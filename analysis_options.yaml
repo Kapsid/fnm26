@@ -1,0 +1,28 @@
+# Football Nations Manager — static analysis configuration.
+#
+# Built on `very_good_analysis` for a strict, consistent ruleset. Generated
+# code (freezed / json_serializable / drift) is excluded from analysis.
+include: package:very_good_analysis/analysis_options.yaml
+
+analyzer:
+  exclude:
+    - "**/*.g.dart"
+    - "**/*.freezed.dart"
+    - "**/*.drift.dart"
+    - "build/**"
+  language:
+    strict-casts: true
+    strict-inference: true
+    strict-raw-types: true
+  errors:
+    # Treat TODOs as info, not warnings, during early development.
+    todo: ignore
+
+linter:
+  rules:
+    # Re-enable per-package once the public API stabilises.
+    public_member_api_docs: false
+    # Disabled: with the SDK-first `flutter` / `flutter_test` entries, this
+    # rule's older-analyzer behaviour false-positives on the first normal
+    # dependency. Our dependency lists are kept alphabetical by convention.
+    sort_pub_dependencies: false

@@ -1,0 +1,28 @@
+import 'package:flutter_test/flutter_test.dart';
+import 'package:fnm/features/home/home_screen.dart';
+import 'package:fnm/shared/widgets/primary_button.dart';
+
+import '../helpers/pump_app.dart';
+
+void main() {
+  group('HomeScreen', () {
+    testWidgets('renders title and primary actions', (tester) async {
+      await tester.pumpApp(const HomeScreen());
+
+      expect(find.text('Football Nations Manager'), findsOneWidget);
+      expect(find.widgetWithText(PrimaryButton, 'New Game'), findsOneWidget);
+      expect(find.widgetWithText(PrimaryButton, 'Continue'), findsOneWidget);
+    });
+
+    testWidgets('tapping New Game shows a coming-soon snackbar', (
+      tester,
+    ) async {
+      await tester.pumpApp(const HomeScreen());
+
+      await tester.tap(find.widgetWithText(PrimaryButton, 'New Game'));
+      await tester.pump();
+
+      expect(find.text('New Game — coming soon'), findsOneWidget);
+    });
+  });
+}
