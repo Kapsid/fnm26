@@ -1,0 +1,24 @@
+import 'package:freezed_annotation/freezed_annotation.dart';
+
+part 'career.freezed.dart';
+
+/// A save game: the manager's ongoing journey with a chosen nation.
+///
+/// [rngSeed] anchors the deterministic simulation for the whole save, so
+/// results are reproducible and replay/cloud-restore safe. [cyclePointer]
+/// tracks which 4-year cycle is active (the free demo allows only cycle `0`).
+///
+/// Persisted via Drift only — there is no per-entity JSON because cloud backup
+/// uploads the whole SQLite file, not individual records.
+@freezed
+abstract class Career with _$Career {
+  const factory Career({
+    required int id,
+    required String managerName,
+    required int nationId,
+    required int rngSeed,
+    required DateTime createdAt,
+    required DateTime inGameDate,
+    @Default(0) int cyclePointer,
+  }) = _Career;
+}

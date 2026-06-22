@@ -42,6 +42,9 @@ dependencies:
   meta: ^1.17.0 # @immutable etc. for pure-Dart core.
   path: ^1.9.1
   path_provider: ^2.1.6
+  # Pinned <3.3.0: 3.3.x ships a native-assets hook/build.dart that breaks
+  # build_runner's AOT bootstrap on Dart 3.10. drift only needs ^3.1.5.
+  sqlite3: ">=3.1.5 <3.3.0"
   sqlite3_flutter_libs: ^0.6.0+eol # Bundled native SQLite.
   supabase_flutter: ^2.15.0 # Cloud auth + storage, used only via CloudSyncService.
 

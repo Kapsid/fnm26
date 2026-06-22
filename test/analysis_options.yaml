@@ -1,0 +1,10 @@
+# Test-specific analysis: inherits the project rules but relaxes a few
+# cosmetic lints that hurt rather than help test readability (explicit
+# argument values document intent; wider lines keep expectations on one line).
+include: ../analysis_options.yaml
+
+linter:
+  rules:
+    avoid_redundant_argument_values: false
+    lines_longer_than_80_chars: false
+    unnecessary_parenthesis: false

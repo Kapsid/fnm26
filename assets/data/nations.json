@@ -1,0 +1,66 @@
+[
+  {
+    "id": 1,
+    "name": "Brazil",
+    "code": "BRA",
+    "confederation": "southAmerica",
+    "ranking": 5,
+    "isFreeDemo": true
+  },
+  {
+    "id": 2,
+    "name": "France",
+    "code": "FRA",
+    "confederation": "europe",
+    "ranking": 2,
+    "isFreeDemo": true
+  },
+  {
+    "id": 3,
+    "name": "Spain",
+    "code": "ESP",
+    "confederation": "europe",
+    "ranking": 8,
+    "isFreeDemo": true
+  },
+  {
+    "id": 4,
+    "name": "England",
+    "code": "ENG",
+    "confederation": "europe",
+    "ranking": 4,
+    "isFreeDemo": true
+  },
+  {
+    "id": 5,
+    "name": "Germany",
+    "code": "GER",
+    "confederation": "europe",
+    "ranking": 10,
+    "isFreeDemo": false
+  },
+  {
+    "id": 6,
+    "name": "Argentina",
+    "code": "ARG",
+    "confederation": "southAmerica",
+    "ranking": 1,
+    "isFreeDemo": false
+  },
+  {
+    "id": 7,
+    "name": "Portugal",
+    "code": "POR",
+    "confederation": "europe",
+    "ranking": 6,
+    "isFreeDemo": false
+  },
+  {
+    "id": 8,
+    "name": "Netherlands",
+    "code": "NED",
+    "confederation": "europe",
+    "ranking": 7,
+    "isFreeDemo": false
+  }
+]

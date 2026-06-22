@@ -63,10 +63,21 @@ flutter analyze       # static analysis
 flutter run           # launch on a connected device / simulator
 ```
 
-### Code generation (from M1 onward, once freezed/drift models exist)
+### Code generation (freezed / json_serializable / drift)
 
 ```bash
-dart run build_runner build --delete-conflicting-outputs
+dart run build_runner build --force-jit
+```
+
+> **`--force-jit` is required.** A transitive dependency (`sqlite3`) ships a
+> native-assets `hook/build.dart` that breaks build_runner's default AOT
+> bootstrap on Dart 3.10. JIT compilation of the build script avoids it.
+> Regenerate after changing any `@freezed` / Drift table / seed entity.
+
+### Regenerating seed data
+
+```bash
+dart run tool/generate_seed.dart   # rewrites assets/data/{nations,players}.json
 ```
 
 ## Roadmap

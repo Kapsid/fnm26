@@ -1,0 +1,2130 @@
+[
+  {
+    "id": 101,
+    "nationId": 1,
+    "name": "Alisson",
+    "age": 33,
+    "position": "gk",
+    "attributes": {
+      "passing": 84,
+      "shooting": 49,
+      "dribbling": 52,
+      "tackling": 68,
+      "positioning": 92,
+      "composure": 92,
+      "decisions": 92,
+      "pace": 75,
+      "stamina": 75,
+      "strength": 86
+    }
+  },
+  {
+    "id": 102,
+    "nationId": 1,
+    "name": "Ederson",
+    "age": 32,
+    "position": "gk",
+    "attributes": {
+      "passing": 86,
+      "shooting": 45,
+      "dribbling": 52,
+      "tackling": 68,
+      "positioning": 94,
+      "composure": 90,
+      "decisions": 90,
+      "pace": 72,
+      "stamina": 75,
+      "strength": 85
+    }
+  },
+  {
+    "id": 103,
+    "nationId": 1,
+    "name": "Wendell",
+    "age": 32,
+    "position": "lb",
+    "attributes": {
+      "passing": 80,
+      "shooting": 64,
+      "dribbling": 78,
+      "tackling": 86,
+      "positioning": 81,
+      "composure": 77,
+      "decisions": 79,
+      "pace": 84,
+      "stamina": 87,
+      "strength": 77
+    }
+  },
+  {
+    "id": 104,
+    "nationId": 1,
+    "name": "Marquinhos",
+    "age": 31,
+    "position": "cb",
+    "attributes": {
+      "passing": 87,
+      "shooting": 64,
+      "dribbling": 78,
+      "tackling": 92,
+      "positioning": 92,
+      "composure": 85,
+      "decisions": 91,
+      "pace": 84,
+      "stamina": 84,
+      "strength": 91
+    }
+  },
+  {
+    "id": 105,
+    "nationId": 1,
+    "name": "Gabriel Magalhães",
+    "age": 28,
+    "position": "cb",
+    "attributes": {
+      "passing": 80,
+      "shooting": 59,
+      "dribbling": 78,
+      "tackling": 95,
+      "positioning": 92,
+      "composure": 86,
+      "decisions": 89,
+      "pace": 86,
+      "stamina": 86,
+      "strength": 91
+    }
+  },
+  {
+    "id": 106,
+    "nationId": 1,
+    "name": "Danilo",
+    "age": 34,
+    "position": "rb",
+    "attributes": {
+      "passing": 80,
+      "shooting": 63,
+      "dribbling": 79,
+      "tackling": 86,
+      "positioning": 81,
+      "composure": 80,
+      "decisions": 82,
+      "pace": 90,
+      "stamina": 83,
+      "strength": 77
+    }
+  },
+  {
+    "id": 107,
+    "nationId": 1,
+    "name": "Bruno Guimarães",
+    "age": 28,
+    "position": "dm",
+    "attributes": {
+      "passing": 92,
+      "shooting": 76,
+      "dribbling": 86,
+      "tackling": 93,
+      "positioning": 94,
+      "composure": 86,
+      "decisions": 89,
+      "pace": 88,
+      "stamina": 89,
+      "strength": 88
+    }
+  },
+  {
+    "id": 108,
+    "nationId": 1,
+    "name": "Lucas Paquetá",
+    "age": 28,
+    "position": "cm",
+    "attributes": {
+      "passing": 90,
+      "shooting": 80,
+      "dribbling": 89,
+      "tackling": 85,
+      "positioning": 85,
+      "composure": 85,
+      "decisions": 88,
+      "pace": 83,
+      "stamina": 86,
+      "strength": 85
+    }
+  },
+  {
+    "id": 109,
+    "nationId": 1,
+    "name": "André",
+    "age": 24,
+    "position": "cm",
+    "attributes": {
+      "passing": 91,
+      "shooting": 80,
+      "dribbling": 85,
+      "tackling": 78,
+      "positioning": 81,
+      "composure": 84,
+      "decisions": 86,
+      "pace": 77,
+      "stamina": 85,
+      "strength": 82
+    }
+  },
+  {
+    "id": 110,
+    "nationId": 1,
+    "name": "Rodrygo",
+    "age": 25,
+    "position": "am",
+    "attributes": {
+      "passing": 90,
+      "shooting": 91,
+      "dribbling": 95,
+      "tackling": 79,
+      "positioning": 85,
+      "composure": 90,
+      "decisions": 93,
+      "pace": 86,
+      "stamina": 87,
+      "strength": 82
+    }
+  },
+  {
+    "id": 111,
+    "nationId": 1,
+    "name": "Vinícius Júnior",
+    "age": 25,
+    "position": "lw",
+    "attributes": {
+      "passing": 94,
+      "shooting": 97,
+      "dribbling": 98,
+      "tackling": 74,
+      "positioning": 96,
+      "composure": 97,
+      "decisions": 90,
+      "pace": 99,
+      "stamina": 87,
+      "strength": 81
+    }
+  },
+  {
+    "id": 112,
+    "nationId": 1,
+    "name": "Raphinha",
+    "age": 29,
+    "position": "rw",
+    "attributes": {
+      "passing": 89,
+      "shooting": 93,
+      "dribbling": 98,
+      "tackling": 70,
+      "positioning": 88,
+      "composure": 93,
+      "decisions": 87,
+      "pace": 99,
+      "stamina": 87,
+      "strength": 81
+    }
+  },
+  {
+    "id": 113,
+    "nationId": 1,
+    "name": "Endrick",
+    "age": 19,
+    "position": "st",
+    "attributes": {
+      "passing": 80,
+      "shooting": 95,
+      "dribbling": 86,
+      "tackling": 59,
+      "positioning": 88,
+      "composure": 85,
+      "decisions": 82,
+      "pace": 90,
+      "stamina": 82,
+      "strength": 86
+    }
+  },
+  {
+    "id": 114,
+    "nationId": 1,
+    "name": "Matheus Cunha",
+    "age": 26,
+    "position": "st",
+    "attributes": {
+      "passing": 80,
+      "shooting": 96,
+      "dribbling": 90,
+      "tackling": 64,
+      "positioning": 90,
+      "composure": 90,
+      "decisions": 86,
+      "pace": 93,
+      "stamina": 83,
+      "strength": 83
+    }
+  },
+  {
+    "id": 201,
+    "nationId": 2,
+    "name": "Mike Maignan",
+    "age": 30,
+    "position": "gk",
+    "attributes": {
+      "passing": 87,
+      "shooting": 47,
+      "dribbling": 51,
+      "tackling": 69,
+      "positioning": 90,
+      "composure": 89,
+      "decisions": 91,
+      "pace": 71,
+      "stamina": 77,
+      "strength": 92
+    }
+  },
+  {
+    "id": 202,
+    "nationId": 2,
+    "name": "Brice Samba",
+    "age": 31,
+    "position": "gk",
+    "attributes": {
+      "passing": 78,
+      "shooting": 44,
+      "dribbling": 44,
+      "tackling": 61,
+      "positioning": 86,
+      "composure": 84,
+      "decisions": 85,
+      "pace": 65,
+      "stamina": 69,
+      "strength": 80
+    }
+  },
+  {
+    "id": 203,
+    "nationId": 2,
+    "name": "Théo Hernández",
+    "age": 28,
+    "position": "lb",
+    "attributes": {
+      "passing": 89,
+      "shooting": 65,
+      "dribbling": 86,
+      "tackling": 86,
+      "positioning": 89,
+      "composure": 88,
+      "decisions": 87,
+      "pace": 96,
+      "stamina": 94,
+      "strength": 87
+    }
+  },
+  {
+    "id": 204,
+    "nationId": 2,
+    "name": "Dayot Upamecano",
+    "age": 27,
+    "position": "cb",
+    "attributes": {
+      "passing": 83,
+      "shooting": 59,
+      "dribbling": 73,
+      "tackling": 90,
+      "positioning": 89,
+      "composure": 88,
+      "decisions": 85,
+      "pace": 85,
+      "stamina": 84,
+      "strength": 89
+    }
+  },
+  {
+    "id": 205,
+    "nationId": 2,
+    "name": "William Saliba",
+    "age": 24,
+    "position": "cb",
+    "attributes": {
+      "passing": 82,
+      "shooting": 64,
+      "dribbling": 76,
+      "tackling": 94,
+      "positioning": 91,
+      "composure": 88,
+      "decisions": 89,
+      "pace": 86,
+      "stamina": 85,
+      "strength": 93
+    }
+  },
+  {
+    "id": 206,
+    "nationId": 2,
+    "name": "Jules Koundé",
+    "age": 27,
+    "position": "rb",
+    "attributes": {
+      "passing": 87,
+      "shooting": 69,
+      "dribbling": 89,
+      "tackling": 86,
+      "positioning": 88,
+      "composure": 87,
+      "decisions": 83,
+      "pace": 95,
+      "stamina": 90,
+      "strength": 87
+    }
+  },
+  {
+    "id": 207,
+    "nationId": 2,
+    "name": "Aurélien Tchouaméni",
+    "age": 25,
+    "position": "dm",
+    "attributes": {
+      "passing": 86,
+      "shooting": 80,
+      "dribbling": 87,
+      "tackling": 95,
+      "positioning": 88,
+      "composure": 90,
+      "decisions": 91,
+      "pace": 83,
+      "stamina": 91,
+      "strength": 92
+    }
+  },
+  {
+    "id": 208,
+    "nationId": 2,
+    "name": "Eduardo Camavinga",
+    "age": 22,
+    "position": "cm",
+    "attributes": {
+      "passing": 90,
+      "shooting": 84,
+      "dribbling": 89,
+      "tackling": 86,
+      "positioning": 89,
+      "composure": 85,
+      "decisions": 91,
+      "pace": 83,
+      "stamina": 88,
+      "strength": 86
+    }
+  },
+  {
+    "id": 209,
+    "nationId": 2,
+    "name": "Adrien Rabiot",
+    "age": 30,
+    "position": "cm",
+    "attributes": {
+      "passing": 87,
+      "shooting": 83,
+      "dribbling": 88,
+      "tackling": 79,
+      "positioning": 83,
+      "composure": 83,
+      "decisions": 86,
+      "pace": 82,
+      "stamina": 90,
+      "strength": 80
+    }
+  },
+  {
+    "id": 210,
+    "nationId": 2,
+    "name": "Antoine Griezmann",
+    "age": 35,
+    "position": "am",
+    "attributes": {
+      "passing": 96,
+      "shooting": 87,
+      "dribbling": 90,
+      "tackling": 77,
+      "positioning": 89,
+      "composure": 88,
+      "decisions": 90,
+      "pace": 86,
+      "stamina": 84,
+      "strength": 82
+    }
+  },
+  {
+    "id": 211,
+    "nationId": 2,
+    "name": "Kylian Mbappé",
+    "age": 27,
+    "position": "lw",
+    "attributes": {
+      "passing": 91,
+      "shooting": 96,
+      "dribbling": 99,
+      "tackling": 74,
+      "positioning": 96,
+      "composure": 95,
+      "decisions": 96,
+      "pace": 99,
+      "stamina": 93,
+      "strength": 84
+    }
+  },
+  {
+    "id": 212,
+    "nationId": 2,
+    "name": "Ousmane Dembélé",
+    "age": 28,
+    "position": "rw",
+    "attributes": {
+      "passing": 88,
+      "shooting": 95,
+      "dribbling": 98,
+      "tackling": 71,
+      "positioning": 91,
+      "composure": 89,
+      "decisions": 91,
+      "pace": 95,
+      "stamina": 83,
+      "strength": 77
+    }
+  },
+  {
+    "id": 213,
+    "nationId": 2,
+    "name": "Marcus Thuram",
+    "age": 28,
+    "position": "st",
+    "attributes": {
+      "passing": 79,
+      "shooting": 99,
+      "dribbling": 89,
+      "tackling": 64,
+      "positioning": 88,
+      "composure": 90,
+      "decisions": 83,
+      "pace": 93,
+      "stamina": 83,
+      "strength": 85
+    }
+  },
+  {
+    "id": 214,
+    "nationId": 2,
+    "name": "Randal Kolo Muani",
+    "age": 27,
+    "position": "st",
+    "attributes": {
+      "passing": 78,
+      "shooting": 95,
+      "dribbling": 90,
+      "tackling": 64,
+      "positioning": 86,
+      "composure": 86,
+      "decisions": 82,
+      "pace": 86,
+      "stamina": 80,
+      "strength": 85
+    }
+  },
+  {
+    "id": 301,
+    "nationId": 3,
+    "name": "Unai Simón",
+    "age": 28,
+    "position": "gk",
+    "attributes": {
+      "passing": 84,
+      "shooting": 42,
+      "dribbling": 51,
+      "tackling": 67,
+      "positioning": 91,
+      "composure": 90,
+      "decisions": 85,
+      "pace": 72,
+      "stamina": 72,
+      "strength": 84
+    }
+  },
+  {
+    "id": 302,
+    "nationId": 3,
+    "name": "David Raya",
+    "age": 30,
+    "position": "gk",
+    "attributes": {
+      "passing": 86,
+      "shooting": 47,
+      "dribbling": 47,
+      "tackling": 62,
+      "positioning": 87,
+      "composure": 89,
+      "decisions": 88,
+      "pace": 72,
+      "stamina": 77,
+      "strength": 88
+    }
+  },
+  {
+    "id": 303,
+    "nationId": 3,
+    "name": "Marc Cucurella",
+    "age": 27,
+    "position": "lb",
+    "attributes": {
+      "passing": 88,
+      "shooting": 67,
+      "dribbling": 84,
+      "tackling": 87,
+      "positioning": 85,
+      "composure": 84,
+      "decisions": 82,
+      "pace": 90,
+      "stamina": 87,
+      "strength": 83
+    }
+  },
+  {
+    "id": 304,
+    "nationId": 3,
+    "name": "Robin Le Normand",
+    "age": 29,
+    "position": "cb",
+    "attributes": {
+      "passing": 80,
+      "shooting": 57,
+      "dribbling": 75,
+      "tackling": 92,
+      "positioning": 90,
+      "composure": 86,
+      "decisions": 83,
+      "pace": 82,
+      "stamina": 81,
+      "strength": 91
+    }
+  },
+  {
+    "id": 305,
+    "nationId": 3,
+    "name": "Pau Cubarsí",
+    "age": 19,
+    "position": "cb",
+    "attributes": {
+      "passing": 81,
+      "shooting": 57,
+      "dribbling": 71,
+      "tackling": 90,
+      "positioning": 87,
+      "composure": 82,
+      "decisions": 81,
+      "pace": 80,
+      "stamina": 79,
+      "strength": 91
+    }
+  },
+  {
+    "id": 306,
+    "nationId": 3,
+    "name": "Dani Carvajal",
+    "age": 34,
+    "position": "rb",
+    "attributes": {
+      "passing": 87,
+      "shooting": 63,
+      "dribbling": 84,
+      "tackling": 86,
+      "positioning": 86,
+      "composure": 81,
+      "decisions": 86,
+      "pace": 94,
+      "stamina": 91,
+      "strength": 86
+    }
+  },
+  {
+    "id": 307,
+    "nationId": 3,
+    "name": "Rodri",
+    "age": 29,
+    "position": "dm",
+    "attributes": {
+      "passing": 91,
+      "shooting": 85,
+      "dribbling": 90,
+      "tackling": 98,
+      "positioning": 98,
+      "composure": 94,
+      "decisions": 99,
+      "pace": 92,
+      "stamina": 95,
+      "strength": 91
+    }
+  },
+  {
+    "id": 308,
+    "nationId": 3,
+    "name": "Pedri",
+    "age": 23,
+    "position": "cm",
+    "attributes": {
+      "passing": 98,
+      "shooting": 87,
+      "dribbling": 88,
+      "tackling": 89,
+      "positioning": 87,
+      "composure": 92,
+      "decisions": 93,
+      "pace": 84,
+      "stamina": 95,
+      "strength": 88
+    }
+  },
+  {
+    "id": 309,
+    "nationId": 3,
+    "name": "Fabián Ruiz",
+    "age": 30,
+    "position": "cm",
+    "attributes": {
+      "passing": 88,
+      "shooting": 84,
+      "dribbling": 87,
+      "tackling": 85,
+      "positioning": 88,
+      "composure": 87,
+      "decisions": 87,
+      "pace": 85,
+      "stamina": 92,
+      "strength": 81
+    }
+  },
+  {
+    "id": 310,
+    "nationId": 3,
+    "name": "Dani Olmo",
+    "age": 27,
+    "position": "am",
+    "attributes": {
+      "passing": 95,
+      "shooting": 85,
+      "dribbling": 93,
+      "tackling": 73,
+      "positioning": 88,
+      "composure": 91,
+      "decisions": 88,
+      "pace": 88,
+      "stamina": 83,
+      "strength": 80
+    }
+  },
+  {
+    "id": 311,
+    "nationId": 3,
+    "name": "Nico Williams",
+    "age": 23,
+    "position": "lw",
+    "attributes": {
+      "passing": 88,
+      "shooting": 92,
+      "dribbling": 96,
+      "tackling": 72,
+      "positioning": 86,
+      "composure": 88,
+      "decisions": 85,
+      "pace": 96,
+      "stamina": 88,
+      "strength": 74
+    }
+  },
+  {
+    "id": 312,
+    "nationId": 3,
+    "name": "Lamine Yamal",
+    "age": 18,
+    "position": "rw",
+    "attributes": {
+      "passing": 86,
+      "shooting": 91,
+      "dribbling": 99,
+      "tackling": 75,
+      "positioning": 89,
+      "composure": 92,
+      "decisions": 89,
+      "pace": 99,
+      "stamina": 86,
+      "strength": 81
+    }
+  },
+  {
+    "id": 313,
+    "nationId": 3,
+    "name": "Álvaro Morata",
+    "age": 33,
+    "position": "st",
+    "attributes": {
+      "passing": 76,
+      "shooting": 98,
+      "dribbling": 85,
+      "tackling": 63,
+      "positioning": 89,
+      "composure": 89,
+      "decisions": 85,
+      "pace": 89,
+      "stamina": 80,
+      "strength": 83
+    }
+  },
+  {
+    "id": 314,
+    "nationId": 3,
+    "name": "Mikel Oyarzabal",
+    "age": 29,
+    "position": "st",
+    "attributes": {
+      "passing": 80,
+      "shooting": 98,
+      "dribbling": 90,
+      "tackling": 66,
+      "positioning": 92,
+      "composure": 94,
+      "decisions": 82,
+      "pace": 93,
+      "stamina": 85,
+      "strength": 87
+    }
+  },
+  {
+    "id": 401,
+    "nationId": 4,
+    "name": "Jordan Pickford",
+    "age": 32,
+    "position": "gk",
+    "attributes": {
+      "passing": 83,
+      "shooting": 46,
+      "dribbling": 49,
+      "tackling": 67,
+      "positioning": 87,
+      "composure": 89,
+      "decisions": 85,
+      "pace": 72,
+      "stamina": 71,
+      "strength": 84
+    }
+  },
+  {
+    "id": 402,
+    "nationId": 4,
+    "name": "Dean Henderson",
+    "age": 29,
+    "position": "gk",
+    "attributes": {
+      "passing": 79,
+      "shooting": 42,
+      "dribbling": 44,
+      "tackling": 63,
+      "positioning": 89,
+      "composure": 81,
+      "decisions": 86,
+      "pace": 67,
+      "stamina": 73,
+      "strength": 81
+    }
+  },
+  {
+    "id": 403,
+    "nationId": 4,
+    "name": "Myles Lewis-Skelly",
+    "age": 19,
+    "position": "lb",
+    "attributes": {
+      "passing": 81,
+      "shooting": 60,
+      "dribbling": 80,
+      "tackling": 82,
+      "positioning": 84,
+      "composure": 80,
+      "decisions": 77,
+      "pace": 87,
+      "stamina": 89,
+      "strength": 77
+    }
+  },
+  {
+    "id": 404,
+    "nationId": 4,
+    "name": "John Stones",
+    "age": 31,
+    "position": "cb",
+    "attributes": {
+      "passing": 81,
+      "shooting": 62,
+      "dribbling": 72,
+      "tackling": 90,
+      "positioning": 90,
+      "composure": 87,
+      "decisions": 88,
+      "pace": 81,
+      "stamina": 82,
+      "strength": 90
+    }
+  },
+  {
+    "id": 405,
+    "nationId": 4,
+    "name": "Marc Guéhi",
+    "age": 25,
+    "position": "cb",
+    "attributes": {
+      "passing": 84,
+      "shooting": 56,
+      "dribbling": 75,
+      "tackling": 90,
+      "positioning": 86,
+      "composure": 86,
+      "decisions": 88,
+      "pace": 79,
+      "stamina": 82,
+      "strength": 90
+    }
+  },
+  {
+    "id": 406,
+    "nationId": 4,
+    "name": "Trent Alexander-Arnold",
+    "age": 27,
+    "position": "rb",
+    "attributes": {
+      "passing": 85,
+      "shooting": 65,
+      "dribbling": 87,
+      "tackling": 91,
+      "positioning": 86,
+      "composure": 87,
+      "decisions": 86,
+      "pace": 91,
+      "stamina": 93,
+      "strength": 85
+    }
+  },
+  {
+    "id": 407,
+    "nationId": 4,
+    "name": "Declan Rice",
+    "age": 27,
+    "position": "dm",
+    "attributes": {
+      "passing": 94,
+      "shooting": 78,
+      "dribbling": 84,
+      "tackling": 93,
+      "positioning": 92,
+      "composure": 92,
+      "decisions": 90,
+      "pace": 86,
+      "stamina": 95,
+      "strength": 91
+    }
+  },
+  {
+    "id": 408,
+    "nationId": 4,
+    "name": "Jude Bellingham",
+    "age": 22,
+    "position": "cm",
+    "attributes": {
+      "passing": 97,
+      "shooting": 84,
+      "dribbling": 90,
+      "tackling": 89,
+      "positioning": 90,
+      "composure": 93,
+      "decisions": 97,
+      "pace": 91,
+      "stamina": 95,
+      "strength": 92
+    }
+  },
+  {
+    "id": 409,
+    "nationId": 4,
+    "name": "Cole Palmer",
+    "age": 23,
+    "position": "cm",
+    "attributes": {
+      "passing": 94,
+      "shooting": 84,
+      "dribbling": 91,
+      "tackling": 87,
+      "positioning": 90,
+      "composure": 92,
+      "decisions": 94,
+      "pace": 86,
+      "stamina": 90,
+      "strength": 86
+    }
+  },
+  {
+    "id": 410,
+    "nationId": 4,
+    "name": "Phil Foden",
+    "age": 25,
+    "position": "am",
+    "attributes": {
+      "passing": 96,
+      "shooting": 88,
+      "dribbling": 91,
+      "tackling": 77,
+      "positioning": 85,
+      "composure": 91,
+      "decisions": 93,
+      "pace": 90,
+      "stamina": 87,
+      "strength": 84
+    }
+  },
+  {
+    "id": 411,
+    "nationId": 4,
+    "name": "Bukayo Saka",
+    "age": 24,
+    "position": "lw",
+    "attributes": {
+      "passing": 92,
+      "shooting": 96,
+      "dribbling": 96,
+      "tackling": 74,
+      "positioning": 92,
+      "composure": 94,
+      "decisions": 86,
+      "pace": 99,
+      "stamina": 90,
+      "strength": 81
+    }
+  },
+  {
+    "id": 412,
+    "nationId": 4,
+    "name": "Anthony Gordon",
+    "age": 25,
+    "position": "rw",
+    "attributes": {
+      "passing": 81,
+      "shooting": 87,
+      "dribbling": 96,
+      "tackling": 68,
+      "positioning": 86,
+      "composure": 90,
+      "decisions": 82,
+      "pace": 91,
+      "stamina": 79,
+      "strength": 76
+    }
+  },
+  {
+    "id": 413,
+    "nationId": 4,
+    "name": "Harry Kane",
+    "age": 32,
+    "position": "st",
+    "attributes": {
+      "passing": 88,
+      "shooting": 99,
+      "dribbling": 96,
+      "tackling": 73,
+      "positioning": 95,
+      "composure": 95,
+      "decisions": 91,
+      "pace": 99,
+      "stamina": 88,
+      "strength": 93
+    }
+  },
+  {
+    "id": 414,
+    "nationId": 4,
+    "name": "Ollie Watkins",
+    "age": 30,
+    "position": "st",
+    "attributes": {
+      "passing": 82,
+      "shooting": 93,
+      "dribbling": 87,
+      "tackling": 60,
+      "positioning": 87,
+      "composure": 90,
+      "decisions": 82,
+      "pace": 91,
+      "stamina": 82,
+      "strength": 83
+    }
+  },
+  {
+    "id": 501,
+    "nationId": 5,
+    "name": "Marc-André ter Stegen",
+    "age": 34,
+    "position": "gk",
+    "attributes": {
+      "passing": 88,
+      "shooting": 43,
+      "dribbling": 52,
+      "tackling": 68,
+      "positioning": 91,
+      "composure": 89,
+      "decisions": 92,
+      "pace": 72,
+      "stamina": 73,
+      "strength": 85
+    }
+  },
+  {
+    "id": 502,
+    "nationId": 5,
+    "name": "Oliver Baumann",
+    "age": 35,
+    "position": "gk",
+    "attributes": {
+      "passing": 78,
+      "shooting": 42,
+      "dribbling": 43,
+      "tackling": 62,
+      "positioning": 85,
+      "composure": 80,
+      "decisions": 86,
+      "pace": 65,
+      "stamina": 66,
+      "strength": 81
+    }
+  },
+  {
+    "id": 503,
+    "nationId": 5,
+    "name": "David Raum",
+    "age": 28,
+    "position": "lb",
+    "attributes": {
+      "passing": 81,
+      "shooting": 64,
+      "dribbling": 84,
+      "tackling": 85,
+      "positioning": 82,
+      "composure": 84,
+      "decisions": 78,
+      "pace": 92,
+      "stamina": 90,
+      "strength": 84
+    }
+  },
+  {
+    "id": 504,
+    "nationId": 5,
+    "name": "Antonio Rüdiger",
+    "age": 33,
+    "position": "cb",
+    "attributes": {
+      "passing": 86,
+      "shooting": 62,
+      "dribbling": 77,
+      "tackling": 92,
+      "positioning": 91,
+      "composure": 84,
+      "decisions": 86,
+      "pace": 86,
+      "stamina": 82,
+      "strength": 92
+    }
+  },
+  {
+    "id": 505,
+    "nationId": 5,
+    "name": "Jonathan Tah",
+    "age": 30,
+    "position": "cb",
+    "attributes": {
+      "passing": 78,
+      "shooting": 61,
+      "dribbling": 73,
+      "tackling": 88,
+      "positioning": 92,
+      "composure": 84,
+      "decisions": 85,
+      "pace": 80,
+      "stamina": 82,
+      "strength": 93
+    }
+  },
+  {
+    "id": 506,
+    "nationId": 5,
+    "name": "Joshua Kimmich",
+    "age": 31,
+    "position": "rb",
+    "attributes": {
+      "passing": 85,
+      "shooting": 71,
+      "dribbling": 91,
+      "tackling": 93,
+      "positioning": 87,
+      "composure": 85,
+      "decisions": 87,
+      "pace": 92,
+      "stamina": 94,
+      "strength": 83
+    }
+  },
+  {
+    "id": 507,
+    "nationId": 5,
+    "name": "Robert Andrich",
+    "age": 31,
+    "position": "dm",
+    "attributes": {
+      "passing": 87,
+      "shooting": 70,
+      "dribbling": 77,
+      "tackling": 85,
+      "positioning": 85,
+      "composure": 82,
+      "decisions": 87,
+      "pace": 80,
+      "stamina": 86,
+      "strength": 87
+    }
+  },
+  {
+    "id": 508,
+    "nationId": 5,
+    "name": "Florian Wirtz",
+    "age": 23,
+    "position": "cm",
+    "attributes": {
+      "passing": 97,
+      "shooting": 85,
+      "dribbling": 95,
+      "tackling": 86,
+      "positioning": 93,
+      "composure": 93,
+      "decisions": 91,
+      "pace": 87,
+      "stamina": 94,
+      "strength": 90
+    }
+  },
+  {
+    "id": 509,
+    "nationId": 5,
+    "name": "Leon Goretzka",
+    "age": 31,
+    "position": "cm",
+    "attributes": {
+      "passing": 88,
+      "shooting": 80,
+      "dribbling": 85,
+      "tackling": 79,
+      "positioning": 81,
+      "composure": 86,
+      "decisions": 89,
+      "pace": 83,
+      "stamina": 87,
+      "strength": 83
+    }
+  },
+  {
+    "id": 510,
+    "nationId": 5,
+    "name": "Jamal Musiala",
+    "age": 23,
+    "position": "am",
+    "attributes": {
+      "passing": 93,
+      "shooting": 90,
+      "dribbling": 97,
+      "tackling": 80,
+      "positioning": 87,
+      "composure": 92,
+      "decisions": 96,
+      "pace": 93,
+      "stamina": 85,
+      "strength": 83
+    }
+  },
+  {
+    "id": 511,
+    "nationId": 5,
+    "name": "Leroy Sané",
+    "age": 30,
+    "position": "lw",
+    "attributes": {
+      "passing": 86,
+      "shooting": 89,
+      "dribbling": 96,
+      "tackling": 69,
+      "positioning": 86,
+      "composure": 87,
+      "decisions": 83,
+      "pace": 99,
+      "stamina": 81,
+      "strength": 74
+    }
+  },
+  {
+    "id": 512,
+    "nationId": 5,
+    "name": "Serge Gnabry",
+    "age": 30,
+    "position": "rw",
+    "attributes": {
+      "passing": 88,
+      "shooting": 89,
+      "dribbling": 95,
+      "tackling": 71,
+      "positioning": 84,
+      "composure": 88,
+      "decisions": 88,
+      "pace": 94,
+      "stamina": 81,
+      "strength": 74
+    }
+  },
+  {
+    "id": 513,
+    "nationId": 5,
+    "name": "Kai Havertz",
+    "age": 27,
+    "position": "st",
+    "attributes": {
+      "passing": 82,
+      "shooting": 97,
+      "dribbling": 87,
+      "tackling": 62,
+      "positioning": 90,
+      "composure": 91,
+      "decisions": 83,
+      "pace": 90,
+      "stamina": 83,
+      "strength": 87
+    }
+  },
+  {
+    "id": 514,
+    "nationId": 5,
+    "name": "Niclas Füllkrug",
+    "age": 33,
+    "position": "st",
+    "attributes": {
+      "passing": 79,
+      "shooting": 97,
+      "dribbling": 85,
+      "tackling": 61,
+      "positioning": 85,
+      "composure": 86,
+      "decisions": 85,
+      "pace": 88,
+      "stamina": 77,
+      "strength": 84
+    }
+  },
+  {
+    "id": 601,
+    "nationId": 6,
+    "name": "Emiliano Martínez",
+    "age": 33,
+    "position": "gk",
+    "attributes": {
+      "passing": 89,
+      "shooting": 48,
+      "dribbling": 54,
+      "tackling": 64,
+      "positioning": 92,
+      "composure": 88,
+      "decisions": 92,
+      "pace": 73,
+      "stamina": 73,
+      "strength": 88
+    }
+  },
+  {
+    "id": 602,
+    "nationId": 6,
+    "name": "Gerónimo Rulli",
+    "age": 33,
+    "position": "gk",
+    "attributes": {
+      "passing": 78,
+      "shooting": 42,
+      "dribbling": 44,
+      "tackling": 57,
+      "positioning": 88,
+      "composure": 85,
+      "decisions": 86,
+      "pace": 64,
+      "stamina": 73,
+      "strength": 81
+    }
+  },
+  {
+    "id": 603,
+    "nationId": 6,
+    "name": "Nicolás Tagliafico",
+    "age": 33,
+    "position": "lb",
+    "attributes": {
+      "passing": 86,
+      "shooting": 62,
+      "dribbling": 82,
+      "tackling": 88,
+      "positioning": 87,
+      "composure": 79,
+      "decisions": 81,
+      "pace": 87,
+      "stamina": 84,
+      "strength": 82
+    }
+  },
+  {
+    "id": 604,
+    "nationId": 6,
+    "name": "Cristian Romero",
+    "age": 27,
+    "position": "cb",
+    "attributes": {
+      "passing": 81,
+      "shooting": 60,
+      "dribbling": 74,
+      "tackling": 92,
+      "positioning": 94,
+      "composure": 89,
+      "decisions": 86,
+      "pace": 82,
+      "stamina": 84,
+      "strength": 94
+    }
+  },
+  {
+    "id": 605,
+    "nationId": 6,
+    "name": "Lisandro Martínez",
+    "age": 28,
+    "position": "cb",
+    "attributes": {
+      "passing": 80,
+      "shooting": 56,
+      "dribbling": 75,
+      "tackling": 93,
+      "positioning": 89,
+      "composure": 85,
+      "decisions": 89,
+      "pace": 79,
+      "stamina": 87,
+      "strength": 93
+    }
+  },
+  {
+    "id": 606,
+    "nationId": 6,
+    "name": "Nahuel Molina",
+    "age": 27,
+    "position": "rb",
+    "attributes": {
+      "passing": 86,
+      "shooting": 64,
+      "dribbling": 86,
+      "tackling": 82,
+      "positioning": 84,
+      "composure": 79,
+      "decisions": 79,
+      "pace": 91,
+      "stamina": 86,
+      "strength": 84
+    }
+  },
+  {
+    "id": 607,
+    "nationId": 6,
+    "name": "Enzo Fernández",
+    "age": 25,
+    "position": "dm",
+    "attributes": {
+      "passing": 91,
+      "shooting": 80,
+      "dribbling": 84,
+      "tackling": 96,
+      "positioning": 94,
+      "composure": 87,
+      "decisions": 94,
+      "pace": 87,
+      "stamina": 94,
+      "strength": 88
+    }
+  },
+  {
+    "id": 608,
+    "nationId": 6,
+    "name": "Alexis Mac Allister",
+    "age": 27,
+    "position": "cm",
+    "attributes": {
+      "passing": 96,
+      "shooting": 82,
+      "dribbling": 90,
+      "tackling": 87,
+      "positioning": 91,
+      "composure": 89,
+      "decisions": 92,
+      "pace": 88,
+      "stamina": 93,
+      "strength": 83
+    }
+  },
+  {
+    "id": 609,
+    "nationId": 6,
+    "name": "Rodrigo De Paul",
+    "age": 31,
+    "position": "cm",
+    "attributes": {
+      "passing": 88,
+      "shooting": 78,
+      "dribbling": 90,
+      "tackling": 82,
+      "positioning": 84,
+      "composure": 84,
+      "decisions": 87,
+      "pace": 82,
+      "stamina": 87,
+      "strength": 83
+    }
+  },
+  {
+    "id": 610,
+    "nationId": 6,
+    "name": "Lionel Messi",
+    "age": 38,
+    "position": "am",
+    "attributes": {
+      "passing": 94,
+      "shooting": 89,
+      "dribbling": 95,
+      "tackling": 80,
+      "positioning": 93,
+      "composure": 93,
+      "decisions": 92,
+      "pace": 95,
+      "stamina": 88,
+      "strength": 82
+    }
+  },
+  {
+    "id": 611,
+    "nationId": 6,
+    "name": "Nicolás González",
+    "age": 27,
+    "position": "lw",
+    "attributes": {
+      "passing": 82,
+      "shooting": 90,
+      "dribbling": 92,
+      "tackling": 66,
+      "positioning": 84,
+      "composure": 91,
+      "decisions": 84,
+      "pace": 95,
+      "stamina": 79,
+      "strength": 72
+    }
+  },
+  {
+    "id": 612,
+    "nationId": 6,
+    "name": "Ángel Di María",
+    "age": 37,
+    "position": "rw",
+    "attributes": {
+      "passing": 82,
+      "shooting": 90,
+      "dribbling": 92,
+      "tackling": 67,
+      "positioning": 84,
+      "composure": 87,
+      "decisions": 85,
+      "pace": 93,
+      "stamina": 82,
+      "strength": 77
+    }
+  },
+  {
+    "id": 613,
+    "nationId": 6,
+    "name": "Lautaro Martínez",
+    "age": 28,
+    "position": "st",
+    "attributes": {
+      "passing": 84,
+      "shooting": 99,
+      "dribbling": 92,
+      "tackling": 66,
+      "positioning": 94,
+      "composure": 97,
+      "decisions": 93,
+      "pace": 99,
+      "stamina": 90,
+      "strength": 90
+    }
+  },
+  {
+    "id": 614,
+    "nationId": 6,
+    "name": "Julián Álvarez",
+    "age": 25,
+    "position": "st",
+    "attributes": {
+      "passing": 88,
+      "shooting": 98,
+      "dribbling": 91,
+      "tackling": 66,
+      "positioning": 95,
+      "composure": 98,
+      "decisions": 91,
+      "pace": 96,
+      "stamina": 86,
+      "strength": 91
+    }
+  },
+  {
+    "id": 701,
+    "nationId": 7,
+    "name": "Diogo Costa",
+    "age": 26,
+    "position": "gk",
+    "attributes": {
+      "passing": 86,
+      "shooting": 47,
+      "dribbling": 52,
+      "tackling": 64,
+      "positioning": 93,
+      "composure": 91,
+      "decisions": 87,
+      "pace": 68,
+      "stamina": 78,
+      "strength": 87
+    }
+  },
+  {
+    "id": 702,
+    "nationId": 7,
+    "name": "José Sá",
+    "age": 33,
+    "position": "gk",
+    "attributes": {
+      "passing": 80,
+      "shooting": 41,
+      "dribbling": 45,
+      "tackling": 58,
+      "positioning": 89,
+      "composure": 87,
+      "decisions": 86,
+      "pace": 66,
+      "stamina": 68,
+      "strength": 79
+    }
+  },
+  {
+    "id": 703,
+    "nationId": 7,
+    "name": "Nuno Mendes",
+    "age": 23,
+    "position": "lb",
+    "attributes": {
+      "passing": 87,
+      "shooting": 67,
+      "dribbling": 90,
+      "tackling": 92,
+      "positioning": 86,
+      "composure": 85,
+      "decisions": 87,
+      "pace": 96,
+      "stamina": 89,
+      "strength": 82
+    }
+  },
+  {
+    "id": 704,
+    "nationId": 7,
+    "name": "Rúben Dias",
+    "age": 28,
+    "position": "cb",
+    "attributes": {
+      "passing": 82,
+      "shooting": 63,
+      "dribbling": 76,
+      "tackling": 92,
+      "positioning": 91,
+      "composure": 87,
+      "decisions": 86,
+      "pace": 88,
+      "stamina": 84,
+      "strength": 94
+    }
+  },
+  {
+    "id": 705,
+    "nationId": 7,
+    "name": "Gonçalo Inácio",
+    "age": 24,
+    "position": "cb",
+    "attributes": {
+      "passing": 79,
+      "shooting": 59,
+      "dribbling": 70,
+      "tackling": 89,
+      "positioning": 85,
+      "composure": 85,
+      "decisions": 86,
+      "pace": 78,
+      "stamina": 82,
+      "strength": 93
+    }
+  },
+  {
+    "id": 706,
+    "nationId": 7,
+    "name": "João Cancelo",
+    "age": 31,
+    "position": "rb",
+    "attributes": {
+      "passing": 84,
+      "shooting": 63,
+      "dribbling": 88,
+      "tackling": 87,
+      "positioning": 85,
+      "composure": 85,
+      "decisions": 84,
+      "pace": 91,
+      "stamina": 93,
+      "strength": 87
+    }
+  },
+  {
+    "id": 707,
+    "nationId": 7,
+    "name": "João Palhinha",
+    "age": 30,
+    "position": "dm",
+    "attributes": {
+      "passing": 86,
+      "shooting": 78,
+      "dribbling": 87,
+      "tackling": 90,
+      "positioning": 88,
+      "composure": 83,
+      "decisions": 93,
+      "pace": 84,
+      "stamina": 91,
+      "strength": 87
+    }
+  },
+  {
+    "id": 708,
+    "nationId": 7,
+    "name": "Vitinha",
+    "age": 26,
+    "position": "cm",
+    "attributes": {
+      "passing": 91,
+      "shooting": 87,
+      "dribbling": 87,
+      "tackling": 89,
+      "positioning": 87,
+      "composure": 92,
+      "decisions": 92,
+      "pace": 87,
+      "stamina": 95,
+      "strength": 83
+    }
+  },
+  {
+    "id": 709,
+    "nationId": 7,
+    "name": "Bruno Fernandes",
+    "age": 31,
+    "position": "cm",
+    "attributes": {
+      "passing": 96,
+      "shooting": 85,
+      "dribbling": 94,
+      "tackling": 87,
+      "positioning": 86,
+      "composure": 88,
+      "decisions": 92,
+      "pace": 87,
+      "stamina": 93,
+      "strength": 84
+    }
+  },
+  {
+    "id": 710,
+    "nationId": 7,
+    "name": "Bernardo Silva",
+    "age": 31,
+    "position": "am",
+    "attributes": {
+      "passing": 92,
+      "shooting": 87,
+      "dribbling": 92,
+      "tackling": 81,
+      "positioning": 91,
+      "composure": 92,
+      "decisions": 92,
+      "pace": 91,
+      "stamina": 84,
+      "strength": 80
+    }
+  },
+  {
+    "id": 711,
+    "nationId": 7,
+    "name": "Rafael Leão",
+    "age": 26,
+    "position": "lw",
+    "attributes": {
+      "passing": 89,
+      "shooting": 92,
+      "dribbling": 97,
+      "tackling": 72,
+      "positioning": 87,
+      "composure": 89,
+      "decisions": 86,
+      "pace": 97,
+      "stamina": 82,
+      "strength": 76
+    }
+  },
+  {
+    "id": 712,
+    "nationId": 7,
+    "name": "Pedro Neto",
+    "age": 25,
+    "position": "rw",
+    "attributes": {
+      "passing": 85,
+      "shooting": 90,
+      "dribbling": 94,
+      "tackling": 67,
+      "positioning": 84,
+      "composure": 87,
+      "decisions": 86,
+      "pace": 95,
+      "stamina": 83,
+      "strength": 73
+    }
+  },
+  {
+    "id": 713,
+    "nationId": 7,
+    "name": "Cristiano Ronaldo",
+    "age": 41,
+    "position": "st",
+    "attributes": {
+      "passing": 83,
+      "shooting": 97,
+      "dribbling": 91,
+      "tackling": 66,
+      "positioning": 92,
+      "composure": 92,
+      "decisions": 83,
+      "pace": 90,
+      "stamina": 82,
+      "strength": 89
+    }
+  },
+  {
+    "id": 714,
+    "nationId": 7,
+    "name": "Gonçalo Ramos",
+    "age": 24,
+    "position": "st",
+    "attributes": {
+      "passing": 79,
+      "shooting": 98,
+      "dribbling": 86,
+      "tackling": 64,
+      "positioning": 87,
+      "composure": 90,
+      "decisions": 86,
+      "pace": 88,
+      "stamina": 85,
+      "strength": 87
+    }
+  },
+  {
+    "id": 801,
+    "nationId": 8,
+    "name": "Bart Verbruggen",
+    "age": 23,
+    "position": "gk",
+    "attributes": {
+      "passing": 83,
+      "shooting": 44,
+      "dribbling": 45,
+      "tackling": 61,
+      "positioning": 85,
+      "composure": 85,
+      "decisions": 85,
+      "pace": 66,
+      "stamina": 72,
+      "strength": 83
+    }
+  },
+  {
+    "id": 802,
+    "nationId": 8,
+    "name": "Mark Flekken",
+    "age": 32,
+    "position": "gk",
+    "attributes": {
+      "passing": 78,
+      "shooting": 39,
+      "dribbling": 46,
+      "tackling": 61,
+      "positioning": 89,
+      "composure": 82,
+      "decisions": 84,
+      "pace": 67,
+      "stamina": 72,
+      "strength": 81
+    }
+  },
+  {
+    "id": 803,
+    "nationId": 8,
+    "name": "Nathan Aké",
+    "age": 31,
+    "position": "lb",
+    "attributes": {
+      "passing": 85,
+      "shooting": 65,
+      "dribbling": 84,
+      "tackling": 86,
+      "positioning": 89,
+      "composure": 80,
+      "decisions": 81,
+      "pace": 94,
+      "stamina": 88,
+      "strength": 84
+    }
+  },
+  {
+    "id": 804,
+    "nationId": 8,
+    "name": "Virgil van Dijk",
+    "age": 34,
+    "position": "cb",
+    "attributes": {
+      "passing": 88,
+      "shooting": 62,
+      "dribbling": 75,
+      "tackling": 96,
+      "positioning": 95,
+      "composure": 87,
+      "decisions": 87,
+      "pace": 83,
+      "stamina": 89,
+      "strength": 94
+    }
+  },
+  {
+    "id": 805,
+    "nationId": 8,
+    "name": "Jurriën Timber",
+    "age": 24,
+    "position": "cb",
+    "attributes": {
+      "passing": 83,
+      "shooting": 60,
+      "dribbling": 72,
+      "tackling": 94,
+      "positioning": 89,
+      "composure": 83,
+      "decisions": 82,
+      "pace": 79,
+      "stamina": 83,
+      "strength": 90
+    }
+  },
+  {
+    "id": 806,
+    "nationId": 8,
+    "name": "Denzel Dumfries",
+    "age": 29,
+    "position": "rb",
+    "attributes": {
+      "passing": 82,
+      "shooting": 66,
+      "dribbling": 87,
+      "tackling": 88,
+      "positioning": 86,
+      "composure": 79,
+      "decisions": 80,
+      "pace": 89,
+      "stamina": 89,
+      "strength": 85
+    }
+  },
+  {
+    "id": 807,
+    "nationId": 8,
+    "name": "Frenkie de Jong",
+    "age": 28,
+    "position": "dm",
+    "attributes": {
+      "passing": 88,
+      "shooting": 75,
+      "dribbling": 85,
+      "tackling": 96,
+      "positioning": 94,
+      "composure": 86,
+      "decisions": 92,
+      "pace": 87,
+      "stamina": 94,
+      "strength": 91
+    }
+  },
+  {
+    "id": 808,
+    "nationId": 8,
+    "name": "Tijjani Reijnders",
+    "age": 27,
+    "position": "cm",
+    "attributes": {
+      "passing": 94,
+      "shooting": 85,
+      "dribbling": 90,
+      "tackling": 83,
+      "positioning": 83,
+      "composure": 87,
+      "decisions": 88,
+      "pace": 83,
+      "stamina": 89,
+      "strength": 86
+    }
+  },
+  {
+    "id": 809,
+    "nationId": 8,
+    "name": "Ryan Gravenberch",
+    "age": 23,
+    "position": "cm",
+    "attributes": {
+      "passing": 91,
+      "shooting": 80,
+      "dribbling": 87,
+      "tackling": 82,
+      "positioning": 83,
+      "composure": 85,
+      "decisions": 90,
+      "pace": 83,
+      "stamina": 89,
+      "strength": 82
+    }
+  },
+  {
+    "id": 810,
+    "nationId": 8,
+    "name": "Cody Gakpo",
+    "age": 26,
+    "position": "am",
+    "attributes": {
+      "passing": 92,
+      "shooting": 88,
+      "dribbling": 91,
+      "tackling": 77,
+      "positioning": 83,
+      "composure": 89,
+      "decisions": 91,
+      "pace": 87,
+      "stamina": 82,
+      "strength": 78
+    }
+  },
+  {
+    "id": 811,
+    "nationId": 8,
+    "name": "Xavi Simons",
+    "age": 22,
+    "position": "lw",
+    "attributes": {
+      "passing": 85,
+      "shooting": 94,
+      "dribbling": 95,
+      "tackling": 73,
+      "positioning": 88,
+      "composure": 90,
+      "decisions": 84,
+      "pace": 94,
+      "stamina": 83,
+      "strength": 79
+    }
+  },
+  {
+    "id": 812,
+    "nationId": 8,
+    "name": "Noa Lang",
+    "age": 26,
+    "position": "rw",
+    "attributes": {
+      "passing": 82,
+      "shooting": 86,
+      "dribbling": 91,
+      "tackling": 68,
+      "positioning": 82,
+      "composure": 88,
+      "decisions": 83,
+      "pace": 93,
+      "stamina": 79,
+      "strength": 71
+    }
+  },
+  {
+    "id": 813,
+    "nationId": 8,
+    "name": "Memphis Depay",
+    "age": 32,
+    "position": "st",
+    "attributes": {
+      "passing": 79,
+      "shooting": 99,
+      "dribbling": 87,
+      "tackling": 62,
+      "positioning": 89,
+      "composure": 94,
+      "decisions": 83,
+      "pace": 90,
+      "stamina": 84,
+      "strength": 89
+    }
+  },
+  {
+    "id": 814,
+    "nationId": 8,
+    "name": "Brian Brobbey",
+    "age": 23,
+    "position": "st",
+    "attributes": {
+      "passing": 76,
+      "shooting": 94,
+      "dribbling": 84,
+      "tackling": 57,
+      "positioning": 85,
+      "composure": 91,
+      "decisions": 85,
+      "pace": 86,
+      "stamina": 79,
+      "strength": 86
+    }
+  }
+]
