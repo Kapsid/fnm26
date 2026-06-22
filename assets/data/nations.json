@@ -1,30 +1,110 @@
 [
   {
     "id": 1,
-    "name": "Brazil",
-    "code": "BRA",
-    "confederation": "southAmerica",
-    "ranking": 5,
-    "isFreeDemo": true
+    "name": "Albania",
+    "code": "ALB",
+    "confederation": "europe",
+    "ranking": 62,
+    "isFreeDemo": false
   },
   {
     "id": 2,
-    "name": "France",
-    "code": "FRA",
+    "name": "Andorra",
+    "code": "AND",
     "confederation": "europe",
-    "ranking": 2,
-    "isFreeDemo": true
+    "ranking": 178,
+    "isFreeDemo": false
   },
   {
     "id": 3,
-    "name": "Spain",
-    "code": "ESP",
+    "name": "Armenia",
+    "code": "ARM",
     "confederation": "europe",
-    "ranking": 8,
-    "isFreeDemo": true
+    "ranking": 91,
+    "isFreeDemo": false
   },
   {
     "id": 4,
+    "name": "Austria",
+    "code": "AUT",
+    "confederation": "europe",
+    "ranking": 21,
+    "isFreeDemo": false
+  },
+  {
+    "id": 5,
+    "name": "Azerbaijan",
+    "code": "AZE",
+    "confederation": "europe",
+    "ranking": 99,
+    "isFreeDemo": false
+  },
+  {
+    "id": 6,
+    "name": "Belarus",
+    "code": "BLR",
+    "confederation": "europe",
+    "ranking": 81,
+    "isFreeDemo": false
+  },
+  {
+    "id": 7,
+    "name": "Belgium",
+    "code": "BEL",
+    "confederation": "europe",
+    "ranking": 9,
+    "isFreeDemo": false
+  },
+  {
+    "id": 8,
+    "name": "Bosnia and Herzegovina",
+    "code": "BIH",
+    "confederation": "europe",
+    "ranking": 49,
+    "isFreeDemo": false
+  },
+  {
+    "id": 9,
+    "name": "Bulgaria",
+    "code": "BUL",
+    "confederation": "europe",
+    "ranking": 73,
+    "isFreeDemo": false
+  },
+  {
+    "id": 10,
+    "name": "Croatia",
+    "code": "CRO",
+    "confederation": "europe",
+    "ranking": 12,
+    "isFreeDemo": false
+  },
+  {
+    "id": 11,
+    "name": "Cyprus",
+    "code": "CYP",
+    "confederation": "europe",
+    "ranking": 107,
+    "isFreeDemo": false
+  },
+  {
+    "id": 12,
+    "name": "Czechia",
+    "code": "CZE",
+    "confederation": "europe",
+    "ranking": 36,
+    "isFreeDemo": false
+  },
+  {
+    "id": 13,
+    "name": "Denmark",
+    "code": "DEN",
+    "confederation": "europe",
+    "ranking": 15,
+    "isFreeDemo": false
+  },
+  {
+    "id": 14,
     "name": "England",
     "code": "ENG",
     "confederation": "europe",
@@ -32,15 +112,335 @@
     "isFreeDemo": true
   },
   {
-    "id": 5,
+    "id": 15,
+    "name": "Estonia",
+    "code": "EST",
+    "confederation": "europe",
+    "ranking": 127,
+    "isFreeDemo": false
+  },
+  {
+    "id": 16,
+    "name": "Faroe Islands",
+    "code": "FRO",
+    "confederation": "europe",
+    "ranking": 170,
+    "isFreeDemo": false
+  },
+  {
+    "id": 17,
+    "name": "Finland",
+    "code": "FIN",
+    "confederation": "europe",
+    "ranking": 63,
+    "isFreeDemo": false
+  },
+  {
+    "id": 18,
+    "name": "France",
+    "code": "FRA",
+    "confederation": "europe",
+    "ranking": 3,
+    "isFreeDemo": true
+  },
+  {
+    "id": 19,
+    "name": "Georgia",
+    "code": "GEO",
+    "confederation": "europe",
+    "ranking": 75,
+    "isFreeDemo": false
+  },
+  {
+    "id": 20,
     "name": "Germany",
     "code": "GER",
+    "confederation": "europe",
+    "ranking": 7,
+    "isFreeDemo": false
+  },
+  {
+    "id": 21,
+    "name": "Gibraltar",
+    "code": "GIB",
+    "confederation": "europe",
+    "ranking": 181,
+    "isFreeDemo": false
+  },
+  {
+    "id": 22,
+    "name": "Greece",
+    "code": "GRE",
+    "confederation": "europe",
+    "ranking": 50,
+    "isFreeDemo": false
+  },
+  {
+    "id": 23,
+    "name": "Hungary",
+    "code": "HUN",
+    "confederation": "europe",
+    "ranking": 46,
+    "isFreeDemo": false
+  },
+  {
+    "id": 24,
+    "name": "Iceland",
+    "code": "ISL",
+    "confederation": "europe",
+    "ranking": 77,
+    "isFreeDemo": false
+  },
+  {
+    "id": 25,
+    "name": "Israel",
+    "code": "ISR",
+    "confederation": "europe",
+    "ranking": 72,
+    "isFreeDemo": false
+  },
+  {
+    "id": 26,
+    "name": "Italy",
+    "code": "ITA",
     "confederation": "europe",
     "ranking": 10,
     "isFreeDemo": false
   },
   {
-    "id": 6,
+    "id": 27,
+    "name": "Kazakhstan",
+    "code": "KAZ",
+    "confederation": "europe",
+    "ranking": 120,
+    "isFreeDemo": false
+  },
+  {
+    "id": 28,
+    "name": "Kosovo",
+    "code": "KVX",
+    "confederation": "europe",
+    "ranking": 84,
+    "isFreeDemo": false
+  },
+  {
+    "id": 29,
+    "name": "Latvia",
+    "code": "LVA",
+    "confederation": "europe",
+    "ranking": 141,
+    "isFreeDemo": false
+  },
+  {
+    "id": 30,
+    "name": "Liechtenstein",
+    "code": "LIE",
+    "confederation": "europe",
+    "ranking": 189,
+    "isFreeDemo": false
+  },
+  {
+    "id": 31,
+    "name": "Lithuania",
+    "code": "LTU",
+    "confederation": "europe",
+    "ranking": 142,
+    "isFreeDemo": false
+  },
+  {
+    "id": 32,
+    "name": "Luxembourg",
+    "code": "LUX",
+    "confederation": "europe",
+    "ranking": 113,
+    "isFreeDemo": false
+  },
+  {
+    "id": 33,
+    "name": "Malta",
+    "code": "MLT",
+    "confederation": "europe",
+    "ranking": 156,
+    "isFreeDemo": false
+  },
+  {
+    "id": 34,
+    "name": "Moldova",
+    "code": "MDA",
+    "confederation": "europe",
+    "ranking": 130,
+    "isFreeDemo": false
+  },
+  {
+    "id": 35,
+    "name": "Montenegro",
+    "code": "MNE",
+    "confederation": "europe",
+    "ranking": 85,
+    "isFreeDemo": false
+  },
+  {
+    "id": 36,
+    "name": "Netherlands",
+    "code": "NED",
+    "confederation": "europe",
+    "ranking": 8,
+    "isFreeDemo": false
+  },
+  {
+    "id": 37,
+    "name": "North Macedonia",
+    "code": "MKD",
+    "confederation": "europe",
+    "ranking": 79,
+    "isFreeDemo": false
+  },
+  {
+    "id": 38,
+    "name": "Northern Ireland",
+    "code": "NIR",
+    "confederation": "europe",
+    "ranking": 86,
+    "isFreeDemo": false
+  },
+  {
+    "id": 39,
+    "name": "Norway",
+    "code": "NOR",
+    "confederation": "europe",
+    "ranking": 32,
+    "isFreeDemo": false
+  },
+  {
+    "id": 40,
+    "name": "Poland",
+    "code": "POL",
+    "confederation": "europe",
+    "ranking": 33,
+    "isFreeDemo": false
+  },
+  {
+    "id": 41,
+    "name": "Portugal",
+    "code": "POR",
+    "confederation": "europe",
+    "ranking": 5,
+    "isFreeDemo": false
+  },
+  {
+    "id": 42,
+    "name": "Republic of Ireland",
+    "code": "IRL",
+    "confederation": "europe",
+    "ranking": 67,
+    "isFreeDemo": false
+  },
+  {
+    "id": 43,
+    "name": "Romania",
+    "code": "ROU",
+    "confederation": "europe",
+    "ranking": 58,
+    "isFreeDemo": false
+  },
+  {
+    "id": 44,
+    "name": "Russia",
+    "code": "RUS",
+    "confederation": "europe",
+    "ranking": 42,
+    "isFreeDemo": false
+  },
+  {
+    "id": 45,
+    "name": "San Marino",
+    "code": "SMR",
+    "confederation": "europe",
+    "ranking": 205,
+    "isFreeDemo": false
+  },
+  {
+    "id": 46,
+    "name": "Scotland",
+    "code": "SCO",
+    "confederation": "europe",
+    "ranking": 48,
+    "isFreeDemo": false
+  },
+  {
+    "id": 47,
+    "name": "Serbia",
+    "code": "SRB",
+    "confederation": "europe",
+    "ranking": 30,
+    "isFreeDemo": false
+  },
+  {
+    "id": 48,
+    "name": "Slovakia",
+    "code": "SVK",
+    "confederation": "europe",
+    "ranking": 59,
+    "isFreeDemo": false
+  },
+  {
+    "id": 49,
+    "name": "Slovenia",
+    "code": "SVN",
+    "confederation": "europe",
+    "ranking": 60,
+    "isFreeDemo": false
+  },
+  {
+    "id": 50,
+    "name": "Spain",
+    "code": "ESP",
+    "confederation": "europe",
+    "ranking": 6,
+    "isFreeDemo": true
+  },
+  {
+    "id": 51,
+    "name": "Sweden",
+    "code": "SWE",
+    "confederation": "europe",
+    "ranking": 37,
+    "isFreeDemo": false
+  },
+  {
+    "id": 52,
+    "name": "Switzerland",
+    "code": "SUI",
+    "confederation": "europe",
+    "ranking": 23,
+    "isFreeDemo": false
+  },
+  {
+    "id": 53,
+    "name": "Türkiye",
+    "code": "TUR",
+    "confederation": "europe",
+    "ranking": 34,
+    "isFreeDemo": false
+  },
+  {
+    "id": 54,
+    "name": "Ukraine",
+    "code": "UKR",
+    "confederation": "europe",
+    "ranking": 39,
+    "isFreeDemo": false
+  },
+  {
+    "id": 55,
+    "name": "Wales",
+    "code": "WAL",
+    "confederation": "europe",
+    "ranking": 53,
+    "isFreeDemo": false
+  },
+  {
+    "id": 56,
     "name": "Argentina",
     "code": "ARG",
     "confederation": "southAmerica",
@@ -48,19 +448,1243 @@
     "isFreeDemo": false
   },
   {
-    "id": 7,
-    "name": "Portugal",
-    "code": "POR",
-    "confederation": "europe",
-    "ranking": 6,
+    "id": 57,
+    "name": "Bolivia",
+    "code": "BOL",
+    "confederation": "southAmerica",
+    "ranking": 100,
     "isFreeDemo": false
   },
   {
-    "id": 8,
-    "name": "Netherlands",
-    "code": "NED",
-    "confederation": "europe",
-    "ranking": 7,
+    "id": 58,
+    "name": "Brazil",
+    "code": "BRA",
+    "confederation": "southAmerica",
+    "ranking": 2,
+    "isFreeDemo": true
+  },
+  {
+    "id": 59,
+    "name": "Chile",
+    "code": "CHI",
+    "confederation": "southAmerica",
+    "ranking": 44,
+    "isFreeDemo": false
+  },
+  {
+    "id": 60,
+    "name": "Colombia",
+    "code": "COL",
+    "confederation": "southAmerica",
+    "ranking": 11,
+    "isFreeDemo": false
+  },
+  {
+    "id": 61,
+    "name": "Ecuador",
+    "code": "ECU",
+    "confederation": "southAmerica",
+    "ranking": 41,
+    "isFreeDemo": false
+  },
+  {
+    "id": 62,
+    "name": "Paraguay",
+    "code": "PAR",
+    "confederation": "southAmerica",
+    "ranking": 57,
+    "isFreeDemo": false
+  },
+  {
+    "id": 63,
+    "name": "Peru",
+    "code": "PER",
+    "confederation": "southAmerica",
+    "ranking": 51,
+    "isFreeDemo": false
+  },
+  {
+    "id": 64,
+    "name": "Uruguay",
+    "code": "URU",
+    "confederation": "southAmerica",
+    "ranking": 14,
+    "isFreeDemo": false
+  },
+  {
+    "id": 65,
+    "name": "Venezuela",
+    "code": "VEN",
+    "confederation": "southAmerica",
+    "ranking": 70,
+    "isFreeDemo": false
+  },
+  {
+    "id": 66,
+    "name": "Anguilla",
+    "code": "AIA",
+    "confederation": "northAmerica",
+    "ranking": 193,
+    "isFreeDemo": false
+  },
+  {
+    "id": 67,
+    "name": "Antigua and Barbuda",
+    "code": "ATG",
+    "confederation": "northAmerica",
+    "ranking": 149,
+    "isFreeDemo": false
+  },
+  {
+    "id": 68,
+    "name": "Aruba",
+    "code": "ARU",
+    "confederation": "northAmerica",
+    "ranking": 174,
+    "isFreeDemo": false
+  },
+  {
+    "id": 69,
+    "name": "Bahamas",
+    "code": "BAH",
+    "confederation": "northAmerica",
+    "ranking": 179,
+    "isFreeDemo": false
+  },
+  {
+    "id": 70,
+    "name": "Barbados",
+    "code": "BRB",
+    "confederation": "northAmerica",
+    "ranking": 155,
+    "isFreeDemo": false
+  },
+  {
+    "id": 71,
+    "name": "Belize",
+    "code": "BLZ",
+    "confederation": "northAmerica",
+    "ranking": 161,
+    "isFreeDemo": false
+  },
+  {
+    "id": 72,
+    "name": "Bermuda",
+    "code": "BER",
+    "confederation": "northAmerica",
+    "ranking": 150,
+    "isFreeDemo": false
+  },
+  {
+    "id": 73,
+    "name": "British Virgin Islands",
+    "code": "VGB",
+    "confederation": "northAmerica",
+    "ranking": 199,
+    "isFreeDemo": false
+  },
+  {
+    "id": 74,
+    "name": "Canada",
+    "code": "CAN",
+    "confederation": "northAmerica",
+    "ranking": 26,
+    "isFreeDemo": false
+  },
+  {
+    "id": 75,
+    "name": "Cayman Islands",
+    "code": "CAY",
+    "confederation": "northAmerica",
+    "ranking": 195,
+    "isFreeDemo": false
+  },
+  {
+    "id": 76,
+    "name": "Costa Rica",
+    "code": "CRC",
+    "confederation": "northAmerica",
+    "ranking": 40,
+    "isFreeDemo": false
+  },
+  {
+    "id": 77,
+    "name": "Cuba",
+    "code": "CUB",
+    "confederation": "northAmerica",
+    "ranking": 118,
+    "isFreeDemo": false
+  },
+  {
+    "id": 78,
+    "name": "Curaçao",
+    "code": "CUW",
+    "confederation": "northAmerica",
+    "ranking": 89,
+    "isFreeDemo": false
+  },
+  {
+    "id": 79,
+    "name": "Dominica",
+    "code": "DMA",
+    "confederation": "northAmerica",
+    "ranking": 187,
+    "isFreeDemo": false
+  },
+  {
+    "id": 80,
+    "name": "Dominican Republic",
+    "code": "DOM",
+    "confederation": "northAmerica",
+    "ranking": 108,
+    "isFreeDemo": false
+  },
+  {
+    "id": 81,
+    "name": "El Salvador",
+    "code": "SLV",
+    "confederation": "northAmerica",
+    "ranking": 109,
+    "isFreeDemo": false
+  },
+  {
+    "id": 82,
+    "name": "Grenada",
+    "code": "GRN",
+    "confederation": "northAmerica",
+    "ranking": 164,
+    "isFreeDemo": false
+  },
+  {
+    "id": 83,
+    "name": "Guatemala",
+    "code": "GUA",
+    "confederation": "northAmerica",
+    "ranking": 103,
+    "isFreeDemo": false
+  },
+  {
+    "id": 84,
+    "name": "Guyana",
+    "code": "GUY",
+    "confederation": "northAmerica",
+    "ranking": 151,
+    "isFreeDemo": false
+  },
+  {
+    "id": 85,
+    "name": "Haiti",
+    "code": "HAI",
+    "confederation": "northAmerica",
+    "ranking": 83,
+    "isFreeDemo": false
+  },
+  {
+    "id": 86,
+    "name": "Honduras",
+    "code": "HON",
+    "confederation": "northAmerica",
+    "ranking": 76,
+    "isFreeDemo": false
+  },
+  {
+    "id": 87,
+    "name": "Jamaica",
+    "code": "JAM",
+    "confederation": "northAmerica",
+    "ranking": 56,
+    "isFreeDemo": false
+  },
+  {
+    "id": 88,
+    "name": "Mexico",
+    "code": "MEX",
+    "confederation": "northAmerica",
+    "ranking": 17,
+    "isFreeDemo": false
+  },
+  {
+    "id": 89,
+    "name": "Montserrat",
+    "code": "MSR",
+    "confederation": "northAmerica",
+    "ranking": 204,
+    "isFreeDemo": false
+  },
+  {
+    "id": 90,
+    "name": "Nicaragua",
+    "code": "NCA",
+    "confederation": "northAmerica",
+    "ranking": 147,
+    "isFreeDemo": false
+  },
+  {
+    "id": 91,
+    "name": "Panama",
+    "code": "PAN",
+    "confederation": "northAmerica",
+    "ranking": 66,
+    "isFreeDemo": false
+  },
+  {
+    "id": 92,
+    "name": "Puerto Rico",
+    "code": "PUR",
+    "confederation": "northAmerica",
+    "ranking": 166,
+    "isFreeDemo": false
+  },
+  {
+    "id": 93,
+    "name": "Saint Kitts and Nevis",
+    "code": "SKN",
+    "confederation": "northAmerica",
+    "ranking": 167,
+    "isFreeDemo": false
+  },
+  {
+    "id": 94,
+    "name": "Saint Lucia",
+    "code": "LCA",
+    "confederation": "northAmerica",
+    "ranking": 184,
+    "isFreeDemo": false
+  },
+  {
+    "id": 95,
+    "name": "St Vincent and the Grenadines",
+    "code": "VIN",
+    "confederation": "northAmerica",
+    "ranking": 177,
+    "isFreeDemo": false
+  },
+  {
+    "id": 96,
+    "name": "Suriname",
+    "code": "SUR",
+    "confederation": "northAmerica",
+    "ranking": 94,
+    "isFreeDemo": false
+  },
+  {
+    "id": 97,
+    "name": "Trinidad and Tobago",
+    "code": "TRI",
+    "confederation": "northAmerica",
+    "ranking": 87,
+    "isFreeDemo": false
+  },
+  {
+    "id": 98,
+    "name": "Turks and Caicos Islands",
+    "code": "TCA",
+    "confederation": "northAmerica",
+    "ranking": 210,
+    "isFreeDemo": false
+  },
+  {
+    "id": 99,
+    "name": "United States",
+    "code": "USA",
+    "confederation": "northAmerica",
+    "ranking": 24,
+    "isFreeDemo": false
+  },
+  {
+    "id": 100,
+    "name": "US Virgin Islands",
+    "code": "VIR",
+    "confederation": "northAmerica",
+    "ranking": 208,
+    "isFreeDemo": false
+  },
+  {
+    "id": 101,
+    "name": "Algeria",
+    "code": "ALG",
+    "confederation": "africa",
+    "ranking": 25,
+    "isFreeDemo": false
+  },
+  {
+    "id": 102,
+    "name": "Angola",
+    "code": "ANG",
+    "confederation": "africa",
+    "ranking": 80,
+    "isFreeDemo": false
+  },
+  {
+    "id": 103,
+    "name": "Benin",
+    "code": "BEN",
+    "confederation": "africa",
+    "ranking": 88,
+    "isFreeDemo": false
+  },
+  {
+    "id": 104,
+    "name": "Botswana",
+    "code": "BOT",
+    "confederation": "africa",
+    "ranking": 134,
+    "isFreeDemo": false
+  },
+  {
+    "id": 105,
+    "name": "Burkina Faso",
+    "code": "BFA",
+    "confederation": "africa",
+    "ranking": 54,
+    "isFreeDemo": false
+  },
+  {
+    "id": 106,
+    "name": "Burundi",
+    "code": "BDI",
+    "confederation": "africa",
+    "ranking": 135,
+    "isFreeDemo": false
+  },
+  {
+    "id": 107,
+    "name": "Cameroon",
+    "code": "CMR",
+    "confederation": "africa",
+    "ranking": 35,
+    "isFreeDemo": false
+  },
+  {
+    "id": 108,
+    "name": "Cape Verde",
+    "code": "CPV",
+    "confederation": "africa",
+    "ranking": 74,
+    "isFreeDemo": false
+  },
+  {
+    "id": 109,
+    "name": "Central African Republic",
+    "code": "CTA",
+    "confederation": "africa",
+    "ranking": 145,
+    "isFreeDemo": false
+  },
+  {
+    "id": 110,
+    "name": "Chad",
+    "code": "CHA",
+    "confederation": "africa",
+    "ranking": 169,
+    "isFreeDemo": false
+  },
+  {
+    "id": 111,
+    "name": "Comoros",
+    "code": "COM",
+    "confederation": "africa",
+    "ranking": 136,
+    "isFreeDemo": false
+  },
+  {
+    "id": 112,
+    "name": "Congo",
+    "code": "CGO",
+    "confederation": "africa",
+    "ranking": 101,
+    "isFreeDemo": false
+  },
+  {
+    "id": 113,
+    "name": "DR Congo",
+    "code": "COD",
+    "confederation": "africa",
+    "ranking": 45,
+    "isFreeDemo": false
+  },
+  {
+    "id": 114,
+    "name": "Djibouti",
+    "code": "DJI",
+    "confederation": "africa",
+    "ranking": 186,
+    "isFreeDemo": false
+  },
+  {
+    "id": 115,
+    "name": "Egypt",
+    "code": "EGY",
+    "confederation": "africa",
+    "ranking": 27,
+    "isFreeDemo": false
+  },
+  {
+    "id": 116,
+    "name": "Equatorial Guinea",
+    "code": "EQG",
+    "confederation": "africa",
+    "ranking": 119,
+    "isFreeDemo": false
+  },
+  {
+    "id": 117,
+    "name": "Eritrea",
+    "code": "ERI",
+    "confederation": "africa",
+    "ranking": 180,
+    "isFreeDemo": false
+  },
+  {
+    "id": 118,
+    "name": "Eswatini",
+    "code": "SWZ",
+    "confederation": "africa",
+    "ranking": 163,
+    "isFreeDemo": false
+  },
+  {
+    "id": 119,
+    "name": "Ethiopia",
+    "code": "ETH",
+    "confederation": "africa",
+    "ranking": 137,
+    "isFreeDemo": false
+  },
+  {
+    "id": 120,
+    "name": "Gabon",
+    "code": "GAB",
+    "confederation": "africa",
+    "ranking": 82,
+    "isFreeDemo": false
+  },
+  {
+    "id": 121,
+    "name": "Gambia",
+    "code": "GAM",
+    "confederation": "africa",
+    "ranking": 102,
+    "isFreeDemo": false
+  },
+  {
+    "id": 122,
+    "name": "Ghana",
+    "code": "GHA",
+    "confederation": "africa",
+    "ranking": 31,
+    "isFreeDemo": false
+  },
+  {
+    "id": 123,
+    "name": "Guinea",
+    "code": "GUI",
+    "confederation": "africa",
+    "ranking": 64,
+    "isFreeDemo": false
+  },
+  {
+    "id": 124,
+    "name": "Guinea-Bissau",
+    "code": "GNB",
+    "confederation": "africa",
+    "ranking": 93,
+    "isFreeDemo": false
+  },
+  {
+    "id": 125,
+    "name": "Ivory Coast",
+    "code": "CIV",
+    "confederation": "africa",
+    "ranking": 28,
+    "isFreeDemo": false
+  },
+  {
+    "id": 126,
+    "name": "Kenya",
+    "code": "KEN",
+    "confederation": "africa",
+    "ranking": 111,
+    "isFreeDemo": false
+  },
+  {
+    "id": 127,
+    "name": "Lesotho",
+    "code": "LES",
+    "confederation": "africa",
+    "ranking": 171,
+    "isFreeDemo": false
+  },
+  {
+    "id": 128,
+    "name": "Liberia",
+    "code": "LBR",
+    "confederation": "africa",
+    "ranking": 129,
+    "isFreeDemo": false
+  },
+  {
+    "id": 129,
+    "name": "Libya",
+    "code": "LBY",
+    "confederation": "africa",
+    "ranking": 121,
+    "isFreeDemo": false
+  },
+  {
+    "id": 130,
+    "name": "Madagascar",
+    "code": "MAD",
+    "confederation": "africa",
+    "ranking": 122,
+    "isFreeDemo": false
+  },
+  {
+    "id": 131,
+    "name": "Malawi",
+    "code": "MWI",
+    "confederation": "africa",
+    "ranking": 152,
+    "isFreeDemo": false
+  },
+  {
+    "id": 132,
+    "name": "Mali",
+    "code": "MLI",
+    "confederation": "africa",
+    "ranking": 47,
+    "isFreeDemo": false
+  },
+  {
+    "id": 133,
+    "name": "Mauritania",
+    "code": "MTN",
+    "confederation": "africa",
+    "ranking": 114,
+    "isFreeDemo": false
+  },
+  {
+    "id": 134,
+    "name": "Mauritius",
+    "code": "MRI",
+    "confederation": "africa",
+    "ranking": 183,
+    "isFreeDemo": false
+  },
+  {
+    "id": 135,
+    "name": "Morocco",
+    "code": "MAR",
+    "confederation": "africa",
+    "ranking": 13,
+    "isFreeDemo": false
+  },
+  {
+    "id": 136,
+    "name": "Mozambique",
+    "code": "MOZ",
+    "confederation": "africa",
+    "ranking": 124,
+    "isFreeDemo": false
+  },
+  {
+    "id": 137,
+    "name": "Namibia",
+    "code": "NAM",
+    "confederation": "africa",
+    "ranking": 131,
+    "isFreeDemo": false
+  },
+  {
+    "id": 138,
+    "name": "Niger",
+    "code": "NIG",
+    "confederation": "africa",
+    "ranking": 143,
+    "isFreeDemo": false
+  },
+  {
+    "id": 139,
+    "name": "Nigeria",
+    "code": "NGA",
+    "confederation": "africa",
+    "ranking": 29,
+    "isFreeDemo": false
+  },
+  {
+    "id": 140,
+    "name": "Rwanda",
+    "code": "RWA",
+    "confederation": "africa",
+    "ranking": 144,
+    "isFreeDemo": false
+  },
+  {
+    "id": 141,
+    "name": "São Tomé and Príncipe",
+    "code": "STP",
+    "confederation": "africa",
+    "ranking": 198,
+    "isFreeDemo": false
+  },
+  {
+    "id": 142,
+    "name": "Senegal",
+    "code": "SEN",
+    "confederation": "africa",
+    "ranking": 18,
+    "isFreeDemo": false
+  },
+  {
+    "id": 143,
+    "name": "Seychelles",
+    "code": "SEY",
+    "confederation": "africa",
+    "ranking": 201,
+    "isFreeDemo": false
+  },
+  {
+    "id": 144,
+    "name": "Sierra Leone",
+    "code": "SLE",
+    "confederation": "africa",
+    "ranking": 125,
+    "isFreeDemo": false
+  },
+  {
+    "id": 145,
+    "name": "Somalia",
+    "code": "SOM",
+    "confederation": "africa",
+    "ranking": 197,
+    "isFreeDemo": false
+  },
+  {
+    "id": 146,
+    "name": "South Africa",
+    "code": "RSA",
+    "confederation": "africa",
+    "ranking": 68,
+    "isFreeDemo": false
+  },
+  {
+    "id": 147,
+    "name": "South Sudan",
+    "code": "SSD",
+    "confederation": "africa",
+    "ranking": 185,
+    "isFreeDemo": false
+  },
+  {
+    "id": 148,
+    "name": "Sudan",
+    "code": "SDN",
+    "confederation": "africa",
+    "ranking": 132,
+    "isFreeDemo": false
+  },
+  {
+    "id": 149,
+    "name": "Tanzania",
+    "code": "TAN",
+    "confederation": "africa",
+    "ranking": 126,
+    "isFreeDemo": false
+  },
+  {
+    "id": 150,
+    "name": "Togo",
+    "code": "TOG",
+    "confederation": "africa",
+    "ranking": 106,
+    "isFreeDemo": false
+  },
+  {
+    "id": 151,
+    "name": "Tunisia",
+    "code": "TUN",
+    "confederation": "africa",
+    "ranking": 38,
+    "isFreeDemo": false
+  },
+  {
+    "id": 152,
+    "name": "Uganda",
+    "code": "UGA",
+    "confederation": "africa",
+    "ranking": 116,
+    "isFreeDemo": false
+  },
+  {
+    "id": 153,
+    "name": "Zambia",
+    "code": "ZAM",
+    "confederation": "africa",
+    "ranking": 98,
+    "isFreeDemo": false
+  },
+  {
+    "id": 154,
+    "name": "Zimbabwe",
+    "code": "ZIM",
+    "confederation": "africa",
+    "ranking": 117,
+    "isFreeDemo": false
+  },
+  {
+    "id": 155,
+    "name": "Afghanistan",
+    "code": "AFG",
+    "confederation": "asia",
+    "ranking": 160,
+    "isFreeDemo": false
+  },
+  {
+    "id": 156,
+    "name": "Australia",
+    "code": "AUS",
+    "confederation": "asia",
+    "ranking": 20,
+    "isFreeDemo": false
+  },
+  {
+    "id": 157,
+    "name": "Bahrain",
+    "code": "BHR",
+    "confederation": "asia",
+    "ranking": 92,
+    "isFreeDemo": false
+  },
+  {
+    "id": 158,
+    "name": "Bangladesh",
+    "code": "BAN",
+    "confederation": "asia",
+    "ranking": 168,
+    "isFreeDemo": false
+  },
+  {
+    "id": 159,
+    "name": "Bhutan",
+    "code": "BHU",
+    "confederation": "asia",
+    "ranking": 202,
+    "isFreeDemo": false
+  },
+  {
+    "id": 160,
+    "name": "Brunei",
+    "code": "BRU",
+    "confederation": "asia",
+    "ranking": 194,
+    "isFreeDemo": false
+  },
+  {
+    "id": 161,
+    "name": "Cambodia",
+    "code": "CAM",
+    "confederation": "asia",
+    "ranking": 162,
+    "isFreeDemo": false
+  },
+  {
+    "id": 162,
+    "name": "China PR",
+    "code": "CHN",
+    "confederation": "asia",
+    "ranking": 71,
+    "isFreeDemo": false
+  },
+  {
+    "id": 163,
+    "name": "Chinese Taipei",
+    "code": "TPE",
+    "confederation": "asia",
+    "ranking": 175,
+    "isFreeDemo": false
+  },
+  {
+    "id": 164,
+    "name": "Guam",
+    "code": "GUM",
+    "confederation": "asia",
+    "ranking": 200,
+    "isFreeDemo": false
+  },
+  {
+    "id": 165,
+    "name": "Hong Kong",
+    "code": "HKG",
+    "confederation": "asia",
+    "ranking": 139,
+    "isFreeDemo": false
+  },
+  {
+    "id": 166,
+    "name": "India",
+    "code": "IND",
+    "confederation": "asia",
+    "ranking": 104,
+    "isFreeDemo": false
+  },
+  {
+    "id": 167,
+    "name": "Indonesia",
+    "code": "IDN",
+    "confederation": "asia",
+    "ranking": 110,
+    "isFreeDemo": false
+  },
+  {
+    "id": 168,
+    "name": "Iran",
+    "code": "IRN",
+    "confederation": "asia",
+    "ranking": 22,
+    "isFreeDemo": false
+  },
+  {
+    "id": 169,
+    "name": "Iraq",
+    "code": "IRQ",
+    "confederation": "asia",
+    "ranking": 55,
+    "isFreeDemo": false
+  },
+  {
+    "id": 170,
+    "name": "Japan",
+    "code": "JPN",
+    "confederation": "asia",
+    "ranking": 16,
+    "isFreeDemo": false
+  },
+  {
+    "id": 171,
+    "name": "Jordan",
+    "code": "JOR",
+    "confederation": "asia",
+    "ranking": 78,
+    "isFreeDemo": false
+  },
+  {
+    "id": 172,
+    "name": "Kuwait",
+    "code": "KUW",
+    "confederation": "asia",
+    "ranking": 128,
+    "isFreeDemo": false
+  },
+  {
+    "id": 173,
+    "name": "Kyrgyzstan",
+    "code": "KGZ",
+    "confederation": "asia",
+    "ranking": 140,
+    "isFreeDemo": false
+  },
+  {
+    "id": 174,
+    "name": "Laos",
+    "code": "LAO",
+    "confederation": "asia",
+    "ranking": 188,
+    "isFreeDemo": false
+  },
+  {
+    "id": 175,
+    "name": "Lebanon",
+    "code": "LIB",
+    "confederation": "asia",
+    "ranking": 112,
+    "isFreeDemo": false
+  },
+  {
+    "id": 176,
+    "name": "Macau",
+    "code": "MAC",
+    "confederation": "asia",
+    "ranking": 203,
+    "isFreeDemo": false
+  },
+  {
+    "id": 177,
+    "name": "Malaysia",
+    "code": "MAS",
+    "confederation": "asia",
+    "ranking": 123,
+    "isFreeDemo": false
+  },
+  {
+    "id": 178,
+    "name": "Maldives",
+    "code": "MDV",
+    "confederation": "asia",
+    "ranking": 182,
+    "isFreeDemo": false
+  },
+  {
+    "id": 179,
+    "name": "Mongolia",
+    "code": "MNG",
+    "confederation": "asia",
+    "ranking": 190,
+    "isFreeDemo": false
+  },
+  {
+    "id": 180,
+    "name": "Myanmar",
+    "code": "MYA",
+    "confederation": "asia",
+    "ranking": 157,
+    "isFreeDemo": false
+  },
+  {
+    "id": 181,
+    "name": "Nepal",
+    "code": "NEP",
+    "confederation": "asia",
+    "ranking": 172,
+    "isFreeDemo": false
+  },
+  {
+    "id": 182,
+    "name": "North Korea",
+    "code": "PRK",
+    "confederation": "asia",
+    "ranking": 105,
+    "isFreeDemo": false
+  },
+  {
+    "id": 183,
+    "name": "Oman",
+    "code": "OMA",
+    "confederation": "asia",
+    "ranking": 90,
+    "isFreeDemo": false
+  },
+  {
+    "id": 184,
+    "name": "Pakistan",
+    "code": "PAK",
+    "confederation": "asia",
+    "ranking": 176,
+    "isFreeDemo": false
+  },
+  {
+    "id": 185,
+    "name": "Palestine",
+    "code": "PLE",
+    "confederation": "asia",
+    "ranking": 115,
+    "isFreeDemo": false
+  },
+  {
+    "id": 186,
+    "name": "Philippines",
+    "code": "PHI",
+    "confederation": "asia",
+    "ranking": 148,
+    "isFreeDemo": false
+  },
+  {
+    "id": 187,
+    "name": "Qatar",
+    "code": "QAT",
+    "confederation": "asia",
+    "ranking": 52,
+    "isFreeDemo": false
+  },
+  {
+    "id": 188,
+    "name": "Saudi Arabia",
+    "code": "KSA",
+    "confederation": "asia",
+    "ranking": 43,
+    "isFreeDemo": false
+  },
+  {
+    "id": 189,
+    "name": "Singapore",
+    "code": "SGP",
+    "confederation": "asia",
+    "ranking": 153,
+    "isFreeDemo": false
+  },
+  {
+    "id": 190,
+    "name": "South Korea",
+    "code": "KOR",
+    "confederation": "asia",
+    "ranking": 19,
+    "isFreeDemo": false
+  },
+  {
+    "id": 191,
+    "name": "Sri Lanka",
+    "code": "SRI",
+    "confederation": "asia",
+    "ranking": 191,
+    "isFreeDemo": false
+  },
+  {
+    "id": 192,
+    "name": "Syria",
+    "code": "SYR",
+    "confederation": "asia",
+    "ranking": 95,
+    "isFreeDemo": false
+  },
+  {
+    "id": 193,
+    "name": "Tajikistan",
+    "code": "TJK",
+    "confederation": "asia",
+    "ranking": 133,
+    "isFreeDemo": false
+  },
+  {
+    "id": 194,
+    "name": "Thailand",
+    "code": "THA",
+    "confederation": "asia",
+    "ranking": 96,
+    "isFreeDemo": false
+  },
+  {
+    "id": 195,
+    "name": "Timor-Leste",
+    "code": "TLS",
+    "confederation": "asia",
+    "ranking": 206,
+    "isFreeDemo": false
+  },
+  {
+    "id": 196,
+    "name": "Turkmenistan",
+    "code": "TKM",
+    "confederation": "asia",
+    "ranking": 159,
+    "isFreeDemo": false
+  },
+  {
+    "id": 197,
+    "name": "United Arab Emirates",
+    "code": "UAE",
+    "confederation": "asia",
+    "ranking": 69,
+    "isFreeDemo": false
+  },
+  {
+    "id": 198,
+    "name": "Uzbekistan",
+    "code": "UZB",
+    "confederation": "asia",
+    "ranking": 61,
+    "isFreeDemo": false
+  },
+  {
+    "id": 199,
+    "name": "Vietnam",
+    "code": "VIE",
+    "confederation": "asia",
+    "ranking": 97,
+    "isFreeDemo": false
+  },
+  {
+    "id": 200,
+    "name": "Yemen",
+    "code": "YEM",
+    "confederation": "asia",
+    "ranking": 173,
+    "isFreeDemo": false
+  },
+  {
+    "id": 201,
+    "name": "American Samoa",
+    "code": "ASA",
+    "confederation": "oceania",
+    "ranking": 211,
+    "isFreeDemo": false
+  },
+  {
+    "id": 202,
+    "name": "Cook Islands",
+    "code": "COK",
+    "confederation": "oceania",
+    "ranking": 209,
+    "isFreeDemo": false
+  },
+  {
+    "id": 203,
+    "name": "Fiji",
+    "code": "FIJ",
+    "confederation": "oceania",
+    "ranking": 138,
+    "isFreeDemo": false
+  },
+  {
+    "id": 204,
+    "name": "New Caledonia",
+    "code": "NCL",
+    "confederation": "oceania",
+    "ranking": 146,
+    "isFreeDemo": false
+  },
+  {
+    "id": 205,
+    "name": "New Zealand",
+    "code": "NZL",
+    "confederation": "oceania",
+    "ranking": 65,
+    "isFreeDemo": false
+  },
+  {
+    "id": 206,
+    "name": "Papua New Guinea",
+    "code": "PNG",
+    "confederation": "oceania",
+    "ranking": 165,
+    "isFreeDemo": false
+  },
+  {
+    "id": 207,
+    "name": "Samoa",
+    "code": "SAM",
+    "confederation": "oceania",
+    "ranking": 196,
+    "isFreeDemo": false
+  },
+  {
+    "id": 208,
+    "name": "Solomon Islands",
+    "code": "SOL",
+    "confederation": "oceania",
+    "ranking": 154,
+    "isFreeDemo": false
+  },
+  {
+    "id": 209,
+    "name": "Tahiti",
+    "code": "TAH",
+    "confederation": "oceania",
+    "ranking": 158,
+    "isFreeDemo": false
+  },
+  {
+    "id": 210,
+    "name": "Tonga",
+    "code": "TGA",
+    "confederation": "oceania",
+    "ranking": 207,
+    "isFreeDemo": false
+  },
+  {
+    "id": 211,
+    "name": "Vanuatu",
+    "code": "VAN",
+    "confederation": "oceania",
+    "ranking": 192,
     "isFreeDemo": false
   }
 ]

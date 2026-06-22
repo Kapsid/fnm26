@@ -17,9 +17,7 @@ extension PumpApp on WidgetTester {
       ProviderScope(
         overrides: overrides,
         child: MaterialApp(
-          theme: AppTheme.light,
-          darkTheme: AppTheme.dark,
-          themeMode: ThemeMode.dark,
+          theme: AppTheme.theme,
           home: widget,
         ),
       ),

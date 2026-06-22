@@ -14,9 +14,7 @@ class FnmApp extends ConsumerWidget {
     return MaterialApp.router(
       title: 'Football Nations Manager',
       debugShowCheckedModeBanner: false,
-      theme: AppTheme.light,
-      darkTheme: AppTheme.dark,
-      themeMode: ThemeMode.dark,
+      theme: AppTheme.theme,
       routerConfig: router,
     );
   }

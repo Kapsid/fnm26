@@ -9,7 +9,7 @@ void main() {
     testWidgets('renders title and primary actions', (tester) async {
       await tester.pumpApp(const HomeScreen());
 
-      expect(find.text('Football Nations Manager'), findsOneWidget);
+      expect(find.text('Football Nations\nManager'), findsOneWidget);
       expect(find.widgetWithText(PrimaryButton, 'New Game'), findsOneWidget);
       expect(find.widgetWithText(PrimaryButton, 'Continue'), findsOneWidget);
     });

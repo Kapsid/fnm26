@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fnm/features/dev/style_gallery_screen.dart';
 import 'package:fnm/features/home/home_screen.dart';
 import 'package:go_router/go_router.dart';
 
@@ -6,6 +7,9 @@ import 'package:go_router/go_router.dart';
 /// string literals.
 abstract final class Routes {
   static const home = '/';
+
+  /// Development-only design-system showcase.
+  static const gallery = '/gallery';
 }
 
 /// Provides the app's [GoRouter]. Exposed as a provider so routing can later
@@ -18,6 +22,10 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: Routes.home,
         builder: (context, state) => const HomeScreen(),
+      ),
+      GoRoute(
+        path: Routes.gallery,
+        builder: (context, state) => const StyleGalleryScreen(),
       ),
     ],
   );

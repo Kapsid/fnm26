@@ -1,52 +1,56 @@
+import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/theme/app_colors.dart';
-import 'package:fnm/shared/widgets/primary_button.dart';
+import 'package:fnm/core/theme/app_dimens.dart';
+import 'package:fnm/core/theme/app_typography.dart';
+import 'package:fnm/shared/widgets/widgets.dart';
+import 'package:go_router/go_router.dart';
 
 /// The app's landing screen.
 ///
-/// This is an M0 placeholder that proves the app boots, themes render, and the
-/// reusable widgets/router are wired up. The real new-game / continue flows
-/// arrive in later milestones.
+/// Still a placeholder for the real new-game / continue flows (M3), but now
+/// dressed in the "Pro Pitch Executive" design system.
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final theme = Theme.of(context);
+    final text = Theme.of(context).textTheme;
 
     return Scaffold(
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24),
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppSpacing.marginMobile,
+          ),
           child: Column(
             children: [
               const Spacer(),
               Image.asset(
                 'assets/images/fnm_logo.png',
-                width: 180,
-                height: 180,
+                width: 168,
+                height: 168,
                 // Graceful fallback if the asset is missing in a bare test env.
                 errorBuilder: (context, error, stack) => const Icon(
                   Icons.sports_soccer,
-                  size: 120,
-                  color: AppColors.pitchGreenBright,
+                  size: 112,
+                  color: AppColors.primary,
                 ),
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: AppSpacing.lg),
               Text(
-                'Football Nations Manager',
+                'Football Nations\nManager',
                 textAlign: TextAlign.center,
-                style: theme.textTheme.headlineSmall?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
+                style: text.headlineLarge,
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: AppSpacing.sm),
               Text(
-                'Lead your nation through a four-year cycle.',
+                'LEAD YOUR NATION · FOUR-YEAR CYCLE',
                 textAlign: TextAlign.center,
-                style: theme.textTheme.bodyMedium?.copyWith(
-                  color: theme.colorScheme.onSurfaceVariant,
+                style: AppTypography.labelMedium.copyWith(
+                  color: AppColors.onSurfaceVariant,
                 ),
               ),
               const Spacer(),
@@ -55,13 +59,20 @@ class HomeScreen extends ConsumerWidget {
                 icon: Icons.play_arrow_rounded,
                 onPressed: () => _comingSoon(context, 'New Game'),
               ),
-              const SizedBox(height: 12),
+              const SizedBox(height: AppSpacing.sm + 4),
               PrimaryButton(
                 label: 'Continue',
                 icon: Icons.save_rounded,
                 onPressed: () => _comingSoon(context, 'Continue'),
               ),
-              const SizedBox(height: 24),
+              if (kDebugMode) ...[
+                const SizedBox(height: AppSpacing.sm),
+                TextButton(
+                  onPressed: () => context.go(Routes.gallery),
+                  child: const Text('Style gallery'),
+                ),
+              ],
+              const SizedBox(height: AppSpacing.lg),
             ],
           ),
         ),
