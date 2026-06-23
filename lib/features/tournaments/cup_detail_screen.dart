@@ -4,14 +4,16 @@ import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
+import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/group_standing.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
 import 'package:fnm/features/tournaments/cup_detail_providers.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
 
-/// Detail of the World Championship: group stage (live), plus knockout, stats
-/// and history tabs (coming soon — only the qualifying group stage exists yet).
+/// World Championship detail: the qualifying group stage for every
+/// confederation (your region first), plus knockout/stats/history tabs that
+/// arrive with the finals.
 class CupDetailScreen extends ConsumerWidget {
   const CupDetailScreen({required this.careerId, super.key});
 
@@ -41,7 +43,7 @@ class CupDetailScreen extends ConsumerWidget {
             unselectedLabelColor: AppColors.onSurfaceVariant,
             indicatorColor: AppColors.primary,
             tabs: [
-              Tab(text: 'GROUPS'),
+              Tab(text: 'QUALIFYING'),
               Tab(text: 'KNOCKOUT'),
               Tab(text: 'STATS'),
               Tab(text: 'HISTORY'),
@@ -58,8 +60,9 @@ class CupDetailScreen extends ConsumerWidget {
 
             return TabBarView(
               children: [
-                _Groups(
+                _Qualifying(
                   groups: data.groups,
+                  playerConfederation: data.playerConfederation,
                   playerNationId: data.playerNationId,
                   code: code,
                   name: name,
@@ -78,15 +81,17 @@ class CupDetailScreen extends ConsumerWidget {
   }
 }
 
-class _Groups extends StatelessWidget {
-  const _Groups({
+class _Qualifying extends StatelessWidget {
+  const _Qualifying({
     required this.groups,
+    required this.playerConfederation,
     required this.playerNationId,
     required this.code,
     required this.name,
   });
 
-  final List<GroupTable> groups;
+  final List<ConfederationGroupTable> groups;
+  final Confederation? playerConfederation;
   final int playerNationId;
   final String Function(int) code;
   final String Function(int) name;
@@ -96,18 +101,51 @@ class _Groups extends StatelessWidget {
     if (groups.isEmpty) {
       return const Center(child: Text('No groups drawn.'));
     }
+    final byConf = <Confederation, List<ConfederationGroupTable>>{};
+    for (final g in groups) {
+      (byConf[g.confederation] ??= []).add(g);
+    }
+    final confs = byConf.keys.toList()
+      ..sort((a, b) {
+        if (a == playerConfederation) return -1;
+        if (b == playerConfederation) return 1;
+        return a.index.compareTo(b.index);
+      });
+
     return ListView(
       padding: const EdgeInsets.all(AppSpacing.marginMobile),
       children: [
-        for (final g in groups) ...[
-          _GroupCard(
-            group: g,
-            playerNationId: playerNationId,
-            code: code,
-            name: name,
+        for (final conf in confs) ...[
+          Padding(
+            padding: const EdgeInsets.only(
+              top: AppSpacing.md,
+              bottom: AppSpacing.sm,
+            ),
+            child: Row(
+              children: [
+                Text(
+                  conf.label.toUpperCase(),
+                  style: AppTypography.labelMedium
+                      .copyWith(color: AppColors.primary),
+                ),
+                if (conf == playerConfederation) ...[
+                  const SizedBox(width: AppSpacing.sm),
+                  const TacticalChip('YOUR REGION', emphasized: true),
+                ],
+              ],
+            ),
           ),
-          const SizedBox(height: AppSpacing.md),
+          for (final g in byConf[conf]!) ...[
+            _GroupCard(
+              group: g,
+              playerNationId: playerNationId,
+              code: code,
+              name: name,
+            ),
+            const SizedBox(height: AppSpacing.sm),
+          ],
         ],
+        const SizedBox(height: AppSpacing.xl),
       ],
     );
   }
@@ -121,7 +159,7 @@ class _GroupCard extends StatelessWidget {
     required this.name,
   });
 
-  final GroupTable group;
+  final ConfederationGroupTable group;
   final int playerNationId;
   final String Function(int) code;
   final String Function(int) name;
@@ -133,8 +171,9 @@ class _GroupCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'GROUP ${group.name}',
-            style: AppTypography.labelMedium.copyWith(color: AppColors.primary),
+            'GROUP ${group.groupName}',
+            style: AppTypography.labelSmall
+                .copyWith(color: AppColors.onSurfaceVariant),
           ),
           const SizedBox(height: AppSpacing.sm),
           for (var i = 0; i < group.standings.length; i++)
@@ -157,9 +196,8 @@ class _GroupCard extends StatelessWidget {
             child: Text(
               '$pos',
               style: AppTypography.labelSmall.copyWith(
-                color: isPlayer
-                    ? AppColors.primary
-                    : AppColors.onSurfaceVariant,
+                color:
+                    isPlayer ? AppColors.primary : AppColors.onSurfaceVariant,
               ),
             ),
           ),
@@ -184,16 +222,16 @@ class _GroupCard extends StatelessWidget {
   }
 
   Widget _cell(String text, {bool emphasize = false}) => SizedBox(
-    width: 30,
-    child: Text(
-      text,
-      textAlign: TextAlign.center,
-      style: AppTypography.labelSmall.copyWith(
-        color: emphasize ? AppColors.primary : AppColors.onSurface,
-        fontWeight: emphasize ? FontWeight.w700 : FontWeight.w500,
-      ),
-    ),
-  );
+        width: 30,
+        child: Text(
+          text,
+          textAlign: TextAlign.center,
+          style: AppTypography.labelSmall.copyWith(
+            color: emphasize ? AppColors.primary : AppColors.onSurface,
+            fontWeight: emphasize ? FontWeight.w700 : FontWeight.w500,
+          ),
+        ),
+      );
 }
 
 class _Soon extends StatelessWidget {

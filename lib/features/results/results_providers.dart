@@ -25,8 +25,15 @@ final AutoDisposeFutureProviderFamily<ResultsData?, int> resultsProvider =
   final career = await ref.watch(careerRepositoryProvider).byId(careerId);
   if (career == null) return null;
 
-  final fixtures =
-      await ref.watch(competitionRepositoryProvider).allFixtures(careerId);
+  final nation = await ref.watch(nationRepositoryProvider).byId(
+        career.nationId,
+      );
+  final fixtures = nation == null
+      ? <Fixture>[]
+      : await ref.watch(competitionRepositoryProvider).fixturesForConfederation(
+            careerId,
+            nation.confederation,
+          );
   final byMatchday = <int, List<Fixture>>{};
   for (final f in fixtures) {
     byMatchday.putIfAbsent(f.matchday, () => []).add(f);

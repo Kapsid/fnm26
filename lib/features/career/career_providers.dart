@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/core/result/result.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/career.dart';
+import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/formation.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/entities/tactics.dart';
@@ -78,23 +79,27 @@ class CareerService {
         );
   }
 
-  /// Draws the player's confederation qualifiers and persists the fixtures.
+  /// Draws every confederation's World Cup qualifiers and persists the
+  /// fixtures, so the whole world plays out (not just the player's region).
   Future<void> _generateSchedule(Career career) async {
     final nationRepo = _ref.read(nationRepositoryProvider);
-    final nation = await nationRepo.byId(career.nationId);
-    if (nation == null) return;
-    final confederationNations = (await nationRepo.all())
-        .where((n) => n.confederation == nation.confederation)
-        .toList();
-    final schedule = const ScheduleGenerator().generate(
-      confederation: nation.confederation,
-      nations: confederationNations,
-      rngSeed: career.rngSeed,
-      start: career.inGameDate,
-    );
-    await _ref
-        .read(competitionRepositoryProvider)
-        .saveSchedule(careerId: career.id, schedule: schedule);
+    final compRepo = _ref.read(competitionRepositoryProvider);
+
+    final byConfederation = <Confederation, List<Nation>>{};
+    for (final n in await nationRepo.all()) {
+      (byConfederation[n.confederation] ??= []).add(n);
+    }
+
+    for (final entry in byConfederation.entries) {
+      if (entry.value.length < 2) continue;
+      final schedule = const ScheduleGenerator().generate(
+        confederation: entry.key,
+        nations: entry.value,
+        rngSeed: career.rngSeed ^ (entry.key.index * 0x9E37),
+        start: career.inGameDate,
+      );
+      await compRepo.saveSchedule(careerId: career.id, schedule: schedule);
+    }
   }
 
   /// Deletes a save.

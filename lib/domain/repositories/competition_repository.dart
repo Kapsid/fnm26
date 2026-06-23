@@ -1,3 +1,4 @@
+import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/entities/group_standing.dart';
 import 'package:fnm/domain/services/competition/schedule_generator.dart';
@@ -6,6 +7,13 @@ import 'package:fnm/domain/services/competition/schedule_generator.dart';
 typedef GroupTable = ({
   int groupId,
   String name,
+  List<GroupStanding> standings,
+});
+
+/// A group table tagged with the confederation it belongs to.
+typedef ConfederationGroupTable = ({
+  Confederation confederation,
+  String groupName,
   List<GroupStanding> standings,
 });
 
@@ -48,4 +56,15 @@ abstract interface class CompetitionRepository {
 
   /// All group tables for the save's competition, ordered by group name.
   Future<List<GroupTable>> allGroupTables(int careerId);
+
+  /// Every group table across all confederations (for browsing all draws).
+  Future<List<ConfederationGroupTable>> allGroupTablesByConfederation(
+    int careerId,
+  );
+
+  /// Fixtures for one confederation's competition, by matchday then date.
+  Future<List<Fixture>> fixturesForConfederation(
+    int careerId,
+    Confederation confederation,
+  );
 }

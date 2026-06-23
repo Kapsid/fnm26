@@ -1,6 +1,7 @@
 import 'package:drift/drift.dart';
 import 'package:fnm/data/db/app_database.dart';
 import 'package:fnm/data/repositories/mappers.dart';
+import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/entities/group_standing.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
@@ -142,14 +143,15 @@ class DriftCompetitionRepository implements CompetitionRepository {
 
   @override
   Future<GroupTable?> groupTableForNation(int careerId, int nationId) async {
-    final comp = await (_db.select(_db.competitions)
-          ..where((t) => t.careerId.equals(careerId))
-          ..limit(1))
-        .getSingleOrNull();
-    if (comp == null) return null;
+    // Search across every confederation's competition for this save.
+    final comps = await (_db.select(_db.competitions)
+          ..where((t) => t.careerId.equals(careerId)))
+        .get();
+    if (comps.isEmpty) return null;
+    final compIds = comps.map((c) => c.id).toList();
 
     final groups = await (_db.select(_db.qualifyingGroups)
-          ..where((t) => t.competitionId.equals(comp.id)))
+          ..where((t) => t.competitionId.isIn(compIds)))
         .get();
     final groupIds = groups.map((g) => g.id).toList();
     if (groupIds.isEmpty) return null;
@@ -174,6 +176,64 @@ class DriftCompetitionRepository implements CompetitionRepository {
       fixtures.map((r) => r.toDomain()).toList(),
     );
     return (groupId: groupId, name: group.name, standings: standings);
+  }
+
+  @override
+  Future<List<ConfederationGroupTable>> allGroupTablesByConfederation(
+    int careerId,
+  ) async {
+    final comps = await (_db.select(_db.competitions)
+          ..where((t) => t.careerId.equals(careerId))
+          ..orderBy([(t) => OrderingTerm(expression: t.id)]))
+        .get();
+
+    final result = <ConfederationGroupTable>[];
+    for (final comp in comps) {
+      final groups = await (_db.select(_db.qualifyingGroups)
+            ..where((t) => t.competitionId.equals(comp.id))
+            ..orderBy([(t) => OrderingTerm(expression: t.name)]))
+          .get();
+      for (final group in groups) {
+        final members = await (_db.select(_db.groupMembers)
+              ..where((t) => t.groupId.equals(group.id)))
+            .get();
+        final fixtures = await (_db.select(_db.fixtures)
+              ..where((t) => t.groupId.equals(group.id)))
+            .get();
+        result.add((
+          confederation: comp.confederation,
+          groupName: group.name,
+          standings: GroupStanding.table(
+            members.map((m) => m.nationId).toList(),
+            fixtures.map((r) => r.toDomain()).toList(),
+          ),
+        ));
+      }
+    }
+    return result;
+  }
+
+  @override
+  Future<List<Fixture>> fixturesForConfederation(
+    int careerId,
+    Confederation confederation,
+  ) async {
+    final comp = await (_db.select(_db.competitions)
+          ..where(
+            (t) =>
+                t.careerId.equals(careerId) &
+                t.confederation.equalsValue(confederation),
+          )
+          ..limit(1))
+        .getSingleOrNull();
+    if (comp == null) return [];
+    final query = _db.select(_db.fixtures)
+      ..where((t) => t.competitionId.equals(comp.id))
+      ..orderBy([
+        (t) => OrderingTerm(expression: t.matchday),
+        (t) => OrderingTerm(expression: t.date),
+      ]);
+    return (await query.get()).map((r) => r.toDomain()).toList();
   }
 
   @override
