@@ -401,10 +401,6 @@ class _HubBottomNav extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    void soon() => ScaffoldMessenger.of(context)
-      ..hideCurrentSnackBar()
-      ..showSnackBar(const SnackBar(content: Text('Coming soon')));
-
     return Container(
       decoration: const BoxDecoration(
         color: AppColors.surfaceContainerHighest,
@@ -438,7 +434,12 @@ class _HubBottomNav extends StatelessWidget {
                 onTap: () =>
                     context.go('${Routes.tournaments}?careerId=$careerId'),
               ),
-              _NavItem(icon: Icons.more_horiz, label: 'More', onTap: soon),
+              _NavItem(
+                icon: Icons.more_horiz,
+                label: 'More',
+                onTap: () =>
+                    context.go('${Routes.ranking}?careerId=$careerId'),
+              ),
             ],
           ),
         ),

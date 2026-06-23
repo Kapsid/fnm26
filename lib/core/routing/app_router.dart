@@ -6,6 +6,7 @@ import 'package:fnm/features/home/home_screen.dart';
 import 'package:fnm/features/hub/hub_screen.dart';
 import 'package:fnm/features/match/match_screen.dart';
 import 'package:fnm/features/nations/nation_select_screen.dart';
+import 'package:fnm/features/ranking/world_ranking_screen.dart';
 import 'package:fnm/features/results/results_screen.dart';
 import 'package:fnm/features/tactics/tactics_screen.dart';
 import 'package:fnm/features/tournaments/cup_detail_screen.dart';
@@ -43,6 +44,9 @@ abstract final class Routes {
 
   /// World Championship detail. Expects `?careerId=`.
   static const cup = '/cup';
+
+  /// World ranking. Expects `?careerId=`.
+  static const ranking = '/ranking';
 
   /// Development-only design-system showcase.
   static const gallery = '/gallery';
@@ -135,6 +139,16 @@ final routerProvider = Provider<GoRouter>((ref) {
               ) ??
               0;
           return CupDetailScreen(careerId: id);
+        },
+      ),
+      GoRoute(
+        path: Routes.ranking,
+        builder: (context, state) {
+          final id = int.tryParse(
+                state.uri.queryParameters['careerId'] ?? '',
+              ) ??
+              0;
+          return WorldRankingScreen(careerId: id);
         },
       ),
       GoRoute(
