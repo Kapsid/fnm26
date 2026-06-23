@@ -22,6 +22,10 @@ class MatchScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.close, color: AppColors.primary),
+          onPressed: () => context.go('${Routes.hub}?careerId=$careerId'),
+        ),
         title: Text(
           'MATCH',
           style: AppTypography.labelMedium.copyWith(color: AppColors.primary),

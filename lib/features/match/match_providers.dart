@@ -23,8 +23,13 @@ class MatchPreview {
   final Map<int, Nation> nations;
 }
 
-final FutureProviderFamily<MatchPreview?, int> matchPreviewProvider =
-    FutureProvider.family<MatchPreview?, int>((ref, careerId) async {
+// autoDispose so re-opening the match screen always recomputes the *current*
+// next fixture (otherwise the first preview is cached and replayed forever).
+final AutoDisposeFutureProviderFamily<MatchPreview?, int> matchPreviewProvider =
+    FutureProvider.autoDispose.family<MatchPreview?, int>((
+  ref,
+  careerId,
+) async {
       await ref.watch(seedLoaderProvider).ensureSeeded();
       final careerRepo = ref.watch(careerRepositoryProvider);
       final compRepo = ref.watch(competitionRepositoryProvider);

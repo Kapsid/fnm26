@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
@@ -11,6 +12,7 @@ import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/entities/tactics.dart';
 import 'package:fnm/features/tactics/tactics_providers.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
+import 'package:go_router/go_router.dart';
 
 /// Squad & tactics: formation, starting XI, and team instructions.
 class TacticsScreen extends ConsumerStatefulWidget {
@@ -32,6 +34,11 @@ class _TacticsScreenState extends ConsumerState<TacticsScreen> {
 
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: AppColors.primary),
+          onPressed: () =>
+              context.go('${Routes.hub}?careerId=${widget.careerId}'),
+        ),
         title: Text(
           'SQUAD & TACTICS',
           style: AppTypography.labelMedium.copyWith(color: AppColors.primary),
