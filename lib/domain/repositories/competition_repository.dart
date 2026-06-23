@@ -45,4 +45,7 @@ abstract interface class CompetitionRepository {
 
   /// The group table containing [nationId] for this save, or null.
   Future<GroupTable?> groupTableForNation(int careerId, int nationId);
+
+  /// All group tables for the save's competition, ordered by group name.
+  Future<List<GroupTable>> allGroupTables(int careerId);
 }

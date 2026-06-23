@@ -175,4 +175,37 @@ class DriftCompetitionRepository implements CompetitionRepository {
     );
     return (groupId: groupId, name: group.name, standings: standings);
   }
+
+  @override
+  Future<List<GroupTable>> allGroupTables(int careerId) async {
+    final comp = await (_db.select(_db.competitions)
+          ..where((t) => t.careerId.equals(careerId))
+          ..limit(1))
+        .getSingleOrNull();
+    if (comp == null) return [];
+
+    final groups = await (_db.select(_db.qualifyingGroups)
+          ..where((t) => t.competitionId.equals(comp.id))
+          ..orderBy([(t) => OrderingTerm(expression: t.name)]))
+        .get();
+
+    final tables = <GroupTable>[];
+    for (final group in groups) {
+      final members = await (_db.select(_db.groupMembers)
+            ..where((t) => t.groupId.equals(group.id)))
+          .get();
+      final fixtures = await (_db.select(_db.fixtures)
+            ..where((t) => t.groupId.equals(group.id)))
+          .get();
+      tables.add((
+        groupId: group.id,
+        name: group.name,
+        standings: GroupStanding.table(
+          members.map((m) => m.nationId).toList(),
+          fixtures.map((r) => r.toDomain()).toList(),
+        ),
+      ));
+    }
+    return tables;
+  }
 }

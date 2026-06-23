@@ -119,4 +119,20 @@ extension PlayerPositionX on PlayerPosition {
 
   /// Short uppercase label for UI (e.g. `GK`, `ST`).
   String get label => name.toUpperCase();
+
+  /// Full descriptive role name (e.g. `Defensive Mid`).
+  String get roleName => switch (this) {
+        PlayerPosition.gk => 'Goalkeeper',
+        PlayerPosition.lb => 'Left Back',
+        PlayerPosition.cb => 'Centre Back',
+        PlayerPosition.rb => 'Right Back',
+        PlayerPosition.dm => 'Defensive Mid',
+        PlayerPosition.cm => 'Central Mid',
+        PlayerPosition.am => 'Attacking Mid',
+        PlayerPosition.lm => 'Left Mid',
+        PlayerPosition.rm => 'Right Mid',
+        PlayerPosition.lw => 'Left Wing',
+        PlayerPosition.rw => 'Right Wing',
+        PlayerPosition.st => 'Striker',
+      };
 }

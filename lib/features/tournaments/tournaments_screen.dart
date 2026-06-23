@@ -30,46 +30,46 @@ class _Tournament {
 
 const _tournaments = <_Tournament>[
   _Tournament(
-    name: 'Global Championship',
+    name: 'World Championship',
     region: 'GLOBAL',
     icon: Icons.emoji_events,
-    description: 'The pinnacle of international football — the World Cup.',
+    description: 'The pinnacle of international football.',
     status: 'QUALIFYING',
     available: true,
   ),
   _Tournament(
-    name: 'Continental Trophy',
+    name: 'European Championship',
     region: 'EUROPE',
     icon: Icons.workspace_premium,
     description: 'The fight for the European crown.',
     status: 'COMING SOON',
   ),
   _Tournament(
-    name: 'League of Nations',
-    region: 'LEAGUE',
-    icon: Icons.military_tech,
-    description: 'A prestige league where every match carries weight.',
+    name: 'African Championship',
+    region: 'AFRICA',
+    icon: Icons.diamond,
+    description: 'A celebration of pace and power across Africa.',
     status: 'COMING SOON',
   ),
   _Tournament(
-    name: 'Southern Cup',
-    region: 'AMERICAS',
-    icon: Icons.flare,
-    description: 'Passion and technique — the oldest continental tournament.',
-    status: 'COMING SOON',
-  ),
-  _Tournament(
-    name: 'Asian Vanguard',
+    name: 'Asian Championship',
     region: 'ASIA',
     icon: Icons.explore,
     description: 'A dynamic stage for the rising stars of Asia.',
     status: 'COMING SOON',
   ),
   _Tournament(
-    name: 'African Majesty',
-    region: 'AFRICA',
-    icon: Icons.diamond,
-    description: 'A celebration of pace and power across Africa.',
+    name: 'South America Cup',
+    region: 'S. AMERICA',
+    icon: Icons.flare,
+    description: 'Passion and technique — the oldest continental tournament.',
+    status: 'COMING SOON',
+  ),
+  _Tournament(
+    name: 'North America Cup',
+    region: 'N. AMERICA',
+    icon: Icons.public,
+    description: 'The premier championship of the CONCACAF region.',
     status: 'COMING SOON',
   ),
 ];
@@ -109,7 +109,7 @@ class TournamentsScreen extends ConsumerWidget {
             _TournamentTile(
               tournament: t,
               onView: t.available
-                  ? () => context.go('${Routes.results}?careerId=$careerId')
+                  ? () => context.go('${Routes.cup}?careerId=$careerId')
                   : null,
             ),
             const SizedBox(height: AppSpacing.md),
