@@ -1,5 +1,6 @@
 import 'package:drift/drift.dart';
 import 'package:fnm/domain/entities/enums.dart';
+import 'package:fnm/domain/entities/formation.dart';
 
 /// Drift table definitions for the local SQLite database.
 ///
@@ -59,4 +60,85 @@ class Careers extends Table {
   DateTimeColumn get createdAt => dateTime()();
   DateTimeColumn get inGameDate => dateTime()();
   IntColumn get cyclePointer => integer().withDefault(const Constant(0))();
+}
+
+/// A competition within a save (e.g. a confederation's WC qualifiers).
+@DataClassName('CompetitionRow')
+class Competitions extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  IntColumn get careerId =>
+      integer().references(Careers, #id, onDelete: KeyAction.cascade)();
+  TextColumn get confederation => textEnum<Confederation>()();
+  TextColumn get name => text()();
+}
+
+/// A qualifying group within a competition.
+@DataClassName('QualifyingGroupRow')
+class QualifyingGroups extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  IntColumn get competitionId =>
+      integer().references(Competitions, #id, onDelete: KeyAction.cascade)();
+  TextColumn get name => text()();
+}
+
+/// A nation's membership of a qualifying group (standings are computed from
+/// played fixtures, not stored).
+@DataClassName('GroupMemberRow')
+class GroupMembers extends Table {
+  IntColumn get groupId => integer().references(
+        QualifyingGroups,
+        #id,
+        onDelete: KeyAction.cascade,
+      )();
+  IntColumn get nationId => integer()();
+
+  @override
+  Set<Column> get primaryKey => {groupId, nationId};
+}
+
+/// The team tactic for a save (one row per career).
+@DataClassName('TacticRow')
+class Tactics extends Table {
+  IntColumn get careerId =>
+      integer().references(Careers, #id, onDelete: KeyAction.cascade)();
+  TextColumn get formation => textEnum<Formation>()();
+  IntColumn get mentality => integer().withDefault(const Constant(50))();
+  IntColumn get pressing => integer().withDefault(const Constant(50))();
+  IntColumn get tempo => integer().withDefault(const Constant(50))();
+  IntColumn get width => integer().withDefault(const Constant(50))();
+  IntColumn get defensiveLine => integer().withDefault(const Constant(50))();
+  IntColumn get directness => integer().withDefault(const Constant(50))();
+
+  @override
+  Set<Column> get primaryKey => {careerId};
+}
+
+/// A starting-XI slot for a save's tactic (slot 0–10).
+@DataClassName('LineupSlotRow')
+class LineupSlots extends Table {
+  IntColumn get careerId =>
+      integer().references(Careers, #id, onDelete: KeyAction.cascade)();
+  IntColumn get slot => integer()();
+  IntColumn get playerId => integer().nullable()();
+
+  @override
+  Set<Column> get primaryKey => {careerId, slot};
+}
+
+/// A scheduled match. Scores are null until played.
+@DataClassName('FixtureRow')
+class Fixtures extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  IntColumn get careerId =>
+      integer().references(Careers, #id, onDelete: KeyAction.cascade)();
+  IntColumn get competitionId => integer().references(Competitions, #id)();
+  IntColumn get groupId =>
+      integer().nullable().references(QualifyingGroups, #id)();
+  IntColumn get matchday => integer()();
+  DateTimeColumn get date => dateTime()();
+  IntColumn get homeNationId => integer()();
+  IntColumn get awayNationId => integer()();
+  IntColumn get homeScore => integer().nullable()();
+  IntColumn get awayScore => integer().nullable()();
+  BoolColumn get played => boolean().withDefault(const Constant(false))();
 }

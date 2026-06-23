@@ -19,6 +19,9 @@ abstract interface class CareerRepository {
   /// The save with [id], or `null` if none exists.
   Future<Career?> byId(int id);
 
+  /// Advances (or sets) the in-game date of a save.
+  Future<void> updateInGameDate(int id, DateTime date);
+
   /// Deletes the save with [id] (no-op if it does not exist).
   Future<void> delete(int id);
 }

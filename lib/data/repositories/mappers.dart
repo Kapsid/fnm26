@@ -1,5 +1,6 @@
 import 'package:fnm/data/db/app_database.dart';
 import 'package:fnm/domain/entities/career.dart';
+import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/entities/player_attributes.dart';
@@ -39,6 +40,23 @@ extension PlayerRowMapper on PlayerRow {
           stamina: stamina,
           strength: strength,
         ),
+      );
+}
+
+extension FixtureRowMapper on FixtureRow {
+  /// Converts this persisted row into a domain [Fixture].
+  Fixture toDomain() => Fixture(
+        id: id,
+        careerId: careerId,
+        competitionId: competitionId,
+        groupId: groupId,
+        matchday: matchday,
+        date: date,
+        homeNationId: homeNationId,
+        awayNationId: awayNationId,
+        homeScore: homeScore,
+        awayScore: awayScore,
+        played: played,
       );
 }
 

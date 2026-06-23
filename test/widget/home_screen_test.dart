@@ -13,16 +13,5 @@ void main() {
       expect(find.widgetWithText(PrimaryButton, 'New Game'), findsOneWidget);
       expect(find.widgetWithText(PrimaryButton, 'Continue'), findsOneWidget);
     });
-
-    testWidgets('tapping New Game shows a coming-soon snackbar', (
-      tester,
-    ) async {
-      await tester.pumpApp(const HomeScreen());
-
-      await tester.tap(find.widgetWithText(PrimaryButton, 'New Game'));
-      await tester.pump();
-
-      expect(find.text('New Game — coming soon'), findsOneWidget);
-    });
   });
 }

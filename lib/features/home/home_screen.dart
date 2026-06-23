@@ -47,7 +47,7 @@ class HomeScreen extends ConsumerWidget {
               ),
               const SizedBox(height: AppSpacing.sm),
               Text(
-                'LEAD YOUR NATION · FOUR-YEAR CYCLE',
+                'LEAD THE NATION',
                 textAlign: TextAlign.center,
                 style: AppTypography.labelMedium.copyWith(
                   color: AppColors.onSurfaceVariant,
@@ -57,13 +57,13 @@ class HomeScreen extends ConsumerWidget {
               PrimaryButton(
                 label: 'New Game',
                 icon: Icons.play_arrow_rounded,
-                onPressed: () => _comingSoon(context, 'New Game'),
+                onPressed: () => context.go(Routes.nations),
               ),
               const SizedBox(height: AppSpacing.sm + 4),
               PrimaryButton(
                 label: 'Continue',
                 icon: Icons.save_rounded,
-                onPressed: () => _comingSoon(context, 'Continue'),
+                onPressed: () => context.go(Routes.saves),
               ),
               if (kDebugMode) ...[
                 const SizedBox(height: AppSpacing.sm),
@@ -78,13 +78,5 @@ class HomeScreen extends ConsumerWidget {
         ),
       ),
     );
-  }
-
-  void _comingSoon(BuildContext context, String feature) {
-    ScaffoldMessenger.of(context)
-      ..hideCurrentSnackBar()
-      ..showSnackBar(
-        SnackBar(content: Text('$feature — coming soon')),
-      );
   }
 }

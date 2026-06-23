@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:fnm/core/routing/app_router.dart';
+import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
+import 'package:go_router/go_router.dart';
 
 /// A development-only showcase of the "Pro Pitch Executive" design system:
 /// typography scale and every reusable component. Handy for visual review and
@@ -21,7 +24,13 @@ class _StyleGalleryScreenState extends State<StyleGalleryScreen> {
     final text = Theme.of(context).textTheme;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Style Gallery')),
+      appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: AppColors.primary),
+          onPressed: () => context.go(Routes.home),
+        ),
+        title: const Text('Style Gallery'),
+      ),
       body: ListView(
         padding: const EdgeInsets.all(AppSpacing.md),
         children: [

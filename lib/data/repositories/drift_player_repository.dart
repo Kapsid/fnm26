@@ -21,6 +21,12 @@ class DriftPlayerRepository implements PlayerRepository {
   }
 
   @override
+  Future<List<Player>> all() async {
+    final rows = await _db.select(_db.players).get();
+    return rows.map((r) => r.toDomain()).toList();
+  }
+
+  @override
   Future<Player?> byId(int id) async {
     final query = _db.select(_db.players)..where((t) => t.id.equals(id));
     final row = await query.getSingleOrNull();

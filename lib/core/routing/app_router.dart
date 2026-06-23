@@ -1,12 +1,36 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fnm/features/career/new_game_screen.dart';
+import 'package:fnm/features/career/saves_screen.dart';
 import 'package:fnm/features/dev/style_gallery_screen.dart';
 import 'package:fnm/features/home/home_screen.dart';
+import 'package:fnm/features/hub/hub_screen.dart';
+import 'package:fnm/features/match/match_screen.dart';
+import 'package:fnm/features/nations/nation_select_screen.dart';
+import 'package:fnm/features/tactics/tactics_screen.dart';
 import 'package:go_router/go_router.dart';
 
 /// Named route paths, centralised so navigation call-sites never hard-code
 /// string literals.
 abstract final class Routes {
   static const home = '/';
+
+  /// National-team selection.
+  static const nations = '/nations';
+
+  /// Save-game list.
+  static const saves = '/saves';
+
+  /// New-game flow (manager name). Expects `?nationId=`.
+  static const newGame = '/new-game';
+
+  /// In-game national hub. Expects `?careerId=`.
+  static const hub = '/hub';
+
+  /// Squad & tactics. Expects `?careerId=`.
+  static const tactics = '/tactics';
+
+  /// Play the next match. Expects `?careerId=`.
+  static const match = '/match';
 
   /// Development-only design-system showcase.
   static const gallery = '/gallery';
@@ -22,6 +46,54 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: Routes.home,
         builder: (context, state) => const HomeScreen(),
+      ),
+      GoRoute(
+        path: Routes.nations,
+        builder: (context, state) => const NationSelectScreen(),
+      ),
+      GoRoute(
+        path: Routes.saves,
+        builder: (context, state) => const SavesScreen(),
+      ),
+      GoRoute(
+        path: Routes.newGame,
+        builder: (context, state) {
+          final id = int.tryParse(
+                state.uri.queryParameters['nationId'] ?? '',
+              ) ??
+              0;
+          return NewGameScreen(nationId: id);
+        },
+      ),
+      GoRoute(
+        path: Routes.hub,
+        builder: (context, state) {
+          final id = int.tryParse(
+                state.uri.queryParameters['careerId'] ?? '',
+              ) ??
+              0;
+          return HubScreen(careerId: id);
+        },
+      ),
+      GoRoute(
+        path: Routes.tactics,
+        builder: (context, state) {
+          final id = int.tryParse(
+                state.uri.queryParameters['careerId'] ?? '',
+              ) ??
+              0;
+          return TacticsScreen(careerId: id);
+        },
+      ),
+      GoRoute(
+        path: Routes.match,
+        builder: (context, state) {
+          final id = int.tryParse(
+                state.uri.queryParameters['careerId'] ?? '',
+              ) ??
+              0;
+          return MatchScreen(careerId: id);
+        },
       ),
       GoRoute(
         path: Routes.gallery,

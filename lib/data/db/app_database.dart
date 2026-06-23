@@ -2,8 +2,9 @@ import 'package:drift/drift.dart';
 import 'package:fnm/data/db/connection.dart';
 import 'package:fnm/data/db/tables.dart';
 // Imported so the generated part file can resolve the enum types used by
-// `textEnum` columns (Confederation, PlayerPosition).
+// `textEnum` columns (Confederation, PlayerPosition, Formation).
 import 'package:fnm/domain/entities/enums.dart';
+import 'package:fnm/domain/entities/formation.dart';
 
 part 'app_database.g.dart';
 
@@ -11,7 +12,19 @@ part 'app_database.g.dart';
 ///
 /// Use the default constructor in the app (opens the on-device file) and
 /// [AppDatabase.forTesting] with an in-memory executor in tests.
-@DriftDatabase(tables: [Nations, Players, Careers])
+@DriftDatabase(
+  tables: [
+    Nations,
+    Players,
+    Careers,
+    Competitions,
+    QualifyingGroups,
+    GroupMembers,
+    Fixtures,
+    Tactics,
+    LineupSlots,
+  ],
+)
 class AppDatabase extends _$AppDatabase {
   /// Opens the on-device database.
   AppDatabase() : super(openConnection());
@@ -25,5 +38,24 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase.forTesting(QueryExecutor executor) : super(executor);
 
   @override
-  int get schemaVersion => 1;
+  int get schemaVersion => 3;
+
+  @override
+  MigrationStrategy get migration => MigrationStrategy(
+        onCreate: (m) => m.createAll(),
+        onUpgrade: (m, from, to) async {
+          // v2 adds the competition/fixture tables.
+          if (from < 2) {
+            await m.createTable(competitions);
+            await m.createTable(qualifyingGroups);
+            await m.createTable(groupMembers);
+            await m.createTable(fixtures);
+          }
+          // v3 adds the tactics/lineup tables.
+          if (from < 3) {
+            await m.createTable(tactics);
+            await m.createTable(lineupSlots);
+          }
+        },
+      );
 }

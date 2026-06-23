@@ -2,13 +2,17 @@ import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/data/db/app_database.dart';
 import 'package:fnm/data/repositories/drift_career_repository.dart';
+import 'package:fnm/data/repositories/drift_competition_repository.dart';
 import 'package:fnm/data/repositories/drift_nation_repository.dart';
 import 'package:fnm/data/repositories/drift_player_repository.dart';
+import 'package:fnm/data/repositories/drift_tactics_repository.dart';
 import 'package:fnm/data/seed/seed_loader.dart';
 import 'package:fnm/data/seed/seed_source.dart';
 import 'package:fnm/domain/repositories/career_repository.dart';
+import 'package:fnm/domain/repositories/competition_repository.dart';
 import 'package:fnm/domain/repositories/nation_repository.dart';
 import 'package:fnm/domain/repositories/player_repository.dart';
+import 'package:fnm/domain/repositories/tactics_repository.dart';
 
 /// Data-layer dependency wiring.
 ///
@@ -52,4 +56,12 @@ final playerRepositoryProvider = Provider<PlayerRepository>(
 
 final careerRepositoryProvider = Provider<CareerRepository>(
   (ref) => DriftCareerRepository(ref.watch(appDatabaseProvider)),
+);
+
+final competitionRepositoryProvider = Provider<CompetitionRepository>(
+  (ref) => DriftCompetitionRepository(ref.watch(appDatabaseProvider)),
+);
+
+final tacticsRepositoryProvider = Provider<TacticsRepository>(
+  (ref) => DriftTacticsRepository(ref.watch(appDatabaseProvider)),
 );
