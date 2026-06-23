@@ -100,12 +100,22 @@ class HubScreen extends ConsumerWidget {
                 const SizedBox(height: AppSpacing.md),
                 _NextMatch(next: hub.next, code: code),
               ],
+              if (hub.hasFinals && hub.championNationId == null)
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: TextButton.icon(
+                    onPressed: () => context
+                        .go('${Routes.finalsDraw}?careerId=$careerId'),
+                    icon: const Icon(Icons.casino, size: 18),
+                    label: const Text('Watch World Cup draw'),
+                  ),
+                ),
               Align(
                 alignment: Alignment.centerRight,
                 child: TextButton(
                   onPressed: () =>
                       context.go('${Routes.results}?careerId=$careerId'),
-                  child: const Text('View full schedule ›'),
+                  child: const Text('View my matches ›'),
                 ),
               ),
               const SizedBox(height: AppSpacing.sm),
@@ -186,6 +196,18 @@ class _ChampionBanner extends StatelessWidget {
   }
 }
 
+/// Human-readable stage for a fixture (distinguishes qualifiers from finals).
+String matchStageLabel(Fixture f) => switch (f.round) {
+      null => 'QUALIFYING · MD ${f.matchday}',
+      'GROUP' => 'WC FINALS · GROUP',
+      'R16' => 'WC FINALS · ROUND OF 16',
+      'QF' => 'WC FINALS · QUARTER-FINAL',
+      'SF' => 'WC FINALS · SEMI-FINAL',
+      '3RD' => 'WC FINALS · THIRD PLACE',
+      'FINAL' => 'WC FINALS · FINAL',
+      _ => f.round!,
+    };
+
 class _NextMatch extends StatelessWidget {
   const _NextMatch({required this.next, required this.code});
 
@@ -208,10 +230,16 @@ class _NextMatch extends StatelessWidget {
             children: [
               const Text('NEXT MATCH', style: AppTypography.labelMedium),
               const Spacer(),
-              Text(
-                'MATCHDAY ${f.matchday}',
-                style: AppTypography.labelSmall.copyWith(
-                  color: AppColors.onSurfaceVariant,
+              Flexible(
+                child: Text(
+                  matchStageLabel(f),
+                  textAlign: TextAlign.end,
+                  overflow: TextOverflow.ellipsis,
+                  style: AppTypography.labelSmall.copyWith(
+                    color: f.round == null
+                        ? AppColors.onSurfaceVariant
+                        : AppColors.primary,
+                  ),
                 ),
               ),
             ],

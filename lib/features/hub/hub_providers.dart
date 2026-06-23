@@ -27,6 +27,7 @@ class HubData {
     required this.squadSize,
     required this.squadRating,
     required this.championNationId,
+    required this.hasFinals,
   });
 
   final Career career;
@@ -37,6 +38,9 @@ class HubData {
 
   /// The World Cup winner once the final is played, else null.
   final int? championNationId;
+
+  /// Whether the World Cup finals have been drawn (draw ceremony available).
+  final bool hasFinals;
 
   /// Number of players in the nation's pool.
   final int squadSize;
@@ -78,6 +82,7 @@ hubDataProvider = FutureProvider.family<HubData?, int>((ref, careerId) async {
       : (squad.fold<int>(0, (s, p) => s + p.overall) / squad.length).round();
 
   final champion = await compRepo.worldChampion(careerId);
+  final hasFinals = await compRepo.hasFinals(careerId);
 
   return HubData(
     career: career,
@@ -88,6 +93,7 @@ hubDataProvider = FutureProvider.family<HubData?, int>((ref, careerId) async {
     squadSize: squad.length,
     squadRating: squadRating,
     championNationId: champion,
+    hasFinals: hasFinals,
   );
 });
 

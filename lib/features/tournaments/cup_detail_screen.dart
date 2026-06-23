@@ -76,6 +76,8 @@ class CupDetailScreen extends ConsumerWidget {
                     playerNationId: data.playerNationId,
                     code: code,
                     name: name,
+                    onWatchDraw: () =>
+                        context.go('${Routes.finalsDraw}?careerId=$careerId'),
                   )
                 else
                   const _Soon(
@@ -358,18 +360,28 @@ class _FinalsGroups extends StatelessWidget {
     required this.playerNationId,
     required this.code,
     required this.name,
+    required this.onWatchDraw,
   });
 
   final List<FinalsGroupTable> groups;
   final int playerNationId;
   final String Function(int) code;
   final String Function(int) name;
+  final VoidCallback onWatchDraw;
 
   @override
   Widget build(BuildContext context) {
     return ListView(
       padding: const EdgeInsets.all(AppSpacing.marginMobile),
       children: [
+        Align(
+          alignment: Alignment.centerRight,
+          child: TextButton.icon(
+            onPressed: onWatchDraw,
+            icon: const Icon(Icons.casino, size: 18),
+            label: const Text('Watch the draw'),
+          ),
+        ),
         for (final g in groups) ...[
           _GroupCard(
             group: (

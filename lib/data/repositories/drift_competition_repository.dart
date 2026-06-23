@@ -144,27 +144,42 @@ class DriftCompetitionRepository implements CompetitionRepository {
 
   @override
   Future<GroupTable?> groupTableForNation(int careerId, int nationId) async {
-    // Search across every confederation's competition for this save.
     final comps = await (_db.select(_db.competitions)
           ..where((t) => t.careerId.equals(careerId)))
         .get();
     if (comps.isEmpty) return null;
-    final compIds = comps.map((c) => c.id).toList();
 
+    // Prefer the finals group (the active stage) over the qualifying group.
+    final ordered = [
+      ...comps.where((c) => c.kind == CompetitionKind.worldCupFinals),
+      ...comps.where((c) => c.kind != CompetitionKind.worldCupFinals),
+    ];
     final groups = await (_db.select(_db.qualifyingGroups)
-          ..where((t) => t.competitionId.isIn(compIds)))
+          ..where(
+            (t) => t.competitionId.isIn(ordered.map((c) => c.id).toList()),
+          ))
         .get();
-    final groupIds = groups.map((g) => g.id).toList();
-    if (groupIds.isEmpty) return null;
+    if (groups.isEmpty) return null;
 
-    final member = await (_db.select(_db.groupMembers)
-          ..where((t) => t.nationId.equals(nationId) & t.groupId.isIn(groupIds))
-          ..limit(1))
-        .getSingleOrNull();
-    if (member == null) return null;
-
-    final groupId = member.groupId;
-    final group = groups.firstWhere((g) => g.id == groupId);
+    final memberships = await (_db.select(_db.groupMembers)
+          ..where((t) => t.nationId.equals(nationId)))
+        .get();
+    final groupById = {for (final g in groups) g.id: g};
+    // Pick the membership in the most advanced competition.
+    final rank = {for (var i = 0; i < ordered.length; i++) ordered[i].id: i};
+    QualifyingGroupRow? group;
+    var best = 1 << 30;
+    for (final m in memberships) {
+      final g = groupById[m.groupId];
+      if (g == null) continue;
+      final r = rank[g.competitionId] ?? best;
+      if (r < best) {
+        best = r;
+        group = g;
+      }
+    }
+    if (group == null) return null;
+    final groupId = group.id;
     final members = await (_db.select(_db.groupMembers)
           ..where((t) => t.groupId.equals(groupId)))
         .get();
