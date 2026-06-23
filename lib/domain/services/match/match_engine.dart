@@ -43,11 +43,21 @@ class MatchResult {
     required this.homeScore,
     required this.awayScore,
     required this.events,
+    required this.homeShots,
+    required this.awayShots,
+    required this.homePossession,
   });
 
   final int homeScore;
   final int awayScore;
   final List<MatchEvent> events;
+  final int homeShots;
+  final int awayShots;
+
+  /// Home possession 0–100; away is `100 - homePossession`.
+  final int homePossession;
+
+  int get awayPossession => 100 - homePossession;
 }
 
 /// A deterministic, lightweight tactical match engine. It derives attack and
@@ -71,15 +81,19 @@ class MatchEngine {
     final events = <MatchEvent>[];
     var homeScore = 0;
     var awayScore = 0;
+    var homeShots = 0;
+    var awayShots = 0;
 
     for (var minute = 1; minute <= 90; minute++) {
       if (_chance(rng, homeAttack, awayDefence, home.instructions)) {
+        homeShots++;
         if (rng.chance(_goalProbability(homeAttack, awayDefence))) {
           homeScore++;
           events.add(_goal(minute, home, rng));
         }
       }
       if (_chance(rng, awayAttack, homeDefence, away.instructions)) {
+        awayShots++;
         if (rng.chance(_goalProbability(awayAttack, homeDefence))) {
           awayScore++;
           events.add(_goal(minute, away, rng));
@@ -87,13 +101,26 @@ class MatchEngine {
       }
     }
 
+    final homeControl = _control(home);
+    final awayControl = _control(away);
+    final homePossession = (100 * homeControl / (homeControl + awayControl))
+        .round();
+
     events.sort((a, b) => a.minute.compareTo(b.minute));
     return MatchResult(
       homeScore: homeScore,
       awayScore: awayScore,
       events: events,
+      homeShots: homeShots,
+      awayShots: awayShots,
+      homePossession: homePossession,
     );
   }
+
+  /// Midfield control, used to estimate possession.
+  double _control(MatchTeam t) =>
+      _mean(t.xi, PositionCategory.midfielder) +
+      (t.instructions.tempo - 50) * 0.05;
 
   bool _chance(
     SeededRng rng,

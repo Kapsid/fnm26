@@ -89,15 +89,16 @@ class HubScreen extends ConsumerWidget {
                     : () => context.go('${Routes.match}?careerId=$careerId'),
               ),
               const SizedBox(height: AppSpacing.md),
-              _CalendarStrip(
-                anchor: hub.next?.date ?? hub.career.inGameDate,
-                fixtureDays: {
-                  for (final f in hub.fixtures) _dayOnly(f.date),
-                },
-              ),
-              const SizedBox(height: AppSpacing.md),
               _NextMatch(next: hub.next, code: code),
-              const SizedBox(height: AppSpacing.md),
+              Align(
+                alignment: Alignment.centerRight,
+                child: TextButton(
+                  onPressed: () =>
+                      context.go('${Routes.results}?careerId=$careerId'),
+                  child: const Text('View full schedule ›'),
+                ),
+              ),
+              const SizedBox(height: AppSpacing.sm),
               _SquadStatus(
                 rating: hub.squadRating,
                 size: hub.squadSize,
@@ -129,119 +130,10 @@ class HubScreen extends ConsumerWidget {
     );
   }
 
-  static DateTime _dayOnly(DateTime d) => DateTime(d.year, d.month, d.day);
-
   void _soon(BuildContext context) {
     ScaffoldMessenger.of(context)
       ..hideCurrentSnackBar()
       ..showSnackBar(const SnackBar(content: Text('Coming soon')));
-  }
-}
-
-class _CalendarStrip extends StatelessWidget {
-  const _CalendarStrip({required this.anchor, required this.fixtureDays});
-
-  final DateTime anchor;
-  final Set<DateTime> fixtureDays;
-
-  @override
-  Widget build(BuildContext context) {
-    final start = anchor.subtract(const Duration(days: 3));
-    return AppCard(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              const Text('CALENDAR', style: AppTypography.labelMedium),
-              const Spacer(),
-              Text(
-                DateFormat('MMM yyyy').format(anchor).toUpperCase(),
-                style: AppTypography.labelSmall.copyWith(
-                  color: AppColors.onSurfaceVariant,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: AppSpacing.sm),
-          SizedBox(
-            height: 64,
-            child: ListView.separated(
-              scrollDirection: Axis.horizontal,
-              itemCount: 12,
-              separatorBuilder: (_, _) => const SizedBox(width: AppSpacing.sm),
-              itemBuilder: (context, i) {
-                final day = start.add(Duration(days: i));
-                final isMatch = fixtureDays.contains(
-                  DateTime(day.year, day.month, day.day),
-                );
-                final isAnchor =
-                    day.year == anchor.year &&
-                    day.month == anchor.month &&
-                    day.day == anchor.day;
-                return _DayCell(
-                  day: day,
-                  isMatch: isMatch,
-                  highlight: isAnchor,
-                );
-              },
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _DayCell extends StatelessWidget {
-  const _DayCell({
-    required this.day,
-    required this.isMatch,
-    required this.highlight,
-  });
-
-  final DateTime day;
-  final bool isMatch;
-  final bool highlight;
-
-  @override
-  Widget build(BuildContext context) {
-    final color = highlight ? AppColors.primary : AppColors.onSurfaceVariant;
-    return Container(
-      width: 46,
-      decoration: BoxDecoration(
-        color: highlight
-            ? AppColors.primary.withValues(alpha: 0.12)
-            : AppColors.surfaceContainerLowest,
-        borderRadius: AppRadii.baseAll,
-        border: Border.all(
-          color: highlight ? AppColors.primary : AppColors.outlineVariant,
-        ),
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(
-            DateFormat('EEE').format(day).toUpperCase(),
-            style: AppTypography.labelSmall.copyWith(color: color, fontSize: 9),
-          ),
-          const SizedBox(height: 2),
-          Text(
-            '${day.day}',
-            style: AppTypography.titleMedium.copyWith(color: color),
-          ),
-          const SizedBox(height: 2),
-          Container(
-            width: 4,
-            height: 4,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: isMatch ? AppColors.error : Colors.transparent,
-            ),
-          ),
-        ],
-      ),
-    );
   }
 }
 

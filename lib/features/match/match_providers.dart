@@ -16,11 +16,15 @@ class MatchPreview {
     required this.fixture,
     required this.result,
     required this.nations,
+    required this.homeTeam,
+    required this.awayTeam,
   });
 
   final Fixture fixture;
   final MatchResult result;
   final Map<int, Nation> nations;
+  final MatchTeam homeTeam;
+  final MatchTeam awayTeam;
 }
 
 // autoDispose so re-opening the match screen always recomputes the *current*
@@ -80,9 +84,11 @@ final AutoDisposeFutureProviderFamily<MatchPreview?, int> matchPreviewProvider =
       );
 
       final playerIsHome = fixture.homeNationId == playerNationId;
+      final homeTeam = playerIsHome ? playerTeam : oppTeam;
+      final awayTeam = playerIsHome ? oppTeam : playerTeam;
       final result = const MatchEngine().play(
-        home: playerIsHome ? playerTeam : oppTeam,
-        away: playerIsHome ? oppTeam : playerTeam,
+        home: homeTeam,
+        away: awayTeam,
         rng: SeededRng.forFixture(career.rngSeed, fixture.id),
       );
 
@@ -90,7 +96,13 @@ final AutoDisposeFutureProviderFamily<MatchPreview?, int> matchPreviewProvider =
         for (final n in await ref.watch(nationRepositoryProvider).all())
           n.id: n,
       };
-      return MatchPreview(fixture: fixture, result: result, nations: nations);
+      return MatchPreview(
+        fixture: fixture,
+        result: result,
+        nations: nations,
+        homeTeam: homeTeam,
+        awayTeam: awayTeam,
+      );
     });
 
 List<Player> _xiFrom(List<Player> pool, List<int?> ids) {
