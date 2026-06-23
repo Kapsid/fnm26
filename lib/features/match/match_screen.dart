@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/core/routing/app_router.dart';
@@ -12,16 +14,75 @@ import 'package:fnm/features/match/match_providers.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
 
-/// Plays the player's next fixture with the tactical engine and shows the
-/// detail (Overview / Stats / Lineups) before committing the result.
-class MatchScreen extends ConsumerWidget {
+/// Plays the player's next fixture as a *live* minute-by-minute simulation
+/// (the deterministic engine result is replayed on a clock with play/pause,
+/// speed, and skip controls), then commits it on Continue.
+class MatchScreen extends ConsumerStatefulWidget {
   const MatchScreen({required this.careerId, super.key});
 
   final int careerId;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final previewAsync = ref.watch(matchPreviewProvider(careerId));
+  ConsumerState<MatchScreen> createState() => _MatchScreenState();
+}
+
+class _MatchScreenState extends ConsumerState<MatchScreen> {
+  static const _speeds = [1, 2, 4];
+
+  int _minute = 0;
+  bool _playing = true;
+  int _speedIdx = 0;
+  bool _started = false;
+  Timer? _timer;
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
+
+  void _begin() {
+    _started = true;
+    _restartTimer();
+  }
+
+  void _restartTimer() {
+    _timer?.cancel();
+    if (!_playing || _minute >= 90) return;
+    final interval = Duration(milliseconds: (360 / _speeds[_speedIdx]).round());
+    _timer = Timer.periodic(interval, (_) {
+      setState(() {
+        _minute++;
+        if (_minute >= 90) {
+          _minute = 90;
+          _playing = false;
+          _timer?.cancel();
+        }
+      });
+    });
+  }
+
+  void _togglePlay() {
+    setState(() => _playing = !_playing);
+    _restartTimer();
+  }
+
+  void _cycleSpeed() {
+    setState(() => _speedIdx = (_speedIdx + 1) % _speeds.length);
+    if (_playing) _restartTimer();
+  }
+
+  void _skip() {
+    _timer?.cancel();
+    setState(() {
+      _minute = 90;
+      _playing = false;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final previewAsync = ref.watch(matchPreviewProvider(widget.careerId));
 
     return Scaffold(
       body: previewAsync.when(
@@ -31,11 +92,22 @@ class MatchScreen extends ConsumerWidget {
           if (preview == null) {
             return const Center(child: Text('No upcoming match.'));
           }
+          if (!_started) {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              if (mounted && !_started) _begin();
+            });
+          }
+
           final r = preview.result;
-          String code(int id) => preview.nations[id]?.code ?? '??';
-          String name(int id) => preview.nations[id]?.name ?? 'Unknown';
           final homeId = preview.homeTeam.nationId;
           final awayId = preview.awayTeam.nationId;
+          String code(int id) => preview.nations[id]?.code ?? '??';
+          String name(int id) => preview.nations[id]?.name ?? 'Unknown';
+
+          final shown = r.events.where((e) => e.minute <= _minute).toList();
+          final homeScore = shown.where((e) => e.teamNationId == homeId).length;
+          final awayScore = shown.length - homeScore;
+          final ft = _minute >= 90;
 
           return DefaultTabController(
             length: 3,
@@ -44,22 +116,32 @@ class MatchScreen extends ConsumerWidget {
                 children: [
                   _TopBar(
                     onClose: () =>
-                        context.go('${Routes.hub}?careerId=$careerId'),
+                        context.go('${Routes.hub}?careerId=${widget.careerId}'),
                   ),
                   _Header(
                     homeCode: code(homeId),
                     awayCode: code(awayId),
                     homeName: name(homeId),
                     awayName: name(awayId),
-                    result: r,
-                    homeId: homeId,
+                    homeScore: homeScore,
+                    awayScore: awayScore,
+                    clock: ft ? 'FULL TIME' : "$_minute'",
+                    live: !ft,
                   ),
+                  if (!ft)
+                    _Controls(
+                      playing: _playing,
+                      speed: _speeds[_speedIdx],
+                      onPlayPause: _togglePlay,
+                      onSpeed: _cycleSpeed,
+                      onSkip: _skip,
+                    ),
                   const TabBar(
                     labelColor: AppColors.onSurface,
                     unselectedLabelColor: AppColors.onSurfaceVariant,
                     indicatorColor: AppColors.primary,
                     tabs: [
-                      Tab(text: 'OVERVIEW'),
+                      Tab(text: 'TIMELINE'),
                       Tab(text: 'STATS'),
                       Tab(text: 'LINEUPS'),
                     ],
@@ -67,12 +149,15 @@ class MatchScreen extends ConsumerWidget {
                   Expanded(
                     child: TabBarView(
                       children: [
-                        _Timeline(result: r, code: code),
-                        _Stats(
-                          result: r,
-                          homeCode: code(homeId),
-                          awayCode: code(awayId),
-                        ),
+                        _Timeline(events: shown, code: code, live: !ft),
+                        if (ft)
+                          _Stats(
+                            result: r,
+                            homeCode: code(homeId),
+                            awayCode: code(awayId),
+                          )
+                        else
+                          const _StatsLocked(),
                         _Lineups(
                           home: preview.homeTeam,
                           away: preview.awayTeam,
@@ -85,16 +170,24 @@ class MatchScreen extends ConsumerWidget {
                   Padding(
                     padding: const EdgeInsets.all(AppSpacing.marginMobile),
                     child: PrimaryButton(
-                      label: 'Continue',
-                      icon: Icons.check_rounded,
-                      onPressed: () async {
-                        await ref
-                            .read(seasonServiceProvider)
-                            .playPlayerMatch(careerId, preview.fixture, r);
-                        if (context.mounted) {
-                          context.go('${Routes.hub}?careerId=$careerId');
-                        }
-                      },
+                      label: ft ? 'Continue' : 'Skip to full time',
+                      icon: ft ? Icons.check_rounded : Icons.fast_forward,
+                      onPressed: ft
+                          ? () async {
+                              await ref
+                                  .read(seasonServiceProvider)
+                                  .playPlayerMatch(
+                                    widget.careerId,
+                                    preview.fixture,
+                                    r,
+                                  );
+                              if (context.mounted) {
+                                context.go(
+                                  '${Routes.hub}?careerId=${widget.careerId}',
+                                );
+                              }
+                            }
+                          : _skip,
                     ),
                   ),
                 ],
@@ -137,33 +230,50 @@ class _Header extends StatelessWidget {
     required this.awayCode,
     required this.homeName,
     required this.awayName,
-    required this.result,
-    required this.homeId,
+    required this.homeScore,
+    required this.awayScore,
+    required this.clock,
+    required this.live,
   });
 
   final String homeCode;
   final String awayCode;
   final String homeName;
   final String awayName;
-  final MatchResult result;
-  final int homeId;
+  final int homeScore;
+  final int awayScore;
+  final String clock;
+  final bool live;
 
   @override
   Widget build(BuildContext context) {
-    final homeGoals = result.events
-        .where((e) => e.teamNationId == homeId)
-        .toList();
-    final awayGoals = result.events
-        .where((e) => e.teamNationId != homeId)
-        .toList();
-
     return Padding(
       padding: const EdgeInsets.all(AppSpacing.marginMobile),
       child: AppCard(
         child: Column(
           children: [
-            const Text('FULL TIME', style: AppTypography.labelMedium),
-            const SizedBox(height: AppSpacing.md),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                if (live)
+                  Container(
+                    width: 8,
+                    height: 8,
+                    margin: const EdgeInsets.only(right: AppSpacing.sm),
+                    decoration: const BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: AppColors.error,
+                    ),
+                  ),
+                Text(
+                  clock,
+                  style: AppTypography.labelMedium.copyWith(
+                    color: live ? AppColors.error : AppColors.onSurfaceVariant,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: AppSpacing.sm),
             Row(
               children: [
                 Expanded(
@@ -174,7 +284,7 @@ class _Header extends StatelessWidget {
                     horizontal: AppSpacing.sm,
                   ),
                   child: Text(
-                    '${result.homeScore} : ${result.awayScore}',
+                    '$homeScore : $awayScore',
                     style: AppTypography.displayLarge,
                   ),
                 ),
@@ -183,17 +293,55 @@ class _Header extends StatelessWidget {
                 ),
               ],
             ),
-            const SizedBox(height: AppSpacing.md),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(child: _Scorers(goals: homeGoals, alignEnd: true)),
-                const SizedBox(width: AppSpacing.md),
-                Expanded(child: _Scorers(goals: awayGoals, alignEnd: false)),
-              ],
-            ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class _Controls extends StatelessWidget {
+  const _Controls({
+    required this.playing,
+    required this.speed,
+    required this.onPlayPause,
+    required this.onSpeed,
+    required this.onSkip,
+  });
+
+  final bool playing;
+  final int speed;
+  final VoidCallback onPlayPause;
+  final VoidCallback onSpeed;
+  final VoidCallback onSkip;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.marginMobile),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          IconButton.filledTonal(
+            icon: Icon(playing ? Icons.pause : Icons.play_arrow),
+            onPressed: onPlayPause,
+          ),
+          const SizedBox(width: AppSpacing.md),
+          OutlinedButton(
+            onPressed: onSpeed,
+            style: OutlinedButton.styleFrom(
+              foregroundColor: AppColors.primary,
+              side: const BorderSide(color: AppColors.outlineVariant),
+            ),
+            child: Text('${speed}x', style: AppTypography.labelMedium),
+          ),
+          const SizedBox(width: AppSpacing.md),
+          IconButton.filledTonal(
+            icon: const Icon(Icons.skip_next),
+            tooltip: 'Skip to full time',
+            onPressed: onSkip,
+          ),
+        ],
       ),
     );
   }
@@ -221,52 +369,33 @@ class _Side extends StatelessWidget {
   }
 }
 
-class _Scorers extends StatelessWidget {
-  const _Scorers({required this.goals, required this.alignEnd});
-  final List<MatchEvent> goals;
-  final bool alignEnd;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: alignEnd
-          ? CrossAxisAlignment.end
-          : CrossAxisAlignment.start,
-      children: [
-        for (final g in goals)
-          Text(
-            "${g.minute}' ${g.playerName}",
-            textAlign: alignEnd ? TextAlign.end : TextAlign.start,
-            style: AppTypography.bodySmall.copyWith(
-              color: AppColors.onSurfaceVariant,
-            ),
-          ),
-      ],
-    );
-  }
-}
-
 class _Timeline extends StatelessWidget {
-  const _Timeline({required this.result, required this.code});
-  final MatchResult result;
+  const _Timeline({
+    required this.events,
+    required this.code,
+    required this.live,
+  });
+  final List<MatchEvent> events;
   final String Function(int) code;
+  final bool live;
 
   @override
   Widget build(BuildContext context) {
-    if (result.events.isEmpty) {
+    if (events.isEmpty) {
       return Center(
         child: Text(
-          'A goalless affair.',
+          live ? 'Kick-off!' : 'A goalless affair.',
           style: AppTypography.bodyMedium.copyWith(
             color: AppColors.onSurfaceVariant,
           ),
         ),
       );
     }
+    final reversed = events.reversed.toList();
     return ListView(
       padding: const EdgeInsets.all(AppSpacing.marginMobile),
       children: [
-        for (final e in result.events)
+        for (final e in reversed)
           Padding(
             padding: const EdgeInsets.symmetric(vertical: AppSpacing.sm),
             child: Row(
@@ -292,6 +421,22 @@ class _Timeline extends StatelessWidget {
             ),
           ),
       ],
+    );
+  }
+}
+
+class _StatsLocked extends StatelessWidget {
+  const _StatsLocked();
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Text(
+        'Stats available at full time.',
+        style: AppTypography.bodyMedium.copyWith(
+          color: AppColors.onSurfaceVariant,
+        ),
+      ),
     );
   }
 }
@@ -384,10 +529,7 @@ class _StatBar extends StatelessWidget {
                 ),
                 Expanded(
                   flex: (away / total * 1000).round().clamp(1, 1000),
-                  child: Container(
-                    height: 6,
-                    color: AppColors.outlineVariant,
-                  ),
+                  child: Container(height: 6, color: AppColors.outlineVariant),
                 ),
               ],
             ),
@@ -437,10 +579,7 @@ class _Lineups extends StatelessWidget {
             padding: const EdgeInsets.symmetric(vertical: 3),
             child: Row(
               children: [
-                SizedBox(
-                  width: 36,
-                  child: TacticalChip(p.position.label),
-                ),
+                SizedBox(width: 36, child: TacticalChip(p.position.label)),
                 const SizedBox(width: AppSpacing.sm),
                 Expanded(
                   child: Text(p.name, style: AppTypography.bodyMedium),
