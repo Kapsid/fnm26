@@ -16,6 +16,7 @@ abstract class Fixture with _$Fixture {
     int? groupId,
     int? homeScore,
     int? awayScore,
+    String? round,
     @Default(false) bool played,
   }) = _Fixture;
 

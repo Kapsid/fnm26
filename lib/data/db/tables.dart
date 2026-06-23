@@ -70,6 +70,9 @@ class Competitions extends Table {
       integer().references(Careers, #id, onDelete: KeyAction.cascade)();
   TextColumn get confederation => textEnum<Confederation>()();
   TextColumn get name => text()();
+  TextColumn get kind => textEnum<CompetitionKind>().withDefault(
+        const Constant('worldCupQualifying'),
+      )();
 }
 
 /// A qualifying group within a competition.
@@ -141,4 +144,8 @@ class Fixtures extends Table {
   IntColumn get homeScore => integer().nullable()();
   IntColumn get awayScore => integer().nullable()();
   BoolColumn get played => boolean().withDefault(const Constant(false))();
+
+  /// Stage label for finals matches: `GROUP`, `R16`, `QF`, `SF`, `3RD`,
+  /// `FINAL`. Null for confederation qualifiers.
+  TextColumn get round => text().nullable()();
 }

@@ -1774,7 +1774,23 @@ class $CompetitionsTable extends Competitions
     requiredDuringInsert: true,
   );
   @override
-  List<GeneratedColumn> get $columns => [id, careerId, confederation, name];
+  late final GeneratedColumnWithTypeConverter<CompetitionKind, String> kind =
+      GeneratedColumn<String>(
+        'kind',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+        defaultValue: const Constant('worldCupQualifying'),
+      ).withConverter<CompetitionKind>($CompetitionsTable.$converterkind);
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    careerId,
+    confederation,
+    name,
+    kind,
+  ];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -1833,6 +1849,12 @@ class $CompetitionsTable extends Competitions
         DriftSqlType.string,
         data['${effectivePrefix}name'],
       )!,
+      kind: $CompetitionsTable.$converterkind.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}kind'],
+        )!,
+      ),
     );
   }
 
@@ -1845,6 +1867,8 @@ class $CompetitionsTable extends Competitions
   $converterconfederation = const EnumNameConverter<Confederation>(
     Confederation.values,
   );
+  static JsonTypeConverter2<CompetitionKind, String, String> $converterkind =
+      const EnumNameConverter<CompetitionKind>(CompetitionKind.values);
 }
 
 class CompetitionRow extends DataClass implements Insertable<CompetitionRow> {
@@ -1852,11 +1876,13 @@ class CompetitionRow extends DataClass implements Insertable<CompetitionRow> {
   final int careerId;
   final Confederation confederation;
   final String name;
+  final CompetitionKind kind;
   const CompetitionRow({
     required this.id,
     required this.careerId,
     required this.confederation,
     required this.name,
+    required this.kind,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -1869,6 +1895,11 @@ class CompetitionRow extends DataClass implements Insertable<CompetitionRow> {
       );
     }
     map['name'] = Variable<String>(name);
+    {
+      map['kind'] = Variable<String>(
+        $CompetitionsTable.$converterkind.toSql(kind),
+      );
+    }
     return map;
   }
 
@@ -1878,6 +1909,7 @@ class CompetitionRow extends DataClass implements Insertable<CompetitionRow> {
       careerId: Value(careerId),
       confederation: Value(confederation),
       name: Value(name),
+      kind: Value(kind),
     );
   }
 
@@ -1893,6 +1925,9 @@ class CompetitionRow extends DataClass implements Insertable<CompetitionRow> {
         serializer.fromJson<String>(json['confederation']),
       ),
       name: serializer.fromJson<String>(json['name']),
+      kind: $CompetitionsTable.$converterkind.fromJson(
+        serializer.fromJson<String>(json['kind']),
+      ),
     );
   }
   @override
@@ -1905,6 +1940,9 @@ class CompetitionRow extends DataClass implements Insertable<CompetitionRow> {
         $CompetitionsTable.$converterconfederation.toJson(confederation),
       ),
       'name': serializer.toJson<String>(name),
+      'kind': serializer.toJson<String>(
+        $CompetitionsTable.$converterkind.toJson(kind),
+      ),
     };
   }
 
@@ -1913,11 +1951,13 @@ class CompetitionRow extends DataClass implements Insertable<CompetitionRow> {
     int? careerId,
     Confederation? confederation,
     String? name,
+    CompetitionKind? kind,
   }) => CompetitionRow(
     id: id ?? this.id,
     careerId: careerId ?? this.careerId,
     confederation: confederation ?? this.confederation,
     name: name ?? this.name,
+    kind: kind ?? this.kind,
   );
   CompetitionRow copyWithCompanion(CompetitionsCompanion data) {
     return CompetitionRow(
@@ -1927,6 +1967,7 @@ class CompetitionRow extends DataClass implements Insertable<CompetitionRow> {
           ? data.confederation.value
           : this.confederation,
       name: data.name.present ? data.name.value : this.name,
+      kind: data.kind.present ? data.kind.value : this.kind,
     );
   }
 
@@ -1936,13 +1977,14 @@ class CompetitionRow extends DataClass implements Insertable<CompetitionRow> {
           ..write('id: $id, ')
           ..write('careerId: $careerId, ')
           ..write('confederation: $confederation, ')
-          ..write('name: $name')
+          ..write('name: $name, ')
+          ..write('kind: $kind')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, careerId, confederation, name);
+  int get hashCode => Object.hash(id, careerId, confederation, name, kind);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -1950,7 +1992,8 @@ class CompetitionRow extends DataClass implements Insertable<CompetitionRow> {
           other.id == this.id &&
           other.careerId == this.careerId &&
           other.confederation == this.confederation &&
-          other.name == this.name);
+          other.name == this.name &&
+          other.kind == this.kind);
 }
 
 class CompetitionsCompanion extends UpdateCompanion<CompetitionRow> {
@@ -1958,17 +2001,20 @@ class CompetitionsCompanion extends UpdateCompanion<CompetitionRow> {
   final Value<int> careerId;
   final Value<Confederation> confederation;
   final Value<String> name;
+  final Value<CompetitionKind> kind;
   const CompetitionsCompanion({
     this.id = const Value.absent(),
     this.careerId = const Value.absent(),
     this.confederation = const Value.absent(),
     this.name = const Value.absent(),
+    this.kind = const Value.absent(),
   });
   CompetitionsCompanion.insert({
     this.id = const Value.absent(),
     required int careerId,
     required Confederation confederation,
     required String name,
+    this.kind = const Value.absent(),
   }) : careerId = Value(careerId),
        confederation = Value(confederation),
        name = Value(name);
@@ -1977,12 +2023,14 @@ class CompetitionsCompanion extends UpdateCompanion<CompetitionRow> {
     Expression<int>? careerId,
     Expression<String>? confederation,
     Expression<String>? name,
+    Expression<String>? kind,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (careerId != null) 'career_id': careerId,
       if (confederation != null) 'confederation': confederation,
       if (name != null) 'name': name,
+      if (kind != null) 'kind': kind,
     });
   }
 
@@ -1991,12 +2039,14 @@ class CompetitionsCompanion extends UpdateCompanion<CompetitionRow> {
     Value<int>? careerId,
     Value<Confederation>? confederation,
     Value<String>? name,
+    Value<CompetitionKind>? kind,
   }) {
     return CompetitionsCompanion(
       id: id ?? this.id,
       careerId: careerId ?? this.careerId,
       confederation: confederation ?? this.confederation,
       name: name ?? this.name,
+      kind: kind ?? this.kind,
     );
   }
 
@@ -2017,6 +2067,11 @@ class CompetitionsCompanion extends UpdateCompanion<CompetitionRow> {
     if (name.present) {
       map['name'] = Variable<String>(name.value);
     }
+    if (kind.present) {
+      map['kind'] = Variable<String>(
+        $CompetitionsTable.$converterkind.toSql(kind.value),
+      );
+    }
     return map;
   }
 
@@ -2026,7 +2081,8 @@ class CompetitionsCompanion extends UpdateCompanion<CompetitionRow> {
           ..write('id: $id, ')
           ..write('careerId: $careerId, ')
           ..write('confederation: $confederation, ')
-          ..write('name: $name')
+          ..write('name: $name, ')
+          ..write('kind: $kind')
           ..write(')'))
         .toString();
   }
@@ -2648,6 +2704,15 @@ class $FixturesTable extends Fixtures
     ),
     defaultValue: const Constant(false),
   );
+  static const VerificationMeta _roundMeta = const VerificationMeta('round');
+  @override
+  late final GeneratedColumn<String> round = GeneratedColumn<String>(
+    'round',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -2661,6 +2726,7 @@ class $FixturesTable extends Fixtures
     homeScore,
     awayScore,
     played,
+    round,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -2758,6 +2824,12 @@ class $FixturesTable extends Fixtures
         played.isAcceptableOrUnknown(data['played']!, _playedMeta),
       );
     }
+    if (data.containsKey('round')) {
+      context.handle(
+        _roundMeta,
+        round.isAcceptableOrUnknown(data['round']!, _roundMeta),
+      );
+    }
     return context;
   }
 
@@ -2811,6 +2883,10 @@ class $FixturesTable extends Fixtures
         DriftSqlType.bool,
         data['${effectivePrefix}played'],
       )!,
+      round: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}round'],
+      ),
     );
   }
 
@@ -2832,6 +2908,10 @@ class FixtureRow extends DataClass implements Insertable<FixtureRow> {
   final int? homeScore;
   final int? awayScore;
   final bool played;
+
+  /// Stage label for finals matches: `GROUP`, `R16`, `QF`, `SF`, `3RD`,
+  /// `FINAL`. Null for confederation qualifiers.
+  final String? round;
   const FixtureRow({
     required this.id,
     required this.careerId,
@@ -2844,6 +2924,7 @@ class FixtureRow extends DataClass implements Insertable<FixtureRow> {
     this.homeScore,
     this.awayScore,
     required this.played,
+    this.round,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -2865,6 +2946,9 @@ class FixtureRow extends DataClass implements Insertable<FixtureRow> {
       map['away_score'] = Variable<int>(awayScore);
     }
     map['played'] = Variable<bool>(played);
+    if (!nullToAbsent || round != null) {
+      map['round'] = Variable<String>(round);
+    }
     return map;
   }
 
@@ -2887,6 +2971,9 @@ class FixtureRow extends DataClass implements Insertable<FixtureRow> {
           ? const Value.absent()
           : Value(awayScore),
       played: Value(played),
+      round: round == null && nullToAbsent
+          ? const Value.absent()
+          : Value(round),
     );
   }
 
@@ -2907,6 +2994,7 @@ class FixtureRow extends DataClass implements Insertable<FixtureRow> {
       homeScore: serializer.fromJson<int?>(json['homeScore']),
       awayScore: serializer.fromJson<int?>(json['awayScore']),
       played: serializer.fromJson<bool>(json['played']),
+      round: serializer.fromJson<String?>(json['round']),
     );
   }
   @override
@@ -2924,6 +3012,7 @@ class FixtureRow extends DataClass implements Insertable<FixtureRow> {
       'homeScore': serializer.toJson<int?>(homeScore),
       'awayScore': serializer.toJson<int?>(awayScore),
       'played': serializer.toJson<bool>(played),
+      'round': serializer.toJson<String?>(round),
     };
   }
 
@@ -2939,6 +3028,7 @@ class FixtureRow extends DataClass implements Insertable<FixtureRow> {
     Value<int?> homeScore = const Value.absent(),
     Value<int?> awayScore = const Value.absent(),
     bool? played,
+    Value<String?> round = const Value.absent(),
   }) => FixtureRow(
     id: id ?? this.id,
     careerId: careerId ?? this.careerId,
@@ -2951,6 +3041,7 @@ class FixtureRow extends DataClass implements Insertable<FixtureRow> {
     homeScore: homeScore.present ? homeScore.value : this.homeScore,
     awayScore: awayScore.present ? awayScore.value : this.awayScore,
     played: played ?? this.played,
+    round: round.present ? round.value : this.round,
   );
   FixtureRow copyWithCompanion(FixturesCompanion data) {
     return FixtureRow(
@@ -2971,6 +3062,7 @@ class FixtureRow extends DataClass implements Insertable<FixtureRow> {
       homeScore: data.homeScore.present ? data.homeScore.value : this.homeScore,
       awayScore: data.awayScore.present ? data.awayScore.value : this.awayScore,
       played: data.played.present ? data.played.value : this.played,
+      round: data.round.present ? data.round.value : this.round,
     );
   }
 
@@ -2987,7 +3079,8 @@ class FixtureRow extends DataClass implements Insertable<FixtureRow> {
           ..write('awayNationId: $awayNationId, ')
           ..write('homeScore: $homeScore, ')
           ..write('awayScore: $awayScore, ')
-          ..write('played: $played')
+          ..write('played: $played, ')
+          ..write('round: $round')
           ..write(')'))
         .toString();
   }
@@ -3005,6 +3098,7 @@ class FixtureRow extends DataClass implements Insertable<FixtureRow> {
     homeScore,
     awayScore,
     played,
+    round,
   );
   @override
   bool operator ==(Object other) =>
@@ -3020,7 +3114,8 @@ class FixtureRow extends DataClass implements Insertable<FixtureRow> {
           other.awayNationId == this.awayNationId &&
           other.homeScore == this.homeScore &&
           other.awayScore == this.awayScore &&
-          other.played == this.played);
+          other.played == this.played &&
+          other.round == this.round);
 }
 
 class FixturesCompanion extends UpdateCompanion<FixtureRow> {
@@ -3035,6 +3130,7 @@ class FixturesCompanion extends UpdateCompanion<FixtureRow> {
   final Value<int?> homeScore;
   final Value<int?> awayScore;
   final Value<bool> played;
+  final Value<String?> round;
   const FixturesCompanion({
     this.id = const Value.absent(),
     this.careerId = const Value.absent(),
@@ -3047,6 +3143,7 @@ class FixturesCompanion extends UpdateCompanion<FixtureRow> {
     this.homeScore = const Value.absent(),
     this.awayScore = const Value.absent(),
     this.played = const Value.absent(),
+    this.round = const Value.absent(),
   });
   FixturesCompanion.insert({
     this.id = const Value.absent(),
@@ -3060,6 +3157,7 @@ class FixturesCompanion extends UpdateCompanion<FixtureRow> {
     this.homeScore = const Value.absent(),
     this.awayScore = const Value.absent(),
     this.played = const Value.absent(),
+    this.round = const Value.absent(),
   }) : careerId = Value(careerId),
        competitionId = Value(competitionId),
        matchday = Value(matchday),
@@ -3078,6 +3176,7 @@ class FixturesCompanion extends UpdateCompanion<FixtureRow> {
     Expression<int>? homeScore,
     Expression<int>? awayScore,
     Expression<bool>? played,
+    Expression<String>? round,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -3091,6 +3190,7 @@ class FixturesCompanion extends UpdateCompanion<FixtureRow> {
       if (homeScore != null) 'home_score': homeScore,
       if (awayScore != null) 'away_score': awayScore,
       if (played != null) 'played': played,
+      if (round != null) 'round': round,
     });
   }
 
@@ -3106,6 +3206,7 @@ class FixturesCompanion extends UpdateCompanion<FixtureRow> {
     Value<int?>? homeScore,
     Value<int?>? awayScore,
     Value<bool>? played,
+    Value<String?>? round,
   }) {
     return FixturesCompanion(
       id: id ?? this.id,
@@ -3119,6 +3220,7 @@ class FixturesCompanion extends UpdateCompanion<FixtureRow> {
       homeScore: homeScore ?? this.homeScore,
       awayScore: awayScore ?? this.awayScore,
       played: played ?? this.played,
+      round: round ?? this.round,
     );
   }
 
@@ -3158,6 +3260,9 @@ class FixturesCompanion extends UpdateCompanion<FixtureRow> {
     if (played.present) {
       map['played'] = Variable<bool>(played.value);
     }
+    if (round.present) {
+      map['round'] = Variable<String>(round.value);
+    }
     return map;
   }
 
@@ -3174,7 +3279,8 @@ class FixturesCompanion extends UpdateCompanion<FixtureRow> {
           ..write('awayNationId: $awayNationId, ')
           ..write('homeScore: $homeScore, ')
           ..write('awayScore: $awayScore, ')
-          ..write('played: $played')
+          ..write('played: $played, ')
+          ..write('round: $round')
           ..write(')'))
         .toString();
   }
@@ -5686,6 +5792,7 @@ typedef $$CompetitionsTableCreateCompanionBuilder =
       required int careerId,
       required Confederation confederation,
       required String name,
+      Value<CompetitionKind> kind,
     });
 typedef $$CompetitionsTableUpdateCompanionBuilder =
     CompetitionsCompanion Function({
@@ -5693,6 +5800,7 @@ typedef $$CompetitionsTableUpdateCompanionBuilder =
       Value<int> careerId,
       Value<Confederation> confederation,
       Value<String> name,
+      Value<CompetitionKind> kind,
     });
 
 final class $$CompetitionsTableReferences
@@ -5778,6 +5886,12 @@ class $$CompetitionsTableFilterComposer
   ColumnFilters<String> get name => $composableBuilder(
     column: $table.name,
     builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnWithTypeConverterFilters<CompetitionKind, CompetitionKind, String>
+  get kind => $composableBuilder(
+    column: $table.kind,
+    builder: (column) => ColumnWithTypeConverterFilters(column),
   );
 
   $$CareersTableFilterComposer get careerId {
@@ -5878,6 +5992,11 @@ class $$CompetitionsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get kind => $composableBuilder(
+    column: $table.kind,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   $$CareersTableOrderingComposer get careerId {
     final $$CareersTableOrderingComposer composer = $composerBuilder(
       composer: this,
@@ -5922,6 +6041,9 @@ class $$CompetitionsTableAnnotationComposer
 
   GeneratedColumn<String> get name =>
       $composableBuilder(column: $table.name, builder: (column) => column);
+
+  GeneratedColumnWithTypeConverter<CompetitionKind, String> get kind =>
+      $composableBuilder(column: $table.kind, builder: (column) => column);
 
   $$CareersTableAnnotationComposer get careerId {
     final $$CareersTableAnnotationComposer composer = $composerBuilder(
@@ -6033,11 +6155,13 @@ class $$CompetitionsTableTableManager
                 Value<int> careerId = const Value.absent(),
                 Value<Confederation> confederation = const Value.absent(),
                 Value<String> name = const Value.absent(),
+                Value<CompetitionKind> kind = const Value.absent(),
               }) => CompetitionsCompanion(
                 id: id,
                 careerId: careerId,
                 confederation: confederation,
                 name: name,
+                kind: kind,
               ),
           createCompanionCallback:
               ({
@@ -6045,11 +6169,13 @@ class $$CompetitionsTableTableManager
                 required int careerId,
                 required Confederation confederation,
                 required String name,
+                Value<CompetitionKind> kind = const Value.absent(),
               }) => CompetitionsCompanion.insert(
                 id: id,
                 careerId: careerId,
                 confederation: confederation,
                 name: name,
+                kind: kind,
               ),
           withReferenceMapper: (p0) => p0
               .map(
@@ -6931,6 +7057,7 @@ typedef $$FixturesTableCreateCompanionBuilder =
       Value<int?> homeScore,
       Value<int?> awayScore,
       Value<bool> played,
+      Value<String?> round,
     });
 typedef $$FixturesTableUpdateCompanionBuilder =
     FixturesCompanion Function({
@@ -6945,6 +7072,7 @@ typedef $$FixturesTableUpdateCompanionBuilder =
       Value<int?> homeScore,
       Value<int?> awayScore,
       Value<bool> played,
+      Value<String?> round,
     });
 
 final class $$FixturesTableReferences
@@ -7050,6 +7178,11 @@ class $$FixturesTableFilterComposer
 
   ColumnFilters<bool> get played => $composableBuilder(
     column: $table.played,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get round => $composableBuilder(
+    column: $table.round,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -7172,6 +7305,11 @@ class $$FixturesTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get round => $composableBuilder(
+    column: $table.round,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   $$CareersTableOrderingComposer get careerId {
     final $$CareersTableOrderingComposer composer = $composerBuilder(
       composer: this,
@@ -7278,6 +7416,9 @@ class $$FixturesTableAnnotationComposer
 
   GeneratedColumn<bool> get played =>
       $composableBuilder(column: $table.played, builder: (column) => column);
+
+  GeneratedColumn<String> get round =>
+      $composableBuilder(column: $table.round, builder: (column) => column);
 
   $$CareersTableAnnotationComposer get careerId {
     final $$CareersTableAnnotationComposer composer = $composerBuilder(
@@ -7392,6 +7533,7 @@ class $$FixturesTableTableManager
                 Value<int?> homeScore = const Value.absent(),
                 Value<int?> awayScore = const Value.absent(),
                 Value<bool> played = const Value.absent(),
+                Value<String?> round = const Value.absent(),
               }) => FixturesCompanion(
                 id: id,
                 careerId: careerId,
@@ -7404,6 +7546,7 @@ class $$FixturesTableTableManager
                 homeScore: homeScore,
                 awayScore: awayScore,
                 played: played,
+                round: round,
               ),
           createCompanionCallback:
               ({
@@ -7418,6 +7561,7 @@ class $$FixturesTableTableManager
                 Value<int?> homeScore = const Value.absent(),
                 Value<int?> awayScore = const Value.absent(),
                 Value<bool> played = const Value.absent(),
+                Value<String?> round = const Value.absent(),
               }) => FixturesCompanion.insert(
                 id: id,
                 careerId: careerId,
@@ -7430,6 +7574,7 @@ class $$FixturesTableTableManager
                 homeScore: homeScore,
                 awayScore: awayScore,
                 played: played,
+                round: round,
               ),
           withReferenceMapper: (p0) => p0
               .map(

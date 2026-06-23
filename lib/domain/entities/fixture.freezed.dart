@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Fixture {
 
- int get id; int get careerId; int get competitionId; int get matchday; DateTime get date; int get homeNationId; int get awayNationId; int? get groupId; int? get homeScore; int? get awayScore; bool get played;
+ int get id; int get careerId; int get competitionId; int get matchday; DateTime get date; int get homeNationId; int get awayNationId; int? get groupId; int? get homeScore; int? get awayScore; String? get round; bool get played;
 /// Create a copy of Fixture
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $FixtureCopyWith<Fixture> get copyWith => _$FixtureCopyWithImpl<Fixture>(this as
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Fixture&&(identical(other.id, id) || other.id == id)&&(identical(other.careerId, careerId) || other.careerId == careerId)&&(identical(other.competitionId, competitionId) || other.competitionId == competitionId)&&(identical(other.matchday, matchday) || other.matchday == matchday)&&(identical(other.date, date) || other.date == date)&&(identical(other.homeNationId, homeNationId) || other.homeNationId == homeNationId)&&(identical(other.awayNationId, awayNationId) || other.awayNationId == awayNationId)&&(identical(other.groupId, groupId) || other.groupId == groupId)&&(identical(other.homeScore, homeScore) || other.homeScore == homeScore)&&(identical(other.awayScore, awayScore) || other.awayScore == awayScore)&&(identical(other.played, played) || other.played == played));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Fixture&&(identical(other.id, id) || other.id == id)&&(identical(other.careerId, careerId) || other.careerId == careerId)&&(identical(other.competitionId, competitionId) || other.competitionId == competitionId)&&(identical(other.matchday, matchday) || other.matchday == matchday)&&(identical(other.date, date) || other.date == date)&&(identical(other.homeNationId, homeNationId) || other.homeNationId == homeNationId)&&(identical(other.awayNationId, awayNationId) || other.awayNationId == awayNationId)&&(identical(other.groupId, groupId) || other.groupId == groupId)&&(identical(other.homeScore, homeScore) || other.homeScore == homeScore)&&(identical(other.awayScore, awayScore) || other.awayScore == awayScore)&&(identical(other.round, round) || other.round == round)&&(identical(other.played, played) || other.played == played));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,careerId,competitionId,matchday,date,homeNationId,awayNationId,groupId,homeScore,awayScore,played);
+int get hashCode => Object.hash(runtimeType,id,careerId,competitionId,matchday,date,homeNationId,awayNationId,groupId,homeScore,awayScore,round,played);
 
 @override
 String toString() {
-  return 'Fixture(id: $id, careerId: $careerId, competitionId: $competitionId, matchday: $matchday, date: $date, homeNationId: $homeNationId, awayNationId: $awayNationId, groupId: $groupId, homeScore: $homeScore, awayScore: $awayScore, played: $played)';
+  return 'Fixture(id: $id, careerId: $careerId, competitionId: $competitionId, matchday: $matchday, date: $date, homeNationId: $homeNationId, awayNationId: $awayNationId, groupId: $groupId, homeScore: $homeScore, awayScore: $awayScore, round: $round, played: $played)';
 }
 
 
@@ -45,7 +45,7 @@ abstract mixin class $FixtureCopyWith<$Res>  {
   factory $FixtureCopyWith(Fixture value, $Res Function(Fixture) _then) = _$FixtureCopyWithImpl;
 @useResult
 $Res call({
- int id, int careerId, int competitionId, int matchday, DateTime date, int homeNationId, int awayNationId, int? groupId, int? homeScore, int? awayScore, bool played
+ int id, int careerId, int competitionId, int matchday, DateTime date, int homeNationId, int awayNationId, int? groupId, int? homeScore, int? awayScore, String? round, bool played
 });
 
 
@@ -62,7 +62,7 @@ class _$FixtureCopyWithImpl<$Res>
 
 /// Create a copy of Fixture
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? careerId = null,Object? competitionId = null,Object? matchday = null,Object? date = null,Object? homeNationId = null,Object? awayNationId = null,Object? groupId = freezed,Object? homeScore = freezed,Object? awayScore = freezed,Object? played = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? careerId = null,Object? competitionId = null,Object? matchday = null,Object? date = null,Object? homeNationId = null,Object? awayNationId = null,Object? groupId = freezed,Object? homeScore = freezed,Object? awayScore = freezed,Object? round = freezed,Object? played = null,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,careerId: null == careerId ? _self.careerId : careerId // ignore: cast_nullable_to_non_nullable
@@ -74,7 +74,8 @@ as int,awayNationId: null == awayNationId ? _self.awayNationId : awayNationId //
 as int,groupId: freezed == groupId ? _self.groupId : groupId // ignore: cast_nullable_to_non_nullable
 as int?,homeScore: freezed == homeScore ? _self.homeScore : homeScore // ignore: cast_nullable_to_non_nullable
 as int?,awayScore: freezed == awayScore ? _self.awayScore : awayScore // ignore: cast_nullable_to_non_nullable
-as int?,played: null == played ? _self.played : played // ignore: cast_nullable_to_non_nullable
+as int?,round: freezed == round ? _self.round : round // ignore: cast_nullable_to_non_nullable
+as String?,played: null == played ? _self.played : played // ignore: cast_nullable_to_non_nullable
 as bool,
   ));
 }
@@ -160,10 +161,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  int careerId,  int competitionId,  int matchday,  DateTime date,  int homeNationId,  int awayNationId,  int? groupId,  int? homeScore,  int? awayScore,  bool played)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  int careerId,  int competitionId,  int matchday,  DateTime date,  int homeNationId,  int awayNationId,  int? groupId,  int? homeScore,  int? awayScore,  String? round,  bool played)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Fixture() when $default != null:
-return $default(_that.id,_that.careerId,_that.competitionId,_that.matchday,_that.date,_that.homeNationId,_that.awayNationId,_that.groupId,_that.homeScore,_that.awayScore,_that.played);case _:
+return $default(_that.id,_that.careerId,_that.competitionId,_that.matchday,_that.date,_that.homeNationId,_that.awayNationId,_that.groupId,_that.homeScore,_that.awayScore,_that.round,_that.played);case _:
   return orElse();
 
 }
@@ -181,10 +182,10 @@ return $default(_that.id,_that.careerId,_that.competitionId,_that.matchday,_that
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  int careerId,  int competitionId,  int matchday,  DateTime date,  int homeNationId,  int awayNationId,  int? groupId,  int? homeScore,  int? awayScore,  bool played)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  int careerId,  int competitionId,  int matchday,  DateTime date,  int homeNationId,  int awayNationId,  int? groupId,  int? homeScore,  int? awayScore,  String? round,  bool played)  $default,) {final _that = this;
 switch (_that) {
 case _Fixture():
-return $default(_that.id,_that.careerId,_that.competitionId,_that.matchday,_that.date,_that.homeNationId,_that.awayNationId,_that.groupId,_that.homeScore,_that.awayScore,_that.played);case _:
+return $default(_that.id,_that.careerId,_that.competitionId,_that.matchday,_that.date,_that.homeNationId,_that.awayNationId,_that.groupId,_that.homeScore,_that.awayScore,_that.round,_that.played);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -201,10 +202,10 @@ return $default(_that.id,_that.careerId,_that.competitionId,_that.matchday,_that
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  int careerId,  int competitionId,  int matchday,  DateTime date,  int homeNationId,  int awayNationId,  int? groupId,  int? homeScore,  int? awayScore,  bool played)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  int careerId,  int competitionId,  int matchday,  DateTime date,  int homeNationId,  int awayNationId,  int? groupId,  int? homeScore,  int? awayScore,  String? round,  bool played)?  $default,) {final _that = this;
 switch (_that) {
 case _Fixture() when $default != null:
-return $default(_that.id,_that.careerId,_that.competitionId,_that.matchday,_that.date,_that.homeNationId,_that.awayNationId,_that.groupId,_that.homeScore,_that.awayScore,_that.played);case _:
+return $default(_that.id,_that.careerId,_that.competitionId,_that.matchday,_that.date,_that.homeNationId,_that.awayNationId,_that.groupId,_that.homeScore,_that.awayScore,_that.round,_that.played);case _:
   return null;
 
 }
@@ -216,7 +217,7 @@ return $default(_that.id,_that.careerId,_that.competitionId,_that.matchday,_that
 
 
 class _Fixture extends Fixture {
-  const _Fixture({required this.id, required this.careerId, required this.competitionId, required this.matchday, required this.date, required this.homeNationId, required this.awayNationId, this.groupId, this.homeScore, this.awayScore, this.played = false}): super._();
+  const _Fixture({required this.id, required this.careerId, required this.competitionId, required this.matchday, required this.date, required this.homeNationId, required this.awayNationId, this.groupId, this.homeScore, this.awayScore, this.round, this.played = false}): super._();
   
 
 @override final  int id;
@@ -229,6 +230,7 @@ class _Fixture extends Fixture {
 @override final  int? groupId;
 @override final  int? homeScore;
 @override final  int? awayScore;
+@override final  String? round;
 @override@JsonKey() final  bool played;
 
 /// Create a copy of Fixture
@@ -241,16 +243,16 @@ _$FixtureCopyWith<_Fixture> get copyWith => __$FixtureCopyWithImpl<_Fixture>(thi
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Fixture&&(identical(other.id, id) || other.id == id)&&(identical(other.careerId, careerId) || other.careerId == careerId)&&(identical(other.competitionId, competitionId) || other.competitionId == competitionId)&&(identical(other.matchday, matchday) || other.matchday == matchday)&&(identical(other.date, date) || other.date == date)&&(identical(other.homeNationId, homeNationId) || other.homeNationId == homeNationId)&&(identical(other.awayNationId, awayNationId) || other.awayNationId == awayNationId)&&(identical(other.groupId, groupId) || other.groupId == groupId)&&(identical(other.homeScore, homeScore) || other.homeScore == homeScore)&&(identical(other.awayScore, awayScore) || other.awayScore == awayScore)&&(identical(other.played, played) || other.played == played));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Fixture&&(identical(other.id, id) || other.id == id)&&(identical(other.careerId, careerId) || other.careerId == careerId)&&(identical(other.competitionId, competitionId) || other.competitionId == competitionId)&&(identical(other.matchday, matchday) || other.matchday == matchday)&&(identical(other.date, date) || other.date == date)&&(identical(other.homeNationId, homeNationId) || other.homeNationId == homeNationId)&&(identical(other.awayNationId, awayNationId) || other.awayNationId == awayNationId)&&(identical(other.groupId, groupId) || other.groupId == groupId)&&(identical(other.homeScore, homeScore) || other.homeScore == homeScore)&&(identical(other.awayScore, awayScore) || other.awayScore == awayScore)&&(identical(other.round, round) || other.round == round)&&(identical(other.played, played) || other.played == played));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,careerId,competitionId,matchday,date,homeNationId,awayNationId,groupId,homeScore,awayScore,played);
+int get hashCode => Object.hash(runtimeType,id,careerId,competitionId,matchday,date,homeNationId,awayNationId,groupId,homeScore,awayScore,round,played);
 
 @override
 String toString() {
-  return 'Fixture(id: $id, careerId: $careerId, competitionId: $competitionId, matchday: $matchday, date: $date, homeNationId: $homeNationId, awayNationId: $awayNationId, groupId: $groupId, homeScore: $homeScore, awayScore: $awayScore, played: $played)';
+  return 'Fixture(id: $id, careerId: $careerId, competitionId: $competitionId, matchday: $matchday, date: $date, homeNationId: $homeNationId, awayNationId: $awayNationId, groupId: $groupId, homeScore: $homeScore, awayScore: $awayScore, round: $round, played: $played)';
 }
 
 
@@ -261,7 +263,7 @@ abstract mixin class _$FixtureCopyWith<$Res> implements $FixtureCopyWith<$Res> {
   factory _$FixtureCopyWith(_Fixture value, $Res Function(_Fixture) _then) = __$FixtureCopyWithImpl;
 @override @useResult
 $Res call({
- int id, int careerId, int competitionId, int matchday, DateTime date, int homeNationId, int awayNationId, int? groupId, int? homeScore, int? awayScore, bool played
+ int id, int careerId, int competitionId, int matchday, DateTime date, int homeNationId, int awayNationId, int? groupId, int? homeScore, int? awayScore, String? round, bool played
 });
 
 
@@ -278,7 +280,7 @@ class __$FixtureCopyWithImpl<$Res>
 
 /// Create a copy of Fixture
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? careerId = null,Object? competitionId = null,Object? matchday = null,Object? date = null,Object? homeNationId = null,Object? awayNationId = null,Object? groupId = freezed,Object? homeScore = freezed,Object? awayScore = freezed,Object? played = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? careerId = null,Object? competitionId = null,Object? matchday = null,Object? date = null,Object? homeNationId = null,Object? awayNationId = null,Object? groupId = freezed,Object? homeScore = freezed,Object? awayScore = freezed,Object? round = freezed,Object? played = null,}) {
   return _then(_Fixture(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,careerId: null == careerId ? _self.careerId : careerId // ignore: cast_nullable_to_non_nullable
@@ -290,7 +292,8 @@ as int,awayNationId: null == awayNationId ? _self.awayNationId : awayNationId //
 as int,groupId: freezed == groupId ? _self.groupId : groupId // ignore: cast_nullable_to_non_nullable
 as int?,homeScore: freezed == homeScore ? _self.homeScore : homeScore // ignore: cast_nullable_to_non_nullable
 as int?,awayScore: freezed == awayScore ? _self.awayScore : awayScore // ignore: cast_nullable_to_non_nullable
-as int?,played: null == played ? _self.played : played // ignore: cast_nullable_to_non_nullable
+as int?,round: freezed == round ? _self.round : round // ignore: cast_nullable_to_non_nullable
+as String?,played: null == played ? _self.played : played // ignore: cast_nullable_to_non_nullable
 as bool,
   ));
 }

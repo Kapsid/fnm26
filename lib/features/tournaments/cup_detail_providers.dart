@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/enums.dart';
+import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
 
@@ -11,6 +12,9 @@ class CupData {
     required this.nations,
     required this.playerNationId,
     required this.playerConfederation,
+    required this.finalsGroups,
+    required this.knockout,
+    required this.champion,
   });
 
   /// Every confederation's qualifying groups.
@@ -18,6 +22,17 @@ class CupData {
   final Map<int, Nation> nations;
   final int playerNationId;
   final Confederation? playerConfederation;
+
+  /// Finals group tables (empty until the finals are drawn).
+  final List<FinalsGroupTable> finalsGroups;
+
+  /// All finals knockout fixtures (empty until the bracket begins).
+  final List<Fixture> knockout;
+
+  /// The World Cup winner once decided.
+  final int? champion;
+
+  bool get hasFinals => finalsGroups.isNotEmpty;
 }
 
 final AutoDisposeFutureProviderFamily<CupData?, int> cupDetailProvider =
@@ -25,9 +40,11 @@ final AutoDisposeFutureProviderFamily<CupData?, int> cupDetailProvider =
       await ref.watch(seedLoaderProvider).ensureSeeded();
       final career = await ref.watch(careerRepositoryProvider).byId(careerId);
       if (career == null) return null;
-      final groups = await ref
-          .watch(competitionRepositoryProvider)
-          .allGroupTablesByConfederation(careerId);
+      final comp = ref.watch(competitionRepositoryProvider);
+      final groups = await comp.allGroupTablesByConfederation(careerId);
+      final finalsGroups = await comp.finalsGroupTables(careerId);
+      final knockout = await comp.finalsKnockoutFixtures(careerId);
+      final champion = await comp.worldChampion(careerId);
       final nations = {
         for (final n in await ref.watch(nationRepositoryProvider).all())
           n.id: n,
@@ -37,5 +54,8 @@ final AutoDisposeFutureProviderFamily<CupData?, int> cupDetailProvider =
         nations: nations,
         playerNationId: career.nationId,
         playerConfederation: nations[career.nationId]?.confederation,
+        finalsGroups: finalsGroups,
+        knockout: knockout,
+        champion: champion,
       );
     });

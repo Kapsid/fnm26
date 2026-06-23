@@ -11,6 +11,7 @@ class QualificationFormat {
   const QualificationFormat({
     required this.targetGroupSize,
     required this.directBerths,
+    required this.finalsBerths,
   });
 
   /// Preferred number of teams per group (group count derives from this).
@@ -19,21 +20,47 @@ class QualificationFormat {
   /// Direct qualification berths for the confederation (display/standings use).
   final int directBerths;
 
+  /// World Cup finals places allocated to the confederation. Across all six
+  /// these sum to 32 (a clean 8-group finals).
+  final int finalsBerths;
+
   static const _byConfederation = <Confederation, QualificationFormat>{
-    Confederation.europe:
-        QualificationFormat(targetGroupSize: 5, directBerths: 16),
-    Confederation.southAmerica:
-        QualificationFormat(targetGroupSize: 10, directBerths: 6),
-    Confederation.northAmerica:
-        QualificationFormat(targetGroupSize: 6, directBerths: 6),
-    Confederation.africa:
-        QualificationFormat(targetGroupSize: 6, directBerths: 9),
-    Confederation.asia:
-        QualificationFormat(targetGroupSize: 6, directBerths: 8),
-    Confederation.oceania:
-        QualificationFormat(targetGroupSize: 11, directBerths: 1),
+    Confederation.europe: QualificationFormat(
+      targetGroupSize: 5,
+      directBerths: 16,
+      finalsBerths: 13,
+    ),
+    Confederation.southAmerica: QualificationFormat(
+      targetGroupSize: 10,
+      directBerths: 6,
+      finalsBerths: 4,
+    ),
+    Confederation.northAmerica: QualificationFormat(
+      targetGroupSize: 6,
+      directBerths: 6,
+      finalsBerths: 5,
+    ),
+    Confederation.africa: QualificationFormat(
+      targetGroupSize: 6,
+      directBerths: 9,
+      finalsBerths: 5,
+    ),
+    Confederation.asia: QualificationFormat(
+      targetGroupSize: 6,
+      directBerths: 8,
+      finalsBerths: 4,
+    ),
+    Confederation.oceania: QualificationFormat(
+      targetGroupSize: 11,
+      directBerths: 1,
+      finalsBerths: 1,
+    ),
   };
 
   static QualificationFormat forConfederation(Confederation c) =>
       _byConfederation[c]!;
+
+  /// Total finals places across every confederation (32).
+  static int get totalFinalsBerths =>
+      _byConfederation.values.fold(0, (s, f) => s + f.finalsBerths);
 }

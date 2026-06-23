@@ -38,7 +38,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase.forTesting(QueryExecutor executor) : super(executor);
 
   @override
-  int get schemaVersion => 3;
+  int get schemaVersion => 4;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -55,6 +55,11 @@ class AppDatabase extends _$AppDatabase {
           if (from < 3) {
             await m.createTable(tactics);
             await m.createTable(lineupSlots);
+          }
+          // v4 adds the World Cup finals: competition kind + fixture round.
+          if (from < 4) {
+            await m.addColumn(competitions, competitions.kind);
+            await m.addColumn(fixtures, fixtures.round);
           }
         },
       );

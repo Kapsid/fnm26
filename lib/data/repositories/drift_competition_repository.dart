@@ -5,6 +5,7 @@ import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/entities/group_standing.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
+import 'package:fnm/domain/services/competition/finals.dart';
 import 'package:fnm/domain/services/competition/schedule_generator.dart';
 
 /// Drift-backed [CompetitionRepository].
@@ -183,7 +184,11 @@ class DriftCompetitionRepository implements CompetitionRepository {
     int careerId,
   ) async {
     final comps = await (_db.select(_db.competitions)
-          ..where((t) => t.careerId.equals(careerId))
+          ..where(
+            (t) =>
+                t.careerId.equals(careerId) &
+                t.kind.equalsValue(CompetitionKind.worldCupQualifying),
+          )
           ..orderBy([(t) => OrderingTerm(expression: t.id)]))
         .get();
 
@@ -222,7 +227,8 @@ class DriftCompetitionRepository implements CompetitionRepository {
           ..where(
             (t) =>
                 t.careerId.equals(careerId) &
-                t.confederation.equalsValue(confederation),
+                t.confederation.equalsValue(confederation) &
+                t.kind.equalsValue(CompetitionKind.worldCupQualifying),
           )
           ..limit(1))
         .getSingleOrNull();
@@ -267,5 +273,208 @@ class DriftCompetitionRepository implements CompetitionRepository {
       ));
     }
     return tables;
+  }
+
+  // --- World Cup finals -----------------------------------------------------
+
+  Future<CompetitionRow?> _finals(int careerId) =>
+      (_db.select(_db.competitions)
+            ..where(
+              (t) =>
+                  t.careerId.equals(careerId) &
+                  t.kind.equalsValue(CompetitionKind.worldCupFinals),
+            )
+            ..limit(1))
+          .getSingleOrNull();
+
+  @override
+  Future<bool> allQualifyingPlayed(int careerId) async {
+    final qualifying = await (_db.select(_db.competitions)
+          ..where(
+            (t) =>
+                t.careerId.equals(careerId) &
+                t.kind.equalsValue(CompetitionKind.worldCupQualifying),
+          ))
+        .get();
+    if (qualifying.isEmpty) return false;
+    final ids = qualifying.map((c) => c.id).toList();
+    final unplayed = await (_db.select(_db.fixtures)
+          ..where(
+            (t) => t.competitionId.isIn(ids) & t.played.equals(false),
+          )
+          ..limit(1))
+        .getSingleOrNull();
+    return unplayed == null;
+  }
+
+  @override
+  Future<bool> hasFinals(int careerId) async =>
+      (await _finals(careerId)) != null;
+
+  @override
+  Future<DateTime?> earliestUnplayedDate(
+    int careerId,
+    DateTime onOrAfter,
+  ) async {
+    final row = await (_db.select(_db.fixtures)
+          ..where(
+            (t) =>
+                t.careerId.equals(careerId) &
+                t.played.equals(false) &
+                t.date.isBiggerOrEqualValue(onOrAfter),
+          )
+          ..orderBy([(t) => OrderingTerm(expression: t.date)])
+          ..limit(1))
+        .getSingleOrNull();
+    return row?.date;
+  }
+
+  @override
+  Future<void> saveFinals({
+    required int careerId,
+    required FinalsDraw draw,
+    required DateTime groupStart,
+  }) async {
+    await _db.transaction(() async {
+      final compId = await _db.into(_db.competitions).insert(
+            CompetitionsCompanion.insert(
+              careerId: careerId,
+              // Finals are global; a value is required but never read (queries
+              // filter by kind), so a placeholder confederation is stored.
+              confederation: Confederation.northAmerica,
+              name: 'World Championship Finals',
+              kind: const Value(CompetitionKind.worldCupFinals),
+            ),
+          );
+
+      for (final group in draw.groups) {
+        final groupId = await _db.into(_db.qualifyingGroups).insert(
+              QualifyingGroupsCompanion.insert(
+                competitionId: compId,
+                name: group.name,
+              ),
+            );
+        await _db.batch((b) {
+          b
+            ..insertAll(_db.groupMembers, [
+              for (final nationId in group.nationIds)
+                GroupMembersCompanion.insert(
+                  groupId: groupId,
+                  nationId: nationId,
+                ),
+            ])
+            ..insertAll(_db.fixtures, [
+              for (final (matchday, home, away) in group.fixtures)
+                FixturesCompanion.insert(
+                  careerId: careerId,
+                  competitionId: compId,
+                  groupId: Value(groupId),
+                  matchday: matchday,
+                  date: groupStart.add(Duration(days: (matchday - 1) * 3)),
+                  homeNationId: home,
+                  awayNationId: away,
+                  round: const Value('GROUP'),
+                ),
+            ]);
+        });
+      }
+    });
+  }
+
+  @override
+  Future<List<FinalsGroupTable>> finalsGroupTables(int careerId) async {
+    final comp = await _finals(careerId);
+    if (comp == null) return [];
+    final groups = await (_db.select(_db.qualifyingGroups)
+          ..where((t) => t.competitionId.equals(comp.id))
+          ..orderBy([(t) => OrderingTerm(expression: t.name)]))
+        .get();
+    final tables = <FinalsGroupTable>[];
+    for (final group in groups) {
+      final members = await (_db.select(_db.groupMembers)
+            ..where((t) => t.groupId.equals(group.id)))
+          .get();
+      final fixtures = await (_db.select(_db.fixtures)
+            ..where((t) => t.groupId.equals(group.id)))
+          .get();
+      tables.add((
+        name: group.name,
+        standings: GroupStanding.table(
+          members.map((m) => m.nationId).toList(),
+          fixtures.map((r) => r.toDomain()).toList(),
+        ),
+      ));
+    }
+    return tables;
+  }
+
+  @override
+  Future<List<Fixture>> fixturesByRound(int careerId, String round) async {
+    final comp = await _finals(careerId);
+    if (comp == null) return [];
+    final query = _db.select(_db.fixtures)
+      ..where(
+        (t) => t.competitionId.equals(comp.id) & t.round.equals(round),
+      )
+      ..orderBy([(t) => OrderingTerm(expression: t.id)]);
+    return (await query.get()).map((r) => r.toDomain()).toList();
+  }
+
+  @override
+  Future<List<Fixture>> finalsKnockoutFixtures(int careerId) async {
+    final comp = await _finals(careerId);
+    if (comp == null) return [];
+    final query = _db.select(_db.fixtures)
+      ..where(
+        (t) =>
+            t.competitionId.equals(comp.id) & t.round.equals('GROUP').not(),
+      )
+      ..orderBy([
+        (t) => OrderingTerm(expression: t.date),
+        (t) => OrderingTerm(expression: t.id),
+      ]);
+    return (await query.get()).map((r) => r.toDomain()).toList();
+  }
+
+  @override
+  Future<void> addKnockoutFixtures({
+    required int careerId,
+    required String round,
+    required List<(int home, int away)> pairings,
+    required DateTime date,
+  }) async {
+    final comp = await _finals(careerId);
+    if (comp == null) return;
+    await _db.batch((b) {
+      b.insertAll(_db.fixtures, [
+        for (final (home, away) in pairings)
+          FixturesCompanion.insert(
+            careerId: careerId,
+            competitionId: comp.id,
+            matchday: 99,
+            date: date,
+            homeNationId: home,
+            awayNationId: away,
+            round: Value(round),
+          ),
+      ]);
+    });
+  }
+
+  @override
+  Future<int?> worldChampion(int careerId) async {
+    final comp = await _finals(careerId);
+    if (comp == null) return null;
+    final f = await (_db.select(_db.fixtures)
+          ..where(
+            (t) =>
+                t.competitionId.equals(comp.id) &
+                t.round.equals(WorldCupFinals.finalRound) &
+                t.played.equals(true),
+          )
+          ..limit(1))
+        .getSingleOrNull();
+    if (f == null || f.homeScore == null || f.awayScore == null) return null;
+    return f.homeScore! >= f.awayScore! ? f.homeNationId : f.awayNationId;
   }
 }

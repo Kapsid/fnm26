@@ -22,6 +22,14 @@ List<List<Pairing>> doubleRoundRobin(
   return [...first, ...second];
 }
 
+/// Generates a **single round-robin** (everyone plays everyone once) using the
+/// circle method. Used for the World Cup finals group stage.
+List<List<Pairing>> singleRoundRobin(
+  List<int> teamIds, {
+  required SeededRng rng,
+}) =>
+    _singleRoundRobin(rng.shuffled(teamIds));
+
 const int _bye = -1;
 
 List<List<Pairing>> _singleRoundRobin(List<int> teams) {

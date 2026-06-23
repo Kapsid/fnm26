@@ -1,6 +1,7 @@
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/entities/group_standing.dart';
+import 'package:fnm/domain/services/competition/finals.dart';
 import 'package:fnm/domain/services/competition/schedule_generator.dart';
 
 /// A qualifying group's table for display.
@@ -16,6 +17,9 @@ typedef ConfederationGroupTable = ({
   String groupName,
   List<GroupStanding> standings,
 });
+
+/// A World Cup finals group table.
+typedef FinalsGroupTable = ({String name, List<GroupStanding> standings});
 
 /// Persists and queries the competition schedule for a save.
 abstract interface class CompetitionRepository {
@@ -67,4 +71,43 @@ abstract interface class CompetitionRepository {
     int careerId,
     Confederation confederation,
   );
+
+  // --- World Cup finals -----------------------------------------------------
+
+  /// Whether every confederation's qualifying is fully played.
+  Future<bool> allQualifyingPlayed(int careerId);
+
+  /// Whether the finals competition has been created for this save.
+  Future<bool> hasFinals(int careerId);
+
+  /// The earliest unplayed fixture date on or after [onOrAfter], or null.
+  Future<DateTime?> earliestUnplayedDate(int careerId, DateTime onOrAfter);
+
+  /// Persists the finals group-stage [draw], scheduling matchdays from
+  /// [groupStart].
+  Future<void> saveFinals({
+    required int careerId,
+    required FinalsDraw draw,
+    required DateTime groupStart,
+  });
+
+  /// Finals group tables (groups A…H, ordered).
+  Future<List<FinalsGroupTable>> finalsGroupTables(int careerId);
+
+  /// Finals fixtures for a knockout [round] (`R16`/`QF`/`SF`/`3RD`/`FINAL`).
+  Future<List<Fixture>> fixturesByRound(int careerId, String round);
+
+  /// All finals knockout fixtures (round ≠ `GROUP`), by date then id.
+  Future<List<Fixture>> finalsKnockoutFixtures(int careerId);
+
+  /// Adds knockout fixtures for [round] on [date].
+  Future<void> addKnockoutFixtures({
+    required int careerId,
+    required String round,
+    required List<(int home, int away)> pairings,
+    required DateTime date,
+  });
+
+  /// The World Cup winner (FINAL fixture winner) once played, else null.
+  Future<int?> worldChampion(int careerId);
 }

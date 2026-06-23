@@ -29,6 +29,15 @@ enum Confederation {
   oceania,
 }
 
+/// The kind of competition a record represents.
+enum CompetitionKind {
+  /// A confederation's World Cup qualifying tournament.
+  worldCupQualifying,
+
+  /// The World Cup finals (group stage + knockout).
+  worldCupFinals,
+}
+
 /// Display helpers for [Confederation].
 extension ConfederationX on Confederation {
   /// Human-readable region name (e.g. `South America`).

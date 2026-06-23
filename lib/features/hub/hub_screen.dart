@@ -81,15 +81,27 @@ class HubScreen extends ConsumerWidget {
                 ],
               ),
               const SizedBox(height: AppSpacing.md),
-              PrimaryButton(
-                label: hub.next == null ? 'Qualifying complete' : 'Continue',
-                icon: Icons.play_arrow_rounded,
-                onPressed: hub.next == null
-                    ? null
-                    : () => context.go('${Routes.match}?careerId=$careerId'),
-              ),
-              const SizedBox(height: AppSpacing.md),
-              _NextMatch(next: hub.next, code: code),
+              if (hub.championNationId != null)
+                _ChampionBanner(
+                  name: name(hub.championNationId!),
+                  code: code(hub.championNationId!),
+                  onView: () => context.go('${Routes.cup}?careerId=$careerId'),
+                )
+              else ...[
+                PrimaryButton(
+                  label: hub.next == null ? 'Advance the world' : 'Continue',
+                  icon: hub.next == null
+                      ? Icons.fast_forward_rounded
+                      : Icons.play_arrow_rounded,
+                  onPressed: hub.next == null
+                      ? () =>
+                          ref.read(seasonServiceProvider).advance(careerId)
+                      : () =>
+                          context.go('${Routes.match}?careerId=$careerId'),
+                ),
+                const SizedBox(height: AppSpacing.md),
+                _NextMatch(next: hub.next, code: code),
+              ],
               Align(
                 alignment: Alignment.centerRight,
                 child: TextButton(
@@ -134,6 +146,45 @@ class HubScreen extends ConsumerWidget {
     ScaffoldMessenger.of(context)
       ..hideCurrentSnackBar()
       ..showSnackBar(const SnackBar(content: Text('Coming soon')));
+  }
+}
+
+class _ChampionBanner extends StatelessWidget {
+  const _ChampionBanner({
+    required this.name,
+    required this.code,
+    required this.onView,
+  });
+
+  final String name;
+  final String code;
+  final VoidCallback onView;
+
+  @override
+  Widget build(BuildContext context) {
+    return AppCard(
+      child: Column(
+        children: [
+          const Icon(Icons.emoji_events, color: AppColors.primary, size: 40),
+          const SizedBox(height: AppSpacing.sm),
+          Text(
+            'WORLD CHAMPIONS',
+            style: AppTypography.labelMedium.copyWith(color: AppColors.primary),
+          ),
+          const SizedBox(height: AppSpacing.xs),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              FlagDisc(code, size: 28),
+              const SizedBox(width: AppSpacing.sm),
+              Text(name, style: AppTypography.headlineMedium),
+            ],
+          ),
+          const SizedBox(height: AppSpacing.sm),
+          TextButton(onPressed: onView, child: const Text('View bracket ›')),
+        ],
+      ),
+    );
   }
 }
 

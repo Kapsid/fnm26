@@ -56,6 +56,7 @@ extension FixtureRowMapper on FixtureRow {
         awayNationId: awayNationId,
         homeScore: homeScore,
         awayScore: awayScore,
+        round: round,
         played: played,
       );
 }
