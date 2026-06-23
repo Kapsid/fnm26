@@ -81,6 +81,17 @@ class DriftCompetitionRepository implements CompetitionRepository {
   }
 
   @override
+  Future<List<Fixture>> allFixtures(int careerId) async {
+    final query = _db.select(_db.fixtures)
+      ..where((t) => t.careerId.equals(careerId))
+      ..orderBy([
+        (t) => OrderingTerm(expression: t.matchday),
+        (t) => OrderingTerm(expression: t.date),
+      ]);
+    return (await query.get()).map((r) => r.toDomain()).toList();
+  }
+
+  @override
   Future<List<Fixture>> unplayedDueBy(int careerId, DateTime date) async {
     final query = _db.select(_db.fixtures)
       ..where(

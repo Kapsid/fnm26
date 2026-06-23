@@ -23,6 +23,9 @@ abstract interface class CompetitionRepository {
   /// A nation's fixtures, ordered by date.
   Future<List<Fixture>> fixturesForNation(int careerId, int nationId);
 
+  /// Every fixture in the save, ordered by matchday then date.
+  Future<List<Fixture>> allFixtures(int careerId);
+
   /// All unplayed fixtures in the save due on or before [date].
   Future<List<Fixture>> unplayedDueBy(int careerId, DateTime date);
 

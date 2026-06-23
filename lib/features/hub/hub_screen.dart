@@ -113,7 +113,12 @@ class HubScreen extends ConsumerWidget {
                   name: name,
                 ),
               const SizedBox(height: AppSpacing.lg),
-              _RecentResults(results: hub.recentResults, code: code),
+              _RecentResults(
+                results: hub.recentResults,
+                code: code,
+                onSeeAll: () =>
+                    context.go('${Routes.results}?careerId=$careerId'),
+              ),
               const SizedBox(height: AppSpacing.xl),
             ],
           );
@@ -229,8 +234,9 @@ class _GroupTable extends StatelessWidget {
             child: Text(
               '$pos',
               style: AppTypography.labelSmall.copyWith(
-                color:
-                    isPlayer ? AppColors.primary : AppColors.onSurfaceVariant,
+                color: isPlayer
+                    ? AppColors.primary
+                    : AppColors.onSurfaceVariant,
               ),
             ),
           ),
@@ -254,8 +260,14 @@ class _GroupTable extends StatelessWidget {
     );
   }
 
-  Widget _row(String a, String b, String c, String d, String e,
-      {bool header = false}) {
+  Widget _row(
+    String a,
+    String b,
+    String c,
+    String d,
+    String e, {
+    bool header = false,
+  }) {
     final style = AppTypography.labelSmall.copyWith(
       color: AppColors.onSurfaceVariant,
     );
@@ -289,22 +301,28 @@ class _GroupTable extends StatelessWidget {
 }
 
 class _RecentResults extends StatelessWidget {
-  const _RecentResults({required this.results, required this.code});
+  const _RecentResults({
+    required this.results,
+    required this.code,
+    required this.onSeeAll,
+  });
 
   final List<Fixture> results;
   final String Function(int) code;
+  final VoidCallback onSeeAll;
 
   @override
   Widget build(BuildContext context) {
     if (results.isEmpty) {
       return AppCard(
+        onTap: onSeeAll,
         child: Row(
           children: [
             const Text('RESULTS', style: AppTypography.labelMedium),
             const Spacer(),
             Text(
-              'None yet',
-              style: AppTypography.bodySmall.copyWith(
+              'See all ›',
+              style: AppTypography.labelSmall.copyWith(
                 color: AppColors.onSurfaceVariant,
               ),
             ),
@@ -313,10 +331,22 @@ class _RecentResults extends StatelessWidget {
       );
     }
     return AppCard(
+      onTap: onSeeAll,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('RECENT RESULTS', style: AppTypography.labelMedium),
+          Row(
+            children: [
+              const Text('RECENT RESULTS', style: AppTypography.labelMedium),
+              const Spacer(),
+              Text(
+                'See all ›',
+                style: AppTypography.labelSmall.copyWith(
+                  color: AppColors.primary,
+                ),
+              ),
+            ],
+          ),
           const SizedBox(height: AppSpacing.sm),
           for (final f in results.take(6))
             Padding(
@@ -324,15 +354,21 @@ class _RecentResults extends StatelessWidget {
               child: Row(
                 children: [
                   Expanded(
-                    child: Text(
-                      code(f.homeNationId),
-                      textAlign: TextAlign.end,
-                      style: AppTypography.bodySmall,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Text(
+                          code(f.homeNationId),
+                          style: AppTypography.bodySmall,
+                        ),
+                        const SizedBox(width: AppSpacing.sm),
+                        FlagDisc(code(f.homeNationId), size: 22),
+                      ],
                     ),
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(
-                      horizontal: AppSpacing.sm,
+                      horizontal: AppSpacing.md,
                     ),
                     child: Text(
                       '${f.homeScore} - ${f.awayScore}',
@@ -340,9 +376,15 @@ class _RecentResults extends StatelessWidget {
                     ),
                   ),
                   Expanded(
-                    child: Text(
-                      code(f.awayNationId),
-                      style: AppTypography.bodySmall,
+                    child: Row(
+                      children: [
+                        FlagDisc(code(f.awayNationId), size: 22),
+                        const SizedBox(width: AppSpacing.sm),
+                        Text(
+                          code(f.awayNationId),
+                          style: AppTypography.bodySmall,
+                        ),
+                      ],
                     ),
                   ),
                 ],

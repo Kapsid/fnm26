@@ -82,9 +82,12 @@ class SavesScreen extends ConsumerWidget {
                             onContinue: () => context.go(
                               '${Routes.hub}?careerId=${save.id}',
                             ),
-                            onDelete: () => ref
-                                .read(careerServiceProvider)
-                                .delete(save.id),
+                            onDelete: () => _confirmDelete(
+                              context,
+                              ref,
+                              nationsById[save.nationId]?.name ?? 'this save',
+                              save.id,
+                            ),
                           );
                         },
                       ),
@@ -103,6 +106,35 @@ class SavesScreen extends ConsumerWidget {
         },
       ),
     );
+  }
+
+  Future<void> _confirmDelete(
+    BuildContext context,
+    WidgetRef ref,
+    String label,
+    int careerId,
+  ) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (_) => AlertDialog(
+        backgroundColor: AppColors.surfaceContainer,
+        title: const Text('Delete save?'),
+        content: Text('This permanently deletes your $label career.'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: const Text('Delete'),
+          ),
+        ],
+      ),
+    );
+    if (confirmed ?? false) {
+      await ref.read(careerServiceProvider).delete(careerId);
+    }
   }
 
   Widget _empty(BuildContext context) => Center(

@@ -43,7 +43,15 @@ class _NewGameScreenState extends ConsumerState<NewGameScreen> {
       (failure) {
         ScaffoldMessenger.of(context)
           ..hideCurrentSnackBar()
-          ..showSnackBar(SnackBar(content: Text(failure.message)));
+          ..showSnackBar(
+            SnackBar(
+              content: Text(failure.message),
+              action: SnackBarAction(
+                label: 'Manage saves',
+                onPressed: () => context.go(Routes.saves),
+              ),
+            ),
+          );
       },
     );
   }
@@ -54,6 +62,10 @@ class _NewGameScreenState extends ConsumerState<NewGameScreen> {
 
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: AppColors.primary),
+          onPressed: () => context.go(Routes.nations),
+        ),
         title: Text(
           'NEW GAME',
           style: AppTypography.labelMedium.copyWith(color: AppColors.primary),
