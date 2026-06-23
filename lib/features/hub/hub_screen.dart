@@ -432,7 +432,12 @@ class _HubBottomNav extends StatelessWidget {
                 label: 'Matches',
                 onTap: () => context.go('${Routes.results}?careerId=$careerId'),
               ),
-              _NavItem(icon: Icons.emoji_events, label: 'Trophy', onTap: soon),
+              _NavItem(
+                icon: Icons.emoji_events,
+                label: 'Trophy',
+                onTap: () =>
+                    context.go('${Routes.tournaments}?careerId=$careerId'),
+              ),
               _NavItem(icon: Icons.more_horiz, label: 'More', onTap: soon),
             ],
           ),

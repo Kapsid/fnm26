@@ -8,6 +8,7 @@ import 'package:fnm/features/match/match_screen.dart';
 import 'package:fnm/features/nations/nation_select_screen.dart';
 import 'package:fnm/features/results/results_screen.dart';
 import 'package:fnm/features/tactics/tactics_screen.dart';
+import 'package:fnm/features/tournaments/tournaments_screen.dart';
 import 'package:go_router/go_router.dart';
 
 /// Named route paths, centralised so navigation call-sites never hard-code
@@ -35,6 +36,9 @@ abstract final class Routes {
 
   /// All results & fixtures. Expects `?careerId=`.
   static const results = '/results';
+
+  /// Tournaments overview. Expects `?careerId=`.
+  static const tournaments = '/tournaments';
 
   /// Development-only design-system showcase.
   static const gallery = '/gallery';
@@ -107,6 +111,16 @@ final routerProvider = Provider<GoRouter>((ref) {
               ) ??
               0;
           return ResultsScreen(careerId: id);
+        },
+      ),
+      GoRoute(
+        path: Routes.tournaments,
+        builder: (context, state) {
+          final id = int.tryParse(
+                state.uri.queryParameters['careerId'] ?? '',
+              ) ??
+              0;
+          return TournamentsScreen(careerId: id);
         },
       ),
       GoRoute(
