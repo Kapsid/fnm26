@@ -21,6 +21,28 @@ typedef ConfederationGroupTable = ({
 /// A World Cup finals group table.
 typedef FinalsGroupTable = ({String name, List<GroupStanding> standings});
 
+/// One attributed goal, ready to persist.
+typedef GoalRecord = ({
+  int careerId,
+  int competitionId,
+  int fixtureId,
+  int nationId,
+  int playerId,
+  int minute,
+});
+
+/// A top-scorer tally.
+typedef ScorerTally = ({int playerId, int nationId, int goals});
+
+/// A roll-of-honour entry.
+typedef Honour = ({
+  int year,
+  String competition,
+  int championId,
+  int runnerUpId,
+  int? thirdId,
+});
+
 /// Persists and queries the competition schedule for a save.
 abstract interface class CompetitionRepository {
   /// Whether a schedule has already been generated for this save.
@@ -110,4 +132,33 @@ abstract interface class CompetitionRepository {
 
   /// The World Cup winner (FINAL fixture winner) once played, else null.
   Future<int?> worldChampion(int careerId);
+
+  // --- Goals & honours ------------------------------------------------------
+
+  /// Persists attributed goals.
+  Future<void> recordGoals(List<GoalRecord> goals);
+
+  /// Top scorers across the save, optionally restricted to a competition
+  /// [kind] (qualifying vs finals), best first.
+  Future<List<ScorerTally>> topScorers(
+    int careerId, {
+    CompetitionKind? kind,
+    int limit,
+  });
+
+  /// Records a tournament's roll-of-honour entry.
+  Future<void> recordHonour({
+    required int careerId,
+    required int year,
+    required String competition,
+    required int championId,
+    required int runnerUpId,
+    int? thirdId,
+  });
+
+  /// Whether a [competition]/[year] honour is already recorded.
+  Future<bool> hasHonour(int careerId, String competition, int year);
+
+  /// The roll of honour for the save, newest first.
+  Future<List<Honour>> honours(int careerId);
 }

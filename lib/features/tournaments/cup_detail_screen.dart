@@ -26,7 +26,7 @@ class CupDetailScreen extends ConsumerWidget {
     final dataAsync = ref.watch(cupDetailProvider(careerId));
 
     return DefaultTabController(
-      length: 3,
+      length: 5,
       child: Scaffold(
         appBar: AppBar(
           leading: IconButton(
@@ -48,6 +48,8 @@ class CupDetailScreen extends ConsumerWidget {
               Tab(text: 'QUALIFYING'),
               Tab(text: 'FINALS'),
               Tab(text: 'BRACKET'),
+              Tab(text: 'SCORERS'),
+              Tab(text: 'HISTORY'),
             ],
           ),
         ),
@@ -93,6 +95,13 @@ class CupDetailScreen extends ConsumerWidget {
                         'The knockout bracket begins after the '
                         'finals group stage.',
                   ),
+                _Scorers(
+                  qualifying: data.scorersQualifying,
+                  finals: data.scorersFinals,
+                  playerNames: data.playerNames,
+                  code: code,
+                ),
+                _History(honours: data.honours, name: name, code: code),
               ],
             );
           },
@@ -102,7 +111,7 @@ class CupDetailScreen extends ConsumerWidget {
   }
 }
 
-class _Qualifying extends StatelessWidget {
+class _Qualifying extends StatefulWidget {
   const _Qualifying({
     required this.groups,
     required this.playerConfederation,
@@ -118,21 +127,91 @@ class _Qualifying extends StatelessWidget {
   final String Function(int) name;
 
   @override
+  State<_Qualifying> createState() => _QualifyingState();
+}
+
+class _QualifyingState extends State<_Qualifying> {
+  Confederation? _filter;
+
+  @override
   Widget build(BuildContext context) {
-    if (groups.isEmpty) {
+    if (widget.groups.isEmpty) {
       return const Center(child: Text('No groups drawn.'));
     }
     final byConf = <Confederation, List<ConfederationGroupTable>>{};
-    for (final g in groups) {
+    for (final g in widget.groups) {
       (byConf[g.confederation] ??= []).add(g);
     }
-    final confs = byConf.keys.toList()
+    var confs = byConf.keys.toList()
       ..sort((a, b) {
-        if (a == playerConfederation) return -1;
-        if (b == playerConfederation) return 1;
+        if (a == widget.playerConfederation) return -1;
+        if (b == widget.playerConfederation) return 1;
         return a.index.compareTo(b.index);
       });
+    if (_filter != null) confs = confs.where((c) => c == _filter).toList();
 
+    return Column(
+      children: [
+        SizedBox(
+          height: 48,
+          child: ListView(
+            scrollDirection: Axis.horizontal,
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppSpacing.marginMobile,
+            ),
+            children: [
+              _regionChip('ALL', _filter == null, () {
+                setState(() => _filter = null);
+              }),
+              for (final c in byConf.keys.toList()
+                ..sort((a, b) => a.index.compareTo(b.index)))
+                Padding(
+                  padding: const EdgeInsets.only(left: AppSpacing.sm),
+                  child: _regionChip(
+                    c.label.toUpperCase(),
+                    _filter == c,
+                    () => setState(() => _filter = c),
+                  ),
+                ),
+            ],
+          ),
+        ),
+        Expanded(child: _list(confs, byConf)),
+      ],
+    );
+  }
+
+  Widget _regionChip(String label, bool active, VoidCallback onTap) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        alignment: Alignment.center,
+        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
+        decoration: BoxDecoration(
+          color: active
+              ? AppColors.secondaryContainer
+              : AppColors.surfaceContainer,
+          borderRadius: AppRadii.xlAll,
+          border: Border.all(
+            color: active ? AppColors.primary : AppColors.outlineVariant,
+          ),
+        ),
+        child: Text(
+          label,
+          style: AppTypography.labelSmall.copyWith(
+            color: active
+                ? AppColors.onSecondaryContainer
+                : AppColors.onSurfaceVariant,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _list(
+    List<Confederation> confs,
+    Map<Confederation, List<ConfederationGroupTable>> byConf,
+  ) {
     return ListView(
       padding: const EdgeInsets.all(AppSpacing.marginMobile),
       children: [
@@ -150,7 +229,7 @@ class _Qualifying extends StatelessWidget {
                     color: AppColors.primary,
                   ),
                 ),
-                if (conf == playerConfederation) ...[
+                if (conf == widget.playerConfederation) ...[
                   const SizedBox(width: AppSpacing.sm),
                   const TacticalChip('YOUR REGION', emphasized: true),
                 ],
@@ -160,9 +239,9 @@ class _Qualifying extends StatelessWidget {
           for (final g in byConf[conf]!) ...[
             _GroupCard(
               group: g,
-              playerNationId: playerNationId,
-              code: code,
-              name: name,
+              playerNationId: widget.playerNationId,
+              code: widget.code,
+              name: widget.name,
             ),
             const SizedBox(height: AppSpacing.sm),
           ],
@@ -186,6 +265,9 @@ class _GroupCard extends StatelessWidget {
   final String Function(int) code;
   final String Function(int) name;
 
+  /// Leading positions shown with a green "advancing" marker.
+  static const advanceCount = 2;
+
   @override
   Widget build(BuildContext context) {
     return AppCard(
@@ -208,10 +290,19 @@ class _GroupCard extends StatelessWidget {
 
   Widget _row(int pos, GroupStanding s) {
     final isPlayer = s.nationId == playerNationId;
+    final advancing = pos <= advanceCount;
     final gd = s.goalDifference;
     return Container(
-      color: isPlayer ? AppColors.surfaceContainerHigh : null,
-      padding: const EdgeInsets.symmetric(vertical: 5),
+      decoration: BoxDecoration(
+        color: isPlayer ? AppColors.surfaceContainerHigh : null,
+        border: Border(
+          left: BorderSide(
+            color: advancing ? AppColors.positive : Colors.transparent,
+            width: 3,
+          ),
+        ),
+      ),
+      padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 4),
       child: Row(
         children: [
           SizedBox(
@@ -219,9 +310,12 @@ class _GroupCard extends StatelessWidget {
             child: Text(
               '$pos',
               style: AppTypography.labelSmall.copyWith(
-                color: isPlayer
-                    ? AppColors.primary
-                    : AppColors.onSurfaceVariant,
+                color: advancing
+                    ? AppColors.positive
+                    : (isPlayer
+                        ? AppColors.primary
+                        : AppColors.onSurfaceVariant),
+                fontWeight: advancing ? FontWeight.w700 : FontWeight.w500,
               ),
             ),
           ),
@@ -418,6 +512,200 @@ class _Bracket extends StatelessWidget {
     return Row(
       mainAxisAlignment: end ? MainAxisAlignment.end : MainAxisAlignment.start,
       children: children,
+    );
+  }
+}
+
+class _Scorers extends StatefulWidget {
+  const _Scorers({
+    required this.qualifying,
+    required this.finals,
+    required this.playerNames,
+    required this.code,
+  });
+
+  final List<ScorerTally> qualifying;
+  final List<ScorerTally> finals;
+  final Map<int, String> playerNames;
+  final String Function(int) code;
+
+  @override
+  State<_Scorers> createState() => _ScorersState();
+}
+
+class _ScorersState extends State<_Scorers> {
+  bool _finals = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final list = _finals ? widget.finals : widget.qualifying;
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(AppSpacing.marginMobile),
+          child: SegmentedButton<bool>(
+            segments: const [
+              ButtonSegment(value: false, label: Text('Qualifying')),
+              ButtonSegment(value: true, label: Text('Finals')),
+            ],
+            selected: {_finals},
+            onSelectionChanged: (s) => setState(() => _finals = s.first),
+          ),
+        ),
+        if (list.isEmpty)
+          const Expanded(
+            child: _Soon(message: 'No goals scored yet.'),
+          )
+        else
+          Expanded(
+            child: ListView.builder(
+              padding: const EdgeInsets.symmetric(
+                horizontal: AppSpacing.marginMobile,
+              ),
+              itemCount: list.length,
+              itemBuilder: (context, i) {
+                final s = list[i];
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+                  child: AppCard(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: AppSpacing.sm,
+                      horizontal: AppSpacing.md,
+                    ),
+                    child: Row(
+                      children: [
+                        SizedBox(
+                          width: 24,
+                          child: Text(
+                            '${i + 1}',
+                            style: AppTypography.labelMedium.copyWith(
+                              color: AppColors.onSurfaceVariant,
+                            ),
+                          ),
+                        ),
+                        FlagDisc(widget.code(s.nationId), size: 24),
+                        const SizedBox(width: AppSpacing.md),
+                        Expanded(
+                          child: Text(
+                            widget.playerNames[s.playerId] ?? 'Unknown',
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: AppTypography.bodyMedium,
+                          ),
+                        ),
+                        Text(
+                          '${s.goals}',
+                          style: AppTypography.titleMedium.copyWith(
+                            color: AppColors.primary,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+      ],
+    );
+  }
+}
+
+class _History extends StatelessWidget {
+  const _History({
+    required this.honours,
+    required this.name,
+    required this.code,
+  });
+
+  final List<Honour> honours;
+  final String Function(int) name;
+  final String Function(int) code;
+
+  @override
+  Widget build(BuildContext context) {
+    if (honours.isEmpty) {
+      return const _Soon(
+        message: 'No tournaments completed yet. Winners are recorded here as '
+            'each World Championship is decided.',
+      );
+    }
+    return ListView(
+      padding: const EdgeInsets.all(AppSpacing.marginMobile),
+      children: [
+        for (final h in honours)
+          Padding(
+            padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+            child: AppCard(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Text(
+                        '${h.year} · ${h.competition}',
+                        style: AppTypography.labelSmall.copyWith(
+                          color: AppColors.onSurfaceVariant,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: AppSpacing.sm),
+                  _medal(
+                    Icons.emoji_events,
+                    AppColors.primary,
+                    'Champions',
+                    h.championId,
+                  ),
+                  _medal(
+                    Icons.military_tech,
+                    AppColors.onSurfaceVariant,
+                    'Runners-up',
+                    h.runnerUpId,
+                  ),
+                  if (h.thirdId != null)
+                    _medal(
+                      Icons.workspace_premium,
+                      AppColors.outline,
+                      'Third',
+                      h.thirdId!,
+                    ),
+                ],
+              ),
+            ),
+          ),
+      ],
+    );
+  }
+
+  Widget _medal(IconData icon, Color color, String label, int nationId) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 3),
+      child: Row(
+        children: [
+          Icon(icon, color: color, size: 18),
+          const SizedBox(width: AppSpacing.sm),
+          SizedBox(
+            width: 84,
+            child: Text(
+              label,
+              style: AppTypography.labelSmall.copyWith(
+                color: AppColors.onSurfaceVariant,
+              ),
+            ),
+          ),
+          FlagDisc(code(nationId), size: 22),
+          const SizedBox(width: AppSpacing.sm),
+          Expanded(
+            child: Text(
+              name(nationId),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: AppTypography.bodyMedium,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

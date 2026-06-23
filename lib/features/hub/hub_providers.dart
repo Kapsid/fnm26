@@ -6,11 +6,13 @@ import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/entities/group_standing.dart';
 import 'package:fnm/domain/entities/nation.dart';
+import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/repositories/career_repository.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
 import 'package:fnm/domain/services/competition/finals.dart';
 import 'package:fnm/domain/services/competition/qualification.dart';
 import 'package:fnm/domain/services/competition/qualification_format.dart';
+import 'package:fnm/domain/services/match/goal_attribution.dart';
 import 'package:fnm/domain/services/match/match_engine.dart';
 import 'package:fnm/domain/services/match/match_simulator.dart';
 
@@ -47,8 +49,8 @@ class HubData {
       fixtures.where((f) => f.hasResult).toList().reversed.toList();
 }
 
-final FutureProviderFamily<HubData?, int> hubDataProvider =
-    FutureProvider.family<HubData?, int>((ref, careerId) async {
+final FutureProviderFamily<HubData?, int>
+hubDataProvider = FutureProvider.family<HubData?, int>((ref, careerId) async {
   await ref.watch(seedLoaderProvider).ensureSeeded();
   final careerRepo = ref.watch(careerRepositoryProvider);
   final compRepo = ref.watch(competitionRepositoryProvider);
@@ -66,7 +68,9 @@ final FutureProviderFamily<HubData?, int> hubDataProvider =
   final nations = {
     for (final n in await ref.watch(nationRepositoryProvider).all()) n.id: n,
   };
-  final squad = await ref.watch(playerRepositoryProvider).byNation(
+  final squad = await ref
+      .watch(playerRepositoryProvider)
+      .byNation(
         career.nationId,
       );
   final squadRating = squad.isEmpty
@@ -95,14 +99,18 @@ class SeasonService {
 
   final Ref _ref;
 
-  CompetitionRepository get _comp =>
-      _ref.read(competitionRepositoryProvider);
+  CompetitionRepository get _comp => _ref.read(competitionRepositoryProvider);
   CareerRepository get _careers => _ref.read(careerRepositoryProvider);
 
+  /// Player pools are static seed data, so cache them across the run.
+  final Map<int, List<Player>> _poolCache = {};
+
   Future<Map<int, Nation>> _nationsById() async => {
-        for (final n in await _ref.read(nationRepositoryProvider).all())
-          n.id: n,
-      };
+    for (final n in await _ref.read(nationRepositoryProvider).all()) n.id: n,
+  };
+
+  Future<List<Player>> _pool(int nationId) async => _poolCache[nationId] ??=
+      await _ref.read(playerRepositoryProvider).byNation(nationId);
 
   static bool _isKnockout(Fixture f) => f.round != null && f.round != 'GROUP';
 
@@ -120,6 +128,22 @@ class SeasonService {
       awayStrength: RatingMatchSimulator.strengthOf(away),
       rng: SeededRng.forFixture(rngSeed, f.id),
     );
+    // Attribute scorers from the pre-shootout score (penalties don't count).
+    await _attributeGoals(
+      f,
+      f.homeNationId,
+      outcome.homeScore,
+      rngSeed,
+      0x6001,
+    );
+    await _attributeGoals(
+      f,
+      f.awayNationId,
+      outcome.awayScore,
+      rngSeed,
+      0x6002,
+    );
+
     var hs = outcome.homeScore;
     var as = outcome.awayScore;
     if (_isKnockout(f)) {
@@ -132,6 +156,31 @@ class SeasonService {
       as = resolved.$2;
     }
     await _comp.recordResult(fixtureId: f.id, homeScore: hs, awayScore: as);
+  }
+
+  Future<void> _attributeGoals(
+    Fixture f,
+    int nationId,
+    int goals,
+    int rngSeed,
+    int salt,
+  ) async {
+    if (goals <= 0) return;
+    final pool = await _pool(nationId);
+    if (pool.isEmpty) return;
+    final rng = SeededRng.forFixture(rngSeed, f.id ^ salt);
+    final ids = GoalAttribution.scorers(pool: pool, goals: goals, rng: rng);
+    await _comp.recordGoals([
+      for (final id in ids)
+        (
+          careerId: f.careerId,
+          competitionId: f.competitionId,
+          fixtureId: f.id,
+          nationId: nationId,
+          playerId: id,
+          minute: 1 + rng.nextInt(90),
+        ),
+    ]);
   }
 
   Future<void> _simDue(int careerId, DateTime upTo, int rngSeed) async {
@@ -202,6 +251,19 @@ class SeasonService {
       homeScore: hs,
       awayScore: as,
     );
+    // Persist the engine's actual scorers for the player's match.
+    await _comp.recordGoals([
+      for (final e in result.events)
+        if (e.type == MatchEventType.goal)
+          (
+            careerId: careerId,
+            competitionId: fixture.competitionId,
+            fixtureId: fixture.id,
+            nationId: e.teamNationId,
+            playerId: e.playerId,
+            minute: e.minute,
+          ),
+    ]);
 
     await _simDue(careerId, fixture.date, career.rngSeed);
     await _careers.updateInGameDate(careerId, fixture.date);
@@ -258,8 +320,10 @@ class SeasonService {
     await _advanceRound(careerId, WorldCupFinals.qf, WorldCupFinals.sf, 4);
 
     // Semi-finals → final + third-place play-off.
-    if ((await _comp.fixturesByRound(careerId, WorldCupFinals.finalRound))
-            .isEmpty &&
+    if ((await _comp.fixturesByRound(
+          careerId,
+          WorldCupFinals.finalRound,
+        )).isEmpty &&
         await _roundComplete(careerId, WorldCupFinals.sf)) {
       final sf = await _comp.fixturesByRound(careerId, WorldCupFinals.sf);
       final date = (await _maxDate(careerId, WorldCupFinals.sf)).add(
@@ -278,6 +342,34 @@ class SeasonService {
         date: date,
       );
     }
+
+    await _recordHonourIfDecided(careerId);
+  }
+
+  /// Records the World Cup roll-of-honour entry once the final is played.
+  Future<void> _recordHonourIfDecided(int careerId) async {
+    final finals = await _comp.fixturesByRound(
+      careerId,
+      WorldCupFinals.finalRound,
+    );
+    if (finals.isEmpty || !finals.first.hasResult) return;
+    final year = finals.first.date.year;
+    if (await _comp.hasHonour(careerId, 'World Championship', year)) return;
+
+    final thirds = await _comp.fixturesByRound(
+      careerId,
+      WorldCupFinals.third,
+    );
+    await _comp.recordHonour(
+      careerId: careerId,
+      year: year,
+      competition: 'World Championship',
+      championId: _winner(finals.first),
+      runnerUpId: _loser(finals.first),
+      thirdId: thirds.isNotEmpty && thirds.first.hasResult
+          ? _winner(thirds.first)
+          : null,
+    );
   }
 
   Future<void> _advanceRound(
@@ -311,8 +403,9 @@ class SeasonService {
 
     final qualifiers = <int>[];
     for (final entry in grouped.entries) {
-      final berths =
-          QualificationFormat.forConfederation(entry.key).finalsBerths;
+      final berths = QualificationFormat.forConfederation(
+        entry.key,
+      ).finalsBerths;
       qualifiers.addAll(Qualification.qualifiers(entry.value, berths));
     }
 
@@ -332,5 +425,6 @@ class SeasonService {
   }
 }
 
-final Provider<SeasonService> seasonServiceProvider =
-    Provider(SeasonService.new);
+final Provider<SeasonService> seasonServiceProvider = Provider(
+  SeasonService.new,
+);

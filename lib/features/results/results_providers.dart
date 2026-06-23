@@ -3,20 +3,18 @@ import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/entities/nation.dart';
 
-/// All fixtures in a save, grouped by matchday, for the results screen.
+/// The player's own matches (qualifiers + finals), in date order.
 class ResultsData {
   const ResultsData({
-    required this.byMatchday,
+    required this.fixtures,
     required this.nations,
     required this.playerNationId,
   });
 
-  /// Matchday number → its fixtures (ascending matchday order via [matchdays]).
-  final Map<int, List<Fixture>> byMatchday;
+  /// The player's fixtures, chronological.
+  final List<Fixture> fixtures;
   final Map<int, Nation> nations;
   final int playerNationId;
-
-  List<int> get matchdays => byMatchday.keys.toList()..sort();
 }
 
 final AutoDisposeFutureProviderFamily<ResultsData?, int> resultsProvider =
@@ -25,24 +23,15 @@ final AutoDisposeFutureProviderFamily<ResultsData?, int> resultsProvider =
   final career = await ref.watch(careerRepositoryProvider).byId(careerId);
   if (career == null) return null;
 
-  final nation = await ref.watch(nationRepositoryProvider).byId(
-        career.nationId,
-      );
-  final fixtures = nation == null
-      ? <Fixture>[]
-      : await ref.watch(competitionRepositoryProvider).fixturesForConfederation(
-            careerId,
-            nation.confederation,
-          );
-  final byMatchday = <int, List<Fixture>>{};
-  for (final f in fixtures) {
-    byMatchday.putIfAbsent(f.matchday, () => []).add(f);
-  }
+  // Only the player's own matches (qualifiers + any finals games).
+  final fixtures = await ref
+      .watch(competitionRepositoryProvider)
+      .fixturesForNation(careerId, career.nationId);
   final nations = {
     for (final n in await ref.watch(nationRepositoryProvider).all()) n.id: n,
   };
   return ResultsData(
-    byMatchday: byMatchday,
+    fixtures: fixtures,
     nations: nations,
     playerNationId: career.nationId,
   );

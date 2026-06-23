@@ -23,6 +23,8 @@ part 'app_database.g.dart';
     Fixtures,
     Tactics,
     LineupSlots,
+    GoalEvents,
+    Honours,
   ],
 )
 class AppDatabase extends _$AppDatabase {
@@ -38,7 +40,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase.forTesting(QueryExecutor executor) : super(executor);
 
   @override
-  int get schemaVersion => 4;
+  int get schemaVersion => 5;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -60,6 +62,11 @@ class AppDatabase extends _$AppDatabase {
           if (from < 4) {
             await m.addColumn(competitions, competitions.kind);
             await m.addColumn(fixtures, fixtures.round);
+          }
+          // v5 adds goal events (top scorers) and the honours roll.
+          if (from < 5) {
+            await m.createTable(goalEvents);
+            await m.createTable(honours);
           }
         },
       );

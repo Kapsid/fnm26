@@ -94,10 +94,8 @@ class HubScreen extends ConsumerWidget {
                       ? Icons.fast_forward_rounded
                       : Icons.play_arrow_rounded,
                   onPressed: hub.next == null
-                      ? () =>
-                          ref.read(seasonServiceProvider).advance(careerId)
-                      : () =>
-                          context.go('${Routes.match}?careerId=$careerId'),
+                      ? () => ref.read(seasonServiceProvider).advance(careerId)
+                      : () => context.go('${Routes.match}?careerId=$careerId'),
                 ),
                 const SizedBox(height: AppSpacing.md),
                 _NextMatch(next: hub.next, code: code),
@@ -368,10 +366,19 @@ class _GroupTable extends StatelessWidget {
 
   Widget _standingRow(int pos, GroupStanding s) {
     final isPlayer = s.nationId == playerNationId;
+    final advancing = pos <= 2;
     final gd = s.goalDifference;
     return Container(
-      color: isPlayer ? AppColors.surfaceContainerHigh : null,
-      padding: const EdgeInsets.symmetric(vertical: 4),
+      decoration: BoxDecoration(
+        color: isPlayer ? AppColors.surfaceContainerHigh : null,
+        border: Border(
+          left: BorderSide(
+            color: advancing ? AppColors.positive : Colors.transparent,
+            width: 3,
+          ),
+        ),
+      ),
+      padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 4),
       child: Row(
         children: [
           SizedBox(
@@ -379,9 +386,12 @@ class _GroupTable extends StatelessWidget {
             child: Text(
               '$pos',
               style: AppTypography.labelSmall.copyWith(
-                color: isPlayer
-                    ? AppColors.primary
-                    : AppColors.onSurfaceVariant,
+                color: advancing
+                    ? AppColors.positive
+                    : (isPlayer
+                          ? AppColors.primary
+                          : AppColors.onSurfaceVariant),
+                fontWeight: advancing ? FontWeight.w700 : FontWeight.w500,
               ),
             ),
           ),
@@ -416,15 +426,18 @@ class _GroupTable extends StatelessWidget {
     final style = AppTypography.labelSmall.copyWith(
       color: AppColors.onSurfaceVariant,
     );
-    return Row(
-      children: [
-        SizedBox(width: 20, child: Text(a, style: style)),
-        const SizedBox(width: 22 + AppSpacing.sm),
-        Expanded(child: Text(b, style: style)),
-        _cell(c, header: true),
-        _cell(d, header: true),
-        _cell(e, header: true),
-      ],
+    return Padding(
+      padding: const EdgeInsets.only(left: 7),
+      child: Row(
+        children: [
+          SizedBox(width: 20, child: Text(a, style: style)),
+          const SizedBox(width: 22 + AppSpacing.sm),
+          Expanded(child: Text(b, style: style)),
+          _cell(c, header: true),
+          _cell(d, header: true),
+          _cell(e, header: true),
+        ],
+      ),
     );
   }
 
@@ -488,8 +501,7 @@ class _HubBottomNav extends StatelessWidget {
               _NavItem(
                 icon: Icons.more_horiz,
                 label: 'More',
-                onTap: () =>
-                    context.go('${Routes.ranking}?careerId=$careerId'),
+                onTap: () => context.go('${Routes.ranking}?careerId=$careerId'),
               ),
             ],
           ),

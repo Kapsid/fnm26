@@ -149,3 +149,31 @@ class Fixtures extends Table {
   /// `FINAL`. Null for confederation qualifiers.
   TextColumn get round => text().nullable()();
 }
+
+/// A goal scored in a fixture, attributed to a player (for top-scorer charts).
+@DataClassName('GoalEventRow')
+class GoalEvents extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  IntColumn get careerId =>
+      integer().references(Careers, #id, onDelete: KeyAction.cascade)();
+  IntColumn get competitionId => integer().references(Competitions, #id)();
+  IntColumn get fixtureId => integer().references(Fixtures, #id)();
+  IntColumn get nationId => integer()();
+  IntColumn get playerId => integer()();
+  IntColumn get minute => integer()();
+}
+
+/// A completed tournament's roll of honour (World Cup winners history).
+@DataClassName('HonourRow')
+class Honours extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  IntColumn get careerId =>
+      integer().references(Careers, #id, onDelete: KeyAction.cascade)();
+
+  /// The tournament year (e.g. finals year).
+  IntColumn get year => integer()();
+  TextColumn get competition => text()();
+  IntColumn get championId => integer()();
+  IntColumn get runnerUpId => integer()();
+  IntColumn get thirdId => integer().nullable()();
+}

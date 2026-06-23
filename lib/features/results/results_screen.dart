@@ -10,12 +10,22 @@ import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
-/// All matches across the confederation, grouped by matchday — the player's
-/// fixtures are highlighted.
+/// The player's own matches (qualifiers + finals), in date order.
 class ResultsScreen extends ConsumerWidget {
   const ResultsScreen({required this.careerId, super.key});
 
   final int careerId;
+
+  static String _stage(String? round) => switch (round) {
+        null => 'QUALIFIER',
+        'GROUP' => 'FINALS GROUP',
+        'R16' => 'ROUND OF 16',
+        'QF' => 'QUARTER-FINAL',
+        'SF' => 'SEMI-FINAL',
+        '3RD' => 'THIRD PLACE',
+        'FINAL' => 'FINAL',
+        _ => round,
+      };
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -28,7 +38,7 @@ class ResultsScreen extends ConsumerWidget {
           onPressed: () => context.go('${Routes.hub}?careerId=$careerId'),
         ),
         title: Text(
-          'RESULTS & FIXTURES',
+          'MY MATCHES',
           style: AppTypography.labelMedium.copyWith(color: AppColors.primary),
         ),
         centerTitle: true,
@@ -37,42 +47,47 @@ class ResultsScreen extends ConsumerWidget {
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (e, _) => Center(child: Text('Could not load results.\n$e')),
         data: (data) {
-          if (data == null) return const Center(child: Text('No fixtures.'));
+          if (data == null || data.fixtures.isEmpty) {
+            return const Center(child: Text('No fixtures.'));
+          }
           String code(int id) => data.nations[id]?.code ?? '??';
 
           return ListView(
             padding: const EdgeInsets.all(AppSpacing.marginMobile),
             children: [
-              for (final md in data.matchdays) ...[
+              for (final f in data.fixtures)
                 Padding(
-                  padding: const EdgeInsets.only(
-                    top: AppSpacing.md,
-                    bottom: AppSpacing.sm,
-                  ),
-                  child: Text(
-                    'MATCHDAY $md',
-                    style: AppTypography.labelMedium
-                        .copyWith(color: AppColors.primary),
-                  ),
-                ),
-                AppCard(
-                  padding: const EdgeInsets.symmetric(
-                    vertical: AppSpacing.xs,
-                    horizontal: AppSpacing.sm,
-                  ),
-                  child: Column(
-                    children: [
-                      for (final f in data.byMatchday[md]!)
-                        _ResultRow(
-                          fixture: f,
-                          code: code,
-                          isPlayer: f.homeNationId == data.playerNationId ||
-                              f.awayNationId == data.playerNationId,
+                  padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+                  child: AppCard(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: AppSpacing.sm,
+                      horizontal: AppSpacing.md,
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Text(
+                              _stage(f.round),
+                              style: AppTypography.labelSmall
+                                  .copyWith(color: AppColors.primary),
+                            ),
+                            const Spacer(),
+                            Text(
+                              DateFormat('d MMM yyyy').format(f.date),
+                              style: AppTypography.labelSmall.copyWith(
+                                color: AppColors.onSurfaceVariant,
+                              ),
+                            ),
+                          ],
                         ),
-                    ],
+                        const SizedBox(height: 4),
+                        _ResultRow(fixture: f, code: code, isPlayer: false),
+                      ],
+                    ),
                   ),
                 ),
-              ],
               const SizedBox(height: AppSpacing.xl),
             ],
           );
@@ -97,7 +112,7 @@ class _ResultRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final middle = fixture.hasResult
         ? '${fixture.homeScore} - ${fixture.awayScore}'
-        : DateFormat('d MMM').format(fixture.date);
+        : 'vs';
 
     return Container(
       color: isPlayer ? AppColors.surfaceContainerHigh : null,

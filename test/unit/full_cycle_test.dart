@@ -58,5 +58,12 @@ void main() {
 
     expect(champion, isNotNull, reason: 'a World Cup champion should emerge');
     expect(nations.map((n) => n.id), contains(champion));
+
+    // The roll of honour records the completed tournament.
+    final honours = await container
+        .read(competitionRepositoryProvider)
+        .honours(career.id);
+    expect(honours, isNotEmpty);
+    expect(honours.first.championId, champion);
   }, timeout: const Timeout(Duration(minutes: 3)));
 }

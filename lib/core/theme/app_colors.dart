@@ -68,6 +68,9 @@ abstract final class AppColors {
   static const errorContainer = Color(0xFF93000A);
   static const onErrorContainer = Color(0xFFFFDAD6);
 
+  /// Positive accent (qualification / advancing positions).
+  static const positive = Color(0xFF7FD1A6);
+
   // Brand extras (not part of ColorScheme)
   /// Hairline divider — silver-tinted at ~10% opacity (per the data-list spec).
   static Color get divider => onSurface.withValues(alpha: 0.10);

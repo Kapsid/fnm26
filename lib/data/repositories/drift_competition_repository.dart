@@ -477,4 +477,123 @@ class DriftCompetitionRepository implements CompetitionRepository {
     if (f == null || f.homeScore == null || f.awayScore == null) return null;
     return f.homeScore! >= f.awayScore! ? f.homeNationId : f.awayNationId;
   }
+
+  // --- Goals & honours ------------------------------------------------------
+
+  @override
+  Future<void> recordGoals(List<GoalRecord> goals) async {
+    if (goals.isEmpty) return;
+    await _db.batch((b) {
+      b.insertAll(_db.goalEvents, [
+        for (final g in goals)
+          GoalEventsCompanion.insert(
+            careerId: g.careerId,
+            competitionId: g.competitionId,
+            fixtureId: g.fixtureId,
+            nationId: g.nationId,
+            playerId: g.playerId,
+            minute: g.minute,
+          ),
+      ]);
+    });
+  }
+
+  @override
+  Future<List<ScorerTally>> topScorers(
+    int careerId, {
+    CompetitionKind? kind,
+    int limit = 20,
+  }) async {
+    Set<int>? compIds;
+    if (kind != null) {
+      final comps = await (_db.select(_db.competitions)
+            ..where(
+              (t) => t.careerId.equals(careerId) & t.kind.equalsValue(kind),
+            ))
+          .get();
+      compIds = comps.map((c) => c.id).toSet();
+      if (compIds.isEmpty) return [];
+    }
+
+    final rows = await (_db.select(_db.goalEvents)
+          ..where((t) => t.careerId.equals(careerId)))
+        .get();
+
+    final tally = <int, ({int nationId, int goals})>{};
+    for (final r in rows) {
+      if (compIds != null && !compIds.contains(r.competitionId)) continue;
+      final cur = tally[r.playerId];
+      tally[r.playerId] = (
+        nationId: r.nationId,
+        goals: (cur?.goals ?? 0) + 1,
+      );
+    }
+
+    final list = tally.entries
+        .map(
+          (e) => (
+            playerId: e.key,
+            nationId: e.value.nationId,
+            goals: e.value.goals,
+          ),
+        )
+        .toList()
+      ..sort((a, b) => b.goals.compareTo(a.goals));
+    return list.take(limit).toList();
+  }
+
+  @override
+  Future<void> recordHonour({
+    required int careerId,
+    required int year,
+    required String competition,
+    required int championId,
+    required int runnerUpId,
+    int? thirdId,
+  }) async {
+    await _db.into(_db.honours).insert(
+          HonoursCompanion.insert(
+            careerId: careerId,
+            year: year,
+            competition: competition,
+            championId: championId,
+            runnerUpId: runnerUpId,
+            thirdId: Value(thirdId),
+          ),
+        );
+  }
+
+  @override
+  Future<bool> hasHonour(int careerId, String competition, int year) async {
+    final row = await (_db.select(_db.honours)
+          ..where(
+            (t) =>
+                t.careerId.equals(careerId) &
+                t.competition.equals(competition) &
+                t.year.equals(year),
+          )
+          ..limit(1))
+        .getSingleOrNull();
+    return row != null;
+  }
+
+  @override
+  Future<List<Honour>> honours(int careerId) async {
+    final rows = await (_db.select(_db.honours)
+          ..where((t) => t.careerId.equals(careerId))
+          ..orderBy([
+            (t) => OrderingTerm(expression: t.year, mode: OrderingMode.desc),
+          ]))
+        .get();
+    return [
+      for (final r in rows)
+        (
+          year: r.year,
+          competition: r.competition,
+          championId: r.championId,
+          runnerUpId: r.runnerUpId,
+          thirdId: r.thirdId,
+        ),
+    ];
+  }
 }

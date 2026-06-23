@@ -15,6 +15,10 @@ class CupData {
     required this.finalsGroups,
     required this.knockout,
     required this.champion,
+    required this.scorersQualifying,
+    required this.scorersFinals,
+    required this.honours,
+    required this.playerNames,
   });
 
   /// Every confederation's qualifying groups.
@@ -32,6 +36,16 @@ class CupData {
   /// The World Cup winner once decided.
   final int? champion;
 
+  /// Top scorers in qualifying and in the finals.
+  final List<ScorerTally> scorersQualifying;
+  final List<ScorerTally> scorersFinals;
+
+  /// Roll of honour (past champions), newest first.
+  final List<Honour> honours;
+
+  /// Names for any player id referenced by the scorer charts.
+  final Map<int, String> playerNames;
+
   bool get hasFinals => finalsGroups.isNotEmpty;
 }
 
@@ -45,10 +59,33 @@ final AutoDisposeFutureProviderFamily<CupData?, int> cupDetailProvider =
       final finalsGroups = await comp.finalsGroupTables(careerId);
       final knockout = await comp.finalsKnockoutFixtures(careerId);
       final champion = await comp.worldChampion(careerId);
+      final scorersQualifying = await comp.topScorers(
+        careerId,
+        kind: CompetitionKind.worldCupQualifying,
+        limit: 15,
+      );
+      final scorersFinals = await comp.topScorers(
+        careerId,
+        kind: CompetitionKind.worldCupFinals,
+        limit: 15,
+      );
+      final honours = await comp.honours(careerId);
       final nations = {
         for (final n in await ref.watch(nationRepositoryProvider).all())
           n.id: n,
       };
+
+      final playerRepo = ref.watch(playerRepositoryProvider);
+      final scorerIds = {
+        for (final s in scorersQualifying) s.playerId,
+        for (final s in scorersFinals) s.playerId,
+      };
+      final playerNames = <int, String>{};
+      for (final id in scorerIds) {
+        final p = await playerRepo.byId(id);
+        if (p != null) playerNames[id] = p.name;
+      }
+
       return CupData(
         groups: groups,
         nations: nations,
@@ -57,5 +94,9 @@ final AutoDisposeFutureProviderFamily<CupData?, int> cupDetailProvider =
         finalsGroups: finalsGroups,
         knockout: knockout,
         champion: champion,
+        scorersQualifying: scorersQualifying,
+        scorersFinals: scorersFinals,
+        honours: honours,
+        playerNames: playerNames,
       );
     });
