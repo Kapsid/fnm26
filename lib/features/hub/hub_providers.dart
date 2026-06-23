@@ -16,6 +16,8 @@ class HubData {
     required this.next,
     required this.fixtures,
     required this.nations,
+    required this.squadSize,
+    required this.squadRating,
   });
 
   final Career career;
@@ -23,6 +25,12 @@ class HubData {
   final Fixture? next;
   final List<Fixture> fixtures;
   final Map<int, Nation> nations;
+
+  /// Number of players in the nation's pool.
+  final int squadSize;
+
+  /// Average overall rating of the nation's pool.
+  final int squadRating;
 
   /// Played fixtures, most recent first.
   List<Fixture> get recentResults =>
@@ -48,12 +56,21 @@ final FutureProviderFamily<HubData?, int> hubDataProvider =
   final nations = {
     for (final n in await ref.watch(nationRepositoryProvider).all()) n.id: n,
   };
+  final squad = await ref.watch(playerRepositoryProvider).byNation(
+        career.nationId,
+      );
+  final squadRating = squad.isEmpty
+      ? 0
+      : (squad.fold<int>(0, (s, p) => s + p.overall) / squad.length).round();
+
   return HubData(
     career: career,
     group: group,
     next: next,
     fixtures: fixtures,
     nations: nations,
+    squadSize: squad.length,
+    squadRating: squadRating,
   );
 });
 

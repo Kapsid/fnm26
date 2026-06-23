@@ -12,8 +12,8 @@ import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
-/// In-game home ("National Hub"): next match, group table, recent results, and
-/// the Advance control that simulates forward to the next fixture.
+/// In-game home ("National Hub"): continue/play, calendar, next match, squad
+/// status, and the group table, with the in-game bottom navigation.
 class HubScreen extends ConsumerWidget {
   const HubScreen({required this.careerId, super.key});
 
@@ -36,15 +36,12 @@ class HubScreen extends ConsumerWidget {
         centerTitle: true,
         actions: [
           IconButton(
-            icon: const Icon(
-              Icons.dashboard_customize_outlined,
-              color: AppColors.primary,
-            ),
-            tooltip: 'Squad & Tactics',
-            onPressed: () => context.go('${Routes.tactics}?careerId=$careerId'),
+            icon: const Icon(Icons.account_circle, color: AppColors.primary),
+            onPressed: () => _soon(context),
           ),
         ],
       ),
+      bottomNavigationBar: _HubBottomNav(careerId: careerId),
       body: dataAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (e, _) => Center(child: Text('Could not load save.\n$e')),
@@ -54,57 +51,60 @@ class HubScreen extends ConsumerWidget {
           }
           final nation = hub.nations[hub.career.nationId];
           final date = DateFormat('d MMM yyyy').format(hub.career.inGameDate);
-
           String code(int id) => hub.nations[id]?.code ?? '??';
           String name(int id) => hub.nations[id]?.name ?? 'Unknown';
 
           return ListView(
             padding: const EdgeInsets.all(AppSpacing.marginMobile),
             children: [
-              AppCard(
-                child: Row(
-                  children: [
-                    FlagDisc(nation?.code ?? '??'),
-                    const SizedBox(width: AppSpacing.md),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            nation?.name ?? '…',
-                            style: AppTypography.headlineMedium,
+              Row(
+                children: [
+                  FlagDisc(nation?.code ?? '??', size: 44),
+                  const SizedBox(width: AppSpacing.md),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          nation?.name ?? '…',
+                          style: AppTypography.headlineMedium,
+                        ),
+                        Text(
+                          '${hub.career.managerName} · $date',
+                          style: AppTypography.bodySmall.copyWith(
+                            color: AppColors.onSurfaceVariant,
                           ),
-                          Text(
-                            '${hub.career.managerName} · $date',
-                            style: AppTypography.bodySmall.copyWith(
-                              color: AppColors.onSurfaceVariant,
-                            ),
-                          ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
               const SizedBox(height: AppSpacing.md),
-              _NextMatch(next: hub.next, code: code),
-              const SizedBox(height: AppSpacing.md),
               PrimaryButton(
-                label: hub.next == null ? 'Qualifying complete' : 'Play Match',
-                icon: Icons.sports_soccer,
+                label: hub.next == null ? 'Qualifying complete' : 'Continue',
+                icon: Icons.play_arrow_rounded,
                 onPressed: hub.next == null
                     ? null
                     : () => context.go('${Routes.match}?careerId=$careerId'),
               ),
-              if (hub.next != null) ...[
-                const SizedBox(height: AppSpacing.sm),
-                TextButton(
-                  onPressed: () =>
-                      ref.read(seasonServiceProvider).advance(careerId),
-                  child: const Text('Quick sim (skip)'),
-                ),
-              ],
-              const SizedBox(height: AppSpacing.lg),
+              const SizedBox(height: AppSpacing.md),
+              _CalendarStrip(
+                anchor: hub.next?.date ?? hub.career.inGameDate,
+                fixtureDays: {
+                  for (final f in hub.fixtures) _dayOnly(f.date),
+                },
+              ),
+              const SizedBox(height: AppSpacing.md),
+              _NextMatch(next: hub.next, code: code),
+              const SizedBox(height: AppSpacing.md),
+              _SquadStatus(
+                rating: hub.squadRating,
+                size: hub.squadSize,
+                onManage: () =>
+                    context.go('${Routes.tactics}?careerId=$careerId'),
+              ),
+              const SizedBox(height: AppSpacing.md),
               if (hub.group != null)
                 _GroupTable(
                   group: hub.group!,
@@ -113,16 +113,133 @@ class HubScreen extends ConsumerWidget {
                   name: name,
                 ),
               const SizedBox(height: AppSpacing.lg),
-              _RecentResults(
-                results: hub.recentResults,
-                code: code,
-                onSeeAll: () =>
-                    context.go('${Routes.results}?careerId=$careerId'),
-              ),
-              const SizedBox(height: AppSpacing.xl),
+              if (hub.next != null)
+                Center(
+                  child: TextButton(
+                    onPressed: () =>
+                        ref.read(seasonServiceProvider).advance(careerId),
+                    child: const Text('Quick sim (skip)'),
+                  ),
+                ),
+              const SizedBox(height: AppSpacing.lg),
             ],
           );
         },
+      ),
+    );
+  }
+
+  static DateTime _dayOnly(DateTime d) => DateTime(d.year, d.month, d.day);
+
+  void _soon(BuildContext context) {
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(const SnackBar(content: Text('Coming soon')));
+  }
+}
+
+class _CalendarStrip extends StatelessWidget {
+  const _CalendarStrip({required this.anchor, required this.fixtureDays});
+
+  final DateTime anchor;
+  final Set<DateTime> fixtureDays;
+
+  @override
+  Widget build(BuildContext context) {
+    final start = anchor.subtract(const Duration(days: 3));
+    return AppCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              const Text('CALENDAR', style: AppTypography.labelMedium),
+              const Spacer(),
+              Text(
+                DateFormat('MMM yyyy').format(anchor).toUpperCase(),
+                style: AppTypography.labelSmall.copyWith(
+                  color: AppColors.onSurfaceVariant,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: AppSpacing.sm),
+          SizedBox(
+            height: 64,
+            child: ListView.separated(
+              scrollDirection: Axis.horizontal,
+              itemCount: 12,
+              separatorBuilder: (_, _) => const SizedBox(width: AppSpacing.sm),
+              itemBuilder: (context, i) {
+                final day = start.add(Duration(days: i));
+                final isMatch = fixtureDays.contains(
+                  DateTime(day.year, day.month, day.day),
+                );
+                final isAnchor =
+                    day.year == anchor.year &&
+                    day.month == anchor.month &&
+                    day.day == anchor.day;
+                return _DayCell(
+                  day: day,
+                  isMatch: isMatch,
+                  highlight: isAnchor,
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _DayCell extends StatelessWidget {
+  const _DayCell({
+    required this.day,
+    required this.isMatch,
+    required this.highlight,
+  });
+
+  final DateTime day;
+  final bool isMatch;
+  final bool highlight;
+
+  @override
+  Widget build(BuildContext context) {
+    final color = highlight ? AppColors.primary : AppColors.onSurfaceVariant;
+    return Container(
+      width: 46,
+      decoration: BoxDecoration(
+        color: highlight
+            ? AppColors.primary.withValues(alpha: 0.12)
+            : AppColors.surfaceContainerLowest,
+        borderRadius: AppRadii.baseAll,
+        border: Border.all(
+          color: highlight ? AppColors.primary : AppColors.outlineVariant,
+        ),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            DateFormat('EEE').format(day).toUpperCase(),
+            style: AppTypography.labelSmall.copyWith(color: color, fontSize: 9),
+          ),
+          const SizedBox(height: 2),
+          Text(
+            '${day.day}',
+            style: AppTypography.titleMedium.copyWith(color: color),
+          ),
+          const SizedBox(height: 2),
+          Container(
+            width: 4,
+            height: 4,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: isMatch ? AppColors.error : Colors.transparent,
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -146,7 +263,18 @@ class _NextMatch extends StatelessWidget {
     return AppCard(
       child: Column(
         children: [
-          const Text('NEXT MATCH', style: AppTypography.labelMedium),
+          Row(
+            children: [
+              const Text('NEXT MATCH', style: AppTypography.labelMedium),
+              const Spacer(),
+              Text(
+                'MATCHDAY ${f.matchday}',
+                style: AppTypography.labelSmall.copyWith(
+                  color: AppColors.onSurfaceVariant,
+                ),
+              ),
+            ],
+          ),
           const SizedBox(height: AppSpacing.md),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -154,10 +282,8 @@ class _NextMatch extends StatelessWidget {
               _Side(code: code(f.homeNationId)),
               Column(
                 children: [
-                  Text('MD${f.matchday}', style: AppTypography.labelSmall),
-                  const SizedBox(height: 4),
                   const Text('VS', style: AppTypography.headlineMedium),
-                  const SizedBox(height: 4),
+                  const SizedBox(height: AppSpacing.xs),
                   Text(
                     date,
                     style: AppTypography.labelSmall.copyWith(
@@ -168,6 +294,13 @@ class _NextMatch extends StatelessWidget {
               ),
               _Side(code: code(f.awayNationId)),
             ],
+          ),
+          const SizedBox(height: AppSpacing.sm),
+          Text(
+            'WORLD CUP QUALIFIER',
+            style: AppTypography.labelSmall.copyWith(
+              color: AppColors.onSurfaceVariant,
+            ),
           ),
         ],
       ),
@@ -185,8 +318,77 @@ class _Side extends StatelessWidget {
       children: [
         FlagDisc(code, size: 56),
         const SizedBox(height: AppSpacing.xs),
-        Text(code, style: AppTypography.labelSmall),
+        Text(code, style: AppTypography.labelMedium),
       ],
+    );
+  }
+}
+
+class _SquadStatus extends StatelessWidget {
+  const _SquadStatus({
+    required this.rating,
+    required this.size,
+    required this.onManage,
+  });
+
+  final int rating;
+  final int size;
+  final VoidCallback onManage;
+
+  @override
+  Widget build(BuildContext context) {
+    return AppCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text('SQUAD STATUS', style: AppTypography.labelMedium),
+          const SizedBox(height: AppSpacing.sm),
+          Row(
+            children: [
+              Text(
+                'Avg rating',
+                style: AppTypography.bodyMedium.copyWith(
+                  color: AppColors.onSurfaceVariant,
+                ),
+              ),
+              const Spacer(),
+              Text('$rating', style: AppTypography.labelMedium),
+            ],
+          ),
+          const SizedBox(height: AppSpacing.xs),
+          ClipRRect(
+            borderRadius: AppRadii.smAll,
+            child: Stack(
+              children: [
+                Container(height: 6, color: AppColors.surfaceContainerHighest),
+                FractionallySizedBox(
+                  widthFactor: (rating / 99).clamp(0.0, 1.0),
+                  child: Container(height: 6, color: AppColors.primary),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: AppSpacing.sm),
+          Row(
+            children: [
+              Text(
+                'Squad size',
+                style: AppTypography.bodyMedium.copyWith(
+                  color: AppColors.onSurfaceVariant,
+                ),
+              ),
+              const Spacer(),
+              Text('$size players', style: AppTypography.labelMedium),
+            ],
+          ),
+          const SizedBox(height: AppSpacing.md),
+          PrimaryButton(
+            label: 'Manage Team',
+            icon: Icons.groups,
+            onPressed: onManage,
+          ),
+        ],
+      ),
     );
   }
 }
@@ -300,97 +502,92 @@ class _GroupTable extends StatelessWidget {
   }
 }
 
-class _RecentResults extends StatelessWidget {
-  const _RecentResults({
-    required this.results,
-    required this.code,
-    required this.onSeeAll,
-  });
+class _HubBottomNav extends StatelessWidget {
+  const _HubBottomNav({required this.careerId});
 
-  final List<Fixture> results;
-  final String Function(int) code;
-  final VoidCallback onSeeAll;
+  final int careerId;
 
   @override
   Widget build(BuildContext context) {
-    if (results.isEmpty) {
-      return AppCard(
-        onTap: onSeeAll,
-        child: Row(
-          children: [
-            const Text('RESULTS', style: AppTypography.labelMedium),
-            const Spacer(),
-            Text(
-              'See all ›',
-              style: AppTypography.labelSmall.copyWith(
-                color: AppColors.onSurfaceVariant,
-              ),
-            ),
-          ],
-        ),
-      );
-    }
-    return AppCard(
-      onTap: onSeeAll,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
+    void soon() => ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(const SnackBar(content: Text('Coming soon')));
+
+    return Container(
+      decoration: const BoxDecoration(
+        color: AppColors.surfaceContainerHighest,
+        border: Border(top: BorderSide(color: AppColors.outlineVariant)),
+      ),
+      child: SafeArea(
+        top: false,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: AppSpacing.xs),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              const Text('RECENT RESULTS', style: AppTypography.labelMedium),
-              const Spacer(),
-              Text(
-                'See all ›',
-                style: AppTypography.labelSmall.copyWith(
-                  color: AppColors.primary,
-                ),
+              const _NavItem(
+                icon: Icons.grid_view,
+                label: 'Hub',
+                active: true,
               ),
+              _NavItem(
+                icon: Icons.groups,
+                label: 'Squad',
+                onTap: () => context.go('${Routes.tactics}?careerId=$careerId'),
+              ),
+              _NavItem(
+                icon: Icons.sports_soccer,
+                label: 'Matches',
+                onTap: () => context.go('${Routes.results}?careerId=$careerId'),
+              ),
+              _NavItem(icon: Icons.emoji_events, label: 'Trophy', onTap: soon),
+              _NavItem(icon: Icons.more_horiz, label: 'More', onTap: soon),
             ],
           ),
-          const SizedBox(height: AppSpacing.sm),
-          for (final f in results.take(6))
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 3),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Text(
-                          code(f.homeNationId),
-                          style: AppTypography.bodySmall,
-                        ),
-                        const SizedBox(width: AppSpacing.sm),
-                        FlagDisc(code(f.homeNationId), size: 22),
-                      ],
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: AppSpacing.md,
-                    ),
-                    child: Text(
-                      '${f.homeScore} - ${f.awayScore}',
-                      style: AppTypography.labelMedium,
-                    ),
-                  ),
-                  Expanded(
-                    child: Row(
-                      children: [
-                        FlagDisc(code(f.awayNationId), size: 22),
-                        const SizedBox(width: AppSpacing.sm),
-                        Text(
-                          code(f.awayNationId),
-                          style: AppTypography.bodySmall,
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-        ],
+        ),
+      ),
+    );
+  }
+}
+
+class _NavItem extends StatelessWidget {
+  const _NavItem({
+    required this.icon,
+    required this.label,
+    this.active = false,
+    this.onTap,
+  });
+
+  final IconData icon;
+  final String label;
+  final bool active;
+  final VoidCallback? onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final color = active
+        ? AppColors.onSecondaryContainer
+        : AppColors.onSurfaceVariant;
+    return InkWell(
+      onTap: onTap,
+      borderRadius: AppRadii.xlAll,
+      child: Container(
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppSpacing.md,
+          vertical: AppSpacing.xs,
+        ),
+        decoration: BoxDecoration(
+          color: active ? AppColors.secondaryContainer : Colors.transparent,
+          borderRadius: AppRadii.xlAll,
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(icon, color: color, size: 22),
+            const SizedBox(height: 2),
+            Text(label, style: AppTypography.labelSmall.copyWith(color: color)),
+          ],
+        ),
       ),
     );
   }
