@@ -311,11 +311,17 @@ class _PlayerNode extends StatelessWidget {
   final Player? player;
   final VoidCallback onTap;
 
+  /// "Cristiano Ronaldo" → "C. Ronaldo" (surnames can repeat in a squad).
+  static String shortName(String full) {
+    final parts = full.trim().split(' ');
+    if (parts.length < 2) return full;
+    return '${parts.first[0]}. ${parts.last}';
+  }
+
   @override
   Widget build(BuildContext context) {
-    final surname = player == null
-        ? position.label
-        : player!.name.split(' ').last;
+    final surname =
+        player == null ? position.label : shortName(player!.name);
     return GestureDetector(
       onTap: onTap,
       child: Column(

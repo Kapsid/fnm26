@@ -127,6 +127,8 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
                     awayScore: awayScore,
                     clock: ft ? 'FULL TIME' : "$_minute'",
                     live: !ft,
+                    events: shown,
+                    homeId: homeId,
                   ),
                   if (!ft)
                     _Controls(
@@ -149,7 +151,12 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
                   Expanded(
                     child: TabBarView(
                       children: [
-                        _Timeline(events: shown, code: code, live: !ft),
+                        _Timeline(
+                          events: shown,
+                          code: code,
+                          live: !ft,
+                          homeId: homeId,
+                        ),
                         if (ft)
                           _Stats(
                             result: r,
@@ -234,6 +241,8 @@ class _Header extends StatelessWidget {
     required this.awayScore,
     required this.clock,
     required this.live,
+    required this.events,
+    required this.homeId,
   });
 
   final String homeCode;
@@ -244,9 +253,14 @@ class _Header extends StatelessWidget {
   final int awayScore;
   final String clock;
   final bool live;
+  final List<MatchEvent> events;
+  final int homeId;
 
   @override
   Widget build(BuildContext context) {
+    final homeGoals = events.where((e) => e.teamNationId == homeId).toList();
+    final awayGoals = events.where((e) => e.teamNationId != homeId).toList();
+
     return Padding(
       padding: const EdgeInsets.all(AppSpacing.marginMobile),
       child: AppCard(
@@ -275,10 +289,9 @@ class _Header extends StatelessWidget {
             ),
             const SizedBox(height: AppSpacing.sm),
             Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Expanded(
-                  child: _Side(code: homeCode, label: homeName),
-                ),
+                Expanded(child: _Side(code: homeCode, label: homeName)),
                 Padding(
                   padding: const EdgeInsets.symmetric(
                     horizontal: AppSpacing.sm,
@@ -288,14 +301,80 @@ class _Header extends StatelessWidget {
                     style: AppTypography.displayLarge,
                   ),
                 ),
-                Expanded(
-                  child: _Side(code: awayCode, label: awayName),
-                ),
+                Expanded(child: _Side(code: awayCode, label: awayName)),
               ],
             ),
+            if (homeGoals.isNotEmpty || awayGoals.isNotEmpty) ...[
+              const SizedBox(height: AppSpacing.sm),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    child: _ScorerList(goals: homeGoals, alignEnd: true),
+                  ),
+                  const SizedBox(width: AppSpacing.md),
+                  Expanded(
+                    child: _ScorerList(goals: awayGoals, alignEnd: false),
+                  ),
+                ],
+              ),
+            ],
           ],
         ),
       ),
+    );
+  }
+}
+
+class _ScorerList extends StatelessWidget {
+  const _ScorerList({required this.goals, required this.alignEnd});
+  final List<MatchEvent> goals;
+  final bool alignEnd;
+
+  @override
+  Widget build(BuildContext context) {
+    final style = AppTypography.bodySmall.copyWith(
+      color: AppColors.onSurfaceVariant,
+    );
+    const ball = Icon(Icons.sports_soccer, size: 12, color: AppColors.primary);
+    return Column(
+      crossAxisAlignment:
+          alignEnd ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+      children: [
+        for (final g in goals)
+          Padding(
+            padding: const EdgeInsets.only(bottom: 2),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: alignEnd
+                  ? [
+                      Flexible(
+                        child: Text(
+                          "${g.playerName} ${g.minute}'",
+                          textAlign: TextAlign.end,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: style,
+                        ),
+                      ),
+                      const SizedBox(width: 4),
+                      ball,
+                    ]
+                  : [
+                      ball,
+                      const SizedBox(width: 4),
+                      Flexible(
+                        child: Text(
+                          "${g.minute}' ${g.playerName}",
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: style,
+                        ),
+                      ),
+                    ],
+            ),
+          ),
+      ],
     );
   }
 }
@@ -374,53 +453,104 @@ class _Timeline extends StatelessWidget {
     required this.events,
     required this.code,
     required this.live,
+    required this.homeId,
   });
   final List<MatchEvent> events;
   final String Function(int) code;
   final bool live;
+  final int homeId;
 
   @override
   Widget build(BuildContext context) {
     if (events.isEmpty) {
       return Center(
         child: Text(
-          live ? 'Kick-off!' : 'A goalless affair.',
+          live ? 'Kick-off!' : 'No goals yet.',
           style: AppTypography.bodyMedium.copyWith(
             color: AppColors.onSurfaceVariant,
           ),
         ),
       );
     }
+    // Most recent at the top.
     final reversed = events.reversed.toList();
     return ListView(
       padding: const EdgeInsets.all(AppSpacing.marginMobile),
       children: [
         for (final e in reversed)
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: AppSpacing.sm),
-            child: Row(
-              children: [
-                SizedBox(
-                  width: 40,
-                  child: Text("${e.minute}'", style: AppTypography.labelMedium),
-                ),
-                const Icon(
-                  Icons.sports_soccer,
-                  size: 18,
-                  color: AppColors.primary,
-                ),
-                const SizedBox(width: AppSpacing.md),
-                Expanded(
-                  child: Text(
-                    'Goal! ${e.playerName}',
-                    style: AppTypography.bodyMedium,
-                  ),
-                ),
-                Text(code(e.teamNationId), style: AppTypography.labelSmall),
-              ],
-            ),
-          ),
+          _TimelineRow(event: e, isHome: e.teamNationId == homeId),
       ],
+    );
+  }
+}
+
+/// One goal on a two-sided timeline: home goals sit on the left, away on the
+/// right, with the minute down the centre spine.
+class _TimelineRow extends StatelessWidget {
+  const _TimelineRow({required this.event, required this.isHome});
+
+  final MatchEvent event;
+  final bool isHome;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: AppSpacing.sm),
+      child: Row(
+        children: [
+          Expanded(
+            child: isHome
+                ? _goal(alignEnd: true)
+                : const SizedBox.shrink(),
+          ),
+          Container(
+            width: 34,
+            alignment: Alignment.center,
+            padding: const EdgeInsets.symmetric(vertical: 2),
+            decoration: BoxDecoration(
+              color: AppColors.surfaceContainerHighest,
+              borderRadius: AppRadii.smAll,
+              border: Border.all(color: AppColors.outlineVariant),
+            ),
+            child: Text("${event.minute}'", style: AppTypography.labelSmall),
+          ),
+          Expanded(
+            child: !isHome
+                ? _goal(alignEnd: false)
+                : const SizedBox.shrink(),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _goal({required bool alignEnd}) {
+    const ball = Icon(
+      Icons.sports_soccer,
+      size: 16,
+      color: AppColors.primary,
+    );
+    final name = Flexible(
+      child: Text(
+        event.playerName,
+        textAlign: alignEnd ? TextAlign.end : TextAlign.start,
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+        style: AppTypography.bodyMedium,
+      ),
+    );
+    return Padding(
+      padding: EdgeInsets.only(
+        left: alignEnd ? 0 : AppSpacing.sm,
+        right: alignEnd ? AppSpacing.sm : 0,
+      ),
+      child: Row(
+        mainAxisAlignment:
+            alignEnd ? MainAxisAlignment.end : MainAxisAlignment.start,
+        children: alignEnd
+            ? [name, const SizedBox(width: AppSpacing.sm), ball]
+            : [ball, const SizedBox(width: AppSpacing.sm), name],
+      ),
     );
   }
 }
