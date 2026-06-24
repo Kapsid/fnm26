@@ -40,7 +40,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase.forTesting(QueryExecutor executor) : super(executor);
 
   @override
-  int get schemaVersion => 5;
+  int get schemaVersion => 6;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -67,6 +67,14 @@ class AppDatabase extends _$AppDatabase {
           if (from < 5) {
             await m.createTable(goalEvents);
             await m.createTable(honours);
+          }
+          // v6 enriches honours with host, final score, and golden boot.
+          if (from < 6) {
+            await m.addColumn(honours, honours.hostId);
+            await m.addColumn(honours, honours.finalHomeScore);
+            await m.addColumn(honours, honours.finalAwayScore);
+            await m.addColumn(honours, honours.topScorerName);
+            await m.addColumn(honours, honours.topScorerGoals);
           }
         },
       );

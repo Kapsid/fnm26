@@ -623,7 +623,7 @@ class _ScorersState extends State<_Scorers> {
   }
 }
 
-class _History extends StatelessWidget {
+class _History extends StatefulWidget {
   const _History({
     required this.honours,
     required this.name,
@@ -635,88 +635,221 @@ class _History extends StatelessWidget {
   final String Function(int) code;
 
   @override
+  State<_History> createState() => _HistoryState();
+}
+
+class _HistoryState extends State<_History> {
+  static const _order = [
+    'World Championship',
+    'European Championship',
+    'South America Cup',
+  ];
+
+  String? _competition;
+
+  @override
   Widget build(BuildContext context) {
-    if (honours.isEmpty) {
-      return const _Soon(
-        message: 'No tournaments completed yet. Winners are recorded here as '
-            'each World Championship is decided.',
-      );
+    if (widget.honours.isEmpty) {
+      return const _Soon(message: 'No tournament history yet.');
     }
+    final comps = _order
+        .where((c) => widget.honours.any((h) => h.competition == c))
+        .toList();
+    final selected = _competition ?? (comps.isNotEmpty ? comps.first : null);
+    final editions =
+        widget.honours.where((h) => h.competition == selected).toList()
+          ..sort((a, b) => b.year.compareTo(a.year));
+
+    // Medal tally + records.
+    final gold = <int, int>{};
+    final silver = <int, int>{};
+    final bronze = <int, int>{};
+    for (final h in editions) {
+      gold[h.championId] = (gold[h.championId] ?? 0) + 1;
+      silver[h.runnerUpId] = (silver[h.runnerUpId] ?? 0) + 1;
+      if (h.thirdId != null) {
+        bronze[h.thirdId!] = (bronze[h.thirdId!] ?? 0) + 1;
+      }
+    }
+    final medalNations = {...gold.keys, ...silver.keys, ...bronze.keys}.toList()
+      ..sort((a, b) {
+        final g = (gold[b] ?? 0).compareTo(gold[a] ?? 0);
+        if (g != 0) return g;
+        final s = (silver[b] ?? 0).compareTo(silver[a] ?? 0);
+        if (s != 0) return s;
+        return (bronze[b] ?? 0).compareTo(bronze[a] ?? 0);
+      });
+    final mostTitles = medalNations.isEmpty ? null : medalNations.first;
+
     return ListView(
       padding: const EdgeInsets.all(AppSpacing.marginMobile),
       children: [
-        for (final h in honours)
+        if (comps.length > 1)
           Padding(
-            padding: const EdgeInsets.only(bottom: AppSpacing.sm),
-            child: AppCard(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
+            padding: const EdgeInsets.only(bottom: AppSpacing.md),
+            child: SegmentedButton<String>(
+              showSelectedIcon: false,
+              segments: [
+                for (final c in comps)
+                  ButtonSegment(
+                    value: c,
+                    label: Text(
+                      switch (c) {
+                        'World Championship' => 'World',
+                        'European Championship' => 'Europe',
+                        _ => 'S. America',
+                      },
+                    ),
+                  ),
+              ],
+              selected: {selected!},
+              onSelectionChanged: (s) =>
+                  setState(() => _competition = s.first),
+            ),
+          ),
+
+        // Records summary.
+        if (mostTitles != null)
+          AppCard(
+            child: Row(
+              children: [
+                const Icon(Icons.workspace_premium, color: AppColors.primary),
+                const SizedBox(width: AppSpacing.md),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        '${h.year} · ${h.competition}',
-                        style: AppTypography.labelSmall.copyWith(
-                          color: AppColors.onSurfaceVariant,
-                        ),
+                        'MOST TITLES',
+                        style: AppTypography.labelSmall
+                            .copyWith(color: AppColors.primary),
+                      ),
+                      Text(
+                        '${widget.name(mostTitles)} · '
+                        '${gold[mostTitles]} · ${editions.length} editions',
+                        style: AppTypography.bodyMedium,
                       ),
                     ],
                   ),
-                  const SizedBox(height: AppSpacing.sm),
-                  _medal(
-                    Icons.emoji_events,
-                    AppColors.primary,
-                    'Champions',
-                    h.championId,
-                  ),
-                  _medal(
-                    Icons.military_tech,
-                    AppColors.onSurfaceVariant,
-                    'Runners-up',
-                    h.runnerUpId,
-                  ),
-                  if (h.thirdId != null)
-                    _medal(
-                      Icons.workspace_premium,
-                      AppColors.outline,
-                      'Third',
-                      h.thirdId!,
-                    ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
+        const SizedBox(height: AppSpacing.md),
+
+        // Medal table.
+        Text(
+          'MEDAL TABLE',
+          style:
+              AppTypography.labelMedium.copyWith(color: AppColors.primary),
+        ),
+        const SizedBox(height: AppSpacing.sm),
+        AppCard(
+          child: Column(
+            children: [
+              for (final id in medalNations.take(10))
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 3),
+                  child: Row(
+                    children: [
+                      FlagDisc(widget.code(id), size: 20),
+                      const SizedBox(width: AppSpacing.sm),
+                      Expanded(
+                        child: Text(
+                          widget.name(id),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: AppTypography.bodySmall,
+                        ),
+                      ),
+                      _medalCount('🥇', gold[id] ?? 0),
+                      _medalCount('🥈', silver[id] ?? 0),
+                      _medalCount('🥉', bronze[id] ?? 0),
+                    ],
+                  ),
+                ),
+            ],
+          ),
+        ),
+        const SizedBox(height: AppSpacing.lg),
+
+        // Winners list.
+        Text(
+          'PAST WINNERS',
+          style:
+              AppTypography.labelMedium.copyWith(color: AppColors.primary),
+        ),
+        const SizedBox(height: AppSpacing.sm),
+        for (final h in editions) _editionCard(h),
+        const SizedBox(height: AppSpacing.xl),
       ],
     );
   }
 
-  Widget _medal(IconData icon, Color color, String label, int nationId) {
+  Widget _medalCount(String emoji, int n) => SizedBox(
+        width: 34,
+        child: Text(
+          '$emoji$n',
+          textAlign: TextAlign.center,
+          style: AppTypography.labelSmall,
+        ),
+      );
+
+  Widget _editionCard(Honour h) {
+    final score = (h.finalHomeScore != null && h.finalAwayScore != null)
+        ? (h.finalHomeScore == h.finalAwayScore
+            ? '${h.finalHomeScore}–${h.finalAwayScore} (pens)'
+            : '${h.finalHomeScore}–${h.finalAwayScore}')
+        : '';
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 3),
-      child: Row(
-        children: [
-          Icon(icon, color: color, size: 18),
-          const SizedBox(width: AppSpacing.sm),
-          SizedBox(
-            width: 84,
-            child: Text(
-              label,
-              style: AppTypography.labelSmall.copyWith(
-                color: AppColors.onSurfaceVariant,
-              ),
+      padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+      child: AppCard(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Text(
+                  '${h.year}',
+                  style: AppTypography.labelMedium
+                      .copyWith(color: AppColors.primary),
+                ),
+                const Spacer(),
+                if (h.hostId != null)
+                  Text(
+                    'Host: ${widget.name(h.hostId!)}',
+                    style: AppTypography.labelSmall
+                        .copyWith(color: AppColors.onSurfaceVariant),
+                  ),
+              ],
             ),
-          ),
-          FlagDisc(code(nationId), size: 22),
-          const SizedBox(width: AppSpacing.sm),
-          Expanded(
-            child: Text(
-              name(nationId),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: AppTypography.bodyMedium,
+            const SizedBox(height: AppSpacing.xs),
+            Row(
+              children: [
+                const Icon(
+                  Icons.emoji_events,
+                  color: AppColors.primary,
+                  size: 18,
+                ),
+                const SizedBox(width: AppSpacing.sm),
+                FlagDisc(widget.code(h.championId), size: 22),
+                const SizedBox(width: AppSpacing.sm),
+                Expanded(
+                  child: Text(
+                    widget.name(h.championId),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: AppTypography.bodyMedium
+                        .copyWith(fontWeight: FontWeight.w700),
+                  ),
+                ),
+                Text(score, style: AppTypography.labelSmall),
+                const SizedBox(width: AppSpacing.sm),
+                FlagDisc(widget.code(h.runnerUpId), size: 18),
+              ],
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

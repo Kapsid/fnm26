@@ -6,6 +6,7 @@ import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/formation.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/entities/tactics.dart';
+import 'package:fnm/domain/services/competition/real_history.dart';
 import 'package:fnm/domain/services/competition/schedule_generator.dart';
 import 'package:fnm/domain/services/entitlement/entitlement.dart';
 import 'package:fnm/domain/services/tactics/best_eleven.dart';
@@ -19,15 +20,15 @@ final savesProvider = FutureProvider<List<Career>>((ref) async {
 /// A nation by id — used by the new-game and hub screens for display.
 final FutureProviderFamily<Nation?, int> nationByIdProvider =
     FutureProvider.family<Nation?, int>((ref, id) async {
-  await ref.watch(seedLoaderProvider).ensureSeeded();
-  return ref.watch(nationRepositoryProvider).byId(id);
-});
+      await ref.watch(seedLoaderProvider).ensureSeeded();
+      return ref.watch(nationRepositoryProvider).byId(id);
+    });
 
 /// A single career by id.
 final FutureProviderFamily<Career?, int> careerByIdProvider =
     FutureProvider.family<Career?, int>(
-  (ref, id) => ref.watch(careerRepositoryProvider).byId(id),
-);
+      (ref, id) => ref.watch(careerRepositoryProvider).byId(id),
+    );
 
 /// Creates and deletes save games, enforcing the slot limit.
 class CareerService {
@@ -63,17 +64,50 @@ class CareerService {
     );
     await _generateSchedule(career);
     await _generateDefaultTactic(career);
+    await _seedHistory(career);
     _ref.invalidate(savesProvider);
     return Result.success(career);
+  }
+
+  /// Seeds real World Cup / Euro / Copa history so the records section is
+  /// populated from day one. Country-level facts only — no player names.
+  Future<void> _seedHistory(Career career) async {
+    final nations = await _ref.read(nationRepositoryProvider).all();
+    final idByName = {for (final n in nations) n.name: n.id};
+    int? resolve(String? name) {
+      if (name == null) return null;
+      return idByName[name] ?? idByName[RealHistory.aliases[name] ?? name];
+    }
+
+    final compRepo = _ref.read(competitionRepositoryProvider);
+    for (final e in RealHistory.editions) {
+      final champion = resolve(e.champion);
+      final runnerUp = resolve(e.runnerUp);
+      if (champion == null || runnerUp == null) continue; // skip if unmapped
+      await compRepo.recordHonour(
+        careerId: career.id,
+        year: e.year,
+        competition: e.competition,
+        championId: champion,
+        runnerUpId: runnerUp,
+        thirdId: resolve(e.third),
+        hostId: resolve(e.host),
+        finalHomeScore: e.finalHome,
+        finalAwayScore: e.finalAway,
+      );
+    }
   }
 
   /// Picks a sensible starting XI (best players in a 4-3-3) so a new save is
   /// immediately playable.
   Future<void> _generateDefaultTactic(Career career) async {
-    final players =
-        await _ref.read(playerRepositoryProvider).byNation(career.nationId);
+    final players = await _ref
+        .read(playerRepositoryProvider)
+        .byNation(career.nationId);
     const formation = Formation.f433;
-    await _ref.read(tacticsRepositoryProvider).saveTactic(
+    await _ref
+        .read(tacticsRepositoryProvider)
+        .saveTactic(
           career.id,
           Tactic(formation: formation, lineup: bestEleven(formation, players)),
         );
@@ -111,5 +145,6 @@ class CareerService {
   int _seed() => DateTime.now().microsecondsSinceEpoch & 0x7fffffff;
 }
 
-final Provider<CareerService> careerServiceProvider =
-    Provider(CareerService.new);
+final Provider<CareerService> careerServiceProvider = Provider(
+  CareerService.new,
+);

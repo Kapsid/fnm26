@@ -10,6 +10,7 @@ import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/repositories/career_repository.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
 import 'package:fnm/domain/services/competition/finals.dart';
+import 'package:fnm/domain/services/competition/hosts.dart';
 import 'package:fnm/domain/services/competition/qualification.dart';
 import 'package:fnm/domain/services/competition/qualification_format.dart';
 import 'package:fnm/domain/services/match/goal_attribution.dart';
@@ -359,22 +360,49 @@ class SeasonService {
       WorldCupFinals.finalRound,
     );
     if (finals.isEmpty || !finals.first.hasResult) return;
-    final year = finals.first.date.year;
+    final f = finals.first;
+    final year = f.date.year;
     if (await _comp.hasHonour(careerId, 'World Championship', year)) return;
 
-    final thirds = await _comp.fixturesByRound(
-      careerId,
-      WorldCupFinals.third,
+    final thirds = await _comp.fixturesByRound(careerId, WorldCupFinals.third);
+    final nations = await _nationsById();
+    final host = WorldCupHosts.hostFor(
+      year: year,
+      nations: nations.values.toList(),
+      seed: (await _careers.byId(careerId))?.rngSeed ?? 0,
     );
+
+    final boot = await _comp.topScorers(
+      careerId,
+      kind: CompetitionKind.worldCupFinals,
+      limit: 1,
+    );
+    String? bootName;
+    int? bootGoals;
+    if (boot.isNotEmpty) {
+      final p = await _ref.read(playerRepositoryProvider).byId(
+            boot.first.playerId,
+          );
+      bootName = p?.name;
+      bootGoals = boot.first.goals;
+    }
+
+    // The champion is the home/away winner; orient the score accordingly.
+    final champIsHome = f.homeScore! >= f.awayScore!;
     await _comp.recordHonour(
       careerId: careerId,
       year: year,
       competition: 'World Championship',
-      championId: _winner(finals.first),
-      runnerUpId: _loser(finals.first),
+      championId: _winner(f),
+      runnerUpId: _loser(f),
       thirdId: thirds.isNotEmpty && thirds.first.hasResult
           ? _winner(thirds.first)
           : null,
+      hostId: host,
+      finalHomeScore: champIsHome ? f.homeScore : f.awayScore,
+      finalAwayScore: champIsHome ? f.awayScore : f.homeScore,
+      topScorerName: bootName,
+      topScorerGoals: bootGoals,
     );
   }
 

@@ -4609,6 +4609,59 @@ class $HonoursTable extends Honours with TableInfo<$HonoursTable, HonourRow> {
     type: DriftSqlType.int,
     requiredDuringInsert: false,
   );
+  static const VerificationMeta _hostIdMeta = const VerificationMeta('hostId');
+  @override
+  late final GeneratedColumn<int> hostId = GeneratedColumn<int>(
+    'host_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _finalHomeScoreMeta = const VerificationMeta(
+    'finalHomeScore',
+  );
+  @override
+  late final GeneratedColumn<int> finalHomeScore = GeneratedColumn<int>(
+    'final_home_score',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _finalAwayScoreMeta = const VerificationMeta(
+    'finalAwayScore',
+  );
+  @override
+  late final GeneratedColumn<int> finalAwayScore = GeneratedColumn<int>(
+    'final_away_score',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _topScorerNameMeta = const VerificationMeta(
+    'topScorerName',
+  );
+  @override
+  late final GeneratedColumn<String> topScorerName = GeneratedColumn<String>(
+    'top_scorer_name',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _topScorerGoalsMeta = const VerificationMeta(
+    'topScorerGoals',
+  );
+  @override
+  late final GeneratedColumn<int> topScorerGoals = GeneratedColumn<int>(
+    'top_scorer_goals',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -4618,6 +4671,11 @@ class $HonoursTable extends Honours with TableInfo<$HonoursTable, HonourRow> {
     championId,
     runnerUpId,
     thirdId,
+    hostId,
+    finalHomeScore,
+    finalAwayScore,
+    topScorerName,
+    topScorerGoals,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -4686,6 +4744,48 @@ class $HonoursTable extends Honours with TableInfo<$HonoursTable, HonourRow> {
         thirdId.isAcceptableOrUnknown(data['third_id']!, _thirdIdMeta),
       );
     }
+    if (data.containsKey('host_id')) {
+      context.handle(
+        _hostIdMeta,
+        hostId.isAcceptableOrUnknown(data['host_id']!, _hostIdMeta),
+      );
+    }
+    if (data.containsKey('final_home_score')) {
+      context.handle(
+        _finalHomeScoreMeta,
+        finalHomeScore.isAcceptableOrUnknown(
+          data['final_home_score']!,
+          _finalHomeScoreMeta,
+        ),
+      );
+    }
+    if (data.containsKey('final_away_score')) {
+      context.handle(
+        _finalAwayScoreMeta,
+        finalAwayScore.isAcceptableOrUnknown(
+          data['final_away_score']!,
+          _finalAwayScoreMeta,
+        ),
+      );
+    }
+    if (data.containsKey('top_scorer_name')) {
+      context.handle(
+        _topScorerNameMeta,
+        topScorerName.isAcceptableOrUnknown(
+          data['top_scorer_name']!,
+          _topScorerNameMeta,
+        ),
+      );
+    }
+    if (data.containsKey('top_scorer_goals')) {
+      context.handle(
+        _topScorerGoalsMeta,
+        topScorerGoals.isAcceptableOrUnknown(
+          data['top_scorer_goals']!,
+          _topScorerGoalsMeta,
+        ),
+      );
+    }
     return context;
   }
 
@@ -4723,6 +4823,26 @@ class $HonoursTable extends Honours with TableInfo<$HonoursTable, HonourRow> {
         DriftSqlType.int,
         data['${effectivePrefix}third_id'],
       ),
+      hostId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}host_id'],
+      ),
+      finalHomeScore: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}final_home_score'],
+      ),
+      finalAwayScore: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}final_away_score'],
+      ),
+      topScorerName: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}top_scorer_name'],
+      ),
+      topScorerGoals: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}top_scorer_goals'],
+      ),
     );
   }
 
@@ -4742,6 +4862,13 @@ class HonourRow extends DataClass implements Insertable<HonourRow> {
   final int championId;
   final int runnerUpId;
   final int? thirdId;
+
+  /// Host nation, final scoreline, and golden-boot winner.
+  final int? hostId;
+  final int? finalHomeScore;
+  final int? finalAwayScore;
+  final String? topScorerName;
+  final int? topScorerGoals;
   const HonourRow({
     required this.id,
     required this.careerId,
@@ -4750,6 +4877,11 @@ class HonourRow extends DataClass implements Insertable<HonourRow> {
     required this.championId,
     required this.runnerUpId,
     this.thirdId,
+    this.hostId,
+    this.finalHomeScore,
+    this.finalAwayScore,
+    this.topScorerName,
+    this.topScorerGoals,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -4762,6 +4894,21 @@ class HonourRow extends DataClass implements Insertable<HonourRow> {
     map['runner_up_id'] = Variable<int>(runnerUpId);
     if (!nullToAbsent || thirdId != null) {
       map['third_id'] = Variable<int>(thirdId);
+    }
+    if (!nullToAbsent || hostId != null) {
+      map['host_id'] = Variable<int>(hostId);
+    }
+    if (!nullToAbsent || finalHomeScore != null) {
+      map['final_home_score'] = Variable<int>(finalHomeScore);
+    }
+    if (!nullToAbsent || finalAwayScore != null) {
+      map['final_away_score'] = Variable<int>(finalAwayScore);
+    }
+    if (!nullToAbsent || topScorerName != null) {
+      map['top_scorer_name'] = Variable<String>(topScorerName);
+    }
+    if (!nullToAbsent || topScorerGoals != null) {
+      map['top_scorer_goals'] = Variable<int>(topScorerGoals);
     }
     return map;
   }
@@ -4777,6 +4924,21 @@ class HonourRow extends DataClass implements Insertable<HonourRow> {
       thirdId: thirdId == null && nullToAbsent
           ? const Value.absent()
           : Value(thirdId),
+      hostId: hostId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(hostId),
+      finalHomeScore: finalHomeScore == null && nullToAbsent
+          ? const Value.absent()
+          : Value(finalHomeScore),
+      finalAwayScore: finalAwayScore == null && nullToAbsent
+          ? const Value.absent()
+          : Value(finalAwayScore),
+      topScorerName: topScorerName == null && nullToAbsent
+          ? const Value.absent()
+          : Value(topScorerName),
+      topScorerGoals: topScorerGoals == null && nullToAbsent
+          ? const Value.absent()
+          : Value(topScorerGoals),
     );
   }
 
@@ -4793,6 +4955,11 @@ class HonourRow extends DataClass implements Insertable<HonourRow> {
       championId: serializer.fromJson<int>(json['championId']),
       runnerUpId: serializer.fromJson<int>(json['runnerUpId']),
       thirdId: serializer.fromJson<int?>(json['thirdId']),
+      hostId: serializer.fromJson<int?>(json['hostId']),
+      finalHomeScore: serializer.fromJson<int?>(json['finalHomeScore']),
+      finalAwayScore: serializer.fromJson<int?>(json['finalAwayScore']),
+      topScorerName: serializer.fromJson<String?>(json['topScorerName']),
+      topScorerGoals: serializer.fromJson<int?>(json['topScorerGoals']),
     );
   }
   @override
@@ -4806,6 +4973,11 @@ class HonourRow extends DataClass implements Insertable<HonourRow> {
       'championId': serializer.toJson<int>(championId),
       'runnerUpId': serializer.toJson<int>(runnerUpId),
       'thirdId': serializer.toJson<int?>(thirdId),
+      'hostId': serializer.toJson<int?>(hostId),
+      'finalHomeScore': serializer.toJson<int?>(finalHomeScore),
+      'finalAwayScore': serializer.toJson<int?>(finalAwayScore),
+      'topScorerName': serializer.toJson<String?>(topScorerName),
+      'topScorerGoals': serializer.toJson<int?>(topScorerGoals),
     };
   }
 
@@ -4817,6 +4989,11 @@ class HonourRow extends DataClass implements Insertable<HonourRow> {
     int? championId,
     int? runnerUpId,
     Value<int?> thirdId = const Value.absent(),
+    Value<int?> hostId = const Value.absent(),
+    Value<int?> finalHomeScore = const Value.absent(),
+    Value<int?> finalAwayScore = const Value.absent(),
+    Value<String?> topScorerName = const Value.absent(),
+    Value<int?> topScorerGoals = const Value.absent(),
   }) => HonourRow(
     id: id ?? this.id,
     careerId: careerId ?? this.careerId,
@@ -4825,6 +5002,19 @@ class HonourRow extends DataClass implements Insertable<HonourRow> {
     championId: championId ?? this.championId,
     runnerUpId: runnerUpId ?? this.runnerUpId,
     thirdId: thirdId.present ? thirdId.value : this.thirdId,
+    hostId: hostId.present ? hostId.value : this.hostId,
+    finalHomeScore: finalHomeScore.present
+        ? finalHomeScore.value
+        : this.finalHomeScore,
+    finalAwayScore: finalAwayScore.present
+        ? finalAwayScore.value
+        : this.finalAwayScore,
+    topScorerName: topScorerName.present
+        ? topScorerName.value
+        : this.topScorerName,
+    topScorerGoals: topScorerGoals.present
+        ? topScorerGoals.value
+        : this.topScorerGoals,
   );
   HonourRow copyWithCompanion(HonoursCompanion data) {
     return HonourRow(
@@ -4841,6 +5031,19 @@ class HonourRow extends DataClass implements Insertable<HonourRow> {
           ? data.runnerUpId.value
           : this.runnerUpId,
       thirdId: data.thirdId.present ? data.thirdId.value : this.thirdId,
+      hostId: data.hostId.present ? data.hostId.value : this.hostId,
+      finalHomeScore: data.finalHomeScore.present
+          ? data.finalHomeScore.value
+          : this.finalHomeScore,
+      finalAwayScore: data.finalAwayScore.present
+          ? data.finalAwayScore.value
+          : this.finalAwayScore,
+      topScorerName: data.topScorerName.present
+          ? data.topScorerName.value
+          : this.topScorerName,
+      topScorerGoals: data.topScorerGoals.present
+          ? data.topScorerGoals.value
+          : this.topScorerGoals,
     );
   }
 
@@ -4853,7 +5056,12 @@ class HonourRow extends DataClass implements Insertable<HonourRow> {
           ..write('competition: $competition, ')
           ..write('championId: $championId, ')
           ..write('runnerUpId: $runnerUpId, ')
-          ..write('thirdId: $thirdId')
+          ..write('thirdId: $thirdId, ')
+          ..write('hostId: $hostId, ')
+          ..write('finalHomeScore: $finalHomeScore, ')
+          ..write('finalAwayScore: $finalAwayScore, ')
+          ..write('topScorerName: $topScorerName, ')
+          ..write('topScorerGoals: $topScorerGoals')
           ..write(')'))
         .toString();
   }
@@ -4867,6 +5075,11 @@ class HonourRow extends DataClass implements Insertable<HonourRow> {
     championId,
     runnerUpId,
     thirdId,
+    hostId,
+    finalHomeScore,
+    finalAwayScore,
+    topScorerName,
+    topScorerGoals,
   );
   @override
   bool operator ==(Object other) =>
@@ -4878,7 +5091,12 @@ class HonourRow extends DataClass implements Insertable<HonourRow> {
           other.competition == this.competition &&
           other.championId == this.championId &&
           other.runnerUpId == this.runnerUpId &&
-          other.thirdId == this.thirdId);
+          other.thirdId == this.thirdId &&
+          other.hostId == this.hostId &&
+          other.finalHomeScore == this.finalHomeScore &&
+          other.finalAwayScore == this.finalAwayScore &&
+          other.topScorerName == this.topScorerName &&
+          other.topScorerGoals == this.topScorerGoals);
 }
 
 class HonoursCompanion extends UpdateCompanion<HonourRow> {
@@ -4889,6 +5107,11 @@ class HonoursCompanion extends UpdateCompanion<HonourRow> {
   final Value<int> championId;
   final Value<int> runnerUpId;
   final Value<int?> thirdId;
+  final Value<int?> hostId;
+  final Value<int?> finalHomeScore;
+  final Value<int?> finalAwayScore;
+  final Value<String?> topScorerName;
+  final Value<int?> topScorerGoals;
   const HonoursCompanion({
     this.id = const Value.absent(),
     this.careerId = const Value.absent(),
@@ -4897,6 +5120,11 @@ class HonoursCompanion extends UpdateCompanion<HonourRow> {
     this.championId = const Value.absent(),
     this.runnerUpId = const Value.absent(),
     this.thirdId = const Value.absent(),
+    this.hostId = const Value.absent(),
+    this.finalHomeScore = const Value.absent(),
+    this.finalAwayScore = const Value.absent(),
+    this.topScorerName = const Value.absent(),
+    this.topScorerGoals = const Value.absent(),
   });
   HonoursCompanion.insert({
     this.id = const Value.absent(),
@@ -4906,6 +5134,11 @@ class HonoursCompanion extends UpdateCompanion<HonourRow> {
     required int championId,
     required int runnerUpId,
     this.thirdId = const Value.absent(),
+    this.hostId = const Value.absent(),
+    this.finalHomeScore = const Value.absent(),
+    this.finalAwayScore = const Value.absent(),
+    this.topScorerName = const Value.absent(),
+    this.topScorerGoals = const Value.absent(),
   }) : careerId = Value(careerId),
        year = Value(year),
        competition = Value(competition),
@@ -4919,6 +5152,11 @@ class HonoursCompanion extends UpdateCompanion<HonourRow> {
     Expression<int>? championId,
     Expression<int>? runnerUpId,
     Expression<int>? thirdId,
+    Expression<int>? hostId,
+    Expression<int>? finalHomeScore,
+    Expression<int>? finalAwayScore,
+    Expression<String>? topScorerName,
+    Expression<int>? topScorerGoals,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -4928,6 +5166,11 @@ class HonoursCompanion extends UpdateCompanion<HonourRow> {
       if (championId != null) 'champion_id': championId,
       if (runnerUpId != null) 'runner_up_id': runnerUpId,
       if (thirdId != null) 'third_id': thirdId,
+      if (hostId != null) 'host_id': hostId,
+      if (finalHomeScore != null) 'final_home_score': finalHomeScore,
+      if (finalAwayScore != null) 'final_away_score': finalAwayScore,
+      if (topScorerName != null) 'top_scorer_name': topScorerName,
+      if (topScorerGoals != null) 'top_scorer_goals': topScorerGoals,
     });
   }
 
@@ -4939,6 +5182,11 @@ class HonoursCompanion extends UpdateCompanion<HonourRow> {
     Value<int>? championId,
     Value<int>? runnerUpId,
     Value<int?>? thirdId,
+    Value<int?>? hostId,
+    Value<int?>? finalHomeScore,
+    Value<int?>? finalAwayScore,
+    Value<String?>? topScorerName,
+    Value<int?>? topScorerGoals,
   }) {
     return HonoursCompanion(
       id: id ?? this.id,
@@ -4948,6 +5196,11 @@ class HonoursCompanion extends UpdateCompanion<HonourRow> {
       championId: championId ?? this.championId,
       runnerUpId: runnerUpId ?? this.runnerUpId,
       thirdId: thirdId ?? this.thirdId,
+      hostId: hostId ?? this.hostId,
+      finalHomeScore: finalHomeScore ?? this.finalHomeScore,
+      finalAwayScore: finalAwayScore ?? this.finalAwayScore,
+      topScorerName: topScorerName ?? this.topScorerName,
+      topScorerGoals: topScorerGoals ?? this.topScorerGoals,
     );
   }
 
@@ -4975,6 +5228,21 @@ class HonoursCompanion extends UpdateCompanion<HonourRow> {
     if (thirdId.present) {
       map['third_id'] = Variable<int>(thirdId.value);
     }
+    if (hostId.present) {
+      map['host_id'] = Variable<int>(hostId.value);
+    }
+    if (finalHomeScore.present) {
+      map['final_home_score'] = Variable<int>(finalHomeScore.value);
+    }
+    if (finalAwayScore.present) {
+      map['final_away_score'] = Variable<int>(finalAwayScore.value);
+    }
+    if (topScorerName.present) {
+      map['top_scorer_name'] = Variable<String>(topScorerName.value);
+    }
+    if (topScorerGoals.present) {
+      map['top_scorer_goals'] = Variable<int>(topScorerGoals.value);
+    }
     return map;
   }
 
@@ -4987,7 +5255,12 @@ class HonoursCompanion extends UpdateCompanion<HonourRow> {
           ..write('competition: $competition, ')
           ..write('championId: $championId, ')
           ..write('runnerUpId: $runnerUpId, ')
-          ..write('thirdId: $thirdId')
+          ..write('thirdId: $thirdId, ')
+          ..write('hostId: $hostId, ')
+          ..write('finalHomeScore: $finalHomeScore, ')
+          ..write('finalAwayScore: $finalAwayScore, ')
+          ..write('topScorerName: $topScorerName, ')
+          ..write('topScorerGoals: $topScorerGoals')
           ..write(')'))
         .toString();
   }
@@ -10199,6 +10472,11 @@ typedef $$HonoursTableCreateCompanionBuilder =
       required int championId,
       required int runnerUpId,
       Value<int?> thirdId,
+      Value<int?> hostId,
+      Value<int?> finalHomeScore,
+      Value<int?> finalAwayScore,
+      Value<String?> topScorerName,
+      Value<int?> topScorerGoals,
     });
 typedef $$HonoursTableUpdateCompanionBuilder =
     HonoursCompanion Function({
@@ -10209,6 +10487,11 @@ typedef $$HonoursTableUpdateCompanionBuilder =
       Value<int> championId,
       Value<int> runnerUpId,
       Value<int?> thirdId,
+      Value<int?> hostId,
+      Value<int?> finalHomeScore,
+      Value<int?> finalAwayScore,
+      Value<String?> topScorerName,
+      Value<int?> topScorerGoals,
     });
 
 final class $$HonoursTableReferences
@@ -10269,6 +10552,31 @@ class $$HonoursTableFilterComposer
 
   ColumnFilters<int> get thirdId => $composableBuilder(
     column: $table.thirdId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get hostId => $composableBuilder(
+    column: $table.hostId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get finalHomeScore => $composableBuilder(
+    column: $table.finalHomeScore,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get finalAwayScore => $composableBuilder(
+    column: $table.finalAwayScore,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get topScorerName => $composableBuilder(
+    column: $table.topScorerName,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get topScorerGoals => $composableBuilder(
+    column: $table.topScorerGoals,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -10335,6 +10643,31 @@ class $$HonoursTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<int> get hostId => $composableBuilder(
+    column: $table.hostId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get finalHomeScore => $composableBuilder(
+    column: $table.finalHomeScore,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get finalAwayScore => $composableBuilder(
+    column: $table.finalAwayScore,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get topScorerName => $composableBuilder(
+    column: $table.topScorerName,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get topScorerGoals => $composableBuilder(
+    column: $table.topScorerGoals,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   $$CareersTableOrderingComposer get careerId {
     final $$CareersTableOrderingComposer composer = $composerBuilder(
       composer: this,
@@ -10391,6 +10724,29 @@ class $$HonoursTableAnnotationComposer
 
   GeneratedColumn<int> get thirdId =>
       $composableBuilder(column: $table.thirdId, builder: (column) => column);
+
+  GeneratedColumn<int> get hostId =>
+      $composableBuilder(column: $table.hostId, builder: (column) => column);
+
+  GeneratedColumn<int> get finalHomeScore => $composableBuilder(
+    column: $table.finalHomeScore,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get finalAwayScore => $composableBuilder(
+    column: $table.finalAwayScore,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get topScorerName => $composableBuilder(
+    column: $table.topScorerName,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get topScorerGoals => $composableBuilder(
+    column: $table.topScorerGoals,
+    builder: (column) => column,
+  );
 
   $$CareersTableAnnotationComposer get careerId {
     final $$CareersTableAnnotationComposer composer = $composerBuilder(
@@ -10451,6 +10807,11 @@ class $$HonoursTableTableManager
                 Value<int> championId = const Value.absent(),
                 Value<int> runnerUpId = const Value.absent(),
                 Value<int?> thirdId = const Value.absent(),
+                Value<int?> hostId = const Value.absent(),
+                Value<int?> finalHomeScore = const Value.absent(),
+                Value<int?> finalAwayScore = const Value.absent(),
+                Value<String?> topScorerName = const Value.absent(),
+                Value<int?> topScorerGoals = const Value.absent(),
               }) => HonoursCompanion(
                 id: id,
                 careerId: careerId,
@@ -10459,6 +10820,11 @@ class $$HonoursTableTableManager
                 championId: championId,
                 runnerUpId: runnerUpId,
                 thirdId: thirdId,
+                hostId: hostId,
+                finalHomeScore: finalHomeScore,
+                finalAwayScore: finalAwayScore,
+                topScorerName: topScorerName,
+                topScorerGoals: topScorerGoals,
               ),
           createCompanionCallback:
               ({
@@ -10469,6 +10835,11 @@ class $$HonoursTableTableManager
                 required int championId,
                 required int runnerUpId,
                 Value<int?> thirdId = const Value.absent(),
+                Value<int?> hostId = const Value.absent(),
+                Value<int?> finalHomeScore = const Value.absent(),
+                Value<int?> finalAwayScore = const Value.absent(),
+                Value<String?> topScorerName = const Value.absent(),
+                Value<int?> topScorerGoals = const Value.absent(),
               }) => HonoursCompanion.insert(
                 id: id,
                 careerId: careerId,
@@ -10477,6 +10848,11 @@ class $$HonoursTableTableManager
                 championId: championId,
                 runnerUpId: runnerUpId,
                 thirdId: thirdId,
+                hostId: hostId,
+                finalHomeScore: finalHomeScore,
+                finalAwayScore: finalAwayScore,
+                topScorerName: topScorerName,
+                topScorerGoals: topScorerGoals,
               ),
           withReferenceMapper: (p0) => p0
               .map(

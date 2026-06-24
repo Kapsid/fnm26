@@ -176,4 +176,11 @@ class Honours extends Table {
   IntColumn get championId => integer()();
   IntColumn get runnerUpId => integer()();
   IntColumn get thirdId => integer().nullable()();
+
+  /// Host nation, final scoreline, and golden-boot winner.
+  IntColumn get hostId => integer().nullable()();
+  IntColumn get finalHomeScore => integer().nullable()();
+  IntColumn get finalAwayScore => integer().nullable()();
+  TextColumn get topScorerName => text().nullable()();
+  IntColumn get topScorerGoals => integer().nullable()();
 }

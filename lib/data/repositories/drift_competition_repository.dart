@@ -565,6 +565,11 @@ class DriftCompetitionRepository implements CompetitionRepository {
     required int championId,
     required int runnerUpId,
     int? thirdId,
+    int? hostId,
+    int? finalHomeScore,
+    int? finalAwayScore,
+    String? topScorerName,
+    int? topScorerGoals,
   }) async {
     await _db.into(_db.honours).insert(
           HonoursCompanion.insert(
@@ -574,6 +579,11 @@ class DriftCompetitionRepository implements CompetitionRepository {
             championId: championId,
             runnerUpId: runnerUpId,
             thirdId: Value(thirdId),
+            hostId: Value(hostId),
+            finalHomeScore: Value(finalHomeScore),
+            finalAwayScore: Value(finalAwayScore),
+            topScorerName: Value(topScorerName),
+            topScorerGoals: Value(topScorerGoals),
           ),
         );
   }
@@ -608,6 +618,11 @@ class DriftCompetitionRepository implements CompetitionRepository {
           championId: r.championId,
           runnerUpId: r.runnerUpId,
           thirdId: r.thirdId,
+          hostId: r.hostId,
+          finalHomeScore: r.finalHomeScore,
+          finalAwayScore: r.finalAwayScore,
+          topScorerName: r.topScorerName,
+          topScorerGoals: r.topScorerGoals,
         ),
     ];
   }

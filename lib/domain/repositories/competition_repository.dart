@@ -41,6 +41,11 @@ typedef Honour = ({
   int championId,
   int runnerUpId,
   int? thirdId,
+  int? hostId,
+  int? finalHomeScore,
+  int? finalAwayScore,
+  String? topScorerName,
+  int? topScorerGoals,
 });
 
 /// Persists and queries the competition schedule for a save.
@@ -154,6 +159,11 @@ abstract interface class CompetitionRepository {
     required int championId,
     required int runnerUpId,
     int? thirdId,
+    int? hostId,
+    int? finalHomeScore,
+    int? finalAwayScore,
+    String? topScorerName,
+    int? topScorerGoals,
   });
 
   /// Whether a [competition]/[year] honour is already recorded.
