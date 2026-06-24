@@ -75,5 +75,14 @@ void main() {
     final honours = await comp.honours(career.id);
     // Real history (≤2024) plus two simulated World Cups (2030, 2034).
     expect(honours.where((h) => h.year >= 2030).length, greaterThanOrEqualTo(2));
+
+    // Continental cups are simulated each cycle (held two years before the WC).
+    expect(
+      honours.any(
+        (h) => h.competition == 'European Championship' && h.year == 2028,
+      ),
+      isTrue,
+      reason: 'continental championships should run each cycle',
+    );
   }, timeout: const Timeout(Duration(minutes: 4)));
 }

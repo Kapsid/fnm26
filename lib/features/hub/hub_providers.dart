@@ -14,6 +14,7 @@ import 'package:fnm/domain/services/competition/hosts.dart';
 import 'package:fnm/domain/services/competition/qualification.dart';
 import 'package:fnm/domain/services/competition/qualification_format.dart';
 import 'package:fnm/domain/services/competition/schedule_generator.dart';
+import 'package:fnm/domain/services/competition/tournament_sim.dart';
 import 'package:fnm/domain/services/match/goal_attribution.dart';
 import 'package:fnm/domain/services/match/match_engine.dart';
 import 'package:fnm/domain/services/match/match_simulator.dart';
@@ -406,6 +407,58 @@ class SeasonService {
       topScorerName: bootName,
       topScorerGoals: bootGoals,
     );
+
+    await _simulateContinentalCups(careerId, year);
+  }
+
+  /// Continental championships per confederation, held two years before the
+  /// World Cup. Simulated in the background and recorded to the roll of honour.
+  static const _continental = <Confederation, (String, int)>{
+    Confederation.europe: ('European Championship', 16),
+    Confederation.southAmerica: ('South America Cup', 8),
+    Confederation.africa: ('African Championship', 16),
+    Confederation.asia: ('Asian Championship', 16),
+    Confederation.northAmerica: ('North America Cup', 8),
+  };
+
+  Future<void> _simulateContinentalCups(int careerId, int wcYear) async {
+    final year = wcYear - 2;
+    final career = await _careers.byId(careerId);
+    if (career == null) return;
+    final nations = await _ref.read(nationRepositoryProvider).all();
+    final strengthById = {
+      for (final n in nations) n.id: (220 - n.ranking).clamp(1, 220),
+    };
+
+    for (final entry in _continental.entries) {
+      final (name, size) = entry.value;
+      if (await _comp.hasHonour(careerId, name, year)) continue;
+
+      final members = nations
+          .where((n) => n.confederation == entry.key)
+          .toList()
+        ..sort((a, b) => a.ranking.compareTo(b.ranking));
+      if (members.length < 4) continue;
+
+      final result = TournamentSim.run(
+        seededByStrength: members.take(size).map((n) => n.id).toList(),
+        strengthById: strengthById,
+        seed: career.rngSeed ^ (year * 0x33) ^ entry.key.index,
+      );
+      if (result == null) continue;
+
+      await _comp.recordHonour(
+        careerId: careerId,
+        year: year,
+        competition: name,
+        championId: result.champion,
+        runnerUpId: result.runnerUp,
+        thirdId: result.third,
+        hostId: members.first.id,
+        finalHomeScore: result.finalHome,
+        finalAwayScore: result.finalAway,
+      );
+    }
   }
 
   Future<void> _advanceRound(
