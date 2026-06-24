@@ -1783,6 +1783,16 @@ class $CompetitionsTable extends Competitions
         requiredDuringInsert: false,
         defaultValue: const Constant('worldCupQualifying'),
       ).withConverter<CompetitionKind>($CompetitionsTable.$converterkind);
+  static const VerificationMeta _cycleMeta = const VerificationMeta('cycle');
+  @override
+  late final GeneratedColumn<int> cycle = GeneratedColumn<int>(
+    'cycle',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -1790,6 +1800,7 @@ class $CompetitionsTable extends Competitions
     confederation,
     name,
     kind,
+    cycle,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -1821,6 +1832,12 @@ class $CompetitionsTable extends Competitions
       );
     } else if (isInserting) {
       context.missing(_nameMeta);
+    }
+    if (data.containsKey('cycle')) {
+      context.handle(
+        _cycleMeta,
+        cycle.isAcceptableOrUnknown(data['cycle']!, _cycleMeta),
+      );
     }
     return context;
   }
@@ -1855,6 +1872,10 @@ class $CompetitionsTable extends Competitions
           data['${effectivePrefix}kind'],
         )!,
       ),
+      cycle: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}cycle'],
+      )!,
     );
   }
 
@@ -1877,12 +1898,17 @@ class CompetitionRow extends DataClass implements Insertable<CompetitionRow> {
   final Confederation confederation;
   final String name;
   final CompetitionKind kind;
+
+  /// The 4-year cycle this competition belongs to (matches Careers.cyclePointer
+  /// at creation time), so each endless cycle is queried independently.
+  final int cycle;
   const CompetitionRow({
     required this.id,
     required this.careerId,
     required this.confederation,
     required this.name,
     required this.kind,
+    required this.cycle,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -1900,6 +1926,7 @@ class CompetitionRow extends DataClass implements Insertable<CompetitionRow> {
         $CompetitionsTable.$converterkind.toSql(kind),
       );
     }
+    map['cycle'] = Variable<int>(cycle);
     return map;
   }
 
@@ -1910,6 +1937,7 @@ class CompetitionRow extends DataClass implements Insertable<CompetitionRow> {
       confederation: Value(confederation),
       name: Value(name),
       kind: Value(kind),
+      cycle: Value(cycle),
     );
   }
 
@@ -1928,6 +1956,7 @@ class CompetitionRow extends DataClass implements Insertable<CompetitionRow> {
       kind: $CompetitionsTable.$converterkind.fromJson(
         serializer.fromJson<String>(json['kind']),
       ),
+      cycle: serializer.fromJson<int>(json['cycle']),
     );
   }
   @override
@@ -1943,6 +1972,7 @@ class CompetitionRow extends DataClass implements Insertable<CompetitionRow> {
       'kind': serializer.toJson<String>(
         $CompetitionsTable.$converterkind.toJson(kind),
       ),
+      'cycle': serializer.toJson<int>(cycle),
     };
   }
 
@@ -1952,12 +1982,14 @@ class CompetitionRow extends DataClass implements Insertable<CompetitionRow> {
     Confederation? confederation,
     String? name,
     CompetitionKind? kind,
+    int? cycle,
   }) => CompetitionRow(
     id: id ?? this.id,
     careerId: careerId ?? this.careerId,
     confederation: confederation ?? this.confederation,
     name: name ?? this.name,
     kind: kind ?? this.kind,
+    cycle: cycle ?? this.cycle,
   );
   CompetitionRow copyWithCompanion(CompetitionsCompanion data) {
     return CompetitionRow(
@@ -1968,6 +2000,7 @@ class CompetitionRow extends DataClass implements Insertable<CompetitionRow> {
           : this.confederation,
       name: data.name.present ? data.name.value : this.name,
       kind: data.kind.present ? data.kind.value : this.kind,
+      cycle: data.cycle.present ? data.cycle.value : this.cycle,
     );
   }
 
@@ -1978,13 +2011,15 @@ class CompetitionRow extends DataClass implements Insertable<CompetitionRow> {
           ..write('careerId: $careerId, ')
           ..write('confederation: $confederation, ')
           ..write('name: $name, ')
-          ..write('kind: $kind')
+          ..write('kind: $kind, ')
+          ..write('cycle: $cycle')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, careerId, confederation, name, kind);
+  int get hashCode =>
+      Object.hash(id, careerId, confederation, name, kind, cycle);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -1993,7 +2028,8 @@ class CompetitionRow extends DataClass implements Insertable<CompetitionRow> {
           other.careerId == this.careerId &&
           other.confederation == this.confederation &&
           other.name == this.name &&
-          other.kind == this.kind);
+          other.kind == this.kind &&
+          other.cycle == this.cycle);
 }
 
 class CompetitionsCompanion extends UpdateCompanion<CompetitionRow> {
@@ -2002,12 +2038,14 @@ class CompetitionsCompanion extends UpdateCompanion<CompetitionRow> {
   final Value<Confederation> confederation;
   final Value<String> name;
   final Value<CompetitionKind> kind;
+  final Value<int> cycle;
   const CompetitionsCompanion({
     this.id = const Value.absent(),
     this.careerId = const Value.absent(),
     this.confederation = const Value.absent(),
     this.name = const Value.absent(),
     this.kind = const Value.absent(),
+    this.cycle = const Value.absent(),
   });
   CompetitionsCompanion.insert({
     this.id = const Value.absent(),
@@ -2015,6 +2053,7 @@ class CompetitionsCompanion extends UpdateCompanion<CompetitionRow> {
     required Confederation confederation,
     required String name,
     this.kind = const Value.absent(),
+    this.cycle = const Value.absent(),
   }) : careerId = Value(careerId),
        confederation = Value(confederation),
        name = Value(name);
@@ -2024,6 +2063,7 @@ class CompetitionsCompanion extends UpdateCompanion<CompetitionRow> {
     Expression<String>? confederation,
     Expression<String>? name,
     Expression<String>? kind,
+    Expression<int>? cycle,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -2031,6 +2071,7 @@ class CompetitionsCompanion extends UpdateCompanion<CompetitionRow> {
       if (confederation != null) 'confederation': confederation,
       if (name != null) 'name': name,
       if (kind != null) 'kind': kind,
+      if (cycle != null) 'cycle': cycle,
     });
   }
 
@@ -2040,6 +2081,7 @@ class CompetitionsCompanion extends UpdateCompanion<CompetitionRow> {
     Value<Confederation>? confederation,
     Value<String>? name,
     Value<CompetitionKind>? kind,
+    Value<int>? cycle,
   }) {
     return CompetitionsCompanion(
       id: id ?? this.id,
@@ -2047,6 +2089,7 @@ class CompetitionsCompanion extends UpdateCompanion<CompetitionRow> {
       confederation: confederation ?? this.confederation,
       name: name ?? this.name,
       kind: kind ?? this.kind,
+      cycle: cycle ?? this.cycle,
     );
   }
 
@@ -2072,6 +2115,9 @@ class CompetitionsCompanion extends UpdateCompanion<CompetitionRow> {
         $CompetitionsTable.$converterkind.toSql(kind.value),
       );
     }
+    if (cycle.present) {
+      map['cycle'] = Variable<int>(cycle.value);
+    }
     return map;
   }
 
@@ -2082,7 +2128,8 @@ class CompetitionsCompanion extends UpdateCompanion<CompetitionRow> {
           ..write('careerId: $careerId, ')
           ..write('confederation: $confederation, ')
           ..write('name: $name, ')
-          ..write('kind: $kind')
+          ..write('kind: $kind, ')
+          ..write('cycle: $cycle')
           ..write(')'))
         .toString();
   }
@@ -7206,6 +7253,7 @@ typedef $$CompetitionsTableCreateCompanionBuilder =
       required Confederation confederation,
       required String name,
       Value<CompetitionKind> kind,
+      Value<int> cycle,
     });
 typedef $$CompetitionsTableUpdateCompanionBuilder =
     CompetitionsCompanion Function({
@@ -7214,6 +7262,7 @@ typedef $$CompetitionsTableUpdateCompanionBuilder =
       Value<Confederation> confederation,
       Value<String> name,
       Value<CompetitionKind> kind,
+      Value<int> cycle,
     });
 
 final class $$CompetitionsTableReferences
@@ -7323,6 +7372,11 @@ class $$CompetitionsTableFilterComposer
   get kind => $composableBuilder(
     column: $table.kind,
     builder: (column) => ColumnWithTypeConverterFilters(column),
+  );
+
+  ColumnFilters<int> get cycle => $composableBuilder(
+    column: $table.cycle,
+    builder: (column) => ColumnFilters(column),
   );
 
   $$CareersTableFilterComposer get careerId {
@@ -7453,6 +7507,11 @@ class $$CompetitionsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<int> get cycle => $composableBuilder(
+    column: $table.cycle,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   $$CareersTableOrderingComposer get careerId {
     final $$CareersTableOrderingComposer composer = $composerBuilder(
       composer: this,
@@ -7500,6 +7559,9 @@ class $$CompetitionsTableAnnotationComposer
 
   GeneratedColumnWithTypeConverter<CompetitionKind, String> get kind =>
       $composableBuilder(column: $table.kind, builder: (column) => column);
+
+  GeneratedColumn<int> get cycle =>
+      $composableBuilder(column: $table.cycle, builder: (column) => column);
 
   $$CareersTableAnnotationComposer get careerId {
     final $$CareersTableAnnotationComposer composer = $composerBuilder(
@@ -7638,12 +7700,14 @@ class $$CompetitionsTableTableManager
                 Value<Confederation> confederation = const Value.absent(),
                 Value<String> name = const Value.absent(),
                 Value<CompetitionKind> kind = const Value.absent(),
+                Value<int> cycle = const Value.absent(),
               }) => CompetitionsCompanion(
                 id: id,
                 careerId: careerId,
                 confederation: confederation,
                 name: name,
                 kind: kind,
+                cycle: cycle,
               ),
           createCompanionCallback:
               ({
@@ -7652,12 +7716,14 @@ class $$CompetitionsTableTableManager
                 required Confederation confederation,
                 required String name,
                 Value<CompetitionKind> kind = const Value.absent(),
+                Value<int> cycle = const Value.absent(),
               }) => CompetitionsCompanion.insert(
                 id: id,
                 careerId: careerId,
                 confederation: confederation,
                 name: name,
                 kind: kind,
+                cycle: cycle,
               ),
           withReferenceMapper: (p0) => p0
               .map(

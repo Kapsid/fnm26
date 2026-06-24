@@ -53,10 +53,11 @@ abstract interface class CompetitionRepository {
   /// Whether a schedule has already been generated for this save.
   Future<bool> hasSchedule(int careerId);
 
-  /// Persists a generated qualifying competition for [careerId].
+  /// Persists a generated qualifying competition for [careerId] in [cycle].
   Future<void> saveSchedule({
     required int careerId,
     required GeneratedSchedule schedule,
+    int cycle = 0,
   });
 
   /// A nation's fixtures, ordered by date.
@@ -116,6 +117,7 @@ abstract interface class CompetitionRepository {
     required int careerId,
     required FinalsDraw draw,
     required DateTime groupStart,
+    int cycle = 0,
   });
 
   /// Finals group tables (groups A…H, ordered).

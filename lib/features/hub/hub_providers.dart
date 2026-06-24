@@ -13,9 +13,11 @@ import 'package:fnm/domain/services/competition/finals.dart';
 import 'package:fnm/domain/services/competition/hosts.dart';
 import 'package:fnm/domain/services/competition/qualification.dart';
 import 'package:fnm/domain/services/competition/qualification_format.dart';
+import 'package:fnm/domain/services/competition/schedule_generator.dart';
 import 'package:fnm/domain/services/match/goal_attribution.dart';
 import 'package:fnm/domain/services/match/match_engine.dart';
 import 'package:fnm/domain/services/match/match_simulator.dart';
+import 'package:fnm/features/career/career_providers.dart';
 
 /// Everything the Hub screen needs for a save, in one fetch.
 class HubData {
@@ -423,6 +425,10 @@ class SeasonService {
     );
   }
 
+  /// The World Cup finals year for a cycle (clean 4-year cadence: 2030, 2034…).
+  static int finalsYear(int cycle) =>
+      CareerService.cycleStart.year + 4 * (cycle + 1);
+
   Future<void> _generateFinals(int careerId) async {
     final career = await _careers.byId(careerId);
     if (career == null) return;
@@ -444,18 +450,72 @@ class SeasonService {
     }
 
     final nations = await _nationsById();
+    final rankingById = {for (final n in nations.values) n.id: n.ranking};
+    final year = finalsYear(career.cyclePointer);
+
+    // The host nation qualifies automatically (replacing the weakest berth).
+    final host = WorldCupHosts.hostFor(
+      year: year,
+      nations: nations.values.toList(),
+      seed: career.rngSeed,
+    );
+    if (!qualifiers.contains(host) && qualifiers.isNotEmpty) {
+      qualifiers
+        ..sort((a, b) => (rankingById[a] ?? 9999).compareTo(
+              rankingById[b] ?? 9999,
+            ))
+        ..removeLast()
+        ..add(host);
+    }
+
     final draw = WorldCupFinals.drawGroups(
       qualifierIds: qualifiers,
-      rankingById: {for (final n in nations.values) n.id: n.ranking},
-      rngSeed: career.rngSeed,
+      rankingById: rankingById,
+      rngSeed: career.rngSeed ^ (career.cyclePointer * 0x2D31),
     );
     if (draw.groups.isEmpty) return;
 
     await _comp.saveFinals(
       careerId: careerId,
       draw: draw,
-      groupStart: DateTime(career.inGameDate.year + 1, 6, 11),
+      groupStart: DateTime(year, 6, 11),
+      cycle: career.cyclePointer,
     );
+  }
+
+  /// Starts the next 4-year cycle once the current World Cup is decided:
+  /// re-draws every confederation's qualifiers and advances the calendar.
+  Future<void> startNextCycle(int careerId) async {
+    final career = await _careers.byId(careerId);
+    if (career == null) return;
+    if (await _comp.worldChampion(careerId) == null) return; // not finished
+
+    final nextCycle = career.cyclePointer + 1;
+    final nextStart = DateTime(finalsYear(career.cyclePointer), 9);
+
+    final byConfederation = <Confederation, List<Nation>>{};
+    for (final n in await _ref.read(nationRepositoryProvider).all()) {
+      (byConfederation[n.confederation] ??= []).add(n);
+    }
+    for (final entry in byConfederation.entries) {
+      if (entry.value.length < 2) continue;
+      final schedule = const ScheduleGenerator().generate(
+        confederation: entry.key,
+        nations: entry.value,
+        rngSeed: career.rngSeed ^
+            (nextCycle * 0x1B3D) ^
+            (entry.key.index * 0x9E37),
+        start: nextStart,
+      );
+      await _comp.saveSchedule(
+        careerId: careerId,
+        schedule: schedule,
+        cycle: nextCycle,
+      );
+    }
+
+    await _careers.advanceCycle(careerId, nextCycle, nextStart);
+    _ref.invalidate(hubDataProvider);
   }
 }
 

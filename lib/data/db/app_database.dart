@@ -40,7 +40,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase.forTesting(QueryExecutor executor) : super(executor);
 
   @override
-  int get schemaVersion => 6;
+  int get schemaVersion => 7;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -75,6 +75,10 @@ class AppDatabase extends _$AppDatabase {
             await m.addColumn(honours, honours.finalAwayScore);
             await m.addColumn(honours, honours.topScorerName);
             await m.addColumn(honours, honours.topScorerGoals);
+          }
+          // v7 scopes competitions to an endless 4-year cycle.
+          if (from < 7) {
+            await m.addColumn(competitions, competitions.cycle);
           }
         },
       );

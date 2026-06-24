@@ -55,6 +55,16 @@ class DriftCareerRepository implements CareerRepository {
   }
 
   @override
+  Future<void> advanceCycle(int id, int cyclePointer, DateTime date) async {
+    await (_db.update(_db.careers)..where((t) => t.id.equals(id))).write(
+      CareersCompanion(
+        cyclePointer: Value(cyclePointer),
+        inGameDate: Value(date),
+      ),
+    );
+  }
+
+  @override
   Future<void> delete(int id) async {
     await (_db.delete(_db.careers)..where((t) => t.id.equals(id))).go();
   }

@@ -14,6 +14,15 @@ class DriftCompetitionRepository implements CompetitionRepository {
 
   final AppDatabase _db;
 
+  /// The save's current 4-year cycle (Careers.cyclePointer).
+  Future<int> _cycle(int careerId) async {
+    final c = await (_db.select(_db.careers)
+          ..where((t) => t.id.equals(careerId))
+          ..limit(1))
+        .getSingleOrNull();
+    return c?.cyclePointer ?? 0;
+  }
+
   @override
   Future<bool> hasSchedule(int careerId) async {
     final row = await (_db.select(_db.competitions)
@@ -27,6 +36,7 @@ class DriftCompetitionRepository implements CompetitionRepository {
   Future<void> saveSchedule({
     required int careerId,
     required GeneratedSchedule schedule,
+    int cycle = 0,
   }) async {
     await _db.transaction(() async {
       final compId = await _db.into(_db.competitions).insert(
@@ -34,6 +44,7 @@ class DriftCompetitionRepository implements CompetitionRepository {
               careerId: careerId,
               confederation: schedule.confederation,
               name: schedule.name,
+              cycle: Value(cycle),
             ),
           );
 
@@ -144,8 +155,9 @@ class DriftCompetitionRepository implements CompetitionRepository {
 
   @override
   Future<GroupTable?> groupTableForNation(int careerId, int nationId) async {
+    final cycle = await _cycle(careerId);
     final comps = await (_db.select(_db.competitions)
-          ..where((t) => t.careerId.equals(careerId)))
+          ..where((t) => t.careerId.equals(careerId) & t.cycle.equals(cycle)))
         .get();
     if (comps.isEmpty) return null;
 
@@ -198,10 +210,12 @@ class DriftCompetitionRepository implements CompetitionRepository {
   Future<List<ConfederationGroupTable>> allGroupTablesByConfederation(
     int careerId,
   ) async {
+    final cycle = await _cycle(careerId);
     final comps = await (_db.select(_db.competitions)
           ..where(
             (t) =>
                 t.careerId.equals(careerId) &
+                t.cycle.equals(cycle) &
                 t.kind.equalsValue(CompetitionKind.worldCupQualifying),
           )
           ..orderBy([(t) => OrderingTerm(expression: t.id)]))
@@ -238,10 +252,12 @@ class DriftCompetitionRepository implements CompetitionRepository {
     int careerId,
     Confederation confederation,
   ) async {
+    final cycle = await _cycle(careerId);
     final comp = await (_db.select(_db.competitions)
           ..where(
             (t) =>
                 t.careerId.equals(careerId) &
+                t.cycle.equals(cycle) &
                 t.confederation.equalsValue(confederation) &
                 t.kind.equalsValue(CompetitionKind.worldCupQualifying),
           )
@@ -292,22 +308,27 @@ class DriftCompetitionRepository implements CompetitionRepository {
 
   // --- World Cup finals -----------------------------------------------------
 
-  Future<CompetitionRow?> _finals(int careerId) =>
-      (_db.select(_db.competitions)
-            ..where(
-              (t) =>
-                  t.careerId.equals(careerId) &
-                  t.kind.equalsValue(CompetitionKind.worldCupFinals),
-            )
-            ..limit(1))
-          .getSingleOrNull();
+  Future<CompetitionRow?> _finals(int careerId) async {
+    final cycle = await _cycle(careerId);
+    return (_db.select(_db.competitions)
+          ..where(
+            (t) =>
+                t.careerId.equals(careerId) &
+                t.cycle.equals(cycle) &
+                t.kind.equalsValue(CompetitionKind.worldCupFinals),
+          )
+          ..limit(1))
+        .getSingleOrNull();
+  }
 
   @override
   Future<bool> allQualifyingPlayed(int careerId) async {
+    final cycle = await _cycle(careerId);
     final qualifying = await (_db.select(_db.competitions)
           ..where(
             (t) =>
                 t.careerId.equals(careerId) &
+                t.cycle.equals(cycle) &
                 t.kind.equalsValue(CompetitionKind.worldCupQualifying),
           ))
         .get();
@@ -349,6 +370,7 @@ class DriftCompetitionRepository implements CompetitionRepository {
     required int careerId,
     required FinalsDraw draw,
     required DateTime groupStart,
+    int cycle = 0,
   }) async {
     await _db.transaction(() async {
       final compId = await _db.into(_db.competitions).insert(
@@ -359,6 +381,7 @@ class DriftCompetitionRepository implements CompetitionRepository {
               confederation: Confederation.northAmerica,
               name: 'World Championship Finals',
               kind: const Value(CompetitionKind.worldCupFinals),
+              cycle: Value(cycle),
             ),
           );
 
@@ -519,16 +542,20 @@ class DriftCompetitionRepository implements CompetitionRepository {
     CompetitionKind? kind,
     int limit = 20,
   }) async {
-    Set<int>? compIds;
-    if (kind != null) {
-      final comps = await (_db.select(_db.competitions)
-            ..where(
-              (t) => t.careerId.equals(careerId) & t.kind.equalsValue(kind),
-            ))
-          .get();
-      compIds = comps.map((c) => c.id).toSet();
-      if (compIds.isEmpty) return [];
-    }
+    // Scope to the current cycle's competitions (optionally of one kind).
+    final cycle = await _cycle(careerId);
+    final comps = await (_db.select(_db.competitions)
+          ..where(
+            (t) =>
+                t.careerId.equals(careerId) &
+                t.cycle.equals(cycle) &
+                (kind == null
+                    ? const Constant(true)
+                    : t.kind.equalsValue(kind)),
+          ))
+        .get();
+    final compIds = comps.map((c) => c.id).toSet();
+    if (compIds.isEmpty) return [];
 
     final rows = await (_db.select(_db.goalEvents)
           ..where((t) => t.careerId.equals(careerId)))
@@ -536,7 +563,7 @@ class DriftCompetitionRepository implements CompetitionRepository {
 
     final tally = <int, ({int nationId, int goals})>{};
     for (final r in rows) {
-      if (compIds != null && !compIds.contains(r.competitionId)) continue;
+      if (!compIds.contains(r.competitionId)) continue;
       final cur = tally[r.playerId];
       tally[r.playerId] = (
         nationId: r.nationId,

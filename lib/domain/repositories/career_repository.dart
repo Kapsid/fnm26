@@ -22,6 +22,9 @@ abstract interface class CareerRepository {
   /// Advances (or sets) the in-game date of a save.
   Future<void> updateInGameDate(int id, DateTime date);
 
+  /// Advances the save to a new cycle, setting [cyclePointer] and [date].
+  Future<void> advanceCycle(int id, int cyclePointer, DateTime date);
+
   /// Deletes the save with [id] (no-op if it does not exist).
   Future<void> delete(int id);
 }

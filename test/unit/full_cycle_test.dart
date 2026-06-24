@@ -44,26 +44,36 @@ void main() {
         .valueOrNull!;
 
     final season = container.read(seasonServiceProvider);
-    int? champion;
-    var lastDate = DateTime(1900);
-    for (var i = 0; i < 400; i++) {
-      await season.advance(career.id);
-      final hub = await container.read(hubDataProvider(career.id).future);
-      champion = hub!.championNationId;
-      if (champion != null) break;
-      // Stop if the clock stops moving (would mean nothing left to do).
-      if (!hub.career.inGameDate.isAfter(lastDate)) break;
-      lastDate = hub.career.inGameDate;
+
+    Future<int?> runToChampion() async {
+      var lastDate = DateTime(1900);
+      for (var i = 0; i < 400; i++) {
+        await season.advance(career.id);
+        final hub = await container.read(hubDataProvider(career.id).future);
+        if (hub!.championNationId != null) return hub.championNationId;
+        if (!hub.career.inGameDate.isAfter(lastDate)) return null;
+        lastDate = hub.career.inGameDate;
+      }
+      return null;
     }
 
+    // Cycle 1: qualify → finals → champion.
+    final champion = await runToChampion();
     expect(champion, isNotNull, reason: 'a World Cup champion should emerge');
     expect(nations.map((n) => n.id), contains(champion));
 
-    // The roll of honour records the completed tournament.
-    final honours = await container
-        .read(competitionRepositoryProvider)
-        .honours(career.id);
-    expect(honours, isNotEmpty);
-    expect(honours.first.championId, champion);
-  }, timeout: const Timeout(Duration(minutes: 3)));
+    // Endless rollover: starting the next cycle crowns a second champion.
+    await season.startNextCycle(career.id);
+    final secondChampion = await runToChampion();
+    expect(
+      secondChampion,
+      isNotNull,
+      reason: 'the next cycle should also crown a champion',
+    );
+
+    final comp = container.read(competitionRepositoryProvider);
+    final honours = await comp.honours(career.id);
+    // Real history (≤2024) plus two simulated World Cups (2030, 2034).
+    expect(honours.where((h) => h.year >= 2030).length, greaterThanOrEqualTo(2));
+  }, timeout: const Timeout(Duration(minutes: 4)));
 }

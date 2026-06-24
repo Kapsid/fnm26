@@ -81,13 +81,22 @@ class HubScreen extends ConsumerWidget {
                 ],
               ),
               const SizedBox(height: AppSpacing.md),
-              if (hub.championNationId != null)
+              if (hub.championNationId != null) ...[
                 _ChampionBanner(
                   name: name(hub.championNationId!),
                   code: code(hub.championNationId!),
                   onView: () => context.go('${Routes.cup}?careerId=$careerId'),
-                )
-              else ...[
+                ),
+                const SizedBox(height: AppSpacing.md),
+                PrimaryButton(
+                  label: 'Begin '
+                      '${SeasonService.finalsYear(hub.career.cyclePointer + 1)}'
+                      ' cycle',
+                  icon: Icons.skip_next_rounded,
+                  onPressed: () =>
+                      ref.read(seasonServiceProvider).startNextCycle(careerId),
+                ),
+              ] else ...[
                 PrimaryButton(
                   label: hub.next == null ? 'Advance the world' : 'Continue',
                   icon: hub.next == null

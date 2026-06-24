@@ -73,6 +73,10 @@ class Competitions extends Table {
   TextColumn get kind => textEnum<CompetitionKind>().withDefault(
         const Constant('worldCupQualifying'),
       )();
+
+  /// The 4-year cycle this competition belongs to (matches Careers.cyclePointer
+  /// at creation time), so each endless cycle is queried independently.
+  IntColumn get cycle => integer().withDefault(const Constant(0))();
 }
 
 /// A qualifying group within a competition.
