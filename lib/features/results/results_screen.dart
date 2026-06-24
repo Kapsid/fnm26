@@ -19,6 +19,7 @@ class ResultsScreen extends ConsumerWidget {
   static String _stage(String? round) => switch (round) {
         null => 'QUALIFIER',
         'FRIENDLY' => 'FRIENDLY',
+        'NL' => 'NATIONS LEAGUE',
         'GROUP' => 'FINALS GROUP',
         'R16' => 'ROUND OF 16',
         'QF' => 'QUARTER-FINAL',

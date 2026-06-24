@@ -39,6 +39,9 @@ enum CompetitionKind {
 
   /// Friendly matches (warm-ups in otherwise empty windows).
   friendly,
+
+  /// Nations League — a competitive mini-group played between tournaments.
+  nationsLeague,
 }
 
 /// Display helpers for [Confederation].

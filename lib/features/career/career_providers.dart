@@ -6,6 +6,7 @@ import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/formation.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/entities/tactics.dart';
+import 'package:fnm/domain/repositories/competition_repository.dart';
 import 'package:fnm/domain/services/competition/friendly_scheduler.dart';
 import 'package:fnm/domain/services/competition/real_history.dart';
 import 'package:fnm/domain/services/competition/schedule_generator.dart';
@@ -67,35 +68,99 @@ class CareerService {
       startDate: cycleStart,
     );
     await _generateSchedule(career);
-    await _scheduleFriendlies(career, cycle: 0);
+    await fillGap(
+      comp: _ref.read(competitionRepositoryProvider),
+      nations: await _ref.read(nationRepositoryProvider).all(),
+      careerId: career.id,
+      nationId: career.nationId,
+      rngSeed: career.rngSeed,
+      cycle: 0,
+      qualifyingStart: career.inGameDate,
+      wcYear: worldCupYear(0),
+    );
     await _generateDefaultTactic(career);
     await _seedHistory(career);
     _ref.invalidate(savesProvider);
     return Result.success(career);
   }
 
-  /// Fills the gap between the nation's last qualifier and the finals with
-  /// friendlies, so there's always something to play.
-  Future<void> _scheduleFriendlies(Career career, {required int cycle}) async {
-    final compRepo = _ref.read(competitionRepositoryProvider);
-    final own = await compRepo.fixturesForNation(career.id, career.nationId);
-    if (own.isEmpty) return;
-    final lastQualifier = own
+  /// Fills the gap between the nation's last qualifier and the finals with a
+  /// Nations League mini-group (if there's room) followed by friendlies, so
+  /// there's always a competitive match to play. Shared by creation + rollover.
+  static Future<void> fillGap({
+    required CompetitionRepository comp,
+    required List<Nation> nations,
+    required int careerId,
+    required int nationId,
+    required int rngSeed,
+    required int cycle,
+    required DateTime qualifyingStart,
+    required int wcYear,
+  }) async {
+    final own = await comp.fixturesForNation(careerId, nationId);
+    final thisCycle = own
+        .where((f) => !f.date.isBefore(qualifyingStart))
+        .toList();
+    if (thisCycle.isEmpty) return;
+    final lastQualifier = thisCycle
         .map((f) => f.date)
         .reduce((a, b) => a.isAfter(b) ? a : b);
-    final nations = await _ref.read(nationRepositoryProvider).all();
+
+    var gapStart = lastQualifier;
+    final me = nations.firstWhere((n) => n.id == nationId);
+
+    // Nations League: only if there's a full season of room before the finals.
+    if (lastQualifier.isBefore(DateTime(wcYear - 1))) {
+      final peers =
+          nations
+              .where(
+                (n) => n.confederation == me.confederation && n.id != me.id,
+              )
+              .toList()
+            ..sort(
+              (a, b) => (a.ranking - me.ranking).abs().compareTo(
+                (b.ranking - me.ranking).abs(),
+              ),
+            );
+      if (peers.length >= 3) {
+        final group = [me, ...peers.take(3)];
+        final generated = const ScheduleGenerator().generate(
+          confederation: me.confederation,
+          nations: group,
+          rngSeed: rngSeed ^ (cycle * 0x71) ^ 0x4E1,
+          start: lastQualifier,
+        );
+        final nl = GeneratedSchedule(
+          confederation: generated.confederation,
+          name: 'Nations League',
+          groups: generated.groups,
+        );
+        await comp.saveSchedule(
+          careerId: careerId,
+          schedule: nl,
+          cycle: cycle,
+          kind: CompetitionKind.nationsLeague,
+          fixtureRound: 'NL',
+        );
+        gapStart = generated.groups
+            .expand((g) => g.fixtures)
+            .map((f) => f.date)
+            .fold(gapStart, (m, d) => d.isAfter(m) ? d : m);
+      }
+    }
+
     final specs = FriendlyScheduler.schedule(
-      from: lastQualifier,
-      until: DateTime(worldCupYear(cycle), 6),
+      from: gapStart,
+      until: DateTime(wcYear, 6),
       opponentPool: [
         for (final n in nations)
-          if (n.id != career.nationId) n.id,
+          if (n.id != nationId) n.id,
       ],
-      seed: career.rngSeed ^ (cycle * 0x71),
+      seed: rngSeed ^ (cycle * 0x71),
     );
-    await compRepo.saveFriendlies(
-      careerId: career.id,
-      nationId: career.nationId,
+    await comp.saveFriendlies(
+      careerId: careerId,
+      nationId: nationId,
       cycle: cycle,
       friendlies: specs,
     );

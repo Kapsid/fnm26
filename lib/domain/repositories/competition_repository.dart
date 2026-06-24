@@ -53,11 +53,14 @@ abstract interface class CompetitionRepository {
   /// Whether a schedule has already been generated for this save.
   Future<bool> hasSchedule(int careerId);
 
-  /// Persists a generated qualifying competition for [careerId] in [cycle].
+  /// Persists a generated group competition for [careerId] in [cycle]. The
+  /// default [kind] is World Cup qualifying; reused for the Nations League.
   Future<void> saveSchedule({
     required int careerId,
     required GeneratedSchedule schedule,
     int cycle = 0,
+    CompetitionKind kind = CompetitionKind.worldCupQualifying,
+    String? fixtureRound,
   });
 
   /// A nation's fixtures, ordered by date.

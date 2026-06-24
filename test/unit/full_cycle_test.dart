@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/data/seed/seed_source.dart';
+import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/services/entitlement/entitlement.dart';
 import 'package:fnm/features/career/career_providers.dart';
@@ -37,16 +38,25 @@ void main() {
     addTearDown(db.close);
 
     await container.read(seedLoaderProvider).ensureSeeded();
+    // A European nation reliably has room for a Nations League before the WC.
+    final player = nations.firstWhere(
+      (n) => n.confederation == Confederation.europe,
+    );
     final career = (await container.read(careerServiceProvider).create(
-          nationId: nations.first.id,
+          nationId: player.id,
           managerName: 'A',
         ))
         .valueOrNull!;
 
-    // Friendlies fill the player's empty windows.
+    // The gap is filled with a Nations League group and friendlies.
     final ownFixtures = await container
         .read(competitionRepositoryProvider)
-        .fixturesForNation(career.id, nations.first.id);
+        .fixturesForNation(career.id, player.id);
+    expect(
+      ownFixtures.any((f) => f.round == 'NL'),
+      isTrue,
+      reason: 'the player should have Nations League matches',
+    );
     expect(
       ownFixtures.any((f) => f.round == 'FRIENDLY'),
       isTrue,

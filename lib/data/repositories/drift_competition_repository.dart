@@ -37,6 +37,8 @@ class DriftCompetitionRepository implements CompetitionRepository {
     required int careerId,
     required GeneratedSchedule schedule,
     int cycle = 0,
+    CompetitionKind kind = CompetitionKind.worldCupQualifying,
+    String? fixtureRound,
   }) async {
     await _db.transaction(() async {
       final compId = await _db.into(_db.competitions).insert(
@@ -45,6 +47,7 @@ class DriftCompetitionRepository implements CompetitionRepository {
               confederation: schedule.confederation,
               name: schedule.name,
               cycle: Value(cycle),
+              kind: Value(kind),
             ),
           );
 
@@ -74,6 +77,7 @@ class DriftCompetitionRepository implements CompetitionRepository {
                   date: f.date,
                   homeNationId: f.homeNationId,
                   awayNationId: f.awayNationId,
+                  round: Value(fixtureRound),
                 ),
             ]);
         });
@@ -179,6 +183,24 @@ class DriftCompetitionRepository implements CompetitionRepository {
     final groupById = {for (final g in groups) g.id: g};
     // Pick the membership in the most advanced competition.
     final rank = {for (var i = 0; i < ordered.length; i++) ordered[i].id: i};
+
+    // Bias towards the competition the player's next match belongs to, so the
+    // active stage (qualifying → Nations League → finals) is what's shown.
+    final compIds = ordered.map((c) => c.id).toList();
+    final nextFx = await (_db.select(_db.fixtures)
+          ..where(
+            (t) =>
+                t.careerId.equals(careerId) &
+                t.competitionId.isIn(compIds) &
+                t.played.equals(false) &
+                (t.homeNationId.equals(nationId) |
+                    t.awayNationId.equals(nationId)),
+          )
+          ..orderBy([(t) => OrderingTerm(expression: t.date)])
+          ..limit(1))
+        .getSingleOrNull();
+    if (nextFx != null) rank[nextFx.competitionId] = -1;
+
     QualifyingGroupRow? group;
     var best = 1 << 30;
     for (final m in memberships) {

@@ -209,6 +209,7 @@ class _ChampionBanner extends StatelessWidget {
 String matchStageLabel(Fixture f) => switch (f.round) {
       null => 'QUALIFYING · MD ${f.matchday}',
       'FRIENDLY' => 'FRIENDLY',
+      'NL' => 'NATIONS LEAGUE',
       'GROUP' => 'WC FINALS · GROUP',
       'R16' => 'WC FINALS · ROUND OF 16',
       'QF' => 'WC FINALS · QUARTER-FINAL',
