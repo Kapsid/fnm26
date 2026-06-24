@@ -225,7 +225,13 @@ class DriftCompetitionRepository implements CompetitionRepository {
       members.map((m) => m.nationId).toList(),
       fixtures.map((r) => r.toDomain()).toList(),
     );
-    return (groupId: groupId, name: group.name, standings: standings);
+    final comp = ordered.firstWhere((c) => c.id == group!.competitionId);
+    return (
+      groupId: groupId,
+      name: group.name,
+      competition: comp.name,
+      standings: standings,
+    );
   }
 
   @override
@@ -319,6 +325,7 @@ class DriftCompetitionRepository implements CompetitionRepository {
       tables.add((
         groupId: group.id,
         name: group.name,
+        competition: comp.name,
         standings: GroupStanding.table(
           members.map((m) => m.nationId).toList(),
           fixtures.map((r) => r.toDomain()).toList(),
@@ -366,17 +373,63 @@ class DriftCompetitionRepository implements CompetitionRepository {
 
   // --- World Cup finals -----------------------------------------------------
 
-  Future<CompetitionRow?> _finals(int careerId) async {
+  Future<CompetitionRow?> _finals(int careerId) =>
+      _tournamentComp(careerId, CompetitionKind.worldCupFinals);
+
+  Future<CompetitionRow?> _tournamentComp(
+    int careerId,
+    CompetitionKind kind,
+  ) async {
     final cycle = await _cycle(careerId);
     return (_db.select(_db.competitions)
           ..where(
             (t) =>
                 t.careerId.equals(careerId) &
                 t.cycle.equals(cycle) &
-                t.kind.equalsValue(CompetitionKind.worldCupFinals),
+                t.kind.equalsValue(kind),
           )
           ..limit(1))
         .getSingleOrNull();
+  }
+
+  @override
+  Future<bool> hasTournament(int careerId, CompetitionKind kind) async =>
+      (await _tournamentComp(careerId, kind)) != null;
+
+  @override
+  Future<void> createKnockout({
+    required int careerId,
+    required int cycle,
+    required Confederation confederation,
+    required CompetitionKind kind,
+    required String name,
+    required List<(int home, int away)> pairings,
+    required DateTime date,
+    String firstRound = 'R16',
+  }) async {
+    final compId = await _db.into(_db.competitions).insert(
+          CompetitionsCompanion.insert(
+            careerId: careerId,
+            confederation: confederation,
+            name: name,
+            kind: Value(kind),
+            cycle: Value(cycle),
+          ),
+        );
+    await _db.batch((b) {
+      b.insertAll(_db.fixtures, [
+        for (final (home, away) in pairings)
+          FixturesCompanion.insert(
+            careerId: careerId,
+            competitionId: compId,
+            matchday: 99,
+            date: date,
+            homeNationId: home,
+            awayNationId: away,
+            round: Value(firstRound),
+          ),
+      ]);
+    });
   }
 
   @override
@@ -505,8 +558,12 @@ class DriftCompetitionRepository implements CompetitionRepository {
   }
 
   @override
-  Future<List<Fixture>> fixturesByRound(int careerId, String round) async {
-    final comp = await _finals(careerId);
+  Future<List<Fixture>> fixturesByRound(
+    int careerId,
+    String round, {
+    CompetitionKind kind = CompetitionKind.worldCupFinals,
+  }) async {
+    final comp = await _tournamentComp(careerId, kind);
     if (comp == null) return [];
     final query = _db.select(_db.fixtures)
       ..where(
@@ -538,8 +595,9 @@ class DriftCompetitionRepository implements CompetitionRepository {
     required String round,
     required List<(int home, int away)> pairings,
     required DateTime date,
+    CompetitionKind kind = CompetitionKind.worldCupFinals,
   }) async {
-    final comp = await _finals(careerId);
+    final comp = await _tournamentComp(careerId, kind);
     if (comp == null) return;
     await _db.batch((b) {
       b.insertAll(_db.fixtures, [

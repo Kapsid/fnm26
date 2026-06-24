@@ -26,6 +26,11 @@ class ResultsScreen extends ConsumerWidget {
         'SF' => 'SEMI-FINAL',
         '3RD' => 'THIRD PLACE',
         'FINAL' => 'FINAL',
+        'CR16' => 'CONTINENTAL R16',
+        'CQF' => 'CONTINENTAL QF',
+        'CSF' => 'CONTINENTAL SF',
+        'C3RD' => 'CONTINENTAL 3RD',
+        'CFINAL' => 'CONTINENTAL FINAL',
         _ => round,
       };
 

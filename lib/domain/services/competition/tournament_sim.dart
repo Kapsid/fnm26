@@ -73,6 +73,21 @@ abstract final class TournamentSim {
     return rng.nextDouble() < sa / (sa + sb) ? a : b;
   }
 
+  /// First-round pairings for a [size]-team bracket from [seededByStrength]
+  /// (strongest first), standard-seeded so top seeds are kept apart.
+  static List<(int, int)> bracketPairs(
+    List<int> seededByStrength,
+    int size,
+  ) {
+    final order = _seedOrder(size);
+    final teams = seededByStrength.take(size).toList();
+    final bracket = [for (final s in order) teams[s - 1]];
+    return [
+      for (var i = 0; i + 1 < bracket.length; i += 2)
+        (bracket[i], bracket[i + 1]),
+    ];
+  }
+
   /// Standard tournament seeding order (1-based) so seed 1 meets seed 2 only in
   /// the final, etc. e.g. n=4 → [1,4,3,2].
   static List<int> _seedOrder(int n) {

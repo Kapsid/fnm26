@@ -38,10 +38,11 @@ void main() {
     addTearDown(db.close);
 
     await container.read(seedLoaderProvider).ensureSeeded();
-    // A European nation reliably has room for a Nations League before the WC.
-    final player = nations.firstWhere(
-      (n) => n.confederation == Confederation.europe,
-    );
+    // The strongest European nation: room for a Nations League and a top-16
+    // seed for the continental championship.
+    final player = nations
+        .where((n) => n.confederation == Confederation.europe)
+        .reduce((a, b) => a.ranking <= b.ranking ? a : b);
     final career = (await container.read(careerServiceProvider).create(
           nationId: player.id,
           managerName: 'A',
@@ -56,6 +57,13 @@ void main() {
       ownFixtures.any((f) => f.round == 'NL'),
       isTrue,
       reason: 'the player should have Nations League matches',
+    );
+    expect(
+      await container
+          .read(competitionRepositoryProvider)
+          .hasTournament(career.id, CompetitionKind.continentalFinals),
+      isTrue,
+      reason: 'a top seed should contest the continental championship',
     );
     expect(
       ownFixtures.any((f) => f.round == 'FRIENDLY'),

@@ -127,8 +127,6 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
                     awayScore: awayScore,
                     clock: ft ? 'FULL TIME' : "$_minute'",
                     live: !ft,
-                    events: shown,
-                    homeId: homeId,
                   ),
                   if (!ft)
                     _Controls(
@@ -241,8 +239,6 @@ class _Header extends StatelessWidget {
     required this.awayScore,
     required this.clock,
     required this.live,
-    required this.events,
-    required this.homeId,
   });
 
   final String homeCode;
@@ -253,14 +249,9 @@ class _Header extends StatelessWidget {
   final int awayScore;
   final String clock;
   final bool live;
-  final List<MatchEvent> events;
-  final int homeId;
 
   @override
   Widget build(BuildContext context) {
-    final homeGoals = events.where((e) => e.teamNationId == homeId).toList();
-    final awayGoals = events.where((e) => e.teamNationId != homeId).toList();
-
     return Padding(
       padding: const EdgeInsets.all(AppSpacing.marginMobile),
       child: AppCard(
@@ -304,77 +295,9 @@ class _Header extends StatelessWidget {
                 Expanded(child: _Side(code: awayCode, label: awayName)),
               ],
             ),
-            if (homeGoals.isNotEmpty || awayGoals.isNotEmpty) ...[
-              const SizedBox(height: AppSpacing.sm),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(
-                    child: _ScorerList(goals: homeGoals, alignEnd: true),
-                  ),
-                  const SizedBox(width: AppSpacing.md),
-                  Expanded(
-                    child: _ScorerList(goals: awayGoals, alignEnd: false),
-                  ),
-                ],
-              ),
-            ],
           ],
         ),
       ),
-    );
-  }
-}
-
-class _ScorerList extends StatelessWidget {
-  const _ScorerList({required this.goals, required this.alignEnd});
-  final List<MatchEvent> goals;
-  final bool alignEnd;
-
-  @override
-  Widget build(BuildContext context) {
-    final style = AppTypography.bodySmall.copyWith(
-      color: AppColors.onSurfaceVariant,
-    );
-    const ball = Icon(Icons.sports_soccer, size: 12, color: AppColors.primary);
-    return Column(
-      crossAxisAlignment:
-          alignEnd ? CrossAxisAlignment.end : CrossAxisAlignment.start,
-      children: [
-        for (final g in goals)
-          Padding(
-            padding: const EdgeInsets.only(bottom: 2),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: alignEnd
-                  ? [
-                      Flexible(
-                        child: Text(
-                          "${g.playerName} ${g.minute}'",
-                          textAlign: TextAlign.end,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: style,
-                        ),
-                      ),
-                      const SizedBox(width: 4),
-                      ball,
-                    ]
-                  : [
-                      ball,
-                      const SizedBox(width: 4),
-                      Flexible(
-                        child: Text(
-                          "${g.minute}' ${g.playerName}",
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: style,
-                        ),
-                      ),
-                    ],
-            ),
-          ),
-      ],
     );
   }
 }

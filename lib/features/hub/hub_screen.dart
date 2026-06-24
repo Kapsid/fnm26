@@ -216,6 +216,11 @@ String matchStageLabel(Fixture f) => switch (f.round) {
       'SF' => 'WC FINALS · SEMI-FINAL',
       '3RD' => 'WC FINALS · THIRD PLACE',
       'FINAL' => 'WC FINALS · FINAL',
+      'CR16' => 'CONTINENTAL · ROUND OF 16',
+      'CQF' => 'CONTINENTAL · QUARTER-FINAL',
+      'CSF' => 'CONTINENTAL · SEMI-FINAL',
+      'C3RD' => 'CONTINENTAL · THIRD PLACE',
+      'CFINAL' => 'CONTINENTAL · FINAL',
       _ => f.round!,
     };
 
@@ -392,6 +397,10 @@ class _GroupTable extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          Text(
+            group.competition.toUpperCase(),
+            style: AppTypography.labelSmall.copyWith(color: AppColors.primary),
+          ),
           Text('GROUP ${group.name}', style: AppTypography.labelMedium),
           const SizedBox(height: AppSpacing.sm),
           _row('#', 'TEAM', 'P', 'GD', 'PTS', header: true),

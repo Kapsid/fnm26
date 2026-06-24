@@ -8,6 +8,7 @@ import 'package:fnm/domain/services/competition/schedule_generator.dart';
 typedef GroupTable = ({
   int groupId,
   String name,
+  String competition,
   List<GroupStanding> standings,
 });
 
@@ -134,18 +135,40 @@ abstract interface class CompetitionRepository {
   /// Finals group tables (groups A…H, ordered).
   Future<List<FinalsGroupTable>> finalsGroupTables(int careerId);
 
-  /// Finals fixtures for a knockout [round] (`R16`/`QF`/`SF`/`3RD`/`FINAL`).
-  Future<List<Fixture>> fixturesByRound(int careerId, String round);
+  /// Knockout fixtures for a [round] (`R16`/`QF`/`SF`/`3RD`/`FINAL`) of the
+  /// current cycle's tournament of [kind].
+  Future<List<Fixture>> fixturesByRound(
+    int careerId,
+    String round, {
+    CompetitionKind kind = CompetitionKind.worldCupFinals,
+  });
 
   /// All finals knockout fixtures (round ≠ `GROUP`), by date then id.
   Future<List<Fixture>> finalsKnockoutFixtures(int careerId);
 
-  /// Adds knockout fixtures for [round] on [date].
+  /// Adds knockout fixtures for [round] on [date] to the tournament of [kind].
   Future<void> addKnockoutFixtures({
     required int careerId,
     required String round,
     required List<(int home, int away)> pairings,
     required DateTime date,
+    CompetitionKind kind = CompetitionKind.worldCupFinals,
+  });
+
+  /// Whether the current cycle has a tournament of [kind].
+  Future<bool> hasTournament(int careerId, CompetitionKind kind);
+
+  /// Creates a knockout tournament for the current cycle, seeding [pairings]
+  /// as the [firstRound] (e.g. `R16` or `QF`).
+  Future<void> createKnockout({
+    required int careerId,
+    required int cycle,
+    required Confederation confederation,
+    required CompetitionKind kind,
+    required String name,
+    required List<(int home, int away)> pairings,
+    required DateTime date,
+    String firstRound = 'R16',
   });
 
   /// The World Cup winner (FINAL fixture winner) once played, else null.

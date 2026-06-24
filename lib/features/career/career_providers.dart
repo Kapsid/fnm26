@@ -7,9 +7,11 @@ import 'package:fnm/domain/entities/formation.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/entities/tactics.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
+import 'package:fnm/domain/services/competition/continental_cups.dart';
 import 'package:fnm/domain/services/competition/friendly_scheduler.dart';
 import 'package:fnm/domain/services/competition/real_history.dart';
 import 'package:fnm/domain/services/competition/schedule_generator.dart';
+import 'package:fnm/domain/services/competition/tournament_sim.dart';
 import 'package:fnm/domain/services/entitlement/entitlement.dart';
 import 'package:fnm/domain/services/tactics/best_eleven.dart';
 
@@ -109,8 +111,35 @@ class CareerService {
     var gapStart = lastQualifier;
     final me = nations.firstWhere((n) => n.id == nationId);
 
+    // Continental championship (played) — if the player qualifies (top seeds of
+    // the confederation) and qualifying ends before it kicks off.
+    final cont = ContinentalCups.byConfederation[me.confederation];
+    final contStart = DateTime(wcYear - 2, 6, 8);
+    if (cont != null && lastQualifier.isBefore(contStart)) {
+      final members =
+          nations.where((n) => n.confederation == me.confederation).toList()
+            ..sort((a, b) => a.ranking.compareTo(b.ranking));
+      if (members.length >= cont.size &&
+          members.take(cont.size).any((n) => n.id == me.id)) {
+        await comp.createKnockout(
+          careerId: careerId,
+          cycle: cycle,
+          confederation: me.confederation,
+          kind: CompetitionKind.continentalFinals,
+          name: cont.name,
+          pairings: TournamentSim.bracketPairs(
+            members.take(cont.size).map((n) => n.id).toList(),
+            cont.size,
+          ),
+          date: contStart,
+          firstRound: cont.size == 16 ? 'CR16' : 'CQF',
+        );
+        gapStart = contStart.add(const Duration(days: 75));
+      }
+    }
+
     // Nations League: only if there's a full season of room before the finals.
-    if (lastQualifier.isBefore(DateTime(wcYear - 1))) {
+    if (gapStart.isBefore(DateTime(wcYear - 1))) {
       final peers =
           nations
               .where(
@@ -128,7 +157,7 @@ class CareerService {
           confederation: me.confederation,
           nations: group,
           rngSeed: rngSeed ^ (cycle * 0x71) ^ 0x4E1,
-          start: lastQualifier,
+          start: gapStart,
         );
         final nl = GeneratedSchedule(
           confederation: generated.confederation,
