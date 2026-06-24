@@ -6,6 +6,7 @@ import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/formation.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/entities/tactics.dart';
+import 'package:fnm/domain/services/competition/friendly_scheduler.dart';
 import 'package:fnm/domain/services/competition/real_history.dart';
 import 'package:fnm/domain/services/competition/schedule_generator.dart';
 import 'package:fnm/domain/services/entitlement/entitlement.dart';
@@ -39,6 +40,9 @@ class CareerService {
   /// The cycle starts on 1 September 2026.
   static final DateTime cycleStart = DateTime(2026, 9);
 
+  /// The World Cup year for a given cycle (clean cadence: 2030, 2034, …).
+  static int worldCupYear(int cycle) => cycleStart.year + 4 * (cycle + 1);
+
   /// Creates a new save for [nationId], or a failure if all slots are in use.
   Future<Result<Career>> create({
     required int nationId,
@@ -63,10 +67,38 @@ class CareerService {
       startDate: cycleStart,
     );
     await _generateSchedule(career);
+    await _scheduleFriendlies(career, cycle: 0);
     await _generateDefaultTactic(career);
     await _seedHistory(career);
     _ref.invalidate(savesProvider);
     return Result.success(career);
+  }
+
+  /// Fills the gap between the nation's last qualifier and the finals with
+  /// friendlies, so there's always something to play.
+  Future<void> _scheduleFriendlies(Career career, {required int cycle}) async {
+    final compRepo = _ref.read(competitionRepositoryProvider);
+    final own = await compRepo.fixturesForNation(career.id, career.nationId);
+    if (own.isEmpty) return;
+    final lastQualifier = own
+        .map((f) => f.date)
+        .reduce((a, b) => a.isAfter(b) ? a : b);
+    final nations = await _ref.read(nationRepositoryProvider).all();
+    final specs = FriendlyScheduler.schedule(
+      from: lastQualifier,
+      until: DateTime(worldCupYear(cycle), 6),
+      opponentPool: [
+        for (final n in nations)
+          if (n.id != career.nationId) n.id,
+      ],
+      seed: career.rngSeed ^ (cycle * 0x71),
+    );
+    await compRepo.saveFriendlies(
+      careerId: career.id,
+      nationId: career.nationId,
+      cycle: cycle,
+      friendlies: specs,
+    );
   }
 
   /// Seeds real World Cup / Euro / Copa history so the records section is

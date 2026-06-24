@@ -36,6 +36,9 @@ enum CompetitionKind {
 
   /// The World Cup finals (group stage + knockout).
   worldCupFinals,
+
+  /// Friendly matches (warm-ups in otherwise empty windows).
+  friendly,
 }
 
 /// Display helpers for [Confederation].

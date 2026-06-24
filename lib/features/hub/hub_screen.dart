@@ -208,6 +208,7 @@ class _ChampionBanner extends StatelessWidget {
 /// Human-readable stage for a fixture (distinguishes qualifiers from finals).
 String matchStageLabel(Fixture f) => switch (f.round) {
       null => 'QUALIFYING · MD ${f.matchday}',
+      'FRIENDLY' => 'FRIENDLY',
       'GROUP' => 'WC FINALS · GROUP',
       'R16' => 'WC FINALS · ROUND OF 16',
       'QF' => 'WC FINALS · QUARTER-FINAL',

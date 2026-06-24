@@ -43,6 +43,16 @@ void main() {
         ))
         .valueOrNull!;
 
+    // Friendlies fill the player's empty windows.
+    final ownFixtures = await container
+        .read(competitionRepositoryProvider)
+        .fixturesForNation(career.id, nations.first.id);
+    expect(
+      ownFixtures.any((f) => f.round == 'FRIENDLY'),
+      isTrue,
+      reason: 'the player should have friendlies scheduled',
+    );
+
     final season = container.read(seasonServiceProvider);
 
     Future<int?> runToChampion() async {

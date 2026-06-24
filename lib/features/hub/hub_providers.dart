@@ -10,6 +10,7 @@ import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/repositories/career_repository.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
 import 'package:fnm/domain/services/competition/finals.dart';
+import 'package:fnm/domain/services/competition/friendly_scheduler.dart';
 import 'package:fnm/domain/services/competition/hosts.dart';
 import 'package:fnm/domain/services/competition/qualification.dart';
 import 'package:fnm/domain/services/competition/qualification_format.dart';
@@ -479,8 +480,7 @@ class SeasonService {
   }
 
   /// The World Cup finals year for a cycle (clean 4-year cadence: 2030, 2034…).
-  static int finalsYear(int cycle) =>
-      CareerService.cycleStart.year + 4 * (cycle + 1);
+  static int finalsYear(int cycle) => CareerService.worldCupYear(cycle);
 
   Future<void> _generateFinals(int careerId) async {
     final career = await _careers.byId(careerId);
@@ -568,6 +568,32 @@ class SeasonService {
     }
 
     await _careers.advanceCycle(careerId, nextCycle, nextStart);
+
+    // Friendlies fill the new cycle's empty windows after qualifying.
+    final own = await _comp.fixturesForNation(careerId, career.nationId);
+    final cycleQ = own.where((f) => f.date.isAfter(nextStart)).toList();
+    if (cycleQ.isNotEmpty) {
+      final lastQualifier = cycleQ
+          .map((f) => f.date)
+          .reduce((a, b) => a.isAfter(b) ? a : b);
+      final nations = await _ref.read(nationRepositoryProvider).all();
+      final specs = FriendlyScheduler.schedule(
+        from: lastQualifier,
+        until: DateTime(finalsYear(nextCycle), 6),
+        opponentPool: [
+          for (final n in nations)
+            if (n.id != career.nationId) n.id,
+        ],
+        seed: career.rngSeed ^ (nextCycle * 0x71),
+      );
+      await _comp.saveFriendlies(
+        careerId: careerId,
+        nationId: career.nationId,
+        cycle: nextCycle,
+        friendlies: specs,
+      );
+    }
+
     _ref.invalidate(hubDataProvider);
   }
 }

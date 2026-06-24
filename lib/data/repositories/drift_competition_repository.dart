@@ -306,6 +306,42 @@ class DriftCompetitionRepository implements CompetitionRepository {
     return tables;
   }
 
+  @override
+  Future<void> saveFriendlies({
+    required int careerId,
+    required int nationId,
+    required int cycle,
+    required List<({DateTime date, int opponentId, bool home})> friendlies,
+  }) async {
+    if (friendlies.isEmpty) return;
+    final compId = await _db.into(_db.competitions).insert(
+          CompetitionsCompanion.insert(
+            careerId: careerId,
+            confederation: Confederation.northAmerica, // unused for friendlies
+            name: 'Friendlies',
+            kind: const Value(CompetitionKind.friendly),
+            cycle: Value(cycle),
+          ),
+        );
+    await _db.batch((b) {
+      var matchday = 1;
+      for (final f in friendlies) {
+        b.insert(
+          _db.fixtures,
+          FixturesCompanion.insert(
+            careerId: careerId,
+            competitionId: compId,
+            matchday: matchday++,
+            date: f.date,
+            homeNationId: f.home ? nationId : f.opponentId,
+            awayNationId: f.home ? f.opponentId : nationId,
+            round: const Value('FRIENDLY'),
+          ),
+        );
+      }
+    });
+  }
+
   // --- World Cup finals -----------------------------------------------------
 
   Future<CompetitionRow?> _finals(int careerId) async {

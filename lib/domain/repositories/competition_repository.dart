@@ -100,6 +100,14 @@ abstract interface class CompetitionRepository {
     Confederation confederation,
   );
 
+  /// Persists friendlies for [nationId] in [cycle] (round label `FRIENDLY`).
+  Future<void> saveFriendlies({
+    required int careerId,
+    required int nationId,
+    required int cycle,
+    required List<({DateTime date, int opponentId, bool home})> friendlies,
+  });
+
   // --- World Cup finals -----------------------------------------------------
 
   /// Whether every confederation's qualifying is fully played.
