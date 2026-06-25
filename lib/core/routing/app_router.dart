@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/features/career/new_game_screen.dart';
 import 'package:fnm/features/career/saves_screen.dart';
 import 'package:fnm/features/dev/style_gallery_screen.dart';
@@ -8,7 +9,9 @@ import 'package:fnm/features/match/match_screen.dart';
 import 'package:fnm/features/nations/nation_select_screen.dart';
 import 'package:fnm/features/ranking/world_ranking_screen.dart';
 import 'package:fnm/features/results/results_screen.dart';
+import 'package:fnm/features/tactics/call_up_screen.dart';
 import 'package:fnm/features/tactics/tactics_screen.dart';
+import 'package:fnm/features/tournaments/continental_detail_screen.dart';
 import 'package:fnm/features/tournaments/cup_detail_screen.dart';
 import 'package:fnm/features/tournaments/finals_draw_screen.dart';
 import 'package:fnm/features/tournaments/tournaments_screen.dart';
@@ -34,6 +37,9 @@ abstract final class Routes {
   /// Squad & tactics. Expects `?careerId=`.
   static const tactics = '/tactics';
 
+  /// Call-ups (squad selection). Expects `?careerId=`.
+  static const callUps = '/call-ups';
+
   /// Play the next match. Expects `?careerId=`.
   static const match = '/match';
 
@@ -45,6 +51,10 @@ abstract final class Routes {
 
   /// World Championship detail. Expects `?careerId=`.
   static const cup = '/cup';
+
+  /// Continental championship detail. Expects `?careerId=` and `?conf=` (a
+  /// [Confederation] enum name).
+  static const continental = '/continental';
 
   /// World ranking. Expects `?careerId=`.
   static const ranking = '/ranking';
@@ -106,6 +116,16 @@ final routerProvider = Provider<GoRouter>((ref) {
         },
       ),
       GoRoute(
+        path: Routes.callUps,
+        builder: (context, state) {
+          final id = int.tryParse(
+                state.uri.queryParameters['careerId'] ?? '',
+              ) ??
+              0;
+          return CallUpScreen(careerId: id);
+        },
+      ),
+      GoRoute(
         path: Routes.match,
         builder: (context, state) {
           final id = int.tryParse(
@@ -143,6 +163,23 @@ final routerProvider = Provider<GoRouter>((ref) {
               ) ??
               0;
           return CupDetailScreen(careerId: id);
+        },
+      ),
+      GoRoute(
+        path: Routes.continental,
+        builder: (context, state) {
+          final id = int.tryParse(
+                state.uri.queryParameters['careerId'] ?? '',
+              ) ??
+              0;
+          final confName = state.uri.queryParameters['conf'] ?? '';
+          final conf = Confederation.values
+              .where((c) => c.name == confName)
+              .firstOrNull;
+          if (conf == null) {
+            return CupDetailScreen(careerId: id);
+          }
+          return ContinentalDetailScreen(careerId: id, confederation: conf);
         },
       ),
       GoRoute(

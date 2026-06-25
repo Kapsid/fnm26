@@ -5,6 +5,7 @@ import 'package:fnm/data/repositories/drift_career_repository.dart';
 import 'package:fnm/data/repositories/drift_competition_repository.dart';
 import 'package:fnm/data/repositories/drift_nation_repository.dart';
 import 'package:fnm/data/repositories/drift_player_repository.dart';
+import 'package:fnm/data/repositories/drift_squad_repository.dart';
 import 'package:fnm/data/repositories/drift_tactics_repository.dart';
 import 'package:fnm/data/seed/seed_loader.dart';
 import 'package:fnm/data/seed/seed_source.dart';
@@ -12,6 +13,7 @@ import 'package:fnm/domain/repositories/career_repository.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
 import 'package:fnm/domain/repositories/nation_repository.dart';
 import 'package:fnm/domain/repositories/player_repository.dart';
+import 'package:fnm/domain/repositories/squad_repository.dart';
 import 'package:fnm/domain/repositories/tactics_repository.dart';
 
 /// Data-layer dependency wiring.
@@ -64,4 +66,8 @@ final competitionRepositoryProvider = Provider<CompetitionRepository>(
 
 final tacticsRepositoryProvider = Provider<TacticsRepository>(
   (ref) => DriftTacticsRepository(ref.watch(appDatabaseProvider)),
+);
+
+final squadRepositoryProvider = Provider<SquadRepository>(
+  (ref) => DriftSquadRepository(ref.watch(appDatabaseProvider)),
 );

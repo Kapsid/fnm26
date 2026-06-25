@@ -4105,6 +4105,225 @@ class LineupSlotsCompanion extends UpdateCompanion<LineupSlotRow> {
   }
 }
 
+class $CallUpsTable extends CallUps with TableInfo<$CallUpsTable, CallUpRow> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $CallUpsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _careerIdMeta = const VerificationMeta(
+    'careerId',
+  );
+  @override
+  late final GeneratedColumn<int> careerId = GeneratedColumn<int>(
+    'career_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES careers (id) ON DELETE CASCADE',
+    ),
+  );
+  static const VerificationMeta _playerIdMeta = const VerificationMeta(
+    'playerId',
+  );
+  @override
+  late final GeneratedColumn<int> playerId = GeneratedColumn<int>(
+    'player_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [careerId, playerId];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'call_ups';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<CallUpRow> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('career_id')) {
+      context.handle(
+        _careerIdMeta,
+        careerId.isAcceptableOrUnknown(data['career_id']!, _careerIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_careerIdMeta);
+    }
+    if (data.containsKey('player_id')) {
+      context.handle(
+        _playerIdMeta,
+        playerId.isAcceptableOrUnknown(data['player_id']!, _playerIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_playerIdMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {careerId, playerId};
+  @override
+  CallUpRow map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return CallUpRow(
+      careerId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}career_id'],
+      )!,
+      playerId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}player_id'],
+      )!,
+    );
+  }
+
+  @override
+  $CallUpsTable createAlias(String alias) {
+    return $CallUpsTable(attachedDatabase, alias);
+  }
+}
+
+class CallUpRow extends DataClass implements Insertable<CallUpRow> {
+  final int careerId;
+  final int playerId;
+  const CallUpRow({required this.careerId, required this.playerId});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['career_id'] = Variable<int>(careerId);
+    map['player_id'] = Variable<int>(playerId);
+    return map;
+  }
+
+  CallUpsCompanion toCompanion(bool nullToAbsent) {
+    return CallUpsCompanion(
+      careerId: Value(careerId),
+      playerId: Value(playerId),
+    );
+  }
+
+  factory CallUpRow.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return CallUpRow(
+      careerId: serializer.fromJson<int>(json['careerId']),
+      playerId: serializer.fromJson<int>(json['playerId']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'careerId': serializer.toJson<int>(careerId),
+      'playerId': serializer.toJson<int>(playerId),
+    };
+  }
+
+  CallUpRow copyWith({int? careerId, int? playerId}) => CallUpRow(
+    careerId: careerId ?? this.careerId,
+    playerId: playerId ?? this.playerId,
+  );
+  CallUpRow copyWithCompanion(CallUpsCompanion data) {
+    return CallUpRow(
+      careerId: data.careerId.present ? data.careerId.value : this.careerId,
+      playerId: data.playerId.present ? data.playerId.value : this.playerId,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('CallUpRow(')
+          ..write('careerId: $careerId, ')
+          ..write('playerId: $playerId')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(careerId, playerId);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is CallUpRow &&
+          other.careerId == this.careerId &&
+          other.playerId == this.playerId);
+}
+
+class CallUpsCompanion extends UpdateCompanion<CallUpRow> {
+  final Value<int> careerId;
+  final Value<int> playerId;
+  final Value<int> rowid;
+  const CallUpsCompanion({
+    this.careerId = const Value.absent(),
+    this.playerId = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  CallUpsCompanion.insert({
+    required int careerId,
+    required int playerId,
+    this.rowid = const Value.absent(),
+  }) : careerId = Value(careerId),
+       playerId = Value(playerId);
+  static Insertable<CallUpRow> custom({
+    Expression<int>? careerId,
+    Expression<int>? playerId,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (careerId != null) 'career_id': careerId,
+      if (playerId != null) 'player_id': playerId,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  CallUpsCompanion copyWith({
+    Value<int>? careerId,
+    Value<int>? playerId,
+    Value<int>? rowid,
+  }) {
+    return CallUpsCompanion(
+      careerId: careerId ?? this.careerId,
+      playerId: playerId ?? this.playerId,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (careerId.present) {
+      map['career_id'] = Variable<int>(careerId.value);
+    }
+    if (playerId.present) {
+      map['player_id'] = Variable<int>(playerId.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('CallUpsCompanion(')
+          ..write('careerId: $careerId, ')
+          ..write('playerId: $playerId, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 class $GoalEventsTable extends GoalEvents
     with TableInfo<$GoalEventsTable, GoalEventRow> {
   @override
@@ -5327,6 +5546,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $FixturesTable fixtures = $FixturesTable(this);
   late final $TacticsTable tactics = $TacticsTable(this);
   late final $LineupSlotsTable lineupSlots = $LineupSlotsTable(this);
+  late final $CallUpsTable callUps = $CallUpsTable(this);
   late final $GoalEventsTable goalEvents = $GoalEventsTable(this);
   late final $HonoursTable honours = $HonoursTable(this);
   @override
@@ -5343,6 +5563,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     fixtures,
     tactics,
     lineupSlots,
+    callUps,
     goalEvents,
     honours,
   ];
@@ -5396,6 +5617,13 @@ abstract class _$AppDatabase extends GeneratedDatabase {
         limitUpdateKind: UpdateKind.delete,
       ),
       result: [TableUpdate('lineup_slots', kind: UpdateKind.delete)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'careers',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('call_ups', kind: UpdateKind.delete)],
     ),
     WritePropagation(
       on: TableUpdateQuery.onTableName(
@@ -6437,6 +6665,25 @@ final class $$CareersTableReferences
     );
   }
 
+  static MultiTypedResultKey<$CallUpsTable, List<CallUpRow>> _callUpsRefsTable(
+    _$AppDatabase db,
+  ) => MultiTypedResultKey.fromTable(
+    db.callUps,
+    aliasName: 'careers__id__call_ups__career_id',
+  );
+
+  $$CallUpsTableProcessedTableManager get callUpsRefs {
+    final manager = $$CallUpsTableTableManager(
+      $_db,
+      $_db.callUps,
+    ).filter((f) => f.careerId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_callUpsRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+
   static MultiTypedResultKey<$GoalEventsTable, List<GoalEventRow>>
   _goalEventsRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
     db.goalEvents,
@@ -6628,6 +6875,31 @@ class $$CareersTableFilterComposer
           }) => $$LineupSlotsTableFilterComposer(
             $db: $db,
             $table: $db.lineupSlots,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> callUpsRefs(
+    Expression<bool> Function($$CallUpsTableFilterComposer f) f,
+  ) {
+    final $$CallUpsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.callUps,
+      getReferencedColumn: (t) => t.careerId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$CallUpsTableFilterComposer(
+            $db: $db,
+            $table: $db.callUps,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -6907,6 +7179,31 @@ class $$CareersTableAnnotationComposer
     return f(composer);
   }
 
+  Expression<T> callUpsRefs<T extends Object>(
+    Expression<T> Function($$CallUpsTableAnnotationComposer a) f,
+  ) {
+    final $$CallUpsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.callUps,
+      getReferencedColumn: (t) => t.careerId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$CallUpsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.callUps,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
   Expression<T> goalEventsRefs<T extends Object>(
     Expression<T> Function($$GoalEventsTableAnnotationComposer a) f,
   ) {
@@ -6977,6 +7274,7 @@ class $$CareersTableTableManager
             bool fixturesRefs,
             bool tacticsRefs,
             bool lineupSlotsRefs,
+            bool callUpsRefs,
             bool goalEventsRefs,
             bool honoursRefs,
           })
@@ -7043,6 +7341,7 @@ class $$CareersTableTableManager
                 fixturesRefs = false,
                 tacticsRefs = false,
                 lineupSlotsRefs = false,
+                callUpsRefs = false,
                 goalEventsRefs = false,
                 honoursRefs = false,
               }) {
@@ -7053,6 +7352,7 @@ class $$CareersTableTableManager
                     if (fixturesRefs) db.fixtures,
                     if (tacticsRefs) db.tactics,
                     if (lineupSlotsRefs) db.lineupSlots,
+                    if (callUpsRefs) db.callUps,
                     if (goalEventsRefs) db.goalEvents,
                     if (honoursRefs) db.honours,
                   ],
@@ -7174,6 +7474,27 @@ class $$CareersTableTableManager
                               ),
                           typedResults: items,
                         ),
+                      if (callUpsRefs)
+                        await $_getPrefetchedData<
+                          CareerRow,
+                          $CareersTable,
+                          CallUpRow
+                        >(
+                          currentTable: table,
+                          referencedTable: $$CareersTableReferences
+                              ._callUpsRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$CareersTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).callUpsRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.careerId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
                       if (goalEventsRefs)
                         await $_getPrefetchedData<
                           CareerRow,
@@ -7242,6 +7563,7 @@ typedef $$CareersTableProcessedTableManager =
         bool fixturesRefs,
         bool tacticsRefs,
         bool lineupSlotsRefs,
+        bool callUpsRefs,
         bool goalEventsRefs,
         bool honoursRefs,
       })
@@ -9995,6 +10317,266 @@ typedef $$LineupSlotsTableProcessedTableManager =
       LineupSlotRow,
       PrefetchHooks Function({bool careerId})
     >;
+typedef $$CallUpsTableCreateCompanionBuilder =
+    CallUpsCompanion Function({
+      required int careerId,
+      required int playerId,
+      Value<int> rowid,
+    });
+typedef $$CallUpsTableUpdateCompanionBuilder =
+    CallUpsCompanion Function({
+      Value<int> careerId,
+      Value<int> playerId,
+      Value<int> rowid,
+    });
+
+final class $$CallUpsTableReferences
+    extends BaseReferences<_$AppDatabase, $CallUpsTable, CallUpRow> {
+  $$CallUpsTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static $CareersTable _careerIdTable(_$AppDatabase db) =>
+      db.careers.createAlias('call_ups__career_id__careers__id');
+
+  $$CareersTableProcessedTableManager get careerId {
+    final $_column = $_itemColumn<int>('career_id')!;
+
+    final manager = $$CareersTableTableManager(
+      $_db,
+      $_db.careers,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_careerIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
+
+class $$CallUpsTableFilterComposer
+    extends Composer<_$AppDatabase, $CallUpsTable> {
+  $$CallUpsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get playerId => $composableBuilder(
+    column: $table.playerId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  $$CareersTableFilterComposer get careerId {
+    final $$CareersTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.careerId,
+      referencedTable: $db.careers,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$CareersTableFilterComposer(
+            $db: $db,
+            $table: $db.careers,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$CallUpsTableOrderingComposer
+    extends Composer<_$AppDatabase, $CallUpsTable> {
+  $$CallUpsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get playerId => $composableBuilder(
+    column: $table.playerId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  $$CareersTableOrderingComposer get careerId {
+    final $$CareersTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.careerId,
+      referencedTable: $db.careers,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$CareersTableOrderingComposer(
+            $db: $db,
+            $table: $db.careers,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$CallUpsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $CallUpsTable> {
+  $$CallUpsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get playerId =>
+      $composableBuilder(column: $table.playerId, builder: (column) => column);
+
+  $$CareersTableAnnotationComposer get careerId {
+    final $$CareersTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.careerId,
+      referencedTable: $db.careers,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$CareersTableAnnotationComposer(
+            $db: $db,
+            $table: $db.careers,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$CallUpsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $CallUpsTable,
+          CallUpRow,
+          $$CallUpsTableFilterComposer,
+          $$CallUpsTableOrderingComposer,
+          $$CallUpsTableAnnotationComposer,
+          $$CallUpsTableCreateCompanionBuilder,
+          $$CallUpsTableUpdateCompanionBuilder,
+          (CallUpRow, $$CallUpsTableReferences),
+          CallUpRow,
+          PrefetchHooks Function({bool careerId})
+        > {
+  $$CallUpsTableTableManager(_$AppDatabase db, $CallUpsTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$CallUpsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$CallUpsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$CallUpsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> careerId = const Value.absent(),
+                Value<int> playerId = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => CallUpsCompanion(
+                careerId: careerId,
+                playerId: playerId,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required int careerId,
+                required int playerId,
+                Value<int> rowid = const Value.absent(),
+              }) => CallUpsCompanion.insert(
+                careerId: careerId,
+                playerId: playerId,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$CallUpsTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: ({careerId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins:
+                  <
+                    T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic
+                    >
+                  >(state) {
+                    if (careerId) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.careerId,
+                                referencedTable: $$CallUpsTableReferences
+                                    ._careerIdTable(db),
+                                referencedColumn: $$CallUpsTableReferences
+                                    ._careerIdTable(db)
+                                    .id,
+                              )
+                              as T;
+                    }
+
+                    return state;
+                  },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
+        ),
+      );
+}
+
+typedef $$CallUpsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $CallUpsTable,
+      CallUpRow,
+      $$CallUpsTableFilterComposer,
+      $$CallUpsTableOrderingComposer,
+      $$CallUpsTableAnnotationComposer,
+      $$CallUpsTableCreateCompanionBuilder,
+      $$CallUpsTableUpdateCompanionBuilder,
+      (CallUpRow, $$CallUpsTableReferences),
+      CallUpRow,
+      PrefetchHooks Function({bool careerId})
+    >;
 typedef $$GoalEventsTableCreateCompanionBuilder =
     GoalEventsCompanion Function({
       Value<int> id,
@@ -11009,6 +11591,8 @@ class $AppDatabaseManager {
       $$TacticsTableTableManager(_db, _db.tactics);
   $$LineupSlotsTableTableManager get lineupSlots =>
       $$LineupSlotsTableTableManager(_db, _db.lineupSlots);
+  $$CallUpsTableTableManager get callUps =>
+      $$CallUpsTableTableManager(_db, _db.callUps);
   $$GoalEventsTableTableManager get goalEvents =>
       $$GoalEventsTableTableManager(_db, _db.goalEvents);
   $$HonoursTableTableManager get honours =>

@@ -16,9 +16,27 @@ class MatchTeam {
   final TacticalInstructions instructions;
 }
 
-/// The kind of thing that happened in a match. (Goals only for now; cards and
-/// injuries can be layered on later.)
-enum MatchEventType { goal }
+/// A timed substitution: at [minute], [on] replaces the player [offId] in the
+/// XI of the team identified by [teamNationId]. Substitutions are part of the
+/// engine input, so a match stays fully deterministic given the same teams,
+/// substitutions, and [SeededRng].
+class Substitution {
+  const Substitution({
+    required this.teamNationId,
+    required this.minute,
+    required this.offId,
+    required this.on,
+  });
+
+  final int teamNationId;
+  final int minute;
+  final int offId;
+  final Player on;
+}
+
+/// The kind of thing that happened in a match. (Goals and substitutions for
+/// now; cards and injuries can be layered on later.)
+enum MatchEventType { goal, substitution }
 
 /// A timed match event.
 class MatchEvent {
@@ -28,6 +46,7 @@ class MatchEvent {
     required this.teamNationId,
     required this.playerId,
     required this.playerName,
+    this.secondaryName,
   });
 
   final int minute;
@@ -35,6 +54,10 @@ class MatchEvent {
   final int teamNationId;
   final int playerId;
   final String playerName;
+
+  /// For a substitution, the name of the player going off (the [playerName] is
+  /// the player coming on).
+  final String? secondaryName;
 }
 
 /// The outcome of a simulated match.
@@ -60,11 +83,25 @@ class MatchResult {
   int get awayPossession => 100 - homePossession;
 }
 
+/// Mutable per-team match state: the XI on the pitch right now, which changes
+/// as substitutions are applied through the match.
+class _Live {
+  _Live(this.team) : xi = [...team.xi];
+
+  final MatchTeam team;
+  final List<Player> xi;
+
+  int get nationId => team.nationId;
+  TacticalInstructions get instructions => team.instructions;
+}
+
 /// A deterministic, lightweight tactical match engine. It derives attack and
 /// defence ratings from each team's XI and instructions, then plays out 90
 /// minute-ticks: each tick either side may create a chance and score, with the
-/// scorer chosen by finishing ability. Same teams + same [SeededRng] → same
-/// match (replay-safe and testable).
+/// scorer chosen by finishing ability. Substitutions take effect from their
+/// minute onward, changing the on-pitch XI and therefore the ratings for the
+/// rest of the match. Same teams + same subs + same [SeededRng] → same match
+/// (replay-safe and testable).
 class MatchEngine {
   const MatchEngine();
 
@@ -72,11 +109,16 @@ class MatchEngine {
     required MatchTeam home,
     required MatchTeam away,
     required SeededRng rng,
+    List<Substitution> subs = const [],
   }) {
-    final homeAttack = _attack(home) + 3; // home advantage
-    final homeDefence = _defence(home) + 2;
-    final awayAttack = _attack(away);
-    final awayDefence = _defence(away);
+    final liveHome = _Live(home);
+    final liveAway = _Live(away);
+
+    // Substitutions grouped by the minute they happen on, applied in order.
+    final byMinute = <int, List<Substitution>>{};
+    for (final s in subs) {
+      (byMinute[s.minute] ??= []).add(s);
+    }
 
     final events = <MatchEvent>[];
     var homeScore = 0;
@@ -85,24 +127,35 @@ class MatchEngine {
     var awayShots = 0;
 
     for (var minute = 1; minute <= 90; minute++) {
-      if (_chance(rng, homeAttack, awayDefence, home.instructions)) {
+      for (final s in byMinute[minute] ?? const <Substitution>[]) {
+        final live = s.teamNationId == liveHome.nationId ? liveHome : liveAway;
+        final event = _applySub(live, s, minute);
+        if (event != null) events.add(event);
+      }
+
+      final homeAttack = _attack(liveHome) + 3; // home advantage
+      final homeDefence = _defence(liveHome) + 2;
+      final awayAttack = _attack(liveAway);
+      final awayDefence = _defence(liveAway);
+
+      if (_chance(rng, homeAttack, awayDefence, liveHome.instructions)) {
         homeShots++;
         if (rng.chance(_goalProbability(homeAttack, awayDefence))) {
           homeScore++;
-          events.add(_goal(minute, home, rng));
+          events.add(_goal(minute, liveHome, rng));
         }
       }
-      if (_chance(rng, awayAttack, homeDefence, away.instructions)) {
+      if (_chance(rng, awayAttack, homeDefence, liveAway.instructions)) {
         awayShots++;
         if (rng.chance(_goalProbability(awayAttack, homeDefence))) {
           awayScore++;
-          events.add(_goal(minute, away, rng));
+          events.add(_goal(minute, liveAway, rng));
         }
       }
     }
 
-    final homeControl = _control(home);
-    final awayControl = _control(away);
+    final homeControl = _control(liveHome);
+    final awayControl = _control(liveAway);
     final homePossession = (100 * homeControl / (homeControl + awayControl))
         .round();
 
@@ -117,8 +170,26 @@ class MatchEngine {
     );
   }
 
+  /// Swaps the incoming player in for the one going off on the pitch,
+  /// returning a substitution event (or null if the player to come off isn't
+  /// found).
+  MatchEvent? _applySub(_Live live, Substitution s, int minute) {
+    final idx = live.xi.indexWhere((p) => p.id == s.offId);
+    if (idx == -1) return null;
+    final off = live.xi[idx];
+    live.xi[idx] = s.on;
+    return MatchEvent(
+      minute: minute,
+      type: MatchEventType.substitution,
+      teamNationId: live.nationId,
+      playerId: s.on.id,
+      playerName: s.on.name,
+      secondaryName: off.name,
+    );
+  }
+
   /// Midfield control, used to estimate possession.
-  double _control(MatchTeam t) =>
+  double _control(_Live t) =>
       _mean(t.xi, PositionCategory.midfielder) +
       (t.instructions.tempo - 50) * 0.05;
 
@@ -136,7 +207,7 @@ class MatchEngine {
   double _goalProbability(double attack, double oppDefence) =>
       (0.28 * attack / (oppDefence <= 0 ? 1 : oppDefence)).clamp(0.08, 0.6);
 
-  MatchEvent _goal(int minute, MatchTeam team, SeededRng rng) {
+  MatchEvent _goal(int minute, _Live team, SeededRng rng) {
     final scorer = _pickScorer(team, rng);
     return MatchEvent(
       minute: minute,
@@ -149,7 +220,7 @@ class MatchEngine {
 
   /// Picks a scorer, weighting outfield players by finishing and attacking
   /// position.
-  Player _pickScorer(MatchTeam team, SeededRng rng) {
+  Player _pickScorer(_Live team, SeededRng rng) {
     final candidates = team.xi
         .where((p) => p.category != PositionCategory.goalkeeper)
         .toList();
@@ -173,7 +244,7 @@ class MatchEngine {
     return candidates.last;
   }
 
-  double _attack(MatchTeam t) {
+  double _attack(_Live t) {
     final base =
         _mean(t.xi, PositionCategory.forward) * 0.55 +
         _mean(t.xi, PositionCategory.midfielder) * 0.30 +
@@ -183,7 +254,7 @@ class MatchEngine {
         (t.instructions.tempo - 50) * 0.04;
   }
 
-  double _defence(MatchTeam t) {
+  double _defence(_Live t) {
     final base =
         _mean(t.xi, PositionCategory.defender) * 0.55 +
         _mean(t.xi, PositionCategory.goalkeeper) * 0.25 +

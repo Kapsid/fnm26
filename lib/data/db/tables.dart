@@ -132,6 +132,19 @@ class LineupSlots extends Table {
   Set<Column> get primaryKey => {careerId, slot};
 }
 
+/// A player called up to a save's national squad. The presence of any rows for
+/// a career means the manager has curated the squad; with no rows the whole
+/// nation pool is treated as called up (the default for new/legacy saves).
+@DataClassName('CallUpRow')
+class CallUps extends Table {
+  IntColumn get careerId =>
+      integer().references(Careers, #id, onDelete: KeyAction.cascade)();
+  IntColumn get playerId => integer()();
+
+  @override
+  Set<Column> get primaryKey => {careerId, playerId};
+}
+
 /// A scheduled match. Scores are null until played.
 @DataClassName('FixtureRow')
 class Fixtures extends Table {

@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fnm/core/rng/seeded_rng.dart';
 import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
@@ -14,9 +15,14 @@ import 'package:fnm/features/match/match_providers.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
 
+/// The maximum substitutions a manager may make in a match.
+const int kMaxSubs = 5;
+
 /// Plays the player's next fixture as a *live* minute-by-minute simulation
 /// (the deterministic engine result is replayed on a clock with play/pause,
-/// speed, and skip controls), then commits it on Continue.
+/// speed, and skip controls). The manager can make substitutions live; the
+/// rest of the match is re-simulated from the same seed with the new XI, so
+/// the change actually affects the outcome. Commits the result on Continue.
 class MatchScreen extends ConsumerStatefulWidget {
   const MatchScreen({required this.careerId, super.key});
 
@@ -28,12 +34,18 @@ class MatchScreen extends ConsumerStatefulWidget {
 
 class _MatchScreenState extends ConsumerState<MatchScreen> {
   static const _speeds = [1, 2, 4];
+  static const _engine = MatchEngine();
 
   int _minute = 0;
   bool _playing = true;
   int _speedIdx = 0;
   bool _started = false;
   Timer? _timer;
+
+  /// Live substitutions the manager has made, and the result recomputed with
+  /// them applied (null until the first preview is loaded).
+  final List<Substitution> _subs = [];
+  MatchResult? _result;
 
   @override
   void dispose() {
@@ -80,6 +92,64 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
     });
   }
 
+  /// The player's on-pitch XI right now (starting XI with live subs applied).
+  List<Player> _currentXi(MatchPreview preview) {
+    final team = preview.playerIsHome ? preview.homeTeam : preview.awayTeam;
+    final xi = [...team.xi];
+    for (final s in _subs) {
+      final idx = xi.indexWhere((p) => p.id == s.offId);
+      if (idx != -1) xi[idx] = s.on;
+    }
+    return xi;
+  }
+
+  /// Substitutes still available (called-up bench minus players already on).
+  List<Player> _availableBench(MatchPreview preview) {
+    final on = _subs.map((s) => s.on.id).toSet();
+    return preview.bench.where((p) => !on.contains(p.id)).toList();
+  }
+
+  void _applySub(MatchPreview preview, int offId, Player on) {
+    final minute = _minute < 1 ? 1 : (_minute > 90 ? 90 : _minute);
+    setState(() {
+      _subs.add(
+        Substitution(
+          teamNationId: preview.playerNationId,
+          minute: minute,
+          offId: offId,
+          on: on,
+        ),
+      );
+      _result = _engine.play(
+        home: preview.homeTeam,
+        away: preview.awayTeam,
+        rng: SeededRng.forFixture(preview.saveSeed, preview.fixture.id),
+        subs: _subs,
+      );
+    });
+  }
+
+  Future<void> _openSubs(MatchPreview preview) async {
+    final wasPlaying = _playing;
+    if (_playing) _togglePlay();
+    final xi = _currentXi(preview);
+    final bench = _availableBench(preview);
+    await showModalBottomSheet<void>(
+      context: context,
+      backgroundColor: AppColors.surfaceContainer,
+      isScrollControlled: true,
+      builder: (_) => _SubSheet(
+        onPitch: xi,
+        bench: bench,
+        onConfirm: (offId, on) {
+          _applySub(preview, offId, on);
+          Navigator.of(context).pop();
+        },
+      ),
+    );
+    if (wasPlaying && _minute < 90 && !_playing) _togglePlay();
+  }
+
   @override
   Widget build(BuildContext context) {
     final previewAsync = ref.watch(matchPreviewProvider(widget.careerId));
@@ -92,22 +162,27 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
           if (preview == null) {
             return const Center(child: Text('No upcoming match.'));
           }
+          _result ??= preview.result;
+          final r = _result!;
           if (!_started) {
             WidgetsBinding.instance.addPostFrameCallback((_) {
               if (mounted && !_started) _begin();
             });
           }
 
-          final r = preview.result;
           final homeId = preview.homeTeam.nationId;
           final awayId = preview.awayTeam.nationId;
           String code(int id) => preview.nations[id]?.code ?? '??';
           String name(int id) => preview.nations[id]?.name ?? 'Unknown';
 
           final shown = r.events.where((e) => e.minute <= _minute).toList();
-          final homeScore = shown.where((e) => e.teamNationId == homeId).length;
-          final awayScore = shown.length - homeScore;
+          final goals =
+              shown.where((e) => e.type == MatchEventType.goal).toList();
+          final homeScore =
+              goals.where((e) => e.teamNationId == homeId).length;
+          final awayScore = goals.length - homeScore;
           final ft = _minute >= 90;
+          final subsLeft = kMaxSubs - _subs.length;
 
           return DefaultTabController(
             length: 3,
@@ -132,9 +207,14 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
                     _Controls(
                       playing: _playing,
                       speed: _speeds[_speedIdx],
+                      subsLeft: subsLeft,
                       onPlayPause: _togglePlay,
                       onSpeed: _cycleSpeed,
                       onSkip: _skip,
+                      onSubs:
+                          subsLeft > 0 && _availableBench(preview).isNotEmpty
+                              ? () => _openSubs(preview)
+                              : null,
                     ),
                   const TabBar(
                     labelColor: AppColors.onSurface,
@@ -151,7 +231,6 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
                       children: [
                         _Timeline(
                           events: shown,
-                          code: code,
                           live: !ft,
                           homeId: homeId,
                         ),
@@ -164,8 +243,12 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
                         else
                           const _StatsLocked(),
                         _Lineups(
-                          home: preview.homeTeam,
-                          away: preview.awayTeam,
+                          home: preview.playerIsHome
+                              ? _currentXi(preview)
+                              : preview.homeTeam.xi,
+                          away: preview.playerIsHome
+                              ? preview.awayTeam.xi
+                              : _currentXi(preview),
                           homeCode: code(homeId),
                           awayCode: code(awayId),
                         ),
@@ -306,16 +389,20 @@ class _Controls extends StatelessWidget {
   const _Controls({
     required this.playing,
     required this.speed,
+    required this.subsLeft,
     required this.onPlayPause,
     required this.onSpeed,
     required this.onSkip,
+    required this.onSubs,
   });
 
   final bool playing;
   final int speed;
+  final int subsLeft;
   final VoidCallback onPlayPause;
   final VoidCallback onSpeed;
   final VoidCallback onSkip;
+  final VoidCallback? onSubs;
 
   @override
   Widget build(BuildContext context) {
@@ -336,6 +423,16 @@ class _Controls extends StatelessWidget {
               side: const BorderSide(color: AppColors.outlineVariant),
             ),
             child: Text('${speed}x', style: AppTypography.labelMedium),
+          ),
+          const SizedBox(width: AppSpacing.md),
+          OutlinedButton.icon(
+            onPressed: onSubs,
+            icon: const Icon(Icons.swap_horiz, size: 18),
+            label: Text('SUBS · $subsLeft', style: AppTypography.labelMedium),
+            style: OutlinedButton.styleFrom(
+              foregroundColor: AppColors.primary,
+              side: const BorderSide(color: AppColors.outlineVariant),
+            ),
           ),
           const SizedBox(width: AppSpacing.md),
           IconButton.filledTonal(
@@ -374,12 +471,10 @@ class _Side extends StatelessWidget {
 class _Timeline extends StatelessWidget {
   const _Timeline({
     required this.events,
-    required this.code,
     required this.live,
     required this.homeId,
   });
   final List<MatchEvent> events;
-  final String Function(int) code;
   final bool live;
   final int homeId;
 
@@ -388,7 +483,7 @@ class _Timeline extends StatelessWidget {
     if (events.isEmpty) {
       return Center(
         child: Text(
-          live ? 'Kick-off!' : 'No goals yet.',
+          live ? 'Kick-off!' : 'No events yet.',
           style: AppTypography.bodyMedium.copyWith(
             color: AppColors.onSurfaceVariant,
           ),
@@ -407,7 +502,7 @@ class _Timeline extends StatelessWidget {
   }
 }
 
-/// One goal on a two-sided timeline: home goals sit on the left, away on the
+/// One event on a two-sided timeline: home events sit on the left, away on the
 /// right, with the minute down the centre spine.
 class _TimelineRow extends StatelessWidget {
   const _TimelineRow({required this.event, required this.isHome});
@@ -422,9 +517,7 @@ class _TimelineRow extends StatelessWidget {
       child: Row(
         children: [
           Expanded(
-            child: isHome
-                ? _goal(alignEnd: true)
-                : const SizedBox.shrink(),
+            child: isHome ? _entry(alignEnd: true) : const SizedBox.shrink(),
           ),
           Container(
             width: 34,
@@ -438,28 +531,32 @@ class _TimelineRow extends StatelessWidget {
             child: Text("${event.minute}'", style: AppTypography.labelSmall),
           ),
           Expanded(
-            child: !isHome
-                ? _goal(alignEnd: false)
-                : const SizedBox.shrink(),
+            child: !isHome ? _entry(alignEnd: false) : const SizedBox.shrink(),
           ),
         ],
       ),
     );
   }
 
-  Widget _goal({required bool alignEnd}) {
-    const ball = Icon(
-      Icons.sports_soccer,
+  Widget _entry({required bool alignEnd}) {
+    final isGoal = event.type == MatchEventType.goal;
+    final icon = Icon(
+      isGoal ? Icons.sports_soccer : Icons.swap_horiz,
       size: 16,
-      color: AppColors.primary,
+      color: isGoal ? AppColors.primary : AppColors.onSurfaceVariant,
     );
-    final name = Flexible(
+    final label = isGoal
+        ? event.playerName
+        : '${event.playerName} ↔ ${event.secondaryName ?? ''}';
+    final text = Flexible(
       child: Text(
-        event.playerName,
+        label,
         textAlign: alignEnd ? TextAlign.end : TextAlign.start,
         maxLines: 1,
         overflow: TextOverflow.ellipsis,
-        style: AppTypography.bodyMedium,
+        style: AppTypography.bodyMedium.copyWith(
+          color: isGoal ? AppColors.onSurface : AppColors.onSurfaceVariant,
+        ),
       ),
     );
     return Padding(
@@ -471,8 +568,8 @@ class _TimelineRow extends StatelessWidget {
         mainAxisAlignment:
             alignEnd ? MainAxisAlignment.end : MainAxisAlignment.start,
         children: alignEnd
-            ? [name, const SizedBox(width: AppSpacing.sm), ball]
-            : [ball, const SizedBox(width: AppSpacing.sm), name],
+            ? [text, const SizedBox(width: AppSpacing.sm), icon]
+            : [icon, const SizedBox(width: AppSpacing.sm), text],
       ),
     );
   }
@@ -601,8 +698,8 @@ class _Lineups extends StatelessWidget {
     required this.awayCode,
   });
 
-  final MatchTeam home;
-  final MatchTeam away;
+  final List<Player> home;
+  final List<Player> away;
   final String homeCode;
   final String awayCode;
 
@@ -611,9 +708,9 @@ class _Lineups extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.all(AppSpacing.marginMobile),
       children: [
-        _xi(homeCode, home.xi),
+        _xi(homeCode, home),
         const SizedBox(height: AppSpacing.lg),
-        _xi(awayCode, away.xi),
+        _xi(awayCode, away),
       ],
     );
   }
@@ -644,4 +741,82 @@ class _Lineups extends StatelessWidget {
       ],
     );
   }
+}
+
+/// Bottom sheet to make a substitution: pick the player coming off (from the
+/// on-pitch XI), then the player coming on (from the bench).
+class _SubSheet extends StatefulWidget {
+  const _SubSheet({
+    required this.onPitch,
+    required this.bench,
+    required this.onConfirm,
+  });
+
+  final List<Player> onPitch;
+  final List<Player> bench;
+  final void Function(int offId, Player on) onConfirm;
+
+  @override
+  State<_SubSheet> createState() => _SubSheetState();
+}
+
+class _SubSheetState extends State<_SubSheet> {
+  int? _offId;
+
+  @override
+  Widget build(BuildContext context) {
+    final off = _offId;
+    return Padding(
+      padding: EdgeInsets.fromLTRB(
+        AppSpacing.md,
+        AppSpacing.md,
+        AppSpacing.md,
+        AppSpacing.md + MediaQuery.of(context).viewInsets.bottom,
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            off == null
+                ? 'SUBSTITUTE — PLAYER OFF'
+                : 'SUBSTITUTE — PLAYER ON',
+            style: AppTypography.labelMedium.copyWith(color: AppColors.primary),
+          ),
+          const SizedBox(height: AppSpacing.sm),
+          Flexible(
+            child: off == null
+                ? ListView(
+                    shrinkWrap: true,
+                    children: [
+                      for (final p in widget.onPitch)
+                        _row(p, () => setState(() => _offId = p.id)),
+                    ],
+                  )
+                : ListView(
+                    shrinkWrap: true,
+                    children: [
+                      for (final p in widget.bench)
+                        _row(p, () => widget.onConfirm(off, p)),
+                    ],
+                  ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _row(Player p, VoidCallback onTap) => ListTile(
+        dense: true,
+        onTap: onTap,
+        leading: SizedBox(width: 40, child: TacticalChip(p.position.label)),
+        title: Text(p.name, style: AppTypography.bodyMedium),
+        subtitle: Text(
+          p.position.roleName,
+          style: AppTypography.labelSmall.copyWith(
+            color: AppColors.onSurfaceVariant,
+          ),
+        ),
+        trailing: Text('${p.overall}', style: AppTypography.labelMedium),
+      );
 }

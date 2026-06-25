@@ -84,8 +84,21 @@ const _layouts = <Formation, List<(double, double)>>{
   ],
 };
 
+/// Dragging an occupied XI slot off the pitch (to swap with another slot).
+class _SlotDrag {
+  const _SlotDrag(this.slot);
+  final int slot;
+}
+
+/// Dragging a substitute onto the pitch (to bring them into the XI).
+class _BenchDrag {
+  const _BenchDrag(this.playerId);
+  final int playerId;
+}
+
 /// Squad: a tactical pitch view of the starting XI with the substitutes list
-/// and formation selector. Instructions live behind the tune action.
+/// and formation selector. Players can be tapped to pick, or dragged to swap
+/// positions / bring a substitute on. Instructions live behind the tune action.
 class TacticsScreen extends ConsumerWidget {
   const TacticsScreen({required this.careerId, super.key});
 
@@ -108,6 +121,12 @@ class TacticsScreen extends ConsumerWidget {
         ),
         centerTitle: true,
         actions: [
+          IconButton(
+            icon: const Icon(Icons.groups, color: AppColors.primary),
+            tooltip: 'Call-ups',
+            onPressed: () =>
+                context.go('${Routes.callUps}?careerId=$careerId'),
+          ),
           dataAsync.maybeWhen(
             data: (data) => IconButton(
               icon: const Icon(Icons.tune, color: AppColors.primary),
@@ -140,6 +159,9 @@ class TacticsScreen extends ConsumerWidget {
                   lineup: tactic.lineup,
                   byId: data.byId,
                   onTapSlot: (slot) => _pickPlayer(context, ref, data, slot),
+                  onSwap: (a, b) => service.swapSlots(careerId, a, b),
+                  onBenchIn: (slot, playerId) =>
+                      service.setSlot(careerId, slot, playerId),
                 ),
               ),
               Padding(
@@ -167,6 +189,13 @@ class TacticsScreen extends ConsumerWidget {
                     Text(
                       'SUBSTITUTES · ${subs.length}',
                       style: AppTypography.labelMedium,
+                    ),
+                    const SizedBox(height: AppSpacing.xs),
+                    Text(
+                      'Drag a sub onto a player to bring them on.',
+                      style: AppTypography.labelSmall.copyWith(
+                        color: AppColors.onSurfaceVariant,
+                      ),
                     ),
                     const SizedBox(height: AppSpacing.sm),
                     AppCard(
@@ -255,12 +284,16 @@ class _Pitch extends StatelessWidget {
     required this.lineup,
     required this.byId,
     required this.onTapSlot,
+    required this.onSwap,
+    required this.onBenchIn,
   });
 
   final Formation formation;
   final List<int?> lineup;
   final Map<int, Player> byId;
   final ValueChanged<int> onTapSlot;
+  final void Function(int slotA, int slotB) onSwap;
+  final void Function(int slot, int playerId) onBenchIn;
 
   @override
   Widget build(BuildContext context) {
@@ -288,9 +321,12 @@ class _Pitch extends StatelessWidget {
                   layout[slot].$2 * 2 - 1,
                 ),
                 child: _PlayerNode(
+                  slot: slot,
                   position: positions[slot],
                   player: byId[lineup[slot]],
                   onTap: () => onTapSlot(slot),
+                  onSwap: onSwap,
+                  onBenchIn: onBenchIn,
                 ),
               ),
           ],
@@ -300,30 +336,68 @@ class _Pitch extends StatelessWidget {
   }
 }
 
+/// "Cristiano Ronaldo" → "C. Ronaldo" (surnames can repeat in a squad).
+String shortName(String full) {
+  final parts = full.trim().split(' ');
+  if (parts.length < 2) return full;
+  return '${parts.first[0]}. ${parts.last}';
+}
+
 class _PlayerNode extends StatelessWidget {
   const _PlayerNode({
+    required this.slot,
     required this.position,
     required this.player,
     required this.onTap,
+    required this.onSwap,
+    required this.onBenchIn,
   });
 
+  final int slot;
   final PlayerPosition position;
   final Player? player;
   final VoidCallback onTap;
-
-  /// "Cristiano Ronaldo" → "C. Ronaldo" (surnames can repeat in a squad).
-  static String shortName(String full) {
-    final parts = full.trim().split(' ');
-    if (parts.length < 2) return full;
-    return '${parts.first[0]}. ${parts.last}';
-  }
+  final void Function(int slotA, int slotB) onSwap;
+  final void Function(int slot, int playerId) onBenchIn;
 
   @override
   Widget build(BuildContext context) {
-    final surname =
-        player == null ? position.label : shortName(player!.name);
-    return GestureDetector(
-      onTap: onTap,
+    return DragTarget<Object>(
+      onWillAcceptWithDetails: (details) {
+        final data = details.data;
+        if (data is _SlotDrag) return data.slot != slot;
+        return data is _BenchDrag;
+      },
+      onAcceptWithDetails: (details) {
+        final data = details.data;
+        if (data is _SlotDrag) {
+          onSwap(data.slot, slot);
+        } else if (data is _BenchDrag) {
+          onBenchIn(slot, data.playerId);
+        }
+      },
+      builder: (context, candidate, rejected) {
+        final node = _node(highlighted: candidate.isNotEmpty);
+        if (player == null) {
+          return GestureDetector(onTap: onTap, child: node);
+        }
+        return GestureDetector(
+          onTap: onTap,
+          child: Draggable<Object>(
+            data: _SlotDrag(slot),
+            feedback: _node(dragging: true),
+            childWhenDragging: Opacity(opacity: 0.35, child: node),
+            child: node,
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _node({bool highlighted = false, bool dragging = false}) {
+    final surname = player == null ? position.label : shortName(player!.name);
+    return Material(
+      type: MaterialType.transparency,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -341,10 +415,12 @@ class _PlayerNode extends StatelessWidget {
                 ],
               ),
               border: Border.all(
-                color: player == null
-                    ? AppColors.outlineVariant
-                    : AppColors.primary,
-                width: 2,
+                color: highlighted
+                    ? AppColors.primary
+                    : player == null
+                        ? AppColors.outlineVariant
+                        : AppColors.primary,
+                width: highlighted || dragging ? 3 : 2,
               ),
             ),
             alignment: Alignment.center,
@@ -408,7 +484,7 @@ class _SubRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
+    final row = ListTile(
       dense: true,
       leading: SizedBox(width: 40, child: TacticalChip(player.position.label)),
       title: Text(player.name, style: AppTypography.bodyMedium),
@@ -418,7 +494,37 @@ class _SubRow extends StatelessWidget {
           color: AppColors.onSurfaceVariant,
         ),
       ),
-      trailing: Text('${player.overall}', style: AppTypography.labelMedium),
+      trailing: const Icon(
+        Icons.drag_indicator,
+        color: AppColors.onSurfaceVariant,
+        size: 18,
+      ),
+    );
+
+    Widget chip() => Material(
+          color: Colors.transparent,
+          child: Container(
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppSpacing.md,
+              vertical: AppSpacing.sm,
+            ),
+            decoration: BoxDecoration(
+              color: AppColors.surfaceContainerHighest,
+              borderRadius: AppRadii.smAll,
+              border: Border.all(color: AppColors.primary),
+            ),
+            child: Text(
+              shortName(player.name).toUpperCase(),
+              style: AppTypography.labelMedium,
+            ),
+          ),
+        );
+
+    return LongPressDraggable<Object>(
+      data: _BenchDrag(player.id),
+      feedback: chip(),
+      childWhenDragging: Opacity(opacity: 0.4, child: row),
+      child: row,
     );
   }
 }

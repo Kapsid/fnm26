@@ -8,9 +8,11 @@ import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/entities/tactics.dart';
 import 'package:fnm/domain/services/match/match_engine.dart';
 import 'package:fnm/domain/services/tactics/best_eleven.dart';
+import 'package:fnm/features/tactics/tactics_providers.dart';
 
 /// The player's next fixture, simulated by the tactical engine and ready to
-/// display.
+/// display. Carries everything the live screen needs to re-simulate after a
+/// substitution (the starting teams, the player's bench, and the seed).
 class MatchPreview {
   const MatchPreview({
     required this.fixture,
@@ -18,6 +20,9 @@ class MatchPreview {
     required this.nations,
     required this.homeTeam,
     required this.awayTeam,
+    required this.playerNationId,
+    required this.bench,
+    required this.saveSeed,
   });
 
   final Fixture fixture;
@@ -25,6 +30,18 @@ class MatchPreview {
   final Map<int, Nation> nations;
   final MatchTeam homeTeam;
   final MatchTeam awayTeam;
+
+  /// The nation the human manager controls in this fixture.
+  final int playerNationId;
+
+  /// Substitutes available to the player (called-up players not in the XI).
+  final List<Player> bench;
+
+  /// The save-level RNG seed, so the screen can deterministically re-run the
+  /// engine with substitutions applied.
+  final int saveSeed;
+
+  bool get playerIsHome => fixture.homeNationId == playerNationId;
 }
 
 // autoDispose so re-opening the match screen always recomputes the *current*
@@ -53,8 +70,12 @@ final AutoDisposeFutureProviderFamily<MatchPreview?, int> matchPreviewProvider =
           ? fixture.awayNationId
           : fixture.homeNationId;
 
-      // Player's team from their saved tactic (falling back to a best XI).
-      final playerPool = await playerRepo.byNation(playerNationId);
+      // Player's team from their saved tactic (falling back to a best XI),
+      // restricted to the called-up squad.
+      final fullPool = await playerRepo.byNation(playerNationId);
+      final callUps =
+          await ref.watch(squadRepositoryProvider).callUps(careerId);
+      final playerPool = availableSquad(fullPool, callUps);
       final byId = {for (final p in playerPool) p.id: p};
       final tactic = await ref
           .watch(tacticsRepositoryProvider)
@@ -69,6 +90,11 @@ final AutoDisposeFutureProviderFamily<MatchPreview?, int> matchPreviewProvider =
       final playerXi = selected.length == 11
           ? selected
           : _xiFrom(playerPool, bestEleven(Formation.f433, playerPool));
+      final startingIds = playerXi.map((p) => p.id).toSet();
+      final bench = playerPool
+          .where((p) => !startingIds.contains(p.id))
+          .toList()
+        ..sort((a, b) => b.overall.compareTo(a.overall));
       final playerTeam = MatchTeam(
         nationId: playerNationId,
         xi: playerXi,
@@ -102,6 +128,9 @@ final AutoDisposeFutureProviderFamily<MatchPreview?, int> matchPreviewProvider =
         nations: nations,
         homeTeam: homeTeam,
         awayTeam: awayTeam,
+        playerNationId: playerNationId,
+        bench: bench,
+        saveSeed: career.rngSeed,
       );
     });
 

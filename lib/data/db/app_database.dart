@@ -23,6 +23,7 @@ part 'app_database.g.dart';
     Fixtures,
     Tactics,
     LineupSlots,
+    CallUps,
     GoalEvents,
     Honours,
   ],
@@ -40,7 +41,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase.forTesting(QueryExecutor executor) : super(executor);
 
   @override
-  int get schemaVersion => 7;
+  int get schemaVersion => 8;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -79,6 +80,10 @@ class AppDatabase extends _$AppDatabase {
           // v7 scopes competitions to an endless 4-year cycle.
           if (from < 7) {
             await m.addColumn(competitions, competitions.cycle);
+          }
+          // v8 adds the call-up (squad selection) table.
+          if (from < 8) {
+            await m.createTable(callUps);
           }
         },
       );

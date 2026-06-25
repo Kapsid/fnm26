@@ -5,6 +5,17 @@ import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/entities/tactics.dart';
 import 'package:fnm/domain/services/tactics/best_eleven.dart';
 
+/// Smallest squad a manager may call up (must field an XI plus cover).
+const int kMinSquadSize = 16;
+
+/// Resolves the squad actually available for selection from a nation [pool]
+/// given the manager's [callUps]. An empty call-up set means the whole pool is
+/// available (the default for new/legacy saves).
+List<Player> availableSquad(List<Player> pool, Set<int> callUps) {
+  if (callUps.isEmpty) return pool;
+  return pool.where((p) => callUps.contains(p.id)).toList();
+}
+
 /// Everything the tactics screen needs for a save.
 class TacticData {
   const TacticData({
@@ -15,7 +26,7 @@ class TacticData {
 
   final Tactic tactic;
 
-  /// The nation's full player pool (selectable squad).
+  /// The called-up squad (selectable for the XI and bench).
   final List<Player> pool;
   final Map<int, Player> byId;
 }
@@ -29,13 +40,41 @@ final FutureProviderFamily<TacticData?, int> tacticDataProvider =
         careerId,
       );
   if (tactic == null) return null;
-  final pool =
+  final fullPool =
       await ref.watch(playerRepositoryProvider).byNation(career.nationId);
+  final callUps = await ref.watch(squadRepositoryProvider).callUps(careerId);
+  final pool = availableSquad(fullPool, callUps);
   return TacticData(
     tactic: tactic,
     pool: pool,
-    byId: {for (final p in pool) p.id: p},
+    // Resolve over the full pool so the XI renders even if a player was just
+    // dropped from the squad (the squad service repairs the lineup on save).
+    byId: {for (final p in fullPool) p.id: p},
   );
+});
+
+/// Everything the call-up (squad selection) screen needs for a save.
+class SquadData {
+  const SquadData({required this.pool, required this.callUps});
+
+  /// The full nation pool, eligible to be called up.
+  final List<Player> pool;
+
+  /// The currently called-up player ids (every pool member when none have been
+  /// explicitly chosen yet).
+  final Set<int> callUps;
+}
+
+final FutureProviderFamily<SquadData?, int> squadDataProvider =
+    FutureProvider.family<SquadData?, int>((ref, careerId) async {
+  await ref.watch(seedLoaderProvider).ensureSeeded();
+  final career = await ref.watch(careerRepositoryProvider).byId(careerId);
+  if (career == null) return null;
+  final pool =
+      await ref.watch(playerRepositoryProvider).byNation(career.nationId);
+  final stored = await ref.watch(squadRepositoryProvider).callUps(careerId);
+  final callUps = stored.isEmpty ? {for (final p in pool) p.id} : stored;
+  return SquadData(pool: pool, callUps: callUps);
 });
 
 /// Mutates and persists the team tactic for a save.
@@ -51,12 +90,18 @@ class TacticService {
     final repo = _ref.read(tacticsRepositoryProvider);
     final current = await repo.tacticForCareer(careerId);
     if (current == null) return;
-    final career = await _ref.read(careerRepositoryProvider).byId(careerId);
-    final pool = career == null
-        ? <Player>[]
-        : await _ref.read(playerRepositoryProvider).byNation(career.nationId);
+    final pool = await _availablePool(careerId);
     await repo.saveTactic(careerId, change(current, pool));
     _ref.invalidate(tacticDataProvider);
+  }
+
+  Future<List<Player>> _availablePool(int careerId) async {
+    final career = await _ref.read(careerRepositoryProvider).byId(careerId);
+    if (career == null) return const [];
+    final pool =
+        await _ref.read(playerRepositoryProvider).byNation(career.nationId);
+    final callUps = await _ref.read(squadRepositoryProvider).callUps(careerId);
+    return availableSquad(pool, callUps);
   }
 
   Future<void> setFormation(int careerId, Formation formation) => _update(
@@ -79,7 +124,59 @@ class TacticService {
         lineup[slot] = playerId;
         return t.copyWith(lineup: lineup);
       });
+
+  /// Swaps the players occupying [slotA] and [slotB] (drag-and-drop on pitch).
+  Future<void> swapSlots(int careerId, int slotA, int slotB) =>
+      _update(careerId, (t, _) {
+        if (slotA == slotB) return t;
+        final lineup = [...t.lineup];
+        final tmp = lineup[slotA];
+        lineup[slotA] = lineup[slotB];
+        lineup[slotB] = tmp;
+        return t.copyWith(lineup: lineup);
+      });
 }
 
 final Provider<TacticService> tacticServiceProvider =
     Provider(TacticService.new);
+
+/// Mutates and persists the called-up squad for a save.
+class SquadService {
+  SquadService(this._ref);
+
+  final Ref _ref;
+
+  /// Replaces the called-up squad, then repairs the saved XI so it only
+  /// contains called-up players (refilling dropped slots from the new squad).
+  Future<void> setCallUps(int careerId, Set<int> ids) async {
+    if (ids.length < kMinSquadSize) return;
+    await _ref.read(squadRepositoryProvider).setCallUps(careerId, ids);
+
+    final tacticRepo = _ref.read(tacticsRepositoryProvider);
+    final tactic = await tacticRepo.tacticForCareer(careerId);
+    if (tactic != null) {
+      final career = await _ref.read(careerRepositoryProvider).byId(careerId);
+      final pool = career == null
+          ? <Player>[]
+          : await _ref
+              .read(playerRepositoryProvider)
+              .byNation(career.nationId);
+      final squad = availableSquad(pool, ids);
+      final dropped =
+          tactic.lineup.whereType<int>().any((id) => !ids.contains(id));
+      if (dropped) {
+        await tacticRepo.saveTactic(
+          careerId,
+          tactic.copyWith(lineup: bestEleven(tactic.formation, squad)),
+        );
+      }
+    }
+
+    _ref
+      ..invalidate(squadDataProvider)
+      ..invalidate(tacticDataProvider);
+  }
+}
+
+final Provider<SquadService> squadServiceProvider =
+    Provider(SquadService.new);
