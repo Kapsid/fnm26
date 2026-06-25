@@ -40,8 +40,9 @@ class CareerService {
 
   final Ref _ref;
 
-  /// The cycle starts on 1 September 2026.
-  static final DateTime cycleStart = DateTime(2026, 9);
+  /// The save opens in July 2026 (pre-season); the first qualifiers kick off in
+  /// the September international window.
+  static final DateTime cycleStart = DateTime(2026, 7);
 
   /// The World Cup year for a given cycle (clean cadence: 2030, 2034, …).
   static int worldCupYear(int cycle) => cycleStart.year + 4 * (cycle + 1);
@@ -114,8 +115,11 @@ class CareerService {
     // Continental championship (played) — if the player qualifies (top seeds of
     // the confederation) and qualifying ends before it kicks off.
     final cont = ContinentalCups.byConfederation[me.confederation];
-    final contStart = DateTime(wcYear - 2, 6, 8);
-    if (cont != null && lastQualifier.isBefore(contStart)) {
+    final contStart =
+        cont == null ? null : DateTime(wcYear - 2, cont.month, 8);
+    if (cont != null &&
+        contStart != null &&
+        lastQualifier.isBefore(contStart)) {
       final members =
           nations.where((n) => n.confederation == me.confederation).toList()
             ..sort((a, b) => a.ranking.compareTo(b.ranking));

@@ -50,13 +50,13 @@ void main() {
     expect((await service.create(nationId: 1, managerName: 'X')).isFailure, isTrue);
   });
 
-  test('created save starts in September 2026 with cycle 0', () async {
+  test('created save starts in July 2026 with cycle 0', () async {
     container = build(premium: true);
     final service = container.read(careerServiceProvider);
 
     final result = await service.create(nationId: 7, managerName: 'Alex');
     final career = result.valueOrNull!;
-    expect(career.inGameDate, DateTime(2026, 9));
+    expect(career.inGameDate, DateTime(2026, 7));
     expect(career.cyclePointer, 0);
     expect(career.managerName, 'Alex');
   });

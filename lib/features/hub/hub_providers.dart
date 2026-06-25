@@ -521,8 +521,8 @@ class SeasonService {
     };
 
     for (final entry in ContinentalCups.byConfederation.entries) {
-      final (:name, :size) = entry.value;
-      if (await _comp.hasHonour(careerId, name, year)) continue;
+      final cont = entry.value;
+      if (await _comp.hasHonour(careerId, cont.name, year)) continue;
 
       final members =
           nations.where((n) => n.confederation == entry.key).toList()
@@ -530,7 +530,7 @@ class SeasonService {
       if (members.length < 4) continue;
 
       final result = TournamentSim.run(
-        seededByStrength: members.take(size).map((n) => n.id).toList(),
+        seededByStrength: members.take(cont.size).map((n) => n.id).toList(),
         strengthById: strengthById,
         seed: career.rngSeed ^ (year * 0x33) ^ entry.key.index,
       );
@@ -539,7 +539,7 @@ class SeasonService {
       await _comp.recordHonour(
         careerId: careerId,
         year: year,
-        competition: name,
+        competition: cont.name,
         championId: result.champion,
         runnerUpId: result.runnerUp,
         thirdId: result.third,
