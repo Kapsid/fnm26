@@ -148,6 +148,24 @@ class CallUps extends Table {
   Set<Column> get primaryKey => {careerId, playerId};
 }
 
+/// The world-ranking positions frozen at the start of a cycle, used to seed
+/// that cycle's draws. Freezing keeps every draw ceremony's re-derivation in
+/// step with the persisted groups no matter when it is viewed. Cycle 0 has no
+/// rows and falls back to the static seed ranking.
+@DataClassName('SeedRankingRow')
+class SeedRankings extends Table {
+  IntColumn get careerId =>
+      integer().references(Careers, #id, onDelete: KeyAction.cascade)();
+  IntColumn get cycle => integer()();
+  IntColumn get nationId => integer()();
+
+  /// The nation's world position (1 = top) at the cycle's start.
+  IntColumn get rank => integer()();
+
+  @override
+  Set<Column> get primaryKey => {careerId, cycle, nationId};
+}
+
 /// A nation's live world-ranking points within a save. Seeded from the static
 /// seed ranking on first use, then nudged by every result (see the Elo model).
 @DataClassName('RankPointRow')

@@ -100,9 +100,14 @@ class CareerService {
     required int cycle,
     required DateTime cycleStart,
     required int wcYear,
+
+    /// The frozen seeding ranking for this cycle (nationId → world position).
+    /// Null seeds by the static seed ranking (used for the opening cycle).
+    Map<int, int>? rankById,
   }) async {
     if (!nations.any((n) => n.id == nationId)) return; // nothing to schedule
     final me = nations.firstWhere((n) => n.id == nationId);
+    int rankOf(Nation n) => rankById?[n.id] ?? n.ranking;
     final byConfederation = <Confederation, List<Nation>>{};
     for (final n in nations) {
       (byConfederation[n.confederation] ??= []).add(n);
@@ -116,7 +121,7 @@ class CareerService {
     if (cont != null && contFinalsStart != null) {
       final members =
           (byConfederation[me.confederation] ?? <Nation>[]).toList()
-            ..sort((a, b) => a.ranking.compareTo(b.ranking));
+            ..sort((a, b) => rankOf(a).compareTo(rankOf(b)));
       if (members.length > cont.size) {
         final cq = const ScheduleGenerator().generate(
           confederation: me.confederation,
@@ -127,6 +132,7 @@ class CareerService {
           // season instead of finishing in three months, so friendlies fall
           // into shorter gaps between phases rather than one long block.
           groupSize: 6,
+          rankById: rankById,
         );
         await comp.saveSchedule(
           careerId: careerId,
@@ -144,7 +150,7 @@ class CareerService {
         // A confederation too small to run a group stage seeds its finals.
         final draw = WorldCupFinals.drawGroups(
           qualifierIds: members.take(cont.size).map((n) => n.id).toList(),
-          rankingById: {for (final n in nations) n.id: n.ranking},
+          rankingById: {for (final n in nations) n.id: rankOf(n)},
           rngSeed: rngSeed ^ (cycle * 0x71) ^ 0xC0FF,
         );
         await comp.saveTournamentGroups(
@@ -171,6 +177,7 @@ class CareerService {
         nations: entry.value,
         rngSeed: rngSeed ^ (cycle * 0x1B3D) ^ (entry.key.index * 0x9E37),
         start: wcQualStart,
+        rankById: rankById,
       );
       await comp.saveSchedule(
         careerId: careerId,

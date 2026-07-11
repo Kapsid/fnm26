@@ -60,10 +60,16 @@ class ScheduleGenerator {
     required int rngSeed,
     DateTime? start,
     int? groupSize,
+    Map<int, int>? rankById,
   }) {
     final rng = SeededRng(rngSeed ^ 0x5151A);
     final format = QualificationFormat.forConfederation(confederation);
-    final groups = _draw(nations, groupSize ?? format.targetGroupSize, rng);
+    final groups = _draw(
+      nations,
+      groupSize ?? format.targetGroupSize,
+      rng,
+      rankById,
+    );
 
     // One shared matchday→date map sized to the largest group.
     final maxRounds = groups
@@ -105,9 +111,16 @@ class ScheduleGenerator {
   }
 
   /// Pot-based draw: rank nations, split into pots, distribute one per group.
-  List<List<int>> _draw(List<Nation> nations, int targetSize, SeededRng rng) {
-    final sorted = [...nations]
-      ..sort((a, b) => a.ranking.compareTo(b.ranking));
+  /// Seeds by [rankById] (nationId → world position) when supplied, else by the
+  /// nation's static seed ranking.
+  List<List<int>> _draw(
+    List<Nation> nations,
+    int targetSize,
+    SeededRng rng,
+    Map<int, int>? rankById,
+  ) {
+    int rankOf(Nation n) => rankById?[n.id] ?? n.ranking;
+    final sorted = [...nations]..sort((a, b) => rankOf(a).compareTo(rankOf(b)));
     final groupCount = (sorted.length / targetSize).round().clamp(1, 12);
     final groups = List.generate(groupCount, (_) => <int>[]);
 

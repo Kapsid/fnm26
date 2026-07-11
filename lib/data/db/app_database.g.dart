@@ -6491,6 +6491,322 @@ class RankPointsCompanion extends UpdateCompanion<RankPointRow> {
   }
 }
 
+class $SeedRankingsTable extends SeedRankings
+    with TableInfo<$SeedRankingsTable, SeedRankingRow> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $SeedRankingsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _careerIdMeta = const VerificationMeta(
+    'careerId',
+  );
+  @override
+  late final GeneratedColumn<int> careerId = GeneratedColumn<int>(
+    'career_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES careers (id) ON DELETE CASCADE',
+    ),
+  );
+  static const VerificationMeta _cycleMeta = const VerificationMeta('cycle');
+  @override
+  late final GeneratedColumn<int> cycle = GeneratedColumn<int>(
+    'cycle',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _nationIdMeta = const VerificationMeta(
+    'nationId',
+  );
+  @override
+  late final GeneratedColumn<int> nationId = GeneratedColumn<int>(
+    'nation_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _rankMeta = const VerificationMeta('rank');
+  @override
+  late final GeneratedColumn<int> rank = GeneratedColumn<int>(
+    'rank',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [careerId, cycle, nationId, rank];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'seed_rankings';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<SeedRankingRow> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('career_id')) {
+      context.handle(
+        _careerIdMeta,
+        careerId.isAcceptableOrUnknown(data['career_id']!, _careerIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_careerIdMeta);
+    }
+    if (data.containsKey('cycle')) {
+      context.handle(
+        _cycleMeta,
+        cycle.isAcceptableOrUnknown(data['cycle']!, _cycleMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_cycleMeta);
+    }
+    if (data.containsKey('nation_id')) {
+      context.handle(
+        _nationIdMeta,
+        nationId.isAcceptableOrUnknown(data['nation_id']!, _nationIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_nationIdMeta);
+    }
+    if (data.containsKey('rank')) {
+      context.handle(
+        _rankMeta,
+        rank.isAcceptableOrUnknown(data['rank']!, _rankMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_rankMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {careerId, cycle, nationId};
+  @override
+  SeedRankingRow map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return SeedRankingRow(
+      careerId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}career_id'],
+      )!,
+      cycle: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}cycle'],
+      )!,
+      nationId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}nation_id'],
+      )!,
+      rank: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}rank'],
+      )!,
+    );
+  }
+
+  @override
+  $SeedRankingsTable createAlias(String alias) {
+    return $SeedRankingsTable(attachedDatabase, alias);
+  }
+}
+
+class SeedRankingRow extends DataClass implements Insertable<SeedRankingRow> {
+  final int careerId;
+  final int cycle;
+  final int nationId;
+
+  /// The nation's world position (1 = top) at the cycle's start.
+  final int rank;
+  const SeedRankingRow({
+    required this.careerId,
+    required this.cycle,
+    required this.nationId,
+    required this.rank,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['career_id'] = Variable<int>(careerId);
+    map['cycle'] = Variable<int>(cycle);
+    map['nation_id'] = Variable<int>(nationId);
+    map['rank'] = Variable<int>(rank);
+    return map;
+  }
+
+  SeedRankingsCompanion toCompanion(bool nullToAbsent) {
+    return SeedRankingsCompanion(
+      careerId: Value(careerId),
+      cycle: Value(cycle),
+      nationId: Value(nationId),
+      rank: Value(rank),
+    );
+  }
+
+  factory SeedRankingRow.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return SeedRankingRow(
+      careerId: serializer.fromJson<int>(json['careerId']),
+      cycle: serializer.fromJson<int>(json['cycle']),
+      nationId: serializer.fromJson<int>(json['nationId']),
+      rank: serializer.fromJson<int>(json['rank']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'careerId': serializer.toJson<int>(careerId),
+      'cycle': serializer.toJson<int>(cycle),
+      'nationId': serializer.toJson<int>(nationId),
+      'rank': serializer.toJson<int>(rank),
+    };
+  }
+
+  SeedRankingRow copyWith({
+    int? careerId,
+    int? cycle,
+    int? nationId,
+    int? rank,
+  }) => SeedRankingRow(
+    careerId: careerId ?? this.careerId,
+    cycle: cycle ?? this.cycle,
+    nationId: nationId ?? this.nationId,
+    rank: rank ?? this.rank,
+  );
+  SeedRankingRow copyWithCompanion(SeedRankingsCompanion data) {
+    return SeedRankingRow(
+      careerId: data.careerId.present ? data.careerId.value : this.careerId,
+      cycle: data.cycle.present ? data.cycle.value : this.cycle,
+      nationId: data.nationId.present ? data.nationId.value : this.nationId,
+      rank: data.rank.present ? data.rank.value : this.rank,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('SeedRankingRow(')
+          ..write('careerId: $careerId, ')
+          ..write('cycle: $cycle, ')
+          ..write('nationId: $nationId, ')
+          ..write('rank: $rank')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(careerId, cycle, nationId, rank);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is SeedRankingRow &&
+          other.careerId == this.careerId &&
+          other.cycle == this.cycle &&
+          other.nationId == this.nationId &&
+          other.rank == this.rank);
+}
+
+class SeedRankingsCompanion extends UpdateCompanion<SeedRankingRow> {
+  final Value<int> careerId;
+  final Value<int> cycle;
+  final Value<int> nationId;
+  final Value<int> rank;
+  final Value<int> rowid;
+  const SeedRankingsCompanion({
+    this.careerId = const Value.absent(),
+    this.cycle = const Value.absent(),
+    this.nationId = const Value.absent(),
+    this.rank = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  SeedRankingsCompanion.insert({
+    required int careerId,
+    required int cycle,
+    required int nationId,
+    required int rank,
+    this.rowid = const Value.absent(),
+  }) : careerId = Value(careerId),
+       cycle = Value(cycle),
+       nationId = Value(nationId),
+       rank = Value(rank);
+  static Insertable<SeedRankingRow> custom({
+    Expression<int>? careerId,
+    Expression<int>? cycle,
+    Expression<int>? nationId,
+    Expression<int>? rank,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (careerId != null) 'career_id': careerId,
+      if (cycle != null) 'cycle': cycle,
+      if (nationId != null) 'nation_id': nationId,
+      if (rank != null) 'rank': rank,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  SeedRankingsCompanion copyWith({
+    Value<int>? careerId,
+    Value<int>? cycle,
+    Value<int>? nationId,
+    Value<int>? rank,
+    Value<int>? rowid,
+  }) {
+    return SeedRankingsCompanion(
+      careerId: careerId ?? this.careerId,
+      cycle: cycle ?? this.cycle,
+      nationId: nationId ?? this.nationId,
+      rank: rank ?? this.rank,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (careerId.present) {
+      map['career_id'] = Variable<int>(careerId.value);
+    }
+    if (cycle.present) {
+      map['cycle'] = Variable<int>(cycle.value);
+    }
+    if (nationId.present) {
+      map['nation_id'] = Variable<int>(nationId.value);
+    }
+    if (rank.present) {
+      map['rank'] = Variable<int>(rank.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('SeedRankingsCompanion(')
+          ..write('careerId: $careerId, ')
+          ..write('cycle: $cycle, ')
+          ..write('nationId: $nationId, ')
+          ..write('rank: $rank, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
@@ -6511,6 +6827,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $DrawsWatchedTable drawsWatched = $DrawsWatchedTable(this);
   late final $PlayerAbsencesTable playerAbsences = $PlayerAbsencesTable(this);
   late final $RankPointsTable rankPoints = $RankPointsTable(this);
+  late final $SeedRankingsTable seedRankings = $SeedRankingsTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -6531,6 +6848,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     drawsWatched,
     playerAbsences,
     rankPoints,
+    seedRankings,
   ];
   @override
   StreamQueryUpdateRules get streamUpdateRules => const StreamQueryUpdateRules([
@@ -6624,6 +6942,13 @@ abstract class _$AppDatabase extends GeneratedDatabase {
         limitUpdateKind: UpdateKind.delete,
       ),
       result: [TableUpdate('rank_points', kind: UpdateKind.delete)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'careers',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('seed_rankings', kind: UpdateKind.delete)],
     ),
   ]);
 }
@@ -7779,6 +8104,24 @@ final class $$CareersTableReferences
       manager.$state.copyWith(prefetchedData: cache),
     );
   }
+
+  static MultiTypedResultKey<$SeedRankingsTable, List<SeedRankingRow>>
+  _seedRankingsRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
+    db.seedRankings,
+    aliasName: 'careers__id__seed_rankings__career_id',
+  );
+
+  $$SeedRankingsTableProcessedTableManager get seedRankingsRefs {
+    final manager = $$SeedRankingsTableTableManager(
+      $_db,
+      $_db.seedRankings,
+    ).filter((f) => f.careerId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_seedRankingsRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
 }
 
 class $$CareersTableFilterComposer
@@ -8084,6 +8427,31 @@ class $$CareersTableFilterComposer
           }) => $$RankPointsTableFilterComposer(
             $db: $db,
             $table: $db.rankPoints,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> seedRankingsRefs(
+    Expression<bool> Function($$SeedRankingsTableFilterComposer f) f,
+  ) {
+    final $$SeedRankingsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.seedRankings,
+      getReferencedColumn: (t) => t.careerId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$SeedRankingsTableFilterComposer(
+            $db: $db,
+            $table: $db.seedRankings,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -8462,6 +8830,31 @@ class $$CareersTableAnnotationComposer
     );
     return f(composer);
   }
+
+  Expression<T> seedRankingsRefs<T extends Object>(
+    Expression<T> Function($$SeedRankingsTableAnnotationComposer a) f,
+  ) {
+    final $$SeedRankingsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.seedRankings,
+      getReferencedColumn: (t) => t.careerId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$SeedRankingsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.seedRankings,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
 }
 
 class $$CareersTableTableManager
@@ -8489,6 +8882,7 @@ class $$CareersTableTableManager
             bool drawsWatchedRefs,
             bool playerAbsencesRefs,
             bool rankPointsRefs,
+            bool seedRankingsRefs,
           })
         > {
   $$CareersTableTableManager(_$AppDatabase db, $CareersTable table)
@@ -8559,6 +8953,7 @@ class $$CareersTableTableManager
                 drawsWatchedRefs = false,
                 playerAbsencesRefs = false,
                 rankPointsRefs = false,
+                seedRankingsRefs = false,
               }) {
                 return PrefetchHooks(
                   db: db,
@@ -8573,6 +8968,7 @@ class $$CareersTableTableManager
                     if (drawsWatchedRefs) db.drawsWatched,
                     if (playerAbsencesRefs) db.playerAbsences,
                     if (rankPointsRefs) db.rankPoints,
+                    if (seedRankingsRefs) db.seedRankings,
                   ],
                   addJoins:
                       <
@@ -8818,6 +9214,27 @@ class $$CareersTableTableManager
                               ),
                           typedResults: items,
                         ),
+                      if (seedRankingsRefs)
+                        await $_getPrefetchedData<
+                          CareerRow,
+                          $CareersTable,
+                          SeedRankingRow
+                        >(
+                          currentTable: table,
+                          referencedTable: $$CareersTableReferences
+                              ._seedRankingsRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$CareersTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).seedRankingsRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.careerId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
                     ];
                   },
                 );
@@ -8850,6 +9267,7 @@ typedef $$CareersTableProcessedTableManager =
         bool drawsWatchedRefs,
         bool playerAbsencesRefs,
         bool rankPointsRefs,
+        bool seedRankingsRefs,
       })
     >;
 typedef $$CompetitionsTableCreateCompanionBuilder =
@@ -13740,6 +14158,304 @@ typedef $$RankPointsTableProcessedTableManager =
       RankPointRow,
       PrefetchHooks Function({bool careerId})
     >;
+typedef $$SeedRankingsTableCreateCompanionBuilder =
+    SeedRankingsCompanion Function({
+      required int careerId,
+      required int cycle,
+      required int nationId,
+      required int rank,
+      Value<int> rowid,
+    });
+typedef $$SeedRankingsTableUpdateCompanionBuilder =
+    SeedRankingsCompanion Function({
+      Value<int> careerId,
+      Value<int> cycle,
+      Value<int> nationId,
+      Value<int> rank,
+      Value<int> rowid,
+    });
+
+final class $$SeedRankingsTableReferences
+    extends BaseReferences<_$AppDatabase, $SeedRankingsTable, SeedRankingRow> {
+  $$SeedRankingsTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static $CareersTable _careerIdTable(_$AppDatabase db) =>
+      db.careers.createAlias('seed_rankings__career_id__careers__id');
+
+  $$CareersTableProcessedTableManager get careerId {
+    final $_column = $_itemColumn<int>('career_id')!;
+
+    final manager = $$CareersTableTableManager(
+      $_db,
+      $_db.careers,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_careerIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
+
+class $$SeedRankingsTableFilterComposer
+    extends Composer<_$AppDatabase, $SeedRankingsTable> {
+  $$SeedRankingsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get cycle => $composableBuilder(
+    column: $table.cycle,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get nationId => $composableBuilder(
+    column: $table.nationId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get rank => $composableBuilder(
+    column: $table.rank,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  $$CareersTableFilterComposer get careerId {
+    final $$CareersTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.careerId,
+      referencedTable: $db.careers,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$CareersTableFilterComposer(
+            $db: $db,
+            $table: $db.careers,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$SeedRankingsTableOrderingComposer
+    extends Composer<_$AppDatabase, $SeedRankingsTable> {
+  $$SeedRankingsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get cycle => $composableBuilder(
+    column: $table.cycle,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get nationId => $composableBuilder(
+    column: $table.nationId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get rank => $composableBuilder(
+    column: $table.rank,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  $$CareersTableOrderingComposer get careerId {
+    final $$CareersTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.careerId,
+      referencedTable: $db.careers,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$CareersTableOrderingComposer(
+            $db: $db,
+            $table: $db.careers,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$SeedRankingsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $SeedRankingsTable> {
+  $$SeedRankingsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get cycle =>
+      $composableBuilder(column: $table.cycle, builder: (column) => column);
+
+  GeneratedColumn<int> get nationId =>
+      $composableBuilder(column: $table.nationId, builder: (column) => column);
+
+  GeneratedColumn<int> get rank =>
+      $composableBuilder(column: $table.rank, builder: (column) => column);
+
+  $$CareersTableAnnotationComposer get careerId {
+    final $$CareersTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.careerId,
+      referencedTable: $db.careers,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$CareersTableAnnotationComposer(
+            $db: $db,
+            $table: $db.careers,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$SeedRankingsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $SeedRankingsTable,
+          SeedRankingRow,
+          $$SeedRankingsTableFilterComposer,
+          $$SeedRankingsTableOrderingComposer,
+          $$SeedRankingsTableAnnotationComposer,
+          $$SeedRankingsTableCreateCompanionBuilder,
+          $$SeedRankingsTableUpdateCompanionBuilder,
+          (SeedRankingRow, $$SeedRankingsTableReferences),
+          SeedRankingRow,
+          PrefetchHooks Function({bool careerId})
+        > {
+  $$SeedRankingsTableTableManager(_$AppDatabase db, $SeedRankingsTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$SeedRankingsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$SeedRankingsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$SeedRankingsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> careerId = const Value.absent(),
+                Value<int> cycle = const Value.absent(),
+                Value<int> nationId = const Value.absent(),
+                Value<int> rank = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => SeedRankingsCompanion(
+                careerId: careerId,
+                cycle: cycle,
+                nationId: nationId,
+                rank: rank,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required int careerId,
+                required int cycle,
+                required int nationId,
+                required int rank,
+                Value<int> rowid = const Value.absent(),
+              }) => SeedRankingsCompanion.insert(
+                careerId: careerId,
+                cycle: cycle,
+                nationId: nationId,
+                rank: rank,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$SeedRankingsTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: ({careerId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins:
+                  <
+                    T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic
+                    >
+                  >(state) {
+                    if (careerId) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.careerId,
+                                referencedTable: $$SeedRankingsTableReferences
+                                    ._careerIdTable(db),
+                                referencedColumn: $$SeedRankingsTableReferences
+                                    ._careerIdTable(db)
+                                    .id,
+                              )
+                              as T;
+                    }
+
+                    return state;
+                  },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
+        ),
+      );
+}
+
+typedef $$SeedRankingsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $SeedRankingsTable,
+      SeedRankingRow,
+      $$SeedRankingsTableFilterComposer,
+      $$SeedRankingsTableOrderingComposer,
+      $$SeedRankingsTableAnnotationComposer,
+      $$SeedRankingsTableCreateCompanionBuilder,
+      $$SeedRankingsTableUpdateCompanionBuilder,
+      (SeedRankingRow, $$SeedRankingsTableReferences),
+      SeedRankingRow,
+      PrefetchHooks Function({bool careerId})
+    >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -13774,4 +14490,6 @@ class $AppDatabaseManager {
       $$PlayerAbsencesTableTableManager(_db, _db.playerAbsences);
   $$RankPointsTableTableManager get rankPoints =>
       $$RankPointsTableTableManager(_db, _db.rankPoints);
+  $$SeedRankingsTableTableManager get seedRankings =>
+      $$SeedRankingsTableTableManager(_db, _db.seedRankings);
 }

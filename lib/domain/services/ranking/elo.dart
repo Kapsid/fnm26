@@ -21,6 +21,23 @@ abstract final class Elo {
   static int seedFromRanking(int ranking) =>
       (1900 - (ranking - 1) * 4).clamp(1000, 1900);
 
+  /// World positions (1 = top) for every nation in [pointsById], ordered by
+  /// points. Ties break by [seedRankById] (the static seed order) when given,
+  /// else by nation id, so the ordering is always deterministic.
+  static Map<int, int> positions(
+    Map<int, int> pointsById, {
+    Map<int, int>? seedRankById,
+  }) {
+    final ids = pointsById.keys.toList()
+      ..sort((a, b) {
+        final byPoints =
+            (pointsById[b] ?? base).compareTo(pointsById[a] ?? base);
+        if (byPoints != 0) return byPoints;
+        return (seedRankById?[a] ?? a).compareTo(seedRankById?[b] ?? b);
+      });
+    return {for (var i = 0; i < ids.length; i++) ids[i]: i + 1};
+  }
+
   /// The change to the home side's points after a match; the away side moves by
   /// the negative of the same amount. [homeScore]/[awayScore] decide the result
   /// and [weight] is one of the importance constants above.

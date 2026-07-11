@@ -5,6 +5,7 @@ import 'package:fnm/domain/services/competition/continental_cups.dart';
 import 'package:fnm/domain/services/competition/schedule_generator.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/hub/hub_event.dart';
+import 'package:fnm/features/ranking/world_ranking_providers.dart';
 
 /// The recomputed qualifying draw for the player's confederation, used by the
 /// qualifying draw ceremony. Deterministic — it reruns [ScheduleGenerator] with
@@ -51,8 +52,15 @@ qualifyingDrawProvider =
   final conf = nations[career.nationId]?.confederation;
   if (conf == null) return null;
 
+  final rankById = await ref.watch(
+    seedRankByIdProvider((
+      careerId: arg.careerId,
+      cycle: career.cyclePointer,
+    )).future,
+  );
+  int rankOf(Nation n) => rankById[n.id] ?? n.ranking;
   final members = nations.values.where((n) => n.confederation == conf).toList()
-    ..sort((a, b) => a.ranking.compareTo(b.ranking));
+    ..sort((a, b) => rankOf(a).compareTo(rankOf(b)));
   if (members.length < 2) return null;
 
   final wcYear = CareerService.worldCupYear(career.cyclePointer);
@@ -68,6 +76,7 @@ qualifyingDrawProvider =
           (career.cyclePointer * 0x1B3D) ^
           (conf.index * 0x9E37),
       start: DateTime(wcYear - 2, 9),
+      rankById: rankById,
     );
     title = 'WORLD CUP QUALIFYING DRAW';
     watchedKind = worldCupQualDrawKind;
@@ -80,6 +89,7 @@ qualifyingDrawProvider =
       rngSeed: career.rngSeed ^ (career.cyclePointer * 0x71) ^ 0xCAFE,
       start: DateTime(wcYear - 4, 9),
       groupSize: 6,
+      rankById: rankById,
     );
     title = '${cont.name.toUpperCase()} QUALIFYING DRAW';
     watchedKind = continentalQualDrawKind;

@@ -47,6 +47,27 @@ void main() {
     expect(firstDate.month, 9);
   });
 
+  test('seeding follows the supplied current ranking', () {
+    final teams = [for (var i = 1; i <= 12; i++) nation(id: i, ranking: i)];
+    String groupsOf(Map<int, int>? rank) => generator
+        .generate(
+          confederation: Confederation.europe,
+          nations: teams,
+          rngSeed: 7,
+          rankById: rank,
+        )
+        .groups
+        .map((g) => ([...g.nationIds]..sort()).toString())
+        .toString();
+
+    // Reversing the current ranking changes who is a top seed, so the draw
+    // must come out differently than seeding by the static ranking.
+    final reversed = {for (var i = 1; i <= 12; i++) i: 13 - i};
+    expect(groupsOf(reversed), isNot(groupsOf(null)));
+    // Still deterministic given the same ranking.
+    expect(groupsOf(reversed), groupsOf(reversed));
+  });
+
   test('deterministic for a given seed', () {
     String draw(int seed) => generator
         .generate(

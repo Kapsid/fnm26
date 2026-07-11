@@ -34,6 +34,26 @@ class RankingData {
 /// Selected confederation filter (null = all).
 final selectedRankRegionProvider = StateProvider<Confederation?>((_) => null);
 
+/// Argument for [seedRankByIdProvider]: the save and the cycle being drawn.
+typedef SeedRankArg = ({int careerId, int cycle});
+
+/// The ranking a cycle's draws seed from: the positions frozen at the cycle's
+/// start, or — for cycle 0 or any legacy save with no snapshot — the static
+/// seed ranking. Every draw and its ceremony read this so they always agree.
+final AutoDisposeFutureProviderFamily<Map<int, int>, SeedRankArg>
+seedRankByIdProvider =
+    FutureProvider.autoDispose.family<Map<int, int>, SeedRankArg>((
+  ref,
+  arg,
+) async {
+  final snap = await ref
+      .watch(seedRankingRepositoryProvider)
+      .forCycle(arg.careerId, arg.cycle);
+  if (snap.isNotEmpty) return snap;
+  final nations = await ref.watch(nationRepositoryProvider).all();
+  return {for (final n in nations) n.id: n.ranking};
+});
+
 final AutoDisposeFutureProviderFamily<RankingData?, int> worldRankingProvider =
     FutureProvider.autoDispose.family<RankingData?, int>((ref, careerId) async {
       await ref.watch(seedLoaderProvider).ensureSeeded();

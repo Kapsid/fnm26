@@ -6,6 +6,7 @@ import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/services/competition/finals.dart';
 import 'package:fnm/domain/services/competition/hosts.dart';
 import 'package:fnm/features/career/career_providers.dart';
+import 'package:fnm/features/ranking/world_ranking_providers.dart';
 
 /// The finals draw recomputed for the draw ceremony. It reuses the exact same
 /// finalist selection, seed and ranking as the season service so the ceremony
@@ -60,7 +61,12 @@ finalsDrawProvider =
   final nations = {
     for (final n in await ref.watch(nationRepositoryProvider).all()) n.id: n,
   };
-  final rankingById = {for (final n in nations.values) n.id: n.ranking};
+  final rankingById = await ref.watch(
+    seedRankByIdProvider((
+      careerId: careerId,
+      cycle: career.cyclePointer,
+    )).future,
+  );
   final year = CareerService.worldCupYear(career.cyclePointer);
   final host = WorldCupHosts.hostFor(
     year: year,

@@ -177,6 +177,29 @@ class SeasonService {
     }
   }
 
+  /// World positions (1 = top) from the live points held in memory, tie-broken
+  /// by the static seed order. Used to freeze a cycle's seeding ranking.
+  Map<int, int> _liveRankById(Map<int, Nation> nations) {
+    final pts = _rankPoints ??
+        {for (final n in nations.values) n.id: Elo.seedFromRanking(n.ranking)};
+    final seedRank = {for (final n in nations.values) n.id: n.ranking};
+    return Elo.positions(pts, seedRankById: seedRank);
+  }
+
+  /// The frozen seeding ranking for [cycle] (nationId → position), falling back
+  /// to the static seed ranking when the cycle was never snapshotted.
+  Future<Map<int, int>> _seedRankById(
+    int careerId,
+    int cycle,
+    Map<int, Nation> nations,
+  ) async {
+    final snap = await _ref
+        .read(seedRankingRepositoryProvider)
+        .forCycle(careerId, cycle);
+    if (snap.isNotEmpty) return snap;
+    return {for (final n in nations.values) n.id: n.ranking};
+  }
+
   static bool _isKnockout(Fixture f) => f.round != null && f.round != 'GROUP';
 
   Future<void> _simAndRecord(
@@ -576,7 +599,7 @@ class SeasonService {
     final wcYear = CareerService.worldCupYear(career.cyclePointer);
     final draw = WorldCupFinals.drawGroups(
       qualifierIds: qualifiers,
-      rankingById: {for (final n in nations.values) n.id: n.ranking},
+      rankingById: await _seedRankById(careerId, career.cyclePointer, nations),
       rngSeed: career.rngSeed ^ (career.cyclePointer * 0x71) ^ 0xC0FF,
     );
     await _comp.saveTournamentGroups(
@@ -780,7 +803,8 @@ class SeasonService {
     }
 
     final nations = await _nationsById();
-    final rankingById = {for (final n in nations.values) n.id: n.ranking};
+    final rankingById =
+        await _seedRankById(careerId, career.cyclePointer, nations);
     final year = finalsYear(career.cyclePointer);
 
     // The host qualifies automatically. Finalist selection (direct berths +
@@ -823,18 +847,29 @@ class SeasonService {
 
     await _careers.advanceCycle(careerId, nextCycle, nextStart);
 
+    // Freeze the current standings as the seeding ranking for the new cycle, so
+    // its draws reflect how nations have actually performed — and stay in step
+    // with the draw ceremonies no matter when they are viewed.
+    await _ensureRank(careerId);
+    final nations = await _nationsById();
+    final seedRank = _liveRankById(nations);
+    await _ref
+        .read(seedRankingRepositoryProvider)
+        .snapshot(careerId, nextCycle, seedRank);
+
     // Build the whole next cycle in real-world order (continental qualifying →
     // continental finals → World Cup qualifying → World Cup finals) plus
     // friendlies, mirroring a fresh save.
     await CareerService.buildCalendar(
       comp: _comp,
-      nations: await _ref.read(nationRepositoryProvider).all(),
+      nations: nations.values.toList(),
       careerId: careerId,
       nationId: career.nationId,
       rngSeed: career.rngSeed,
       cycle: nextCycle,
       cycleStart: nextStart,
       wcYear: finalsYear(nextCycle),
+      rankById: seedRank,
     );
 
     _ref.invalidate(hubDataProvider);

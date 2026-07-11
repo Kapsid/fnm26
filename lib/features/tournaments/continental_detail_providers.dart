@@ -9,6 +9,7 @@ import 'package:fnm/domain/services/competition/finals.dart';
 import 'package:fnm/domain/services/competition/qualification.dart';
 import 'package:fnm/domain/services/competition/schedule_generator.dart';
 import 'package:fnm/features/career/career_providers.dart';
+import 'package:fnm/features/ranking/world_ranking_providers.dart';
 
 /// Identifies one continental championship within a save.
 typedef ContinentalKey = ({int careerId, Confederation confederation});
@@ -95,6 +96,13 @@ final AutoDisposeFutureProviderFamily<ContinentalDrawData?, ContinentalKey>
       key.confederation) {
     return null;
   }
+  final rankById = await ref.watch(
+    seedRankByIdProvider((
+      careerId: key.careerId,
+      cycle: career.cyclePointer,
+    )).future,
+  );
+  int rankOf(Nation n) => rankById[n.id] ?? n.ranking;
   // The finals field comes from continental qualifying when it was played;
   // otherwise (the seeded fallback) from the confederation's ranking.
   List<int> qualifierIds;
@@ -118,14 +126,14 @@ final AutoDisposeFutureProviderFamily<ContinentalDrawData?, ContinentalKey>
     final members = all
         .where((n) => n.confederation == key.confederation)
         .toList()
-      ..sort((a, b) => a.ranking.compareTo(b.ranking));
+      ..sort((a, b) => rankOf(a).compareTo(rankOf(b)));
     qualifierIds = members.take(config.size).map((n) => n.id).toList();
   }
   if (qualifierIds.length < config.size) return null;
 
   final draw = WorldCupFinals.drawGroups(
     qualifierIds: qualifierIds,
-    rankingById: {for (final n in all) n.id: n.ranking},
+    rankingById: {for (final n in all) n.id: rankOf(n)},
     rngSeed: career.rngSeed ^ (career.cyclePointer * 0x71) ^ 0xC0FF,
   );
   return ContinentalDrawData(
@@ -160,6 +168,12 @@ final AutoDisposeFutureProviderFamily<ContinentalDrawData?, ContinentalKey>
       key.confederation) {
     return null;
   }
+  final rankById = await ref.watch(
+    seedRankByIdProvider((
+      careerId: key.careerId,
+      cycle: career.cyclePointer,
+    )).future,
+  );
   final members =
       all.where((n) => n.confederation == key.confederation).toList();
   final schedule = const ScheduleGenerator().generate(
@@ -168,6 +182,7 @@ final AutoDisposeFutureProviderFamily<ContinentalDrawData?, ContinentalKey>
     rngSeed: career.rngSeed ^ (career.cyclePointer * 0x71) ^ 0xCAFE,
     start: DateTime(CareerService.worldCupYear(career.cyclePointer) - 3, 9),
     groupSize: 4,
+    rankById: rankById,
   );
   return ContinentalDrawData(
     draw: FinalsDraw(

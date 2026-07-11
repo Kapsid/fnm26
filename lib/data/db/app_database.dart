@@ -29,6 +29,7 @@ part 'app_database.g.dart';
     DrawsWatched,
     PlayerAbsences,
     RankPoints,
+    SeedRankings,
   ],
 )
 class AppDatabase extends _$AppDatabase {
@@ -44,7 +45,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase.forTesting(QueryExecutor executor) : super(executor);
 
   @override
-  int get schemaVersion => 12;
+  int get schemaVersion => 13;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -103,6 +104,10 @@ class AppDatabase extends _$AppDatabase {
           // v12 tracks live world-ranking points.
           if (from < 12) {
             await m.createTable(rankPoints);
+          }
+          // v13 freezes each cycle's seeding ranking.
+          if (from < 13) {
+            await m.createTable(seedRankings);
           }
         },
       );
