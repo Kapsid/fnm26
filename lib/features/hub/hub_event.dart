@@ -112,8 +112,34 @@ final AutoDisposeFutureProviderFamily<HubEvent, int> nextEventProvider =
               '&event=$kind&cycle=$cycle',
         );
 
-    // 3. The squad call-up before each campaign / tournament (qualifying draws
-    //    are not surfaced as events — only the finals draw above is).
+    HubEvent drawEvent(String label, String route) => HubEvent(
+          kind: HubEventKind.draw,
+          label: label,
+          icon: Icons.casino,
+          route: route,
+        );
+
+    // 3. Each tournament's draw is a forced, one-time event that plays right
+    //    before its squad call-up (watch the ceremony or skip it). The
+    //    continental and World Cup qualifying draws come first; the World Cup
+    //    finals draw is handled above.
+    final isWcQualGame = next.round == null && next.groupId != null;
+    if (next.round == 'CQ' &&
+        !await comp.hasWatchedDraw(careerId, cycle, continentalQualDrawKind)) {
+      return drawEvent(
+        'Watch the qualifying draw',
+        '${Routes.qualifyingDraw}?careerId=$careerId',
+      );
+    }
+    if (isWcQualGame &&
+        !await comp.hasWatchedDraw(careerId, cycle, worldCupQualDrawKind)) {
+      return drawEvent(
+        'Watch the World Cup qualifying draw',
+        '${Routes.qualifyingDraw}?careerId=$careerId&worldCup=true',
+      );
+    }
+
+    // 4. The squad call-up before each campaign / tournament.
     if (next.round == 'CQ' &&
         !await comp.hasWatchedDraw(
           careerId,
@@ -122,7 +148,7 @@ final AutoDisposeFutureProviderFamily<HubEvent, int> nextEventProvider =
         )) {
       return callUp('Name your qualifying squad', continentalQualCallUpKind);
     }
-    if (next.round == null &&
+    if (isWcQualGame &&
         !await comp.hasWatchedDraw(careerId, cycle, worldCupQualCallUpKind)) {
       return callUp('Name your qualifying squad', worldCupQualCallUpKind);
     }
