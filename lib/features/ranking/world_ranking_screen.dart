@@ -157,6 +157,15 @@ class _RankRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // The left edge highlights the row: the player's colour always, otherwise a
+    // green/red tint when the team has moved since the campaign began.
+    final (edgeColor, edgeWidth) = isPlayer
+        ? (AppColors.primary, 3.0)
+        : movement > 0
+            ? (const Color(0xFF3FA34D), 3.0)
+            : movement < 0
+                ? (const Color(0xFFD64545), 3.0)
+                : (AppColors.outlineVariant, 1.0);
     return Container(
       decoration: BoxDecoration(
         color: isPlayer
@@ -164,10 +173,7 @@ class _RankRow extends StatelessWidget {
             : AppColors.surfaceContainer,
         borderRadius: AppRadii.baseAll,
         border: Border(
-          left: BorderSide(
-            color: isPlayer ? AppColors.primary : AppColors.outlineVariant,
-            width: isPlayer ? 3 : 1,
-          ),
+          left: BorderSide(color: edgeColor, width: edgeWidth),
           top: const BorderSide(color: AppColors.outlineVariant),
           right: const BorderSide(color: AppColors.outlineVariant),
           bottom: const BorderSide(color: AppColors.outlineVariant),

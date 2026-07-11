@@ -67,6 +67,15 @@ final AutoDisposeFutureProviderFamily<RankingData?, int> worldRankingProvider =
           .watch(rankingRepositoryProvider)
           .pointsFor(careerId, seed);
 
+      // Baseline: where each nation stood when the current cycle began, so the
+      // arrows highlight how form has moved them this campaign.
+      final baseline = await ref.watch(
+        seedRankByIdProvider((
+          careerId: careerId,
+          cycle: career?.cyclePointer ?? 0,
+        )).future,
+      );
+
       final ordered = [...nations]
         ..sort((a, b) {
           final byPoints = (points[b.id] ?? Elo.base)
@@ -80,7 +89,8 @@ final AutoDisposeFutureProviderFamily<RankingData?, int> worldRankingProvider =
         final n = ordered[i];
         final rank = i + 1;
         position[n.id] = rank;
-        movement[n.id] = n.ranking - rank; // + = climbed from its seed spot
+        // + = climbed since the cycle's starting position.
+        movement[n.id] = (baseline[n.id] ?? n.ranking) - rank;
       }
 
       return RankingData(

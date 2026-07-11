@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/domain/entities/enums.dart';
+import 'package:fnm/features/career/career_summary_screen.dart';
 import 'package:fnm/features/career/new_game_screen.dart';
 import 'package:fnm/features/career/saves_screen.dart';
 import 'package:fnm/features/dev/style_gallery_screen.dart';
@@ -89,6 +90,9 @@ abstract final class Routes {
 
   /// The player's national-team records / top scorers. Expects `?careerId=`.
   static const teamStats = '/team-stats';
+
+  /// The manager's career summary + trophy cabinet. Expects `?careerId=`.
+  static const careerSummary = '/career-summary';
 
   /// End-of-cycle event: crowns the champion and starts the next cycle. Expects
   /// `?careerId=`.
@@ -216,6 +220,16 @@ final routerProvider = Provider<GoRouter>((ref) {
               ) ??
               0;
           return TeamStatsScreen(careerId: id);
+        },
+      ),
+      GoRoute(
+        path: Routes.careerSummary,
+        builder: (context, state) {
+          final id = int.tryParse(
+                state.uri.queryParameters['careerId'] ?? '',
+              ) ??
+              0;
+          return CareerSummaryScreen(careerId: id);
         },
       ),
       GoRoute(
