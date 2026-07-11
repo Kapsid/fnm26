@@ -9,6 +9,7 @@ import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/entities/group_standing.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
 import 'package:fnm/domain/services/competition/finals.dart';
+import 'package:fnm/features/tournaments/best_thirds.dart';
 import 'package:fnm/features/tournaments/cup_detail_providers.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
@@ -74,9 +75,6 @@ class CupDetailScreen extends ConsumerWidget {
                   playerNationId: data.playerNationId,
                   code: code,
                   name: name,
-                  onViewDraw: () => context.go(
-                    '${Routes.qualifyingDraw}?careerId=$careerId&worldCup=true',
-                  ),
                 ),
                 if (data.hasFinals)
                   _FinalsGroups(
@@ -84,8 +82,6 @@ class CupDetailScreen extends ConsumerWidget {
                     playerNationId: data.playerNationId,
                     code: code,
                     name: name,
-                    onWatchDraw: () =>
-                        context.go('${Routes.finalsDraw}?careerId=$careerId'),
                   )
                 else
                   const _Soon(
@@ -173,7 +169,6 @@ class _Qualifying extends StatefulWidget {
     required this.playerNationId,
     required this.code,
     required this.name,
-    required this.onViewDraw,
   });
 
   final List<ConfederationGroupTable> groups;
@@ -181,7 +176,6 @@ class _Qualifying extends StatefulWidget {
   final int playerNationId;
   final String Function(int) code;
   final String Function(int) name;
-  final VoidCallback onViewDraw;
 
   @override
   State<_Qualifying> createState() => _QualifyingState();
@@ -272,14 +266,6 @@ class _QualifyingState extends State<_Qualifying> {
     return ListView(
       padding: const EdgeInsets.all(AppSpacing.marginMobile),
       children: [
-        Align(
-          alignment: Alignment.centerRight,
-          child: TextButton.icon(
-            onPressed: widget.onViewDraw,
-            icon: const Icon(Icons.casino, size: 18),
-            label: const Text('View qualifying draw'),
-          ),
-        ),
         for (final conf in confs) ...[
           Padding(
             padding: const EdgeInsets.only(
@@ -423,28 +409,24 @@ class _FinalsGroups extends StatelessWidget {
     required this.playerNationId,
     required this.code,
     required this.name,
-    required this.onWatchDraw,
   });
 
   final List<FinalsGroupTable> groups;
   final int playerNationId;
   final String Function(int) code;
   final String Function(int) name;
-  final VoidCallback onWatchDraw;
 
   @override
   Widget build(BuildContext context) {
+    final thirds = [
+      for (final g in groups)
+        if (g.standings.length > 2) g.standings[2],
+    ]..sort(rankStandings);
+    final qualifyThirds = WorldCupFinals.bestThirdsFor(groups.length);
+
     return ListView(
       padding: const EdgeInsets.all(AppSpacing.marginMobile),
       children: [
-        Align(
-          alignment: Alignment.centerRight,
-          child: TextButton.icon(
-            onPressed: onWatchDraw,
-            icon: const Icon(Icons.casino, size: 18),
-            label: const Text('Watch the draw'),
-          ),
-        ),
         for (final g in groups) ...[
           _GroupCard(
             group: (
@@ -457,6 +439,16 @@ class _FinalsGroups extends StatelessWidget {
             name: name,
           ),
           const SizedBox(height: AppSpacing.sm),
+        ],
+        if (qualifyThirds > 0 && thirds.length > qualifyThirds) ...[
+          const SizedBox(height: AppSpacing.sm),
+          BestThirdsCard(
+            thirds: thirds,
+            qualifyCount: qualifyThirds,
+            playerNationId: playerNationId,
+            code: code,
+            name: name,
+          ),
         ],
         const SizedBox(height: AppSpacing.xl),
       ],

@@ -30,12 +30,16 @@ typedef RoundResultGroup = ({
   List<Fixture> fixtures,
 });
 
-/// The results of the group-stage round the player just played, grouped by
-/// group (every group in the same competition, with that matchday's scores).
+/// The results of the stage the player just played. For a group-stage round
+/// this is every group of the competition with that matchday's scores; for a
+/// knockout round it is `knockoutFixtures` (all ties of that round) with a
+/// human `stage` label and empty `groups`.
 typedef RoundResults = ({
   String competition,
   int matchday,
   List<RoundResultGroup> groups,
+  String? stage,
+  List<Fixture> knockoutFixtures,
 });
 
 /// One attributed goal, ready to persist.

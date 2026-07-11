@@ -254,13 +254,12 @@ class DriftCompetitionRepository implements CompetitionRepository {
 
   @override
   Future<RoundResults?> lastRoundResults(int careerId, int nationId) async {
-    // The player's most recently played group-stage fixture.
+    // The player's most recently played fixture (any stage).
     final played = await (_db.select(_db.fixtures)
           ..where(
             (t) =>
                 t.careerId.equals(careerId) &
                 t.played.equals(true) &
-                t.groupId.isNotNull() &
                 (t.homeNationId.equals(nationId) |
                     t.awayNationId.equals(nationId)),
           )
@@ -269,8 +268,36 @@ class DriftCompetitionRepository implements CompetitionRepository {
           ])
           ..limit(1))
         .getSingleOrNull();
-    final playedGroupId = played?.groupId;
-    if (played == null || playedGroupId == null) return null;
+    if (played == null) return null;
+
+    // A knockout tie → show that round's ties across the tournament, not the
+    // now-finished group stage.
+    final round = played.round;
+    if (round != null && _isKnockoutRound(round)) {
+      final comp = await (_db.select(_db.competitions)
+            ..where((t) => t.id.equals(played.competitionId)))
+          .getSingleOrNull();
+      if (comp == null) return null;
+      final ties = await (_db.select(_db.fixtures)
+            ..where(
+              (t) =>
+                  t.competitionId.equals(played.competitionId) &
+                  t.round.equals(round) &
+                  t.played.equals(true),
+            )
+            ..orderBy([(t) => OrderingTerm(expression: t.id)]))
+          .get();
+      return (
+        competition: comp.name,
+        matchday: played.matchday,
+        groups: const <RoundResultGroup>[],
+        stage: _stageLabel(round),
+        knockoutFixtures: ties.map((r) => r.toDomain()).toList(),
+      );
+    }
+
+    final playedGroupId = played.groupId;
+    if (playedGroupId == null) return null; // a friendly — nothing to show
 
     final matchday = played.matchday;
     final group = await (_db.select(_db.qualifyingGroups)
@@ -316,7 +343,30 @@ class DriftCompetitionRepository implements CompetitionRepository {
       competition: comp.name,
       matchday: matchday,
       groups: result,
+      stage: null,
+      knockoutFixtures: const <Fixture>[],
     );
+  }
+
+  /// Whether a round label is a knockout tie (continental rounds are 'C'-
+  /// prefixed; group and qualifying rounds never are).
+  static bool _isKnockoutRound(String round) {
+    const suffixes = ['R32', 'R16', 'QF', 'SF', '3RD', 'FINAL'];
+    return suffixes.any(round.endsWith);
+  }
+
+  /// A human label for a knockout round (prefix-agnostic).
+  static String _stageLabel(String round) {
+    final core = round.startsWith('C') ? round.substring(1) : round;
+    return switch (core) {
+      'R32' => 'Round of 32',
+      'R16' => 'Round of 16',
+      'QF' => 'Quarter-finals',
+      'SF' => 'Semi-finals',
+      '3RD' => 'Third-place play-off',
+      'FINAL' => 'Final',
+      _ => core,
+    };
   }
 
   @override

@@ -8,6 +8,8 @@ import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/entities/group_standing.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
+import 'package:fnm/domain/services/competition/finals.dart';
+import 'package:fnm/features/tournaments/best_thirds.dart';
 import 'package:fnm/features/tournaments/continental_detail_providers.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
@@ -42,15 +44,6 @@ class ContinentalDetailScreen extends ConsumerWidget {
       )),
     );
 
-    final canWatchDraw = dataAsync.maybeWhen(
-      data: (d) => d != null && d.groups.isNotEmpty,
-      orElse: () => false,
-    );
-    final canWatchQualiDraw = dataAsync.maybeWhen(
-      data: (d) => d != null && d.qualifyingGroups.isNotEmpty,
-      orElse: () => false,
-    );
-
     return DefaultTabController(
       length: 5,
       child: Scaffold(
@@ -68,26 +61,6 @@ class ContinentalDetailScreen extends ConsumerWidget {
             style: AppTypography.labelMedium.copyWith(color: AppColors.primary),
           ),
           centerTitle: true,
-          actions: [
-            if (canWatchQualiDraw)
-              IconButton(
-                icon: const Icon(Icons.shuffle, color: AppColors.primary),
-                tooltip: 'Watch the qualifying draw',
-                onPressed: () => context.go(
-                  '${Routes.continentalDraw}?careerId=$careerId'
-                  '&conf=${confederation.name}&stage=qualifying',
-                ),
-              ),
-            if (canWatchDraw)
-              IconButton(
-                icon: const Icon(Icons.casino, color: AppColors.primary),
-                tooltip: 'Watch the finals draw',
-                onPressed: () => context.go(
-                  '${Routes.continentalDraw}?careerId=$careerId'
-                  '&conf=${confederation.name}',
-                ),
-              ),
-          ],
           bottom: const TabBar(
             isScrollable: true,
             labelColor: AppColors.onSurface,
@@ -120,10 +93,6 @@ class ContinentalDetailScreen extends ConsumerWidget {
                     playerNationId: data.playerNationId,
                     code: code,
                     name: name,
-                    onViewDraw: () => context.go(
-                      '${Routes.qualifyingDraw}?careerId=$careerId'
-                      '&worldCup=false',
-                    ),
                   )
                 else
                   _Soon(
@@ -191,32 +160,27 @@ class _Groups extends StatelessWidget {
     required this.playerNationId,
     required this.code,
     required this.name,
-    this.onViewDraw,
   });
 
   final List<FinalsGroupTable> groups;
   final int playerNationId;
   final String Function(int) code;
   final String Function(int) name;
-  final VoidCallback? onViewDraw;
 
   /// Top two of each group advance to the knockout.
   static const _advance = 2;
 
   @override
   Widget build(BuildContext context) {
+    final thirds = [
+      for (final g in groups)
+        if (g.standings.length > 2) g.standings[2],
+    ]..sort(rankStandings);
+    final qualifyThirds = WorldCupFinals.bestThirdsFor(groups.length);
+
     return ListView(
       padding: const EdgeInsets.all(AppSpacing.marginMobile),
       children: [
-        if (onViewDraw != null)
-          Align(
-            alignment: Alignment.centerRight,
-            child: TextButton.icon(
-              onPressed: onViewDraw,
-              icon: const Icon(Icons.casino, size: 18),
-              label: const Text('View qualifying draw'),
-            ),
-          ),
         for (final g in groups) ...[
           AppCard(
             child: Column(
@@ -236,6 +200,14 @@ class _Groups extends StatelessWidget {
           ),
           const SizedBox(height: AppSpacing.sm),
         ],
+        if (qualifyThirds > 0 && thirds.length > qualifyThirds)
+          BestThirdsCard(
+            thirds: thirds,
+            qualifyCount: qualifyThirds,
+            playerNationId: playerNationId,
+            code: code,
+            name: name,
+          ),
         const SizedBox(height: AppSpacing.xl),
       ],
     );

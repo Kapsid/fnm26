@@ -64,8 +64,11 @@ class RoundResultsScreen extends ConsumerWidget {
         error: (e, _) => Center(child: Text('Could not load results.\n$e')),
         data: (view) {
           final results = view?.results;
-          if (view == null || results == null || results.groups.isEmpty) {
-            // Nothing group-shaped to show (knockout/friendly) — go on.
+          final hasContent = results != null &&
+              (results.groups.isNotEmpty ||
+                  results.knockoutFixtures.isNotEmpty);
+          if (view == null || results == null || !hasContent) {
+            // Nothing to show (e.g. a friendly) — go on.
             return Center(
               child: Padding(
                 padding: const EdgeInsets.all(AppSpacing.xl),
@@ -79,6 +82,7 @@ class RoundResultsScreen extends ConsumerWidget {
           }
           String code(int id) => view.nations[id]?.code ?? '??';
           String name(int id) => view.nations[id]?.name ?? '—';
+          final isKnockout = results.knockoutFixtures.isNotEmpty;
 
           return ListView(
             padding: const EdgeInsets.all(AppSpacing.marginMobile),
@@ -90,17 +94,34 @@ class RoundResultsScreen extends ConsumerWidget {
                 ),
               ),
               Text(
-                'MATCHDAY ${results.matchday}',
+                isKnockout
+                    ? (results.stage ?? 'Knockout').toUpperCase()
+                    : 'MATCHDAY ${results.matchday}',
                 style: AppTypography.headlineMedium,
               ),
               const SizedBox(height: AppSpacing.md),
-              for (final g in results.groups)
-                _GroupBlock(
-                  group: g,
-                  playerNationId: view.playerNationId,
-                  code: code,
-                  name: name,
-                ),
+              if (isKnockout)
+                AppCard(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      for (final f in results.knockoutFixtures)
+                        _ResultRow(
+                          fixture: f,
+                          playerNationId: view.playerNationId,
+                          code: code,
+                        ),
+                    ],
+                  ),
+                )
+              else
+                for (final g in results.groups)
+                  _GroupBlock(
+                    group: g,
+                    playerNationId: view.playerNationId,
+                    code: code,
+                    name: name,
+                  ),
               const SizedBox(height: AppSpacing.xl),
             ],
           );
