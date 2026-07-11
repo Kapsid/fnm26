@@ -186,6 +186,13 @@ class SeasonService {
     return Elo.positions(pts, seedRankById: seedRank);
   }
 
+  /// Ensures the [host] is in the finals field (it qualifies automatically),
+  /// taking the last/weakest qualifier's place if it isn't already there.
+  List<int> _withHost(List<int> field, int host) {
+    if (field.isEmpty || field.contains(host)) return field;
+    return [...field.take(field.length - 1), host];
+  }
+
   /// The frozen seeding ranking for [cycle] (nationId → position), falling back
   /// to the static seed ranking when the cycle was never snapshotted.
   Future<Map<int, int>> _seedRankById(
@@ -613,11 +620,21 @@ class SeasonService {
     );
     if (qualifiers.length < cont.size) return;
 
+    // The host qualifies automatically and is seeded into Group A.
+    final host = WorldCupHosts.continentalHostFor(
+      confederation: conf,
+      cycle: career.cyclePointer,
+      seed: career.rngSeed,
+      nations: nations.values.toList(),
+    );
+    final field = _withHost(qualifiers, host);
+
     final wcYear = CareerService.worldCupYear(career.cyclePointer);
     final draw = WorldCupFinals.drawGroups(
-      qualifierIds: qualifiers,
+      qualifierIds: field,
       rankingById: await _seedRankById(careerId, career.cyclePointer, nations),
       rngSeed: career.rngSeed ^ (career.cyclePointer * 0x71) ^ 0xC0FF,
+      host: host,
     );
     await _comp.saveTournamentGroups(
       careerId: careerId,
@@ -675,6 +692,12 @@ class SeasonService {
       thirdId: thirds.isNotEmpty && thirds.first.hasResult
           ? _winner(thirds.first)
           : null,
+      hostId: WorldCupHosts.continentalHostFor(
+        confederation: conf,
+        cycle: career.cyclePointer,
+        seed: career.rngSeed,
+        nations: nations.values.toList(),
+      ),
       finalHomeScore: champIsHome ? f.homeScore : f.awayScore,
       finalAwayScore: champIsHome ? f.awayScore : f.homeScore,
       topScorerName: bootName,
@@ -841,6 +864,7 @@ class SeasonService {
       qualifierIds: qualifiers,
       rankingById: rankingById,
       rngSeed: career.rngSeed ^ (career.cyclePointer * 0x2D31),
+      host: host,
     );
     if (draw.groups.isEmpty) return;
 

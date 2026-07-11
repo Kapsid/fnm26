@@ -6,6 +6,7 @@ import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
 import 'package:fnm/domain/services/competition/continental_cups.dart';
 import 'package:fnm/domain/services/competition/finals.dart';
+import 'package:fnm/domain/services/competition/hosts.dart';
 import 'package:fnm/domain/services/competition/qualification.dart';
 import 'package:fnm/domain/services/competition/schedule_generator.dart';
 import 'package:fnm/features/career/career_providers.dart';
@@ -131,10 +132,23 @@ final AutoDisposeFutureProviderFamily<ContinentalDrawData?, ContinentalKey>
   }
   if (qualifierIds.length < config.size) return null;
 
+  // The host qualifies automatically and is seeded into Group A — mirror the
+  // season service so the shown draw matches the played tournament.
+  final host = WorldCupHosts.continentalHostFor(
+    confederation: key.confederation,
+    cycle: career.cyclePointer,
+    seed: career.rngSeed,
+    nations: all,
+  );
+  final field = qualifierIds.contains(host) || qualifierIds.isEmpty
+      ? qualifierIds
+      : [...qualifierIds.take(qualifierIds.length - 1), host];
+
   final draw = WorldCupFinals.drawGroups(
-    qualifierIds: qualifierIds,
+    qualifierIds: field,
     rankingById: {for (final n in all) n.id: rankOf(n)},
     rngSeed: career.rngSeed ^ (career.cyclePointer * 0x71) ^ 0xC0FF,
+    host: host,
   );
   return ContinentalDrawData(
     draw: draw,

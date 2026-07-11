@@ -83,6 +83,7 @@ finalsDrawProvider =
     qualifierIds: qualifiers,
     rankingById: rankingById,
     rngSeed: career.rngSeed ^ (career.cyclePointer * 0x2D31),
+    host: host,
   );
   if (draw.groups.isEmpty) return null;
 

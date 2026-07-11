@@ -303,10 +303,12 @@ class MatchEngine {
     return live.xi.last;
   }
 
-  /// Midfield control, used to estimate possession.
+  /// Midfield control, used to estimate possession. A quicker tempo helps hold
+  /// the ball; playing more directly (long, early balls) cedes possession.
   double _control(_Live t) =>
       _mean(t, PositionCategory.midfielder) +
-      (t.instructions.tempo - 50) * 0.05;
+      (t.instructions.tempo - 50) * 0.05 -
+      (t.instructions.directness - 50) * 0.06;
 
   bool _chance(
     SeededRng rng,
@@ -368,23 +370,34 @@ class MatchEngine {
   }
 
   double _attack(_Live t) {
+    final i = t.instructions;
     final base =
         _mean(t, PositionCategory.forward) * 0.55 +
         _mean(t, PositionCategory.midfielder) * 0.30 +
         _mean(t, PositionCategory.defender) * 0.15;
+    // Attacking mentality, a quick tempo, a high defensive line (winning the
+    // ball higher) and direct play all lift the attacking threat.
     return base +
-        (t.instructions.mentality - 50) * 0.12 +
-        (t.instructions.tempo - 50) * 0.04;
+        (i.mentality - 50) * 0.12 +
+        (i.tempo - 50) * 0.04 +
+        (i.defensiveLine - 50) * 0.05 +
+        (i.directness - 50) * 0.04 +
+        (i.width - 50) * 0.02;
   }
 
   double _defence(_Live t) {
+    final i = t.instructions;
     final base =
         _mean(t, PositionCategory.defender) * 0.55 +
         _mean(t, PositionCategory.goalkeeper) * 0.25 +
         _mean(t, PositionCategory.midfielder) * 0.20;
+    // Attacking mentality, a high line (space in behind) and a stretched, wide
+    // shape all leave the defence more exposed; heavy pressing wins it back.
     return base -
-        (t.instructions.mentality - 50) * 0.08 +
-        (t.instructions.pressing - 50) * 0.03;
+        (i.mentality - 50) * 0.08 +
+        (i.pressing - 50) * 0.03 -
+        (i.defensiveLine - 50) * 0.06 -
+        (i.width - 50) * 0.03;
   }
 
   /// Mean *effective* rating of the players assigned to a line, bucketed by the

@@ -11,9 +11,11 @@ abstract final class Elo {
   static const int base = 1300;
 
   /// Importance weight (the K-factor) for a match, by how much is at stake.
-  static const double friendly = 8;
-  static const double qualifier = 20;
-  static const double finals = 35;
+  /// Kept low so the table moves gradually; final tournaments carry far more
+  /// weight than qualifiers, which in turn outweigh friendlies.
+  static const double friendly = 3;
+  static const double qualifier = 8;
+  static const double finals = 28;
 
   /// Starting points for a nation seeded from its static seed [ranking]
   /// position (1 = strongest). Keeps early tables looking sensible before any

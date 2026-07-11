@@ -80,11 +80,14 @@ abstract final class WorldCupFinals {
   }
 
   /// Draws [qualifierIds] into groups of four. Teams are seeded into four pots
-  /// by world ranking, then one team per pot is drawn into each group.
+  /// by world ranking, then one team per pot is drawn into each group. A [host]
+  /// (when it is one of the qualifiers) is always a top seed placed in Group A,
+  /// as at a real finals.
   static FinalsDraw drawGroups({
     required List<int> qualifierIds,
     required Map<int, int> rankingById,
     required int rngSeed,
+    int? host,
   }) {
     final rng = SeededRng(rngSeed ^ 0xF1A15);
     final groupCount = qualifierIds.length ~/ 4;
@@ -94,12 +97,30 @@ abstract final class WorldCupFinals {
       ..sort(
         (a, b) => (rankingById[a] ?? 9999).compareTo(rankingById[b] ?? 9999),
       );
+    // The host is a top seed (pot 1) regardless of ranking, so it can be placed
+    // into Group A below.
+    final hasHost = host != null && seeded.contains(host);
+    if (hasHost) {
+      seeded
+        ..remove(host)
+        ..insert(0, host);
+    }
 
     final groups = List.generate(groupCount, (_) => <int>[]);
     for (var pot = 0; pot < 4; pot++) {
-      final slice = rng.shuffled(
-        seeded.sublist(pot * groupCount, (pot + 1) * groupCount),
-      );
+      final slice = [
+        ...rng.shuffled(
+          seeded.sublist(pot * groupCount, (pot + 1) * groupCount),
+        ),
+      ];
+      // Force the host to Group A (the first group) within pot 1.
+      if (pot == 0 && hasHost) {
+        final hi = slice.indexOf(host);
+        if (hi > 0) {
+          slice[hi] = slice[0];
+          slice[0] = host;
+        }
+      }
       for (var i = 0; i < groupCount; i++) {
         groups[i].add(slice[i]);
       }

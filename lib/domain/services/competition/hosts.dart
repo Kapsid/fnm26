@@ -24,14 +24,54 @@ abstract final class WorldCupHosts {
     required int seed,
   }) {
     final conf = _rotation[(year ~/ 4) % _rotation.length];
-    final pool = nations.where((n) => n.confederation == conf).toList()
+    return hostFromConfederation(
+      confederation: conf,
+      nations: nations,
+      seed: seed ^ (year * 0x51ED),
+    );
+  }
+
+  /// The host of a continental championship for a confederation in a given
+  /// [cycle], derived deterministically (like the World Cup host) so it can be
+  /// re-computed anywhere without being stored. Biased toward strong members.
+  static int continentalHostFor({
+    required Confederation confederation,
+    required int cycle,
+    required int seed,
+    required List<Nation> nations,
+  }) =>
+      hostFromConfederation(
+        confederation: confederation,
+        nations: nations,
+        seed: seed ^ (cycle * 0x2C9F) ^ (confederation.index * 0x51ED) ^ 0xC047,
+      );
+
+  /// Picks a host from [confederation], biased toward its strongest members: a
+  /// weighted draw over the top of the confederation's ranking so a heavyweight
+  /// usually hosts, but not always. Falls back to the strongest nation overall
+  /// if the confederation has no members. Deterministic for a given [seed].
+  static int hostFromConfederation({
+    required Confederation confederation,
+    required List<Nation> nations,
+    required int seed,
+  }) {
+    final pool = nations.where((n) => n.confederation == confederation).toList()
       ..sort((a, b) => a.ranking.compareTo(b.ranking));
     if (pool.isEmpty) {
       final all = [...nations]..sort((a, b) => a.ranking.compareTo(b.ranking));
-      return all.first.id;
+      return all.isEmpty ? 0 : all.first.id;
     }
     final shortlist = pool.take(12).toList();
-    final rng = SeededRng(seed ^ (year * 0x51ED));
-    return shortlist[rng.nextInt(shortlist.length)].id;
+    final rng = SeededRng(seed);
+    // Triangular weights: the strongest candidate is weighted `n`, the next
+    // `n-1`, … so stronger nations are far likelier to host.
+    final n = shortlist.length;
+    final total = n * (n + 1) / 2;
+    var roll = rng.nextDouble() * total;
+    for (var i = 0; i < n; i++) {
+      roll -= n - i;
+      if (roll <= 0) return shortlist[i].id;
+    }
+    return shortlist.first.id;
   }
 }
