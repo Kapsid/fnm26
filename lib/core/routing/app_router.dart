@@ -9,6 +9,7 @@ import 'package:fnm/features/hub/hub_screen.dart';
 import 'package:fnm/features/match/match_preview_screen.dart';
 import 'package:fnm/features/match/match_screen.dart';
 import 'package:fnm/features/nations/nation_select_screen.dart';
+import 'package:fnm/features/player/player_detail_screen.dart';
 import 'package:fnm/features/ranking/world_ranking_screen.dart';
 import 'package:fnm/features/results/results_screen.dart';
 import 'package:fnm/features/results/round_results_screen.dart';
@@ -81,6 +82,9 @@ abstract final class Routes {
 
   /// Post-match round results, grouped by group. Expects `?careerId=`.
   static const roundResults = '/round-results';
+
+  /// A player's detail card. Expects `?careerId=` and `?playerId=`.
+  static const player = '/player';
 
   /// End-of-cycle event: crowns the champion and starts the next cycle. Expects
   /// `?careerId=`.
@@ -184,6 +188,20 @@ final routerProvider = Provider<GoRouter>((ref) {
               ) ??
               0;
           return RoundResultsScreen(careerId: id);
+        },
+      ),
+      GoRoute(
+        path: Routes.player,
+        builder: (context, state) {
+          final id = int.tryParse(
+                state.uri.queryParameters['careerId'] ?? '',
+              ) ??
+              0;
+          final playerId = int.tryParse(
+                state.uri.queryParameters['playerId'] ?? '',
+              ) ??
+              0;
+          return PlayerDetailScreen(careerId: id, playerId: playerId);
         },
       ),
       GoRoute(

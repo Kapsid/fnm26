@@ -8,6 +8,9 @@ import 'package:fnm/domain/services/tactics/best_eleven.dart';
 /// Smallest squad a manager may call up (must field an XI plus cover).
 const int kMinSquadSize = 16;
 
+/// Largest squad a manager may call up (a full tournament squad).
+const int kMaxSquadSize = 23;
+
 /// Resolves the squad actually available for selection from a nation [pool]
 /// given the manager's [callUps]. An empty call-up set means the whole pool is
 /// available (the default for new/legacy saves).

@@ -50,6 +50,17 @@ class _CallUpScreenState extends ConsumerState<CallUpScreen> {
         PositionCategory.forward => 'FORWARDS',
       };
 
+  /// The starting selection: restore the last call-up if there is one, else
+  /// preselect the best [kMaxSquadSize] by rating. Never exceeds the cap.
+  Set<int> _initialSquad(List<Player> pool, Iterable<int> current) {
+    final currentSet = current.toSet();
+    final source = (currentSet.isNotEmpty
+        ? pool.where((p) => currentSet.contains(p.id)).toList()
+        : [...pool])
+      ..sort((a, b) => b.overall.compareTo(a.overall));
+    return source.take(kMaxSquadSize).map((p) => p.id).toSet();
+  }
+
   /// Back to the hub when this was a timeline event, else back to tactics.
   String get _exitRoute => widget.eventKind != null
       ? '${Routes.hub}?careerId=${widget.careerId}'
@@ -89,9 +100,9 @@ class _CallUpScreenState extends ConsumerState<CallUpScreen> {
         error: (e, _) => Center(child: Text('Could not load squad.\n$e')),
         data: (data) {
           if (data == null) return const Center(child: Text('No squad.'));
-          final selected = _selected ??= {...data.callUps};
+          final selected = _selected ??= _initialSquad(data.pool, data.callUps);
           final count = selected.length;
-          final ok = count >= kMinSquadSize;
+          final ok = count >= kMinSquadSize && count <= kMaxSquadSize;
 
           return Column(
             children: [
@@ -100,14 +111,14 @@ class _CallUpScreenState extends ConsumerState<CallUpScreen> {
                 child: Row(
                   children: [
                     Text(
-                      'SQUAD · $count',
+                      'SQUAD · $count/$kMaxSquadSize',
                       style: AppTypography.labelMedium.copyWith(
                         color: ok ? AppColors.onSurface : AppColors.error,
                       ),
                     ),
                     const Spacer(),
                     Text(
-                      ok ? 'Min $kMinSquadSize' : 'At least $kMinSquadSize',
+                      'Min $kMinSquadSize · Max $kMaxSquadSize',
                       style: AppTypography.labelSmall.copyWith(
                         color: ok
                             ? AppColors.onSurfaceVariant
@@ -166,13 +177,29 @@ class _CallUpScreenState extends ConsumerState<CallUpScreen> {
               _PlayerToggle(
                 player: p,
                 selected: selected.contains(p.id),
-                onChanged: (on) => setState(() {
-                  if (on) {
-                    selected.add(p.id);
-                  } else {
-                    selected.remove(p.id);
+                onChanged: (on) {
+                  if (on && selected.length >= kMaxSquadSize) {
+                    ScaffoldMessenger.of(context)
+                      ..hideCurrentSnackBar()
+                      ..showSnackBar(
+                        const SnackBar(
+                          content: Text('Squad full — max $kMaxSquadSize'),
+                        ),
+                      );
+                    return;
                   }
-                }),
+                  setState(() {
+                    if (on) {
+                      selected.add(p.id);
+                    } else {
+                      selected.remove(p.id);
+                    }
+                  });
+                },
+                onInfo: () => context.push(
+                  '${Routes.player}?careerId=${widget.careerId}'
+                  '&playerId=${p.id}',
+                ),
               ),
           ],
         ),
@@ -187,11 +214,13 @@ class _PlayerToggle extends StatelessWidget {
     required this.player,
     required this.selected,
     required this.onChanged,
+    required this.onInfo,
   });
 
   final Player player;
   final bool selected;
   final ValueChanged<bool> onChanged;
+  final VoidCallback onInfo;
 
   @override
   Widget build(BuildContext context) {
@@ -211,6 +240,15 @@ class _PlayerToggle extends StatelessWidget {
       trailing: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
+          IconButton(
+            visualDensity: VisualDensity.compact,
+            icon: const Icon(
+              Icons.info_outline,
+              size: 20,
+              color: AppColors.onSurfaceVariant,
+            ),
+            onPressed: onInfo,
+          ),
           Text('${player.overall}', style: AppTypography.labelMedium),
           const SizedBox(width: AppSpacing.sm),
           Icon(

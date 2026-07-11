@@ -82,6 +82,58 @@ const _layouts = <Formation, List<(double, double)>>{
     (0.38, 0.16),
     (0.62, 0.16),
   ],
+  Formation.f4141: [
+    (0.5, 0.90),
+    (0.12, 0.70),
+    (0.37, 0.73),
+    (0.63, 0.73),
+    (0.88, 0.70),
+    (0.5, 0.56),
+    (0.14, 0.38),
+    (0.38, 0.40),
+    (0.62, 0.40),
+    (0.86, 0.38),
+    (0.5, 0.15),
+  ],
+  Formation.f343: [
+    (0.5, 0.90),
+    (0.28, 0.74),
+    (0.5, 0.76),
+    (0.72, 0.74),
+    (0.10, 0.48),
+    (0.38, 0.50),
+    (0.62, 0.50),
+    (0.90, 0.48),
+    (0.18, 0.18),
+    (0.5, 0.14),
+    (0.82, 0.18),
+  ],
+  Formation.f4222: [
+    (0.5, 0.90),
+    (0.12, 0.70),
+    (0.37, 0.73),
+    (0.63, 0.73),
+    (0.88, 0.70),
+    (0.35, 0.52),
+    (0.65, 0.52),
+    (0.22, 0.34),
+    (0.78, 0.34),
+    (0.38, 0.15),
+    (0.62, 0.15),
+  ],
+  Formation.f424: [
+    (0.5, 0.90),
+    (0.12, 0.70),
+    (0.37, 0.73),
+    (0.63, 0.73),
+    (0.88, 0.70),
+    (0.35, 0.50),
+    (0.65, 0.50),
+    (0.14, 0.20),
+    (0.38, 0.15),
+    (0.62, 0.15),
+    (0.86, 0.20),
+  ],
 };
 
 /// Dragging an occupied XI slot off the pitch (to swap with another slot).
@@ -243,20 +295,52 @@ class TacticsScreen extends ConsumerWidget {
           ),
           const SizedBox(height: AppSpacing.sm),
           for (final p in candidates)
-            ListTile(
-              dense: true,
-              leading: TacticalChip(p.position.label),
-              title: Text(p.name, style: AppTypography.bodyMedium),
-              subtitle: Text(
-                p.position.roleName,
-                style: AppTypography.labelSmall.copyWith(
-                  color: AppColors.onSurfaceVariant,
+            () {
+              final inXi = data.tactic.lineup.contains(p.id);
+              return ListTile(
+                dense: true,
+                leading: TacticalChip(p.position.label),
+                title: Text(
+                  p.name,
+                  style: AppTypography.bodyMedium.copyWith(
+                    color: inXi ? AppColors.onSurfaceVariant : null,
+                    fontWeight: inXi ? FontWeight.w400 : FontWeight.w600,
+                  ),
                 ),
-              ),
-              trailing: Text('${p.overall}', style: AppTypography.labelMedium),
-              selected: data.tactic.lineup.contains(p.id),
-              onTap: () => Navigator.of(context).pop(p.id),
-            ),
+                subtitle: Text(
+                  '${p.club} · ${p.position.roleName}',
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: AppTypography.labelSmall.copyWith(
+                    color: AppColors.onSurfaceVariant,
+                  ),
+                ),
+                trailing: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    if (inXi) ...[
+                      const TacticalChip('IN XI'),
+                      const SizedBox(width: AppSpacing.sm),
+                    ],
+                    Text('${p.overall}', style: AppTypography.labelMedium),
+                    IconButton(
+                      visualDensity: VisualDensity.compact,
+                      icon: const Icon(
+                        Icons.info_outline,
+                        size: 20,
+                        color: AppColors.onSurfaceVariant,
+                      ),
+                      onPressed: () => context.push(
+                        '${Routes.player}?careerId=$careerId&playerId=${p.id}',
+                      ),
+                    ),
+                  ],
+                ),
+                selected: inXi,
+                selectedTileColor: AppColors.surfaceContainerHigh,
+                onTap: () => Navigator.of(context).pop(p.id),
+              );
+            }(),
         ],
       ),
     );

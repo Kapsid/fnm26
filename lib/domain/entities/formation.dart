@@ -2,7 +2,7 @@ import 'package:fnm/domain/entities/enums.dart';
 
 /// Supported team shapes. Each maps to 11 on-pitch positions (slot order:
 /// goalkeeper, defence, midfield, attack).
-enum Formation { f442, f433, f352, f4231, f532 }
+enum Formation { f442, f433, f352, f4231, f532, f4141, f343, f4222, f424 }
 
 extension FormationX on Formation {
   /// Human-readable label, e.g. `4-3-3`.
@@ -12,6 +12,10 @@ extension FormationX on Formation {
         Formation.f352 => '3-5-2',
         Formation.f4231 => '4-2-3-1',
         Formation.f532 => '5-3-2',
+        Formation.f4141 => '4-1-4-1',
+        Formation.f343 => '3-4-3',
+        Formation.f4222 => '4-2-2-2',
+        Formation.f424 => '4-2-4',
       };
 
   /// The 11 positions for this formation, in slot order.
@@ -80,6 +84,58 @@ extension FormationX on Formation {
             PlayerPosition.cm,
             PlayerPosition.st,
             PlayerPosition.st,
+          ],
+        Formation.f4141 => const [
+            PlayerPosition.gk,
+            PlayerPosition.lb,
+            PlayerPosition.cb,
+            PlayerPosition.cb,
+            PlayerPosition.rb,
+            PlayerPosition.dm,
+            PlayerPosition.lm,
+            PlayerPosition.cm,
+            PlayerPosition.cm,
+            PlayerPosition.rm,
+            PlayerPosition.st,
+          ],
+        Formation.f343 => const [
+            PlayerPosition.gk,
+            PlayerPosition.cb,
+            PlayerPosition.cb,
+            PlayerPosition.cb,
+            PlayerPosition.lm,
+            PlayerPosition.cm,
+            PlayerPosition.cm,
+            PlayerPosition.rm,
+            PlayerPosition.lw,
+            PlayerPosition.st,
+            PlayerPosition.rw,
+          ],
+        Formation.f4222 => const [
+            PlayerPosition.gk,
+            PlayerPosition.lb,
+            PlayerPosition.cb,
+            PlayerPosition.cb,
+            PlayerPosition.rb,
+            PlayerPosition.dm,
+            PlayerPosition.dm,
+            PlayerPosition.am,
+            PlayerPosition.am,
+            PlayerPosition.st,
+            PlayerPosition.st,
+          ],
+        Formation.f424 => const [
+            PlayerPosition.gk,
+            PlayerPosition.lb,
+            PlayerPosition.cb,
+            PlayerPosition.cb,
+            PlayerPosition.rb,
+            PlayerPosition.cm,
+            PlayerPosition.cm,
+            PlayerPosition.lw,
+            PlayerPosition.st,
+            PlayerPosition.st,
+            PlayerPosition.rw,
           ],
       };
 }

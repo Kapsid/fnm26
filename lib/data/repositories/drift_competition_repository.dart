@@ -288,6 +288,12 @@ class DriftCompetitionRepository implements CompetitionRepository {
         ..sort((a, b) => a.id.compareTo(b.id));
       result.add((name: g.name, standings: standings, fixtures: roundFixtures));
     }
+    // Put the player's own group first, then the rest by name.
+    result.sort((a, b) {
+      if (a.name == group.name) return -1;
+      if (b.name == group.name) return 1;
+      return a.name.compareTo(b.name);
+    });
     return (
       competition: comp.name,
       matchday: matchday,
