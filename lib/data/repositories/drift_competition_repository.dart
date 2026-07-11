@@ -837,6 +837,44 @@ class DriftCompetitionRepository implements CompetitionRepository {
   }
 
   @override
+  Future<List<ScorerTally>> nationTopScorers(
+    int careerId,
+    int nationId, {
+    CompetitionKind? kind,
+    int limit = 20,
+  }) async {
+    // Optionally restrict to one competition kind (across every cycle).
+    Set<int>? compIds;
+    if (kind != null) {
+      final comps = await (_db.select(_db.competitions)
+            ..where(
+              (t) => t.careerId.equals(careerId) & t.kind.equalsValue(kind),
+            ))
+          .get();
+      compIds = comps.map((c) => c.id).toSet();
+      if (compIds.isEmpty) return [];
+    }
+
+    final rows = await (_db.select(_db.goalEvents)
+          ..where(
+            (t) => t.careerId.equals(careerId) & t.nationId.equals(nationId),
+          ))
+        .get();
+
+    final tally = <int, int>{};
+    for (final r in rows) {
+      if (compIds != null && !compIds.contains(r.competitionId)) continue;
+      tally[r.playerId] = (tally[r.playerId] ?? 0) + 1;
+    }
+
+    final list = tally.entries
+        .map((e) => (playerId: e.key, nationId: nationId, goals: e.value))
+        .toList()
+      ..sort((a, b) => b.goals.compareTo(a.goals));
+    return list.take(limit).toList();
+  }
+
+  @override
   Future<void> recordHonour({
     required int careerId,
     required int year,

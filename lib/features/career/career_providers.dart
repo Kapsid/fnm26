@@ -241,7 +241,7 @@ class CareerService {
   Future<void> _generateDefaultTactic(Career career) async {
     final players = await _ref
         .read(playerRepositoryProvider)
-        .byNation(career.nationId);
+        .byNation(career.nationId, agingCycles: career.cyclePointer);
     const formation = Formation.f433;
     await _ref
         .read(tacticsRepositoryProvider)

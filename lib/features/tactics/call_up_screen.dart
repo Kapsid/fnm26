@@ -7,6 +7,7 @@ import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/player.dart';
+import 'package:fnm/domain/entities/player_absence.dart';
 import 'package:fnm/features/tactics/tactics_providers.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
@@ -135,7 +136,7 @@ class _CallUpScreenState extends ConsumerState<CallUpScreen> {
                   ),
                   children: [
                     for (final category in _order)
-                      ..._section(category, data.pool, selected),
+                      ..._section(category, data.pool, selected, data.absences),
                     const SizedBox(height: AppSpacing.xl),
                   ],
                 ),
@@ -161,6 +162,7 @@ class _CallUpScreenState extends ConsumerState<CallUpScreen> {
     PositionCategory category,
     List<Player> pool,
     Set<int> selected,
+    Map<int, PlayerAbsence> absences,
   ) {
     final players = pool.where((p) => p.position.category == category).toList()
       ..sort((a, b) => b.overall.compareTo(a.overall));
@@ -177,6 +179,7 @@ class _CallUpScreenState extends ConsumerState<CallUpScreen> {
               _PlayerToggle(
                 player: p,
                 selected: selected.contains(p.id),
+                absence: absences[p.id],
                 onChanged: (on) {
                   if (on && selected.length >= kMaxSquadSize) {
                     ScaffoldMessenger.of(context)
@@ -215,20 +218,39 @@ class _PlayerToggle extends StatelessWidget {
     required this.selected,
     required this.onChanged,
     required this.onInfo,
+    this.absence,
   });
 
   final Player player;
   final bool selected;
   final ValueChanged<bool> onChanged;
   final VoidCallback onInfo;
+  final PlayerAbsence? absence;
 
   @override
   Widget build(BuildContext context) {
+    final reason = absence?.reason;
+    final isInjury = (absence?.injuryMatches ?? 0) > 0;
     return ListTile(
       dense: true,
       onTap: () => onChanged(!selected),
       leading: SizedBox(width: 40, child: TacticalChip(player.position.label)),
-      title: Text(player.name, style: AppTypography.bodyMedium),
+      title: Row(
+        children: [
+          Flexible(
+            child: Text(
+              player.name,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: AppTypography.bodyMedium,
+            ),
+          ),
+          if (reason != null) ...[
+            const SizedBox(width: AppSpacing.sm),
+            _AbsenceBadge(reason: reason, isInjury: isInjury),
+          ],
+        ],
+      ),
       subtitle: Text(
         '${player.club} · Age ${player.age} · ${_money(player.value)}',
         maxLines: 1,
@@ -266,5 +288,41 @@ class _PlayerToggle extends StatelessWidget {
     if (euros >= 1000000) return '€${(euros / 1000000).toStringAsFixed(1)}M';
     if (euros >= 1000) return '€${(euros / 1000).round()}K';
     return '€$euros';
+  }
+}
+
+/// A compact chip flagging an unavailable player as injured or suspended.
+class _AbsenceBadge extends StatelessWidget {
+  const _AbsenceBadge({required this.reason, required this.isInjury});
+
+  final String reason;
+  final bool isInjury;
+
+  @override
+  Widget build(BuildContext context) {
+    final color = isInjury ? const Color(0xFFD64545) : const Color(0xFFEFC94C);
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: 0.16),
+        borderRadius: AppRadii.smAll,
+        border: Border.all(color: color.withValues(alpha: 0.5)),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            isInjury ? Icons.medical_services : Icons.gavel,
+            size: 11,
+            color: color,
+          ),
+          const SizedBox(width: 3),
+          Text(
+            reason,
+            style: AppTypography.labelSmall.copyWith(color: color),
+          ),
+        ],
+      ),
+    );
   }
 }

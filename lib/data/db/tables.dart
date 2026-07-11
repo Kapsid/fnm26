@@ -148,6 +148,27 @@ class CallUps extends Table {
   Set<Column> get primaryKey => {careerId, playerId};
 }
 
+/// A player's disciplinary and fitness standing within a save. Only players
+/// with something to track (a pending caution, a ban, or an injury) have a row.
+@DataClassName('PlayerAbsenceRow')
+class PlayerAbsences extends Table {
+  IntColumn get careerId =>
+      integer().references(Careers, #id, onDelete: KeyAction.cascade)();
+  IntColumn get playerId => integer()();
+
+  /// Yellow cards accumulated toward the next suspension.
+  IntColumn get yellows => integer().withDefault(const Constant(0))();
+
+  /// Matches still to be served on a suspension.
+  IntColumn get banMatches => integer().withDefault(const Constant(0))();
+
+  /// Matches the player is still sidelined by injury.
+  IntColumn get injuryMatches => integer().withDefault(const Constant(0))();
+
+  @override
+  Set<Column> get primaryKey => {careerId, playerId};
+}
+
 /// A draw ceremony the manager has already watched. The presence of a row for
 /// a (career, cycle, kind) means the draw has played once and should not be
 /// re-animated — the drawn result is shown statically instead.

@@ -50,6 +50,7 @@ void main() {
     var homeGoals = 0;
     var awayGoals = 0;
     for (final e in result.events) {
+      if (e.type != MatchEventType.goal) continue;
       if (e.teamNationId == 1) {
         expect(homeIds.contains(e.playerId), isTrue);
         homeGoals++;

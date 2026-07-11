@@ -52,6 +52,10 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
   /// button must show a busy state rather than looking dead.
   bool _committing = false;
 
+  /// The goal currently flashed on the "GOAL!" overlay (null when hidden).
+  MatchEvent? _goalFlash;
+  Timer? _flashTimer;
+
   @override
   void initState() {
     super.initState();
@@ -62,6 +66,7 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
   @override
   void dispose() {
     _timer?.cancel();
+    _flashTimer?.cancel();
     super.dispose();
   }
 
@@ -77,6 +82,7 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
     _timer = Timer.periodic(interval, (_) {
       setState(() {
         _minute++;
+        _flashGoalAt(_minute);
         if (_minute >= 90) {
           _minute = 90;
           _playing = false;
@@ -84,6 +90,39 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
         }
       });
     });
+  }
+
+  /// Flashes the "GOAL!" overlay if a goal was scored on [minute].
+  void _flashGoalAt(int minute) {
+    final events = _result?.events;
+    if (events == null) return;
+    for (final e in events) {
+      if (e.type == MatchEventType.goal && e.minute == minute) {
+        _goalFlash = e;
+        _flashTimer?.cancel();
+        _flashTimer = Timer(const Duration(milliseconds: 2000), () {
+          if (mounted) setState(() => _goalFlash = null);
+        });
+        break;
+      }
+    }
+  }
+
+  /// Home-team momentum (0–100) at the current minute: a strength baseline that
+  /// swings toward whichever side scored recently (decaying over ~20 minutes).
+  double _homeMomentum(MatchPreview preview, int homeId) {
+    double avg(List<Player> xi) => xi.isEmpty
+        ? 60
+        : xi.fold<int>(0, (s, p) => s + p.overall) / xi.length;
+    var m = 50 + (avg(preview.homeTeam.xi) - avg(preview.awayTeam.xi)) * 1.1;
+    for (final e in _result?.events ?? const <MatchEvent>[]) {
+      if (e.type != MatchEventType.goal || e.minute > _minute) continue;
+      final age = _minute - e.minute;
+      if (age > 20) continue;
+      final swing = (20 - age) / 20 * 20;
+      m += e.teamNationId == homeId ? swing : -swing;
+    }
+    return m.clamp(10, 90);
   }
 
   void _togglePlay() {
@@ -226,8 +265,10 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
           return DefaultTabController(
             length: 3,
             child: SafeArea(
-              child: Column(
+              child: Stack(
                 children: [
+                  Column(
+                    children: [
                   _TopBar(
                     onClose: () =>
                         context.go('${Routes.hub}?careerId=${widget.careerId}'),
@@ -242,6 +283,12 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
                     clock: ft ? 'FULL TIME' : "$_minute'",
                     live: !ft,
                   ),
+                  if (!ft)
+                    _MomentumBar(
+                      homePercent: _homeMomentum(preview, homeId),
+                      homeCode: code(homeId),
+                      awayCode: code(awayId),
+                    ),
                   if (!ft)
                     _Controls(
                       playing: _playing,
@@ -294,6 +341,13 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
                       ],
                     ),
                   ),
+                ],
+              ),
+                  if (_goalFlash != null)
+                    _GoalFlash(
+                      event: _goalFlash!,
+                      isHome: _goalFlash!.teamNationId == homeId,
+                    ),
                 ],
               ),
             ),
@@ -583,14 +637,26 @@ class _TimelineRow extends StatelessWidget {
 
   Widget _entry({required bool alignEnd}) {
     final isGoal = event.type == MatchEventType.goal;
-    final icon = Icon(
-      isGoal ? Icons.sports_soccer : Icons.swap_horiz,
-      size: 16,
-      color: isGoal ? AppColors.primary : AppColors.onSurfaceVariant,
-    );
-    final label = isGoal
-        ? event.playerName
-        : '${event.playerName} ↔ ${event.secondaryName ?? ''}';
+    final iconData = switch (event.type) {
+      MatchEventType.goal => Icons.sports_soccer,
+      MatchEventType.substitution => Icons.swap_horiz,
+      MatchEventType.yellowCard ||
+      MatchEventType.redCard =>
+        Icons.square_rounded,
+      MatchEventType.injury => Icons.medical_services,
+    };
+    final iconColor = switch (event.type) {
+      MatchEventType.goal => AppColors.primary,
+      MatchEventType.yellowCard => const Color(0xFFEFC94C),
+      MatchEventType.redCard => const Color(0xFFD64545),
+      _ => AppColors.onSurfaceVariant,
+    };
+    final icon = Icon(iconData, size: 16, color: iconColor);
+    final label = switch (event.type) {
+      MatchEventType.substitution =>
+        '${event.playerName} ↔ ${event.secondaryName ?? ''}',
+      _ => event.playerName,
+    };
     final text = Flexible(
       child: Text(
         label,
@@ -862,4 +928,123 @@ class _SubSheetState extends State<_SubSheet> {
         ),
         trailing: Text('${p.overall}', style: AppTypography.labelMedium),
       );
+}
+
+/// A live momentum bar: the home share of the track (left, primary) grows and
+/// shrinks as the game swings, animated between minutes.
+class _MomentumBar extends StatelessWidget {
+  const _MomentumBar({
+    required this.homePercent,
+    required this.homeCode,
+    required this.awayCode,
+  });
+
+  final double homePercent; // 0..100
+  final String homeCode;
+  final String awayCode;
+
+  @override
+  Widget build(BuildContext context) {
+    final h = (homePercent / 100).clamp(0.0, 1.0);
+    return Padding(
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppSpacing.marginMobile,
+        vertical: AppSpacing.xs,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Row(
+            children: [
+              Text(homeCode, style: AppTypography.labelSmall),
+              const SizedBox(width: AppSpacing.xs),
+              const Text(
+                'MOMENTUM',
+                style: AppTypography.labelSmall,
+              ),
+              const Spacer(),
+              Text(awayCode, style: AppTypography.labelSmall),
+            ],
+          ),
+          const SizedBox(height: 3),
+          ClipRRect(
+            borderRadius: AppRadii.smAll,
+            child: SizedBox(
+              height: 6,
+              child: Stack(
+                children: [
+                  Container(color: AppColors.surfaceContainerHighest),
+                  AnimatedFractionallySizedBox(
+                    duration: const Duration(milliseconds: 400),
+                    curve: Curves.easeOut,
+                    widthFactor: h,
+                    alignment: Alignment.centerLeft,
+                    child: Container(color: AppColors.primary),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// The animated "GOAL!" overlay shown briefly when a goal is scored.
+class _GoalFlash extends StatelessWidget {
+  const _GoalFlash({required this.event, required this.isHome});
+
+  final MatchEvent event;
+  final bool isHome;
+
+  @override
+  Widget build(BuildContext context) {
+    return Positioned.fill(
+      child: IgnorePointer(
+        child: Center(
+          child: TweenAnimationBuilder<double>(
+            key: ValueKey('${event.minute}-${event.playerId}'),
+            tween: Tween(begin: 0, end: 1),
+            duration: const Duration(milliseconds: 320),
+            curve: Curves.elasticOut,
+            builder: (context, t, child) => Transform.scale(
+              scale: 0.6 + t * 0.4,
+              child: Opacity(opacity: t.clamp(0.0, 1.0), child: child),
+            ),
+            child: Container(
+              padding: const EdgeInsets.symmetric(
+                horizontal: AppSpacing.xl,
+                vertical: AppSpacing.lg,
+              ),
+              decoration: BoxDecoration(
+                color: AppColors.surfaceContainerHigh,
+                borderRadius: AppRadii.lgAll,
+                border: Border.all(color: AppColors.primary, width: 2),
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    'GOAL!',
+                    style: AppTypography.headlineLargeMobile.copyWith(
+                      color: AppColors.primary,
+                    ),
+                  ),
+                  const SizedBox(height: AppSpacing.xs),
+                  Text(event.playerName, style: AppTypography.titleMedium),
+                  Text(
+                    "${event.minute}'",
+                    style: AppTypography.labelSmall.copyWith(
+                      color: AppColors.onSurfaceVariant,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
 }

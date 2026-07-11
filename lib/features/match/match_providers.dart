@@ -77,26 +77,36 @@ final AutoDisposeFutureProviderFamily<MatchPreview?, int> matchPreviewProvider =
 
       // Player's team from their saved tactic (falling back to a best XI),
       // restricted to the called-up squad.
-      final fullPool = await playerRepo.byNation(playerNationId);
+      final fullPool = await playerRepo.byNation(
+        playerNationId,
+        agingCycles: career.cyclePointer,
+      );
       final callUps =
           await ref.watch(squadRepositoryProvider).callUps(careerId);
-      final playerPool = availableSquad(fullPool, callUps);
+      // Drop suspended and injured players — they can't be fielded, so a
+      // saved lineup that names one auto-fills their slot from who's fit.
+      final absences =
+          await ref.watch(absenceRepositoryProvider).forCareer(careerId);
+      final calledUp = availableSquad(fullPool, callUps);
+      final playerPool = calledUp
+          .where((p) => absences[p.id]?.isAvailable ?? true)
+          .toList();
       final byId = {for (final p in playerPool) p.id: p};
       final tactic = await ref
           .watch(tacticsRepositoryProvider)
           .tacticForCareer(
             careerId,
           );
+      final playerFormation = tactic?.formation ?? Formation.f433;
       final selected = (tactic?.lineup ?? const <int?>[])
           .whereType<int>()
           .map((id) => byId[id])
           .whereType<Player>()
           .toList();
-      final playerFormation = tactic?.formation ?? Formation.f433;
       final usingTactic = selected.length == 11;
       final playerXi = usingTactic
           ? selected
-          : _xiFrom(playerPool, bestEleven(Formation.f433, playerPool));
+          : _xiFrom(playerPool, bestEleven(playerFormation, playerPool));
       final startingIds = playerXi.map((p) => p.id).toSet();
       final bench = playerPool
           .where((p) => !startingIds.contains(p.id))
@@ -106,13 +116,16 @@ final AutoDisposeFutureProviderFamily<MatchPreview?, int> matchPreviewProvider =
         nationId: playerNationId,
         xi: playerXi,
         instructions: tactic?.instructions ?? const TacticalInstructions(),
-        // Only the saved lineup's slots are meaningful; the fallback XI is
-        // already picked into f433 slots.
-        formation: usingTactic ? playerFormation : Formation.f433,
+        // Both the saved lineup and the auto-filled fallback are laid out in
+        // the tactic's shape (f433 when there's no saved tactic).
+        formation: playerFormation,
       );
 
       // Opponent: a best XI in a default shape.
-      final oppPool = await playerRepo.byNation(opponentId);
+      final oppPool = await playerRepo.byNation(
+        opponentId,
+        agingCycles: career.cyclePointer,
+      );
       final oppTeam = MatchTeam(
         nationId: opponentId,
         xi: _xiFrom(oppPool, bestEleven(Formation.f433, oppPool)),

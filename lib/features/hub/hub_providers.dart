@@ -17,6 +17,7 @@ import 'package:fnm/domain/services/competition/tournament_sim.dart';
 import 'package:fnm/domain/services/match/goal_attribution.dart';
 import 'package:fnm/domain/services/match/match_engine.dart';
 import 'package:fnm/domain/services/match/match_simulator.dart';
+import 'package:fnm/domain/services/player/discipline.dart';
 import 'package:fnm/features/career/career_providers.dart';
 
 /// Everything the Hub screen needs for a save, in one fetch.
@@ -79,6 +80,7 @@ hubDataProvider = FutureProvider.family<HubData?, int>((ref, careerId) async {
       .watch(playerRepositoryProvider)
       .byNation(
         career.nationId,
+        agingCycles: career.cyclePointer,
       );
   final squadRating = squad.isEmpty
       ? 0
@@ -111,15 +113,22 @@ class SeasonService {
   CompetitionRepository get _comp => _ref.read(competitionRepositoryProvider);
   CareerRepository get _careers => _ref.read(careerRepositoryProvider);
 
-  /// Player pools are static seed data, so cache them across the run.
-  final Map<int, List<Player>> _poolCache = {};
+  /// Player pools cached per (nation, cycle) — cheap seed data aged to the
+  /// cycle currently being simulated.
+  final Map<(int, int), List<Player>> _poolCache = {};
+
+  /// The cyclePointer of the save currently being simulated (drives aging in
+  /// [_pool]); set at the start of each top-level sim operation.
+  int _simCycle = 0;
 
   Future<Map<int, Nation>> _nationsById() async => {
     for (final n in await _ref.read(nationRepositoryProvider).all()) n.id: n,
   };
 
-  Future<List<Player>> _pool(int nationId) async => _poolCache[nationId] ??=
-      await _ref.read(playerRepositoryProvider).byNation(nationId);
+  Future<List<Player>> _pool(int nationId) async =>
+      _poolCache[(nationId, _simCycle)] ??= await _ref
+          .read(playerRepositoryProvider)
+          .byNation(nationId, agingCycles: _simCycle);
 
   static bool _isKnockout(Fixture f) => f.round != null && f.round != 'GROUP';
 
@@ -220,6 +229,7 @@ class SeasonService {
     while (true) {
       final career = await _careers.byId(careerId);
       if (career == null) break;
+      _simCycle = career.cyclePointer;
 
       final next = await _comp.nextFixtureForNation(
         careerId,
@@ -259,6 +269,7 @@ class SeasonService {
     for (var i = 0; i < 300; i++) {
       final career = await _careers.byId(careerId);
       if (career == null) break;
+      _simCycle = career.cyclePointer;
       if (await _comp.worldChampion(careerId) != null) break;
       final earliest = await _comp.earliestUnplayedDate(
         careerId,
@@ -280,6 +291,7 @@ class SeasonService {
   ) async {
     final career = await _careers.byId(careerId);
     if (career == null) return;
+    _simCycle = career.cyclePointer;
 
     var hs = result.homeScore;
     var as = result.awayScore;
@@ -310,6 +322,18 @@ class SeasonService {
             minute: e.minute,
           ),
     ]);
+
+    // Update the squad's suspensions and injuries from this match's cards and
+    // knocks (players who sat this one out have now served a game).
+    final absenceRepo = _ref.read(absenceRepositoryProvider);
+    final before = await absenceRepo.forCareer(careerId);
+    final after = Discipline.applyMatch(
+      before: before,
+      events: result.events,
+      nationId: career.nationId,
+      rng: SeededRng.forFixture(career.rngSeed, fixture.id ^ 0x0AB5),
+    );
+    await absenceRepo.replace(careerId, after.values);
 
     await _careers.updateInGameDate(careerId, fixture.date);
     await _catchUp(careerId, fixture.date, career.rngSeed);

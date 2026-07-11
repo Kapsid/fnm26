@@ -125,13 +125,20 @@ class HubScreen extends ConsumerWidget {
                       context.go('${Routes.cup}?careerId=$careerId'),
                 ),
               ],
-              Align(
-                alignment: Alignment.centerRight,
-                child: TextButton(
-                  onPressed: () =>
-                      context.go('${Routes.results}?careerId=$careerId'),
-                  child: const Text('View my matches ›'),
-                ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  TextButton(
+                    onPressed: () =>
+                        context.go('${Routes.teamStats}?careerId=$careerId'),
+                    child: const Text('Team records ›'),
+                  ),
+                  TextButton(
+                    onPressed: () =>
+                        context.go('${Routes.results}?careerId=$careerId'),
+                    child: const Text('My matches ›'),
+                  ),
+                ],
               ),
               const SizedBox(height: AppSpacing.sm),
               _SquadStatus(

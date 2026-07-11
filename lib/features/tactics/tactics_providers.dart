@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/formation.dart';
 import 'package:fnm/domain/entities/player.dart';
+import 'package:fnm/domain/entities/player_absence.dart';
 import 'package:fnm/domain/entities/tactics.dart';
 import 'package:fnm/domain/services/tactics/best_eleven.dart';
 
@@ -44,7 +45,10 @@ final FutureProviderFamily<TacticData?, int> tacticDataProvider =
       );
   if (tactic == null) return null;
   final fullPool =
-      await ref.watch(playerRepositoryProvider).byNation(career.nationId);
+      await ref.watch(playerRepositoryProvider).byNation(
+        career.nationId,
+        agingCycles: career.cyclePointer,
+      );
   final callUps = await ref.watch(squadRepositoryProvider).callUps(careerId);
   final pool = availableSquad(fullPool, callUps);
   return TacticData(
@@ -58,7 +62,11 @@ final FutureProviderFamily<TacticData?, int> tacticDataProvider =
 
 /// Everything the call-up (squad selection) screen needs for a save.
 class SquadData {
-  const SquadData({required this.pool, required this.callUps});
+  const SquadData({
+    required this.pool,
+    required this.callUps,
+    required this.absences,
+  });
 
   /// The full nation pool, eligible to be called up.
   final List<Player> pool;
@@ -66,6 +74,9 @@ class SquadData {
   /// The currently called-up player ids (every pool member when none have been
   /// explicitly chosen yet).
   final Set<int> callUps;
+
+  /// Suspension/injury standing keyed by player id (only notable players).
+  final Map<int, PlayerAbsence> absences;
 }
 
 final FutureProviderFamily<SquadData?, int> squadDataProvider =
@@ -74,10 +85,15 @@ final FutureProviderFamily<SquadData?, int> squadDataProvider =
   final career = await ref.watch(careerRepositoryProvider).byId(careerId);
   if (career == null) return null;
   final pool =
-      await ref.watch(playerRepositoryProvider).byNation(career.nationId);
+      await ref.watch(playerRepositoryProvider).byNation(
+        career.nationId,
+        agingCycles: career.cyclePointer,
+      );
   final stored = await ref.watch(squadRepositoryProvider).callUps(careerId);
   final callUps = stored.isEmpty ? {for (final p in pool) p.id} : stored;
-  return SquadData(pool: pool, callUps: callUps);
+  final absences =
+      await ref.watch(absenceRepositoryProvider).forCareer(careerId);
+  return SquadData(pool: pool, callUps: callUps, absences: absences);
 });
 
 /// Mutates and persists the team tactic for a save.
@@ -102,7 +118,10 @@ class TacticService {
     final career = await _ref.read(careerRepositoryProvider).byId(careerId);
     if (career == null) return const [];
     final pool =
-        await _ref.read(playerRepositoryProvider).byNation(career.nationId);
+        await _ref.read(playerRepositoryProvider).byNation(
+          career.nationId,
+          agingCycles: career.cyclePointer,
+        );
     final callUps = await _ref.read(squadRepositoryProvider).callUps(careerId);
     return availableSquad(pool, callUps);
   }
@@ -113,6 +132,24 @@ class TacticService {
           formation: formation,
           lineup: bestEleven(formation, pool),
         ),
+      );
+
+  /// Changes the shape but keeps the players currently in the XI, re-fitting
+  /// them to the new formation's slots (used when a drag reshapes the team, so
+  /// dragging one player doesn't reshuffle the whole side from the pool).
+  Future<void> reshapeFormation(int careerId, Formation formation) => _update(
+        careerId,
+        (t, pool) {
+          final ids = t.lineup.whereType<int>().toSet();
+          final current = pool.where((p) => ids.contains(p.id)).toList();
+          final fitPool = current.length >= 11
+              ? current
+              : [...current, ...pool.where((p) => !ids.contains(p.id))];
+          return t.copyWith(
+            formation: formation,
+            lineup: bestEleven(formation, fitPool),
+          );
+        },
       );
 
   Future<void> setInstructions(int careerId, TacticalInstructions i) =>
@@ -163,7 +200,7 @@ class SquadService {
           ? <Player>[]
           : await _ref
               .read(playerRepositoryProvider)
-              .byNation(career.nationId);
+              .byNation(career.nationId, agingCycles: career.cyclePointer);
       final squad = availableSquad(pool, ids);
       final dropped =
           tactic.lineup.whereType<int>().any((id) => !ids.contains(id));

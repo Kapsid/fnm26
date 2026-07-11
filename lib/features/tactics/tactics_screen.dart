@@ -212,7 +212,8 @@ class TacticsScreen extends ConsumerWidget {
                   lineup: tactic.lineup,
                   byId: data.byId,
                   onTapSlot: (slot) => _pickPlayer(context, ref, data, slot),
-                  onSwap: (a, b) => service.swapSlots(careerId, a, b),
+                  onSwap: (a, b) =>
+                      _dragBetweenSlots(service, tactic, a, b),
                   onBenchIn: (slot, playerId) =>
                       service.setSlot(careerId, slot, playerId),
                 ),
@@ -349,6 +350,40 @@ class TacticsScreen extends ConsumerWidget {
     }
   }
 
+  /// Handles a pitch drag from slot [a] onto slot [b]. Within the same line it
+  /// is a straight swap; across lines it reshapes to the formation implied by
+  /// moving the dragged player to the target's line (keeping the same players),
+  /// falling back to a swap when no such formation exists.
+  void _dragBetweenSlots(TacticService service, Tactic tactic, int a, int b) {
+    final positions = tactic.formation.positions;
+    final catA = positions[a].category;
+    final catB = positions[b].category;
+    if (catA == catB) {
+      unawaited(service.swapSlots(careerId, a, b));
+      return;
+    }
+    final counts = _lineCounts(tactic.formation);
+    final next = _formationForCounts(
+      _adjust(counts.$1, PositionCategory.defender, catA, catB),
+      _adjust(counts.$2, PositionCategory.midfielder, catA, catB),
+      _adjust(counts.$3, PositionCategory.forward, catA, catB),
+    );
+    if (next != null && next != tactic.formation) {
+      unawaited(service.reshapeFormation(careerId, next));
+    } else {
+      unawaited(service.swapSlots(careerId, a, b));
+    }
+  }
+
+  /// Adjusts a line's count for a move from [from]'s line to [to]'s line.
+  int _adjust(int count, PositionCategory line, PositionCategory from,
+      PositionCategory to) {
+    var n = count;
+    if (from == line) n--;
+    if (to == line) n++;
+    return n;
+  }
+
   Future<void> _openInstructions(
     BuildContext context,
     WidgetRef ref,
@@ -446,6 +481,35 @@ class _Pitch extends StatelessWidget {
       ),
     );
   }
+}
+
+/// The (defenders, midfielders, forwards) count of a formation's outfield.
+(int, int, int) _lineCounts(Formation f) {
+  var d = 0;
+  var m = 0;
+  var w = 0;
+  for (final p in f.positions) {
+    switch (p.category) {
+      case PositionCategory.defender:
+        d++;
+      case PositionCategory.midfielder:
+        m++;
+      case PositionCategory.forward:
+        w++;
+      case PositionCategory.goalkeeper:
+        break;
+    }
+  }
+  return (d, m, w);
+}
+
+/// The formation matching a given line distribution, or null if none exists.
+Formation? _formationForCounts(int d, int m, int w) {
+  for (final f in Formation.values) {
+    final c = _lineCounts(f);
+    if (c.$1 == d && c.$2 == m && c.$3 == w) return f;
+  }
+  return null;
 }
 
 /// "Cristiano Ronaldo" → "C. Ronaldo" (surnames can repeat in a squad).

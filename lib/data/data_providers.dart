@@ -1,6 +1,7 @@
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/data/db/app_database.dart';
+import 'package:fnm/data/repositories/drift_absence_repository.dart';
 import 'package:fnm/data/repositories/drift_career_repository.dart';
 import 'package:fnm/data/repositories/drift_competition_repository.dart';
 import 'package:fnm/data/repositories/drift_nation_repository.dart';
@@ -9,6 +10,7 @@ import 'package:fnm/data/repositories/drift_squad_repository.dart';
 import 'package:fnm/data/repositories/drift_tactics_repository.dart';
 import 'package:fnm/data/seed/seed_loader.dart';
 import 'package:fnm/data/seed/seed_source.dart';
+import 'package:fnm/domain/repositories/absence_repository.dart';
 import 'package:fnm/domain/repositories/career_repository.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
 import 'package:fnm/domain/repositories/nation_repository.dart';
@@ -70,4 +72,8 @@ final tacticsRepositoryProvider = Provider<TacticsRepository>(
 
 final squadRepositoryProvider = Provider<SquadRepository>(
   (ref) => DriftSquadRepository(ref.watch(appDatabaseProvider)),
+);
+
+final absenceRepositoryProvider = Provider<AbsenceRepository>(
+  (ref) => DriftAbsenceRepository(ref.watch(appDatabaseProvider)),
 );

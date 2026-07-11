@@ -11,10 +11,18 @@ import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
 
 typedef _PlayerView = ({Player? player, Nation? nation});
+typedef _PlayerArg = ({int careerId, int playerId});
 
-final AutoDisposeFutureProviderFamily<_PlayerView, int> _playerDetailProvider =
-    FutureProvider.autoDispose.family<_PlayerView, int>((ref, playerId) async {
-  final player = await ref.watch(playerRepositoryProvider).byId(playerId);
+final AutoDisposeFutureProviderFamily<_PlayerView, _PlayerArg>
+_playerDetailProvider =
+    FutureProvider.autoDispose.family<_PlayerView, _PlayerArg>((
+  ref,
+  arg,
+) async {
+  final career = await ref.watch(careerRepositoryProvider).byId(arg.careerId);
+  final player = await ref
+      .watch(playerRepositoryProvider)
+      .byId(arg.playerId, agingCycles: career?.cyclePointer ?? 0);
   Nation? nation;
   if (player != null) {
     final nations = await ref.watch(nationRepositoryProvider).all();
@@ -43,7 +51,9 @@ class PlayerDetailScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final viewAsync = ref.watch(_playerDetailProvider(playerId));
+    final viewAsync = ref.watch(
+      _playerDetailProvider((careerId: careerId, playerId: playerId)),
+    );
 
     return Scaffold(
       appBar: AppBar(

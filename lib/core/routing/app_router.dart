@@ -13,6 +13,7 @@ import 'package:fnm/features/player/player_detail_screen.dart';
 import 'package:fnm/features/ranking/world_ranking_screen.dart';
 import 'package:fnm/features/results/results_screen.dart';
 import 'package:fnm/features/results/round_results_screen.dart';
+import 'package:fnm/features/stats/team_stats_screen.dart';
 import 'package:fnm/features/tactics/call_up_screen.dart';
 import 'package:fnm/features/tactics/tactics_screen.dart';
 import 'package:fnm/features/tournaments/continental_detail_screen.dart';
@@ -85,6 +86,9 @@ abstract final class Routes {
 
   /// A player's detail card. Expects `?careerId=` and `?playerId=`.
   static const player = '/player';
+
+  /// The player's national-team records / top scorers. Expects `?careerId=`.
+  static const teamStats = '/team-stats';
 
   /// End-of-cycle event: crowns the champion and starts the next cycle. Expects
   /// `?careerId=`.
@@ -202,6 +206,16 @@ final routerProvider = Provider<GoRouter>((ref) {
               ) ??
               0;
           return PlayerDetailScreen(careerId: id, playerId: playerId);
+        },
+      ),
+      GoRoute(
+        path: Routes.teamStats,
+        builder: (context, state) {
+          final id = int.tryParse(
+                state.uri.queryParameters['careerId'] ?? '',
+              ) ??
+              0;
+          return TeamStatsScreen(careerId: id);
         },
       ),
       GoRoute(

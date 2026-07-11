@@ -240,6 +240,15 @@ abstract interface class CompetitionRepository {
     int limit,
   });
 
+  /// Top scorers for one nation, all-time across every cycle (optionally of a
+  /// single competition [kind]), best first — for the team records screen.
+  Future<List<ScorerTally>> nationTopScorers(
+    int careerId,
+    int nationId, {
+    CompetitionKind? kind,
+    int limit,
+  });
+
   /// Records a tournament's roll-of-honour entry.
   Future<void> recordHonour({
     required int careerId,

@@ -42,9 +42,23 @@ class Substitution {
   final Player on;
 }
 
-/// The kind of thing that happened in a match. (Goals and substitutions for
-/// now; cards and injuries can be layered on later.)
-enum MatchEventType { goal, substitution }
+/// The kind of thing that happened in a match.
+enum MatchEventType {
+  goal,
+  substitution,
+
+  /// A caution. A player's second yellow is reported as a [redCard], not two
+  /// yellows, so the discipline system treats it as a sending-off.
+  yellowCard,
+
+  /// A sending-off (a straight red or a second bookable offence). The player
+  /// leaves the pitch and their team plays on a man down.
+  redCard,
+
+  /// A player picking up a knock. They stay on for the rest of this match but
+  /// are sidelined for the games that follow.
+  injury,
+}
 
 /// A timed match event.
 class MatchEvent {
@@ -119,6 +133,15 @@ class _Live {
 class MatchEngine {
   const MatchEngine();
 
+  /// Per-team, per-minute booking probability (~1.8 yellows a team a game).
+  static const double _yellowPerMinute = 0.020;
+
+  /// Per-team, per-minute probability of a straight red (~1 in 20 games).
+  static const double _straightRedPerMinute = 0.0006;
+
+  /// Per-team, per-minute probability of a player picking up a knock.
+  static const double _injuryPerMinute = 0.0016;
+
   MatchResult play({
     required MatchTeam home,
     required MatchTeam away,
@@ -135,6 +158,8 @@ class MatchEngine {
     }
 
     final events = <MatchEvent>[];
+    // Players already on a yellow, so a second booking becomes a red.
+    final booked = <int>{};
     var homeScore = 0;
     var awayScore = 0;
     var homeShots = 0;
@@ -166,6 +191,9 @@ class MatchEngine {
           events.add(_goal(minute, liveAway, rng));
         }
       }
+
+      _discipline(liveHome, minute, rng, events, booked);
+      _discipline(liveAway, minute, rng, events, booked);
     }
 
     final homeControl = _control(liveHome);
@@ -200,6 +228,79 @@ class MatchEngine {
       playerName: s.on.name,
       secondaryName: off.name,
     );
+  }
+
+  /// Rolls one minute of discipline for [live]: a possible booking (a second
+  /// caution becomes a sending-off), a possible straight red, and a possible
+  /// knock. A red removes the player from the pitch for the rest of the match.
+  void _discipline(
+    _Live live,
+    int minute,
+    SeededRng rng,
+    List<MatchEvent> events,
+    Set<int> booked,
+  ) {
+    if (live.xi.isEmpty) return;
+
+    if (rng.chance(_yellowPerMinute)) {
+      final culprit = _pickCulprit(live, rng);
+      if (booked.contains(culprit.id)) {
+        events.add(_card(minute, live, culprit, MatchEventType.redCard));
+        _sendOff(live, culprit.id);
+      } else {
+        booked.add(culprit.id);
+        events.add(_card(minute, live, culprit, MatchEventType.yellowCard));
+      }
+    } else if (rng.chance(_straightRedPerMinute)) {
+      final culprit = _pickCulprit(live, rng);
+      events.add(_card(minute, live, culprit, MatchEventType.redCard));
+      _sendOff(live, culprit.id);
+    }
+
+    if (live.xi.isNotEmpty && rng.chance(_injuryPerMinute)) {
+      final hurt = _pickCulprit(live, rng);
+      events.add(_card(minute, live, hurt, MatchEventType.injury));
+    }
+  }
+
+  MatchEvent _card(int minute, _Live live, Player p, MatchEventType type) =>
+      MatchEvent(
+        minute: minute,
+        type: type,
+        teamNationId: live.nationId,
+        playerId: p.id,
+        playerName: p.name,
+      );
+
+  /// Removes [playerId] from the pitch, dropping their formation slot too so
+  /// the team plays on a man down for the rest of the match.
+  void _sendOff(_Live live, int playerId) {
+    final idx = live.xi.indexWhere((p) => p.id == playerId);
+    if (idx == -1) return;
+    live.xi.removeAt(idx);
+    if (idx < live.slots.length) live.slots.removeAt(idx);
+  }
+
+  /// Picks the player at fault for a foul or knock, weighting harder-working
+  /// defensive players (who make more challenges) and the less composed.
+  Player _pickCulprit(_Live live, SeededRng rng) {
+    double weight(Player p) {
+      final positional = switch (p.category) {
+        PositionCategory.defender => 3.0,
+        PositionCategory.midfielder => 2.2,
+        PositionCategory.forward => 1.2,
+        PositionCategory.goalkeeper => 0.3,
+      };
+      return positional * (1.3 - p.attributes.composure / 100).clamp(0.4, 1.3);
+    }
+
+    final total = live.xi.fold<double>(0, (sum, p) => sum + weight(p));
+    var roll = rng.nextDouble() * total;
+    for (final p in live.xi) {
+      roll -= weight(p);
+      if (roll <= 0) return p;
+    }
+    return live.xi.last;
   }
 
   /// Midfield control, used to estimate possession.
