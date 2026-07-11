@@ -21,6 +21,7 @@ import 'package:fnm/features/tournaments/continental_detail_screen.dart';
 import 'package:fnm/features/tournaments/continental_draw_screen.dart';
 import 'package:fnm/features/tournaments/cup_detail_screen.dart';
 import 'package:fnm/features/tournaments/finals_draw_screen.dart';
+import 'package:fnm/features/tournaments/host_draw_screen.dart';
 import 'package:fnm/features/tournaments/qualifying_draw_screen.dart';
 import 'package:fnm/features/tournaments/tournaments_screen.dart';
 import 'package:go_router/go_router.dart';
@@ -93,6 +94,9 @@ abstract final class Routes {
 
   /// The manager's career summary + trophy cabinet. Expects `?careerId=`.
   static const careerSummary = '/career-summary';
+
+  /// The host-selection ceremony. Expects `?careerId=` and `?worldCup=`.
+  static const hostDraw = '/host-draw';
 
   /// End-of-cycle event: crowns the champion and starts the next cycle. Expects
   /// `?careerId=`.
@@ -230,6 +234,17 @@ final routerProvider = Provider<GoRouter>((ref) {
               ) ??
               0;
           return CareerSummaryScreen(careerId: id);
+        },
+      ),
+      GoRoute(
+        path: Routes.hostDraw,
+        builder: (context, state) {
+          final id = int.tryParse(
+                state.uri.queryParameters['careerId'] ?? '',
+              ) ??
+              0;
+          final worldCup = state.uri.queryParameters['worldCup'] == 'true';
+          return HostDrawScreen(careerId: id, worldCup: worldCup);
         },
       ),
       GoRoute(

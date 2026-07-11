@@ -4,6 +4,7 @@ import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/features/hub/hub_providers.dart';
 import 'package:fnm/features/tournaments/finals_draw_providers.dart';
+import 'package:fnm/features/tournaments/host_draw_providers.dart';
 
 /// The kinds of thing the hub's main action can be — the game is a timeline of
 /// these events rather than a single "continue".
@@ -119,24 +120,55 @@ final AutoDisposeFutureProviderFamily<HubEvent, int> nextEventProvider =
           route: route,
         );
 
-    // 3. Each tournament's draw is a forced, one-time event that plays right
-    //    before its squad call-up (watch the ceremony or skip it). The
-    //    continental and World Cup qualifying draws come first; the World Cup
-    //    finals draw is handled above.
+    // 3. Each tournament's draws are forced, one-time events before its squad
+    //    call-up. For a campaign the order is: host selection → qualifying draw
+    //    → call-up. The continental campaign comes before the World Cup one;
+    //    the World Cup finals draw is handled above.
     final isWcQualGame = next.round == null && next.groupId != null;
-    if (next.round == 'CQ' &&
-        !await comp.hasWatchedDraw(careerId, cycle, continentalQualDrawKind)) {
-      return drawEvent(
-        'Watch the qualifying draw',
-        '${Routes.qualifyingDraw}?careerId=$careerId',
-      );
+
+    if (next.round == 'CQ') {
+      if (!await comp.hasWatchedDraw(
+        careerId,
+        cycle,
+        continentalHostDrawKind,
+      )) {
+        return drawEvent(
+          'Watch the host selection',
+          '${Routes.hostDraw}?careerId=$careerId',
+        );
+      }
+      if (!await comp.hasWatchedDraw(
+        careerId,
+        cycle,
+        continentalQualDrawKind,
+      )) {
+        return drawEvent(
+          'Watch the qualifying draw',
+          '${Routes.qualifyingDraw}?careerId=$careerId',
+        );
+      }
     }
-    if (isWcQualGame &&
-        !await comp.hasWatchedDraw(careerId, cycle, worldCupQualDrawKind)) {
-      return drawEvent(
-        'Watch the World Cup qualifying draw',
-        '${Routes.qualifyingDraw}?careerId=$careerId&worldCup=true',
-      );
+    if (isWcQualGame) {
+      if (!await comp.hasWatchedDraw(
+        careerId,
+        cycle,
+        worldCupHostDrawKind,
+      )) {
+        return drawEvent(
+          'Watch the World Cup host selection',
+          '${Routes.hostDraw}?careerId=$careerId&worldCup=true',
+        );
+      }
+      if (!await comp.hasWatchedDraw(
+        careerId,
+        cycle,
+        worldCupQualDrawKind,
+      )) {
+        return drawEvent(
+          'Watch the World Cup qualifying draw',
+          '${Routes.qualifyingDraw}?careerId=$careerId&worldCup=true',
+        );
+      }
     }
 
     // 4. The squad call-up before each campaign / tournament.

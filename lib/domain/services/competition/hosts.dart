@@ -17,6 +17,23 @@ abstract final class WorldCupHosts {
     Confederation.oceania,
   ];
 
+  /// The confederation hosting the World Cup in [year].
+  static Confederation confederationFor(int year) =>
+      _rotation[(year ~/ 4) % _rotation.length];
+
+  /// The shortlist of realistic host candidates for [confederation] (its
+  /// strongest members), shown in the host-draw ceremony before the winner is
+  /// revealed.
+  static List<int> hostCandidates({
+    required Confederation confederation,
+    required List<Nation> nations,
+    int count = 6,
+  }) {
+    final pool = nations.where((n) => n.confederation == confederation).toList()
+      ..sort((a, b) => a.ranking.compareTo(b.ranking));
+    return pool.take(count).map((n) => n.id).toList();
+  }
+
   /// The host nation id for the World Cup in [year].
   static int hostFor({
     required int year,
