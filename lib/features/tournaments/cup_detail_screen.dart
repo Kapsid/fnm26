@@ -9,8 +9,10 @@ import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/entities/group_standing.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
 import 'package:fnm/domain/services/competition/finals.dart';
+import 'package:fnm/domain/services/competition/venues.dart';
 import 'package:fnm/features/tournaments/best_thirds.dart';
 import 'package:fnm/features/tournaments/cup_detail_providers.dart';
+import 'package:fnm/features/tournaments/venues_card.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
 
@@ -80,6 +82,7 @@ class CupDetailScreen extends ConsumerWidget {
                   _FinalsGroups(
                     groups: data.finalsGroups,
                     playerNationId: data.playerNationId,
+                    hostId: data.hostId,
                     code: code,
                     name: name,
                   )
@@ -407,12 +410,14 @@ class _FinalsGroups extends StatelessWidget {
   const _FinalsGroups({
     required this.groups,
     required this.playerNationId,
+    required this.hostId,
     required this.code,
     required this.name,
   });
 
   final List<FinalsGroupTable> groups;
   final int playerNationId;
+  final int? hostId;
   final String Function(int) code;
   final String Function(int) name;
 
@@ -427,6 +432,14 @@ class _FinalsGroups extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.all(AppSpacing.marginMobile),
       children: [
+        if (hostId != null) ...[
+          VenuesCard(
+            hostCode: code(hostId!),
+            hostName: name(hostId!),
+            venues: VenueGenerator.forHost(hostId: hostId!),
+          ),
+          const SizedBox(height: AppSpacing.sm),
+        ],
         for (final g in groups) ...[
           _GroupCard(
             group: (

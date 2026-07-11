@@ -9,8 +9,10 @@ import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/entities/group_standing.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
 import 'package:fnm/domain/services/competition/finals.dart';
+import 'package:fnm/domain/services/competition/venues.dart';
 import 'package:fnm/features/tournaments/best_thirds.dart';
 import 'package:fnm/features/tournaments/continental_detail_providers.dart';
+import 'package:fnm/features/tournaments/venues_card.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
 
@@ -91,6 +93,7 @@ class ContinentalDetailScreen extends ConsumerWidget {
                   _Groups(
                     groups: data.qualifyingGroups,
                     playerNationId: data.playerNationId,
+                    hostId: null,
                     code: code,
                     name: name,
                   )
@@ -106,6 +109,7 @@ class ContinentalDetailScreen extends ConsumerWidget {
                   _Groups(
                     groups: data.groups,
                     playerNationId: data.playerNationId,
+                    hostId: data.hostId,
                     code: code,
                     name: name,
                   )
@@ -158,12 +162,14 @@ class _Groups extends StatelessWidget {
   const _Groups({
     required this.groups,
     required this.playerNationId,
+    required this.hostId,
     required this.code,
     required this.name,
   });
 
   final List<FinalsGroupTable> groups;
   final int playerNationId;
+  final int? hostId;
   final String Function(int) code;
   final String Function(int) name;
 
@@ -181,6 +187,14 @@ class _Groups extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.all(AppSpacing.marginMobile),
       children: [
+        if (hostId != null) ...[
+          VenuesCard(
+            hostCode: code(hostId!),
+            hostName: name(hostId!),
+            venues: VenueGenerator.forHost(hostId: hostId!),
+          ),
+          const SizedBox(height: AppSpacing.sm),
+        ],
         for (final g in groups) ...[
           AppCard(
             child: Column(

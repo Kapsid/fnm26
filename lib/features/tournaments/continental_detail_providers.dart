@@ -21,6 +21,7 @@ class ContinentalData {
     required this.name,
     required this.confederation,
     required this.isPlayerRegion,
+    required this.hostId,
     required this.qualifyingGroups,
     required this.groups,
     required this.knockout,
@@ -34,6 +35,9 @@ class ContinentalData {
 
   final String name;
   final Confederation confederation;
+
+  /// The championship host (finals venues), or null before it's decided.
+  final int? hostId;
 
   /// Whether this is the player's region (the only one played in detail; other
   /// regions are simulated in the background and only appear in History).
@@ -286,10 +290,20 @@ final AutoDisposeFutureProviderFamily<ContinentalData?, ContinentalKey>
     if (p != null) playerNames[id] = p.name;
   }
 
+  final hostId = isPlayerRegion && groups.isNotEmpty
+      ? WorldCupHosts.continentalHostFor(
+          confederation: key.confederation,
+          cycle: career.cyclePointer,
+          seed: career.rngSeed,
+          nations: nations.values.toList(),
+        )
+      : null;
+
   return ContinentalData(
     name: config.name,
     confederation: key.confederation,
     isPlayerRegion: isPlayerRegion,
+    hostId: hostId,
     qualifyingGroups: qualifyingGroups,
     groups: groups,
     knockout: knockout,
