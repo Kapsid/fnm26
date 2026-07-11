@@ -266,6 +266,7 @@ class _EventButton extends ConsumerWidget {
       case HubEventKind.cycleRollover:
       case HubEventKind.draw:
       case HubEventKind.callUp:
+      case HubEventKind.friendlies:
       case HubEventKind.match:
         if (event.route != null) context.go(event.route!);
     }

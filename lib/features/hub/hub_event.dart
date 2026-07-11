@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/data/data_providers.dart';
+import 'package:fnm/features/friendlies/friendlies_providers.dart';
 import 'package:fnm/features/hub/hub_providers.dart';
 import 'package:fnm/features/tournaments/finals_draw_providers.dart';
 import 'package:fnm/features/tournaments/host_draw_providers.dart';
@@ -14,6 +15,9 @@ enum HubEventKind {
 
   /// A squad call-up window before a campaign or tournament.
   callUp,
+
+  /// A prompt to arrange friendlies in the gap before the next block.
+  friendlies,
 
   /// The player's own next match (opens the match, via its preview).
   match,
@@ -189,7 +193,23 @@ final AutoDisposeFutureProviderFamily<HubEvent, int> nextEventProvider =
       return callUp('Name your World Cup squad', worldCupFinalsCallUpKind);
     }
 
-    // 4. Play the next match (opens its pre-match preview first).
+    // 5. Arrange friendlies in an open gap before the next competitive block.
+    final friendlies = await ref.watch(
+      friendliesPlanProvider(careerId).future,
+    );
+    if (friendlies != null) {
+      final n = friendlies.windows.length;
+      return HubEvent(
+        kind: HubEventKind.friendlies,
+        label: 'Arrange friendlies',
+        icon: Icons.handshake_outlined,
+        route: '${Routes.friendlies}?careerId=$careerId',
+        subtitle: "You haven't arranged your $n open "
+            "window${n == 1 ? '' : 's'} yet",
+      );
+    }
+
+    // 6. Play the next match (opens its pre-match preview first).
     final oppId = next.homeNationId == hub.career.nationId
         ? next.awayNationId
         : next.homeNationId;

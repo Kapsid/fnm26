@@ -49,9 +49,9 @@ void main() {
         ))
         .valueOrNull!;
 
-    // The gap is filled with continental qualifying and friendlies. Europe has
-    // room before the Euros, so the player contests a real qualifying stage
-    // (its finals are drawn from the qualifiers mid-season).
+    // Europe has room before the Euros, so the player contests a real
+    // qualifying stage (its finals are drawn from the qualifiers mid-season).
+    // Friendlies are no longer auto-scheduled — the manager arranges them.
     final ownFixtures = await container
         .read(competitionRepositoryProvider)
         .fixturesForNation(career.id, player.id);
@@ -69,8 +69,8 @@ void main() {
     );
     expect(
       ownFixtures.any((f) => f.round == 'FRIENDLY'),
-      isTrue,
-      reason: 'the player should have friendlies scheduled',
+      isFalse,
+      reason: 'friendlies are now manager-arranged, not auto-scheduled',
     );
 
     final season = container.read(seasonServiceProvider);

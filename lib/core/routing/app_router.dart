@@ -4,6 +4,7 @@ import 'package:fnm/features/career/career_summary_screen.dart';
 import 'package:fnm/features/career/new_game_screen.dart';
 import 'package:fnm/features/career/saves_screen.dart';
 import 'package:fnm/features/dev/style_gallery_screen.dart';
+import 'package:fnm/features/friendlies/friendlies_screen.dart';
 import 'package:fnm/features/home/home_screen.dart';
 import 'package:fnm/features/hub/cycle_rollover_screen.dart';
 import 'package:fnm/features/hub/hub_screen.dart';
@@ -97,6 +98,9 @@ abstract final class Routes {
 
   /// The host-selection ceremony. Expects `?careerId=` and `?worldCup=`.
   static const hostDraw = '/host-draw';
+
+  /// Arrange friendlies for the current gap. Expects `?careerId=`.
+  static const friendlies = '/friendlies';
 
   /// End-of-cycle event: crowns the champion and starts the next cycle. Expects
   /// `?careerId=`.
@@ -245,6 +249,16 @@ final routerProvider = Provider<GoRouter>((ref) {
               0;
           final worldCup = state.uri.queryParameters['worldCup'] == 'true';
           return HostDrawScreen(careerId: id, worldCup: worldCup);
+        },
+      ),
+      GoRoute(
+        path: Routes.friendlies,
+        builder: (context, state) {
+          final id = int.tryParse(
+                state.uri.queryParameters['careerId'] ?? '',
+              ) ??
+              0;
+          return FriendliesScreen(careerId: id);
         },
       ),
       GoRoute(

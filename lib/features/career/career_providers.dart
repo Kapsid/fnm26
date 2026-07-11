@@ -9,7 +9,6 @@ import 'package:fnm/domain/entities/tactics.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
 import 'package:fnm/domain/services/competition/continental_cups.dart';
 import 'package:fnm/domain/services/competition/finals.dart';
-import 'package:fnm/domain/services/competition/friendly_scheduler.dart';
 import 'package:fnm/domain/services/competition/real_history.dart';
 import 'package:fnm/domain/services/competition/schedule_generator.dart';
 import 'package:fnm/domain/services/entitlement/entitlement.dart';
@@ -186,32 +185,9 @@ class CareerService {
       );
     }
 
-    // 3. Friendlies fill every window that has no competitive fixture, keeping
-    //    clear of the two finals windows (the player may reach either).
-    final own = await comp.fixturesForNation(careerId, nationId);
-    final occupied = <(int, int)>{
-      for (final f in own)
-        if (!f.date.isBefore(cycleStart)) (f.date.year, f.date.month),
-    };
-    if (contFinalsStart != null) {
-      occupied.add((contFinalsStart.year, contFinalsStart.month));
-    }
-    occupied.add((wcYear, 6)); // World Cup finals window.
-    final pool = [for (final n in nations) if (n.id != nationId) n.id];
-    final friendlies = FriendlyScheduler.schedule(
-      from: cycleStart,
-      until: DateTime(wcYear, 6),
-      opponentPool: pool,
-      seed: rngSeed ^ (cycle * 0x71),
-      max: 14,
-      skipWindows: occupied,
-    );
-    await comp.saveFriendlies(
-      careerId: careerId,
-      nationId: nationId,
-      cycle: cycle,
-      friendlies: friendlies,
-    );
+    // Friendlies are no longer auto-scheduled: the manager arranges 1–3 of them
+    // per gap between competitive blocks, from the hub's "Arrange friendlies"
+    // event (see friendliesProvider / FriendliesScreen).
   }
 
   /// Seeds real World Cup / Euro / Copa history so the records section is
