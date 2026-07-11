@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/services.dart' show AssetBundle;
+import 'package:fnm/data/seed/pool_generator.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/entities/player.dart';
 
@@ -39,9 +40,10 @@ class AssetSeedSource implements SeedSource {
   Future<List<Player>> players() async {
     final raw = await _bundle.loadString(_playersAsset);
     final list = jsonDecode(raw) as List<dynamic>;
-    return list
-        .map((e) => Player.fromJson(e as Map<String, Object?>))
-        .toList(growable: false);
+    final base =
+        list.map((e) => Player.fromJson(e as Map<String, Object?>)).toList();
+    // Assign clubs and pad each nation into a deeper, scoutable pool.
+    return PoolGenerator.expand(base);
   }
 }
 

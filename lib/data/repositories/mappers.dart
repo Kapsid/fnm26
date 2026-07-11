@@ -40,6 +40,7 @@ extension PlayerRowMapper on PlayerRow {
           stamina: stamina,
           strength: strength,
         ),
+        club: club,
       );
 }
 

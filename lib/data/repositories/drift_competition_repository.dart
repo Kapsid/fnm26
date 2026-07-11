@@ -235,6 +235,67 @@ class DriftCompetitionRepository implements CompetitionRepository {
   }
 
   @override
+  Future<RoundResults?> lastRoundResults(int careerId, int nationId) async {
+    // The player's most recently played group-stage fixture.
+    final played = await (_db.select(_db.fixtures)
+          ..where(
+            (t) =>
+                t.careerId.equals(careerId) &
+                t.played.equals(true) &
+                t.groupId.isNotNull() &
+                (t.homeNationId.equals(nationId) |
+                    t.awayNationId.equals(nationId)),
+          )
+          ..orderBy([
+            (t) => OrderingTerm(expression: t.date, mode: OrderingMode.desc),
+          ])
+          ..limit(1))
+        .getSingleOrNull();
+    final playedGroupId = played?.groupId;
+    if (played == null || playedGroupId == null) return null;
+
+    final matchday = played.matchday;
+    final group = await (_db.select(_db.qualifyingGroups)
+          ..where((t) => t.id.equals(playedGroupId)))
+        .getSingleOrNull();
+    if (group == null) return null;
+    final comp = await (_db.select(_db.competitions)
+          ..where((t) => t.id.equals(group.competitionId)))
+        .getSingleOrNull();
+    if (comp == null) return null;
+
+    final groups = await (_db.select(_db.qualifyingGroups)
+          ..where((t) => t.competitionId.equals(group.competitionId))
+          ..orderBy([(t) => OrderingTerm(expression: t.name)]))
+        .get();
+
+    final result = <RoundResultGroup>[];
+    for (final g in groups) {
+      final members = await (_db.select(_db.groupMembers)
+            ..where((t) => t.groupId.equals(g.id)))
+          .get();
+      final fixtures = await (_db.select(_db.fixtures)
+            ..where((t) => t.groupId.equals(g.id)))
+          .get();
+      final standings = GroupStanding.table(
+        members.map((m) => m.nationId).toList(),
+        fixtures.map((r) => r.toDomain()).toList(),
+      );
+      final roundFixtures = fixtures
+          .where((f) => f.matchday == matchday && f.played)
+          .map((r) => r.toDomain())
+          .toList()
+        ..sort((a, b) => a.id.compareTo(b.id));
+      result.add((name: g.name, standings: standings, fixtures: roundFixtures));
+    }
+    return (
+      competition: comp.name,
+      matchday: matchday,
+      groups: result,
+    );
+  }
+
+  @override
   Future<List<ConfederationGroupTable>> allGroupTablesByConfederation(
     int careerId,
   ) async {
@@ -433,18 +494,22 @@ class DriftCompetitionRepository implements CompetitionRepository {
   }
 
   @override
-  Future<bool> allQualifyingPlayed(int careerId) async {
+  Future<bool> allQualifyingPlayed(int careerId) =>
+      allPlayedForKind(careerId, CompetitionKind.worldCupQualifying);
+
+  @override
+  Future<bool> allPlayedForKind(int careerId, CompetitionKind kind) async {
     final cycle = await _cycle(careerId);
-    final qualifying = await (_db.select(_db.competitions)
+    final comps = await (_db.select(_db.competitions)
           ..where(
             (t) =>
                 t.careerId.equals(careerId) &
                 t.cycle.equals(cycle) &
-                t.kind.equalsValue(CompetitionKind.worldCupQualifying),
+                t.kind.equalsValue(kind),
           ))
         .get();
-    if (qualifying.isEmpty) return false;
-    final ids = qualifying.map((c) => c.id).toList();
+    if (comps.isEmpty) return false;
+    final ids = comps.map((c) => c.id).toList();
     final unplayed = await (_db.select(_db.fixtures)
           ..where(
             (t) => t.competitionId.isIn(ids) & t.played.equals(false),
@@ -531,8 +596,18 @@ class DriftCompetitionRepository implements CompetitionRepository {
   }
 
   @override
-  Future<List<FinalsGroupTable>> finalsGroupTables(int careerId) async {
-    final comp = await _finals(careerId);
+  Future<List<FinalsGroupTable>> finalsGroupTables(int careerId) async =>
+      _groupTables(await _finals(careerId));
+
+  @override
+  Future<List<FinalsGroupTable>> tournamentGroupTables(
+    int careerId,
+    CompetitionKind kind,
+  ) async =>
+      _groupTables(await _tournamentComp(careerId, kind));
+
+  /// Builds the group tables for [comp] (empty if it has no group stage).
+  Future<List<FinalsGroupTable>> _groupTables(CompetitionRow? comp) async {
     if (comp == null) return [];
     final groups = await (_db.select(_db.qualifyingGroups)
           ..where((t) => t.competitionId.equals(comp.id))
@@ -555,6 +630,61 @@ class DriftCompetitionRepository implements CompetitionRepository {
       ));
     }
     return tables;
+  }
+
+  @override
+  Future<void> saveTournamentGroups({
+    required int careerId,
+    required int cycle,
+    required Confederation confederation,
+    required CompetitionKind kind,
+    required String name,
+    required FinalsDraw draw,
+    required DateTime groupStart,
+    String round = 'GROUP',
+  }) async {
+    await _db.transaction(() async {
+      final compId = await _db.into(_db.competitions).insert(
+            CompetitionsCompanion.insert(
+              careerId: careerId,
+              confederation: confederation,
+              name: name,
+              kind: Value(kind),
+              cycle: Value(cycle),
+            ),
+          );
+      for (final group in draw.groups) {
+        final groupId = await _db.into(_db.qualifyingGroups).insert(
+              QualifyingGroupsCompanion.insert(
+                competitionId: compId,
+                name: group.name,
+              ),
+            );
+        await _db.batch((b) {
+          b
+            ..insertAll(_db.groupMembers, [
+              for (final nationId in group.nationIds)
+                GroupMembersCompanion.insert(
+                  groupId: groupId,
+                  nationId: nationId,
+                ),
+            ])
+            ..insertAll(_db.fixtures, [
+              for (final (matchday, home, away) in group.fixtures)
+                FixturesCompanion.insert(
+                  careerId: careerId,
+                  competitionId: compId,
+                  groupId: Value(groupId),
+                  matchday: matchday,
+                  date: groupStart.add(Duration(days: (matchday - 1) * 3)),
+                  homeNationId: home,
+                  awayNationId: away,
+                  round: Value(round),
+                ),
+            ]);
+        });
+      }
+    });
   }
 
   @override
@@ -728,6 +858,30 @@ class DriftCompetitionRepository implements CompetitionRepository {
             topScorerName: Value(topScorerName),
             topScorerGoals: Value(topScorerGoals),
           ),
+        );
+  }
+
+  @override
+  Future<bool> hasWatchedDraw(int careerId, int cycle, String kind) async {
+    final row = await (_db.select(_db.drawsWatched)
+          ..where(
+            (t) =>
+                t.careerId.equals(careerId) &
+                t.cycle.equals(cycle) &
+                t.kind.equals(kind),
+          )
+          ..limit(1))
+        .getSingleOrNull();
+    return row != null;
+  }
+
+  @override
+  Future<void> markDrawWatched(int careerId, int cycle, String kind) async {
+    await _db
+        .into(_db.drawsWatched)
+        .insert(
+          DrawWatchedRow(careerId: careerId, cycle: cycle, kind: kind),
+          mode: InsertMode.insertOrIgnore,
         );
   }
 

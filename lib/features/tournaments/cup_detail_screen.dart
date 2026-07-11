@@ -61,14 +61,22 @@ class CupDetailScreen extends ConsumerWidget {
             String code(int id) => data.nations[id]?.code ?? '??';
             String name(int id) => data.nations[id]?.name ?? 'Unknown';
 
-            return TabBarView(
+            return Column(
               children: [
+                if (data.hostId != null)
+                  _HostBar(code: code(data.hostId!), name: name(data.hostId!)),
+                Expanded(
+                  child: TabBarView(
+                    children: [
                 _Qualifying(
                   groups: data.groups,
                   playerConfederation: data.playerConfederation,
                   playerNationId: data.playerNationId,
                   code: code,
                   name: name,
+                  onViewDraw: () => context.go(
+                    '${Routes.qualifyingDraw}?careerId=$careerId&worldCup=true',
+                  ),
                 ),
                 if (data.hasFinals)
                   _FinalsGroups(
@@ -88,6 +96,7 @@ class CupDetailScreen extends ConsumerWidget {
                     fixtures: data.knockout,
                     champion: data.champion,
                     playerNationId: data.playerNationId,
+                    runSummary: _playerRunSummary(data),
                     code: code,
                     name: name,
                   )
@@ -103,11 +112,55 @@ class CupDetailScreen extends ConsumerWidget {
                   playerNames: data.playerNames,
                   code: code,
                 ),
-                _History(honours: data.honours, name: name, code: code),
+                      _History(honours: data.honours, name: name, code: code),
+                    ],
+                  ),
+                ),
               ],
             );
           },
         ),
+      ),
+    );
+  }
+}
+
+/// A slim banner naming the World Cup host nation (shown across the cup tabs).
+class _HostBar extends StatelessWidget {
+  const _HostBar({required this.code, required this.name});
+
+  final String code;
+  final String name;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      color: AppColors.surfaceContainerHigh,
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppSpacing.marginMobile,
+        vertical: AppSpacing.sm,
+      ),
+      child: Row(
+        children: [
+          const Icon(Icons.stadium_rounded, size: 16, color: AppColors.primary),
+          const SizedBox(width: AppSpacing.sm),
+          Text(
+            'HOST',
+            style: AppTypography.labelSmall.copyWith(color: AppColors.primary),
+          ),
+          const SizedBox(width: AppSpacing.sm),
+          FlagDisc(code, size: 18),
+          const SizedBox(width: AppSpacing.xs),
+          Expanded(
+            child: Text(
+              name,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: AppTypography.labelMedium,
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -120,6 +173,7 @@ class _Qualifying extends StatefulWidget {
     required this.playerNationId,
     required this.code,
     required this.name,
+    required this.onViewDraw,
   });
 
   final List<ConfederationGroupTable> groups;
@@ -127,6 +181,7 @@ class _Qualifying extends StatefulWidget {
   final int playerNationId;
   final String Function(int) code;
   final String Function(int) name;
+  final VoidCallback onViewDraw;
 
   @override
   State<_Qualifying> createState() => _QualifyingState();
@@ -217,6 +272,14 @@ class _QualifyingState extends State<_Qualifying> {
     return ListView(
       padding: const EdgeInsets.all(AppSpacing.marginMobile),
       children: [
+        Align(
+          alignment: Alignment.centerRight,
+          child: TextButton.icon(
+            onPressed: widget.onViewDraw,
+            icon: const Icon(Icons.casino, size: 18),
+            label: const Text('View qualifying draw'),
+          ),
+        ),
         for (final conf in confs) ...[
           Padding(
             padding: const EdgeInsets.only(
@@ -401,11 +464,58 @@ class _FinalsGroups extends StatelessWidget {
   }
 }
 
+/// A short summary of how the player's nation fared in the finals, used to
+/// highlight their run on the bracket ("Knocked out in the Quarter-finals",
+/// "World Champions!"). Returns null when the player didn't qualify.
+String? _playerRunSummary(CupData data) {
+  final pid = data.playerNationId;
+  if (data.champion == pid) return 'World Champions! 🏆';
+
+  const order = {'R32': 0, 'R16': 1, 'QF': 2, 'SF': 3, '3RD': 4, 'FINAL': 5};
+  const label = {
+    'R32': 'Round of 32',
+    'R16': 'Round of 16',
+    'QF': 'Quarter-finals',
+    'SF': 'Semi-finals',
+    '3RD': 'third-place play-off',
+    'FINAL': 'Final',
+  };
+
+  final own = data.knockout
+      .where((f) => f.homeNationId == pid || f.awayNationId == pid)
+      .toList();
+  if (own.isEmpty) {
+    final inFinals = data.finalsGroups.any(
+      (g) => g.standings.any((s) => s.nationId == pid),
+    );
+    if (!inFinals) return null; // didn't reach the finals
+    return data.knockout.isEmpty
+        ? 'Contesting the group stage'
+        : 'Eliminated in the group stage';
+  }
+
+  own.sort((a, b) => (order[a.round] ?? 0).compareTo(order[b.round] ?? 0));
+  final deepest = own.last;
+  final round = deepest.round;
+  final roundLabel = label[round] ?? round ?? '';
+  if (!deepest.hasResult) return 'Into the $roundLabel';
+
+  final won = deepest.homeNationId == pid
+      ? deepest.homeScore! >= deepest.awayScore!
+      : deepest.awayScore! >= deepest.homeScore!;
+  if (round == 'FINAL') return won ? 'World Champions! 🏆' : 'Runners-up';
+  if (round == '3RD') return won ? 'Third place' : 'Fourth place';
+  return won
+      ? 'Through from the $roundLabel'
+      : 'Knocked out in the $roundLabel';
+}
+
 class _Bracket extends StatelessWidget {
   const _Bracket({
     required this.fixtures,
     required this.champion,
     required this.playerNationId,
+    required this.runSummary,
     required this.code,
     required this.name,
   });
@@ -413,10 +523,12 @@ class _Bracket extends StatelessWidget {
   final List<Fixture> fixtures;
   final int? champion;
   final int playerNationId;
+  final String? runSummary;
   final String Function(int) code;
   final String Function(int) name;
 
   static const List<(String, String)> _rounds = [
+    (WorldCupFinals.r32, 'Round of 32'),
     (WorldCupFinals.r16, 'Round of 16'),
     (WorldCupFinals.qf, 'Quarter-finals'),
     (WorldCupFinals.sf, 'Semi-finals'),
@@ -429,6 +541,37 @@ class _Bracket extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.all(AppSpacing.marginMobile),
       children: [
+        if (runSummary != null)
+          Padding(
+            padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+            child: AppCard(
+              color: AppColors.secondaryContainer,
+              child: Row(
+                children: [
+                  const Icon(
+                    Icons.flag_rounded,
+                    color: AppColors.primary,
+                    size: 18,
+                  ),
+                  const SizedBox(width: AppSpacing.sm),
+                  Text(
+                    'YOUR RUN',
+                    style: AppTypography.labelSmall.copyWith(
+                      color: AppColors.primary,
+                    ),
+                  ),
+                  const SizedBox(width: AppSpacing.sm),
+                  Expanded(
+                    child: Text(
+                      runSummary!,
+                      textAlign: TextAlign.end,
+                      style: AppTypography.labelMedium,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
         if (champion != null)
           AppCard(
             child: Row(

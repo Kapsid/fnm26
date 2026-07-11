@@ -22,6 +22,22 @@ typedef ConfederationGroupTable = ({
 /// A World Cup finals group table.
 typedef FinalsGroupTable = ({String name, List<GroupStanding> standings});
 
+/// One group within a round-results view: its standings plus the fixtures that
+/// were played on the round's matchday.
+typedef RoundResultGroup = ({
+  String name,
+  List<GroupStanding> standings,
+  List<Fixture> fixtures,
+});
+
+/// The results of the group-stage round the player just played, grouped by
+/// group (every group in the same competition, with that matchday's scores).
+typedef RoundResults = ({
+  String competition,
+  int matchday,
+  List<RoundResultGroup> groups,
+});
+
 /// One attributed goal, ready to persist.
 typedef GoalRecord = ({
   int careerId,
@@ -90,6 +106,11 @@ abstract interface class CompetitionRepository {
   /// The group table containing [nationId] for this save, or null.
   Future<GroupTable?> groupTableForNation(int careerId, int nationId);
 
+  /// The results of the group-stage round [nationId] most recently played,
+  /// grouped by every group in that competition. Null when the last played
+  /// match wasn't a group-stage fixture (e.g. a knockout tie or a friendly).
+  Future<RoundResults?> lastRoundResults(int careerId, int nationId);
+
   /// All group tables for the save's competition, ordered by group name.
   Future<List<GroupTable>> allGroupTables(int careerId);
 
@@ -117,8 +138,19 @@ abstract interface class CompetitionRepository {
   /// Whether every confederation's qualifying is fully played.
   Future<bool> allQualifyingPlayed(int careerId);
 
+  /// Whether every fixture of the current cycle's tournament(s) of [kind] is
+  /// played. Returns false if no such competition exists.
+  Future<bool> allPlayedForKind(int careerId, CompetitionKind kind);
+
   /// Whether the finals competition has been created for this save.
   Future<bool> hasFinals(int careerId);
+
+  /// Whether the manager has already watched a given draw ([kind] is
+  /// 'worldCupFinals' or a confederation name) for [cycle] — draws play once.
+  Future<bool> hasWatchedDraw(int careerId, int cycle, String kind);
+
+  /// Records that a draw ceremony has been watched (idempotent).
+  Future<void> markDrawWatched(int careerId, int cycle, String kind);
 
   /// The earliest unplayed fixture date on or after [onOrAfter], or null.
   Future<DateTime?> earliestUnplayedDate(int careerId, DateTime onOrAfter);
@@ -134,6 +166,27 @@ abstract interface class CompetitionRepository {
 
   /// Finals group tables (groups A…H, ordered).
   Future<List<FinalsGroupTable>> finalsGroupTables(int careerId);
+
+  /// Persists a drawn group stage for any tournament [kind] (e.g. a continental
+  /// championship), labelling its fixtures [round] and spacing matchdays from
+  /// [groupStart]. Creates the competition.
+  Future<void> saveTournamentGroups({
+    required int careerId,
+    required int cycle,
+    required Confederation confederation,
+    required CompetitionKind kind,
+    required String name,
+    required FinalsDraw draw,
+    required DateTime groupStart,
+    String round = 'GROUP',
+  });
+
+  /// Group tables for the current cycle's tournament of [kind], ordered by
+  /// group name (empty if it has no group stage).
+  Future<List<FinalsGroupTable>> tournamentGroupTables(
+    int careerId,
+    CompetitionKind kind,
+  );
 
   /// Knockout fixtures for a [round] (`R16`/`QF`/`SF`/`3RD`/`FINAL`) of the
   /// current cycle's tournament of [kind].

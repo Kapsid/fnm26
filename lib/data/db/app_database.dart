@@ -26,6 +26,7 @@ part 'app_database.g.dart';
     CallUps,
     GoalEvents,
     Honours,
+    DrawsWatched,
   ],
 )
 class AppDatabase extends _$AppDatabase {
@@ -41,7 +42,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase.forTesting(QueryExecutor executor) : super(executor);
 
   @override
-  int get schemaVersion => 8;
+  int get schemaVersion => 10;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -84,6 +85,14 @@ class AppDatabase extends _$AppDatabase {
           // v8 adds the call-up (squad selection) table.
           if (from < 8) {
             await m.createTable(callUps);
+          }
+          // v9 tracks which draw ceremonies have been watched (one-time play).
+          if (from < 9) {
+            await m.createTable(drawsWatched);
+          }
+          // v10 adds the player's club (pool is topped up by the seed loader).
+          if (from < 10) {
+            await m.addColumn(players, players.club);
           }
         },
       );

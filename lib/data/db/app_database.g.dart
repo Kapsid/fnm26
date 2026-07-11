@@ -575,6 +575,16 @@ class $PlayersTable extends Players with TableInfo<$PlayersTable, PlayerRow> {
     type: DriftSqlType.int,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _clubMeta = const VerificationMeta('club');
+  @override
+  late final GeneratedColumn<String> club = GeneratedColumn<String>(
+    'club',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('Free agent'),
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -592,6 +602,7 @@ class $PlayersTable extends Players with TableInfo<$PlayersTable, PlayerRow> {
     pace,
     stamina,
     strength,
+    club,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -715,6 +726,12 @@ class $PlayersTable extends Players with TableInfo<$PlayersTable, PlayerRow> {
     } else if (isInserting) {
       context.missing(_strengthMeta);
     }
+    if (data.containsKey('club')) {
+      context.handle(
+        _clubMeta,
+        club.isAcceptableOrUnknown(data['club']!, _clubMeta),
+      );
+    }
     return context;
   }
 
@@ -786,6 +803,10 @@ class $PlayersTable extends Players with TableInfo<$PlayersTable, PlayerRow> {
         DriftSqlType.int,
         data['${effectivePrefix}strength'],
       )!,
+      club: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}club'],
+      )!,
     );
   }
 
@@ -815,6 +836,9 @@ class PlayerRow extends DataClass implements Insertable<PlayerRow> {
   final int pace;
   final int stamina;
   final int strength;
+
+  /// The player's club side (display/scouting only).
+  final String club;
   const PlayerRow({
     required this.id,
     required this.nationId,
@@ -831,6 +855,7 @@ class PlayerRow extends DataClass implements Insertable<PlayerRow> {
     required this.pace,
     required this.stamina,
     required this.strength,
+    required this.club,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -854,6 +879,7 @@ class PlayerRow extends DataClass implements Insertable<PlayerRow> {
     map['pace'] = Variable<int>(pace);
     map['stamina'] = Variable<int>(stamina);
     map['strength'] = Variable<int>(strength);
+    map['club'] = Variable<String>(club);
     return map;
   }
 
@@ -874,6 +900,7 @@ class PlayerRow extends DataClass implements Insertable<PlayerRow> {
       pace: Value(pace),
       stamina: Value(stamina),
       strength: Value(strength),
+      club: Value(club),
     );
   }
 
@@ -900,6 +927,7 @@ class PlayerRow extends DataClass implements Insertable<PlayerRow> {
       pace: serializer.fromJson<int>(json['pace']),
       stamina: serializer.fromJson<int>(json['stamina']),
       strength: serializer.fromJson<int>(json['strength']),
+      club: serializer.fromJson<String>(json['club']),
     );
   }
   @override
@@ -923,6 +951,7 @@ class PlayerRow extends DataClass implements Insertable<PlayerRow> {
       'pace': serializer.toJson<int>(pace),
       'stamina': serializer.toJson<int>(stamina),
       'strength': serializer.toJson<int>(strength),
+      'club': serializer.toJson<String>(club),
     };
   }
 
@@ -942,6 +971,7 @@ class PlayerRow extends DataClass implements Insertable<PlayerRow> {
     int? pace,
     int? stamina,
     int? strength,
+    String? club,
   }) => PlayerRow(
     id: id ?? this.id,
     nationId: nationId ?? this.nationId,
@@ -958,6 +988,7 @@ class PlayerRow extends DataClass implements Insertable<PlayerRow> {
     pace: pace ?? this.pace,
     stamina: stamina ?? this.stamina,
     strength: strength ?? this.strength,
+    club: club ?? this.club,
   );
   PlayerRow copyWithCompanion(PlayersCompanion data) {
     return PlayerRow(
@@ -978,6 +1009,7 @@ class PlayerRow extends DataClass implements Insertable<PlayerRow> {
       pace: data.pace.present ? data.pace.value : this.pace,
       stamina: data.stamina.present ? data.stamina.value : this.stamina,
       strength: data.strength.present ? data.strength.value : this.strength,
+      club: data.club.present ? data.club.value : this.club,
     );
   }
 
@@ -998,7 +1030,8 @@ class PlayerRow extends DataClass implements Insertable<PlayerRow> {
           ..write('decisions: $decisions, ')
           ..write('pace: $pace, ')
           ..write('stamina: $stamina, ')
-          ..write('strength: $strength')
+          ..write('strength: $strength, ')
+          ..write('club: $club')
           ..write(')'))
         .toString();
   }
@@ -1020,6 +1053,7 @@ class PlayerRow extends DataClass implements Insertable<PlayerRow> {
     pace,
     stamina,
     strength,
+    club,
   );
   @override
   bool operator ==(Object other) =>
@@ -1039,7 +1073,8 @@ class PlayerRow extends DataClass implements Insertable<PlayerRow> {
           other.decisions == this.decisions &&
           other.pace == this.pace &&
           other.stamina == this.stamina &&
-          other.strength == this.strength);
+          other.strength == this.strength &&
+          other.club == this.club);
 }
 
 class PlayersCompanion extends UpdateCompanion<PlayerRow> {
@@ -1058,6 +1093,7 @@ class PlayersCompanion extends UpdateCompanion<PlayerRow> {
   final Value<int> pace;
   final Value<int> stamina;
   final Value<int> strength;
+  final Value<String> club;
   const PlayersCompanion({
     this.id = const Value.absent(),
     this.nationId = const Value.absent(),
@@ -1074,6 +1110,7 @@ class PlayersCompanion extends UpdateCompanion<PlayerRow> {
     this.pace = const Value.absent(),
     this.stamina = const Value.absent(),
     this.strength = const Value.absent(),
+    this.club = const Value.absent(),
   });
   PlayersCompanion.insert({
     this.id = const Value.absent(),
@@ -1091,6 +1128,7 @@ class PlayersCompanion extends UpdateCompanion<PlayerRow> {
     required int pace,
     required int stamina,
     required int strength,
+    this.club = const Value.absent(),
   }) : nationId = Value(nationId),
        name = Value(name),
        age = Value(age),
@@ -1121,6 +1159,7 @@ class PlayersCompanion extends UpdateCompanion<PlayerRow> {
     Expression<int>? pace,
     Expression<int>? stamina,
     Expression<int>? strength,
+    Expression<String>? club,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -1138,6 +1177,7 @@ class PlayersCompanion extends UpdateCompanion<PlayerRow> {
       if (pace != null) 'pace': pace,
       if (stamina != null) 'stamina': stamina,
       if (strength != null) 'strength': strength,
+      if (club != null) 'club': club,
     });
   }
 
@@ -1157,6 +1197,7 @@ class PlayersCompanion extends UpdateCompanion<PlayerRow> {
     Value<int>? pace,
     Value<int>? stamina,
     Value<int>? strength,
+    Value<String>? club,
   }) {
     return PlayersCompanion(
       id: id ?? this.id,
@@ -1174,6 +1215,7 @@ class PlayersCompanion extends UpdateCompanion<PlayerRow> {
       pace: pace ?? this.pace,
       stamina: stamina ?? this.stamina,
       strength: strength ?? this.strength,
+      club: club ?? this.club,
     );
   }
 
@@ -1227,6 +1269,9 @@ class PlayersCompanion extends UpdateCompanion<PlayerRow> {
     if (strength.present) {
       map['strength'] = Variable<int>(strength.value);
     }
+    if (club.present) {
+      map['club'] = Variable<String>(club.value);
+    }
     return map;
   }
 
@@ -1247,7 +1292,8 @@ class PlayersCompanion extends UpdateCompanion<PlayerRow> {
           ..write('decisions: $decisions, ')
           ..write('pace: $pace, ')
           ..write('stamina: $stamina, ')
-          ..write('strength: $strength')
+          ..write('strength: $strength, ')
+          ..write('club: $club')
           ..write(')'))
         .toString();
   }
@@ -5532,6 +5578,273 @@ class HonoursCompanion extends UpdateCompanion<HonourRow> {
   }
 }
 
+class $DrawsWatchedTable extends DrawsWatched
+    with TableInfo<$DrawsWatchedTable, DrawWatchedRow> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $DrawsWatchedTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _careerIdMeta = const VerificationMeta(
+    'careerId',
+  );
+  @override
+  late final GeneratedColumn<int> careerId = GeneratedColumn<int>(
+    'career_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES careers (id) ON DELETE CASCADE',
+    ),
+  );
+  static const VerificationMeta _cycleMeta = const VerificationMeta('cycle');
+  @override
+  late final GeneratedColumn<int> cycle = GeneratedColumn<int>(
+    'cycle',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _kindMeta = const VerificationMeta('kind');
+  @override
+  late final GeneratedColumn<String> kind = GeneratedColumn<String>(
+    'kind',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [careerId, cycle, kind];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'draws_watched';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<DrawWatchedRow> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('career_id')) {
+      context.handle(
+        _careerIdMeta,
+        careerId.isAcceptableOrUnknown(data['career_id']!, _careerIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_careerIdMeta);
+    }
+    if (data.containsKey('cycle')) {
+      context.handle(
+        _cycleMeta,
+        cycle.isAcceptableOrUnknown(data['cycle']!, _cycleMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_cycleMeta);
+    }
+    if (data.containsKey('kind')) {
+      context.handle(
+        _kindMeta,
+        kind.isAcceptableOrUnknown(data['kind']!, _kindMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_kindMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {careerId, cycle, kind};
+  @override
+  DrawWatchedRow map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return DrawWatchedRow(
+      careerId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}career_id'],
+      )!,
+      cycle: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}cycle'],
+      )!,
+      kind: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}kind'],
+      )!,
+    );
+  }
+
+  @override
+  $DrawsWatchedTable createAlias(String alias) {
+    return $DrawsWatchedTable(attachedDatabase, alias);
+  }
+}
+
+class DrawWatchedRow extends DataClass implements Insertable<DrawWatchedRow> {
+  final int careerId;
+  final int cycle;
+
+  /// Which draw: 'worldCupFinals', or a confederation name for a continental.
+  final String kind;
+  const DrawWatchedRow({
+    required this.careerId,
+    required this.cycle,
+    required this.kind,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['career_id'] = Variable<int>(careerId);
+    map['cycle'] = Variable<int>(cycle);
+    map['kind'] = Variable<String>(kind);
+    return map;
+  }
+
+  DrawsWatchedCompanion toCompanion(bool nullToAbsent) {
+    return DrawsWatchedCompanion(
+      careerId: Value(careerId),
+      cycle: Value(cycle),
+      kind: Value(kind),
+    );
+  }
+
+  factory DrawWatchedRow.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return DrawWatchedRow(
+      careerId: serializer.fromJson<int>(json['careerId']),
+      cycle: serializer.fromJson<int>(json['cycle']),
+      kind: serializer.fromJson<String>(json['kind']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'careerId': serializer.toJson<int>(careerId),
+      'cycle': serializer.toJson<int>(cycle),
+      'kind': serializer.toJson<String>(kind),
+    };
+  }
+
+  DrawWatchedRow copyWith({int? careerId, int? cycle, String? kind}) =>
+      DrawWatchedRow(
+        careerId: careerId ?? this.careerId,
+        cycle: cycle ?? this.cycle,
+        kind: kind ?? this.kind,
+      );
+  DrawWatchedRow copyWithCompanion(DrawsWatchedCompanion data) {
+    return DrawWatchedRow(
+      careerId: data.careerId.present ? data.careerId.value : this.careerId,
+      cycle: data.cycle.present ? data.cycle.value : this.cycle,
+      kind: data.kind.present ? data.kind.value : this.kind,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('DrawWatchedRow(')
+          ..write('careerId: $careerId, ')
+          ..write('cycle: $cycle, ')
+          ..write('kind: $kind')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(careerId, cycle, kind);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is DrawWatchedRow &&
+          other.careerId == this.careerId &&
+          other.cycle == this.cycle &&
+          other.kind == this.kind);
+}
+
+class DrawsWatchedCompanion extends UpdateCompanion<DrawWatchedRow> {
+  final Value<int> careerId;
+  final Value<int> cycle;
+  final Value<String> kind;
+  final Value<int> rowid;
+  const DrawsWatchedCompanion({
+    this.careerId = const Value.absent(),
+    this.cycle = const Value.absent(),
+    this.kind = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  DrawsWatchedCompanion.insert({
+    required int careerId,
+    required int cycle,
+    required String kind,
+    this.rowid = const Value.absent(),
+  }) : careerId = Value(careerId),
+       cycle = Value(cycle),
+       kind = Value(kind);
+  static Insertable<DrawWatchedRow> custom({
+    Expression<int>? careerId,
+    Expression<int>? cycle,
+    Expression<String>? kind,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (careerId != null) 'career_id': careerId,
+      if (cycle != null) 'cycle': cycle,
+      if (kind != null) 'kind': kind,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  DrawsWatchedCompanion copyWith({
+    Value<int>? careerId,
+    Value<int>? cycle,
+    Value<String>? kind,
+    Value<int>? rowid,
+  }) {
+    return DrawsWatchedCompanion(
+      careerId: careerId ?? this.careerId,
+      cycle: cycle ?? this.cycle,
+      kind: kind ?? this.kind,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (careerId.present) {
+      map['career_id'] = Variable<int>(careerId.value);
+    }
+    if (cycle.present) {
+      map['cycle'] = Variable<int>(cycle.value);
+    }
+    if (kind.present) {
+      map['kind'] = Variable<String>(kind.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('DrawsWatchedCompanion(')
+          ..write('careerId: $careerId, ')
+          ..write('cycle: $cycle, ')
+          ..write('kind: $kind, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
@@ -5549,6 +5862,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $CallUpsTable callUps = $CallUpsTable(this);
   late final $GoalEventsTable goalEvents = $GoalEventsTable(this);
   late final $HonoursTable honours = $HonoursTable(this);
+  late final $DrawsWatchedTable drawsWatched = $DrawsWatchedTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -5566,6 +5880,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     callUps,
     goalEvents,
     honours,
+    drawsWatched,
   ];
   @override
   StreamQueryUpdateRules get streamUpdateRules => const StreamQueryUpdateRules([
@@ -5638,6 +5953,13 @@ abstract class _$AppDatabase extends GeneratedDatabase {
         limitUpdateKind: UpdateKind.delete,
       ),
       result: [TableUpdate('honours', kind: UpdateKind.delete)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'careers',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('draws_watched', kind: UpdateKind.delete)],
     ),
   ]);
 }
@@ -6063,6 +6385,7 @@ typedef $$PlayersTableCreateCompanionBuilder =
       required int pace,
       required int stamina,
       required int strength,
+      Value<String> club,
     });
 typedef $$PlayersTableUpdateCompanionBuilder =
     PlayersCompanion Function({
@@ -6081,6 +6404,7 @@ typedef $$PlayersTableUpdateCompanionBuilder =
       Value<int> pace,
       Value<int> stamina,
       Value<int> strength,
+      Value<String> club,
     });
 
 final class $$PlayersTableReferences
@@ -6182,6 +6506,11 @@ class $$PlayersTableFilterComposer
 
   ColumnFilters<int> get strength => $composableBuilder(
     column: $table.strength,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get club => $composableBuilder(
+    column: $table.club,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -6288,6 +6617,11 @@ class $$PlayersTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get club => $composableBuilder(
+    column: $table.club,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   $$NationsTableOrderingComposer get nationId {
     final $$NationsTableOrderingComposer composer = $composerBuilder(
       composer: this,
@@ -6365,6 +6699,9 @@ class $$PlayersTableAnnotationComposer
   GeneratedColumn<int> get strength =>
       $composableBuilder(column: $table.strength, builder: (column) => column);
 
+  GeneratedColumn<String> get club =>
+      $composableBuilder(column: $table.club, builder: (column) => column);
+
   $$NationsTableAnnotationComposer get nationId {
     final $$NationsTableAnnotationComposer composer = $composerBuilder(
       composer: this,
@@ -6432,6 +6769,7 @@ class $$PlayersTableTableManager
                 Value<int> pace = const Value.absent(),
                 Value<int> stamina = const Value.absent(),
                 Value<int> strength = const Value.absent(),
+                Value<String> club = const Value.absent(),
               }) => PlayersCompanion(
                 id: id,
                 nationId: nationId,
@@ -6448,6 +6786,7 @@ class $$PlayersTableTableManager
                 pace: pace,
                 stamina: stamina,
                 strength: strength,
+                club: club,
               ),
           createCompanionCallback:
               ({
@@ -6466,6 +6805,7 @@ class $$PlayersTableTableManager
                 required int pace,
                 required int stamina,
                 required int strength,
+                Value<String> club = const Value.absent(),
               }) => PlayersCompanion.insert(
                 id: id,
                 nationId: nationId,
@@ -6482,6 +6822,7 @@ class $$PlayersTableTableManager
                 pace: pace,
                 stamina: stamina,
                 strength: strength,
+                club: club,
               ),
           withReferenceMapper: (p0) => p0
               .map(
@@ -6720,6 +7061,24 @@ final class $$CareersTableReferences
       manager.$state.copyWith(prefetchedData: cache),
     );
   }
+
+  static MultiTypedResultKey<$DrawsWatchedTable, List<DrawWatchedRow>>
+  _drawsWatchedRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
+    db.drawsWatched,
+    aliasName: 'careers__id__draws_watched__career_id',
+  );
+
+  $$DrawsWatchedTableProcessedTableManager get drawsWatchedRefs {
+    final manager = $$DrawsWatchedTableTableManager(
+      $_db,
+      $_db.drawsWatched,
+    ).filter((f) => f.careerId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_drawsWatchedRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
 }
 
 class $$CareersTableFilterComposer
@@ -6950,6 +7309,31 @@ class $$CareersTableFilterComposer
           }) => $$HonoursTableFilterComposer(
             $db: $db,
             $table: $db.honours,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> drawsWatchedRefs(
+    Expression<bool> Function($$DrawsWatchedTableFilterComposer f) f,
+  ) {
+    final $$DrawsWatchedTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.drawsWatched,
+      getReferencedColumn: (t) => t.careerId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$DrawsWatchedTableFilterComposer(
+            $db: $db,
+            $table: $db.drawsWatched,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -7253,6 +7637,31 @@ class $$CareersTableAnnotationComposer
     );
     return f(composer);
   }
+
+  Expression<T> drawsWatchedRefs<T extends Object>(
+    Expression<T> Function($$DrawsWatchedTableAnnotationComposer a) f,
+  ) {
+    final $$DrawsWatchedTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.drawsWatched,
+      getReferencedColumn: (t) => t.careerId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$DrawsWatchedTableAnnotationComposer(
+            $db: $db,
+            $table: $db.drawsWatched,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
 }
 
 class $$CareersTableTableManager
@@ -7277,6 +7686,7 @@ class $$CareersTableTableManager
             bool callUpsRefs,
             bool goalEventsRefs,
             bool honoursRefs,
+            bool drawsWatchedRefs,
           })
         > {
   $$CareersTableTableManager(_$AppDatabase db, $CareersTable table)
@@ -7344,6 +7754,7 @@ class $$CareersTableTableManager
                 callUpsRefs = false,
                 goalEventsRefs = false,
                 honoursRefs = false,
+                drawsWatchedRefs = false,
               }) {
                 return PrefetchHooks(
                   db: db,
@@ -7355,6 +7766,7 @@ class $$CareersTableTableManager
                     if (callUpsRefs) db.callUps,
                     if (goalEventsRefs) db.goalEvents,
                     if (honoursRefs) db.honours,
+                    if (drawsWatchedRefs) db.drawsWatched,
                   ],
                   addJoins:
                       <
@@ -7537,6 +7949,27 @@ class $$CareersTableTableManager
                               ),
                           typedResults: items,
                         ),
+                      if (drawsWatchedRefs)
+                        await $_getPrefetchedData<
+                          CareerRow,
+                          $CareersTable,
+                          DrawWatchedRow
+                        >(
+                          currentTable: table,
+                          referencedTable: $$CareersTableReferences
+                              ._drawsWatchedRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$CareersTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).drawsWatchedRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.careerId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
                     ];
                   },
                 );
@@ -7566,6 +7999,7 @@ typedef $$CareersTableProcessedTableManager =
         bool callUpsRefs,
         bool goalEventsRefs,
         bool honoursRefs,
+        bool drawsWatchedRefs,
       })
     >;
 typedef $$CompetitionsTableCreateCompanionBuilder =
@@ -11569,6 +12003,285 @@ typedef $$HonoursTableProcessedTableManager =
       HonourRow,
       PrefetchHooks Function({bool careerId})
     >;
+typedef $$DrawsWatchedTableCreateCompanionBuilder =
+    DrawsWatchedCompanion Function({
+      required int careerId,
+      required int cycle,
+      required String kind,
+      Value<int> rowid,
+    });
+typedef $$DrawsWatchedTableUpdateCompanionBuilder =
+    DrawsWatchedCompanion Function({
+      Value<int> careerId,
+      Value<int> cycle,
+      Value<String> kind,
+      Value<int> rowid,
+    });
+
+final class $$DrawsWatchedTableReferences
+    extends BaseReferences<_$AppDatabase, $DrawsWatchedTable, DrawWatchedRow> {
+  $$DrawsWatchedTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static $CareersTable _careerIdTable(_$AppDatabase db) =>
+      db.careers.createAlias('draws_watched__career_id__careers__id');
+
+  $$CareersTableProcessedTableManager get careerId {
+    final $_column = $_itemColumn<int>('career_id')!;
+
+    final manager = $$CareersTableTableManager(
+      $_db,
+      $_db.careers,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_careerIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
+
+class $$DrawsWatchedTableFilterComposer
+    extends Composer<_$AppDatabase, $DrawsWatchedTable> {
+  $$DrawsWatchedTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get cycle => $composableBuilder(
+    column: $table.cycle,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get kind => $composableBuilder(
+    column: $table.kind,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  $$CareersTableFilterComposer get careerId {
+    final $$CareersTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.careerId,
+      referencedTable: $db.careers,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$CareersTableFilterComposer(
+            $db: $db,
+            $table: $db.careers,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$DrawsWatchedTableOrderingComposer
+    extends Composer<_$AppDatabase, $DrawsWatchedTable> {
+  $$DrawsWatchedTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get cycle => $composableBuilder(
+    column: $table.cycle,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get kind => $composableBuilder(
+    column: $table.kind,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  $$CareersTableOrderingComposer get careerId {
+    final $$CareersTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.careerId,
+      referencedTable: $db.careers,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$CareersTableOrderingComposer(
+            $db: $db,
+            $table: $db.careers,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$DrawsWatchedTableAnnotationComposer
+    extends Composer<_$AppDatabase, $DrawsWatchedTable> {
+  $$DrawsWatchedTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get cycle =>
+      $composableBuilder(column: $table.cycle, builder: (column) => column);
+
+  GeneratedColumn<String> get kind =>
+      $composableBuilder(column: $table.kind, builder: (column) => column);
+
+  $$CareersTableAnnotationComposer get careerId {
+    final $$CareersTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.careerId,
+      referencedTable: $db.careers,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$CareersTableAnnotationComposer(
+            $db: $db,
+            $table: $db.careers,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$DrawsWatchedTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $DrawsWatchedTable,
+          DrawWatchedRow,
+          $$DrawsWatchedTableFilterComposer,
+          $$DrawsWatchedTableOrderingComposer,
+          $$DrawsWatchedTableAnnotationComposer,
+          $$DrawsWatchedTableCreateCompanionBuilder,
+          $$DrawsWatchedTableUpdateCompanionBuilder,
+          (DrawWatchedRow, $$DrawsWatchedTableReferences),
+          DrawWatchedRow,
+          PrefetchHooks Function({bool careerId})
+        > {
+  $$DrawsWatchedTableTableManager(_$AppDatabase db, $DrawsWatchedTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$DrawsWatchedTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$DrawsWatchedTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$DrawsWatchedTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> careerId = const Value.absent(),
+                Value<int> cycle = const Value.absent(),
+                Value<String> kind = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => DrawsWatchedCompanion(
+                careerId: careerId,
+                cycle: cycle,
+                kind: kind,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required int careerId,
+                required int cycle,
+                required String kind,
+                Value<int> rowid = const Value.absent(),
+              }) => DrawsWatchedCompanion.insert(
+                careerId: careerId,
+                cycle: cycle,
+                kind: kind,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$DrawsWatchedTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: ({careerId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins:
+                  <
+                    T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic
+                    >
+                  >(state) {
+                    if (careerId) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.careerId,
+                                referencedTable: $$DrawsWatchedTableReferences
+                                    ._careerIdTable(db),
+                                referencedColumn: $$DrawsWatchedTableReferences
+                                    ._careerIdTable(db)
+                                    .id,
+                              )
+                              as T;
+                    }
+
+                    return state;
+                  },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
+        ),
+      );
+}
+
+typedef $$DrawsWatchedTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $DrawsWatchedTable,
+      DrawWatchedRow,
+      $$DrawsWatchedTableFilterComposer,
+      $$DrawsWatchedTableOrderingComposer,
+      $$DrawsWatchedTableAnnotationComposer,
+      $$DrawsWatchedTableCreateCompanionBuilder,
+      $$DrawsWatchedTableUpdateCompanionBuilder,
+      (DrawWatchedRow, $$DrawsWatchedTableReferences),
+      DrawWatchedRow,
+      PrefetchHooks Function({bool careerId})
+    >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -11597,4 +12310,6 @@ class $AppDatabaseManager {
       $$GoalEventsTableTableManager(_db, _db.goalEvents);
   $$HonoursTableTableManager get honours =>
       $$HonoursTableTableManager(_db, _db.honours);
+  $$DrawsWatchedTableTableManager get drawsWatched =>
+      $$DrawsWatchedTableTableManager(_db, _db.drawsWatched);
 }

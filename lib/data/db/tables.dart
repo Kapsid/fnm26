@@ -46,6 +46,9 @@ class Players extends Table {
   IntColumn get stamina => integer()();
   IntColumn get strength => integer()();
 
+  /// The player's club side (display/scouting only).
+  TextColumn get club => text().withDefault(const Constant('Free agent'))();
+
   @override
   Set<Column> get primaryKey => {id};
 }
@@ -143,6 +146,22 @@ class CallUps extends Table {
 
   @override
   Set<Column> get primaryKey => {careerId, playerId};
+}
+
+/// A draw ceremony the manager has already watched. The presence of a row for
+/// a (career, cycle, kind) means the draw has played once and should not be
+/// re-animated — the drawn result is shown statically instead.
+@DataClassName('DrawWatchedRow')
+class DrawsWatched extends Table {
+  IntColumn get careerId =>
+      integer().references(Careers, #id, onDelete: KeyAction.cascade)();
+  IntColumn get cycle => integer()();
+
+  /// Which draw: 'worldCupFinals', or a confederation name for a continental.
+  TextColumn get kind => text()();
+
+  @override
+  Set<Column> get primaryKey => {careerId, cycle, kind};
 }
 
 /// A scheduled match. Scores are null until played.

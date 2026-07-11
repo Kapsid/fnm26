@@ -21,18 +21,53 @@ class ResultsScreen extends ConsumerWidget {
         'FRIENDLY' => 'FRIENDLY',
         'NL' => 'NATIONS LEAGUE',
         'GROUP' => 'FINALS GROUP',
+        'R32' => 'ROUND OF 32',
         'R16' => 'ROUND OF 16',
         'QF' => 'QUARTER-FINAL',
         'SF' => 'SEMI-FINAL',
         '3RD' => 'THIRD PLACE',
         'FINAL' => 'FINAL',
-        'CR16' => 'CONTINENTAL R16',
-        'CQF' => 'CONTINENTAL QF',
-        'CSF' => 'CONTINENTAL SF',
-        'C3RD' => 'CONTINENTAL 3RD',
-        'CFINAL' => 'CONTINENTAL FINAL',
+        'CGROUP' => 'GROUP STAGE',
+        'CR16' => 'ROUND OF 16',
+        'CQF' => 'QUARTER-FINAL',
+        'CSF' => 'SEMI-FINAL',
+        'C3RD' => 'THIRD PLACE',
+        'CFINAL' => 'FINAL',
         _ => round,
       };
+
+  /// The competition a fixture belongs to, derived from its round label.
+  static String _category(String? round) {
+    if (round == null) return 'World Cup Qualifying';
+    if (round == 'FRIENDLY') return 'Friendlies';
+    if (round == 'NL') return 'Nations League';
+    if (round.startsWith('C')) return 'Continental Cup';
+    return 'World Cup Finals';
+  }
+
+  /// Groups fixtures by competition, ordering the groups so the most currently
+  /// relevant one (the soonest still-to-play) comes first; fully-played
+  /// competitions fall to the bottom, most-recent first.
+  static List<MapEntry<String, List<Fixture>>> _grouped(List<Fixture> all) {
+    final groups = <String, List<Fixture>>{};
+    for (final f in all) {
+      (groups[_category(f.round)] ??= []).add(f);
+    }
+    int keyFor(List<Fixture> fx) {
+      final upcoming = fx.where((f) => !f.played).map((f) => f.date);
+      if (upcoming.isNotEmpty) {
+        // Soonest upcoming first (small, positive sort key).
+        return upcoming.reduce((a, b) => a.isBefore(b) ? a : b)
+            .millisecondsSinceEpoch;
+      }
+      // All played: push below any live competition, most recent first.
+      final last = fx.map((f) => f.date).reduce((a, b) => a.isAfter(b) ? a : b);
+      return 8000000000000 - last.millisecondsSinceEpoch;
+    }
+
+    return groups.entries.toList()
+      ..sort((a, b) => keyFor(a.value).compareTo(keyFor(b.value)));
+  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -62,39 +97,65 @@ class ResultsScreen extends ConsumerWidget {
           return ListView(
             padding: const EdgeInsets.all(AppSpacing.marginMobile),
             children: [
-              for (final f in data.fixtures)
+              for (final section in _grouped(data.fixtures)) ...[
                 Padding(
-                  padding: const EdgeInsets.only(bottom: AppSpacing.sm),
-                  child: AppCard(
-                    padding: const EdgeInsets.symmetric(
-                      vertical: AppSpacing.sm,
-                      horizontal: AppSpacing.md,
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            Text(
-                              _stage(f.round),
-                              style: AppTypography.labelSmall
-                                  .copyWith(color: AppColors.primary),
-                            ),
-                            const Spacer(),
-                            Text(
-                              DateFormat('d MMM yyyy').format(f.date),
-                              style: AppTypography.labelSmall.copyWith(
-                                color: AppColors.onSurfaceVariant,
-                              ),
-                            ),
-                          ],
+                  padding: const EdgeInsets.fromLTRB(
+                    4,
+                    AppSpacing.md,
+                    4,
+                    AppSpacing.sm,
+                  ),
+                  child: Row(
+                    children: [
+                      Text(
+                        section.key.toUpperCase(),
+                        style: AppTypography.labelMedium
+                            .copyWith(color: AppColors.primary),
+                      ),
+                      const SizedBox(width: AppSpacing.sm),
+                      Text(
+                        '${section.value.length}',
+                        style: AppTypography.labelSmall.copyWith(
+                          color: AppColors.onSurfaceVariant,
                         ),
-                        const SizedBox(height: 4),
-                        _ResultRow(fixture: f, code: code, isPlayer: false),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
+                for (final f in section.value)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+                    child: AppCard(
+                      padding: const EdgeInsets.symmetric(
+                        vertical: AppSpacing.sm,
+                        horizontal: AppSpacing.md,
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Text(
+                                _stage(f.round),
+                                style: AppTypography.labelSmall
+                                    .copyWith(color: AppColors.primary),
+                              ),
+                              const Spacer(),
+                              Text(
+                                DateFormat('d MMM yyyy').format(f.date),
+                                style: AppTypography.labelSmall.copyWith(
+                                  color: AppColors.onSurfaceVariant,
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 4),
+                          _ResultRow(fixture: f, code: code, isPlayer: false),
+                        ],
+                      ),
+                    ),
+                  ),
+              ],
               const SizedBox(height: AppSpacing.xl),
             ],
           );

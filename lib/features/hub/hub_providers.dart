@@ -13,8 +13,6 @@ import 'package:fnm/domain/services/competition/continental_cups.dart';
 import 'package:fnm/domain/services/competition/finals.dart';
 import 'package:fnm/domain/services/competition/hosts.dart';
 import 'package:fnm/domain/services/competition/qualification.dart';
-import 'package:fnm/domain/services/competition/qualification_format.dart';
-import 'package:fnm/domain/services/competition/schedule_generator.dart';
 import 'package:fnm/domain/services/competition/tournament_sim.dart';
 import 'package:fnm/domain/services/match/goal_attribution.dart';
 import 'package:fnm/domain/services/match/match_engine.dart';
@@ -202,6 +200,19 @@ class SeasonService {
     }
   }
 
+  /// Simulates everything due by [upTo] and keeps spawning + playing the next
+  /// tournament stages until nothing more is due. Without this a tournament
+  /// whose window has already passed (e.g. the continental cup once World Cup
+  /// qualifying begins) trickles out one knockout round per call and lags —
+  /// this fully resolves it so its champion is known on time.
+  Future<void> _catchUp(int careerId, DateTime upTo, int rngSeed) async {
+    for (var pass = 0; pass < 40; pass++) {
+      await _simDue(careerId, upTo, rngSeed);
+      await _progress(careerId);
+      if ((await _comp.unplayedDueBy(careerId, upTo)).isEmpty) break;
+    }
+  }
+
   /// Quick-sims the world to the player's next match, or — if the player has
   /// no fixture — fast-forwards through the rest of the cycle (other regions'
   /// qualifiers, the finals draw, and the knockout) to the champion.
@@ -216,9 +227,8 @@ class SeasonService {
         career.inGameDate,
       );
       if (next != null) {
-        await _simDue(careerId, next.date, career.rngSeed);
         await _careers.updateInGameDate(careerId, next.date);
-        await _progress(careerId);
+        await _catchUp(careerId, next.date, career.rngSeed);
         break;
       }
 
@@ -229,9 +239,34 @@ class SeasonService {
         career.inGameDate,
       );
       if (earliest == null) break; // cycle complete
-      await _simDue(careerId, earliest, career.rngSeed);
       await _careers.updateInGameDate(careerId, earliest);
-      await _progress(careerId);
+      await _catchUp(careerId, earliest, career.rngSeed);
+
+      // While the World Cup finals are being contested, surface each matchday
+      // to the player — a non-qualifier (or a knocked-out nation) can then
+      // follow the tournament instead of it fast-forwarding to the champion.
+      if (await _comp.hasFinals(careerId) &&
+          await _comp.worldChampion(careerId) == null) {
+        break;
+      }
+    }
+    _ref.invalidate(hubDataProvider);
+  }
+
+  /// Fast-forwards straight to the World Cup champion — the "skip to the final"
+  /// option when the player is watching the finals rather than playing them.
+  Future<void> skipToChampion(int careerId) async {
+    for (var i = 0; i < 300; i++) {
+      final career = await _careers.byId(careerId);
+      if (career == null) break;
+      if (await _comp.worldChampion(careerId) != null) break;
+      final earliest = await _comp.earliestUnplayedDate(
+        careerId,
+        career.inGameDate,
+      );
+      if (earliest == null) break;
+      await _careers.updateInGameDate(careerId, earliest);
+      await _catchUp(careerId, earliest, career.rngSeed);
     }
     _ref.invalidate(hubDataProvider);
   }
@@ -276,9 +311,8 @@ class SeasonService {
           ),
     ]);
 
-    await _simDue(careerId, fixture.date, career.rngSeed);
     await _careers.updateInGameDate(careerId, fixture.date);
-    await _progress(careerId);
+    await _catchUp(careerId, fixture.date, career.rngSeed);
     _ref.invalidate(hubDataProvider);
   }
 
@@ -321,16 +355,16 @@ class SeasonService {
       return;
     }
 
-    // Round of 16 (after the group stage).
-    if ((await _comp.fixturesByRound(careerId, WorldCupFinals.r16)).isEmpty) {
+    // Round of 32 (after the 12-group stage): 24 group qualifiers + 8 thirds.
+    if ((await _comp.fixturesByRound(careerId, WorldCupFinals.r32)).isEmpty) {
       if (await _roundComplete(careerId, 'GROUP')) {
         final tables = await _comp.finalsGroupTables(careerId);
-        final pairings = WorldCupFinals.roundOf16(
+        final pairings = WorldCupFinals.roundOf32(
           tables.map((t) => t.standings).toList(),
         );
         await _comp.addKnockoutFixtures(
           careerId: careerId,
-          round: WorldCupFinals.r16,
+          round: WorldCupFinals.r32,
           pairings: pairings,
           date: (await _maxDate(careerId, 'GROUP')).add(
             const Duration(days: 7),
@@ -345,17 +379,49 @@ class SeasonService {
   }
 
   Future<void> _progressContinental(int careerId) async {
-    if (!await _comp.hasTournament(
-      careerId,
-      CompetitionKind.continentalFinals,
-    )) {
+    const kind = CompetitionKind.continentalFinals;
+    if (!await _comp.hasTournament(careerId, kind)) {
+      // Once continental qualifying is complete, draw the finals from the
+      // qualifiers (the finals didn't exist yet for the qualifying path).
+      if (await _comp.hasTournament(
+            careerId,
+            CompetitionKind.continentalQualifying,
+          ) &&
+          await _comp.allPlayedForKind(
+            careerId,
+            CompetitionKind.continentalQualifying,
+          )) {
+        await _generateContinentalFinals(careerId);
+      }
       return;
     }
-    await _advanceTournamentKnockout(
-      careerId,
-      CompetitionKind.continentalFinals,
-      prefix: 'C',
-    );
+
+    // Group stage → first knockout round (quarter-finals for a 16-team cup,
+    // semi-finals for an 8-team cup), once every group game is played.
+    final tables = await _comp.tournamentGroupTables(careerId, kind);
+    if (tables.isNotEmpty) {
+      final firstRound = tables.length == 4 ? 'CQF' : 'CSF';
+      final started =
+          (await _comp.fixturesByRound(careerId, firstRound, kind: kind))
+              .isNotEmpty;
+      if (!started) {
+        if (!await _roundComplete(careerId, 'CGROUP', kind: kind)) return;
+        await _comp.addKnockoutFixtures(
+          careerId: careerId,
+          round: firstRound,
+          kind: kind,
+          pairings: WorldCupFinals.knockoutFromGroups(
+            tables.map((t) => t.standings).toList(),
+          ),
+          date: (await _maxDate(careerId, 'CGROUP', kind: kind)).add(
+            const Duration(days: 7),
+          ),
+        );
+        return;
+      }
+    }
+
+    await _advanceTournamentKnockout(careerId, kind, prefix: 'C');
     await _recordContinentalHonourIfDecided(careerId);
   }
 
@@ -368,12 +434,16 @@ class SeasonService {
     CompetitionKind kind, {
     String prefix = '',
   }) async {
+    final r32 = '${prefix}R32';
     final r16 = '${prefix}R16';
     final qf = '${prefix}QF';
     final sf = '${prefix}SF';
     final third = '${prefix}3RD';
     final fin = '${prefix}FINAL';
 
+    // The R32 step is a no-op for brackets that start later (continental cups
+    // open at the quarter- or semi-finals — their R32 round never exists).
+    await _advanceRound(careerId, r32, r16, 4, kind: kind);
     await _advanceRound(careerId, r16, qf, 4, kind: kind);
     await _advanceRound(careerId, qf, sf, 4, kind: kind);
 
@@ -400,6 +470,46 @@ class SeasonService {
         date: date,
       );
     }
+  }
+
+  /// Draws the continental finals (a group stage) from the teams that came
+  /// through continental qualifying, mirroring the World Cup finals draw.
+  Future<void> _generateContinentalFinals(int careerId) async {
+    final career = await _careers.byId(careerId);
+    if (career == null) return;
+    final nations = await _nationsById();
+    final conf = nations[career.nationId]?.confederation;
+    final cont = conf == null
+        ? null
+        : ContinentalCups.byConfederation[conf];
+    if (conf == null || cont == null) return;
+
+    final tables = await _comp.tournamentGroupTables(
+      careerId,
+      CompetitionKind.continentalQualifying,
+    );
+    final qualifiers = Qualification.qualifiers(
+      tables.map((t) => t.standings).toList(),
+      cont.size,
+    );
+    if (qualifiers.length < cont.size) return;
+
+    final wcYear = CareerService.worldCupYear(career.cyclePointer);
+    final draw = WorldCupFinals.drawGroups(
+      qualifierIds: qualifiers,
+      rankingById: {for (final n in nations.values) n.id: n.ranking},
+      rngSeed: career.rngSeed ^ (career.cyclePointer * 0x71) ^ 0xC0FF,
+    );
+    await _comp.saveTournamentGroups(
+      careerId: careerId,
+      cycle: career.cyclePointer,
+      confederation: conf,
+      kind: CompetitionKind.continentalFinals,
+      name: cont.name,
+      draw: draw,
+      groupStart: DateTime(wcYear - 2, cont.month, 8),
+      round: 'CGROUP',
+    );
   }
 
   /// Records the player's continental championship to the honours roll once its
@@ -590,32 +700,22 @@ class SeasonService {
       (grouped[t.confederation] ??= []).add(t.standings);
     }
 
-    final qualifiers = <int>[];
-    for (final entry in grouped.entries) {
-      final berths = QualificationFormat.forConfederation(
-        entry.key,
-      ).finalsBerths;
-      qualifiers.addAll(Qualification.qualifiers(entry.value, berths));
-    }
-
     final nations = await _nationsById();
     final rankingById = {for (final n in nations.values) n.id: n.ranking};
     final year = finalsYear(career.cyclePointer);
 
-    // The host nation qualifies automatically (replacing the weakest berth).
+    // The host qualifies automatically. Finalist selection (direct berths +
+    // intercontinental playoff + host swap) is shared with the draw ceremony.
     final host = WorldCupHosts.hostFor(
       year: year,
       nations: nations.values.toList(),
       seed: career.rngSeed,
     );
-    if (!qualifiers.contains(host) && qualifiers.isNotEmpty) {
-      qualifiers
-        ..sort((a, b) => (rankingById[a] ?? 9999).compareTo(
-              rankingById[b] ?? 9999,
-            ))
-        ..removeLast()
-        ..add(host);
-    }
+    final qualifiers = WorldCupFinals.selectFinalists(
+      byConfederation: grouped,
+      rankingById: rankingById,
+      host: host,
+    );
 
     final draw = WorldCupFinals.drawGroups(
       qualifierIds: qualifiers,
@@ -642,38 +742,19 @@ class SeasonService {
     final nextCycle = career.cyclePointer + 1;
     final nextStart = DateTime(finalsYear(career.cyclePointer), 9);
 
-    final byConfederation = <Confederation, List<Nation>>{};
-    for (final n in await _ref.read(nationRepositoryProvider).all()) {
-      (byConfederation[n.confederation] ??= []).add(n);
-    }
-    for (final entry in byConfederation.entries) {
-      if (entry.value.length < 2) continue;
-      final schedule = const ScheduleGenerator().generate(
-        confederation: entry.key,
-        nations: entry.value,
-        rngSeed: career.rngSeed ^
-            (nextCycle * 0x1B3D) ^
-            (entry.key.index * 0x9E37),
-        start: nextStart,
-      );
-      await _comp.saveSchedule(
-        careerId: careerId,
-        schedule: schedule,
-        cycle: nextCycle,
-      );
-    }
-
     await _careers.advanceCycle(careerId, nextCycle, nextStart);
 
-    // Nations League + friendlies fill the new cycle's windows.
-    await CareerService.fillGap(
+    // Build the whole next cycle in real-world order (continental qualifying →
+    // continental finals → World Cup qualifying → World Cup finals) plus
+    // friendlies, mirroring a fresh save.
+    await CareerService.buildCalendar(
       comp: _comp,
       nations: await _ref.read(nationRepositoryProvider).all(),
       careerId: careerId,
       nationId: career.nationId,
       rngSeed: career.rngSeed,
       cycle: nextCycle,
-      qualifyingStart: nextStart,
+      cycleStart: nextStart,
       wcYear: finalsYear(nextCycle),
     );
 

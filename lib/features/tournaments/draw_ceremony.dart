@@ -23,6 +23,7 @@ class DrawCeremony extends StatefulWidget {
     required this.groups,
     required this.nations,
     required this.onContinue,
+    this.highlightNationId,
     this.potCount,
     this.crossAxisCount = 2,
     super.key,
@@ -34,6 +35,10 @@ class DrawCeremony extends StatefulWidget {
 
   /// Called when the ceremony finishes (or is skipped) and the user continues.
   final VoidCallback onContinue;
+
+  /// The player's nation, kept highlighted throughout the draw so they can spot
+  /// where they land.
+  final int? highlightNationId;
 
   /// Number of pots; defaults to the largest group's size.
   final int? potCount;
@@ -140,6 +145,7 @@ class _DrawCeremonyState extends State<DrawCeremony> {
                   justAdded: !done && last != null && last.groupIndex == gi
                       ? last.nationId
                       : null,
+                  highlightNationId: widget.highlightNationId,
                   code: _code,
                   name: _name,
                 ),
@@ -357,6 +363,7 @@ class _GroupCard extends StatelessWidget {
     required this.slots,
     required this.revealed,
     required this.justAdded,
+    required this.highlightNationId,
     required this.code,
     required this.name,
   });
@@ -365,6 +372,7 @@ class _GroupCard extends StatelessWidget {
   final int slots;
   final List<int> revealed;
   final int? justAdded;
+  final int? highlightNationId;
   final String Function(int) code;
   final String Function(int) name;
 
@@ -383,7 +391,11 @@ class _GroupCard extends StatelessWidget {
           for (var slot = 0; slot < slots; slot++)
             Expanded(
               child: slot < revealed.length
-                  ? _row(revealed[slot], revealed[slot] == justAdded)
+                  ? _row(
+                      revealed[slot],
+                      flashed: revealed[slot] == justAdded,
+                      isPlayer: revealed[slot] == highlightNationId,
+                    )
                   : const _EmptySlot(),
             ),
         ],
@@ -391,12 +403,21 @@ class _GroupCard extends StatelessWidget {
     );
   }
 
-  Widget _row(int nationId, bool highlight) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 2),
+  Widget _row(int nationId, {required bool flashed, required bool isPlayer}) {
+    // The player's nation stays highlighted; a just-drawn ball also flashes.
+    final emphasise = flashed || isPlayer;
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 1),
+      padding: const EdgeInsets.symmetric(vertical: 1, horizontal: 2),
+      decoration: isPlayer
+          ? const BoxDecoration(
+              color: AppColors.secondaryContainer,
+              borderRadius: AppRadii.smAll,
+            )
+          : null,
       child: Row(
         children: [
-          FlagDisc(code(nationId), size: 18, highlighted: highlight),
+          FlagDisc(code(nationId), size: 18, highlighted: emphasise),
           const SizedBox(width: AppSpacing.xs),
           Expanded(
             child: Text(
@@ -404,8 +425,8 @@ class _GroupCard extends StatelessWidget {
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: AppTypography.bodySmall.copyWith(
-                color: highlight ? AppColors.primary : AppColors.onSurface,
-                fontWeight: highlight ? FontWeight.w700 : FontWeight.w400,
+                color: emphasise ? AppColors.primary : AppColors.onSurface,
+                fontWeight: emphasise ? FontWeight.w700 : FontWeight.w400,
               ),
             ),
           ),

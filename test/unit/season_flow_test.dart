@@ -63,9 +63,9 @@ void main() {
       after!.career.inGameDate.isAfter(before!.career.inGameDate),
       isTrue,
     );
+    // Advancing simulates the world up to the player's next fixture: at least
+    // one match has now been played (a friendly or a qualifier — the cycle
+    // opens with continental qualifying / friendlies before the World Cup).
     expect(after.recentResults, isNotEmpty);
-    final played =
-        after.group!.standings.fold<int>(0, (s, row) => s + row.played);
-    expect(played, greaterThan(0));
   });
 }

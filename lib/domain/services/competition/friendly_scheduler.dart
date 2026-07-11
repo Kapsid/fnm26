@@ -9,13 +9,16 @@ abstract final class FriendlyScheduler {
   static const _windowMonths = [9, 10, 11, 3, 6];
 
   /// Schedules up to [max] friendlies on window dates strictly after [from] and
-  /// before [until], against random members of [opponentPool]. Deterministic.
+  /// before [until], against random members of [opponentPool]. Windows whose
+  /// `(year, month)` appears in [skipWindows] are left free (they already hold
+  /// a competitive fixture), so friendlies only fill real gaps. Deterministic.
   static List<FriendlySpec> schedule({
     required DateTime from,
     required DateTime until,
     required List<int> opponentPool,
     required int seed,
     int max = 8,
+    Set<(int, int)> skipWindows = const {},
   }) {
     if (opponentPool.isEmpty) return const [];
     final rng = SeededRng(seed ^ 0x4F12);
@@ -23,6 +26,7 @@ abstract final class FriendlyScheduler {
     final dates = <DateTime>[];
     for (var year = from.year; year <= until.year; year++) {
       for (final month in _windowMonths) {
+        if (skipWindows.contains((year, month))) continue;
         final d = DateTime(year, month, 14);
         if (d.isAfter(from) && d.isBefore(until)) dates.add(d);
       }

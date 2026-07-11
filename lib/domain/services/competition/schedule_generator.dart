@@ -59,10 +59,11 @@ class ScheduleGenerator {
     required List<Nation> nations,
     required int rngSeed,
     DateTime? start,
+    int? groupSize,
   }) {
     final rng = SeededRng(rngSeed ^ 0x5151A);
     final format = QualificationFormat.forConfederation(confederation);
-    final groups = _draw(nations, format.targetGroupSize, rng);
+    final groups = _draw(nations, groupSize ?? format.targetGroupSize, rng);
 
     // One shared matchday→date map sized to the largest group.
     final maxRounds = groups

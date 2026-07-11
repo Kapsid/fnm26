@@ -43,7 +43,10 @@ enum CompetitionKind {
   /// Nations League — a competitive mini-group played between tournaments.
   nationsLeague,
 
-  /// A continental championship the player contests (knockout bracket).
+  /// A confederation's continental championship qualifying (group stage).
+  continentalQualifying,
+
+  /// A continental championship the player contests (group stage + knockout).
   continentalFinals,
 }
 

@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/player_attributes.dart';
 import 'package:fnm/domain/services/rating/overall_rating.dart';
@@ -16,6 +18,7 @@ abstract class Player with _$Player {
     required int age,
     required PlayerPosition position,
     required PlayerAttributes attributes,
+    @Default('Free agent') String club,
   }) = _Player;
 
   const Player._();
@@ -27,4 +30,20 @@ abstract class Player with _$Player {
 
   /// Broad positional grouping, for squad organisation and filtering.
   PositionCategory get category => position.category;
+
+  /// Estimated transfer value in euros, derived from the rating with an age
+  /// curve (peaks in the mid-20s). For squad/scouting display only.
+  int get value {
+    final base = pow(max(0, overall - 44) / 12, 3).toDouble(); // € millions
+    final ageFactor = age <= 23
+        ? 1.2
+        : age <= 27
+            ? 1.1
+            : age <= 30
+                ? 0.9
+                : age <= 33
+                    ? 0.6
+                    : 0.35;
+    return (base * ageFactor * 1000000).round();
+  }
 }

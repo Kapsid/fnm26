@@ -156,6 +156,7 @@ class TacticsScreen extends ConsumerWidget {
                 aspectRatio: 3 / 4,
                 child: _Pitch(
                   formation: tactic.formation,
+                  instructions: tactic.instructions,
                   lineup: tactic.lineup,
                   byId: data.byId,
                   onTapSlot: (slot) => _pickPlayer(context, ref, data, slot),
@@ -281,6 +282,7 @@ class TacticsScreen extends ConsumerWidget {
 class _Pitch extends StatelessWidget {
   const _Pitch({
     required this.formation,
+    required this.instructions,
     required this.lineup,
     required this.byId,
     required this.onTapSlot,
@@ -289,11 +291,37 @@ class _Pitch extends StatelessWidget {
   });
 
   final Formation formation;
+  final TacticalInstructions instructions;
   final List<int?> lineup;
   final Map<int, Player> byId;
   final ValueChanged<int> onTapSlot;
   final void Function(int slotA, int slotB) onSwap;
   final void Function(int slot, int playerId) onBenchIn;
+
+  /// Nudges a slot's base coordinate by the instructions so the shape reads the
+  /// tactics: wider/narrower spread, a higher/deeper back line, and a more
+  /// advanced team when attacking.
+  (double, double) _adjusted(
+    (double, double) base,
+    PositionCategory category,
+  ) {
+    final i = instructions;
+    // Width: spread outfield players out from / in toward the centre line.
+    final widthFactor = 0.82 + i.width / 100 * 0.30; // 0.82 … 1.12
+    final x = 0.5 + (base.$1 - 0.5) * widthFactor;
+    var y = base.$2;
+    if (category != PositionCategory.goalkeeper) {
+      // Attacking mentality lifts the whole outfield up the pitch (lower y).
+      y -= (i.mentality - 50) / 50 * 0.05;
+    }
+    if (category == PositionCategory.defender) {
+      // A high defensive line pushes the back line up; a deep one drops it.
+      y -= (i.defensiveLine - 50) / 50 * 0.10;
+    } else if (category == PositionCategory.forward) {
+      y -= (i.mentality - 50) / 50 * 0.02;
+    }
+    return (x.clamp(0.04, 0.96), y.clamp(0.07, 0.93));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -315,20 +343,20 @@ class _Pitch extends StatelessWidget {
         child: Stack(
           children: [
             for (var slot = 0; slot < 11; slot++)
-              Align(
-                alignment: Alignment(
-                  layout[slot].$1 * 2 - 1,
-                  layout[slot].$2 * 2 - 1,
-                ),
-                child: _PlayerNode(
-                  slot: slot,
-                  position: positions[slot],
-                  player: byId[lineup[slot]],
-                  onTap: () => onTapSlot(slot),
-                  onSwap: onSwap,
-                  onBenchIn: onBenchIn,
-                ),
-              ),
+              () {
+                final pos = _adjusted(layout[slot], positions[slot].category);
+                return Align(
+                  alignment: Alignment(pos.$1 * 2 - 1, pos.$2 * 2 - 1),
+                  child: _PlayerNode(
+                    slot: slot,
+                    position: positions[slot],
+                    player: byId[lineup[slot]],
+                    onTap: () => onTapSlot(slot),
+                    onSwap: onSwap,
+                    onBenchIn: onBenchIn,
+                  ),
+                );
+              }(),
           ],
         ),
       ),
@@ -394,8 +422,21 @@ class _PlayerNode extends StatelessWidget {
     );
   }
 
+  /// How well the assigned player suits this slot, driving the colour cue:
+  /// green = exact position, primary = right line/different role, red = out of
+  /// position (and taking a rating penalty in matches).
+  Color get _fitColor {
+    final p = player;
+    if (p == null) return AppColors.outlineVariant;
+    if (p.position == position) return AppColors.positive;
+    if (p.category == position.category) return AppColors.primary;
+    return AppColors.error;
+  }
+
   Widget _node({bool highlighted = false, bool dragging = false}) {
-    final surname = player == null ? position.label : shortName(player!.name);
+    final p = player;
+    final fit = _fitColor;
+    final borderColor = highlighted ? AppColors.primary : fit;
     return Material(
       type: MaterialType.transparency,
       child: Column(
@@ -415,35 +456,43 @@ class _PlayerNode extends StatelessWidget {
                 ],
               ),
               border: Border.all(
-                color: highlighted
-                    ? AppColors.primary
-                    : player == null
-                        ? AppColors.outlineVariant
-                        : AppColors.primary,
+                color: borderColor,
                 width: highlighted || dragging ? 3 : 2,
               ),
             ),
             alignment: Alignment.center,
             child: Text(
-              player == null ? '+' : '${player!.overall}',
+              p == null ? '+' : '${p.overall}',
               style: AppTypography.labelMedium.copyWith(
                 color: AppColors.primary,
               ),
             ),
           ),
-          const SizedBox(height: 4),
+          const SizedBox(height: 3),
+          // The slot's exact position, always shown and tinted by fit.
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
+            padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1),
             decoration: BoxDecoration(
-              color: AppColors.surface.withValues(alpha: 0.8),
+              color: fit.withValues(alpha: 0.18),
               borderRadius: AppRadii.smAll,
-              border: Border.all(color: AppColors.outlineVariant),
+              border: Border.all(color: fit),
             ),
             child: Text(
-              surname.toUpperCase(),
-              style: AppTypography.labelSmall.copyWith(fontSize: 9),
+              position.label,
+              style: AppTypography.labelSmall.copyWith(
+                fontSize: 9,
+                color: fit,
+                fontWeight: FontWeight.w700,
+              ),
             ),
           ),
+          if (p != null) ...[
+            const SizedBox(height: 1),
+            Text(
+              shortName(p.name).toUpperCase(),
+              style: AppTypography.labelSmall.copyWith(fontSize: 8),
+            ),
+          ],
         ],
       ),
     );

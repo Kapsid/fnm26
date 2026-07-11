@@ -1,0 +1,110 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fnm/data/data_providers.dart';
+import 'package:fnm/domain/entities/nation.dart';
+import 'package:fnm/domain/services/competition/continental_cups.dart';
+import 'package:fnm/domain/services/competition/schedule_generator.dart';
+import 'package:fnm/features/career/career_providers.dart';
+import 'package:fnm/features/hub/hub_event.dart';
+
+/// The recomputed qualifying draw for the player's confederation, used by the
+/// qualifying draw ceremony. Deterministic — it reruns [ScheduleGenerator] with
+/// the exact seed [CareerService.buildCalendar] used, so it matches the
+/// persisted groups.
+class QualifyingDrawData {
+  const QualifyingDrawData({
+    required this.title,
+    required this.groups,
+    required this.nations,
+    required this.playerNationId,
+    required this.potByNation,
+    required this.cycle,
+    required this.watchedKind,
+  });
+
+  final String title;
+  final List<({String name, List<int> nationIds})> groups;
+  final Map<int, Nation> nations;
+  final int playerNationId;
+  final Map<int, int> potByNation;
+
+  /// The cycle and draw key, so viewing the draw can mark it watched (it fires
+  /// as a timeline event only once).
+  final int cycle;
+  final String watchedKind;
+}
+
+/// Argument for [qualifyingDrawProvider]: the save and which qualifying draw.
+typedef QualifyingDrawArg = ({int careerId, bool worldCup});
+
+final AutoDisposeFutureProviderFamily<QualifyingDrawData?, QualifyingDrawArg>
+qualifyingDrawProvider =
+    FutureProvider.autoDispose.family<QualifyingDrawData?, QualifyingDrawArg>((
+  ref,
+  arg,
+) async {
+  await ref.watch(seedLoaderProvider).ensureSeeded();
+  final career = await ref.watch(careerRepositoryProvider).byId(arg.careerId);
+  if (career == null) return null;
+  final nations = {
+    for (final n in await ref.watch(nationRepositoryProvider).all()) n.id: n,
+  };
+  final conf = nations[career.nationId]?.confederation;
+  if (conf == null) return null;
+
+  final members = nations.values.where((n) => n.confederation == conf).toList()
+    ..sort((a, b) => a.ranking.compareTo(b.ranking));
+  if (members.length < 2) return null;
+
+  final wcYear = CareerService.worldCupYear(career.cyclePointer);
+  final GeneratedSchedule schedule;
+  final String title;
+  final String watchedKind;
+
+  if (arg.worldCup) {
+    schedule = const ScheduleGenerator().generate(
+      confederation: conf,
+      nations: members,
+      rngSeed: career.rngSeed ^
+          (career.cyclePointer * 0x1B3D) ^
+          (conf.index * 0x9E37),
+      start: DateTime(wcYear - 2, 9),
+    );
+    title = 'WORLD CUP QUALIFYING DRAW';
+    watchedKind = worldCupQualDrawKind;
+  } else {
+    final cont = ContinentalCups.byConfederation[conf];
+    if (cont == null || members.length <= cont.size) return null;
+    schedule = const ScheduleGenerator().generate(
+      confederation: conf,
+      nations: members,
+      rngSeed: career.rngSeed ^ (career.cyclePointer * 0x71) ^ 0xCAFE,
+      start: DateTime(wcYear - 4, 9),
+      groupSize: 6,
+    );
+    title = '${cont.name.toUpperCase()} QUALIFYING DRAW';
+    watchedKind = continentalQualDrawKind;
+  }
+
+  final groups = [
+    for (final g in schedule.groups) (name: g.name, nationIds: g.nationIds),
+  ];
+  if (groups.isEmpty) return null;
+
+  // Pots: the confederation seeded by ranking, split into as many pots as there
+  // are groups (top group first).
+  final groupCount = groups.length;
+  final potByNation = <int, int>{
+    for (var i = 0; i < members.length; i++)
+      members[i].id: (i ~/ groupCount) + 1,
+  };
+
+  return QualifyingDrawData(
+    title: title,
+    groups: groups,
+    nations: nations,
+    playerNationId: career.nationId,
+    potByNation: potByNation,
+    cycle: career.cyclePointer,
+    watchedKind: watchedKind,
+  );
+});

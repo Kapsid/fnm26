@@ -4,6 +4,7 @@ import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
+import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/features/tactics/tactics_providers.dart';
@@ -14,9 +15,19 @@ import 'package:go_router/go_router.dart';
 /// for this save. Only called-up players can be picked in the XI or brought on
 /// as substitutes. The squad must keep at least [kMinSquadSize] players.
 class CallUpScreen extends ConsumerStatefulWidget {
-  const CallUpScreen({required this.careerId, super.key});
+  const CallUpScreen({
+    required this.careerId,
+    this.eventKind,
+    this.eventCycle,
+    super.key,
+  });
 
   final int careerId;
+
+  /// When launched as a timeline event, confirming the squad records this
+  /// call-up window as done (so it fires only once) and returns to the hub.
+  final String? eventKind;
+  final int? eventCycle;
 
   @override
   ConsumerState<CallUpScreen> createState() => _CallUpScreenState();
@@ -39,6 +50,24 @@ class _CallUpScreenState extends ConsumerState<CallUpScreen> {
         PositionCategory.forward => 'FORWARDS',
       };
 
+  /// Back to the hub when this was a timeline event, else back to tactics.
+  String get _exitRoute => widget.eventKind != null
+      ? '${Routes.hub}?careerId=${widget.careerId}'
+      : '${Routes.tactics}?careerId=${widget.careerId}';
+
+  Future<void> _confirm(Set<int> selected) async {
+    await ref.read(squadServiceProvider).setCallUps(widget.careerId, selected);
+    // A timeline call-up records itself done so the event fires only once.
+    final kind = widget.eventKind;
+    final cycle = widget.eventCycle;
+    if (kind != null && cycle != null) {
+      await ref
+          .read(competitionRepositoryProvider)
+          .markDrawWatched(widget.careerId, cycle, kind);
+    }
+    if (mounted) context.go(_exitRoute);
+  }
+
   @override
   Widget build(BuildContext context) {
     final dataAsync = ref.watch(squadDataProvider(widget.careerId));
@@ -47,8 +76,7 @@ class _CallUpScreenState extends ConsumerState<CallUpScreen> {
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: AppColors.primary),
-          onPressed: () =>
-              context.go('${Routes.tactics}?careerId=${widget.careerId}'),
+          onPressed: () => context.go(_exitRoute),
         ),
         title: Text(
           'CALL-UPS',
@@ -107,18 +135,7 @@ class _CallUpScreenState extends ConsumerState<CallUpScreen> {
                   child: PrimaryButton(
                     label: 'Confirm squad',
                     icon: Icons.check_rounded,
-                    onPressed: ok
-                        ? () async {
-                            await ref
-                                .read(squadServiceProvider)
-                                .setCallUps(widget.careerId, selected);
-                            if (context.mounted) {
-                              context.go(
-                                '${Routes.tactics}?careerId=${widget.careerId}',
-                              );
-                            }
-                          }
-                        : null,
+                    onPressed: ok ? () => _confirm(selected) : null,
                   ),
                 ),
               ),
@@ -184,7 +201,9 @@ class _PlayerToggle extends StatelessWidget {
       leading: SizedBox(width: 40, child: TacticalChip(player.position.label)),
       title: Text(player.name, style: AppTypography.bodyMedium),
       subtitle: Text(
-        '${player.position.roleName} · Age ${player.age}',
+        '${player.club} · Age ${player.age} · ${_money(player.value)}',
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
         style: AppTypography.labelSmall.copyWith(
           color: AppColors.onSurfaceVariant,
         ),
@@ -202,5 +221,12 @@ class _PlayerToggle extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  /// Formats a euro value compactly, e.g. €12.5M / €650K / €0.
+  static String _money(int euros) {
+    if (euros >= 1000000) return '€${(euros / 1000000).toStringAsFixed(1)}M';
+    if (euros >= 1000) return '€${(euros / 1000).round()}K';
+    return '€$euros';
   }
 }

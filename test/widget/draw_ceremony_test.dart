@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/features/tournaments/draw_ceremony.dart';
 import 'package:fnm/shared/widgets/primary_button.dart';
 

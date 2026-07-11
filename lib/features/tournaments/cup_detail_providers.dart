@@ -4,6 +4,8 @@ import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
+import 'package:fnm/domain/services/competition/hosts.dart';
+import 'package:fnm/features/career/career_providers.dart';
 
 /// Data for the cup-detail (World Championship) screen.
 class CupData {
@@ -15,6 +17,7 @@ class CupData {
     required this.finalsGroups,
     required this.knockout,
     required this.champion,
+    required this.hostId,
     required this.scorersQualifying,
     required this.scorersFinals,
     required this.honours,
@@ -35,6 +38,10 @@ class CupData {
 
   /// The World Cup winner once decided.
   final int? champion;
+
+  /// The host nation of this cycle's World Cup (known from the start of the
+  /// cycle — the rotation is deterministic).
+  final int? hostId;
 
   /// Top scorers in qualifying and in the finals.
   final List<ScorerTally> scorersQualifying;
@@ -75,6 +82,12 @@ final AutoDisposeFutureProviderFamily<CupData?, int> cupDetailProvider =
           n.id: n,
       };
 
+      final hostId = WorldCupHosts.hostFor(
+        year: CareerService.worldCupYear(career.cyclePointer),
+        nations: nations.values.toList(),
+        seed: career.rngSeed,
+      );
+
       final playerRepo = ref.watch(playerRepositoryProvider);
       final scorerIds = {
         for (final s in scorersQualifying) s.playerId,
@@ -94,6 +107,7 @@ final AutoDisposeFutureProviderFamily<CupData?, int> cupDetailProvider =
         finalsGroups: finalsGroups,
         knockout: knockout,
         champion: champion,
+        hostId: hostId,
         scorersQualifying: scorersQualifying,
         scorersFinals: scorersFinals,
         honours: honours,

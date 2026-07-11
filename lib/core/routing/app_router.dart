@@ -4,16 +4,21 @@ import 'package:fnm/features/career/new_game_screen.dart';
 import 'package:fnm/features/career/saves_screen.dart';
 import 'package:fnm/features/dev/style_gallery_screen.dart';
 import 'package:fnm/features/home/home_screen.dart';
+import 'package:fnm/features/hub/cycle_rollover_screen.dart';
 import 'package:fnm/features/hub/hub_screen.dart';
+import 'package:fnm/features/match/match_preview_screen.dart';
 import 'package:fnm/features/match/match_screen.dart';
 import 'package:fnm/features/nations/nation_select_screen.dart';
 import 'package:fnm/features/ranking/world_ranking_screen.dart';
 import 'package:fnm/features/results/results_screen.dart';
+import 'package:fnm/features/results/round_results_screen.dart';
 import 'package:fnm/features/tactics/call_up_screen.dart';
 import 'package:fnm/features/tactics/tactics_screen.dart';
 import 'package:fnm/features/tournaments/continental_detail_screen.dart';
+import 'package:fnm/features/tournaments/continental_draw_screen.dart';
 import 'package:fnm/features/tournaments/cup_detail_screen.dart';
 import 'package:fnm/features/tournaments/finals_draw_screen.dart';
+import 'package:fnm/features/tournaments/qualifying_draw_screen.dart';
 import 'package:fnm/features/tournaments/tournaments_screen.dart';
 import 'package:go_router/go_router.dart';
 
@@ -56,11 +61,30 @@ abstract final class Routes {
   /// [Confederation] enum name).
   static const continental = '/continental';
 
+  /// Continental championship group-draw ceremony. Expects `?careerId=`,
+  /// `?conf=`.
+  static const continentalDraw = '/continental-draw';
+
   /// World ranking. Expects `?careerId=`.
   static const ranking = '/ranking';
 
   /// World Cup finals draw ceremony. Expects `?careerId=`.
   static const finalsDraw = '/finals-draw';
+
+  /// Qualifying group-draw ceremony. Expects `?careerId=` and `?worldCup=`
+  /// ('true' for the World Cup qualifying draw, else the continental one).
+  static const qualifyingDraw = '/qualifying-draw';
+
+  /// Pre-match preview (review/adjust the lineup, then kick off). Expects
+  /// `?careerId=`.
+  static const matchPreview = '/match-preview';
+
+  /// Post-match round results, grouped by group. Expects `?careerId=`.
+  static const roundResults = '/round-results';
+
+  /// End-of-cycle event: crowns the champion and starts the next cycle. Expects
+  /// `?careerId=`.
+  static const cycleRollover = '/cycle-rollover';
 
   /// Development-only design-system showcase.
   static const gallery = '/gallery';
@@ -122,7 +146,24 @@ final routerProvider = Provider<GoRouter>((ref) {
                 state.uri.queryParameters['careerId'] ?? '',
               ) ??
               0;
-          return CallUpScreen(careerId: id);
+          return CallUpScreen(
+            careerId: id,
+            // When launched as a timeline event, these mark the call-up done.
+            eventKind: state.uri.queryParameters['event'],
+            eventCycle: int.tryParse(
+              state.uri.queryParameters['cycle'] ?? '',
+            ),
+          );
+        },
+      ),
+      GoRoute(
+        path: Routes.matchPreview,
+        builder: (context, state) {
+          final id = int.tryParse(
+                state.uri.queryParameters['careerId'] ?? '',
+              ) ??
+              0;
+          return MatchPreviewScreen(careerId: id);
         },
       ),
       GoRoute(
@@ -133,6 +174,26 @@ final routerProvider = Provider<GoRouter>((ref) {
               ) ??
               0;
           return MatchScreen(careerId: id);
+        },
+      ),
+      GoRoute(
+        path: Routes.roundResults,
+        builder: (context, state) {
+          final id = int.tryParse(
+                state.uri.queryParameters['careerId'] ?? '',
+              ) ??
+              0;
+          return RoundResultsScreen(careerId: id);
+        },
+      ),
+      GoRoute(
+        path: Routes.cycleRollover,
+        builder: (context, state) {
+          final id = int.tryParse(
+                state.uri.queryParameters['careerId'] ?? '',
+              ) ??
+              0;
+          return CycleRolloverScreen(careerId: id);
         },
       ),
       GoRoute(
@@ -183,6 +244,25 @@ final routerProvider = Provider<GoRouter>((ref) {
         },
       ),
       GoRoute(
+        path: Routes.continentalDraw,
+        builder: (context, state) {
+          final id = int.tryParse(
+                state.uri.queryParameters['careerId'] ?? '',
+              ) ??
+              0;
+          final confName = state.uri.queryParameters['conf'] ?? '';
+          final conf = Confederation.values
+              .where((c) => c.name == confName)
+              .firstOrNull;
+          if (conf == null) return HubScreen(careerId: id);
+          return ContinentalDrawScreen(
+            careerId: id,
+            confederation: conf,
+            qualifying: state.uri.queryParameters['stage'] == 'qualifying',
+          );
+        },
+      ),
+      GoRoute(
         path: Routes.ranking,
         builder: (context, state) {
           final id = int.tryParse(
@@ -200,6 +280,19 @@ final routerProvider = Provider<GoRouter>((ref) {
               ) ??
               0;
           return FinalsDrawScreen(careerId: id);
+        },
+      ),
+      GoRoute(
+        path: Routes.qualifyingDraw,
+        builder: (context, state) {
+          final id = int.tryParse(
+                state.uri.queryParameters['careerId'] ?? '',
+              ) ??
+              0;
+          return QualifyingDrawScreen(
+            careerId: id,
+            worldCup: state.uri.queryParameters['worldCup'] == 'true',
+          );
         },
       ),
       GoRoute(

@@ -1,0 +1,162 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fnm/core/routing/app_router.dart';
+import 'package:fnm/data/data_providers.dart';
+import 'package:fnm/features/hub/hub_providers.dart';
+import 'package:fnm/features/tournaments/finals_draw_providers.dart';
+
+/// The kinds of thing the hub's main action can be — the game is a timeline of
+/// these events rather than a single "continue".
+enum HubEventKind {
+  /// A draw ceremony to watch (qualifying or finals).
+  draw,
+
+  /// A squad call-up window before a campaign or tournament.
+  callUp,
+
+  /// The player's own next match (opens the match, via its preview).
+  match,
+
+  /// A tournament the player isn't in is under way — watch or skip it.
+  watchTournament,
+
+  /// The World Cup is decided; roll over to the next cycle.
+  cycleRollover,
+
+  /// Nothing to present for the player — quick-sim the world forward.
+  advance,
+}
+
+/// A single step in the game timeline the hub presents as its primary action.
+class HubEvent {
+  const HubEvent({
+    required this.kind,
+    required this.label,
+    required this.icon,
+    this.route,
+    this.subtitle,
+  });
+
+  final HubEventKind kind;
+  final String label;
+  final IconData icon;
+
+  /// Where the action navigates, or null for an in-place action (advance /
+  /// rollover handled by the hub).
+  final String? route;
+
+  /// Optional one-line context shown under the button.
+  final String? subtitle;
+}
+
+/// Watched-draw keys for the qualifying draws (finals uses [worldCupDrawKind]).
+const continentalQualDrawKind = 'contQualDraw';
+const worldCupQualDrawKind = 'wcQualDraw';
+
+/// Call-up window keys (reuse the watched-draw store, one per campaign/cycle).
+const continentalQualCallUpKind = 'callup:contQual';
+const worldCupQualCallUpKind = 'callup:wcQual';
+const worldCupFinalsCallUpKind = 'callup:wcFinals';
+
+/// The World Cup finals rounds, used to detect a finals match.
+const _finalsRounds = {'GROUP', 'R32', 'R16', 'QF', 'SF', '3RD', 'FINAL'};
+
+/// Computes the next timeline event for the save — the heart of the
+/// event-driven flow. Draws are surfaced right before the player's first match
+/// in that competition (and only once), matches open their preview, a live
+/// tournament the player isn't in becomes a watch/skip event, and a decided
+/// World Cup becomes the cycle-rollover event.
+final AutoDisposeFutureProviderFamily<HubEvent, int> nextEventProvider =
+    FutureProvider.autoDispose.family<HubEvent, int>((ref, careerId) async {
+  final hub = await ref.watch(hubDataProvider(careerId).future);
+  if (hub == null) {
+    return const HubEvent(
+      kind: HubEventKind.advance,
+      label: 'Advance the world',
+      icon: Icons.fast_forward_rounded,
+    );
+  }
+  final comp = ref.watch(competitionRepositoryProvider);
+  final cycle = hub.career.cyclePointer;
+  String opp(int id) => hub.nations[id]?.name ?? 'Unknown';
+
+  // 1. The World Cup is decided — roll into the next cycle.
+  if (hub.championNationId != null) {
+    return HubEvent(
+      kind: HubEventKind.cycleRollover,
+      label: 'Start ${SeasonService.finalsYear(cycle + 1)} cycle',
+      icon: Icons.skip_next_rounded,
+      route: '${Routes.cycleRollover}?careerId=$careerId',
+      subtitle: '${opp(hub.championNationId!)} are World Champions',
+    );
+  }
+
+  // 2. The World Cup finals draw, once it exists and hasn't been watched.
+  if (hub.hasFinals &&
+      !await comp.hasWatchedDraw(careerId, cycle, worldCupDrawKind)) {
+    return HubEvent(
+      kind: HubEventKind.draw,
+      label: 'Watch the World Cup draw',
+      icon: Icons.casino,
+      route: '${Routes.finalsDraw}?careerId=$careerId',
+    );
+  }
+
+  final next = hub.next;
+  if (next != null) {
+    HubEvent callUp(String label, String kind) => HubEvent(
+          kind: HubEventKind.callUp,
+          label: label,
+          icon: Icons.groups,
+          route: '${Routes.callUps}?careerId=$careerId'
+              '&event=$kind&cycle=$cycle',
+        );
+
+    // 3. The squad call-up before each campaign / tournament (qualifying draws
+    //    are not surfaced as events — only the finals draw above is).
+    if (next.round == 'CQ' &&
+        !await comp.hasWatchedDraw(
+          careerId,
+          cycle,
+          continentalQualCallUpKind,
+        )) {
+      return callUp('Name your qualifying squad', continentalQualCallUpKind);
+    }
+    if (next.round == null &&
+        !await comp.hasWatchedDraw(careerId, cycle, worldCupQualCallUpKind)) {
+      return callUp('Name your qualifying squad', worldCupQualCallUpKind);
+    }
+    if (_finalsRounds.contains(next.round) &&
+        !await comp.hasWatchedDraw(careerId, cycle, worldCupFinalsCallUpKind)) {
+      return callUp('Name your World Cup squad', worldCupFinalsCallUpKind);
+    }
+
+    // 4. Play the next match (opens its pre-match preview first).
+    final oppId = next.homeNationId == hub.career.nationId
+        ? next.awayNationId
+        : next.homeNationId;
+    return HubEvent(
+      kind: HubEventKind.match,
+      label: 'Play ${opp(oppId)}',
+      icon: Icons.play_arrow_rounded,
+      route: '${Routes.matchPreview}?careerId=$careerId',
+    );
+  }
+
+  // 5. No match for the player, but the World Cup is under way — step it
+  //    forward one matchday at a time (round-by-round views land later).
+  if (hub.hasFinals) {
+    return const HubEvent(
+      kind: HubEventKind.watchTournament,
+      label: 'Next World Cup match',
+      icon: Icons.fast_forward_rounded,
+    );
+  }
+
+  // 6. Nothing to present — quick-sim the world to the next event.
+  return const HubEvent(
+    kind: HubEventKind.advance,
+    label: 'Advance the world',
+    icon: Icons.fast_forward_rounded,
+  );
+});

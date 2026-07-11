@@ -35,20 +35,24 @@ void main() {
     });
   });
 
-  test('finals berths sum to 32', () {
-    expect(QualificationFormat.totalFinalsBerths, 32);
+  test('direct finals berths sum to 46 (+2 playoff = 48)', () {
+    expect(QualificationFormat.totalFinalsBerths, 46);
+    expect(
+      QualificationFormat.totalFinalsBerths + QualificationFormat.playoffBerths,
+      48,
+    );
   });
 
   group('WorldCupFinals', () {
-    test('draws 32 qualifiers into 8 groups of 4', () {
-      final ids = List.generate(32, (i) => i + 1);
+    test('draws 48 qualifiers into 12 groups of 4', () {
+      final ids = List.generate(48, (i) => i + 1);
       final ranking = {for (final id in ids) id: id};
       final draw = WorldCupFinals.drawGroups(
         qualifierIds: ids,
         rankingById: ranking,
         rngSeed: 42,
       );
-      expect(draw.groups, hasLength(8));
+      expect(draw.groups, hasLength(12));
       for (final g in draw.groups) {
         expect(g.nationIds, hasLength(4));
         expect(g.fixtures, hasLength(6)); // 4 teams single round-robin
@@ -56,6 +60,28 @@ void main() {
       // Every nation placed exactly once.
       final placed = draw.groups.expand((g) => g.nationIds).toList();
       expect(placed.toSet(), ids.toSet());
+    });
+
+    test('round of 32 seeds 24 group qualifiers + 8 best thirds into 16 ties',
+        () {
+      // 12 groups of 4; group i gives its teams descending points so ranks are
+      // well-defined across groups.
+      final groups = [
+        for (var i = 0; i < 12; i++)
+          [
+            _standing(i * 4 + 1, points: 9, gf: 12 - i),
+            _standing(i * 4 + 2, points: 6, gf: 12 - i),
+            _standing(i * 4 + 3, points: 3, gf: 12 - i),
+            _standing(i * 4 + 4, points: 0, gf: 12 - i),
+          ],
+      ];
+      final ties = WorldCupFinals.roundOf32(groups);
+      expect(ties, hasLength(16)); // 32 teams → 16 ties
+      // 32 distinct teams: all 12 winners, all 12 runners-up, 8 of 12 thirds.
+      final teams = ties.expand((t) => [t.$1, t.$2]).toSet();
+      expect(teams, hasLength(32));
+      // No fourth-placed team qualifies.
+      expect(teams.any((id) => id % 4 == 0), isFalse);
     });
 
     test('round of 16 pairs winners with runners-up across groups', () {
@@ -76,6 +102,32 @@ void main() {
       final level = WorldCupFinals.resolveTie(1, 1, SeededRng(7));
       expect(level.$1 == level.$2, isFalse);
       expect(WorldCupFinals.resolveTie(2, 0, SeededRng(7)), (2, 0));
+    });
+
+    test('knockoutFromGroups pairs winners vs runners-up (4 groups → QF)', () {
+      final groups = [
+        for (var i = 0; i < 4; i++)
+          [
+            _standing(i * 2 + 1, points: 9),
+            _standing(i * 2 + 2, points: 6),
+          ],
+      ];
+      final ties = WorldCupFinals.knockoutFromGroups(groups);
+      expect(ties, hasLength(4)); // 8 teams → quarter-finals
+      expect(ties.first, (1, 4)); // winner A vs runner-up B
+      // Every qualifier appears exactly once.
+      final teams = ties.expand((t) => [t.$1, t.$2]).toSet();
+      expect(teams, {1, 2, 3, 4, 5, 6, 7, 8});
+    });
+
+    test('knockoutFromGroups handles 2 groups → semi-finals', () {
+      final groups = [
+        [_standing(1, points: 9), _standing(2, points: 6)],
+        [_standing(3, points: 9), _standing(4, points: 6)],
+      ];
+      final ties = WorldCupFinals.knockoutFromGroups(groups);
+      expect(ties, hasLength(2));
+      expect(ties, [(1, 4), (3, 2)]);
     });
   });
 }

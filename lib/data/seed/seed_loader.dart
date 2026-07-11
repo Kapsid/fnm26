@@ -1,5 +1,6 @@
 import 'package:drift/drift.dart';
 import 'package:fnm/data/db/app_database.dart';
+import 'package:fnm/data/seed/pool_generator.dart';
 import 'package:fnm/data/seed/seed_source.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/entities/player.dart';
@@ -20,7 +21,11 @@ class SeedLoader {
   Future<bool> ensureSeeded() async {
     final existing =
         await (_db.select(_db.nations)..limit(1)).getSingleOrNull();
-    if (existing != null) return false;
+    if (existing != null) {
+      // Already seeded: top up the deeper pool + clubs for pre-v10 saves.
+      await _ensureDeepPool();
+      return false;
+    }
 
     final nations = await _source.nations();
     final players = await _source.players();
@@ -31,6 +36,36 @@ class SeedLoader {
         ..insertAll(_db.players, players.map(_playerCompanion));
     });
     return true;
+  }
+
+  /// Rebuilds the player pool on databases seeded with a shallower one (the
+  /// base 23-per-nation squads, or an earlier, smaller expansion). A cheap
+  /// count gate skips it once the pool is at target; the rebuild is atomic so a
+  /// mid-flight kill can't lose the squads.
+  Future<void> _ensureDeepPool() async {
+    final have = await _count(_db.players, _db.players.id);
+    final nationCount = await _count(_db.nations, _db.nations.id);
+    final target = nationCount * (23 + PoolGenerator.extraPerNation);
+    if (have >= target - nationCount) return; // within a squad of target → done
+
+    final players = await _source.players();
+    if (have >= players.length) return; // in-memory/test source: nothing to add
+
+    await _db.transaction(() async {
+      await _db.delete(_db.players).go();
+      await _db.batch(
+        (batch) => batch.insertAll(_db.players, players.map(_playerCompanion)),
+      );
+    });
+  }
+
+  Future<int> _count(
+    TableInfo<Table, dynamic> table,
+    GeneratedColumn id,
+  ) async {
+    final c = id.count();
+    final row = await (_db.selectOnly(table)..addColumns([c])).getSingle();
+    return row.read(c) ?? 0;
   }
 
   NationsCompanion _nationCompanion(Nation n) => NationsCompanion.insert(
@@ -58,5 +93,6 @@ class SeedLoader {
         pace: p.attributes.pace,
         stamina: p.attributes.stamina,
         strength: p.attributes.strength,
+        club: Value(p.club),
       );
 }

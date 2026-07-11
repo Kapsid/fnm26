@@ -47,6 +47,18 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
   final List<Substitution> _subs = [];
   MatchResult? _result;
 
+  /// True while the full-time result is being committed and the world is being
+  /// simulated forward. Debug builds can take several seconds here, so the
+  /// button must show a busy state rather than looking dead.
+  bool _committing = false;
+
+  @override
+  void initState() {
+    super.initState();
+    // Restore the playback speed chosen in a previous match this session.
+    _speedIdx = ref.read(matchSpeedProvider);
+  }
+
   @override
   void dispose() {
     _timer?.cancel();
@@ -81,6 +93,8 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
 
   void _cycleSpeed() {
     setState(() => _speedIdx = (_speedIdx + 1) % _speeds.length);
+    // Remember the choice for the next match this session.
+    ref.read(matchSpeedProvider.notifier).state = _speedIdx;
     if (_playing) _restartTimer();
   }
 
@@ -90,6 +104,31 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
       _minute = 90;
       _playing = false;
     });
+  }
+
+  /// Commits the full-time result, simulates the world forward, and returns to
+  /// the hub. Any failure is surfaced instead of being silently swallowed by
+  /// the async callback (which would make the Continue button appear dead).
+  Future<void> _continue(MatchPreview preview, MatchResult r) async {
+    if (_committing) return;
+    setState(() => _committing = true);
+    try {
+      await ref
+          .read(seasonServiceProvider)
+          .playPlayerMatch(widget.careerId, preview.fixture, r);
+      if (mounted) {
+        // Show the round's other results (grouped) before returning to the hub.
+        context.go('${Routes.roundResults}?careerId=${widget.careerId}');
+      }
+    } catch (e, st) {
+      debugPrint('Continue failed: $e\n$st');
+      if (mounted) {
+        setState(() => _committing = false);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Could not continue: $e')),
+        );
+      }
+    }
   }
 
   /// The player's on-pitch XI right now (starting XI with live subs applied).
@@ -255,30 +294,34 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
                       ],
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(AppSpacing.marginMobile),
-                    child: PrimaryButton(
-                      label: ft ? 'Continue' : 'Skip to full time',
-                      icon: ft ? Icons.check_rounded : Icons.fast_forward,
-                      onPressed: ft
-                          ? () async {
-                              await ref
-                                  .read(seasonServiceProvider)
-                                  .playPlayerMatch(
-                                    widget.careerId,
-                                    preview.fixture,
-                                    r,
-                                  );
-                              if (context.mounted) {
-                                context.go(
-                                  '${Routes.hub}?careerId=${widget.careerId}',
-                                );
-                              }
-                            }
-                          : _skip,
-                    ),
-                  ),
                 ],
+              ),
+            ),
+          );
+        },
+      ),
+      // The action button is pinned to the bottom of the screen so it is
+      // always visible — it used to sit at the end of the column and could
+      // overflow off the bottom on shorter screens.
+      bottomNavigationBar: previewAsync.whenOrNull(
+        data: (preview) {
+          if (preview == null) return null;
+          final ft = _minute >= 90;
+          final r = _result ?? preview.result;
+          return SafeArea(
+            top: false,
+            child: Padding(
+              padding: const EdgeInsets.all(AppSpacing.marginMobile),
+              child: PrimaryButton(
+                label: ft
+                    ? (_committing ? 'Continuing…' : 'Continue')
+                    : 'Skip to full time',
+                icon: ft ? Icons.check_rounded : Icons.fast_forward,
+                onPressed: _committing
+                    ? null
+                    : ft
+                    ? () => _continue(preview, r)
+                    : _skip,
               ),
             ),
           );

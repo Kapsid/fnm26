@@ -10,6 +10,11 @@ import 'package:fnm/domain/services/match/match_engine.dart';
 import 'package:fnm/domain/services/tactics/best_eleven.dart';
 import 'package:fnm/features/tactics/tactics_providers.dart';
 
+/// The player's preferred live-match playback speed, as an index into the
+/// screen's speed steps. Kept in a session-wide provider so the choice carries
+/// from one match to the next instead of resetting each game.
+final matchSpeedProvider = StateProvider<int>((ref) => 0);
+
 /// The player's next fixture, simulated by the tactical engine and ready to
 /// display. Carries everything the live screen needs to re-simulate after a
 /// substitution (the starting teams, the player's bench, and the seed).
@@ -87,7 +92,9 @@ final AutoDisposeFutureProviderFamily<MatchPreview?, int> matchPreviewProvider =
           .map((id) => byId[id])
           .whereType<Player>()
           .toList();
-      final playerXi = selected.length == 11
+      final playerFormation = tactic?.formation ?? Formation.f433;
+      final usingTactic = selected.length == 11;
+      final playerXi = usingTactic
           ? selected
           : _xiFrom(playerPool, bestEleven(Formation.f433, playerPool));
       final startingIds = playerXi.map((p) => p.id).toSet();
@@ -99,6 +106,9 @@ final AutoDisposeFutureProviderFamily<MatchPreview?, int> matchPreviewProvider =
         nationId: playerNationId,
         xi: playerXi,
         instructions: tactic?.instructions ?? const TacticalInstructions(),
+        // Only the saved lineup's slots are meaningful; the fallback XI is
+        // already picked into f433 slots.
+        formation: usingTactic ? playerFormation : Formation.f433,
       );
 
       // Opponent: a best XI in a default shape.

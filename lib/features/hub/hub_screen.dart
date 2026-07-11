@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/core/routing/app_router.dart';
@@ -7,6 +9,7 @@ import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/entities/group_standing.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
+import 'package:fnm/features/hub/hub_event.dart';
 import 'package:fnm/features/hub/hub_providers.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
@@ -88,37 +91,40 @@ class HubScreen extends ConsumerWidget {
                   onView: () => context.go('${Routes.cup}?careerId=$careerId'),
                 ),
                 const SizedBox(height: AppSpacing.md),
-                PrimaryButton(
-                  label: 'Begin '
-                      '${SeasonService.finalsYear(hub.career.cyclePointer + 1)}'
-                      ' cycle',
-                  icon: Icons.skip_next_rounded,
-                  onPressed: () =>
-                      ref.read(seasonServiceProvider).startNextCycle(careerId),
-                ),
-              ] else ...[
-                PrimaryButton(
-                  label: hub.next == null ? 'Advance the world' : 'Continue',
-                  icon: hub.next == null
-                      ? Icons.fast_forward_rounded
-                      : Icons.play_arrow_rounded,
-                  onPressed: hub.next == null
-                      ? () => ref.read(seasonServiceProvider).advance(careerId)
-                      : () => context.go('${Routes.match}?careerId=$careerId'),
-                ),
+              ],
+              // The primary action is whatever the next timeline event is
+              // (a draw, the next match, a tournament to follow, or rollover).
+              _EventButton(careerId: careerId),
+              if (hub.championNationId == null) ...[
                 const SizedBox(height: AppSpacing.md),
                 _NextMatch(next: hub.next, code: code),
               ],
-              if (hub.hasFinals && hub.championNationId == null)
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: TextButton.icon(
-                    onPressed: () => context
-                        .go('${Routes.finalsDraw}?careerId=$careerId'),
-                    icon: const Icon(Icons.casino, size: 18),
-                    label: const Text('Watch World Cup draw'),
+              if (hub.hasFinals && hub.championNationId == null) ...[
+                const SizedBox(height: AppSpacing.md),
+                _FinalsFollowCard(
+                  playerInFinals: hub.fixtures.any(
+                    (f) => const {
+                      'GROUP',
+                      'R32',
+                      'R16',
+                      'QF',
+                      'SF',
+                      '3RD',
+                      'FINAL',
+                    }.contains(f.round),
                   ),
+                  onSkipToFinal: () async {
+                    await ref
+                        .read(seasonServiceProvider)
+                        .skipToChampion(careerId);
+                    if (context.mounted) {
+                      context.go('${Routes.cup}?careerId=$careerId');
+                    }
+                  },
+                  onFollow: () =>
+                      context.go('${Routes.cup}?careerId=$careerId'),
                 ),
+              ],
               Align(
                 alignment: Alignment.centerRight,
                 child: TextButton(
@@ -141,6 +147,7 @@ class HubScreen extends ConsumerWidget {
                   playerNationId: hub.career.nationId,
                   code: code,
                   name: name,
+                  onTap: () => context.go('${Routes.cup}?careerId=$careerId'),
                 ),
               const SizedBox(height: AppSpacing.lg),
               if (hub.next != null)
@@ -205,12 +212,142 @@ class _ChampionBanner extends StatelessWidget {
   }
 }
 
+/// The hub's primary action, driven by the next timeline event: watch a draw,
+/// play the next match, step a live tournament, or roll into the next cycle.
+class _EventButton extends ConsumerWidget {
+  const _EventButton({required this.careerId});
+
+  final int careerId;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final event = ref.watch(nextEventProvider(careerId)).valueOrNull;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        PrimaryButton(
+          label: event?.label ?? 'Continue',
+          icon: event?.icon ?? Icons.play_arrow_rounded,
+          onPressed:
+              event == null ? null : () => _dispatch(context, ref, event),
+        ),
+        if (event?.subtitle != null) ...[
+          const SizedBox(height: AppSpacing.xs),
+          Text(
+            event!.subtitle!,
+            textAlign: TextAlign.center,
+            style: AppTypography.labelSmall.copyWith(
+              color: AppColors.onSurfaceVariant,
+            ),
+          ),
+        ],
+      ],
+    );
+  }
+
+  void _dispatch(BuildContext context, WidgetRef ref, HubEvent event) {
+    final season = ref.read(seasonServiceProvider);
+    switch (event.kind) {
+      case HubEventKind.advance:
+      case HubEventKind.watchTournament:
+        unawaited(season.advance(careerId));
+      case HubEventKind.cycleRollover:
+      case HubEventKind.draw:
+      case HubEventKind.callUp:
+      case HubEventKind.match:
+        if (event.route != null) context.go(event.route!);
+    }
+  }
+}
+
+/// Surfaces the ongoing World Cup finals on the hub so the player can follow
+/// the tournament — especially when their nation didn't qualify and would
+/// otherwise have no visible "next step".
+class _FinalsFollowCard extends StatelessWidget {
+  const _FinalsFollowCard({
+    required this.playerInFinals,
+    required this.onSkipToFinal,
+    required this.onFollow,
+  });
+
+  final bool playerInFinals;
+  final VoidCallback onSkipToFinal;
+  final VoidCallback onFollow;
+
+  @override
+  Widget build(BuildContext context) {
+    return AppCard(
+      onTap: onFollow,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Row(
+            children: [
+              Icon(Icons.emoji_events, color: AppColors.primary, size: 18),
+              SizedBox(width: AppSpacing.sm),
+              Expanded(
+                child: Text(
+                  'WORLD CUP FINALS',
+                  style: AppTypography.labelMedium,
+                ),
+              ),
+              Icon(
+                Icons.chevron_right,
+                size: 18,
+                color: AppColors.onSurfaceVariant,
+              ),
+            ],
+          ),
+          const SizedBox(height: AppSpacing.xs),
+          Text(
+            playerInFinals
+                ? 'The finals are under way — follow the bracket.'
+                : "You didn't qualify — follow the finals to the end.",
+            style: AppTypography.bodySmall.copyWith(
+              color: AppColors.onSurfaceVariant,
+            ),
+          ),
+          const SizedBox(height: AppSpacing.sm),
+          Row(
+            children: [
+              Expanded(
+                child: OutlinedButton.icon(
+                  onPressed: onFollow,
+                  icon: const Icon(Icons.table_rows_rounded, size: 16),
+                  label: const Text('Follow'),
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: AppColors.primary,
+                    side: const BorderSide(color: AppColors.outlineVariant),
+                  ),
+                ),
+              ),
+              const SizedBox(width: AppSpacing.sm),
+              Expanded(
+                child: OutlinedButton.icon(
+                  onPressed: onSkipToFinal,
+                  icon: const Icon(Icons.fast_forward_rounded, size: 16),
+                  label: const Text('Skip to final'),
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: AppColors.primary,
+                    side: const BorderSide(color: AppColors.outlineVariant),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 /// Human-readable stage for a fixture (distinguishes qualifiers from finals).
 String matchStageLabel(Fixture f) => switch (f.round) {
       null => 'QUALIFYING · MD ${f.matchday}',
       'FRIENDLY' => 'FRIENDLY',
       'NL' => 'NATIONS LEAGUE',
       'GROUP' => 'WC FINALS · GROUP',
+      'R32' => 'WC FINALS · ROUND OF 32',
       'R16' => 'WC FINALS · ROUND OF 16',
       'QF' => 'WC FINALS · QUARTER-FINAL',
       'SF' => 'WC FINALS · SEMI-FINAL',
@@ -260,15 +397,15 @@ class _NextMatch extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: AppSpacing.md),
+          const SizedBox(height: AppSpacing.sm),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               _Side(code: code(f.homeNationId)),
               Column(
                 children: [
-                  const Text('VS', style: AppTypography.headlineMedium),
-                  const SizedBox(height: AppSpacing.xs),
+                  const Text('VS', style: AppTypography.labelLarge),
+                  const SizedBox(height: 2),
                   Text(
                     date,
                     style: AppTypography.labelSmall.copyWith(
@@ -279,13 +416,6 @@ class _NextMatch extends StatelessWidget {
               ),
               _Side(code: code(f.awayNationId)),
             ],
-          ),
-          const SizedBox(height: AppSpacing.sm),
-          Text(
-            'WORLD CUP QUALIFIER',
-            style: AppTypography.labelSmall.copyWith(
-              color: AppColors.onSurfaceVariant,
-            ),
           ),
         ],
       ),
@@ -301,7 +431,7 @@ class _Side extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        FlagDisc(code, size: 56),
+        FlagDisc(code, size: 40),
         const SizedBox(height: AppSpacing.xs),
         Text(code, style: AppTypography.labelMedium),
       ],
@@ -326,13 +456,24 @@ class _SquadStatus extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('SQUAD STATUS', style: AppTypography.labelMedium),
-          const SizedBox(height: AppSpacing.sm),
+          Row(
+            children: [
+              const Text('SQUAD STATUS', style: AppTypography.labelMedium),
+              const Spacer(),
+              Text(
+                '$size players',
+                style: AppTypography.labelSmall.copyWith(
+                  color: AppColors.onSurfaceVariant,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: AppSpacing.xs),
           Row(
             children: [
               Text(
                 'Avg rating',
-                style: AppTypography.bodyMedium.copyWith(
+                style: AppTypography.bodySmall.copyWith(
                   color: AppColors.onSurfaceVariant,
                 ),
               ),
@@ -354,19 +495,6 @@ class _SquadStatus extends StatelessWidget {
             ),
           ),
           const SizedBox(height: AppSpacing.sm),
-          Row(
-            children: [
-              Text(
-                'Squad size',
-                style: AppTypography.bodyMedium.copyWith(
-                  color: AppColors.onSurfaceVariant,
-                ),
-              ),
-              const Spacer(),
-              Text('$size players', style: AppTypography.labelMedium),
-            ],
-          ),
-          const SizedBox(height: AppSpacing.md),
           PrimaryButton(
             label: 'Manage Team',
             icon: Icons.groups,
@@ -384,22 +512,38 @@ class _GroupTable extends StatelessWidget {
     required this.playerNationId,
     required this.code,
     required this.name,
+    this.onTap,
   });
 
   final GroupTable group;
   final int playerNationId;
   final String Function(int) code;
   final String Function(int) name;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
     return AppCard(
+      onTap: onTap,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            group.competition.toUpperCase(),
-            style: AppTypography.labelSmall.copyWith(color: AppColors.primary),
+          Row(
+            children: [
+              Expanded(
+                child: Text(
+                  group.competition.toUpperCase(),
+                  style: AppTypography.labelSmall
+                      .copyWith(color: AppColors.primary),
+                ),
+              ),
+              if (onTap != null)
+                const Icon(
+                  Icons.chevron_right,
+                  size: 18,
+                  color: AppColors.onSurfaceVariant,
+                ),
+            ],
           ),
           Text('GROUP ${group.name}', style: AppTypography.labelMedium),
           const SizedBox(height: AppSpacing.sm),

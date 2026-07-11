@@ -6,6 +6,7 @@ import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/fixture.dart';
+import 'package:fnm/domain/entities/group_standing.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
 import 'package:fnm/features/tournaments/continental_detail_providers.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
@@ -41,8 +42,17 @@ class ContinentalDetailScreen extends ConsumerWidget {
       )),
     );
 
+    final canWatchDraw = dataAsync.maybeWhen(
+      data: (d) => d != null && d.groups.isNotEmpty,
+      orElse: () => false,
+    );
+    final canWatchQualiDraw = dataAsync.maybeWhen(
+      data: (d) => d != null && d.qualifyingGroups.isNotEmpty,
+      orElse: () => false,
+    );
+
     return DefaultTabController(
-      length: 3,
+      length: 5,
       child: Scaffold(
         appBar: AppBar(
           leading: IconButton(
@@ -58,11 +68,34 @@ class ContinentalDetailScreen extends ConsumerWidget {
             style: AppTypography.labelMedium.copyWith(color: AppColors.primary),
           ),
           centerTitle: true,
+          actions: [
+            if (canWatchQualiDraw)
+              IconButton(
+                icon: const Icon(Icons.shuffle, color: AppColors.primary),
+                tooltip: 'Watch the qualifying draw',
+                onPressed: () => context.go(
+                  '${Routes.continentalDraw}?careerId=$careerId'
+                  '&conf=${confederation.name}&stage=qualifying',
+                ),
+              ),
+            if (canWatchDraw)
+              IconButton(
+                icon: const Icon(Icons.casino, color: AppColors.primary),
+                tooltip: 'Watch the finals draw',
+                onPressed: () => context.go(
+                  '${Routes.continentalDraw}?careerId=$careerId'
+                  '&conf=${confederation.name}',
+                ),
+              ),
+          ],
           bottom: const TabBar(
+            isScrollable: true,
             labelColor: AppColors.onSurface,
             unselectedLabelColor: AppColors.onSurfaceVariant,
             indicatorColor: AppColors.primary,
             tabs: [
+              Tab(text: 'QUALIFYING'),
+              Tab(text: 'FINALS'),
               Tab(text: 'BRACKET'),
               Tab(text: 'SCORERS'),
               Tab(text: 'HISTORY'),
@@ -81,6 +114,40 @@ class ContinentalDetailScreen extends ConsumerWidget {
 
             return TabBarView(
               children: [
+                if (data.qualifyingGroups.isNotEmpty)
+                  _Groups(
+                    groups: data.qualifyingGroups,
+                    playerNationId: data.playerNationId,
+                    code: code,
+                    name: name,
+                    onViewDraw: () => context.go(
+                      '${Routes.qualifyingDraw}?careerId=$careerId'
+                      '&worldCup=false',
+                    ),
+                  )
+                else
+                  _Soon(
+                    message: data.isPlayerRegion
+                        ? 'Qualifying is seeded by ranking this cycle.'
+                        : 'Only your own confederation is played in detail. '
+                            '${data.name} is decided in the background — see '
+                            'its winners under History.',
+                  ),
+                if (data.groups.isNotEmpty)
+                  _Groups(
+                    groups: data.groups,
+                    playerNationId: data.playerNationId,
+                    code: code,
+                    name: name,
+                  )
+                else
+                  _Soon(
+                    message: data.isPlayerRegion
+                        ? 'The finals draw happens once qualifying ends.'
+                        : 'Only your own confederation is played in detail. '
+                            '${data.name} is decided in the background — see '
+                            'its winners under History.',
+                  ),
                 if (data.knockout.isNotEmpty)
                   _Bracket(
                     fixtures: data.knockout,
@@ -116,6 +183,124 @@ class ContinentalDetailScreen extends ConsumerWidget {
       ),
     );
   }
+}
+
+class _Groups extends StatelessWidget {
+  const _Groups({
+    required this.groups,
+    required this.playerNationId,
+    required this.code,
+    required this.name,
+    this.onViewDraw,
+  });
+
+  final List<FinalsGroupTable> groups;
+  final int playerNationId;
+  final String Function(int) code;
+  final String Function(int) name;
+  final VoidCallback? onViewDraw;
+
+  /// Top two of each group advance to the knockout.
+  static const _advance = 2;
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView(
+      padding: const EdgeInsets.all(AppSpacing.marginMobile),
+      children: [
+        if (onViewDraw != null)
+          Align(
+            alignment: Alignment.centerRight,
+            child: TextButton.icon(
+              onPressed: onViewDraw,
+              icon: const Icon(Icons.casino, size: 18),
+              label: const Text('View qualifying draw'),
+            ),
+          ),
+        for (final g in groups) ...[
+          AppCard(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'GROUP ${g.name}',
+                  style: AppTypography.labelSmall.copyWith(
+                    color: AppColors.onSurfaceVariant,
+                  ),
+                ),
+                const SizedBox(height: AppSpacing.sm),
+                for (var i = 0; i < g.standings.length; i++)
+                  _row(i + 1, g.standings[i]),
+              ],
+            ),
+          ),
+          const SizedBox(height: AppSpacing.sm),
+        ],
+        const SizedBox(height: AppSpacing.xl),
+      ],
+    );
+  }
+
+  Widget _row(int pos, GroupStanding s) {
+    final isPlayer = s.nationId == playerNationId;
+    final advancing = pos <= _advance;
+    final gd = s.goalDifference;
+    return Container(
+      decoration: BoxDecoration(
+        color: isPlayer ? AppColors.surfaceContainerHigh : null,
+        border: Border(
+          left: BorderSide(
+            color: advancing ? AppColors.positive : Colors.transparent,
+            width: 3,
+          ),
+        ),
+      ),
+      padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 4),
+      child: Row(
+        children: [
+          SizedBox(
+            width: 18,
+            child: Text(
+              '$pos',
+              style: AppTypography.labelSmall.copyWith(
+                color: advancing
+                    ? AppColors.positive
+                    : AppColors.onSurfaceVariant,
+                fontWeight: advancing ? FontWeight.w700 : FontWeight.w500,
+              ),
+            ),
+          ),
+          FlagDisc(code(s.nationId), size: 22),
+          const SizedBox(width: AppSpacing.sm),
+          Expanded(
+            child: Text(
+              name(s.nationId),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: AppTypography.bodySmall.copyWith(
+                fontWeight: isPlayer ? FontWeight.w700 : FontWeight.w400,
+              ),
+            ),
+          ),
+          _cell('${s.played}'),
+          _cell(gd > 0 ? '+$gd' : '$gd'),
+          _cell('${s.points}', emphasize: true),
+        ],
+      ),
+    );
+  }
+
+  Widget _cell(String text, {bool emphasize = false}) => SizedBox(
+        width: 30,
+        child: Text(
+          text,
+          textAlign: TextAlign.center,
+          style: AppTypography.labelSmall.copyWith(
+            color: emphasize ? AppColors.primary : AppColors.onSurface,
+            fontWeight: emphasize ? FontWeight.w700 : FontWeight.w500,
+          ),
+        ),
+      );
 }
 
 class _Bracket extends StatelessWidget {

@@ -1,5 +1,8 @@
+import 'dart:math';
+
 import 'package:fnm/core/rng/seeded_rng.dart';
 import 'package:fnm/domain/entities/enums.dart';
+import 'package:fnm/domain/entities/formation.dart';
 import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/entities/tactics.dart';
 
@@ -9,11 +12,16 @@ class MatchTeam {
     required this.nationId,
     required this.xi,
     required this.instructions,
+    this.formation = Formation.f433,
   });
 
   final int nationId;
   final List<Player> xi;
   final TacticalInstructions instructions;
+
+  /// The shape the XI lines up in; `xi[i]` occupies `formation.positions[i]`.
+  /// Players fielded away from their natural position take a rating penalty.
+  final Formation formation;
 }
 
 /// A timed substitution: at [minute], [on] replaces the player [offId] in the
@@ -86,10 +94,16 @@ class MatchResult {
 /// Mutable per-team match state: the XI on the pitch right now, which changes
 /// as substitutions are applied through the match.
 class _Live {
-  _Live(this.team) : xi = [...team.xi];
+  _Live(this.team)
+      : xi = [...team.xi],
+        slots = [...team.formation.positions];
 
   final MatchTeam team;
   final List<Player> xi;
+
+  /// The position each XI slot is meant to be — stable across substitutions
+  /// (a sub inherits the slot of the player they replace).
+  final List<PlayerPosition> slots;
 
   int get nationId => team.nationId;
   TacticalInstructions get instructions => team.instructions;
@@ -190,7 +204,7 @@ class MatchEngine {
 
   /// Midfield control, used to estimate possession.
   double _control(_Live t) =>
-      _mean(t.xi, PositionCategory.midfielder) +
+      _mean(t, PositionCategory.midfielder) +
       (t.instructions.tempo - 50) * 0.05;
 
   bool _chance(
@@ -199,13 +213,21 @@ class MatchEngine {
     double oppDefence,
     TacticalInstructions instr,
   ) {
-    final ratio = attack / (oppDefence <= 0 ? 1 : oppDefence);
-    final rate = (0.085 * ratio * (0.85 + instr.tempo / 333)).clamp(0.02, 0.25);
+    // Compress the strength ratio so mismatches don't compound into blowouts
+    // (the same damped ratio also feeds conversion below).
+    final ratio = _edge(attack, oppDefence);
+    final rate = (0.075 * ratio * (0.85 + instr.tempo / 333)).clamp(0.02, 0.18);
     return rng.chance(rate);
   }
 
   double _goalProbability(double attack, double oppDefence) =>
-      (0.28 * attack / (oppDefence <= 0 ? 1 : oppDefence)).clamp(0.08, 0.6);
+      (0.20 * _edge(attack, oppDefence)).clamp(0.07, 0.42);
+
+  /// The attacking edge as a *compressed* strength ratio: the square root pulls
+  /// extreme mismatches back toward parity so scorelines stay believable (a
+  /// two-to-one strength gap becomes ~1.4×, not 2×).
+  double _edge(double attack, double oppDefence) =>
+      sqrt(attack / (oppDefence <= 0 ? 1 : oppDefence));
 
   MatchEvent _goal(int minute, _Live team, SeededRng rng) {
     final scorer = _pickScorer(team, rng);
@@ -246,9 +268,9 @@ class MatchEngine {
 
   double _attack(_Live t) {
     final base =
-        _mean(t.xi, PositionCategory.forward) * 0.55 +
-        _mean(t.xi, PositionCategory.midfielder) * 0.30 +
-        _mean(t.xi, PositionCategory.defender) * 0.15;
+        _mean(t, PositionCategory.forward) * 0.55 +
+        _mean(t, PositionCategory.midfielder) * 0.30 +
+        _mean(t, PositionCategory.defender) * 0.15;
     return base +
         (t.instructions.mentality - 50) * 0.12 +
         (t.instructions.tempo - 50) * 0.04;
@@ -256,20 +278,46 @@ class MatchEngine {
 
   double _defence(_Live t) {
     final base =
-        _mean(t.xi, PositionCategory.defender) * 0.55 +
-        _mean(t.xi, PositionCategory.goalkeeper) * 0.25 +
-        _mean(t.xi, PositionCategory.midfielder) * 0.20;
+        _mean(t, PositionCategory.defender) * 0.55 +
+        _mean(t, PositionCategory.goalkeeper) * 0.25 +
+        _mean(t, PositionCategory.midfielder) * 0.20;
     return base -
         (t.instructions.mentality - 50) * 0.08 +
         (t.instructions.pressing - 50) * 0.03;
   }
 
-  double _mean(List<Player> xi, PositionCategory category) {
-    final ratings = xi
-        .where((p) => p.category == category)
-        .map((p) => p.overall)
-        .toList();
-    if (ratings.isEmpty) return 55;
-    return ratings.reduce((a, b) => a + b) / ratings.length;
+  /// Mean *effective* rating of the players assigned to a line, bucketed by the
+  /// slot they are fielded in (not their natural position). A player out of
+  /// position still counts toward the line they play in, but at a reduced
+  /// rating — so an emergency centre-back is a weak defender, not a hole.
+  double _mean(_Live t, PositionCategory category) {
+    final values = <double>[];
+    final n = t.xi.length;
+    for (var i = 0; i < n; i++) {
+      final slot = i < t.slots.length ? t.slots[i] : t.xi[i].position;
+      if (slot.category != category) continue;
+      values.add(t.xi[i].overall * _positionFactor(t.xi[i].position, slot));
+    }
+    if (values.isEmpty) return 55;
+    return values.reduce((a, b) => a + b) / values.length;
+  }
+
+  /// How well a player performs in a given slot: 1.0 at their natural position,
+  /// tapering as the slot moves further from it. Same line is barely a dent;
+  /// crossing lines (or into/out of goal) hurts progressively more.
+  static double _positionFactor(PlayerPosition natural, PlayerPosition slot) {
+    if (natural == slot) return 1;
+    if (natural.category == slot.category) return 0.96;
+    int line(PositionCategory c) => switch (c) {
+      PositionCategory.goalkeeper => 0,
+      PositionCategory.defender => 1,
+      PositionCategory.midfielder => 2,
+      PositionCategory.forward => 3,
+    };
+    final gap = (line(natural.category) - line(slot.category)).abs();
+    final involvesKeeper = natural.category == PositionCategory.goalkeeper ||
+        slot.category == PositionCategory.goalkeeper;
+    if (involvesKeeper) return gap <= 1 ? 0.70 : 0.55;
+    return gap <= 1 ? 0.86 : 0.74;
   }
 }

@@ -67,11 +67,14 @@ class NationSelectScreen extends ConsumerWidget {
                 ),
               ),
               data: (nations) {
+                // With a search query, look across every confederation (so a
+                // nation is findable from any tab); otherwise show the selected
+                // confederation.
                 final filtered = nations
-                    .where((n) => n.confederation == selectedConf)
                     .where(
-                      (n) =>
-                          query.isEmpty || n.name.toLowerCase().contains(query),
+                      (n) => query.isEmpty
+                          ? n.confederation == selectedConf
+                          : n.name.toLowerCase().contains(query),
                     )
                     .toList();
 

@@ -49,21 +49,23 @@ void main() {
         ))
         .valueOrNull!;
 
-    // The gap is filled with a Nations League group and friendlies.
+    // The gap is filled with continental qualifying and friendlies. Europe has
+    // room before the Euros, so the player contests a real qualifying stage
+    // (its finals are drawn from the qualifiers mid-season).
     final ownFixtures = await container
         .read(competitionRepositoryProvider)
         .fixturesForNation(career.id, player.id);
     expect(
-      ownFixtures.any((f) => f.round == 'NL'),
+      ownFixtures.any((f) => f.round == 'CQ'),
       isTrue,
-      reason: 'the player should have Nations League matches',
+      reason: 'the player should contest continental qualifying',
     );
     expect(
       await container
           .read(competitionRepositoryProvider)
-          .hasTournament(career.id, CompetitionKind.continentalFinals),
+          .hasTournament(career.id, CompetitionKind.continentalQualifying),
       isTrue,
-      reason: 'a top seed should contest the continental championship',
+      reason: 'a continental qualifying competition should exist',
     );
     expect(
       ownFixtures.any((f) => f.round == 'FRIENDLY'),
