@@ -7,7 +7,7 @@ import 'package:fnm/domain/entities/enums.dart';
 abstract final class ContinentalCups {
   static const byConfederation =
       <Confederation, ({String name, int size, int month})>{
-    Confederation.europe: (name: 'European Championship', size: 16, month: 6),
+    Confederation.europe: (name: 'European Championship', size: 24, month: 6),
     Confederation.southAmerica: (name: 'South America Cup', size: 8, month: 6),
     Confederation.africa: (name: 'African Championship', size: 16, month: 1),
     Confederation.asia: (name: 'Asian Championship', size: 16, month: 1),

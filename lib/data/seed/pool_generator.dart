@@ -68,8 +68,12 @@ abstract final class PoolGenerator {
 
       for (var i = 0; i < extraPerNation; i++) {
         final pos = _fringePositions[i % _fringePositions.length];
-        // Fringe players sit a little below the squad's average.
-        final scale = 0.70 + rng.nextInt(22) / 100; // 0.70 … 0.91
+        // Depth-graded quality: the first fringe players are near the squad's
+        // level (just below the weaker starters) and taper smoothly down the
+        // depth chart, so there's no cliff between the top 23 and the rest.
+        final depth = extraPerNation == 1 ? 0.0 : i / (extraPerNation - 1);
+        final noise = (rng.nextInt(9) - 4) / 100;
+        final scale = (0.96 - 0.34 * depth + noise).clamp(0.55, 0.98);
         out.add(
           Player(
             id: nextId,

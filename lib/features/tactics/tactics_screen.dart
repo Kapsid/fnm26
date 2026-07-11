@@ -428,18 +428,21 @@ class _Pitch extends StatelessWidget {
     // Width: spread outfield players out from / in toward the centre line.
     final widthFactor = 0.82 + i.width / 100 * 0.30; // 0.82 … 1.12
     final x = 0.5 + (base.$1 - 0.5) * widthFactor;
-    var y = base.$2;
-    if (category != PositionCategory.goalkeeper) {
-      // Attacking mentality lifts the whole outfield up the pitch (lower y).
-      y -= (i.mentality - 50) / 50 * 0.05;
+    // The keeper is pinned near the goal line and never shifts up the pitch, so
+    // a deep defensive line can't drop the back four on top of them.
+    if (category == PositionCategory.goalkeeper) {
+      return (x.clamp(0.04, 0.96), 0.93);
     }
+    // Attacking mentality lifts the whole outfield up the pitch (lower y).
+    var y = base.$2 - (i.mentality - 50) / 50 * 0.05;
     if (category == PositionCategory.defender) {
       // A high defensive line pushes the back line up; a deep one drops it.
       y -= (i.defensiveLine - 50) / 50 * 0.10;
     } else if (category == PositionCategory.forward) {
       y -= (i.mentality - 50) / 50 * 0.02;
     }
-    return (x.clamp(0.04, 0.96), y.clamp(0.07, 0.93));
+    // Cap outfield depth short of the keeper so the lines never overlap them.
+    return (x.clamp(0.04, 0.96), y.clamp(0.10, 0.82));
   }
 
   @override

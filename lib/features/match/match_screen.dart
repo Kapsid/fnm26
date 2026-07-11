@@ -8,7 +8,9 @@ import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/domain/entities/enums.dart';
+import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/entities/player.dart';
+import 'package:fnm/domain/services/competition/finals.dart';
 import 'package:fnm/domain/services/match/match_engine.dart';
 import 'package:fnm/features/hub/hub_providers.dart';
 import 'package:fnm/features/match/match_providers.dart';
@@ -75,37 +77,75 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
     _restartTimer();
   }
 
+  /// The base tick length for the current speed.
+  Duration get _tick =>
+      Duration(milliseconds: (360 / _speeds[_speedIdx]).round());
+
+  /// How long the clock lingers on a goal so its popup is always seen — even at
+  /// the fastest speed several goals can't blur past unnoticed.
+  static const _goalPause = Duration(milliseconds: 1100);
+
   void _restartTimer() {
     _timer?.cancel();
     if (!_playing || _minute >= 90) return;
-    final interval = Duration(milliseconds: (360 / _speeds[_speedIdx]).round());
-    _timer = Timer.periodic(interval, (_) {
+    _scheduleTick(_tick);
+  }
+
+  void _scheduleTick(Duration delay) {
+    _timer = Timer(delay, () {
+      if (!mounted || !_playing) return;
+      var scored = false;
       setState(() {
         _minute++;
-        _flashGoalAt(_minute);
+        scored = _flashGoalAt(_minute);
         if (_minute >= 90) {
           _minute = 90;
           _playing = false;
-          _timer?.cancel();
         }
       });
+      if (!_playing || _minute >= 90) return;
+      // Pause a beat on goals so the popup is fully seen before play resumes.
+      _scheduleTick(scored ? _tick + _goalPause : _tick);
     });
   }
 
-  /// Flashes the "GOAL!" overlay if a goal was scored on [minute].
-  void _flashGoalAt(int minute) {
+  /// Flashes the "GOAL!" overlay for a goal scored on [minute]; returns whether
+  /// one was shown so the clock can linger on it.
+  bool _flashGoalAt(int minute) {
     final events = _result?.events;
-    if (events == null) return;
+    if (events == null) return false;
     for (final e in events) {
       if (e.type == MatchEventType.goal && e.minute == minute) {
         _goalFlash = e;
         _flashTimer?.cancel();
-        _flashTimer = Timer(const Duration(milliseconds: 2000), () {
+        _flashTimer = Timer(_goalPause + const Duration(milliseconds: 700), () {
           if (mounted) setState(() => _goalFlash = null);
         });
-        break;
+        return true;
       }
     }
+    return false;
+  }
+
+  static const _knockoutSuffixes = ['R32', 'R16', 'QF', 'SF', '3RD', 'FINAL'];
+
+  bool _isKnockoutFixture(Fixture f) {
+    final r = f.round;
+    return r != null && _knockoutSuffixes.any(r.endsWith);
+  }
+
+  /// The result to show at full time: the engine's score, with a level knockout
+  /// settled by the same seeded shootout the season service will apply, so the
+  /// displayed and recorded results always match.
+  (int, int) _finalScore(MatchPreview preview, MatchResult r) {
+    if (_isKnockoutFixture(preview.fixture) && r.homeScore == r.awayScore) {
+      return WorldCupFinals.resolveTie(
+        r.homeScore,
+        r.awayScore,
+        SeededRng.forFixture(preview.saveSeed, preview.fixture.id ^ 0x7F),
+      );
+    }
+    return (r.homeScore, r.awayScore);
   }
 
   /// Home-team momentum (0–100) at the current minute: a strength baseline that
@@ -254,12 +294,25 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
           String name(int id) => preview.nations[id]?.name ?? 'Unknown';
 
           final shown = r.events.where((e) => e.minute <= _minute).toList();
-          final goals =
-              shown.where((e) => e.type == MatchEventType.goal).toList();
-          final homeScore =
-              goals.where((e) => e.teamNationId == homeId).length;
-          final awayScore = goals.length - homeScore;
           final ft = _minute >= 90;
+          // While playing, the score is the running tally of shown goal events.
+          // At full time it is the true recorded result (a level knockout is
+          // settled by a shootout), so the screen can never disagree with what
+          // gets saved.
+          final (finalHome, finalAway) = _finalScore(preview, r);
+          final liveHome = shown
+              .where((e) => e.type == MatchEventType.goal)
+              .where((e) => e.teamNationId == homeId)
+              .length;
+          final liveAway = shown
+                  .where((e) => e.type == MatchEventType.goal)
+                  .length -
+              liveHome;
+          final homeScore = ft ? finalHome : liveHome;
+          final awayScore = ft ? finalAway : liveAway;
+          final decidedByShootout = ft &&
+              _isKnockoutFixture(preview.fixture) &&
+              r.homeScore == r.awayScore;
           final subsLeft = kMaxSubs - _subs.length;
 
           return DefaultTabController(
@@ -280,7 +333,9 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
                     awayName: name(awayId),
                     homeScore: homeScore,
                     awayScore: awayScore,
-                    clock: ft ? 'FULL TIME' : "$_minute'",
+                    clock: ft
+                        ? (decidedByShootout ? 'FULL TIME · PENS' : 'FULL TIME')
+                        : "$_minute'",
                     live: !ft,
                   ),
                   if (!ft)

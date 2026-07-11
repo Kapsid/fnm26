@@ -181,12 +181,26 @@ class DriftCompetitionRepository implements CompetitionRepository {
           ..where((t) => t.nationId.equals(nationId)))
         .get();
     final groupById = {for (final g in groups) g.id: g};
-    // Pick the membership in the most advanced competition.
+    // Pick the membership in the most advanced competition (finals first).
     final rank = {for (var i = 0; i < ordered.length; i++) ordered[i].id: i};
-
-    // Bias towards the competition the player's next match belongs to, so the
-    // active stage (qualifying → Nations League → finals) is what's shown.
     final compIds = ordered.map((c) => c.id).toList();
+
+    // Competitions still in progress (some fixture unplayed). A qualifying
+    // table whose competition is finished must not linger on the hub while the
+    // player
+    // is between stages (e.g. playing friendlies) — only a live stage is shown.
+    final liveRows = await (_db.select(_db.fixtures)
+          ..where(
+            (t) =>
+                t.careerId.equals(careerId) &
+                t.competitionId.isIn(compIds) &
+                t.played.equals(false),
+          ))
+        .get();
+    final liveComps = liveRows.map((f) => f.competitionId).toSet();
+
+    // The player's next unplayed fixture — prefer its group when it's a group
+    // game, so the stage they're about to play is what's on screen.
     final nextFx = await (_db.select(_db.fixtures)
           ..where(
             (t) =>
@@ -199,17 +213,21 @@ class DriftCompetitionRepository implements CompetitionRepository {
           ..orderBy([(t) => OrderingTerm(expression: t.date)])
           ..limit(1))
         .getSingleOrNull();
-    if (nextFx != null) rank[nextFx.competitionId] = -1;
 
     QualifyingGroupRow? group;
-    var best = 1 << 30;
-    for (final m in memberships) {
-      final g = groupById[m.groupId];
-      if (g == null) continue;
-      final r = rank[g.competitionId] ?? best;
-      if (r < best) {
-        best = r;
-        group = g;
+    if (nextFx?.groupId != null) {
+      group = groupById[nextFx!.groupId];
+    }
+    if (group == null) {
+      var best = 1 << 30;
+      for (final m in memberships) {
+        final g = groupById[m.groupId];
+        if (g == null || !liveComps.contains(g.competitionId)) continue;
+        final r = rank[g.competitionId] ?? best;
+        if (r < best) {
+          best = r;
+          group = g;
+        }
       }
     }
     if (group == null) return null;

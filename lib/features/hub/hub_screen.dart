@@ -570,14 +570,23 @@ class _GroupTable extends StatelessWidget {
 
   Widget _standingRow(int pos, GroupStanding s) {
     final isPlayer = s.nationId == playerNationId;
-    final advancing = pos <= 2;
+    // Honest zones: the group winner is safe (green); the runner-up is only in
+    // contention (amber) — they still need to be among the best runners-up /
+    // third-placed teams, or win a play-off, so never promise qualification.
+    final direct = pos == 1;
+    final contention = pos == 2;
+    final zoneColor = direct
+        ? AppColors.positive
+        : contention
+            ? const Color(0xFFEFC94C)
+            : null;
     final gd = s.goalDifference;
     return Container(
       decoration: BoxDecoration(
         color: isPlayer ? AppColors.surfaceContainerHigh : null,
         border: Border(
           left: BorderSide(
-            color: advancing ? AppColors.positive : Colors.transparent,
+            color: zoneColor ?? Colors.transparent,
             width: 3,
           ),
         ),
@@ -590,12 +599,11 @@ class _GroupTable extends StatelessWidget {
             child: Text(
               '$pos',
               style: AppTypography.labelSmall.copyWith(
-                color: advancing
-                    ? AppColors.positive
-                    : (isPlayer
-                          ? AppColors.primary
-                          : AppColors.onSurfaceVariant),
-                fontWeight: advancing ? FontWeight.w700 : FontWeight.w500,
+                color: zoneColor ??
+                    (isPlayer
+                        ? AppColors.primary
+                        : AppColors.onSurfaceVariant),
+                fontWeight: direct ? FontWeight.w700 : FontWeight.w500,
               ),
             ),
           ),

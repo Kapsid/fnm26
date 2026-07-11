@@ -135,24 +135,46 @@ abstract final class WorldCupFinals {
     return b.goalsFor.compareTo(a.goalsFor);
   }
 
-  /// Round-of-32 pairings for a 48-team finals (12 groups of four). The 12
-  /// group winners, 12 runners-up and the eight best third-placed teams are
-  /// seeded into one 32-team bracket by cross-group rank; the strongest seed
-  /// meets the weakest, and [pairWinners] carries it through to the final.
-  static List<(int, int)> roundOf32(List<List<GroupStanding>> groups) {
+  /// Seeds the group winners, runners-up and the [bestThirds] best third-placed
+  /// teams into one bracket by cross-group rank, pairing the strongest seed
+  /// with the weakest. Models the modern formats that advance the best
+  /// third-placed teams: a 48-team World Cup (12 groups, 8 thirds → 32) and a
+  /// 24-team European Championship (6 groups, 4 thirds → 16). [pairWinners]
+  /// carries the bracket through to the final.
+  static List<(int, int)> knockoutWithThirds(
+    List<List<GroupStanding>> groups,
+    int bestThirds,
+  ) {
     final winners = [for (final g in groups) g[0]]..sort(_rank);
-    final runners = [for (final g in groups) g[1]]..sort(_rank);
+    final runners = [
+      for (final g in groups)
+        if (g.length > 1) g[1],
+    ]..sort(_rank);
     final thirds = [
       for (final g in groups)
         if (g.length > 2) g[2],
     ]..sort(_rank);
-    final seeds = [...winners, ...runners, ...thirds.take(8)];
+    final seeds = [...winners, ...runners, ...thirds.take(bestThirds)];
     final n = seeds.length;
     return [
       for (var i = 0; i * 2 < n; i++)
         (seeds[i].nationId, seeds[n - 1 - i].nationId),
     ];
   }
+
+  /// Round-of-32 pairings for a 48-team finals (12 groups of four): the 24
+  /// group qualifiers plus the eight best third-placed teams.
+  static List<(int, int)> roundOf32(List<List<GroupStanding>> groups) =>
+      knockoutWithThirds(groups, 8);
+
+  /// The best third-placed teams that reach the knockout for a groups-of-four
+  /// finals: 8 for a 48-team World Cup (12 groups), 4 for a 24-team continental
+  /// (6 groups), otherwise none (top two only).
+  static int bestThirdsFor(int groupCount) => switch (groupCount) {
+        12 => 8,
+        6 => 4,
+        _ => 0,
+      };
 
   /// Round-of-16 pairings from the finals group tables (ordered A…H): each
   /// group winner meets a runner-up from another group, halves kept apart.

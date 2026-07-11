@@ -200,7 +200,15 @@ class SeasonService {
     return {for (final n in nations.values) n.id: n.ranking};
   }
 
-  static bool _isKnockout(Fixture f) => f.round != null && f.round != 'GROUP';
+  /// Whether a fixture is a knockout tie (so a level score is settled by a
+  /// shootout). Group and qualifying rounds are never knockouts — note the
+  /// continental group round is `CGROUP`, which must not be mistaken for one.
+  static bool _isKnockout(Fixture f) {
+    final r = f.round;
+    if (r == null) return false;
+    const knockoutSuffixes = ['R32', 'R16', 'QF', 'SF', '3RD', 'FINAL'];
+    return knockoutSuffixes.any(r.endsWith);
+  }
 
   Future<void> _simAndRecord(
     Fixture f,
@@ -498,11 +506,20 @@ class SeasonService {
       return;
     }
 
-    // Group stage → first knockout round (quarter-finals for a 16-team cup,
-    // semi-finals for an 8-team cup), once every group game is played.
+    // Group stage → first knockout round, once every group game is played. The
+    // round depends on how many teams advance: a 24-team cup (6 groups) sends
+    // the top two plus the four best third-placed teams into a round of 16; a
+    // 16-team cup (4 groups) opens at the quarter-finals; an 8-team cup (2
+    // groups) at the semi-finals.
     final tables = await _comp.tournamentGroupTables(careerId, kind);
     if (tables.isNotEmpty) {
-      final firstRound = tables.length == 4 ? 'CQF' : 'CSF';
+      final standings = tables.map((t) => t.standings).toList();
+      final bestThirds = WorldCupFinals.bestThirdsFor(tables.length);
+      final firstRound = switch (tables.length) {
+        6 => 'CR16',
+        4 => 'CQF',
+        _ => 'CSF',
+      };
       final started =
           (await _comp.fixturesByRound(careerId, firstRound, kind: kind))
               .isNotEmpty;
@@ -512,9 +529,9 @@ class SeasonService {
           careerId: careerId,
           round: firstRound,
           kind: kind,
-          pairings: WorldCupFinals.knockoutFromGroups(
-            tables.map((t) => t.standings).toList(),
-          ),
+          pairings: bestThirds > 0
+              ? WorldCupFinals.knockoutWithThirds(standings, bestThirds)
+              : WorldCupFinals.knockoutFromGroups(standings),
           date: (await _maxDate(careerId, 'CGROUP', kind: kind)).add(
             const Duration(days: 7),
           ),
