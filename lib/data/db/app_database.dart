@@ -28,6 +28,7 @@ part 'app_database.g.dart';
     Honours,
     DrawsWatched,
     PlayerAbsences,
+    RankPoints,
   ],
 )
 class AppDatabase extends _$AppDatabase {
@@ -43,7 +44,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase.forTesting(QueryExecutor executor) : super(executor);
 
   @override
-  int get schemaVersion => 11;
+  int get schemaVersion => 12;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -98,6 +99,10 @@ class AppDatabase extends _$AppDatabase {
           // v11 tracks suspensions and injuries.
           if (from < 11) {
             await m.createTable(playerAbsences);
+          }
+          // v12 tracks live world-ranking points.
+          if (from < 12) {
+            await m.createTable(rankPoints);
           }
         },
       );

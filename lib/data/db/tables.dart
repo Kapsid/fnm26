@@ -148,6 +148,19 @@ class CallUps extends Table {
   Set<Column> get primaryKey => {careerId, playerId};
 }
 
+/// A nation's live world-ranking points within a save. Seeded from the static
+/// seed ranking on first use, then nudged by every result (see the Elo model).
+@DataClassName('RankPointRow')
+class RankPoints extends Table {
+  IntColumn get careerId =>
+      integer().references(Careers, #id, onDelete: KeyAction.cascade)();
+  IntColumn get nationId => integer()();
+  IntColumn get points => integer()();
+
+  @override
+  Set<Column> get primaryKey => {careerId, nationId};
+}
+
 /// A player's disciplinary and fitness standing within a save. Only players
 /// with something to track (a pending caution, a ban, or an injury) have a row.
 @DataClassName('PlayerAbsenceRow')

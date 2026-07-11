@@ -6,6 +6,7 @@ import 'package:fnm/data/repositories/drift_career_repository.dart';
 import 'package:fnm/data/repositories/drift_competition_repository.dart';
 import 'package:fnm/data/repositories/drift_nation_repository.dart';
 import 'package:fnm/data/repositories/drift_player_repository.dart';
+import 'package:fnm/data/repositories/drift_ranking_repository.dart';
 import 'package:fnm/data/repositories/drift_squad_repository.dart';
 import 'package:fnm/data/repositories/drift_tactics_repository.dart';
 import 'package:fnm/data/seed/seed_loader.dart';
@@ -15,6 +16,7 @@ import 'package:fnm/domain/repositories/career_repository.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
 import 'package:fnm/domain/repositories/nation_repository.dart';
 import 'package:fnm/domain/repositories/player_repository.dart';
+import 'package:fnm/domain/repositories/ranking_repository.dart';
 import 'package:fnm/domain/repositories/squad_repository.dart';
 import 'package:fnm/domain/repositories/tactics_repository.dart';
 
@@ -76,4 +78,8 @@ final squadRepositoryProvider = Provider<SquadRepository>(
 
 final absenceRepositoryProvider = Provider<AbsenceRepository>(
   (ref) => DriftAbsenceRepository(ref.watch(appDatabaseProvider)),
+);
+
+final rankingRepositoryProvider = Provider<RankingRepository>(
+  (ref) => DriftRankingRepository(ref.watch(appDatabaseProvider)),
 );

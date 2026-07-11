@@ -18,6 +18,7 @@ import 'package:fnm/domain/services/match/goal_attribution.dart';
 import 'package:fnm/domain/services/match/match_engine.dart';
 import 'package:fnm/domain/services/match/match_simulator.dart';
 import 'package:fnm/domain/services/player/discipline.dart';
+import 'package:fnm/domain/services/ranking/elo.dart';
 import 'package:fnm/features/career/career_providers.dart';
 
 /// Everything the Hub screen needs for a save, in one fetch.
@@ -130,6 +131,52 @@ class SeasonService {
           .read(playerRepositoryProvider)
           .byNation(nationId, agingCycles: _simCycle);
 
+  /// Live world-ranking points for the save currently being simulated, held in
+  /// memory across a whole operation and flushed once at the end (a result adds
+  /// only an in-memory nudge, not a database write).
+  Map<int, int>? _rankPoints;
+  int? _rankCareer;
+
+  /// Loads (seeding if needed) the ranking points for [careerId].
+  Future<void> _ensureRank(int careerId) async {
+    if (_rankCareer == careerId && _rankPoints != null) return;
+    final nations = await _nationsById();
+    final seed = {
+      for (final n in nations.values) n.id: Elo.seedFromRanking(n.ranking),
+    };
+    _rankPoints =
+        await _ref.read(rankingRepositoryProvider).pointsFor(careerId, seed);
+    _rankCareer = careerId;
+  }
+
+  /// Nudges both nations' points by this result (finals count for more than
+  /// qualifiers). No-op until [_ensureRank] has run.
+  void _bumpRank(Fixture f, int home, int away, int hs, int as) {
+    final pts = _rankPoints;
+    if (pts == null) return;
+    final hp = pts[home] ?? Elo.base;
+    final ap = pts[away] ?? Elo.base;
+    final weight =
+        (_isKnockout(f) || f.round == 'GROUP') ? Elo.finals : Elo.qualifier;
+    final delta = Elo.homeDelta(
+      homePoints: hp,
+      awayPoints: ap,
+      homeScore: hs,
+      awayScore: as,
+      weight: weight,
+    );
+    pts[home] = hp + delta;
+    pts[away] = ap - delta;
+  }
+
+  /// Persists the in-memory ranking points for [careerId].
+  Future<void> _flushRank(int careerId) async {
+    final pts = _rankPoints;
+    if (pts != null && _rankCareer == careerId) {
+      await _ref.read(rankingRepositoryProvider).save(careerId, pts);
+    }
+  }
+
   static bool _isKnockout(Fixture f) => f.round != null && f.round != 'GROUP';
 
   Future<void> _simAndRecord(
@@ -174,6 +221,7 @@ class SeasonService {
       as = resolved.$2;
     }
     await _comp.recordResult(fixtureId: f.id, homeScore: hs, awayScore: as);
+    _bumpRank(f, f.homeNationId, f.awayNationId, hs, as);
   }
 
   Future<void> _attributeGoals(
@@ -226,6 +274,7 @@ class SeasonService {
   /// no fixture — fast-forwards through the rest of the cycle (other regions'
   /// qualifiers, the finals draw, and the knockout) to the champion.
   Future<void> advance(int careerId) async {
+    await _ensureRank(careerId);
     while (true) {
       final career = await _careers.byId(careerId);
       if (career == null) break;
@@ -260,12 +309,14 @@ class SeasonService {
         break;
       }
     }
+    await _flushRank(careerId);
     _ref.invalidate(hubDataProvider);
   }
 
   /// Fast-forwards straight to the World Cup champion — the "skip to the final"
   /// option when the player is watching the finals rather than playing them.
   Future<void> skipToChampion(int careerId) async {
+    await _ensureRank(careerId);
     for (var i = 0; i < 300; i++) {
       final career = await _careers.byId(careerId);
       if (career == null) break;
@@ -279,6 +330,7 @@ class SeasonService {
       await _careers.updateInGameDate(careerId, earliest);
       await _catchUp(careerId, earliest, career.rngSeed);
     }
+    await _flushRank(careerId);
     _ref.invalidate(hubDataProvider);
   }
 
@@ -292,6 +344,7 @@ class SeasonService {
     final career = await _careers.byId(careerId);
     if (career == null) return;
     _simCycle = career.cyclePointer;
+    await _ensureRank(careerId);
 
     var hs = result.homeScore;
     var as = result.awayScore;
@@ -309,6 +362,7 @@ class SeasonService {
       homeScore: hs,
       awayScore: as,
     );
+    _bumpRank(fixture, fixture.homeNationId, fixture.awayNationId, hs, as);
     // Persist the engine's actual scorers for the player's match.
     await _comp.recordGoals([
       for (final e in result.events)
@@ -337,6 +391,7 @@ class SeasonService {
 
     await _careers.updateInGameDate(careerId, fixture.date);
     await _catchUp(careerId, fixture.date, career.rngSeed);
+    await _flushRank(careerId);
     _ref.invalidate(hubDataProvider);
   }
 

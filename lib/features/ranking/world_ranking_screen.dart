@@ -58,6 +58,9 @@ class WorldRankingScreen extends ConsumerWidget {
                       const SizedBox(height: AppSpacing.sm),
                   itemBuilder: (context, i) => _RankRow(
                     nation: filtered[i],
+                    rank: data.position[filtered[i].id] ?? (i + 1),
+                    points: data.points[filtered[i].id] ?? 0,
+                    movement: data.movement[filtered[i].id] ?? 0,
                     isPlayer: filtered[i].id == data.playerNationId,
                   ),
                 ),
@@ -136,9 +139,20 @@ class _RegionFilter extends StatelessWidget {
 }
 
 class _RankRow extends StatelessWidget {
-  const _RankRow({required this.nation, required this.isPlayer});
+  const _RankRow({
+    required this.nation,
+    required this.rank,
+    required this.points,
+    required this.movement,
+    required this.isPlayer,
+  });
 
   final Nation nation;
+  final int rank;
+  final int points;
+
+  /// Positions climbed (positive) or dropped (negative) since the season began.
+  final int movement;
   final bool isPlayer;
 
   @override
@@ -168,7 +182,7 @@ class _RankRow extends StatelessWidget {
           SizedBox(
             width: 32,
             child: Text(
-              '${nation.ranking}',
+              '$rank',
               style: AppTypography.titleMedium.copyWith(
                 color: isPlayer
                     ? AppColors.primary
@@ -176,6 +190,8 @@ class _RankRow extends StatelessWidget {
               ),
             ),
           ),
+          const SizedBox(width: 4),
+          SizedBox(width: 20, child: _Movement(movement)),
           const SizedBox(width: AppSpacing.sm),
           FlagDisc(nation.code, size: 36, highlighted: isPlayer),
           const SizedBox(width: AppSpacing.md),
@@ -208,12 +224,43 @@ class _RankRow extends StatelessWidget {
               ],
             ),
           ),
-          Text(
-            '${rankingPoints(nation.ranking)}',
-            style: AppTypography.labelMedium,
-          ),
+          Text('$points', style: AppTypography.labelMedium),
         ],
       ),
+    );
+  }
+}
+
+/// A small up/down/steady arrow showing a nation's movement since kick-off.
+class _Movement extends StatelessWidget {
+  const _Movement(this.delta);
+
+  final int delta;
+
+  @override
+  Widget build(BuildContext context) {
+    if (delta == 0) {
+      return const Icon(
+        Icons.remove,
+        size: 12,
+        color: AppColors.outlineVariant,
+      );
+    }
+    final up = delta > 0;
+    final color = up ? const Color(0xFF3FA34D) : const Color(0xFFD64545);
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Icon(
+          up ? Icons.arrow_drop_up : Icons.arrow_drop_down,
+          size: 16,
+          color: color,
+        ),
+        Text(
+          '${delta.abs()}',
+          style: AppTypography.labelSmall.copyWith(color: color, fontSize: 9),
+        ),
+      ],
     );
   }
 }
