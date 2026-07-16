@@ -30,6 +30,16 @@ part 'app_database.g.dart';
     PlayerAbsences,
     RankPoints,
     SeedRankings,
+    RankingReleases,
+    Achievements,
+    Appearances,
+    Messages,
+    CareerStints,
+    PlayerRatings,
+    FederationInvestments,
+    MatchTeamStats,
+    NationsCupTiers,
+    NaturalizedPlayers,
   ],
 )
 class AppDatabase extends _$AppDatabase {
@@ -45,70 +55,29 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase.forTesting(QueryExecutor executor) : super(executor);
 
   @override
-  int get schemaVersion => 13;
+  int get schemaVersion => 27;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
         onCreate: (m) => m.createAll(),
         onUpgrade: (m, from, to) async {
-          // v2 adds the competition/fixture tables.
-          if (from < 2) {
-            await m.createTable(competitions);
-            await m.createTable(qualifyingGroups);
-            await m.createTable(groupMembers);
-            await m.createTable(fixtures);
+          // While the game is still in active development its schema changes
+          // often, and stepping every intermediate migration is brittle (a
+          // table created in an early step already carries columns added
+          // later, so a subsequent ADD COLUMN duplicates it). Saves are
+          // disposable for now, so any version change wipes the database and
+          // rebuilds it fresh; reference data (nations/players) is re-seeded on
+          // the next launch by the seed loader.
+          //
+          // Use only migration-safe APIs: drop every table the current schema
+          // knows (deleteTable issues DROP TABLE IF EXISTS, a no-op when the
+          // table is absent), then recreate. Reading sqlite_master or using the
+          // normal query APIs mid-migration is unreliable on device, so it is
+          // avoided here.
+          for (final table in allTables) {
+            await m.deleteTable(table.actualTableName);
           }
-          // v3 adds the tactics/lineup tables.
-          if (from < 3) {
-            await m.createTable(tactics);
-            await m.createTable(lineupSlots);
-          }
-          // v4 adds the World Cup finals: competition kind + fixture round.
-          if (from < 4) {
-            await m.addColumn(competitions, competitions.kind);
-            await m.addColumn(fixtures, fixtures.round);
-          }
-          // v5 adds goal events (top scorers) and the honours roll.
-          if (from < 5) {
-            await m.createTable(goalEvents);
-            await m.createTable(honours);
-          }
-          // v6 enriches honours with host, final score, and golden boot.
-          if (from < 6) {
-            await m.addColumn(honours, honours.hostId);
-            await m.addColumn(honours, honours.finalHomeScore);
-            await m.addColumn(honours, honours.finalAwayScore);
-            await m.addColumn(honours, honours.topScorerName);
-            await m.addColumn(honours, honours.topScorerGoals);
-          }
-          // v7 scopes competitions to an endless 4-year cycle.
-          if (from < 7) {
-            await m.addColumn(competitions, competitions.cycle);
-          }
-          // v8 adds the call-up (squad selection) table.
-          if (from < 8) {
-            await m.createTable(callUps);
-          }
-          // v9 tracks which draw ceremonies have been watched (one-time play).
-          if (from < 9) {
-            await m.createTable(drawsWatched);
-          }
-          // v10 adds the player's club (pool is topped up by the seed loader).
-          if (from < 10) {
-            await m.addColumn(players, players.club);
-          }
-          // v11 tracks suspensions and injuries.
-          if (from < 11) {
-            await m.createTable(playerAbsences);
-          }
-          // v12 tracks live world-ranking points.
-          if (from < 12) {
-            await m.createTable(rankPoints);
-          }
-          // v13 freezes each cycle's seeding ranking.
-          if (from < 13) {
-            await m.createTable(seedRankings);
-          }
+          await m.createAll();
         },
       );
 }

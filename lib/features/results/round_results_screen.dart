@@ -5,10 +5,13 @@ import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/data/data_providers.dart';
-import 'package:fnm/domain/entities/fixture.dart';
+import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/group_standing.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
+import 'package:fnm/domain/services/competition/continental_cups.dart';
+import 'package:fnm/domain/services/competition/group_advancement.dart';
+import 'package:fnm/features/friendlies/other_friendlies_providers.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
 
@@ -18,6 +21,8 @@ typedef _RoundView = ({
   RoundResults? results,
   Map<int, Nation> nations,
   int playerNationId,
+  int directCount,
+  int? contentionPos,
 });
 
 final AutoDisposeFutureProviderFamily<_RoundView?, int> _roundResultsProvider =
@@ -30,10 +35,31 @@ final AutoDisposeFutureProviderFamily<_RoundView?, int> _roundResultsProvider =
   final nations = {
     for (final n in await ref.watch(nationRepositoryProvider).all()) n.id: n,
   };
+
+  // The advancing (green) and in-contention (amber) positions for this
+  // competition, so the results tables match the hub and detail screens.
+  var direct = 2;
+  int? contention;
+  if (results != null && results.groupCount > 0) {
+    final conf =
+        nations[career.nationId]?.confederation ?? Confederation.europe;
+    final size = ContinentalCups.byConfederation[conf]?.size ?? 24;
+    final adv = GroupAdvancement.forGroup(
+      kind: results.kind,
+      confederation: conf,
+      groupCount: results.groupCount,
+      continentalSize: size,
+    );
+    direct = adv.direct;
+    contention = adv.contention;
+  }
+
   return (
     results: results,
     nations: nations,
     playerNationId: career.nationId,
+    directCount: direct,
+    contentionPos: contention,
   );
 });
 
@@ -48,6 +74,8 @@ class RoundResultsScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final viewAsync = ref.watch(_roundResultsProvider(careerId));
+    final friendlies =
+        ref.watch(otherFriendliesProvider(careerId)).valueOrNull ?? const [];
     void toHub() => context.go('${Routes.hub}?careerId=$careerId');
 
     return Scaffold(
@@ -68,17 +96,35 @@ class RoundResultsScreen extends ConsumerWidget {
               (results.groups.isNotEmpty ||
                   results.knockoutFixtures.isNotEmpty);
           if (view == null || results == null || !hasContent) {
-            // Nothing to show (e.g. a friendly) — go on.
-            return Center(
-              child: Padding(
-                padding: const EdgeInsets.all(AppSpacing.xl),
-                child: PrimaryButton(
-                  label: 'Continue',
-                  icon: Icons.check_rounded,
-                  onPressed: toHub,
-                ),
-              ),
-            );
+            // A friendly (or nothing competitive): show the other nations'
+            // friendly internationals from this window, if any.
+            if (view != null && friendlies.isNotEmpty) {
+              String code(int id) => view.nations[id]?.code ?? '??';
+              String name(int id) => view.nations[id]?.name ?? '—';
+              return ListView(
+                padding: const EdgeInsets.all(AppSpacing.marginMobile),
+                children: [
+                  Text(
+                    'FRIENDLY INTERNATIONALS',
+                    style: AppTypography.labelSmall.copyWith(
+                      color: AppColors.primary,
+                    ),
+                  ),
+                  const SizedBox(height: AppSpacing.md),
+                  AppCard(
+                    child: Column(
+                      children: [
+                        for (final f in friendlies)
+                          _FriendlyRow(result: f, code: code, name: name),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: AppSpacing.xl),
+                ],
+              );
+            }
+            // Nothing to show — the bottom Continue button carries on.
+            return const SizedBox.shrink();
           }
           String code(int id) => view.nations[id]?.code ?? '??';
           String name(int id) => view.nations[id]?.name ?? '—';
@@ -106,10 +152,10 @@ class RoundResultsScreen extends ConsumerWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       for (final f in results.knockoutFixtures)
-                        _ResultRow(
+                        MatchResultRow(
                           fixture: f,
-                          playerNationId: view.playerNationId,
                           code: code,
+                          emphasiseNationId: view.playerNationId,
                         ),
                     ],
                   ),
@@ -119,6 +165,8 @@ class RoundResultsScreen extends ConsumerWidget {
                   _GroupBlock(
                     group: g,
                     playerNationId: view.playerNationId,
+                    directCount: view.directCount,
+                    contentionPos: view.contentionPos,
                     code: code,
                     name: name,
                   ),
@@ -146,12 +194,16 @@ class _GroupBlock extends StatelessWidget {
   const _GroupBlock({
     required this.group,
     required this.playerNationId,
+    required this.directCount,
+    required this.contentionPos,
     required this.code,
     required this.name,
   });
 
   final RoundResultGroup group;
   final int playerNationId;
+  final int directCount;
+  final int? contentionPos;
   final String Function(int) code;
   final String Function(int) name;
 
@@ -172,10 +224,10 @@ class _GroupBlock extends StatelessWidget {
             const SizedBox(height: AppSpacing.xs),
             // This matchday's scores.
             for (final f in group.fixtures)
-              _ResultRow(
+              MatchResultRow(
                 fixture: f,
-                playerNationId: playerNationId,
                 code: code,
+                emphasiseNationId: playerNationId,
               ),
             const Divider(height: AppSpacing.md),
             // Standings snapshot (top spots advance).
@@ -184,6 +236,8 @@ class _GroupBlock extends StatelessWidget {
                 pos: i + 1,
                 standing: group.standings[i],
                 isPlayer: group.standings[i].nationId == playerNationId,
+                directCount: directCount,
+                contentionPos: contentionPos,
                 name: name,
                 code: code,
               ),
@@ -194,33 +248,41 @@ class _GroupBlock extends StatelessWidget {
   }
 }
 
-class _ResultRow extends StatelessWidget {
-  const _ResultRow({
-    required this.fixture,
-    required this.playerNationId,
+/// One other-nations' friendly result: flags and names either side of the
+/// score.
+class _FriendlyRow extends StatelessWidget {
+  const _FriendlyRow({
+    required this.result,
     required this.code,
+    required this.name,
   });
 
-  final Fixture fixture;
-  final int playerNationId;
+  final FriendlyResult result;
   final String Function(int) code;
+  final String Function(int) name;
 
   @override
   Widget build(BuildContext context) {
-    final isPlayer = fixture.homeNationId == playerNationId ||
-        fixture.awayNationId == playerNationId;
-    final style = AppTypography.bodySmall.copyWith(
-      fontWeight: isPlayer ? FontWeight.w700 : FontWeight.w400,
-    );
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 2),
+      padding: const EdgeInsets.symmetric(vertical: 3),
       child: Row(
         children: [
           Expanded(
-            child: Text(
-              code(fixture.homeNationId),
-              textAlign: TextAlign.end,
-              style: style,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Flexible(
+                  child: Text(
+                    name(result.homeId),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    textAlign: TextAlign.end,
+                    style: AppTypography.bodySmall,
+                  ),
+                ),
+                const SizedBox(width: AppSpacing.sm),
+                FlagDisc(code(result.homeId), size: 18),
+              ],
             ),
           ),
           Container(
@@ -231,11 +293,26 @@ class _ResultRow extends StatelessWidget {
               borderRadius: AppRadii.smAll,
             ),
             child: Text(
-              '${fixture.homeScore} - ${fixture.awayScore}',
+              '${result.homeScore} - ${result.awayScore}',
               style: AppTypography.labelMedium,
             ),
           ),
-          Expanded(child: Text(code(fixture.awayNationId), style: style)),
+          Expanded(
+            child: Row(
+              children: [
+                FlagDisc(code(result.awayId), size: 18),
+                const SizedBox(width: AppSpacing.sm),
+                Flexible(
+                  child: Text(
+                    name(result.awayId),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: AppTypography.bodySmall,
+                  ),
+                ),
+              ],
+            ),
+          ),
         ],
       ),
     );
@@ -247,6 +324,8 @@ class _StandingRow extends StatelessWidget {
     required this.pos,
     required this.standing,
     required this.isPlayer,
+    required this.directCount,
+    required this.contentionPos,
     required this.name,
     required this.code,
   });
@@ -254,18 +333,26 @@ class _StandingRow extends StatelessWidget {
   final int pos;
   final GroupStanding standing;
   final bool isPlayer;
+  final int directCount;
+  final int? contentionPos;
   final String Function(int) name;
   final String Function(int) code;
 
   @override
   Widget build(BuildContext context) {
-    final advancing = pos <= 2;
+    final advancing = pos <= directCount;
+    final inContention = pos == contentionPos;
+    final accent = advancing
+        ? AppColors.positive
+        : inContention
+            ? AppColors.warning
+            : null;
     return Container(
       decoration: BoxDecoration(
         color: isPlayer ? AppColors.surfaceContainerHigh : null,
         border: Border(
           left: BorderSide(
-            color: advancing ? AppColors.positive : Colors.transparent,
+            color: accent ?? Colors.transparent,
             width: 3,
           ),
         ),
@@ -278,9 +365,7 @@ class _StandingRow extends StatelessWidget {
             child: Text(
               '$pos',
               style: AppTypography.labelSmall.copyWith(
-                color: advancing
-                    ? AppColors.positive
-                    : AppColors.onSurfaceVariant,
+                color: accent ?? AppColors.onSurfaceVariant,
               ),
             ),
           ),

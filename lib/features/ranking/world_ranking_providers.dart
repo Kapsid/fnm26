@@ -54,6 +54,53 @@ seedRankByIdProvider =
   return {for (final n in nations) n.id: n.ranking};
 });
 
+/// One point on the nation's ranking timeline (its world position at a moment).
+typedef RankHistoryPoint = ({DateTime date, int rank});
+
+/// How many recent ranking releases the chart shows.
+const int kRankHistoryPoints = 6;
+
+/// The nation's recent world-ranking history for the chart: the last few
+/// published releases plus its live position now.
+///
+/// Releases are published roughly monthly (see the season service), so this
+/// tracks the real rise and fall through a campaign. The old chart plotted one
+/// point per four-year cycle, so a young career had just two points — a single
+/// flat line.
+final AutoDisposeFutureProviderFamily<List<RankHistoryPoint>, int>
+    rankHistoryProvider =
+    FutureProvider.autoDispose.family<List<RankHistoryPoint>, int>((
+  ref,
+  careerId,
+) async {
+  final career = await ref.watch(careerRepositoryProvider).byId(careerId);
+  if (career == null) return const [];
+  final nationId = career.nationId;
+
+  final releases =
+      await ref.watch(rankingReleaseRepositoryProvider).all(careerId);
+  final out = <RankHistoryPoint>[
+    // Only this nation's releases — a change of job starts a fresh line.
+    for (final r in releases)
+      if (r.nationId == nationId) (date: r.publishedOn, rank: r.playerRank),
+  ];
+
+  // The live position now, so the line runs right up to the present (and gives
+  // a second point when only one release exists yet).
+  final live = await ref.watch(worldRankingProvider(careerId).future);
+  final now = live?.position[nationId];
+  if (now != null &&
+      (out.isEmpty || out.last.date != career.inGameDate)) {
+    out.add((date: career.inGameDate, rank: now));
+  }
+
+  // Keep the most recent handful.
+  if (out.length > kRankHistoryPoints) {
+    return out.sublist(out.length - kRankHistoryPoints);
+  }
+  return out;
+});
+
 final AutoDisposeFutureProviderFamily<RankingData?, int> worldRankingProvider =
     FutureProvider.autoDispose.family<RankingData?, int>((ref, careerId) async {
       await ref.watch(seedLoaderProvider).ensureSeeded();

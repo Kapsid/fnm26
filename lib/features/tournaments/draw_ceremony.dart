@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:fnm/core/theme/app_colors.dart';
@@ -53,6 +54,15 @@ class DrawCeremony extends StatefulWidget {
 class _DrawCeremonyState extends State<DrawCeremony> {
   int _revealed = 0;
   Timer? _timer;
+
+  /// Whether the draw is auto-playing. The manager can pause and pull the balls
+  /// one at a time, or let it run.
+  bool _auto = true;
+
+  /// A calmer autoplay than before — the old pace flew by before you could see
+  /// where anyone landed.
+  static const _autoInterval = Duration(milliseconds: 950);
+
   late final List<_Step> _steps = _buildSteps();
   late final int _pots = widget.potCount ?? _largestGroup();
 
@@ -61,8 +71,21 @@ class _DrawCeremonyState extends State<DrawCeremony> {
 
   List<_Step> _buildSteps() {
     final pots = widget.potCount ?? _largestGroup();
-    return [
-      for (var pot = 0; pot < pots; pot++)
+    // A stable seed from the drawn field, so the reveal order is deterministic
+    // (it survives rebuilds) yet isn't the tell-tale group A→B→C→… sequence.
+    var seed = 0x9E3779B9;
+    for (final g in widget.groups) {
+      for (final id in g.nationIds) {
+        seed = ((seed ^ id) * 0x85EBCA6B) & 0x7FFFFFFF;
+      }
+    }
+    final rng = Random(seed == 0 ? 1 : seed);
+    final steps = <_Step>[];
+    // One pot at a time: a random team is drawn from the pot and drops into its
+    // group, so the groups fill in an unpredictable order — as at a real draw —
+    // rather than always A, B, C, …
+    for (var pot = 0; pot < pots; pot++) {
+      final potSteps = <_Step>[
         for (var gi = 0; gi < widget.groups.length; gi++)
           if (pot < widget.groups[gi].nationIds.length)
             (
@@ -70,14 +93,22 @@ class _DrawCeremonyState extends State<DrawCeremony> {
               nationId: widget.groups[gi].nationIds[pot],
               pot: pot,
             ),
-    ];
+      ]..shuffle(rng);
+      steps.addAll(potSteps);
+    }
+    return steps;
   }
 
   @override
   void initState() {
     super.initState();
-    _timer = Timer.periodic(const Duration(milliseconds: 650), (t) {
-      if (_revealed >= _steps.length) {
+    _startAuto();
+  }
+
+  void _startAuto() {
+    _timer?.cancel();
+    _timer = Timer.periodic(_autoInterval, (t) {
+      if (!_auto || _revealed >= _steps.length) {
         t.cancel();
         return;
       }
@@ -91,9 +122,30 @@ class _DrawCeremonyState extends State<DrawCeremony> {
     super.dispose();
   }
 
+  bool get _done => _revealed >= _steps.length;
+
+  /// Reveal the next ball. Tapping to draw pauses the autoplay, so the manager
+  /// stays in control until they press play again.
+  void _drawNext() {
+    if (_done) return;
+    setState(() {
+      _revealed++;
+      _auto = false;
+    });
+    _timer?.cancel();
+  }
+
+  void _toggleAuto() {
+    setState(() => _auto = !_auto);
+    if (_auto) _startAuto();
+  }
+
   void _skip() {
     _timer?.cancel();
-    setState(() => _revealed = _steps.length);
+    setState(() {
+      _revealed = _steps.length;
+      _auto = false;
+    });
   }
 
   String _code(int id) => widget.nations[id]?.code ?? '??';
@@ -106,6 +158,11 @@ class _DrawCeremonyState extends State<DrawCeremony> {
     for (final s in shown) {
       (revealedByGroup[s.groupIndex] ??= []).add(s.nationId);
     }
+    // Nations still waiting in each pot, so the pots can show their flags.
+    final waitingByPot = <int, List<int>>{};
+    for (var i = _revealed; i < _steps.length; i++) {
+      (waitingByPot[_steps[i].pot] ??= []).add(_steps[i].nationId);
+    }
     final done = _revealed >= _steps.length;
     final current = (!done && _revealed >= 0 && _revealed < _steps.length)
         ? _steps[_revealed]
@@ -117,58 +174,110 @@ class _DrawCeremonyState extends State<DrawCeremony> {
         _Pots(
           potCount: _pots,
           groupCount: widget.groups.length,
-          shown: shown,
+          waitingByPot: waitingByPot,
           activePot: current?.pot,
+          highlightNationId: widget.highlightNationId,
+          code: _code,
         ),
         _Stage(
           done: done,
           step: last,
           groupName: last == null ? '' : widget.groups[last.groupIndex].name,
+          // The teams already in the group the last team joined, for context.
+          groupMembers: last == null
+              ? const []
+              : (revealedByGroup[last.groupIndex] ?? const []),
           code: _code,
           name: _name,
         ),
         Expanded(
-          child: GridView.count(
-            crossAxisCount: widget.crossAxisCount,
+          // Tap anywhere over the groups to pull the next ball.
+          child: GestureDetector(
+            onTap: done ? null : _drawNext,
+            behavior: HitTestBehavior.opaque,
+            child: GridView.count(
+              crossAxisCount: widget.crossAxisCount,
+              padding: const EdgeInsets.symmetric(
+                horizontal: AppSpacing.marginMobile,
+              ),
+              childAspectRatio: 0.92,
+              mainAxisSpacing: AppSpacing.sm,
+              crossAxisSpacing: AppSpacing.sm,
+              children: [
+                for (var gi = 0; gi < widget.groups.length; gi++)
+                  _GroupCard(
+                    title: 'GROUP ${widget.groups[gi].name}',
+                    slots: _pots,
+                    revealed: revealedByGroup[gi] ?? const [],
+                    justAdded: !done && last != null && last.groupIndex == gi
+                        ? last.nationId
+                        : null,
+                    highlightNationId: widget.highlightNationId,
+                    code: _code,
+                    name: _name,
+                  ),
+              ],
+            ),
+          ),
+        ),
+        if (!done)
+          Padding(
             padding: const EdgeInsets.symmetric(
               horizontal: AppSpacing.marginMobile,
             ),
-            childAspectRatio: 0.92,
-            mainAxisSpacing: AppSpacing.sm,
-            crossAxisSpacing: AppSpacing.sm,
-            children: [
-              for (var gi = 0; gi < widget.groups.length; gi++)
-                _GroupCard(
-                  title: 'GROUP ${widget.groups[gi].name}',
-                  slots: _pots,
-                  revealed: revealedByGroup[gi] ?? const [],
-                  justAdded: !done && last != null && last.groupIndex == gi
-                      ? last.nationId
-                      : null,
-                  highlightNationId: widget.highlightNationId,
-                  code: _code,
-                  name: _name,
-                ),
-            ],
+            child: Text(
+              'Tap to draw the next team',
+              textAlign: TextAlign.center,
+              style: AppTypography.labelSmall.copyWith(
+                color: AppColors.onSurfaceVariant,
+              ),
+            ),
           ),
-        ),
-        Padding(
-          padding: const EdgeInsets.all(AppSpacing.marginMobile),
-          child: done
-              ? PrimaryButton(
-                  label: 'Continue',
-                  icon: Icons.check_rounded,
-                  onPressed: widget.onContinue,
-                )
-              : OutlinedButton(
-                  onPressed: _skip,
-                  style: OutlinedButton.styleFrom(
-                    minimumSize: const Size.fromHeight(44),
-                    foregroundColor: AppColors.primary,
-                    side: const BorderSide(color: AppColors.outlineVariant),
+        SafeArea(
+          top: false,
+          child: Padding(
+            padding: const EdgeInsets.all(AppSpacing.marginMobile),
+            child: done
+                ? PrimaryButton(
+                    label: 'Continue',
+                    icon: Icons.check_rounded,
+                    onPressed: widget.onContinue,
+                  )
+                : Row(
+                    children: [
+                      // Pause the run, or set it going again.
+                      Expanded(
+                        child: OutlinedButton.icon(
+                          onPressed: _toggleAuto,
+                          style: OutlinedButton.styleFrom(
+                            minimumSize: const Size.fromHeight(48),
+                          ),
+                          icon: Icon(
+                            _auto
+                                ? Icons.pause_rounded
+                                : Icons.play_arrow_rounded,
+                            size: 20,
+                          ),
+                          label: Text(_auto ? 'Pause' : 'Play'),
+                        ),
+                      ),
+                      const SizedBox(width: AppSpacing.sm),
+                      Expanded(
+                        child: FilledButton.tonalIcon(
+                          onPressed: _skip,
+                          style: FilledButton.styleFrom(
+                            minimumSize: const Size.fromHeight(48),
+                          ),
+                          icon: const Icon(
+                            Icons.fast_forward_rounded,
+                            size: 20,
+                          ),
+                          label: const Text('Skip'),
+                        ),
+                      ),
+                    ],
                   ),
-                  child: const Text('Skip'),
-                ),
+          ),
         ),
       ],
     );
@@ -180,14 +289,18 @@ class _Pots extends StatelessWidget {
   const _Pots({
     required this.potCount,
     required this.groupCount,
-    required this.shown,
+    required this.waitingByPot,
     required this.activePot,
+    required this.highlightNationId,
+    required this.code,
   });
 
   final int potCount;
   final int groupCount;
-  final List<_Step> shown;
+  final Map<int, List<int>> waitingByPot;
   final int? activePot;
+  final int? highlightNationId;
+  final String Function(int) code;
 
   @override
   Widget build(BuildContext context) {
@@ -200,13 +313,16 @@ class _Pots extends StatelessWidget {
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           for (var pot = 0; pot < potCount; pot++)
             _Pot(
               index: pot,
               total: groupCount,
-              drawn: shown.where((s) => s.pot == pot).length,
+              waiting: waitingByPot[pot] ?? const [],
               active: pot == activePot,
+              highlightNationId: highlightNationId,
+              code: code,
             ),
         ],
       ),
@@ -218,22 +334,31 @@ class _Pot extends StatelessWidget {
   const _Pot({
     required this.index,
     required this.total,
-    required this.drawn,
+    required this.waiting,
     required this.active,
+    required this.highlightNationId,
+    required this.code,
   });
 
   final int index;
   final int total;
-  final int drawn;
+  final List<int> waiting;
   final bool active;
+  final int? highlightNationId;
+  final String Function(int) code;
 
   @override
   Widget build(BuildContext context) {
-    final remaining = total - drawn;
+    // Cap the flags shown so a big pot doesn't blow out the row; the rest are
+    // summarised as "+N".
+    const cap = 6;
+    final flags = waiting.take(cap).toList();
+    final extra = waiting.length - flags.length;
     return AnimatedContainer(
       duration: const Duration(milliseconds: 250),
+      width: 66,
       padding: const EdgeInsets.symmetric(
-        horizontal: AppSpacing.sm,
+        horizontal: AppSpacing.xs,
         vertical: AppSpacing.xs,
       ),
       decoration: BoxDecoration(
@@ -246,6 +371,7 @@ class _Pot extends StatelessWidget {
         ),
       ),
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
           Text(
             'POT ${index + 1}',
@@ -253,26 +379,34 @@ class _Pot extends StatelessWidget {
               color: active ? AppColors.primary : AppColors.onSurfaceVariant,
             ),
           ),
-          const SizedBox(height: 2),
-          // Remaining balls, shrinking as the pot empties.
-          SizedBox(
-            height: 10,
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                for (var i = 0; i < total; i++)
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 1),
-                    child: Icon(
-                      Icons.circle,
-                      size: 7,
-                      color: i < remaining
-                          ? AppColors.primary
-                          : AppColors.outlineVariant.withValues(alpha: 0.4),
-                    ),
+          const SizedBox(height: 3),
+          // The flags of the nations still waiting in this pot.
+          Wrap(
+            spacing: 2,
+            runSpacing: 2,
+            alignment: WrapAlignment.center,
+            children: [
+              for (final id in flags)
+                FlagDisc(
+                  code(id),
+                  size: 14,
+                  highlighted: id == highlightNationId,
+                ),
+              if (extra > 0)
+                Text(
+                  '+$extra',
+                  style: AppTypography.labelSmall.copyWith(
+                    fontSize: 9,
+                    color: AppColors.onSurfaceVariant,
                   ),
-              ],
-            ),
+                ),
+              if (waiting.isEmpty)
+                Text(
+                  '✓',
+                  style: AppTypography.labelSmall
+                      .copyWith(color: AppColors.primary),
+                ),
+            ],
           ),
         ],
       ),
@@ -286,6 +420,7 @@ class _Stage extends StatelessWidget {
     required this.done,
     required this.step,
     required this.groupName,
+    required this.groupMembers,
     required this.code,
     required this.name,
   });
@@ -293,6 +428,9 @@ class _Stage extends StatelessWidget {
   final bool done;
   final _Step? step;
   final String groupName;
+
+  /// Teams already in the group the drawn team joined (includes the drawn one).
+  final List<int> groupMembers;
   final String Function(int) code;
   final String Function(int) name;
 
@@ -348,6 +486,24 @@ class _Stage extends StatelessWidget {
                         style: AppTypography.labelMedium
                             .copyWith(color: AppColors.primary),
                       ),
+                      if (groupMembers.length > 1) ...[
+                        const SizedBox(height: 4),
+                        // The group filling up, drawn team highlighted.
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            for (final id in groupMembers)
+                              Padding(
+                                padding: const EdgeInsets.only(right: 3),
+                                child: FlagDisc(
+                                  code(id),
+                                  size: 18,
+                                  highlighted: id == step!.nationId,
+                                ),
+                              ),
+                          ],
+                        ),
+                      ],
                     ],
                   ),
                 ],

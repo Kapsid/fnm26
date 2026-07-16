@@ -22,7 +22,9 @@ class SeedLoader {
     final existing =
         await (_db.select(_db.nations)..limit(1)).getSingleOrNull();
     if (existing != null) {
-      // Already seeded: top up the deeper pool + clubs for pre-v10 saves.
+      // Already seeded: prune any nations dropped from the source data, then
+      // top up the deeper pool + clubs for pre-v10 saves.
+      await _reconcileNations();
       await _ensureDeepPool();
       return false;
     }
@@ -36,6 +38,28 @@ class SeedLoader {
         ..insertAll(_db.players, players.map(_playerCompanion));
     });
     return true;
+  }
+
+  /// Removes nations (and their players) that are no longer in the source data
+  /// — e.g. teams dropped for eligibility reasons — so an existing save's
+  /// reference data self-heals on launch without a full re-seed. A no-op when
+  /// the DB already matches the source. In-progress careers keep any fixtures
+  /// already drawn against a removed nation, but it disappears from every new
+  /// draw and from selection.
+  Future<void> _reconcileNations() async {
+    final source = await _source.nations();
+    if (source.isEmpty) return; // never prune against an empty/failed source
+    final keep = source.map((n) => n.id).toSet();
+    final present = await _db.select(_db.nations).get();
+    final drop = [
+      for (final n in present)
+        if (!keep.contains(n.id)) n.id,
+    ];
+    if (drop.isEmpty) return;
+    await _db.transaction(() async {
+      await (_db.delete(_db.players)..where((p) => p.nationId.isIn(drop))).go();
+      await (_db.delete(_db.nations)..where((n) => n.id.isIn(drop))).go();
+    });
   }
 
   /// Rebuilds the player pool on databases seeded with a shallower one (the

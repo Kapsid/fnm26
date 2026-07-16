@@ -165,12 +165,15 @@ class _PotsPreview extends StatelessWidget {
             ],
           ),
         ),
-        Padding(
-          padding: const EdgeInsets.all(AppSpacing.marginMobile),
-          child: PrimaryButton(
-            label: buttonLabel,
-            icon: buttonIcon,
-            onPressed: onStart,
+        SafeArea(
+          top: false,
+          child: Padding(
+            padding: const EdgeInsets.all(AppSpacing.marginMobile),
+            child: PrimaryButton(
+              label: buttonLabel,
+              icon: buttonIcon,
+              onPressed: onStart,
+            ),
           ),
         ),
       ],

@@ -68,8 +68,13 @@ class _HostDrawScreenState extends ConsumerState<HostDrawScreen> {
               ),
             );
           }
-          final hostName = data.nations[data.hostId]?.name ?? '—';
-          final hostCode = data.nations[data.hostId]?.code ?? '??';
+          final hosts = [
+            for (final id in data.hostIds)
+              (
+                code: data.nations[id]?.code ?? '??',
+                name: data.nations[id]?.name ?? '—',
+              ),
+          ];
 
           return Column(
             children: [
@@ -82,18 +87,16 @@ class _HostDrawScreenState extends ConsumerState<HostDrawScreen> {
                     const SizedBox(height: AppSpacing.xs),
                     Text(
                       _revealed
-                          ? 'And the hosts will be…'
+                          ? (hosts.length > 1
+                              ? 'And the hosts will be…'
+                              : 'And the host will be…')
                           : 'The candidates in the running:',
                       style: AppTypography.bodyMedium.copyWith(
                         color: AppColors.onSurfaceVariant,
                       ),
                     ),
                     const SizedBox(height: AppSpacing.lg),
-                    _Envelope(
-                      revealed: _revealed,
-                      hostCode: hostCode,
-                      hostName: hostName,
-                    ),
+                    _Envelope(revealed: _revealed, hosts: hosts),
                     const SizedBox(height: AppSpacing.lg),
                     Text(
                       'CANDIDATES',
@@ -106,13 +109,25 @@ class _HostDrawScreenState extends ConsumerState<HostDrawScreen> {
                       spacing: AppSpacing.sm,
                       runSpacing: AppSpacing.sm,
                       children: [
-                        for (final id in data.candidateIds)
-                          _Candidate(
-                            code: data.nations[id]?.code ?? '??',
-                            name: data.nations[id]?.name ?? '—',
-                            chosen: _revealed && id == data.hostId,
-                            dimmed: _revealed && id != data.hostId,
-                          ),
+                        for (final bid in data.bids)
+                          () {
+                            // A bid wins as a whole, so it's chosen only when
+                            // it IS the winning bid — not merely overlapping.
+                            final won = _revealed &&
+                                bid.length == data.hostIds.length &&
+                                bid.every(data.hostIds.contains);
+                            return _Candidate(
+                              nations: [
+                                for (final id in bid)
+                                  (
+                                    code: data.nations[id]?.code ?? '??',
+                                    name: data.nations[id]?.name ?? '—',
+                                  ),
+                              ],
+                              chosen: won,
+                              dimmed: _revealed && !won,
+                            );
+                          }(),
                       ],
                     ),
                   ],
@@ -144,22 +159,19 @@ class _HostDrawScreenState extends ConsumerState<HostDrawScreen> {
 }
 
 class _Envelope extends StatelessWidget {
-  const _Envelope({
-    required this.revealed,
-    required this.hostCode,
-    required this.hostName,
-  });
+  const _Envelope({required this.revealed, required this.hosts});
 
   final bool revealed;
-  final String hostCode;
-  final String hostName;
+  final List<({String code, String name})> hosts;
 
   @override
   Widget build(BuildContext context) {
+    final multi = hosts.length > 1;
     return AnimatedContainer(
       duration: const Duration(milliseconds: 350),
       curve: Curves.easeOut,
-      height: 160,
+      constraints: const BoxConstraints(minHeight: 160),
+      padding: const EdgeInsets.all(AppSpacing.md),
       decoration: BoxDecoration(
         color: revealed
             ? AppColors.secondaryContainer
@@ -175,11 +187,29 @@ class _Envelope extends StatelessWidget {
           ? Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                FlagDisc(hostCode, size: 56, highlighted: true),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    for (final h in hosts) ...[
+                      FlagDisc(
+                        h.code,
+                        size: multi ? 44 : 56,
+                        highlighted: true,
+                      ),
+                      const SizedBox(width: AppSpacing.sm),
+                    ],
+                  ],
+                ),
                 const SizedBox(height: AppSpacing.sm),
-                Text(hostName, style: AppTypography.headlineMedium),
                 Text(
-                  'HOSTS',
+                  hosts.map((h) => h.name).join(' · '),
+                  textAlign: TextAlign.center,
+                  style: multi
+                      ? AppTypography.titleMedium
+                      : AppTypography.headlineMedium,
+                ),
+                Text(
+                  multi ? 'CO-HOSTS' : 'HOST',
                   style: AppTypography.labelSmall.copyWith(
                     color: AppColors.primary,
                   ),
@@ -195,21 +225,23 @@ class _Envelope extends StatelessWidget {
   }
 }
 
+/// One candidature on the table: a lone nation, or two or three standing
+/// jointly. A joint bid reads as one chip — because that is what it is, and it
+/// wins or loses as one.
 class _Candidate extends StatelessWidget {
   const _Candidate({
-    required this.code,
-    required this.name,
+    required this.nations,
     required this.chosen,
     required this.dimmed,
   });
 
-  final String code;
-  final String name;
+  final List<({String code, String name})> nations;
   final bool chosen;
   final bool dimmed;
 
   @override
   Widget build(BuildContext context) {
+    final joint = nations.length > 1;
     return Opacity(
       opacity: dimmed ? 0.35 : 1,
       child: Container(
@@ -226,18 +258,35 @@ class _Candidate extends StatelessWidget {
             color: chosen ? AppColors.primary : AppColors.outlineVariant,
           ),
         ),
-        child: Row(
+        child: Column(
           mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            FlagDisc(code, size: 20, highlighted: chosen),
-            const SizedBox(width: AppSpacing.sm),
-            Text(
-              name,
-              style: AppTypography.bodySmall.copyWith(
-                color: chosen ? AppColors.primary : AppColors.onSurface,
-                fontWeight: chosen ? FontWeight.w700 : FontWeight.w400,
-              ),
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                for (final n in nations) ...[
+                  FlagDisc(n.code, size: 20, highlighted: chosen),
+                  const SizedBox(width: 4),
+                ],
+                const SizedBox(width: AppSpacing.xs),
+                Text(
+                  nations.map((n) => n.name).join(' & '),
+                  style: AppTypography.bodySmall.copyWith(
+                    color: chosen ? AppColors.primary : AppColors.onSurface,
+                    fontWeight: chosen ? FontWeight.w700 : FontWeight.w400,
+                  ),
+                ),
+              ],
             ),
+            if (joint)
+              Text(
+                'JOINT BID',
+                style: AppTypography.labelSmall.copyWith(
+                  fontSize: 8,
+                  color: AppColors.onSurfaceVariant,
+                ),
+              ),
           ],
         ),
       ),

@@ -51,8 +51,13 @@ class GeneratedSchedule {
 class ScheduleGenerator {
   const ScheduleGenerator();
 
-  /// International match windows (month numbers), two matchdays each.
+  /// International match windows (month numbers), in season order.
   static const _windowMonths = [9, 10, 11, 3, 6];
+
+  /// Days played within each window. Three matchdays, not two: South America's
+  /// 10-team single group runs 18 matchdays, and at two per window that spills
+  /// past the June finals (the same trap Oceania's format comment describes).
+  static const _windowDays = [6, 9, 12];
 
   GeneratedSchedule generate({
     required Confederation confederation,
@@ -121,7 +126,11 @@ class ScheduleGenerator {
   ) {
     int rankOf(Nation n) => rankById?[n.id] ?? n.ranking;
     final sorted = [...nations]..sort((a, b) => rankOf(a).compareTo(rankOf(b)));
-    final groupCount = (sorted.length / targetSize).round().clamp(1, 12);
+    // Ceil, not round: [targetSize] is a ceiling, and rounding down overfills
+    // the groups. A 13-nation pool at target 4 would round to 3 groups of 5/4/4
+    // — and a group of 5 runs 10 matchdays instead of 6, spilling the Nations
+    // Cup out of its autumn and into World Cup qualifying's March window.
+    final groupCount = (sorted.length / targetSize).ceil().clamp(1, 12);
     final groups = List.generate(groupCount, (_) => <int>[]);
 
     for (var start = 0; start < sorted.length; start += groupCount) {
@@ -138,15 +147,27 @@ class ScheduleGenerator {
 
   int _roundCount(int teams) => teams.isEven ? 2 * (teams - 1) : 2 * teams;
 
+  /// The [count] international matchdays on or after [start].
+  ///
+  /// A season runs September→June, so [_windowMonths] is in season order and
+  /// its spring months belong to the following calendar year. Windows earlier
+  /// than [start] are skipped rather than assumed away: a March start really
+  /// does begin in March, which is what keeps qualifying inside its own cycle
+  /// and clear of the finals.
   List<DateTime> _matchdayDates(DateTime start, int count) {
     final dates = <DateTime>[];
-    var seasonYear = start.year;
+    // Open from the season before [start] so the first eligible window is
+    // found by skipping, whatever month [start] names.
+    var seasonYear = start.year - 1;
     var wi = 0;
     while (dates.length < count) {
       final month = _windowMonths[wi];
       final year = month >= 9 ? seasonYear : seasonYear + 1;
-      dates.add(DateTime(year, month, 6));
-      if (dates.length < count) dates.add(DateTime(year, month, 9));
+      for (final day in _windowDays) {
+        if (dates.length == count) break;
+        final date = DateTime(year, month, day);
+        if (!date.isBefore(start)) dates.add(date);
+      }
       wi++;
       if (wi == _windowMonths.length) {
         wi = 0;

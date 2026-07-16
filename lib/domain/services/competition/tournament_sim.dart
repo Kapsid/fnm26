@@ -55,9 +55,10 @@ abstract final class TournamentSim {
         ? runnerUp
         : _winner(semiLosers.first, semiLosers.last, strengthById, rng);
 
-    // A plausible final scoreline (champion listed first).
+    // A plausible final scoreline (champion listed first); occasionally level,
+    // decided on penalties.
     final home = 1 + rng.nextInt(3);
-    final away = rng.nextInt(home);
+    final away = rng.nextInt(home + 1); // 0..home — home==away means pens
     return (
       champion: champion,
       runnerUp: runnerUp,
@@ -70,7 +71,11 @@ abstract final class TournamentSim {
   static int _winner(int a, int b, Map<int, int> strength, SeededRng rng) {
     final sa = (strength[a] ?? 1).clamp(1, 1 << 20);
     final sb = (strength[b] ?? 1).clamp(1, 1 << 20);
-    return rng.nextDouble() < sa / (sa + sb) ? a : b;
+    // Square the strengths so the better side is favoured more firmly and
+    // knockout upsets stay the exception, matching the played engine's bias.
+    final wa = sa * sa;
+    final wb = sb * sb;
+    return rng.nextDouble() < wa / (wa + wb) ? a : b;
   }
 
   /// First-round pairings for a [size]-team bracket from [seededByStrength]

@@ -5,12 +5,9 @@ import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/domain/entities/enums.dart';
-import 'package:fnm/domain/entities/fixture.dart';
-import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/features/tournaments/tournaments_providers.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart';
 
 /// A championship tile's static presentation (name/region/icon/blurb). Its
 /// status and whether it's playable come from [tournamentsOverviewProvider].
@@ -75,6 +72,13 @@ const _championships = <_Championship>[
     description: 'The premier championship of the CONCACAF region.',
     confederation: Confederation.northAmerica,
   ),
+  _Championship(
+    name: 'Oceania Cup',
+    region: 'OCEANIA',
+    icon: Icons.sailing,
+    description: 'The championship of the Pacific nations.',
+    confederation: Confederation.oceania,
+  ),
 ];
 
 /// Tournaments overview (the "Trophy" destination). Lists every championship
@@ -91,20 +95,39 @@ class TournamentsScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: AppColors.primary),
-          onPressed: () => context.go('${Routes.hub}?careerId=$careerId'),
-        ),
+        automaticallyImplyLeading: false,
         title: Text(
-          'TOURNAMENTS',
+          'COMPETITIONS',
           style: AppTypography.labelMedium.copyWith(color: AppColors.primary),
         ),
         centerTitle: true,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.leaderboard, color: AppColors.primary),
+            tooltip: 'World ranking',
+            onPressed: () =>
+                context.go('${Routes.ranking}?careerId=$careerId'),
+          ),
+        ],
       ),
+      bottomNavigationBar:
+          AppBottomNav(careerId: careerId, current: AppTab.competitions),
       body: overviewAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (e, _) => Center(child: Text('Could not load tournaments.\n$e')),
-        data: (overview) => ListView(
+        data: (overview) {
+          final playerConf = overview?.playerConfederation;
+          // Your competitions (the World Cup + your own continental cup) sit in
+          // their own section; the other continents follow.
+          final mine = _championships
+              .where((c) =>
+                  c.confederation == null || c.confederation == playerConf)
+              .toList();
+          final others = _ordered(overview)
+              .where((c) =>
+                  c.confederation != null && c.confederation != playerConf)
+              .toList();
+          return ListView(
           padding: const EdgeInsets.all(AppSpacing.marginMobile),
           children: [
             Text(
@@ -115,28 +138,92 @@ class TournamentsScreen extends ConsumerWidget {
             const SizedBox(height: AppSpacing.xs),
             const Text('Overview', style: AppTypography.headlineLargeMobile),
             const SizedBox(height: AppSpacing.md),
-            for (final c in _ordered(overview)) ...[
-              _ChampionshipTile(
-                championship: c,
-                status: overview?.statuses[c.confederation],
-                championName: () {
-                  final id = overview?.statuses[c.confederation]?.championId;
-                  return id == null ? null : overview?.nations[id]?.name;
-                }(),
-                isPlayerRegion:
-                    c.confederation == overview?.playerConfederation,
-                nextMatch: overview?.nextMatches[c.confederation],
-                hostId: c.confederation == null
-                    ? overview?.worldCupHostId
-                    : null,
-                nations: overview?.nations ?? const {},
-                onView: () => _open(context, c),
+            AppCard(
+              onTap: () => context.go('${Routes.ranking}?careerId=$careerId'),
+              child: const Row(
+                children: [
+                  Icon(Icons.leaderboard, color: AppColors.primary),
+                  SizedBox(width: AppSpacing.md),
+                  Expanded(
+                    child: Text(
+                      'World Ranking',
+                      style: AppTypography.titleMedium,
+                    ),
+                  ),
+                  Icon(
+                    Icons.chevron_right,
+                    color: AppColors.onSurfaceVariant,
+                    size: 20,
+                  ),
+                ],
               ),
-              const SizedBox(height: AppSpacing.sm),
-            ],
+            ),
+            const SizedBox(height: AppSpacing.md),
+            Text(
+              'YOUR COMPETITIONS',
+              style:
+                  AppTypography.labelMedium.copyWith(color: AppColors.primary),
+            ),
+            const SizedBox(height: AppSpacing.sm),
+            _tileGrid([
+              for (final c in mine) _tile(context, overview, c),
+              if (overview?.nationsCup != null)
+                _ChampionshipTile(
+                  championship: _Championship(
+                    name: 'Nations Cup',
+                    region: 'LEAGUE ${overview!.nationsCupLeague}',
+                    icon: Icons.military_tech,
+                    description: 'Your league — promotion and relegation.',
+                  ),
+                  status: overview.nationsCup,
+                  championName: overview
+                      .nations[overview.nationsCup!.championId]?.name,
+                  onView: () =>
+                      context.go('${Routes.nationsCup}?careerId=$careerId'),
+                ),
+              if (overview?.continentalClash != null)
+                _ChampionshipTile(
+                  championship: const _Championship(
+                    name: 'Continental Clash',
+                    region: 'INTERCONTINENTAL',
+                    icon: Icons.flash_on,
+                    description: 'Champions of two continents, one match.',
+                  ),
+                  status: overview!.continentalClash,
+                  championName: overview
+                      .nations[overview.continentalClash!.championId]?.name,
+                  onView: () {},
+                ),
+            ]),
+            const SizedBox(height: AppSpacing.lg),
+            Text(
+              'OTHER CONTINENTS',
+              style:
+                  AppTypography.labelMedium.copyWith(color: AppColors.primary),
+            ),
+            const SizedBox(height: AppSpacing.sm),
+            _tileGrid([for (final c in others) _tile(context, overview, c)]),
+            const SizedBox(height: AppSpacing.lg),
           ],
-        ),
+          );
+        },
       ),
+    );
+  }
+
+  /// Builds a championship tile from the overview data.
+  Widget _tile(
+    BuildContext context,
+    TournamentsOverview? overview,
+    _Championship c,
+  ) {
+    final championId = overview?.statuses[c.confederation]?.championId;
+    return _ChampionshipTile(
+      championship: c,
+      status: overview?.statuses[c.confederation],
+      championName:
+          championId == null ? null : overview?.nations[championId]?.name,
+      onView: () => _open(context, c),
     );
   }
 
@@ -166,6 +253,34 @@ class TournamentsScreen extends ConsumerWidget {
     return [for (final e in indexed) e.value];
   }
 
+  /// Lays [tiles] out two-per-row as square cells, without introducing a nested
+  /// scrollable (keeps the page a single scroll view).
+  static Widget _tileGrid(List<Widget> tiles) {
+    final rows = <Widget>[];
+    for (var i = 0; i < tiles.length; i += 2) {
+      final left = tiles[i];
+      final right = i + 1 < tiles.length ? tiles[i + 1] : null;
+      rows.add(
+        Padding(
+          padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(child: AspectRatio(aspectRatio: 1.25, child: left)),
+              const SizedBox(width: AppSpacing.sm),
+              Expanded(
+                child: right == null
+                    ? const SizedBox.shrink()
+                    : AspectRatio(aspectRatio: 1.25, child: right),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+    return Column(children: rows);
+  }
+
   void _open(BuildContext context, _Championship c) {
     if (c.confederation == null) {
       context.go('${Routes.cup}?careerId=$careerId');
@@ -181,20 +296,12 @@ class _ChampionshipTile extends StatelessWidget {
     required this.championship,
     required this.status,
     required this.championName,
-    required this.isPlayerRegion,
-    required this.nextMatch,
-    required this.hostId,
-    required this.nations,
     required this.onView,
   });
 
   final _Championship championship;
   final TournamentStatus? status;
   final String? championName;
-  final bool isPlayerRegion;
-  final Fixture? nextMatch;
-  final int? hostId;
-  final Map<int, Nation> nations;
   final VoidCallback onView;
 
   @override
@@ -202,26 +309,19 @@ class _ChampionshipTile extends StatelessWidget {
     final c = championship;
     final available = status?.available ?? false;
     final label = status?.label ?? 'SOON';
-
-    // One compact context line: your next match, else the champion, else host.
-    Widget? detail;
-    if (nextMatch != null) {
-      detail = _UpNext(fixture: nextMatch!, nations: nations);
-    } else if (championName != null) {
-      detail = _iconLine(Icons.emoji_events, 'WINNER', championName!);
-    } else if (hostId != null) {
-      detail = _iconLine(
-        Icons.stadium_rounded,
-        'HOST',
-        nations[hostId!]?.name ?? '—',
-      );
-    }
+    // The competition being contested right now is highlighted green.
+    final live = status?.phase == TournamentPhase.live;
+    final accent = !available
+        ? AppColors.onSurfaceVariant
+        : live
+            ? AppColors.positive
+            : AppColors.primary;
 
     return AppCard(
-      padding: const EdgeInsets.symmetric(
-        vertical: AppSpacing.sm,
-        horizontal: AppSpacing.md,
-      ),
+      color: live ? AppColors.positive.withValues(alpha: 0.08) : null,
+      border: live
+          ? Border.all(color: AppColors.positive.withValues(alpha: 0.6))
+          : null,
       onTap: available
           ? onView
           : () => ScaffoldMessenger.of(context)
@@ -232,124 +332,49 @@ class _ChampionshipTile extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            children: [
-              Icon(
-                c.icon,
-                size: 20,
-                color: available
-                    ? AppColors.primary
-                    : AppColors.onSurfaceVariant,
-              ),
-              const SizedBox(width: AppSpacing.sm),
-              Expanded(
-                child: Text(
-                  c.name,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: AppTypography.labelLarge,
-                ),
-              ),
-              if (isPlayerRegion) ...[
-                const TacticalChip('YOU', emphasized: true),
-                const SizedBox(width: AppSpacing.sm),
-              ],
-              Text(
-                label,
-                style: AppTypography.labelSmall.copyWith(
-                  color: available
-                      ? AppColors.primary
-                      : AppColors.onSurfaceVariant,
-                ),
-              ),
-              const Icon(
-                Icons.chevron_right,
-                size: 18,
-                color: AppColors.onSurfaceVariant,
-              ),
-            ],
-          ),
-          if (detail != null) ...[
-            const SizedBox(height: AppSpacing.xs),
-            detail,
-          ],
-        ],
-      ),
-    );
-  }
-
-  Widget _iconLine(IconData icon, String label, String value) {
-    return Row(
-      children: [
-        Icon(icon, size: 14, color: AppColors.onSurfaceVariant),
-        const SizedBox(width: AppSpacing.xs),
-        Text(
-          label,
-          style: AppTypography.labelSmall.copyWith(
-            color: AppColors.onSurfaceVariant,
-          ),
-        ),
-        const SizedBox(width: AppSpacing.sm),
-        Flexible(
-          child: Text(
-            value,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: AppTypography.labelSmall,
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-/// A compact "up next" strip on a championship tile: the player's next fixture
-/// in that competition (home code vs away code + date).
-class _UpNext extends StatelessWidget {
-  const _UpNext({required this.fixture, required this.nations});
-
-  final Fixture fixture;
-  final Map<int, Nation> nations;
-
-  @override
-  Widget build(BuildContext context) {
-    String code(int id) => nations[id]?.code ?? '??';
-    return Container(
-      padding: const EdgeInsets.symmetric(
-        horizontal: AppSpacing.sm,
-        vertical: AppSpacing.xs,
-      ),
-      decoration: const BoxDecoration(
-        color: AppColors.surfaceContainerHigh,
-        borderRadius: AppRadii.smAll,
-      ),
-      child: Row(
-        children: [
-          Text(
-            'UP NEXT',
-            style: AppTypography.labelSmall.copyWith(
-              color: AppColors.onSurfaceVariant,
-            ),
-          ),
-          const SizedBox(width: AppSpacing.sm),
-          FlagDisc(code(fixture.homeNationId), size: 18),
-          const SizedBox(width: AppSpacing.xs),
-          Text(code(fixture.homeNationId), style: AppTypography.labelSmall),
-          Text(
-            '  v  ',
-            style: AppTypography.labelSmall.copyWith(
-              color: AppColors.onSurfaceVariant,
-            ),
-          ),
-          Text(code(fixture.awayNationId), style: AppTypography.labelSmall),
-          const SizedBox(width: AppSpacing.xs),
-          FlagDisc(code(fixture.awayNationId), size: 18),
+          Icon(c.icon, size: 24, color: accent),
           const Spacer(),
           Text(
-            DateFormat('d MMM').format(fixture.date),
+            c.name,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            style: AppTypography.labelLarge,
+          ),
+          const SizedBox(height: 2),
+          Text(
+            c.region,
             style: AppTypography.labelSmall.copyWith(
               color: AppColors.onSurfaceVariant,
             ),
+          ),
+          const SizedBox(height: AppSpacing.xs),
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                decoration: BoxDecoration(
+                  color: accent.withValues(alpha: 0.14),
+                  borderRadius: AppRadii.smAll,
+                ),
+                child: Text(
+                  label,
+                  style: AppTypography.labelSmall.copyWith(color: accent),
+                ),
+              ),
+              const Spacer(),
+              if (championName != null)
+                Flexible(
+                  child: Text(
+                    championName!,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    textAlign: TextAlign.end,
+                    style: AppTypography.labelSmall.copyWith(
+                      color: AppColors.onSurfaceVariant,
+                    ),
+                  ),
+                ),
+            ],
           ),
         ],
       ),

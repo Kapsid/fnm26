@@ -20,5 +20,10 @@ abstract class Career with _$Career {
     required DateTime createdAt,
     required DateTime inGameDate,
     @Default(0) int cyclePointer,
+
+    /// The federation's cash balance (euros), spent on department investments
+    /// and replenished each cycle by central funding, prize money and
+    /// commercial returns. Player-driven mutable state (not seed-derived).
+    @Default(0) int budget,
   }) = _Career;
 }

@@ -14,7 +14,10 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Career {
 
- int get id; String get managerName; int get nationId; int get rngSeed; DateTime get createdAt; DateTime get inGameDate; int get cyclePointer;
+ int get id; String get managerName; int get nationId; int get rngSeed; DateTime get createdAt; DateTime get inGameDate; int get cyclePointer;/// The federation's cash balance (euros), spent on department investments
+/// and replenished each cycle by central funding, prize money and
+/// commercial returns. Player-driven mutable state (not seed-derived).
+ int get budget;
 /// Create a copy of Career
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +28,16 @@ $CareerCopyWith<Career> get copyWith => _$CareerCopyWithImpl<Career>(this as Car
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Career&&(identical(other.id, id) || other.id == id)&&(identical(other.managerName, managerName) || other.managerName == managerName)&&(identical(other.nationId, nationId) || other.nationId == nationId)&&(identical(other.rngSeed, rngSeed) || other.rngSeed == rngSeed)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.inGameDate, inGameDate) || other.inGameDate == inGameDate)&&(identical(other.cyclePointer, cyclePointer) || other.cyclePointer == cyclePointer));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Career&&(identical(other.id, id) || other.id == id)&&(identical(other.managerName, managerName) || other.managerName == managerName)&&(identical(other.nationId, nationId) || other.nationId == nationId)&&(identical(other.rngSeed, rngSeed) || other.rngSeed == rngSeed)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.inGameDate, inGameDate) || other.inGameDate == inGameDate)&&(identical(other.cyclePointer, cyclePointer) || other.cyclePointer == cyclePointer)&&(identical(other.budget, budget) || other.budget == budget));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,managerName,nationId,rngSeed,createdAt,inGameDate,cyclePointer);
+int get hashCode => Object.hash(runtimeType,id,managerName,nationId,rngSeed,createdAt,inGameDate,cyclePointer,budget);
 
 @override
 String toString() {
-  return 'Career(id: $id, managerName: $managerName, nationId: $nationId, rngSeed: $rngSeed, createdAt: $createdAt, inGameDate: $inGameDate, cyclePointer: $cyclePointer)';
+  return 'Career(id: $id, managerName: $managerName, nationId: $nationId, rngSeed: $rngSeed, createdAt: $createdAt, inGameDate: $inGameDate, cyclePointer: $cyclePointer, budget: $budget)';
 }
 
 
@@ -45,7 +48,7 @@ abstract mixin class $CareerCopyWith<$Res>  {
   factory $CareerCopyWith(Career value, $Res Function(Career) _then) = _$CareerCopyWithImpl;
 @useResult
 $Res call({
- int id, String managerName, int nationId, int rngSeed, DateTime createdAt, DateTime inGameDate, int cyclePointer
+ int id, String managerName, int nationId, int rngSeed, DateTime createdAt, DateTime inGameDate, int cyclePointer, int budget
 });
 
 
@@ -62,7 +65,7 @@ class _$CareerCopyWithImpl<$Res>
 
 /// Create a copy of Career
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? managerName = null,Object? nationId = null,Object? rngSeed = null,Object? createdAt = null,Object? inGameDate = null,Object? cyclePointer = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? managerName = null,Object? nationId = null,Object? rngSeed = null,Object? createdAt = null,Object? inGameDate = null,Object? cyclePointer = null,Object? budget = null,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,managerName: null == managerName ? _self.managerName : managerName // ignore: cast_nullable_to_non_nullable
@@ -71,6 +74,7 @@ as int,rngSeed: null == rngSeed ? _self.rngSeed : rngSeed // ignore: cast_nullab
 as int,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime,inGameDate: null == inGameDate ? _self.inGameDate : inGameDate // ignore: cast_nullable_to_non_nullable
 as DateTime,cyclePointer: null == cyclePointer ? _self.cyclePointer : cyclePointer // ignore: cast_nullable_to_non_nullable
+as int,budget: null == budget ? _self.budget : budget // ignore: cast_nullable_to_non_nullable
 as int,
   ));
 }
@@ -156,10 +160,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  String managerName,  int nationId,  int rngSeed,  DateTime createdAt,  DateTime inGameDate,  int cyclePointer)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  String managerName,  int nationId,  int rngSeed,  DateTime createdAt,  DateTime inGameDate,  int cyclePointer,  int budget)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Career() when $default != null:
-return $default(_that.id,_that.managerName,_that.nationId,_that.rngSeed,_that.createdAt,_that.inGameDate,_that.cyclePointer);case _:
+return $default(_that.id,_that.managerName,_that.nationId,_that.rngSeed,_that.createdAt,_that.inGameDate,_that.cyclePointer,_that.budget);case _:
   return orElse();
 
 }
@@ -177,10 +181,10 @@ return $default(_that.id,_that.managerName,_that.nationId,_that.rngSeed,_that.cr
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  String managerName,  int nationId,  int rngSeed,  DateTime createdAt,  DateTime inGameDate,  int cyclePointer)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  String managerName,  int nationId,  int rngSeed,  DateTime createdAt,  DateTime inGameDate,  int cyclePointer,  int budget)  $default,) {final _that = this;
 switch (_that) {
 case _Career():
-return $default(_that.id,_that.managerName,_that.nationId,_that.rngSeed,_that.createdAt,_that.inGameDate,_that.cyclePointer);case _:
+return $default(_that.id,_that.managerName,_that.nationId,_that.rngSeed,_that.createdAt,_that.inGameDate,_that.cyclePointer,_that.budget);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -197,10 +201,10 @@ return $default(_that.id,_that.managerName,_that.nationId,_that.rngSeed,_that.cr
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  String managerName,  int nationId,  int rngSeed,  DateTime createdAt,  DateTime inGameDate,  int cyclePointer)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  String managerName,  int nationId,  int rngSeed,  DateTime createdAt,  DateTime inGameDate,  int cyclePointer,  int budget)?  $default,) {final _that = this;
 switch (_that) {
 case _Career() when $default != null:
-return $default(_that.id,_that.managerName,_that.nationId,_that.rngSeed,_that.createdAt,_that.inGameDate,_that.cyclePointer);case _:
+return $default(_that.id,_that.managerName,_that.nationId,_that.rngSeed,_that.createdAt,_that.inGameDate,_that.cyclePointer,_that.budget);case _:
   return null;
 
 }
@@ -212,7 +216,7 @@ return $default(_that.id,_that.managerName,_that.nationId,_that.rngSeed,_that.cr
 
 
 class _Career implements Career {
-  const _Career({required this.id, required this.managerName, required this.nationId, required this.rngSeed, required this.createdAt, required this.inGameDate, this.cyclePointer = 0});
+  const _Career({required this.id, required this.managerName, required this.nationId, required this.rngSeed, required this.createdAt, required this.inGameDate, this.cyclePointer = 0, this.budget = 0});
   
 
 @override final  int id;
@@ -222,6 +226,10 @@ class _Career implements Career {
 @override final  DateTime createdAt;
 @override final  DateTime inGameDate;
 @override@JsonKey() final  int cyclePointer;
+/// The federation's cash balance (euros), spent on department investments
+/// and replenished each cycle by central funding, prize money and
+/// commercial returns. Player-driven mutable state (not seed-derived).
+@override@JsonKey() final  int budget;
 
 /// Create a copy of Career
 /// with the given fields replaced by the non-null parameter values.
@@ -233,16 +241,16 @@ _$CareerCopyWith<_Career> get copyWith => __$CareerCopyWithImpl<_Career>(this, _
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Career&&(identical(other.id, id) || other.id == id)&&(identical(other.managerName, managerName) || other.managerName == managerName)&&(identical(other.nationId, nationId) || other.nationId == nationId)&&(identical(other.rngSeed, rngSeed) || other.rngSeed == rngSeed)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.inGameDate, inGameDate) || other.inGameDate == inGameDate)&&(identical(other.cyclePointer, cyclePointer) || other.cyclePointer == cyclePointer));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Career&&(identical(other.id, id) || other.id == id)&&(identical(other.managerName, managerName) || other.managerName == managerName)&&(identical(other.nationId, nationId) || other.nationId == nationId)&&(identical(other.rngSeed, rngSeed) || other.rngSeed == rngSeed)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.inGameDate, inGameDate) || other.inGameDate == inGameDate)&&(identical(other.cyclePointer, cyclePointer) || other.cyclePointer == cyclePointer)&&(identical(other.budget, budget) || other.budget == budget));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,managerName,nationId,rngSeed,createdAt,inGameDate,cyclePointer);
+int get hashCode => Object.hash(runtimeType,id,managerName,nationId,rngSeed,createdAt,inGameDate,cyclePointer,budget);
 
 @override
 String toString() {
-  return 'Career(id: $id, managerName: $managerName, nationId: $nationId, rngSeed: $rngSeed, createdAt: $createdAt, inGameDate: $inGameDate, cyclePointer: $cyclePointer)';
+  return 'Career(id: $id, managerName: $managerName, nationId: $nationId, rngSeed: $rngSeed, createdAt: $createdAt, inGameDate: $inGameDate, cyclePointer: $cyclePointer, budget: $budget)';
 }
 
 
@@ -253,7 +261,7 @@ abstract mixin class _$CareerCopyWith<$Res> implements $CareerCopyWith<$Res> {
   factory _$CareerCopyWith(_Career value, $Res Function(_Career) _then) = __$CareerCopyWithImpl;
 @override @useResult
 $Res call({
- int id, String managerName, int nationId, int rngSeed, DateTime createdAt, DateTime inGameDate, int cyclePointer
+ int id, String managerName, int nationId, int rngSeed, DateTime createdAt, DateTime inGameDate, int cyclePointer, int budget
 });
 
 
@@ -270,7 +278,7 @@ class __$CareerCopyWithImpl<$Res>
 
 /// Create a copy of Career
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? managerName = null,Object? nationId = null,Object? rngSeed = null,Object? createdAt = null,Object? inGameDate = null,Object? cyclePointer = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? managerName = null,Object? nationId = null,Object? rngSeed = null,Object? createdAt = null,Object? inGameDate = null,Object? cyclePointer = null,Object? budget = null,}) {
   return _then(_Career(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,managerName: null == managerName ? _self.managerName : managerName // ignore: cast_nullable_to_non_nullable
@@ -279,6 +287,7 @@ as int,rngSeed: null == rngSeed ? _self.rngSeed : rngSeed // ignore: cast_nullab
 as int,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime,inGameDate: null == inGameDate ? _self.inGameDate : inGameDate // ignore: cast_nullable_to_non_nullable
 as DateTime,cyclePointer: null == cyclePointer ? _self.cyclePointer : cyclePointer // ignore: cast_nullable_to_non_nullable
+as int,budget: null == budget ? _self.budget : budget // ignore: cast_nullable_to_non_nullable
 as int,
   ));
 }

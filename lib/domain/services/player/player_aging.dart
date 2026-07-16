@@ -8,9 +8,13 @@ import 'package:fnm/domain/entities/player_attributes.dart';
 /// per-save storage is needed and every save evolves on its own timeline.
 abstract final class PlayerAging {
   /// The player as they are [cycles] four-year cycles after their seed state.
-  static Player aged(Player p, int cycles) {
-    if (cycles <= 0) return p;
-    final years = cycles * 4;
+  static Player aged(Player p, int cycles) => agedYears(p, cycles * 4);
+
+  /// The player as they are [years] years after their seed state — the same
+  /// curve as [aged], but at one-year resolution so squads evolve every season
+  /// rather than jumping four years at a time.
+  static Player agedYears(Player p, int years) {
+    if (years <= 0) return p;
     final toAge = p.age + years;
     return p.copyWith(
       age: toAge,

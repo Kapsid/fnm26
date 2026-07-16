@@ -44,7 +44,14 @@ abstract final class PoolGenerator {
   ];
 
   /// Returns the players with clubs assigned, plus generated fringe players.
-  static List<Player> expand(List<Player> real) {
+  ///
+  /// [namesByNation] supplies culturally-authentic first/surname pools per
+  /// nation id (from `assets/data/country_names.json`); when absent for a
+  /// nation the fringe names are recombined from that squad's real names.
+  static List<Player> expand(
+    List<Player> real, {
+    Map<int, ({List<String> first, List<String> sur})>? namesByNation,
+  }) {
     final byNation = <int, List<Player>>{};
     for (final p in real) {
       (byNation[p.nationId] ??= []).add(p);
@@ -62,18 +69,33 @@ abstract final class PoolGenerator {
       }
 
       final rng = SeededRng((nationId * 0x9E3779B1) ^ 0xF00DBEEF);
-      final firsts = squad.map((p) => _firstName(p.name)).toList();
-      final lasts = squad.map((p) => _lastName(p.name)).toList();
-      final avg = _averageAttributes(squad);
+      final pool = namesByNation?[nationId];
+      final firsts = pool != null && pool.first.isNotEmpty
+          ? pool.first
+          : squad.map((p) => _firstName(p.name)).toList();
+      final lasts = pool != null && pool.sur.isNotEmpty
+          ? pool.sur
+          : squad.map((p) => _lastName(p.name)).toList();
+      // Anchor on the nation's stronger players (top half by overall), not the
+      // whole-squad mean — stars pull the mean down, so a mean-anchored fringe
+      // sat well below the real starters and left a cliff right after the 23.
+      final ranked = [...squad]..sort((a, b) => b.overall.compareTo(a.overall));
+      final avg = _averageAttributes(
+        ranked.take((squad.length / 2).ceil().clamp(1, squad.length)).toList(),
+      );
 
       for (var i = 0; i < extraPerNation; i++) {
         final pos = _fringePositions[i % _fringePositions.length];
-        // Depth-graded quality: the first fringe players are near the squad's
-        // level (just below the weaker starters) and taper smoothly down the
-        // depth chart, so there's no cliff between the top 23 and the rest.
+        // Depth-graded quality anchored on the stronger players so the best
+        // fringe overlap the first-choice XI (a continuous curve, no cliff at
+        // the top-23 boundary) and taper gently down the depth chart to a
+        // clear-reserve floor. The slope is deliberately shallow near the top
+        // so the next tier of talent stays competitive.
         final depth = extraPerNation == 1 ? 0.0 : i / (extraPerNation - 1);
         final noise = (rng.nextInt(9) - 4) / 100;
-        final scale = (0.96 - 0.34 * depth + noise).clamp(0.55, 0.98);
+        // Shallow slope + a high floor: the next tier stays close to the XI and
+        // even the deepest reserve is a credible squad player, not a minnow.
+        final scale = (1.04 - 0.26 * depth + noise).clamp(0.74, 1.06);
         out.add(
           Player(
             id: nextId,

@@ -19,7 +19,10 @@ class ResultsScreen extends ConsumerWidget {
   static String _stage(String? round) => switch (round) {
         null => 'QUALIFIER',
         'FRIENDLY' => 'FRIENDLY',
-        'NL' => 'NATIONS LEAGUE',
+        'NL' || 'NGROUP' => 'GROUP STAGE',
+        'NSF' => 'SEMI-FINAL',
+        'NFINAL' => 'FINAL',
+        'FFINAL' => 'CONTINENTAL CLASH',
         'GROUP' => 'FINALS GROUP',
         'R32' => 'ROUND OF 32',
         'R16' => 'ROUND OF 16',
@@ -40,7 +43,8 @@ class ResultsScreen extends ConsumerWidget {
   static String _category(String? round) {
     if (round == null) return 'World Cup Qualifying';
     if (round == 'FRIENDLY') return 'Friendlies';
-    if (round == 'NL') return 'Nations League';
+    if (round == 'FFINAL') return 'Continental Clash';
+    if (round.startsWith('N')) return 'Nations Cup';
     if (round.startsWith('C')) return 'Continental Cup';
     return 'World Cup Finals';
   }

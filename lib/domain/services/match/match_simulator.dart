@@ -37,8 +37,10 @@ class RatingMatchSimulator implements MatchSimulator {
     required SeededRng rng,
   }) {
     final diff = (homeStrength + 5) - awayStrength; // +5 home advantage
-    final homeXg = (1.3 + diff * 0.03).clamp(0.2, 4.5);
-    final awayXg = (1.1 - diff * 0.03).clamp(0.2, 4.5);
+    // A steeper strength→xG slope so the better side controls the scoreline and
+    // upsets stay the exception rather than the rule.
+    final homeXg = (1.25 + diff * 0.05).clamp(0.15, 5.0);
+    final awayXg = (1.05 - diff * 0.05).clamp(0.15, 5.0);
     return MatchOutcome(_goals(homeXg, rng), _goals(awayXg, rng));
   }
 

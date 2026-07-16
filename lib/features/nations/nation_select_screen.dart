@@ -31,8 +31,9 @@ class NationSelectScreen extends ConsumerWidget {
       appBar: AppBar(
         centerTitle: true,
         leading: IconButton(
-          icon: const Icon(Icons.menu, color: AppColors.primary),
-          onPressed: () {},
+          icon: const Icon(Icons.arrow_back, color: AppColors.primary),
+          onPressed: () =>
+              context.canPop() ? context.pop() : context.go(Routes.home),
         ),
         title: Text(
           'SELECT NATIONAL TEAM',

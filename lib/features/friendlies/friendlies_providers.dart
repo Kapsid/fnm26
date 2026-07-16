@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fnm/core/rng/seeded_rng.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/features/hub/hub_providers.dart';
@@ -83,9 +84,15 @@ friendliesPlanProvider =
   final nations = {for (final n in all) n.id: n};
   final me = nations[career.nationId];
   final myRank = me?.ranking ?? 100;
-  final opponents = all.where((n) => n.id != career.nationId).toList()
+  // A ranking-plausible candidate pool (closest ~60 by strength), then a
+  // seeded shuffle so the suggested opponents vary cycle to cycle instead of
+  // always being the same static nearest-neighbours list.
+  final byProximity = all.where((n) => n.id != career.nationId).toList()
     ..sort((a, b) =>
         (a.ranking - myRank).abs().compareTo((b.ranking - myRank).abs()));
+  final pool = byProximity.take(60).toList();
+  final rng = SeededRng(career.rngSeed ^ (career.cyclePointer * 0x2F) ^ 0xF1E4);
+  final opponents = rng.shuffled(pool);
 
   return FriendliesPlan(
     windows: windows,

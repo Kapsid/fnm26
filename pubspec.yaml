@@ -63,8 +63,11 @@ dev_dependencies:
 
 flutter_launcher_icons:
   android: true
-  ios: false
+  ios: true
   image_path: "assets/images/fnm_logo.png"
+  # iOS icons can't have transparency — flatten onto the app's dark background.
+  background_color_ios: "#121416"
+  remove_alpha_ios: true
   min_sdk_android: 21
   adaptive_icon_background: "#121416"
   adaptive_icon_foreground: "assets/images/fnm_logo.png"

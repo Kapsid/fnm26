@@ -26,6 +26,7 @@ class AssetSeedSource implements SeedSource {
 
   static const _nationsAsset = 'assets/data/nations.json';
   static const _playersAsset = 'assets/data/players.json';
+  static const _namesAsset = 'assets/data/country_names.json';
 
   @override
   Future<List<Nation>> nations() async {
@@ -42,8 +43,18 @@ class AssetSeedSource implements SeedSource {
     final list = jsonDecode(raw) as List<dynamic>;
     final base =
         list.map((e) => Player.fromJson(e as Map<String, Object?>)).toList();
+    // Per-nation name pools for culturally-plausible generated players.
+    final namesRaw = jsonDecode(await _bundle.loadString(_namesAsset))
+        as Map<String, Object?>;
+    final namesByNation = <int, ({List<String> first, List<String> sur})>{
+      for (final e in namesRaw.entries)
+        int.parse(e.key): (
+          first: ((e.value! as Map)['first'] as List).cast<String>(),
+          sur: ((e.value! as Map)['sur'] as List).cast<String>(),
+        ),
+    };
     // Assign clubs and pad each nation into a deeper, scoutable pool.
-    return PoolGenerator.expand(base);
+    return PoolGenerator.expand(base, namesByNation: namesByNation);
   }
 }
 

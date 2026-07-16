@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/services/competition/continental_cups.dart';
+import 'package:fnm/domain/services/competition/hosts.dart';
 import 'package:fnm/domain/services/competition/schedule_generator.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/hub/hub_event.dart';
@@ -68,10 +69,21 @@ qualifyingDrawProvider =
   final String title;
   final String watchedKind;
 
+  // The host sits out qualifying (friendlies only), so it's absent from the
+  // group draw — mirror the exclusion in [CareerService.buildCalendar].
+  final allNations = nations.values.toList();
+  final List<Nation> drawMembers;
+
   if (arg.worldCup) {
+    final hostIds = WorldCupHosts.worldCupHostIds(
+      year: wcYear,
+      nations: allNations,
+      seed: career.rngSeed,
+    );
+    drawMembers = members.where((n) => !hostIds.contains(n.id)).toList();
     schedule = const ScheduleGenerator().generate(
       confederation: conf,
-      nations: members,
+      nations: drawMembers,
       rngSeed: career.rngSeed ^
           (career.cyclePointer * 0x1B3D) ^
           (conf.index * 0x9E37),
@@ -83,9 +95,16 @@ qualifyingDrawProvider =
   } else {
     final cont = ContinentalCups.byConfederation[conf];
     if (cont == null || members.length <= cont.size) return null;
+    final host = WorldCupHosts.continentalHostFor(
+      confederation: conf,
+      cycle: career.cyclePointer,
+      seed: career.rngSeed,
+      nations: allNations,
+    );
+    drawMembers = members.where((n) => n.id != host).toList();
     schedule = const ScheduleGenerator().generate(
       confederation: conf,
-      nations: members,
+      nations: drawMembers,
       rngSeed: career.rngSeed ^ (career.cyclePointer * 0x71) ^ 0xCAFE,
       start: DateTime(wcYear - 4, 9),
       groupSize: 6,
@@ -104,8 +123,8 @@ qualifyingDrawProvider =
   // are groups (top group first).
   final groupCount = groups.length;
   final potByNation = <int, int>{
-    for (var i = 0; i < members.length; i++)
-      members[i].id: (i ~/ groupCount) + 1,
+    for (var i = 0; i < drawMembers.length; i++)
+      drawMembers[i].id: (i ~/ groupCount) + 1,
   };
 
   return QualifyingDrawData(

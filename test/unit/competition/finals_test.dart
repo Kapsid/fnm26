@@ -62,6 +62,22 @@ void main() {
       expect(placed.toSet(), ids.toSet());
     });
 
+    test('co-hosts are each seeded into their own opening group', () {
+      final ids = List.generate(48, (i) => i + 1);
+      final ranking = {for (final id in ids) id: id};
+      // Two low-ranked co-hosts (40 and 45) should still open Groups A and B.
+      final draw = WorldCupFinals.drawGroups(
+        qualifierIds: ids,
+        rankingById: ranking,
+        rngSeed: 42,
+        hosts: const [40, 45],
+      );
+      expect(draw.groups[0].nationIds, contains(40));
+      expect(draw.groups[1].nationIds, contains(45));
+      // And not doubled up in the same group.
+      expect(draw.groups[0].nationIds, isNot(contains(45)));
+    });
+
     test('round of 32 seeds 24 group qualifiers + 8 best thirds into 16 ties',
         () {
       // 12 groups of 4; group i gives its teams descending points so ranks are
@@ -128,6 +144,36 @@ void main() {
       final ties = WorldCupFinals.knockoutFromGroups(groups);
       expect(ties, hasLength(2));
       expect(ties, [(1, 4), (3, 2)]);
+    });
+  });
+
+  group('playoffWinners', () {
+    // Six entrants with realistic world-ranking gaps (id 1 strongest).
+    final pool = [1, 2, 3, 4, 5, 6];
+    final ranks = {1: 20, 2: 35, 3: 50, 4: 65, 5: 80, 6: 95};
+
+    test('returns exactly the playoff berths, drawn from the field', () {
+      final w = WorldCupFinals.playoffWinners(pool, ranks, SeededRng(7));
+      expect(w, hasLength(2));
+      expect(pool, containsAll(w));
+      expect(w.toSet(), hasLength(2)); // no duplicates
+    });
+
+    test('is deterministic for a given seed', () {
+      final a = WorldCupFinals.playoffWinners(pool, ranks, SeededRng(42));
+      final b = WorldCupFinals.playoffWinners(pool, ranks, SeededRng(42));
+      expect(a, b);
+    });
+
+    test('stronger seeds win the play-off far more often', () {
+      var topTwo = 0;
+      for (var seed = 0; seed < 200; seed++) {
+        final w = WorldCupFinals.playoffWinners(pool, ranks, SeededRng(seed));
+        // The two best-ranked (1 and 2) get byes to the finals and are favoured.
+        topTwo += w.where((id) => id <= 2).length;
+      }
+      // Out of 400 winner slots, the two seeds should take a clear majority.
+      expect(topTwo / 400, greaterThan(0.6));
     });
   });
 }

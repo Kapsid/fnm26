@@ -11,4 +11,9 @@ abstract interface class SquadRepository {
 
   /// Replaces the called-up squad for [careerId] with [playerIds].
   Future<void> setCallUps(int careerId, Set<int> playerIds);
+
+  /// Drops every call-up for [careerId], returning the save to "no explicit
+  /// selection" — used when the manager moves to a new nation, whose players
+  /// share no ids with the old squad.
+  Future<void> clearCallUps(int careerId);
 }

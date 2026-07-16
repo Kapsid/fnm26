@@ -9,9 +9,12 @@ import 'package:fnm/domain/entities/tactics.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
 import 'package:fnm/domain/services/competition/continental_cups.dart';
 import 'package:fnm/domain/services/competition/finals.dart';
+import 'package:fnm/domain/services/competition/hosts.dart';
+import 'package:fnm/domain/services/competition/nations_cup.dart';
 import 'package:fnm/domain/services/competition/real_history.dart';
 import 'package:fnm/domain/services/competition/schedule_generator.dart';
 import 'package:fnm/domain/services/entitlement/entitlement.dart';
+import 'package:fnm/domain/services/federation/federation_finance.dart';
 import 'package:fnm/domain/services/tactics/best_eleven.dart';
 
 /// All save games, most recent first (seeding the DB first if needed).
@@ -46,6 +49,11 @@ class CareerService {
   /// The World Cup year for a given cycle (clean cadence: 2030, 2034, …).
   static int worldCupYear(int cycle) => cycleStart.year + 4 * (cycle + 1);
 
+  /// Elapsed in-game years since the save began — how much to age the player
+  /// pool, so squads evolve one season at a time as the calendar advances.
+  static int agingYears(Career c) =>
+      (c.inGameDate.year - cycleStart.year).clamp(0, 400);
+
   /// Creates a new save for [nationId], or a failure if all slots are in use.
   Future<Result<Career>> create({
     required int nationId,
@@ -69,15 +77,29 @@ class CareerService {
       rngSeed: _seed(),
       startDate: cycleStart,
     );
+    await repo.recordStint(career.id, 0, nationId);
+    final nations = await _ref.read(nationRepositoryProvider).all();
+    // Endow the federation with an opening balance sized to its world standing
+    // (a mid-table default if the nation isn't in the reference set).
+    final rankById = {for (final n in nations) n.id: n.ranking};
+    await repo.setBudget(
+      career.id,
+      FederationFinance.initialBudget(rankById[nationId] ?? 100),
+    );
+    // Seed the Nations Cup ladder from the world ranking, once — from here it
+    // only moves by promotion/relegation.
+    final tiers = NationsCup.seedTiers(nations, (n) => n.ranking);
+    await repo.setNationsCupTiers(career.id, tiers);
     await buildCalendar(
       comp: _ref.read(competitionRepositoryProvider),
-      nations: await _ref.read(nationRepositoryProvider).all(),
+      nations: nations,
       careerId: career.id,
       nationId: career.nationId,
       rngSeed: career.rngSeed,
       cycle: 0,
       cycleStart: career.inGameDate,
       wcYear: worldCupYear(0),
+      nationsCupTiers: tiers,
     );
     await _generateDefaultTactic(career);
     await _seedHistory(career);
@@ -103,6 +125,10 @@ class CareerService {
     /// The frozen seeding ranking for this cycle (nationId → world position).
     /// Null seeds by the static seed ranking (used for the opening cycle).
     Map<int, int>? rankById,
+
+    /// The persisted Nations Cup league of each nation (nationId → tier). Empty
+    /// falls back to a ranking seed (the first cup / an un-laddered nation).
+    Map<int, int> nationsCupTiers = const {},
   }) async {
     if (!nations.any((n) => n.id == nationId)) return; // nothing to schedule
     final me = nations.firstWhere((n) => n.id == nationId);
@@ -121,10 +147,21 @@ class CareerService {
       final members =
           (byConfederation[me.confederation] ?? <Nation>[]).toList()
             ..sort((a, b) => rankOf(a).compareTo(rankOf(b)));
-      if (members.length > cont.size) {
+      // The hosts (primary + any co-hosts) auto-qualify and sit out qualifying
+      // (playing only friendlies in those windows), so drop them from the draw.
+      final contHosts = WorldCupHosts.continentalHostsFor(
+        confederation: me.confederation,
+        cycle: cycle,
+        seed: rngSeed,
+        nations: nations,
+      ).toSet();
+      // A confederation with no qualifying (Copa América) seeds its finals
+      // field straight from the ranking; only qualifying confederations run a
+      // group stage first.
+      if (cont.qualifying && members.length > cont.size) {
         final cq = const ScheduleGenerator().generate(
           confederation: me.confederation,
-          nations: members,
+          nations: members.where((n) => !contHosts.contains(n.id)).toList(),
           rngSeed: rngSeed ^ (cycle * 0x71) ^ 0xCAFE,
           start: DateTime(cycleStart.year, 9),
           // Groups of six (ten matchdays) spread qualifying across the first
@@ -144,9 +181,12 @@ class CareerService {
           kind: CompetitionKind.continentalQualifying,
           fixtureRound: 'CQ',
         );
-      } else if (members.length >= cont.size &&
-          members.take(cont.size).any((n) => n.id == me.id)) {
-        // A confederation too small to run a group stage seeds its finals.
+      } else if (members.length >= (cont.qualifying ? cont.size : 4)) {
+        // No group-stage qualifying — either a Copa-style all-in cup (needs
+        // only four teams) or a qualifying confederation already at that size.
+        // Seed the finals field straight from the ranking, and ALWAYS create it
+        // (even if the player didn't make the field) so it's played out and can
+        // be followed rather than silently vanishing.
         final draw = WorldCupFinals.drawGroups(
           qualifierIds: members.take(cont.size).map((n) => n.id).toList(),
           rankingById: {for (final n in nations) n.id: rankOf(n)},
@@ -165,22 +205,98 @@ class CareerService {
       }
     }
 
+    // 1c. The Nations Cup runs AFTER the continental finals and before the
+    //     World Cup — the real Nations League slot. The confederation plays as
+    //     a persistent ladder of leagues (League A, B, C…), each four groups of
+    //     four home & away. Every league is played so the whole ladder moves;
+    //     League A's group winners contest a Finals Four for the title. The
+    //     ladder is seeded from the ranking only for the first cup and then
+    //     changes solely by promotion/relegation (see [nationsCupTiers]).
+    if (cont != null) {
+      final members = (byConfederation[me.confederation] ?? <Nation>[]).toList()
+        ..sort((a, b) => rankOf(a).compareTo(rankOf(b)));
+      // Effective ladder: the saved tiers, or a ranking seed for the first cup.
+      var tiers = nationsCupTiers;
+      if (tiers.isEmpty || !members.any((n) => tiers.containsKey(n.id))) {
+        tiers = NationsCup.seedTiers(nations, rankOf);
+      }
+      // EVERY league is played out (real, persistent promotion/relegation for
+      // the whole ladder). Groups are named with a league prefix ('B2' = League
+      // B, group 2) so each league's results can be read back at rollover.
+      final byTier = <int, List<Nation>>{};
+      for (final n in members) {
+        (byTier[tiers[n.id] ?? 0] ??= []).add(n);
+      }
+      final allGroups = <GeneratedGroup>[];
+      for (final tier in byTier.keys.toList()..sort()) {
+        final league = byTier[tier]!;
+        if (league.length < 4) continue; // too small for a group stage
+        final gen = const ScheduleGenerator().generate(
+          confederation: me.confederation,
+          nations: league,
+          rngSeed: rngSeed ^ (cycle * 0x71) ^ 0x5A17 ^ (tier * 0x9E37),
+          // Autumn of the continental-finals year (wcYear − 2), after the
+          // summer finals — the real Nations League slot before the World Cup.
+          start: DateTime(wcYear - 2, 9),
+          groupSize: 4,
+          rankById: rankById,
+        );
+        final letter = NationsCup.leagueLetter(tier);
+        for (var i = 0; i < gen.groups.length; i++) {
+          allGroups.add(GeneratedGroup(
+            name: '$letter${i + 1}', // 'A1'..'A4', 'B1'..'B4', … encodes league
+            nationIds: gen.groups[i].nationIds,
+            fixtures: gen.groups[i].fixtures,
+          ));
+        }
+      }
+      if (allGroups.isNotEmpty) {
+        await comp.saveSchedule(
+          careerId: careerId,
+          schedule: GeneratedSchedule(
+            confederation: me.confederation,
+            name: 'Nations Cup',
+            groups: allGroups,
+          ),
+          cycle: cycle,
+          kind: CompetitionKind.nationsLeague,
+          fixtureRound: 'NGROUP',
+        );
+      }
+    }
+
     // 2. World Cup qualifying for every confederation runs the back half of the
-    //    cycle (autumn of WC year − 2 into the WC year), so it leads straight
-    //    into the finals.
-    final wcQualStart = DateTime(wcYear - 2, 9);
+    //    cycle. It starts the spring AFTER the Nations Cup (which fills the
+    //    autumn of wcYear − 2), so the calendar reads Euro → Nations Cup → WC
+    //    qualifying → World Cup rather than qualifying overlapping the cup.
+    final wcQualStart = DateTime(wcYear - 1, 3);
+    // Hosts auto-qualify and skip qualifying (friendlies only), so drop them
+    // from every confederation's qualifying pool.
+    final wcHostIds = WorldCupHosts.worldCupHostIds(
+      year: wcYear,
+      nations: nations,
+      seed: rngSeed,
+    );
     for (final entry in byConfederation.entries) {
-      if (entry.value.length < 2) continue;
+      final quals =
+          entry.value.where((n) => !wcHostIds.contains(n.id)).toList();
+      if (quals.length < 2) continue;
       final schedule = const ScheduleGenerator().generate(
         confederation: entry.key,
-        nations: entry.value,
+        nations: quals,
         rngSeed: rngSeed ^ (cycle * 0x1B3D) ^ (entry.key.index * 0x9E37),
         start: wcQualStart,
         rankById: rankById,
       );
       await comp.saveSchedule(
         careerId: careerId,
-        schedule: schedule,
+        // Name it for the competition, not the confederation — otherwise the
+        // hub labels the player's World Cup qualifying group "Europe".
+        schedule: GeneratedSchedule(
+          confederation: entry.key,
+          name: 'World Cup Qualifiers',
+          groups: schedule.groups,
+        ),
         cycle: cycle,
       );
     }
@@ -224,7 +340,11 @@ class CareerService {
   Future<void> _generateDefaultTactic(Career career) async {
     final players = await _ref
         .read(playerRepositoryProvider)
-        .byNation(career.nationId, agingCycles: career.cyclePointer);
+        .byNation(
+          career.nationId,
+          agingYears: CareerService.agingYears(career),
+          saveSeed: career.rngSeed,
+        );
     const formation = Formation.f433;
     await _ref
         .read(tacticsRepositoryProvider)

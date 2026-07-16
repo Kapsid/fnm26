@@ -119,8 +119,14 @@ class MatchPreviewScreen extends ConsumerWidget {
               ),
               const SizedBox(height: AppSpacing.md),
               OutlinedButton.icon(
-                onPressed: () =>
-                    context.go('${Routes.tactics}?careerId=$careerId'),
+                onPressed: () async {
+                  // Push (don't replace) so returning lands back on the
+                  // preview, then refresh it to pick up the new lineup.
+                  await context.push(
+                    '${Routes.tactics}?careerId=$careerId',
+                  );
+                  ref.invalidate(matchPreviewProvider(careerId));
+                },
                 icon: const Icon(Icons.tune, size: 18),
                 label: const Text('Adjust lineup & tactics'),
                 style: OutlinedButton.styleFrom(

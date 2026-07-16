@@ -44,13 +44,14 @@ abstract final class WorldCupFinals {
 
   /// Selects the 48 World Cup finalists from every confederation's qualifying
   /// tables: direct berths per confederation, then the two best entrants of the
-  /// intercontinental playoff, and finally the [host] (which replaces the
-  /// weakest-ranked qualifier if it didn't already make the cut). Shared by the
-  /// finals generator and the draw ceremony so both always agree.
+  /// intercontinental playoff, and finally every host in [hosts] (each replaces
+  /// the weakest-ranked qualifier it isn't already among). Shared by the finals
+  /// generator and the draw ceremony so both always agree.
   static List<int> selectFinalists({
     required Map<Confederation, List<List<GroupStanding>>> byConfederation,
     required Map<int, int> rankingById,
-    required int host,
+    required List<int> hosts,
+    SeededRng? playoffRng,
   }) {
     int rank(int id) => rankingById[id] ?? 9999;
     final qualifiers = <int>[];
@@ -67,27 +68,43 @@ abstract final class WorldCupFinals {
         playoffPool.addAll(withEntrants.skip(direct.length));
       }
     }
+    // The two remaining places go through the intercontinental play-off: an
+    // actually-simulated mini-bracket (strength-weighted) when an rng is given,
+    // rather than simply handing them to the two best-ranked entrants.
     playoffPool.sort((a, b) => rank(a).compareTo(rank(b)));
-    qualifiers.addAll(playoffPool.take(QualificationFormat.playoffBerths));
+    qualifiers.addAll(
+      playoffRng == null
+          ? playoffPool.take(QualificationFormat.playoffBerths)
+          : playoffWinners(playoffPool, rankingById, playoffRng),
+    );
 
-    if (!qualifiers.contains(host) && qualifiers.isNotEmpty) {
-      qualifiers
-        ..sort((a, b) => rank(a).compareTo(rank(b)))
-        ..removeLast()
-        ..add(host);
+    // Every host auto-qualifies, each replacing the weakest non-host qualifier.
+    final missing = hosts.where((h) => !qualifiers.contains(h)).toList();
+    if (missing.isNotEmpty && qualifiers.isNotEmpty) {
+      qualifiers.sort((a, b) => rank(a).compareTo(rank(b)));
+      for (final h in missing) {
+        for (var i = qualifiers.length - 1; i >= 0; i--) {
+          if (!hosts.contains(qualifiers[i])) {
+            qualifiers.removeAt(i);
+            break;
+          }
+        }
+        qualifiers.add(h);
+      }
     }
     return qualifiers;
   }
 
   /// Draws [qualifierIds] into groups of four. Teams are seeded into four pots
-  /// by world ranking, then one team per pot is drawn into each group. A [host]
-  /// (when it is one of the qualifiers) is always a top seed placed in Group A,
-  /// as at a real finals.
+  /// by world ranking, then one team per pot is drawn into each group. Each
+  /// [hosts] entry (when it is one of the qualifiers) is a top seed placed into
+  /// its own opening group (host 0 → Group A, host 1 → Group B, …), as at a
+  /// real finals with co-hosts.
   static FinalsDraw drawGroups({
     required List<int> qualifierIds,
     required Map<int, int> rankingById,
     required int rngSeed,
-    int? host,
+    List<int> hosts = const [],
   }) {
     final rng = SeededRng(rngSeed ^ 0xF1A15);
     final groupCount = qualifierIds.length ~/ 4;
@@ -97,13 +114,16 @@ abstract final class WorldCupFinals {
       ..sort(
         (a, b) => (rankingById[a] ?? 9999).compareTo(rankingById[b] ?? 9999),
       );
-    // The host is a top seed (pot 1) regardless of ranking, so it can be placed
-    // into Group A below.
-    final hasHost = host != null && seeded.contains(host);
-    if (hasHost) {
+    // Hosts are top seeds (pot 1) regardless of ranking — one per group,
+    // and never more than there are groups.
+    final activeHosts = [
+      for (final h in hosts)
+        if (seeded.contains(h)) h,
+    ].take(groupCount).toList();
+    for (final h in activeHosts.reversed) {
       seeded
-        ..remove(host)
-        ..insert(0, host);
+        ..remove(h)
+        ..insert(0, h);
     }
 
     final groups = List.generate(groupCount, (_) => <int>[]);
@@ -113,12 +133,15 @@ abstract final class WorldCupFinals {
           seeded.sublist(pot * groupCount, (pot + 1) * groupCount),
         ),
       ];
-      // Force the host to Group A (the first group) within pot 1.
-      if (pot == 0 && hasHost) {
-        final hi = slice.indexOf(host);
-        if (hi > 0) {
-          slice[hi] = slice[0];
-          slice[0] = host;
+      // Force each host into its own opening group within pot 1 (host k → k).
+      if (pot == 0) {
+        for (var k = 0; k < activeHosts.length; k++) {
+          final hi = slice.indexOf(activeHosts[k]);
+          if (hi >= 0 && hi != k) {
+            final tmp = slice[k];
+            slice[k] = slice[hi];
+            slice[hi] = tmp;
+          }
         }
       }
       for (var i = 0; i < groupCount; i++) {
@@ -238,9 +261,63 @@ abstract final class WorldCupFinals {
       ];
 
   /// Resolves a knockout score so there is always a winner: a level game goes
-  /// to a (seeded) shootout, modelled as one extra goal for the chosen side.
-  static (int, int) resolveTie(int home, int away, SeededRng rng) {
+  /// to a (seeded) shootout, modelled as one extra goal for the winning side.
+  ///
+  /// The shootout is tight but the stronger side is favoured — a coin flip made
+  /// every knockout a lottery, so [homeStrength]/[awayStrength] tilt it (a big
+  /// gap wins ~80% of shootouts, a small one only slightly better than even).
+  static (int, int) resolveTie(
+    int home,
+    int away,
+    SeededRng rng, {
+    double homeStrength = 1,
+    double awayStrength = 1,
+  }) {
     if (home != away) return (home, away);
-    return rng.chance(0.5) ? (home + 1, away) : (home, away + 1);
+    final total = homeStrength + awayStrength;
+    final homeWin = total <= 0
+        ? 0.5
+        : (0.5 + 0.35 * (homeStrength - awayStrength) / total).clamp(0.2, 0.8);
+    return rng.chance(homeWin) ? (home + 1, away) : (home, away + 1);
+  }
+
+  /// The intercontinental play-off winners ([QualificationFormat.playoffBerths]
+  /// places). The entrants are seeded by ranking; in the standard six-team
+  /// field the top two get byes to the path finals while the other four contest
+  /// two semis, and each semi winner meets a seed for a World Cup place. Each
+  /// tie is a strength-weighted, deterministic single match.
+  static List<int> playoffWinners(
+    List<int> pool,
+    Map<int, int> rankingById,
+    SeededRng rng,
+  ) {
+    const berths = QualificationFormat.playoffBerths;
+    if (pool.length <= berths) return pool;
+    int r(int id) => rankingById[id] ?? 9999;
+    final seeds = [...pool]..sort((a, b) => r(a).compareTo(r(b)));
+    if (seeds.length == 6) {
+      final w1 = _playoffMatch(seeds[2], seeds[5], rankingById, rng);
+      final w2 = _playoffMatch(seeds[3], seeds[4], rankingById, rng);
+      return [
+        _playoffMatch(seeds[0], w1, rankingById, rng),
+        _playoffMatch(seeds[1], w2, rankingById, rng),
+      ];
+    }
+    // Uncommon field size — take the best-ranked to fill the berths.
+    return seeds.take(berths).toList();
+  }
+
+  /// One play-off tie: the stronger (lower-ranked) side is favoured, but a
+  /// single knockout always leaves room for a surprise.
+  static int _playoffMatch(
+    int a,
+    int b,
+    Map<int, int> rankingById,
+    SeededRng rng,
+  ) {
+    final ra = rankingById[a] ?? 9999;
+    final rb = rankingById[b] ?? 9999;
+    final winA = (0.5 + (rb - ra) * 0.006).clamp(0.2, 0.8);
+    return rng.chance(winA) ? a : b;
   }
 }

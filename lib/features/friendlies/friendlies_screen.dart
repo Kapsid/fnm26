@@ -35,6 +35,15 @@ class _FriendliesScreenState extends ConsumerState<FriendliesScreen> {
 
   String _label(DateTime d) => '${_months[d.month]} ${d.year}';
 
+  /// A distinct block of suggested opponents for window [index], so each window
+  /// offers a different (already seed-shuffled) set rather than the same list.
+  List<Nation> _opponentsFor(List<Nation> pool, int index, int windowCount) {
+    if (pool.isEmpty) return pool;
+    final per = (pool.length ~/ windowCount).clamp(6, 12);
+    final start = (index * per) % pool.length;
+    return [for (var k = 0; k < per; k++) pool[(start + k) % pool.length]];
+  }
+
   Future<void> _confirm(FriendliesPlan plan) async {
     setState(() => _saving = true);
     await ref.read(friendliesServiceProvider).arrange(
@@ -81,8 +90,6 @@ class _FriendliesScreenState extends ConsumerState<FriendliesScreen> {
               ),
             );
           }
-          final suggestions = plan.opponents.take(14).toList();
-
           return Column(
             children: [
               Padding(
@@ -102,14 +109,19 @@ class _FriendliesScreenState extends ConsumerState<FriendliesScreen> {
                     horizontal: AppSpacing.marginMobile,
                   ),
                   children: [
-                    for (final w in plan.windows)
+                    for (var i = 0; i < plan.windows.length; i++)
                       _WindowCard(
-                        label: _label(w),
-                        opponents: suggestions,
-                        selected: _picks[w],
+                        label: _label(plan.windows[i]),
+                        opponents: _opponentsFor(
+                          plan.opponents,
+                          i,
+                          plan.windows.length,
+                        ),
+                        selected: _picks[plan.windows[i]],
                         code: (id) => plan.nations[id]?.code ?? '??',
                         name: (id) => plan.nations[id]?.name ?? '—',
                         onPick: (id) => setState(() {
+                          final w = plan.windows[i];
                           if (_picks[w] == id) {
                             _picks.remove(w);
                           } else {

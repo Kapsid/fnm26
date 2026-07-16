@@ -25,6 +25,7 @@ class BestThirdsCard extends StatelessWidget {
     required this.playerNationId,
     required this.code,
     required this.name,
+    this.destination = 'the knockouts',
     super.key,
   });
 
@@ -34,6 +35,10 @@ class BestThirdsCard extends StatelessWidget {
   final int playerNationId;
   final String Function(int) code;
   final String Function(int) name;
+
+  /// Where the qualifying thirds advance to — 'the knockouts' for a finals
+  /// group stage, 'the finals' for a qualifying group stage.
+  final String destination;
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +51,7 @@ class BestThirdsCard extends StatelessWidget {
             style: AppTypography.labelSmall.copyWith(color: AppColors.primary),
           ),
           Text(
-            'Top $qualifyCount advance to the knockouts',
+            'Top $qualifyCount advance to $destination',
             style: AppTypography.labelSmall.copyWith(
               color: AppColors.onSurfaceVariant,
             ),

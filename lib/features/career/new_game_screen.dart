@@ -82,11 +82,19 @@ class _NewGameScreenState extends ConsumerState<NewGameScreen> {
               if (nation == null) {
                 return const Center(child: Text('Nation not found.'));
               }
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  const SizedBox(height: AppSpacing.lg),
-                  Center(child: FlagDisc(nation.code, size: 96)),
+              // Scrolls (and keeps the Spacer layout via IntrinsicHeight) so
+              // the on-screen keyboard can't overflow the fixed content.
+              return LayoutBuilder(
+                builder: (context, constraints) => SingleChildScrollView(
+                  child: ConstrainedBox(
+                    constraints:
+                        BoxConstraints(minHeight: constraints.maxHeight),
+                    child: IntrinsicHeight(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          const SizedBox(height: AppSpacing.lg),
+                          Center(child: FlagDisc(nation.code, size: 96)),
                   const SizedBox(height: AppSpacing.md),
                   Center(
                     child: Text(
@@ -124,8 +132,12 @@ class _NewGameScreenState extends ConsumerState<NewGameScreen> {
                     isLoading: _creating,
                     onPressed: _creating ? null : _start,
                   ),
-                  const SizedBox(height: AppSpacing.md),
-                ],
+                          const SizedBox(height: AppSpacing.md),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
               );
             },
           ),

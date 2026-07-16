@@ -92,13 +92,15 @@ class SavesScreen extends ConsumerWidget {
                         },
                       ),
               ),
-              Padding(
-                padding: const EdgeInsets.all(AppSpacing.marginMobile),
-                child: PrimaryButton(
-                  label: full ? 'Slots full' : 'New Game',
-                  icon: Icons.add,
-                  onPressed:
-                      full ? null : () => context.go(Routes.nations),
+              SafeArea(
+                top: false,
+                child: Padding(
+                  padding: const EdgeInsets.all(AppSpacing.marginMobile),
+                  child: PrimaryButton(
+                    label: full ? 'Slots full' : 'New Game',
+                    icon: Icons.add,
+                    onPressed: full ? null : () => context.go(Routes.nations),
+                  ),
                 ),
               ),
             ],

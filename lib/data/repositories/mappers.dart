@@ -72,5 +72,6 @@ extension CareerRowMapper on CareerRow {
         createdAt: createdAt,
         inGameDate: inGameDate,
         cyclePointer: cyclePointer,
+        budget: budget,
       );
 }

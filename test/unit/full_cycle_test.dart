@@ -8,6 +8,7 @@ import 'package:fnm/data/seed/seed_source.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/services/entitlement/entitlement.dart';
+import 'package:fnm/domain/services/competition/hosts.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/hub/hub_providers.dart';
 
@@ -55,11 +56,22 @@ void main() {
     final ownFixtures = await container
         .read(competitionRepositoryProvider)
         .fixturesForNation(career.id, player.id);
-    expect(
-      ownFixtures.any((f) => f.round == 'CQ'),
-      isTrue,
-      reason: 'the player should contest continental qualifying',
+    // The player contests continental qualifying — unless they were drawn as
+    // the continental host, in which case they auto-qualify and sit it out.
+    // All hosts (primary + any co-hosts) auto-qualify and sit out qualifying.
+    final euroHosts = WorldCupHosts.continentalHostsFor(
+      confederation: Confederation.europe,
+      cycle: career.cyclePointer,
+      seed: career.rngSeed,
+      nations: nations,
     );
+    if (!euroHosts.contains(player.id)) {
+      expect(
+        ownFixtures.any((f) => f.round == 'CQ'),
+        isTrue,
+        reason: 'a non-host player should contest continental qualifying',
+      );
+    }
     expect(
       await container
           .read(competitionRepositoryProvider)
@@ -113,6 +125,18 @@ void main() {
       ),
       isTrue,
       reason: 'continental championships should run each cycle',
+    );
+
+    // The Nations Cup and Continental Clash run and crown champions each cycle.
+    expect(
+      honours.any((h) => h.competition == 'Nations Cup'),
+      isTrue,
+      reason: 'the Nations Cup should crown a champion',
+    );
+    expect(
+      honours.any((h) => h.competition == 'Continental Clash'),
+      isTrue,
+      reason: 'the Continental Clash should be played between champions',
     );
   }, timeout: const Timeout(Duration(minutes: 4)));
 }

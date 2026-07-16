@@ -3,6 +3,7 @@ import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/career.dart';
 import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/entities/nation.dart';
+import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/ranking/world_ranking_providers.dart';
 
 /// One tournament in the manager's career: how far the team went, and who won.
@@ -35,6 +36,23 @@ class TournamentRun {
   final String? championName;
 }
 
+/// One of the manager's titles: the year it was won and the nation they were
+/// managing at the time (which can change across a career).
+typedef TrophyWin = ({int year, String nationName});
+
+/// A competition the manager has won, and every time they won it.
+class TrophyTitle {
+  const TrophyTitle({required this.competition, required this.wins});
+
+  /// Display name, e.g. 'World Cup'.
+  final String competition;
+
+  /// Each win, newest first.
+  final List<TrophyWin> wins;
+
+  int get count => wins.length;
+}
+
 /// Everything the career summary screen shows for a save.
 class CareerSummary {
   const CareerSummary({
@@ -53,6 +71,7 @@ class CareerSummary {
     required this.silvers,
     required this.bronzes,
     required this.runs,
+    required this.titles,
   });
 
   final Career career;
@@ -78,6 +97,10 @@ class CareerSummary {
 
   /// Tournament history, newest first.
   final List<TournamentRun> runs;
+
+  /// Every competition the manager has won, with each win's year and nation —
+  /// the trophy cabinet in full, most-won first.
+  final List<TrophyTitle> titles;
 
   int get goalDifference => goalsFor - goalsAgainst;
   int get trophies => golds;
@@ -114,7 +137,10 @@ careerSummaryProvider =
   final ranking = await ref.watch(worldRankingProvider(careerId).future);
 
   final fixtures = await comp.fixturesForNation(careerId, career.nationId);
-  final honours = await comp.honours(careerId);
+  // Only this career's own editions — not the pre-seeded real-world history.
+  final honours = (await comp.honours(careerId))
+      .where((h) => h.year >= CareerService.cycleStart.year)
+      .toList();
 
   // Overall record across every played international.
   var played = 0;
@@ -172,6 +198,41 @@ careerSummaryProvider =
   }
   runs.sort((a, b) => b.year.compareTo(a.year));
 
+  // The full trophy cabinet: every honour this career won, grouped by
+  // competition. A trophy counts as the manager's when the nation they were
+  // managing that cycle is the champion — so titles survive a change of nation
+  // (the runs above only track the current nation's own campaigns).
+  final stints = await ref.watch(careerRepositoryProvider).stints(careerId);
+  int cycleForYear(int year) {
+    // worldCupYear(c) = 2030 + 4c; an honour belongs to the cycle whose World
+    // Cup is the next one on or after it (continental cups sit two years
+    // before their cycle's World Cup).
+    final c = ((year - CareerService.worldCupYear(0)) / 4).ceil();
+    return c < 0 ? 0 : c;
+  }
+
+  final byCompetition = <String, List<TrophyWin>>{};
+  for (final h in honours) {
+    final managedNation = stints[cycleForYear(h.year)] ?? career.nationId;
+    if (h.championId != managedNation) continue;
+    final display =
+        h.competition == 'World Championship' ? 'World Cup' : h.competition;
+    (byCompetition[display] ??= []).add((
+      year: h.year,
+      nationName: nations[managedNation]?.name ?? 'Unknown',
+    ));
+  }
+  final titles = [
+    for (final entry in byCompetition.entries)
+      TrophyTitle(
+        competition: entry.key,
+        wins: entry.value..sort((a, b) => b.year.compareTo(a.year)),
+      ),
+  ]..sort((a, b) {
+      final byCount = b.count.compareTo(a.count);
+      return byCount != 0 ? byCount : a.competition.compareTo(b.competition);
+    });
+
   return CareerSummary(
     career: career,
     nation: nation,
@@ -188,6 +249,7 @@ careerSummaryProvider =
     silvers: silvers,
     bronzes: bronzes,
     runs: runs,
+    titles: titles,
   );
 });
 

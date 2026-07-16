@@ -5,6 +5,8 @@ import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/entities/player_absence.dart';
 import 'package:fnm/domain/entities/tactics.dart';
 import 'package:fnm/domain/services/tactics/best_eleven.dart';
+import 'package:fnm/features/career/career_providers.dart';
+import 'package:fnm/features/federation/naturalization_providers.dart';
 
 /// Smallest squad a manager may call up (must field an XI plus cover).
 const int kMinSquadSize = 16;
@@ -15,10 +17,26 @@ const int kMaxSquadSize = 23;
 /// Resolves the squad actually available for selection from a nation [pool]
 /// given the manager's [callUps]. An empty call-up set means the whole pool is
 /// available (the default for new/legacy saves).
+///
+/// Call-ups that select *nobody* fall back to the whole pool too. A squad of
+/// zero is never something a manager chose — it means the call-ups belong to
+/// another nation (ids are partitioned per nation, so a stale set selects
+/// nothing). Fielding the pool is wrong-ish; fielding nobody is fatal.
 List<Player> availableSquad(List<Player> pool, Set<int> callUps) {
   if (callUps.isEmpty) return pool;
-  return pool.where((p) => callUps.contains(p.id)).toList();
+  final selected = pool.where((p) => callUps.contains(p.id)).toList();
+  return selected.isEmpty ? pool : selected;
 }
+
+/// The members of [pool] who can actually play the next match — dropping anyone
+/// serving a ban or an injury.
+///
+/// A suspension only means something if it keeps the player off the pitch. The
+/// absence used to be a badge on the call-up screen and nothing more: the
+/// manager could pick a banned player, save him into the XI, and only the match
+/// would quietly refuse to field him.
+List<Player> selectable(List<Player> pool, Map<int, PlayerAbsence> absences) =>
+    pool.where((p) => absences[p.id]?.isAvailable ?? true).toList();
 
 /// Everything the tactics screen needs for a save.
 class TacticData {
@@ -35,8 +53,12 @@ class TacticData {
   final Map<int, Player> byId;
 }
 
-final FutureProviderFamily<TacticData?, int> tacticDataProvider =
-    FutureProvider.family<TacticData?, int>((ref, careerId) async {
+// Auto-disposed, like hubDataProvider: a career's nation can change mid-save
+// (the manager takes a new job) and nothing here watches that column, so a
+// cached snapshot would keep showing the previous nation's squad.
+final AutoDisposeFutureProviderFamily<TacticData?, int> tacticDataProvider =
+    FutureProvider.autoDispose.family<TacticData?, int>(
+        (ref, careerId) async {
   await ref.watch(seedLoaderProvider).ensureSeeded();
   final career = await ref.watch(careerRepositoryProvider).byId(careerId);
   if (career == null) return null;
@@ -47,10 +69,16 @@ final FutureProviderFamily<TacticData?, int> tacticDataProvider =
   final fullPool =
       await ref.watch(playerRepositoryProvider).byNation(
         career.nationId,
-        agingCycles: career.cyclePointer,
+        agingYears: CareerService.agingYears(career),
+        saveSeed: career.rngSeed,
       );
   final callUps = await ref.watch(squadRepositoryProvider).callUps(careerId);
-  final pool = availableSquad(fullPool, callUps);
+  // A banned or injured player can't be picked, so he isn't in the pool the
+  // manager picks from. The match already refuses to field him — but it did so
+  // silently, discarding the whole saved XI and re-picking eleven fresh names,
+  // so the side that kicked off was not the side on this screen.
+  final absences = await ref.watch(absenceRepositoryProvider).forCareer(careerId);
+  final pool = selectable(availableSquad(fullPool, callUps), absences);
   return TacticData(
     tactic: tactic,
     pool: pool,
@@ -66,6 +94,7 @@ class SquadData {
     required this.pool,
     required this.callUps,
     required this.absences,
+    this.hasPreviousSquad = false,
   });
 
   /// The full nation pool, eligible to be called up.
@@ -77,23 +106,37 @@ class SquadData {
 
   /// Suspension/injury standing keyed by player id (only notable players).
   final Map<int, PlayerAbsence> absences;
+
+  /// Whether the manager has ever named a squad. [callUps] can't answer this:
+  /// it reports the whole pool when nothing has been chosen, so "everyone" and
+  /// "the previous squad happened to be everyone" look identical.
+  final bool hasPreviousSquad;
 }
 
-final FutureProviderFamily<SquadData?, int> squadDataProvider =
-    FutureProvider.family<SquadData?, int>((ref, careerId) async {
+// Auto-disposed for the same reason as [tacticDataProvider].
+final AutoDisposeFutureProviderFamily<SquadData?, int> squadDataProvider =
+    FutureProvider.autoDispose.family<SquadData?, int>((ref, careerId) async {
   await ref.watch(seedLoaderProvider).ensureSeeded();
   final career = await ref.watch(careerRepositoryProvider).byId(careerId);
   if (career == null) return null;
-  final pool =
-      await ref.watch(playerRepositoryProvider).byNation(
-        career.nationId,
-        agingCycles: career.cyclePointer,
-      );
+  final pool = [
+    ...await ref.watch(playerRepositoryProvider).byNation(
+          career.nationId,
+          agingYears: CareerService.agingYears(career),
+          saveSeed: career.rngSeed,
+        ),
+    ...await naturalizedPlayersFor(ref, career),
+  ]..sort((a, b) => b.overall.compareTo(a.overall));
   final stored = await ref.watch(squadRepositoryProvider).callUps(careerId);
   final callUps = stored.isEmpty ? {for (final p in pool) p.id} : stored;
   final absences =
       await ref.watch(absenceRepositoryProvider).forCareer(careerId);
-  return SquadData(pool: pool, callUps: callUps, absences: absences);
+  return SquadData(
+    pool: pool,
+    callUps: callUps,
+    absences: absences,
+    hasPreviousSquad: stored.isNotEmpty,
+  );
 });
 
 /// Mutates and persists the team tactic for a save.
@@ -117,13 +160,19 @@ class TacticService {
   Future<List<Player>> _availablePool(int careerId) async {
     final career = await _ref.read(careerRepositoryProvider).byId(careerId);
     if (career == null) return const [];
-    final pool =
-        await _ref.read(playerRepositoryProvider).byNation(
-          career.nationId,
-          agingCycles: career.cyclePointer,
-        );
+    final pool = [
+      ...await _ref.read(playerRepositoryProvider).byNation(
+            career.nationId,
+            agingYears: CareerService.agingYears(career),
+            saveSeed: career.rngSeed,
+          ),
+      ...await naturalizedPlayersFor(_ref, career),
+    ]..sort((a, b) => b.overall.compareTo(a.overall));
     final callUps = await _ref.read(squadRepositoryProvider).callUps(careerId);
-    return availableSquad(pool, callUps);
+    // Reshaping the side must not fill a slot with someone serving a ban.
+    final absences =
+        await _ref.read(absenceRepositoryProvider).forCareer(careerId);
+    return selectable(availableSquad(pool, callUps), absences);
   }
 
   Future<void> setFormation(int careerId, Formation formation) => _update(
@@ -188,8 +237,12 @@ class SquadService {
 
   /// Replaces the called-up squad, then repairs the saved XI so it only
   /// contains called-up players (refilling dropped slots from the new squad).
-  Future<void> setCallUps(int careerId, Set<int> ids) async {
-    if (ids.length < kMinSquadSize) return;
+  ///
+  /// Returns whether the squad was saved: too small a squad is rejected, and
+  /// the caller must not report success (or retire a forced call-up event) for
+  /// a save that didn't happen.
+  Future<bool> setCallUps(int careerId, Set<int> ids) async {
+    if (ids.length < kMinSquadSize) return false;
     await _ref.read(squadRepositoryProvider).setCallUps(careerId, ids);
 
     final tacticRepo = _ref.read(tacticsRepositoryProvider);
@@ -198,9 +251,14 @@ class SquadService {
       final career = await _ref.read(careerRepositoryProvider).byId(careerId);
       final pool = career == null
           ? <Player>[]
-          : await _ref
-              .read(playerRepositoryProvider)
-              .byNation(career.nationId, agingCycles: career.cyclePointer);
+          : [
+              ...await _ref.read(playerRepositoryProvider).byNation(
+                    career.nationId,
+                    agingYears: CareerService.agingYears(career),
+                    saveSeed: career.rngSeed,
+                  ),
+              ...await naturalizedPlayersFor(_ref, career),
+            ];
       final squad = availableSquad(pool, ids);
       final dropped =
           tactic.lineup.whereType<int>().any((id) => !ids.contains(id));
@@ -215,6 +273,7 @@ class SquadService {
     _ref
       ..invalidate(squadDataProvider)
       ..invalidate(tacticDataProvider);
+    return true;
   }
 }
 

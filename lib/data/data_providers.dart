@@ -6,6 +6,7 @@ import 'package:fnm/data/repositories/drift_career_repository.dart';
 import 'package:fnm/data/repositories/drift_competition_repository.dart';
 import 'package:fnm/data/repositories/drift_nation_repository.dart';
 import 'package:fnm/data/repositories/drift_player_repository.dart';
+import 'package:fnm/data/repositories/drift_ranking_release_repository.dart';
 import 'package:fnm/data/repositories/drift_ranking_repository.dart';
 import 'package:fnm/data/repositories/drift_seed_ranking_repository.dart';
 import 'package:fnm/data/repositories/drift_squad_repository.dart';
@@ -17,6 +18,7 @@ import 'package:fnm/domain/repositories/career_repository.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
 import 'package:fnm/domain/repositories/nation_repository.dart';
 import 'package:fnm/domain/repositories/player_repository.dart';
+import 'package:fnm/domain/repositories/ranking_release_repository.dart';
 import 'package:fnm/domain/repositories/ranking_repository.dart';
 import 'package:fnm/domain/repositories/seed_ranking_repository.dart';
 import 'package:fnm/domain/repositories/squad_repository.dart';
@@ -88,4 +90,8 @@ final rankingRepositoryProvider = Provider<RankingRepository>(
 
 final seedRankingRepositoryProvider = Provider<SeedRankingRepository>(
   (ref) => DriftSeedRankingRepository(ref.watch(appDatabaseProvider)),
+);
+
+final rankingReleaseRepositoryProvider = Provider<RankingReleaseRepository>(
+  (ref) => DriftRankingReleaseRepository(ref.watch(appDatabaseProvider)),
 );

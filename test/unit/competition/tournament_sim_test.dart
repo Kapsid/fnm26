@@ -13,7 +13,8 @@ void main() {
     expect(teams, contains(r.champion));
     expect(teams, contains(r.runnerUp));
     expect(r.champion, isNot(r.runnerUp));
-    expect(r.finalHome, greaterThan(r.finalAway));
+    // The champion's scoreline is never behind (level means it went to pens).
+    expect(r.finalHome, greaterThanOrEqualTo(r.finalAway));
   });
 
   test('returns null for fewer than four teams', () {

@@ -39,4 +39,28 @@ void main() {
     expect(out.map((p) => '${p.id}:${p.name}:${p.club}'),
         again.map((p) => '${p.id}:${p.name}:${p.club}'));
   });
+
+  test('uses per-nation name pools for generated fringe players', () {
+    final base = [
+      for (var i = 0; i < 23; i++)
+        player(
+          id: 100 + i,
+          nationId: 1,
+          name: 'Real$i Player$i',
+          position: PlayerPosition.cm,
+          attributes: flatAttributes(70),
+        ),
+    ];
+    final out = PoolGenerator.expand(base, namesByNation: {
+      1: (first: const ['Kenji', 'Haruto'], sur: const ['Tanaka', 'Sato']),
+    });
+    // Generated fringe (ids >= 10_000_000) draw only from the supplied pool.
+    final fringe = out.where((p) => p.id >= 10000000);
+    expect(fringe, isNotEmpty);
+    for (final p in fringe) {
+      final parts = p.name.split(' ');
+      expect(['Kenji', 'Haruto'], contains(parts.first));
+      expect(['Tanaka', 'Sato'], contains(parts.last));
+    }
+  });
 }

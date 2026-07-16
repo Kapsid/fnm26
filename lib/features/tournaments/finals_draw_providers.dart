@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fnm/core/rng/seeded_rng.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/group_standing.dart';
@@ -68,7 +69,7 @@ finalsDrawProvider =
     )).future,
   );
   final year = CareerService.worldCupYear(career.cyclePointer);
-  final host = WorldCupHosts.hostFor(
+  final hosts = WorldCupHosts.hostsFor(
     year: year,
     nations: nations.values.toList(),
     seed: career.rngSeed,
@@ -77,21 +78,35 @@ finalsDrawProvider =
   final qualifiers = WorldCupFinals.selectFinalists(
     byConfederation: grouped,
     rankingById: rankingById,
-    host: host,
+    hosts: hosts,
+    playoffRng: SeededRng(
+      career.rngSeed ^ (career.cyclePointer * 0x50FF) ^ 0xB1A0,
+    ),
   );
   final draw = WorldCupFinals.drawGroups(
     qualifierIds: qualifiers,
     rankingById: rankingById,
     rngSeed: career.rngSeed ^ (career.cyclePointer * 0x2D31),
-    host: host,
+    hosts: hosts,
   );
   if (draw.groups.isEmpty) return null;
 
-  // Reconstruct the seeding pots (top-ranked → pot 1) for the pre-draw view.
+  // Reconstruct the seeding pots (top-ranked → pot 1) for the pre-draw view,
+  // mirroring drawGroups exactly: every host is forced to the top of pot 1 so
+  // the pots shown match where teams are actually drawn.
   final groupCount = qualifiers.length ~/ 4;
   final seeded = [...qualifiers]..sort(
       (a, b) => (rankingById[a] ?? 9999).compareTo(rankingById[b] ?? 9999),
     );
+  final activeHosts = [
+    for (final h in hosts)
+      if (seeded.contains(h)) h,
+  ].take(groupCount).toList();
+  for (final h in activeHosts.reversed) {
+    seeded
+      ..remove(h)
+      ..insert(0, h);
+  }
   final potByNation = {
     for (var i = 0; i < seeded.length; i++) seeded[i]: (i ~/ groupCount) + 1,
   };

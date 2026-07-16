@@ -11,11 +11,48 @@ abstract final class Elo {
   static const int base = 1300;
 
   /// Importance weight (the K-factor) for a match, by how much is at stake.
-  /// Kept low so the table moves gradually; final tournaments carry far more
-  /// weight than qualifiers, which in turn outweigh friendlies.
-  static const double friendly = 3;
-  static const double qualifier = 8;
-  static const double finals = 28;
+  /// Final tournaments carry far more weight than qualifiers, which outweigh
+  /// the Nations Cup, which outweighs friendlies.
+  ///
+  /// These are sized against [seedFromRanking]'s spread of 4 points per world
+  /// place. Weights that are too small round away entirely: at K=8 an expected
+  /// qualifying win is `8 × 0.1 = 0.8` → 1 point → a quarter of a place, and an
+  /// expected friendly win rounds to 0 and moves nothing at all. The table then
+  /// looks frozen. These follow FIFA's own K-factors, so a win is worth a
+  /// visible move and an upset is worth a real climb.
+  static const double friendly = 5;
+  static const double nationsCup = 15;
+  static const double qualifier = 25;
+  static const double finals = 50;
+
+  /// Knockout round codes, ignoring any competition prefix ('CQF', 'NSF', …).
+  static const List<String> _knockoutSuffixes = [
+    'R32',
+    'R16',
+    'QF',
+    'SF',
+    '3RD',
+    'FINAL',
+  ];
+
+  /// The round code of a friendly international.
+  static const String friendlyRound = 'FRIENDLY';
+
+  /// The importance weight for a fixture's [round].
+  ///
+  /// World Cup qualifiers carry no round code at all, so null means qualifier.
+  /// The Nations Cup is checked before the knockout suffixes because its own
+  /// rounds ('NSF', 'NFINAL') end with them but are not finals football.
+  static double weightForRound(String? round) {
+    if (round == null) return qualifier;
+    if (round == friendlyRound) return friendly;
+    if (round.startsWith('N')) return nationsCup;
+    // Both finals group stages, the World Cup's and a continental cup's.
+    if (round == 'GROUP' || round == 'CGROUP') return finals;
+    if (_knockoutSuffixes.any(round.endsWith)) return finals;
+    // Continental qualifying ('CQ') and anything else unaccounted for.
+    return qualifier;
+  }
 
   /// Starting points for a nation seeded from its static seed [ranking]
   /// position (1 = strongest). Keeps early tables looking sensible before any

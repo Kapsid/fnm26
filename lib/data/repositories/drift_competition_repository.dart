@@ -6,6 +6,7 @@ import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/entities/group_standing.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
 import 'package:fnm/domain/services/competition/finals.dart';
+import 'package:fnm/domain/services/competition/rounds.dart';
 import 'package:fnm/domain/services/competition/schedule_generator.dart';
 
 /// Drift-backed [CompetitionRepository].
@@ -13,6 +14,10 @@ class DriftCompetitionRepository implements CompetitionRepository {
   DriftCompetitionRepository(this._db);
 
   final AppDatabase _db;
+
+  @override
+  Future<void> transact(Future<void> Function() action) =>
+      _db.transaction(action);
 
   /// The save's current 4-year cycle (Careers.cyclePointer).
   Future<int> _cycle(int careerId) async {
@@ -109,32 +114,36 @@ class DriftCompetitionRepository implements CompetitionRepository {
   }
 
   @override
-  Future<List<Fixture>> unplayedDueBy(int careerId, DateTime date) async {
+  Future<List<Fixture>> unplayedDueBy(
+    int careerId,
+    DateTime date, {
+    int? excludeNationId,
+  }) async {
     final query = _db.select(_db.fixtures)
       ..where(
         (t) =>
             t.careerId.equals(careerId) &
             t.played.equals(false) &
-            t.date.isSmallerOrEqualValue(date),
+            t.date.isSmallerOrEqualValue(date) &
+            (excludeNationId == null
+                ? const Constant(true)
+                : (t.homeNationId.equals(excludeNationId) |
+                        t.awayNationId.equals(excludeNationId))
+                    .not()),
       )
       ..orderBy([(t) => OrderingTerm(expression: t.date)]);
     return (await query.get()).map((r) => r.toDomain()).toList();
   }
 
   @override
-  Future<Fixture?> nextFixtureForNation(
-    int careerId,
-    int nationId,
-    DateTime onOrAfter,
-  ) async {
+  Future<Fixture?> nextFixtureForNation(int careerId, int nationId) async {
     final query = _db.select(_db.fixtures)
       ..where(
         (t) =>
             t.careerId.equals(careerId) &
             t.played.equals(false) &
             (t.homeNationId.equals(nationId) |
-                t.awayNationId.equals(nationId)) &
-            t.date.isBiggerOrEqualValue(onOrAfter),
+                t.awayNationId.equals(nationId)),
       )
       ..orderBy([(t) => OrderingTerm(expression: t.date)])
       ..limit(1);
@@ -165,11 +174,22 @@ class DriftCompetitionRepository implements CompetitionRepository {
         .get();
     if (comps.isEmpty) return null;
 
-    // Prefer the finals group (the active stage) over the qualifying group.
+    // Rank finals ahead of qualifying so an active tournament (World Cup or
+    // continental finals) is shown, not a qualifier running alongside it.
     final ordered = [
       ...comps.where((c) => c.kind == CompetitionKind.worldCupFinals),
-      ...comps.where((c) => c.kind != CompetitionKind.worldCupFinals),
+      ...comps.where((c) => c.kind == CompetitionKind.continentalFinals),
+      ...comps.where(
+        (c) =>
+            c.kind != CompetitionKind.worldCupFinals &&
+            c.kind != CompetitionKind.continentalFinals,
+      ),
     ];
+    const finalsKinds = {
+      CompetitionKind.worldCupFinals,
+      CompetitionKind.continentalFinals,
+    };
+    final kindByComp = {for (final c in comps) c.id: c.kind};
     final groups = await (_db.select(_db.qualifyingGroups)
           ..where(
             (t) => t.competitionId.isIn(ordered.map((c) => c.id).toList()),
@@ -215,11 +235,26 @@ class DriftCompetitionRepository implements CompetitionRepository {
         .getSingleOrNull();
 
     QualifyingGroupRow? group;
-    if (nextFx?.groupId != null) {
+    // 1. A live finals group the player is in wins — the active tournament is
+    //    always what the hub shows, even if a qualifier's fixture falls sooner.
+    var best = 1 << 30;
+    for (final m in memberships) {
+      final g = groupById[m.groupId];
+      if (g == null || !liveComps.contains(g.competitionId)) continue;
+      if (!finalsKinds.contains(kindByComp[g.competitionId])) continue;
+      final r = rank[g.competitionId] ?? best;
+      if (r < best) {
+        best = r;
+        group = g;
+      }
+    }
+    // 2. Otherwise the group of the stage they're about to play.
+    if (group == null && nextFx?.groupId != null) {
       group = groupById[nextFx!.groupId];
     }
+    // 3. Otherwise any live group they're in (most advanced first).
     if (group == null) {
-      var best = 1 << 30;
+      best = 1 << 30;
       for (final m in memberships) {
         final g = groupById[m.groupId];
         if (g == null || !liveComps.contains(g.competitionId)) continue;
@@ -244,10 +279,14 @@ class DriftCompetitionRepository implements CompetitionRepository {
       fixtures.map((r) => r.toDomain()).toList(),
     );
     final comp = ordered.firstWhere((c) => c.id == group!.competitionId);
+    final groupCount =
+        groups.where((g) => g.competitionId == group!.competitionId).length;
     return (
       groupId: groupId,
       name: group.name,
       competition: comp.name,
+      kind: comp.kind,
+      groupCount: groupCount,
       standings: standings,
     );
   }
@@ -289,6 +328,8 @@ class DriftCompetitionRepository implements CompetitionRepository {
           .get();
       return (
         competition: comp.name,
+        kind: comp.kind,
+        groupCount: 0,
         matchday: played.matchday,
         groups: const <RoundResultGroup>[],
         stage: _stageLabel(round),
@@ -341,6 +382,8 @@ class DriftCompetitionRepository implements CompetitionRepository {
     });
     return (
       competition: comp.name,
+      kind: comp.kind,
+      groupCount: result.length,
       matchday: matchday,
       groups: result,
       stage: null,
@@ -350,10 +393,7 @@ class DriftCompetitionRepository implements CompetitionRepository {
 
   /// Whether a round label is a knockout tie (continental rounds are 'C'-
   /// prefixed; group and qualifying rounds never are).
-  static bool _isKnockoutRound(String round) {
-    const suffixes = ['R32', 'R16', 'QF', 'SF', '3RD', 'FINAL'];
-    return suffixes.any(round.endsWith);
-  }
+  static bool _isKnockoutRound(String round) => Rounds.isKnockout(round);
 
   /// A human label for a knockout round (prefix-agnostic).
   static String _stageLabel(String round) {
@@ -461,6 +501,8 @@ class DriftCompetitionRepository implements CompetitionRepository {
         groupId: group.id,
         name: group.name,
         competition: comp.name,
+        kind: comp.kind,
+        groupCount: groups.length,
         standings: GroupStanding.table(
           members.map((m) => m.nationId).toList(),
           fixtures.map((r) => r.toDomain()).toList(),
@@ -510,6 +552,37 @@ class DriftCompetitionRepository implements CompetitionRepository {
 
   Future<CompetitionRow?> _finals(int careerId) =>
       _tournamentComp(careerId, CompetitionKind.worldCupFinals);
+
+  @override
+  Future<bool> hasLiveContinentalFinals(int careerId) async {
+    final comp =
+        await _tournamentComp(careerId, CompetitionKind.continentalFinals);
+    if (comp == null) return false;
+    final unplayed = await (_db.select(_db.fixtures)
+          ..where(
+            (t) => t.competitionId.equals(comp.id) & t.played.equals(false),
+          )
+          ..limit(1))
+        .getSingleOrNull();
+    return unplayed != null;
+  }
+
+  @override
+  Future<bool> hasLiveNationsCupFinals(int careerId) async {
+    final comp =
+        await _tournamentComp(careerId, CompetitionKind.nationsLeague);
+    if (comp == null) return false;
+    final unplayed = await (_db.select(_db.fixtures)
+          ..where(
+            (t) =>
+                t.competitionId.equals(comp.id) &
+                t.played.equals(false) &
+                t.round.isIn(const ['NSF', 'NFINAL']),
+          )
+          ..limit(1))
+        .getSingleOrNull();
+    return unplayed != null;
+  }
 
   Future<CompetitionRow?> _tournamentComp(
     int careerId,
@@ -608,6 +681,49 @@ class DriftCompetitionRepository implements CompetitionRepository {
                 t.careerId.equals(careerId) &
                 t.played.equals(false) &
                 t.date.isBiggerOrEqualValue(onOrAfter),
+          )
+          ..orderBy([(t) => OrderingTerm(expression: t.date)])
+          ..limit(1))
+        .getSingleOrNull();
+    return row?.date;
+  }
+
+  @override
+  Future<DateTime?> earliestUnplayedFinalsDate(int careerId) async {
+    final comps = await (_db.select(_db.competitions)
+          ..where(
+            (t) =>
+                t.careerId.equals(careerId) &
+                (t.kind.equalsValue(CompetitionKind.worldCupFinals) |
+                    t.kind.equalsValue(CompetitionKind.continentalFinals)),
+          ))
+        .get();
+    if (comps.isEmpty) return null;
+    final ids = comps.map((c) => c.id).toList();
+    final row = await (_db.select(_db.fixtures)
+          ..where(
+            (t) =>
+                t.careerId.equals(careerId) &
+                t.played.equals(false) &
+                t.competitionId.isIn(ids),
+          )
+          ..orderBy([(t) => OrderingTerm(expression: t.date)])
+          ..limit(1))
+        .getSingleOrNull();
+    return row?.date;
+  }
+
+  @override
+  Future<DateTime?> earliestUnplayedNationsCupFinalsDate(int careerId) async {
+    final comp =
+        await _tournamentComp(careerId, CompetitionKind.nationsLeague);
+    if (comp == null) return null;
+    final row = await (_db.select(_db.fixtures)
+          ..where(
+            (t) =>
+                t.competitionId.equals(comp.id) &
+                t.played.equals(false) &
+                t.round.isIn(const ['NSF', 'NFINAL']),
           )
           ..orderBy([(t) => OrderingTerm(expression: t.date)])
           ..limit(1))
@@ -777,6 +893,10 @@ class DriftCompetitionRepository implements CompetitionRepository {
     return (await query.get()).map((r) => r.toDomain()).toList();
   }
 
+  /// The finals knockout round labels, in bracket order. Anything outside this
+  /// set (group games, or stray/duplicate rows) is never shown as a tie.
+  static const _knockoutRounds = ['R32', 'R16', 'QF', 'SF', '3RD', 'FINAL'];
+
   @override
   Future<List<Fixture>> finalsKnockoutFixtures(int careerId) async {
     final comp = await _finals(careerId);
@@ -784,13 +904,20 @@ class DriftCompetitionRepository implements CompetitionRepository {
     final query = _db.select(_db.fixtures)
       ..where(
         (t) =>
-            t.competitionId.equals(comp.id) & t.round.equals('GROUP').not(),
+            t.competitionId.equals(comp.id) & t.round.isIn(_knockoutRounds),
       )
       ..orderBy([
         (t) => OrderingTerm(expression: t.date),
         (t) => OrderingTerm(expression: t.id),
       ]);
-    return (await query.get()).map((r) => r.toDomain()).toList();
+    final rows = (await query.get()).map((r) => r.toDomain()).toList();
+    // Guard against duplicate inserts leaking into the bracket: keep one tie
+    // per (round, home, away). A single knockout has at most 32 ties.
+    final seen = <String>{};
+    return [
+      for (final f in rows)
+        if (seen.add('${f.round}:${f.homeNationId}:${f.awayNationId}')) f,
+    ];
   }
 
   @override
@@ -1034,5 +1161,333 @@ class DriftCompetitionRepository implements CompetitionRepository {
           topScorerGoals: r.topScorerGoals,
         ),
     ];
+  }
+
+  @override
+  Future<void> recordAppearances(
+    int careerId,
+    int nationId,
+    Iterable<int> playerIds,
+  ) async {
+    for (final id in playerIds) {
+      await _db.customStatement(
+        'INSERT INTO appearances (career_id, nation_id, player_id, count) '
+        'VALUES (?, ?, ?, 1) '
+        'ON CONFLICT(career_id, player_id) DO UPDATE SET count = count + 1',
+        [careerId, nationId, id],
+      );
+    }
+  }
+
+  @override
+  Future<List<({int playerId, int games})>> nationTopAppearances(
+    int careerId,
+    int nationId, {
+    int limit = 25,
+  }) async {
+    final rows = await (_db.select(_db.appearances)
+          ..where(
+            (t) => t.careerId.equals(careerId) & t.nationId.equals(nationId),
+          )
+          ..orderBy([
+            (t) => OrderingTerm(expression: t.count, mode: OrderingMode.desc),
+          ])
+          ..limit(limit))
+        .get();
+    return [for (final r in rows) (playerId: r.playerId, games: r.count)];
+  }
+
+  @override
+  Future<void> recordPlayerMatchStats(
+    int careerId,
+    int fixtureId,
+    Iterable<PlayerMatchLine> lines,
+  ) async {
+    final list = lines.toList();
+    if (list.isEmpty) return;
+    await _db.batch((b) {
+      b.insertAllOnConflictUpdate(_db.playerRatings, [
+        for (final r in list)
+          PlayerRatingsCompanion.insert(
+            careerId: careerId,
+            fixtureId: fixtureId,
+            playerId: r.playerId,
+            nationId: Value(r.nationId),
+            rating: r.rating,
+            goals: Value(r.goals),
+            assists: Value(r.assists),
+            cleanSheet: Value(r.cleanSheet),
+            motm: Value(r.motm),
+            yellows: Value(r.yellows),
+            reds: Value(r.reds),
+          ),
+      ]);
+    });
+  }
+
+  @override
+  Future<void> recordTeamStats(
+    int careerId,
+    int fixtureId, {
+    required int homeShots,
+    required int awayShots,
+    required int homePossession,
+  }) async {
+    await _db.into(_db.matchTeamStats).insertOnConflictUpdate(
+          MatchTeamStatRow(
+            careerId: careerId,
+            fixtureId: fixtureId,
+            homeShots: homeShots,
+            awayShots: awayShots,
+            homePossession: homePossession,
+          ),
+        );
+  }
+
+  @override
+  Future<List<PlayerMatchStat>> playerMatchHistory(
+    int careerId,
+    int playerId, {
+    int limit = 50,
+  }) async {
+    final rows = await (_db.select(_db.playerRatings)
+          ..where(
+            (t) => t.careerId.equals(careerId) & t.playerId.equals(playerId),
+          ))
+        .get();
+    if (rows.isEmpty) return const [];
+    final byFixture = {for (final r in rows) r.fixtureId: r};
+
+    final fixtures = await (_db.select(_db.fixtures)
+          ..where((t) => t.id.isIn(byFixture.keys.toList())))
+        .get();
+
+    final stats = <PlayerMatchStat>[
+      for (final f in fixtures)
+        if (byFixture[f.id] case final r?)
+          (
+            fixtureId: f.id,
+            date: f.date,
+            homeNationId: f.homeNationId,
+            awayNationId: f.awayNationId,
+            homeScore: f.homeScore,
+            awayScore: f.awayScore,
+            round: f.round,
+            rating: r.rating,
+            goals: r.goals,
+            assists: r.assists,
+            cleanSheet: r.cleanSheet,
+            motm: r.motm,
+          ),
+    ]..sort((a, b) => b.date.compareTo(a.date));
+    return stats.take(limit).toList();
+  }
+
+  @override
+  Future<Map<int, List<({DateTime date, double rating})>>>
+      recentRatingsByNation(
+    int careerId,
+    int nationId, {
+    int perPlayer = 8,
+  }) async {
+    final rows = await (_db.select(_db.playerRatings)
+          ..where(
+            (t) => t.careerId.equals(careerId) & t.nationId.equals(nationId),
+          ))
+        .get();
+    if (rows.isEmpty) return const {};
+    final fixtures = await (_db.select(_db.fixtures)
+          ..where((t) => t.id.isIn(rows.map((r) => r.fixtureId).toList())))
+        .get();
+    final dateOf = {for (final f in fixtures) f.id: f.date};
+    final byPlayer = <int, List<({DateTime date, double rating})>>{};
+    for (final r in rows) {
+      final d = dateOf[r.fixtureId];
+      if (d == null) continue;
+      (byPlayer[r.playerId] ??= []).add((date: d, rating: r.rating));
+    }
+    for (final list in byPlayer.values) {
+      list.sort((a, b) => b.date.compareTo(a.date)); // newest first
+      if (list.length > perPlayer) list.removeRange(perPlayer, list.length);
+    }
+    return byPlayer;
+  }
+
+  @override
+  Future<PlayerCareerStats?> playerCareerStats(
+    int careerId,
+    int playerId,
+  ) async {
+    final rows = await (_db.select(_db.playerRatings)
+          ..where(
+            (t) => t.careerId.equals(careerId) & t.playerId.equals(playerId),
+          ))
+        .get();
+    if (rows.isEmpty) return null;
+    // Newest-first for the form window.
+    final byFixture = await (_db.select(_db.fixtures)
+          ..where((t) => t.id.isIn(rows.map((r) => r.fixtureId).toList())))
+        .get();
+    final dateOf = {for (final f in byFixture) f.id: f.date};
+    final sorted = [...rows]..sort(
+        (a, b) => (dateOf[b.fixtureId] ?? DateTime(0))
+            .compareTo(dateOf[a.fixtureId] ?? DateTime(0)),
+      );
+
+    var goals = 0;
+    var assists = 0;
+    var cleanSheets = 0;
+    var motm = 0;
+    var yellows = 0;
+    var reds = 0;
+    var ratingSum = 0.0;
+    var best = 0.0;
+    for (final r in rows) {
+      goals += r.goals;
+      assists += r.assists;
+      if (r.cleanSheet) cleanSheets++;
+      if (r.motm) motm++;
+      yellows += r.yellows;
+      reds += r.reds;
+      ratingSum += r.rating;
+      if (r.rating > best) best = r.rating;
+    }
+    final form = sorted.take(5).toList();
+    final formAvg = form.isEmpty
+        ? 0.0
+        : form.fold<double>(0, (s, r) => s + r.rating) / form.length;
+    return (
+      caps: rows.length,
+      goals: goals,
+      assists: assists,
+      cleanSheets: cleanSheets,
+      motm: motm,
+      yellows: yellows,
+      reds: reds,
+      avgRating: ratingSum / rows.length,
+      bestRating: best,
+      formRating: formAvg,
+    );
+  }
+
+  @override
+  Future<List<({int playerId, int assists})>> nationTopAssists(
+    int careerId,
+    int nationId, {
+    int limit = 25,
+  }) async {
+    final rows = await (_db.select(_db.playerRatings)
+          ..where(
+            (t) =>
+                t.careerId.equals(careerId) &
+                t.nationId.equals(nationId) &
+                t.assists.isBiggerThanValue(0),
+          ))
+        .get();
+    final tally = <int, int>{};
+    for (final r in rows) {
+      tally.update(r.playerId, (v) => v + r.assists, ifAbsent: () => r.assists);
+    }
+    final sorted = tally.entries.toList()
+      ..sort((a, b) => b.value.compareTo(a.value));
+    return [
+      for (final e in sorted.take(limit)) (playerId: e.key, assists: e.value),
+    ];
+  }
+
+  @override
+  Future<Set<String>> messageKeys(int careerId) async {
+    final rows = await (_db.select(_db.messages)
+          ..where((t) => t.careerId.equals(careerId)))
+        .get();
+    return {for (final r in rows) r.dedupKey};
+  }
+
+  @override
+  Future<void> addMessage({
+    required int careerId,
+    required String dedupKey,
+    required String category,
+    required String title,
+    required String body,
+    required int year,
+  }) async {
+    await _db.into(_db.messages).insert(
+          MessagesCompanion.insert(
+            careerId: careerId,
+            dedupKey: dedupKey,
+            category: category,
+            title: title,
+            body: body,
+            year: year,
+          ),
+          mode: InsertMode.insertOrIgnore,
+        );
+  }
+
+  @override
+  Future<List<MessageItem>> messages(int careerId) async {
+    final rows = await (_db.select(_db.messages)
+          ..where((t) => t.careerId.equals(careerId))
+          ..orderBy([
+            (t) => OrderingTerm(expression: t.id, mode: OrderingMode.desc),
+          ]))
+        .get();
+    return [
+      for (final r in rows)
+        (
+          id: r.id,
+          category: r.category,
+          title: r.title,
+          body: r.body,
+          year: r.year,
+          read: r.read,
+        ),
+    ];
+  }
+
+  @override
+  Future<int> unreadMessageCount(int careerId) async {
+    final rows = await (_db.select(_db.messages)
+          ..where((t) => t.careerId.equals(careerId) & t.read.equals(false)))
+        .get();
+    return rows.length;
+  }
+
+  @override
+  Future<void> markMessagesRead(int careerId, {List<int>? ids}) async {
+    if (ids != null && ids.isEmpty) return;
+    await (_db.update(_db.messages)
+          ..where(
+            (t) =>
+                t.careerId.equals(careerId) &
+                t.read.equals(false) &
+                (ids == null ? const Constant(true) : t.id.isIn(ids)),
+          ))
+        .write(const MessagesCompanion(read: Value(true)));
+  }
+
+  @override
+  Future<Set<String>> earnedAchievements(int careerId) async {
+    final rows = await (_db.select(_db.achievements)
+          ..where((t) => t.careerId.equals(careerId)))
+        .get();
+    return {for (final r in rows) r.achievementId};
+  }
+
+  @override
+  Future<void> recordAchievement(
+    int careerId,
+    String achievementId,
+    int year,
+  ) async {
+    await _db.into(_db.achievements).insert(
+          AchievementRow(
+            careerId: careerId,
+            achievementId: achievementId,
+            earnedYear: year,
+          ),
+          mode: InsertMode.insertOrIgnore,
+        );
   }
 }

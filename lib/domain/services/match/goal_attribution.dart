@@ -8,9 +8,9 @@ import 'package:fnm/domain/entities/player.dart';
 abstract final class GoalAttribution {
   static double _weight(Player p) {
     final mult = switch (p.position.category) {
-      PositionCategory.forward => 3.0,
+      PositionCategory.forward => 4.2,
       PositionCategory.midfielder => 1.5,
-      PositionCategory.defender => 0.5,
+      PositionCategory.defender => 0.35,
       PositionCategory.goalkeeper => 0.02,
     };
     return (p.attributes.shooting + 5) * mult;

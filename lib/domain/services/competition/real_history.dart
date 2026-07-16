@@ -30,6 +30,7 @@ abstract final class RealHistory {
   static const worldChampionship = 'World Championship';
   static const europeanChampionship = 'European Championship';
   static const southAmericaCup = 'South America Cup';
+  static const nationsCup = 'Nations Cup';
 
   static const editions = <HistoryEdition>[
     // --- World Cup ---------------------------------------------------------
@@ -484,6 +485,50 @@ abstract final class RealHistory {
       third: null,
       finalHome: 1,
       finalAway: 0,
+    ),
+    // --- Nations Cup (UEFA Nations League finals) --------------------------
+    // A knock-out final each edition; a level score was settled on penalties.
+    (
+      year: 2019,
+      competition: nationsCup,
+      host: 'Portugal',
+      champion: 'Portugal',
+      runnerUp: 'Netherlands',
+      third: 'England',
+      finalHome: 1,
+      finalAway: 0,
+    ),
+    (
+      year: 2021,
+      competition: nationsCup,
+      host: 'Italy',
+      champion: 'France',
+      runnerUp: 'Spain',
+      third: 'Italy',
+      finalHome: 2,
+      finalAway: 1,
+    ),
+    (
+      year: 2023,
+      competition: nationsCup,
+      host: 'Netherlands',
+      champion: 'Spain',
+      runnerUp: 'Croatia',
+      third: 'Italy',
+      // 0–0, Spain won on penalties.
+      finalHome: 0,
+      finalAway: 0,
+    ),
+    (
+      year: 2025,
+      competition: nationsCup,
+      host: 'Germany',
+      champion: 'Portugal',
+      runnerUp: 'Spain',
+      third: 'Germany',
+      // 2–2, Portugal won on penalties.
+      finalHome: 2,
+      finalAway: 2,
     ),
   ];
 }

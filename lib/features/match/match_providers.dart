@@ -6,8 +6,15 @@ import 'package:fnm/domain/entities/formation.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/entities/tactics.dart';
+import 'package:fnm/domain/services/federation/federation_finance.dart';
+import 'package:fnm/domain/services/match/ai_substitutions.dart';
 import 'package:fnm/domain/services/match/match_engine.dart';
+import 'package:fnm/domain/services/squad/condition.dart';
 import 'package:fnm/domain/services/tactics/best_eleven.dart';
+import 'package:fnm/features/career/career_providers.dart';
+import 'package:fnm/features/federation/federation_providers.dart';
+import 'package:fnm/features/federation/naturalization_providers.dart';
+import 'package:fnm/features/tactics/condition_providers.dart';
 import 'package:fnm/features/tactics/tactics_providers.dart';
 
 /// The player's preferred live-match playback speed, as an index into the
@@ -28,6 +35,8 @@ class MatchPreview {
     required this.playerNationId,
     required this.bench,
     required this.saveSeed,
+    this.opponentSubs = const [],
+    this.injuryFactorByNation = const {},
   });
 
   final Fixture fixture;
@@ -45,6 +54,14 @@ class MatchPreview {
   /// The save-level RNG seed, so the screen can deterministically re-run the
   /// engine with substitutions applied.
   final int saveSeed;
+
+  /// The AI opponent's pre-planned substitutions, applied on every (re-)sim so
+  /// the timeline stays stable when the human manager makes a change.
+  final List<Substitution> opponentSubs;
+
+  /// Per-nation injury-rate multipliers (the player's nation carries its
+  /// medical investment); passed to the engine on every (re-)sim.
+  final Map<int, double> injuryFactorByNation;
 
   bool get playerIsHome => fixture.homeNationId == playerNationId;
 }
@@ -66,7 +83,6 @@ final AutoDisposeFutureProviderFamily<MatchPreview?, int> matchPreviewProvider =
       final fixture = await compRepo.nextFixtureForNation(
         careerId,
         career.nationId,
-        career.inGameDate,
       );
       if (fixture == null) return null;
 
@@ -76,11 +92,27 @@ final AutoDisposeFutureProviderFamily<MatchPreview?, int> matchPreviewProvider =
           : fixture.homeNationId;
 
       // Player's team from their saved tactic (falling back to a best XI),
-      // restricted to the called-up squad.
-      final fullPool = await playerRepo.byNation(
-        playerNationId,
-        agingCycles: career.cyclePointer,
-      );
+      // restricted to the called-up squad. The nation's youth-academy
+      // investment lifts its home-grown players.
+      final youthBonus =
+          await ref.watch(youthBonusByCycleProvider(careerId).future);
+      // Form, fatigue and morale shift each of the manager's players' effective
+      // rating for this match (opponents are unaffected — you manage your own
+      // squad's condition).
+      final condition =
+          await ref.watch(squadConditionProvider(careerId).future);
+      final fullPool = [
+        for (final p in [
+          ...await playerRepo.byNation(
+            playerNationId,
+            agingYears: CareerService.agingYears(career),
+            saveSeed: career.rngSeed,
+            youthBonusByCycle: youthBonus,
+          ),
+          ...await naturalizedPlayersFor(ref, career),
+        ])
+          withConditionDelta(p, condition[p.id]?.overallDelta ?? 0),
+      ];
       final callUps =
           await ref.watch(squadRepositoryProvider).callUps(careerId);
       // Drop suspended and injured players — they can't be fielded, so a
@@ -121,16 +153,55 @@ final AutoDisposeFutureProviderFamily<MatchPreview?, int> matchPreviewProvider =
         formation: playerFormation,
       );
 
-      // Opponent: a best XI in a default shape.
+      // Opponent: a best XI in a default shape, with a bench to sub from.
       final oppPool = await playerRepo.byNation(
         opponentId,
-        agingCycles: career.cyclePointer,
+        agingYears: CareerService.agingYears(career),
+        saveSeed: career.rngSeed,
       );
+      final oppXi = _xiFrom(oppPool, bestEleven(Formation.f433, oppPool));
+      final oppStartingIds = oppXi.map((p) => p.id).toSet();
+      final oppBench = oppPool
+          .where((p) => !oppStartingIds.contains(p.id))
+          .toList()
+        ..sort((a, b) => b.overall.compareTo(a.overall));
       final oppTeam = MatchTeam(
         nationId: opponentId,
-        xi: _xiFrom(oppPool, bestEleven(Formation.f433, oppPool)),
+        xi: oppXi,
         instructions: const TacticalInstructions(),
       );
+
+      // Plan the AI's substitutions up front on a stream tied to this fixture,
+      // so re-sims after a human change reproduce them exactly.
+      final opponentSubs = AiSubstitutions.plan(
+        nationId: opponentId,
+        xi: oppXi,
+        bench: oppBench,
+        rng: SeededRng.forFixture(career.rngSeed, fixture.id ^ 0x5195),
+      );
+
+      // The nation's medical investment for the current cycle reduces its
+      // players' injury risk this match; heavy fatigue in the fielded XI pushes
+      // it back up (tired legs pull up more often).
+      final medical =
+          (await careerRepo.investment(careerId, career.cyclePointer)).medical;
+      int fatigueLevel(int id) => switch (
+          condition[id]?.fatigueState ?? FatigueState.fresh) {
+        FatigueState.fresh => 0,
+        FatigueState.ready => 1,
+        FatigueState.tired => 2,
+        FatigueState.exhausted => 3,
+      };
+      final avgFatigue = playerXi.isEmpty
+          ? 0.0
+          : playerXi
+                  .map((p) => fatigueLevel(p.id))
+                  .fold<int>(0, (a, b) => a + b) /
+              playerXi.length;
+      final injuryFactorByNation = {
+        playerNationId:
+            FederationFinance.injuryFactor(medical) * (1 + avgFatigue * 0.14),
+      };
 
       final playerIsHome = fixture.homeNationId == playerNationId;
       final homeTeam = playerIsHome ? playerTeam : oppTeam;
@@ -139,6 +210,8 @@ final AutoDisposeFutureProviderFamily<MatchPreview?, int> matchPreviewProvider =
         home: homeTeam,
         away: awayTeam,
         rng: SeededRng.forFixture(career.rngSeed, fixture.id),
+        subs: opponentSubs,
+        injuryFactorByNation: injuryFactorByNation,
       );
 
       final nations = {
@@ -154,6 +227,8 @@ final AutoDisposeFutureProviderFamily<MatchPreview?, int> matchPreviewProvider =
         playerNationId: playerNationId,
         bench: bench,
         saveSeed: career.rngSeed,
+        opponentSubs: opponentSubs,
+        injuryFactorByNation: injuryFactorByNation,
       );
     });
 

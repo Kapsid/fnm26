@@ -5,17 +5,16 @@ import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/data/data_providers.dart';
-import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/nation.dart';
-import 'package:fnm/domain/repositories/competition_repository.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
 
+typedef _StatEntry = ({int playerId, int value});
+
 typedef _StatsView = ({
   Nation? nation,
-  List<ScorerTally> allTime,
-  List<ScorerTally> qualifying,
-  List<ScorerTally> finals,
+  List<_StatEntry> scorers,
+  List<_StatEntry> appearances,
   Map<int, String> names,
 });
 
@@ -26,35 +25,31 @@ final AutoDisposeFutureProviderFamily<_StatsView?, int> _teamStatsProvider =
   final comp = ref.watch(competitionRepositoryProvider);
   final nationId = career.nationId;
 
-  final allTime = await comp.nationTopScorers(careerId, nationId, limit: 25);
-  final qualifying = await comp.nationTopScorers(
-    careerId,
-    nationId,
-    kind: CompetitionKind.worldCupQualifying,
-    limit: 15,
-  );
-  final finals = await comp.nationTopScorers(
-    careerId,
-    nationId,
-    kind: CompetitionKind.worldCupFinals,
-    limit: 15,
-  );
+  final scorers = [
+    for (final s in await comp.nationTopScorers(careerId, nationId, limit: 25))
+      (playerId: s.playerId, value: s.goals),
+  ];
+  final appearances = [
+    for (final a
+        in await comp.nationTopAppearances(careerId, nationId, limit: 25))
+      (playerId: a.playerId, value: a.games),
+  ];
 
   final playerRepo = ref.watch(playerRepositoryProvider);
   final ids = {
-    for (final s in [...allTime, ...qualifying, ...finals]) s.playerId,
+    for (final s in [...scorers, ...appearances]) s.playerId,
   };
   final names = <int, String>{};
   for (final id in ids) {
-    names[id] = (await playerRepo.byId(id))?.name ?? 'Unknown';
+    final p = await playerRepo.byId(id, saveSeed: career.rngSeed);
+    names[id] = p?.name ?? 'Unknown';
   }
 
   final nations = await ref.watch(nationRepositoryProvider).all();
   return (
     nation: nations.where((n) => n.id == nationId).firstOrNull,
-    allTime: allTime,
-    qualifying: qualifying,
-    finals: finals,
+    scorers: scorers,
+    appearances: appearances,
     names: names,
   );
 });
@@ -71,7 +66,7 @@ class TeamStatsScreen extends ConsumerStatefulWidget {
 }
 
 class _TeamStatsScreenState extends ConsumerState<TeamStatsScreen> {
-  int _tab = 0; // 0 all-time, 1 qualifying, 2 finals
+  int _tab = 0; // 0 top scorers, 1 most games
 
   @override
   Widget build(BuildContext context) {
@@ -89,14 +84,22 @@ class _TeamStatsScreenState extends ConsumerState<TeamStatsScreen> {
           style: AppTypography.labelMedium.copyWith(color: AppColors.primary),
         ),
         centerTitle: true,
+        actions: [
+          IconButton(
+            tooltip: 'Record book',
+            icon: const Icon(Icons.auto_stories, color: AppColors.primary),
+            onPressed: () =>
+                context.go('${Routes.records}?careerId=${widget.careerId}'),
+          ),
+        ],
       ),
       body: viewAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (e, _) => Center(child: Text('Could not load stats.\n$e')),
         data: (view) {
           if (view == null) return const Center(child: Text('No data.'));
-          final lists = [view.allTime, view.qualifying, view.finals];
-          final list = lists[_tab];
+          final list = _tab == 0 ? view.scorers : view.appearances;
+          final heading = _tab == 0 ? 'TOP SCORERS' : 'MOST GAMES PLAYED';
 
           return Column(
             children: [
@@ -122,9 +125,8 @@ class _TeamStatsScreenState extends ConsumerState<TeamStatsScreen> {
                 child: SegmentedButton<int>(
                   showSelectedIcon: false,
                   segments: const [
-                    ButtonSegment(value: 0, label: Text('All-time')),
-                    ButtonSegment(value: 1, label: Text('Qualifying')),
-                    ButtonSegment(value: 2, label: Text('Finals')),
+                    ButtonSegment(value: 0, label: Text('Top scorers')),
+                    ButtonSegment(value: 1, label: Text('Most games')),
                   ],
                   selected: {_tab},
                   onSelectionChanged: (s) => setState(() => _tab = s.first),
@@ -138,7 +140,7 @@ class _TeamStatsScreenState extends ConsumerState<TeamStatsScreen> {
                 child: Row(
                   children: [
                     Text(
-                      'TOP SCORERS',
+                      heading,
                       style: AppTypography.labelSmall.copyWith(
                         color: AppColors.primary,
                       ),
@@ -159,7 +161,8 @@ class _TeamStatsScreenState extends ConsumerState<TeamStatsScreen> {
                           return _ScorerRow(
                             rank: i + 1,
                             name: view.names[s.playerId] ?? 'Unknown',
-                            goals: s.goals,
+                            flagCode: view.nation?.code,
+                            value: s.value,
                             onInfo: () => context.push(
                               '${Routes.player}?careerId=${widget.careerId}'
                               '&playerId=${s.playerId}',
@@ -180,13 +183,15 @@ class _ScorerRow extends StatelessWidget {
   const _ScorerRow({
     required this.rank,
     required this.name,
-    required this.goals,
+    required this.flagCode,
+    required this.value,
     required this.onInfo,
   });
 
   final int rank;
   final String name;
-  final int goals;
+  final String? flagCode;
+  final int value;
   final VoidCallback onInfo;
 
   @override
@@ -209,6 +214,10 @@ class _ScorerRow extends StatelessWidget {
                 ),
               ),
             ),
+            if (flagCode != null) ...[
+              FlagDisc(flagCode!, size: 22),
+              const SizedBox(width: AppSpacing.sm),
+            ],
             Expanded(
               child: Text(
                 name,
@@ -227,7 +236,7 @@ class _ScorerRow extends StatelessWidget {
               onPressed: onInfo,
             ),
             Text(
-              '$goals',
+              '$value',
               style: AppTypography.titleMedium.copyWith(
                 color: AppColors.primary,
               ),

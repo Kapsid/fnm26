@@ -78,7 +78,7 @@ void main() {
         name: 'European Championship',
         confederation: Confederation.europe,
         isPlayerRegion: false,
-        hostId: null,
+        hostCount: 1,
         qualifyingGroups: const [],
         groups: const [],
         knockout: const [],

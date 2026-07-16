@@ -2,16 +2,35 @@ import 'package:fnm/domain/entities/player.dart';
 
 /// Read access to the player reference data.
 ///
-/// `agingCycles` ages the returned players by that many four-year cycles (0 =
-/// the base seed state) — callers pass the active save's `cyclePointer` so the
-/// squad reflects the current point in that save's timeline.
+/// `agingYears` ages the returned players by that many years (0 = the base seed
+/// state) — callers pass the save's elapsed in-game years, so squads evolve one
+/// season at a time rather than jumping four years each cycle.
+///
+/// `saveSeed` varies the *procedurally-generated* players (the fringe depth and
+/// newgens — never the real, named internationals) per save, so two saves with
+/// the same nation don't field identical squads. Callers pass the save's
+/// `rngSeed`; 0 means no variation (the base seed state, used by tests).
+///
+/// `youthBonusByCycle` optionally lifts a nation's newgen intakes (keyed by the
+/// cycle each was born in) — the federation's youth-academy investment. Only
+/// the manager's own nation is passed a non-empty map.
 abstract interface class PlayerRepository {
   /// All players eligible for [nationId], ordered by overall (best first).
-  Future<List<Player>> byNation(int nationId, {int agingCycles});
+  Future<List<Player>> byNation(
+    int nationId, {
+    int agingYears,
+    int saveSeed,
+    Map<int, double> youthBonusByCycle,
+  });
 
   /// Every player across all nations (unordered).
   Future<List<Player>> all();
 
   /// The player with [id], or `null` if none exists.
-  Future<Player?> byId(int id, {int agingCycles});
+  Future<Player?> byId(
+    int id, {
+    int agingYears,
+    int saveSeed,
+    Map<int, double> youthBonusByCycle,
+  });
 }

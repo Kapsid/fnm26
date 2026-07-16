@@ -25,8 +25,9 @@ final starPlayersProvider = FutureProvider<Map<int, Player>>((ref) async {
 });
 
 /// The continental tab currently selected on the nation-select screen.
-final selectedConfederationProvider =
-    StateProvider<Confederation>((_) => Confederation.europe);
+final selectedConfederationProvider = StateProvider<Confederation>(
+  (_) => Confederation.europe,
+);
 
 /// The current search query on the nation-select screen.
 final nationSearchProvider = StateProvider<String>((_) => '');

@@ -71,6 +71,9 @@ abstract final class AppColors {
   /// Positive accent (qualification / advancing positions).
   static const positive = Color(0xFF7FD1A6);
 
+  /// Caution accent (a best-third place that may advance via the play-off).
+  static const warning = Color(0xFFE7A85A);
+
   // Brand extras (not part of ColorScheme)
   /// Hairline divider — silver-tinted at ~10% opacity (per the data-list spec).
   static Color get divider => onSurface.withValues(alpha: 0.10);

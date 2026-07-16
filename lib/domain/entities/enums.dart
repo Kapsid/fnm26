@@ -48,6 +48,9 @@ enum CompetitionKind {
 
   /// A continental championship the player contests (group stage + knockout).
   continentalFinals,
+
+  /// The Finalissima — a one-off match between two continental champions.
+  finalissima,
 }
 
 /// Display helpers for [Confederation].

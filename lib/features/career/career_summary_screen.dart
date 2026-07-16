@@ -55,6 +55,10 @@ class CareerSummaryScreen extends ConsumerWidget {
               ),
               const SizedBox(height: AppSpacing.sm),
               _TrophyCabinet(s),
+              if (s.titles.isNotEmpty) ...[
+                const SizedBox(height: AppSpacing.sm),
+                _TitlesList(s.titles),
+              ],
               const SizedBox(height: AppSpacing.md),
               Text(
                 'TOURNAMENT HISTORY',
@@ -171,6 +175,85 @@ class _RecordCard extends StatelessWidget {
           ),
         ],
       );
+}
+
+/// Every title the manager has won: each competition, how many times, and the
+/// year and nation of each win.
+class _TitlesList extends StatelessWidget {
+  const _TitlesList(this.titles);
+
+  final List<TrophyTitle> titles;
+
+  @override
+  Widget build(BuildContext context) {
+    return AppCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          for (var i = 0; i < titles.length; i++) ...[
+            if (i > 0) const Divider(height: AppSpacing.md),
+            _titleRow(titles[i]),
+          ],
+        ],
+      ),
+    );
+  }
+
+  Widget _titleRow(TrophyTitle t) {
+    // "2038 (Brazil) · 2030 (Argentina)" — each win with its nation, since a
+    // manager can lift the same trophy with different countries.
+    final wins = t.wins
+        .map((w) => '${w.year} (${w.nationName})')
+        .join('  ·  ');
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Icon(Icons.emoji_events, color: _gold, size: 20),
+        const SizedBox(width: AppSpacing.sm),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      t.competition,
+                      style: AppTypography.titleMedium,
+                    ),
+                  ),
+                  if (t.count > 1)
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: AppSpacing.sm,
+                        vertical: 1,
+                      ),
+                      decoration: BoxDecoration(
+                        color: AppColors.secondaryContainer,
+                        borderRadius: AppRadii.smAll,
+                      ),
+                      child: Text(
+                        '×${t.count}',
+                        style: AppTypography.labelMedium.copyWith(
+                          color: AppColors.primary,
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+              const SizedBox(height: 2),
+              Text(
+                wins,
+                style: AppTypography.labelSmall.copyWith(
+                  color: AppColors.onSurfaceVariant,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
 }
 
 class _TrophyCabinet extends StatelessWidget {

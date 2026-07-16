@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
@@ -26,7 +27,8 @@ class WorldRankingScreen extends ConsumerWidget {
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: AppColors.primary),
-          onPressed: () => context.go('${Routes.hub}?careerId=$careerId'),
+          onPressed: () =>
+              context.go('${Routes.tournaments}?careerId=$careerId'),
         ),
         title: Text(
           'WORLD RANKING',
@@ -34,6 +36,8 @@ class WorldRankingScreen extends ConsumerWidget {
         ),
         centerTitle: true,
       ),
+      bottomNavigationBar:
+          AppBottomNav(careerId: careerId, current: AppTab.competitions),
       body: dataAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (e, _) => Center(child: Text('Could not load ranking.\n$e')),
@@ -45,6 +49,7 @@ class WorldRankingScreen extends ConsumerWidget {
 
           return Column(
             children: [
+              _RankHistoryChart(careerId: careerId),
               _RegionFilter(
                 selected: region,
                 onSelect: (r) =>
@@ -62,6 +67,10 @@ class WorldRankingScreen extends ConsumerWidget {
                     points: data.points[filtered[i].id] ?? 0,
                     movement: data.movement[filtered[i].id] ?? 0,
                     isPlayer: filtered[i].id == data.playerNationId,
+                    onTap: () => context.push(
+                      '${Routes.nationVitrine}'
+                      '?careerId=$careerId&nationId=${filtered[i].id}',
+                    ),
                   ),
                 ),
               ),
@@ -145,6 +154,7 @@ class _RankRow extends StatelessWidget {
     required this.points,
     required this.movement,
     required this.isPlayer,
+    required this.onTap,
   });
 
   final Nation nation;
@@ -154,6 +164,7 @@ class _RankRow extends StatelessWidget {
   /// Positions climbed (positive) or dropped (negative) since the season began.
   final int movement;
   final bool isPlayer;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -162,76 +173,80 @@ class _RankRow extends StatelessWidget {
     final (edgeColor, edgeWidth) = isPlayer
         ? (AppColors.primary, 3.0)
         : movement > 0
-            ? (const Color(0xFF3FA34D), 3.0)
-            : movement < 0
-                ? (const Color(0xFFD64545), 3.0)
-                : (AppColors.outlineVariant, 1.0);
-    return Container(
-      decoration: BoxDecoration(
-        color: isPlayer
-            ? AppColors.surfaceContainerHigh
-            : AppColors.surfaceContainer,
-        borderRadius: AppRadii.baseAll,
-        border: Border(
-          left: BorderSide(color: edgeColor, width: edgeWidth),
-          top: const BorderSide(color: AppColors.outlineVariant),
-          right: const BorderSide(color: AppColors.outlineVariant),
-          bottom: const BorderSide(color: AppColors.outlineVariant),
+        ? (const Color(0xFF3FA34D), 3.0)
+        : movement < 0
+        ? (const Color(0xFFD64545), 3.0)
+        : (AppColors.outlineVariant, 1.0);
+    return GestureDetector(
+      onTap: onTap,
+      behavior: HitTestBehavior.opaque,
+      child: Container(
+        decoration: BoxDecoration(
+          color: isPlayer
+              ? AppColors.surfaceContainerHigh
+              : AppColors.surfaceContainer,
+          borderRadius: AppRadii.baseAll,
+          border: Border(
+            left: BorderSide(color: edgeColor, width: edgeWidth),
+            top: const BorderSide(color: AppColors.outlineVariant),
+            right: const BorderSide(color: AppColors.outlineVariant),
+            bottom: const BorderSide(color: AppColors.outlineVariant),
+          ),
         ),
-      ),
-      padding: const EdgeInsets.symmetric(
-        horizontal: AppSpacing.md,
-        vertical: AppSpacing.sm,
-      ),
-      child: Row(
-        children: [
-          SizedBox(
-            width: 32,
-            child: Text(
-              '$rank',
-              style: AppTypography.titleMedium.copyWith(
-                color: isPlayer
-                    ? AppColors.primary
-                    : AppColors.onSurfaceVariant,
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppSpacing.md,
+          vertical: AppSpacing.sm,
+        ),
+        child: Row(
+          children: [
+            SizedBox(
+              width: 32,
+              child: Text(
+                '$rank',
+                style: AppTypography.titleMedium.copyWith(
+                  color: isPlayer
+                      ? AppColors.primary
+                      : AppColors.onSurfaceVariant,
+                ),
               ),
             ),
-          ),
-          const SizedBox(width: 4),
-          SizedBox(width: 20, child: _Movement(movement)),
-          const SizedBox(width: AppSpacing.sm),
-          FlagDisc(nation.code, size: 36, highlighted: isPlayer),
-          const SizedBox(width: AppSpacing.md),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Flexible(
-                      child: Text(
-                        nation.name,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: AppTypography.titleMedium,
+            const SizedBox(width: 4),
+            SizedBox(width: 20, child: _Movement(movement)),
+            const SizedBox(width: AppSpacing.sm),
+            FlagDisc(nation.code, size: 36, highlighted: isPlayer),
+            const SizedBox(width: AppSpacing.md),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Flexible(
+                        child: Text(
+                          nation.name,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: AppTypography.titleMedium,
+                        ),
                       ),
-                    ),
-                    if (isPlayer) ...[
-                      const SizedBox(width: AppSpacing.sm),
-                      const TacticalChip('YOUR TEAM', emphasized: true),
+                      if (isPlayer) ...[
+                        const SizedBox(width: AppSpacing.sm),
+                        const TacticalChip('YOUR TEAM', emphasized: true),
+                      ],
                     ],
-                  ],
-                ),
-                Text(
-                  nation.confederation.label.toUpperCase(),
-                  style: AppTypography.labelSmall.copyWith(
-                    color: AppColors.outline,
                   ),
-                ),
-              ],
+                  Text(
+                    nation.confederation.label.toUpperCase(),
+                    style: AppTypography.labelSmall.copyWith(
+                      color: AppColors.outline,
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
-          Text('$points', style: AppTypography.labelMedium),
-        ],
+            Text('$points', style: AppTypography.labelMedium),
+          ],
+        ),
       ),
     );
   }
@@ -269,4 +284,130 @@ class _Movement extends StatelessWidget {
       ],
     );
   }
+}
+
+/// A compact line chart of the manager's nation's world ranking over time
+/// (cycle-start snapshots plus the live position). Hidden until there are at
+/// least two points to connect.
+class _RankHistoryChart extends ConsumerWidget {
+  const _RankHistoryChart({required this.careerId});
+
+  final int careerId;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final points = ref.watch(rankHistoryProvider(careerId)).valueOrNull;
+    if (points == null || points.length < 2) return const SizedBox.shrink();
+    final ranks = points.map((p) => p.rank).toList();
+    final best = ranks.reduce((a, b) => a < b ? a : b);
+    final worst = ranks.reduce((a, b) => a > b ? a : b);
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(
+        AppSpacing.marginMobile,
+        AppSpacing.marginMobile,
+        AppSpacing.marginMobile,
+        AppSpacing.sm,
+      ),
+      child: AppCard(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                const Icon(Icons.timeline, color: AppColors.primary, size: 18),
+                const SizedBox(width: AppSpacing.sm),
+                Text(
+                  'YOUR RANKING OVER TIME',
+                  style: AppTypography.labelSmall.copyWith(
+                    color: AppColors.primary,
+                  ),
+                ),
+                const Spacer(),
+                Text(
+                  'now #${points.last.rank}',
+                  style: AppTypography.labelMedium.copyWith(
+                    color: AppColors.primary,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: AppSpacing.sm),
+            SizedBox(
+              height: 96,
+              width: double.infinity,
+              child: CustomPaint(
+                painter: _RankChartPainter(points),
+              ),
+            ),
+            const SizedBox(height: AppSpacing.xs),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  DateFormat('MMM yy').format(points.first.date),
+                  style: AppTypography.labelSmall.copyWith(
+                    color: AppColors.onSurfaceVariant,
+                  ),
+                ),
+                Text(
+                  'best #$best · worst #$worst',
+                  style: AppTypography.labelSmall.copyWith(
+                    color: AppColors.onSurfaceVariant,
+                  ),
+                ),
+                Text(
+                  DateFormat('MMM yy').format(points.last.date),
+                  style: AppTypography.labelSmall.copyWith(
+                    color: AppColors.onSurfaceVariant,
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _RankChartPainter extends CustomPainter {
+  _RankChartPainter(this.points);
+
+  final List<RankHistoryPoint> points;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    if (points.length < 2) return;
+    final ranks = points.map((p) => p.rank).toList();
+    var best = ranks.reduce((a, b) => a < b ? a : b);
+    var worst = ranks.reduce((a, b) => a > b ? a : b);
+    if (best == worst) {
+      best -= 1;
+      worst += 1;
+    }
+    // Rank 1 (best) sits at the top; a lower rank number maps higher.
+    double x(int i) => size.width * i / (points.length - 1);
+    double y(int rank) =>
+        size.height * (rank - best) / (worst - best);
+
+    final line = Paint()
+      ..color = AppColors.primary
+      ..strokeWidth = 2.5
+      ..style = PaintingStyle.stroke
+      ..strokeJoin = StrokeJoin.round;
+    final path = Path()..moveTo(x(0), y(points.first.rank));
+    for (var i = 1; i < points.length; i++) {
+      path.lineTo(x(i), y(points[i].rank));
+    }
+    canvas.drawPath(path, line);
+
+    final dot = Paint()..color = AppColors.primary;
+    for (var i = 0; i < points.length; i++) {
+      canvas.drawCircle(Offset(x(i), y(points[i].rank)), 3, dot);
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant _RankChartPainter old) =>
+      old.points != points;
 }

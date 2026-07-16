@@ -9,22 +9,63 @@ import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/entities/group_standing.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
+import 'package:fnm/domain/services/squad/condition.dart';
+import 'package:fnm/features/achievements/achievement_providers.dart';
+import 'package:fnm/features/federation/investment_editor.dart';
 import 'package:fnm/features/hub/hub_event.dart';
 import 'package:fnm/features/hub/hub_providers.dart';
+import 'package:fnm/features/hub/round_popup.dart';
+import 'package:fnm/features/messages/message_popup.dart';
+import 'package:fnm/features/messages/message_providers.dart';
+import 'package:fnm/features/tactics/condition_providers.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
 /// In-game home ("National Hub"): continue/play, calendar, next match, squad
 /// status, and the group table, with the in-game bottom navigation.
-class HubScreen extends ConsumerWidget {
+class HubScreen extends ConsumerStatefulWidget {
   const HubScreen({required this.careerId, super.key});
 
   final int careerId;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<HubScreen> createState() => _HubScreenState();
+}
+
+class _HubScreenState extends ConsumerState<HubScreen> {
+  /// Guards against a second run while a sheet is already up — the hub rebuilds
+  /// often, and each rebuild would otherwise stack another popup.
+  bool _popping = false;
+
+  int get careerId => widget.careerId;
+
+  /// Pops any unread news over the hub. Driven from here rather than from each
+  /// action because everything returns to the hub — a match, a draw, a stepped
+  /// tournament round — so this catches them all in one place.
+  Future<void> _popMessages() async {
+    // Wait if an action is already showing its own popup: stepping a final
+    // fires the champion news and the final's result together, and racing them
+    // buries one behind the other. That path pops the news itself when done.
+    if (_popping || appPopupBusy) return;
+    _popping = true;
+    try {
+      if (mounted) await showUnreadMessagePopups(context, ref, careerId);
+    } finally {
+      _popping = false;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final dataAsync = ref.watch(hubDataProvider(careerId));
+    final unread =
+        ref.watch(unreadMessagesProvider(careerId)).valueOrNull ?? 0;
+
+    // Surface news the moment it lands, rather than leaving it to be found.
+    if (unread > 0 && !_popping) {
+      WidgetsBinding.instance.addPostFrameCallback((_) => _popMessages());
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -39,12 +80,19 @@ class HubScreen extends ConsumerWidget {
         centerTitle: true,
         actions: [
           IconButton(
-            icon: const Icon(Icons.account_circle, color: AppColors.primary),
-            onPressed: () => _soon(context),
+            tooltip: 'Messages',
+            icon: Badge(
+              isLabelVisible: unread > 0,
+              label: Text('$unread'),
+              child: const Icon(Icons.mail_outline, color: AppColors.primary),
+            ),
+            onPressed: () =>
+                context.go('${Routes.messages}?careerId=$careerId'),
           ),
         ],
       ),
-      bottomNavigationBar: _HubBottomNav(careerId: careerId),
+      bottomNavigationBar:
+          AppBottomNav(careerId: careerId, current: AppTab.hub),
       body: dataAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (e, _) => Center(child: Text('Could not load save.\n$e')),
@@ -56,6 +104,8 @@ class HubScreen extends ConsumerWidget {
           final date = DateFormat('d MMM yyyy').format(hub.career.inGameDate);
           String code(int id) => hub.nations[id]?.code ?? '??';
           String name(int id) => hub.nations[id]?.name ?? 'Unknown';
+          // Hide the opponent and group table until the draw has been watched.
+          final drawWatched = hub.nextDrawWatched;
 
           return ListView(
             padding: const EdgeInsets.all(AppSpacing.marginMobile),
@@ -92,10 +142,17 @@ class HubScreen extends ConsumerWidget {
                 ),
                 const SizedBox(height: AppSpacing.md),
               ],
+              _BoardFinanceCard(
+                careerId: careerId,
+                budget: hub.career.budget,
+                onFinances: () =>
+                    context.go('${Routes.finances}?careerId=$careerId'),
+              ),
+              const SizedBox(height: AppSpacing.md),
               // The primary action is whatever the next timeline event is
               // (a draw, the next match, a tournament to follow, or rollover).
               _EventButton(careerId: careerId),
-              if (hub.championNationId == null) ...[
+              if (hub.championNationId == null && drawWatched) ...[
                 const SizedBox(height: AppSpacing.md),
                 _NextMatch(next: hub.next, code: code),
               ],
@@ -125,42 +182,53 @@ class HubScreen extends ConsumerWidget {
                       context.go('${Routes.cup}?careerId=$careerId'),
                 ),
               ],
-              Wrap(
-                alignment: WrapAlignment.end,
-                children: [
-                  TextButton(
-                    onPressed: () => context
-                        .go('${Routes.careerSummary}?careerId=$careerId'),
-                    child: const Text('Career ›'),
-                  ),
-                  TextButton(
-                    onPressed: () =>
-                        context.go('${Routes.teamStats}?careerId=$careerId'),
-                    child: const Text('Team records ›'),
-                  ),
-                  TextButton(
-                    onPressed: () =>
-                        context.go('${Routes.results}?careerId=$careerId'),
-                    child: const Text('My matches ›'),
-                  ),
-                ],
-              ),
-              const SizedBox(height: AppSpacing.sm),
+              const SizedBox(height: AppSpacing.md),
               _SquadStatus(
                 rating: hub.squadRating,
                 size: hub.squadSize,
+                morale: ref.watch(moraleProvider(careerId)).valueOrNull ?? 50,
                 onManage: () =>
                     context.go('${Routes.tactics}?careerId=$careerId'),
               ),
               const SizedBox(height: AppSpacing.md),
+              // Always show the next group — but only reveal the table once its
+              // own draw has been watched; before then it's "to be drawn".
               if (hub.group != null)
-                _GroupTable(
-                  group: hub.group!,
-                  playerNationId: hub.career.nationId,
-                  code: code,
-                  name: name,
-                  onTap: () => context.go('${Routes.cup}?careerId=$careerId'),
-                ),
+                if (hub.groupDrawWatched)
+                  _GroupTable(
+                    group: hub.group!,
+                    playerNationId: hub.career.nationId,
+                    directCount: hub.groupDirectCount,
+                    contentionPos: hub.groupContentionPos,
+                    relegateCount: hub.groupRelegateCount,
+                    caption: hub.groupCaption,
+                    code: code,
+                    name: name,
+                    // Open the right competition detail: the Nations Cup, the
+                    // World Cup for its qualifiers/finals, else the player's
+                    // continental cup.
+                    onTap: () {
+                      final comp = hub.group!.competition;
+                      final conf =
+                          hub.nations[hub.career.nationId]?.confederation;
+                      if (comp.startsWith('Nations Cup')) {
+                        context.go(
+                          '${Routes.nationsCup}?careerId=$careerId',
+                        );
+                        return;
+                      }
+                      final isWc = comp == 'World Cup Qualifiers' ||
+                          comp == 'World Championship';
+                      context.go(
+                        isWc || conf == null
+                            ? '${Routes.cup}?careerId=$careerId'
+                            : '${Routes.continental}?careerId=$careerId'
+                                '&conf=${conf.name}',
+                      );
+                    },
+                  )
+                else
+                  _GroupPlaceholder(competition: hub.group!.competition),
               const SizedBox(height: AppSpacing.lg),
               if (hub.next != null)
                 Center(
@@ -178,11 +246,6 @@ class HubScreen extends ConsumerWidget {
     );
   }
 
-  void _soon(BuildContext context) {
-    ScaffoldMessenger.of(context)
-      ..hideCurrentSnackBar()
-      ..showSnackBar(const SnackBar(content: Text('Coming soon')));
-  }
 }
 
 class _ChampionBanner extends StatelessWidget {
@@ -218,6 +281,73 @@ class _ChampionBanner extends StatelessWidget {
           ),
           const SizedBox(height: AppSpacing.sm),
           TextButton(onPressed: onView, child: const Text('View bracket ›')),
+        ],
+      ),
+    );
+  }
+}
+
+/// A single compact strip: board confidence (shown immediately, colour-coded)
+/// on the left, and the federation funds as a button through to the finances
+/// screen on the right.
+class _BoardFinanceCard extends ConsumerWidget {
+  const _BoardFinanceCard({
+    required this.careerId,
+    required this.budget,
+    required this.onFinances,
+  });
+
+  final int careerId;
+  final int budget;
+  final VoidCallback onFinances;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final value = ref.watch(satisfactionProvider(careerId)).valueOrNull;
+    final (color, verdict) = switch (value) {
+      null => (AppColors.onSurfaceVariant, '—'),
+      >= 75 => (AppColors.positive, 'Delighted'),
+      >= 55 => (AppColors.positive, 'Pleased'),
+      >= 40 => (AppColors.warning, 'Expecting more'),
+      >= 25 => (AppColors.warning, 'Concerned'),
+      _ => (AppColors.error, 'Job at risk'),
+    };
+    return AppCard(
+      child: Row(
+        children: [
+          Icon(Icons.gavel, color: color, size: 18),
+          const SizedBox(width: AppSpacing.sm),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Row(
+                children: [
+                  Text(
+                    value == null ? 'BOARD' : '$value%',
+                    style: AppTypography.titleMedium.copyWith(color: color),
+                  ),
+                ],
+              ),
+              Text(
+                verdict,
+                style: AppTypography.labelSmall.copyWith(
+                  color: AppColors.onSurfaceVariant,
+                ),
+              ),
+            ],
+          ),
+          const Spacer(),
+          OutlinedButton.icon(
+            onPressed: onFinances,
+            icon: const Icon(Icons.account_balance, size: 16),
+            label: Text(formatEuros(budget)),
+            style: OutlinedButton.styleFrom(
+              foregroundColor: AppColors.primary,
+              side: const BorderSide(color: AppColors.outlineVariant),
+              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
+            ),
+          ),
         ],
       ),
     );
@@ -260,12 +390,32 @@ class _EventButton extends ConsumerWidget {
   void _dispatch(BuildContext context, WidgetRef ref, HubEvent event) {
     final season = ref.read(seasonServiceProvider);
     switch (event.kind) {
-      case HubEventKind.advance:
       case HubEventKind.watchTournament:
+        // Sim the next round, then pop up its results (with a link to the full
+        // bracket); group-stage rounds fall through to the bracket directly.
+        final route = event.route;
+        unawaited(
+          // Guarded from before the first await: advancing invalidates the hub,
+          // which would otherwise let its automatic news popup race this one —
+          // and the round that generates news is the final, the one round the
+          // player most wants to see.
+          withAppPopupGuard(() async {
+            await season.advance(careerId);
+            if (context.mounted) {
+              await showRoundPopup(context, ref, careerId, route: route);
+            }
+            // Then the news, in order, rather than on top.
+            if (context.mounted) {
+              await showUnreadMessagePopups(context, ref, careerId);
+            }
+          }),
+        );
+      case HubEventKind.advance:
         unawaited(season.advance(careerId));
       case HubEventKind.cycleRollover:
       case HubEventKind.draw:
       case HubEventKind.callUp:
+      case HubEventKind.naturalization:
       case HubEventKind.friendlies:
       case HubEventKind.match:
         if (event.route != null) context.go(event.route!);
@@ -358,7 +508,11 @@ class _FinalsFollowCard extends StatelessWidget {
 String matchStageLabel(Fixture f) => switch (f.round) {
       null => 'QUALIFYING · MD ${f.matchday}',
       'FRIENDLY' => 'FRIENDLY',
-      'NL' => 'NATIONS LEAGUE',
+      'NL' => 'NATIONS CUP',
+      'NGROUP' => 'NATIONS CUP · GROUP',
+      'NSF' => 'NATIONS CUP · SEMI-FINAL',
+      'NFINAL' => 'NATIONS CUP · FINAL',
+      'FFINAL' => 'CONTINENTAL CLASH',
       'GROUP' => 'WC FINALS · GROUP',
       'R32' => 'WC FINALS · ROUND OF 32',
       'R16' => 'WC FINALS · ROUND OF 16',
@@ -456,12 +610,22 @@ class _SquadStatus extends StatelessWidget {
   const _SquadStatus({
     required this.rating,
     required this.size,
+    required this.morale,
     required this.onManage,
   });
 
   final int rating;
   final int size;
+  final int morale;
   final VoidCallback onManage;
+
+  Color get _moraleColor => morale >= 60
+      ? AppColors.positive
+      : morale >= 42
+          ? AppColors.primary
+          : morale >= 25
+              ? AppColors.warning
+              : AppColors.error;
 
   @override
   Widget build(BuildContext context) {
@@ -508,6 +672,35 @@ class _SquadStatus extends StatelessWidget {
             ),
           ),
           const SizedBox(height: AppSpacing.sm),
+          Row(
+            children: [
+              Text(
+                'Morale',
+                style: AppTypography.bodySmall.copyWith(
+                  color: AppColors.onSurfaceVariant,
+                ),
+              ),
+              const Spacer(),
+              Text(
+                Condition.moraleLabel(morale),
+                style: AppTypography.labelMedium.copyWith(color: _moraleColor),
+              ),
+            ],
+          ),
+          const SizedBox(height: AppSpacing.xs),
+          ClipRRect(
+            borderRadius: AppRadii.smAll,
+            child: Stack(
+              children: [
+                Container(height: 6, color: AppColors.surfaceContainerHighest),
+                FractionallySizedBox(
+                  widthFactor: (morale / 100).clamp(0.0, 1.0),
+                  child: Container(height: 6, color: _moraleColor),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: AppSpacing.sm),
           PrimaryButton(
             label: 'Manage Team',
             icon: Icons.groups,
@@ -519,17 +712,73 @@ class _SquadStatus extends StatelessWidget {
   }
 }
 
+/// Stand-in for the group table before its draw ceremony has been watched —
+/// the competition is known, the groups are not yet revealed.
+class _GroupPlaceholder extends StatelessWidget {
+  const _GroupPlaceholder({required this.competition});
+
+  final String competition;
+
+  @override
+  Widget build(BuildContext context) {
+    return AppCard(
+      child: Row(
+        children: [
+          const Icon(Icons.casino, color: AppColors.primary, size: 22),
+          const SizedBox(width: AppSpacing.md),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  competition.toUpperCase(),
+                  style: AppTypography.labelSmall.copyWith(
+                    color: AppColors.primary,
+                  ),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  'Groups to be drawn — watch the draw to reveal them.',
+                  style: AppTypography.bodySmall.copyWith(
+                    color: AppColors.onSurfaceVariant,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 class _GroupTable extends StatelessWidget {
   const _GroupTable({
     required this.group,
     required this.playerNationId,
+    required this.directCount,
+    required this.contentionPos,
     required this.code,
     required this.name,
+    this.relegateCount = 0,
+    this.caption = '',
     this.onTap,
   });
 
   final GroupTable group;
   final int playerNationId;
+
+  /// Positions that advance outright (green) and the single "in contention"
+  /// (amber) position, matching the tournament detail screens.
+  final int directCount;
+  final int? contentionPos;
+
+  /// How many bottom places go down (red) — the Nations Cup relegates each
+  /// group's last side.
+  final int relegateCount;
+
+  /// A plain-English note on what the zones mean.
+  final String caption;
   final String Function(int) code;
   final String Function(int) name;
   final VoidCallback? onTap;
@@ -564,6 +813,15 @@ class _GroupTable extends StatelessWidget {
           const Divider(),
           for (var i = 0; i < group.standings.length; i++)
             _standingRow(i + 1, group.standings[i]),
+          if (caption.isNotEmpty) ...[
+            const SizedBox(height: AppSpacing.xs),
+            Text(
+              caption,
+              style: AppTypography.labelSmall.copyWith(
+                color: AppColors.onSurfaceVariant,
+              ),
+            ),
+          ],
         ],
       ),
     );
@@ -571,16 +829,21 @@ class _GroupTable extends StatelessWidget {
 
   Widget _standingRow(int pos, GroupStanding s) {
     final isPlayer = s.nationId == playerNationId;
-    // Honest zones: the group winner is safe (green); the runner-up is only in
-    // contention (amber) — they still need to be among the best runners-up /
-    // third-placed teams, or win a play-off, so never promise qualification.
-    final direct = pos == 1;
-    final contention = pos == 2;
+    // Greens the outright qualifiers, ambers the single "in contention" spot
+    // (best runner-up / best third / play-off) and reds the relegation places,
+    // using the same format the tournament detail screens compute, so the two
+    // never disagree.
+    final direct = pos <= directCount;
+    final inContention = pos == contentionPos;
+    final relegated =
+        relegateCount > 0 && pos > group.standings.length - relegateCount;
     final zoneColor = direct
         ? AppColors.positive
-        : contention
-            ? const Color(0xFFEFC94C)
-            : null;
+        : inContention
+            ? AppColors.warning
+            : relegated
+                ? AppColors.error
+                : null;
     final gd = s.goalDifference;
     return Container(
       decoration: BoxDecoration(
@@ -665,102 +928,6 @@ class _GroupTable extends StatelessWidget {
               ? AppColors.onSurfaceVariant
               : (emphasize ? AppColors.primary : AppColors.onSurface),
           fontWeight: emphasize ? FontWeight.w700 : FontWeight.w500,
-        ),
-      ),
-    );
-  }
-}
-
-class _HubBottomNav extends StatelessWidget {
-  const _HubBottomNav({required this.careerId});
-
-  final int careerId;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: const BoxDecoration(
-        color: AppColors.surfaceContainerHighest,
-        border: Border(top: BorderSide(color: AppColors.outlineVariant)),
-      ),
-      child: SafeArea(
-        top: false,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: AppSpacing.xs),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              const _NavItem(
-                icon: Icons.grid_view,
-                label: 'Hub',
-                active: true,
-              ),
-              _NavItem(
-                icon: Icons.groups,
-                label: 'Squad',
-                onTap: () => context.go('${Routes.tactics}?careerId=$careerId'),
-              ),
-              _NavItem(
-                icon: Icons.sports_soccer,
-                label: 'Matches',
-                onTap: () => context.go('${Routes.results}?careerId=$careerId'),
-              ),
-              _NavItem(
-                icon: Icons.emoji_events,
-                label: 'Trophy',
-                onTap: () =>
-                    context.go('${Routes.tournaments}?careerId=$careerId'),
-              ),
-              _NavItem(
-                icon: Icons.more_horiz,
-                label: 'More',
-                onTap: () => context.go('${Routes.ranking}?careerId=$careerId'),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _NavItem extends StatelessWidget {
-  const _NavItem({
-    required this.icon,
-    required this.label,
-    this.active = false,
-    this.onTap,
-  });
-
-  final IconData icon;
-  final String label;
-  final bool active;
-  final VoidCallback? onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final color = active
-        ? AppColors.onSecondaryContainer
-        : AppColors.onSurfaceVariant;
-    return InkWell(
-      onTap: onTap,
-      borderRadius: AppRadii.xlAll,
-      child: Container(
-        padding: const EdgeInsets.symmetric(
-          horizontal: AppSpacing.md,
-          vertical: AppSpacing.xs,
-        ),
-        decoration: BoxDecoration(
-          color: active ? AppColors.secondaryContainer : Colors.transparent,
-          borderRadius: AppRadii.xlAll,
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(icon, color: color, size: 22),
-            const SizedBox(height: 2),
-            Text(label, style: AppTypography.labelSmall.copyWith(color: color)),
-          ],
         ),
       ),
     );

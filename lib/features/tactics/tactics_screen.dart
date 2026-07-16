@@ -8,145 +8,12 @@ import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/formation.dart';
-import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/entities/tactics.dart';
+import 'package:fnm/domain/services/tactics/position_fit.dart';
+import 'package:fnm/features/tactics/tactics_pitch.dart';
 import 'package:fnm/features/tactics/tactics_providers.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
-
-/// Normalised pitch coordinates per formation (x: 0=left…1=right,
-/// y: 0=attack…1=own goal), in the same slot order as `Formation.positions`.
-const _layouts = <Formation, List<(double, double)>>{
-  Formation.f442: [
-    (0.5, 0.90),
-    (0.12, 0.70),
-    (0.37, 0.73),
-    (0.63, 0.73),
-    (0.88, 0.70),
-    (0.12, 0.45),
-    (0.38, 0.48),
-    (0.62, 0.48),
-    (0.88, 0.45),
-    (0.38, 0.16),
-    (0.62, 0.16),
-  ],
-  Formation.f433: [
-    (0.5, 0.90),
-    (0.12, 0.70),
-    (0.37, 0.73),
-    (0.63, 0.73),
-    (0.88, 0.70),
-    (0.5, 0.55),
-    (0.30, 0.42),
-    (0.70, 0.42),
-    (0.16, 0.18),
-    (0.5, 0.13),
-    (0.84, 0.18),
-  ],
-  Formation.f352: [
-    (0.5, 0.90),
-    (0.28, 0.73),
-    (0.5, 0.76),
-    (0.72, 0.73),
-    (0.10, 0.45),
-    (0.32, 0.50),
-    (0.5, 0.52),
-    (0.68, 0.50),
-    (0.90, 0.45),
-    (0.38, 0.16),
-    (0.62, 0.16),
-  ],
-  Formation.f4231: [
-    (0.5, 0.90),
-    (0.12, 0.70),
-    (0.37, 0.73),
-    (0.63, 0.73),
-    (0.88, 0.70),
-    (0.38, 0.56),
-    (0.62, 0.56),
-    (0.5, 0.38),
-    (0.16, 0.22),
-    (0.84, 0.22),
-    (0.5, 0.14),
-  ],
-  Formation.f532: [
-    (0.5, 0.90),
-    (0.08, 0.62),
-    (0.30, 0.74),
-    (0.5, 0.76),
-    (0.70, 0.74),
-    (0.92, 0.62),
-    (0.30, 0.45),
-    (0.5, 0.48),
-    (0.70, 0.45),
-    (0.38, 0.16),
-    (0.62, 0.16),
-  ],
-  Formation.f4141: [
-    (0.5, 0.90),
-    (0.12, 0.70),
-    (0.37, 0.73),
-    (0.63, 0.73),
-    (0.88, 0.70),
-    (0.5, 0.56),
-    (0.14, 0.38),
-    (0.38, 0.40),
-    (0.62, 0.40),
-    (0.86, 0.38),
-    (0.5, 0.15),
-  ],
-  Formation.f343: [
-    (0.5, 0.90),
-    (0.28, 0.74),
-    (0.5, 0.76),
-    (0.72, 0.74),
-    (0.10, 0.48),
-    (0.38, 0.50),
-    (0.62, 0.50),
-    (0.90, 0.48),
-    (0.18, 0.18),
-    (0.5, 0.14),
-    (0.82, 0.18),
-  ],
-  Formation.f4222: [
-    (0.5, 0.90),
-    (0.12, 0.70),
-    (0.37, 0.73),
-    (0.63, 0.73),
-    (0.88, 0.70),
-    (0.35, 0.52),
-    (0.65, 0.52),
-    (0.22, 0.34),
-    (0.78, 0.34),
-    (0.38, 0.15),
-    (0.62, 0.15),
-  ],
-  Formation.f424: [
-    (0.5, 0.90),
-    (0.12, 0.70),
-    (0.37, 0.73),
-    (0.63, 0.73),
-    (0.88, 0.70),
-    (0.35, 0.50),
-    (0.65, 0.50),
-    (0.14, 0.20),
-    (0.38, 0.15),
-    (0.62, 0.15),
-    (0.86, 0.20),
-  ],
-};
-
-/// Dragging an occupied XI slot off the pitch (to swap with another slot).
-class _SlotDrag {
-  const _SlotDrag(this.slot);
-  final int slot;
-}
-
-/// Dragging a substitute onto the pitch (to bring them into the XI).
-class _BenchDrag {
-  const _BenchDrag(this.playerId);
-  final int playerId;
-}
 
 /// Squad: a tactical pitch view of the starting XI with the substitutes list
 /// and formation selector. Players can be tapped to pick, or dragged to swap
@@ -165,7 +32,11 @@ class TacticsScreen extends ConsumerWidget {
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: AppColors.primary),
-          onPressed: () => context.go('${Routes.hub}?careerId=$careerId'),
+          // Pop back to wherever we came from (e.g. the match preview); fall
+          // back to the hub when opened as a root tab.
+          onPressed: () => context.canPop()
+              ? context.pop()
+              : context.go('${Routes.hub}?careerId=$careerId'),
         ),
         title: Text(
           'SQUAD',
@@ -191,6 +62,8 @@ class TacticsScreen extends ConsumerWidget {
           ),
         ],
       ),
+      bottomNavigationBar:
+          AppBottomNav(careerId: careerId, current: AppTab.squad),
       body: dataAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (e, _) => Center(child: Text('Could not load squad.\n$e')),
@@ -206,7 +79,7 @@ class TacticsScreen extends ConsumerWidget {
             children: [
               AspectRatio(
                 aspectRatio: 3 / 4,
-                child: _Pitch(
+                child: TacticsPitch(
                   formation: tactic.formation,
                   instructions: tactic.instructions,
                   lineup: tactic.lineup,
@@ -223,6 +96,16 @@ class TacticsScreen extends ConsumerWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    // The pitch scrolls, so a drag has to start with a hold —
+                    // say so, or it just reads as the page moving.
+                    Text(
+                      'Tap a player to swap them out, or hold and drag one to '
+                      'move them.',
+                      style: AppTypography.labelSmall.copyWith(
+                        color: AppColors.onSurfaceVariant,
+                      ),
+                    ),
+                    const SizedBox(height: AppSpacing.lg),
                     const Text('FORMATION', style: AppTypography.labelMedium),
                     const SizedBox(height: AppSpacing.sm),
                     Wrap(
@@ -246,7 +129,8 @@ class TacticsScreen extends ConsumerWidget {
                     ),
                     const SizedBox(height: AppSpacing.xs),
                     Text(
-                      'Drag a sub onto a player to bring them on.',
+                      'Hold a sub, then drag them onto a player to bring '
+                      'them on.',
                       style: AppTypography.labelSmall.copyWith(
                         color: AppColors.onSurfaceVariant,
                       ),
@@ -256,7 +140,7 @@ class TacticsScreen extends ConsumerWidget {
                       padding: EdgeInsets.zero,
                       child: Column(
                         children: [
-                          for (final p in subs) _SubRow(player: p),
+                          for (final p in subs) SubDragRow(player: p),
                         ],
                       ),
                     ),
@@ -282,7 +166,7 @@ class TacticsScreen extends ConsumerWidget {
         data.pool
             .where((p) => p.position.category == position.category)
             .toList()
-          ..sort((a, b) => b.overall.compareTo(a.overall));
+          ..sort(PositionFit.bySlotFit(position));
 
     final picked = await showModalBottomSheet<int>(
       context: context,
@@ -309,7 +193,7 @@ class TacticsScreen extends ConsumerWidget {
                   ),
                 ),
                 subtitle: Text(
-                  '${p.club} · ${p.position.roleName}',
+                  '${p.position.roleName} · Age ${p.age}',
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: AppTypography.labelSmall.copyWith(
@@ -350,38 +234,15 @@ class TacticsScreen extends ConsumerWidget {
     }
   }
 
-  /// Handles a pitch drag from slot [a] onto slot [b]. Within the same line it
-  /// is a straight swap; across lines it reshapes to the formation implied by
-  /// moving the dragged player to the target's line (keeping the same players),
-  /// falling back to a swap when no such formation exists.
+  /// Handles a pitch drag from slot [a] onto slot [b] by persisting the
+  /// resolved swap or reshape.
   void _dragBetweenSlots(TacticService service, Tactic tactic, int a, int b) {
-    final positions = tactic.formation.positions;
-    final catA = positions[a].category;
-    final catB = positions[b].category;
-    if (catA == catB) {
-      unawaited(service.swapSlots(careerId, a, b));
-      return;
+    switch (resolveDrag(tactic.formation, a, b)) {
+      case SwapSlots():
+        unawaited(service.swapSlots(careerId, a, b));
+      case ReshapeTo(:final formation):
+        unawaited(service.reshapeFormation(careerId, formation));
     }
-    final counts = _lineCounts(tactic.formation);
-    final next = _formationForCounts(
-      _adjust(counts.$1, PositionCategory.defender, catA, catB),
-      _adjust(counts.$2, PositionCategory.midfielder, catA, catB),
-      _adjust(counts.$3, PositionCategory.forward, catA, catB),
-    );
-    if (next != null && next != tactic.formation) {
-      unawaited(service.reshapeFormation(careerId, next));
-    } else {
-      unawaited(service.swapSlots(careerId, a, b));
-    }
-  }
-
-  /// Adjusts a line's count for a move from [from]'s line to [to]'s line.
-  int _adjust(int count, PositionCategory line, PositionCategory from,
-      PositionCategory to) {
-    var n = count;
-    if (from == line) n--;
-    if (to == line) n++;
-    return n;
   }
 
   Future<void> _openInstructions(
@@ -394,337 +255,6 @@ class TacticsScreen extends ConsumerWidget {
       backgroundColor: AppColors.surfaceContainer,
       isScrollControlled: true,
       builder: (_) => _InstructionsSheet(careerId: careerId, tactic: tactic),
-    );
-  }
-}
-
-class _Pitch extends StatelessWidget {
-  const _Pitch({
-    required this.formation,
-    required this.instructions,
-    required this.lineup,
-    required this.byId,
-    required this.onTapSlot,
-    required this.onSwap,
-    required this.onBenchIn,
-  });
-
-  final Formation formation;
-  final TacticalInstructions instructions;
-  final List<int?> lineup;
-  final Map<int, Player> byId;
-  final ValueChanged<int> onTapSlot;
-  final void Function(int slotA, int slotB) onSwap;
-  final void Function(int slot, int playerId) onBenchIn;
-
-  /// Nudges a slot's base coordinate by the instructions so the shape reads the
-  /// tactics: wider/narrower spread, a higher/deeper back line, and a more
-  /// advanced team when attacking.
-  (double, double) _adjusted(
-    (double, double) base,
-    PositionCategory category,
-  ) {
-    final i = instructions;
-    // Width: spread outfield players out from / in toward the centre line.
-    final widthFactor = 0.82 + i.width / 100 * 0.30; // 0.82 … 1.12
-    final x = 0.5 + (base.$1 - 0.5) * widthFactor;
-    // The keeper is pinned near the goal line and never shifts up the pitch, so
-    // a deep defensive line can't drop the back four on top of them.
-    if (category == PositionCategory.goalkeeper) {
-      return (x.clamp(0.04, 0.96), 0.93);
-    }
-    // Attacking mentality lifts the whole outfield up the pitch (lower y).
-    var y = base.$2 - (i.mentality - 50) / 50 * 0.05;
-    if (category == PositionCategory.defender) {
-      // A high defensive line pushes the back line up; a deep one drops it.
-      y -= (i.defensiveLine - 50) / 50 * 0.10;
-    } else if (category == PositionCategory.forward) {
-      y -= (i.mentality - 50) / 50 * 0.02;
-    }
-    // Cap outfield depth short of the keeper so the lines never overlap them.
-    return (x.clamp(0.04, 0.96), y.clamp(0.10, 0.82));
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final layout = _layouts[formation]!;
-    final positions = formation.positions;
-
-    return Container(
-      decoration: const BoxDecoration(
-        gradient: RadialGradient(
-          colors: [
-            AppColors.surfaceContainer,
-            AppColors.surfaceContainerLowest,
-          ],
-          radius: 0.9,
-        ),
-      ),
-      child: CustomPaint(
-        painter: _PitchPainter(),
-        child: Stack(
-          children: [
-            for (var slot = 0; slot < 11; slot++)
-              () {
-                final pos = _adjusted(layout[slot], positions[slot].category);
-                return Align(
-                  alignment: Alignment(pos.$1 * 2 - 1, pos.$2 * 2 - 1),
-                  child: _PlayerNode(
-                    slot: slot,
-                    position: positions[slot],
-                    player: byId[lineup[slot]],
-                    onTap: () => onTapSlot(slot),
-                    onSwap: onSwap,
-                    onBenchIn: onBenchIn,
-                  ),
-                );
-              }(),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-/// The (defenders, midfielders, forwards) count of a formation's outfield.
-(int, int, int) _lineCounts(Formation f) {
-  var d = 0;
-  var m = 0;
-  var w = 0;
-  for (final p in f.positions) {
-    switch (p.category) {
-      case PositionCategory.defender:
-        d++;
-      case PositionCategory.midfielder:
-        m++;
-      case PositionCategory.forward:
-        w++;
-      case PositionCategory.goalkeeper:
-        break;
-    }
-  }
-  return (d, m, w);
-}
-
-/// The formation matching a given line distribution, or null if none exists.
-Formation? _formationForCounts(int d, int m, int w) {
-  for (final f in Formation.values) {
-    final c = _lineCounts(f);
-    if (c.$1 == d && c.$2 == m && c.$3 == w) return f;
-  }
-  return null;
-}
-
-/// "Cristiano Ronaldo" → "C. Ronaldo" (surnames can repeat in a squad).
-String shortName(String full) {
-  final parts = full.trim().split(' ');
-  if (parts.length < 2) return full;
-  return '${parts.first[0]}. ${parts.last}';
-}
-
-class _PlayerNode extends StatelessWidget {
-  const _PlayerNode({
-    required this.slot,
-    required this.position,
-    required this.player,
-    required this.onTap,
-    required this.onSwap,
-    required this.onBenchIn,
-  });
-
-  final int slot;
-  final PlayerPosition position;
-  final Player? player;
-  final VoidCallback onTap;
-  final void Function(int slotA, int slotB) onSwap;
-  final void Function(int slot, int playerId) onBenchIn;
-
-  @override
-  Widget build(BuildContext context) {
-    return DragTarget<Object>(
-      onWillAcceptWithDetails: (details) {
-        final data = details.data;
-        if (data is _SlotDrag) return data.slot != slot;
-        return data is _BenchDrag;
-      },
-      onAcceptWithDetails: (details) {
-        final data = details.data;
-        if (data is _SlotDrag) {
-          onSwap(data.slot, slot);
-        } else if (data is _BenchDrag) {
-          onBenchIn(slot, data.playerId);
-        }
-      },
-      builder: (context, candidate, rejected) {
-        final node = _node(highlighted: candidate.isNotEmpty);
-        if (player == null) {
-          return GestureDetector(onTap: onTap, child: node);
-        }
-        return GestureDetector(
-          onTap: onTap,
-          child: Draggable<Object>(
-            data: _SlotDrag(slot),
-            feedback: _node(dragging: true),
-            childWhenDragging: Opacity(opacity: 0.35, child: node),
-            child: node,
-          ),
-        );
-      },
-    );
-  }
-
-  /// How well the assigned player suits this slot, driving the colour cue:
-  /// green = exact position, primary = right line/different role, red = out of
-  /// position (and taking a rating penalty in matches).
-  Color get _fitColor {
-    final p = player;
-    if (p == null) return AppColors.outlineVariant;
-    if (p.position == position) return AppColors.positive;
-    if (p.category == position.category) return AppColors.primary;
-    return AppColors.error;
-  }
-
-  Widget _node({bool highlighted = false, bool dragging = false}) {
-    final p = player;
-    final fit = _fitColor;
-    final borderColor = highlighted ? AppColors.primary : fit;
-    return Material(
-      type: MaterialType.transparency,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            width: 46,
-            height: 46,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              gradient: const LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [
-                  AppColors.surfaceContainerHighest,
-                  AppColors.surfaceContainer,
-                ],
-              ),
-              border: Border.all(
-                color: borderColor,
-                width: highlighted || dragging ? 3 : 2,
-              ),
-            ),
-            alignment: Alignment.center,
-            child: Text(
-              p == null ? '+' : '${p.overall}',
-              style: AppTypography.labelMedium.copyWith(
-                color: AppColors.primary,
-              ),
-            ),
-          ),
-          const SizedBox(height: 3),
-          // The slot's exact position, always shown and tinted by fit.
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1),
-            decoration: BoxDecoration(
-              color: fit.withValues(alpha: 0.18),
-              borderRadius: AppRadii.smAll,
-              border: Border.all(color: fit),
-            ),
-            child: Text(
-              position.label,
-              style: AppTypography.labelSmall.copyWith(
-                fontSize: 9,
-                color: fit,
-                fontWeight: FontWeight.w700,
-              ),
-            ),
-          ),
-          if (p != null) ...[
-            const SizedBox(height: 1),
-            Text(
-              shortName(p.name).toUpperCase(),
-              style: AppTypography.labelSmall.copyWith(fontSize: 8),
-            ),
-          ],
-        ],
-      ),
-    );
-  }
-}
-
-class _PitchPainter extends CustomPainter {
-  @override
-  void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 1.5
-      ..color = AppColors.outlineVariant.withValues(alpha: 0.5);
-
-    final inset = (Offset.zero & size).deflate(12);
-    final boxW = size.width * 0.5;
-    final boxH = size.height * 0.16;
-    final left = (size.width - boxW) / 2;
-    canvas
-      ..drawRect(inset, paint)
-      ..drawLine(
-        Offset(inset.left, size.height / 2),
-        Offset(inset.right, size.height / 2),
-        paint,
-      )
-      ..drawCircle(Offset(size.width / 2, size.height / 2), 36, paint)
-      ..drawRect(Rect.fromLTWH(left, inset.top, boxW, boxH), paint)
-      ..drawRect(Rect.fromLTWH(left, inset.bottom - boxH, boxW, boxH), paint);
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
-}
-
-class _SubRow extends StatelessWidget {
-  const _SubRow({required this.player});
-  final Player player;
-
-  @override
-  Widget build(BuildContext context) {
-    final row = ListTile(
-      dense: true,
-      leading: SizedBox(width: 40, child: TacticalChip(player.position.label)),
-      title: Text(player.name, style: AppTypography.bodyMedium),
-      subtitle: Text(
-        player.position.roleName,
-        style: AppTypography.labelSmall.copyWith(
-          color: AppColors.onSurfaceVariant,
-        ),
-      ),
-      trailing: const Icon(
-        Icons.drag_indicator,
-        color: AppColors.onSurfaceVariant,
-        size: 18,
-      ),
-    );
-
-    Widget chip() => Material(
-          color: Colors.transparent,
-          child: Container(
-            padding: const EdgeInsets.symmetric(
-              horizontal: AppSpacing.md,
-              vertical: AppSpacing.sm,
-            ),
-            decoration: BoxDecoration(
-              color: AppColors.surfaceContainerHighest,
-              borderRadius: AppRadii.smAll,
-              border: Border.all(color: AppColors.primary),
-            ),
-            child: Text(
-              shortName(player.name).toUpperCase(),
-              style: AppTypography.labelMedium,
-            ),
-          ),
-        );
-
-    return LongPressDraggable<Object>(
-      data: _BenchDrag(player.id),
-      feedback: chip(),
-      childWhenDragging: Opacity(opacity: 0.4, child: row),
-      child: row,
     );
   }
 }

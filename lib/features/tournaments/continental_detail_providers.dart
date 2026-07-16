@@ -10,7 +10,9 @@ import 'package:fnm/domain/services/competition/hosts.dart';
 import 'package:fnm/domain/services/competition/qualification.dart';
 import 'package:fnm/domain/services/competition/schedule_generator.dart';
 import 'package:fnm/features/career/career_providers.dart';
+import 'package:fnm/features/hub/hub_event.dart';
 import 'package:fnm/features/ranking/world_ranking_providers.dart';
+import 'package:fnm/features/tournaments/city_providers.dart';
 
 /// Identifies one continental championship within a save.
 typedef ContinentalKey = ({int careerId, Confederation confederation});
@@ -21,7 +23,7 @@ class ContinentalData {
     required this.name,
     required this.confederation,
     required this.isPlayerRegion,
-    required this.hostId,
+    required this.hostCount,
     required this.qualifyingGroups,
     required this.groups,
     required this.knockout,
@@ -31,13 +33,30 @@ class ContinentalData {
     required this.nations,
     required this.playerNationId,
     required this.playerNames,
+    this.hostIds = const [],
+    this.hostCities = const {},
+    this.qualDrawWatched = true,
+    this.finalsDrawWatched = true,
   });
 
   final String name;
   final Confederation confederation;
 
-  /// The championship host (finals venues), or null before it's decided.
-  final int? hostId;
+  /// Whether the player has watched the qualifying / finals draw ceremonies —
+  /// the groups stay hidden ("to be drawn") until they have.
+  final bool qualDrawWatched;
+  final bool finalsDrawWatched;
+
+  /// Every championship host (primary first), empty before it's decided.
+  final List<int> hostIds;
+
+  /// How many hosts (primary + co-hosts) auto-qualify — they reserve finals
+  /// berths, so that many fewer teams come through qualifying.
+  final int hostCount;
+
+  /// Each host's real cities (biggest first), keyed by nation id, for the
+  /// venues card.
+  final Map<int, List<String>> hostCities;
 
   /// Whether this is the player's region (the only one played in detail; other
   /// regions are simulated in the background and only appear in History).
@@ -67,9 +86,16 @@ const _rounds = ['CR16', 'CQF', 'CSF', 'C3RD', 'CFINAL'];
 
 /// The drawn continental group stage, for the pot-draw ceremony.
 class ContinentalDrawData {
-  const ContinentalDrawData({required this.draw, required this.nations});
+  const ContinentalDrawData({
+    required this.draw,
+    required this.nations,
+    required this.playerNationId,
+  });
   final FinalsDraw draw;
   final Map<int, Nation> nations;
+
+  /// The player's nation, highlighted throughout the ceremony.
+  final int playerNationId;
 }
 
 /// Recomputes the player's continental group draw deterministically (same seed
@@ -152,11 +178,12 @@ final AutoDisposeFutureProviderFamily<ContinentalDrawData?, ContinentalKey>
     qualifierIds: field,
     rankingById: {for (final n in all) n.id: rankOf(n)},
     rngSeed: career.rngSeed ^ (career.cyclePointer * 0x71) ^ 0xC0FF,
-    host: host,
+    hosts: [host],
   );
   return ContinentalDrawData(
     draw: draw,
     nations: {for (final n in all) n.id: n},
+    playerNationId: career.nationId,
   );
 });
 
@@ -192,14 +219,25 @@ final AutoDisposeFutureProviderFamily<ContinentalDrawData?, ContinentalKey>
       cycle: career.cyclePointer,
     )).future,
   );
-  final members =
-      all.where((n) => n.confederation == key.confederation).toList();
+  // The host sits out qualifying (friendlies only), so exclude it from the
+  // group draw — mirror [CareerService.buildCalendar].
+  final host = WorldCupHosts.continentalHostFor(
+    confederation: key.confederation,
+    cycle: career.cyclePointer,
+    seed: career.rngSeed,
+    nations: all,
+  );
+  final members = all
+      .where((n) => n.confederation == key.confederation && n.id != host)
+      .toList();
   final schedule = const ScheduleGenerator().generate(
     confederation: key.confederation,
     nations: members,
     rngSeed: career.rngSeed ^ (career.cyclePointer * 0x71) ^ 0xCAFE,
-    start: DateTime(CareerService.worldCupYear(career.cyclePointer) - 3, 9),
-    groupSize: 4,
+    start: DateTime(CareerService.cycleStart.year, 9),
+    // Must match the played schedule (career_providers buildCalendar) so the
+    // ceremony's groups are the real ones — groups of six, not four.
+    groupSize: 6,
     rankById: rankById,
   );
   return ContinentalDrawData(
@@ -210,6 +248,7 @@ final AutoDisposeFutureProviderFamily<ContinentalDrawData?, ContinentalKey>
       ],
     ),
     nations: {for (final n in all) n.id: n},
+    playerNationId: career.nationId,
   );
 });
 
@@ -278,6 +317,8 @@ final AutoDisposeFutureProviderFamily<ContinentalData?, ContinentalKey>
         )
       : const <ScorerTally>[];
 
+  // The competition's full roll of honour — all past winners, including the
+  // pre-seeded real-world history.
   final allHonours = await comp.honours(key.careerId);
   final honours =
       allHonours.where((h) => h.competition == config.name).toList()
@@ -286,24 +327,47 @@ final AutoDisposeFutureProviderFamily<ContinentalData?, ContinentalKey>
   final playerRepo = ref.watch(playerRepositoryProvider);
   final playerNames = <int, String>{};
   for (final id in {for (final s in scorers) s.playerId}) {
-    final p = await playerRepo.byId(id);
+    final p = await playerRepo.byId(id, saveSeed: career.rngSeed);
     if (p != null) playerNames[id] = p.name;
   }
 
-  final hostId = isPlayerRegion && groups.isNotEmpty
-      ? WorldCupHosts.continentalHostFor(
-          confederation: key.confederation,
-          cycle: career.cyclePointer,
-          seed: career.rngSeed,
-          nations: nations.values.toList(),
-        )
-      : null;
+  // Every host, primary first. The co-hosts used to be fetched only to be
+  // counted for the berth maths and then thrown away, so a jointly-hosted
+  // championship showed one country's grounds.
+  final allHosts = WorldCupHosts.continentalHostsFor(
+    confederation: key.confederation,
+    cycle: career.cyclePointer,
+    seed: career.rngSeed,
+    nations: nations.values.toList(),
+  );
+  final hostCount = allHosts.length;
+  final hostIds =
+      isPlayerRegion && groups.isNotEmpty ? allHosts : const <int>[];
+  final cities = await ref.watch(countryCitiesProvider.future);
+  final hostCities = {
+    for (final h in hostIds) h: cities[h] ?? const <String>[],
+  };
+
+  // Only reveal the player's own groups once the relevant draw was watched.
+  final qualDrawWatched = !isPlayerRegion ||
+      await comp.hasWatchedDraw(
+        key.careerId,
+        career.cyclePointer,
+        continentalQualDrawKind,
+      );
+  final finalsDrawWatched = !isPlayerRegion ||
+      await comp.hasWatchedDraw(
+        key.careerId,
+        career.cyclePointer,
+        continentalFinalsDrawKind,
+      );
 
   return ContinentalData(
     name: config.name,
     confederation: key.confederation,
     isPlayerRegion: isPlayerRegion,
-    hostId: hostId,
+    hostIds: hostIds,
+    hostCount: hostCount,
     qualifyingGroups: qualifyingGroups,
     groups: groups,
     knockout: knockout,
@@ -313,5 +377,8 @@ final AutoDisposeFutureProviderFamily<ContinentalData?, ContinentalKey>
     nations: nations,
     playerNationId: career.nationId,
     playerNames: playerNames,
+    hostCities: hostCities,
+    qualDrawWatched: qualDrawWatched,
+    finalsDrawWatched: finalsDrawWatched,
   );
 });

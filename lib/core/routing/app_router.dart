@@ -1,18 +1,27 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/domain/entities/enums.dart';
+import 'package:fnm/features/achievements/achievements_screen.dart';
 import 'package:fnm/features/career/career_summary_screen.dart';
+import 'package:fnm/features/career/careers_screen.dart';
+import 'package:fnm/features/career/manager_history_screen.dart';
 import 'package:fnm/features/career/new_game_screen.dart';
 import 'package:fnm/features/career/saves_screen.dart';
 import 'package:fnm/features/dev/style_gallery_screen.dart';
+import 'package:fnm/features/federation/finances_screen.dart';
+import 'package:fnm/features/federation/naturalization_screen.dart';
 import 'package:fnm/features/friendlies/friendlies_screen.dart';
 import 'package:fnm/features/home/home_screen.dart';
 import 'package:fnm/features/hub/cycle_rollover_screen.dart';
 import 'package:fnm/features/hub/hub_screen.dart';
 import 'package:fnm/features/match/match_preview_screen.dart';
 import 'package:fnm/features/match/match_screen.dart';
+import 'package:fnm/features/messages/messages_screen.dart';
 import 'package:fnm/features/nations/nation_select_screen.dart';
+import 'package:fnm/features/nations/nation_vitrine_screen.dart';
 import 'package:fnm/features/player/player_detail_screen.dart';
 import 'package:fnm/features/ranking/world_ranking_screen.dart';
+import 'package:fnm/features/records/legends_screen.dart';
+import 'package:fnm/features/records/record_book_screen.dart';
 import 'package:fnm/features/results/results_screen.dart';
 import 'package:fnm/features/results/round_results_screen.dart';
 import 'package:fnm/features/stats/team_stats_screen.dart';
@@ -23,6 +32,8 @@ import 'package:fnm/features/tournaments/continental_draw_screen.dart';
 import 'package:fnm/features/tournaments/cup_detail_screen.dart';
 import 'package:fnm/features/tournaments/finals_draw_screen.dart';
 import 'package:fnm/features/tournaments/host_draw_screen.dart';
+import 'package:fnm/features/tournaments/nations_cup_draw_screen.dart';
+import 'package:fnm/features/tournaments/nations_cup_screen.dart';
 import 'package:fnm/features/tournaments/qualifying_draw_screen.dart';
 import 'package:fnm/features/tournaments/tournaments_screen.dart';
 import 'package:go_router/go_router.dart';
@@ -93,8 +104,25 @@ abstract final class Routes {
   /// The player's national-team records / top scorers. Expects `?careerId=`.
   static const teamStats = '/team-stats';
 
+  /// A nation's vitrine (honours, records, ranking history). Expects
+  /// `?careerId=` and `?nationId=`.
+  static const nationVitrine = '/nation';
+
+  /// The Careers hub (career summary, team records, my matches). Expects
+  /// `?careerId=`.
+  static const careers = '/careers';
+
   /// The manager's career summary + trophy cabinet. Expects `?careerId=`.
   static const careerSummary = '/career-summary';
+
+  /// The per-save achievements screen. Expects `?careerId=`.
+  static const achievements = '/achievements';
+
+  /// The manager's messages inbox. Expects `?careerId=`.
+  static const messages = '/messages';
+
+  /// The manager's cycle-by-cycle career history. Expects `?careerId=`.
+  static const managerHistory = '/manager-history';
 
   /// The host-selection ceremony. Expects `?careerId=` and `?worldCup=`.
   static const hostDraw = '/host-draw';
@@ -108,6 +136,18 @@ abstract final class Routes {
 
   /// Development-only design-system showcase.
   static const gallery = '/gallery';
+
+  /// The federation finances screen. Expects `?careerId=`.
+  static const finances = '/finances';
+
+  /// The nation's all-time record book. Expects `?careerId=`.
+  static const records = '/records';
+  static const legends = '/legends';
+
+  /// The Nations Cup league standings. Expects `?careerId=`.
+  static const nationsCup = '/nations-cup';
+  static const nationsCupDraw = '/nations-cup-draw';
+  static const naturalization = '/naturalization';
 }
 
 /// Provides the app's [GoRouter]. Exposed as a provider so routing can later
@@ -132,7 +172,8 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: Routes.newGame,
         builder: (context, state) {
-          final id = int.tryParse(
+          final id =
+              int.tryParse(
                 state.uri.queryParameters['nationId'] ?? '',
               ) ??
               0;
@@ -142,7 +183,8 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: Routes.hub,
         builder: (context, state) {
-          final id = int.tryParse(
+          final id =
+              int.tryParse(
                 state.uri.queryParameters['careerId'] ?? '',
               ) ??
               0;
@@ -152,7 +194,8 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: Routes.tactics,
         builder: (context, state) {
-          final id = int.tryParse(
+          final id =
+              int.tryParse(
                 state.uri.queryParameters['careerId'] ?? '',
               ) ??
               0;
@@ -162,7 +205,8 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: Routes.callUps,
         builder: (context, state) {
-          final id = int.tryParse(
+          final id =
+              int.tryParse(
                 state.uri.queryParameters['careerId'] ?? '',
               ) ??
               0;
@@ -179,7 +223,8 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: Routes.matchPreview,
         builder: (context, state) {
-          final id = int.tryParse(
+          final id =
+              int.tryParse(
                 state.uri.queryParameters['careerId'] ?? '',
               ) ??
               0;
@@ -189,7 +234,8 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: Routes.match,
         builder: (context, state) {
-          final id = int.tryParse(
+          final id =
+              int.tryParse(
                 state.uri.queryParameters['careerId'] ?? '',
               ) ??
               0;
@@ -199,7 +245,8 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: Routes.roundResults,
         builder: (context, state) {
-          final id = int.tryParse(
+          final id =
+              int.tryParse(
                 state.uri.queryParameters['careerId'] ?? '',
               ) ??
               0;
@@ -209,11 +256,13 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: Routes.player,
         builder: (context, state) {
-          final id = int.tryParse(
+          final id =
+              int.tryParse(
                 state.uri.queryParameters['careerId'] ?? '',
               ) ??
               0;
-          final playerId = int.tryParse(
+          final playerId =
+              int.tryParse(
                 state.uri.queryParameters['playerId'] ?? '',
               ) ??
               0;
@@ -223,7 +272,8 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: Routes.teamStats,
         builder: (context, state) {
-          final id = int.tryParse(
+          final id =
+              int.tryParse(
                 state.uri.queryParameters['careerId'] ?? '',
               ) ??
               0;
@@ -231,9 +281,36 @@ final routerProvider = Provider<GoRouter>((ref) {
         },
       ),
       GoRoute(
-        path: Routes.careerSummary,
+        path: Routes.nationVitrine,
+        builder: (context, state) {
+          final id =
+              int.tryParse(
+                state.uri.queryParameters['careerId'] ?? '',
+              ) ??
+              0;
+          final nationId =
+              int.tryParse(
+                state.uri.queryParameters['nationId'] ?? '',
+              ) ??
+              0;
+          return NationVitrineScreen(careerId: id, nationId: nationId);
+        },
+      ),
+      GoRoute(
+        path: Routes.careers,
         builder: (context, state) {
           final id = int.tryParse(
+                state.uri.queryParameters['careerId'] ?? '',
+              ) ??
+              0;
+          return CareersScreen(careerId: id);
+        },
+      ),
+      GoRoute(
+        path: Routes.careerSummary,
+        builder: (context, state) {
+          final id =
+              int.tryParse(
                 state.uri.queryParameters['careerId'] ?? '',
               ) ??
               0;
@@ -241,9 +318,109 @@ final routerProvider = Provider<GoRouter>((ref) {
         },
       ),
       GoRoute(
+        path: Routes.achievements,
+        builder: (context, state) {
+          final id =
+              int.tryParse(
+                state.uri.queryParameters['careerId'] ?? '',
+              ) ??
+              0;
+          return AchievementsScreen(careerId: id);
+        },
+      ),
+      GoRoute(
+        path: Routes.messages,
+        builder: (context, state) {
+          final id =
+              int.tryParse(
+                state.uri.queryParameters['careerId'] ?? '',
+              ) ??
+              0;
+          return MessagesScreen(careerId: id);
+        },
+      ),
+      GoRoute(
+        path: Routes.finances,
+        builder: (context, state) {
+          final id =
+              int.tryParse(
+                state.uri.queryParameters['careerId'] ?? '',
+              ) ??
+              0;
+          return FinancesScreen(careerId: id);
+        },
+      ),
+      GoRoute(
+        path: Routes.records,
+        builder: (context, state) {
+          final id =
+              int.tryParse(
+                state.uri.queryParameters['careerId'] ?? '',
+              ) ??
+              0;
+          return RecordBookScreen(careerId: id);
+        },
+      ),
+      GoRoute(
+        path: Routes.legends,
+        builder: (context, state) {
+          final id =
+              int.tryParse(
+                state.uri.queryParameters['careerId'] ?? '',
+              ) ??
+              0;
+          return LegendsScreen(careerId: id);
+        },
+      ),
+      GoRoute(
+        path: Routes.nationsCup,
+        builder: (context, state) {
+          final id =
+              int.tryParse(
+                state.uri.queryParameters['careerId'] ?? '',
+              ) ??
+              0;
+          return NationsCupScreen(careerId: id);
+        },
+      ),
+      GoRoute(
+        path: Routes.nationsCupDraw,
+        builder: (context, state) {
+          final id =
+              int.tryParse(
+                state.uri.queryParameters['careerId'] ?? '',
+              ) ??
+              0;
+          return NationsCupDrawScreen(careerId: id);
+        },
+      ),
+      GoRoute(
+        path: Routes.naturalization,
+        builder: (context, state) {
+          final id =
+              int.tryParse(
+                state.uri.queryParameters['careerId'] ?? '',
+              ) ??
+              0;
+          return NaturalizationScreen(careerId: id);
+        },
+      ),
+      GoRoute(
+        path: Routes.managerHistory,
+        builder: (context, state) {
+          final id =
+              int.tryParse(
+                state.uri.queryParameters['careerId'] ?? '',
+              ) ??
+              0;
+          return ManagerHistoryScreen(careerId: id);
+        },
+      ),
+      GoRoute(
         path: Routes.hostDraw,
         builder: (context, state) {
-          final id = int.tryParse(
+          final id =
+              int.tryParse(
                 state.uri.queryParameters['careerId'] ?? '',
               ) ??
               0;
@@ -254,7 +431,8 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: Routes.friendlies,
         builder: (context, state) {
-          final id = int.tryParse(
+          final id =
+              int.tryParse(
                 state.uri.queryParameters['careerId'] ?? '',
               ) ??
               0;
@@ -264,7 +442,8 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: Routes.cycleRollover,
         builder: (context, state) {
-          final id = int.tryParse(
+          final id =
+              int.tryParse(
                 state.uri.queryParameters['careerId'] ?? '',
               ) ??
               0;
@@ -274,7 +453,8 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: Routes.results,
         builder: (context, state) {
-          final id = int.tryParse(
+          final id =
+              int.tryParse(
                 state.uri.queryParameters['careerId'] ?? '',
               ) ??
               0;
@@ -284,7 +464,8 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: Routes.tournaments,
         builder: (context, state) {
-          final id = int.tryParse(
+          final id =
+              int.tryParse(
                 state.uri.queryParameters['careerId'] ?? '',
               ) ??
               0;
@@ -294,7 +475,8 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: Routes.cup,
         builder: (context, state) {
-          final id = int.tryParse(
+          final id =
+              int.tryParse(
                 state.uri.queryParameters['careerId'] ?? '',
               ) ??
               0;
@@ -304,7 +486,8 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: Routes.continental,
         builder: (context, state) {
-          final id = int.tryParse(
+          final id =
+              int.tryParse(
                 state.uri.queryParameters['careerId'] ?? '',
               ) ??
               0;
@@ -321,7 +504,8 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: Routes.continentalDraw,
         builder: (context, state) {
-          final id = int.tryParse(
+          final id =
+              int.tryParse(
                 state.uri.queryParameters['careerId'] ?? '',
               ) ??
               0;
@@ -340,7 +524,8 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: Routes.ranking,
         builder: (context, state) {
-          final id = int.tryParse(
+          final id =
+              int.tryParse(
                 state.uri.queryParameters['careerId'] ?? '',
               ) ??
               0;
@@ -350,7 +535,8 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: Routes.finalsDraw,
         builder: (context, state) {
-          final id = int.tryParse(
+          final id =
+              int.tryParse(
                 state.uri.queryParameters['careerId'] ?? '',
               ) ??
               0;
@@ -360,7 +546,8 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: Routes.qualifyingDraw,
         builder: (context, state) {
-          final id = int.tryParse(
+          final id =
+              int.tryParse(
                 state.uri.queryParameters['careerId'] ?? '',
               ) ??
               0;

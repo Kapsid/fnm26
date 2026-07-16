@@ -16,6 +16,12 @@ class DriftSquadRepository implements SquadRepository {
   }
 
   @override
+  Future<void> clearCallUps(int careerId) async {
+    await (_db.delete(_db.callUps)..where((t) => t.careerId.equals(careerId)))
+        .go();
+  }
+
+  @override
   Future<void> setCallUps(int careerId, Set<int> playerIds) async {
     await _db.transaction(() async {
       await (_db.delete(_db.callUps)
