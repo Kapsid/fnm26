@@ -19,6 +19,25 @@ void main() {
       ),
   ];
 
+  test('career starts develop a player (capped) and none leaves them as-is', () {
+    final base = PlayerLifecycle.poolAt(seeded, 1, 0);
+    final target = base.first;
+    // With many starts, the same player's overall is a touch higher — but
+    // capped, so it can't run away.
+    final developed = PlayerLifecycle.poolAt(
+      seeded,
+      1,
+      0,
+      careerStartsByPlayer: {target.id: 40},
+    ).firstWhere((p) => p.id == target.id);
+    expect(developed.overall, greaterThan(target.overall));
+    expect(developed.overall - target.overall, lessThanOrEqualTo(3));
+    // No starts → identical to the undeveloped pool.
+    final none = PlayerLifecycle.poolAt(seeded, 1, 0)
+        .firstWhere((p) => p.id == target.id);
+    expect(none.overall, target.overall);
+  });
+
   test('year 0 returns exactly the seeded players, unaged', () {
     final pool = PlayerLifecycle.poolAt(seeded, 1, 0);
     expect(pool.map((p) => p.id).toSet(), seeded.map((p) => p.id).toSet());

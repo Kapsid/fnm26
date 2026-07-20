@@ -1,12 +1,15 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/features/achievements/achievements_screen.dart';
+import 'package:fnm/features/achievements/challenges_screen.dart';
 import 'package:fnm/features/career/career_summary_screen.dart';
 import 'package:fnm/features/career/careers_screen.dart';
 import 'package:fnm/features/career/manager_history_screen.dart';
 import 'package:fnm/features/career/new_game_screen.dart';
 import 'package:fnm/features/career/saves_screen.dart';
+import 'package:fnm/features/settings/settings_screen.dart';
 import 'package:fnm/features/dev/style_gallery_screen.dart';
+import 'package:fnm/features/federation/budget_setup_screen.dart';
 import 'package:fnm/features/federation/finances_screen.dart';
 import 'package:fnm/features/federation/naturalization_screen.dart';
 import 'package:fnm/features/friendlies/friendlies_screen.dart';
@@ -20,6 +23,9 @@ import 'package:fnm/features/nations/nation_select_screen.dart';
 import 'package:fnm/features/nations/nation_vitrine_screen.dart';
 import 'package:fnm/features/player/player_detail_screen.dart';
 import 'package:fnm/features/ranking/world_ranking_screen.dart';
+import 'package:fnm/features/records/all_time_records_screen.dart';
+import 'package:fnm/features/records/h2h_meetings_screen.dart';
+import 'package:fnm/features/records/head_to_head_screen.dart';
 import 'package:fnm/features/records/legends_screen.dart';
 import 'package:fnm/features/records/record_book_screen.dart';
 import 'package:fnm/features/results/results_screen.dart';
@@ -27,10 +33,13 @@ import 'package:fnm/features/results/round_results_screen.dart';
 import 'package:fnm/features/stats/team_stats_screen.dart';
 import 'package:fnm/features/tactics/call_up_screen.dart';
 import 'package:fnm/features/tactics/tactics_screen.dart';
+import 'package:fnm/features/tournaments/continental_clash_screen.dart';
 import 'package:fnm/features/tournaments/continental_detail_screen.dart';
 import 'package:fnm/features/tournaments/continental_draw_screen.dart';
 import 'package:fnm/features/tournaments/cup_detail_screen.dart';
 import 'package:fnm/features/tournaments/finals_draw_screen.dart';
+import 'package:fnm/features/tournaments/intercontinental_playoff_screen.dart';
+import 'package:fnm/features/tournaments/tournament_kickoff_screen.dart';
 import 'package:fnm/features/tournaments/host_draw_screen.dart';
 import 'package:fnm/features/tournaments/nations_cup_draw_screen.dart';
 import 'package:fnm/features/tournaments/nations_cup_screen.dart';
@@ -45,6 +54,7 @@ abstract final class Routes {
 
   /// National-team selection.
   static const nations = '/nations';
+  static const settings = '/settings';
 
   /// Save-game list.
   static const saves = '/saves';
@@ -86,6 +96,8 @@ abstract final class Routes {
 
   /// World Cup finals draw ceremony. Expects `?careerId=`.
   static const finalsDraw = '/finals-draw';
+  static const tournamentKickoff = '/tournament-kickoff';
+  static const intercontinentalPlayoff = '/intercontinental-playoff';
 
   /// Qualifying group-draw ceremony. Expects `?careerId=` and `?worldCup=`
   /// ('true' for the World Cup qualifying draw, else the continental one).
@@ -140,14 +152,36 @@ abstract final class Routes {
   /// The federation finances screen. Expects `?careerId=`.
   static const finances = '/finances';
 
+  /// The forced first-of-cycle budget allocation. Expects `?careerId=`.
+  static const budgetSetup = '/budget-setup';
+
+  /// The brutal career-long challenges. Expects `?careerId=`.
+  static const challenges = '/challenges';
+
   /// The nation's all-time record book. Expects `?careerId=`.
   static const records = '/records';
   static const legends = '/legends';
+
+  /// The save's global all-time records across every nation. Expects
+  /// `?careerId=`.
+  static const allTimeRecords = '/all-time-records';
+
+  /// The head-to-head record explorer between any two nations. Expects
+  /// `?careerId=`.
+  static const headToHead = '/head-to-head';
+
+  /// Every past meeting between two nations. Expects
+  /// `?careerId=&a=&b=`.
+  static const h2hMeetings = '/h2h-meetings';
 
   /// The Nations Cup league standings. Expects `?careerId=`.
   static const nationsCup = '/nations-cup';
   static const nationsCupDraw = '/nations-cup-draw';
   static const naturalization = '/naturalization';
+
+  /// The Continental Clash (champions-of-champions) detail. Expects
+  /// `?careerId=`.
+  static const continentalClash = '/continental-clash';
 }
 
 /// Provides the app's [GoRouter]. Exposed as a provider so routing can later
@@ -168,6 +202,10 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: Routes.saves,
         builder: (context, state) => const SavesScreen(),
+      ),
+      GoRoute(
+        path: Routes.settings,
+        builder: (context, state) => const SettingsScreen(),
       ),
       GoRoute(
         path: Routes.newGame,
@@ -329,6 +367,17 @@ final routerProvider = Provider<GoRouter>((ref) {
         },
       ),
       GoRoute(
+        path: Routes.challenges,
+        builder: (context, state) {
+          final id =
+              int.tryParse(
+                state.uri.queryParameters['careerId'] ?? '',
+              ) ??
+              0;
+          return ChallengesScreen(careerId: id);
+        },
+      ),
+      GoRoute(
         path: Routes.messages,
         builder: (context, state) {
           final id =
@@ -351,6 +400,17 @@ final routerProvider = Provider<GoRouter>((ref) {
         },
       ),
       GoRoute(
+        path: Routes.budgetSetup,
+        builder: (context, state) {
+          final id =
+              int.tryParse(
+                state.uri.queryParameters['careerId'] ?? '',
+              ) ??
+              0;
+          return BudgetSetupScreen(careerId: id);
+        },
+      ),
+      GoRoute(
         path: Routes.records,
         builder: (context, state) {
           final id =
@@ -370,6 +430,39 @@ final routerProvider = Provider<GoRouter>((ref) {
               ) ??
               0;
           return LegendsScreen(careerId: id);
+        },
+      ),
+      GoRoute(
+        path: Routes.allTimeRecords,
+        builder: (context, state) {
+          final id =
+              int.tryParse(
+                state.uri.queryParameters['careerId'] ?? '',
+              ) ??
+              0;
+          return AllTimeRecordsScreen(careerId: id);
+        },
+      ),
+      GoRoute(
+        path: Routes.headToHead,
+        builder: (context, state) {
+          final id =
+              int.tryParse(
+                state.uri.queryParameters['careerId'] ?? '',
+              ) ??
+              0;
+          return HeadToHeadScreen(careerId: id);
+        },
+      ),
+      GoRoute(
+        path: Routes.h2hMeetings,
+        builder: (context, state) {
+          final q = state.uri.queryParameters;
+          return H2HMeetingsScreen(
+            careerId: int.tryParse(q['careerId'] ?? '') ?? 0,
+            nationA: int.tryParse(q['a'] ?? '') ?? 0,
+            nationB: int.tryParse(q['b'] ?? '') ?? 0,
+          );
         },
       ),
       GoRoute(
@@ -502,6 +595,17 @@ final routerProvider = Provider<GoRouter>((ref) {
         },
       ),
       GoRoute(
+        path: Routes.continentalClash,
+        builder: (context, state) {
+          final id =
+              int.tryParse(
+                state.uri.queryParameters['careerId'] ?? '',
+              ) ??
+              0;
+          return ContinentalClashScreen(careerId: id);
+        },
+      ),
+      GoRoute(
         path: Routes.continentalDraw,
         builder: (context, state) {
           final id =
@@ -541,6 +645,32 @@ final routerProvider = Provider<GoRouter>((ref) {
               ) ??
               0;
           return FinalsDrawScreen(careerId: id);
+        },
+      ),
+      GoRoute(
+        path: Routes.tournamentKickoff,
+        builder: (context, state) {
+          final id =
+              int.tryParse(
+                state.uri.queryParameters['careerId'] ?? '',
+              ) ??
+              0;
+          final confName = state.uri.queryParameters['conf'] ?? '';
+          final conf = Confederation.values
+              .where((c) => c.name == confName)
+              .firstOrNull;
+          return TournamentKickoffScreen(careerId: id, conf: conf);
+        },
+      ),
+      GoRoute(
+        path: Routes.intercontinentalPlayoff,
+        builder: (context, state) {
+          final id =
+              int.tryParse(
+                state.uri.queryParameters['careerId'] ?? '',
+              ) ??
+              0;
+          return IntercontinentalPlayoffScreen(careerId: id);
         },
       ),
       GoRoute(

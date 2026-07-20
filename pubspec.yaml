@@ -30,6 +30,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_localizations: # Generated AppLocalizations + Material/Cupertino l10n.
+    sdk: flutter
 
   cupertino_icons: ^1.0.8
   drift: ^2.34.0 # Local relational storage; the save file is the cloud artifact.
@@ -48,6 +50,7 @@ dependencies:
   sqlite3_flutter_libs: ^0.6.0+eol # Bundled native SQLite.
   supabase_flutter: ^2.15.0 # Cloud auth + storage, used only via CloudSyncService.
   flutter_svg: ^2.3.0
+  shared_preferences: ^2.5.5
 
 dev_dependencies:
   flutter_test:
@@ -78,6 +81,9 @@ flutter_launcher_icons:
 # The following section is specific to Flutter packages.
 flutter:
 
+  # Generate the AppLocalizations classes from lib/l10n/*.arb (see l10n.yaml).
+  generate: true
+
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
@@ -87,6 +93,7 @@ flutter:
     - assets/images/
     - assets/data/
     - assets/flags/
+    - assets/trophies/
 
   # Bundled variable fonts (offline-first). The wght axis is driven by
   # `fontWeight` in TextStyle — see lib/core/theme/app_typography.dart.

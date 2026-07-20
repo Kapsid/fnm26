@@ -11,6 +11,7 @@ import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
 import 'package:fnm/domain/services/competition/continental_cups.dart';
 import 'package:fnm/domain/services/competition/group_advancement.dart';
+import 'package:fnm/domain/services/competition/nations_cup.dart';
 import 'package:fnm/features/friendlies/other_friendlies_providers.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
@@ -23,6 +24,8 @@ typedef _RoundView = ({
   int playerNationId,
   int directCount,
   int? contentionPos,
+  int relegateCount,
+  Set<String> noRelegationGroups,
 });
 
 final AutoDisposeFutureProviderFamily<_RoundView?, int> _roundResultsProvider =
@@ -36,10 +39,13 @@ final AutoDisposeFutureProviderFamily<_RoundView?, int> _roundResultsProvider =
     for (final n in await ref.watch(nationRepositoryProvider).all()) n.id: n,
   };
 
-  // The advancing (green) and in-contention (amber) positions for this
-  // competition, so the results tables match the hub and detail screens.
+  // The advancing (green), in-contention (amber) and relegated (red) positions
+  // for this competition, so the results tables match the hub and detail
+  // screens.
   var direct = 2;
   int? contention;
+  var relegate = 0;
+  final noRelegation = <String>{};
   if (results != null && results.groupCount > 0) {
     final conf =
         nations[career.nationId]?.confederation ?? Confederation.europe;
@@ -52,6 +58,22 @@ final AutoDisposeFutureProviderFamily<_RoundView?, int> _roundResultsProvider =
     );
     direct = adv.direct;
     contention = adv.contention;
+    relegate = adv.relegate;
+    // The Nations Cup's lowest league has nowhere to fall — its groups show no
+    // relegation zone, exactly as the hub and the Nations Cup screen decide.
+    if (results.kind == CompetitionKind.nationsLeague) {
+      final tiers =
+          await ref.watch(careerRepositoryProvider).nationsCupTiers(careerId);
+      for (final g in results.groups) {
+        final lowest = NationsCup.isLowestLeague(
+          groupName: g.name,
+          tiers: tiers,
+          confederation: conf,
+          confederationOf: (id) => nations[id]?.confederation,
+        );
+        if (lowest) noRelegation.add(g.name);
+      }
+    }
   }
 
   return (
@@ -60,6 +82,8 @@ final AutoDisposeFutureProviderFamily<_RoundView?, int> _roundResultsProvider =
     playerNationId: career.nationId,
     directCount: direct,
     contentionPos: contention,
+    relegateCount: relegate,
+    noRelegationGroups: noRelegation,
   );
 });
 
@@ -167,6 +191,9 @@ class RoundResultsScreen extends ConsumerWidget {
                     playerNationId: view.playerNationId,
                     directCount: view.directCount,
                     contentionPos: view.contentionPos,
+                    relegateCount: view.noRelegationGroups.contains(g.name)
+                        ? 0
+                        : view.relegateCount,
                     code: code,
                     name: name,
                   ),
@@ -196,6 +223,7 @@ class _GroupBlock extends StatelessWidget {
     required this.playerNationId,
     required this.directCount,
     required this.contentionPos,
+    required this.relegateCount,
     required this.code,
     required this.name,
   });
@@ -204,6 +232,10 @@ class _GroupBlock extends StatelessWidget {
   final int playerNationId;
   final int directCount;
   final int? contentionPos;
+
+  /// How many bottom places go down (red) — the Nations Cup relegates each
+  /// group's last side (bar the lowest league's).
+  final int relegateCount;
   final String Function(int) code;
   final String Function(int) name;
 
@@ -238,6 +270,8 @@ class _GroupBlock extends StatelessWidget {
                 isPlayer: group.standings[i].nationId == playerNationId,
                 directCount: directCount,
                 contentionPos: contentionPos,
+                relegated: relegateCount > 0 &&
+                    i + 1 > group.standings.length - relegateCount,
                 name: name,
                 code: code,
               ),
@@ -326,6 +360,7 @@ class _StandingRow extends StatelessWidget {
     required this.isPlayer,
     required this.directCount,
     required this.contentionPos,
+    required this.relegated,
     required this.name,
     required this.code,
   });
@@ -335,6 +370,9 @@ class _StandingRow extends StatelessWidget {
   final bool isPlayer;
   final int directCount;
   final int? contentionPos;
+
+  /// Whether this position drops a league (Nations Cup groups).
+  final bool relegated;
   final String Function(int) name;
   final String Function(int) code;
 
@@ -346,7 +384,9 @@ class _StandingRow extends StatelessWidget {
         ? AppColors.positive
         : inContention
             ? AppColors.warning
-            : null;
+            : relegated
+                ? AppColors.error
+                : null;
     return Container(
       decoration: BoxDecoration(
         color: isPlayer ? AppColors.surfaceContainerHigh : null,

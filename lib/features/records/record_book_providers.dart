@@ -48,6 +48,7 @@ final AutoDisposeFutureProviderFamily<RecordBook?, int> recordBookProvider =
   final nationId = career.nationId;
   final aging = CareerService.agingYears(career);
   final youth = await ref.watch(youthBonusByCycleProvider(careerId).future);
+  final careerDev = await ref.watch(careerDevBonusProvider(careerId).future);
   final nations = {
     for (final n in await ref.watch(nationRepositoryProvider).all()) n.id: n,
   };
@@ -60,6 +61,7 @@ final AutoDisposeFutureProviderFamily<RecordBook?, int> recordBookProvider =
       agingYears: aging,
       saveSeed: career.rngSeed,
       youthBonusByCycle: youth,
+      careerStartsByPlayer: careerDev,
     );
     return nameCache[id] = p?.name ?? 'Unknown';
   }

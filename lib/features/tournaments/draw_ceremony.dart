@@ -15,6 +15,16 @@ typedef DrawGroup = ({String name, List<int> nationIds});
 /// One reveal in the running order: a nation dropping into a group from a pot.
 typedef _Step = ({int groupIndex, int nationId, int pot});
 
+/// How much each draw action reveals — chosen by the manager.
+enum _DrawGrain {
+  ball('Ball'),
+  pot('Pot'),
+  all('All');
+
+  const _DrawGrain(this.label);
+  final String label;
+}
+
 /// A reusable, animated pot-draw ceremony: balls are pulled from numbered pots
 /// and dropped one by one into their groups. The result is already decided —
 /// this presents it with a flourish. Shared by every competition's draw (World
@@ -66,6 +76,10 @@ class _DrawCeremonyState extends State<DrawCeremony> {
   late final List<_Step> _steps = _buildSteps();
   late final int _pots = widget.potCount ?? _largestGroup();
 
+  /// How much each draw reveals: one ball, a whole pot, or the entire draw.
+  /// Pot-by-pot is the default — a real draw's rhythm without the wait.
+  _DrawGrain _grain = _DrawGrain.ball;
+
   int _largestGroup() => widget.groups
       .fold<int>(0, (m, g) => g.nationIds.length > m ? g.nationIds.length : m);
 
@@ -105,6 +119,25 @@ class _DrawCeremonyState extends State<DrawCeremony> {
     _startAuto();
   }
 
+  /// The reveal index the next draw advances to, honouring the chosen grain:
+  /// one ball, the rest of the current pot, or the whole draw.
+  int _advanceTarget() {
+    if (_revealed >= _steps.length) return _revealed;
+    switch (_grain) {
+      case _DrawGrain.ball:
+        return _revealed + 1;
+      case _DrawGrain.all:
+        return _steps.length;
+      case _DrawGrain.pot:
+        final pot = _steps[_revealed].pot;
+        var r = _revealed;
+        while (r < _steps.length && _steps[r].pot == pot) {
+          r++;
+        }
+        return r;
+    }
+  }
+
   void _startAuto() {
     _timer?.cancel();
     _timer = Timer.periodic(_autoInterval, (t) {
@@ -112,7 +145,7 @@ class _DrawCeremonyState extends State<DrawCeremony> {
         t.cancel();
         return;
       }
-      setState(() => _revealed++);
+      setState(() => _revealed = _advanceTarget());
     });
   }
 
@@ -129,7 +162,7 @@ class _DrawCeremonyState extends State<DrawCeremony> {
   void _drawNext() {
     if (_done) return;
     setState(() {
-      _revealed++;
+      _revealed = _advanceTarget();
       _auto = false;
     });
     _timer?.cancel();
@@ -220,19 +253,44 @@ class _DrawCeremonyState extends State<DrawCeremony> {
             ),
           ),
         ),
-        if (!done)
+        if (!done) ...[
+          // Draw mode: reveal one ball, a whole pot, or the entire draw.
+          Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppSpacing.marginMobile,
+            ),
+            child: SegmentedButton<_DrawGrain>(
+              showSelectedIcon: false,
+              style: SegmentedButton.styleFrom(
+                visualDensity: VisualDensity.compact,
+              ),
+              segments: const [
+                ButtonSegment(value: _DrawGrain.ball, label: Text('Ball')),
+                ButtonSegment(value: _DrawGrain.pot, label: Text('Pot')),
+                ButtonSegment(value: _DrawGrain.all, label: Text('All')),
+              ],
+              selected: {_grain},
+              onSelectionChanged: (s) => setState(() => _grain = s.first),
+            ),
+          ),
+          const SizedBox(height: AppSpacing.xs),
           Padding(
             padding: const EdgeInsets.symmetric(
               horizontal: AppSpacing.marginMobile,
             ),
             child: Text(
-              'Tap to draw the next team',
+              switch (_grain) {
+                _DrawGrain.ball => 'Tap to draw the next team',
+                _DrawGrain.pot => 'Tap to draw the next pot',
+                _DrawGrain.all => 'Tap to reveal the whole draw',
+              },
               textAlign: TextAlign.center,
               style: AppTypography.labelSmall.copyWith(
                 color: AppColors.onSurfaceVariant,
               ),
             ),
           ),
+        ],
         SafeArea(
           top: false,
           child: Padding(

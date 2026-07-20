@@ -64,6 +64,22 @@ class RecordBookScreen extends ConsumerWidget {
             padding: const EdgeInsets.all(AppSpacing.marginMobile),
             children: [
               _LegendsLink(careerId: careerId),
+              const SizedBox(height: AppSpacing.sm),
+              _NavLink(
+                icon: Icons.public,
+                title: 'ALL-TIME WORLD',
+                subtitle: 'Global scorers & most-capped, every nation',
+                onTap: () => context
+                    .push('${Routes.allTimeRecords}?careerId=$careerId'),
+              ),
+              const SizedBox(height: AppSpacing.sm),
+              _NavLink(
+                icon: Icons.compare_arrows,
+                title: 'HEAD TO HEAD',
+                subtitle: 'Compare any two nations’ all-time record',
+                onTap: () =>
+                    context.push('${Routes.headToHead}?careerId=$careerId'),
+              ),
               const SizedBox(height: AppSpacing.md),
               _RivalryCard(careerId: careerId),
               _TeamRecords(
@@ -131,6 +147,50 @@ class _LegendsLink extends StatelessWidget {
                         .copyWith(color: AppColors.primary)),
                 Text(
                   'All-time XI & hall of fame',
+                  style: AppTypography.labelSmall
+                      .copyWith(color: AppColors.onSurfaceVariant),
+                ),
+              ],
+            ),
+          ),
+          const Icon(Icons.chevron_right, color: AppColors.onSurfaceVariant),
+        ],
+      ),
+    );
+  }
+}
+
+/// A simple tappable navigation card (icon, title, subtitle, chevron).
+class _NavLink extends StatelessWidget {
+  const _NavLink({
+    required this.icon,
+    required this.title,
+    required this.subtitle,
+    required this.onTap,
+  });
+
+  final IconData icon;
+  final String title;
+  final String subtitle;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return AppCard(
+      onTap: onTap,
+      child: Row(
+        children: [
+          Icon(icon, size: 22, color: AppColors.primary),
+          const SizedBox(width: AppSpacing.sm),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(title,
+                    style: AppTypography.labelMedium
+                        .copyWith(color: AppColors.primary)),
+                Text(
+                  subtitle,
                   style: AppTypography.labelSmall
                       .copyWith(color: AppColors.onSurfaceVariant),
                 ),

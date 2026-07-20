@@ -79,7 +79,6 @@ void main() {
         'mega_goldenboot',
         'mega_allstar',
         'mega_sweep',
-        'mega_harmony',
       ]),
     );
   });

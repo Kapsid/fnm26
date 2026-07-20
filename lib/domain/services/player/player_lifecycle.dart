@@ -1,7 +1,10 @@
+import 'dart:math';
+
 import 'package:fnm/core/rng/seeded_rng.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/entities/player_attributes.dart';
+import 'package:fnm/domain/services/club/clubs.dart';
 import 'package:fnm/domain/services/player/player_aging.dart';
 
 /// Keeps a nation's player pool alive across an endless run of four-year
@@ -60,11 +63,14 @@ abstract final class PlayerLifecycle {
     int nationId,
     int agingYears, {
     Map<int, double> youthBonusByCycle = const {},
+    Map<int, int> careerStartsByPlayer = const {},
   }) {
     final out = <Player>[];
     for (final p in seeded) {
       final aged = PlayerAging.agedYears(p, agingYears);
-      if (aged.age < retirementAge) out.add(aged);
+      if (aged.age < retirementAge) {
+        out.add(withCareerDev(aged, careerStartsByPlayer[aged.id] ?? 0));
+      }
     }
     final cyclesElapsed = agingYears ~/ 4;
     for (var born = 1; born <= cyclesElapsed; born++) {
@@ -72,10 +78,46 @@ abstract final class PlayerLifecycle {
       final bonus = youthBonusByCycle[born] ?? 0.0;
       for (final g in _intake(seeded, nationId, born, youthBonus: bonus)) {
         final aged = PlayerAging.agedYears(g, agingYears - debutYears);
-        if (aged.age < retirementAge) out.add(aged);
+        if (aged.age < retirementAge) {
+          out.add(withCareerDev(aged, careerStartsByPlayer[aged.id] ?? 0));
+        }
       }
     }
     return out;
+  }
+
+  /// The career-development bump: a player who has started many tournament
+  /// matches grows a little, faster if they play in a strong club league. A
+  /// small, capped, deterministic uplift to every attribute — applied AFTER
+  /// aging, so ids/names/positions and the pool are unchanged. No [starts] (or
+  /// an opponent, who is passed none) leaves the player exactly as aged.
+  static Player withCareerDev(Player aged, int starts) {
+    if (starts <= 0) return aged;
+    // Weight by the club-league tier the player's (pre-bump) overall implies,
+    // so a top-flight regular improves faster than a lower-league one.
+    final tier = ClubService.tierForOverall(aged.overall);
+    final tierWeight = (6 - tier) / 5.0; // tier 1 → 1.0 … tier 5 → 0.2
+    final delta =
+        (sqrt(starts) * 0.5 * tierWeight).clamp(0.0, 3.0).round();
+    if (delta == 0) return aged;
+    return aged.copyWith(attributes: _bumpAll(aged.attributes, delta));
+  }
+
+  /// Adds [d] to every attribute, clamped to the same range aging uses.
+  static PlayerAttributes _bumpAll(PlayerAttributes a, int d) {
+    int up(int v) => (v + d).clamp(20, 95);
+    return a.copyWith(
+      passing: up(a.passing),
+      shooting: up(a.shooting),
+      dribbling: up(a.dribbling),
+      tackling: up(a.tackling),
+      positioning: up(a.positioning),
+      composure: up(a.composure),
+      decisions: up(a.decisions),
+      pace: up(a.pace),
+      stamina: up(a.stamina),
+      strength: up(a.strength),
+    );
   }
 
   /// Rebuilds the single newgen with [id], aged to [agingYears]; `null` if [id]
@@ -87,6 +129,7 @@ abstract final class PlayerLifecycle {
     int id,
     int agingYears, {
     Map<int, double> youthBonusByCycle = const {},
+    Map<int, int> careerStartsByPlayer = const {},
   }) {
     if (!isNewgenId(id)) return null;
     final rem = id - _idBase;
@@ -97,7 +140,8 @@ abstract final class PlayerLifecycle {
     final bonus = youthBonusByCycle[born] ?? 0.0;
     for (final g in _intake(seeded, nationId, born, youthBonus: bonus)) {
       if (g.id != id) continue;
-      return PlayerAging.agedYears(g, agingYears - debutYears);
+      final aged = PlayerAging.agedYears(g, agingYears - debutYears);
+      return withCareerDev(aged, careerStartsByPlayer[aged.id] ?? 0);
     }
     return null;
   }
@@ -119,18 +163,21 @@ abstract final class PlayerLifecycle {
     final firsts = [for (final p in seeded) _firstName(p.name)];
     final lasts = [for (final p in seeded) _lastName(p.name)];
     final clubs = [for (final p in seeded) p.club];
+    // Anchor on a broad slice of the squad (not just the best XI) so youngsters
+    // debut clearly below the established stars.
     final ranked = [...seeded]..sort((a, b) => b.overall.compareTo(a.overall));
-    final avg = _averageAttributes(ranked.take(23).toList());
+    final avg = _averageAttributes(ranked.take(30).toList());
 
     final out = <Player>[];
     for (var i = 0; i < intakePerCycle; i++) {
       final pos = _intakePositions[i % _intakePositions.length];
       // A wide talent spread anchored on the nation's level: youngsters start
-      // below their eventual ceiling but the best prospects grow into stars as
-      // the aging curve develops them through their early twenties.
-      // Youth-academy investment lifts the whole intake's ceiling (applied
-      // after the draw so the RNG stream — and thus ids/names — is unchanged).
-      final talent = 0.70 + rng.nextDouble() * 0.42 + youthBonus; // 0.70 … 1.30
+      // WELL below their eventual ceiling — even the best prospect debuts short
+      // of the senior stars — then the aging curve develops the gems into stars
+      // through their early twenties. Youth-academy investment lifts the whole
+      // intake's ceiling (applied after the draw so the RNG stream — and thus
+      // ids/names — is unchanged).
+      final talent = 0.56 + rng.nextDouble() * 0.38 + youthBonus; // 0.56 … 0.94
       out.add(
         Player(
           id: _idBase + nationId * _nationStride + bornCycle * _cycleStride + i,

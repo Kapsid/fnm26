@@ -6,15 +6,18 @@ import 'package:fnm/domain/entities/formation.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/entities/tactics.dart';
+import 'package:fnm/domain/services/competition/hosts.dart';
 import 'package:fnm/domain/services/federation/federation_finance.dart';
 import 'package:fnm/domain/services/match/ai_substitutions.dart';
 import 'package:fnm/domain/services/match/match_engine.dart';
+import 'package:fnm/domain/services/match/venue.dart';
 import 'package:fnm/domain/services/squad/condition.dart';
 import 'package:fnm/domain/services/tactics/best_eleven.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/federation/federation_providers.dart';
 import 'package:fnm/features/federation/naturalization_providers.dart';
 import 'package:fnm/features/tactics/condition_providers.dart';
+import 'package:fnm/features/tactics/player_roles_providers.dart';
 import 'package:fnm/features/tactics/tactics_providers.dart';
 
 /// The player's preferred live-match playback speed, as an index into the
@@ -37,6 +40,8 @@ class MatchPreview {
     required this.saveSeed,
     this.opponentSubs = const [],
     this.injuryFactorByNation = const {},
+    this.neutralVenue = false,
+    this.venueHostId,
   });
 
   final Fixture fixture;
@@ -62,6 +67,11 @@ class MatchPreview {
   /// Per-nation injury-rate multipliers (the player's nation carries its
   /// medical investment); passed to the engine on every (re-)sim.
   final Map<int, double> injuryFactorByNation;
+
+  /// Whether this is a neutral-venue finals match (no automatic home advantage),
+  /// and — if the tournament host is playing — which nation still gets it.
+  final bool neutralVenue;
+  final int? venueHostId;
 
   bool get playerIsHome => fixture.homeNationId == playerNationId;
 }
@@ -96,6 +106,9 @@ final AutoDisposeFutureProviderFamily<MatchPreview?, int> matchPreviewProvider =
       // investment lifts its home-grown players.
       final youthBonus =
           await ref.watch(youthBonusByCycleProvider(careerId).future);
+      // A well-used player who plays in a strong league develops over a career.
+      final careerDev =
+          await ref.watch(careerDevBonusProvider(careerId).future);
       // Form, fatigue and morale shift each of the manager's players' effective
       // rating for this match (opponents are unaffected — you manage your own
       // squad's condition).
@@ -108,6 +121,7 @@ final AutoDisposeFutureProviderFamily<MatchPreview?, int> matchPreviewProvider =
             agingYears: CareerService.agingYears(career),
             saveSeed: career.rngSeed,
             youthBonusByCycle: youthBonus,
+            careerStartsByPlayer: careerDev,
           ),
           ...await naturalizedPlayersFor(ref, career),
         ])
@@ -144,6 +158,9 @@ final AutoDisposeFutureProviderFamily<MatchPreview?, int> matchPreviewProvider =
           .where((p) => !startingIds.contains(p.id))
           .toList()
         ..sort((a, b) => b.overall.compareTo(a.overall));
+      // Per-player tactical roles the manager has assigned (shapes who scores /
+      // creates and the set-piece threat; opponents play roleless).
+      final roles = await ref.watch(playerRolesProvider(careerId).future);
       final playerTeam = MatchTeam(
         nationId: playerNationId,
         xi: playerXi,
@@ -151,6 +168,7 @@ final AutoDisposeFutureProviderFamily<MatchPreview?, int> matchPreviewProvider =
         // Both the saved lineup and the auto-filled fallback are laid out in
         // the tactic's shape (f433 when there's no saved tactic).
         formation: playerFormation,
+        roles: roles,
       );
 
       // Opponent: a best XI in a default shape, with a bench to sub from.
@@ -206,18 +224,31 @@ final AutoDisposeFutureProviderFamily<MatchPreview?, int> matchPreviewProvider =
       final playerIsHome = fixture.homeNationId == playerNationId;
       final homeTeam = playerIsHome ? playerTeam : oppTeam;
       final awayTeam = playerIsHome ? oppTeam : playerTeam;
+
+      final allNations = await ref.watch(nationRepositoryProvider).all();
+      // A finals match is played at a neutral host — only the host keeps a home
+      // crowd. Qualifiers, friendlies and the Nations Cup are home-and-away.
+      final venue = venueForFixture(
+        fixture: fixture,
+        nations: allNations,
+        seed: career.rngSeed,
+        cycle: career.cyclePointer,
+      );
+
       final result = const MatchEngine().play(
         home: homeTeam,
         away: awayTeam,
         rng: SeededRng.forFixture(career.rngSeed, fixture.id),
         subs: opponentSubs,
+        // The AI opponent reactively manages the game by the scoreline (chases
+        // when behind, protects a lead); the player controls their own side.
+        aiManagedNationIds: {opponentId},
         injuryFactorByNation: injuryFactorByNation,
+        neutralVenue: venue.neutral,
+        venueHostId: venue.hostId,
       );
 
-      final nations = {
-        for (final n in await ref.watch(nationRepositoryProvider).all())
-          n.id: n,
-      };
+      final nations = {for (final n in allNations) n.id: n};
       return MatchPreview(
         fixture: fixture,
         result: result,
@@ -229,8 +260,62 @@ final AutoDisposeFutureProviderFamily<MatchPreview?, int> matchPreviewProvider =
         saveSeed: career.rngSeed,
         opponentSubs: opponentSubs,
         injuryFactorByNation: injuryFactorByNation,
+        neutralVenue: venue.neutral,
+        venueHostId: venue.hostId,
       );
     });
+
+/// The finals opening-ceremony details shown once, right before the player's
+/// first World Cup finals match: the year and the host nation(s).
+typedef FinalsOpening = ({
+  int year,
+  List<String> hostCodes,
+  List<String> hostNames,
+});
+
+/// Non-null only when the player's next fixture is their FIRST match of the
+/// current World Cup finals — so the match preview can open with a trophy/host
+/// ceremony exactly at kick-off of the tournament, then never again.
+final AutoDisposeFutureProviderFamily<FinalsOpening?, int>
+    finalsOpeningProvider =
+    FutureProvider.autoDispose.family<FinalsOpening?, int>((
+  ref,
+  careerId,
+) async {
+  const wcFinalsRounds = {'GROUP', 'R32', 'R16', 'QF', 'SF', '3RD', 'FINAL'};
+  final comp = ref.watch(competitionRepositoryProvider);
+  final career = await ref.watch(careerRepositoryProvider).byId(careerId);
+  if (career == null) return null;
+  final fixture = await comp.nextFixtureForNation(careerId, career.nationId);
+  if (fixture == null || !wcFinalsRounds.contains(fixture.round)) return null;
+  // Only ahead of the very first finals match — once any finals game has a
+  // result, the tournament is under way and the ceremony has served its purpose.
+  final playerFixtures =
+      await comp.fixturesForNation(careerId, career.nationId);
+  final alreadyStarted = playerFixtures.any(
+    (f) => f.hasResult && wcFinalsRounds.contains(f.round),
+  );
+  if (alreadyStarted) return null;
+  final allNations = await ref.watch(nationRepositoryProvider).all();
+  final year = CareerService.worldCupYear(career.cyclePointer);
+  final hosts = WorldCupHosts.hostsFor(
+    year: year,
+    nations: allNations,
+    seed: career.rngSeed,
+  );
+  final byId = {for (final n in allNations) n.id: n};
+  return (
+    year: year,
+    hostCodes: [
+      for (final h in hosts)
+        if (byId[h] != null) byId[h]!.code,
+    ],
+    hostNames: [
+      for (final h in hosts)
+        if (byId[h] != null) byId[h]!.name,
+    ],
+  );
+});
 
 List<Player> _xiFrom(List<Player> pool, List<int?> ids) {
   final byId = {for (final p in pool) p.id: p};

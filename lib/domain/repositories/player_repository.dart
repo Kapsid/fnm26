@@ -16,11 +16,16 @@ import 'package:fnm/domain/entities/player.dart';
 /// the manager's own nation is passed a non-empty map.
 abstract interface class PlayerRepository {
   /// All players eligible for [nationId], ordered by overall (best first).
+  ///
+  /// `careerStartsByPlayer` (playerId → tournament starts) applies the
+  /// career-development bump — a well-used player grows a touch. Optional; an
+  /// empty map (the default, and every non-manager call) means no development.
   Future<List<Player>> byNation(
     int nationId, {
     int agingYears,
     int saveSeed,
     Map<int, double> youthBonusByCycle,
+    Map<int, int> careerStartsByPlayer,
   });
 
   /// Every player across all nations (unordered).
@@ -32,5 +37,6 @@ abstract interface class PlayerRepository {
     int agingYears,
     int saveSeed,
     Map<int, double> youthBonusByCycle,
+    Map<int, int> careerStartsByPlayer,
   });
 }

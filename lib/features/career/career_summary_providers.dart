@@ -3,6 +3,7 @@ import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/career.dart';
 import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/entities/nation.dart';
+import 'package:fnm/domain/services/competition/continental_cups.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/ranking/world_ranking_providers.dart';
 
@@ -166,14 +167,33 @@ careerSummaryProvider =
     }
   }
 
-  // One run per honoured tournament (World Cup + the player's continental cup),
-  // with the team's own finish worked out from its finals fixtures.
+  // Which cycle an honour belongs to: worldCupYear(c) = 2030 + 4c; an honour
+  // belongs to the cycle whose World Cup is the next one on or after it
+  // (continental cups sit two years before their cycle's World Cup).
+  final stints = await ref.watch(careerRepositoryProvider).stints(careerId);
+  int cycleForYear(int year) {
+    final c = ((year - CareerService.worldCupYear(0)) / 4).ceil();
+    return c < 0 ? 0 : c;
+  }
+
+  // One run per tournament the manager's team could actually contest: the
+  // World Cup and the continental cup of the nation they managed that cycle.
+  // Other confederations' cups (and the background Nations Cup / Continental
+  // Clash entries) are NOT the manager's campaigns — listing them filled the
+  // career page with "Did not qualify" rows for cups the team can't enter.
   final runs = <TournamentRun>[];
   var golds = 0;
   var silvers = 0;
   var bronzes = 0;
   for (final h in honours) {
     final isWc = h.competition == 'World Championship';
+    if (!isWc) {
+      final managedId = stints[cycleForYear(h.year)] ?? career.nationId;
+      final conf = nations[managedId]?.confederation;
+      final ownCup =
+          conf == null ? null : ContinentalCups.byConfederation[conf]?.name;
+      if (h.competition != ownCup) continue;
+    }
     final display = isWc ? 'World Cup' : h.competition;
     final mine = fixtures.where((f) {
       final core = _coreRound(f.round);
@@ -202,15 +222,6 @@ careerSummaryProvider =
   // competition. A trophy counts as the manager's when the nation they were
   // managing that cycle is the champion — so titles survive a change of nation
   // (the runs above only track the current nation's own campaigns).
-  final stints = await ref.watch(careerRepositoryProvider).stints(careerId);
-  int cycleForYear(int year) {
-    // worldCupYear(c) = 2030 + 4c; an honour belongs to the cycle whose World
-    // Cup is the next one on or after it (continental cups sit two years
-    // before their cycle's World Cup).
-    final c = ((year - CareerService.worldCupYear(0)) / 4).ceil();
-    return c < 0 ? 0 : c;
-  }
-
   final byCompetition = <String, List<TrophyWin>>{};
   for (final h in honours) {
     final managedNation = stints[cycleForYear(h.year)] ?? career.nationId;

@@ -1,7 +1,10 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/core/rng/seeded_rng.dart';
 import 'package:fnm/data/data_providers.dart';
+import 'package:fnm/domain/entities/career.dart';
 import 'package:fnm/domain/entities/nation.dart';
+import 'package:fnm/domain/repositories/competition_repository.dart';
+import 'package:fnm/domain/services/federation/federation_finance.dart';
 import 'package:fnm/features/achievements/achievement_providers.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/career/career_summary_providers.dart';
@@ -33,6 +36,9 @@ class RolloverVerdict {
     required this.sacked,
     required this.currentNation,
     required this.offers,
+    required this.reputation,
+    required this.nationalHero,
+    required this.cyclesAtNation,
   });
 
   /// A 0–100 rating of the cycle just gone.
@@ -44,6 +50,28 @@ class RolloverVerdict {
   final bool sacked;
   final Nation? currentNation;
   final List<NationOffer> offers;
+
+  /// A 0–100 career-long standing built from trophies won and years served —
+  /// it cushions the job market so a decorated manager keeps drawing big offers
+  /// through a lean cycle, and an unproven one has to earn them.
+  final int reputation;
+
+  /// Whether the manager is a national hero at their current nation (a long,
+  /// decorated tenure): the board will not sack a hero, and the nation implores
+  /// them to stay.
+  final bool nationalHero;
+
+  /// Consecutive cycles served at the current nation.
+  final int cyclesAtNation;
+
+  /// A short label for the reputation tier, for the UI.
+  String get reputationLabel => switch (reputation) {
+        >= 85 => 'Iconic',
+        >= 70 => 'Renowned',
+        >= 50 => 'Established',
+        >= 30 => 'Up-and-coming',
+        _ => 'Unproven',
+      };
 }
 
 /// Evaluates the manager's just-finished cycle and produces the board verdict
@@ -69,9 +97,31 @@ final AutoDisposeFutureProviderFamily<RolloverVerdict?, int>
   final currentPos =
       ranking.position[career.nationId] ?? currentNation?.ranking ?? total;
 
-  // A genuinely dismal cycle costs the manager their job; the bar is low-ish so
-  // most cycles are survived.
-  final sacked = perf < 25;
+  // Career-long reputation and national-hero standing — the "job market depth"
+  // beyond a single cycle's form. Built from the manager's own titles and how
+  // long they've served, computed from stored honours + stints (no new state).
+  final careerRepo = ref.watch(careerRepositoryProvider);
+  final stints = await careerRepo.stints(careerId);
+  final honours =
+      await ref.watch(competitionRepositoryProvider).honours(careerId);
+  final rep = _reputation(career, stints, honours);
+  final cyclesAtNation = _cyclesAtNation(career, stints);
+  final titlesAtNation =
+      _titlesAtNation(career, stints, honours, career.nationId);
+  // A hero: a long, decorated stay with the same nation. The board won't sack
+  // a hero, and the nation begs them to stay.
+  final nationalHero =
+      (cyclesAtNation >= 3 && titlesAtNation >= 1) || cyclesAtNation >= 5;
+
+  // A truly disastrous cycle costs the manager their job — but the board is
+  // patient: only a dismal showing risks the sack, a decent reputation buys
+  // extra rope, investing in Board Relations buys still more, and a national
+  // hero is never dismissed.
+  final tolerance = FederationFinance.boardTolerance(
+    (await careerRepo.investment(careerId, career.cyclePointer)).boardRelations,
+  );
+  final sackBar = (rep + tolerance >= 60 ? 8 : 15) - tolerance ~/ 3;
+  final sacked = perf < sackBar && !nationalHero;
 
   // How the offer band shifts from the current job: strong cycles unlock
   // stronger nations, weak ones only weaker.
@@ -81,7 +131,11 @@ final AutoDisposeFutureProviderFamily<RolloverVerdict?, int>
   } else {
     factor = 1 + (55 - perf) / 55 * 2.2; // up to ~3.2x weaker
   }
-  final center = (currentPos * factor).round().clamp(1, total);
+  // Reputation cushions the band: an iconic manager still draws strong offers
+  // after a lean cycle; an unproven one is marked tougher (±20% at the ends).
+  final repFactor = 1 - (rep - 50) / 50 * 0.20;
+  final center =
+      (currentPos * factor * repFactor).round().clamp(1, total);
 
   final rng = SeededRng(career.rngSeed ^ (career.cyclePointer * 0x77) ^ 0xB0A5);
   final offers = <NationOffer>[];
@@ -115,16 +169,89 @@ final AutoDisposeFutureProviderFamily<RolloverVerdict?, int>
 
   final best = _bestResult(summary, career.cyclePointer);
   final (headline, detail) = _verdict(perf, sacked, best);
+  final heroNote = nationalHero && !sacked
+      ? ' ${currentNation?.name ?? 'The nation'} adore you — a national hero '
+          'after $cyclesAtNation cycles; your job is safe for as long as you '
+          'want it.'
+      : '';
 
   return RolloverVerdict(
     performance: perf,
-    headline: headline,
-    detail: detail,
+    headline: nationalHero && perf < 30 ? 'The nation stands by you' : headline,
+    detail: '$detail$heroNote',
     sacked: sacked,
     currentNation: currentNation,
     offers: offers,
+    reputation: rep,
+    nationalHero: nationalHero,
+    cyclesAtNation: cyclesAtNation,
   );
 });
+
+/// Which cycle an honour belongs to (the cycle whose World Cup is the next one
+/// on or after the honour's year) — mirrors the challenge/summary mapping.
+int _cycleForYear(int year) {
+  final c = ((year - CareerService.worldCupYear(0)) / 4).ceil();
+  return c < 0 ? 0 : c;
+}
+
+/// The nation the manager led in [cycle] (their current nation if unrecorded).
+int _managedIn(Career career, Map<int, int> stints, int cycle) =>
+    stints[cycle] ?? career.nationId;
+
+/// A 0–100 career reputation from the manager's own major honours and tenure.
+int _reputation(Career career, Map<int, int> stints, List<Honour> honours) {
+  var wc = 0;
+  var cont = 0;
+  var other = 0;
+  for (final h in honours) {
+    if (h.year < CareerService.cycleStart.year) continue;
+    final managed = _managedIn(career, stints, _cycleForYear(h.year));
+    if (h.championId != managed) continue;
+    switch (h.competition) {
+      case 'World Championship':
+        wc++;
+      case 'Nations Cup':
+      case 'Continental Clash':
+        other++;
+      default:
+        cont++; // continental championships
+    }
+  }
+  final years = career.inGameDate.year - CareerService.cycleStart.year;
+  final score = 20 + wc * 20 + cont * 8 + other * 4 + (years * 0.5);
+  return score.round().clamp(0, 100);
+}
+
+/// Consecutive cycles the manager has served at their current nation, counting
+/// back from the just-finished cycle.
+int _cyclesAtNation(Career career, Map<int, int> stints) {
+  var count = 0;
+  for (var c = career.cyclePointer; c >= 0; c--) {
+    if (_managedIn(career, stints, c) == career.nationId) {
+      count++;
+    } else {
+      break;
+    }
+  }
+  return count;
+}
+
+/// Major titles the manager won specifically with [nationId].
+int _titlesAtNation(
+  Career career,
+  Map<int, int> stints,
+  List<Honour> honours,
+  int nationId,
+) {
+  var titles = 0;
+  for (final h in honours) {
+    if (h.year < CareerService.cycleStart.year) continue;
+    final managed = _managedIn(career, stints, _cycleForYear(h.year));
+    if (managed == nationId && h.championId == nationId) titles++;
+  }
+  return titles;
+}
 
 /// The best tournament placement the manager achieved this cycle, for flavour.
 String _bestResult(CareerSummary? summary, int cycle) {

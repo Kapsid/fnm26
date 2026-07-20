@@ -21,6 +21,7 @@ final AutoDisposeFutureProviderFamily<LegendsView?, int> legendsProvider =
   final nationId = career.nationId;
   final aging = CareerService.agingYears(career);
   final youth = await ref.watch(youthBonusByCycleProvider(careerId).future);
+  final careerDev = await ref.watch(careerDevBonusProvider(careerId).future);
   final nations = {
     for (final n in await ref.watch(nationRepositoryProvider).all()) n.id: n,
   };
@@ -43,26 +44,37 @@ final AutoDisposeFutureProviderFamily<LegendsView?, int> legendsProvider =
     );
   }
 
+  // Persistent tallies from the whole save: caps from the appearances log and
+  // goals from the goal events — both now recorded for background-simulated
+  // matches too, so a legend's record isn't limited to the seasons the manager
+  // happened to be in charge. Per-match detail (assists, ratings, MOTM) only
+  // exists for played matches, so those stay as-is.
+  final capsByPlayer = {for (final c in caps) c.playerId: c.games};
+  final goalsByPlayer = {for (final s in scorers) s.playerId: s.goals};
+  int maxOf(int a, int b) => a > b ? a : b;
+
   final stats = <LegendStat>[];
   for (final id in ids) {
     final career0 = await comp.playerCareerStats(careerId, id);
-    if (career0 == null || career0.caps < 3) continue; // needs a real record
+    final capCount = maxOf(career0?.caps ?? 0, capsByPlayer[id] ?? 0);
+    if (capCount < 3) continue; // needs a real record
     final player = await playerRepo.byId(
       id,
       agingYears: aging,
       saveSeed: career.rngSeed,
       youthBonusByCycle: youth,
+      careerStartsByPlayer: careerDev,
     );
     if (player == null) continue;
     stats.add((
       playerId: id,
       name: player.name,
       position: player.position,
-      caps: career0.caps,
-      goals: career0.goals,
-      assists: career0.assists,
-      motm: career0.motm,
-      avgRating: career0.avgRating,
+      caps: capCount,
+      goals: maxOf(career0?.goals ?? 0, goalsByPlayer[id] ?? 0),
+      assists: career0?.assists ?? 0,
+      motm: career0?.motm ?? 0,
+      avgRating: career0?.avgRating ?? 6.5,
     ));
   }
 

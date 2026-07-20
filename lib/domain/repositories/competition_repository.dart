@@ -59,6 +59,19 @@ typedef GoalRecord = ({
 /// A top-scorer tally.
 typedef ScorerTally = ({int playerId, int nationId, int goals});
 
+/// The head-to-head record between two nations across a save: from nation A's
+/// point of view (its wins, the draws, its losses, and both sides' goals).
+typedef HeadToHead = ({
+  int played,
+  int winsA,
+  int draws,
+  int winsB,
+  int goalsA,
+  int goalsB,
+  int biggestWinMarginA,
+  int biggestWinMarginB,
+});
+
 /// One row of a player's match-by-match history: the fixture and the player's
 /// full stat line for it.
 typedef PlayerMatchStat = ({
@@ -150,6 +163,10 @@ abstract interface class CompetitionRepository {
   /// A nation's fixtures, ordered by date.
   Future<List<Fixture>> fixturesForNation(int careerId, int nationId);
 
+  /// The display name of every competition in the save, keyed by competition
+  /// id — so a fixture's `competitionId` can be shown as a readable label.
+  Future<Map<int, String>> competitionNames(int careerId);
+
   /// Every fixture in the save, ordered by matchday then date.
   Future<List<Fixture>> allFixtures(int careerId);
 
@@ -167,12 +184,20 @@ abstract interface class CompetitionRepository {
   /// for the player to play rather than being silently skipped).
   Future<Fixture?> nextFixtureForNation(int careerId, int nationId);
 
-  /// Records a fixture result.
+  /// Records a fixture result. For a level knockout, [afterExtraTime] marks an
+  /// ET finish and [homePenalties]/[awayPenalties] carry the shootout score.
   Future<void> recordResult({
     required int fixtureId,
     required int homeScore,
     required int awayScore,
+    bool afterExtraTime,
+    int? homePenalties,
+    int? awayPenalties,
   });
+
+  /// Moves an unplayed fixture to a new [date] (e.g. splitting a legacy save's
+  /// third-place play-off and final that shared a day).
+  Future<void> rescheduleFixture(int fixtureId, DateTime date);
 
   /// The group table containing [nationId] for this save, or null.
   Future<GroupTable?> groupTableForNation(int careerId, int nationId);
@@ -219,7 +244,10 @@ abstract interface class CompetitionRepository {
   /// Whether a continental-finals tournament is under way this cycle — it
   /// exists and still has an unplayed fixture. Lets the hub surface the
   /// continental championship even when the player's nation didn't qualify.
-  Future<bool> hasLiveContinentalFinals(int careerId);
+  Future<bool> hasLiveContinentalFinals(
+    int careerId, {
+    Confederation? confederation,
+  });
 
   /// Whether the Nations Cup Finals Four (its knockout stage — semis or final)
   /// is under way this cycle with an unplayed fixture. Lets the hub surface the
@@ -239,12 +267,29 @@ abstract interface class CompetitionRepository {
   /// The earliest unplayed fixture date among the live finals tournaments (the
   /// World Cup + continental finals), or null when none is under way — so the
   /// hub can step a tournament the player isn't in, day by day.
-  Future<DateTime?> earliestUnplayedFinalsDate(int careerId);
+  ///
+  /// [playerConfederation] limits the continental finals considered to the
+  /// player's own region — every region's cup exists as fixtures, but only the
+  /// player's is stepped day by day (the rest resolve in the background).
+  Future<DateTime?> earliestUnplayedFinalsDate(
+    int careerId, {
+    Confederation? playerConfederation,
+  });
 
   /// The earliest unplayed Nations Cup Finals Four (NSF/NFINAL) fixture date, or
   /// null when none is pending — so the hub can step the Finals Four day by day
   /// even when the player's nation isn't in it.
   Future<DateTime?> earliestUnplayedNationsCupFinalsDate(int careerId);
+
+  /// The earliest unplayed fixture date of the current cycle's tournament of
+  /// [kind] (optionally the one for [confederation]), or null when none pends —
+  /// so the hub can tell when a tournament's FIRST match is imminent and fire
+  /// its opening ceremony right before it, not weeks early behind friendlies.
+  Future<DateTime?> earliestUnplayedDateOfKind(
+    int careerId,
+    CompetitionKind kind, {
+    Confederation? confederation,
+  });
 
   /// Persists the finals group-stage [draw], scheduling matchdays from
   /// [groupStart].
@@ -276,8 +321,9 @@ abstract interface class CompetitionRepository {
   /// group name (empty if it has no group stage).
   Future<List<FinalsGroupTable>> tournamentGroupTables(
     int careerId,
-    CompetitionKind kind,
-  );
+    CompetitionKind kind, {
+    Confederation? confederation,
+  });
 
   /// Knockout fixtures for a [round] (`R16`/`QF`/`SF`/`3RD`/`FINAL`) of the
   /// current cycle's tournament of [kind].
@@ -285,6 +331,7 @@ abstract interface class CompetitionRepository {
     int careerId,
     String round, {
     CompetitionKind kind = CompetitionKind.worldCupFinals,
+    Confederation? confederation,
   });
 
   /// All finals knockout fixtures (round ≠ `GROUP`), by date then id.
@@ -297,10 +344,15 @@ abstract interface class CompetitionRepository {
     required List<(int home, int away)> pairings,
     required DateTime date,
     CompetitionKind kind = CompetitionKind.worldCupFinals,
+    Confederation? confederation,
   });
 
   /// Whether the current cycle has a tournament of [kind].
-  Future<bool> hasTournament(int careerId, CompetitionKind kind);
+  Future<bool> hasTournament(
+    int careerId,
+    CompetitionKind kind, {
+    Confederation? confederation,
+  });
 
   /// Creates a knockout tournament for the current cycle, seeding [pairings]
   /// as the [firstRound] (e.g. `R16` or `QF`).
@@ -328,6 +380,19 @@ abstract interface class CompetitionRepository {
   Future<List<ScorerTally>> topScorers(
     int careerId, {
     CompetitionKind? kind,
+    Confederation? confederation,
+    int limit,
+  });
+
+  /// All-time top scorers across every cycle for a competition [kind] — the
+  /// save's own record book. Excludes the pre-seeded real-world history (which
+  /// stores no goal events), best first. With no [kind], every competition
+  /// counts (the global chart). Pass [confederation] to scope a continental
+  /// championship to its own region, so each cup has its own all-time chart.
+  Future<List<ScorerTally>> allTimeTopScorers(
+    int careerId, {
+    CompetitionKind? kind,
+    Confederation? confederation,
     int limit,
   });
 
@@ -375,6 +440,51 @@ abstract interface class CompetitionRepository {
     int nationId, {
     int limit,
   });
+
+  /// All-time most-capped players across EVERY nation (most games first) — the
+  /// save's global appearance record, best first.
+  Future<List<({int playerId, int nationId, int games})>> allTimeTopAppearances(
+    int careerId, {
+    int limit,
+  });
+
+  /// Logs each player's participation in [competitionId] (one competition
+  /// edition), for tournament-scoped records. Every [player] gains one
+  /// appearance; those with `started == true` also gain one start. Called once
+  /// per played match, for the whole world (both teams).
+  Future<void> recordTournamentAppearances(
+    int careerId,
+    int competitionId,
+    Iterable<({int playerId, int nationId, bool started})> players,
+  );
+
+  /// Total tournament STARTS per player across the whole save (every nation),
+  /// for the career-development bonus — a player who has started many matches
+  /// grows a touch. Keyed by player id.
+  Future<Map<int, int>> careerStartsByPlayer(int careerId);
+
+  /// All-time most STARTS in competitions of [kind] (e.g. World Cup finals),
+  /// across every nation and edition (most starts first) — for the records
+  /// screen's tournament leaderboards.
+  Future<List<({int playerId, int nationId, int starts})>>
+      mostTournamentStarts(
+    int careerId, {
+    required CompetitionKind kind,
+    int limit,
+  });
+
+  /// All-time most distinct tournaments ATTENDED (an appearance in an edition of
+  /// any of [kinds]) across every nation, most first — "most cups attended".
+  Future<List<({int playerId, int nationId, int tournaments})>>
+      mostTournamentsAttended(
+    int careerId, {
+    required Set<CompetitionKind> kinds,
+    int limit,
+  });
+
+  /// The all-time head-to-head record between [nationA] and [nationB] across
+  /// every played fixture in the save (friendlies included).
+  Future<HeadToHead> headToHead(int careerId, int nationA, int nationB);
 
   /// Persists a match's per-player stat lines (both teams). Called once per
   /// played match; re-recording the same fixture overwrites its lines.

@@ -65,11 +65,18 @@ class _CallUpScreenState extends ConsumerState<CallUpScreen> {
   /// with [_bestQuality] and [_previousSquad] there for when it isn't.
   Set<int> _initialSquad(List<Player> pool, Iterable<int> current) => {};
 
-  /// The best [kMaxSquadSize] available players by rating.
+  /// The best [kMaxSquadSize] available players by rating, but with **at most
+  /// three goalkeepers** — a real squad carries three keepers and fills the
+  /// rest with outfielders, rather than stacking whoever rates highest.
   Set<int> _bestQuality(List<Player> pool, Map<int, PlayerAbsence> absences) {
     final fit = pool.where((p) => absences[p.id]?.isAvailable ?? true).toList()
       ..sort((a, b) => b.overall.compareTo(a.overall));
-    return fit.take(kMaxSquadSize).map((p) => p.id).toSet();
+    bool isGk(Player p) =>
+        p.position.category == PositionCategory.goalkeeper;
+    final keepers = fit.where(isGk).take(3).toList();
+    final outfield =
+        fit.where((p) => !isGk(p)).take(kMaxSquadSize - keepers.length);
+    return {...keepers, ...outfield}.map((p) => p.id).toSet();
   }
 
   /// Last time's squad, minus anyone who can no longer play.

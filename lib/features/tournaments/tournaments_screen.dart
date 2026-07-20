@@ -5,6 +5,7 @@ import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/domain/entities/enums.dart';
+import 'package:fnm/domain/services/competition/trophies.dart';
 import 'package:fnm/features/tournaments/tournaments_providers.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
@@ -181,19 +182,12 @@ class TournamentsScreen extends ConsumerWidget {
                   onView: () =>
                       context.go('${Routes.nationsCup}?careerId=$careerId'),
                 ),
-              if (overview?.continentalClash != null)
-                _ChampionshipTile(
-                  championship: const _Championship(
-                    name: 'Continental Clash',
-                    region: 'INTERCONTINENTAL',
-                    icon: Icons.flash_on,
-                    description: 'Champions of two continents, one match.',
-                  ),
-                  status: overview!.continentalClash,
-                  championName: overview
-                      .nations[overview.continentalClash!.championId]?.name,
-                  onView: () {},
-                ),
+              // The Continental Clash only sits among YOUR competitions when
+              // your nation is one of the two entrants; otherwise it drops to
+              // the other-competitions grid below.
+              if (overview?.continentalClash != null &&
+                  overview!.clashInvolvesPlayer)
+                _clashTile(context, overview),
             ]),
             const SizedBox(height: AppSpacing.lg),
             Text(
@@ -202,7 +196,12 @@ class TournamentsScreen extends ConsumerWidget {
                   AppTypography.labelMedium.copyWith(color: AppColors.primary),
             ),
             const SizedBox(height: AppSpacing.sm),
-            _tileGrid([for (final c in others) _tile(context, overview, c)]),
+            _tileGrid([
+              for (final c in others) _tile(context, overview, c),
+              if (overview?.continentalClash != null &&
+                  !overview!.clashInvolvesPlayer)
+                _clashTile(context, overview),
+            ]),
             const SizedBox(height: AppSpacing.lg),
           ],
           );
@@ -224,6 +223,24 @@ class TournamentsScreen extends ConsumerWidget {
       championName:
           championId == null ? null : overview?.nations[championId]?.name,
       onView: () => _open(context, c),
+    );
+  }
+
+  /// The Continental Clash tile, placed either among your competitions or the
+  /// other-competitions grid depending on whether you're an entrant.
+  Widget _clashTile(BuildContext context, TournamentsOverview overview) {
+    return _ChampionshipTile(
+      championship: const _Championship(
+        name: 'Continental Clash',
+        region: 'INTERCONTINENTAL',
+        icon: Icons.flash_on,
+        description: 'Champions of two continents, one match.',
+      ),
+      status: overview.continentalClash,
+      championName:
+          overview.nations[overview.continentalClash!.championId]?.name,
+      onView: () =>
+          context.go('${Routes.continentalClash}?careerId=$careerId'),
     );
   }
 
@@ -332,7 +349,23 @@ class _ChampionshipTile extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(c.icon, size: 24, color: accent),
+          () {
+            final trophy = Trophies.forCompetitionName(c.name);
+            if (trophy == null) {
+              return Icon(c.icon, size: 24, color: accent);
+            }
+            // The trophy artwork, dimmed until this competition is live.
+            return Opacity(
+              opacity: available ? 1 : 0.5,
+              child: Image.asset(
+                trophy,
+                height: 40,
+                fit: BoxFit.contain,
+                errorBuilder: (_, __, ___) =>
+                    Icon(c.icon, size: 24, color: accent),
+              ),
+            );
+          }(),
           const Spacer(),
           Text(
             c.name,

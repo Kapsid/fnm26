@@ -12,14 +12,49 @@ import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
 
 /// FIFA-style world ranking of every nation, filterable by confederation, with
-/// the player's team highlighted.
-class WorldRankingScreen extends ConsumerWidget {
+/// the player's team highlighted. Opens focused on the manager's own nation.
+class WorldRankingScreen extends ConsumerStatefulWidget {
   const WorldRankingScreen({required this.careerId, super.key});
 
   final int careerId;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<WorldRankingScreen> createState() =>
+      _WorldRankingScreenState();
+}
+
+class _WorldRankingScreenState extends ConsumerState<WorldRankingScreen> {
+  final _controller = ScrollController();
+  bool _focused = false;
+
+  /// Estimated height of one rank row plus its separator, for the jump-to.
+  static const _rowExtent = 64.0;
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  /// Scrolls so the manager's nation is a couple of rows from the top — done
+  /// once, after the first data build.
+  void _focusPlayer(int index) {
+    if (_focused || index < 0) return;
+    _focused = true;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted || !_controller.hasClients) return;
+      // Centre the player's row in the viewport — a few nations above and a few
+      // below — rather than pinning it near the top.
+      final viewport = _controller.position.viewportDimension;
+      final target = (index * _rowExtent + _rowExtent / 2 - viewport / 2)
+          .clamp(0.0, _controller.position.maxScrollExtent);
+      _controller.jumpTo(target);
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final careerId = widget.careerId;
     final dataAsync = ref.watch(worldRankingProvider(careerId));
     final region = ref.watch(selectedRankRegionProvider);
 
@@ -46,6 +81,12 @@ class WorldRankingScreen extends ConsumerWidget {
           final filtered = region == null
               ? data.nations
               : data.nations.where((n) => n.confederation == region).toList();
+          // Focus the player's row the first time the full list lands.
+          if (region == null) {
+            _focusPlayer(
+              filtered.indexWhere((n) => n.id == data.playerNationId),
+            );
+          }
 
           return Column(
             children: [
@@ -57,6 +98,7 @@ class WorldRankingScreen extends ConsumerWidget {
               ),
               Expanded(
                 child: ListView.separated(
+                  controller: _controller,
                   padding: const EdgeInsets.all(AppSpacing.marginMobile),
                   itemCount: filtered.length,
                   separatorBuilder: (_, _) =>

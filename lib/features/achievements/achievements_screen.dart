@@ -32,6 +32,17 @@ class AchievementsScreen extends ConsumerWidget {
           style: AppTypography.labelMedium.copyWith(color: AppColors.primary),
         ),
         centerTitle: true,
+        actions: [
+          IconButton(
+            tooltip: 'Challenges',
+            icon: const Icon(
+              Icons.local_fire_department_rounded,
+              color: AppColors.primary,
+            ),
+            onPressed: () =>
+                context.go('${Routes.challenges}?careerId=$careerId'),
+          ),
+        ],
       ),
       body: viewAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
@@ -46,6 +57,41 @@ class AchievementsScreen extends ConsumerWidget {
             padding: const EdgeInsets.all(AppSpacing.marginMobile),
             children: [
               _SatisfactionCard(percent: satisfaction),
+              const SizedBox(height: AppSpacing.md),
+              AppCard(
+                onTap: () =>
+                    context.go('${Routes.challenges}?careerId=$careerId'),
+                child: Row(
+                  children: [
+                    const Icon(
+                      Icons.local_fire_department_rounded,
+                      color: AppColors.primary,
+                    ),
+                    const SizedBox(width: AppSpacing.md),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            'CHALLENGES',
+                            style: AppTypography.titleMedium,
+                          ),
+                          Text(
+                            'Brutal career-long tests',
+                            style: AppTypography.labelSmall.copyWith(
+                              color: AppColors.onSurfaceVariant,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const Icon(
+                      Icons.chevron_right,
+                      color: AppColors.onSurfaceVariant,
+                    ),
+                  ],
+                ),
+              ),
               const SizedBox(height: AppSpacing.md),
               Row(
                 children: [

@@ -18,6 +18,14 @@ class SeedLoader {
 
   /// Seeds the database if it has not been seeded yet. Returns `true` if
   /// seeding was performed, `false` if it was already populated.
+  ///
+  /// Nearly every provider awaits this, so on a fresh database several callers
+  /// race: each sees an empty nations table and each inserts the seed. The
+  /// slower one used to die on `UNIQUE constraint failed: nations.id` — the
+  /// "nations error" the new-game screen showed on first launch (a relaunch
+  /// found the table populated and looked fine). The seed batch now uses
+  /// `insertOrIgnore`, so a duplicate row from a concurrent seeder is skipped
+  /// rather than throwing the whole insert away — the race resolves silently.
   Future<bool> ensureSeeded() async {
     final existing =
         await (_db.select(_db.nations)..limit(1)).getSingleOrNull();
@@ -34,8 +42,18 @@ class SeedLoader {
 
     await _db.batch((batch) {
       batch
-        ..insertAll(_db.nations, nations.map(_nationCompanion))
-        ..insertAll(_db.players, players.map(_playerCompanion));
+        // insertOrIgnore: if a concurrent seeder landed the row first, skip it
+        // rather than throwing the whole batch away (see the doc comment).
+        ..insertAll(
+          _db.nations,
+          nations.map(_nationCompanion),
+          mode: InsertMode.insertOrIgnore,
+        )
+        ..insertAll(
+          _db.players,
+          players.map(_playerCompanion),
+          mode: InsertMode.insertOrIgnore,
+        );
     });
     return true;
   }

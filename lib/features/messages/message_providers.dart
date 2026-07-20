@@ -252,6 +252,46 @@ class MessageService {
             4,
           ));
         }
+
+        // Young Player of the Tournament — the standout finals performer aged
+        // 21 or under, weighted like the senior award. A separate trophy so a
+        // breakout star is recognised even when a veteran takes the main prize.
+        ({int nationId, String name, int age, num score})? young;
+        for (final s in finalsScorers) {
+          final p = await playerRepo.byId(
+            s.playerId,
+            agingYears: CareerService.agingYears(career),
+            saveSeed: career.rngSeed,
+          );
+          if (p == null || p.age > 21) continue;
+          final teamBonus = s.nationId == honour.championId
+              ? 25
+              : s.nationId == honour.runnerUpId
+                  ? 10
+                  : 0;
+          final score = s.goals * 10 + p.overall + teamBonus;
+          if (young == null || score > young.score) {
+            young = (
+              nationId: s.nationId,
+              name: p.name,
+              age: p.age,
+              score: score,
+            );
+          }
+        }
+        if (young != null) {
+          final mine = young.nationId == career.nationId;
+          drafts.add(_Draft(
+            'ypot:$cycle',
+            'award',
+            'Young Player of the Tournament',
+            '${young.name} (${nameOf(young.nationId)}), just ${young.age}, is '
+                'named the $wcYear Young Player of the Tournament'
+                '${mine ? ' — one of yours!' : '.'}',
+            wcYear,
+            4,
+          ));
+        }
       }
     }
 
@@ -382,15 +422,70 @@ class MessageService {
         );
         squads[y] = {for (final p in list) p.id: p};
       }
+      // Career caps/goals, to judge who deserves an individual send-off and who
+      // belongs in the hall of fame.
+      final capsById = {for (final c in caps) c.playerId: c.games};
+      final goalsById = {for (final s in scorers) s.playerId: s.goals};
+
       for (final y in missingYears) {
+        final reportYear = CareerService.cycleStart.year + y;
         drafts.add(_Draft(
           'aging:$y',
           'aging',
-          'Squad development · ${CareerService.cycleStart.year + y}',
+          'Squad development · $reportYear',
           _agingReport(squads[y - 1]!, squads[y]!),
-          CareerService.cycleStart.year + y,
+          reportYear,
           4,
         ));
+
+        // Notable individuals bowing out — a dignified international retirement
+        // announcement, and a hall-of-fame induction for the true greats. Both
+        // are derived from the same year-on-year pool diff the report uses.
+        final retirees = [
+          for (final e in squads[y - 1]!.entries)
+            if (!squads[y]!.containsKey(e.key) && e.value.age >= 34) e.value,
+        ]..sort((a, b) {
+            final ca = (capsById[a.id] ?? 0) + (goalsById[a.id] ?? 0);
+            final cb = (capsById[b.id] ?? 0) + (goalsById[b.id] ?? 0);
+            return cb.compareTo(ca);
+          });
+        for (final p in retirees) {
+          final pc = capsById[p.id] ?? 0;
+          final pg = goalsById[p.id] ?? 0;
+          // Worth an individual send-off: a real international career, not a
+          // fringe player who won a couple of caps.
+          final notable = pc >= 30 || pg >= 15 || p.overall >= 82;
+          if (notable && !existing.contains('retire:${p.id}')) {
+            final tally = [
+              if (pc > 0) '$pc caps',
+              if (pg > 0) '$pg goals',
+            ].join(', ');
+            final sendoff = tally.isEmpty ? '' : ', bowing out with $tally';
+            drafts.add(_Draft(
+              'retire:${p.id}',
+              'retirement',
+              '${p.name} retires from internationals',
+              '${p.name} has announced their retirement from international '
+                  'football at ${p.age}$sendoff. A servant of your nation — '
+                  'we thank them.',
+              reportYear,
+              4,
+            ));
+          }
+          // Hall of Fame — reserved for the genuine greats.
+          final worthy = pc >= 60 || pg >= 30;
+          if (worthy && !existing.contains('hof:${p.id}')) {
+            drafts.add(_Draft(
+              'hof:${p.id}',
+              'halloffame',
+              '${p.name} inducted into the Hall of Fame',
+              '${p.name} takes their place among your nation’s immortals '
+                  '($pc caps, $pg goals). See them in Legends.',
+              reportYear,
+              4,
+            ));
+          }
+        }
       }
     }
 

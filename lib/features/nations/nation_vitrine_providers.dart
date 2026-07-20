@@ -140,9 +140,16 @@ nationVitrineProvider = FutureProvider.autoDispose
       var coS = 0;
       var coB = 0;
       final titles = <TitleWon>[];
+      // Global competitions any nation can win, shown alongside its own
+      // confederation's continental cup.
+      const globalCups = {'Nations Cup', 'Continental Clash'};
       for (final h in honours) {
         final isWc = h.competition == 'World Championship';
-        if (!isWc && h.competition != ownCup) continue; // foreign cup — skip
+        if (!isWc &&
+            h.competition != ownCup &&
+            !globalCups.contains(h.competition)) {
+          continue; // a foreign confederation's cup — skip
+        }
         final gold = h.championId == arg.nationId;
         final silver = h.runnerUpId == arg.nationId;
         final bronze = h.thirdId == arg.nationId;

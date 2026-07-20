@@ -1,0 +1,63 @@
+{
+  "@@locale": "en",
+
+  "matchPreviewTitle": "MATCH PREVIEW",
+  "@matchPreviewTitle": { "description": "App-bar title on the pre-match preview screen." },
+  "matchKickOff": "Kick off",
+  "@matchKickOff": { "description": "Button that starts the live match." },
+  "matchTactics": "Tactics",
+  "@matchTactics": { "description": "Button opening the lineup & tactics editor." },
+  "matchYourXi": "YOUR XI",
+  "@matchYourXi": { "description": "Heading above the manager's starting eleven." },
+  "matchHeadToHead": "HEAD TO HEAD",
+  "@matchHeadToHead": { "description": "Heading on the head-to-head record card." },
+
+  "ceremonyWorldCupYear": "WORLD CUP {year}",
+  "@ceremonyWorldCupYear": {
+    "description": "Opening-ceremony banner heading with the edition year.",
+    "placeholders": { "year": { "type": "int", "example": "2030" } }
+  },
+  "ceremonyFinalsAreHere": "THE FINALS ARE HERE",
+  "@ceremonyFinalsAreHere": { "description": "Opening-ceremony tagline." },
+  "ceremonyHostedBy": "HOSTED BY  {hosts}",
+  "@ceremonyHostedBy": {
+    "description": "Opening-ceremony host line.",
+    "placeholders": { "hosts": { "type": "String", "example": "SPAIN · PORTUGAL" } }
+  },
+  "ceremonyHostTbc": "HOST TO BE CONFIRMED",
+  "@ceremonyHostTbc": { "description": "Shown when the host isn't known yet." },
+
+  "matchHalfTime": "HALF TIME",
+  "@matchHalfTime": { "description": "Heading on the half-time interval overlay." },
+  "matchContinue": "Continue",
+  "@matchContinue": { "description": "Button that resumes play from the interval." },
+  "matchTacticsWithSubs": "Tactics · {used}/{max} subs",
+  "@matchTacticsWithSubs": {
+    "description": "Tactics button on the interval overlay, with subs used.",
+    "placeholders": {
+      "used": { "type": "int", "example": "1" },
+      "max": { "type": "int", "example": "5" }
+    }
+  },
+
+  "teamTalkHeading": "TEAM TALK",
+  "@teamTalkHeading": { "description": "Heading above the interval team-talk options." },
+  "teamTalkPrompt": "Set the tone for the second half.",
+  "@teamTalkPrompt": { "description": "Prompt shown before a team talk is chosen." },
+  "teamTalkCalmLabel": "Calm heads",
+  "@teamTalkCalmLabel": { "description": "Team-talk tone button label." },
+  "teamTalkCalmBlurb": "Steady the side — a small all-round lift.",
+  "@teamTalkCalmBlurb": { "description": "Team-talk tone description." },
+  "teamTalkEncourageLabel": "Encourage",
+  "@teamTalkEncourageLabel": { "description": "Team-talk tone button label." },
+  "teamTalkEncourageBlurb": "Push forward and go for the game.",
+  "@teamTalkEncourageBlurb": { "description": "Team-talk tone description." },
+  "teamTalkDemandMoreLabel": "Demand more",
+  "@teamTalkDemandMoreLabel": { "description": "Team-talk tone button label." },
+  "teamTalkDemandMoreBlurb": "Throw everything at it — attack hard.",
+  "@teamTalkDemandMoreBlurb": { "description": "Team-talk tone description." },
+  "teamTalkPraiseLabel": "Keep it tight",
+  "@teamTalkPraiseLabel": { "description": "Team-talk tone button label." },
+  "teamTalkPraiseBlurb": "Stay compact and protect what you have.",
+  "@teamTalkPraiseBlurb": { "description": "Team-talk tone description." }
+}

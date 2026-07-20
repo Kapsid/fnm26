@@ -48,13 +48,10 @@ void main() {
       for (var r = 1; r <= 20; r++)
         nation(id: r, confederation: Confederation.europe, ranking: r),
     ];
-    // Hosting rotates by confederation, so the year has to be one that lands
-    // on Europe or this all-European pool has nobody to draw from.
-    const euroYear = 2038;
-
-    test('the chosen year rotates to this pool\'s confederation', () {
-      expect(WorldCupHosts.confederationFor(euroYear), Confederation.europe);
-    });
+    // The FIRST edition bars nobody (no previous host to exclude), so this
+    // all-European pool is fully eligible — later editions bar the previous
+    // host's confederation, which an all-European pool couldn't satisfy.
+    const euroYear = 2030;
 
     /// The share of editions with 1 host, 2 hosts and 3 hosts over many seeds.
     ({double solo, double joint, double triple}) rates() {
@@ -125,7 +122,8 @@ void main() {
       for (var r = 1; r <= 20; r++)
         nation(id: r, confederation: Confederation.europe, ranking: r),
     ];
-    const euroYear = 2038;
+    // The first edition bars nobody, so this all-European pool is eligible.
+    const euroYear = 2030;
 
     List<HostBid> bids(int seed) => WorldCupHosts.worldCupBids(
           year: euroYear,

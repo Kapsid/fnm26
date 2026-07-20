@@ -158,69 +158,152 @@ class _HostDrawScreenState extends ConsumerState<HostDrawScreen> {
   }
 }
 
-class _Envelope extends StatelessWidget {
+class _Envelope extends StatefulWidget {
   const _Envelope({required this.revealed, required this.hosts});
 
   final bool revealed;
   final List<({String code, String name})> hosts;
 
   @override
+  State<_Envelope> createState() => _EnvelopeState();
+}
+
+class _EnvelopeState extends State<_Envelope>
+    with SingleTickerProviderStateMixin {
+  // Plays once when the envelope is opened: the flap lifts, then the host
+  // card springs out of it.
+  late final AnimationController _c = AnimationController(
+    vsync: this,
+    duration: const Duration(milliseconds: 900),
+  );
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.revealed) _c.value = 1; // already opened (revisiting)
+  }
+
+  @override
+  void didUpdateWidget(_Envelope old) {
+    super.didUpdateWidget(old);
+    if (widget.revealed && !old.revealed) _c.forward(from: 0);
+  }
+
+  @override
+  void dispose() {
+    _c.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final multi = hosts.length > 1;
+    final multi = widget.hosts.length > 1;
     return AnimatedContainer(
       duration: const Duration(milliseconds: 350),
       curve: Curves.easeOut,
       constraints: const BoxConstraints(minHeight: 160),
       padding: const EdgeInsets.all(AppSpacing.md),
       decoration: BoxDecoration(
-        color: revealed
+        color: widget.revealed
             ? AppColors.secondaryContainer
             : AppColors.surfaceContainerHigh,
         borderRadius: AppRadii.baseAll,
         border: Border.all(
-          color: revealed ? AppColors.primary : AppColors.outlineVariant,
-          width: revealed ? 2 : 1,
+          color: widget.revealed
+              ? AppColors.primary
+              : AppColors.outlineVariant,
+          width: widget.revealed ? 2 : 1,
         ),
       ),
       alignment: Alignment.center,
-      child: revealed
-          ? Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    for (final h in hosts) ...[
-                      FlagDisc(
-                        h.code,
-                        size: multi ? 44 : 56,
-                        highlighted: true,
-                      ),
-                      const SizedBox(width: AppSpacing.sm),
-                    ],
-                  ],
-                ),
-                const SizedBox(height: AppSpacing.sm),
-                Text(
-                  hosts.map((h) => h.name).join(' · '),
-                  textAlign: TextAlign.center,
-                  style: multi
-                      ? AppTypography.titleMedium
-                      : AppTypography.headlineMedium,
-                ),
-                Text(
-                  multi ? 'CO-HOSTS' : 'HOST',
-                  style: AppTypography.labelSmall.copyWith(
-                    color: AppColors.primary,
-                  ),
-                ),
-              ],
-            )
-          : const Icon(
+      child: AnimatedBuilder(
+        animation: _c,
+        builder: (context, _) {
+          if (!widget.revealed) {
+            return const Icon(
               Icons.mail_outline_rounded,
               size: 56,
               color: AppColors.onSurfaceVariant,
-            ),
+            );
+          }
+          // Phase 1 (0–0.45): the flap opens — the closed envelope tips up and
+          // fades into the open one. Phase 2 (0.45–1): the host card springs
+          // out, scaling and rising into place.
+          final flap = (_c.value / 0.45).clamp(0.0, 1.0);
+          final content =
+              Curves.easeOutBack.transform(((_c.value - 0.45) / 0.55).clamp(0.0, 1.0));
+
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // The opening envelope: mail → drafts, flap lifting up.
+              Transform(
+                alignment: Alignment.topCenter,
+                transform: Matrix4.identity()
+                  ..setEntry(3, 2, 0.002)
+                  ..rotateX(-0.9 * flap),
+                child: Opacity(
+                  opacity: 1 - content.clamp(0.0, 1.0) * 0.85,
+                  child: Icon(
+                    flap < 0.5
+                        ? Icons.mail_outline_rounded
+                        : Icons.drafts_rounded,
+                    size: 40,
+                    color: AppColors.primary,
+                  ),
+                ),
+              ),
+              // The host card rising out of the envelope.
+              ClipRect(
+                child: Align(
+                  heightFactor: content.clamp(0.0, 1.0),
+                  child: Opacity(
+                    opacity: content.clamp(0.0, 1.0),
+                    child: Transform.scale(
+                      scale: 0.7 + 0.3 * content.clamp(0.0, 1.0),
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: AppSpacing.sm),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                for (final h in widget.hosts) ...[
+                                  FlagDisc(
+                                    h.code,
+                                    size: multi ? 44 : 56,
+                                    highlighted: true,
+                                  ),
+                                  const SizedBox(width: AppSpacing.sm),
+                                ],
+                              ],
+                            ),
+                            const SizedBox(height: AppSpacing.sm),
+                            Text(
+                              widget.hosts.map((h) => h.name).join(' · '),
+                              textAlign: TextAlign.center,
+                              style: multi
+                                  ? AppTypography.titleMedium
+                                  : AppTypography.headlineMedium,
+                            ),
+                            Text(
+                              multi ? 'CO-HOSTS' : 'HOST',
+                              style: AppTypography.labelSmall.copyWith(
+                                color: AppColors.primary,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          );
+        },
+      ),
     );
   }
 }

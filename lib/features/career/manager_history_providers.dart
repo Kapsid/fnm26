@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/entities/nation.dart';
+import 'package:fnm/domain/services/competition/trophies.dart';
 import 'package:fnm/features/career/career_providers.dart';
 
 /// One cycle of the manager's career: the nation led, the win/loss balance, and
@@ -42,6 +43,18 @@ class ManagerCycle {
   bool get wonContinental => continental == 'Champions';
 }
 
+/// A single notable result in the manager's career — the nation they led, the
+/// opponent, the scoreline (from the manager's perspective) and when/where.
+typedef ManagerResult = ({
+  String code,
+  String opponentCode,
+  String opponentName,
+  int scoreFor,
+  int scoreAgainst,
+  DateTime date,
+  String? round,
+});
+
 /// The manager's whole journey — every cycle, and the totals across them all.
 class ManagerHistory {
   const ManagerHistory({
@@ -54,7 +67,15 @@ class ManagerHistory {
     required this.goalsFor,
     required this.goalsAgainst,
     required this.titles,
+    this.trophyCounts = const {},
+    this.biggestWin,
+    this.biggestLoss,
   });
+
+  /// The manager's record win and record defeat across the whole career (by
+  /// goal margin, then by goals scored/conceded), or null before any result.
+  final ManagerResult? biggestWin;
+  final ManagerResult? biggestLoss;
 
   final String managerName;
 
@@ -70,11 +91,24 @@ class ManagerHistory {
   /// Total championships (World Cup + continental) won across the career.
   final int titles;
 
+  /// Trophy-cabinet tallies keyed by trophy id (see [Trophies]): how many of
+  /// each the manager has won, for the cabinet display.
+  final Map<String, int> trophyCounts;
+
   int get goalDifference => goalsFor - goalsAgainst;
 
   /// The distinct nations the manager has led.
   int get nationsLed =>
       {for (final c in cycles) c.nation?.id}.whereType<int>().length;
+
+  /// World Cups won across the whole career.
+  int get worldCups => cycles.where((c) => c.wonWorldCup).length;
+
+  /// Continental titles won across the whole career.
+  int get continentalTitles => cycles.where((c) => c.wonContinental).length;
+
+  /// The manager's win percentage (0–100), 0 with no matches.
+  int get winRate => played == 0 ? 0 : (won * 100 / played).round();
 }
 
 const _wcRounds = ['GROUP', 'R32', 'R16', 'QF', 'SF', '3RD', 'FINAL'];
@@ -101,6 +135,9 @@ final AutoDisposeFutureProviderFamily<ManagerHistory?, int>
       fixturesByNation[nationId] ??=
           await comp.fixturesForNation(careerId, nationId);
 
+  ManagerResult? biggestWin;
+  ManagerResult? biggestLoss;
+
   final cycles = <ManagerCycle>[];
   for (var c = 0; c <= career.cyclePointer; c++) {
     final nationId = stints[c] ?? career.nationId;
@@ -125,12 +162,38 @@ final AutoDisposeFutureProviderFamily<ManagerHistory?, int>
       played++;
       gf += my;
       ga += other;
+      final oppId = home ? f.awayNationId : f.homeNationId;
+      final result = (
+        code: nations[nationId]?.code ?? '??',
+        opponentCode: nations[oppId]?.code ?? '??',
+        opponentName: nations[oppId]?.name ?? 'Unknown',
+        scoreFor: my,
+        scoreAgainst: other,
+        date: f.date,
+        round: f.round,
+      );
       if (my > other) {
         won++;
+        // Record win: biggest margin, then most goals scored.
+        final w = biggestWin;
+        if (w == null ||
+            my - other > w.scoreFor - w.scoreAgainst ||
+            (my - other == w.scoreFor - w.scoreAgainst &&
+                my > w.scoreFor)) {
+          biggestWin = result;
+        }
       } else if (my == other) {
         drawn++;
       } else {
         lost++;
+        // Record defeat: biggest margin, then most goals conceded.
+        final l = biggestLoss;
+        if (l == null ||
+            other - my > l.scoreAgainst - l.scoreFor ||
+            (other - my == l.scoreAgainst - l.scoreFor &&
+                other > l.scoreAgainst)) {
+          biggestLoss = result;
+        }
       }
     }
 
@@ -171,6 +234,24 @@ final AutoDisposeFutureProviderFamily<ManagerHistory?, int>
     if (c.wonContinental) titles++;
   }
 
+  // Trophy cabinet: every trophy the manager lifted, keyed by trophy id. Only
+  // this career's own editions, and only when the champion was the nation the
+  // manager led that cycle.
+  final honours = await comp.honours(careerId);
+  final trophyCounts = <String, int>{};
+  int cycleForYear(int year) {
+    final c = ((year - CareerService.worldCupYear(0)) / 4).ceil();
+    return c < 0 ? 0 : c;
+  }
+
+  for (final h in honours) {
+    if (h.year < CareerService.cycleStart.year) continue;
+    final managed = stints[cycleForYear(h.year)] ?? career.nationId;
+    if (h.championId != managed) continue;
+    final key = Trophies.keyForCompetitionName(h.competition);
+    if (key != null) trophyCounts[key] = (trophyCounts[key] ?? 0) + 1;
+  }
+
   return ManagerHistory(
     managerName: career.managerName,
     cycles: cycles,
@@ -181,6 +262,9 @@ final AutoDisposeFutureProviderFamily<ManagerHistory?, int>
     goalsFor: gf,
     goalsAgainst: ga,
     titles: titles,
+    trophyCounts: trophyCounts,
+    biggestWin: biggestWin,
+    biggestLoss: biggestLoss,
   );
 });
 

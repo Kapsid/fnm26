@@ -1,9 +1,16 @@
-/// Persists the world-ranking positions frozen at the start of each cycle.
+/// Persists world-ranking snapshots used to seed draws.
 ///
-/// A cycle's draws (qualifying and finals, plus their ceremony re-derivations)
-/// all seed from the same frozen snapshot, so they stay consistent no matter
-/// when they run. Cycle 0 is never snapshotted — callers fall back to the
-/// static seed ranking there.
+/// Two kinds share this store, keyed by [cycle]:
+/// * the real cycle number holds the positions frozen at the cycle's START —
+///   the baseline the ranking-movement arrows measure against, and the seed for
+///   the early (host/qualifying) draws;
+/// * a synthetic `drawSeedCycle(cycle, slot)` key holds the LIVE ranking
+///   snapshotted when a finals draw is generated, so a cup's pots reflect
+///   current form (e.g. the World Cup finals pots by the ranking after
+///   qualifying) and the draw ceremony reproduces those pots exactly.
+///
+/// Cycle 0's start is never snapshotted — callers fall back to the static seed
+/// ranking there.
 abstract interface class SeedRankingRepository {
   /// The frozen positions (nationId → rank, 1 = top) for [cycle] of [careerId],
   /// or an empty map if that cycle was never snapshotted.

@@ -255,13 +255,6 @@ abstract final class AchievementCatalog {
       description: 'Win a match by 5 goals or more.',
       isEarned: (s) => s.biggestWinMargin >= 5,
     ),
-    AchievementDef(
-      id: 'mega_harmony',
-      category: AchievementCategory.mega,
-      title: 'Total Satisfaction',
-      description: 'Reach 100% board satisfaction.',
-      isEarned: (s) => s.satisfaction >= 100,
-    ),
   ];
 
   /// Ids of every achievement unlocked for [stats].

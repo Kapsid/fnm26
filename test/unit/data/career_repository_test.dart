@@ -84,7 +84,13 @@ void main() {
     await repo.setInvestment(
       career.id,
       1,
-      (youth: 1000000, commercial: 2000000, medical: 0, naturalization: 3500000),
+      (
+        youth: 1000000,
+        commercial: 2000000,
+        medical: 0,
+        naturalization: 3500000,
+        boardRelations: 0,
+      ),
     );
 
     final read = await repo.investment(career.id, 1);

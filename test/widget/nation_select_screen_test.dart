@@ -51,12 +51,20 @@ void main() {
 
     expect(find.text('SELECT'), findsOneWidget); // France (free)
     expect(find.text('PREMIUM'), findsOneWidget); // Germany (locked)
-    expect(find.textContaining('Luc Mercier'), findsOneWidget); // star player
+    // The star-player line was removed from the card by design.
+    expect(find.textContaining('Luc Mercier'), findsNothing);
   });
 
   testWidgets('premium unlocked makes every nation selectable', (tester) async {
-    // premiumUnlockedProvider defaults to true (unlocked).
-    await tester.pumpApp(const NationSelectScreen(), overrides: overrides);
+    // The provider defaults to LOCKED (real builds unlock via the store), so
+    // Pro must be granted explicitly here.
+    await tester.pumpApp(
+      const NationSelectScreen(),
+      overrides: [
+        ...overrides,
+        premiumUnlockedProvider.overrideWith((ref) => true),
+      ],
+    );
     await tester.pump();
 
     expect(find.text('SELECT'), findsNWidgets(2)); // France + Germany

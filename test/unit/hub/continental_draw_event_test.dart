@@ -9,6 +9,7 @@ import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/services/entitlement/entitlement.dart';
 import 'package:fnm/features/career/career_providers.dart';
+import 'package:fnm/features/federation/budget_setup_screen.dart';
 import 'package:fnm/features/hub/hub_event.dart';
 import 'package:fnm/features/hub/hub_providers.dart';
 import 'package:fnm/features/tournaments/continental_detail_providers.dart';
@@ -99,6 +100,10 @@ void main() {
       kind: CompetitionKind.continentalFinals,
     );
     expect(allFinalsGames, isNotEmpty, reason: 'a group stage was generated');
+
+    // The budget is the forced first event of the cycle; set it so the flow
+    // moves on to the draw this test is about.
+    await comp.markDrawWatched(career.id, career.cyclePointer, budgetSetupKind);
 
     // The draw is offered anyway.
     final event = await container.read(nextEventProvider(career.id).future);

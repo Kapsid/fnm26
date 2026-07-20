@@ -6,6 +6,7 @@ typedef FederationInvestment = ({
   int commercial,
   int medical,
   int naturalization,
+  int boardRelations,
 });
 
 /// A naturalised-player link: a foreign player's original id, the nation they

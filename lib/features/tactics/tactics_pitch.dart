@@ -345,6 +345,9 @@ class TacticsPitch extends StatelessWidget {
     required this.onTapSlot,
     required this.onSwap,
     required this.onBenchIn,
+    this.absentIds = const {},
+    this.injuredIds = const {},
+    this.energyByPlayer = const {},
     super.key,
   });
 
@@ -352,6 +355,19 @@ class TacticsPitch extends StatelessWidget {
   final TacticalInstructions instructions;
   final List<int?> lineup;
   final Map<int, Player> byId;
+
+  /// Live remaining energy (0–100) per player id, shown on each node during a
+  /// match so the manager can see who's tiring. Empty (the default) hides it —
+  /// e.g. on the pre-match tactics screen where everyone is fresh.
+  final Map<int, int> energyByPlayer;
+
+  /// Players who cannot play the next match (banned or injured): their node is
+  /// flagged OUT so the manager can see exactly who must be replaced.
+  final Set<int> absentIds;
+
+  /// The subset of [absentIds] who are INJURED (shown orange); the rest are
+  /// suspended (shown red).
+  final Set<int> injuredIds;
   final ValueChanged<int> onTapSlot;
   final void Function(int slotA, int slotB) onSwap;
   final void Function(int slot, int playerId) onBenchIn;
@@ -364,13 +380,15 @@ class TacticsPitch extends StatelessWidget {
     PositionCategory category,
   ) {
     final i = instructions;
-    // Width: spread outfield players out from / in toward the centre line.
-    final widthFactor = 0.82 + i.width / 100 * 0.30; // 0.82 … 1.12
+    // Width: spread outfield players out from / in toward the centre line. The
+    // span is deliberately modest so a wide 3-back shape (e.g. 3-4-3) can't push
+    // the widest players' name labels off the painted pitch.
+    final widthFactor = 0.82 + i.width / 100 * 0.24; // 0.82 … 1.06
     final x = 0.5 + (base.$1 - 0.5) * widthFactor;
-    // The keeper is pinned near the goal line and never shifts up the pitch, so
-    // a deep defensive line can't drop the back four on top of them.
+    // The keeper is pinned on the goal line and never shifts up the pitch, so
+    // a deep defensive line can't drop the back line on top of them.
     if (category == PositionCategory.goalkeeper) {
-      return (x.clamp(0.04, 0.96), 0.93);
+      return (x.clamp(0.12, 0.88), 0.94);
     }
     // Attacking mentality lifts the whole outfield up the pitch (lower y).
     var y = base.$2 - (i.mentality - 50) / 50 * 0.05;
@@ -380,8 +398,10 @@ class TacticsPitch extends StatelessWidget {
     } else if (category == PositionCategory.forward) {
       y -= (i.mentality - 50) / 50 * 0.02;
     }
-    // Cap outfield depth short of the keeper so the lines never overlap them.
-    return (x.clamp(0.04, 0.96), y.clamp(0.10, 0.82));
+    // Cap the width so the widest players' labels stay on the pitch, and cap
+    // outfield depth well short of the keeper (a ~0.17 gap) so even a deep back
+    // line's node and its name label never overlap the goalkeeper's.
+    return (x.clamp(0.12, 0.88), y.clamp(0.10, 0.77));
   }
 
   @override
@@ -412,6 +432,9 @@ class TacticsPitch extends StatelessWidget {
                     slot: slot,
                     position: positions[slot],
                     player: byId[lineup[slot]],
+                    absent: absentIds.contains(lineup[slot]),
+                    injured: injuredIds.contains(lineup[slot]),
+                    energy: energyByPlayer[lineup[slot]],
                     onTap: () => onTapSlot(slot),
                     onSwap: onSwap,
                     onBenchIn: onBenchIn,
@@ -433,11 +456,24 @@ class _PlayerNode extends StatelessWidget {
     required this.onTap,
     required this.onSwap,
     required this.onBenchIn,
+    this.absent = false,
+    this.injured = false,
+    this.energy,
   });
 
   final int slot;
   final PlayerPosition position;
   final Player? player;
+
+  /// The player's live remaining energy (0–100) during a match, or null when
+  /// energy isn't being tracked (pre-match) — shown as a small gauge on the node.
+  final int? energy;
+
+  /// Whether the assigned player is banned or injured for the next match.
+  final bool absent;
+
+  /// Whether the absence is an injury (orange) rather than a suspension (red).
+  final bool injured;
   final VoidCallback onTap;
   final void Function(int slotA, int slotB) onSwap;
   final void Function(int slot, int playerId) onBenchIn;
@@ -494,7 +530,10 @@ class _PlayerNode extends StatelessWidget {
 
   Widget _node({bool highlighted = false, bool dragging = false}) {
     final p = player;
-    final fit = _fitColor;
+    // An absent player overrides the fit cue entirely — nothing about the slot
+    // matters until he is replaced. Injury shows orange, suspension red.
+    final absentColor = injured ? AppColors.warning : AppColors.error;
+    final fit = absent ? absentColor : _fitColor;
     final borderColor = highlighted ? AppColors.primary : fit;
     // The rating as it actually counts in this slot — docked when the player is
     // out of position, so the manager sees the real number before committing.
@@ -525,15 +564,34 @@ class _PlayerNode extends StatelessWidget {
               ),
             ),
             alignment: Alignment.center,
-            child: Text(
-              p == null ? '+' : '$effective',
-              style: AppTypography.labelMedium.copyWith(
-                color: penalised ? AppColors.error : AppColors.primary,
+            child: absent
+                ? Icon(
+                    injured
+                        ? Icons.personal_injury
+                        : Icons.gavel_rounded,
+                    size: 22,
+                    color: absentColor,
+                  )
+                : Text(
+                    p == null ? '+' : '$effective',
+                    style: AppTypography.labelMedium.copyWith(
+                      color: penalised ? AppColors.error : AppColors.primary,
+                    ),
+                  ),
+          ),
+          if (absent) ...[
+            const SizedBox(height: 2),
+            Text(
+              injured ? 'INJURED — REPLACE' : 'SUSPENDED — REPLACE',
+              style: AppTypography.labelSmall.copyWith(
+                fontSize: 7,
+                color: absentColor,
+                fontWeight: FontWeight.w700,
               ),
             ),
-          ),
+          ],
           // When out of position, spell out the drop from the base rating.
-          if (penalised) ...[
+          if (!absent && penalised) ...[
             const SizedBox(height: 2),
             Text(
               '${p.overall}→$effective',
@@ -569,11 +627,37 @@ class _PlayerNode extends StatelessWidget {
               style: AppTypography.labelSmall.copyWith(fontSize: 8),
             ),
           ],
+          if (p != null && energy != null) ...[
+            const SizedBox(height: 1),
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(Icons.bolt, size: 9, color: energyColor(energy!)),
+                Text(
+                  '$energy%',
+                  style: AppTypography.labelSmall.copyWith(
+                    fontSize: 8,
+                    color: energyColor(energy!),
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ],
+            ),
+          ],
         ],
       ),
     );
   }
 }
+
+/// The colour cue for a remaining-energy value: green when fresh, orange once
+/// tiring (below 75%), red when spent (below 50%) — a shared scale so the pitch
+/// node, the bench row and the in-match lineup pip all agree.
+Color energyColor(int energy) => energy >= 75
+    ? AppColors.positive
+    : energy >= 50
+        ? AppColors.warning
+        : AppColors.error;
 
 class _PitchPainter extends CustomPainter {
   @override

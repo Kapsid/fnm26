@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/core/routing/app_router.dart';
@@ -9,6 +11,7 @@ import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/services/entitlement/entitlement.dart';
 import 'package:fnm/features/nations/nation_select_providers.dart';
+import 'package:fnm/features/paywall/paywall_sheet.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
 
@@ -124,13 +127,9 @@ class NationSelectScreen extends ConsumerWidget {
     if (selectable) {
       context.go('${Routes.newGame}?nationId=${nation.id}');
     } else {
-      ScaffoldMessenger.of(context)
-        ..hideCurrentSnackBar()
-        ..showSnackBar(
-          const SnackBar(
-            content: Text('Premium nation — unlock store coming soon'),
-          ),
-        );
+      // A locked nation opens the paywall; if the unlock completes, the card
+      // rebuilds unlocked and the player selects it normally.
+      unawaited(showPaywall(context));
     }
   }
 }
@@ -322,18 +321,6 @@ class _NationCard extends StatelessWidget {
                           ],
                         ),
                       ),
-                      if (star != null)
-                        Padding(
-                          padding: const EdgeInsets.only(top: 2),
-                          child: Text(
-                            'Star: ${star!.name}',
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: AppTypography.bodySmall.copyWith(
-                              color: AppColors.onSurfaceVariant,
-                            ),
-                          ),
-                        ),
                     ],
                   ),
                 ),

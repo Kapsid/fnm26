@@ -8,14 +8,16 @@ import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/group_standing.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
 import 'package:fnm/domain/services/competition/continental_cups.dart';
-import 'package:fnm/domain/services/competition/group_advancement.dart';
 import 'package:fnm/domain/services/competition/finals.dart';
-import 'package:fnm/domain/services/competition/venues.dart';
+import 'package:fnm/domain/services/competition/group_advancement.dart';
+import 'package:fnm/domain/services/competition/trophies.dart';
 import 'package:fnm/features/tournaments/best_thirds.dart';
 import 'package:fnm/features/tournaments/continental_detail_providers.dart';
 import 'package:fnm/features/tournaments/tournament_bracket.dart';
+import 'package:fnm/features/tournaments/tournament_awards.dart';
 import 'package:fnm/features/tournaments/tournament_history.dart';
-import 'package:fnm/features/tournaments/venues_card.dart';
+import 'package:fnm/features/tournaments/tournament_stats.dart';
+import 'package:fnm/features/tournaments/tournament_summary.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
 
@@ -36,7 +38,6 @@ class ContinentalDetailScreen extends ConsumerWidget {
     ('CR16', 'Round of 16'),
     ('CQF', 'Quarter-finals'),
     ('CSF', 'Semi-finals'),
-    ('C3RD', 'Third place'),
     ('CFINAL', 'Final'),
   ];
 
@@ -52,9 +53,9 @@ class ContinentalDetailScreen extends ConsumerWidget {
   /// The tab to land on: wherever this championship actually is.
   static int _liveTab(ContinentalData? data) {
     if (data == null) return 0;
-    // Another confederation's cup is decided in the background, so every tab
-    // but History is a placeholder.
-    if (!data.isPlayerRegion) return 4;
+    // Another confederation's cup is simulated in the background but now has
+    // real fixtures — land on its bracket if one exists, else its history.
+    if (!data.isPlayerRegion) return data.knockout.isNotEmpty ? 2 : 4;
     if (data.knockout.isNotEmpty) return 2; // bracket
     if (data.groups.isNotEmpty && data.finalsDrawWatched) return 1; // finals
     return 0; // qualifying
@@ -73,8 +74,9 @@ class ContinentalDetailScreen extends ConsumerWidget {
     return DefaultTabController(
       // See CupDetailScreen: initialIndex is read once, before the data lands.
       key: ValueKey(liveTab),
-      length: 5,
-      initialIndex: liveTab,
+      length: 8,
+      // +1 because SUMMARY is now the first tab.
+      initialIndex: liveTab + 1,
       child: Scaffold(
         appBar: AppBar(
           leading: IconButton(
@@ -100,11 +102,14 @@ class ContinentalDetailScreen extends ConsumerWidget {
               unselectedLabelColor: AppColors.onSurfaceVariant,
               indicatorColor: AppColors.primary,
               tabs: [
+                Tab(text: 'SUMMARY'),
                 Tab(text: 'QUALIFYING'),
                 Tab(text: 'FINALS'),
                 Tab(text: 'BRACKET'),
+                Tab(text: 'AWARDS'),
                 Tab(text: 'SCORERS'),
                 Tab(text: 'HISTORY'),
+                Tab(text: 'RECORDS'),
               ],
             ),
           ),
@@ -121,6 +126,14 @@ class ContinentalDetailScreen extends ConsumerWidget {
 
             return TabBarView(
               children: [
+                TournamentSummaryTab(
+                  hostIds: data.hostIds,
+                  hostCities: data.hostCities,
+                  identity: data.identity,
+                  trophyAsset: Trophies.forConfederation(data.confederation),
+                  code: code,
+                  name: name,
+                ),
                 if (data.qualifyingGroups.isNotEmpty && !data.qualDrawWatched)
                   const TournamentSoon(
                     message:
@@ -136,18 +149,17 @@ class ContinentalDetailScreen extends ConsumerWidget {
                         24;
                     // Hosts reserve finals berths, so fewer teams (and fewer
                     // best-thirds) come through qualifying.
-                    final adv = _contQualAdvance(
+                    final adv = GroupAdvancement.continentalQualifying(
                       (size - data.hostCount).clamp(1, size),
                       data.qualifyingGroups.length,
                     );
                     return _Groups(
                       groups: data.qualifyingGroups,
                       playerNationId: data.playerNationId,
-                      hostIds: const [],
-                      hostCities: const {},
                       directCount: adv.direct,
                       contentionPos: adv.contention,
                       thirdsQualify: adv.thirdsQualify,
+                      runnersQualify: adv.runnersQualify,
                       // Qualifying thirds advance to the finals, not knockouts.
                       thirdsDestination: 'the finals',
                       code: code,
@@ -169,23 +181,33 @@ class ContinentalDetailScreen extends ConsumerWidget {
                         'from the hub to reveal them.',
                   )
                 else if (data.groups.isNotEmpty)
-                  _Groups(
+                  () {
+                    // Copa América: two groups of five, top four into the
+                    // quarters. Every other format advances the top two (plus
+                    // any best-thirds).
+                    final copa = data.groups.length == 2 &&
+                        data.groups
+                            .every((g) => g.standings.length >= 5);
+                    return _Groups(
                     groups: data.groups,
                     playerNationId: data.playerNationId,
-                    hostIds: data.hostIds,
-                    hostCities: data.hostCities,
-                    // Finals: top two advance; best thirds are in contention.
-                    directCount: 2,
-                    contentionPos:
-                        WorldCupFinals.bestThirdsFor(data.groups.length) > 0
-                        ? 3
-                        : null,
-                    thirdsQualify: WorldCupFinals.bestThirdsFor(
-                      data.groups.length,
-                    ),
+                    // Finals: top two advance; best thirds are in contention
+                    // (top four for the Copa América groups of five).
+                    directCount: copa ? 4 : 2,
+                    contentionPos: copa
+                        ? null
+                        : WorldCupFinals.bestThirdsFor(data.groups.length) > 0
+                            ? 3
+                            : null,
+                    thirdsQualify: copa
+                        ? 0
+                        : WorldCupFinals.bestThirdsFor(
+                            data.groups.length,
+                          ),
                     code: code,
                     name: name,
-                  )
+                  );
+                  }()
                 else
                   TournamentSoon(
                     message: data.isPlayerRegion
@@ -226,9 +248,16 @@ class ContinentalDetailScreen extends ConsumerWidget {
                               '${data.name} is decided in the background — see '
                               'its full results under History.',
                   ),
+                TournamentAwardsTab(
+                  team: data.teamOfTournament,
+                  goldenGlove: data.goldenGlove,
+                  code: code,
+                  name: name,
+                ),
                 TournamentScorers(
                   scorers: data.scorers,
                   playerNames: data.playerNames,
+                  allTime: data.allTimeScorers,
                   code: code,
                   emptyMessage: 'No goals recorded yet.',
                 ),
@@ -236,6 +265,12 @@ class ContinentalDetailScreen extends ConsumerWidget {
                   honours: data.honours,
                   name: name,
                   code: code,
+                ),
+                TournamentStatsTab(
+                  honours: data.honours,
+                  allTimeScorers: data.allTimeScorers,
+                  code: code,
+                  name: name,
                 ),
               ],
             );
@@ -246,56 +281,21 @@ class ContinentalDetailScreen extends ConsumerWidget {
   }
 }
 
-/// How a continental qualifying group resolves, from the finals field [size]
-/// and how many groups the confederation plays: how many advance outright
-/// (green), which single position is "in contention" (amber — best runner-up or
-/// best third), and how many best thirds ultimately qualify. Group winners
-/// always go through; the rest of the field is filled by the best runners-up
-/// then the best thirds, exactly as `Qualification.qualifiers` does.
-({int direct, int? contention, int thirdsQualify}) _contQualAdvance(
-  int size,
-  int groupCount,
-) {
-  if (groupCount < 1) return (direct: 1, contention: null, thirdsQualify: 0);
-  final afterWinners = size - groupCount; // places left for 2nd/3rd tiers
-  if (afterWinners <= 0) {
-    return (direct: 1, contention: null, thirdsQualify: 0);
-  }
-  if (afterWinners >= groupCount) {
-    // Every runner-up qualifies; the remainder come from the best thirds.
-    final thirds = (afterWinners - groupCount).clamp(0, groupCount);
-    return (
-      direct: 2,
-      contention: thirds > 0 ? 3 : null,
-      thirdsQualify: thirds,
-    );
-  }
-  // Only the best runners-up qualify — second place is in contention.
-  return (direct: 1, contention: 2, thirdsQualify: 0);
-}
-
 class _Groups extends StatelessWidget {
   const _Groups({
     required this.groups,
     required this.playerNationId,
-    required this.hostIds,
-    required this.hostCities,
     required this.directCount,
     required this.contentionPos,
     required this.thirdsQualify,
     required this.code,
     required this.name,
+    this.runnersQualify = 0,
     this.thirdsDestination = 'the knockouts',
   });
 
   final List<FinalsGroupTable> groups;
   final int playerNationId;
-
-  /// Every host (primary first); empty for a qualifying table, which has none.
-  final List<int> hostIds;
-
-  /// The host's real cities (biggest first) for the venues card.
-  final Map<int, List<String>> hostCities;
 
   /// Positions that advance/qualify outright (green).
   final int directCount;
@@ -307,21 +307,16 @@ class _Groups extends StatelessWidget {
   /// How many best third-placed teams qualify (drives the best-thirds card).
   final int thirdsQualify;
 
+  /// How many runners-up qualify. When only some do (fewer than there are
+  /// groups), a cross-group runners-up ladder is shown so second place's real
+  /// chances are visible instead of just an amber stripe.
+  final int runnersQualify;
+
   /// Where the best thirds advance to ('the finals' in qualifying).
   final String thirdsDestination;
+
   final String Function(int) code;
   final String Function(int) name;
-
-  /// A plain-English note on what qualifies from each group.
-  String get caption {
-    final kind = thirdsDestination == 'the finals'
-        ? CompetitionKind.continentalQualifying
-        : CompetitionKind.continentalFinals;
-    return GroupAdvancement.caption(
-      kind: kind,
-      adv: (direct: directCount, contention: contentionPos, relegate: 0),
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -342,21 +337,6 @@ class _Groups extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.all(AppSpacing.marginMobile),
       children: [
-        if (hostIds.isNotEmpty) ...[
-          () {
-            final byHost = VenueGenerator.forHosts(
-              hostIds: hostIds,
-              citiesByHost: hostCities,
-            );
-            return VenuesCard(
-              hosts: [
-                for (final h in hostIds)
-                  (code: code(h), name: name(h), venues: byHost[h] ?? const []),
-              ],
-            );
-          }(),
-          const SizedBox(height: AppSpacing.sm),
-        ],
         for (final g in ordered) ...[
           AppCard(
             child: Column(
@@ -371,17 +351,23 @@ class _Groups extends StatelessWidget {
                 const SizedBox(height: AppSpacing.sm),
                 for (var i = 0; i < g.standings.length; i++)
                   _row(i + 1, g.standings[i]),
-                if (caption.isNotEmpty) ...[
-                  const SizedBox(height: AppSpacing.xs),
-                  Text(
-                    caption,
-                    style: AppTypography.labelSmall.copyWith(
-                      color: AppColors.onSurfaceVariant,
-                    ),
-                  ),
-                ],
               ],
             ),
+          ),
+          const SizedBox(height: AppSpacing.sm),
+        ],
+        if (runnersQualify > 0 && runnersQualify < groups.length) ...[
+          BestThirdsCard(
+            thirds: [
+              for (final g in groups)
+                if (g.standings.length > 1) g.standings[1],
+            ]..sort(rankStandings),
+            qualifyCount: runnersQualify,
+            playerNationId: playerNationId,
+            code: code,
+            name: name,
+            destination: thirdsDestination,
+            title: 'BEST RUNNERS-UP',
           ),
           const SizedBox(height: AppSpacing.sm),
         ],

@@ -35,8 +35,10 @@ class RatingMatchSimulator implements MatchSimulator {
     required int homeStrength,
     required int awayStrength,
     required SeededRng rng,
+    bool homeAdvantage = true,
   }) {
-    final diff = (homeStrength + 5) - awayStrength; // +5 home advantage
+    // +5 home advantage — but a neutral-venue finals gives neither side one.
+    final diff = (homeStrength + (homeAdvantage ? 5 : 0)) - awayStrength;
     // A steeper strength→xG slope so the better side controls the scoreline and
     // upsets stay the exception rather than the rule.
     final homeXg = (1.25 + diff * 0.05).clamp(0.15, 5.0);

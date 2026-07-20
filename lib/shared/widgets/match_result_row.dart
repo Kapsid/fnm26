@@ -38,11 +38,14 @@ class MatchResultRow extends StatelessWidget {
     final hs = fixture.homeScore ?? 0;
     final as = fixture.awayScore ?? 0;
 
-    // A level knockout tie was settled on penalties, and the stored home side
-    // is the winner; anything else can simply be a draw.
     final isKnockout = Rounds.isKnockout(fixture.round);
-    final pens = isKnockout && hs == as;
     final drawn = !isKnockout && hs == as;
+    // How a settled knockout tie was decided, for the little tag under the score.
+    final marker = fixture.wentToShootout
+        ? 'pens ${fixture.homePenalties}-${fixture.awayPenalties}'
+        : fixture.afterExtraTime
+            ? 'AET'
+            : null;
 
     bool bold(int nationId) {
       if (emphasiseNationId != null) return nationId == emphasiseNationId;
@@ -64,9 +67,19 @@ class MatchResultRow extends StatelessWidget {
               color: AppColors.surfaceContainerHigh,
               borderRadius: AppRadii.smAll,
             ),
-            child: Text(
-              pens ? '$hs - $as p' : '$hs - $as',
-              style: AppTypography.labelMedium,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text('$hs - $as', style: AppTypography.labelMedium),
+                if (marker != null)
+                  Text(
+                    marker,
+                    style: AppTypography.labelSmall.copyWith(
+                      fontSize: 8,
+                      color: AppColors.onSurfaceVariant,
+                    ),
+                  ),
+              ],
             ),
           ),
           Expanded(

@@ -107,6 +107,10 @@ class FederationInvestments extends Table {
   /// raise the chance a foreign player asks to switch allegiance this cycle.
   IntColumn get naturalization => integer().withDefault(const Constant(0))();
 
+  /// Euros put into board relations — hospitality, PR and expectation
+  /// management that make the board more patient with results this cycle.
+  IntColumn get boardRelations => integer().withDefault(const Constant(0))();
+
   @override
   Set<Column> get primaryKey => {careerId, cycle};
 }
@@ -355,6 +359,26 @@ class Appearances extends Table {
   Set<Column> get primaryKey => {careerId, playerId};
 }
 
+/// Per-player participation in a single competition edition, tagged by
+/// [competitionId] so tournament-scoped records can be computed: "most World
+/// Cup starts" (sum of [starts] over World-Cup-finals competitions) and "most
+/// tournaments attended" (distinct competitions with an appearance). Logged for
+/// the WHOLE world, every nation — both starters and substitutes. [starts]
+/// counts only fixtures the player started; [apps] every appearance.
+@DataClassName('TournamentAppearanceRow')
+class TournamentAppearances extends Table {
+  IntColumn get careerId =>
+      integer().references(Careers, #id, onDelete: KeyAction.cascade)();
+  IntColumn get competitionId => integer()();
+  IntColumn get nationId => integer()();
+  IntColumn get playerId => integer()();
+  IntColumn get starts => integer().withDefault(const Constant(0))();
+  IntColumn get apps => integer().withDefault(const Constant(0))();
+
+  @override
+  Set<Column> get primaryKey => {careerId, competitionId, playerId};
+}
+
 /// A player's full stat line for a played fixture, written for every player in
 /// a match the manager took part in (both teams). Powers the per-player
 /// match-by-match history, career aggregates and all-time records.
@@ -460,6 +484,15 @@ class Fixtures extends Table {
   /// Stage label for finals matches: `GROUP`, `R16`, `QF`, `SF`, `3RD`,
   /// `FINAL`. Null for confederation qualifiers.
   TextColumn get round => text().nullable()();
+
+  /// Whether a level knockout was settled after extra time (shows "AET").
+  BoolColumn get afterExtraTime =>
+      boolean().withDefault(const Constant(false))();
+
+  /// The shootout score when a knockout went to penalties (null otherwise), so
+  /// results can show "(pens 4-3)".
+  IntColumn get homePenalties => integer().nullable()();
+  IntColumn get awayPenalties => integer().nullable()();
 }
 
 /// A goal scored in a fixture, attributed to a player (for top-scorer charts).

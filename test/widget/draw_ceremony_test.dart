@@ -84,6 +84,10 @@ void main() {
     await tester.pump(const Duration(seconds: 2));
     expect(find.byType(FlagDisc).evaluate().length, before);
 
+    // Pick the ball-by-ball draw mode for this team-by-team test.
+    await tester.tap(find.text('Ball'));
+    await tester.pump();
+
     // Tapping over the groups (the tap target is the grid) pulls the balls one
     // at a time; the whole field of eight comes out and then the draw is done.
     for (var i = 0; i < 8; i++) {

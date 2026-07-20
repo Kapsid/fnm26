@@ -44,6 +44,8 @@ class TacticData {
     required this.tactic,
     required this.pool,
     required this.byId,
+    this.absences = const {},
+    this.unavailable = const [],
   });
 
   final Tactic tactic;
@@ -51,6 +53,21 @@ class TacticData {
   /// The called-up squad (selectable for the XI and bench).
   final List<Player> pool;
   final Map<int, Player> byId;
+
+  /// Suspension/injury standing keyed by player id (only notable players).
+  final Map<int, PlayerAbsence> absences;
+
+  /// Called-up players who cannot play the next match (banned or injured) —
+  /// shown on the screen with their reason, never hidden. Hiding them entirely
+  /// left the manager staring at a forced "reshape your XI" event with no way
+  /// to see WHO was out.
+  final List<Player> unavailable;
+
+  /// The starters (lineup members) currently unavailable, with reasons.
+  List<Player> get unavailableStarters {
+    final xi = tactic.lineup.whereType<int>().toSet();
+    return unavailable.where((p) => xi.contains(p.id)).toList();
+  }
 }
 
 // Auto-disposed, like hubDataProvider: a career's nation can change mid-save
@@ -77,14 +94,20 @@ final AutoDisposeFutureProviderFamily<TacticData?, int> tacticDataProvider =
   // manager picks from. The match already refuses to field him — but it did so
   // silently, discarding the whole saved XI and re-picking eleven fresh names,
   // so the side that kicked off was not the side on this screen.
-  final absences = await ref.watch(absenceRepositoryProvider).forCareer(careerId);
-  final pool = selectable(availableSquad(fullPool, callUps), absences);
+  final absences =
+      await ref.watch(absenceRepositoryProvider).forCareer(careerId);
+  final called = availableSquad(fullPool, callUps);
+  final pool = selectable(called, absences);
   return TacticData(
     tactic: tactic,
     pool: pool,
     // Resolve over the full pool so the XI renders even if a player was just
     // dropped from the squad (the squad service repairs the lineup on save).
     byId: {for (final p in fullPool) p.id: p},
+    absences: absences,
+    unavailable: called
+        .where((p) => !(absences[p.id]?.isAvailable ?? true))
+        .toList(),
   );
 });
 
@@ -203,6 +226,22 @@ class TacticService {
 
   Future<void> setInstructions(int careerId, TacticalInstructions i) =>
       _update(careerId, (t, _) => t.copyWith(instructions: i));
+
+  /// Applies a saved preset: adopts its shape (re-picking the best available XI
+  /// for it) and its instruction sliders in one write.
+  Future<void> applyPreset(
+    int careerId,
+    Formation formation,
+    TacticalInstructions instructions,
+  ) =>
+      _update(
+        careerId,
+        (t, pool) => t.copyWith(
+          formation: formation,
+          lineup: bestEleven(formation, pool),
+          instructions: instructions,
+        ),
+      );
 
   /// Assigns [playerId] to [slot], swapping if they already start elsewhere.
   Future<void> setSlot(int careerId, int slot, int playerId) =>

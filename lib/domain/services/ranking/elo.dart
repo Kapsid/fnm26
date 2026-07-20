@@ -20,10 +20,13 @@ abstract final class Elo {
   /// expected friendly win rounds to 0 and moves nothing at all. The table then
   /// looks frozen. These follow FIFA's own K-factors, so a win is worth a
   /// visible move and an upset is worth a real climb.
-  static const double friendly = 5;
-  static const double nationsCup = 15;
-  static const double qualifier = 25;
-  static const double finals = 50;
+  // Trimmed ~20% from the FIFA-scale K-factors: a single result still moves a
+  // side, but the table drifts more gently game to game (it read as swinging
+  // too far, too often).
+  static const double friendly = 4;
+  static const double nationsCup = 12;
+  static const double qualifier = 20;
+  static const double finals = 40;
 
   /// Knockout round codes, ignoring any competition prefix ('CQF', 'NSF', …).
   static const List<String> _knockoutSuffixes = [

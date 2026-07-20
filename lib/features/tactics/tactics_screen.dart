@@ -8,8 +8,13 @@ import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/formation.dart';
+import 'package:fnm/domain/entities/tactic_preset.dart';
 import 'package:fnm/domain/entities/tactics.dart';
 import 'package:fnm/domain/services/tactics/position_fit.dart';
+import 'package:fnm/domain/entities/player.dart';
+import 'package:fnm/domain/entities/player_role.dart';
+import 'package:fnm/features/tactics/player_roles_providers.dart';
+import 'package:fnm/features/tactics/tactic_preset_providers.dart';
 import 'package:fnm/features/tactics/tactics_pitch.dart';
 import 'package:fnm/features/tactics/tactics_providers.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
@@ -52,6 +57,16 @@ class TacticsScreen extends ConsumerWidget {
           ),
           dataAsync.maybeWhen(
             data: (data) => IconButton(
+              icon: const Icon(Icons.bookmark_border, color: AppColors.primary),
+              tooltip: 'Tactic presets',
+              onPressed: data == null
+                  ? null
+                  : () => _openPresets(context, ref, data.tactic),
+            ),
+            orElse: () => const SizedBox.shrink(),
+          ),
+          dataAsync.maybeWhen(
+            data: (data) => IconButton(
               icon: const Icon(Icons.tune, color: AppColors.primary),
               tooltip: 'Instructions',
               onPressed: data == null
@@ -70,20 +85,85 @@ class TacticsScreen extends ConsumerWidget {
         data: (data) {
           if (data == null) return const Center(child: Text('No tactic set.'));
           final tactic = data.tactic;
+          final roles =
+              ref.watch(playerRolesProvider(careerId)).valueOrNull ??
+                  const <int, PlayerRole>{};
           final startingIds = tactic.lineup.whereType<int>().toSet();
           final subs =
               data.pool.where((p) => !startingIds.contains(p.id)).toList()
                 ..sort((a, b) => b.overall.compareTo(a.overall));
+          final absentIds = {for (final p in data.unavailable) p.id};
+          // Injuries (orange) vs suspensions (red) — split so the pitch and the
+          // lists can show the right badge for each.
+          final injuredIds = {
+            for (final p in data.unavailable)
+              if ((data.absences[p.id]?.injuryMatches ?? 0) > 0) p.id,
+          };
+          final outStarters = data.unavailableStarters;
 
           return ListView(
             children: [
+              // Starters who are banned/injured block the next match: name
+              // them (with the reason) right here, or the forced "reshape your
+              // XI" event reads as an unexplained dead end.
+              if (outStarters.isNotEmpty)
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(
+                    AppSpacing.marginMobile,
+                    AppSpacing.sm,
+                    AppSpacing.marginMobile,
+                    0,
+                  ),
+                  child: AppCard(
+                    child: Row(
+                      children: [
+                        const Icon(
+                          Icons.personal_injury_outlined,
+                          color: AppColors.error,
+                        ),
+                        const SizedBox(width: AppSpacing.md),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'REPLACE ${outStarters.length} '
+                                'STARTER${outStarters.length == 1 ? '' : 'S'}',
+                                style: AppTypography.labelSmall.copyWith(
+                                  color: AppColors.error,
+                                ),
+                              ),
+                              const SizedBox(height: 2),
+                              for (final p in outStarters)
+                                Text(
+                                  '${p.name} — '
+                                  '${data.absences[p.id]?.reason ?? 'Out'}',
+                                  style: AppTypography.bodySmall,
+                                ),
+                              const SizedBox(height: 2),
+                              Text(
+                                'Tap their spot on the pitch to pick a '
+                                'replacement.',
+                                style: AppTypography.labelSmall.copyWith(
+                                  color: AppColors.onSurfaceVariant,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
               AspectRatio(
                 aspectRatio: 3 / 4,
                 child: TacticsPitch(
+                  injuredIds: injuredIds,
                   formation: tactic.formation,
                   instructions: tactic.instructions,
                   lineup: tactic.lineup,
                   byId: data.byId,
+                  absentIds: absentIds,
                   onTapSlot: (slot) => _pickPlayer(context, ref, data, slot),
                   onSwap: (a, b) =>
                       _dragBetweenSlots(service, tactic, a, b),
@@ -123,6 +203,25 @@ class TacticsScreen extends ConsumerWidget {
                       ],
                     ),
                     const SizedBox(height: AppSpacing.lg),
+                    const Text('PLAYER ROLES', style: AppTypography.labelMedium),
+                    const SizedBox(height: AppSpacing.xs),
+                    Text(
+                      'Give a player a job — a poacher, a playmaker, a target '
+                      'man. Shapes who scores, who creates and your set-piece '
+                      'threat.',
+                      style: AppTypography.labelSmall.copyWith(
+                        color: AppColors.onSurfaceVariant,
+                      ),
+                    ),
+                    const SizedBox(height: AppSpacing.sm),
+                    for (final id in tactic.lineup.whereType<int>())
+                      if (data.byId[id] case final p?)
+                        _RoleRow(
+                          player: p,
+                          role: roles[id] ?? PlayerRole.none,
+                          onTap: () => _pickRole(context, ref, p),
+                        ),
+                    const SizedBox(height: AppSpacing.lg),
                     Text(
                       'SUBSTITUTES · ${subs.length}',
                       style: AppTypography.labelMedium,
@@ -144,6 +243,72 @@ class TacticsScreen extends ConsumerWidget {
                         ],
                       ),
                     ),
+                    // Banned/injured squad members, visible with their reason
+                    // rather than silently missing from the lists above.
+                    if (data.unavailable.isNotEmpty) ...[
+                      const SizedBox(height: AppSpacing.lg),
+                      Text(
+                        'UNAVAILABLE · ${data.unavailable.length}',
+                        style: AppTypography.labelMedium,
+                      ),
+                      const SizedBox(height: AppSpacing.sm),
+                      AppCard(
+                        padding: EdgeInsets.zero,
+                        child: Column(
+                          children: [
+                            for (final p in data.unavailable)
+                              ListTile(
+                                dense: true,
+                                enabled: false,
+                                leading: SizedBox(
+                                  width: 40,
+                                  child: TacticalChip(p.position.label),
+                                ),
+                                title: Text(
+                                  p.name,
+                                  style: AppTypography.bodyMedium.copyWith(
+                                    color: AppColors.onSurfaceVariant,
+                                  ),
+                                ),
+                                trailing: () {
+                                  final inj = injuredIds.contains(p.id);
+                                  final c = inj
+                                      ? AppColors.warning
+                                      : AppColors.error;
+                                  return Container(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 8,
+                                      vertical: 3,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: c.withValues(alpha: 0.16),
+                                      borderRadius: AppRadii.smAll,
+                                    ),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Icon(
+                                          inj
+                                              ? Icons.personal_injury
+                                              : Icons.gavel_rounded,
+                                          size: 13,
+                                          color: c,
+                                        ),
+                                        const SizedBox(width: 4),
+                                        Text(
+                                          data.absences[p.id]?.reason ?? 'Out',
+                                          style: AppTypography.labelSmall
+                                              .copyWith(color: c),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                }(),
+                              ),
+                          ],
+                        ),
+                      ),
+                    ],
                     const SizedBox(height: AppSpacing.xl),
                   ],
                 ),
@@ -155,6 +320,61 @@ class TacticsScreen extends ConsumerWidget {
     );
   }
 
+  /// Opens the role picker for [player] — only the roles that suit their
+  /// position, plus "No role".
+  Future<void> _pickRole(
+    BuildContext context,
+    WidgetRef ref,
+    Player player,
+  ) async {
+    final options = [
+      for (final r in PlayerRole.values)
+        if (r == PlayerRole.none ||
+            switch (player.category) {
+              PositionCategory.forward => r.forForwards,
+              PositionCategory.midfielder => r.forMidfielders,
+              PositionCategory.defender => r.forDefenders,
+              PositionCategory.goalkeeper => false,
+            })
+          r,
+    ];
+    final picked = await showModalBottomSheet<PlayerRole>(
+      context: context,
+      backgroundColor: AppColors.surfaceContainerHigh,
+      builder: (_) => SafeArea(
+        child: ListView(
+          shrinkWrap: true,
+          padding: const EdgeInsets.all(AppSpacing.marginMobile),
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+              child: Text(
+                'ROLE · ${player.name}',
+                style: AppTypography.labelMedium
+                    .copyWith(color: AppColors.primary),
+              ),
+            ),
+            for (final r in options)
+              ListTile(
+                title: Text(r.label, style: AppTypography.bodyMedium),
+                subtitle: Text(
+                  r.blurb,
+                  style: AppTypography.labelSmall
+                      .copyWith(color: AppColors.onSurfaceVariant),
+                ),
+                onTap: () => Navigator.of(context).pop(r),
+              ),
+          ],
+        ),
+      ),
+    );
+    if (picked != null) {
+      await ref
+          .read(playerRolesStoreProvider)
+          .setRole(careerId, player.id, picked);
+    }
+  }
+
   Future<void> _pickPlayer(
     BuildContext context,
     WidgetRef ref,
@@ -162,11 +382,20 @@ class TacticsScreen extends ConsumerWidget {
     int slot,
   ) async {
     final position = data.tactic.formation.positions[slot];
-    final candidates =
-        data.pool
-            .where((p) => p.position.category == position.category)
-            .toList()
-          ..sort(PositionFit.bySlotFit(position));
+    final isKeeperSlot = position.category == PositionCategory.goalkeeper;
+    // A goalkeeping slot is keeper-only; any other slot can be filled by any
+    // outfield player, carrying the out-of-position penalty shown per row.
+    var candidates = data.pool
+        .where((p) => isKeeperSlot
+            ? p.position.category == PositionCategory.goalkeeper
+            : p.position.category != PositionCategory.goalkeeper)
+        .toList()
+      ..sort(PositionFit.bySlotFit(position));
+    // Nobody available for a keeper slot (both keepers out): fall back to the
+    // whole pool rather than a dead-end empty sheet — someone must go in goal.
+    if (candidates.isEmpty) {
+      candidates = [...data.pool]..sort(PositionFit.bySlotFit(position));
+    }
 
     final picked = await showModalBottomSheet<int>(
       context: context,
@@ -182,6 +411,7 @@ class TacticsScreen extends ConsumerWidget {
           for (final p in candidates)
             () {
               final inXi = data.tactic.lineup.contains(p.id);
+              final eff = PositionFit.effectiveOverall(p, position);
               return ListTile(
                 dense: true,
                 leading: TacticalChip(p.position.label),
@@ -193,11 +423,15 @@ class TacticsScreen extends ConsumerWidget {
                   ),
                 ),
                 subtitle: Text(
-                  '${p.position.roleName} · Age ${p.age}',
+                  eff < p.overall
+                      ? '${p.position.roleName} · out of position'
+                      : '${p.position.roleName} · Age ${p.age}',
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: AppTypography.labelSmall.copyWith(
-                    color: AppColors.onSurfaceVariant,
+                    color: eff < p.overall
+                        ? AppColors.error
+                        : AppColors.onSurfaceVariant,
                   ),
                 ),
                 trailing: Row(
@@ -207,7 +441,19 @@ class TacticsScreen extends ConsumerWidget {
                       const TacticalChip('IN XI'),
                       const SizedBox(width: AppSpacing.sm),
                     ],
-                    Text('${p.overall}', style: AppTypography.labelMedium),
+                    if (eff < p.overall)
+                      Text(
+                        '${p.overall}→',
+                        style: AppTypography.labelSmall.copyWith(
+                          color: AppColors.onSurfaceVariant,
+                        ),
+                      ),
+                    Text(
+                      '$eff',
+                      style: AppTypography.labelMedium.copyWith(
+                        color: eff < p.overall ? AppColors.error : null,
+                      ),
+                    ),
                     IconButton(
                       visualDensity: VisualDensity.compact,
                       icon: const Icon(
@@ -257,6 +503,19 @@ class TacticsScreen extends ConsumerWidget {
       builder: (_) => _InstructionsSheet(careerId: careerId, tactic: tactic),
     );
   }
+
+  Future<void> _openPresets(
+    BuildContext context,
+    WidgetRef ref,
+    Tactic tactic,
+  ) {
+    return showModalBottomSheet<void>(
+      context: context,
+      backgroundColor: AppColors.surfaceContainer,
+      isScrollControlled: true,
+      builder: (_) => _PresetsSheet(careerId: careerId, tactic: tactic),
+    );
+  }
 }
 
 class _InstructionsSheet extends ConsumerStatefulWidget {
@@ -281,64 +540,101 @@ class _InstructionsSheetState extends ConsumerState<_InstructionsSheet> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.fromLTRB(
-        AppSpacing.md,
-        AppSpacing.md,
-        AppSpacing.md,
-        AppSpacing.md + MediaQuery.of(context).viewInsets.bottom,
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'INSTRUCTIONS',
-            style: AppTypography.labelMedium.copyWith(color: AppColors.primary),
-          ),
-          _slider(
-            'Mentality',
-            'Defensive',
-            'Attacking',
-            _i.mentality,
-            (v) => _set(_i.copyWith(mentality: v)),
-          ),
-          _slider(
-            'Pressing',
-            'Low block',
-            'High press',
-            _i.pressing,
-            (v) => _set(_i.copyWith(pressing: v)),
-          ),
-          _slider(
-            'Tempo',
-            'Patient',
-            'Fast',
-            _i.tempo,
-            (v) => _set(_i.copyWith(tempo: v)),
-          ),
-          _slider(
-            'Width',
-            'Narrow',
-            'Wide',
-            _i.width,
-            (v) => _set(_i.copyWith(width: v)),
-          ),
-          _slider(
-            'Def. line',
-            'Deep',
-            'High',
-            _i.defensiveLine,
-            (v) => _set(_i.copyWith(defensiveLine: v)),
-          ),
-          _slider(
-            'Directness',
-            'Possession',
-            'Direct',
-            _i.directness,
-            (v) => _set(_i.copyWith(directness: v)),
-          ),
-        ],
+    // Roomier than a plain sheet: a tall, scrollable panel so each instruction
+    // has space to breathe and reads clearly.
+    final maxHeight = MediaQuery.of(context).size.height * 0.85;
+    return ConstrainedBox(
+      constraints: BoxConstraints(maxHeight: maxHeight),
+      child: Padding(
+        padding: EdgeInsets.fromLTRB(
+          AppSpacing.lg,
+          AppSpacing.md,
+          AppSpacing.lg,
+          AppSpacing.lg + MediaQuery.of(context).viewInsets.bottom,
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // A small grab handle so the panel reads as a draggable sheet.
+            Center(
+              child: Container(
+                width: 40,
+                height: 4,
+                margin: const EdgeInsets.only(bottom: AppSpacing.md),
+                decoration: const BoxDecoration(
+                  color: AppColors.outlineVariant,
+                  borderRadius: AppRadii.smAll,
+                ),
+              ),
+            ),
+            Text(
+              'TEAM INSTRUCTIONS',
+              style: AppTypography.titleMedium.copyWith(
+                color: AppColors.primary,
+              ),
+            ),
+            const SizedBox(height: AppSpacing.xs),
+            Text(
+              'Set how your side plays. Each dial nudges the whole team.',
+              style: AppTypography.bodySmall.copyWith(
+                color: AppColors.onSurfaceVariant,
+              ),
+            ),
+            const SizedBox(height: AppSpacing.md),
+            Flexible(
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _slider(
+                      'Mentality',
+                      'Defensive',
+                      'Attacking',
+                      _i.mentality,
+                      (v) => _set(_i.copyWith(mentality: v)),
+                    ),
+                    _slider(
+                      'Pressing',
+                      'Low block',
+                      'High press',
+                      _i.pressing,
+                      (v) => _set(_i.copyWith(pressing: v)),
+                    ),
+                    _slider(
+                      'Tempo',
+                      'Patient',
+                      'Fast',
+                      _i.tempo,
+                      (v) => _set(_i.copyWith(tempo: v)),
+                    ),
+                    _slider(
+                      'Width',
+                      'Narrow',
+                      'Wide',
+                      _i.width,
+                      (v) => _set(_i.copyWith(width: v)),
+                    ),
+                    _slider(
+                      'Defensive line',
+                      'Deep',
+                      'High',
+                      _i.defensiveLine,
+                      (v) => _set(_i.copyWith(defensiveLine: v)),
+                    ),
+                    _slider(
+                      'Directness',
+                      'Possession',
+                      'Direct',
+                      _i.directness,
+                      (v) => _set(_i.copyWith(directness: v)),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -350,40 +646,320 @@ class _InstructionsSheetState extends ConsumerState<_InstructionsSheet> {
     int value,
     ValueChanged<int> onChanged,
   ) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            Text(label, style: AppTypography.bodyMedium),
-            const Spacer(),
-            Text('$value', style: AppTypography.labelMedium),
-          ],
+    // Each instruction sits in its own spaced-out block so the label, value and
+    // end-points don't crowd the neighbouring dials.
+    return Padding(
+      padding: const EdgeInsets.only(bottom: AppSpacing.lg),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Text(label, style: AppTypography.titleMedium),
+              const Spacer(),
+              Text(
+                '$value',
+                style: AppTypography.titleMedium.copyWith(
+                  color: AppColors.primary,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: AppSpacing.xs),
+          SliderTheme(
+            data: SliderTheme.of(context).copyWith(
+              trackHeight: 6,
+            ),
+            child: Slider(
+              value: value.toDouble(),
+              max: 100,
+              divisions: 20,
+              onChanged: (v) => onChanged(v.round()),
+            ),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                low,
+                style: AppTypography.bodySmall.copyWith(
+                  color: AppColors.onSurfaceVariant,
+                ),
+              ),
+              Text(
+                high,
+                style: AppTypography.bodySmall.copyWith(
+                  color: AppColors.onSurfaceVariant,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// Save the current shape + instructions as a named preset, and apply or delete
+/// any previously saved preset. Presets are reusable across every save.
+class _PresetsSheet extends ConsumerStatefulWidget {
+  const _PresetsSheet({required this.careerId, required this.tactic});
+
+  final int careerId;
+  final Tactic tactic;
+
+  @override
+  ConsumerState<_PresetsSheet> createState() => _PresetsSheetState();
+}
+
+class _PresetsSheetState extends ConsumerState<_PresetsSheet> {
+  Future<void> _saveCurrent() async {
+    // A dialog is the most reliable place to type on top of a bottom sheet —
+    // the sheet's own text field kept losing the keyboard.
+    final name = await showDialog<String>(
+      context: context,
+      builder: (_) => const _NamePresetDialog(),
+    );
+    if (name == null || name.trim().isEmpty) return;
+    await ref.read(tacticPresetStoreProvider).save(
+          widget.careerId,
+          TacticPreset(
+            name: name.trim(),
+            formation: widget.tactic.formation,
+            instructions: widget.tactic.instructions,
+          ),
+        );
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Saved “${name.trim()}”')),
+      );
+    }
+  }
+
+  Future<void> _apply(TacticPreset preset) async {
+    await ref.read(tacticServiceProvider).applyPreset(
+          widget.careerId,
+          preset.formation,
+          preset.instructions,
+        );
+    if (mounted) {
+      Navigator.of(context).pop();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Applied “${preset.name}”')),
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final presetsAsync = ref.watch(tacticPresetsProvider(widget.careerId));
+    final maxHeight = MediaQuery.of(context).size.height * 0.8;
+    return ConstrainedBox(
+      constraints: BoxConstraints(maxHeight: maxHeight),
+      child: Padding(
+        padding: EdgeInsets.fromLTRB(
+          AppSpacing.lg,
+          AppSpacing.md,
+          AppSpacing.lg,
+          AppSpacing.lg + MediaQuery.of(context).viewInsets.bottom,
         ),
-        Slider(
-          value: value.toDouble(),
-          max: 100,
-          divisions: 20,
-          onChanged: (v) => onChanged(v.round()),
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              low,
-              style: AppTypography.labelSmall.copyWith(
-                color: AppColors.onSurfaceVariant,
+            Center(
+              child: Container(
+                width: 40,
+                height: 4,
+                margin: const EdgeInsets.only(bottom: AppSpacing.md),
+                decoration: const BoxDecoration(
+                  color: AppColors.outlineVariant,
+                  borderRadius: AppRadii.smAll,
+                ),
               ),
             ),
             Text(
-              high,
-              style: AppTypography.labelSmall.copyWith(
+              'TACTIC PRESETS',
+              style: AppTypography.titleMedium.copyWith(
+                color: AppColors.primary,
+              ),
+            ),
+            const SizedBox(height: AppSpacing.xs),
+            Text(
+              'Save this shape and its instructions as a reusable style, or '
+              'apply one you saved earlier.',
+              style: AppTypography.bodySmall.copyWith(
                 color: AppColors.onSurfaceVariant,
               ),
             ),
+            const SizedBox(height: AppSpacing.md),
+            SizedBox(
+              width: double.infinity,
+              child: FilledButton.icon(
+                onPressed: _saveCurrent,
+                icon: const Icon(Icons.add, size: 18),
+                label: const Text('Save current tactic'),
+              ),
+            ),
+            const SizedBox(height: AppSpacing.md),
+            Flexible(
+              child: presetsAsync.when(
+                loading: () =>
+                    const Center(child: CircularProgressIndicator()),
+                error: (e, _) => Text('Could not load presets.\n$e'),
+                data: (presets) {
+                  if (presets.isEmpty) {
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(
+                        vertical: AppSpacing.lg,
+                      ),
+                      child: Text(
+                        'No presets yet. Tap “Save current tactic” to store '
+                        'this setup as a reusable style.',
+                        style: AppTypography.bodySmall.copyWith(
+                          color: AppColors.onSurfaceVariant,
+                        ),
+                      ),
+                    );
+                  }
+                  return ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: presets.length,
+                    itemBuilder: (context, i) {
+                      final p = presets[i];
+                      return ListTile(
+                        contentPadding: EdgeInsets.zero,
+                        leading: const Icon(
+                          Icons.bookmark,
+                          color: AppColors.primary,
+                        ),
+                        title: Text(p.name, style: AppTypography.bodyMedium),
+                        subtitle: Text(
+                          p.formation.label,
+                          style: AppTypography.labelSmall.copyWith(
+                            color: AppColors.onSurfaceVariant,
+                          ),
+                        ),
+                        trailing: IconButton(
+                          icon: const Icon(
+                            Icons.delete_outline,
+                            color: AppColors.onSurfaceVariant,
+                          ),
+                          onPressed: () => ref
+                              .read(tacticPresetStoreProvider)
+                              .delete(widget.careerId, p.name),
+                        ),
+                        onTap: () => _apply(p),
+                      );
+                    },
+                  );
+                },
+              ),
+            ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+/// A small dialog to name a tactic preset — a plain dialog text field is the
+/// most reliable place to type over a bottom sheet.
+class _NamePresetDialog extends StatefulWidget {
+  const _NamePresetDialog();
+
+  @override
+  State<_NamePresetDialog> createState() => _NamePresetDialogState();
+}
+
+class _NamePresetDialogState extends State<_NamePresetDialog> {
+  final _controller = TextEditingController();
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  void _submit() => Navigator.of(context).pop(_controller.text);
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: const Text('Name this tactic'),
+      content: TextField(
+        controller: _controller,
+        autofocus: true,
+        textCapitalization: TextCapitalization.words,
+        textInputAction: TextInputAction.done,
+        onSubmitted: (_) => _submit(),
+        decoration: const InputDecoration(
+          hintText: 'e.g. High press 4-3-3',
+        ),
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(),
+          child: const Text('Cancel'),
+        ),
+        FilledButton(
+          onPressed: _submit,
+          child: const Text('Save'),
         ),
       ],
+    );
+  }
+}
+
+/// One player's role row in the tactics screen: position, name, and the role
+/// they've been given (tap to change).
+class _RoleRow extends StatelessWidget {
+  const _RoleRow({
+    required this.player,
+    required this.role,
+    required this.onTap,
+  });
+
+  final Player player;
+  final PlayerRole role;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final assigned = role != PlayerRole.none;
+    return InkWell(
+      onTap: onTap,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 5),
+        child: Row(
+          children: [
+            SizedBox(width: 36, child: TacticalChip(player.position.label)),
+            const SizedBox(width: AppSpacing.sm),
+            Expanded(
+              child: Text(
+                player.name,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: AppTypography.bodyMedium,
+              ),
+            ),
+            const SizedBox(width: AppSpacing.sm),
+            Text(
+              assigned ? role.label : 'Tap to assign',
+              style: AppTypography.labelSmall.copyWith(
+                color:
+                    assigned ? AppColors.primary : AppColors.onSurfaceVariant,
+                fontWeight: assigned ? FontWeight.w700 : FontWeight.w400,
+              ),
+            ),
+            const Icon(
+              Icons.chevron_right,
+              size: 18,
+              color: AppColors.onSurfaceVariant,
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

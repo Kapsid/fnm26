@@ -5,8 +5,8 @@ import 'package:fnm/shared/widgets/match_result_row.dart';
 
 import '../helpers/pump_app.dart';
 
-/// The shared result row. Only a knockout tie can be settled on penalties, so
-/// only a knockout tie may be marked with a "p".
+/// The shared result row. A knockout settled on penalties carries an explicit
+/// shootout score, shown as a "pens X-Y" tag under the scoreline.
 void main() {
   Fixture level(String? round) => Fixture(
         id: 1,
@@ -20,6 +20,25 @@ void main() {
         awayScore: 1,
         played: true,
         round: round,
+      );
+
+  /// A knockout won on penalties: the stored score shows a winner, and the
+  /// shootout score is carried in the penalty columns.
+  Fixture shootout(String round) => Fixture(
+        id: 1,
+        careerId: 1,
+        competitionId: 1,
+        matchday: 1,
+        date: DateTime(2029, 3, 6),
+        homeNationId: 1,
+        awayNationId: 2,
+        homeScore: 2,
+        awayScore: 1,
+        played: true,
+        round: round,
+        afterExtraTime: true,
+        homePenalties: 4,
+        awayPenalties: 3,
       );
 
   String code(int id) => 'N$id';
@@ -59,10 +78,12 @@ void main() {
     expect(find.text('1 - 1'), findsOneWidget);
   });
 
-  testWidgets('a level knockout tie IS a shootout', (tester) async {
+  testWidgets('a knockout settled on penalties shows the shootout score',
+      (tester) async {
     for (final round in ['SF', 'CFINAL', 'NSF', '3RD']) {
-      await pump(tester, level(round));
-      expect(find.text('1 - 1 p'), findsOneWidget, reason: round);
+      await pump(tester, shootout(round));
+      expect(find.text('2 - 1'), findsOneWidget, reason: round);
+      expect(find.text('pens 4-3'), findsOneWidget, reason: round);
     }
   });
 

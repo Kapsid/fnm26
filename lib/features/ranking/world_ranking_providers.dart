@@ -37,6 +37,17 @@ final selectedRankRegionProvider = StateProvider<Confederation?>((_) => null);
 /// Argument for [seedRankByIdProvider]: the save and the cycle being drawn.
 typedef SeedRankArg = ({int careerId, int cycle});
 
+/// Per-draw seeding-snapshot slots. Each cup's draw freezes the LIVE world
+/// ranking at the moment it is generated (so its pots reflect current form —
+/// e.g. a World Cup finals draw pots by the ranking after qualifying), stored
+/// under a synthetic cycle key kept clear of real cycle numbers so it never
+/// collides with the cycle-start baseline the ranking-movement arrows use.
+const int drawSlotWorldCupFinals = 0;
+const int drawSlotContinentalFinals = 1;
+
+/// The synthetic "cycle" a draw's own live-ranking snapshot is stored under.
+int drawSeedCycle(int cycle, int slot) => 900000 + cycle * 10 + slot;
+
 /// The ranking a cycle's draws seed from: the positions frozen at the cycle's
 /// start, or — for cycle 0 or any legacy save with no snapshot — the static
 /// seed ranking. Every draw and its ceremony read this so they always agree.

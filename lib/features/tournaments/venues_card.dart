@@ -14,9 +14,19 @@ typedef HostVenues = ({String code, String name, List<Venue> venues});
 /// all of them, and showing a single country's grounds under a "HOSTS" heading
 /// simply loses the others.
 class VenuesCard extends StatelessWidget {
-  const VenuesCard({required this.hosts, super.key});
+  const VenuesCard({
+    required this.hosts,
+    this.mascot,
+    this.ball,
+    super.key,
+  });
 
   final List<HostVenues> hosts;
+
+  /// This edition's official mascot and match ball, shown as the tournament's
+  /// flavour identity under the host. Null when the edition isn't drawn yet.
+  final String? mascot;
+  final String? ball;
 
   /// "58,000" from 58000 — a thousands-separated seat count.
   static String _capacity(int seats) {
@@ -92,10 +102,43 @@ class VenuesCard extends StatelessWidget {
             ],
             for (final v in h.venues) _venueRow(v),
           ],
+          if (mascot != null || ball != null) ...[
+            const Divider(height: AppSpacing.md),
+            if (mascot != null)
+              _identityRow(Icons.emoji_emotions_outlined, 'MASCOT', mascot!),
+            if (ball != null)
+              _identityRow(Icons.sports_soccer, 'MATCH BALL', ball!),
+          ],
         ],
       ),
     );
   }
+
+  Widget _identityRow(IconData icon, String label, String value) => Padding(
+        padding: const EdgeInsets.symmetric(vertical: 3),
+        child: Row(
+          children: [
+            Icon(icon, size: 16, color: AppColors.onSurfaceVariant),
+            const SizedBox(width: AppSpacing.sm),
+            Text(
+              label,
+              style: AppTypography.labelSmall.copyWith(
+                color: AppColors.primary,
+              ),
+            ),
+            const SizedBox(width: AppSpacing.sm),
+            Expanded(
+              child: Text(
+                value,
+                textAlign: TextAlign.end,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: AppTypography.bodyMedium,
+              ),
+            ),
+          ],
+        ),
+      );
 
   Widget _venueRow(Venue v) => Padding(
         padding: const EdgeInsets.symmetric(vertical: 3),

@@ -14,6 +14,7 @@ import 'package:fnm/features/achievements/achievement_providers.dart';
 import 'package:fnm/features/federation/investment_editor.dart';
 import 'package:fnm/features/hub/hub_event.dart';
 import 'package:fnm/features/hub/hub_providers.dart';
+import 'package:fnm/features/hub/objective_providers.dart';
 import 'package:fnm/features/hub/round_popup.dart';
 import 'package:fnm/features/messages/message_popup.dart';
 import 'package:fnm/features/messages/message_providers.dart';
@@ -156,32 +157,6 @@ class _HubScreenState extends ConsumerState<HubScreen> {
                 const SizedBox(height: AppSpacing.md),
                 _NextMatch(next: hub.next, code: code),
               ],
-              if (hub.hasFinals && hub.championNationId == null) ...[
-                const SizedBox(height: AppSpacing.md),
-                _FinalsFollowCard(
-                  playerInFinals: hub.fixtures.any(
-                    (f) => const {
-                      'GROUP',
-                      'R32',
-                      'R16',
-                      'QF',
-                      'SF',
-                      '3RD',
-                      'FINAL',
-                    }.contains(f.round),
-                  ),
-                  onSkipToFinal: () async {
-                    await ref
-                        .read(seasonServiceProvider)
-                        .skipToChampion(careerId);
-                    if (context.mounted) {
-                      context.go('${Routes.cup}?careerId=$careerId');
-                    }
-                  },
-                  onFollow: () =>
-                      context.go('${Routes.cup}?careerId=$careerId'),
-                ),
-              ],
               const SizedBox(height: AppSpacing.md),
               _SquadStatus(
                 rating: hub.squadRating,
@@ -201,7 +176,6 @@ class _HubScreenState extends ConsumerState<HubScreen> {
                     directCount: hub.groupDirectCount,
                     contentionPos: hub.groupContentionPos,
                     relegateCount: hub.groupRelegateCount,
-                    caption: hub.groupCaption,
                     code: code,
                     name: name,
                     // Open the right competition detail: the Nations Cup, the
@@ -229,15 +203,6 @@ class _HubScreenState extends ConsumerState<HubScreen> {
                   )
                 else
                   _GroupPlaceholder(competition: hub.group!.competition),
-              const SizedBox(height: AppSpacing.lg),
-              if (hub.next != null)
-                Center(
-                  child: TextButton(
-                    onPressed: () =>
-                        ref.read(seasonServiceProvider).advance(careerId),
-                    child: const Text('Quick sim (skip)'),
-                  ),
-                ),
               const SizedBox(height: AppSpacing.lg),
             ],
           );
@@ -312,42 +277,85 @@ class _BoardFinanceCard extends ConsumerWidget {
       >= 25 => (AppColors.warning, 'Concerned'),
       _ => (AppColors.error, 'Job at risk'),
     };
+    final objective = ref.watch(cycleObjectiveProvider(careerId)).valueOrNull;
     return AppCard(
-      child: Row(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(Icons.gavel, color: color, size: 18),
-          const SizedBox(width: AppSpacing.sm),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
+          Row(
             children: [
-              Row(
+              Icon(Icons.gavel, color: color, size: 18),
+              const SizedBox(width: AppSpacing.sm),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
                     value == null ? 'BOARD' : '$value%',
                     style: AppTypography.titleMedium.copyWith(color: color),
                   ),
+                  Text(
+                    verdict,
+                    style: AppTypography.labelSmall.copyWith(
+                      color: AppColors.onSurfaceVariant,
+                    ),
+                  ),
                 ],
               ),
-              Text(
-                verdict,
-                style: AppTypography.labelSmall.copyWith(
-                  color: AppColors.onSurfaceVariant,
+              const Spacer(),
+              OutlinedButton.icon(
+                onPressed: onFinances,
+                icon: const Icon(Icons.account_balance, size: 16),
+                label: Text(formatEuros(budget)),
+                style: OutlinedButton.styleFrom(
+                  foregroundColor: AppColors.primary,
+                  side: const BorderSide(color: AppColors.outlineVariant),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: AppSpacing.md),
                 ),
               ),
             ],
           ),
-          const Spacer(),
-          OutlinedButton.icon(
-            onPressed: onFinances,
-            icon: const Icon(Icons.account_balance, size: 16),
-            label: Text(formatEuros(budget)),
-            style: OutlinedButton.styleFrom(
-              foregroundColor: AppColors.primary,
-              side: const BorderSide(color: AppColors.outlineVariant),
-              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
+          if (objective != null) ...[
+            const Divider(height: AppSpacing.lg, color: AppColors.outlineVariant),
+            Row(
+              children: [
+                const Icon(Icons.flag_outlined,
+                    size: 15, color: AppColors.onSurfaceVariant),
+                const SizedBox(width: AppSpacing.sm),
+                Expanded(
+                  child: Text(
+                    'Board objective: ${objective.label}',
+                    style: AppTypography.labelSmall,
+                  ),
+                ),
+                if (objective.decided)
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 8, vertical: 2),
+                    decoration: BoxDecoration(
+                      color: (objective.met
+                              ? AppColors.positive
+                              : AppColors.error)
+                          .withValues(alpha: 0.15),
+                      borderRadius: AppRadii.smAll,
+                    ),
+                    child: Text(
+                      objective.met
+                          ? 'MET · ${objective.resultLabel}'
+                          : 'MISSED · ${objective.resultLabel}',
+                      style: AppTypography.labelSmall.copyWith(
+                        color: objective.met
+                            ? AppColors.positive
+                            : AppColors.error,
+                        fontWeight: FontWeight.w700,
+                        fontSize: 9,
+                      ),
+                    ),
+                  ),
+              ],
             ),
-          ),
+          ],
         ],
       ),
     );
@@ -414,93 +422,14 @@ class _EventButton extends ConsumerWidget {
         unawaited(season.advance(careerId));
       case HubEventKind.cycleRollover:
       case HubEventKind.draw:
+      case HubEventKind.tournamentKickoff:
       case HubEventKind.callUp:
+      case HubEventKind.budget:
       case HubEventKind.naturalization:
       case HubEventKind.friendlies:
       case HubEventKind.match:
         if (event.route != null) context.go(event.route!);
     }
-  }
-}
-
-/// Surfaces the ongoing World Cup finals on the hub so the player can follow
-/// the tournament — especially when their nation didn't qualify and would
-/// otherwise have no visible "next step".
-class _FinalsFollowCard extends StatelessWidget {
-  const _FinalsFollowCard({
-    required this.playerInFinals,
-    required this.onSkipToFinal,
-    required this.onFollow,
-  });
-
-  final bool playerInFinals;
-  final VoidCallback onSkipToFinal;
-  final VoidCallback onFollow;
-
-  @override
-  Widget build(BuildContext context) {
-    return AppCard(
-      onTap: onFollow,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Row(
-            children: [
-              Icon(Icons.emoji_events, color: AppColors.primary, size: 18),
-              SizedBox(width: AppSpacing.sm),
-              Expanded(
-                child: Text(
-                  'WORLD CUP FINALS',
-                  style: AppTypography.labelMedium,
-                ),
-              ),
-              Icon(
-                Icons.chevron_right,
-                size: 18,
-                color: AppColors.onSurfaceVariant,
-              ),
-            ],
-          ),
-          const SizedBox(height: AppSpacing.xs),
-          Text(
-            playerInFinals
-                ? 'The finals are under way — follow the bracket.'
-                : "You didn't qualify — follow the finals to the end.",
-            style: AppTypography.bodySmall.copyWith(
-              color: AppColors.onSurfaceVariant,
-            ),
-          ),
-          const SizedBox(height: AppSpacing.sm),
-          Row(
-            children: [
-              Expanded(
-                child: OutlinedButton.icon(
-                  onPressed: onFollow,
-                  icon: const Icon(Icons.table_rows_rounded, size: 16),
-                  label: const Text('Follow'),
-                  style: OutlinedButton.styleFrom(
-                    foregroundColor: AppColors.primary,
-                    side: const BorderSide(color: AppColors.outlineVariant),
-                  ),
-                ),
-              ),
-              const SizedBox(width: AppSpacing.sm),
-              Expanded(
-                child: OutlinedButton.icon(
-                  onPressed: onSkipToFinal,
-                  icon: const Icon(Icons.fast_forward_rounded, size: 16),
-                  label: const Text('Skip to final'),
-                  style: OutlinedButton.styleFrom(
-                    foregroundColor: AppColors.primary,
-                    side: const BorderSide(color: AppColors.outlineVariant),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
   }
 }
 
@@ -761,7 +690,6 @@ class _GroupTable extends StatelessWidget {
     required this.code,
     required this.name,
     this.relegateCount = 0,
-    this.caption = '',
     this.onTap,
   });
 
@@ -777,8 +705,6 @@ class _GroupTable extends StatelessWidget {
   /// group's last side.
   final int relegateCount;
 
-  /// A plain-English note on what the zones mean.
-  final String caption;
   final String Function(int) code;
   final String Function(int) name;
   final VoidCallback? onTap;
@@ -813,15 +739,6 @@ class _GroupTable extends StatelessWidget {
           const Divider(),
           for (var i = 0; i < group.standings.length; i++)
             _standingRow(i + 1, group.standings[i]),
-          if (caption.isNotEmpty) ...[
-            const SizedBox(height: AppSpacing.xs),
-            Text(
-              caption,
-              style: AppTypography.labelSmall.copyWith(
-                color: AppColors.onSurfaceVariant,
-              ),
-            ),
-          ],
         ],
       ),
     );

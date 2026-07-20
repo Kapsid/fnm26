@@ -42,11 +42,13 @@ class _FinancesScreenState extends ConsumerState<FinancesScreen> {
     final prevSpend = view.planned.youth +
         view.planned.commercial +
         view.planned.medical +
-        view.planned.naturalization;
+        view.planned.naturalization +
+        view.planned.boardRelations;
     final newSpend = alloc.youth +
         alloc.commercial +
         alloc.medical +
-        alloc.naturalization;
+        alloc.naturalization +
+        alloc.boardRelations;
     final career = await repo.byId(widget.careerId);
     if (career == null) return;
     // Plan the NEXT cycle's investment (its effects — better prospects, fewer
@@ -101,18 +103,29 @@ class _FinancesScreenState extends ConsumerState<FinancesScreen> {
               view.planned.youth +
               view.planned.commercial +
               view.planned.medical +
-              view.planned.naturalization;
+              view.planned.naturalization +
+              view.planned.boardRelations;
           final income = view.projectedIncome;
           final hasCurrent = view.current.youth +
                   view.current.commercial +
                   view.current.medical +
-                  view.current.naturalization >
+                  view.current.naturalization +
+                  view.current.boardRelations >
               0;
 
           return ListView(
             padding: const EdgeInsets.all(AppSpacing.marginMobile),
             children: [
               _BalanceCard(budget: view.budget),
+              const SizedBox(height: AppSpacing.md),
+              Text(
+                'FEDERATION DEVELOPMENT',
+                style: AppTypography.labelSmall.copyWith(
+                  color: AppColors.primary,
+                ),
+              ),
+              const SizedBox(height: AppSpacing.sm),
+              _BuildingsCard(careerId: widget.careerId),
               const SizedBox(height: AppSpacing.md),
               Text(
                 'PROJECTED AT SEASON END',
@@ -157,6 +170,15 @@ class _FinancesScreenState extends ConsumerState<FinancesScreen> {
                   onChanged: (a) => setState(() => _alloc = a),
                 ),
               ),
+              const SizedBox(height: AppSpacing.md),
+              Text(
+                'NEXT SEASON IMPACT',
+                style: AppTypography.labelSmall.copyWith(
+                  color: AppColors.primary,
+                ),
+              ),
+              const SizedBox(height: AppSpacing.sm),
+              _ImpactCard(planned: alloc, current: view.current),
               const SizedBox(height: AppSpacing.lg),
               PrimaryButton(
                 label: _busy ? 'Saving…' : 'Confirm investment',
@@ -244,6 +266,7 @@ class _LockedInvestment extends StatelessWidget {
                       Department.commercial => investment.commercial,
                       Department.medical => investment.medical,
                       Department.naturalization => investment.naturalization,
+                      Department.boardRelations => investment.boardRelations,
                     }),
                     style: AppTypography.labelMedium.copyWith(
                       color: AppColors.primary,
@@ -259,6 +282,230 @@ class _LockedInvestment extends StatelessWidget {
               color: AppColors.onSurfaceVariant,
             ),
           ),
+        ],
+      ),
+    );
+  }
+}
+
+/// The federation's four buildings, each with a level that grows from the total
+/// invested in that department across the whole save — the long-term picture the
+/// per-cycle sliders can't convey.
+class _BuildingsCard extends ConsumerWidget {
+  const _BuildingsCard({required this.careerId});
+
+  final int careerId;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final async = ref.watch(federationBuildingsProvider(careerId));
+    return async.when(
+      loading: () => const AppCard(
+        child: Center(child: CircularProgressIndicator()),
+      ),
+      error: (_, _) => const SizedBox.shrink(),
+      data: (buildings) => AppCard(
+        child: Column(
+          children: [
+            for (final b in buildings)
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 5),
+                child: Row(
+                  children: [
+                    SizedBox(
+                      width: 34,
+                      child: _LevelBadge(level: b.level),
+                    ),
+                    const SizedBox(width: AppSpacing.md),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            '${FederationBuildings.nameFor(b.department)}'
+                            '  ·  ${b.department.label}',
+                            style: AppTypography.bodyMedium,
+                          ),
+                          const SizedBox(height: 4),
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(3),
+                            child: LinearProgressIndicator(
+                              value: b.progress,
+                              minHeight: 5,
+                              backgroundColor: AppColors.surfaceContainerHigh,
+                              valueColor: const AlwaysStoppedAnimation(
+                                AppColors.primary,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(width: AppSpacing.sm),
+                    Text(
+                      formatEuros(b.cumulativeEuros),
+                      style: AppTypography.labelSmall.copyWith(
+                        color: AppColors.onSurfaceVariant,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _LevelBadge extends StatelessWidget {
+  const _LevelBadge({required this.level});
+
+  final int level;
+
+  @override
+  Widget build(BuildContext context) {
+    final maxed = level >= FederationBuildings.maxLevel;
+    return Container(
+      width: 34,
+      height: 34,
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+        color: maxed ? AppColors.primary : AppColors.surfaceContainerHigh,
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(
+          color: maxed ? AppColors.primary : AppColors.outlineVariant,
+        ),
+      ),
+      child: Text(
+        'L$level',
+        style: AppTypography.labelMedium.copyWith(
+          color: maxed ? AppColors.onPrimary : AppColors.primary,
+          fontWeight: FontWeight.w700,
+        ),
+      ),
+    );
+  }
+}
+
+/// A live preview of what next season's planned investment actually buys, with
+/// an arrow whenever it differs from this season's committed spend — so the
+/// player can see the concrete effect of moving a slider before confirming.
+class _ImpactCard extends StatelessWidget {
+  const _ImpactCard({required this.planned, required this.current});
+
+  final FederationInvestment planned;
+  final FederationInvestment current;
+
+  @override
+  Widget build(BuildContext context) {
+    return AppCard(
+      child: Column(
+        children: [
+          _ImpactRow(
+            label: 'Academy prospects',
+            planned: _youthOverall(planned.youth),
+            current: _youthOverall(current.youth),
+            format: (v) => '+$v overall',
+            higherIsBetter: true,
+          ),
+          _ImpactRow(
+            label: 'Injury risk',
+            planned: (FederationFinance.injuryFactor(planned.medical) * 100)
+                .round(),
+            current: (FederationFinance.injuryFactor(current.medical) * 100)
+                .round(),
+            format: (v) => '×${(v / 100).toStringAsFixed(2)}',
+            higherIsBetter: false,
+          ),
+          _ImpactRow(
+            label: 'Naturalisation chance',
+            planned: _natPct(planned.naturalization),
+            current: _natPct(current.naturalization),
+            format: (v) => '$v%',
+            higherIsBetter: true,
+          ),
+          _ImpactRow(
+            label: 'Commercial return',
+            planned: FederationFinance.commercialReturn(planned.commercial),
+            current: FederationFinance.commercialReturn(current.commercial),
+            format: formatEuros,
+            higherIsBetter: true,
+          ),
+          _ImpactRow(
+            label: 'Board patience',
+            planned: FederationFinance.boardTolerance(planned.boardRelations),
+            current: FederationFinance.boardTolerance(current.boardRelations),
+            format: (v) => '+$v',
+            higherIsBetter: true,
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// The youth talent bonus expressed as approximate overall points (~+12 at
+  /// full investment), for a tangible read on what the academy buys.
+  static int _youthOverall(int invested) =>
+      (FederationFinance.youthTalentBonus(invested) / 0.18 * 12).round();
+
+  static int _natPct(int invested) =>
+      (FederationFinance.naturalizationChance(invested) * 100).round();
+}
+
+class _ImpactRow extends StatelessWidget {
+  const _ImpactRow({
+    required this.label,
+    required this.planned,
+    required this.current,
+    required this.format,
+    required this.higherIsBetter,
+  });
+
+  final String label;
+  final int planned;
+  final int current;
+  final String Function(int) format;
+  final bool higherIsBetter;
+
+  @override
+  Widget build(BuildContext context) {
+    final changed = planned != current;
+    final better = higherIsBetter ? planned > current : planned < current;
+    final deltaColor = !changed
+        ? AppColors.onSurfaceVariant
+        : better
+            ? AppColors.positive
+            : AppColors.error;
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 3),
+      child: Row(
+        children: [
+          Expanded(
+            child: Text(
+              label.toUpperCase(),
+              style: AppTypography.labelSmall.copyWith(
+                color: AppColors.onSurfaceVariant,
+              ),
+            ),
+          ),
+          Text(
+            format(planned),
+            style: AppTypography.bodyMedium.copyWith(
+              color: changed ? deltaColor : AppColors.onSurface,
+              fontWeight: changed ? FontWeight.w700 : FontWeight.w400,
+            ),
+          ),
+          if (changed) ...[
+            const SizedBox(width: 4),
+            Icon(
+              better
+                  ? Icons.arrow_upward_rounded
+                  : Icons.arrow_downward_rounded,
+              size: 14,
+              color: deltaColor,
+            ),
+          ],
         ],
       ),
     );

@@ -4,7 +4,9 @@ import 'package:fnm/domain/entities/fixture.dart';
 /// at the start of a *period* and then locked for that whole period's matches;
 /// the next period opens the next window. Periods begin:
 ///
-///  * before a qualifying campaign (matchday 1) and again before matchday 6;
+///  * before a qualifying campaign (matchday 1) and again every four matchdays
+///    (5, 9, 13, …), so a long campaign is re-selected regularly rather than
+///    a squad being locked in for six games at a time;
 ///  * before a friendly window;
 ///  * before a tournament (the group stage's first match — the squad is then
 ///    locked for the entire tournament, knockouts included).
@@ -19,8 +21,12 @@ abstract final class Nomination {
     'NGROUP', // Nations Cup group
   };
 
-  /// Qualifying rounds, which get a second nomination window at matchday 6.
+  /// Qualifying rounds, which get a fresh nomination window every four matchdays
+  /// through the campaign.
   static const _qualRounds = <String?>{null, 'CQ'};
+
+  /// How often (in matchdays) a qualifying campaign re-opens the squad.
+  static const _qualWindowEvery = 4;
 
   /// Whether [f] begins a new nomination period, given the fixture immediately
   /// before it by date ([previous], null if [f] is the very first).
@@ -29,7 +35,11 @@ abstract final class Nomination {
       return previous == null || previous.round != 'FRIENDLY';
     }
     if (f.matchday == 1 && _periodStartRounds.contains(f.round)) return true;
-    if (f.matchday == 6 && _qualRounds.contains(f.round)) return true;
+    if (_qualRounds.contains(f.round) &&
+        f.matchday > 1 &&
+        (f.matchday - 1) % _qualWindowEvery == 0) {
+      return true;
+    }
     return false;
   }
 

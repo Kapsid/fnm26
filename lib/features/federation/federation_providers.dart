@@ -20,3 +20,12 @@ final AutoDisposeFutureProviderFamily<Map<int, double>, int>
         e.key: FederationFinance.youthTalentBonus(e.value.youth),
   };
 });
+
+/// Total tournament STARTS per player across the save (playerId → starts) — the
+/// career-development signal. A player who has started many matches grows a
+/// touch (weighted by their club-league tier). Derived from stored appearance
+/// rows, so it re-produces identically on replay.
+final AutoDisposeFutureProviderFamily<Map<int, int>, int>
+    careerDevBonusProvider =
+    FutureProvider.autoDispose.family<Map<int, int>, int>((ref, careerId) =>
+        ref.watch(competitionRepositoryProvider).careerStartsByPlayer(careerId));

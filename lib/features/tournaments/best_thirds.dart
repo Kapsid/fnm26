@@ -15,9 +15,11 @@ int rankStandings(GroupStanding a, GroupStanding b) {
   return b.goalsFor.compareTo(a.goalsFor);
 }
 
-/// The best third-placed teams league that decides the last knockout places in
-/// the modern group formats (48-team World Cup, 24-team continental cups): the
-/// [qualifyCount] highest-ranked thirds advance (green), the rest are out.
+/// The cross-group ladder that decides the last places in the modern group
+/// formats — the best third-placed teams (48-team World Cup, 24-team
+/// continental cups), or the best runners-up where only some second places go
+/// through: the [qualifyCount] highest-ranked advance (green), the rest are
+/// out.
 class BestThirdsCard extends StatelessWidget {
   const BestThirdsCard({
     required this.thirds,
@@ -26,10 +28,11 @@ class BestThirdsCard extends StatelessWidget {
     required this.code,
     required this.name,
     this.destination = 'the knockouts',
+    this.title = 'BEST THIRD-PLACED',
     super.key,
   });
 
-  /// The third-placed teams, already ranked best-first.
+  /// The tier's teams (thirds or runners-up), already ranked best-first.
   final List<GroupStanding> thirds;
   final int qualifyCount;
   final int playerNationId;
@@ -40,6 +43,9 @@ class BestThirdsCard extends StatelessWidget {
   /// group stage, 'the finals' for a qualifying group stage.
   final String destination;
 
+  /// The card heading — override for a runners-up ladder.
+  final String title;
+
   @override
   Widget build(BuildContext context) {
     return AppCard(
@@ -47,7 +53,7 @@ class BestThirdsCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'BEST THIRD-PLACED',
+            title,
             style: AppTypography.labelSmall.copyWith(color: AppColors.primary),
           ),
           Text(

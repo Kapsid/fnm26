@@ -26,30 +26,55 @@ abstract final class GroupAdvancement {
   /// Continental qualifying, from the finals field [size] and [groupCount].
   /// Group winners always go through; the rest come from the best runners-up
   /// then the best thirds (as Qualification.qualifiers resolves them).
-  static ({int direct, int? contention, int thirdsQualify})
+  ///
+  /// `runnersQualify`/`thirdsQualify` say how many of each cross-group tier
+  /// actually go through, so a screen can show the real ladder ("6 of 9
+  /// runners-up advance") instead of leaving an amber stripe to be guessed at.
+  static ({int direct, int? contention, int runnersQualify, int thirdsQualify})
       continentalQualifying(
     int size,
     int groupCount,
   ) {
-    if (groupCount < 1) return (direct: 1, contention: null, thirdsQualify: 0);
+    if (groupCount < 1) {
+      return (direct: 1, contention: null, runnersQualify: 0, thirdsQualify: 0);
+    }
     final afterWinners = size - groupCount; // places left for 2nd/3rd tiers
     if (afterWinners <= 0) {
-      return (direct: 1, contention: null, thirdsQualify: 0);
+      return (direct: 1, contention: null, runnersQualify: 0, thirdsQualify: 0);
     }
     if (afterWinners >= groupCount) {
       final thirds = (afterWinners - groupCount).clamp(0, groupCount);
-      // The top two go through reliably (green). Third place can only sneak in
-      // as one of a handful of best-thirds across all groups — far from a berth
-      // — so it is NOT flagged "in contention" (amber), which read as though a
-      // third-place finish would qualify.
-      return (direct: 2, contention: null, thirdsQualify: thirds);
+      // The top two go through reliably (green). When any best-thirds places
+      // exist, third place is flagged "in contention" (amber) — the same
+      // reading the tournament detail screens give, so the hub, the round
+      // results and the detail tabs never disagree about what third means.
+      return (
+        direct: 2,
+        contention: thirds > 0 ? 3 : null,
+        runnersQualify: groupCount,
+        thirdsQualify: thirds,
+      );
     }
-    return (direct: 1, contention: 2, thirdsQualify: 0);
+    // Only the best runners-up qualify — second place is in contention.
+    return (
+      direct: 1,
+      contention: 2,
+      runnersQualify: afterWinners,
+      thirdsQualify: 0,
+    );
   }
 
-  /// A finals group stage: top two advance, and the best thirds may be in
-  /// contention for the last knockout places.
-  static ({int direct, int? contention}) finalsGroup(int groupCount) {
+  /// A finals group stage: normally the top two advance, with the best thirds
+  /// in contention. The exception is a two-group-of-five field (Copa América),
+  /// where the top FOUR of each group go through to the quarter-finals.
+  static ({int direct, int? contention}) finalsGroup(
+    int groupCount,
+    int fieldSize,
+  ) {
+    final perGroup = groupCount > 0 ? fieldSize ~/ groupCount : 0;
+    if (groupCount == 2 && perGroup >= 5) {
+      return (direct: 4, contention: null);
+    }
     final thirds = WorldCupFinals.bestThirdsFor(groupCount);
     return (direct: 2, contention: thirds > 0 ? 3 : null);
   }
@@ -76,7 +101,7 @@ abstract final class GroupAdvancement {
         return (direct: adv.direct, contention: adv.contention, relegate: 0);
       case CompetitionKind.worldCupFinals:
       case CompetitionKind.continentalFinals:
-        final adv = finalsGroup(groupCount);
+        final adv = finalsGroup(groupCount, continentalSize);
         return (direct: adv.direct, contention: adv.contention, relegate: 0);
       case CompetitionKind.nationsLeague:
         // Only the group winner advances (to the Finals Four / promotion), and
@@ -125,8 +150,8 @@ abstract final class GroupAdvancement {
       case CompetitionKind.worldCupFinals:
       case CompetitionKind.continentalFinals:
         return adv.contention != null
-            ? 'Top 2 advance; the best third-placed teams join them'
-            : 'Top 2 advance';
+            ? '${top(adv.direct)} advance; the best third-placed teams join them'
+            : '${top(adv.direct)} advance';
       case CompetitionKind.friendly:
       case CompetitionKind.finalissima:
         return '';

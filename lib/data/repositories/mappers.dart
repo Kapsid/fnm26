@@ -59,6 +59,9 @@ extension FixtureRowMapper on FixtureRow {
         awayScore: awayScore,
         round: round,
         played: played,
+        afterExtraTime: afterExtraTime,
+        homePenalties: homePenalties,
+        awayPenalties: awayPenalties,
       );
 }
 

@@ -16,6 +16,7 @@ import 'package:fnm/domain/services/competition/schedule_generator.dart';
 import 'package:fnm/domain/services/entitlement/entitlement.dart';
 import 'package:fnm/domain/services/federation/federation_finance.dart';
 import 'package:fnm/domain/services/tactics/best_eleven.dart';
+import 'package:fnm/features/hub/hub_event.dart' show worldCupQualDrawKind;
 
 /// All save games, most recent first (seeding the DB first if needed).
 final savesProvider = FutureProvider<List<Career>>((ref) async {
@@ -191,6 +192,7 @@ class CareerService {
           qualifierIds: members.take(cont.size).map((n) => n.id).toList(),
           rankingById: {for (final n in nations) n.id: rankOf(n)},
           rngSeed: rngSeed ^ (cycle * 0x71) ^ 0xC0FF,
+          perGroup: cont.groupSize,
         );
         await comp.saveTournamentGroups(
           careerId: careerId,
@@ -206,13 +208,14 @@ class CareerService {
     }
 
     // 1c. The Nations Cup runs AFTER the continental finals and before the
-    //     World Cup — the real Nations League slot. The confederation plays as
-    //     a persistent ladder of leagues (League A, B, C…), each four groups of
+    //     World Cup — the real Nations League slot. It is a EUROPEAN
+    //     competition only (like the real Nations League): Europe plays as a
+    //     persistent ladder of leagues (League A, B, C…), each four groups of
     //     four home & away. Every league is played so the whole ladder moves;
     //     League A's group winners contest a Finals Four for the title. The
     //     ladder is seeded from the ranking only for the first cup and then
     //     changes solely by promotion/relegation (see [nationsCupTiers]).
-    if (cont != null) {
+    if (cont != null && me.confederation == Confederation.europe) {
       final members = (byConfederation[me.confederation] ?? <Nation>[]).toList()
         ..sort((a, b) => rankOf(a).compareTo(rankOf(b)));
       // Effective ladder: the saved tiers, or a ranking seed for the first cup.
@@ -299,6 +302,12 @@ class CareerService {
         ),
         cycle: cycle,
       );
+      // A single-group campaign (CONMEBOL — everyone plays everyone) has nothing
+      // to draw, so mark the player's qualifying draw as already watched and
+      // skip the ceremony.
+      if (entry.key == me.confederation && schedule.groups.length <= 1) {
+        await comp.markDrawWatched(careerId, cycle, worldCupQualDrawKind);
+      }
     }
 
     // Friendlies are no longer auto-scheduled: the manager arranges 1–3 of them

@@ -129,3 +129,54 @@ final AutoDisposeFutureProviderFamily<FinanceView?, int> financeViewProvider =
     projectedIncome: income,
   );
 });
+
+/// A department's long-term standing: its building level and the total euros
+/// invested in it across every cycle of the save so far.
+typedef DepartmentBuilding = ({
+  Department department,
+  int level,
+  int cumulativeEuros,
+  double progress,
+});
+
+/// The four federation buildings with their levels, derived from the whole
+/// investment history — the "long-term impact" view the sliders can't show.
+final AutoDisposeFutureProviderFamily<List<DepartmentBuilding>, int>
+    federationBuildingsProvider =
+    FutureProvider.autoDispose.family<List<DepartmentBuilding>, int>((
+  ref,
+  careerId,
+) async {
+  final repo = ref.watch(careerRepositoryProvider);
+  final career = await repo.byId(careerId);
+  if (career == null) return const [];
+  final invests = await repo.investments(careerId);
+  int spend(FederationInvestment i, Department d) => switch (d) {
+        Department.youth => i.youth,
+        Department.commercial => i.commercial,
+        Department.medical => i.medical,
+        Department.naturalization => i.naturalization,
+        Department.boardRelations => i.boardRelations,
+      };
+  // A building's standing is its maintained investment — recent, sustained
+  // funding, with each past cycle's spend decayed by carryOver — so it climbs
+  // while you invest and slides back down when you stop.
+  return [
+    for (final d in Department.values)
+      () {
+        final byCycle = {
+          for (final e in invests.entries) e.key: spend(e.value, d),
+        };
+        final euros = FederationBuildings.maintainedEuros(
+          byCycle,
+          career.cyclePointer,
+        );
+        return (
+          department: d,
+          level: FederationBuildings.levelFor(euros),
+          cumulativeEuros: euros,
+          progress: FederationBuildings.progressFor(euros),
+        );
+      }(),
+  ];
+});

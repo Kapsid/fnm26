@@ -6,6 +6,7 @@ import 'package:fnm/data/db/app_database.dart';
 import 'package:fnm/data/repositories/mappers.dart';
 import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/repositories/player_repository.dart';
+import 'package:fnm/domain/services/club/clubs.dart';
 import 'package:fnm/domain/services/player/player_aging.dart';
 import 'package:fnm/domain/services/player/player_lifecycle.dart';
 
@@ -41,6 +42,7 @@ class DriftPlayerRepository implements PlayerRepository {
     int agingYears = 0,
     int saveSeed = 0,
     Map<int, double> youthBonusByCycle = const {},
+    Map<int, int> careerStartsByPlayer = const {},
   }) async {
     final seeded = await _seededRows(nationId);
     // `overall` is position-weighted and derived (not a column), so build the
@@ -50,9 +52,17 @@ class DriftPlayerRepository implements PlayerRepository {
       nationId,
       agingYears,
       youthBonusByCycle: youthBonusByCycle,
+      careerStartsByPlayer: careerStartsByPlayer,
     )..sort((a, b) => b.overall.compareTo(a.overall));
     final name = await _namerFor(nationId, seeded, saveSeed);
-    return [for (final p in pool) name(p)];
+    return [for (final p in pool) _withClub(name(p), saveSeed)];
+  }
+
+  /// Attaches the player's (cosmetic) club and its country, derived from their
+  /// current overall + id + save seed — layered on like the namer.
+  Player _withClub(Player p, int saveSeed) {
+    final c = ClubService.clubForSeed(p, saveSeed);
+    return p.copyWith(club: c.name, clubCountry: c.country);
   }
 
   @override
@@ -67,6 +77,7 @@ class DriftPlayerRepository implements PlayerRepository {
     int agingYears = 0,
     int saveSeed = 0,
     Map<int, double> youthBonusByCycle = const {},
+    Map<int, int> careerStartsByPlayer = const {},
   }) async {
     if (PlayerLifecycle.isNewgenId(id)) {
       final nationId = PlayerLifecycle.nationIdOf(id);
@@ -76,9 +87,10 @@ class DriftPlayerRepository implements PlayerRepository {
         id,
         agingYears,
         youthBonusByCycle: youthBonusByCycle,
+        careerStartsByPlayer: careerStartsByPlayer,
       );
       if (p == null) return null;
-      return (await _namerFor(nationId, seeded, saveSeed))(p);
+      return _withClub((await _namerFor(nationId, seeded, saveSeed))(p), saveSeed);
     }
     final row = await (_db.select(_db.players)..where((t) => t.id.equals(id)))
         .getSingleOrNull();
@@ -86,9 +98,15 @@ class DriftPlayerRepository implements PlayerRepository {
     // Identity lookups resolve a player even once they've retired out of the
     // selectable pool — a retired legend still has a name and a record.
     if (p == null) return null;
-    final aged = PlayerAging.agedYears(p, agingYears);
+    final aged = PlayerLifecycle.withCareerDev(
+      PlayerAging.agedYears(p, agingYears),
+      careerStartsByPlayer[id] ?? 0,
+    );
     final seeded = await _seededRows(p.nationId);
-    return (await _namerFor(p.nationId, seeded, saveSeed))(aged);
+    return _withClub(
+      (await _namerFor(p.nationId, seeded, saveSeed))(aged),
+      saveSeed,
+    );
   }
 
   /// The nation's base (cycle-0) seeded rows, unaged.

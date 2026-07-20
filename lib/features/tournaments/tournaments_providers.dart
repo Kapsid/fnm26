@@ -7,6 +7,7 @@ import 'package:fnm/domain/repositories/competition_repository.dart';
 import 'package:fnm/domain/services/competition/continental_cups.dart';
 import 'package:fnm/domain/services/competition/hosts.dart';
 import 'package:fnm/features/career/career_providers.dart';
+import 'package:fnm/features/tournaments/finals_draw_providers.dart';
 
 /// Where a championship stands for the current save, used to label and unlock
 /// its tile on the tournaments overview.
@@ -52,6 +53,7 @@ class TournamentsOverview {
     this.nationsCup,
     this.nationsCupLeague = 'A',
     this.continentalClash,
+    this.clashInvolvesPlayer = false,
   });
 
   final Map<Confederation?, TournamentStatus> statuses;
@@ -64,6 +66,10 @@ class TournamentsOverview {
   final TournamentStatus? nationsCup;
   final String nationsCupLeague;
   final TournamentStatus? continentalClash;
+
+  /// Whether the manager's nation is one of the two Continental Clash entrants
+  /// this cycle — if not, the Clash belongs among the "other" competitions.
+  final bool clashInvolvesPlayer;
 
   /// The host nation of this cycle's World Cup (deterministic from the start).
   final int? worldCupHostId;
@@ -121,10 +127,19 @@ final AutoDisposeFutureProviderFamily<TournamentsOverview?, int>
   final nextIsCont = next != null &&
       (next.round == 'CQ' || contFinalsRounds.contains(next.round));
 
-  // World Championship.
+  // World Championship. The finals fixtures exist from the rollover onward, but
+  // the tournament only counts as being in its FINALS phase (host known, tile
+  // ACTIVE) once the player has watched the finals-draw ceremony — before that
+  // it's still the QUALIFYING campaign as far as the UI is concerned.
   final worldChampion = await comp.worldChampion(careerId);
   final hasFinals = await comp.hasFinals(careerId);
-  final wcLive = hasFinals || wcStarted || nextIsWc;
+  final finalsDrawWatched = await comp.hasWatchedDraw(
+    careerId,
+    career.cyclePointer,
+    worldCupDrawKind,
+  );
+  final finalsPhase = hasFinals && finalsDrawWatched;
+  final wcLive = finalsPhase || wcStarted || nextIsWc;
   final wcHasHistory = honourComps.contains('World Championship');
   statuses[null] = TournamentStatus(
     phase: worldChampion != null
@@ -137,7 +152,7 @@ final AutoDisposeFutureProviderFamily<TournamentsOverview?, int>
     label: worldChampion != null
         ? 'CHAMPIONS'
         : wcLive
-            ? (hasFinals ? 'FINALS' : 'QUALIFYING')
+            ? (finalsPhase ? 'FINALS' : 'QUALIFYING')
             : wcHasHistory
                 ? 'PAST WINNERS'
                 : 'UPCOMING',
@@ -262,15 +277,33 @@ final AutoDisposeFutureProviderFamily<TournamentsOverview?, int>
     );
   }
 
-  // Continental Clash (Finalissima): the champions-of-champions one-off.
-  TournamentStatus? continentalClash;
+  // Continental Clash (Finalissima): the champions-of-champions one-off. The
+  // tile always shows — out of season it browses past winners, like the cups.
+  TournamentStatus continentalClash;
+  var clashInvolvesPlayer = false;
   if (await comp.hasTournament(careerId, CompetitionKind.finalissima)) {
+    final fx = await comp.fixturesByRound(
+      careerId,
+      'FFINAL',
+      kind: CompetitionKind.finalissima,
+    );
+    clashInvolvesPlayer = fx.any(
+      (f) =>
+          f.homeNationId == career.nationId ||
+          f.awayNationId == career.nationId,
+    );
     final champ = await _knockoutWinner(comp, careerId, 'FFINAL',
         CompetitionKind.finalissima);
     continentalClash = TournamentStatus(
       phase: champ != null ? TournamentPhase.decided : TournamentPhase.live,
       label: champ != null ? 'DECIDED' : 'IN PROGRESS',
       championId: champ,
+    );
+  } else {
+    continentalClash = const TournamentStatus(
+      phase: TournamentPhase.history,
+      label: 'PAST WINNERS',
+      championId: null,
     );
   }
 
@@ -284,6 +317,7 @@ final AutoDisposeFutureProviderFamily<TournamentsOverview?, int>
     nationsCup: nationsCup,
     nationsCupLeague: ncLeague,
     continentalClash: continentalClash,
+    clashInvolvesPlayer: clashInvolvesPlayer,
   );
 });
 

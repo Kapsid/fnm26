@@ -4,7 +4,7 @@ import 'dart:math';
 typedef IncomeBreakdown = ({int grant, int prize, int commercial});
 
 /// The federation departments the manager invests in each cycle.
-enum Department { youth, commercial, medical, naturalization }
+enum Department { youth, commercial, medical, naturalization, boardRelations }
 
 extension DepartmentX on Department {
   String get label => switch (this) {
@@ -12,6 +12,7 @@ extension DepartmentX on Department {
         Department.commercial => 'Commercial / PR',
         Department.medical => 'Medical & Sports Science',
         Department.naturalization => 'Naturalisation Office',
+        Department.boardRelations => 'Board Relations',
       };
 
   /// A one-line description of what the department buys, for the invest UI.
@@ -25,6 +26,9 @@ extension DepartmentX on Department {
         Department.naturalization =>
           'Reputation and openness — more foreign players offer to switch '
               'allegiance to your nation.',
+        Department.boardRelations =>
+          'Hospitality and expectation management — the board judges your '
+              'results far more patiently.',
       };
 }
 
@@ -135,4 +139,68 @@ abstract final class FederationFinance {
   /// even with no spend, rising to ~70% at full investment.
   static double naturalizationChance(int invested) =>
       min(0.7, 0.06 + invested / 40000000 * 0.64);
+
+  /// Extra board patience (in reputation-equivalent points) bought by investing
+  /// in Board Relations this cycle — it lifts the manager's standing in the
+  /// board's eyes and lowers the bar below which they'd be sacked, up to ~+20 at
+  /// full investment.
+  static int boardTolerance(int invested) =>
+      min(20, (invested / 40000000 * 20).round());
+}
+
+/// The federation's long-term infrastructure, expressed as a "building" per
+/// department whose LEVEL grows with the total euros ploughed into it across
+/// every cycle of the save. Purely a read model over the investment history —
+/// it visualises accumulated commitment (the thing a single cycle's slider
+/// can't show) without changing the per-cycle effect curves.
+abstract final class FederationBuildings {
+  /// Euros of *maintained* investment that separate one building level from the
+  /// next — reached in a couple of well-funded cycles, so infrastructure grows
+  /// at a satisfying pace.
+  static const int eurosPerLevel = 15000000;
+
+  /// How much of a building's standing carries into the next cycle. Below 1 it
+  /// decays, so a department left unfunded slides back down its levels rather
+  /// than holding forever — infrastructure has to be maintained.
+  static const double carryOver = 0.75;
+
+  /// The highest level a building can reach.
+  static const int maxLevel = 10;
+
+  /// The maintained ("effective") euros behind a building after applying the
+  /// per-cycle [carryOver] decay to each past cycle's spend, given [spendByCycle]
+  /// (cycle → euros) up to and including [currentCycle]. Recent, sustained
+  /// funding dominates; old one-off splurges fade.
+  static int maintainedEuros(
+    Map<int, int> spendByCycle,
+    int currentCycle,
+  ) {
+    var effective = 0.0;
+    for (var c = 0; c <= currentCycle; c++) {
+      effective = effective * carryOver + (spendByCycle[c] ?? 0);
+    }
+    return effective.round();
+  }
+
+  /// The building level for [cumulativeEuros] poured into a department over the
+  /// save so far — level 1 from the first euro, one level per [eurosPerLevel].
+  static int levelFor(int cumulativeEuros) {
+    final level = 1 + cumulativeEuros ~/ eurosPerLevel;
+    return level > maxLevel ? maxLevel : level;
+  }
+
+  /// How far (0–1) the building is toward its next level; 1.0 once maxed.
+  static double progressFor(int cumulativeEuros) {
+    if (levelFor(cumulativeEuros) >= maxLevel) return 1;
+    return (cumulativeEuros % eurosPerLevel) / eurosPerLevel;
+  }
+
+  /// A short display name for a department's building.
+  static String nameFor(Department d) => switch (d) {
+        Department.youth => 'Academy',
+        Department.commercial => 'Commercial HQ',
+        Department.medical => 'Medical Centre',
+        Department.naturalization => 'Scouting Office',
+        Department.boardRelations => 'Boardroom',
+      };
 }

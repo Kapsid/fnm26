@@ -43,11 +43,13 @@ class _InvestmentEditorState extends State<InvestmentEditor> {
   late int _commercial = widget.initial.commercial;
   late int _medical = widget.initial.medical;
   late int _naturalization = widget.initial.naturalization;
+  late int _boardRelations = widget.initial.boardRelations;
 
   /// Slider granularity — €500k steps.
   static const _step = 500000;
 
-  int get _allocated => _youth + _commercial + _medical + _naturalization;
+  int get _allocated =>
+      _youth + _commercial + _medical + _naturalization + _boardRelations;
   int get _remaining => widget.available - _allocated;
 
   FederationInvestment get _current => (
@@ -55,6 +57,7 @@ class _InvestmentEditorState extends State<InvestmentEditor> {
         commercial: _commercial,
         medical: _medical,
         naturalization: _naturalization,
+        boardRelations: _boardRelations,
       );
 
   void _set(Department dept, double raw) {
@@ -65,6 +68,7 @@ class _InvestmentEditorState extends State<InvestmentEditor> {
           Department.commercial => _commercial,
           Department.medical => _medical,
           Department.naturalization => _naturalization,
+          Department.boardRelations => _boardRelations,
         };
     final capped = (raw ~/ _step * _step).clamp(0, widget.available - others);
     setState(() {
@@ -77,6 +81,8 @@ class _InvestmentEditorState extends State<InvestmentEditor> {
           _medical = capped;
         case Department.naturalization:
           _naturalization = capped;
+        case Department.boardRelations:
+          _boardRelations = capped;
       }
     });
     widget.onChanged(_current);
@@ -106,6 +112,7 @@ class _InvestmentEditorState extends State<InvestmentEditor> {
         _slider(Department.commercial, _commercial),
         _slider(Department.medical, _medical),
         _slider(Department.naturalization, _naturalization),
+        _slider(Department.boardRelations, _boardRelations),
       ],
     );
   }

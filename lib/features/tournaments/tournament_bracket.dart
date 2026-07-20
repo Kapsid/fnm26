@@ -286,8 +286,12 @@ class _TournamentBracketState extends State<TournamentBracket> {
             overflow: TextOverflow.ellipsis,
             style: AppTypography.labelSmall.copyWith(
               // The side that goes through, in the same green the tables use
-              // for an advancing place.
-              color: winner ? AppColors.positive : AppColors.onSurfaceVariant,
+              // for an advancing place; your own nation in the accent colour.
+              color: winner
+                  ? AppColors.positive
+                  : isPlayer
+                      ? AppColors.primary
+                      : AppColors.onSurfaceVariant,
               fontWeight: winner || isPlayer
                   ? FontWeight.w700
                   : FontWeight.w400,
@@ -349,8 +353,13 @@ class _TournamentBracketState extends State<TournamentBracket> {
                   ? FontWeight.w700
                   : FontWeight.w400,
               // Going through is the whole story of a knockout tie, so say it
-              // in colour — bold alone reads the same as "this is your nation".
-              color: winner ? AppColors.positive : AppColors.onSurfaceVariant,
+              // in colour; your own nation stands out in the accent colour even
+              // when it isn't (yet) the one advancing.
+              color: winner
+                  ? AppColors.positive
+                  : isPlayer
+                      ? AppColors.primary
+                      : AppColors.onSurfaceVariant,
             ),
           ),
           if (seed != null)

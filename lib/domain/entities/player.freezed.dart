@@ -15,7 +15,9 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Player {
 
- int get id; int get nationId; String get name; int get age; PlayerPosition get position; PlayerAttributes get attributes; String get club;
+ int get id; int get nationId; String get name; int get age; PlayerPosition get position; PlayerAttributes get attributes; String get club;/// FIFA code of the club's country (for its flag). Empty when unknown; set
+/// at materialisation from the deterministic club assignment.
+ String get clubCountry;
 /// Create a copy of Player
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +30,16 @@ $PlayerCopyWith<Player> get copyWith => _$PlayerCopyWithImpl<Player>(this as Pla
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Player&&(identical(other.id, id) || other.id == id)&&(identical(other.nationId, nationId) || other.nationId == nationId)&&(identical(other.name, name) || other.name == name)&&(identical(other.age, age) || other.age == age)&&(identical(other.position, position) || other.position == position)&&(identical(other.attributes, attributes) || other.attributes == attributes)&&(identical(other.club, club) || other.club == club));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Player&&(identical(other.id, id) || other.id == id)&&(identical(other.nationId, nationId) || other.nationId == nationId)&&(identical(other.name, name) || other.name == name)&&(identical(other.age, age) || other.age == age)&&(identical(other.position, position) || other.position == position)&&(identical(other.attributes, attributes) || other.attributes == attributes)&&(identical(other.club, club) || other.club == club)&&(identical(other.clubCountry, clubCountry) || other.clubCountry == clubCountry));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,nationId,name,age,position,attributes,club);
+int get hashCode => Object.hash(runtimeType,id,nationId,name,age,position,attributes,club,clubCountry);
 
 @override
 String toString() {
-  return 'Player(id: $id, nationId: $nationId, name: $name, age: $age, position: $position, attributes: $attributes, club: $club)';
+  return 'Player(id: $id, nationId: $nationId, name: $name, age: $age, position: $position, attributes: $attributes, club: $club, clubCountry: $clubCountry)';
 }
 
 
@@ -48,7 +50,7 @@ abstract mixin class $PlayerCopyWith<$Res>  {
   factory $PlayerCopyWith(Player value, $Res Function(Player) _then) = _$PlayerCopyWithImpl;
 @useResult
 $Res call({
- int id, int nationId, String name, int age, PlayerPosition position, PlayerAttributes attributes, String club
+ int id, int nationId, String name, int age, PlayerPosition position, PlayerAttributes attributes, String club, String clubCountry
 });
 
 
@@ -65,7 +67,7 @@ class _$PlayerCopyWithImpl<$Res>
 
 /// Create a copy of Player
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? nationId = null,Object? name = null,Object? age = null,Object? position = null,Object? attributes = null,Object? club = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? nationId = null,Object? name = null,Object? age = null,Object? position = null,Object? attributes = null,Object? club = null,Object? clubCountry = null,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,nationId: null == nationId ? _self.nationId : nationId // ignore: cast_nullable_to_non_nullable
@@ -74,6 +76,7 @@ as String,age: null == age ? _self.age : age // ignore: cast_nullable_to_non_nul
 as int,position: null == position ? _self.position : position // ignore: cast_nullable_to_non_nullable
 as PlayerPosition,attributes: null == attributes ? _self.attributes : attributes // ignore: cast_nullable_to_non_nullable
 as PlayerAttributes,club: null == club ? _self.club : club // ignore: cast_nullable_to_non_nullable
+as String,clubCountry: null == clubCountry ? _self.clubCountry : clubCountry // ignore: cast_nullable_to_non_nullable
 as String,
   ));
 }
@@ -168,10 +171,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  int nationId,  String name,  int age,  PlayerPosition position,  PlayerAttributes attributes,  String club)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  int nationId,  String name,  int age,  PlayerPosition position,  PlayerAttributes attributes,  String club,  String clubCountry)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Player() when $default != null:
-return $default(_that.id,_that.nationId,_that.name,_that.age,_that.position,_that.attributes,_that.club);case _:
+return $default(_that.id,_that.nationId,_that.name,_that.age,_that.position,_that.attributes,_that.club,_that.clubCountry);case _:
   return orElse();
 
 }
@@ -189,10 +192,10 @@ return $default(_that.id,_that.nationId,_that.name,_that.age,_that.position,_tha
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  int nationId,  String name,  int age,  PlayerPosition position,  PlayerAttributes attributes,  String club)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  int nationId,  String name,  int age,  PlayerPosition position,  PlayerAttributes attributes,  String club,  String clubCountry)  $default,) {final _that = this;
 switch (_that) {
 case _Player():
-return $default(_that.id,_that.nationId,_that.name,_that.age,_that.position,_that.attributes,_that.club);case _:
+return $default(_that.id,_that.nationId,_that.name,_that.age,_that.position,_that.attributes,_that.club,_that.clubCountry);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -209,10 +212,10 @@ return $default(_that.id,_that.nationId,_that.name,_that.age,_that.position,_tha
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  int nationId,  String name,  int age,  PlayerPosition position,  PlayerAttributes attributes,  String club)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  int nationId,  String name,  int age,  PlayerPosition position,  PlayerAttributes attributes,  String club,  String clubCountry)?  $default,) {final _that = this;
 switch (_that) {
 case _Player() when $default != null:
-return $default(_that.id,_that.nationId,_that.name,_that.age,_that.position,_that.attributes,_that.club);case _:
+return $default(_that.id,_that.nationId,_that.name,_that.age,_that.position,_that.attributes,_that.club,_that.clubCountry);case _:
   return null;
 
 }
@@ -224,7 +227,7 @@ return $default(_that.id,_that.nationId,_that.name,_that.age,_that.position,_tha
 @JsonSerializable()
 
 class _Player extends Player {
-  const _Player({required this.id, required this.nationId, required this.name, required this.age, required this.position, required this.attributes, this.club = 'Free agent'}): super._();
+  const _Player({required this.id, required this.nationId, required this.name, required this.age, required this.position, required this.attributes, this.club = 'Free agent', this.clubCountry = ''}): super._();
   factory _Player.fromJson(Map<String, dynamic> json) => _$PlayerFromJson(json);
 
 @override final  int id;
@@ -234,6 +237,9 @@ class _Player extends Player {
 @override final  PlayerPosition position;
 @override final  PlayerAttributes attributes;
 @override@JsonKey() final  String club;
+/// FIFA code of the club's country (for its flag). Empty when unknown; set
+/// at materialisation from the deterministic club assignment.
+@override@JsonKey() final  String clubCountry;
 
 /// Create a copy of Player
 /// with the given fields replaced by the non-null parameter values.
@@ -248,16 +254,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Player&&(identical(other.id, id) || other.id == id)&&(identical(other.nationId, nationId) || other.nationId == nationId)&&(identical(other.name, name) || other.name == name)&&(identical(other.age, age) || other.age == age)&&(identical(other.position, position) || other.position == position)&&(identical(other.attributes, attributes) || other.attributes == attributes)&&(identical(other.club, club) || other.club == club));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Player&&(identical(other.id, id) || other.id == id)&&(identical(other.nationId, nationId) || other.nationId == nationId)&&(identical(other.name, name) || other.name == name)&&(identical(other.age, age) || other.age == age)&&(identical(other.position, position) || other.position == position)&&(identical(other.attributes, attributes) || other.attributes == attributes)&&(identical(other.club, club) || other.club == club)&&(identical(other.clubCountry, clubCountry) || other.clubCountry == clubCountry));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,nationId,name,age,position,attributes,club);
+int get hashCode => Object.hash(runtimeType,id,nationId,name,age,position,attributes,club,clubCountry);
 
 @override
 String toString() {
-  return 'Player(id: $id, nationId: $nationId, name: $name, age: $age, position: $position, attributes: $attributes, club: $club)';
+  return 'Player(id: $id, nationId: $nationId, name: $name, age: $age, position: $position, attributes: $attributes, club: $club, clubCountry: $clubCountry)';
 }
 
 
@@ -268,7 +274,7 @@ abstract mixin class _$PlayerCopyWith<$Res> implements $PlayerCopyWith<$Res> {
   factory _$PlayerCopyWith(_Player value, $Res Function(_Player) _then) = __$PlayerCopyWithImpl;
 @override @useResult
 $Res call({
- int id, int nationId, String name, int age, PlayerPosition position, PlayerAttributes attributes, String club
+ int id, int nationId, String name, int age, PlayerPosition position, PlayerAttributes attributes, String club, String clubCountry
 });
 
 
@@ -285,7 +291,7 @@ class __$PlayerCopyWithImpl<$Res>
 
 /// Create a copy of Player
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? nationId = null,Object? name = null,Object? age = null,Object? position = null,Object? attributes = null,Object? club = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? nationId = null,Object? name = null,Object? age = null,Object? position = null,Object? attributes = null,Object? club = null,Object? clubCountry = null,}) {
   return _then(_Player(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,nationId: null == nationId ? _self.nationId : nationId // ignore: cast_nullable_to_non_nullable
@@ -294,6 +300,7 @@ as String,age: null == age ? _self.age : age // ignore: cast_nullable_to_non_nul
 as int,position: null == position ? _self.position : position // ignore: cast_nullable_to_non_nullable
 as PlayerPosition,attributes: null == attributes ? _self.attributes : attributes // ignore: cast_nullable_to_non_nullable
 as PlayerAttributes,club: null == club ? _self.club : club // ignore: cast_nullable_to_non_nullable
+as String,clubCountry: null == clubCountry ? _self.clubCountry : clubCountry // ignore: cast_nullable_to_non_nullable
 as String,
   ));
 }

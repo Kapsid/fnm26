@@ -62,10 +62,12 @@ finalsDrawProvider =
   final nations = {
     for (final n in await ref.watch(nationRepositoryProvider).all()) n.id: n,
   };
+  // The pots use the live ranking snapshotted when the finals draw was
+  // generated (post-qualifying), so the ceremony reproduces the real pots.
   final rankingById = await ref.watch(
     seedRankByIdProvider((
       careerId: careerId,
-      cycle: career.cyclePointer,
+      cycle: drawSeedCycle(career.cyclePointer, drawSlotWorldCupFinals),
     )).future,
   );
   final year = CareerService.worldCupYear(career.cyclePointer);

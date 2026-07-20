@@ -37,6 +37,8 @@ Future<InMatchTacticsResult?> showInMatchTactics(
   required List<Player> pool,
   required Set<int> startingIds,
   required int maxSubs,
+  Set<int> injuredIds = const {},
+  Map<int, int> energyByPlayer = const {},
 }) {
   return Navigator.of(context).push<InMatchTacticsResult>(
     MaterialPageRoute(
@@ -49,6 +51,8 @@ Future<InMatchTacticsResult?> showInMatchTactics(
         pool: pool,
         startingIds: startingIds,
         maxSubs: maxSubs,
+        injuredIds: injuredIds,
+        energyByPlayer: energyByPlayer,
       ),
     ),
   );
@@ -63,6 +67,8 @@ class _InMatchTacticsEditor extends StatefulWidget {
     required this.pool,
     required this.startingIds,
     required this.maxSubs,
+    this.injuredIds = const {},
+    this.energyByPlayer = const {},
   });
 
   final int minute;
@@ -72,6 +78,14 @@ class _InMatchTacticsEditor extends StatefulWidget {
   final List<Player> pool;
   final Set<int> startingIds;
   final int maxSubs;
+
+  /// Live remaining energy (0–100) per player id, shown on the pitch and bench
+  /// so the manager can see who's tiring before making a sub.
+  final Map<int, int> energyByPlayer;
+
+  /// Players hurt this match and not yet replaced — flagged orange on the pitch
+  /// so the manager knows exactly who to take off.
+  final Set<int> injuredIds;
 
   @override
   State<_InMatchTacticsEditor> createState() => _InMatchTacticsEditorState();
@@ -210,7 +224,9 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
     );
   }
 
-  /// The pitch and the bench: pick a slot or drag a substitute on.
+  /// The pitch and the bench: pick a slot or drag a substitute on. An injured
+  /// player is flagged directly on the pitch (orange, "INJURED — REPLACE"), so
+  /// no banner is needed above the squad.
   Widget _lineupTab(List<Player> subs) {
     return ListView(
       children: [
@@ -221,6 +237,11 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
             instructions: _instructions,
             lineup: _lineup,
             byId: _byId,
+            energyByPlayer: widget.energyByPlayer,
+            // Mark the hurt players absent AND injured so their node renders the
+            // orange "INJURED — REPLACE" flag, exactly like a pre-match injury.
+            absentIds: widget.injuredIds,
+            injuredIds: widget.injuredIds,
             onTapSlot: _pickPlayer,
             onSwap: (a, b) {
               switch (resolveDrag(_formation, a, b)) {
@@ -273,13 +294,34 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
                           style: AppTypography.bodyMedium,
                         ),
                       ),
-                    for (final p in subs) SubDragRow(player: p),
+                    for (final p in subs)
+                      SubDragRow(
+                        player: p,
+                        trailing: _energyTrailing(p.id),
+                      ),
                   ],
                 ),
               ),
               const SizedBox(height: AppSpacing.xl),
             ],
           ),
+        ),
+      ],
+    );
+  }
+
+  /// A small energy gauge for a bench row, or null when energy isn't tracked
+  /// (pre-match) or this player has no recorded energy yet.
+  Widget? _energyTrailing(int id) {
+    final e = widget.energyByPlayer[id];
+    if (e == null) return null;
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Icon(Icons.bolt, size: 14, color: energyColor(e)),
+        Text(
+          '$e%',
+          style: AppTypography.labelMedium.copyWith(color: energyColor(e)),
         ),
       ],
     );
@@ -336,8 +378,13 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
 
   Future<void> _pickPlayer(int slot) async {
     final position = _formation.positions[slot];
+    final isKeeperSlot = position.category == PositionCategory.goalkeeper;
+    // A goalkeeping slot is keeper-only; any other slot can be filled by any
+    // outfield player (with a heavy out-of-position penalty, shown below).
     final candidates = widget.pool
-        .where((p) => p.position.category == position.category)
+        .where((p) => isKeeperSlot
+            ? p.position.category == PositionCategory.goalkeeper
+            : p.position.category != PositionCategory.goalkeeper)
         .toList()
       ..sort(PositionFit.bySlotFit(position));
     final onPitch = _onPitch;
@@ -354,35 +401,57 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
           ),
           const SizedBox(height: AppSpacing.sm),
           for (final p in candidates)
-            ListTile(
-              dense: true,
-              leading: TacticalChip(p.position.label),
-              title: Text(
-                p.name,
-                style: AppTypography.bodyMedium.copyWith(
-                  color: onPitch.contains(p.id)
-                      ? AppColors.onSurfaceVariant
-                      : null,
+            () {
+              final eff = PositionFit.effectiveOverall(p, position);
+              final penalised = eff < p.overall;
+              return ListTile(
+                dense: true,
+                leading: TacticalChip(p.position.label),
+                title: Text(
+                  p.name,
+                  style: AppTypography.bodyMedium.copyWith(
+                    color: onPitch.contains(p.id)
+                        ? AppColors.onSurfaceVariant
+                        : null,
+                  ),
                 ),
-              ),
-              subtitle: Text(
-                '${p.position.roleName} · Age ${p.age}',
-                style: AppTypography.labelSmall.copyWith(
-                  color: AppColors.onSurfaceVariant,
+                subtitle: Text(
+                  penalised
+                      ? '${p.position.roleName} · out of position'
+                      : '${p.position.roleName} · Age ${p.age}',
+                  style: AppTypography.labelSmall.copyWith(
+                    color: penalised
+                        ? AppColors.error
+                        : AppColors.onSurfaceVariant,
+                  ),
                 ),
-              ),
-              trailing: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  if (onPitch.contains(p.id)) ...[
-                    const TacticalChip('ON'),
-                    const SizedBox(width: AppSpacing.sm),
+                trailing: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    if (onPitch.contains(p.id)) ...[
+                      const TacticalChip('ON'),
+                      const SizedBox(width: AppSpacing.sm),
+                    ],
+                    // The rating as it will count in this slot — the drop from
+                    // the base overall is the cost of playing out of position.
+                    if (penalised)
+                      Text(
+                        '${p.overall}→',
+                        style: AppTypography.labelSmall.copyWith(
+                          color: AppColors.onSurfaceVariant,
+                        ),
+                      ),
+                    Text(
+                      '$eff',
+                      style: AppTypography.labelMedium.copyWith(
+                        color: penalised ? AppColors.error : null,
+                      ),
+                    ),
                   ],
-                  Text('${p.overall}', style: AppTypography.labelMedium),
-                ],
-              ),
-              onTap: () => Navigator.of(context).pop(p.id),
-            ),
+                ),
+                onTap: () => Navigator.of(context).pop(p.id),
+              );
+            }(),
         ],
       ),
     );

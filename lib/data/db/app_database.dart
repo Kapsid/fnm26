@@ -33,6 +33,7 @@ part 'app_database.g.dart';
     RankingReleases,
     Achievements,
     Appearances,
+    TournamentAppearances,
     Messages,
     CareerStints,
     PlayerRatings,
@@ -55,7 +56,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase.forTesting(QueryExecutor executor) : super(executor);
 
   @override
-  int get schemaVersion => 27;
+  int get schemaVersion => 30;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(

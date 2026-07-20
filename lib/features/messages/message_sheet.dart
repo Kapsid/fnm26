@@ -15,11 +15,17 @@ import 'package:fnm/shared/widgets/widgets.dart';
           color: AppColors.onSurfaceVariant,
         ),
       'qualify' => (icon: Icons.flight_takeoff, color: AppColors.positive),
+      'eliminated' => (icon: Icons.flight_land, color: AppColors.error),
       'draw' => (icon: Icons.casino, color: AppColors.primary),
       'aging' => (icon: Icons.trending_up, color: AppColors.positive),
       'ranking' => (icon: Icons.leaderboard, color: AppColors.primary),
       'milestone' => (icon: Icons.military_tech, color: AppColors.primary),
       'award' => (icon: Icons.workspace_premium, color: AppColors.primary),
+      'retirement' => (
+          icon: Icons.waving_hand_outlined,
+          color: AppColors.onSurfaceVariant,
+        ),
+      'halloffame' => (icon: Icons.star_rounded, color: AppColors.primary),
       'discipline' => (icon: Icons.dangerous, color: AppColors.error),
       'injury' => (icon: Icons.healing, color: AppColors.warning),
       'board' => (icon: Icons.gavel, color: AppColors.warning),
@@ -28,6 +34,7 @@ import 'package:fnm/shared/widgets/widgets.dart';
           color: AppColors.positive,
         ),
       'cycle' => (icon: Icons.flag_rounded, color: AppColors.primary),
+      'transfer' => (icon: Icons.swap_horiz_rounded, color: AppColors.primary),
       _ => (icon: Icons.mail_outline, color: AppColors.onSurfaceVariant),
     };
 

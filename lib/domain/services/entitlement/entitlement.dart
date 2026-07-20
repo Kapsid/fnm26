@@ -6,9 +6,10 @@ import 'package:fnm/domain/entities/nation.dart';
 /// This is the single source of truth for all paywall gating — UI and data
 /// code should consult it rather than scattering `if (premium)` checks.
 ///
-/// During development it defaults to **unlocked** so every nation/feature is
-/// available. M7 will drive this from the real `in_app_purchase` flow plus a
-/// persisted entitlement flag (and restore-purchases).
+/// Currently defaults to **unlocked** so everything is available for play/
+/// testing. The EntitlementService still flips it from the cached grant and the
+/// store's purchase stream, but the default already grants Pro. Flip back to
+/// `false` to gate the free tier again.
 final premiumUnlockedProvider = StateProvider<bool>((ref) => true);
 
 /// Whether [nation] can currently be selected: free-demo nations are always

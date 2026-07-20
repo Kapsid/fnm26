@@ -19,6 +19,10 @@ abstract class Player with _$Player {
     required PlayerPosition position,
     required PlayerAttributes attributes,
     @Default('Free agent') String club,
+
+    /// FIFA code of the club's country (for its flag). Empty when unknown; set
+    /// at materialisation from the deterministic club assignment.
+    @Default('') String clubCountry,
   }) = _Player;
 
   const Player._();

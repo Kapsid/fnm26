@@ -276,14 +276,6 @@ class _NationsCupScreenState extends ConsumerState<NationsCupScreen> {
           '${selected == v.playerLeague ? ' · YOUR LEAGUE' : ''}',
           style: AppTypography.labelMedium.copyWith(color: AppColors.primary),
         ),
-        const SizedBox(height: AppSpacing.xs),
-        Text(
-          'Group winners meet in the Finals Four. Winners are promoted; '
-          'the bottom side of each group is relegated.',
-          style: AppTypography.bodySmall.copyWith(
-            color: AppColors.onSurfaceVariant,
-          ),
-        ),
         const SizedBox(height: AppSpacing.md),
         for (final g in shown) ...[
           _GroupCard(

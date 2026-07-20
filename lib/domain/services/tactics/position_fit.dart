@@ -11,10 +11,12 @@ import 'package:fnm/domain/entities/player.dart';
 abstract final class PositionFit {
   /// The rating multiplier for a [natural]-position player fielded in [slot]:
   /// `1.0` at their own position, tapering as the slot moves away. Same line is
-  /// barely a dent; crossing lines (or into/out of goal) hurts progressively.
+  /// barely a dent; crossing lines (or into/out of goal) hurts sharply — a
+  /// player shoved right out of position should be a clear downgrade, so the
+  /// manager only does it in an emergency.
   static double factor(PlayerPosition natural, PlayerPosition slot) {
     if (natural == slot) return 1;
-    if (natural.category == slot.category) return 0.96;
+    if (natural.category == slot.category) return 0.95;
     int line(PositionCategory c) => switch (c) {
           PositionCategory.goalkeeper => 0,
           PositionCategory.defender => 1,
@@ -24,8 +26,10 @@ abstract final class PositionFit {
     final gap = (line(natural.category) - line(slot.category)).abs();
     final involvesKeeper = natural.category == PositionCategory.goalkeeper ||
         slot.category == PositionCategory.goalkeeper;
-    if (involvesKeeper) return gap <= 1 ? 0.70 : 0.55;
-    return gap <= 1 ? 0.86 : 0.74;
+    if (involvesKeeper) return gap <= 1 ? 0.55 : 0.40;
+    // One line off (e.g. a midfielder at full-back or up front) is a real dent;
+    // two lines off (a defender leading the line) is a heavy penalty.
+    return gap <= 1 ? 0.80 : 0.60;
   }
 
   /// [player]'s overall rating as it counts when fielded in [slot] (their base

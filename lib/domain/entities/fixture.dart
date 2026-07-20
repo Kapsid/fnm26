@@ -18,10 +18,16 @@ abstract class Fixture with _$Fixture {
     int? awayScore,
     String? round,
     @Default(false) bool played,
+    @Default(false) bool afterExtraTime,
+    int? homePenalties,
+    int? awayPenalties,
   }) = _Fixture;
 
   const Fixture._();
 
   /// Whether this fixture has a recorded result.
   bool get hasResult => played && homeScore != null && awayScore != null;
+
+  /// Whether this knockout tie was settled on penalties.
+  bool get wentToShootout => homePenalties != null && awayPenalties != null;
 }

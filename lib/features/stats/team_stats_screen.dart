@@ -6,6 +6,8 @@ import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/nation.dart';
+import 'package:fnm/features/career/career_providers.dart';
+import 'package:fnm/features/federation/federation_providers.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
 
@@ -36,12 +38,21 @@ final AutoDisposeFutureProviderFamily<_StatsView?, int> _teamStatsProvider =
   ];
 
   final playerRepo = ref.watch(playerRepositoryProvider);
+  final aging = CareerService.agingYears(career);
+  final youth = await ref.watch(youthBonusByCycleProvider(careerId).future);
+  final careerDev = await ref.watch(careerDevBonusProvider(careerId).future);
   final ids = {
     for (final s in [...scorers, ...appearances]) s.playerId,
   };
   final names = <int, String>{};
   for (final id in ids) {
-    final p = await playerRepo.byId(id, saveSeed: career.rngSeed);
+    final p = await playerRepo.byId(
+      id,
+      agingYears: aging,
+      saveSeed: career.rngSeed,
+      youthBonusByCycle: youth,
+      careerStartsByPlayer: careerDev,
+    );
     names[id] = p?.name ?? 'Unknown';
   }
 

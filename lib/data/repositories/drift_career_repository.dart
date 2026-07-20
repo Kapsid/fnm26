@@ -102,12 +102,19 @@ class DriftCareerRepository implements CareerRepository {
           ..where((t) => t.careerId.equals(careerId) & t.cycle.equals(cycle)))
         .getSingleOrNull();
     return row == null
-        ? (youth: 0, commercial: 0, medical: 0, naturalization: 0)
+        ? (
+            youth: 0,
+            commercial: 0,
+            medical: 0,
+            naturalization: 0,
+            boardRelations: 0,
+          )
         : (
             youth: row.youth,
             commercial: row.commercial,
             medical: row.medical,
             naturalization: row.naturalization,
+            boardRelations: row.boardRelations,
           );
   }
 
@@ -123,6 +130,7 @@ class DriftCareerRepository implements CareerRepository {
           commercial: r.commercial,
           medical: r.medical,
           naturalization: r.naturalization,
+          boardRelations: r.boardRelations,
         ),
     };
   }
@@ -141,6 +149,7 @@ class DriftCareerRepository implements CareerRepository {
             commercial: i.commercial,
             medical: i.medical,
             naturalization: i.naturalization,
+            boardRelations: i.boardRelations,
           ),
         );
   }

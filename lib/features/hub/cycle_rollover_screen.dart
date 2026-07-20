@@ -69,8 +69,9 @@ class _CycleRolloverScreenState extends ConsumerState<CycleRolloverScreen> {
   Future<void> _begin(RolloverVerdict? v) async {
     if (_busy) return;
     setState(() => _busy = true);
-    // Investment for the season ahead is planned on the Finances screen; the
-    // rollover only banks the finished cycle's income and advances.
+    // The rollover banks the finished cycle's income and advances; the new
+    // cycle's budget is allocated in the forced budget-setup event that opens
+    // it (see nextEventProvider).
     await ref.read(seasonServiceProvider).startNextCycle(
           widget.careerId,
           switchToNationId: _selected,
@@ -238,8 +239,8 @@ class _CycleRolloverScreenState extends ConsumerState<CycleRolloverScreen> {
     );
   }
 
-  /// The invest step: bank the cycle's income, then allocate the war chest
-  /// across the three departments for the season ahead.
+  /// The invest step: bank the cycle's income, then roll into the next cycle —
+  /// where setting the federation budget is the forced first event.
   Widget _investStep(_RolloverView? view) {
     final incomeAsync = ref.watch(cycleIncomeProvider(widget.careerId));
     final verdict =
@@ -265,8 +266,9 @@ class _CycleRolloverScreenState extends ConsumerState<CycleRolloverScreen> {
                     ),
                     const SizedBox(height: AppSpacing.md),
                     Text(
-                      'Plan next season’s investment any time from the '
-                      'Finances screen.',
+                      'Your first job next cycle is to set the federation '
+                      'budget — you’ll distribute this war chest across the '
+                      'departments before anything else.',
                       style: AppTypography.bodySmall
                           .copyWith(color: AppColors.onSurfaceVariant),
                     ),
@@ -281,7 +283,8 @@ class _CycleRolloverScreenState extends ConsumerState<CycleRolloverScreen> {
                   child: PrimaryButton(
                     label: _busy ? 'Starting…' : 'Begin next cycle',
                     icon: Icons.skip_next_rounded,
-                    onPressed: _busy ? null : () => unawaited(_begin(verdict)),
+                    onPressed:
+                        _busy ? null : () => unawaited(_begin(verdict)),
                   ),
                 ),
               ),
@@ -389,6 +392,40 @@ class _VerdictCard extends StatelessWidget {
               backgroundColor: AppColors.surfaceContainerHighest,
               valueColor: AlwaysStoppedAnimation(color),
             ),
+          ),
+          const SizedBox(height: AppSpacing.md),
+          Row(
+            children: [
+              const Icon(
+                Icons.emoji_events_outlined,
+                size: 16,
+                color: AppColors.onSurfaceVariant,
+              ),
+              const SizedBox(width: AppSpacing.xs),
+              Text(
+                'Reputation: ${verdict.reputationLabel} '
+                '(${verdict.reputation})',
+                style: AppTypography.labelSmall.copyWith(
+                  color: AppColors.onSurfaceVariant,
+                ),
+              ),
+              if (verdict.nationalHero) ...[
+                const Spacer(),
+                const Icon(
+                  Icons.shield_rounded,
+                  size: 16,
+                  color: AppColors.primary,
+                ),
+                const SizedBox(width: AppSpacing.xs),
+                Text(
+                  'National hero',
+                  style: AppTypography.labelSmall.copyWith(
+                    color: AppColors.primary,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ],
+            ],
           ),
         ],
       ),

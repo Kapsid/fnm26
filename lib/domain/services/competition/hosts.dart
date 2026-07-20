@@ -6,33 +6,29 @@ import 'package:fnm/domain/entities/nation.dart';
 /// Ordered strongest-first, so the first is the primary host if the bid wins.
 typedef HostBid = List<int>;
 
-/// Decides World Cup hosts. The hosting confederation rotates each edition and
-/// a strong member is chosen deterministically, so the host of any year is
-/// reproducible and the decision can be "revealed" after the previous final.
+/// Decides World Cup hosts. Any nation may bid EXCEPT the previous edition's
+/// host confederation (so the same continent never hosts twice in a row) and
+/// anyone who hosted one of the last three editions; the winner is a strong
+/// nation drawn deterministically, so the host of any year is reproducible and
+/// can be "revealed" after the previous final.
 abstract final class WorldCupHosts {
-  /// Confederation rotation order across editions.
-  static const List<Confederation> _rotation = [
-    Confederation.europe,
-    Confederation.southAmerica,
-    Confederation.northAmerica,
-    Confederation.asia,
-    Confederation.africa,
-    Confederation.europe,
-    Confederation.oceania,
-  ];
-
-  /// The confederation hosting the World Cup in [year].
-  static Confederation confederationFor(int year) =>
-      _rotation[(year ~/ 4) % _rotation.length];
+  /// The first World Cup edition the game manages (cycle 0). Editions step by 4
+  /// years; the host chain is computed forward from here.
+  static const int _firstWcYear = 2030;
 
   /// The shortlist of realistic host candidates for [confederation] (its
-  /// strongest members), strongest first.
+  /// strongest members), strongest first. Nations in [exclude] — the recent
+  /// hosts of this competition — are dropped, so a country can't host again so
+  /// soon after its last turn.
   static List<int> hostCandidates({
     required Confederation confederation,
     required List<Nation> nations,
     int count = _shortlistSize,
+    Set<int> exclude = const {},
   }) {
-    final pool = nations.where((n) => n.confederation == confederation).toList()
+    final pool = nations
+        .where((n) => n.confederation == confederation && !exclude.contains(n.id))
+        .toList()
       ..sort((a, b) => a.ranking.compareTo(b.ranking));
     return pool.take(count).map((n) => n.id).toList();
   }
@@ -54,11 +50,13 @@ abstract final class WorldCupHosts {
     required List<Nation> nations,
     required int seed,
     int count = _shortlistSize,
+    Set<int> exclude = const {},
   }) {
     final shortlist = hostCandidates(
       confederation: confederation,
       nations: nations,
       count: count,
+      exclude: exclude,
     );
     if (shortlist.isEmpty) return const [];
 
@@ -98,17 +96,107 @@ abstract final class WorldCupHosts {
   /// The seed stream for the World Cup host draw of [year].
   static int _wcSeed(int year, int seed) => seed ^ (year * 0x51ED);
 
-  /// The bids to host the World Cup in [year].
+  /// The bids to host the World Cup in [year]: the strongest nations from ANY
+  /// confederation EXCEPT the previous edition's host confederation, minus any
+  /// nation that hosted one of the last three editions — grouped into solo or
+  /// joint (co-host) candidatures, strongest first. Deterministic.
   static List<HostBid> worldCupBids({
     required int year,
     required List<Nation> nations,
     required int seed,
-  }) =>
-      hostBids(
-        confederation: confederationFor(year),
+  }) {
+    final ex = _wcExclusions(year, nations, seed);
+    return _worldCupBidsFor(
+      year: year,
+      nations: nations,
+      seed: seed,
+      barredConfederation: ex.barred,
+      excludeIds: ex.recent,
+    );
+  }
+
+  /// The candidate bids for [year] given the two exclusions. The eligible pool
+  /// is every nation not in [barredConfederation] and not in [excludeIds],
+  /// ranked; joint bids pair ranking-adjacent neighbours of the SAME
+  /// confederation (a cross-continent joint bid isn't realistic).
+  static List<HostBid> _worldCupBidsFor({
+    required int year,
+    required List<Nation> nations,
+    required int seed,
+    required Confederation? barredConfederation,
+    required Set<int> excludeIds,
+  }) {
+    final shortlist = (nations
+            .where((n) =>
+                n.confederation != barredConfederation &&
+                !excludeIds.contains(n.id))
+            .toList()
+          ..sort((a, b) => a.ranking.compareTo(b.ranking)))
+        .take(_shortlistSize)
+        .toList();
+    if (shortlist.isEmpty) return const [];
+
+    final rng = SeededRng(_wcSeed(year, seed) ^ 0x81D5);
+    final bids = <HostBid>[];
+    var i = 0;
+    while (i < shortlist.length) {
+      final roll = rng.nextDouble();
+      final conf = shortlist[i].confederation;
+      var size = 1;
+      if (roll < _coHostChance &&
+          i + 1 < shortlist.length &&
+          shortlist[i + 1].confederation == conf) {
+        size = 2;
+        if (roll < _tripleHostChance &&
+            i + 2 < shortlist.length &&
+            shortlist[i + 2].confederation == conf) {
+          size = 3;
+        }
+      }
+      bids.add([for (final n in shortlist.sublist(i, i + size)) n.id]);
+      i += size;
+    }
+    return bids;
+  }
+
+  /// The two exclusions for [year], derived from the deterministic host chain up
+  /// to the previous edition: the previous host's confederation, and every
+  /// nation that hosted one of the last three editions.
+  static ({Confederation? barred, Set<int> recent}) _wcExclusions(
+    int year,
+    List<Nation> nations,
+    int seed,
+  ) {
+    final prior = _wcHostChain(year - 4, nations, seed);
+    final byId = {for (final n in nations) n.id: n};
+    final barred =
+        prior.isEmpty ? null : byId[prior.last.first]?.confederation;
+    final recent = <int>{for (final w in prior.reversed.take(3)) ...w};
+    return (barred: barred, recent: recent);
+  }
+
+  /// Every World Cup host decision from [_firstWcYear] up to and including
+  /// [upto], each computed from the editions before it — so the "not the last
+  /// host's confederation, no last-three-hosts nation" rule is applied
+  /// consistently without unbounded recursion. Linear in the number of editions.
+  static List<HostBid> _wcHostChain(int upto, List<Nation> nations, int seed) {
+    final byId = {for (final n in nations) n.id: n};
+    final winners = <HostBid>[];
+    for (var y = _firstWcYear; y <= upto; y += 4) {
+      final barred =
+          winners.isEmpty ? null : byId[winners.last.first]?.confederation;
+      final recent = <int>{for (final w in winners.reversed.take(3)) ...w};
+      final bids = _worldCupBidsFor(
+        year: y,
         nations: nations,
-        seed: _wcSeed(year, seed),
+        seed: seed,
+        barredConfederation: barred,
+        excludeIds: recent,
       );
+      winners.add(_pickBid(bids, _wcSeed(y, seed)));
+    }
+    return winners;
+  }
 
   /// The primary host nation id for the World Cup in [year] — the first name on
   /// the winning bid.
@@ -122,9 +210,8 @@ abstract final class WorldCupHosts {
   }
 
   /// Every host of the World Cup in [year] — the winning bid, which is usually
-  /// one nation but is sometimes a joint candidature of two or three (as at
-  /// 2002 and 2026). Hosts all auto-qualify and are seeded into the opening
-  /// groups.
+  /// one nation but is sometimes a joint candidature of two or three. Hosts all
+  /// auto-qualify and are seeded into the opening groups.
   static List<int> hostsFor({
     required int year,
     required List<Nation> nations,
@@ -132,8 +219,8 @@ abstract final class WorldCupHosts {
   }) {
     final bids = worldCupBids(year: year, nations: nations, seed: seed);
     if (bids.isEmpty) {
-      // No members of the hosting confederation: fall back to the world's best
-      // rather than nobody.
+      // Everyone somehow excluded: fall back to the world's best rather than
+      // nobody.
       final all = [...nations]..sort((a, b) => a.ranking.compareTo(b.ranking));
       return all.isEmpty ? const [] : [all.first.id];
     }
@@ -154,18 +241,69 @@ abstract final class WorldCupHosts {
   static int _contSeed(Confederation confederation, int cycle, int seed) =>
       seed ^ (cycle * 0x2C9F) ^ (confederation.index * 0x51ED) ^ 0xC047;
 
-  /// The bids to host [confederation]'s championship in [cycle].
+  /// The bids to host [confederation]'s championship in [cycle], dropping the
+  /// recent hosts (the last three editions) so a country can't host again so
+  /// soon.
   static List<HostBid> continentalBids({
     required Confederation confederation,
     required int cycle,
     required int seed,
     required List<Nation> nations,
   }) =>
+      _continentalBids(
+        confederation: confederation,
+        cycle: cycle,
+        seed: seed,
+        nations: nations,
+        exclude: _recentContinentalHosts(
+          confederation: confederation,
+          cycle: cycle,
+          seed: seed,
+          nations: nations,
+        ),
+      );
+
+  static List<HostBid> _continentalBids({
+    required Confederation confederation,
+    required int cycle,
+    required int seed,
+    required List<Nation> nations,
+    required Set<int> exclude,
+  }) =>
       hostBids(
         confederation: confederation,
         nations: nations,
         seed: _contSeed(confederation, cycle, seed),
+        exclude: exclude,
       );
+
+  /// The nations that hosted this confederation's championship in the previous
+  /// three cycles (naive picks, computed without the exclusion to avoid
+  /// recursion) — barred from the current edition.
+  static Set<int> _recentContinentalHosts({
+    required Confederation confederation,
+    required int cycle,
+    required int seed,
+    required List<Nation> nations,
+    int editions = 3,
+  }) {
+    final recent = <int>{};
+    for (var i = 1; i <= editions; i++) {
+      final c = cycle - i;
+      if (c < 0) break;
+      final bids = _continentalBids(
+        confederation: confederation,
+        cycle: c,
+        seed: seed,
+        nations: nations,
+        exclude: const {},
+      );
+      if (bids.isNotEmpty) {
+        recent.addAll(_pickBid(bids, _contSeed(confederation, c, seed)));
+      }
+    }
+    return recent;
+  }
 
   /// The primary host of a continental championship for a confederation in a
   /// given [cycle], derived deterministically (like the World Cup host) so it

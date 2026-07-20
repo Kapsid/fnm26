@@ -3,6 +3,8 @@ import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
+import 'package:fnm/features/tournaments/cup_detail_providers.dart'
+    show AllTimeScorer;
 import 'package:fnm/shared/widgets/widgets.dart';
 
 /// The height a tournament screen's TabBar occupies.
@@ -42,11 +44,12 @@ class TournamentSoon extends StatelessWidget {
 }
 
 /// A competition's scorer chart, best first.
-class TournamentScorers extends StatelessWidget {
+class TournamentScorers extends StatefulWidget {
   const TournamentScorers({
     required this.scorers,
     required this.playerNames,
     required this.code,
+    this.allTime = const [],
     this.emptyMessage = 'No goals scored yet.',
     super.key,
   });
@@ -54,55 +57,126 @@ class TournamentScorers extends StatelessWidget {
   final List<ScorerTally> scorers;
   final Map<int, String> playerNames;
   final String Function(int) code;
+
+  /// The competition's all-time scorers across every cycle (with names and an
+  /// active flag). When non-empty a "This edition / All-time" toggle appears.
+  final List<AllTimeScorer> allTime;
   final String emptyMessage;
 
   @override
+  State<TournamentScorers> createState() => _TournamentScorersState();
+}
+
+class _TournamentScorersState extends State<TournamentScorers> {
+  bool _allTime = false;
+
+  @override
   Widget build(BuildContext context) {
-    if (scorers.isEmpty) return TournamentSoon(message: emptyMessage);
-    return ListView.builder(
-      padding: const EdgeInsets.all(AppSpacing.marginMobile),
-      itemCount: scorers.length,
-      itemBuilder: (context, i) {
-        final s = scorers[i];
-        return Padding(
-          padding: const EdgeInsets.only(bottom: AppSpacing.sm),
-          child: AppCard(
-            padding: const EdgeInsets.symmetric(
-              vertical: AppSpacing.sm,
-              horizontal: AppSpacing.md,
+    final hasAllTime = widget.allTime.isNotEmpty;
+    final showingAllTime = _allTime && hasAllTime;
+    final count =
+        showingAllTime ? widget.allTime.length : widget.scorers.length;
+    if (count == 0 && !hasAllTime) {
+      return TournamentSoon(message: widget.emptyMessage);
+    }
+    return Column(
+      children: [
+        if (hasAllTime)
+          Padding(
+            padding: const EdgeInsets.fromLTRB(
+              AppSpacing.marginMobile,
+              AppSpacing.marginMobile,
+              AppSpacing.marginMobile,
+              0,
             ),
-            child: Row(
-              children: [
-                SizedBox(
-                  width: 24,
-                  child: Text(
-                    '${i + 1}',
-                    style: AppTypography.labelMedium.copyWith(
-                      color: AppColors.onSurfaceVariant,
-                    ),
-                  ),
-                ),
-                FlagDisc(code(s.nationId), size: 24),
-                const SizedBox(width: AppSpacing.md),
-                Expanded(
-                  child: Text(
-                    playerNames[s.playerId] ?? 'Unknown',
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: AppTypography.bodyMedium,
-                  ),
-                ),
-                Text(
-                  '${s.goals}',
-                  style: AppTypography.titleMedium.copyWith(
-                    color: AppColors.primary,
-                  ),
-                ),
+            child: SegmentedButton<bool>(
+              segments: const [
+                ButtonSegment(value: false, label: Text('This edition')),
+                ButtonSegment(value: true, label: Text('All-time')),
               ],
+              selected: {_allTime},
+              onSelectionChanged: (s) => setState(() => _allTime = s.first),
             ),
           ),
-        );
-      },
+        Expanded(
+          child: count == 0
+              ? TournamentSoon(message: widget.emptyMessage)
+              : ListView.builder(
+                  padding: const EdgeInsets.all(AppSpacing.marginMobile),
+                  itemCount: count,
+                  itemBuilder: (context, i) => showingAllTime
+                      ? _allTimeRow(i, widget.allTime[i])
+                      : _editionRow(i, widget.scorers[i]),
+                ),
+        ),
+      ],
+    );
+  }
+
+  Widget _editionRow(int i, ScorerTally s) => _row(
+        rank: i + 1,
+        nationId: s.nationId,
+        name: widget.playerNames[s.playerId] ?? 'Unknown',
+        goals: s.goals,
+        active: false,
+      );
+
+  Widget _allTimeRow(int i, AllTimeScorer s) => _row(
+        rank: i + 1,
+        nationId: s.nationId,
+        name: s.name,
+        goals: s.goals,
+        active: s.active,
+      );
+
+  Widget _row({
+    required int rank,
+    required int nationId,
+    required String name,
+    required int goals,
+    required bool active,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+      child: AppCard(
+        padding: const EdgeInsets.symmetric(
+          vertical: AppSpacing.sm,
+          horizontal: AppSpacing.md,
+        ),
+        child: Row(
+          children: [
+            SizedBox(
+              width: 24,
+              child: Text(
+                '$rank',
+                style: AppTypography.labelMedium.copyWith(
+                  color: AppColors.onSurfaceVariant,
+                ),
+              ),
+            ),
+            FlagDisc(widget.code(nationId), size: 24),
+            const SizedBox(width: AppSpacing.md),
+            Expanded(
+              child: Text(
+                name,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: AppTypography.bodyMedium,
+              ),
+            ),
+            if (active) ...[
+              const TacticalChip('ACTIVE', emphasized: true),
+              const SizedBox(width: AppSpacing.sm),
+            ],
+            Text(
+              '$goals',
+              style: AppTypography.titleMedium.copyWith(
+                color: AppColors.primary,
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

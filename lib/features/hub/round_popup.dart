@@ -111,7 +111,10 @@ final AutoDisposeFutureProviderFamily<RoundPopup?, int>
       final bo = _knockoutRounds[b.round ?? '']?.order ?? -1;
       return ao.compareTo(bo);
     });
-  final round = sameDay.first.round ?? '';
+  // Title by the day's most important round: should a play-off and the final
+  // ever share a day, the popup reads "Final" (with the final listed last)
+  // rather than burying it under "Third-place play-off".
+  final round = sameDay.last.round ?? '';
   final label = _knockoutRounds[round]?.label ?? 'Group Stage';
   return (competition: latest.name, stage: label, fixtures: sameDay);
 });
@@ -200,14 +203,32 @@ class _RoundSheet extends StatelessWidget {
                 ],
               ),
             ),
-            if (onBracket != null)
-              Align(
-                alignment: Alignment.centerRight,
-                child: TextButton(
+            const SizedBox(height: AppSpacing.lg),
+            // The classic bottom actions: Continue carries on (like every other
+            // continue screen), Brackets opens the tournament in full.
+            PrimaryButton(
+              label: 'Continue',
+              icon: Icons.check_rounded,
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+            if (onBracket != null) ...[
+              const SizedBox(height: AppSpacing.sm),
+              SizedBox(
+                width: double.infinity,
+                child: OutlinedButton.icon(
                   onPressed: onBracket,
-                  child: const Text('View bracket ›'),
+                  icon: const Icon(Icons.account_tree_outlined, size: 18),
+                  label: const Text('Brackets'),
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: AppColors.primary,
+                    side: const BorderSide(color: AppColors.outlineVariant),
+                    padding: const EdgeInsets.symmetric(
+                      vertical: AppSpacing.md,
+                    ),
+                  ),
                 ),
               ),
+            ],
           ],
         ),
       ),

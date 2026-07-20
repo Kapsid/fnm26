@@ -93,9 +93,10 @@ void main() {
     tester.view.physicalSize = const Size(500, 900);
     addTearDown(tester.view.reset);
 
-    // A discriminating case: the landing tab here is 4, not the 0 a naive
+    // A discriminating case: the landing tab here is HISTORY, not the 0 a naive
     // initialIndex would give. Only the player's own region is played out, so
-    // every other tab of a foreign cup is a placeholder.
+    // every other tab of a foreign cup is a placeholder. HISTORY is index 5
+    // now that SUMMARY leads the tab bar.
     await tester.pumpWidget(
       UncontrolledProviderScope(
         container: container,
@@ -115,7 +116,7 @@ void main() {
     );
     expect(
       controller.index,
-      4,
+      5,
       reason: "a foreign cup's only real content is its history",
     );
   });

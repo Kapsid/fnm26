@@ -9,6 +9,7 @@ import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/services/entitlement/entitlement.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/nations/nation_select_providers.dart';
+import 'package:fnm/features/paywall/paywall_sheet.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
@@ -56,10 +57,12 @@ class SavesScreen extends ConsumerWidget {
                       ),
                     ),
                     if (!premium)
-                      Text(
-                        'Pro: up to 5',
-                        style: AppTypography.labelSmall
-                            .copyWith(color: AppColors.onSurfaceVariant),
+                      TextButton(
+                        onPressed: () => showPaywall(context),
+                        style: TextButton.styleFrom(
+                          visualDensity: VisualDensity.compact,
+                        ),
+                        child: const Text('Pro: up to 5'),
                       ),
                   ],
                 ),
@@ -97,9 +100,15 @@ class SavesScreen extends ConsumerWidget {
                 child: Padding(
                   padding: const EdgeInsets.all(AppSpacing.marginMobile),
                   child: PrimaryButton(
-                    label: full ? 'Slots full' : 'New Game',
+                    label: full
+                        ? (premium ? 'Slots full' : 'Slots full — go Pro for 5')
+                        : 'New Game',
                     icon: Icons.add,
-                    onPressed: full ? null : () => context.go(Routes.nations),
+                    // On the free tier, full slots open the paywall (Pro more
+                    // than doubles them); with Pro, full really is full.
+                    onPressed: full
+                        ? (premium ? null : () => showPaywall(context))
+                        : () => context.go(Routes.nations),
                   ),
                 ),
               ),
@@ -168,6 +177,7 @@ class _SaveTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final date = DateFormat('MMM yyyy').format(save.inGameDate);
+    final wcYear = CareerService.worldCupYear(save.cyclePointer);
     return AppCard(
       onTap: onContinue,
       child: Row(
@@ -186,6 +196,22 @@ class _SaveTile extends StatelessWidget {
                   '${save.managerName} · $date',
                   style: AppTypography.bodySmall
                       .copyWith(color: AppColors.onSurfaceVariant),
+                ),
+                const SizedBox(height: 2),
+                Row(
+                  children: [
+                    const Icon(
+                      Icons.emoji_events_outlined,
+                      size: 12,
+                      color: AppColors.primary,
+                    ),
+                    const SizedBox(width: 4),
+                    Text(
+                      'Road to the $wcYear World Cup',
+                      style: AppTypography.labelSmall
+                          .copyWith(color: AppColors.primary),
+                    ),
+                  ],
                 ),
               ],
             ),

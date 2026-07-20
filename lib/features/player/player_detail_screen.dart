@@ -169,7 +169,7 @@ class PlayerDetailScreen extends ConsumerWidget {
               AppCard(
                 child: Column(
                   children: [
-                    _fact('Club', p.club),
+                    _clubFact(p),
                     _fact('Position', p.position.roleName),
                     _fact('Age', '${p.age}'),
                     _fact('Value', money(p.value)),
@@ -261,6 +261,43 @@ class PlayerDetailScreen extends ConsumerWidget {
       ),
     );
   }
+
+  /// The club row, with the club's country flag beside its name, hard-aligned
+  /// to the right (the trailing group takes the remaining width and ends right).
+  Widget _clubFact(Player p) => Padding(
+        padding: const EdgeInsets.symmetric(vertical: 3),
+        child: Row(
+          children: [
+            Text(
+              'CLUB',
+              style: AppTypography.labelSmall.copyWith(
+                color: AppColors.onSurfaceVariant,
+              ),
+            ),
+            const SizedBox(width: AppSpacing.sm),
+            Expanded(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  if (p.clubCountry.isNotEmpty) ...[
+                    FlagDisc(p.clubCountry, size: 18),
+                    const SizedBox(width: AppSpacing.sm),
+                  ],
+                  Flexible(
+                    child: Text(
+                      p.club,
+                      textAlign: TextAlign.end,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: AppTypography.bodyMedium,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      );
 
   Widget _fact(String label, String value) => Padding(
         padding: const EdgeInsets.symmetric(vertical: 3),
