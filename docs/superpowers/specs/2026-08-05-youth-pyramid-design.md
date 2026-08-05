@@ -103,7 +103,12 @@ the sole counterweight.
   so the world simulation, AI squad selection, rankings and every existing
   caller see exactly the pool they see today and the hot path costs no more.
   Only the player's own call-up path passes `minAge: 15`.
-  Consequence, accepted: AI nations never name a 15–16-year-old.
+  Consequence, accepted: AI nations never name a 15–16-year-old. The band is
+  ~13 extra players per nation, aged year-by-year, on every world-sim step —
+  for players who would essentially never be picked. Admitting only the top
+  potential tail (filterable by id before anyone is built) was considered and
+  rejected in favour of zero added cost; the world simply does not produce
+  sixteen-year-old internationals.
 - `PlayerLifecycle.youthPoolAt(seeded, nationId, agingYears)` — builds ages
   11–20 for one nation on demand, for the Youth screen. Applies the same
   wash-out, aging and academy bonus as `poolAt`.
