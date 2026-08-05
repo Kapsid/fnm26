@@ -51,6 +51,10 @@ enum CompetitionKind {
 
   /// The Finalissima — a one-off match between two continental champions.
   finalissima,
+
+  /// The intercontinental play-off: a six-team knockout for the last two World
+  /// Cup places, contested by the best qualifying also-rans.
+  worldCupPlayoff,
 }
 
 /// Display helpers for [Confederation].
@@ -159,4 +163,49 @@ extension PlayerPositionX on PlayerPosition {
         PlayerPosition.rw => 'Right Wing',
         PlayerPosition.st => 'Striker',
       };
+}
+
+/// A nation's youth levels, strict under-N: a player is in [YouthLevel.u17]
+/// while he is *under* seventeen, so "rarely cap a sub-17" reads directly as
+/// "rarely cap from U-17".
+///
+/// Not persisted — a player's level is a function of his age, recomputed
+/// wherever it is needed.
+enum YouthLevel {
+  /// 11–12.
+  u13(11, 12),
+
+  /// 13–14.
+  u15(13, 14),
+
+  /// 15–16.
+  u17(15, 16),
+
+  /// 17–18.
+  u19(17, 18),
+
+  /// 19–20.
+  u21(19, 20);
+
+  const YouthLevel(this.minAge, this.maxAge);
+
+  /// The youngest and oldest age in this band, inclusive.
+  final int minAge;
+  final int maxAge;
+
+  /// Whether players at this level appear in the senior call-up list. Under-15s
+  /// are watched, not picked.
+  bool get callable => minAge >= 15;
+
+  /// Display label, e.g. `U-17`.
+  String get label => 'U-${maxAge + 1}';
+
+  /// The level [age] belongs to, or null once a player is 21 (and so simply a
+  /// senior) or younger than the intake age.
+  static YouthLevel? forAge(int age) {
+    for (final level in values) {
+      if (age >= level.minAge && age <= level.maxAge) return level;
+    }
+    return null;
+  }
 }
