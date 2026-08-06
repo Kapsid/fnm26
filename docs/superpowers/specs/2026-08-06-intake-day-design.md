@@ -70,8 +70,15 @@ short lines), so the format stays forward-compatible in the same way.
 - `lib/features/messages/squad_dev_report.dart` — the optional note in the
   encoder, the decoder's v1/v2 handling, and the renderer.
 - `lib/features/messages/message_providers.dart` — the new draft. It already
-  reads `youthBonusByCycleProvider` and the player repository; the boys come
-  from `youthByNation` filtered to `age == PlayerLifecycle.intakeAge`.
+  reads the player repository in the yearly-report block; it does NOT yet read
+  `youthBonusByCycleProvider` and will need to. The boys come from
+  `youthByNation` filtered to `age == PlayerLifecycle.intakeAge`.
+- `lib/features/messages/intake_report.dart` (new) — the pure row and note
+  builders, so the message's content is testable without a provider container.
+
+The cycle an intake year belongs to must come from `PlayerLifecycle` rather
+than being recomputed in the message layer: the same mapping written out twice
+is how the draw ceremony once disagreed with the draw it was showing.
 - The new `youth` category's icon and colour go wherever `messageStyle` maps
   categories today.
 
