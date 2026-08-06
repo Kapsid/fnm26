@@ -129,6 +129,8 @@ void main() {
     });
   });
 
+  _weakNationIsNotInflated();
+
   test('veterans retire once they pass the retirement age', () {
     // Seed one 36-year-old; after four years they are 40 and gone.
     final vets = [
@@ -161,6 +163,57 @@ void main() {
 
   test('newgenById returns null for a seeded id', () {
     expect(PlayerLifecycle.newgenById(seeded, 100, 12), isNull);
+  });
+}
+
+/// The reconstruction that turns a seventeen-year-old draw into an
+/// eleven-year-old has to be faithful at the BOTTOM of the range, not just the
+/// middle — and a poor nation lives at the bottom.
+void _weakNationIsNotInflated() {
+  group('a weak nation is not inflated by the reconstruction', () {
+    // A nation whose players average 45. The intake is drawn at 0.56–0.94 of
+    // the nation's own top-thirty average, so its weakest boys come out around
+    // 45 × 0.56 − 4 ≈ 21, and the youth discount at seventeen (−9) puts them
+    // on the display floor of 20. A flat-70 nation never gets near it, which is
+    // why the pool-size test above cannot see this.
+    final weak = [
+      for (var i = 0; i < 23; i++)
+        player(
+          id: 100 + i,
+          nationId: 1,
+          name: 'First$i Last$i',
+          position: PlayerPosition.values[i % PlayerPosition.values.length],
+          age: 20 + (i % 15),
+          attributes: flatAttributes(45),
+        ),
+    ];
+
+    test('its seventeen-year-olds still reach the display floor', () {
+      // A boy is generated as his seventeen-year-old draw minus six years of
+      // growth (−14 physical/stamina, −12 technical), which the sub-17 curve
+      // then gives back. If that subtraction is floored at 20 — the bound every
+      // DISPLAYED attribute is clamped to — then every draw below 34 is
+      // truncated and the curve grows those boys back to MORE than they were
+      // drawn as. The low tail is what disappears first: under truncation the
+      // weakest seventeen-year-old attribute a nation this poor can produce is
+      // 23, and not one of its boys reaches the floor. Faithful, about a
+      // quarter of them do.
+      final attrs = <int>[];
+      for (var year = 0; year <= 20; year++) {
+        for (final p in PlayerLifecycle.poolAt(weak, 1, year)) {
+          if (p.age != 17 || !PlayerLifecycle.isNewgenId(p.id)) continue;
+          attrs.addAll([
+            p.attributes.physical,
+            p.attributes.technical,
+            p.attributes.stamina,
+          ]);
+        }
+      }
+      expect(attrs, isNotEmpty);
+      expect(attrs.reduce((a, b) => a < b ? a : b), 20);
+      final atFloor = attrs.where((v) => v <= 20).length / attrs.length;
+      expect(atFloor, greaterThan(0.10), reason: 'the low tail was truncated');
+    });
   });
 }
 

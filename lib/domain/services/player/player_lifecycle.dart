@@ -403,10 +403,19 @@ abstract final class PlayerLifecycle {
   /// and two at +1.8/+1.5. Subtracting them here and adding them back through
   /// the curve is what keeps the senior pool exactly where it was while giving
   /// the youth levels six years of visible growth.
+  ///
+  /// The floor is 5, NOT the 20 everything else is clamped at. These are the
+  /// child's internal numbers, six years short of the player he was drawn as,
+  /// and they are never shown raw — [PlayerAging] floors every displayed value
+  /// at 20 on the way back out. Clamping here at 20 instead would truncate the
+  /// subtraction for any draw below 34, and the curve would then grow those
+  /// boys back to MORE than they were drawn as: a weak nation, whose intake
+  /// sits low precisely because the nation is weak, would have a third of every
+  /// intake quietly inflated, and the senior pool would drift up under it.
   static PlayerAttributes _asChild(PlayerAttributes a) => PlayerAttributes(
-        physical: (a.physical - 14).clamp(20, 95),
-        technical: (a.technical - 12).clamp(20, 95),
-        stamina: (a.stamina - 14).clamp(20, 95),
+        physical: (a.physical - 14).clamp(5, 95),
+        technical: (a.technical - 12).clamp(5, 95),
+        stamina: (a.stamina - 14).clamp(5, 95),
       );
 
   static String _firstName(String full) => full.trim().split(' ').first;
