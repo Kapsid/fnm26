@@ -122,13 +122,12 @@ abstract final class PlayerLifecycle {
   /// up to the youngest seeded player on day one. Not sorted.
   ///
   /// [minAge] drops anyone younger than it, so a caller that only wants the
-  /// senior pool never sees the schoolboys underneath it.
-  ///
-  /// The youngest age the pool contains. Seventeen by default, which is what
-  /// the world simulation, AI squad selection, the rankings and every existing
-  /// caller want: the U-17 band is ~13 extra players per nation, aged
-  /// year-by-year on every sim step, for players who would essentially never
-  /// be picked. Only the player's own call-up path asks for 15.
+  /// senior pool never sees the schoolboys underneath it. Seventeen by
+  /// default, which is what the world simulation, AI squad selection, the
+  /// rankings and every existing caller want: the U-17 band is ~13 extra
+  /// players per nation, aged year-by-year on every sim step, for players who
+  /// would essentially never be picked. Only the player's own call-up path
+  /// asks for 15.
   ///
   /// [youthBonusByCycle] optionally boosts an intake's talent for the four-year
   /// cycle it came in at (a federation's youth-academy investment). It only

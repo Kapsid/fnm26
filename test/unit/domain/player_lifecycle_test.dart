@@ -168,6 +168,7 @@ void main() {
   group('who the senior pool contains', () {
     test('by default it starts at seventeen', () {
       final pool = PlayerLifecycle.poolAt(seeded, 1, 5);
+      expect(pool, isNotEmpty);
       expect(pool.every((p) => p.age >= 17), isTrue);
     });
 
@@ -176,31 +177,46 @@ void main() {
       expect(pool.any((p) => p.age == 15 || p.age == 16), isTrue);
     });
 
-    test('the youth pool is the five levels and nothing else', () {
+    test('the youth pool populates every band from U-13 to U-21', () {
       final youth = PlayerLifecycle.youthPoolAt(seeded, 1, 5);
       expect(youth, isNotEmpty);
-      expect(youth.every((p) => p.age >= 11 && p.age <= 20), isTrue);
+      for (final level in YouthLevel.values) {
+        expect(
+          youth.any((p) => p.age >= level.minAge && p.age <= level.maxAge),
+          isTrue,
+          reason: '${level.label} has nobody in it',
+        );
+      }
     });
 
-    test('a sixteen-year-old is far below a typical senior', () {
-      // The balance guard, and the whole reason capping one is rare. Compared
-      // median-to-median rather than against `seniors.first`: the single
-      // weakest player across the WHOLE 17-to-retirement pool is, this many
-      // years in, occasionally a fringe veteran in the terminal years of
-      // decline or an unlucky just-matured newgen — neither of which a
-      // manager would ever actually reach for ahead of a promising sixteen-
-      // year-old, so it is not a fair stand-in for "the senior competing with
-      // him." The typical (median) senior is.
+    test(
+        'the best sixteen-year-old is still well below the squad-boundary '
+        'senior', () {
+      // The intent: naming a fifteen- or sixteen-year-old must cost you
+      // results, so it stays a rare, deliberate gamble rather than a free
+      // upgrade. The senior a teenager actually displaces is the one at the
+      // SQUAD BOUNDARY — roughly the 23rd-best player, the last man into a
+      // squad — not some arbitrary fringe veteran three-quarters of the way
+      // down the pool. And the player who could threaten that boundary is
+      // the BEST available sixteen-year-old, not a middling one: if even he
+      // falls well short, naming a lesser one is that much more obviously a
+      // mistake.
       final seniors = PlayerLifecycle.poolAt(seeded, 1, 12)
-        ..sort((a, b) => a.overall.compareTo(b.overall));
+        ..sort((a, b) => b.overall.compareTo(a.overall));
+      // The 23rd-best (index 22) is the last man into a standard squad.
+      expect(seniors.length, greaterThan(22),
+          reason: 'senior pool too small to have a squad boundary');
+      final boundarySenior = seniors[22];
       final sixteens = PlayerLifecycle.youthPoolAt(seeded, 1, 12)
           .where((p) => p.age == 16)
           .toList()
-        ..sort((a, b) => a.overall.compareTo(b.overall));
+        ..sort((a, b) => b.overall.compareTo(a.overall));
       expect(sixteens, isNotEmpty);
-      final medianSixteen = sixteens[sixteens.length ~/ 2].overall;
-      final medianSenior = seniors[seniors.length ~/ 2].overall;
-      expect(medianSenior - medianSixteen, greaterThanOrEqualTo(12));
+      final bestSixteen = sixteens.first;
+      expect(
+        boundarySenior.overall - bestSixteen.overall,
+        greaterThanOrEqualTo(12),
+      );
     });
   });
 }
