@@ -20,7 +20,21 @@ abstract interface class PlayerRepository {
   /// `careerStartsByPlayer` (playerId → tournament starts) applies the
   /// career-development bump — a well-used player grows a touch. Optional; an
   /// empty map (the default, and every non-manager call) means no development.
+  ///
+  /// `minAge` is the youngest age returned — seventeen by default, the senior
+  /// pool. Only the player's own call-up path asks for fifteen.
   Future<List<Player>> byNation(
+    int nationId, {
+    int agingYears,
+    int saveSeed,
+    Map<int, double> youthBonusByCycle,
+    Map<int, int> careerStartsByPlayer,
+    int minAge,
+  });
+
+  /// The nation's youth pyramid (ages 11–20), for the Youth screen. Never used
+  /// by the simulation.
+  Future<List<Player>> youthByNation(
     int nationId, {
     int agingYears,
     int saveSeed,

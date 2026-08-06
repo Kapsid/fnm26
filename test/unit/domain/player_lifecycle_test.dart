@@ -164,6 +164,45 @@ void main() {
   test('newgenById returns null for a seeded id', () {
     expect(PlayerLifecycle.newgenById(seeded, 100, 12), isNull);
   });
+
+  group('who the senior pool contains', () {
+    test('by default it starts at seventeen', () {
+      final pool = PlayerLifecycle.poolAt(seeded, 1, 5);
+      expect(pool.every((p) => p.age >= 17), isTrue);
+    });
+
+    test('the call-up path can ask for fifteen', () {
+      final pool = PlayerLifecycle.poolAt(seeded, 1, 5, minAge: 15);
+      expect(pool.any((p) => p.age == 15 || p.age == 16), isTrue);
+    });
+
+    test('the youth pool is the five levels and nothing else', () {
+      final youth = PlayerLifecycle.youthPoolAt(seeded, 1, 5);
+      expect(youth, isNotEmpty);
+      expect(youth.every((p) => p.age >= 11 && p.age <= 20), isTrue);
+    });
+
+    test('a sixteen-year-old is far below a typical senior', () {
+      // The balance guard, and the whole reason capping one is rare. Compared
+      // median-to-median rather than against `seniors.first`: the single
+      // weakest player across the WHOLE 17-to-retirement pool is, this many
+      // years in, occasionally a fringe veteran in the terminal years of
+      // decline or an unlucky just-matured newgen — neither of which a
+      // manager would ever actually reach for ahead of a promising sixteen-
+      // year-old, so it is not a fair stand-in for "the senior competing with
+      // him." The typical (median) senior is.
+      final seniors = PlayerLifecycle.poolAt(seeded, 1, 12)
+        ..sort((a, b) => a.overall.compareTo(b.overall));
+      final sixteens = PlayerLifecycle.youthPoolAt(seeded, 1, 12)
+          .where((p) => p.age == 16)
+          .toList()
+        ..sort((a, b) => a.overall.compareTo(b.overall));
+      expect(sixteens, isNotEmpty);
+      final medianSixteen = sixteens[sixteens.length ~/ 2].overall;
+      final medianSenior = seniors[seniors.length ~/ 2].overall;
+      expect(medianSenior - medianSixteen, greaterThanOrEqualTo(12));
+    });
+  });
 }
 
 /// The reconstruction that turns a seventeen-year-old draw into an

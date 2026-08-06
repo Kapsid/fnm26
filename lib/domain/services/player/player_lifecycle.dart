@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:fnm/core/rng/seeded_rng.dart';
+import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/entities/player_attributes.dart';
 import 'package:fnm/domain/services/club/clubs.dart';
@@ -123,6 +124,12 @@ abstract final class PlayerLifecycle {
   /// [minAge] drops anyone younger than it, so a caller that only wants the
   /// senior pool never sees the schoolboys underneath it.
   ///
+  /// The youngest age the pool contains. Seventeen by default, which is what
+  /// the world simulation, AI squad selection, the rankings and every existing
+  /// caller want: the U-17 band is ~13 extra players per nation, aged
+  /// year-by-year on every sim step, for players who would essentially never
+  /// be picked. Only the player's own call-up path asks for 15.
+  ///
   /// [youthBonusByCycle] optionally boosts an intake's talent for the four-year
   /// cycle it came in at (a federation's youth-academy investment). It only
   /// shifts attribute magnitudes — it is applied after the RNG draw, so ids,
@@ -132,7 +139,7 @@ abstract final class PlayerLifecycle {
     List<Player> seeded,
     int nationId,
     int agingYears, {
-    int minAge = 0,
+    int minAge = 17,
     Map<int, double> youthBonusByCycle = const {},
     Map<int, int> careerStartsByPlayer = const {},
   }) {
@@ -174,6 +181,25 @@ abstract final class PlayerLifecycle {
     }
     return out;
   }
+
+  /// A nation's whole youth pyramid — ages 11 to 20 — for one nation, on
+  /// demand. The Youth screen is the only caller; the hot path never builds
+  /// this.
+  static List<Player> youthPoolAt(
+    List<Player> seeded,
+    int nationId,
+    int agingYears, {
+    Map<int, double> youthBonusByCycle = const {},
+    Map<int, int> careerStartsByPlayer = const {},
+  }) =>
+      poolAt(
+        seeded,
+        nationId,
+        agingYears,
+        youthBonusByCycle: youthBonusByCycle,
+        careerStartsByPlayer: careerStartsByPlayer,
+        minAge: intakeAge,
+      ).where((p) => p.age <= YouthLevel.u21.maxAge).toList();
 
   /// The four-year cycle an intake year belongs to, for the academy bonus.
   /// Backfilled years are before the save and take no investment.

@@ -4,6 +4,7 @@ import 'package:flutter/services.dart' show rootBundle;
 import 'package:fnm/core/rng/seeded_rng.dart';
 import 'package:fnm/data/db/app_database.dart';
 import 'package:fnm/data/repositories/mappers.dart';
+import 'package:fnm/data/seed/seed_source.dart';
 import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/repositories/player_repository.dart';
 import 'package:fnm/domain/services/club/clubs.dart';
@@ -23,14 +24,27 @@ Player _identity(Player p) => p;
 /// pools. Names are unique within a nation (no two share a first + surname at
 /// once) and vary per save, yet stay stable for a given player id.
 class DriftPlayerRepository implements PlayerRepository {
-  DriftPlayerRepository(this._db);
+  /// [_seed] supplies the per-nation city lists used to name domestic clubs.
+  /// It is injected (rather than read straight from the asset bundle here) so
+  /// tests can leave it empty — a hot-path asset read stalls widget tests,
+  /// which drive their own async clock.
+  DriftPlayerRepository(this._db, [this._seed]);
 
   final AppDatabase _db;
+  final SeedSource? _seed;
 
   static const _namesAsset = 'assets/data/country_names.json';
 
   /// Per-nation name pools, loaded from the asset once.
   Map<int, _NamePool>? _namePools;
+
+  /// Per-nation city lists (biggest first), loaded once — used to name a
+  /// domestic club for a country with no curated league.
+  Map<int, List<String>>? _cities;
+
+  /// Nation id → FIFA code, cached; tells the club assignment which country is
+  /// "home" for a player.
+  Map<int, String>? _codes;
 
   /// Shuffled first+surname combinations per (nation, save), cached so repeated
   /// lookups don't rebuild the (large) list.
@@ -43,6 +57,7 @@ class DriftPlayerRepository implements PlayerRepository {
     int saveSeed = 0,
     Map<int, double> youthBonusByCycle = const {},
     Map<int, int> careerStartsByPlayer = const {},
+    int minAge = 17,
   }) async {
     final seeded = await _seededRows(nationId);
     // `overall` is position-weighted and derived (not a column), so build the
@@ -53,17 +68,90 @@ class DriftPlayerRepository implements PlayerRepository {
       agingYears,
       youthBonusByCycle: youthBonusByCycle,
       careerStartsByPlayer: careerStartsByPlayer,
+      minAge: minAge,
     )..sort((a, b) => b.overall.compareTo(a.overall));
     final name = await _namerFor(nationId, seeded, saveSeed);
-    return [for (final p in pool) _withClub(name(p), saveSeed)];
+    final home = await _home(nationId);
+    return [
+      for (final p in pool)
+        _withClub(
+          name(p),
+          saveSeed,
+          homeCode: home.code,
+          homeCities: home.cities,
+        ),
+    ];
+  }
+
+  @override
+  Future<List<Player>> youthByNation(
+    int nationId, {
+    int agingYears = 0,
+    int saveSeed = 0,
+    Map<int, double> youthBonusByCycle = const {},
+    Map<int, int> careerStartsByPlayer = const {},
+  }) async {
+    final seeded = await _seededRows(nationId);
+    // `overall` is position-weighted and derived (not a column), so build the
+    // aged pool (seeded survivors + newgen intakes) and order in Dart.
+    final pool = PlayerLifecycle.youthPoolAt(
+      seeded,
+      nationId,
+      agingYears,
+      youthBonusByCycle: youthBonusByCycle,
+      careerStartsByPlayer: careerStartsByPlayer,
+    )..sort((a, b) => b.overall.compareTo(a.overall));
+    final name = await _namerFor(nationId, seeded, saveSeed);
+    final home = await _home(nationId);
+    return [
+      for (final p in pool)
+        _withClub(
+          name(p),
+          saveSeed,
+          homeCode: home.code,
+          homeCities: home.cities,
+        ),
+    ];
   }
 
   /// Attaches the player's (cosmetic) club and its country, derived from their
   /// current overall + id + save seed — layered on like the namer.
-  Player _withClub(Player p, int saveSeed) {
-    final c = ClubService.clubForSeed(p, saveSeed);
+  ///
+  /// [homeCode] and [homeCities] let the assignment keep most of a nation's
+  /// players at home; without them every player would be placed abroad.
+  Player _withClub(
+    Player p,
+    int saveSeed, {
+    String homeCode = '',
+    List<String> homeCities = const [],
+  }) {
+    final c = ClubService.clubForSeed(
+      p,
+      saveSeed,
+      homeCode: homeCode,
+      homeCities: homeCities,
+    );
     return p.copyWith(club: c.name, clubCountry: c.country);
   }
+
+  /// The FIFA code and cities of [nationId] — the "home country" context the
+  /// club assignment needs.
+  Future<({String code, List<String> cities})> _home(int nationId) async {
+    final codes = _codes ??= {
+      for (final n in await _db.select(_db.nations).get()) n.id: n.code,
+    };
+    return (
+      // Lower-cased to match the league table's country keys (and the flag
+      // asset names), which are all lowercase FIFA codes.
+      code: (codes[nationId] ?? '').toLowerCase(),
+      cities: (await _cityLists())[nationId] ?? const <String>[],
+    );
+  }
+
+  /// The per-nation city lists, from the injected seed source (once). Empty
+  /// when no source was supplied.
+  Future<Map<int, List<String>>> _cityLists() async =>
+      _cities ??= await _seed?.cities() ?? const {};
 
   @override
   Future<List<Player>> all() async {
@@ -90,7 +178,13 @@ class DriftPlayerRepository implements PlayerRepository {
         careerStartsByPlayer: careerStartsByPlayer,
       );
       if (p == null) return null;
-      return _withClub((await _namerFor(nationId, seeded, saveSeed))(p), saveSeed);
+      final home = await _home(nationId);
+      return _withClub(
+        (await _namerFor(nationId, seeded, saveSeed))(p),
+        saveSeed,
+        homeCode: home.code,
+        homeCities: home.cities,
+      );
     }
     final row = await (_db.select(_db.players)..where((t) => t.id.equals(id)))
         .getSingleOrNull();
@@ -103,9 +197,12 @@ class DriftPlayerRepository implements PlayerRepository {
       careerStartsByPlayer[id] ?? 0,
     );
     final seeded = await _seededRows(p.nationId);
+    final home = await _home(p.nationId);
     return _withClub(
       (await _namerFor(p.nationId, seeded, saveSeed))(aged),
       saveSeed,
+      homeCode: home.code,
+      homeCities: home.cities,
     );
   }
 
