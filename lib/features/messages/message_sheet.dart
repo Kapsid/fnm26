@@ -3,6 +3,7 @@ import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
+import 'package:fnm/features/messages/squad_dev_report.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 
 /// The icon and colour a message category is shown with. Shared so a message
@@ -11,9 +12,9 @@ import 'package:fnm/shared/widgets/widgets.dart';
     switch (category) {
       'triumph' => (icon: Icons.emoji_events, color: AppColors.primary),
       'champion' => (
-          icon: Icons.emoji_events_outlined,
-          color: AppColors.onSurfaceVariant,
-        ),
+        icon: Icons.emoji_events_outlined,
+        color: AppColors.onSurfaceVariant,
+      ),
       'qualify' => (icon: Icons.flight_takeoff, color: AppColors.positive),
       'eliminated' => (icon: Icons.flight_land, color: AppColors.error),
       'draw' => (icon: Icons.casino, color: AppColors.primary),
@@ -22,19 +23,20 @@ import 'package:fnm/shared/widgets/widgets.dart';
       'milestone' => (icon: Icons.military_tech, color: AppColors.primary),
       'award' => (icon: Icons.workspace_premium, color: AppColors.primary),
       'retirement' => (
-          icon: Icons.waving_hand_outlined,
-          color: AppColors.onSurfaceVariant,
-        ),
+        icon: Icons.waving_hand_outlined,
+        color: AppColors.onSurfaceVariant,
+      ),
       'halloffame' => (icon: Icons.star_rounded, color: AppColors.primary),
       'discipline' => (icon: Icons.dangerous, color: AppColors.error),
       'injury' => (icon: Icons.healing, color: AppColors.warning),
       'board' => (icon: Icons.gavel, color: AppColors.warning),
       'naturalize' => (
-          icon: Icons.how_to_reg_rounded,
-          color: AppColors.positive,
-        ),
+        icon: Icons.how_to_reg_rounded,
+        color: AppColors.positive,
+      ),
       'cycle' => (icon: Icons.flag_rounded, color: AppColors.primary),
       'transfer' => (icon: Icons.swap_horiz_rounded, color: AppColors.primary),
+      'record' => (icon: Icons.leaderboard_rounded, color: AppColors.primary),
       _ => (icon: Icons.mail_outline, color: AppColors.onSurfaceVariant),
     };
 
@@ -83,7 +85,23 @@ class MessageSheet extends StatelessWidget {
               ],
             ),
             const SizedBox(height: AppSpacing.md),
-            Text(message.body, style: AppTypography.bodyMedium),
+            // The yearly squad report is a table, not a paragraph — a run of
+            // "A 78→82, B 74→76, …" was unreadable once more than a couple of
+            // players moved. Anything else is plain text.
+            if (decodeSquadDevReport(message.body) case final report?) ...[
+              if (report.note case final note?) ...[
+                Text(
+                  note,
+                  style: AppTypography.bodySmall.copyWith(
+                    color: AppColors.onSurfaceVariant,
+                  ),
+                ),
+                const SizedBox(height: AppSpacing.sm),
+              ],
+              SquadDevTable(rows: report.rows),
+            ]
+            else
+              Text(message.body, style: AppTypography.bodyMedium),
             if (action != null) ...[
               const SizedBox(height: AppSpacing.lg),
               PrimaryButton(
