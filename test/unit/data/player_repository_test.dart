@@ -4,6 +4,8 @@ import 'package:fnm/data/repositories/drift_player_repository.dart';
 import 'package:fnm/data/seed/seed_loader.dart';
 import 'package:fnm/data/seed/seed_source.dart';
 import 'package:fnm/domain/entities/enums.dart';
+import 'package:fnm/domain/entities/player.dart';
+import 'package:fnm/domain/services/player/player_lifecycle.dart';
 
 import '../../helpers/fixtures.dart';
 import '../../helpers/test_database.dart';
@@ -44,23 +46,29 @@ void main() {
 
   tearDown(() => db.close());
 
+  /// The seeded players only — a nation's pool now also carries the backfilled
+  /// youth intakes, which are generated rather than read from the source.
+  List<Player> seededOf(List<Player> pool) =>
+      [for (final p in pool) if (!PlayerLifecycle.isNewgenId(p.id)) p];
+
   test('byNation() filters by nation and orders by overall (best first)',
       () async {
     final squad = await repo.byNation(1);
-    expect(squad.map((p) => p.id), [102, 103, 101]);
+    expect(seededOf(squad).map((p) => p.id), [102, 103, 101]);
     expect(squad.first.overall, 90);
   });
 
   test('byNation() returns only the requested nation', () async {
     final squad = await repo.byNation(2);
-    expect(squad.map((p) => p.id), [201]);
+    expect(seededOf(squad).map((p) => p.id), [201]);
+    expect(squad.every((p) => p.nationId == 2), isTrue);
   });
 
   test('byId() round-trips attributes and derived overall', () async {
     final p = await repo.byId(102);
     expect(p, isNotNull);
     expect(p!.overall, 90);
-    expect(p.attributes.tackling, 90);
+    expect(p.attributes.technical, 90);
     expect(await repo.byId(999), isNull);
   });
 }
