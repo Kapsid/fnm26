@@ -1,19 +1,27 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
+import 'package:fnm/core/util/match_stage.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/entities/player_absence.dart';
 import 'package:fnm/domain/services/squad/condition.dart';
-import 'package:fnm/features/hub/hub_screen.dart' show matchStageLabel;
+import 'package:fnm/domain/services/squad/absence_outlook.dart';
+import 'package:fnm/features/tactics/absence_providers.dart';
 import 'package:fnm/features/tactics/condition_providers.dart';
 import 'package:fnm/features/tactics/nomination_providers.dart';
 import 'package:fnm/features/tactics/tactics_providers.dart';
+import 'package:fnm/features/career/career_providers.dart';
+import 'package:fnm/features/player/player_detail_screen.dart'
+    show PlayerTraitGlyphs;
+import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
@@ -43,6 +51,14 @@ class CallUpScreen extends ConsumerStatefulWidget {
 class _CallUpScreenState extends ConsumerState<CallUpScreen> {
   Set<int>? _selected;
 
+  /// The key this screen's draft is stored under, resolved once the nomination
+  /// window is known.
+  String? _draftKey;
+
+  /// Whether the saved draft has been read back into [_selected] yet, so a
+  /// rebuild never re-applies it over later edits.
+  bool _draftLoaded = false;
+
   static const List<PositionCategory> _order = [
     PositionCategory.goalkeeper,
     PositionCategory.defender,
@@ -50,12 +66,12 @@ class _CallUpScreenState extends ConsumerState<CallUpScreen> {
     PositionCategory.forward,
   ];
 
-  static String _heading(PositionCategory c) => switch (c) {
-        PositionCategory.goalkeeper => 'GOALKEEPERS',
-        PositionCategory.defender => 'DEFENDERS',
-        PositionCategory.midfielder => 'MIDFIELDERS',
-        PositionCategory.forward => 'FORWARDS',
-      };
+  String _heading(AppLocalizations l, PositionCategory c) => switch (c) {
+    PositionCategory.goalkeeper => l.tacticsGoalkeepers,
+    PositionCategory.defender => l.tacticsDefenders,
+    PositionCategory.midfielder => l.tacticsMidfielders,
+    PositionCategory.forward => l.tacticsForwards,
+  };
 
   /// Nobody, to start with.
   ///
@@ -65,32 +81,85 @@ class _CallUpScreenState extends ConsumerState<CallUpScreen> {
   /// with [_bestQuality] and [_previousSquad] there for when it isn't.
   Set<int> _initialSquad(List<Player> pool, Iterable<int> current) => {};
 
-  /// The best [kMaxSquadSize] available players by rating, but with **at most
-  /// three goalkeepers** — a real squad carries three keepers and fills the
-  /// rest with outfielders, rather than stacking whoever rates highest.
-  Set<int> _bestQuality(List<Player> pool, Map<int, PlayerAbsence> absences) {
-    final fit = pool.where((p) => absences[p.id]?.isAvailable ?? true).toList()
-      ..sort((a, b) => b.overall.compareTo(a.overall));
-    bool isGk(Player p) =>
-        p.position.category == PositionCategory.goalkeeper;
+  /// Records the squad as it currently stands, so leaving the screen part-way
+  /// through a nomination — to read a player's card, or just to look at the
+  /// fixtures — no longer means starting again from an empty sheet.
+  void _saveDraft() {
+    final key = _draftKey;
+    final selected = _selected;
+    if (key == null || selected == null) return;
+    unawaited(
+      ref
+          .read(squadRepositoryProvider)
+          .saveCallUpDraft(widget.careerId, key, {...selected}),
+    );
+  }
+
+  /// Applies any change to the selection and drafts the result.
+  void _edit(void Function(Set<int> selected) change) {
+    setState(() => change(_selected ??= {}));
+    _saveDraft();
+  }
+
+  /// Whether a player is worth naming for a squad covering [coverage] matches.
+  ///
+  /// A one-match knock or ban does NOT rule a player out of a squad that covers
+  /// four games — he sits out the first and plays the rest, exactly as a real
+  /// call-up list works. Only someone missing EVERY match in the period is left
+  /// out, which is what the auto-picks used to do to anyone carrying so much as
+  /// a single-game absence.
+  static bool _usableInPeriod(
+    PlayerAbsence? absence,
+    int coverage,
+  ) {
+    if (absence == null || absence.isAvailable) return true;
+    final out = absence.injuryMatches > absence.banMatches
+        ? absence.injuryMatches
+        : absence.banMatches;
+    return out < (coverage < 1 ? 1 : coverage);
+  }
+
+  /// The best [kMaxSquadSize] players by rating who are usable at some point in
+  /// the period, but with **at most three goalkeepers** — a real squad carries
+  /// three keepers and fills the rest with outfielders, rather than stacking
+  /// whoever rates highest.
+  Set<int> _bestQuality(
+    List<Player> pool,
+    Map<int, PlayerAbsence> absences,
+    int coverage,
+  ) {
+    final fit =
+        pool.where((p) => _usableInPeriod(absences[p.id], coverage)).toList()
+          // Whoever can play the FIRST match comes first at equal quality, so
+          // the named squad can always field an XI straight away.
+          ..sort((a, b) {
+            final aFit = absences[a.id]?.isAvailable ?? true;
+            final bFit = absences[b.id]?.isAvailable ?? true;
+            if (aFit != bFit) return aFit ? -1 : 1;
+            return b.overall.compareTo(a.overall);
+          });
+    bool isGk(Player p) => p.position.category == PositionCategory.goalkeeper;
     final keepers = fit.where(isGk).take(3).toList();
-    final outfield =
-        fit.where((p) => !isGk(p)).take(kMaxSquadSize - keepers.length);
+    final outfield = fit
+        .where((p) => !isGk(p))
+        .take(kMaxSquadSize - keepers.length);
     return {...keepers, ...outfield}.map((p) => p.id).toSet();
   }
 
-  /// Last time's squad, minus anyone who can no longer play.
+  /// Last time's squad, minus anyone who cannot play at all in this period.
   Set<int> _previousSquad(
     List<Player> pool,
     Iterable<int> previous,
     Map<int, PlayerAbsence> absences,
+    int coverage,
   ) {
     final was = previous.toSet();
-    final fit = pool
-        .where((p) => was.contains(p.id))
-        .where((p) => absences[p.id]?.isAvailable ?? true)
-        .toList()
-      ..sort((a, b) => b.overall.compareTo(a.overall));
+    final fit =
+        pool
+            .where((p) => was.contains(p.id))
+            .where((p) => _usableInPeriod(absences[p.id], coverage))
+            .toList()
+          ..sort((a, b) => b.overall.compareTo(a.overall));
     return fit.take(kMaxSquadSize).map((p) => p.id).toSet();
   }
 
@@ -107,13 +176,21 @@ class _CallUpScreenState extends ConsumerState<CallUpScreen> {
     // manager would come back to no squad and no way to be asked again.
     if (!saved) {
       if (mounted) {
+        final l = AppLocalizations.of(context);
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Pick at least $kMinSquadSize players.'),
+          SnackBar(
+            content: Text(l.tacticsPickAtLeastPlayers(kMinSquadSize)),
           ),
         );
       }
       return;
+    }
+    // The squad is named: the draft has served its purpose.
+    final key = _draftKey;
+    if (key != null) {
+      await ref
+          .read(squadRepositoryProvider)
+          .clearCallUpDraft(widget.careerId, key);
     }
     // A timeline call-up records itself done so the event fires only once.
     final kind = widget.eventKind;
@@ -128,12 +205,41 @@ class _CallUpScreenState extends ConsumerState<CallUpScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
     final dataAsync = ref.watch(squadDataProvider(widget.careerId));
-    final window =
-        ref.watch(nominationWindowProvider(widget.careerId)).valueOrNull;
+    // The save seed, so a player's derived traits are the same here as
+    // everywhere else in the save.
+    final saveSeed =
+        ref.watch(careerByIdProvider(widget.careerId)).valueOrNull?.rngSeed ??
+        0;
+    final window = ref
+        .watch(nominationWindowProvider(widget.careerId))
+        .valueOrNull;
     // Editable only during a nomination window (or when opened as the forced
     // pre-campaign event); otherwise the squad is locked between windows.
     final locked = widget.eventKind == null && window != null && !window.open;
+    // How many matches this squad has to cover — a player carrying a shorter
+    // absence than that is still worth naming.
+    final coverage = window?.matches.length ?? 1;
+
+    // Restore a nomination the manager had already started. Resolved once the
+    // window is known (it decides which draft this is), and applied once.
+    if (_draftKey == null && (window != null || widget.eventKind != null)) {
+      _draftKey = callUpDraftKey(
+        eventKind: widget.eventKind,
+        periodStart: window?.matches.firstOrNull,
+      );
+    }
+    final draftAsync = _draftKey == null
+        ? null
+        : ref.watch(
+            callUpDraftProvider((careerId: widget.careerId, key: _draftKey!)),
+          );
+    if (!_draftLoaded && draftAsync?.valueOrNull != null) {
+      _draftLoaded = true;
+      final saved = draftAsync!.valueOrNull!;
+      if (saved.isNotEmpty) _selected = {...saved};
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -142,22 +248,44 @@ class _CallUpScreenState extends ConsumerState<CallUpScreen> {
           onPressed: () => context.go(_exitRoute),
         ),
         title: Text(
-          'CALL-UPS',
+          l.tacticsCallUpsTitle,
           style: AppTypography.labelMedium.copyWith(color: AppColors.primary),
         ),
         centerTitle: true,
+        actions: [
+          // "Who's coming through?" is a question asked while picking a squad,
+          // so the watchlist hangs off the call-up screen.
+          IconButton(
+            icon: const Icon(Icons.school_outlined, color: AppColors.primary),
+            tooltip: l.tacticsYouth,
+            onPressed: () =>
+                context.push('${Routes.youth}?careerId=${widget.careerId}'),
+          ),
+        ],
       ),
       body: dataAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => Center(child: Text('Could not load squad.\n$e')),
+        error: (e, _) =>
+            Center(child: Text(l.tacticsCouldNotLoadSquad(e.toString()))),
         data: (data) {
-          if (data == null) return const Center(child: Text('No squad.'));
+          if (data == null) return Center(child: Text(l.tacticsNoSquad));
           final condition =
               ref.watch(squadConditionProvider(widget.careerId)).valueOrNull ??
-                  const <int, PlayerCondition>{};
+              const <int, PlayerCondition>{};
+          final outlooks =
+              ref.watch(absenceOutlookProvider(widget.careerId)).valueOrNull ??
+              const <int, AbsenceOutlook>{};
           final selected = _selected ??= _initialSquad(data.pool, data.callUps);
           final count = selected.length;
-          final ok = count >= kMinSquadSize && count <= kMaxSquadSize;
+          // Banned/injured players may be named, but a squad still has to be
+          // able to put eleven fit players on the pitch.
+          final fit = selected
+              .where((id) => data.absences[id]?.isAvailable ?? true)
+              .length;
+          final ok =
+              count >= kMinSquadSize &&
+              count <= kMaxSquadSize &&
+              fit >= kMinFitPlayers;
 
           return Column(
             children: [
@@ -173,14 +301,20 @@ class _CallUpScreenState extends ConsumerState<CallUpScreen> {
                 child: Row(
                   children: [
                     Text(
-                      'SQUAD · $count/$kMaxSquadSize',
+                      l.tacticsSquadCount(count, kMaxSquadSize),
                       style: AppTypography.labelMedium.copyWith(
                         color: ok ? AppColors.onSurface : AppColors.error,
                       ),
                     ),
                     const Spacer(),
                     Text(
-                      'Min $kMinSquadSize · Max $kMaxSquadSize',
+                      // Once the size is right, the remaining constraint worth
+                      // stating is how many of them can actually play.
+                      count >= kMinSquadSize &&
+                              count <= kMaxSquadSize &&
+                              fit < kMinFitPlayers
+                          ? l.tacticsNeedFitPlayers(kMinFitPlayers, fit)
+                          : l.tacticsMinMax(kMinSquadSize, kMaxSquadSize),
                       style: AppTypography.labelSmall.copyWith(
                         color: ok
                             ? AppColors.onSurfaceVariant
@@ -204,12 +338,19 @@ class _CallUpScreenState extends ConsumerState<CallUpScreen> {
                     children: [
                       Expanded(
                         child: OutlinedButton.icon(
-                          onPressed: () => setState(
-                            () => _selected =
-                                _bestQuality(data.pool, data.absences),
-                          ),
+                          onPressed: () => _edit((s) {
+                            s
+                              ..clear()
+                              ..addAll(
+                                _bestQuality(
+                                  data.pool,
+                                  data.absences,
+                                  coverage,
+                                ),
+                              );
+                          }),
                           icon: const Icon(Icons.auto_awesome, size: 16),
-                          label: const Text('Best quality'),
+                          label: Text(l.tacticsBestQuality),
                         ),
                       ),
                       const SizedBox(width: AppSpacing.sm),
@@ -218,15 +359,20 @@ class _CallUpScreenState extends ConsumerState<CallUpScreen> {
                           // Nothing to restore before a squad has been named.
                           onPressed: !data.hasPreviousSquad
                               ? null
-                              : () => setState(
-                                    () => _selected = _previousSquad(
-                                      data.pool,
-                                      data.callUps,
-                                      data.absences,
-                                    ),
-                                  ),
+                              : () => _edit((s) {
+                                  s
+                                    ..clear()
+                                    ..addAll(
+                                      _previousSquad(
+                                        data.pool,
+                                        data.callUps,
+                                        data.absences,
+                                        coverage,
+                                      ),
+                                    );
+                                }),
                           icon: const Icon(Icons.history, size: 16),
-                          label: const Text('Previous squad'),
+                          label: Text(l.tacticsPreviousSquad),
                         ),
                       ),
                     ],
@@ -244,8 +390,10 @@ class _CallUpScreenState extends ConsumerState<CallUpScreen> {
                         data.pool,
                         selected,
                         data.absences,
+                        outlooks,
                         condition,
                         locked: locked,
+                        saveSeed: saveSeed,
                       ),
                     const SizedBox(height: AppSpacing.xl),
                   ],
@@ -258,7 +406,7 @@ class _CallUpScreenState extends ConsumerState<CallUpScreen> {
                       ? OutlinedButton.icon(
                           onPressed: () => context.go(_exitRoute),
                           icon: const Icon(Icons.lock_outline, size: 18),
-                          label: const Text('Squad locked — back'),
+                          label: Text(l.tacticsSquadLockedBack),
                           style: OutlinedButton.styleFrom(
                             foregroundColor: AppColors.onSurfaceVariant,
                             side: const BorderSide(
@@ -268,7 +416,7 @@ class _CallUpScreenState extends ConsumerState<CallUpScreen> {
                           ),
                         )
                       : PrimaryButton(
-                          label: 'Confirm squad',
+                          label: l.tacticsConfirmSquad,
                           icon: Icons.check_rounded,
                           onPressed: ok ? () => _confirm(selected) : null,
                         ),
@@ -286,15 +434,18 @@ class _CallUpScreenState extends ConsumerState<CallUpScreen> {
     List<Player> pool,
     Set<int> selected,
     Map<int, PlayerAbsence> absences,
+    Map<int, AbsenceOutlook> outlooks,
     Map<int, PlayerCondition> condition, {
     bool locked = false,
+    int saveSeed = 0,
   }) {
+    final l = AppLocalizations.of(context);
     final players = pool.where((p) => p.position.category == category).toList()
       ..sort((a, b) => b.overall.compareTo(a.overall));
     if (players.isEmpty) return const [];
     return [
       const SizedBox(height: AppSpacing.sm),
-      Text(_heading(category), style: AppTypography.labelMedium),
+      Text(_heading(l, category), style: AppTypography.labelMedium),
       const SizedBox(height: AppSpacing.sm),
       AppCard(
         padding: EdgeInsets.zero,
@@ -305,31 +456,38 @@ class _CallUpScreenState extends ConsumerState<CallUpScreen> {
                 player: p,
                 selected: selected.contains(p.id),
                 absence: absences[p.id],
+                outlook: outlooks[p.id],
                 condition: condition[p.id],
-                // A player serving a ban or an injury can't be picked — the
-                // badge used to say so while the toggle happily let him in,
-                // and the match then quietly refused to field him.
-                onChanged: locked || !(absences[p.id]?.isAvailable ?? true)
+                saveSeed: saveSeed,
+                // A banned or injured player CAN be named in the squad — real
+                // managers call up someone serving a one-game ban or returning
+                // from a knock, they just can't field them until they're clear.
+                // The badge says why, the XI picker keeps them out, and the
+                // engine still refuses to play them; nomination itself is the
+                // manager's call, not the game's.
+                onChanged: locked
                     ? null
                     : (on) {
                         if (on && selected.length >= kMaxSquadSize) {
-                    ScaffoldMessenger.of(context)
-                      ..hideCurrentSnackBar()
-                      ..showSnackBar(
-                        const SnackBar(
-                          content: Text('Squad full — max $kMaxSquadSize'),
-                        ),
-                      );
-                    return;
-                  }
-                  setState(() {
-                    if (on) {
-                      selected.add(p.id);
-                    } else {
-                      selected.remove(p.id);
-                    }
-                  });
-                },
+                          ScaffoldMessenger.of(context)
+                            ..hideCurrentSnackBar()
+                            ..showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                  l.tacticsSquadFullMax(kMaxSquadSize),
+                                ),
+                              ),
+                            );
+                          return;
+                        }
+                        _edit((s) {
+                          if (on) {
+                            s.add(p.id);
+                          } else {
+                            s.remove(p.id);
+                          }
+                        });
+                      },
                 onInfo: () => context.push(
                   '${Routes.player}?careerId=${widget.careerId}'
                   '&playerId=${p.id}',
@@ -353,6 +511,7 @@ class _CoverageBanner extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
     final accent = locked ? AppColors.onSurfaceVariant : AppColors.positive;
     return Padding(
       padding: const EdgeInsets.fromLTRB(
@@ -361,11 +520,9 @@ class _CoverageBanner extends StatelessWidget {
         AppSpacing.marginMobile,
         0,
       ),
+      // A plain card — the open/locked state reads from the small icon and
+      // label colour, not a full green fill and border (which was too loud).
       child: AppCard(
-        color: locked ? null : AppColors.positive.withValues(alpha: 0.08),
-        border: locked
-            ? null
-            : Border.all(color: AppColors.positive.withValues(alpha: 0.5)),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -379,9 +536,7 @@ class _CoverageBanner extends StatelessWidget {
                 const SizedBox(width: AppSpacing.sm),
                 Expanded(
                   child: Text(
-                    locked
-                        ? 'SQUAD LOCKED'
-                        : 'NOMINATION OPEN — PICK YOUR SQUAD',
+                    locked ? l.tacticsSquadLocked : l.tacticsNominationOpen,
                     style: AppTypography.labelSmall.copyWith(color: accent),
                   ),
                 ),
@@ -389,31 +544,31 @@ class _CoverageBanner extends StatelessWidget {
             ),
             const SizedBox(height: AppSpacing.xs),
             Text(
-              locked
-                  ? 'This squad is fixed for the matches below. You can '
-                      're-select before the next nomination window.'
-                  : 'This squad will play the matches below.',
+              locked ? l.tacticsSquadFixedBlurb : l.tacticsSquadWillPlayBlurb,
               style: AppTypography.labelSmall.copyWith(
                 color: AppColors.onSurfaceVariant,
               ),
             ),
             const SizedBox(height: AppSpacing.sm),
-            for (final f in window.matches.take(6)) _matchLine(f),
+            for (final f in window.matches.take(6)) _matchLine(l, f),
           ],
         ),
       ),
     );
   }
 
-  Widget _matchLine(Fixture f) {
+  Widget _matchLine(AppLocalizations l, Fixture f) {
     final oppId = f.homeNationId == window.playerNationId
         ? f.awayNationId
         : f.homeNationId;
     final opp = window.nations[oppId];
     final home = f.homeNationId == window.playerNationId;
+    // Two lines: the opponent gets the full width up top (no more squeezing it
+    // to an ellipsis to fit the competition), and the stage sits underneath.
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 2),
+      padding: const EdgeInsets.symmetric(vertical: 4),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           SizedBox(
             width: 52,
@@ -424,23 +579,34 @@ class _CoverageBanner extends StatelessWidget {
               ),
             ),
           ),
-          Text(home ? 'v ' : '@ ',
-              style: AppTypography.labelSmall
-                  .copyWith(color: AppColors.onSurfaceVariant)),
+          Text(
+            home ? 'v ' : '@ ',
+            style: AppTypography.labelSmall.copyWith(
+              color: AppColors.onSurfaceVariant,
+            ),
+          ),
           FlagDisc(opp?.code ?? '??', size: 16),
           const SizedBox(width: AppSpacing.sm),
           Expanded(
-            child: Text(
-              opp?.name ?? 'Unknown',
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: AppTypography.bodySmall,
-            ),
-          ),
-          Text(
-            matchStageLabel(f),
-            style: AppTypography.labelSmall.copyWith(
-              color: AppColors.primary,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  opp?.name ?? l.tacticsUnknown,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: AppTypography.bodySmall,
+                ),
+                Text(
+                  MatchStage.label(l, f),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: AppTypography.labelSmall.copyWith(
+                    color: AppColors.primary,
+                    fontSize: 10,
+                  ),
+                ),
+              ],
             ),
           ),
         ],
@@ -455,7 +621,9 @@ class _PlayerToggle extends StatelessWidget {
     required this.selected,
     required this.onChanged,
     required this.onInfo,
+    required this.saveSeed,
     this.absence,
+    this.outlook,
     this.condition,
   });
 
@@ -466,11 +634,20 @@ class _PlayerToggle extends StatelessWidget {
   final ValueChanged<bool>? onChanged;
   final VoidCallback onInfo;
   final PlayerAbsence? absence;
+
+  /// How long the absence actually runs — in weeks and a return match, rather
+  /// than the raw game count on [absence].
+  final AbsenceOutlook? outlook;
   final PlayerCondition? condition;
+
+  /// The save seed, so the derived traits match the rest of the save.
+  final int saveSeed;
 
   @override
   Widget build(BuildContext context) {
-    final reason = absence?.reason;
+    final l = AppLocalizations.of(context);
+    final out = outlook;
+    final reason = out != null ? absenceLabel(l, out) : absence?.reason;
     final isInjury = (absence?.injuryMatches ?? 0) > 0;
     final change = onChanged;
     return ListTile(
@@ -491,6 +668,9 @@ class _PlayerToggle extends StatelessWidget {
             const SizedBox(width: AppSpacing.xs),
             _FormDot(form: condition!.form),
           ],
+          // What this player is known for, as a compact glyph strip — the
+          // thing that makes one 74-rated midfielder different from the next.
+          PlayerTraitGlyphs(player: player, saveSeed: saveSeed),
         ],
       ),
       // The absence badge lives on the subtitle line, not beside the name: in
@@ -500,7 +680,7 @@ class _PlayerToggle extends StatelessWidget {
         children: [
           // Position is already shown by the leading chip — no role text.
           Text(
-            'Age ${player.age} · ${_money(player.value)}',
+            l.tacticsAgeValue(player.age, _money(player.value)),
             style: AppTypography.labelSmall.copyWith(
               color: AppColors.onSurfaceVariant,
             ),
@@ -559,9 +739,9 @@ class _FormDot extends StatelessWidget {
   Widget build(BuildContext context) {
     final (color, icon) = switch (form) {
       PlayerForm.onFire => (
-          const Color(0xFFE8622C),
-          Icons.local_fire_department,
-        ),
+        const Color(0xFFE8622C),
+        Icons.local_fire_department,
+      ),
       PlayerForm.good => (AppColors.positive, Icons.trending_up),
       PlayerForm.steady => (AppColors.onSurfaceVariant, Icons.remove),
       PlayerForm.poor => (const Color(0xFFEFC94C), Icons.trending_down),
@@ -580,10 +760,17 @@ class _FatigueTag extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
     final (color, label) = switch (state) {
-      FatigueState.exhausted => (const Color(0xFFD64545), 'Exhausted'),
-      FatigueState.tired => (const Color(0xFFEFC94C), 'Tired'),
-      FatigueState.ready => (AppColors.onSurfaceVariant, 'Match legs'),
+      FatigueState.exhausted => (
+        const Color(0xFFD64545),
+        l.tacticsFatigueExhausted,
+      ),
+      FatigueState.tired => (const Color(0xFFEFC94C), l.tacticsFatigueTired),
+      FatigueState.ready => (
+        AppColors.onSurfaceVariant,
+        l.tacticsFatigueMatchLegs,
+      ),
       FatigueState.fresh => (AppColors.onSurfaceVariant, ''),
     };
     if (state == FatigueState.fresh) return const SizedBox.shrink();

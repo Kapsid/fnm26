@@ -7,13 +7,18 @@ import 'package:fnm/features/career/careers_screen.dart';
 import 'package:fnm/features/career/manager_history_screen.dart';
 import 'package:fnm/features/career/new_game_screen.dart';
 import 'package:fnm/features/career/saves_screen.dart';
+import 'package:fnm/features/settings/diagnostics_screen.dart';
 import 'package:fnm/features/settings/settings_screen.dart';
+import 'package:fnm/features/squad/training_camp_screen.dart';
+import 'package:fnm/features/squad/youth_screen.dart';
 import 'package:fnm/features/dev/style_gallery_screen.dart';
 import 'package:fnm/features/federation/budget_setup_screen.dart';
 import 'package:fnm/features/federation/finances_screen.dart';
 import 'package:fnm/features/federation/naturalization_screen.dart';
 import 'package:fnm/features/friendlies/friendlies_screen.dart';
 import 'package:fnm/features/home/home_screen.dart';
+import 'package:fnm/features/hub/board_objectives_screen.dart';
+import 'package:fnm/features/career/unemployed_start_screen.dart';
 import 'package:fnm/features/hub/cycle_rollover_screen.dart';
 import 'package:fnm/features/hub/hub_screen.dart';
 import 'package:fnm/features/match/match_preview_screen.dart';
@@ -62,6 +67,9 @@ abstract final class Routes {
   /// New-game flow (manager name). Expects `?nationId=`.
   static const newGame = '/new-game';
 
+  /// Starting a career with no job: the bottom of the world comes to you.
+  static const startFromBottom = '/start-from-the-bottom';
+
   /// In-game national hub. Expects `?careerId=`.
   static const hub = '/hub';
 
@@ -97,6 +105,10 @@ abstract final class Routes {
   /// World Cup finals draw ceremony. Expects `?careerId=`.
   static const finalsDraw = '/finals-draw';
   static const tournamentKickoff = '/tournament-kickoff';
+
+  /// Choosing the squad's base camp for a tournament. Expects `?careerId=`.
+  static const trainingCamp = '/training-camp';
+
   static const intercontinentalPlayoff = '/intercontinental-playoff';
 
   /// Qualifying group-draw ceremony. Expects `?careerId=` and `?worldCup=`
@@ -149,8 +161,17 @@ abstract final class Routes {
   /// Development-only design-system showcase.
   static const gallery = '/gallery';
 
+  /// The on-device error log (Settings → Diagnostics).
+  static const diagnostics = '/diagnostics';
+
   /// The federation finances screen. Expects `?careerId=`.
   static const finances = '/finances';
+
+  /// The board's objectives for the cycle. Expects `?careerId=`.
+  static const boardObjectives = '/board-objectives';
+
+  /// The under-21 watchlist. Expects `?careerId=`.
+  static const youth = '/youth';
 
   /// The forced first-of-cycle budget allocation. Expects `?careerId=`.
   static const budgetSetup = '/budget-setup';
@@ -206,6 +227,14 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: Routes.settings,
         builder: (context, state) => const SettingsScreen(),
+      ),
+      GoRoute(
+        path: Routes.diagnostics,
+        builder: (context, state) => const DiagnosticsScreen(),
+      ),
+      GoRoute(
+        path: Routes.startFromBottom,
+        builder: (context, state) => const UnemployedStartScreen(),
       ),
       GoRoute(
         path: Routes.newGame,
@@ -337,7 +366,8 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: Routes.careers,
         builder: (context, state) {
-          final id = int.tryParse(
+          final id =
+              int.tryParse(
                 state.uri.queryParameters['careerId'] ?? '',
               ) ??
               0;
@@ -397,6 +427,28 @@ final routerProvider = Provider<GoRouter>((ref) {
               ) ??
               0;
           return FinancesScreen(careerId: id);
+        },
+      ),
+      GoRoute(
+        path: Routes.youth,
+        builder: (context, state) {
+          final id =
+              int.tryParse(
+                state.uri.queryParameters['careerId'] ?? '',
+              ) ??
+              0;
+          return YouthScreen(careerId: id);
+        },
+      ),
+      GoRoute(
+        path: Routes.boardObjectives,
+        builder: (context, state) {
+          final id =
+              int.tryParse(
+                state.uri.queryParameters['careerId'] ?? '',
+              ) ??
+              0;
+          return BoardObjectivesScreen(careerId: id);
         },
       ),
       GoRoute(
@@ -660,6 +712,17 @@ final routerProvider = Provider<GoRouter>((ref) {
               .where((c) => c.name == confName)
               .firstOrNull;
           return TournamentKickoffScreen(careerId: id, conf: conf);
+        },
+      ),
+      GoRoute(
+        path: Routes.trainingCamp,
+        builder: (context, state) {
+          final id =
+              int.tryParse(
+                state.uri.queryParameters['careerId'] ?? '',
+              ) ??
+              0;
+          return TrainingCampScreen(careerId: id);
         },
       ),
       GoRoute(
