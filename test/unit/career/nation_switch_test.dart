@@ -110,10 +110,14 @@ void main() {
     expect(moved!.nationId, to.id);
 
     // The new nation's pool shares no ids with the old one.
+    // minAge 15, matching what the call-up screen asks for: the squad screen
+    // reaches down to the U-17s so a wonderkid can be named, and this set is
+    // what its pool is checked against below.
     final toPool = await playerRepo.byNation(
       to.id,
       agingYears: CareerService.agingYears(moved),
       saveSeed: moved.rngSeed,
+      minAge: 15,
     );
     final toIds = toPool.map((p) => p.id).toSet();
     expect(
