@@ -19,6 +19,7 @@ import 'package:fnm/shared/widgets/widgets.dart';
       'eliminated' => (icon: Icons.flight_land, color: AppColors.error),
       'draw' => (icon: Icons.casino, color: AppColors.primary),
       'aging' => (icon: Icons.trending_up, color: AppColors.positive),
+      'youth' => (icon: Icons.school_outlined, color: AppColors.primary),
       'ranking' => (icon: Icons.leaderboard, color: AppColors.primary),
       'milestone' => (icon: Icons.military_tech, color: AppColors.primary),
       'award' => (icon: Icons.workspace_premium, color: AppColors.primary),

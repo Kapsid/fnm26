@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fnm/core/util/text_variety.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/player.dart';
@@ -6,8 +7,13 @@ import 'package:fnm/domain/repositories/competition_repository.dart';
 import 'package:fnm/domain/services/achievements/achievements.dart';
 import 'package:fnm/domain/services/competition/continental_cups.dart';
 import 'package:fnm/domain/services/competition/hosts.dart';
+import 'package:fnm/domain/services/player/prospects.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/hub/hub_event.dart';
+import 'package:fnm/domain/services/player/player_lifecycle.dart';
+import 'package:fnm/features/federation/federation_providers.dart';
+import 'package:fnm/features/messages/intake_report.dart';
+import 'package:fnm/features/messages/squad_dev_report.dart';
 import 'package:fnm/features/tournaments/finals_draw_providers.dart';
 import 'package:fnm/features/tournaments/host_draw_providers.dart';
 
@@ -52,7 +58,7 @@ class MessageService {
     final contName = conf == null
         ? 'the continental championship'
         : ContinentalCups.byConfederation[conf]?.name ??
-            'the continental championship';
+              'the continental championship';
     final cycle = career.cyclePointer;
     final wcYear = CareerService.worldCupYear(cycle);
     final existing = await comp.messageKeys(careerId);
@@ -81,15 +87,27 @@ class MessageService {
             seed: career.rngSeed,
             nations: nationList,
           );
-    final contHostName =
-        contHosts.isEmpty ? 'a host nation' : contHosts.map(nameOf).join(' & ');
+    final contHostName = contHosts.isEmpty
+        ? 'a host nation'
+        : contHosts.map(nameOf).join(' & ');
 
+    final cycleSeed = varietySeed('cyclestart:$cycle:${career.rngSeed}');
     final drafts = <_Draft>[
       _Draft(
         'cycle:$cycle',
         'cycle',
-        'A new cycle begins',
-        'The road to the $wcYear World Cup starts here — good luck.',
+        pickVariant([
+          'A new cycle begins',
+          'The road to $wcYear opens',
+          'A fresh campaign dawns',
+          'Back to work',
+        ], cycleSeed),
+        pickVariant([
+          'The road to the $wcYear World Cup starts here.',
+          'A new cycle. The $wcYear World Cup is the target.',
+          'Four years to the $wcYear World Cup. Work starts now.',
+          'The $wcYear campaign begins today.',
+        ], cycleSeed),
         cycleStartYear,
         0,
       ),
@@ -147,27 +165,51 @@ class MessageService {
       for (final f in fixtures)
         if (f.round == 'GROUP') f.date.year,
     }) {
-      drafts.add(_Draft(
-        'qual:wc:$y',
-        'qualify',
-        'Through to the World Cup',
-        'You have qualified for the $y World Cup finals!',
-        y - 2,
-        2,
-      ));
+      final qs = varietySeed('qualwc:$y:${career.rngSeed}');
+      drafts.add(
+        _Draft(
+          'qual:wc:$y',
+          'qualify',
+          pickVariant([
+            'Through to the World Cup',
+            'World Cup booked',
+            "We're going to the World Cup",
+            'Ticket punched',
+          ], qs),
+          pickVariant([
+            'You have qualified for the $y World Cup finals.',
+            "It's official: your nation is at the $y World Cup.",
+            'A place at the $y World Cup is secured.',
+            "You're through to the $y World Cup finals.",
+          ], qs),
+          y - 2,
+          2,
+        ),
+      );
     }
     for (final y in {
       for (final f in fixtures)
         if (f.round == 'CGROUP') f.date.year,
     }) {
-      drafts.add(_Draft(
-        'qual:cont:$y',
-        'qualify',
-        'Through to $contName',
-        'You have qualified for the $contName finals!',
-        y - 1,
-        2,
-      ));
+      final qcs = varietySeed('qualcont:$y:${career.rngSeed}');
+      drafts.add(
+        _Draft(
+          'qual:cont:$y',
+          'qualify',
+          pickVariant([
+            'Through to $contName',
+            '$contName booked',
+            'Qualified for $contName',
+          ], qcs),
+          pickVariant([
+            'You have qualified for the $contName finals.',
+            'Your nation has sealed its place at $contName.',
+            "You're through to $contName.",
+          ], qcs),
+          y - 1,
+          2,
+        ),
+      );
     }
 
     // Champions — this career's editions only (never the pre-seeded history).
@@ -180,8 +222,9 @@ class MessageService {
     final honours = await comp.honours(careerId);
     for (final h in honours) {
       if (h.year < CareerService.cycleStart.year) continue;
-      final display =
-          h.competition == worldCupHonourName ? 'World Cup' : h.competition;
+      final display = h.competition == worldCupHonourName
+          ? 'World Cup'
+          : h.competition;
       final mine = h.championId == career.nationId;
 
       final scored = h.finalHomeScore != null && h.finalAwayScore != null;
@@ -190,22 +233,49 @@ class MessageService {
       final result = !scored
           ? ''
           : pens
-              ? ' on penalties, after a ${h.finalHomeScore}–'
-                  '${h.finalAwayScore} final'
-              : ' ${h.finalHomeScore}–${h.finalAwayScore} in the final';
+          ? ' on penalties, after a ${h.finalHomeScore}–'
+                '${h.finalAwayScore} final'
+          : ' ${h.finalHomeScore}–${h.finalAwayScore} in the final';
 
-      drafts.add(_Draft(
-        'champ:${h.competition}:${h.year}',
-        mine ? 'triumph' : 'champion',
-        mine ? '$display CHAMPIONS!' : '$display decided',
-        mine
-            ? 'Your nation are the ${h.year} $display champions — '
-                'beating ${nameOf(h.runnerUpId)}$result.'
-            : '${nameOf(h.championId)} won the ${h.year} $display, '
-                'beating ${nameOf(h.runnerUpId)}$result.',
-        h.year,
-        3,
-      ));
+      final chSeed = varietySeed(
+        'champ:${h.competition}:${h.year}:${career.rngSeed}',
+      );
+      final champTitle = mine
+          ? pickVariant([
+              '$display CHAMPIONS!',
+              'Champions of the $display!',
+              "You've won the $display!",
+            ], chSeed)
+          : pickVariant([
+              '$display decided',
+              '$display champions crowned',
+              'The $display is won',
+            ], chSeed);
+      final champBody = mine
+          ? pickVariant([
+              'Your nation are the ${h.year} $display champions, beating '
+                  '${nameOf(h.runnerUpId)}$result.',
+              "You've won the ${h.year} $display, seeing off "
+                  '${nameOf(h.runnerUpId)}$result.',
+              'The ${h.year} $display is yours. '
+                  '${nameOf(h.runnerUpId)} beaten$result.',
+            ], chSeed)
+          : pickVariant([
+              '${nameOf(h.championId)} won the ${h.year} $display, beating '
+                  '${nameOf(h.runnerUpId)}$result.',
+              '${nameOf(h.championId)} are the ${h.year} $display champions, '
+                  'defeating ${nameOf(h.runnerUpId)}$result.',
+            ], chSeed);
+      drafts.add(
+        _Draft(
+          'champ:${h.competition}:${h.year}',
+          mine ? 'triumph' : 'champion',
+          champTitle,
+          champBody,
+          h.year,
+          3,
+        ),
+      );
     }
 
     // World Player of the Year — crowned at each World Cup from the finals'
@@ -233,8 +303,8 @@ class MessageService {
           final teamBonus = s.nationId == honour.championId
               ? 25
               : s.nationId == honour.runnerUpId
-                  ? 10
-                  : 0;
+              ? 10
+              : 0;
           final score = s.goals * 10 + p.overall + teamBonus;
           if (best == null || score > best.score) {
             best = (nationId: s.nationId, name: p.name, score: score);
@@ -242,15 +312,17 @@ class MessageService {
         }
         if (best != null) {
           final mine = best.nationId == career.nationId;
-          drafts.add(_Draft(
-            'wpoty:$cycle',
-            'award',
-            'World Player of the Year',
-            '${best.name} (${nameOf(best.nationId)}) is crowned the $wcYear '
-                'World Player of the Year${mine ? ' — one of yours!' : '.'}',
-            wcYear,
-            4,
-          ));
+          drafts.add(
+            _Draft(
+              'wpoty:$cycle',
+              'award',
+              'World Player of the Year',
+              '${best.name} (${nameOf(best.nationId)}) is named $wcYear '
+                  'World Player of the Year${mine ? ', one of yours.' : '.'}',
+              wcYear,
+              4,
+            ),
+          );
         }
 
         // Young Player of the Tournament — the standout finals performer aged
@@ -267,8 +339,8 @@ class MessageService {
           final teamBonus = s.nationId == honour.championId
               ? 25
               : s.nationId == honour.runnerUpId
-                  ? 10
-                  : 0;
+              ? 10
+              : 0;
           final score = s.goals * 10 + p.overall + teamBonus;
           if (young == null || score > young.score) {
             young = (
@@ -281,16 +353,18 @@ class MessageService {
         }
         if (young != null) {
           final mine = young.nationId == career.nationId;
-          drafts.add(_Draft(
-            'ypot:$cycle',
-            'award',
-            'Young Player of the Tournament',
-            '${young.name} (${nameOf(young.nationId)}), just ${young.age}, is '
-                'named the $wcYear Young Player of the Tournament'
-                '${mine ? ' — one of yours!' : '.'}',
-            wcYear,
-            4,
-          ));
+          drafts.add(
+            _Draft(
+              'ypot:$cycle',
+              'award',
+              'Young Player of the Tournament',
+              '${young.name} (${nameOf(young.nationId)}), aged ${young.age}, is '
+                  'named $wcYear Young Player of the Tournament'
+                  '${mine ? ', one of yours.' : '.'}',
+              wcYear,
+              4,
+            ),
+          );
         }
       }
     }
@@ -313,33 +387,51 @@ class MessageService {
       final baseline = await seedRanks.forCycle(careerId, release.cycle);
       // Cycle 0 (and any legacy save) has no snapshot: fall back to the static
       // seed ranking, exactly as seedRankByIdProvider does.
-      final was = baseline[release.nationId] ??
-          nations[release.nationId]?.ranking;
+      final was =
+          baseline[release.nationId] ?? nations[release.nationId]?.ranking;
       final leader = nameOf(release.leaderNationId);
       final rank = release.playerRank;
 
+      final rSeed = varietySeed(
+        'rank:${release.publishedOn.toIso8601String()}:'
+        '${career.rngSeed}',
+      );
       final String movement;
       if (was == null || was == rank) {
-        movement = 'You hold at #$rank.';
+        movement = pickVariant([
+          'You hold at #$rank.',
+          'No change, still #$rank.',
+          'Steady at #$rank.',
+        ], rSeed);
       } else {
         final move = was - rank; // positive = climbed
         final places = move.abs() == 1 ? 'place' : 'places';
         movement = move > 0
-            ? 'You are up $move $places this cycle, to #$rank.'
-            : 'You are down ${-move} $places this cycle, to #$rank.';
+            ? pickVariant([
+                'Up $move $places this cycle, to #$rank.',
+                'A climb of $move $places lifts you to #$rank.',
+                "Up $move $places, now #$rank.",
+              ], rSeed)
+            : pickVariant([
+                'Down ${-move} $places this cycle, to #$rank.',
+                'A slide of ${-move} $places drops you to #$rank.',
+                "Down ${-move} $places, now #$rank.",
+              ], rSeed);
       }
       final lead = release.leaderNationId == release.nationId
           ? 'You top the world.'
           : '$leader top the world.';
 
-      drafts.add(_Draft(
-        'rankrel:${release.publishedOn.toIso8601String()}',
-        'ranking',
-        'World ranking · #$rank',
-        'The world ranking has been updated. $lead $movement',
-        release.publishedOn.year,
-        0,
-      ));
+      drafts.add(
+        _Draft(
+          'rankrel:${release.publishedOn.toIso8601String()}',
+          'ranking',
+          'World ranking · #$rank',
+          'The world ranking has been updated. $lead $movement',
+          release.publishedOn.year,
+          0,
+        ),
+      );
     }
 
     // Player milestones — caps and goals crossing round numbers. Each is filed
@@ -361,42 +453,50 @@ class MessageService {
     const capTiers = [25, 50, 100, 150];
     const goalTiers = [10, 25, 50, 75, 100];
     final milestoneYear = career.inGameDate.year;
-    final caps =
-        await comp.nationTopAppearances(careerId, career.nationId, limit: 60);
+    final caps = await comp.nationTopAppearances(
+      careerId,
+      career.nationId,
+      limit: 60,
+    );
     for (final c in caps) {
       for (final t in capTiers) {
         if (c.games < t) continue;
         final key = 'mile:caps:${c.playerId}:$t';
         if (existing.contains(key)) continue;
         final name = await playerName(c.playerId);
-        drafts.add(_Draft(
-          key,
-          'milestone',
-          '$name reaches $t caps',
-          '$name has now made $t appearances for your nation — a landmark of '
-              'service.',
-          milestoneYear,
-          5,
-        ));
+        drafts.add(
+          _Draft(
+            key,
+            'milestone',
+            '$name reaches $t caps',
+            '$name has now made $t appearances for your nation.',
+            milestoneYear,
+            5,
+          ),
+        );
       }
     }
-    final scorers =
-        await comp.nationTopScorers(careerId, career.nationId, limit: 60);
+    final scorers = await comp.nationTopScorers(
+      careerId,
+      career.nationId,
+      limit: 60,
+    );
     for (final s in scorers) {
       for (final t in goalTiers) {
         if (s.goals < t) continue;
         final key = 'mile:goals:${s.playerId}:$t';
         if (existing.contains(key)) continue;
         final name = await playerName(s.playerId);
-        drafts.add(_Draft(
-          key,
-          'milestone',
-          '$name reaches $t goals',
-          '$name has scored $t international goals — one of your nation’s '
-              'great marksmen.',
-          milestoneYear,
-          5,
-        ));
+        drafts.add(
+          _Draft(
+            key,
+            'milestone',
+            '$name reaches $t goals',
+            '$name has scored $t international goals for your nation.',
+            milestoneYear,
+            5,
+          ),
+        );
       }
     }
 
@@ -410,6 +510,12 @@ class MessageService {
     ];
     if (missingYears.isNotEmpty) {
       final playerRepo = _ref.read(playerRepositoryProvider);
+      // The same development inputs the rest of the app derives players with,
+      // so the intake reported here is the intake the Youth screen shows.
+      final academyBonus =
+          await _ref.read(youthBonusByCycleProvider(careerId).future);
+      final careerDev =
+          await _ref.read(careerDevBonusProvider(careerId).future);
       final needed = <int>{
         for (final y in missingYears) ...[y, y - 1],
       };
@@ -429,61 +535,129 @@ class MessageService {
 
       for (final y in missingYears) {
         final reportYear = CareerService.cycleStart.year + y;
-        drafts.add(_Draft(
-          'aging:$y',
-          'aging',
-          'Squad development · $reportYear',
-          _agingReport(squads[y - 1]!, squads[y]!),
-          reportYear,
-          4,
-        ));
+        // Two reports, not one. Who grew and who faded is a question about the
+        // side you already have; who has just come through is a question about
+        // the side you are about to have. Bundled together, the newcomers —
+        // the part of the year a manager actually wants to read — were three
+        // rows at the top of a hundred-row table of ±1 rating moves.
+        final before = squads[y - 1]!;
+        final after = squads[y]!;
+        drafts.add(
+          _Draft(
+            'aging:$y',
+            'aging',
+            'Squad development · $reportYear',
+            _developmentReport(before, after),
+            reportYear,
+            4,
+          ),
+        );
+        final newcomers = _newcomerReport(before, after);
+        if (newcomers != null) {
+          drafts.add(
+            _Draft(
+              'newcomers:$y',
+              'aging',
+              'New faces · $reportYear',
+              newcomers,
+              reportYear,
+              4,
+            ),
+          );
+        }
+
+        // The year's academy intake: the eleven-year-olds who have just come
+        // in. The pyramid was otherwise silent — a manager only learned an
+        // intake had happened by going and looking for it.
+        final pyramid = await playerRepo.youthByNation(
+          career.nationId,
+          agingYears: y,
+          saveSeed: career.rngSeed,
+          youthBonusByCycle: academyBonus,
+          careerStartsByPlayer: careerDev,
+        );
+        final intake = intakeRows(pyramid);
+        if (intake.isNotEmpty) {
+          drafts.add(
+            _Draft(
+              'intake:$y',
+              'youth',
+              'Academy intake · $reportYear',
+              encodeSquadDevReport(
+                intake,
+                note: intakeNote(
+                  academyBonus[PlayerLifecycle.cycleOfIntake(y)] ?? 0,
+                ),
+              ),
+              reportYear,
+              4,
+            ),
+          );
+        }
 
         // Notable individuals bowing out — a dignified international retirement
         // announcement, and a hall-of-fame induction for the true greats. Both
         // are derived from the same year-on-year pool diff the report uses.
-        final retirees = [
-          for (final e in squads[y - 1]!.entries)
-            if (!squads[y]!.containsKey(e.key) && e.value.age >= 34) e.value,
-        ]..sort((a, b) {
-            final ca = (capsById[a.id] ?? 0) + (goalsById[a.id] ?? 0);
-            final cb = (capsById[b.id] ?? 0) + (goalsById[b.id] ?? 0);
-            return cb.compareTo(ca);
-          });
+        final retirees =
+            [
+              for (final e in squads[y - 1]!.entries)
+                if (!squads[y]!.containsKey(e.key) && e.value.age >= 34)
+                  e.value,
+            ]..sort((a, b) {
+              final ca = (capsById[a.id] ?? 0) + (goalsById[a.id] ?? 0);
+              final cb = (capsById[b.id] ?? 0) + (goalsById[b.id] ?? 0);
+              return cb.compareTo(ca);
+            });
         for (final p in retirees) {
           final pc = capsById[p.id] ?? 0;
           final pg = goalsById[p.id] ?? 0;
           // Worth an individual send-off: a real international career, not a
           // fringe player who won a couple of caps.
           final notable = pc >= 30 || pg >= 15 || p.overall >= 82;
-          if (notable && !existing.contains('retire:${p.id}')) {
+          // Losing the captain is not just another retirement: the armband is
+          // vacant from here, and the manager has to be told rather than
+          // finding out when the morale lift quietly stops.
+          final wasCaptain = career.captainPlayerId == p.id;
+          if (wasCaptain) {
+            await _ref.read(careerRepositoryProvider).setCaptain(careerId, null);
+          }
+          if ((notable || wasCaptain) &&
+              !existing.contains('retire:${p.id}')) {
             final tally = [
               if (pc > 0) '$pc caps',
               if (pg > 0) '$pg goals',
             ].join(', ');
             final sendoff = tally.isEmpty ? '' : ', bowing out with $tally';
-            drafts.add(_Draft(
-              'retire:${p.id}',
-              'retirement',
-              '${p.name} retires from internationals',
-              '${p.name} has announced their retirement from international '
-                  'football at ${p.age}$sendoff. A servant of your nation — '
-                  'we thank them.',
-              reportYear,
-              4,
-            ));
+            drafts.add(
+              _Draft(
+                'retire:${p.id}',
+                'retirement',
+                wasCaptain
+                    ? 'Your captain ${p.name} retires'
+                    : '${p.name} retires from internationals',
+                '${p.name} has retired from international football at '
+                    '${p.age}$sendoff.'
+                    '${wasCaptain ? ' The armband is vacant — name a new '
+                        'captain from the call-up screen.' : ''}',
+                reportYear,
+                4,
+              ),
+            );
           }
           // Hall of Fame — reserved for the genuine greats.
           final worthy = pc >= 60 || pg >= 30;
           if (worthy && !existing.contains('hof:${p.id}')) {
-            drafts.add(_Draft(
-              'hof:${p.id}',
-              'halloffame',
-              '${p.name} inducted into the Hall of Fame',
-              '${p.name} takes their place among your nation’s immortals '
-                  '($pc caps, $pg goals). See them in Legends.',
-              reportYear,
-              4,
-            ));
+            drafts.add(
+              _Draft(
+                'hof:${p.id}',
+                'halloffame',
+                '${p.name} inducted into the Hall of Fame',
+                '${p.name} joins your nation’s Hall of Fame '
+                    '($pc caps, $pg goals). See them in Legends.',
+                reportYear,
+                4,
+              ),
+            );
           }
         }
       }
@@ -504,55 +678,62 @@ class MessageService {
   }
 }
 
-/// A detailed squad report from [before] → [after] (keyed by player id): who
-/// stepped up, who declined, who retired and who emerged — naming each player
-/// with their rating move (e.g. "Novák 78→82"), so the manager sees which
-/// players changed and by how much. Falls back to a "quiet year" note.
-String _agingReport(Map<int, Player> before, Map<int, Player> after) {
-  final improved = <(Player, int)>[];
-  final declined = <(Player, int)>[];
+/// The year's development report from [before] → [after] (keyed by player id):
+/// who stepped up, who declined and who retired, each with their rating move.
+///
+/// Newcomers are deliberately absent — they get [_newcomerReport] to
+/// themselves.
+String _developmentReport(Map<int, Player> before, Map<int, Player> after) {
+  final rows = <SquadDevRow>[];
   for (final e in after.entries) {
     final was = before[e.key];
-    if (was == null) continue;
-    final d = e.value.overall - was.overall;
-    if (d >= 2) improved.add((e.value, d));
-    if (d <= -2) declined.add((e.value, d));
+    if (was == null) continue; // a new face, reported separately
+    rows.add(
+      SquadDevRow(
+        name: e.value.name,
+        age: e.value.age,
+        position: e.value.position.label,
+        rating: e.value.overall,
+        change: e.value.overall - was.overall,
+        status: SquadDevStatus.stayed,
+      ),
+    );
   }
-  // Retired: in the pool last year, gone this year having aged past it.
-  final retired = [
-    for (final e in before.entries)
-      if (!after.containsKey(e.key) && e.value.age >= 35) e.value,
-  ]..sort((a, b) => b.overall.compareTo(a.overall));
-  // Emerged: a newcomer to the pool (a debuting newgen).
-  final emerged = [
+  for (final e in before.entries) {
+    if (after.containsKey(e.key)) continue;
+    rows.add(
+      SquadDevRow(
+        name: e.value.name,
+        age: e.value.age,
+        position: e.value.position.label,
+        rating: e.value.overall,
+        status: SquadDevStatus.gone,
+      ),
+    );
+  }
+  return encodeSquadDevReport(rows);
+}
+
+/// The players who have come into the pool this year, with the scouting read on
+/// each — so a wonderkid is a headline rather than one line among a hundred.
+/// Null when nobody emerged.
+String? _newcomerReport(Map<int, Player> before, Map<int, Player> after) {
+  final rows = <SquadDevRow>[
     for (final e in after.entries)
-      if (!before.containsKey(e.key)) e.value,
-  ]..sort((a, b) => b.overall.compareTo(a.overall));
-  improved.sort((a, b) => b.$2.compareTo(a.$2));
-  declined.sort((a, b) => a.$2.compareTo(b.$2));
-
-  // "Name was→now (±d)" for a changed player.
-  String moved((Player, int) e) {
-    final p = e.$1;
-    final was = p.overall - e.$2;
-    final sign = e.$2 > 0 ? '+${e.$2}' : '${e.$2}';
-    return '${p.name} $was→${p.overall} ($sign)';
-  }
-
-  String plain(Iterable<Player> ps) =>
-      ps.take(5).map((p) => '${p.name} (${p.overall})').join(', ');
-
-  final sections = <String>[
-    if (improved.isNotEmpty)
-      '📈 Improved: ${improved.take(5).map(moved).join(', ')}',
-    if (declined.isNotEmpty)
-      '📉 Declined: ${declined.take(5).map(moved).join(', ')}',
-    if (emerged.isNotEmpty) '✨ Emerged: ${plain(emerged)}',
-    if (retired.isNotEmpty) '🎖️ Retired: ${plain(retired)}',
+      if (!before.containsKey(e.key))
+        SquadDevRow(
+          name: e.value.name,
+          age: e.value.age,
+          position: e.value.position.label,
+          rating: e.value.overall,
+          status: SquadDevStatus.arrived,
+          // Unproven, so this is the scout's read, not the truth — the same
+          // estimate the under-21 watchlist shows, and it can be a star out.
+          stars: Prospects.scoutedStars(e.value.id),
+        ),
   ];
-  return sections.isEmpty
-      ? 'A settled year — no major swings in form across the squad.'
-      : sections.join('\n\n');
+  if (rows.isEmpty) return null;
+  return encodeSquadDevReport(rows);
 }
 
 final Provider<MessageService> messageServiceProvider =
@@ -563,16 +744,20 @@ typedef MessageInbox = ({List<MessageItem> messages, int unread});
 
 final AutoDisposeFutureProviderFamily<MessageInbox, int> messageInboxProvider =
     FutureProvider.autoDispose.family<MessageInbox, int>((ref, careerId) async {
-  await ref.watch(seedLoaderProvider).ensureSeeded();
-  await ref.watch(messageServiceProvider).sync(careerId);
-  final messages =
-      await ref.watch(competitionRepositoryProvider).messages(careerId);
-  return (messages: messages, unread: messages.where((m) => !m.read).length);
-});
+      await ref.watch(seedLoaderProvider).ensureSeeded();
+      await ref.watch(messageServiceProvider).sync(careerId);
+      final messages = await ref
+          .watch(competitionRepositoryProvider)
+          .messages(careerId);
+      return (
+        messages: messages,
+        unread: messages.where((m) => !m.read).length,
+      );
+    });
 
 /// Unread-message count, for the navigation badge.
 final AutoDisposeFutureProviderFamily<int, int> unreadMessagesProvider =
     FutureProvider.autoDispose.family<int, int>((ref, careerId) async {
-  final inbox = await ref.watch(messageInboxProvider(careerId).future);
-  return inbox.unread;
-});
+      final inbox = await ref.watch(messageInboxProvider(careerId).future);
+      return inbox.unread;
+    });
