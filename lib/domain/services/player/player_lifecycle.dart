@@ -169,7 +169,7 @@ abstract final class PlayerLifecycle {
     // Every intake year that has happened, including the ones backfilled from
     // before the save opened.
     for (var year = -backfillYears; year <= agingYears; year++) {
-      final bonus = youthBonusByCycle[_cycleOfIntake(year)] ?? 0.0;
+      final bonus = youthBonusByCycle[cycleOfIntake(year)] ?? 0.0;
       for (final g in _intake(seeded, nationId, year, youthBonus: bonus)) {
         final aged = PlayerAging.agedYears(g, agingYears - year);
         if (aged.age < minAge) continue;
@@ -202,7 +202,12 @@ abstract final class PlayerLifecycle {
 
   /// The four-year cycle an intake year belongs to, for the academy bonus.
   /// Backfilled years are before the save and take no investment.
-  static int _cycleOfIntake(int intakeYear) =>
+  ///
+  /// Public because the inbox reports whether that investment showed, and the
+  /// mapping has to be asked once rather than written out twice — the same
+  /// duplication is how a draw ceremony once disagreed with the draw it was
+  /// showing.
+  static int cycleOfIntake(int intakeYear) =>
       intakeYear < 0 ? -1 : intakeYear ~/ 4;
 
   /// The career-development bump: a player who has started many tournament
@@ -343,7 +348,7 @@ abstract final class PlayerLifecycle {
     final intakeYear = bornYearIndex - _bornYearOffset;
     if (intakeYear < -backfillYears || intakeYear > agingYears) return null;
     final nationId = rem ~/ _nationStride;
-    final bonus = youthBonusByCycle[_cycleOfIntake(intakeYear)] ?? 0.0;
+    final bonus = youthBonusByCycle[cycleOfIntake(intakeYear)] ?? 0.0;
     for (final g in _intake(seeded, nationId, intakeYear, youthBonus: bonus)) {
       if (g.id != id) continue;
       final aged = PlayerAging.agedYears(g, agingYears - intakeYear);
