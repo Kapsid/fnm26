@@ -71,13 +71,13 @@ abstract final class Prospects {
   }
 
   /// The scout's read on an unproven player: the truth, off by up to a star
-  /// for a nineteen- or twenty-year-old and up to TWO for anyone younger.
+  /// from seventeen up and up to TWO below that.
   ///
-  /// A boy of fifteen has played nothing anyone can judge him on, so the read
-  /// on him is barely a read at all — which is what makes bringing him
-  /// through and finding out the interesting decision.
+  /// A boy under seventeen has played nothing anyone can judge him on, so
+  /// the read on him is barely a read at all — which is what makes bringing
+  /// him through and finding out the interesting decision.
   static int scoutedStars(int playerId, {int age = 20}) {
-    final spread = age >= YouthLevel.u19.maxAge ? 1 : 2;
+    final spread = age >= YouthLevel.u19.minAge ? 1 : 2;
     final wobble = (_mix(playerId ^ 0x5CADE) % (spread * 2 + 1)) - spread;
     return (trueStars(playerId) + wobble).clamp(1, 5);
   }

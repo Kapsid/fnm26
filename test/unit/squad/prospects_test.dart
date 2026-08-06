@@ -109,9 +109,21 @@ void main() {
     });
 
     test('a nineteen-year-old is never more than one star out', () {
+      var sawOne = false;
       for (var id = 1; id < 3000; id++) {
         final gap =
             (Prospects.scoutedStars(id, age: 19) - Prospects.trueStars(id))
+                .abs();
+        expect(gap, lessThanOrEqualTo(1));
+        if (gap == 1) sawOne = true;
+      }
+      expect(sawOne, isTrue, reason: 'the older read is not always spot on');
+    });
+
+    test('seventeen is the boundary: never more than one star out', () {
+      for (var id = 1; id < 3000; id++) {
+        final gap =
+            (Prospects.scoutedStars(id, age: 17) - Prospects.trueStars(id))
                 .abs();
         expect(gap, lessThanOrEqualTo(1));
       }
