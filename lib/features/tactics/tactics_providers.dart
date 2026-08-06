@@ -6,6 +6,7 @@ import 'package:fnm/domain/entities/player_absence.dart';
 import 'package:fnm/domain/entities/tactics.dart';
 import 'package:fnm/domain/services/tactics/best_eleven.dart';
 import 'package:fnm/features/career/career_providers.dart';
+import 'package:fnm/features/federation/federation_providers.dart';
 import 'package:fnm/features/federation/naturalization_providers.dart';
 
 /// Smallest squad a manager may call up (must field an XI plus cover).
@@ -13,6 +14,11 @@ const int kMinSquadSize = 16;
 
 /// Largest squad a manager may call up (a full tournament squad).
 const int kMaxSquadSize = 23;
+
+/// The fewest AVAILABLE (unbanned, uninjured) players a squad must contain.
+/// A manager may name someone serving a ban or nursing a knock — that's their
+/// call — but the squad still has to be able to field a legal XI.
+const int kMinFitPlayers = 11;
 
 /// Resolves the squad actually available for selection from a nation [pool]
 /// given the manager's [callUps]. An empty call-up set means the whole pool is
@@ -83,12 +89,24 @@ final AutoDisposeFutureProviderFamily<TacticData?, int> tacticDataProvider =
         careerId,
       );
   if (tactic == null) return null;
-  final fullPool =
-      await ref.watch(playerRepositoryProvider).byNation(
-        career.nationId,
-        agingYears: CareerService.agingYears(career),
-        saveSeed: career.rngSeed,
-      );
+  // The naturalised players belong in this pool exactly as they do in the
+  // call-up pool and the match pool. They were missing here alone, so a
+  // naturalised player could be picked in the squad and then never appear on
+  // the tactics screen — nominated, but impossible to field.
+  final fullPool = [
+    ...await ref.watch(playerRepositoryProvider).byNation(
+      career.nationId,
+      agingYears: CareerService.agingYears(career),
+      saveSeed: career.rngSeed,
+      youthBonusByCycle: await ref.watch(
+        youthBonusByCycleProvider(careerId).future,
+      ),
+      careerStartsByPlayer: await ref.watch(
+        careerDevBonusProvider(careerId).future,
+      ),
+    ),
+    ...await naturalizedPlayersFor(ref, career),
+  ]..sort((a, b) => b.overall.compareTo(a.overall));
   final callUps = await ref.watch(squadRepositoryProvider).callUps(careerId);
   // A banned or injured player can't be picked, so he isn't in the pool the
   // manager picks from. The match already refuses to field him — but it did so
@@ -137,21 +155,37 @@ class SquadData {
 }
 
 // Auto-disposed for the same reason as [tacticDataProvider].
+/// The squad a manager who has named nobody starts from: every senior.
+///
+/// The pool now reaches down to fifteen so a wonderkid CAN be named, but the
+/// default must not name him — left as "everyone in the pool", a new save would
+/// auto-select its whole academy.
+Set<int> defaultCallUpIds(List<Player> pool) =>
+    {for (final p in pool) if (p.age >= 17) p.id};
+
 final AutoDisposeFutureProviderFamily<SquadData?, int> squadDataProvider =
     FutureProvider.autoDispose.family<SquadData?, int>((ref, careerId) async {
   await ref.watch(seedLoaderProvider).ensureSeeded();
   final career = await ref.watch(careerRepositoryProvider).byId(careerId);
   if (career == null) return null;
   final pool = [
+    // Down to fifteen: the U-17s are selectable, tagged, so a genuine wonderkid
+    // is a decision the manager can make. Every other caller keeps the default
+    // seventeen — see [PlayerLifecycle.poolAt].
     ...await ref.watch(playerRepositoryProvider).byNation(
           career.nationId,
           agingYears: CareerService.agingYears(career),
           saveSeed: career.rngSeed,
+          minAge: 15,
+          youthBonusByCycle:
+              await ref.watch(youthBonusByCycleProvider(careerId).future),
+          careerStartsByPlayer:
+              await ref.watch(careerDevBonusProvider(careerId).future),
         ),
     ...await naturalizedPlayersFor(ref, career),
   ]..sort((a, b) => b.overall.compareTo(a.overall));
   final stored = await ref.watch(squadRepositoryProvider).callUps(careerId);
-  final callUps = stored.isEmpty ? {for (final p in pool) p.id} : stored;
+  final callUps = stored.isEmpty ? defaultCallUpIds(pool) : stored;
   final absences =
       await ref.watch(absenceRepositoryProvider).forCareer(careerId);
   return SquadData(
@@ -188,6 +222,10 @@ class TacticService {
             career.nationId,
             agingYears: CareerService.agingYears(career),
             saveSeed: career.rngSeed,
+            youthBonusByCycle:
+                await _ref.read(youthBonusByCycleProvider(careerId).future),
+            careerStartsByPlayer:
+                await _ref.read(careerDevBonusProvider(careerId).future),
           ),
       ...await naturalizedPlayersFor(_ref, career),
     ]..sort((a, b) => b.overall.compareTo(a.overall));
@@ -224,8 +262,27 @@ class TacticService {
         },
       );
 
-  Future<void> setInstructions(int careerId, TacticalInstructions i) =>
-      _update(careerId, (t, _) => t.copyWith(instructions: i));
+  /// Adopts a general playing style, composing it straight into the six
+  /// instruction dials.
+  ///
+  /// This is the "what do we do" decision; the dials underneath are the "how
+  /// much" of it, and stay available. [Playstyle.custom] is not adoptable — it
+  /// is what the tactic BECOMES when a dial is moved by hand.
+  Future<void> setPlaystyle(int careerId, Playstyle style) {
+    final composed = style.instructions;
+    if (composed == null) return Future.value();
+    return _update(
+      careerId,
+      (t, _) => t.copyWith(playstyle: style, instructions: composed),
+    );
+  }
+
+  Future<void> setInstructions(int careerId, TacticalInstructions i) => _update(
+    careerId,
+    // A hand-moved dial re-labels the tactic honestly: it is the named style
+    // only while it still matches that style's profile exactly.
+    (t, _) => t.copyWith(instructions: i, playstyle: PlaystyleX.matching(i)),
+  );
 
   /// Applies a saved preset: adopts its shape (re-picking the best available XI
   /// for it) and its instruction sliders in one write.
@@ -240,6 +297,7 @@ class TacticService {
           formation: formation,
           lineup: bestEleven(formation, pool),
           instructions: instructions,
+          playstyle: PlaystyleX.matching(instructions),
         ),
       );
 
@@ -295,10 +353,19 @@ class SquadService {
                     career.nationId,
                     agingYears: CareerService.agingYears(career),
                     saveSeed: career.rngSeed,
+                    youthBonusByCycle: await _ref
+                        .read(youthBonusByCycleProvider(careerId).future),
+                    careerStartsByPlayer: await _ref
+                        .read(careerDevBonusProvider(careerId).future),
                   ),
               ...await naturalizedPlayersFor(_ref, career),
             ];
-      final squad = availableSquad(pool, ids);
+      // A squad may now legitimately include banned/injured players (the
+      // manager picks the squad; the game decides who can play), so the XI is
+      // refilled from those actually available for the next match.
+      final absences =
+          await _ref.read(absenceRepositoryProvider).forCareer(careerId);
+      final squad = selectable(availableSquad(pool, ids), absences);
       final dropped =
           tactic.lineup.whereType<int>().any((id) => !ids.contains(id));
       if (dropped) {

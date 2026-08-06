@@ -664,6 +664,27 @@ class _PlayerToggle extends StatelessWidget {
               style: AppTypography.bodyMedium,
             ),
           ),
+          // A boy still in the youth pyramid wears his level, so naming him is
+          // never something that happens by accident.
+          if (YouthLevel.forAge(player.age) case final level?) ...[
+            const SizedBox(width: AppSpacing.xs),
+            Container(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 6,
+                vertical: 2,
+              ),
+              decoration: BoxDecoration(
+                color: AppColors.primary.withValues(alpha: 0.16),
+                borderRadius: AppRadii.smAll,
+              ),
+              child: Text(
+                level.label,
+                style: AppTypography.labelSmall.copyWith(
+                  color: AppColors.primary,
+                ),
+              ),
+            ),
+          ],
           if (condition != null) ...[
             const SizedBox(width: AppSpacing.xs),
             _FormDot(form: condition!.form),
