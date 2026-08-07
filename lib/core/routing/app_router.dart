@@ -11,6 +11,7 @@ import 'package:fnm/features/settings/diagnostics_screen.dart';
 import 'package:fnm/features/settings/settings_screen.dart';
 import 'package:fnm/features/squad/training_camp_screen.dart';
 import 'package:fnm/features/squad/youth_screen.dart';
+import 'package:fnm/features/y/y_screen.dart';
 import 'package:fnm/features/dev/style_gallery_screen.dart';
 import 'package:fnm/features/federation/budget_setup_screen.dart';
 import 'package:fnm/features/federation/finances_screen.dart';
@@ -172,6 +173,9 @@ abstract final class Routes {
 
   /// The under-21 watchlist. Expects `?careerId=`.
   static const youth = '/youth';
+
+  /// The social feed.
+  static const y = '/y';
 
   /// The forced first-of-cycle budget allocation. Expects `?careerId=`.
   static const budgetSetup = '/budget-setup';
@@ -438,6 +442,17 @@ final routerProvider = Provider<GoRouter>((ref) {
               ) ??
               0;
           return YouthScreen(careerId: id);
+        },
+      ),
+      GoRoute(
+        path: Routes.y,
+        builder: (context, state) {
+          final id =
+              int.tryParse(
+                state.uri.queryParameters['careerId'] ?? '',
+              ) ??
+              0;
+          return YScreen(careerId: id);
         },
       ),
       GoRoute(

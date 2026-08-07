@@ -3052,6 +3052,275 @@ class AppLocalizationsEn extends AppLocalizations {
   String get clubFrozenOut => 'Not playing';
 
   @override
+  String yWinUpset0(String opponent, String score) {
+    return 'I have watched football for thirty years and I did not see that coming. $opponent beaten $score.';
+  }
+
+  @override
+  String yWinUpset1(String opponent, String score) {
+    return 'Nobody gave them a prayer against $opponent. $score. Absolutely nobody.';
+  }
+
+  @override
+  String yWinUpset2(String opponent, String score) {
+    return '$score against $opponent. Go and wake the neighbours.';
+  }
+
+  @override
+  String yWinUpset3(String opponent, String score) {
+    return 'That is the kind of night people describe to their grandchildren. $opponent $score.';
+  }
+
+  @override
+  String yWinRoutine0(String opponent, String score) {
+    return '$score against $opponent. Job done, nothing learned.';
+  }
+
+  @override
+  String yWinRoutine1(String opponent, String score) {
+    return 'Beat $opponent $score. We were supposed to, and we did.';
+  }
+
+  @override
+  String yWinRoutine2(String opponent, String score) {
+    return 'A professional $score over $opponent. Next.';
+  }
+
+  @override
+  String yWinRoutine3(String opponent, String score) {
+    return '$opponent dispatched $score. File it and move on.';
+  }
+
+  @override
+  String yWinTight0(String opponent, String score) {
+    return '$score against $opponent and every minute of it earned.';
+  }
+
+  @override
+  String yWinTight1(String opponent, String score) {
+    return 'Nervy, ugly, and a win. $opponent $score.';
+  }
+
+  @override
+  String yWinTight2(String opponent, String score) {
+    return 'Beat $opponent $score. Take the three points and never watch it again.';
+  }
+
+  @override
+  String yWinTight3(String opponent, String score) {
+    return '$score. $opponent made us work for every inch of that.';
+  }
+
+  @override
+  String yDrew0(String opponent, String score) {
+    return '$score with $opponent. Two points dropped or one gained — pick your mood.';
+  }
+
+  @override
+  String yDrew1(String opponent, String score) {
+    return 'A draw against $opponent, $score. Nobody is happy, nobody is furious.';
+  }
+
+  @override
+  String yDrew2(String opponent, String score) {
+    return '$opponent $score. The most forgettable ninety minutes of the year.';
+  }
+
+  @override
+  String yDrew3(String opponent, String score) {
+    return 'Shared the spoils with $opponent, $score. On we go.';
+  }
+
+  @override
+  String yLost0(String opponent, String score) {
+    return 'Beaten $score by $opponent. It happens.';
+  }
+
+  @override
+  String yLost1(String opponent, String score) {
+    return '$opponent $score. We were second best and there is no argument.';
+  }
+
+  @override
+  String yLost2(String opponent, String score) {
+    return 'Lost $score to $opponent. Regroup.';
+  }
+
+  @override
+  String yLost3(String opponent, String score) {
+    return '$score to $opponent. Not a disgrace, not good enough.';
+  }
+
+  @override
+  String yLostBadly0(String opponent, String score) {
+    return '$score. To $opponent. I have no words and I am paid to have words.';
+  }
+
+  @override
+  String yLostBadly1(String opponent, String score) {
+    return 'That was not a defeat to $opponent, it was a surrender. $score.';
+  }
+
+  @override
+  String yLostBadly2(String opponent, String score) {
+    return '$opponent $score. Somebody has to answer for that.';
+  }
+
+  @override
+  String yLostBadly3(String opponent, String score) {
+    return 'I want the $score against $opponent struck from the record and from memory.';
+  }
+
+  @override
+  String yTrophy0(String opponent) {
+    return 'CHAMPIONS. $opponent. Say it out loud.';
+  }
+
+  @override
+  String yTrophy1(String opponent) {
+    return 'We won it. $opponent. I am not okay.';
+  }
+
+  @override
+  String yTrophy2(String opponent) {
+    return '$opponent — and the trophy is coming home.';
+  }
+
+  @override
+  String yTrophy3(String opponent) {
+    return 'Every single one of them a legend. $opponent.';
+  }
+
+  @override
+  String yRunnerUp0(String opponent) {
+    return 'So close. $opponent and a medal nobody wants.';
+  }
+
+  @override
+  String yRunnerUp1(String opponent) {
+    return 'Runners-up at $opponent. It will sting for years.';
+  }
+
+  @override
+  String yRunnerUp2(String opponent) {
+    return '$opponent: one match from everything.';
+  }
+
+  @override
+  String yRunnerUp3(String opponent) {
+    return 'Second. At $opponent. Somebody pass the bottle.';
+  }
+
+  @override
+  String yEliminated0(String opponent) {
+    return 'Out at $opponent. Same script, different year.';
+  }
+
+  @override
+  String yEliminated1(String opponent) {
+    return '$opponent is where it ends. Again.';
+  }
+
+  @override
+  String yEliminated2(String opponent) {
+    return 'Eliminated at $opponent. Now the inquest.';
+  }
+
+  @override
+  String yEliminated3(String opponent) {
+    return 'Knocked out at $opponent. Somebody explain that to me.';
+  }
+
+  @override
+  String yQualified0(String opponent) {
+    return 'WE ARE GOING TO $opponent.';
+  }
+
+  @override
+  String yQualified1(String opponent) {
+    return 'Qualified for $opponent. Book the time off work.';
+  }
+
+  @override
+  String yQualified2(String opponent) {
+    return '$opponent, here we come. Never in doubt (it was entirely in doubt).';
+  }
+
+  @override
+  String yQualified3(String opponent) {
+    return 'Through to $opponent. That is the hard part done.';
+  }
+
+  @override
+  String yGroupDrawn0(String opponent) {
+    return 'Group drawn for $opponent. Could be worse. Could be a lot worse.';
+  }
+
+  @override
+  String yGroupDrawn1(String opponent) {
+    return 'So that is the $opponent draw. Interesting.';
+  }
+
+  @override
+  String yGroupDrawn2(String opponent) {
+    return 'The $opponent groups are out and I already do not like ours.';
+  }
+
+  @override
+  String yGroupDrawn3(String opponent) {
+    return '$opponent draw made. Let the overreaction begin.';
+  }
+
+  @override
+  String yHostNamed0(String opponent) {
+    return '$opponent will host it. Start saving.';
+  }
+
+  @override
+  String yHostNamed1(String opponent) {
+    return 'It is going to $opponent. Predictable, but fine.';
+  }
+
+  @override
+  String yHostNamed2(String opponent) {
+    return '$opponent gets the tournament. Congratulations to them, I suppose.';
+  }
+
+  @override
+  String yHostNamed3(String opponent) {
+    return 'Hosts confirmed: $opponent.';
+  }
+
+  @override
+  String yTournamentSoon0(String opponent) {
+    return '$opponent starts soon and I cannot sit still.';
+  }
+
+  @override
+  String yTournamentSoon1(String opponent) {
+    return 'Not long now until $opponent.';
+  }
+
+  @override
+  String yTournamentSoon2(String opponent) {
+    return '$opponent is nearly here. Squad announcement, please.';
+  }
+
+  @override
+  String yTournamentSoon3(String opponent) {
+    return 'Countdown to $opponent is officially unbearable.';
+  }
+
+  @override
+  String get navY => 'Y';
+
+  @override
+  String get yTitle => 'Y';
+
+  @override
+  String get yEmpty => 'Nothing to say yet. Play a match.';
+
+  @override
   String get playerClubHistory => 'CLUB HISTORY';
 
   @override

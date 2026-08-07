@@ -4032,6 +4032,278 @@
   "@clubFringe": { "description": "Club standing: fringe player." },
   "clubFrozenOut": "Not playing",
   "@clubFrozenOut": { "description": "Club standing: frozen out." },
+  "yWinUpset0": "I have watched football for thirty years and I did not see that coming. {opponent} beaten {score}.",
+  "@yWinUpset0": {
+    "description": "Y post: winUpset, variant 0.",
+    "placeholders": { "opponent": {"type": "String"}, "score": {"type": "String"} }
+  },
+  "yWinUpset1": "Nobody gave them a prayer against {opponent}. {score}. Absolutely nobody.",
+  "@yWinUpset1": {
+    "description": "Y post: winUpset, variant 1.",
+    "placeholders": { "opponent": {"type": "String"}, "score": {"type": "String"} }
+  },
+  "yWinUpset2": "{score} against {opponent}. Go and wake the neighbours.",
+  "@yWinUpset2": {
+    "description": "Y post: winUpset, variant 2.",
+    "placeholders": { "opponent": {"type": "String"}, "score": {"type": "String"} }
+  },
+  "yWinUpset3": "That is the kind of night people describe to their grandchildren. {opponent} {score}.",
+  "@yWinUpset3": {
+    "description": "Y post: winUpset, variant 3.",
+    "placeholders": { "opponent": {"type": "String"}, "score": {"type": "String"} }
+  },
+  "yWinRoutine0": "{score} against {opponent}. Job done, nothing learned.",
+  "@yWinRoutine0": {
+    "description": "Y post: winRoutine, variant 0.",
+    "placeholders": { "opponent": {"type": "String"}, "score": {"type": "String"} }
+  },
+  "yWinRoutine1": "Beat {opponent} {score}. We were supposed to, and we did.",
+  "@yWinRoutine1": {
+    "description": "Y post: winRoutine, variant 1.",
+    "placeholders": { "opponent": {"type": "String"}, "score": {"type": "String"} }
+  },
+  "yWinRoutine2": "A professional {score} over {opponent}. Next.",
+  "@yWinRoutine2": {
+    "description": "Y post: winRoutine, variant 2.",
+    "placeholders": { "opponent": {"type": "String"}, "score": {"type": "String"} }
+  },
+  "yWinRoutine3": "{opponent} dispatched {score}. File it and move on.",
+  "@yWinRoutine3": {
+    "description": "Y post: winRoutine, variant 3.",
+    "placeholders": { "opponent": {"type": "String"}, "score": {"type": "String"} }
+  },
+  "yWinTight0": "{score} against {opponent} and every minute of it earned.",
+  "@yWinTight0": {
+    "description": "Y post: winTight, variant 0.",
+    "placeholders": { "opponent": {"type": "String"}, "score": {"type": "String"} }
+  },
+  "yWinTight1": "Nervy, ugly, and a win. {opponent} {score}.",
+  "@yWinTight1": {
+    "description": "Y post: winTight, variant 1.",
+    "placeholders": { "opponent": {"type": "String"}, "score": {"type": "String"} }
+  },
+  "yWinTight2": "Beat {opponent} {score}. Take the three points and never watch it again.",
+  "@yWinTight2": {
+    "description": "Y post: winTight, variant 2.",
+    "placeholders": { "opponent": {"type": "String"}, "score": {"type": "String"} }
+  },
+  "yWinTight3": "{score}. {opponent} made us work for every inch of that.",
+  "@yWinTight3": {
+    "description": "Y post: winTight, variant 3.",
+    "placeholders": { "opponent": {"type": "String"}, "score": {"type": "String"} }
+  },
+  "yDrew0": "{score} with {opponent}. Two points dropped or one gained \u2014 pick your mood.",
+  "@yDrew0": {
+    "description": "Y post: drew, variant 0.",
+    "placeholders": { "opponent": {"type": "String"}, "score": {"type": "String"} }
+  },
+  "yDrew1": "A draw against {opponent}, {score}. Nobody is happy, nobody is furious.",
+  "@yDrew1": {
+    "description": "Y post: drew, variant 1.",
+    "placeholders": { "opponent": {"type": "String"}, "score": {"type": "String"} }
+  },
+  "yDrew2": "{opponent} {score}. The most forgettable ninety minutes of the year.",
+  "@yDrew2": {
+    "description": "Y post: drew, variant 2.",
+    "placeholders": { "opponent": {"type": "String"}, "score": {"type": "String"} }
+  },
+  "yDrew3": "Shared the spoils with {opponent}, {score}. On we go.",
+  "@yDrew3": {
+    "description": "Y post: drew, variant 3.",
+    "placeholders": { "opponent": {"type": "String"}, "score": {"type": "String"} }
+  },
+  "yLost0": "Beaten {score} by {opponent}. It happens.",
+  "@yLost0": {
+    "description": "Y post: lost, variant 0.",
+    "placeholders": { "opponent": {"type": "String"}, "score": {"type": "String"} }
+  },
+  "yLost1": "{opponent} {score}. We were second best and there is no argument.",
+  "@yLost1": {
+    "description": "Y post: lost, variant 1.",
+    "placeholders": { "opponent": {"type": "String"}, "score": {"type": "String"} }
+  },
+  "yLost2": "Lost {score} to {opponent}. Regroup.",
+  "@yLost2": {
+    "description": "Y post: lost, variant 2.",
+    "placeholders": { "opponent": {"type": "String"}, "score": {"type": "String"} }
+  },
+  "yLost3": "{score} to {opponent}. Not a disgrace, not good enough.",
+  "@yLost3": {
+    "description": "Y post: lost, variant 3.",
+    "placeholders": { "opponent": {"type": "String"}, "score": {"type": "String"} }
+  },
+  "yLostBadly0": "{score}. To {opponent}. I have no words and I am paid to have words.",
+  "@yLostBadly0": {
+    "description": "Y post: lostBadly, variant 0.",
+    "placeholders": { "opponent": {"type": "String"}, "score": {"type": "String"} }
+  },
+  "yLostBadly1": "That was not a defeat to {opponent}, it was a surrender. {score}.",
+  "@yLostBadly1": {
+    "description": "Y post: lostBadly, variant 1.",
+    "placeholders": { "opponent": {"type": "String"}, "score": {"type": "String"} }
+  },
+  "yLostBadly2": "{opponent} {score}. Somebody has to answer for that.",
+  "@yLostBadly2": {
+    "description": "Y post: lostBadly, variant 2.",
+    "placeholders": { "opponent": {"type": "String"}, "score": {"type": "String"} }
+  },
+  "yLostBadly3": "I want the {score} against {opponent} struck from the record and from memory.",
+  "@yLostBadly3": {
+    "description": "Y post: lostBadly, variant 3.",
+    "placeholders": { "opponent": {"type": "String"}, "score": {"type": "String"} }
+  },
+  "yTrophy0": "CHAMPIONS. {opponent}. Say it out loud.",
+  "@yTrophy0": {
+    "description": "Y post: trophy, variant 0.",
+    "placeholders": { "opponent": {"type": "String"} }
+  },
+  "yTrophy1": "We won it. {opponent}. I am not okay.",
+  "@yTrophy1": {
+    "description": "Y post: trophy, variant 1.",
+    "placeholders": { "opponent": {"type": "String"} }
+  },
+  "yTrophy2": "{opponent} \u2014 and the trophy is coming home.",
+  "@yTrophy2": {
+    "description": "Y post: trophy, variant 2.",
+    "placeholders": { "opponent": {"type": "String"} }
+  },
+  "yTrophy3": "Every single one of them a legend. {opponent}.",
+  "@yTrophy3": {
+    "description": "Y post: trophy, variant 3.",
+    "placeholders": { "opponent": {"type": "String"} }
+  },
+  "yRunnerUp0": "So close. {opponent} and a medal nobody wants.",
+  "@yRunnerUp0": {
+    "description": "Y post: runnerUp, variant 0.",
+    "placeholders": { "opponent": {"type": "String"} }
+  },
+  "yRunnerUp1": "Runners-up at {opponent}. It will sting for years.",
+  "@yRunnerUp1": {
+    "description": "Y post: runnerUp, variant 1.",
+    "placeholders": { "opponent": {"type": "String"} }
+  },
+  "yRunnerUp2": "{opponent}: one match from everything.",
+  "@yRunnerUp2": {
+    "description": "Y post: runnerUp, variant 2.",
+    "placeholders": { "opponent": {"type": "String"} }
+  },
+  "yRunnerUp3": "Second. At {opponent}. Somebody pass the bottle.",
+  "@yRunnerUp3": {
+    "description": "Y post: runnerUp, variant 3.",
+    "placeholders": { "opponent": {"type": "String"} }
+  },
+  "yEliminated0": "Out at {opponent}. Same script, different year.",
+  "@yEliminated0": {
+    "description": "Y post: eliminated, variant 0.",
+    "placeholders": { "opponent": {"type": "String"} }
+  },
+  "yEliminated1": "{opponent} is where it ends. Again.",
+  "@yEliminated1": {
+    "description": "Y post: eliminated, variant 1.",
+    "placeholders": { "opponent": {"type": "String"} }
+  },
+  "yEliminated2": "Eliminated at {opponent}. Now the inquest.",
+  "@yEliminated2": {
+    "description": "Y post: eliminated, variant 2.",
+    "placeholders": { "opponent": {"type": "String"} }
+  },
+  "yEliminated3": "Knocked out at {opponent}. Somebody explain that to me.",
+  "@yEliminated3": {
+    "description": "Y post: eliminated, variant 3.",
+    "placeholders": { "opponent": {"type": "String"} }
+  },
+  "yQualified0": "WE ARE GOING TO {opponent}.",
+  "@yQualified0": {
+    "description": "Y post: qualified, variant 0.",
+    "placeholders": { "opponent": {"type": "String"} }
+  },
+  "yQualified1": "Qualified for {opponent}. Book the time off work.",
+  "@yQualified1": {
+    "description": "Y post: qualified, variant 1.",
+    "placeholders": { "opponent": {"type": "String"} }
+  },
+  "yQualified2": "{opponent}, here we come. Never in doubt (it was entirely in doubt).",
+  "@yQualified2": {
+    "description": "Y post: qualified, variant 2.",
+    "placeholders": { "opponent": {"type": "String"} }
+  },
+  "yQualified3": "Through to {opponent}. That is the hard part done.",
+  "@yQualified3": {
+    "description": "Y post: qualified, variant 3.",
+    "placeholders": { "opponent": {"type": "String"} }
+  },
+  "yGroupDrawn0": "Group drawn for {opponent}. Could be worse. Could be a lot worse.",
+  "@yGroupDrawn0": {
+    "description": "Y post: groupDrawn, variant 0.",
+    "placeholders": { "opponent": {"type": "String"} }
+  },
+  "yGroupDrawn1": "So that is the {opponent} draw. Interesting.",
+  "@yGroupDrawn1": {
+    "description": "Y post: groupDrawn, variant 1.",
+    "placeholders": { "opponent": {"type": "String"} }
+  },
+  "yGroupDrawn2": "The {opponent} groups are out and I already do not like ours.",
+  "@yGroupDrawn2": {
+    "description": "Y post: groupDrawn, variant 2.",
+    "placeholders": { "opponent": {"type": "String"} }
+  },
+  "yGroupDrawn3": "{opponent} draw made. Let the overreaction begin.",
+  "@yGroupDrawn3": {
+    "description": "Y post: groupDrawn, variant 3.",
+    "placeholders": { "opponent": {"type": "String"} }
+  },
+  "yHostNamed0": "{opponent} will host it. Start saving.",
+  "@yHostNamed0": {
+    "description": "Y post: hostNamed, variant 0.",
+    "placeholders": { "opponent": {"type": "String"} }
+  },
+  "yHostNamed1": "It is going to {opponent}. Predictable, but fine.",
+  "@yHostNamed1": {
+    "description": "Y post: hostNamed, variant 1.",
+    "placeholders": { "opponent": {"type": "String"} }
+  },
+  "yHostNamed2": "{opponent} gets the tournament. Congratulations to them, I suppose.",
+  "@yHostNamed2": {
+    "description": "Y post: hostNamed, variant 2.",
+    "placeholders": { "opponent": {"type": "String"} }
+  },
+  "yHostNamed3": "Hosts confirmed: {opponent}.",
+  "@yHostNamed3": {
+    "description": "Y post: hostNamed, variant 3.",
+    "placeholders": { "opponent": {"type": "String"} }
+  },
+  "yTournamentSoon0": "{opponent} starts soon and I cannot sit still.",
+  "@yTournamentSoon0": {
+    "description": "Y post: tournamentSoon, variant 0.",
+    "placeholders": { "opponent": {"type": "String"} }
+  },
+  "yTournamentSoon1": "Not long now until {opponent}.",
+  "@yTournamentSoon1": {
+    "description": "Y post: tournamentSoon, variant 1.",
+    "placeholders": { "opponent": {"type": "String"} }
+  },
+  "yTournamentSoon2": "{opponent} is nearly here. Squad announcement, please.",
+  "@yTournamentSoon2": {
+    "description": "Y post: tournamentSoon, variant 2.",
+    "placeholders": { "opponent": {"type": "String"} }
+  },
+  "yTournamentSoon3": "Countdown to {opponent} is officially unbearable.",
+  "@yTournamentSoon3": {
+    "description": "Y post: tournamentSoon, variant 3.",
+    "placeholders": { "opponent": {"type": "String"} }
+  },
+  "navY": "Y",
+  "@navY": {
+    "description": "Bottom navigation label for the Y feed."
+  },
+  "yTitle": "Y",
+  "@yTitle": {
+    "description": "Title of the Y feed screen."
+  },
+  "yEmpty": "Nothing to say yet. Play a match.",
+  "@yEmpty": {
+    "description": "Empty state on the Y feed."
+  },
   "playerClubHistory": "CLUB HISTORY",
   "@playerClubHistory": {
     "description": "Heading above a player's list of club spells on the detail card."

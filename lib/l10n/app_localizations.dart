@@ -5238,6 +5238,336 @@ abstract class AppLocalizations {
   /// **'Not playing'**
   String get clubFrozenOut;
 
+  /// Y post: winUpset, variant 0.
+  ///
+  /// In en, this message translates to:
+  /// **'I have watched football for thirty years and I did not see that coming. {opponent} beaten {score}.'**
+  String yWinUpset0(String opponent, String score);
+
+  /// Y post: winUpset, variant 1.
+  ///
+  /// In en, this message translates to:
+  /// **'Nobody gave them a prayer against {opponent}. {score}. Absolutely nobody.'**
+  String yWinUpset1(String opponent, String score);
+
+  /// Y post: winUpset, variant 2.
+  ///
+  /// In en, this message translates to:
+  /// **'{score} against {opponent}. Go and wake the neighbours.'**
+  String yWinUpset2(String opponent, String score);
+
+  /// Y post: winUpset, variant 3.
+  ///
+  /// In en, this message translates to:
+  /// **'That is the kind of night people describe to their grandchildren. {opponent} {score}.'**
+  String yWinUpset3(String opponent, String score);
+
+  /// Y post: winRoutine, variant 0.
+  ///
+  /// In en, this message translates to:
+  /// **'{score} against {opponent}. Job done, nothing learned.'**
+  String yWinRoutine0(String opponent, String score);
+
+  /// Y post: winRoutine, variant 1.
+  ///
+  /// In en, this message translates to:
+  /// **'Beat {opponent} {score}. We were supposed to, and we did.'**
+  String yWinRoutine1(String opponent, String score);
+
+  /// Y post: winRoutine, variant 2.
+  ///
+  /// In en, this message translates to:
+  /// **'A professional {score} over {opponent}. Next.'**
+  String yWinRoutine2(String opponent, String score);
+
+  /// Y post: winRoutine, variant 3.
+  ///
+  /// In en, this message translates to:
+  /// **'{opponent} dispatched {score}. File it and move on.'**
+  String yWinRoutine3(String opponent, String score);
+
+  /// Y post: winTight, variant 0.
+  ///
+  /// In en, this message translates to:
+  /// **'{score} against {opponent} and every minute of it earned.'**
+  String yWinTight0(String opponent, String score);
+
+  /// Y post: winTight, variant 1.
+  ///
+  /// In en, this message translates to:
+  /// **'Nervy, ugly, and a win. {opponent} {score}.'**
+  String yWinTight1(String opponent, String score);
+
+  /// Y post: winTight, variant 2.
+  ///
+  /// In en, this message translates to:
+  /// **'Beat {opponent} {score}. Take the three points and never watch it again.'**
+  String yWinTight2(String opponent, String score);
+
+  /// Y post: winTight, variant 3.
+  ///
+  /// In en, this message translates to:
+  /// **'{score}. {opponent} made us work for every inch of that.'**
+  String yWinTight3(String opponent, String score);
+
+  /// Y post: drew, variant 0.
+  ///
+  /// In en, this message translates to:
+  /// **'{score} with {opponent}. Two points dropped or one gained — pick your mood.'**
+  String yDrew0(String opponent, String score);
+
+  /// Y post: drew, variant 1.
+  ///
+  /// In en, this message translates to:
+  /// **'A draw against {opponent}, {score}. Nobody is happy, nobody is furious.'**
+  String yDrew1(String opponent, String score);
+
+  /// Y post: drew, variant 2.
+  ///
+  /// In en, this message translates to:
+  /// **'{opponent} {score}. The most forgettable ninety minutes of the year.'**
+  String yDrew2(String opponent, String score);
+
+  /// Y post: drew, variant 3.
+  ///
+  /// In en, this message translates to:
+  /// **'Shared the spoils with {opponent}, {score}. On we go.'**
+  String yDrew3(String opponent, String score);
+
+  /// Y post: lost, variant 0.
+  ///
+  /// In en, this message translates to:
+  /// **'Beaten {score} by {opponent}. It happens.'**
+  String yLost0(String opponent, String score);
+
+  /// Y post: lost, variant 1.
+  ///
+  /// In en, this message translates to:
+  /// **'{opponent} {score}. We were second best and there is no argument.'**
+  String yLost1(String opponent, String score);
+
+  /// Y post: lost, variant 2.
+  ///
+  /// In en, this message translates to:
+  /// **'Lost {score} to {opponent}. Regroup.'**
+  String yLost2(String opponent, String score);
+
+  /// Y post: lost, variant 3.
+  ///
+  /// In en, this message translates to:
+  /// **'{score} to {opponent}. Not a disgrace, not good enough.'**
+  String yLost3(String opponent, String score);
+
+  /// Y post: lostBadly, variant 0.
+  ///
+  /// In en, this message translates to:
+  /// **'{score}. To {opponent}. I have no words and I am paid to have words.'**
+  String yLostBadly0(String opponent, String score);
+
+  /// Y post: lostBadly, variant 1.
+  ///
+  /// In en, this message translates to:
+  /// **'That was not a defeat to {opponent}, it was a surrender. {score}.'**
+  String yLostBadly1(String opponent, String score);
+
+  /// Y post: lostBadly, variant 2.
+  ///
+  /// In en, this message translates to:
+  /// **'{opponent} {score}. Somebody has to answer for that.'**
+  String yLostBadly2(String opponent, String score);
+
+  /// Y post: lostBadly, variant 3.
+  ///
+  /// In en, this message translates to:
+  /// **'I want the {score} against {opponent} struck from the record and from memory.'**
+  String yLostBadly3(String opponent, String score);
+
+  /// Y post: trophy, variant 0.
+  ///
+  /// In en, this message translates to:
+  /// **'CHAMPIONS. {opponent}. Say it out loud.'**
+  String yTrophy0(String opponent);
+
+  /// Y post: trophy, variant 1.
+  ///
+  /// In en, this message translates to:
+  /// **'We won it. {opponent}. I am not okay.'**
+  String yTrophy1(String opponent);
+
+  /// Y post: trophy, variant 2.
+  ///
+  /// In en, this message translates to:
+  /// **'{opponent} — and the trophy is coming home.'**
+  String yTrophy2(String opponent);
+
+  /// Y post: trophy, variant 3.
+  ///
+  /// In en, this message translates to:
+  /// **'Every single one of them a legend. {opponent}.'**
+  String yTrophy3(String opponent);
+
+  /// Y post: runnerUp, variant 0.
+  ///
+  /// In en, this message translates to:
+  /// **'So close. {opponent} and a medal nobody wants.'**
+  String yRunnerUp0(String opponent);
+
+  /// Y post: runnerUp, variant 1.
+  ///
+  /// In en, this message translates to:
+  /// **'Runners-up at {opponent}. It will sting for years.'**
+  String yRunnerUp1(String opponent);
+
+  /// Y post: runnerUp, variant 2.
+  ///
+  /// In en, this message translates to:
+  /// **'{opponent}: one match from everything.'**
+  String yRunnerUp2(String opponent);
+
+  /// Y post: runnerUp, variant 3.
+  ///
+  /// In en, this message translates to:
+  /// **'Second. At {opponent}. Somebody pass the bottle.'**
+  String yRunnerUp3(String opponent);
+
+  /// Y post: eliminated, variant 0.
+  ///
+  /// In en, this message translates to:
+  /// **'Out at {opponent}. Same script, different year.'**
+  String yEliminated0(String opponent);
+
+  /// Y post: eliminated, variant 1.
+  ///
+  /// In en, this message translates to:
+  /// **'{opponent} is where it ends. Again.'**
+  String yEliminated1(String opponent);
+
+  /// Y post: eliminated, variant 2.
+  ///
+  /// In en, this message translates to:
+  /// **'Eliminated at {opponent}. Now the inquest.'**
+  String yEliminated2(String opponent);
+
+  /// Y post: eliminated, variant 3.
+  ///
+  /// In en, this message translates to:
+  /// **'Knocked out at {opponent}. Somebody explain that to me.'**
+  String yEliminated3(String opponent);
+
+  /// Y post: qualified, variant 0.
+  ///
+  /// In en, this message translates to:
+  /// **'WE ARE GOING TO {opponent}.'**
+  String yQualified0(String opponent);
+
+  /// Y post: qualified, variant 1.
+  ///
+  /// In en, this message translates to:
+  /// **'Qualified for {opponent}. Book the time off work.'**
+  String yQualified1(String opponent);
+
+  /// Y post: qualified, variant 2.
+  ///
+  /// In en, this message translates to:
+  /// **'{opponent}, here we come. Never in doubt (it was entirely in doubt).'**
+  String yQualified2(String opponent);
+
+  /// Y post: qualified, variant 3.
+  ///
+  /// In en, this message translates to:
+  /// **'Through to {opponent}. That is the hard part done.'**
+  String yQualified3(String opponent);
+
+  /// Y post: groupDrawn, variant 0.
+  ///
+  /// In en, this message translates to:
+  /// **'Group drawn for {opponent}. Could be worse. Could be a lot worse.'**
+  String yGroupDrawn0(String opponent);
+
+  /// Y post: groupDrawn, variant 1.
+  ///
+  /// In en, this message translates to:
+  /// **'So that is the {opponent} draw. Interesting.'**
+  String yGroupDrawn1(String opponent);
+
+  /// Y post: groupDrawn, variant 2.
+  ///
+  /// In en, this message translates to:
+  /// **'The {opponent} groups are out and I already do not like ours.'**
+  String yGroupDrawn2(String opponent);
+
+  /// Y post: groupDrawn, variant 3.
+  ///
+  /// In en, this message translates to:
+  /// **'{opponent} draw made. Let the overreaction begin.'**
+  String yGroupDrawn3(String opponent);
+
+  /// Y post: hostNamed, variant 0.
+  ///
+  /// In en, this message translates to:
+  /// **'{opponent} will host it. Start saving.'**
+  String yHostNamed0(String opponent);
+
+  /// Y post: hostNamed, variant 1.
+  ///
+  /// In en, this message translates to:
+  /// **'It is going to {opponent}. Predictable, but fine.'**
+  String yHostNamed1(String opponent);
+
+  /// Y post: hostNamed, variant 2.
+  ///
+  /// In en, this message translates to:
+  /// **'{opponent} gets the tournament. Congratulations to them, I suppose.'**
+  String yHostNamed2(String opponent);
+
+  /// Y post: hostNamed, variant 3.
+  ///
+  /// In en, this message translates to:
+  /// **'Hosts confirmed: {opponent}.'**
+  String yHostNamed3(String opponent);
+
+  /// Y post: tournamentSoon, variant 0.
+  ///
+  /// In en, this message translates to:
+  /// **'{opponent} starts soon and I cannot sit still.'**
+  String yTournamentSoon0(String opponent);
+
+  /// Y post: tournamentSoon, variant 1.
+  ///
+  /// In en, this message translates to:
+  /// **'Not long now until {opponent}.'**
+  String yTournamentSoon1(String opponent);
+
+  /// Y post: tournamentSoon, variant 2.
+  ///
+  /// In en, this message translates to:
+  /// **'{opponent} is nearly here. Squad announcement, please.'**
+  String yTournamentSoon2(String opponent);
+
+  /// Y post: tournamentSoon, variant 3.
+  ///
+  /// In en, this message translates to:
+  /// **'Countdown to {opponent} is officially unbearable.'**
+  String yTournamentSoon3(String opponent);
+
+  /// Bottom navigation label for the Y feed.
+  ///
+  /// In en, this message translates to:
+  /// **'Y'**
+  String get navY;
+
+  /// Title of the Y feed screen.
+  ///
+  /// In en, this message translates to:
+  /// **'Y'**
+  String get yTitle;
+
+  /// Empty state on the Y feed.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing to say yet. Play a match.'**
+  String get yEmpty;
+
   /// Heading above a player's list of club spells on the detail card.
   ///
   /// In en, this message translates to:

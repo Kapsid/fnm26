@@ -3,10 +3,11 @@ import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
+import 'package:fnm/l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
 
 /// The primary destinations reachable from the persistent bottom navigation.
-enum AppTab { hub, squad, competitions, careers }
+enum AppTab { hub, squad, competitions, careers, y }
 
 /// The app's persistent bottom navigation bar, shared across the primary
 /// destinations so the four core areas are always one tap apart.
@@ -26,6 +27,7 @@ class AppBottomNav extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
     return Container(
       decoration: const BoxDecoration(
         color: AppColors.surfaceContainerHighest,
@@ -36,31 +38,50 @@ class AppBottomNav extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: AppSpacing.xs),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            // Equal shares rather than natural widths: at four destinations the
+            // labels happened to fit, at five they overflowed a 320px phone by
+            // 200 pixels. Sharing the width means the bar cannot outgrow the
+            // screen however many destinations it ends up with.
             children: [
-              _NavItem(
-                icon: Icons.grid_view,
-                label: 'Hub',
-                active: current == AppTab.hub,
-                onTap: () => _go(context, Routes.hub),
+              Expanded(
+                child: _NavItem(
+                  icon: Icons.grid_view,
+                  label: l.navHub,
+                  active: current == AppTab.hub,
+                  onTap: () => _go(context, Routes.hub),
+                ),
               ),
-              _NavItem(
-                icon: Icons.groups,
-                label: 'Squad',
-                active: current == AppTab.squad,
-                onTap: () => _go(context, Routes.tactics),
+              Expanded(
+                child: _NavItem(
+                  icon: Icons.groups,
+                  label: l.navSquad,
+                  active: current == AppTab.squad,
+                  onTap: () => _go(context, Routes.tactics),
+                ),
               ),
-              _NavItem(
-                icon: Icons.emoji_events,
-                label: 'Trophy',
-                active: current == AppTab.competitions,
-                onTap: () => _go(context, Routes.tournaments),
+              Expanded(
+                child: _NavItem(
+                  icon: Icons.emoji_events,
+                  label: l.navCompetitions,
+                  active: current == AppTab.competitions,
+                  onTap: () => _go(context, Routes.tournaments),
+                ),
               ),
-              _NavItem(
-                icon: Icons.account_circle,
-                label: 'Careers',
-                active: current == AppTab.careers,
-                onTap: () => _go(context, Routes.careers),
+              Expanded(
+                child: _NavItem(
+                  icon: Icons.account_circle,
+                  label: l.navCareers,
+                  active: current == AppTab.careers,
+                  onTap: () => _go(context, Routes.careers),
+                ),
+              ),
+              Expanded(
+                child: _NavItem(
+                  icon: Icons.tag,
+                  label: l.navY,
+                  active: current == AppTab.y,
+                  onTap: () => _go(context, Routes.y),
+                ),
               ),
             ],
           ),
@@ -93,7 +114,7 @@ class _NavItem extends StatelessWidget {
       borderRadius: AppRadii.xlAll,
       child: Container(
         padding: const EdgeInsets.symmetric(
-          horizontal: AppSpacing.md,
+          horizontal: AppSpacing.xs,
           vertical: AppSpacing.xs,
         ),
         decoration: BoxDecoration(
@@ -105,7 +126,13 @@ class _NavItem extends StatelessWidget {
           children: [
             Icon(icon, color: color, size: 22),
             const SizedBox(height: 2),
-            Text(label, style: AppTypography.labelSmall.copyWith(color: color)),
+            Text(
+              label,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              textAlign: TextAlign.center,
+              style: AppTypography.labelSmall.copyWith(color: color),
+            ),
           ],
         ),
       ),
