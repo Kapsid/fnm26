@@ -27,8 +27,10 @@ you.
 ## The feed
 
 Newest first, capped at the most recent 60 posts so a long save does not build
-an unbounded list. Each post carries an author, a body, and the in-game date of
-the event that produced it.
+an unbounded list. Each post carries an author, a template with its arguments, and the in-game
+date of the event that produced it. It carries a TEMPLATE rather than a finished
+string because the words are localised at render — the same reason the squad
+report encodes structure and lets the sheet do the wording.
 
 ```dart
 enum YVoice { pundit, fan, rival, stats }
@@ -37,7 +39,8 @@ typedef YPost = ({
   YVoice voice,
   String handle,      // '@' name, stable for a given author
   String displayName,
-  String body,
+  YTemplate template, // WHAT is said; the words are chosen at render
+  List<String> args,  // the nouns it needs: opponent, score, a player's name
   DateTime date,
   String key,         // the event that produced it; stable across rebuilds
 });
