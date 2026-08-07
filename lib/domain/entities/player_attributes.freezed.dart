@@ -15,10 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$PlayerAttributes {
 
-// Technical
- int get passing; int get shooting; int get dribbling; int get tackling;// Mental
- int get positioning; int get composure; int get decisions;// Physical
- int get pace; int get stamina; int get strength;
+ int get physical; int get technical; int get stamina;
 /// Create a copy of PlayerAttributes
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -31,16 +28,16 @@ $PlayerAttributesCopyWith<PlayerAttributes> get copyWith => _$PlayerAttributesCo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is PlayerAttributes&&(identical(other.passing, passing) || other.passing == passing)&&(identical(other.shooting, shooting) || other.shooting == shooting)&&(identical(other.dribbling, dribbling) || other.dribbling == dribbling)&&(identical(other.tackling, tackling) || other.tackling == tackling)&&(identical(other.positioning, positioning) || other.positioning == positioning)&&(identical(other.composure, composure) || other.composure == composure)&&(identical(other.decisions, decisions) || other.decisions == decisions)&&(identical(other.pace, pace) || other.pace == pace)&&(identical(other.stamina, stamina) || other.stamina == stamina)&&(identical(other.strength, strength) || other.strength == strength));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is PlayerAttributes&&(identical(other.physical, physical) || other.physical == physical)&&(identical(other.technical, technical) || other.technical == technical)&&(identical(other.stamina, stamina) || other.stamina == stamina));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,passing,shooting,dribbling,tackling,positioning,composure,decisions,pace,stamina,strength);
+int get hashCode => Object.hash(runtimeType,physical,technical,stamina);
 
 @override
 String toString() {
-  return 'PlayerAttributes(passing: $passing, shooting: $shooting, dribbling: $dribbling, tackling: $tackling, positioning: $positioning, composure: $composure, decisions: $decisions, pace: $pace, stamina: $stamina, strength: $strength)';
+  return 'PlayerAttributes(physical: $physical, technical: $technical, stamina: $stamina)';
 }
 
 
@@ -51,7 +48,7 @@ abstract mixin class $PlayerAttributesCopyWith<$Res>  {
   factory $PlayerAttributesCopyWith(PlayerAttributes value, $Res Function(PlayerAttributes) _then) = _$PlayerAttributesCopyWithImpl;
 @useResult
 $Res call({
- int passing, int shooting, int dribbling, int tackling, int positioning, int composure, int decisions, int pace, int stamina, int strength
+ int physical, int technical, int stamina
 });
 
 
@@ -68,18 +65,11 @@ class _$PlayerAttributesCopyWithImpl<$Res>
 
 /// Create a copy of PlayerAttributes
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? passing = null,Object? shooting = null,Object? dribbling = null,Object? tackling = null,Object? positioning = null,Object? composure = null,Object? decisions = null,Object? pace = null,Object? stamina = null,Object? strength = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? physical = null,Object? technical = null,Object? stamina = null,}) {
   return _then(_self.copyWith(
-passing: null == passing ? _self.passing : passing // ignore: cast_nullable_to_non_nullable
-as int,shooting: null == shooting ? _self.shooting : shooting // ignore: cast_nullable_to_non_nullable
-as int,dribbling: null == dribbling ? _self.dribbling : dribbling // ignore: cast_nullable_to_non_nullable
-as int,tackling: null == tackling ? _self.tackling : tackling // ignore: cast_nullable_to_non_nullable
-as int,positioning: null == positioning ? _self.positioning : positioning // ignore: cast_nullable_to_non_nullable
-as int,composure: null == composure ? _self.composure : composure // ignore: cast_nullable_to_non_nullable
-as int,decisions: null == decisions ? _self.decisions : decisions // ignore: cast_nullable_to_non_nullable
-as int,pace: null == pace ? _self.pace : pace // ignore: cast_nullable_to_non_nullable
+physical: null == physical ? _self.physical : physical // ignore: cast_nullable_to_non_nullable
+as int,technical: null == technical ? _self.technical : technical // ignore: cast_nullable_to_non_nullable
 as int,stamina: null == stamina ? _self.stamina : stamina // ignore: cast_nullable_to_non_nullable
-as int,strength: null == strength ? _self.strength : strength // ignore: cast_nullable_to_non_nullable
 as int,
   ));
 }
@@ -165,10 +155,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int passing,  int shooting,  int dribbling,  int tackling,  int positioning,  int composure,  int decisions,  int pace,  int stamina,  int strength)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int physical,  int technical,  int stamina)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _PlayerAttributes() when $default != null:
-return $default(_that.passing,_that.shooting,_that.dribbling,_that.tackling,_that.positioning,_that.composure,_that.decisions,_that.pace,_that.stamina,_that.strength);case _:
+return $default(_that.physical,_that.technical,_that.stamina);case _:
   return orElse();
 
 }
@@ -186,10 +176,10 @@ return $default(_that.passing,_that.shooting,_that.dribbling,_that.tackling,_tha
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int passing,  int shooting,  int dribbling,  int tackling,  int positioning,  int composure,  int decisions,  int pace,  int stamina,  int strength)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int physical,  int technical,  int stamina)  $default,) {final _that = this;
 switch (_that) {
 case _PlayerAttributes():
-return $default(_that.passing,_that.shooting,_that.dribbling,_that.tackling,_that.positioning,_that.composure,_that.decisions,_that.pace,_that.stamina,_that.strength);case _:
+return $default(_that.physical,_that.technical,_that.stamina);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -206,10 +196,10 @@ return $default(_that.passing,_that.shooting,_that.dribbling,_that.tackling,_tha
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int passing,  int shooting,  int dribbling,  int tackling,  int positioning,  int composure,  int decisions,  int pace,  int stamina,  int strength)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int physical,  int technical,  int stamina)?  $default,) {final _that = this;
 switch (_that) {
 case _PlayerAttributes() when $default != null:
-return $default(_that.passing,_that.shooting,_that.dribbling,_that.tackling,_that.positioning,_that.composure,_that.decisions,_that.pace,_that.stamina,_that.strength);case _:
+return $default(_that.physical,_that.technical,_that.stamina);case _:
   return null;
 
 }
@@ -221,22 +211,12 @@ return $default(_that.passing,_that.shooting,_that.dribbling,_that.tackling,_tha
 @JsonSerializable()
 
 class _PlayerAttributes extends PlayerAttributes {
-  const _PlayerAttributes({required this.passing, required this.shooting, required this.dribbling, required this.tackling, required this.positioning, required this.composure, required this.decisions, required this.pace, required this.stamina, required this.strength}): super._();
+  const _PlayerAttributes({required this.physical, required this.technical, required this.stamina}): super._();
   factory _PlayerAttributes.fromJson(Map<String, dynamic> json) => _$PlayerAttributesFromJson(json);
 
-// Technical
-@override final  int passing;
-@override final  int shooting;
-@override final  int dribbling;
-@override final  int tackling;
-// Mental
-@override final  int positioning;
-@override final  int composure;
-@override final  int decisions;
-// Physical
-@override final  int pace;
+@override final  int physical;
+@override final  int technical;
 @override final  int stamina;
-@override final  int strength;
 
 /// Create a copy of PlayerAttributes
 /// with the given fields replaced by the non-null parameter values.
@@ -251,16 +231,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _PlayerAttributes&&(identical(other.passing, passing) || other.passing == passing)&&(identical(other.shooting, shooting) || other.shooting == shooting)&&(identical(other.dribbling, dribbling) || other.dribbling == dribbling)&&(identical(other.tackling, tackling) || other.tackling == tackling)&&(identical(other.positioning, positioning) || other.positioning == positioning)&&(identical(other.composure, composure) || other.composure == composure)&&(identical(other.decisions, decisions) || other.decisions == decisions)&&(identical(other.pace, pace) || other.pace == pace)&&(identical(other.stamina, stamina) || other.stamina == stamina)&&(identical(other.strength, strength) || other.strength == strength));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _PlayerAttributes&&(identical(other.physical, physical) || other.physical == physical)&&(identical(other.technical, technical) || other.technical == technical)&&(identical(other.stamina, stamina) || other.stamina == stamina));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,passing,shooting,dribbling,tackling,positioning,composure,decisions,pace,stamina,strength);
+int get hashCode => Object.hash(runtimeType,physical,technical,stamina);
 
 @override
 String toString() {
-  return 'PlayerAttributes(passing: $passing, shooting: $shooting, dribbling: $dribbling, tackling: $tackling, positioning: $positioning, composure: $composure, decisions: $decisions, pace: $pace, stamina: $stamina, strength: $strength)';
+  return 'PlayerAttributes(physical: $physical, technical: $technical, stamina: $stamina)';
 }
 
 
@@ -271,7 +251,7 @@ abstract mixin class _$PlayerAttributesCopyWith<$Res> implements $PlayerAttribut
   factory _$PlayerAttributesCopyWith(_PlayerAttributes value, $Res Function(_PlayerAttributes) _then) = __$PlayerAttributesCopyWithImpl;
 @override @useResult
 $Res call({
- int passing, int shooting, int dribbling, int tackling, int positioning, int composure, int decisions, int pace, int stamina, int strength
+ int physical, int technical, int stamina
 });
 
 
@@ -288,18 +268,11 @@ class __$PlayerAttributesCopyWithImpl<$Res>
 
 /// Create a copy of PlayerAttributes
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? passing = null,Object? shooting = null,Object? dribbling = null,Object? tackling = null,Object? positioning = null,Object? composure = null,Object? decisions = null,Object? pace = null,Object? stamina = null,Object? strength = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? physical = null,Object? technical = null,Object? stamina = null,}) {
   return _then(_PlayerAttributes(
-passing: null == passing ? _self.passing : passing // ignore: cast_nullable_to_non_nullable
-as int,shooting: null == shooting ? _self.shooting : shooting // ignore: cast_nullable_to_non_nullable
-as int,dribbling: null == dribbling ? _self.dribbling : dribbling // ignore: cast_nullable_to_non_nullable
-as int,tackling: null == tackling ? _self.tackling : tackling // ignore: cast_nullable_to_non_nullable
-as int,positioning: null == positioning ? _self.positioning : positioning // ignore: cast_nullable_to_non_nullable
-as int,composure: null == composure ? _self.composure : composure // ignore: cast_nullable_to_non_nullable
-as int,decisions: null == decisions ? _self.decisions : decisions // ignore: cast_nullable_to_non_nullable
-as int,pace: null == pace ? _self.pace : pace // ignore: cast_nullable_to_non_nullable
+physical: null == physical ? _self.physical : physical // ignore: cast_nullable_to_non_nullable
+as int,technical: null == technical ? _self.technical : technical // ignore: cast_nullable_to_non_nullable
 as int,stamina: null == stamina ? _self.stamina : stamina // ignore: cast_nullable_to_non_nullable
-as int,strength: null == strength ? _self.strength : strength // ignore: cast_nullable_to_non_nullable
 as int,
   ));
 }

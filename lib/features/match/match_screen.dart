@@ -8,6 +8,7 @@ import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
+import 'package:fnm/core/theme/kit_colors.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/entities/formation.dart';
@@ -15,11 +16,15 @@ import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/entities/tactics.dart';
 import 'package:fnm/domain/services/competition/finals.dart';
 import 'package:fnm/domain/services/competition/rounds.dart';
+import 'package:fnm/domain/services/match/attendance.dart';
 import 'package:fnm/domain/services/match/match_engine.dart';
+import 'package:fnm/domain/services/match/penalty_takers.dart';
 import 'package:fnm/features/achievements/achievement_popup.dart';
 import 'package:fnm/features/achievements/achievement_providers.dart';
 import 'package:fnm/features/hub/hub_providers.dart';
 import 'package:fnm/features/match/match_feedback.dart';
+import 'package:fnm/features/match/ground_card.dart';
+import 'package:fnm/features/match/penalty_order_sheet.dart';
 import 'package:fnm/features/match/match_providers.dart';
 import 'package:fnm/features/settings/settings_providers.dart';
 import 'package:fnm/features/tactics/in_match_tactics.dart';
@@ -33,20 +38,47 @@ const int kMaxSubs = 5;
 
 /// The localised button label for a team-talk [tone]. The engine owns the tone's
 /// gameplay effect; its display text lives here so it can be translated.
-String teamTalkLabel(AppLocalizations l10n, TeamTalkTone tone) => switch (tone) {
+String teamTalkLabel(AppLocalizations l10n, TeamTalkTone tone) =>
+    switch (tone) {
       TeamTalkTone.calm => l10n.teamTalkCalmLabel,
       TeamTalkTone.encourage => l10n.teamTalkEncourageLabel,
       TeamTalkTone.demandMore => l10n.teamTalkDemandMoreLabel,
       TeamTalkTone.praise => l10n.teamTalkPraiseLabel,
+      TeamTalkTone.believe => l10n.teamTalkBelieveLabel,
+      TeamTalkTone.focus => l10n.teamTalkFocusLabel,
+      TeamTalkTone.urgency => l10n.teamTalkUrgencyLabel,
+      TeamTalkTone.reassure => l10n.teamTalkReassureLabel,
     };
 
 /// The localised one-line description of what a team-talk [tone] asks for.
-String teamTalkBlurb(AppLocalizations l10n, TeamTalkTone tone) => switch (tone) {
+String teamTalkBlurb(AppLocalizations l10n, TeamTalkTone tone) =>
+    switch (tone) {
       TeamTalkTone.calm => l10n.teamTalkCalmBlurb,
       TeamTalkTone.encourage => l10n.teamTalkEncourageBlurb,
       TeamTalkTone.demandMore => l10n.teamTalkDemandMoreBlurb,
       TeamTalkTone.praise => l10n.teamTalkPraiseBlurb,
+      TeamTalkTone.believe => l10n.teamTalkBelieveBlurb,
+      TeamTalkTone.focus => l10n.teamTalkFocusBlurb,
+      TeamTalkTone.urgency => l10n.teamTalkUrgencyBlurb,
+      TeamTalkTone.reassure => l10n.teamTalkReassureBlurb,
     };
+
+/// The team-talk tones offered at this match's interval: a seeded subset of the
+/// full set, so the choices vary from match to match (no fixed list with an
+/// obvious "right answer") while staying stable across re-sims of the SAME
+/// fixture — the salt keeps it independent of the match-result rng stream.
+List<TeamTalkTone> offeredTalkTones(int saveSeed, int fixtureId) {
+  final rng = SeededRng(saveSeed ^ (fixtureId * 0x9E37) ^ 0x7A1C);
+  final tones = [...TeamTalkTone.values];
+  // Fisher–Yates shuffle on the seeded stream, then take a handful.
+  for (var i = tones.length - 1; i > 0; i--) {
+    final j = rng.nextInt(i + 1);
+    final t = tones[i];
+    tones[i] = tones[j];
+    tones[j] = t;
+  }
+  return tones.take(5).toList();
+}
 
 /// Plays the player's next fixture as a *live* minute-by-minute simulation
 /// (the deterministic engine result is replayed on a clock with play/pause,
@@ -125,6 +157,30 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
   bool _atHalfTime = false;
   bool _halfTimeTaken = false;
 
+  /// The two extra-time intervals: the huddle on the pitch at the end of 90
+  /// minutes, and the turnaround at 105'. Both stop the clock for a talk, like
+  /// half time — a knockout used to slide straight from full time into extra
+  /// time and on to penalties with the manager never saying a word, which is
+  /// the one stretch of a tournament where what is said matters most.
+  bool _atExtraTimeStart = false;
+  bool _extraTimeStartTaken = false;
+  bool _atExtraTimeHalf = false;
+  bool _extraTimeHalfTaken = false;
+
+  /// The talk given before extra time — it tilts the extra period itself.
+  TeamTalkTone? _extraTimeTalk;
+
+  /// Whether the clock is stopped at any interval — half time or either
+  /// extra-time break. Anything that would otherwise restart play (a goal
+  /// flash clearing, an injury sub being made) has to respect all three.
+  bool get _atInterval =>
+      _atHalfTime || _atExtraTimeStart || _atExtraTimeHalf;
+
+  /// The talk given at the extra-time turnaround. Extra time is already drawn
+  /// by then (its goals have been shown), so this one steadies the takers
+  /// instead: it moves the shootout, not the score.
+  TeamTalkTone? _extraTimeHalfTalk;
+
   // --- Live extra time / penalties -----------------------------------------
   // A level knockout plays on: the clock runs to 120 (extra time) and, if still
   // level, a shootout is revealed kick by kick — rather than the result just
@@ -159,6 +215,15 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
   /// How many shootout kicks have been revealed so far.
   int _penRevealed = 0;
   Timer? _penTimer;
+
+  /// The five takers the manager has named, in the order they step up. Null
+  /// until they choose (or the shootout is skipped, which takes the automatic
+  /// order). Sudden death cycles back through the same list.
+  List<Player>? _penOrder;
+
+  /// Whether the taker sheet has already been offered this match, so it is
+  /// asked exactly once.
+  bool _penOrderAsked = false;
 
   bool get _isShootout => _koOutcome?.wentToShootout ?? false;
   int get _penTotal =>
@@ -239,9 +304,9 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
     // Attribute each ET goal to a plausible scorer (the side's sharpest
     // finishers, rotating) so it appears in the timeline like any other goal.
     List<Player> finishers(List<Player> xi) => [
-          for (final p in xi)
-            if (p.position.category != PositionCategory.goalkeeper) p,
-        ]..sort((a, b) => b.attributes.shooting.compareTo(a.attributes.shooting));
+      for (final p in xi)
+        if (p.position.category != PositionCategory.goalkeeper) p,
+    ]..sort((a, b) => b.attributes.technical.compareTo(a.attributes.technical));
     final homeFin = finishers(
       preview.playerIsHome ? _currentXi(preview) : preview.homeTeam.xi,
     );
@@ -267,6 +332,37 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
           );
         }(),
     ];
+  }
+
+  /// Names the five takers before the shootout, then reveals it. Dismissing
+  /// the sheet keeps the automatic order — the shootout always goes ahead.
+  Future<void> _askPenaltyOrder(MatchPreview preview) async {
+    final r = _result;
+    final chosen = await showModalBottomSheet<List<Player>>(
+      context: context,
+      backgroundColor: AppColors.surfaceContainer,
+      isScrollControlled: true,
+      isDismissible: false,
+      enableDrag: false,
+      builder: (_) => PenaltyOrderSheet(
+        squad: [
+          for (final p in _currentXi(preview))
+            if (r == null || !_sentOff(r, _playerNationId ?? -1).contains(p.id))
+              p,
+        ],
+        initialOrder: _penTakers(preview),
+        traitsByPlayer: _playerTeam(preview).traitsByPlayer,
+      ),
+    );
+    if (!mounted) return;
+    setState(() {
+      if (chosen != null && chosen.isNotEmpty) _penOrder = chosen;
+      // The kicks follow from who is taking them, so they are drawn now.
+      final res = _result;
+      if (res != null) _koOutcome = _knockoutOutcome(preview, res);
+      _penRevealed = 0;
+    });
+    _startShootout();
   }
 
   /// Starts revealing the shootout kicks one at a time.
@@ -325,8 +421,22 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
         if (_clockDone) {
           _playing = false;
           MatchFeedback.fullTime(ref.read(soundHapticsEnabledProvider));
-          // A level knockout that reached the shootout now reveals its kicks.
-          if (_isShootout) _startShootout();
+          // A level knockout that reached the shootout: name the takers first,
+          // then reveal the kicks. The order is asked once, and only of a
+          // manager who is actually in the tie.
+          if (_isShootout) {
+            if (_penOrderAsked) {
+              _startShootout();
+            } else {
+              _penOrderAsked = true;
+              final preview = _livePreview;
+              if (preview != null) {
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  if (mounted) _askPenaltyOrder(preview);
+                });
+              }
+            }
+          }
         }
       });
       // An injury opens the squad (paused) with the hurt player flagged — play
@@ -334,6 +444,8 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
       _checkInjuryAt(_minute, tickStoppage);
       // Half-time: the whistle stops play until the manager continues.
       if (_checkHalfTime()) return;
+      // The extra-time intervals do the same at 90' and 105'.
+      if (_checkExtraTimeBreaks()) return;
       if (!_playing || _clockDone) return;
       // A goal genuinely pauses the clock: the flash timer resumes play once
       // the popup has cleared, so the game never ticks on under the overlay.
@@ -364,7 +476,7 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
           // Resume only if nothing else has taken over the clock (half-time in
           // the same minute, a manual pause, or full time) — those paths own
           // their own resume. Injuries no longer pause play.
-          if (_playing && !_clockDone && !_atHalfTime) {
+          if (_playing && !_clockDone && !_atInterval) {
             _restartTimer();
           }
         });
@@ -372,6 +484,25 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
       }
     }
     return false;
+  }
+
+  /// The manager's own players sent off so far in this match.
+  ///
+  /// A red card ends that player's game: he leaves the pitch for good, can't be
+  /// replaced, and must not appear among the substitutes. Derived from the
+  /// event list rather than accumulated, so it stays correct across the
+  /// re-simulations a tactical change triggers.
+  Set<int> _sentOffIds() {
+    final events = _result?.events;
+    final nation = _playerNationId;
+    if (events == null || nation == null) return const {};
+    return {
+      for (final e in events)
+        if (e.type == MatchEventType.redCard &&
+            e.teamNationId == nation &&
+            e.minute <= _minute)
+          e.playerId,
+    };
   }
 
   /// Pauses playback and raises the injury overlay if one of the manager's own
@@ -409,7 +540,7 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
   /// manager is done — whether they made the sub or not.
   Future<void> _handleInjury(MatchPreview preview) async {
     await _openTactics(preview);
-    if (mounted && !_playing && !_clockDone && !_atHalfTime) {
+    if (mounted && !_playing && !_clockDone && !_atInterval) {
       _togglePlay();
     }
   }
@@ -437,6 +568,96 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
     _restartTimer();
   }
 
+  /// Stops the clock at the two extra-time intervals of a level knockout: the
+  /// huddle at the end of 90 minutes (before the first period) and the
+  /// turnaround at 105'. Each fires once; a match settled inside 90 minutes
+  /// never sees either.
+  bool _checkExtraTimeBreaks() {
+    if (_fullTimeMinute <= 90) return false;
+    // The end of regulation, stoppage played out — the players are on the grass
+    // and the manager has the huddle.
+    if (!_extraTimeStartTaken && _minute >= 90 && _added >= _stoppage) {
+      _extraTimeStartTaken = true;
+      _timer?.cancel();
+      setState(() {
+        _playing = false;
+        _atExtraTimeStart = true;
+      });
+      return true;
+    }
+    if (!_extraTimeHalfTaken && _minute >= 105) {
+      _extraTimeHalfTaken = true;
+      _timer?.cancel();
+      setState(() {
+        _playing = false;
+        _atExtraTimeHalf = true;
+      });
+      return true;
+    }
+    return false;
+  }
+
+  /// Dismisses an extra-time interval overlay and restarts the clock.
+  void _resumeFromExtraTimeBreak() {
+    setState(() {
+      _atExtraTimeStart = false;
+      _atExtraTimeHalf = false;
+      _playing = true;
+    });
+    _restartTimer();
+  }
+
+  /// How much the pre-extra-time talk tilts the extra period, as the strength
+  /// pair `decideKnockout` weights its half-chances by.
+  ///
+  /// A talk here is worth a real edge but not the tie: at its strongest it
+  /// moves a level pair to roughly 57/43, which decides some of them and none
+  /// of them on its own.
+  (double, double) _extraTimeStrengths(MatchPreview preview) {
+    final tone = _extraTimeTalk;
+    if (tone == null) return (1, 1);
+    final (atk, def) = tone.effect;
+    final edge = 1 + ((atk + def) / 2) * 0.06;
+    return preview.playerIsHome ? (edge, 1.0) : (1.0, edge);
+  }
+
+  /// How much the extra-time turnaround talk steadies the manager's takers, as
+  /// a multiplier on their per-kick conversion.
+  double _shootoutComposure() {
+    final tone = _extraTimeHalfTalk;
+    if (tone == null) return 1;
+    // Composure, not aggression: settling the side is worth more from the spot
+    // than demanding more of it.
+    final (atk, def) = tone.effect;
+    return (1 + (def - atk * 0.5) * 0.02).clamp(0.94, 1.08);
+  }
+
+  /// Applies a talk given at one of the extra-time intervals.
+  void _applyExtraTimeTalk(
+    MatchPreview preview,
+    TeamTalkTone tone, {
+    required bool atStart,
+  }) {
+    setState(() {
+      if (atStart) {
+        _extraTimeTalk = tone;
+        // Extra time has not been played yet, so it can be redrawn wholesale
+        // with the new edge applied. Unlocking the one-time setup is what lets
+        // the recomputed goals reach the clock and the timeline.
+        _koSetup = false;
+        final r = _result ?? preview.result;
+        _ensureKnockoutSetup(preview, r);
+      } else {
+        _extraTimeHalfTalk = tone;
+        // Only the shootout is still open — `decideKnockout` draws extra time
+        // from the stream BEFORE the kicks, so the score the manager has just
+        // watched cannot move under them.
+        final r = _result ?? preview.result;
+        _koOutcome = _knockoutOutcome(preview, r);
+      }
+    });
+  }
+
   /// Dismisses the injury overlay and resumes play a man down (only offered
   /// when no substitution can be made — subs spent or an empty bench).
   bool _isKnockoutFixture(Fixture f) => Rounds.isKnockout(f.round);
@@ -449,10 +670,64 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
     if (!_isKnockoutFixture(preview.fixture) || r.homeScore != r.awayScore) {
       return null;
     }
+    // Who takes them decides them. Extra time is drawn from the same stream
+    // BEFORE the shootout, so naming takers changes the kicks and never the
+    // extra-time score — the tie the manager just watched stays as it was.
+    final composure = _shootoutComposure();
+    final mySkill = [
+      for (final s in PenaltyTakers.skillOrder(
+        _penTakers(preview),
+        traitsByPlayer: _playerTeam(preview).traitsByPlayer,
+      ))
+        s * composure,
+    ];
+    final oppTeam = _opponentTeam(preview);
+    final oppSkill = PenaltyTakers.skillOrder(
+      PenaltyTakers.autoOrder(
+        oppTeam.xi,
+        unavailable: _sentOff(r, oppTeam.nationId),
+        traitsByPlayer: oppTeam.traitsByPlayer,
+      ),
+      traitsByPlayer: oppTeam.traitsByPlayer,
+    );
+    final (homeStrength, awayStrength) = _extraTimeStrengths(preview);
     return WorldCupFinals.decideKnockout(
       r.homeScore,
       r.awayScore,
       SeededRng.forFixture(preview.saveSeed, preview.fixture.id ^ 0x7F),
+      homeStrength: homeStrength,
+      awayStrength: awayStrength,
+      homeTakerSkill: preview.playerIsHome ? mySkill : oppSkill,
+      awayTakerSkill: preview.playerIsHome ? oppSkill : mySkill,
+    );
+  }
+
+  /// The opposition, as fielded (the manager's own side is [_playerTeam]).
+  MatchTeam _opponentTeam(MatchPreview preview) =>
+      preview.playerIsHome ? preview.awayTeam : preview.homeTeam;
+
+  /// Players sent off — they cannot take a kick.
+  Set<int> _sentOff(MatchResult r, int nationId) => {
+    for (final e in r.events)
+      if (e.type == MatchEventType.redCard && e.teamNationId == nationId)
+        e.playerId,
+  };
+
+  /// The manager's takers by name, for the shootout strip.
+  List<String> _takerNames(MatchPreview preview) => [
+    for (final p in _penTakers(preview)) p.name,
+  ];
+
+  /// The manager's takers: their named order, or the automatic one until they
+  /// name it.
+  List<Player> _penTakers(MatchPreview preview) {
+    final named = _penOrder;
+    if (named != null && named.isNotEmpty) return named;
+    final r = _result;
+    return PenaltyTakers.autoOrder(
+      _currentXi(preview),
+      unavailable: r == null ? const {} : _sentOff(r, _playerNationId ?? -1),
+      traitsByPlayer: _playerTeam(preview).traitsByPlayer,
     );
   }
 
@@ -473,9 +748,8 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
   /// before the goal, peaks as it goes in, then fades away afterwards — the way
   /// a real momentum needle leans into a goal rather than jumping after it.
   double _homeMomentum(MatchPreview preview, int homeId) {
-    double avg(List<Player> xi) => xi.isEmpty
-        ? 60
-        : xi.fold<int>(0, (s, p) => s + p.overall) / xi.length;
+    double avg(List<Player> xi) =>
+        xi.isEmpty ? 60 : xi.fold<int>(0, (s, p) => s + p.overall) / xi.length;
     final baseline =
         50 + (avg(preview.homeTeam.xi) - avg(preview.awayTeam.xi)) * 1.1;
     var m = baseline;
@@ -484,23 +758,46 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
     // (two out-of-phase waves) so it's stable across rebuilds, and it leans
     // toward whichever side is stronger.
     final lean = (baseline - 50) / 40; // −1…1, the stronger side's tilt
-    final wobble = 9 * math.sin(_minute * 0.5 + homeId % 5) +
-        5 * math.sin(_minute * 0.23 + 1.7) +
+    // Three incommensurate waves, wide enough that the needle reaches its
+    // extremes on its own. It used to breathe in a narrow band and only ever
+    // hit the ends when a goal was on the way, which turned the bar into a
+    // countdown: the manager learned that 8% meant a goal inside two minutes.
+    final wobble =
+        12 * math.sin(_minute * 0.37 + homeId % 7) +
+        7 * math.sin(_minute * 0.13 + 1.7) +
+        5 * math.sin(_minute * 0.71 + homeId % 3) +
         6 * lean * math.sin(_minute * 0.11);
     m += wobble;
-    const build = 6.0; // minutes of pressure rising before the goal
-    const fade = 16.0; // minutes it fades over afterwards
-    const peak = 22.0;
+    // A goal is FELT after it goes in, not announced beforehand. There is still
+    // a lean into it — pressure does tell — but it is a hint the size of the
+    // ordinary ebb and flow, not a spike that pins the bar to its clamp.
+    const build = 3.0; // minutes of pressure rising before the goal
+    const fade = 18.0; // minutes it fades over afterwards
+    const prePeak = 6.0; // the most a coming goal shows in advance
+    const postPeak = 24.0; // the swing the goal itself produces
     for (final e in _result?.events ?? const <MatchEvent>[]) {
       if (e.type != MatchEventType.goal) continue;
       final g = e.minute;
       if (_minute < g - build || _minute > g + fade) continue;
-      final swing = _minute <= g
-          ? (build - (g - _minute)) / build * peak // 0 → peak approaching goal
-          : (fade - (_minute - g)) / fade * peak; // peak → 0 after the goal
+      final swing = _minute < g
+          ? (build - (g - _minute)) / build * prePeak
+          : (fade - (_minute - g)) / fade * postPeak; // peak → 0 after the goal
       m += e.teamNationId == homeId ? swing : -swing;
     }
-    return m.clamp(8, 92);
+    // Fold in the engine's REAL momentum swing (the mechanic that actually
+    // shifted the play) so the needle reflects it, not just this cosmetic model.
+    // momentumByMinute is net home−away; homeId may be the away side on the
+    // pitch, so orient it to the home team of this bar.
+    final real = _result?.momentumByMinute;
+    if (real != null && _minute > 0 && _minute < real.length) {
+      final net = real[_minute]; // + = engine's home side pressing
+      final forThisHome = homeId == preview.fixture.homeNationId ? net : -net;
+      m += forThisHome * 2.4;
+    }
+    // A wider band than the swing can reach on its own, so touching the end of
+    // the bar is a genuinely extreme spell rather than the routine sign that a
+    // goal is coming.
+    return m.clamp(4, 96);
   }
 
   void _togglePlay() {
@@ -519,6 +816,8 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
     _timer?.cancel();
     _penTimer?.cancel();
     setState(() {
+      // Skipping past a shootout accepts the automatic taker order.
+      _penOrderAsked = true;
       // Jump straight to the result, revealing any stoppage / extra time /
       // shootout at once rather than playing the drama out.
       _minute = _fullTimeMinute;
@@ -538,7 +837,16 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
     try {
       await ref
           .read(seasonServiceProvider)
-          .playPlayerMatch(widget.careerId, preview.fixture, r);
+          .playPlayerMatch(
+            widget.careerId,
+            preview.fixture,
+            r,
+            // The extra time and shootout the manager just watched — with the
+            // takers they named and the talks they gave folded in. The season
+            // service used to redraw it from the raw seed, so the stored
+            // result could disagree with the one on screen.
+            knockout: _knockoutOutcome(preview, r),
+          );
       // Celebrate any achievements this match just unlocked before moving on.
       final unlocked = await ref
           .read(achievementServiceProvider)
@@ -553,7 +861,11 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
       if (mounted) {
         setState(() => _committing = false);
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Could not continue: $e')),
+          SnackBar(
+            content: Text(
+              AppLocalizations.of(context).matchCouldNotContinue('$e'),
+            ),
+          ),
         );
       }
     }
@@ -565,8 +877,10 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
       preview.playerIsHome ? preview.homeTeam : preview.awayTeam;
 
   /// Every player the manager can field: the starting XI plus the bench.
-  List<Player> _playerPool(MatchPreview preview) =>
-      [..._playerTeam(preview).xi, ...preview.bench];
+  List<Player> _playerPool(MatchPreview preview) => [
+    ..._playerTeam(preview).xi,
+    ...preview.bench,
+  ];
 
   /// Seeds the live tactical setup from the preview's starting setup, once.
   void _ensureLiveSetup(MatchPreview preview) {
@@ -595,20 +909,43 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
     return _playerTeam(preview).xi.where((p) => !on.contains(p.id)).length;
   }
 
+  /// Interpolated live energy per player (0–100). The engine only reports each
+  /// player's energy at full time, so before then we walk it from a fresh 100 at
+  /// kick-off down to that final value by 90' — everyone reads ~100 pre-match
+  /// and drains believably as the game runs.
+  Map<int, int> _liveEnergy(MatchResult r) {
+    if (_fullTime) return r.energyByPlayer;
+    final t = _minute.clamp(0, 90) / 90;
+    return {
+      for (final e in r.energyByPlayer.entries)
+        e.key: (100 - (100 - e.value) * t).round(),
+    };
+  }
+
+  /// How many of the manager's own players on the pitch are running on empty
+  /// (below the red band). Drives the alert on the tactics button — legs go
+  /// quietly, and a manager watching the ball shouldn't have to open the squad
+  /// on spec to find out someone has nothing left.
+  int _spentCount(MatchPreview preview, MatchResult r) {
+    if (_fullTime) return 0;
+    final energy = _liveEnergy(r);
+    final sentOff = _sentOffIds();
+    var n = 0;
+    for (final p in _currentXi(preview)) {
+      if (sentOff.contains(p.id)) continue;
+      if ((energy[p.id] ?? 100) < 50) n++;
+    }
+    return n;
+  }
+
   /// Opens the full in-match tactics editor and, if the manager confirms,
   /// records the change and re-simulates the rest of the match with it applied.
   Future<void> _openTactics(MatchPreview preview) async {
     final wasPlaying = _playing;
     if (_playing) _togglePlay();
     final team = _playerTeam(preview);
-    // Interpolated live energy (fresh 100 at kick-off → the final value by 90')
-    // so the manager can see who's tiring when choosing a substitution.
-    final base = (_result ?? preview.result).energyByPlayer;
-    final energyNow = {
-      for (final e in base.entries)
-        e.key:
-            (100 - (100 - e.value) * (_minute.clamp(0, 90) / 90)).round(),
-    };
+    // So the manager can see who's tiring when choosing a substitution.
+    final energyNow = _liveEnergy(_result ?? preview.result);
     final result = await showInMatchTactics(
       context,
       minute: _minute.clamp(1, 90),
@@ -619,7 +956,16 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
       startingIds: team.xi.map((p) => p.id).toSet(),
       maxSubs: kMaxSubs,
       injuredIds: _injuredIds,
+      sentOffIds: _sentOffIds(),
       energyByPlayer: energyNow,
+      // Your kit on your players' discs — the same identity the pre-match
+      // tactics pitch shows, rather than a neutral grey mid-game.
+      teamColors: () {
+        final n = preview.nations[preview.playerNationId];
+        return n == null
+            ? null
+            : KitColors.discFill(n.primaryColor, n.secondaryColor);
+      }(),
     );
     if (result != null && mounted) _applyTactics(preview, result);
     if (wasPlaying && _minute < 90 && !_playing) _togglePlay();
@@ -629,24 +975,30 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
   /// tactics the engine reactively manages by the scoreline.
   int _opponentNationId(MatchPreview preview) =>
       preview.homeTeam.nationId == preview.playerNationId
-          ? preview.awayTeam.nationId
-          : preview.homeTeam.nationId;
+      ? preview.awayTeam.nationId
+      : preview.homeTeam.nationId;
 
   /// Re-runs the whole match from its seed with every change and team talk the
   /// manager has made applied, and the AI opponent reactively managed. Shared by
   /// the tactics editor and the interval team talk so both stay deterministic.
   MatchResult _resim(MatchPreview preview) => _engine.play(
-        home: preview.homeTeam,
-        away: preview.awayTeam,
-        rng: SeededRng.forFixture(preview.saveSeed, preview.fixture.id),
-        subs: preview.opponentSubs,
-        changes: _changes,
-        talks: _talks,
-        aiManagedNationIds: {_opponentNationId(preview)},
-        injuryFactorByNation: preview.injuryFactorByNation,
-        neutralVenue: preview.neutralVenue,
-        venueHostId: preview.venueHostId,
-      );
+    home: preview.homeTeam,
+    away: preview.awayTeam,
+    rng: SeededRng.forFixture(preview.saveSeed, preview.fixture.id),
+    subs: preview.opponentSubs,
+    changes: _changes,
+    talks: _talks,
+    aiManagedNationIds: {_opponentNationId(preview)},
+    injuryFactorByNation: preview.injuryFactorByNation,
+    chemistryByNation: preview.chemistryByNation,
+    neutralVenue: preview.neutralVenue,
+    venueHostId: preview.venueHostId,
+    // Carried through so a re-sim after a substitution or team talk keeps
+    // the big-game trait and the crowd applied exactly as the first
+    // simulation did.
+    bigMatch: preview.bigMatch,
+    atmosphere: Attendance.atmosphere(preview.ground),
+  );
 
   void _applyTactics(MatchPreview preview, InMatchTacticsResult r) {
     final byId = {for (final p in _playerPool(preview)) p.id: p};
@@ -655,7 +1007,16 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
         .map((id) => byId[id])
         .whereType<Player>()
         .toList();
-    final minute = _minute.clamp(1, 90);
+    // Take effect from the NEXT minute, never the one just played. A change
+    // stamped on the current minute made the re-sim replay that minute with the
+    // new XI — so a goal the manager had already watched go in (popup and all)
+    // could vanish from the rebuilt event list, leaving a "GOAL!" flash with no
+    // goal on the scoreboard. Past minutes are now always replayed identically.
+    //
+    // Beyond 90 this lands past the regulation loop and is simply inert: the
+    // engine only applies changes on minutes 1–90 in normal time, so a sub made
+    // during stoppage updates the lineups display without rewriting the match.
+    final minute = _minute + 1;
     setState(() {
       _liveFormation = r.formation;
       _liveLineup = r.lineup;
@@ -698,15 +1059,16 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
     final previewAsync = ref.watch(matchPreviewProvider(widget.careerId));
 
     return Scaffold(
       body: previewAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => Center(child: Text('Could not load match.\n$e')),
+        error: (e, _) => Center(child: Text(l.matchCouldNotLoad('$e'))),
         data: (preview) {
           if (preview == null) {
-            return const Center(child: Text('No upcoming match.'));
+            return Center(child: Text(l.matchNoUpcoming));
           }
           _result ??= preview.result;
           _livePreview = preview;
@@ -728,13 +1090,14 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
           final shown = r.events.where(_reached).toList();
           // The event feed also shows extra-time goals (kept OUT of `shown` so
           // the score isn't double-counted — it adds ET via _etGoals below).
-          final timelineEvents = [
-            ...shown,
-            ..._etEvents.where(_reached),
-          ]..sort((a, b) {
-              final byMin = a.minute.compareTo(b.minute);
-              return byMin != 0 ? byMin : a.stoppage.compareTo(b.stoppage);
-            });
+          final timelineEvents =
+              [
+                ...shown,
+                ..._etEvents.where(_reached),
+              ]..sort((a, b) {
+                final byMin = a.minute.compareTo(b.minute);
+                return byMin != 0 ? byMin : a.stoppage.compareTo(b.stoppage);
+              });
           final ft = _fullTime;
           final inExtraTime = _minute > 90 && _minute < _fullTimeMinute;
           final inStoppage = _minute == 90 && _added > 0 && !ft;
@@ -747,15 +1110,16 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
               .where((e) => e.type == MatchEventType.goal)
               .where((e) => e.teamNationId == homeId)
               .length;
-          final liveAway = shown
-                  .where((e) => e.type == MatchEventType.goal)
-                  .length -
+          final liveAway =
+              shown.where((e) => e.type == MatchEventType.goal).length -
               liveHome;
           // Extra-time score: the 90' tally plus revealed ET goals.
-          final etHome =
-              _etGoals.where((g) => g.$1 <= _minute && g.$2 == homeId).length;
-          final etAway =
-              _etGoals.where((g) => g.$1 <= _minute && g.$2 == awayId).length;
+          final etHome = _etGoals
+              .where((g) => g.$1 <= _minute && g.$2 == homeId)
+              .length;
+          final etAway = _etGoals
+              .where((g) => g.$1 <= _minute && g.$2 == awayId)
+              .length;
           final int homeScore;
           final int awayScore;
           if (ft) {
@@ -784,133 +1148,130 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
                 children: [
                   Column(
                     children: [
-                  _TopBar(
-                    onClose: () =>
-                        context.go('${Routes.hub}?careerId=${widget.careerId}'),
-                  ),
-                  _Header(
-                    homeCode: code(homeId),
-                    awayCode: code(awayId),
-                    homeName: name(homeId),
-                    awayName: name(awayId),
-                    homeScore: homeScore,
-                    awayScore: awayScore,
-                    clock: ft
-                        ? (decidedByShootout
-                            ? 'FULL TIME · PENALTIES'
-                            : knockout != null
-                                ? 'AFTER EXTRA TIME'
-                                : 'FULL TIME')
-                        : showingShootout
+                      _TopBar(
+                        onClose: () => context.go(
+                          '${Routes.hub}?careerId=${widget.careerId}',
+                        ),
+                      ),
+                      _Header(
+                        homeCode: code(homeId),
+                        awayCode: code(awayId),
+                        homeName: name(homeId),
+                        awayName: name(awayId),
+                        homeScore: homeScore,
+                        awayScore: awayScore,
+                        clock: ft
+                            ? (decidedByShootout
+                                  ? 'FULL TIME · PENALTIES'
+                                  : knockout != null
+                                  ? 'AFTER EXTRA TIME'
+                                  : 'FULL TIME')
+                            : showingShootout
                             ? 'PENALTIES'
                             : inExtraTime
-                                // No trailing apostrophe: it adds right-side
-                                // width that pushes the digits left of the
-                                // plate's centre. The bare number reads as the
-                                // minute and sits dead-centre.
-                                ? 'ET $_minute'
-                                : inStoppage
-                                    ? '90+$_added'
-                                    : '$_minute',
-                    live: !ft,
-                  ),
-                  if (!ft && !showingShootout)
-                    _MomentumBar(
-                      homePercent: _homeMomentum(preview, homeId),
-                      homeCode: code(homeId),
-                      awayCode: code(awayId),
-                    ),
-                  if (!ft && !showingShootout && r.homeXgByMinute.isNotEmpty)
-                    _XgRaceLine(
-                      home: r.homeXgByMinute,
-                      away: r.awayXgByMinute,
-                      minute: _minute.clamp(0, 90),
-                      homeCode: code(homeId),
-                      awayCode: code(awayId),
-                    ),
-                  if (showingShootout || decidedByShootout)
-                    _ShootoutStrip(
-                      outcome: knockout!,
-                      homeCode: code(homeId),
-                      awayCode: code(awayId),
-                      revealed: showingShootout ? _penRevealed : _penTotal,
-                    ),
-                  const TabBar(
-                    labelColor: AppColors.onSurface,
-                    unselectedLabelColor: AppColors.onSurfaceVariant,
-                    indicatorColor: AppColors.primary,
-                    tabs: [
-                      Tab(text: 'TIMELINE'),
-                      Tab(text: 'STATS'),
-                      Tab(text: 'LINEUPS'),
-                    ],
-                  ),
-                  Expanded(
-                    child: TabBarView(
-                      children: [
-                        _Timeline(
-                          events: timelineEvents,
-                          live: !ft,
-                          homeId: homeId,
-                        ),
-                        if (ft)
-                          _Stats(
-                            result: r,
-                            homeCode: code(homeId),
-                            awayCode: code(awayId),
-                            homeNationId: homeId,
-                          )
-                        else
-                          const _StatsLocked(),
-                        _Lineups(
-                          home: preview.playerIsHome
-                              ? _currentXi(preview)
-                              : preview.homeTeam.xi,
-                          away: preview.playerIsHome
-                              ? preview.awayTeam.xi
-                              : _currentXi(preview),
+                            // No trailing apostrophe: it adds right-side
+                            // width that pushes the digits left of the
+                            // plate's centre. The bare number reads as the
+                            // minute and sits dead-centre.
+                            ? 'ET $_minute'
+                            : inStoppage
+                            ? '90+$_added'
+                            : '$_minute',
+                        live: !ft,
+                      ),
+                      if (!ft && !showingShootout)
+                        _MomentumBar(
+                          homePercent: _homeMomentum(preview, homeId),
                           homeCode: code(homeId),
                           awayCode: code(awayId),
-                          homeSubs: shown
-                              .where(
-                                (e) =>
-                                    e.type == MatchEventType.substitution &&
-                                    e.teamNationId == homeId,
-                              )
-                              .toList(),
-                          awaySubs: shown
-                              .where(
-                                (e) =>
-                                    e.type == MatchEventType.substitution &&
-                                    e.teamNationId == awayId,
-                              )
-                              .toList(),
-                          ratings: ft
-                              ? {
-                                  for (final x in r.ratings)
-                                    x.playerId: x.rating,
-                                }
-                              : const {},
-                          // Live energy: the engine only reports each player's
-                          // final energy, so before full time we interpolate it
-                          // from a fresh 100 at kick-off down to that final value
-                          // by the current minute — everyone reads ~100 pre-match
-                          // and drains believably as the game runs.
-                          energy: ft
-                              ? r.energyByPlayer
-                              : {
-                                  for (final e in r.energyByPlayer.entries)
-                                    e.key: (100 -
-                                            (100 - e.value) *
-                                                (_minute.clamp(0, 90) / 90))
-                                        .round(),
-                                },
                         ),
-                      ],
-                    ),
+                      if (showingShootout || decidedByShootout)
+                        _ShootoutStrip(
+                          outcome: knockout!,
+                          homeCode: code(homeId),
+                          awayCode: code(awayId),
+                          revealed: showingShootout ? _penRevealed : _penTotal,
+                          homeTakers: preview.playerIsHome
+                              ? _takerNames(preview)
+                              : const [],
+                          awayTakers: preview.playerIsHome
+                              ? const []
+                              : _takerNames(preview),
+                        ),
+                      const TabBar(
+                        labelColor: AppColors.onSurface,
+                        unselectedLabelColor: AppColors.onSurfaceVariant,
+                        indicatorColor: AppColors.primary,
+                        tabs: [
+                          Tab(text: 'TIMELINE'),
+                          Tab(text: 'STATS'),
+                          Tab(text: 'LINEUPS'),
+                        ],
+                      ),
+                      Expanded(
+                        child: TabBarView(
+                          children: [
+                            _Timeline(
+                              events: timelineEvents,
+                              live: !ft,
+                              homeId: homeId,
+                            ),
+                            if (ft)
+                              _Stats(
+                                result: r,
+                                homeCode: code(homeId),
+                                awayCode: code(awayId),
+                                homeNationId: homeId,
+                                ground: preview.ground,
+                                neutral: preview.neutralVenue,
+                                groundCode: code(
+                                  preview.ground.groundNationId,
+                                ),
+                              )
+                            else
+                              const _StatsLocked(),
+                            _Lineups(
+                              home: preview.playerIsHome
+                                  ? _currentXi(preview)
+                                  : preview.homeTeam.xi,
+                              away: preview.playerIsHome
+                                  ? preview.awayTeam.xi
+                                  : _currentXi(preview),
+                              homeCode: code(homeId),
+                              awayCode: code(awayId),
+                              homeSubs: shown
+                                  .where(
+                                    (e) =>
+                                        e.type == MatchEventType.substitution &&
+                                        e.teamNationId == homeId,
+                                  )
+                                  .toList(),
+                              awaySubs: shown
+                                  .where(
+                                    (e) =>
+                                        e.type == MatchEventType.substitution &&
+                                        e.teamNationId == awayId,
+                                  )
+                                  .toList(),
+                              homeBench: preview.playerIsHome
+                                  ? preview.bench
+                                  : preview.opponentBench,
+                              awayBench: preview.playerIsHome
+                                  ? preview.opponentBench
+                                  : preview.bench,
+                              ratings: ft
+                                  ? {
+                                      for (final x in r.ratings)
+                                        x.playerId: x.rating,
+                                    }
+                                  : const {},
+                              energy: _liveEnergy(r),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
-                ],
-              ),
                   if (_goalFlash != null)
                     _GoalFlash(
                       event: _goalFlash!,
@@ -920,6 +1281,7 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
                   // manager may reshape the side first).
                   if (_atHalfTime)
                     _HalfTimePrompt(
+                      heading: l.matchHalfTime,
                       homeCode: code(homeId),
                       awayCode: code(awayId),
                       homeScore: homeScore,
@@ -930,9 +1292,47 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
                           : 100 - r.homePossession,
                       subsUsed: _subsUsed(preview),
                       selectedTalk: _halfTimeTalk,
+                      options: offeredTalkTones(
+                        preview.saveSeed,
+                        preview.fixture.id,
+                      ),
                       onTalk: (tone) => _applyTeamTalk(preview, tone),
                       onTactics: () => _openTactics(preview),
                       onContinue: _resumeFromHalfTime,
+                    ),
+                  // The two extra-time intervals of a level knockout: the
+                  // huddle before the first period, and the turnaround at 105'.
+                  if (_atExtraTimeStart || _atExtraTimeHalf)
+                    _HalfTimePrompt(
+                      heading: _atExtraTimeStart
+                          ? l.matchExtraTimeAhead
+                          : l.matchExtraTimeHalf,
+                      homeCode: code(homeId),
+                      awayCode: code(awayId),
+                      homeScore: homeScore,
+                      awayScore: awayScore,
+                      playerIsHome: preview.playerIsHome,
+                      possession: preview.playerIsHome
+                          ? r.homePossession
+                          : 100 - r.homePossession,
+                      subsUsed: _subsUsed(preview),
+                      selectedTalk: _atExtraTimeStart
+                          ? _extraTimeTalk
+                          : _extraTimeHalfTalk,
+                      // A different salt per interval, so the huddle and the
+                      // turnaround don't offer the identical three lines.
+                      options: offeredTalkTones(
+                        preview.saveSeed,
+                        preview.fixture.id ^
+                            (_atExtraTimeStart ? 0x0E71 : 0x0E72),
+                      ),
+                      onTalk: (tone) => _applyExtraTimeTalk(
+                        preview,
+                        tone,
+                        atStart: _atExtraTimeStart,
+                      ),
+                      onTactics: () => _openTactics(preview),
+                      onContinue: _resumeFromExtraTimeBreak,
                     ),
                 ],
               ),
@@ -954,14 +1354,14 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
                   child: PrimaryButton(
                     label: _committing ? 'Continuing…' : 'Continue',
                     icon: Icons.check_rounded,
-                    onPressed:
-                        _committing ? null : () => _continue(preview, r),
+                    onPressed: _committing ? null : () => _continue(preview, r),
                   ),
                 )
               : _MatchControlBar(
                   playing: _playing,
                   speed: _speeds[_speedIdx],
                   subsUsed: _subsUsed(preview),
+                  spent: _spentCount(preview, r),
                   onPlayPause: _togglePlay,
                   onSpeed: _cycleSpeed,
                   onSkip: _skip,
@@ -1042,7 +1442,7 @@ class _Header extends StatelessWidget {
                   horizontal: AppSpacing.md,
                   vertical: 4,
                 ),
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   color: AppColors.surfaceContainerHighest,
                   borderRadius: AppRadii.baseAll,
                 ),
@@ -1057,8 +1457,9 @@ class _Header extends StatelessWidget {
                     fontSize: 15,
                     fontWeight: FontWeight.w700,
                     fontFeatures: const [FontFeature.tabularFigures()],
-                    color:
-                        live ? AppColors.onSurface : AppColors.onSurfaceVariant,
+                    color: live
+                        ? AppColors.onSurface
+                        : AppColors.onSurfaceVariant,
                   ),
                 ),
               ),
@@ -1067,19 +1468,35 @@ class _Header extends StatelessWidget {
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Expanded(child: _Side(code: homeCode, label: homeName)),
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: AppSpacing.sm,
-                  ),
-                  child: Text(
-                    '$homeScore : $awayScore',
-                    style: AppTypography.displayLarge,
+                Expanded(
+                  child: _Side(code: homeCode, label: homeName),
+                ),
+                // The scoreline is allowed to shrink rather than shove the two
+                // sides out of the card: a long name next to a 4:3 used to run
+                // the row off the edge of a narrow screen.
+                Flexible(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: AppSpacing.sm,
+                    ),
+                    child: FittedBox(
+                      child: Text(
+                        '$homeScore : $awayScore',
+                        maxLines: 1,
+                        style: AppTypography.displayLarge,
+                      ),
+                    ),
                   ),
                 ),
-                Expanded(child: _Side(code: awayCode, label: awayName)),
+                Expanded(
+                  child: _Side(code: awayCode, label: awayName),
+                ),
               ],
             ),
+            // Nothing under the scoreline: who scored is already told twice
+            // over — the goal flashes as it goes in, and the timeline tab
+            // keeps the full list — so a goal-count pill here was one place
+            // too many.
           ],
         ),
       ),
@@ -1095,6 +1512,7 @@ class _MatchControlBar extends StatelessWidget {
     required this.playing,
     required this.speed,
     required this.subsUsed,
+    required this.spent,
     required this.onPlayPause,
     required this.onSpeed,
     required this.onSkip,
@@ -1104,6 +1522,9 @@ class _MatchControlBar extends StatelessWidget {
   final bool playing;
   final int speed;
   final int subsUsed;
+
+  /// How many of the manager's players on the pitch are running on empty.
+  final int spent;
   final VoidCallback onPlayPause;
   final VoidCallback onSpeed;
   final VoidCallback onSkip;
@@ -1113,6 +1534,7 @@ class _MatchControlBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
     return Padding(
       padding: const EdgeInsets.symmetric(
         horizontal: AppSpacing.marginMobile,
@@ -1150,17 +1572,34 @@ class _MatchControlBar extends StatelessWidget {
           _PillButton(
             expand: true,
             onTap: onTactics,
+            // Spent legs call attention to themselves: the tactics pill turns
+            // amber and counts the players who have nothing left, so a fading
+            // side is something the manager sees rather than something they
+            // only notice in the full-time ratings.
+            accent: spent > 0 && subsUsed < kMaxSubs ? AppColors.warning : null,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Icon(Icons.tune, size: 18, color: AppColors.primary),
+                Icon(
+                  spent > 0 && subsUsed < kMaxSubs
+                      ? Icons.battery_alert_rounded
+                      : Icons.tune,
+                  size: 18,
+                  color: spent > 0 && subsUsed < kMaxSubs
+                      ? AppColors.warning
+                      : AppColors.primary,
+                ),
                 const SizedBox(width: AppSpacing.sm),
                 Flexible(
                   child: Text(
-                    'TACTICS · $subsUsed/$kMaxSubs',
+                    spent > 0 && subsUsed < kMaxSubs
+                        ? 'TIRED ×$spent · $subsUsed/$kMaxSubs'
+                        : 'TACTICS · $subsUsed/$kMaxSubs',
                     overflow: TextOverflow.ellipsis,
                     style: AppTypography.labelMedium.copyWith(
-                      color: AppColors.primary,
+                      color: spent > 0 && subsUsed < kMaxSubs
+                          ? AppColors.warning
+                          : AppColors.primary,
                     ),
                   ),
                 ),
@@ -1170,7 +1609,7 @@ class _MatchControlBar extends StatelessWidget {
           const SizedBox(width: AppSpacing.sm),
           _PillButton(
             onTap: onSkip,
-            tooltip: 'Skip to full time',
+            tooltip: l.matchSkipToFullTime,
             child: const Icon(
               Icons.skip_next_rounded,
               color: AppColors.primary,
@@ -1190,6 +1629,7 @@ class _PillButton extends StatelessWidget {
     required this.child,
     this.expand = false,
     this.tooltip,
+    this.accent,
   });
 
   final VoidCallback onTap;
@@ -1197,10 +1637,16 @@ class _PillButton extends StatelessWidget {
   final bool expand;
   final String? tooltip;
 
+  /// An alert colour for the pill's fill and border (null = the neutral look).
+  final Color? accent;
+
   @override
   Widget build(BuildContext context) {
+    final accent = this.accent;
     Widget button = Material(
-      color: AppColors.surfaceContainerHighest,
+      color: accent == null
+          ? AppColors.surfaceContainerHighest
+          : accent.withValues(alpha: 0.16),
       borderRadius: AppRadii.mdAll,
       child: InkWell(
         borderRadius: AppRadii.mdAll,
@@ -1211,7 +1657,9 @@ class _PillButton extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
           decoration: BoxDecoration(
             borderRadius: AppRadii.mdAll,
-            border: Border.all(color: AppColors.outlineVariant),
+            border: Border.all(
+              color: accent ?? AppColors.outlineVariant,
+            ),
           ),
           child: child,
         ),
@@ -1325,8 +1773,7 @@ class _TimelineRow extends StatelessWidget {
       MatchEventType.goal => Icons.sports_soccer,
       MatchEventType.substitution => Icons.swap_horiz,
       MatchEventType.yellowCard ||
-      MatchEventType.redCard =>
-        Icons.square_rounded,
+      MatchEventType.redCard => Icons.square_rounded,
       MatchEventType.injury => Icons.medical_services,
     };
     final iconColor = switch (event.type) {
@@ -1342,8 +1789,6 @@ class _TimelineRow extends StatelessWidget {
             '${_abbrevName(event.secondaryName ?? '')}',
       MatchEventType.goal when event.penalty =>
         '${_abbrevName(event.playerName)} (pen)',
-      MatchEventType.goal when event.setPiece =>
-        '${_abbrevName(event.playerName)} (set piece)',
       _ => _abbrevName(event.playerName),
     };
     final text = Flexible(
@@ -1363,8 +1808,9 @@ class _TimelineRow extends StatelessWidget {
         right: alignEnd ? AppSpacing.sm : 0,
       ),
       child: Row(
-        mainAxisAlignment:
-            alignEnd ? MainAxisAlignment.end : MainAxisAlignment.start,
+        mainAxisAlignment: alignEnd
+            ? MainAxisAlignment.end
+            : MainAxisAlignment.start,
         children: alignEnd
             ? [text, const SizedBox(width: AppSpacing.sm), icon]
             : [icon, const SizedBox(width: AppSpacing.sm), text],
@@ -1408,24 +1854,36 @@ class _Stats extends StatelessWidget {
     required this.homeCode,
     required this.awayCode,
     required this.homeNationId,
+    required this.ground,
+    required this.neutral,
+    required this.groundCode,
   });
+  final bool neutral;
+  final String groundCode;
   final MatchResult result;
   final String homeCode;
   final String awayCode;
   final int homeNationId;
+  final MatchGround ground;
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
     final motm = result.manOfTheMatch;
     return ListView(
       padding: const EdgeInsets.all(AppSpacing.marginMobile),
       children: [
+        GroundCard(
+          ground: ground,
+          neutral: neutral,
+          groundNationCode: groundCode,
+        ),
+        const SizedBox(height: AppSpacing.lg),
         if (motm != null) ...[
           _MotmCard(
             name: motm.playerName,
             rating: motm.rating,
-            teamCode:
-                motm.teamNationId == homeNationId ? homeCode : awayCode,
+            teamCode: motm.teamNationId == homeNationId ? homeCode : awayCode,
           ),
           const SizedBox(height: AppSpacing.lg),
         ],
@@ -1438,13 +1896,13 @@ class _Stats extends StatelessWidget {
         ),
         const SizedBox(height: AppSpacing.md),
         _StatBar(
-          label: 'Possession',
+          label: l.tacticsInstrPossession,
           home: result.homePossession,
           away: result.awayPossession,
           suffix: '%',
         ),
         _StatBar(
-          label: 'Shots',
+          label: l.matchStatShots,
           home: result.homeShots,
           away: result.awayShots,
         ),
@@ -1469,17 +1927,19 @@ class _Stats extends StatelessWidget {
   Widget _ratingsBlock(String teamCode, int? teamId) {
     // Read top-down like a team sheet: goalkeeper, defence, midfield, attack
     // (then rating within a line), rather than purely by score.
-    final players = [
-      for (final r in result.ratings)
-        if ((r.teamNationId == homeNationId) == (teamId != null)) r,
-    ]..sort((a, b) {
-        final byLine =
-            a.position.category.index.compareTo(b.position.category.index);
-        if (byLine != 0) return byLine;
-        final byPos = a.position.index.compareTo(b.position.index);
-        if (byPos != 0) return byPos;
-        return b.rating.compareTo(a.rating);
-      });
+    final players =
+        [
+          for (final r in result.ratings)
+            if ((r.teamNationId == homeNationId) == (teamId != null)) r,
+        ]..sort((a, b) {
+          final byLine = a.position.category.index.compareTo(
+            b.position.category.index,
+          );
+          if (byLine != 0) return byLine;
+          final byPos = a.position.index.compareTo(b.position.index);
+          if (byPos != 0) return byPos;
+          return b.rating.compareTo(a.rating);
+        });
     return AppCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -1517,116 +1977,6 @@ class _Stats extends StatelessWidget {
       ),
     );
   }
-}
-
-/// A live "xG race" line: cumulative expected goals for each side over the 90
-/// minutes, revealed up to the current [minute] so the two lines climb as the
-/// game plays. A step up is a big chance created.
-class _XgRaceLine extends StatelessWidget {
-  const _XgRaceLine({
-    required this.home,
-    required this.away,
-    required this.minute,
-    required this.homeCode,
-    required this.awayCode,
-  });
-
-  final List<double> home;
-  final List<double> away;
-  final int minute;
-  final String homeCode;
-  final String awayCode;
-
-  @override
-  Widget build(BuildContext context) {
-    final m = minute.clamp(0, home.length - 1);
-    final h = home[m];
-    final a = away[m];
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(
-        AppSpacing.marginMobile,
-        0,
-        AppSpacing.marginMobile,
-        AppSpacing.sm,
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text('$homeCode ${h.toStringAsFixed(1)}',
-                  style: AppTypography.labelSmall
-                      .copyWith(color: AppColors.primary)),
-              Text('xG',
-                  style: AppTypography.labelSmall
-                      .copyWith(color: AppColors.onSurfaceVariant)),
-              Text('${a.toStringAsFixed(1)} $awayCode',
-                  style: AppTypography.labelSmall
-                      .copyWith(color: AppColors.onSurfaceVariant)),
-            ],
-          ),
-          const SizedBox(height: 4),
-          SizedBox(
-            height: 40,
-            width: double.infinity,
-            child: CustomPaint(
-              painter: _XgRacePainter(home: home, away: away, upto: m),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _XgRacePainter extends CustomPainter {
-  _XgRacePainter({required this.home, required this.away, required this.upto});
-
-  final List<double> home;
-  final List<double> away;
-  final int upto;
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    if (upto <= 0) return;
-    // Scale to the larger of the two revealed totals (min 1.0 headroom) so the
-    // final magnitude never leaks before it's reached.
-    final maxXg = [home[upto], away[upto], 1.0].reduce((x, y) => x > y ? x : y);
-    final lastIndex = home.length - 1;
-    Path pathFor(List<double> series) {
-      final p = Path();
-      for (var i = 0; i <= upto; i++) {
-        final x = size.width * (i / lastIndex);
-        final y = size.height - (series[i] / maxXg) * size.height;
-        i == 0 ? p.moveTo(x, y) : p.lineTo(x, y);
-      }
-      return p;
-    }
-
-    final baseline = Paint()
-      ..color = AppColors.outlineVariant.withValues(alpha: 0.4)
-      ..strokeWidth = 1;
-    canvas.drawLine(
-        Offset(0, size.height), Offset(size.width, size.height), baseline);
-
-    final homePaint = Paint()
-      ..color = AppColors.primary
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 2
-      ..strokeJoin = StrokeJoin.round;
-    final awayPaint = Paint()
-      ..color = AppColors.onSurfaceVariant
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 2
-      ..strokeJoin = StrokeJoin.round;
-    canvas.drawPath(pathFor(away), awayPaint);
-    canvas.drawPath(pathFor(home), homePaint);
-  }
-
-  @override
-  bool shouldRepaint(_XgRacePainter old) =>
-      old.upto != upto || old.home != home || old.away != away;
 }
 
 /// The expected-goals stat row: fractional values (one decimal) with a bar
@@ -1742,6 +2092,8 @@ class _Lineups extends StatelessWidget {
     required this.awayCode,
     this.homeSubs = const [],
     this.awaySubs = const [],
+    this.homeBench = const [],
+    this.awayBench = const [],
     this.ratings = const {},
     this.energy = const {},
   });
@@ -1755,6 +2107,12 @@ class _Lineups extends StatelessWidget {
   final List<MatchEvent> homeSubs;
   final List<MatchEvent> awaySubs;
 
+  /// Every substitute named on each teamsheet — the tab used to show only the
+  /// eleven who started plus whoever had already come on, so the rest of the
+  /// bench was invisible for the whole match.
+  final List<Player> homeBench;
+  final List<Player> awayBench;
+
   /// Per-player match ratings, keyed by player id. Empty until full time.
   final Map<int, double> ratings;
 
@@ -1766,14 +2124,25 @@ class _Lineups extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.all(AppSpacing.marginMobile),
       children: [
-        _xi(homeCode, home, homeSubs),
+        _xi(homeCode, home, homeSubs, homeBench),
         const SizedBox(height: AppSpacing.lg),
-        _xi(awayCode, away, awaySubs),
+        _xi(awayCode, away, awaySubs, awayBench),
       ],
     );
   }
 
-  Widget _xi(String teamCode, List<Player> xi, List<MatchEvent> subs) {
+  Widget _xi(
+    String teamCode,
+    List<Player> xi,
+    List<MatchEvent> subs,
+    List<Player> bench,
+  ) {
+    // Anyone already on the pitch is no longer a substitute.
+    final onPitch = {for (final p in xi) p.id};
+    final remaining = [
+      for (final p in bench)
+        if (!onPitch.contains(p.id)) p,
+    ];
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -1875,6 +2244,46 @@ class _Lineups extends StatelessWidget {
               ),
             ),
         ],
+        if (remaining.isNotEmpty) ...[
+          const SizedBox(height: AppSpacing.sm),
+          Text(
+            'SUBSTITUTES',
+            style: AppTypography.labelSmall.copyWith(
+              color: AppColors.onSurfaceVariant,
+            ),
+          ),
+          const SizedBox(height: AppSpacing.xs),
+          for (final p in remaining)
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 2),
+              child: Row(
+                children: [
+                  SizedBox(width: 36, child: TacticalChip(p.position.label)),
+                  const SizedBox(width: AppSpacing.sm),
+                  Expanded(
+                    child: Text(
+                      p.name,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: AppTypography.bodySmall.copyWith(
+                        color: AppColors.onSurfaceVariant,
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    width: 20,
+                    child: Text(
+                      '${p.overall}',
+                      textAlign: TextAlign.end,
+                      style: AppTypography.labelSmall.copyWith(
+                        color: AppColors.onSurfaceVariant,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+        ],
       ],
     );
   }
@@ -1913,12 +2322,7 @@ class _RatingPill extends StatelessWidget {
 
   final double rating;
 
-  static Color colorFor(double r) {
-    if (r >= 7.5) return const Color(0xFF2E9E5B);
-    if (r >= 6.5) return const Color(0xFF4C86C6);
-    if (r >= 5.5) return AppColors.onSurfaceVariant;
-    return const Color(0xFFD64545);
-  }
+  static Color colorFor(double r) => AppColors.ratingColor(r);
 
   @override
   Widget build(BuildContext context) {
@@ -2013,6 +2417,7 @@ class _MomentumBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
     final h = (homePercent / 100).clamp(0.0, 1.0);
     final homePct = homePercent.round();
     final leaningHome = h >= 0.5;
@@ -2038,7 +2443,7 @@ class _MomentumBar extends StatelessWidget {
                 ),
               ),
               const Spacer(),
-              const Text('MOMENTUM', style: AppTypography.labelSmall),
+              Text(l.matchMomentum, style: AppTypography.labelSmall),
               const Spacer(),
               Text(
                 '${100 - homePct}%',
@@ -2168,9 +2573,7 @@ class _GoalFlash extends StatelessWidget {
                   Text(
                     event.penalty
                         ? 'PENALTY · ${_eventClock(event)}'
-                        : event.setPiece
-                            ? 'SET PIECE · ${_eventClock(event)}'
-                            : _eventClock(event),
+                        : _eventClock(event),
                     style: AppTypography.labelSmall.copyWith(
                       color: AppColors.onSurfaceVariant,
                     ),
@@ -2196,11 +2599,18 @@ class _ShootoutStrip extends StatelessWidget {
     required this.homeCode,
     required this.awayCode,
     this.revealed = 1 << 30,
+    this.homeTakers = const [],
+    this.awayTakers = const [],
   });
 
   final KnockoutOutcome outcome;
   final String homeCode;
   final String awayCode;
+
+  /// Each side's takers in order, so the strip can name whoever just stepped
+  /// up. Cycled in sudden death, exactly as the kicks are.
+  final List<String> homeTakers;
+  final List<String> awayTakers;
 
   /// How many kicks (across both teams, home-first) have been taken so far —
   /// the strip reveals them one at a time as the shootout plays out live.
@@ -2216,6 +2626,18 @@ class _ShootoutStrip extends StatelessWidget {
     final awayKicks = outcome.awayKicks.take(awayShown).toList();
     final homePens = homeKicks.where((s) => s).length;
     final awayPens = awayKicks.where((s) => s).length;
+    // Who just stepped up, and what happened — a shootout is a sequence of
+    // individuals, not a row of anonymous dots.
+    final lastIsHome = revealed.isOdd;
+    final lastIndex = (lastIsHome ? homeShown : awayShown) - 1;
+    final takers = lastIsHome ? homeTakers : awayTakers;
+    final kicks = lastIsHome ? homeKicks : awayKicks;
+    final lastName = lastIndex >= 0 && takers.isNotEmpty
+        ? takers[lastIndex % takers.length]
+        : null;
+    final lastScored = lastIndex >= 0 && lastIndex < kicks.length
+        ? kicks[lastIndex]
+        : null;
     return Container(
       width: double.infinity,
       color: AppColors.surfaceContainerHigh,
@@ -2233,34 +2655,44 @@ class _ShootoutStrip extends StatelessWidget {
           _kicks(homeCode, homeKicks),
           const SizedBox(height: 2),
           _kicks(awayCode, awayKicks),
+          if (lastName != null && lastScored != null) ...[
+            const SizedBox(height: AppSpacing.xs),
+            Text(
+              '$lastName — ${lastScored ? 'SCORED' : 'MISSED'}',
+              style: AppTypography.labelSmall.copyWith(
+                color: lastScored ? AppColors.positive : AppColors.error,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ],
         ],
       ),
     );
   }
 
   Widget _kicks(String code, List<bool> kicks) => Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          SizedBox(
-            width: 34,
-            child: Text(
-              code,
-              style: AppTypography.labelSmall,
-              textAlign: TextAlign.center,
-            ),
+    mainAxisAlignment: MainAxisAlignment.center,
+    children: [
+      SizedBox(
+        width: 34,
+        child: Text(
+          code,
+          style: AppTypography.labelSmall,
+          textAlign: TextAlign.center,
+        ),
+      ),
+      const SizedBox(width: AppSpacing.sm),
+      for (final scored in kicks)
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 2),
+          child: Icon(
+            scored ? Icons.circle : Icons.circle_outlined,
+            size: 12,
+            color: scored ? AppColors.positive : AppColors.error,
           ),
-          const SizedBox(width: AppSpacing.sm),
-          for (final scored in kicks)
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 2),
-              child: Icon(
-                scored ? Icons.circle : Icons.circle_outlined,
-                size: 12,
-                color: scored ? AppColors.positive : AppColors.error,
-              ),
-            ),
-        ],
-      );
+        ),
+    ],
+  );
 }
 
 /// The half-time interval overlay: the score, a read of the first half, and the
@@ -2268,6 +2700,7 @@ class _ShootoutStrip extends StatelessWidget {
 /// current game state. The manager can reshape the side (Tactics) too.
 class _HalfTimePrompt extends StatelessWidget {
   const _HalfTimePrompt({
+    required this.heading,
     required this.homeCode,
     required this.awayCode,
     required this.homeScore,
@@ -2276,10 +2709,15 @@ class _HalfTimePrompt extends StatelessWidget {
     required this.possession,
     required this.subsUsed,
     required this.selectedTalk,
+    required this.options,
     required this.onTalk,
     required this.onTactics,
     required this.onContinue,
   });
+
+  /// Which interval this is — half time, the break before extra time, or the
+  /// turnaround midway through it.
+  final String heading;
 
   final String homeCode;
   final String awayCode;
@@ -2289,19 +2727,13 @@ class _HalfTimePrompt extends StatelessWidget {
   final int possession;
   final int subsUsed;
   final TeamTalkTone? selectedTalk;
+
+  /// The tones offered this interval — a seeded, varied subset of the full set
+  /// rather than every tone in a fixed order.
+  final List<TeamTalkTone> options;
   final ValueChanged<TeamTalkTone> onTalk;
   final VoidCallback onTactics;
   final VoidCallback onContinue;
-
-  /// The team talk that best fits the scoreline: protect a lead, chase a
-  /// deficit, or push on when level.
-  TeamTalkTone get _recommended {
-    final diff =
-        playerIsHome ? homeScore - awayScore : awayScore - homeScore;
-    if (diff > 0) return TeamTalkTone.praise;
-    if (diff < 0) return TeamTalkTone.demandMore;
-    return TeamTalkTone.encourage;
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -2310,13 +2742,13 @@ class _HalfTimePrompt extends StatelessWidget {
     final state = diff > 0
         ? 'You lead by ${diff == 1 ? 'a goal' : '$diff goals'}'
         : diff < 0
-            ? 'You trail by ${-diff == 1 ? 'a goal' : '${-diff} goals'}'
-            : 'It\'s all square';
+        ? 'You trail by ${-diff == 1 ? 'a goal' : '${-diff} goals'}'
+        : 'It\'s all square';
     final stateColor = diff > 0
         ? AppColors.positive
         : diff < 0
-            ? AppColors.error
-            : AppColors.onSurface;
+        ? AppColors.error
+        : AppColors.onSurface;
     return Positioned.fill(
       child: ColoredBox(
         color: Colors.black54,
@@ -2335,7 +2767,7 @@ class _HalfTimePrompt extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    l10n.matchHalfTime,
+                    heading,
                     style: AppTypography.labelMedium.copyWith(
                       color: AppColors.primary,
                     ),
@@ -2370,13 +2802,12 @@ class _HalfTimePrompt extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: AppSpacing.xs),
-                  for (final tone in TeamTalkTone.values)
+                  for (final tone in options)
                     _TalkOption(
                       label: teamTalkLabel(l10n, tone),
                       blurb: teamTalkBlurb(l10n, tone),
                       effect: tone.effect,
                       selected: selectedTalk == tone,
-                      recommended: _recommended == tone,
                       onTap: () => onTalk(tone),
                     ),
                   const SizedBox(height: AppSpacing.md),
@@ -2415,15 +2846,15 @@ class _HalfTimePrompt extends StatelessWidget {
   }
 }
 
-/// One team-talk option in the half-time card: its label, what it asks for, the
-/// attack/defence swing it applies, and a "suggested" flag for the game state.
+/// One team-talk option in the half-time card: its label, what it asks for, and
+/// the attack/defence swing it applies. No "suggested" hint — the manager reads
+/// the game and decides.
 class _TalkOption extends StatelessWidget {
   const _TalkOption({
     required this.label,
     required this.blurb,
     required this.effect,
     required this.selected,
-    required this.recommended,
     required this.onTap,
   });
 
@@ -2431,11 +2862,11 @@ class _TalkOption extends StatelessWidget {
   final String blurb;
   final (double, double) effect;
   final bool selected;
-  final bool recommended;
   final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
     final (atk, def) = effect;
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 3),
@@ -2474,27 +2905,7 @@ class _TalkOption extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Row(
-                        children: [
-                          Text(label, style: AppTypography.bodyMedium),
-                          if (recommended) ...[
-                            const SizedBox(width: 6),
-                            const Icon(
-                              Icons.star_rounded,
-                              size: 14,
-                              color: AppColors.primary,
-                            ),
-                            Text(
-                              'SUGGESTED',
-                              style: AppTypography.labelSmall.copyWith(
-                                fontSize: 8,
-                                color: AppColors.primary,
-                                fontWeight: FontWeight.w700,
-                              ),
-                            ),
-                          ],
-                        ],
-                      ),
+                      Text(label, style: AppTypography.bodyMedium),
                       Text(
                         blurb,
                         style: AppTypography.labelSmall.copyWith(
@@ -2510,9 +2921,9 @@ class _TalkOption extends StatelessWidget {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
-                    _SwingArrows(label: 'ATK', value: atk),
+                    _SwingArrows(label: l.matchSwingAtk, value: atk),
                     const SizedBox(height: 2),
-                    _SwingArrows(label: 'DEF', value: def),
+                    _SwingArrows(label: l.matchSwingDef, value: def),
                   ],
                 ),
               ],
@@ -2541,8 +2952,8 @@ class _SwingArrows extends StatelessWidget {
     final color = magnitude == 0
         ? AppColors.onSurfaceVariant
         : up
-            ? AppColors.positive
-            : AppColors.error;
+        ? AppColors.positive
+        : AppColors.error;
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -2567,4 +2978,3 @@ class _SwingArrows extends StatelessWidget {
     );
   }
 }
-

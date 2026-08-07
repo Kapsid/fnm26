@@ -5,6 +5,7 @@ import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
 import 'package:fnm/features/tournaments/cup_detail_providers.dart'
     show AllTimeScorer;
+import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 
 /// The height a tournament screen's TabBar occupies.
@@ -72,6 +73,7 @@ class _TournamentScorersState extends State<TournamentScorers> {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
     final hasAllTime = widget.allTime.isNotEmpty;
     final showingAllTime = _allTime && hasAllTime;
     final count =
@@ -90,9 +92,10 @@ class _TournamentScorersState extends State<TournamentScorers> {
               0,
             ),
             child: SegmentedButton<bool>(
-              segments: const [
-                ButtonSegment(value: false, label: Text('This edition')),
-                ButtonSegment(value: true, label: Text('All-time')),
+              segments: [
+                ButtonSegment(
+                    value: false, label: Text(l.tourSharedThisEdition)),
+                ButtonSegment(value: true, label: Text(l.tourSharedAllTime)),
               ],
               selected: {_allTime},
               onSelectionChanged: (s) => setState(() => _allTime = s.first),
@@ -217,8 +220,13 @@ class TournamentHistory extends StatelessWidget {
     for (final h in honours) {
       gold[h.championId] = (gold[h.championId] ?? 0) + 1;
       silver[h.runnerUpId] = (silver[h.runnerUpId] ?? 0) + 1;
+      // Both bronze slots count — a no-third-place cup shares bronze between
+      // its two beaten semi-finalists (thirdId + thirdId2).
       if (h.thirdId != null) {
         bronze[h.thirdId!] = (bronze[h.thirdId!] ?? 0) + 1;
+      }
+      if (h.thirdId2 != null) {
+        bronze[h.thirdId2!] = (bronze[h.thirdId2!] ?? 0) + 1;
       }
     }
     final medalNations = {...gold.keys, ...silver.keys, ...bronze.keys}.toList()
@@ -347,27 +355,30 @@ class TournamentHistory extends StatelessWidget {
                 ),
               ],
             ),
-            if (h.thirdId != null) ...[
-              const SizedBox(height: AppSpacing.xs),
-              Row(
-                children: [
-                  const SizedBox(width: 2),
-                  const Text('🥉', style: AppTypography.labelSmall),
-                  const SizedBox(width: AppSpacing.sm),
-                  FlagDisc(code(h.thirdId!), size: 16),
-                  const SizedBox(width: AppSpacing.sm),
-                  Expanded(
-                    child: Text(
-                      name(h.thirdId!),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: AppTypography.labelSmall
-                          .copyWith(color: AppColors.onSurfaceVariant),
+            // Both bronze medallists — a no-third-place cup lists its two
+            // beaten semi-finalists, so the whole podium shows.
+            for (final b in [h.thirdId, h.thirdId2])
+              if (b != null) ...[
+                const SizedBox(height: AppSpacing.xs),
+                Row(
+                  children: [
+                    const SizedBox(width: 2),
+                    const Text('🥉', style: AppTypography.labelSmall),
+                    const SizedBox(width: AppSpacing.sm),
+                    FlagDisc(code(b), size: 16),
+                    const SizedBox(width: AppSpacing.sm),
+                    Expanded(
+                      child: Text(
+                        name(b),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: AppTypography.labelSmall
+                            .copyWith(color: AppColors.onSurfaceVariant),
+                      ),
                     ),
-                  ),
-                ],
-              ),
-            ],
+                  ],
+                ),
+              ],
           ],
         ),
       ),

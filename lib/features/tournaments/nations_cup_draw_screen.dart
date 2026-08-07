@@ -8,6 +8,7 @@ import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/features/tournaments/draw_ceremony.dart';
 import 'package:fnm/features/tournaments/nations_cup_draw_providers.dart';
+import 'package:fnm/l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
 
 /// The Nations Cup group draw, presented through the shared [DrawCeremony]
@@ -40,6 +41,7 @@ class _NationsCupDrawScreenState extends ConsumerState<NationsCupDrawScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
     final async = ref.watch(nationsCupDrawProvider(widget.careerId));
 
     // Fires once as a timeline event: mark it watched as soon as the data is
@@ -61,17 +63,18 @@ class _NationsCupDrawScreenState extends ConsumerState<NationsCupDrawScreen> {
           onPressed: leave,
         ),
         title: Text(
-          'NATIONS CUP DRAW',
+          l.tourContNationsCupDraw,
           style: AppTypography.labelMedium.copyWith(color: AppColors.primary),
         ),
         centerTitle: true,
       ),
       body: async.when(
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => Center(child: Text('Could not load draw.\n$e')),
+        error: (e, _) =>
+            Center(child: Text(l.tourContCouldNotLoadDraw(e.toString()))),
         data: (data) {
           if (data == null) {
-            return const Center(child: Text('The draw is not ready yet.'));
+            return Center(child: Text(l.tourContDrawNotReady));
           }
           return DrawCeremony(
             groups: [

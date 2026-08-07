@@ -6,6 +6,7 @@ import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/domain/services/competition/trophies.dart';
 import 'package:fnm/features/career/manager_history_providers.dart';
+import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
@@ -19,6 +20,7 @@ class ManagerHistoryScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l = AppLocalizations.of(context);
     final async = ref.watch(managerHistoryProvider(careerId));
     return Scaffold(
       appBar: AppBar(
@@ -27,23 +29,23 @@ class ManagerHistoryScreen extends ConsumerWidget {
           onPressed: () => context.go('${Routes.careers}?careerId=$careerId'),
         ),
         title: Text(
-          'MANAGER CAREER',
+          l.careerManagerCareerTitle,
           style: AppTypography.labelMedium.copyWith(color: AppColors.primary),
         ),
         centerTitle: true,
       ),
       body: async.when(
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => Center(child: Text('Could not load.\n$e')),
+        error: (e, _) => Center(child: Text(l.careerCouldNotLoad('$e'))),
         data: (h) {
-          if (h == null) return const Center(child: Text('No career.'));
+          if (h == null) return Center(child: Text(l.careerNoCareer));
           return ListView(
             padding: const EdgeInsets.all(AppSpacing.marginMobile),
             children: [
               _OverallCard(history: h),
               const SizedBox(height: AppSpacing.md),
               Text(
-                'CYCLE BY CYCLE',
+                l.careerCycleByCycle,
                 style: AppTypography.labelSmall.copyWith(
                   color: AppColors.primary,
                 ),
@@ -66,6 +68,7 @@ class _OverallCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
     final h = history;
     final gd = h.goalDifference;
     return AppCard(
@@ -74,8 +77,7 @@ class _OverallCard extends StatelessWidget {
         children: [
           Text(h.managerName, style: AppTypography.headlineMedium),
           Text(
-            '${h.cycles.length} cycle${h.cycles.length == 1 ? '' : 's'} · '
-            '${h.nationsLed} nation${h.nationsLed == 1 ? '' : 's'} led',
+            l.careerCyclesNationsLed(h.cycles.length, h.nationsLed),
             style: AppTypography.labelSmall.copyWith(
               color: AppColors.onSurfaceVariant,
             ),
@@ -84,17 +86,24 @@ class _OverallCard extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              _Stat(label: 'Titles', value: '${h.titles}', highlight: true),
-              _Stat(label: 'Played', value: '${h.played}'),
-              _Stat(label: 'Won', value: '${h.won}'),
-              _Stat(label: 'Drawn', value: '${h.drawn}'),
-              _Stat(label: 'Lost', value: '${h.lost}'),
+              _Stat(
+                  label: l.careerStatTitles,
+                  value: '${h.titles}',
+                  highlight: true),
+              _Stat(label: l.careerStatPlayed, value: '${h.played}'),
+              _Stat(label: l.careerStatWon, value: '${h.won}'),
+              _Stat(label: l.careerStatDrawn, value: '${h.drawn}'),
+              _Stat(label: l.careerStatLost, value: '${h.lost}'),
             ],
           ),
           const SizedBox(height: AppSpacing.sm),
           Text(
-            'Goals ${h.goalsFor}–${h.goalsAgainst}  '
-            '(${gd >= 0 ? '+' : ''}$gd)  ·  Win rate ${h.winRate}%',
+            l.careerGoalsWinRate(
+              h.goalsFor,
+              h.goalsAgainst,
+              '${gd >= 0 ? '+' : ''}$gd',
+              h.winRate,
+            ),
             style: AppTypography.bodySmall.copyWith(
               color: AppColors.onSurfaceVariant,
             ),
@@ -104,22 +113,23 @@ class _OverallCard extends StatelessWidget {
             const Divider(height: 1),
             const SizedBox(height: AppSpacing.md),
             Text(
-              'RECORD RESULTS',
+              l.careerRecordResults,
               style: AppTypography.labelSmall.copyWith(
                 color: AppColors.onSurfaceVariant,
               ),
             ),
             const SizedBox(height: AppSpacing.xs),
             if (h.biggestWin != null)
-              _RecordResult(label: 'Best win', result: h.biggestWin!),
+              _RecordResult(label: l.careerBestWin, result: h.biggestWin!),
             if (h.biggestLoss != null)
-              _RecordResult(label: 'Worst defeat', result: h.biggestLoss!),
+              _RecordResult(
+                  label: l.careerWorstDefeat, result: h.biggestLoss!),
           ],
           const SizedBox(height: AppSpacing.md),
           const Divider(height: 1),
           const SizedBox(height: AppSpacing.md),
           Text(
-            'TROPHY CABINET',
+            l.careerTrophyCabinet,
             style: AppTypography.labelSmall.copyWith(
               color: AppColors.onSurfaceVariant,
             ),
@@ -142,6 +152,7 @@ class _RecordResult extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
     final win = result.scoreFor > result.scoreAgainst;
     final accent = win ? AppColors.positive : AppColors.error;
     return Padding(
@@ -168,8 +179,10 @@ class _RecordResult extends StatelessWidget {
           const SizedBox(width: AppSpacing.sm),
           Expanded(
             child: Text(
-              'v ${result.opponentName} · '
-              '${DateFormat('MMM yyyy').format(result.date)}',
+              l.careerVsOpponentDate(
+                result.opponentName,
+                DateFormat('MMM yyyy').format(result.date),
+              ),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: AppTypography.labelSmall.copyWith(
@@ -313,6 +326,7 @@ class _CycleCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
     final c = cycle;
     final gd = c.goalDifference;
     return Padding(
@@ -327,7 +341,7 @@ class _CycleCard extends StatelessWidget {
                 const SizedBox(width: AppSpacing.sm),
                 Expanded(
                   child: Text(
-                    c.nation?.name ?? 'Unknown',
+                    c.nation?.name ?? l.careerUnknownNation,
                     style: AppTypography.titleMedium,
                   ),
                 ),
@@ -341,25 +355,38 @@ class _CycleCard extends StatelessWidget {
             ),
             const SizedBox(height: AppSpacing.sm),
             Text(
-              '${c.won}W ${c.drawn}D ${c.lost}L  ·  '
-              'GF ${c.goalsFor} GA ${c.goalsAgainst} '
-              '(${gd >= 0 ? '+' : ''}$gd)',
+              l.careerCycleRecordLine(
+                c.won,
+                c.drawn,
+                c.lost,
+                c.goalsFor,
+                c.goalsAgainst,
+                '${gd >= 0 ? '+' : ''}$gd',
+              ),
               style: AppTypography.bodySmall,
             ),
             const SizedBox(height: AppSpacing.xs),
             Row(
               children: [
                 Expanded(
-                  child: _Finish(label: 'World Cup', placement: c.worldCup),
+                  child: _Finish(
+                      label: l.careerWorldCupLabel, placement: c.worldCup),
                 ),
                 Expanded(
                   child: _Finish(
-                    label: 'Continental',
+                    label: l.careerContinentalLabel,
                     placement: c.continental,
                   ),
                 ),
               ],
             ),
+            if (c.nationsCup.isNotEmpty) ...[
+              const SizedBox(height: AppSpacing.xs),
+              _Finish(
+                label: l.careerNationsCupLabel,
+                placement: c.nationsCup,
+              ),
+            ],
           ],
         ),
       ),

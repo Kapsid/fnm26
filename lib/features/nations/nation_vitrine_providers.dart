@@ -152,7 +152,8 @@ nationVitrineProvider = FutureProvider.autoDispose
         }
         final gold = h.championId == arg.nationId;
         final silver = h.runnerUpId == arg.nationId;
-        final bronze = h.thirdId == arg.nationId;
+        final bronze =
+            h.thirdId == arg.nationId || h.thirdId2 == arg.nationId;
         if (isWc) {
           if (gold) wcG++;
           if (silver) wcS++;

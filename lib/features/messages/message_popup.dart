@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/features/messages/message_providers.dart';
 import 'package:fnm/features/messages/message_sheet.dart';
+import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 
 /// At most this many messages pop in one go. Anything past it waits in the
@@ -29,6 +30,7 @@ Future<int> showUnreadMessagePopups(
   WidgetRef ref,
   int careerId,
 ) async {
+  final l = AppLocalizations.of(context);
   final comp = ref.read(competitionRepositoryProvider);
   final unread = (await comp.messages(careerId)).where((m) => !m.read).toList()
     // The inbox is newest first; a run of events reads better in the order it
@@ -48,7 +50,7 @@ Future<int> showUnreadMessagePopups(
       builder: (popupContext) => MessageSheet(
         message: showing[i],
         action: (
-          label: isLast ? 'Done' : 'Next',
+          label: isLast ? l.messagesDone : l.messagesNext,
           onPressed: () => Navigator.of(popupContext).pop(),
         ),
       ),

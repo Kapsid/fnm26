@@ -5646,6 +5646,48 @@ abstract class AppLocalizations {
   /// **'I did not come this far to carry the bibs.'**
   String get yPlayerGrievance3;
 
+  /// Award: playerHonoursTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'HONOURS'**
+  String get playerHonoursTitle;
+
+  /// Award: awardGoldenBall.
+  ///
+  /// In en, this message translates to:
+  /// **'Golden Ball'**
+  String get awardGoldenBall;
+
+  /// Award: awardGoldenBoot.
+  ///
+  /// In en, this message translates to:
+  /// **'Golden Boot'**
+  String get awardGoldenBoot;
+
+  /// Award: awardGoldenGlove.
+  ///
+  /// In en, this message translates to:
+  /// **'Golden Glove'**
+  String get awardGoldenGlove;
+
+  /// Award: awardTeamOfTournament.
+  ///
+  /// In en, this message translates to:
+  /// **'Team of the Tournament'**
+  String get awardTeamOfTournament;
+
+  /// Award: awardPlayerOfYear.
+  ///
+  /// In en, this message translates to:
+  /// **'World Player of the Year'**
+  String get awardPlayerOfYear;
+
+  /// Award: awardYoungPlayerOfYear.
+  ///
+  /// In en, this message translates to:
+  /// **'Young Player of the Year'**
+  String get awardYoungPlayerOfYear;
+
   /// Heading above a player's list of club spells on the detail card.
   ///
   /// In en, this message translates to:

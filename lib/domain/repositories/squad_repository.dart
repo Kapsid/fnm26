@@ -16,4 +16,19 @@ abstract interface class SquadRepository {
   /// selection" — used when the manager moves to a new nation, whose players
   /// share no ids with the old squad.
   Future<void> clearCallUps(int careerId);
+
+  /// The part-named squad saved under [draftKey], or an empty set when the
+  /// manager has not started (or has already confirmed) this one.
+  Future<Set<int>> callUpDraft(int careerId, String draftKey);
+
+  /// Records the squad as it currently stands under [draftKey], so backing out
+  /// of the call-up screen doesn't throw the selection away.
+  Future<void> saveCallUpDraft(
+    int careerId,
+    String draftKey,
+    Set<int> playerIds,
+  );
+
+  /// Forgets the draft under [draftKey] — called once the squad is confirmed.
+  Future<void> clearCallUpDraft(int careerId, String draftKey);
 }

@@ -6,11 +6,12 @@ import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/domain/services/achievements/achievements.dart';
 import 'package:fnm/features/achievements/achievement_providers.dart';
+import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
 
-/// The per-save achievements screen: a board-satisfaction gauge, an unlocked
-/// count, and every achievement grouped by category with progress for tallies.
+/// The per-save achievements screen: an unlocked count and every achievement
+/// grouped by category, with progress for tally-based ones.
 class AchievementsScreen extends ConsumerWidget {
   const AchievementsScreen({required this.careerId, super.key});
 
@@ -18,8 +19,8 @@ class AchievementsScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l = AppLocalizations.of(context);
     final viewAsync = ref.watch(achievementsViewProvider(careerId));
-    final satisfaction = ref.watch(satisfactionProvider(careerId)).valueOrNull;
 
     return Scaffold(
       appBar: AppBar(
@@ -28,13 +29,13 @@ class AchievementsScreen extends ConsumerWidget {
           onPressed: () => context.go('${Routes.careers}?careerId=$careerId'),
         ),
         title: Text(
-          'ACHIEVEMENTS',
+          l.achievementsScreenTitle,
           style: AppTypography.labelMedium.copyWith(color: AppColors.primary),
         ),
         centerTitle: true,
         actions: [
           IconButton(
-            tooltip: 'Challenges',
+            tooltip: l.achievementsChallengesTooltip,
             icon: const Icon(
               Icons.local_fire_department_rounded,
               color: AppColors.primary,
@@ -46,7 +47,8 @@ class AchievementsScreen extends ConsumerWidget {
       ),
       body: viewAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => Center(child: Text('Could not load.\n$e')),
+        error: (e, _) =>
+            Center(child: Text(l.achievementsCouldNotLoad(e.toString()))),
         data: (views) {
           final earned = views.where((v) => v.earned).length;
           final grouped = <AchievementCategory, List<AchievementView>>{};
@@ -56,8 +58,6 @@ class AchievementsScreen extends ConsumerWidget {
           return ListView(
             padding: const EdgeInsets.all(AppSpacing.marginMobile),
             children: [
-              _SatisfactionCard(percent: satisfaction),
-              const SizedBox(height: AppSpacing.md),
               AppCard(
                 onTap: () =>
                     context.go('${Routes.challenges}?careerId=$careerId'),
@@ -72,12 +72,12 @@ class AchievementsScreen extends ConsumerWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text(
-                            'CHALLENGES',
+                          Text(
+                            l.achievementsChallengesHeading,
                             style: AppTypography.titleMedium,
                           ),
                           Text(
-                            'Brutal career-long tests',
+                            l.achievementsBrutalTests,
                             style: AppTypography.labelSmall.copyWith(
                               color: AppColors.onSurfaceVariant,
                             ),
@@ -102,7 +102,7 @@ class AchievementsScreen extends ConsumerWidget {
                   ),
                   const SizedBox(width: AppSpacing.sm),
                   Text(
-                    '$earned / ${views.length} unlocked',
+                    l.achievementsUnlockedCount(earned, views.length),
                     style: AppTypography.titleMedium,
                   ),
                 ],
@@ -111,7 +111,7 @@ class AchievementsScreen extends ConsumerWidget {
               for (final cat in AchievementCategory.values)
                 if (grouped[cat] case final rows?) ...[
                   Text(
-                    cat.label.toUpperCase(),
+                    achievementCategoryLabel(l, cat).toUpperCase(),
                     style: AppTypography.labelSmall.copyWith(
                       color: AppColors.primary,
                     ),
@@ -128,54 +128,6 @@ class AchievementsScreen extends ConsumerWidget {
   }
 }
 
-class _SatisfactionCard extends StatelessWidget {
-  const _SatisfactionCard({required this.percent});
-
-  final int? percent;
-
-  @override
-  Widget build(BuildContext context) {
-    final p = percent ?? 0;
-    final color = p >= 80
-        ? AppColors.positive
-        : p >= 50
-            ? AppColors.primary
-            : AppColors.error;
-    return AppCard(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'BOARD SATISFACTION',
-                style: AppTypography.labelSmall.copyWith(
-                  color: AppColors.onSurfaceVariant,
-                ),
-              ),
-              Text(
-                percent == null ? '—' : '$p%',
-                style: AppTypography.titleMedium.copyWith(color: color),
-              ),
-            ],
-          ),
-          const SizedBox(height: AppSpacing.sm),
-          ClipRRect(
-            borderRadius: AppRadii.smAll,
-            child: LinearProgressIndicator(
-              value: (p / 100).clamp(0.0, 1.0),
-              minHeight: 8,
-              backgroundColor: AppColors.surfaceContainerHighest,
-              valueColor: AlwaysStoppedAnimation(color),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
 class _AchievementTile extends StatelessWidget {
   const _AchievementTile({required this.view});
 
@@ -183,6 +135,7 @@ class _AchievementTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final text = achievementText(AppLocalizations.of(context), view.def);
     final earned = view.earned;
     final showProgress =
         !earned && view.current != null && view.target != null;
@@ -202,17 +155,25 @@ class _AchievementTile extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    view.def.title,
-                    style: AppTypography.titleMedium.copyWith(
-                      color: earned
-                          ? AppColors.onSurface
-                          : AppColors.onSurfaceVariant,
-                    ),
+                  Row(
+                    children: [
+                      Flexible(
+                        child: Text(
+                          text.title,
+                          style: AppTypography.titleMedium.copyWith(
+                            color: earned
+                                ? AppColors.onSurface
+                                : AppColors.onSurfaceVariant,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: AppSpacing.sm),
+                      _TierBadge(view.def.tier, dimmed: !earned),
+                    ],
                   ),
                   const SizedBox(height: 2),
                   Text(
-                    view.def.description,
+                    text.description,
                     style: AppTypography.labelSmall.copyWith(
                       color: AppColors.onSurfaceVariant,
                     ),
@@ -234,6 +195,44 @@ class _AchievementTile extends StatelessWidget {
                 ),
               ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+/// A small rarity pill (Bronze / Silver / Gold / Platinum), coloured by tier
+/// and greyed while the achievement is still locked.
+class _TierBadge extends StatelessWidget {
+  const _TierBadge(this.tier, {required this.dimmed});
+
+  final AchievementTier tier;
+  final bool dimmed;
+
+  static const _colors = {
+    AchievementTier.bronze: AppColors.medalBronze,
+    AchievementTier.silver: AppColors.medalSilver,
+    AchievementTier.gold: AppColors.medalGold,
+    AchievementTier.platinum: AppColors.medalPlatinum,
+  };
+
+  @override
+  Widget build(BuildContext context) {
+    final base = _colors[tier]!;
+    final color = dimmed ? AppColors.onSurfaceVariant : base;
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: 0.16),
+        borderRadius: AppRadii.smAll,
+        border: Border.all(color: color.withValues(alpha: 0.55)),
+      ),
+      child: Text(
+        achievementTierLabel(AppLocalizations.of(context), tier).toUpperCase(),
+        style: AppTypography.labelSmall.copyWith(
+          color: color,
+          fontWeight: FontWeight.w700,
+          letterSpacing: 0.5,
         ),
       ),
     );

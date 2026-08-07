@@ -50,10 +50,27 @@ class CareerService {
   /// The World Cup year for a given cycle (clean cadence: 2030, 2034, …).
   static int worldCupYear(int cycle) => cycleStart.year + 4 * (cycle + 1);
 
+  /// The month a year of development lands on. December, not January.
+  ///
+  /// The African and Asian championships are played in JANUARY (see
+  /// [ContinentalCups]), so a calendar-year boundary re-rated the entire squad
+  /// in the middle of those managers' own finals: a side that reached the
+  /// semi-final was not the side that had come through the group. Ticking on 1
+  /// December moves it into the gap between the November qualifying window and
+  /// those finals, where no competition is being played.
+  static const int developmentMonth = 12;
+
   /// Elapsed in-game years since the save began — how much to age the player
   /// pool, so squads evolve one season at a time as the calendar advances.
-  static int agingYears(Career c) =>
-      (c.inGameDate.year - cycleStart.year).clamp(0, 400);
+  ///
+  /// Counted off [developmentMonth], so each tick falls between competitions
+  /// rather than inside one.
+  static int agingYears(Career c) {
+    final d = c.inGameDate;
+    final years =
+        d.year - cycleStart.year + (d.month >= developmentMonth ? 1 : 0);
+    return years.clamp(0, 400);
+  }
 
   /// Creates a new save for [nationId], or a failure if all slots are in use.
   Future<Result<Career>> create({
@@ -141,28 +158,59 @@ class CareerService {
 
     // 1. Continental qualifying opens the cycle (autumn of the start year). The
     //    finals are drawn from the qualifiers two years before the World Cup.
-    final cont = ContinentalCups.byConfederation[me.confederation];
-    final contFinalsStart =
-        cont == null ? null : DateTime(wcYear - 2, cont.month, 8);
-    if (cont != null && contFinalsStart != null) {
-      final members =
-          (byConfederation[me.confederation] ?? <Nation>[]).toList()
-            ..sort((a, b) => rankOf(a).compareTo(rankOf(b)));
+    //
+    //    EVERY confederation gets its championship, not just the manager's. The
+    //    rest of the world used to have none at all, so no goal, cap or cup was
+    //    ever recorded outside the continent the manager happened to be working
+    //    in — the all-time world records were really one continent's records,
+    //    and the Continental Clash could not be staged unless the manager was
+    //    European or South American.
+    //
+    //    Only the manager's own confederation runs a qualifying campaign; the
+    //    others seed their field straight from the ranking. That keeps the
+    //    world's cups real (they are drawn, played and won) without adding five
+    //    more qualifying campaigns' worth of background fixtures per cycle.
+    for (final confederation in Confederation.values) {
+      final cont = ContinentalCups.byConfederation[confederation];
+      if (cont == null) continue;
+      final contFinalsStart = DateTime(wcYear - 2, cont.month, 8);
+      final members = (byConfederation[confederation] ?? <Nation>[]).toList()
+        ..sort((a, b) => rankOf(a).compareTo(rankOf(b)));
       // The hosts (primary + any co-hosts) auto-qualify and sit out qualifying
       // (playing only friendlies in those windows), so drop them from the draw.
       final contHosts = WorldCupHosts.continentalHostsFor(
-        confederation: me.confederation,
+        confederation: confederation,
         cycle: cycle,
         seed: rngSeed,
         nations: nations,
       ).toSet();
+      // Who is in the qualifying draw is asked in three places (here, and the
+      // two screens that recompute the draw for display), so it is answered in
+      // exactly one — see [WorldCupHosts.continentalQualifiers].
+      final contField = {
+        for (final n in WorldCupHosts.continentalQualifiers(
+          confederation: confederation,
+          cycle: cycle,
+          seed: rngSeed,
+          nations: nations,
+        ))
+          n.id,
+      };
       // A confederation with no qualifying (Copa América) seeds its finals
       // field straight from the ranking; only qualifying confederations run a
       // group stage first.
+      //
+      // EVERY qualifying confederation runs its campaign, not just the
+      // manager's. The rest of the world used to have its finals field seeded
+      // off the ranking instead, so the continent the manager happened to work
+      // in played a whole extra ten-matchday competition every cycle that
+      // nobody else did — and the all-time world records were really a chart
+      // of that one continent. It also meant no other continent's cup was ever
+      // WON by a side that had to earn its place in it.
       if (cont.qualifying && members.length > cont.size) {
         final cq = const ScheduleGenerator().generate(
-          confederation: me.confederation,
-          nations: members.where((n) => !contHosts.contains(n.id)).toList(),
+          confederation: confederation,
+          nations: members.where((n) => contField.contains(n.id)).toList(),
           rngSeed: rngSeed ^ (cycle * 0x71) ^ 0xCAFE,
           start: DateTime(cycleStart.year, 9),
           // Groups of six (ten matchdays) spread qualifying across the first
@@ -174,7 +222,7 @@ class CareerService {
         await comp.saveSchedule(
           careerId: careerId,
           schedule: GeneratedSchedule(
-            confederation: me.confederation,
+            confederation: confederation,
             name: '${cont.name} Qualifiers',
             groups: cq.groups,
           ),
@@ -183,21 +231,28 @@ class CareerService {
           fixtureRound: 'CQ',
         );
       } else if (members.length >= (cont.qualifying ? cont.size : 4)) {
-        // No group-stage qualifying — either a Copa-style all-in cup (needs
-        // only four teams) or a qualifying confederation already at that size.
-        // Seed the finals field straight from the ranking, and ALWAYS create it
-        // (even if the player didn't make the field) so it's played out and can
-        // be followed rather than silently vanishing.
+        // No group-stage qualifying — a Copa-style all-in cup, a qualifying
+        // confederation already down to its finals size, or another continent's
+        // cup running in the background. Seed the finals field straight from
+        // the ranking, and ALWAYS create it (even if the player didn't make the
+        // field) so it's played out and can be followed rather than silently
+        // vanishing. The hosts head the field: they qualify automatically.
+        final seeded = [
+          for (final n in members)
+            if (contHosts.contains(n.id)) n,
+          for (final n in members)
+            if (!contHosts.contains(n.id)) n,
+        ];
         final draw = WorldCupFinals.drawGroups(
-          qualifierIds: members.take(cont.size).map((n) => n.id).toList(),
+          qualifierIds: seeded.take(cont.size).map((n) => n.id).toList(),
           rankingById: {for (final n in nations) n.id: rankOf(n)},
-          rngSeed: rngSeed ^ (cycle * 0x71) ^ 0xC0FF,
+          rngSeed: rngSeed ^ (cycle * 0x71) ^ 0xC0FF ^ (confederation.index * 7),
           perGroup: cont.groupSize,
         );
         await comp.saveTournamentGroups(
           careerId: careerId,
           cycle: cycle,
-          confederation: me.confederation,
+          confederation: confederation,
           kind: CompetitionKind.continentalFinals,
           name: cont.name,
           draw: draw,
@@ -215,7 +270,7 @@ class CareerService {
     //     League A's group winners contest a Finals Four for the title. The
     //     ladder is seeded from the ranking only for the first cup and then
     //     changes solely by promotion/relegation (see [nationsCupTiers]).
-    if (cont != null && me.confederation == Confederation.europe) {
+    if (me.confederation == Confederation.europe) {
       final members = (byConfederation[me.confederation] ?? <Nation>[]).toList()
         ..sort((a, b) => rankOf(a).compareTo(rankOf(b)));
       // Effective ladder: the saved tiers, or a ranking seed for the first cup.
@@ -268,10 +323,51 @@ class CareerService {
       }
     }
 
-    // 2. World Cup qualifying for every confederation runs the back half of the
-    //    cycle. It starts the spring AFTER the Nations Cup (which fills the
-    //    autumn of wcYear − 2), so the calendar reads Euro → Nations Cup → WC
-    //    qualifying → World Cup rather than qualifying overlapping the cup.
+    // Friendlies are no longer auto-scheduled: the manager arranges 1–3 of them
+    // per gap between competitive blocks, from the hub's "Arrange friendlies"
+    // event (see friendliesProvider / FriendliesScreen).
+  }
+
+  /// The month of the World Cup year − 1 in which every confederation's
+  /// qualifying campaign is drawn.
+  ///
+  /// Qualifying is drawn LAZILY, not with the rest of the cycle's calendar.
+  /// Writing it up front meant the World Cup's groups existed from the cycle's
+  /// first day — months before the continental championship that is supposed to
+  /// come first had even been played — so the calendar read back to front and
+  /// the qualifying "draw" was a replay of fixtures that had been sitting in
+  /// the database all along. January is comfortably after the last continental
+  /// final (June of wcYear − 2) and comfortably before qualifying kicks off in
+  /// March.
+  static const int wcQualifyingDrawMonth = 1;
+
+  /// Whether [date] has reached the point in the cycle at which World Cup
+  /// qualifying is drawn.
+  static bool wcQualifyingDue(DateTime date, int wcYear) =>
+      !date.isBefore(DateTime(wcYear - 1, wcQualifyingDrawMonth));
+
+  /// Draws World Cup qualifying for every confederation, the back half of the
+  /// cycle: it starts the spring AFTER the Nations Cup (which fills the autumn
+  /// of wcYear − 2), so the calendar reads Euro → Nations Cup → WC qualifying →
+  /// World Cup rather than qualifying overlapping the cup.
+  ///
+  /// The caller must check the competitions do not already exist.
+  static Future<void> buildWorldCupQualifying({
+    required CompetitionRepository comp,
+    required List<Nation> nations,
+    required int careerId,
+    required int nationId,
+    required int rngSeed,
+    required int cycle,
+    required int wcYear,
+    Map<int, int>? rankById,
+  }) async {
+    if (!nations.any((n) => n.id == nationId)) return;
+    final me = nations.firstWhere((n) => n.id == nationId);
+    final byConfederation = <Confederation, List<Nation>>{};
+    for (final n in nations) {
+      (byConfederation[n.confederation] ??= []).add(n);
+    }
     final wcQualStart = DateTime(wcYear - 1, 3);
     // Hosts auto-qualify and skip qualifying (friendlies only), so drop them
     // from every confederation's qualifying pool.
@@ -302,17 +398,13 @@ class CareerService {
         ),
         cycle: cycle,
       );
-      // A single-group campaign (CONMEBOL — everyone plays everyone) has nothing
-      // to draw, so mark the player's qualifying draw as already watched and
-      // skip the ceremony.
+      // A single-group campaign (CONMEBOL — everyone plays everyone) has
+      // nothing to draw, so mark the player's qualifying draw as already
+      // watched and skip the ceremony.
       if (entry.key == me.confederation && schedule.groups.length <= 1) {
         await comp.markDrawWatched(careerId, cycle, worldCupQualDrawKind);
       }
     }
-
-    // Friendlies are no longer auto-scheduled: the manager arranges 1–3 of them
-    // per gap between competitive blocks, from the hub's "Arrange friendlies"
-    // event (see friendliesProvider / FriendliesScreen).
   }
 
   /// Seeds real World Cup / Euro / Copa history so the records section is
@@ -330,13 +422,18 @@ class CareerService {
       final champion = resolve(e.champion);
       final runnerUp = resolve(e.runnerUp);
       if (champion == null || runnerUp == null) continue; // skip if unmapped
+      // Continental cups share the bronze between both beaten semi-finalists
+      // (no third-place match), so those editions carry two bronzes here; all
+      // others fall back to the single third-place team on the edition itself.
+      final shared = RealHistory.continentalBronzes['${e.competition}|${e.year}'];
       await compRepo.recordHonour(
         careerId: career.id,
         year: e.year,
         competition: e.competition,
         championId: champion,
         runnerUpId: runnerUp,
-        thirdId: resolve(e.third),
+        thirdId: shared != null ? resolve(shared.$1) : resolve(e.third),
+        thirdId2: shared != null ? resolve(shared.$2) : null,
         hostId: resolve(e.host),
         finalHomeScore: e.finalHome,
         finalAwayScore: e.finalAway,
@@ -361,6 +458,13 @@ class CareerService {
           career.id,
           Tactic(formation: formation, lineup: bestEleven(formation, players)),
         );
+  }
+
+  /// Records that a save was just opened, so the saves list can show "last
+  /// played" and put the most recent one first.
+  Future<void> markPlayed(int id) async {
+    await _ref.read(careerRepositoryProvider).touch(id, DateTime.now());
+    _ref.invalidate(savesProvider);
   }
 
   /// Deletes a save.

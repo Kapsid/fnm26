@@ -7,6 +7,7 @@ import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/features/tournaments/draw_ceremony.dart';
 import 'package:fnm/features/tournaments/finals_draw_providers.dart';
+import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
 
@@ -36,6 +37,7 @@ class _FinalsDrawScreenState extends ConsumerState<FinalsDrawScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
     final dataAsync = ref.watch(finalsDrawProvider(widget.careerId));
     void leave() => context.go('${Routes.cup}?careerId=${widget.careerId}');
 
@@ -53,10 +55,10 @@ class _FinalsDrawScreenState extends ConsumerState<FinalsDrawScreen> {
       ),
       body: dataAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => Center(child: Text('Could not load draw.\n$e')),
+        error: (_, _) => Center(child: Text(l.tourSharedCouldNotLoad)),
         data: (data) {
           if (data == null) {
-            return const Center(child: Text('The draw is not ready yet.'));
+            return Center(child: Text(l.tourContDrawNotReady));
           }
           if (_drawing) {
             return DrawCeremony(
@@ -128,8 +130,7 @@ class _PotsPreview extends StatelessWidget {
             padding: const EdgeInsets.all(AppSpacing.marginMobile),
             children: [
               Text(
-                'Seeded by world ranking. You can spot your nation before the '
-                'balls are drawn.',
+                'Seeded by world ranking. Spot your nation before the draw.',
                 style: AppTypography.bodySmall.copyWith(
                   color: AppColors.onSurfaceVariant,
                 ),

@@ -6,6 +6,7 @@ import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/features/records/record_book_providers.dart';
 import 'package:fnm/features/records/rivalry_providers.dart';
+import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
 
@@ -18,6 +19,7 @@ class RecordBookScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l = AppLocalizations.of(context);
     final async = ref.watch(recordBookProvider(careerId));
     return Scaffold(
       appBar: AppBar(
@@ -28,17 +30,18 @@ class RecordBookScreen extends ConsumerWidget {
               : context.go('${Routes.hub}?careerId=$careerId'),
         ),
         title: Text(
-          'RECORD BOOK',
+          l.recordsRecordBook,
           style: AppTypography.labelMedium.copyWith(color: AppColors.primary),
         ),
         centerTitle: true,
       ),
       body: async.when(
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => Center(child: Text('Could not load records.\n$e')),
+        error: (e, _) =>
+            Center(child: Text(l.recordsCouldNotLoadRecords(e.toString()))),
         data: (book) {
           if (book == null) {
-            return const Center(child: Text('Save not found.'));
+            return Center(child: Text(l.recordsSaveNotFound));
           }
           final hasData = book.mostCaps.isNotEmpty ||
               book.topScorers.isNotEmpty ||
@@ -48,8 +51,7 @@ class RecordBookScreen extends ConsumerWidget {
               child: Padding(
                 padding: const EdgeInsets.all(AppSpacing.xl),
                 child: Text(
-                  'Play some matches to start writing '
-                  '${book.nationName}’s history.',
+                  l.recordsPlayToWriteHistory(book.nationName),
                   textAlign: TextAlign.center,
                   style: AppTypography.bodyMedium.copyWith(
                     color: AppColors.onSurfaceVariant,
@@ -63,23 +65,7 @@ class RecordBookScreen extends ConsumerWidget {
           return ListView(
             padding: const EdgeInsets.all(AppSpacing.marginMobile),
             children: [
-              _LegendsLink(careerId: careerId),
-              const SizedBox(height: AppSpacing.sm),
-              _NavLink(
-                icon: Icons.public,
-                title: 'ALL-TIME WORLD',
-                subtitle: 'Global scorers & most-capped, every nation',
-                onTap: () => context
-                    .push('${Routes.allTimeRecords}?careerId=$careerId'),
-              ),
-              const SizedBox(height: AppSpacing.sm),
-              _NavLink(
-                icon: Icons.compare_arrows,
-                title: 'HEAD TO HEAD',
-                subtitle: 'Compare any two nations’ all-time record',
-                onTap: () =>
-                    context.push('${Routes.headToHead}?careerId=$careerId'),
-              ),
+              LegacyTiles(careerId: careerId),
               const SizedBox(height: AppSpacing.md),
               _RivalryCard(careerId: careerId),
               _TeamRecords(
@@ -87,30 +73,33 @@ class RecordBookScreen extends ConsumerWidget {
                 longestUnbeaten: book.longestUnbeaten,
                 biggestWin: book.biggestWin == null
                     ? null
-                    : '${book.biggestWin!.gf}–${book.biggestWin!.ga} '
-                        'v ${nation(book.biggestWin!.oppId)}',
+                    : l.recordsBiggestWinValue(
+                        book.biggestWin!.gf,
+                        book.biggestWin!.ga,
+                        nation(book.biggestWin!.oppId),
+                      ),
                 biggestWinCode: book.biggestWin == null
                     ? null
                     : code(book.biggestWin!.oppId),
               ),
               const SizedBox(height: AppSpacing.md),
               _Leaderboard(
-                title: 'MOST CAPS',
+                title: l.recordsMostCaps,
                 unit: '',
                 leaders: book.mostCaps,
                 careerId: careerId,
               ),
               const SizedBox(height: AppSpacing.md),
               _Leaderboard(
-                title: 'TOP SCORERS',
-                unit: 'goals',
+                title: l.recordsTopScorers,
+                unit: l.recordsUnitGoals,
                 leaders: book.topScorers,
                 careerId: careerId,
               ),
               const SizedBox(height: AppSpacing.md),
               _Leaderboard(
-                title: 'MOST ASSISTS',
-                unit: 'assists',
+                title: l.recordsMostAssists,
+                unit: l.recordsUnitAssists,
                 leaders: book.topAssists,
                 careerId: careerId,
               ),
@@ -123,46 +112,157 @@ class RecordBookScreen extends ConsumerWidget {
   }
 }
 
-/// A tappable banner into the Legends screen (all-time XI + hall of fame).
-class _LegendsLink extends StatelessWidget {
-  const _LegendsLink({required this.careerId});
+/// The nation's legacy sections, as a grid of tiles.
+///
+/// They used to be a stack of full-width rows at the top of the record book,
+/// reachable only from an unlabelled icon on the team-records screen — so the
+/// all-time XI, the world records and the head-to-head archive were the three
+/// most interesting screens in the game and also the three hardest to find.
+/// Shown as tiles they read as destinations rather than as a menu, and the same
+/// grid is used everywhere they are offered.
+class LegacyTiles extends StatelessWidget {
+  const LegacyTiles({
+    required this.careerId,
+    this.includeRecordBook = false,
+    this.dense = false,
+    super.key,
+  });
 
   final int careerId;
 
+  /// Whether to offer the record book itself — set on screens that are not the
+  /// record book.
+  final bool includeRecordBook;
+
+  /// A single scrolling row of small pills instead of a grid of cards. Used
+  /// where the destinations are a way OUT of the screen rather than the point
+  /// of it: on the team-records hub the four cards took up half the first
+  /// screenful before a single record was visible.
+  final bool dense;
+
   @override
   Widget build(BuildContext context) {
-    return AppCard(
-      onTap: () => context.push('${Routes.legends}?careerId=$careerId'),
-      child: Row(
-        children: [
-          const Icon(Icons.workspace_premium,
-              size: 22, color: AppColors.primary),
-          const SizedBox(width: AppSpacing.sm),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text('LEGENDS',
-                    style: AppTypography.labelMedium
-                        .copyWith(color: AppColors.primary)),
-                Text(
-                  'All-time XI & hall of fame',
-                  style: AppTypography.labelSmall
-                      .copyWith(color: AppColors.onSurfaceVariant),
-                ),
-              ],
-            ),
+    final l = AppLocalizations.of(context);
+    final entries = <({IconData icon, String title, String subtitle,
+        VoidCallback onTap})>[
+      if (includeRecordBook)
+        (
+          icon: Icons.auto_stories,
+          title: l.recordsRecordBook,
+          subtitle: l.recordsRecordBookSubtitle,
+          onTap: () => context.push('${Routes.records}?careerId=$careerId'),
+        ),
+      (
+        icon: Icons.workspace_premium,
+        title: l.recordsLegends,
+        subtitle: l.recordsLegendsSubtitle,
+        onTap: () => context.push('${Routes.legends}?careerId=$careerId'),
+      ),
+      (
+        icon: Icons.public,
+        title: l.recordsAllTimeWorld,
+        subtitle: l.recordsAllTimeWorldSubtitle,
+        onTap: () =>
+            context.push('${Routes.allTimeRecords}?careerId=$careerId'),
+      ),
+      (
+        icon: Icons.compare_arrows,
+        title: l.recordsHeadToHead,
+        subtitle: l.recordsHeadToHeadSubtitle,
+        onTap: () => context.push('${Routes.headToHead}?careerId=$careerId'),
+      ),
+    ];
+
+    if (dense) {
+      return SizedBox(
+        height: 34,
+        child: ListView.separated(
+          scrollDirection: Axis.horizontal,
+          itemCount: entries.length,
+          separatorBuilder: (_, __) => const SizedBox(width: AppSpacing.xs),
+          itemBuilder: (context, i) => _LegacyPill(
+            icon: entries[i].icon,
+            title: entries[i].title,
+            onTap: entries[i].onTap,
           ),
-          const Icon(Icons.chevron_right, color: AppColors.onSurfaceVariant),
-        ],
+        ),
+      );
+    }
+
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        // Two to a row, and the row's own width decides the tile width — so it
+        // holds up on a narrow phone and on a tablet alike.
+        const gap = AppSpacing.sm;
+        final width = (constraints.maxWidth - gap) / 2;
+        return Wrap(
+          spacing: gap,
+          runSpacing: gap,
+          children: [
+            for (final e in entries)
+              SizedBox(
+                width: width,
+                child: _LegacyTile(
+                  icon: e.icon,
+                  title: e.title,
+                  subtitle: e.subtitle,
+                  onTap: e.onTap,
+                ),
+              ),
+          ],
+        );
+      },
+    );
+  }
+}
+
+/// The dense form of a legacy destination: an icon and its name, on one line.
+class _LegacyPill extends StatelessWidget {
+  const _LegacyPill({
+    required this.icon,
+    required this.title,
+    required this.onTap,
+  });
+
+  final IconData icon;
+  final String title;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: AppColors.surfaceContainerHigh,
+      borderRadius: AppRadii.smAll,
+      child: InkWell(
+        borderRadius: AppRadii.smAll,
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppSpacing.sm,
+            vertical: 6,
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(icon, size: 15, color: AppColors.primary),
+              const SizedBox(width: 6),
+              Text(
+                title.toUpperCase(),
+                style: AppTypography.labelSmall.copyWith(
+                  color: AppColors.primary,
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
 }
 
-/// A simple tappable navigation card (icon, title, subtitle, chevron).
-class _NavLink extends StatelessWidget {
-  const _NavLink({
+/// One legacy destination: an icon, what it is, and a word on what's inside.
+class _LegacyTile extends StatelessWidget {
+  const _LegacyTile({
     required this.icon,
     required this.title,
     required this.subtitle,
@@ -178,27 +278,32 @@ class _NavLink extends StatelessWidget {
   Widget build(BuildContext context) {
     return AppCard(
       onTap: onTap,
-      child: Row(
-        children: [
-          Icon(icon, size: 22, color: AppColors.primary),
-          const SizedBox(width: AppSpacing.sm),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(title,
-                    style: AppTypography.labelMedium
-                        .copyWith(color: AppColors.primary)),
-                Text(
-                  subtitle,
-                  style: AppTypography.labelSmall
-                      .copyWith(color: AppColors.onSurfaceVariant),
-                ),
-              ],
+      child: SizedBox(
+        height: 96,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Icon(icon, size: 24, color: AppColors.primary),
+            const Spacer(),
+            Text(
+              title.toUpperCase(),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: AppTypography.labelMedium.copyWith(
+                color: AppColors.primary,
+              ),
             ),
-          ),
-          const Icon(Icons.chevron_right, color: AppColors.onSurfaceVariant),
-        ],
+            const SizedBox(height: 2),
+            Text(
+              subtitle,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              style: AppTypography.labelSmall.copyWith(
+                color: AppColors.onSurfaceVariant,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -213,14 +318,15 @@ class _RivalryCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l = AppLocalizations.of(context);
     final r = ref.watch(rivalryProvider(careerId)).valueOrNull;
     if (r == null) return const SizedBox.shrink();
-    final record = '${r.wins}W ${r.draws}D ${r.losses}L';
+    final record = l.recordsWdl(r.wins, r.draws, r.losses);
     final edge = r.wins > r.losses
-        ? 'You hold the upper hand'
+        ? l.recordsEdgeUpperHand
         : r.wins < r.losses
-            ? 'They have your number'
-            : 'Honours even';
+            ? l.recordsEdgeTheirNumber
+            : l.recordsEdgeEven;
     return Padding(
       padding: const EdgeInsets.only(bottom: AppSpacing.md),
       child: AppCard(
@@ -236,7 +342,7 @@ class _RivalryCard extends ConsumerWidget {
                 ),
                 const SizedBox(width: AppSpacing.sm),
                 Text(
-                  'FIERCEST RIVAL',
+                  l.recordsFiercestRival,
                   style: AppTypography.labelSmall.copyWith(
                     color: AppColors.warning,
                   ),
@@ -254,7 +360,7 @@ class _RivalryCard extends ConsumerWidget {
                     children: [
                       Text(r.rival.name, style: AppTypography.titleMedium),
                       Text(
-                        '${r.played} meetings · $record · $edge',
+                        l.recordsRivalLine(r.played, record, edge),
                         style: AppTypography.labelSmall.copyWith(
                           color: AppColors.onSurfaceVariant,
                         ),
@@ -292,13 +398,15 @@ class _TeamRecords extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
     return AppCard(
       child: Column(
         children: [
-          _row('Best finish', bestFinish, null),
-          _row('Longest unbeaten', '$longestUnbeaten matches', null),
+          _row(l.recordsBestFinish, bestFinish, null),
+          _row(l.recordsLongestUnbeaten,
+              l.recordsMatchesCount(longestUnbeaten), null),
           if (biggestWin != null)
-            _row('Biggest win', biggestWin!, biggestWinCode),
+            _row(l.recordsBiggestWin, biggestWin!, biggestWinCode),
         ],
       ),
     );

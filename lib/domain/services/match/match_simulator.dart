@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:fnm/core/rng/seeded_rng.dart';
 import 'package:fnm/domain/entities/nation.dart';
 
@@ -39,10 +41,16 @@ class RatingMatchSimulator implements MatchSimulator {
   }) {
     // +5 home advantage — but a neutral-venue finals gives neither side one.
     final diff = (homeStrength + (homeAdvantage ? 5 : 0)) - awayStrength;
-    // A steeper strength→xG slope so the better side controls the scoreline and
-    // upsets stay the exception rather than the rule.
-    final homeXg = (1.25 + diff * 0.05).clamp(0.15, 5.0);
-    final awayXg = (1.05 - diff * 0.05).clamp(0.15, 5.0);
+    // Strength tells MULTIPLICATIVELY, not as a flat slope. The old linear
+    // +0.05 goals per point meant every point of the gap was worth as much
+    // between two good sides as between a superpower and a minnow: ten points
+    // (a Brazil against an Ecuador) already swung a full goal each way and read
+    // like a mismatch. Scaling instead means a modest gap barely moves the
+    // scoreline while a real gulf still runs away — and the underdog's xG tails
+    // off toward zero rather than hitting a floor.
+    final edge = exp(0.026 * diff);
+    final homeXg = (1.30 * edge).clamp(0.10, 5.5);
+    final awayXg = (1.15 / edge).clamp(0.10, 5.5);
     return MatchOutcome(_goals(homeXg, rng), _goals(awayXg, rng));
   }
 

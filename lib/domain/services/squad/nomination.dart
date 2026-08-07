@@ -43,13 +43,33 @@ abstract final class Nomination {
     return false;
   }
 
+  /// The index of the match the nation is actually ON, in a date-sorted list:
+  /// the first unplayed fixture *after the last one that was played*. −1 when
+  /// the season is over.
+  ///
+  /// Taking simply the first unplayed fixture is wrong once anything has been
+  /// left behind. A fixture the world moved past without playing — an arranged
+  /// friendly a tournament swallowed, say — keeps its place at the head of the
+  /// list for ever, and every later period is judged against it: the window
+  /// stays shut, and no tournament ever opens a fresh nomination again.
+  static int _currentIndex(List<Fixture> sorted) {
+    var lastPlayed = -1;
+    for (var i = 0; i < sorted.length; i++) {
+      if (sorted[i].hasResult) lastPlayed = i;
+    }
+    for (var i = lastPlayed + 1; i < sorted.length; i++) {
+      if (!sorted[i].hasResult) return i;
+    }
+    return -1;
+  }
+
   /// From a nation's fixtures (any order), returns the matches the *current*
   /// squad covers: the run from the next unplayed fixture up to — but not
   /// including — the fixture that starts the following period. Empty when there
   /// are no upcoming matches.
   static List<Fixture> currentPeriod(List<Fixture> fixtures) {
     final sorted = [...fixtures]..sort((a, b) => a.date.compareTo(b.date));
-    final firstUnplayedIndex = sorted.indexWhere((f) => !f.hasResult);
+    final firstUnplayedIndex = _currentIndex(sorted);
     if (firstUnplayedIndex == -1) return const [];
 
     final out = <Fixture>[sorted[firstUnplayedIndex]];
@@ -64,7 +84,7 @@ abstract final class Nomination {
   /// fixture starts a period (so the squad may be edited before it kicks off).
   static bool windowOpen(List<Fixture> fixtures) {
     final sorted = [...fixtures]..sort((a, b) => a.date.compareTo(b.date));
-    final idx = sorted.indexWhere((f) => !f.hasResult);
+    final idx = _currentIndex(sorted);
     if (idx == -1) return false;
     return isPeriodStart(sorted[idx], idx == 0 ? null : sorted[idx - 1]);
   }

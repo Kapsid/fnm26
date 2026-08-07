@@ -4,7 +4,9 @@ import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
+import 'package:fnm/domain/services/achievements/challenges.dart';
 import 'package:fnm/features/achievements/challenge_providers.dart';
+import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
 
@@ -17,6 +19,7 @@ class ChallengesScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l = AppLocalizations.of(context);
     final viewAsync = ref.watch(challengesViewProvider(careerId));
     return Scaffold(
       appBar: AppBar(
@@ -26,16 +29,24 @@ class ChallengesScreen extends ConsumerWidget {
               context.go('${Routes.achievements}?careerId=$careerId'),
         ),
         title: Text(
-          'CHALLENGES',
+          l.achievementsChallengesHeading,
           style: AppTypography.labelMedium.copyWith(color: AppColors.primary),
         ),
         centerTitle: true,
       ),
       body: viewAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => Center(child: Text('Could not load.\n$e')),
+        error: (e, _) =>
+            Center(child: Text(l.achievementsCouldNotLoad(e.toString()))),
         data: (views) {
           final done = views.where((v) => v.complete).length;
+          // This save's procedural challenges get their own section; the rest
+          // form the fixed difficulty ladder.
+          final procedural = views.where((v) => v.def.procedural).toList();
+          final byTier = <ChallengeTier, List<ChallengeView>>{};
+          for (final v in views.where((v) => !v.def.procedural)) {
+            (byTier[v.def.tier] ??= []).add(v);
+          }
           return ListView(
             padding: const EdgeInsets.all(AppSpacing.marginMobile),
             children: [
@@ -58,15 +69,14 @@ class ChallengesScreen extends ConsumerWidget {
                         ),
                         const SizedBox(width: AppSpacing.sm),
                         Text(
-                          '$done / ${views.length} conquered',
+                          l.achievementsConqueredCount(done, views.length),
                           style: AppTypography.titleMedium,
                         ),
                       ],
                     ),
                     const SizedBox(height: AppSpacing.xs),
                     Text(
-                      'The hardest tests of a manager — measured across a whole '
-                      'career, many nations and many decades.',
+                      l.achievementsHardestTests,
                       style: AppTypography.bodySmall.copyWith(
                         color: AppColors.onSurfaceVariant,
                       ),
@@ -75,7 +85,63 @@ class ChallengesScreen extends ConsumerWidget {
                 ),
               ),
               const SizedBox(height: AppSpacing.md),
-              for (final v in views) _ChallengeTile(view: v),
+              if (procedural.isNotEmpty) ...[
+                Padding(
+                  padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+                  child: Row(
+                    children: [
+                      const Icon(Icons.auto_awesome_rounded,
+                          size: 18, color: AppColors.primary),
+                      const SizedBox(width: AppSpacing.sm),
+                      Text(
+                        l.achievementsThisSave,
+                        style: AppTypography.labelMedium
+                            .copyWith(color: AppColors.primary),
+                      ),
+                      const Spacer(),
+                      Text(
+                        '${procedural.where((v) => v.complete).length}/'
+                        '${procedural.length}',
+                        style: AppTypography.labelSmall.copyWith(
+                          color: AppColors.onSurfaceVariant,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                for (final v in procedural) _ChallengeTile(view: v),
+                const SizedBox(height: AppSpacing.sm),
+              ],
+              for (final tier in ChallengeTier.values)
+                if (byTier[tier] case final list?) ...[
+                  Padding(
+                    padding: const EdgeInsets.only(
+                      top: AppSpacing.sm,
+                      bottom: AppSpacing.sm,
+                    ),
+                    child: Row(
+                      children: [
+                        Icon(Icons.workspace_premium_rounded,
+                            size: 18, color: _tierColor(tier)),
+                        const SizedBox(width: AppSpacing.sm),
+                        Text(
+                          challengeTierLabel(l, tier).toUpperCase(),
+                          style: AppTypography.labelMedium
+                              .copyWith(color: _tierColor(tier)),
+                        ),
+                        const Spacer(),
+                        Text(
+                          '${list.where((v) => v.complete).length}/'
+                          '${list.length}',
+                          style: AppTypography.labelSmall.copyWith(
+                            color: AppColors.onSurfaceVariant,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  for (final v in list) _ChallengeTile(view: v),
+                ],
               const SizedBox(height: AppSpacing.xl),
             ],
           );
@@ -85,6 +151,14 @@ class ChallengesScreen extends ConsumerWidget {
   }
 }
 
+/// The medal colour for a challenge tier.
+Color _tierColor(ChallengeTier tier) => switch (tier) {
+      ChallengeTier.bronze => AppColors.medalBronze,
+      ChallengeTier.silver => AppColors.medalSilver,
+      ChallengeTier.gold => AppColors.medalGold,
+      ChallengeTier.legendary => AppColors.primary,
+    };
+
 class _ChallengeTile extends StatelessWidget {
   const _ChallengeTile({required this.view});
 
@@ -92,6 +166,8 @@ class _ChallengeTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    final text = challengeText(l, view.def, view.target);
     final complete = view.complete;
     final brutal = view.def.brutal;
     return Padding(
@@ -114,19 +190,19 @@ class _ChallengeTile extends StatelessWidget {
                 const SizedBox(width: AppSpacing.sm),
                 Expanded(
                   child: Text(
-                    view.def.title,
+                    text.title,
                     style: AppTypography.titleMedium.copyWith(
                       color: complete ? AppColors.positive : null,
                     ),
                   ),
                 ),
                 if (brutal)
-                  const TacticalChip('BRUTAL', emphasized: true),
+                  TacticalChip(l.achievementsBrutalBadge, emphasized: true),
               ],
             ),
             const SizedBox(height: AppSpacing.xs),
             Text(
-              view.def.description,
+              text.description,
               style: AppTypography.bodySmall.copyWith(
                 color: AppColors.onSurfaceVariant,
               ),

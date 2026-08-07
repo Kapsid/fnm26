@@ -14,6 +14,7 @@ import 'package:fnm/domain/services/competition/group_advancement.dart';
 import 'package:fnm/domain/services/competition/nations_cup.dart';
 import 'package:fnm/features/tournaments/nations_cup_draw_providers.dart';
 import 'package:fnm/features/tournaments/tournament_history.dart';
+import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
 
@@ -147,6 +148,7 @@ class _NationsCupScreenState extends ConsumerState<NationsCupScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
     final async = ref.watch(_nationsCupProvider(widget.careerId));
     final liveTab = _liveTab(async.valueOrNull);
     return DefaultTabController(
@@ -165,36 +167,36 @@ class _NationsCupScreenState extends ConsumerState<NationsCupScreen> {
                   ),
           ),
           title: Text(
-            'NATIONS CUP',
+            l.tourContNationsCup,
             style: AppTypography.labelMedium.copyWith(color: AppColors.primary),
           ),
           centerTitle: true,
           // The tabs sit right on top of the content otherwise; the extra
           // height gives them room to breathe.
-          bottom: const PreferredSize(
-            preferredSize: Size.fromHeight(kTournamentTabBarHeight),
+          bottom: PreferredSize(
+            preferredSize: const Size.fromHeight(kTournamentTabBarHeight),
             child: TabBar(
               isScrollable: true,
               labelColor: AppColors.onSurface,
               unselectedLabelColor: AppColors.onSurfaceVariant,
               indicatorColor: AppColors.primary,
               tabs: [
-                Tab(text: 'LEAGUES'),
-                Tab(text: 'FINALS FOUR'),
-                Tab(text: 'SCORERS'),
-                Tab(text: 'HISTORY'),
+                Tab(text: l.tourContTabLeagues),
+                Tab(text: l.tourContTabFinalsFour),
+                Tab(text: l.tourContTabScorers),
+                Tab(text: l.tourContTabHistory),
               ],
             ),
           ),
         ),
         body: async.when(
           loading: () => const Center(child: CircularProgressIndicator()),
-          error: (e, _) => Center(child: Text('Could not load.\n$e')),
+          error: (e, _) => Center(child: Text(l.tourContCouldNotLoad(e.toString()))),
           data: (v) {
             if (v == null) {
-              return const Center(child: Text('Save not found.'));
+              return Center(child: Text(l.tourContNoSaveFound));
             }
-            String name(int id) => v.nations[id]?.name ?? 'Unknown';
+            String name(int id) => v.nations[id]?.name ?? l.tourContUnknown;
             String code(int id) => v.nations[id]?.code ?? '??';
 
             return TabBarView(
@@ -205,7 +207,7 @@ class _NationsCupScreenState extends ConsumerState<NationsCupScreen> {
                   scorers: v.scorers,
                   playerNames: v.playerNames,
                   code: code,
-                  emptyMessage: 'No Nations Cup goals recorded yet.',
+                  emptyMessage: l.tourContNoNationsCupGoals,
                 ),
                 // Always reachable: the roll of honour used to be visible only
                 // out of season, so the cup's history vanished the moment it
@@ -214,7 +216,7 @@ class _NationsCupScreenState extends ConsumerState<NationsCupScreen> {
                   honours: v.honours,
                   name: name,
                   code: code,
-                  emptyMessage: 'No Nations Cup champions crowned yet.',
+                  emptyMessage: l.tourContNoNationsCupChampions,
                 ),
               ],
             );
@@ -230,20 +232,17 @@ class _NationsCupScreenState extends ConsumerState<NationsCupScreen> {
     String Function(int) name,
     String Function(int) code,
   ) {
+    final l = AppLocalizations.of(context);
     if (v.groups.isEmpty) {
-      return const TournamentSoon(
-        message:
-            'This cycle’s Nations Cup begins after the continental '
-            'finals. Past winners are under History.',
+      return TournamentSoon(
+        message: l.tourContNationsCupOffSeason,
       );
     }
     // Groups exist but the draw ceremony hasn't been watched — keep it a
     // surprise.
     if (!v.drawWatched) {
-      return const TournamentSoon(
-        message:
-            'This cycle’s Nations Cup groups are drawn at the ceremony. '
-            'Watch the draw from the hub to see who your nation faces.',
+      return TournamentSoon(
+        message: l.tourContNationsCupGroupsSoon,
       );
     }
 
@@ -272,8 +271,9 @@ class _NationsCupScreenState extends ConsumerState<NationsCupScreen> {
           ),
         const SizedBox(height: AppSpacing.sm),
         Text(
-          'LEAGUE $selected'
-          '${selected == v.playerLeague ? ' · YOUR LEAGUE' : ''}',
+          selected == v.playerLeague
+              ? l.tourContLeagueHeadingYours(selected)
+              : l.tourContLeagueHeading(selected),
           style: AppTypography.labelMedium.copyWith(color: AppColors.primary),
         ),
         const SizedBox(height: AppSpacing.md),
@@ -297,11 +297,10 @@ class _NationsCupScreenState extends ConsumerState<NationsCupScreen> {
     String Function(int) name,
     String Function(int) code,
   ) {
+    final l = AppLocalizations.of(context);
     if (v.semis.isEmpty && v.finalFx.isEmpty) {
-      return const TournamentSoon(
-        message:
-            'The Finals Four is contested by League A’s group winners '
-            'once the group stage is done.',
+      return TournamentSoon(
+        message: l.tourContFinalsFourSoon,
       );
     }
     return ListView(
@@ -335,6 +334,7 @@ class _LeagueSelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context);
     return SizedBox(
       height: 36,
       child: ListView(
@@ -362,7 +362,9 @@ class _LeagueSelector extends StatelessWidget {
                     ),
                   ),
                   child: Text(
-                    l == playerLeague ? 'League $l ★' : 'League $l',
+                    l == playerLeague
+                        ? loc.tourContLeagueChipStar(l)
+                        : loc.tourContLeagueChip(l),
                     style: AppTypography.labelSmall.copyWith(
                       color: l == selected
                           ? AppColors.onSecondaryContainer
@@ -397,6 +399,7 @@ class _GroupCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
     final mine = group.standings.any((s) => s.nationId == playerNationId);
     return AppCard(
       border: mine
@@ -405,7 +408,8 @@ class _GroupCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('GROUP ${group.name}', style: AppTypography.labelMedium),
+          Text(l.tourContGroupHeading(group.name),
+              style: AppTypography.labelMedium),
           const SizedBox(height: AppSpacing.sm),
           for (var i = 0; i < group.standings.length; i++)
             _row(i + 1, group.standings[i], group.standings.length),
@@ -463,6 +467,7 @@ class _GroupCard extends StatelessWidget {
             ),
           ),
           _cell('${s.played}'),
+          _cell('${s.goalsFor}:${s.goalsAgainst}', width: 42),
           _cell(gd > 0 ? '+$gd' : '$gd'),
           _cell('${s.points}', bold: true),
         ],
@@ -470,8 +475,8 @@ class _GroupCard extends StatelessWidget {
     );
   }
 
-  Widget _cell(String t, {bool bold = false}) => SizedBox(
-    width: 30,
+  Widget _cell(String t, {bool bold = false, double width = 30}) => SizedBox(
+    width: width,
     child: Text(
       t,
       textAlign: TextAlign.center,
@@ -503,44 +508,45 @@ class _FinalsFourCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
     return AppCard(
       border: Border.all(color: AppColors.primary.withValues(alpha: 0.5)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Row(
+          Row(
             children: [
-              Icon(Icons.emoji_events, size: 16, color: AppColors.primary),
-              SizedBox(width: AppSpacing.xs),
-              Text('FINALS FOUR', style: AppTypography.labelMedium),
+              const Icon(Icons.emoji_events, size: 16, color: AppColors.primary),
+              const SizedBox(width: AppSpacing.xs),
+              Text(l.tourContTabFinalsFour, style: AppTypography.labelMedium),
             ],
           ),
           const SizedBox(height: AppSpacing.sm),
           Text(
-            'SEMI-FINALS',
+            l.tourContSemiFinals,
             style: AppTypography.labelSmall.copyWith(
               color: AppColors.onSurfaceVariant,
             ),
           ),
           const SizedBox(height: AppSpacing.xs),
-          for (final f in semis) _tie(f),
+          for (final f in semis) _tie(f, l),
           if (finalFx.isNotEmpty) ...[
             const SizedBox(height: AppSpacing.sm),
             Text(
-              'FINAL',
+              l.tourContFinal,
               style: AppTypography.labelSmall.copyWith(
                 color: AppColors.primary,
               ),
             ),
             const SizedBox(height: AppSpacing.xs),
-            for (final f in finalFx) _tie(f),
+            for (final f in finalFx) _tie(f, l),
           ],
         ],
       ),
     );
   }
 
-  Widget _tie(Fixture f) {
+  Widget _tie(Fixture f, AppLocalizations l) {
     final done = f.hasResult;
     final homeWon = done && f.homeScore! >= f.awayScore!;
     return Padding(
@@ -551,7 +557,7 @@ class _FinalsFourCard extends StatelessWidget {
           SizedBox(
             width: 54,
             child: Text(
-              done ? '${f.homeScore} - ${f.awayScore}' : 'vs',
+              done ? '${f.homeScore} - ${f.awayScore}' : l.tourContVersusShort,
               textAlign: TextAlign.center,
               style: AppTypography.labelMedium.copyWith(
                 color: done ? AppColors.onSurface : AppColors.onSurfaceVariant,

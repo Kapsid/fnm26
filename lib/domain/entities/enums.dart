@@ -209,3 +209,27 @@ enum YouthLevel {
     return null;
   }
 }
+
+/// An individual trophy a player can win.
+///
+/// Stored by name, so reordering these members never rewrites a save's
+/// history — the same discipline every other persisted enum here follows.
+enum AwardKind {
+  /// Best player of a finals tournament.
+  goldenBall,
+
+  /// Top scorer of a finals tournament.
+  goldenBoot,
+
+  /// Best goalkeeper of a finals tournament.
+  goldenGlove,
+
+  /// Named in a finals tournament's best XI.
+  teamOfTournament,
+
+  /// The world's best player over a calendar year.
+  playerOfYear,
+
+  /// The world's best under-21 over a calendar year.
+  youngPlayerOfYear,
+}

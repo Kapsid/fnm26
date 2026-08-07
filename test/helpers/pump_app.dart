@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/core/theme/app_theme.dart';
+import 'package:fnm/l10n/app_localizations.dart';
 
 /// Shared test harness for pumping a widget inside the app's Riverpod scope
 /// and theme. Keeps widget tests terse and consistent (DRY).
@@ -18,6 +19,8 @@ extension PumpApp on WidgetTester {
         overrides: overrides,
         child: MaterialApp(
           theme: AppTheme.theme,
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
           home: widget,
         ),
       ),

@@ -5,6 +5,7 @@ import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/services/player/player_lifecycle.dart';
 import 'package:fnm/features/career/career_providers.dart';
+import 'package:fnm/features/federation/federation_providers.dart';
 
 /// The pending naturalisation offer resolved for the decision screen: the
 /// candidate player (with their real name/attributes) and the nations either
@@ -45,6 +46,12 @@ final AutoDisposeFutureProviderFamily<NaturalizationOffer?, int>
 /// foreign player resolved live from their original id (so their name and
 /// attributes stay their own), then re-homed to the manager's nation so they
 /// slot into the squad, call-ups and match pool alongside home-grown players.
+///
+/// Resolved with the save's development inputs — the youth-intake bonuses and
+/// the per-player start counts — exactly as the nation's own pool is. Without
+/// them a naturalised player was frozen at his base rating for the rest of the
+/// save: he could play fifty tournament matches and never gain a point, while
+/// every home-grown team-mate around him grew.
 Future<List<Player>> naturalizedPlayersFor(Ref ref, Career career) async {
   final links =
       await ref.read(careerRepositoryProvider).acceptedNaturalizations(
@@ -53,12 +60,18 @@ Future<List<Player>> naturalizedPlayersFor(Ref ref, Career career) async {
   if (links.isEmpty) return const [];
   final repo = ref.read(playerRepositoryProvider);
   final agingYears = CareerService.agingYears(career);
+  final youthBonus = await ref.read(
+    youthBonusByCycleProvider(career.id).future,
+  );
+  final careerDev = await ref.read(careerDevBonusProvider(career.id).future);
   final out = <Player>[];
   for (final link in links) {
     final p = await repo.byId(
       link.playerId,
       agingYears: agingYears,
       saveSeed: career.rngSeed,
+      youthBonusByCycle: youthBonus,
+      careerStartsByPlayer: careerDev,
     );
     // Only field a naturalised player who is still active (not retired out of
     // the pool); re-home them to the manager's nation for selection.

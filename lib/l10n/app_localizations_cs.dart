@@ -3395,6 +3395,27 @@ class AppLocalizationsCs extends AppLocalizations {
       'Nedošel jsem takhle daleko, abych nosil rozlišováky.';
 
   @override
+  String get playerHonoursTitle => 'TROFEJE';
+
+  @override
+  String get awardGoldenBall => 'Zlatý míč';
+
+  @override
+  String get awardGoldenBoot => 'Zlatá kopačka';
+
+  @override
+  String get awardGoldenGlove => 'Zlatá rukavice';
+
+  @override
+  String get awardTeamOfTournament => 'Sestava turnaje';
+
+  @override
+  String get awardPlayerOfYear => 'Nejlepší hráč světa';
+
+  @override
+  String get awardYoungPlayerOfYear => 'Nejlepší mladý hráč';
+
+  @override
   String get playerClubHistory => 'KLUBOVÁ HISTORIE';
 
   @override

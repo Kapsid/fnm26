@@ -1,6 +1,7 @@
 import 'package:fnm/core/rng/seeded_rng.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/group_standing.dart';
+import 'package:fnm/domain/services/competition/cross_group.dart';
 import 'package:fnm/domain/services/competition/qualification.dart';
 import 'package:fnm/domain/services/competition/qualification_format.dart';
 import 'package:fnm/domain/services/competition/round_robin.dart';
@@ -57,9 +58,8 @@ class KnockoutOutcome {
   int get awayPens => awayKicks.where((s) => s).length;
 
   /// Whether the home side won the tie (in extra time or on penalties).
-  bool get homeWon => wentToShootout
-      ? homePens > awayPens
-      : homeScore > awayScore;
+  bool get homeWon =>
+      wentToShootout ? homePens > awayPens : homeScore > awayScore;
 }
 
 /// World Cup finals: a pot-based group draw (by world ranking) and the knockout
@@ -88,30 +88,30 @@ abstract final class WorldCupFinals {
     required Map<int, int> rankingById,
     required List<int> hosts,
     SeededRng? playoffRng,
+    List<int>? playoffWinnersOverride,
   }) {
     int rank(int id) => rankingById[id] ?? 9999;
     final qualifiers = <int>[];
-    final playoffPool = <int>[];
     for (final entry in byConfederation.entries) {
       final fmt = QualificationFormat.forConfederation(entry.key);
-      final direct = Qualification.qualifiers(entry.value, fmt.finalsBerths);
-      qualifiers.addAll(direct);
-      if (fmt.playoffEntrants > 0) {
-        final withEntrants = Qualification.qualifiers(
-          entry.value,
-          fmt.finalsBerths + fmt.playoffEntrants,
-        );
-        playoffPool.addAll(withEntrants.skip(direct.length));
-      }
+      qualifiers.addAll(
+        Qualification.qualifiers(entry.value, fmt.finalsBerths),
+      );
     }
-    // The two remaining places go through the intercontinental play-off: an
+    // The two remaining places go through the intercontinental play-off. A
+    // caller that has actually PLAYED the play-off passes its real winners in
+    // [playoffWinnersOverride]; otherwise the tie is decided here — an
     // actually-simulated mini-bracket (strength-weighted) when an rng is given,
-    // rather than simply handing them to the two best-ranked entrants.
-    playoffPool.sort((a, b) => rank(a).compareTo(rank(b)));
+    // else simply the two best-ranked entrants.
+    final playoffPool = playoffPoolFor(
+      byConfederation: byConfederation,
+      rankingById: rankingById,
+    );
     qualifiers.addAll(
-      playoffRng == null
-          ? playoffPool.take(QualificationFormat.playoffBerths)
-          : playoffWinners(playoffPool, rankingById, playoffRng),
+      playoffWinnersOverride ??
+          (playoffRng == null
+              ? playoffPool.take(QualificationFormat.playoffBerths)
+              : playoffWinners(playoffPool, rankingById, playoffRng)),
     );
 
     // Every host auto-qualifies, each replacing the weakest non-host qualifier.
@@ -226,21 +226,26 @@ abstract final class WorldCupFinals {
     List<List<GroupStanding>> groups,
     int bestThirds,
   ) {
+    // Cross-group seeding compares teams that never met, so it runs on
+    // comparable records: with uneven groups, results against the bottom side
+    // of the bigger ones are stripped out first (see CrossGroup). Positions
+    // within each group are untouched.
+    final comparable = CrossGroup.comparable(groups);
     // Which group each standing came from, so two teams out of the same group
     // are never drawn against each other in the first knockout round.
     final groupOf = <GroupStanding, int>{};
-    for (var gi = 0; gi < groups.length; gi++) {
-      for (final s in groups[gi]) {
+    for (var gi = 0; gi < comparable.length; gi++) {
+      for (final s in comparable[gi]) {
         groupOf[s] = gi;
       }
     }
-    final winners = [for (final g in groups) g[0]]..sort(_rank);
+    final winners = [for (final g in comparable) g[0]]..sort(_rank);
     final runners = [
-      for (final g in groups)
+      for (final g in comparable)
         if (g.length > 1) g[1],
     ]..sort(_rank);
     final thirds = [
-      for (final g in groups)
+      for (final g in comparable)
         if (g.length > 2) g[2],
     ]..sort(_rank);
     final seeds = [...winners, ...runners, ...thirds.take(bestThirds)];
@@ -276,10 +281,10 @@ abstract final class WorldCupFinals {
   /// finals: 8 for a 48-team World Cup (12 groups), 4 for a 24-team continental
   /// (6 groups), otherwise none (top two only).
   static int bestThirdsFor(int groupCount) => switch (groupCount) {
-        12 => 8,
-        6 => 4,
-        _ => 0,
-      };
+    12 => 8,
+    6 => 4,
+    _ => 0,
+  };
 
   /// Round-of-16 pairings from the finals group tables (ordered A…H): each
   /// group winner meets a runner-up from another group, halves kept apart.
@@ -331,9 +336,9 @@ abstract final class WorldCupFinals {
 
   /// Pairs consecutive winners (in bracket order) into the next round's ties.
   static List<(int, int)> pairWinners(List<int> winners) => [
-        for (var i = 0; i + 1 < winners.length; i += 2)
-          (winners[i], winners[i + 1]),
-      ];
+    for (var i = 0; i + 1 < winners.length; i += 2)
+      (winners[i], winners[i + 1]),
+  ];
 
   /// Resolves a knockout score so there is always a winner. A level game after
   /// 90 goes to extra time and, if still level, a penalty shootout — see
@@ -376,6 +381,8 @@ abstract final class WorldCupFinals {
     SeededRng rng, {
     double homeStrength = 1,
     double awayStrength = 1,
+    List<double> homeTakerSkill = const [],
+    List<double> awayTakerSkill = const [],
   }) {
     final total = homeStrength + awayStrength;
     final homeShare = total <= 0 ? 0.5 : homeStrength / total;
@@ -405,9 +412,16 @@ abstract final class WorldCupFinals {
     }
 
     // Still level — a shootout. Each side's per-kick conversion is tilted by
-    // strength (the stronger side, and its keeper, edge it).
-    final homeConv = (0.75 + 0.12 * (homeShare - 0.5) * 2).clamp(0.55, 0.9);
-    final awayConv = (0.75 + 0.12 * (0.5 - homeShare) * 2).clamp(0.55, 0.9);
+    // strength (the stronger side, and its keeper, edge it) and then by WHO is
+    // taking it: [homeTakerSkill]/[awayTakerSkill] are per-kick multipliers in
+    // the order the takers step up, cycled once sudden death runs past the
+    // named five. Empty lists leave the old strength-only shootout, so a
+    // background tie between two AI sides is unchanged.
+    final homeBase = (0.75 + 0.12 * (homeShare - 0.5) * 2).clamp(0.55, 0.9);
+    final awayBase = (0.75 + 0.12 * (0.5 - homeShare) * 2).clamp(0.55, 0.9);
+    double convOf(double base, List<double> skill, int kick) => skill.isEmpty
+        ? base
+        : (base * skill[kick % skill.length]).clamp(0.35, 0.96);
     final homeKicks = <bool>[];
     final awayKicks = <bool>[];
     int hs() => homeKicks.where((s) => s).length;
@@ -424,14 +438,22 @@ abstract final class WorldCupFinals {
     // Best of five, home first — stop the moment it is decided.
     for (var round = 0; round < 5; round++) {
       if (decided()) break;
-      homeKicks.add(rng.chance(homeConv));
+      homeKicks.add(
+        rng.chance(convOf(homeBase, homeTakerSkill, homeKicks.length)),
+      );
       if (decided()) break;
-      awayKicks.add(rng.chance(awayConv));
+      awayKicks.add(
+        rng.chance(convOf(awayBase, awayTakerSkill, awayKicks.length)),
+      );
     }
     // Sudden death: a pair of kicks each round until one side leads.
     while (hs() == as_()) {
-      homeKicks.add(rng.chance(homeConv));
-      awayKicks.add(rng.chance(awayConv));
+      homeKicks.add(
+        rng.chance(convOf(homeBase, homeTakerSkill, homeKicks.length)),
+      );
+      awayKicks.add(
+        rng.chance(convOf(awayBase, awayTakerSkill, awayKicks.length)),
+      );
     }
 
     return KnockoutOutcome(
@@ -441,6 +463,30 @@ abstract final class WorldCupFinals {
       homeKicks: homeKicks,
       awayKicks: awayKicks,
     );
+  }
+
+  /// The intercontinental play-off pool: each confederation's best entrants
+  /// below its direct cut-off, sorted by ranking (seeds first). The standard
+  /// field is six teams. Shared by finalist selection, the display bracket and
+  /// the playable play-off so all three agree on who is in it.
+  static List<int> playoffPoolFor({
+    required Map<Confederation, List<List<GroupStanding>>> byConfederation,
+    required Map<int, int> rankingById,
+  }) {
+    int rank(int id) => rankingById[id] ?? 9999;
+    final pool = <int>[];
+    for (final entry in byConfederation.entries) {
+      final fmt = QualificationFormat.forConfederation(entry.key);
+      if (fmt.playoffEntrants <= 0) continue;
+      final direct = Qualification.qualifiers(entry.value, fmt.finalsBerths);
+      final withEntrants = Qualification.qualifiers(
+        entry.value,
+        fmt.finalsBerths + fmt.playoffEntrants,
+      );
+      pool.addAll(withEntrants.skip(direct.length));
+    }
+    pool.sort((a, b) => rank(a).compareTo(rank(b)));
+    return pool;
   }
 
   /// The intercontinental play-off winners ([QualificationFormat.playoffBerths]

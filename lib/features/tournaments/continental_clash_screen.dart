@@ -10,6 +10,7 @@ import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
 import 'package:fnm/features/tournaments/tournament_history.dart';
+import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
 
@@ -58,6 +59,7 @@ class ContinentalClashScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l = AppLocalizations.of(context);
     final dataAsync = ref.watch(_clashProvider(careerId));
 
     return DefaultTabController(
@@ -70,41 +72,39 @@ class ContinentalClashScreen extends ConsumerWidget {
                 context.go('${Routes.tournaments}?careerId=$careerId'),
           ),
           title: Text(
-            'CONTINENTAL CLASH',
+            l.tourContContinentalClash,
             style: AppTypography.labelMedium.copyWith(color: AppColors.primary),
           ),
           centerTitle: true,
-          bottom: const PreferredSize(
-            preferredSize: Size.fromHeight(kTournamentTabBarHeight),
+          bottom: PreferredSize(
+            preferredSize: const Size.fromHeight(kTournamentTabBarHeight),
             child: TabBar(
               labelColor: AppColors.onSurface,
               unselectedLabelColor: AppColors.onSurfaceVariant,
               indicatorColor: AppColors.primary,
               tabs: [
-                Tab(text: 'THIS CYCLE'),
-                Tab(text: 'HISTORY'),
+                Tab(text: l.tourContTabThisCycle),
+                Tab(text: l.tourContTabHistory),
               ],
             ),
           ),
         ),
         body: dataAsync.when(
           loading: () => const Center(child: CircularProgressIndicator()),
-          error: (e, _) => Center(child: Text('Could not load the Clash.\n$e')),
+          error: (e, _) =>
+              Center(child: Text(l.tourContCouldNotLoadClash(e.toString()))),
           data: (data) {
             if (data == null) {
-              return const Center(child: Text('No save found.'));
+              return Center(child: Text(l.tourContNoSaveFound));
             }
             String code(int id) => data.nations[id]?.code ?? '??';
-            String name(int id) => data.nations[id]?.name ?? 'Unknown';
+            String name(int id) => data.nations[id]?.name ?? l.tourContUnknown;
 
             return TabBarView(
               children: [
                 if (data.tie == null)
-                  const TournamentSoon(
-                    message:
-                        'Champions of two continents, one match. The Clash is '
-                        'played once the European Championship and the South '
-                        'America Cup are both decided.',
+                  TournamentSoon(
+                    message: l.tourContClashSoon,
                   )
                 else
                   _ThisCycle(
@@ -117,7 +117,7 @@ class ContinentalClashScreen extends ConsumerWidget {
                   honours: data.honours,
                   name: name,
                   code: code,
-                  emptyMessage: 'No Clash has been decided yet.',
+                  emptyMessage: l.tourContNoClashYet,
                 ),
               ],
             );
@@ -144,6 +144,7 @@ class _ThisCycle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
     final played = tie.hasResult;
     final winnerId = !played
         ? null
@@ -159,7 +160,7 @@ class _ThisCycle extends StatelessWidget {
               const Icon(Icons.flash_on, color: AppColors.primary, size: 32),
               const SizedBox(height: AppSpacing.xs),
               Text(
-                'CHAMPIONS OF TWO CONTINENTS, ONE MATCH',
+                l.tourContTwoContinentsOneMatch,
                 textAlign: TextAlign.center,
                 style: AppTypography.labelSmall.copyWith(
                   color: AppColors.onSurfaceVariant,
@@ -175,7 +176,7 @@ class _ThisCycle extends StatelessWidget {
                     child: Text(
                       played
                           ? '${tie.homeScore} – ${tie.awayScore}'
-                          : 'v',
+                          : l.tourContVersusShort,
                       style: AppTypography.headlineMedium,
                     ),
                   ),
@@ -194,7 +195,7 @@ class _ThisCycle extends StatelessWidget {
                     ),
                     const SizedBox(width: AppSpacing.sm),
                     Text(
-                      '${name(winnerId)} win the Clash',
+                      l.tourContWinTheClash(name(winnerId)),
                       style: AppTypography.titleMedium,
                     ),
                   ],

@@ -7,6 +7,7 @@ import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/domain/services/entitlement/entitlement.dart';
 import 'package:fnm/domain/services/entitlement/entitlement_service.dart';
+import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 
 /// Opens the premium paywall as a bottom sheet. Resolves once the sheet is
@@ -46,6 +47,7 @@ class _PaywallSheetState extends ConsumerState<PaywallSheet> {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
     final premium = ref.watch(premiumUnlockedProvider);
     final flow = ref.watch(purchaseFlowProvider);
     final service = ref.read(entitlementServiceProvider);
@@ -75,7 +77,7 @@ class _PaywallSheetState extends ConsumerState<PaywallSheet> {
           ),
           const SizedBox(height: AppSpacing.sm),
           Text(
-            'GO PRO',
+            l.paywallGoPro,
             textAlign: TextAlign.center,
             style: AppTypography.headlineMedium.copyWith(
               color: AppColors.primary,
@@ -83,20 +85,20 @@ class _PaywallSheetState extends ConsumerState<PaywallSheet> {
           ),
           const SizedBox(height: AppSpacing.xs),
           Text(
-            'One-time unlock. No subscription.',
+            l.paywallOneTimeUnlock,
             textAlign: TextAlign.center,
             style: AppTypography.bodySmall.copyWith(
               color: AppColors.onSurfaceVariant,
             ),
           ),
           const SizedBox(height: AppSpacing.lg),
-          _benefit(Icons.public, 'Manage every nation in the world'),
-          _benefit(Icons.save, 'Five save slots instead of two'),
-          _benefit(Icons.all_inclusive, 'Endless careers, forever'),
+          _benefit(Icons.public, l.paywallBenefitEveryNation),
+          _benefit(Icons.save, l.paywallBenefitSaveSlots),
+          _benefit(Icons.all_inclusive, l.paywallBenefitEndless),
           const SizedBox(height: AppSpacing.lg),
           if (premium)
             Text(
-              'Premium is unlocked — enjoy!',
+              l.paywallUnlocked,
               textAlign: TextAlign.center,
               style: AppTypography.titleMedium.copyWith(
                 color: AppColors.positive,
@@ -105,15 +107,17 @@ class _PaywallSheetState extends ConsumerState<PaywallSheet> {
           else ...[
             PrimaryButton(
               label: busy
-                  ? 'Contacting the store…'
-                  : 'Unlock Pro${_price == null ? '' : ' · $_price'}',
+                  ? l.paywallContactingStore
+                  : (_price == null
+                      ? l.paywallUnlockPro
+                      : l.paywallUnlockProPriced(_price!)),
               icon: Icons.lock_open_rounded,
               onPressed: busy ? null : service.buy,
             ),
             const SizedBox(height: AppSpacing.sm),
             TextButton(
               onPressed: busy ? null : service.restore,
-              child: const Text('Restore purchases'),
+              child: Text(l.paywallRestorePurchases),
             ),
             if (flow == PurchaseFlowState.error &&
                 service.lastError != null) ...[

@@ -8,6 +8,7 @@ import 'package:fnm/domain/services/federation/federation_finance.dart';
 import 'package:fnm/features/achievements/achievement_providers.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/career/career_summary_providers.dart';
+import 'package:fnm/features/hub/objective_providers.dart';
 import 'package:fnm/features/ranking/world_ranking_providers.dart';
 
 /// One job offer a manager can accept between cycles.
@@ -89,6 +90,20 @@ final AutoDisposeFutureProviderFamily<RolloverVerdict?, int>
   if (ranking == null) return null;
   final perf = await ref.watch(satisfactionProvider(careerId).future);
   final summary = await ref.watch(careerSummaryProvider(careerId).future);
+  // How far the cycle's briefs were BEATEN, in rounds, summed across the
+  // objectives the board set. Satisfaction already rewards overachievement, but
+  // it is a 0–100 gauge with a ceiling: a manager who drags a middling nation
+  // to a World Cup semi-final pegs it at 100 and looks no different in the job
+  // market from one who merely did the job. Rounds beyond the brief are read
+  // separately, so the phone rings from higher up.
+  final outcomes =
+      await ref.watch(cycleObjectiveOutcomesProvider(careerId).future);
+  var beatenBy = 0;
+  for (final o in outcomes) {
+    if (!o.decided) continue;
+    final gap = o.actual - o.target;
+    if (gap > 0) beatenBy += gap;
+  }
 
   final ordered = ranking.nations; // strongest first
   final total = ordered.length;
@@ -134,8 +149,11 @@ final AutoDisposeFutureProviderFamily<RolloverVerdict?, int>
   // Reputation cushions the band: an iconic manager still draws strong offers
   // after a lean cycle; an unproven one is marked tougher (±20% at the ends).
   final repFactor = 1 - (rep - 50) / 50 * 0.20;
+  // Beating the brief pulls the whole band upward, on top of what satisfaction
+  // already did — 12% stronger per round beyond it, up to a little over a third.
+  final overFactor = 1 - (beatenBy.clamp(0, 3) * 0.12);
   final center =
-      (currentPos * factor * repFactor).round().clamp(1, total);
+      (currentPos * factor * repFactor * overFactor).round().clamp(1, total);
 
   final rng = SeededRng(career.rngSeed ^ (career.cyclePointer * 0x77) ^ 0xB0A5);
   final offers = <NationOffer>[];
@@ -269,34 +287,34 @@ String _bestResult(CareerSummary? summary, int cycle) {
   if (sacked) {
     return (
       'The board has dismissed you',
-      'A dismal cycle (form rating $perf%). Your reign ends here — only '
-          'lesser nations are willing to take a chance on you now.',
+      'A dismal cycle (rating $perf%). Your reign ends here. Only lesser '
+          'nations will take a chance on you now.',
     );
   }
   if (perf >= 80) {
     return (
       'The board is delighted',
       'An outstanding cycle (rating $perf%) after $best. Bigger nations are '
-          'circling — or stay and build a dynasty.',
+          'interested, or you can stay and build.',
     );
   }
   if (perf >= 55) {
     return (
       'A solid cycle',
-      'The board is content (rating $perf%). A few clubs of similar standing '
-          'would welcome you, but there is no pressure to move.',
+      'The board is content (rating $perf%). A few nations of similar '
+          'standing would take you, but there is no pressure to move.',
     );
   }
   if (perf >= 30) {
     return (
       'The board expected more',
-      'A disappointing cycle (rating $perf%). You keep your job, but the '
-          'offers on the table are a step down.',
+      'A disappointing cycle (rating $perf%). You keep your job, but any '
+          'offers are a step down.',
     );
   }
   return (
     'You are under real pressure',
-    'A poor cycle (rating $perf%). You survive — just — but only weaker '
-        'nations are interested if you fancy a fresh start.',
+    'A poor cycle (rating $perf%). You survive, but only weaker nations are '
+        'interested if you fancy a fresh start.',
   );
 }

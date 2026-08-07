@@ -8,6 +8,7 @@ import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/nations/nation_select_providers.dart';
 import 'package:fnm/features/records/head_to_head_providers.dart';
+import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
 
@@ -29,6 +30,7 @@ class _HeadToHeadScreenState extends ConsumerState<HeadToHeadScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
     final nationsAsync = ref.watch(nationsProvider);
     // Default side A to the manager's own nation the first time.
     if (!_seeded) {
@@ -49,14 +51,15 @@ class _HeadToHeadScreenState extends ConsumerState<HeadToHeadScreen> {
               : context.go('${Routes.records}?careerId=${widget.careerId}'),
         ),
         title: Text(
-          'HEAD TO HEAD',
+          l.recordsHeadToHead,
           style: AppTypography.labelMedium.copyWith(color: AppColors.primary),
         ),
         centerTitle: true,
       ),
       body: nationsAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => Center(child: Text('Could not load nations.\n$e')),
+        error: (e, _) =>
+            Center(child: Text(l.recordsCouldNotLoadNations(e.toString()))),
         data: (nations) {
           final byId = {for (final n in nations) n.id: n};
           return ListView(
@@ -66,7 +69,7 @@ class _HeadToHeadScreenState extends ConsumerState<HeadToHeadScreen> {
                 children: [
                   Expanded(
                     child: _NationSlot(
-                      label: 'HOME',
+                      label: l.recordsHome,
                       nation: _a == null ? null : byId[_a],
                       onTap: () =>
                           _pick(nations, (id) => setState(() => _a = id)),
@@ -76,14 +79,14 @@ class _HeadToHeadScreenState extends ConsumerState<HeadToHeadScreen> {
                     padding: const EdgeInsets.symmetric(
                         horizontal: AppSpacing.sm),
                     child: Text(
-                      'vs',
+                      l.recordsVs,
                       style: AppTypography.titleMedium
                           .copyWith(color: AppColors.onSurfaceVariant),
                     ),
                   ),
                   Expanded(
                     child: _NationSlot(
-                      label: 'AWAY',
+                      label: l.recordsAway,
                       nation: _b == null ? null : byId[_b],
                       onTap: () =>
                           _pick(nations, (id) => setState(() => _b = id)),
@@ -100,7 +103,7 @@ class _HeadToHeadScreenState extends ConsumerState<HeadToHeadScreen> {
                 )
               else ...[
                 if (_a == _b && _a != null)
-                  const _Hint(text: 'Pick two different nations.'),
+                  _Hint(text: l.recordsPickTwoDifferent),
                 // Your current team's record against everyone you've faced —
                 // tap an opponent to see the full breakdown.
                 _MyLedger(
@@ -140,6 +143,7 @@ class _NationSlot extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
     return AppCard(
       onTap: onTap,
       child: Column(
@@ -153,7 +157,7 @@ class _NationSlot extends StatelessWidget {
           FlagDisc(nation?.code ?? '??', size: 40),
           const SizedBox(height: AppSpacing.sm),
           Text(
-            nation?.name ?? 'Select',
+            nation?.name ?? l.recordsSelect,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             textAlign: TextAlign.center,
@@ -195,31 +199,29 @@ class _MyLedger extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l = AppLocalizations.of(context);
     final async = ref.watch(myHeadToHeadsProvider(careerId));
     return async.when(
       loading: () => const Padding(
         padding: EdgeInsets.all(AppSpacing.xl),
         child: Center(child: CircularProgressIndicator()),
       ),
-      error: (e, _) => Text('Could not load your record.\n$e'),
+      error: (e, _) => Text(l.recordsCouldNotLoadYourRecord(e.toString())),
       data: (lines) {
         if (lines.isEmpty) {
-          return const _Hint(
-            text: 'Play some matches and your record against each opponent '
-                'will build here.',
-          );
+          return _Hint(text: l.recordsPlayToBuildRecord);
         }
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'YOUR RECORD',
+              l.recordsYourRecord,
               style: AppTypography.labelMedium
                   .copyWith(color: AppColors.primary),
             ),
             const SizedBox(height: AppSpacing.xs),
             Text(
-              'Tap an opponent for the full breakdown.',
+              l.recordsTapOpponent,
               style: AppTypography.labelSmall
                   .copyWith(color: AppColors.onSurfaceVariant),
             ),
@@ -228,9 +230,9 @@ class _MyLedger extends ConsumerWidget {
               padding: EdgeInsets.zero,
               child: Column(
                 children: [
-                  for (final l in lines)
+                  for (final line in lines)
                     InkWell(
-                      onTap: () => onPick(l.opponentId),
+                      onTap: () => onPick(line.opponentId),
                       child: Padding(
                         padding: const EdgeInsets.symmetric(
                           horizontal: AppSpacing.md,
@@ -238,21 +240,24 @@ class _MyLedger extends ConsumerWidget {
                         ),
                         child: Row(
                           children: [
-                            FlagDisc(l.opponentCode, size: 24),
+                            FlagDisc(line.opponentCode, size: 24),
                             const SizedBox(width: AppSpacing.sm),
                             Expanded(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    l.opponentName,
+                                    line.opponentName,
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
                                     style: AppTypography.bodyMedium,
                                   ),
                                   Text(
-                                    '${l.played} played · '
-                                    '${l.goalsFor}–${l.goalsAgainst}',
+                                    l.recordsPlayedScore(
+                                      line.played,
+                                      line.goalsFor,
+                                      line.goalsAgainst,
+                                    ),
                                     style: AppTypography.labelSmall.copyWith(
                                       color: AppColors.onSurfaceVariant,
                                     ),
@@ -261,7 +266,11 @@ class _MyLedger extends ConsumerWidget {
                               ),
                             ),
                             const SizedBox(width: AppSpacing.sm),
-                            _WdlPill(w: l.wins, d: l.draws, l: l.losses),
+                            _WdlPill(
+                              w: line.wins,
+                              d: line.draws,
+                              l: line.losses,
+                            ),
                           ],
                         ),
                       ),
@@ -319,6 +328,7 @@ class _Record extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l = AppLocalizations.of(context);
     final async = ref.watch(headToHeadProvider(
       (careerId: careerId, nationA: a.id, nationB: b.id),
     ));
@@ -327,12 +337,10 @@ class _Record extends ConsumerWidget {
         padding: EdgeInsets.all(AppSpacing.xl),
         child: Center(child: CircularProgressIndicator()),
       ),
-      error: (e, _) => Text('Could not load record.\n$e'),
+      error: (e, _) => Text(l.recordsCouldNotLoadRecord(e.toString())),
       data: (h) {
         if (h.played == 0) {
-          return _Hint(
-            text: '${a.name} and ${b.name} have never met in this save.',
-          );
+          return _Hint(text: l.recordsNeverMet(a.name, b.name));
         }
         return Column(
           children: [
@@ -342,16 +350,16 @@ class _Record extends ConsumerWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      _Tally(value: h.winsA, label: '${a.code} wins'),
-                      _Tally(value: h.draws, label: 'Draws'),
-                      _Tally(value: h.winsB, label: '${b.code} wins'),
+                      _Tally(value: h.winsA, label: l.recordsCodeWins(a.code)),
+                      _Tally(value: h.draws, label: l.recordsDraws),
+                      _Tally(value: h.winsB, label: l.recordsCodeWins(b.code)),
                     ],
                   ),
                   const SizedBox(height: AppSpacing.md),
                   _WinBar(winsA: h.winsA, draws: h.draws, winsB: h.winsB),
                   const SizedBox(height: AppSpacing.sm),
                   Text(
-                    '${h.played} meetings',
+                    l.recordsMeetingsCount(h.played),
                     style: AppTypography.labelSmall
                         .copyWith(color: AppColors.onSurfaceVariant),
                   ),
@@ -362,9 +370,10 @@ class _Record extends ConsumerWidget {
             AppCard(
               child: Column(
                 children: [
-                  _statRow('Goals', '${h.goalsA}', '${h.goalsB}'),
                   _statRow(
-                    'Biggest win',
+                      l.recordsGoalsLabel, '${h.goalsA}', '${h.goalsB}'),
+                  _statRow(
+                    l.recordsBiggestWin,
                     h.biggestWinMarginA == 0 ? '—' : '+${h.biggestWinMarginA}',
                     h.biggestWinMarginB == 0 ? '—' : '+${h.biggestWinMarginB}',
                   ),
@@ -380,7 +389,7 @@ class _Record extends ConsumerWidget {
                   '&a=${a.id}&b=${b.id}',
                 ),
                 icon: const Icon(Icons.history, size: 18),
-                label: const Text('See all meetings'),
+                label: Text(l.recordsSeeAllMeetings),
               ),
             ),
           ],
@@ -502,6 +511,7 @@ class _NationPickerSheetState extends State<_NationPickerSheet> {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
     final q = _query.trim().toLowerCase();
     final filtered = q.isEmpty
         ? widget.nations
@@ -532,13 +542,13 @@ class _NationPickerSheetState extends State<_NationPickerSheet> {
                 autofocus: true,
                 onChanged: (v) => setState(() => _query = v),
                 style: AppTypography.bodyMedium,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   isDense: true,
-                  hintText: 'Search nation',
-                  prefixIcon: Icon(Icons.search, size: 20),
+                  hintText: l.recordsSearchNation,
+                  prefixIcon: const Icon(Icons.search, size: 20),
                   filled: true,
                   fillColor: AppColors.surfaceContainerHigh,
-                  border: OutlineInputBorder(
+                  border: const OutlineInputBorder(
                     borderRadius: AppRadii.baseAll,
                     borderSide: BorderSide.none,
                   ),

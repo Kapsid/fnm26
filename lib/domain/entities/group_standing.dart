@@ -1,5 +1,18 @@
 import 'package:fnm/domain/entities/fixture.dart';
 
+/// One team's record against a single opponent inside its group: the games,
+/// the goals each way and the points taken. Kept per row so a cross-group
+/// comparison can strip out results against a particular opponent without
+/// needing the original fixture list.
+typedef GroupMeeting = ({
+  int played,
+  int won,
+  int drawn,
+  int lost,
+  int goalsFor,
+  int goalsAgainst,
+});
+
 /// A computed standings row for one nation in a qualifying group. Derived from
 /// played fixtures rather than stored, so it can never drift out of sync.
 class GroupStanding {
@@ -13,8 +26,58 @@ class GroupStanding {
   int goalsFor = 0;
   int goalsAgainst = 0;
 
+  /// This team's record against each opponent it has met in the group
+  /// (opponent id → record). Populated by [table]; empty on a row assembled by
+  /// hand. Feeds `CrossGroup`, which drops results against the teams that only
+  /// exist in the larger groups so uneven groups can be compared fairly.
+  final Map<int, GroupMeeting> versus = {};
+
   int get goalDifference => goalsFor - goalsAgainst;
   int get points => won * 3 + drawn;
+
+  /// A copy of this row with every result against an opponent in [drop]
+  /// removed — the record as it stands over the remaining fixtures only.
+  ///
+  /// Returns a row identical to this one when nothing is dropped (or when the
+  /// per-opponent breakdown is unavailable), so callers can apply it blindly.
+  GroupStanding excluding(Set<int> drop) {
+    final out = GroupStanding(nationId)
+      ..played = played
+      ..won = won
+      ..drawn = drawn
+      ..lost = lost
+      ..goalsFor = goalsFor
+      ..goalsAgainst = goalsAgainst;
+    for (final entry in versus.entries) {
+      if (!drop.contains(entry.key)) {
+        out.versus[entry.key] = entry.value;
+        continue;
+      }
+      final m = entry.value;
+      out
+        ..played -= m.played
+        ..won -= m.won
+        ..drawn -= m.drawn
+        ..lost -= m.lost
+        ..goalsFor -= m.goalsFor
+        ..goalsAgainst -= m.goalsAgainst;
+    }
+    return out;
+  }
+
+  /// Folds one meeting's result into [versus].
+  void _recordMeeting(int opponentId, int scored, int conceded) {
+    final prev = versus[opponentId] ??
+        (played: 0, won: 0, drawn: 0, lost: 0, goalsFor: 0, goalsAgainst: 0);
+    versus[opponentId] = (
+      played: prev.played + 1,
+      won: prev.won + (scored > conceded ? 1 : 0),
+      drawn: prev.drawn + (scored == conceded ? 1 : 0),
+      lost: prev.lost + (scored < conceded ? 1 : 0),
+      goalsFor: prev.goalsFor + scored,
+      goalsAgainst: prev.goalsAgainst + conceded,
+    );
+  }
 
   /// Computes the ordered table for a group from its [members] and [fixtures].
   ///
@@ -45,6 +108,8 @@ class GroupStanding {
         ..played += 1
         ..goalsFor += as
         ..goalsAgainst += hs;
+      home._recordMeeting(away.nationId, hs, as);
+      away._recordMeeting(home.nationId, as, hs);
       if (hs > as) {
         home.won += 1;
         away.lost += 1;

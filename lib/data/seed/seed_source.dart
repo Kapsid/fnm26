@@ -16,6 +16,15 @@ abstract interface class SeedSource {
 
   /// The players to seed.
   Future<List<Player>> players();
+
+  /// Each nation's cities (biggest first), keyed by nation id — used to name a
+  /// domestic club for a country with no curated league.
+  ///
+  /// It lives on the seed source rather than being read straight from the
+  /// bundle by the player repository so tests can supply it (or leave it
+  /// empty) without any asset IO: a repository that loads an asset on a hot
+  /// path stalls widget tests, which drive their own async clock.
+  Future<Map<int, List<String>>> cities();
 }
 
 /// A [SeedSource] that reads bundled JSON assets.
@@ -27,6 +36,25 @@ class AssetSeedSource implements SeedSource {
   static const _nationsAsset = 'assets/data/nations.json';
   static const _playersAsset = 'assets/data/players.json';
   static const _namesAsset = 'assets/data/country_names.json';
+  static const _citiesAsset = 'assets/data/country_cities.json';
+
+  Map<int, List<String>>? _cities;
+
+  @override
+  Future<Map<int, List<String>>> cities() async {
+    if (_cities != null) return _cities!;
+    try {
+      final raw =
+          jsonDecode(await _bundle.loadString(_citiesAsset)) as Map<String, Object?>;
+      _cities = {
+        for (final e in raw.entries)
+          int.parse(e.key): (e.value! as List).cast<String>(),
+      };
+    } on Object {
+      _cities = {};
+    }
+    return _cities!;
+  }
 
   @override
   Future<List<Nation>> nations() async {
@@ -60,14 +88,22 @@ class AssetSeedSource implements SeedSource {
 
 /// A trivial in-memory [SeedSource], primarily for tests.
 class InMemorySeedSource implements SeedSource {
-  InMemorySeedSource({required this.nationList, required this.playerList});
+  InMemorySeedSource({
+    required this.nationList,
+    required this.playerList,
+    this.cityLists = const {},
+  });
 
   final List<Nation> nationList;
   final List<Player> playerList;
+  final Map<int, List<String>> cityLists;
 
   @override
   Future<List<Nation>> nations() async => nationList;
 
   @override
   Future<List<Player>> players() async => playerList;
+
+  @override
+  Future<Map<int, List<String>>> cities() async => cityLists;
 }

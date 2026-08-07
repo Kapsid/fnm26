@@ -8,16 +8,9 @@ import 'package:fnm/domain/entities/player_attributes.dart';
 /// Attributes with every value set to [value] (default 80). With weights that
 /// sum to 1, this yields an overall exactly equal to [value] for any position.
 PlayerAttributes flatAttributes([int value = 80]) => PlayerAttributes(
-      passing: value,
-      shooting: value,
-      dribbling: value,
-      tackling: value,
-      positioning: value,
-      composure: value,
-      decisions: value,
-      pace: value,
+      physical: value,
+      technical: value,
       stamina: value,
-      strength: value,
     );
 
 Nation nation({

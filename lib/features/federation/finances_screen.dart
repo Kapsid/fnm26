@@ -13,6 +13,7 @@ import 'package:fnm/features/federation/federation_providers.dart';
 import 'package:fnm/features/federation/federation_service.dart';
 import 'package:fnm/features/federation/investment_editor.dart';
 import 'package:fnm/features/hub/hub_providers.dart';
+import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
 
@@ -63,12 +64,13 @@ class _FinancesScreenState extends ConsumerState<FinancesScreen> {
       ..invalidate(youthBonusByCycleProvider(widget.careerId))
       ..invalidate(hubDataProvider);
     if (mounted) {
+      final l = AppLocalizations.of(context);
       setState(() {
         _busy = false;
         _alloc = null;
       });
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Investment updated.')),
+        SnackBar(content: Text(l.federationInvestmentUpdated)),
       );
     }
   }
@@ -76,6 +78,7 @@ class _FinancesScreenState extends ConsumerState<FinancesScreen> {
   @override
   Widget build(BuildContext context) {
     final viewAsync = ref.watch(financeViewProvider(widget.careerId));
+    final l = AppLocalizations.of(context);
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -85,17 +88,18 @@ class _FinancesScreenState extends ConsumerState<FinancesScreen> {
               : context.go('${Routes.hub}?careerId=${widget.careerId}'),
         ),
         title: Text(
-          'FINANCES',
+          l.federationFinances,
           style: AppTypography.labelMedium.copyWith(color: AppColors.primary),
         ),
         centerTitle: true,
       ),
       body: viewAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => Center(child: Text('Could not load finances.\n$e')),
+        error: (e, _) =>
+            Center(child: Text(l.federationCouldNotLoadFinances(e.toString()))),
         data: (view) {
           if (view == null) {
-            return const Center(child: Text('Save not found.'));
+            return Center(child: Text(l.federationSaveNotFound));
           }
           final alloc = _alloc ?? view.planned;
           // Refundable: current balance plus whatever is already planned.
@@ -119,7 +123,7 @@ class _FinancesScreenState extends ConsumerState<FinancesScreen> {
               _BalanceCard(budget: view.budget),
               const SizedBox(height: AppSpacing.md),
               Text(
-                'FEDERATION DEVELOPMENT',
+                l.federationDevelopment,
                 style: AppTypography.labelSmall.copyWith(
                   color: AppColors.primary,
                 ),
@@ -128,7 +132,7 @@ class _FinancesScreenState extends ConsumerState<FinancesScreen> {
               _BuildingsCard(careerId: widget.careerId),
               const SizedBox(height: AppSpacing.md),
               Text(
-                'PROJECTED AT SEASON END',
+                l.federationProjectedAtSeasonEnd,
                 style: AppTypography.labelSmall.copyWith(
                   color: AppColors.primary,
                 ),
@@ -137,17 +141,17 @@ class _FinancesScreenState extends ConsumerState<FinancesScreen> {
               AppCard(
                 child: Column(
                   children: [
-                    _row('Central funding', income.grant),
-                    _row('Prize money so far', income.prize),
+                    _row(l.federationCentralFunding, income.grant),
+                    _row(l.federationPrizeMoneySoFar, income.prize),
                     if (income.commercial > 0)
-                      _row('Commercial return', income.commercial),
+                      _row(l.federationCommercialReturn, income.commercial),
                   ],
                 ),
               ),
               if (hasCurrent) ...[
                 const SizedBox(height: AppSpacing.md),
                 Text(
-                  'THIS SEASON (LOCKED)',
+                  l.federationThisSeasonLocked,
                   style: AppTypography.labelSmall.copyWith(
                     color: AppColors.onSurfaceVariant,
                   ),
@@ -157,7 +161,7 @@ class _FinancesScreenState extends ConsumerState<FinancesScreen> {
               ],
               const SizedBox(height: AppSpacing.md),
               Text(
-                'INVEST FOR NEXT SEASON',
+                l.federationInvestForNextSeason,
                 style: AppTypography.labelSmall.copyWith(
                   color: AppColors.primary,
                 ),
@@ -170,18 +174,17 @@ class _FinancesScreenState extends ConsumerState<FinancesScreen> {
                   onChanged: (a) => setState(() => _alloc = a),
                 ),
               ),
-              const SizedBox(height: AppSpacing.md),
-              Text(
-                'NEXT SEASON IMPACT',
-                style: AppTypography.labelSmall.copyWith(
-                  color: AppColors.primary,
-                ),
-              ),
-              const SizedBox(height: AppSpacing.sm),
-              _ImpactCard(planned: alloc, current: view.current),
+              // The "next season impact" preview is deliberately NOT shown here.
+              // It compared a planned allocation against the one already
+              // committed and stated the difference as fact, which it isn't —
+              // the departments only pay out over the cycle, so the figures it
+              // quoted did not match what the manager actually got. The sliders
+              // themselves state what each department buys.
               const SizedBox(height: AppSpacing.lg),
               PrimaryButton(
-                label: _busy ? 'Saving…' : 'Confirm investment',
+                label: _busy
+                    ? l.federationSaving
+                    : l.federationConfirmInvestment,
                 icon: Icons.savings_rounded,
                 onPressed: _busy ? null : () => unawaited(_commit(view)),
               ),
@@ -219,6 +222,7 @@ class _BalanceCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
     return AppCard(
       child: Row(
         children: [
@@ -228,7 +232,7 @@ class _BalanceCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'FEDERATION BALANCE',
+                l.federationBalance,
                 style: AppTypography.labelSmall.copyWith(
                   color: AppColors.onSurfaceVariant,
                 ),
@@ -249,6 +253,7 @@ class _LockedInvestment extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
     return AppCard(
       child: Column(
         children: [
@@ -277,7 +282,7 @@ class _LockedInvestment extends StatelessWidget {
             ),
           const SizedBox(height: AppSpacing.xs),
           Text(
-            'Invest for next season at the end-of-cycle ceremony.',
+            l.federationInvestAtCeremony,
             style: AppTypography.labelSmall.copyWith(
               color: AppColors.onSurfaceVariant,
             ),
@@ -365,6 +370,7 @@ class _LevelBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
     final maxed = level >= FederationBuildings.maxLevel;
     return Container(
       width: 34,
@@ -378,135 +384,11 @@ class _LevelBadge extends StatelessWidget {
         ),
       ),
       child: Text(
-        'L$level',
+        l.federationLevelBadge(level),
         style: AppTypography.labelMedium.copyWith(
           color: maxed ? AppColors.onPrimary : AppColors.primary,
           fontWeight: FontWeight.w700,
         ),
-      ),
-    );
-  }
-}
-
-/// A live preview of what next season's planned investment actually buys, with
-/// an arrow whenever it differs from this season's committed spend — so the
-/// player can see the concrete effect of moving a slider before confirming.
-class _ImpactCard extends StatelessWidget {
-  const _ImpactCard({required this.planned, required this.current});
-
-  final FederationInvestment planned;
-  final FederationInvestment current;
-
-  @override
-  Widget build(BuildContext context) {
-    return AppCard(
-      child: Column(
-        children: [
-          _ImpactRow(
-            label: 'Academy prospects',
-            planned: _youthOverall(planned.youth),
-            current: _youthOverall(current.youth),
-            format: (v) => '+$v overall',
-            higherIsBetter: true,
-          ),
-          _ImpactRow(
-            label: 'Injury risk',
-            planned: (FederationFinance.injuryFactor(planned.medical) * 100)
-                .round(),
-            current: (FederationFinance.injuryFactor(current.medical) * 100)
-                .round(),
-            format: (v) => '×${(v / 100).toStringAsFixed(2)}',
-            higherIsBetter: false,
-          ),
-          _ImpactRow(
-            label: 'Naturalisation chance',
-            planned: _natPct(planned.naturalization),
-            current: _natPct(current.naturalization),
-            format: (v) => '$v%',
-            higherIsBetter: true,
-          ),
-          _ImpactRow(
-            label: 'Commercial return',
-            planned: FederationFinance.commercialReturn(planned.commercial),
-            current: FederationFinance.commercialReturn(current.commercial),
-            format: formatEuros,
-            higherIsBetter: true,
-          ),
-          _ImpactRow(
-            label: 'Board patience',
-            planned: FederationFinance.boardTolerance(planned.boardRelations),
-            current: FederationFinance.boardTolerance(current.boardRelations),
-            format: (v) => '+$v',
-            higherIsBetter: true,
-          ),
-        ],
-      ),
-    );
-  }
-
-  /// The youth talent bonus expressed as approximate overall points (~+12 at
-  /// full investment), for a tangible read on what the academy buys.
-  static int _youthOverall(int invested) =>
-      (FederationFinance.youthTalentBonus(invested) / 0.18 * 12).round();
-
-  static int _natPct(int invested) =>
-      (FederationFinance.naturalizationChance(invested) * 100).round();
-}
-
-class _ImpactRow extends StatelessWidget {
-  const _ImpactRow({
-    required this.label,
-    required this.planned,
-    required this.current,
-    required this.format,
-    required this.higherIsBetter,
-  });
-
-  final String label;
-  final int planned;
-  final int current;
-  final String Function(int) format;
-  final bool higherIsBetter;
-
-  @override
-  Widget build(BuildContext context) {
-    final changed = planned != current;
-    final better = higherIsBetter ? planned > current : planned < current;
-    final deltaColor = !changed
-        ? AppColors.onSurfaceVariant
-        : better
-            ? AppColors.positive
-            : AppColors.error;
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 3),
-      child: Row(
-        children: [
-          Expanded(
-            child: Text(
-              label.toUpperCase(),
-              style: AppTypography.labelSmall.copyWith(
-                color: AppColors.onSurfaceVariant,
-              ),
-            ),
-          ),
-          Text(
-            format(planned),
-            style: AppTypography.bodyMedium.copyWith(
-              color: changed ? deltaColor : AppColors.onSurface,
-              fontWeight: changed ? FontWeight.w700 : FontWeight.w400,
-            ),
-          ),
-          if (changed) ...[
-            const SizedBox(width: 4),
-            Icon(
-              better
-                  ? Icons.arrow_upward_rounded
-                  : Icons.arrow_downward_rounded,
-              size: 14,
-              color: deltaColor,
-            ),
-          ],
-        ],
       ),
     );
   }

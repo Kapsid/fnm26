@@ -4,6 +4,7 @@ import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
+import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 
 /// One knockout round of a bracket: its stored round code and display label.
@@ -67,6 +68,7 @@ class _TournamentBracketState extends State<TournamentBracket> {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
     return ListView(
       padding: const EdgeInsets.all(AppSpacing.marginMobile),
       children: [
@@ -139,9 +141,9 @@ class _TournamentBracketState extends State<TournamentBracket> {
         const SizedBox(height: AppSpacing.md),
         SegmentedButton<bool>(
           showSelectedIcon: false,
-          segments: const [
-            ButtonSegment(value: false, label: Text('List')),
-            ButtonSegment(value: true, label: Text('Bracket')),
+          segments: [
+            ButtonSegment(value: false, label: Text(l.tourSharedList)),
+            ButtonSegment(value: true, label: Text(l.tourSharedBracket)),
           ],
           selected: {_visual},
           onSelectionChanged: (s) => setState(() => _visual = s.first),
@@ -248,9 +250,16 @@ class _TournamentBracketState extends State<TournamentBracket> {
     );
   }
 
+  /// Whether the manager's nation is contesting this tie — the whole row is
+  /// lifted when they are, not just their flag.
+  bool _isMine(Fixture f) =>
+      f.homeNationId == widget.playerNationId ||
+      f.awayNationId == widget.playerNationId;
+
   Widget _miniTie(Fixture f) {
     final decided = f.hasResult;
     final homeWon = decided && f.homeScore! >= f.awayScore!;
+    final mine = _isMine(f);
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 3),
       padding: const EdgeInsets.symmetric(
@@ -258,9 +267,14 @@ class _TournamentBracketState extends State<TournamentBracket> {
         vertical: 3,
       ),
       decoration: BoxDecoration(
-        color: AppColors.surfaceContainer,
+        color: mine
+            ? AppColors.surfaceContainerHigh
+            : AppColors.surfaceContainer,
         borderRadius: AppRadii.smAll,
-        border: Border.all(color: AppColors.outlineVariant),
+        border: Border.all(
+          color: mine ? AppColors.primary : AppColors.outlineVariant,
+          width: mine ? 1.5 : 1,
+        ),
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -313,24 +327,48 @@ class _TournamentBracketState extends State<TournamentBracket> {
   Widget _tie(Fixture f) {
     final decided = f.hasResult;
     final homeWon = decided && f.homeScore! >= f.awayScore!;
-    return AppCard(
-      padding: const EdgeInsets.symmetric(
-        horizontal: AppSpacing.md,
-        vertical: AppSpacing.sm,
-      ),
-      child: Row(
-        children: [
-          Expanded(child: _side(f.homeNationId, decided && homeWon)),
-          Text(
-            decided ? '${f.homeScore} - ${f.awayScore}' : 'vs',
-            style: AppTypography.labelMedium,
-          ),
-          Expanded(
-            child: _side(f.awayNationId, decided && !homeWon, end: true),
-          ),
-        ],
+    final mine = _isMine(f);
+    return Padding(
+      padding: const EdgeInsets.only(bottom: AppSpacing.xs),
+      child: AppCard(
+        // The manager's own tie is lifted as a whole row — fill, accent edge
+        // and a left bar — rather than being signalled by a flag ring alone.
+        color: mine ? AppColors.surfaceContainerHigh : null,
+        border: mine
+            ? const Border(
+                left: BorderSide(color: AppColors.primary, width: 3),
+                top: BorderSide(color: AppColors.primary),
+                right: BorderSide(color: AppColors.primary),
+                bottom: BorderSide(color: AppColors.primary),
+              )
+            : null,
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppSpacing.md,
+          vertical: AppSpacing.sm,
+        ),
+        child: Row(
+          children: [
+            Expanded(child: _side(f.homeNationId, decided && homeWon)),
+            Text(
+              decided ? _scoreLine(f) : 'vs',
+              style: AppTypography.labelMedium,
+            ),
+            Expanded(
+              child: _side(f.awayNationId, decided && !homeWon, end: true),
+            ),
+          ],
+        ),
       ),
     );
+  }
+
+  /// The tie's scoreline, with how it was settled when it went past 90 minutes.
+  String _scoreLine(Fixture f) {
+    final base = '${f.homeScore} - ${f.awayScore}';
+    if (f.wentToShootout) {
+      return '$base (${f.homePenalties}-${f.awayPenalties} p)';
+    }
+    return f.afterExtraTime ? '$base a.e.t.' : base;
   }
 
   Widget _side(int nationId, bool winner, {bool end = false}) {
@@ -344,7 +382,7 @@ class _TournamentBracketState extends State<TournamentBracket> {
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(
-            widget.name(nationId),
+            bracketName(widget.name(nationId), widget.code(nationId)),
             textAlign: end ? TextAlign.end : TextAlign.start,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
@@ -405,6 +443,17 @@ class _TournamentBracketState extends State<TournamentBracket> {
     );
   }
 }
+
+/// The longest nation name a bracket tie row can hold before the two sides and
+/// the scoreline stop fitting on one line.
+const int _bracketNameLimit = 14;
+
+/// A bracket-safe label for a nation: its full name when it fits a tie row,
+/// otherwise its three-letter code. "Bosnia and Herzegovina" and "United Arab
+/// Emirates" used to squeeze the scoreline out of the row (or truncate to an
+/// unreadable stub), so long names fall back to the code they're known by.
+String bracketName(String name, String code) =>
+    name.length <= _bracketNameLimit ? name : code.toUpperCase();
 
 /// The round code without its competition prefix ('CQF' → 'QF'), so one set of
 /// labels and orderings serves every tournament.

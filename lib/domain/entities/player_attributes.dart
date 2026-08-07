@@ -3,27 +3,21 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'player_attributes.freezed.dart';
 part 'player_attributes.g.dart';
 
-/// A player's ability across ten attributes, each on a `1..99` scale.
+/// A player's ability across three broad qualities, each on a `1..99` scale.
 ///
-/// Grouped conceptually as technical / mental / physical. Goalkeepers reuse
-/// [positioning]/[composure]/[decisions] as a shot-stopping proxy for now; a
-/// dedicated goalkeeping model arrives with the match engine (M6).
+/// - [physical] — pace, power and athleticism.
+/// - [technical] — on-the-ball skill and footballing awareness (passing,
+///   finishing, dribbling, tackling, positioning, composure).
+/// - [stamina] — endurance across a match.
+///
+/// Hidden potential is not stored here — it is derived from the player id (see
+/// `PlayerLifecycle.developmentPotential`).
 @freezed
 abstract class PlayerAttributes with _$PlayerAttributes {
   const factory PlayerAttributes({
-    // Technical
-    required int passing,
-    required int shooting,
-    required int dribbling,
-    required int tackling,
-    // Mental
-    required int positioning,
-    required int composure,
-    required int decisions,
-    // Physical
-    required int pace,
+    required int physical,
+    required int technical,
     required int stamina,
-    required int strength,
   }) = _PlayerAttributes;
 
   const PlayerAttributes._();
@@ -31,17 +25,6 @@ abstract class PlayerAttributes with _$PlayerAttributes {
   factory PlayerAttributes.fromJson(Map<String, Object?> json) =>
       _$PlayerAttributesFromJson(json);
 
-  /// The unweighted mean of all ten attributes.
-  int get average => ((passing +
-              shooting +
-              dribbling +
-              tackling +
-              positioning +
-              composure +
-              decisions +
-              pace +
-              stamina +
-              strength) /
-          10)
-      .round();
+  /// The unweighted mean of the three qualities.
+  int get average => ((physical + technical + stamina) / 3).round();
 }

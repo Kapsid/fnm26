@@ -35,6 +35,7 @@ void main() {
         championId: champion,
         runnerUpId: runnerUp,
         thirdId: third,
+        thirdId2: null,
         hostId: host,
         finalHomeScore: homeScore,
         finalAwayScore: awayScore,

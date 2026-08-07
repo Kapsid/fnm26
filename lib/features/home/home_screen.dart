@@ -5,6 +5,7 @@ import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/features/career/career_providers.dart';
+import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
@@ -16,9 +17,10 @@ class HomeScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l = AppLocalizations.of(context);
     final textTheme = Theme.of(context).textTheme;
-    // The most recent save (saves are listed newest first) — powers the
-    // one-tap "continue where you left off" action.
+    // The most recent save (saves are listed most-recently-PLAYED first) —
+    // powers the one-tap "continue where you left off" action.
     final saves = ref.watch(savesProvider).valueOrNull;
     final lastSave = (saves != null && saves.isNotEmpty) ? saves.first : null;
     final lastNation = lastSave == null
@@ -36,7 +38,7 @@ class HomeScreen extends ConsumerWidget {
               Align(
                 alignment: Alignment.centerRight,
                 child: IconButton(
-                  tooltip: 'Settings',
+                  tooltip: l.homeSettings,
                   icon: const Icon(
                     Icons.settings_outlined,
                     color: AppColors.onSurfaceVariant,
@@ -64,7 +66,7 @@ class HomeScreen extends ConsumerWidget {
               ),
               const SizedBox(height: AppSpacing.sm),
               Text(
-                'LEAD THE NATION',
+                l.homeLeadTheNation,
                 textAlign: TextAlign.center,
                 style: AppTypography.labelMedium.copyWith(
                   color: AppColors.onSurfaceVariant,
@@ -75,25 +77,26 @@ class HomeScreen extends ConsumerWidget {
               // visually lifted so it reads as "carry on".
               if (lastSave != null) ...[
                 _ContinueCard(
-                  nationName: lastNation?.name ?? 'your nation',
+                  nationName: lastNation?.name ?? l.homeYourNation,
                   nationCode: lastNation?.code,
                   inGameDate: lastSave.inGameDate,
                   cyclePointer: lastSave.cyclePointer,
-                  onResume: () => context.go(
-                    '${Routes.hub}?careerId=${lastSave.id}',
-                  ),
+                  onResume: () {
+                    ref.read(careerServiceProvider).markPlayed(lastSave.id);
+                    context.go('${Routes.hub}?careerId=${lastSave.id}');
+                  },
                 ),
                 const SizedBox(height: AppSpacing.md),
               ],
               PrimaryButton(
-                label: 'New Game',
+                label: l.homeNewGame,
                 icon: Icons.play_arrow_rounded,
                 onPressed: () => context.go(Routes.nations),
               ),
               const SizedBox(height: AppSpacing.sm),
               TextButton(
                 onPressed: () => context.go(Routes.saves),
-                child: Text(lastSave != null ? 'All saves' : 'Load game'),
+                child: Text(lastSave != null ? l.homeAllSaves : l.homeLoadGame),
               ),
               const SizedBox(height: AppSpacing.lg),
             ],
@@ -123,6 +126,7 @@ class _ContinueCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
     return GestureDetector(
       onTap: onResume,
       child: Container(
@@ -143,7 +147,7 @@ class _ContinueCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'CONTINUE',
+                    l.homeContinue,
                     style: AppTypography.labelSmall.copyWith(
                       color: AppColors.primary,
                     ),
@@ -151,8 +155,10 @@ class _ContinueCard extends StatelessWidget {
                   Text(nationName, style: AppTypography.titleMedium),
                   const SizedBox(height: 2),
                   Text(
-                    '${DateFormat('MMM yyyy').format(inGameDate)} · Road to '
-                    'the ${CareerService.worldCupYear(cyclePointer)} World Cup',
+                    l.homeRoadToWorldCup(
+                      DateFormat('MMM yyyy').format(inGameDate),
+                      CareerService.worldCupYear(cyclePointer),
+                    ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: AppTypography.labelSmall.copyWith(

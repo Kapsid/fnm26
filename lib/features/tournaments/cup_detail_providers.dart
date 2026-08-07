@@ -29,6 +29,7 @@ class CupData {
     required this.playerConfederation,
     required this.finalsGroups,
     required this.knockout,
+    this.groupFixtures = const [],
     required this.champion,
     required this.hostId,
     required this.scorersQualifying,
@@ -44,7 +45,20 @@ class CupData {
     this.identity,
     this.allTimeScorers = const [],
     this.playoffTies = const [],
+    this.topGames = const [],
+    this.topCups = const [],
+    this.myNationIds = const {},
   });
+
+  /// All-time player leaderboards for the World Cup finals, most first (up to
+  /// ten): most finals matches played, and most finals tournaments (editions)
+  /// attended. Empty before there is any history.
+  final List<CupPlayerRecord> topGames;
+  final List<CupPlayerRecord> topCups;
+
+  /// Every nation the manager has led (current + past stints), for highlighting
+  /// their record-holders in the leaderboards.
+  final Set<int> myNationIds;
 
   /// The intercontinental play-off ties that decided the last two finals berths
   /// (empty until qualifying is complete). Shown under a "Play-off" option in
@@ -87,6 +101,10 @@ class CupData {
   /// All finals knockout fixtures (empty until the bracket begins).
   final List<Fixture> knockout;
 
+  /// All finals group-stage fixtures (round 'GROUP'), so each group's matches
+  /// can be shown alongside its table.
+  final List<Fixture> groupFixtures;
+
   /// The World Cup winner once decided.
   final int? champion;
 
@@ -123,6 +141,15 @@ typedef AllTimeScorer = ({
   bool active,
 });
 
+/// A per-player cup record holder: their name, nation, and the count that put
+/// them top (matches played, or finals tournaments attended).
+typedef CupPlayerRecord = ({
+  int playerId,
+  String name,
+  int nationId,
+  int count,
+});
+
 /// Deepest knockout round each nation reached (0 = group stage only).
 const _roundDepth = {
   'R32': 1,
@@ -142,6 +169,11 @@ final AutoDisposeFutureProviderFamily<CupData?, int> cupDetailProvider =
       final groups = await comp.allGroupTablesByConfederation(careerId);
       final finalsGroups = await comp.finalsGroupTables(careerId);
       final knockout = await comp.finalsKnockoutFixtures(careerId);
+      final groupFixtures = await comp.fixturesByRound(
+        careerId,
+        'GROUP',
+        kind: CompetitionKind.worldCupFinals,
+      );
       final champion = await comp.worldChampion(careerId);
       final scorersQualifying = await comp.topScorers(
         careerId,
@@ -196,8 +228,28 @@ final AutoDisposeFutureProviderFamily<CupData?, int> cupDetailProvider =
           }
         }
 
+        // How everyone actually played. Every match in the world is rated now,
+        // so the awards are decided on performance rather than on reputation
+        // and goals — see `TournamentStars`.
+        final lines = await comp.competitionPlayerLines(
+          careerId,
+          knockout.first.competitionId,
+        );
+        final formByPlayer = {
+          for (final l in lines)
+            l.playerId: (
+              apps: l.apps,
+              meanRating: l.meanRating,
+              motms: l.motms,
+            ),
+        };
+        final cleanSheetsByPlayer = {
+          for (final l in lines) l.playerId: l.cleanSheets,
+        };
+
         // Golden Glove — the keeper of the meanest defence among the knockout
         // sides (goals conceded across the group stage and the knockouts).
+        // Used only as a fallback when the tournament has no rating data.
         final concededByNation = <int, int>{
           for (final g in finalsGroups)
             for (final s in g.standings) s.nationId: s.goalsAgainst,
@@ -254,6 +306,7 @@ final AutoDisposeFutureProviderFamily<CupData?, int> cupDetailProvider =
         final candidateNations = <int>{
           for (final n in runByNation.keys) n,
           for (final s in allFinalsScorers) s.nationId,
+          for (final l in lines) l.nationId,
         };
         final candidates = <Player>[];
         for (final nid in candidateNations) {
@@ -262,14 +315,33 @@ final AutoDisposeFutureProviderFamily<CupData?, int> cupDetailProvider =
             agingYears: CareerService.agingYears(career),
             saveSeed: career.rngSeed,
           );
-          candidates.addAll(squad.take(16)); // top 16 by overall
+          // Everyone who actually appeared — not the top sixteen by rating,
+          // which both included players who never got on and excluded a
+          // squad player who did.
+          candidates.addAll(
+            formByPlayer.isEmpty
+                ? squad.take(16)
+                : squad.where((p) => formByPlayer.containsKey(p.id)),
+          );
         }
         teamOfTournament = TournamentStars.teamOfTournament(
           candidates: candidates,
           goalsByPlayer: goalsByPlayer,
           runByNation: runByNation,
           champion: champion,
+          formByPlayer: formByPlayer,
         );
+        final bestKeeper = TournamentStars.goldenGlove(
+          candidates: candidates,
+          formByPlayer: formByPlayer,
+          cleanSheetsByPlayer: cleanSheetsByPlayer,
+        );
+        if (bestKeeper != null) {
+          goldenGlove = (
+            nationId: bestKeeper.nationId,
+            name: bestKeeper.name,
+          );
+        }
       }
 
       final qualDrawWatched = await comp.hasWatchedDraw(
@@ -346,6 +418,42 @@ final AutoDisposeFutureProviderFamily<CupData?, int> cupDetailProvider =
         ));
       }
 
+      // Per-player all-time records for the finals: most matches played and
+      // most finals tournaments attended (each resolved to the holder's name).
+      final cupRecords = await comp.playerCupRecords(
+        careerId,
+        kind: CompetitionKind.worldCupFinals,
+      );
+      // The top ten by a chosen count (games or editions), holders resolved to
+      // their names — so the records tab can show a leaderboard, not just the
+      // single leader.
+      Future<List<CupPlayerRecord>> topRecords(
+        int Function(({int playerId, int nationId, int games, int finals})) key,
+      ) async {
+        final ranked = cupRecords.where((r) => key(r) > 0).toList()
+          ..sort((a, b) => key(b).compareTo(key(a)));
+        final out = <CupPlayerRecord>[];
+        for (final r in ranked.take(10)) {
+          final p = await playerRepo.byId(
+            r.playerId,
+            agingYears: aging,
+            saveSeed: career.rngSeed,
+            youthBonusByCycle: youth,
+            careerStartsByPlayer: careerDev,
+          );
+          out.add((
+            playerId: r.playerId,
+            name: p?.name ?? 'Unknown',
+            nationId: r.nationId,
+            count: key(r),
+          ));
+        }
+        return out;
+      }
+
+      final topGames = await topRecords((r) => r.games);
+      final topCups = await topRecords((r) => r.finals);
+
       return CupData(
         groups: groups,
         nations: nations,
@@ -353,6 +461,7 @@ final AutoDisposeFutureProviderFamily<CupData?, int> cupDetailProvider =
         playerConfederation: nations[career.nationId]?.confederation,
         finalsGroups: finalsGroups,
         knockout: knockout,
+        groupFixtures: groupFixtures,
         champion: champion,
         hostId: hostId,
         // The host and its stadiums surface once the host-selection ceremony is
@@ -377,5 +486,12 @@ final AutoDisposeFutureProviderFamily<CupData?, int> cupDetailProvider =
               ),
         allTimeScorers: allTimeScorers,
         playoffTies: playoffTies,
+        topGames: topGames,
+        topCups: topCups,
+        myNationIds: {
+          career.nationId,
+          ...(await ref.watch(careerRepositoryProvider).stints(careerId))
+              .values,
+        },
       );
     });

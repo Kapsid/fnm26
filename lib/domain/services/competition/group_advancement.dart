@@ -11,56 +11,58 @@ typedef Advancement = ({int direct, int? contention, int relegate});
 
 abstract final class GroupAdvancement {
   /// World Cup qualifying, for a confederation running [groupCount] groups.
-  static ({int direct, int? contention}) worldCupQualifying(
-    Confederation confederation,
-    int groupCount,
-  ) {
+  ///
+  /// Berths are filled a POSITION AT A TIME (see [Qualification.qualifiers]):
+  /// every group winner first, then every runner-up, and so on. So the places
+  /// that are safe are the whole tiers the berths cover, and the one partly
+  /// covered tier is what's in contention.
+  ///
+  /// The old maths floored the safe count at one, which broke every
+  /// confederation with FEWER berths than groups — Oceania has two qualifying
+  /// groups for a single direct place, and both winners were painted green as
+  /// though each had qualified.
+  static ({int direct, int? contention, int contentionQualify})
+  worldCupQualifying(Confederation confederation, int groupCount) {
     final fmt = QualificationFormat.forConfederation(confederation);
     final groups = groupCount < 1 ? 1 : groupCount;
-    final direct = (fmt.directBerths ~/ groups).clamp(1, 99);
-    final leftover = fmt.directBerths - direct * groups; // via best runners-up
-    final hasContention = leftover > 0 || fmt.playoffEntrants > 0;
-    return (direct: direct, contention: hasContention ? direct + 1 : null);
+    final full = fmt.directBerths ~/ groups; // positions that all go through
+    final rest = fmt.directBerths % groups; // best of the next position
+    // Play-off entrants come from the same ladder, so the contested position is
+    // contested even when the direct berths divide evenly.
+    final contested = rest > 0 || fmt.playoffEntrants > 0;
+    return (
+      direct: full,
+      contention: contested ? full + 1 : null,
+      contentionQualify: rest > 0 ? rest : fmt.playoffEntrants,
+    );
   }
 
-  /// Continental qualifying, from the finals field [size] and [groupCount].
-  /// Group winners always go through; the rest come from the best runners-up
-  /// then the best thirds (as Qualification.qualifiers resolves them).
+  /// Continental qualifying, from the number of finals places to be won
+  /// ([size], already less any hosts) and [groupCount].
   ///
-  /// `runnersQualify`/`thirdsQualify` say how many of each cross-group tier
-  /// actually go through, so a screen can show the real ladder ("6 of 9
-  /// runners-up advance") instead of leaving an amber stripe to be guessed at.
-  static ({int direct, int? contention, int runnersQualify, int thirdsQualify})
-      continentalQualifying(
-    int size,
-    int groupCount,
-  ) {
-    if (groupCount < 1) {
-      return (direct: 1, contention: null, runnersQualify: 0, thirdsQualify: 0);
-    }
-    final afterWinners = size - groupCount; // places left for 2nd/3rd tiers
-    if (afterWinners <= 0) {
-      return (direct: 1, contention: null, runnersQualify: 0, thirdsQualify: 0);
-    }
-    if (afterWinners >= groupCount) {
-      final thirds = (afterWinners - groupCount).clamp(0, groupCount);
-      // The top two go through reliably (green). When any best-thirds places
-      // exist, third place is flagged "in contention" (amber) — the same
-      // reading the tournament detail screens give, so the hub, the round
-      // results and the detail tabs never disagree about what third means.
-      return (
-        direct: 2,
-        contention: thirds > 0 ? 3 : null,
-        runnersQualify: groupCount,
-        thirdsQualify: thirds,
-      );
-    }
-    // Only the best runners-up qualify — second place is in contention.
+  /// The same position-at-a-time ladder as [worldCupQualifying]: whole tiers of
+  /// places are safe, and the tier the berths run out in is the contested one.
+  ///
+  /// This used to assume the ladder never reached past third place, which is
+  /// wrong wherever the field is large relative to the confederation. The
+  /// Oceania Cup takes eight of eleven nations from two qualifying groups —
+  /// seven places over two groups means the top THREE are through and fourth is
+  /// contested, but the table highlighted the top two and put third in
+  /// contention.
+  ///
+  /// `contentionQualify` is how many of the contested position go through, so a
+  /// screen can show the real ladder ("1 of 2 fourth-placed sides advance")
+  /// rather than leaving an amber stripe to be guessed at.
+  static ({int direct, int? contention, int contentionQualify})
+  continentalQualifying(int size, int groupCount) {
+    final groups = groupCount < 1 ? 1 : groupCount;
+    final berths = size < 0 ? 0 : size;
+    final full = berths ~/ groups;
+    final rest = berths % groups;
     return (
-      direct: 1,
-      contention: 2,
-      runnersQualify: afterWinners,
-      thirdsQualify: 0,
+      direct: full,
+      contention: rest > 0 ? full + 1 : null,
+      contentionQualify: rest,
     );
   }
 
@@ -115,8 +117,22 @@ abstract final class GroupAdvancement {
         );
       case CompetitionKind.friendly:
       case CompetitionKind.finalissima:
+      // A knockout, so it has no group table — this is never called for it, but
+      // the switch must stay exhaustive.
+      case CompetitionKind.worldCupPlayoff:
         return (direct: 2, contention: null, relegate: 0);
     }
+  }
+
+  /// An English ordinal for a table position ("2nd", "3rd", "4th").
+  static String ordinal(int n) {
+    if (n % 100 >= 11 && n % 100 <= 13) return '${n}th';
+    return switch (n % 10) {
+      1 => '${n}st',
+      2 => '${n}nd',
+      3 => '${n}rd',
+      _ => '${n}th',
+    };
   }
 
   /// A one-line plain-English caption for a group's zones, so a table reads
@@ -131,21 +147,38 @@ abstract final class GroupAdvancement {
     required Advancement adv,
   }) {
     String top(int n) => n == 1 ? 'Winner' : 'Top $n';
+    // The contested position, named — "the best runners-up", "the best
+    // fourth-placed sides". A confederation with fewer berths than groups
+    // contests FIRST place, so this has to cover that too.
+    String best(int? pos) => switch (pos) {
+      null => '',
+      1 => 'the best group winners',
+      2 => 'the best runners-up',
+      3 => 'the best third-placed sides',
+      _ => 'the best ${ordinal(pos)}-placed sides',
+    };
     switch (kind) {
       case CompetitionKind.nationsLeague:
         return adv.relegate > 0
             ? 'Winner goes up (League A: to the Finals Four); '
-                'bottom side is relegated'
+                  'bottom side is relegated'
             : 'Winner goes up';
       case CompetitionKind.worldCupQualifying:
+        if (adv.direct == 0) {
+          return 'Only ${best(adv.contention)} qualify; the next go to the '
+              'play-offs';
+        }
         return adv.contention != null
-            ? '${top(adv.direct)} qualify; the best runners-up go to the '
-                'play-offs'
+            ? '${top(adv.direct)} qualify; ${best(adv.contention)} go to the '
+                  'play-offs'
             : '${top(adv.direct)} qualify';
       case CompetitionKind.continentalQualifying:
+        if (adv.direct == 0) {
+          return 'Only ${best(adv.contention)} advance to the finals';
+        }
         return adv.contention != null
-            ? '${top(adv.direct)} advance to the finals; the best third may '
-                'follow'
+            ? '${top(adv.direct)} advance to the finals; '
+                  '${best(adv.contention)} may follow'
             : '${top(adv.direct)} advance to the finals';
       case CompetitionKind.worldCupFinals:
       case CompetitionKind.continentalFinals:
@@ -154,6 +187,7 @@ abstract final class GroupAdvancement {
             : '${top(adv.direct)} advance';
       case CompetitionKind.friendly:
       case CompetitionKind.finalissima:
+      case CompetitionKind.worldCupPlayoff:
         return '';
     }
   }

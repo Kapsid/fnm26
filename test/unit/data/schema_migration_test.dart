@@ -21,7 +21,7 @@ void main() {
 
   /// Every from → to pair that must carry data across. Extend as versions are
   /// added: {38: 39}, then {38: 40, 39: 40}, and so on.
-  const upgrades = <int, int>{38: 39};
+  const upgrades = <int, int>{39: 40, 38: 40};
 
   test('the live schema still matches the recorded snapshot', () async {
     // Catches the mistake that breaks saves: changing a table without dumping

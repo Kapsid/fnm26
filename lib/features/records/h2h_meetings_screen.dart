@@ -6,6 +6,7 @@ import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/features/nations/nation_select_providers.dart';
 import 'package:fnm/features/records/head_to_head_providers.dart';
+import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
@@ -27,6 +28,7 @@ class H2HMeetingsScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l = AppLocalizations.of(context);
     final nationsAsync = ref.watch(nationsProvider);
     final meetingsAsync = ref.watch(
       h2hMeetingsProvider(
@@ -47,21 +49,22 @@ class H2HMeetingsScreen extends ConsumerWidget {
               context.canPop() ? context.pop() : context.go('/'),
         ),
         title: Text(
-          'MEETINGS',
+          l.recordsMeetings,
           style: AppTypography.labelMedium.copyWith(color: AppColors.primary),
         ),
         centerTitle: true,
       ),
       body: meetingsAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => Center(child: Text('Could not load.\n$e')),
+        error: (e, _) =>
+            Center(child: Text(l.recordsCouldNotLoad(e.toString()))),
         data: (meetings) {
           if (meetings.isEmpty) {
             return Center(
               child: Padding(
                 padding: const EdgeInsets.all(AppSpacing.xl),
                 child: Text(
-                  '$aName and $bName have never met in this save.',
+                  l.recordsNeverMet(aName, bName),
                   textAlign: TextAlign.center,
                   style: AppTypography.bodyMedium
                       .copyWith(color: AppColors.onSurfaceVariant),
@@ -76,11 +79,11 @@ class H2HMeetingsScreen extends ConsumerWidget {
             padding: const EdgeInsets.all(AppSpacing.marginMobile),
             children: [
               Text(
-                '$aName vs $bName',
+                l.recordsVersus(aName, bName),
                 style: AppTypography.titleMedium,
               ),
               Text(
-                '${meetings.length} meetings · ${wins}W ${draws}D ${losses}L',
+                l.recordsMeetingsWdl(meetings.length, wins, draws, losses),
                 style: AppTypography.labelSmall
                     .copyWith(color: AppColors.onSurfaceVariant),
               ),
@@ -102,12 +105,24 @@ class _MeetingRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
     final m = meeting;
-    final result = m.forA > m.forB
+    // A shootout decides the tie, so colour the row by the shootout — a 1–1
+    // (5–3 pens) semi-final is a win, not a draw.
+    final decided = m.penA != null && m.penB != null
+        ? (m.penA! - m.penB!)
+        : (m.forA - m.forB);
+    final result = decided > 0
         ? AppColors.positive
-        : m.forA < m.forB
+        : decided < 0
             ? AppColors.error
             : AppColors.onSurfaceVariant;
+    // How the tie was settled, when it went past 90 minutes.
+    final settled = m.penA != null && m.penB != null
+        ? l.recordsOnPenalties(m.penA!, m.penB!)
+        : m.afterExtraTime
+            ? l.recordsAfterExtraTime
+            : null;
     return Padding(
       padding: const EdgeInsets.only(bottom: AppSpacing.sm),
       child: AppCard(
@@ -141,10 +156,24 @@ class _MeetingRow extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                     style: AppTypography.bodyMedium,
                   ),
-                  Text(
-                    DateFormat('d MMM yyyy').format(m.date),
-                    style: AppTypography.labelSmall
-                        .copyWith(color: AppColors.onSurfaceVariant),
+                  Row(
+                    children: [
+                      Text(
+                        DateFormat('d MMM yyyy').format(m.date),
+                        style: AppTypography.labelSmall
+                            .copyWith(color: AppColors.onSurfaceVariant),
+                      ),
+                      if (settled != null) ...[
+                        const SizedBox(width: AppSpacing.xs),
+                        Text(
+                          '· $settled',
+                          style: AppTypography.labelSmall.copyWith(
+                            color: AppColors.primary,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                      ],
+                    ],
                   ),
                 ],
               ),

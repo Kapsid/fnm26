@@ -1,7 +1,13 @@
 import 'package:fnm/domain/entities/enums.dart';
+import 'package:fnm/domain/entities/group_standing.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/services/competition/nations_cup.dart';
 import 'package:flutter_test/flutter_test.dart';
+
+/// A standings row for [id] carrying [points], so a boundary with fewer places
+/// than candidates can be checked to pick the right sides.
+GroupStanding _row(int id, {int points = 0}) =>
+    GroupStanding(id)..won = points ~/ 3;
 
 Nation _n(int id, int ranking) => Nation(
       id: id,
@@ -105,14 +111,35 @@ void main() {
       final next = NationsCup.promoteRelegate(
         tiers: tiers,
         groups: [
-          (tier: 0, winner: 1, bottom: 2), // A: 2 relegated to B
-          (tier: 1, winner: 3, bottom: 4), // B: 3 promoted to A, 4 stays (bottom)
+          (tier: 0, winner: _row(1), bottom: _row(2)), // A: 2 relegated to B
+          // B: 3 promoted to A, 4 stays (lowest league)
+          (tier: 1, winner: _row(3), bottom: _row(4)),
         ],
       );
       expect(next[1], 0); // A winner stays top
       expect(next[2], 1); // relegated to B
       expect(next[3], 0); // promoted to A
       expect(next[4], 1); // lowest league, no further relegation
+    });
+
+    test('a boundary moves as many up as it sends down', () {
+      // League B has two groups, League C only one — the old rule sent two down
+      // and brought one up, so C grew by one every cycle. Only the WORSE of B's
+      // two bottom sides now drops, and C's single winner takes its place.
+      final tiers = {1: 0, 2: 0, 3: 0, 4: 0, 5: 1, 6: 1};
+      final next = NationsCup.promoteRelegate(
+        tiers: tiers,
+        groups: [
+          (tier: 0, winner: _row(1), bottom: _row(2, points: 9)),
+          (tier: 0, winner: _row(3), bottom: _row(4, points: 3)),
+          (tier: 1, winner: _row(5), bottom: _row(6)),
+        ],
+      );
+      expect(next[4], 1); // the worse bottom side goes down
+      expect(next[2], 0); // the better one is spared — there was one place
+      expect(next[5], 0); // C's winner fills it
+      expect(next.values.where((t) => t == 0).length, 4); // sizes hold
+      expect(next.values.where((t) => t == 1).length, 2);
     });
 
     test('empty results leave the ladder unchanged', () {

@@ -19,7 +19,8 @@ import 'package:fnm/features/hub/hub_event.dart';
 import 'package:fnm/features/tournaments/host_draw_providers.dart';
 import 'package:fnm/features/ranking/world_ranking_providers.dart';
 import 'package:fnm/features/tournaments/city_providers.dart';
-import 'package:fnm/features/tournaments/cup_detail_providers.dart' show AllTimeScorer;
+import 'package:fnm/features/tournaments/cup_detail_providers.dart'
+    show AllTimeScorer, CupPlayerRecord;
 
 /// Identifies one continental championship within a save.
 typedef ContinentalKey = ({int careerId, Confederation confederation});
@@ -34,6 +35,7 @@ class ContinentalData {
     required this.qualifyingGroups,
     required this.groups,
     required this.knockout,
+    this.groupFixtures = const [],
     required this.champion,
     required this.scorers,
     required this.honours,
@@ -48,6 +50,9 @@ class ContinentalData {
     this.identity,
     this.teamOfTournament = const [],
     this.goldenGlove,
+    this.topGames = const [],
+    this.topCups = const [],
+    this.myNationIds = const {},
   });
 
   /// The edition's best XI and best goalkeeper (empty until it's decided).
@@ -89,6 +94,9 @@ class ContinentalData {
 
   /// This cycle's knockout fixtures (empty for non-player regions / no edition).
   final List<Fixture> knockout;
+
+  /// This cycle's finals group-stage fixtures (round 'CGROUP').
+  final List<Fixture> groupFixtures;
   final int? champion;
   final List<ScorerTally> scorers;
 
@@ -101,6 +109,16 @@ class ContinentalData {
   final Map<int, Nation> nations;
   final int playerNationId;
   final Map<int, String> playerNames;
+
+  /// All-time player leaderboards for this continental cup, most first (up to
+  /// ten): most matches played, and most editions attended. Empty before there
+  /// is any history.
+  final List<CupPlayerRecord> topGames;
+  final List<CupPlayerRecord> topCups;
+
+  /// Every nation the manager has led (current + past stints), for highlighting
+  /// their record-holders in the leaderboards.
+  final Set<int> myNationIds;
 }
 
 /// The continental knockout rounds in bracket order.
@@ -175,17 +193,22 @@ final AutoDisposeFutureProviderFamily<ContinentalDrawData?, ContinentalKey>
       : const <int>[];
   final berths = (config.size - hosts.length).clamp(1, config.size);
   List<int> qualifierIds;
+  // Named confederation throughout: every confederation runs its own qualifying
+  // campaign now, and this screen may be showing any of them.
   if (await comp.hasTournament(
         key.careerId,
         CompetitionKind.continentalQualifying,
+        confederation: key.confederation,
       ) &&
       await comp.allPlayedForKind(
         key.careerId,
         CompetitionKind.continentalQualifying,
+        confederation: key.confederation,
       )) {
     final tables = await comp.tournamentGroupTables(
       key.careerId,
       CompetitionKind.continentalQualifying,
+      confederation: key.confederation,
     );
     qualifierIds = Qualification.qualifiers(
       tables.map((t) => t.standings).toList(),
@@ -238,6 +261,7 @@ final AutoDisposeFutureProviderFamily<ContinentalDrawData?, ContinentalKey>
   if (!await comp.hasTournament(
     key.careerId,
     CompetitionKind.continentalQualifying,
+    confederation: key.confederation,
   )) {
     return null;
   }
@@ -252,17 +276,14 @@ final AutoDisposeFutureProviderFamily<ContinentalDrawData?, ContinentalKey>
       cycle: career.cyclePointer,
     )).future,
   );
-  // The host sits out qualifying (friendlies only), so exclude it from the
-  // group draw — mirror [CareerService.buildCalendar].
-  final host = WorldCupHosts.continentalHostFor(
+  // The one shared definition of who is in the draw — see
+  // [WorldCupHosts.continentalQualifiers].
+  final members = WorldCupHosts.continentalQualifiers(
     confederation: key.confederation,
     cycle: career.cyclePointer,
     seed: career.rngSeed,
     nations: all,
   );
-  final members = all
-      .where((n) => n.confederation == key.confederation && n.id != host)
-      .toList();
   final schedule = const ScheduleGenerator().generate(
     confederation: key.confederation,
     nations: members,
@@ -309,14 +330,17 @@ final AutoDisposeFutureProviderFamily<ContinentalData?, ContinentalKey>
   // background), so a region's groups, bracket and scorers are shown once its
   // cup has been drawn — not only the player's.
   final knockout = <Fixture>[];
+  final groupFixtures = <Fixture>[];
   var groups = <FinalsGroupTable>[];
   var qualifyingGroups = <FinalsGroupTable>[];
-  if (isPlayerRegion) {
-    qualifyingGroups = await comp.tournamentGroupTables(
-      key.careerId,
-      CompetitionKind.continentalQualifying,
-    );
-  }
+  // Every confederation qualifies for its own cup now, so the qualifying tables
+  // are shown for whichever continent this screen is on — not only the
+  // manager's, which was the only one that used to have any.
+  qualifyingGroups = await comp.tournamentGroupTables(
+    key.careerId,
+    CompetitionKind.continentalQualifying,
+    confederation: key.confederation,
+  );
   if (await comp.hasTournament(
     key.careerId,
     CompetitionKind.continentalFinals,
@@ -327,6 +351,12 @@ final AutoDisposeFutureProviderFamily<ContinentalData?, ContinentalKey>
       CompetitionKind.continentalFinals,
       confederation: key.confederation,
     );
+    groupFixtures.addAll(await comp.fixturesByRound(
+      key.careerId,
+      'CGROUP',
+      kind: CompetitionKind.continentalFinals,
+      confederation: key.confederation,
+    ));
     for (final round in _rounds) {
       knockout.addAll(
         await comp.fixturesByRound(
@@ -368,6 +398,42 @@ final AutoDisposeFutureProviderFamily<ContinentalData?, ContinentalKey>
   final youth = await ref.watch(youthBonusByCycleProvider(key.careerId).future);
   final careerDev =
       await ref.watch(careerDevBonusProvider(key.careerId).future);
+
+  // Per-player all-time records for THIS continental cup: most matches played
+  // and most finals tournaments attended, each resolved to the holder's name.
+  final cupRecords = await comp.playerCupRecords(
+    key.careerId,
+    kind: CompetitionKind.continentalFinals,
+    confederation: key.confederation,
+  );
+  // The top ten by a chosen count (games or editions), holders resolved to
+  // their names — so the records tab can show a leaderboard, not just the leader.
+  Future<List<CupPlayerRecord>> topRecords(
+    int Function(({int playerId, int nationId, int games, int finals})) key,
+  ) async {
+    final ranked = cupRecords.where((r) => key(r) > 0).toList()
+      ..sort((a, b) => key(b).compareTo(key(a)));
+    final out = <CupPlayerRecord>[];
+    for (final r in ranked.take(10)) {
+      final p = await playerRepo.byId(
+        r.playerId,
+        agingYears: aging,
+        saveSeed: career.rngSeed,
+        youthBonusByCycle: youth,
+        careerStartsByPlayer: careerDev,
+      );
+      out.add((
+        playerId: r.playerId,
+        name: p?.name ?? 'Unknown',
+        nationId: r.nationId,
+        count: key(r),
+      ));
+    }
+    return out;
+  }
+
+  final topGames = await topRecords((r) => r.games);
+  final topCups = await topRecords((r) => r.finals);
   final playerNames = <int, String>{};
   for (final id in {for (final s in scorers) s.playerId}) {
     final p = await playerRepo.byId(
@@ -393,7 +459,22 @@ final AutoDisposeFutureProviderFamily<ContinentalData?, ContinentalKey>
         if (d > (runByNation[nid] ?? 0)) runByNation[nid] = d;
       }
     }
-    // Golden Glove: the keeper of the meanest defence among the knockout sides.
+    // How everyone actually played, so the awards are earned rather than
+    // assumed — see `TournamentStars`.
+    final lines = await comp.competitionPlayerLines(
+      key.careerId,
+      knockout.first.competitionId,
+    );
+    final formByPlayer = {
+      for (final l in lines)
+        l.playerId: (apps: l.apps, meanRating: l.meanRating, motms: l.motms),
+    };
+    final cleanSheetsByPlayer = {
+      for (final l in lines) l.playerId: l.cleanSheets,
+    };
+
+    // Golden Glove fallback for an edition with no rating data: the keeper of
+    // the meanest defence among the knockout sides.
     final concededByNation = <int, int>{
       for (final g in groups)
         for (final s in g.standings) s.nationId: s.goalsAgainst,
@@ -435,6 +516,7 @@ final AutoDisposeFutureProviderFamily<ContinentalData?, ContinentalKey>
     final candidateNations = <int>{
       ...runByNation.keys,
       for (final s in allFinalsScorers) s.nationId,
+      for (final l in lines) l.nationId,
     };
     final candidates = <Player>[];
     for (final nid in candidateNations) {
@@ -443,14 +525,27 @@ final AutoDisposeFutureProviderFamily<ContinentalData?, ContinentalKey>
         agingYears: aging,
         saveSeed: career.rngSeed,
       );
-      candidates.addAll(squad.take(16));
+      candidates.addAll(
+        formByPlayer.isEmpty
+            ? squad.take(16)
+            : squad.where((p) => formByPlayer.containsKey(p.id)),
+      );
     }
     teamOfTournament = TournamentStars.teamOfTournament(
       candidates: candidates,
       goalsByPlayer: goalsByPlayer,
       runByNation: runByNation,
       champion: champion,
+      formByPlayer: formByPlayer,
     );
+    final bestKeeper = TournamentStars.goldenGlove(
+      candidates: candidates,
+      formByPlayer: formByPlayer,
+      cleanSheetsByPlayer: cleanSheetsByPlayer,
+    );
+    if (bestKeeper != null) {
+      goldenGlove = (nationId: bestKeeper.nationId, name: bestKeeper.name);
+    }
   }
 
   // This championship's own all-time scorers across every cycle (scoped to the
@@ -518,8 +613,14 @@ final AutoDisposeFutureProviderFamily<ContinentalData?, ContinentalKey>
         career.cyclePointer,
         continentalHostDrawKind,
       );
-  final hostIds =
-      groups.isNotEmpty && hostDrawWatched ? allHosts : const <int>[];
+  // NOT gated on the finals groups existing. It used to be, which meant the
+  // continental championship had no summary at all until its finals draw — the
+  // one tournament in the game where the host, its cities and its stadiums
+  // stayed hidden through the entire qualifying campaign, while the World Cup
+  // showed all of it from the moment its host was revealed. The host is
+  // deterministic per edition and already public once its ceremony is watched,
+  // so there is nothing to hold back.
+  final hostIds = hostDrawWatched ? allHosts : const <int>[];
   final cities = await ref.watch(countryCitiesProvider.future);
   final hostCities = {
     for (final h in hostIds) h: cities[h] ?? const <String>[],
@@ -534,10 +635,17 @@ final AutoDisposeFutureProviderFamily<ContinentalData?, ContinentalKey>
     qualifyingGroups: qualifyingGroups,
     groups: groups,
     knockout: knockout,
+    groupFixtures: groupFixtures,
     champion: champion,
     scorers: scorers,
     allTimeScorers: allTimeScorers,
     honours: honours,
+    topGames: topGames,
+    topCups: topCups,
+    myNationIds: {
+      career.nationId,
+      ...(await ref.watch(careerRepositoryProvider).stints(key.careerId)).values,
+    },
     nations: nations,
     playerNationId: career.nationId,
     playerNames: playerNames,

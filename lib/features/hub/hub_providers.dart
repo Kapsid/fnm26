@@ -31,6 +31,7 @@ import 'package:fnm/domain/services/ranking/elo.dart';
 import 'package:fnm/domain/services/tactics/best_eleven.dart';
 import 'package:fnm/domain/services/tactics/team_chemistry.dart';
 import 'package:fnm/features/career/career_providers.dart';
+import 'package:fnm/features/awards/award_providers.dart';
 import 'package:fnm/features/squad/grievance_providers.dart';
 import 'package:fnm/features/federation/federation_providers.dart';
 import 'package:fnm/features/federation/federation_service.dart';
@@ -947,6 +948,8 @@ class SeasonService {
     // stopped waiting. Settled before the clock moves, so the squad the next
     // match is picked from is the squad that is actually available.
     await _ref.read(grievanceServiceProvider).settleWalkouts(careerId);
+    // And the year's individual trophies, once a year has actually finished.
+    await _ref.read(awardServiceProvider).settleYear(careerId);
     while (true) {
       final career = await _careers.byId(careerId);
       if (career == null) break;

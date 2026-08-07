@@ -35,8 +35,9 @@ void main() {
         if (host <= 12) topTwelve++;
         if (host <= 3) topThree++;
       }
-      // Only the strongest twelve are ever eligible…
-      expect(topTwelve, 400);
+      // The shortlist is the strongest twelve, and an outsider standing last on
+      // the ballot almost never wins — but "almost" is the point of it.
+      expect(topTwelve / 400, greaterThan(0.95));
       // …the best are favoured, but it's an open race — not a lock.
       expect(topThree / 400, greaterThan(0.25));
       expect(topThree / 400, lessThan(0.6));
@@ -75,19 +76,21 @@ void main() {
     test('a solo host is the normal case', () {
       // Regression: one roll gave ~65% co-hosted and ~30% triple-hosted, while
       // the doc comment claimed "co-hosting is the exception, not the rule".
+      // A joint bid is now a regular feature of the calendar rather than a
+      // once-a-career curiosity, but a single host still wins most editions.
       final r = rates();
-      expect(r.solo, greaterThan(0.75), reason: 'most editions have one host');
+      expect(r.solo, greaterThan(0.55), reason: 'most editions have one host');
     });
 
     test('joint bids happen, but are a talking point', () {
       final r = rates();
-      expect(r.joint, greaterThan(0.02));
-      expect(r.joint, lessThan(0.25));
+      expect(r.joint, greaterThan(0.10));
+      expect(r.joint, lessThan(0.40));
     });
 
     test('a triple bid is rare', () {
       final r = rates();
-      expect(r.triple, lessThan(0.08));
+      expect(r.triple, lessThan(0.15));
       expect(
         r.triple,
         lessThan(r.joint),
@@ -155,12 +158,23 @@ void main() {
     });
 
     test('bids partition the shortlist — nobody bids twice', () {
+      var outsiders = 0;
       for (var seed = 0; seed < 50; seed++) {
-        final flat = bids(seed).expand((b) => b).toList();
+        final table = bids(seed);
+        final flat = table.expand((b) => b).toList();
         expect(flat.toSet(), hasLength(flat.length), reason: 'seed $seed');
-        // Only the strongest twelve are realistic candidates.
-        expect(flat.every((id) => id <= 12), isTrue, reason: 'seed $seed');
+        // The shortlist is the strongest twelve; anything below it is the one
+        // outsider, which stands alone and stands last.
+        final outside = flat.where((id) => id > 12).toList();
+        expect(outside.length, lessThanOrEqualTo(1), reason: 'seed $seed');
+        if (outside.isNotEmpty) {
+          outsiders++;
+          expect(table.last, [outside.single], reason: 'seed $seed');
+        }
       }
+      // Rare, but it does happen — that is the whole point of the outsider.
+      expect(outsiders, greaterThan(0));
+      expect(outsiders, lessThan(25));
     });
 
     test('some bids are joint, most are not', () {
@@ -283,6 +297,59 @@ void main() {
       expect(venues.every((v) => v.capacity >= 32000 && v.capacity <= 85000),
           isTrue);
       expect(venues.map((v) => v.city).toSet(), hasLength(venues.length));
+    });
+  });
+
+  group('WorldCupHosts.continentalQualifiers', () {
+    final nations = [
+      for (var r = 1; r <= 40; r++)
+        nation(id: r, confederation: Confederation.europe, ranking: r),
+      // Another continent, to prove the field is confederation-scoped.
+      for (var r = 41; r <= 50; r++)
+        nation(id: r, confederation: Confederation.asia, ranking: r),
+    ];
+
+    List<int> hosts(int cycle) => WorldCupHosts.continentalHostsFor(
+          confederation: Confederation.europe,
+          cycle: cycle,
+          seed: 4242,
+          nations: nations,
+        );
+
+    List<int> field(int cycle) => [
+          for (final n in WorldCupHosts.continentalQualifiers(
+            confederation: Confederation.europe,
+            cycle: cycle,
+            seed: 4242,
+            nations: nations,
+          ))
+            n.id,
+        ];
+
+    test('excludes EVERY host, co-hosts included', () {
+      // The bug this pins: the draw ceremony dropped only the primary host, so
+      // on a co-hosted edition it drew a field the calendar had never drawn.
+      // Co-hosting fires on roughly a third of editions, so a run of cycles is
+      // certain to contain one.
+      var sawCoHosted = false;
+      for (var cycle = 0; cycle < 40; cycle++) {
+        final h = hosts(cycle);
+        if (h.length > 1) sawCoHosted = true;
+        final f = field(cycle);
+        for (final id in h) {
+          expect(f, isNot(contains(id)),
+              reason: 'host $id still in the draw at cycle $cycle');
+        }
+        expect(f.length, 40 - h.length);
+      }
+      expect(sawCoHosted, isTrue,
+          reason: 'no co-hosted edition in 40 cycles — sample is not testing '
+              'the case the bug lived in');
+    });
+
+    test('is confederation-scoped and deterministic', () {
+      expect(field(3), field(3));
+      expect(field(3).every((id) => id <= 40), isTrue);
     });
   });
 }

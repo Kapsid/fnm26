@@ -24,6 +24,36 @@ Fixture _f({
 
 void main() {
   group('Nomination', () {
+    test('a tournament always opens a fresh nomination after friendlies', () {
+      // Warm-up friendlies, then the finals group stage. The friendlies are one
+      // period; the tournament must open its own.
+      final fixtures = [
+        _f(md: 1, round: 'FRIENDLY', day: 1, played: true),
+        _f(md: 2, round: 'FRIENDLY', day: 4, played: true),
+        _f(md: 1, round: 'GROUP', day: 10),
+        _f(md: 2, round: 'GROUP', day: 13),
+        _f(md: 3, round: 'GROUP', day: 16),
+      ];
+      expect(Nomination.windowOpen(fixtures), isTrue);
+      final period = Nomination.currentPeriod(fixtures);
+      expect(period.map((f) => f.round), everyElement('GROUP'));
+      expect(period, hasLength(3), reason: 'the squad is locked for the group');
+    });
+
+    test('a fixture the world left behind does not pin the window shut', () {
+      // The friendly on day 4 was never played, but the tournament kicked off
+      // and its first game HAS been. The nomination for the second group match
+      // must be read from where the nation actually is, not from the orphan.
+      final fixtures = [
+        _f(md: 1, round: 'FRIENDLY', day: 1, played: true),
+        _f(md: 2, round: 'FRIENDLY', day: 4), // abandoned, never played
+        _f(md: 1, round: 'GROUP', day: 10, played: true),
+        _f(md: 2, round: 'GROUP', day: 13),
+      ];
+      expect(Nomination.windowOpen(fixtures), isFalse, reason: 'mid-tournament');
+      expect(Nomination.currentPeriod(fixtures).single.round, 'GROUP');
+    });
+
     test('period starts before qualifying, every 4 MDs, friendlies, tournaments',
         () {
       // Qualifying re-opens at MD1, 5, 9, …; the matchdays in between do not.

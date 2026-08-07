@@ -20,6 +20,7 @@ class ManagerCycle {
     required this.goalsAgainst,
     required this.worldCup,
     required this.continental,
+    this.nationsCup = '',
   });
 
   final int cycle;
@@ -37,6 +38,10 @@ class ManagerCycle {
   /// Placement strings, e.g. 'Champions', 'Semi-finals', 'Did not qualify'.
   final String worldCup;
   final String continental;
+
+  /// The Nations Cup finish, e.g. 'League B · 2nd' or 'League A · Runners-up'.
+  /// Empty when the manager didn't play a Nations Cup that cycle.
+  final String nationsCup;
 
   int get goalDifference => goalsFor - goalsAgainst;
   bool get wonWorldCup => worldCup == 'Champions';
@@ -135,6 +140,16 @@ final AutoDisposeFutureProviderFamily<ManagerHistory?, int>
       fixturesByNation[nationId] ??=
           await comp.fixturesForNation(careerId, nationId);
 
+  // Nations Cup finishes per nation, indexed by cycle (cached like fixtures).
+  final ncByNation = <int, Map<int, String>>{};
+  Future<Map<int, String>> ncFor(int nationId) async =>
+      ncByNation[nationId] ??= {
+        for (final e in await comp.nationsCupFinishes(careerId, nationId))
+          e.cycle: e.finals != null
+              ? 'League ${e.league} · ${e.finals}'
+              : 'League ${e.league} · ${_ordinal(e.position)}',
+      };
+
   ManagerResult? biggestWin;
   ManagerResult? biggestLoss;
 
@@ -212,6 +227,7 @@ final AutoDisposeFutureProviderFamily<ManagerHistory?, int>
       goalsAgainst: ga,
       worldCup: _placement(inCycle, nationId, continental: false),
       continental: _placement(inCycle, nationId, continental: true),
+      nationsCup: (await ncFor(nationId))[c] ?? '',
     ));
   }
   cycles.sort((a, b) => b.cycle.compareTo(a.cycle));
@@ -268,6 +284,13 @@ final AutoDisposeFutureProviderFamily<ManagerHistory?, int>
   );
 });
 
+String _ordinal(int n) => switch (n) {
+      1 => '1st',
+      2 => '2nd',
+      3 => '3rd',
+      _ => '${n}th',
+    };
+
 /// The nation's finish in a competition this cycle, from its finals fixtures.
 String _placement(
   List<Fixture> fixtures,
@@ -307,7 +330,9 @@ String _placement(
   return switch (_wcRounds[deepest]) {
     'FINAL' => wonAt(finalTie) ? 'Champions' : 'Runners-up',
     '3RD' => wonAt(thirdTie) ? 'Third place' : 'Fourth place',
-    'SF' => 'Semi-finals',
+    // Continental cups have no third-place match — both beaten semi-finalists
+    // share the bronze, so a lost semi there is a third-place finish.
+    'SF' => continental ? 'Third place' : 'Semi-finals',
     'QF' => 'Quarter-finals',
     'R16' => 'Round of 16',
     'R32' => 'Round of 32',

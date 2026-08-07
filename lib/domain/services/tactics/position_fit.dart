@@ -45,10 +45,21 @@ abstract final class PositionFit {
     return 0;
   }
 
-  /// A comparator ordering players for a [slot]: best positional fit first,
-  /// then by overall. Use to surface same-position substitutes at the top.
+  /// A comparator ordering players for a [slot] by the rating they would
+  /// actually play at there — best first.
+  ///
+  /// It used to sort by positional fit FIRST and only then by rating, so the
+  /// list opened with every same-position player in the squad before the first
+  /// out-of-position one, however much better that player was: a 62-rated
+  /// reserve full-back sat above an 84-rated centre-back who would play the
+  /// slot at 80. The number the picker shows is the effective rating, so that
+  /// is the number it now orders by; fit and raw overall only break ties (a
+  /// natural fit ahead of a converted one at the same effective rating).
   static int Function(Player, Player) bySlotFit(PlayerPosition slot) =>
       (a, b) {
+        final byEffective =
+            effectiveOverall(b, slot).compareTo(effectiveOverall(a, slot));
+        if (byEffective != 0) return byEffective;
         final byFit = fitRank(b, slot) - fitRank(a, slot);
         return byFit != 0 ? byFit : b.overall.compareTo(a.overall);
       };

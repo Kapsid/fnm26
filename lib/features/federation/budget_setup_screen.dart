@@ -12,6 +12,7 @@ import 'package:fnm/domain/repositories/career_repository.dart';
 import 'package:fnm/features/federation/federation_service.dart';
 import 'package:fnm/features/federation/investment_editor.dart';
 import 'package:fnm/features/hub/hub_providers.dart';
+import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
 
@@ -78,21 +79,23 @@ class _BudgetSetupScreenState extends ConsumerState<BudgetSetupScreen> {
   @override
   Widget build(BuildContext context) {
     final careerAsync = ref.watch(_budgetCareerProvider(widget.careerId));
+    final l = AppLocalizations.of(context);
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
         title: Text(
-          'SET YOUR BUDGET',
+          l.federationSetYourBudget,
           style: AppTypography.labelMedium.copyWith(color: AppColors.primary),
         ),
         centerTitle: true,
       ),
       body: careerAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => Center(child: Text('Could not load finances.\n$e')),
+        error: (e, _) =>
+            Center(child: Text(l.federationCouldNotLoadFinances(e.toString()))),
         data: (career) {
           if (career == null) {
-            return const Center(child: Text('Save not found.'));
+            return Center(child: Text(l.federationSaveNotFound));
           }
           final available = career.budget;
           final alloc = _alloc ??
@@ -137,7 +140,7 @@ class _BudgetSetupScreenState extends ConsumerState<BudgetSetupScreen> {
                               ),
                               const SizedBox(width: AppSpacing.sm),
                               Text(
-                                'FEDERATION BUDGET',
+                                l.federationBudgetHeading,
                                 style: AppTypography.labelMedium
                                     .copyWith(color: AppColors.primary),
                               ),
@@ -145,9 +148,9 @@ class _BudgetSetupScreenState extends ConsumerState<BudgetSetupScreen> {
                           ),
                           const SizedBox(height: AppSpacing.xs),
                           Text(
-                            'Distribute ${formatEuros(available)} across the '
-                            'departments to open the cycle. This is where the '
-                            'season is won or lost — spend it wisely.',
+                            l.federationDistributeBudget(
+                              formatEuros(available),
+                            ),
                             style: AppTypography.bodySmall.copyWith(
                               color: AppColors.onSurfaceVariant,
                             ),
@@ -178,14 +181,16 @@ class _BudgetSetupScreenState extends ConsumerState<BudgetSetupScreen> {
                         Padding(
                           padding: const EdgeInsets.only(bottom: AppSpacing.sm),
                           child: Text(
-                            'Allocate the full budget to begin the cycle.',
+                            l.federationAllocateFullBudget,
                             style: AppTypography.labelSmall.copyWith(
                               color: AppColors.onSurfaceVariant,
                             ),
                           ),
                         ),
                       PrimaryButton(
-                        label: _busy ? 'Confirming…' : 'Confirm budget',
+                        label: _busy
+                            ? l.federationConfirming
+                            : l.federationConfirmBudget,
                         icon: Icons.savings_rounded,
                         onPressed: (!ready || _busy)
                             ? null

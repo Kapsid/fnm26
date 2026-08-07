@@ -8,6 +8,7 @@ import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/features/tournaments/draw_ceremony.dart';
 import 'package:fnm/features/tournaments/qualifying_draw_providers.dart';
+import 'package:fnm/l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
 
 /// A qualifying draw, presented through the shared animated [DrawCeremony] (the
@@ -33,6 +34,7 @@ class _QualifyingDrawScreenState extends ConsumerState<QualifyingDrawScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
     final careerId = widget.careerId;
     final worldCup = widget.worldCup;
     final dataAsync = ref.watch(
@@ -70,10 +72,10 @@ class _QualifyingDrawScreenState extends ConsumerState<QualifyingDrawScreen> {
       ),
       body: dataAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => Center(child: Text('Could not load draw.\n$e')),
+        error: (_, _) => Center(child: Text(l.tourSharedCouldNotLoad)),
         data: (data) {
           if (data == null) {
-            return const Center(child: Text('No qualifying draw.'));
+            return Center(child: Text(l.tourSharedNoQualifyingDraw));
           }
           final potCount = data.groups.fold(
             0,

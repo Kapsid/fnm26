@@ -5,12 +5,14 @@ import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/features/career/career_summary_providers.dart';
+import 'package:fnm/features/stats/stats_providers.dart';
+import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
 
-const _gold = Color(0xFFEFC94C);
-const _silver = Color(0xFFBFC7CE);
-const _bronze = Color(0xFFCD8B62);
+const _gold = AppColors.medalGold;
+const _silver = AppColors.medalSilver;
+const _bronze = AppColors.medalBronze;
 
 /// The manager's career at a glance: team, world standing, overall record, a
 /// trophy cabinet, and a finish-by-finish tournament history.
@@ -21,6 +23,7 @@ class CareerSummaryScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l = AppLocalizations.of(context);
     final async = ref.watch(careerSummaryProvider(careerId));
 
     return Scaffold(
@@ -30,25 +33,27 @@ class CareerSummaryScreen extends ConsumerWidget {
           onPressed: () => context.go('${Routes.hub}?careerId=$careerId'),
         ),
         title: Text(
-          'CAREER',
+          l.careerTitle,
           style: AppTypography.labelMedium.copyWith(color: AppColors.primary),
         ),
         centerTitle: true,
       ),
       body: async.when(
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => Center(child: Text('Could not load career.\n$e')),
+        error: (e, _) =>
+            Center(child: Text(l.careerCouldNotLoadCareer('$e'))),
         data: (s) {
-          if (s == null) return const Center(child: Text('No career.'));
+          if (s == null) return Center(child: Text(l.careerNoCareer));
           return ListView(
             padding: const EdgeInsets.all(AppSpacing.marginMobile),
             children: [
               _Header(s),
               const SizedBox(height: AppSpacing.sm),
               _RecordCard(s),
+              _CareerStatsSection(careerId),
               const SizedBox(height: AppSpacing.md),
               Text(
-                'TROPHY CABINET',
+                l.careerTrophyCabinet,
                 style: AppTypography.labelMedium.copyWith(
                   color: AppColors.primary,
                 ),
@@ -61,14 +66,14 @@ class CareerSummaryScreen extends ConsumerWidget {
               ],
               const SizedBox(height: AppSpacing.md),
               Text(
-                'TOURNAMENT HISTORY',
+                l.careerTournamentHistory,
                 style: AppTypography.labelMedium.copyWith(
                   color: AppColors.primary,
                 ),
               ),
               const SizedBox(height: AppSpacing.sm),
               if (s.runs.isEmpty)
-                const AppCard(child: Text('No tournaments completed yet.'))
+                AppCard(child: Text(l.careerNoTournamentsYet))
               else
                 for (final r in s.runs) _RunRow(r),
               const SizedBox(height: AppSpacing.xl),
@@ -87,6 +92,7 @@ class _Header extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
     final rank = s.worldRank;
     return AppCard(
       child: Row(
@@ -99,7 +105,7 @@ class _Header extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  s.nation?.name ?? 'Team',
+                  s.nation?.name ?? l.careerTeamFallback,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: AppTypography.headlineMedium,
@@ -117,11 +123,11 @@ class _Header extends StatelessWidget {
                   runSpacing: AppSpacing.xs,
                   children: [
                     if (rank != null)
-                      TacticalChip('WORLD #$rank', emphasized: true),
+                      TacticalChip(l.careerWorldNum(rank), emphasized: true),
                     if (s.worldPoints != null)
-                      TacticalChip('${s.worldPoints} PTS'),
+                      TacticalChip(l.careerPointsNum(s.worldPoints!)),
                     TacticalChip(
-                      'SEASON ${s.seasons}',
+                      l.careerSeasonNum(s.seasons),
                     ),
                   ],
                 ),
@@ -141,18 +147,21 @@ class _RecordCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
     final gd = s.goalDifference;
     return AppCard(
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          _stat('P', '${s.played}'),
-          _stat('W', '${s.won}', color: const Color(0xFF3FA34D)),
-          _stat('D', '${s.drawn}'),
-          _stat('L', '${s.lost}', color: const Color(0xFFD64545)),
-          _stat('GF', '${s.goalsFor}'),
-          _stat('GA', '${s.goalsAgainst}'),
-          _stat('GD', '${gd >= 0 ? '+' : ''}$gd'),
+          _stat(l.careerStatPlayedShort, '${s.played}'),
+          _stat(l.careerStatWonShort, '${s.won}',
+              color: const Color(0xFF3FA34D)),
+          _stat(l.careerStatDrawnShort, '${s.drawn}'),
+          _stat(l.careerStatLostShort, '${s.lost}',
+              color: const Color(0xFFD64545)),
+          _stat(l.careerStatGoalsForShort, '${s.goalsFor}'),
+          _stat(l.careerStatGoalsAgainstShort, '${s.goalsAgainst}'),
+          _stat(l.careerStatGoalDiffShort, '${gd >= 0 ? '+' : ''}$gd'),
         ],
       ),
     );
@@ -175,6 +184,81 @@ class _RecordCard extends StatelessWidget {
           ),
         ],
       );
+}
+
+/// The deeper career numbers beyond the W/D/L line — streaks, clean sheets,
+/// shootouts and the manager's players' feats — from [careerStatsProvider].
+/// Renders nothing until at least one match has been played.
+class _CareerStatsSection extends ConsumerWidget {
+  const _CareerStatsSection(this.careerId);
+
+  final int careerId;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l = AppLocalizations.of(context);
+    final s = ref.watch(careerStatsProvider(careerId)).valueOrNull;
+    if (s == null || s.played == 0) return const SizedBox.shrink();
+    final tiles = <(String, String)>[
+      (l.careerStatsWinRate, '${(s.winRate * 100).round()}%'),
+      (l.careerStatsCleanSheets, '${s.cleanSheets}'),
+      (l.careerStatsBiggestWin, '+${s.biggestWinMargin}'),
+      (l.careerStatsWinStreak, '${s.longestWinStreak}'),
+      (l.careerStatsUnbeaten, '${s.longestUnbeatenRun}'),
+      (l.careerStatsShootouts, '${s.shootoutsWon}–${s.shootoutsLost}'),
+      (l.careerStatsMotms, '${s.playerMotms}'),
+      if (s.hatTricks > 0) (l.careerStatsHatTricks, '${s.hatTricks}'),
+      if (s.bestPlayerRating > 0)
+        (l.careerStatsBestRating, s.bestPlayerRating.toStringAsFixed(1)),
+    ];
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const SizedBox(height: AppSpacing.md),
+        Text(
+          l.careerStatsHeading,
+          style: AppTypography.labelMedium.copyWith(color: AppColors.primary),
+        ),
+        const SizedBox(height: AppSpacing.sm),
+        AppCard(
+          child: LayoutBuilder(
+            builder: (context, c) {
+              const cols = 3;
+              final w = (c.maxWidth - AppSpacing.md * (cols - 1)) / cols;
+              return Wrap(
+                spacing: AppSpacing.md,
+                runSpacing: AppSpacing.md,
+                children: [
+                  for (final t in tiles)
+                    SizedBox(
+                      width: w,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            t.$2,
+                            style: AppTypography.titleMedium
+                                .copyWith(color: AppColors.primary),
+                          ),
+                          Text(
+                            t.$1,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            style: AppTypography.labelSmall.copyWith(
+                              color: AppColors.onSurfaceVariant,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                ],
+              );
+            },
+          ),
+        ),
+      ],
+    );
+  }
 }
 
 /// Every title the manager has won: each competition, how many times, and the
@@ -263,6 +347,7 @@ class _TrophyCabinet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
     final empty = s.golds == 0 && s.silvers == 0 && s.bronzes == 0;
     return AppCard(
       child: empty
@@ -275,7 +360,7 @@ class _TrophyCabinet extends StatelessWidget {
                 ),
                 const SizedBox(width: AppSpacing.sm),
                 Text(
-                  'No silverware yet — go win one.',
+                  l.careerNoSilverware,
                   style: AppTypography.bodyMedium.copyWith(
                     color: AppColors.onSurfaceVariant,
                   ),
@@ -285,9 +370,9 @@ class _TrophyCabinet extends StatelessWidget {
           : Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                _medal(_gold, s.golds, 'GOLD'),
-                _medal(_silver, s.silvers, 'SILVER'),
-                _medal(_bronze, s.bronzes, 'BRONZE'),
+                _medal(_gold, s.golds, l.careerMedalGold),
+                _medal(_silver, s.silvers, l.careerMedalSilver),
+                _medal(_bronze, s.bronzes, l.careerMedalBronze),
               ],
             ),
     );
@@ -318,6 +403,7 @@ class _RunRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
     final medalColor = switch (run.medal) {
       1 => _gold,
       2 => _silver,
@@ -356,7 +442,7 @@ class _RunRow extends StatelessWidget {
                   ),
                   if (run.championName != null)
                     Text(
-                      'Winners: ${run.championName}',
+                      l.careerWinnersName(run.championName!),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: AppTypography.labelSmall.copyWith(

@@ -13,6 +13,7 @@ import 'package:fnm/domain/services/competition/continental_cups.dart';
 import 'package:fnm/domain/services/competition/group_advancement.dart';
 import 'package:fnm/domain/services/competition/nations_cup.dart';
 import 'package:fnm/features/friendlies/other_friendlies_providers.dart';
+import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
 
@@ -97,6 +98,7 @@ class RoundResultsScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l = AppLocalizations.of(context);
     final viewAsync = ref.watch(_roundResultsProvider(careerId));
     final friendlies =
         ref.watch(otherFriendliesProvider(careerId)).valueOrNull ?? const [];
@@ -106,14 +108,15 @@ class RoundResultsScreen extends ConsumerWidget {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         title: Text(
-          'ROUND RESULTS',
+          l.resultsRoundResults,
           style: AppTypography.labelMedium.copyWith(color: AppColors.primary),
         ),
         centerTitle: true,
       ),
       body: viewAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => Center(child: Text('Could not load results.\n$e')),
+        error: (e, _) =>
+            Center(child: Text(l.resultsCouldNotLoad(e.toString()))),
         data: (view) {
           final results = view?.results;
           final hasContent = results != null &&
@@ -129,7 +132,7 @@ class RoundResultsScreen extends ConsumerWidget {
                 padding: const EdgeInsets.all(AppSpacing.marginMobile),
                 children: [
                   Text(
-                    'FRIENDLY INTERNATIONALS',
+                    l.resultsFriendlyInternationals,
                     style: AppTypography.labelSmall.copyWith(
                       color: AppColors.primary,
                     ),
@@ -165,8 +168,8 @@ class RoundResultsScreen extends ConsumerWidget {
               ),
               Text(
                 isKnockout
-                    ? (results.stage ?? 'Knockout').toUpperCase()
-                    : 'MATCHDAY ${results.matchday}',
+                    ? (results.stage ?? l.resultsKnockout).toUpperCase()
+                    : l.resultsMatchday(results.matchday),
                 style: AppTypography.headlineMedium,
               ),
               const SizedBox(height: AppSpacing.md),
@@ -207,7 +210,7 @@ class RoundResultsScreen extends ConsumerWidget {
         child: Padding(
           padding: const EdgeInsets.all(AppSpacing.marginMobile),
           child: PrimaryButton(
-            label: 'Continue',
+            label: l.resultsContinue,
             icon: Icons.check_rounded,
             onPressed: toHub,
           ),
@@ -241,6 +244,7 @@ class _GroupBlock extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
     return Padding(
       padding: const EdgeInsets.only(bottom: AppSpacing.md),
       child: AppCard(
@@ -248,7 +252,7 @@ class _GroupBlock extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'GROUP ${group.name}',
+              l.resultsGroup(group.name),
               style: AppTypography.labelSmall.copyWith(
                 color: AppColors.onSurfaceVariant,
               ),

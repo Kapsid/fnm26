@@ -10,6 +10,7 @@ import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/features/hub/hub_event.dart';
 import 'package:fnm/features/tournaments/continental_detail_providers.dart';
 import 'package:fnm/features/tournaments/draw_ceremony.dart';
+import 'package:fnm/l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
 
 /// The continental championship group draw, presented through the shared
@@ -49,6 +50,7 @@ class _ContinentalDrawScreenState extends ConsumerState<ContinentalDrawScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
     final careerId = widget.careerId;
     final confederation = widget.confederation;
     final key = (careerId: careerId, confederation: confederation);
@@ -76,17 +78,20 @@ class _ContinentalDrawScreenState extends ConsumerState<ContinentalDrawScreen> {
           onPressed: leave,
         ),
         title: Text(
-          widget.qualifying ? 'QUALIFYING DRAW' : 'GROUP DRAW',
+          widget.qualifying
+              ? l.tourContQualifyingDraw
+              : l.tourContGroupDraw,
           style: AppTypography.labelMedium.copyWith(color: AppColors.primary),
         ),
         centerTitle: true,
       ),
       body: dataAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => Center(child: Text('Could not load draw.\n$e')),
+        error: (e, _) =>
+            Center(child: Text(l.tourContCouldNotLoadDraw(e.toString()))),
         data: (data) {
           if (data == null) {
-            return const Center(child: Text('The draw is not ready yet.'));
+            return Center(child: Text(l.tourContDrawNotReady));
           }
           return DrawCeremony(
             groups: [

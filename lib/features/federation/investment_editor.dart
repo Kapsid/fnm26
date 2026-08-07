@@ -4,6 +4,8 @@ import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/domain/repositories/career_repository.dart';
 import 'package:fnm/domain/services/federation/federation_finance.dart';
+import 'package:fnm/features/federation/department_effect.dart';
+import 'package:fnm/l10n/app_localizations.dart';
 
 /// Formats euros compactly for the finance UI (e.g. `€4.5M`, `€250K`, `€0`).
 String formatEuros(int euros) {
@@ -90,12 +92,13 @@ class _InvestmentEditorState extends State<InvestmentEditor> {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
           children: [
-            const Text('UNALLOCATED', style: AppTypography.labelSmall),
+            Text(l.federationUnallocated, style: AppTypography.labelSmall),
             const Spacer(),
             Text(
               formatEuros(_remaining),
@@ -152,11 +155,35 @@ class _InvestmentEditorState extends State<InvestmentEditor> {
           ),
           Padding(
             padding: const EdgeInsets.only(bottom: AppSpacing.sm),
-            child: Text(
-              dept.blurb,
-              style: AppTypography.labelSmall.copyWith(
-                color: AppColors.onSurfaceVariant,
-              ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  dept.blurb,
+                  style: AppTypography.labelSmall.copyWith(
+                    color: AppColors.onSurfaceVariant,
+                  ),
+                ),
+                const SizedBox(height: 2),
+                // What this money actually buys, live as the slider moves.
+                // The effect used to be legible only on the finances screen's
+                // impact table — a screen away from the decision.
+                Text(
+                  value <= 0
+                      ? AppLocalizations.of(context).deptEffectNone
+                      : DepartmentEffect.describe(
+                          AppLocalizations.of(context),
+                          dept,
+                          value,
+                        ),
+                  style: AppTypography.labelSmall.copyWith(
+                    color: value > 0
+                        ? AppColors.positive
+                        : AppColors.onSurfaceVariant,
+                    fontWeight: value > 0 ? FontWeight.w700 : null,
+                  ),
+                ),
+              ],
             ),
           ),
         ],

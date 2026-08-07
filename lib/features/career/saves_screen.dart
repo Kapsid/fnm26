@@ -10,6 +10,7 @@ import 'package:fnm/domain/services/entitlement/entitlement.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/nations/nation_select_providers.dart';
 import 'package:fnm/features/paywall/paywall_sheet.dart';
+import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
@@ -21,6 +22,7 @@ class SavesScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l = AppLocalizations.of(context);
     final savesAsync = ref.watch(savesProvider);
     final premium = ref.watch(premiumUnlockedProvider);
     final limit = maxSaveSlots(premiumUnlocked: premium);
@@ -34,14 +36,15 @@ class SavesScreen extends ConsumerWidget {
           onPressed: () => context.go(Routes.home),
         ),
         title: Text(
-          'SAVES',
+          l.careerSavesTitle,
           style: AppTypography.labelMedium.copyWith(color: AppColors.primary),
         ),
         centerTitle: true,
       ),
       body: savesAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => Center(child: Text('Could not load saves.\n$e')),
+        error: (e, _) =>
+            Center(child: Text(l.careerCouldNotLoadSaves('$e'))),
         data: (saves) {
           final full = saves.length >= limit;
           return Column(
@@ -52,7 +55,7 @@ class SavesScreen extends ConsumerWidget {
                   children: [
                     Expanded(
                       child: Text(
-                        'SLOTS  ${saves.length}/$limit',
+                        l.careerSlotsCount(saves.length, limit),
                         style: AppTypography.labelMedium,
                       ),
                     ),
@@ -62,7 +65,7 @@ class SavesScreen extends ConsumerWidget {
                         style: TextButton.styleFrom(
                           visualDensity: VisualDensity.compact,
                         ),
-                        child: const Text('Pro: up to 5'),
+                        child: Text(l.careerProUpTo5),
                       ),
                   ],
                 ),
@@ -82,13 +85,19 @@ class SavesScreen extends ConsumerWidget {
                           return _SaveTile(
                             save: save,
                             nation: nationsById[save.nationId],
-                            onContinue: () => context.go(
-                              '${Routes.hub}?careerId=${save.id}',
-                            ),
+                            onContinue: () {
+                              // Stamp the open before navigating so this save
+                              // is top of the list next time.
+                              ref
+                                  .read(careerServiceProvider)
+                                  .markPlayed(save.id);
+                              context.go('${Routes.hub}?careerId=${save.id}');
+                            },
                             onDelete: () => _confirmDelete(
                               context,
                               ref,
-                              nationsById[save.nationId]?.name ?? 'this save',
+                              nationsById[save.nationId]?.name ??
+                                  l.careerThisSave,
                               save.id,
                             ),
                           );
@@ -101,8 +110,10 @@ class SavesScreen extends ConsumerWidget {
                   padding: const EdgeInsets.all(AppSpacing.marginMobile),
                   child: PrimaryButton(
                     label: full
-                        ? (premium ? 'Slots full' : 'Slots full — go Pro for 5')
-                        : 'New Game',
+                        ? (premium
+                            ? l.careerSlotsFull
+                            : l.careerSlotsFullGoPro)
+                        : l.careerNewGame,
                     icon: Icons.add,
                     // On the free tier, full slots open the paywall (Pro more
                     // than doubles them); with Pro, full really is full.
@@ -125,20 +136,21 @@ class SavesScreen extends ConsumerWidget {
     String label,
     int careerId,
   ) async {
+    final l = AppLocalizations.of(context);
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (_) => AlertDialog(
         backgroundColor: AppColors.surfaceContainer,
-        title: const Text('Delete save?'),
-        content: Text('This permanently deletes your $label career.'),
+        title: Text(l.careerDeleteSaveTitle),
+        content: Text(l.careerDeleteSaveBody(label)),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('Cancel'),
+            child: Text(l.careerCancel),
           ),
           TextButton(
             onPressed: () => Navigator.of(context).pop(true),
-            child: const Text('Delete'),
+            child: Text(l.careerDelete),
           ),
         ],
       ),
@@ -152,13 +164,25 @@ class SavesScreen extends ConsumerWidget {
         child: Padding(
           padding: const EdgeInsets.all(AppSpacing.xl),
           child: Text(
-            'No saves yet.\nStart a new game to lead a nation.',
+            AppLocalizations.of(context).careerNoSavesYet,
             textAlign: TextAlign.center,
             style: AppTypography.bodyMedium
                 .copyWith(color: AppColors.onSurfaceVariant),
           ),
         ),
       );
+}
+
+/// A short, human "when" for a last-played timestamp — "just now", "3h ago",
+/// "yesterday", then a plain date once it's more than a week old.
+String _ago(AppLocalizations l, DateTime at) {
+  final diff = DateTime.now().difference(at);
+  if (diff.inMinutes < 2) return l.careerJustNow;
+  if (diff.inMinutes < 60) return l.careerMinutesAgo(diff.inMinutes);
+  if (diff.inHours < 24) return l.careerHoursAgo(diff.inHours);
+  if (diff.inDays == 1) return l.careerYesterday;
+  if (diff.inDays < 7) return l.careerDaysAgo(diff.inDays);
+  return DateFormat('d MMM yyyy').format(at);
 }
 
 class _SaveTile extends StatelessWidget {
@@ -176,6 +200,7 @@ class _SaveTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
     final date = DateFormat('MMM yyyy').format(save.inGameDate);
     final wcYear = CareerService.worldCupYear(save.cyclePointer);
     return AppCard(
@@ -189,7 +214,7 @@ class _SaveTile extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  nation?.name ?? 'Unknown',
+                  nation?.name ?? l.careerUnknownNation,
                   style: AppTypography.titleMedium,
                 ),
                 Text(
@@ -207,12 +232,30 @@ class _SaveTile extends StatelessWidget {
                     ),
                     const SizedBox(width: 4),
                     Text(
-                      'Road to the $wcYear World Cup',
+                      l.careerRoadToWorldCup(wcYear),
                       style: AppTypography.labelSmall
                           .copyWith(color: AppColors.primary),
                     ),
                   ],
                 ),
+                if (save.lastPlayedAt != null) ...[
+                  const SizedBox(height: 2),
+                  Row(
+                    children: [
+                      const Icon(
+                        Icons.schedule_rounded,
+                        size: 12,
+                        color: AppColors.onSurfaceVariant,
+                      ),
+                      const SizedBox(width: 4),
+                      Text(
+                        l.careerLastPlayed(_ago(l, save.lastPlayedAt!)),
+                        style: AppTypography.labelSmall
+                            .copyWith(color: AppColors.onSurfaceVariant),
+                      ),
+                    ],
+                  ),
+                ],
               ],
             ),
           ),

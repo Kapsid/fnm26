@@ -6,6 +6,8 @@ library;
 
 export 'app_bottom_nav.dart';
 export 'app_card.dart';
+export 'app_crash_box.dart';
+export 'app_error_state.dart';
 export 'app_list_row.dart';
 export 'app_popup.dart';
 export 'app_text_field.dart';

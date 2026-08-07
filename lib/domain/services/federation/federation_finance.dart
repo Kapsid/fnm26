@@ -20,15 +20,13 @@ extension DepartmentX on Department {
         Department.youth =>
           'Better academy prospects debut for your nation next cycle.',
         Department.commercial =>
-          'Sponsorship returns extra income at the end of the cycle.',
+          'Sponsorship brings extra income at the end of the cycle.',
         Department.medical =>
-          'Fewer injuries — your squad stays available all cycle.',
+          'Fewer injuries. Your squad stays available all cycle.',
         Department.naturalization =>
-          'Reputation and openness — more foreign players offer to switch '
-              'allegiance to your nation.',
+          'More foreign players offer to switch to your nation.',
         Department.boardRelations =>
-          'Hospitality and expectation management — the board judges your '
-              'results far more patiently.',
+          'The board judges your results more patiently.',
       };
 }
 
@@ -126,19 +124,32 @@ abstract final class FederationFinance {
   /// The talent scale bonus applied to a nation's newgen intake for a cycle,
   /// from the euros invested in the Youth Academy. Diminishing, capped so an
   /// academy lifts prospects without breaking the curve (~+12 overall at most).
+  ///
+  /// The cap is reached exactly at [maxInvestPerDepartment] — it used to need
+  /// 60M to hit 0.18 while the slider stopped at 40M, so the impact preview
+  /// topped out at "+8" and the advertised ceiling was unreachable however much
+  /// the manager spent.
   static double youthTalentBonus(int invested) =>
-      min(0.18, invested / 5000000 * 0.015);
+      min(0.18, invested / maxInvestPerDepartment * 0.18);
 
   /// The multiplier applied to a nation's per-minute injury rate for a cycle,
-  /// from the euros invested in Medical — down to 40% of the base rate.
+  /// from the euros invested in Medical — down to 30% of the base rate.
+  ///
+  /// The reduction used to bottom out at 20M, half the slider's range, so the
+  /// impact preview froze at ×0.40 and the top half of the slider bought
+  /// nothing. Same rate per euro as before; it now keeps paying to the ceiling.
   static double injuryFactor(int invested) =>
-      1 - min(0.6, invested / 20000000 * 0.6);
+      1 - min(0.7, invested / 20000000 * 0.6);
 
   /// The probability that a foreign player offers to naturalise this cycle,
   /// from the euros invested in the Naturalisation Office. A small base chance
-  /// even with no spend, rising to ~70% at full investment.
-  static double naturalizationChance(int invested) =>
-      min(0.7, 0.06 + invested / 40000000 * 0.64);
+  /// even with no spend, rising to ~75% at full investment. The curve is
+  /// concave (exponent < 1), so even a modest investment already lifts the
+  /// chance noticeably rather than needing a near-maximum spend to matter.
+  static double naturalizationChance(int invested) => min(
+        0.78,
+        0.08 + pow(invested / 40000000, 0.7).toDouble() * 0.67,
+      );
 
   /// Extra board patience (in reputation-equivalent points) bought by investing
   /// in Board Relations this cycle — it lifts the manager's standing in the

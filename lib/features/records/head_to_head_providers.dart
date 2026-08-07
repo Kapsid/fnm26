@@ -15,11 +15,18 @@ final AutoDisposeFutureProviderFamily<HeadToHead, H2HKey> headToHeadProvider =
 
 /// One past meeting between two nations: when, in what competition, and the
 /// score from side A's point of view.
+///
+/// A knockout tie that went past 90 minutes carries how it was settled:
+/// [afterExtraTime] for an extra-time winner, and [penA]/[penB] for a shootout
+/// — otherwise a 1–1 draw and a 1–1 (4–3 pens) semi-final read identically.
 typedef H2HMeeting = ({
   DateTime date,
   String competition,
   int forA,
   int forB,
+  bool afterExtraTime,
+  int? penA,
+  int? penB,
 });
 
 /// Every past meeting between the two nations in the key, newest first — the
@@ -43,6 +50,13 @@ final AutoDisposeFutureProviderFamily<List<H2HMeeting>, H2HKey>
           (f.round == 'FRIENDLY' ? 'Friendly' : 'Match'),
       forA: aHome ? f.homeScore! : f.awayScore!,
       forB: aHome ? f.awayScore! : f.homeScore!,
+      afterExtraTime: f.afterExtraTime,
+      penA: f.wentToShootout
+          ? (aHome ? f.homePenalties : f.awayPenalties)
+          : null,
+      penB: f.wentToShootout
+          ? (aHome ? f.awayPenalties : f.homePenalties)
+          : null,
     ));
   }
   meetings.sort((a, b) => b.date.compareTo(a.date));

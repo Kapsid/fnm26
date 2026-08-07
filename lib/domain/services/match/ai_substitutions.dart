@@ -26,10 +26,9 @@ abstract final class AiSubstitutions {
     int maxSubs = 3,
   }) {
     // Fresh outfield options, strongest first.
-    final available = bench
-        .where((p) => p.category != PositionCategory.goalkeeper)
-        .toList()
-      ..sort((a, b) => b.overall.compareTo(a.overall));
+    final available =
+        bench.where((p) => p.category != PositionCategory.goalkeeper).toList()
+          ..sort((a, b) => b.overall.compareTo(a.overall));
     if (available.isEmpty) return const [];
 
     final count = rng.rangeInt(2, maxSubs).clamp(0, available.length);
@@ -50,16 +49,19 @@ abstract final class AiSubstitutions {
       final incoming = available[benchIdx++];
       // Replace the weakest outfield player of the incoming player's line who
       // is still on; fall back to the weakest outfield player overall.
-      final off = _weakestOutfield(onPitch, incoming.category) ??
+      final off =
+          _weakestOutfield(onPitch, incoming.category) ??
           _weakestOutfield(onPitch, null);
       if (off == null) break;
       onPitch.removeWhere((p) => p.id == off.id);
-      subs.add(Substitution(
-        teamNationId: nationId,
-        minute: minutes[k],
-        offId: off.id,
-        on: incoming,
-      ));
+      subs.add(
+        Substitution(
+          teamNationId: nationId,
+          minute: minutes[k],
+          offId: off.id,
+          on: incoming,
+        ),
+      );
     }
     return subs;
   }

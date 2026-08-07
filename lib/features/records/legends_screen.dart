@@ -7,6 +7,7 @@ import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/services/squad/legends.dart';
 import 'package:fnm/features/records/legends_providers.dart';
+import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
 
@@ -19,6 +20,7 @@ class LegendsScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l = AppLocalizations.of(context);
     final async = ref.watch(legendsProvider(careerId));
     return Scaffold(
       appBar: AppBar(
@@ -29,23 +31,25 @@ class LegendsScreen extends ConsumerWidget {
               : context.go('${Routes.hub}?careerId=$careerId'),
         ),
         title: Text(
-          'LEGENDS',
+          l.recordsLegends,
           style: AppTypography.labelMedium.copyWith(color: AppColors.primary),
         ),
         centerTitle: true,
       ),
       body: async.when(
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => Center(child: Text('Could not load legends.\n$e')),
+        error: (e, _) =>
+            Center(child: Text(l.recordsCouldNotLoadLegends(e.toString()))),
         data: (view) {
-          if (view == null) return const Center(child: Text('Save not found.'));
+          if (view == null) {
+            return Center(child: Text(l.recordsSaveNotFound));
+          }
           if (view.hallOfFame.isEmpty) {
             return Center(
               child: Padding(
                 padding: const EdgeInsets.all(AppSpacing.xl),
                 child: Text(
-                  'No legends yet. Play out some campaigns and '
-                  '${view.nationName}’s greats will emerge here.',
+                  l.recordsNoLegends(view.nationName),
                   textAlign: TextAlign.center,
                   style: AppTypography.bodyMedium.copyWith(
                     color: AppColors.onSurfaceVariant,
@@ -57,12 +61,12 @@ class LegendsScreen extends ConsumerWidget {
           return ListView(
             padding: const EdgeInsets.all(AppSpacing.marginMobile),
             children: [
-              Text('ALL-TIME XI',
+              Text(l.recordsAllTimeXi,
                   style: AppTypography.labelMedium
                       .copyWith(color: AppColors.primary)),
               const SizedBox(height: AppSpacing.xs),
               Text(
-                'The greatest side ${view.nationName} could ever field.',
+                l.recordsGreatestSide(view.nationName),
                 style: AppTypography.bodySmall
                     .copyWith(color: AppColors.onSurfaceVariant),
               ),
@@ -81,7 +85,7 @@ class LegendsScreen extends ConsumerWidget {
                 ),
               ),
               const SizedBox(height: AppSpacing.lg),
-              Text('HALL OF FAME',
+              Text(l.recordsHallOfFame,
                   style: AppTypography.labelMedium
                       .copyWith(color: AppColors.primary)),
               const SizedBox(height: AppSpacing.sm),
@@ -122,12 +126,13 @@ class _LegendRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
     // The headline stat: goals for attackers, else caps.
     final tallies = <String>[
-      '${legend.caps} caps',
-      if (legend.goals > 0) '${legend.goals} goals',
-      if (legend.assists > 0) '${legend.assists} assists',
-      if (legend.motm > 0) '${legend.motm} MOTM',
+      l.recordsCapsCount(legend.caps),
+      if (legend.goals > 0) l.recordsGoalsCount(legend.goals),
+      if (legend.assists > 0) l.recordsAssistsCount(legend.assists),
+      if (legend.motm > 0) l.recordsMotmCount(legend.motm),
     ];
     return ListTile(
       dense: true,
@@ -175,7 +180,7 @@ class _LegendRow extends StatelessWidget {
             style: AppTypography.labelMedium.copyWith(color: AppColors.primary),
           ),
           Text(
-            'avg',
+            l.recordsAvg,
             style: AppTypography.labelSmall
                 .copyWith(color: AppColors.onSurfaceVariant, fontSize: 9),
           ),

@@ -9,6 +9,7 @@ import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/features/federation/naturalization_providers.dart';
 import 'package:fnm/features/tactics/tactics_providers.dart';
+import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
 
@@ -33,6 +34,7 @@ class _NaturalizationScreenState extends ConsumerState<NaturalizationScreen> {
     required bool accept,
   }) async {
     if (_busy) return;
+    final l = AppLocalizations.of(context);
     setState(() => _busy = true);
     final repo = ref.read(careerRepositoryProvider);
     final career = await repo.byId(widget.careerId);
@@ -50,10 +52,11 @@ class _NaturalizationScreenState extends ConsumerState<NaturalizationScreen> {
             careerId: widget.careerId,
             dedupKey: 'natzdone:${offer.player.id}',
             category: 'naturalize',
-            title: '${offer.player.name} naturalised',
-            body: '${offer.player.name} has completed the switch and is now '
-                'eligible for ${offer.playerNation.name}. Call them up from '
-                'your squad selection.',
+            title: l.federationNaturalisedTitle(offer.player.name),
+            body: l.federationNaturalisedBody(
+              offer.player.name,
+              offer.playerNation.name,
+            ),
             year: career?.inGameDate.year ?? 2026,
           );
     }
@@ -65,24 +68,26 @@ class _NaturalizationScreenState extends ConsumerState<NaturalizationScreen> {
   @override
   Widget build(BuildContext context) {
     final async = ref.watch(pendingNaturalizationProvider(widget.careerId));
+    final l = AppLocalizations.of(context);
 
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
         title: Text(
-          'NATURALISATION',
+          l.federationNaturalisation,
           style: AppTypography.labelMedium.copyWith(color: AppColors.primary),
         ),
         centerTitle: true,
       ),
       body: async.when(
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => Center(child: Text('Could not load offer.\n$e')),
+        error: (e, _) =>
+            Center(child: Text(l.federationCouldNotLoadOffer(e.toString()))),
         data: (offer) {
           if (offer == null) {
             return Center(
               child: PrimaryButton(
-                label: 'Continue',
+                label: l.federationContinue,
                 icon: Icons.check_rounded,
                 onPressed: () =>
                     context.go('${Routes.hub}?careerId=${widget.careerId}'),
@@ -100,7 +105,7 @@ class _NaturalizationScreenState extends ConsumerState<NaturalizationScreen> {
                         size: 44, color: AppColors.primary),
                     const SizedBox(height: AppSpacing.sm),
                     Center(
-                      child: Text('AN OFFER TO SWITCH ALLEGIANCE',
+                      child: Text(l.federationOfferToSwitchAllegiance,
                           style: AppTypography.labelSmall
                               .copyWith(color: AppColors.primary)),
                     ),
@@ -120,8 +125,11 @@ class _NaturalizationScreenState extends ConsumerState<NaturalizationScreen> {
                                     Text(p.name,
                                         style: AppTypography.titleMedium),
                                     Text(
-                                      '${p.position.name} · age ${p.age} · '
-                                      'from ${offer.sourceNation.name}',
+                                      l.federationPlayerMeta(
+                                        p.position.name,
+                                        p.age,
+                                        offer.sourceNation.name,
+                                      ),
                                       style: AppTypography.bodySmall.copyWith(
                                         color: AppColors.onSurfaceVariant,
                                       ),
@@ -157,11 +165,11 @@ class _NaturalizationScreenState extends ConsumerState<NaturalizationScreen> {
                     ),
                     const SizedBox(height: AppSpacing.md),
                     Text(
-                      '${p.name} has ties to ${offer.playerNation.name} and, '
-                      'drawn by the federation’s growing reputation, is '
-                      'willing to be naturalised. Accept and they become '
-                      'eligible for selection; decline and they stay with '
-                      '${offer.sourceNation.name}.',
+                      l.federationNaturalisationBlurb(
+                        p.name,
+                        offer.playerNation.name,
+                        offer.sourceNation.name,
+                      ),
                       style: AppTypography.bodyMedium
                           .copyWith(color: AppColors.onSurfaceVariant),
                     ),
@@ -184,13 +192,13 @@ class _NaturalizationScreenState extends ConsumerState<NaturalizationScreen> {
                           style: OutlinedButton.styleFrom(
                             minimumSize: const Size.fromHeight(52),
                           ),
-                          child: const Text('Decline'),
+                          child: Text(l.federationDecline),
                         ),
                       ),
                       const SizedBox(width: AppSpacing.sm),
                       Expanded(
                         child: PrimaryButton(
-                          label: 'Naturalise',
+                          label: l.federationNaturalise,
                           icon: Icons.how_to_reg_rounded,
                           onPressed: _busy
                               ? null

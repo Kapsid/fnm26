@@ -1,7 +1,12 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/core/rng/seeded_rng.dart';
 import 'package:fnm/data/data_providers.dart';
+import 'package:fnm/domain/entities/career.dart';
+import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/nation.dart';
+import 'package:fnm/domain/repositories/competition_repository.dart';
+import 'package:fnm/domain/services/competition/continental_cups.dart';
+import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/hub/hub_providers.dart';
 
 /// International match windows (month numbers) a friendly can be arranged in.
@@ -10,6 +15,12 @@ const _windowMonths = [9, 10, 11, 3, 6];
 /// Marks a friendly window (year/month) decided, so the hub stops prompting for
 /// it once the manager has arranged or declined a game there.
 String friendlyWindowKey(DateTime d) => 'friendly:${d.year}-${d.month}';
+
+/// Whether the manager's side hosts a friendly arranged in the window on [d].
+/// Fixed by the window (not the opponent) so the arrange screen can show it
+/// before anything is scheduled, and so it matches what [FriendliesService]
+/// actually saves.
+bool friendlyIsHome(DateTime d) => d.month.isEven;
 
 /// The friendlies the manager can arrange in the current gap before their next
 /// competitive fixture: the open [windows] (up to three) and a shortlist of
@@ -54,6 +65,22 @@ friendliesPlanProvider =
   }
   if (nextComp == null) return null;
 
+  final all = await ref.watch(nationRepositoryProvider).all();
+  final nations = {for (final n in all) n.id: n};
+
+  // Windows that a finals tournament will swallow, even though nothing is on
+  // the calendar there yet.
+  //
+  // [occupied] can only see fixtures that EXIST. A side that reaches a finals
+  // without playing a qualifier — a host, above all — has no fixture in the
+  // tournament's month until the draw is made, so its June window looked free
+  // and a warm-up could be booked straight into the middle of its own
+  // tournament. The finals calendar is deterministic, so those months are
+  // blocked up front and only released once the draw proves the nation isn't
+  // in the field (at which point its fixtures, or the absence of them, speak
+  // for themselves).
+  final blocked = await _finalsWindows(comp, career, nations);
+
   final now = career.inGameDate;
   final candidates = <DateTime>[];
   for (var year = now.year; year <= now.year + 2; year++) {
@@ -68,6 +95,7 @@ friendliesPlanProvider =
     if (!d.isAfter(now)) continue;
     if (!d.isBefore(nextComp)) break; // only the gap before the next block
     if (occupied.contains((d.year, d.month))) continue;
+    if (blocked.contains((d.year, d.month))) continue;
     if (await comp.hasWatchedDraw(
       careerId,
       career.cyclePointer,
@@ -80,8 +108,6 @@ friendliesPlanProvider =
   }
   if (windows.isEmpty) return null;
 
-  final all = await ref.watch(nationRepositoryProvider).all();
-  final nations = {for (final n in all) n.id: n};
   final me = nations[career.nationId];
   final myRank = me?.ranking ?? 100;
   // A ranking-plausible candidate pool (closest ~60 by strength), then a
@@ -103,6 +129,44 @@ friendliesPlanProvider =
   );
 });
 
+/// The `(year, month)` windows this cycle's finals tournaments occupy, for a
+/// nation that might still be playing in them.
+///
+/// A tournament whose draw has already been made puts real fixtures on the
+/// calendar, so it needs no help here: either the nation is in the field (and
+/// the month is occupied) or it isn't (and the month is genuinely free). It is
+/// the stretch BEFORE the draw that needs blocking, which is exactly when a
+/// host — with no qualifiers to play — has an empty summer that isn't empty at
+/// all.
+Future<Set<(int, int)>> _finalsWindows(
+  CompetitionRepository comp,
+  Career career,
+  Map<int, Nation> nations,
+) async {
+  final blocked = <(int, int)>{};
+  final wcYear = CareerService.worldCupYear(career.cyclePointer);
+
+  // The World Cup finals open in June of the World Cup year.
+  if (!await comp.hasTournament(career.id, CompetitionKind.worldCupFinals)) {
+    blocked.add((wcYear, 6));
+  }
+
+  // The continental championship: two years before the World Cup, in the
+  // confederation's own finals month.
+  final conf = nations[career.nationId]?.confederation;
+  final cup = conf == null ? null : ContinentalCups.byConfederation[conf];
+  if (conf != null &&
+      cup != null &&
+      !await comp.hasTournament(
+        career.id,
+        CompetitionKind.continentalFinals,
+        confederation: conf,
+      )) {
+    blocked.add((wcYear - 2, cup.month));
+  }
+  return blocked;
+}
+
 /// Arranges the manager's chosen friendlies and records that every offered
 /// window has now been decided (so the hub stops prompting for this gap).
 class FriendliesService {
@@ -123,7 +187,7 @@ class FriendliesService {
     final comp = _ref.read(competitionRepositoryProvider);
     final games = [
       for (final e in picks.entries)
-        (date: e.key, opponentId: e.value, home: e.key.month.isEven),
+        (date: e.key, opponentId: e.value, home: friendlyIsHome(e.key)),
     ]..sort((a, b) => a.date.compareTo(b.date));
     if (games.isNotEmpty) {
       await comp.saveFriendlies(

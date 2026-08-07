@@ -6,6 +6,7 @@ import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/domain/entities/nation.dart';
+import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 
 /// One drawn group for the ceremony: its display name and the nations in it,
@@ -186,15 +187,26 @@ class _DrawCeremonyState extends State<DrawCeremony> {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
     final shown = _steps.take(_revealed).toList();
     final revealedByGroup = <int, List<int>>{};
     for (final s in shown) {
       (revealedByGroup[s.groupIndex] ??= []).add(s.nationId);
     }
     // Nations still waiting in each pot, so the pots can show their flags.
+    //
+    // Listed in a FIXED order (by nation id) rather than in the order they are
+    // about to come out. Showing the draw order meant the ball taken next was
+    // always the leftmost flag in the pot: the reveal was random, but it never
+    // looked it — you could read off who was coming before it was drawn. A pot
+    // that keeps its own order has its ball plucked from somewhere in the
+    // middle, which is what a draw looks like.
     final waitingByPot = <int, List<int>>{};
     for (var i = _revealed; i < _steps.length; i++) {
       (waitingByPot[_steps[i].pot] ??= []).add(_steps[i].nationId);
+    }
+    for (final pot in waitingByPot.values) {
+      pot.sort();
     }
     final done = _revealed >= _steps.length;
     final current = (!done && _revealed >= 0 && _revealed < _steps.length)
@@ -239,7 +251,7 @@ class _DrawCeremonyState extends State<DrawCeremony> {
               children: [
                 for (var gi = 0; gi < widget.groups.length; gi++)
                   _GroupCard(
-                    title: 'GROUP ${widget.groups[gi].name}',
+                    title: l.tourSharedGroupName(widget.groups[gi].name),
                     slots: _pots,
                     revealed: revealedByGroup[gi] ?? const [],
                     justAdded: !done && last != null && last.groupIndex == gi
@@ -264,10 +276,13 @@ class _DrawCeremonyState extends State<DrawCeremony> {
               style: SegmentedButton.styleFrom(
                 visualDensity: VisualDensity.compact,
               ),
-              segments: const [
-                ButtonSegment(value: _DrawGrain.ball, label: Text('Ball')),
-                ButtonSegment(value: _DrawGrain.pot, label: Text('Pot')),
-                ButtonSegment(value: _DrawGrain.all, label: Text('All')),
+              segments: [
+                ButtonSegment(
+                    value: _DrawGrain.ball, label: Text(l.tourSharedBall)),
+                ButtonSegment(
+                    value: _DrawGrain.pot, label: Text(l.tourSharedPot)),
+                ButtonSegment(
+                    value: _DrawGrain.all, label: Text(l.tourSharedAll)),
               ],
               selected: {_grain},
               onSelectionChanged: (s) => setState(() => _grain = s.first),
@@ -280,9 +295,9 @@ class _DrawCeremonyState extends State<DrawCeremony> {
             ),
             child: Text(
               switch (_grain) {
-                _DrawGrain.ball => 'Tap to draw the next team',
-                _DrawGrain.pot => 'Tap to draw the next pot',
-                _DrawGrain.all => 'Tap to reveal the whole draw',
+                _DrawGrain.ball => l.tourSharedTapDrawTeam,
+                _DrawGrain.pot => l.tourSharedTapDrawPot,
+                _DrawGrain.all => l.tourSharedTapDrawAll,
               },
               textAlign: TextAlign.center,
               style: AppTypography.labelSmall.copyWith(
@@ -297,7 +312,7 @@ class _DrawCeremonyState extends State<DrawCeremony> {
             padding: const EdgeInsets.all(AppSpacing.marginMobile),
             child: done
                 ? PrimaryButton(
-                    label: 'Continue',
+                    label: l.tourSharedContinue,
                     icon: Icons.check_rounded,
                     onPressed: widget.onContinue,
                   )
@@ -316,7 +331,8 @@ class _DrawCeremonyState extends State<DrawCeremony> {
                                 : Icons.play_arrow_rounded,
                             size: 20,
                           ),
-                          label: Text(_auto ? 'Pause' : 'Play'),
+                          label:
+                              Text(_auto ? l.tourSharedPause : l.tourSharedPlay),
                         ),
                       ),
                       const SizedBox(width: AppSpacing.sm),
@@ -330,7 +346,7 @@ class _DrawCeremonyState extends State<DrawCeremony> {
                             Icons.fast_forward_rounded,
                             size: 20,
                           ),
-                          label: const Text('Skip'),
+                          label: Text(l.tourSharedSkip),
                         ),
                       ),
                     ],
@@ -370,17 +386,18 @@ class _Pots extends StatelessWidget {
         AppSpacing.sm,
       ),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           for (var pot = 0; pot < potCount; pot++)
-            _Pot(
-              index: pot,
-              total: groupCount,
-              waiting: waitingByPot[pot] ?? const [],
-              active: pot == activePot,
-              highlightNationId: highlightNationId,
-              code: code,
+            Expanded(
+              child: _Pot(
+                index: pot,
+                total: groupCount,
+                waiting: waitingByPot[pot] ?? const [],
+                active: pot == activePot,
+                highlightNationId: highlightNationId,
+                code: code,
+              ),
             ),
         ],
       ),
@@ -407,17 +424,15 @@ class _Pot extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Cap the flags shown so a big pot doesn't blow out the row; the rest are
-    // summarised as "+N".
-    const cap = 6;
-    final flags = waiting.take(cap).toList();
-    final extra = waiting.length - flags.length;
+    // Show every nation still in the pot (no cap) — the active pot larger and
+    // highlighted so it's clear which one is being drawn right now.
+    final flagSize = active ? 22.0 : 15.0;
     return AnimatedContainer(
       duration: const Duration(milliseconds: 250),
-      width: 66,
-      padding: const EdgeInsets.symmetric(
+      margin: const EdgeInsets.symmetric(horizontal: 2),
+      padding: EdgeInsets.symmetric(
         horizontal: AppSpacing.xs,
-        vertical: AppSpacing.xs,
+        vertical: active ? AppSpacing.sm : AppSpacing.xs,
       ),
       decoration: BoxDecoration(
         color: active
@@ -426,6 +441,7 @@ class _Pot extends StatelessWidget {
         borderRadius: AppRadii.smAll,
         border: Border.all(
           color: active ? AppColors.primary : AppColors.outlineVariant,
+          width: active ? 2 : 1,
         ),
       ),
       child: Column(
@@ -433,31 +449,62 @@ class _Pot extends StatelessWidget {
         children: [
           Text(
             'POT ${index + 1}',
-            style: AppTypography.labelSmall.copyWith(
+            style: (active
+                    ? AppTypography.labelMedium
+                    : AppTypography.labelSmall)
+                .copyWith(
               color: active ? AppColors.primary : AppColors.onSurfaceVariant,
+              fontWeight: active ? FontWeight.w800 : FontWeight.w600,
             ),
           ),
-          const SizedBox(height: 3),
-          // The flags of the nations still waiting in this pot.
+          const SizedBox(height: 4),
+          // The flags of the nations still waiting in this pot. The manager's
+          // own ball is a labelled pill rather than one more ringed flag among
+          // twelve — a ring alone was impossible to pick out of a full pot.
           Wrap(
-            spacing: 2,
-            runSpacing: 2,
+            spacing: 3,
+            runSpacing: 3,
             alignment: WrapAlignment.center,
             children: [
-              for (final id in flags)
-                FlagDisc(
-                  code(id),
-                  size: 14,
-                  highlighted: id == highlightNationId,
-                ),
-              if (extra > 0)
-                Text(
-                  '+$extra',
-                  style: AppTypography.labelSmall.copyWith(
-                    fontSize: 9,
-                    color: AppColors.onSurfaceVariant,
-                  ),
-                ),
+              for (final id in waiting)
+                if (id == highlightNationId)
+                  // Scaled down to whatever room the pot column has left: a
+                  // six-pot draw leaves each column barely wider than a flag,
+                  // and the flag + code pill ran straight out of its box.
+                  FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 4,
+                        vertical: 2,
+                      ),
+                      decoration: BoxDecoration(
+                        color: AppColors.primary.withValues(alpha: 0.20),
+                        borderRadius: AppRadii.smAll,
+                        border: Border.all(
+                          color: AppColors.primary,
+                          width: 1.5,
+                        ),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          FlagDisc(code(id), size: flagSize, highlighted: true),
+                          const SizedBox(width: 3),
+                          Text(
+                            code(id).toUpperCase(),
+                            style: AppTypography.labelSmall.copyWith(
+                              color: AppColors.primary,
+                              fontWeight: FontWeight.w800,
+                              fontSize: active ? 11 : 9,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  )
+                else
+                  FlagDisc(code(id), size: flagSize),
               if (waiting.isEmpty)
                 Text(
                   '✓',
@@ -623,10 +670,15 @@ class _GroupCard extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 1),
       padding: const EdgeInsets.symmetric(vertical: 1, horizontal: 2),
+      // The whole row is lifted for the manager's nation — fill plus a left
+      // accent bar — so it reads at a glance in a grid of twelve groups.
       decoration: isPlayer
           ? const BoxDecoration(
               color: AppColors.secondaryContainer,
               borderRadius: AppRadii.smAll,
+              border: Border(
+                left: BorderSide(color: AppColors.primary, width: 3),
+              ),
             )
           : null,
       child: Row(

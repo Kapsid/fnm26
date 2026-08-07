@@ -20,13 +20,30 @@ abstract final class Elo {
   /// expected friendly win rounds to 0 and moves nothing at all. The table then
   /// looks frozen. These follow FIFA's own K-factors, so a win is worth a
   /// visible move and an upset is worth a real climb.
-  // Trimmed ~20% from the FIFA-scale K-factors: a single result still moves a
-  // side, but the table drifts more gently game to game (it read as swinging
-  // too far, too often).
+  // Trimmed from the FIFA-scale K-factors: a single result still moves a side,
+  // but the table drifts more gently game to game (it read as swinging too far,
+  // too often). Friendly stays at 4 — any lower and an expected friendly win
+  // rounds to zero and the table looks frozen. The finals weight is only used
+  // for continental cups now — the World Cup finals are not settled live at all
+  // (see [finalsSettled]).
   static const double friendly = 4;
-  static const double nationsCup = 12;
-  static const double qualifier = 20;
-  static const double finals = 40;
+  static const double nationsCup = 10;
+  static const double qualifier = 16;
+
+  /// The continental-cup weight. Trimmed from 40: a cup run is six or seven
+  /// matches at this weight and every one of them lands live, so winning a
+  /// continental championship was on its own worth a climb of dozens of world
+  /// places — more than a World Cup, which is settled once at [finalsSettled].
+  /// It is still comfortably the heaviest thing that happens outside a World
+  /// Cup, so lifting the trophy moves a nation a long way; it just no longer
+  /// rewrites the top of the table by itself.
+  static const double finals = 30;
+
+  /// The weight used to settle the World Cup finals into the ranking *after* the
+  /// tournament, in one pass, rather than live round by round. It is heavier
+  /// than every other match, so a deep run at the World Cup is the single
+  /// biggest thing that can move a nation's ranking in a cycle.
+  static const double finalsSettled = 48;
 
   /// Knockout round codes, ignoring any competition prefix ('CQF', 'NSF', …).
   static const List<String> _knockoutSuffixes = [

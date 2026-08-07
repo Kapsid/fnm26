@@ -25,6 +25,9 @@ class DriftCareerRepository implements CareerRepository {
             rngSeed: rngSeed,
             createdAt: startDate,
             inGameDate: startDate,
+            // A brand-new save counts as just played, so it opens at the top
+            // of the list rather than below older saves.
+            lastPlayedAt: Value(DateTime.now()),
           ),
         );
     final row = await (_db.select(_db.careers)..where((t) => t.id.equals(id)))
@@ -34,12 +37,22 @@ class DriftCareerRepository implements CareerRepository {
 
   @override
   Future<List<Career>> all() async {
+    // Most recently played first. A save that predates the column has a null
+    // lastPlayedAt; SQLite sorts nulls last under DESC, so those fall to the
+    // bottom and are then ordered among themselves by creation date.
     final query = _db.select(_db.careers)
       ..orderBy([
+        (t) => OrderingTerm(expression: t.lastPlayedAt, mode: OrderingMode.desc),
         (t) => OrderingTerm(expression: t.createdAt, mode: OrderingMode.desc),
       ]);
     final rows = await query.get();
     return rows.map((r) => r.toDomain()).toList();
+  }
+
+  @override
+  Future<void> touch(int id, DateTime at) async {
+    await (_db.update(_db.careers)..where((t) => t.id.equals(id)))
+        .write(CareersCompanion(lastPlayedAt: Value(at)));
   }
 
   @override
@@ -68,7 +81,15 @@ class DriftCareerRepository implements CareerRepository {
   @override
   Future<void> switchNation(int id, int nationId) async {
     await (_db.update(_db.careers)..where((t) => t.id.equals(id)))
-        .write(CareersCompanion(nationId: Value(nationId)));
+        .write(
+          // The armband does not travel: a captain named at the old nation is
+          // not even eligible for the new one, and leaving the id behind would
+          // point the captaincy at a player in somebody else's squad.
+          CareersCompanion(
+            nationId: Value(nationId),
+            captainPlayerId: const Value(null),
+          ),
+        );
   }
 
   @override
@@ -94,6 +115,12 @@ class DriftCareerRepository implements CareerRepository {
   Future<void> setBudget(int id, int budget) async {
     await (_db.update(_db.careers)..where((t) => t.id.equals(id)))
         .write(CareersCompanion(budget: Value(budget)));
+  }
+
+  @override
+  Future<void> setCaptain(int id, int? playerId) async {
+    await (_db.update(_db.careers)..where((t) => t.id.equals(id)))
+        .write(CareersCompanion(captainPlayerId: Value(playerId)));
   }
 
   @override
@@ -242,6 +269,96 @@ class DriftCareerRepository implements CareerRepository {
           ),
       ]);
     });
+  }
+
+  @override
+  Future<void> recordPressAnswer({
+    required int careerId,
+    required int cycle,
+    required String questionKey,
+    required String tone,
+    required int moraleDelta,
+    required int boardDelta,
+    required DateTime answeredAt,
+  }) async {
+    await _db
+        .into(_db.pressAnswers)
+        .insert(
+          PressAnswersCompanion.insert(
+            careerId: careerId,
+            cycle: cycle,
+            questionKey: questionKey,
+            tone: tone,
+            moraleDelta: moraleDelta,
+            boardDelta: boardDelta,
+            answeredAt: answeredAt,
+          ),
+        );
+  }
+
+  @override
+  Future<List<PressAnswerRow>> pressAnswers(int careerId, {int? cycle}) async {
+    final rows =
+        await (_db.select(_db.pressAnswers)
+              ..where(
+                (t) => cycle == null
+                    ? t.careerId.equals(careerId)
+                    : t.careerId.equals(careerId) & t.cycle.equals(cycle),
+              )
+              ..orderBy([
+                (t) => OrderingTerm.desc(t.answeredAt),
+              ]))
+            .get();
+    return [
+      for (final r in rows)
+        (
+          questionKey: r.questionKey,
+          tone: r.tone,
+          moraleDelta: r.moraleDelta,
+          boardDelta: r.boardDelta,
+          cycle: r.cycle,
+          answeredAt: r.answeredAt,
+        ),
+    ];
+  }
+
+  @override
+  Future<({int hostId, int campIndex})?> trainingCamp(
+    int careerId,
+    int cycle,
+    String tournament,
+  ) async {
+    final row = await (_db.select(_db.trainingCampChoices)
+          ..where(
+            (t) =>
+                t.careerId.equals(careerId) &
+                t.cycle.equals(cycle) &
+                t.tournament.equals(tournament),
+          )
+          ..limit(1))
+        .getSingleOrNull();
+    return row == null
+        ? null
+        : (hostId: row.hostId, campIndex: row.campIndex);
+  }
+
+  @override
+  Future<void> setTrainingCamp({
+    required int careerId,
+    required int cycle,
+    required String tournament,
+    required int hostId,
+    required int campIndex,
+  }) async {
+    await _db.into(_db.trainingCampChoices).insertOnConflictUpdate(
+          TrainingCampChoicesCompanion.insert(
+            careerId: careerId,
+            cycle: cycle,
+            tournament: tournament,
+            hostId: hostId,
+            campIndex: campIndex,
+          ),
+        );
   }
 
   @override

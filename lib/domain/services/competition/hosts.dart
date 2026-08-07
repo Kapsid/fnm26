@@ -1,6 +1,7 @@
 import 'package:fnm/core/rng/seeded_rng.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/nation.dart';
+import 'package:fnm/domain/services/nation/nation_geography.dart';
 
 /// A candidature: one nation standing alone, or two or three bidding jointly.
 /// Ordered strongest-first, so the first is the primary host if the bid wins.
@@ -42,9 +43,9 @@ abstract final class WorldCupHosts {
   /// afterwards, so a joint candidature could not be shown in the candidacy
   /// list, only revealed with the result.
   ///
-  /// Neighbours in the ranking bid together, which is how it tends to go: a
-  /// joint bid is two comparable neighbours, not a superpower adopting a
-  /// minnow.
+  /// A joint bid pairs geographic neighbours: 95% of the time a co-host shares
+  /// the primary's subregion (Spain + Portugal, USA + Canada + Mexico), and
+  /// only ~5% of joint bids reach for a partner from further afield.
   static List<HostBid> hostBids({
     required Confederation confederation,
     required List<Nation> nations,
@@ -52,24 +53,87 @@ abstract final class WorldCupHosts {
     int count = _shortlistSize,
     Set<int> exclude = const {},
   }) {
-    final shortlist = hostCandidates(
-      confederation: confederation,
-      nations: nations,
-      count: count,
-      exclude: exclude,
-    );
-    if (shortlist.isEmpty) return const [];
+    final ranked = nations
+        .where((n) =>
+            n.confederation == confederation && !exclude.contains(n.id))
+        .toList()
+      ..sort((a, b) => a.ranking.compareTo(b.ranking));
+    if (ranked.isEmpty) return const [];
+    return _bidsFrom(ranked, count, seed);
+  }
 
-    final rng = SeededRng(seed ^ 0x81D5);
+  /// The candidatures for a ranking-sorted eligible [ranked] pool: the joint
+  /// and solo bids of its strongest [count] members, plus — now and again —
+  /// one outsider standing alone at the bottom of the ballot.
+  static List<HostBid> _bidsFrom(List<Nation> ranked, int count, int seed) {
+    final shortlist = ranked.take(count).toList();
+    if (shortlist.isEmpty) return const [];
+    final bids = _bidsFromShortlist(shortlist, SeededRng(seed ^ 0x81D5));
+    final outsider = _outsider(ranked, count, SeededRng(seed ^ 0x0DDBA11));
+    if (outsider != null) bids.add([outsider.id]);
+    return bids;
+  }
+
+  /// An unfancied country putting its hand up, or null (the usual answer).
+  ///
+  /// The candidate field used to be exactly the top twelve, so every bidding
+  /// round the manager ever saw was the same dozen heavyweights and the race
+  /// had no texture. A real one occasionally has an outsider stand — Qatar and
+  /// Morocco were not on anybody's list either.
+  ///
+  /// It stands ALONE, and its bid goes last: the weighted draw hands the final
+  /// bid the smallest share of any, so an outsider is a name on the ballot far
+  /// more often than it is a winner, and it never dilutes a joint candidature
+  /// between genuine neighbours.
+  static Nation? _outsider(List<Nation> ranked, int count, SeededRng rng) {
+    if (ranked.length <= count) return null;
+    if (rng.nextDouble() >= _outsiderChance) return null;
+    final end = (count + _outsiderDepth).clamp(count, ranked.length);
+    final tail = ranked.sublist(count, end);
+    return tail.isEmpty ? null : tail[rng.nextInt(tail.length)];
+  }
+
+  /// The subregion of a nation, falling back to its confederation when it has
+  /// no finer geographic tag.
+  static String _subregion(Nation n) =>
+      NationGeography.subregionFor(n.code, n.confederation.name);
+
+  /// Forms the solo and joint candidatures from a ranking-sorted [shortlist].
+  /// The primary is always the strongest remaining nation; when a co-host roll
+  /// fires, its partner(s) are drawn as geographic neighbours 95% of the time
+  /// (same subregion, nearest-ranked), else a nearest-ranked partner of any
+  /// origin. Deterministic in [rng].
+  static List<HostBid> _bidsFromShortlist(List<Nation> shortlist, SeededRng rng) {
+    final remaining = [...shortlist];
     final bids = <HostBid>[];
-    var i = 0;
-    while (i < shortlist.length) {
+    while (remaining.isNotEmpty) {
+      final primary = remaining.removeAt(0);
+      final bid = <int>[primary.id];
       final roll = rng.nextDouble();
-      var size = 1;
-      if (roll < _coHostChance && i + 1 < shortlist.length) size = 2;
-      if (roll < _tripleHostChance && i + 2 < shortlist.length) size = 3;
-      bids.add(shortlist.sublist(i, i + size));
-      i += size;
+      if (roll < _coHostChance && remaining.isNotEmpty) {
+        final want = roll < _tripleHostChance ? 2 : 1;
+        // 95% of joint bids are between neighbours; the rest reach further.
+        final neighboursOnly = rng.nextDouble() < _neighbourChance;
+        final sub = _subregion(primary);
+        for (var k = 0; k < want && remaining.isNotEmpty; k++) {
+          Nation? partner;
+          if (neighboursOnly) {
+            for (final c in remaining) {
+              if (_subregion(c) == sub) {
+                partner = c;
+                break;
+              }
+            }
+            // No neighbour on the shortlist → don't force a distant co-host.
+            if (partner == null) break;
+          } else {
+            partner = remaining.first; // nearest-ranked, any origin
+          }
+          remaining.remove(partner);
+          bid.add(partner.id);
+        }
+      }
+      bids.add(bid);
     }
     return bids;
   }
@@ -117,8 +181,8 @@ abstract final class WorldCupHosts {
 
   /// The candidate bids for [year] given the two exclusions. The eligible pool
   /// is every nation not in [barredConfederation] and not in [excludeIds],
-  /// ranked; joint bids pair ranking-adjacent neighbours of the SAME
-  /// confederation (a cross-continent joint bid isn't realistic).
+  /// ranked; joint bids pair geographic neighbours (same subregion) 95% of the
+  /// time — a cross-continent joint bid stays a rare exception.
   static List<HostBid> _worldCupBidsFor({
     required int year,
     required List<Nation> nations,
@@ -126,37 +190,14 @@ abstract final class WorldCupHosts {
     required Confederation? barredConfederation,
     required Set<int> excludeIds,
   }) {
-    final shortlist = (nations
-            .where((n) =>
-                n.confederation != barredConfederation &&
-                !excludeIds.contains(n.id))
-            .toList()
-          ..sort((a, b) => a.ranking.compareTo(b.ranking)))
-        .take(_shortlistSize)
-        .toList();
-    if (shortlist.isEmpty) return const [];
-
-    final rng = SeededRng(_wcSeed(year, seed) ^ 0x81D5);
-    final bids = <HostBid>[];
-    var i = 0;
-    while (i < shortlist.length) {
-      final roll = rng.nextDouble();
-      final conf = shortlist[i].confederation;
-      var size = 1;
-      if (roll < _coHostChance &&
-          i + 1 < shortlist.length &&
-          shortlist[i + 1].confederation == conf) {
-        size = 2;
-        if (roll < _tripleHostChance &&
-            i + 2 < shortlist.length &&
-            shortlist[i + 2].confederation == conf) {
-          size = 3;
-        }
-      }
-      bids.add([for (final n in shortlist.sublist(i, i + size)) n.id]);
-      i += size;
-    }
-    return bids;
+    final ranked = nations
+        .where((n) =>
+            n.confederation != barredConfederation &&
+            !excludeIds.contains(n.id))
+        .toList()
+      ..sort((a, b) => a.ranking.compareTo(b.ranking));
+    if (ranked.isEmpty) return const [];
+    return _bidsFrom(ranked, _shortlistSize, _wcSeed(year, seed));
   }
 
   /// The two exclusions for [year], derived from the deterministic host chain up
@@ -323,6 +364,35 @@ abstract final class WorldCupHosts {
     return hosts.isEmpty ? 0 : hosts.first;
   }
 
+  /// The nations actually drawn into [confederation]'s continental qualifying:
+  /// every member except that cycle's hosts, who auto-qualify and play
+  /// friendlies through the qualifying windows.
+  ///
+  /// ONE definition, shared by the calendar that stores the draw and by every
+  /// screen that recomputes it for display. They were written out separately
+  /// and drifted: the ceremony dropped only [continentalHostFor] — the primary
+  /// host — while the calendar dropped all of [continentalHostsFor]. Roughly a
+  /// third of editions are co-hosted, so on those the manager watched a draw of
+  /// a field that had never been drawn, and the groups it produced disagreed
+  /// with the ones actually played.
+  static List<Nation> continentalQualifiers({
+    required Confederation confederation,
+    required int cycle,
+    required int seed,
+    required List<Nation> nations,
+  }) {
+    final hosts = continentalHostsFor(
+      confederation: confederation,
+      cycle: cycle,
+      seed: seed,
+      nations: nations,
+    ).toSet();
+    return [
+      for (final n in nations)
+        if (n.confederation == confederation && !hosts.contains(n.id)) n,
+    ];
+  }
+
   /// Every host of a continental championship — the winning bid, occasionally a
   /// joint one (as at Euro 2000/2008/2012).
   static List<int> continentalHostsFor({
@@ -342,17 +412,27 @@ abstract final class WorldCupHosts {
   }
 
   /// The chance an edition is co-hosted at all, and the chance it is shared
-  /// three ways. Co-hosting is the exception: a solo host is the normal case,
-  /// a joint bid a talking point, and a triple bid rare.
+  /// three ways. A solo host is still the normal case, but joint candidatures
+  /// are a real part of the modern game (2002, 2026, Euro 2000/2008/2012/2020),
+  /// and at 15% they turned up so seldom that most careers never saw one.
   ///
   /// One roll drives both, so [_tripleHostChance] is a subset of
   /// [_coHostChance] — they must stay ordered.
-  static const double _coHostChance = 0.15;
-  static const double _tripleHostChance = 0.04;
+  static const double _coHostChance = 0.32;
+  static const double _tripleHostChance = 0.08;
+
+  /// When an edition is co-hosted, the chance the partner is a geographic
+  /// neighbour (same subregion) rather than a nation from further afield.
+  static const double _neighbourChance = 0.95;
 
   /// How many of a confederation's strongest members make the host shortlist —
   /// both the weighted draw pool and the candidates shown in the ceremony.
   static const int _shortlistSize = 12;
+
+  /// How often an outsider joins the candidate field, and how far past the
+  /// shortlist it may be drawn from. See [_outsider].
+  static const double _outsiderChance = 0.18;
+  static const int _outsiderDepth = 30;
 
   /// Picks a single host from [confederation] — the primary name on the
   /// winning bid. Falls back to the strongest nation overall if the

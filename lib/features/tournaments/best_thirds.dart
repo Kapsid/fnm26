@@ -3,23 +3,41 @@ import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/domain/entities/group_standing.dart';
+import 'package:fnm/domain/services/competition/cross_group.dart';
+import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 
 /// Cross-group ranking of standings: points, then goal difference, then goals
 /// scored (best first).
-int rankStandings(GroupStanding a, GroupStanding b) {
-  final byPoints = b.points.compareTo(a.points);
-  if (byPoints != 0) return byPoints;
-  final byGd = b.goalDifference.compareTo(a.goalDifference);
-  if (byGd != 0) return byGd;
-  return b.goalsFor.compareTo(a.goalsFor);
-}
+int rankStandings(GroupStanding a, GroupStanding b) => CrossGroup.rank(a, b);
+
+/// Every team finishing at [index] (1 = runners-up, 2 = thirds) across
+/// [groups], ranked best-first on COMPARABLE records — results against the
+/// bottom side of any oversized group are stripped out first, so a ladder drawn
+/// from groups of five and six is judged over the same number of games. See
+/// [CrossGroup].
+List<GroupStanding> crossGroupTier(
+  List<List<GroupStanding>> groups,
+  int index,
+) => CrossGroup.tier(groups, index);
 
 /// The cross-group ladder that decides the last places in the modern group
 /// formats — the best third-placed teams (48-team World Cup, 24-team
 /// continental cups), or the best runners-up where only some second places go
 /// through: the [qualifyCount] highest-ranked advance (green), the rest are
 /// out.
+/// The heading for a cross-group ladder card, named for the position that is
+/// actually being fought over — first place where a confederation has fewer
+/// berths than groups, or a fourth place where the finals field reaches that
+/// deep into a small confederation.
+String contentionLadderTitle(AppLocalizations l, int position) =>
+    switch (position) {
+      1 => l.tourContBestWinners,
+      2 => l.tourContBestRunnersUp,
+      3 => l.tourContBestThirds,
+      _ => l.tourContBestPlaced('$position'),
+    };
+
 class BestThirdsCard extends StatelessWidget {
   const BestThirdsCard({
     required this.thirds,
@@ -29,6 +47,7 @@ class BestThirdsCard extends StatelessWidget {
     required this.name,
     this.destination = 'the knockouts',
     this.title = 'BEST THIRD-PLACED',
+    this.adjustedForGroupSize = false,
     super.key,
   });
 
@@ -46,6 +65,11 @@ class BestThirdsCard extends StatelessWidget {
   /// The card heading — override for a runners-up ladder.
   final String title;
 
+  /// Whether the groups behind this ladder are of different sizes, so the
+  /// totals shown are the reduced ones the comparison actually uses. Says so on
+  /// the card, otherwise a team's points here wouldn't match its group table.
+  final bool adjustedForGroupSize;
+
   @override
   Widget build(BuildContext context) {
     return AppCard(
@@ -62,6 +86,14 @@ class BestThirdsCard extends StatelessWidget {
               color: AppColors.onSurfaceVariant,
             ),
           ),
+          if (adjustedForGroupSize)
+            Text(
+              'Groups are uneven — results against each big group\'s bottom '
+              'side are dropped, so every team is judged over the same games.',
+              style: AppTypography.labelSmall.copyWith(
+                color: AppColors.warning,
+              ),
+            ),
           const SizedBox(height: AppSpacing.xs),
           for (var i = 0; i < thirds.length; i++)
             _thirdRow(i + 1, thirds[i], advancing: i < qualifyCount),
@@ -91,8 +123,9 @@ class BestThirdsCard extends StatelessWidget {
             child: Text(
               '$pos',
               style: AppTypography.labelSmall.copyWith(
-                color:
-                    advancing ? AppColors.positive : AppColors.onSurfaceVariant,
+                color: advancing
+                    ? AppColors.positive
+                    : AppColors.onSurfaceVariant,
               ),
             ),
           ),

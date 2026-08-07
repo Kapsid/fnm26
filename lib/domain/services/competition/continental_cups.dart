@@ -46,9 +46,13 @@ abstract final class ContinentalCups {
       month: 1,
       qualifying: true,
     ),
+    // The Gold Cup's shape: sixteen teams, four groups of four, straight into
+    // quarter-finals. An eight-team cup left a 35-nation confederation with a
+    // two-group tournament that was over in a week and shut out four sides in
+    // five — far too small a stage for the region.
     Confederation.northAmerica: (
       name: 'North America Cup',
-      size: 8,
+      size: 16,
       groupSize: 4,
       month: 6,
       qualifying: true,

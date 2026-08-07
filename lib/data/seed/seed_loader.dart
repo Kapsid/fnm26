@@ -117,6 +117,8 @@ class SeedLoader {
         confederation: n.confederation,
         ranking: Value(n.ranking),
         isFreeDemo: Value(n.isFreeDemo),
+        primaryColor: Value(n.primaryColor),
+        secondaryColor: Value(n.secondaryColor),
       );
 
   PlayersCompanion _playerCompanion(Player p) => PlayersCompanion.insert(
@@ -125,16 +127,9 @@ class SeedLoader {
         name: p.name,
         age: p.age,
         position: p.position,
-        passing: p.attributes.passing,
-        shooting: p.attributes.shooting,
-        dribbling: p.attributes.dribbling,
-        tackling: p.attributes.tackling,
-        positioning: p.attributes.positioning,
-        composure: p.attributes.composure,
-        decisions: p.attributes.decisions,
-        pace: p.attributes.pace,
+        physical: p.attributes.physical,
+        technical: p.attributes.technical,
         stamina: p.attributes.stamina,
-        strength: p.attributes.strength,
         club: Value(p.club),
       );
 }

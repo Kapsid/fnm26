@@ -53,12 +53,25 @@ qualifyingDrawProvider =
   final conf = nations[career.nationId]?.confederation;
   if (conf == null) return null;
 
-  final rankById = await ref.watch(
-    seedRankByIdProvider((
-      careerId: arg.careerId,
-      cycle: career.cyclePointer,
-    )).future,
-  );
+  // World Cup qualifying is drawn two years into the cycle off the LIVE
+  // ranking (see HubService._drawWorldCupQualifyingIfDue), so its ceremony has
+  // to read that draw's own snapshot or the pots on screen would disagree with
+  // the groups actually drawn. Continental qualifying opens the cycle, so it
+  // seeds from the cycle baseline.
+  final rankById = arg.worldCup
+      ? await ref.watch(
+          drawRankByIdProvider((
+            careerId: arg.careerId,
+            cycle: career.cyclePointer,
+            slot: drawSlotWorldCupQualifying,
+          )).future,
+        )
+      : await ref.watch(
+          seedRankByIdProvider((
+            careerId: arg.careerId,
+            cycle: career.cyclePointer,
+          )).future,
+        );
   int rankOf(Nation n) => rankById[n.id] ?? n.ranking;
   final members = nations.values.where((n) => n.confederation == conf).toList()
     ..sort((a, b) => rankOf(a).compareTo(rankOf(b)));
@@ -95,13 +108,19 @@ qualifyingDrawProvider =
   } else {
     final cont = ContinentalCups.byConfederation[conf];
     if (cont == null || members.length <= cont.size) return null;
-    final host = WorldCupHosts.continentalHostFor(
-      confederation: conf,
-      cycle: career.cyclePointer,
-      seed: career.rngSeed,
-      nations: allNations,
-    );
-    drawMembers = members.where((n) => n.id != host).toList();
+    // The one shared definition of who is in the draw — see
+    // [WorldCupHosts.continentalQualifiers]. Re-sorted by rank here because the
+    // pot numbering below reads off this list's order.
+    final field = {
+      for (final n in WorldCupHosts.continentalQualifiers(
+        confederation: conf,
+        cycle: career.cyclePointer,
+        seed: career.rngSeed,
+        nations: allNations,
+      ))
+        n.id,
+    };
+    drawMembers = members.where((n) => field.contains(n.id)).toList();
     schedule = const ScheduleGenerator().generate(
       confederation: conf,
       nations: drawMembers,

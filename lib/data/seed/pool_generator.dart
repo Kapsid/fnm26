@@ -1,7 +1,7 @@
 import 'package:fnm/core/rng/seeded_rng.dart';
-import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/entities/player_attributes.dart';
+import 'package:fnm/domain/services/player/depth_chart.dart';
 
 /// Turns the base 23-per-nation seed into a deeper, scoutable pool: it assigns
 /// every player a club and pads each nation with procedurally-generated fringe
@@ -27,21 +27,6 @@ abstract final class PoolGenerator {
   ];
 
   static String _club(int seed) => _clubs[seed.abs() % _clubs.length];
-
-  /// A depth chart of extra positions per nation, roughly realistic.
-  static const List<PlayerPosition> _fringePositions = [
-    PlayerPosition.gk, PlayerPosition.gk,
-    PlayerPosition.rb, PlayerPosition.lb, PlayerPosition.cb,
-    PlayerPosition.cb, PlayerPosition.cb, PlayerPosition.rb,
-    PlayerPosition.dm, PlayerPosition.cm, PlayerPosition.cm,
-    PlayerPosition.am, PlayerPosition.lm, PlayerPosition.rm,
-    PlayerPosition.dm, PlayerPosition.cm, PlayerPosition.am,
-    PlayerPosition.lw, PlayerPosition.rw, PlayerPosition.st,
-    PlayerPosition.st, PlayerPosition.lw, PlayerPosition.rw,
-    PlayerPosition.cb, PlayerPosition.cm, PlayerPosition.st,
-    PlayerPosition.lb, PlayerPosition.rm, PlayerPosition.am,
-    PlayerPosition.dm,
-  ];
 
   /// Returns the players with clubs assigned, plus generated fringe players.
   ///
@@ -84,8 +69,16 @@ abstract final class PoolGenerator {
         ranked.take((squad.length / 2).ceil().clamp(1, squad.length)).toList(),
       );
 
+      // The nation's own depth chart, not one shared list — see [DepthChart].
+      // Every country used to pad its pool from the same fixed cycle of
+      // positions, so every nation in the world had an identical fringe.
+      final fringePositions = DepthChart.forNation(
+        nationId: nationId,
+        count: extraPerNation,
+      );
+
       for (var i = 0; i < extraPerNation; i++) {
-        final pos = _fringePositions[i % _fringePositions.length];
+        final pos = fringePositions[i];
         // Depth-graded quality anchored on the stronger players so the best
         // fringe overlap the first-choice XI (a continuous curve, no cliff at
         // the top-23 boundary) and taper gently down the depth chart to a
@@ -126,16 +119,9 @@ abstract final class PoolGenerator {
     int mean(int Function(PlayerAttributes) pick) =>
         squad.fold<int>(0, (s, p) => s + pick(p.attributes)) ~/ n;
     return PlayerAttributes(
-      passing: mean((a) => a.passing),
-      shooting: mean((a) => a.shooting),
-      dribbling: mean((a) => a.dribbling),
-      tackling: mean((a) => a.tackling),
-      positioning: mean((a) => a.positioning),
-      composure: mean((a) => a.composure),
-      decisions: mean((a) => a.decisions),
-      pace: mean((a) => a.pace),
+      physical: mean((a) => a.physical),
+      technical: mean((a) => a.technical),
       stamina: mean((a) => a.stamina),
-      strength: mean((a) => a.strength),
     );
   }
 
@@ -146,16 +132,9 @@ abstract final class PoolGenerator {
   ) {
     int a(int v) => ((v * scale) + rng.nextInt(9) - 4).round().clamp(20, 92);
     return PlayerAttributes(
-      passing: a(base.passing),
-      shooting: a(base.shooting),
-      dribbling: a(base.dribbling),
-      tackling: a(base.tackling),
-      positioning: a(base.positioning),
-      composure: a(base.composure),
-      decisions: a(base.decisions),
-      pace: a(base.pace),
+      physical: a(base.physical),
+      technical: a(base.technical),
       stamina: a(base.stamina),
-      strength: a(base.strength),
     );
   }
 }

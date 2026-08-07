@@ -3369,6 +3369,27 @@ class AppLocalizationsEn extends AppLocalizations {
   String get yPlayerGrievance3 => 'I did not come this far to carry the bibs.';
 
   @override
+  String get playerHonoursTitle => 'HONOURS';
+
+  @override
+  String get awardGoldenBall => 'Golden Ball';
+
+  @override
+  String get awardGoldenBoot => 'Golden Boot';
+
+  @override
+  String get awardGoldenGlove => 'Golden Glove';
+
+  @override
+  String get awardTeamOfTournament => 'Team of the Tournament';
+
+  @override
+  String get awardPlayerOfYear => 'World Player of the Year';
+
+  @override
+  String get awardYoungPlayerOfYear => 'Young Player of the Year';
+
+  @override
   String get playerClubHistory => 'CLUB HISTORY';
 
   @override

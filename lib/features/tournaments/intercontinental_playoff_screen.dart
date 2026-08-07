@@ -12,6 +12,8 @@ import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/services/competition/finals.dart';
 import 'package:fnm/features/hub/hub_event.dart';
 import 'package:fnm/features/ranking/world_ranking_providers.dart';
+import 'package:fnm/features/tournaments/intercontinental_playoff_bracket.dart';
+import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
 
@@ -24,38 +26,43 @@ typedef PlayoffView = ({
 });
 
 final AutoDisposeFutureProviderFamily<PlayoffView?, int>
-    intercontinentalPlayoffProvider =
-    FutureProvider.autoDispose.family<PlayoffView?, int>((ref, careerId) async {
-  await ref.watch(seedLoaderProvider).ensureSeeded();
-  final career = await ref.watch(careerRepositoryProvider).byId(careerId);
-  if (career == null) return null;
-  final comp = ref.watch(competitionRepositoryProvider);
-  if (!await comp.allQualifyingPlayed(careerId)) return null;
+intercontinentalPlayoffProvider = FutureProvider.autoDispose
+    .family<PlayoffView?, int>((ref, careerId) async {
+      await ref.watch(seedLoaderProvider).ensureSeeded();
+      final career = await ref.watch(careerRepositoryProvider).byId(careerId);
+      if (career == null) return null;
+      final comp = ref.watch(competitionRepositoryProvider);
+      if (!await comp.allQualifyingPlayed(careerId)) return null;
 
-  final byConfederation = await comp.allGroupTablesByConfederation(careerId);
-  final grouped = <Confederation, List<List<GroupStanding>>>{};
-  for (final t in byConfederation) {
-    (grouped[t.confederation] ??= []).add(t.standings);
-  }
-  final nations = {
-    for (final n in await ref.watch(nationRepositoryProvider).all()) n.id: n,
-  };
-  final rankingById = await ref.watch(
-    seedRankByIdProvider((
-      careerId: careerId,
-      cycle: drawSeedCycle(career.cyclePointer, drawSlotWorldCupFinals),
-    )).future,
-  );
-  // Same seed the finalist selection uses, so the shown ties are exactly how
-  // the last two places were decided.
-  final ties = WorldCupFinals.playoffBracket(
-    byConfederation: grouped,
-    rankingById: rankingById,
-    rng: SeededRng(career.rngSeed ^ (career.cyclePointer * 0x50FF) ^ 0xB1A0),
-  );
-  if (ties.isEmpty) return null;
-  return (ties: ties, nations: nations, playerNationId: career.nationId);
-});
+      final byConfederation = await comp.allGroupTablesByConfederation(
+        careerId,
+      );
+      final grouped = <Confederation, List<List<GroupStanding>>>{};
+      for (final t in byConfederation) {
+        (grouped[t.confederation] ??= []).add(t.standings);
+      }
+      final nations = {
+        for (final n in await ref.watch(nationRepositoryProvider).all())
+          n.id: n,
+      };
+      final rankingById = await ref.watch(
+        seedRankByIdProvider((
+          careerId: careerId,
+          cycle: drawSeedCycle(career.cyclePointer, drawSlotWorldCupFinals),
+        )).future,
+      );
+      // Same seed the finalist selection uses, so the shown ties are exactly how
+      // the last two places were decided.
+      final ties = WorldCupFinals.playoffBracket(
+        byConfederation: grouped,
+        rankingById: rankingById,
+        rng: SeededRng(
+          career.rngSeed ^ (career.cyclePointer * 0x50FF) ^ 0xB1A0,
+        ),
+      );
+      if (ties.isEmpty) return null;
+      return (ties: ties, nations: nations, playerNationId: career.nationId);
+    });
 
 /// A one-shot event surfaced before the World Cup finals draw: the
 /// intercontinental play-off that decided the final two berths, shown as its own
@@ -68,7 +75,9 @@ class IntercontinentalPlayoffScreen extends ConsumerWidget {
   Future<void> _continue(BuildContext context, WidgetRef ref) async {
     final career = await ref.read(careerRepositoryProvider).byId(careerId);
     if (career != null) {
-      await ref.read(competitionRepositoryProvider).markDrawWatched(
+      await ref
+          .read(competitionRepositoryProvider)
+          .markDrawWatched(
             careerId,
             career.cyclePointer,
             worldCupPlayoffKind,
@@ -79,22 +88,23 @@ class IntercontinentalPlayoffScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l = AppLocalizations.of(context);
     final async = ref.watch(intercontinentalPlayoffProvider(careerId));
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
         title: Text(
-          'INTERCONTINENTAL PLAY-OFF',
+          l.tourContIntercontinentalPlayoff,
           style: AppTypography.labelMedium.copyWith(color: AppColors.primary),
         ),
         centerTitle: true,
       ),
       body: async.when(
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => Center(child: Text('Could not load.\n$e')),
+        error: (e, _) => Center(child: Text(l.tourContCouldNotLoad(e.toString()))),
         data: (data) {
           if (data == null) {
-            return const Center(child: Text('No play-off this cycle.'));
+            return Center(child: Text(l.tourContNoPlayoffThisCycle));
           }
           String code(int id) => data.nations[id]?.code ?? '??';
           String name(int id) => data.nations[id]?.name ?? '—';
@@ -104,7 +114,8 @@ class IntercontinentalPlayoffScreen extends ConsumerWidget {
           };
           final playerThrough = winners.contains(data.playerNationId);
           final playerInvolved = data.ties.any(
-            (t) => t.home == data.playerNationId || t.away == data.playerNationId,
+            (t) =>
+                t.home == data.playerNationId || t.away == data.playerNationId,
           );
           return Column(
             children: [
@@ -113,8 +124,7 @@ class IntercontinentalPlayoffScreen extends ConsumerWidget {
                   padding: const EdgeInsets.all(AppSpacing.marginMobile),
                   children: [
                     Text(
-                      'Two World Cup places decided across a knockout of the '
-                      'best qualifying also-rans.',
+                      l.tourContPlayoffIntro,
                       style: AppTypography.bodySmall.copyWith(
                         color: AppColors.onSurfaceVariant,
                       ),
@@ -125,10 +135,11 @@ class IntercontinentalPlayoffScreen extends ConsumerWidget {
                         width: double.infinity,
                         padding: const EdgeInsets.all(AppSpacing.md),
                         decoration: BoxDecoration(
-                          color: (playerThrough
-                                  ? AppColors.positive
-                                  : AppColors.error)
-                              .withValues(alpha: 0.12),
+                          color:
+                              (playerThrough
+                                      ? AppColors.positive
+                                      : AppColors.error)
+                                  .withValues(alpha: 0.12),
                           borderRadius: AppRadii.baseAll,
                           border: Border.all(
                             color: playerThrough
@@ -138,10 +149,8 @@ class IntercontinentalPlayoffScreen extends ConsumerWidget {
                         ),
                         child: Text(
                           playerThrough
-                              ? 'You came through the play-off — you\'re at the '
-                                  'World Cup!'
-                              : 'You fell short in the play-off — no World Cup '
-                                  'this time.',
+                              ? l.tourContPlayoffThrough
+                              : l.tourContPlayoffOut,
                           style: AppTypography.bodyMedium.copyWith(
                             color: playerThrough
                                 ? AppColors.positive
@@ -152,46 +161,12 @@ class IntercontinentalPlayoffScreen extends ConsumerWidget {
                       ),
                     ],
                     const SizedBox(height: AppSpacing.md),
-                    for (final t in data.ties)
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 3),
-                        child: Row(
-                          children: [
-                            SizedBox(
-                              width: 58,
-                              child: Text(
-                                t.isFinal ? 'FINAL' : 'SEMI',
-                                style: AppTypography.labelSmall.copyWith(
-                                  color: t.isFinal
-                                      ? AppColors.primary
-                                      : AppColors.onSurfaceVariant,
-                                  fontWeight: t.isFinal
-                                      ? FontWeight.w700
-                                      : FontWeight.w400,
-                                ),
-                              ),
-                            ),
-                            Expanded(
-                              child: _side(code, name, t.home, t,
-                                  data.playerNationId),
-                            ),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 4),
-                              child: Text(
-                                '${t.homeScore}-${t.awayScore}',
-                                style: AppTypography.labelMedium.copyWith(
-                                  fontWeight: FontWeight.w700,
-                                ),
-                              ),
-                            ),
-                            Expanded(
-                              child: _side(code, name, t.away, t,
-                                  data.playerNationId),
-                            ),
-                          ],
-                        ),
-                      ),
+                    IntercontinentalPlayoffBracket(
+                      ties: data.ties,
+                      code: code,
+                      name: name,
+                      playerNationId: data.playerNationId,
+                    ),
                   ],
                 ),
               ),
@@ -200,7 +175,7 @@ class IntercontinentalPlayoffScreen extends ConsumerWidget {
                 child: Padding(
                   padding: const EdgeInsets.all(AppSpacing.marginMobile),
                   child: PrimaryButton(
-                    label: 'Continue',
+                    label: l.tourContContinue,
                     icon: Icons.check_rounded,
                     onPressed: () => _continue(context, ref),
                   ),
@@ -210,34 +185,6 @@ class IntercontinentalPlayoffScreen extends ConsumerWidget {
           );
         },
       ),
-    );
-  }
-
-  Widget _side(
-    String Function(int) code,
-    String Function(int) name,
-    int id,
-    PlayoffTie t,
-    int playerNationId,
-  ) {
-    final won = t.winner == id;
-    final isPlayer = id == playerNationId;
-    return Row(
-      children: [
-        FlagDisc(code(id), size: 18, highlighted: isPlayer),
-        const SizedBox(width: 4),
-        Expanded(
-          child: Text(
-            name(id),
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: AppTypography.labelSmall.copyWith(
-              color: won ? AppColors.primary : AppColors.onSurfaceVariant,
-              fontWeight: won ? FontWeight.w700 : FontWeight.w400,
-            ),
-          ),
-        ),
-      ],
     );
   }
 }

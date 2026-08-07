@@ -5,6 +5,7 @@ import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/features/records/all_time_records_providers.dart';
+import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
 
@@ -27,6 +28,7 @@ class _AllTimeRecordsScreenState extends ConsumerState<AllTimeRecordsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
     final async = ref.watch(allTimeRecordsProvider(widget.careerId));
     return Scaffold(
       appBar: AppBar(
@@ -37,25 +39,25 @@ class _AllTimeRecordsScreenState extends ConsumerState<AllTimeRecordsScreen> {
               : context.go('${Routes.records}?careerId=${widget.careerId}'),
         ),
         title: Text(
-          'ALL-TIME WORLD',
+          l.recordsAllTimeWorld,
           style: AppTypography.labelMedium.copyWith(color: AppColors.primary),
         ),
         centerTitle: true,
       ),
       body: async.when(
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => Center(child: Text('Could not load records.\n$e')),
+        error: (e, _) =>
+            Center(child: Text(l.recordsCouldNotLoadRecords(e.toString()))),
         data: (records) {
           if (records == null) {
-            return const Center(child: Text('Save not found.'));
+            return Center(child: Text(l.recordsSaveNotFound));
           }
           if (records.topScorers.isEmpty && records.mostCaps.isEmpty) {
             return Center(
               child: Padding(
                 padding: const EdgeInsets.all(AppSpacing.xl),
                 child: Text(
-                  'The world has no history yet. Play out some campaigns and '
-                  'the game’s all-time greats will emerge here.',
+                  l.recordsNoWorldHistory,
                   textAlign: TextAlign.center,
                   style: AppTypography.bodyMedium
                       .copyWith(color: AppColors.onSurfaceVariant),
@@ -77,29 +79,29 @@ class _AllTimeRecordsScreenState extends ConsumerState<AllTimeRecordsScreen> {
               _SearchField(onChanged: (v) => setState(() => _query = v)),
               const SizedBox(height: AppSpacing.md),
               _Board(
-                title: 'ALL-TIME TOP SCORERS',
-                unit: 'goals',
+                title: l.recordsAllTimeTopScorers,
+                unit: l.recordsUnitGoals,
                 leaders: scorers,
                 careerId: widget.careerId,
               ),
               const SizedBox(height: AppSpacing.lg),
               _Board(
-                title: 'MOST CAPPED',
-                unit: 'caps',
+                title: l.recordsMostCapped,
+                unit: l.recordsUnitCaps,
                 leaders: caps,
                 careerId: widget.careerId,
               ),
               const SizedBox(height: AppSpacing.lg),
               _Board(
-                title: 'MOST WORLD CUP STARTS',
-                unit: 'starts',
+                title: l.recordsMostWcStarts,
+                unit: l.recordsUnitStarts,
                 leaders: wcStarts,
                 careerId: widget.careerId,
               ),
               const SizedBox(height: AppSpacing.lg),
               _Board(
-                title: 'MOST TOURNAMENTS ATTENDED',
-                unit: 'cups',
+                title: l.recordsMostTournaments,
+                unit: l.recordsUnitCups,
                 leaders: cups,
                 careerId: widget.careerId,
               ),
@@ -116,7 +118,7 @@ class _AllTimeRecordsScreenState extends ConsumerState<AllTimeRecordsScreen> {
                   ),
                   const SizedBox(width: AppSpacing.sm),
                   Text(
-                    'Still active',
+                    l.recordsStillActive,
                     style: AppTypography.labelSmall
                         .copyWith(color: AppColors.onSurfaceVariant),
                   ),
@@ -138,16 +140,17 @@ class _SearchField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
     return TextField(
       onChanged: onChanged,
       style: AppTypography.bodyMedium,
-      decoration: const InputDecoration(
+      decoration: InputDecoration(
         isDense: true,
-        hintText: 'Search player or nation',
-        prefixIcon: Icon(Icons.search, size: 20),
+        hintText: l.recordsSearchPlayerOrNation,
+        prefixIcon: const Icon(Icons.search, size: 20),
         filled: true,
         fillColor: AppColors.surfaceContainerHigh,
-        border: OutlineInputBorder(
+        border: const OutlineInputBorder(
           borderRadius: AppRadii.baseAll,
           borderSide: BorderSide.none,
         ),
@@ -171,6 +174,7 @@ class _Board extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -183,7 +187,7 @@ class _Board extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(vertical: AppSpacing.sm),
             child: Text(
-              'No matches.',
+              l.recordsNoMatches,
               style: AppTypography.bodySmall
                   .copyWith(color: AppColors.onSurfaceVariant),
             ),
@@ -299,6 +303,7 @@ class _ActiveDot extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
       decoration: BoxDecoration(
@@ -306,7 +311,7 @@ class _ActiveDot extends StatelessWidget {
         borderRadius: AppRadii.smAll,
       ),
       child: Text(
-        'ACTIVE',
+        l.recordsActive,
         style: AppTypography.labelSmall.copyWith(
           color: AppColors.positive,
           fontSize: 9,

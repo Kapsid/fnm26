@@ -1,6 +1,7 @@
 import 'package:drift/drift.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/formation.dart';
+import 'package:fnm/domain/entities/tactics.dart';
 
 /// Drift table definitions for the local SQLite database.
 ///
@@ -19,6 +20,15 @@ class Nations extends Table {
   IntColumn get ranking => integer().withDefault(const Constant(0))();
   BoolColumn get isFreeDemo => boolean().withDefault(const Constant(false))();
 
+  /// Home-kit colours as `#RRGGBB` (see `Nation.primaryColor`). The seed data
+  /// has carried these all along, but without columns to hold them every nation
+  /// came back out of the database on the entity defaults — which is why the
+  /// tactics pitch and the host re-skin were blue/white for everyone.
+  TextColumn get primaryColor =>
+      text().withDefault(const Constant('#1E88E5'))();
+  TextColumn get secondaryColor =>
+      text().withDefault(const Constant('#FFFFFF'))();
+
   @override
   Set<Column> get primaryKey => {id};
 }
@@ -34,17 +44,10 @@ class Players extends Table {
   IntColumn get age => integer()();
   TextColumn get position => textEnum<PlayerPosition>()();
 
-  // Attribute block (1..99 each).
-  IntColumn get passing => integer()();
-  IntColumn get shooting => integer()();
-  IntColumn get dribbling => integer()();
-  IntColumn get tackling => integer()();
-  IntColumn get positioning => integer()();
-  IntColumn get composure => integer()();
-  IntColumn get decisions => integer()();
-  IntColumn get pace => integer()();
+  // Attribute block (1..99 each): three broad qualities.
+  IntColumn get physical => integer()();
+  IntColumn get technical => integer()();
   IntColumn get stamina => integer()();
-  IntColumn get strength => integer()();
 
   /// The player's club side (display/scouting only).
   TextColumn get club => text().withDefault(const Constant('Free agent'))();
@@ -64,8 +67,18 @@ class Careers extends Table {
   DateTimeColumn get inGameDate => dateTime()();
   IntColumn get cyclePointer => integer().withDefault(const Constant(0))();
 
+  /// Real-world timestamp of the last time this save was opened, so the saves
+  /// list can show "last played" and put the most recent one first. Nullable
+  /// only for saves created before the column existed; new saves stamp it at
+  /// creation.
+  DateTimeColumn get lastPlayedAt => dateTime().nullable()();
+
   /// The federation's cash balance in euros (see `Career.budget`).
   IntColumn get budget => integer().withDefault(const Constant(0))();
+
+  /// The player the manager has named captain, or null for none. Cleared when
+  /// the manager changes nation — an armband does not travel.
+  IntColumn get captainPlayerId => integer().nullable()();
 }
 
 /// A nation's Nations Cup league (0 = League A, 1 = League B, …) within its
@@ -183,12 +196,38 @@ class GroupMembers extends Table {
   Set<Column> get primaryKey => {groupId, nationId};
 }
 
+/// The base camp the manager has chosen for a tournament.
+///
+/// One row per (career, cycle, tournament). [hostId] is the host the camp was
+/// picked in — stored so a stale choice is spotted if the host somehow differs
+/// — and [campIndex] indexes that host's offered camps (see `TrainingCamps`),
+/// which are derived, not stored.
+@DataClassName('TrainingCampRow')
+class TrainingCampChoices extends Table {
+  IntColumn get careerId =>
+      integer().references(Careers, #id, onDelete: KeyAction.cascade)();
+  IntColumn get cycle => integer()();
+
+  /// Which tournament: the group round code, `GROUP` or `CGROUP`.
+  TextColumn get tournament => text()();
+  IntColumn get hostId => integer()();
+  IntColumn get campIndex => integer()();
+
+  @override
+  Set<Column> get primaryKey => {careerId, cycle, tournament};
+}
+
 /// The team tactic for a save (one row per career).
 @DataClassName('TacticRow')
 class Tactics extends Table {
   IntColumn get careerId =>
       integer().references(Careers, #id, onDelete: KeyAction.cascade)();
   TextColumn get formation => textEnum<Formation>()();
+
+  /// The general playing style the instructions below were composed from (see
+  /// `Playstyle`); `custom` once any dial is moved by hand.
+  TextColumn get playstyle =>
+      textEnum<Playstyle>().withDefault(const Constant('custom'))();
   IntColumn get mentality => integer().withDefault(const Constant(50))();
   IntColumn get pressing => integer().withDefault(const Constant(50))();
   IntColumn get tempo => integer().withDefault(const Constant(50))();
@@ -223,6 +262,28 @@ class CallUps extends Table {
 
   @override
   Set<Column> get primaryKey => {careerId, playerId};
+}
+
+/// A call-up list the manager is part-way through naming.
+///
+/// Picking a squad is a screenful of decisions, and it used to live only in the
+/// widget's own state: stepping out to look at a player's card, or backing out
+/// to check the fixture list, threw the whole selection away and the manager
+/// started again from an empty sheet. Every tick is now written here as it is
+/// made, and the draft is cleared once the squad is confirmed.
+///
+/// [draftKey] is the nomination window the draft belongs to (the same key the
+/// timeline uses to fire the call-up event), so a draft for one window is never
+/// resurrected in the next.
+@DataClassName('CallUpDraftRow')
+class CallUpDrafts extends Table {
+  IntColumn get careerId =>
+      integer().references(Careers, #id, onDelete: KeyAction.cascade)();
+  TextColumn get draftKey => text()();
+  IntColumn get playerId => integer()();
+
+  @override
+  Set<Column> get primaryKey => {careerId, draftKey, playerId};
 }
 
 /// The world-ranking positions frozen at the start of a cycle, used to seed
@@ -413,8 +474,12 @@ class PlayerRatings extends Table {
   Set<Column> get primaryKey => {careerId, fixtureId, playerId};
 }
 
-/// Team-level box-score stats for a played fixture (the manager's matches
-/// only): shots and possession, for post-match and season aggregates.
+/// Team-level box-score stats for a played fixture: shots, possession and
+/// expected goals, for post-match and season aggregates.
+///
+/// Written for EVERY match in the world, not only the manager's — the tactical
+/// engine fills it for the games they play, and `BackgroundMatch` derives it
+/// for the rest.
 @DataClassName('MatchTeamStatRow')
 class MatchTeamStats extends Table {
   IntColumn get careerId =>
@@ -423,6 +488,10 @@ class MatchTeamStats extends Table {
   IntColumn get homeShots => integer().withDefault(const Constant(0))();
   IntColumn get awayShots => integer().withDefault(const Constant(0))();
   IntColumn get homePossession => integer().withDefault(const Constant(50))();
+
+  /// Expected goals accumulated by each side.
+  RealColumn get homeXg => real().withDefault(const Constant(0))();
+  RealColumn get awayXg => real().withDefault(const Constant(0))();
 
   @override
   Set<Column> get primaryKey => {careerId, fixtureId};
@@ -522,10 +591,100 @@ class Honours extends Table {
   IntColumn get runnerUpId => integer()();
   IntColumn get thirdId => integer().nullable()();
 
+  /// The SECOND bronze medallist, for a cup with no third-place play-off (the
+  /// continental championships): the two beaten semi-finalists share bronze, so
+  /// [thirdId] and [thirdId2] hold both. Null for the World Cup (which plays a
+  /// single third-place match) and for editions with no bronze recorded.
+  IntColumn get thirdId2 => integer().nullable()();
+
   /// Host nation, final scoreline, and golden-boot winner.
   IntColumn get hostId => integer().nullable()();
   IntColumn get finalHomeScore => integer().nullable()();
   IntColumn get finalAwayScore => integer().nullable()();
   TextColumn get topScorerName => text().nullable()();
   IntColumn get topScorerGoals => integer().nullable()();
+}
+
+/// How drilled the manager is in each formation, per career. Rises for the
+/// shape actually fielded each match and decays for the rest (see
+/// `TeamChemistry`), giving a settled side a small match bonus. Reset when the
+/// manager takes a new nation.
+@DataClassName('TacticFamiliarityRow')
+class TacticFamiliarities extends Table {
+  IntColumn get careerId =>
+      integer().references(Careers, #id, onDelete: KeyAction.cascade)();
+  TextColumn get formation => textEnum<Formation>()();
+
+  /// Familiarity with this shape, `0..1`.
+  RealColumn get familiarity => real().withDefault(const Constant(0))();
+
+  /// How thoroughly opponents have worked this shape out, `0..1` — the hidden
+  /// counterweight to [familiarity]. It climbs while the manager keeps naming
+  /// the same shape with the same plan and falls away as soon as they vary it
+  /// or field something else, so a side that never changes anything is drilled
+  /// but read, and one that mixes it up is fresher but less settled.
+  RealColumn get predictability => real().withDefault(const Constant(0))();
+
+  /// A fingerprint of the instructions last used with this shape, so a genuine
+  /// change of plan can be told from the same plan again. 0 = never fielded.
+  IntColumn get lastPlanKey => integer().withDefault(const Constant(0))();
+
+  @override
+  Set<Column> get primaryKey => {careerId, formation};
+}
+
+/// What the manager said to the press, and what it cost or bought.
+///
+/// Press answers are the one thing in the game that moves morale and board
+/// confidence WITHOUT a result behind them, so — unlike form, which is derived
+/// from fixtures — they have to be remembered. One row per question answered;
+/// effects apply for the cycle they were given in and are forgotten with it,
+/// so a bad line in 2030 is not still hanging over a manager in 2034.
+class PressAnswers extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  IntColumn get careerId =>
+      integer().references(Careers, #id, onDelete: KeyAction.cascade)();
+
+  /// The cycle the answer was given in — effects expire with it.
+  IntColumn get cycle => integer()();
+
+  /// The question, so it is never asked twice.
+  TextColumn get questionKey => text()();
+
+  /// The tone taken (a `PressTone` name).
+  TextColumn get tone => text()();
+
+  /// What it did to the dressing room and to the board, in points.
+  IntColumn get moraleDelta => integer()();
+  IntColumn get boardDelta => integer()();
+  DateTimeColumn get answeredAt => dateTime()();
+}
+
+/// The individual trophies a player has won.
+///
+/// Stored rather than derived: the awards used to be computed inside the
+/// tournament screen and forgotten the moment it closed, so a fifteen-year
+/// career read exactly like one that had won nothing. Deriving a cabinet on
+/// demand would mean recomputing every past tournament each time a player card
+/// opened; a row per trophy is cheap and instant.
+///
+/// The primary key is the award itself — kind, competition, year — so settling
+/// code that runs twice records it once.
+class PlayerHonours extends Table {
+  IntColumn get careerId =>
+      integer().references(Careers, #id, onDelete: KeyAction.cascade)();
+  IntColumn get playerId => integer()();
+
+  /// The nation he won it representing.
+  IntColumn get nationId => integer()();
+
+  TextColumn get kind => textEnum<AwardKind>()();
+
+  /// The competition it was won at; empty for the yearly awards.
+  TextColumn get competition => text().withDefault(const Constant(''))();
+
+  IntColumn get year => integer()();
+
+  @override
+  Set<Column> get primaryKey => {careerId, kind, competition, year, playerId};
 }

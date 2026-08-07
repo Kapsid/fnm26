@@ -38,38 +38,24 @@ void main() {
       }
     });
 
-    test('a striker is rewarded for finishing more than for tackling', () {
-      const finisher = PlayerAttributes(
-        passing: 60,
-        shooting: 95,
-        dribbling: 80,
-        tackling: 30,
-        positioning: 80,
-        composure: 85,
-        decisions: 70,
-        pace: 88,
-        stamina: 70,
-        strength: 70,
+    test('a striker weights technical ability above stamina', () {
+      const technician = PlayerAttributes(
+        physical: 70,
+        technical: 95,
+        stamina: 50,
       );
-      const tackler = PlayerAttributes(
-        passing: 60,
-        shooting: 30,
-        dribbling: 80,
-        tackling: 95,
-        positioning: 80,
-        composure: 85,
-        decisions: 70,
-        pace: 88,
-        stamina: 70,
-        strength: 70,
+      const runner = PlayerAttributes(
+        physical: 70,
+        technical: 50,
+        stamina: 95,
       );
 
-      final finisherOverall =
-          OverallRating.forPosition(PlayerPosition.st, finisher);
-      final tacklerOverall =
-          OverallRating.forPosition(PlayerPosition.st, tackler);
+      final technicianOverall =
+          OverallRating.forPosition(PlayerPosition.st, technician);
+      final runnerOverall =
+          OverallRating.forPosition(PlayerPosition.st, runner);
 
-      expect(finisherOverall, greaterThan(tacklerOverall));
+      expect(technicianOverall, greaterThan(runnerOverall));
     });
 
     test('result is clamped to 1..99', () {

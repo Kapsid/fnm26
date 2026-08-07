@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/nation.dart';
+import 'package:fnm/domain/repositories/competition_repository.dart';
 import 'package:fnm/domain/services/player/player_lifecycle.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/federation/federation_providers.dart';
@@ -75,9 +76,16 @@ final AutoDisposeFutureProviderFamily<AllTimeRecords?, int>
     );
   }
 
-  // Across every competition in the save — the global, all-competitions chart
-  // (each cup also has its own cup-specific all-time scorers on its detail).
-  final scorersRaw = await comp.allTimeTopScorers(careerId, limit: 40);
+  // Across every GLOBALLY CONTESTED competition in the save (each cup also has
+  // its own cup-specific all-time scorers on its detail). The Nations Cup and
+  // continental qualifying are left out on purpose — only one confederation
+  // plays each of them, so counting them made this a chart of the continent the
+  // manager works in rather than of the world.
+  final scorersRaw = await comp.allTimeTopScorers(
+    careerId,
+    kinds: globallyContestedKinds,
+    limit: 40,
+  );
   final capsRaw = await comp.allTimeTopAppearances(careerId, limit: 40);
   // Tournament-scoped: most World Cup finals starts, and most distinct
   // tournaments (World Cup + continental finals) attended.

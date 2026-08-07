@@ -1,5 +1,14 @@
 import 'package:fnm/domain/entities/enums.dart';
+import 'package:fnm/domain/entities/group_standing.dart';
 import 'package:fnm/domain/entities/nation.dart';
+
+/// One finished league group, as the ladder reads it: which league it belongs
+/// to, and the rows of the side that won it and the side that finished last.
+///
+/// The rows (rather than bare ids) are what let promotion and relegation be
+/// compared ACROSS the groups of a league — when a boundary has fewer places
+/// than candidates, the best winners go up and the worst bottoms go down.
+typedef LadderGroup = ({int tier, GroupStanding winner, GroupStanding bottom});
 
 /// The Nations Cup league ladder: a confederation's nations split into leagues
 /// of [leagueSize] (League A = tier 0, League B = tier 1, …). The ladder is
@@ -74,21 +83,53 @@ abstract final class NationsCup {
   }
 
   /// Applies promotion/relegation to [tiers] from a finished cup's group
-  /// outcomes: each group winner (bar the top league) climbs a league, each
-  /// group's bottom side (bar the lowest league) drops one. Balanced 4-up,
-  /// 4-down at every boundary, so league sizes stay stable.
+  /// outcomes, one boundary at a time: as many sides come up from a league as
+  /// go down into it, so no league ever grows or shrinks.
+  ///
+  /// It used to promote every group winner and relegate every group's bottom
+  /// side independently, which is only balanced while neighbouring leagues have
+  /// the same number of groups. The bottom league never does — it holds the
+  /// remainder of the confederation — so League C sent four sides down into a
+  /// League D that could only send two back up. Two nations leaked downwards
+  /// every cycle: C withered, D swelled, and the ladder drifted apart.
+  ///
+  /// A boundary now moves `min(groups above, groups below)` sides each way. The
+  /// worst of the bottom sides go down and the best of the group winners come
+  /// up, compared across the whole league by points, then goal difference, then
+  /// goals — so when there are fewer places than candidates it is the table
+  /// that decides who takes them.
   static Map<int, int> promoteRelegate({
     required Map<int, int> tiers,
-    required List<({int tier, int winner, int bottom})> groups,
+    required List<LadderGroup> groups,
   }) {
     if (groups.isEmpty) return tiers;
     final maxTier = groups.map((g) => g.tier).reduce((a, b) => a > b ? a : b);
-    final next = {...tiers};
+    final byTier = <int, List<LadderGroup>>{};
     for (final g in groups) {
-      if (g.tier > 0) next[g.winner] = g.tier - 1; // promoted
-      if (g.tier < maxTier) next[g.bottom] = g.tier + 1; // relegated
+      (byTier[g.tier] ??= []).add(g);
+    }
+
+    final next = {...tiers};
+    for (var tier = 1; tier <= maxTier; tier++) {
+      final up = [...?byTier[tier]]
+        ..sort((a, b) => _strongerFirst(a.winner, b.winner));
+      final down = [...?byTier[tier - 1]]
+        ..sort((a, b) => _strongerFirst(b.bottom, a.bottom));
+      final places = up.length < down.length ? up.length : down.length;
+      for (var i = 0; i < places; i++) {
+        next[up[i].winner.nationId] = tier - 1; // promoted
+        next[down[i].bottom.nationId] = tier; // relegated
+      }
     }
     return next;
+  }
+
+  /// Orders two rows best-first: points, then goal difference, then goals.
+  static int _strongerFirst(GroupStanding a, GroupStanding b) {
+    final byPoints = b.points.compareTo(a.points);
+    if (byPoints != 0) return byPoints;
+    final byGd = b.goalDifference.compareTo(a.goalDifference);
+    return byGd != 0 ? byGd : b.goalsFor.compareTo(a.goalsFor);
   }
 
   /// Promotion/relegation when only the manager's OWN league ([playerTier]) was

@@ -22,8 +22,10 @@ import 'package:fnm/domain/services/match/match_engine.dart';
 /// by one match — the players who sat out the game just played have now missed
 /// it. Only players with something left to track are returned.
 abstract final class Discipline {
-  /// Two yellows (across the cycle) trigger a one-match ban.
-  static const int _yellowsPerBan = 2;
+  /// Three yellows (across the cycle) trigger a one-match ban. A higher
+  /// threshold than club football keeps accumulation bans occasional rather
+  /// than a regular starter sitting out every few games.
+  static const int _yellowsPerBan = 3;
 
   /// The ban length for a straight red, by severity (deterministic from [rng]):
   /// mostly one match, sometimes two, rarely three.

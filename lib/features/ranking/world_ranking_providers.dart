@@ -45,6 +45,13 @@ typedef SeedRankArg = ({int careerId, int cycle});
 const int drawSlotWorldCupFinals = 0;
 const int drawSlotContinentalFinals = 1;
 
+/// World Cup QUALIFYING is drawn two years into the cycle, long after the
+/// cycle-start baseline was frozen. Seeding it from that baseline meant a side
+/// that had climbed to the top of the world since could still be drawn out of
+/// pot 2 — so it snapshots the live ranking at the moment the draw is made,
+/// exactly as the finals draws do.
+const int drawSlotWorldCupQualifying = 2;
+
 /// The synthetic "cycle" a draw's own live-ranking snapshot is stored under.
 int drawSeedCycle(int cycle, int slot) => 900000 + cycle * 10 + slot;
 
@@ -63,6 +70,27 @@ seedRankByIdProvider =
   if (snap.isNotEmpty) return snap;
   final nations = await ref.watch(nationRepositoryProvider).all();
   return {for (final n in nations) n.id: n.ranking};
+});
+
+/// Argument for [drawRankByIdProvider]: the save, the cycle, and which draw.
+typedef DrawSeedArg = ({int careerId, int cycle, int slot});
+
+/// The ranking ONE PARTICULAR draw seeded from: the live standings snapshotted
+/// when that draw was made, falling back to the cycle baseline for a draw made
+/// before the slot existed (or a legacy save).
+final AutoDisposeFutureProviderFamily<Map<int, int>, DrawSeedArg>
+drawRankByIdProvider =
+    FutureProvider.autoDispose.family<Map<int, int>, DrawSeedArg>((
+  ref,
+  arg,
+) async {
+  final snap = await ref
+      .watch(seedRankingRepositoryProvider)
+      .forCycle(arg.careerId, drawSeedCycle(arg.cycle, arg.slot));
+  if (snap.isNotEmpty) return snap;
+  return ref.watch(
+    seedRankByIdProvider((careerId: arg.careerId, cycle: arg.cycle)).future,
+  );
 });
 
 /// One point on the nation's ranking timeline (its world position at a moment).
@@ -110,6 +138,39 @@ final AutoDisposeFutureProviderFamily<List<RankHistoryPoint>, int>
     return out.sublist(out.length - kRankHistoryPoints);
   }
   return out;
+});
+
+/// The best and worst world position the manager's nation has EVER held, over
+/// every ranking release of the career plus where it stands right now.
+///
+/// The chart beside it plots only the last [kRankHistoryPoints] releases — a
+/// few months — so reading the extremes off those points described the recent
+/// wobble, not the career. Null until the nation has been ranked at all.
+final AutoDisposeFutureProviderFamily<({int best, int worst})?, int>
+rankExtremesProvider =
+    FutureProvider.autoDispose.family<({int best, int worst})?, int>((
+  ref,
+  careerId,
+) async {
+  final career = await ref.watch(careerRepositoryProvider).byId(careerId);
+  if (career == null) return null;
+  final nationId = career.nationId;
+
+  final releases =
+      await ref.watch(rankingReleaseRepositoryProvider).all(careerId);
+  final ranks = <int>[
+    // Only this nation's releases — a change of job starts a fresh record.
+    for (final r in releases)
+      if (r.nationId == nationId) r.playerRank,
+  ];
+  final live = await ref.watch(worldRankingProvider(careerId).future);
+  final now = live?.position[nationId];
+  if (now != null) ranks.add(now);
+  if (ranks.isEmpty) return null;
+  return (
+    best: ranks.reduce((a, b) => a < b ? a : b),
+    worst: ranks.reduce((a, b) => a > b ? a : b),
+  );
 });
 
 final AutoDisposeFutureProviderFamily<RankingData?, int> worldRankingProvider =

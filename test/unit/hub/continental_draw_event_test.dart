@@ -66,9 +66,13 @@ void main() {
     var last = DateTime(1900);
     var drawn = false;
     for (var i = 0; i < 120; i++) {
+      // THIS nation's cup. Every confederation's championship is drawn for the
+      // cycle now, so an unqualified check is true from the first day and this
+      // loop would never advance the save at all.
       if (await comp.hasTournament(
         career.id,
         CompetitionKind.continentalFinals,
+        confederation: player.confederation,
       )) {
         drawn = true;
         break;

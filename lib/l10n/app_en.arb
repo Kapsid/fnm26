@@ -4360,6 +4360,34 @@
   "@yPlayerGrievance3": {
     "description": "Player agency: yPlayerGrievance3."
   },
+  "playerHonoursTitle": "HONOURS",
+  "@playerHonoursTitle": {
+    "description": "Award: playerHonoursTitle."
+  },
+  "awardGoldenBall": "Golden Ball",
+  "@awardGoldenBall": {
+    "description": "Award: awardGoldenBall."
+  },
+  "awardGoldenBoot": "Golden Boot",
+  "@awardGoldenBoot": {
+    "description": "Award: awardGoldenBoot."
+  },
+  "awardGoldenGlove": "Golden Glove",
+  "@awardGoldenGlove": {
+    "description": "Award: awardGoldenGlove."
+  },
+  "awardTeamOfTournament": "Team of the Tournament",
+  "@awardTeamOfTournament": {
+    "description": "Award: awardTeamOfTournament."
+  },
+  "awardPlayerOfYear": "World Player of the Year",
+  "@awardPlayerOfYear": {
+    "description": "Award: awardPlayerOfYear."
+  },
+  "awardYoungPlayerOfYear": "Young Player of the Year",
+  "@awardYoungPlayerOfYear": {
+    "description": "Award: awardYoungPlayerOfYear."
+  },
   "playerClubHistory": "CLUB HISTORY",
   "@playerClubHistory": {
     "description": "Heading above a player's list of club spells on the detail card."

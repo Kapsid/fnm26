@@ -1,3 +1,4 @@
+import 'package:fnm/core/rng/seeded_rng.dart';
 import 'package:fnm/domain/entities/enums.dart';
 
 /// Career-defining "challenges" — the brutal, long-haul goals a manager chases
@@ -24,6 +25,10 @@ class ChallengeStats {
     this.wonWorldCupAsVisitor = false,
     this.wonWorldCupAsMinnow = false,
     this.longestUnbeatenRun = 0,
+    this.longestWinStreak = 0,
+    this.careerGoals = 0,
+    this.careerCleanSheets = 0,
+    this.careerHatTricks = 0,
   });
 
   /// World Cups won by the manager (whichever nation they led that cycle).
@@ -74,6 +79,30 @@ class ChallengeStats {
 
   /// The manager's longest unbeaten run of competitive matches, any nation.
   final int longestUnbeatenRun;
+
+  /// The manager's longest run of consecutive wins, any nation.
+  final int longestWinStreak;
+
+  /// Lifetime goals scored, clean sheets kept, and hat-tricks by the manager's
+  /// players — the running career totals behind the collector challenges.
+  final int careerGoals, careerCleanSheets, careerHatTricks;
+}
+
+/// A challenge's difficulty tier — a ladder from a first taste of success to
+/// the truly legendary, so the list reads as a climb and the badge cabinet can
+/// group by prestige.
+enum ChallengeTier { bronze, silver, gold, legendary }
+
+extension ChallengeTierX on ChallengeTier {
+  String get label => switch (this) {
+        ChallengeTier.bronze => 'Bronze',
+        ChallengeTier.silver => 'Silver',
+        ChallengeTier.gold => 'Gold',
+        ChallengeTier.legendary => 'Legendary',
+      };
+
+  /// Sort/rank order (bronze first).
+  int get rank => index;
 }
 
 /// One challenge: its identity, how it reads, and how it is judged.
@@ -83,13 +112,22 @@ class ChallengeDef {
     required this.title,
     required this.description,
     required this.progressOf,
+    this.tier = ChallengeTier.gold,
     this.brutal = false,
+    this.procedural = false,
   });
+
+  /// Whether this challenge was generated for THIS save (a seeded target),
+  /// rather than a fixed catalogue entry — shown in its own section.
+  final bool procedural;
 
   /// Stable id — never change once shipped.
   final String id;
   final String title;
   final String description;
+
+  /// The difficulty tier, for grouping and the badge cabinet.
+  final ChallengeTier tier;
 
   /// A `(current, target)` pair; complete when `current >= target`.
   final (int, int) Function(ChallengeStats) progressOf;
@@ -106,6 +144,58 @@ class ChallengeDef {
 /// The catalogue of challenges, hardest-earned roughly last.
 abstract final class ChallengeCatalog {
   static const List<ChallengeDef> all = [
+    // --- Bronze: a first taste of success -----------------------------------
+    ChallengeDef(
+      id: 'ch_first_steps',
+      title: 'In the Dugout',
+      description: 'Manage for 5 years.',
+      progressOf: _years5,
+      tier: ChallengeTier.bronze,
+    ),
+    ChallengeDef(
+      id: 'ch_unbeaten_10',
+      title: 'On a Roll',
+      description: 'Go 10 competitive matches unbeaten.',
+      progressOf: _unbeaten10,
+      tier: ChallengeTier.bronze,
+    ),
+    ChallengeDef(
+      id: 'ch_two_nations',
+      title: 'Fresh Challenge',
+      description: 'Manage 2 different nations.',
+      progressOf: _nations2,
+      tier: ChallengeTier.bronze,
+    ),
+    // --- Silver: first silverware -------------------------------------------
+    ChallengeDef(
+      id: 'ch_cont_1',
+      title: 'Continental Champion',
+      description: 'Win a continental championship.',
+      progressOf: _cont1,
+      tier: ChallengeTier.silver,
+    ),
+    ChallengeDef(
+      id: 'ch_nc_1',
+      title: 'Nations Cup Winner',
+      description: 'Win the Nations Cup.',
+      progressOf: _nc1,
+      tier: ChallengeTier.silver,
+    ),
+    ChallengeDef(
+      id: 'ch_wc_1',
+      title: 'World Champion',
+      description: 'Win the World Cup.',
+      progressOf: _wc1,
+      tier: ChallengeTier.silver,
+    ),
+    ChallengeDef(
+      id: 'ch_years_25',
+      title: 'Establishment',
+      description: 'Manage for 25 years.',
+      progressOf: _years25,
+      tier: ChallengeTier.silver,
+    ),
+    // --- Gold and Legendary -------------------------------------------------
     ChallengeDef(
       id: 'ch_wc_3',
       title: 'Serial Winner',
@@ -123,6 +213,7 @@ abstract final class ChallengeCatalog {
       title: 'Immortal',
       description: 'Win 10 World Cups.',
       progressOf: _wc10,
+      tier: ChallengeTier.legendary,
       brutal: true,
     ),
     ChallengeDef(
@@ -142,6 +233,7 @@ abstract final class ChallengeCatalog {
       title: 'Three-Peat',
       description: 'Win 3 World Cups in a row.',
       progressOf: _wcStreak3,
+      tier: ChallengeTier.legendary,
       brutal: true,
     ),
     ChallengeDef(
@@ -150,6 +242,7 @@ abstract final class ChallengeCatalog {
       description:
           'Win the World Cup with a nation from every confederation (6).',
       progressOf: _wcAllConf,
+      tier: ChallengeTier.legendary,
       brutal: true,
     ),
     ChallengeDef(
@@ -163,6 +256,7 @@ abstract final class ChallengeCatalog {
       title: 'Six-Continent Slam',
       description: 'Win every confederation’s continental championship (6).',
       progressOf: _contAll,
+      tier: ChallengeTier.legendary,
       brutal: true,
     ),
     ChallengeDef(
@@ -190,6 +284,7 @@ abstract final class ChallengeCatalog {
       title: 'Half a Millennium',
       description: 'Manage for 500 years.',
       progressOf: _years500,
+      tier: ChallengeTier.legendary,
       brutal: true,
     ),
     ChallengeDef(
@@ -197,6 +292,7 @@ abstract final class ChallengeCatalog {
       title: 'Eternal',
       description: 'Manage for 1000 years.',
       progressOf: _years1000,
+      tier: ChallengeTier.legendary,
       brutal: true,
     ),
     ChallengeDef(
@@ -204,6 +300,7 @@ abstract final class ChallengeCatalog {
       title: 'Grandmaster',
       description: 'Win 3 World Cups AND 5 continental championships.',
       progressOf: _grandmaster,
+      tier: ChallengeTier.legendary,
       brutal: true,
     ),
     ChallengeDef(
@@ -211,6 +308,7 @@ abstract final class ChallengeCatalog {
       title: 'Untouchable',
       description: 'Win a World Cup without losing a single match.',
       progressOf: _undefeated,
+      tier: ChallengeTier.legendary,
       brutal: true,
     ),
     ChallengeDef(
@@ -218,6 +316,7 @@ abstract final class ChallengeCatalog {
       title: 'Flawless Passage',
       description: 'Win every match of a World Cup qualifying campaign.',
       progressOf: _perfectQual,
+      tier: ChallengeTier.legendary,
       brutal: true,
     ),
     ChallengeDef(
@@ -226,6 +325,7 @@ abstract final class ChallengeCatalog {
       description:
           'Win the World Cup with a nation ranked outside the world top 32.',
       progressOf: _minnow,
+      tier: ChallengeTier.legendary,
       brutal: true,
     ),
     ChallengeDef(
@@ -233,6 +333,7 @@ abstract final class ChallengeCatalog {
       title: 'Home & Away',
       description: 'Win a World Cup as hosts and win one away from home.',
       progressOf: _grandTour,
+      tier: ChallengeTier.legendary,
       brutal: true,
     ),
     ChallengeDef(
@@ -240,11 +341,54 @@ abstract final class ChallengeCatalog {
       title: 'The Wall',
       description: 'Go 25 competitive matches unbeaten.',
       progressOf: _unbeaten25,
+      tier: ChallengeTier.legendary,
+      brutal: true,
+    ),
+    // --- Career collectors (lifetime totals across every nation) -------------
+    ChallengeDef(
+      id: 'ch_goals_10k',
+      title: 'Goal Machine',
+      description: 'Score 10,000 career goals.',
+      progressOf: _goals10k,
+    ),
+    ChallengeDef(
+      id: 'ch_cleansheets_500',
+      title: 'Fortress',
+      description: 'Keep 500 career clean sheets.',
+      progressOf: _cleanSheets500,
+    ),
+    ChallengeDef(
+      id: 'ch_hattricks_25',
+      title: 'Hat-trick Habit',
+      description: 'Have your players score 25 hat-tricks.',
+      progressOf: _hatTricks25,
+    ),
+    ChallengeDef(
+      id: 'ch_winstreak_25',
+      title: 'Relentless',
+      description: 'Win 25 matches in a row.',
+      progressOf: _winStreak25,
+      tier: ChallengeTier.legendary,
+      brutal: true,
+    ),
+    ChallengeDef(
+      id: 'ch_cont_10',
+      title: 'Continental Dynasty',
+      description: 'Win 10 continental championships.',
+      progressOf: _cont10,
+      tier: ChallengeTier.legendary,
       brutal: true,
     ),
   ];
 
   // Top-level functions (const tear-offs can't close over locals).
+  static (int, int) _years5(ChallengeStats s) => (s.yearsManaged, 5);
+  static (int, int) _years25(ChallengeStats s) => (s.yearsManaged, 25);
+  static (int, int) _unbeaten10(ChallengeStats s) => (s.longestUnbeatenRun, 10);
+  static (int, int) _nations2(ChallengeStats s) => (s.nationsManaged, 2);
+  static (int, int) _cont1(ChallengeStats s) => (s.continentalTitles, 1);
+  static (int, int) _nc1(ChallengeStats s) => (s.nationsCupTitles, 1);
+  static (int, int) _wc1(ChallengeStats s) => (s.worldCupTitles, 1);
   static (int, int) _wc3(ChallengeStats s) => (s.worldCupTitles, 3);
   static (int, int) _wc5(ChallengeStats s) => (s.worldCupTitles, 5);
   static (int, int) _wc10(ChallengeStats s) => (s.worldCupTitles, 10);
@@ -295,4 +439,68 @@ abstract final class ChallengeCatalog {
 
   static (int, int) _unbeaten25(ChallengeStats s) =>
       (s.longestUnbeatenRun, 25);
+  static (int, int) _goals10k(ChallengeStats s) => (s.careerGoals, 10000);
+  static (int, int) _cleanSheets500(ChallengeStats s) =>
+      (s.careerCleanSheets, 500);
+  static (int, int) _hatTricks25(ChallengeStats s) => (s.careerHatTricks, 25);
+  static (int, int) _winStreak25(ChallengeStats s) => (s.longestWinStreak, 25);
+  static (int, int) _cont10(ChallengeStats s) => (s.continentalTitles, 10);
+}
+
+/// Per-save procedural challenges: the same kinds of goal as the catalogue, but
+/// with targets rolled from the save seed, so every career chases a slightly
+/// different set. Judged against the same [ChallengeStats]. Ids are stable per
+/// save (the seed fixes the targets), so progress reads consistently.
+abstract final class ProceduralChallenges {
+  static List<ChallengeDef> forSeed(int seed) {
+    final rng = SeededRng(seed ^ 0x0C4A11E9);
+    final wc = 2 + rng.nextInt(4); // 2..5
+    final nations = 3 + rng.nextInt(8); // 3..10
+    final unbeaten = 15 + rng.nextInt(21); // 15..35
+    final majors = 3 + rng.nextInt(6); // 3..8
+    final years = 40 + rng.nextInt(160); // 40..199
+    return [
+      ChallengeDef(
+        id: 'pc_wc',
+        title: 'Serial Champion',
+        description: 'Win $wc World Cups this save.',
+        progressOf: (s) => (s.worldCupTitles, wc),
+        procedural: true,
+      ),
+      ChallengeDef(
+        id: 'pc_majors',
+        title: 'Silverware Collector',
+        description:
+            'Win $majors major trophies (World Cup, continental or Nations Cup).',
+        progressOf: (s) => (
+          s.worldCupTitles + s.continentalTitles + s.nationsCupTitles,
+          majors,
+        ),
+        procedural: true,
+      ),
+      ChallengeDef(
+        id: 'pc_unbeaten',
+        title: 'Iron Wall',
+        description: 'Go $unbeaten competitive matches unbeaten.',
+        progressOf: (s) => (s.longestUnbeatenRun, unbeaten),
+        procedural: true,
+      ),
+      ChallengeDef(
+        id: 'pc_nations',
+        title: 'Journeyman',
+        description: 'Manage $nations different nations.',
+        progressOf: (s) => (s.nationsManaged, nations),
+        tier: ChallengeTier.silver,
+        procedural: true,
+      ),
+      ChallengeDef(
+        id: 'pc_years',
+        title: 'The Long Haul',
+        description: 'Manage for $years years.',
+        progressOf: (s) => (s.yearsManaged, years),
+        tier: ChallengeTier.silver,
+        procedural: true,
+      ),
+    ];
+  }
 }

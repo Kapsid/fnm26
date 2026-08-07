@@ -10,6 +10,7 @@ import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
 import 'package:fnm/features/messages/message_providers.dart';
 import 'package:fnm/features/messages/message_sheet.dart';
+import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
 
@@ -29,6 +30,7 @@ class _MessagesScreenState extends ConsumerState<MessagesScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
     final inboxAsync = ref.watch(messageInboxProvider(widget.careerId));
 
     // Mark everything read once the inbox has loaded (after this frame).
@@ -52,19 +54,22 @@ class _MessagesScreenState extends ConsumerState<MessagesScreen> {
               context.go('${Routes.hub}?careerId=${widget.careerId}'),
         ),
         title: Text(
-          'MESSAGES',
+          l.messagesTitle,
           style: AppTypography.labelMedium.copyWith(color: AppColors.primary),
         ),
         centerTitle: true,
       ),
       body: inboxAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => Center(child: Text('Could not load messages.\n$e')),
+        error: (e, _) => AppErrorState(
+          message: l.messagesCouldNotLoad('').trim(),
+          onRetry: () => ref.invalidate(messageInboxProvider(widget.careerId)),
+        ),
         data: (inbox) {
           if (inbox.messages.isEmpty) {
             return Center(
               child: Text(
-                'No messages yet.',
+                l.messagesNoMessagesYet,
                 style: AppTypography.bodyMedium.copyWith(
                   color: AppColors.onSurfaceVariant,
                 ),

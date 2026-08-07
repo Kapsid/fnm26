@@ -5,23 +5,16 @@ import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/entities/player_attributes.dart';
 import 'package:fnm/domain/services/match/goal_attribution.dart';
 
-Player _p(int id, PlayerPosition pos, int shooting) => Player(
+Player _p(int id, PlayerPosition pos, int technical) => Player(
       id: id,
       nationId: 1,
       name: 'P$id',
       age: 25,
       position: pos,
       attributes: PlayerAttributes(
-        passing: 50,
-        shooting: shooting,
-        dribbling: 50,
-        tackling: 50,
-        positioning: 50,
-        composure: 50,
-        decisions: 50,
-        pace: 50,
+        physical: 50,
+        technical: technical,
         stamina: 50,
-        strength: 50,
       ),
     );
 

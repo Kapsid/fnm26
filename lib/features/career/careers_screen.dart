@@ -3,6 +3,7 @@ import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
+import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
 
@@ -15,10 +16,11 @@ class CareersScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'CAREERS',
+          l.careersTitle,
           style: AppTypography.labelMedium.copyWith(color: AppColors.primary),
         ),
         centerTitle: true,
@@ -30,39 +32,39 @@ class CareersScreen extends StatelessWidget {
         children: [
           _MenuTile(
             icon: Icons.timeline,
-            title: 'Manager career',
-            subtitle: "Every cycle you've managed and your overall record",
+            title: l.careerManagerCareer,
+            subtitle: l.careerManagerCareerSubtitle,
             onTap: () =>
                 context.go('${Routes.managerHistory}?careerId=$careerId'),
           ),
           const SizedBox(height: AppSpacing.sm),
           _MenuTile(
             icon: Icons.workspace_premium,
-            title: 'Career summary',
-            subtitle: 'Your trophy cabinet and manager record',
+            title: l.careerSummaryTitle,
+            subtitle: l.careerSummarySubtitle,
             onTap: () =>
                 context.go('${Routes.careerSummary}?careerId=$careerId'),
           ),
           const SizedBox(height: AppSpacing.sm),
           _MenuTile(
             icon: Icons.emoji_events,
-            title: 'Achievements',
-            subtitle: 'Milestones, titles and board satisfaction',
+            title: l.careerAchievements,
+            subtitle: l.careerAchievementsSubtitle,
             onTap: () =>
                 context.go('${Routes.achievements}?careerId=$careerId'),
           ),
           const SizedBox(height: AppSpacing.sm),
           _MenuTile(
             icon: Icons.leaderboard,
-            title: 'Team records',
-            subtitle: 'All-time top scorers and appearances',
+            title: l.careerTeamRecords,
+            subtitle: l.careerTeamRecordsSubtitle,
             onTap: () => context.go('${Routes.teamStats}?careerId=$careerId'),
           ),
           const SizedBox(height: AppSpacing.sm),
           _MenuTile(
             icon: Icons.sports_soccer,
-            title: 'My matches',
-            subtitle: 'Every result and upcoming fixture',
+            title: l.careerMyMatches,
+            subtitle: l.careerMyMatchesSubtitle,
             onTap: () => context.go('${Routes.results}?careerId=$careerId'),
           ),
         ],

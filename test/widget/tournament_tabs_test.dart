@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/core/theme/app_theme.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/data/db/app_database.dart';
@@ -70,6 +71,8 @@ void main() {
         container: container,
         child: MaterialApp(
           theme: AppTheme.theme,
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
           home: NationsCupScreen(careerId: careerId),
         ),
       ),
@@ -102,6 +105,8 @@ void main() {
         container: container,
         child: MaterialApp(
           theme: AppTheme.theme,
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
           home: ContinentalDetailScreen(
             careerId: careerId,
             confederation: Confederation.asia,
@@ -114,9 +119,14 @@ void main() {
     final controller = DefaultTabController.of(
       tester.element(find.byType(TabBarView)),
     );
+    // Tabs: 0 summary, 1 qualifying, 2 finals, 3 bracket, 4 awards,
+    // 5 scorers, 6 history. This used to assert 5 — the scorers tab — which
+    // contradicted its own reason: the landing index was computed in the old
+    // pre-summary numbering and never re-based when summary was added in front
+    // of it, so "open on the history" opened one tab short of it.
     expect(
       controller.index,
-      5,
+      6,
       reason: "a foreign cup's only real content is its history",
     );
   });

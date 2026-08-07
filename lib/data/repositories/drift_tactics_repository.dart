@@ -25,17 +25,25 @@ class DriftTacticsRepository implements TacticsRepository {
       if (s.slot >= 0 && s.slot < 11) lineup[s.slot] = s.playerId;
     }
 
+    final instructions = TacticalInstructions(
+      mentality: row.mentality,
+      pressing: row.pressing,
+      tempo: row.tempo,
+      width: row.width,
+      defensiveLine: row.defensiveLine,
+      directness: row.directness,
+    );
     return Tactic(
       formation: row.formation,
       lineup: lineup,
-      instructions: TacticalInstructions(
-        mentality: row.mentality,
-        pressing: row.pressing,
-        tempo: row.tempo,
-        width: row.width,
-        defensiveLine: row.defensiveLine,
-        directness: row.directness,
-      ),
+      // A tactic that has never had a style named still HAS one if its dials
+      // happen to describe a known way of playing — a fresh save's balanced
+      // defaults being the obvious case. Naming it is honest, and stops the
+      // screen opening on "Custom" before the manager has touched anything.
+      playstyle: row.playstyle == Playstyle.custom
+          ? PlaystyleX.matching(instructions)
+          : row.playstyle,
+      instructions: instructions,
     );
   }
 
@@ -47,6 +55,7 @@ class DriftTacticsRepository implements TacticsRepository {
             TacticsCompanion.insert(
               careerId: Value(careerId),
               formation: tactic.formation,
+              playstyle: Value(tactic.playstyle),
               mentality: Value(i.mentality),
               pressing: Value(i.pressing),
               tempo: Value(i.tempo),

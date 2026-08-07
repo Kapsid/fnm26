@@ -5,13 +5,15 @@ import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/domain/entities/enums.dart';
+import 'package:fnm/domain/services/nation/nation_identity.dart';
 import 'package:fnm/features/nations/nation_vitrine_providers.dart';
+import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
 
-const _gold = Color(0xFFEFC94C);
-const _silver = Color(0xFFBFC7CE);
-const _bronze = Color(0xFFCD8B62);
+const _gold = AppColors.medalGold;
+const _silver = AppColors.medalSilver;
+const _bronze = AppColors.medalBronze;
 
 /// A country's trophy room: honours, all-time record-breakers, and how its
 /// world standing has moved across the save. Opened from the world ranking.
@@ -27,6 +29,7 @@ class NationVitrineScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l = AppLocalizations.of(context);
     final async = ref.watch(
       nationVitrineProvider((careerId: careerId, nationId: nationId)),
     );
@@ -40,35 +43,35 @@ class NationVitrineScreen extends ConsumerWidget {
               : context.go('${Routes.ranking}?careerId=$careerId'),
         ),
         title: Text(
-          'NATIONAL VITRINE',
+          l.nationsVitrineTitle,
           style: AppTypography.labelMedium.copyWith(color: AppColors.primary),
         ),
         centerTitle: true,
       ),
       body: async.when(
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => Center(child: Text('Could not load nation.\n$e')),
+        error: (e, _) => Center(child: Text(l.nationsCouldNotLoad(e.toString()))),
         data: (v) {
-          if (v == null) return const Center(child: Text('No nation.'));
+          if (v == null) return Center(child: Text(l.nationsNoNation));
           return ListView(
             padding: const EdgeInsets.all(AppSpacing.marginMobile),
             children: [
               _Header(v),
               const SizedBox(height: AppSpacing.md),
-              _sectionLabel('HONOURS'),
+              _sectionLabel(l.nationsHonours),
               const SizedBox(height: AppSpacing.sm),
               _HonoursCard(v),
               const SizedBox(height: AppSpacing.md),
-              _sectionLabel('WORLD RANKING HISTORY'),
+              _sectionLabel(l.nationsRankingHistory),
               const SizedBox(height: AppSpacing.sm),
               _RankingHistoryCard(v),
               const SizedBox(height: AppSpacing.md),
-              _sectionLabel('ALL-TIME TOP SCORERS'),
+              _sectionLabel(l.nationsTopScorers),
               const SizedBox(height: AppSpacing.sm),
               _TopScorersCard(v),
               if (v.titles.isNotEmpty) ...[
                 const SizedBox(height: AppSpacing.md),
-                _sectionLabel('TITLES'),
+                _sectionLabel(l.nationsTitles),
                 const SizedBox(height: AppSpacing.sm),
                 _TitlesCard(v),
               ],
@@ -92,6 +95,7 @@ class _Header extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
     return AppCard(
       child: Row(
         children: [
@@ -113,10 +117,21 @@ class _Header extends StatelessWidget {
                     ),
                     if (v.isPlayerNation) ...[
                       const SizedBox(width: AppSpacing.sm),
-                      const TacticalChip('YOUR TEAM', emphasized: true),
+                      TacticalChip(l.nationsYourTeam, emphasized: true),
                     ],
                   ],
                 ),
+                if (NationIdentity.nicknameOf(v.nation.code) case final nick?)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 2),
+                    child: Text(
+                      '“$nick”',
+                      style: AppTypography.bodyMedium.copyWith(
+                        color: AppColors.primary,
+                        fontStyle: FontStyle.italic,
+                      ),
+                    ),
+                  ),
                 const SizedBox(height: 2),
                 Text(
                   '${v.nation.confederation.label} · ${v.nation.code}',
@@ -138,7 +153,7 @@ class _Header extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  'WORLD',
+                  l.nationsWorld,
                   style: AppTypography.labelSmall.copyWith(
                     color: AppColors.onSurfaceVariant,
                   ),
@@ -157,12 +172,13 @@ class _HonoursCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
     return AppCard(
       child: Column(
         children: [
-          _MedalRow(label: 'World Cup', haul: v.worldCup),
+          _MedalRow(label: l.nationsWorldCup, haul: v.worldCup),
           const Divider(height: AppSpacing.lg),
-          _MedalRow(label: 'Continental', haul: v.continental),
+          _MedalRow(label: l.nationsContinental, haul: v.continental),
         ],
       ),
     );
@@ -176,6 +192,7 @@ class _MedalRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
     return Row(
       children: [
         Expanded(
@@ -184,8 +201,7 @@ class _MedalRow extends StatelessWidget {
             children: [
               Text(label, style: AppTypography.titleMedium),
               Text(
-                '${haul.appearances} '
-                '${haul.appearances == 1 ? 'appearance' : 'appearances'}',
+                l.nationsAppearances(haul.appearances),
                 style: AppTypography.labelSmall.copyWith(
                   color: AppColors.onSurfaceVariant,
                 ),
@@ -229,11 +245,12 @@ class _RankingHistoryCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
     final history = v.rankHistory;
     if (history.length < 2) {
       return AppCard(
         child: Text(
-          'Not enough history yet — check back after a cycle or two.',
+          l.nationsNotEnoughHistory,
           style: AppTypography.bodyMedium.copyWith(
             color: AppColors.onSurfaceVariant,
           ),
@@ -250,13 +267,13 @@ class _RankingHistoryCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Best: #$best',
+                l.nationsBestRank(best),
                 style: AppTypography.labelMedium.copyWith(
                   color: AppColors.primary,
                 ),
               ),
               Text(
-                'Now: #${history.last.rank}',
+                l.nationsNowRank(history.last.rank),
                 style: AppTypography.labelMedium,
               ),
             ],
@@ -357,10 +374,11 @@ class _TopScorersCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
     if (v.topScorers.isEmpty) {
       return AppCard(
         child: Text(
-          'No goals recorded yet.',
+          l.nationsNoGoals,
           style: AppTypography.bodyMedium.copyWith(
             color: AppColors.onSurfaceVariant,
           ),
@@ -400,7 +418,7 @@ class _TopScorersCard extends StatelessWidget {
                 ),
                 const SizedBox(width: 4),
                 Text(
-                  'gls',
+                  l.nationsGoalsAbbrev,
                   style: AppTypography.labelSmall.copyWith(
                     color: AppColors.onSurfaceVariant,
                   ),
@@ -420,6 +438,7 @@ class _TitlesCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
     return AppCard(
       child: Column(
         children: [
@@ -436,7 +455,7 @@ class _TitlesCard extends StatelessWidget {
                   ),
                 ),
                 if (v.titles[i].wasHost) ...[
-                  const TacticalChip('HOSTS'),
+                  TacticalChip(l.nationsHosts),
                   const SizedBox(width: AppSpacing.sm),
                 ],
                 Text(

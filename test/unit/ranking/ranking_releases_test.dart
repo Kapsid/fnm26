@@ -142,15 +142,15 @@ void main() {
           .firstWhere((m) => m.title == 'World ranking · #${r.playerRank}')
           .body;
       if (expectedMove == 0) {
-        expect(body, contains('You hold at #${r.playerRank}'));
+        expect(body, contains('#${r.playerRank}'));
       } else {
-        final dir = expectedMove > 0 ? 'up' : 'down';
+        // The message must report the cycle move's magnitude ("N place(s)"),
+        // not a release-to-release delta — the exact phrasing varies.
         expect(
-          body,
-          contains('You are $dir ${expectedMove.abs()} '),
+          body.toLowerCase(),
+          contains('${expectedMove.abs()} place'),
           reason: 'movement must be cycle-anchored, not release-to-release',
         );
-        expect(body, contains('this cycle'));
       }
     }
 

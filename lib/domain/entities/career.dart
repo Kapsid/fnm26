@@ -21,9 +21,18 @@ abstract class Career with _$Career {
     required DateTime inGameDate,
     @Default(0) int cyclePointer,
 
+    /// Real-world timestamp of the last time this save was opened. Drives the
+    /// "last played" line on the saves list and its most-recent-first order.
+    /// Null only for saves written before the field existed.
+    DateTime? lastPlayedAt,
+
     /// The federation's cash balance (euros), spent on department investments
     /// and replenished each cycle by central funding, prize money and
     /// commercial returns. Player-driven mutable state (not seed-derived).
     @Default(0) int budget,
+
+    /// The player wearing the armband, or null if the manager has not named a
+    /// captain. Only ever a player in the current squad — see `Captaincy`.
+    int? captainPlayerId,
   }) = _Career;
 }

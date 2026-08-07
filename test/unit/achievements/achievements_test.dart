@@ -13,6 +13,14 @@ AchievementStats stats({
   bool playerInAllStars = false,
   bool wonWorldCupAndContinental = false,
   int satisfaction = 50,
+  int cleanSheets = 0,
+  int totalGoals = 0,
+  int longestWinStreak = 0,
+  int longestUnbeatenRun = 0,
+  int hatTricks = 0,
+  int playerMotms = 0,
+  int shootoutsWon = 0,
+  double bestPlayerRating = 0,
 }) =>
     AchievementStats(
       matchesPlayed: matchesPlayed,
@@ -26,6 +34,14 @@ AchievementStats stats({
       playerInAllStars: playerInAllStars,
       wonWorldCupAndContinental: wonWorldCupAndContinental,
       satisfaction: satisfaction,
+      cleanSheets: cleanSheets,
+      totalGoals: totalGoals,
+      longestWinStreak: longestWinStreak,
+      longestUnbeatenRun: longestUnbeatenRun,
+      hatTricks: hatTricks,
+      playerMotms: playerMotms,
+      shootoutsWon: shootoutsWon,
+      bestPlayerRating: bestPlayerRating,
     );
 
 void main() {
@@ -48,6 +64,56 @@ void main() {
     final earned = AchievementCatalog.earnedIds(stats(matchesPlayed: 200));
     expect(earned, containsAll(['matches_10', 'matches_100', 'matches_200']));
     expect(earned, isNot(contains('matches_500')));
+  });
+
+  test('goal and clean-sheet tallies unlock cumulatively', () {
+    final earned =
+        AchievementCatalog.earnedIds(stats(totalGoals: 300, cleanSheets: 60));
+    expect(earned, containsAll(['goals_50', 'goals_250']));
+    expect(earned, isNot(contains('goals_1000')));
+    expect(earned, containsAll(['cleansheets_10', 'cleansheets_50']));
+    expect(earned, isNot(contains('cleansheets_200')));
+  });
+
+  test('streak achievements unlock at their thresholds', () {
+    final earned = AchievementCatalog.earnedIds(
+      stats(longestWinStreak: 12, longestUnbeatenRun: 16),
+    );
+    expect(earned, containsAll(['streak_win_5', 'streak_win_10']));
+    expect(earned, isNot(contains('streak_win_20')));
+    expect(earned, contains('streak_unbeaten_15'));
+    expect(earned, isNot(contains('streak_unbeaten_30')));
+  });
+
+  test('player feats unlock from the snapshot fields', () {
+    final earned = AchievementCatalog.earnedIds(stats(
+      hatTricks: 1,
+      playerMotms: 10,
+      bestPlayerRating: 9.6,
+      shootoutsWon: 5,
+      biggestWinMargin: 7,
+    ));
+    expect(
+      earned,
+      containsAll([
+        'feat_hattrick',
+        'feat_motm_10',
+        'feat_perfect',
+        'feat_shootout',
+        'feat_massacre',
+      ]),
+    );
+    expect(earned, isNot(contains('feat_motm_50')));
+    expect(earned, isNot(contains('feat_annihilation')));
+  });
+
+  test('every achievement has localizable text (id maps or falls back)', () {
+    // Guards against a new catalogue entry whose id the resolver forgot: the
+    // English title/description are never blank.
+    for (final a in AchievementCatalog.all) {
+      expect(a.title, isNotEmpty);
+      expect(a.description, isNotEmpty);
+    }
   });
 
   test('titles are matched by exact competition name', () {

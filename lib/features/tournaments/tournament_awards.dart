@@ -6,6 +6,7 @@ import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/services/competition/tournament_stars.dart';
 import 'package:fnm/features/tournaments/tournament_history.dart'
     show TournamentSoon;
+import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 
 /// A tournament's individual honours in one place — the Golden Ball (best
@@ -28,9 +29,10 @@ class TournamentAwardsTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
     if (team.isEmpty && goldenGlove == null) {
-      return const TournamentSoon(
-        message: 'The awards are decided once the tournament is played out.',
+      return TournamentSoon(
+        message: l.tourSharedAwardsEmpty,
       );
     }
     final goldenBall = team.isEmpty ? null : team.first;
@@ -213,10 +215,16 @@ class TeamOfTournamentCard extends StatelessWidget {
             children: [
               const Icon(Icons.star_rounded, color: AppColors.primary, size: 18),
               const SizedBox(width: AppSpacing.sm),
-              Text(
-                'TEAM OF THE TOURNAMENT',
-                style: AppTypography.labelMedium.copyWith(
-                  color: AppColors.primary,
+              // Flexible: the heading is a long line of capitals and ran off
+              // the card on a narrow phone.
+              Flexible(
+                child: Text(
+                  'TEAM OF THE TOURNAMENT',
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: AppTypography.labelMedium.copyWith(
+                    color: AppColors.primary,
+                  ),
                 ),
               ),
             ],
@@ -250,6 +258,18 @@ class TeamOfTournamentCard extends StatelessWidget {
             const Icon(Icons.sports_soccer, size: 12, color: AppColors.primary),
             const SizedBox(width: 2),
             Text('${s.goals}', style: AppTypography.labelSmall),
+            const SizedBox(width: AppSpacing.sm),
+          ],
+          // The mark that earned the place. Shown instead of leaving the XI
+          // looking like a list of the most famous names available.
+          if (s.apps > 0) ...[
+            Text(
+              s.meanRating.toStringAsFixed(2),
+              style: AppTypography.labelMedium.copyWith(
+                color: AppColors.ratingColor(s.meanRating),
+                fontWeight: FontWeight.w800,
+              ),
+            ),
             const SizedBox(width: AppSpacing.sm),
           ],
           Text(

@@ -27,7 +27,7 @@ void main() {
     expect(after[1]!.isAvailable, isFalse);
   });
 
-  test('two yellows across matches earn a suspension', () {
+  test('three yellows across matches earn a suspension', () {
     final first = Discipline.applyMatch(
       before: const {},
       events: [_event(MatchEventType.yellowCard)],
@@ -43,8 +43,18 @@ void main() {
       nationId: 10,
       rng: rng(),
     );
-    expect(second[1]!.banMatches, 1);
-    expect(second[1]!.yellows, 0);
+    // Two is no longer enough — the threshold is three, so still no ban.
+    expect(second[1]!.yellows, 2);
+    expect(second[1]!.banMatches, 0);
+
+    final third = Discipline.applyMatch(
+      before: second,
+      events: [_event(MatchEventType.yellowCard)],
+      nationId: 10,
+      rng: rng(),
+    );
+    expect(third[1]!.banMatches, 1);
+    expect(third[1]!.yellows, 0);
   });
 
   test('an injury sidelines the player for one to four matches', () {

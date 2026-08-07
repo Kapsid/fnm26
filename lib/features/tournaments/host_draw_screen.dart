@@ -8,6 +8,7 @@ import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/features/tournaments/host_draw_providers.dart';
+import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
 
@@ -42,6 +43,7 @@ class _HostDrawScreenState extends ConsumerState<HostDrawScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
     final async = ref.watch(
       hostDrawProvider((careerId: widget.careerId, worldCup: widget.worldCup)),
     );
@@ -57,12 +59,12 @@ class _HostDrawScreenState extends ConsumerState<HostDrawScreen> {
       ),
       body: async.when(
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => Center(child: Text('Could not load host draw.\n$e')),
+        error: (_, _) => Center(child: Text(l.tourSharedCouldNotLoad)),
         data: (data) {
           if (data == null) {
             return Center(
               child: PrimaryButton(
-                label: 'Continue',
+                label: l.tourSharedContinue,
                 icon: Icons.check_rounded,
                 onPressed: _toHub,
               ),
@@ -139,12 +141,12 @@ class _HostDrawScreenState extends ConsumerState<HostDrawScreen> {
                   padding: const EdgeInsets.all(AppSpacing.marginMobile),
                   child: _revealed
                       ? PrimaryButton(
-                          label: 'Continue',
+                          label: l.tourSharedContinue,
                           icon: Icons.check_rounded,
                           onPressed: _toHub,
                         )
                       : PrimaryButton(
-                          label: 'Open the envelope',
+                          label: l.tourSharedOpenEnvelope,
                           icon: Icons.mail_outline_rounded,
                           onPressed: () => unawaited(_reveal(data)),
                         ),

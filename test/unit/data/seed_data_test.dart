@@ -54,10 +54,9 @@ void main() {
       expect(nationIds.contains(p.nationId), isTrue, reason: p.name);
       expect(p.overall, inInclusiveRange(1, 99));
       for (final v in [
-        p.attributes.passing,
-        p.attributes.shooting,
-        p.attributes.pace,
-        p.attributes.strength,
+        p.attributes.physical,
+        p.attributes.technical,
+        p.attributes.stamina,
       ]) {
         expect(v, inInclusiveRange(1, 99));
       }

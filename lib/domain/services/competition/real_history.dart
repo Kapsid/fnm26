@@ -3,6 +3,12 @@
 ///
 /// The champion is listed first in the scoreline; equal scores denote a
 /// penalty shoot-out win for the champion.
+///
+/// The scoreline is nullable because not every edition was settled by a final:
+/// the early South American Championships were straight round-robins, decided
+/// on the table rather than in a one-off match. Those editions carry a champion
+/// and a runner-up but no score, and every screen that shows a final already
+/// handles a missing scoreline (the honour's own columns are nullable too).
 typedef HistoryEdition = ({
   int year,
   String competition,
@@ -10,8 +16,8 @@ typedef HistoryEdition = ({
   String champion,
   String runnerUp,
   String? third,
-  int finalHome,
-  int finalAway,
+  int? finalHome,
+  int? finalAway,
 });
 
 /// Real World Cup, European Championship and South America Cup history, mapped
@@ -25,6 +31,38 @@ abstract final class RealHistory {
     'Czechoslovakia': 'Czechia',
     'Czech Republic': 'Czechia',
     'Yugoslavia': 'Serbia',
+    'Turkey': 'Türkiye',
+  };
+
+  /// The two beaten semi-finalists (who share the bronze) for continental-cup
+  /// editions. The European Championship and South America Cup rows carry no
+  /// single third place in [editions] — they have no third-place match — so
+  /// both their bronze medallists are supplied here, keyed `"competition|year"`,
+  /// and applied by the history seeder. Names resolve via [aliases].
+  static const continentalBronzes = <String, (String, String)>{
+    'European Championship|1960': ('Czechoslovakia', 'France'),
+    'European Championship|1964': ('Hungary', 'Denmark'),
+    'European Championship|1968': ('England', 'Soviet Union'),
+    'European Championship|1972': ('Belgium', 'Hungary'),
+    'European Championship|1976': ('Netherlands', 'Yugoslavia'),
+    'European Championship|1980': ('Czechoslovakia', 'Italy'),
+    'European Championship|1984': ('Denmark', 'Portugal'),
+    'European Championship|1988': ('West Germany', 'Italy'),
+    'European Championship|1992': ('Sweden', 'Netherlands'),
+    'European Championship|1996': ('England', 'France'),
+    'European Championship|2000': ('Portugal', 'Netherlands'),
+    'European Championship|2004': ('Czech Republic', 'Netherlands'),
+    'European Championship|2008': ('Russia', 'Turkey'),
+    'European Championship|2012': ('Portugal', 'Germany'),
+    'European Championship|2016': ('Wales', 'Germany'),
+    'European Championship|2020': ('Spain', 'Denmark'),
+    'European Championship|2024': ('France', 'Netherlands'),
+    'South America Cup|2011': ('Peru', 'Venezuela'),
+    'South America Cup|2015': ('Peru', 'Paraguay'),
+    'South America Cup|2016': ('Colombia', 'United States'),
+    'South America Cup|2019': ('Argentina', 'Chile'),
+    'South America Cup|2021': ('Colombia', 'Peru'),
+    'South America Cup|2024': ('Uruguay', 'Canada'),
   };
 
   static const worldChampionship = 'World Championship';
@@ -204,7 +242,7 @@ abstract final class RealHistory {
       host: 'Japan',
       champion: 'Brazil',
       runnerUp: 'Germany',
-      third: null,
+      third: 'Turkey', // resolves via aliases → Türkiye
       finalHome: 2,
       finalAway: 0,
     ),
@@ -258,6 +296,11 @@ abstract final class RealHistory {
       finalHome: 3,
       finalAway: 3,
     ),
+    // 2026 is deliberately ABSENT. A save opens on 1 July 2026, while that
+    // World Cup is still being played — so recording a champion for it put a
+    // decided edition on a nation's history before the competition it belongs
+    // to had been won. The roll of honour ends with the last edition that was
+    // actually finished when the career begins.
     // --- European Championship --------------------------------------------
     (
       year: 1960,
@@ -430,6 +473,438 @@ abstract final class RealHistory {
       finalAway: 1,
     ),
     // --- South America Cup -------------------------------------------------
+    // The full run of South American Championships / Copa América, back to the
+    // first in 1916. Most editions before 1987 were straight round-robins with
+    // no final, so they carry a champion and a runner-up but no scoreline; the
+    // ones that ended level and went to a play-off record that play-off's
+    // score. The 1959 championship was staged twice; only the (official)
+    // Argentine edition is listed, since honours are keyed by competition and
+    // year and two rows would collide.
+    (
+      year: 1916,
+      competition: southAmericaCup,
+      host: 'Argentina',
+      champion: 'Uruguay',
+      runnerUp: 'Argentina',
+      third: null,
+      finalHome: null,
+      finalAway: null,
+    ),
+    (
+      year: 1917,
+      competition: southAmericaCup,
+      host: 'Uruguay',
+      champion: 'Uruguay',
+      runnerUp: 'Argentina',
+      third: null,
+      finalHome: null,
+      finalAway: null,
+    ),
+    (
+      year: 1919,
+      competition: southAmericaCup,
+      host: 'Brazil',
+      champion: 'Brazil',
+      runnerUp: 'Uruguay',
+      third: null,
+      // Level at the top of the table; Brazil won the play-off in extra time.
+      finalHome: 1,
+      finalAway: 0,
+    ),
+    (
+      year: 1920,
+      competition: southAmericaCup,
+      host: 'Chile',
+      champion: 'Uruguay',
+      runnerUp: 'Argentina',
+      third: null,
+      finalHome: null,
+      finalAway: null,
+    ),
+    (
+      year: 1921,
+      competition: southAmericaCup,
+      host: 'Argentina',
+      champion: 'Argentina',
+      runnerUp: 'Brazil',
+      third: null,
+      finalHome: null,
+      finalAway: null,
+    ),
+    (
+      year: 1922,
+      competition: southAmericaCup,
+      host: 'Brazil',
+      champion: 'Brazil',
+      runnerUp: 'Paraguay',
+      third: null,
+      // Decided by a play-off after Brazil and Paraguay finished level.
+      finalHome: 3,
+      finalAway: 0,
+    ),
+    (
+      year: 1923,
+      competition: southAmericaCup,
+      host: 'Uruguay',
+      champion: 'Uruguay',
+      runnerUp: 'Argentina',
+      third: null,
+      finalHome: null,
+      finalAway: null,
+    ),
+    (
+      year: 1924,
+      competition: southAmericaCup,
+      host: 'Uruguay',
+      champion: 'Uruguay',
+      runnerUp: 'Argentina',
+      third: null,
+      finalHome: null,
+      finalAway: null,
+    ),
+    (
+      year: 1925,
+      competition: southAmericaCup,
+      host: 'Argentina',
+      champion: 'Argentina',
+      runnerUp: 'Brazil',
+      third: null,
+      finalHome: null,
+      finalAway: null,
+    ),
+    (
+      year: 1926,
+      competition: southAmericaCup,
+      host: 'Chile',
+      champion: 'Uruguay',
+      runnerUp: 'Argentina',
+      third: null,
+      finalHome: null,
+      finalAway: null,
+    ),
+    (
+      year: 1927,
+      competition: southAmericaCup,
+      host: 'Peru',
+      champion: 'Argentina',
+      runnerUp: 'Uruguay',
+      third: null,
+      finalHome: null,
+      finalAway: null,
+    ),
+    (
+      year: 1929,
+      competition: southAmericaCup,
+      host: 'Argentina',
+      champion: 'Argentina',
+      runnerUp: 'Paraguay',
+      third: null,
+      finalHome: null,
+      finalAway: null,
+    ),
+    (
+      year: 1935,
+      competition: southAmericaCup,
+      host: 'Peru',
+      champion: 'Uruguay',
+      runnerUp: 'Argentina',
+      third: null,
+      finalHome: null,
+      finalAway: null,
+    ),
+    (
+      year: 1937,
+      competition: southAmericaCup,
+      host: 'Argentina',
+      champion: 'Argentina',
+      runnerUp: 'Brazil',
+      third: null,
+      // Argentina and Brazil finished level; Argentina took the play-off in
+      // extra time.
+      finalHome: 2,
+      finalAway: 0,
+    ),
+    (
+      year: 1939,
+      competition: southAmericaCup,
+      host: 'Peru',
+      champion: 'Peru',
+      runnerUp: 'Uruguay',
+      third: null,
+      finalHome: null,
+      finalAway: null,
+    ),
+    (
+      year: 1941,
+      competition: southAmericaCup,
+      host: 'Chile',
+      champion: 'Argentina',
+      runnerUp: 'Uruguay',
+      third: null,
+      finalHome: null,
+      finalAway: null,
+    ),
+    (
+      year: 1942,
+      competition: southAmericaCup,
+      host: 'Uruguay',
+      champion: 'Uruguay',
+      runnerUp: 'Argentina',
+      third: null,
+      finalHome: null,
+      finalAway: null,
+    ),
+    (
+      year: 1945,
+      competition: southAmericaCup,
+      host: 'Chile',
+      champion: 'Argentina',
+      runnerUp: 'Brazil',
+      third: null,
+      finalHome: null,
+      finalAway: null,
+    ),
+    (
+      year: 1946,
+      competition: southAmericaCup,
+      host: 'Argentina',
+      champion: 'Argentina',
+      runnerUp: 'Brazil',
+      third: null,
+      finalHome: null,
+      finalAway: null,
+    ),
+    (
+      year: 1947,
+      competition: southAmericaCup,
+      host: 'Ecuador',
+      champion: 'Argentina',
+      runnerUp: 'Paraguay',
+      third: null,
+      finalHome: null,
+      finalAway: null,
+    ),
+    (
+      year: 1949,
+      competition: southAmericaCup,
+      host: 'Brazil',
+      champion: 'Brazil',
+      runnerUp: 'Paraguay',
+      third: null,
+      // Brazil won the play-off after the two finished level.
+      finalHome: 7,
+      finalAway: 0,
+    ),
+    (
+      year: 1953,
+      competition: southAmericaCup,
+      host: 'Peru',
+      champion: 'Paraguay',
+      runnerUp: 'Brazil',
+      third: null,
+      // Settled by a play-off in Lima.
+      finalHome: 3,
+      finalAway: 2,
+    ),
+    (
+      year: 1955,
+      competition: southAmericaCup,
+      host: 'Chile',
+      champion: 'Argentina',
+      runnerUp: 'Chile',
+      third: null,
+      finalHome: null,
+      finalAway: null,
+    ),
+    (
+      year: 1956,
+      competition: southAmericaCup,
+      host: 'Uruguay',
+      champion: 'Uruguay',
+      runnerUp: 'Chile',
+      third: null,
+      finalHome: null,
+      finalAway: null,
+    ),
+    (
+      year: 1957,
+      competition: southAmericaCup,
+      host: 'Peru',
+      champion: 'Argentina',
+      runnerUp: 'Brazil',
+      third: null,
+      finalHome: null,
+      finalAway: null,
+    ),
+    (
+      year: 1959,
+      competition: southAmericaCup,
+      host: 'Argentina',
+      champion: 'Argentina',
+      runnerUp: 'Brazil',
+      third: null,
+      finalHome: null,
+      finalAway: null,
+    ),
+    (
+      year: 1963,
+      competition: southAmericaCup,
+      host: 'Bolivia',
+      champion: 'Bolivia',
+      runnerUp: 'Paraguay',
+      third: null,
+      finalHome: null,
+      finalAway: null,
+    ),
+    (
+      year: 1967,
+      competition: southAmericaCup,
+      host: 'Uruguay',
+      champion: 'Uruguay',
+      runnerUp: 'Argentina',
+      third: null,
+      finalHome: null,
+      finalAway: null,
+    ),
+    // 1975–1983 had no host: the whole tournament was played home-and-away
+    // across the continent, so no host country is recorded for them.
+    (
+      year: 1975,
+      competition: southAmericaCup,
+      host: '',
+      champion: 'Peru',
+      runnerUp: 'Colombia',
+      third: null,
+      // The two-legged final finished level and Peru won the play-off.
+      finalHome: 1,
+      finalAway: 0,
+    ),
+    (
+      year: 1979,
+      competition: southAmericaCup,
+      host: '',
+      champion: 'Paraguay',
+      runnerUp: 'Chile',
+      third: null,
+      // One win each over the two legs and a goalless play-off; Paraguay took
+      // the title on goal difference, so the aggregate is what is recorded (a
+      // level score here would read as a shoot-out, which it was not).
+      finalHome: 3,
+      finalAway: 1,
+    ),
+    (
+      year: 1983,
+      competition: southAmericaCup,
+      host: '',
+      champion: 'Uruguay',
+      runnerUp: 'Brazil',
+      third: null,
+      // Uruguay won the two-legged final 3–1 on aggregate.
+      finalHome: 3,
+      finalAway: 1,
+    ),
+    (
+      year: 1987,
+      competition: southAmericaCup,
+      host: 'Argentina',
+      champion: 'Uruguay',
+      runnerUp: 'Chile',
+      third: null,
+      finalHome: 1,
+      finalAway: 0,
+    ),
+    (
+      year: 1989,
+      competition: southAmericaCup,
+      host: 'Brazil',
+      champion: 'Brazil',
+      runnerUp: 'Uruguay',
+      third: null,
+      // Decided by a final round-robin; Brazil beat Uruguay in the decider.
+      finalHome: 1,
+      finalAway: 0,
+    ),
+    (
+      year: 1991,
+      competition: southAmericaCup,
+      host: 'Chile',
+      champion: 'Argentina',
+      runnerUp: 'Brazil',
+      third: null,
+      // Also a final round-robin; the two met in the decisive match.
+      finalHome: 3,
+      finalAway: 2,
+    ),
+    (
+      year: 1993,
+      competition: southAmericaCup,
+      host: 'Ecuador',
+      champion: 'Argentina',
+      runnerUp: 'Mexico',
+      third: null,
+      finalHome: 2,
+      finalAway: 1,
+    ),
+    (
+      year: 1995,
+      competition: southAmericaCup,
+      host: 'Uruguay',
+      champion: 'Uruguay',
+      runnerUp: 'Brazil',
+      third: null,
+      finalHome: 1,
+      finalAway: 1,
+    ),
+    (
+      year: 1997,
+      competition: southAmericaCup,
+      host: 'Bolivia',
+      champion: 'Brazil',
+      runnerUp: 'Bolivia',
+      third: null,
+      finalHome: 3,
+      finalAway: 1,
+    ),
+    (
+      year: 1999,
+      competition: southAmericaCup,
+      host: 'Paraguay',
+      champion: 'Brazil',
+      runnerUp: 'Uruguay',
+      third: null,
+      finalHome: 3,
+      finalAway: 0,
+    ),
+    (
+      year: 2001,
+      competition: southAmericaCup,
+      host: 'Colombia',
+      champion: 'Colombia',
+      runnerUp: 'Mexico',
+      third: null,
+      finalHome: 1,
+      finalAway: 0,
+    ),
+    (
+      year: 2004,
+      competition: southAmericaCup,
+      host: 'Peru',
+      champion: 'Brazil',
+      runnerUp: 'Argentina',
+      third: null,
+      finalHome: 2,
+      finalAway: 2,
+    ),
+    (
+      year: 2007,
+      competition: southAmericaCup,
+      host: 'Venezuela',
+      champion: 'Brazil',
+      runnerUp: 'Argentina',
+      third: null,
+      finalHome: 3,
+      finalAway: 0,
+    ),
     (
       year: 2011,
       competition: southAmericaCup,
@@ -830,6 +1305,19 @@ abstract final class RealHistory {
       runnerUp: 'Papua New Guinea',
       third: 'New Caledonia',
       finalHome: 0, // New Zealand won on penalties
+      finalAway: 0,
+    ),
+    // 2020 was cancelled (COVID), so the cup returned in 2024 after an
+    // eight-year gap — co-hosted by Fiji and Vanuatu, with the Vanuatu matches
+    // ultimately moved to Suva.
+    (
+      year: 2024,
+      competition: oceaniaCup,
+      host: 'Fiji',
+      champion: 'New Zealand',
+      runnerUp: 'Vanuatu',
+      third: 'Tahiti', // beat Fiji 2-1 in the third-place match
+      finalHome: 3,
       finalAway: 0,
     ),
   ];

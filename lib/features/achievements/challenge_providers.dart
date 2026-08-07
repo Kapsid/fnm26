@@ -5,6 +5,8 @@ import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/services/achievements/challenges.dart';
 import 'package:fnm/domain/services/competition/continental_cups.dart';
 import 'package:fnm/features/career/career_providers.dart';
+import 'package:fnm/features/stats/stats_providers.dart';
+import 'package:fnm/l10n/app_localizations.dart';
 
 /// The World Cup finals round codes (bare — continental/Nations Cup rounds are
 /// prefixed), used to tell a finals match from a qualifier.
@@ -18,6 +20,77 @@ typedef ChallengeView = ({
   bool complete,
 });
 
+/// The localised (title, description) for a challenge, from its stable id. The
+/// procedural (`pc_`) challenges fold their per-save [target] into the text.
+/// Falls back to the catalogue's English if an id isn't mapped.
+({String title, String description}) challengeText(
+  AppLocalizations l,
+  ChallengeDef def,
+  int target,
+) =>
+    switch (def.id) {
+      'ch_first_steps' =>
+        (title: l.chFirstSteps, description: l.chFirstStepsDesc),
+      'ch_unbeaten_10' =>
+        (title: l.chUnbeaten10, description: l.chUnbeaten10Desc),
+      'ch_two_nations' =>
+        (title: l.chTwoNations, description: l.chTwoNationsDesc),
+      'ch_cont_1' => (title: l.chCont1, description: l.chCont1Desc),
+      'ch_nc_1' => (title: l.chNc1, description: l.chNc1Desc),
+      'ch_wc_1' => (title: l.chWc1, description: l.chWc1Desc),
+      'ch_years_25' => (title: l.chYears25, description: l.chYears25Desc),
+      'ch_wc_3' => (title: l.chWc3, description: l.chWc3Desc),
+      'ch_wc_5' => (title: l.chWc5, description: l.chWc5Desc),
+      'ch_wc_10' => (title: l.chWc10, description: l.chWc10Desc),
+      'ch_wc_2teams' => (title: l.chWc2Teams, description: l.chWc2TeamsDesc),
+      'ch_wc_3teams' => (title: l.chWc3Teams, description: l.chWc3TeamsDesc),
+      'ch_wc_streak3' => (title: l.chWcStreak3, description: l.chWcStreak3Desc),
+      'ch_wc_allconf' => (title: l.chWcAllconf, description: l.chWcAllconfDesc),
+      'ch_cont_5' => (title: l.chCont5, description: l.chCont5Desc),
+      'ch_cont_all' => (title: l.chContAll, description: l.chContAllDesc),
+      'ch_treble' => (title: l.chTreble, description: l.chTrebleDesc),
+      'ch_nations_10' => (title: l.chNations10, description: l.chNations10Desc),
+      'ch_years_100' => (title: l.chYears100, description: l.chYears100Desc),
+      'ch_years_500' => (title: l.chYears500, description: l.chYears500Desc),
+      'ch_years_1000' =>
+        (title: l.chYears1000, description: l.chYears1000Desc),
+      'ch_grandmaster' =>
+        (title: l.chGrandmaster, description: l.chGrandmasterDesc),
+      'ch_undefeated' =>
+        (title: l.chUndefeated, description: l.chUndefeatedDesc),
+      'ch_perfect_qual' =>
+        (title: l.chPerfectQual, description: l.chPerfectQualDesc),
+      'ch_minnow' => (title: l.chMinnow, description: l.chMinnowDesc),
+      'ch_grand_tour' => (title: l.chGrandTour, description: l.chGrandTourDesc),
+      'ch_unbeaten_25' =>
+        (title: l.chUnbeaten25, description: l.chUnbeaten25Desc),
+      'ch_goals_10k' => (title: l.chGoals10k, description: l.chGoals10kDesc),
+      'ch_cleansheets_500' =>
+        (title: l.chCleanSheets500, description: l.chCleanSheets500Desc),
+      'ch_hattricks_25' =>
+        (title: l.chHatTricks25, description: l.chHatTricks25Desc),
+      'ch_winstreak_25' =>
+        (title: l.chWinStreak25, description: l.chWinStreak25Desc),
+      'ch_cont_10' => (title: l.chCont10, description: l.chCont10Desc),
+      'pc_wc' => (title: l.chPcWc, description: l.chPcWcDesc(target)),
+      'pc_majors' =>
+        (title: l.chPcMajors, description: l.chPcMajorsDesc(target)),
+      'pc_unbeaten' =>
+        (title: l.chPcUnbeaten, description: l.chPcUnbeatenDesc(target)),
+      'pc_nations' =>
+        (title: l.chPcNations, description: l.chPcNationsDesc(target)),
+      'pc_years' => (title: l.chPcYears, description: l.chPcYearsDesc(target)),
+      _ => (title: def.title, description: def.description),
+    };
+
+/// The localised heading for a challenge [t]ier.
+String challengeTierLabel(AppLocalizations l, ChallengeTier t) => switch (t) {
+      ChallengeTier.bronze => l.chTierBronze,
+      ChallengeTier.silver => l.chTierSilver,
+      ChallengeTier.gold => l.chTierGold,
+      ChallengeTier.legendary => l.chTierLegendary,
+    };
+
 /// Gathers the whole-career [ChallengeStats] and evaluates the catalogue.
 final AutoDisposeFutureProviderFamily<List<ChallengeView>, int>
     challengesViewProvider =
@@ -29,6 +102,9 @@ final AutoDisposeFutureProviderFamily<List<ChallengeView>, int>
   final career = await ref.watch(careerRepositoryProvider).byId(careerId);
   if (career == null) return const [];
   final comp = ref.watch(competitionRepositoryProvider);
+  // Career-wide totals (goals, clean sheets, hat-tricks, streaks) shared with
+  // the stats screen and achievements, so the collector challenges agree.
+  final cs = await ref.watch(careerStatsProvider(careerId).future);
   final nations = {
     for (final n in await ref.watch(nationRepositoryProvider).all()) n.id: n,
   };
@@ -157,6 +233,7 @@ final AutoDisposeFutureProviderFamily<List<ChallengeView>, int>
           championId: 0,
           runnerUpId: 0,
           thirdId: null,
+          thirdId2: null,
           hostId: null,
           finalHomeScore: null,
           finalAwayScore: null,
@@ -214,10 +291,19 @@ final AutoDisposeFutureProviderFamily<List<ChallengeView>, int>
     wonWorldCupAsVisitor: wonAsVisitor,
     wonWorldCupAsMinnow: wonAsMinnow,
     longestUnbeatenRun: longestUnbeaten,
+    longestWinStreak: cs.longestWinStreak,
+    careerGoals: cs.goalsFor,
+    careerCleanSheets: cs.cleanSheets,
+    careerHatTricks: cs.hatTricks,
   );
 
+  // The fixed catalogue plus this save's procedural challenges (seeded targets).
+  final all = [
+    ...ChallengeCatalog.all,
+    ...ProceduralChallenges.forSeed(career.rngSeed),
+  ];
   return [
-    for (final c in ChallengeCatalog.all)
+    for (final c in all)
       () {
         final (cur, target) = c.progressOf(stats);
         return (

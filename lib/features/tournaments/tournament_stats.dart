@@ -3,21 +3,26 @@ import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
-import 'package:fnm/features/tournaments/cup_detail_providers.dart' show AllTimeScorer;
-import 'package:fnm/features/tournaments/tournament_history.dart' show TournamentSoon;
+import 'package:fnm/features/tournaments/cup_detail_providers.dart'
+    show AllTimeScorer, CupPlayerRecord;
+import 'package:fnm/features/tournaments/tournament_history.dart'
+    show TournamentSoon;
+import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 
-/// A cup's all-time historical records, built from its full roll of honour and
-/// its all-time scorer chart: the record scorer, the most-decorated nations, the
-/// most frequent finalists, and the biggest win in a final. (More player records
-/// — caps, goals in a single match, a nation's biggest haul in one edition —
-/// will be layered on as the stat store grows.)
+/// A cup's all-time records: the nation honours (most titles, most finals
+/// reached, biggest final win) as headline cards, then a tabbed top-ten
+/// leaderboard of the players — most games, most cups (editions) played, and
+/// top scorers.
 class TournamentStatsTab extends StatelessWidget {
   const TournamentStatsTab({
     required this.honours,
     required this.allTimeScorers,
     required this.code,
     required this.name,
+    this.topGames = const [],
+    this.topCups = const [],
+    this.highlightNations = const {},
     super.key,
   });
 
@@ -26,12 +31,20 @@ class TournamentStatsTab extends StatelessWidget {
   final String Function(int) code;
   final String Function(int) name;
 
+  /// All-time player leaderboards, most first: matches played, and cup editions
+  /// attended.
+  final List<CupPlayerRecord> topGames;
+  final List<CupPlayerRecord> topCups;
+
+  /// The nations the manager has led (current and past) — their players are
+  /// highlighted in the leaderboards, so "my" record-holders stand out.
+  final Set<int> highlightNations;
+
   @override
   Widget build(BuildContext context) {
-    if (honours.isEmpty && allTimeScorers.isEmpty) {
-      return const TournamentSoon(
-        message: 'Records appear once the competition has some history.',
-      );
+    final l = AppLocalizations.of(context);
+    if (honours.isEmpty && allTimeScorers.isEmpty && topGames.isEmpty) {
+      return TournamentSoon(message: l.tourSharedStatsEmpty);
     }
 
     // Most titles, and most finals reached (champion or runner-up), by nation.
@@ -60,85 +73,47 @@ class TournamentStatsTab extends StatelessWidget {
       }
     }
 
-    final topScorer = allTimeScorers.isEmpty ? null : allTimeScorers.first;
-
     return ListView(
       padding: const EdgeInsets.all(AppSpacing.marginMobile),
       children: [
-        if (topScorer != null)
-          _RecordCard(
-            icon: Icons.sports_soccer_rounded,
-            label: 'RECORD SCORER',
-            headline: topScorer.name,
-            code: code(topScorer.nationId),
-            detail: '${topScorer.goals} goals · ${name(topScorer.nationId)}'
-                '${topScorer.active ? ' · still active' : ''}',
-          ),
+        // Nation honours — the headline records.
         if (topTitles != null)
           _RecordCard(
             icon: Icons.emoji_events_rounded,
-            label: 'MOST TITLES',
+            label: l.tourSharedMostTitles,
             headline: name(topTitles.$1),
             code: code(topTitles.$1),
-            detail: '${topTitles.$2} '
-                '${topTitles.$2 == 1 ? 'title' : 'titles'}',
+            detail: l.tourStatsTitles(topTitles.$2),
           ),
         if (topFinals != null)
           _RecordCard(
             icon: Icons.workspace_premium_rounded,
-            label: 'MOST FINALS',
+            label: l.tourSharedMostFinals,
             headline: name(topFinals.$1),
             code: code(topFinals.$1),
-            detail: '${topFinals.$2} '
-                '${topFinals.$2 == 1 ? 'final' : 'finals'} contested',
+            detail: l.tourStatsFinalsContested(topFinals.$2),
           ),
         if (bigFinal != null)
           _RecordCard(
             icon: Icons.whatshot_rounded,
-            label: 'BIGGEST FINAL WIN',
+            label: l.tourSharedBiggestFinalWin,
             headline: '${name(bigFinal.championId)} '
                 '${_winScore(bigFinal)}',
             code: code(bigFinal.championId),
-            detail: 'v ${name(bigFinal.runnerUpId)} · ${bigFinal.year}',
+            detail: '${l.recordsVs} ${name(bigFinal.runnerUpId)} · '
+                '${bigFinal.year}',
           ),
-        if (allTimeScorers.length > 1) ...[
-          const SizedBox(height: AppSpacing.md),
-          Text(
-            'ALL-TIME SCORERS',
-            style: AppTypography.labelMedium.copyWith(color: AppColors.primary),
-          ),
-          const SizedBox(height: AppSpacing.xs),
-          AppCard(
-            child: Column(
-              children: [
-                for (final s in allTimeScorers.take(10))
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 3),
-                    child: Row(
-                      children: [
-                        FlagDisc(code(s.nationId), size: 20),
-                        const SizedBox(width: AppSpacing.sm),
-                        Expanded(
-                          child: Text(
-                            s.name,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: AppTypography.bodySmall,
-                          ),
-                        ),
-                        Text(
-                          '${s.goals}',
-                          style: AppTypography.labelMedium.copyWith(
-                            color: AppColors.primary,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-              ],
-            ),
-          ),
-        ],
+        // Player leaderboards. Games and scorers show from the first edition;
+        // "cups played" only tells a story once there are at least two editions
+        // (before that, everyone has played exactly one).
+        _Leaderboard(
+          topGames: topGames,
+          topCups: topCups,
+          scorers: allTimeScorers,
+          editions: honours.length,
+          code: code,
+          highlightNations: highlightNations,
+        ),
         const SizedBox(height: AppSpacing.xl),
       ],
     );
@@ -165,6 +140,154 @@ class TournamentStatsTab extends StatelessWidget {
       }
     });
     return (bestId, best);
+  }
+}
+
+/// One row of a leaderboard: a nation (for the flag), a holder name and a count.
+typedef _LbRow = ({int nationId, String name, int count});
+
+/// The all-time player leaderboard: a segmented switch between Games, Cups and
+/// Scorers, each a top-ten table. The Cups board is offered only from the
+/// second edition on. Renders nothing when there's no player data at all.
+class _Leaderboard extends StatefulWidget {
+  const _Leaderboard({
+    required this.topGames,
+    required this.topCups,
+    required this.scorers,
+    required this.editions,
+    required this.code,
+    required this.highlightNations,
+  });
+
+  final List<CupPlayerRecord> topGames;
+  final List<CupPlayerRecord> topCups;
+  final List<AllTimeScorer> scorers;
+  final int editions;
+  final String Function(int) code;
+  final Set<int> highlightNations;
+
+  @override
+  State<_Leaderboard> createState() => _LeaderboardState();
+}
+
+class _LeaderboardState extends State<_Leaderboard> {
+  int _tab = 0;
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    final boards = <({String label, List<_LbRow> rows})>[
+      if (widget.topGames.isNotEmpty)
+        (
+          label: l.tourStatsTabGames,
+          rows: [
+            for (final r in widget.topGames)
+              (nationId: r.nationId, name: r.name, count: r.count),
+          ],
+        ),
+      // "Cups played" is meaningless in edition one (everyone's on one), so it
+      // only appears from the second edition.
+      if (widget.editions >= 2 && widget.topCups.isNotEmpty)
+        (
+          label: l.tourStatsTabCups,
+          rows: [
+            for (final r in widget.topCups)
+              (nationId: r.nationId, name: r.name, count: r.count),
+          ],
+        ),
+      if (widget.scorers.isNotEmpty)
+        (
+          label: l.tourStatsTabScorers,
+          rows: [
+            for (final s in widget.scorers.take(10))
+              (nationId: s.nationId, name: s.name, count: s.goals),
+          ],
+        ),
+    ];
+    if (boards.isEmpty) return const SizedBox.shrink();
+    final tab = _tab.clamp(0, boards.length - 1);
+    final rows = boards[tab].rows;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const SizedBox(height: AppSpacing.sm),
+        Text(
+          l.tourStatsLeaders,
+          style: AppTypography.labelMedium.copyWith(color: AppColors.primary),
+        ),
+        const SizedBox(height: AppSpacing.xs),
+        if (boards.length > 1)
+          SegmentedButton<int>(
+            showSelectedIcon: false,
+            style: SegmentedButton.styleFrom(
+              visualDensity: VisualDensity.compact,
+            ),
+            segments: [
+              for (var i = 0; i < boards.length; i++)
+                ButtonSegment(value: i, label: Text(boards[i].label)),
+            ],
+            selected: {tab},
+            onSelectionChanged: (s) => setState(() => _tab = s.first),
+          ),
+        const SizedBox(height: AppSpacing.sm),
+        AppCard(
+          child: Column(
+            children: [
+              for (var i = 0; i < rows.length; i++)
+                () {
+                  // A player from one of the manager's nations (now or in the
+                  // past) is highlighted so their records stand out.
+                  final mine = widget.highlightNations.contains(rows[i].nationId);
+                  return Container(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 3, horizontal: 4),
+                    decoration: mine
+                        ? BoxDecoration(
+                            color: AppColors.primary.withValues(alpha: 0.10),
+                            borderRadius: AppRadii.smAll,
+                          )
+                        : null,
+                    child: Row(
+                      children: [
+                        SizedBox(
+                          width: 22,
+                          child: Text(
+                            '${i + 1}',
+                            style: AppTypography.labelSmall.copyWith(
+                              color: AppColors.onSurfaceVariant,
+                            ),
+                          ),
+                        ),
+                        FlagDisc(widget.code(rows[i].nationId), size: 20),
+                        const SizedBox(width: AppSpacing.sm),
+                        Expanded(
+                          child: Text(
+                            rows[i].name,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: AppTypography.bodySmall.copyWith(
+                              fontWeight:
+                                  mine ? FontWeight.w700 : FontWeight.w400,
+                              color: mine ? AppColors.primary : null,
+                            ),
+                          ),
+                        ),
+                        Text(
+                          '${rows[i].count}',
+                          style: AppTypography.labelMedium.copyWith(
+                            color: AppColors.primary,
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                }(),
+            ],
+          ),
+        ),
+      ],
+    );
   }
 }
 

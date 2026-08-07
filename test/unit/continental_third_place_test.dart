@@ -14,10 +14,11 @@ import 'package:fnm/features/hub/hub_providers.dart';
 import '../helpers/test_database.dart';
 
 /// The continental championships have NO third-place play-off (as the real
-/// European Championship): the honour records no bronze medallist and no C3RD
-/// fixture is ever scheduled.
+/// European Championship): no C3RD fixture is ever scheduled, but the two beaten
+/// semi-finalists SHARE the bronze, so the honour records both of them.
 void main() {
-  test('the continental cup has no 3rd-place match and no bronze', () async {
+  test('the continental cup shares bronze between both beaten semi-finalists',
+      () async {
     final db = createTestDatabase();
     final nations = (jsonDecode(
       File('assets/data/nations.json').readAsStringSync(),
@@ -68,14 +69,20 @@ void main() {
       (h) => h.competition == 'European Championship' && h.year == 2028,
     );
 
-    // No third-place play-off: no bronze medallist recorded.
-    expect(
+    // No third-place play-off, but BOTH beaten semi-finalists share bronze —
+    // recorded in the honour's two third-place slots.
+    expect(euro.thirdId, isNotNull, reason: 'first bronze (a semi-final loser)');
+    expect(euro.thirdId2, isNotNull,
+        reason: 'second bronze (the other semi-final loser)');
+    // Four distinct medallists: two finalists plus two shared-bronze sides.
+    final medallists = {
+      euro.championId,
+      euro.runnerUpId,
       euro.thirdId,
-      isNull,
-      reason: 'the continental cup has no third-place play-off',
-    );
-    // Champion and runner-up are still two distinct nations.
-    expect(euro.championId, isNot(euro.runnerUpId));
+      euro.thirdId2,
+    };
+    expect(medallists.length, 4,
+        reason: 'champion, runner-up and two distinct bronze medallists');
 
     // No C3RD fixture is ever scheduled.
     final thirds = await comp.fixturesByRound(

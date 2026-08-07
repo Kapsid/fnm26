@@ -8,6 +8,7 @@ import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/features/friendlies/friendlies_providers.dart';
+import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
 
@@ -28,12 +29,37 @@ class _FriendliesScreenState extends ConsumerState<FriendliesScreen> {
   final Map<DateTime, int> _picks = {};
   bool _saving = false;
 
-  static const _months = [
-    '', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', //
-    'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
-  ];
+  String _monthAbbr(AppLocalizations l, int m) {
+    switch (m) {
+      case 1:
+        return l.friendliesMonthJan;
+      case 2:
+        return l.friendliesMonthFeb;
+      case 3:
+        return l.friendliesMonthMar;
+      case 4:
+        return l.friendliesMonthApr;
+      case 5:
+        return l.friendliesMonthMay;
+      case 6:
+        return l.friendliesMonthJun;
+      case 7:
+        return l.friendliesMonthJul;
+      case 8:
+        return l.friendliesMonthAug;
+      case 9:
+        return l.friendliesMonthSep;
+      case 10:
+        return l.friendliesMonthOct;
+      case 11:
+        return l.friendliesMonthNov;
+      default:
+        return l.friendliesMonthDec;
+    }
+  }
 
-  String _label(DateTime d) => '${_months[d.month]} ${d.year}';
+  String _label(AppLocalizations l, DateTime d) =>
+      '${_monthAbbr(l, d.month)} ${d.year}';
 
   /// A distinct block of suggested opponents for window [index], so each window
   /// offers a different (already seed-shuffled) set rather than the same list.
@@ -59,6 +85,7 @@ class _FriendliesScreenState extends ConsumerState<FriendliesScreen> {
   @override
   Widget build(BuildContext context) {
     final async = ref.watch(friendliesPlanProvider(widget.careerId));
+    final l = AppLocalizations.of(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -68,21 +95,22 @@ class _FriendliesScreenState extends ConsumerState<FriendliesScreen> {
               context.go('${Routes.hub}?careerId=${widget.careerId}'),
         ),
         title: Text(
-          'FRIENDLIES',
+          l.friendliesTitle,
           style: AppTypography.labelMedium.copyWith(color: AppColors.primary),
         ),
         centerTitle: true,
       ),
       body: async.when(
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => Center(child: Text('Could not load friendlies.\n$e')),
+        error: (e, _) =>
+            Center(child: Text(l.friendliesLoadError(e.toString()))),
         data: (plan) {
           if (plan == null) {
             return Center(
               child: Padding(
                 padding: const EdgeInsets.all(AppSpacing.xl),
                 child: PrimaryButton(
-                  label: 'Continue',
+                  label: l.friendliesContinue,
                   icon: Icons.check_rounded,
                   onPressed: () =>
                       context.go('${Routes.hub}?careerId=${widget.careerId}'),
@@ -95,9 +123,7 @@ class _FriendliesScreenState extends ConsumerState<FriendliesScreen> {
               Padding(
                 padding: const EdgeInsets.all(AppSpacing.marginMobile),
                 child: Text(
-                  'Arrange warm-ups for the ${plan.windows.length} open '
-                  'window${plan.windows.length == 1 ? '' : 's'} before your '
-                  'next competitive match. Tap an opponent, or leave it free.',
+                  l.friendliesArrangeIntro(plan.windows.length),
                   style: AppTypography.bodyMedium.copyWith(
                     color: AppColors.onSurfaceVariant,
                   ),
@@ -111,7 +137,8 @@ class _FriendliesScreenState extends ConsumerState<FriendliesScreen> {
                   children: [
                     for (var i = 0; i < plan.windows.length; i++)
                       _WindowCard(
-                        label: _label(plan.windows[i]),
+                        label: _label(l, plan.windows[i]),
+                        home: friendlyIsHome(plan.windows[i]),
                         opponents: _opponentsFor(
                           plan.opponents,
                           i,
@@ -139,9 +166,8 @@ class _FriendliesScreenState extends ConsumerState<FriendliesScreen> {
                   padding: const EdgeInsets.all(AppSpacing.marginMobile),
                   child: PrimaryButton(
                     label: _picks.isEmpty
-                        ? 'No friendlies this window'
-                        : 'Confirm ${_picks.length} friendly'
-                            '${_picks.length == 1 ? '' : 's'}',
+                        ? l.friendliesNoneThisWindow
+                        : l.friendliesConfirmCount(_picks.length),
                     icon: Icons.check_rounded,
                     onPressed: _saving ? null : () => unawaited(_confirm(plan)),
                   ),
@@ -158,6 +184,7 @@ class _FriendliesScreenState extends ConsumerState<FriendliesScreen> {
 class _WindowCard extends StatelessWidget {
   const _WindowCard({
     required this.label,
+    required this.home,
     required this.opponents,
     required this.selected,
     required this.code,
@@ -166,6 +193,11 @@ class _WindowCard extends StatelessWidget {
   });
 
   final String label;
+
+  /// Whether the manager's side hosts this window's game — fixed by the window,
+  /// so it's worth showing before an opponent is picked (it decides whether the
+  /// home advantage is yours or theirs).
+  final bool home;
   final List<Nation> opponents;
   final int? selected;
   final String Function(int) code;
@@ -183,6 +215,8 @@ class _WindowCard extends StatelessWidget {
             Row(
               children: [
                 Text(label, style: AppTypography.labelMedium),
+                const SizedBox(width: AppSpacing.sm),
+                _VenueBadge(home: home),
                 const Spacer(),
                 if (selected != null)
                   Row(
@@ -199,7 +233,7 @@ class _WindowCard extends StatelessWidget {
                   )
                 else
                   Text(
-                    'Free',
+                    AppLocalizations.of(context).friendliesFree,
                     style: AppTypography.labelSmall.copyWith(
                       color: AppColors.onSurfaceVariant,
                     ),
@@ -221,6 +255,43 @@ class _WindowCard extends StatelessWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+/// A small HOME / AWAY badge for a friendly window, so the manager can see who
+/// hosts before committing to an opponent.
+class _VenueBadge extends StatelessWidget {
+  const _VenueBadge({required this.home});
+
+  final bool home;
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    final color = home ? AppColors.primary : AppColors.onSurfaceVariant;
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: 0.14),
+        borderRadius: AppRadii.smAll,
+        border: Border.all(color: color.withValues(alpha: 0.5)),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            home ? Icons.home_rounded : Icons.flight_takeoff_rounded,
+            size: 11,
+            color: color,
+          ),
+          const SizedBox(width: 3),
+          Text(
+            home ? l.friendliesHome : l.friendliesAway,
+            style: AppTypography.labelSmall.copyWith(color: color),
+          ),
+        ],
       ),
     );
   }

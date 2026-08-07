@@ -30,11 +30,14 @@ class _FnmAppState extends ConsumerState<FnmApp> {
   @override
   Widget build(BuildContext context) {
     final router = ref.watch(routerProvider);
+    // A null override follows the device language; a chosen language wins.
+    final locale = ref.watch(localeProvider);
 
     return MaterialApp.router(
       title: 'Football Nations Manager',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.theme,
+      locale: locale,
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       routerConfig: router,

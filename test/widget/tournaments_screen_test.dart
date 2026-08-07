@@ -91,6 +91,7 @@ void main() {
             championId: 1,
             runnerUpId: 2,
             thirdId: null,
+            thirdId2: null,
             hostId: null,
             finalHomeScore: 2,
             finalAwayScore: 1,

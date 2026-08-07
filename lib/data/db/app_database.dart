@@ -52,6 +52,7 @@ const int _newgenIdBase = 1000000000;
     NaturalizedPlayers,
     TacticFamiliarities,
     PressAnswers,
+    PlayerHonours,
   ],
 )
 class AppDatabase extends _$AppDatabase {
@@ -67,7 +68,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase.forTesting(QueryExecutor executor) : super(executor);
 
   @override
-  int get schemaVersion => 39;
+  int get schemaVersion => 40;
 
   /// The first schema version with a recorded shape in `drift_schemas/`, and so
   /// the oldest save that can be migrated forward rather than rebuilt.
@@ -147,6 +148,13 @@ class AppDatabase extends _$AppDatabase {
                 'UPDATE careers SET captain_player_id = NULL '
                 'WHERE captain_player_id >= $_newgenIdBase',
               );
+            },
+            // 39 → 40 adds the trophy cabinet. Nothing else moves: existing
+            // rows are untouched and the new table simply starts empty, so a
+            // career carries on with its history intact and begins collecting
+            // individual honours from here.
+            from39To40: (m, schema) async {
+              await m.createTable(schema.playerHonours);
             },
           )(m, from, to);
         },

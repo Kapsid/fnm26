@@ -17,6 +17,8 @@ extension NationRowMapper on NationRow {
         confederation: confederation,
         ranking: ranking,
         isFreeDemo: isFreeDemo,
+        primaryColor: primaryColor,
+        secondaryColor: secondaryColor,
       );
 }
 
@@ -29,16 +31,9 @@ extension PlayerRowMapper on PlayerRow {
         age: age,
         position: position,
         attributes: PlayerAttributes(
-          passing: passing,
-          shooting: shooting,
-          dribbling: dribbling,
-          tackling: tackling,
-          positioning: positioning,
-          composure: composure,
-          decisions: decisions,
-          pace: pace,
+          physical: physical,
+          technical: technical,
           stamina: stamina,
-          strength: strength,
         ),
         club: club,
       );
@@ -75,6 +70,8 @@ extension CareerRowMapper on CareerRow {
         createdAt: createdAt,
         inGameDate: inGameDate,
         cyclePointer: cyclePointer,
+        lastPlayedAt: lastPlayedAt,
         budget: budget,
+        captainPlayerId: captainPlayerId,
       );
 }

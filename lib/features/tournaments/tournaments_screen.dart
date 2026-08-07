@@ -7,6 +7,7 @@ import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/services/competition/trophies.dart';
 import 'package:fnm/features/tournaments/tournaments_providers.dart';
+import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
 
@@ -36,48 +37,48 @@ const _championships = <_Championship>[
     name: 'World Championship',
     region: 'GLOBAL',
     icon: Icons.emoji_events,
-    description: 'The pinnacle of international football.',
+    description: 'The world championship.',
   ),
   _Championship(
     name: 'European Championship',
     region: 'EUROPE',
     icon: Icons.workspace_premium,
-    description: 'The fight for the European crown.',
+    description: "Europe's championship.",
     confederation: Confederation.europe,
   ),
   _Championship(
     name: 'South America Cup',
     region: 'S. AMERICA',
     icon: Icons.flare,
-    description: 'Passion and technique — the oldest continental tournament.',
+    description: "South America's championship.",
     confederation: Confederation.southAmerica,
   ),
   _Championship(
     name: 'African Championship',
     region: 'AFRICA',
     icon: Icons.diamond,
-    description: 'A celebration of pace and power across Africa.',
+    description: "Africa's championship.",
     confederation: Confederation.africa,
   ),
   _Championship(
     name: 'Asian Championship',
     region: 'ASIA',
     icon: Icons.explore,
-    description: 'A dynamic stage for the rising stars of Asia.',
+    description: "Asia's championship.",
     confederation: Confederation.asia,
   ),
   _Championship(
     name: 'North America Cup',
     region: 'N. AMERICA',
     icon: Icons.public,
-    description: 'The premier championship of the CONCACAF region.',
+    description: 'The championship of North & Central America.',
     confederation: Confederation.northAmerica,
   ),
   _Championship(
     name: 'Oceania Cup',
     region: 'OCEANIA',
     icon: Icons.sailing,
-    description: 'The championship of the Pacific nations.',
+    description: "Oceania's championship.",
     confederation: Confederation.oceania,
   ),
 ];
@@ -92,20 +93,21 @@ class TournamentsScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l = AppLocalizations.of(context);
     final overviewAsync = ref.watch(tournamentsOverviewProvider(careerId));
 
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
         title: Text(
-          'COMPETITIONS',
+          l.tourSharedCompetitions,
           style: AppTypography.labelMedium.copyWith(color: AppColors.primary),
         ),
         centerTitle: true,
         actions: [
           IconButton(
             icon: const Icon(Icons.leaderboard, color: AppColors.primary),
-            tooltip: 'World ranking',
+            tooltip: l.tourSharedWorldRanking,
             onPressed: () =>
                 context.go('${Routes.ranking}?careerId=$careerId'),
           ),
@@ -115,7 +117,7 @@ class TournamentsScreen extends ConsumerWidget {
           AppBottomNav(careerId: careerId, current: AppTab.competitions),
       body: overviewAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => Center(child: Text('Could not load tournaments.\n$e')),
+        error: (_, _) => Center(child: Text(l.tourSharedCouldNotLoadTournaments)),
         data: (overview) {
           final playerConf = overview?.playerConfederation;
           // Your competitions (the World Cup + your own continental cup) sit in
@@ -132,12 +134,13 @@ class TournamentsScreen extends ConsumerWidget {
           padding: const EdgeInsets.all(AppSpacing.marginMobile),
           children: [
             Text(
-              'PRESTIGE STAGE',
+              l.tourSharedPrestigeStage,
               style:
                   AppTypography.labelMedium.copyWith(color: AppColors.primary),
             ),
             const SizedBox(height: AppSpacing.xs),
-            const Text('Overview', style: AppTypography.headlineLargeMobile),
+            Text(l.tourSharedOverview,
+                style: AppTypography.headlineLargeMobile),
             const SizedBox(height: AppSpacing.md),
             AppCard(
               onTap: () => context.go('${Routes.ranking}?careerId=$careerId'),
@@ -323,9 +326,10 @@ class _ChampionshipTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
     final c = championship;
     final available = status?.available ?? false;
-    final label = status?.label ?? 'SOON';
+    final label = status?.label ?? l.tourSharedSoon;
     // The competition being contested right now is highlighted green.
     final live = status?.phase == TournamentPhase.live;
     final accent = !available
@@ -344,7 +348,7 @@ class _ChampionshipTile extends StatelessWidget {
           : () => ScaffoldMessenger.of(context)
             ..hideCurrentSnackBar()
             ..showSnackBar(
-              const SnackBar(content: Text('Tournament coming soon')),
+              SnackBar(content: Text(l.tourSharedComingSoon)),
             ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

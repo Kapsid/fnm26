@@ -204,9 +204,6 @@ careerSummaryProvider =
     }).toList();
 
     final (placement, medal) = _placement(mine, career.nationId);
-    if (medal == 1) golds++;
-    if (medal == 2) silvers++;
-    if (medal == 3) bronzes++;
     runs.add(TournamentRun(
       year: h.year,
       competition: display,
@@ -217,6 +214,22 @@ careerSummaryProvider =
     ));
   }
   runs.sort((a, b) => b.year.compareTo(a.year));
+
+  // The medal tally counts EVERY competition the manager's side placed in, read
+  // straight off the roll of honour. It used to be a by-product of the runs
+  // above, which list only the World Cup and the manager's own continental cup
+  // — so a Nations Cup or a Continental Clash could be won and the cabinet
+  // would not show it, while the career tab (which reads the honours) did.
+  for (final h in honours) {
+    final managed = stints[cycleForYear(h.year)] ?? career.nationId;
+    if (h.championId == managed) {
+      golds++;
+    } else if (h.runnerUpId == managed) {
+      silvers++;
+    } else if (h.thirdId == managed || h.thirdId2 == managed) {
+      bronzes++;
+    }
+  }
 
   // The full trophy cabinet: every honour this career won, grouped by
   // competition. A trophy counts as the manager's when the nation they were
@@ -274,6 +287,12 @@ careerSummaryProvider =
     if (idx > deepest) deepest = idx;
   }
   final deepestRound = _roundOrder[deepest];
+  // Continental championships play no third-place match, so the two beaten
+  // semi-finalists SHARE the bronze — a lost semi there is a third-place finish,
+  // not a medal-less "semi-finals". (The World Cup, which has a 3RD play-off,
+  // resolves its semi losers into 3rd/4th and never stops at 'SF'.)
+  final noThirdPlace =
+      fixtures.any((f) => f.round != null && _isContinentalRound(f.round!));
 
   bool wonAt(String core) {
     final f = fixtures.firstWhere(
@@ -289,7 +308,7 @@ careerSummaryProvider =
   return switch (deepestRound) {
     'FINAL' => wonAt('FINAL') ? ('Champions', 1) : ('Runners-up', 2),
     '3RD' => wonAt('3RD') ? ('Third place', 3) : ('Fourth place', 0),
-    'SF' => ('Semi-finals', 0),
+    'SF' => noThirdPlace ? ('Third place', 3) : ('Semi-finals', 0),
     'QF' => ('Quarter-finals', 0),
     'R16' => ('Round of 16', 0),
     'R32' => ('Round of 32', 0),

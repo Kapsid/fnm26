@@ -1,4 +1,5 @@
 import 'package:fnm/domain/entities/enums.dart';
+import 'package:fnm/domain/services/awards/awards.dart';
 import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/entities/group_standing.dart';
 import 'package:fnm/domain/services/competition/finals.dart';
@@ -13,6 +14,28 @@ typedef GroupTable = ({
   int groupCount,
   List<GroupStanding> standings,
 });
+
+/// The competitions EVERY confederation contests, and so the only fair basis
+/// for a world-wide all-time chart.
+///
+/// This is everything on the calendar except the Nations Cup, which is a
+/// European competition. Continental qualifying used to be missing from it too
+/// — it was run only for the confederation the manager worked in, and the rest
+/// of the world had its finals field seeded straight off the ranking — but
+/// every confederation now plays its own campaign, so it counts.
+///
+/// The exclusion matters because a competition only one continent plays is a
+/// whole extra campaign of goals every cycle that nobody else gets: counting it
+/// made the "all-time world scorers" a list of whichever confederation you
+/// happened to be managing in.
+const globallyContestedKinds = <CompetitionKind>{
+  CompetitionKind.worldCupQualifying,
+  CompetitionKind.worldCupPlayoff,
+  CompetitionKind.worldCupFinals,
+  CompetitionKind.continentalQualifying,
+  CompetitionKind.continentalFinals,
+  CompetitionKind.finalissima,
+};
 
 /// A group table tagged with the confederation it belongs to.
 typedef ConfederationGroupTable = ({
@@ -44,6 +67,18 @@ typedef RoundResults = ({
   List<RoundResultGroup> groups,
   String? stage,
   List<Fixture> knockoutFixtures,
+});
+
+/// A player's aggregated performance across one competition.
+typedef TournamentLine = ({
+  int playerId,
+  int nationId,
+  int apps,
+  double meanRating,
+  int goals,
+  int assists,
+  int motms,
+  int cleanSheets,
 });
 
 /// One attributed goal, ready to persist.
@@ -126,6 +161,20 @@ typedef MessageItem = ({
   bool read,
 });
 
+
+/// One trophy in a player's cabinet.
+///
+/// Named for the award rather than the row: drift generates its own
+/// `PlayerHonour` data class from the table, and two of them in scope is a
+/// clash the analyser is right to object to.
+typedef PlayerAward = ({
+  int playerId,
+  int nationId,
+  AwardKind kind,
+  String competition,
+  int year,
+});
+
 /// A roll-of-honour entry.
 typedef Honour = ({
   int year,
@@ -133,6 +182,9 @@ typedef Honour = ({
   int championId,
   int runnerUpId,
   int? thirdId,
+  // A second bronze, for a cup with no third-place match (both beaten
+  // semi-finalists share bronze). Null for the World Cup.
+  int? thirdId2,
   int? hostId,
   int? finalHomeScore,
   int? finalAwayScore,
@@ -162,6 +214,14 @@ abstract interface class CompetitionRepository {
 
   /// A nation's fixtures, ordered by date.
   Future<List<Fixture>> fixturesForNation(int careerId, int nationId);
+
+  /// A nation's fixtures **in the current cycle only**, ordered by date.
+  ///
+  /// A career is endless, so the all-time list above answers "every game this
+  /// nation has ever played" — the wrong question for anything judging THIS
+  /// cycle (the board's objectives, how far the side went in the tournament
+  /// that just finished). Those read this instead.
+  Future<List<Fixture>> cycleFixturesForNation(int careerId, int nationId);
 
   /// The display name of every competition in the save, keyed by competition
   /// id — so a fixture's `competitionId` can be shown as a readable label.
@@ -236,7 +296,15 @@ abstract interface class CompetitionRepository {
 
   /// Whether every fixture of the current cycle's tournament(s) of [kind] is
   /// played. Returns false if no such competition exists.
-  Future<bool> allPlayedForKind(int careerId, CompetitionKind kind);
+  /// Whether every fixture of [kind] this cycle has been played. Name a
+  /// [confederation] for the continental cups: all six confederations' cups are
+  /// competitions of the same kind, so an unqualified call answers for whichever
+  /// continents happen to exist.
+  Future<bool> allPlayedForKind(
+    int careerId,
+    CompetitionKind kind, {
+    Confederation? confederation,
+  });
 
   /// Whether the finals competition has been created for this save.
   Future<bool> hasFinals(int careerId);
@@ -370,10 +438,28 @@ abstract interface class CompetitionRepository {
   /// The World Cup winner (FINAL fixture winner) once played, else null.
   Future<int?> worldChampion(int careerId);
 
+  /// The continental championship winner for this cycle (its CFINAL winner)
+  /// once played, else null. Scoped to [confederation] when given, so one
+  /// region's cup being over is never confused with another's still running.
+  Future<int?> continentalChampion(
+    int careerId, {
+    Confederation? confederation,
+  });
+
   // --- Goals & honours ------------------------------------------------------
 
   /// Persists attributed goals.
   Future<void> recordGoals(List<GoalRecord> goals);
+
+  /// Every goal in the save as a minute-ordered timeline per fixture
+  /// (`fixtureId` → the goals in the order they were scored).
+  ///
+  /// This is what makes a scoreline a story rather than a number: it is the
+  /// only way to know a side came from behind, since a fixture row records how
+  /// a match ENDED and nothing about how it got there.
+  Future<Map<int, List<({int nationId, int minute})>>> goalTimeline(
+    int careerId,
+  );
 
   /// Top scorers across the save, optionally restricted to a competition
   /// [kind] (qualifying vs finals), best first.
@@ -393,6 +479,11 @@ abstract interface class CompetitionRepository {
     int careerId, {
     CompetitionKind? kind,
     Confederation? confederation,
+
+    /// Restrict the tally to these competition kinds. Use for the WORLD chart,
+    /// which must only count competitions every confederation actually plays —
+    /// see [globallyContestedKinds].
+    Set<CompetitionKind>? kinds,
     int limit,
   });
 
@@ -413,6 +504,7 @@ abstract interface class CompetitionRepository {
     required int championId,
     required int runnerUpId,
     int? thirdId,
+    int? thirdId2,
     int? hostId,
     int? finalHomeScore,
     int? finalAwayScore,
@@ -482,6 +574,31 @@ abstract interface class CompetitionRepository {
     int limit,
   });
 
+  /// Per-PLAYER all-time records for a cup: matches PLAYED (appearances) and
+  /// distinct finals-tournament editions ATTENDED, across every edition of
+  /// [kind] (optionally narrowed to one [confederation], for a continental cup).
+  /// Ordered by games played, most first.
+  Future<List<({int playerId, int nationId, int games, int finals})>>
+      playerCupRecords(
+    int careerId, {
+    required CompetitionKind kind,
+    Confederation? confederation,
+  });
+
+  /// The manager nation's Nations Cup finish in every edition it played: the
+  /// league it was in (A/B/…), its final group position (1 = top), the group
+  /// size, and its Finals Four result if it reached the last four. One entry per
+  /// cycle, for the career-history "which league, and how it ended".
+  Future<
+      List<
+          ({
+            int cycle,
+            String league,
+            int position,
+            int groupSize,
+            String? finals,
+          })>> nationsCupFinishes(int careerId, int nationId);
+
   /// The all-time head-to-head record between [nationA] and [nationB] across
   /// every played fixture in the save (friendlies included).
   Future<HeadToHead> headToHead(int careerId, int nationA, int nationB);
@@ -501,6 +618,8 @@ abstract interface class CompetitionRepository {
     required int homeShots,
     required int awayShots,
     required int homePossession,
+    double homeXg,
+    double awayXg,
   });
 
   /// A player's match-by-match history (full stat line per fixture), newest
@@ -523,12 +642,79 @@ abstract interface class CompetitionRepository {
     int perPlayer,
   });
 
+  /// Every recorded player-rating line for players who represented one of
+  /// [nationIds] — the raw feed for career feats (hat-tricks, MOTMs, cards,
+  /// best rating). One entry per (player, match).
+  ///
+  /// Rating rows now exist for EVERY match in the world (the tactical engine
+  /// writes the manager's, `BackgroundMatch` derives the rest), so pass the
+  /// nations actually being asked about; passing the manager's own stint
+  /// nations gives their career feats as before.
+  Future<
+      List<
+          ({
+            int playerId,
+            int goals,
+            int assists,
+            double rating,
+            bool motm,
+            int yellows,
+            int reds,
+          })>> careerPlayerLines(int careerId, Set<int> nationIds);
+
+  /// How everyone who appeared in [competitionId] actually played: one entry
+  /// per player, aggregated across their appearances in that competition.
+  ///
+  /// This is what turns a Team of the Tournament from a guess into a verdict.
+  /// The awards used to be picked from squad `overall` and goals, because
+  /// performance data existed only for the manager's own matches; every match
+  /// in the world is rated now, so a tournament can be judged on how it was
+  /// played.
+  Future<List<TournamentLine>> competitionPlayerLines(
+    int careerId,
+    int competitionId,
+  );
+
   /// A nation's players by assists (most first), all-time across cycles.
+  /// A nation's players by average match rating (best first), across every
+  /// match of the save, for players with at least [minApps] appearances.
+  ///
+  /// Every match in the world is rated now, so this reads a full record rather
+  /// than only the games the manager happened to be in charge for.
+  Future<List<({int playerId, int apps, double meanRating, int motms})>>
+  nationTopRatings(
+    int careerId,
+    int nationId, {
+    int minApps,
+    int limit,
+  });
+
   Future<List<({int playerId, int assists})>> nationTopAssists(
     int careerId,
     int nationId, {
     int limit,
   });
+
+
+  /// One individual trophy a player has won.
+  ///
+  /// Stored rather than derived — see `PlayerHonours` for why.
+  Future<void> recordPlayerHonour({
+    required int careerId,
+    required int playerId,
+    required int nationId,
+    required AwardKind kind,
+    required int year,
+    String competition,
+  });
+
+  /// A player's trophy cabinet, newest first.
+  Future<List<PlayerAward>> playerHonours(int careerId, int playerId);
+
+  /// Every player's year across the WHOLE WORLD, for the yearly awards. Reads
+  /// the per-match ratings the world simulation writes for every game played
+  /// anywhere, not only the manager's own.
+  Future<List<AwardLine>> awardLinesForYear(int careerId, int year);
 
   /// The dedup keys of every message already recorded (so sync adds each once).
   Future<Set<String>> messageKeys(int careerId);

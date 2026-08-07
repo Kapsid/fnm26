@@ -109,7 +109,12 @@ final AutoDisposeFutureProviderFamily<TournamentsOverview?, int>
   // and World Cup are still months away but the Euro qualifiers are on).
   const wcFinalsRounds = {'GROUP', 'R32', 'R16', 'QF', 'SF', '3RD', 'FINAL'};
   const contFinalsRounds = {'CGROUP', 'CR16', 'CQF', 'CSF', 'C3RD', 'CFINAL'};
-  final fixtures = await comp.fixturesForNation(careerId, career.nationId);
+  // THIS CYCLE's fixtures only. `fixturesForNation` is all-time, so from the
+  // second cycle onward the previous cycle's played qualifiers were still
+  // sitting in the list: `wcStarted` saw them, and the World Cup tile came up
+  // ACTIVE on the first day of a new cycle when the continental cup was the
+  // only competition actually being contested.
+  final fixtures = await comp.cycleFixturesForNation(careerId, career.nationId);
   final upcoming = fixtures.where((f) => !f.played).toList()
     ..sort((a, b) => a.date.compareTo(b.date));
   final next = upcoming.isEmpty ? null : upcoming.first;
@@ -161,14 +166,21 @@ final AutoDisposeFutureProviderFamily<TournamentsOverview?, int>
 
   // The player's continental championship is played in detail this cycle;
   // others are decided in the background and live on in History.
-  final hasContinental =
-      await comp.hasTournament(careerId, CompetitionKind.continentalFinals);
+  // Named confederation: every continent's cup is a competition of this same
+  // kind, so an unqualified lookup can return another continent's tournament
+  // (and crown its champion here).
+  final hasContinental = await comp.hasTournament(
+    careerId,
+    CompetitionKind.continentalFinals,
+    confederation: playerConf,
+  );
   int? continentalChampion;
   if (hasContinental) {
     final finalTie = await comp.fixturesByRound(
       careerId,
       'CFINAL',
       kind: CompetitionKind.continentalFinals,
+      confederation: playerConf,
     );
     if (finalTie.isNotEmpty && finalTie.first.hasResult) {
       final f = finalTie.first;

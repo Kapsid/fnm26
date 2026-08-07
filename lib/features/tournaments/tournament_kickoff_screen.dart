@@ -11,6 +11,7 @@ import 'package:fnm/domain/services/competition/hosts.dart';
 import 'package:fnm/domain/services/competition/trophies.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/hub/hub_event.dart';
+import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
 
@@ -105,16 +106,14 @@ class TournamentKickoffScreen extends ConsumerWidget {
           );
     }
     if (!context.mounted) return;
-    // Open the tournament that just kicked off.
-    if (conf == null) {
-      context.go('${Routes.cup}?careerId=$careerId');
-    } else {
-      context.go('${Routes.continental}?careerId=$careerId&conf=${conf!.name}');
-    }
+    // Just close back to the hub — the ceremony was the last thing before the
+    // opening match, so the hub's next event is the player's first finals game.
+    context.go('${Routes.hub}?careerId=$careerId');
   }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l = AppLocalizations.of(context);
     final async = ref.watch(
       tournamentKickoffProvider((careerId: careerId, conf: conf)),
     );
@@ -122,10 +121,10 @@ class TournamentKickoffScreen extends ConsumerWidget {
       body: SafeArea(
         child: async.when(
           loading: () => const Center(child: CircularProgressIndicator()),
-          error: (e, _) => Center(child: Text('Could not load.\n$e')),
+          error: (_, _) => Center(child: Text(l.tourSharedCouldNotLoad)),
           data: (data) {
             final hostLabel = data == null || data.hostNames.isEmpty
-                ? 'HOST TO BE CONFIRMED'
+                ? l.tourSharedHostTbc
                 : data.hostNames.join('  ·  ').toUpperCase();
             final title = data == null
                 ? ''
@@ -206,7 +205,7 @@ class TournamentKickoffScreen extends ConsumerWidget {
                 Padding(
                   padding: const EdgeInsets.all(AppSpacing.marginMobile),
                   child: PrimaryButton(
-                    label: 'Let the finals begin',
+                    label: l.tourSharedLetFinalsBegin,
                     icon: Icons.sports_soccer,
                     onPressed: () => _begin(context, ref),
                   ),

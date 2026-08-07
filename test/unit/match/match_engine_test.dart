@@ -41,6 +41,65 @@ void main() {
         b.events.map((e) => '${e.minute}:${e.playerId}').toList());
   });
 
+  group('momentum', () {
+    test('records a net-momentum series and stays deterministic', () {
+      final home = team(1, 80);
+      final away = team(2, 78);
+      final a = engine.play(home: home, away: away, rng: SeededRng.forFixture(5, 2));
+      final b = engine.play(home: home, away: away, rng: SeededRng.forFixture(5, 2));
+      expect(a.momentumByMinute.length, 91);
+      expect(a.momentumByMinute, b.momentumByMinute);
+    });
+
+    test('a goalless deadlock keeps momentum flat at zero', () {
+      // Two weak, ultra-defensive sides rarely score; with no goals, momentum
+      // never swings off zero.
+      const park = TacticalInstructions(mentality: 5, tempo: 10);
+      final a =
+          engine.play(home: team(1, 40, instructions: park), away: team(2, 40, instructions: park), rng: SeededRng.forFixture(1, 1));
+      if (a.homeScore == 0 && a.awayScore == 0) {
+        expect(a.momentumByMinute.every((m) => m == 0), isTrue);
+      }
+    });
+  });
+
+  group('chemistry', () {
+    test('empty chemistry map leaves the match byte-identical to default', () {
+      final home = team(1, 80);
+      final away = team(2, 76);
+      final base = engine.play(home: home, away: away, rng: SeededRng.forFixture(7, 3));
+      final withMap = engine.play(
+        home: home,
+        away: away,
+        rng: SeededRng.forFixture(7, 3),
+        chemistryByNation: const {},
+      );
+      expect(withMap.homeScore, base.homeScore);
+      expect(withMap.awayScore, base.awayScore);
+    });
+
+    test('a drilled side outscores its unfamiliar self on aggregate', () {
+      var drilled = 0;
+      var neutral = 0;
+      for (var seed = 0; seed < 60; seed++) {
+        final home = team(1, 78);
+        final away = team(2, 78);
+        final rng = SeededRng.forFixture(seed, 11);
+        drilled += engine
+            .play(
+              home: home,
+              away: away,
+              rng: SeededRng(rng.state),
+              chemistryByNation: const {1: 1.06},
+            )
+            .homeScore;
+        neutral +=
+            engine.play(home: home, away: away, rng: SeededRng(rng.state)).homeScore;
+      }
+      expect(drilled, greaterThan(neutral));
+    });
+  });
+
   test('goal events belong to a scoring team and one of its players', () {
     final home = team(1, 82);
     final away = team(2, 70);
@@ -105,7 +164,10 @@ void main() {
   test('subbing on a far stronger forward lifts goals over many matches', () {
     var withSub = 0;
     var without = 0;
-    for (var seed = 0; seed < 40; seed++) {
+    // 300 seeds, not 40: one striker's upgrade is worth a fraction of a goal a
+    // game, so at 40 the two totals sat a single goal apart and any unrelated
+    // tuning (a sending-off costing a little more, say) flipped the sign.
+    for (var seed = 0; seed < 300; seed++) {
       final home = team(1, 70);
       final away = team(2, 70);
       final on = player(
@@ -393,6 +455,48 @@ void main() {
     });
   });
 
+  group('set-piece takers', () {
+    test('a designated penalty taker takes the penalties', () {
+      final base = team(1, 80);
+      // Pick a defender (low shooting) as the designated penalty taker — the
+      // engine would never auto-pick them, so any penalty they score proves the
+      // override works.
+      final taker = base.xi.firstWhere(
+        (p) => p.position.category == PositionCategory.defender,
+      );
+      var penaltiesByTaker = 0;
+      var otherPenalties = 0;
+      for (var seed = 0; seed < 300; seed++) {
+        final home = MatchTeam(
+          nationId: 1,
+          xi: base.xi,
+          instructions: const TacticalInstructions(),
+          penaltyTakerId: taker.id,
+        );
+        final r = engine.play(
+          home: home,
+          away: team(2, 78),
+          rng: SeededRng.forFixture(seed, 3),
+        );
+        for (final g in r.events.where(
+          (e) => e.type == MatchEventType.goal && e.penalty && e.teamNationId == 1,
+        )) {
+          if (g.playerId == taker.id) {
+            penaltiesByTaker++;
+          } else {
+            otherPenalties++;
+          }
+        }
+      }
+      expect(penaltiesByTaker, greaterThan(0),
+          reason: 'the designated taker should take penalties');
+      // Anyone else taking one is the documented fallback — the taker having
+      // left the pitch (injury) — so they must be the rare exception.
+      expect(penaltiesByTaker, greaterThan(otherPenalties * 5),
+          reason: 'the taker takes the overwhelming majority');
+    });
+  });
+
   group('player roles', () {
     test('a poacher takes a bigger share of the goals', () {
       // The same forward, with and without the poacher role, over many seeds.
@@ -482,7 +586,7 @@ void main() {
               id: nationId * 100 + i,
               nationId: nationId,
               position: positions[i],
-              attributes: flatAttributes(76).copyWith(strength: strength),
+              attributes: flatAttributes(76).copyWith(physical: strength),
             ),
         ];
         return MatchTeam(
@@ -705,7 +809,10 @@ void main() {
           team(2, 78, instructions: const TacticalInstructions(width: 10));
       final wideDef =
           team(2, 78, instructions: const TacticalInstructions(width: 90));
-      expect(homeXg(wide, narrowDef), greaterThan(homeXg(wide, wideDef)));
+      // The width edge is the smallest of the tactical swings, so it needs more
+      // samples than the default to rise clear of match-to-match noise.
+      expect(homeXg(wide, narrowDef, runs: 800),
+          greaterThan(homeXg(wide, wideDef, runs: 800)));
     });
 
     test('the match-up keeps the game deterministic', () {

@@ -7,6 +7,8 @@ import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/entities/player_attributes.dart';
 import 'package:fnm/domain/entities/player_role.dart';
 import 'package:fnm/domain/entities/tactics.dart';
+import 'package:fnm/domain/services/match/performance_mark.dart';
+import 'package:fnm/domain/services/player/player_traits.dart';
 import 'package:fnm/domain/services/tactics/position_fit.dart';
 
 /// A team as it lines up for a match: its starting XI and instructions.
@@ -17,15 +19,46 @@ class MatchTeam {
     required this.instructions,
     this.formation = Formation.f433,
     this.roles = const {},
+    this.penaltyTakerId,
+    this.deadBallTakerId,
+    this.conditionByPlayer = const {},
+    this.traitsByPlayer = const {},
   });
 
   final int nationId;
   final List<Player> xi;
   final TacticalInstructions instructions;
 
+  /// A HIDDEN per-player rating shift from form, fatigue and morale (player id
+  /// → points, positive or negative), applied to strength inside the engine
+  /// only.
+  ///
+  /// It is deliberately not folded into the players' attributes: doing that
+  /// made a tired player's `overall` read lower on the match screens than on
+  /// the squad screen, so the same footballer appeared to have three different
+  /// ratings depending on where you looked. The displayed rating is always the
+  /// player's real overall; condition is what the engine quietly does with it.
+  final Map<int, int> conditionByPlayer;
+
+  /// Each player's traits (player id → traits), from [PlayerTraits]. Traits are
+  /// what make a squad memorable: a hothead collects cards, an iron man barely
+  /// tires, a big-game player turns up in the knockouts. Supplied by the caller
+  /// so the engine stays free of the save seed the derivation needs.
+  final Map<int, List<PlayerTrait>> traitsByPlayer;
+
+  /// Whether [playerId] carries [trait].
+  bool hasTrait(int playerId, PlayerTrait trait) =>
+      traitsByPlayer[playerId]?.contains(trait) ?? false;
+
   /// Per-player tactical roles, keyed by player id (absent = [PlayerRole.none]).
   /// Shapes who scores/creates and the set-piece threat; never raw strength.
   final Map<int, PlayerRole> roles;
+
+  /// The manager's designated penalty taker / dead-ball (corner & free-kick)
+  /// taker, or null to let the engine pick the best-suited player. Ignored if
+  /// that player isn't on the pitch.
+  final int? penaltyTakerId;
+  final int? deadBallTakerId;
 
   /// The shape the XI lines up in; `xi[i]` occupies `formation.positions[i]`.
   /// Players fielded away from their natural position take a rating penalty.
@@ -75,7 +108,16 @@ class TacticalChange {
 /// The tone a manager strikes in a team talk (at the interval). Each tone shifts
 /// the side's attacking and defensive edge for the rest of the match — a lift
 /// when it fits the game state, a smaller or riskier one when it doesn't.
-enum TeamTalkTone { calm, encourage, demandMore, praise }
+enum TeamTalkTone {
+  calm,
+  encourage,
+  demandMore,
+  praise,
+  believe,
+  focus,
+  urgency,
+  reassure,
+}
 
 extension TeamTalkToneX on TeamTalkTone {
   // Display text (label/blurb) lives in the UI layer (l10n) so it can be
@@ -84,11 +126,15 @@ extension TeamTalkToneX on TeamTalkTone {
   /// The attack / defence rating swing the talk applies for the rest of the
   /// match, on the same scale as home advantage (+3 attack / +2 defence).
   (double attack, double defence) get effect => switch (this) {
-        TeamTalkTone.calm => (1, 1),
-        TeamTalkTone.encourage => (3, -1),
-        TeamTalkTone.demandMore => (4, -2),
-        TeamTalkTone.praise => (-1, 3),
-      };
+    TeamTalkTone.calm => (1, 1),
+    TeamTalkTone.encourage => (3, -1),
+    TeamTalkTone.demandMore => (4, -2),
+    TeamTalkTone.praise => (-1, 3),
+    TeamTalkTone.believe => (2, 2),
+    TeamTalkTone.focus => (0, 4),
+    TeamTalkTone.urgency => (4, -3),
+    TeamTalkTone.reassure => (0, 2),
+  };
 }
 
 /// A timed team talk: at [minute] the manager of [teamNationId] strikes a [tone]
@@ -212,6 +258,7 @@ class MatchResult {
     this.stoppage = 0,
     this.homeXgByMinute = const [],
     this.awayXgByMinute = const [],
+    this.momentumByMinute = const [],
   });
 
   final int homeScore;
@@ -234,6 +281,11 @@ class MatchResult {
   /// the live "xG race" line. Empty when not recorded.
   final List<double> homeXgByMinute;
   final List<double> awayXgByMinute;
+
+  /// Net in-match momentum per minute from the home side's view (positive = home
+  /// pressing, negative = away), length 91 like the xG series. Empty when not
+  /// recorded. Drives the live momentum bar.
+  final List<double> momentumByMinute;
 
   /// Each participating player's remaining energy (0–100) at the final whistle,
   /// keyed by player id — fresh subs stay high, a 90-minute man is spent.
@@ -259,9 +311,9 @@ class MatchResult {
 /// are applied through the match.
 class _Live {
   _Live(this.team)
-      : xi = [...team.xi],
-        slots = [...team.formation.positions],
-        instructions = team.instructions;
+    : xi = [...team.xi],
+      slots = [...team.formation.positions],
+      instructions = team.instructions;
 
   final MatchTeam team;
 
@@ -283,6 +335,41 @@ class _Live {
   /// defence for the rest of the match (0 until the manager gives a talk).
   double talkAttack = 0;
   double talkDefence = 0;
+
+  /// Rolling in-match MOMENTUM. A goal lifts the scorer's [momentumAttack] and
+  /// rocks the conceder's [momentumDefence] (negative = reeling); both fade back
+  /// toward zero each minute (see [decayMomentum]). Added to the side's ratings,
+  /// never to an RNG stream, so the three seeded streams stay byte-stable and a
+  /// re-sim rebuilds momentum exactly from the same goal events.
+  double momentumAttack = 0;
+  double momentumDefence = 0;
+
+  /// A settled, well-drilled side's tactical-familiarity multiplier (~1.0 for a
+  /// new/rotating side, up to ~1.06 for a long-settled shape). Applied to attack
+  /// and defence. Defaults to 1.0 (neutral) so it never shifts an unset match.
+  double chemistry = 1.0;
+
+  /// Whether this is a KNOCKOUT or finals tie — the occasion a big-game player
+  /// rises to. Set once per match by the caller.
+  bool bigMatch = false;
+
+  /// Whether a LEADER other than [playerId] is on the pitch — a captain lifts
+  /// those around them, never themselves.
+  bool hasLeaderOtherThan(int playerId) {
+    for (final p in xi) {
+      if (p.id != playerId && team.hasTrait(p.id, PlayerTrait.leader)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /// Fades this minute's momentum a little, so a swing that isn't renewed by
+  /// another goal decays back to neutral.
+  void decayMomentum() {
+    momentumAttack *= 0.90;
+    momentumDefence *= 0.90;
+  }
 
   /// Players sent off — they can never return, even if a later live change
   /// names them in the XI.
@@ -312,8 +399,8 @@ class _Live {
 class MatchEngine {
   const MatchEngine();
 
-  /// Per-team, per-minute booking probability (~1.8 yellows a team a game).
-  static const double _yellowPerMinute = 0.020;
+  /// Per-team, per-minute booking probability (~1.3 yellows a team a game).
+  static const double _yellowPerMinute = 0.015;
 
   /// Per-team, per-minute probability of a straight red (~1 in 20 games).
   static const double _straightRedPerMinute = 0.0006;
@@ -330,6 +417,10 @@ class MatchEngine {
   /// host nation, who keeps the advantage when they're one of the two teams.
   /// Left as the default (`false`), the [home] team enjoys home advantage as in
   /// a qualifier or friendly.
+  /// [atmosphere] scales whatever home advantage applies by how full and how
+  /// loud the ground is (1.0 = a normal, well-filled house). A packed stadium
+  /// is worth more than a half-empty one, and it is the only thing the crowd
+  /// touches — a neutral or empty venue simply leaves the advantage at zero.
   /// [talks] are timed team talks that shift a side's edge for the rest of the
   /// match. [aiManagedNationIds] name the sides whose instructions the engine
   /// reactively manages by the scoreline and clock (typically the human's AI
@@ -343,11 +434,18 @@ class MatchEngine {
     List<TeamTalk> talks = const [],
     Set<int> aiManagedNationIds = const {},
     Map<int, double> injuryFactorByNation = const {},
+    Map<int, double> chemistryByNation = const {},
     bool neutralVenue = false,
     int? venueHostId,
+    bool bigMatch = false,
+    double atmosphere = 1.0,
   }) {
-    final liveHome = _Live(home);
-    final liveAway = _Live(away);
+    final liveHome = _Live(home)
+      ..chemistry = chemistryByNation[home.nationId] ?? 1.0
+      ..bigMatch = bigMatch;
+    final liveAway = _Live(away)
+      ..chemistry = chemistryByNation[away.nationId] ?? 1.0
+      ..bigMatch = bigMatch;
     // Who, if anyone, plays in front of a home crowd this match.
     final homeAdvantage = !neutralVenue || home.nationId == venueHostId;
     final awayAdvantage = neutralVenue && away.nationId == venueHostId;
@@ -399,8 +497,9 @@ class MatchEngine {
     void playMinute(int manageMinute, int stoppage) {
       if (stoppage == 0) {
         for (final s in byMinute[manageMinute] ?? const <Substitution>[]) {
-          final live =
-              s.teamNationId == liveHome.nationId ? liveHome : liveAway;
+          final live = s.teamNationId == liveHome.nationId
+              ? liveHome
+              : liveAway;
           final event = _applySub(live, s, manageMinute);
           if (event != null) {
             events.add(event);
@@ -409,16 +508,18 @@ class MatchEngine {
         }
         for (final c
             in changesByMinute[manageMinute] ?? const <TacticalChange>[]) {
-          final live =
-              c.teamNationId == liveHome.nationId ? liveHome : liveAway;
+          final live = c.teamNationId == liveHome.nationId
+              ? liveHome
+              : liveAway;
           _applyChange(live, c, manageMinute, events);
           for (final p in c.xi) {
             appeared[p.id] = p;
           }
         }
         for (final t in talksByMinute[manageMinute] ?? const <TeamTalk>[]) {
-          final live =
-              t.teamNationId == liveHome.nationId ? liveHome : liveAway;
+          final live = t.teamNationId == liveHome.nationId
+              ? liveHome
+              : liveAway;
           final (a, d) = t.tone.effect;
           live
             ..talkAttack = a
@@ -430,11 +531,17 @@ class MatchEngine {
       // the clock: chase the game when behind late, protect a lead when ahead.
       if (aiManagedNationIds.contains(liveHome.nationId)) {
         liveHome.instructions = _manage(
-            liveHome.team.instructions, homeScore - awayScore, manageMinute);
+          liveHome.team.instructions,
+          homeScore - awayScore,
+          manageMinute,
+        );
       }
       if (aiManagedNationIds.contains(liveAway.nationId)) {
         liveAway.instructions = _manage(
-            liveAway.team.instructions, awayScore - homeScore, manageMinute);
+          liveAway.team.instructions,
+          awayScore - homeScore,
+          manageMinute,
+        );
       }
 
       // Players tire as the match wears on, weakening the side until fresh legs
@@ -442,22 +549,41 @@ class MatchEngine {
       _deplete(liveHome);
       _deplete(liveAway);
 
+      // Last minute's momentum fades a touch before this minute's ratings use it.
+      liveHome.decayMomentum();
+      liveAway.decayMomentum();
+
       // Home advantage (+3 attack / +2 defence) goes to the side actually
       // playing at home — nobody at a neutral finals unless it's the host — plus
-      // any team-talk swing, plus the tactical MATCH-UP: how each side's plan and
+      // any team-talk swing, plus the running MOMENTUM (a goal lifts a side and
+      // rocks the other), plus the tactical MATCH-UP: how each side's plan and
       // its players' attributes fare against the other's (see [_matchup]).
-      final homeAttack = _attack(liveHome) +
-          (homeAdvantage ? 3 : 0) +
+      final homeAttack =
+          _attack(liveHome) +
+          (homeAdvantage ? 3 * atmosphere : 0) +
           liveHome.talkAttack +
+          liveHome.momentumAttack +
           _matchup(liveHome, liveAway);
       final homeDefence =
-          _defence(liveHome) + (homeAdvantage ? 2 : 0) + liveHome.talkDefence;
-      final awayAttack = _attack(liveAway) +
-          (awayAdvantage ? 3 : 0) +
+          _defence(liveHome) +
+          (homeAdvantage ? 2 * atmosphere : 0) +
+          liveHome.talkDefence +
+          liveHome.momentumDefence;
+      final awayAttack =
+          _attack(liveAway) +
+          (awayAdvantage ? 3 * atmosphere : 0) +
           liveAway.talkAttack +
+          liveAway.momentumAttack +
           _matchup(liveAway, liveHome);
       final awayDefence =
-          _defence(liveAway) + (awayAdvantage ? 2 : 0) + liveAway.talkDefence;
+          _defence(liveAway) +
+          (awayAdvantage ? 2 * atmosphere : 0) +
+          liveAway.talkDefence +
+          liveAway.momentumDefence;
+
+      // Snapshot the score so a goal this minute can swing momentum afterwards.
+      final homeBefore = homeScore;
+      final awayBefore = awayScore;
 
       // Possession share: the side that keeps the ball more creates a little
       // more and lets the other have less — so a patient, passing side is
@@ -467,55 +593,104 @@ class MatchEngine {
       final controlTotal = homeControl + awayControl;
       final homeShare = controlTotal <= 0 ? 0.5 : homeControl / controlTotal;
 
-      if (_chance(rng, homeAttack, awayDefence, liveHome.instructions,
-          homeShare)) {
+      if (_chance(
+        rng,
+        homeAttack,
+        awayDefence,
+        liveHome.instructions,
+        homeShare,
+      )) {
         homeShots++;
         // The player taking the shot is chosen now, so their fatigue can affect
         // the finish — a spent striker underperforms the chance.
         final shooter = _pickScorer(liveHome, rng);
         final baseP = _goalProbability(homeAttack, awayDefence);
         homeXg += baseP; // xG is the CHANCE quality, before the finish
-        final p = (baseP * _finishingSharpness(liveHome.energyOf(shooter.id)))
-            .clamp(0.05, 0.48);
+        final p =
+            (baseP *
+                    _finishingSharpness(liveHome.energyOf(shooter.id)) *
+                    _finishTrait(liveHome, shooter.id))
+                .clamp(0.04, 0.44);
         if (rng.chance(p)) {
           homeScore++;
-          events.add(_goal(manageMinute, liveHome, shooter, assistRng,
-              stoppage: stoppage));
+          events.add(
+            _goal(
+              manageMinute,
+              liveHome,
+              shooter,
+              assistRng,
+              stoppage: stoppage,
+            ),
+          );
         }
       }
-      if (_chance(rng, awayAttack, homeDefence, liveAway.instructions,
-          1 - homeShare)) {
+      if (_chance(
+        rng,
+        awayAttack,
+        homeDefence,
+        liveAway.instructions,
+        1 - homeShare,
+      )) {
         awayShots++;
         final shooter = _pickScorer(liveAway, rng);
         final baseP = _goalProbability(awayAttack, homeDefence);
         awayXg += baseP;
-        final p = (baseP * _finishingSharpness(liveAway.energyOf(shooter.id)))
-            .clamp(0.05, 0.48);
+        final p =
+            (baseP *
+                    _finishingSharpness(liveAway.energyOf(shooter.id)) *
+                    _finishTrait(liveAway, shooter.id))
+                .clamp(0.04, 0.44);
         if (rng.chance(p)) {
           awayScore++;
-          events.add(_goal(manageMinute, liveAway, shooter, assistRng,
-              stoppage: stoppage));
+          events.add(
+            _goal(
+              manageMinute,
+              liveAway,
+              shooter,
+              assistRng,
+              stoppage: stoppage,
+            ),
+          );
         }
       }
 
       // Set pieces — a third, additive channel on its own RNG stream. Corners /
       // free-kicks reward aerial strength and a good delivery, so a physical,
       // set-piece-strong side scores goals open play alone wouldn't give it.
-      final homeSp = _setPiece(liveHome, liveAway, manageMinute, setPieceRng,
-          stoppage: stoppage);
+      final homeSp = _setPiece(
+        liveHome,
+        liveAway,
+        manageMinute,
+        setPieceRng,
+        stoppage: stoppage,
+      );
       if (homeSp.shot) homeShots++;
       homeXg += homeSp.xg;
       if (homeSp.goal != null) {
         homeScore++;
         events.add(homeSp.goal!);
       }
-      final awaySp = _setPiece(liveAway, liveHome, manageMinute, setPieceRng,
-          stoppage: stoppage);
+      final awaySp = _setPiece(
+        liveAway,
+        liveHome,
+        manageMinute,
+        setPieceRng,
+        stoppage: stoppage,
+      );
       if (awaySp.shot) awayShots++;
       awayXg += awaySp.xg;
       if (awaySp.goal != null) {
         awayScore++;
         events.add(awaySp.goal!);
+      }
+
+      // A goal swings momentum: the scorer's side presses on, the conceding side
+      // reels. Deterministic — a pure function of the goals scored this minute.
+      if (homeScore > homeBefore) {
+        _swingMomentum(liveHome, liveAway, homeScore - homeBefore);
+      }
+      if (awayScore > awayBefore) {
+        _swingMomentum(liveAway, liveHome, awayScore - awayBefore);
       }
 
       _discipline(
@@ -541,10 +716,14 @@ class MatchEngine {
     // Cumulative xG snapshots per minute (index 0 = kick-off), for the race line.
     final homeXgByMinute = <double>[0];
     final awayXgByMinute = <double>[0];
+    // Net momentum per minute from the home side's view (+ = home on top), for
+    // the live momentum bar. Same length/shape as the xG series.
+    final momentumByMinute = <double>[0];
     for (var minute = 1; minute <= 90; minute++) {
       playMinute(minute, 0);
       homeXgByMinute.add(homeXg);
       awayXgByMinute.add(awayXg);
+      momentumByMinute.add(liveHome.momentumAttack - liveAway.momentumAttack);
     }
     // Second-half stoppage time ("90+X"): a deterministic few added minutes,
     // longer the more the match was interrupted (goals, subs, cards, knocks), in
@@ -557,6 +736,8 @@ class MatchEngine {
     // Fold stoppage-time xG onto the final (90') point of the series.
     homeXgByMinute[homeXgByMinute.length - 1] = homeXg;
     awayXgByMinute[awayXgByMinute.length - 1] = awayXg;
+    momentumByMinute[momentumByMinute.length - 1] =
+        liveHome.momentumAttack - liveAway.momentumAttack;
 
     final homeControl = _control(liveHome);
     final awayControl = _control(liveAway);
@@ -579,6 +760,7 @@ class MatchEngine {
       awayXg: awayXg,
       homeXgByMinute: homeXgByMinute,
       awayXgByMinute: awayXgByMinute,
+      momentumByMinute: momentumByMinute,
       stoppage: stoppageMinutes,
       homePossession: homePossession,
       ratings: _rate(
@@ -592,6 +774,20 @@ class MatchEngine {
         for (final e in liveHome.energy.entries) e.key: e.value.round(),
         for (final e in liveAway.energy.entries) e.key: e.value.round(),
       },
+    );
+  }
+
+  /// Applies a momentum swing when [scoring] beats [conceding] for [n] goal(s)
+  /// this minute: the scorers push on (attack up), the conceders reel (defence
+  /// down). Clamped so momentum stays a nudge, not a runaway feedback loop.
+  void _swingMomentum(_Live scoring, _Live conceding, int n) {
+    scoring.momentumAttack = (scoring.momentumAttack + 1.4 * n).clamp(
+      -2.5,
+      2.5,
+    );
+    conceding.momentumDefence = (conceding.momentumDefence - 1.1 * n).clamp(
+      -2.5,
+      2.5,
     );
   }
 
@@ -647,6 +843,8 @@ class MatchEngine {
     ];
   }
 
+  /// Delegates to [PerformanceMark] so the manager's matches and the rest of
+  /// the world's are marked on exactly the same scale — see that class.
   double _mark(
     Player p, {
     required int goals,
@@ -655,23 +853,15 @@ class MatchEngine {
     required bool sentOff,
     required int teamScore,
     required int oppScore,
-  }) {
-    var r = 6.5;
-    r += goals * 1.0 + assists * 0.6;
-    if (teamScore > oppScore) {
-      r += 0.4;
-    } else if (teamScore < oppScore) {
-      r -= 0.3;
-    }
-    final defensive = p.category == PositionCategory.defender ||
-        p.category == PositionCategory.goalkeeper;
-    if (defensive) {
-      r += oppScore == 0 ? 0.5 : -0.15 * oppScore;
-    }
-    if (booked) r -= 0.3;
-    if (sentOff) r -= 1.2;
-    return (r.clamp(3.0, 10.0) * 10).roundToDouble() / 10;
-  }
+  }) => PerformanceMark.forPlayer(
+    category: p.category,
+    goals: goals,
+    assists: assists,
+    booked: booked,
+    sentOff: sentOff,
+    teamScore: teamScore,
+    oppScore: oppScore,
+  );
 
   /// Swaps the incoming player in for the one going off on the pitch,
   /// returning a substitution event (or null if the player to come off isn't
@@ -721,14 +911,16 @@ class MatchEngine {
     final incoming = newXi.where((p) => !before.contains(p.id)).toList();
     final offIds = before.difference(after).toList();
     for (var k = 0; k < incoming.length; k++) {
-      events.add(MatchEvent(
-        minute: minute,
-        type: MatchEventType.substitution,
-        teamNationId: live.nationId,
-        playerId: incoming[k].id,
-        playerName: incoming[k].name,
-        secondaryName: k < offIds.length ? offNames[offIds[k]] : null,
-      ));
+      events.add(
+        MatchEvent(
+          minute: minute,
+          type: MatchEventType.substitution,
+          teamNationId: live.nationId,
+          playerId: incoming[k].id,
+          playerName: incoming[k].name,
+          secondaryName: k < offIds.length ? offNames[offIds[k]] : null,
+        ),
+      );
     }
 
     live
@@ -762,27 +954,48 @@ class MatchEngine {
         // A second booking — a one-match ban, flagged so discipline doesn't
         // treat it as a violent-conduct straight red.
         events.add(
-          _card(minute, live, culprit, MatchEventType.redCard,
-              secondYellow: true, stoppage: stoppage),
+          _card(
+            minute,
+            live,
+            culprit,
+            MatchEventType.redCard,
+            secondYellow: true,
+            stoppage: stoppage,
+          ),
         );
         _leaveField(live, culprit.id);
       } else {
         booked.add(culprit.id);
-        events.add(_card(minute, live, culprit, MatchEventType.yellowCard,
-            stoppage: stoppage));
+        events.add(
+          _card(
+            minute,
+            live,
+            culprit,
+            MatchEventType.yellowCard,
+            stoppage: stoppage,
+          ),
+        );
       }
     } else if (rng.chance(_straightRedPerMinute)) {
       final culprit = _pickCulprit(live, rng);
-      events.add(_card(minute, live, culprit, MatchEventType.redCard,
-          stoppage: stoppage));
+      events.add(
+        _card(
+          minute,
+          live,
+          culprit,
+          MatchEventType.redCard,
+          stoppage: stoppage,
+        ),
+      );
       _leaveField(live, culprit.id);
     }
 
     if (live.xi.isNotEmpty &&
         rng.chance(_injuryPerMinute * injuryFactor * tiredness)) {
-      final hurt = _pickCulprit(live, rng);
-      events.add(_card(minute, live, hurt, MatchEventType.injury,
-          stoppage: stoppage));
+      final hurt = _pickCulprit(live, rng, injury: true);
+      events.add(
+        _card(minute, live, hurt, MatchEventType.injury, stoppage: stoppage),
+      );
       // A hurt player leaves the pitch, exactly as a sent-off one does. Only
       // the event used to be emitted, so he played the rest of the match at
       // full strength: the "injury" cost nothing until the *next* game, and
@@ -800,16 +1013,15 @@ class MatchEngine {
     MatchEventType type, {
     bool secondYellow = false,
     int stoppage = 0,
-  }) =>
-      MatchEvent(
-        minute: minute,
-        stoppage: stoppage,
-        type: type,
-        teamNationId: live.nationId,
-        playerId: p.id,
-        playerName: p.name,
-        secondYellow: secondYellow,
-      );
+  }) => MatchEvent(
+    minute: minute,
+    stoppage: stoppage,
+    type: type,
+    teamNationId: live.nationId,
+    playerId: p.id,
+    playerName: p.name,
+    secondYellow: secondYellow,
+  );
 
   /// Removes [playerId] from the pitch — sent off or hurt — dropping their
   /// formation slot too, so the team plays on a man down for the rest of the
@@ -839,7 +1051,7 @@ class MatchEngine {
   /// defensive players (who make more challenges), the less composed, and — now
   /// — the more TIRED: a player running on empty mistimes challenges and pulls
   /// up hurt more often, so fatigue drives late fouls, cards and knocks.
-  Player _pickCulprit(_Live live, SeededRng rng) {
+  Player _pickCulprit(_Live live, SeededRng rng, {bool injury = false}) {
     double weight(Player p) {
       final positional = switch (p.category) {
         PositionCategory.defender => 3.0,
@@ -847,11 +1059,20 @@ class MatchEngine {
         PositionCategory.forward => 1.2,
         PositionCategory.goalkeeper => 0.3,
       };
-      final composure =
-          (1.3 - p.attributes.composure / 100).clamp(0.4, 1.3);
+      final composure = (1.3 - p.attributes.technical / 100).clamp(0.4, 1.3);
       // 1.0 fresh → ~1.6 spent: tired legs are more likely to give it away.
       final fatigue = 1.0 + (100 - live.energyOf(p.id)) / 100 * 0.6;
-      return positional * composure * fatigue;
+      // Traits decide WHO it happens to, not how often it happens: a hothead
+      // takes a bigger share of the side's cards, an iron man a smaller share
+      // of its knocks. The team-level rates are untouched.
+      var trait = 1.0;
+      if (!injury && live.team.hasTrait(p.id, PlayerTrait.hothead)) {
+        trait *= PlayerTraits.hotheadCardFactor;
+      }
+      if (injury && live.team.hasTrait(p.id, PlayerTrait.ironMan)) {
+        trait *= PlayerTraits.ironManInjuryFactor;
+      }
+      return positional * composure * fatigue * trait;
     }
 
     final total = live.xi.fold<double>(0, (sum, p) => sum + weight(p));
@@ -877,31 +1098,61 @@ class MatchEngine {
     TacticalInstructions instr,
     double controlShare,
   ) {
-    // The same strength edge feeds shot creation and conversion below. A quick
-    // tempo and, now, a larger share of possession both lift the chance rate —
-    // controlling the ball turns into more openings (0.5 share = neutral).
-    final ratio = _edge(attack, oppDefence);
-    final rate = (0.078 *
-            ratio *
-            (0.85 + instr.tempo / 333) *
-            (0.7 + 0.6 * controlShare))
-        .clamp(0.015, 0.21);
+    // Chance CREATION is where the strength gap tells hardest: a clearly better
+    // side manufactures most of the openings, and that — not a freakish
+    // conversion rate — is what makes the favourite win reliably. The rate is
+    // tightly capped, so even a gross mismatch can't conjure an endless stream
+    // of chances; that ceiling is what keeps 6-goal routs rare. A quick tempo
+    // and a larger share of possession both lift it (0.5 share = neutral).
+    //
+    // The exponent is what decides how loudly a rating gap speaks. At 2.2 it
+    // shouted: two good sides a dozen points apart (a Brazil against an
+    // Ecuador) played out like a superpower against a minnow — 2.5-0.9 with a
+    // 70% win rate and routs in a fifth of games. [_ratio] is already convex in
+    // the gap (see there), so the extra amplification only had to be modest;
+    // it is now sized so that comparable sides play tight games and the score
+    // only runs away when the gulf is genuine.
+    final edge = pow(_ratio(attack, oppDefence), 1.2).toDouble();
+    final rate =
+        (0.078 * edge * (0.85 + instr.tempo / 333) * (0.7 + 0.6 * controlShare))
+            .clamp(0.010, 0.280);
     return rng.chance(rate);
   }
 
+  /// The probability a created chance is finished. Deliberately FLAT: a good
+  /// chance is a good chance whoever gets it, so the strength edge here is weak
+  /// (exponent well below 1) and the ceiling low. The favourite outscores by
+  /// taking more chances, not by converting each one at an absurd rate — this
+  /// is what keeps scorelines realistic and makes >5-goal games rare.
   double _goalProbability(double attack, double oppDefence) =>
-      (0.20 * _edge(attack, oppDefence)).clamp(0.05, 0.48);
+      (0.145 * pow(_ratio(attack, oppDefence), 0.25)).clamp(0.03, 0.20);
 
-  /// The attacking edge as a strength ratio, *amplified* by an exponent above 1
-  /// so a favourite keeps — and slightly magnifies — its advantage. This makes
-  /// the better side win more reliably and by bigger margins (upsets still
-  /// happen, but they're the exception), matching a more FIFA-like feel where
-  /// class usually tells.
-  double _edge(double attack, double oppDefence) =>
-      pow(attack / (oppDefence <= 0 ? 1 : oppDefence), 1.25).toDouble();
+  /// The attack-to-defence strength ratio, measured ABOVE a replacement
+  /// baseline rather than from zero. This makes a rating gap tell more sharply
+  /// where it matters: two sides six points apart near the top (80 vs 74) are
+  /// a meaningfully bigger mismatch than the raw 1.08 ratio implies, so a
+  /// clearly better team wins more reliably — fewer flukey "upsets" — without
+  /// needing an inflated scoreline to do it. Both sides are floored well above
+  /// the baseline so a decimated team (red cards, deep fatigue) can never drive
+  /// the ratio negative or to infinity. Callers raise this to their own
+  /// exponent: a strong one for chance creation (the favourite makes more
+  /// openings), a gentle one for conversion (a chance converts at a fairly
+  /// steady rate) — so class tells through the VOLUME of chances, not by
+  /// blowing up every result.
+  double _ratio(double attack, double oppDefence) {
+    const base = 26.0;
+    final a = (attack - base).clamp(8.0, double.infinity);
+    final d = (oppDefence - base).clamp(8.0, double.infinity);
+    return a / d;
+  }
 
-  MatchEvent _goal(int minute, _Live team, Player scorer, SeededRng assistRng,
-      {int stoppage = 0}) {
+  MatchEvent _goal(
+    int minute,
+    _Live team,
+    Player scorer,
+    SeededRng assistRng, {
+    int stoppage = 0,
+  }) {
     // [scorer] was chosen at shot time (so fatigue could dull the finish). The
     // penalty branch decides on the separate assist stream, so whether a goal
     // is a spot-kick never shifts the score.
@@ -930,17 +1181,30 @@ class MatchEngine {
     );
   }
 
-  /// The side's penalty taker: the outfield player with the best finishing,
-  /// falling back to the first player when a team is somehow empty.
+  /// The side's penalty taker: the manager's designated taker if they're on the
+  /// pitch, else the outfield player with the best finishing; the first player
+  /// when a team is somehow empty.
   Player _penaltyTaker(_Live team) {
+    final chosen = _designated(team, team.team.penaltyTakerId);
+    if (chosen != null) return chosen;
     final outfield = team.xi
         .where((p) => p.category != PositionCategory.goalkeeper)
         .toList();
     final pool = outfield.isEmpty ? team.xi : outfield;
     if (pool.isEmpty) return team.xi.first;
     return pool.reduce(
-      (a, b) => b.attributes.shooting > a.attributes.shooting ? b : a,
+      (a, b) => b.attributes.technical > a.attributes.technical ? b : a,
     );
+  }
+
+  /// The player [id] if they're currently on the pitch for [team], else null —
+  /// so a designated taker who's been subbed off or sent off falls back to auto.
+  Player? _designated(_Live team, int? id) {
+    if (id == null) return null;
+    for (final p in team.xi) {
+      if (p.id == id) return p;
+    }
+    return null;
   }
 
   /// Picks the teammate who set up a goal, or null for a solo effort (~30% of
@@ -948,8 +1212,9 @@ class MatchEngine {
   /// excluding the scorer and, in practice, the goalkeeper.
   Player? _pickAssister(_Live team, Player scorer, SeededRng rng) {
     if (rng.chance(0.30)) return null; // unassisted
-    final candidates =
-        team.xi.where((p) => p.id != scorer.id).toList(growable: false);
+    final candidates = team.xi
+        .where((p) => p.id != scorer.id)
+        .toList(growable: false);
     if (candidates.isEmpty) return null;
 
     double weight(Player p) {
@@ -959,7 +1224,8 @@ class MatchEngine {
         PositionCategory.defender => 3.0,
         PositionCategory.goalkeeper => 0.2,
       };
-      return (p.attributes.passing + positional) * team.roleOf(p.id).assistWeight;
+      return (p.attributes.technical + positional) *
+          team.roleOf(p.id).assistWeight;
     }
 
     final total = candidates.fold<double>(0, (sum, p) => sum + weight(p));
@@ -979,13 +1245,23 @@ class MatchEngine {
         .toList();
     if (candidates.isEmpty) return team.xi.first;
 
+    // The line a player plays in is MULTIPLIED in, not added to his finishing.
+    // Added, it barely separated anyone: a 70-technical centre-half weighed 71
+    // against a striker's 95, so defenders took better than a third of every
+    // side's goals. As a multiplier the line dominates and finishing then
+    // separates players within it, which lands a 4-4-2 at roughly half the
+    // goals to the forwards, a little under 40% to midfield and one in ten to
+    // the back four — what a real season looks like.
     double weight(Player p) {
       final positional = switch (p.category) {
-        PositionCategory.forward => 25.0,
-        PositionCategory.midfielder => 8.0,
-        _ => 1.0,
+        PositionCategory.forward => 5.0,
+        PositionCategory.midfielder => 2.0,
+        PositionCategory.defender => 0.55,
+        PositionCategory.goalkeeper => 0.0,
       };
-      return (p.attributes.shooting + positional) * team.roleOf(p.id).scorerWeight;
+      return (p.attributes.technical + 20) *
+          positional *
+          team.roleOf(p.id).scorerWeight;
     }
 
     final total = candidates.fold<double>(0, (sum, p) => sum + weight(p));
@@ -1017,11 +1293,18 @@ class MatchEngine {
     // Aerial duel in the box: the attackers' physicality (and defenders up for
     // it) against the defence and keeper.
     final threat = (_aerialAttack(atk) / _aerialDefence(def)).clamp(0.5, 2.0);
-    final p = (0.08 * pow(threat, 1.2)).toDouble().clamp(0.02, 0.26);
-    final xg = p; // the chance's quality
-    if (!rng.chance(p)) return (goal: null, xg: xg, shot: true);
+    // The scorer and the deliverer are settled BEFORE the roll, so a set-piece
+    // specialist's better ball actually raises the chance of the goal rather
+    // than only being named on one that was going in anyway.
     final scorer = _pickHeader(atk, rng);
     final taker = _setPieceTaker(atk, scorer);
+    final delivery =
+        taker != null && atk.team.hasTrait(taker.id, PlayerTrait.setPiece)
+        ? PlayerTraits.setPieceFactor
+        : 1.0;
+    final p = (0.08 * pow(threat, 1.2) * delivery).toDouble().clamp(0.02, 0.30);
+    final xg = p; // the chance's quality
+    if (!rng.chance(p)) return (goal: null, xg: xg, shot: true);
     return (
       goal: MatchEvent(
         minute: minute,
@@ -1042,14 +1325,14 @@ class MatchEngine {
   /// The attacking side's aerial threat at a set piece: its forwards' and
   /// defenders' (who come up) strength.
   double _aerialAttack(_Live t) =>
-      (_lineAttr(t, PositionCategory.forward, (a) => a.strength) +
-              _lineAttr(t, PositionCategory.defender, (a) => a.strength)) /
-          2;
+      (_lineAttr(t, PositionCategory.forward, (a) => a.physical) +
+          _lineAttr(t, PositionCategory.defender, (a) => a.physical)) /
+      2;
 
   /// The defending side's ability to clear a set piece: its back line and keeper.
   double _aerialDefence(_Live t) =>
-      _lineAttr(t, PositionCategory.defender, (a) => a.strength) * 0.7 +
-      _lineAttr(t, PositionCategory.goalkeeper, (a) => a.strength) * 0.3;
+      _lineAttr(t, PositionCategory.defender, (a) => a.physical) * 0.7 +
+      _lineAttr(t, PositionCategory.goalkeeper, (a) => a.physical) * 0.3;
 
   /// Picks the set-piece scorer: an outfield player who attacks the ball,
   /// weighted by strength (aerial power), forwards and defenders most likely.
@@ -1058,14 +1341,20 @@ class MatchEngine {
         .where((p) => p.category != PositionCategory.goalkeeper)
         .toList();
     if (candidates.isEmpty) return team.xi.first;
+    // As with open play, the line multiplies rather than adds — added, the four
+    // centre-backs and full-backs took more of the side's set-piece goals than
+    // its forwards did. Defenders are still a real aerial threat (a corner is
+    // the one moment a back four is in the box), just the second one.
     double weight(Player p) {
       final positional = switch (p.category) {
-        PositionCategory.forward => 30.0,
-        PositionCategory.defender => 26.0,
-        PositionCategory.midfielder => 14.0,
+        PositionCategory.forward => 3.5,
+        PositionCategory.defender => 1.0,
+        PositionCategory.midfielder => 0.9,
         PositionCategory.goalkeeper => 0.0,
       };
-      return (p.attributes.strength + positional) * team.roleOf(p.id).aerialWeight;
+      return (p.attributes.physical + 20) *
+          positional *
+          team.roleOf(p.id).aerialWeight;
     }
 
     final total = candidates.fold<double>(0, (s, p) => s + weight(p));
@@ -1077,21 +1366,43 @@ class MatchEngine {
     return candidates.last;
   }
 
-  /// The set-piece taker (credited with the assist): the side's best passer,
-  /// excluding the scorer. Null when nobody else is on the pitch.
+  /// The set-piece taker (credited with the assist): the manager's designated
+  /// dead-ball taker if on the pitch (and not the scorer), else the side's best
+  /// passer. Null when nobody else is on the pitch.
   Player? _setPieceTaker(_Live team, Player scorer) {
+    final chosen = _designated(team, team.team.deadBallTakerId);
+    if (chosen != null && chosen.id != scorer.id) return chosen;
     final pool = team.xi.where((p) => p.id != scorer.id).toList();
     if (pool.isEmpty) return null;
-    return pool
-        .reduce((a, b) => b.attributes.passing > a.attributes.passing ? b : a);
+    return pool.reduce(
+      (a, b) => b.attributes.technical > a.attributes.technical ? b : a,
+    );
   }
 
-  /// The penalty for playing short-handed. A mean of the remaining line barely
-  /// moves when a body is lost, so a red card is applied here as a heavy blow —
-  /// each sending-off knocks ~22% off the team's whole effectiveness (both
-  /// attack and defence) for the rest of the match, as playing a man down
-  /// really should.
-  double _numbers(_Live t) => (1 - 0.22 * t.sentOff.length).clamp(0.35, 1.0);
+  /// The penalty for playing short-handed, in RATING POINTS off the side's
+  /// attack (and, at [_shortHandedDefenceShare], off its defence).
+  ///
+  /// It used to be a multiplier (×0.72 per red), which scaled the whole rating
+  /// and so flattened the sides together: a 28% cut costs a strong team far
+  /// more absolute rating than a weak one, so a good side reduced to ten was
+  /// pushed *below* a poor side with eleven and scoring became close to
+  /// impossible. A flat deduction is just as big a blow at the top of the scale
+  /// and leaves the gap between the two teams intact — being a man down should
+  /// hurt, not erase the difference in quality.
+  ///
+  /// Each further sending-off costs more than the last (nine men is far worse
+  /// than ten), and the ten who are left also cover more ground (see
+  /// [_deplete]), so a red still compounds over what's left of the game.
+  static const double _shortHandedAttackPenalty = 16.0;
+  static const double _shortHandedEscalation = 5.5;
+  static const double _shortHandedDefenceShare = 0.85;
+
+  double _shortHandedPenalty(_Live t) {
+    final n = t.sentOff.length;
+    if (n == 0) return 0;
+    return n * _shortHandedAttackPenalty +
+        n * (n - 1) / 2 * _shortHandedEscalation;
+  }
 
   /// Re-derives an AI side's instructions from its [base] setup by the game
   /// state: from the hour mark a trailing team pushes its mentality, tempo and
@@ -1162,12 +1473,22 @@ class MatchEngine {
     final a = atk.instructions;
     final d = def.instructions;
 
-    final fwdPace = _lineAttr(atk, PositionCategory.forward, (x) => x.pace);
-    final defPace = _lineAttr(def, PositionCategory.defender, (x) => x.pace);
-    final midPass =
-        _lineAttr(atk, PositionCategory.midfielder, (x) => x.passing);
-    final pressEngine =
-        _lineAttr(def, PositionCategory.midfielder, (x) => x.stamina);
+    final fwdPace = _lineAttr(atk, PositionCategory.forward, (x) => x.physical);
+    final defPace = _lineAttr(
+      def,
+      PositionCategory.defender,
+      (x) => x.physical,
+    );
+    final midPass = _lineAttr(
+      atk,
+      PositionCategory.midfielder,
+      (x) => x.technical,
+    );
+    final pressEngine = _lineAttr(
+      def,
+      PositionCategory.midfielder,
+      (x) => x.stamina,
+    );
 
     var bonus = 0.0;
 
@@ -1184,14 +1505,33 @@ class MatchEngine {
     final passRelief = ((midPass - 55) / 60).clamp(0.0, 0.6);
     final engine = ((pressEngine - 55) / 45).clamp(-0.4, 1.0);
     bonus -= press * slow * (2.5 + 2.0 * engine) * (1 - passRelief);
-    bonus += press * n(a.directness).clamp(0.0, 1.0) * 2.5; // direct beats press
+    bonus +=
+        press * n(a.directness).clamp(0.0, 1.0) * 2.5; // direct beats press
 
     // 3) Width mismatch.
     bonus += (n(a.width) * -n(d.width)).clamp(0.0, 1.0) * 2.5; // wide vs narrow
     bonus += (-n(a.width) * n(d.width)).clamp(0.0, 1.0) * 2.0; // narrow vs wide
 
-    return bonus.clamp(-8.0, 10.0);
+    // 4) Mentality clash. Committing men forward against a side that has ALSO
+    //    committed forward leaves space everywhere and the game opens up;
+    //    against a team sitting deep there is no space to attack, and the
+    //    same commitment buys much less. Makes the choice of mentality read
+    //    off the opponent rather than being a flat "more is better" dial.
+    bonus += n(a.mentality).clamp(0.0, 1.0) * n(d.mentality) * 3.5;
+
+    return bonus.clamp(-9.0, 11.0);
   }
+
+  /// How far the mentality slider moves a side's attack, per point away from
+  /// the neutral 50. At the extremes this is the difference between a side that
+  /// throws everyone forward and one that sits in — the single most consequential
+  /// tactical choice a manager makes, and sized to feel like it.
+  static const double kMentalityAttack = 0.35;
+
+  /// The other half of the same bargain: what committing forward costs at the
+  /// back. Deliberately about half the attacking gain, so attacking is a
+  /// favourable-but-real trade and parking the bus genuinely shuts a game down.
+  static const double kMentalityDefence = 0.18;
 
   double _attack(_Live t) {
     final i = t.instructions;
@@ -1201,14 +1541,21 @@ class MatchEngine {
         _mean(t, PositionCategory.defender) * 0.15;
     // Attacking mentality, a quick tempo and a high defensive line (winning the
     // ball higher) lift the attacking threat. Mentality is by far the biggest
-    // dial. Directness and width carry NO flat bonus here — their value is
-    // entirely situational, decided by the match-up against the opponent's shape
-    // (see [_matchup]), so a plan can be strong or weak depending on who it meets.
-    final v = base +
-        (i.mentality - 50) * 0.20 +
+    // dial: at full attack it is worth ~+17 rating points here (and ~−9 at the
+    // back), so committing men forward is a real, felt decision rather than the
+    // ~±10/±4 nudge it used to be — which was small enough next to squad
+    // quality that the slider barely changed a match.
+    //
+    // Directness and width carry NO flat bonus here — their value is entirely
+    // situational, decided by the match-up against the opponent's shape (see
+    // [_matchup]), so a plan can be strong or weak depending on who it meets.
+    final v =
+        base +
+        (i.mentality - 50) * kMentalityAttack +
         (i.tempo - 50) * 0.04 +
-        (i.defensiveLine - 50) * 0.05;
-    return v * _numbers(t);
+        (i.defensiveLine - 50) * 0.05 -
+        _shortHandedPenalty(t);
+    return v * t.chemistry;
   }
 
   double _defence(_Live t) {
@@ -1219,12 +1566,14 @@ class MatchEngine {
         _mean(t, PositionCategory.midfielder) * 0.20;
     // Attacking mentality, a high line (space in behind) and a stretched, wide
     // shape all leave the defence more exposed; heavy pressing wins it back.
-    final v = base -
-        (i.mentality - 50) * 0.08 +
+    final v =
+        base -
+        (i.mentality - 50) * kMentalityDefence +
         (i.pressing - 50) * 0.03 -
         (i.defensiveLine - 50) * 0.06 -
-        (i.width - 50) * 0.03;
-    return v * _numbers(t);
+        (i.width - 50) * 0.03 -
+        _shortHandedPenalty(t) * _shortHandedDefenceShare;
+    return v * t.chemistry;
   }
 
   /// Mean *effective* rating of the players assigned to a line, bucketed by the
@@ -1238,8 +1587,18 @@ class MatchEngine {
       final slot = i < t.slots.length ? t.slots[i] : t.xi[i].position;
       if (slot.category != category) continue;
       final p = t.xi[i];
+      // Condition (form, fatigue, morale) shifts the rating the ENGINE works
+      // with; the player's displayed overall never moves. Traits shift it too:
+      // a big-game player is worth more on the biggest night, and a leader
+      // lifts everyone ELSE around them.
+      var shift = t.team.conditionByPlayer[p.id] ?? 0;
+      if (t.bigMatch && t.team.hasTrait(p.id, PlayerTrait.bigGame)) {
+        shift += PlayerTraits.bigGameBonus;
+      }
+      if (t.hasLeaderOtherThan(p.id)) shift += PlayerTraits.leaderTeamBonus;
+      final rated = (p.overall + shift).clamp(1, 99);
       values.add(
-        p.overall *
+        rated *
             PositionFit.factor(p.position, slot) *
             _energyFactor(t.energyOf(p.id)),
       );
@@ -1248,16 +1607,34 @@ class MatchEngine {
     return values.reduce((a, b) => a + b) / values.length;
   }
 
-  /// How energy scales a player's effective rating: full at 100, down to ~72%
-  /// when spent, so a tired side fades and fresh legs off the bench matter.
-  static double _energyFactor(double energy) => 0.72 + 0.28 * (energy / 100);
+  /// A shooter's trait multiplier on an open-play finish: a wasteful forward
+  /// puts good chances wide. Neutral (1.0) for everyone else.
+  double _finishTrait(_Live t, int playerId) =>
+      t.team.hasTrait(playerId, PlayerTrait.wasteful)
+      ? PlayerTraits.wastefulFinishFactor
+      : 1.0;
+
+  /// How energy scales a player's effective rating.
+  ///
+  /// Deliberately a KINKED curve, not a straight line. A flat slope made
+  /// fatigue something you could ignore: a spent player was still worth ~90% of
+  /// himself, so there was never a moment where leaving him on visibly cost you
+  /// the game. Now the first quarter of the tank is nearly free (a fit player
+  /// coasts through the first hour), and everything below ~72% falls away
+  /// steeply — a genuinely gassed man plays at barely half his rating, and
+  /// taking him off is the obvious call rather than a marginal one.
+  static double _energyFactor(double energy) {
+    final e = (energy / 100).clamp(0.0, 1.0);
+    if (e >= 0.72) return 1.0 - (1.0 - e) * 0.18; // 1.00 → 0.95
+    return 0.95 - (0.72 - e) * 0.62; // 0.95 → ~0.51 when empty
+  }
 
   /// How fatigue dulls an INDIVIDUAL'S finishing: a fresh player converts at
   /// full quality, a spent one underperforms the chance (its xG stays, the goal
   /// doesn't). This is the late-game "he should have buried that" when the legs
   /// have gone — on top of the team-level [_energyFactor] fade.
   static double _finishingSharpness(double energy) =>
-      (0.82 + 0.18 * (energy / 100)).clamp(0.82, 1.0);
+      (0.74 + 0.26 * (energy / 100)).clamp(0.74, 1.0);
 
   /// Drains one minute of energy from everyone on the pitch. Higher-[stamina]
   /// players last longer, a high tempo / heavy press tires a team faster, older
@@ -1265,17 +1642,25 @@ class MatchEngine {
   /// curve for the whole XI.
   void _deplete(_Live t) {
     final i = t.instructions;
-    final workload = 1 + (i.tempo - 50) / 250 + (i.pressing - 50) / 250;
+    // A man down means the ten who are left cover the missing man's ground, so
+    // a sending-off also burns the side out faster.
+    final shortHanded = 1 + 0.24 * t.sentOff.length;
+    final workload =
+        (1 + (i.tempo - 50) / 250 + (i.pressing - 50) / 250) * shortHanded;
     for (final p in t.xi) {
       if (t.sentOff.contains(p.id)) continue;
       final stamina = p.attributes.stamina.clamp(20, 99);
       final base = p.position.category == PositionCategory.goalkeeper
           ? 0.12
-          : 0.50;
+          : 0.62;
       // Age: legs over 30 tire progressively faster (up to ~+30% at 37), the
       // under-24s a touch fresher — so an ageing star needs managing.
       final ageFactor = (1 + (p.age - 28) * 0.04).clamp(0.9, 1.35);
-      final drain = base * workload * (1.4 - stamina / 100) * ageFactor;
+      final ironMan = t.team.hasTrait(p.id, PlayerTrait.ironMan)
+          ? PlayerTraits.ironManStaminaFactor
+          : 1.0;
+      final drain =
+          base * workload * (1.4 - stamina / 100) * ageFactor * ironMan;
       t.energy[p.id] = (t.energyOf(p.id) - drain).clamp(0.0, 100.0);
     }
   }

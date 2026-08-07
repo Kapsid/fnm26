@@ -4,8 +4,10 @@ import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
+import 'package:fnm/core/util/match_stage.dart';
 import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/features/results/results_providers.dart';
+import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
@@ -16,46 +18,17 @@ class ResultsScreen extends ConsumerWidget {
 
   final int careerId;
 
-  static String _stage(String? round) => switch (round) {
-        null => 'QUALIFIER',
-        'FRIENDLY' => 'FRIENDLY',
-        'NL' || 'NGROUP' => 'GROUP STAGE',
-        'NSF' => 'SEMI-FINAL',
-        'NFINAL' => 'FINAL',
-        'FFINAL' => 'CONTINENTAL CLASH',
-        'GROUP' => 'FINALS GROUP',
-        'R32' => 'ROUND OF 32',
-        'R16' => 'ROUND OF 16',
-        'QF' => 'QUARTER-FINAL',
-        'SF' => 'SEMI-FINAL',
-        '3RD' => 'THIRD PLACE',
-        'FINAL' => 'FINAL',
-        'CGROUP' => 'GROUP STAGE',
-        'CR16' => 'ROUND OF 16',
-        'CQF' => 'QUARTER-FINAL',
-        'CSF' => 'SEMI-FINAL',
-        'C3RD' => 'THIRD PLACE',
-        'CFINAL' => 'FINAL',
-        _ => round,
-      };
-
-  /// The competition a fixture belongs to, derived from its round label.
-  static String _category(String? round) {
-    if (round == null) return 'World Cup Qualifying';
-    if (round == 'FRIENDLY') return 'Friendlies';
-    if (round == 'FFINAL') return 'Continental Clash';
-    if (round.startsWith('N')) return 'Nations Cup';
-    if (round.startsWith('C')) return 'Continental Cup';
-    return 'World Cup Finals';
-  }
 
   /// Groups fixtures by competition, ordering the groups so the most currently
   /// relevant one (the soonest still-to-play) comes first; fully-played
   /// competitions fall to the bottom, most-recent first.
-  static List<MapEntry<String, List<Fixture>>> _grouped(List<Fixture> all) {
+  static List<MapEntry<String, List<Fixture>>> _grouped(
+    AppLocalizations l,
+    List<Fixture> all,
+  ) {
     final groups = <String, List<Fixture>>{};
     for (final f in all) {
-      (groups[_category(f.round)] ??= []).add(f);
+      (groups[MatchStage.category(l, f.round)] ??= []).add(f);
     }
     int keyFor(List<Fixture> fx) {
       final upcoming = fx.where((f) => !f.played).map((f) => f.date);
@@ -75,6 +48,7 @@ class ResultsScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l = AppLocalizations.of(context);
     final dataAsync = ref.watch(resultsProvider(careerId));
 
     return Scaffold(
@@ -84,24 +58,25 @@ class ResultsScreen extends ConsumerWidget {
           onPressed: () => context.go('${Routes.hub}?careerId=$careerId'),
         ),
         title: Text(
-          'MY MATCHES',
+          l.resultsMyMatches,
           style: AppTypography.labelMedium.copyWith(color: AppColors.primary),
         ),
         centerTitle: true,
       ),
       body: dataAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => Center(child: Text('Could not load results.\n$e')),
+        error: (e, _) =>
+            Center(child: Text(l.resultsCouldNotLoad(e.toString()))),
         data: (data) {
           if (data == null || data.fixtures.isEmpty) {
-            return const Center(child: Text('No fixtures.'));
+            return Center(child: Text(l.resultsNoFixtures));
           }
           String code(int id) => data.nations[id]?.code ?? '??';
 
           return ListView(
             padding: const EdgeInsets.all(AppSpacing.marginMobile),
             children: [
-              for (final section in _grouped(data.fixtures)) ...[
+              for (final section in _grouped(l, data.fixtures)) ...[
                 Padding(
                   padding: const EdgeInsets.fromLTRB(
                     4,
@@ -140,7 +115,7 @@ class ResultsScreen extends ConsumerWidget {
                           Row(
                             children: [
                               Text(
-                                _stage(f.round),
+                                MatchStage.stage(l, f.round),
                                 style: AppTypography.labelSmall
                                     .copyWith(color: AppColors.primary),
                               ),
@@ -182,9 +157,10 @@ class _ResultRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
     final middle = fixture.hasResult
         ? '${fixture.homeScore} - ${fixture.awayScore}'
-        : 'vs';
+        : l.resultsVs;
 
     return Container(
       color: isPlayer ? AppColors.surfaceContainerHigh : null,
