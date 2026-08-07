@@ -12,7 +12,8 @@ match — but no player has ever addressed the manager personally.
 
 ## Decisions
 
-- Three grievances: **game time**, **a squad place**, **a role**. Not the
+- Two grievances ship: **game time** and **a squad place**. A **role**
+  grievance was designed and cut on contact with the data — see below. Not the
   armband.
 - The manager **answers with a tone**, exactly as he answers the press.
   Answers are not tracked as breakable promises.
@@ -26,13 +27,20 @@ match — but no player has ever addressed the manager personally.
 `GrievanceKind { gameTime, squadPlace, role }`, detected by a pure function over
 data the save already holds:
 
-- **gameTime** — named in the squad for **3** consecutive windows with no
-  appearance in any of them.
+- **gameTime** — in the current squad, with no appearance in the nation's last
+  **3** played matches. `CallUps` holds only the current squad and no history,
+  so "three windows in the squad" is not knowable; "in the squad and not
+  playing" is, and is the same grievance.
 - **squadPlace** — inside the **top 25** of the nation's pool by rating, **not**
   called up for 3 consecutive windows, and aged 24 or over. A young player left
   out is waiting his turn; a 29-year-old repeatedly passed over is being told
   something.
-- **role** — started **3** matches in a position his position-fit rates poorly.
+**The role grievance is not in this build.** `PlayerRatings` records what a
+player did in a match but not the position he was played in, so "he keeps being
+shoved out of position" is not derivable from anything stored. It needs a new
+column, which means a schema bump and a wiped save — a real cost to pay for one
+grievance, and a decision for the player rather than an accident. The
+`GrievanceKind` enum leaves room for it.
 
 At most **one grievance per player**, and at most **two active at once**, so the
 hub never becomes a queue of complaints. When more men qualify than there is
