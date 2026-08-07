@@ -2,23 +2,30 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fnm/core/diagnostics/app_log.dart';
 import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
+import 'package:fnm/core/util/match_stage.dart';
 import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/entities/group_standing.dart';
+import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
 import 'package:fnm/domain/services/squad/condition.dart';
 import 'package:fnm/features/achievements/achievement_providers.dart';
+import 'package:fnm/features/tournaments/wc_host_theme.dart';
 import 'package:fnm/features/federation/investment_editor.dart';
 import 'package:fnm/features/hub/hub_event.dart';
 import 'package:fnm/features/hub/hub_providers.dart';
-import 'package:fnm/features/hub/objective_providers.dart';
+import 'package:fnm/features/hub/board_objectives_screen.dart';
+import 'package:fnm/features/press/press_providers.dart';
+import 'package:fnm/features/press/press_sheet.dart';
 import 'package:fnm/features/hub/round_popup.dart';
 import 'package:fnm/features/messages/message_popup.dart';
 import 'package:fnm/features/messages/message_providers.dart';
 import 'package:fnm/features/tactics/condition_providers.dart';
+import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
@@ -59,9 +66,15 @@ class _HubScreenState extends ConsumerState<HubScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
     final dataAsync = ref.watch(hubDataProvider(careerId));
-    final unread =
-        ref.watch(unreadMessagesProvider(careerId)).valueOrNull ?? 0;
+    final host = ref.watch(wcHostThemeProvider(careerId)).valueOrNull;
+    // The continental cup gets the same host re-skin as the World Cup. Only one
+    // can be live at a time, and the World Cup wins if they ever overlap.
+    final contHost = ref
+        .watch(continentalHostThemeProvider(careerId))
+        .valueOrNull;
+    final unread = ref.watch(unreadMessagesProvider(careerId)).valueOrNull ?? 0;
 
     // Surface news the moment it lands, rather than leaving it to be found.
     if (unread > 0 && !_popping) {
@@ -75,13 +88,13 @@ class _HubScreenState extends ConsumerState<HubScreen> {
           onPressed: () => context.go(Routes.home),
         ),
         title: Text(
-          'NATIONAL HUB',
+          l.hubNationalHub,
           style: AppTypography.labelMedium.copyWith(color: AppColors.primary),
         ),
         centerTitle: true,
         actions: [
           IconButton(
-            tooltip: 'Messages',
+            tooltip: l.hubMessages,
             icon: Badge(
               isLabelVisible: unread > 0,
               label: Text('$unread'),
@@ -90,21 +103,37 @@ class _HubScreenState extends ConsumerState<HubScreen> {
             onPressed: () =>
                 context.go('${Routes.messages}?careerId=$careerId'),
           ),
+          IconButton(
+            tooltip: l.navY,
+            icon: const Icon(Icons.tag, color: AppColors.primary),
+            onPressed: () => context.push('${Routes.y}?careerId=$careerId'),
+          ),
+          IconButton(
+            tooltip: l.homeSettings,
+            icon: const Icon(Icons.settings_outlined, color: AppColors.primary),
+            // push (not go) so Settings' back button returns to the hub.
+            onPressed: () => context.push(Routes.settings),
+          ),
         ],
       ),
-      bottomNavigationBar:
-          AppBottomNav(careerId: careerId, current: AppTab.hub),
+      bottomNavigationBar: AppBottomNav(
+        careerId: careerId,
+        current: AppTab.hub,
+      ),
       body: dataAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => Center(child: Text('Could not load save.\n$e')),
+        error: (e, _) => AppErrorState(
+          message: l.hubCouldNotLoadSave('').trim(),
+          onRetry: () => ref.invalidate(hubDataProvider(careerId)),
+        ),
         data: (hub) {
           if (hub == null) {
-            return const Center(child: Text('Save not found.'));
+            return Center(child: Text(l.hubSaveNotFound));
           }
           final nation = hub.nations[hub.career.nationId];
           final date = DateFormat('d MMM yyyy').format(hub.career.inGameDate);
           String code(int id) => hub.nations[id]?.code ?? '??';
-          String name(int id) => hub.nations[id]?.name ?? 'Unknown';
+          String name(int id) => hub.nations[id]?.name ?? l.hubUnknown;
           // Hide the opponent and group table until the draw has been watched.
           final drawWatched = hub.nextDrawWatched;
 
@@ -135,6 +164,15 @@ class _HubScreenState extends ConsumerState<HubScreen> {
                 ],
               ),
               const SizedBox(height: AppSpacing.md),
+              // Host-nation strip while a finals is under way — the World Cup,
+              // or the continental championship when that's the live one.
+              if (host?.active ?? false) ...[
+                WcHostBanner(theme: host!, code: code),
+                const SizedBox(height: AppSpacing.md),
+              ] else if (contHost?.active ?? false) ...[
+                WcHostBanner(theme: contHost!, code: code),
+                const SizedBox(height: AppSpacing.md),
+              ],
               if (hub.championNationId != null) ...[
                 _ChampionBanner(
                   name: name(hub.championNationId!),
@@ -143,11 +181,18 @@ class _HubScreenState extends ConsumerState<HubScreen> {
                 ),
                 const SizedBox(height: AppSpacing.md),
               ],
+              // The press, when they have something to ask. A card, not a
+              // forced step: it waits, and it goes away on its own if the
+              // manager would rather not talk.
+              _PressCard(careerId: careerId, name: name),
               _BoardFinanceCard(
                 careerId: careerId,
                 budget: hub.career.budget,
                 onFinances: () =>
                     context.go('${Routes.finances}?careerId=$careerId'),
+                onObjectives: () => context.go(
+                  '${Routes.boardObjectives}?careerId=$careerId',
+                ),
               ),
               const SizedBox(height: AppSpacing.md),
               // The primary action is whatever the next timeline event is
@@ -191,13 +236,14 @@ class _HubScreenState extends ConsumerState<HubScreen> {
                         );
                         return;
                       }
-                      final isWc = comp == 'World Cup Qualifiers' ||
+                      final isWc =
+                          comp == 'World Cup Qualifiers' ||
                           comp == 'World Championship';
                       context.go(
                         isWc || conf == null
                             ? '${Routes.cup}?careerId=$careerId'
                             : '${Routes.continental}?careerId=$careerId'
-                                '&conf=${conf.name}',
+                                  '&conf=${conf.name}',
                       );
                     },
                   )
@@ -210,7 +256,6 @@ class _HubScreenState extends ConsumerState<HubScreen> {
       ),
     );
   }
-
 }
 
 class _ChampionBanner extends StatelessWidget {
@@ -226,13 +271,14 @@ class _ChampionBanner extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
     return AppCard(
       child: Column(
         children: [
           const Icon(Icons.emoji_events, color: AppColors.primary, size: 40),
           const SizedBox(height: AppSpacing.sm),
           Text(
-            'WORLD CHAMPIONS',
+            l.hubWorldChampions,
             style: AppTypography.labelMedium.copyWith(color: AppColors.primary),
           ),
           const SizedBox(height: AppSpacing.xs),
@@ -245,39 +291,97 @@ class _ChampionBanner extends StatelessWidget {
             ],
           ),
           const SizedBox(height: AppSpacing.sm),
-          TextButton(onPressed: onView, child: const Text('View bracket ›')),
+          TextButton(onPressed: onView, child: Text(l.hubViewBracket)),
         ],
       ),
     );
   }
 }
 
+/// The press card: shown only when there is a question waiting, and gone the
+/// moment it is answered or goes stale. It sits below the board strip rather
+/// than in the primary action, so talking to the press is never in the way of
+/// playing the next match.
+class _PressCard extends ConsumerWidget {
+  const _PressCard({required this.careerId, required this.name});
+
+  final int careerId;
+
+  /// Resolves a nation id to its name, for a question about a specific match.
+  final String Function(int) name;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l = AppLocalizations.of(context);
+    final question = ref.watch(pressQuestionProvider(careerId)).valueOrNull;
+    if (question == null) return const SizedBox.shrink();
+    return Padding(
+      padding: const EdgeInsets.only(bottom: AppSpacing.md),
+      child: AppCard(
+        onTap: () => showModalBottomSheet<void>(
+          context: context,
+          backgroundColor: AppColors.surfaceContainer,
+          isScrollControlled: true,
+          builder: (_) => PressSheet(
+            careerId: careerId,
+            question: question,
+            opponentName: switch (question.subjectNationId) {
+              final id? => name(id),
+              _ => null,
+            },
+          ),
+        ),
+        child: Row(
+          children: [
+            const Icon(Icons.mic_rounded, color: AppColors.primary, size: 20),
+            const SizedBox(width: AppSpacing.md),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(l.pressCardTitle, style: AppTypography.titleMedium),
+                  Text(
+                    l.pressCardSub,
+                    style: AppTypography.labelSmall.copyWith(
+                      color: AppColors.onSurfaceVariant,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const Icon(
+              Icons.chevron_right,
+              size: 18,
+              color: AppColors.onSurfaceVariant,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 /// A single compact strip: board confidence (shown immediately, colour-coded)
-/// on the left, and the federation funds as a button through to the finances
-/// screen on the right.
+/// on the left, the federation funds as a button through to the finances screen
+/// on the right, and a way through to the board's objectives below.
 class _BoardFinanceCard extends ConsumerWidget {
   const _BoardFinanceCard({
     required this.careerId,
     required this.budget,
     required this.onFinances,
+    required this.onObjectives,
   });
 
   final int careerId;
   final int budget;
   final VoidCallback onFinances;
+  final VoidCallback onObjectives;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l = AppLocalizations.of(context);
     final value = ref.watch(satisfactionProvider(careerId)).valueOrNull;
-    final (color, verdict) = switch (value) {
-      null => (AppColors.onSurfaceVariant, '—'),
-      >= 75 => (AppColors.positive, 'Delighted'),
-      >= 55 => (AppColors.positive, 'Pleased'),
-      >= 40 => (AppColors.warning, 'Expecting more'),
-      >= 25 => (AppColors.warning, 'Concerned'),
-      _ => (AppColors.error, 'Job at risk'),
-    };
-    final objective = ref.watch(cycleObjectiveProvider(careerId)).valueOrNull;
+    final (color, verdict) = boardVerdict(l, value);
     return AppCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -291,7 +395,7 @@ class _BoardFinanceCard extends ConsumerWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    value == null ? 'BOARD' : '$value%',
+                    value == null ? l.hubBoard : '$value%',
                     style: AppTypography.titleMedium.copyWith(color: color),
                   ),
                   Text(
@@ -310,52 +414,30 @@ class _BoardFinanceCard extends ConsumerWidget {
                 style: OutlinedButton.styleFrom(
                   foregroundColor: AppColors.primary,
                   side: const BorderSide(color: AppColors.outlineVariant),
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: AppSpacing.md),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: AppSpacing.md,
+                  ),
                 ),
               ),
             ],
           ),
-          if (objective != null) ...[
-            const Divider(height: AppSpacing.lg, color: AppColors.outlineVariant),
-            Row(
-              children: [
-                const Icon(Icons.flag_outlined,
-                    size: 15, color: AppColors.onSurfaceVariant),
-                const SizedBox(width: AppSpacing.sm),
-                Expanded(
-                  child: Text(
-                    'Board objective: ${objective.label}',
-                    style: AppTypography.labelSmall,
-                  ),
-                ),
-                if (objective.decided)
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 8, vertical: 2),
-                    decoration: BoxDecoration(
-                      color: (objective.met
-                              ? AppColors.positive
-                              : AppColors.error)
-                          .withValues(alpha: 0.15),
-                      borderRadius: AppRadii.smAll,
-                    ),
-                    child: Text(
-                      objective.met
-                          ? 'MET · ${objective.resultLabel}'
-                          : 'MISSED · ${objective.resultLabel}',
-                      style: AppTypography.labelSmall.copyWith(
-                        color: objective.met
-                            ? AppColors.positive
-                            : AppColors.error,
-                        fontWeight: FontWeight.w700,
-                        fontSize: 9,
-                      ),
-                    ),
-                  ),
-              ],
+          const SizedBox(height: AppSpacing.sm),
+          // The objectives themselves live on their own screen: spelled out in
+          // full they never fit this strip, and an ellipsised half-sentence
+          // told the manager less than the confidence figure above already
+          // does.
+          SizedBox(
+            width: double.infinity,
+            child: OutlinedButton.icon(
+              onPressed: onObjectives,
+              icon: const Icon(Icons.flag_outlined, size: 16),
+              label: Text(l.boardObjectivesTitle),
+              style: OutlinedButton.styleFrom(
+                foregroundColor: AppColors.primary,
+                side: const BorderSide(color: AppColors.outlineVariant),
+              ),
             ),
-          ],
+          ),
         ],
       ),
     );
@@ -371,15 +453,17 @@ class _EventButton extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l = AppLocalizations.of(context);
     final event = ref.watch(nextEventProvider(careerId)).valueOrNull;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         PrimaryButton(
-          label: event?.label ?? 'Continue',
+          label: event?.label ?? l.hubContinue,
           icon: event?.icon ?? Icons.play_arrow_rounded,
-          onPressed:
-              event == null ? null : () => _dispatch(context, ref, event),
+          onPressed: event == null
+              ? null
+              : () => _dispatch(context, ref, event),
         ),
         if (event?.subtitle != null) ...[
           const SizedBox(height: AppSpacing.xs),
@@ -395,6 +479,28 @@ class _EventButton extends ConsumerWidget {
     );
   }
 
+  /// Runs a world-mutating season call that nothing awaits, and puts any
+  /// failure in front of the player.
+  ///
+  /// These used to be bare `unawaited(...)`: anything thrown inside the sim
+  /// became an unhandled async error, so the hub silently failed to move and
+  /// the player was left tapping a button that looked dead. Now the error is
+  /// recorded for Settings → Diagnostics and shown as a snackbar.
+  void _guarded(BuildContext context, Future<void> Function() op) {
+    unawaited(() async {
+      try {
+        await op();
+      } on Object catch (e, st) {
+        AppLog.error('hub:action', e, st);
+        if (!context.mounted) return;
+        final l = AppLocalizations.of(context);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(l.hubCouldNotAdvance('$e'))),
+        );
+      }
+    }());
+  }
+
   void _dispatch(BuildContext context, WidgetRef ref, HubEvent event) {
     final season = ref.read(seasonServiceProvider);
     switch (event.kind) {
@@ -402,12 +508,13 @@ class _EventButton extends ConsumerWidget {
         // Sim the next round, then pop up its results (with a link to the full
         // bracket); group-stage rounds fall through to the bracket directly.
         final route = event.route;
-        unawaited(
+        _guarded(
+          context,
           // Guarded from before the first await: advancing invalidates the hub,
           // which would otherwise let its automatic news popup race this one —
           // and the round that generates news is the final, the one round the
           // player most wants to see.
-          withAppPopupGuard(() async {
+          () => withAppPopupGuard(() async {
             await season.advance(careerId);
             if (context.mounted) {
               await showRoundPopup(context, ref, careerId, route: route);
@@ -419,7 +526,30 @@ class _EventButton extends ConsumerWidget {
           }),
         );
       case HubEventKind.advance:
-        unawaited(season.advance(careerId));
+        _guarded(context, () => season.advance(careerId));
+      case HubEventKind.press:
+        // The press conference has no screen of its own — it is the same sheet
+        // the optional press card opens, just reached as a forced step.
+        final question = ref.read(pressQuestionProvider(careerId)).valueOrNull;
+        if (question == null) return;
+        final nations =
+            ref.read(hubDataProvider(careerId)).valueOrNull?.nations ??
+            const <int, Nation>{};
+        unawaited(
+          showModalBottomSheet<void>(
+            context: context,
+            backgroundColor: AppColors.surfaceContainer,
+            isScrollControlled: true,
+            builder: (_) => PressSheet(
+              careerId: careerId,
+              question: question,
+              opponentName: switch (question.subjectNationId) {
+                final id? => nations[id]?.name,
+                _ => null,
+              },
+            ),
+          ),
+        );
       case HubEventKind.cycleRollover:
       case HubEventKind.draw:
       case HubEventKind.tournamentKickoff:
@@ -427,6 +557,7 @@ class _EventButton extends ConsumerWidget {
       case HubEventKind.budget:
       case HubEventKind.naturalization:
       case HubEventKind.friendlies:
+      case HubEventKind.trainingCamp:
       case HubEventKind.match:
         if (event.route != null) context.go(event.route!);
     }
@@ -434,28 +565,6 @@ class _EventButton extends ConsumerWidget {
 }
 
 /// Human-readable stage for a fixture (distinguishes qualifiers from finals).
-String matchStageLabel(Fixture f) => switch (f.round) {
-      null => 'QUALIFYING · MD ${f.matchday}',
-      'FRIENDLY' => 'FRIENDLY',
-      'NL' => 'NATIONS CUP',
-      'NGROUP' => 'NATIONS CUP · GROUP',
-      'NSF' => 'NATIONS CUP · SEMI-FINAL',
-      'NFINAL' => 'NATIONS CUP · FINAL',
-      'FFINAL' => 'CONTINENTAL CLASH',
-      'GROUP' => 'WC FINALS · GROUP',
-      'R32' => 'WC FINALS · ROUND OF 32',
-      'R16' => 'WC FINALS · ROUND OF 16',
-      'QF' => 'WC FINALS · QUARTER-FINAL',
-      'SF' => 'WC FINALS · SEMI-FINAL',
-      '3RD' => 'WC FINALS · THIRD PLACE',
-      'FINAL' => 'WC FINALS · FINAL',
-      'CR16' => 'CONTINENTAL · ROUND OF 16',
-      'CQF' => 'CONTINENTAL · QUARTER-FINAL',
-      'CSF' => 'CONTINENTAL · SEMI-FINAL',
-      'C3RD' => 'CONTINENTAL · THIRD PLACE',
-      'CFINAL' => 'CONTINENTAL · FINAL',
-      _ => f.round!,
-    };
 
 class _NextMatch extends StatelessWidget {
   const _NextMatch({required this.next, required this.code});
@@ -465,10 +574,11 @@ class _NextMatch extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
     final f = next;
     if (f == null) {
-      return const AppCard(
-        child: Center(child: Text('No more fixtures this cycle.')),
+      return AppCard(
+        child: Center(child: Text(l.hubNoMoreFixtures)),
       );
     }
     final date = DateFormat('EEE d MMM').format(f.date).toUpperCase();
@@ -477,11 +587,11 @@ class _NextMatch extends StatelessWidget {
         children: [
           Row(
             children: [
-              const Text('NEXT MATCH', style: AppTypography.labelMedium),
+              Text(l.hubNextMatch, style: AppTypography.labelMedium),
               const Spacer(),
               Flexible(
                 child: Text(
-                  matchStageLabel(f),
+                  MatchStage.label(l, f),
                   textAlign: TextAlign.end,
                   overflow: TextOverflow.ellipsis,
                   style: AppTypography.labelSmall.copyWith(
@@ -500,7 +610,7 @@ class _NextMatch extends StatelessWidget {
               _Side(code: code(f.homeNationId)),
               Column(
                 children: [
-                  const Text('VS', style: AppTypography.labelLarge),
+                  Text(l.hubVs, style: AppTypography.labelLarge),
                   const SizedBox(height: 2),
                   Text(
                     date,
@@ -551,23 +661,24 @@ class _SquadStatus extends StatelessWidget {
   Color get _moraleColor => morale >= 60
       ? AppColors.positive
       : morale >= 42
-          ? AppColors.primary
-          : morale >= 25
-              ? AppColors.warning
-              : AppColors.error;
+      ? AppColors.primary
+      : morale >= 25
+      ? AppColors.warning
+      : AppColors.error;
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
     return AppCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              const Text('SQUAD STATUS', style: AppTypography.labelMedium),
+              Text(l.hubSquadStatus, style: AppTypography.labelMedium),
               const Spacer(),
               Text(
-                '$size players',
+                l.hubPlayers(size),
                 style: AppTypography.labelSmall.copyWith(
                   color: AppColors.onSurfaceVariant,
                 ),
@@ -578,7 +689,7 @@ class _SquadStatus extends StatelessWidget {
           Row(
             children: [
               Text(
-                'Avg rating',
+                l.hubAvgRating,
                 style: AppTypography.bodySmall.copyWith(
                   color: AppColors.onSurfaceVariant,
                 ),
@@ -604,7 +715,7 @@ class _SquadStatus extends StatelessWidget {
           Row(
             children: [
               Text(
-                'Morale',
+                l.hubMorale,
                 style: AppTypography.bodySmall.copyWith(
                   color: AppColors.onSurfaceVariant,
                 ),
@@ -631,7 +742,7 @@ class _SquadStatus extends StatelessWidget {
           ),
           const SizedBox(height: AppSpacing.sm),
           PrimaryButton(
-            label: 'Manage Team',
+            label: l.hubManageTeam,
             icon: Icons.groups,
             onPressed: onManage,
           ),
@@ -650,6 +761,7 @@ class _GroupPlaceholder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
     return AppCard(
       child: Row(
         children: [
@@ -667,7 +779,7 @@ class _GroupPlaceholder extends StatelessWidget {
                 ),
                 const SizedBox(height: 2),
                 Text(
-                  'Groups to be drawn — watch the draw to reveal them.',
+                  l.hubGroupsToBeDrawn,
                   style: AppTypography.bodySmall.copyWith(
                     color: AppColors.onSurfaceVariant,
                   ),
@@ -711,6 +823,7 @@ class _GroupTable extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
     return AppCard(
       onTap: onTap,
       child: Column(
@@ -721,8 +834,9 @@ class _GroupTable extends StatelessWidget {
               Expanded(
                 child: Text(
                   group.competition.toUpperCase(),
-                  style: AppTypography.labelSmall
-                      .copyWith(color: AppColors.primary),
+                  style: AppTypography.labelSmall.copyWith(
+                    color: AppColors.primary,
+                  ),
                 ),
               ),
               if (onTap != null)
@@ -733,9 +847,16 @@ class _GroupTable extends StatelessWidget {
                 ),
             ],
           ),
-          Text('GROUP ${group.name}', style: AppTypography.labelMedium),
+          Text(l.hubGroupName(group.name), style: AppTypography.labelMedium),
           const SizedBox(height: AppSpacing.sm),
-          _row('#', 'TEAM', 'P', 'GD', 'PTS', header: true),
+          _row(
+            '#',
+            l.hubTblTeam,
+            l.hubTblP,
+            l.hubTblGd,
+            l.hubTblPts,
+            header: true,
+          ),
           const Divider(),
           for (var i = 0; i < group.standings.length; i++)
             _standingRow(i + 1, group.standings[i]),
@@ -757,10 +878,10 @@ class _GroupTable extends StatelessWidget {
     final zoneColor = direct
         ? AppColors.positive
         : inContention
-            ? AppColors.warning
-            : relegated
-                ? AppColors.error
-                : null;
+        ? AppColors.warning
+        : relegated
+        ? AppColors.error
+        : null;
     final gd = s.goalDifference;
     return Container(
       decoration: BoxDecoration(
@@ -780,10 +901,9 @@ class _GroupTable extends StatelessWidget {
             child: Text(
               '$pos',
               style: AppTypography.labelSmall.copyWith(
-                color: zoneColor ??
-                    (isPlayer
-                        ? AppColors.primary
-                        : AppColors.onSurfaceVariant),
+                color:
+                    zoneColor ??
+                    (isPlayer ? AppColors.primary : AppColors.onSurfaceVariant),
                 fontWeight: direct ? FontWeight.w700 : FontWeight.w500,
               ),
             ),

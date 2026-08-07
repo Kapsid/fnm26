@@ -7,7 +7,7 @@ import 'package:fnm/l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
 
 /// The primary destinations reachable from the persistent bottom navigation.
-enum AppTab { hub, squad, competitions, careers, y }
+enum AppTab { hub, squad, competitions, careers }
 
 /// The app's persistent bottom navigation bar, shared across the primary
 /// destinations so the four core areas are always one tap apart.
@@ -73,14 +73,6 @@ class AppBottomNav extends StatelessWidget {
                   label: l.navCareers,
                   active: current == AppTab.careers,
                   onTap: () => _go(context, Routes.careers),
-                ),
-              ),
-              Expanded(
-                child: _NavItem(
-                  icon: Icons.tag,
-                  label: l.navY,
-                  active: current == AppTab.y,
-                  onTap: () => _go(context, Routes.y),
                 ),
               ),
             ],

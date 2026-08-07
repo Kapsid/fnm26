@@ -131,16 +131,17 @@ void main() {
     expect(continued, isTrue);
   });
 
-  testWidgets('five nav destinations still fit a narrow phone', (tester) async {
-    // The bar was already tight at four. A fifth must not overflow at the
-    // smallest width the app supports.
+  testWidgets('the nav destinations fit a narrow phone', (tester) async {
+    // A fifth destination once overflowed this by 200 pixels. The bar now
+    // shares its width equally, so it cannot outgrow the screen whatever it
+    // is asked to hold — this guards that it stays that way.
     tester.view.devicePixelRatio = 1;
     tester.view.physicalSize = const Size(320, 640);
     addTearDown(tester.view.reset);
 
     await tester.pumpApp(
       const Scaffold(
-        bottomNavigationBar: AppBottomNav(careerId: 1, current: AppTab.y),
+        bottomNavigationBar: AppBottomNav(careerId: 1, current: AppTab.hub),
       ),
     );
     await tester.pumpAndSettle();
