@@ -3065,6 +3065,18 @@ class AppLocalizationsCs extends AppLocalizations {
   String get playerValue => 'Hodnota';
 
   @override
+  String get clubFirstChoice => 'Hraje pravidelně';
+
+  @override
+  String get clubRotation => 'Střídavě';
+
+  @override
+  String get clubFringe => 'Hraje málo';
+
+  @override
+  String get clubFrozenOut => 'Nehraje';
+
+  @override
   String get playerClubHistory => 'KLUBOVÁ HISTORIE';
 
   @override

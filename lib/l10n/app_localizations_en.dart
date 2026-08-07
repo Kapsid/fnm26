@@ -3040,6 +3040,18 @@ class AppLocalizationsEn extends AppLocalizations {
   String get playerValue => 'Value';
 
   @override
+  String get clubFirstChoice => 'Plays every week';
+
+  @override
+  String get clubRotation => 'In and out';
+
+  @override
+  String get clubFringe => 'Barely playing';
+
+  @override
+  String get clubFrozenOut => 'Not playing';
+
+  @override
   String get playerClubHistory => 'CLUB HISTORY';
 
   @override

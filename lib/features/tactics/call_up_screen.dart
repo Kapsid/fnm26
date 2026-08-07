@@ -9,6 +9,7 @@ import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/core/util/match_stage.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/enums.dart';
+import 'package:fnm/domain/services/club/club_form.dart';
 import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/entities/player_absence.dart';
@@ -615,6 +616,14 @@ class _CoverageBanner extends StatelessWidget {
   }
 }
 
+/// What a club standing reads as on a call-up row.
+String clubStandingLabel(AppLocalizations l, ClubStanding s) => switch (s) {
+      ClubStanding.firstChoice => l.clubFirstChoice,
+      ClubStanding.rotation => l.clubRotation,
+      ClubStanding.fringe => l.clubFringe,
+      ClubStanding.frozenOut => l.clubFrozenOut,
+    };
+
 class _PlayerToggle extends StatelessWidget {
   const _PlayerToggle({
     required this.player,
@@ -710,6 +719,20 @@ class _PlayerToggle extends StatelessWidget {
             const SizedBox(width: AppSpacing.sm),
             _AbsenceBadge(reason: reason, isInjury: isInjury),
           ],
+          // Only when it is worth saying: a rotation player is the norm and a
+          // badge on every row would say nothing at all.
+          if (condition?.clubStanding case final s?)
+            if (s != ClubStanding.rotation) ...[
+              const SizedBox(width: AppSpacing.sm),
+              Text(
+                clubStandingLabel(l, s),
+                style: AppTypography.labelSmall.copyWith(
+                  color: s == ClubStanding.firstChoice
+                      ? AppColors.positive
+                      : AppColors.warning,
+                ),
+              ),
+            ],
           if (condition != null &&
               condition!.fatigueState != FatigueState.fresh) ...[
             const SizedBox(width: AppSpacing.sm),

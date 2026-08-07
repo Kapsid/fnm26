@@ -4024,6 +4024,14 @@
   "@playerValue": {
     "description": "Label: player market value."
   },
+  "clubFirstChoice": "Plays every week",
+  "@clubFirstChoice": { "description": "Club standing: first choice." },
+  "clubRotation": "In and out",
+  "@clubRotation": { "description": "Club standing: rotation player." },
+  "clubFringe": "Barely playing",
+  "@clubFringe": { "description": "Club standing: fringe player." },
+  "clubFrozenOut": "Not playing",
+  "@clubFrozenOut": { "description": "Club standing: frozen out." },
   "playerClubHistory": "CLUB HISTORY",
   "@playerClubHistory": {
     "description": "Heading above a player's list of club spells on the detail card."

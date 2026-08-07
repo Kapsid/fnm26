@@ -5214,6 +5214,30 @@ abstract class AppLocalizations {
   /// **'Value'**
   String get playerValue;
 
+  /// Club standing: first choice.
+  ///
+  /// In en, this message translates to:
+  /// **'Plays every week'**
+  String get clubFirstChoice;
+
+  /// Club standing: rotation player.
+  ///
+  /// In en, this message translates to:
+  /// **'In and out'**
+  String get clubRotation;
+
+  /// Club standing: fringe player.
+  ///
+  /// In en, this message translates to:
+  /// **'Barely playing'**
+  String get clubFringe;
+
+  /// Club standing: frozen out.
+  ///
+  /// In en, this message translates to:
+  /// **'Not playing'**
+  String get clubFrozenOut;
+
   /// Heading above a player's list of club spells on the detail card.
   ///
   /// In en, this message translates to:
