@@ -219,6 +219,44 @@ void main() {
       );
     });
   });
+
+  group('club minutes and development', () {
+    test('a seed of zero leaves development exactly as it was', () {
+      // Every existing caller passes no seed; none of them may move.
+      final without = PlayerLifecycle.poolAt(seeded, 1, 8,
+          careerStartsByPlayer: {for (final p in seeded) p.id: 9});
+      final explicit = PlayerLifecycle.poolAt(seeded, 1, 8,
+          clubSeed: 0, careerStartsByPlayer: {for (final p in seeded) p.id: 9});
+      expect(
+        [for (final p in explicit) p.overall],
+        [for (final p in without) p.overall],
+      );
+    });
+
+    test('the minutes factor moves a well-used player', () {
+      final base = PlayerLifecycle.withCareerDev(seeded.first, 16);
+      final starved =
+          PlayerLifecycle.withCareerDev(seeded.first, 16, minutesFactor: 0.6);
+      final feasted =
+          PlayerLifecycle.withCareerDev(seeded.first, 16, minutesFactor: 1.4);
+      expect(starved.overall, lessThanOrEqualTo(base.overall));
+      expect(feasted.overall, greaterThanOrEqualTo(base.overall));
+    });
+
+    test('a real club seed does not shift the pool as a whole', () {
+      // The equilibrium guard at the pool level: individuals move, the world
+      // does not.
+      double meanOverall(int seed) {
+        final pool = PlayerLifecycle.poolAt(seeded, 1, 20,
+            clubSeed: seed,
+            careerStartsByPlayer: {for (final p in seeded) p.id: 12});
+        return pool.map((p) => p.overall).reduce((a, b) => a + b) /
+            pool.length;
+      }
+
+      expect(meanOverall(7777), closeTo(meanOverall(0), 0.6));
+    });
+  });
 }
 
 /// The reconstruction that turns a seventeen-year-old draw into an
@@ -312,4 +350,5 @@ void _retirementVariance() {
       expect(mean, closeTo(PlayerLifecycle.retirementAge.toDouble(), 0.3));
     });
   });
+
 }

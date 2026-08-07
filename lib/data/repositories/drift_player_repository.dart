@@ -69,6 +69,9 @@ class DriftPlayerRepository implements PlayerRepository {
       youthBonusByCycle: youthBonusByCycle,
       careerStartsByPlayer: careerStartsByPlayer,
       minAge: minAge,
+      // Only the manager's own pool feels club minutes; the world simulation
+      // passes no seed and is byte-identical to before.
+      clubSeed: saveSeed,
     )..sort((a, b) => b.overall.compareTo(a.overall));
     final name = await _namerFor(nationId, seeded, saveSeed);
     final home = await _home(nationId);
@@ -100,6 +103,9 @@ class DriftPlayerRepository implements PlayerRepository {
       agingYears,
       youthBonusByCycle: youthBonusByCycle,
       careerStartsByPlayer: careerStartsByPlayer,
+      // Only the manager's own pool feels club minutes; the world simulation
+      // passes no seed and is byte-identical to before.
+      clubSeed: saveSeed,
     )..sort((a, b) => b.overall.compareTo(a.overall));
     final name = await _namerFor(nationId, seeded, saveSeed);
     final home = await _home(nationId);

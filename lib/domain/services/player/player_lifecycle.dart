@@ -4,6 +4,7 @@ import 'package:fnm/core/rng/seeded_rng.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/entities/player_attributes.dart';
+import 'package:fnm/domain/services/club/club_form.dart';
 import 'package:fnm/domain/services/club/clubs.dart';
 import 'package:fnm/domain/services/player/depth_chart.dart';
 import 'package:fnm/domain/services/player/player_aging.dart';
@@ -141,6 +142,12 @@ abstract final class PlayerLifecycle {
     int minAge = 17,
     Map<int, double> youthBonusByCycle = const {},
     Map<int, int> careerStartsByPlayer = const {},
+
+    /// The save seed, for the club-minutes factor on development. ZERO means
+    /// no club effect at all — which is what the world simulation and every
+    /// other existing caller want, and what keeps their pools identical to
+    /// before this feature existed.
+    int clubSeed = 0,
   }) {
     // International retirements happen as a WAVE after a tournament, not at some
     // arbitrary off-season boundary. A major tournament falls on every even
@@ -158,12 +165,23 @@ abstract final class PlayerLifecycle {
     bool retired(Player aged) =>
         aged.age - agingYears + retireAging >= retirementAgeFor(aged.id);
 
+    double factorFor(Player aged) => clubSeed == 0
+        ? 1
+        : ClubForm.yearMinutesFactor(
+            playerId: aged.id,
+            overall: aged.overall,
+            age: aged.age,
+            saveSeed: clubSeed,
+            year: agingYears,
+          );
+
     final out = <Player>[];
     for (final p in seeded) {
       final aged = PlayerAging.agedYears(p, agingYears);
       if (aged.age < minAge) continue;
       if (!retired(aged)) {
-        out.add(withCareerDev(aged, careerStartsByPlayer[aged.id] ?? 0));
+        out.add(withCareerDev(aged, careerStartsByPlayer[aged.id] ?? 0,
+            minutesFactor: factorFor(aged)));
       }
     }
     // Every intake year that has happened, including the ones backfilled from
@@ -175,7 +193,8 @@ abstract final class PlayerLifecycle {
         if (aged.age < minAge) continue;
         if (isReleasedBy(aged.id, aged.age)) continue;
         if (retired(aged)) continue;
-        out.add(withCareerDev(aged, careerStartsByPlayer[aged.id] ?? 0));
+        out.add(withCareerDev(aged, careerStartsByPlayer[aged.id] ?? 0,
+            minutesFactor: factorFor(aged)));
       }
     }
     return out;
@@ -190,6 +209,7 @@ abstract final class PlayerLifecycle {
     int agingYears, {
     Map<int, double> youthBonusByCycle = const {},
     Map<int, int> careerStartsByPlayer = const {},
+    int clubSeed = 0,
   }) =>
       poolAt(
         seeded,
@@ -198,6 +218,7 @@ abstract final class PlayerLifecycle {
         youthBonusByCycle: youthBonusByCycle,
         careerStartsByPlayer: careerStartsByPlayer,
         minAge: intakeAge,
+        clubSeed: clubSeed,
       ).where((p) => p.age <= YouthLevel.u21.maxAge).toList();
 
   /// The four-year cycle an intake year belongs to, for the academy bonus.
@@ -220,7 +241,11 @@ abstract final class PlayerLifecycle {
   /// Potential is what turns game time into a gamble worth caring about: two
   /// prospects who debut alike diverge as they play — a gem kicks on toward
   /// stardom, a bust plateaus however many caps you give them.
-  static Player withCareerDev(Player aged, int starts) {
+  static Player withCareerDev(
+    Player aged,
+    int starts, {
+    double minutesFactor = 1,
+  }) {
     if (starts <= 0) return aged;
     // Weight by the club-league tier the player's (pre-bump) overall implies,
     // so a top-flight regular improves faster than a lower-league one.
@@ -230,10 +255,13 @@ abstract final class PlayerLifecycle {
     // running alongside it. At the old rate a regular picked up the cap in a
     // single cycle and the two effects compounded into squads that improved
     // faster than they could possibly age out.
-    final delta =
-        (sqrt(starts) * 0.30 * tierWeight * developmentPotential(aged.id))
-            .clamp(0.0, 3.0)
-            .round();
+    final delta = (sqrt(starts) *
+            0.30 *
+            tierWeight *
+            developmentPotential(aged.id) *
+            minutesFactor)
+        .clamp(0.0, 3.0)
+        .round();
     if (delta == 0) return aged;
     return aged.copyWith(attributes: _bumpAll(aged.attributes, delta));
   }
