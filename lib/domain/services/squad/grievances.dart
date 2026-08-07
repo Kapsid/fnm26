@@ -79,9 +79,13 @@ abstract final class Grievances {
   /// Below this age, being left out is waiting your turn.
   static const int squadPlaceMinAge = 24;
 
-  /// At most this many men are unhappy at once. The hub is a place to manage a
-  /// team, not a queue of complaints.
-  static const int maxActive = 2;
+  /// How many men are unhappy at once. ONE: the hub is a place to manage a
+  /// team, and a queue of complaints is not a dressing room, it is an inbox.
+  static const int maxActive = 1;
+
+  /// How many men may come to the office in a single year. A dressing room that
+  /// produces a grievance every window is not a dressing room either.
+  static const int maxPerYear = 3;
 
   /// The age at which a man walks away rather than sulks.
   static const int walkoutAge = 30;
@@ -92,22 +96,35 @@ abstract final class Grievances {
   /// What the dressing room loses while a grievance stands unanswered.
   static const int ignoredMoraleCost = -4;
 
-  /// Who wants a word, most senior first, capped at [maxActive].
+  /// Who wants a word — at most [maxActive], most senior first.
   ///
   /// [standings] is the nation's pool with each man's situation; [poolRank] is
-  /// his position by rating (1 = the best in the country); [window] identifies
-  /// the international window, so the same grievance is not raised twice in it.
+  /// his position by rating (1 = the best in the country); [year] keys the
+  /// grievance, so a man who is ignored does not come back every window with a
+  /// fresh complaint — he asks once a year, like a person.
+  ///
+  /// [squadNamed] is false before the manager has ever picked a squad. Nobody
+  /// may complain about being left out of a team that does not exist yet —
+  /// without this the whole country turns up on day one, because an empty
+  /// squad reads as everybody being dropped.
+  ///
+  /// [raisedThisYear] is how many have already come forward, so a season has a
+  /// couple of these rather than one every window.
   static List<Grievance> raise(
     List<SquadStanding> standings, {
     required Map<int, int> poolRank,
-    required int window,
+    required int year,
+    bool squadNamed = true,
+    int raisedThisYear = 0,
     Set<String> alreadyRaised = const {},
   }) {
+    if (!squadNamed) return const [];
+    if (raisedThisYear >= maxPerYear) return const [];
     final out = <Grievance>[];
     for (final s in standings) {
       final kind = _kindFor(s, poolRank[s.playerId]);
       if (kind == null) continue;
-      final key = 'grv:${kind.name}:${s.playerId}:$window';
+      final key = 'grv:${kind.name}:${s.playerId}:$year';
       if (alreadyRaised.contains(key)) continue;
       out.add((
         playerId: s.playerId,

@@ -3,7 +3,6 @@ import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/services/squad/grievances.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/federation/federation_providers.dart';
-import 'package:fnm/domain/services/club/club_form.dart';
 
 /// The prefix a walkout message is keyed with. The ANNOUNCEMENT IS THE RECORD:
 /// a permanent retirement needs a persisted fact, and a new table would cost
@@ -31,7 +30,8 @@ typedef _Standing = ({
   List<SquadStanding> standings,
   Map<int, int> poolRank,
   Map<int, int> longAbsence,
-  int window,
+  int year,
+  bool squadNamed,
 });
 
 final AutoDisposeFutureProviderFamily<_Standing?, int> _standingProvider =
@@ -107,9 +107,11 @@ final AutoDisposeFutureProviderFamily<_Standing?, int> _standingProvider =
     longAbsence: {
       for (final p in pool) p.id: appearances(p.id, longDates),
     },
-    // The same definition of "which window are we in" the club-form draw
-    // uses. Two answers to that question would drift.
-    window: ClubForm.windowIndexFor(career.inGameDate),
+    year: career.inGameDate.year,
+    // Before the manager has ever named a squad, an empty call-up list reads
+    // as everybody having been dropped — and the entire country turns up at
+    // the office on day one. Nobody may resent a team that does not exist yet.
+    squadNamed: callUps.isNotEmpty,
   );
 });
 
@@ -126,10 +128,17 @@ final AutoDisposeFutureProviderFamily<List<Grievance>, int> grievanceProvider =
         in await ref.watch(careerRepositoryProvider).pressAnswers(careerId))
       a.questionKey,
   };
+  // How many have already had their word this year — a season gets a couple of
+  // these, not one every window.
+  final thisYear = answered
+      .where((k) => k.startsWith('grv:') && k.endsWith(':${standing.year}'))
+      .length;
   return Grievances.raise(
     standing.standings,
     poolRank: standing.poolRank,
-    window: standing.window,
+    year: standing.year,
+    squadNamed: standing.squadNamed,
+    raisedThisYear: thisYear,
     alreadyRaised: answered,
   );
 });
