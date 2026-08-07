@@ -1,3 +1,4 @@
+import 'package:fnm/domain/services/press/public_mood.dart';
 /// How a single match went for the manager's nation.
 enum MatchOutcome { win, draw, loss }
 
@@ -7,6 +8,10 @@ enum TournamentTier { world, continental, nationsCup, clash }
 
 /// Where the manager's nation finished a tournament.
 enum Placing { champion, runnerUp, third }
+
+/// A settled board objective: what was demanded at [tier] and how far the
+/// nation actually went, both on the 2 (qualify) … 7 (champions) scale.
+typedef ObjectiveResult = ({TournamentTier tier, int target, int actual});
 
 /// The board's mood, 0–100.
 ///
@@ -97,8 +102,65 @@ abstract final class BoardSatisfaction {
         _ => 0,
       };
 
-  /// The board's mood given [recent] form (most recent first), the tournaments
-  /// the nation placed in recently, and its [worldRank].
+  /// What meeting an objective at [tier] is worth, and what each round beyond
+  /// (or short of) it adds. The World Cup dominates; the continental cup is
+  /// worth roughly two-thirds of it.
+  static ({int met, int step}) objectiveWeights(TournamentTier tier) =>
+      switch (tier) {
+        TournamentTier.world => (met: 18, step: 7),
+        TournamentTier.continental => (met: 12, step: 5),
+        TournamentTier.nationsCup => (met: 5, step: 2),
+        TournamentTier.clash => (met: 2, step: 1),
+      };
+
+  /// How much harder a board judges the brief it actually set, by the height of
+  /// the demand (2 = "qualify" … 7 = "win it").
+  ///
+  /// A federation that tells its side to lift the World Cup has staked
+  /// everything on it, and lives or dies by whether it happened; one that asks
+  /// only to be there has far less riding on the answer. Scaling by the demand
+  /// is what makes the gauge move hardest at the biggest nations — which is
+  /// where a missed objective should genuinely cost a manager their job.
+  static double demandFactor(int target) =>
+      1 + 0.18 * (target.clamp(2, 7) - 2);
+
+  /// The board's swing for one settled objective: strongly positive for hitting
+  /// the brief (more so for beating it), strongly negative for falling short,
+  /// in proportion to how far short — and to how much was demanded in the first
+  /// place (see [demandFactor]).
+  ///
+  /// This is the term that makes the gauge legible. It used to be absent
+  /// entirely — satisfaction was recent form plus the best trophy plus a rank
+  /// bonus — so a manager could miss the stated objective and still sit high on
+  /// good friendly form, or meet it and sit low. The board now answers for what
+  /// it actually asked for, and it is the dominant term: no run of form or
+  /// stack of minor honours outweighs the cycle's stated brief.
+  static int objectiveSwing(ObjectiveResult o) {
+    final w = objectiveWeights(o.tier);
+    final gap = (o.actual - o.target).clamp(-5, 3);
+    final raw = gap >= 0
+        ? w.met + gap * w.step + overachievementBonus(o.tier, gap)
+        : -(w.met + (-gap) * w.step);
+    return (raw * demandFactor(o.target)).round();
+  }
+
+  /// What BEATING the brief is worth, on top of the rounds it was beaten by.
+  ///
+  /// Meeting an objective and surpassing it used to differ by a single [step],
+  /// so a side told to reach the quarter-finals and carried to the final was
+  /// scored barely above one that went out in the last eight as instructed.
+  /// Exceeding what the board asked for is the thing a manager is remembered
+  /// for; it earns a flat surge the moment the brief is beaten at all, and the
+  /// per-round steps then stack on top.
+  static int overachievementBonus(TournamentTier tier, int gap) =>
+      gap <= 0 ? 0 : objectiveWeights(tier).step;
+
+  /// The board's mood.
+  ///
+  /// [objectives] are the cycle's SETTLED expectations (see `objectiveSwing`) —
+  /// the dominant term. [recent] form nudges it match to match, [honours]
+  /// covers the side competitions nobody sets an objective for, and
+  /// [worldRank] is a small standing bonus.
   ///
   /// Only the best [honours] placing counts rather than the sum: a board judges
   /// the cycle on its finest hour, and stacking every trophy would peg the
@@ -107,13 +169,27 @@ abstract final class BoardSatisfaction {
     required Iterable<MatchOutcome> recent,
     required Iterable<({TournamentTier tier, Placing placing})> honours,
     required int? worldRank,
+    Iterable<ObjectiveResult> objectives = const [],
+
+    /// What the country thinks, 0–100. [PublicMood.neutral] means the board has
+    /// no public opinion to weigh and behaves exactly as it did before Y.
+    int publicMood = PublicMood.neutral,
   }) {
     var best = 0;
     for (final h in honours) {
       final bonus = trophyBonus(h.tier, h.placing);
       if (bonus > best) best = bonus;
     }
-    return (neutral + formPoints(recent) + best + rankBonus(worldRank))
+    var fromObjectives = 0;
+    for (final o in objectives) {
+      fromObjectives += objectiveSwing(o);
+    }
+    return (neutral +
+            formPoints(recent) +
+            best +
+            fromObjectives +
+            rankBonus(worldRank) +
+            PublicMood.boardShift(publicMood))
         .clamp(0, 100);
   }
 }
