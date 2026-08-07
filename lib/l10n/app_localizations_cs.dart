@@ -218,7 +218,7 @@ class AppLocalizationsCs extends AppLocalizations {
   String get navSquad => 'Tým';
 
   @override
-  String get navCompetitions => 'Soutěže';
+  String get navStandings => 'Tabulky';
 
   @override
   String get navCareers => 'Kariéry';

@@ -62,7 +62,7 @@ class AppBottomNav extends StatelessWidget {
               Expanded(
                 child: _NavItem(
                   icon: Icons.emoji_events,
-                  label: l.navCompetitions,
+                  label: l.navStandings,
                   active: current == AppTab.competitions,
                   onTap: () => _go(context, Routes.tournaments),
                 ),

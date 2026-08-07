@@ -218,7 +218,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get navSquad => 'Squad';
 
   @override
-  String get navCompetitions => 'Competitions';
+  String get navStandings => 'Standings';
 
   @override
   String get navCareers => 'Careers';

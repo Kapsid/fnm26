@@ -476,11 +476,11 @@ abstract class AppLocalizations {
   /// **'Squad'**
   String get navSquad;
 
-  /// Bottom navigation label for the competitions/tournaments tab.
+  /// Bottom navigation label for the tournaments/standings tab.
   ///
   /// In en, this message translates to:
-  /// **'Competitions'**
-  String get navCompetitions;
+  /// **'Standings'**
+  String get navStandings;
 
   /// Bottom navigation label for the careers tab.
   ///

@@ -299,9 +299,9 @@
   "@navSquad": {
     "description": "Bottom navigation label for the squad/tactics tab."
   },
-  "navCompetitions": "Competitions",
-  "@navCompetitions": {
-    "description": "Bottom navigation label for the competitions/tournaments tab."
+  "navStandings": "Standings",
+  "@navStandings": {
+    "description": "Bottom navigation label for the tournaments/standings tab."
   },
   "navCareers": "Careers",
   "@navCareers": {
