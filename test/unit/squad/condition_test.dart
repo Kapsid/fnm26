@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/domain/entities/fixture.dart';
+import 'package:fnm/domain/services/club/club_form.dart';
 import 'package:fnm/domain/services/squad/condition.dart';
 
 Fixture result({
@@ -94,6 +95,37 @@ void main() {
 
     test('no results is neutral', () {
       expect(Condition.morale(const [], 1), 50);
+    });
+  });
+
+  group('club sharpness', () {
+    test('a frozen-out player is rated below a sharp one', () {
+      final sharp = Condition.of(const [], const [], DateTime(2030), 0,
+          clubDelta: ClubForm.sharpnessDelta(ClubStanding.firstChoice));
+      final rusty = Condition.of(const [], const [], DateTime(2030), 0,
+          clubDelta: ClubForm.sharpnessDelta(ClubStanding.frozenOut));
+      expect(rusty.overallDelta, lessThan(sharp.overallDelta));
+    });
+
+    test('the combined delta still respects its clamp', () {
+      // Poor form, exhausted, frozen out, low morale: bad, but never beyond
+      // the bound the match engine is tuned against.
+      final worst = Condition.of(
+        const [3.0, 3.0, 3.0, 3.0, 3.0],
+        [for (var i = 0; i < 6; i++) DateTime(2030, 6, 10 + i)],
+        DateTime(2030, 6, 16),
+        -3,
+        clubDelta: ClubForm.sharpnessDelta(ClubStanding.frozenOut),
+      );
+      expect(worst.overallDelta, greaterThanOrEqualTo(-9));
+      expect(worst.overallDelta, lessThanOrEqualTo(6));
+    });
+
+    test('no club delta leaves the old behaviour exactly', () {
+      final before = Condition.of(const [7.0, 7.0], const [], DateTime(2030), 0);
+      final after = Condition.of(const [7.0, 7.0], const [], DateTime(2030), 0,
+          clubDelta: 0);
+      expect(after.overallDelta, before.overallDelta);
     });
   });
 }

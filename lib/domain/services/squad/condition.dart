@@ -1,4 +1,5 @@
 import 'package:fnm/domain/entities/fixture.dart';
+import 'package:fnm/domain/services/club/club_form.dart';
 
 /// A player's short-term form, from their recent match ratings.
 enum PlayerForm { onFire, good, steady, poor, cold }
@@ -14,6 +15,9 @@ typedef PlayerCondition = ({
   FatigueState fatigueState,
   int gamesInWindow, // appearances counted toward fatigue
   int overallDelta, // net rating shift applied in the match
+
+  /// Where he stands at his club, or null when it was not supplied.
+  ClubStanding? clubStanding,
 });
 
 /// Derives form, fatigue and morale from data already recorded (match ratings,
@@ -75,21 +79,34 @@ abstract final class Condition {
   }
 
   /// A player's overall condition from their recent ratings + appearance dates.
+  ///
+  /// [travelFatigue] scales how heavily a congested run of games weighs — the
+  /// base camp's contribution during a tournament (under 1 = a squad that
+  /// isn't spending the month on a coach). [campBonus] is that camp's flat lift
+  /// to sharpness. Both default to no effect, which is every match outside a
+  /// tournament.
   static PlayerCondition of(
     List<double> recentRatings,
     List<DateTime> appearanceDates,
     DateTime asOf,
-    int moraleDelta,
-  ) {
+    int moraleDelta, {
+    double travelFatigue = 1,
+    int campBonus = 0,
+    int clubDelta = 0,
+    ClubStanding? clubStanding,
+  }) {
     final f = form(recentRatings);
     final t = fatigue(appearanceDates, asOf);
-    final net = (f.delta + t.delta + moraleDelta).clamp(-9, 6);
+    final tired = (t.delta * travelFatigue).round();
+    final net =
+        (f.delta + tired + moraleDelta + campBonus + clubDelta).clamp(-9, 6);
     return (
       form: f.state,
       formRating: f.avg,
       fatigueState: t.state,
       gamesInWindow: t.games,
       overallDelta: net,
+      clubStanding: clubStanding,
     );
   }
 
