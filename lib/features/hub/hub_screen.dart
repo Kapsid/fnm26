@@ -20,6 +20,8 @@ import 'package:fnm/features/hub/hub_event.dart';
 import 'package:fnm/features/hub/hub_providers.dart';
 import 'package:fnm/features/hub/board_objectives_screen.dart';
 import 'package:fnm/features/press/press_providers.dart';
+import 'package:fnm/features/squad/grievance_providers.dart';
+import 'package:fnm/features/squad/grievance_sheet.dart';
 import 'package:fnm/features/press/press_sheet.dart';
 import 'package:fnm/features/hub/round_popup.dart';
 import 'package:fnm/features/messages/message_popup.dart';
@@ -527,6 +529,20 @@ class _EventButton extends ConsumerWidget {
         );
       case HubEventKind.advance:
         _guarded(context, () => season.advance(careerId));
+      case HubEventKind.grievance:
+        final open = ref.read(grievanceProvider(careerId)).valueOrNull;
+        if (open == null || open.isEmpty) return;
+        unawaited(
+          showModalBottomSheet<void>(
+            context: context,
+            backgroundColor: AppColors.surfaceContainer,
+            isScrollControlled: true,
+            builder: (_) => GrievanceSheet(
+              careerId: careerId,
+              grievance: open.first,
+            ),
+          ),
+        );
       case HubEventKind.press:
         // The press conference has no screen of its own — it is the same sheet
         // the optional press card opens, just reached as a forced step.

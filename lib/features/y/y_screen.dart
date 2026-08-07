@@ -73,6 +73,10 @@ String yPostBody(AppLocalizations l, YPost p) {
       (YTemplate.tournamentSoon, 1) => l.yTournamentSoon1(a0),
       (YTemplate.tournamentSoon, 2) => l.yTournamentSoon2(a0),
       (YTemplate.tournamentSoon, 3) => l.yTournamentSoon3(a0),
+      (YTemplate.playerGrievance, 0) => l.yPlayerGrievance0,
+      (YTemplate.playerGrievance, 1) => l.yPlayerGrievance1,
+      (YTemplate.playerGrievance, 2) => l.yPlayerGrievance2,
+      (YTemplate.playerGrievance, 3) => l.yPlayerGrievance3,
       // Unreachable: variant is always < YFeed.variantCount, which is 4.
       _ => throw ArgumentError('no words for ${p.template} v${p.variant}'),
   };
@@ -142,6 +146,7 @@ class _PostRow extends StatelessWidget {
         YVoice.fan => AppColors.positive,
         YVoice.rival => AppColors.error,
         YVoice.stats => AppColors.onSurfaceVariant,
+        YVoice.player => AppColors.warning,
       };
 
   @override

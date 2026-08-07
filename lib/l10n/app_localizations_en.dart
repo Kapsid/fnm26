@@ -3321,6 +3321,54 @@ class AppLocalizationsEn extends AppLocalizations {
   String get yEmpty => 'Nothing to say yet. Play a match.';
 
   @override
+  String hubEventGrievance(String player) {
+    return '$player wants a word';
+  }
+
+  @override
+  String get hubEventGrievanceSub => 'He wants to know where he stands';
+
+  @override
+  String get grievanceTitle => 'A word in your office';
+
+  @override
+  String grievanceGameTime(String player) {
+    return '$player has been in the squad and has not kicked a ball. He wants to know why.';
+  }
+
+  @override
+  String grievanceSquadPlace(String player) {
+    return '$player is not in the squad and cannot understand it. He wants telling, one way or the other.';
+  }
+
+  @override
+  String grievanceRole(String player) {
+    return '$player keeps being played out of position and has had enough of it.';
+  }
+
+  @override
+  String get grievanceReassure => 'You are in my plans';
+
+  @override
+  String get grievanceHonest => 'You are behind others, and here is why';
+
+  @override
+  String get grievanceDismiss => 'I pick the team';
+
+  @override
+  String get yPlayerGrievance0 =>
+      'Asked where I stand. Still waiting on an answer.';
+
+  @override
+  String get yPlayerGrievance1 => 'Training hard. Not much else I can do.';
+
+  @override
+  String get yPlayerGrievance2 => 'Some questions you only get to ask once.';
+
+  @override
+  String get yPlayerGrievance3 => 'I did not come this far to carry the bibs.';
+
+  @override
   String get playerClubHistory => 'CLUB HISTORY';
 
   @override

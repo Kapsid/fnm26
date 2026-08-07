@@ -14,7 +14,9 @@ import 'package:fnm/features/career/nation_offers_providers.dart';
 import 'package:fnm/features/federation/federation_service.dart';
 import 'package:fnm/features/federation/investment_editor.dart';
 import 'package:fnm/features/hub/hub_providers.dart';
+import 'package:fnm/features/hub/objective_providers.dart';
 import 'package:fnm/features/messages/message_providers.dart';
+import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
 
@@ -88,11 +90,12 @@ class _CycleRolloverScreenState extends ConsumerState<CycleRolloverScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
     final viewAsync = ref.watch(_rolloverProvider(widget.careerId));
     return Scaffold(
       body: viewAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => Center(child: Text('Could not load.\n$e')),
+        error: (e, _) => Center(child: Text(l.hubCouldNotLoad('$e'))),
         data: (view) => switch (_step) {
           0 => _championStep(view),
           1 => _boardStep(view),
@@ -103,6 +106,7 @@ class _CycleRolloverScreenState extends ConsumerState<CycleRolloverScreen> {
   }
 
   Widget _championStep(_RolloverView? view) {
+    final l = AppLocalizations.of(context);
     final wc = view?.worldCup;
     String name(int id) => view?.nations[id]?.name ?? '—';
     String code(int id) => view?.nations[id]?.code ?? '??';
@@ -116,7 +120,7 @@ class _CycleRolloverScreenState extends ConsumerState<CycleRolloverScreen> {
             const SizedBox(height: AppSpacing.md),
             if (wc != null) ...[
               Text(
-                '${wc.year} WORLD CHAMPIONS',
+                l.hubWorldChampionsYear(wc.year),
                 style: AppTypography.labelMedium.copyWith(
                   color: AppColors.primary,
                 ),
@@ -139,13 +143,13 @@ class _CycleRolloverScreenState extends ConsumerState<CycleRolloverScreen> {
               const SizedBox(height: AppSpacing.md),
               _SummaryCard(wc: wc, name: name),
             ] else
-              const Text(
-                'The cycle is complete.',
+              Text(
+                l.hubCycleComplete,
                 style: AppTypography.headlineMedium,
               ),
             const Spacer(),
             PrimaryButton(
-              label: 'Continue',
+              label: l.hubContinue,
               icon: Icons.arrow_forward_rounded,
               onPressed: () => setState(() => _step = 1),
             ),
@@ -156,18 +160,19 @@ class _CycleRolloverScreenState extends ConsumerState<CycleRolloverScreen> {
   }
 
   Widget _boardStep(_RolloverView? view) {
+    final l = AppLocalizations.of(context);
     final verdictAsync = ref.watch(rolloverVerdictProvider(widget.careerId));
     return SafeArea(
       child: verdictAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => Center(child: Text('Could not load.\n$e')),
+        error: (e, _) => Center(child: Text(l.hubCouldNotLoad('$e'))),
         data: (v) {
           if (v == null) {
             return Center(
               child: Padding(
                 padding: const EdgeInsets.all(AppSpacing.xl),
                 child: PrimaryButton(
-                  label: 'Continue',
+                  label: l.hubContinue,
                   icon: Icons.arrow_forward_rounded,
                   onPressed: () => setState(() => _step = 2),
                 ),
@@ -184,9 +189,14 @@ class _CycleRolloverScreenState extends ConsumerState<CycleRolloverScreen> {
                   children: [
                     _VerdictCard(verdict: v),
                     const SizedBox(height: AppSpacing.md),
+                    // What the board actually asked for this cycle, and how each
+                    // brief was graded. The verdict above is a sentence and a
+                    // percentage; this is the reckoning it was based on, which
+                    // is the part a manager wants to see at the close.
+                    _ObjectivesSummary(careerId: widget.careerId),
                     if (canStay && v.currentNation != null) ...[
                       Text(
-                        'YOUR JOB',
+                        l.hubYourJob,
                         style: AppTypography.labelSmall.copyWith(
                           color: AppColors.primary,
                         ),
@@ -194,14 +204,14 @@ class _CycleRolloverScreenState extends ConsumerState<CycleRolloverScreen> {
                       const SizedBox(height: AppSpacing.xs),
                       _OfferTile(
                         nation: v.currentNation!,
-                        subtitle: 'Stay and continue your project',
+                        subtitle: l.hubStayProject,
                         selected: _selected == null,
                         onTap: () => setState(() => _selected = null),
                       ),
                       const SizedBox(height: AppSpacing.md),
                     ],
                     Text(
-                      v.sacked ? 'CHOOSE YOUR NEXT JOB' : 'OFFERS ON THE TABLE',
+                      v.sacked ? l.hubChooseNextJob : l.hubOffersOnTable,
                       style: AppTypography.labelSmall.copyWith(
                         color: AppColors.primary,
                       ),
@@ -210,7 +220,7 @@ class _CycleRolloverScreenState extends ConsumerState<CycleRolloverScreen> {
                     for (final o in v.offers)
                       _OfferTile(
                         nation: o.nation,
-                        subtitle: '${o.tier} · world #${o.position}',
+                        subtitle: l.hubOfferSubtitle(o.tier, o.position),
                         selected: _selected == o.nation.id,
                         onTap: () => setState(() => _selected = o.nation.id),
                       ),
@@ -224,9 +234,9 @@ class _CycleRolloverScreenState extends ConsumerState<CycleRolloverScreen> {
                   padding: const EdgeInsets.all(AppSpacing.marginMobile),
                   child: PrimaryButton(
                     label: _selected == null
-                        ? 'Continue with '
-                            '${v.currentNation?.name ?? 'your nation'}'
-                        : 'Take the job',
+                        ? l.hubContinueWith(
+                            v.currentNation?.name ?? l.hubYourNation)
+                        : l.hubTakeTheJob,
                     icon: Icons.arrow_forward_rounded,
                     onPressed: !ready ? null : () => setState(() => _step = 2),
                   ),
@@ -242,13 +252,15 @@ class _CycleRolloverScreenState extends ConsumerState<CycleRolloverScreen> {
   /// The invest step: bank the cycle's income, then roll into the next cycle —
   /// where setting the federation budget is the forced first event.
   Widget _investStep(_RolloverView? view) {
+    final l = AppLocalizations.of(context);
     final incomeAsync = ref.watch(cycleIncomeProvider(widget.careerId));
     final verdict =
         ref.watch(rolloverVerdictProvider(widget.careerId)).valueOrNull;
     return SafeArea(
       child: incomeAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => Center(child: Text('Could not load finances.\n$e')),
+        error: (e, _) =>
+            Center(child: Text(l.hubCouldNotLoadFinances('$e'))),
         data: (income) {
           return Column(
             children: [
@@ -256,7 +268,7 @@ class _CycleRolloverScreenState extends ConsumerState<CycleRolloverScreen> {
                 child: ListView(
                   padding: const EdgeInsets.all(AppSpacing.marginMobile),
                   children: [
-                    Text('FEDERATION FINANCES',
+                    Text(l.hubFederationFinances,
                         style: AppTypography.labelMedium
                             .copyWith(color: AppColors.primary)),
                     const SizedBox(height: AppSpacing.sm),
@@ -266,9 +278,7 @@ class _CycleRolloverScreenState extends ConsumerState<CycleRolloverScreen> {
                     ),
                     const SizedBox(height: AppSpacing.md),
                     Text(
-                      'Your first job next cycle is to set the federation '
-                      'budget — you’ll distribute this war chest across the '
-                      'departments before anything else.',
+                      l.hubBudgetIntro,
                       style: AppTypography.bodySmall
                           .copyWith(color: AppColors.onSurfaceVariant),
                     ),
@@ -281,7 +291,7 @@ class _CycleRolloverScreenState extends ConsumerState<CycleRolloverScreen> {
                 child: Padding(
                   padding: const EdgeInsets.all(AppSpacing.marginMobile),
                   child: PrimaryButton(
-                    label: _busy ? 'Starting…' : 'Begin next cycle',
+                    label: _busy ? l.hubStarting : l.hubBeginNextCycle,
                     icon: Icons.skip_next_rounded,
                     onPressed:
                         _busy ? null : () => unawaited(_begin(verdict)),
@@ -296,6 +306,107 @@ class _CycleRolloverScreenState extends ConsumerState<CycleRolloverScreen> {
   }
 }
 
+/// The cycle's board objectives as they finished: what was demanded of each
+/// competition and how far the nation actually went.
+///
+/// Shown at the rollover because this is the moment the brief is settled — the
+/// board's verdict card says how it feels, and this says why.
+class _ObjectivesSummary extends ConsumerWidget {
+  const _ObjectivesSummary({required this.careerId});
+
+  final int careerId;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l = AppLocalizations.of(context);
+    final objectives =
+        ref.watch(cycleObjectivesProvider(careerId)).valueOrNull ??
+        const <CycleObjective>[];
+    if (objectives.isEmpty) return const SizedBox.shrink();
+    return Padding(
+      padding: const EdgeInsets.only(bottom: AppSpacing.md),
+      child: AppCard(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              l.boardObjectivesTitle.toUpperCase(),
+              style: AppTypography.labelSmall.copyWith(
+                color: AppColors.onSurfaceVariant,
+              ),
+            ),
+            const SizedBox(height: AppSpacing.sm),
+            for (final o in objectives) _ObjectiveLine(objective: o),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// One graded objective: the competition, what was asked, and the verdict.
+class _ObjectiveLine extends StatelessWidget {
+  const _ObjectiveLine({required this.objective});
+
+  final CycleObjective objective;
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    final o = objective;
+    final color = !o.decided
+        ? AppColors.onSurfaceVariant
+        : (o.met ? AppColors.positive : AppColors.error);
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Icon(
+            !o.decided
+                ? Icons.remove_circle_outline
+                : o.met
+                ? Icons.check_circle_outline
+                : Icons.cancel_outlined,
+            size: 16,
+            color: color,
+          ),
+          const SizedBox(width: AppSpacing.sm),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  o.competition,
+                  style: AppTypography.labelSmall.copyWith(
+                    color: AppColors.onSurfaceVariant,
+                  ),
+                ),
+                Text(o.label, style: AppTypography.bodySmall),
+              ],
+            ),
+          ),
+          const SizedBox(width: AppSpacing.sm),
+          Flexible(
+            child: Text(
+              !o.decided
+                  ? (o.actual > 0
+                        ? l.boardObjectiveSoFar(o.resultLabel)
+                        : l.boardObjectivesPending)
+                  : o.resultLabel,
+              textAlign: TextAlign.end,
+              style: AppTypography.labelSmall.copyWith(
+                color: color,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 /// A breakdown of the income banked at a cycle's close.
 class _IncomeCard extends StatelessWidget {
   const _IncomeCard({required this.income, required this.openingBalance});
@@ -305,17 +416,18 @@ class _IncomeCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
     final earned = income.grant + income.prize + income.commercial;
     return AppCard(
       child: Column(
         children: [
-          _row('Opening balance', openingBalance),
-          _row('Central funding', income.grant),
-          _row('Prize money', income.prize),
+          _row(l.hubOpeningBalance, openingBalance),
+          _row(l.hubCentralFunding, income.grant),
+          _row(l.hubPrizeMoney, income.prize),
           if (income.commercial > 0)
-            _row('Commercial return', income.commercial),
+            _row(l.hubCommercialReturn, income.commercial),
           const Divider(),
-          _row('Available to invest', openingBalance + earned, bold: true),
+          _row(l.hubAvailableToInvest, openingBalance + earned, bold: true),
         ],
       ),
     );
@@ -353,6 +465,7 @@ class _VerdictCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
     final p = verdict.performance;
     final color = verdict.sacked
         ? AppColors.error
@@ -403,8 +516,7 @@ class _VerdictCard extends StatelessWidget {
               ),
               const SizedBox(width: AppSpacing.xs),
               Text(
-                'Reputation: ${verdict.reputationLabel} '
-                '(${verdict.reputation})',
+                l.hubReputation(verdict.reputationLabel, verdict.reputation),
                 style: AppTypography.labelSmall.copyWith(
                   color: AppColors.onSurfaceVariant,
                 ),
@@ -418,7 +530,7 @@ class _VerdictCard extends StatelessWidget {
                 ),
                 const SizedBox(width: AppSpacing.xs),
                 Text(
-                  'National hero',
+                  l.hubNationalHero,
                   style: AppTypography.labelSmall.copyWith(
                     color: AppColors.primary,
                     fontWeight: FontWeight.w700,
@@ -494,21 +606,23 @@ class _SummaryCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
     final score = (wc.finalHomeScore != null && wc.finalAwayScore != null)
         ? (wc.finalHomeScore == wc.finalAwayScore
-            ? '${wc.finalHomeScore}–${wc.finalAwayScore} (pens)'
+            ? '${wc.finalHomeScore}–${wc.finalAwayScore} ${l.hubPens}'
             : '${wc.finalHomeScore}–${wc.finalAwayScore}')
         : null;
     return AppCard(
       child: Column(
         children: [
-          _row('Final', '${name(wc.championId)} $score ${name(wc.runnerUpId)}'),
+          _row(l.hubFinal, '${name(wc.championId)} $score ${name(wc.runnerUpId)}'),
           if (wc.hostId != null)
-            _row('Host', name(wc.hostId!)),
+            _row(l.hubHost, name(wc.hostId!)),
           if (wc.topScorerName != null)
             _row(
-              'Golden Boot',
-              '${wc.topScorerName} · ${wc.topScorerGoals} goals',
+              l.hubGoldenBoot,
+              l.hubGoldenBootValue(
+                  wc.topScorerName!, wc.topScorerGoals ?? 0),
             ),
         ],
       ),

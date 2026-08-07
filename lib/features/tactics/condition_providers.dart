@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/services/club/club_form.dart';
 import 'package:fnm/features/career/career_providers.dart';
+import 'package:fnm/features/squad/grievance_providers.dart';
 import 'package:fnm/domain/services/squad/condition.dart';
 import 'package:fnm/features/press/press_providers.dart';
 import 'package:fnm/features/squad/captain_providers.dart';
@@ -65,9 +66,13 @@ final AutoDisposeFutureProviderFamily<int, int> moraleProvider =
   // is a steadier one; see `Captaincy` for why the armband works through
   // morale rather than straight into ratings.
   final captain = await ref.watch(captainMoraleProvider(careerId).future);
+  // And men left to stew. A player who asked where he stood and was never
+  // answered drags the room down until somebody talks to him.
+  final aggrieved = await ref.watch(grievanceMoraleProvider(careerId).future);
   return (Condition.morale(fixtures, career.nationId) +
           press.morale +
-          captain)
+          captain +
+          aggrieved)
       .clamp(0, 100);
 });
 

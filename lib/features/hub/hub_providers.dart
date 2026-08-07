@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/core/rng/seeded_rng.dart';
+import 'package:fnm/core/util/text_variety.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/career.dart';
 import 'package:fnm/domain/entities/enums.dart';
@@ -8,6 +9,7 @@ import 'package:fnm/domain/entities/formation.dart';
 import 'package:fnm/domain/entities/group_standing.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/entities/player.dart';
+import 'package:fnm/domain/entities/player_absence.dart';
 import 'package:fnm/domain/entities/tactics.dart';
 import 'package:fnm/domain/repositories/career_repository.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
@@ -19,6 +21,7 @@ import 'package:fnm/domain/services/competition/nations_cup.dart';
 import 'package:fnm/domain/services/competition/qualification.dart';
 import 'package:fnm/domain/services/competition/rounds.dart';
 import 'package:fnm/domain/services/federation/federation_finance.dart';
+import 'package:fnm/domain/services/match/background_match.dart';
 import 'package:fnm/domain/services/match/goal_attribution.dart';
 import 'package:fnm/domain/services/match/match_engine.dart';
 import 'package:fnm/domain/services/match/match_simulator.dart';
@@ -26,11 +29,16 @@ import 'package:fnm/domain/services/match/venue.dart';
 import 'package:fnm/domain/services/player/discipline.dart';
 import 'package:fnm/domain/services/ranking/elo.dart';
 import 'package:fnm/domain/services/tactics/best_eleven.dart';
+import 'package:fnm/domain/services/tactics/team_chemistry.dart';
 import 'package:fnm/features/career/career_providers.dart';
+import 'package:fnm/features/squad/grievance_providers.dart';
 import 'package:fnm/features/federation/federation_providers.dart';
 import 'package:fnm/features/federation/federation_service.dart';
 import 'package:fnm/features/hub/draw_reveal.dart';
+import 'package:fnm/features/achievements/achievement_providers.dart';
+import 'package:fnm/features/hub/objective_providers.dart';
 import 'package:fnm/features/ranking/world_ranking_providers.dart';
+import 'package:fnm/features/squad/training_camp_providers.dart';
 import 'package:fnm/features/tactics/tactics_providers.dart';
 
 /// Everything the Hub screen needs for a save, in one fetch.
@@ -95,8 +103,11 @@ class HubData {
 
 // Auto-disposed so it recomputes fresh whenever the hub is re-entered (e.g.
 // after watching a draw), rather than serving a stale cached snapshot.
-final AutoDisposeFutureProviderFamily<HubData?, int> hubDataProvider =
-    FutureProvider.autoDispose.family<HubData?, int>((ref, careerId) async {
+final AutoDisposeFutureProviderFamily<HubData?, int>
+hubDataProvider = FutureProvider.autoDispose.family<HubData?, int>((
+  ref,
+  careerId,
+) async {
   await ref.watch(seedLoaderProvider).ensureSeeded();
   final careerRepo = ref.watch(careerRepositoryProvider);
   final compRepo = ref.watch(competitionRepositoryProvider);
@@ -131,8 +142,11 @@ final AutoDisposeFutureProviderFamily<HubData?, int> hubDataProvider =
   if (next != null) {
     final kind = drawKindForFixture(next);
     if (kind != null) {
-      nextDrawWatched =
-          await compRepo.hasWatchedDraw(careerId, career.cyclePointer, kind);
+      nextDrawWatched = await compRepo.hasWatchedDraw(
+        careerId,
+        career.cyclePointer,
+        kind,
+      );
     }
   }
 
@@ -173,8 +187,11 @@ final AutoDisposeFutureProviderFamily<HubData?, int> hubDataProvider =
     groupRelegate = adv.relegate;
     final gk = groupDrawKind(group.kind);
     if (gk != null) {
-      groupDrawWatched =
-          await compRepo.hasWatchedDraw(careerId, career.cyclePointer, gk);
+      groupDrawWatched = await compRepo.hasWatchedDraw(
+        careerId,
+        career.cyclePointer,
+        gk,
+      );
     }
   }
 
@@ -216,6 +233,47 @@ class SeasonService {
   int _simSeed = 0;
   int _simYears = 0;
 
+  /// The world-mutating operation currently running, if any.
+  ///
+  /// Every public entry point below drives the SAME career through the SAME
+  /// scratch state ([_simSeed], [_simYears], [_poolCache]) and writes in
+  /// batched transactions. Two of them running at once interleave those writes
+  /// and stomp the scratch fields mid-run, so they are serialized here rather
+  /// than at each call site — the hub fires [advance] without awaiting it, so
+  /// a second tap used to start a whole second simulation over the first.
+  Future<void>? _inFlight;
+
+  /// Runs [body] with no other world-mutating operation in progress.
+  ///
+  /// [dropIfBusy] separates the two kinds of caller. "Move the world on"
+  /// (advance, skip) is idempotent from the player's point of view: a second
+  /// tap while the first is still working means nothing new, so it joins the
+  /// running operation instead of queueing another advance behind it. Calls
+  /// that carry data that would be LOST if dropped — a played match, a cycle
+  /// rollover — queue behind the running one instead.
+  Future<void> _exclusive(
+    Future<void> Function() body, {
+    required bool dropIfBusy,
+  }) {
+    final running = _inFlight;
+    if (running != null && dropIfBusy) return running;
+    // Chain behind whatever is running. Its failure is not ours to report —
+    // that call surfaces its own error to its own caller — so either outcome
+    // simply lets us start.
+    final next = running == null
+        ? body()
+        : running.then((_) => body(), onError: (_) => body());
+    _inFlight = next;
+    return next.whenComplete(() {
+      // Only clear the slot if nothing has queued behind us in the meantime.
+      if (identical(_inFlight, next)) _inFlight = null;
+    });
+  }
+
+  /// Whether a world-mutating operation is running right now (the hub disables
+  /// its controls on this rather than starting work it will drop).
+  bool get isBusy => _inFlight != null;
+
   Future<Map<int, Nation>> _nationsById() async => {
     for (final n in await _ref.read(nationRepositoryProvider).all()) n.id: n,
   };
@@ -231,6 +289,67 @@ class SeasonService {
   Map<int, int>? _rankPoints;
   int? _rankCareer;
 
+  /// Suspensions and injuries for the save currently being simulated, held in
+  /// memory across a whole operation and written once at the end — exactly like
+  /// [_rankPoints].
+  ///
+  /// EVERY nation carries absences now, not just the manager's, so a single
+  /// advance can touch hundreds of rows; reading and rewriting the table per
+  /// fixture would make advancing the world crawl.
+  Map<int, PlayerAbsence>? _absences;
+  int? _absenceCareer;
+
+  Future<Map<int, PlayerAbsence>> _ensureAbsences(int careerId) async {
+    if (_absenceCareer == careerId && _absences != null) return _absences!;
+    _absences = await _ref.read(absenceRepositoryProvider).forCareer(careerId);
+    _absenceCareer = careerId;
+    return _absences!;
+  }
+
+  Future<void> _flushAbsences(int careerId) async {
+    final a = _absences;
+    if (a != null && _absenceCareer == careerId) {
+      await _ref.read(absenceRepositoryProvider).replace(careerId, a.values);
+    }
+  }
+
+  /// Applies one match's cards and knocks to [nationId]'s standing.
+  ///
+  /// [Discipline.applyMatch] serves a game off every ban and injury it is
+  /// handed, so the career-wide map is narrowed to this nation's own players
+  /// first. Handing it the whole world would tick a game off every suspension
+  /// on the planet every time any match anywhere was played.
+  Future<Map<int, PlayerAbsence>> _applyDiscipline({
+    required int careerId,
+    required int nationId,
+    required List<MatchEvent> events,
+    required SeededRng rng,
+    required bool competitive,
+  }) async {
+    final all = await _ensureAbsences(careerId);
+    final mine = {for (final p in await _pool(nationId)) p.id};
+    final after = Discipline.applyMatch(
+      before: {
+        for (final e in all.entries)
+          if (mine.contains(e.key)) e.key: e.value,
+      },
+      events: events,
+      nationId: nationId,
+      rng: rng,
+      competitive: competitive,
+    );
+    all
+      ..removeWhere((id, _) => mine.contains(id))
+      ..addAll(after);
+    return after;
+  }
+
+  /// Whether [playerId] is currently banned or injured.
+  bool _isAbsent(int playerId) {
+    final a = _absences?[playerId];
+    return a != null && !a.isAvailable;
+  }
+
   /// Loads (seeding if needed) the ranking points for [careerId].
   Future<void> _ensureRank(int careerId) async {
     if (_rankCareer == careerId && _rankPoints != null) return;
@@ -238,16 +357,37 @@ class SeasonService {
     final seed = {
       for (final n in nations.values) n.id: Elo.seedFromRanking(n.ranking),
     };
-    _rankPoints =
-        await _ref.read(rankingRepositoryProvider).pointsFor(careerId, seed);
+    _rankPoints = await _ref
+        .read(rankingRepositoryProvider)
+        .pointsFor(careerId, seed);
     _rankCareer = careerId;
   }
 
+  /// The World Cup finals rounds. Their results never move the ranking live —
+  /// while the tournament is on the table sits still, and the whole run is
+  /// settled in one heavier pass once the champion is known (see
+  /// [_settleWorldCupRanking]). These round codes are unique to the World Cup
+  /// finals (continental uses a 'C' prefix, the Nations Cup an 'N' prefix).
+  static const _wcFinalsRounds = {
+    'GROUP',
+    'R32',
+    'R16',
+    'QF',
+    'SF',
+    '3RD',
+    'FINAL',
+  };
+
+  static bool _isWcFinalsMatch(Fixture f) =>
+      f.round != null && _wcFinalsRounds.contains(f.round);
+
   /// Nudges both nations' points by this result (finals count for more than
-  /// qualifiers). No-op until [_ensureRank] has run.
+  /// qualifiers). No-op until [_ensureRank] has run. World Cup finals matches
+  /// are skipped here — they are settled together after the tournament.
   void _bumpRank(Fixture f, int home, int away, int hs, int as) {
     final pts = _rankPoints;
     if (pts == null) return;
+    if (_isWcFinalsMatch(f)) return; // settled post-tournament, not live
     final hp = pts[home] ?? Elo.base;
     final ap = pts[away] ?? Elo.base;
     final weight = Elo.weightForRound(f.round);
@@ -260,6 +400,40 @@ class SeasonService {
     );
     pts[home] = hp + delta;
     pts[away] = ap - delta;
+  }
+
+  /// Settles a decided World Cup finals into the ranking in one pass, heavier
+  /// than any live result. Called once, from [_recordHonourIfDecided], so the
+  /// whole tournament lands after the final rather than creeping through it.
+  /// Rounds are replayed in bracket order for a stable, deterministic result.
+  Future<void> _settleWorldCupRanking(int careerId) async {
+    final pts = _rankPoints;
+    if (pts == null) return;
+    for (final round in const [
+      'GROUP',
+      'R32',
+      'R16',
+      'QF',
+      'SF',
+      '3RD',
+      'FINAL',
+    ]) {
+      final fixtures = await _comp.fixturesByRound(careerId, round);
+      for (final f in fixtures) {
+        if (!f.hasResult) continue;
+        final hp = pts[f.homeNationId] ?? Elo.base;
+        final ap = pts[f.awayNationId] ?? Elo.base;
+        final delta = Elo.homeDelta(
+          homePoints: hp,
+          awayPoints: ap,
+          homeScore: f.homeScore!,
+          awayScore: f.awayScore!,
+          weight: Elo.finalsSettled,
+        );
+        pts[f.homeNationId] = hp + delta;
+        pts[f.awayNationId] = ap - delta;
+      }
+    }
   }
 
   /// Persists the in-memory ranking points for [careerId], and republishes the
@@ -319,14 +493,23 @@ class SeasonService {
   }
 
   /// Whether any finals tournament is currently live — the World Cup finals
-  /// (drawn but no champion yet), a continental championship, or the Nations
-  /// Cup Finals Four. Ranking releases pause while one is.
+  /// (drawn but no champion yet), the manager's continental championship, or
+  /// the Nations Cup Finals Four. Ranking releases pause while one is.
+  ///
+  /// The continental check names the manager's own confederation: all six
+  /// championships run at once now, so an unqualified lookup answers for
+  /// whichever continent the query happened to return.
   Future<bool> _finalsInProgress(int careerId) async {
     if (await _comp.hasFinals(careerId) &&
         await _comp.worldChampion(careerId) == null) {
       return true;
     }
-    if (await _comp.hasLiveContinentalFinals(careerId)) return true;
+    if (await _comp.hasLiveContinentalFinals(
+      careerId,
+      confederation: await _managerConfederation(careerId),
+    )) {
+      return true;
+    }
     if (await _comp.hasLiveNationsCupFinals(careerId)) return true;
     return false;
   }
@@ -334,7 +517,8 @@ class SeasonService {
   /// World positions (1 = top) from the live points held in memory, tie-broken
   /// by the static seed order. Used to freeze a cycle's seeding ranking.
   Map<int, int> _liveRankById(Map<int, Nation> nations) {
-    final pts = _rankPoints ??
+    final pts =
+        _rankPoints ??
         {for (final n in nations.values) n.id: Elo.seedFromRanking(n.ranking)};
     final seedRank = {for (final n in nations.values) n.id: n.ranking};
     return Elo.positions(pts, seedRankById: seedRank);
@@ -363,6 +547,13 @@ class SeasonService {
     // aging, evolving pool), not just the nation's static seeding.
     final homeXi = await _fieldedXi(f.homeNationId);
     final awayXi = await _fieldedXi(f.awayNationId);
+    // …and the substitutes it brings on. Background sides used to play the
+    // whole ninety with eleven men, so outside the manager's own fixtures no
+    // substitute ever won a cap, scored, was booked or was marked — the rest of
+    // the world had no bench at all. Strength is still read off the XI: the
+    // subs change who is on the pitch, not how good the side is.
+    final homeSubs = await _fieldedSubs(f.homeNationId, homeXi);
+    final awaySubs = await _fieldedSubs(f.awayNationId, awayXi);
     final homeStrength = _squadStrength(homeXi, home);
     final awayStrength = _squadStrength(awayXi, away);
     const sim = RatingMatchSimulator();
@@ -376,43 +567,51 @@ class SeasonService {
     await _comp.recordAppearances(
       f.careerId,
       f.homeNationId,
-      homeXi.map((p) => p.id),
+      [...homeXi, ...homeSubs].map((p) => p.id),
     );
     await _comp.recordAppearances(
       f.careerId,
       f.awayNationId,
-      awayXi.map((p) => p.id),
+      [...awayXi, ...awaySubs].map((p) => p.id),
     );
     // Tournament-tagged participation (whole world) so records like "most World
-    // Cup starts" / "most cups attended" accrue. A background side fields an XI
-    // with no subs, so everyone fielded is a starter.
+    // Cup starts" / "most cups attended" accrue — the XI as starters, the
+    // substitutes as appearances off the bench.
     await _comp.recordTournamentAppearances(
       f.careerId,
       f.competitionId,
       [
         for (final p in homeXi)
           (playerId: p.id, nationId: f.homeNationId, started: true),
+        for (final p in homeSubs)
+          (playerId: p.id, nationId: f.homeNationId, started: false),
         for (final p in awayXi)
           (playerId: p.id, nationId: f.awayNationId, started: true),
+        for (final p in awaySubs)
+          (playerId: p.id, nationId: f.awayNationId, started: false),
       ],
     );
     // Attribute scorers from the pre-shootout score (penalties don't count).
-    await _attributeGoals(
-      f,
-      f.homeNationId,
-      outcome.homeScore,
-      rngSeed,
-      0x6001,
-      xi: homeXi,
-    );
-    await _attributeGoals(
-      f,
-      f.awayNationId,
-      outcome.awayScore,
-      rngSeed,
-      0x6002,
-      xi: awayXi,
-    );
+    final scorers = <int>[
+      ...await _attributeGoals(
+        f,
+        f.homeNationId,
+        outcome.homeScore,
+        rngSeed,
+        0x6001,
+        xi: homeXi,
+        subs: homeSubs,
+      ),
+      ...await _attributeGoals(
+        f,
+        f.awayNationId,
+        outcome.awayScore,
+        rngSeed,
+        0x6002,
+        xi: awayXi,
+        subs: awaySubs,
+      ),
+    ];
 
     var hs = outcome.homeScore;
     var as = outcome.awayScore;
@@ -430,10 +629,33 @@ class SeasonService {
       aet = true;
       // The extra-time goals are attributed with 91'–120' minutes so they show
       // up in the scorer charts, not just on the scoreboard.
-      await _attributeGoals(f, f.homeNationId, ko.homeScore - hs, rngSeed,
-          0x7E01, xi: homeXi, minuteFrom: 91, minuteSpan: 30);
-      await _attributeGoals(f, f.awayNationId, ko.awayScore - as, rngSeed,
-          0x7E02, xi: awayXi, minuteFrom: 91, minuteSpan: 30);
+      scorers
+        ..addAll(
+          await _attributeGoals(
+            f,
+            f.homeNationId,
+            ko.homeScore - hs,
+            rngSeed,
+            0x7E01,
+            xi: homeXi,
+            subs: homeSubs,
+            minuteFrom: 91,
+            minuteSpan: 30,
+          ),
+        )
+        ..addAll(
+          await _attributeGoals(
+            f,
+            f.awayNationId,
+            ko.awayScore - as,
+            rngSeed,
+            0x7E02,
+            xi: awayXi,
+            subs: awaySubs,
+            minuteFrom: 91,
+            minuteSpan: 30,
+          ),
+        );
       if (ko.wentToShootout) {
         homePens = ko.homePens;
         awayPens = ko.awayPens;
@@ -454,6 +676,101 @@ class SeasonService {
       awayPenalties: awayPens,
     );
     _bumpRank(f, f.homeNationId, f.awayNationId, hs, as);
+    await _recordBackgroundDetail(
+      f,
+      homeXi: homeXi,
+      awayXi: awayXi,
+      homeSubs: homeSubs,
+      awaySubs: awaySubs,
+      homeScore: outcome.homeScore,
+      awayScore: outcome.awayScore,
+      homeStrength: homeStrength,
+      awayStrength: awayStrength,
+      scorers: scorers,
+      rngSeed: rngSeed,
+    );
+  }
+
+  /// Gives a background match everything the tactical engine would have given
+  /// it apart from its scoreline: a box score, assists, cards, knocks and a
+  /// mark for all twenty-two — see [BackgroundMatch].
+  ///
+  /// Every RNG draw here comes off a stream FORKED from the fixture's, so
+  /// adding this changed no result already in any save.
+  Future<void> _recordBackgroundDetail(
+    Fixture f, {
+    required List<Player> homeXi,
+    required List<Player> awayXi,
+    required List<Player> homeSubs,
+    required List<Player> awaySubs,
+    required int homeScore,
+    required int awayScore,
+    required int homeStrength,
+    required int awayStrength,
+    required List<int> scorers,
+    required int rngSeed,
+  }) async {
+    if (homeXi.isEmpty || awayXi.isEmpty) return;
+    final goalsByPlayer = <int, int>{};
+    for (final id in scorers) {
+      goalsByPlayer.update(id, (v) => v + 1, ifAbsent: () => 1);
+    }
+    final competitive = f.round != Rounds.friendly;
+    final detail = BackgroundMatch.detail(
+      homeXi: homeXi,
+      awayXi: awayXi,
+      homeSubs: homeSubs,
+      awaySubs: awaySubs,
+      homeNationId: f.homeNationId,
+      awayNationId: f.awayNationId,
+      homeScore: homeScore,
+      awayScore: awayScore,
+      homeStrength: homeStrength,
+      awayStrength: awayStrength,
+      goalsByPlayer: goalsByPlayer,
+      rng: SeededRng.forFixture(rngSeed, f.id ^ 0x0D37),
+      competitive: competitive,
+      saveSeed: _simSeed,
+    );
+
+    await _comp.recordPlayerMatchStats(
+      f.careerId,
+      f.id,
+      detail.lines.map(
+        (l) => (
+          playerId: l.playerId,
+          nationId: l.nationId,
+          rating: l.rating,
+          goals: l.goals,
+          assists: l.assists,
+          cleanSheet: l.cleanSheet,
+          motm: l.motm,
+          yellows: l.yellows,
+          reds: l.reds,
+        ),
+      ),
+    );
+    await _comp.recordTeamStats(
+      f.careerId,
+      f.id,
+      homeShots: detail.homeShots,
+      awayShots: detail.awayShots,
+      homePossession: detail.homePossession,
+      homeXg: detail.homeXg,
+      awayXg: detail.awayXg,
+    );
+
+    // Both sides' cards and knocks, through the same rules the manager's own
+    // squad lives under — so a rival really can lose its striker to a ban.
+    for (final nationId in [f.homeNationId, f.awayNationId]) {
+      await _applyDiscipline(
+        careerId: f.careerId,
+        nationId: nationId,
+        events: detail.events,
+        rng: SeededRng.forFixture(rngSeed, f.id ^ 0x0AB5 ^ nationId),
+        competitive: competitive,
+      );
+    }
   }
 
   /// A background side's match strength, driven by the real XI it fields (an
@@ -467,8 +784,7 @@ class SeasonService {
     if (xi.isEmpty) return ranked;
     final best = [...xi]..sort((a, b) => b.overall.compareTo(a.overall));
     final eleven = best.take(11).toList();
-    final mean =
-        eleven.fold<int>(0, (s, p) => s + p.overall) / eleven.length;
+    final mean = eleven.fold<int>(0, (s, p) => s + p.overall) / eleven.length;
     // Weight the squad heavily; keep a quarter on the ranking as an anchor.
     return (mean * 0.75 + ranked * 0.25).round().clamp(40, 92);
   }
@@ -478,33 +794,73 @@ class SeasonService {
   Future<List<Player>> _fieldedXi(int nationId) async {
     final pool = await _pool(nationId);
     if (pool.isEmpty) return const [];
-    final xiIds = bestEleven(Formation.f433, pool).whereType<int>().toSet();
-    final xi = pool.where((p) => xiIds.contains(p.id)).toList();
-    return xi.isEmpty ? pool : xi;
+    // A suspended or injured player does not play — for ANY nation, not just
+    // the manager's. This is what makes the world's cards and knocks mean
+    // something: a rival losing its centre-forward for a quarter-final really
+    // does field a weaker side, because `_squadStrength` reads this XI.
+    final available = [
+      for (final p in pool)
+        if (!_isAbsent(p.id)) p,
+    ];
+    // Never field nobody: a pool decimated by absences still puts out its best
+    // available eleven, and a pool somehow entirely absent falls back to itself
+    // rather than forfeiting.
+    final fit = available.isEmpty ? pool : available;
+    final xiIds = bestEleven(Formation.f433, fit).whereType<int>().toSet();
+    final xi = fit.where((p) => xiIds.contains(p.id)).toList();
+    return xi.isEmpty ? fit : xi;
   }
 
-  Future<void> _attributeGoals(
+  /// How many substitutes a background side brings on. Three is the number that
+  /// matters: enough that a bench player is a real part of the world's records
+  /// without pretending every game empties the bench.
+  static const int _backgroundSubs = 3;
+
+  /// The substitutes a background side uses: the best available players outside
+  /// its [xi]. Deterministic — the same pool and the same absences always give
+  /// the same bench, like everything else in the derived world.
+  Future<List<Player>> _fieldedSubs(int nationId, List<Player> xi) async {
+    if (xi.isEmpty) return const [];
+    final pool = await _pool(nationId);
+    final onPitch = xi.map((p) => p.id).toSet();
+    final available = [
+      for (final p in pool)
+        if (!onPitch.contains(p.id) && !_isAbsent(p.id)) p,
+    ]..sort((a, b) {
+      final byOverall = b.overall.compareTo(a.overall);
+      return byOverall != 0 ? byOverall : a.id.compareTo(b.id);
+    });
+    return available.take(_backgroundSubs).toList();
+  }
+
+  /// Attributes [goals] to the fielded XI and records them, returning the
+  /// scorer of each goal (repeated for a brace) so the caller can build the
+  /// match's player lines from the same attribution.
+  Future<List<int>> _attributeGoals(
     Fixture f,
     int nationId,
     int goals,
     int rngSeed,
     int salt, {
     List<Player>? xi,
+    List<Player> subs = const [],
     int minuteFrom = 1,
     int minuteSpan = 90,
   }) async {
-    if (goals <= 0) return;
+    if (goals <= 0) return const [];
     // Attribute to the players who actually take the field, not the whole
     // 100-man pool — otherwise goals scatter across every fringe player and no
     // striker ever builds a tally. The best XI concentrates goals on the front
-    // line, matching the detailed engine's behaviour.
+    // line, matching the detailed engine's behaviour. Substitutes are in the
+    // draw too, weighted down for the half-hour they get.
     final fielded = xi ?? await _fieldedXi(nationId);
-    if (fielded.isEmpty) return;
+    if (fielded.isEmpty) return const [];
     final rng = SeededRng.forFixture(rngSeed, f.id ^ salt);
     final ids = GoalAttribution.scorers(
-      pool: fielded,
+      pool: [...fielded, ...subs],
       goals: goals,
       rng: rng,
+      benchIds: {for (final p in subs) p.id},
     );
     await _comp.recordGoals([
       for (final id in ids)
@@ -517,6 +873,7 @@ class SeasonService {
           minute: minuteFrom + rng.nextInt(minuteSpan),
         ),
     ]);
+    return ids;
   }
 
   Future<void> _simDue(
@@ -577,15 +934,24 @@ class SeasonService {
   /// Quick-sims the world to the player's next match, or — if the player has
   /// no fixture — fast-forwards through the rest of the cycle (other regions'
   /// qualifiers, the finals draw, and the knockout) to the champion.
-  Future<void> advance(int careerId) async {
+  ///
+  /// Dropped if a sim is already running — see [_exclusive].
+  Future<void> advance(int careerId) =>
+      _exclusive(() => _advance(careerId), dropIfBusy: true);
+
+  Future<void> _advance(int careerId) async {
     await _ensureRank(careerId);
     // A foreign talent may declare interest at any random point in the cycle.
     await _rollNaturalizationIfDue(careerId);
+    // And anybody who asked where he stood and was never answered may have
+    // stopped waiting. Settled before the clock moves, so the squad the next
+    // match is picked from is the squad that is actually available.
+    await _ref.read(grievanceServiceProvider).settleWalkouts(careerId);
     while (true) {
       final career = await _careers.byId(careerId);
       if (career == null) break;
-    _simSeed = career.rngSeed;
-    _simYears = CareerService.agingYears(career);
+      _simSeed = career.rngSeed;
+      _simYears = CareerService.agingYears(career);
 
       // Spawn any due stage/finals first, so the tournament to step exists.
       await _progress(careerId);
@@ -598,15 +964,17 @@ class SeasonService {
       // A finals participant is never fast-forwarded past their own matches:
       // check ALL of the player's unplayed fixtures, not just the immediate one
       // (an intervening friendly must not lock them out of their finals games).
-      final playerFixtures =
-          await _comp.fixturesForNation(careerId, career.nationId);
-      final playerInFinals =
-          playerFixtures.any((f) => !f.hasResult && _isFinalsMatch(f));
+      final playerFixtures = await _comp.fixturesForNation(
+        careerId,
+        career.nationId,
+      );
+      final playerInFinals = playerFixtures.any(
+        (f) => !f.hasResult && _isFinalsMatch(f),
+      );
       // Only step the World Cup and the player's OWN continental finals day by
       // day; foreign continental finals resolve in the background (else their
       // dates hijack the WC "watch" step — see nextEventProvider).
-      final playerConf =
-          (await _nationsById())[career.nationId]?.confederation;
+      final playerConf = (await _nationsById())[career.nationId]?.confederation;
       final finalsDate = await _comp.earliestUnplayedFinalsDate(
         careerId,
         playerConfederation: playerConf,
@@ -642,8 +1010,9 @@ class SeasonService {
       //     participant is detected from ANY unplayed NSF/NFINAL fixture (not
       //     just their immediate next one), so a host whose pre-finals window is
       //     friendlies still plays their own semi/final instead of watching it.
-      final ncFinalsDate =
-          await _comp.earliestUnplayedNationsCupFinalsDate(careerId);
+      final ncFinalsDate = await _comp.earliestUnplayedNationsCupFinalsDate(
+        careerId,
+      );
       final nextIsNcFinals =
           next != null && (next.round == 'NSF' || next.round == 'NFINAL');
       final playerInNcFinals = playerFixtures.any(
@@ -679,31 +1048,54 @@ class SeasonService {
       if (earliest == null) break; // cycle complete
       await _careers.updateInGameDate(careerId, earliest);
       await _catchUp(careerId, earliest, career.rngSeed);
-      final wcFinalsLive = await _comp.hasFinals(careerId) &&
+      final wcFinalsLive =
+          await _comp.hasFinals(careerId) &&
           await _comp.worldChampion(careerId) == null;
-      if (wcFinalsLive || await _comp.hasLiveContinentalFinals(careerId)) {
+      // The manager's OWN continental cup — a foreign continent's championship
+      // resolves in the background and must not stop the world advancing.
+      if (wcFinalsLive ||
+          await _comp.hasLiveContinentalFinals(
+            careerId,
+            confederation: playerConf,
+          )) {
         break;
       }
     }
+    // The board's verdict on any objective this run has just settled, so it
+    // lands with the result rather than at the end of the cycle.
+    await _gradeObjectivesIfDecided(careerId);
     await _flushRank(careerId);
+    await _flushAbsences(careerId);
     // The ranking screen's data is auto-disposed but can be kept alive by a
     // listener elsewhere (careers list, vitrine) — refresh it explicitly so
     // the full ranking always shows the points the sim just moved.
     _ref
       ..invalidate(hubDataProvider)
       ..invalidate(worldRankingProvider)
-      ..invalidate(rankHistoryProvider);
+      ..invalidate(rankHistoryProvider)
+      // The board's brief and its mood are derived from fixtures the sim has
+      // just changed, and neither reads them through a provider that would
+      // notice — so they are refreshed by hand, or the hub keeps showing the
+      // verdict it computed before the tournament was played.
+      ..invalidate(cycleObjectiveOutcomesProvider)
+      ..invalidate(cycleObjectivesProvider)
+      ..invalidate(satisfactionProvider);
   }
 
   /// Fast-forwards straight to the World Cup champion — the "skip to the final"
   /// option when the player is watching the finals rather than playing them.
-  Future<void> skipToChampion(int careerId) async {
+  ///
+  /// Dropped if a sim is already running — see [_exclusive].
+  Future<void> skipToChampion(int careerId) =>
+      _exclusive(() => _skipToChampion(careerId), dropIfBusy: true);
+
+  Future<void> _skipToChampion(int careerId) async {
     await _ensureRank(careerId);
     for (var i = 0; i < 300; i++) {
       final career = await _careers.byId(careerId);
       if (career == null) break;
-    _simSeed = career.rngSeed;
-    _simYears = CareerService.agingYears(career);
+      _simSeed = career.rngSeed;
+      _simYears = CareerService.agingYears(career);
       if (await _comp.worldChampion(careerId) != null) break;
       final earliest = await _comp.earliestUnplayedDate(
         careerId,
@@ -713,28 +1105,75 @@ class SeasonService {
       await _careers.updateInGameDate(careerId, earliest);
       await _catchUp(careerId, earliest, career.rngSeed);
     }
+    // The board's verdict on any objective this run has just settled, so it
+    // lands with the result rather than at the end of the cycle.
+    await _gradeObjectivesIfDecided(careerId);
     await _flushRank(careerId);
+    await _flushAbsences(careerId);
     // The ranking screen's data is auto-disposed but can be kept alive by a
     // listener elsewhere (careers list, vitrine) — refresh it explicitly so
     // the full ranking always shows the points the sim just moved.
     _ref
       ..invalidate(hubDataProvider)
       ..invalidate(worldRankingProvider)
-      ..invalidate(rankHistoryProvider);
+      ..invalidate(rankHistoryProvider)
+      // The board's brief and its mood are derived from fixtures the sim has
+      // just changed, and neither reads them through a provider that would
+      // notice — so they are refreshed by hand, or the hub keeps showing the
+      // verdict it computed before the tournament was played.
+      ..invalidate(cycleObjectiveOutcomesProvider)
+      ..invalidate(cycleObjectivesProvider)
+      ..invalidate(satisfactionProvider);
   }
 
   /// Records the player's [result] for [fixture] (from the tactical engine),
   /// quick-sims every other match due that day, advances and progresses.
+  /// Records the manager's own match.
+  ///
+  /// [knockout] is the extra time / shootout as it was actually played out on
+  /// the match screen (with the named takers and any extra-time team talk).
+  /// When it is omitted — a match committed without the live screen — the tie
+  /// is drawn here from the fixture's own seed, as it always was.
+  ///
+  /// Queued, never dropped — the result would be lost. See [_exclusive].
   Future<void> playPlayerMatch(
     int careerId,
     Fixture fixture,
-    MatchResult result,
-  ) async {
+    MatchResult result, {
+    KnockoutOutcome? knockout,
+  }) => _exclusive(
+    () => _playPlayerMatch(careerId, fixture, result, knockout: knockout),
+    dropIfBusy: false,
+  );
+
+  Future<void> _playPlayerMatch(
+    int careerId,
+    Fixture fixture,
+    MatchResult result, {
+    KnockoutOutcome? knockout,
+  }) async {
     final career = await _careers.byId(careerId);
     if (career == null) return;
     _simSeed = career.rngSeed;
     _simYears = CareerService.agingYears(career);
     await _ensureRank(careerId);
+
+    // Credit tactical familiarity with the shape the manager just fielded — a
+    // settled side grows drilled (see TeamChemistry); other shapes decay. The
+    // plan behind it goes in too: naming the same shape with the same
+    // instructions again is what lets opponents read the side.
+    final playedTactic = await _ref
+        .read(tacticsRepositoryProvider)
+        .tacticForCareer(careerId);
+    await _ref
+        .read(tacticFamiliarityRepositoryProvider)
+        .recordMatch(
+          careerId,
+          playedTactic?.formation ?? Formation.f433,
+          planKey: TeamChemistry.planKey(
+            playedTactic?.instructions ?? const TacticalInstructions(),
+          ),
+        );
 
     var hs = result.homeScore;
     var as = result.awayScore;
@@ -742,18 +1181,34 @@ class SeasonService {
     int? homePens;
     int? awayPens;
     if (_isKnockout(fixture) && hs == as) {
-      final ko = WorldCupFinals.decideKnockout(
-        hs,
-        as,
-        SeededRng.forFixture(career.rngSeed, fixture.id ^ 0x7F),
-      );
+      final ko =
+          knockout ??
+          WorldCupFinals.decideKnockout(
+            hs,
+            as,
+            SeededRng.forFixture(career.rngSeed, fixture.id ^ 0x7F),
+          );
       aet = true;
       // Attribute the extra-time goals (91'–120') so they reach the scorer
       // charts too, matching the live screen.
-      await _attributeGoals(fixture, fixture.homeNationId, ko.homeScore - hs,
-          career.rngSeed, 0x7E01, minuteFrom: 91, minuteSpan: 30);
-      await _attributeGoals(fixture, fixture.awayNationId, ko.awayScore - as,
-          career.rngSeed, 0x7E02, minuteFrom: 91, minuteSpan: 30);
+      await _attributeGoals(
+        fixture,
+        fixture.homeNationId,
+        ko.homeScore - hs,
+        career.rngSeed,
+        0x7E01,
+        minuteFrom: 91,
+        minuteSpan: 30,
+      );
+      await _attributeGoals(
+        fixture,
+        fixture.awayNationId,
+        ko.awayScore - as,
+        career.rngSeed,
+        0x7E02,
+        minuteFrom: 91,
+        minuteSpan: 30,
+      );
       if (ko.wentToShootout) {
         homePens = ko.homePens;
         awayPens = ko.awayPens;
@@ -788,17 +1243,36 @@ class SeasonService {
     ]);
 
     // Update the squad's suspensions and injuries from this match's cards and
-    // knocks (players who sat this one out have now served a game).
-    final absenceRepo = _ref.read(absenceRepositoryProvider);
-    final before = await absenceRepo.forCareer(careerId);
-    final after = Discipline.applyMatch(
-      before: before,
-      events: result.events,
+    // knocks (players who sat this one out have now served a game). Scoped to
+    // the manager's own nation — the rest of the world now carries absences
+    // too, and they are not served by a game they had no part in.
+    var after = await _applyDiscipline(
+      careerId: careerId,
       nationId: career.nationId,
+      events: result.events,
       rng: SeededRng.forFixture(career.rngSeed, fixture.id ^ 0x0AB5),
       competitive: fixture.round != Rounds.friendly,
     );
-    await absenceRepo.replace(careerId, after.values);
+    // A base camp with a proper medical set-up turns knocks round faster (see
+    // `TrainingCamps`), so a knee picked up in the group stage can cost a
+    // tournament at one camp and a single match at another.
+    final camp = await _ref.read(activeCampProvider(careerId).future);
+    final recovery = camp?.injuryRecovery ?? 1;
+    if (recovery > 1) {
+      after = {
+        for (final e in after.entries)
+          e.key: e.value.injuryMatches <= 1
+              ? e.value
+              : e.value.copyWith(
+                  injuryMatches: (e.value.injuryMatches / recovery)
+                      .round()
+                      .clamp(1, e.value.injuryMatches),
+                ),
+      };
+      // The camp's faster recovery has to land back in the shared map, or the
+      // flush at the end of the operation writes the un-shortened injuries.
+      _absences?.addAll(after);
+    }
 
     // Notify the manager of new suspensions and knocks from this match, so a
     // ban or injury never comes as a silent surprise next selection.
@@ -812,14 +1286,15 @@ class SeasonService {
         final how = e.secondYellow
             ? 'was sent off for a second booking'
             : ban >= 3
-                ? 'was shown a straight red for violent conduct'
-                : 'was sent off';
+            ? 'was shown a straight red for violent conduct'
+            : 'was sent off';
         await _comp.addMessage(
           careerId: careerId,
           dedupKey: 'ban:${fixture.id}:${e.playerId}',
           category: 'discipline',
           title: '${e.playerName} suspended',
-          body: '${e.playerName} $how and is banned for $games — they will '
+          body:
+              '${e.playerName} $how and is banned for $games — they will '
               'be unavailable for selection.',
           year: discYear,
         );
@@ -830,7 +1305,8 @@ class SeasonService {
           dedupKey: 'inj:${fixture.id}:${e.playerId}',
           category: 'injury',
           title: '${e.playerName} injured',
-          body: '${e.playerName} picked up a knock and is out for '
+          body:
+              '${e.playerName} picked up a knock and is out for '
               '$out match${out == 1 ? '' : 'es'}.',
           year: discYear,
         );
@@ -887,6 +1363,8 @@ class SeasonService {
       homeShots: result.homeShots,
       awayShots: result.awayShots,
       homePossession: result.homePossession,
+      homeXg: result.homeXg,
+      awayXg: result.awayXg,
     );
 
     // Log caps for the manager's players who featured (started or came on), for
@@ -924,6 +1402,8 @@ class SeasonService {
     for (var y = career.inGameDate.year + 1; y <= fixture.date.year; y++) {
       await _recordTransferYear(careerId, career.nationId, career.rngSeed, y);
     }
+    // Records breaking live: announce a new all-time record holder as a headline.
+    await _checkRecords(careerId, career, fixture.date.year);
     await _careers.updateInGameDate(careerId, fixture.date);
     // Sim the rest of the world up to this date, but never the manager's own
     // other fixtures — playing one match must not silently skip another (e.g. a
@@ -938,14 +1418,25 @@ class SeasonService {
     // If this match (or the round it completed) knocked the manager out of a
     // cup, tell them — a tournament exit shouldn't pass unremarked.
     await _fileEliminationIfOut(careerId, career, fixture, hs, as);
+    // The board's verdict on any objective this run has just settled, so it
+    // lands with the result rather than at the end of the cycle.
+    await _gradeObjectivesIfDecided(careerId);
     await _flushRank(careerId);
+    await _flushAbsences(careerId);
     // The ranking screen's data is auto-disposed but can be kept alive by a
     // listener elsewhere (careers list, vitrine) — refresh it explicitly so
     // the full ranking always shows the points the sim just moved.
     _ref
       ..invalidate(hubDataProvider)
       ..invalidate(worldRankingProvider)
-      ..invalidate(rankHistoryProvider);
+      ..invalidate(rankHistoryProvider)
+      // The board's brief and its mood are derived from fixtures the sim has
+      // just changed, and neither reads them through a provider that would
+      // notice — so they are refreshed by hand, or the hub keeps showing the
+      // verdict it computed before the tournament was played.
+      ..invalidate(cycleObjectiveOutcomesProvider)
+      ..invalidate(cycleObjectivesProvider)
+      ..invalidate(satisfactionProvider);
   }
 
   /// Files an inbox message when [fixture] knocked the manager out of a cup —
@@ -970,16 +1461,16 @@ class SeasonService {
     final contName = conf == null
         ? 'the continental championship'
         : ContinentalCups.byConfederation[conf]?.name ??
-            'the continental championship';
+              'the continental championship';
     final ({String name, CompetitionKind kind})? cup = switch (round) {
       'GROUP' || 'R32' || 'R16' || 'QF' || 'SF' || '3RD' || 'FINAL' => (
-          name: 'the World Cup',
-          kind: CompetitionKind.worldCupFinals,
-        ),
+        name: 'the World Cup',
+        kind: CompetitionKind.worldCupFinals,
+      ),
       'CGROUP' || 'CR16' || 'CQF' || 'CSF' || 'CFINAL' => (
-          name: contName,
-          kind: CompetitionKind.continentalFinals,
-        ),
+        name: contName,
+        kind: CompetitionKind.continentalFinals,
+      ),
       _ => null,
     };
     if (cup == null) return; // not a finals-tournament match
@@ -993,23 +1484,44 @@ class SeasonService {
       if (myScore >= oppScore) return; // won the tie — still in
       final core = round!.startsWith('C') ? round.substring(1) : round;
       if (core == 'FINAL') {
+        final s = varietySeed('runnerup:${fixture.id}');
         await _comp.addMessage(
           careerId: careerId,
           dedupKey: 'runnerup:${fixture.id}',
           category: 'eliminated',
-          title: 'Runners-up',
-          body: 'You reached ${cup.name} final but lost to $oppName. So '
-              'close — silver this time.',
+          title: pickVariant([
+            'Runners-up',
+            'So near, yet so far',
+            'Silver medals',
+          ], s),
+          body: pickVariant([
+            'You reached ${cup.name} final but lost to $oppName. So '
+                'close — silver this time.',
+            'Beaten by $oppName in the ${cup.name} final. Runners-up — '
+                'agonisingly close.',
+            'The ${cup.name} final slipped away against $oppName. So much '
+                'to be proud of, but not the trophy.',
+          ], s),
           year: year,
         );
       } else {
+        final s = varietySeed('out:${fixture.id}');
         await _comp.addMessage(
           careerId: careerId,
           dedupKey: 'out:${fixture.id}',
           category: 'eliminated',
-          title: 'Knocked out',
-          body: "You're out of ${cup.name} — beaten by $oppName in the "
-              '${_stageName(core)}.',
+          title: pickVariant([
+            'Knocked out',
+            'The end of the road',
+            'Journey over',
+          ], s),
+          body: pickVariant([
+            "You're out of ${cup.name}, beaten by $oppName in the "
+                '${_stageName(core)}.',
+            '$oppName end your ${cup.name} in the ${_stageName(core)}.',
+            'Your ${cup.name} ends in the ${_stageName(core)}, '
+                'beaten by $oppName.',
+          ], s),
           year: year,
         );
       }
@@ -1028,13 +1540,23 @@ class SeasonService {
         (t) => t.homeNationId == me || t.awayNationId == me,
       );
       if (!inKnockout) {
+        final s = varietySeed('groupout:${cup.kind.name}:$year');
         await _comp.addMessage(
           careerId: careerId,
           dedupKey: 'groupout:${cup.kind.name}:$year',
           category: 'eliminated',
-          title: 'Group stage exit',
-          body: 'Your ${cup.name} is over at the group stage — not enough to '
-              'reach the knockouts this time.',
+          title: pickVariant([
+            'Group stage exit',
+            'Out at the group stage',
+            'Early bath',
+          ], s),
+          body: pickVariant([
+            'Your ${cup.name} is over at the group stage. Not enough to '
+                'reach the knockouts.',
+            'You failed to get out of the group. Your ${cup.name} ends here.',
+            'No knockout place this time. Your ${cup.name} is done at the '
+                'group stage.',
+          ], s),
           year: year,
         );
       }
@@ -1044,22 +1566,33 @@ class SeasonService {
 
   /// A readable stage name from a bare knockout core code.
   static String _stageName(String core) => switch (core) {
-        'R32' => 'round of 32',
-        'R16' => 'round of 16',
-        'QF' => 'quarter-finals',
-        'SF' => 'semi-finals',
-        '3RD' => 'third-place play-off',
-        'FINAL' => 'final',
-        _ => 'knockouts',
-      };
+    'R32' => 'round of 32',
+    'R16' => 'round of 16',
+    'QF' => 'quarter-finals',
+    'SF' => 'semi-finals',
+    '3RD' => 'third-place play-off',
+    'FINAL' => 'final',
+    _ => 'knockouts',
+  };
 
   // --- Cycle progression ----------------------------------------------------
 
   /// Rounds that belong to the main finals tournaments (World Cup + continental
   /// championship) — the ones the player steps through even when not in them.
   static const _finalsMatchRounds = {
-    'GROUP', 'R32', 'R16', 'QF', 'SF', '3RD', 'FINAL',
-    'CGROUP', 'CR16', 'CQF', 'CSF', 'C3RD', 'CFINAL',
+    'GROUP',
+    'R32',
+    'R16',
+    'QF',
+    'SF',
+    '3RD',
+    'FINAL',
+    'CGROUP',
+    'CR16',
+    'CQF',
+    'CSF',
+    'C3RD',
+    'CFINAL',
   };
 
   static bool _isFinalsMatch(Fixture f) =>
@@ -1074,8 +1607,14 @@ class SeasonService {
     int careerId,
     String round, {
     CompetitionKind kind = CompetitionKind.worldCupFinals,
+    Confederation? confederation,
   }) async {
-    final fx = await _comp.fixturesByRound(careerId, round, kind: kind);
+    final fx = await _comp.fixturesByRound(
+      careerId,
+      round,
+      kind: kind,
+      confederation: confederation,
+    );
     return fx.isNotEmpty && fx.every((f) => f.hasResult);
   }
 
@@ -1083,17 +1622,134 @@ class SeasonService {
     int careerId,
     String round, {
     CompetitionKind kind = CompetitionKind.worldCupFinals,
+    Confederation? confederation,
   }) async {
-    final fx = await _comp.fixturesByRound(careerId, round, kind: kind);
+    final fx = await _comp.fixturesByRound(
+      careerId,
+      round,
+      kind: kind,
+      confederation: confederation,
+    );
     return fx.map((f) => f.date).reduce((a, b) => a.isAfter(b) ? a : b);
   }
 
   /// Creates the next competition stage when the current one finishes.
+  /// Files the board's verdict on each of the cycle's objectives the moment
+  /// that tournament is settled for the manager's nation — the cup is won, or
+  /// their run in it is over.
+  ///
+  /// The board used to say nothing at all until the cycle rolled over, two
+  /// years after a continental championship and weeks after a World Cup: the
+  /// expectation was stated up front, the tournament was played, and the
+  /// verdict on it only ever appeared inside the end-of-cycle summary. Both
+  /// objectives are now graded and announced when they happen, so winning your
+  /// continent is answered by the board in the same month you win it.
+  ///
+  /// Deduped per cycle and tier, so it is filed once however many times the
+  /// world is stepped afterwards.
+  Future<void> _gradeObjectivesIfDecided(int careerId) async {
+    final career = await _careers.byId(careerId);
+    if (career == null) return;
+    // Grade from FRESH data. The objectives read the database imperatively, so
+    // nothing about a played match invalidates them — and the hub keeps the
+    // whole chain alive (its board strip watches satisfaction, which watches
+    // the objectives), so this used to read a snapshot taken early in the cycle
+    // where nothing was decided yet. The tournament was won or lost and the
+    // board's verdict was graded against a cached "still to be decided",
+    // which is why no verdict ever arrived, at the Euro or anywhere else.
+    _ref.invalidate(cycleObjectiveOutcomesProvider(careerId));
+    final objectives = await _ref.read(
+      cycleObjectiveOutcomesProvider(careerId).future,
+    );
+    for (final o in objectives) {
+      if (!o.decided) continue;
+      final demand = objectiveDemandText(o.tier, o.target);
+      final finish = objectiveFinishText(o.tier, o.actual);
+      await _comp.addMessage(
+        careerId: careerId,
+        dedupKey: 'objective:${career.cyclePointer}:${o.tier.name}',
+        category: 'board',
+        title: o.met
+            ? 'Objective met — ${o.competition}'
+            : 'Objective missed — ${o.competition}',
+        body: o.met
+            ? 'The board asked you to $demand at the ${o.competition}. '
+                  'You finished $finish. They have what they asked for.'
+            : 'The board asked you to $demand at the ${o.competition}. '
+                  'You finished $finish. That is short of what was expected.',
+        year: career.inGameDate.year,
+      );
+    }
+  }
+
   Future<void> _progress(int careerId) async {
+    await _drawWorldCupQualifyingIfDue(careerId);
     await _progressWorldCup(careerId);
     await _progressContinental(careerId);
     await _progressNationsLeague(careerId);
     await _progressFinalissima(careerId);
+  }
+
+  /// Draws World Cup qualifying once the cycle reaches it.
+  ///
+  /// It used to be written with the rest of the calendar on the cycle's first
+  /// day, so the World Cup groups existed before the continental championship
+  /// that comes first had been played, and its "draw" ceremony was a replay of
+  /// fixtures that had been in the database for two years. Drawing it here
+  /// puts it in its proper place in the calendar.
+  ///
+  /// Drawn as soon as the manager's continental championship has a winner —
+  /// that is the moment the cycle's first half is over — with the calendar date
+  /// as a fallback.
+  ///
+  /// The fallback is not optional. `advance` moves the clock to the next
+  /// unplayed fixture, so if the cup somehow never crowned a champion the
+  /// calendar would empty, the date would stop, and a date-only trigger could
+  /// never arrive: the save would stall with nothing left to play. Either
+  /// condition alone is enough to draw.
+  Future<void> _drawWorldCupQualifyingIfDue(int careerId) async {
+    final career = await _careers.byId(careerId);
+    if (career == null) return;
+    final wcYear = finalsYear(career.cyclePointer);
+    if (await _comp.hasTournament(
+      careerId,
+      CompetitionKind.worldCupQualifying,
+    )) {
+      return;
+    }
+    final conf = await _managerConfederation(careerId);
+    final contDecided =
+        conf != null &&
+        await _comp.continentalChampion(careerId, confederation: conf) != null;
+    if (!contDecided &&
+        !CareerService.wcQualifyingDue(career.inGameDate, wcYear)) {
+      return;
+    }
+    // Seed the pots from the LIVE ranking, snapshotted here so the ceremony
+    // reproduces exactly the pots the draw used. It used to read the cycle-start
+    // baseline, frozen two years earlier — a nation that had climbed to number
+    // one in the meantime was still drawn out of the pot it started the cycle
+    // in, which is the one thing a draw must never get wrong.
+    await _ensureRank(careerId);
+    final nations = await _nationsById();
+    final seedRank = _liveRankById(nations);
+    await _ref
+        .read(seedRankingRepositoryProvider)
+        .snapshot(
+          careerId,
+          drawSeedCycle(career.cyclePointer, drawSlotWorldCupQualifying),
+          seedRank,
+        );
+    await CareerService.buildWorldCupQualifying(
+      comp: _comp,
+      nations: nations.values.toList(),
+      careerId: careerId,
+      nationId: career.nationId,
+      rngSeed: career.rngSeed,
+      cycle: career.cyclePointer,
+      wcYear: wcYear,
+      rankById: seedRank.isEmpty ? null : seedRank,
+    );
   }
 
   static int _rankStandings(GroupStanding a, GroupStanding b) {
@@ -1123,8 +1779,7 @@ class SeasonService {
       // the Finals Four.
       final winners = [
         for (final t in tables)
-          if (t.standings.isNotEmpty &&
-              NationsCup.tierOfGroupName(t.name) == 0)
+          if (t.standings.isNotEmpty && NationsCup.tierOfGroupName(t.name) == 0)
             t.standings.first,
       ]..sort(_rankStandings);
       if (winners.isEmpty) return;
@@ -1179,8 +1834,11 @@ class SeasonService {
         round: 'NFINAL',
         kind: kind,
         pairings: [(_winner(semiFx[0]), _winner(semiFx[1]))],
-        date: (await _maxDate(careerId, 'NSF', kind: kind))
-            .add(const Duration(days: 3)),
+        date: (await _maxDate(
+          careerId,
+          'NSF',
+          kind: kind,
+        )).add(const Duration(days: 3)),
       );
       return;
     }
@@ -1216,10 +1874,12 @@ class SeasonService {
       competition: 'Nations Cup',
       championId: champion,
       runnerUpId: runnerUp ?? champion,
-      finalHomeScore:
-          !scored ? null : (champIsHome ? f.homeScore : f.awayScore),
-      finalAwayScore:
-          !scored ? null : (champIsHome ? f.awayScore : f.homeScore),
+      finalHomeScore: !scored
+          ? null
+          : (champIsHome ? f.homeScore : f.awayScore),
+      finalAwayScore: !scored
+          ? null
+          : (champIsHome ? f.awayScore : f.homeScore),
     );
   }
 
@@ -1232,8 +1892,11 @@ class SeasonService {
     final year = finalsYear(career.cyclePointer) - 2;
     if (await _comp.hasHonour(careerId, 'Continental Clash', year)) return;
 
-    final existing =
-        await _comp.fixturesByRound(careerId, 'FFINAL', kind: kind);
+    final existing = await _comp.fixturesByRound(
+      careerId,
+      'FFINAL',
+      kind: kind,
+    );
     if (existing.isEmpty) {
       final honours = await _comp.honours(careerId);
       int? euro;
@@ -1282,7 +1945,7 @@ class SeasonService {
   Future<void> _progressWorldCup(int careerId) async {
     if (!await _comp.hasFinals(careerId)) {
       if (await _comp.allQualifyingPlayed(careerId)) {
-        await _generateFinals(careerId);
+        await _progressPlayoff(careerId);
       }
       return;
     }
@@ -1310,20 +1973,69 @@ class SeasonService {
     await _recordHonourIfDecided(careerId);
   }
 
+  /// Progresses EVERY confederation's championship, not only the manager's.
+  ///
+  /// The rest of the world's cups used to be created and then never played, so
+  /// the only continent that ever put goals and caps on the record was the one
+  /// the manager happened to be working in — the all-time world records read as
+  /// a chart of a single confederation. It also meant the Continental Clash
+  /// could only ever happen for a European or South American manager, since it
+  /// needs both of those champions on the honours roll.
+  ///
+  /// The manager's own cup is progressed first so nothing about their season
+  /// depends on the order the others resolve in.
   Future<void> _progressContinental(int careerId) async {
+    final mine = await _managerConfederation(careerId);
+    if (mine == null) return;
+    await _progressContinentalFor(careerId, mine, isManagers: true);
+    for (final conf in Confederation.values) {
+      if (conf == mine) continue;
+      await _progressContinentalFor(careerId, conf, isManagers: false);
+    }
+  }
+
+  /// Progresses one confederation's championship from its group stage through
+  /// to its final, recording the honour once it is decided.
+  Future<void> _progressContinentalFor(
+    int careerId,
+    Confederation conf, {
+    required bool isManagers,
+  }) async {
     const kind = CompetitionKind.continentalFinals;
-    if (!await _comp.hasTournament(careerId, kind)) {
-      // Once continental qualifying is complete, draw the finals from the
-      // qualifiers (the finals didn't exist yet for the qualifying path).
+    // Already decided this cycle: nothing to advance, and this is by far the
+    // cheapest way to say so — `_progress` runs up to forty times in a single
+    // catch-up, and there are six cups to look at on every one of those passes.
+    final cupName = ContinentalCups.byConfederation[conf]?.name;
+    if (cupName != null) {
+      final career = await _careers.byId(careerId);
+      if (career == null) return;
+      final cupYear = finalsYear(career.cyclePointer) - 2;
+      if (await _comp.hasHonour(careerId, cupName, cupYear)) return;
+    }
+    // EVERY confederation's championship lives in this cycle as a competition
+    // of this same kind, so a lookup that doesn't name the confederation picks
+    // an arbitrary one. That let the manager's own cup be left undrawn (another
+    // continent's existed, so "we already have a continental tournament" read
+    // true) and another continent's bracket be advanced and recorded in its
+    // place — after which the board's continental objective could never be
+    // graded, because the manager's cup had no champion.
+    if (!await _comp.hasTournament(careerId, kind, confederation: conf)) {
+      // Once THIS confederation's qualifying is complete, draw its finals from
+      // its own qualifiers. Every qualifying confederation now runs a campaign,
+      // so every one of them draws its field the same way the manager's does —
+      // and each lookup names its confederation, because all six live in this
+      // cycle under the same competition kind.
       if (await _comp.hasTournament(
             careerId,
             CompetitionKind.continentalQualifying,
+            confederation: conf,
           ) &&
           await _comp.allPlayedForKind(
             careerId,
             CompetitionKind.continentalQualifying,
+            confederation: conf,
           )) {
-        await _generateContinentalFinals(careerId);
+        await _generateContinentalFinals(careerId, conf, isManagers: isManagers);
       }
       return;
     }
@@ -1333,13 +2045,16 @@ class SeasonService {
     // the top two plus the four best third-placed teams into a round of 16; a
     // 16-team cup (4 groups) opens at the quarter-finals; an 8-team cup (2
     // groups) at the semi-finals.
-    final tables = await _comp.tournamentGroupTables(careerId, kind);
+    final tables = await _comp.tournamentGroupTables(
+      careerId,
+      kind,
+      confederation: conf,
+    );
     if (tables.isNotEmpty) {
       final standings = tables.map((t) => t.standings).toList();
       // Copa América: two groups of five, the top four of each into the
       // quarter-finals (only the fifth-placed side goes out).
-      final copa = tables.length == 2 &&
-          standings.every((s) => s.length >= 5);
+      final copa = tables.length == 2 && standings.every((s) => s.length >= 5);
       final bestThirds = WorldCupFinals.bestThirdsFor(tables.length);
       final firstRound = copa
           ? 'CQF'
@@ -1348,23 +2063,37 @@ class SeasonService {
               4 => 'CQF',
               _ => 'CSF',
             };
-      final started =
-          (await _comp.fixturesByRound(careerId, firstRound, kind: kind))
-              .isNotEmpty;
+      final started = (await _comp.fixturesByRound(
+        careerId,
+        firstRound,
+        kind: kind,
+        confederation: conf,
+      )).isNotEmpty;
       if (!started) {
-        if (!await _roundComplete(careerId, 'CGROUP', kind: kind)) return;
+        if (!await _roundComplete(
+          careerId,
+          'CGROUP',
+          kind: kind,
+          confederation: conf,
+        )) {
+          return;
+        }
         await _comp.addKnockoutFixtures(
           careerId: careerId,
           round: firstRound,
           kind: kind,
+          confederation: conf,
           pairings: copa
               ? WorldCupFinals.copaQuarters(standings)
               : bestThirds > 0
-                  ? WorldCupFinals.knockoutWithThirds(standings, bestThirds)
-                  : WorldCupFinals.knockoutFromGroups(standings),
-          date: (await _maxDate(careerId, 'CGROUP', kind: kind)).add(
-            const Duration(days: 7),
-          ),
+              ? WorldCupFinals.knockoutWithThirds(standings, bestThirds)
+              : WorldCupFinals.knockoutFromGroups(standings),
+          date: (await _maxDate(
+            careerId,
+            'CGROUP',
+            kind: kind,
+            confederation: conf,
+          )).add(const Duration(days: 7)),
         );
         return;
       }
@@ -1375,8 +2104,17 @@ class SeasonService {
       kind,
       prefix: 'C',
       thirdPlace: false,
+      confederation: conf,
     );
-    await _recordContinentalHonourIfDecided(careerId);
+    await _recordContinentalHonourIfDecided(careerId, conf);
+  }
+
+  /// The confederation of the nation the manager currently leads — the one
+  /// whose continental championship is theirs to play.
+  Future<Confederation?> _managerConfederation(int careerId) async {
+    final career = await _careers.byId(careerId);
+    if (career == null) return null;
+    return (await _nationsById())[career.nationId]?.confederation;
   }
 
   /// Advances a knockout from its first round to the final (and, for the World
@@ -1394,6 +2132,7 @@ class SeasonService {
     CompetitionKind kind, {
     String prefix = '',
     bool thirdPlace = true,
+    Confederation? confederation,
   }) async {
     final r32 = '${prefix}R32';
     final r16 = '${prefix}R16';
@@ -1404,14 +2143,56 @@ class SeasonService {
 
     // The R32 step is a no-op for brackets that start later (continental cups
     // open at the quarter- or semi-finals — their R32 round never exists).
-    await _advanceRound(careerId, r32, r16, 4, kind: kind);
-    await _advanceRound(careerId, r16, qf, 4, kind: kind);
-    await _advanceRound(careerId, qf, sf, 4, kind: kind);
+    await _advanceRound(
+      careerId,
+      r32,
+      r16,
+      4,
+      kind: kind,
+      confederation: confederation,
+    );
+    await _advanceRound(
+      careerId,
+      r16,
+      qf,
+      4,
+      kind: kind,
+      confederation: confederation,
+    );
+    await _advanceRound(
+      careerId,
+      qf,
+      sf,
+      4,
+      kind: kind,
+      confederation: confederation,
+    );
 
-    if ((await _comp.fixturesByRound(careerId, fin, kind: kind)).isEmpty &&
-        await _roundComplete(careerId, sf, kind: kind)) {
-      final semis = await _comp.fixturesByRound(careerId, sf, kind: kind);
-      final afterSemis = await _maxDate(careerId, sf, kind: kind);
+    if ((await _comp.fixturesByRound(
+              careerId,
+              fin,
+              kind: kind,
+              confederation: confederation,
+            ))
+            .isEmpty &&
+        await _roundComplete(
+          careerId,
+          sf,
+          kind: kind,
+          confederation: confederation,
+        )) {
+      final semis = await _comp.fixturesByRound(
+        careerId,
+        sf,
+        kind: kind,
+        confederation: confederation,
+      );
+      final afterSemis = await _maxDate(
+        careerId,
+        sf,
+        kind: kind,
+        confederation: confederation,
+      );
       // The play-off comes first and the final closes the tournament, on their
       // own days — sharing one date collapsed them into a single round popup
       // titled after the play-off, so the final was never its own moment.
@@ -1420,6 +2201,7 @@ class SeasonService {
           careerId: careerId,
           round: third,
           kind: kind,
+          confederation: confederation,
           pairings: WorldCupFinals.pairWinners(semis.map(_loser).toList()),
           date: afterSemis.add(const Duration(days: 5)),
         );
@@ -1428,6 +2210,7 @@ class SeasonService {
         careerId: careerId,
         round: fin,
         kind: kind,
+        confederation: confederation,
         pairings: WorldCupFinals.pairWinners(semis.map(_winner).toList()),
         date: afterSemis.add(const Duration(days: 7)),
       );
@@ -1436,8 +2219,18 @@ class SeasonService {
     // Repair saves whose play-off and final were scheduled on the SAME day
     // (before the split above): push an unplayed final onto its own later day.
     if (!thirdPlace) return;
-    final finFx = await _comp.fixturesByRound(careerId, fin, kind: kind);
-    final thirdFx = await _comp.fixturesByRound(careerId, third, kind: kind);
+    final finFx = await _comp.fixturesByRound(
+      careerId,
+      fin,
+      kind: kind,
+      confederation: confederation,
+    );
+    final thirdFx = await _comp.fixturesByRound(
+      careerId,
+      third,
+      kind: kind,
+      confederation: confederation,
+    );
     if (finFx.isNotEmpty && thirdFx.isNotEmpty) {
       final f = finFx.first;
       if (!f.hasResult && !f.date.isAfter(thirdFx.first.date)) {
@@ -1451,15 +2244,16 @@ class SeasonService {
 
   /// Draws the continental finals (a group stage) from the teams that came
   /// through continental qualifying, mirroring the World Cup finals draw.
-  Future<void> _generateContinentalFinals(int careerId) async {
+  Future<void> _generateContinentalFinals(
+    int careerId,
+    Confederation conf, {
+    required bool isManagers,
+  }) async {
     final career = await _careers.byId(careerId);
     if (career == null) return;
     final nations = await _nationsById();
-    final conf = nations[career.nationId]?.confederation;
-    final cont = conf == null
-        ? null
-        : ContinentalCups.byConfederation[conf];
-    if (conf == null || cont == null) return;
+    final cont = ContinentalCups.byConfederation[conf];
+    if (cont == null) return;
 
     // The hosts qualify automatically and reserve their berths, so only
     // (size − hosts) teams come through qualifying — a host does NOT bump the
@@ -1471,9 +2265,13 @@ class SeasonService {
       nations: nations.values.toList(),
     );
     final berths = (cont.size - hosts.length).clamp(1, cont.size);
+    // Named confederation: every confederation's qualifying is a competition of
+    // this same kind now, so an unqualified lookup would seed this continent's
+    // finals out of another continent's group tables.
     final tables = await _comp.tournamentGroupTables(
       careerId,
       CompetitionKind.continentalQualifying,
+      confederation: conf,
     );
     final qualifiers = Qualification.qualifiers(
       tables.map((t) => t.standings).toList(),
@@ -1492,7 +2290,9 @@ class SeasonService {
     // snapshotted so the draw ceremony reproduces the same pots.
     await _ensureRank(careerId);
     final rankingById = _liveRankById(nations);
-    await _ref.read(seedRankingRepositoryProvider).snapshot(
+    await _ref
+        .read(seedRankingRepositoryProvider)
+        .snapshot(
           careerId,
           drawSeedCycle(career.cyclePointer, drawSlotContinentalFinals),
           rankingById,
@@ -1516,57 +2316,84 @@ class SeasonService {
     );
 
     // If the manager's nation didn't make the field, their continental
-    // qualifying campaign fell short.
-    if (!field.contains(career.nationId)) {
+    // qualifying campaign fell short. Only ever filed for their OWN continent —
+    // every confederation draws its finals through here now, and a manager does
+    // not need telling they missed out on a cup they were never in.
+    if (isManagers && !field.contains(career.nationId)) {
       final year = wcYear - 2;
       await _comp.addMessage(
         careerId: careerId,
         dedupKey: 'contmiss:$year',
         category: 'eliminated',
         title: '${cont.name} missed',
-        body: "You didn't qualify for ${cont.name} — the campaign came up "
+        body:
+            "You didn't qualify for ${cont.name} — the campaign came up "
             'short this time.',
         year: year - 1,
       );
     }
   }
 
-  /// Records the player's continental championship to the honours roll once its
+  /// Records [conf]'s continental championship to the honours roll once its
   /// final is played (so the played result — not the background sim — counts).
-  Future<void> _recordContinentalHonourIfDecided(int careerId) async {
+  /// Every confederation's cup is recorded, so the world's honours roll is
+  /// complete and the Continental Clash always has two champions to call on.
+  Future<void> _recordContinentalHonourIfDecided(
+    int careerId,
+    Confederation conf,
+  ) async {
     const kind = CompetitionKind.continentalFinals;
+    final career = await _careers.byId(careerId);
+    if (career == null) return;
+    final nations = await _nationsById();
+
+    // THIS confederation's final: every confederation's cup is a competition of
+    // this kind, and an unqualified lookup could hand back another continent's
+    // final and file it under the wrong competition.
     final finals = await _comp.fixturesByRound(
       careerId,
       'CFINAL',
       kind: kind,
+      confederation: conf,
     );
     if (finals.isEmpty || !finals.first.hasResult) return;
     final f = finals.first;
     final year = f.date.year;
 
-    final career = await _careers.byId(careerId);
-    if (career == null) return;
-    final nations = await _nationsById();
-    final conf = nations[career.nationId]?.confederation;
-    if (conf == null) return;
     final name = ContinentalCups.byConfederation[conf]?.name;
     if (name == null) return;
     if (await _comp.hasHonour(careerId, name, year)) return;
 
-    // No third-place play-off in the continental championships (the beaten
-    // semi-finalists share the bronze finish), so no bronze medallist.
-    final boot = await _comp.topScorers(careerId, kind: kind, limit: 1);
+    // No third-place play-off in the continental championships — the two beaten
+    // semi-finalists SHARE the bronze, so record both as third place.
+    final semis = await _comp.fixturesByRound(
+      careerId,
+      'CSF',
+      kind: kind,
+      confederation: conf,
+    );
+    final bronzes = [
+      for (final s in semis)
+        if (s.hasResult) _loser(s),
+    ];
+    final boot = await _comp.topScorers(
+      careerId,
+      kind: kind,
+      confederation: conf,
+      limit: 1,
+    );
     String? bootName;
     int? bootGoals;
     if (boot.isNotEmpty) {
-      bootName = (await _ref
-              .read(playerRepositoryProvider)
-              .byId(
-                boot.first.playerId,
-                agingYears: _simYears,
-                saveSeed: _simSeed,
-              ))
-          ?.name;
+      bootName =
+          (await _ref
+                  .read(playerRepositoryProvider)
+                  .byId(
+                    boot.first.playerId,
+                    agingYears: _simYears,
+                    saveSeed: _simSeed,
+                  ))
+              ?.name;
       bootGoals = boot.first.goals;
     }
 
@@ -1577,7 +2404,8 @@ class SeasonService {
       competition: name,
       championId: _winner(f),
       runnerUpId: _loser(f),
-      thirdId: null,
+      thirdId: bronzes.isNotEmpty ? bronzes[0] : null,
+      thirdId2: bronzes.length > 1 ? bronzes[1] : null,
       hostId: WorldCupHosts.continentalHostFor(
         confederation: conf,
         cycle: career.cyclePointer,
@@ -1622,7 +2450,9 @@ class SeasonService {
     String? bootName;
     int? bootGoals;
     if (boot.isNotEmpty) {
-      final p = await _ref.read(playerRepositoryProvider).byId(
+      final p = await _ref
+          .read(playerRepositoryProvider)
+          .byId(
             boot.first.playerId,
             saveSeed: _simSeed,
           );
@@ -1648,17 +2478,24 @@ class SeasonService {
       topScorerGoals: bootGoals,
     );
 
+    // The finals didn't move the ranking live; settle the whole tournament now,
+    // heavier than any qualifier, so the champion's run is the cycle's biggest
+    // ranking swing and it lands as one update after the final.
+    await _settleWorldCupRanking(careerId);
+
     await _simulateContinentalCups(careerId, year);
   }
 
-  /// Background-simulates each confederation's continental championship (held
-  /// two years before the World Cup). The player's own confederation is played
-  /// out and recorded separately, so its honour is skipped here when present.
+  /// A BACKSTOP for any confederation whose championship never got played.
   ///
-  /// Every other confederation now plays a REAL tournament — a group stage and
-  /// a knockout, persisted as fixtures with attributed scorers — rather than
-  /// the old abstract bracket. So their editions carry actual results, a real
-  /// golden boot, and their players build all-time records like anyone else.
+  /// Every confederation's cup is now drawn when the cycle is built and played
+  /// out in its own window alongside the manager's (see [_progressContinental]),
+  /// which is what puts the world's goals, caps and honours on the record at the
+  /// right time — and what lets the Continental Clash find both its champions in
+  /// the year it is meant to be staged. This runs after the World Cup final and
+  /// only picks up a cup that somehow has neither a tournament nor an honour
+  /// (an older save, or a cycle whose draw never happened), so a continent is
+  /// never left with a missing edition.
   Future<void> _simulateContinentalCups(int careerId, int wcYear) async {
     final year = wcYear - 2;
     final career = await _careers.byId(careerId);
@@ -1668,6 +2505,16 @@ class SeasonService {
     for (final entry in ContinentalCups.byConfederation.entries) {
       final cont = entry.value;
       if (await _comp.hasHonour(careerId, cont.name, year)) continue;
+      // Already drawn (and being played, or waiting on a round) — leave it to
+      // the normal progression rather than drawing a second competition of the
+      // same kind and confederation on top of it.
+      if (await _comp.hasTournament(
+        careerId,
+        CompetitionKind.continentalFinals,
+        confederation: entry.key,
+      )) {
+        continue;
+      }
 
       final members =
           nations.where((n) => n.confederation == entry.key).toList()
@@ -1728,17 +2575,21 @@ class SeasonService {
     );
 
     const kind = CompetitionKind.continentalFinals;
-    Future<List<Fixture>> byRound(String r) =>
-        _comp.fixturesByRound(careerId, r, kind: kind,
-            confederation: confederation);
+    Future<List<Fixture>> byRound(String r) => _comp.fixturesByRound(
+      careerId,
+      r,
+      kind: kind,
+      confederation: confederation,
+    );
     Future<void> simRound(String r) async {
       for (final f in await byRound(r)) {
         if (!f.hasResult) await _simAndRecord(f, nationsById, rngSeed);
       }
     }
 
-    Future<DateTime> lastDate(String r) async =>
-        (await byRound(r)).map((f) => f.date).reduce((a, b) => a.isAfter(b) ? a : b);
+    Future<DateTime> lastDate(String r) async => (await byRound(
+      r,
+    )).map((f) => f.date).reduce((a, b) => a.isAfter(b) ? a : b);
 
     // Group stage.
     await simRound('CGROUP');
@@ -1752,8 +2603,7 @@ class SeasonService {
     );
     final standings = tables.map((t) => t.standings).toList();
     // Copa América: two groups of five, top four of each into the quarters.
-    final copa = tables.length == 2 &&
-        standings.every((s) => s.length >= 5);
+    final copa = tables.length == 2 && standings.every((s) => s.length >= 5);
     final bestThirds = WorldCupFinals.bestThirdsFor(tables.length);
     final ladder = copa
         ? ['CQF', 'CSF']
@@ -1771,8 +2621,8 @@ class SeasonService {
       pairings: copa
           ? WorldCupFinals.copaQuarters(standings)
           : bestThirds > 0
-              ? WorldCupFinals.knockoutWithThirds(standings, bestThirds)
-              : WorldCupFinals.knockoutFromGroups(standings),
+          ? WorldCupFinals.knockoutWithThirds(standings, bestThirds)
+          : WorldCupFinals.knockoutFromGroups(standings),
       date: (await lastDate('CGROUP')).add(const Duration(days: 5)),
     );
     // Play each round, seeding the next from its winners — straight to the
@@ -1794,11 +2644,16 @@ class SeasonService {
     }
     await simRound('CFINAL');
 
-    // Record the honour from the real final + golden boot (no bronze medal —
-    // the continental cups have no third-place play-off).
+    // Record the honour from the real final + golden boot. The continental
+    // cups have no third-place play-off, so BOTH beaten semi-finalists share
+    // the bronze — record the two 'CSF' losers as third place.
     final finals = await byRound('CFINAL');
     if (finals.isEmpty || !finals.first.hasResult) return;
     final f = finals.first;
+    final bronzes = [
+      for (final s in await byRound('CSF'))
+        if (s.hasResult) _loser(s),
+    ];
     final boot = await _comp.topScorers(
       careerId,
       kind: kind,
@@ -1808,14 +2663,15 @@ class SeasonService {
     String? bootName;
     int? bootGoals;
     if (boot.isNotEmpty) {
-      bootName = (await _ref
-              .read(playerRepositoryProvider)
-              .byId(
-                boot.first.playerId,
-                agingYears: _simYears,
-                saveSeed: _simSeed,
-              ))
-          ?.name;
+      bootName =
+          (await _ref
+                  .read(playerRepositoryProvider)
+                  .byId(
+                    boot.first.playerId,
+                    agingYears: _simYears,
+                    saveSeed: _simSeed,
+                  ))
+              ?.name;
       bootGoals = boot.first.goals;
     }
     final champIsHome = f.homeScore! >= f.awayScore!;
@@ -1825,7 +2681,8 @@ class SeasonService {
       competition: cont.name,
       championId: _winner(f),
       runnerUpId: _loser(f),
-      thirdId: null,
+      thirdId: bronzes.isNotEmpty ? bronzes[0] : null,
+      thirdId2: bronzes.length > 1 ? bronzes[1] : null,
       hostId: members.first.id,
       finalHomeScore: champIsHome ? f.homeScore : f.awayScore,
       finalAwayScore: champIsHome ? f.awayScore : f.homeScore,
@@ -1840,21 +2697,41 @@ class SeasonService {
     String to,
     int plusDays, {
     CompetitionKind kind = CompetitionKind.worldCupFinals,
+    Confederation? confederation,
   }) async {
-    if ((await _comp.fixturesByRound(careerId, to, kind: kind)).isNotEmpty) {
+    if ((await _comp.fixturesByRound(
+      careerId,
+      to,
+      kind: kind,
+      confederation: confederation,
+    )).isNotEmpty) {
       return;
     }
-    if (!await _roundComplete(careerId, from, kind: kind)) return;
-    final fx = await _comp.fixturesByRound(careerId, from, kind: kind);
+    if (!await _roundComplete(
+      careerId,
+      from,
+      kind: kind,
+      confederation: confederation,
+    )) {
+      return;
+    }
+    final fx = await _comp.fixturesByRound(
+      careerId,
+      from,
+      kind: kind,
+      confederation: confederation,
+    );
     await _comp.addKnockoutFixtures(
       careerId: careerId,
       round: to,
       kind: kind,
+      confederation: confederation,
       pairings: WorldCupFinals.pairWinners(fx.map(_winner).toList()),
       date: (await _maxDate(
         careerId,
         from,
         kind: kind,
+        confederation: confederation,
       )).add(Duration(days: plusDays)),
     );
   }
@@ -1862,7 +2739,94 @@ class SeasonService {
   /// The World Cup finals year for a cycle (clean 4-year cadence: 2030, 2034…).
   static int finalsYear(int cycle) => CareerService.worldCupYear(cycle);
 
-  Future<void> _generateFinals(int careerId) async {
+  /// The intercontinental play-off round code. It ends in `FINAL` so [Rounds]
+  /// treats it as a knockout — a level tie is settled on penalties like any
+  /// other, giving a clean winner.
+  static const _poRound = 'POFINAL';
+
+  /// Between qualifying ending and the finals being drawn, resolve the
+  /// intercontinental play-off.
+  ///
+  /// When the manager's nation is NOT among the six entrants (the common case)
+  /// this generates the finals exactly as before — the tie is decided instantly,
+  /// zero behaviour change. When they ARE an entrant, their tie becomes a real,
+  /// playable knockout: the finals wait until they've played it, then the real
+  /// winner is fed into finalist selection. Any unexpected pool shape falls back
+  /// to the instant path, so this can never stall the cycle.
+  Future<void> _progressPlayoff(int careerId) async {
+    final career = await _careers.byId(careerId);
+    if (career == null) return;
+
+    final tables = await _comp.allGroupTablesByConfederation(careerId);
+    final grouped = <Confederation, List<List<GroupStanding>>>{};
+    for (final t in tables) {
+      (grouped[t.confederation] ??= []).add(t.standings);
+    }
+    await _ensureRank(careerId);
+    final nations = await _nationsById();
+    final rankingById = _liveRankById(nations);
+    final pool = WorldCupFinals.playoffPoolFor(
+      byConfederation: grouped,
+      rankingById: rankingById,
+    );
+    final me = career.nationId;
+
+    // Not the standard six, or the manager sits it out → decide instantly, as
+    // the game always has.
+    if (pool.length != 6 || !pool.contains(me)) {
+      await _generateFinals(careerId);
+      return;
+    }
+
+    final existing = await _comp.fixturesByRound(
+      careerId,
+      _poRound,
+      kind: CompetitionKind.worldCupPlayoff,
+    );
+    if (existing.isEmpty) {
+      // The manager's tie for a World Cup place: a one-off knockout against the
+      // strongest rival in the pool. Dated just ahead so it's their next match
+      // (never in the past, where the catch-up sim would take it off them).
+      final rival = pool.firstWhere((id) => id != me);
+      await _comp.createKnockout(
+        careerId: careerId,
+        cycle: career.cyclePointer,
+        confederation: nations[me]?.confederation ?? Confederation.europe,
+        kind: CompetitionKind.worldCupPlayoff,
+        name: 'Intercontinental Play-off',
+        pairings: [(me, rival)],
+        date: career.inGameDate.add(const Duration(days: 7)),
+        firstRound: _poRound,
+      );
+      return;
+    }
+
+    final tie = existing.first;
+    if (!tie.hasResult) return; // still to be played
+
+    // Played. The manager's berth goes to whoever won their tie; the other berth
+    // goes to the best remaining entrant. Both feed into finalist selection so
+    // the field reflects what was actually played.
+    final winner = _winner(tie);
+    final rivalId = tie.homeNationId == me
+        ? tie.awayNationId
+        : tie.homeNationId;
+    final other = pool.firstWhere((id) => id != me && id != rivalId);
+    await _generateFinals(careerId, playoffWinners: [winner, other]);
+    // The manager just played their tie live, so skip the RNG display bracket —
+    // but still satisfy the finals-draw gate that waits on the play-off "draw"
+    // being seen (the constant is 'worldCupPlayoff', see hub_event.dart).
+    await _comp.markDrawWatched(
+      careerId,
+      career.cyclePointer,
+      'worldCupPlayoff',
+    );
+  }
+
+  Future<void> _generateFinals(
+    int careerId, {
+    List<int>? playoffWinners,
+  }) async {
     final career = await _careers.byId(careerId);
     if (career == null) return;
 
@@ -1881,7 +2845,9 @@ class SeasonService {
     // pots precisely.
     await _ensureRank(careerId);
     final rankingById = _liveRankById(nations);
-    await _ref.read(seedRankingRepositoryProvider).snapshot(
+    await _ref
+        .read(seedRankingRepositoryProvider)
+        .snapshot(
           careerId,
           drawSeedCycle(career.cyclePointer, drawSlotWorldCupFinals),
           rankingById,
@@ -1899,6 +2865,9 @@ class SeasonService {
       byConfederation: grouped,
       rankingById: rankingById,
       hosts: hosts,
+      // When the manager played their own play-off tie, its real winners are
+      // passed in and override the instant resolution below.
+      playoffWinnersOverride: playoffWinners,
       playoffRng: SeededRng(
         career.rngSeed ^ (career.cyclePointer * 0x50FF) ^ 0xB1A0,
       ),
@@ -1936,7 +2905,8 @@ class SeasonService {
         dedupKey: 'wcmiss:$year',
         category: 'eliminated',
         title: 'World Cup dream over',
-        body: "You didn't make the $year World Cup — the qualifying campaign "
+        body:
+            "You didn't make the $year World Cup — the qualifying campaign "
             'fell short. Four more years.',
         year: year - 1,
       );
@@ -1948,7 +2918,26 @@ class SeasonService {
   /// Rolls into the next cycle. [switchToNationId] moves the manager to a new
   /// nation (an accepted offer or a forced move after the sack); [boardTitle]/
   /// [boardBody], when given, are filed as a board-verdict message.
+  ///
+  /// Queued, never dropped — the rollover would be lost. See [_exclusive].
   Future<void> startNextCycle(
+    int careerId, {
+    int? switchToNationId,
+    String? boardTitle,
+    String? boardBody,
+    FederationInvestment? nextInvestment,
+  }) => _exclusive(
+    () => _startNextCycle(
+      careerId,
+      switchToNationId: switchToNationId,
+      boardTitle: boardTitle,
+      boardBody: boardBody,
+      nextInvestment: nextInvestment,
+    ),
+    dropIfBusy: false,
+  );
+
+  Future<void> _startNextCycle(
     int careerId, {
     int? switchToNationId,
     String? boardTitle,
@@ -1959,6 +2948,15 @@ class SeasonService {
     if (career == null) return;
     if (await _comp.worldChampion(careerId) == null) return; // not finished
 
+    // The board answers for every brief it set BEFORE the cycle pointer moves
+    // on. Grading is normally filed the moment a tournament settles, but every
+    // one of those hooks hangs off a step of the world; a cycle that ends
+    // without one (the last act being a foreign final, say) used to roll over
+    // with an objective still ungraded, and once the pointer moved the cycle's
+    // fixtures were out of reach and the verdict could never be filed at all.
+    // Deduped per cycle and tier, so this is a no-op when it already landed.
+    await _gradeObjectivesIfDecided(careerId);
+
     // Settle the finishing cycle's finances: bank income, then commit the
     // manager's allocation for the cycle about to begin.
     final income = await _ref
@@ -1967,7 +2965,8 @@ class SeasonService {
     var budget =
         career.budget + income.grant + income.prize + income.commercial;
     if (nextInvestment != null) {
-      final spend = nextInvestment.youth +
+      final spend =
+          nextInvestment.youth +
           nextInvestment.commercial +
           nextInvestment.medical +
           nextInvestment.naturalization +
@@ -1999,8 +2998,8 @@ class SeasonService {
           if (t.standings.length >= 2)
             (
               tier: NationsCup.tierOfGroupName(t.name),
-              winner: t.standings.first.nationId,
-              bottom: t.standings.last.nationId,
+              winner: t.standings.first,
+              bottom: t.standings.last,
             ),
       ];
       ncTiers = NationsCup.promoteRelegate(tiers: ncTiers, groups: groups);
@@ -2010,6 +3009,8 @@ class SeasonService {
     if (switchToNationId != null && switchToNationId != career.nationId) {
       await _careers.switchNation(careerId, switchToNationId);
       await _resetSquadForNewNation(careerId, switchToNationId, career);
+      // A new nation means an unfamiliar squad — the drilled-shape bonus resets.
+      await _ref.read(tacticFamiliarityRepositoryProvider).reset(careerId);
     }
     if (boardTitle != null) {
       await _comp.addMessage(
@@ -2066,7 +3067,14 @@ class SeasonService {
     _ref
       ..invalidate(hubDataProvider)
       ..invalidate(worldRankingProvider)
-      ..invalidate(rankHistoryProvider);
+      ..invalidate(rankHistoryProvider)
+      // The board's brief and its mood are derived from fixtures the sim has
+      // just changed, and neither reads them through a provider that would
+      // notice — so they are refreshed by hand, or the hub keeps showing the
+      // verdict it computed before the tournament was played.
+      ..invalidate(cycleObjectiveOutcomesProvider)
+      ..invalidate(cycleObjectivesProvider)
+      ..invalidate(satisfactionProvider);
   }
 
   /// Posts transfer messages for the manager's nation's notable club moves over
@@ -2083,10 +3091,8 @@ class SeasonService {
     final agingNow = (year - CareerService.cycleStart.year).clamp(0, 400);
     final agingPrev = (agingNow - 1).clamp(0, 400);
     if (agingNow <= agingPrev) return; // save's first year — nothing before it
-    final youth =
-        await _ref.read(youthBonusByCycleProvider(careerId).future);
-    final careerDev =
-        await _ref.read(careerDevBonusProvider(careerId).future);
+    final youth = await _ref.read(youthBonusByCycleProvider(careerId).future);
+    final careerDev = await _ref.read(careerDevBonusProvider(careerId).future);
     final repo = _ref.read(playerRepositoryProvider);
     final before = await repo.byNation(
       nationId,
@@ -2103,16 +3109,25 @@ class SeasonService {
       careerStartsByPlayer: careerDev,
     );
     final beforeById = {for (final p in before) p.id: p};
-    // Squad-relevant players whose club changed over the year, biggest first.
+    // Notable players whose club changed over the year, biggest first.
+    //
+    // "Notable" is RELATIVE to the nation, not an absolute rating: a fixed
+    // >=78 bar meant only the giants ever had a transfer window, and a manager
+    // of anyone outside the top thirty nations saw an empty one every single
+    // year. The bar is now the nation's own senior pool, so a minnow's best
+    // players moving club is news there exactly as a superstar's move is news
+    // in Brazil.
+    final ranked = [...after]..sort((a, b) => b.overall.compareTo(a.overall));
+    final notable = {for (final p in ranked.take(_transferPoolSize)) p.id};
     final moves = <(Player now, String fromClub)>[
       for (final p in after)
-        if (p.overall >= 72 &&
+        if (notable.contains(p.id) &&
             beforeById[p.id] != null &&
             beforeById[p.id]!.club != p.club)
           (p, beforeById[p.id]!.club),
     ]..sort((a, b) => b.$1.value.compareTo(a.$1.value));
 
-    for (final m in moves.take(6)) {
+    for (final m in moves.take(3)) {
       final p = m.$1;
       final fee = _transferFee(p);
       await _comp.addMessage(
@@ -2120,18 +3135,82 @@ class SeasonService {
         dedupKey: 'transfer:${p.id}:$year',
         category: 'transfer',
         title: '${p.name} joins ${p.club}',
-        body: '${p.name} (${p.position.label}, ${p.overall}) has left '
+        body:
+            '${p.name} (${p.position.label}, ${p.overall}) has left '
             '${m.$2} to sign for ${p.club} for ${_feeLabel(fee)}.',
         year: year,
       );
     }
   }
 
+  /// Announces a new all-time record holder (leading scorer / most-capped) as a
+  /// headline. Deduped per holder id, so a record only makes the news when a
+  /// NEW player takes it — a threshold keeps trivial early-save "records" out.
+  Future<void> _checkRecords(int careerId, Career career, int year) async {
+    Future<String> nameOf(int id) async {
+      final p = await _ref
+          .read(playerRepositoryProvider)
+          .byId(
+            id,
+            agingYears: CareerService.agingYears(career),
+            saveSeed: career.rngSeed,
+          );
+      return p?.name ?? 'A new record-breaker';
+    }
+
+    final scorers = await _comp.allTimeTopScorers(careerId, limit: 1);
+    if (scorers.isNotEmpty && scorers.first.goals >= 30) {
+      final s = scorers.first;
+      await _comp.addMessage(
+        careerId: careerId,
+        dedupKey: 'record:scorer:${s.playerId}',
+        category: 'record',
+        title: 'All-time top scorer',
+        body:
+            '${await nameOf(s.playerId)} is now the game\'s all-time leading '
+            'goalscorer with ${s.goals} goals.',
+        year: year,
+      );
+    }
+    final caps = await _comp.allTimeTopAppearances(careerId, limit: 1);
+    if (caps.isNotEmpty && caps.first.games >= 70) {
+      final c = caps.first;
+      await _comp.addMessage(
+        careerId: careerId,
+        dedupKey: 'record:caps:${c.playerId}',
+        category: 'record',
+        title: 'Most-capped player',
+        body:
+            '${await nameOf(c.playerId)} is now the game\'s most-capped '
+            'player with ${c.games} appearances.',
+        year: year,
+      );
+    }
+  }
+
+  /// How deep into a nation's pool a club move still counts as news: the
+  /// nation's top ten, so the window reports the players a manager would
+  /// actually recognise rather than the hundredth man on the depth chart.
+  ///
+  /// This is the dial that decides how BUSY a transfer window looks, and it was
+  /// set far too deep at first. With sixteen players in scope, more than three
+  /// of them moved in 69% of years — so the `take(3)` cap below was doing all
+  /// the work and every window reported exactly three transfers. Measured over
+  /// five nations × 16 years, ten in scope gives a mean of 1.4 moves a year and
+  /// hits the cap in 18% of them: sometimes none, usually one or two,
+  /// occasionally a full three.
+  static const int _transferPoolSize = 10;
+
   /// A plausible transfer fee: the player's value with a deterministic premium
   /// (a fee usually tops the book value), so a marquee move reads big.
+  ///
+  /// Floored well above zero — [Player.value] is zero for anyone under 44
+  /// overall, which would have every move in a smaller nation announced as a
+  /// free transfer.
   int _transferFee(Player p) {
     final premium = 1.0 + (p.id.abs() % 60) / 100; // 1.00–1.59×
-    return (p.value * premium).round();
+    final floor = 100000 + (p.overall.clamp(20, 99) * 6000);
+    return (p.value * premium).round().clamp(floor, 1 << 62);
   }
 
   /// Formats a euro fee compactly: €X.XM / €XXXk / €X.
@@ -2161,13 +3240,17 @@ class SeasonService {
 
     // Rebuild the XI from the new nation's players; saveTactic replaces the
     // stored lineup slots, which still named the old squad.
-    final players = await _ref.read(playerRepositoryProvider).byNation(
+    final players = await _ref
+        .read(playerRepositoryProvider)
+        .byNation(
           nationId,
           agingYears: CareerService.agingYears(career),
           saveSeed: career.rngSeed,
         );
     const formation = Formation.f433;
-    await _ref.read(tacticsRepositoryProvider).saveTactic(
+    await _ref
+        .read(tacticsRepositoryProvider)
+        .saveTactic(
           careerId,
           Tactic(
             formation: formation,
@@ -2231,8 +3314,9 @@ class SeasonService {
     Map<int, Nation> nations,
   ) async {
     final invest = await _careers.investment(careerId, nextCycle);
-    final chance =
-        FederationFinance.naturalizationChance(invest.naturalization);
+    final chance = FederationFinance.naturalizationChance(
+      invest.naturalization,
+    );
     final career = await _careers.byId(careerId);
     if (career == null) return;
 
@@ -2240,8 +3324,10 @@ class SeasonService {
       ..sort((a, b) => a.ranking.compareTo(b.ranking)); // strongest first
     if (others.isEmpty) return;
     final playerRepo = _ref.read(playerRepositoryProvider);
-    final agingYears = (cycleStart.year - CareerService.cycleStart.year)
-        .clamp(0, 400);
+    final agingYears = (cycleStart.year - CareerService.cycleStart.year).clamp(
+      0,
+      400,
+    );
 
     // Never re-offer a player already secured; keep the two rolls distinct.
     final taken = {
@@ -2263,7 +3349,9 @@ class SeasonService {
       // believable. Otherwise a mid-tier player from anywhere.
       final marquee = rng.nextDouble() < 0.05;
       final sources = marquee
-          ? others.take(20).toList() // only strong nations breed stars
+          ? others
+                .take(20)
+                .toList() // only strong nations breed stars
           : others;
       final minR = marquee ? 85 : 66;
       final maxR = marquee ? 93 : 84;
@@ -2306,12 +3394,12 @@ class SeasonService {
         title: pick.overall >= 85
             ? '⭐ ${pick.name} would switch to $to!'
             : '${pick.name} wants to play for $to',
-        body: '${pick.name} — a ${pick.age}-year-old '
-            '${pick.position.name} rated ${pick.overall}, currently of $from — '
+        body:
+            '${pick.name}, a ${pick.age}-year-old '
+            '${pick.position.name} rated ${pick.overall} currently with $from, '
             '${pick.overall >= 85 ? 'is a star name who ' : ''}'
-            'has family ties to $to and is open to switching allegiance. '
-            'Your growing reputation has caught their eye. Head to the '
-            'Naturalisation offer to accept or decline.',
+            'has family ties to $to and is open to switching. '
+            'Open the Naturalisation offer to accept or decline.',
         year: finalsYear(nextCycle),
       );
     }

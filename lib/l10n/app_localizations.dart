@@ -5568,6 +5568,84 @@ abstract class AppLocalizations {
   /// **'Nothing to say yet. Play a match.'**
   String get yEmpty;
 
+  /// Player agency: hubEventGrievance.
+  ///
+  /// In en, this message translates to:
+  /// **'{player} wants a word'**
+  String hubEventGrievance(String player);
+
+  /// Player agency: hubEventGrievanceSub.
+  ///
+  /// In en, this message translates to:
+  /// **'He wants to know where he stands'**
+  String get hubEventGrievanceSub;
+
+  /// Player agency: grievanceTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'A word in your office'**
+  String get grievanceTitle;
+
+  /// Player agency: grievanceGameTime.
+  ///
+  /// In en, this message translates to:
+  /// **'{player} has been in the squad and has not kicked a ball. He wants to know why.'**
+  String grievanceGameTime(String player);
+
+  /// Player agency: grievanceSquadPlace.
+  ///
+  /// In en, this message translates to:
+  /// **'{player} is not in the squad and cannot understand it. He wants telling, one way or the other.'**
+  String grievanceSquadPlace(String player);
+
+  /// Player agency: grievanceRole.
+  ///
+  /// In en, this message translates to:
+  /// **'{player} keeps being played out of position and has had enough of it.'**
+  String grievanceRole(String player);
+
+  /// Player agency: grievanceReassure.
+  ///
+  /// In en, this message translates to:
+  /// **'You are in my plans'**
+  String get grievanceReassure;
+
+  /// Player agency: grievanceHonest.
+  ///
+  /// In en, this message translates to:
+  /// **'You are behind others, and here is why'**
+  String get grievanceHonest;
+
+  /// Player agency: grievanceDismiss.
+  ///
+  /// In en, this message translates to:
+  /// **'I pick the team'**
+  String get grievanceDismiss;
+
+  /// Player agency: yPlayerGrievance0.
+  ///
+  /// In en, this message translates to:
+  /// **'Asked where I stand. Still waiting on an answer.'**
+  String get yPlayerGrievance0;
+
+  /// Player agency: yPlayerGrievance1.
+  ///
+  /// In en, this message translates to:
+  /// **'Training hard. Not much else I can do.'**
+  String get yPlayerGrievance1;
+
+  /// Player agency: yPlayerGrievance2.
+  ///
+  /// In en, this message translates to:
+  /// **'Some questions you only get to ask once.'**
+  String get yPlayerGrievance2;
+
+  /// Player agency: yPlayerGrievance3.
+  ///
+  /// In en, this message translates to:
+  /// **'I did not come this far to carry the bibs.'**
+  String get yPlayerGrievance3;
+
   /// Heading above a player's list of club spells on the detail card.
   ///
   /// In en, this message translates to:

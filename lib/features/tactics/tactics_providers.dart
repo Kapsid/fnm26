@@ -6,6 +6,7 @@ import 'package:fnm/domain/entities/player_absence.dart';
 import 'package:fnm/domain/entities/tactics.dart';
 import 'package:fnm/domain/services/tactics/best_eleven.dart';
 import 'package:fnm/features/career/career_providers.dart';
+import 'package:fnm/features/squad/grievance_providers.dart';
 import 'package:fnm/features/federation/federation_providers.dart';
 import 'package:fnm/features/federation/naturalization_providers.dart';
 
@@ -107,6 +108,9 @@ final AutoDisposeFutureProviderFamily<TacticData?, int> tacticDataProvider =
     ),
     ...await naturalizedPlayersFor(ref, career),
   ]..sort((a, b) => b.overall.compareTo(a.overall));
+  // A man who walked away cannot be fielded, whatever the saved XI says.
+  final walked = await ref.watch(walkoutsProvider(careerId).future);
+  fullPool.removeWhere((p) => walked.contains(p.id));
   final callUps = await ref.watch(squadRepositoryProvider).callUps(careerId);
   // A banned or injured player can't be picked, so he isn't in the pool the
   // manager picks from. The match already refuses to field him — but it did so
@@ -184,6 +188,9 @@ final AutoDisposeFutureProviderFamily<SquadData?, int> squadDataProvider =
         ),
     ...await naturalizedPlayersFor(ref, career),
   ]..sort((a, b) => b.overall.compareTo(a.overall));
+  // A man who walked away is not available to be called up again.
+  final walked = await ref.watch(walkoutsProvider(careerId).future);
+  pool.removeWhere((p) => walked.contains(p.id));
   final stored = await ref.watch(squadRepositoryProvider).callUps(careerId);
   final callUps = stored.isEmpty ? defaultCallUpIds(pool) : stored;
   final absences =

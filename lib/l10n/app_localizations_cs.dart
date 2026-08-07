@@ -3346,6 +3346,55 @@ class AppLocalizationsCs extends AppLocalizations {
   String get yEmpty => 'Zatím není o čem. Odehraj zápas.';
 
   @override
+  String hubEventGrievance(String player) {
+    return '$player si chce promluvit';
+  }
+
+  @override
+  String get hubEventGrievanceSub => 'Chce vědět, na čem je';
+
+  @override
+  String get grievanceTitle => 'Slovo v kanceláři';
+
+  @override
+  String grievanceGameTime(String player) {
+    return '$player je v nominaci a nekopl do míče. Chce vědět proč.';
+  }
+
+  @override
+  String grievanceSquadPlace(String player) {
+    return '$player není v nominaci a nechápe to. Chce to slyšet, tak či tak.';
+  }
+
+  @override
+  String grievanceRole(String player) {
+    return '$player hraje pořád mimo svůj post a má toho dost.';
+  }
+
+  @override
+  String get grievanceReassure => 'Počítám s tebou';
+
+  @override
+  String get grievanceHonest => 'Jsi za ostatními, a tady je proč';
+
+  @override
+  String get grievanceDismiss => 'Sestavu určuji já';
+
+  @override
+  String get yPlayerGrievance0 =>
+      'Zeptal jsem se, na čem jsem. Pořád čekám na odpověď.';
+
+  @override
+  String get yPlayerGrievance1 => 'Trénuju naplno. Víc dělat nemůžu.';
+
+  @override
+  String get yPlayerGrievance2 => 'Na některé otázky se ptáš jen jednou.';
+
+  @override
+  String get yPlayerGrievance3 =>
+      'Nedošel jsem takhle daleko, abych nosil rozlišováky.';
+
+  @override
   String get playerClubHistory => 'KLUBOVÁ HISTORIE';
 
   @override

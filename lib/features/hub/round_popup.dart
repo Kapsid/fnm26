@@ -9,6 +9,7 @@ import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/services/competition/continental_cups.dart';
 import 'package:fnm/features/hub/hub_providers.dart';
+import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
 
@@ -38,6 +39,20 @@ const _knockoutRounds = <String, ({int order, String label})>{
   'NFINAL': (order: 1, label: 'Final'),
 };
 
+/// The localised name for a knockout [round] code (empty/unknown = group stage),
+/// shared by the World Cup, continental (C…) and Nations Cup (N…) prefixes. The
+/// record still carries a canonical English [RoundPopup.stage]; this resolves
+/// the code to the viewer's language only when the popup is shown.
+String stageLabelFor(AppLocalizations l, String round) => switch (round) {
+      'R32' => l.hubStageRoundOf32,
+      'R16' || 'CR16' => l.finishRoundOf16,
+      'QF' || 'CQF' => l.finishQuarterFinals,
+      'SF' || 'CSF' || 'NSF' => l.finishSemiFinals,
+      '3RD' || 'C3RD' => l.hubStageThirdPlace,
+      'FINAL' || 'CFINAL' || 'NFINAL' => l.hubFinal,
+      _ => l.finishGroupStage,
+    };
+
 /// The results of the most recent day of whichever tournament the player is
 /// following — the fixtures played on the latest date across the World Cup
 /// finals, their continental championship and the Nations Cup Finals Four,
@@ -62,21 +77,33 @@ final AutoDisposeFutureProviderFamily<RoundPopup?, int>
       : ContinentalCups.byConfederation[conf]?.name ??
           'Continental Championship';
 
-  final sources = <({CompetitionKind kind, String name, List<String> rounds})>[
+  // Every confederation's championship is a competition of the same kind, so
+  // the continental source names the player's own: without it the popup could
+  // report a round from a cup on the other side of the world under the name of
+  // the manager's.
+  final sources = <({
+    CompetitionKind kind,
+    String name,
+    List<String> rounds,
+    Confederation? confederation,
+  })>[
     (
       kind: CompetitionKind.worldCupFinals,
       name: 'World Cup',
       rounds: const ['GROUP', 'R32', 'R16', 'QF', 'SF', '3RD', 'FINAL'],
+      confederation: null,
     ),
     (
       kind: CompetitionKind.continentalFinals,
       name: continentalName,
       rounds: const ['CGROUP', 'CR16', 'CQF', 'CSF', 'C3RD', 'CFINAL'],
+      confederation: conf,
     ),
     (
       kind: CompetitionKind.nationsLeague,
       name: 'Nations Cup',
       rounds: const ['NSF', 'NFINAL'],
+      confederation: null,
     ),
   ];
 
@@ -88,6 +115,7 @@ final AutoDisposeFutureProviderFamily<RoundPopup?, int>
         careerId,
         round,
         kind: source.kind,
+        confederation: source.confederation,
       );
       for (final f in fixtures.where((f) => f.hasResult)) {
         (byName[source.name] ??= []).add(f);
@@ -163,6 +191,11 @@ class _RoundSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    // The canonical round is the day's most important tie (fixtures are ordered
+    // by bracket depth), resolved to the viewer's language here.
+    final round =
+        popup.fixtures.isEmpty ? '' : (popup.fixtures.last.round ?? '');
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.fromLTRB(
@@ -184,7 +217,7 @@ class _RoundSheet extends StatelessWidget {
               ),
             ),
             Text(
-              popup.stage.toUpperCase(),
+              stageLabelFor(l, round).toUpperCase(),
               style: AppTypography.headlineMedium,
             ),
             const SizedBox(height: AppSpacing.md),
@@ -207,7 +240,7 @@ class _RoundSheet extends StatelessWidget {
             // The classic bottom actions: Continue carries on (like every other
             // continue screen), Brackets opens the tournament in full.
             PrimaryButton(
-              label: 'Continue',
+              label: l.hubContinue,
               icon: Icons.check_rounded,
               onPressed: () => Navigator.of(context).pop(),
             ),
@@ -218,7 +251,7 @@ class _RoundSheet extends StatelessWidget {
                 child: OutlinedButton.icon(
                   onPressed: onBracket,
                   icon: const Icon(Icons.account_tree_outlined, size: 18),
-                  label: const Text('Brackets'),
+                  label: Text(l.hubBrackets),
                   style: OutlinedButton.styleFrom(
                     foregroundColor: AppColors.primary,
                     side: const BorderSide(color: AppColors.outlineVariant),

@@ -7,14 +7,24 @@ import 'package:fnm/domain/repositories/competition_repository.dart';
 import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/services/competition/continental_cups.dart';
 import 'package:fnm/domain/services/competition/hosts.dart';
+import 'package:fnm/domain/services/competition/kickoff_keys.dart';
 import 'package:fnm/domain/services/squad/nomination.dart';
+import 'package:fnm/domain/services/press/press.dart';
+import 'package:fnm/features/press/press_providers.dart';
+import 'package:fnm/features/squad/grievance_providers.dart';
+
+export 'package:fnm/domain/services/competition/kickoff_keys.dart'
+    show continentalKickoffKind, worldCupKickoffKind;
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/federation/budget_setup_screen.dart';
 import 'package:fnm/features/friendlies/friendlies_providers.dart';
 import 'package:fnm/features/hub/hub_providers.dart';
+import 'package:fnm/features/settings/settings_providers.dart';
+import 'package:fnm/features/squad/training_camp_providers.dart';
 import 'package:fnm/features/tournaments/finals_draw_providers.dart';
 import 'package:fnm/features/tournaments/host_draw_providers.dart';
 import 'package:fnm/features/tournaments/nations_cup_draw_providers.dart';
+import 'package:fnm/l10n/app_localizations.dart';
 
 /// The kinds of thing the hub's main action can be — the game is a timeline of
 /// these events rather than a single "continue".
@@ -37,6 +47,17 @@ enum HubEventKind {
 
   /// A prompt to arrange friendlies in the gap before the next block.
   friendlies,
+
+  /// A press conference the manager must face (the opening of a tournament),
+  /// opened in place rather than on its own screen.
+  press,
+
+  /// A player wants a word.
+  grievance,
+
+  /// Choosing the squad's base camp in the host country, before a tournament's
+  /// opening ceremony.
+  trainingCamp,
 
   /// The player's own next match (opens the match, via its preview).
   match,
@@ -80,14 +101,6 @@ const worldCupQualDrawKind = 'wcQualDraw';
 /// Watched-draw key for the continental championship (finals) group draw.
 const continentalFinalsDrawKind = 'contFinalsDraw';
 
-/// Watched key for the World Cup opening ceremony (fires once per edition, after
-/// the finals draw and before the first matchday).
-const worldCupKickoffKind = 'worldCupKickoff';
-
-/// The watched-key for a continental championship's opening ceremony (trophy +
-/// host reveal), so it fires once per edition like the World Cup kickoff.
-const continentalKickoffKind = 'contKickoff';
-
 /// Watched key for the intercontinental play-off reveal (fires once, after
 /// qualifying and before the finals draw).
 const worldCupPlayoffKind = 'worldCupPlayoff';
@@ -95,23 +108,29 @@ const worldCupPlayoffKind = 'worldCupPlayoff';
 /// A short label for the call-up event, tailored to the period its first match
 /// [f] opens (a qualifying campaign, its matchday-6 reshuffle, a friendly
 /// window, or a specific tournament).
-String _callUpLabel(Fixture f) {
-  if (f.round == 'FRIENDLY') return 'Name your squad for the friendlies';
-  if (f.matchday == 6) return 'Re-name your qualifying squad';
+String _callUpLabel(AppLocalizations l, Fixture f) {
+  if (f.round == 'FRIENDLY') return l.hubCallUpFriendlies;
+  if (f.matchday == 6) return l.hubCallUpRequalify;
   return switch (f.round) {
-    'GROUP' => 'Name your World Cup squad',
-    'CGROUP' => 'Name your squad for the finals',
-    'NGROUP' => 'Name your Nations Cup squad',
-    'CQ' || null => 'Name your qualifying squad',
-    _ => 'Name your squad',
+    'GROUP' => l.hubCallUpWorldCup,
+    'CGROUP' => l.hubCallUpFinals,
+    'NGROUP' => l.hubCallUpNationsCup,
+    'CQ' || null => l.hubCallUpQualifying,
+    _ => l.hubCallUpGeneric,
   };
 }
 
+/// The World Cup finals rounds.
+const _wcFinalsRounds = {'GROUP', 'R32', 'R16', 'QF', 'SF', '3RD', 'FINAL'};
+
+/// The continental championship's finals rounds.
+const _contFinalsRounds = {'CGROUP', 'CR16', 'CQF', 'CSF', 'C3RD', 'CFINAL'};
+
 /// Every main-tournament finals round (World Cup + continental) — a fixture in
 /// one of these means the player is contesting that tournament themselves.
-const _mainFinalsRounds = {
-  'GROUP', 'R32', 'R16', 'QF', 'SF', '3RD', 'FINAL',
-  'CGROUP', 'CR16', 'CQF', 'CSF', 'C3RD', 'CFINAL',
+const Set<String> _mainFinalsRounds = {
+  ..._wcFinalsRounds,
+  ..._contFinalsRounds,
 };
 
 /// Whether a tournament of [kind] is about to kick off: its first unplayed
@@ -141,26 +160,39 @@ Future<bool> _finalsImminent(
 /// World Cup becomes the cycle-rollover event.
 final AutoDisposeFutureProviderFamily<HubEvent, int> nextEventProvider =
     FutureProvider.autoDispose.family<HubEvent, int>((ref, careerId) async {
+  final l = ref.watch(appLocalizationsProvider);
   final hub = await ref.watch(hubDataProvider(careerId).future);
   if (hub == null) {
-    return const HubEvent(
+    return HubEvent(
       kind: HubEventKind.advance,
-      label: 'Advance the world',
+      label: l.hubEventAdvanceWorld,
       icon: Icons.fast_forward_rounded,
     );
   }
   final comp = ref.watch(competitionRepositoryProvider);
   final cycle = hub.career.cyclePointer;
-  String opp(int id) => hub.nations[id]?.name ?? 'Unknown';
+  String opp(int id) => hub.nations[id]?.name ?? l.hubUnknown;
+
+  // Whether the manager is contesting each finals tournament themselves — they
+  // have an unplayed fixture in one of its rounds. This decides whether an
+  // opening ceremony may be held back behind their own friendly windows: a
+  // participant's warm-ups genuinely come first, but a manager who is only
+  // WATCHING the tournament must still see it opened before its first match.
+  final playerInWcFinals = hub.fixtures.any(
+    (f) => !f.hasResult && _wcFinalsRounds.contains(f.round),
+  );
+  final playerInContFinals = hub.fixtures.any(
+    (f) => !f.hasResult && _contFinalsRounds.contains(f.round),
+  );
 
   // 1. The World Cup is decided — roll into the next cycle.
   if (hub.championNationId != null) {
     return HubEvent(
       kind: HubEventKind.cycleRollover,
-      label: 'Start ${SeasonService.finalsYear(cycle + 1)} cycle',
+      label: l.hubEventStartCycle(SeasonService.finalsYear(cycle + 1)),
       icon: Icons.skip_next_rounded,
       route: '${Routes.cycleRollover}?careerId=$careerId',
-      subtitle: '${opp(hub.championNationId!)} are World Champions',
+      subtitle: l.hubEventWorldChampions(opp(hub.championNationId!)),
     );
   }
 
@@ -170,10 +202,10 @@ final AutoDisposeFutureProviderFamily<HubEvent, int> nextEventProvider =
   if (!await comp.hasWatchedDraw(careerId, cycle, budgetSetupKind)) {
     return HubEvent(
       kind: HubEventKind.budget,
-      label: 'Set your federation budget',
+      label: l.hubEventSetBudget,
       icon: Icons.account_balance_rounded,
       route: '${Routes.budgetSetup}?careerId=$careerId',
-      subtitle: 'Allocate this cycle’s war chest before the season begins',
+      subtitle: l.hubEventSetBudgetSub,
     );
   }
 
@@ -185,10 +217,10 @@ final AutoDisposeFutureProviderFamily<HubEvent, int> nextEventProvider =
       null) {
     return HubEvent(
       kind: HubEventKind.naturalization,
-      label: 'Review naturalisation offer',
+      label: l.hubEventNaturalization,
       icon: Icons.how_to_reg_rounded,
       route: '${Routes.naturalization}?careerId=$careerId',
-      subtitle: 'A foreign player wants to switch allegiance to you',
+      subtitle: l.hubEventNaturalizationSub,
     );
   }
 
@@ -201,7 +233,7 @@ final AutoDisposeFutureProviderFamily<HubEvent, int> nextEventProvider =
       !await comp.hasWatchedDraw(careerId, cycle, worldCupPlayoffKind)) {
     return HubEvent(
       kind: HubEventKind.draw,
-      label: 'The intercontinental play-off',
+      label: l.hubEventIntercontinentalPlayoff,
       icon: Icons.swap_calls_rounded,
       route: '${Routes.intercontinentalPlayoff}?careerId=$careerId',
     );
@@ -213,10 +245,35 @@ final AutoDisposeFutureProviderFamily<HubEvent, int> nextEventProvider =
       !await comp.hasWatchedDraw(careerId, cycle, worldCupDrawKind)) {
     return HubEvent(
       kind: HubEventKind.draw,
-      label: 'Watch the World Cup draw',
+      label: l.hubEventWatchWcDraw,
       icon: Icons.casino,
       route: '${Routes.finalsDraw}?careerId=$careerId',
     );
+  }
+
+  // 2·4. The base camp. Before a tournament is opened, the squad has to be
+  //      billeted somewhere in the host country — a decision with real weight
+  //      (travel against recovery against comfort) that a manager makes once
+  //      per tournament. It comes BEFORE the opening ceremony because that is
+  //      when a real squad flies out.
+  //
+  //      Gated on the tournament's own draw having been watched, so it never
+  //      jumps in front of the draw that decides whether there is a tournament
+  //      to camp for.
+  final campPlan = await ref.watch(trainingCampPlanProvider(careerId).future);
+  if (campPlan != null && !campPlan.decided) {
+    final drawWatched = campPlan.tournament == 'GROUP'
+        ? await comp.hasWatchedDraw(careerId, cycle, worldCupDrawKind)
+        : await comp.hasWatchedDraw(careerId, cycle, continentalFinalsDrawKind);
+    if (drawWatched) {
+      return HubEvent(
+        kind: HubEventKind.trainingCamp,
+        label: l.hubEventChooseCamp,
+        icon: Icons.holiday_village_rounded,
+        route: '${Routes.trainingCamp}?careerId=$careerId',
+        subtitle: l.hubEventChooseCampSub(campPlan.hostName),
+      );
+    }
   }
 
   // 2·5. The World Cup opening ceremony — a trophy/host reveal that fires once,
@@ -228,6 +285,16 @@ final AutoDisposeFutureProviderFamily<HubEvent, int> nextEventProvider =
   if (hub.hasFinals &&
       await comp.hasWatchedDraw(careerId, cycle, worldCupDrawKind) &&
       !await comp.hasWatchedDraw(careerId, cycle, worldCupKickoffKind) &&
+      // Hold the ceremony while a PARTICIPANT still has open friendly windows to
+      // arrange before the finals — an un-arranged friendly isn't a fixture yet,
+      // so it wouldn't push out hub.next and the ceremony would jump ahead of it.
+      //
+      // A manager who isn't in the finals is never held: they always have an
+      // open window across the tournament's summer, so the hold never lifted
+      // and the ceremony landed only once the group stage had already been
+      // simulated — the tournament "started" after it had begun.
+      (!playerInWcFinals ||
+          await ref.watch(friendliesPlanProvider(careerId).future) == null) &&
       await _finalsImminent(
         comp,
         careerId,
@@ -236,7 +303,7 @@ final AutoDisposeFutureProviderFamily<HubEvent, int> nextEventProvider =
       )) {
     return HubEvent(
       kind: HubEventKind.tournamentKickoff,
-      label: 'The World Cup is here',
+      label: l.hubEventWorldCupHere,
       icon: Icons.emoji_events_rounded,
       route: '${Routes.tournamentKickoff}?careerId=$careerId',
     );
@@ -254,12 +321,18 @@ final AutoDisposeFutureProviderFamily<HubEvent, int> nextEventProvider =
   //     A non-qualifier following their continent's draw is the point, not an
   //     edge case.
   final playerConf = hub.nations[hub.career.nationId]?.confederation;
+  // Named confederation: every continent's cup is a competition of this same
+  // kind, so an unqualified check fires on somebody else's tournament.
   if (playerConf != null &&
-      await comp.hasTournament(careerId, CompetitionKind.continentalFinals) &&
+      await comp.hasTournament(
+        careerId,
+        CompetitionKind.continentalFinals,
+        confederation: playerConf,
+      ) &&
       !await comp.hasWatchedDraw(careerId, cycle, continentalFinalsDrawKind)) {
     return HubEvent(
       kind: HubEventKind.draw,
-      label: 'Watch the finals draw',
+      label: l.hubEventWatchFinalsDraw,
       icon: Icons.casino,
       route: '${Routes.continentalDraw}?careerId=$careerId'
           '&conf=${playerConf.name}',
@@ -271,9 +344,18 @@ final AutoDisposeFutureProviderFamily<HubEvent, int> nextEventProvider =
   //       occasion. Fires once, as the LAST thing before its first finals match
   //       (friendlies in the window play first), like the World Cup above.
   if (playerConf != null &&
-      await comp.hasTournament(careerId, CompetitionKind.continentalFinals) &&
+      await comp.hasTournament(
+        careerId,
+        CompetitionKind.continentalFinals,
+        confederation: playerConf,
+      ) &&
       await comp.hasWatchedDraw(careerId, cycle, continentalFinalsDrawKind) &&
       !await comp.hasWatchedDraw(careerId, cycle, continentalKickoffKind) &&
+      // As with the World Cup, a participant waits until any open friendly
+      // windows are dealt with; a manager only watching the cup does not (see
+      // the World Cup branch above).
+      (!playerInContFinals ||
+          await ref.watch(friendliesPlanProvider(careerId).future) == null) &&
       await _finalsImminent(
         comp,
         careerId,
@@ -283,10 +365,39 @@ final AutoDisposeFutureProviderFamily<HubEvent, int> nextEventProvider =
       )) {
     return HubEvent(
       kind: HubEventKind.tournamentKickoff,
-      label: 'The finals are here',
+      label: l.hubEventFinalsHere,
       icon: Icons.emoji_events_rounded,
       route: '${Routes.tournamentKickoff}?careerId=$careerId'
           '&conf=${playerConf.name}',
+    );
+  }
+
+  // 2b. The opening press conference. Every tournament the manager is in is
+  //     opened by facing the world's press, right after the ceremony and before
+  //     a ball is kicked — the point in a cycle where setting the expectation is
+  //     actually a decision. The press otherwise only ever turned up in the
+  //     wreckage afterwards.
+  // 2b-i. Somebody wants a word. A man who has been in the squad without
+  //       playing, or left out of it altogether, has come to ask where he
+  //       stands — and leaving him unanswered has a price.
+  final wantsAWord = await ref.watch(grievanceProvider(careerId).future);
+  if (wantsAWord.isNotEmpty) {
+    return HubEvent(
+      kind: HubEventKind.grievance,
+      label: l.hubEventGrievance(wantsAWord.first.playerName),
+      icon: Icons.record_voice_over_outlined,
+      subtitle: l.hubEventGrievanceSub,
+    );
+  }
+
+  final pressQuestion = await ref.watch(pressQuestionProvider(careerId).future);
+  if (pressQuestion != null &&
+      pressQuestion.topic == PressTopic.tournamentOpening) {
+    return HubEvent(
+      kind: HubEventKind.press,
+      label: l.hubEventPressConference,
+      icon: Icons.mic_rounded,
+      subtitle: l.hubEventPressConferenceSub,
     );
   }
 
@@ -302,9 +413,7 @@ final AutoDisposeFutureProviderFamily<HubEvent, int> nextEventProvider =
   // finals fixture — not just when their *immediate* next fixture is one. A
   // participant always plays their own matches; only the `wcLive` fast-forward
   // below (for non-participants) may run ahead of their friendlies.
-  final playerInFinals = hub.fixtures.any(
-    (f) => !f.hasResult && _mainFinalsRounds.contains(f.round),
-  );
+  final playerInFinals = playerInWcFinals || playerInContFinals;
   // Restrict the "watch the live finals" date to the World Cup and the player's
   // OWN continental finals — otherwise a foreign continental final dated earlier
   // points `finalsDate` at a match the WC "watch" route can't show, and the WC
@@ -326,19 +435,19 @@ final AutoDisposeFutureProviderFamily<HubEvent, int> nextEventProvider =
     if (wcLive) {
       return HubEvent(
         kind: HubEventKind.watchTournament,
-        label: 'Play the next World Cup round',
+        label: l.hubEventPlayWcRound,
         icon: Icons.fast_forward_rounded,
         route: '${Routes.cup}?careerId=$careerId',
       );
     }
     final conf = hub.nations[hub.career.nationId]?.confederation;
     final cupName = conf == null
-        ? 'the continental finals'
+        ? l.hubEventContinentalFinalsFallback
         : ContinentalCups.byConfederation[conf]?.name ??
-            'the continental finals';
+            l.hubEventContinentalFinalsFallback;
     return HubEvent(
       kind: HubEventKind.watchTournament,
-      label: 'Play the next $cupName match',
+      label: l.hubEventPlayCupMatch(cupName),
       icon: Icons.fast_forward_rounded,
       route: conf == null
           ? null
@@ -365,7 +474,7 @@ final AutoDisposeFutureProviderFamily<HubEvent, int> nextEventProvider =
       (next == null || !ncFinalsDate.isAfter(next.date))) {
     return HubEvent(
       kind: HubEventKind.watchTournament,
-      label: 'Play the next Nations Cup match',
+      label: l.hubEventPlayNationsCupMatch,
       icon: Icons.fast_forward_rounded,
       route: '${Routes.nationsCup}?careerId=$careerId',
     );
@@ -397,18 +506,24 @@ final AutoDisposeFutureProviderFamily<HubEvent, int> nextEventProvider =
       // would never be drawn after the Euro. Hold it until the continental
       // campaign is resolved: qualifying done and, if the player has a finals,
       // that finals is drawn.
+      // Named confederation: every confederation runs a qualifying campaign
+      // now, so an unqualified lookup answers for whichever continent the query
+      // happens to land on rather than the manager's.
       final euroUpcoming = playerConf != null &&
           await comp.hasTournament(
-              careerId, CompetitionKind.continentalQualifying) &&
+              careerId, CompetitionKind.continentalQualifying,
+              confederation: playerConf) &&
           (!await comp.allPlayedForKind(
-                  careerId, CompetitionKind.continentalQualifying) ||
-              (await comp.hasTournament(
-                      careerId, CompetitionKind.continentalFinals) &&
+                  careerId, CompetitionKind.continentalQualifying,
+                  confederation: playerConf) ||
+              (await comp.hasTournament(careerId,
+                      CompetitionKind.continentalFinals,
+                      confederation: playerConf) &&
                   !await comp.hasWatchedDraw(
                       careerId, cycle, continentalFinalsDrawKind)));
       if (!euroUpcoming) {
         return drawEvent(
-          'Watch the Nations Cup draw',
+          l.hubEventWatchNationsCupDraw,
           '${Routes.nationsCupDraw}?careerId=$careerId',
         );
       }
@@ -445,7 +560,7 @@ final AutoDisposeFutureProviderFamily<HubEvent, int> nextEventProvider =
         continentalHostDrawKind,
       )) {
         return drawEvent(
-          'Watch the host selection',
+          l.hubEventWatchHostSelection,
           '${Routes.hostDraw}?careerId=$careerId',
         );
       }
@@ -458,33 +573,88 @@ final AutoDisposeFutureProviderFamily<HubEvent, int> nextEventProvider =
             continentalQualDrawKind,
           )) {
         return drawEvent(
-          'Watch the qualifying draw',
+          l.hubEventWatchQualifyingDraw,
           '${Routes.qualifyingDraw}?careerId=$careerId',
         );
       }
     }
-    if (isWcQualGame || playerIsWcHost) {
+    // The World Cup host reveal belongs AFTER the continental championship has
+    // been played out — for everyone, whether or not they're in it, and whether
+    // or not they host it.
+    //
+    // A host of either tournament auto-qualifies and so has no qualifier to
+    // time the reveal off. Without a hold, a continental host's next fixture is
+    // already a WC qualifier the moment the cycle opens, and the WC host draw
+    // fired immediately after the continental host draw — two host ceremonies
+    // back to back, years before the cup they belong to.
+    //
+    // Pending if ANY of these is true, as independent clauses (a confederation
+    // with no group qualifying — CONMEBOL — would otherwise fall through a
+    // guard gated on "has qualifying"):
+    //   * continental qualifying is still being played;
+    //   * the continental finals hasn't been drawn yet;
+    //   * the continental finals is drawn but not finished.
+    final contQualUnfinished = playerConf != null &&
+        await comp.hasTournament(
+          careerId,
+          CompetitionKind.continentalQualifying,
+          confederation: playerConf,
+        ) &&
+        !await comp.allPlayedForKind(
+          careerId,
+          CompetitionKind.continentalQualifying,
+          confederation: playerConf,
+        );
+    final hasContFinals = playerConf != null &&
+        await comp.hasTournament(
+          careerId,
+          CompetitionKind.continentalFinals,
+          confederation: playerConf,
+        );
+    final contFinalsUndrawn = hasContFinals &&
+        !await comp.hasWatchedDraw(
+          careerId,
+          cycle,
+          continentalFinalsDrawKind,
+        );
+    // allPlayedForKind is false while any fixture of the cup is unplayed — and
+    // also before its fixtures exist, which the undrawn clause above already
+    // covers.
+    final contFinalsUnfinished = hasContFinals &&
+        !await comp.allPlayedForKind(
+          careerId,
+          CompetitionKind.continentalFinals,
+          confederation: playerConf,
+        );
+    final contCampaignPending =
+        contQualUnfinished || contFinalsUndrawn || contFinalsUnfinished;
+    // The host reveal waits for the continental cup to be done — for hosts and
+    // non-hosts alike.
+    if ((isWcQualGame || playerIsWcHost) && !contCampaignPending) {
       if (!await comp.hasWatchedDraw(
         careerId,
         cycle,
         worldCupHostDrawKind,
       )) {
         return drawEvent(
-          'Watch the World Cup host selection',
+          l.hubEventWatchWcHostSelection,
           '${Routes.hostDraw}?careerId=$careerId&worldCup=true',
         );
       }
-      if (isWcQualGame &&
-          !await comp.hasWatchedDraw(
-            careerId,
-            cycle,
-            worldCupQualDrawKind,
-          )) {
-        return drawEvent(
-          'Watch the World Cup qualifying draw',
-          '${Routes.qualifyingDraw}?careerId=$careerId&worldCup=true',
-        );
-      }
+    }
+    // The qualifying draw is NOT held behind the continental cup: it belongs to
+    // the campaign the player is about to start, and blocking it on a cup that
+    // somehow overran would leave them unable to see their own group.
+    if (isWcQualGame &&
+        !await comp.hasWatchedDraw(
+          careerId,
+          cycle,
+          worldCupQualDrawKind,
+        )) {
+      return drawEvent(
+        l.hubEventWatchWcQualifyingDraw,
+        '${Routes.qualifyingDraw}?careerId=$careerId&worldCup=true',
+      );
     }
 
     // 4. Arrange friendlies in an open gap BEFORE the next competitive block —
@@ -499,11 +669,10 @@ final AutoDisposeFutureProviderFamily<HubEvent, int> nextEventProvider =
       final n = friendlies.windows.length;
       return HubEvent(
         kind: HubEventKind.friendlies,
-        label: 'Arrange friendlies',
+        label: l.hubEventArrangeFriendlies,
         icon: Icons.handshake_outlined,
         route: '${Routes.friendlies}?careerId=$careerId',
-        subtitle: "You haven't arranged your $n open "
-            "window${n == 1 ? '' : 's'} yet",
+        subtitle: l.hubEventFriendliesSub(n),
       );
     }
 
@@ -514,14 +683,18 @@ final AutoDisposeFutureProviderFamily<HubEvent, int> nextEventProvider =
     //    the squad until the next period opens. Runs after friendlies are
     //    arranged, so the nearest period (and its call-up) is the friendly
     //    window when one exists.
+    //    Scoped to THIS cycle: the window is read off the first unplayed match
+    //    by date, so one fixture left behind in an earlier cycle would hold the
+    //    head of an all-time list for ever and no later period — a tournament's
+    //    group stage above all — would ever open a call-up again.
     final playerFixtures =
-        await comp.fixturesForNation(careerId, hub.career.nationId);
+        await comp.cycleFixturesForNation(careerId, hub.career.nationId);
     if (Nomination.windowOpen(playerFixtures)) {
       final period = Nomination.currentPeriod(playerFixtures);
       if (period.isNotEmpty) {
         final periodKey = 'callup:${period.first.id}';
         if (!await comp.hasWatchedDraw(careerId, cycle, periodKey)) {
-          return callUp(_callUpLabel(period.first), periodKey);
+          return callUp(_callUpLabel(l, period.first), periodKey);
         }
       }
     }
@@ -543,14 +716,12 @@ final AutoDisposeFutureProviderFamily<HubEvent, int> nextEventProvider =
       if (out > 0 || lineupIds.length < 11) {
         return HubEvent(
           kind: HubEventKind.callUp,
-          label: 'Reshape your starting XI',
+          label: l.hubEventReshapeXi,
           icon: Icons.healing_rounded,
           route: '${Routes.tactics}?careerId=$careerId',
           subtitle: out > 0
-              ? '$out of your XI ${out == 1 ? 'is' : 'are'} out '
-                  '(suspended or injured) — pick their replacement'
-              : 'Your starting XI is short — fill the open '
-                  '${11 - lineupIds.length == 1 ? 'slot' : 'slots'}',
+              ? l.hubEventReshapeOutSub(out)
+              : l.hubEventReshapeShortSub(11 - lineupIds.length),
         );
       }
     }
@@ -561,7 +732,7 @@ final AutoDisposeFutureProviderFamily<HubEvent, int> nextEventProvider =
         : next.homeNationId;
     return HubEvent(
       kind: HubEventKind.match,
-      label: 'Play ${opp(oppId)}',
+      label: l.hubEventPlayOpponent(opp(oppId)),
       icon: Icons.play_arrow_rounded,
       route: '${Routes.matchPreview}?careerId=$careerId',
     );
@@ -572,7 +743,7 @@ final AutoDisposeFutureProviderFamily<HubEvent, int> nextEventProvider =
   if (hub.hasFinals) {
     return HubEvent(
       kind: HubEventKind.watchTournament,
-      label: 'Play the next World Cup round',
+      label: l.hubEventPlayWcRound,
       icon: Icons.fast_forward_rounded,
       // After simming the round, open the bracket so its results are shown.
       route: '${Routes.cup}?careerId=$careerId',
@@ -583,15 +754,22 @@ final AutoDisposeFutureProviderFamily<HubEvent, int> nextEventProvider =
   //     (they didn't qualify). Surface it so it's played out as a visible event
   //     rather than silently fast-forwarded — open the bracket via the Trophy
   //     tab to watch the results.
-  if (await comp.hasLiveContinentalFinals(careerId)) {
-    final conf = hub.nations[hub.career.nationId]?.confederation;
+  // Their OWN continent's: every confederation's championship is live in this
+  // window, and an unqualified lookup would offer the manager a front-row seat
+  // at a tournament on the other side of the world.
+  final myConf = hub.nations[hub.career.nationId]?.confederation;
+  if (await comp.hasLiveContinentalFinals(
+    careerId,
+    confederation: myConf,
+  )) {
+    final conf = myConf;
     final cupName = conf == null
-        ? 'the continental finals'
+        ? l.hubEventContinentalFinalsFallback
         : ContinentalCups.byConfederation[conf]?.name ??
-            'the continental finals';
+            l.hubEventContinentalFinalsFallback;
     return HubEvent(
       kind: HubEventKind.watchTournament,
-      label: 'Play the next $cupName match',
+      label: l.hubEventPlayCupMatch(cupName),
       icon: Icons.fast_forward_rounded,
       route: conf == null
           ? null
@@ -600,9 +778,9 @@ final AutoDisposeFutureProviderFamily<HubEvent, int> nextEventProvider =
   }
 
   // 6. Nothing to present — quick-sim the world to the next event.
-  return const HubEvent(
+  return HubEvent(
     kind: HubEventKind.advance,
-    label: 'Advance the world',
+    label: l.hubEventAdvanceWorld,
     icon: Icons.fast_forward_rounded,
   );
 });

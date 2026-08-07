@@ -14,6 +14,10 @@ enum YVoice {
   /// An account that posts numbers and nothing else, which is what makes it
   /// useful — it is never pleased or annoyed.
   stats,
+
+  /// One of your own players, saying in public what he could not get said in
+  /// your office.
+  player,
 }
 
 /// What a post is ABOUT. The words themselves are chosen at render, because
@@ -33,6 +37,9 @@ enum YTemplate {
   groupDrawn,
   hostNamed,
   tournamentSoon,
+
+  /// A player who asked where he stood and was not answered.
+  playerGrievance,
 }
 
 /// One post on the feed.
@@ -155,6 +162,27 @@ abstract final class YFeed {
         ),
       ];
 
+  /// A player saying in public what he could not get said in your office.
+  static List<YPost> forGrievance({
+    required String playerName,
+    required DateTime date,
+    required String key,
+    required String nation,
+    required int seed,
+  }) =>
+      [
+        _post(
+          voice: YVoice.player,
+          template: YTemplate.playerGrievance,
+          args: [playerName],
+          date: date,
+          key: key,
+          nation: nation,
+          seed: seed,
+          authorName: playerName,
+        ),
+      ];
+
   /// Newest first, and capped — a long save would otherwise build a feed
   /// nobody can scroll to the end of.
   static List<YPost> mostRecent(List<YPost> all, {int cap = 60}) {
@@ -176,11 +204,14 @@ abstract final class YFeed {
     required String key,
     required String nation,
     required int seed,
+    String? authorName,
   }) {
     // Seeded by the event AND the voice, so two people reacting to the same
     // match never reach for the same sentence.
     final variant = varietySeed('$key|${voice.name}') % variantCount;
-    final (handle, display) = _author(voice, nation, seed, key);
+    final (handle, display) = authorName == null
+        ? _author(voice, nation, seed, key)
+        : ('@${authorName.replaceAll(' ', '')}', authorName);
     return (
       voice: voice,
       handle: handle,
@@ -208,6 +239,11 @@ abstract final class YFeed {
       case YVoice.fan:
         final n = _fanNames[varietySeed('fan|$key') % _fanNames.length];
         return ('@$n', n);
+      case YVoice.player:
+        // Never reached: a player's post always carries his own name, supplied
+        // by [forGrievance]. Falling back to the nation would put a country's
+        // name above a personal complaint.
+        return ('@$nation', nation);
       case YVoice.rival:
         final n = _rivalNames[varietySeed('rival|$key') % _rivalNames.length];
         return ('@$n', n);

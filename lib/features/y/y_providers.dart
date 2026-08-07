@@ -4,6 +4,7 @@ import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/services/press/public_mood.dart';
 import 'package:fnm/domain/services/press/y_feed.dart';
 import 'package:fnm/features/ranking/world_ranking_providers.dart';
+import 'package:fnm/features/squad/grievance_providers.dart';
 
 /// The manager's played matches, newest first, with both sides' world
 /// positions — the raw material both Y and the public's mood are built from.
@@ -92,6 +93,20 @@ final AutoDisposeFutureProviderFamily<List<YPost>, int> yFeedProvider =
       ),
     );
   }
+  // And anybody left to stew says so in public — the thing he could not get
+  // said in the manager's office.
+  for (final g in await ref.watch(grievanceProvider(careerId).future)) {
+    posts.addAll(
+      YFeed.forGrievance(
+        playerName: g.playerName,
+        date: career.inGameDate,
+        key: g.key,
+        nation: nation,
+        seed: career.rngSeed,
+      ),
+    );
+  }
+
   // Ordering and the cap live in the tested pure layer, not here.
   return YFeed.mostRecent(posts);
 });

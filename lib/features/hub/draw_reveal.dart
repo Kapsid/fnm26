@@ -40,9 +40,12 @@ String? groupDrawKind(CompetitionKind kind) => switch (kind) {
       // the "Watch the Nations Cup draw" button was still sitting on the very
       // same screen.
       CompetitionKind.nationsLeague => nationsCupDrawKind,
-      // No ceremony: a friendly is arranged, and the Clash is just the two
-      // champions.
-      CompetitionKind.friendly || CompetitionKind.finalissima => null,
+      // No group table to gate: a friendly is arranged, the Clash is just the
+      // two champions, and the play-off is a knockout.
+      CompetitionKind.friendly ||
+      CompetitionKind.finalissima ||
+      CompetitionKind.worldCupPlayoff =>
+        null,
     };
 
 /// Whether the draw for the player's next fixture has been watched, so the hub

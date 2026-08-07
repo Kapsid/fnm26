@@ -4304,6 +4304,62 @@
   "@yEmpty": {
     "description": "Empty state on the Y feed."
   },
+  "hubEventGrievance": "{player} wants a word",
+  "@hubEventGrievance": {
+    "description": "Player agency: hubEventGrievance.",
+    "placeholders": { "player": {"type": "String"} }
+  },
+  "hubEventGrievanceSub": "He wants to know where he stands",
+  "@hubEventGrievanceSub": {
+    "description": "Player agency: hubEventGrievanceSub."
+  },
+  "grievanceTitle": "A word in your office",
+  "@grievanceTitle": {
+    "description": "Player agency: grievanceTitle."
+  },
+  "grievanceGameTime": "{player} has been in the squad and has not kicked a ball. He wants to know why.",
+  "@grievanceGameTime": {
+    "description": "Player agency: grievanceGameTime.",
+    "placeholders": { "player": {"type": "String"} }
+  },
+  "grievanceSquadPlace": "{player} is not in the squad and cannot understand it. He wants telling, one way or the other.",
+  "@grievanceSquadPlace": {
+    "description": "Player agency: grievanceSquadPlace.",
+    "placeholders": { "player": {"type": "String"} }
+  },
+  "grievanceRole": "{player} keeps being played out of position and has had enough of it.",
+  "@grievanceRole": {
+    "description": "Player agency: grievanceRole.",
+    "placeholders": { "player": {"type": "String"} }
+  },
+  "grievanceReassure": "You are in my plans",
+  "@grievanceReassure": {
+    "description": "Player agency: grievanceReassure."
+  },
+  "grievanceHonest": "You are behind others, and here is why",
+  "@grievanceHonest": {
+    "description": "Player agency: grievanceHonest."
+  },
+  "grievanceDismiss": "I pick the team",
+  "@grievanceDismiss": {
+    "description": "Player agency: grievanceDismiss."
+  },
+  "yPlayerGrievance0": "Asked where I stand. Still waiting on an answer.",
+  "@yPlayerGrievance0": {
+    "description": "Player agency: yPlayerGrievance0."
+  },
+  "yPlayerGrievance1": "Training hard. Not much else I can do.",
+  "@yPlayerGrievance1": {
+    "description": "Player agency: yPlayerGrievance1."
+  },
+  "yPlayerGrievance2": "Some questions you only get to ask once.",
+  "@yPlayerGrievance2": {
+    "description": "Player agency: yPlayerGrievance2."
+  },
+  "yPlayerGrievance3": "I did not come this far to carry the bibs.",
+  "@yPlayerGrievance3": {
+    "description": "Player agency: yPlayerGrievance3."
+  },
   "playerClubHistory": "CLUB HISTORY",
   "@playerClubHistory": {
     "description": "Heading above a player's list of club spells on the detail card."
