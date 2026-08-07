@@ -454,6 +454,7 @@ class TacticsPitch extends StatelessWidget {
     required this.onTapSlot,
     required this.onSwap,
     required this.onBenchIn,
+    this.onMoveToSpace,
     this.absentIds = const {},
     this.injuredIds = const {},
     this.energyByPlayer = const {},
@@ -489,6 +490,11 @@ class TacticsPitch extends StatelessWidget {
   final ValueChanged<int> onTapSlot;
   final void Function(int slotA, int slotB) onSwap;
   final void Function(int slot, int playerId) onBenchIn;
+
+  /// A player released in OPEN SPACE, with where he landed as a fraction of
+  /// the pitch's height. Null disables the gesture; dropping onto a team-mate
+  /// still goes through [onSwap] either way.
+  final void Function(int slot, double dropY)? onMoveToSpace;
 
   /// The deepest an outfield node may sit. The keeper is pinned below it, and
   /// a node is a good deal taller than its disc (position chip, name, and — in
@@ -575,6 +581,25 @@ class TacticsPitch extends StatelessWidget {
 
             return Stack(
               children: [
+                // BEHIND every player node: a drop that lands on a team-mate
+                // must still reach his own target, so today's swap-and-reshape
+                // gesture is untouched. This one only catches open space.
+                if (onMoveToSpace case final onSpace?)
+                  Positioned.fill(
+                    child: DragTarget<Object>(
+                      onWillAcceptWithDetails: (d) => d.data is _SlotDrag,
+                      onAcceptWithDetails: (d) {
+                        final box = context.findRenderObject() as RenderBox?;
+                        if (box == null || box.size.height <= 0) return;
+                        final local = box.globalToLocal(d.offset);
+                        onSpace(
+                          (d.data as _SlotDrag).slot,
+                          (local.dy / box.size.height).clamp(0.0, 1.0),
+                        );
+                      },
+                      builder: (_, __, ___) => const SizedBox.expand(),
+                    ),
+                  ),
                 for (var slot = 0; slot < 11; slot++)
                   () {
                     final pos = _adjusted(

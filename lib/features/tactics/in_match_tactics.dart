@@ -9,6 +9,7 @@ import 'package:fnm/domain/entities/tactics.dart';
 import 'package:fnm/domain/services/tactics/best_eleven.dart';
 import 'package:fnm/domain/services/tactics/position_fit.dart';
 import 'package:fnm/features/tactics/tactics_pitch.dart';
+import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 
 /// The tactical setup a manager confirms from the in-match editor: the shape,
@@ -38,7 +39,9 @@ Future<InMatchTacticsResult?> showInMatchTactics(
   required Set<int> startingIds,
   required int maxSubs,
   Set<int> injuredIds = const {},
+  Set<int> sentOffIds = const {},
   Map<int, int> energyByPlayer = const {},
+  List<Color>? teamColors,
 }) {
   return Navigator.of(context).push<InMatchTacticsResult>(
     MaterialPageRoute(
@@ -52,7 +55,9 @@ Future<InMatchTacticsResult?> showInMatchTactics(
         startingIds: startingIds,
         maxSubs: maxSubs,
         injuredIds: injuredIds,
+        sentOffIds: sentOffIds,
         energyByPlayer: energyByPlayer,
+        teamColors: teamColors,
       ),
     ),
   );
@@ -68,7 +73,9 @@ class _InMatchTacticsEditor extends StatefulWidget {
     required this.startingIds,
     required this.maxSubs,
     this.injuredIds = const {},
+    this.sentOffIds = const {},
     this.energyByPlayer = const {},
+    this.teamColors,
   });
 
   final int minute;
@@ -87,14 +94,32 @@ class _InMatchTacticsEditor extends StatefulWidget {
   /// so the manager knows exactly who to take off.
   final Set<int> injuredIds;
 
+  /// Players sent off this match. They are gone for good: off the pitch, off
+  /// the bench, and NOT replaceable — the side simply plays a man down. They
+  /// used to sit in the squad list unmarked and could be subbed on again.
+  final Set<int> sentOffIds;
+
+  /// The manager's kit colours, filling the player discs on the pitch.
+  final List<Color>? teamColors;
+
   @override
   State<_InMatchTacticsEditor> createState() => _InMatchTacticsEditorState();
 }
 
 class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
   late Formation _formation = widget.formation;
-  late List<int?> _lineup = [...widget.lineup];
+
+  /// The XI with any sent-off player's slot vacated — the shape the manager is
+  /// actually working with once someone has walked.
+  late List<int?> _lineup = [
+    for (final id in widget.lineup)
+      if (id != null && widget.sentOffIds.contains(id)) null else id,
+  ];
   late TacticalInstructions _instructions = widget.instructions;
+
+  /// Everyone still eligible to be on the pitch: the squad minus the sent off.
+  late final List<Player> _eligible =
+      widget.pool.where((p) => !widget.sentOffIds.contains(p.id)).toList();
 
   late final Map<int, Player> _byId = {for (final p in widget.pool) p.id: p};
 
@@ -102,9 +127,12 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
   Set<int> get _onPitch => _lineup.whereType<int>().toSet();
 
   /// A sub is spent for every starter no longer on the pitch (chains of
-  /// replacements still count as a single change to that starter's slot).
-  int get _subsUsed =>
-      widget.startingIds.where((id) => !_onPitch.contains(id)).length;
+  /// replacements still count as a single change to that starter's slot). A
+  /// sending-off is not a substitution — it costs a player, not a change.
+  int get _subsUsed => widget.startingIds
+      .where((id) =>
+          !_onPitch.contains(id) && !widget.sentOffIds.contains(id))
+      .length;
 
   bool get _overLimit => _subsUsed > widget.maxSubs;
 
@@ -112,10 +140,10 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
     if (f == _formation) return;
     // Keep the players currently on the pitch, refitting them to the new shape.
     final ids = _onPitch;
-    final current = widget.pool.where((p) => ids.contains(p.id)).toList();
+    final current = _eligible.where((p) => ids.contains(p.id)).toList();
     final fitPool = current.length >= 11
         ? current
-        : [...current, ...widget.pool.where((p) => !ids.contains(p.id))];
+        : [...current, ..._eligible.where((p) => !ids.contains(p.id))];
     setState(() {
       _formation = f;
       _lineup = bestEleven(f, fitPool);
@@ -150,10 +178,11 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
 
   void _apply() {
     if (_overLimit) {
+      final l = AppLocalizations.of(context);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-            'Too many substitutions (max ${widget.maxSubs}).',
+            l.tacticsTooManySubs(widget.maxSubs),
           ),
         ),
       );
@@ -170,8 +199,10 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
     final onPitch = _onPitch;
-    final subs = widget.pool.where((p) => !onPitch.contains(p.id)).toList()
+    // A sent-off player is not a substitute — he's out of the game.
+    final subs = _eligible.where((p) => !onPitch.contains(p.id)).toList()
       ..sort((a, b) => b.overall.compareTo(a.overall));
 
     return Scaffold(
@@ -181,7 +212,7 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
           onPressed: () => Navigator.of(context).pop(),
         ),
         title: Text(
-          "TACTICS · ${widget.minute}'",
+          l.tacticsMinuteTitle(widget.minute),
           style: AppTypography.labelMedium.copyWith(color: AppColors.primary),
         ),
         centerTitle: true,
@@ -189,7 +220,7 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
           TextButton(
             onPressed: _apply,
             child: Text(
-              'APPLY',
+              l.tacticsApply,
               style: AppTypography.labelMedium.copyWith(
                 color: _overLimit ? AppColors.error : AppColors.primary,
               ),
@@ -201,13 +232,13 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
         length: 2,
         child: Column(
           children: [
-            const TabBar(
+            TabBar(
               labelColor: AppColors.onSurface,
               unselectedLabelColor: AppColors.onSurfaceVariant,
               indicatorColor: AppColors.primary,
               tabs: [
-                Tab(text: 'LINEUP & SUBS'),
-                Tab(text: 'TACTICS'),
+                Tab(text: l.tacticsTabLineupSubs),
+                Tab(text: l.tacticsTabTactics),
               ],
             ),
             Expanded(
@@ -228,8 +259,13 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
   /// player is flagged directly on the pitch (orange, "INJURED — REPLACE"), so
   /// no banner is needed above the squad.
   Widget _lineupTab(List<Player> subs) {
+    final l = AppLocalizations.of(context);
     return ListView(
       children: [
+        // The formation picker lives on the Tactics tab and nowhere else. It
+        // used to be repeated here, above the pitch, so the same row of shape
+        // chips appeared twice in one sheet — two controls for one setting,
+        // which reads as a bug whichever one you touch.
         AspectRatio(
           aspectRatio: 3 / 4,
           child: TacticsPitch(
@@ -237,6 +273,7 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
             instructions: _instructions,
             lineup: _lineup,
             byId: _byId,
+            teamColors: widget.teamColors,
             energyByPlayer: widget.energyByPlayer,
             // Mark the hurt players absent AND injured so their node renders the
             // orange "INJURED — REPLACE" flag, exactly like a pre-match injury.
@@ -252,6 +289,16 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
               }
             },
             onBenchIn: _setSlot,
+            onMoveToSpace: (slot, dropY) {
+              final outcome =
+                  resolveSpaceDrag(_formation, _instructions, slot, dropY);
+              // Through _setFormation, which refits the players already on the
+              // pitch — assigning _formation directly would scramble the side
+              // mid-match.
+              if (outcome case ReshapeTo(:final formation)) {
+                _setFormation(formation);
+              }
+            },
           ),
         ),
         Padding(
@@ -262,12 +309,12 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
               Row(
                 children: [
                   Text(
-                    'SUBSTITUTES · ${subs.length}',
+                    l.tacticsSubstitutesCount(subs.length),
                     style: AppTypography.labelMedium,
                   ),
                   const Spacer(),
                   Text(
-                    'SUBS · $_subsUsed/${widget.maxSubs}',
+                    l.tacticsSubsUsed(_subsUsed, widget.maxSubs),
                     style: AppTypography.labelMedium.copyWith(
                       color: _overLimit ? AppColors.error : AppColors.primary,
                     ),
@@ -276,21 +323,43 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
               ),
               const SizedBox(height: AppSpacing.xs),
               Text(
-                'Drag a sub onto a player to bring them on.',
+                l.tacticsDragSubOn,
                 style: AppTypography.labelSmall.copyWith(
                   color: AppColors.onSurfaceVariant,
                 ),
               ),
+              // Say plainly that the side is short — the vacated slot on the
+              // pitch is otherwise easy to read as an empty position to fill.
+              if (widget.sentOffIds.isNotEmpty) ...[
+                const SizedBox(height: AppSpacing.sm),
+                Row(
+                  children: [
+                    const Icon(Icons.block_rounded,
+                        size: 14, color: AppColors.error),
+                    const SizedBox(width: AppSpacing.xs),
+                    Expanded(
+                      child: Text(
+                        l.tacticsSentOffNote(widget.sentOffIds
+                            .map((id) => _byId[id]?.name)
+                            .whereType<String>()
+                            .join(', ')),
+                        style: AppTypography.labelSmall
+                            .copyWith(color: AppColors.error),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
               const SizedBox(height: AppSpacing.sm),
               AppCard(
                 padding: EdgeInsets.zero,
                 child: Column(
                   children: [
                     if (subs.isEmpty)
-                      const Padding(
-                        padding: EdgeInsets.all(AppSpacing.md),
+                      Padding(
+                        padding: const EdgeInsets.all(AppSpacing.md),
                         child: Text(
-                          'No substitutes available.',
+                          l.tacticsNoSubs,
                           style: AppTypography.bodyMedium,
                         ),
                       ),
@@ -328,11 +397,17 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
   }
 
   /// Formation and the tactical instruction sliders.
+  ///
+  /// Shouting a side further forward when you are chasing a game is management,
+  /// not an exploit — the sliders belong here. What does not belong is applying
+  /// a whole prepared PLAYSTYLE mid-match, and that lives on the tactics screen
+  /// rather than in this editor.
   Widget _tacticsTab() {
+    final l = AppLocalizations.of(context);
     return ListView(
       padding: const EdgeInsets.all(AppSpacing.marginMobile),
       children: [
-        const Text('FORMATION', style: AppTypography.labelMedium),
+        Text(l.tacticsFormation, style: AppTypography.labelMedium),
         const SizedBox(height: AppSpacing.sm),
         Wrap(
           spacing: AppSpacing.sm,
@@ -346,116 +421,28 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
           ],
         ),
         const SizedBox(height: AppSpacing.lg),
-        const Text('INSTRUCTIONS', style: AppTypography.labelMedium),
-        _slider('Mentality', 'Defensive', 'Attacking', _instructions.mentality,
+        Text(l.tacticsInstructions, style: AppTypography.labelMedium),
+        _slider(l.tacticsInstrMentality, l.tacticsInstrDefensive,
+            l.tacticsInstrAttacking, _instructions.mentality,
             (v) => _instructions = _instructions.copyWith(mentality: v)),
-        _slider('Pressing', 'Low block', 'High press', _instructions.pressing,
+        _slider(l.tacticsInstrPressing, l.tacticsInstrLowBlock,
+            l.tacticsInstrHighPress, _instructions.pressing,
             (v) => _instructions = _instructions.copyWith(pressing: v)),
-        _slider('Tempo', 'Patient', 'Fast', _instructions.tempo,
+        _slider(l.tacticsInstrTempo, l.tacticsInstrPatient, l.tacticsInstrFast,
+            _instructions.tempo,
             (v) => _instructions = _instructions.copyWith(tempo: v)),
-        _slider('Width', 'Narrow', 'Wide', _instructions.width,
+        _slider(l.tacticsInstrWidth, l.tacticsInstrNarrow, l.tacticsInstrWide,
+            _instructions.width,
             (v) => _instructions = _instructions.copyWith(width: v)),
-        _slider('Def. line', 'Deep', 'High', _instructions.defensiveLine,
+        _slider(l.tacticsInstrDefLine, l.tacticsInstrDeep, l.tacticsInstrHigh,
+            _instructions.defensiveLine,
             (v) => _instructions = _instructions.copyWith(defensiveLine: v)),
-        _slider('Directness', 'Possession', 'Direct', _instructions.directness,
+        _slider(l.tacticsInstrDirectness, l.tacticsInstrPossession,
+            l.tacticsInstrDirect, _instructions.directness,
             (v) => _instructions = _instructions.copyWith(directness: v)),
         const SizedBox(height: AppSpacing.xl),
       ],
     );
-  }
-
-  /// A cross-line drag that reshapes: refit the current players to [next], then
-  /// nudge the dragged player toward the target slot so the intent is kept.
-  void _reshapeKeeping(Formation next, int a, int b) {
-    final draggedId = _lineup[a];
-    _setFormation(next);
-    if (draggedId != null) {
-      final slot = _lineup.indexOf(draggedId);
-      // If the player didn't land near the target line, place them at b.
-      if (slot != -1 && slot != b) _setSlot(b, draggedId);
-    }
-  }
-
-  Future<void> _pickPlayer(int slot) async {
-    final position = _formation.positions[slot];
-    final isKeeperSlot = position.category == PositionCategory.goalkeeper;
-    // A goalkeeping slot is keeper-only; any other slot can be filled by any
-    // outfield player (with a heavy out-of-position penalty, shown below).
-    final candidates = widget.pool
-        .where((p) => isKeeperSlot
-            ? p.position.category == PositionCategory.goalkeeper
-            : p.position.category != PositionCategory.goalkeeper)
-        .toList()
-      ..sort(PositionFit.bySlotFit(position));
-    final onPitch = _onPitch;
-
-    final picked = await showModalBottomSheet<int>(
-      context: context,
-      backgroundColor: AppColors.surfaceContainer,
-      builder: (_) => ListView(
-        padding: const EdgeInsets.all(AppSpacing.md),
-        children: [
-          Text(
-            'PICK ${position.roleName.toUpperCase()}',
-            style: AppTypography.labelMedium.copyWith(color: AppColors.primary),
-          ),
-          const SizedBox(height: AppSpacing.sm),
-          for (final p in candidates)
-            () {
-              final eff = PositionFit.effectiveOverall(p, position);
-              final penalised = eff < p.overall;
-              return ListTile(
-                dense: true,
-                leading: TacticalChip(p.position.label),
-                title: Text(
-                  p.name,
-                  style: AppTypography.bodyMedium.copyWith(
-                    color: onPitch.contains(p.id)
-                        ? AppColors.onSurfaceVariant
-                        : null,
-                  ),
-                ),
-                subtitle: Text(
-                  penalised
-                      ? '${p.position.roleName} · out of position'
-                      : '${p.position.roleName} · Age ${p.age}',
-                  style: AppTypography.labelSmall.copyWith(
-                    color: penalised
-                        ? AppColors.error
-                        : AppColors.onSurfaceVariant,
-                  ),
-                ),
-                trailing: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    if (onPitch.contains(p.id)) ...[
-                      const TacticalChip('ON'),
-                      const SizedBox(width: AppSpacing.sm),
-                    ],
-                    // The rating as it will count in this slot — the drop from
-                    // the base overall is the cost of playing out of position.
-                    if (penalised)
-                      Text(
-                        '${p.overall}→',
-                        style: AppTypography.labelSmall.copyWith(
-                          color: AppColors.onSurfaceVariant,
-                        ),
-                      ),
-                    Text(
-                      '$eff',
-                      style: AppTypography.labelMedium.copyWith(
-                        color: penalised ? AppColors.error : null,
-                      ),
-                    ),
-                  ],
-                ),
-                onTap: () => Navigator.of(context).pop(p.id),
-              );
-            }(),
-        ],
-      ),
-    );
-    if (picked != null) _setSlot(slot, picked);
   }
 
   Widget _slider(
@@ -482,7 +469,6 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
           onChanged: (v) => setState(() => apply(v.round())),
         ),
         Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
               low,
@@ -490,6 +476,7 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
                 color: AppColors.onSurfaceVariant,
               ),
             ),
+            const Spacer(),
             Text(
               high,
               style: AppTypography.labelSmall.copyWith(
@@ -498,7 +485,105 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
             ),
           ],
         ),
+        const SizedBox(height: AppSpacing.sm),
       ],
     );
   }
+
+  /// A cross-line drag that reshapes: refit the current players to [next], then
+  /// nudge the dragged player toward the target slot so the intent is kept.
+  void _reshapeKeeping(Formation next, int a, int b) {
+    final draggedId = _lineup[a];
+    _setFormation(next);
+    if (draggedId != null) {
+      final slot = _lineup.indexOf(draggedId);
+      // If the player didn't land near the target line, place them at b.
+      if (slot != -1 && slot != b) _setSlot(b, draggedId);
+    }
+  }
+
+  Future<void> _pickPlayer(int slot) async {
+    final position = _formation.positions[slot];
+    final isKeeperSlot = position.category == PositionCategory.goalkeeper;
+    // A goalkeeping slot is keeper-only; any other slot can be filled by any
+    // outfield player (with a heavy out-of-position penalty, shown below).
+    final candidates = _eligible
+        .where((p) => isKeeperSlot
+            ? p.position.category == PositionCategory.goalkeeper
+            : p.position.category != PositionCategory.goalkeeper)
+        .toList()
+      ..sort(PositionFit.bySlotFit(position));
+    final onPitch = _onPitch;
+    final l = AppLocalizations.of(context);
+
+    final picked = await showModalBottomSheet<int>(
+      context: context,
+      backgroundColor: AppColors.surfaceContainer,
+      builder: (_) => ListView(
+        padding: const EdgeInsets.all(AppSpacing.md),
+        children: [
+          Text(
+            l.tacticsPickRole(position.roleName.toUpperCase()),
+            style: AppTypography.labelMedium.copyWith(color: AppColors.primary),
+          ),
+          const SizedBox(height: AppSpacing.sm),
+          for (final p in candidates)
+            () {
+              final eff = PositionFit.effectiveOverall(p, position);
+              final penalised = eff < p.overall;
+              return ListTile(
+                dense: true,
+                leading: TacticalChip(p.position.label),
+                title: Text(
+                  p.name,
+                  style: AppTypography.bodyMedium.copyWith(
+                    color: onPitch.contains(p.id)
+                        ? AppColors.onSurfaceVariant
+                        : null,
+                  ),
+                ),
+                subtitle: Text(
+                  penalised
+                      ? l.tacticsRoleOutOfPosition(p.position.roleName)
+                      : l.tacticsRoleAge(p.position.roleName, p.age),
+                  style: AppTypography.labelSmall.copyWith(
+                    color: penalised
+                        ? AppColors.warning
+                        : AppColors.onSurfaceVariant,
+                  ),
+                ),
+                trailing: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    if (onPitch.contains(p.id)) ...[
+                      TacticalChip(l.tacticsOn),
+                      const SizedBox(width: AppSpacing.sm),
+                    ],
+                    // The rating in THIS slot leads — the number that decides
+                    // the match — in amber when it is a docked one, with the
+                    // player's own overall behind it for the comparison.
+                    Text(
+                      '$eff',
+                      style: AppTypography.labelMedium.copyWith(
+                        color: penalised ? AppColors.warning : null,
+                      ),
+                    ),
+                    if (penalised)
+                      Text(
+                        ' (${p.overall})',
+                        style: AppTypography.labelSmall.copyWith(
+                          color: AppColors.onSurfaceVariant,
+                        ),
+                      ),
+                  ],
+                ),
+                onTap: () => Navigator.of(context).pop(p.id),
+              );
+            }(),
+        ],
+      ),
+    );
+    if (picked != null) _setSlot(slot, picked);
+  }
+
 }

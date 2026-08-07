@@ -28,6 +28,7 @@ void main() {
   Widget harness({
     required void Function(int, int) onSwap,
     void Function(int, int)? onBenchIn,
+    void Function(int, double)? onMoveToSpace,
   }) {
     // The pitch lives inside a ListView in the real screen — that scroll view
     // is exactly what the drag gesture has to win the arena against.
@@ -43,6 +44,7 @@ void main() {
             onTapSlot: (_) {},
             onSwap: onSwap,
             onBenchIn: onBenchIn ?? (_, __) {},
+            onMoveToSpace: onMoveToSpace,
           ),
         ),
       ],
@@ -164,5 +166,41 @@ void main() {
       isEmpty,
       reason: 'an immediate drag is a scroll, not a player move',
     );
+  });
+
+  testWidgets('dropping a player in open space reports where he landed', (
+    tester,
+  ) async {
+    sizeSurface(tester);
+    int? movedSlot;
+    double? movedY;
+    await tester.pumpApp(
+      harness(
+        onSwap: (_, __) {},
+        onMoveToSpace: (slot, dropY) {
+          movedSlot = slot;
+          movedY = dropY;
+        },
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    final pitch = tester.getRect(find.byType(TacticsPitch));
+    // Pick a midfielder up and release him high up the pitch, in the space
+    // wide of the forwards rather than on top of one.
+    // P5 is a midfielder in 4-4-2 — the same naming the other drag tests use.
+    final start = tester.getCenter(find.text('P5'));
+    final gesture = await tester.startGesture(start);
+    await tester.pump(kDragHoldDelay + const Duration(milliseconds: 40));
+    await gesture.moveTo(
+      Offset(pitch.left + pitch.width * 0.08, pitch.top + pitch.height * 0.10),
+    );
+    await tester.pump();
+    await gesture.up();
+    await tester.pumpAndSettle();
+
+    expect(movedSlot, isNotNull, reason: 'the space drop was never reported');
+    expect(movedY, isNotNull);
+    expect(movedY, lessThan(0.35), reason: 'dropped high up the pitch');
   });
 }

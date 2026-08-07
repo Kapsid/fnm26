@@ -6,17 +6,26 @@ import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
+import 'package:fnm/core/theme/kit_colors.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/formation.dart';
 import 'package:fnm/domain/entities/tactic_preset.dart';
 import 'package:fnm/domain/entities/tactics.dart';
 import 'package:fnm/domain/services/tactics/position_fit.dart';
+import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/entities/player_role.dart';
+import 'package:fnm/domain/services/squad/absence_outlook.dart';
+import 'package:fnm/domain/services/squad/captaincy.dart';
+import 'package:fnm/features/squad/captain_providers.dart';
+import 'package:fnm/features/tactics/absence_providers.dart';
+import 'package:fnm/features/tactics/nation_squad_tab.dart';
 import 'package:fnm/features/tactics/player_roles_providers.dart';
+import 'package:fnm/features/tactics/set_piece_takers_providers.dart';
 import 'package:fnm/features/tactics/tactic_preset_providers.dart';
 import 'package:fnm/features/tactics/tactics_pitch.dart';
 import 'package:fnm/features/tactics/tactics_providers.dart';
+import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
 
@@ -30,185 +39,316 @@ class TacticsScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l = AppLocalizations.of(context);
     final dataAsync = ref.watch(tacticDataProvider(careerId));
     final service = ref.read(tacticServiceProvider);
+    // The manager's kit colours, giving the squad on the pitch a real team
+    // identity. Resolved via the career's nation; null until loaded.
+    final career = ref.watch(careerByIdProvider(careerId)).valueOrNull;
+    final nation = career == null
+        ? null
+        : ref.watch(nationByIdProvider(career.nationId)).valueOrNull;
+    final teamColors = nation == null
+        ? null
+        : KitColors.discFill(nation.primaryColor, nation.secondaryColor);
+    // How long each absence really runs, in weeks and a return match.
+    final outlooks =
+        ref.watch(absenceOutlookProvider(careerId)).valueOrNull ??
+        const <int, AbsenceOutlook>{};
 
-    return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: AppColors.primary),
-          // Pop back to wherever we came from (e.g. the match preview); fall
-          // back to the hub when opened as a root tab.
-          onPressed: () => context.canPop()
-              ? context.pop()
-              : context.go('${Routes.hub}?careerId=$careerId'),
-        ),
-        title: Text(
-          'SQUAD',
-          style: AppTypography.labelMedium.copyWith(color: AppColors.primary),
-        ),
-        centerTitle: true,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.groups, color: AppColors.primary),
-            tooltip: 'Call-ups',
-            onPressed: () =>
-                context.go('${Routes.callUps}?careerId=$careerId'),
+    return DefaultTabController(
+      length: 3,
+      child: Scaffold(
+        appBar: AppBar(
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back, color: AppColors.primary),
+            // Pop back to wherever we came from (e.g. the match preview); fall
+            // back to the hub when opened as a root tab.
+            onPressed: () => context.canPop()
+                ? context.pop()
+                : context.go('${Routes.hub}?careerId=$careerId'),
           ),
-          dataAsync.maybeWhen(
-            data: (data) => IconButton(
-              icon: const Icon(Icons.bookmark_border, color: AppColors.primary),
-              tooltip: 'Tactic presets',
-              onPressed: data == null
-                  ? null
-                  : () => _openPresets(context, ref, data.tactic),
+          title: Text(
+            l.tacticsSquad,
+            style: AppTypography.labelMedium.copyWith(color: AppColors.primary),
+          ),
+          centerTitle: true,
+          // Split into sections so it's not one long scroll — the pitch, each
+          // player's role, the set-piece takers, and the wider squad each get
+          // their own tab.
+          bottom: TabBar(
+            isScrollable: true,
+            labelColor: AppColors.onSurface,
+            unselectedLabelColor: AppColors.onSurfaceVariant,
+            indicatorColor: AppColors.primary,
+            tabs: [
+              Tab(text: l.tacticsTabLineup),
+              Tab(text: l.tacticsTabRolesSetPieces),
+              Tab(text: l.tacticsSquad),
+            ],
+          ),
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.groups, color: AppColors.primary),
+              tooltip: l.tacticsTooltipCallUps,
+              onPressed: () =>
+                  context.go('${Routes.callUps}?careerId=$careerId'),
             ),
-            orElse: () => const SizedBox.shrink(),
-          ),
-          dataAsync.maybeWhen(
-            data: (data) => IconButton(
-              icon: const Icon(Icons.tune, color: AppColors.primary),
-              tooltip: 'Instructions',
-              onPressed: data == null
-                  ? null
-                  : () => _openInstructions(context, ref, data.tactic),
+            dataAsync.maybeWhen(
+              data: (data) => IconButton(
+                icon: const Icon(
+                  Icons.bookmark_border,
+                  color: AppColors.primary,
+                ),
+                tooltip: l.tacticsTooltipPresets,
+                onPressed: data == null
+                    ? null
+                    : () => _openPresets(context, ref, data.tactic),
+              ),
+              orElse: () => const SizedBox.shrink(),
             ),
-            orElse: () => const SizedBox.shrink(),
-          ),
-        ],
-      ),
-      bottomNavigationBar:
-          AppBottomNav(careerId: careerId, current: AppTab.squad),
-      body: dataAsync.when(
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => Center(child: Text('Could not load squad.\n$e')),
-        data: (data) {
-          if (data == null) return const Center(child: Text('No tactic set.'));
-          final tactic = data.tactic;
-          final roles =
-              ref.watch(playerRolesProvider(careerId)).valueOrNull ??
-                  const <int, PlayerRole>{};
-          final startingIds = tactic.lineup.whereType<int>().toSet();
-          final subs =
-              data.pool.where((p) => !startingIds.contains(p.id)).toList()
-                ..sort((a, b) => b.overall.compareTo(a.overall));
-          final absentIds = {for (final p in data.unavailable) p.id};
-          // Injuries (orange) vs suspensions (red) — split so the pitch and the
-          // lists can show the right badge for each.
-          final injuredIds = {
-            for (final p in data.unavailable)
-              if ((data.absences[p.id]?.injuryMatches ?? 0) > 0) p.id,
-          };
-          final outStarters = data.unavailableStarters;
+            dataAsync.maybeWhen(
+              data: (data) => IconButton(
+                icon: const Icon(Icons.tune, color: AppColors.primary),
+                tooltip: l.tacticsTooltipInstructions,
+                onPressed: data == null
+                    ? null
+                    : () => _openInstructions(context, ref, data.tactic),
+              ),
+              orElse: () => const SizedBox.shrink(),
+            ),
+          ],
+        ),
+        bottomNavigationBar: AppBottomNav(
+          careerId: careerId,
+          current: AppTab.squad,
+        ),
+        body: dataAsync.when(
+          loading: () => const Center(child: CircularProgressIndicator()),
+          error: (e, _) =>
+              Center(child: Text(l.tacticsCouldNotLoadSquad(e.toString()))),
+          data: (data) {
+            if (data == null) return Center(child: Text(l.tacticsNoTacticSet));
+            final tactic = data.tactic;
+            final roles =
+                ref.watch(playerRolesProvider(careerId)).valueOrNull ??
+                const <int, PlayerRole>{};
+            final takers = ref
+                .watch(setPieceTakersProvider(careerId))
+                .valueOrNull;
+            final absentIds = {for (final p in data.unavailable) p.id};
+            // Injuries (orange) vs suspensions (red) — split so the pitch and the
+            // lists can show the right badge for each.
+            final injuredIds = {
+              for (final p in data.unavailable)
+                if ((data.absences[p.id]?.injuryMatches ?? 0) > 0) p.id,
+            };
+            final outStarters = data.unavailableStarters;
 
-          return ListView(
-            children: [
-              // Starters who are banned/injured block the next match: name
-              // them (with the reason) right here, or the forced "reshape your
-              // XI" event reads as an unexplained dead end.
-              if (outStarters.isNotEmpty)
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(
-                    AppSpacing.marginMobile,
-                    AppSpacing.sm,
-                    AppSpacing.marginMobile,
-                    0,
-                  ),
-                  child: AppCard(
-                    child: Row(
-                      children: [
-                        const Icon(
-                          Icons.personal_injury_outlined,
-                          color: AppColors.error,
+            return TabBarView(
+              children: [
+                // 1. LINEUP — the pitch and the formation, the everyday setup.
+                ListView(
+                  padding: const EdgeInsets.only(bottom: AppSpacing.xl),
+                  children: [
+                    // Starters who are banned/injured block the next match: name
+                    // them (with the reason) right here, or the forced "reshape
+                    // your XI" event reads as an unexplained dead end.
+                    if (outStarters.isNotEmpty)
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(
+                          AppSpacing.marginMobile,
+                          AppSpacing.sm,
+                          AppSpacing.marginMobile,
+                          0,
                         ),
-                        const SizedBox(width: AppSpacing.md),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                        child: AppCard(
+                          child: Row(
                             children: [
-                              Text(
-                                'REPLACE ${outStarters.length} '
-                                'STARTER${outStarters.length == 1 ? '' : 'S'}',
-                                style: AppTypography.labelSmall.copyWith(
-                                  color: AppColors.error,
-                                ),
+                              const Icon(
+                                Icons.personal_injury_outlined,
+                                color: AppColors.error,
                               ),
-                              const SizedBox(height: 2),
-                              for (final p in outStarters)
-                                Text(
-                                  '${p.name} — '
-                                  '${data.absences[p.id]?.reason ?? 'Out'}',
-                                  style: AppTypography.bodySmall,
-                                ),
-                              const SizedBox(height: 2),
-                              Text(
-                                'Tap their spot on the pitch to pick a '
-                                'replacement.',
-                                style: AppTypography.labelSmall.copyWith(
-                                  color: AppColors.onSurfaceVariant,
+                              const SizedBox(width: AppSpacing.md),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      l.tacticsReplaceStarters(
+                                        outStarters.length,
+                                      ),
+                                      style: AppTypography.labelSmall.copyWith(
+                                        color: AppColors.error,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 2),
+                                    for (final p in outStarters)
+                                      Text(
+                                        l.tacticsPlayerOut(
+                                          p.name,
+                                          switch (outlooks[p.id]) {
+                                            final o? => absenceLabel(l, o),
+                                            _ =>
+                                              data.absences[p.id]?.reason ??
+                                                  l.tacticsOut,
+                                          },
+                                        ),
+                                        style: AppTypography.bodySmall,
+                                      ),
+                                    const SizedBox(height: 2),
+                                    Text(
+                                      l.tacticsTapSpotReplace,
+                                      style: AppTypography.labelSmall.copyWith(
+                                        color: AppColors.onSurfaceVariant,
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
                             ],
                           ),
                         ),
-                      ],
-                    ),
-                  ),
-                ),
-              AspectRatio(
-                aspectRatio: 3 / 4,
-                child: TacticsPitch(
-                  injuredIds: injuredIds,
-                  formation: tactic.formation,
-                  instructions: tactic.instructions,
-                  lineup: tactic.lineup,
-                  byId: data.byId,
-                  absentIds: absentIds,
-                  onTapSlot: (slot) => _pickPlayer(context, ref, data, slot),
-                  onSwap: (a, b) =>
-                      _dragBetweenSlots(service, tactic, a, b),
-                  onBenchIn: (slot, playerId) =>
-                      service.setSlot(careerId, slot, playerId),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(AppSpacing.marginMobile),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // The pitch scrolls, so a drag has to start with a hold —
-                    // say so, or it just reads as the page moving.
-                    Text(
-                      'Tap a player to swap them out, or hold and drag one to '
-                      'move them.',
-                      style: AppTypography.labelSmall.copyWith(
-                        color: AppColors.onSurfaceVariant,
+                      ),
+                    AspectRatio(
+                      aspectRatio: 3 / 4,
+                      child: TacticsPitch(
+                        injuredIds: injuredIds,
+                        formation: tactic.formation,
+                        instructions: tactic.instructions,
+                        lineup: tactic.lineup,
+                        byId: data.byId,
+                        teamColors: teamColors,
+                        absentIds: absentIds,
+                        onTapSlot: (slot) =>
+                            _pickPlayer(context, ref, data, slot),
+                        onSwap: (a, b) =>
+                            _dragBetweenSlots(service, tactic, a, b),
+                        onBenchIn: (slot, playerId) =>
+                            service.setSlot(careerId, slot, playerId),
+                        onMoveToSpace: (slot, dropY) {
+                          final outcome = resolveSpaceDrag(
+                            tactic.formation,
+                            tactic.instructions,
+                            slot,
+                            dropY,
+                          );
+                          if (outcome case ReshapeTo(:final formation)) {
+                            unawaited(
+                              service.reshapeFormation(careerId, formation),
+                            );
+                          }
+                        },
                       ),
                     ),
-                    const SizedBox(height: AppSpacing.lg),
-                    const Text('FORMATION', style: AppTypography.labelMedium),
-                    const SizedBox(height: AppSpacing.sm),
-                    Wrap(
-                      spacing: AppSpacing.sm,
-                      runSpacing: AppSpacing.sm,
-                      children: [
-                        for (final f in Formation.values)
-                          GestureDetector(
-                            onTap: () => service.setFormation(careerId, f),
-                            child: TacticalChip(
-                              f.label,
-                              emphasized: f == tactic.formation,
+                    Padding(
+                      padding: const EdgeInsets.all(AppSpacing.marginMobile),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // The pitch scrolls, so a drag has to start with a
+                          // hold — say so, or it just reads as the page moving.
+                          Text(
+                            l.tacticsTapOrDrag,
+                            style: AppTypography.labelSmall.copyWith(
+                              color: AppColors.onSurfaceVariant,
                             ),
                           ),
-                      ],
+                          const SizedBox(height: AppSpacing.lg),
+                          Text(
+                            l.tacticsFormation,
+                            style: AppTypography.labelMedium,
+                          ),
+                          const SizedBox(height: AppSpacing.sm),
+                          Wrap(
+                            spacing: AppSpacing.sm,
+                            runSpacing: AppSpacing.sm,
+                            children: [
+                              for (final f in Formation.values)
+                                GestureDetector(
+                                  onTap: () =>
+                                      service.setFormation(careerId, f),
+                                  child: TacticalChip(
+                                    f.label,
+                                    emphasized: f == tactic.formation,
+                                  ),
+                                ),
+                            ],
+                          ),
+                          const SizedBox(height: AppSpacing.lg),
+                          // The side's way of playing, stated in words, with a
+                          // tap through to change it. The shape is only half of
+                          // a tactic and the other half used to be six unnamed
+                          // sliders behind an icon.
+                          Text(
+                            l.tacticsPlaystyle,
+                            style: AppTypography.labelMedium,
+                          ),
+                          const SizedBox(height: AppSpacing.sm),
+                          AppCard(
+                            onTap: () =>
+                                _openInstructions(context, ref, tactic),
+                            child: Row(
+                              children: [
+                                const Icon(
+                                  Icons.auto_graph_rounded,
+                                  size: 18,
+                                  color: AppColors.primary,
+                                ),
+                                const SizedBox(width: AppSpacing.md),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        playstyleLabel(l, tactic.playstyle),
+                                        style: AppTypography.titleMedium,
+                                      ),
+                                      Text(
+                                        playstyleBlurb(l, tactic.playstyle),
+                                        style: AppTypography.labelSmall
+                                            .copyWith(
+                                              color:
+                                                  AppColors.onSurfaceVariant,
+                                            ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                const Icon(
+                                  Icons.chevron_right,
+                                  size: 18,
+                                  color: AppColors.onSurfaceVariant,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                    const SizedBox(height: AppSpacing.lg),
-                    const Text('PLAYER ROLES', style: AppTypography.labelMedium),
-                    const SizedBox(height: AppSpacing.xs),
+                  ],
+                ),
+                // 2. ROLES & SET PIECES — one row per starter: their job, plus
+                //    the penalty and free-kick badges (tap to make them taker).
+                //    The armband sits at the top of it: naming a captain is the
+                //    same kind of decision as naming a penalty taker — one job,
+                //    one man. It used to be an armband button on EVERY row of
+                //    the call-up list, twenty-odd of them, which read as a
+                //    multiple choice and buried the one name that mattered.
+                ListView(
+                  padding: const EdgeInsets.all(AppSpacing.marginMobile),
+                  children: [
+                    // The armband can go to a player nursing a knock — he is
+                    // still the captain, he just isn't playing — so the squad
+                    // offered here is the called-up group, not only the fit.
+                    _CaptainCard(
+                      careerId: careerId,
+                      pool: [...data.pool, ...data.unavailable],
+                    ),
+                    const SizedBox(height: AppSpacing.md),
                     Text(
-                      'Give a player a job — a poacher, a playmaker, a target '
-                      'man. Shapes who scores, who creates and your set-piece '
-                      'threat.',
+                      l.tacticsRolesSetPiecesBlurb,
                       style: AppTypography.labelSmall.copyWith(
                         color: AppColors.onSurfaceVariant,
                       ),
@@ -216,106 +356,40 @@ class TacticsScreen extends ConsumerWidget {
                     const SizedBox(height: AppSpacing.sm),
                     for (final id in tactic.lineup.whereType<int>())
                       if (data.byId[id] case final p?)
-                        _RoleRow(
+                        _PlayerTacticRow(
                           player: p,
                           role: roles[id] ?? PlayerRole.none,
-                          onTap: () => _pickRole(context, ref, p),
-                        ),
-                    const SizedBox(height: AppSpacing.lg),
-                    Text(
-                      'SUBSTITUTES · ${subs.length}',
-                      style: AppTypography.labelMedium,
-                    ),
-                    const SizedBox(height: AppSpacing.xs),
-                    Text(
-                      'Hold a sub, then drag them onto a player to bring '
-                      'them on.',
-                      style: AppTypography.labelSmall.copyWith(
-                        color: AppColors.onSurfaceVariant,
-                      ),
-                    ),
-                    const SizedBox(height: AppSpacing.sm),
-                    AppCard(
-                      padding: EdgeInsets.zero,
-                      child: Column(
-                        children: [
-                          for (final p in subs) SubDragRow(player: p),
-                        ],
-                      ),
-                    ),
-                    // Banned/injured squad members, visible with their reason
-                    // rather than silently missing from the lists above.
-                    if (data.unavailable.isNotEmpty) ...[
-                      const SizedBox(height: AppSpacing.lg),
-                      Text(
-                        'UNAVAILABLE · ${data.unavailable.length}',
-                        style: AppTypography.labelMedium,
-                      ),
-                      const SizedBox(height: AppSpacing.sm),
-                      AppCard(
-                        padding: EdgeInsets.zero,
-                        child: Column(
-                          children: [
-                            for (final p in data.unavailable)
-                              ListTile(
-                                dense: true,
-                                enabled: false,
-                                leading: SizedBox(
-                                  width: 40,
-                                  child: TacticalChip(p.position.label),
-                                ),
-                                title: Text(
-                                  p.name,
-                                  style: AppTypography.bodyMedium.copyWith(
-                                    color: AppColors.onSurfaceVariant,
-                                  ),
-                                ),
-                                trailing: () {
-                                  final inj = injuredIds.contains(p.id);
-                                  final c = inj
-                                      ? AppColors.warning
-                                      : AppColors.error;
-                                  return Container(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 8,
-                                      vertical: 3,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      color: c.withValues(alpha: 0.16),
-                                      borderRadius: AppRadii.smAll,
-                                    ),
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Icon(
-                                          inj
-                                              ? Icons.personal_injury
-                                              : Icons.gavel_rounded,
-                                          size: 13,
-                                          color: c,
-                                        ),
-                                        const SizedBox(width: 4),
-                                        Text(
-                                          data.absences[p.id]?.reason ?? 'Out',
-                                          style: AppTypography.labelSmall
-                                              .copyWith(color: c),
-                                        ),
-                                      ],
-                                    ),
-                                  );
-                                }(),
+                          isPenaltyTaker: takers?.penalty == p.id,
+                          isDeadBallTaker: takers?.deadBall == p.id,
+                          onRole: () => _pickRole(context, ref, p),
+                          onTogglePenalty: () => ref
+                              .read(setPieceTakersStoreProvider)
+                              .set(
+                                careerId,
+                                penalty: true,
+                                playerId: takers?.penalty == p.id ? null : p.id,
                               ),
-                          ],
+                          onToggleDeadBall: () => ref
+                              .read(setPieceTakersStoreProvider)
+                              .set(
+                                careerId,
+                                penalty: false,
+                                playerId: takers?.deadBall == p.id
+                                    ? null
+                                    : p.id,
+                              ),
                         ),
-                      ),
-                    ],
-                    const SizedBox(height: AppSpacing.xl),
                   ],
                 ),
-              ),
-            ],
-          );
-        },
+                // 3. SQUAD — the nation's whole pool: every eligible player,
+                //    their club, age, form and international record, filterable
+                //    and sortable. See [NationSquadTab] for why it is the pool
+                //    rather than the bench.
+                NationSquadTab(careerId: careerId),
+              ],
+            );
+          },
+        ),
       ),
     );
   }
@@ -338,35 +412,82 @@ class TacticsScreen extends ConsumerWidget {
             })
           r,
     ];
+    final l = AppLocalizations.of(context);
     final picked = await showModalBottomSheet<PlayerRole>(
       context: context,
       backgroundColor: AppColors.surfaceContainerHigh,
-      builder: (_) => SafeArea(
-        child: ListView(
-          shrinkWrap: true,
-          padding: const EdgeInsets.all(AppSpacing.marginMobile),
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(bottom: AppSpacing.sm),
-              child: Text(
-                'ROLE · ${player.name}',
-                style: AppTypography.labelMedium
-                    .copyWith(color: AppColors.primary),
-              ),
+      // Scroll-controlled + bounded height so a long role list scrolls INSIDE
+      // the sheet instead of overflowing the default half-screen cap and
+      // pushing the header/handle off the top (which left it unclosable).
+      isScrollControlled: true,
+      builder: (_) {
+        final maxHeight = MediaQuery.of(context).size.height * 0.7;
+        return ConstrainedBox(
+          constraints: BoxConstraints(maxHeight: maxHeight),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppSpacing.marginMobile,
             ),
-            for (final r in options)
-              ListTile(
-                title: Text(r.label, style: AppTypography.bodyMedium),
-                subtitle: Text(
-                  r.blurb,
-                  style: AppTypography.labelSmall
-                      .copyWith(color: AppColors.onSurfaceVariant),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // A grab handle so the panel reads as a draggable sheet.
+                Center(
+                  child: Container(
+                    width: 40,
+                    height: 4,
+                    margin: const EdgeInsets.symmetric(
+                      vertical: AppSpacing.sm,
+                    ),
+                    decoration: const BoxDecoration(
+                      color: AppColors.outlineVariant,
+                      borderRadius: AppRadii.smAll,
+                    ),
+                  ),
                 ),
-                onTap: () => Navigator.of(context).pop(r),
-              ),
-          ],
-        ),
-      ),
+                Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        l.tacticsRolePlayer(player.name),
+                        style: AppTypography.labelMedium.copyWith(
+                          color: AppColors.primary,
+                        ),
+                      ),
+                    ),
+                    // An explicit close so the sheet is always dismissable even
+                    // if the list is long.
+                    IconButton(
+                      icon: const Icon(Icons.close, size: 20),
+                      onPressed: () => Navigator.of(context).pop(),
+                    ),
+                  ],
+                ),
+                Flexible(
+                  child: ListView(
+                    shrinkWrap: true,
+                    padding: const EdgeInsets.only(bottom: AppSpacing.md),
+                    children: [
+                      for (final r in options)
+                        ListTile(
+                          title: Text(r.label, style: AppTypography.bodyMedium),
+                          subtitle: Text(
+                            r.blurb,
+                            style: AppTypography.labelSmall.copyWith(
+                              color: AppColors.onSurfaceVariant,
+                            ),
+                          ),
+                          onTap: () => Navigator.of(context).pop(r),
+                        ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
     if (picked != null) {
       await ref
@@ -385,18 +506,22 @@ class TacticsScreen extends ConsumerWidget {
     final isKeeperSlot = position.category == PositionCategory.goalkeeper;
     // A goalkeeping slot is keeper-only; any other slot can be filled by any
     // outfield player, carrying the out-of-position penalty shown per row.
-    var candidates = data.pool
-        .where((p) => isKeeperSlot
-            ? p.position.category == PositionCategory.goalkeeper
-            : p.position.category != PositionCategory.goalkeeper)
-        .toList()
-      ..sort(PositionFit.bySlotFit(position));
+    var candidates =
+        data.pool
+            .where(
+              (p) => isKeeperSlot
+                  ? p.position.category == PositionCategory.goalkeeper
+                  : p.position.category != PositionCategory.goalkeeper,
+            )
+            .toList()
+          ..sort(PositionFit.bySlotFit(position));
     // Nobody available for a keeper slot (both keepers out): fall back to the
     // whole pool rather than a dead-end empty sheet — someone must go in goal.
     if (candidates.isEmpty) {
       candidates = [...data.pool]..sort(PositionFit.bySlotFit(position));
     }
 
+    final l = AppLocalizations.of(context);
     final picked = await showModalBottomSheet<int>(
       context: context,
       backgroundColor: AppColors.surfaceContainer,
@@ -404,7 +529,7 @@ class TacticsScreen extends ConsumerWidget {
         padding: const EdgeInsets.all(AppSpacing.md),
         children: [
           Text(
-            'PICK ${position.roleName.toUpperCase()}',
+            l.tacticsPickRole(position.roleName.toUpperCase()),
             style: AppTypography.labelMedium.copyWith(color: AppColors.primary),
           ),
           const SizedBox(height: AppSpacing.sm),
@@ -424,13 +549,13 @@ class TacticsScreen extends ConsumerWidget {
                 ),
                 subtitle: Text(
                   eff < p.overall
-                      ? '${p.position.roleName} · out of position'
-                      : '${p.position.roleName} · Age ${p.age}',
+                      ? l.tacticsRoleOutOfPosition(p.position.roleName)
+                      : l.tacticsRoleAge(p.position.roleName, p.age),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: AppTypography.labelSmall.copyWith(
                     color: eff < p.overall
-                        ? AppColors.error
+                        ? AppColors.warning
                         : AppColors.onSurfaceVariant,
                   ),
                 ),
@@ -438,22 +563,25 @@ class TacticsScreen extends ConsumerWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     if (inXi) ...[
-                      const TacticalChip('IN XI'),
+                      TacticalChip(l.tacticsInXi),
                       const SizedBox(width: AppSpacing.sm),
                     ],
+                    // The rating in THIS slot leads — the number the match
+                    // engine uses — in amber when it is docked, with the
+                    // player's own overall behind it for the comparison.
+                    Text(
+                      '$eff',
+                      style: AppTypography.labelMedium.copyWith(
+                        color: eff < p.overall ? AppColors.warning : null,
+                      ),
+                    ),
                     if (eff < p.overall)
                       Text(
-                        '${p.overall}→',
+                        ' (${p.overall})',
                         style: AppTypography.labelSmall.copyWith(
                           color: AppColors.onSurfaceVariant,
                         ),
                       ),
-                    Text(
-                      '$eff',
-                      style: AppTypography.labelMedium.copyWith(
-                        color: eff < p.overall ? AppColors.error : null,
-                      ),
-                    ),
                     IconButton(
                       visualDensity: VisualDensity.compact,
                       icon: const Icon(
@@ -518,6 +646,30 @@ class TacticsScreen extends ConsumerWidget {
   }
 }
 
+/// The manager-facing name of a playing style.
+String playstyleLabel(AppLocalizations l, Playstyle s) => switch (s) {
+  Playstyle.custom => l.playstyleCustom,
+  Playstyle.balanced => l.playstyleBalanced,
+  Playstyle.possession => l.playstylePossession,
+  Playstyle.gegenpress => l.playstyleGegenpress,
+  Playstyle.counter => l.playstyleCounter,
+  Playstyle.direct => l.playstyleDirect,
+  Playstyle.lowBlock => l.playstyleLowBlock,
+  Playstyle.wingPlay => l.playstyleWingPlay,
+};
+
+/// One line on what a style actually asks the side to do.
+String playstyleBlurb(AppLocalizations l, Playstyle s) => switch (s) {
+  Playstyle.custom => l.tacticsPlaystyleCustom,
+  Playstyle.balanced => l.playstyleBalancedBlurb,
+  Playstyle.possession => l.playstylePossessionBlurb,
+  Playstyle.gegenpress => l.playstyleGegenpressBlurb,
+  Playstyle.counter => l.playstyleCounterBlurb,
+  Playstyle.direct => l.playstyleDirectBlurb,
+  Playstyle.lowBlock => l.playstyleLowBlockBlurb,
+  Playstyle.wingPlay => l.playstyleWingPlayBlurb,
+};
+
 class _InstructionsSheet extends ConsumerStatefulWidget {
   const _InstructionsSheet({required this.careerId, required this.tactic});
 
@@ -530,11 +682,29 @@ class _InstructionsSheet extends ConsumerStatefulWidget {
 
 class _InstructionsSheetState extends ConsumerState<_InstructionsSheet> {
   late TacticalInstructions _i = widget.tactic.instructions;
+  late Playstyle _style = widget.tactic.playstyle;
 
   void _set(TacticalInstructions next) {
-    setState(() => _i = next);
+    setState(() {
+      _i = next;
+      // Moving a dial re-labels the tactic: it only keeps a style's name while
+      // it still matches that style exactly.
+      _style = PlaystyleX.matching(next);
+    });
     unawaited(
       ref.read(tacticServiceProvider).setInstructions(widget.careerId, next),
+    );
+  }
+
+  void _setStyle(Playstyle style) {
+    final composed = style.instructions;
+    if (composed == null) return;
+    setState(() {
+      _style = style;
+      _i = composed;
+    });
+    unawaited(
+      ref.read(tacticServiceProvider).setPlaystyle(widget.careerId, style),
     );
   }
 
@@ -542,6 +712,7 @@ class _InstructionsSheetState extends ConsumerState<_InstructionsSheet> {
   Widget build(BuildContext context) {
     // Roomier than a plain sheet: a tall, scrollable panel so each instruction
     // has space to breathe and reads clearly.
+    final l = AppLocalizations.of(context);
     final maxHeight = MediaQuery.of(context).size.height * 0.85;
     return ConstrainedBox(
       constraints: BoxConstraints(maxHeight: maxHeight),
@@ -569,14 +740,14 @@ class _InstructionsSheetState extends ConsumerState<_InstructionsSheet> {
               ),
             ),
             Text(
-              'TEAM INSTRUCTIONS',
+              l.tacticsTeamInstructions,
               style: AppTypography.titleMedium.copyWith(
                 color: AppColors.primary,
               ),
             ),
             const SizedBox(height: AppSpacing.xs),
             Text(
-              'Set how your side plays. Each dial nudges the whole team.',
+              l.tacticsTeamInstructionsBlurb,
               style: AppTypography.bodySmall.copyWith(
                 color: AppColors.onSurfaceVariant,
               ),
@@ -587,45 +758,89 @@ class _InstructionsSheetState extends ConsumerState<_InstructionsSheet> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    // The style comes first: one decision that sets all six
+                    // dials below, which are then there to trim it. Managing a
+                    // side by six unlabelled sliders asked the manager to
+                    // reverse-engineer a way of playing they could simply have
+                    // named.
+                    Text(
+                      l.tacticsPlaystyle,
+                      style: AppTypography.titleMedium,
+                    ),
+                    const SizedBox(height: AppSpacing.xs),
+                    Text(
+                      l.tacticsPlaystyleBlurb,
+                      style: AppTypography.bodySmall.copyWith(
+                        color: AppColors.onSurfaceVariant,
+                      ),
+                    ),
+                    const SizedBox(height: AppSpacing.sm),
+                    Wrap(
+                      spacing: AppSpacing.sm,
+                      runSpacing: AppSpacing.sm,
+                      children: [
+                        for (final s in Playstyle.values)
+                          if (s != Playstyle.custom)
+                            GestureDetector(
+                              onTap: () => _setStyle(s),
+                              child: TacticalChip(
+                                playstyleLabel(l, s),
+                                emphasized: s == _style,
+                              ),
+                            ),
+                      ],
+                    ),
+                    const SizedBox(height: AppSpacing.sm),
+                    Text(
+                      _style == Playstyle.custom
+                          ? l.tacticsPlaystyleCustom
+                          : playstyleBlurb(l, _style),
+                      style: AppTypography.labelSmall.copyWith(
+                        color: _style == Playstyle.custom
+                            ? AppColors.onSurfaceVariant
+                            : AppColors.primary,
+                      ),
+                    ),
+                    const SizedBox(height: AppSpacing.lg),
                     _slider(
-                      'Mentality',
-                      'Defensive',
-                      'Attacking',
+                      l.tacticsInstrMentality,
+                      l.tacticsInstrDefensive,
+                      l.tacticsInstrAttacking,
                       _i.mentality,
                       (v) => _set(_i.copyWith(mentality: v)),
                     ),
                     _slider(
-                      'Pressing',
-                      'Low block',
-                      'High press',
+                      l.tacticsInstrPressing,
+                      l.tacticsInstrLowBlock,
+                      l.tacticsInstrHighPress,
                       _i.pressing,
                       (v) => _set(_i.copyWith(pressing: v)),
                     ),
                     _slider(
-                      'Tempo',
-                      'Patient',
-                      'Fast',
+                      l.tacticsInstrTempo,
+                      l.tacticsInstrPatient,
+                      l.tacticsInstrFast,
                       _i.tempo,
                       (v) => _set(_i.copyWith(tempo: v)),
                     ),
                     _slider(
-                      'Width',
-                      'Narrow',
-                      'Wide',
+                      l.tacticsInstrWidth,
+                      l.tacticsInstrNarrow,
+                      l.tacticsInstrWide,
                       _i.width,
                       (v) => _set(_i.copyWith(width: v)),
                     ),
                     _slider(
-                      'Defensive line',
-                      'Deep',
-                      'High',
+                      l.tacticsInstrDefensiveLine,
+                      l.tacticsInstrDeep,
+                      l.tacticsInstrHigh,
                       _i.defensiveLine,
                       (v) => _set(_i.copyWith(defensiveLine: v)),
                     ),
                     _slider(
-                      'Directness',
-                      'Possession',
-                      'Direct',
+                      l.tacticsInstrDirectness,
+                      l.tacticsInstrPossession,
+                      l.tacticsInstrDirect,
                       _i.directness,
                       (v) => _set(_i.copyWith(directness: v)),
                     ),
@@ -721,7 +936,9 @@ class _PresetsSheetState extends ConsumerState<_PresetsSheet> {
       builder: (_) => const _NamePresetDialog(),
     );
     if (name == null || name.trim().isEmpty) return;
-    await ref.read(tacticPresetStoreProvider).save(
+    await ref
+        .read(tacticPresetStoreProvider)
+        .save(
           widget.careerId,
           TacticPreset(
             name: name.trim(),
@@ -730,28 +947,33 @@ class _PresetsSheetState extends ConsumerState<_PresetsSheet> {
           ),
         );
     if (mounted) {
+      final l = AppLocalizations.of(context);
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Saved “${name.trim()}”')),
+        SnackBar(content: Text(l.tacticsSavedPreset(name.trim()))),
       );
     }
   }
 
   Future<void> _apply(TacticPreset preset) async {
-    await ref.read(tacticServiceProvider).applyPreset(
+    await ref
+        .read(tacticServiceProvider)
+        .applyPreset(
           widget.careerId,
           preset.formation,
           preset.instructions,
         );
     if (mounted) {
+      final l = AppLocalizations.of(context);
       Navigator.of(context).pop();
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Applied “${preset.name}”')),
+        SnackBar(content: Text(l.tacticsAppliedPreset(preset.name))),
       );
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
     final presetsAsync = ref.watch(tacticPresetsProvider(widget.careerId));
     final maxHeight = MediaQuery.of(context).size.height * 0.8;
     return ConstrainedBox(
@@ -779,15 +1001,14 @@ class _PresetsSheetState extends ConsumerState<_PresetsSheet> {
               ),
             ),
             Text(
-              'TACTIC PRESETS',
+              l.tacticsTacticPresets,
               style: AppTypography.titleMedium.copyWith(
                 color: AppColors.primary,
               ),
             ),
             const SizedBox(height: AppSpacing.xs),
             Text(
-              'Save this shape and its instructions as a reusable style, or '
-              'apply one you saved earlier.',
+              l.tacticsPresetsBlurb,
               style: AppTypography.bodySmall.copyWith(
                 color: AppColors.onSurfaceVariant,
               ),
@@ -798,15 +1019,15 @@ class _PresetsSheetState extends ConsumerState<_PresetsSheet> {
               child: FilledButton.icon(
                 onPressed: _saveCurrent,
                 icon: const Icon(Icons.add, size: 18),
-                label: const Text('Save current tactic'),
+                label: Text(l.tacticsSaveCurrentTactic),
               ),
             ),
             const SizedBox(height: AppSpacing.md),
             Flexible(
               child: presetsAsync.when(
-                loading: () =>
-                    const Center(child: CircularProgressIndicator()),
-                error: (e, _) => Text('Could not load presets.\n$e'),
+                loading: () => const Center(child: CircularProgressIndicator()),
+                error: (e, _) =>
+                    Text(l.tacticsCouldNotLoadPresets(e.toString())),
                 data: (presets) {
                   if (presets.isEmpty) {
                     return Padding(
@@ -814,8 +1035,7 @@ class _PresetsSheetState extends ConsumerState<_PresetsSheet> {
                         vertical: AppSpacing.lg,
                       ),
                       child: Text(
-                        'No presets yet. Tap “Save current tactic” to store '
-                        'this setup as a reusable style.',
+                        l.tacticsNoPresetsYet,
                         style: AppTypography.bodySmall.copyWith(
                           color: AppColors.onSurfaceVariant,
                         ),
@@ -885,79 +1105,293 @@ class _NamePresetDialogState extends State<_NamePresetDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
     return AlertDialog(
-      title: const Text('Name this tactic'),
+      title: Text(l.tacticsNameThisTactic),
       content: TextField(
         controller: _controller,
         autofocus: true,
         textCapitalization: TextCapitalization.words,
         textInputAction: TextInputAction.done,
         onSubmitted: (_) => _submit(),
-        decoration: const InputDecoration(
-          hintText: 'e.g. High press 4-3-3',
+        decoration: InputDecoration(
+          hintText: l.tacticsNameHint,
         ),
       ),
       actions: [
         TextButton(
           onPressed: () => Navigator.of(context).pop(),
-          child: const Text('Cancel'),
+          child: Text(l.tacticsCancel),
         ),
         FilledButton(
           onPressed: _submit,
-          child: const Text('Save'),
+          child: Text(l.tacticsSave),
         ),
       ],
     );
   }
 }
 
+/// The armband, as one decision: who wears it, what it is worth, and a single
+/// picker to change it.
+///
+/// A captain is one man, so this is one row — not a badge repeated down a list
+/// of twenty-three call-ups, which is where it used to live and which made a
+/// single-choice decision look like a set of toggles.
+class _CaptainCard extends ConsumerWidget {
+  const _CaptainCard({required this.careerId, required this.pool});
+
+  final int careerId;
+
+  /// The squad the armband can be given to.
+  final List<Player> pool;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l = AppLocalizations.of(context);
+    final captain = ref.watch(captainProvider(careerId)).valueOrNull;
+    final morale = ref.watch(captainMoraleProvider(careerId)).valueOrNull ?? 0;
+    return AppCard(
+      padding: EdgeInsets.zero,
+      child: ListTile(
+        dense: true,
+        leading: const Icon(
+          Icons.military_tech_outlined,
+          color: AppColors.primary,
+        ),
+        title: Text(
+          l.squadCaptain.toUpperCase(),
+          style: AppTypography.labelSmall.copyWith(
+            color: AppColors.onSurfaceVariant,
+          ),
+        ),
+        subtitle: Text(
+          captain == null
+              ? l.captainNone
+              : morale > 0
+              ? '${captain.name} · ${l.captainMoraleBoost(morale)}'
+              : captain.name,
+          style: AppTypography.bodyMedium,
+        ),
+        trailing: const Icon(
+          Icons.chevron_right,
+          color: AppColors.onSurfaceVariant,
+        ),
+        onTap: () => _pick(context, ref, captain?.id),
+      ),
+    );
+  }
+
+  Future<void> _pick(BuildContext context, WidgetRef ref, int? current) async {
+    final l = AppLocalizations.of(context);
+    final career = ref.read(careerByIdProvider(careerId)).valueOrNull;
+    final saveSeed = career?.rngSeed ?? 0;
+    // Best first — the armband usually goes to a senior name, and the fit tag
+    // says who actually carries it.
+    final candidates = [...pool]
+      ..sort((a, b) => b.overall.compareTo(a.overall));
+    final picked = await showModalBottomSheet<int>(
+      context: context,
+      backgroundColor: AppColors.surfaceContainer,
+      builder: (_) => ListView(
+        padding: const EdgeInsets.all(AppSpacing.md),
+        children: [
+          Text(
+            l.squadCaptain.toUpperCase(),
+            style: AppTypography.labelMedium.copyWith(color: AppColors.primary),
+          ),
+          const SizedBox(height: AppSpacing.sm),
+          for (final p in candidates)
+            ListTile(
+              dense: true,
+              leading: SizedBox(
+                width: 40,
+                child: TacticalChip(p.position.label),
+              ),
+              title: Text(p.name, style: AppTypography.bodyMedium),
+              subtitle: Text(
+                _fitLabel(l, Captaincy.fit(p, saveSeed: saveSeed)),
+                style: AppTypography.labelSmall.copyWith(
+                  color: AppColors.onSurfaceVariant,
+                ),
+              ),
+              trailing: p.id == current
+                  ? const Icon(Icons.check_circle, color: AppColors.primary)
+                  : Text('${p.overall}', style: AppTypography.labelMedium),
+              // Tapping the current captain takes the armband back off him, so
+              // "no captain" needs no row of its own.
+              onTap: () => Navigator.of(context).pop(p.id),
+            ),
+        ],
+      ),
+    );
+    if (picked == null) return;
+    await setCaptain(ref, careerId, picked == current ? null : picked);
+  }
+
+  static String _fitLabel(AppLocalizations l, CaptainFit fit) => switch (fit) {
+    CaptainFit.born => l.captainFitBorn,
+    CaptainFit.natural => l.captainFitNatural,
+    CaptainFit.capable => l.captainFitCapable,
+    CaptainFit.unproven => l.captainFitUnproven,
+  };
+}
+
 /// One player's role row in the tactics screen: position, name, and the role
 /// they've been given (tap to change).
-class _RoleRow extends StatelessWidget {
-  const _RoleRow({
+/// One starter in the merged roles & set-pieces list: their position and name,
+/// a tappable role, and penalty / free-kick badges that toggle them as the
+/// taker — so a player's whole tactical brief is set in one place.
+class _PlayerTacticRow extends StatelessWidget {
+  const _PlayerTacticRow({
     required this.player,
     required this.role,
-    required this.onTap,
+    required this.isPenaltyTaker,
+    required this.isDeadBallTaker,
+    required this.onRole,
+    required this.onTogglePenalty,
+    required this.onToggleDeadBall,
   });
 
   final Player player;
   final PlayerRole role;
+  final bool isPenaltyTaker;
+  final bool isDeadBallTaker;
+  final VoidCallback onRole;
+  final VoidCallback onTogglePenalty;
+  final VoidCallback onToggleDeadBall;
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    final assigned = role != PlayerRole.none;
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: Row(
+        children: [
+          Expanded(
+            child: InkWell(
+              onTap: onRole,
+              borderRadius: AppRadii.smAll,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 4),
+                child: Row(
+                  children: [
+                    SizedBox(
+                      width: 36,
+                      child: TacticalChip(player.position.label),
+                    ),
+                    const SizedBox(width: AppSpacing.sm),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            player.name,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: AppTypography.bodyMedium,
+                          ),
+                          Text(
+                            assigned ? role.label : l.tacticsTapToAssign,
+                            style: AppTypography.labelSmall.copyWith(
+                              color: assigned
+                                  ? AppColors.primary
+                                  : AppColors.onSurfaceVariant,
+                              fontWeight: assigned
+                                  ? FontWeight.w700
+                                  : FontWeight.w400,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          // Technical ability — the quality that matters most for taking
+          // penalties and dead balls, so it's on hand while assigning takers.
+          Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                l.playerAttrTechnical.toUpperCase(),
+                style: AppTypography.labelSmall.copyWith(
+                  color: AppColors.onSurfaceVariant,
+                  fontSize: 9,
+                ),
+              ),
+              Text(
+                '${player.attributes.technical}',
+                style: AppTypography.labelMedium.copyWith(
+                  color: AppColors.ratingColor(
+                    player.attributes.technical / 10,
+                  ),
+                  fontWeight: FontWeight.w800,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(width: AppSpacing.md),
+          _SpBadge(
+            icon: Icons.sports_soccer,
+            active: isPenaltyTaker,
+            tooltip: l.tacticsPenalties,
+            onTap: onTogglePenalty,
+          ),
+          const SizedBox(width: 6),
+          _SpBadge(
+            icon: Icons.flag_rounded,
+            active: isDeadBallTaker,
+            tooltip: l.tacticsCornersFreeKicks,
+            onTap: onToggleDeadBall,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// A round set-piece toggle badge: filled in the accent when this player is the
+/// current taker, an outline otherwise.
+class _SpBadge extends StatelessWidget {
+  const _SpBadge({
+    required this.icon,
+    required this.active,
+    required this.tooltip,
+    required this.onTap,
+  });
+
+  final IconData icon;
+  final bool active;
+  final String tooltip;
   final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
-    final assigned = role != PlayerRole.none;
-    return InkWell(
-      onTap: onTap,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 5),
-        child: Row(
-          children: [
-            SizedBox(width: 36, child: TacticalChip(player.position.label)),
-            const SizedBox(width: AppSpacing.sm),
-            Expanded(
-              child: Text(
-                player.name,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: AppTypography.bodyMedium,
-              ),
+    return Tooltip(
+      message: tooltip,
+      child: InkWell(
+        onTap: onTap,
+        customBorder: const CircleBorder(),
+        child: Container(
+          width: 34,
+          height: 34,
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            color: active ? AppColors.primary.withValues(alpha: 0.18) : null,
+            shape: BoxShape.circle,
+            border: Border.all(
+              color: active ? AppColors.primary : AppColors.outlineVariant,
             ),
-            const SizedBox(width: AppSpacing.sm),
-            Text(
-              assigned ? role.label : 'Tap to assign',
-              style: AppTypography.labelSmall.copyWith(
-                color:
-                    assigned ? AppColors.primary : AppColors.onSurfaceVariant,
-                fontWeight: assigned ? FontWeight.w700 : FontWeight.w400,
-              ),
-            ),
-            const Icon(
-              Icons.chevron_right,
-              size: 18,
-              color: AppColors.onSurfaceVariant,
-            ),
-          ],
+          ),
+          child: Icon(
+            icon,
+            size: 18,
+            color: active ? AppColors.primary : AppColors.onSurfaceVariant,
+          ),
         ),
       ),
     );
