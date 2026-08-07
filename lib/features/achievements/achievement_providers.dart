@@ -5,10 +5,104 @@ import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/services/achievements/achievements.dart';
 import 'package:fnm/domain/services/achievements/board_satisfaction.dart';
+import 'package:fnm/features/y/y_providers.dart';
 import 'package:fnm/domain/services/competition/continental_cups.dart';
 import 'package:fnm/domain/services/competition/tournament_stars.dart';
 import 'package:fnm/features/career/career_providers.dart';
+import 'package:fnm/features/hub/objective_providers.dart';
+import 'package:fnm/features/press/press_providers.dart';
 import 'package:fnm/features/ranking/world_ranking_providers.dart';
+import 'package:fnm/features/stats/stats_providers.dart';
+import 'package:fnm/l10n/app_localizations.dart';
+
+/// The localised (title, description) for an achievement, resolved from its
+/// stable [AchievementDef.id]. Falls back to the catalogue's English if an id
+/// isn't mapped, so a newly added achievement still shows text.
+({String title, String description}) achievementText(
+  AppLocalizations l,
+  AchievementDef def,
+) {
+  final id = def.id;
+  if (id.startsWith('wins_')) {
+    final t = int.tryParse(id.substring(5)) ?? 0;
+    return (title: l.achWins(t), description: l.achWinsDesc(t));
+  }
+  if (id.startsWith('matches_')) {
+    final t = int.tryParse(id.substring(8)) ?? 0;
+    return (title: l.achMatches(t), description: l.achMatchesDesc(t));
+  }
+  if (id.startsWith('goals_')) {
+    final t = int.tryParse(id.substring(6)) ?? 0;
+    return (title: l.achGoals(t), description: l.achGoalsDesc(t));
+  }
+  if (id.startsWith('cleansheets_')) {
+    final t = int.tryParse(id.substring(12)) ?? 0;
+    return (title: l.achCleanSheets(t), description: l.achCleanSheetsDesc(t));
+  }
+  return switch (id) {
+    'streak_win_5' => (title: l.achStreakWin5, description: l.achStreakWin5Desc),
+    'streak_win_10' =>
+      (title: l.achStreakWin10, description: l.achStreakWin10Desc),
+    'streak_win_20' =>
+      (title: l.achStreakWin20, description: l.achStreakWin20Desc),
+    'streak_unbeaten_15' =>
+      (title: l.achUnbeaten15, description: l.achUnbeaten15Desc),
+    'streak_unbeaten_30' =>
+      (title: l.achUnbeaten30, description: l.achUnbeaten30Desc),
+    'feat_hattrick' => (title: l.achHattrick, description: l.achHattrickDesc),
+    'feat_motm_10' => (title: l.achMotm10, description: l.achMotm10Desc),
+    'feat_motm_50' => (title: l.achMotm50, description: l.achMotm50Desc),
+    'feat_perfect' => (title: l.achPerfect, description: l.achPerfectDesc),
+    'feat_shootout' => (title: l.achShootout, description: l.achShootoutDesc),
+    'feat_massacre' => (title: l.achMassacre, description: l.achMassacreDesc),
+    'feat_annihilation' =>
+      (title: l.achAnnihilation, description: l.achAnnihilationDesc),
+    'qual_wc' => (title: l.achQualWc, description: l.achQualWcDesc),
+    'qual_cont' => (title: l.achQualCont, description: l.achQualContDesc),
+    'title_wc' => (title: l.achTitleWc, description: l.achTitleWcDesc),
+    'title_euro' => (title: l.achTitleEuro, description: l.achTitleEuroDesc),
+    'title_copa' => (title: l.achTitleCopa, description: l.achTitleCopaDesc),
+    'title_afcon' => (title: l.achTitleAfcon, description: l.achTitleAfconDesc),
+    'title_asia' => (title: l.achTitleAsia, description: l.achTitleAsiaDesc),
+    'title_concacaf' =>
+      (title: l.achTitleConcacaf, description: l.achTitleConcacafDesc),
+    'title_ofc' => (title: l.achTitleOfc, description: l.achTitleOfcDesc),
+    'title_nations_league' =>
+      (title: l.achTitleNations, description: l.achTitleNationsDesc),
+    'title_finalissima' =>
+      (title: l.achTitleClash, description: l.achTitleClashDesc),
+    'wc_marksman' => (title: l.achMarksman, description: l.achMarksmanDesc),
+    'mega_sweep' => (title: l.achSweep, description: l.achSweepDesc),
+    'mega_allstar' => (title: l.achAllstar, description: l.achAllstarDesc),
+    'mega_goldenboot' =>
+      (title: l.achGoldenboot, description: l.achGoldenbootDesc),
+    'mega_demolition' =>
+      (title: l.achDemolition, description: l.achDemolitionDesc),
+    _ => (title: def.title, description: def.description),
+  };
+}
+
+/// The localised heading for an achievement [c]ategory.
+String achievementCategoryLabel(AppLocalizations l, AchievementCategory c) =>
+    switch (c) {
+      AchievementCategory.wins => l.achCatWins,
+      AchievementCategory.goals => l.achCatGoals,
+      AchievementCategory.matches => l.achCatMatches,
+      AchievementCategory.streaks => l.achCatStreaks,
+      AchievementCategory.qualifications => l.achCatQualifications,
+      AchievementCategory.titles => l.achCatTitles,
+      AchievementCategory.misc => l.achCatMisc,
+      AchievementCategory.mega => l.achCatMega,
+    };
+
+/// The localised rarity label for an achievement [t]ier.
+String achievementTierLabel(AppLocalizations l, AchievementTier t) =>
+    switch (t) {
+      AchievementTier.bronze => l.achTierBronze,
+      AchievementTier.silver => l.achTierSilver,
+      AchievementTier.gold => l.achTierGold,
+      AchievementTier.platinum => l.achTierPlatinum,
+    };
 
 /// Board/fan satisfaction (0–100) for the save. Recent form nudges it match to
 /// match; a tournament result is what actually moves it. See
@@ -55,7 +149,8 @@ final AutoDisposeFutureProviderFamily<int, int> satisfactionProvider =
         ? Placing.champion
         : h.runnerUpId == career.nationId
             ? Placing.runnerUp
-            : h.thirdId == career.nationId
+            : (h.thirdId == career.nationId ||
+                    h.thirdId2 == career.nationId)
                 ? Placing.third
                 : null;
     if (placing == null) continue;
@@ -72,11 +167,45 @@ final AutoDisposeFutureProviderFamily<int, int> satisfactionProvider =
     honours.add((tier: tier, placing: placing));
   }
 
-  return BoardSatisfaction.compute(
-    recent: recent,
-    honours: honours,
-    worldRank: ranking?.position[career.nationId],
-  );
+  // The cycle's stated objectives, once each is settled — the biggest thing
+  // the gauge answers to. Without them the board's mood was legible only to
+  // the code: a manager could hit the brief and still be "concerned", or miss
+  // it and be "pleased", purely on friendly form.
+  final objectives = await ref.watch(cycleObjectivesProvider(careerId).future);
+  final settled = [
+    for (final o in objectives)
+      if (o.decided) (tier: o.tier, target: o.target, actual: o.actual),
+  ];
+
+  // What the manager has said in public this cycle. Small next to results, but
+  // it is the one thing that moves the board between matches.
+  final press = await ref.watch(pressEffectProvider(careerId).future);
+
+  final base =
+      (BoardSatisfaction.compute(
+                recent: recent,
+                honours: honours,
+                worldRank: ranking?.position[career.nationId],
+                objectives: settled,
+                // The board reads the room. A neutral public contributes
+                // exactly nothing, so the gauge only moves once the country
+                // has an opinion.
+                publicMood: await ref.watch(
+                  publicMoodProvider(careerId).future,
+                ),
+              ) +
+              press.board)
+          .clamp(0, 100);
+
+  // Board promise kept: once EVERY settled objective has been met, the board
+  // stays onside — individual results still nudge satisfaction, but it can
+  // never sink below the neutral (job-safe) mark for the rest of the cycle.
+  final allMet = settled.isNotEmpty &&
+      objectives.where((o) => o.decided).every((o) => o.met);
+  if (allMet && base < BoardSatisfaction.neutral) {
+    return BoardSatisfaction.neutral;
+  }
+  return base;
 });
 
 /// Gathers, evaluates and persists a save's achievements. The sole writer of
@@ -162,8 +291,12 @@ class AchievementService {
       for (final h in honours)
         if (h.championId == nationId) h.competition,
     };
+    // The manager's own confederation — every continent's cup is a competition
+    // of the same kind, so anything read off "the continental finals" has to
+    // name theirs or it answers for somebody else's tournament.
+    final playerConfederation = nations[nationId]?.confederation;
     final ownContinental =
-        ContinentalCups.byConfederation[nations[nationId]?.confederation]?.name;
+        ContinentalCups.byConfederation[playerConfederation]?.name;
     final wonWcAndCont = titlesWon.contains(worldCupHonourName) &&
         ownContinental != null &&
         titlesWon.contains(ownContinental);
@@ -183,15 +316,33 @@ class AchievementService {
     final contScorers = await comp.topScorers(
       careerId,
       kind: CompetitionKind.continentalFinals,
+      confederation: playerConfederation,
       limit: 1,
     );
-    final goldenBoot = (wcScorers.isNotEmpty &&
+    // Only a FINISHED tournament crowns a top scorer — otherwise a mid-cup
+    // scoring lead (e.g. after the group stage) would award the Golden Boot
+    // prematurely. Gate each branch on its tournament being decided.
+    final wcDecided = await comp.worldChampion(careerId) != null;
+    final contDecided = await comp.allPlayedForKind(
+      careerId,
+      CompetitionKind.continentalFinals,
+      confederation: playerConfederation,
+    );
+    final goldenBoot = (wcDecided &&
+            wcScorers.isNotEmpty &&
             wcScorers.first.nationId == nationId) ||
-        (contScorers.isNotEmpty && contScorers.first.nationId == nationId);
+        (contDecided &&
+            contScorers.isNotEmpty &&
+            contScorers.first.nationId == nationId);
 
     final allStar = await _playerInWorldAllStars(careerId, nationId, fixtures);
     final satisfaction =
         await _ref.read(satisfactionProvider(careerId).future);
+
+    // The deeper record aggregates (streaks, clean sheets, player feats) come
+    // from the shared career-stats snapshot — the same numbers the stats screen
+    // shows, so an achievement can never disagree with the stat that earned it.
+    final cs = await _ref.read(careerStatsProvider(careerId).future);
 
     return AchievementStats(
       matchesPlayed: matches,
@@ -199,12 +350,22 @@ class AchievementService {
       reachedWorldCup: reachedWc,
       reachedContinental: reachedCont,
       titlesWon: titlesWon,
-      biggestWinMargin: biggestMargin,
+      biggestWinMargin: cs.biggestWinMargin > biggestMargin
+          ? cs.biggestWinMargin
+          : biggestMargin,
       wcMarksmanGoals: wcMarksmanGoals,
       hasChampionshipGoldenBoot: goldenBoot,
       playerInAllStars: allStar,
       wonWorldCupAndContinental: wonWcAndCont,
       satisfaction: satisfaction,
+      cleanSheets: cs.cleanSheets,
+      totalGoals: cs.goalsFor,
+      longestWinStreak: cs.longestWinStreak,
+      longestUnbeatenRun: cs.longestUnbeatenRun,
+      hatTricks: cs.hatTricks,
+      playerMotms: cs.playerMotms,
+      shootoutsWon: cs.shootoutsWon,
+      bestPlayerRating: cs.bestPlayerRating,
     );
   }
 
