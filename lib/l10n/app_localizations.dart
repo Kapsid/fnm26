@@ -296,6 +296,18 @@ abstract class AppLocalizations {
   /// **'Tactics · {used}/{max} subs'**
   String matchTacticsWithSubs(int used, int max);
 
+  /// Live match control bar tactics pill label when players are out of energy; the substitution count is shown separately so it is never clipped.
+  ///
+  /// In en, this message translates to:
+  /// **'TIRED ×{count}'**
+  String matchTiredCount(int count);
+
+  /// Live match control bar tactics pill label when no players are tired.
+  ///
+  /// In en, this message translates to:
+  /// **'TACTICS'**
+  String get matchTacticsLabel;
+
   /// Heading above the interval team-talk options.
   ///
   /// In en, this message translates to:

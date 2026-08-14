@@ -122,6 +122,14 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String matchTiredCount(int count) {
+    return 'TIRED ×$count';
+  }
+
+  @override
+  String get matchTacticsLabel => 'TACTICS';
+
+  @override
   String get teamTalkHeading => 'TEAM TALK';
 
   @override

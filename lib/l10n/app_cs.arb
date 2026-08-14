@@ -33,6 +33,8 @@
   "matchHalfTime": "POLOČAS",
   "matchContinue": "Pokračovat",
   "matchTacticsWithSubs": "Taktika · {used}/{max} střídání",
+  "matchTiredCount": "ÚNAVA ×{count}",
+  "matchTacticsLabel": "TAKTIKA",
   "teamTalkHeading": "PORADA TÝMU",
   "teamTalkPrompt": "Nastavte tón pro druhý poločas.",
   "teamTalkCalmLabel": "Chladné hlavy",

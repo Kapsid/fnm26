@@ -173,8 +173,7 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
   /// Whether the clock is stopped at any interval — half time or either
   /// extra-time break. Anything that would otherwise restart play (a goal
   /// flash clearing, an injury sub being made) has to respect all three.
-  bool get _atInterval =>
-      _atHalfTime || _atExtraTimeStart || _atExtraTimeHalf;
+  bool get _atInterval => _atHalfTime || _atExtraTimeStart || _atExtraTimeHalf;
 
   /// The talk given at the extra-time turnaround. Extra time is already drawn
   /// by then (its goals have been shown), so this one steadies the takers
@@ -1535,6 +1534,11 @@ class _MatchControlBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
+    // Spent legs call attention to themselves: the tactics pill turns amber
+    // and counts the players who have nothing left, so a fading side is
+    // something the manager sees rather than something they only notice in
+    // the full-time ratings.
+    final tired = spent > 0 && subsUsed < kMaxSubs;
     return Padding(
       padding: const EdgeInsets.symmetric(
         horizontal: AppSpacing.marginMobile,
@@ -1572,39 +1576,8 @@ class _MatchControlBar extends StatelessWidget {
           _PillButton(
             expand: true,
             onTap: onTactics,
-            // Spent legs call attention to themselves: the tactics pill turns
-            // amber and counts the players who have nothing left, so a fading
-            // side is something the manager sees rather than something they
-            // only notice in the full-time ratings.
-            accent: spent > 0 && subsUsed < kMaxSubs ? AppColors.warning : null,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  spent > 0 && subsUsed < kMaxSubs
-                      ? Icons.battery_alert_rounded
-                      : Icons.tune,
-                  size: 18,
-                  color: spent > 0 && subsUsed < kMaxSubs
-                      ? AppColors.warning
-                      : AppColors.primary,
-                ),
-                const SizedBox(width: AppSpacing.sm),
-                Flexible(
-                  child: Text(
-                    spent > 0 && subsUsed < kMaxSubs
-                        ? 'TIRED ×$spent · $subsUsed/$kMaxSubs'
-                        : 'TACTICS · $subsUsed/$kMaxSubs',
-                    overflow: TextOverflow.ellipsis,
-                    style: AppTypography.labelMedium.copyWith(
-                      color: spent > 0 && subsUsed < kMaxSubs
-                          ? AppColors.warning
-                          : AppColors.primary,
-                    ),
-                  ),
-                ),
-              ],
-            ),
+            accent: tired ? AppColors.warning : null,
+            child: MatchTacticsPillContent(subsUsed: subsUsed, spent: spent),
           ),
           const SizedBox(width: AppSpacing.sm),
           _PillButton(
@@ -1617,6 +1590,63 @@ class _MatchControlBar extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+/// The content of the live match control bar's tactics pill: an icon, an
+/// ellipsizing tired/tactics label, and the substitution count.
+///
+/// Extracted out of [_MatchControlBar] so the count can be a fixed-width
+/// sibling of the label rather than folded into one ellipsized string — on a
+/// narrow screen the label gives way first, never the count, which is the
+/// number the manager is actually reading. The extraction also lets a widget
+/// test pump this content directly without reaching into the private
+/// [_MatchControlBar].
+@visibleForTesting
+class MatchTacticsPillContent extends StatelessWidget {
+  const MatchTacticsPillContent({
+    super.key,
+    required this.subsUsed,
+    required this.spent,
+  });
+
+  final int subsUsed;
+
+  /// How many of the manager's players on the pitch are running on empty.
+  final int spent;
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    final tired = spent > 0 && subsUsed < kMaxSubs;
+    final tone = tired ? AppColors.warning : AppColors.primary;
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Icon(
+          tired ? Icons.battery_alert_rounded : Icons.tune,
+          size: 18,
+          color: tone,
+        ),
+        const SizedBox(width: AppSpacing.sm),
+        Flexible(
+          child: Text(
+            tired ? l.matchTiredCount(spent) : l.matchTacticsLabel,
+            overflow: TextOverflow.ellipsis,
+            softWrap: false,
+            style: AppTypography.labelMedium.copyWith(color: tone),
+          ),
+        ),
+        const SizedBox(width: AppSpacing.xs),
+        // Never Flexible: the count is the number the manager is actually
+        // reading, so the label gives way to it rather than the other way
+        // round.
+        Text(
+          '$subsUsed/$kMaxSubs',
+          style: AppTypography.labelMedium.copyWith(color: tone),
+        ),
+      ],
     );
   }
 }

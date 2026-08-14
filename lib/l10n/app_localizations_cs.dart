@@ -122,6 +122,14 @@ class AppLocalizationsCs extends AppLocalizations {
   }
 
   @override
+  String matchTiredCount(int count) {
+    return 'ÚNAVA ×$count';
+  }
+
+  @override
+  String get matchTacticsLabel => 'TAKTIKA';
+
+  @override
   String get teamTalkHeading => 'PORADA TÝMU';
 
   @override

@@ -37,7 +37,7 @@ The tactics pill already wraps its text in `Flexible` with `TextOverflow.ellipsi
 - Consumes: `kMaxSubs` (existing const), `_PillButton` (existing, same file)
 - Produces: no new public API
 
-- [ ] **Step 1: Write the failing widget test**
+- [x] **Step 1: Write the failing widget test**
 
 ```dart
 // test/widget/match_control_bar_test.dart
@@ -64,12 +64,12 @@ delegates. `_MatchControlBar` is private — make it package-visible for the tes
 by adding `@visibleForTesting` to the class, or extract the pill's content into
 a small public widget. Prefer the extraction; it is what the fix needs anyway.
 
-- [ ] **Step 2: Run the test to verify it fails**
+- [x] **Step 2: Run the test to verify it fails**
 
 Run: `flutter test test/widget/match_control_bar_test.dart`
 Expected: FAIL — `1/3` not found (it is inside the concatenated, ellipsized string).
 
-- [ ] **Step 3: Split the label from the count**
+- [x] **Step 3: Split the label from the count**
 
 Replace the single `Flexible(child: Text(...))` with two children: an
 ellipsizing label and a fixed count that never shrinks.
@@ -99,7 +99,7 @@ Hoist the repeated `spent > 0 && subsUsed < kMaxSubs` into a single local
 AppColors.warning : AppColors.primary;` — it is currently evaluated five times
 in this widget.
 
-- [ ] **Step 4: Add the two new strings to both ARB files**
+- [x] **Step 4: Add the two new strings to both ARB files**
 
 ```json
 // lib/l10n/app_en.arb
@@ -114,12 +114,12 @@ in this widget.
 "matchTacticsLabel": "TAKTIKA",
 ```
 
-- [ ] **Step 5: Regenerate localizations and run the test**
+- [x] **Step 5: Regenerate localizations and run the test**
 
 Run: `flutter gen-l10n && flutter test test/widget/match_control_bar_test.dart`
 Expected: PASS
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add lib/features/match/match_screen.dart lib/l10n/app_en.arb lib/l10n/app_cs.arb lib/l10n/ test/widget/match_control_bar_test.dart
