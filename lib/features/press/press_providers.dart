@@ -262,13 +262,29 @@ pressQuestionProvider = FutureProvider.autoDispose.family<PressQuestion?, int>((
     );
   }
 
-  if (candidates.isEmpty) return null;
-  final pool = candidates.take(Press.storyPool).toList();
-  final seed = varietySeed(
-    'press:${career.rngSeed}:${now.year}:${now.month}:${now.day}',
+  // What the press have just been asking about, newest first. A topic they
+  // have only recently covered goes to the back of the queue: the conference
+  // read as a loop because nothing stopped the same story leading twice.
+  final recentAnswers = [...answers]
+    ..sort((a, b) => b.answeredAt.compareTo(a.answeredAt));
+  final recentTopics = <PressTopic>{
+    for (final a in recentAnswers.take(_recentTopicMemory))
+      if (Press.topicOfKey(a.questionKey) case final topic?) topic,
+  };
+
+  return Press.pick(
+    candidates,
+    recentTopics: recentTopics,
+    seed: varietySeed(
+      'press:${career.rngSeed}:${now.year}:${now.month}:${now.day}',
+    ),
   );
-  return pool[seed % pool.length];
 });
+
+/// How many recent questions the press remember having asked. Small on
+/// purpose: they should avoid repeating themselves, not work through every
+/// topic before coming back to a story that matters.
+const int _recentTopicMemory = 3;
 
 /// How many competitive games without defeat make a run worth asking about.
 const int _unbeatenRunLength = 6;

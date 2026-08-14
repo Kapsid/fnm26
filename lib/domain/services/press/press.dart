@@ -100,6 +100,57 @@ abstract final class Press {
   /// instead of last month's defeat.
   static const int storyPool = 4;
 
+  /// The prefix a topic's question key carries.
+  ///
+  /// The key is what gets stored when a question is answered, so it is also
+  /// the only record of what the press have already asked about. Naming the
+  /// mapping here — rather than leaving it implicit in a dozen string literals
+  /// — is what lets [pick] avoid asking the same thing twice in a row.
+  static String keyPrefixOf(PressTopic topic) => switch (topic) {
+    PressTopic.heavyDefeat => 'defeat',
+    PressTopic.underPressure => 'pressure',
+    PressTopic.tournamentPreview => 'preview',
+    PressTopic.tournamentOpening => 'opening',
+    PressTopic.triumph => 'triumph',
+    PressTopic.elimination => 'exit',
+    PressTopic.bigWin => 'rout',
+    PressTopic.qualified => 'qualified',
+    PressTopic.missedOut => 'missed',
+    PressTopic.unbeatenRun => 'unbeaten',
+    PressTopic.newJob => 'newjob',
+    PressTopic.rankingPeak => 'peak',
+  };
+
+  /// The topic a stored question key belongs to, or null if it is not a press
+  /// question at all (a grievance is stored in the same table).
+  static PressTopic? topicOfKey(String key) {
+    final prefix = key.split(':').first;
+    for (final topic in PressTopic.values) {
+      if (keyPrefixOf(topic) == prefix) return topic;
+    }
+    return null;
+  }
+
+  /// Which of the live stories the press actually lead with.
+  ///
+  /// [candidates] arrive biggest-first. A topic the manager has just been
+  /// asked about is pushed to the back rather than dropped: the press repeat
+  /// themselves when nothing else has happened, but they do not open with the
+  /// same question twice running while there is anything else to ask.
+  static PressQuestion? pick(
+    List<PressQuestion> candidates, {
+    Set<PressTopic> recentTopics = const {},
+    required int seed,
+  }) {
+    if (candidates.isEmpty) return null;
+    final fresh = [
+      for (final c in candidates)
+        if (!recentTopics.contains(c.topic)) c,
+    ];
+    final pool = (fresh.isEmpty ? candidates : fresh).take(storyPool).toList();
+    return pool[seed % pool.length];
+  }
+
   /// What each tone does.
   static PressEffect effectOf(PressTone tone) => switch (tone) {
     PressTone.backThePlayers => (morale: 6, board: -3),

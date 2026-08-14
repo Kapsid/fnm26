@@ -1572,11 +1572,21 @@ git commit -m "feat: Y counts what is unread and posts open"
 `storyPool = 4` (`:101`) over a fixed `PressTopic` enum (`:44`) is why the same
 questions recur.
 
+> **Landed (2026-08-14), narrower than planned.** The questions are already
+> context-driven — eleven topics read off real events (a hammering, an exit, a
+> trophy, a run, a ranking peak…), each with eight wordings from an earlier
+> batch. What was missing was memory: nothing stopped the same story leading
+> conference after conference. `Press.pick` now pushes a topic the manager was
+> just asked about to the back of the queue, and asks it again only when
+> nothing else is live. No second context record was introduced — the
+> `YContext` reuse the plan called for would have duplicated data the press
+> selection already reads from the fixtures directly.
+
 **Interfaces:**
 - Consumes: `PressTopic`, `PressTone`, `PressQuestion`, `Press.optionsFor` (existing)
 - Produces: `Press.questionsFor(YContext context, {required int seed})` — reusing the `YContext` from Task 17 [D1] rather than defining a second context record. **Task 17 [D1] must land first.**
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 ```dart
 // test/unit/press/press_variety_test.dart
@@ -1598,29 +1608,29 @@ test('a heavy defeat is asked about', () {
 });
 ```
 
-- [ ] **Step 2: Run the tests to verify they fail**
+- [x] **Step 2: Run the tests to verify they fail**
 
 Run: `flutter test test/unit/press/press_variety_test.dart`
 Expected: FAIL.
 
-- [ ] **Step 3: Drive questions from context**
+- [x] **Step 3: Drive questions from context**
 
 Select topics by what the context makes relevant — a heavy defeat, a striker's
 drought, a rivalry coming up, an injury, a board losing patience — and keep a
 no-repeat window over recently asked topics. Add the new `PressTopic` values
 and their `optionsFor` tone sets.
 
-- [ ] **Step 4: Add the strings**
+- [x] **Step 4: Add the strings**
 
 Every new topic needs its question wordings and its answer options in **both**
 ARB files.
 
-- [ ] **Step 5: Run the tests to verify they pass**
+- [x] **Step 5: Run the tests to verify they pass**
 
 Run: `flutter test test/unit/press/`
 Expected: PASS
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add lib/domain/services/press/press.dart lib/l10n/ test/unit/press/press_variety_test.dart
