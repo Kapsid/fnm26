@@ -25,7 +25,7 @@
 
 ## Phase A — Live match
 
-### Task A1: Substitution count survives the tired label
+### Task 1: Substitution count survives the tired label [A1]
 
 **Files:**
 - Modify: `lib/features/match/match_screen.dart:1580-1605`
@@ -128,7 +128,7 @@ git commit -m "fix: the substitution count no longer gets eaten by the tired lab
 
 ---
 
-### Task A2: The substitution cap is enforced, not just announced
+### Task 2: The substitution cap is enforced, not just announced [A2]
 
 **Files:**
 - Modify: `lib/features/tactics/in_match_tactics.dart:137-200`
@@ -305,7 +305,7 @@ git commit -m "fix: the substitution cap is enforced at the point of change"
 
 ---
 
-### Task A3: Second yellows outnumber straight reds, and read differently
+### Task 3: Second yellows outnumber straight reds, and read differently [A3]
 
 **Files:**
 - Modify: `lib/domain/services/match/match_engine.dart:406`, `:940-1000`
@@ -432,7 +432,7 @@ git commit -m "fix: second bookings are the common dismissal, and look like one"
 
 ---
 
-### Task A4: Team overall on the match and on team detail
+### Task 4: Team overall on the match and on team detail [A4]
 
 **Files:**
 - Modify: `lib/features/match/match_preview_screen.dart`
@@ -526,7 +526,7 @@ git commit -m "feat: team overall on the match preview and team detail"
 
 ---
 
-### Task A5: Seven-goal results become ultra rare
+### Task 5: Seven-goal results become ultra rare [A5]
 
 **Files:**
 - Modify: `lib/domain/services/match/match_engine.dart` (scoreline draw)
@@ -549,7 +549,7 @@ void main() {
     const runs = 2000;
 
     for (var seed = 0; seed < runs; seed++) {
-      final r = simulateOneMatch(seed); // same helper style as Task A3
+      final r = simulateOneMatch(seed); // same helper style as Task 3 [A3]
       if (r.homeGoals >= 7 || r.awayGoals >= 7) blowouts++;
     }
 
@@ -616,7 +616,7 @@ git commit -m "fix: a seven-goal win is ultra rare again"
 
 ## Phase B — Tournament flow
 
-### Task B1: The intercontinental play-off becomes playable
+### Task 6: The intercontinental play-off becomes playable [B1]
 
 **Files:**
 - Modify: `lib/domain/services/competition/finals.dart:468-600`
@@ -777,7 +777,7 @@ git commit -m "fix: the intercontinental play-off is played, not decided for you
 
 ---
 
-### Task B2: The tournament's best player is named only at the end
+### Task 7: The tournament's best player is named only at the end [B2]
 
 **Files:**
 - Modify: `lib/domain/services/awards/awards.dart`
@@ -840,7 +840,7 @@ git commit -m "fix: the tournament's best player is named after the final, not b
 
 ---
 
-### Task B3: The passive World Cup simulation paginates by round
+### Task 8: The passive World Cup simulation paginates by round [B3]
 
 **Files:**
 - Modify: `lib/features/tournaments/cup_detail_screen.dart`
@@ -892,7 +892,7 @@ git commit -m "feat: the passive tournament sim pages by round instead of scroll
 
 ---
 
-### Task B4: Gold Cup winners after 2023
+### Task 9: Gold Cup winners after 2023 [B4]
 
 **Files:**
 - Modify: `lib/domain/services/competition/real_history.dart:1197+`
@@ -938,7 +938,7 @@ git commit -m "fix: the North America Cup record no longer stops at 2023"
 
 ## Phase C — Squad, youth, players
 
-### Task C1: The call-up screen gets position tabs
+### Task 10: The call-up screen gets position tabs [C1]
 
 **Files:**
 - Modify: `lib/features/tactics/call_up_screen.dart` (all three reported items live here)
@@ -1023,7 +1023,7 @@ git commit -m "feat: call-ups are picked line by line instead of scrolled"
 
 ---
 
-### Task C2: Newgens enter the pyramid at 13–15
+### Task 11: Newgens enter the pyramid at 13–15 [C2]
 
 **Files:**
 - Modify: `lib/domain/services/player/prospects.dart:80` and its age bands
@@ -1095,7 +1095,7 @@ git commit -m "feat: prospects are discovered at thirteen and grow up through th
 
 ---
 
-### Task C3: A player promoted out of U-19 is not outshone in U-21
+### Task 12: A player promoted out of U-19 is not outshone in U-21 [C3]
 
 **Files:**
 - Modify: `lib/domain/services/player/prospects.dart`
@@ -1128,7 +1128,7 @@ Expected: FAIL on at least one seed.
 
 A player's band must be a function of his age, so the same generated player
 moves up as the years pass. If bands are currently generated independently, the
-fix is to generate once at intake (Task C2) and derive the band from age.
+fix is to generate once at intake (Task 11 [C2]) and derive the band from age.
 
 - [ ] **Step 4: Run the tests to verify they pass**
 
@@ -1144,7 +1144,7 @@ git commit -m "fix: the best under-19 is promoted rather than replaced"
 
 ---
 
-### Task C4: The grievance event waits for a squad, and stays resolved
+### Task 13: The grievance event waits for a squad, and stays resolved [C4]
 
 **Files:**
 - Modify: `lib/features/hub/hub_event.dart:383`
@@ -1203,7 +1203,7 @@ git commit -m "fix: players do not air grievances before they have been picked"
 
 ---
 
-### Task C5: Every player has a club history
+### Task 14: Every player has a club history [C5]
 
 **Files:**
 - Modify: `lib/domain/services/club/club_history.dart` callers
@@ -1248,7 +1248,7 @@ git commit -m "fix: every player carries a club history, not just some"
 
 ---
 
-### Task C6: More players abroad, and international transfers are visible
+### Task 15: More players abroad, and international transfers are visible [C6]
 
 **Files:**
 - Modify: `lib/domain/services/club/clubs.dart:40-200`
@@ -1310,7 +1310,7 @@ git commit -m "feat: more players ply their trade abroad, and the move is report
 
 ---
 
-### Task C7: An active scorer is not listed as inactive
+### Task 16: An active scorer is not listed as inactive [C7]
 
 **Files:**
 - Modify: `lib/domain/services/stats/career_stats.dart` or the all-time scorer query in `lib/features/stats/`
@@ -1358,7 +1358,7 @@ git commit -m "fix: a player still playing is not listed as retired"
 
 ## Phase D — Y and the press
 
-### Task D1: Y posts read the save, not a template pool
+### Task 17: Y posts read the save, not a template pool [D1]
 
 **Files:**
 - Modify: `lib/domain/services/press/y_feed.dart`
@@ -1459,7 +1459,7 @@ git commit -m "feat: Y writes about what actually happened"
 
 ---
 
-### Task D2: Y gets an unread count and tappable posts
+### Task 18: Y gets an unread count and tappable posts [D2]
 
 **Files:**
 - Modify: `lib/features/y/y_screen.dart`, `lib/features/y/y_providers.dart`
@@ -1516,7 +1516,7 @@ git commit -m "feat: Y counts what is unread and posts open"
 
 ---
 
-### Task D3: Press conferences ask about what happened
+### Task 19: Press conferences ask about what happened [D3]
 
 **Files:**
 - Modify: `lib/domain/services/press/press.dart`
@@ -1527,7 +1527,7 @@ questions recur.
 
 **Interfaces:**
 - Consumes: `PressTopic`, `PressTone`, `PressQuestion`, `Press.optionsFor` (existing)
-- Produces: `Press.questionsFor(YContext context, {required int seed})` — reusing the `YContext` from Task D1 rather than defining a second context record. **Task D1 must land first.**
+- Produces: `Press.questionsFor(YContext context, {required int seed})` — reusing the `YContext` from Task 17 [D1] rather than defining a second context record. **Task 17 [D1] must land first.**
 
 - [ ] **Step 1: Write the failing test**
 
@@ -1584,7 +1584,7 @@ git commit -m "feat: the press asks about the match you just played"
 
 ## Phase E — Naming, UI, balance
 
-### Task E1: Achievements use the licence-safe name
+### Task 20: Achievements use the licence-safe name [E1]
 
 **Files:**
 - Modify: `lib/domain/services/achievements/achievements.dart:283-422`
@@ -1639,14 +1639,14 @@ git commit -m "fix: achievements use the licence-safe competition name"
 
 ---
 
-### Task E2: A nation's overall over time
+### Task 21: A nation's overall over time [E2]
 
 **Files:**
 - Modify: `lib/features/stats/team_stats_screen.dart`
 - Test: `test/widget/team_overall_history_test.dart` (create)
 
 **Interfaces:**
-- Consumes: `squadOverall` from Task A4. **Task A4 must land first.**
+- Consumes: `squadOverall` from Task 4 [A4]. **Task 4 [A4] must land first.**
 - Produces: `teamOverallHistoryProvider(careerId) → List<({int year, int overall})>`
 
 - [ ] **Step 1: Write the failing test**
@@ -1692,7 +1692,7 @@ git commit -m "feat: a nation's overall is a curve you can see"
 
 ---
 
-### Task E3: The World Cup moves you more, a single match less
+### Task 22: The World Cup moves you more, a single match less [E3]
 
 **Files:**
 - Modify: `lib/domain/services/ranking/elo.dart:28-48`
@@ -1762,7 +1762,7 @@ git commit -m "balance: a World Championship moves a nation further, a single ma
 
 ---
 
-### Task E4: Board objectives are kinder to weak nations and harsher on collapse
+### Task 23: Board objectives are kinder to weak nations and harsher on collapse [E4]
 
 **Files:**
 - Modify: `lib/domain/services/achievements/board_satisfaction.dart`
