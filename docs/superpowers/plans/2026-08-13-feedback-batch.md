@@ -145,7 +145,7 @@ call, then have `_setSlot` refuse a change that breaks it.
 **Interfaces:**
 - Produces: `bool canBringOn({required Set<int> startingIds, required Set<int> onPitch, required Set<int> sentOffIds, required Set<int> withdrawnIds, required int maxSubs, required int playerId})` in a new file `lib/domain/services/tactics/substitution_rules.dart`
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 ```dart
 // test/unit/tactics/in_match_subs_test.dart
@@ -213,12 +213,12 @@ void main() {
 }
 ```
 
-- [ ] **Step 2: Run the test to verify it fails**
+- [x] **Step 2: Run the test to verify it fails**
 
 Run: `flutter test test/unit/tactics/in_match_subs_test.dart`
 Expected: FAIL — `substitution_rules.dart` does not exist.
 
-- [ ] **Step 3: Write the rule**
+- [x] **Step 3: Write the rule**
 
 ```dart
 // lib/domain/services/tactics/substitution_rules.dart
@@ -248,12 +248,12 @@ bool canBringOn({
 }
 ```
 
-- [ ] **Step 4: Run the test to verify it passes**
+- [x] **Step 4: Run the test to verify it passes**
 
 Run: `flutter test test/unit/tactics/in_match_subs_test.dart`
 Expected: PASS
 
-- [ ] **Step 5: Wire the rule into the board**
+- [x] **Step 5: Wire the rule into the board**
 
 In `in_match_tactics.dart`, track `withdrawnIds` in state (a starter leaves the
 pitch → add; the state is per-sheet, so seed it from `widget.startingIds`
@@ -293,7 +293,7 @@ void _setSlot(int slot, int playerId) {
 Keep the `_apply()` guard as a backstop — it costs nothing and covers any path
 that does not go through `_setSlot`.
 
-- [ ] **Step 6: Verify and commit**
+- [x] **Step 6: Verify and commit**
 
 Run: `flutter analyze && flutter test test/unit/tactics/ test/widget/tactics_pitch_test.dart`
 Expected: PASS

@@ -8,6 +8,7 @@ import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/entities/tactics.dart';
 import 'package:fnm/domain/services/tactics/best_eleven.dart';
 import 'package:fnm/domain/services/tactics/position_fit.dart';
+import 'package:fnm/domain/services/tactics/substitution_rules.dart';
 import 'package:fnm/features/tactics/tactics_pitch.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
@@ -118,8 +119,9 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
   late TacticalInstructions _instructions = widget.instructions;
 
   /// Everyone still eligible to be on the pitch: the squad minus the sent off.
-  late final List<Player> _eligible =
-      widget.pool.where((p) => !widget.sentOffIds.contains(p.id)).toList();
+  late final List<Player> _eligible = widget.pool
+      .where((p) => !widget.sentOffIds.contains(p.id))
+      .toList();
 
   late final Map<int, Player> _byId = {for (final p in widget.pool) p.id: p};
 
@@ -130,11 +132,17 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
   /// replacements still count as a single change to that starter's slot). A
   /// sending-off is not a substitution — it costs a player, not a change.
   int get _subsUsed => widget.startingIds
-      .where((id) =>
-          !_onPitch.contains(id) && !widget.sentOffIds.contains(id))
+      .where((id) => !_onPitch.contains(id) && !widget.sentOffIds.contains(id))
       .length;
 
   bool get _overLimit => _subsUsed > widget.maxSubs;
+
+  /// Starters already taken off. They cannot come back on: football has no
+  /// re-entry. Seeded from the XI the sheet opened with, so a manager reopening
+  /// the editor later in the match still cannot undo an earlier change.
+  late Set<int> _withdrawn = widget.startingIds
+      .where((id) => !_onPitch.contains(id))
+      .toSet();
 
   void _setFormation(Formation f) {
     if (f == _formation) return;
@@ -164,12 +172,32 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
   /// Puts [playerId] into [slot], swapping if they already start elsewhere (so
   /// the displaced player moves rather than duplicating), or otherwise pushing
   /// the previous occupant off the pitch (a substitution).
+  ///
+  /// The change is refused outright when it would break the substitution
+  /// rules — the snackbar on [_apply] used to be the only thing standing in
+  /// the way, which let the board reach a state football does not allow.
   void _setSlot(int slot, int playerId) {
+    if (!canBringOn(
+      startingIds: widget.startingIds,
+      onPitch: _onPitch,
+      sentOffIds: widget.sentOffIds,
+      withdrawnIds: _withdrawn,
+      maxSubs: widget.maxSubs,
+      playerId: playerId,
+    )) {
+      final l = AppLocalizations.of(context);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(l.tacticsTooManySubs(widget.maxSubs))),
+      );
+      return;
+    }
     setState(() {
       final l = [..._lineup];
       final existing = l.indexOf(playerId);
       if (existing != -1) {
         l[existing] = l[slot];
+      } else if (l[slot] case final out?) {
+        _withdrawn = {..._withdrawn, out};
       }
       l[slot] = playerId;
       _lineup = l;
@@ -290,8 +318,12 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
             },
             onBenchIn: _setSlot,
             onMoveToSpace: (slot, dropY) {
-              final outcome =
-                  resolveSpaceDrag(_formation, _instructions, slot, dropY);
+              final outcome = resolveSpaceDrag(
+                _formation,
+                _instructions,
+                slot,
+                dropY,
+              );
               // Through _setFormation, which refits the players already on the
               // pitch — assigning _formation directly would scramble the side
               // mid-match.
@@ -334,17 +366,23 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
                 const SizedBox(height: AppSpacing.sm),
                 Row(
                   children: [
-                    const Icon(Icons.block_rounded,
-                        size: 14, color: AppColors.error),
+                    const Icon(
+                      Icons.block_rounded,
+                      size: 14,
+                      color: AppColors.error,
+                    ),
                     const SizedBox(width: AppSpacing.xs),
                     Expanded(
                       child: Text(
-                        l.tacticsSentOffNote(widget.sentOffIds
-                            .map((id) => _byId[id]?.name)
-                            .whereType<String>()
-                            .join(', ')),
-                        style: AppTypography.labelSmall
-                            .copyWith(color: AppColors.error),
+                        l.tacticsSentOffNote(
+                          widget.sentOffIds
+                              .map((id) => _byId[id]?.name)
+                              .whereType<String>()
+                              .join(', '),
+                        ),
+                        style: AppTypography.labelSmall.copyWith(
+                          color: AppColors.error,
+                        ),
                       ),
                     ),
                   ],
@@ -422,24 +460,48 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
         ),
         const SizedBox(height: AppSpacing.lg),
         Text(l.tacticsInstructions, style: AppTypography.labelMedium),
-        _slider(l.tacticsInstrMentality, l.tacticsInstrDefensive,
-            l.tacticsInstrAttacking, _instructions.mentality,
-            (v) => _instructions = _instructions.copyWith(mentality: v)),
-        _slider(l.tacticsInstrPressing, l.tacticsInstrLowBlock,
-            l.tacticsInstrHighPress, _instructions.pressing,
-            (v) => _instructions = _instructions.copyWith(pressing: v)),
-        _slider(l.tacticsInstrTempo, l.tacticsInstrPatient, l.tacticsInstrFast,
-            _instructions.tempo,
-            (v) => _instructions = _instructions.copyWith(tempo: v)),
-        _slider(l.tacticsInstrWidth, l.tacticsInstrNarrow, l.tacticsInstrWide,
-            _instructions.width,
-            (v) => _instructions = _instructions.copyWith(width: v)),
-        _slider(l.tacticsInstrDefLine, l.tacticsInstrDeep, l.tacticsInstrHigh,
-            _instructions.defensiveLine,
-            (v) => _instructions = _instructions.copyWith(defensiveLine: v)),
-        _slider(l.tacticsInstrDirectness, l.tacticsInstrPossession,
-            l.tacticsInstrDirect, _instructions.directness,
-            (v) => _instructions = _instructions.copyWith(directness: v)),
+        _slider(
+          l.tacticsInstrMentality,
+          l.tacticsInstrDefensive,
+          l.tacticsInstrAttacking,
+          _instructions.mentality,
+          (v) => _instructions = _instructions.copyWith(mentality: v),
+        ),
+        _slider(
+          l.tacticsInstrPressing,
+          l.tacticsInstrLowBlock,
+          l.tacticsInstrHighPress,
+          _instructions.pressing,
+          (v) => _instructions = _instructions.copyWith(pressing: v),
+        ),
+        _slider(
+          l.tacticsInstrTempo,
+          l.tacticsInstrPatient,
+          l.tacticsInstrFast,
+          _instructions.tempo,
+          (v) => _instructions = _instructions.copyWith(tempo: v),
+        ),
+        _slider(
+          l.tacticsInstrWidth,
+          l.tacticsInstrNarrow,
+          l.tacticsInstrWide,
+          _instructions.width,
+          (v) => _instructions = _instructions.copyWith(width: v),
+        ),
+        _slider(
+          l.tacticsInstrDefLine,
+          l.tacticsInstrDeep,
+          l.tacticsInstrHigh,
+          _instructions.defensiveLine,
+          (v) => _instructions = _instructions.copyWith(defensiveLine: v),
+        ),
+        _slider(
+          l.tacticsInstrDirectness,
+          l.tacticsInstrPossession,
+          l.tacticsInstrDirect,
+          _instructions.directness,
+          (v) => _instructions = _instructions.copyWith(directness: v),
+        ),
         const SizedBox(height: AppSpacing.xl),
       ],
     );
@@ -507,12 +569,15 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
     final isKeeperSlot = position.category == PositionCategory.goalkeeper;
     // A goalkeeping slot is keeper-only; any other slot can be filled by any
     // outfield player (with a heavy out-of-position penalty, shown below).
-    final candidates = _eligible
-        .where((p) => isKeeperSlot
-            ? p.position.category == PositionCategory.goalkeeper
-            : p.position.category != PositionCategory.goalkeeper)
-        .toList()
-      ..sort(PositionFit.bySlotFit(position));
+    final candidates =
+        _eligible
+            .where(
+              (p) => isKeeperSlot
+                  ? p.position.category == PositionCategory.goalkeeper
+                  : p.position.category != PositionCategory.goalkeeper,
+            )
+            .toList()
+          ..sort(PositionFit.bySlotFit(position));
     final onPitch = _onPitch;
     final l = AppLocalizations.of(context);
 
@@ -585,5 +650,4 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
     );
     if (picked != null) _setSlot(slot, picked);
   }
-
 }
