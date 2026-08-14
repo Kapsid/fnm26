@@ -1653,7 +1653,17 @@ name, but the achievement titles and descriptions say "World Cup".
 **`worldCupHonourName` itself must not change** — it is a stored value and
 changing it orphans every honour already recorded in existing saves.
 
-- [ ] **Step 1: Write the failing test**
+> **Note (2026-08-14):** the titles the manager actually reads come from
+> `app_en.arb` (`achQualWc` and friends), not from the definitions — both are
+> renamed, and the test walks the ARB files as well as the catalogue. Czech
+> already said "mistrovství světa" and needed no change.
+>
+> **Still outstanding, outside this task's scope:** 39 other user-facing
+> strings say "World Cup" (`hubEventWatchWcDraw`, `careerWorldCupLabel`,
+> `resultsCategoryWorldCupFinals`, …). They break the same licence rule and
+> want their own sweep.
+
+- [x] **Step 1: Write the failing test**
 
 ```dart
 // test/unit/achievements/naming_test.dart
@@ -1670,24 +1680,24 @@ test('the stored honour name is unchanged', () {
 });
 ```
 
-- [ ] **Step 2: Run the tests to verify the first fails**
+- [x] **Step 2: Run the tests to verify the first fails**
 
 Run: `flutter test test/unit/achievements/naming_test.dart`
 Expected: FAIL on the naming test, PASS on the guard.
 
-- [ ] **Step 3: Rename the user-facing strings**
+- [x] **Step 3: Rename the user-facing strings**
 
 "World Cup Qualifier" → "World Championship Qualifier", "Win the World Cup." →
 "Win the World Championship.", "World Cup Marksman" → "World Championship
 Marksman", and the remaining occurrences at `:283`, `:301`, `:334`, `:335`,
 `:414`, `:422`. Update the Czech strings to match.
 
-- [ ] **Step 4: Run the tests to verify they pass**
+- [x] **Step 4: Run the tests to verify they pass**
 
 Run: `flutter test test/unit/achievements/`
 Expected: PASS
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add lib/domain/services/achievements/achievements.dart lib/l10n/ test/unit/achievements/naming_test.dart

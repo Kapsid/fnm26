@@ -3413,11 +3413,11 @@
       }
     }
   },
-  "achQualWc": "World Cup Qualifier",
+  "achQualWc": "World Championship Qualifier",
   "@achQualWc": {
     "description": "Achievement title."
   },
-  "achQualWcDesc": "Reach the World Cup finals.",
+  "achQualWcDesc": "Reach the World Championship finals.",
   "@achQualWcDesc": {
     "description": "Achievement description."
   },
@@ -3433,7 +3433,7 @@
   "@achTitleWc": {
     "description": "Achievement title."
   },
-  "achTitleWcDesc": "Win the World Cup.",
+  "achTitleWcDesc": "Win the World Championship.",
   "@achTitleWcDesc": {
     "description": "Achievement description."
   },
@@ -3501,11 +3501,11 @@
   "@achTitleClashDesc": {
     "description": "Achievement description."
   },
-  "achMarksman": "World Cup Marksman",
+  "achMarksman": "World Championship Marksman",
   "@achMarksman": {
     "description": "Achievement title."
   },
-  "achMarksmanDesc": "Have a squad player score 6+ World Cup finals goals.",
+  "achMarksmanDesc": "Have a squad player score 6+ World Championship finals goals.",
   "@achMarksmanDesc": {
     "description": "Achievement description."
   },
@@ -3513,7 +3513,7 @@
   "@achSweep": {
     "description": "Achievement title."
   },
-  "achSweepDesc": "Hold the World Cup and your continental title in one career.",
+  "achSweepDesc": "Hold the World Championship and your continental title in one career.",
   "@achSweepDesc": {
     "description": "Achievement description."
   },
@@ -3521,7 +3521,7 @@
   "@achAllstar": {
     "description": "Achievement title."
   },
-  "achAllstarDesc": "Have a player named in a World Cup Team of the Tournament.",
+  "achAllstarDesc": "Have a player named in a World Championship Team of the Tournament.",
   "@achAllstarDesc": {
     "description": "Achievement description."
   },

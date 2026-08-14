@@ -291,8 +291,8 @@ abstract final class AchievementCatalog {
     AchievementDef(
       id: 'qual_wc',
       category: AchievementCategory.qualifications,
-      title: 'World Cup Qualifier',
-      description: 'Reach the World Cup finals.',
+      title: 'World Championship Qualifier',
+      description: 'Reach the World Championship finals.',
       isEarned: (s) => s.reachedWorldCup,
       tier: AchievementTier.silver,
     ),
@@ -309,7 +309,7 @@ abstract final class AchievementCatalog {
       id: 'title_wc',
       category: AchievementCategory.titles,
       title: 'World Champions',
-      description: 'Win the World Cup.',
+      description: 'Win the World Championship.',
       isEarned: (s) => s.titlesWon.contains(worldCupHonourName),
       tier: AchievementTier.platinum,
     ),
@@ -342,8 +342,9 @@ abstract final class AchievementCatalog {
     AchievementDef(
       id: 'wc_marksman',
       category: AchievementCategory.misc,
-      title: 'World Cup Marksman',
-      description: 'Have a squad player score 6+ World Cup finals goals.',
+      title: 'World Championship Marksman',
+      description:
+          'Have a squad player score 6+ World Championship finals goals.',
       isEarned: (s) => s.wcMarksmanGoals > 5,
       tier: AchievementTier.gold,
     ),
@@ -422,7 +423,7 @@ abstract final class AchievementCatalog {
       category: AchievementCategory.mega,
       title: 'Clean Sweep',
       description:
-          'Hold the World Cup and your continental title in one career.',
+          'Hold the World Championship and your continental title in one career.',
       isEarned: (s) => s.wonWorldCupAndContinental,
       tier: AchievementTier.platinum,
     ),
@@ -430,7 +431,8 @@ abstract final class AchievementCatalog {
       id: 'mega_allstar',
       category: AchievementCategory.mega,
       title: 'Tournament All-Star',
-      description: 'Have a player named in a World Cup Team of the Tournament.',
+      description:
+          'Have a player named in a World Championship Team of the Tournament.',
       isEarned: (s) => s.playerInAllStars,
       tier: AchievementTier.gold,
     ),
