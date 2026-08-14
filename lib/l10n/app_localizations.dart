@@ -1022,6 +1022,30 @@ abstract class AppLocalizations {
   /// **'Play some matches to start writing {nation}’s history.'**
   String recordsPlayToWriteHistory(String nation);
 
+  /// Short name for the goalkeepers line, on the call-up tabs.
+  ///
+  /// In en, this message translates to:
+  /// **'GK'**
+  String get tacticsLineGk;
+
+  /// Short name for the defenders line, on the call-up tabs.
+  ///
+  /// In en, this message translates to:
+  /// **'DEF'**
+  String get tacticsLineDef;
+
+  /// Short name for the midfielders line, on the call-up tabs.
+  ///
+  /// In en, this message translates to:
+  /// **'MID'**
+  String get tacticsLineMid;
+
+  /// Short name for the forwards line, on the call-up tabs.
+  ///
+  /// In en, this message translates to:
+  /// **'FWD'**
+  String get tacticsLineFwd;
+
   /// Position-group heading on the call-ups list.
   ///
   /// In en, this message translates to:

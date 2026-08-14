@@ -67,11 +67,12 @@ class _CallUpScreenState extends ConsumerState<CallUpScreen> {
     PositionCategory.forward,
   ];
 
-  String _heading(AppLocalizations l, PositionCategory c) => switch (c) {
-    PositionCategory.goalkeeper => l.tacticsGoalkeepers,
-    PositionCategory.defender => l.tacticsDefenders,
-    PositionCategory.midfielder => l.tacticsMidfielders,
-    PositionCategory.forward => l.tacticsForwards,
+  /// The line's name, short enough that four of them fit across a phone.
+  String _shortHeading(AppLocalizations l, PositionCategory c) => switch (c) {
+    PositionCategory.goalkeeper => l.tacticsLineGk,
+    PositionCategory.defender => l.tacticsLineDef,
+    PositionCategory.midfielder => l.tacticsLineMid,
+    PositionCategory.forward => l.tacticsLineFwd,
   };
 
   /// Nobody, to start with.
@@ -90,9 +91,9 @@ class _CallUpScreenState extends ConsumerState<CallUpScreen> {
     final selected = _selected;
     if (key == null || selected == null) return;
     unawaited(
-      ref
-          .read(squadRepositoryProvider)
-          .saveCallUpDraft(widget.careerId, key, {...selected}),
+      ref.read(squadRepositoryProvider).saveCallUpDraft(widget.careerId, key, {
+        ...selected,
+      }),
     );
   }
 
@@ -299,27 +300,38 @@ class _CallUpScreenState extends ConsumerState<CallUpScreen> {
                   AppSpacing.marginMobile,
                   0,
                 ),
+                // Both halves ellipsize: a translated "you need eleven fit
+                // players, you have nine" is long enough to run the count off
+                // the right-hand edge of a phone, which is what it did.
                 child: Row(
                   children: [
                     Text(
                       l.tacticsSquadCount(count, kMaxSquadSize),
+                      maxLines: 1,
+                      softWrap: false,
                       style: AppTypography.labelMedium.copyWith(
                         color: ok ? AppColors.onSurface : AppColors.error,
                       ),
                     ),
-                    const Spacer(),
-                    Text(
-                      // Once the size is right, the remaining constraint worth
-                      // stating is how many of them can actually play.
-                      count >= kMinSquadSize &&
-                              count <= kMaxSquadSize &&
-                              fit < kMinFitPlayers
-                          ? l.tacticsNeedFitPlayers(kMinFitPlayers, fit)
-                          : l.tacticsMinMax(kMinSquadSize, kMaxSquadSize),
-                      style: AppTypography.labelSmall.copyWith(
-                        color: ok
-                            ? AppColors.onSurfaceVariant
-                            : AppColors.error,
+                    const SizedBox(width: AppSpacing.sm),
+                    Expanded(
+                      child: Text(
+                        // Once the size is right, the remaining constraint
+                        // worth stating is how many of them can actually play.
+                        count >= kMinSquadSize &&
+                                count <= kMaxSquadSize &&
+                                fit < kMinFitPlayers
+                            ? l.tacticsNeedFitPlayers(kMinFitPlayers, fit)
+                            : l.tacticsMinMax(kMinSquadSize, kMaxSquadSize),
+                        textAlign: TextAlign.end,
+                        maxLines: 1,
+                        softWrap: false,
+                        overflow: TextOverflow.ellipsis,
+                        style: AppTypography.labelSmall.copyWith(
+                          color: ok
+                              ? AppColors.onSurfaceVariant
+                              : AppColors.error,
+                        ),
                       ),
                     ),
                   ],
@@ -379,25 +391,68 @@ class _CallUpScreenState extends ConsumerState<CallUpScreen> {
                     ],
                   ),
                 ),
+              // One line at a time. A full pool is sixty-odd names, and as one
+              // list the manager had to scroll past every keeper and defender
+              // to find out whether he had enough forwards. The tabs are a view
+              // over one squad — selection lives on the state, not the tab.
               Expanded(
-                child: ListView(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: AppSpacing.marginMobile,
-                  ),
-                  children: [
-                    for (final category in _order)
-                      ..._section(
-                        category,
-                        data.pool,
-                        selected,
-                        data.absences,
-                        outlooks,
-                        condition,
-                        locked: locked,
-                        saveSeed: saveSeed,
+                child: DefaultTabController(
+                  length: _order.length,
+                  child: Column(
+                    children: [
+                      TabBar(
+                        isScrollable: false,
+                        labelPadding: EdgeInsets.zero,
+                        labelColor: AppColors.primary,
+                        unselectedLabelColor: AppColors.onSurfaceVariant,
+                        indicatorColor: AppColors.primary,
+                        tabs: [
+                          for (final category in _order)
+                            Tab(
+                              height: 44,
+                              child: _LineTab(
+                                label: _shortHeading(l, category),
+                                // How many of this line are in the squad —
+                                // the number the manager is actually
+                                // balancing.
+                                count: data.pool
+                                    .where(
+                                      (p) =>
+                                          p.position.category == category &&
+                                          selected.contains(p.id),
+                                    )
+                                    .length,
+                              ),
+                            ),
+                        ],
                       ),
-                    const SizedBox(height: AppSpacing.xl),
-                  ],
+                      Expanded(
+                        child: TabBarView(
+                          children: [
+                            for (final category in _order)
+                              ListView(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: AppSpacing.marginMobile,
+                                ),
+                                children: [
+                                  ..._section(
+                                    category,
+                                    data.pool,
+                                    selected,
+                                    data.absences,
+                                    outlooks,
+                                    condition,
+                                    locked: locked,
+                                    saveSeed: saveSeed,
+                                  ),
+                                  const SizedBox(height: AppSpacing.xl),
+                                ],
+                              ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
               SafeArea(
@@ -443,11 +498,21 @@ class _CallUpScreenState extends ConsumerState<CallUpScreen> {
     final l = AppLocalizations.of(context);
     final players = pool.where((p) => p.position.category == category).toList()
       ..sort((a, b) => b.overall.compareTo(a.overall));
-    if (players.isEmpty) return const [];
+    if (players.isEmpty) {
+      return [
+        const SizedBox(height: AppSpacing.lg),
+        Text(
+          l.tacticsNoSquad,
+          textAlign: TextAlign.center,
+          style: AppTypography.bodyMedium.copyWith(
+            color: AppColors.onSurfaceVariant,
+          ),
+        ),
+      ];
+    }
     return [
       const SizedBox(height: AppSpacing.sm),
-      Text(_heading(l, category), style: AppTypography.labelMedium),
-      const SizedBox(height: AppSpacing.sm),
+      // No heading: the tab above already names the line.
       AppCard(
         padding: EdgeInsets.zero,
         child: Column(
@@ -504,6 +569,40 @@ class _CallUpScreenState extends ConsumerState<CallUpScreen> {
 
 /// The banner atop the call-ups screen: whether the squad is open to change or
 /// locked between windows, and exactly which matches this nomination covers.
+/// One line's tab: its short name, and how many of that line are in the squad.
+class _LineTab extends StatelessWidget {
+  const _LineTab({required this.label, required this.count});
+
+  final String label;
+  final int count;
+
+  @override
+  Widget build(BuildContext context) => Row(
+    mainAxisAlignment: MainAxisAlignment.center,
+    mainAxisSize: MainAxisSize.min,
+    children: [
+      Flexible(
+        child: Text(
+          label,
+          maxLines: 1,
+          softWrap: false,
+          overflow: TextOverflow.ellipsis,
+          style: AppTypography.labelMedium,
+        ),
+      ),
+      if (count > 0) ...[
+        const SizedBox(width: AppSpacing.xs),
+        Text(
+          '$count',
+          style: AppTypography.labelSmall.copyWith(
+            color: AppColors.onSurfaceVariant,
+          ),
+        ),
+      ],
+    ],
+  );
+}
+
 class _CoverageBanner extends StatelessWidget {
   const _CoverageBanner({required this.window, required this.locked});
 
@@ -618,11 +717,11 @@ class _CoverageBanner extends StatelessWidget {
 
 /// What a club standing reads as on a call-up row.
 String clubStandingLabel(AppLocalizations l, ClubStanding s) => switch (s) {
-      ClubStanding.firstChoice => l.clubFirstChoice,
-      ClubStanding.rotation => l.clubRotation,
-      ClubStanding.fringe => l.clubFringe,
-      ClubStanding.frozenOut => l.clubFrozenOut,
-    };
+  ClubStanding.firstChoice => l.clubFirstChoice,
+  ClubStanding.rotation => l.clubRotation,
+  ClubStanding.fringe => l.clubFringe,
+  ClubStanding.frozenOut => l.clubFrozenOut,
+};
 
 class _PlayerToggle extends StatelessWidget {
   const _PlayerToggle({
@@ -709,10 +808,18 @@ class _PlayerToggle extends StatelessWidget {
       subtitle: Row(
         children: [
           // Position is already shown by the leading chip — no role text.
-          Text(
-            l.tacticsAgeValue(player.age, _money(player.value)),
-            style: AppTypography.labelSmall.copyWith(
-              color: AppColors.onSurfaceVariant,
+          // Flexible because the tile's trailing controls leave this line
+          // little more than a hundred pixels on a phone: age and value give
+          // way to the badges, rather than running off the edge of the row.
+          Flexible(
+            child: Text(
+              l.tacticsAgeValue(player.age, _money(player.value)),
+              maxLines: 1,
+              softWrap: false,
+              overflow: TextOverflow.ellipsis,
+              style: AppTypography.labelSmall.copyWith(
+                color: AppColors.onSurfaceVariant,
+              ),
             ),
           ),
           if (reason != null) ...[
@@ -724,12 +831,20 @@ class _PlayerToggle extends StatelessWidget {
           if (condition?.clubStanding case final s?)
             if (s != ClubStanding.rotation) ...[
               const SizedBox(width: AppSpacing.sm),
-              Text(
-                clubStandingLabel(l, s),
-                style: AppTypography.labelSmall.copyWith(
-                  color: s == ClubStanding.firstChoice
-                      ? AppColors.positive
-                      : AppColors.warning,
+              // The one thing on this line that can be long ("Plays every
+              // week"), so it is the one thing that gives way. Unconstrained it
+              // pushed the fatigue tag off the row and read as overlapping it.
+              Flexible(
+                child: Text(
+                  clubStandingLabel(l, s),
+                  maxLines: 1,
+                  softWrap: false,
+                  overflow: TextOverflow.ellipsis,
+                  style: AppTypography.labelSmall.copyWith(
+                    color: s == ClubStanding.firstChoice
+                        ? AppColors.positive
+                        : AppColors.warning,
+                  ),
                 ),
               ),
             ],

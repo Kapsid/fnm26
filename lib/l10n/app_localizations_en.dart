@@ -551,6 +551,18 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get tacticsLineGk => 'GK';
+
+  @override
+  String get tacticsLineDef => 'DEF';
+
+  @override
+  String get tacticsLineMid => 'MID';
+
+  @override
+  String get tacticsLineFwd => 'FWD';
+
+  @override
   String get tacticsGoalkeepers => 'GOALKEEPERS';
 
   @override

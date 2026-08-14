@@ -551,6 +551,18 @@ class AppLocalizationsCs extends AppLocalizations {
   }
 
   @override
+  String get tacticsLineGk => 'BR';
+
+  @override
+  String get tacticsLineDef => 'OBR';
+
+  @override
+  String get tacticsLineMid => 'ZÁL';
+
+  @override
+  String get tacticsLineFwd => 'ÚT';
+
+  @override
   String get tacticsGoalkeepers => 'BRANKÁŘI';
 
   @override

@@ -879,6 +879,22 @@
       }
     }
   },
+  "tacticsLineGk": "GK",
+  "@tacticsLineGk": {
+    "description": "Short name for the goalkeepers line, on the call-up tabs."
+  },
+  "tacticsLineDef": "DEF",
+  "@tacticsLineDef": {
+    "description": "Short name for the defenders line, on the call-up tabs."
+  },
+  "tacticsLineMid": "MID",
+  "@tacticsLineMid": {
+    "description": "Short name for the midfielders line, on the call-up tabs."
+  },
+  "tacticsLineFwd": "FWD",
+  "@tacticsLineFwd": {
+    "description": "Short name for the forwards line, on the call-up tabs."
+  },
   "tacticsGoalkeepers": "GOALKEEPERS",
   "@tacticsGoalkeepers": {
     "description": "Position-group heading on the call-ups list."

@@ -952,7 +952,7 @@ and the `clubFirstChoice` label ("Plays every week", rendered at `:728` via
 - Consumes: `clubStandingLabel(AppLocalizations, ClubStanding)` (existing, `:620`), `_PlayerToggle` (existing, `:627`)
 - Produces: no new public API
 
-- [ ] **Step 1: Write the failing widget test**
+- [x] **Step 1: Write the failing widget test**
 
 ```dart
 // test/widget/call_up_tabs_test.dart
@@ -988,12 +988,12 @@ testWidgets('the call-up screen groups players by line', (tester) async {
 `test/widget/layout_regression_test.dart` already exists — read it and follow
 its overflow-detection convention instead of inventing a second one.
 
-- [ ] **Step 2: Run the test to verify it fails**
+- [x] **Step 2: Run the test to verify it fails**
 
 Run: `flutter test test/widget/call_up_tabs_test.dart`
 Expected: FAIL — no tabs exist.
 
-- [ ] **Step 3: Restructure around four tabs**
+- [x] **Step 3: Restructure around four tabs**
 
 Replace the single `ListView` (`:383`) with a `TabBar`/`TabBarView` over GK,
 DEF, MID, FWD. Selection state stays where it is on `_CallUpScreenState` — the
@@ -1003,18 +1003,18 @@ Keep the coverage banner (`_CoverageBanner`, `:507`) *outside* the tab view: it
 reports on the whole squad and must not disappear when the manager is looking
 at keepers.
 
-- [ ] **Step 4: Fix the club-standing label overlap**
+- [x] **Step 4: Fix the club-standing label overlap**
 
 In `_PlayerToggle` (`:656-776`), the standing label at `:728` sits in a row that
 cannot give it room. Constrain it — `Flexible` with `TextOverflow.ellipsis` —
 and let the badges beside it keep their intrinsic width.
 
-- [ ] **Step 5: Run the tests to verify they pass**
+- [x] **Step 5: Run the tests to verify they pass**
 
 Run: `flutter test test/widget/call_up_tabs_test.dart test/widget/layout_regression_test.dart test/widget/club_standing_badge_test.dart`
 Expected: PASS
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add lib/features/tactics/call_up_screen.dart test/widget/call_up_tabs_test.dart
