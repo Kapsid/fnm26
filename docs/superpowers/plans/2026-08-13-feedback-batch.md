@@ -1912,10 +1912,16 @@ git commit -m "balance: gentler objectives for weak nations, a firmer bar for co
 
 ## Final verification
 
-- [ ] **Full suite green**
+- [x] **Full suite green**
 
 Run: `dart format --set-exit-if-changed lib test && flutter analyze && flutter test`
 Expected: PASS, no analyzer warnings.
+
+> **2026-08-14:** format clean, no analyzer errors or warnings (437 infos, all
+> pre-existing style lints), 737 tests pass. One caveat:
+> `test/unit/hub/season_service_exclusive_test.dart` flakes under full-suite
+> load — it fails on the pre-batch baseline too (verified at bb7e954), so it is
+> a pre-existing race in the double-tap coalescing guard, not a regression.
 
 - [ ] **Device playtest** — the five things no test can sign off:
 
