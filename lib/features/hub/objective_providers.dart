@@ -173,7 +173,7 @@ cycleObjectiveOutcomesProvider = FutureProvider.autoDispose.family<List<Objectiv
       conf,
       career.nationId,
     );
-    final target = _continentalTarget(continentalRank);
+    final target = continentalObjectiveTarget(continentalRank);
     // Graded the moment the manager's OWN continental championship has a
     // winner, exactly as the World Cup objective is graded off the world
     // champion.
@@ -271,7 +271,7 @@ cycleObjectiveOutcomesProvider = FutureProvider.autoDispose.family<List<Objectiv
 
   // --- The World Cup ---------------------------------------------------------
   final champion = await comp.worldChampion(careerId);
-  final wcTarget = _worldTarget(worldRank);
+  final wcTarget = worldObjectiveTarget(worldRank);
   var wcActual = _finishOrdinal(fixtures, career.nationId);
   if (wcActual == 0) {
     wcActual = await _qualifyingOrdinal(
@@ -468,7 +468,7 @@ int _rankWithin(
 /// has no realistic route into a World Cup, and a board that demands one is
 /// setting a brief nobody in the game could meet. Those sides are judged on
 /// their qualifying campaign instead.
-int _worldTarget(int rank) {
+int worldObjectiveTarget(int rank) {
   if (rank <= 2) return 7; // win it
   if (rank <= 6) return 6; // reach the final
   if (rank <= 12) return 5; // semi-finals
@@ -484,7 +484,7 @@ int _worldTarget(int rank) {
 ///
 /// As with the World Cup, a side well outside its continent's leading two dozen
 /// is asked to compete in qualifying rather than to reach the finals.
-int _continentalTarget(int confederationRank) {
+int continentalObjectiveTarget(int confederationRank) {
   if (confederationRank <= 2) return 7; // win it
   if (confederationRank <= 4) return 6; // reach the final
   if (confederationRank <= 7) return 5; // semi-finals

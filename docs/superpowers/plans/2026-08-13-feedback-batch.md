@@ -1848,7 +1848,14 @@ Two asks that pull in opposite directions by design: a weak nation should not be
 handed a target it cannot reach, but genuinely bad results should end a job
 faster. Tolerance goes on the *objective*; severity goes on the *collapse*.
 
-- [ ] **Step 1: Write the failing test**
+> **Outcome (2026-08-14):** the tolerance half was already right — the targets
+> scale with ranking (120th is asked to come out of its qualifying group, 3rd
+> to reach a final), now pinned by test. The severity half was a real bug: the
+> loss weight's own doc comment promised that a full window of defeats drops
+> even a well-ranked nation under the sacking bar, and it did not — a top-five
+> side sat on 22 against a bar of 15. At −5 it lands on 12.
+
+- [x] **Step 1: Write the failing test**
 
 ```dart
 // test/unit/achievements/board_tolerance_test.dart
@@ -1875,12 +1882,12 @@ The third test is a guard the existing code already documents at
 `board_satisfaction.dart` — a manager who loses ten straight should not be saved
 by their world ranking. Keep it passing.
 
-- [ ] **Step 2: Run the tests to verify they fail**
+- [x] **Step 2: Run the tests to verify they fail**
 
 Run: `flutter test test/unit/achievements/board_tolerance_test.dart`
 Expected: FAIL on the first.
 
-- [ ] **Step 3: Scale the target by ranking, sharpen the collapse**
+- [x] **Step 3: Scale the target by ranking, sharpen the collapse**
 
 Make the objective target a function of world ranking so a 120th-ranked nation
 is asked to qualify and nothing more. Separately, steepen the loss weight (`loss
@@ -1889,12 +1896,12 @@ is asked to qualify and nothing more. Separately, steepen the loss weight (`loss
 Change one at a time and re-run — these two interact, and the third test is the
 boundary between them.
 
-- [ ] **Step 4: Run the tests to verify they pass**
+- [x] **Step 4: Run the tests to verify they pass**
 
 Run: `flutter test test/unit/achievements/ test/unit/hub/`
 Expected: PASS
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add lib/domain/services/achievements/board_satisfaction.dart lib/features/hub/objective_providers.dart test/unit/achievements/board_tolerance_test.dart

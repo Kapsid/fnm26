@@ -43,10 +43,14 @@ abstract final class BoardSatisfaction {
   /// The loss weight also has to stay heavy enough that a full window of
   /// defeats drops even a well-ranked nation under the sacking bar (see
   /// nationOffers) — a manager who loses ten straight should not be saved by
-  /// their world ranking.
+  /// their world ranking. At −4 that promise was not kept: a top-five side's
+  /// standing bonus (+12) left the gauge on 22 against a bar of 15, so the
+  /// worst run in the game cost a well-regarded manager nothing. At −5 a full
+  /// window of defeats lands on 12 however good the badge is. A reputation
+  /// still buys rope, which is a different thing and deliberate.
   static const int win = 2;
   static const int draw = 0;
-  static const int loss = -4;
+  static const int loss = -5;
 
   /// Trophy bonuses by tier and placing.
   ///
