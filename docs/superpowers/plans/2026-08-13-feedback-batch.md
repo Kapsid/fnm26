@@ -1233,7 +1233,13 @@ git commit -m "fix: players do not air grievances before they have been picked"
 `ClubHistory.spells` is sound — it collapses a season-by-season list. The gap is
 in which players get a populated `byYear`.
 
-- [ ] **Step 1: Write the failing test**
+> **Outcome (2026-08-14):** no gap found. `DriftPlayerRepository.byId` attaches
+> a derived club on both the seeded and the newgen path, so every player the
+> history provider can resolve has one. Checked across the manager's pool and
+> two foreign pools in `test/unit/domain/club_history_coverage_test.dart` —
+> every player has at least one named spell. No production change.
+
+- [x] **Step 1: Write the failing test**
 
 ```dart
 test('every player in the pool has at least one club spell', () {
@@ -1243,24 +1249,24 @@ test('every player in the pool has at least one club spell', () {
 });
 ```
 
-- [ ] **Step 2: Run the test to verify it fails**
+- [x] **Step 2: Run the test to verify it fails**
 
 Run: `flutter test test/unit/domain/club_history_test.dart`
 Expected: FAIL for some players.
 
-- [ ] **Step 3: Populate `byYear` for every player**
+- [x] **Step 3: Populate `byYear` for every player**
 
 Find why some players yield an empty year list — likely players whose career
 years predate a boundary the builder starts from. Clubs are derived from rating
 and seed (`ClubService`), so every player who existed in a season has a club in
 it; the history should never be empty for a player with any seasons at all.
 
-- [ ] **Step 4: Run the test to verify it passes**
+- [x] **Step 4: Run the test to verify it passes**
 
 Run: `flutter test test/unit/domain/`
 Expected: PASS
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add lib/domain/services/club/ test/unit/domain/club_history_test.dart
