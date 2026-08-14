@@ -73,7 +73,12 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    // List view: round headings and full nation names.
+    // List view: one round at a time, opening on the last played round.
+    expect(find.text('FINAL'), findsOneWidget);
+    await tester.tap(find.byKey(const Key('passive-sim-prev-round')));
+    await tester.pumpAndSettle();
+
+    // Round headings and full nation names.
     expect(find.text('SEMI-FINALS'), findsOneWidget);
     expect(find.text('Nation 2'), findsOneWidget);
 
@@ -102,9 +107,11 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('EUROPEAN CHAMPIONSHIP CHAMPIONS'), findsOneWidget);
-    expect(find.text('SEMI-FINALS'), findsOneWidget);
     expect(find.text('List'), findsOneWidget);
     expect(find.text('Bracket'), findsOneWidget);
+    await tester.tap(find.byKey(const Key('passive-sim-prev-round')));
+    await tester.pumpAndSettle();
+    expect(find.text('SEMI-FINALS'), findsOneWidget);
 
     await tester.tap(find.text('Bracket'));
     await tester.pumpAndSettle();

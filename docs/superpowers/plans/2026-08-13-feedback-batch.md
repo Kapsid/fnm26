@@ -849,7 +849,7 @@ git commit -m "fix: the tournament's best player is named after the final, not b
 **Interfaces:**
 - Consumes: existing round codes (`'GROUP'`, `'R32'`, `'R16'`, `'QF'`, `'SF'`, `'3RD'`, `'FINAL'` — see `elo.dart:_knockoutSuffixes`)
 
-- [ ] **Step 1: Write the failing widget test**
+- [x] **Step 1: Write the failing widget test**
 
 ```dart
 // test/widget/passive_sim_pagination_test.dart
@@ -867,23 +867,23 @@ testWidgets('the passive sim shows one round at a time', (tester) async {
 });
 ```
 
-- [ ] **Step 2: Run the test to verify it fails**
+- [x] **Step 2: Run the test to verify it fails**
 
 Run: `flutter test test/widget/passive_sim_pagination_test.dart`
 Expected: FAIL — everything renders in one list.
 
-- [ ] **Step 3: Paginate**
+- [x] **Step 3: Paginate**
 
 Replace the single scrolling list with a round-at-a-time view: a header naming
 the round, that round's fixtures, and previous/next controls. Key the next
 control `passive-sim-next-round`.
 
-- [ ] **Step 4: Run the test to verify it passes**
+- [x] **Step 4: Run the test to verify it passes**
 
 Run: `flutter test test/widget/passive_sim_pagination_test.dart`
 Expected: PASS
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add lib/features/tournaments/cup_detail_screen.dart test/widget/passive_sim_pagination_test.dart

@@ -66,6 +66,10 @@ class TournamentBracket extends StatefulWidget {
 class _TournamentBracketState extends State<TournamentBracket> {
   bool _visual = false;
 
+  /// Which round the list view is showing, as an index into [_playedRounds].
+  /// Null until the first build works out where the tournament is.
+  int? _round;
+
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
@@ -158,29 +162,81 @@ class _TournamentBracketState extends State<TournamentBracket> {
   List<Fixture> _inRound(String round) =>
       widget.fixtures.where((f) => f.round == round).toList();
 
-  List<Widget> _listView() => [
-    for (final (round, label) in widget.rounds)
-      () {
-        final inRound = _inRound(round);
-        if (inRound.isEmpty) return const SizedBox.shrink();
-        return Padding(
-          padding: const EdgeInsets.only(top: AppSpacing.md),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                label.toUpperCase(),
-                style: AppTypography.labelMedium.copyWith(
-                  color: AppColors.primary,
-                ),
-              ),
-              const SizedBox(height: AppSpacing.sm),
-              for (final f in inRound) _tie(f),
-            ],
-          ),
-        );
-      }(),
+  /// The rounds that actually have ties, in order. A tournament that has only
+  /// reached the last sixteen has no quarter-final page to turn to.
+  List<BracketRound> get _playedRounds => [
+    for (final r in widget.rounds)
+      if (_inRound(r.$1).isNotEmpty) r,
   ];
+
+  /// Where the tournament is: the first round with a tie still to play, or the
+  /// last round of all once everything has been played. A manager stepping
+  /// through a tournament he is not in lands on the round being played, not at
+  /// the start of a thirty-two-tie scroll.
+  int _liveRound(List<BracketRound> rounds) {
+    for (var i = 0; i < rounds.length; i++) {
+      if (_inRound(rounds[i].$1).any((f) => !f.hasResult)) return i;
+    }
+    return rounds.length - 1;
+  }
+
+  /// One round at a time, with a pager. The rounds used to be stacked into a
+  /// single list — thirty-two ties on a phone, which is a scroll with no shape
+  /// to it and no sense of where the tournament had got to.
+  List<Widget> _listView() {
+    final rounds = _playedRounds;
+    if (rounds.isEmpty) return const [];
+    final index = (_round ?? _liveRound(rounds)).clamp(0, rounds.length - 1);
+    final (round, label) = rounds[index];
+    return [
+      Padding(
+        padding: const EdgeInsets.only(top: AppSpacing.md),
+        child: Row(
+          children: [
+            IconButton(
+              key: const Key('passive-sim-prev-round'),
+              icon: const Icon(Icons.chevron_left_rounded),
+              color: AppColors.primary,
+              onPressed: index == 0
+                  ? null
+                  : () => setState(() => _round = index - 1),
+            ),
+            Expanded(
+              child: Column(
+                children: [
+                  Text(
+                    label.toUpperCase(),
+                    textAlign: TextAlign.center,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: AppTypography.labelMedium.copyWith(
+                      color: AppColors.primary,
+                    ),
+                  ),
+                  Text(
+                    '${index + 1}/${rounds.length}',
+                    style: AppTypography.labelSmall.copyWith(
+                      color: AppColors.onSurfaceVariant,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            IconButton(
+              key: const Key('passive-sim-next-round'),
+              icon: const Icon(Icons.chevron_right_rounded),
+              color: AppColors.primary,
+              onPressed: index == rounds.length - 1
+                  ? null
+                  : () => setState(() => _round = index + 1),
+            ),
+          ],
+        ),
+      ),
+      const SizedBox(height: AppSpacing.sm),
+      for (final f in _inRound(round)) _tie(f),
+    ];
+  }
 
   /// Vertical room for one tie in the bracket columns. The widest round sets
   /// the bracket's height at this much per tie, and every other round spreads
