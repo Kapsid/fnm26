@@ -215,6 +215,20 @@ hubDataProvider = FutureProvider.autoDispose.family<HubData?, int>((
   );
 });
 
+/// How a transfer's destination is written in the feed.
+///
+/// A move abroad used to read exactly like a move across town — same sentence,
+/// no country — so every transfer in the manager's feed looked domestic. When
+/// the player crosses a border the country is named, because that is the part
+/// of the news that is the news.
+String transferDestination({
+  required String club,
+  required String? toCountryName,
+  required bool crossedBorder,
+}) => crossedBorder && toCountryName != null && toCountryName.isNotEmpty
+    ? '$club in $toCountryName'
+    : club;
+
 /// Drives the whole-world simulation: quick-sims due matches, advances the
 /// date, and progresses the cycle (qualifying → finals draw → knockout →
 /// champion). Knockout ties are always resolved to a winner.
@@ -3226,17 +3240,30 @@ class SeasonService {
     // in Brazil.
     final ranked = [...after]..sort((a, b) => b.overall.compareTo(a.overall));
     final notable = {for (final p in ranked.take(_transferPoolSize)) p.id};
-    final moves = <(Player now, String fromClub)>[
+    final moves = <(Player now, Player was)>[
       for (final p in after)
         if (notable.contains(p.id) &&
             beforeById[p.id] != null &&
             beforeById[p.id]!.club != p.club)
-          (p, beforeById[p.id]!.club),
+          (p, beforeById[p.id]!),
     ]..sort((a, b) => b.$1.value.compareTo(a.$1.value));
 
+    // The country a club plays in, for naming a move that crosses a border.
+    final byCode = {
+      for (final n in (await _nationsById()).values) n.code.toLowerCase(): n,
+    };
+
     for (final m in moves.take(3)) {
-      final p = m.$1;
+      final (p, was) = m;
       final fee = _transferFee(p);
+      // A move abroad used to read exactly like a move across town, so every
+      // transfer in the feed looked domestic. Name the country when the player
+      // crosses a border — that is the part of the news that is the news.
+      final destination = transferDestination(
+        club: p.club,
+        toCountryName: byCode[p.clubCountry]?.name,
+        crossedBorder: was.clubCountry != p.clubCountry,
+      );
       await _comp.addMessage(
         careerId: careerId,
         dedupKey: 'transfer:${p.id}:$year',
@@ -3244,7 +3271,7 @@ class SeasonService {
         title: '${p.name} joins ${p.club}',
         body:
             '${p.name} (${p.position.label}, ${p.overall}) has left '
-            '${m.$2} to sign for ${p.club} for ${_feeLabel(fee)}.',
+            '${was.club} to sign for $destination for ${_feeLabel(fee)}.',
         year: year,
       );
     }

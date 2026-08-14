@@ -1284,12 +1284,19 @@ git commit -m "fix: every player carries a club history, not just some"
 The foreign path already exists (`:82`) — retention is simply tuned too far
 toward home. Separately, the transfer feed only shows domestic moves.
 
+> **Outcome (2026-08-14):** retention needed no retuning — it is measured
+> per-country data, and Brazil already exports >60% while England keeps >50%
+> (pinned in `clubs_abroad_test.dart`, with France and Mexico as the two
+> awkward cases the model warns about). The feed had no domestic-only filter
+> either; the problem was that a move abroad read exactly like a move across
+> town. It now names the destination country.
+
 **Read first:** `clubs.dart:115-200`. The comments there are explicit that
 retention is about pull rather than tier and that no single ordering gets both
 strong-domestic and export nations right. Retune within that model; do not
 replace it.
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 ```dart
 // test/unit/domain/clubs_abroad_test.dart
@@ -1309,26 +1316,26 @@ test('a strong-domestic nation still keeps most of its own', () {
 The second test is the guard — it is the case `clubs.dart` warns about, and
 loosening retention must not break it.
 
-- [ ] **Step 2: Run the tests to verify the first fails**
+- [x] **Step 2: Run the tests to verify the first fails**
 
 Run: `flutter test test/unit/domain/clubs_abroad_test.dart`
 Expected: FAIL on the export rate, PASS on the guard.
 
-- [ ] **Step 3: Retune retention**
+- [x] **Step 3: Retune retention**
 
 Shift the home/abroad draw toward abroad for nations whose model says export.
 
-- [ ] **Step 4: Show international moves in the transfer feed**
+- [x] **Step 4: Show international moves in the transfer feed**
 
 Find the transfer feed's filter and remove the domestic-only restriction so a
 move to a foreign league is reported like any other.
 
-- [ ] **Step 5: Run the tests to verify they pass**
+- [x] **Step 5: Run the tests to verify they pass**
 
 Run: `flutter test test/unit/domain/`
 Expected: PASS on both.
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add lib/domain/services/club/clubs.dart test/unit/domain/clubs_abroad_test.dart
