@@ -13,6 +13,7 @@ import 'package:fnm/domain/services/competition/finals.dart';
 import 'package:fnm/features/hub/hub_event.dart';
 import 'package:fnm/features/ranking/world_ranking_providers.dart';
 import 'package:fnm/features/tournaments/intercontinental_playoff_bracket.dart';
+import 'package:fnm/features/tournaments/playoff_paths.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
@@ -45,12 +46,58 @@ intercontinentalPlayoffProvider = FutureProvider.autoDispose
         for (final n in await ref.watch(nationRepositoryProvider).all())
           n.id: n,
       };
-      final rankingById = await ref.watch(
+      // The play-off's own frozen seeding when there is one (there is whenever
+      // the manager was an entrant), else the finals-draw snapshot — the
+      // ranking the instant resolution was seeded on.
+      final playoffRank = await ref.watch(
         seedRankByIdProvider((
           careerId: careerId,
-          cycle: drawSeedCycle(career.cyclePointer, drawSlotWorldCupFinals),
+          cycle: drawSeedCycle(career.cyclePointer, drawSlotWorldCupPlayoff),
         )).future,
       );
+      final rankingById = playoffRank.isNotEmpty
+          ? playoffRank
+          : await ref.watch(
+              seedRankByIdProvider((
+                careerId: careerId,
+                cycle: drawSeedCycle(
+                  career.cyclePointer,
+                  drawSlotWorldCupFinals,
+                ),
+              )).future,
+            );
+      final pool = WorldCupFinals.playoffPoolFor(
+        byConfederation: grouped,
+        rankingById: rankingById,
+      );
+      // The manager's own ties were played, not modelled. Read them back so the
+      // bracket shows what happened on the pitch — a bracket that contradicted
+      // the result he just played would also contradict the finals draw.
+      final path = playoffPathOf(
+        pool: pool,
+        rankingById: rankingById,
+        nationId: career.nationId,
+      );
+      var results = const <String, int>{};
+      var scores = const <String, (int, int)>{};
+      if (path != null) {
+        const kind = CompetitionKind.worldCupPlayoff;
+        final played = playoffPlayed(
+          path: path,
+          semis: await comp.fixturesByRound(
+            careerId,
+            playoffSemiFixtureRound,
+            kind: kind,
+          ),
+          finals: await comp.fixturesByRound(
+            careerId,
+            playoffFinalFixtureRound,
+            kind: kind,
+          ),
+        );
+        results = played.results;
+        scores = played.scores;
+      }
       // Same seed the finalist selection uses, so the shown ties are exactly how
       // the last two places were decided.
       final ties = WorldCupFinals.playoffBracket(
@@ -59,6 +106,9 @@ intercontinentalPlayoffProvider = FutureProvider.autoDispose
         rng: SeededRng(
           career.rngSeed ^ (career.cyclePointer * 0x50FF) ^ 0xB1A0,
         ),
+        pool: pool,
+        playedResults: results,
+        playedScores: scores,
       );
       if (ties.isEmpty) return null;
       return (ties: ties, nations: nations, playerNationId: career.nationId);
@@ -101,7 +151,8 @@ class IntercontinentalPlayoffScreen extends ConsumerWidget {
       ),
       body: async.when(
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => Center(child: Text(l.tourContCouldNotLoad(e.toString()))),
+        error: (e, _) =>
+            Center(child: Text(l.tourContCouldNotLoad(e.toString()))),
         data: (data) {
           if (data == null) {
             return Center(child: Text(l.tourContNoPlayoffThisCycle));

@@ -33,56 +33,58 @@ typedef KickoffData = ({
 /// A continental edition ([arg.conf] set) pulls its name, trophy and hosts from
 /// that confederation; otherwise it's the World Cup.
 final AutoDisposeFutureProviderFamily<KickoffData?, KickoffArg>
-    tournamentKickoffProvider =
-    FutureProvider.autoDispose.family<KickoffData?, KickoffArg>(
-        (ref, arg) async {
-  await ref.watch(seedLoaderProvider).ensureSeeded();
-  final career = await ref.watch(careerRepositoryProvider).byId(arg.careerId);
-  if (career == null) return null;
-  final allNations = await ref.watch(nationRepositoryProvider).all();
-  final byId = {for (final n in allNations) n.id: n};
+tournamentKickoffProvider = FutureProvider.autoDispose
+    .family<KickoffData?, KickoffArg>((ref, arg) async {
+      await ref.watch(seedLoaderProvider).ensureSeeded();
+      final career = await ref
+          .watch(careerRepositoryProvider)
+          .byId(arg.careerId);
+      if (career == null) return null;
+      final allNations = await ref.watch(nationRepositoryProvider).all();
+      final byId = {for (final n in allNations) n.id: n};
 
-  final String title;
-  final int year;
-  final String trophy;
-  final List<int> hosts;
-  final conf = arg.conf;
-  if (conf == null) {
-    title = 'WORLD CUP';
-    year = CareerService.worldCupYear(career.cyclePointer);
-    trophy = Trophies.worldCup;
-    hosts = WorldCupHosts.hostsFor(
-      year: year,
-      nations: allNations,
-      seed: career.rngSeed,
-    );
-  } else {
-    title = (ContinentalCups.byConfederation[conf]?.name ?? 'CONTINENTAL CUP')
-        .toUpperCase();
-    // Continental finals sit two years off the World Cup in the cycle.
-    year = CareerService.worldCupYear(career.cyclePointer) - 2;
-    trophy = Trophies.forConfederation(conf);
-    hosts = WorldCupHosts.continentalHostsFor(
-      confederation: conf,
-      cycle: career.cyclePointer,
-      seed: career.rngSeed,
-      nations: allNations,
-    );
-  }
-  return (
-    title: title,
-    year: year,
-    trophyAsset: trophy,
-    hostCodes: [
-      for (final h in hosts)
-        if (byId[h] != null) byId[h]!.code,
-    ],
-    hostNames: [
-      for (final h in hosts)
-        if (byId[h] != null) byId[h]!.name,
-    ],
-  );
-});
+      final String title;
+      final int year;
+      final String trophy;
+      final List<int> hosts;
+      final conf = arg.conf;
+      if (conf == null) {
+        title = 'WORLD CUP';
+        year = CareerService.worldCupYear(career.cyclePointer);
+        trophy = Trophies.worldCup;
+        hosts = WorldCupHosts.hostsFor(
+          year: year,
+          nations: allNations,
+          seed: career.rngSeed,
+        );
+      } else {
+        title =
+            (ContinentalCups.byConfederation[conf]?.name ?? 'CONTINENTAL CUP')
+                .toUpperCase();
+        // Continental finals sit two years off the World Cup in the cycle.
+        year = CareerService.worldCupYear(career.cyclePointer) - 2;
+        trophy = Trophies.forConfederation(conf);
+        hosts = WorldCupHosts.continentalHostsFor(
+          confederation: conf,
+          cycle: career.cyclePointer,
+          seed: career.rngSeed,
+          nations: allNations,
+        );
+      }
+      return (
+        title: title,
+        year: year,
+        trophyAsset: trophy,
+        hostCodes: [
+          for (final h in hosts)
+            if (byId[h] != null) byId[h]!.code,
+        ],
+        hostNames: [
+          for (final h in hosts)
+            if (byId[h] != null) byId[h]!.name,
+        ],
+      );
+    });
 
 /// A one-shot ceremony screen shown as a hub event when a finals tournament
 /// kicks off: an animated trophy and host reveal, for the World Cup and every
@@ -99,7 +101,9 @@ class TournamentKickoffScreen extends ConsumerWidget {
   Future<void> _begin(BuildContext context, WidgetRef ref) async {
     final career = await ref.read(careerRepositoryProvider).byId(careerId);
     if (career != null) {
-      await ref.read(competitionRepositoryProvider).markDrawWatched(
+      await ref
+          .read(competitionRepositoryProvider)
+          .markDrawWatched(
             careerId,
             career.cyclePointer,
             conf == null ? worldCupKickoffKind : continentalKickoffKind,
@@ -126,9 +130,7 @@ class TournamentKickoffScreen extends ConsumerWidget {
             final hostLabel = data == null || data.hostNames.isEmpty
                 ? l.tourSharedHostTbc
                 : data.hostNames.join('  ·  ').toUpperCase();
-            final title = data == null
-                ? ''
-                : '${data.title} ${data.year}';
+            final title = data == null ? '' : '${data.title} ${data.year}';
             return Column(
               children: [
                 Expanded(

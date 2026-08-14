@@ -108,105 +108,114 @@ class TournamentsScreen extends ConsumerWidget {
           IconButton(
             icon: const Icon(Icons.leaderboard, color: AppColors.primary),
             tooltip: l.tourSharedWorldRanking,
-            onPressed: () =>
-                context.go('${Routes.ranking}?careerId=$careerId'),
+            onPressed: () => context.go('${Routes.ranking}?careerId=$careerId'),
           ),
         ],
       ),
-      bottomNavigationBar:
-          AppBottomNav(careerId: careerId, current: AppTab.competitions),
+      bottomNavigationBar: AppBottomNav(
+        careerId: careerId,
+        current: AppTab.competitions,
+      ),
       body: overviewAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (_, _) => Center(child: Text(l.tourSharedCouldNotLoadTournaments)),
+        error: (_, _) =>
+            Center(child: Text(l.tourSharedCouldNotLoadTournaments)),
         data: (overview) {
           final playerConf = overview?.playerConfederation;
           // Your competitions (the World Cup + your own continental cup) sit in
           // their own section; the other continents follow.
           final mine = _championships
-              .where((c) =>
-                  c.confederation == null || c.confederation == playerConf)
+              .where(
+                (c) => c.confederation == null || c.confederation == playerConf,
+              )
               .toList();
           final others = _ordered(overview)
-              .where((c) =>
-                  c.confederation != null && c.confederation != playerConf)
+              .where(
+                (c) => c.confederation != null && c.confederation != playerConf,
+              )
               .toList();
           return ListView(
-          padding: const EdgeInsets.all(AppSpacing.marginMobile),
-          children: [
-            Text(
-              l.tourSharedPrestigeStage,
-              style:
-                  AppTypography.labelMedium.copyWith(color: AppColors.primary),
-            ),
-            const SizedBox(height: AppSpacing.xs),
-            Text(l.tourSharedOverview,
-                style: AppTypography.headlineLargeMobile),
-            const SizedBox(height: AppSpacing.md),
-            AppCard(
-              onTap: () => context.go('${Routes.ranking}?careerId=$careerId'),
-              child: const Row(
-                children: [
-                  Icon(Icons.leaderboard, color: AppColors.primary),
-                  SizedBox(width: AppSpacing.md),
-                  Expanded(
-                    child: Text(
-                      'World Ranking',
-                      style: AppTypography.titleMedium,
-                    ),
-                  ),
-                  Icon(
-                    Icons.chevron_right,
-                    color: AppColors.onSurfaceVariant,
-                    size: 20,
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: AppSpacing.md),
-            Text(
-              'YOUR COMPETITIONS',
-              style:
-                  AppTypography.labelMedium.copyWith(color: AppColors.primary),
-            ),
-            const SizedBox(height: AppSpacing.sm),
-            _tileGrid([
-              for (final c in mine) _tile(context, overview, c),
-              if (overview?.nationsCup != null)
-                _ChampionshipTile(
-                  championship: _Championship(
-                    name: 'Nations Cup',
-                    region: 'LEAGUE ${overview!.nationsCupLeague}',
-                    icon: Icons.military_tech,
-                    description: 'Your league — promotion and relegation.',
-                  ),
-                  status: overview.nationsCup,
-                  championName: overview
-                      .nations[overview.nationsCup!.championId]?.name,
-                  onView: () =>
-                      context.go('${Routes.nationsCup}?careerId=$careerId'),
+            padding: const EdgeInsets.all(AppSpacing.marginMobile),
+            children: [
+              Text(
+                l.tourSharedPrestigeStage,
+                style: AppTypography.labelMedium.copyWith(
+                  color: AppColors.primary,
                 ),
-              // The Continental Clash only sits among YOUR competitions when
-              // your nation is one of the two entrants; otherwise it drops to
-              // the other-competitions grid below.
-              if (overview?.continentalClash != null &&
-                  overview!.clashInvolvesPlayer)
-                _clashTile(context, overview),
-            ]),
-            const SizedBox(height: AppSpacing.lg),
-            Text(
-              'OTHER CONTINENTS',
-              style:
-                  AppTypography.labelMedium.copyWith(color: AppColors.primary),
-            ),
-            const SizedBox(height: AppSpacing.sm),
-            _tileGrid([
-              for (final c in others) _tile(context, overview, c),
-              if (overview?.continentalClash != null &&
-                  !overview!.clashInvolvesPlayer)
-                _clashTile(context, overview),
-            ]),
-            const SizedBox(height: AppSpacing.lg),
-          ],
+              ),
+              const SizedBox(height: AppSpacing.xs),
+              Text(
+                l.tourSharedOverview,
+                style: AppTypography.headlineLargeMobile,
+              ),
+              const SizedBox(height: AppSpacing.md),
+              AppCard(
+                onTap: () => context.go('${Routes.ranking}?careerId=$careerId'),
+                child: const Row(
+                  children: [
+                    Icon(Icons.leaderboard, color: AppColors.primary),
+                    SizedBox(width: AppSpacing.md),
+                    Expanded(
+                      child: Text(
+                        'World Ranking',
+                        style: AppTypography.titleMedium,
+                      ),
+                    ),
+                    Icon(
+                      Icons.chevron_right,
+                      color: AppColors.onSurfaceVariant,
+                      size: 20,
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: AppSpacing.md),
+              Text(
+                'YOUR COMPETITIONS',
+                style: AppTypography.labelMedium.copyWith(
+                  color: AppColors.primary,
+                ),
+              ),
+              const SizedBox(height: AppSpacing.sm),
+              _tileGrid([
+                for (final c in mine) _tile(context, overview, c),
+                if (overview?.nationsCup != null)
+                  _ChampionshipTile(
+                    championship: _Championship(
+                      name: 'Nations Cup',
+                      region: 'LEAGUE ${overview!.nationsCupLeague}',
+                      icon: Icons.military_tech,
+                      description: 'Your league — promotion and relegation.',
+                    ),
+                    status: overview.nationsCup,
+                    championName:
+                        overview.nations[overview.nationsCup!.championId]?.name,
+                    onView: () =>
+                        context.go('${Routes.nationsCup}?careerId=$careerId'),
+                  ),
+                // The Continental Clash only sits among YOUR competitions when
+                // your nation is one of the two entrants; otherwise it drops to
+                // the other-competitions grid below.
+                if (overview?.continentalClash != null &&
+                    overview!.clashInvolvesPlayer)
+                  _clashTile(context, overview),
+              ]),
+              const SizedBox(height: AppSpacing.lg),
+              Text(
+                'OTHER CONTINENTS',
+                style: AppTypography.labelMedium.copyWith(
+                  color: AppColors.primary,
+                ),
+              ),
+              const SizedBox(height: AppSpacing.sm),
+              _tileGrid([
+                for (final c in others) _tile(context, overview, c),
+                if (overview?.continentalClash != null &&
+                    !overview!.clashInvolvesPlayer)
+                  _clashTile(context, overview),
+              ]),
+              const SizedBox(height: AppSpacing.lg),
+            ],
           );
         },
       ),
@@ -223,8 +232,9 @@ class TournamentsScreen extends ConsumerWidget {
     return _ChampionshipTile(
       championship: c,
       status: overview?.statuses[c.confederation],
-      championName:
-          championId == null ? null : overview?.nations[championId]?.name,
+      championName: championId == null
+          ? null
+          : overview?.nations[championId]?.name,
       onView: () => _open(context, c),
     );
   }
@@ -242,8 +252,7 @@ class TournamentsScreen extends ConsumerWidget {
       status: overview.continentalClash,
       championName:
           overview.nations[overview.continentalClash!.championId]?.name,
-      onView: () =>
-          context.go('${Routes.continentalClash}?careerId=$careerId'),
+      onView: () => context.go('${Routes.continentalClash}?careerId=$careerId'),
     );
   }
 
@@ -263,8 +272,8 @@ class TournamentsScreen extends ConsumerWidget {
       final regionRank = c.confederation == null
           ? 1 // World Championship
           : c.confederation == o?.playerConfederation
-              ? 0 // the player's own region
-              : 2;
+          ? 0 // the player's own region
+          : 2;
       return phaseRank * 100 + regionRank * 10 + index;
     }
 
@@ -335,8 +344,8 @@ class _ChampionshipTile extends StatelessWidget {
     final accent = !available
         ? AppColors.onSurfaceVariant
         : live
-            ? AppColors.positive
-            : AppColors.primary;
+        ? AppColors.positive
+        : AppColors.primary;
 
     return AppCard(
       color: live ? AppColors.positive.withValues(alpha: 0.08) : null,
@@ -346,10 +355,10 @@ class _ChampionshipTile extends StatelessWidget {
       onTap: available
           ? onView
           : () => ScaffoldMessenger.of(context)
-            ..hideCurrentSnackBar()
-            ..showSnackBar(
-              SnackBar(content: Text(l.tourSharedComingSoon)),
-            ),
+              ..hideCurrentSnackBar()
+              ..showSnackBar(
+                SnackBar(content: Text(l.tourSharedComingSoon)),
+              ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

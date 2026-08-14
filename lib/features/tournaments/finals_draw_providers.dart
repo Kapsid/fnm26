@@ -42,8 +42,7 @@ class FinalsDrawData {
 const worldCupDrawKind = 'worldCupFinals';
 
 final AutoDisposeFutureProviderFamily<FinalsDrawData?, int>
-finalsDrawProvider =
-    FutureProvider.autoDispose.family<FinalsDrawData?, int>((
+finalsDrawProvider = FutureProvider.autoDispose.family<FinalsDrawData?, int>((
   ref,
   careerId,
 ) async {
@@ -97,7 +96,8 @@ finalsDrawProvider =
   // mirroring drawGroups exactly: every host is forced to the top of pot 1 so
   // the pots shown match where teams are actually drawn.
   final groupCount = qualifiers.length ~/ 4;
-  final seeded = [...qualifiers]..sort(
+  final seeded = [...qualifiers]
+    ..sort(
       (a, b) => (rankingById[a] ?? 9999).compareTo(rankingById[b] ?? 9999),
     );
   final activeHosts = [

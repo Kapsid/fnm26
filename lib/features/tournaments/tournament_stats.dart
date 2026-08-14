@@ -97,10 +97,12 @@ class TournamentStatsTab extends StatelessWidget {
           _RecordCard(
             icon: Icons.whatshot_rounded,
             label: l.tourSharedBiggestFinalWin,
-            headline: '${name(bigFinal.championId)} '
+            headline:
+                '${name(bigFinal.championId)} '
                 '${_winScore(bigFinal)}',
             code: code(bigFinal.championId),
-            detail: '${l.recordsVs} ${name(bigFinal.runnerUpId)} · '
+            detail:
+                '${l.recordsVs} ${name(bigFinal.runnerUpId)} · '
                 '${bigFinal.year}',
           ),
         // Player leaderboards. Games and scorers show from the first edition;
@@ -238,10 +240,14 @@ class _LeaderboardState extends State<_Leaderboard> {
                 () {
                   // A player from one of the manager's nations (now or in the
                   // past) is highlighted so their records stand out.
-                  final mine = widget.highlightNations.contains(rows[i].nationId);
+                  final mine = widget.highlightNations.contains(
+                    rows[i].nationId,
+                  );
                   return Container(
                     padding: const EdgeInsets.symmetric(
-                        vertical: 3, horizontal: 4),
+                      vertical: 3,
+                      horizontal: 4,
+                    ),
                     decoration: mine
                         ? BoxDecoration(
                             color: AppColors.primary.withValues(alpha: 0.10),
@@ -267,8 +273,9 @@ class _LeaderboardState extends State<_Leaderboard> {
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                             style: AppTypography.bodySmall.copyWith(
-                              fontWeight:
-                                  mine ? FontWeight.w700 : FontWeight.w400,
+                              fontWeight: mine
+                                  ? FontWeight.w700
+                                  : FontWeight.w400,
                               color: mine ? AppColors.primary : null,
                             ),
                           ),

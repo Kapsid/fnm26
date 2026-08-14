@@ -623,16 +623,16 @@ class _GroupCard extends StatelessWidget {
 
   Widget _cell(String text, {bool emphasize = false, double width = 30}) =>
       SizedBox(
-    width: width,
-    child: Text(
-      text,
-      textAlign: TextAlign.center,
-      style: AppTypography.labelSmall.copyWith(
-        color: emphasize ? AppColors.primary : AppColors.onSurface,
-        fontWeight: emphasize ? FontWeight.w700 : FontWeight.w500,
-      ),
-    ),
-  );
+        width: width,
+        child: Text(
+          text,
+          textAlign: TextAlign.center,
+          style: AppTypography.labelSmall.copyWith(
+            color: emphasize ? AppColors.primary : AppColors.onSurface,
+            fontWeight: emphasize ? FontWeight.w700 : FontWeight.w500,
+          ),
+        ),
+      );
 }
 
 class _FinalsGroups extends StatelessWidget {

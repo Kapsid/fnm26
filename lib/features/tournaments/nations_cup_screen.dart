@@ -191,7 +191,8 @@ class _NationsCupScreenState extends ConsumerState<NationsCupScreen> {
         ),
         body: async.when(
           loading: () => const Center(child: CircularProgressIndicator()),
-          error: (e, _) => Center(child: Text(l.tourContCouldNotLoad(e.toString()))),
+          error: (e, _) =>
+              Center(child: Text(l.tourContCouldNotLoad(e.toString()))),
           data: (v) {
             if (v == null) {
               return Center(child: Text(l.tourContNoSaveFound));
@@ -408,8 +409,10 @@ class _GroupCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(l.tourContGroupHeading(group.name),
-              style: AppTypography.labelMedium),
+          Text(
+            l.tourContGroupHeading(group.name),
+            style: AppTypography.labelMedium,
+          ),
           const SizedBox(height: AppSpacing.sm),
           for (var i = 0; i < group.standings.length; i++)
             _row(i + 1, group.standings[i], group.standings.length),
@@ -516,7 +519,11 @@ class _FinalsFourCard extends StatelessWidget {
         children: [
           Row(
             children: [
-              const Icon(Icons.emoji_events, size: 16, color: AppColors.primary),
+              const Icon(
+                Icons.emoji_events,
+                size: 16,
+                color: AppColors.primary,
+              ),
               const SizedBox(width: AppSpacing.xs),
               Text(l.tourContTabFinalsFour, style: AppTypography.labelMedium),
             ],

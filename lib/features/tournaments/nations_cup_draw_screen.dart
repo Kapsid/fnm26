@@ -29,10 +29,13 @@ class _NationsCupDrawScreenState extends ConsumerState<NationsCupDrawScreen> {
   bool _marked = false;
 
   Future<void> _markWatched() async {
-    final career =
-        await ref.read(careerRepositoryProvider).byId(widget.careerId);
+    final career = await ref
+        .read(careerRepositoryProvider)
+        .byId(widget.careerId);
     if (career == null) return;
-    await ref.read(competitionRepositoryProvider).markDrawWatched(
+    await ref
+        .read(competitionRepositoryProvider)
+        .markDrawWatched(
           widget.careerId,
           career.cyclePointer,
           nationsCupDrawKind,
@@ -53,8 +56,7 @@ class _NationsCupDrawScreenState extends ConsumerState<NationsCupDrawScreen> {
       });
     }
 
-    void leave() =>
-        context.go('${Routes.hub}?careerId=${widget.careerId}');
+    void leave() => context.go('${Routes.hub}?careerId=${widget.careerId}');
 
     return Scaffold(
       appBar: AppBar(

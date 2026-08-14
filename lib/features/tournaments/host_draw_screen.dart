@@ -84,14 +84,16 @@ class _HostDrawScreenState extends ConsumerState<HostDrawScreen> {
                 child: ListView(
                   padding: const EdgeInsets.all(AppSpacing.marginMobile),
                   children: [
-                    Text('${data.title} · ${data.year}',
-                        style: AppTypography.headlineMedium),
+                    Text(
+                      '${data.title} · ${data.year}',
+                      style: AppTypography.headlineMedium,
+                    ),
                     const SizedBox(height: AppSpacing.xs),
                     Text(
                       _revealed
                           ? (hosts.length > 1
-                              ? 'And the hosts will be…'
-                              : 'And the host will be…')
+                                ? 'And the hosts will be…'
+                                : 'And the host will be…')
                           : 'The candidates in the running:',
                       style: AppTypography.bodyMedium.copyWith(
                         color: AppColors.onSurfaceVariant,
@@ -115,7 +117,8 @@ class _HostDrawScreenState extends ConsumerState<HostDrawScreen> {
                           () {
                             // A bid wins as a whole, so it's chosen only when
                             // it IS the winning bid — not merely overlapping.
-                            final won = _revealed &&
+                            final won =
+                                _revealed &&
                                 bid.length == data.hostIds.length &&
                                 bid.every(data.hostIds.contains);
                             return _Candidate(
@@ -211,9 +214,7 @@ class _EnvelopeState extends State<_Envelope>
             : AppColors.surfaceContainerHigh,
         borderRadius: AppRadii.baseAll,
         border: Border.all(
-          color: widget.revealed
-              ? AppColors.primary
-              : AppColors.outlineVariant,
+          color: widget.revealed ? AppColors.primary : AppColors.outlineVariant,
           width: widget.revealed ? 2 : 1,
         ),
       ),
@@ -232,8 +233,9 @@ class _EnvelopeState extends State<_Envelope>
           // fades into the open one. Phase 2 (0.45–1): the host card springs
           // out, scaling and rising into place.
           final flap = (_c.value / 0.45).clamp(0.0, 1.0);
-          final content =
-              Curves.easeOutBack.transform(((_c.value - 0.45) / 0.55).clamp(0.0, 1.0));
+          final content = Curves.easeOutBack.transform(
+            ((_c.value - 0.45) / 0.55).clamp(0.0, 1.0),
+          );
 
           return Column(
             mainAxisSize: MainAxisSize.min,

@@ -33,61 +33,63 @@ class NationsCupDrawData {
 }
 
 final AutoDisposeFutureProviderFamily<NationsCupDrawData?, int>
-    nationsCupDrawProvider =
-    FutureProvider.autoDispose.family<NationsCupDrawData?, int>((
-  ref,
-  careerId,
-) async {
-  final career = await ref.watch(careerRepositoryProvider).byId(careerId);
-  if (career == null) return null;
-  final comp = ref.watch(competitionRepositoryProvider);
-  final tables = await comp.tournamentGroupTables(
-    careerId,
-    CompetitionKind.nationsLeague,
-  );
-  if (tables.isEmpty) return null;
+nationsCupDrawProvider = FutureProvider.autoDispose
+    .family<NationsCupDrawData?, int>((
+      ref,
+      careerId,
+    ) async {
+      final career = await ref.watch(careerRepositoryProvider).byId(careerId);
+      if (career == null) return null;
+      final comp = ref.watch(competitionRepositoryProvider);
+      final tables = await comp.tournamentGroupTables(
+        careerId,
+        CompetitionKind.nationsLeague,
+      );
+      if (tables.isEmpty) return null;
 
-  final tiers =
-      await ref.watch(careerRepositoryProvider).nationsCupTiers(careerId);
-  final playerTier = tiers[career.nationId] ?? 0;
-  final letter = NationsCup.leagueLetter(playerTier);
+      final tiers = await ref
+          .watch(careerRepositoryProvider)
+          .nationsCupTiers(careerId);
+      final playerTier = tiers[career.nationId] ?? 0;
+      final letter = NationsCup.leagueLetter(playerTier);
 
-  final nations = {
-    for (final n in await ref.watch(nationRepositoryProvider).all()) n.id: n,
-  };
-  int rank(int id) => nations[id]?.ranking ?? 9999;
+      final nations = {
+        for (final n in await ref.watch(nationRepositoryProvider).all())
+          n.id: n,
+      };
+      int rank(int id) => nations[id]?.ranking ?? 9999;
 
-  // Only the manager's own league, its groups in order.
-  final leagueTables = [
-    for (final t in tables)
-      if (t.name.isNotEmpty && t.name[0] == letter) t,
-  ]..sort((a, b) => a.name.compareTo(b.name));
-  if (leagueTables.isEmpty) return null;
+      // Only the manager's own league, its groups in order.
+      final leagueTables = [
+        for (final t in tables)
+          if (t.name.isNotEmpty && t.name[0] == letter) t,
+      ]..sort((a, b) => a.name.compareTo(b.name));
+      if (leagueTables.isEmpty) return null;
 
-  final groups = <NcDrawGroup>[
-    for (final t in leagueTables)
-      (
-        name: t.name,
-        // Order each group by ranking so pot 1 shows the seeds, pot 4 the
-        // lowest-ranked — a plausible pot draw of the already-decided groups.
-        nationIds: [
-          for (final s in t.standings) s.nationId,
-        ]..sort((a, b) => rank(a).compareTo(rank(b))),
-      ),
-  ];
+      final groups = <NcDrawGroup>[
+        for (final t in leagueTables)
+          (
+            name: t.name,
+            // Order each group by ranking so pot 1 shows the seeds, pot 4 the
+            // lowest-ranked — a plausible pot draw of the already-decided groups.
+            nationIds: [
+              for (final s in t.standings) s.nationId,
+            ]..sort((a, b) => rank(a).compareTo(rank(b))),
+          ),
+      ];
 
-  final alreadyWatched = await comp.hasWatchedDraw(
-    careerId,
-    career.cyclePointer,
-    nationsCupDrawKind,
-  );
+      final alreadyWatched = await comp.hasWatchedDraw(
+        careerId,
+        career.cyclePointer,
+        nationsCupDrawKind,
+      );
 
-  return NationsCupDrawData(
-    leagueLetter: letter,
-    groups: groups,
-    nations: nations,
-    playerNationId: career.nationId,
-    cycle: career.cyclePointer,
-    alreadyWatched: alreadyWatched,
-  );
-});
+      return NationsCupDrawData(
+        leagueLetter: letter,
+        groups: groups,
+        nations: nations,
+        playerNationId: career.nationId,
+        cycle: career.cyclePointer,
+        alreadyWatched: alreadyWatched,
+      );
+    });

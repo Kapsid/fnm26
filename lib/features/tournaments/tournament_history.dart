@@ -76,8 +76,9 @@ class _TournamentScorersState extends State<TournamentScorers> {
     final l = AppLocalizations.of(context);
     final hasAllTime = widget.allTime.isNotEmpty;
     final showingAllTime = _allTime && hasAllTime;
-    final count =
-        showingAllTime ? widget.allTime.length : widget.scorers.length;
+    final count = showingAllTime
+        ? widget.allTime.length
+        : widget.scorers.length;
     if (count == 0 && !hasAllTime) {
       return TournamentSoon(message: widget.emptyMessage);
     }
@@ -94,7 +95,9 @@ class _TournamentScorersState extends State<TournamentScorers> {
             child: SegmentedButton<bool>(
               segments: [
                 ButtonSegment(
-                    value: false, label: Text(l.tourSharedThisEdition)),
+                  value: false,
+                  label: Text(l.tourSharedThisEdition),
+                ),
                 ButtonSegment(value: true, label: Text(l.tourSharedAllTime)),
               ],
               selected: {_allTime},
@@ -117,20 +120,20 @@ class _TournamentScorersState extends State<TournamentScorers> {
   }
 
   Widget _editionRow(int i, ScorerTally s) => _row(
-        rank: i + 1,
-        nationId: s.nationId,
-        name: widget.playerNames[s.playerId] ?? 'Unknown',
-        goals: s.goals,
-        active: false,
-      );
+    rank: i + 1,
+    nationId: s.nationId,
+    name: widget.playerNames[s.playerId] ?? 'Unknown',
+    goals: s.goals,
+    active: false,
+  );
 
   Widget _allTimeRow(int i, AllTimeScorer s) => _row(
-        rank: i + 1,
-        nationId: s.nationId,
-        name: s.name,
-        goals: s.goals,
-        active: s.active,
-      );
+    rank: i + 1,
+    nationId: s.nationId,
+    name: s.name,
+    goals: s.goals,
+    active: s.active,
+  );
 
   Widget _row({
     required int rank,
@@ -290,13 +293,13 @@ class TournamentHistory extends StatelessWidget {
   }
 
   Widget _medalCount(String emoji, int n) => SizedBox(
-        width: 34,
-        child: Text(
-          '$emoji$n',
-          textAlign: TextAlign.center,
-          style: AppTypography.labelSmall,
-        ),
-      );
+    width: 34,
+    child: Text(
+      '$emoji$n',
+      textAlign: TextAlign.center,
+      style: AppTypography.labelSmall,
+    ),
+  );
 
   /// One edition's full podium.
   ///
@@ -321,15 +324,17 @@ class TournamentHistory extends StatelessWidget {
               children: [
                 Text(
                   '${h.year}',
-                  style: AppTypography.labelMedium
-                      .copyWith(color: AppColors.primary),
+                  style: AppTypography.labelMedium.copyWith(
+                    color: AppColors.primary,
+                  ),
                 ),
                 const Spacer(),
                 if (h.hostId != null)
                   Text(
                     'Host: ${name(h.hostId!)}',
-                    style: AppTypography.labelSmall
-                        .copyWith(color: AppColors.onSurfaceVariant),
+                    style: AppTypography.labelSmall.copyWith(
+                      color: AppColors.onSurfaceVariant,
+                    ),
                   ),
               ],
             ),
@@ -342,12 +347,14 @@ class TournamentHistory extends StatelessWidget {
                   child: _podiumSide(h.championId, champion: true),
                 ),
                 Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: AppSpacing.sm),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: AppSpacing.sm,
+                  ),
                   child: Text(
                     score.isEmpty ? 'beat' : score,
-                    style: AppTypography.labelMedium
-                        .copyWith(color: AppColors.onSurfaceVariant),
+                    style: AppTypography.labelMedium.copyWith(
+                      color: AppColors.onSurfaceVariant,
+                    ),
                   ),
                 ),
                 Expanded(
@@ -372,8 +379,9 @@ class TournamentHistory extends StatelessWidget {
                         name(b),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: AppTypography.labelSmall
-                            .copyWith(color: AppColors.onSurfaceVariant),
+                        style: AppTypography.labelSmall.copyWith(
+                          color: AppColors.onSurfaceVariant,
+                        ),
                       ),
                     ),
                   ],
@@ -386,26 +394,24 @@ class TournamentHistory extends StatelessWidget {
   }
 
   Widget _podiumSide(int nationId, {required bool champion}) => Row(
-        children: [
-          if (champion) ...[
-            const Icon(Icons.emoji_events, color: AppColors.primary, size: 16),
-            const SizedBox(width: 4),
-          ],
-          FlagDisc(code(nationId), size: champion ? 22 : 18),
-          const SizedBox(width: AppSpacing.sm),
-          Flexible(
-            child: Text(
-              name(nationId),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: AppTypography.bodySmall.copyWith(
-                fontWeight: champion ? FontWeight.w700 : FontWeight.w400,
-                color: champion
-                    ? AppColors.onSurface
-                    : AppColors.onSurfaceVariant,
-              ),
-            ),
+    children: [
+      if (champion) ...[
+        const Icon(Icons.emoji_events, color: AppColors.primary, size: 16),
+        const SizedBox(width: 4),
+      ],
+      FlagDisc(code(nationId), size: champion ? 22 : 18),
+      const SizedBox(width: AppSpacing.sm),
+      Flexible(
+        child: Text(
+          name(nationId),
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          style: AppTypography.bodySmall.copyWith(
+            fontWeight: champion ? FontWeight.w700 : FontWeight.w400,
+            color: champion ? AppColors.onSurface : AppColors.onSurfaceVariant,
           ),
-        ],
-      );
+        ),
+      ),
+    ],
+  );
 }

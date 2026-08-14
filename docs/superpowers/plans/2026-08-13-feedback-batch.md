@@ -640,7 +640,7 @@ disagree, the finals draw contains a nation the bracket says lost.
 - Consumes: `Finals.playoffPoolFor(...) → List<int>` (existing, `:473`), `Finals.playoffBracket(...) → List<PlayoffTie>` (existing, `:532`)
 - Produces: `Finals.playoffWinners(pool, rankingById, rng, {Map<int, int> playedResults = const {}})` — `playedResults` maps a tie key to the winning nation id; any tie present there uses the played result instead of `_playoffMatch`.
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 ```dart
 // test/unit/competition/intercontinental_playoff_test.dart
@@ -693,12 +693,12 @@ Read `finals.dart:532` first: `playoffBracket` takes `byConfederation` today.
 The third test above asserts the invariant that matters — adapt its call to the
 real signature rather than changing the signature to suit the test.
 
-- [ ] **Step 2: Run the test to verify it fails**
+- [x] **Step 2: Run the test to verify it fails**
 
 Run: `flutter test test/unit/competition/intercontinental_playoff_test.dart`
 Expected: FAIL — `playedResults` and `tieKey` do not exist.
 
-- [ ] **Step 3: Add the played-result override**
+- [x] **Step 3: Add the played-result override**
 
 Add a stable tie key and thread `playedResults` through `playoffWinners` and
 `playoffBracket`, so both consult it before falling back to `_playoffMatch`:
@@ -730,12 +730,12 @@ Route every `_playoffMatch` call in `playoffWinners` and `playoffBracket`
 through `_settle` with the matching key. **Both functions must key ties
 identically** — that is the invariant.
 
-- [ ] **Step 4: Run the test to verify it passes**
+- [x] **Step 4: Run the test to verify it passes**
 
 Run: `flutter test test/unit/competition/`
 Expected: PASS — including existing finals and qualification tests.
 
-- [ ] **Step 5: Make the manager's ties real fixtures**
+- [x] **Step 5: Make the manager's ties real fixtures**
 
 In `intercontinental_playoff_screen.dart`: when the manager's nation is in
 `playoffPoolFor`, its ties are played or watched like any other knockout rather
@@ -752,7 +752,7 @@ is in the pool this must become *play the tie*, not *watch the reveal* — and
 the World Cup finals draw at `:242` must stay gated behind it, so the draw can
 never run before the manager's play-off is settled.
 
-- [ ] **Step 6: Add an end-to-end regression test**
+- [x] **Step 6: Add an end-to-end regression test**
 
 ```dart
 test('a manager in the pool is never eliminated without a fixture', () async {
@@ -765,7 +765,7 @@ test('a manager in the pool is never eliminated without a fixture', () async {
 Use `test/unit/full_cycle_test.dart` as the model for driving a career forward
 — it already advances a save through a full cycle.
 
-- [ ] **Step 7: Verify and commit**
+- [x] **Step 7: Verify and commit**
 
 Run: `flutter analyze && flutter test`
 Expected: PASS

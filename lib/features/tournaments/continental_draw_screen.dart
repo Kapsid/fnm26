@@ -38,10 +38,13 @@ class _ContinentalDrawScreenState extends ConsumerState<ContinentalDrawScreen> {
   bool _marked = false;
 
   Future<void> _markFinalsWatched() async {
-    final career =
-        await ref.read(careerRepositoryProvider).byId(widget.careerId);
+    final career = await ref
+        .read(careerRepositoryProvider)
+        .byId(widget.careerId);
     if (career == null) return;
-    await ref.read(competitionRepositoryProvider).markDrawWatched(
+    await ref
+        .read(competitionRepositoryProvider)
+        .markDrawWatched(
           widget.careerId,
           career.cyclePointer,
           continentalFinalsDrawKind,
@@ -78,9 +81,7 @@ class _ContinentalDrawScreenState extends ConsumerState<ContinentalDrawScreen> {
           onPressed: leave,
         ),
         title: Text(
-          widget.qualifying
-              ? l.tourContQualifyingDraw
-              : l.tourContGroupDraw,
+          widget.qualifying ? l.tourContQualifyingDraw : l.tourContGroupDraw,
           style: AppTypography.labelMedium.copyWith(color: AppColors.primary),
         ),
         centerTitle: true,

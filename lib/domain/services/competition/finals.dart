@@ -494,25 +494,89 @@ abstract final class WorldCupFinals {
   /// field the top two get byes to the path finals while the other four contest
   /// two semis, and each semi winner meets a seed for a World Cup place. Each
   /// tie is a strength-weighted, deterministic single match.
+  ///
+  /// A tie listed in [playedResults] — keyed by [tieKey] — was actually played,
+  /// and its winner stands. That is how a manager in the pool decides his own
+  /// fate: without it every tie was settled here, at finalist selection, and a
+  /// manager was eliminated from a World Cup he never got to play for.
   static List<int> playoffWinners(
     List<int> pool,
     Map<int, int> rankingById,
-    SeededRng rng,
-  ) {
+    SeededRng rng, {
+    Map<String, int> playedResults = const {},
+  }) {
     const berths = QualificationFormat.playoffBerths;
     if (pool.length <= berths) return pool;
     int r(int id) => rankingById[id] ?? 9999;
     final seeds = [...pool]..sort((a, b) => r(a).compareTo(r(b)));
     if (seeds.length == 6) {
-      final w1 = _playoffMatch(seeds[2], seeds[5], rankingById, rng);
-      final w2 = _playoffMatch(seeds[3], seeds[4], rankingById, rng);
+      final w1 = _settle(
+        tieKey(round: playoffSemiRound, slot: 0),
+        seeds[2],
+        seeds[5],
+        rankingById,
+        rng,
+        playedResults,
+      );
+      final w2 = _settle(
+        tieKey(round: playoffSemiRound, slot: 1),
+        seeds[3],
+        seeds[4],
+        rankingById,
+        rng,
+        playedResults,
+      );
       return [
-        _playoffMatch(seeds[0], w1, rankingById, rng),
-        _playoffMatch(seeds[1], w2, rankingById, rng),
+        _settle(
+          tieKey(round: playoffFinalRound, slot: 0),
+          seeds[0],
+          w1,
+          rankingById,
+          rng,
+          playedResults,
+        ),
+        _settle(
+          tieKey(round: playoffFinalRound, slot: 1),
+          seeds[1],
+          w2,
+          rankingById,
+          rng,
+          playedResults,
+        ),
       ];
     }
     // Uncommon field size — take the best-ranked to fill the berths.
     return seeds.take(berths).toList();
+  }
+
+  /// The two rounds of the six-team play-off, as they appear in a [tieKey] and
+  /// on a stored fixture.
+  static const String playoffSemiRound = 'SEMI';
+  static const String playoffFinalRound = 'FINAL';
+
+  /// A stable identifier for one play-off tie, so a played result can be matched
+  /// back to the slot it settled. Deliberately derived from the slot rather than
+  /// from the nations in it: the bracket is recomputed every time it is shown,
+  /// and a key made of nation ids would move the moment an earlier round was
+  /// played for real.
+  static String tieKey({required String round, required int slot}) =>
+      'ICPO-$round-$slot';
+
+  /// Settles one tie: a played result if there is one, otherwise the model.
+  static int _settle(
+    String key,
+    int a,
+    int b,
+    Map<int, int> rankingById,
+    SeededRng rng,
+    Map<String, int> playedResults,
+  ) {
+    final played = playedResults[key];
+    // A played tie is the truth. A result naming somebody who is not in this
+    // tie is stale — an earlier round has since been replayed — and is ignored
+    // rather than allowed to put a nation into a bracket it never reached.
+    if (played != null && (played == a || played == b)) return played;
+    return _playoffMatch(a, b, rankingById, rng);
   }
 
   /// One play-off tie: the stronger (lower-ranked) side is favoured, but a
@@ -535,51 +599,58 @@ abstract final class WorldCupFinals {
   /// replays it tie-by-tie, so — called with the SAME seed the finalist
   /// selection used — the recorded winners are exactly the two nations that
   /// took the final World Cup places. The two path finals decide those places.
+  ///
+  /// [pool] overrides the field when the caller already has it (it is otherwise
+  /// derived from [byConfederation] by [playoffPoolFor]). [playedResults] and
+  /// [playedScores] carry the ties the manager actually played, keyed by
+  /// [tieKey] — the bracket must show what happened on the pitch, or it would
+  /// contradict the finals draw it is explaining.
   static List<PlayoffTie> playoffBracket({
     required Map<Confederation, List<List<GroupStanding>>> byConfederation,
     required Map<int, int> rankingById,
     required SeededRng rng,
+    List<int>? pool,
+    Map<String, int> playedResults = const {},
+    Map<String, (int, int)> playedScores = const {},
   }) {
+    final field =
+        pool ??
+        playoffPoolFor(
+          byConfederation: byConfederation,
+          rankingById: rankingById,
+        );
     int rank(int id) => rankingById[id] ?? 9999;
-    final pool = <int>[];
-    for (final entry in byConfederation.entries) {
-      final fmt = QualificationFormat.forConfederation(entry.key);
-      if (fmt.playoffEntrants <= 0) continue;
-      final direct = Qualification.qualifiers(entry.value, fmt.finalsBerths);
-      final withEntrants = Qualification.qualifiers(
-        entry.value,
-        fmt.finalsBerths + fmt.playoffEntrants,
-      );
-      pool.addAll(withEntrants.skip(direct.length));
-    }
-    pool.sort((a, b) => rank(a).compareTo(rank(b)));
+    final seeds = [...field]..sort((a, b) => rank(a).compareTo(rank(b)));
     // Mirror playoffWinners' six-team bracket exactly (same tie order, same
-    // match function) so the winners match the real finalist selection.
-    if (pool.length != 6) return const [];
+    // keys, same match function) so the winners match the real finalist
+    // selection.
+    if (seeds.length != 6) return const [];
     final ties = <PlayoffTie>[];
-    int add(int a, int b, {required bool isFinal}) {
+    int add(int a, int b, {required String round, required int slot}) {
       // The winner is decided on the SAME rng stream as playoffWinners, so the
       // finals berths shown here match the real selection exactly. A plausible
       // scoreline is then drawn on a SEPARATE, tie-derived stream, so adding it
-      // for display never shifts who actually goes through.
-      final w = _playoffMatch(a, b, rankingById, rng);
+      // for display never shifts who actually goes through — unless the tie was
+      // really played, in which case both come from the match.
+      final key = tieKey(round: round, slot: slot);
+      final w = _settle(key, a, b, rankingById, rng, playedResults);
       final loser = w == a ? b : a;
-      final (wg, lg) = _playoffScore(w, loser);
+      final (wg, lg) = playedScores[key] ?? _playoffScore(w, loser);
       ties.add((
         home: a,
         away: b,
         homeScore: a == w ? wg : lg,
         awayScore: a == w ? lg : wg,
         winner: w,
-        isFinal: isFinal,
+        isFinal: round == playoffFinalRound,
       ));
       return w;
     }
 
-    final w1 = add(pool[2], pool[5], isFinal: false);
-    final w2 = add(pool[3], pool[4], isFinal: false);
-    add(pool[0], w1, isFinal: true);
-    add(pool[1], w2, isFinal: true);
+    final w1 = add(seeds[2], seeds[5], round: playoffSemiRound, slot: 0);
+    final w2 = add(seeds[3], seeds[4], round: playoffSemiRound, slot: 1);
+    add(seeds[0], w1, round: playoffFinalRound, slot: 0);
+    add(seeds[1], w2, round: playoffFinalRound, slot: 1);
     return ties;
   }
 

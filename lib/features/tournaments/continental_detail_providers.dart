@@ -142,8 +142,7 @@ class ContinentalDrawData {
 /// and qualifiers as creation) so the ceremony matches the stored groups.
 /// Returns null when the player's region isn't contesting a finals this cycle.
 final AutoDisposeFutureProviderFamily<ContinentalDrawData?, ContinentalKey>
-    continentalDrawProvider =
-    FutureProvider.autoDispose.family<ContinentalDrawData?, ContinentalKey>((
+continentalDrawProvider = FutureProvider.autoDispose.family<ContinentalDrawData?, ContinentalKey>((
   ref,
   key,
 ) async {
@@ -161,9 +160,7 @@ final AutoDisposeFutureProviderFamily<ContinentalDrawData?, ContinentalKey>
     return null;
   }
   final all = await ref.watch(nationRepositoryProvider).all();
-  if (all
-          .firstWhere((n) => n.id == career.nationId)
-          .confederation !=
+  if (all.firstWhere((n) => n.id == career.nationId).confederation !=
       key.confederation) {
     return null;
   }
@@ -215,10 +212,9 @@ final AutoDisposeFutureProviderFamily<ContinentalDrawData?, ContinentalKey>
       berths,
     );
   } else {
-    final members = all
-        .where((n) => n.confederation == key.confederation)
-        .toList()
-      ..sort((a, b) => rankOf(a).compareTo(rankOf(b)));
+    final members =
+        all.where((n) => n.confederation == key.confederation).toList()
+          ..sort((a, b) => rankOf(a).compareTo(rankOf(b)));
     qualifierIds = members.take(berths).map((n) => n.id).toList();
   }
   if (qualifierIds.length < berths) return null;
@@ -247,68 +243,74 @@ final AutoDisposeFutureProviderFamily<ContinentalDrawData?, ContinentalKey>
 /// seed and members as creation), for the qualifying draw ceremony. Returns
 /// null when the player's region has no qualifying this cycle.
 final AutoDisposeFutureProviderFamily<ContinentalDrawData?, ContinentalKey>
-    continentalQualifyingDrawProvider =
-    FutureProvider.autoDispose.family<ContinentalDrawData?, ContinentalKey>((
-  ref,
-  key,
-) async {
-  await ref.watch(seedLoaderProvider).ensureSeeded();
-  final career = await ref.watch(careerRepositoryProvider).byId(key.careerId);
-  if (career == null) return null;
-  if (ContinentalCups.byConfederation[key.confederation] == null) return null;
+continentalQualifyingDrawProvider = FutureProvider.autoDispose
+    .family<ContinentalDrawData?, ContinentalKey>((
+      ref,
+      key,
+    ) async {
+      await ref.watch(seedLoaderProvider).ensureSeeded();
+      final career = await ref
+          .watch(careerRepositoryProvider)
+          .byId(key.careerId);
+      if (career == null) return null;
+      if (ContinentalCups.byConfederation[key.confederation] == null)
+        return null;
 
-  final comp = ref.watch(competitionRepositoryProvider);
-  if (!await comp.hasTournament(
-    key.careerId,
-    CompetitionKind.continentalQualifying,
-    confederation: key.confederation,
-  )) {
-    return null;
-  }
-  final all = await ref.watch(nationRepositoryProvider).all();
-  if (all.firstWhere((n) => n.id == career.nationId).confederation !=
-      key.confederation) {
-    return null;
-  }
-  final rankById = await ref.watch(
-    seedRankByIdProvider((
-      careerId: key.careerId,
-      cycle: career.cyclePointer,
-    )).future,
-  );
-  // The one shared definition of who is in the draw — see
-  // [WorldCupHosts.continentalQualifiers].
-  final members = WorldCupHosts.continentalQualifiers(
-    confederation: key.confederation,
-    cycle: career.cyclePointer,
-    seed: career.rngSeed,
-    nations: all,
-  );
-  final schedule = const ScheduleGenerator().generate(
-    confederation: key.confederation,
-    nations: members,
-    rngSeed: career.rngSeed ^ (career.cyclePointer * 0x71) ^ 0xCAFE,
-    start: DateTime(CareerService.cycleStart.year, 9),
-    // Must match the played schedule (career_providers buildCalendar) so the
-    // ceremony's groups are the real ones — groups of six, not four.
-    groupSize: 6,
-    rankById: rankById,
-  );
-  return ContinentalDrawData(
-    draw: FinalsDraw(
-      groups: [
-        for (final g in schedule.groups)
-          FinalsGroupDraw(name: g.name, nationIds: g.nationIds, fixtures: []),
-      ],
-    ),
-    nations: {for (final n in all) n.id: n},
-    playerNationId: career.nationId,
-  );
-});
+      final comp = ref.watch(competitionRepositoryProvider);
+      if (!await comp.hasTournament(
+        key.careerId,
+        CompetitionKind.continentalQualifying,
+        confederation: key.confederation,
+      )) {
+        return null;
+      }
+      final all = await ref.watch(nationRepositoryProvider).all();
+      if (all.firstWhere((n) => n.id == career.nationId).confederation !=
+          key.confederation) {
+        return null;
+      }
+      final rankById = await ref.watch(
+        seedRankByIdProvider((
+          careerId: key.careerId,
+          cycle: career.cyclePointer,
+        )).future,
+      );
+      // The one shared definition of who is in the draw — see
+      // [WorldCupHosts.continentalQualifiers].
+      final members = WorldCupHosts.continentalQualifiers(
+        confederation: key.confederation,
+        cycle: career.cyclePointer,
+        seed: career.rngSeed,
+        nations: all,
+      );
+      final schedule = const ScheduleGenerator().generate(
+        confederation: key.confederation,
+        nations: members,
+        rngSeed: career.rngSeed ^ (career.cyclePointer * 0x71) ^ 0xCAFE,
+        start: DateTime(CareerService.cycleStart.year, 9),
+        // Must match the played schedule (career_providers buildCalendar) so the
+        // ceremony's groups are the real ones — groups of six, not four.
+        groupSize: 6,
+        rankById: rankById,
+      );
+      return ContinentalDrawData(
+        draw: FinalsDraw(
+          groups: [
+            for (final g in schedule.groups)
+              FinalsGroupDraw(
+                name: g.name,
+                nationIds: g.nationIds,
+                fixtures: [],
+              ),
+          ],
+        ),
+        nations: {for (final n in all) n.id: n},
+        playerNationId: career.nationId,
+      );
+    });
 
 final AutoDisposeFutureProviderFamily<ContinentalData?, ContinentalKey>
-    continentalDetailProvider =
-    FutureProvider.autoDispose.family<ContinentalData?, ContinentalKey>((
+continentalDetailProvider = FutureProvider.autoDispose.family<ContinentalData?, ContinentalKey>((
   ref,
   key,
 ) async {
@@ -351,12 +353,14 @@ final AutoDisposeFutureProviderFamily<ContinentalData?, ContinentalKey>
       CompetitionKind.continentalFinals,
       confederation: key.confederation,
     );
-    groupFixtures.addAll(await comp.fixturesByRound(
-      key.careerId,
-      'CGROUP',
-      kind: CompetitionKind.continentalFinals,
-      confederation: key.confederation,
-    ));
+    groupFixtures.addAll(
+      await comp.fixturesByRound(
+        key.careerId,
+        'CGROUP',
+        kind: CompetitionKind.continentalFinals,
+        confederation: key.confederation,
+      ),
+    );
     for (final round in _rounds) {
       knockout.addAll(
         await comp.fixturesByRound(
@@ -389,15 +393,15 @@ final AutoDisposeFutureProviderFamily<ContinentalData?, ContinentalKey>
   // The competition's full roll of honour — all past winners, including the
   // pre-seeded real-world history.
   final allHonours = await comp.honours(key.careerId);
-  final honours =
-      allHonours.where((h) => h.competition == config.name).toList()
-        ..sort((a, b) => b.year.compareTo(a.year));
+  final honours = allHonours.where((h) => h.competition == config.name).toList()
+    ..sort((a, b) => b.year.compareTo(a.year));
 
   final playerRepo = ref.watch(playerRepositoryProvider);
   final aging = CareerService.agingYears(career);
   final youth = await ref.watch(youthBonusByCycleProvider(key.careerId).future);
-  final careerDev =
-      await ref.watch(careerDevBonusProvider(key.careerId).future);
+  final careerDev = await ref.watch(
+    careerDevBonusProvider(key.careerId).future,
+  );
 
   // Per-player all-time records for THIS continental cup: most matches played
   // and most finals tournaments attended, each resolved to the holder's name.
@@ -481,10 +485,16 @@ final AutoDisposeFutureProviderFamily<ContinentalData?, ContinentalKey>
     };
     for (final f in knockout) {
       concededByNation
-        ..update(f.homeNationId, (v) => v + (f.awayScore ?? 0),
-            ifAbsent: () => f.awayScore ?? 0)
-        ..update(f.awayNationId, (v) => v + (f.homeScore ?? 0),
-            ifAbsent: () => f.homeScore ?? 0);
+        ..update(
+          f.homeNationId,
+          (v) => v + (f.awayScore ?? 0),
+          ifAbsent: () => f.awayScore ?? 0,
+        )
+        ..update(
+          f.awayNationId,
+          (v) => v + (f.homeScore ?? 0),
+          ifAbsent: () => f.homeScore ?? 0,
+        );
     }
     int? meanest;
     var fewest = 1 << 30;
@@ -512,7 +522,9 @@ final AutoDisposeFutureProviderFamily<ContinentalData?, ContinentalKey>
       confederation: key.confederation,
       limit: 500,
     );
-    final goalsByPlayer = {for (final s in allFinalsScorers) s.playerId: s.goals};
+    final goalsByPlayer = {
+      for (final s in allFinalsScorers) s.playerId: s.goals,
+    };
     final candidateNations = <int>{
       ...runByNation.keys,
       for (final s in allFinalsScorers) s.nationId,
@@ -588,13 +600,15 @@ final AutoDisposeFutureProviderFamily<ContinentalData?, ContinentalKey>
   // Only reveal the player's own groups/host once the relevant draw was watched.
   // A background region (not the player's own) has nothing to "watch", so its
   // finals count as drawn immediately.
-  final qualDrawWatched = !isPlayerRegion ||
+  final qualDrawWatched =
+      !isPlayerRegion ||
       await comp.hasWatchedDraw(
         key.careerId,
         career.cyclePointer,
         continentalQualDrawKind,
       );
-  final finalsDrawWatched = !isPlayerRegion ||
+  final finalsDrawWatched =
+      !isPlayerRegion ||
       await comp.hasWatchedDraw(
         key.careerId,
         career.cyclePointer,
@@ -607,7 +621,8 @@ final AutoDisposeFutureProviderFamily<ContinentalData?, ContinentalKey>
   // lone trophy. Gated on the HOST-selection ceremony (earlier than the finals
   // draw) so the player's own host appears as soon as it's revealed (a
   // background region is always "drawn").
-  final hostDrawWatched = !isPlayerRegion ||
+  final hostDrawWatched =
+      !isPlayerRegion ||
       await comp.hasWatchedDraw(
         key.careerId,
         career.cyclePointer,
@@ -644,7 +659,8 @@ final AutoDisposeFutureProviderFamily<ContinentalData?, ContinentalKey>
     topCups: topCups,
     myNationIds: {
       career.nationId,
-      ...(await ref.watch(careerRepositoryProvider).stints(key.careerId)).values,
+      ...(await ref.watch(careerRepositoryProvider).stints(key.careerId))
+          .values,
     },
     nations: nations,
     playerNationId: career.nationId,

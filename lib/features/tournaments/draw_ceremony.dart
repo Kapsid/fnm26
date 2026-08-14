@@ -20,7 +20,8 @@ typedef _Step = ({int groupIndex, int nationId, int pot});
 enum _DrawGrain {
   ball('Ball'),
   pot('Pot'),
-  all('All');
+  all('All')
+  ;
 
   const _DrawGrain(this.label);
   final String label;
@@ -81,8 +82,10 @@ class _DrawCeremonyState extends State<DrawCeremony> {
   /// Pot-by-pot is the default — a real draw's rhythm without the wait.
   _DrawGrain _grain = _DrawGrain.ball;
 
-  int _largestGroup() => widget.groups
-      .fold<int>(0, (m, g) => g.nationIds.length > m ? g.nationIds.length : m);
+  int _largestGroup() => widget.groups.fold<int>(
+    0,
+    (m, g) => g.nationIds.length > m ? g.nationIds.length : m,
+  );
 
   List<_Step> _buildSteps() {
     final pots = widget.potCount ?? _largestGroup();
@@ -278,11 +281,17 @@ class _DrawCeremonyState extends State<DrawCeremony> {
               ),
               segments: [
                 ButtonSegment(
-                    value: _DrawGrain.ball, label: Text(l.tourSharedBall)),
+                  value: _DrawGrain.ball,
+                  label: Text(l.tourSharedBall),
+                ),
                 ButtonSegment(
-                    value: _DrawGrain.pot, label: Text(l.tourSharedPot)),
+                  value: _DrawGrain.pot,
+                  label: Text(l.tourSharedPot),
+                ),
                 ButtonSegment(
-                    value: _DrawGrain.all, label: Text(l.tourSharedAll)),
+                  value: _DrawGrain.all,
+                  label: Text(l.tourSharedAll),
+                ),
               ],
               selected: {_grain},
               onSelectionChanged: (s) => setState(() => _grain = s.first),
@@ -331,8 +340,9 @@ class _DrawCeremonyState extends State<DrawCeremony> {
                                 : Icons.play_arrow_rounded,
                             size: 20,
                           ),
-                          label:
-                              Text(_auto ? l.tourSharedPause : l.tourSharedPlay),
+                          label: Text(
+                            _auto ? l.tourSharedPause : l.tourSharedPlay,
+                          ),
                         ),
                       ),
                       const SizedBox(width: AppSpacing.sm),
@@ -449,13 +459,14 @@ class _Pot extends StatelessWidget {
         children: [
           Text(
             'POT ${index + 1}',
-            style: (active
-                    ? AppTypography.labelMedium
-                    : AppTypography.labelSmall)
-                .copyWith(
-              color: active ? AppColors.primary : AppColors.onSurfaceVariant,
-              fontWeight: active ? FontWeight.w800 : FontWeight.w600,
-            ),
+            style:
+                (active ? AppTypography.labelMedium : AppTypography.labelSmall)
+                    .copyWith(
+                      color: active
+                          ? AppColors.primary
+                          : AppColors.onSurfaceVariant,
+                      fontWeight: active ? FontWeight.w800 : FontWeight.w600,
+                    ),
           ),
           const SizedBox(height: 4),
           // The flags of the nations still waiting in this pot. The manager's
@@ -508,8 +519,9 @@ class _Pot extends StatelessWidget {
               if (waiting.isEmpty)
                 Text(
                   '✓',
-                  style: AppTypography.labelSmall
-                      .copyWith(color: AppColors.primary),
+                  style: AppTypography.labelSmall.copyWith(
+                    color: AppColors.primary,
+                  ),
                 ),
             ],
           ),
@@ -554,8 +566,9 @@ class _Stage extends StatelessWidget {
                 key: const ValueKey('done'),
                 child: Text(
                   done ? 'DRAW COMPLETE' : 'DRAWING…',
-                  style: AppTypography.labelMedium
-                      .copyWith(color: AppColors.primary),
+                  style: AppTypography.labelMedium.copyWith(
+                    color: AppColors.primary,
+                  ),
                 ),
               )
             : Row(
@@ -588,8 +601,9 @@ class _Stage extends StatelessWidget {
                       ),
                       Text(
                         '→ GROUP $groupName',
-                        style: AppTypography.labelMedium
-                            .copyWith(color: AppColors.primary),
+                        style: AppTypography.labelMedium.copyWith(
+                          color: AppColors.primary,
+                        ),
                       ),
                       if (groupMembers.length > 1) ...[
                         const SizedBox(height: 4),

@@ -98,8 +98,9 @@ class IntercontinentalPlayoffBracket extends StatelessWidget {
     final mine = t.home == playerNationId || t.away == playerNationId;
     return Container(
       decoration: BoxDecoration(
-        color:
-            mine ? AppColors.surfaceContainerHigh : AppColors.surfaceContainer,
+        color: mine
+            ? AppColors.surfaceContainerHigh
+            : AppColors.surfaceContainer,
         borderRadius: AppRadii.baseAll,
         border: Border.all(
           color: mine ? AppColors.primary : AppColors.outlineVariant,
@@ -111,11 +112,23 @@ class IntercontinentalPlayoffBracket extends StatelessWidget {
         children: [
           // In a path final the home side is the top-ranked team that byed
           // straight in — tag it so it doesn't read as coming from nowhere.
-          _sideRow(t, t.home, t.homeScore,
-              decisive: decisive, top: true, seeded: decisive),
+          _sideRow(
+            t,
+            t.home,
+            t.homeScore,
+            decisive: decisive,
+            top: true,
+            seeded: decisive,
+          ),
           const Divider(height: 1, color: AppColors.outlineVariant),
-          _sideRow(t, t.away, t.awayScore,
-              decisive: decisive, top: false, seeded: false),
+          _sideRow(
+            t,
+            t.away,
+            t.awayScore,
+            decisive: decisive,
+            top: false,
+            seeded: false,
+          ),
         ],
       ),
     );
@@ -134,8 +147,8 @@ class IntercontinentalPlayoffBracket extends StatelessWidget {
     final color = won
         ? AppColors.positive
         : isPlayer
-            ? AppColors.primary
-            : AppColors.onSurfaceVariant;
+        ? AppColors.primary
+        : AppColors.onSurfaceVariant;
     return Builder(
       builder: (context) {
         final l = AppLocalizations.of(context);

@@ -443,16 +443,16 @@ class _Groups extends StatelessWidget {
 
   Widget _cell(String text, {bool emphasize = false, double width = 30}) =>
       SizedBox(
-    width: width,
-    child: Text(
-      text,
-      textAlign: TextAlign.center,
-      style: AppTypography.labelSmall.copyWith(
-        color: emphasize ? AppColors.primary : AppColors.onSurface,
-        fontWeight: emphasize ? FontWeight.w700 : FontWeight.w500,
-      ),
-    ),
-  );
+        width: width,
+        child: Text(
+          text,
+          textAlign: TextAlign.center,
+          style: AppTypography.labelSmall.copyWith(
+            color: emphasize ? AppColors.primary : AppColors.onSurface,
+            fontWeight: emphasize ? FontWeight.w700 : FontWeight.w500,
+          ),
+        ),
+      );
 }
 
 /// The continental FINALS groups view: every group's table and matches on one
@@ -610,14 +610,14 @@ class _ContFinalsGroupsState extends State<_ContFinalsGroups> {
 
   Widget _cell(String text, {bool emphasize = false, double width = 30}) =>
       SizedBox(
-    width: width,
-    child: Text(
-      text,
-      textAlign: TextAlign.center,
-      style: AppTypography.labelSmall.copyWith(
-        color: emphasize ? AppColors.primary : AppColors.onSurface,
-        fontWeight: emphasize ? FontWeight.w700 : FontWeight.w500,
-      ),
-    ),
-  );
+        width: width,
+        child: Text(
+          text,
+          textAlign: TextAlign.center,
+          style: AppTypography.labelSmall.copyWith(
+            color: emphasize ? AppColors.primary : AppColors.onSurface,
+            fontWeight: emphasize ? FontWeight.w700 : FontWeight.w500,
+          ),
+        ),
+      );
 }

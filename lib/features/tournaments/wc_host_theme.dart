@@ -37,15 +37,15 @@ typedef WcHostTheme = ({
 });
 
 WcHostTheme _inactive() => (
-      active: false,
-      accent: AppColors.primary,
-      onAccent: AppColors.onSurface,
-      colors: const <Color>[],
-      hostIds: const <int>[],
-      hostLabel: '',
-      competitionLabel: '',
-      year: 0,
-    );
+  active: false,
+  accent: AppColors.primary,
+  onAccent: AppColors.onSurface,
+  colors: const <Color>[],
+  hostIds: const <int>[],
+  hostLabel: '',
+  competitionLabel: '',
+  year: 0,
+);
 
 /// Parses a `#RRGGBB` nation colour into an opaque [Color].
 Color hostColorHex(String hex) => KitColors.parse(hex);
@@ -54,8 +54,8 @@ Color hostColorHex(String hex) => KitColors.parse(hex);
 /// made UI-legible and de-duplicated. Co-hosts contribute all their colours, so
 /// the more nations share the finals, the richer the gradient.
 List<Color> hostGradientColors(Iterable<Nation> hosts) => KitColors.gradient(
-      hosts.map((h) => (h.primaryColor, h.secondaryColor)),
-    );
+  hosts.map((h) => (h.primaryColor, h.secondaryColor)),
+);
 
 /// A legible accent from a host's two kit colours.
 Color usableHostAccent(Nation host) =>
@@ -66,52 +66,55 @@ Color onHostAccent(Color accent) => KitColors.onAccent(accent);
 
 /// The active host theme for [careerId], or an inactive one until the World Cup
 /// ceremony has been watched and while a champion is undecided.
-final wcHostThemeProvider =
-    FutureProvider.autoDispose.family<WcHostTheme, int>((ref, careerId) async {
-  final career = await ref.watch(careerRepositoryProvider).byId(careerId);
-  if (career == null) return _inactive();
-  final comp = ref.watch(competitionRepositoryProvider);
-  if (!await comp.hasFinals(careerId)) return _inactive();
-  // Once the champion is crowned the tournament is over — drop the re-skin.
-  if (await comp.worldChampion(careerId) != null) return _inactive();
-  // The gate: nothing changes until the opening ceremony has been watched.
-  if (!await comp.hasWatchedDraw(
-    careerId,
-    career.cyclePointer,
-    worldCupKickoffKind,
-  )) {
-    return _inactive();
-  }
+final wcHostThemeProvider = FutureProvider.autoDispose.family<WcHostTheme, int>(
+  (ref, careerId) async {
+    final career = await ref.watch(careerRepositoryProvider).byId(careerId);
+    if (career == null) return _inactive();
+    final comp = ref.watch(competitionRepositoryProvider);
+    if (!await comp.hasFinals(careerId)) return _inactive();
+    // Once the champion is crowned the tournament is over — drop the re-skin.
+    if (await comp.worldChampion(careerId) != null) return _inactive();
+    // The gate: nothing changes until the opening ceremony has been watched.
+    if (!await comp.hasWatchedDraw(
+      careerId,
+      career.cyclePointer,
+      worldCupKickoffKind,
+    )) {
+      return _inactive();
+    }
 
-  final nations = await ref.watch(nationRepositoryProvider).all();
-  final year = CareerService.worldCupYear(career.cyclePointer);
-  final hostIds = WorldCupHosts.hostsFor(
-    year: year,
-    nations: nations,
-    seed: career.rngSeed,
-  );
-  if (hostIds.isEmpty) return _inactive();
-  final byId = {for (final n in nations) n.id: n};
-  final primary = byId[hostIds.first];
-  if (primary == null) return _inactive();
-  final hostNations =
-      hostIds.map((id) => byId[id]).whereType<Nation>().toList();
+    final nations = await ref.watch(nationRepositoryProvider).all();
+    final year = CareerService.worldCupYear(career.cyclePointer);
+    final hostIds = WorldCupHosts.hostsFor(
+      year: year,
+      nations: nations,
+      seed: career.rngSeed,
+    );
+    if (hostIds.isEmpty) return _inactive();
+    final byId = {for (final n in nations) n.id: n};
+    final primary = byId[hostIds.first];
+    if (primary == null) return _inactive();
+    final hostNations = hostIds
+        .map((id) => byId[id])
+        .whereType<Nation>()
+        .toList();
 
-  final accent = usableHostAccent(primary);
-  return (
-    active: true,
-    accent: accent,
-    onAccent: onHostAccent(accent),
-    colors: hostGradientColors(hostNations),
-    hostIds: hostIds,
-    hostLabel: hostIds
-        .map((h) => byId[h]?.name.toUpperCase() ?? '')
-        .where((s) => s.isNotEmpty)
-        .join(' · '),
-    competitionLabel: 'WORLD CUP $year',
-    year: year,
-  );
-});
+    final accent = usableHostAccent(primary);
+    return (
+      active: true,
+      accent: accent,
+      onAccent: onHostAccent(accent),
+      colors: hostGradientColors(hostNations),
+      hostIds: hostIds,
+      hostLabel: hostIds
+          .map((h) => byId[h]?.name.toUpperCase() ?? '')
+          .where((s) => s.isNotEmpty)
+          .join(' · '),
+      competitionLabel: 'WORLD CUP $year',
+      year: year,
+    );
+  },
+);
 
 /// The same host re-skin for the player's CONTINENTAL championship — the Euro,
 /// the Copa, AFCON and the rest get their host nation's colours exactly as the
@@ -119,67 +122,70 @@ final wcHostThemeProvider =
 ///
 /// Gated the same way: active only once that cup's opening ceremony has been
 /// watched and while it is still being played.
-final continentalHostThemeProvider =
-    FutureProvider.autoDispose.family<WcHostTheme, int>((ref, careerId) async {
-  final career = await ref.watch(careerRepositoryProvider).byId(careerId);
-  if (career == null) return _inactive();
-  final comp = ref.watch(competitionRepositoryProvider);
-  final nations = await ref.watch(nationRepositoryProvider).all();
-  final byId = {for (final n in nations) n.id: n};
-  final me = byId[career.nationId];
-  if (me == null) return _inactive();
-  final cup = ContinentalCups.byConfederation[me.confederation];
-  if (cup == null) return _inactive();
+final continentalHostThemeProvider = FutureProvider.autoDispose
+    .family<WcHostTheme, int>((ref, careerId) async {
+      final career = await ref.watch(careerRepositoryProvider).byId(careerId);
+      if (career == null) return _inactive();
+      final comp = ref.watch(competitionRepositoryProvider);
+      final nations = await ref.watch(nationRepositoryProvider).all();
+      final byId = {for (final n in nations) n.id: n};
+      final me = byId[career.nationId];
+      if (me == null) return _inactive();
+      final cup = ContinentalCups.byConfederation[me.confederation];
+      if (cup == null) return _inactive();
 
-  final cycle = career.cyclePointer;
-  // Live means: the cup exists, its ceremony has been watched, and it hasn't
-  // finished yet.
-  if (!await comp.hasTournament(
-    careerId,
-    CompetitionKind.continentalFinals,
-    confederation: me.confederation,
-  )) {
-    return _inactive();
-  }
-  if (!await comp.hasWatchedDraw(careerId, cycle, continentalKickoffKind)) {
-    return _inactive();
-  }
-  if (await comp.allPlayedForKind(
-    careerId,
-    CompetitionKind.continentalFinals,
-    confederation: me.confederation,
-  )) {
-    return _inactive();
-  }
+      final cycle = career.cyclePointer;
+      // Live means: the cup exists, its ceremony has been watched, and it hasn't
+      // finished yet.
+      if (!await comp.hasTournament(
+        careerId,
+        CompetitionKind.continentalFinals,
+        confederation: me.confederation,
+      )) {
+        return _inactive();
+      }
+      if (!await comp.hasWatchedDraw(careerId, cycle, continentalKickoffKind)) {
+        return _inactive();
+      }
+      if (await comp.allPlayedForKind(
+        careerId,
+        CompetitionKind.continentalFinals,
+        confederation: me.confederation,
+      )) {
+        return _inactive();
+      }
 
-  final hostIds = WorldCupHosts.continentalHostsFor(
-    confederation: me.confederation,
-    cycle: cycle,
-    seed: career.rngSeed,
-    nations: nations,
-  );
-  if (hostIds.isEmpty) return _inactive();
-  final primary = byId[hostIds.first];
-  if (primary == null) return _inactive();
-  final hostNations =
-      hostIds.map((id) => byId[id]).whereType<Nation>().toList();
+      final hostIds = WorldCupHosts.continentalHostsFor(
+        confederation: me.confederation,
+        cycle: cycle,
+        seed: career.rngSeed,
+        nations: nations,
+      );
+      if (hostIds.isEmpty) return _inactive();
+      final primary = byId[hostIds.first];
+      if (primary == null) return _inactive();
+      final hostNations = hostIds
+          .map((id) => byId[id])
+          .whereType<Nation>()
+          .toList();
 
-  final year = CareerService.worldCupYear(cycle) - 2; // finals sit two before
-  final accent = usableHostAccent(primary);
-  return (
-    active: true,
-    accent: accent,
-    onAccent: onHostAccent(accent),
-    colors: hostGradientColors(hostNations),
-    hostIds: hostIds,
-    hostLabel: hostIds
-        .map((h) => byId[h]?.name.toUpperCase() ?? '')
-        .where((s) => s.isNotEmpty)
-        .join(' · '),
-    competitionLabel: '${cup.name.toUpperCase()} $year',
-    year: year,
-  );
-});
+      final year =
+          CareerService.worldCupYear(cycle) - 2; // finals sit two before
+      final accent = usableHostAccent(primary);
+      return (
+        active: true,
+        accent: accent,
+        onAccent: onHostAccent(accent),
+        colors: hostGradientColors(hostNations),
+        hostIds: hostIds,
+        hostLabel: hostIds
+            .map((h) => byId[h]?.name.toUpperCase() ?? '')
+            .where((s) => s.isNotEmpty)
+            .join(' · '),
+        competitionLabel: '${cup.name.toUpperCase()} $year',
+        year: year,
+      );
+    });
 
 /// A bold host banner shown atop the World Cup screens once the theme is
 /// active: a full gradient poured from every host's kit colours, the host

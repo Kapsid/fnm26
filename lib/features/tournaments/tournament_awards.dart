@@ -52,7 +52,8 @@ class TournamentAwardsTab extends StatelessWidget {
         if (goldenBoot != null)
           _AwardHero(
             award: 'GOLDEN BOOT',
-            sub: '${goldenBoot.goals} '
+            sub:
+                '${goldenBoot.goals} '
                 '${goldenBoot.goals == 1 ? 'goal' : 'goals'}',
             icon: Icons.sports_soccer_rounded,
             playerName: goldenBoot.name,
@@ -213,7 +214,11 @@ class TeamOfTournamentCard extends StatelessWidget {
         children: [
           Row(
             children: [
-              const Icon(Icons.star_rounded, color: AppColors.primary, size: 18),
+              const Icon(
+                Icons.star_rounded,
+                color: AppColors.primary,
+                size: 18,
+              ),
               const SizedBox(width: AppSpacing.sm),
               // Flexible: the heading is a long line of capitals and ran off
               // the card on a narrow phone.

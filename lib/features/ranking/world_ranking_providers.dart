@@ -52,6 +52,10 @@ const int drawSlotContinentalFinals = 1;
 /// exactly as the finals draws do.
 const int drawSlotWorldCupQualifying = 2;
 
+/// The intercontinental play-off's seeding, frozen when the play-off starts so
+/// the bracket cannot reseed itself between the manager's semi and his final.
+const int drawSlotWorldCupPlayoff = 3;
+
 /// The synthetic "cycle" a draw's own live-ranking snapshot is stored under.
 int drawSeedCycle(int cycle, int slot) => 900000 + cycle * 10 + slot;
 
@@ -59,18 +63,18 @@ int drawSeedCycle(int cycle, int slot) => 900000 + cycle * 10 + slot;
 /// start, or — for cycle 0 or any legacy save with no snapshot — the static
 /// seed ranking. Every draw and its ceremony read this so they always agree.
 final AutoDisposeFutureProviderFamily<Map<int, int>, SeedRankArg>
-seedRankByIdProvider =
-    FutureProvider.autoDispose.family<Map<int, int>, SeedRankArg>((
-  ref,
-  arg,
-) async {
-  final snap = await ref
-      .watch(seedRankingRepositoryProvider)
-      .forCycle(arg.careerId, arg.cycle);
-  if (snap.isNotEmpty) return snap;
-  final nations = await ref.watch(nationRepositoryProvider).all();
-  return {for (final n in nations) n.id: n.ranking};
-});
+seedRankByIdProvider = FutureProvider.autoDispose
+    .family<Map<int, int>, SeedRankArg>((
+      ref,
+      arg,
+    ) async {
+      final snap = await ref
+          .watch(seedRankingRepositoryProvider)
+          .forCycle(arg.careerId, arg.cycle);
+      if (snap.isNotEmpty) return snap;
+      final nations = await ref.watch(nationRepositoryProvider).all();
+      return {for (final n in nations) n.id: n.ranking};
+    });
 
 /// Argument for [drawRankByIdProvider]: the save, the cycle, and which draw.
 typedef DrawSeedArg = ({int careerId, int cycle, int slot});
@@ -79,19 +83,19 @@ typedef DrawSeedArg = ({int careerId, int cycle, int slot});
 /// when that draw was made, falling back to the cycle baseline for a draw made
 /// before the slot existed (or a legacy save).
 final AutoDisposeFutureProviderFamily<Map<int, int>, DrawSeedArg>
-drawRankByIdProvider =
-    FutureProvider.autoDispose.family<Map<int, int>, DrawSeedArg>((
-  ref,
-  arg,
-) async {
-  final snap = await ref
-      .watch(seedRankingRepositoryProvider)
-      .forCycle(arg.careerId, drawSeedCycle(arg.cycle, arg.slot));
-  if (snap.isNotEmpty) return snap;
-  return ref.watch(
-    seedRankByIdProvider((careerId: arg.careerId, cycle: arg.cycle)).future,
-  );
-});
+drawRankByIdProvider = FutureProvider.autoDispose
+    .family<Map<int, int>, DrawSeedArg>((
+      ref,
+      arg,
+    ) async {
+      final snap = await ref
+          .watch(seedRankingRepositoryProvider)
+          .forCycle(arg.careerId, drawSeedCycle(arg.cycle, arg.slot));
+      if (snap.isNotEmpty) return snap;
+      return ref.watch(
+        seedRankByIdProvider((careerId: arg.careerId, cycle: arg.cycle)).future,
+      );
+    });
 
 /// One point on the nation's ranking timeline (its world position at a moment).
 typedef RankHistoryPoint = ({DateTime date, int rank});
@@ -107,38 +111,38 @@ const int kRankHistoryPoints = 6;
 /// point per four-year cycle, so a young career had just two points — a single
 /// flat line.
 final AutoDisposeFutureProviderFamily<List<RankHistoryPoint>, int>
-    rankHistoryProvider =
-    FutureProvider.autoDispose.family<List<RankHistoryPoint>, int>((
-  ref,
-  careerId,
-) async {
-  final career = await ref.watch(careerRepositoryProvider).byId(careerId);
-  if (career == null) return const [];
-  final nationId = career.nationId;
+rankHistoryProvider = FutureProvider.autoDispose
+    .family<List<RankHistoryPoint>, int>((
+      ref,
+      careerId,
+    ) async {
+      final career = await ref.watch(careerRepositoryProvider).byId(careerId);
+      if (career == null) return const [];
+      final nationId = career.nationId;
 
-  final releases =
-      await ref.watch(rankingReleaseRepositoryProvider).all(careerId);
-  final out = <RankHistoryPoint>[
-    // Only this nation's releases — a change of job starts a fresh line.
-    for (final r in releases)
-      if (r.nationId == nationId) (date: r.publishedOn, rank: r.playerRank),
-  ];
+      final releases = await ref
+          .watch(rankingReleaseRepositoryProvider)
+          .all(careerId);
+      final out = <RankHistoryPoint>[
+        // Only this nation's releases — a change of job starts a fresh line.
+        for (final r in releases)
+          if (r.nationId == nationId) (date: r.publishedOn, rank: r.playerRank),
+      ];
 
-  // The live position now, so the line runs right up to the present (and gives
-  // a second point when only one release exists yet).
-  final live = await ref.watch(worldRankingProvider(careerId).future);
-  final now = live?.position[nationId];
-  if (now != null &&
-      (out.isEmpty || out.last.date != career.inGameDate)) {
-    out.add((date: career.inGameDate, rank: now));
-  }
+      // The live position now, so the line runs right up to the present (and gives
+      // a second point when only one release exists yet).
+      final live = await ref.watch(worldRankingProvider(careerId).future);
+      final now = live?.position[nationId];
+      if (now != null && (out.isEmpty || out.last.date != career.inGameDate)) {
+        out.add((date: career.inGameDate, rank: now));
+      }
 
-  // Keep the most recent handful.
-  if (out.length > kRankHistoryPoints) {
-    return out.sublist(out.length - kRankHistoryPoints);
-  }
-  return out;
-});
+      // Keep the most recent handful.
+      if (out.length > kRankHistoryPoints) {
+        return out.sublist(out.length - kRankHistoryPoints);
+      }
+      return out;
+    });
 
 /// The best and worst world position the manager's nation has EVER held, over
 /// every ranking release of the career plus where it stands right now.
@@ -147,31 +151,32 @@ final AutoDisposeFutureProviderFamily<List<RankHistoryPoint>, int>
 /// few months — so reading the extremes off those points described the recent
 /// wobble, not the career. Null until the nation has been ranked at all.
 final AutoDisposeFutureProviderFamily<({int best, int worst})?, int>
-rankExtremesProvider =
-    FutureProvider.autoDispose.family<({int best, int worst})?, int>((
-  ref,
-  careerId,
-) async {
-  final career = await ref.watch(careerRepositoryProvider).byId(careerId);
-  if (career == null) return null;
-  final nationId = career.nationId;
+rankExtremesProvider = FutureProvider.autoDispose
+    .family<({int best, int worst})?, int>((
+      ref,
+      careerId,
+    ) async {
+      final career = await ref.watch(careerRepositoryProvider).byId(careerId);
+      if (career == null) return null;
+      final nationId = career.nationId;
 
-  final releases =
-      await ref.watch(rankingReleaseRepositoryProvider).all(careerId);
-  final ranks = <int>[
-    // Only this nation's releases — a change of job starts a fresh record.
-    for (final r in releases)
-      if (r.nationId == nationId) r.playerRank,
-  ];
-  final live = await ref.watch(worldRankingProvider(careerId).future);
-  final now = live?.position[nationId];
-  if (now != null) ranks.add(now);
-  if (ranks.isEmpty) return null;
-  return (
-    best: ranks.reduce((a, b) => a < b ? a : b),
-    worst: ranks.reduce((a, b) => a > b ? a : b),
-  );
-});
+      final releases = await ref
+          .watch(rankingReleaseRepositoryProvider)
+          .all(careerId);
+      final ranks = <int>[
+        // Only this nation's releases — a change of job starts a fresh record.
+        for (final r in releases)
+          if (r.nationId == nationId) r.playerRank,
+      ];
+      final live = await ref.watch(worldRankingProvider(careerId).future);
+      final now = live?.position[nationId];
+      if (now != null) ranks.add(now);
+      if (ranks.isEmpty) return null;
+      return (
+        best: ranks.reduce((a, b) => a < b ? a : b),
+        worst: ranks.reduce((a, b) => a > b ? a : b),
+      );
+    });
 
 final AutoDisposeFutureProviderFamily<RankingData?, int> worldRankingProvider =
     FutureProvider.autoDispose.family<RankingData?, int>((ref, careerId) async {
@@ -197,8 +202,9 @@ final AutoDisposeFutureProviderFamily<RankingData?, int> worldRankingProvider =
 
       final ordered = [...nations]
         ..sort((a, b) {
-          final byPoints = (points[b.id] ?? Elo.base)
-              .compareTo(points[a.id] ?? Elo.base);
+          final byPoints = (points[b.id] ?? Elo.base).compareTo(
+            points[a.id] ?? Elo.base,
+          );
           return byPoints != 0 ? byPoints : a.ranking.compareTo(b.ranking);
         });
 

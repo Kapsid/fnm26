@@ -25,29 +25,30 @@ typedef _ClashData = ({
 
 final AutoDisposeFutureProviderFamily<_ClashData?, int> _clashProvider =
     FutureProvider.autoDispose.family<_ClashData?, int>((ref, careerId) async {
-  await ref.watch(seedLoaderProvider).ensureSeeded();
-  final career = await ref.watch(careerRepositoryProvider).byId(careerId);
-  if (career == null) return null;
-  final comp = ref.watch(competitionRepositoryProvider);
+      await ref.watch(seedLoaderProvider).ensureSeeded();
+      final career = await ref.watch(careerRepositoryProvider).byId(careerId);
+      if (career == null) return null;
+      final comp = ref.watch(competitionRepositoryProvider);
 
-  final ties = await comp.fixturesByRound(
-    careerId,
-    'FFINAL',
-    kind: CompetitionKind.finalissima,
-  );
-  final honours = (await comp.honours(careerId))
-      .where((h) => h.competition == 'Continental Clash')
-      .toList();
-  final nations = {
-    for (final n in await ref.watch(nationRepositoryProvider).all()) n.id: n,
-  };
-  return (
-    tie: ties.firstOrNull,
-    nations: nations,
-    playerNationId: career.nationId,
-    honours: honours,
-  );
-});
+      final ties = await comp.fixturesByRound(
+        careerId,
+        'FFINAL',
+        kind: CompetitionKind.finalissima,
+      );
+      final honours = (await comp.honours(
+        careerId,
+      )).where((h) => h.competition == 'Continental Clash').toList();
+      final nations = {
+        for (final n in await ref.watch(nationRepositoryProvider).all())
+          n.id: n,
+      };
+      return (
+        tie: ties.firstOrNull,
+        nations: nations,
+        playerNationId: career.nationId,
+        honours: honours,
+      );
+    });
 
 /// Continental Clash (Finalissima) detail: the champions-of-champions one-off
 /// between the European and South American champions — this cycle's tie and
@@ -149,8 +150,8 @@ class _ThisCycle extends StatelessWidget {
     final winnerId = !played
         ? null
         : tie.homeScore! >= tie.awayScore!
-            ? tie.homeNationId
-            : tie.awayNationId;
+        ? tie.homeNationId
+        : tie.awayNationId;
     return ListView(
       padding: const EdgeInsets.all(AppSpacing.marginMobile),
       children: [
@@ -171,8 +172,9 @@ class _ThisCycle extends StatelessWidget {
                 children: [
                   Expanded(child: _side(tie.homeNationId)),
                   Padding(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: AppSpacing.md),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: AppSpacing.md,
+                    ),
                     child: Text(
                       played
                           ? '${tie.homeScore} – ${tie.awayScore}'
@@ -209,20 +211,20 @@ class _ThisCycle extends StatelessWidget {
   }
 
   Widget _side(int nationId) => Column(
-        children: [
-          FlagDisc(
-            code(nationId),
-            size: 44,
-            highlighted: nationId == playerNationId,
-          ),
-          const SizedBox(height: AppSpacing.sm),
-          Text(
-            name(nationId),
-            textAlign: TextAlign.center,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: AppTypography.titleMedium,
-          ),
-        ],
-      );
+    children: [
+      FlagDisc(
+        code(nationId),
+        size: 44,
+        highlighted: nationId == playerNationId,
+      ),
+      const SizedBox(height: AppSpacing.sm),
+      Text(
+        name(nationId),
+        textAlign: TextAlign.center,
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+        style: AppTypography.titleMedium,
+      ),
+    ],
+  );
 }

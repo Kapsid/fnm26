@@ -85,8 +85,7 @@ class TournamentsOverview {
 }
 
 final AutoDisposeFutureProviderFamily<TournamentsOverview?, int>
-    tournamentsOverviewProvider =
-    FutureProvider.autoDispose.family<TournamentsOverview?, int>((
+tournamentsOverviewProvider = FutureProvider.autoDispose.family<TournamentsOverview?, int>((
   ref,
   careerId,
 ) async {
@@ -122,14 +121,18 @@ final AutoDisposeFutureProviderFamily<TournamentsOverview?, int>
       fixtures.any((f) => f.hasResult && test(f.round, f.groupId));
   // A World Cup qualifier is a group game with no round label; continental
   // qualifiers use 'CQ'.
-  final wcStarted = anyPlayed((r, g) =>
-      (r == null && g != null) || wcFinalsRounds.contains(r));
-  final contStarted =
-      anyPlayed((r, _) => r == 'CQ' || contFinalsRounds.contains(r));
-  final nextIsWc = next != null &&
+  final wcStarted = anyPlayed(
+    (r, g) => (r == null && g != null) || wcFinalsRounds.contains(r),
+  );
+  final contStarted = anyPlayed(
+    (r, _) => r == 'CQ' || contFinalsRounds.contains(r),
+  );
+  final nextIsWc =
+      next != null &&
       ((next.round == null && next.groupId != null) ||
           wcFinalsRounds.contains(next.round));
-  final nextIsCont = next != null &&
+  final nextIsCont =
+      next != null &&
       (next.round == 'CQ' || contFinalsRounds.contains(next.round));
 
   // World Championship. The finals fixtures exist from the rollover onward, but
@@ -150,17 +153,17 @@ final AutoDisposeFutureProviderFamily<TournamentsOverview?, int>
     phase: worldChampion != null
         ? TournamentPhase.decided
         : wcLive
-            ? TournamentPhase.live
-            : wcHasHistory
-                ? TournamentPhase.history
-                : TournamentPhase.upcoming,
+        ? TournamentPhase.live
+        : wcHasHistory
+        ? TournamentPhase.history
+        : TournamentPhase.upcoming,
     label: worldChampion != null
         ? 'CHAMPIONS'
         : wcLive
-            ? (finalsPhase ? 'FINALS' : 'QUALIFYING')
-            : wcHasHistory
-                ? 'PAST WINNERS'
-                : 'UPCOMING',
+        ? (finalsPhase ? 'FINALS' : 'QUALIFYING')
+        : wcHasHistory
+        ? 'PAST WINNERS'
+        : 'UPCOMING',
     championId: worldChampion,
   );
 
@@ -184,8 +187,9 @@ final AutoDisposeFutureProviderFamily<TournamentsOverview?, int>
     );
     if (finalTie.isNotEmpty && finalTie.first.hasResult) {
       final f = finalTie.first;
-      continentalChampion =
-          f.homeScore! >= f.awayScore! ? f.homeNationId : f.awayNationId;
+      continentalChampion = f.homeScore! >= f.awayScore!
+          ? f.homeNationId
+          : f.awayNationId;
     }
   }
 
@@ -209,8 +213,8 @@ final AutoDisposeFutureProviderFamily<TournamentsOverview?, int>
       label = continentalChampion != null
           ? 'CHAMPIONS'
           : hasContinental
-              ? 'IN PROGRESS'
-              : 'QUALIFYING';
+          ? 'IN PROGRESS'
+          : 'QUALIFYING';
       champion = continentalChampion;
     } else if (hasHistory) {
       phase = TournamentPhase.history;
@@ -229,9 +233,8 @@ final AutoDisposeFutureProviderFamily<TournamentsOverview?, int>
   // The player's next fixture in each competition, for "up next" on the tiles.
   final now = career.inGameDate;
   Fixture? nextWhere(bool Function(String? round) match) {
-    final upcoming =
-        fixtures.where((f) => !f.played && match(f.round)).toList()
-          ..sort((a, b) => a.date.compareTo(b.date));
+    final upcoming = fixtures.where((f) => !f.played && match(f.round)).toList()
+      ..sort((a, b) => a.date.compareTo(b.date));
     for (final f in upcoming) {
       if (!f.date.isBefore(now)) return f;
     }
@@ -258,7 +261,9 @@ final AutoDisposeFutureProviderFamily<TournamentsOverview?, int>
   // Nations Cup: the manager's own league. It only becomes "live" once its
   // group games actually start (after the continental finals) — before then
   // it's upcoming ("after the Euro"), not in progress.
-  final ncTiers = await ref.watch(careerRepositoryProvider).nationsCupTiers(
+  final ncTiers = await ref
+      .watch(careerRepositoryProvider)
+      .nationsCupTiers(
         careerId,
       );
   final ncLeague = String.fromCharCode(65 + (ncTiers[career.nationId] ?? 0));
@@ -270,21 +275,25 @@ final AutoDisposeFutureProviderFamily<TournamentsOverview?, int>
       kind: CompetitionKind.nationsLeague,
     );
     final started = ncGroupFx.any((f) => f.hasResult);
-    final champ = await _knockoutWinner(comp, careerId, 'NFINAL',
-        CompetitionKind.nationsLeague);
+    final champ = await _knockoutWinner(
+      comp,
+      careerId,
+      'NFINAL',
+      CompetitionKind.nationsLeague,
+    );
     // Before this cycle's cup starts (it follows the Euro), browse past winners
     // — mirroring how the World Cup and continental tiles read out of season.
     nationsCup = TournamentStatus(
       phase: champ != null
           ? TournamentPhase.decided
           : started
-              ? TournamentPhase.live
-              : TournamentPhase.history,
+          ? TournamentPhase.live
+          : TournamentPhase.history,
       label: champ != null
           ? 'CHAMPIONS'
           : started
-              ? 'LEAGUE $ncLeague'
-              : 'PAST WINNERS',
+          ? 'LEAGUE $ncLeague'
+          : 'PAST WINNERS',
       championId: champ,
     );
   }
@@ -304,8 +313,12 @@ final AutoDisposeFutureProviderFamily<TournamentsOverview?, int>
           f.homeNationId == career.nationId ||
           f.awayNationId == career.nationId,
     );
-    final champ = await _knockoutWinner(comp, careerId, 'FFINAL',
-        CompetitionKind.finalissima);
+    final champ = await _knockoutWinner(
+      comp,
+      careerId,
+      'FFINAL',
+      CompetitionKind.finalissima,
+    );
     continentalClash = TournamentStatus(
       phase: champ != null ? TournamentPhase.decided : TournamentPhase.live,
       label: champ != null ? 'DECIDED' : 'IN PROGRESS',

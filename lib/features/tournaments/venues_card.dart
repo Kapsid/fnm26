@@ -61,8 +61,9 @@ class VenuesCard extends StatelessWidget {
                   children: [
                     Text(
                       joint ? 'CO-HOSTS' : 'HOST',
-                      style: AppTypography.labelSmall
-                          .copyWith(color: AppColors.primary),
+                      style: AppTypography.labelSmall.copyWith(
+                        color: AppColors.primary,
+                      ),
                     ),
                     Text(
                       hosts.map((h) => h.name).join(' & '),
@@ -94,8 +95,9 @@ class VenuesCard extends StatelessWidget {
                   const SizedBox(width: AppSpacing.xs),
                   Text(
                     h.name.toUpperCase(),
-                    style: AppTypography.labelSmall
-                        .copyWith(color: AppColors.onSurfaceVariant),
+                    style: AppTypography.labelSmall.copyWith(
+                      color: AppColors.onSurfaceVariant,
+                    ),
                   ),
                 ],
               ),
@@ -115,61 +117,61 @@ class VenuesCard extends StatelessWidget {
   }
 
   Widget _identityRow(IconData icon, String label, String value) => Padding(
-        padding: const EdgeInsets.symmetric(vertical: 3),
-        child: Row(
-          children: [
-            Icon(icon, size: 16, color: AppColors.onSurfaceVariant),
-            const SizedBox(width: AppSpacing.sm),
-            Text(
-              label,
-              style: AppTypography.labelSmall.copyWith(
-                color: AppColors.primary,
-              ),
-            ),
-            const SizedBox(width: AppSpacing.sm),
-            Expanded(
-              child: Text(
-                value,
-                textAlign: TextAlign.end,
+    padding: const EdgeInsets.symmetric(vertical: 3),
+    child: Row(
+      children: [
+        Icon(icon, size: 16, color: AppColors.onSurfaceVariant),
+        const SizedBox(width: AppSpacing.sm),
+        Text(
+          label,
+          style: AppTypography.labelSmall.copyWith(
+            color: AppColors.primary,
+          ),
+        ),
+        const SizedBox(width: AppSpacing.sm),
+        Expanded(
+          child: Text(
+            value,
+            textAlign: TextAlign.end,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: AppTypography.bodyMedium,
+          ),
+        ),
+      ],
+    ),
+  );
+
+  Widget _venueRow(Venue v) => Padding(
+    padding: const EdgeInsets.symmetric(vertical: 3),
+    child: Row(
+      children: [
+        const Icon(
+          Icons.place_outlined,
+          size: 16,
+          color: AppColors.onSurfaceVariant,
+        ),
+        const SizedBox(width: AppSpacing.sm),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                v.stadium,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: AppTypography.bodyMedium,
               ),
-            ),
-          ],
-        ),
-      );
-
-  Widget _venueRow(Venue v) => Padding(
-        padding: const EdgeInsets.symmetric(vertical: 3),
-        child: Row(
-          children: [
-            const Icon(
-              Icons.place_outlined,
-              size: 16,
-              color: AppColors.onSurfaceVariant,
-            ),
-            const SizedBox(width: AppSpacing.sm),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    v.stadium,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: AppTypography.bodyMedium,
-                  ),
-                  Text(
-                    '${v.city} · ${_capacity(v.capacity)} seats',
-                    style: AppTypography.labelSmall.copyWith(
-                      color: AppColors.onSurfaceVariant,
-                    ),
-                  ),
-                ],
+              Text(
+                '${v.city} · ${_capacity(v.capacity)} seats',
+                style: AppTypography.labelSmall.copyWith(
+                  color: AppColors.onSurfaceVariant,
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
-      );
+      ],
+    ),
+  );
 }

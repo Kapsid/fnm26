@@ -42,8 +42,7 @@ class HostDrawData {
 }
 
 final AutoDisposeFutureProviderFamily<HostDrawData?, HostDrawArg>
-hostDrawProvider =
-    FutureProvider.autoDispose.family<HostDrawData?, HostDrawArg>((
+hostDrawProvider = FutureProvider.autoDispose.family<HostDrawData?, HostDrawArg>((
   ref,
   arg,
 ) async {

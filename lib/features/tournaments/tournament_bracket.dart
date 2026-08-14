@@ -304,8 +304,8 @@ class _TournamentBracketState extends State<TournamentBracket> {
               color: winner
                   ? AppColors.positive
                   : isPlayer
-                      ? AppColors.primary
-                      : AppColors.onSurfaceVariant,
+                  ? AppColors.primary
+                  : AppColors.onSurfaceVariant,
               fontWeight: winner || isPlayer
                   ? FontWeight.w700
                   : FontWeight.w400,
@@ -396,8 +396,8 @@ class _TournamentBracketState extends State<TournamentBracket> {
               color: winner
                   ? AppColors.positive
                   : isPlayer
-                      ? AppColors.primary
-                      : AppColors.onSurfaceVariant,
+                  ? AppColors.primary
+                  : AppColors.onSurfaceVariant,
             ),
           ),
           if (seed != null)
