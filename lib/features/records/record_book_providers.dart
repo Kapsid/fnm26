@@ -39,8 +39,11 @@ const _wcFinishRank = {
   'FINAL': 6,
 };
 
-final AutoDisposeFutureProviderFamily<RecordBook?, int> recordBookProvider =
-    FutureProvider.autoDispose.family<RecordBook?, int>((ref, careerId) async {
+final AutoDisposeFutureProviderFamily<RecordBook?, int>
+recordBookProvider = FutureProvider.autoDispose.family<RecordBook?, int>((
+  ref,
+  careerId,
+) async {
   final career = await ref.watch(careerRepositoryProvider).byId(careerId);
   if (career == null) return null;
   final comp = ref.watch(competitionRepositoryProvider);
@@ -85,10 +88,12 @@ final AutoDisposeFutureProviderFamily<RecordBook?, int> recordBookProvider =
 
   // Biggest win, longest unbeaten run, and deepest World Cup run — over every
   // competitive result the nation has ever posted.
-  final fixtures = (await comp.fixturesForNation(careerId, nationId))
-      .where((f) => f.hasResult)
-      .toList()
-    ..sort((a, b) => a.date.compareTo(b.date));
+  final fixtures =
+      (await comp.fixturesForNation(
+          careerId,
+          nationId,
+        )).where((f) => f.hasResult).toList()
+        ..sort((a, b) => a.date.compareTo(b.date));
   ({int oppId, int gf, int ga})? biggestWin;
   var bestMargin = 0;
   var unbeaten = 0;
@@ -120,15 +125,16 @@ final AutoDisposeFutureProviderFamily<RecordBook?, int> recordBookProvider =
   // A title trumps any run; otherwise the deepest World Cup round reached.
   final honours = await comp.honours(careerId);
   final wonWc = honours.any(
-    (h) => h.competition == 'World Championship' &&
+    (h) =>
+        h.competition == 'World Championship' &&
         h.championId == nationId &&
         h.year >= CareerService.cycleStart.year,
   );
   final bestFinish = wonWc
       ? 'World Champions'
       : deepestRound.isEmpty
-          ? 'No finals appearance yet'
-          : _wcFinishLabel[deepestRound] ?? 'World Cup Finals';
+      ? 'No finals appearance yet'
+      : _wcFinishLabel[deepestRound] ?? 'World Cup Finals';
 
   return (
     nationName: nations[nationId]?.name ?? 'Your nation',

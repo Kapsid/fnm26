@@ -23,9 +23,9 @@ const budgetSetupKind = 'budgetSet';
 /// The war chest a career currently has to allocate.
 final AutoDisposeFutureProviderFamily<Career?, int> _budgetCareerProvider =
     FutureProvider.autoDispose.family<Career?, int>((ref, careerId) async {
-  await ref.watch(seedLoaderProvider).ensureSeeded();
-  return ref.watch(careerRepositoryProvider).byId(careerId);
-});
+      await ref.watch(seedLoaderProvider).ensureSeeded();
+      return ref.watch(careerRepositoryProvider).byId(careerId);
+    });
 
 /// The forced, first-of-the-cycle budget allocation. The manager must
 /// distribute the federation's war chest across the departments before the
@@ -51,7 +51,8 @@ class _BudgetSetupScreenState extends ConsumerState<BudgetSetupScreen> {
     setState(() => _busy = true);
     final repo = ref.read(careerRepositoryProvider);
     final comp = ref.read(competitionRepositoryProvider);
-    final spend = alloc.youth +
+    final spend =
+        alloc.youth +
         alloc.commercial +
         alloc.medical +
         alloc.naturalization +
@@ -98,7 +99,8 @@ class _BudgetSetupScreenState extends ConsumerState<BudgetSetupScreen> {
             return Center(child: Text(l.federationSaveNotFound));
           }
           final available = career.budget;
-          final alloc = _alloc ??
+          final alloc =
+              _alloc ??
               const (
                 youth: 0,
                 commercial: 0,
@@ -106,7 +108,8 @@ class _BudgetSetupScreenState extends ConsumerState<BudgetSetupScreen> {
                 naturalization: 0,
                 boardRelations: 0,
               );
-          final allocated = alloc.youth +
+          final allocated =
+              alloc.youth +
               alloc.commercial +
               alloc.medical +
               alloc.naturalization +
@@ -126,8 +129,10 @@ class _BudgetSetupScreenState extends ConsumerState<BudgetSetupScreen> {
                       decoration: BoxDecoration(
                         color: AppColors.secondaryContainer,
                         borderRadius: AppRadii.baseAll,
-                        border:
-                            Border.all(color: AppColors.primary, width: 1.5),
+                        border: Border.all(
+                          color: AppColors.primary,
+                          width: 1.5,
+                        ),
                       ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -141,8 +146,9 @@ class _BudgetSetupScreenState extends ConsumerState<BudgetSetupScreen> {
                               const SizedBox(width: AppSpacing.sm),
                               Text(
                                 l.federationBudgetHeading,
-                                style: AppTypography.labelMedium
-                                    .copyWith(color: AppColors.primary),
+                                style: AppTypography.labelMedium.copyWith(
+                                  color: AppColors.primary,
+                                ),
                               ),
                             ],
                           ),

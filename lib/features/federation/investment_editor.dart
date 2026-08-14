@@ -55,16 +55,17 @@ class _InvestmentEditorState extends State<InvestmentEditor> {
   int get _remaining => widget.available - _allocated;
 
   FederationInvestment get _current => (
-        youth: _youth,
-        commercial: _commercial,
-        medical: _medical,
-        naturalization: _naturalization,
-        boardRelations: _boardRelations,
-      );
+    youth: _youth,
+    commercial: _commercial,
+    medical: _medical,
+    naturalization: _naturalization,
+    boardRelations: _boardRelations,
+  );
 
   void _set(Department dept, double raw) {
     // Round to the step, then cap so the departments never exceed the balance.
-    final others = _allocated -
+    final others =
+        _allocated -
         switch (dept) {
           Department.youth => _youth,
           Department.commercial => _commercial,

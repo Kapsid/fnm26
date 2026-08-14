@@ -417,9 +417,11 @@ cupDetailProvider = FutureProvider.autoDispose.family<CupData?, int>((
       nationId: s.nationId,
       name: p?.name ?? 'Unknown',
       goals: s.goals,
-      // Still active if aged below the retirement age; a missing player
-      // (shouldn't happen) is treated as retired.
-      active: p != null && p.age < PlayerLifecycle.retirementAge,
+      // Still active if his own career has not ended — retirement runs from
+      // 34 to 40, so a flat cut-off called a man finished while he was
+      // playing in this very tournament. A missing player (shouldn't happen)
+      // is treated as retired.
+      active: p != null && !PlayerLifecycle.hasRetiredAt(p.id, p.age, aging),
     ));
   }
 

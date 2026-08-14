@@ -48,7 +48,9 @@ class _NaturalizationScreenState extends ConsumerState<NaturalizationScreen> {
       ref
         ..invalidate(squadDataProvider)
         ..invalidate(naturalizedCountProvider(widget.careerId));
-      await ref.read(competitionRepositoryProvider).addMessage(
+      await ref
+          .read(competitionRepositoryProvider)
+          .addMessage(
             careerId: widget.careerId,
             dedupKey: 'natzdone:${offer.player.id}',
             category: 'naturalize',
@@ -101,13 +103,19 @@ class _NaturalizationScreenState extends ConsumerState<NaturalizationScreen> {
                 child: ListView(
                   padding: const EdgeInsets.all(AppSpacing.marginMobile),
                   children: [
-                    const Icon(Icons.how_to_reg_rounded,
-                        size: 44, color: AppColors.primary),
+                    const Icon(
+                      Icons.how_to_reg_rounded,
+                      size: 44,
+                      color: AppColors.primary,
+                    ),
                     const SizedBox(height: AppSpacing.sm),
                     Center(
-                      child: Text(l.federationOfferToSwitchAllegiance,
-                          style: AppTypography.labelSmall
-                              .copyWith(color: AppColors.primary)),
+                      child: Text(
+                        l.federationOfferToSwitchAllegiance,
+                        style: AppTypography.labelSmall.copyWith(
+                          color: AppColors.primary,
+                        ),
+                      ),
                     ),
                     const SizedBox(height: AppSpacing.lg),
                     AppCard(
@@ -119,11 +127,12 @@ class _NaturalizationScreenState extends ConsumerState<NaturalizationScreen> {
                               const SizedBox(width: AppSpacing.md),
                               Expanded(
                                 child: Column(
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text(p.name,
-                                        style: AppTypography.titleMedium),
+                                    Text(
+                                      p.name,
+                                      style: AppTypography.titleMedium,
+                                    ),
                                     Text(
                                       l.federationPlayerMeta(
                                         p.position.name,
@@ -147,17 +156,26 @@ class _NaturalizationScreenState extends ConsumerState<NaturalizationScreen> {
                               FlagDisc(offer.sourceNation.code, size: 22),
                               const Padding(
                                 padding: EdgeInsets.symmetric(
-                                    horizontal: AppSpacing.sm),
-                                child: Icon(Icons.arrow_forward_rounded,
-                                    size: 18,
-                                    color: AppColors.onSurfaceVariant),
+                                  horizontal: AppSpacing.sm,
+                                ),
+                                child: Icon(
+                                  Icons.arrow_forward_rounded,
+                                  size: 18,
+                                  color: AppColors.onSurfaceVariant,
+                                ),
                               ),
-                              FlagDisc(offer.playerNation.code,
-                                  size: 22, highlighted: true),
+                              FlagDisc(
+                                offer.playerNation.code,
+                                size: 22,
+                                highlighted: true,
+                              ),
                               const SizedBox(width: AppSpacing.sm),
-                              Text(offer.playerNation.name,
-                                  style: AppTypography.labelMedium
-                                      .copyWith(color: AppColors.primary)),
+                              Text(
+                                offer.playerNation.name,
+                                style: AppTypography.labelMedium.copyWith(
+                                  color: AppColors.primary,
+                                ),
+                              ),
                             ],
                           ),
                         ],
@@ -170,8 +188,9 @@ class _NaturalizationScreenState extends ConsumerState<NaturalizationScreen> {
                         offer.playerNation.name,
                         offer.sourceNation.name,
                       ),
-                      style: AppTypography.bodyMedium
-                          .copyWith(color: AppColors.onSurfaceVariant),
+                      style: AppTypography.bodyMedium.copyWith(
+                        color: AppColors.onSurfaceVariant,
+                      ),
                     ),
                   ],
                 ),
@@ -187,8 +206,8 @@ class _NaturalizationScreenState extends ConsumerState<NaturalizationScreen> {
                           onPressed: _busy
                               ? null
                               : () => unawaited(
-                                    _resolve(offer, accept: false),
-                                  ),
+                                  _resolve(offer, accept: false),
+                                ),
                           style: OutlinedButton.styleFrom(
                             minimumSize: const Size.fromHeight(52),
                           ),
@@ -202,8 +221,7 @@ class _NaturalizationScreenState extends ConsumerState<NaturalizationScreen> {
                           icon: Icons.how_to_reg_rounded,
                           onPressed: _busy
                               ? null
-                              : () =>
-                                  unawaited(_resolve(offer, accept: true)),
+                              : () => unawaited(_resolve(offer, accept: true)),
                         ),
                       ),
                     ],

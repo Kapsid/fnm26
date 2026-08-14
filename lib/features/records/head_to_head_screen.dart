@@ -34,8 +34,7 @@ class _HeadToHeadScreenState extends ConsumerState<HeadToHeadScreen> {
     final nationsAsync = ref.watch(nationsProvider);
     // Default side A to the manager's own nation the first time.
     if (!_seeded) {
-      final career =
-          ref.watch(careerByIdProvider(widget.careerId)).valueOrNull;
+      final career = ref.watch(careerByIdProvider(widget.careerId)).valueOrNull;
       if (career != null) {
         _a = career.nationId;
         _seeded = true;
@@ -77,11 +76,13 @@ class _HeadToHeadScreenState extends ConsumerState<HeadToHeadScreen> {
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(
-                        horizontal: AppSpacing.sm),
+                      horizontal: AppSpacing.sm,
+                    ),
                     child: Text(
                       l.recordsVs,
-                      style: AppTypography.titleMedium
-                          .copyWith(color: AppColors.onSurfaceVariant),
+                      style: AppTypography.titleMedium.copyWith(
+                        color: AppColors.onSurfaceVariant,
+                      ),
                     ),
                   ),
                   Expanded(
@@ -150,8 +151,9 @@ class _NationSlot extends StatelessWidget {
         children: [
           Text(
             label,
-            style: AppTypography.labelSmall
-                .copyWith(color: AppColors.onSurfaceVariant),
+            style: AppTypography.labelSmall.copyWith(
+              color: AppColors.onSurfaceVariant,
+            ),
           ),
           const SizedBox(height: AppSpacing.sm),
           FlagDisc(nation?.code ?? '??', size: 40),
@@ -183,8 +185,9 @@ class _Hint extends StatelessWidget {
       child: Text(
         text,
         textAlign: TextAlign.center,
-        style: AppTypography.bodyMedium
-            .copyWith(color: AppColors.onSurfaceVariant),
+        style: AppTypography.bodyMedium.copyWith(
+          color: AppColors.onSurfaceVariant,
+        ),
       ),
     );
   }
@@ -216,14 +219,16 @@ class _MyLedger extends ConsumerWidget {
           children: [
             Text(
               l.recordsYourRecord,
-              style: AppTypography.labelMedium
-                  .copyWith(color: AppColors.primary),
+              style: AppTypography.labelMedium.copyWith(
+                color: AppColors.primary,
+              ),
             ),
             const SizedBox(height: AppSpacing.xs),
             Text(
               l.recordsTapOpponent,
-              style: AppTypography.labelSmall
-                  .copyWith(color: AppColors.onSurfaceVariant),
+              style: AppTypography.labelSmall.copyWith(
+                color: AppColors.onSurfaceVariant,
+              ),
             ),
             const SizedBox(height: AppSpacing.sm),
             AppCard(
@@ -296,23 +301,29 @@ class _WdlPill extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Widget seg(int v, Color c) => Text(
-          '$v',
-          style: AppTypography.labelMedium.copyWith(
-            color: c,
-            fontWeight: FontWeight.w700,
-          ),
-        );
+      '$v',
+      style: AppTypography.labelMedium.copyWith(
+        color: c,
+        fontWeight: FontWeight.w700,
+      ),
+    );
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
         seg(w, AppColors.positive),
-        Text('-',
-            style: AppTypography.labelSmall
-                .copyWith(color: AppColors.onSurfaceVariant)),
+        Text(
+          '-',
+          style: AppTypography.labelSmall.copyWith(
+            color: AppColors.onSurfaceVariant,
+          ),
+        ),
         seg(d, AppColors.onSurfaceVariant),
-        Text('-',
-            style: AppTypography.labelSmall
-                .copyWith(color: AppColors.onSurfaceVariant)),
+        Text(
+          '-',
+          style: AppTypography.labelSmall.copyWith(
+            color: AppColors.onSurfaceVariant,
+          ),
+        ),
         seg(l, AppColors.error),
       ],
     );
@@ -329,9 +340,11 @@ class _Record extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l = AppLocalizations.of(context);
-    final async = ref.watch(headToHeadProvider(
-      (careerId: careerId, nationA: a.id, nationB: b.id),
-    ));
+    final async = ref.watch(
+      headToHeadProvider(
+        (careerId: careerId, nationA: a.id, nationB: b.id),
+      ),
+    );
     return async.when(
       loading: () => const Padding(
         padding: EdgeInsets.all(AppSpacing.xl),
@@ -360,8 +373,9 @@ class _Record extends ConsumerWidget {
                   const SizedBox(height: AppSpacing.sm),
                   Text(
                     l.recordsMeetingsCount(h.played),
-                    style: AppTypography.labelSmall
-                        .copyWith(color: AppColors.onSurfaceVariant),
+                    style: AppTypography.labelSmall.copyWith(
+                      color: AppColors.onSurfaceVariant,
+                    ),
                   ),
                 ],
               ),
@@ -370,8 +384,7 @@ class _Record extends ConsumerWidget {
             AppCard(
               child: Column(
                 children: [
-                  _statRow(
-                      l.recordsGoalsLabel, '${h.goalsA}', '${h.goalsB}'),
+                  _statRow(l.recordsGoalsLabel, '${h.goalsA}', '${h.goalsB}'),
                   _statRow(
                     l.recordsBiggestWin,
                     h.biggestWinMarginA == 0 ? '—' : '+${h.biggestWinMarginA}',
@@ -407,16 +420,18 @@ class _Record extends ConsumerWidget {
             width: 44,
             child: Text(
               left,
-              style: AppTypography.titleMedium
-                  .copyWith(color: AppColors.primary),
+              style: AppTypography.titleMedium.copyWith(
+                color: AppColors.primary,
+              ),
             ),
           ),
           Expanded(
             child: Text(
               label.toUpperCase(),
               textAlign: TextAlign.center,
-              style: AppTypography.labelSmall
-                  .copyWith(color: AppColors.onSurfaceVariant),
+              style: AppTypography.labelSmall.copyWith(
+                color: AppColors.onSurfaceVariant,
+              ),
             ),
           ),
           SizedBox(
@@ -424,8 +439,9 @@ class _Record extends ConsumerWidget {
             child: Text(
               right,
               textAlign: TextAlign.end,
-              style: AppTypography.titleMedium
-                  .copyWith(color: AppColors.primary),
+              style: AppTypography.titleMedium.copyWith(
+                color: AppColors.primary,
+              ),
             ),
           ),
         ],
@@ -448,8 +464,9 @@ class _Tally extends StatelessWidget {
         const SizedBox(height: 2),
         Text(
           label,
-          style: AppTypography.labelSmall
-              .copyWith(color: AppColors.onSurfaceVariant),
+          style: AppTypography.labelSmall.copyWith(
+            color: AppColors.onSurfaceVariant,
+          ),
         ),
       ],
     );
@@ -516,9 +533,12 @@ class _NationPickerSheetState extends State<_NationPickerSheet> {
     final filtered = q.isEmpty
         ? widget.nations
         : widget.nations
-            .where((n) => n.name.toLowerCase().contains(q) ||
-                n.code.toLowerCase().contains(q))
-            .toList();
+              .where(
+                (n) =>
+                    n.name.toLowerCase().contains(q) ||
+                    n.code.toLowerCase().contains(q),
+              )
+              .toList();
     return Padding(
       padding: EdgeInsets.only(
         bottom: MediaQuery.of(context).viewInsets.bottom,

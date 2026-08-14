@@ -1353,7 +1353,7 @@ git commit -m "feat: more players ply their trade abroad, and the move is report
 A player appearing in a live tournament shows as not active in the all-time
 scorer table — the active flag is read from the wrong source.
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 ```dart
 // test/unit/stats/all_time_active_test.dart
@@ -1364,24 +1364,24 @@ test('a player in the current squad is active in the all-time table', () async {
 });
 ```
 
-- [ ] **Step 2: Run the test to verify it fails**
+- [x] **Step 2: Run the test to verify it fails**
 
 Run: `flutter test test/unit/stats/all_time_active_test.dart`
 Expected: FAIL — `isActive` is false.
 
-- [ ] **Step 3: Read the flag from the right source**
+- [x] **Step 3: Read the flag from the right source**
 
 A player is active if he has not retired as of the current in-game date. Find
 where the all-time table derives this and correct it. Per project memory,
 imperative database reads never notice a sim step — if the flag is computed
 against a snapshot taken before the tournament, that is the bug.
 
-- [ ] **Step 4: Run the test to verify it passes**
+- [x] **Step 4: Run the test to verify it passes**
 
 Run: `flutter test test/unit/stats/`
 Expected: PASS
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add lib/domain/services/stats/ lib/features/stats/ test/unit/stats/all_time_active_test.dart

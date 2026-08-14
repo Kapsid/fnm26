@@ -8,7 +8,12 @@ import 'package:fnm/features/career/career_providers.dart';
 /// The finals rounds counted for prize money, split by tournament.
 const _wcFinalsRounds = {'GROUP', 'R32', 'R16', 'QF', 'SF', '3RD', 'FINAL'};
 const _contFinalsRounds = {
-  'CGROUP', 'CR16', 'CQF', 'CSF', 'C3RD', 'CFINAL',
+  'CGROUP',
+  'CR16',
+  'CQF',
+  'CSF',
+  'C3RD',
+  'CFINAL',
 };
 
 /// Computes the federation's earnings for a finished cycle: central funding,
@@ -55,12 +60,12 @@ class FederationService {
           h.competition,
     };
     final nations = {
-      for (final n in await _ref.read(nationRepositoryProvider).all())
-        n.id: n,
+      for (final n in await _ref.read(nationRepositoryProvider).all()) n.id: n,
     };
     final conf = nations[career.nationId]?.confederation;
-    final contName =
-        conf == null ? null : ContinentalCups.byConfederation[conf]?.name;
+    final contName = conf == null
+        ? null
+        : ContinentalCups.byConfederation[conf]?.name;
 
     final prize = FederationFinance.resultsPrize(
       wcRounds: wcRounds,
@@ -69,8 +74,9 @@ class FederationService {
       continentalName: contName,
     );
 
-    final invest =
-        await _ref.read(careerRepositoryProvider).investment(careerId, cycle);
+    final invest = await _ref
+        .read(careerRepositoryProvider)
+        .investment(careerId, cycle);
     final commercialInvested = invest.commercial;
 
     return (
@@ -87,8 +93,7 @@ final Provider<FederationService> federationServiceProvider =
 /// The income breakdown the manager will bank at the current cycle's close —
 /// shown in the invest UI so allocation happens against the real new balance.
 final AutoDisposeFutureProviderFamily<IncomeBreakdown, int>
-    cycleIncomeProvider =
-    FutureProvider.autoDispose.family<IncomeBreakdown, int>((
+cycleIncomeProvider = FutureProvider.autoDispose.family<IncomeBreakdown, int>((
   ref,
   careerId,
 ) async {
@@ -113,22 +118,22 @@ typedef FinanceView = ({
 
 final AutoDisposeFutureProviderFamily<FinanceView?, int> financeViewProvider =
     FutureProvider.autoDispose.family<FinanceView?, int>((ref, careerId) async {
-  final career = await ref.watch(careerRepositoryProvider).byId(careerId);
-  if (career == null) return null;
-  final repo = ref.watch(careerRepositoryProvider);
-  final planned = await repo.investment(careerId, career.cyclePointer + 1);
-  final current = await repo.investment(careerId, career.cyclePointer);
-  final income = await ref
-      .watch(federationServiceProvider)
-      .incomeForCycle(careerId, career.cyclePointer);
-  return (
-    budget: career.budget,
-    cycle: career.cyclePointer,
-    planned: planned,
-    current: current,
-    projectedIncome: income,
-  );
-});
+      final career = await ref.watch(careerRepositoryProvider).byId(careerId);
+      if (career == null) return null;
+      final repo = ref.watch(careerRepositoryProvider);
+      final planned = await repo.investment(careerId, career.cyclePointer + 1);
+      final current = await repo.investment(careerId, career.cyclePointer);
+      final income = await ref
+          .watch(federationServiceProvider)
+          .incomeForCycle(careerId, career.cyclePointer);
+      return (
+        budget: career.budget,
+        cycle: career.cyclePointer,
+        planned: planned,
+        current: current,
+        projectedIncome: income,
+      );
+    });
 
 /// A department's long-term standing: its building level and the total euros
 /// invested in it across every cycle of the save so far.
@@ -142,41 +147,41 @@ typedef DepartmentBuilding = ({
 /// The four federation buildings with their levels, derived from the whole
 /// investment history — the "long-term impact" view the sliders can't show.
 final AutoDisposeFutureProviderFamily<List<DepartmentBuilding>, int>
-    federationBuildingsProvider =
-    FutureProvider.autoDispose.family<List<DepartmentBuilding>, int>((
-  ref,
-  careerId,
-) async {
-  final repo = ref.watch(careerRepositoryProvider);
-  final career = await repo.byId(careerId);
-  if (career == null) return const [];
-  final invests = await repo.investments(careerId);
-  int spend(FederationInvestment i, Department d) => switch (d) {
+federationBuildingsProvider = FutureProvider.autoDispose
+    .family<List<DepartmentBuilding>, int>((
+      ref,
+      careerId,
+    ) async {
+      final repo = ref.watch(careerRepositoryProvider);
+      final career = await repo.byId(careerId);
+      if (career == null) return const [];
+      final invests = await repo.investments(careerId);
+      int spend(FederationInvestment i, Department d) => switch (d) {
         Department.youth => i.youth,
         Department.commercial => i.commercial,
         Department.medical => i.medical,
         Department.naturalization => i.naturalization,
         Department.boardRelations => i.boardRelations,
       };
-  // A building's standing is its maintained investment — recent, sustained
-  // funding, with each past cycle's spend decayed by carryOver — so it climbs
-  // while you invest and slides back down when you stop.
-  return [
-    for (final d in Department.values)
-      () {
-        final byCycle = {
-          for (final e in invests.entries) e.key: spend(e.value, d),
-        };
-        final euros = FederationBuildings.maintainedEuros(
-          byCycle,
-          career.cyclePointer,
-        );
-        return (
-          department: d,
-          level: FederationBuildings.levelFor(euros),
-          cumulativeEuros: euros,
-          progress: FederationBuildings.progressFor(euros),
-        );
-      }(),
-  ];
-});
+      // A building's standing is its maintained investment — recent, sustained
+      // funding, with each past cycle's spend decayed by carryOver — so it climbs
+      // while you invest and slides back down when you stop.
+      return [
+        for (final d in Department.values)
+          () {
+            final byCycle = {
+              for (final e in invests.entries) e.key: spend(e.value, d),
+            };
+            final euros = FederationBuildings.maintainedEuros(
+              byCycle,
+              career.cyclePointer,
+            );
+            return (
+              department: d,
+              level: FederationBuildings.levelFor(euros),
+              cumulativeEuros: euros,
+              progress: FederationBuildings.progressFor(euros),
+            );
+          }(),
+      ];
+    });

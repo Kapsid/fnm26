@@ -53,6 +53,25 @@ abstract final class PlayerLifecycle {
     return retirementAge + offsets[h % offsets.length];
   }
 
+  /// The aging year retirement is judged as of.
+  ///
+  /// International retirements happen as a WAVE after a tournament, not at some
+  /// arbitrary off-season boundary — a major tournament falls on every even
+  /// aging year — so a career is judged as of the most recent tournament the
+  /// player has already played.
+  static int retireAgingAt(int agingYears) =>
+      agingYears < 2 ? 0 : 2 * ((agingYears - 1) ~/ 2);
+
+  /// Whether a player of [age] has retired, [agingYears] into the save.
+  ///
+  /// The one definition of "still playing". The all-time charts used to carry
+  /// their own — a flat "under [retirementAge]" — which called a
+  /// thirty-eight-year-old finished while he was turning out in that week's
+  /// tournament, because careers actually end anywhere from 34 to 40.
+  static bool hasRetiredAt(int playerId, int age, int agingYears) =>
+      age - agingYears + retireAgingAt(agingYears) >=
+      retirementAgeFor(playerId);
+
   /// The age a player enters the world. Nobody is ever created older than this
   /// — a seventeen-year-old in this game was an eleven-year-old six years ago,
   /// and the manager could have watched him the whole way.
@@ -149,21 +168,16 @@ abstract final class PlayerLifecycle {
     /// before this feature existed.
     int clubSeed = 0,
   }) {
-    // International retirements happen as a WAVE after a tournament, not at some
-    // arbitrary off-season boundary. A major tournament falls on every even
-    // aging-year (a continental cup or a World Cup every two years), so a
-    // player's retirement is judged as of the most recent tournament they have
-    // already played — [retireAging] freezes it there, keeping a 37-year-old in
-    // the pool through the current cup and letting the whole wave drop together
-    // the year after. Development still uses the live [agingYears]. Because the
-    // yearly squad-report diffs this pool, the retirement NEWS lands in that
-    // same post-tournament window automatically, so the inbox and the squad
-    // always agree.
-    final retireAging = agingYears < 2 ? 0 : 2 * ((agingYears - 1) ~/ 2);
+    // Retirement comes in a post-tournament WAVE — see [retireAgingAt] — which
+    // keeps a 37-year-old in the pool through the current cup and drops the
+    // whole wave together the year after. Development still uses the live
+    // [agingYears]. Because the yearly squad-report diffs this pool, the
+    // retirement NEWS lands in that same window automatically, so the inbox and
+    // the squad always agree.
     // A player's age at that frozen tournament year (`aged.age` is their live
-    // developed age; back out the extra live years, add the frozen ones).
-    bool retired(Player aged) =>
-        aged.age - agingYears + retireAging >= retirementAgeFor(aged.id);
+    // developed age; back out the extra live years, add the frozen ones) —
+    // see [hasRetiredAt], which the all-time charts read too.
+    bool retired(Player aged) => hasRetiredAt(aged.id, aged.age, agingYears);
 
     double factorFor(Player aged) => clubSeed == 0
         ? 1
@@ -180,8 +194,13 @@ abstract final class PlayerLifecycle {
       final aged = PlayerAging.agedYears(p, agingYears);
       if (aged.age < minAge) continue;
       if (!retired(aged)) {
-        out.add(withCareerDev(aged, careerStartsByPlayer[aged.id] ?? 0,
-            minutesFactor: factorFor(aged)));
+        out.add(
+          withCareerDev(
+            aged,
+            careerStartsByPlayer[aged.id] ?? 0,
+            minutesFactor: factorFor(aged),
+          ),
+        );
       }
     }
     // Every intake year that has happened, including the ones backfilled from
@@ -193,8 +212,13 @@ abstract final class PlayerLifecycle {
         if (aged.age < minAge) continue;
         if (isReleasedBy(aged.id, aged.age)) continue;
         if (retired(aged)) continue;
-        out.add(withCareerDev(aged, careerStartsByPlayer[aged.id] ?? 0,
-            minutesFactor: factorFor(aged)));
+        out.add(
+          withCareerDev(
+            aged,
+            careerStartsByPlayer[aged.id] ?? 0,
+            minutesFactor: factorFor(aged),
+          ),
+        );
       }
     }
     return out;
@@ -210,16 +234,15 @@ abstract final class PlayerLifecycle {
     Map<int, double> youthBonusByCycle = const {},
     Map<int, int> careerStartsByPlayer = const {},
     int clubSeed = 0,
-  }) =>
-      poolAt(
-        seeded,
-        nationId,
-        agingYears,
-        youthBonusByCycle: youthBonusByCycle,
-        careerStartsByPlayer: careerStartsByPlayer,
-        minAge: intakeAge,
-        clubSeed: clubSeed,
-      ).where((p) => p.age <= YouthLevel.u21.maxAge).toList();
+  }) => poolAt(
+    seeded,
+    nationId,
+    agingYears,
+    youthBonusByCycle: youthBonusByCycle,
+    careerStartsByPlayer: careerStartsByPlayer,
+    minAge: intakeAge,
+    clubSeed: clubSeed,
+  ).where((p) => p.age <= YouthLevel.u21.maxAge).toList();
 
   /// The four-year cycle an intake year belongs to, for the academy bonus.
   /// Backfilled years are before the save and take no investment.
@@ -255,13 +278,14 @@ abstract final class PlayerLifecycle {
     // running alongside it. At the old rate a regular picked up the cap in a
     // single cycle and the two effects compounded into squads that improved
     // faster than they could possibly age out.
-    final delta = (sqrt(starts) *
-            0.30 *
-            tierWeight *
-            developmentPotential(aged.id) *
-            minutesFactor)
-        .clamp(0.0, 3.0)
-        .round();
+    final delta =
+        (sqrt(starts) *
+                0.30 *
+                tierWeight *
+                developmentPotential(aged.id) *
+                minutesFactor)
+            .clamp(0.0, 3.0)
+            .round();
     if (delta == 0) return aged;
     return aged.copyWith(attributes: _bumpAll(aged.attributes, delta));
   }
@@ -430,20 +454,24 @@ abstract final class PlayerLifecycle {
       // ids/names — is unchanged).
       // Clamped: a nation in freefall still produces footballers, and no amount
       // of academy money plus momentum makes a 16-year-old a finished article.
-      final talent =
-          (0.56 + rng.nextDouble() * 0.38 + youthBonus).clamp(0.40, 1.05);
+      final talent = (0.56 + rng.nextDouble() * 0.38 + youthBonus).clamp(
+        0.40,
+        1.05,
+      );
       // `talent` describes the player he will be at SEVENTEEN — the same
       // number the old intake used, so the senior world is unchanged. What is
       // generated here is that player minus the growing-up he has yet to do,
       // which the sub-17 curve then gives back over six years.
       out.add(
         Player(
-          id: _idBase +
+          id:
+              _idBase +
               nationId * _nationStride +
               bornYearIndex * _cycleStride +
               i,
           nationId: nationId,
-          name: '${firsts[rng.nextInt(firsts.length)]} '
+          name:
+              '${firsts[rng.nextInt(firsts.length)]} '
               '${lasts[rng.nextInt(lasts.length)]}',
           age: intakeAge,
           position: pos,
@@ -471,10 +499,10 @@ abstract final class PlayerLifecycle {
   /// sits low precisely because the nation is weak, would have a third of every
   /// intake quietly inflated, and the senior pool would drift up under it.
   static PlayerAttributes _asChild(PlayerAttributes a) => PlayerAttributes(
-        physical: (a.physical - 14).clamp(5, 95),
-        technical: (a.technical - 12).clamp(5, 95),
-        stamina: (a.stamina - 14).clamp(5, 95),
-      );
+    physical: (a.physical - 14).clamp(5, 95),
+    technical: (a.technical - 12).clamp(5, 95),
+    stamina: (a.stamina - 14).clamp(5, 95),
+  );
 
   static String _firstName(String full) => full.trim().split(' ').first;
 

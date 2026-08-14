@@ -45,8 +45,7 @@ class H2HMeetingsScreen extends ConsumerWidget {
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: AppColors.primary),
-          onPressed: () =>
-              context.canPop() ? context.pop() : context.go('/'),
+          onPressed: () => context.canPop() ? context.pop() : context.go('/'),
         ),
         title: Text(
           l.recordsMeetings,
@@ -66,8 +65,9 @@ class H2HMeetingsScreen extends ConsumerWidget {
                 child: Text(
                   l.recordsNeverMet(aName, bName),
                   textAlign: TextAlign.center,
-                  style: AppTypography.bodyMedium
-                      .copyWith(color: AppColors.onSurfaceVariant),
+                  style: AppTypography.bodyMedium.copyWith(
+                    color: AppColors.onSurfaceVariant,
+                  ),
                 ),
               ),
             );
@@ -84,8 +84,9 @@ class H2HMeetingsScreen extends ConsumerWidget {
               ),
               Text(
                 l.recordsMeetingsWdl(meetings.length, wins, draws, losses),
-                style: AppTypography.labelSmall
-                    .copyWith(color: AppColors.onSurfaceVariant),
+                style: AppTypography.labelSmall.copyWith(
+                  color: AppColors.onSurfaceVariant,
+                ),
               ),
               const SizedBox(height: AppSpacing.md),
               for (final m in meetings) _MeetingRow(meeting: m),
@@ -115,14 +116,14 @@ class _MeetingRow extends StatelessWidget {
     final result = decided > 0
         ? AppColors.positive
         : decided < 0
-            ? AppColors.error
-            : AppColors.onSurfaceVariant;
+        ? AppColors.error
+        : AppColors.onSurfaceVariant;
     // How the tie was settled, when it went past 90 minutes.
     final settled = m.penA != null && m.penB != null
         ? l.recordsOnPenalties(m.penA!, m.penB!)
         : m.afterExtraTime
-            ? l.recordsAfterExtraTime
-            : null;
+        ? l.recordsAfterExtraTime
+        : null;
     return Padding(
       padding: const EdgeInsets.only(bottom: AppSpacing.sm),
       child: AppCard(
@@ -160,8 +161,9 @@ class _MeetingRow extends StatelessWidget {
                     children: [
                       Text(
                         DateFormat('d MMM yyyy').format(m.date),
-                        style: AppTypography.labelSmall
-                            .copyWith(color: AppColors.onSurfaceVariant),
+                        style: AppTypography.labelSmall.copyWith(
+                          color: AppColors.onSurfaceVariant,
+                        ),
                       ),
                       if (settled != null) ...[
                         const SizedBox(width: AppSpacing.xs),

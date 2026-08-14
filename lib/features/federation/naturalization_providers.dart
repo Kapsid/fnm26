@@ -17,30 +17,34 @@ typedef NaturalizationOffer = ({
 });
 
 final AutoDisposeFutureProviderFamily<NaturalizationOffer?, int>
-    pendingNaturalizationProvider =
-    FutureProvider.autoDispose.family<NaturalizationOffer?, int>((
-  ref,
-  careerId,
-) async {
-  final career = await ref.watch(careerRepositoryProvider).byId(careerId);
-  if (career == null) return null;
-  final link =
-      await ref.watch(careerRepositoryProvider).pendingNaturalization(careerId);
-  if (link == null) return null;
-  final player = await ref.watch(playerRepositoryProvider).byId(
-        link.playerId,
-        agingYears: CareerService.agingYears(career),
-        saveSeed: career.rngSeed,
-      );
-  if (player == null) return null;
-  final nations = {
-    for (final n in await ref.watch(nationRepositoryProvider).all()) n.id: n,
-  };
-  final source = nations[link.sourceNationId];
-  final home = nations[career.nationId];
-  if (source == null || home == null) return null;
-  return (player: player, sourceNation: source, playerNation: home);
-});
+pendingNaturalizationProvider = FutureProvider.autoDispose
+    .family<NaturalizationOffer?, int>((
+      ref,
+      careerId,
+    ) async {
+      final career = await ref.watch(careerRepositoryProvider).byId(careerId);
+      if (career == null) return null;
+      final link = await ref
+          .watch(careerRepositoryProvider)
+          .pendingNaturalization(careerId);
+      if (link == null) return null;
+      final player = await ref
+          .watch(playerRepositoryProvider)
+          .byId(
+            link.playerId,
+            agingYears: CareerService.agingYears(career),
+            saveSeed: career.rngSeed,
+          );
+      if (player == null) return null;
+      final nations = {
+        for (final n in await ref.watch(nationRepositoryProvider).all())
+          n.id: n,
+      };
+      final source = nations[link.sourceNationId];
+      final home = nations[career.nationId];
+      if (source == null || home == null) return null;
+      return (player: player, sourceNation: source, playerNation: home);
+    });
 
 /// The naturalised players available to [career]'s nation: each accepted
 /// foreign player resolved live from their original id (so their name and
@@ -53,10 +57,11 @@ final AutoDisposeFutureProviderFamily<NaturalizationOffer?, int>
 /// save: he could play fifty tournament matches and never gain a point, while
 /// every home-grown team-mate around him grew.
 Future<List<Player>> naturalizedPlayersFor(Ref ref, Career career) async {
-  final links =
-      await ref.read(careerRepositoryProvider).acceptedNaturalizations(
-            career.id,
-          );
+  final links = await ref
+      .read(careerRepositoryProvider)
+      .acceptedNaturalizations(
+        career.id,
+      );
   if (links.isEmpty) return const [];
   final repo = ref.read(playerRepositoryProvider);
   final agingYears = CareerService.agingYears(career);
@@ -74,8 +79,10 @@ Future<List<Player>> naturalizedPlayersFor(Ref ref, Career career) async {
       careerStartsByPlayer: careerDev,
     );
     // Only field a naturalised player who is still active (not retired out of
-    // the pool); re-home them to the manager's nation for selection.
-    if (p != null && p.age < PlayerLifecycle.retirementAge) {
+    // the pool); re-home them to the manager's nation for selection. The test
+    // is his own retirement age, exactly as the pool's is — a flat cut-off
+    // both dropped men still playing and kept men who had finished.
+    if (p != null && !PlayerLifecycle.hasRetiredAt(p.id, p.age, agingYears)) {
       out.add(p.copyWith(nationId: career.nationId));
     }
   }
@@ -86,9 +93,10 @@ Future<List<Player>> naturalizedPlayersFor(Ref ref, Career career) async {
 /// badge for the finances screen.
 final AutoDisposeFutureProviderFamily<int, int> naturalizedCountProvider =
     FutureProvider.autoDispose.family<int, int>((ref, careerId) async {
-  final links =
-      await ref.watch(careerRepositoryProvider).acceptedNaturalizations(
+      final links = await ref
+          .watch(careerRepositoryProvider)
+          .acceptedNaturalizations(
             careerId,
           );
-  return links.length;
-});
+      return links.length;
+    });

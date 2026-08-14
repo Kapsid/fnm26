@@ -30,9 +30,10 @@ typedef AllTimeRecords = ({
 });
 
 final AutoDisposeFutureProviderFamily<AllTimeRecords?, int>
-    allTimeRecordsProvider =
-    FutureProvider.autoDispose.family<AllTimeRecords?, int>(
-        (ref, careerId) async {
+allTimeRecordsProvider = FutureProvider.autoDispose.family<AllTimeRecords?, int>((
+  ref,
+  careerId,
+) async {
   final career = await ref.watch(careerRepositoryProvider).byId(careerId);
   if (career == null) return null;
   final comp = ref.watch(competitionRepositoryProvider);
@@ -58,12 +59,19 @@ final AutoDisposeFutureProviderFamily<AllTimeRecords?, int>
     );
     return cache[id] = (
       name: p?.name ?? 'Unknown',
-      active: p != null && p.age < PlayerLifecycle.retirementAge,
+      // The same rule the pool itself retires on. A flat "under 37" was its
+      // own second opinion, and careers run from 34 to 40 — so a man playing
+      // in that week's tournament could be listed here as finished.
+      active: p != null && !PlayerLifecycle.hasRetiredAt(p.id, p.age, aging),
     );
   }
 
-  AllTimeLeader lead(int playerId, int nationId, int value,
-      ({String name, bool active}) info) {
+  AllTimeLeader lead(
+    int playerId,
+    int nationId,
+    int value,
+    ({String name, bool active}) info,
+  ) {
     final n = nations[nationId];
     return (
       playerId: playerId,

@@ -586,7 +586,9 @@ continentalDetailProvider = FutureProvider.autoDispose.family<ContinentalData?, 
       nationId: s.nationId,
       name: p?.name ?? 'Unknown',
       goals: s.goals,
-      active: p != null && p.age < PlayerLifecycle.retirementAge,
+      // His own career, not a flat cut-off — see the World Cup's detail
+      // provider, which reads the same rule.
+      active: p != null && !PlayerLifecycle.hasRetiredAt(p.id, p.age, aging),
     ));
   }
 

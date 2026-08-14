@@ -61,14 +61,18 @@ class LegendsScreen extends ConsumerWidget {
           return ListView(
             padding: const EdgeInsets.all(AppSpacing.marginMobile),
             children: [
-              Text(l.recordsAllTimeXi,
-                  style: AppTypography.labelMedium
-                      .copyWith(color: AppColors.primary)),
+              Text(
+                l.recordsAllTimeXi,
+                style: AppTypography.labelMedium.copyWith(
+                  color: AppColors.primary,
+                ),
+              ),
               const SizedBox(height: AppSpacing.xs),
               Text(
                 l.recordsGreatestSide(view.nationName),
-                style: AppTypography.bodySmall
-                    .copyWith(color: AppColors.onSurfaceVariant),
+                style: AppTypography.bodySmall.copyWith(
+                  color: AppColors.onSurfaceVariant,
+                ),
               ),
               const SizedBox(height: AppSpacing.sm),
               AppCard(
@@ -85,9 +89,12 @@ class LegendsScreen extends ConsumerWidget {
                 ),
               ),
               const SizedBox(height: AppSpacing.lg),
-              Text(l.recordsHallOfFame,
-                  style: AppTypography.labelMedium
-                      .copyWith(color: AppColors.primary)),
+              Text(
+                l.recordsHallOfFame,
+                style: AppTypography.labelMedium.copyWith(
+                  color: AppColors.primary,
+                ),
+              ),
               const SizedBox(height: AppSpacing.sm),
               AppCard(
                 padding: EdgeInsets.zero,
@@ -168,8 +175,9 @@ class _LegendRow extends StatelessWidget {
         tallies.join(' · '),
         maxLines: 1,
         overflow: TextOverflow.ellipsis,
-        style: AppTypography.labelSmall
-            .copyWith(color: AppColors.onSurfaceVariant),
+        style: AppTypography.labelSmall.copyWith(
+          color: AppColors.onSurfaceVariant,
+        ),
       ),
       trailing: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -181,8 +189,10 @@ class _LegendRow extends StatelessWidget {
           ),
           Text(
             l.recordsAvg,
-            style: AppTypography.labelSmall
-                .copyWith(color: AppColors.onSurfaceVariant, fontSize: 9),
+            style: AppTypography.labelSmall.copyWith(
+              color: AppColors.onSurfaceVariant,
+              fontSize: 9,
+            ),
           ),
         ],
       ),

@@ -12,8 +12,11 @@ typedef LegendsView = ({
   List<RankedLegend> hallOfFame,
 });
 
-final AutoDisposeFutureProviderFamily<LegendsView?, int> legendsProvider =
-    FutureProvider.autoDispose.family<LegendsView?, int>((ref, careerId) async {
+final AutoDisposeFutureProviderFamily<LegendsView?, int>
+legendsProvider = FutureProvider.autoDispose.family<LegendsView?, int>((
+  ref,
+  careerId,
+) async {
   final career = await ref.watch(careerRepositoryProvider).byId(careerId);
   if (career == null) return null;
   final comp = ref.watch(competitionRepositoryProvider);

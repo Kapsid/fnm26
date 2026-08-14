@@ -14,13 +14,13 @@ import 'package:fnm/domain/services/player/player_lifecycle.dart';
 ///
 /// Passed only for the player's own nation's pool.
 final AutoDisposeFutureProviderFamily<Map<int, double>, int>
-    youthBonusByCycleProvider =
-    FutureProvider.autoDispose.family<Map<int, double>, int>((
+youthBonusByCycleProvider = FutureProvider.autoDispose.family<Map<int, double>, int>((
   ref,
   careerId,
 ) async {
-  final invests =
-      await ref.watch(careerRepositoryProvider).investments(careerId);
+  final invests = await ref
+      .watch(careerRepositoryProvider)
+      .investments(careerId);
   final bonuses = <int, double>{
     for (final e in invests.entries)
       if (e.value.youth > 0)
@@ -29,8 +29,9 @@ final AutoDisposeFutureProviderFamily<Map<int, double>, int>
 
   // Where the nation finished each cycle in the world ranking. Releases arrive
   // oldest-first, so the last one written for a cycle is that cycle's standing.
-  final releases =
-      await ref.watch(rankingReleaseRepositoryProvider).all(careerId);
+  final releases = await ref
+      .watch(rankingReleaseRepositoryProvider)
+      .all(careerId);
   final rankByCycle = <int, int>{};
   final nationByCycle = <int, int>{};
   for (final r in releases) {
@@ -41,8 +42,7 @@ final AutoDisposeFutureProviderFamily<Map<int, double>, int>
     final before = rankByCycle[cycle - 1];
     // Never measure a "climb" across a change of nation — taking over a better
     // side is not the same as having improved the one you had.
-    if (before == null ||
-        nationByCycle[cycle - 1] != nationByCycle[cycle]) {
+    if (before == null || nationByCycle[cycle - 1] != nationByCycle[cycle]) {
       continue;
     }
     // A lower rank number is better, so a drop in the number is a climb. The
@@ -62,6 +62,7 @@ final AutoDisposeFutureProviderFamily<Map<int, double>, int>
 /// touch (weighted by their club-league tier). Derived from stored appearance
 /// rows, so it re-produces identically on replay.
 final AutoDisposeFutureProviderFamily<Map<int, int>, int>
-    careerDevBonusProvider =
-    FutureProvider.autoDispose.family<Map<int, int>, int>((ref, careerId) =>
-        ref.watch(competitionRepositoryProvider).careerStartsByPlayer(careerId));
+careerDevBonusProvider = FutureProvider.autoDispose.family<Map<int, int>, int>(
+  (ref, careerId) =>
+      ref.watch(competitionRepositoryProvider).careerStartsByPlayer(careerId),
+);

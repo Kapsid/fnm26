@@ -43,7 +43,8 @@ class RecordBookScreen extends ConsumerWidget {
           if (book == null) {
             return Center(child: Text(l.recordsSaveNotFound));
           }
-          final hasData = book.mostCaps.isNotEmpty ||
+          final hasData =
+              book.mostCaps.isNotEmpty ||
               book.topScorers.isNotEmpty ||
               book.longestUnbeaten > 0;
           if (!hasData) {
@@ -143,35 +144,36 @@ class LegacyTiles extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
-    final entries = <({IconData icon, String title, String subtitle,
-        VoidCallback onTap})>[
-      if (includeRecordBook)
-        (
-          icon: Icons.auto_stories,
-          title: l.recordsRecordBook,
-          subtitle: l.recordsRecordBookSubtitle,
-          onTap: () => context.push('${Routes.records}?careerId=$careerId'),
-        ),
-      (
-        icon: Icons.workspace_premium,
-        title: l.recordsLegends,
-        subtitle: l.recordsLegendsSubtitle,
-        onTap: () => context.push('${Routes.legends}?careerId=$careerId'),
-      ),
-      (
-        icon: Icons.public,
-        title: l.recordsAllTimeWorld,
-        subtitle: l.recordsAllTimeWorldSubtitle,
-        onTap: () =>
-            context.push('${Routes.allTimeRecords}?careerId=$careerId'),
-      ),
-      (
-        icon: Icons.compare_arrows,
-        title: l.recordsHeadToHead,
-        subtitle: l.recordsHeadToHeadSubtitle,
-        onTap: () => context.push('${Routes.headToHead}?careerId=$careerId'),
-      ),
-    ];
+    final entries =
+        <({IconData icon, String title, String subtitle, VoidCallback onTap})>[
+          if (includeRecordBook)
+            (
+              icon: Icons.auto_stories,
+              title: l.recordsRecordBook,
+              subtitle: l.recordsRecordBookSubtitle,
+              onTap: () => context.push('${Routes.records}?careerId=$careerId'),
+            ),
+          (
+            icon: Icons.workspace_premium,
+            title: l.recordsLegends,
+            subtitle: l.recordsLegendsSubtitle,
+            onTap: () => context.push('${Routes.legends}?careerId=$careerId'),
+          ),
+          (
+            icon: Icons.public,
+            title: l.recordsAllTimeWorld,
+            subtitle: l.recordsAllTimeWorldSubtitle,
+            onTap: () =>
+                context.push('${Routes.allTimeRecords}?careerId=$careerId'),
+          ),
+          (
+            icon: Icons.compare_arrows,
+            title: l.recordsHeadToHead,
+            subtitle: l.recordsHeadToHeadSubtitle,
+            onTap: () =>
+                context.push('${Routes.headToHead}?careerId=$careerId'),
+          ),
+        ];
 
     if (dense) {
       return SizedBox(
@@ -325,8 +327,8 @@ class _RivalryCard extends ConsumerWidget {
     final edge = r.wins > r.losses
         ? l.recordsEdgeUpperHand
         : r.wins < r.losses
-            ? l.recordsEdgeTheirNumber
-            : l.recordsEdgeEven;
+        ? l.recordsEdgeTheirNumber
+        : l.recordsEdgeEven;
     return Padding(
       padding: const EdgeInsets.only(bottom: AppSpacing.md),
       child: AppCard(
@@ -403,8 +405,11 @@ class _TeamRecords extends StatelessWidget {
       child: Column(
         children: [
           _row(l.recordsBestFinish, bestFinish, null),
-          _row(l.recordsLongestUnbeaten,
-              l.recordsMatchesCount(longestUnbeaten), null),
+          _row(
+            l.recordsLongestUnbeaten,
+            l.recordsMatchesCount(longestUnbeaten),
+            null,
+          ),
           if (biggestWin != null)
             _row(l.recordsBiggestWin, biggestWin!, biggestWinCode),
         ],
@@ -501,8 +506,9 @@ class _Leaderboard extends StatelessWidget {
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                             style: AppTypography.bodyMedium.copyWith(
-                              fontWeight:
-                                  i == 0 ? FontWeight.w700 : FontWeight.w400,
+                              fontWeight: i == 0
+                                  ? FontWeight.w700
+                                  : FontWeight.w400,
                             ),
                           ),
                         ),

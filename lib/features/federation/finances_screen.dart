@@ -40,12 +40,14 @@ class _FinancesScreenState extends ConsumerState<FinancesScreen> {
     setState(() => _busy = true);
     final repo = ref.read(careerRepositoryProvider);
     // Refund the previously-planned spend and charge the new one (delta).
-    final prevSpend = view.planned.youth +
+    final prevSpend =
+        view.planned.youth +
         view.planned.commercial +
         view.planned.medical +
         view.planned.naturalization +
         view.planned.boardRelations;
-    final newSpend = alloc.youth +
+    final newSpend =
+        alloc.youth +
         alloc.commercial +
         alloc.medical +
         alloc.naturalization +
@@ -103,14 +105,16 @@ class _FinancesScreenState extends ConsumerState<FinancesScreen> {
           }
           final alloc = _alloc ?? view.planned;
           // Refundable: current balance plus whatever is already planned.
-          final available = view.budget +
+          final available =
+              view.budget +
               view.planned.youth +
               view.planned.commercial +
               view.planned.medical +
               view.planned.naturalization +
               view.planned.boardRelations;
           final income = view.projectedIncome;
-          final hasCurrent = view.current.youth +
+          final hasCurrent =
+              view.current.youth +
                   view.current.commercial +
                   view.current.medical +
                   view.current.naturalization +

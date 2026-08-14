@@ -59,14 +59,16 @@ class _AllTimeRecordsScreenState extends ConsumerState<AllTimeRecordsScreen> {
                 child: Text(
                   l.recordsNoWorldHistory,
                   textAlign: TextAlign.center,
-                  style: AppTypography.bodyMedium
-                      .copyWith(color: AppColors.onSurfaceVariant),
+                  style: AppTypography.bodyMedium.copyWith(
+                    color: AppColors.onSurfaceVariant,
+                  ),
                 ),
               ),
             );
           }
           final q = _query.trim().toLowerCase();
-          bool match(AllTimeLeader l) => q.isEmpty ||
+          bool match(AllTimeLeader l) =>
+              q.isEmpty ||
               l.name.toLowerCase().contains(q) ||
               l.nationName.toLowerCase().contains(q);
           final scorers = records.topScorers.where(match).toList();
@@ -119,8 +121,9 @@ class _AllTimeRecordsScreenState extends ConsumerState<AllTimeRecordsScreen> {
                   const SizedBox(width: AppSpacing.sm),
                   Text(
                     l.recordsStillActive,
-                    style: AppTypography.labelSmall
-                        .copyWith(color: AppColors.onSurfaceVariant),
+                    style: AppTypography.labelSmall.copyWith(
+                      color: AppColors.onSurfaceVariant,
+                    ),
                   ),
                 ],
               ),
@@ -188,8 +191,9 @@ class _Board extends StatelessWidget {
             padding: const EdgeInsets.symmetric(vertical: AppSpacing.sm),
             child: Text(
               l.recordsNoMatches,
-              style: AppTypography.bodySmall
-                  .copyWith(color: AppColors.onSurfaceVariant),
+              style: AppTypography.bodySmall.copyWith(
+                color: AppColors.onSurfaceVariant,
+              ),
             ),
           )
         else
@@ -247,8 +251,7 @@ class _LeaderRow extends StatelessWidget {
               child: Text(
                 '$rank',
                 style: AppTypography.labelMedium.copyWith(
-                  color:
-                      top ? AppColors.primary : AppColors.onSurfaceVariant,
+                  color: top ? AppColors.primary : AppColors.onSurfaceVariant,
                 ),
               ),
             ),
@@ -288,8 +291,9 @@ class _LeaderRow extends StatelessWidget {
             const SizedBox(width: AppSpacing.sm),
             Text(
               '${leader.value} $unit',
-              style: AppTypography.labelMedium
-                  .copyWith(color: AppColors.primary),
+              style: AppTypography.labelMedium.copyWith(
+                color: AppColors.primary,
+              ),
             ),
           ],
         ),
