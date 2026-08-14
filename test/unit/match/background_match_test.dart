@@ -80,16 +80,18 @@ void main() {
     // Exactly one man of the match, and it is the best mark on the pitch.
     final motm = d.lines.where((l) => l.motm).toList();
     expect(motm, hasLength(1));
-    final best = d.lines
-        .map((l) => l.rating)
-        .reduce((a, b) => a > b ? a : b);
+    final best = d.lines.map((l) => l.rating).reduce((a, b) => a > b ? a : b);
     expect(motm.single.rating, best);
 
     // The clean-sheet flag follows the scoreline, not the player.
-    expect(d.lines.where((l) => l.nationId == 1).every((l) => !l.cleanSheet),
-        isTrue);
-    expect(d.lines.where((l) => l.nationId == 2).every((l) => !l.cleanSheet),
-        isTrue);
+    expect(
+      d.lines.where((l) => l.nationId == 1).every((l) => !l.cleanSheet),
+      isTrue,
+    );
+    expect(
+      d.lines.where((l) => l.nationId == 2).every((l) => !l.cleanSheet),
+      isTrue,
+    );
   });
 
   test('a clean sheet is flagged for the side that conceded nothing', () {
@@ -131,45 +133,46 @@ void main() {
     var competitive = 0;
     var friendly = 0;
     for (var seed = 0; seed < 300; seed++) {
-      competitive += _detail(seed: seed)
-          .events
-          .where((e) => e.type != MatchEventType.injury)
-          .length;
-      friendly += _detail(seed: seed, competitive: false)
-          .events
-          .where((e) => e.type != MatchEventType.injury)
-          .length;
+      competitive += _detail(
+        seed: seed,
+      ).events.where((e) => e.type != MatchEventType.injury).length;
+      friendly += _detail(
+        seed: seed,
+        competitive: false,
+      ).events.where((e) => e.type != MatchEventType.injury).length;
     }
     expect(competitive, greaterThan(0));
     expect(friendly, lessThan(competitive));
   });
 
-  test('cards and knocks land often enough to matter, rarely enough to be news',
-      () {
-    var yellows = 0;
-    var reds = 0;
-    var injuries = 0;
-    const matches = 400;
-    for (var seed = 0; seed < matches; seed++) {
-      for (final e in _detail(seed: seed).events) {
-        switch (e.type) {
-          case MatchEventType.yellowCard:
-            yellows++;
-          case MatchEventType.redCard:
-            reds++;
-          case MatchEventType.injury:
-            injuries++;
-          case MatchEventType.goal:
-          case MatchEventType.substitution:
-            break;
+  test(
+    'cards and knocks land often enough to matter, rarely enough to be news',
+    () {
+      var yellows = 0;
+      var reds = 0;
+      var injuries = 0;
+      const matches = 400;
+      for (var seed = 0; seed < matches; seed++) {
+        for (final e in _detail(seed: seed).events) {
+          switch (e.type) {
+            case MatchEventType.yellowCard:
+              yellows++;
+            case MatchEventType.redCard:
+              reds++;
+            case MatchEventType.injury:
+              injuries++;
+            case MatchEventType.goal:
+            case MatchEventType.substitution:
+              break;
+          }
         }
       }
-    }
-    // Roughly one-to-three bookings a game across both sides.
-    expect(yellows / matches, inInclusiveRange(0.8, 3.5));
-    // A sending-off is an event, not a routine.
-    expect(reds / matches, lessThan(0.25));
-    // A knock every few matches per side.
-    expect(injuries / matches, inInclusiveRange(0.05, 0.8));
-  });
+      // Roughly one-to-three bookings a game across both sides.
+      expect(yellows / matches, inInclusiveRange(0.8, 3.5));
+      // A sending-off is an event, not a routine.
+      expect(reds / matches, lessThan(0.25));
+      // A knock every few matches per side.
+      expect(injuries / matches, inInclusiveRange(0.05, 0.8));
+    },
+  );
 }

@@ -79,7 +79,10 @@ void main() {
       );
       // The primary host's biggest city is the first in its list.
       expect(finalGround.city, cities[99]!.first);
-      expect(finalGround.capacity, greaterThanOrEqualTo(finalGround.attendance));
+      expect(
+        finalGround.capacity,
+        greaterThanOrEqualTo(finalGround.attendance),
+      );
     });
 
     test('a joint candidature still stages the showpiece at the lead host', () {

@@ -326,7 +326,7 @@ player is the one on a knife edge), and cut the straight-red rate.
 - Consumes: `MatchEvent.secondYellow` (existing, `match_engine.dart:221`)
 - Produces: no new API; rates change only
 
-- [ ] **Step 1: Write the failing distribution test**
+- [x] **Step 1: Write the failing distribution test**
 
 ```dart
 // test/unit/match/discipline_rates_test.dart
@@ -363,12 +363,12 @@ Write `simulateOneMatch(int seed)` as a local helper using
 `test/unit/match/` for the existing engine-test setup and follow it rather than
 inventing a new harness.
 
-- [ ] **Step 2: Run the test to verify it fails**
+- [x] **Step 2: Run the test to verify it fails**
 
 Run: `flutter test test/unit/match/discipline_rates_test.dart`
 Expected: FAIL — straight reds outnumber second yellows.
 
-- [ ] **Step 3: Bias the culprit draw and cut the straight-red rate**
+- [x] **Step 3: Bias the culprit draw and cut the straight-red rate**
 
 In `match_engine.dart`, change the rate:
 
@@ -399,12 +399,12 @@ Weight already-booked players roughly 3× in the draw. Apply the same rate
 change and the same bias in `match_simulator.dart` — per the global constraint,
 these two move together.
 
-- [ ] **Step 4: Run the test to verify it passes**
+- [x] **Step 4: Run the test to verify it passes**
 
 Run: `flutter test test/unit/match/`
 Expected: PASS — including the existing engine tests, which must not regress.
 
-- [ ] **Step 5: Render the two dismissals differently**
+- [x] **Step 5: Render the two dismissals differently**
 
 In the match timeline and the match report, a `redCard` with `secondYellow ==
 true` shows the two-card icon (🟨🟥) and the second-booking wording; a straight
@@ -420,7 +420,7 @@ red shows 🟥. Add both strings to the ARB files:
 "matchStraightRed": "Červená karta",
 ```
 
-- [ ] **Step 6: Verify and commit**
+- [x] **Step 6: Verify and commit**
 
 Run: `dart format --set-exit-if-changed lib test && flutter analyze && flutter test`
 Expected: PASS

@@ -308,6 +308,18 @@ abstract class AppLocalizations {
   /// **'TACTICS'**
   String get matchTacticsLabel;
 
+  /// Match timeline label for a dismissal that followed a second booking.
+  ///
+  /// In en, this message translates to:
+  /// **'Second yellow'**
+  String get matchSecondYellow;
+
+  /// Match timeline label for a straight red card.
+  ///
+  /// In en, this message translates to:
+  /// **'Red card'**
+  String get matchStraightRed;
+
   /// Heading above the interval team-talk options.
   ///
   /// In en, this message translates to:

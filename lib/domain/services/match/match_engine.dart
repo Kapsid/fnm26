@@ -402,8 +402,14 @@ class MatchEngine {
   /// Per-team, per-minute booking probability (~1.3 yellows a team a game).
   static const double _yellowPerMinute = 0.015;
 
-  /// Per-team, per-minute probability of a straight red (~1 in 20 games).
-  static const double _straightRedPerMinute = 0.0006;
+  /// Per-team, per-minute probability of a straight red. Deliberately well
+  /// below the second-booking rate: violent conduct is the rare dismissal, a
+  /// second caution the ordinary one.
+  static const double _straightRedPerMinute = 0.00015;
+
+  /// How often a foul by an already-booked player actually costs him the
+  /// second card. The rest of the time the referee has a word instead.
+  static const double _secondBookingChance = 0.45;
 
   /// Per-team, per-minute probability of a player picking up a knock.
   static const double _injuryPerMinute = 0.0016;
@@ -949,21 +955,27 @@ class MatchEngine {
     final tiredness = _teamFatigue(live);
 
     if (rng.chance(_yellowPerMinute * tiredness)) {
-      final culprit = _pickCulprit(live, rng);
+      final culprit = _pickCulprit(live, rng, booked: booked);
       if (booked.contains(culprit.id)) {
-        // A second booking — a one-match ban, flagged so discipline doesn't
-        // treat it as a violent-conduct straight red.
-        events.add(
-          _card(
-            minute,
-            live,
-            culprit,
-            MatchEventType.redCard,
-            secondYellow: true,
-            stoppage: stoppage,
-          ),
-        );
-        _leaveField(live, culprit.id);
+        // Not every foul by a booked man is punished: a referee who has already
+        // shown him a card often settles for a word instead of ending his
+        // match. Without that leniency the culprit bias above would send
+        // someone off in every other game.
+        if (rng.chance(_secondBookingChance)) {
+          // A second booking — a one-match ban, flagged so discipline doesn't
+          // treat it as a violent-conduct straight red.
+          events.add(
+            _card(
+              minute,
+              live,
+              culprit,
+              MatchEventType.redCard,
+              secondYellow: true,
+              stoppage: stoppage,
+            ),
+          );
+          _leaveField(live, culprit.id);
+        }
       } else {
         booked.add(culprit.id);
         events.add(
@@ -1051,7 +1063,17 @@ class MatchEngine {
   /// defensive players (who make more challenges), the less composed, and — now
   /// — the more TIRED: a player running on empty mistimes challenges and pulls
   /// up hurt more often, so fatigue drives late fouls, cards and knocks.
-  Player _pickCulprit(_Live live, SeededRng rng, {bool injury = false}) {
+  ///
+  /// [booked] players are likelier to be the culprit again — a man on a yellow
+  /// is the man mistiming the next challenge, and referees watch him. Without
+  /// this the same player had to be drawn twice at random out of eleven, which
+  /// is why second bookings effectively never happened.
+  Player _pickCulprit(
+    _Live live,
+    SeededRng rng, {
+    bool injury = false,
+    Set<int> booked = const {},
+  }) {
     double weight(Player p) {
       final positional = switch (p.category) {
         PositionCategory.defender => 3.0,
@@ -1072,7 +1094,8 @@ class MatchEngine {
       if (injury && live.team.hasTrait(p.id, PlayerTrait.ironMan)) {
         trait *= PlayerTraits.ironManInjuryFactor;
       }
-      return positional * composure * fatigue * trait;
+      final onAYellow = booked.contains(p.id) ? 3.0 : 1.0;
+      return positional * composure * fatigue * trait * onAYellow;
     }
 
     final total = live.xi.fold<double>(0, (sum, p) => sum + weight(p));

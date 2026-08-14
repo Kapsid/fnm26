@@ -188,6 +188,14 @@
   "@matchTacticsLabel": {
     "description": "Live match control bar tactics pill label when no players are tired."
   },
+  "matchSecondYellow": "Second yellow",
+  "@matchSecondYellow": {
+    "description": "Match timeline label for a dismissal that followed a second booking."
+  },
+  "matchStraightRed": "Red card",
+  "@matchStraightRed": {
+    "description": "Match timeline label for a straight red card."
+  },
   "teamTalkHeading": "TEAM TALK",
   "@teamTalkHeading": {
     "description": "Heading above the interval team-talk options."

@@ -32,21 +32,39 @@ void main() {
   test('same teams + same seed produce an identical match', () {
     final home = team(1, 80);
     final away = team(2, 75);
-    final a = engine.play(home: home, away: away, rng: SeededRng.forFixture(9, 1));
-    final b = engine.play(home: home, away: away, rng: SeededRng.forFixture(9, 1));
+    final a = engine.play(
+      home: home,
+      away: away,
+      rng: SeededRng.forFixture(9, 1),
+    );
+    final b = engine.play(
+      home: home,
+      away: away,
+      rng: SeededRng.forFixture(9, 1),
+    );
 
     expect(a.homeScore, b.homeScore);
     expect(a.awayScore, b.awayScore);
-    expect(a.events.map((e) => '${e.minute}:${e.playerId}').toList(),
-        b.events.map((e) => '${e.minute}:${e.playerId}').toList());
+    expect(
+      a.events.map((e) => '${e.minute}:${e.playerId}').toList(),
+      b.events.map((e) => '${e.minute}:${e.playerId}').toList(),
+    );
   });
 
   group('momentum', () {
     test('records a net-momentum series and stays deterministic', () {
       final home = team(1, 80);
       final away = team(2, 78);
-      final a = engine.play(home: home, away: away, rng: SeededRng.forFixture(5, 2));
-      final b = engine.play(home: home, away: away, rng: SeededRng.forFixture(5, 2));
+      final a = engine.play(
+        home: home,
+        away: away,
+        rng: SeededRng.forFixture(5, 2),
+      );
+      final b = engine.play(
+        home: home,
+        away: away,
+        rng: SeededRng.forFixture(5, 2),
+      );
       expect(a.momentumByMinute.length, 91);
       expect(a.momentumByMinute, b.momentumByMinute);
     });
@@ -55,8 +73,11 @@ void main() {
       // Two weak, ultra-defensive sides rarely score; with no goals, momentum
       // never swings off zero.
       const park = TacticalInstructions(mentality: 5, tempo: 10);
-      final a =
-          engine.play(home: team(1, 40, instructions: park), away: team(2, 40, instructions: park), rng: SeededRng.forFixture(1, 1));
+      final a = engine.play(
+        home: team(1, 40, instructions: park),
+        away: team(2, 40, instructions: park),
+        rng: SeededRng.forFixture(1, 1),
+      );
       if (a.homeScore == 0 && a.awayScore == 0) {
         expect(a.momentumByMinute.every((m) => m == 0), isTrue);
       }
@@ -67,7 +88,11 @@ void main() {
     test('empty chemistry map leaves the match byte-identical to default', () {
       final home = team(1, 80);
       final away = team(2, 76);
-      final base = engine.play(home: home, away: away, rng: SeededRng.forFixture(7, 3));
+      final base = engine.play(
+        home: home,
+        away: away,
+        rng: SeededRng.forFixture(7, 3),
+      );
       final withMap = engine.play(
         home: home,
         away: away,
@@ -93,8 +118,9 @@ void main() {
               chemistryByNation: const {1: 1.06},
             )
             .homeScore;
-        neutral +=
-            engine.play(home: home, away: away, rng: SeededRng(rng.state)).homeScore;
+        neutral += engine
+            .play(home: home, away: away, rng: SeededRng(rng.state))
+            .homeScore;
       }
       expect(drilled, greaterThan(neutral));
     });
@@ -103,8 +129,11 @@ void main() {
   test('goal events belong to a scoring team and one of its players', () {
     final home = team(1, 82);
     final away = team(2, 70);
-    final result =
-        engine.play(home: home, away: away, rng: SeededRng.forFixture(3, 7));
+    final result = engine.play(
+      home: home,
+      away: away,
+      rng: SeededRng.forFixture(3, 7),
+    );
 
     final homeIds = home.xi.map((p) => p.id).toSet();
     final awayIds = away.xi.map((p) => p.id).toSet();
@@ -153,8 +182,9 @@ void main() {
     );
 
     expect(a.homeScore, b.homeScore);
-    final subEvents =
-        a.events.where((e) => e.type == MatchEventType.substitution).toList();
+    final subEvents = a.events
+        .where((e) => e.type == MatchEventType.substitution)
+        .toList();
     expect(subEvents, hasLength(1));
     expect(subEvents.single.minute, 60);
     expect(subEvents.single.playerName, 'Super Sub');
@@ -237,50 +267,60 @@ void main() {
     expect(strongGoals, greaterThan(weakGoals));
   });
 
-  test('a live tactical change is deterministic and preserves earlier play',
-      () {
-    final home = team(1, 78);
-    final away = team(2, 78);
-    // Same starting XI, in a fresh 4-3-3, from minute 60.
-    final change = TacticalChange(
-      teamNationId: 1,
-      minute: 60,
-      formation: Formation.f433,
-      instructions: const TacticalInstructions(mentality: 80),
-      xi: home.xi,
-    );
-    final a = engine.play(
-      home: home,
-      away: away,
-      rng: SeededRng.forFixture(11, 4),
-      changes: [change],
-    );
-    final b = engine.play(
-      home: home,
-      away: away,
-      rng: SeededRng.forFixture(11, 4),
-      changes: [change],
-    );
-    expect(a.homeScore, b.homeScore);
-    expect(a.awayScore, b.awayScore);
+  test(
+    'a live tactical change is deterministic and preserves earlier play',
+    () {
+      final home = team(1, 78);
+      final away = team(2, 78);
+      // Same starting XI, in a fresh 4-3-3, from minute 60.
+      final change = TacticalChange(
+        teamNationId: 1,
+        minute: 60,
+        formation: Formation.f433,
+        instructions: const TacticalInstructions(mentality: 80),
+        xi: home.xi,
+      );
+      final a = engine.play(
+        home: home,
+        away: away,
+        rng: SeededRng.forFixture(11, 4),
+        changes: [change],
+      );
+      final b = engine.play(
+        home: home,
+        away: away,
+        rng: SeededRng.forFixture(11, 4),
+        changes: [change],
+      );
+      expect(a.homeScore, b.homeScore);
+      expect(a.awayScore, b.awayScore);
 
-    // Minutes before the change match a run with no change at all.
-    final plain = engine.play(
-      home: home,
-      away: away,
-      rng: SeededRng.forFixture(11, 4),
-    );
-    final earlyChanged =
-        a.events.where((e) => e.minute < 60).map((e) => e.minute).toList();
-    final earlyPlain =
-        plain.events.where((e) => e.minute < 60).map((e) => e.minute).toList();
-    expect(earlyChanged, earlyPlain);
-  });
+      // Minutes before the change match a run with no change at all.
+      final plain = engine.play(
+        home: home,
+        away: away,
+        rng: SeededRng.forFixture(11, 4),
+      );
+      final earlyChanged = a.events
+          .where((e) => e.minute < 60)
+          .map((e) => e.minute)
+          .toList();
+      final earlyPlain = plain.events
+          .where((e) => e.minute < 60)
+          .map((e) => e.minute)
+          .toList();
+      expect(earlyChanged, earlyPlain);
+    },
+  );
 
   test('every player who takes part gets a rating, both teams', () {
     final home = team(1, 80);
     final away = team(2, 78);
-    final r = engine.play(home: home, away: away, rng: SeededRng.forFixture(3, 7));
+    final r = engine.play(
+      home: home,
+      away: away,
+      rng: SeededRng.forFixture(3, 7),
+    );
     final rated = r.ratings.map((x) => x.playerId).toSet();
     expect(rated, containsAll(home.xi.map((p) => p.id)));
     expect(rated, containsAll(away.xi.map((p) => p.id)));
@@ -293,15 +333,19 @@ void main() {
     for (var seed = 0; seed < 60 && checks < 5; seed++) {
       final home = team(1, 80);
       final away = team(2, 62);
-      final r =
-          engine.play(home: home, away: away, rng: SeededRng.forFixture(seed, seed));
+      final r = engine.play(
+        home: home,
+        away: away,
+        rng: SeededRng.forFixture(seed, seed),
+      );
       final scorerIds = r.events
           .where((e) => e.type == MatchEventType.goal && e.teamNationId == 1)
           .map((e) => e.playerId)
           .toSet();
       if (scorerIds.isEmpty) continue;
       final byId = {for (final x in r.ratings) x.playerId: x.rating};
-      final scorerAvg = scorerIds.map((id) => byId[id]!).reduce((a, b) => a + b) /
+      final scorerAvg =
+          scorerIds.map((id) => byId[id]!).reduce((a, b) => a + b) /
           scorerIds.length;
       expect(scorerAvg, greaterThan(6.5));
       checks++;
@@ -313,8 +357,11 @@ void main() {
     for (var seed = 0; seed < 40; seed++) {
       final home = team(1, 82);
       final away = team(2, 80);
-      final r =
-          engine.play(home: home, away: away, rng: SeededRng.forFixture(seed, seed));
+      final r = engine.play(
+        home: home,
+        away: away,
+        rng: SeededRng.forFixture(seed, seed),
+      );
       for (final e in r.events.where((e) => e.type == MatchEventType.goal)) {
         if (e.assistPlayerId == null) continue;
         expect(e.assistPlayerId, isNot(e.playerId));
@@ -375,8 +422,9 @@ void main() {
           away: team(2, 80),
           rng: SeededRng(seed),
         );
-        final injuries =
-            r.events.where((e) => e.type == MatchEventType.injury).toList();
+        final injuries = r.events
+            .where((e) => e.type == MatchEventType.injury)
+            .toList();
         if (injuries.isEmpty) continue;
         checked++;
         for (final hurt in injuries) {
@@ -391,7 +439,8 @@ void main() {
           expect(
             after,
             isEmpty,
-            reason: 'seed $seed: ${hurt.playerName} was hurt at '
+            reason:
+                'seed $seed: ${hurt.playerName} was hurt at '
                 '${hurt.minute}\' and kept playing',
           );
         }
@@ -408,8 +457,11 @@ void main() {
           away: team(2, 76),
           rng: SeededRng.forFixture(seed, 5),
         );
-        expect(r.stoppage, greaterThanOrEqualTo(1),
-            reason: 'seed $seed had no stoppage');
+        expect(
+          r.stoppage,
+          greaterThanOrEqualTo(1),
+          reason: 'seed $seed had no stoppage',
+        );
         expect(r.stoppage, lessThanOrEqualTo(8));
       }
     });
@@ -432,8 +484,11 @@ void main() {
           checked++;
         }
       }
-      expect(checked, greaterThan(0),
-          reason: 'no stoppage-time goal ever occurred');
+      expect(
+        checked,
+        greaterThan(0),
+        reason: 'no stoppage-time goal ever occurred',
+      );
     });
 
     test('stoppage keeps the match deterministic', () {
@@ -479,7 +534,8 @@ void main() {
           rng: SeededRng.forFixture(seed, 3),
         );
         for (final g in r.events.where(
-          (e) => e.type == MatchEventType.goal && e.penalty && e.teamNationId == 1,
+          (e) =>
+              e.type == MatchEventType.goal && e.penalty && e.teamNationId == 1,
         )) {
           if (g.playerId == taker.id) {
             penaltiesByTaker++;
@@ -488,12 +544,18 @@ void main() {
           }
         }
       }
-      expect(penaltiesByTaker, greaterThan(0),
-          reason: 'the designated taker should take penalties');
+      expect(
+        penaltiesByTaker,
+        greaterThan(0),
+        reason: 'the designated taker should take penalties',
+      );
       // Anyone else taking one is the documented fallback — the taker having
       // left the pitch (injury) — so they must be the rare exception.
-      expect(penaltiesByTaker, greaterThan(otherPenalties * 5),
-          reason: 'the taker takes the overwhelming majority');
+      expect(
+        penaltiesByTaker,
+        greaterThan(otherPenalties * 5),
+        reason: 'the taker takes the overwhelming majority',
+      );
     });
   });
 
@@ -519,8 +581,9 @@ void main() {
             rng: SeededRng.forFixture(seed, 4),
           );
           g += r.events
-              .where((e) =>
-                  e.type == MatchEventType.goal && e.playerId == poacherId)
+              .where(
+                (e) => e.type == MatchEventType.goal && e.playerId == poacherId,
+              )
               .length;
         }
         return g;
@@ -540,8 +603,16 @@ void main() {
         roles: {team(1, 80).xi.first.id: PlayerRole.playmaker},
       );
       final away = team(2, 78);
-      final a = engine.play(home: home, away: away, rng: SeededRng.forFixture(5, 1));
-      final b = engine.play(home: home, away: away, rng: SeededRng.forFixture(5, 1));
+      final a = engine.play(
+        home: home,
+        away: away,
+        rng: SeededRng.forFixture(5, 1),
+      );
+      final b = engine.play(
+        home: home,
+        away: away,
+        rng: SeededRng.forFixture(5, 1),
+      );
       expect(a.homeScore, b.homeScore);
       expect(
         a.events.map((e) => '${e.minute}:${e.playerId}').toList(),
@@ -551,75 +622,83 @@ void main() {
   });
 
   group('set pieces', () {
-    test('set-piece goals occur, are tagged, and belong to the scoring team',
-        () {
-      final home = team(1, 80);
-      final away = team(2, 78);
-      final homeIds = home.xi.map((p) => p.id).toSet();
-      final awayIds = away.xi.map((p) => p.id).toSet();
-      var checked = 0;
-      for (var seed = 0; seed < 200 && checked < 5; seed++) {
-        final r = engine.play(
-          home: home,
-          away: away,
-          rng: SeededRng.forFixture(seed, 2),
-        );
-        for (final g in r.events.where(
-          (e) => e.type == MatchEventType.goal && e.setPiece,
-        )) {
-          expect(g.penalty, isFalse, reason: 'set piece is not a penalty');
-          final ids = g.teamNationId == 1 ? homeIds : awayIds;
-          expect(ids.contains(g.playerId), isTrue);
-          checked++;
+    test(
+      'set-piece goals occur, are tagged, and belong to the scoring team',
+      () {
+        final home = team(1, 80);
+        final away = team(2, 78);
+        final homeIds = home.xi.map((p) => p.id).toSet();
+        final awayIds = away.xi.map((p) => p.id).toSet();
+        var checked = 0;
+        for (var seed = 0; seed < 200 && checked < 5; seed++) {
+          final r = engine.play(
+            home: home,
+            away: away,
+            rng: SeededRng.forFixture(seed, 2),
+          );
+          for (final g in r.events.where(
+            (e) => e.type == MatchEventType.goal && e.setPiece,
+          )) {
+            expect(g.penalty, isFalse, reason: 'set piece is not a penalty');
+            final ids = g.teamNationId == 1 ? homeIds : awayIds;
+            expect(ids.contains(g.playerId), isTrue);
+            checked++;
+          }
         }
-      }
-      expect(checked, greaterThan(0), reason: 'no set-piece goal ever occurred');
-    });
-
-    test('a physical side scores more set-piece goals than a weak-aerial one',
-        () {
-      MatchTeam physical(int nationId, int strength) {
-        final positions = Formation.f433.positions;
-        final xi = [
-          for (var i = 0; i < 11; i++)
-            player(
-              id: nationId * 100 + i,
-              nationId: nationId,
-              position: positions[i],
-              attributes: flatAttributes(76).copyWith(physical: strength),
-            ),
-        ];
-        return MatchTeam(
-          nationId: nationId,
-          xi: xi,
-          instructions: const TacticalInstructions(),
+        expect(
+          checked,
+          greaterThan(0),
+          reason: 'no set-piece goal ever occurred',
         );
-      }
+      },
+    );
 
-      var strong = 0;
-      var weak = 0;
-      for (var seed = 0; seed < 120; seed++) {
-        strong += engine
-            .play(
-              home: physical(1, 95),
-              away: physical(2, 55),
-              rng: SeededRng.forFixture(seed, 7),
-            )
-            .events
-            .where((e) => e.teamNationId == 1 && e.setPiece)
-            .length;
-        weak += engine
-            .play(
-              home: physical(1, 55),
-              away: physical(2, 95),
-              rng: SeededRng.forFixture(seed, 7),
-            )
-            .events
-            .where((e) => e.teamNationId == 1 && e.setPiece)
-            .length;
-      }
-      expect(strong, greaterThan(weak));
-    });
+    test(
+      'a physical side scores more set-piece goals than a weak-aerial one',
+      () {
+        MatchTeam physical(int nationId, int strength) {
+          final positions = Formation.f433.positions;
+          final xi = [
+            for (var i = 0; i < 11; i++)
+              player(
+                id: nationId * 100 + i,
+                nationId: nationId,
+                position: positions[i],
+                attributes: flatAttributes(76).copyWith(physical: strength),
+              ),
+          ];
+          return MatchTeam(
+            nationId: nationId,
+            xi: xi,
+            instructions: const TacticalInstructions(),
+          );
+        }
+
+        var strong = 0;
+        var weak = 0;
+        for (var seed = 0; seed < 120; seed++) {
+          strong += engine
+              .play(
+                home: physical(1, 95),
+                away: physical(2, 55),
+                rng: SeededRng.forFixture(seed, 7),
+              )
+              .events
+              .where((e) => e.teamNationId == 1 && e.setPiece)
+              .length;
+          weak += engine
+              .play(
+                home: physical(1, 55),
+                away: physical(2, 95),
+                rng: SeededRng.forFixture(seed, 7),
+              )
+              .events
+              .where((e) => e.teamNationId == 1 && e.setPiece)
+              .length;
+        }
+        expect(strong, greaterThan(weak));
+      },
+    );
   });
 
   group('fatigue', () {
@@ -701,7 +780,11 @@ void main() {
     test('a talk keeps the match deterministic', () {
       final home = team(1, 80);
       final away = team(2, 78);
-      const talk = TeamTalk(teamNationId: 1, minute: 46, tone: TeamTalkTone.demandMore);
+      const talk = TeamTalk(
+        teamNationId: 1,
+        minute: 46,
+        tone: TeamTalkTone.demandMore,
+      );
       final a = engine.play(
         home: home,
         away: away,
@@ -733,7 +816,11 @@ void main() {
               away: away,
               rng: SeededRng.forFixture(seed, 1),
               talks: const [
-                TeamTalk(teamNationId: 1, minute: 46, tone: TeamTalkTone.demandMore),
+                TeamTalk(
+                  teamNationId: 1,
+                  minute: 46,
+                  tone: TeamTalkTone.demandMore,
+                ),
               ],
             )
             .homeXg;
@@ -756,7 +843,11 @@ void main() {
               away: away,
               rng: SeededRng.forFixture(seed, 3),
               talks: const [
-                TeamTalk(teamNationId: 1, minute: 46, tone: TeamTalkTone.praise),
+                TeamTalk(
+                  teamNationId: 1,
+                  minute: 46,
+                  tone: TeamTalkTone.praise,
+                ),
               ],
             )
             .awayXg;
@@ -778,41 +869,75 @@ void main() {
       return sum;
     }
 
-    final direct = team(1, 78,
-        instructions: const TacticalInstructions(directness: 90));
-    final possession = team(1, 78,
-        instructions: const TacticalInstructions(directness: 10));
+    final direct = team(
+      1,
+      78,
+      instructions: const TacticalInstructions(directness: 90),
+    );
+    final possession = team(
+      1,
+      78,
+      instructions: const TacticalInstructions(directness: 10),
+    );
 
     test('direct play beats a HIGH defensive line (space in behind)', () {
-      final highLine =
-          team(2, 78, instructions: const TacticalInstructions(defensiveLine: 90));
-      expect(homeXg(direct, highLine), greaterThan(homeXg(possession, highLine)));
+      final highLine = team(
+        2,
+        78,
+        instructions: const TacticalInstructions(defensiveLine: 90),
+      );
+      expect(
+        homeXg(direct, highLine),
+        greaterThan(homeXg(possession, highLine)),
+      );
     });
 
     test('but a DEEP line turns the same direct plan wasteful (a counter)', () {
-      final deep =
-          team(2, 78, instructions: const TacticalInstructions(defensiveLine: 10));
+      final deep = team(
+        2,
+        78,
+        instructions: const TacticalInstructions(defensiveLine: 10),
+      );
       // No space in behind: direct is no better than keeping the ball.
       expect(homeXg(direct, deep), lessThan(homeXg(possession, deep)));
     });
 
-    test('a high press strangles slow build-up but direct plays through it', () {
-      final press =
-          team(2, 78, instructions: const TacticalInstructions(pressing: 90));
-      expect(homeXg(direct, press), greaterThan(homeXg(possession, press)));
-    });
+    test(
+      'a high press strangles slow build-up but direct plays through it',
+      () {
+        final press = team(
+          2,
+          78,
+          instructions: const TacticalInstructions(pressing: 90),
+        );
+        expect(homeXg(direct, press), greaterThan(homeXg(possession, press)));
+      },
+    );
 
     test('attacking wide into a narrow defence beats wide-vs-wide', () {
-      final wide =
-          team(1, 78, instructions: const TacticalInstructions(width: 90));
-      final narrowDef =
-          team(2, 78, instructions: const TacticalInstructions(width: 10));
-      final wideDef =
-          team(2, 78, instructions: const TacticalInstructions(width: 90));
-      // The width edge is the smallest of the tactical swings, so it needs more
-      // samples than the default to rise clear of match-to-match noise.
-      expect(homeXg(wide, narrowDef, runs: 800),
-          greaterThan(homeXg(wide, wideDef, runs: 800)));
+      final wide = team(
+        1,
+        78,
+        instructions: const TacticalInstructions(width: 90),
+      );
+      final narrowDef = team(
+        2,
+        78,
+        instructions: const TacticalInstructions(width: 10),
+      );
+      final wideDef = team(
+        2,
+        78,
+        instructions: const TacticalInstructions(width: 90),
+      );
+      // The width edge is the smallest of the tactical swings — about two parts
+      // in a thousand — so it needs far more samples than the default to rise
+      // clear of match-to-match noise. At 800 runs the ordering flips on any
+      // change that merely shifts the RNG stream.
+      expect(
+        homeXg(wide, narrowDef, runs: 3000),
+        greaterThan(homeXg(wide, wideDef, runs: 3000)),
+      );
     });
 
     test('the match-up keeps the game deterministic', () {
@@ -845,28 +970,30 @@ void main() {
       );
     });
 
-    test('a managed underdog that trails commits forward late, raising its xG',
-        () {
-      // A weak away side against a strong home side trails often, so from the
-      // hour mark the reactive manager pushes it forward — lifting its xG.
-      final home = team(1, 84);
-      final away = team(2, 66);
-      var managed = 0.0;
-      var unmanaged = 0.0;
-      for (var seed = 0; seed < 200; seed++) {
-        unmanaged += engine
-            .play(home: home, away: away, rng: SeededRng.forFixture(seed, 4))
-            .awayXg;
-        managed += engine
-            .play(
-              home: home,
-              away: away,
-              rng: SeededRng.forFixture(seed, 4),
-              aiManagedNationIds: const {2},
-            )
-            .awayXg;
-      }
-      expect(managed, greaterThan(unmanaged));
-    });
+    test(
+      'a managed underdog that trails commits forward late, raising its xG',
+      () {
+        // A weak away side against a strong home side trails often, so from the
+        // hour mark the reactive manager pushes it forward — lifting its xG.
+        final home = team(1, 84);
+        final away = team(2, 66);
+        var managed = 0.0;
+        var unmanaged = 0.0;
+        for (var seed = 0; seed < 200; seed++) {
+          unmanaged += engine
+              .play(home: home, away: away, rng: SeededRng.forFixture(seed, 4))
+              .awayXg;
+          managed += engine
+              .play(
+                home: home,
+                away: away,
+                rng: SeededRng.forFixture(seed, 4),
+                aiManagedNationIds: const {2},
+              )
+              .awayXg;
+        }
+        expect(managed, greaterThan(unmanaged));
+      },
+    );
   });
 }

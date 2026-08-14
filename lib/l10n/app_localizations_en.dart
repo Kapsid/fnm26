@@ -130,6 +130,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get matchTacticsLabel => 'TACTICS';
 
   @override
+  String get matchSecondYellow => 'Second yellow';
+
+  @override
+  String get matchStraightRed => 'Red card';
+
+  @override
   String get teamTalkHeading => 'TEAM TALK';
 
   @override

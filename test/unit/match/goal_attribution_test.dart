@@ -6,17 +6,17 @@ import 'package:fnm/domain/entities/player_attributes.dart';
 import 'package:fnm/domain/services/match/goal_attribution.dart';
 
 Player _p(int id, PlayerPosition pos, int technical) => Player(
-      id: id,
-      nationId: 1,
-      name: 'P$id',
-      age: 25,
-      position: pos,
-      attributes: PlayerAttributes(
-        physical: 50,
-        technical: technical,
-        stamina: 50,
-      ),
-    );
+  id: id,
+  nationId: 1,
+  name: 'P$id',
+  age: 25,
+  position: pos,
+  attributes: PlayerAttributes(
+    physical: 50,
+    technical: technical,
+    stamina: 50,
+  ),
+);
 
 void main() {
   test('returns one scorer per goal from the pool', () {

@@ -35,6 +35,8 @@
   "matchTacticsWithSubs": "Taktika · {used}/{max} střídání",
   "matchTiredCount": "ÚNAVA ×{count}",
   "matchTacticsLabel": "TAKTIKA",
+  "matchSecondYellow": "Druhá žlutá",
+  "matchStraightRed": "Červená karta",
   "teamTalkHeading": "PORADA TÝMU",
   "teamTalkPrompt": "Nastavte tón pro druhý poločas.",
   "teamTalkCalmLabel": "Chladné hlavy",

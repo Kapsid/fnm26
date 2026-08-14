@@ -1776,7 +1776,9 @@ class _TimelineRow extends StatelessWidget {
       child: Row(
         children: [
           Expanded(
-            child: isHome ? _entry(alignEnd: true) : const SizedBox.shrink(),
+            child: isHome
+                ? _entry(context, alignEnd: true)
+                : const SizedBox.shrink(),
           ),
           Container(
             width: 34,
@@ -1790,14 +1792,17 @@ class _TimelineRow extends StatelessWidget {
             child: Text(_eventClock(event), style: AppTypography.labelSmall),
           ),
           Expanded(
-            child: !isHome ? _entry(alignEnd: false) : const SizedBox.shrink(),
+            child: !isHome
+                ? _entry(context, alignEnd: false)
+                : const SizedBox.shrink(),
           ),
         ],
       ),
     );
   }
 
-  Widget _entry({required bool alignEnd}) {
+  Widget _entry(BuildContext context, {required bool alignEnd}) {
+    final l = AppLocalizations.of(context);
     final isGoal = event.type == MatchEventType.goal;
     final iconData = switch (event.type) {
       MatchEventType.goal => Icons.sports_soccer,
@@ -1808,17 +1813,24 @@ class _TimelineRow extends StatelessWidget {
     };
     final iconColor = switch (event.type) {
       MatchEventType.goal => AppColors.primary,
-      MatchEventType.yellowCard => const Color(0xFFEFC94C),
-      MatchEventType.redCard => const Color(0xFFD64545),
+      MatchEventType.yellowCard => _yellowCard,
+      MatchEventType.redCard => _redCard,
       _ => AppColors.onSurfaceVariant,
     };
-    final icon = Icon(iconData, size: 16, color: iconColor);
+    // A second booking shows both cards, the way it happened; a straight red
+    // shows one. The manager can tell at a glance which one cost him the man.
+    final icon = event.type == MatchEventType.redCard && event.secondYellow
+        ? const _SecondYellowIcon()
+        : Icon(iconData, size: 16, color: iconColor);
     final label = switch (event.type) {
       MatchEventType.substitution =>
         '${_abbrevName(event.playerName)} ↔ '
             '${_abbrevName(event.secondaryName ?? '')}',
       MatchEventType.goal when event.penalty =>
         '${_abbrevName(event.playerName)} (pen)',
+      MatchEventType.redCard =>
+        '${_abbrevName(event.playerName)} · '
+            '${event.secondYellow ? l.matchSecondYellow : l.matchStraightRed}',
       _ => _abbrevName(event.playerName),
     };
     final text = Flexible(
@@ -1847,6 +1859,33 @@ class _TimelineRow extends StatelessWidget {
       ),
     );
   }
+}
+
+const Color _yellowCard = Color(0xFFEFC94C);
+const Color _redCard = Color(0xFFD64545);
+
+/// The two-card mark of a second booking: the yellow he was already on, with
+/// the red that followed it overlapping in front.
+class _SecondYellowIcon extends StatelessWidget {
+  const _SecondYellowIcon();
+
+  @override
+  Widget build(BuildContext context) => const SizedBox(
+    width: 22,
+    height: 16,
+    child: Stack(
+      children: [
+        Positioned(
+          left: 0,
+          child: Icon(Icons.square_rounded, size: 14, color: _yellowCard),
+        ),
+        Positioned(
+          right: 0,
+          child: Icon(Icons.square_rounded, size: 16, color: _redCard),
+        ),
+      ],
+    ),
+  );
 }
 
 /// The clock label for an event: a stoppage-time event reads "90+3", everything

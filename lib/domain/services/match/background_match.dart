@@ -75,6 +75,11 @@ abstract final class BackgroundMatch {
   /// seven matches across both sides.
   static const double _redChance = 0.0035;
 
+  /// What share of those dismissals are a second booking rather than violent
+  /// conduct. The world used to send everyone off with a straight red, so the
+  /// two-card dismissal the live engine models never showed up in the feed.
+  static const double _secondYellowShare = 0.7;
+
   /// Per-player chance of picking up a knock.
   static const double _injuryChance = 0.011;
 
@@ -257,10 +262,30 @@ abstract final class BackgroundMatch {
           _cardWeight(p.category) *
           minutes(p);
       if (rng.chance(_redChance * discipline * cardFactor)) {
+        final secondYellow = rng.chance(_secondYellowShare);
+        final minute = 60 + rng.nextInt(30);
+        if (secondYellow) {
+          // The booking he was already on, so the feed reads as a match does:
+          // a caution, then the second one that sends him off.
+          events.add(
+            _event(
+              MatchEventType.yellowCard,
+              p,
+              nationId,
+              10 + rng.nextInt(minute - 10),
+            ),
+          );
+        }
         events.add(
-          _event(MatchEventType.redCard, p, nationId, 60 + rng.nextInt(30)),
+          _event(
+            MatchEventType.redCard,
+            p,
+            nationId,
+            minute,
+            secondYellow: secondYellow,
+          ),
         );
-        continue; // a dismissed player is not also booked
+        continue; // a dismissed player is not also booked again
       }
       if (rng.chance(_yellowChance * discipline * cardFactor)) {
         events.add(
@@ -285,13 +310,15 @@ abstract final class BackgroundMatch {
     MatchEventType type,
     Player p,
     int nationId,
-    int minute,
-  ) => MatchEvent(
+    int minute, {
+    bool secondYellow = false,
+  }) => MatchEvent(
     minute: minute,
     type: type,
     teamNationId: nationId,
     playerId: p.id,
     playerName: p.name,
+    secondYellow: secondYellow,
   );
 
   /// How likely a player is to be the one who made the goal.

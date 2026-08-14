@@ -60,13 +60,14 @@ int _clashHost({
   required List<Nation> nations,
   required int seed,
 }) {
-  final candidates = [
-    for (final n in nations)
-      if (n.id != fixture.homeNationId && n.id != fixture.awayNationId) n,
-  ]..sort((a, b) {
-      final byRank = a.ranking.compareTo(b.ranking);
-      return byRank != 0 ? byRank : a.id.compareTo(b.id);
-    });
+  final candidates =
+      [
+        for (final n in nations)
+          if (n.id != fixture.homeNationId && n.id != fixture.awayNationId) n,
+      ]..sort((a, b) {
+        final byRank = a.ranking.compareTo(b.ranking);
+        return byRank != 0 ? byRank : a.id.compareTo(b.id);
+      });
   if (candidates.isEmpty) return 0;
   final pool = candidates.take(24).toList();
   var h = (fixture.id ^ seed ^ 0x3C1A5) & 0x7fffffff;

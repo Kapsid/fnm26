@@ -60,11 +60,11 @@ void main() {
 
   test('deterministic for the same seed', () {
     List<String> keys(SeededRng rng) => AiSubstitutions.plan(
-          nationId: 1,
-          xi: xi,
-          bench: bench,
-          rng: rng,
-        ).map((s) => '${s.minute}:${s.offId}:${s.on.id}').toList();
+      nationId: 1,
+      xi: xi,
+      bench: bench,
+      rng: rng,
+    ).map((s) => '${s.minute}:${s.offId}:${s.on.id}').toList();
     expect(keys(SeededRng.forFixture(7, 2)), keys(SeededRng.forFixture(7, 2)));
   });
 

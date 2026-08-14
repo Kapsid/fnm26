@@ -130,6 +130,12 @@ class AppLocalizationsCs extends AppLocalizations {
   String get matchTacticsLabel => 'TAKTIKA';
 
   @override
+  String get matchSecondYellow => 'Druhá žlutá';
+
+  @override
+  String get matchStraightRed => 'Červená karta';
+
+  @override
   String get teamTalkHeading => 'PORADA TÝMU';
 
   @override
