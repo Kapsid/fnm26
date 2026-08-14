@@ -442,7 +442,7 @@ git commit -m "fix: second bookings are the common dismissal, and look like one"
 **Interfaces:**
 - Produces: `int squadOverall(List<Player> squad)` in `lib/domain/services/rating/overall_rating.dart` — the rounded mean overall of the strongest eleven, not of the whole squad (a 26-man squad's mean is dragged down by its third-choice keeper and reads wrong next to a rival's).
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 ```dart
 // test/unit/tactics/squad_overall_test.dart
@@ -472,12 +472,12 @@ Use the existing player factory in `test/helpers/fixtures.dart` for
 `playerWithOverall`; add it there if it is missing rather than defining a
 second player builder in this file.
 
-- [ ] **Step 2: Run the test to verify it fails**
+- [x] **Step 2: Run the test to verify it fails**
 
 Run: `flutter test test/unit/tactics/squad_overall_test.dart`
 Expected: FAIL — `squadOverall` is not defined.
 
-- [ ] **Step 3: Implement `squadOverall`**
+- [x] **Step 3: Implement `squadOverall`**
 
 ```dart
 /// The rounded mean overall of a squad's strongest eleven.
@@ -497,12 +497,12 @@ Use whichever existing per-player overall function this file already exposes
 in place of `overallOf` — read the file first and reuse it; do not add a second
 way to compute a player's overall.
 
-- [ ] **Step 4: Run the test to verify it passes**
+- [x] **Step 4: Run the test to verify it passes**
 
 Run: `flutter test test/unit/tactics/squad_overall_test.dart`
 Expected: PASS
 
-- [ ] **Step 5: Show it in both places**
+- [x] **Step 5: Show it in both places**
 
 On the match preview header, show each side's `squadOverall` beside its name.
 On team detail (`team_stats_screen.dart`), show the nation's overall. Localise
@@ -515,7 +515,7 @@ the label:
 "teamOverall": "Celkový přehled",
 ```
 
-- [ ] **Step 6: Verify and commit**
+- [x] **Step 6: Verify and commit**
 
 Run: `flutter analyze && flutter test`
 

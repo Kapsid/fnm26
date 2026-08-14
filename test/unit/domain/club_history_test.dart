@@ -6,8 +6,7 @@ void main() {
     int year,
     String club, [
     String country = 'eng',
-  ]) =>
-      (year: year, club: club, country: country);
+  ]) => (year: year, club: club, country: country);
 
   group('ClubHistory.spells', () {
     test('collapses consecutive seasons at one club into a spell', () {

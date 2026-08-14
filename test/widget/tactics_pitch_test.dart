@@ -67,8 +67,9 @@ void main() {
     expect(kDragHoldDelay, greaterThan(kPressTimeout));
   });
 
-  testWidgets('holding briefly then dragging onto another slot swaps them',
-      (tester) async {
+  testWidgets('holding briefly then dragging onto another slot swaps them', (
+    tester,
+  ) async {
     sizeSurface(tester);
     final swaps = <(int, int)>[];
     await tester.pumpApp(harness(onSwap: (a, b) => swaps.add((a, b))));
@@ -90,8 +91,9 @@ void main() {
     expect(swaps.single, (2, 3));
   });
 
-  testWidgets('dragging a player across lines reshapes rather than swapping',
-      (tester) async {
+  testWidgets('dragging a player across lines reshapes rather than swapping', (
+    tester,
+  ) async {
     sizeSurface(tester);
     final swaps = <(int, int)>[];
     await tester.pumpApp(harness(onSwap: (a, b) => swaps.add((a, b))));
@@ -99,7 +101,9 @@ void main() {
 
     // A defender onto a forward: different lines, so the screen resolves this
     // through resolveDrag (swap or reshape) — either way it must report.
-    final gesture = await tester.startGesture(tester.getCenter(find.text('P2')));
+    final gesture = await tester.startGesture(
+      tester.getCenter(find.text('P2')),
+    );
     await tester.pump(kDragHoldDelay + const Duration(milliseconds: 50));
     await gesture.moveTo(tester.getCenter(find.text('P9')));
     await tester.pump();
@@ -138,19 +142,24 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    final gesture =
-        await tester.startGesture(tester.getCenter(find.text('Sub One')));
+    final gesture = await tester.startGesture(
+      tester.getCenter(find.text('Sub One')),
+    );
     await tester.pump(kDragHoldDelay + const Duration(milliseconds: 50));
     await gesture.moveTo(tester.getCenter(find.text('P9')));
     await tester.pump();
     await gesture.up();
     await tester.pumpAndSettle();
 
-    expect(subs.single, (9, 200), reason: 'the sub replaces the dragged-on slot');
+    expect(subs.single, (
+      9,
+      200,
+    ), reason: 'the sub replaces the dragged-on slot');
   });
 
-  testWidgets('dragging without holding first scrolls instead of swapping',
-      (tester) async {
+  testWidgets('dragging without holding first scrolls instead of swapping', (
+    tester,
+  ) async {
     sizeSurface(tester);
     final swaps = <(int, int)>[];
     await tester.pumpApp(harness(onSwap: (a, b) => swaps.add((a, b))));

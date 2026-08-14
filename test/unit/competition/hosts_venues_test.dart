@@ -15,10 +15,10 @@ void main() {
 
     test('is deterministic for a given seed', () {
       int host(int seed) => WorldCupHosts.hostFromConfederation(
-            confederation: Confederation.europe,
-            nations: nations,
-            seed: seed,
-          );
+        confederation: Confederation.europe,
+        nations: nations,
+        seed: seed,
+      );
       expect(host(1234), host(1234));
     });
 
@@ -129,10 +129,10 @@ void main() {
     const euroYear = 2030;
 
     List<HostBid> bids(int seed) => WorldCupHosts.worldCupBids(
-          year: euroYear,
-          nations: nations,
-          seed: seed,
-        );
+      year: euroYear,
+      nations: nations,
+      seed: seed,
+    );
 
     test('the winner is always one of the bids on the table', () {
       // The whole point of (b): joint candidatures are visible BEFORE the
@@ -147,9 +147,7 @@ void main() {
         );
         expect(
           table.any(
-            (b) =>
-                b.length == winner.length &&
-                b.every(winner.contains),
+            (b) => b.length == winner.length && b.every(winner.contains),
           ),
           isTrue,
           reason: 'seed $seed: the winning bid must be a listed candidature',
@@ -186,7 +184,11 @@ void main() {
           if (b.length > 1) joint++;
         }
       }
-      expect(joint, greaterThan(0), reason: 'joint bids must exist to be shown');
+      expect(
+        joint,
+        greaterThan(0),
+        reason: 'joint bids must exist to be shown',
+      );
       expect(joint / total, lessThan(0.3), reason: 'and stay the exception');
     });
 
@@ -204,8 +206,11 @@ void main() {
 
     test('a primary host is always the first name on its bid', () {
       for (var seed = 0; seed < 50; seed++) {
-        final winner =
-            WorldCupHosts.hostsFor(year: euroYear, nations: nations, seed: seed);
+        final winner = WorldCupHosts.hostsFor(
+          year: euroYear,
+          nations: nations,
+          seed: seed,
+        );
         expect(
           WorldCupHosts.hostFor(year: euroYear, nations: nations, seed: seed),
           winner.first,
@@ -284,20 +289,24 @@ void main() {
       expect(VenueGenerator.forHosts(hostIds: const []), isEmpty);
     });
 
-    test('venues are the biggest cities, largest first, with real capacities',
-        () {
-      final venues = VenueGenerator.forHost(hostId: 7, count: 6);
-      // Ordered biggest-first.
-      for (var i = 1; i < venues.length; i++) {
+    test(
+      'venues are the biggest cities, largest first, with real capacities',
+      () {
+        final venues = VenueGenerator.forHost(hostId: 7, count: 6);
+        // Ordered biggest-first.
+        for (var i = 1; i < venues.length; i++) {
+          expect(
+            venues[i].capacity,
+            lessThanOrEqualTo(venues[i - 1].capacity),
+          );
+        }
         expect(
-          venues[i].capacity,
-          lessThanOrEqualTo(venues[i - 1].capacity),
+          venues.every((v) => v.capacity >= 32000 && v.capacity <= 85000),
+          isTrue,
         );
-      }
-      expect(venues.every((v) => v.capacity >= 32000 && v.capacity <= 85000),
-          isTrue);
-      expect(venues.map((v) => v.city).toSet(), hasLength(venues.length));
-    });
+        expect(venues.map((v) => v.city).toSet(), hasLength(venues.length));
+      },
+    );
   });
 
   group('WorldCupHosts.continentalQualifiers', () {
@@ -310,21 +319,21 @@ void main() {
     ];
 
     List<int> hosts(int cycle) => WorldCupHosts.continentalHostsFor(
-          confederation: Confederation.europe,
-          cycle: cycle,
-          seed: 4242,
-          nations: nations,
-        );
+      confederation: Confederation.europe,
+      cycle: cycle,
+      seed: 4242,
+      nations: nations,
+    );
 
     List<int> field(int cycle) => [
-          for (final n in WorldCupHosts.continentalQualifiers(
-            confederation: Confederation.europe,
-            cycle: cycle,
-            seed: 4242,
-            nations: nations,
-          ))
-            n.id,
-        ];
+      for (final n in WorldCupHosts.continentalQualifiers(
+        confederation: Confederation.europe,
+        cycle: cycle,
+        seed: 4242,
+        nations: nations,
+      ))
+        n.id,
+    ];
 
     test('excludes EVERY host, co-hosts included', () {
       // The bug this pins: the draw ceremony dropped only the primary host, so
@@ -337,14 +346,21 @@ void main() {
         if (h.length > 1) sawCoHosted = true;
         final f = field(cycle);
         for (final id in h) {
-          expect(f, isNot(contains(id)),
-              reason: 'host $id still in the draw at cycle $cycle');
+          expect(
+            f,
+            isNot(contains(id)),
+            reason: 'host $id still in the draw at cycle $cycle',
+          );
         }
         expect(f.length, 40 - h.length);
       }
-      expect(sawCoHosted, isTrue,
-          reason: 'no co-hosted edition in 40 cycles — sample is not testing '
-              'the case the bug lived in');
+      expect(
+        sawCoHosted,
+        isTrue,
+        reason:
+            'no co-hosted edition in 40 cycles — sample is not testing '
+            'the case the bug lived in',
+      );
     });
 
     test('is confederation-scoped and deterministic', () {

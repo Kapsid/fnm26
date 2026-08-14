@@ -6,10 +6,12 @@ import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/nation.dart';
+import 'package:fnm/domain/services/rating/overall_rating.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/records/record_book_screen.dart';
 import 'package:fnm/features/federation/federation_providers.dart';
 import 'package:fnm/features/stats/stats_providers.dart';
+import 'package:fnm/features/tactics/tactics_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
@@ -31,8 +33,11 @@ typedef _StatsView = ({
   Map<int, String> names,
 });
 
-final AutoDisposeFutureProviderFamily<_StatsView?, int> _teamStatsProvider =
-    FutureProvider.autoDispose.family<_StatsView?, int>((ref, careerId) async {
+final AutoDisposeFutureProviderFamily<_StatsView?, int>
+_teamStatsProvider = FutureProvider.autoDispose.family<_StatsView?, int>((
+  ref,
+  careerId,
+) async {
   final career = await ref.watch(careerRepositoryProvider).byId(careerId);
   if (career == null) return null;
   final comp = ref.watch(competitionRepositoryProvider);
@@ -43,8 +48,11 @@ final AutoDisposeFutureProviderFamily<_StatsView?, int> _teamStatsProvider =
       (playerId: s.playerId, value: s.goals),
   ];
   final appearances = [
-    for (final a
-        in await comp.nationTopAppearances(careerId, nationId, limit: 25))
+    for (final a in await comp.nationTopAppearances(
+      careerId,
+      nationId,
+      limit: 25,
+    ))
       (playerId: a.playerId, value: a.games),
   ];
   // Best average match rating. Every match in the world is rated now, so this
@@ -204,49 +212,51 @@ class _TeamStatsScreenState extends ConsumerState<TeamStatsScreen> {
               Expanded(
                 child: switch (_tab) {
                   3 => _CareerRecord(careerId: widget.careerId),
-                  2 => view.ratings.isEmpty
-                      ? Center(child: Text(l.statsNoRatingsRecorded))
-                      : ListView.builder(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: AppSpacing.marginMobile,
+                  2 =>
+                    view.ratings.isEmpty
+                        ? Center(child: Text(l.statsNoRatingsRecorded))
+                        : ListView.builder(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: AppSpacing.marginMobile,
+                            ),
+                            itemCount: view.ratings.length,
+                            itemBuilder: (context, i) {
+                              final r = view.ratings[i];
+                              return _RatingRow(
+                                rank: i + 1,
+                                name: view.names[r.playerId] ?? l.statsUnknown,
+                                flagCode: view.nation?.code,
+                                entry: r,
+                                onInfo: () => context.push(
+                                  '${Routes.player}?careerId=${widget.careerId}'
+                                  '&playerId=${r.playerId}',
+                                ),
+                              );
+                            },
                           ),
-                          itemCount: view.ratings.length,
-                          itemBuilder: (context, i) {
-                            final r = view.ratings[i];
-                            return _RatingRow(
-                              rank: i + 1,
-                              name: view.names[r.playerId] ?? l.statsUnknown,
-                              flagCode: view.nation?.code,
-                              entry: r,
-                              onInfo: () => context.push(
-                                '${Routes.player}?careerId=${widget.careerId}'
-                                '&playerId=${r.playerId}',
-                              ),
-                            );
-                          },
-                        ),
-                  _ => list.isEmpty
-                      ? Center(child: Text(l.statsNoGoalsRecorded))
-                      : ListView.builder(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: AppSpacing.marginMobile,
+                  _ =>
+                    list.isEmpty
+                        ? Center(child: Text(l.statsNoGoalsRecorded))
+                        : ListView.builder(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: AppSpacing.marginMobile,
+                            ),
+                            itemCount: list.length,
+                            itemBuilder: (context, i) {
+                              final s = list[i];
+                              return _ScorerRow(
+                                rank: i + 1,
+                                name: view.names[s.playerId] ?? l.statsUnknown,
+                                flagCode: view.nation?.code,
+                                value: s.value,
+                                unit: unit,
+                                onInfo: () => context.push(
+                                  '${Routes.player}?careerId=${widget.careerId}'
+                                  '&playerId=${s.playerId}',
+                                ),
+                              );
+                            },
                           ),
-                          itemCount: list.length,
-                          itemBuilder: (context, i) {
-                            final s = list[i];
-                            return _ScorerRow(
-                              rank: i + 1,
-                              name: view.names[s.playerId] ?? l.statsUnknown,
-                              flagCode: view.nation?.code,
-                              value: s.value,
-                              unit: unit,
-                              onInfo: () => context.push(
-                                '${Routes.player}?careerId=${widget.careerId}'
-                                '&playerId=${s.playerId}',
-                              ),
-                            );
-                          },
-                        ),
                 },
               ),
             ],
@@ -274,6 +284,11 @@ class _TeamHeader extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l = AppLocalizations.of(context);
     final stats = ref.watch(careerStatsProvider(careerId)).valueOrNull;
+    // The nation's own strength, read off its strongest eleven — the number the
+    // match preview shows against the opponent's, in the one place a manager
+    // comes to ask how good his side actually is.
+    final pool = ref.watch(squadDataProvider(careerId)).valueOrNull?.pool;
+    final overall = pool == null ? null : squadOverall(pool);
     return AppCard(
       padding: const EdgeInsets.symmetric(
         horizontal: AppSpacing.md,
@@ -296,6 +311,15 @@ class _TeamHeader extends ConsumerWidget {
                   style: AppTypography.titleMedium,
                 ),
               ),
+              if (overall != null) ...[
+                const SizedBox(width: AppSpacing.sm),
+                Text(
+                  '${l.teamOverall} $overall',
+                  style: AppTypography.labelMedium.copyWith(
+                    color: AppColors.primary,
+                  ),
+                ),
+              ],
             ],
           ),
           if (stats != null && stats.played > 0) ...[

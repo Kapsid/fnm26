@@ -28,23 +28,23 @@ void main() {
     int? host = 4,
     int? homeScore = 2,
     int? awayScore = 1,
-  }) =>
-      (
-        year: year,
-        competition: 'European Championship',
-        championId: champion,
-        runnerUpId: runnerUp,
-        thirdId: third,
-        thirdId2: null,
-        hostId: host,
-        finalHomeScore: homeScore,
-        finalAwayScore: awayScore,
-        topScorerName: null,
-        topScorerGoals: null,
-      );
+  }) => (
+    year: year,
+    competition: 'European Championship',
+    championId: champion,
+    runnerUpId: runnerUp,
+    thirdId: third,
+    thirdId2: null,
+    hostId: host,
+    finalHomeScore: homeScore,
+    finalAwayScore: awayScore,
+    topScorerName: null,
+    topScorerGoals: null,
+  );
 
-  testWidgets('an edition names the whole podium, not just the winner',
-      (tester) async {
+  testWidgets('an edition names the whole podium, not just the winner', (
+    tester,
+  ) async {
     await tester.pumpApp(
       TournamentHistory(honours: [honour()], name: name, code: code),
     );
@@ -85,8 +85,9 @@ void main() {
     expect(find.text('Brazil'), findsNothing);
   });
 
-  testWidgets('the medal table counts golds, silvers and bronzes',
-      (tester) async {
+  testWidgets('the medal table counts golds, silvers and bronzes', (
+    tester,
+  ) async {
     await tester.pumpApp(
       TournamentHistory(
         honours: [

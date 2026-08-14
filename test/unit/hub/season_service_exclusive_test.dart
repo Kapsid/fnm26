@@ -40,10 +40,12 @@ void main() {
     try {
       await container.read(seedLoaderProvider).ensureSeeded();
       final career =
-          (await container.read(careerServiceProvider).create(
-            nationId: 1,
-            managerName: 'A',
-          ))
+          (await container
+                  .read(careerServiceProvider)
+                  .create(
+                    nationId: 1,
+                    managerName: 'A',
+                  ))
               .valueOrNull!;
       final season = container.read(seasonServiceProvider);
 
@@ -103,10 +105,12 @@ void main() {
 
     await container.read(seedLoaderProvider).ensureSeeded();
     final career =
-        (await container.read(careerServiceProvider).create(
-          nationId: 1,
-          managerName: 'A',
-        ))
+        (await container
+                .read(careerServiceProvider)
+                .create(
+                  nationId: 1,
+                  managerName: 'A',
+                ))
             .valueOrNull!;
     final season = container.read(seasonServiceProvider);
 

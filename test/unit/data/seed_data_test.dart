@@ -13,14 +13,16 @@ void main() {
   late List<Player> players;
 
   setUpAll(() {
-    nations = (jsonDecode(File('assets/data/nations.json').readAsStringSync())
-            as List<dynamic>)
-        .map((e) => Nation.fromJson(e as Map<String, Object?>))
-        .toList();
-    players = (jsonDecode(File('assets/data/players.json').readAsStringSync())
-            as List<dynamic>)
-        .map((e) => Player.fromJson(e as Map<String, Object?>))
-        .toList();
+    nations =
+        (jsonDecode(File('assets/data/nations.json').readAsStringSync())
+                as List<dynamic>)
+            .map((e) => Nation.fromJson(e as Map<String, Object?>))
+            .toList();
+    players =
+        (jsonDecode(File('assets/data/players.json').readAsStringSync())
+                as List<dynamic>)
+            .map((e) => Player.fromJson(e as Map<String, Object?>))
+            .toList();
   });
 
   test('covers (nearly) all FIFA nations across every confederation', () {

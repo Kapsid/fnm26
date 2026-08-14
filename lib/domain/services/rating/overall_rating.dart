@@ -1,5 +1,18 @@
 import 'package:fnm/domain/entities/enums.dart';
+import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/entities/player_attributes.dart';
+
+/// The rounded mean overall of a squad's strongest eleven.
+///
+/// The best eleven rather than the whole squad: a 26-man mean is dragged down
+/// by the third-choice keeper, so two sides that would field identical teams
+/// would show different numbers purely on squad depth.
+int squadOverall(List<Player> squad) {
+  if (squad.isEmpty) return 0;
+  final rated = [for (final p in squad) p.overall]..sort((a, b) => b - a);
+  final best = rated.take(11).toList();
+  return (best.reduce((a, b) => a + b) / best.length).round();
+}
 
 /// Computes a single position-weighted "overall" rating from a player's
 /// attributes.
@@ -13,23 +26,37 @@ abstract final class OverallRating {
   static int forPosition(PlayerPosition position, PlayerAttributes a) {
     final w = _weightsByCategory[position.category]!;
     final weighted =
-        a.physical * w.physical + a.technical * w.technical + a.stamina * w.stamina;
+        a.physical * w.physical +
+        a.technical * w.technical +
+        a.stamina * w.stamina;
     return weighted.round().clamp(1, 99);
   }
 
   static const _weightsByCategory = <PositionCategory, _Weights>{
     // Keepers lean on technique (a shot-stopping proxy) with some physique.
-    PositionCategory.goalkeeper:
-        _Weights(technical: 0.60, physical: 0.30, stamina: 0.10),
+    PositionCategory.goalkeeper: _Weights(
+      technical: 0.60,
+      physical: 0.30,
+      stamina: 0.10,
+    ),
     // Defenders balance physique and technique, with real endurance.
-    PositionCategory.defender:
-        _Weights(physical: 0.42, technical: 0.40, stamina: 0.18),
+    PositionCategory.defender: _Weights(
+      physical: 0.42,
+      technical: 0.40,
+      stamina: 0.18,
+    ),
     // Midfielders run the game: technique first, then endurance.
-    PositionCategory.midfielder:
-        _Weights(technical: 0.48, stamina: 0.28, physical: 0.24),
+    PositionCategory.midfielder: _Weights(
+      technical: 0.48,
+      stamina: 0.28,
+      physical: 0.24,
+    ),
     // Forwards are technique and pace, endurance least of all.
-    PositionCategory.forward:
-        _Weights(technical: 0.52, physical: 0.34, stamina: 0.14),
+    PositionCategory.forward: _Weights(
+      technical: 0.52,
+      physical: 0.34,
+      stamina: 0.14,
+    ),
   };
 }
 

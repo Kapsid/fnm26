@@ -21,28 +21,27 @@ AchievementStats stats({
   int playerMotms = 0,
   int shootoutsWon = 0,
   double bestPlayerRating = 0,
-}) =>
-    AchievementStats(
-      matchesPlayed: matchesPlayed,
-      wins: wins,
-      reachedWorldCup: reachedWorldCup,
-      reachedContinental: reachedContinental,
-      titlesWon: titlesWon,
-      biggestWinMargin: biggestWinMargin,
-      wcMarksmanGoals: wcMarksmanGoals,
-      hasChampionshipGoldenBoot: hasChampionshipGoldenBoot,
-      playerInAllStars: playerInAllStars,
-      wonWorldCupAndContinental: wonWorldCupAndContinental,
-      satisfaction: satisfaction,
-      cleanSheets: cleanSheets,
-      totalGoals: totalGoals,
-      longestWinStreak: longestWinStreak,
-      longestUnbeatenRun: longestUnbeatenRun,
-      hatTricks: hatTricks,
-      playerMotms: playerMotms,
-      shootoutsWon: shootoutsWon,
-      bestPlayerRating: bestPlayerRating,
-    );
+}) => AchievementStats(
+  matchesPlayed: matchesPlayed,
+  wins: wins,
+  reachedWorldCup: reachedWorldCup,
+  reachedContinental: reachedContinental,
+  titlesWon: titlesWon,
+  biggestWinMargin: biggestWinMargin,
+  wcMarksmanGoals: wcMarksmanGoals,
+  hasChampionshipGoldenBoot: hasChampionshipGoldenBoot,
+  playerInAllStars: playerInAllStars,
+  wonWorldCupAndContinental: wonWorldCupAndContinental,
+  satisfaction: satisfaction,
+  cleanSheets: cleanSheets,
+  totalGoals: totalGoals,
+  longestWinStreak: longestWinStreak,
+  longestUnbeatenRun: longestUnbeatenRun,
+  hatTricks: hatTricks,
+  playerMotms: playerMotms,
+  shootoutsWon: shootoutsWon,
+  bestPlayerRating: bestPlayerRating,
+);
 
 void main() {
   test('every achievement id is unique and stable', () {
@@ -67,8 +66,9 @@ void main() {
   });
 
   test('goal and clean-sheet tallies unlock cumulatively', () {
-    final earned =
-        AchievementCatalog.earnedIds(stats(totalGoals: 300, cleanSheets: 60));
+    final earned = AchievementCatalog.earnedIds(
+      stats(totalGoals: 300, cleanSheets: 60),
+    );
     expect(earned, containsAll(['goals_50', 'goals_250']));
     expect(earned, isNot(contains('goals_1000')));
     expect(earned, containsAll(['cleansheets_10', 'cleansheets_50']));
@@ -86,13 +86,15 @@ void main() {
   });
 
   test('player feats unlock from the snapshot fields', () {
-    final earned = AchievementCatalog.earnedIds(stats(
-      hatTricks: 1,
-      playerMotms: 10,
-      bestPlayerRating: 9.6,
-      shootoutsWon: 5,
-      biggestWinMargin: 7,
-    ));
+    final earned = AchievementCatalog.earnedIds(
+      stats(
+        hatTricks: 1,
+        playerMotms: 10,
+        bestPlayerRating: 9.6,
+        shootoutsWon: 5,
+        biggestWinMargin: 7,
+      ),
+    );
     expect(
       earned,
       containsAll([
@@ -125,16 +127,18 @@ void main() {
   });
 
   test('qualification, misc and mega flags each unlock their achievement', () {
-    final earned = AchievementCatalog.earnedIds(stats(
-      reachedWorldCup: true,
-      reachedContinental: true,
-      biggestWinMargin: 5,
-      wcMarksmanGoals: 6,
-      hasChampionshipGoldenBoot: true,
-      playerInAllStars: true,
-      wonWorldCupAndContinental: true,
-      satisfaction: 100,
-    ));
+    final earned = AchievementCatalog.earnedIds(
+      stats(
+        reachedWorldCup: true,
+        reachedContinental: true,
+        biggestWinMargin: 5,
+        wcMarksmanGoals: 6,
+        hasChampionshipGoldenBoot: true,
+        playerInAllStars: true,
+        wonWorldCupAndContinental: true,
+        satisfaction: 100,
+      ),
+    );
     expect(
       earned,
       containsAll([

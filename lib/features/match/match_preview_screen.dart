@@ -8,6 +8,7 @@ import 'package:fnm/core/util/match_stage.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/formation.dart';
 import 'package:fnm/domain/entities/player.dart';
+import 'package:fnm/domain/services/rating/overall_rating.dart';
 import 'package:fnm/domain/services/squad/condition.dart';
 import 'package:fnm/domain/services/tactics/position_fit.dart';
 import 'package:fnm/features/match/ground_card.dart';
@@ -127,7 +128,10 @@ class MatchPreviewScreen extends ConsumerWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  _Side(code: code(f.homeNationId)),
+                  _Side(
+                    code: code(f.homeNationId),
+                    overall: squadOverall(preview.homeTeam.xi),
+                  ),
                   Column(
                     children: [
                       const Text('VS', style: AppTypography.labelLarge),
@@ -140,7 +144,10 @@ class MatchPreviewScreen extends ConsumerWidget {
                       ),
                     ],
                   ),
-                  _Side(code: code(f.awayNationId)),
+                  _Side(
+                    code: code(f.awayNationId),
+                    overall: squadOverall(preview.awayTeam.xi),
+                  ),
                 ],
               ),
               const SizedBox(height: AppSpacing.lg),
@@ -699,16 +706,28 @@ class _Tally extends StatelessWidget {
 }
 
 class _Side extends StatelessWidget {
-  const _Side({required this.code});
+  const _Side({required this.code, required this.overall});
   final String code;
+
+  /// The side's team overall, so the two numbers sit either side of the "VS"
+  /// and the manager can read the gap before kick-off.
+  final int overall;
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Column(
       children: [
         FlagDisc(code, size: 48),
         const SizedBox(height: AppSpacing.xs),
         Text(code, style: AppTypography.labelMedium),
+        const SizedBox(height: 2),
+        Text(
+          '${l10n.teamOverall} $overall',
+          style: AppTypography.labelSmall.copyWith(
+            color: AppColors.onSurfaceVariant,
+          ),
+        ),
       ],
     );
   }

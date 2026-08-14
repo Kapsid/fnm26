@@ -59,11 +59,14 @@ void main() {
     }
   });
 
-  test('the read is stable — a scout does not change his mind on a refresh', () {
-    final a = Prospects.watchlist([kid(21)]).single.stars;
-    final b = Prospects.watchlist([kid(21)]).single.stars;
-    expect(a, b);
-  });
+  test(
+    'the read is stable — a scout does not change his mind on a refresh',
+    () {
+      final a = Prospects.watchlist([kid(21)]).single.stars;
+      final b = Prospects.watchlist([kid(21)]).single.stars;
+      expect(a, b);
+    },
+  );
 
   test('promise outranks current ability', () {
     // A five-star teenager on 60 should sit above a one-star on 68: the list
@@ -130,8 +133,10 @@ void main() {
     });
 
     test('the read is stable — a scout does not change his mind', () {
-      expect(Prospects.scoutedStars(77, age: 15),
-          Prospects.scoutedStars(77, age: 15));
+      expect(
+        Prospects.scoutedStars(77, age: 15),
+        Prospects.scoutedStars(77, age: 15),
+      );
     });
   });
 }

@@ -4,13 +4,13 @@ import 'package:fnm/features/career/career_providers.dart';
 
 void main() {
   Career at(DateTime date) => Career(
-        id: 1,
-        managerName: 'Test',
-        nationId: 1,
-        rngSeed: 7,
-        createdAt: CareerService.cycleStart,
-        inGameDate: date,
-      );
+    id: 1,
+    managerName: 'Test',
+    nationId: 1,
+    rngSeed: 7,
+    createdAt: CareerService.cycleStart,
+    inGameDate: date,
+  );
 
   int agingAt(DateTime date) => CareerService.agingYears(at(date));
 
@@ -34,8 +34,11 @@ void main() {
       for (var year = 2027; year < 2047; year++) {
         final december = agingAt(DateTime(year - 1, 12, 15));
         for (final day in [1, 8, 20, 31]) {
-          expect(agingAt(DateTime(year, 1, day)), december,
-              reason: 'squad re-rated during January $year');
+          expect(
+            agingAt(DateTime(year, 1, day)),
+            december,
+            reason: 'squad re-rated during January $year',
+          );
         }
       }
     });

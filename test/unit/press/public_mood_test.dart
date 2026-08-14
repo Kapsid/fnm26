@@ -19,8 +19,11 @@ void main() {
       // The board counts this as a win; the public expected it.
       final routine = PublicMood.of([r(10, 90, won: true)]);
       expect(routine, greaterThan(48));
-      expect(routine, lessThan(60),
-          reason: 'a routine win should not read as triumph');
+      expect(
+        routine,
+        lessThan(60),
+        reason: 'a routine win should not read as triumph',
+      );
     });
 
     test('losing to a far weaker side is a catastrophe', () {
@@ -29,8 +32,11 @@ void main() {
 
     test('losing to a far better side is forgiven', () {
       final noble = PublicMood.of([r(90, 2)]);
-      expect(noble, greaterThan(35),
-          reason: 'nobody blames you for losing to the best side alive');
+      expect(
+        noble,
+        greaterThan(35),
+        reason: 'nobody blames you for losing to the best side alive',
+      );
     });
 
     test('a draw sits between the two', () {

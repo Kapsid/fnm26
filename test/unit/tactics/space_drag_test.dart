@@ -104,20 +104,22 @@ void main() {
       expect((out! as ReshapeTo).formation, Formation.f532);
     });
 
-    test('every outcome is a real formation, from every band of every shape',
-        () {
-      // The constraint the whole feature rests on: a drag can never invent a
-      // shape the game does not have.
-      for (final f in Formation.values) {
-        for (var slot = 0; slot < f.positions.length; slot++) {
-          for (final band in PositionCategory.values) {
-            final out = resolveSpaceDrag(f, flat, slot, bandY(f, band));
-            if (out is ReshapeTo) {
-              expect(Formation.values, contains(out.formation));
+    test(
+      'every outcome is a real formation, from every band of every shape',
+      () {
+        // The constraint the whole feature rests on: a drag can never invent a
+        // shape the game does not have.
+        for (final f in Formation.values) {
+          for (var slot = 0; slot < f.positions.length; slot++) {
+            for (final band in PositionCategory.values) {
+              final out = resolveSpaceDrag(f, flat, slot, bandY(f, band));
+              if (out is ReshapeTo) {
+                expect(Formation.values, contains(out.formation));
+              }
             }
           }
         }
-      }
-    });
+      },
+    );
   });
 }

@@ -9,18 +9,18 @@ import '../helpers/pump_app.dart';
 /// same shape, and the continental screens used to get a list-only view.
 void main() {
   Fixture tie(String round, int home, int away, {int? hs, int? as}) => Fixture(
-        id: home * 100 + away,
-        careerId: 1,
-        competitionId: 1,
-        matchday: 1,
-        date: DateTime(2030, 6, 20),
-        homeNationId: home,
-        awayNationId: away,
-        homeScore: hs,
-        awayScore: as,
-        played: hs != null,
-        round: round,
-      );
+    id: home * 100 + away,
+    careerId: 1,
+    competitionId: 1,
+    matchday: 1,
+    date: DateTime(2030, 6, 20),
+    homeNationId: home,
+    awayNationId: away,
+    homeScore: hs,
+    awayScore: as,
+    played: hs != null,
+    round: round,
+  );
 
   String code(int id) => 'N$id';
   String name(int id) => 'Nation $id';
@@ -32,20 +32,19 @@ void main() {
     int? champion,
     String? runSummary,
     String championLabel = 'CHAMPIONS',
-  }) =>
-      Scaffold(
-        body: TournamentBracket(
-          fixtures: fixtures,
-          rounds: rounds,
-          ladder: ladder,
-          champion: champion,
-          championLabel: championLabel,
-          runSummary: runSummary,
-          playerNationId: 1,
-          code: code,
-          name: name,
-        ),
-      );
+  }) => Scaffold(
+    body: TournamentBracket(
+      fixtures: fixtures,
+      rounds: rounds,
+      ladder: ladder,
+      champion: champion,
+      championLabel: championLabel,
+      runSummary: runSummary,
+      playerNationId: 1,
+      code: code,
+      name: name,
+    ),
+  );
 
   const wcRounds = <BracketRound>[
     ('SF', 'Semi-finals'),
@@ -64,7 +63,10 @@ void main() {
   testWidgets('the List/Bracket toggle switches views', (tester) async {
     await tester.pumpApp(
       bracket(
-        fixtures: [tie('SF', 1, 2, hs: 2, as: 1), tie('FINAL', 1, 3, hs: 0, as: 1)],
+        fixtures: [
+          tie('SF', 1, 2, hs: 2, as: 1),
+          tie('FINAL', 1, 3, hs: 0, as: 1),
+        ],
         rounds: wcRounds,
         ladder: wcLadder,
       ),
@@ -146,8 +148,9 @@ void main() {
     }
   });
 
-  testWidgets('the bracket scrolls sideways to reach later rounds',
-      (tester) async {
+  testWidgets('the bracket scrolls sideways to reach later rounds', (
+    tester,
+  ) async {
     tester.view.devicePixelRatio = 1;
     tester.view.physicalSize = const Size(360, 800);
     addTearDown(tester.view.reset);
@@ -157,7 +160,8 @@ void main() {
         fixtures: [
           for (var i = 0; i < 8; i++)
             tie('R16', 200 + i * 2, 201 + i * 2, hs: 1, as: 0),
-          for (var i = 0; i < 4; i++) tie('QF', 200 + i * 4, 204 + i * 4, hs: 1, as: 0),
+          for (var i = 0; i < 4; i++)
+            tie('QF', 200 + i * 4, 204 + i * 4, hs: 1, as: 0),
           tie('SF', 200, 208, hs: 1, as: 0),
           tie('FINAL', 200, 216, hs: 1, as: 0),
         ],
@@ -175,7 +179,10 @@ void main() {
     await tester.pumpAndSettle();
 
     // Four 150px columns don't fit a 360px phone, so the row must scroll.
-    final scrollable = find.byType(Scrollable).evaluate().map(
+    final scrollable = find
+        .byType(Scrollable)
+        .evaluate()
+        .map(
           (e) => (e.widget as Scrollable).axisDirection,
         );
     expect(
@@ -206,8 +213,9 @@ void main() {
     expect(find.text('Into the Semi-finals'), findsOneWidget);
   });
 
-  testWidgets('an undecided tie reads "vs" rather than a score',
-      (tester) async {
+  testWidgets('an undecided tie reads "vs" rather than a score', (
+    tester,
+  ) async {
     await tester.pumpApp(
       bracket(fixtures: [tie('SF', 1, 2)], rounds: wcRounds, ladder: wcLadder),
     );

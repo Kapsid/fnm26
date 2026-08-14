@@ -9,28 +9,26 @@ void main() {
     int overall = 78,
     bool calledUp = true,
     int recent = 3,
-  }) =>
-      (
-        playerId: id,
-        playerName: 'P$id',
-        age: age,
-        caps: caps,
-        overall: overall,
-        calledUp: calledUp,
-        recentAppearances: recent,
-      );
+  }) => (
+    playerId: id,
+    playerName: 'P$id',
+    age: age,
+    caps: caps,
+    overall: overall,
+    calledUp: calledUp,
+    recentAppearances: recent,
+  );
 
   List<Grievance> raise(
     List<SquadStanding> squad, {
     Map<int, int>? ranks,
     Set<String> already = const {},
-  }) =>
-      Grievances.raise(
-        squad,
-        poolRank: ranks ?? {for (final s in squad) s.playerId: 5},
-        year: 2032,
-        alreadyRaised: already,
-      );
+  }) => Grievances.raise(
+    squad,
+    poolRank: ranks ?? {for (final s in squad) s.playerId: 5},
+    year: 2032,
+    alreadyRaised: already,
+  );
 
   group('who has a case', () {
     test('a settled squad says nothing', () {
@@ -90,8 +88,10 @@ void main() {
 
     test('a grievance already raised is not raised again', () {
       final first = raise([man(1, recent: 0)]);
-      final again = raise([man(1, recent: 0)],
-          already: {for (final g in first) g.key});
+      final again = raise(
+        [man(1, recent: 0)],
+        already: {for (final g in first) g.key},
+      );
       expect(again, isEmpty);
     });
   });

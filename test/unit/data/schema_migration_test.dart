@@ -60,53 +60,57 @@ void main() {
     expect(saved.managerName, 'Survivor');
   });
 
+  test(
+    'v39 clears references to generated players, and keeps the rest',
+    () async {
+      // 38 → 39 changed no table. It changed what a newgen id MEANS — intake
+      // moved to seven eleven-year-olds a year, so the id now encodes an intake
+      // year where it encoded a cycle. Rows naming one point at a player who no
+      // longer exists, and the step deletes exactly those.
+      //
+      // `schemaAt` rather than `startAt`: its connections share one underlying
+      // database, so data written at v38 is still there when the migration runs.
+      const newgen = 1000000123; // above the generated-id base
+      const seeded = 4711; // an ordinary seeded player
 
-  test('v39 clears references to generated players, and keeps the rest',
-      () async {
-    // 38 → 39 changed no table. It changed what a newgen id MEANS — intake
-    // moved to seven eleven-year-olds a year, so the id now encodes an intake
-    // year where it encoded a cycle. Rows naming one point at a player who no
-    // longer exists, and the step deletes exactly those.
-    //
-    // `schemaAt` rather than `startAt`: its connections share one underlying
-    // database, so data written at v38 is still there when the migration runs.
-    const newgen = 1000000123; // above the generated-id base
-    const seeded = 4711; // an ordinary seeded player
+      final schema = await verifier.schemaAt(38);
 
-    final schema = await verifier.schemaAt(38);
-
-    final old = v38.DatabaseAtV38(schema.newConnection());
-    await old.customStatement(
-      'INSERT INTO careers (id, nation_id, manager_name, created_at, '
-      'in_game_date, rng_seed, cycle_pointer, budget, captain_player_id) '
-      'VALUES (1, 1, ?, 0, 0, 7, 0, 0, ?)',
-      ['Keeper', newgen],
-    );
-    for (final id in const [newgen, seeded]) {
+      final old = v38.DatabaseAtV38(schema.newConnection());
       await old.customStatement(
-        'INSERT INTO call_ups (career_id, player_id) VALUES (1, ?)',
-        [id],
+        'INSERT INTO careers (id, nation_id, manager_name, created_at, '
+        'in_game_date, rng_seed, cycle_pointer, budget, captain_player_id) '
+        'VALUES (1, 1, ?, 0, 0, 7, 0, 0, ?)',
+        ['Keeper', newgen],
       );
-    }
-    await old.close();
+      for (final id in const [newgen, seeded]) {
+        await old.customStatement(
+          'INSERT INTO call_ups (career_id, player_id) VALUES (1, ?)',
+          [id],
+        );
+      }
+      await old.close();
 
-    final db = AppDatabase.forTesting(schema.newConnection());
-    addTearDown(db.close);
-    await verifier.migrateAndValidate(db, 39);
+      final db = AppDatabase.forTesting(schema.newConnection());
+      addTearDown(db.close);
+      await verifier.migrateAndValidate(db, 39);
 
-    final remaining = await db
-        .customSelect('SELECT player_id FROM call_ups ORDER BY player_id')
-        .map((r) => r.read<int>('player_id'))
-        .get();
-    expect(remaining, [seeded],
-        reason: 'the generated player should be gone, the seeded one kept');
+      final remaining = await db
+          .customSelect('SELECT player_id FROM call_ups ORDER BY player_id')
+          .map((r) => r.read<int>('player_id'))
+          .get();
+      expect(
+        remaining,
+        [seeded],
+        reason: 'the generated player should be gone, the seeded one kept',
+      );
 
-    final captain = await db
-        .customSelect('SELECT captain_player_id FROM careers')
-        .map((r) => r.readNullable<int>('captain_player_id'))
-        .getSingle();
-    expect(captain, isNull, reason: 'an armband on a vanished player');
-  });
+      final captain = await db
+          .customSelect('SELECT captain_player_id FROM careers')
+          .map((r) => r.readNullable<int>('captain_player_id'))
+          .getSingle();
+      expect(captain, isNull, reason: 'an armband on a vanished player');
+    },
+  );
 
   for (final MapEntry(key: from, value: to) in upgrades.entries) {
     test('a save migrates from v$from to v$to with its data intact', () async {

@@ -9,12 +9,11 @@ void main() {
     List<MatchOutcome> recent = const [],
     List<({TournamentTier tier, Placing placing})> honours = const [],
     int? rank,
-  }) =>
-      BoardSatisfaction.compute(
-        recent: recent,
-        honours: honours,
-        worldRank: rank,
-      );
+  }) => BoardSatisfaction.compute(
+    recent: recent,
+    honours: honours,
+    worldRank: rank,
+  );
 
   group('BoardSatisfaction', () {
     test('a board with nothing to judge sits at neutral', () {
@@ -34,7 +33,10 @@ void main() {
       final nine = repeat(MatchOutcome.draw, 9);
       final withLoss = mood(recent: [MatchOutcome.loss, ...nine]);
       final withWin = mood(recent: [MatchOutcome.win, ...nine]);
-      expect(withWin - withLoss, BoardSatisfaction.win - BoardSatisfaction.loss);
+      expect(
+        withWin - withLoss,
+        BoardSatisfaction.win - BoardSatisfaction.loss,
+      );
       expect(withWin - withLoss, lessThanOrEqualTo(8));
     });
 
@@ -53,19 +55,27 @@ void main() {
     });
 
     test('a run of draws leaves the board where it started', () {
-      expect(mood(recent: repeat(MatchOutcome.draw, 10)),
-          BoardSatisfaction.neutral);
+      expect(
+        mood(recent: repeat(MatchOutcome.draw, 10)),
+        BoardSatisfaction.neutral,
+      );
     });
 
     test('prestige orders the trophies', () {
       int champion(TournamentTier tier) =>
           BoardSatisfaction.trophyBonus(tier, Placing.champion);
-      expect(champion(TournamentTier.world),
-          greaterThan(champion(TournamentTier.continental)));
-      expect(champion(TournamentTier.continental),
-          greaterThan(champion(TournamentTier.nationsCup)));
-      expect(champion(TournamentTier.nationsCup),
-          greaterThan(champion(TournamentTier.clash)));
+      expect(
+        champion(TournamentTier.world),
+        greaterThan(champion(TournamentTier.continental)),
+      );
+      expect(
+        champion(TournamentTier.continental),
+        greaterThan(champion(TournamentTier.nationsCup)),
+      );
+      expect(
+        champion(TournamentTier.nationsCup),
+        greaterThan(champion(TournamentTier.clash)),
+      );
     });
 
     test('finishing higher is worth more', () {
@@ -126,8 +136,10 @@ void main() {
         lessThan(sackedBelow),
         reason: 'even the best-ranked nation is sackable after ten defeats',
       );
-      expect(mood(recent: repeat(MatchOutcome.loss, 10), rank: 200),
-          lessThan(sackedBelow));
+      expect(
+        mood(recent: repeat(MatchOutcome.loss, 10), rank: 200),
+        lessThan(sackedBelow),
+      );
     });
 
     test('a mediocre cycle keeps the manager in post', () {
@@ -197,8 +209,10 @@ void main() {
       });
 
       test('meeting the brief exactly earns no overachievement surge', () {
-        expect(BoardSatisfaction.overachievementBonus(TournamentTier.world, 0),
-            0);
+        expect(
+          BoardSatisfaction.overachievementBonus(TournamentTier.world, 0),
+          0,
+        );
         expect(
           BoardSatisfaction.overachievementBonus(TournamentTier.world, -2),
           0,
@@ -248,10 +262,14 @@ void main() {
     });
 
     test('a stronger world ranking is worth more', () {
-      expect(BoardSatisfaction.rankBonus(1),
-          greaterThan(BoardSatisfaction.rankBonus(10)));
-      expect(BoardSatisfaction.rankBonus(10),
-          greaterThan(BoardSatisfaction.rankBonus(20)));
+      expect(
+        BoardSatisfaction.rankBonus(1),
+        greaterThan(BoardSatisfaction.rankBonus(10)),
+      );
+      expect(
+        BoardSatisfaction.rankBonus(10),
+        greaterThan(BoardSatisfaction.rankBonus(20)),
+      );
       expect(BoardSatisfaction.rankBonus(200), 0);
       expect(BoardSatisfaction.rankBonus(null), 0);
     });
@@ -277,11 +295,11 @@ void main() {
 
     test('a delighted public lifts the board, a furious one sinks it', () {
       int at(int mood) => BoardSatisfaction.compute(
-            recent: const [MatchOutcome.win, MatchOutcome.draw],
-            honours: const [],
-            worldRank: 20,
-            publicMood: mood,
-          );
+        recent: const [MatchOutcome.win, MatchOutcome.draw],
+        honours: const [],
+        worldRank: 20,
+        publicMood: mood,
+      );
       expect(at(100), greaterThan(at(50)));
       expect(at(0), lessThan(at(50)));
       expect(at(100) - at(50), lessThanOrEqualTo(5));

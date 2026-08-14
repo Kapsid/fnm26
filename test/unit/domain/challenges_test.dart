@@ -19,25 +19,24 @@ ChallengeStats _stats({
   bool asVisitor = false,
   bool asMinnow = false,
   int unbeaten = 0,
-}) =>
-    ChallengeStats(
-      worldCupTitles: wc,
-      distinctWorldCupNations: wcNations,
-      worldCupConfederations: wcConfs,
-      mostWorldCupsInARow: streak,
-      continentalTitles: cont,
-      continentalCupsWon: contCups,
-      nationsCupTitles: nationsCup,
-      clashTitles: clash,
-      yearsManaged: years,
-      nationsManaged: nations,
-      wonWorldCupUndefeated: undefeated,
-      perfectQualifying: perfectQual,
-      wonWorldCupAsHost: asHost,
-      wonWorldCupAsVisitor: asVisitor,
-      wonWorldCupAsMinnow: asMinnow,
-      longestUnbeatenRun: unbeaten,
-    );
+}) => ChallengeStats(
+  worldCupTitles: wc,
+  distinctWorldCupNations: wcNations,
+  worldCupConfederations: wcConfs,
+  mostWorldCupsInARow: streak,
+  continentalTitles: cont,
+  continentalCupsWon: contCups,
+  nationsCupTitles: nationsCup,
+  clashTitles: clash,
+  yearsManaged: years,
+  nationsManaged: nations,
+  wonWorldCupUndefeated: undefeated,
+  perfectQualifying: perfectQual,
+  wonWorldCupAsHost: asHost,
+  wonWorldCupAsVisitor: asVisitor,
+  wonWorldCupAsMinnow: asMinnow,
+  longestUnbeatenRun: unbeaten,
+);
 
 ChallengeDef _byId(String id) =>
     ChallengeCatalog.all.firstWhere((c) => c.id == id);
@@ -67,8 +66,9 @@ void main() {
     };
     expect(_byId('ch_wc_allconf').isComplete(_stats(wcConfs: five)), isFalse);
     expect(
-      _byId('ch_wc_allconf')
-          .isComplete(_stats(wcConfs: {...five, Confederation.oceania})),
+      _byId(
+        'ch_wc_allconf',
+      ).isComplete(_stats(wcConfs: {...five, Confederation.oceania})),
       isTrue,
     );
   });
@@ -117,8 +117,7 @@ void main() {
   test('home & away needs a title both as host and away', () {
     expect(_byId('ch_grand_tour').isComplete(_stats(asHost: true)), isFalse);
     expect(
-      _byId('ch_grand_tour')
-          .isComplete(_stats(asHost: true, asVisitor: true)),
+      _byId('ch_grand_tour').isComplete(_stats(asHost: true, asVisitor: true)),
       isTrue,
     );
   });

@@ -9,49 +9,52 @@ import '../helpers/pump_app.dart';
 /// shootout score, shown as a "pens X-Y" tag under the scoreline.
 void main() {
   Fixture level(String? round) => Fixture(
-        id: 1,
-        careerId: 1,
-        competitionId: 1,
-        matchday: 1,
-        date: DateTime(2029, 3, 6),
-        homeNationId: 1,
-        awayNationId: 2,
-        homeScore: 1,
-        awayScore: 1,
-        played: true,
-        round: round,
-      );
+    id: 1,
+    careerId: 1,
+    competitionId: 1,
+    matchday: 1,
+    date: DateTime(2029, 3, 6),
+    homeNationId: 1,
+    awayNationId: 2,
+    homeScore: 1,
+    awayScore: 1,
+    played: true,
+    round: round,
+  );
 
   /// A knockout won on penalties: the stored score shows a winner, and the
   /// shootout score is carried in the penalty columns.
   Fixture shootout(String round) => Fixture(
-        id: 1,
-        careerId: 1,
-        competitionId: 1,
-        matchday: 1,
-        date: DateTime(2029, 3, 6),
-        homeNationId: 1,
-        awayNationId: 2,
-        homeScore: 2,
-        awayScore: 1,
-        played: true,
-        round: round,
-        afterExtraTime: true,
-        homePenalties: 4,
-        awayPenalties: 3,
-      );
+    id: 1,
+    careerId: 1,
+    competitionId: 1,
+    matchday: 1,
+    date: DateTime(2029, 3, 6),
+    homeNationId: 1,
+    awayNationId: 2,
+    homeScore: 2,
+    awayScore: 1,
+    played: true,
+    round: round,
+    afterExtraTime: true,
+    homePenalties: 4,
+    awayPenalties: 3,
+  );
 
   String code(int id) => 'N$id';
 
   Future<void> pump(WidgetTester tester, Fixture f) async {
     await tester.pumpApp(
-      Scaffold(body: MatchResultRow(fixture: f, code: code)),
+      Scaffold(
+        body: MatchResultRow(fixture: f, code: code),
+      ),
     );
     await tester.pumpAndSettle();
   }
 
-  testWidgets('a drawn continental qualifier is not a shootout',
-      (tester) async {
+  testWidgets('a drawn continental qualifier is not a shootout', (
+    tester,
+  ) async {
     // Regression: 'CQ' isn't a group code, so a check that inferred knockout by
     // excluding 'GROUP' rendered "1 - 1 p" on an ordinary drawn qualifier.
     await pump(tester, level('CQ'));
@@ -78,8 +81,9 @@ void main() {
     expect(find.text('1 - 1'), findsOneWidget);
   });
 
-  testWidgets('a knockout settled on penalties shows the shootout score',
-      (tester) async {
+  testWidgets('a knockout settled on penalties shows the shootout score', (
+    tester,
+  ) async {
     for (final round in ['SF', 'CFINAL', 'NSF', '3RD']) {
       await pump(tester, shootout(round));
       expect(find.text('2 - 1'), findsOneWidget, reason: round);
@@ -106,7 +110,10 @@ void main() {
         .widgetList<Text>(find.byType(Text))
         .where((t) => t.data == 'N1' || t.data == 'N2')
         .map((t) => t.style?.fontWeight);
-    expect(weights, isNot(contains(FontWeight.w700)),
-        reason: 'nobody won a drawn game');
+    expect(
+      weights,
+      isNot(contains(FontWeight.w700)),
+      reason: 'nobody won a drawn game',
+    );
   });
 }

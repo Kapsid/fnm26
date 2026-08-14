@@ -10,17 +10,16 @@ LegendStat stat({
   int assists = 0,
   int motm = 0,
   double avgRating = 6.7,
-}) =>
-    (
-      playerId: id,
-      name: 'P$id',
-      position: position,
-      caps: caps,
-      goals: goals,
-      assists: assists,
-      motm: motm,
-      avgRating: avgRating,
-    );
+}) => (
+  playerId: id,
+  name: 'P$id',
+  position: position,
+  caps: caps,
+  goals: goals,
+  assists: assists,
+  motm: motm,
+  avgRating: avgRating,
+);
 
 void main() {
   test('a long-serving scorer outranks a one-cap cameo', () {
@@ -45,7 +44,9 @@ void main() {
     final xi = Legends.allTimeXi(Legends.rank(stats));
     expect(xi.length, 11);
     expect(
-      xi.where((l) => l.position.category == PositionCategory.goalkeeper).length,
+      xi
+          .where((l) => l.position.category == PositionCategory.goalkeeper)
+          .length,
       1,
     );
     expect(

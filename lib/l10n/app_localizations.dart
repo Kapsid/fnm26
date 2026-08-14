@@ -308,6 +308,12 @@ abstract class AppLocalizations {
   /// **'TACTICS'**
   String get matchTacticsLabel;
 
+  /// Label for a team's overall rating (the mean of its best eleven).
+  ///
+  /// In en, this message translates to:
+  /// **'Overall'**
+  String get teamOverall;
+
   /// Match timeline label for a dismissal that followed a second booking.
   ///
   /// In en, this message translates to:

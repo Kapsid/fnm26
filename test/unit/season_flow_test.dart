@@ -42,10 +42,12 @@ void main() {
   test('creating a save generates a competitive group with fixtures', () async {
     await container.read(seedLoaderProvider).ensureSeeded();
     final career =
-        (await container.read(careerServiceProvider).create(
-          nationId: 1,
-          managerName: 'A',
-        ))
+        (await container
+                .read(careerServiceProvider)
+                .create(
+                  nationId: 1,
+                  managerName: 'A',
+                ))
             .valueOrNull!;
 
     final hub = await container.read(hubDataProvider(career.id).future);
@@ -60,10 +62,12 @@ void main() {
   test('advancing simulates the matchday and moves the date forward', () async {
     await container.read(seedLoaderProvider).ensureSeeded();
     final career =
-        (await container.read(careerServiceProvider).create(
-          nationId: 1,
-          managerName: 'A',
-        ))
+        (await container
+                .read(careerServiceProvider)
+                .create(
+                  nationId: 1,
+                  managerName: 'A',
+                ))
             .valueOrNull!;
 
     final before = await container.read(hubDataProvider(career.id).future);

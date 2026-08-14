@@ -6,17 +6,17 @@ import 'package:fnm/domain/services/competition/qualification.dart';
 
 /// Builds a played fixture between two nations.
 Fixture _f(int home, int away, int hs, int as, {int id = 0}) => Fixture(
-      id: id,
-      careerId: 1,
-      competitionId: 1,
-      matchday: 1,
-      date: DateTime(2027),
-      homeNationId: home,
-      awayNationId: away,
-      homeScore: hs,
-      awayScore: as,
-      played: true,
-    );
+  id: id,
+  careerId: 1,
+  competitionId: 1,
+  matchday: 1,
+  date: DateTime(2027),
+  homeNationId: home,
+  awayNationId: away,
+  homeScore: hs,
+  awayScore: as,
+  played: true,
+);
 
 /// A double round-robin where every team beats everyone ranked below it, so
 /// the finishing order is exactly [members] and the results are predictable.
@@ -48,8 +48,21 @@ void main() {
     test('drops results against the bigger group\'s bottom side', () {
       // Group A has six teams, group B five. In A everyone beats everyone
       // below them, so 1 wins all ten (30 pts) and 6 finishes last.
-      final a = GroupStanding.table([1, 2, 3, 4, 5, 6], _pecking([1, 2, 3, 4, 5, 6]));
-      final b = GroupStanding.table([11, 12, 13, 14, 15], _pecking([11, 12, 13, 14, 15]));
+      final a = GroupStanding.table([
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+      ], _pecking([1, 2, 3, 4, 5, 6]));
+      final b = GroupStanding.table([
+        11,
+        12,
+        13,
+        14,
+        15,
+      ], _pecking([11, 12, 13, 14, 15]));
 
       expect(CrossGroup.isUneven([a, b]), isTrue);
       expect(a[0].points, 30); // 10 games, all won
@@ -67,8 +80,21 @@ void main() {
     });
 
     test('third places from uneven groups are ranked over the same games', () {
-      final a = GroupStanding.table([1, 2, 3, 4, 5, 6], _pecking([1, 2, 3, 4, 5, 6]));
-      final b = GroupStanding.table([11, 12, 13, 14, 15], _pecking([11, 12, 13, 14, 15]));
+      final a = GroupStanding.table([
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+      ], _pecking([1, 2, 3, 4, 5, 6]));
+      final b = GroupStanding.table([
+        11,
+        12,
+        13,
+        14,
+        15,
+      ], _pecking([11, 12, 13, 14, 15]));
 
       // Raw totals flatter the six-team group's third place purely because it
       // played two more games: 18 points from 10 against 12 from 8.
@@ -87,8 +113,21 @@ void main() {
     });
 
     test('qualification picks tiers on the comparable records', () {
-      final a = GroupStanding.table([1, 2, 3, 4, 5, 6], _pecking([1, 2, 3, 4, 5, 6]));
-      final b = GroupStanding.table([11, 12, 13, 14, 15], _pecking([11, 12, 13, 14, 15]));
+      final a = GroupStanding.table([
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+      ], _pecking([1, 2, 3, 4, 5, 6]));
+      final b = GroupStanding.table([
+        11,
+        12,
+        13,
+        14,
+        15,
+      ], _pecking([11, 12, 13, 14, 15]));
 
       // Two berths: both group winners, whatever the group sizes.
       expect(Qualification.qualifiers([a, b], 2), containsAll([1, 11]));

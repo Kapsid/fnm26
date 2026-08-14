@@ -46,12 +46,12 @@ void main() {
 
   test('bigger games move more points', () {
     int gain(double weight) => Elo.homeDelta(
-          homePoints: 1500,
-          awayPoints: 1500,
-          homeScore: 1,
-          awayScore: 0,
-          weight: weight,
-        );
+      homePoints: 1500,
+      awayPoints: 1500,
+      homeScore: 1,
+      awayScore: 0,
+      weight: weight,
+    );
     expect(gain(Elo.finals), greaterThan(gain(Elo.friendly)));
   });
 

@@ -29,11 +29,13 @@ void main() {
 
   setUp(() async {
     db = createTestDatabase();
-    final nations = (jsonDecode(
-      File('assets/data/nations.json').readAsStringSync(),
-    ) as List<dynamic>)
-        .map((e) => Nation.fromJson(e as Map<String, Object?>))
-        .toList();
+    final nations =
+        (jsonDecode(
+                  File('assets/data/nations.json').readAsStringSync(),
+                )
+                as List<dynamic>)
+            .map((e) => Nation.fromJson(e as Map<String, Object?>))
+            .toList();
 
     container = ProviderContainer(
       overrides: [
@@ -48,12 +50,15 @@ void main() {
     final player = nations
         .where((n) => n.confederation == Confederation.europe)
         .reduce((a, b) => a.ranking <= b.ranking ? a : b);
-    careerId = (await container.read(careerServiceProvider).create(
-          nationId: player.id,
-          managerName: 'M',
-        ))
-        .valueOrNull!
-        .id;
+    careerId =
+        (await container
+                .read(careerServiceProvider)
+                .create(
+                  nationId: player.id,
+                  managerName: 'M',
+                ))
+            .valueOrNull!
+            .id;
   });
 
   tearDown(() async {
@@ -90,8 +95,9 @@ void main() {
     expect(find.textContaining('LEAGUE'), findsWidgets);
   });
 
-  testWidgets("another confederation's cup opens on its history",
-      (tester) async {
+  testWidgets("another confederation's cup opens on its history", (
+    tester,
+  ) async {
     tester.view.devicePixelRatio = 1;
     tester.view.physicalSize = const Size(500, 900);
     addTearDown(tester.view.reset);

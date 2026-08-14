@@ -44,8 +44,12 @@ NationSquadRow _row(
 
 final _data = NationSquadData(
   rows: [
-    _row(_p(1, 'Alonso', PlayerPosition.st, 88), caps: 40, goals: 20,
-        calledUp: true),
+    _row(
+      _p(1, 'Alonso', PlayerPosition.st, 88),
+      caps: 40,
+      goals: 20,
+      calledUp: true,
+    ),
     _row(_p(2, 'Barrow', PlayerPosition.cb, 80), caps: 12),
     _row(_p(3, 'Costa', PlayerPosition.cm, 76), calledUp: true),
     _row(_p(4, 'Duval', PlayerPosition.gk, 74)),
@@ -74,8 +78,9 @@ void main() {
       const Scaffold(body: NationSquadTab(careerId: 1)),
       overrides: [
         nationSquadProvider(1).overrideWith((ref) async => _data),
-        absenceOutlookProvider(1)
-            .overrideWith((ref) async => const <int, AbsenceOutlook>{}),
+        absenceOutlookProvider(
+          1,
+        ).overrideWith((ref) async => const <int, AbsenceOutlook>{}),
         captainProvider(1).overrideWith((ref) async => null),
         captainMoraleProvider(1).overrideWith((ref) async => 0),
       ],

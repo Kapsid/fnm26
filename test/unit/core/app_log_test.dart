@@ -60,7 +60,10 @@ void main() {
   test('with no writable file it falls back to memory, never throws', () async {
     AppLog.debugUse(null);
 
-    expect(() => AppLog.error('ctx', Exception('memory only')), returnsNormally);
+    expect(
+      () => AppLog.error('ctx', Exception('memory only')),
+      returnsNormally,
+    );
     await AppLog.debugFlush();
     expect(await AppLog.read(), contains('memory only'));
   });
@@ -73,7 +76,10 @@ void main() {
     // The file is gone underneath us — appending recreates or fails silently,
     // but either way the caller (already handling a crash) must not see a
     // second exception.
-    expect(() => AppLog.error('ctx', Exception('after delete')), returnsNormally);
+    expect(
+      () => AppLog.error('ctx', Exception('after delete')),
+      returnsNormally,
+    );
     await AppLog.debugFlush();
     expect(() => AppLog.read(), returnsNormally);
   });

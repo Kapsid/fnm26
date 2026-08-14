@@ -22,7 +22,10 @@ void main() {
     final labels = {
       for (final s in ClubStanding.values) clubStandingLabel(l, s),
     };
-    expect(labels, hasLength(ClubStanding.values.length),
-        reason: 'two standings read the same, so the badge says nothing');
+    expect(
+      labels,
+      hasLength(ClubStanding.values.length),
+      reason: 'two standings read the same, so the badge says nothing',
+    );
   });
 }

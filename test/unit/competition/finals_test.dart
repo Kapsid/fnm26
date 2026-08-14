@@ -125,27 +125,29 @@ void main() {
       expect(draw.groups[0].nationIds, isNot(contains(45)));
     });
 
-    test('round of 32 seeds 24 group qualifiers + 8 best thirds into 16 ties',
-        () {
-      // 12 groups of 4; group i gives its teams descending points so ranks are
-      // well-defined across groups.
-      final groups = [
-        for (var i = 0; i < 12; i++)
-          [
-            _standing(i * 4 + 1, points: 9, gf: 12 - i),
-            _standing(i * 4 + 2, points: 6, gf: 12 - i),
-            _standing(i * 4 + 3, points: 3, gf: 12 - i),
-            _standing(i * 4 + 4, points: 0, gf: 12 - i),
-          ],
-      ];
-      final ties = WorldCupFinals.roundOf32(groups);
-      expect(ties, hasLength(16)); // 32 teams → 16 ties
-      // 32 distinct teams: all 12 winners, all 12 runners-up, 8 of 12 thirds.
-      final teams = ties.expand((t) => [t.$1, t.$2]).toSet();
-      expect(teams, hasLength(32));
-      // No fourth-placed team qualifies.
-      expect(teams.any((id) => id % 4 == 0), isFalse);
-    });
+    test(
+      'round of 32 seeds 24 group qualifiers + 8 best thirds into 16 ties',
+      () {
+        // 12 groups of 4; group i gives its teams descending points so ranks are
+        // well-defined across groups.
+        final groups = [
+          for (var i = 0; i < 12; i++)
+            [
+              _standing(i * 4 + 1, points: 9, gf: 12 - i),
+              _standing(i * 4 + 2, points: 6, gf: 12 - i),
+              _standing(i * 4 + 3, points: 3, gf: 12 - i),
+              _standing(i * 4 + 4, points: 0, gf: 12 - i),
+            ],
+        ];
+        final ties = WorldCupFinals.roundOf32(groups);
+        expect(ties, hasLength(16)); // 32 teams → 16 ties
+        // 32 distinct teams: all 12 winners, all 12 runners-up, 8 of 12 thirds.
+        final teams = ties.expand((t) => [t.$1, t.$2]).toSet();
+        expect(teams, hasLength(32));
+        // No fourth-placed team qualifies.
+        expect(teams.any((id) => id % 4 == 0), isFalse);
+      },
+    );
 
     test('round of 16 pairs winners with runners-up across groups', () {
       final groups = [
@@ -267,15 +269,14 @@ void main() {
 
     test('is deterministic for a given seed', () {
       List<PlayoffTie> run() => WorldCupFinals.playoffBracket(
-            byConfederation: byConfederation,
-            rankingById: ranks,
-            rng: SeededRng(42),
-          );
+        byConfederation: byConfederation,
+        rankingById: ranks,
+        rng: SeededRng(42),
+      );
       expect(run().map((t) => t.winner), run().map((t) => t.winner));
     });
 
-    test('path-final winners are exactly selectFinalists play-off qualifiers',
-        () {
+    test('path-final winners are exactly selectFinalists play-off qualifiers', () {
       const seed = 123;
       final ties = WorldCupFinals.playoffBracket(
         byConfederation: byConfederation,
@@ -294,8 +295,7 @@ void main() {
         hosts: const [],
         playoffRng: SeededRng(seed),
       );
-      final actualPlayoffQualifiers =
-          finalists.where(poolIds.contains).toSet();
+      final actualPlayoffQualifiers = finalists.where(poolIds.contains).toSet();
       expect(displayWinners, actualPlayoffQualifiers);
       expect(displayWinners, hasLength(2));
     });

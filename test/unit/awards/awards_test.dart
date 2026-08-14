@@ -11,18 +11,17 @@ void main() {
     int assists = 0,
     double rating = 7.0,
     int motms = 0,
-  }) =>
-      (
-        playerId: id,
-        nationId: 1,
-        name: 'P$id',
-        age: age,
-        apps: apps,
-        goals: goals,
-        assists: assists,
-        meanRating: rating,
-        motms: motms,
-      );
+  }) => (
+    playerId: id,
+    nationId: 1,
+    name: 'P$id',
+    age: age,
+    apps: apps,
+    goals: goals,
+    assists: assists,
+    meanRating: rating,
+    motms: motms,
+  );
 
   group('Player of the Year', () {
     test('nobody wins a year nobody played', () {

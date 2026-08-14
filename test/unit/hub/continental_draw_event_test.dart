@@ -27,111 +27,126 @@ void main() {
   // continentalDetailProvider loads city data from rootBundle.
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  test('a non-qualifier is still offered their continent\'s finals draw',
-      () async {
-    final db = createTestDatabase();
-    final nations = (jsonDecode(
-      File('assets/data/nations.json').readAsStringSync(),
-    ) as List<dynamic>)
-        .map((e) => Nation.fromJson(e as Map<String, Object?>))
-        .toList();
+  test(
+    'a non-qualifier is still offered their continent\'s finals draw',
+    () async {
+      final db = createTestDatabase();
+      final nations =
+          (jsonDecode(
+                    File('assets/data/nations.json').readAsStringSync(),
+                  )
+                  as List<dynamic>)
+              .map((e) => Nation.fromJson(e as Map<String, Object?>))
+              .toList();
 
-    final container = ProviderContainer(
-      overrides: [
-        appDatabaseProvider.overrideWithValue(db),
-        premiumUnlockedProvider.overrideWith((ref) => true),
-        seedSourceProvider.overrideWithValue(
-          InMemorySeedSource(nationList: nations, playerList: const []),
-        ),
-      ],
-    );
-    addTearDown(container.dispose);
-    addTearDown(db.close);
+      final container = ProviderContainer(
+        overrides: [
+          appDatabaseProvider.overrideWithValue(db),
+          premiumUnlockedProvider.overrideWith((ref) => true),
+          seedSourceProvider.overrideWithValue(
+            InMemorySeedSource(nationList: nations, playerList: const []),
+          ),
+        ],
+      );
+      addTearDown(container.dispose);
+      addTearDown(db.close);
 
-    await container.read(seedLoaderProvider).ensureSeeded();
-    // The weakest European nation: it won't reach the Euro finals.
-    final player = nations
-        .where((n) => n.confederation == Confederation.europe)
-        .reduce((a, b) => a.ranking >= b.ranking ? a : b);
-    final career = (await container.read(careerServiceProvider).create(
-          nationId: player.id,
-          managerName: 'M',
-        ))
-        .valueOrNull!;
+      await container.read(seedLoaderProvider).ensureSeeded();
+      // The weakest European nation: it won't reach the Euro finals.
+      final player = nations
+          .where((n) => n.confederation == Confederation.europe)
+          .reduce((a, b) => a.ranking >= b.ranking ? a : b);
+      final career =
+          (await container
+                  .read(careerServiceProvider)
+                  .create(
+                    nationId: player.id,
+                    managerName: 'M',
+                  ))
+              .valueOrNull!;
 
-    final comp = container.read(competitionRepositoryProvider);
-    final season = container.read(seasonServiceProvider);
+      final comp = container.read(competitionRepositoryProvider);
+      final season = container.read(seasonServiceProvider);
 
-    // Advance until the continental finals have been drawn.
-    var last = DateTime(1900);
-    var drawn = false;
-    for (var i = 0; i < 120; i++) {
-      // THIS nation's cup. Every confederation's championship is drawn for the
-      // cycle now, so an unqualified check is true from the first day and this
-      // loop would never advance the save at all.
-      if (await comp.hasTournament(
-        career.id,
-        CompetitionKind.continentalFinals,
-        confederation: player.confederation,
-      )) {
-        drawn = true;
-        break;
+      // Advance until the continental finals have been drawn.
+      var last = DateTime(1900);
+      var drawn = false;
+      for (var i = 0; i < 120; i++) {
+        // THIS nation's cup. Every confederation's championship is drawn for the
+        // cycle now, so an unqualified check is true from the first day and this
+        // loop would never advance the save at all.
+        if (await comp.hasTournament(
+          career.id,
+          CompetitionKind.continentalFinals,
+          confederation: player.confederation,
+        )) {
+          drawn = true;
+          break;
+        }
+        await season.advance(career.id);
+        final hub = await container.read(hubDataProvider(career.id).future);
+        if (hub == null) break;
+        if (!hub.career.inGameDate.isAfter(last)) break;
+        last = hub.career.inGameDate;
       }
-      await season.advance(career.id);
-      final hub = await container.read(hubDataProvider(career.id).future);
-      if (hub == null) break;
-      if (!hub.career.inGameDate.isAfter(last)) break;
-      last = hub.career.inGameDate;
-    }
-    expect(drawn, isTrue, reason: 'the continental finals should be drawn');
+      expect(drawn, isTrue, reason: 'the continental finals should be drawn');
 
-    // The player is NOT in the finals — that's the case this is about.
-    final ownFinalsGames = (await comp.fixturesByRound(
-      career.id,
-      'CGROUP',
-      kind: CompetitionKind.continentalFinals,
-    ))
-        .where((f) =>
-            f.homeNationId == player.id || f.awayNationId == player.id)
-        .toList();
-    expect(ownFinalsGames, isEmpty, reason: 'this nation did not qualify');
+      // The player is NOT in the finals — that's the case this is about.
+      final ownFinalsGames =
+          (await comp.fixturesByRound(
+                career.id,
+                'CGROUP',
+                kind: CompetitionKind.continentalFinals,
+              ))
+              .where(
+                (f) =>
+                    f.homeNationId == player.id || f.awayNationId == player.id,
+              )
+              .toList();
+      expect(ownFinalsGames, isEmpty, reason: 'this nation did not qualify');
 
-    // The finals groups exist and are real — the tournament is not "knockouts
-    // only", whatever the screen used to imply.
-    final allFinalsGames = await comp.fixturesByRound(
-      career.id,
-      'CGROUP',
-      kind: CompetitionKind.continentalFinals,
-    );
-    expect(allFinalsGames, isNotEmpty, reason: 'a group stage was generated');
+      // The finals groups exist and are real — the tournament is not "knockouts
+      // only", whatever the screen used to imply.
+      final allFinalsGames = await comp.fixturesByRound(
+        career.id,
+        'CGROUP',
+        kind: CompetitionKind.continentalFinals,
+      );
+      expect(allFinalsGames, isNotEmpty, reason: 'a group stage was generated');
 
-    // The budget is the forced first event of the cycle; set it so the flow
-    // moves on to the draw this test is about.
-    await comp.markDrawWatched(career.id, career.cyclePointer, budgetSetupKind);
+      // The budget is the forced first event of the cycle; set it so the flow
+      // moves on to the draw this test is about.
+      await comp.markDrawWatched(
+        career.id,
+        career.cyclePointer,
+        budgetSetupKind,
+      );
 
-    // The draw is offered anyway.
-    final event = await container.read(nextEventProvider(career.id).future);
-    expect(
-      event.kind,
-      HubEventKind.draw,
-      reason: 'a non-qualifier must still be offered the draw',
-    );
-    expect(event.label, 'Watch the finals draw');
+      // The draw is offered anyway.
+      final event = await container.read(nextEventProvider(career.id).future);
+      expect(
+        event.kind,
+        HubEventKind.draw,
+        reason: 'a non-qualifier must still be offered the draw',
+      );
+      expect(event.label, 'Watch the finals draw');
 
-    // And watching it unlocks the groups tab.
-    await comp.markDrawWatched(
-      career.id,
-      career.cyclePointer,
-      continentalFinalsDrawKind,
-    );
-    container.invalidate(continentalDetailProvider);
-    final view = await container.read(
-      continentalDetailProvider((
-        careerId: career.id,
-        confederation: Confederation.europe,
-      )).future,
-    );
-    expect(view!.finalsDrawWatched, isTrue);
-    expect(view.groups, isNotEmpty, reason: 'the group tables are revealed');
-  }, timeout: const Timeout(Duration(minutes: 6)));
+      // And watching it unlocks the groups tab.
+      await comp.markDrawWatched(
+        career.id,
+        career.cyclePointer,
+        continentalFinalsDrawKind,
+      );
+      container.invalidate(continentalDetailProvider);
+      final view = await container.read(
+        continentalDetailProvider((
+          careerId: career.id,
+          confederation: Confederation.europe,
+        )).future,
+      );
+      expect(view!.finalsDrawWatched, isTrue);
+      expect(view.groups, isNotEmpty, reason: 'the group tables are revealed');
+    },
+    timeout: const Timeout(Duration(minutes: 6)),
+  );
 }

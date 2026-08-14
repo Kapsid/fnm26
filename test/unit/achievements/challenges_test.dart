@@ -9,23 +9,22 @@ ChallengeStats stats({
   int careerCleanSheets = 0,
   int careerHatTricks = 0,
   int longestWinStreak = 0,
-}) =>
-    ChallengeStats(
-      worldCupTitles: worldCupTitles,
-      distinctWorldCupNations: 0,
-      worldCupConfederations: const <Confederation>{},
-      mostWorldCupsInARow: 0,
-      continentalTitles: continentalTitles,
-      continentalCupsWon: const <String>{},
-      nationsCupTitles: 0,
-      clashTitles: 0,
-      yearsManaged: 0,
-      nationsManaged: 0,
-      careerGoals: careerGoals,
-      careerCleanSheets: careerCleanSheets,
-      careerHatTricks: careerHatTricks,
-      longestWinStreak: longestWinStreak,
-    );
+}) => ChallengeStats(
+  worldCupTitles: worldCupTitles,
+  distinctWorldCupNations: 0,
+  worldCupConfederations: const <Confederation>{},
+  mostWorldCupsInARow: 0,
+  continentalTitles: continentalTitles,
+  continentalCupsWon: const <String>{},
+  nationsCupTitles: 0,
+  clashTitles: 0,
+  yearsManaged: 0,
+  nationsManaged: 0,
+  careerGoals: careerGoals,
+  careerCleanSheets: careerCleanSheets,
+  careerHatTricks: careerHatTricks,
+  longestWinStreak: longestWinStreak,
+);
 
 void main() {
   test('every challenge id (catalogue + procedural) is unique', () {

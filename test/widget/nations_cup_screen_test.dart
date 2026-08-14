@@ -29,11 +29,13 @@ void main() {
 
   setUp(() async {
     db = createTestDatabase();
-    final nations = (jsonDecode(
-      File('assets/data/nations.json').readAsStringSync(),
-    ) as List<dynamic>)
-        .map((e) => Nation.fromJson(e as Map<String, Object?>))
-        .toList();
+    final nations =
+        (jsonDecode(
+                  File('assets/data/nations.json').readAsStringSync(),
+                )
+                as List<dynamic>)
+            .map((e) => Nation.fromJson(e as Map<String, Object?>))
+            .toList();
 
     container = ProviderContainer(
       overrides: [
@@ -48,12 +50,15 @@ void main() {
     final player = nations
         .where((n) => n.confederation == Confederation.europe)
         .reduce((a, b) => a.ranking <= b.ranking ? a : b);
-    careerId = (await container.read(careerServiceProvider).create(
-          nationId: player.id,
-          managerName: 'M',
-        ))
-        .valueOrNull!
-        .id;
+    careerId =
+        (await container
+                .read(careerServiceProvider)
+                .create(
+                  nationId: player.id,
+                  managerName: 'M',
+                ))
+            .valueOrNull!
+            .id;
   });
 
   tearDown(() async {
@@ -99,13 +104,15 @@ void main() {
     await tester.pumpAndSettle();
 
     // Either the honour roll or its empty state, but never nothing at all.
-    final hasHistory = find.text('PAST WINNERS').evaluate().isNotEmpty ||
+    final hasHistory =
+        find.text('PAST WINNERS').evaluate().isNotEmpty ||
         find.textContaining('champions crowned').evaluate().isNotEmpty;
     expect(hasHistory, isTrue, reason: 'history must be reachable in season');
   });
 
-  testWidgets('the scorers tab exists and reports an empty chart',
-      (tester) async {
+  testWidgets('the scorers tab exists and reports an empty chart', (
+    tester,
+  ) async {
     await pumpScreen(tester);
 
     await tester.ensureVisible(find.text('SCORERS'));

@@ -20,24 +20,30 @@ void main() {
       ),
   ];
 
-  test('career starts develop a player (capped) and none leaves them as-is', () {
-    final base = PlayerLifecycle.poolAt(seeded, 1, 0);
-    final target = base.first;
-    // With many starts, the same player's overall is a touch higher — but
-    // capped, so it can't run away.
-    final developed = PlayerLifecycle.poolAt(
-      seeded,
-      1,
-      0,
-      careerStartsByPlayer: {target.id: 40},
-    ).firstWhere((p) => p.id == target.id);
-    expect(developed.overall, greaterThan(target.overall));
-    expect(developed.overall - target.overall, lessThanOrEqualTo(3));
-    // No starts → identical to the undeveloped pool.
-    final none = PlayerLifecycle.poolAt(seeded, 1, 0)
-        .firstWhere((p) => p.id == target.id);
-    expect(none.overall, target.overall);
-  });
+  test(
+    'career starts develop a player (capped) and none leaves them as-is',
+    () {
+      final base = PlayerLifecycle.poolAt(seeded, 1, 0);
+      final target = base.first;
+      // With many starts, the same player's overall is a touch higher — but
+      // capped, so it can't run away.
+      final developed = PlayerLifecycle.poolAt(
+        seeded,
+        1,
+        0,
+        careerStartsByPlayer: {target.id: 40},
+      ).firstWhere((p) => p.id == target.id);
+      expect(developed.overall, greaterThan(target.overall));
+      expect(developed.overall - target.overall, lessThanOrEqualTo(3));
+      // No starts → identical to the undeveloped pool.
+      final none = PlayerLifecycle.poolAt(
+        seeded,
+        1,
+        0,
+      ).firstWhere((p) => p.id == target.id);
+      expect(none.overall, target.overall);
+    },
+  );
 
   group('annual intake at eleven', () {
     List<Player> youth(int years) =>
@@ -64,8 +70,11 @@ void main() {
     test('a fresh intake arrives every year, not every fourth', () {
       for (var year = 1; year <= 4; year++) {
         final eleven = youth(year).where((p) => p.age == 11).toList();
-        expect(eleven, hasLength(PlayerLifecycle.intakePerYear),
-            reason: 'no intake in year $year');
+        expect(
+          eleven,
+          hasLength(PlayerLifecycle.intakePerYear),
+          reason: 'no intake in year $year',
+        );
       }
     });
 
@@ -102,8 +111,11 @@ void main() {
       for (var year = 0; year <= 20; year++) {
         final present = youth(year).any((p) => p.id == doomed.id);
         final ageThen = doomed.age + year;
-        expect(present, ageThen < releaseAge,
-            reason: 'at age $ageThen (release $releaseAge)');
+        expect(
+          present,
+          ageThen < releaseAge,
+          reason: 'at age $ageThen (release $releaseAge)',
+        );
       }
     });
 
@@ -114,8 +126,12 @@ void main() {
       // the schoolboys beneath it are new and would otherwise be counted as
       // growth that never happened.
       for (final year in [20, 40, 80]) {
-        final seniors =
-            PlayerLifecycle.poolAt(seeded, 1, year, minAge: 17).length;
+        final seniors = PlayerLifecycle.poolAt(
+          seeded,
+          1,
+          year,
+          minAge: 17,
+        ).length;
         expect(seniors, greaterThan(105), reason: 'year $year');
         expect(seniors, lessThan(150), reason: 'year $year');
       }
@@ -124,8 +140,10 @@ void main() {
     test('two saves at the same year see the same pyramid', () {
       final a = youth(9)..sort((x, y) => x.id.compareTo(y.id));
       final b = youth(9)..sort((x, y) => x.id.compareTo(y.id));
-      expect([for (final p in a) '${p.id}:${p.name}:${p.overall}'],
-          [for (final p in b) '${p.id}:${p.name}:${p.overall}']);
+      expect(
+        [for (final p in a) '${p.id}:${p.name}:${p.overall}'],
+        [for (final p in b) '${p.id}:${p.name}:${p.overall}'],
+      );
     });
   });
 
@@ -189,8 +207,7 @@ void main() {
       }
     });
 
-    test(
-        'the best sixteen-year-old is still well below the squad-boundary '
+    test('the best sixteen-year-old is still well below the squad-boundary '
         'senior', () {
       // The intent: naming a fifteen- or sixteen-year-old must cost you
       // results, so it stays a rare, deliberate gamble rather than a free
@@ -204,13 +221,19 @@ void main() {
       final seniors = PlayerLifecycle.poolAt(seeded, 1, 12)
         ..sort((a, b) => b.overall.compareTo(a.overall));
       // The 23rd-best (index 22) is the last man into a standard squad.
-      expect(seniors.length, greaterThan(22),
-          reason: 'senior pool too small to have a squad boundary');
+      expect(
+        seniors.length,
+        greaterThan(22),
+        reason: 'senior pool too small to have a squad boundary',
+      );
       final boundarySenior = seniors[22];
-      final sixteens = PlayerLifecycle.youthPoolAt(seeded, 1, 12)
-          .where((p) => p.age == 16)
-          .toList()
-        ..sort((a, b) => b.overall.compareTo(a.overall));
+      final sixteens =
+          PlayerLifecycle.youthPoolAt(
+              seeded,
+              1,
+              12,
+            ).where((p) => p.age == 16).toList()
+            ..sort((a, b) => b.overall.compareTo(a.overall));
       expect(sixteens, isNotEmpty);
       final bestSixteen = sixteens.first;
       expect(
@@ -223,10 +246,19 @@ void main() {
   group('club minutes and development', () {
     test('a seed of zero leaves development exactly as it was', () {
       // Every existing caller passes no seed; none of them may move.
-      final without = PlayerLifecycle.poolAt(seeded, 1, 8,
-          careerStartsByPlayer: {for (final p in seeded) p.id: 9});
-      final explicit = PlayerLifecycle.poolAt(seeded, 1, 8,
-          clubSeed: 0, careerStartsByPlayer: {for (final p in seeded) p.id: 9});
+      final without = PlayerLifecycle.poolAt(
+        seeded,
+        1,
+        8,
+        careerStartsByPlayer: {for (final p in seeded) p.id: 9},
+      );
+      final explicit = PlayerLifecycle.poolAt(
+        seeded,
+        1,
+        8,
+        clubSeed: 0,
+        careerStartsByPlayer: {for (final p in seeded) p.id: 9},
+      );
       expect(
         [for (final p in explicit) p.overall],
         [for (final p in without) p.overall],
@@ -235,10 +267,16 @@ void main() {
 
     test('the minutes factor moves a well-used player', () {
       final base = PlayerLifecycle.withCareerDev(seeded.first, 16);
-      final starved =
-          PlayerLifecycle.withCareerDev(seeded.first, 16, minutesFactor: 0.6);
-      final feasted =
-          PlayerLifecycle.withCareerDev(seeded.first, 16, minutesFactor: 1.4);
+      final starved = PlayerLifecycle.withCareerDev(
+        seeded.first,
+        16,
+        minutesFactor: 0.6,
+      );
+      final feasted = PlayerLifecycle.withCareerDev(
+        seeded.first,
+        16,
+        minutesFactor: 1.4,
+      );
       expect(starved.overall, lessThanOrEqualTo(base.overall));
       expect(feasted.overall, greaterThanOrEqualTo(base.overall));
     });
@@ -247,11 +285,14 @@ void main() {
       // The equilibrium guard at the pool level: individuals move, the world
       // does not.
       double meanOverall(int seed) {
-        final pool = PlayerLifecycle.poolAt(seeded, 1, 20,
-            clubSeed: seed,
-            careerStartsByPlayer: {for (final p in seeded) p.id: 12});
-        return pool.map((p) => p.overall).reduce((a, b) => a + b) /
-            pool.length;
+        final pool = PlayerLifecycle.poolAt(
+          seeded,
+          1,
+          20,
+          clubSeed: seed,
+          careerStartsByPlayer: {for (final p in seeded) p.id: 12},
+        );
+        return pool.map((p) => p.overall).reduce((a, b) => a + b) / pool.length;
       }
 
       expect(meanOverall(7777), closeTo(meanOverall(0), 0.6));
@@ -350,5 +391,4 @@ void _retirementVariance() {
       expect(mean, closeTo(PlayerLifecycle.retirementAge.toDouble(), 0.3));
     });
   });
-
 }

@@ -88,13 +88,13 @@ void main() {
 
   group('the sub-17 curve', () {
     Player boy(int age) => player(
-          id: 4242,
-          nationId: 1,
-          name: 'Boy',
-          position: PlayerPosition.cm,
-          age: age,
-          attributes: flatAttributes(70),
-        );
+      id: 4242,
+      nationId: 1,
+      name: 'Boy',
+      position: PlayerPosition.cm,
+      age: age,
+      attributes: flatAttributes(70),
+    );
 
     test('a child is rated far below the same attributes at senior age', () {
       // Same raw attributes, read at different ages: the discount is what
@@ -108,8 +108,11 @@ void main() {
       var previous = PlayerAging.agedYears(boy(11), 0).overall;
       for (var age = 12; age <= 18; age++) {
         final current = PlayerAging.agedYears(boy(age), 0).overall;
-        expect(current, greaterThanOrEqualTo(previous),
-            reason: 'the discount jumped backwards at $age');
+        expect(
+          current,
+          greaterThanOrEqualTo(previous),
+          reason: 'the discount jumped backwards at $age',
+        );
         previous = current;
       }
     });
@@ -127,9 +130,11 @@ void main() {
     test('a boy grows fast and then slows down', () {
       // Eleven to seventeen must add clearly more than seventeen to twenty
       // does — childhood is where the growth is.
-      final childhood = PlayerAging.agedYears(boy(11), 6).attributes.physical -
+      final childhood =
+          PlayerAging.agedYears(boy(11), 6).attributes.physical -
           boy(11).attributes.physical;
-      final teens = PlayerAging.agedYears(boy(17), 3).attributes.physical -
+      final teens =
+          PlayerAging.agedYears(boy(17), 3).attributes.physical -
           boy(17).attributes.physical;
       expect(childhood, greaterThan(teens * 2));
     });

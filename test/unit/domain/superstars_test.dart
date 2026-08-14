@@ -24,13 +24,13 @@ void main() {
   }
 
   Player at(int id, int age, int attribute) => player(
-        id: id,
-        nationId: 1,
-        name: 'Test',
-        position: PlayerPosition.st,
-        age: age,
-        attributes: flatAttributes(attribute),
-      );
+    id: id,
+    nationId: 1,
+    name: 'Test',
+    position: PlayerPosition.st,
+    age: age,
+    attributes: flatAttributes(attribute),
+  );
 
   group('who is a superstar', () {
     test('a world of ~4800 players holds between five and twenty', () {
@@ -93,8 +93,10 @@ void main() {
         ),
         0,
       );
-      expect(lifted.attributes.physical,
-          greaterThan(lifted.attributes.technical));
+      expect(
+        lifted.attributes.physical,
+        greaterThan(lifted.attributes.technical),
+      );
     });
 
     test('he arrives through his early twenties and fades in his thirties', () {

@@ -9,7 +9,11 @@ void main() {
   group('PlayerPosition.category', () {
     test('maps every position to the right broad category', () {
       expect(PlayerPosition.gk.category, PositionCategory.goalkeeper);
-      for (final p in [PlayerPosition.lb, PlayerPosition.cb, PlayerPosition.rb]) {
+      for (final p in [
+        PlayerPosition.lb,
+        PlayerPosition.cb,
+        PlayerPosition.rb,
+      ]) {
         expect(p.category, PositionCategory.defender, reason: p.name);
       }
       for (final p in [
@@ -21,7 +25,11 @@ void main() {
       ]) {
         expect(p.category, PositionCategory.midfielder, reason: p.name);
       }
-      for (final p in [PlayerPosition.lw, PlayerPosition.rw, PlayerPosition.st]) {
+      for (final p in [
+        PlayerPosition.lw,
+        PlayerPosition.rw,
+        PlayerPosition.st,
+      ]) {
         expect(p.category, PositionCategory.forward, reason: p.name);
       }
     });
@@ -50,19 +58,27 @@ void main() {
         stamina: 95,
       );
 
-      final technicianOverall =
-          OverallRating.forPosition(PlayerPosition.st, technician);
-      final runnerOverall =
-          OverallRating.forPosition(PlayerPosition.st, runner);
+      final technicianOverall = OverallRating.forPosition(
+        PlayerPosition.st,
+        technician,
+      );
+      final runnerOverall = OverallRating.forPosition(
+        PlayerPosition.st,
+        runner,
+      );
 
       expect(technicianOverall, greaterThan(runnerOverall));
     });
 
     test('result is clamped to 1..99', () {
-      expect(OverallRating.forPosition(PlayerPosition.st, flatAttributes(99)),
-          lessThanOrEqualTo(99));
-      expect(OverallRating.forPosition(PlayerPosition.gk, flatAttributes(1)),
-          greaterThanOrEqualTo(1));
+      expect(
+        OverallRating.forPosition(PlayerPosition.st, flatAttributes(99)),
+        lessThanOrEqualTo(99),
+      );
+      expect(
+        OverallRating.forPosition(PlayerPosition.gk, flatAttributes(1)),
+        greaterThanOrEqualTo(1),
+      );
     });
   });
 

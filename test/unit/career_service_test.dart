@@ -28,8 +28,14 @@ void main() {
     container = build(premium: false);
     final service = container.read(careerServiceProvider);
 
-    expect((await service.create(nationId: 1, managerName: 'A')).isSuccess, isTrue);
-    expect((await service.create(nationId: 1, managerName: 'B')).isSuccess, isTrue);
+    expect(
+      (await service.create(nationId: 1, managerName: 'A')).isSuccess,
+      isTrue,
+    );
+    expect(
+      (await service.create(nationId: 1, managerName: 'B')).isSuccess,
+      isTrue,
+    );
 
     final third = await service.create(nationId: 1, managerName: 'C');
     expect(third.isFailure, isTrue);
@@ -47,7 +53,10 @@ void main() {
       final r = await service.create(nationId: 1, managerName: 'M$i');
       expect(r.isSuccess, isTrue, reason: 'save ${i + 1}');
     }
-    expect((await service.create(nationId: 1, managerName: 'X')).isFailure, isTrue);
+    expect(
+      (await service.create(nationId: 1, managerName: 'X')).isFailure,
+      isTrue,
+    );
   });
 
   test('created save starts in July 2026 with cycle 0', () async {
@@ -65,8 +74,10 @@ void main() {
     container = build(premium: true);
     final service = container.read(careerServiceProvider);
 
-    final career =
-        (await service.create(nationId: 1, managerName: '   ')).valueOrNull!;
+    final career = (await service.create(
+      nationId: 1,
+      managerName: '   ',
+    )).valueOrNull!;
     expect(career.managerName, 'Manager');
   });
 }

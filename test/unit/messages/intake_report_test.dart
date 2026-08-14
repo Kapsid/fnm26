@@ -9,16 +9,16 @@ import '../../helpers/fixtures.dart';
 
 void main() {
   List<Player> pyramidOfAges(List<int> ages) => [
-        for (var i = 0; i < ages.length; i++)
-          player(
-            id: 5000 + i,
-            nationId: 1,
-            name: 'Boy$i',
-            position: PlayerPosition.cm,
-            age: ages[i],
-            attributes: flatAttributes(40 + i),
-          ),
-      ];
+    for (var i = 0; i < ages.length; i++)
+      player(
+        id: 5000 + i,
+        nationId: 1,
+        name: 'Boy$i',
+        position: PlayerPosition.cm,
+        age: ages[i],
+        attributes: flatAttributes(40 + i),
+      ),
+  ];
 
   group('intakeRows', () {
     test("takes this year's eleven-year-olds and nobody else", () {

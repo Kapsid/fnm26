@@ -172,8 +172,11 @@ void main() {
       // about, not the norm the rating curve would otherwise produce for a
       // talented kid from a small country.
       for (final code in ['eng', 'cze', 'bra']) {
-        expect(youngDomesticShare(code, 62, 15), greaterThan(85),
-            reason: '$code lets its fifteen-year-olds go too easily');
+        expect(
+          youngDomesticShare(code, 62, 15),
+          greaterThan(85),
+          reason: '$code lets its fifteen-year-olds go too easily',
+        );
       }
     });
 

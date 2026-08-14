@@ -3,17 +3,17 @@ import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/entities/group_standing.dart';
 
 Fixture _fx(int home, int away, int hs, int as) => Fixture(
-      id: home * 100 + away,
-      careerId: 1,
-      competitionId: 1,
-      matchday: 1,
-      date: DateTime(2030),
-      homeNationId: home,
-      awayNationId: away,
-      homeScore: hs,
-      awayScore: as,
-      played: true,
-    );
+  id: home * 100 + away,
+  careerId: 1,
+  competitionId: 1,
+  matchday: 1,
+  date: DateTime(2030),
+  homeNationId: home,
+  awayNationId: away,
+  homeScore: hs,
+  awayScore: as,
+  played: true,
+);
 
 void main() {
   test('teams level on points are split by their head-to-head result', () {

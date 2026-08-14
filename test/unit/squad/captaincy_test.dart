@@ -82,8 +82,7 @@ void main() {
   });
 
   test('fit tiers move with leadership', () {
-    expect(Captaincy.fit(_p(id: 1, age: 18, overall: 50)),
-        CaptainFit.unproven);
+    expect(Captaincy.fit(_p(id: 1, age: 18, overall: 50)), CaptainFit.unproven);
     expect(
       Captaincy.fit(_p(id: 2, age: 34, overall: 90)).index,
       lessThan(CaptainFit.unproven.index),

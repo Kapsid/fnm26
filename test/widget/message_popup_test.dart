@@ -24,7 +24,9 @@ void main() {
     );
     comp = container.read(competitionRepositoryProvider);
     // A career row for the messages to hang off.
-    await container.read(careerRepositoryProvider).create(
+    await container
+        .read(careerRepositoryProvider)
+        .create(
           managerName: 'M',
           nationId: 1,
           rngSeed: 1,
@@ -38,13 +40,13 @@ void main() {
   });
 
   Future<void> addMessage(String key, String title) => comp.addMessage(
-        careerId: careerId,
-        dedupKey: key,
-        category: 'ranking',
-        title: title,
-        body: 'Body of $title',
-        year: 2026,
-      );
+    careerId: careerId,
+    dedupKey: key,
+    category: 'ranking',
+    title: title,
+    body: 'Body of $title',
+    year: 2026,
+  );
 
   /// Pumps a host widget that runs the popups against the real container.
   Future<void> pumpAndPop(WidgetTester tester) async {
@@ -84,8 +86,9 @@ void main() {
     expect(find.text('Done'), findsOneWidget);
   });
 
-  testWidgets('a run steps through with Next, then marks them read',
-      (tester) async {
+  testWidgets('a run steps through with Next, then marks them read', (
+    tester,
+  ) async {
     await addMessage('a', 'First');
     await addMessage('b', 'Second');
     await pumpAndPop(tester);
@@ -112,8 +115,9 @@ void main() {
     expect(find.text('Old news'), findsNothing);
   });
 
-  testWidgets('a long run is capped, and the rest stay unread for next time',
-      (tester) async {
+  testWidgets('a long run is capped, and the rest stay unread for next time', (
+    tester,
+  ) async {
     for (var i = 0; i < kMaxMessagePopups + 2; i++) {
       await addMessage('m$i', 'News $i');
     }

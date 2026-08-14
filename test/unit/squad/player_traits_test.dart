@@ -11,19 +11,18 @@ Player _p({
   int physical = 70,
   int technical = 70,
   int stamina = 70,
-}) =>
-    Player(
-      id: id,
-      nationId: 1,
-      name: 'P$id',
-      age: age,
-      position: position,
-      attributes: PlayerAttributes(
-        physical: physical,
-        technical: technical,
-        stamina: stamina,
-      ),
-    );
+}) => Player(
+  id: id,
+  nationId: 1,
+  name: 'P$id',
+  age: age,
+  position: position,
+  attributes: PlayerAttributes(
+    physical: physical,
+    technical: technical,
+    stamina: stamina,
+  ),
+);
 
 void main() {
   group('PlayerTraits', () {
@@ -64,8 +63,10 @@ void main() {
       );
       // An ordinary player with ordinary attributes earns nothing automatic.
       expect(
-        PlayerTraits.of(_p(id: 1, physical: 60, technical: 60, stamina: 60),
-            saveSeed: 1),
+        PlayerTraits.of(
+          _p(id: 1, physical: 60, technical: 60, stamina: 60),
+          saveSeed: 1,
+        ),
         isNot(contains(PlayerTrait.pacey)),
       );
     });

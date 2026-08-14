@@ -10,12 +10,12 @@ GroupStanding _row(int id, {int points = 0}) =>
     GroupStanding(id)..won = points ~/ 3;
 
 Nation _n(int id, int ranking) => Nation(
-      id: id,
-      name: 'N$id',
-      code: 'N$id',
-      confederation: Confederation.europe,
-      ranking: ranking,
-    );
+  id: id,
+  name: 'N$id',
+  code: 'N$id',
+  confederation: Confederation.europe,
+  ranking: ranking,
+);
 
 void main() {
   group('NationsCup', () {
@@ -61,11 +61,11 @@ void main() {
 
       test('only the bottom league has no relegation', () {
         bool lowest(String group) => NationsCup.isLowestLeague(
-              groupName: group,
-              tiers: tiers,
-              confederation: Confederation.europe,
-              confederationOf: confOf,
-            );
+          groupName: group,
+          tiers: tiers,
+          confederation: Confederation.europe,
+          confederationOf: confOf,
+        );
         expect(lowest('A1'), isFalse, reason: 'League A drops into B');
         expect(lowest('B1'), isFalse, reason: 'League B drops into C');
         expect(lowest('C1'), isTrue, reason: 'League C has nowhere to fall');

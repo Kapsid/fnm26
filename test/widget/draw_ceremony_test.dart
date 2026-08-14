@@ -51,8 +51,9 @@ void main() {
     expect(continued, isTrue);
   });
 
-  testWidgets('the manager can pause and draw team by team by tapping',
-      (tester) async {
+  testWidgets('the manager can pause and draw team by team by tapping', (
+    tester,
+  ) async {
     final nations = {
       for (var i = 1; i <= 8; i++) i: nation(id: i, name: 'Nation $i'),
     };

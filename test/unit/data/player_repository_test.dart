@@ -48,15 +48,19 @@ void main() {
 
   /// The seeded players only — a nation's pool now also carries the backfilled
   /// youth intakes, which are generated rather than read from the source.
-  List<Player> seededOf(List<Player> pool) =>
-      [for (final p in pool) if (!PlayerLifecycle.isNewgenId(p.id)) p];
+  List<Player> seededOf(List<Player> pool) => [
+    for (final p in pool)
+      if (!PlayerLifecycle.isNewgenId(p.id)) p,
+  ];
 
-  test('byNation() filters by nation and orders by overall (best first)',
-      () async {
-    final squad = await repo.byNation(1);
-    expect(seededOf(squad).map((p) => p.id), [102, 103, 101]);
-    expect(squad.first.overall, 90);
-  });
+  test(
+    'byNation() filters by nation and orders by overall (best first)',
+    () async {
+      final squad = await repo.byNation(1);
+      expect(seededOf(squad).map((p) => p.id), [102, 103, 101]);
+      expect(squad.first.overall, 90);
+    },
+  );
 
   test('byNation() returns only the requested nation', () async {
     final squad = await repo.byNation(2);

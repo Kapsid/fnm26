@@ -36,8 +36,10 @@ void main() {
 
     // Deterministic: same input → identical names/ids.
     final again = PoolGenerator.expand(base);
-    expect(out.map((p) => '${p.id}:${p.name}:${p.club}'),
-        again.map((p) => '${p.id}:${p.name}:${p.club}'));
+    expect(
+      out.map((p) => '${p.id}:${p.name}:${p.club}'),
+      again.map((p) => '${p.id}:${p.name}:${p.club}'),
+    );
   });
 
   test('uses per-nation name pools for generated fringe players', () {
@@ -51,9 +53,12 @@ void main() {
           attributes: flatAttributes(70),
         ),
     ];
-    final out = PoolGenerator.expand(base, namesByNation: {
-      1: (first: const ['Kenji', 'Haruto'], sur: const ['Tanaka', 'Sato']),
-    });
+    final out = PoolGenerator.expand(
+      base,
+      namesByNation: {
+        1: (first: const ['Kenji', 'Haruto'], sur: const ['Tanaka', 'Sato']),
+      },
+    );
     // Generated fringe (ids >= 10_000_000) draw only from the supplied pool.
     final fringe = out.where((p) => p.id >= 10000000);
     expect(fringe, isNotEmpty);

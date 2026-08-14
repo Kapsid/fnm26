@@ -106,7 +106,8 @@ void main() {
     test('a body written before notes existed still decodes', () {
       // The guard that matters: reports already sitting in players' saves
       // were written with the v1 tag and must keep rendering, rows intact.
-      const legacy = 'SQUADDEV1\n'
+      const legacy =
+          'SQUADDEV1\n'
           'Old Player|24|ST|78|3||\n'
           'Gone Player|35|GK|70||out|';
       final decoded = decodeSquadDevReport(legacy);

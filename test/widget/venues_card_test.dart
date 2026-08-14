@@ -10,9 +10,9 @@ import '../helpers/pump_app.dart';
 /// under a "HOSTS" heading.
 void main() {
   List<Venue> venues(String prefix) => [
-        (city: '${prefix}ville', stadium: 'Arena $prefix', capacity: 60000),
-        (city: '${prefix}town', stadium: '$prefix Park', capacity: 45000),
-      ];
+    (city: '${prefix}ville', stadium: 'Arena $prefix', capacity: 60000),
+    (city: '${prefix}town', stadium: '$prefix Park', capacity: 45000),
+  ];
 
   testWidgets('a solo host reads as one host', (tester) async {
     await tester.pumpApp(
@@ -29,8 +29,9 @@ void main() {
     expect(find.text('Arena A'), findsOneWidget);
   });
 
-  testWidgets('co-hosts are both named, with both sets of grounds',
-      (tester) async {
+  testWidgets('co-hosts are both named, with both sets of grounds', (
+    tester,
+  ) async {
     await tester.pumpApp(
       Scaffold(
         body: VenuesCard(
@@ -47,7 +48,11 @@ void main() {
     expect(find.text('Spain & Portugal'), findsOneWidget);
     // Both countries' stadiums, each labelled with its country.
     expect(find.text('Arena A'), findsOneWidget);
-    expect(find.text('Arena B'), findsOneWidget, reason: "the co-host's ground");
+    expect(
+      find.text('Arena B'),
+      findsOneWidget,
+      reason: "the co-host's ground",
+    );
     expect(find.text('SPAIN'), findsOneWidget);
     expect(find.text('PORTUGAL'), findsOneWidget);
   });

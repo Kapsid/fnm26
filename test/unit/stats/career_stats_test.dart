@@ -12,19 +12,18 @@ ManagerMatch m(
   bool wonShootout = false,
   bool lostShootout = false,
   bool trailed = false,
-}) =>
-    (
-      date: DateTime(2030, 1, day),
-      nationId: nationId,
-      goalsFor: gf,
-      goalsAgainst: ga,
-      competitive: competitive,
-      home: home,
-      neutral: neutral,
-      wonShootout: wonShootout,
-      lostShootout: lostShootout,
-      trailed: trailed,
-    );
+}) => (
+  date: DateTime(2030, 1, day),
+  nationId: nationId,
+  goalsFor: gf,
+  goalsAgainst: ga,
+  competitive: competitive,
+  home: home,
+  neutral: neutral,
+  wonShootout: wonShootout,
+  lostShootout: lostShootout,
+  trailed: trailed,
+);
 
 PlayerMatchLine line(
   int goals, {
@@ -34,16 +33,15 @@ PlayerMatchLine line(
   bool motm = false,
   int yellows = 0,
   int reds = 0,
-}) =>
-    (
-      playerId: playerId,
-      goals: goals,
-      assists: assists,
-      rating: rating,
-      motm: motm,
-      yellows: yellows,
-      reds: reds,
-    );
+}) => (
+  playerId: playerId,
+  goals: goals,
+  assists: assists,
+  rating: rating,
+  motm: motm,
+  yellows: yellows,
+  reds: reds,
+);
 
 void main() {
   group('record & goals', () {
@@ -128,7 +126,11 @@ void main() {
         m(3, 1, day: 4),
       ], const []);
       expect(s.longestCleanSheetStreak, 3, reason: 'GA 0,0,0');
-      expect(s.longestScoringStreak, 2, reason: 'scored, scored, blank, scored');
+      expect(
+        s.longestScoringStreak,
+        2,
+        reason: 'scored, scored, blank, scored',
+      );
     });
 
     test('order does not matter — input is sorted by date', () {

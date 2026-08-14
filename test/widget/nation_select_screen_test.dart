@@ -38,8 +38,9 @@ void main() {
     expect(find.text('Brazil'), findsNothing);
   });
 
-  testWidgets('without premium, free shows SELECT and locked shows PREMIUM',
-      (tester) async {
+  testWidgets('without premium, free shows SELECT and locked shows PREMIUM', (
+    tester,
+  ) async {
     await tester.pumpApp(
       const NationSelectScreen(),
       overrides: [

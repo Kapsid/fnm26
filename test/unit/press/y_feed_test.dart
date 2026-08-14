@@ -8,16 +8,15 @@ void main() {
     int scored = 1,
     int conceded = 1,
     String key = 'fx:1',
-  }) =>
-      (
-        opponent: 'Norway',
-        nationRank: mine,
-        opponentRank: theirs,
-        scored: scored,
-        conceded: conceded,
-        date: DateTime(2030, 6, 10),
-        key: key,
-      );
+  }) => (
+    opponent: 'Norway',
+    nationRank: mine,
+    opponentRank: theirs,
+    scored: scored,
+    conceded: conceded,
+    date: DateTime(2030, 6, 10),
+    key: key,
+  );
 
   List<YPost> posts(YMatch m) =>
       YFeed.forMatch(m, nation: 'Czechia', seed: 4242);
@@ -54,7 +53,9 @@ void main() {
 
     test('a bad day says more than a routine one', () {
       final routine = posts(match(mine: 4, theirs: 70, scored: 2, conceded: 0));
-      final disaster = posts(match(mine: 4, theirs: 70, scored: 0, conceded: 4));
+      final disaster = posts(
+        match(mine: 4, theirs: 70, scored: 0, conceded: 4),
+      );
       expect(disaster.length, greaterThan(routine.length));
     });
 
@@ -79,15 +80,15 @@ void main() {
 
   group('mostRecent', () {
     YPost at(DateTime d) => (
-          voice: YVoice.stats,
-          handle: '@s',
-          displayName: 's',
-          template: YTemplate.drew,
-          variant: 0,
-          args: const ['Norway', '1–1'],
-          date: d,
-          key: 'k${d.millisecondsSinceEpoch}',
-        );
+      voice: YVoice.stats,
+      handle: '@s',
+      displayName: 's',
+      template: YTemplate.drew,
+      variant: 0,
+      args: const ['Norway', '1–1'],
+      date: d,
+      key: 'k${d.millisecondsSinceEpoch}',
+    );
 
     test('newest first, and capped', () {
       final all = [for (var i = 0; i < 120; i++) at(DateTime(2030, 1, 1 + i))];
@@ -105,13 +106,17 @@ void main() {
 
   group('the pundit', () {
     test('is the same man all career', () {
-      expect(YFeed.punditHandle('Czechia', 4242),
-          YFeed.punditHandle('Czechia', 4242));
+      expect(
+        YFeed.punditHandle('Czechia', 4242),
+        YFeed.punditHandle('Czechia', 4242),
+      );
     });
 
     test('but a different one in another country', () {
-      expect(YFeed.punditHandle('Czechia', 4242),
-          isNot(YFeed.punditHandle('Brazil', 4242)));
+      expect(
+        YFeed.punditHandle('Czechia', 4242),
+        isNot(YFeed.punditHandle('Brazil', 4242)),
+      );
     });
   });
 

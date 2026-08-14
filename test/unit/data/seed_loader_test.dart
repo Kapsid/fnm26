@@ -14,14 +14,14 @@ void main() {
   late AppDatabase db;
 
   SeedLoader loaderWith() => SeedLoader(
-        db,
-        InMemorySeedSource(
-          nationList: [nation(id: 1, isFreeDemo: true)],
-          playerList: [
-            player(id: 101, nationId: 1, position: PlayerPosition.st),
-          ],
-        ),
-      );
+    db,
+    InMemorySeedSource(
+      nationList: [nation(id: 1, isFreeDemo: true)],
+      playerList: [
+        player(id: 101, nationId: 1, position: PlayerPosition.st),
+      ],
+    ),
+  );
 
   setUp(() => db = createTestDatabase());
   tearDown(() => db.close());

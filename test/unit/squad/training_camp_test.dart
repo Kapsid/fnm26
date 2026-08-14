@@ -21,7 +21,10 @@ void main() {
       final a = TrainingCamps.forHost(hostId: 12);
       final b = TrainingCamps.forHost(hostId: 12);
       expect(a.map((c) => c.name).toList(), b.map((c) => c.name).toList());
-      expect(a.map((c) => c.terrain).toList(), b.map((c) => c.terrain).toList());
+      expect(
+        a.map((c) => c.terrain).toList(),
+        b.map((c) => c.terrain).toList(),
+      );
     });
 
     test('the national centre is always the first, safe option', () {
@@ -38,12 +41,14 @@ void main() {
       // Nothing may be best at everything: whatever a camp gives on one axis it
       // gives up on another, or the choice is not a choice.
       for (final c in camps) {
-        final beatsAll = camps.where((o) => o.index != c.index).every(
-          (o) =>
-              c.travelFatigue <= o.travelFatigue &&
-              c.injuryRecovery >= o.injuryRecovery &&
-              c.conditionBonus >= o.conditionBonus,
-        );
+        final beatsAll = camps
+            .where((o) => o.index != c.index)
+            .every(
+              (o) =>
+                  c.travelFatigue <= o.travelFatigue &&
+                  c.injuryRecovery >= o.injuryRecovery &&
+                  c.conditionBonus >= o.conditionBonus,
+            );
         expect(beatsAll, isFalse, reason: '${c.name} dominates every other');
       }
     });

@@ -11,20 +11,19 @@ Fixture result({
   required int as,
   required DateTime date,
   String? round,
-}) =>
-    Fixture(
-      id: id,
-      careerId: 1,
-      competitionId: 1,
-      matchday: 1,
-      date: date,
-      homeNationId: home,
-      awayNationId: away,
-      homeScore: hs,
-      awayScore: as,
-      round: round,
-      played: true,
-    );
+}) => Fixture(
+  id: id,
+  careerId: 1,
+  competitionId: 1,
+  matchday: 1,
+  date: date,
+  homeNationId: home,
+  awayNationId: away,
+  homeScore: hs,
+  awayScore: as,
+  round: round,
+  played: true,
+);
 
 void main() {
   group('Condition.form', () {
@@ -100,10 +99,20 @@ void main() {
 
   group('club sharpness', () {
     test('a frozen-out player is rated below a sharp one', () {
-      final sharp = Condition.of(const [], const [], DateTime(2030), 0,
-          clubDelta: ClubForm.sharpnessDelta(ClubStanding.firstChoice));
-      final rusty = Condition.of(const [], const [], DateTime(2030), 0,
-          clubDelta: ClubForm.sharpnessDelta(ClubStanding.frozenOut));
+      final sharp = Condition.of(
+        const [],
+        const [],
+        DateTime(2030),
+        0,
+        clubDelta: ClubForm.sharpnessDelta(ClubStanding.firstChoice),
+      );
+      final rusty = Condition.of(
+        const [],
+        const [],
+        DateTime(2030),
+        0,
+        clubDelta: ClubForm.sharpnessDelta(ClubStanding.frozenOut),
+      );
       expect(rusty.overallDelta, lessThan(sharp.overallDelta));
     });
 
@@ -122,9 +131,19 @@ void main() {
     });
 
     test('no club delta leaves the old behaviour exactly', () {
-      final before = Condition.of(const [7.0, 7.0], const [], DateTime(2030), 0);
-      final after = Condition.of(const [7.0, 7.0], const [], DateTime(2030), 0,
-          clubDelta: 0);
+      final before = Condition.of(
+        const [7.0, 7.0],
+        const [],
+        DateTime(2030),
+        0,
+      );
+      final after = Condition.of(
+        const [7.0, 7.0],
+        const [],
+        DateTime(2030),
+        0,
+        clubDelta: 0,
+      );
       expect(after.overallDelta, before.overallDelta);
     });
   });
