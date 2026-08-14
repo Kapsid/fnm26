@@ -1,3 +1,4 @@
+import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/player.dart';
 
@@ -54,6 +55,21 @@ abstract final class TournamentStars {
   /// One brilliant game in a group stage is not a tournament.
   static const int minApps = 2;
 
+  /// Whether every fixture of a tournament has been played.
+  ///
+  /// No award is named before this is true. The final being decided is not
+  /// enough: a third-place play-off still to come is a match that can change
+  /// who had the best tournament, and an award handed out while any of it is
+  /// unplayed is an award given on incomplete evidence.
+  static bool isComplete(Iterable<Fixture> fixtures) {
+    var any = false;
+    for (final f in fixtures) {
+      any = true;
+      if (!f.hasResult) return false;
+    }
+    return any;
+  }
+
   /// The best XI from [candidates], best-fit first per line.
   ///
   /// [goalsByPlayer] maps a player id to goals scored in the tournament;
@@ -83,7 +99,8 @@ abstract final class TournamentStars {
 
       final double score;
       if (form == null) {
-        score = p.overall +
+        score =
+            p.overall +
             goals * 6.0 +
             run * 3.0 +
             (p.nationId == champion ? 8.0 : 0.0);
@@ -91,7 +108,8 @@ abstract final class TournamentStars {
         // Performance dominates. A 7.6 average over a full run beats a 6.8 who
         // happened to score twice, and quality/run stay as tie-breakers rather
         // than the substance of the award.
-        score = (form.meanRating - 6.0) * 26.0 +
+        score =
+            (form.meanRating - 6.0) * 26.0 +
             form.motms * 6.0 +
             goals * 4.0 +
             run * 2.5 +
@@ -140,7 +158,8 @@ abstract final class TournamentStars {
       final form = formByPlayer[p.id];
       if (form == null || form.apps < minApps) continue;
       // A keeper is judged on their marks and the sheets they kept.
-      final score = (form.meanRating - 6.0) * 20.0 +
+      final score =
+          (form.meanRating - 6.0) * 20.0 +
           (cleanSheetsByPlayer[p.id] ?? 0) * 5.0;
       if (best == null || score > best.score) {
         best = StarPlayer(

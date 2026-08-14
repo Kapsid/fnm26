@@ -454,7 +454,11 @@ continentalDetailProvider = FutureProvider.autoDispose.family<ContinentalData?, 
   // exactly like the World Cup's, scoped to this continental finals.
   var teamOfTournament = const <StarPlayer>[];
   ({int nationId, String name})? goldenGlove;
-  if (champion != null && knockout.isNotEmpty) {
+  // Only once every match of the tournament has been played — see the same
+  // gate on the World Cup's detail provider.
+  if (champion != null &&
+      knockout.isNotEmpty &&
+      TournamentStars.isComplete([...groupFixtures, ...knockout])) {
     const roundDepth = {'CR16': 1, 'CQF': 2, 'CSF': 3, 'C3RD': 3, 'CFINAL': 4};
     final runByNation = <int, int>{};
     for (final f in knockout) {

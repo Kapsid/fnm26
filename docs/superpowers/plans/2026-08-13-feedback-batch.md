@@ -786,7 +786,7 @@ git commit -m "fix: the intercontinental play-off is played, not decided for you
 **Interfaces:**
 - Produces: awards return `null` (no award) until every fixture in the tournament has been played.
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 ```dart
 // test/unit/awards/award_timing_test.dart
@@ -808,12 +808,12 @@ void main() {
 Read `awards.dart` first for the real award entry point and its parameter list;
 name the test after that function rather than assuming `bestPlayerOf`.
 
-- [ ] **Step 2: Run the test to verify it fails**
+- [x] **Step 2: Run the test to verify it fails**
 
 Run: `flutter test test/unit/awards/award_timing_test.dart`
 Expected: FAIL — an award is returned mid-tournament.
 
-- [ ] **Step 3: Gate the award on completeness**
+- [x] **Step 3: Gate the award on completeness**
 
 ```dart
 /// No award until the tournament is actually over. The golden ball was being
@@ -826,12 +826,12 @@ Per project memory, the completeness check must cover *all* fixtures for the
 tournament — the same all-fixtures participant check the live-finals routing
 needs. Reuse that helper if one exists rather than writing a second.
 
-- [ ] **Step 4: Run the test to verify it passes**
+- [x] **Step 4: Run the test to verify it passes**
 
 Run: `flutter test test/unit/awards/`
 Expected: PASS
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add lib/domain/services/awards/awards.dart test/unit/awards/award_timing_test.dart

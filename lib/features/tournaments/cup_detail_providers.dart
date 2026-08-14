@@ -218,10 +218,14 @@ cupDetailProvider = FutureProvider.autoDispose.family<CupData?, int>((
     if (p != null) playerNames[id] = p.name;
   }
 
-  // Team of the Tournament — only once the champion is crowned.
+  // Team of the Tournament — only once every match of the tournament has been
+  // played. The final crowning a champion is not the end of it: a third-place
+  // play-off still to come is evidence the voters do not have yet.
   var teamOfTournament = const <StarPlayer>[];
   ({int nationId, String name})? goldenGlove;
-  if (champion != null && knockout.isNotEmpty) {
+  if (champion != null &&
+      knockout.isNotEmpty &&
+      TournamentStars.isComplete([...groupFixtures, ...knockout])) {
     final runByNation = <int, int>{};
     for (final f in knockout) {
       final d = _roundDepth[f.round] ?? 0;
