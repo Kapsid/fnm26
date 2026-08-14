@@ -898,7 +898,7 @@ git commit -m "feat: the passive tournament sim pages by round instead of scroll
 - Modify: `lib/domain/services/competition/real_history.dart:1197+`
 - Test: `test/unit/competition/real_history_test.dart` (extend if it exists, else create)
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 ```dart
 test('the North America Cup record runs to the present', () {
@@ -911,23 +911,23 @@ test('the North America Cup record runs to the present', () {
 Read `real_history.dart:1197` for the actual field name and shape of the record
 before writing this; match it exactly.
 
-- [ ] **Step 2: Run the test to verify it fails**
+- [x] **Step 2: Run the test to verify it fails**
 
 Run: `flutter test test/unit/competition/real_history_test.dart`
 Expected: FAIL — the record stops at 2023.
 
-- [ ] **Step 3: Extend the record**
+- [x] **Step 3: Extend the record**
 
 Add the 2025 edition (Mexico won, beating the United States 2-1 in the final).
 There was no 2024 edition — the tournament runs biennially in odd years, so a
 gap at 2024 is correct, not missing data.
 
-- [ ] **Step 4: Run the test to verify it passes**
+- [x] **Step 4: Run the test to verify it passes**
 
 Run: `flutter test test/unit/competition/real_history_test.dart`
 Expected: PASS
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add lib/domain/services/competition/real_history.dart test/unit/competition/real_history_test.dart

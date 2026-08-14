@@ -1275,6 +1275,18 @@ abstract final class RealHistory {
       finalHome: 1,
       finalAway: 0,
     ),
+    // Biennial, odd years — there was no 2024 edition, so the gap is the
+    // tournament's cadence rather than missing data.
+    (
+      year: 2025,
+      competition: northAmericaCup,
+      host: 'United States',
+      champion: 'Mexico',
+      runnerUp: 'United States',
+      third: 'Honduras',
+      finalHome: 2,
+      finalAway: 1,
+    ),
 
     // --- Oceania Cup (OFC Nations Cup) -------------------------------------
     (
