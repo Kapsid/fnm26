@@ -51,15 +51,29 @@ class RatingMatchSimulator implements MatchSimulator {
     final edge = exp(0.026 * diff);
     final homeXg = (1.30 * edge).clamp(0.10, 5.5);
     final awayXg = (1.15 / edge).clamp(0.10, 5.5);
-    return MatchOutcome(_goals(homeXg, rng), _goals(awayXg, rng));
+    return _scoreline(homeXg, awayXg, rng);
   }
 
-  int _goals(double expected, SeededRng rng) {
-    var goals = 0;
-    // Sample ~Poisson by summing independent chances across 8 segments.
+  /// Samples both scorelines together — segment by segment, in step — so a side
+  /// that has pulled well clear can ease off for the rest of the match. Sampled
+  /// apart, the two are memoryless and a hot seed runs away to seven.
+  MatchOutcome _scoreline(double homeXg, double awayXg, SeededRng rng) {
+    var home = 0;
+    var away = 0;
+    // ~Poisson by summing independent chances across 8 segments.
     for (var i = 0; i < 8; i++) {
-      if (rng.chance(expected / 8)) goals++;
+      if (rng.chance(homeXg / 8 * _blowoutDamping(home, away))) home++;
+      if (rng.chance(awayXg / 8 * _blowoutDamping(away, home))) away++;
     }
-    return goals;
+    return MatchOutcome(home, away);
+  }
+
+  /// Once a side is well clear it stops chasing goals — substitutions, a
+  /// dropped tempo, and an opponent packing the box. The live engine damps its
+  /// scoring the same way; the two are always tuned together.
+  double _blowoutDamping(int scored, int conceded) {
+    final margin = scored - conceded;
+    if (margin < 3) return 1.0;
+    return 1.0 / (1.0 + (margin - 2) * 0.6);
   }
 }

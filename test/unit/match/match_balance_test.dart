@@ -150,9 +150,13 @@ void main() {
       expect(gap.homeWinPct, inInclusiveRange(50, 70));
       expect(gap.away, greaterThan(0.6));
 
-      // A gulf still produces a hatful.
+      // A gulf still produces a hatful — a little smaller than it used to be,
+      // because a side three clear now eases off (see [_blowoutDamping]). That
+      // trim is the point: it is what keeps a 7-0 a story rather than a
+      // Tuesday, and it costs the very top of the distribution about a tenth
+      // of a goal.
       final gulf = sim(89, 48);
-      expect(gulf.home, greaterThan(3.5));
+      expect(gulf.home, greaterThan(3.3));
       expect(gulf.homeWinPct, greaterThan(90));
     });
   });

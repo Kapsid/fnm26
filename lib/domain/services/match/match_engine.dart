@@ -605,6 +605,7 @@ class MatchEngine {
         awayDefence,
         liveHome.instructions,
         homeShare,
+        damping: _blowoutDamping(homeScore, awayScore),
       )) {
         homeShots++;
         // The player taking the shot is chosen now, so their fatigue can affect
@@ -636,6 +637,7 @@ class MatchEngine {
         homeDefence,
         liveAway.instructions,
         1 - homeShare,
+        damping: _blowoutDamping(awayScore, homeScore),
       )) {
         awayShots++;
         final shooter = _pickScorer(liveAway, rng);
@@ -669,6 +671,7 @@ class MatchEngine {
         manageMinute,
         setPieceRng,
         stoppage: stoppage,
+        damping: _blowoutDamping(homeScore, awayScore),
       );
       if (homeSp.shot) homeShots++;
       homeXg += homeSp.xg;
@@ -682,6 +685,7 @@ class MatchEngine {
         manageMinute,
         setPieceRng,
         stoppage: stoppage,
+        damping: _blowoutDamping(awayScore, homeScore),
       );
       if (awaySp.shot) awayShots++;
       awayXg += awaySp.xg;
@@ -1119,8 +1123,9 @@ class MatchEngine {
     double attack,
     double oppDefence,
     TacticalInstructions instr,
-    double controlShare,
-  ) {
+    double controlShare, {
+    double damping = 1.0,
+  }) {
     // Chance CREATION is where the strength gap tells hardest: a clearly better
     // side manufactures most of the openings, and that — not a freakish
     // conversion rate — is what makes the favourite win reliably. The rate is
@@ -1139,7 +1144,19 @@ class MatchEngine {
     final rate =
         (0.078 * edge * (0.85 + instr.tempo / 333) * (0.7 + 0.6 * controlShare))
             .clamp(0.010, 0.280);
-    return rng.chance(rate);
+    // The damping is applied AFTER the clamp: a side four up is meant to fall
+    // below the floor the rate normally sits on, not be held up by it.
+    return rng.chance(rate * damping);
+  }
+
+  /// Once a side is well clear it stops chasing goals — substitutions, a
+  /// dropped tempo, and an opponent packing the box. Without this the
+  /// per-minute model is memoryless and a hot seed runs away to 8-0 far more
+  /// often than football does.
+  double _blowoutDamping(int scored, int conceded) {
+    final margin = scored - conceded;
+    if (margin < 3) return 1.0;
+    return 1.0 / (1.0 + (margin - 2) * 0.6);
   }
 
   /// The probability a created chance is finished. Deliberately FLAT: a good
@@ -1309,8 +1326,12 @@ class MatchEngine {
     int minute,
     SeededRng rng, {
     int stoppage = 0,
+    double damping = 1.0,
   }) {
-    if (atk.xi.isEmpty || !rng.chance(_setPiecePerMinute)) {
+    // A side well clear works its corners as lazily as it works open play, so
+    // the same damping applies here — otherwise the set-piece channel alone
+    // keeps the rout going.
+    if (atk.xi.isEmpty || !rng.chance(_setPiecePerMinute * damping)) {
       return (goal: null, xg: 0, shot: false);
     }
     // Aerial duel in the box: the attackers' physicality (and defenders up for

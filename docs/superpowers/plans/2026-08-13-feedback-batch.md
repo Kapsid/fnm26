@@ -537,7 +537,7 @@ git commit -m "feat: team overall on the match preview and team detail"
 - Consumes: the existing goal-chance-per-minute model in `match_engine`
 - Produces: no new API
 
-- [ ] **Step 1: Write the failing distribution test**
+- [x] **Step 1: Write the failing distribution test**
 
 ```dart
 // test/unit/match/scoreline_distribution_test.dart
@@ -575,12 +575,12 @@ scorelines. Per project memory there is already a match-balance guard test —
 find it (`test/unit/match/`) and make sure it still passes rather than
 loosening it.
 
-- [ ] **Step 2: Run the test to verify it fails**
+- [x] **Step 2: Run the test to verify it fails**
 
 Run: `flutter test test/unit/match/scoreline_distribution_test.dart`
 Expected: FAIL on the blowout rate.
 
-- [ ] **Step 3: Damp the tail**
+- [x] **Step 3: Damp the tail**
 
 Apply a progressive penalty to each additional goal once a side is three or
 more clear: the per-minute goal chance for the leading side scales down as the
@@ -600,12 +600,12 @@ double _blowoutDamping(int scored, int conceded) {
 Multiply the leading side's per-minute goal chance by this. Apply the identical
 function in `match_simulator.dart`.
 
-- [ ] **Step 4: Run the tests to verify they pass**
+- [x] **Step 4: Run the tests to verify they pass**
 
 Run: `flutter test test/unit/match/`
 Expected: PASS, including the existing balance guard test.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add lib/domain/services/match/ test/unit/match/scoreline_distribution_test.dart
