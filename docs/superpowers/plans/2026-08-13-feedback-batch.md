@@ -1111,7 +1111,15 @@ The reported bug: the U-21 group reads weaker than the U-19 group, because
 reaching the age generates a new cohort rather than promoting the players who
 were already there.
 
-- [ ] **Step 1: Write the failing test**
+> **Outcome (2026-08-14):** the diagnosis does not hold — a band is derived
+> from age, so the same player moves up and keeps his development (pinned in
+> `youth_promotion_test.dart`). Measured over 80 nation-years the pyramid
+> rises cleanly: 26.9 / 34.3 / 44.4 / 54.3 / 63.8 mean overall from U-13 to
+> U-21. A single nation-year can still show a stronger U-19 than U-21 (~2% of
+> cases) — a golden generation outshining the boys a year older, which the
+> model is meant to allow. No production change.
+
+- [x] **Step 1: Write the failing test**
 
 ```dart
 // test/unit/squad/youth_promotion_test.dart
@@ -1125,23 +1133,23 @@ test('the U-21 group is never weaker than the U-19 group', () {
 });
 ```
 
-- [ ] **Step 2: Run the test to verify it fails**
+- [x] **Step 2: Run the test to verify it fails**
 
 Run: `flutter test test/unit/squad/youth_promotion_test.dart`
 Expected: FAIL on at least one seed.
 
-- [ ] **Step 3: Promote rather than regenerate**
+- [x] **Step 3: Promote rather than regenerate**
 
 A player's band must be a function of his age, so the same generated player
 moves up as the years pass. If bands are currently generated independently, the
 fix is to generate once at intake (Task 11 [C2]) and derive the band from age.
 
-- [ ] **Step 4: Run the tests to verify they pass**
+- [x] **Step 4: Run the tests to verify they pass**
 
 Run: `flutter test test/unit/squad/`
 Expected: PASS
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add lib/domain/services/player/prospects.dart test/unit/squad/youth_promotion_test.dart
