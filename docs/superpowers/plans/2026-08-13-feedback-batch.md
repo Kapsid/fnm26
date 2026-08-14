@@ -1169,7 +1169,14 @@ git commit -m "fix: the best under-19 is promoted rather than replaced"
 named a squad — there is nothing to have a grievance about — and it returns
 after an app restart, so it reads as unresolved.
 
-- [ ] **Step 1: Write the failing test**
+> **Outcome (2026-08-14):** both halves already hold. The squad gate landed in
+> 9713658 (`squadNamed: callUps.isNotEmpty`), and an answer is written to the
+> press-answer table and fed back as `alreadyRaised`, so it survives a restart.
+> Covered end-to-end now by `test/unit/hub/grievance_gating_test.dart`, which
+> re-reads through a second provider container over the same database — the
+> restart the report describes. No production change.
+
+- [x] **Step 1: Write the failing test**
 
 ```dart
 // test/unit/hub/grievance_gating_test.dart
@@ -1193,22 +1200,22 @@ Use `test/helpers/test_database.dart` for the career fixtures. Per project
 memory, derived providers go stale — invalidate explicitly between the write
 and the second read rather than trusting a cached value.
 
-- [ ] **Step 2: Run the test to verify it fails**
+- [x] **Step 2: Run the test to verify it fails**
 
 Run: `flutter test test/unit/hub/grievance_gating_test.dart`
 Expected: FAIL on both.
 
-- [ ] **Step 3: Gate and persist**
+- [x] **Step 3: Gate and persist**
 
 Gate `grievanceProvider` on at least one squad having been named, and persist
 the resolution so a rebuild does not resurrect it.
 
-- [ ] **Step 4: Run the tests to verify they pass**
+- [x] **Step 4: Run the tests to verify they pass**
 
 Run: `flutter test test/unit/hub/`
 Expected: PASS
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add lib/features/hub/hub_event.dart lib/features/squad/grievance_providers.dart test/unit/hub/grievance_gating_test.dart
