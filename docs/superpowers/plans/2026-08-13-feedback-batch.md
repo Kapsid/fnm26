@@ -1033,6 +1033,12 @@ git commit -m "feat: call-ups are picked line by line instead of scrolled"
 Intake starts at 17 today, so a generation appears fully formed. It should start
 at the bottom of the pyramid and grow up through it.
 
+> **Outcome (2026-08-14):** already true. `PlayerLifecycle.intakeAge` is **11**
+> and the pyramid runs U-13 → U-21, with players progressing rather than a
+> cohort being regenerated per band — the youth-pyramid batch of 2026-08-05
+> did this work. No production change was needed; the behaviour is now pinned
+> by `test/unit/squad/youth_intake_test.dart`, and no schema bump arises.
+
 **Read first:** `docs/superpowers/specs/2026-08-05-youth-pyramid-design.md` and
 `2026-08-06-intake-day-design.md` — the pyramid is a recent, deliberate design
 and this task changes one of its parameters, not its shape.
@@ -1041,7 +1047,7 @@ and this task changes one of its parameters, not its shape.
 - Consumes: `YouthLevel` (u13 … u21) with `minAge` (existing)
 - Produces: no new API; intake age changes
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 ```dart
 // test/unit/squad/youth_intake_test.dart
@@ -1063,30 +1069,30 @@ The second test is the one that matters — it asserts the players *progress*
 rather than a new cohort being generated per band. Read `prospects.dart` for the
 real `poolAt` signature (project memory records `minAge 17`) and match it.
 
-- [ ] **Step 2: Run the test to verify it fails**
+- [x] **Step 2: Run the test to verify it fails**
 
 Run: `flutter test test/unit/squad/youth_intake_test.dart`
 Expected: FAIL — nobody below 17 exists.
 
-- [ ] **Step 3: Lower the intake age**
+- [x] **Step 3: Lower the intake age**
 
 Move intake to 13 and revisit the age bands as a whole. Note `prospects.dart:80`
 already branches on `YouthLevel.u19.minAge` for its spread — that branch was
 written for a 17+ world and needs redoing across the full range, not patching
 at one edge.
 
-- [ ] **Step 4: Run the tests to verify they pass**
+- [x] **Step 4: Run the tests to verify they pass**
 
 Run: `flutter test test/unit/squad/ test/widget/youth_screen_test.dart`
 Expected: PASS
 
-- [ ] **Step 5: Check whether the schema needs a bump**
+- [x] **Step 5: Check whether the schema needs a bump**
 
 Per project memory, schema 39 exists specifically to clear stale newgen rows. If
 this change invalidates stored newgens the same way, a bump is needed — **and a
 bump wipes saves. Stop and ask the user before bumping.**
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add lib/domain/services/player/ test/unit/squad/youth_intake_test.dart
