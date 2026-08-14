@@ -11,9 +11,9 @@ class DriftTacticFamiliarityRepository implements TacticFamiliarityRepository {
 
   @override
   Future<Map<Formation, ShapeDrilling>> forCareer(int careerId) async {
-    final rows = await (_db.select(_db.tacticFamiliarities)
-          ..where((t) => t.careerId.equals(careerId)))
-        .get();
+    final rows = await (_db.select(
+      _db.tacticFamiliarities,
+    )..where((t) => t.careerId.equals(careerId))).get();
     return {
       for (final r in rows)
         r.formation: (
@@ -29,16 +29,15 @@ class DriftTacticFamiliarityRepository implements TacticFamiliarityRepository {
     Formation used, {
     int planKey = 0,
   }) async {
-    final rows = await (_db.select(_db.tacticFamiliarities)
-          ..where((t) => t.careerId.equals(careerId)))
-        .get();
+    final rows = await (_db.select(
+      _db.tacticFamiliarities,
+    )..where((t) => t.careerId.equals(careerId))).get();
     final current = {for (final r in rows) r.formation: r};
     final was = current[used];
     // The same plan again only counts as such when there IS a previous plan —
     // a shape's first outing can't already have been scouted.
-    final samePlan = was != null &&
-        was.lastPlanKey != 0 &&
-        was.lastPlanKey == planKey;
+    final samePlan =
+        was != null && was.lastPlanKey != 0 && was.lastPlanKey == planKey;
 
     final next = <Formation, ({double fam, double pred, int plan})>{
       // The fielded shape climbs; every other stored shape decays a little.
@@ -65,7 +64,9 @@ class DriftTacticFamiliarityRepository implements TacticFamiliarityRepository {
     };
     await _db.transaction(() async {
       for (final e in next.entries) {
-        await _db.into(_db.tacticFamiliarities).insertOnConflictUpdate(
+        await _db
+            .into(_db.tacticFamiliarities)
+            .insertOnConflictUpdate(
               TacticFamiliaritiesCompanion.insert(
                 careerId: careerId,
                 formation: e.key,
@@ -80,8 +81,8 @@ class DriftTacticFamiliarityRepository implements TacticFamiliarityRepository {
 
   @override
   Future<void> reset(int careerId) async {
-    await (_db.delete(_db.tacticFamiliarities)
-          ..where((t) => t.careerId.equals(careerId)))
-        .go();
+    await (_db.delete(
+      _db.tacticFamiliarities,
+    )..where((t) => t.careerId.equals(careerId))).go();
   }
 }

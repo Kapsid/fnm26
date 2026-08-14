@@ -44,7 +44,8 @@ abstract final class TournamentBranding {
     required int seed,
   }) {
     final rng = SeededRng(seed ^ (year * 0x9E37) ^ hostName.hashCode);
-    final mascot = '${rng.pick(_mascotNames)} the '
+    final mascot =
+        '${rng.pick(_mascotNames)} the '
         '${rng.pick(_mascotAdjectives)} ${rng.pick(_mascotAnimals)}';
     final ball = '${rng.pick(_ballRoots)} ${rng.pick(_ballSuffixes)}';
     return (mascot: mascot, ball: ball);

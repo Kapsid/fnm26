@@ -72,6 +72,9 @@ abstract interface class CareerRepository {
   /// Names (or, with null, un-names) the squad captain.
   Future<void> setCaptain(int id, int? playerId);
 
+  /// Marks the Y feed read up to [date] — the in-game date of its newest post.
+  Future<void> setYReadAt(int id, DateTime date);
+
   /// The investment allocation committed for [cycle] (zeros if none).
   Future<FederationInvestment> investment(int careerId, int cycle);
 

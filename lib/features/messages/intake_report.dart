@@ -15,17 +15,17 @@ import 'package:fnm/features/messages/squad_dev_report.dart';
 /// until he has actually played. What the manager is being told is what the
 /// coaches think — which is the only thing anybody could honestly tell him.
 List<SquadDevRow> intakeRows(List<Player> pyramid) => [
-      for (final p in pyramid)
-        if (p.age == PlayerLifecycle.intakeAge)
-          SquadDevRow(
-            name: p.name,
-            age: p.age,
-            position: p.position.label,
-            rating: p.overall,
-            status: SquadDevStatus.arrived,
-            stars: Prospects.scoutedStars(p.id, age: p.age),
-          ),
-    ];
+  for (final p in pyramid)
+    if (p.age == PlayerLifecycle.intakeAge)
+      SquadDevRow(
+        name: p.name,
+        age: p.age,
+        position: p.position.label,
+        rating: p.overall,
+        status: SquadDevStatus.arrived,
+        stars: Prospects.scoutedStars(p.id, age: p.age),
+      ),
+];
 
 /// The line above the table, or null when there is nothing to say.
 ///
@@ -35,4 +35,4 @@ List<SquadDevRow> intakeRows(List<Player> pyramid) => [
 String? intakeNote(double academyBonus) => academyBonus <= 0
     ? null
     : 'The academy investment is showing: this intake arrived stronger than '
-        'it would have.';
+          'it would have.';

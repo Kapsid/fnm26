@@ -29,8 +29,11 @@ typedef _RoundView = ({
   Set<String> noRelegationGroups,
 });
 
-final AutoDisposeFutureProviderFamily<_RoundView?, int> _roundResultsProvider =
-    FutureProvider.autoDispose.family<_RoundView?, int>((ref, careerId) async {
+final AutoDisposeFutureProviderFamily<_RoundView?, int>
+_roundResultsProvider = FutureProvider.autoDispose.family<_RoundView?, int>((
+  ref,
+  careerId,
+) async {
   final career = await ref.watch(careerRepositoryProvider).byId(careerId);
   if (career == null) return null;
   final results = await ref
@@ -63,8 +66,9 @@ final AutoDisposeFutureProviderFamily<_RoundView?, int> _roundResultsProvider =
     // The Nations Cup's lowest league has nowhere to fall — its groups show no
     // relegation zone, exactly as the hub and the Nations Cup screen decide.
     if (results.kind == CompetitionKind.nationsLeague) {
-      final tiers =
-          await ref.watch(careerRepositoryProvider).nationsCupTiers(careerId);
+      final tiers = await ref
+          .watch(careerRepositoryProvider)
+          .nationsCupTiers(careerId);
       for (final g in results.groups) {
         final lowest = NationsCup.isLowestLeague(
           groupName: g.name,
@@ -119,7 +123,8 @@ class RoundResultsScreen extends ConsumerWidget {
             Center(child: Text(l.resultsCouldNotLoad(e.toString()))),
         data: (view) {
           final results = view?.results;
-          final hasContent = results != null &&
+          final hasContent =
+              results != null &&
               (results.groups.isNotEmpty ||
                   results.knockoutFixtures.isNotEmpty);
           if (view == null || results == null || !hasContent) {
@@ -274,7 +279,8 @@ class _GroupBlock extends StatelessWidget {
                 isPlayer: group.standings[i].nationId == playerNationId,
                 directCount: directCount,
                 contentionPos: contentionPos,
-                relegated: relegateCount > 0 &&
+                relegated:
+                    relegateCount > 0 &&
                     i + 1 > group.standings.length - relegateCount,
                 name: name,
                 code: code,
@@ -387,10 +393,10 @@ class _StandingRow extends StatelessWidget {
     final accent = advancing
         ? AppColors.positive
         : inContention
-            ? AppColors.warning
-            : relegated
-                ? AppColors.error
-                : null;
+        ? AppColors.warning
+        : relegated
+        ? AppColors.error
+        : null;
     return Container(
       decoration: BoxDecoration(
         color: isPlayer ? AppColors.surfaceContainerHigh : null,

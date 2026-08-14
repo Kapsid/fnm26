@@ -38,8 +38,7 @@ class UnemployedStartScreen extends ConsumerStatefulWidget {
       _UnemployedStartScreenState();
 }
 
-class _UnemployedStartScreenState
-    extends ConsumerState<UnemployedStartScreen> {
+class _UnemployedStartScreenState extends ConsumerState<UnemployedStartScreen> {
   /// Fixed for the life of the screen, so the offers do not reshuffle on every
   /// rebuild. There is deliberately no re-roll: an out-of-work manager takes
   /// one of the three jobs on the table or walks away — waiting for a better
@@ -49,11 +48,10 @@ class _UnemployedStartScreenState
   /// The federations on the table: [_offerCount] drawn at random from the
   /// bottom [_bottomShare] of the ranking that this player may actually manage.
   List<Nation> _offers(List<Nation> all, {required bool premium}) {
-    final eligible =
-        [
-          for (final n in all)
-            if (nationSelectable(n, premiumUnlocked: premium)) n,
-        ]..sort((a, b) => a.ranking.compareTo(b.ranking));
+    final eligible = [
+      for (final n in all)
+        if (nationSelectable(n, premiumUnlocked: premium)) n,
+    ]..sort((a, b) => a.ranking.compareTo(b.ranking));
     if (eligible.isEmpty) return const [];
     // The weakest half — but never fewer than the number of offers, so a
     // demo-locked pool of a handful of nations still fills the table.

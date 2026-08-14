@@ -168,10 +168,10 @@ abstract final class Grievances {
   /// nothing later, and telling a man the truth must therefore never be worse
   /// than lying to him.
   static GrievanceEffect effectOf(GrievanceTone tone) => switch (tone) {
-        GrievanceTone.reassure => (morale: 3, board: -1),
-        GrievanceTone.honest => (morale: 1, board: 1),
-        GrievanceTone.dismiss => (morale: -3, board: 1),
-      };
+    GrievanceTone.reassure => (morale: 3, board: -1),
+    GrievanceTone.honest => (morale: 1, board: 1),
+    GrievanceTone.dismiss => (morale: -3, board: 1),
+  };
 
   /// Whether a man whose grievance has stood unanswered for [windows] walks
   /// away from international football. Younger men sulk; a proud veteran goes.

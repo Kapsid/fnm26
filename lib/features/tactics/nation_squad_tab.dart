@@ -66,13 +66,15 @@ class _NationSquadTabState extends ConsumerState<NationSquadTab> {
                 r.player.club.toLowerCase().contains(q))
               r,
     ];
-    rows.sort((a, b) => switch (_sort) {
-      _SquadSort.rating => b.player.overall.compareTo(a.player.overall),
-      _SquadSort.caps => b.caps.compareTo(a.caps),
-      _SquadSort.goals => b.goals.compareTo(a.goals),
-      _SquadSort.age => a.player.age.compareTo(b.player.age),
-      _SquadSort.name => a.player.name.compareTo(b.player.name),
-    });
+    rows.sort(
+      (a, b) => switch (_sort) {
+        _SquadSort.rating => b.player.overall.compareTo(a.player.overall),
+        _SquadSort.caps => b.caps.compareTo(a.caps),
+        _SquadSort.goals => b.goals.compareTo(a.goals),
+        _SquadSort.age => a.player.age.compareTo(b.player.age),
+        _SquadSort.name => a.player.name.compareTo(b.player.name),
+      },
+    );
     return rows;
   }
 
@@ -546,9 +548,7 @@ class _PlayerRow extends StatelessWidget {
                         Icon(
                           injured ? Icons.personal_injury : Icons.gavel_rounded,
                           size: 11,
-                          color: injured
-                              ? AppColors.warning
-                              : AppColors.error,
+                          color: injured ? AppColors.warning : AppColors.error,
                         ),
                         const SizedBox(width: 2),
                         // Flexible: an absence reads "Out 6 weeks · back for

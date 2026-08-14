@@ -14,13 +14,13 @@ abstract final class Trophies {
 
   /// A confederation's continental-championship trophy.
   static String forConfederation(Confederation c) => switch (c) {
-        Confederation.europe => '$_base/europe.png',
-        Confederation.southAmerica => '$_base/southamerica.png',
-        Confederation.africa => '$_base/africa.png',
-        Confederation.asia => '$_base/asia.png',
-        Confederation.northAmerica => '$_base/northamerica.png',
-        Confederation.oceania => '$_base/oceania.png',
-      };
+    Confederation.europe => '$_base/europe.png',
+    Confederation.southAmerica => '$_base/southamerica.png',
+    Confederation.africa => '$_base/africa.png',
+    Confederation.asia => '$_base/asia.png',
+    Confederation.northAmerica => '$_base/northamerica.png',
+    Confederation.oceania => '$_base/oceania.png',
+  };
 
   /// The trophy for a stored honour's competition name, or null if unknown.
   static String? forCompetitionName(String name) {

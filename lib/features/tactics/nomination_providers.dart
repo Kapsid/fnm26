@@ -25,15 +25,14 @@ String callUpDraftKey({String? eventKind, Fixture? periodStart}) =>
 
 /// Reads back the part-named squad stored under a draft key.
 final AutoDisposeFutureProviderFamily<Set<int>, ({int careerId, String key})>
-    callUpDraftProvider =
-    FutureProvider.autoDispose.family<Set<int>, ({int careerId, String key})>(
-  (ref, arg) =>
-      ref.watch(squadRepositoryProvider).callUpDraft(arg.careerId, arg.key),
-);
+callUpDraftProvider = FutureProvider.autoDispose
+    .family<Set<int>, ({int careerId, String key})>(
+      (ref, arg) =>
+          ref.watch(squadRepositoryProvider).callUpDraft(arg.careerId, arg.key),
+    );
 
 final AutoDisposeFutureProviderFamily<NominationWindow, int>
-    nominationWindowProvider =
-    FutureProvider.autoDispose.family<NominationWindow, int>((
+nominationWindowProvider = FutureProvider.autoDispose.family<NominationWindow, int>((
   ref,
   careerId,
 ) async {

@@ -95,11 +95,11 @@ enum ChallengeTier { bronze, silver, gold, legendary }
 
 extension ChallengeTierX on ChallengeTier {
   String get label => switch (this) {
-        ChallengeTier.bronze => 'Bronze',
-        ChallengeTier.silver => 'Silver',
-        ChallengeTier.gold => 'Gold',
-        ChallengeTier.legendary => 'Legendary',
-      };
+    ChallengeTier.bronze => 'Bronze',
+    ChallengeTier.silver => 'Silver',
+    ChallengeTier.gold => 'Gold',
+    ChallengeTier.legendary => 'Legendary',
+  };
 
   /// Sort/rank order (bronze first).
   int get rank => index;
@@ -437,8 +437,7 @@ abstract final class ChallengeCatalog {
     return (done, 2);
   }
 
-  static (int, int) _unbeaten25(ChallengeStats s) =>
-      (s.longestUnbeatenRun, 25);
+  static (int, int) _unbeaten25(ChallengeStats s) => (s.longestUnbeatenRun, 25);
   static (int, int) _goals10k(ChallengeStats s) => (s.careerGoals, 10000);
   static (int, int) _cleanSheets500(ChallengeStats s) =>
       (s.careerCleanSheets, 500);

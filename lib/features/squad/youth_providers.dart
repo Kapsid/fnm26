@@ -15,8 +15,11 @@ typedef YouthPyramid = ({
 
 /// The five youth levels, each ranked by promise, plus the boys released out of
 /// each level this year — so a departure is seen rather than silent.
-final AutoDisposeFutureProviderFamily<YouthPyramid, int> youthPyramidProvider =
-    FutureProvider.autoDispose.family<YouthPyramid, int>((ref, careerId) async {
+final AutoDisposeFutureProviderFamily<YouthPyramid, int>
+youthPyramidProvider = FutureProvider.autoDispose.family<YouthPyramid, int>((
+  ref,
+  careerId,
+) async {
   await ref.watch(seedLoaderProvider).ensureSeeded();
   final career = await ref.watch(careerRepositoryProvider).byId(careerId);
   final empty = (
@@ -30,19 +33,20 @@ final AutoDisposeFutureProviderFamily<YouthPyramid, int> youthPyramidProvider =
   final starts = await ref.watch(careerDevBonusProvider(careerId).future);
 
   Future<List<Player>> pyramidAt(int at) => repo.youthByNation(
-        career.nationId,
-        agingYears: at,
-        saveSeed: career.rngSeed,
-        youthBonusByCycle: youth,
-        careerStartsByPlayer: starts,
-      );
+    career.nationId,
+    agingYears: at,
+    saveSeed: career.rngSeed,
+    youthBonusByCycle: youth,
+    careerStartsByPlayer: starts,
+  );
 
   final now = await pyramidAt(years);
   final before = years <= 0 ? const <Player>[] : await pyramidAt(years - 1);
   final caps = {
-    for (final c in await ref
-        .watch(competitionRepositoryProvider)
-        .nationTopAppearances(careerId, career.nationId, limit: 500))
+    for (final c
+        in await ref
+            .watch(competitionRepositoryProvider)
+            .nationTopAppearances(careerId, career.nationId, limit: 500))
       c.playerId: c.games,
   };
 

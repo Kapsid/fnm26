@@ -4606,6 +4606,10 @@
   "@yBoardPressure3": {
     "description": "Y post about the board losing patience. Variant 3."
   },
+  "yReplies": "ALSO ABOUT THIS MATCH",
+  "@yReplies": {
+    "description": "Heading over the other posts about the same event, on a Y post's detail."
+  },
   "yPlayerGrievance0": "Asked where I stand. Still waiting on an answer.",
   "@yPlayerGrievance0": {
     "description": "Player agency: yPlayerGrievance0."

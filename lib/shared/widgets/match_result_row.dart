@@ -44,8 +44,8 @@ class MatchResultRow extends StatelessWidget {
     final marker = fixture.wentToShootout
         ? 'pens ${fixture.homePenalties}-${fixture.awayPenalties}'
         : fixture.afterExtraTime
-            ? 'AET'
-            : null;
+        ? 'AET'
+        : null;
 
     bool bold(int nationId) {
       if (emphasiseNationId != null) return nationId == emphasiseNationId;

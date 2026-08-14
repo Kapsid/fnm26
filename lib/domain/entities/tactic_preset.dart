@@ -17,15 +17,15 @@ class TacticPreset {
   final TacticalInstructions instructions;
 
   Map<String, dynamic> toJson() => {
-        'name': name,
-        'formation': formation.name,
-        'mentality': instructions.mentality,
-        'pressing': instructions.pressing,
-        'tempo': instructions.tempo,
-        'width': instructions.width,
-        'defensiveLine': instructions.defensiveLine,
-        'directness': instructions.directness,
-      };
+    'name': name,
+    'formation': formation.name,
+    'mentality': instructions.mentality,
+    'pressing': instructions.pressing,
+    'tempo': instructions.tempo,
+    'width': instructions.width,
+    'defensiveLine': instructions.defensiveLine,
+    'directness': instructions.directness,
+  };
 
   static TacticPreset? fromJson(Map<String, dynamic> json) {
     final name = json['name'];

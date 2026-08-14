@@ -61,13 +61,13 @@ enum CompetitionKind {
 extension ConfederationX on Confederation {
   /// Human-readable region name (e.g. `South America`).
   String get label => switch (this) {
-        Confederation.europe => 'Europe',
-        Confederation.southAmerica => 'South America',
-        Confederation.northAmerica => 'North America',
-        Confederation.africa => 'Africa',
-        Confederation.asia => 'Asia',
-        Confederation.oceania => 'Oceania',
-      };
+    Confederation.europe => 'Europe',
+    Confederation.southAmerica => 'South America',
+    Confederation.northAmerica => 'North America',
+    Confederation.africa => 'Africa',
+    Confederation.asia => 'Asia',
+    Confederation.oceania => 'Oceania',
+  };
 }
 
 /// On-pitch playing positions, ordered roughly back-to-front.
@@ -128,41 +128,38 @@ enum PositionCategory {
 extension PlayerPositionX on PlayerPosition {
   /// The broad grouping this position belongs to.
   PositionCategory get category => switch (this) {
-        PlayerPosition.gk => PositionCategory.goalkeeper,
-        PlayerPosition.lb ||
-        PlayerPosition.cb ||
-        PlayerPosition.rb =>
-          PositionCategory.defender,
-        PlayerPosition.dm ||
-        PlayerPosition.cm ||
-        PlayerPosition.am ||
-        PlayerPosition.lm ||
-        PlayerPosition.rm =>
-          PositionCategory.midfielder,
-        PlayerPosition.lw ||
-        PlayerPosition.rw ||
-        PlayerPosition.st =>
-          PositionCategory.forward,
-      };
+    PlayerPosition.gk => PositionCategory.goalkeeper,
+    PlayerPosition.lb ||
+    PlayerPosition.cb ||
+    PlayerPosition.rb => PositionCategory.defender,
+    PlayerPosition.dm ||
+    PlayerPosition.cm ||
+    PlayerPosition.am ||
+    PlayerPosition.lm ||
+    PlayerPosition.rm => PositionCategory.midfielder,
+    PlayerPosition.lw ||
+    PlayerPosition.rw ||
+    PlayerPosition.st => PositionCategory.forward,
+  };
 
   /// Short uppercase label for UI (e.g. `GK`, `ST`).
   String get label => name.toUpperCase();
 
   /// Full descriptive role name (e.g. `Defensive Mid`).
   String get roleName => switch (this) {
-        PlayerPosition.gk => 'Goalkeeper',
-        PlayerPosition.lb => 'Left Back',
-        PlayerPosition.cb => 'Centre Back',
-        PlayerPosition.rb => 'Right Back',
-        PlayerPosition.dm => 'Defensive Mid',
-        PlayerPosition.cm => 'Central Mid',
-        PlayerPosition.am => 'Attacking Mid',
-        PlayerPosition.lm => 'Left Mid',
-        PlayerPosition.rm => 'Right Mid',
-        PlayerPosition.lw => 'Left Wing',
-        PlayerPosition.rw => 'Right Wing',
-        PlayerPosition.st => 'Striker',
-      };
+    PlayerPosition.gk => 'Goalkeeper',
+    PlayerPosition.lb => 'Left Back',
+    PlayerPosition.cb => 'Centre Back',
+    PlayerPosition.rb => 'Right Back',
+    PlayerPosition.dm => 'Defensive Mid',
+    PlayerPosition.cm => 'Central Mid',
+    PlayerPosition.am => 'Attacking Mid',
+    PlayerPosition.lm => 'Left Mid',
+    PlayerPosition.rm => 'Right Mid',
+    PlayerPosition.lw => 'Left Wing',
+    PlayerPosition.rw => 'Right Wing',
+    PlayerPosition.st => 'Striker',
+  };
 }
 
 /// A nation's youth levels, strict under-N: a player is in [YouthLevel.u17]
@@ -185,7 +182,8 @@ enum YouthLevel {
   u19(17, 18),
 
   /// 19–20.
-  u21(19, 20);
+  u21(19, 20)
+  ;
 
   const YouthLevel(this.minAge, this.maxAge);
 

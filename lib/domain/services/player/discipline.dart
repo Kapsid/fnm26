@@ -54,14 +54,14 @@ abstract final class Discipline {
       for (final a in before.values)
         a.playerId: a.copyWith(
           // A friendly does not count toward serving a competitive ban.
-          banMatches:
-              competitive ? (a.banMatches - 1).clamp(0, 99) : a.banMatches,
+          banMatches: competitive
+              ? (a.banMatches - 1).clamp(0, 99)
+              : a.banMatches,
           injuryMatches: (a.injuryMatches - 1).clamp(0, 99),
         ),
     };
 
-    PlayerAbsence current(int id) =>
-        next[id] ?? PlayerAbsence(playerId: id);
+    PlayerAbsence current(int id) => next[id] ?? PlayerAbsence(playerId: id);
 
     for (final e in events) {
       if (e.teamNationId != nationId) continue;
@@ -88,8 +88,10 @@ abstract final class Discipline {
           // A second booking is a one-match ban; a straight red is weighted by
           // severity. A dismissal also wipes the pending-yellow count.
           final ban = e.secondYellow ? 1 : _straightRedBan(rng);
-          next[e.playerId] =
-              a.copyWith(yellows: 0, banMatches: a.banMatches + ban);
+          next[e.playerId] = a.copyWith(
+            yellows: 0,
+            banMatches: a.banMatches + ban,
+          );
         case MatchEventType.injury:
           final a = current(e.playerId);
           final weeks = 1 + rng.nextInt(4); // 1..4 matches

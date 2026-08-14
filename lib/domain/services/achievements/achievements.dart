@@ -13,7 +13,8 @@ enum AchievementCategory {
   qualifications('Qualifications'),
   titles('Titles'),
   misc('Misc'),
-  mega('Mega');
+  mega('Mega')
+  ;
 
   const AchievementCategory(this.label);
 
@@ -135,7 +136,17 @@ abstract final class AchievementCatalog {
 
   /// Cumulative matches-played milestones.
   static const matchTiers = [
-    10, 50, 100, 200, 500, 1000, 2000, 5000, 10000, 50000, 100000,
+    10,
+    50,
+    100,
+    200,
+    500,
+    1000,
+    2000,
+    5000,
+    10000,
+    50000,
+    100000,
   ];
 
   /// Cumulative goals-scored milestones.
@@ -442,8 +453,10 @@ abstract final class AchievementCatalog {
   ];
 
   /// Ids of every achievement unlocked for [stats].
-  static Set<String> earnedIds(AchievementStats stats) =>
-      {for (final a in all) if (a.isEarned(stats)) a.id};
+  static Set<String> earnedIds(AchievementStats stats) => {
+    for (final a in all)
+      if (a.isEarned(stats)) a.id,
+  };
 
   static String _count(int n, String one, String many) =>
       '$n ${n == 1 ? one : many}';

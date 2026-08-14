@@ -137,8 +137,7 @@ class _AchievementTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final text = achievementText(AppLocalizations.of(context), view.def);
     final earned = view.earned;
-    final showProgress =
-        !earned && view.current != null && view.target != null;
+    final showProgress = !earned && view.current != null && view.target != null;
     return Padding(
       padding: const EdgeInsets.only(bottom: AppSpacing.sm),
       child: AppCard(

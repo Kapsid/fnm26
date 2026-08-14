@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/domain/services/press/y_feed.dart';
+import 'package:fnm/features/y/y_post_detail.dart';
 import 'package:fnm/features/y/y_screen.dart';
 import 'package:fnm/l10n/app_localizations.dart';
+
+import '../helpers/pump_app.dart';
 
 void main() {
   testWidgets('every template and variant renders real words', (tester) async {
@@ -41,5 +44,77 @@ void main() {
         expect(body.trim(), isNotEmpty, reason: '$t variant $v is blank');
       }
     }
+  });
+
+  group('a post opens', () {
+    YPost post(String voice, String key) => (
+      voice: YVoice.fan,
+      handle: '@$voice',
+      displayName: voice,
+      template: YTemplate.winTight,
+      variant: 0,
+      args: const ['Spain', '2–1'],
+      date: DateTime(2030, 6, 10),
+      key: key,
+    );
+
+    final posts = [
+      post('Alice', 'fx:1|fan'),
+      post('Bob', 'fx:1|stats'),
+      post('Cara', 'fx:2|fan'),
+    ];
+
+    testWidgets('a tapped post opens its detail', (tester) async {
+      await tester.pumpApp(
+        Scaffold(
+          body: ListView(
+            children: [
+              for (final p in posts)
+                YPostTile(
+                  post: p,
+                  onTap: () =>
+                      Navigator.of(tester.element(find.byType(ListView))).push(
+                        MaterialPageRoute<void>(
+                          builder: (_) => YPostDetail(post: p, all: posts),
+                        ),
+                      ),
+                ),
+            ],
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.byType(YPostTile).first);
+      await tester.pumpAndSettle();
+      expect(find.byType(YPostDetail), findsOneWidget);
+    });
+
+    testWidgets('the detail shows what else was said about that match', (
+      tester,
+    ) async {
+      await tester.pumpApp(
+        Scaffold(
+          body: YPostDetail(post: posts.first, all: posts),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      // Bob was talking about the same match; Cara was not.
+      expect(find.text('Bob'), findsOneWidget);
+      expect(find.text('Cara'), findsNothing);
+    });
+
+    testWidgets('a post nobody replied to shows no replies heading', (
+      tester,
+    ) async {
+      await tester.pumpApp(
+        Scaffold(
+          body: YPostDetail(post: posts.last, all: posts),
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(find.text('ALSO ABOUT THIS MATCH'), findsNothing);
+    });
   });
 }

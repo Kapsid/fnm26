@@ -1,4 +1,5 @@
 import 'package:fnm/domain/services/press/public_mood.dart';
+
 /// How a single match went for the manager's nation.
 enum MatchOutcome { win, draw, loss }
 
@@ -95,12 +96,12 @@ abstract final class BoardSatisfaction {
 
   /// The standing bonus for a [worldRank] (1-based); null when unranked.
   static int rankBonus(int? worldRank) => switch (worldRank) {
-        null => 0,
-        <= 5 => 12,
-        <= 15 => 8,
-        <= 30 => 4,
-        _ => 0,
-      };
+    null => 0,
+    <= 5 => 12,
+    <= 15 => 8,
+    <= 30 => 4,
+    _ => 0,
+  };
 
   /// What meeting an objective at [tier] is worth, and what each round beyond
   /// (or short of) it adds. The World Cup dominates; the continental cup is
@@ -121,8 +122,7 @@ abstract final class BoardSatisfaction {
   /// only to be there has far less riding on the answer. Scaling by the demand
   /// is what makes the gauge move hardest at the biggest nations — which is
   /// where a missed objective should genuinely cost a manager their job.
-  static double demandFactor(int target) =>
-      1 + 0.18 * (target.clamp(2, 7) - 2);
+  static double demandFactor(int target) => 1 + 0.18 * (target.clamp(2, 7) - 2);
 
   /// The board's swing for one settled objective: strongly positive for hitting
   /// the brief (more so for beating it), strongly negative for falling short,

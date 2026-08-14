@@ -10,9 +10,9 @@ class DriftSeedRankingRepository implements SeedRankingRepository {
 
   @override
   Future<Map<int, int>> forCycle(int careerId, int cycle) async {
-    final rows = await (_db.select(_db.seedRankings)
-          ..where((t) => t.careerId.equals(careerId) & t.cycle.equals(cycle)))
-        .get();
+    final rows = await (_db.select(
+      _db.seedRankings,
+    )..where((t) => t.careerId.equals(careerId) & t.cycle.equals(cycle))).get();
     return {for (final r in rows) r.nationId: r.rank};
   }
 

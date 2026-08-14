@@ -145,8 +145,9 @@ abstract final class NationsCup {
     required int Function(int nationId) rankOf,
   }) {
     final next = {...tiers};
-    final maxTier =
-        tiers.values.isEmpty ? 0 : tiers.values.reduce((a, b) => a > b ? a : b);
+    final maxTier = tiers.values.isEmpty
+        ? 0
+        : tiers.values.reduce((a, b) => a > b ? a : b);
 
     if (playerTier > 0 && winners.isNotEmpty) {
       // Winners go up; the weakest of the league above drop to fill the spots.

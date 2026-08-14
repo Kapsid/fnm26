@@ -3500,6 +3500,9 @@ class AppLocalizationsEn extends AppLocalizations {
       'Nobody at the federation is saying anything supportive. Draw your own conclusions.';
 
   @override
+  String get yReplies => 'ALSO ABOUT THIS MATCH';
+
+  @override
   String get yPlayerGrievance0 =>
       'Asked where I stand. Still waiting on an answer.';
 

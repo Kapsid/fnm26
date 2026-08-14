@@ -87,9 +87,10 @@ class _OverallCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               _Stat(
-                  label: l.careerStatTitles,
-                  value: '${h.titles}',
-                  highlight: true),
+                label: l.careerStatTitles,
+                value: '${h.titles}',
+                highlight: true,
+              ),
               _Stat(label: l.careerStatPlayed, value: '${h.played}'),
               _Stat(label: l.careerStatWon, value: '${h.won}'),
               _Stat(label: l.careerStatDrawn, value: '${h.drawn}'),
@@ -122,8 +123,7 @@ class _OverallCard extends StatelessWidget {
             if (h.biggestWin != null)
               _RecordResult(label: l.careerBestWin, result: h.biggestWin!),
             if (h.biggestLoss != null)
-              _RecordResult(
-                  label: l.careerWorstDefeat, result: h.biggestLoss!),
+              _RecordResult(label: l.careerWorstDefeat, result: h.biggestLoss!),
           ],
           const SizedBox(height: AppSpacing.md),
           const Divider(height: 1),
@@ -249,9 +249,7 @@ class _TrophySlot extends StatelessWidget {
                   fit: BoxFit.contain,
                   errorBuilder: (_, __, ___) => Icon(
                     Icons.emoji_events,
-                    color: won
-                        ? AppColors.primary
-                        : AppColors.onSurfaceVariant,
+                    color: won ? AppColors.primary : AppColors.onSurfaceVariant,
                   ),
                 );
                 if (won) return image;
@@ -274,8 +272,10 @@ class _TrophySlot extends StatelessWidget {
                   right: -2,
                   top: -2,
                   child: Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 5, vertical: 1),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 5,
+                      vertical: 1,
+                    ),
                     decoration: const BoxDecoration(
                       color: AppColors.primary,
                       shape: BoxShape.circle,
@@ -370,7 +370,9 @@ class _CycleCard extends StatelessWidget {
               children: [
                 Expanded(
                   child: _Finish(
-                      label: l.careerWorldCupLabel, placement: c.worldCup),
+                    label: l.careerWorldCupLabel,
+                    placement: c.worldCup,
+                  ),
                 ),
                 Expanded(
                   child: _Finish(

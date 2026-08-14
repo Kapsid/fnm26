@@ -120,8 +120,7 @@ String? _coreRound(String? round) {
 bool _isContinentalRound(String round) => round.startsWith('C');
 
 final AutoDisposeFutureProviderFamily<CareerSummary?, int>
-careerSummaryProvider =
-    FutureProvider.autoDispose.family<CareerSummary?, int>((
+careerSummaryProvider = FutureProvider.autoDispose.family<CareerSummary?, int>((
   ref,
   careerId,
 ) async {
@@ -139,9 +138,9 @@ careerSummaryProvider =
 
   final fixtures = await comp.fixturesForNation(careerId, career.nationId);
   // Only this career's own editions — not the pre-seeded real-world history.
-  final honours = (await comp.honours(careerId))
-      .where((h) => h.year >= CareerService.cycleStart.year)
-      .toList();
+  final honours = (await comp.honours(
+    careerId,
+  )).where((h) => h.year >= CareerService.cycleStart.year).toList();
 
   // Overall record across every played international.
   var played = 0;
@@ -190,8 +189,9 @@ careerSummaryProvider =
     if (!isWc) {
       final managedId = stints[cycleForYear(h.year)] ?? career.nationId;
       final conf = nations[managedId]?.confederation;
-      final ownCup =
-          conf == null ? null : ContinentalCups.byConfederation[conf]?.name;
+      final ownCup = conf == null
+          ? null
+          : ContinentalCups.byConfederation[conf]?.name;
       if (h.competition != ownCup) continue;
     }
     final display = isWc ? 'World Cup' : h.competition;
@@ -204,14 +204,16 @@ careerSummaryProvider =
     }).toList();
 
     final (placement, medal) = _placement(mine, career.nationId);
-    runs.add(TournamentRun(
-      year: h.year,
-      competition: display,
-      placement: placement,
-      medal: medal,
-      qualified: mine.isNotEmpty,
-      championName: nations[h.championId]?.name,
-    ));
+    runs.add(
+      TournamentRun(
+        year: h.year,
+        competition: display,
+        placement: placement,
+        medal: medal,
+        qualified: mine.isNotEmpty,
+        championName: nations[h.championId]?.name,
+      ),
+    );
   }
   runs.sort((a, b) => b.year.compareTo(a.year));
 
@@ -239,23 +241,25 @@ careerSummaryProvider =
   for (final h in honours) {
     final managedNation = stints[cycleForYear(h.year)] ?? career.nationId;
     if (h.championId != managedNation) continue;
-    final display =
-        h.competition == 'World Championship' ? 'World Cup' : h.competition;
+    final display = h.competition == 'World Championship'
+        ? 'World Cup'
+        : h.competition;
     (byCompetition[display] ??= []).add((
       year: h.year,
       nationName: nations[managedNation]?.name ?? 'Unknown',
     ));
   }
-  final titles = [
-    for (final entry in byCompetition.entries)
-      TrophyTitle(
-        competition: entry.key,
-        wins: entry.value..sort((a, b) => b.year.compareTo(a.year)),
-      ),
-  ]..sort((a, b) {
-      final byCount = b.count.compareTo(a.count);
-      return byCount != 0 ? byCount : a.competition.compareTo(b.competition);
-    });
+  final titles =
+      [
+        for (final entry in byCompetition.entries)
+          TrophyTitle(
+            competition: entry.key,
+            wins: entry.value..sort((a, b) => b.year.compareTo(a.year)),
+          ),
+      ]..sort((a, b) {
+        final byCount = b.count.compareTo(a.count);
+        return byCount != 0 ? byCount : a.competition.compareTo(b.competition);
+      });
 
   return CareerSummary(
     career: career,
@@ -291,8 +295,9 @@ careerSummaryProvider =
   // semi-finalists SHARE the bronze — a lost semi there is a third-place finish,
   // not a medal-less "semi-finals". (The World Cup, which has a 3RD play-off,
   // resolves its semi losers into 3rd/4th and never stops at 'SF'.)
-  final noThirdPlace =
-      fixtures.any((f) => f.round != null && _isContinentalRound(f.round!));
+  final noThirdPlace = fixtures.any(
+    (f) => f.round != null && _isContinentalRound(f.round!),
+  );
 
   bool wonAt(String core) {
     final f = fixtures.firstWhere(

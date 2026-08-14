@@ -26,34 +26,39 @@ typedef NationForm = ({List<int> results, int morale, int played});
 /// The recent form of the (careerId, nationId) key's nation — its last five
 /// results and morale, derived purely from recorded fixtures (nothing to
 /// persist). Keyed so it can profile the opponent as well as the manager.
-final AutoDisposeFutureProviderFamily<NationForm,
-        ({int careerId, int nationId})> nationFormProvider =
-    FutureProvider.autoDispose
-        .family<NationForm, ({int careerId, int nationId})>((ref, key) async {
-  final fixtures = await ref
-      .watch(competitionRepositoryProvider)
-      .fixturesForNation(key.careerId, key.nationId);
-  final played = [
-    for (final f in fixtures)
-      if (f.hasResult) f,
-  ]..sort((a, b) => b.date.compareTo(a.date)); // newest first
-  final results = <int>[];
-  for (final f in played.take(5)) {
-    final isHome = f.homeNationId == key.nationId;
-    final gf = isHome ? f.homeScore! : f.awayScore!;
-    final ga = isHome ? f.awayScore! : f.homeScore!;
-    results.add(gf > ga ? 1 : (gf < ga ? -1 : 0));
-  }
-  return (
-    results: results,
-    morale: Condition.morale(fixtures, key.nationId),
-    played: played.length,
-  );
-});
+final AutoDisposeFutureProviderFamily<
+  NationForm,
+  ({int careerId, int nationId})
+>
+nationFormProvider = FutureProvider.autoDispose
+    .family<NationForm, ({int careerId, int nationId})>((ref, key) async {
+      final fixtures = await ref
+          .watch(competitionRepositoryProvider)
+          .fixturesForNation(key.careerId, key.nationId);
+      final played = [
+        for (final f in fixtures)
+          if (f.hasResult) f,
+      ]..sort((a, b) => b.date.compareTo(a.date)); // newest first
+      final results = <int>[];
+      for (final f in played.take(5)) {
+        final isHome = f.homeNationId == key.nationId;
+        final gf = isHome ? f.homeScore! : f.awayScore!;
+        final ga = isHome ? f.awayScore! : f.homeScore!;
+        results.add(gf > ga ? 1 : (gf < ga ? -1 : 0));
+      }
+      return (
+        results: results,
+        morale: Condition.morale(fixtures, key.nationId),
+        played: played.length,
+      );
+    });
 
 /// Team morale (0–100) for the manager's nation, derived from recent results.
-final AutoDisposeFutureProviderFamily<int, int> moraleProvider =
-    FutureProvider.autoDispose.family<int, int>((ref, careerId) async {
+final AutoDisposeFutureProviderFamily<int, int>
+moraleProvider = FutureProvider.autoDispose.family<int, int>((
+  ref,
+  careerId,
+) async {
   final career = await ref.watch(careerRepositoryProvider).byId(careerId);
   if (career == null) return 50;
   final fixtures = await ref
@@ -79,58 +84,62 @@ final AutoDisposeFutureProviderFamily<int, int> moraleProvider =
 /// Every squad player's live condition (form + fatigue + the morale shift),
 /// keyed by player id, for the manager's nation as of the current in-game date.
 final AutoDisposeFutureProviderFamily<Map<int, PlayerCondition>, int>
-    squadConditionProvider =
-    FutureProvider.autoDispose.family<Map<int, PlayerCondition>, int>((
-  ref,
-  careerId,
-) async {
-  final career = await ref.watch(careerRepositoryProvider).byId(careerId);
-  if (career == null) return const {};
-  final recent = await ref
-      .watch(competitionRepositoryProvider)
-      .recentRatingsByNation(careerId, career.nationId);
-  final morale = await ref.watch(moraleProvider(careerId).future);
-  final mDelta = Condition.moraleDelta(morale);
-  // The tournament base camp, while one is running: where the squad is living
-  // shows up as travel wear and a sharpness lift.
-  final camp = await ref.watch(activeCampProvider(careerId).future);
-  final asOf = career.inGameDate;
-  // Where each man stands at his club this window — the third term beside form
-  // and fatigue. A striker who has not started since October arrives rusty.
-  final pool = await ref.watch(playerRepositoryProvider).byNation(
-        career.nationId,
-        agingYears: CareerService.agingYears(career),
-        saveSeed: career.rngSeed,
-        minAge: 15,
-      );
-  final byId = {for (final p in pool) p.id: p};
-  final window = ClubForm.windowIndexFor(asOf);
-  return {
-    for (final entry in recent.entries)
-      entry.key: () {
-        final p = byId[entry.key];
-        final standing = p == null
-            ? null
-            : ClubForm.standingFor(
-                playerId: p.id,
-                overall: p.overall,
-                age: p.age,
-                saveSeed: career.rngSeed,
-                windowIndex: window,
-              );
-        return Condition.of(
-          [for (final r in entry.value) r.rating],
-          [for (final r in entry.value) r.date],
-          asOf,
-          mDelta,
-          travelFatigue: camp?.travelFatigue ?? 1,
-          campBonus: camp?.conditionBonus ?? 0,
-          clubDelta: standing == null ? 0 : ClubForm.sharpnessDelta(standing),
-          clubStanding: standing,
-        );
-      }(),
-  };
-});
+squadConditionProvider = FutureProvider.autoDispose
+    .family<Map<int, PlayerCondition>, int>((
+      ref,
+      careerId,
+    ) async {
+      final career = await ref.watch(careerRepositoryProvider).byId(careerId);
+      if (career == null) return const {};
+      final recent = await ref
+          .watch(competitionRepositoryProvider)
+          .recentRatingsByNation(careerId, career.nationId);
+      final morale = await ref.watch(moraleProvider(careerId).future);
+      final mDelta = Condition.moraleDelta(morale);
+      // The tournament base camp, while one is running: where the squad is living
+      // shows up as travel wear and a sharpness lift.
+      final camp = await ref.watch(activeCampProvider(careerId).future);
+      final asOf = career.inGameDate;
+      // Where each man stands at his club this window — the third term beside form
+      // and fatigue. A striker who has not started since October arrives rusty.
+      final pool = await ref
+          .watch(playerRepositoryProvider)
+          .byNation(
+            career.nationId,
+            agingYears: CareerService.agingYears(career),
+            saveSeed: career.rngSeed,
+            minAge: 15,
+          );
+      final byId = {for (final p in pool) p.id: p};
+      final window = ClubForm.windowIndexFor(asOf);
+      return {
+        for (final entry in recent.entries)
+          entry.key: () {
+            final p = byId[entry.key];
+            final standing = p == null
+                ? null
+                : ClubForm.standingFor(
+                    playerId: p.id,
+                    overall: p.overall,
+                    age: p.age,
+                    saveSeed: career.rngSeed,
+                    windowIndex: window,
+                  );
+            return Condition.of(
+              [for (final r in entry.value) r.rating],
+              [for (final r in entry.value) r.date],
+              asOf,
+              mDelta,
+              travelFatigue: camp?.travelFatigue ?? 1,
+              campBonus: camp?.conditionBonus ?? 0,
+              clubDelta: standing == null
+                  ? 0
+                  : ClubForm.sharpnessDelta(standing),
+              clubStanding: standing,
+            );
+          }(),
+      };
+    });
 
 /// A map of player id → net rating delta from condition, for the match engine
 /// to apply. Read without watching (the match preview builds once).

@@ -10,9 +10,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 String _rolesKey(int careerId) => 'player_roles_v1:$careerId';
 
 PlayerRole _roleByName(String name) => PlayerRole.values.firstWhere(
-      (r) => r.name == name,
-      orElse: () => PlayerRole.none,
-    );
+  (r) => r.name == name,
+  orElse: () => PlayerRole.none,
+);
 
 /// Loads and saves a save's per-player tactical roles.
 class PlayerRolesStore {
@@ -54,11 +54,13 @@ class PlayerRolesStore {
   }
 }
 
-final Provider<PlayerRolesStore> playerRolesStoreProvider =
-    Provider(PlayerRolesStore.new);
+final Provider<PlayerRolesStore> playerRolesStoreProvider = Provider(
+  PlayerRolesStore.new,
+);
 
 /// One save's per-player role assignments (playerId → role; absent = none).
 final AutoDisposeFutureProviderFamily<Map<int, PlayerRole>, int>
-    playerRolesProvider =
-    FutureProvider.autoDispose.family<Map<int, PlayerRole>, int>(
-        (ref, careerId) => ref.watch(playerRolesStoreProvider).load(careerId));
+playerRolesProvider = FutureProvider.autoDispose
+    .family<Map<int, PlayerRole>, int>(
+      (ref, careerId) => ref.watch(playerRolesStoreProvider).load(careerId),
+    );

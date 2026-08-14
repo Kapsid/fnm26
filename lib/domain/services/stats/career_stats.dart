@@ -234,7 +234,12 @@ abstract final class CareerStats {
     }
 
     // Player feats.
-    var hatTricks = 0, braces = 0, motms = 0, assists = 0, yellows = 0, reds = 0;
+    var hatTricks = 0,
+        braces = 0,
+        motms = 0,
+        assists = 0,
+        yellows = 0,
+        reds = 0;
     var bestRating = 0.0;
     for (final l in lines) {
       if (l.goals >= 3) {

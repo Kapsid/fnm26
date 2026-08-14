@@ -10,9 +10,9 @@ class DriftRankingRepository implements RankingRepository {
 
   @override
   Future<Map<int, int>> pointsFor(int careerId, Map<int, int> seed) async {
-    final rows = await (_db.select(_db.rankPoints)
-          ..where((t) => t.careerId.equals(careerId)))
-        .get();
+    final rows = await (_db.select(
+      _db.rankPoints,
+    )..where((t) => t.careerId.equals(careerId))).get();
     if (rows.isNotEmpty) {
       return {for (final r in rows) r.nationId: r.points};
     }

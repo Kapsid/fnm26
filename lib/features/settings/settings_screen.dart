@@ -67,8 +67,10 @@ class SettingsScreen extends ConsumerWidget {
               children: [
                 Row(
                   children: [
-                    const Icon(Icons.translate_rounded,
-                        color: AppColors.primary),
+                    const Icon(
+                      Icons.translate_rounded,
+                      color: AppColors.primary,
+                    ),
                     const SizedBox(width: AppSpacing.md),
                     Expanded(
                       child: Column(

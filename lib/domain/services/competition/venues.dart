@@ -17,20 +17,58 @@ abstract final class VenueGenerator {
   /// Candidate cities, roughly ordered biggest-first; the index seeds a base
   /// population so the earlier a city sits, the larger it is.
   static const List<String> _cities = [
-    'Montara', 'Kastel', 'Westport', 'Belgrave', 'Ashford', 'Norwick',
-    'Verrano', 'Granthem', 'Rosalia', 'Sundborg', 'Delmar', 'Holloway',
-    'Ironwood', 'Queensford', 'Estburia', 'Pelmar', 'Cardona', 'Lindenau',
-    'Ostrava', 'Fairhaven', 'Torreón', 'Ulmarno', 'Jerova', 'Ximena',
-    'Arcelo', 'Brenova', 'Calderis', 'Dornhaven', 'Ysolde', 'Zaltena',
+    'Montara',
+    'Kastel',
+    'Westport',
+    'Belgrave',
+    'Ashford',
+    'Norwick',
+    'Verrano',
+    'Granthem',
+    'Rosalia',
+    'Sundborg',
+    'Delmar',
+    'Holloway',
+    'Ironwood',
+    'Queensford',
+    'Estburia',
+    'Pelmar',
+    'Cardona',
+    'Lindenau',
+    'Ostrava',
+    'Fairhaven',
+    'Torreón',
+    'Ulmarno',
+    'Jerova',
+    'Ximena',
+    'Arcelo',
+    'Brenova',
+    'Calderis',
+    'Dornhaven',
+    'Ysolde',
+    'Zaltena',
   ];
 
   static const List<String> _stadiumPrefixes = [
-    'Estadio', 'Arena', 'Stade', 'Park', 'Stadion', 'Coliseum',
+    'Estadio',
+    'Arena',
+    'Stade',
+    'Park',
+    'Stadion',
+    'Coliseum',
   ];
 
   static const List<String> _stadiumSuffixes = [
-    'Nacional', 'Olímpico', 'Central', 'Grande', 'Metropolitano', 'del Rey',
-    'Arena', 'Park', 'Bowl', 'Field',
+    'Nacional',
+    'Olímpico',
+    'Central',
+    'Grande',
+    'Metropolitano',
+    'del Rey',
+    'Arena',
+    'Park',
+    'Bowl',
+    'Field',
   ];
 
   /// The venues of a tournament shared between [hostIds] (primary first):
@@ -81,12 +119,14 @@ abstract final class VenueGenerator {
             city: cities[i], // already ordered biggest-first
             stadium: rng.chance(0.5)
                 ? '${_stadiumPrefixes[rng.nextInt(_stadiumPrefixes.length)]} '
-                    '${cities[i]}'
+                      '${cities[i]}'
                 : '${cities[i]} '
-                    '${_stadiumSuffixes[rng.nextInt(_stadiumSuffixes.length)]}',
+                      '${_stadiumSuffixes[rng.nextInt(_stadiumSuffixes.length)]}',
             // Capacity tapers from the biggest city down, with a little wobble.
-            capacity:
-                (80000 - i * 6000 + rng.nextInt(3000)).clamp(30000, 85000),
+            capacity: (80000 - i * 6000 + rng.nextInt(3000)).clamp(
+              30000,
+              85000,
+            ),
           ),
       ];
     }

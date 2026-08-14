@@ -157,15 +157,17 @@ abstract final class DepthChart {
     final rng = SeededRng(
       (nationId * 0x9E3779B1) ^ (salt * 0x85EBCA77) ^ 0x5F3D2C11,
     );
-    final school = _schools[_hash(nationId ^ (salt * 0x2545F491))
-        % _schools.length];
+    final school =
+        _schools[_hash(nationId ^ (salt * 0x2545F491)) % _schools.length];
 
     // The nation's weights: its school's chart, plus a small wobble so two
     // countries of the same school still differ.
     final weights = <PlayerPosition, int>{
       for (final p in _order)
-        p: (_baseShare[p]! + (school[p] ?? 0) + rng.nextInt(5) - 2)
-            .clamp(2, 40),
+        p: (_baseShare[p]! + (school[p] ?? 0) + rng.nextInt(5) - 2).clamp(
+          2,
+          40,
+        ),
     };
 
     final counts = _allocate(weights, count);

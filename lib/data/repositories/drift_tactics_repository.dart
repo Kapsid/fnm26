@@ -11,15 +11,16 @@ class DriftTacticsRepository implements TacticsRepository {
 
   @override
   Future<Tactic?> tacticForCareer(int careerId) async {
-    final row = await (_db.select(_db.tactics)
-          ..where((t) => t.careerId.equals(careerId)))
-        .getSingleOrNull();
+    final row = await (_db.select(
+      _db.tactics,
+    )..where((t) => t.careerId.equals(careerId))).getSingleOrNull();
     if (row == null) return null;
 
-    final slotRows = await (_db.select(_db.lineupSlots)
-          ..where((t) => t.careerId.equals(careerId))
-          ..orderBy([(t) => OrderingTerm(expression: t.slot)]))
-        .get();
+    final slotRows =
+        await (_db.select(_db.lineupSlots)
+              ..where((t) => t.careerId.equals(careerId))
+              ..orderBy([(t) => OrderingTerm(expression: t.slot)]))
+            .get();
     final lineup = List<int?>.filled(11, null);
     for (final s in slotRows) {
       if (s.slot >= 0 && s.slot < 11) lineup[s.slot] = s.playerId;
@@ -51,7 +52,9 @@ class DriftTacticsRepository implements TacticsRepository {
   Future<void> saveTactic(int careerId, Tactic tactic) async {
     final i = tactic.instructions;
     await _db.transaction(() async {
-      await _db.into(_db.tactics).insertOnConflictUpdate(
+      await _db
+          .into(_db.tactics)
+          .insertOnConflictUpdate(
             TacticsCompanion.insert(
               careerId: Value(careerId),
               formation: tactic.formation,
@@ -64,9 +67,9 @@ class DriftTacticsRepository implements TacticsRepository {
               directness: Value(i.directness),
             ),
           );
-      await (_db.delete(_db.lineupSlots)
-            ..where((t) => t.careerId.equals(careerId)))
-          .go();
+      await (_db.delete(
+        _db.lineupSlots,
+      )..where((t) => t.careerId.equals(careerId))).go();
       await _db.batch((b) {
         for (var slot = 0; slot < tactic.lineup.length; slot++) {
           b.insert(

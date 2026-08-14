@@ -138,8 +138,8 @@ abstract final class ClubService {
     final floor = age <= 16
         ? 94
         : age <= 18
-            ? 85
-            : 0;
+        ? 85
+        : 0;
     final withFloor = percent < floor ? floor.toDouble() : percent;
     return roll < withFloor.round().clamp(3, 96);
   }

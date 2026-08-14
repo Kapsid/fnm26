@@ -15,15 +15,17 @@ const String walkoutKeyPrefix = 'walkout:';
 /// Read from the inbox rather than a table of its own — see [walkoutKeyPrefix].
 final AutoDisposeFutureProviderFamily<Set<int>, int> walkoutsProvider =
     FutureProvider.autoDispose.family<Set<int>, int>((ref, careerId) async {
-  final keys = await ref.watch(competitionRepositoryProvider).messageKeys(
-        careerId,
-      );
-  return {
-    for (final k in keys)
-      if (k.startsWith(walkoutKeyPrefix))
-        int.tryParse(k.substring(walkoutKeyPrefix.length)) ?? -1,
-  }..remove(-1);
-});
+      final keys = await ref
+          .watch(competitionRepositoryProvider)
+          .messageKeys(
+            careerId,
+          );
+      return {
+        for (final k in keys)
+          if (k.startsWith(walkoutKeyPrefix))
+            int.tryParse(k.substring(walkoutKeyPrefix.length)) ?? -1,
+      }..remove(-1);
+    });
 
 /// How each squad member stands: whether he is picked, and whether he plays.
 typedef _Standing = ({
@@ -34,23 +36,31 @@ typedef _Standing = ({
   bool squadNamed,
 });
 
-final AutoDisposeFutureProviderFamily<_Standing?, int> _standingProvider =
-    FutureProvider.autoDispose.family<_Standing?, int>((ref, careerId) async {
+final AutoDisposeFutureProviderFamily<_Standing?, int>
+_standingProvider = FutureProvider.autoDispose.family<_Standing?, int>((
+  ref,
+  careerId,
+) async {
   await ref.watch(seedLoaderProvider).ensureSeeded();
   final career = await ref.watch(careerRepositoryProvider).byId(careerId);
   if (career == null) return null;
   final comp = ref.watch(competitionRepositoryProvider);
 
-  final pool = await ref.watch(playerRepositoryProvider).byNation(
-        career.nationId,
-        agingYears: CareerService.agingYears(career),
-        saveSeed: career.rngSeed,
-        youthBonusByCycle:
-            await ref.watch(youthBonusByCycleProvider(careerId).future),
-        careerStartsByPlayer:
-            await ref.watch(careerDevBonusProvider(careerId).future),
-      )
-    ..sort((a, b) => b.overall.compareTo(a.overall));
+  final pool =
+      await ref
+            .watch(playerRepositoryProvider)
+            .byNation(
+              career.nationId,
+              agingYears: CareerService.agingYears(career),
+              saveSeed: career.rngSeed,
+              youthBonusByCycle: await ref.watch(
+                youthBonusByCycleProvider(careerId).future,
+              ),
+              careerStartsByPlayer: await ref.watch(
+                careerDevBonusProvider(careerId).future,
+              ),
+            )
+        ..sort((a, b) => b.overall.compareTo(a.overall));
   if (pool.isEmpty) return null;
 
   final callUps = await ref.watch(squadRepositoryProvider).callUps(careerId);
@@ -116,8 +126,8 @@ final AutoDisposeFutureProviderFamily<_Standing?, int> _standingProvider =
 });
 
 /// Players who want a word — at most two, most senior first.
-final AutoDisposeFutureProviderFamily<List<Grievance>, int> grievanceProvider =
-    FutureProvider.autoDispose.family<List<Grievance>, int>((
+final AutoDisposeFutureProviderFamily<List<Grievance>, int>
+grievanceProvider = FutureProvider.autoDispose.family<List<Grievance>, int>((
   ref,
   careerId,
 ) async {
@@ -146,9 +156,9 @@ final AutoDisposeFutureProviderFamily<List<Grievance>, int> grievanceProvider =
 /// What the dressing room loses to men who have been left to stew.
 final AutoDisposeFutureProviderFamily<int, int> grievanceMoraleProvider =
     FutureProvider.autoDispose.family<int, int>((ref, careerId) async {
-  final open = await ref.watch(grievanceProvider(careerId).future);
-  return open.length * Grievances.ignoredMoraleCost;
-});
+      final open = await ref.watch(grievanceProvider(careerId).future);
+      return open.length * Grievances.ignoredMoraleCost;
+    });
 
 /// Answers a player, and settles anybody who has been ignored too long.
 class GrievanceService {
@@ -208,7 +218,8 @@ class GrievanceService {
         dedupKey: '$walkoutKeyPrefix${g.playerId}',
         category: 'retirement',
         title: '${g.playerName} walks away',
-        body: '${g.playerName} has retired from international football at '
+        body:
+            '${g.playerName} has retired from international football at '
             '${g.age}, with ${g.caps} caps. He asked to be told where he '
             'stood and was not, and he is not waiting any longer.',
         year: career.inGameDate.year,
@@ -220,5 +231,6 @@ class GrievanceService {
   }
 }
 
-final Provider<GrievanceService> grievanceServiceProvider =
-    Provider(GrievanceService.new);
+final Provider<GrievanceService> grievanceServiceProvider = Provider(
+  GrievanceService.new,
+);

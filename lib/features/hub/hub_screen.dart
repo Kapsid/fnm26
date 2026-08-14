@@ -18,6 +18,7 @@ import 'package:fnm/features/tournaments/wc_host_theme.dart';
 import 'package:fnm/features/federation/investment_editor.dart';
 import 'package:fnm/features/hub/hub_event.dart';
 import 'package:fnm/features/hub/hub_providers.dart';
+import 'package:fnm/features/y/y_providers.dart';
 import 'package:fnm/features/hub/board_objectives_screen.dart';
 import 'package:fnm/features/press/press_providers.dart';
 import 'package:fnm/features/squad/grievance_providers.dart';
@@ -77,6 +78,8 @@ class _HubScreenState extends ConsumerState<HubScreen> {
         .watch(continentalHostThemeProvider(careerId))
         .valueOrNull;
     final unread = ref.watch(unreadMessagesProvider(careerId)).valueOrNull ?? 0;
+    // What the world has said since the manager last looked.
+    final yUnread = ref.watch(yUnreadCountProvider(careerId)).valueOrNull ?? 0;
 
     // Surface news the moment it lands, rather than leaving it to be found.
     if (unread > 0 && !_popping) {
@@ -107,7 +110,11 @@ class _HubScreenState extends ConsumerState<HubScreen> {
           ),
           IconButton(
             tooltip: l.navY,
-            icon: const Icon(Icons.tag, color: AppColors.primary),
+            icon: Badge(
+              isLabelVisible: yUnread > 0,
+              label: Text('$yUnread'),
+              child: const Icon(Icons.tag, color: AppColors.primary),
+            ),
             onPressed: () => context.push('${Routes.y}?careerId=$careerId'),
           ),
           IconButton(

@@ -66,11 +66,13 @@ class TacticPresetStore {
   }
 }
 
-final Provider<TacticPresetStore> tacticPresetStoreProvider =
-    Provider(TacticPresetStore.new);
+final Provider<TacticPresetStore> tacticPresetStoreProvider = Provider(
+  TacticPresetStore.new,
+);
 
 /// The saved tactic presets for one save, alphabetically ordered.
 final AutoDisposeFutureProviderFamily<List<TacticPreset>, int>
-    tacticPresetsProvider =
-    FutureProvider.autoDispose.family<List<TacticPreset>, int>(
-        (ref, careerId) => ref.watch(tacticPresetStoreProvider).load(careerId));
+tacticPresetsProvider = FutureProvider.autoDispose
+    .family<List<TacticPreset>, int>(
+      (ref, careerId) => ref.watch(tacticPresetStoreProvider).load(careerId),
+    );

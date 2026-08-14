@@ -5820,6 +5820,12 @@ abstract class AppLocalizations {
   /// **'Nobody at the federation is saying anything supportive. Draw your own conclusions.'**
   String get yBoardPressure3;
 
+  /// Heading over the other posts about the same event, on a Y post's detail.
+  ///
+  /// In en, this message translates to:
+  /// **'ALSO ABOUT THIS MATCH'**
+  String get yReplies;
+
   /// Player agency: yPlayerGrievance0.
   ///
   /// In en, this message translates to:

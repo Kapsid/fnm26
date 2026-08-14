@@ -43,8 +43,7 @@ class SavesScreen extends ConsumerWidget {
       ),
       body: savesAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) =>
-            Center(child: Text(l.careerCouldNotLoadSaves('$e'))),
+        error: (e, _) => Center(child: Text(l.careerCouldNotLoadSaves('$e'))),
         data: (saves) {
           final full = saves.length >= limit;
           return Column(
@@ -110,9 +109,7 @@ class SavesScreen extends ConsumerWidget {
                   padding: const EdgeInsets.all(AppSpacing.marginMobile),
                   child: PrimaryButton(
                     label: full
-                        ? (premium
-                            ? l.careerSlotsFull
-                            : l.careerSlotsFullGoPro)
+                        ? (premium ? l.careerSlotsFull : l.careerSlotsFullGoPro)
                         : l.careerNewGame,
                     icon: Icons.add,
                     // On the free tier, full slots open the paywall (Pro more
@@ -161,16 +158,17 @@ class SavesScreen extends ConsumerWidget {
   }
 
   Widget _empty(BuildContext context) => Center(
-        child: Padding(
-          padding: const EdgeInsets.all(AppSpacing.xl),
-          child: Text(
-            AppLocalizations.of(context).careerNoSavesYet,
-            textAlign: TextAlign.center,
-            style: AppTypography.bodyMedium
-                .copyWith(color: AppColors.onSurfaceVariant),
-          ),
+    child: Padding(
+      padding: const EdgeInsets.all(AppSpacing.xl),
+      child: Text(
+        AppLocalizations.of(context).careerNoSavesYet,
+        textAlign: TextAlign.center,
+        style: AppTypography.bodyMedium.copyWith(
+          color: AppColors.onSurfaceVariant,
         ),
-      );
+      ),
+    ),
+  );
 }
 
 /// A short, human "when" for a last-played timestamp — "just now", "3h ago",
@@ -219,8 +217,9 @@ class _SaveTile extends StatelessWidget {
                 ),
                 Text(
                   '${save.managerName} · $date',
-                  style: AppTypography.bodySmall
-                      .copyWith(color: AppColors.onSurfaceVariant),
+                  style: AppTypography.bodySmall.copyWith(
+                    color: AppColors.onSurfaceVariant,
+                  ),
                 ),
                 const SizedBox(height: 2),
                 Row(
@@ -233,8 +232,9 @@ class _SaveTile extends StatelessWidget {
                     const SizedBox(width: 4),
                     Text(
                       l.careerRoadToWorldCup(wcYear),
-                      style: AppTypography.labelSmall
-                          .copyWith(color: AppColors.primary),
+                      style: AppTypography.labelSmall.copyWith(
+                        color: AppColors.primary,
+                      ),
                     ),
                   ],
                 ),
@@ -250,8 +250,9 @@ class _SaveTile extends StatelessWidget {
                       const SizedBox(width: 4),
                       Text(
                         l.careerLastPlayed(_ago(l, save.lastPlayedAt!)),
-                        style: AppTypography.labelSmall
-                            .copyWith(color: AppColors.onSurfaceVariant),
+                        style: AppTypography.labelSmall.copyWith(
+                          color: AppColors.onSurfaceVariant,
+                        ),
                       ),
                     ],
                   ),

@@ -3524,6 +3524,9 @@ class AppLocalizationsCs extends AppLocalizations {
       'Nikdo ve svazu neřekne jediné podporující slovo. Vyvoďte si z toho své.';
 
   @override
+  String get yReplies => 'TAKÉ K TOMUTO ZÁPASU';
+
+  @override
   String get yPlayerGrievance0 =>
       'Zeptal jsem se, na čem jsem. Pořád čekám na odpověď.';
 

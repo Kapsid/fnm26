@@ -53,7 +53,8 @@ class NationBadge extends StatelessWidget {
               colors: [AppColors.surfaceBright, AppColors.surfaceContainerHigh],
             ),
           ),
-          child: flag ??
+          child:
+              flag ??
               Text(
                 code.toUpperCase(),
                 style: AppTypography.labelSmall.copyWith(

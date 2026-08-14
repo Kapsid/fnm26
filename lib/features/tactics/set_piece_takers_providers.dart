@@ -51,11 +51,12 @@ class SetPieceTakersStore {
   }
 }
 
-final Provider<SetPieceTakersStore> setPieceTakersStoreProvider =
-    Provider(SetPieceTakersStore.new);
+final Provider<SetPieceTakersStore> setPieceTakersStoreProvider = Provider(
+  SetPieceTakersStore.new,
+);
 
 /// One save's set-piece taker choices.
 final AutoDisposeFutureProviderFamily<SetPieceTakers, int>
-    setPieceTakersProvider =
-    FutureProvider.autoDispose.family<SetPieceTakers, int>(
-        (ref, careerId) => ref.watch(setPieceTakersStoreProvider).load(careerId));
+setPieceTakersProvider = FutureProvider.autoDispose.family<SetPieceTakers, int>(
+  (ref, careerId) => ref.watch(setPieceTakersStoreProvider).load(careerId),
+);

@@ -8,14 +8,15 @@ import 'package:fnm/features/career/career_providers.dart';
 typedef AwardArg = ({int careerId, int playerId});
 
 final AutoDisposeFutureProviderFamily<List<PlayerAward>, AwardArg>
-playerAwardsProvider =
-    FutureProvider.autoDispose.family<List<PlayerAward>, AwardArg>((
-  ref,
-  arg,
-) =>
-        ref
-            .watch(competitionRepositoryProvider)
-            .playerHonours(arg.careerId, arg.playerId));
+playerAwardsProvider = FutureProvider.autoDispose
+    .family<List<PlayerAward>, AwardArg>(
+      (
+        ref,
+        arg,
+      ) => ref
+          .watch(competitionRepositoryProvider)
+          .playerHonours(arg.careerId, arg.playerId),
+    );
 
 /// Hands out the trophies a finished year has earned.
 ///
@@ -99,9 +100,10 @@ class AwardService {
         dedupKey: 'poty:$year',
         category: 'award',
         title: 'World Player of the Year $year',
-        body: '${best.name} is the best player in the world this year.'
+        body:
+            '${best.name} is the best player in the world this year.'
             '${young == null || young.playerId == best.playerId ? '' : ' '
-                '${young.name} takes the young player\'s award.'}',
+                      '${young.name} takes the young player\'s award.'}',
         year: year,
       );
     }

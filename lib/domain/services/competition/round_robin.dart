@@ -27,8 +27,7 @@ List<List<Pairing>> doubleRoundRobin(
 List<List<Pairing>> singleRoundRobin(
   List<int> teamIds, {
   required SeededRng rng,
-}) =>
-    _singleRoundRobin(rng.shuffled(teamIds));
+}) => _singleRoundRobin(rng.shuffled(teamIds));
 
 const int _bye = -1;
 

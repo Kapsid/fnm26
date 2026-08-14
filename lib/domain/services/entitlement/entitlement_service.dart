@@ -28,7 +28,7 @@ enum PurchaseFlowState { idle, loading, pending, error }
 /// re-asks the store, which is what heals a reinstall or a new device.
 class EntitlementService {
   EntitlementService(this._ref, {InAppPurchase? iap})
-      : _iap = iap ?? InAppPurchase.instance;
+    : _iap = iap ?? InAppPurchase.instance;
 
   final Ref _ref;
   final InAppPurchase _iap;
@@ -130,8 +130,9 @@ class EntitlementService {
 }
 
 /// The purchase flow's UI state, for the paywall sheet.
-final StateProvider<PurchaseFlowState> purchaseFlowProvider =
-    StateProvider((_) => PurchaseFlowState.idle);
+final StateProvider<PurchaseFlowState> purchaseFlowProvider = StateProvider(
+  (_) => PurchaseFlowState.idle,
+);
 
 final Provider<EntitlementService> entitlementServiceProvider = Provider(
   (ref) {

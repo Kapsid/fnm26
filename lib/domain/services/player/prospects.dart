@@ -61,7 +61,9 @@ abstract final class Prospects {
   /// The honest read on a player's ceiling, 1–5 stars, from the same hidden
   /// potential that decides whether game time turns him into anything.
   static int trueStars(int playerId) {
-    final potential = PlayerLifecycle.developmentPotential(playerId); // .35–1.75
+    final potential = PlayerLifecycle.developmentPotential(
+      playerId,
+    ); // .35–1.75
     // Bands chosen so five stars is genuinely rare — most players are ordinary.
     if (potential >= 1.45) return 5;
     if (potential >= 1.2) return 4;

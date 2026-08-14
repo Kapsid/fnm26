@@ -4,6 +4,7 @@ import 'package:fnm/data/db/app_database.dart';
 
 import '../../generated_migrations/schema.dart';
 import '../../generated_migrations/schema_v38.dart' as v38;
+import '../../generated_migrations/schema_v40.dart' as v40;
 
 /// Guards the promise that a save survives a schema bump.
 ///
@@ -21,7 +22,7 @@ void main() {
 
   /// Every from → to pair that must carry data across. Extend as versions are
   /// added: {38: 39}, then {38: 40, 39: 40}, and so on.
-  const upgrades = <int, int>{39: 40, 38: 40};
+  const upgrades = <int, int>{40: 41, 39: 41, 38: 41};
 
   test('the live schema still matches the recorded snapshot', () async {
     // Catches the mistake that breaks saves: changing a table without dumping
@@ -111,6 +112,30 @@ void main() {
       expect(captain, isNull, reason: 'an armband on a vanished player');
     },
   );
+
+  test('v41 keeps a career and starts it with an unread feed', () async {
+    // 40 → 41 adds the Y read watermark. Additive: the career survives, and a
+    // save that has never opened the feed reads as never having opened it.
+    final schema = await verifier.schemaAt(40);
+    final old = v40.DatabaseAtV40(schema.newConnection());
+    await old.customStatement(
+      'INSERT INTO careers (id, nation_id, manager_name, created_at, '
+      'in_game_date, rng_seed, cycle_pointer, budget) '
+      'VALUES (1, 1, ?, 0, 0, 7, 0, 0)',
+      ['Reader'],
+    );
+    await old.close();
+
+    final db = AppDatabase.forTesting(schema.newConnection());
+    addTearDown(db.close);
+    await verifier.migrateAndValidate(db, 41);
+
+    final row = await db
+        .customSelect('SELECT manager_name, y_read_at FROM careers')
+        .getSingle();
+    expect(row.read<String>('manager_name'), 'Reader');
+    expect(row.readNullable<DateTime>('y_read_at'), isNull);
+  });
 
   for (final MapEntry(key: from, value: to) in upgrades.entries) {
     test('a save migrates from v$from to v$to with its data intact', () async {

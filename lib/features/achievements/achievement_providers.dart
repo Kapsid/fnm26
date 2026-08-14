@@ -40,23 +40,36 @@ import 'package:fnm/l10n/app_localizations.dart';
     return (title: l.achCleanSheets(t), description: l.achCleanSheetsDesc(t));
   }
   return switch (id) {
-    'streak_win_5' => (title: l.achStreakWin5, description: l.achStreakWin5Desc),
-    'streak_win_10' =>
-      (title: l.achStreakWin10, description: l.achStreakWin10Desc),
-    'streak_win_20' =>
-      (title: l.achStreakWin20, description: l.achStreakWin20Desc),
-    'streak_unbeaten_15' =>
-      (title: l.achUnbeaten15, description: l.achUnbeaten15Desc),
-    'streak_unbeaten_30' =>
-      (title: l.achUnbeaten30, description: l.achUnbeaten30Desc),
+    'streak_win_5' => (
+      title: l.achStreakWin5,
+      description: l.achStreakWin5Desc,
+    ),
+    'streak_win_10' => (
+      title: l.achStreakWin10,
+      description: l.achStreakWin10Desc,
+    ),
+    'streak_win_20' => (
+      title: l.achStreakWin20,
+      description: l.achStreakWin20Desc,
+    ),
+    'streak_unbeaten_15' => (
+      title: l.achUnbeaten15,
+      description: l.achUnbeaten15Desc,
+    ),
+    'streak_unbeaten_30' => (
+      title: l.achUnbeaten30,
+      description: l.achUnbeaten30Desc,
+    ),
     'feat_hattrick' => (title: l.achHattrick, description: l.achHattrickDesc),
     'feat_motm_10' => (title: l.achMotm10, description: l.achMotm10Desc),
     'feat_motm_50' => (title: l.achMotm50, description: l.achMotm50Desc),
     'feat_perfect' => (title: l.achPerfect, description: l.achPerfectDesc),
     'feat_shootout' => (title: l.achShootout, description: l.achShootoutDesc),
     'feat_massacre' => (title: l.achMassacre, description: l.achMassacreDesc),
-    'feat_annihilation' =>
-      (title: l.achAnnihilation, description: l.achAnnihilationDesc),
+    'feat_annihilation' => (
+      title: l.achAnnihilation,
+      description: l.achAnnihilationDesc,
+    ),
     'qual_wc' => (title: l.achQualWc, description: l.achQualWcDesc),
     'qual_cont' => (title: l.achQualCont, description: l.achQualContDesc),
     'title_wc' => (title: l.achTitleWc, description: l.achTitleWcDesc),
@@ -64,20 +77,30 @@ import 'package:fnm/l10n/app_localizations.dart';
     'title_copa' => (title: l.achTitleCopa, description: l.achTitleCopaDesc),
     'title_afcon' => (title: l.achTitleAfcon, description: l.achTitleAfconDesc),
     'title_asia' => (title: l.achTitleAsia, description: l.achTitleAsiaDesc),
-    'title_concacaf' =>
-      (title: l.achTitleConcacaf, description: l.achTitleConcacafDesc),
+    'title_concacaf' => (
+      title: l.achTitleConcacaf,
+      description: l.achTitleConcacafDesc,
+    ),
     'title_ofc' => (title: l.achTitleOfc, description: l.achTitleOfcDesc),
-    'title_nations_league' =>
-      (title: l.achTitleNations, description: l.achTitleNationsDesc),
-    'title_finalissima' =>
-      (title: l.achTitleClash, description: l.achTitleClashDesc),
+    'title_nations_league' => (
+      title: l.achTitleNations,
+      description: l.achTitleNationsDesc,
+    ),
+    'title_finalissima' => (
+      title: l.achTitleClash,
+      description: l.achTitleClashDesc,
+    ),
     'wc_marksman' => (title: l.achMarksman, description: l.achMarksmanDesc),
     'mega_sweep' => (title: l.achSweep, description: l.achSweepDesc),
     'mega_allstar' => (title: l.achAllstar, description: l.achAllstarDesc),
-    'mega_goldenboot' =>
-      (title: l.achGoldenboot, description: l.achGoldenbootDesc),
-    'mega_demolition' =>
-      (title: l.achDemolition, description: l.achDemolitionDesc),
+    'mega_goldenboot' => (
+      title: l.achGoldenboot,
+      description: l.achGoldenbootDesc,
+    ),
+    'mega_demolition' => (
+      title: l.achDemolition,
+      description: l.achDemolitionDesc,
+    ),
     _ => (title: def.title, description: def.description),
   };
 }
@@ -107,8 +130,11 @@ String achievementTierLabel(AppLocalizations l, AchievementTier t) =>
 /// Board/fan satisfaction (0–100) for the save. Recent form nudges it match to
 /// match; a tournament result is what actually moves it. See
 /// [BoardSatisfaction] for the weights and why they are sized as they are.
-final AutoDisposeFutureProviderFamily<int, int> satisfactionProvider =
-    FutureProvider.autoDispose.family<int, int>((ref, careerId) async {
+final AutoDisposeFutureProviderFamily<int, int>
+satisfactionProvider = FutureProvider.autoDispose.family<int, int>((
+  ref,
+  careerId,
+) async {
   await ref.watch(seedLoaderProvider).ensureSeeded();
   final career = await ref.watch(careerRepositoryProvider).byId(careerId);
   if (career == null) return BoardSatisfaction.neutral;
@@ -139,8 +165,9 @@ final AutoDisposeFutureProviderFamily<int, int> satisfactionProvider =
       .where((n) => n.id == career.nationId)
       .map((n) => n.confederation)
       .firstOrNull;
-  final continentalName =
-      conf == null ? null : ContinentalCups.byConfederation[conf]?.name;
+  final continentalName = conf == null
+      ? null
+      : ContinentalCups.byConfederation[conf]?.name;
 
   final honours = <({TournamentTier tier, Placing placing})>[];
   for (final h in await comp.honours(careerId)) {
@@ -148,11 +175,10 @@ final AutoDisposeFutureProviderFamily<int, int> satisfactionProvider =
     final placing = h.championId == career.nationId
         ? Placing.champion
         : h.runnerUpId == career.nationId
-            ? Placing.runnerUp
-            : (h.thirdId == career.nationId ||
-                    h.thirdId2 == career.nationId)
-                ? Placing.third
-                : null;
+        ? Placing.runnerUp
+        : (h.thirdId == career.nationId || h.thirdId2 == career.nationId)
+        ? Placing.third
+        : null;
     if (placing == null) continue;
     final tier = switch (h.competition) {
       'World Championship' => TournamentTier.world,
@@ -200,7 +226,8 @@ final AutoDisposeFutureProviderFamily<int, int> satisfactionProvider =
   // Board promise kept: once EVERY settled objective has been met, the board
   // stays onside — individual results still nudge satisfaction, but it can
   // never sink below the neutral (job-safe) mark for the rest of the cycle.
-  final allMet = settled.isNotEmpty &&
+  final allMet =
+      settled.isNotEmpty &&
       objectives.where((o) => o.decided).every((o) => o.met);
   if (allMet && base < BoardSatisfaction.neutral) {
     return BoardSatisfaction.neutral;
@@ -284,9 +311,9 @@ class AchievementService {
     // Titles: honour rows won by the player's nation DURING this career — the
     // pre-seeded real-world history (earlier years) must never count, or a
     // nation that won a real Euro/World Cup would unlock the title instantly.
-    final honours = (await comp.honours(careerId))
-        .where((h) => h.year >= CareerService.cycleStart.year)
-        .toList();
+    final honours = (await comp.honours(
+      careerId,
+    )).where((h) => h.year >= CareerService.cycleStart.year).toList();
     final titlesWon = {
       for (final h in honours)
         if (h.championId == nationId) h.competition,
@@ -297,7 +324,8 @@ class AchievementService {
     final playerConfederation = nations[nationId]?.confederation;
     final ownContinental =
         ContinentalCups.byConfederation[playerConfederation]?.name;
-    final wonWcAndCont = titlesWon.contains(worldCupHonourName) &&
+    final wonWcAndCont =
+        titlesWon.contains(worldCupHonourName) &&
         ownContinental != null &&
         titlesWon.contains(ownContinental);
 
@@ -328,7 +356,8 @@ class AchievementService {
       CompetitionKind.continentalFinals,
       confederation: playerConfederation,
     );
-    final goldenBoot = (wcDecided &&
+    final goldenBoot =
+        (wcDecided &&
             wcScorers.isNotEmpty &&
             wcScorers.first.nationId == nationId) ||
         (contDecided &&
@@ -336,8 +365,7 @@ class AchievementService {
             contScorers.first.nationId == nationId);
 
     final allStar = await _playerInWorldAllStars(careerId, nationId, fixtures);
-    final satisfaction =
-        await _ref.read(satisfactionProvider(careerId).future);
+    final satisfaction = await _ref.read(satisfactionProvider(careerId).future);
 
     // The deeper record aggregates (streaks, clean sheets, player feats) come
     // from the shared career-stats snapshot — the same numbers the stats screen
@@ -443,29 +471,29 @@ typedef AchievementView = ({
 /// (and persisting) any newly-earned achievements when opened. Earned status is
 /// the sticky union of stored unlocks and what the current stats satisfy.
 final AutoDisposeFutureProviderFamily<List<AchievementView>, int>
-    achievementsViewProvider =
-    FutureProvider.autoDispose.family<List<AchievementView>, int>((
-  ref,
-  careerId,
-) async {
-  final service = ref.watch(achievementServiceProvider);
-  await service.checkAndRecord(careerId); // reconcile + persist
-  final stats = await service.computeStats(careerId);
-  final stored = await ref
-      .watch(competitionRepositoryProvider)
-      .earnedAchievements(careerId);
-  return [
-    for (final a in AchievementCatalog.all)
-      () {
-        final earned =
-            stored.contains(a.id) || (stats != null && a.isEarned(stats));
-        final p = stats == null ? null : a.progressOf?.call(stats);
-        return (
-          def: a,
-          earned: earned,
-          current: p?.$1,
-          target: p?.$2,
-        );
-      }(),
-  ];
-});
+achievementsViewProvider = FutureProvider.autoDispose
+    .family<List<AchievementView>, int>((
+      ref,
+      careerId,
+    ) async {
+      final service = ref.watch(achievementServiceProvider);
+      await service.checkAndRecord(careerId); // reconcile + persist
+      final stats = await service.computeStats(careerId);
+      final stored = await ref
+          .watch(competitionRepositoryProvider)
+          .earnedAchievements(careerId);
+      return [
+        for (final a in AchievementCatalog.all)
+          () {
+            final earned =
+                stored.contains(a.id) || (stats != null && a.isEarned(stats));
+            final p = stats == null ? null : a.progressOf?.call(stats);
+            return (
+              def: a,
+              earned: earned,
+              current: p?.$1,
+              target: p?.$2,
+            );
+          }(),
+      ];
+    });

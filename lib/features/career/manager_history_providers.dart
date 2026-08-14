@@ -119,50 +119,120 @@ class ManagerHistory {
 const _wcRounds = ['GROUP', 'R32', 'R16', 'QF', 'SF', '3RD', 'FINAL'];
 
 final AutoDisposeFutureProviderFamily<ManagerHistory?, int>
-    managerHistoryProvider =
-    FutureProvider.autoDispose.family<ManagerHistory?, int>((
-  ref,
-  careerId,
-) async {
-  await ref.watch(seedLoaderProvider).ensureSeeded();
-  final careerRepo = ref.watch(careerRepositoryProvider);
-  final career = await careerRepo.byId(careerId);
-  if (career == null) return null;
-  final comp = ref.watch(competitionRepositoryProvider);
-  final nations = {
-    for (final n in await ref.watch(nationRepositoryProvider).all()) n.id: n,
-  };
-  final stints = await careerRepo.stints(careerId);
+managerHistoryProvider = FutureProvider.autoDispose.family<ManagerHistory?, int>(
+  (
+    ref,
+    careerId,
+  ) async {
+    await ref.watch(seedLoaderProvider).ensureSeeded();
+    final careerRepo = ref.watch(careerRepositoryProvider);
+    final career = await careerRepo.byId(careerId);
+    if (career == null) return null;
+    final comp = ref.watch(competitionRepositoryProvider);
+    final nations = {
+      for (final n in await ref.watch(nationRepositoryProvider).all()) n.id: n,
+    };
+    final stints = await careerRepo.stints(careerId);
 
-  // Fixtures per nation the manager led (cached — a nation can recur).
-  final fixturesByNation = <int, List<Fixture>>{};
-  Future<List<Fixture>> fx(int nationId) async =>
-      fixturesByNation[nationId] ??=
-          await comp.fixturesForNation(careerId, nationId);
+    // Fixtures per nation the manager led (cached — a nation can recur).
+    final fixturesByNation = <int, List<Fixture>>{};
+    Future<List<Fixture>> fx(int nationId) async =>
+        fixturesByNation[nationId] ??= await comp.fixturesForNation(
+          careerId,
+          nationId,
+        );
 
-  // Nations Cup finishes per nation, indexed by cycle (cached like fixtures).
-  final ncByNation = <int, Map<int, String>>{};
-  Future<Map<int, String>> ncFor(int nationId) async =>
-      ncByNation[nationId] ??= {
-        for (final e in await comp.nationsCupFinishes(careerId, nationId))
-          e.cycle: e.finals != null
-              ? 'League ${e.league} · ${e.finals}'
-              : 'League ${e.league} · ${_ordinal(e.position)}',
-      };
+    // Nations Cup finishes per nation, indexed by cycle (cached like fixtures).
+    final ncByNation = <int, Map<int, String>>{};
+    Future<Map<int, String>> ncFor(int nationId) async =>
+        ncByNation[nationId] ??= {
+          for (final e in await comp.nationsCupFinishes(careerId, nationId))
+            e.cycle: e.finals != null
+                ? 'League ${e.league} · ${e.finals}'
+                : 'League ${e.league} · ${_ordinal(e.position)}',
+        };
 
-  ManagerResult? biggestWin;
-  ManagerResult? biggestLoss;
+    ManagerResult? biggestWin;
+    ManagerResult? biggestLoss;
 
-  final cycles = <ManagerCycle>[];
-  for (var c = 0; c <= career.cyclePointer; c++) {
-    final nationId = stints[c] ?? career.nationId;
-    final start = DateTime(CareerService.cycleStart.year + 4 * c, 8);
-    final end = DateTime(CareerService.cycleStart.year + 4 * (c + 1), 8);
-    final all = await fx(nationId);
-    final mine = all.where(
-      (f) =>
-          f.hasResult && !f.date.isBefore(start) && f.date.isBefore(end),
-    );
+    final cycles = <ManagerCycle>[];
+    for (var c = 0; c <= career.cyclePointer; c++) {
+      final nationId = stints[c] ?? career.nationId;
+      final start = DateTime(CareerService.cycleStart.year + 4 * c, 8);
+      final end = DateTime(CareerService.cycleStart.year + 4 * (c + 1), 8);
+      final all = await fx(nationId);
+      final mine = all.where(
+        (f) => f.hasResult && !f.date.isBefore(start) && f.date.isBefore(end),
+      );
+
+      var played = 0;
+      var won = 0;
+      var drawn = 0;
+      var lost = 0;
+      var gf = 0;
+      var ga = 0;
+      for (final f in mine) {
+        final home = f.homeNationId == nationId;
+        final my = home ? f.homeScore! : f.awayScore!;
+        final other = home ? f.awayScore! : f.homeScore!;
+        played++;
+        gf += my;
+        ga += other;
+        final oppId = home ? f.awayNationId : f.homeNationId;
+        final result = (
+          code: nations[nationId]?.code ?? '??',
+          opponentCode: nations[oppId]?.code ?? '??',
+          opponentName: nations[oppId]?.name ?? 'Unknown',
+          scoreFor: my,
+          scoreAgainst: other,
+          date: f.date,
+          round: f.round,
+        );
+        if (my > other) {
+          won++;
+          // Record win: biggest margin, then most goals scored.
+          final w = biggestWin;
+          if (w == null ||
+              my - other > w.scoreFor - w.scoreAgainst ||
+              (my - other == w.scoreFor - w.scoreAgainst && my > w.scoreFor)) {
+            biggestWin = result;
+          }
+        } else if (my == other) {
+          drawn++;
+        } else {
+          lost++;
+          // Record defeat: biggest margin, then most goals conceded.
+          final l = biggestLoss;
+          if (l == null ||
+              other - my > l.scoreAgainst - l.scoreFor ||
+              (other - my == l.scoreAgainst - l.scoreFor &&
+                  other > l.scoreAgainst)) {
+            biggestLoss = result;
+          }
+        }
+      }
+
+      final inCycle = all
+          .where((f) => !f.date.isBefore(start) && f.date.isBefore(end))
+          .toList();
+      cycles.add(
+        ManagerCycle(
+          cycle: c,
+          year: CareerService.worldCupYear(c),
+          nation: nations[nationId],
+          played: played,
+          won: won,
+          drawn: drawn,
+          lost: lost,
+          goalsFor: gf,
+          goalsAgainst: ga,
+          worldCup: _placement(inCycle, nationId, continental: false),
+          continental: _placement(inCycle, nationId, continental: true),
+          nationsCup: (await ncFor(nationId))[c] ?? '',
+        ),
+      );
+    }
+    cycles.sort((a, b) => b.cycle.compareTo(a.cycle));
 
     var played = 0;
     var won = 0;
@@ -170,126 +240,59 @@ final AutoDisposeFutureProviderFamily<ManagerHistory?, int>
     var lost = 0;
     var gf = 0;
     var ga = 0;
-    for (final f in mine) {
-      final home = f.homeNationId == nationId;
-      final my = home ? f.homeScore! : f.awayScore!;
-      final other = home ? f.awayScore! : f.homeScore!;
-      played++;
-      gf += my;
-      ga += other;
-      final oppId = home ? f.awayNationId : f.homeNationId;
-      final result = (
-        code: nations[nationId]?.code ?? '??',
-        opponentCode: nations[oppId]?.code ?? '??',
-        opponentName: nations[oppId]?.name ?? 'Unknown',
-        scoreFor: my,
-        scoreAgainst: other,
-        date: f.date,
-        round: f.round,
-      );
-      if (my > other) {
-        won++;
-        // Record win: biggest margin, then most goals scored.
-        final w = biggestWin;
-        if (w == null ||
-            my - other > w.scoreFor - w.scoreAgainst ||
-            (my - other == w.scoreFor - w.scoreAgainst &&
-                my > w.scoreFor)) {
-          biggestWin = result;
-        }
-      } else if (my == other) {
-        drawn++;
-      } else {
-        lost++;
-        // Record defeat: biggest margin, then most goals conceded.
-        final l = biggestLoss;
-        if (l == null ||
-            other - my > l.scoreAgainst - l.scoreFor ||
-            (other - my == l.scoreAgainst - l.scoreFor &&
-                other > l.scoreAgainst)) {
-          biggestLoss = result;
-        }
-      }
+    var titles = 0;
+    for (final c in cycles) {
+      played += c.played;
+      won += c.won;
+      drawn += c.drawn;
+      lost += c.lost;
+      gf += c.goalsFor;
+      ga += c.goalsAgainst;
+      if (c.wonWorldCup) titles++;
+      if (c.wonContinental) titles++;
     }
 
-    final inCycle = all
-        .where((f) => !f.date.isBefore(start) && f.date.isBefore(end))
-        .toList();
-    cycles.add(ManagerCycle(
-      cycle: c,
-      year: CareerService.worldCupYear(c),
-      nation: nations[nationId],
+    // Trophy cabinet: every trophy the manager lifted, keyed by trophy id. Only
+    // this career's own editions, and only when the champion was the nation the
+    // manager led that cycle.
+    final honours = await comp.honours(careerId);
+    final trophyCounts = <String, int>{};
+    int cycleForYear(int year) {
+      final c = ((year - CareerService.worldCupYear(0)) / 4).ceil();
+      return c < 0 ? 0 : c;
+    }
+
+    for (final h in honours) {
+      if (h.year < CareerService.cycleStart.year) continue;
+      final managed = stints[cycleForYear(h.year)] ?? career.nationId;
+      if (h.championId != managed) continue;
+      final key = Trophies.keyForCompetitionName(h.competition);
+      if (key != null) trophyCounts[key] = (trophyCounts[key] ?? 0) + 1;
+    }
+
+    return ManagerHistory(
+      managerName: career.managerName,
+      cycles: cycles,
       played: played,
       won: won,
       drawn: drawn,
       lost: lost,
       goalsFor: gf,
       goalsAgainst: ga,
-      worldCup: _placement(inCycle, nationId, continental: false),
-      continental: _placement(inCycle, nationId, continental: true),
-      nationsCup: (await ncFor(nationId))[c] ?? '',
-    ));
-  }
-  cycles.sort((a, b) => b.cycle.compareTo(a.cycle));
-
-  var played = 0;
-  var won = 0;
-  var drawn = 0;
-  var lost = 0;
-  var gf = 0;
-  var ga = 0;
-  var titles = 0;
-  for (final c in cycles) {
-    played += c.played;
-    won += c.won;
-    drawn += c.drawn;
-    lost += c.lost;
-    gf += c.goalsFor;
-    ga += c.goalsAgainst;
-    if (c.wonWorldCup) titles++;
-    if (c.wonContinental) titles++;
-  }
-
-  // Trophy cabinet: every trophy the manager lifted, keyed by trophy id. Only
-  // this career's own editions, and only when the champion was the nation the
-  // manager led that cycle.
-  final honours = await comp.honours(careerId);
-  final trophyCounts = <String, int>{};
-  int cycleForYear(int year) {
-    final c = ((year - CareerService.worldCupYear(0)) / 4).ceil();
-    return c < 0 ? 0 : c;
-  }
-
-  for (final h in honours) {
-    if (h.year < CareerService.cycleStart.year) continue;
-    final managed = stints[cycleForYear(h.year)] ?? career.nationId;
-    if (h.championId != managed) continue;
-    final key = Trophies.keyForCompetitionName(h.competition);
-    if (key != null) trophyCounts[key] = (trophyCounts[key] ?? 0) + 1;
-  }
-
-  return ManagerHistory(
-    managerName: career.managerName,
-    cycles: cycles,
-    played: played,
-    won: won,
-    drawn: drawn,
-    lost: lost,
-    goalsFor: gf,
-    goalsAgainst: ga,
-    titles: titles,
-    trophyCounts: trophyCounts,
-    biggestWin: biggestWin,
-    biggestLoss: biggestLoss,
-  );
-});
+      titles: titles,
+      trophyCounts: trophyCounts,
+      biggestWin: biggestWin,
+      biggestLoss: biggestLoss,
+    );
+  },
+);
 
 String _ordinal(int n) => switch (n) {
-      1 => '1st',
-      2 => '2nd',
-      3 => '3rd',
-      _ => '${n}th',
-    };
+  1 => '1st',
+  2 => '2nd',
+  3 => '3rd',
+  _ => '${n}th',
+};
 
 /// The nation's finish in a competition this cycle, from its finals fixtures.
 String _placement(

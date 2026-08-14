@@ -48,8 +48,7 @@ abstract final class PublicMood {
   static double _verdict(MoodResult g) {
     // How much the public EXPECTED to win: +1 when the opponent is ranked far
     // worse (a higher number is a worse rank), −1 when they are far better.
-    final expected =
-        ((g.opponentRank - g.nationRank) / 60.0).clamp(-1.0, 1.0);
+    final expected = ((g.opponentRank - g.nationRank) / 60.0).clamp(-1.0, 1.0);
     if (g.won) {
       // Beating a better side is everything; beating a worse one is the job,
       // and the floor keeps it from reading as a disappointment.

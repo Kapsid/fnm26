@@ -9,34 +9,36 @@ class DriftRankingReleaseRepository implements RankingReleaseRepository {
   final AppDatabase _db;
 
   RankingRelease _toDomain(RankingReleaseRow r) => (
-        publishedOn: r.publishedOn,
-        cycle: r.cycle,
-        nationId: r.nationId,
-        playerRank: r.playerRank,
-        leaderNationId: r.leaderNationId,
-      );
+    publishedOn: r.publishedOn,
+    cycle: r.cycle,
+    nationId: r.nationId,
+    playerRank: r.playerRank,
+    leaderNationId: r.leaderNationId,
+  );
 
   @override
   Future<List<RankingRelease>> all(int careerId) async {
-    final rows = await (_db.select(_db.rankingReleases)
-          ..where((t) => t.careerId.equals(careerId))
-          ..orderBy([(t) => OrderingTerm(expression: t.publishedOn)]))
-        .get();
+    final rows =
+        await (_db.select(_db.rankingReleases)
+              ..where((t) => t.careerId.equals(careerId))
+              ..orderBy([(t) => OrderingTerm(expression: t.publishedOn)]))
+            .get();
     return rows.map(_toDomain).toList();
   }
 
   @override
   Future<RankingRelease?> latest(int careerId) async {
-    final row = await (_db.select(_db.rankingReleases)
-          ..where((t) => t.careerId.equals(careerId))
-          ..orderBy([
-            (t) => OrderingTerm(
+    final row =
+        await (_db.select(_db.rankingReleases)
+              ..where((t) => t.careerId.equals(careerId))
+              ..orderBy([
+                (t) => OrderingTerm(
                   expression: t.publishedOn,
                   mode: OrderingMode.desc,
                 ),
-          ])
-          ..limit(1))
-        .getSingleOrNull();
+              ])
+              ..limit(1))
+            .getSingleOrNull();
     return row == null ? null : _toDomain(row);
   }
 
@@ -49,7 +51,9 @@ class DriftRankingReleaseRepository implements RankingReleaseRepository {
     required int playerRank,
     required int leaderNationId,
   }) async {
-    await _db.into(_db.rankingReleases).insert(
+    await _db
+        .into(_db.rankingReleases)
+        .insert(
           RankingReleasesCompanion.insert(
             careerId: careerId,
             publishedOn: publishedOn,

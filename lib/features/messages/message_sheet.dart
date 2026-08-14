@@ -100,8 +100,7 @@ class MessageSheet extends StatelessWidget {
                 const SizedBox(height: AppSpacing.sm),
               ],
               SquadDevTable(rows: report.rows),
-            ]
-            else
+            ] else
               Text(message.body, style: AppTypography.bodyMedium),
             if (action != null) ...[
               const SizedBox(height: AppSpacing.lg),

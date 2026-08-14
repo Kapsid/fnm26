@@ -44,14 +44,14 @@ const _knockoutRounds = <String, ({int order, String label})>{
 /// record still carries a canonical English [RoundPopup.stage]; this resolves
 /// the code to the viewer's language only when the popup is shown.
 String stageLabelFor(AppLocalizations l, String round) => switch (round) {
-      'R32' => l.hubStageRoundOf32,
-      'R16' || 'CR16' => l.finishRoundOf16,
-      'QF' || 'CQF' => l.finishQuarterFinals,
-      'SF' || 'CSF' || 'NSF' => l.finishSemiFinals,
-      '3RD' || 'C3RD' => l.hubStageThirdPlace,
-      'FINAL' || 'CFINAL' || 'NFINAL' => l.hubFinal,
-      _ => l.finishGroupStage,
-    };
+  'R32' => l.hubStageRoundOf32,
+  'R16' || 'CR16' => l.finishRoundOf16,
+  'QF' || 'CQF' => l.finishQuarterFinals,
+  'SF' || 'CSF' || 'NSF' => l.finishSemiFinals,
+  '3RD' || 'C3RD' => l.hubStageThirdPlace,
+  'FINAL' || 'CFINAL' || 'NFINAL' => l.hubFinal,
+  _ => l.finishGroupStage,
+};
 
 /// The results of the most recent day of whichever tournament the player is
 /// following — the fixtures played on the latest date across the World Cup
@@ -65,8 +65,10 @@ String stageLabelFor(AppLocalizations l, String round) => switch (round) {
 ///
 /// Null when nothing has been played yet.
 final AutoDisposeFutureProviderFamily<RoundPopup?, int>
-    latestRoundPopupProvider =
-    FutureProvider.autoDispose.family<RoundPopup?, int>((ref, careerId) async {
+latestRoundPopupProvider = FutureProvider.autoDispose.family<RoundPopup?, int>((
+  ref,
+  careerId,
+) async {
   final comp = ref.watch(competitionRepositoryProvider);
   final hub = await ref.watch(hubDataProvider(careerId).future);
   if (hub == null) return null;
@@ -75,37 +77,40 @@ final AutoDisposeFutureProviderFamily<RoundPopup?, int>
   final continentalName = conf == null
       ? 'Continental Championship'
       : ContinentalCups.byConfederation[conf]?.name ??
-          'Continental Championship';
+            'Continental Championship';
 
   // Every confederation's championship is a competition of the same kind, so
   // the continental source names the player's own: without it the popup could
   // report a round from a cup on the other side of the world under the name of
   // the manager's.
-  final sources = <({
-    CompetitionKind kind,
-    String name,
-    List<String> rounds,
-    Confederation? confederation,
-  })>[
-    (
-      kind: CompetitionKind.worldCupFinals,
-      name: 'World Cup',
-      rounds: const ['GROUP', 'R32', 'R16', 'QF', 'SF', '3RD', 'FINAL'],
-      confederation: null,
-    ),
-    (
-      kind: CompetitionKind.continentalFinals,
-      name: continentalName,
-      rounds: const ['CGROUP', 'CR16', 'CQF', 'CSF', 'C3RD', 'CFINAL'],
-      confederation: conf,
-    ),
-    (
-      kind: CompetitionKind.nationsLeague,
-      name: 'Nations Cup',
-      rounds: const ['NSF', 'NFINAL'],
-      confederation: null,
-    ),
-  ];
+  final sources =
+      <
+        ({
+          CompetitionKind kind,
+          String name,
+          List<String> rounds,
+          Confederation? confederation,
+        })
+      >[
+        (
+          kind: CompetitionKind.worldCupFinals,
+          name: 'World Cup',
+          rounds: const ['GROUP', 'R32', 'R16', 'QF', 'SF', '3RD', 'FINAL'],
+          confederation: null,
+        ),
+        (
+          kind: CompetitionKind.continentalFinals,
+          name: continentalName,
+          rounds: const ['CGROUP', 'CR16', 'CQF', 'CSF', 'C3RD', 'CFINAL'],
+          confederation: conf,
+        ),
+        (
+          kind: CompetitionKind.nationsLeague,
+          name: 'Nations Cup',
+          rounds: const ['NSF', 'NFINAL'],
+          confederation: null,
+        ),
+      ];
 
   ({String name, Fixture fixture})? newest;
   final byName = <String, List<Fixture>>{};
@@ -131,14 +136,15 @@ final AutoDisposeFutureProviderFamily<RoundPopup?, int>
   // Everything that competition played on its most recent date — the day the
   // player just stepped.
   final latestDate = latest.fixture.date;
-  final sameDay = byName[latest.name]!
-      .where((f) => f.date.isAtSameMomentAs(latestDate))
-      .toList()
-    ..sort((a, b) {
-      final ao = _knockoutRounds[a.round ?? '']?.order ?? -1;
-      final bo = _knockoutRounds[b.round ?? '']?.order ?? -1;
-      return ao.compareTo(bo);
-    });
+  final sameDay =
+      byName[latest.name]!
+          .where((f) => f.date.isAtSameMomentAs(latestDate))
+          .toList()
+        ..sort((a, b) {
+          final ao = _knockoutRounds[a.round ?? '']?.order ?? -1;
+          final bo = _knockoutRounds[b.round ?? '']?.order ?? -1;
+          return ao.compareTo(bo);
+        });
   // Title by the day's most important round: should a play-off and the final
   // ever share a day, the popup reads "Final" (with the final listed last)
   // rather than burying it under "Third-place play-off".
@@ -194,8 +200,9 @@ class _RoundSheet extends StatelessWidget {
     final l = AppLocalizations.of(context);
     // The canonical round is the day's most important tie (fixtures are ordered
     // by bracket depth), resolved to the viewer's language here.
-    final round =
-        popup.fixtures.isEmpty ? '' : (popup.fixtures.last.round ?? '');
+    final round = popup.fixtures.isEmpty
+        ? ''
+        : (popup.fixtures.last.round ?? '');
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.fromLTRB(

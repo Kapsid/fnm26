@@ -45,7 +45,8 @@ class AssetSeedSource implements SeedSource {
     if (_cities != null) return _cities!;
     try {
       final raw =
-          jsonDecode(await _bundle.loadString(_citiesAsset)) as Map<String, Object?>;
+          jsonDecode(await _bundle.loadString(_citiesAsset))
+              as Map<String, Object?>;
       _cities = {
         for (final e in raw.entries)
           int.parse(e.key): (e.value! as List).cast<String>(),
@@ -69,11 +70,13 @@ class AssetSeedSource implements SeedSource {
   Future<List<Player>> players() async {
     final raw = await _bundle.loadString(_playersAsset);
     final list = jsonDecode(raw) as List<dynamic>;
-    final base =
-        list.map((e) => Player.fromJson(e as Map<String, Object?>)).toList();
+    final base = list
+        .map((e) => Player.fromJson(e as Map<String, Object?>))
+        .toList();
     // Per-nation name pools for culturally-plausible generated players.
-    final namesRaw = jsonDecode(await _bundle.loadString(_namesAsset))
-        as Map<String, Object?>;
+    final namesRaw =
+        jsonDecode(await _bundle.loadString(_namesAsset))
+            as Map<String, Object?>;
     final namesByNation = <int, ({List<String> first, List<String> sur})>{
       for (final e in namesRaw.entries)
         int.parse(e.key): (

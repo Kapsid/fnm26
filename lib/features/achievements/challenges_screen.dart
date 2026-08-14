@@ -90,13 +90,17 @@ class ChallengesScreen extends ConsumerWidget {
                   padding: const EdgeInsets.only(bottom: AppSpacing.sm),
                   child: Row(
                     children: [
-                      const Icon(Icons.auto_awesome_rounded,
-                          size: 18, color: AppColors.primary),
+                      const Icon(
+                        Icons.auto_awesome_rounded,
+                        size: 18,
+                        color: AppColors.primary,
+                      ),
                       const SizedBox(width: AppSpacing.sm),
                       Text(
                         l.achievementsThisSave,
-                        style: AppTypography.labelMedium
-                            .copyWith(color: AppColors.primary),
+                        style: AppTypography.labelMedium.copyWith(
+                          color: AppColors.primary,
+                        ),
                       ),
                       const Spacer(),
                       Text(
@@ -121,13 +125,17 @@ class ChallengesScreen extends ConsumerWidget {
                     ),
                     child: Row(
                       children: [
-                        Icon(Icons.workspace_premium_rounded,
-                            size: 18, color: _tierColor(tier)),
+                        Icon(
+                          Icons.workspace_premium_rounded,
+                          size: 18,
+                          color: _tierColor(tier),
+                        ),
                         const SizedBox(width: AppSpacing.sm),
                         Text(
                           challengeTierLabel(l, tier).toUpperCase(),
-                          style: AppTypography.labelMedium
-                              .copyWith(color: _tierColor(tier)),
+                          style: AppTypography.labelMedium.copyWith(
+                            color: _tierColor(tier),
+                          ),
                         ),
                         const Spacer(),
                         Text(
@@ -153,11 +161,11 @@ class ChallengesScreen extends ConsumerWidget {
 
 /// The medal colour for a challenge tier.
 Color _tierColor(ChallengeTier tier) => switch (tier) {
-      ChallengeTier.bronze => AppColors.medalBronze,
-      ChallengeTier.silver => AppColors.medalSilver,
-      ChallengeTier.gold => AppColors.medalGold,
-      ChallengeTier.legendary => AppColors.primary,
-    };
+  ChallengeTier.bronze => AppColors.medalBronze,
+  ChallengeTier.silver => AppColors.medalSilver,
+  ChallengeTier.gold => AppColors.medalGold,
+  ChallengeTier.legendary => AppColors.primary,
+};
 
 class _ChallengeTile extends StatelessWidget {
   const _ChallengeTile({required this.view});
@@ -214,9 +222,7 @@ class _ChallengeTile extends StatelessWidget {
                   child: ClipRRect(
                     borderRadius: AppRadii.smAll,
                     child: LinearProgressIndicator(
-                      value: view.target == 0
-                          ? 1
-                          : view.current / view.target,
+                      value: view.target == 0 ? 1 : view.current / view.target,
                       minHeight: 6,
                       backgroundColor: AppColors.surfaceContainerHigh,
                       valueColor: AlwaysStoppedAnimation(

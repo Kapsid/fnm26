@@ -78,8 +78,7 @@ class NationSquadData {
 /// to answer is who is OUT there: the whole pool, what each has done for the
 /// country, and who is in the reckoning.
 final AutoDisposeFutureProviderFamily<NationSquadData?, int>
-nationSquadProvider =
-    FutureProvider.autoDispose.family<NationSquadData?, int>((
+nationSquadProvider = FutureProvider.autoDispose.family<NationSquadData?, int>((
   ref,
   careerId,
 ) async {
@@ -88,14 +87,18 @@ nationSquadProvider =
   if (career == null) return null;
 
   final pool = [
-    ...await ref.watch(playerRepositoryProvider).byNation(
+    ...await ref
+        .watch(playerRepositoryProvider)
+        .byNation(
           career.nationId,
           agingYears: CareerService.agingYears(career),
           saveSeed: career.rngSeed,
-          youthBonusByCycle:
-              await ref.watch(youthBonusByCycleProvider(careerId).future),
-          careerStartsByPlayer:
-              await ref.watch(careerDevBonusProvider(careerId).future),
+          youthBonusByCycle: await ref.watch(
+            youthBonusByCycleProvider(careerId).future,
+          ),
+          careerStartsByPlayer: await ref.watch(
+            careerDevBonusProvider(careerId).future,
+          ),
         ),
     ...await naturalizedPlayersFor(ref, career),
   ]..sort((a, b) => b.overall.compareTo(a.overall));
@@ -124,8 +127,9 @@ nationSquadProvider =
       .watch(tacticsRepositoryProvider)
       .tacticForCareer(careerId);
   final starting = (tactic?.lineup ?? const <int?>[]).whereType<int>().toSet();
-  final absences =
-      await ref.watch(absenceRepositoryProvider).forCareer(careerId);
+  final absences = await ref
+      .watch(absenceRepositoryProvider)
+      .forCareer(careerId);
   final conditions = await ref.watch(squadConditionProvider(careerId).future);
 
   return NationSquadData(

@@ -119,8 +119,7 @@ class _MessageCard extends StatelessWidget {
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: AppTypography.titleMedium.copyWith(
-                  fontWeight:
-                      message.read ? FontWeight.w500 : FontWeight.w700,
+                  fontWeight: message.read ? FontWeight.w500 : FontWeight.w700,
                 ),
               ),
             ),
@@ -145,9 +144,11 @@ class _MessageCard extends StatelessWidget {
 
   /// Opens the full message in a popup.
   void _open(BuildContext context) {
-    unawaited(showAppPopup<void>(
-      context: context,
-      builder: (context) => MessageSheet(message: message),
-    ));
+    unawaited(
+      showAppPopup<void>(
+        context: context,
+        builder: (context) => MessageSheet(message: message),
+      ),
+    );
   }
 }

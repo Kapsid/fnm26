@@ -9,17 +9,17 @@ import 'package:fnm/l10n/app_localizations.dart';
 
 /// What a player has come to say.
 String grievanceText(AppLocalizations l, Grievance g) => switch (g.kind) {
-      GrievanceKind.gameTime => l.grievanceGameTime(g.playerName),
-      GrievanceKind.squadPlace => l.grievanceSquadPlace(g.playerName),
-      GrievanceKind.role => l.grievanceRole(g.playerName),
-    };
+  GrievanceKind.gameTime => l.grievanceGameTime(g.playerName),
+  GrievanceKind.squadPlace => l.grievanceSquadPlace(g.playerName),
+  GrievanceKind.role => l.grievanceRole(g.playerName),
+};
 
 /// How an answer reads.
 String grievanceToneLabel(AppLocalizations l, GrievanceTone t) => switch (t) {
-      GrievanceTone.reassure => l.grievanceReassure,
-      GrievanceTone.honest => l.grievanceHonest,
-      GrievanceTone.dismiss => l.grievanceDismiss,
-    };
+  GrievanceTone.reassure => l.grievanceReassure,
+  GrievanceTone.honest => l.grievanceHonest,
+  GrievanceTone.dismiss => l.grievanceDismiss,
+};
 
 /// A player asking where he stands, and the three ways to answer him.
 ///

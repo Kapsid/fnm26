@@ -378,10 +378,10 @@ DragOutcome? resolveSpaceDrag(
     if (f == formation) continue;
     final c = lineCounts(f);
     if (_inLine(c, to) <= _inLine(counts, to)) continue; // must move him there
-    final score = (c.$1 - wantD).abs() +
-        (c.$2 - wantM).abs() +
-        (c.$3 - wantF).abs();
-    final better = score < bestScore ||
+    final score =
+        (c.$1 - wantD).abs() + (c.$2 - wantM).abs() + (c.$3 - wantF).abs();
+    final better =
+        score < bestScore ||
         (score == bestScore &&
             best != null &&
             _inLine(c, to) > _inLine(lineCounts(best), to));
@@ -394,11 +394,11 @@ DragOutcome? resolveSpaceDrag(
 }
 
 int _inLine((int, int, int) counts, PositionCategory line) => switch (line) {
-      PositionCategory.defender => counts.$1,
-      PositionCategory.midfielder => counts.$2,
-      PositionCategory.forward => counts.$3,
-      PositionCategory.goalkeeper => 0,
-    };
+  PositionCategory.defender => counts.$1,
+  PositionCategory.midfielder => counts.$2,
+  PositionCategory.forward => counts.$3,
+  PositionCategory.goalkeeper => 0,
+};
 
 int _adjust(
   int count,
@@ -535,7 +535,8 @@ class TacticsPitch extends StatelessWidget {
     // full-backs) into one straight row as soon as the deepest player hit the
     // cap. Squeezing keeps the shape and just fits it above the keeper.
     const from = 0.78;
-    final squeezed = _outfieldCeiling +
+    final squeezed =
+        _outfieldCeiling +
         (y.clamp(_outfieldCeiling, from) - _outfieldCeiling) *
             ((_outfieldFloor - _outfieldCeiling) / (from - _outfieldCeiling));
     // Cap the width so the widest players' labels stay on the pitch.
@@ -574,8 +575,9 @@ class TacticsPitch extends StatelessWidget {
             // units, so a whole node always fits whatever size it is drawn at.
             final height = constraints.maxHeight;
             final top = height <= 0 ? 0.0 : (_discSize / 2) / height;
-            final bottom =
-                height <= 0 ? 0.0 : (_nodeHeight - _discSize / 2) / height;
+            final bottom = height <= 0
+                ? 0.0
+                : (_nodeHeight - _discSize / 2) / height;
             final span = (1 - top - bottom).clamp(0.05, 1.0);
             double place(double y) => top + y * span;
 
@@ -727,8 +729,11 @@ class _PlayerNode extends StatelessWidget {
     return AppColors.warning;
   }
 
-  Widget _node(AppLocalizations l,
-      {bool highlighted = false, bool dragging = false}) {
+  Widget _node(
+    AppLocalizations l, {
+    bool highlighted = false,
+    bool dragging = false,
+  }) {
     final p = player;
     // An absent player overrides the fit cue entirely — nothing about the slot
     // matters until he is replaced. Injury shows orange, suspension red.
@@ -737,8 +742,9 @@ class _PlayerNode extends StatelessWidget {
     final borderColor = highlighted ? AppColors.primary : fit;
     // The rating as it actually counts in this slot — docked when the player is
     // out of position, so the manager sees the real number before committing.
-    final effective =
-        p == null ? null : PositionFit.effectiveOverall(p, position);
+    final effective = p == null
+        ? null
+        : PositionFit.effectiveOverall(p, position);
     final penalised = p != null && effective! < p.overall;
     // Team identity: fill an occupied disc with the nation's kit colours (a
     // two-stop gradient for a two-colour kit, a shaded sweep of one otherwise).
@@ -751,8 +757,8 @@ class _PlayerNode extends StatelessWidget {
     // It used to keep the kit fill, show his untouched overall, and spell the
     // drop out in small red type underneath — which read as a warning about a
     // number that was itself wrong, and made every node a line taller.
-    final filled = tc != null && tc.isNotEmpty && p != null && !absent &&
-        !penalised;
+    final filled =
+        tc != null && tc.isNotEmpty && p != null && !absent && !penalised;
     final fillColors = penalised && !absent
         ? [
             Color.alphaBlend(
@@ -765,27 +771,27 @@ class _PlayerNode extends StatelessWidget {
             ),
           ]
         : filled
-            ? (tc.length >= 2
-                ? tc.take(2).toList()
-                : [
+        ? (tc.length >= 2
+              ? tc.take(2).toList()
+              : [
+                  tc.first,
+                  Color.alphaBlend(
+                    Colors.black.withValues(alpha: 0.28),
                     tc.first,
-                    Color.alphaBlend(
-                      Colors.black.withValues(alpha: 0.28),
-                      tc.first,
-                    ),
-                  ])
-            : const [
-                AppColors.surfaceContainerHighest,
-                AppColors.surfaceContainer,
-              ];
+                  ),
+                ])
+        : const [
+            AppColors.surfaceContainerHighest,
+            AppColors.surfaceContainer,
+          ];
     // Legible number over the kit: dark text on a light shirt, else white.
     final onTeam = penalised
         ? AppColors.warning
         : filled
-            ? (fillColors.first.computeLuminance() > 0.55
-                ? Colors.black
-                : Colors.white)
-            : AppColors.primary;
+        ? (fillColors.first.computeLuminance() > 0.55
+              ? Colors.black
+              : Colors.white)
+        : AppColors.primary;
     return Material(
       type: MaterialType.transparency,
       child: Column(
@@ -809,9 +815,7 @@ class _PlayerNode extends StatelessWidget {
             alignment: Alignment.center,
             child: absent
                 ? Icon(
-                    injured
-                        ? Icons.personal_injury
-                        : Icons.gavel_rounded,
+                    injured ? Icons.personal_injury : Icons.gavel_rounded,
                     size: 22,
                     color: absentColor,
                   )
@@ -901,8 +905,8 @@ class _PlayerNode extends StatelessWidget {
 Color energyColor(int energy) => energy >= 75
     ? AppColors.positive
     : energy >= 50
-        ? AppColors.warning
-        : AppColors.error;
+    ? AppColors.warning
+    : AppColors.error;
 
 class _PitchPainter extends CustomPainter {
   @override
@@ -956,7 +960,8 @@ class SubDragRow extends StatelessWidget {
       leading: SizedBox(width: 40, child: TacticalChip(player.position.label)),
       // Position is already shown by the leading chip — no role subtitle.
       title: Text(player.name, style: AppTypography.bodyMedium),
-      trailing: trailing ??
+      trailing:
+          trailing ??
           const Icon(
             Icons.drag_indicator,
             color: AppColors.onSurfaceVariant,
@@ -965,23 +970,23 @@ class SubDragRow extends StatelessWidget {
     );
 
     Widget chip() => Material(
-          color: Colors.transparent,
-          child: Container(
-            padding: const EdgeInsets.symmetric(
-              horizontal: AppSpacing.md,
-              vertical: AppSpacing.sm,
-            ),
-            decoration: BoxDecoration(
-              color: AppColors.surfaceContainerHighest,
-              borderRadius: AppRadii.smAll,
-              border: Border.all(color: AppColors.primary),
-            ),
-            child: Text(
-              shortName(player.name).toUpperCase(),
-              style: AppTypography.labelMedium,
-            ),
-          ),
-        );
+      color: Colors.transparent,
+      child: Container(
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppSpacing.md,
+          vertical: AppSpacing.sm,
+        ),
+        decoration: BoxDecoration(
+          color: AppColors.surfaceContainerHighest,
+          borderRadius: AppRadii.smAll,
+          border: Border.all(color: AppColors.primary),
+        ),
+        child: Text(
+          shortName(player.name).toUpperCase(),
+          style: AppTypography.labelMedium,
+        ),
+      ),
+    );
 
     return LongPressDraggable<Object>(
       data: _BenchDrag(player.id),

@@ -15,7 +15,6 @@ typedef PlayerCondition = ({
   FatigueState fatigueState,
   int gamesInWindow, // appearances counted toward fatigue
   int overallDelta, // net rating shift applied in the match
-
   /// Where he stands at his club, or null when it was not supplied.
   ClubStanding? clubStanding,
 });
@@ -48,12 +47,12 @@ abstract final class Condition {
     final state = avg >= 7.6
         ? PlayerForm.onFire
         : avg >= 7.05
-            ? PlayerForm.good
-            : avg >= 6.4
-                ? PlayerForm.steady
-                : avg >= 5.9
-                    ? PlayerForm.poor
-                    : PlayerForm.cold;
+        ? PlayerForm.good
+        : avg >= 6.4
+        ? PlayerForm.steady
+        : avg >= 5.9
+        ? PlayerForm.poor
+        : PlayerForm.cold;
     return (state: state, avg: avg, delta: delta);
   }
 
@@ -98,8 +97,10 @@ abstract final class Condition {
     final f = form(recentRatings);
     final t = fatigue(appearanceDates, asOf);
     final tired = (t.delta * travelFatigue).round();
-    final net =
-        (f.delta + tired + moraleDelta + campBonus + clubDelta).clamp(-9, 6);
+    final net = (f.delta + tired + moraleDelta + campBonus + clubDelta).clamp(
+      -9,
+      6,
+    );
     return (
       form: f.state,
       formRating: f.avg,
@@ -129,8 +130,8 @@ abstract final class Condition {
       final outcome = gf > ga
           ? 1.0
           : gf < ga
-              ? -1.0
-              : 0.0;
+          ? -1.0
+          : 0.0;
       final friendly = f.round == 'FRIENDLY';
       final weight = (6 - i) * (friendly ? 0.4 : 1.0);
       score += outcome * weight;
@@ -149,10 +150,10 @@ abstract final class Condition {
   static String moraleLabel(int m) => m >= 78
       ? 'Buoyant'
       : m >= 60
-          ? 'Positive'
-          : m >= 42
-              ? 'Settled'
-              : m >= 25
-                  ? 'Uneasy'
-                  : 'Rock bottom';
+      ? 'Positive'
+      : m >= 42
+      ? 'Settled'
+      : m >= 25
+      ? 'Uneasy'
+      : 'Rock bottom';
 }

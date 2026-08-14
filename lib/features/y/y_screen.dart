@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/core/theme/app_colors.dart';
@@ -5,6 +7,7 @@ import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/domain/services/press/y_feed.dart';
+import 'package:fnm/features/y/y_post_detail.dart';
 import 'package:fnm/features/y/y_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
@@ -110,15 +113,31 @@ String yPostBody(AppLocalizations l, YPost p) {
 ///
 /// Read-only. The manager already has a voice at press conferences, with real
 /// consequences; this is the place he is talked ABOUT.
-class YScreen extends ConsumerWidget {
+class YScreen extends ConsumerStatefulWidget {
   const YScreen({required this.careerId, super.key});
 
   final int careerId;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<YScreen> createState() => _YScreenState();
+}
+
+class _YScreenState extends ConsumerState<YScreen> {
+  /// Whether the feed has been stamped read on this visit — once per visit, so
+  /// a rebuild does not keep writing the same watermark.
+  bool _marked = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final careerId = widget.careerId;
     final l = AppLocalizations.of(context);
     final async = ref.watch(yFeedProvider(careerId));
+    // Opening the feed IS reading it: the badge counts what has been said
+    // since, not what has been tapped.
+    if (!_marked && async.hasValue) {
+      _marked = true;
+      unawaited(ref.read(yReadServiceProvider).markRead(careerId));
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -152,7 +171,17 @@ class YScreen extends ConsumerWidget {
           return ListView.builder(
             padding: const EdgeInsets.all(AppSpacing.marginMobile),
             itemCount: posts.length,
-            itemBuilder: (context, i) => _PostRow(post: posts[i]),
+            itemBuilder: (context, i) => YPostTile(
+              post: posts[i],
+              // A post is the start of a conversation, not a dead line of
+              // text: opening it shows everyone who said something about the
+              // same match.
+              onTap: () => Navigator.of(context).push(
+                MaterialPageRoute<void>(
+                  builder: (_) => YPostDetail(post: posts[i], all: posts),
+                ),
+              ),
+            ),
           );
         },
       ),
@@ -160,10 +189,13 @@ class YScreen extends ConsumerWidget {
   }
 }
 
-class _PostRow extends StatelessWidget {
-  const _PostRow({required this.post});
+/// One post in the feed. Public so the detail view — and the tests — can use
+/// the same row rather than a second, subtly different one.
+class YPostTile extends StatelessWidget {
+  const YPostTile({required this.post, this.onTap, super.key});
 
   final YPost post;
+  final VoidCallback? onTap;
 
   Color get _tint => switch (post.voice) {
     YVoice.pundit => AppColors.primary,
@@ -179,6 +211,7 @@ class _PostRow extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(bottom: AppSpacing.sm),
       child: AppCard(
+        onTap: onTap,
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

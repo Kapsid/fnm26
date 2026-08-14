@@ -28,7 +28,8 @@ final localeProvider = StateProvider<Locale?>((ref) => null);
 /// any unsupported one.
 final appLocalizationsProvider = Provider<AppLocalizations>((ref) {
   final override = ref.watch(localeProvider);
-  final code = override?.languageCode ??
+  final code =
+      override?.languageCode ??
       WidgetsBinding.instance.platformDispatcher.locale.languageCode;
   return lookupAppLocalizations(
     code == 'cs' ? const Locale('cs') : const Locale('en'),

@@ -51,8 +51,8 @@ class _PaywallSheetState extends ConsumerState<PaywallSheet> {
     final premium = ref.watch(premiumUnlockedProvider);
     final flow = ref.watch(purchaseFlowProvider);
     final service = ref.read(entitlementServiceProvider);
-    final busy = flow == PurchaseFlowState.loading ||
-        flow == PurchaseFlowState.pending;
+    final busy =
+        flow == PurchaseFlowState.loading || flow == PurchaseFlowState.pending;
 
     // Close on success so the newly unlocked screen is what the player sees.
     ref.listen(premiumUnlockedProvider, (was, now) {
@@ -109,8 +109,8 @@ class _PaywallSheetState extends ConsumerState<PaywallSheet> {
               label: busy
                   ? l.paywallContactingStore
                   : (_price == null
-                      ? l.paywallUnlockPro
-                      : l.paywallUnlockProPriced(_price!)),
+                        ? l.paywallUnlockPro
+                        : l.paywallUnlockProPriced(_price!)),
               icon: Icons.lock_open_rounded,
               onPressed: busy ? null : service.buy,
             ),
@@ -137,13 +137,13 @@ class _PaywallSheetState extends ConsumerState<PaywallSheet> {
   }
 
   Widget _benefit(IconData icon, String text) => Padding(
-        padding: const EdgeInsets.symmetric(vertical: AppSpacing.xs),
-        child: Row(
-          children: [
-            Icon(icon, size: 20, color: AppColors.primary),
-            const SizedBox(width: AppSpacing.md),
-            Expanded(child: Text(text, style: AppTypography.bodyMedium)),
-          ],
-        ),
-      );
+    padding: const EdgeInsets.symmetric(vertical: AppSpacing.xs),
+    child: Row(
+      children: [
+        Icon(icon, size: 20, color: AppColors.primary),
+        const SizedBox(width: AppSpacing.md),
+        Expanded(child: Text(text, style: AppTypography.bodyMedium)),
+      ],
+    ),
+  );
 }

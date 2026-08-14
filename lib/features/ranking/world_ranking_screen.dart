@@ -22,8 +22,7 @@ class WorldRankingScreen extends ConsumerStatefulWidget {
   final int careerId;
 
   @override
-  ConsumerState<WorldRankingScreen> createState() =>
-      _WorldRankingScreenState();
+  ConsumerState<WorldRankingScreen> createState() => _WorldRankingScreenState();
 }
 
 /// Height of one rank row, and of the gap under it. Every row is laid out at
@@ -66,7 +65,9 @@ class _WorldRankingScreenState extends ConsumerState<WorldRankingScreen> {
     final viewport = _controller.position.viewportDimension;
     // Item `index` starts at listPadding + index * extent; centre its middle.
     final target =
-        (AppSpacing.marginMobile + index * _rowExtent + _rowHeight / 2 -
+        (AppSpacing.marginMobile +
+                index * _rowExtent +
+                _rowHeight / 2 -
                 viewport / 2)
             .clamp(0.0, _controller.position.maxScrollExtent);
     if (animate) {
@@ -102,14 +103,18 @@ class _WorldRankingScreenState extends ConsumerState<WorldRankingScreen> {
         actions: [
           IconButton(
             tooltip: l.rankingCentreOnMe,
-            icon: const Icon(Icons.my_location_rounded,
-                color: AppColors.primary),
+            icon: const Icon(
+              Icons.my_location_rounded,
+              color: AppColors.primary,
+            ),
             onPressed: () => _centre(_playerIndex, animate: true),
           ),
         ],
       ),
-      bottomNavigationBar:
-          AppBottomNav(careerId: careerId, current: AppTab.competitions),
+      bottomNavigationBar: AppBottomNav(
+        careerId: careerId,
+        current: AppTab.competitions,
+      ),
       body: dataAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (e, _) => AppErrorState(
@@ -123,8 +128,9 @@ class _WorldRankingScreenState extends ConsumerState<WorldRankingScreen> {
               : data.nations.where((n) => n.confederation == region).toList();
           // Centre the player's row — on open, and again whenever the filter
           // (or the ranking itself) moves them to a different row.
-          _playerIndex =
-              filtered.indexWhere((n) => n.id == data.playerNationId);
+          _playerIndex = filtered.indexWhere(
+            (n) => n.id == data.playerNationId,
+          );
           _focusPlayer(region, _playerIndex);
 
           return Column(
@@ -506,18 +512,31 @@ class _RankChartPainter extends CustomPainter {
       canvas.drawCircle(Offset(px, py), 4.5, dot);
       canvas.drawCircle(Offset(px, py), 2.0, dotCore);
 
-      final rank = label('#${points[i].rank}', AppColors.primary, 9,
-          FontWeight.w700);
+      final rank = label(
+        '#${points[i].rank}',
+        AppColors.primary,
+        9,
+        FontWeight.w700,
+      );
       final rx = (px - rank.width / 2).clamp(0.0, size.width - rank.width);
       final isEnd = i == 0 || i == points.length - 1;
       if (isEnd || rx >= lastRankRight + 4) {
-        rank.paint(canvas, Offset(rx, (py - rank.height - 6).clamp(0.0,
-            size.height - rank.height)));
+        rank.paint(
+          canvas,
+          Offset(
+            rx,
+            (py - rank.height - 6).clamp(0.0, size.height - rank.height),
+          ),
+        );
         lastRankRight = rx + rank.width;
       }
 
-      final date = label(DateFormat('MM/yy').format(points[i].date),
-          AppColors.onSurfaceVariant, 8, FontWeight.w600);
+      final date = label(
+        DateFormat('MM/yy').format(points[i].date),
+        AppColors.onSurfaceVariant,
+        8,
+        FontWeight.w600,
+      );
       final dx = (px - date.width / 2).clamp(0.0, size.width - date.width);
       if (dx < lastDateRight + 3) continue;
       date.paint(canvas, Offset(dx, size.height - date.height));
@@ -526,6 +545,5 @@ class _RankChartPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant _RankChartPainter old) =>
-      old.points != points;
+  bool shouldRepaint(covariant _RankChartPainter old) => old.points != points;
 }

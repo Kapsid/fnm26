@@ -27,10 +27,14 @@ abstract final class WorldCupHosts {
     int count = _shortlistSize,
     Set<int> exclude = const {},
   }) {
-    final pool = nations
-        .where((n) => n.confederation == confederation && !exclude.contains(n.id))
-        .toList()
-      ..sort((a, b) => a.ranking.compareTo(b.ranking));
+    final pool =
+        nations
+            .where(
+              (n) =>
+                  n.confederation == confederation && !exclude.contains(n.id),
+            )
+            .toList()
+          ..sort((a, b) => a.ranking.compareTo(b.ranking));
     return pool.take(count).map((n) => n.id).toList();
   }
 
@@ -53,11 +57,14 @@ abstract final class WorldCupHosts {
     int count = _shortlistSize,
     Set<int> exclude = const {},
   }) {
-    final ranked = nations
-        .where((n) =>
-            n.confederation == confederation && !exclude.contains(n.id))
-        .toList()
-      ..sort((a, b) => a.ranking.compareTo(b.ranking));
+    final ranked =
+        nations
+            .where(
+              (n) =>
+                  n.confederation == confederation && !exclude.contains(n.id),
+            )
+            .toList()
+          ..sort((a, b) => a.ranking.compareTo(b.ranking));
     if (ranked.isEmpty) return const [];
     return _bidsFrom(ranked, count, seed);
   }
@@ -103,7 +110,10 @@ abstract final class WorldCupHosts {
   /// fires, its partner(s) are drawn as geographic neighbours 95% of the time
   /// (same subregion, nearest-ranked), else a nearest-ranked partner of any
   /// origin. Deterministic in [rng].
-  static List<HostBid> _bidsFromShortlist(List<Nation> shortlist, SeededRng rng) {
+  static List<HostBid> _bidsFromShortlist(
+    List<Nation> shortlist,
+    SeededRng rng,
+  ) {
     final remaining = [...shortlist];
     final bids = <HostBid>[];
     while (remaining.isNotEmpty) {
@@ -190,12 +200,15 @@ abstract final class WorldCupHosts {
     required Confederation? barredConfederation,
     required Set<int> excludeIds,
   }) {
-    final ranked = nations
-        .where((n) =>
-            n.confederation != barredConfederation &&
-            !excludeIds.contains(n.id))
-        .toList()
-      ..sort((a, b) => a.ranking.compareTo(b.ranking));
+    final ranked =
+        nations
+            .where(
+              (n) =>
+                  n.confederation != barredConfederation &&
+                  !excludeIds.contains(n.id),
+            )
+            .toList()
+          ..sort((a, b) => a.ranking.compareTo(b.ranking));
     if (ranked.isEmpty) return const [];
     return _bidsFrom(ranked, _shortlistSize, _wcSeed(year, seed));
   }
@@ -210,8 +223,7 @@ abstract final class WorldCupHosts {
   ) {
     final prior = _wcHostChain(year - 4, nations, seed);
     final byId = {for (final n in nations) n.id: n};
-    final barred =
-        prior.isEmpty ? null : byId[prior.last.first]?.confederation;
+    final barred = prior.isEmpty ? null : byId[prior.last.first]?.confederation;
     final recent = <int>{for (final w in prior.reversed.take(3)) ...w};
     return (barred: barred, recent: recent);
   }
@@ -224,8 +236,9 @@ abstract final class WorldCupHosts {
     final byId = {for (final n in nations) n.id: n};
     final winners = <HostBid>[];
     for (var y = _firstWcYear; y <= upto; y += 4) {
-      final barred =
-          winners.isEmpty ? null : byId[winners.last.first]?.confederation;
+      final barred = winners.isEmpty
+          ? null
+          : byId[winners.last.first]?.confederation;
       final recent = <int>{for (final w in winners.reversed.take(3)) ...w};
       final bids = _worldCupBidsFor(
         year: y,
@@ -275,8 +288,7 @@ abstract final class WorldCupHosts {
     required int year,
     required List<Nation> nations,
     required int seed,
-  }) =>
-      hostsFor(year: year, nations: nations, seed: seed).toSet();
+  }) => hostsFor(year: year, nations: nations, seed: seed).toSet();
 
   /// The seed stream for a continental host draw.
   static int _contSeed(Confederation confederation, int cycle, int seed) =>
@@ -290,19 +302,18 @@ abstract final class WorldCupHosts {
     required int cycle,
     required int seed,
     required List<Nation> nations,
-  }) =>
-      _continentalBids(
-        confederation: confederation,
-        cycle: cycle,
-        seed: seed,
-        nations: nations,
-        exclude: _recentContinentalHosts(
-          confederation: confederation,
-          cycle: cycle,
-          seed: seed,
-          nations: nations,
-        ),
-      );
+  }) => _continentalBids(
+    confederation: confederation,
+    cycle: cycle,
+    seed: seed,
+    nations: nations,
+    exclude: _recentContinentalHosts(
+      confederation: confederation,
+      cycle: cycle,
+      seed: seed,
+      nations: nations,
+    ),
+  );
 
   static List<HostBid> _continentalBids({
     required Confederation confederation,
@@ -310,13 +321,12 @@ abstract final class WorldCupHosts {
     required int seed,
     required List<Nation> nations,
     required Set<int> exclude,
-  }) =>
-      hostBids(
-        confederation: confederation,
-        nations: nations,
-        seed: _contSeed(confederation, cycle, seed),
-        exclude: exclude,
-      );
+  }) => hostBids(
+    confederation: confederation,
+    nations: nations,
+    seed: _contSeed(confederation, cycle, seed),
+    exclude: exclude,
+  );
 
   /// The nations that hosted this confederation's championship in the previous
   /// three cycles (naive picks, computed without the exclusion to avoid

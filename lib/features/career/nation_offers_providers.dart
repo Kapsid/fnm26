@@ -67,20 +67,19 @@ class RolloverVerdict {
 
   /// A short label for the reputation tier, for the UI.
   String get reputationLabel => switch (reputation) {
-        >= 85 => 'Iconic',
-        >= 70 => 'Renowned',
-        >= 50 => 'Established',
-        >= 30 => 'Up-and-coming',
-        _ => 'Unproven',
-      };
+    >= 85 => 'Iconic',
+    >= 70 => 'Renowned',
+    >= 50 => 'Established',
+    >= 30 => 'Up-and-coming',
+    _ => 'Unproven',
+  };
 }
 
 /// Evaluates the manager's just-finished cycle and produces the board verdict
 /// plus a tiered set of job offers — strong showings open up better nations,
 /// poor ones only lesser jobs, and a dismal cycle can end in the sack.
 final AutoDisposeFutureProviderFamily<RolloverVerdict?, int>
-    rolloverVerdictProvider =
-    FutureProvider.autoDispose.family<RolloverVerdict?, int>((
+rolloverVerdictProvider = FutureProvider.autoDispose.family<RolloverVerdict?, int>((
   ref,
   careerId,
 ) async {
@@ -96,8 +95,9 @@ final AutoDisposeFutureProviderFamily<RolloverVerdict?, int>
   // to a World Cup semi-final pegs it at 100 and looks no different in the job
   // market from one who merely did the job. Rounds beyond the brief are read
   // separately, so the phone rings from higher up.
-  final outcomes =
-      await ref.watch(cycleObjectiveOutcomesProvider(careerId).future);
+  final outcomes = await ref.watch(
+    cycleObjectiveOutcomesProvider(careerId).future,
+  );
   var beatenBy = 0;
   for (final o in outcomes) {
     if (!o.decided) continue;
@@ -107,8 +107,9 @@ final AutoDisposeFutureProviderFamily<RolloverVerdict?, int>
 
   final ordered = ranking.nations; // strongest first
   final total = ordered.length;
-  final currentNation =
-      ordered.where((n) => n.id == career.nationId).firstOrNull;
+  final currentNation = ordered
+      .where((n) => n.id == career.nationId)
+      .firstOrNull;
   final currentPos =
       ranking.position[career.nationId] ?? currentNation?.ranking ?? total;
 
@@ -117,12 +118,17 @@ final AutoDisposeFutureProviderFamily<RolloverVerdict?, int>
   // long they've served, computed from stored honours + stints (no new state).
   final careerRepo = ref.watch(careerRepositoryProvider);
   final stints = await careerRepo.stints(careerId);
-  final honours =
-      await ref.watch(competitionRepositoryProvider).honours(careerId);
+  final honours = await ref
+      .watch(competitionRepositoryProvider)
+      .honours(careerId);
   final rep = _reputation(career, stints, honours);
   final cyclesAtNation = _cyclesAtNation(career, stints);
-  final titlesAtNation =
-      _titlesAtNation(career, stints, honours, career.nationId);
+  final titlesAtNation = _titlesAtNation(
+    career,
+    stints,
+    honours,
+    career.nationId,
+  );
   // A hero: a long, decorated stay with the same nation. The board won't sack
   // a hero, and the nation begs them to stay.
   final nationalHero =
@@ -152,8 +158,10 @@ final AutoDisposeFutureProviderFamily<RolloverVerdict?, int>
   // Beating the brief pulls the whole band upward, on top of what satisfaction
   // already did — 12% stronger per round beyond it, up to a little over a third.
   final overFactor = 1 - (beatenBy.clamp(0, 3) * 0.12);
-  final center =
-      (currentPos * factor * repFactor * overFactor).round().clamp(1, total);
+  final center = (currentPos * factor * repFactor * overFactor).round().clamp(
+    1,
+    total,
+  );
 
   final rng = SeededRng(career.rngSeed ^ (career.cyclePointer * 0x77) ^ 0xB0A5);
   final offers = <NationOffer>[];
@@ -179,8 +187,8 @@ final AutoDisposeFutureProviderFamily<RolloverVerdict?, int>
     final tier = pos < currentPos * 0.85
         ? 'Step up'
         : pos > currentPos * 1.2
-            ? 'A rebuild'
-            : 'Lateral move';
+        ? 'A rebuild'
+        : 'Lateral move';
     offers.add(NationOffer(nation: pick, position: pos, tier: tier));
   }
   offers.sort((a, b) => a.position.compareTo(b.position));
@@ -189,8 +197,8 @@ final AutoDisposeFutureProviderFamily<RolloverVerdict?, int>
   final (headline, detail) = _verdict(perf, sacked, best);
   final heroNote = nationalHero && !sacked
       ? ' ${currentNation?.name ?? 'The nation'} adore you — a national hero '
-          'after $cyclesAtNation cycles; your job is safe for as long as you '
-          'want it.'
+            'after $cyclesAtNation cycles; your job is safe for as long as you '
+            'want it.'
       : '';
 
   return RolloverVerdict(

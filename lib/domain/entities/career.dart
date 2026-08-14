@@ -34,5 +34,10 @@ abstract class Career with _$Career {
     /// The player wearing the armband, or null if the manager has not named a
     /// captain. Only ever a player in the current squad — see `Captaincy`.
     int? captainPlayerId,
+
+    /// The in-game date of the newest Y post the manager has seen, or null if
+    /// he has never opened the feed. Posts are derived rather than stored, so
+    /// this watermark is what "unread" is counted against.
+    DateTime? yReadAt,
   }) = _Career;
 }

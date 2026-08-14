@@ -85,8 +85,7 @@ const _contFinalsRounds = {'CGROUP', 'CR16', 'CQF', 'CSF', 'C3RD', 'CFINAL'};
 /// which is most of the time. Live only between a finals draw putting the
 /// nation in the field and its first match being played.
 final AutoDisposeFutureProviderFamily<TrainingCampPlan?, int>
-trainingCampPlanProvider =
-    FutureProvider.autoDispose.family<TrainingCampPlan?, int>((
+trainingCampPlanProvider = FutureProvider.autoDispose.family<TrainingCampPlan?, int>((
   ref,
   careerId,
 ) async {
@@ -135,9 +134,10 @@ trainingCampPlanProvider =
     final perHost = _campsPerHost(hosts.length);
     final options = <CampOption>[
       for (final id in hosts)
-        for (final camp
-            in TrainingCamps.forHost(hostId: id, cities: cities[id])
-                .take(perHost))
+        for (final camp in TrainingCamps.forHost(
+          hostId: id,
+          cities: cities[id],
+        ).take(perHost))
           (
             hostId: id,
             hostName: byId[id]?.name ?? '—',
@@ -170,16 +170,19 @@ trainingCampPlanProvider =
 /// What the manager's chosen camp is worth right now — the neutral profile when
 /// no tournament is on, so the rest of the game can read it unconditionally.
 final AutoDisposeFutureProviderFamily<TrainingCamp?, int> activeCampProvider =
-    FutureProvider.autoDispose.family<TrainingCamp?, int>((ref, careerId) async {
-  final plan = await ref.watch(trainingCampPlanProvider(careerId).future);
-  final chosen = plan?.chosen;
-  if (plan == null || chosen == null) return null;
-  return TrainingCamps.resolve(
-    hostId: chosen.hostId,
-    cities: (await ref.watch(countryCitiesProvider.future))[chosen.hostId],
-    index: chosen.campIndex,
-  );
-});
+    FutureProvider.autoDispose.family<TrainingCamp?, int>((
+      ref,
+      careerId,
+    ) async {
+      final plan = await ref.watch(trainingCampPlanProvider(careerId).future);
+      final chosen = plan?.chosen;
+      if (plan == null || chosen == null) return null;
+      return TrainingCamps.resolve(
+        hostId: chosen.hostId,
+        cities: (await ref.watch(countryCitiesProvider.future))[chosen.hostId],
+        index: chosen.campIndex,
+      );
+    });
 
 /// Saves the manager's base camp for a tournament.
 class TrainingCampService {
@@ -192,7 +195,9 @@ class TrainingCampService {
     TrainingCampPlan plan,
     CampOption option,
   ) async {
-    await _ref.read(careerRepositoryProvider).setTrainingCamp(
+    await _ref
+        .read(careerRepositoryProvider)
+        .setTrainingCamp(
           careerId: careerId,
           cycle: plan.cycle,
           tournament: plan.tournament,
@@ -205,5 +210,6 @@ class TrainingCampService {
   }
 }
 
-final Provider<TrainingCampService> trainingCampServiceProvider =
-    Provider(TrainingCampService.new);
+final Provider<TrainingCampService> trainingCampServiceProvider = Provider(
+  TrainingCampService.new,
+);

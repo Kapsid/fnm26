@@ -158,8 +158,11 @@ Future<bool> _finalsImminent(
 /// in that competition (and only once), matches open their preview, a live
 /// tournament the player isn't in becomes a watch/skip event, and a decided
 /// World Cup becomes the cycle-rollover event.
-final AutoDisposeFutureProviderFamily<HubEvent, int> nextEventProvider =
-    FutureProvider.autoDispose.family<HubEvent, int>((ref, careerId) async {
+final AutoDisposeFutureProviderFamily<HubEvent, int>
+nextEventProvider = FutureProvider.autoDispose.family<HubEvent, int>((
+  ref,
+  careerId,
+) async {
   final l = ref.watch(appLocalizationsProvider);
   final hub = await ref.watch(hubDataProvider(careerId).future);
   if (hub == null) {
@@ -334,7 +337,8 @@ final AutoDisposeFutureProviderFamily<HubEvent, int> nextEventProvider =
       kind: HubEventKind.draw,
       label: l.hubEventWatchFinalsDraw,
       icon: Icons.casino,
-      route: '${Routes.continentalDraw}?careerId=$careerId'
+      route:
+          '${Routes.continentalDraw}?careerId=$careerId'
           '&conf=${playerConf.name}',
     );
   }
@@ -367,7 +371,8 @@ final AutoDisposeFutureProviderFamily<HubEvent, int> nextEventProvider =
       kind: HubEventKind.tournamentKickoff,
       label: l.hubEventFinalsHere,
       icon: Icons.emoji_events_rounded,
-      route: '${Routes.tournamentKickoff}?careerId=$careerId'
+      route:
+          '${Routes.tournamentKickoff}?careerId=$careerId'
           '&conf=${playerConf.name}',
     );
   }
@@ -444,7 +449,7 @@ final AutoDisposeFutureProviderFamily<HubEvent, int> nextEventProvider =
     final cupName = conf == null
         ? l.hubEventContinentalFinalsFallback
         : ContinentalCups.byConfederation[conf]?.name ??
-            l.hubEventContinentalFinalsFallback;
+              l.hubEventContinentalFinalsFallback;
     return HubEvent(
       kind: HubEventKind.watchTournament,
       label: l.hubEventPlayCupMatch(cupName),
@@ -466,8 +471,9 @@ final AutoDisposeFutureProviderFamily<HubEvent, int> nextEventProvider =
   final playerInNcFinals = hub.fixtures.any(
     (f) => !f.hasResult && (f.round == 'NSF' || f.round == 'NFINAL'),
   );
-  final ncFinalsDate =
-      await comp.earliestUnplayedNationsCupFinalsDate(careerId);
+  final ncFinalsDate = await comp.earliestUnplayedNationsCupFinalsDate(
+    careerId,
+  );
   if (ncFinalsDate != null &&
       !nextIsNcFinals &&
       !playerInNcFinals &&
@@ -482,19 +488,20 @@ final AutoDisposeFutureProviderFamily<HubEvent, int> nextEventProvider =
 
   if (next != null) {
     HubEvent callUp(String label, String kind) => HubEvent(
-          kind: HubEventKind.callUp,
-          label: label,
-          icon: Icons.groups,
-          route: '${Routes.callUps}?careerId=$careerId'
-              '&event=$kind&cycle=$cycle',
-        );
+      kind: HubEventKind.callUp,
+      label: label,
+      icon: Icons.groups,
+      route:
+          '${Routes.callUps}?careerId=$careerId'
+          '&event=$kind&cycle=$cycle',
+    );
 
     HubEvent drawEvent(String label, String route) => HubEvent(
-          kind: HubEventKind.draw,
-          label: label,
-          icon: Icons.casino,
-          route: route,
-        );
+      kind: HubEventKind.draw,
+      label: label,
+      icon: Icons.casino,
+      route: route,
+    );
 
     // 2e. The Nations Cup group draw, forced once before the player's first
     //     group match. The group tables stay hidden until it is watched.
@@ -509,18 +516,28 @@ final AutoDisposeFutureProviderFamily<HubEvent, int> nextEventProvider =
       // Named confederation: every confederation runs a qualifying campaign
       // now, so an unqualified lookup answers for whichever continent the query
       // happens to land on rather than the manager's.
-      final euroUpcoming = playerConf != null &&
+      final euroUpcoming =
+          playerConf != null &&
           await comp.hasTournament(
-              careerId, CompetitionKind.continentalQualifying,
-              confederation: playerConf) &&
+            careerId,
+            CompetitionKind.continentalQualifying,
+            confederation: playerConf,
+          ) &&
           (!await comp.allPlayedForKind(
-                  careerId, CompetitionKind.continentalQualifying,
-                  confederation: playerConf) ||
-              (await comp.hasTournament(careerId,
-                      CompetitionKind.continentalFinals,
-                      confederation: playerConf) &&
+                careerId,
+                CompetitionKind.continentalQualifying,
+                confederation: playerConf,
+              ) ||
+              (await comp.hasTournament(
+                    careerId,
+                    CompetitionKind.continentalFinals,
+                    confederation: playerConf,
+                  ) &&
                   !await comp.hasWatchedDraw(
-                      careerId, cycle, continentalFinalsDrawKind)));
+                    careerId,
+                    cycle,
+                    continentalFinalsDrawKind,
+                  )));
       if (!euroUpcoming) {
         return drawEvent(
           l.hubEventWatchNationsCupDraw,
@@ -540,7 +557,8 @@ final AutoDisposeFutureProviderFamily<HubEvent, int> nextEventProvider =
     // (deterministic) so it still sees its OWN selection ceremony rather than it
     // being silently skipped.
     final nationsList = hub.nations.values.toList();
-    final playerIsContHost = playerConf != null &&
+    final playerIsContHost =
+        playerConf != null &&
         WorldCupHosts.continentalHostsFor(
           confederation: playerConf,
           cycle: cycle,
@@ -594,7 +612,8 @@ final AutoDisposeFutureProviderFamily<HubEvent, int> nextEventProvider =
     //   * continental qualifying is still being played;
     //   * the continental finals hasn't been drawn yet;
     //   * the continental finals is drawn but not finished.
-    final contQualUnfinished = playerConf != null &&
+    final contQualUnfinished =
+        playerConf != null &&
         await comp.hasTournament(
           careerId,
           CompetitionKind.continentalQualifying,
@@ -605,13 +624,15 @@ final AutoDisposeFutureProviderFamily<HubEvent, int> nextEventProvider =
           CompetitionKind.continentalQualifying,
           confederation: playerConf,
         );
-    final hasContFinals = playerConf != null &&
+    final hasContFinals =
+        playerConf != null &&
         await comp.hasTournament(
           careerId,
           CompetitionKind.continentalFinals,
           confederation: playerConf,
         );
-    final contFinalsUndrawn = hasContFinals &&
+    final contFinalsUndrawn =
+        hasContFinals &&
         !await comp.hasWatchedDraw(
           careerId,
           cycle,
@@ -620,7 +641,8 @@ final AutoDisposeFutureProviderFamily<HubEvent, int> nextEventProvider =
     // allPlayedForKind is false while any fixture of the cup is unplayed — and
     // also before its fixtures exist, which the undrawn clause above already
     // covers.
-    final contFinalsUnfinished = hasContFinals &&
+    final contFinalsUnfinished =
+        hasContFinals &&
         !await comp.allPlayedForKind(
           careerId,
           CompetitionKind.continentalFinals,
@@ -687,8 +709,10 @@ final AutoDisposeFutureProviderFamily<HubEvent, int> nextEventProvider =
     //    by date, so one fixture left behind in an earlier cycle would hold the
     //    head of an all-time list for ever and no later period — a tournament's
     //    group stage above all — would ever open a call-up again.
-    final playerFixtures =
-        await comp.cycleFixturesForNation(careerId, hub.career.nationId);
+    final playerFixtures = await comp.cycleFixturesForNation(
+      careerId,
+      hub.career.nationId,
+    );
     if (Nomination.windowOpen(playerFixtures)) {
       final period = Nomination.currentPeriod(playerFixtures);
       if (period.isNotEmpty) {
@@ -703,13 +727,16 @@ final AutoDisposeFutureProviderFamily<HubEvent, int> nextEventProvider =
     //     manager must reshape the side THEMSELVES before the match. Without
     //     this, the preview quietly auto-filled the gap with a best XI, so a
     //     ban or injury never actually cost the manager a decision.
-    final tactic =
-        await ref.watch(tacticsRepositoryProvider).tacticForCareer(careerId);
-    final lineupIds =
-        (tactic?.lineup ?? const <int?>[]).whereType<int>().toList();
+    final tactic = await ref
+        .watch(tacticsRepositoryProvider)
+        .tacticForCareer(careerId);
+    final lineupIds = (tactic?.lineup ?? const <int?>[])
+        .whereType<int>()
+        .toList();
     if (lineupIds.isNotEmpty) {
-      final absences =
-          await ref.watch(absenceRepositoryProvider).forCareer(careerId);
+      final absences = await ref
+          .watch(absenceRepositoryProvider)
+          .forCareer(careerId);
       final out = lineupIds
           .where((id) => !(absences[id]?.isAvailable ?? true))
           .length;
@@ -766,7 +793,7 @@ final AutoDisposeFutureProviderFamily<HubEvent, int> nextEventProvider =
     final cupName = conf == null
         ? l.hubEventContinentalFinalsFallback
         : ContinentalCups.byConfederation[conf]?.name ??
-            l.hubEventContinentalFinalsFallback;
+              l.hubEventContinentalFinalsFallback;
     return HubEvent(
       kind: HubEventKind.watchTournament,
       label: l.hubEventPlayCupMatch(cupName),

@@ -11,9 +11,9 @@ class DriftAbsenceRepository implements AbsenceRepository {
 
   @override
   Future<Map<int, PlayerAbsence>> forCareer(int careerId) async {
-    final rows = await (_db.select(_db.playerAbsences)
-          ..where((t) => t.careerId.equals(careerId)))
-        .get();
+    final rows = await (_db.select(
+      _db.playerAbsences,
+    )..where((t) => t.careerId.equals(careerId))).get();
     return {
       for (final r in rows)
         r.playerId: PlayerAbsence(
@@ -28,9 +28,9 @@ class DriftAbsenceRepository implements AbsenceRepository {
   @override
   Future<void> replace(int careerId, Iterable<PlayerAbsence> absences) async {
     await _db.transaction(() async {
-      await (_db.delete(_db.playerAbsences)
-            ..where((t) => t.careerId.equals(careerId)))
-          .go();
+      await (_db.delete(
+        _db.playerAbsences,
+      )..where((t) => t.careerId.equals(careerId))).go();
       await _db.batch((b) {
         for (final a in absences) {
           if (!a.isNotable) continue;

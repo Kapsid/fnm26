@@ -14,16 +14,46 @@ abstract final class PoolGenerator {
   /// Fictional-but-plausible club sides, shared across nations (national-team
   /// players from the same club is realistic).
   static const List<String> _clubs = [
-    'FC Meridian', 'Athletic Rivera', 'Real Montaña', 'Sporting Delta',
-    'Inter Valle', 'Olympic Larsson', 'Dynamo Kest', 'AC Borealis',
-    'Union Sportif', 'Cassar City', 'Vardar United', 'Nord FK',
-    'Racing Aledo', 'Kaiser SV', 'Atlético Ponte', 'Estrella FC',
-    'Lokomotiv Ost', 'Wanderers AFC', 'Hansa Verein', 'CD Marino',
-    'Górnik Wisła', 'Étoile Sud', 'Panthera SC', 'River Aterno',
-    'Fortuna Vega', 'Slavia Brod', 'Kongens BK', 'Al-Nahda SC',
-    'Toluca Norte', 'Selênio FC', 'Ironside United', 'Volta Roja',
-    'Aurora Athletic', 'Kobalt SV', 'Deportivo Sol', 'Rangers Kilda',
-    'FK Zenica', 'Corsair FC', 'Monteverde', 'Halden IL',
+    'FC Meridian',
+    'Athletic Rivera',
+    'Real Montaña',
+    'Sporting Delta',
+    'Inter Valle',
+    'Olympic Larsson',
+    'Dynamo Kest',
+    'AC Borealis',
+    'Union Sportif',
+    'Cassar City',
+    'Vardar United',
+    'Nord FK',
+    'Racing Aledo',
+    'Kaiser SV',
+    'Atlético Ponte',
+    'Estrella FC',
+    'Lokomotiv Ost',
+    'Wanderers AFC',
+    'Hansa Verein',
+    'CD Marino',
+    'Górnik Wisła',
+    'Étoile Sud',
+    'Panthera SC',
+    'River Aterno',
+    'Fortuna Vega',
+    'Slavia Brod',
+    'Kongens BK',
+    'Al-Nahda SC',
+    'Toluca Norte',
+    'Selênio FC',
+    'Ironside United',
+    'Volta Roja',
+    'Aurora Athletic',
+    'Kobalt SV',
+    'Deportivo Sol',
+    'Rangers Kilda',
+    'FK Zenica',
+    'Corsair FC',
+    'Monteverde',
+    'Halden IL',
   ];
 
   static String _club(int seed) => _clubs[seed.abs() % _clubs.length];
@@ -93,7 +123,8 @@ abstract final class PoolGenerator {
           Player(
             id: nextId,
             nationId: nationId,
-            name: '${firsts[rng.nextInt(firsts.length)]} '
+            name:
+                '${firsts[rng.nextInt(firsts.length)]} '
                 '${lasts[rng.nextInt(lasts.length)]}',
             age: 18 + rng.nextInt(17), // 18 … 34
             position: pos,

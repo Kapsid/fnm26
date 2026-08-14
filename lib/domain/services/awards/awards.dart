@@ -45,10 +45,10 @@ abstract final class Awards {
 
   /// The world's best under-21 over a year.
   static AwardWinner? youngPlayerOfYear(Iterable<AwardLine> lines) => _best(
-        lines,
-        AwardKind.youngPlayerOfYear,
-        (l) => l.age <= youngMaxAge,
-      );
+    lines,
+    AwardKind.youngPlayerOfYear,
+    (l) => l.age <= youngMaxAge,
+  );
 
   /// How good a year was.
   ///
@@ -79,7 +79,8 @@ abstract final class Awards {
       final s = score(l);
       // Ties break on the player id, so two saves at the same year agree on
       // who won rather than on which row the database happened to return first.
-      if (s > bestScore || (s == bestScore && best != null && l.playerId < best.playerId)) {
+      if (s > bestScore ||
+          (s == bestScore && best != null && l.playerId < best.playerId)) {
         bestScore = s;
         best = l;
       }

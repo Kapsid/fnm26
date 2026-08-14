@@ -27,8 +27,9 @@ class SeedLoader {
   /// `insertOrIgnore`, so a duplicate row from a concurrent seeder is skipped
   /// rather than throwing the whole insert away — the race resolves silently.
   Future<bool> ensureSeeded() async {
-    final existing =
-        await (_db.select(_db.nations)..limit(1)).getSingleOrNull();
+    final existing = await (_db.select(
+      _db.nations,
+    )..limit(1)).getSingleOrNull();
     if (existing != null) {
       // Already seeded: prune any nations dropped from the source data, then
       // top up the deeper pool + clubs for pre-v10 saves.
@@ -111,25 +112,25 @@ class SeedLoader {
   }
 
   NationsCompanion _nationCompanion(Nation n) => NationsCompanion.insert(
-        id: Value(n.id),
-        name: n.name,
-        code: n.code,
-        confederation: n.confederation,
-        ranking: Value(n.ranking),
-        isFreeDemo: Value(n.isFreeDemo),
-        primaryColor: Value(n.primaryColor),
-        secondaryColor: Value(n.secondaryColor),
-      );
+    id: Value(n.id),
+    name: n.name,
+    code: n.code,
+    confederation: n.confederation,
+    ranking: Value(n.ranking),
+    isFreeDemo: Value(n.isFreeDemo),
+    primaryColor: Value(n.primaryColor),
+    secondaryColor: Value(n.secondaryColor),
+  );
 
   PlayersCompanion _playerCompanion(Player p) => PlayersCompanion.insert(
-        id: Value(p.id),
-        nationId: p.nationId,
-        name: p.name,
-        age: p.age,
-        position: p.position,
-        physical: p.attributes.physical,
-        technical: p.attributes.technical,
-        stamina: p.attributes.stamina,
-        club: Value(p.club),
-      );
+    id: Value(p.id),
+    nationId: p.nationId,
+    name: p.name,
+    age: p.age,
+    position: p.position,
+    physical: p.attributes.physical,
+    technical: p.attributes.technical,
+    stamina: p.attributes.stamina,
+    club: Value(p.club),
+  );
 }

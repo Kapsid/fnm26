@@ -109,8 +109,10 @@ class _DiagnosticsScreenState extends State<DiagnosticsScreen> {
                             await AppLog.clear();
                             _reload();
                           },
-                          icon: const Icon(Icons.delete_outline_rounded,
-                              size: 18),
+                          icon: const Icon(
+                            Icons.delete_outline_rounded,
+                            size: 18,
+                          ),
                           label: Text(l.diagnosticsClear),
                         ),
                       ),

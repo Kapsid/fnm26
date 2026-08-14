@@ -25,8 +25,10 @@ class CareersScreen extends StatelessWidget {
         ),
         centerTitle: true,
       ),
-      bottomNavigationBar:
-          AppBottomNav(careerId: careerId, current: AppTab.careers),
+      bottomNavigationBar: AppBottomNav(
+        careerId: careerId,
+        current: AppTab.careers,
+      ),
       body: ListView(
         padding: const EdgeInsets.all(AppSpacing.marginMobile),
         children: [

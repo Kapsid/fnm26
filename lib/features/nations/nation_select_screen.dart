@@ -63,8 +63,11 @@ class NationSelectScreen extends ConsumerWidget {
           // always going to pick": let the draw choose, or take whatever job an
           // out-of-work manager can get.
           _StartModes(
-            onRandom: () => _startRandom(context, nationsAsync.valueOrNull,
-                premium: premium),
+            onRandom: () => _startRandom(
+              context,
+              nationsAsync.valueOrNull,
+              premium: premium,
+            ),
             onBottom: () => context.go(Routes.startFromBottom),
           ),
           _ConfederationTabs(
@@ -522,7 +525,10 @@ class _BottomNav extends StatelessWidget {
                 label: l.nationsNavCareer,
                 onTap: () => context.go(Routes.home),
               ),
-              _NavItem(icon: Icons.dashboard_customize, label: l.nationsNavTactics),
+              _NavItem(
+                icon: Icons.dashboard_customize,
+                label: l.nationsNavTactics,
+              ),
               _NavItem(
                 icon: Icons.public,
                 label: l.nationsNavNations,

@@ -89,8 +89,9 @@ abstract final class Elo {
   }) {
     final ids = pointsById.keys.toList()
       ..sort((a, b) {
-        final byPoints =
-            (pointsById[b] ?? base).compareTo(pointsById[a] ?? base);
+        final byPoints = (pointsById[b] ?? base).compareTo(
+          pointsById[a] ?? base,
+        );
         if (byPoints != 0) return byPoints;
         return (seedRankById?[a] ?? a).compareTo(seedRankById?[b] ?? b);
       });
@@ -111,8 +112,8 @@ abstract final class Elo {
     final actual = homeScore > awayScore
         ? 1.0
         : homeScore == awayScore
-            ? 0.5
-            : 0.0;
+        ? 0.5
+        : 0.0;
     return (weight * (actual - expected)).round();
   }
 }

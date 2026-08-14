@@ -22,7 +22,10 @@ mixin _$Career {
 /// commercial returns. Player-driven mutable state (not seed-derived).
  int get budget;/// The player wearing the armband, or null if the manager has not named a
 /// captain. Only ever a player in the current squad — see `Captaincy`.
- int? get captainPlayerId;
+ int? get captainPlayerId;/// The in-game date of the newest Y post the manager has seen, or null if
+/// he has never opened the feed. Posts are derived rather than stored, so
+/// this watermark is what "unread" is counted against.
+ DateTime? get yReadAt;
 /// Create a copy of Career
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -33,16 +36,16 @@ $CareerCopyWith<Career> get copyWith => _$CareerCopyWithImpl<Career>(this as Car
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Career&&(identical(other.id, id) || other.id == id)&&(identical(other.managerName, managerName) || other.managerName == managerName)&&(identical(other.nationId, nationId) || other.nationId == nationId)&&(identical(other.rngSeed, rngSeed) || other.rngSeed == rngSeed)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.inGameDate, inGameDate) || other.inGameDate == inGameDate)&&(identical(other.cyclePointer, cyclePointer) || other.cyclePointer == cyclePointer)&&(identical(other.lastPlayedAt, lastPlayedAt) || other.lastPlayedAt == lastPlayedAt)&&(identical(other.budget, budget) || other.budget == budget)&&(identical(other.captainPlayerId, captainPlayerId) || other.captainPlayerId == captainPlayerId));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Career&&(identical(other.id, id) || other.id == id)&&(identical(other.managerName, managerName) || other.managerName == managerName)&&(identical(other.nationId, nationId) || other.nationId == nationId)&&(identical(other.rngSeed, rngSeed) || other.rngSeed == rngSeed)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.inGameDate, inGameDate) || other.inGameDate == inGameDate)&&(identical(other.cyclePointer, cyclePointer) || other.cyclePointer == cyclePointer)&&(identical(other.lastPlayedAt, lastPlayedAt) || other.lastPlayedAt == lastPlayedAt)&&(identical(other.budget, budget) || other.budget == budget)&&(identical(other.captainPlayerId, captainPlayerId) || other.captainPlayerId == captainPlayerId)&&(identical(other.yReadAt, yReadAt) || other.yReadAt == yReadAt));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,managerName,nationId,rngSeed,createdAt,inGameDate,cyclePointer,lastPlayedAt,budget,captainPlayerId);
+int get hashCode => Object.hash(runtimeType,id,managerName,nationId,rngSeed,createdAt,inGameDate,cyclePointer,lastPlayedAt,budget,captainPlayerId,yReadAt);
 
 @override
 String toString() {
-  return 'Career(id: $id, managerName: $managerName, nationId: $nationId, rngSeed: $rngSeed, createdAt: $createdAt, inGameDate: $inGameDate, cyclePointer: $cyclePointer, lastPlayedAt: $lastPlayedAt, budget: $budget, captainPlayerId: $captainPlayerId)';
+  return 'Career(id: $id, managerName: $managerName, nationId: $nationId, rngSeed: $rngSeed, createdAt: $createdAt, inGameDate: $inGameDate, cyclePointer: $cyclePointer, lastPlayedAt: $lastPlayedAt, budget: $budget, captainPlayerId: $captainPlayerId, yReadAt: $yReadAt)';
 }
 
 
@@ -53,7 +56,7 @@ abstract mixin class $CareerCopyWith<$Res>  {
   factory $CareerCopyWith(Career value, $Res Function(Career) _then) = _$CareerCopyWithImpl;
 @useResult
 $Res call({
- int id, String managerName, int nationId, int rngSeed, DateTime createdAt, DateTime inGameDate, int cyclePointer, DateTime? lastPlayedAt, int budget, int? captainPlayerId
+ int id, String managerName, int nationId, int rngSeed, DateTime createdAt, DateTime inGameDate, int cyclePointer, DateTime? lastPlayedAt, int budget, int? captainPlayerId, DateTime? yReadAt
 });
 
 
@@ -70,7 +73,7 @@ class _$CareerCopyWithImpl<$Res>
 
 /// Create a copy of Career
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? managerName = null,Object? nationId = null,Object? rngSeed = null,Object? createdAt = null,Object? inGameDate = null,Object? cyclePointer = null,Object? lastPlayedAt = freezed,Object? budget = null,Object? captainPlayerId = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? managerName = null,Object? nationId = null,Object? rngSeed = null,Object? createdAt = null,Object? inGameDate = null,Object? cyclePointer = null,Object? lastPlayedAt = freezed,Object? budget = null,Object? captainPlayerId = freezed,Object? yReadAt = freezed,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,managerName: null == managerName ? _self.managerName : managerName // ignore: cast_nullable_to_non_nullable
@@ -82,7 +85,8 @@ as DateTime,cyclePointer: null == cyclePointer ? _self.cyclePointer : cyclePoint
 as int,lastPlayedAt: freezed == lastPlayedAt ? _self.lastPlayedAt : lastPlayedAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,budget: null == budget ? _self.budget : budget // ignore: cast_nullable_to_non_nullable
 as int,captainPlayerId: freezed == captainPlayerId ? _self.captainPlayerId : captainPlayerId // ignore: cast_nullable_to_non_nullable
-as int?,
+as int?,yReadAt: freezed == yReadAt ? _self.yReadAt : yReadAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,
   ));
 }
 
@@ -167,10 +171,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  String managerName,  int nationId,  int rngSeed,  DateTime createdAt,  DateTime inGameDate,  int cyclePointer,  DateTime? lastPlayedAt,  int budget,  int? captainPlayerId)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  String managerName,  int nationId,  int rngSeed,  DateTime createdAt,  DateTime inGameDate,  int cyclePointer,  DateTime? lastPlayedAt,  int budget,  int? captainPlayerId,  DateTime? yReadAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Career() when $default != null:
-return $default(_that.id,_that.managerName,_that.nationId,_that.rngSeed,_that.createdAt,_that.inGameDate,_that.cyclePointer,_that.lastPlayedAt,_that.budget,_that.captainPlayerId);case _:
+return $default(_that.id,_that.managerName,_that.nationId,_that.rngSeed,_that.createdAt,_that.inGameDate,_that.cyclePointer,_that.lastPlayedAt,_that.budget,_that.captainPlayerId,_that.yReadAt);case _:
   return orElse();
 
 }
@@ -188,10 +192,10 @@ return $default(_that.id,_that.managerName,_that.nationId,_that.rngSeed,_that.cr
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  String managerName,  int nationId,  int rngSeed,  DateTime createdAt,  DateTime inGameDate,  int cyclePointer,  DateTime? lastPlayedAt,  int budget,  int? captainPlayerId)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  String managerName,  int nationId,  int rngSeed,  DateTime createdAt,  DateTime inGameDate,  int cyclePointer,  DateTime? lastPlayedAt,  int budget,  int? captainPlayerId,  DateTime? yReadAt)  $default,) {final _that = this;
 switch (_that) {
 case _Career():
-return $default(_that.id,_that.managerName,_that.nationId,_that.rngSeed,_that.createdAt,_that.inGameDate,_that.cyclePointer,_that.lastPlayedAt,_that.budget,_that.captainPlayerId);case _:
+return $default(_that.id,_that.managerName,_that.nationId,_that.rngSeed,_that.createdAt,_that.inGameDate,_that.cyclePointer,_that.lastPlayedAt,_that.budget,_that.captainPlayerId,_that.yReadAt);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -208,10 +212,10 @@ return $default(_that.id,_that.managerName,_that.nationId,_that.rngSeed,_that.cr
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  String managerName,  int nationId,  int rngSeed,  DateTime createdAt,  DateTime inGameDate,  int cyclePointer,  DateTime? lastPlayedAt,  int budget,  int? captainPlayerId)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  String managerName,  int nationId,  int rngSeed,  DateTime createdAt,  DateTime inGameDate,  int cyclePointer,  DateTime? lastPlayedAt,  int budget,  int? captainPlayerId,  DateTime? yReadAt)?  $default,) {final _that = this;
 switch (_that) {
 case _Career() when $default != null:
-return $default(_that.id,_that.managerName,_that.nationId,_that.rngSeed,_that.createdAt,_that.inGameDate,_that.cyclePointer,_that.lastPlayedAt,_that.budget,_that.captainPlayerId);case _:
+return $default(_that.id,_that.managerName,_that.nationId,_that.rngSeed,_that.createdAt,_that.inGameDate,_that.cyclePointer,_that.lastPlayedAt,_that.budget,_that.captainPlayerId,_that.yReadAt);case _:
   return null;
 
 }
@@ -223,7 +227,7 @@ return $default(_that.id,_that.managerName,_that.nationId,_that.rngSeed,_that.cr
 
 
 class _Career implements Career {
-  const _Career({required this.id, required this.managerName, required this.nationId, required this.rngSeed, required this.createdAt, required this.inGameDate, this.cyclePointer = 0, this.lastPlayedAt, this.budget = 0, this.captainPlayerId});
+  const _Career({required this.id, required this.managerName, required this.nationId, required this.rngSeed, required this.createdAt, required this.inGameDate, this.cyclePointer = 0, this.lastPlayedAt, this.budget = 0, this.captainPlayerId, this.yReadAt});
   
 
 @override final  int id;
@@ -244,6 +248,10 @@ class _Career implements Career {
 /// The player wearing the armband, or null if the manager has not named a
 /// captain. Only ever a player in the current squad — see `Captaincy`.
 @override final  int? captainPlayerId;
+/// The in-game date of the newest Y post the manager has seen, or null if
+/// he has never opened the feed. Posts are derived rather than stored, so
+/// this watermark is what "unread" is counted against.
+@override final  DateTime? yReadAt;
 
 /// Create a copy of Career
 /// with the given fields replaced by the non-null parameter values.
@@ -255,16 +263,16 @@ _$CareerCopyWith<_Career> get copyWith => __$CareerCopyWithImpl<_Career>(this, _
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Career&&(identical(other.id, id) || other.id == id)&&(identical(other.managerName, managerName) || other.managerName == managerName)&&(identical(other.nationId, nationId) || other.nationId == nationId)&&(identical(other.rngSeed, rngSeed) || other.rngSeed == rngSeed)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.inGameDate, inGameDate) || other.inGameDate == inGameDate)&&(identical(other.cyclePointer, cyclePointer) || other.cyclePointer == cyclePointer)&&(identical(other.lastPlayedAt, lastPlayedAt) || other.lastPlayedAt == lastPlayedAt)&&(identical(other.budget, budget) || other.budget == budget)&&(identical(other.captainPlayerId, captainPlayerId) || other.captainPlayerId == captainPlayerId));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Career&&(identical(other.id, id) || other.id == id)&&(identical(other.managerName, managerName) || other.managerName == managerName)&&(identical(other.nationId, nationId) || other.nationId == nationId)&&(identical(other.rngSeed, rngSeed) || other.rngSeed == rngSeed)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.inGameDate, inGameDate) || other.inGameDate == inGameDate)&&(identical(other.cyclePointer, cyclePointer) || other.cyclePointer == cyclePointer)&&(identical(other.lastPlayedAt, lastPlayedAt) || other.lastPlayedAt == lastPlayedAt)&&(identical(other.budget, budget) || other.budget == budget)&&(identical(other.captainPlayerId, captainPlayerId) || other.captainPlayerId == captainPlayerId)&&(identical(other.yReadAt, yReadAt) || other.yReadAt == yReadAt));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,managerName,nationId,rngSeed,createdAt,inGameDate,cyclePointer,lastPlayedAt,budget,captainPlayerId);
+int get hashCode => Object.hash(runtimeType,id,managerName,nationId,rngSeed,createdAt,inGameDate,cyclePointer,lastPlayedAt,budget,captainPlayerId,yReadAt);
 
 @override
 String toString() {
-  return 'Career(id: $id, managerName: $managerName, nationId: $nationId, rngSeed: $rngSeed, createdAt: $createdAt, inGameDate: $inGameDate, cyclePointer: $cyclePointer, lastPlayedAt: $lastPlayedAt, budget: $budget, captainPlayerId: $captainPlayerId)';
+  return 'Career(id: $id, managerName: $managerName, nationId: $nationId, rngSeed: $rngSeed, createdAt: $createdAt, inGameDate: $inGameDate, cyclePointer: $cyclePointer, lastPlayedAt: $lastPlayedAt, budget: $budget, captainPlayerId: $captainPlayerId, yReadAt: $yReadAt)';
 }
 
 
@@ -275,7 +283,7 @@ abstract mixin class _$CareerCopyWith<$Res> implements $CareerCopyWith<$Res> {
   factory _$CareerCopyWith(_Career value, $Res Function(_Career) _then) = __$CareerCopyWithImpl;
 @override @useResult
 $Res call({
- int id, String managerName, int nationId, int rngSeed, DateTime createdAt, DateTime inGameDate, int cyclePointer, DateTime? lastPlayedAt, int budget, int? captainPlayerId
+ int id, String managerName, int nationId, int rngSeed, DateTime createdAt, DateTime inGameDate, int cyclePointer, DateTime? lastPlayedAt, int budget, int? captainPlayerId, DateTime? yReadAt
 });
 
 
@@ -292,7 +300,7 @@ class __$CareerCopyWithImpl<$Res>
 
 /// Create a copy of Career
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? managerName = null,Object? nationId = null,Object? rngSeed = null,Object? createdAt = null,Object? inGameDate = null,Object? cyclePointer = null,Object? lastPlayedAt = freezed,Object? budget = null,Object? captainPlayerId = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? managerName = null,Object? nationId = null,Object? rngSeed = null,Object? createdAt = null,Object? inGameDate = null,Object? cyclePointer = null,Object? lastPlayedAt = freezed,Object? budget = null,Object? captainPlayerId = freezed,Object? yReadAt = freezed,}) {
   return _then(_Career(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,managerName: null == managerName ? _self.managerName : managerName // ignore: cast_nullable_to_non_nullable
@@ -304,7 +312,8 @@ as DateTime,cyclePointer: null == cyclePointer ? _self.cyclePointer : cyclePoint
 as int,lastPlayedAt: freezed == lastPlayedAt ? _self.lastPlayedAt : lastPlayedAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,budget: null == budget ? _self.budget : budget // ignore: cast_nullable_to_non_nullable
 as int,captainPlayerId: freezed == captainPlayerId ? _self.captainPlayerId : captainPlayerId // ignore: cast_nullable_to_non_nullable
-as int?,
+as int?,yReadAt: freezed == yReadAt ? _self.yReadAt : yReadAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,
   ));
 }
 

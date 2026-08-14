@@ -40,7 +40,9 @@ Future<T?> showAppPopup<T>({
   required WidgetBuilder builder,
   bool barrierDismissible = true,
 }) {
-  return withAppPopupGuard(() => _show<T>(context, builder, barrierDismissible));
+  return withAppPopupGuard(
+    () => _show<T>(context, builder, barrierDismissible),
+  );
 }
 
 Future<T?> _show<T>(

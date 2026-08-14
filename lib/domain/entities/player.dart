@@ -42,12 +42,12 @@ abstract class Player with _$Player {
     final ageFactor = age <= 23
         ? 1.2
         : age <= 27
-            ? 1.1
-            : age <= 30
-                ? 0.9
-                : age <= 33
-                    ? 0.6
-                    : 0.35;
+        ? 1.1
+        : age <= 30
+        ? 0.9
+        : age <= 33
+        ? 0.6
+        : 0.35;
     return (base * ageFactor * 1000000).round();
   }
 }

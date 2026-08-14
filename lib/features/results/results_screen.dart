@@ -18,7 +18,6 @@ class ResultsScreen extends ConsumerWidget {
 
   final int careerId;
 
-
   /// Groups fixtures by competition, ordering the groups so the most currently
   /// relevant one (the soonest still-to-play) comes first; fully-played
   /// competitions fall to the bottom, most-recent first.
@@ -34,7 +33,8 @@ class ResultsScreen extends ConsumerWidget {
       final upcoming = fx.where((f) => !f.played).map((f) => f.date);
       if (upcoming.isNotEmpty) {
         // Soonest upcoming first (small, positive sort key).
-        return upcoming.reduce((a, b) => a.isBefore(b) ? a : b)
+        return upcoming
+            .reduce((a, b) => a.isBefore(b) ? a : b)
             .millisecondsSinceEpoch;
       }
       // All played: push below any live competition, most recent first.
@@ -88,8 +88,9 @@ class ResultsScreen extends ConsumerWidget {
                     children: [
                       Text(
                         section.key.toUpperCase(),
-                        style: AppTypography.labelMedium
-                            .copyWith(color: AppColors.primary),
+                        style: AppTypography.labelMedium.copyWith(
+                          color: AppColors.primary,
+                        ),
                       ),
                       const SizedBox(width: AppSpacing.sm),
                       Text(
@@ -116,8 +117,9 @@ class ResultsScreen extends ConsumerWidget {
                             children: [
                               Text(
                                 MatchStage.stage(l, f.round),
-                                style: AppTypography.labelSmall
-                                    .copyWith(color: AppColors.primary),
+                                style: AppTypography.labelSmall.copyWith(
+                                  color: AppColors.primary,
+                                ),
                               ),
                               const Spacer(),
                               Text(
@@ -171,8 +173,10 @@ class _ResultRow extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                Text(code(fixture.homeNationId),
-                    style: AppTypography.bodySmall),
+                Text(
+                  code(fixture.homeNationId),
+                  style: AppTypography.bodySmall,
+                ),
                 const SizedBox(width: AppSpacing.sm),
                 FlagDisc(code(fixture.homeNationId), size: 22),
               ],
@@ -185,8 +189,9 @@ class _ResultRow extends StatelessWidget {
               textAlign: TextAlign.center,
               style: fixture.hasResult
                   ? AppTypography.labelMedium
-                  : AppTypography.labelSmall
-                      .copyWith(color: AppColors.onSurfaceVariant),
+                  : AppTypography.labelSmall.copyWith(
+                      color: AppColors.onSurfaceVariant,
+                    ),
             ),
           ),
           Expanded(
@@ -194,8 +199,10 @@ class _ResultRow extends StatelessWidget {
               children: [
                 FlagDisc(code(fixture.awayNationId), size: 22),
                 const SizedBox(width: AppSpacing.sm),
-                Text(code(fixture.awayNationId),
-                    style: AppTypography.bodySmall),
+                Text(
+                  code(fixture.awayNationId),
+                  style: AppTypography.bodySmall,
+                ),
               ],
             ),
           ),

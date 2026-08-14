@@ -32,7 +32,9 @@ class _NewGameScreenState extends ConsumerState<NewGameScreen> {
 
   Future<void> _start() async {
     setState(() => _creating = true);
-    final result = await ref.read(careerServiceProvider).create(
+    final result = await ref
+        .read(careerServiceProvider)
+        .create(
           nationId: widget.nationId,
           managerName: _controller.text,
         );
@@ -91,50 +93,53 @@ class _NewGameScreenState extends ConsumerState<NewGameScreen> {
               return LayoutBuilder(
                 builder: (context, constraints) => SingleChildScrollView(
                   child: ConstrainedBox(
-                    constraints:
-                        BoxConstraints(minHeight: constraints.maxHeight),
+                    constraints: BoxConstraints(
+                      minHeight: constraints.maxHeight,
+                    ),
                     child: IntrinsicHeight(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
                           const SizedBox(height: AppSpacing.lg),
                           Center(child: FlagDisc(nation.code, size: 96)),
-                  const SizedBox(height: AppSpacing.md),
-                  Center(
-                    child: Text(
-                      nation.name,
-                      style: AppTypography.headlineMedium,
-                    ),
-                  ),
-                  Center(
-                    child: Text(
-                      l.careerWorldRankNum(nation.ranking),
-                      style: AppTypography.labelMedium
-                          .copyWith(color: AppColors.onSurfaceVariant),
-                    ),
-                  ),
-                  const SizedBox(height: AppSpacing.xl),
-                  AppTextField(
-                    label: l.careerManagerName,
-                    hint: l.careerManagerNameHint,
-                    controller: _controller,
-                    autofocus: true,
-                    textInputAction: TextInputAction.done,
-                    onSubmitted: (_) => _start(),
-                  ),
-                  const SizedBox(height: AppSpacing.md),
-                  Text(
-                    l.careerBeginsBlurb,
-                    style: AppTypography.bodySmall
-                        .copyWith(color: AppColors.onSurfaceVariant),
-                  ),
-                  const Spacer(),
-                  PrimaryButton(
-                    label: l.careerStartCareer,
-                    icon: Icons.play_arrow_rounded,
-                    isLoading: _creating,
-                    onPressed: _creating ? null : _start,
-                  ),
+                          const SizedBox(height: AppSpacing.md),
+                          Center(
+                            child: Text(
+                              nation.name,
+                              style: AppTypography.headlineMedium,
+                            ),
+                          ),
+                          Center(
+                            child: Text(
+                              l.careerWorldRankNum(nation.ranking),
+                              style: AppTypography.labelMedium.copyWith(
+                                color: AppColors.onSurfaceVariant,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: AppSpacing.xl),
+                          AppTextField(
+                            label: l.careerManagerName,
+                            hint: l.careerManagerNameHint,
+                            controller: _controller,
+                            autofocus: true,
+                            textInputAction: TextInputAction.done,
+                            onSubmitted: (_) => _start(),
+                          ),
+                          const SizedBox(height: AppSpacing.md),
+                          Text(
+                            l.careerBeginsBlurb,
+                            style: AppTypography.bodySmall.copyWith(
+                              color: AppColors.onSurfaceVariant,
+                            ),
+                          ),
+                          const Spacer(),
+                          PrimaryButton(
+                            label: l.careerStartCareer,
+                            icon: Icons.play_arrow_rounded,
+                            isLoading: _creating,
+                            onPressed: _creating ? null : _start,
+                          ),
                           const SizedBox(height: AppSpacing.md),
                         ],
                       ),

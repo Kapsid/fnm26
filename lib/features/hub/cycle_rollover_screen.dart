@@ -29,27 +29,28 @@ typedef _RolloverView = ({
 
 final AutoDisposeFutureProviderFamily<_RolloverView?, int> _rolloverProvider =
     FutureProvider.autoDispose.family<_RolloverView?, int>((
-  ref,
-  careerId,
-) async {
-  final career = await ref.watch(careerRepositoryProvider).byId(careerId);
-  if (career == null) return null;
-  final honours =
-      await ref.watch(competitionRepositoryProvider).honours(careerId);
-  final wc = honours
-      .where((h) => h.competition == 'World Championship')
-      .toList()
-    ..sort((a, b) => b.year.compareTo(a.year));
-  final nations = {
-    for (final n in await ref.watch(nationRepositoryProvider).all()) n.id: n,
-  };
-  return (
-    worldCup: wc.isEmpty ? null : wc.first,
-    nations: nations,
-    nextYear: SeasonService.finalsYear(career.cyclePointer + 1),
-    budget: career.budget,
-  );
-});
+      ref,
+      careerId,
+    ) async {
+      final career = await ref.watch(careerRepositoryProvider).byId(careerId);
+      if (career == null) return null;
+      final honours = await ref
+          .watch(competitionRepositoryProvider)
+          .honours(careerId);
+      final wc =
+          honours.where((h) => h.competition == 'World Championship').toList()
+            ..sort((a, b) => b.year.compareTo(a.year));
+      final nations = {
+        for (final n in await ref.watch(nationRepositoryProvider).all())
+          n.id: n,
+      };
+      return (
+        worldCup: wc.isEmpty ? null : wc.first,
+        nations: nations,
+        nextYear: SeasonService.finalsYear(career.cyclePointer + 1),
+        budget: career.budget,
+      );
+    });
 
 /// The end-of-cycle event: crowns the World Cup winner, delivers the board's
 /// verdict (with job offers or the sack), then rolls into the next cycle.
@@ -74,7 +75,9 @@ class _CycleRolloverScreenState extends ConsumerState<CycleRolloverScreen> {
     // The rollover banks the finished cycle's income and advances; the new
     // cycle's budget is allocated in the forced budget-setup event that opens
     // it (see nextEventProvider).
-    await ref.read(seasonServiceProvider).startNextCycle(
+    await ref
+        .read(seasonServiceProvider)
+        .startNextCycle(
           widget.careerId,
           switchToNationId: _selected,
           boardTitle: v?.headline,
@@ -235,7 +238,8 @@ class _CycleRolloverScreenState extends ConsumerState<CycleRolloverScreen> {
                   child: PrimaryButton(
                     label: _selected == null
                         ? l.hubContinueWith(
-                            v.currentNation?.name ?? l.hubYourNation)
+                            v.currentNation?.name ?? l.hubYourNation,
+                          )
                         : l.hubTakeTheJob,
                     icon: Icons.arrow_forward_rounded,
                     onPressed: !ready ? null : () => setState(() => _step = 2),
@@ -254,13 +258,13 @@ class _CycleRolloverScreenState extends ConsumerState<CycleRolloverScreen> {
   Widget _investStep(_RolloverView? view) {
     final l = AppLocalizations.of(context);
     final incomeAsync = ref.watch(cycleIncomeProvider(widget.careerId));
-    final verdict =
-        ref.watch(rolloverVerdictProvider(widget.careerId)).valueOrNull;
+    final verdict = ref
+        .watch(rolloverVerdictProvider(widget.careerId))
+        .valueOrNull;
     return SafeArea(
       child: incomeAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) =>
-            Center(child: Text(l.hubCouldNotLoadFinances('$e'))),
+        error: (e, _) => Center(child: Text(l.hubCouldNotLoadFinances('$e'))),
         data: (income) {
           return Column(
             children: [
@@ -268,9 +272,12 @@ class _CycleRolloverScreenState extends ConsumerState<CycleRolloverScreen> {
                 child: ListView(
                   padding: const EdgeInsets.all(AppSpacing.marginMobile),
                   children: [
-                    Text(l.hubFederationFinances,
-                        style: AppTypography.labelMedium
-                            .copyWith(color: AppColors.primary)),
+                    Text(
+                      l.hubFederationFinances,
+                      style: AppTypography.labelMedium.copyWith(
+                        color: AppColors.primary,
+                      ),
+                    ),
                     const SizedBox(height: AppSpacing.sm),
                     _IncomeCard(
                       income: income,
@@ -279,8 +286,9 @@ class _CycleRolloverScreenState extends ConsumerState<CycleRolloverScreen> {
                     const SizedBox(height: AppSpacing.md),
                     Text(
                       l.hubBudgetIntro,
-                      style: AppTypography.bodySmall
-                          .copyWith(color: AppColors.onSurfaceVariant),
+                      style: AppTypography.bodySmall.copyWith(
+                        color: AppColors.onSurfaceVariant,
+                      ),
                     ),
                     const SizedBox(height: AppSpacing.xl),
                   ],
@@ -293,8 +301,7 @@ class _CycleRolloverScreenState extends ConsumerState<CycleRolloverScreen> {
                   child: PrimaryButton(
                     label: _busy ? l.hubStarting : l.hubBeginNextCycle,
                     icon: Icons.skip_next_rounded,
-                    onPressed:
-                        _busy ? null : () => unawaited(_begin(verdict)),
+                    onPressed: _busy ? null : () => unawaited(_begin(verdict)),
                   ),
                 ),
               ),
@@ -470,8 +477,8 @@ class _VerdictCard extends StatelessWidget {
     final color = verdict.sacked
         ? AppColors.error
         : p >= 55
-            ? AppColors.positive
-            : AppColors.warning;
+        ? AppColors.positive
+        : AppColors.warning;
     return AppCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -609,20 +616,21 @@ class _SummaryCard extends StatelessWidget {
     final l = AppLocalizations.of(context);
     final score = (wc.finalHomeScore != null && wc.finalAwayScore != null)
         ? (wc.finalHomeScore == wc.finalAwayScore
-            ? '${wc.finalHomeScore}–${wc.finalAwayScore} ${l.hubPens}'
-            : '${wc.finalHomeScore}–${wc.finalAwayScore}')
+              ? '${wc.finalHomeScore}–${wc.finalAwayScore} ${l.hubPens}'
+              : '${wc.finalHomeScore}–${wc.finalAwayScore}')
         : null;
     return AppCard(
       child: Column(
         children: [
-          _row(l.hubFinal, '${name(wc.championId)} $score ${name(wc.runnerUpId)}'),
-          if (wc.hostId != null)
-            _row(l.hubHost, name(wc.hostId!)),
+          _row(
+            l.hubFinal,
+            '${name(wc.championId)} $score ${name(wc.runnerUpId)}',
+          ),
+          if (wc.hostId != null) _row(l.hubHost, name(wc.hostId!)),
           if (wc.topScorerName != null)
             _row(
               l.hubGoldenBoot,
-              l.hubGoldenBootValue(
-                  wc.topScorerName!, wc.topScorerGoals ?? 0),
+              l.hubGoldenBootValue(wc.topScorerName!, wc.topScorerGoals ?? 0),
             ),
         ],
       ),

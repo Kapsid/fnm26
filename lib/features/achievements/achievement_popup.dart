@@ -40,24 +40,28 @@ Future<void> showAchievementsUnlocked(
             ),
             const SizedBox(height: AppSpacing.md),
             for (final d in defs)
-              Builder(builder: (context) {
-                final text = achievementText(l, d);
-                return Padding(
-                  padding: const EdgeInsets.symmetric(vertical: AppSpacing.xs),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(text.title, style: AppTypography.titleMedium),
-                      Text(
-                        text.description,
-                        style: AppTypography.labelSmall.copyWith(
-                          color: AppColors.onSurfaceVariant,
+              Builder(
+                builder: (context) {
+                  final text = achievementText(l, d);
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: AppSpacing.xs,
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(text.title, style: AppTypography.titleMedium),
+                        Text(
+                          text.description,
+                          style: AppTypography.labelSmall.copyWith(
+                            color: AppColors.onSurfaceVariant,
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                );
-              }),
+                      ],
+                    ),
+                  );
+                },
+              ),
             const SizedBox(height: AppSpacing.md),
             FilledButton(
               onPressed: () => Navigator.of(context).pop(),

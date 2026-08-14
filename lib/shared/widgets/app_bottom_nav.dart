@@ -98,8 +98,9 @@ class _NavItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final color =
-        active ? AppColors.onSecondaryContainer : AppColors.onSurfaceVariant;
+    final color = active
+        ? AppColors.onSecondaryContainer
+        : AppColors.onSurfaceVariant;
     return InkWell(
       // The active tab is already here — tapping it is a no-op.
       onTap: active ? null : onTap,

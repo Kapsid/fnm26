@@ -192,8 +192,9 @@ class DriftPlayerRepository implements PlayerRepository {
         homeCities: home.cities,
       );
     }
-    final row = await (_db.select(_db.players)..where((t) => t.id.equals(id)))
-        .getSingleOrNull();
+    final row = await (_db.select(
+      _db.players,
+    )..where((t) => t.id.equals(id))).getSingleOrNull();
     final p = row?.toDomain();
     // Identity lookups resolve a player even once they've retired out of the
     // selectable pool — a retired legend still has a name and a record.
@@ -214,9 +215,9 @@ class DriftPlayerRepository implements PlayerRepository {
 
   /// The nation's base (cycle-0) seeded rows, unaged.
   Future<List<Player>> _seededRows(int nationId) async {
-    final rows = await (_db.select(_db.players)
-          ..where((t) => t.nationId.equals(nationId)))
-        .get();
+    final rows = await (_db.select(
+      _db.players,
+    )..where((t) => t.nationId.equals(nationId))).get();
     return rows.map((r) => r.toDomain()).toList();
   }
 
@@ -225,8 +226,9 @@ class DriftPlayerRepository implements PlayerRepository {
   Future<Map<int, _NamePool>> _pools() async {
     if (_namePools != null) return _namePools!;
     try {
-      final raw = jsonDecode(await rootBundle.loadString(_namesAsset))
-          as Map<String, Object?>;
+      final raw =
+          jsonDecode(await rootBundle.loadString(_namesAsset))
+              as Map<String, Object?>;
       _namePools = {
         for (final e in raw.entries)
           int.parse(e.key): (
@@ -256,12 +258,13 @@ class DriftPlayerRepository implements PlayerRepository {
     }
     // A save-specific shuffle of every first+surname combination, so each save
     // fields a distinct set drawn from the SAME pool.
-    final combos = _comboCache[(nationId, saveSeed)] ??= SeededRng(
-      saveSeed ^ (nationId * 0x9E3779B1) ^ 0x5F5E,
-    ).shuffled([
-      for (final f in pool.first)
-        for (final s in pool.sur) '$f $s',
-    ]);
+    final combos = _comboCache[(nationId, saveSeed)] ??=
+        SeededRng(
+          saveSeed ^ (nationId * 0x9E3779B1) ^ 0x5F5E,
+        ).shuffled([
+          for (final f in pool.first)
+            for (final s in pool.sur) '$f $s',
+        ]);
     if (combos.isEmpty) return _identity;
 
     // A stable, distinct index for every player: stored rows (base + fringe)

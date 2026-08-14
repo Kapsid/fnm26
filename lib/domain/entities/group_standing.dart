@@ -67,7 +67,8 @@ class GroupStanding {
 
   /// Folds one meeting's result into [versus].
   void _recordMeeting(int opponentId, int scored, int conceded) {
-    final prev = versus[opponentId] ??
+    final prev =
+        versus[opponentId] ??
         (played: 0, won: 0, drawn: 0, lost: 0, goalsFor: 0, goalsAgainst: 0);
     versus[opponentId] = (
       played: prev.played + 1,

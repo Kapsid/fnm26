@@ -42,92 +42,97 @@ class FriendliesPlan {
 }
 
 final AutoDisposeFutureProviderFamily<FriendliesPlan?, int>
-friendliesPlanProvider =
-    FutureProvider.autoDispose.family<FriendliesPlan?, int>((
-  ref,
-  careerId,
-) async {
-  final career = await ref.watch(careerRepositoryProvider).byId(careerId);
-  if (career == null) return null;
-  final comp = ref.watch(competitionRepositoryProvider);
-  final fixtures = await comp.fixturesForNation(careerId, career.nationId);
+friendliesPlanProvider = FutureProvider.autoDispose.family<FriendliesPlan?, int>(
+  (
+    ref,
+    careerId,
+  ) async {
+    final career = await ref.watch(careerRepositoryProvider).byId(careerId);
+    if (career == null) return null;
+    final comp = ref.watch(competitionRepositoryProvider);
+    final fixtures = await comp.fixturesForNation(careerId, career.nationId);
 
-  // The next competitive fixture bounds the current gap. Warm-ups are only
-  // offered when there's an upcoming block to prepare for.
-  DateTime? nextComp;
-  final occupied = <(int, int)>{};
-  for (final f in fixtures) {
-    occupied.add((f.date.year, f.date.month));
-    final isCompetitive = f.round != 'FRIENDLY';
-    if (!f.played && isCompetitive) {
-      if (nextComp == null || f.date.isBefore(nextComp)) nextComp = f.date;
+    // The next competitive fixture bounds the current gap. Warm-ups are only
+    // offered when there's an upcoming block to prepare for.
+    DateTime? nextComp;
+    final occupied = <(int, int)>{};
+    for (final f in fixtures) {
+      occupied.add((f.date.year, f.date.month));
+      final isCompetitive = f.round != 'FRIENDLY';
+      if (!f.played && isCompetitive) {
+        if (nextComp == null || f.date.isBefore(nextComp)) nextComp = f.date;
+      }
     }
-  }
-  if (nextComp == null) return null;
+    if (nextComp == null) return null;
 
-  final all = await ref.watch(nationRepositoryProvider).all();
-  final nations = {for (final n in all) n.id: n};
+    final all = await ref.watch(nationRepositoryProvider).all();
+    final nations = {for (final n in all) n.id: n};
 
-  // Windows that a finals tournament will swallow, even though nothing is on
-  // the calendar there yet.
-  //
-  // [occupied] can only see fixtures that EXIST. A side that reaches a finals
-  // without playing a qualifier — a host, above all — has no fixture in the
-  // tournament's month until the draw is made, so its June window looked free
-  // and a warm-up could be booked straight into the middle of its own
-  // tournament. The finals calendar is deterministic, so those months are
-  // blocked up front and only released once the draw proves the nation isn't
-  // in the field (at which point its fixtures, or the absence of them, speak
-  // for themselves).
-  final blocked = await _finalsWindows(comp, career, nations);
+    // Windows that a finals tournament will swallow, even though nothing is on
+    // the calendar there yet.
+    //
+    // [occupied] can only see fixtures that EXIST. A side that reaches a finals
+    // without playing a qualifier — a host, above all — has no fixture in the
+    // tournament's month until the draw is made, so its June window looked free
+    // and a warm-up could be booked straight into the middle of its own
+    // tournament. The finals calendar is deterministic, so those months are
+    // blocked up front and only released once the draw proves the nation isn't
+    // in the field (at which point its fixtures, or the absence of them, speak
+    // for themselves).
+    final blocked = await _finalsWindows(comp, career, nations);
 
-  final now = career.inGameDate;
-  final candidates = <DateTime>[];
-  for (var year = now.year; year <= now.year + 2; year++) {
-    for (final month in _windowMonths) {
-      candidates.add(DateTime(year, month, 14));
+    final now = career.inGameDate;
+    final candidates = <DateTime>[];
+    for (var year = now.year; year <= now.year + 2; year++) {
+      for (final month in _windowMonths) {
+        candidates.add(DateTime(year, month, 14));
+      }
     }
-  }
-  candidates.sort();
+    candidates.sort();
 
-  final windows = <DateTime>[];
-  for (final d in candidates) {
-    if (!d.isAfter(now)) continue;
-    if (!d.isBefore(nextComp)) break; // only the gap before the next block
-    if (occupied.contains((d.year, d.month))) continue;
-    if (blocked.contains((d.year, d.month))) continue;
-    if (await comp.hasWatchedDraw(
-      careerId,
-      career.cyclePointer,
-      friendlyWindowKey(d),
-    )) {
-      continue;
+    final windows = <DateTime>[];
+    for (final d in candidates) {
+      if (!d.isAfter(now)) continue;
+      if (!d.isBefore(nextComp)) break; // only the gap before the next block
+      if (occupied.contains((d.year, d.month))) continue;
+      if (blocked.contains((d.year, d.month))) continue;
+      if (await comp.hasWatchedDraw(
+        careerId,
+        career.cyclePointer,
+        friendlyWindowKey(d),
+      )) {
+        continue;
+      }
+      windows.add(d);
+      if (windows.length >= 3) break;
     }
-    windows.add(d);
-    if (windows.length >= 3) break;
-  }
-  if (windows.isEmpty) return null;
+    if (windows.isEmpty) return null;
 
-  final me = nations[career.nationId];
-  final myRank = me?.ranking ?? 100;
-  // A ranking-plausible candidate pool (closest ~60 by strength), then a
-  // seeded shuffle so the suggested opponents vary cycle to cycle instead of
-  // always being the same static nearest-neighbours list.
-  final byProximity = all.where((n) => n.id != career.nationId).toList()
-    ..sort((a, b) =>
-        (a.ranking - myRank).abs().compareTo((b.ranking - myRank).abs()));
-  final pool = byProximity.take(60).toList();
-  final rng = SeededRng(career.rngSeed ^ (career.cyclePointer * 0x2F) ^ 0xF1E4);
-  final opponents = rng.shuffled(pool);
+    final me = nations[career.nationId];
+    final myRank = me?.ranking ?? 100;
+    // A ranking-plausible candidate pool (closest ~60 by strength), then a
+    // seeded shuffle so the suggested opponents vary cycle to cycle instead of
+    // always being the same static nearest-neighbours list.
+    final byProximity = all.where((n) => n.id != career.nationId).toList()
+      ..sort(
+        (a, b) =>
+            (a.ranking - myRank).abs().compareTo((b.ranking - myRank).abs()),
+      );
+    final pool = byProximity.take(60).toList();
+    final rng = SeededRng(
+      career.rngSeed ^ (career.cyclePointer * 0x2F) ^ 0xF1E4,
+    );
+    final opponents = rng.shuffled(pool);
 
-  return FriendliesPlan(
-    windows: windows,
-    opponents: opponents.take(24).toList(),
-    nations: nations,
-    playerNationId: career.nationId,
-    cycle: career.cyclePointer,
-  );
-});
+    return FriendliesPlan(
+      windows: windows,
+      opponents: opponents.take(24).toList(),
+      nations: nations,
+      playerNationId: career.nationId,
+      cycle: career.cyclePointer,
+    );
+  },
+);
 
 /// The `(year, month)` windows this cycle's finals tournaments occupy, for a
 /// nation that might still be playing in them.
@@ -206,5 +211,6 @@ class FriendliesService {
   }
 }
 
-final Provider<FriendliesService> friendliesServiceProvider =
-    Provider(FriendliesService.new);
+final Provider<FriendliesService> friendliesServiceProvider = Provider(
+  FriendliesService.new,
+);

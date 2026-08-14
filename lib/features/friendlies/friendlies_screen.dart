@@ -72,7 +72,9 @@ class _FriendliesScreenState extends ConsumerState<FriendliesScreen> {
 
   Future<void> _confirm(FriendliesPlan plan) async {
     setState(() => _saving = true);
-    await ref.read(friendliesServiceProvider).arrange(
+    await ref
+        .read(friendliesServiceProvider)
+        .arrange(
           widget.careerId,
           nationId: plan.playerNationId,
           cycle: plan.cycle,

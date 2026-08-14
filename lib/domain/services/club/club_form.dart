@@ -85,19 +85,19 @@ abstract final class ClubForm {
   /// Bounded on purpose: a frozen-out star may still be the right pick, and
   /// finding that out is the game. [Condition] clamps the combined delta too.
   static int sharpnessDelta(ClubStanding s) => switch (s) {
-        ClubStanding.firstChoice => 1,
-        ClubStanding.rotation => 0,
-        ClubStanding.fringe => -2,
-        ClubStanding.frozenOut => -5,
-      };
+    ClubStanding.firstChoice => 1,
+    ClubStanding.rotation => 0,
+    ClubStanding.fringe => -2,
+    ClubStanding.frozenOut => -5,
+  };
 
   /// Roughly what share of his club's minutes a standing is worth.
   static double minutesShare(ClubStanding s) => switch (s) {
-        ClubStanding.firstChoice => 0.90,
-        ClubStanding.rotation => 0.55,
-        ClubStanding.fringe => 0.20,
-        ClubStanding.frozenOut => 0.0,
-      };
+    ClubStanding.firstChoice => 0.90,
+    ClubStanding.rotation => 0.55,
+    ClubStanding.fringe => 0.20,
+    ClubStanding.frozenOut => 0.0,
+  };
 
   /// The population's mean [minutesShare]. The development factor is centred
   /// on this so the world's average development does not move — see the guard
@@ -140,20 +140,20 @@ abstract final class ClubForm {
   }
 
   static int _tierFloor(int tier) => switch (tier) {
-        1 => 84,
-        2 => 78,
-        3 => 72,
-        4 => 66,
-        _ => 40,
-      };
+    1 => 84,
+    2 => 78,
+    3 => 72,
+    4 => 66,
+    _ => 40,
+  };
 
   static int _tierCeiling(int tier) => switch (tier) {
-        1 => 95,
-        2 => 84,
-        3 => 78,
-        4 => 72,
-        _ => 66,
-      };
+    1 => 95,
+    2 => 84,
+    3 => 78,
+    4 => 72,
+    _ => 66,
+  };
 
   static int _mix(int x) {
     var h = x & 0x7fffffff;

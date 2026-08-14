@@ -1511,7 +1511,13 @@ git commit -m "feat: Y writes about what actually happened"
 - Consumes: `YPost.key` (existing — the stable per-event id, which is what marks a post read)
 - Produces: `yUnreadCountProvider(careerId) → int`
 
-- [ ] **Step 1: Write the failing test**
+> **Landed (2026-08-14) with a schema bump to 41**, approved by the user. Posts
+> are derived rather than stored, so there is no row to mark read: `careers`
+> gains a nullable `yReadAt` watermark and the count is everything newer. The
+> migration is additive and stepwise — an existing save keeps its data and
+> simply starts with the feed unread.
+
+- [x] **Step 1: Write the failing test**
 
 ```dart
 testWidgets('the Y tab shows how much is unread', (tester) async {
@@ -1527,28 +1533,28 @@ testWidgets('a post opens its detail', (tester) async {
 });
 ```
 
-- [ ] **Step 2: Run the tests to verify they fail**
+- [x] **Step 2: Run the tests to verify they fail**
 
 Run: `flutter test test/widget/y_screen_test.dart`
 Expected: FAIL — no count, posts are inert.
 
-- [ ] **Step 3: Add the unread count**
+- [x] **Step 3: Add the unread count**
 
 Store the last-read post key per career and count posts newer than it. The
 count is on the bottom-nav Y tab.
 
-- [ ] **Step 4: Add the detail view**
+- [x] **Step 4: Add the detail view**
 
 A tapped post opens `YPostDetail`: the post itself, its author, the event it
 came from, and any replies from other voices about that same event (they share
 a `key`).
 
-- [ ] **Step 5: Run the tests to verify they pass**
+- [x] **Step 5: Run the tests to verify they pass**
 
 Run: `flutter test test/widget/y_screen_test.dart`
 Expected: PASS
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add lib/features/y/ lib/l10n/ test/widget/y_screen_test.dart

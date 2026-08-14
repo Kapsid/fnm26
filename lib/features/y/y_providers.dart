@@ -209,6 +209,48 @@ final AutoDisposeFutureProviderFamily<List<YPost>, int> yFeedProvider =
       return YFeed.mostRecent(posts);
     });
 
+/// How many posts the manager has not seen.
+///
+/// Y posts are derived from events rather than stored, so there is nothing to
+/// mark read one by one: the count is everything newer than the watermark the
+/// feed writes when he opens it. A save that has never opened the feed has
+/// everything unread, which is what a brand-new manager should see.
+final AutoDisposeFutureProviderFamily<int, int> yUnreadCountProvider =
+    FutureProvider.autoDispose.family<int, int>((ref, careerId) async {
+      final career = await ref.watch(careerRepositoryProvider).byId(careerId);
+      if (career == null) return 0;
+      final posts = await ref.watch(yFeedProvider(careerId).future);
+      final since = career.yReadAt;
+      if (since == null) return posts.length;
+      return posts.where((p) => p.date.isAfter(since)).length;
+    });
+
+/// Marks the feed read up to its newest post.
+final Provider<YReadService> yReadServiceProvider = Provider<YReadService>(
+  YReadService.new,
+);
+
+/// Records that the manager has looked at Y.
+class YReadService {
+  YReadService(this._ref);
+
+  final Ref _ref;
+
+  /// Stamps the watermark at the newest post's date, so opening the feed
+  /// clears the badge — and a post that arrives later still counts as unread.
+  Future<void> markRead(int careerId) async {
+    final posts = await _ref.read(yFeedProvider(careerId).future);
+    if (posts.isEmpty) return;
+    final newest = posts
+        .map((p) => p.date)
+        .reduce((a, b) => a.isAfter(b) ? a : b);
+    await _ref.read(careerRepositoryProvider).setYReadAt(careerId, newest);
+    _ref
+      ..invalidate(careerByIdProvider(careerId))
+      ..invalidate(yUnreadCountProvider(careerId));
+  }
+}
+
 /// What the country thinks of the manager, 0–100.
 ///
 /// Read by the board — see [PublicMood] for why this measures expectation

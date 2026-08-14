@@ -79,6 +79,14 @@ class Careers extends Table {
   /// The player the manager has named captain, or null for none. Cleared when
   /// the manager changes nation — an armband does not travel.
   IntColumn get captainPlayerId => integer().nullable()();
+
+  /// The in-game date of the newest Y post the manager has seen, or null if he
+  /// has never opened the feed.
+  ///
+  /// Y posts are derived from events rather than stored, so there is no post
+  /// row to mark read — a single watermark is what the unread count is
+  /// counted against.
+  DateTimeColumn get yReadAt => dateTime().nullable()();
 }
 
 /// A nation's Nations Cup league (0 = League A, 1 = League B, …) within its
@@ -148,8 +156,7 @@ class NaturalizedPlayers extends Table {
   IntColumn get cycle => integer()();
 
   /// 'pending', 'accepted' or 'declined'.
-  TextColumn get status =>
-      text().withDefault(const Constant('pending'))();
+  TextColumn get status => text().withDefault(const Constant('pending'))();
 
   @override
   Set<Column> get primaryKey => {careerId, playerId};
@@ -164,8 +171,8 @@ class Competitions extends Table {
   TextColumn get confederation => textEnum<Confederation>()();
   TextColumn get name => text()();
   TextColumn get kind => textEnum<CompetitionKind>().withDefault(
-        const Constant('worldCupQualifying'),
-      )();
+    const Constant('worldCupQualifying'),
+  )();
 
   /// The 4-year cycle this competition belongs to (matches Careers.cyclePointer
   /// at creation time), so each endless cycle is queried independently.
@@ -186,10 +193,10 @@ class QualifyingGroups extends Table {
 @DataClassName('GroupMemberRow')
 class GroupMembers extends Table {
   IntColumn get groupId => integer().references(
-        QualifyingGroups,
-        #id,
-        onDelete: KeyAction.cascade,
-      )();
+    QualifyingGroups,
+    #id,
+    onDelete: KeyAction.cascade,
+  )();
   IntColumn get nationId => integer()();
 
   @override
@@ -516,8 +523,8 @@ class Messages extends Table {
 
   @override
   List<Set<Column>> get uniqueKeys => [
-        {careerId, dedupKey},
-      ];
+    {careerId, dedupKey},
+  ];
 }
 
 /// Which nation the manager was in charge of during each cycle — the record of

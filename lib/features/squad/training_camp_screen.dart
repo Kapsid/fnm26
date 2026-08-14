@@ -91,10 +91,12 @@ class TrainingCampScreen extends ConsumerWidget {
                     camp: option.camp,
                     // The country is part of the choice when the tournament is
                     // shared, so every card wears its flag.
-                    countryCode:
-                        plan.hostNames.length > 1 ? option.hostCode : null,
-                    countryName:
-                        plan.hostNames.length > 1 ? option.hostName : null,
+                    countryCode: plan.hostNames.length > 1
+                        ? option.hostCode
+                        : null,
+                    countryName: plan.hostNames.length > 1
+                        ? option.hostName
+                        : null,
                     selected: plan.isChosen(option),
                     onTap: () async {
                       await ref

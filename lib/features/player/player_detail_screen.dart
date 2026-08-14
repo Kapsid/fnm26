@@ -569,11 +569,14 @@ class _ClubHistoryCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l = AppLocalizations.of(context);
-    final spells = ref
-            .watch(clubHistoryProvider((
-              careerId: careerId,
-              playerId: playerId,
-            )))
+    final spells =
+        ref
+            .watch(
+              clubHistoryProvider((
+                careerId: careerId,
+                playerId: playerId,
+              )),
+            )
             .valueOrNull ??
         const <ClubSpell>[];
     // One spell is just the club already shown at the top of the card.
@@ -634,7 +637,6 @@ class _ClubHistoryCard extends ConsumerWidget {
   }
 }
 
-
 /// What he has won.
 ///
 /// A player who has won nothing shows nothing at all — an empty cabinet is a
@@ -648,11 +650,14 @@ class _TrophyCabinet extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l = AppLocalizations.of(context);
-    final awards = ref
-            .watch(playerAwardsProvider((
-              careerId: careerId,
-              playerId: playerId,
-            )))
+    final awards =
+        ref
+            .watch(
+              playerAwardsProvider((
+                careerId: careerId,
+                playerId: playerId,
+              )),
+            )
             .valueOrNull ??
         const <PlayerAward>[];
     if (awards.isEmpty) return const SizedBox.shrink();
@@ -709,24 +714,24 @@ class _TrophyCabinet extends ConsumerWidget {
   }
 
   IconData _glyph(AwardKind kind) => switch (kind) {
-        AwardKind.goldenBall => Icons.emoji_events_rounded,
-        AwardKind.goldenBoot => Icons.sports_soccer_rounded,
-        AwardKind.goldenGlove => Icons.back_hand_outlined,
-        AwardKind.teamOfTournament => Icons.groups_rounded,
-        AwardKind.playerOfYear => Icons.workspace_premium_rounded,
-        AwardKind.youngPlayerOfYear => Icons.auto_awesome_rounded,
-      };
+    AwardKind.goldenBall => Icons.emoji_events_rounded,
+    AwardKind.goldenBoot => Icons.sports_soccer_rounded,
+    AwardKind.goldenGlove => Icons.back_hand_outlined,
+    AwardKind.teamOfTournament => Icons.groups_rounded,
+    AwardKind.playerOfYear => Icons.workspace_premium_rounded,
+    AwardKind.youngPlayerOfYear => Icons.auto_awesome_rounded,
+  };
 }
 
 /// What an award is called.
 String awardName(AppLocalizations l, AwardKind kind) => switch (kind) {
-      AwardKind.goldenBall => l.awardGoldenBall,
-      AwardKind.goldenBoot => l.awardGoldenBoot,
-      AwardKind.goldenGlove => l.awardGoldenGlove,
-      AwardKind.teamOfTournament => l.awardTeamOfTournament,
-      AwardKind.playerOfYear => l.awardPlayerOfYear,
-      AwardKind.youngPlayerOfYear => l.awardYoungPlayerOfYear,
-    };
+  AwardKind.goldenBall => l.awardGoldenBall,
+  AwardKind.goldenBoot => l.awardGoldenBoot,
+  AwardKind.goldenGlove => l.awardGoldenGlove,
+  AwardKind.teamOfTournament => l.awardTeamOfTournament,
+  AwardKind.playerOfYear => l.awardPlayerOfYear,
+  AwardKind.youngPlayerOfYear => l.awardYoungPlayerOfYear,
+};
 
 class _HistoryRow extends StatelessWidget {
   const _HistoryRow({

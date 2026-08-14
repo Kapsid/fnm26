@@ -40,8 +40,7 @@ class CareerSummaryScreen extends ConsumerWidget {
       ),
       body: async.when(
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) =>
-            Center(child: Text(l.careerCouldNotLoadCareer('$e'))),
+        error: (e, _) => Center(child: Text(l.careerCouldNotLoadCareer('$e'))),
         data: (s) {
           if (s == null) return Center(child: Text(l.careerNoCareer));
           return ListView(
@@ -154,11 +153,17 @@ class _RecordCard extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           _stat(l.careerStatPlayedShort, '${s.played}'),
-          _stat(l.careerStatWonShort, '${s.won}',
-              color: const Color(0xFF3FA34D)),
+          _stat(
+            l.careerStatWonShort,
+            '${s.won}',
+            color: const Color(0xFF3FA34D),
+          ),
           _stat(l.careerStatDrawnShort, '${s.drawn}'),
-          _stat(l.careerStatLostShort, '${s.lost}',
-              color: const Color(0xFFD64545)),
+          _stat(
+            l.careerStatLostShort,
+            '${s.lost}',
+            color: const Color(0xFFD64545),
+          ),
           _stat(l.careerStatGoalsForShort, '${s.goalsFor}'),
           _stat(l.careerStatGoalsAgainstShort, '${s.goalsAgainst}'),
           _stat(l.careerStatGoalDiffShort, '${gd >= 0 ? '+' : ''}$gd'),
@@ -168,22 +173,22 @@ class _RecordCard extends StatelessWidget {
   }
 
   Widget _stat(String label, String value, {Color? color}) => Column(
-        children: [
-          Text(
-            value,
-            style: AppTypography.titleMedium.copyWith(
-              color: color ?? AppColors.onSurface,
-            ),
-          ),
-          const SizedBox(height: 2),
-          Text(
-            label,
-            style: AppTypography.labelSmall.copyWith(
-              color: AppColors.onSurfaceVariant,
-            ),
-          ),
-        ],
-      );
+    children: [
+      Text(
+        value,
+        style: AppTypography.titleMedium.copyWith(
+          color: color ?? AppColors.onSurface,
+        ),
+      ),
+      const SizedBox(height: 2),
+      Text(
+        label,
+        style: AppTypography.labelSmall.copyWith(
+          color: AppColors.onSurfaceVariant,
+        ),
+      ),
+    ],
+  );
 }
 
 /// The deeper career numbers beyond the W/D/L line — streaks, clean sheets,
@@ -237,8 +242,9 @@ class _CareerStatsSection extends ConsumerWidget {
                         children: [
                           Text(
                             t.$2,
-                            style: AppTypography.titleMedium
-                                .copyWith(color: AppColors.primary),
+                            style: AppTypography.titleMedium.copyWith(
+                              color: AppColors.primary,
+                            ),
                           ),
                           Text(
                             t.$1,
@@ -286,9 +292,7 @@ class _TitlesList extends StatelessWidget {
   Widget _titleRow(TrophyTitle t) {
     // "2038 (Brazil) · 2030 (Argentina)" — each win with its nation, since a
     // manager can lift the same trophy with different countries.
-    final wins = t.wins
-        .map((w) => '${w.year} (${w.nationName})')
-        .join('  ·  ');
+    final wins = t.wins.map((w) => '${w.year} (${w.nationName})').join('  ·  ');
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -379,21 +383,21 @@ class _TrophyCabinet extends StatelessWidget {
   }
 
   Widget _medal(Color color, int count, String label) => Column(
-        children: [
-          Icon(Icons.emoji_events, color: color, size: 30),
-          const SizedBox(height: 4),
-          Text(
-            '$count',
-            style: AppTypography.headlineMedium.copyWith(color: color),
-          ),
-          Text(
-            label,
-            style: AppTypography.labelSmall.copyWith(
-              color: AppColors.onSurfaceVariant,
-            ),
-          ),
-        ],
-      );
+    children: [
+      Icon(Icons.emoji_events, color: color, size: 30),
+      const SizedBox(height: 4),
+      Text(
+        '$count',
+        style: AppTypography.headlineMedium.copyWith(color: color),
+      ),
+      Text(
+        label,
+        style: AppTypography.labelSmall.copyWith(
+          color: AppColors.onSurfaceVariant,
+        ),
+      ),
+    ],
+  );
 }
 
 class _RunRow extends StatelessWidget {
@@ -423,9 +427,10 @@ class _RunRow extends StatelessWidget {
               run.medal > 0
                   ? Icons.emoji_events
                   : run.qualified
-                      ? Icons.sports_soccer
-                      : Icons.block,
-              color: medalColor ??
+                  ? Icons.sports_soccer
+                  : Icons.block,
+              color:
+                  medalColor ??
                   (run.qualified
                       ? AppColors.onSurfaceVariant
                       : AppColors.outlineVariant),

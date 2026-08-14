@@ -50,7 +50,8 @@ class NationVitrineScreen extends ConsumerWidget {
       ),
       body: async.when(
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => Center(child: Text(l.nationsCouldNotLoad(e.toString()))),
+        error: (e, _) =>
+            Center(child: Text(l.nationsCouldNotLoad(e.toString()))),
         data: (v) {
           if (v == null) return Center(child: Text(l.nationsNoNation));
           return ListView(

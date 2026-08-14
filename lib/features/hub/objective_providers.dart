@@ -75,34 +75,34 @@ typedef ObjectiveOutcome = ({
 /// reads off its own scale (see [_nationsCupDemandText]).
 String objectiveDemandText(TournamentTier tier, int target) =>
     tier == TournamentTier.nationsCup
-        ? _nationsCupDemandText(target)
-        : switch (target) {
-            7 => 'win it',
-            6 => 'reach the final',
-            5 => 'reach the semi-finals',
-            4 => 'reach the quarter-finals',
-            3 => 'reach the knockout stage',
-            2 => 'qualify',
-            // Below "qualify": the weakest sides in the world are not asked to
-            // reach a tournament they have never been near. They are asked to
-            // compete — to come out of their qualifying group off the bottom.
-            _ => 'avoid finishing bottom of your qualifying group',
-          };
+    ? _nationsCupDemandText(target)
+    : switch (target) {
+        7 => 'win it',
+        6 => 'reach the final',
+        5 => 'reach the semi-finals',
+        4 => 'reach the quarter-finals',
+        3 => 'reach the knockout stage',
+        2 => 'qualify',
+        // Below "qualify": the weakest sides in the world are not asked to
+        // reach a tournament they have never been near. They are asked to
+        // compete — to come out of their qualifying group off the bottom.
+        _ => 'avoid finishing bottom of your qualifying group',
+      };
 
 /// A finish ordinal, in plain English.
 String objectiveFinishText(TournamentTier tier, int ordinal) =>
     tier == TournamentTier.nationsCup
-        ? _nationsCupFinishText(ordinal)
-        : switch (ordinal) {
-            7 => 'champions',
-            6 => 'runners-up',
-            5 => 'the semi-finals',
-            4 => 'the quarter-finals',
-            3 => 'the round of 16',
-            2 => 'the group stage',
-            1 => 'short of qualification',
-            _ => 'bottom of your qualifying group',
-          };
+    ? _nationsCupFinishText(ordinal)
+    : switch (ordinal) {
+        7 => 'champions',
+        6 => 'runners-up',
+        5 => 'the semi-finals',
+        4 => 'the quarter-finals',
+        3 => 'the round of 16',
+        2 => 'the group stage',
+        1 => 'short of qualification',
+        _ => 'bottom of your qualifying group',
+      };
 
 String _nationsCupDemandText(int target) => switch (target) {
   7 => 'win the Nations Cup',
@@ -131,8 +131,7 @@ String _nationsCupFinishText(int ordinal) => switch (ordinal) {
 /// expectation for only one of them: the manager could win their continent and
 /// still be judged solely on the World Cup two years later.
 final AutoDisposeFutureProviderFamily<List<ObjectiveOutcome>, int>
-cycleObjectiveOutcomesProvider =
-    FutureProvider.autoDispose.family<List<ObjectiveOutcome>, int>((
+cycleObjectiveOutcomesProvider = FutureProvider.autoDispose.family<List<ObjectiveOutcome>, int>((
   ref,
   careerId,
 ) async {
@@ -314,33 +313,33 @@ const _nationsCupName = 'Nations Cup';
 
 /// Every board objective for the current cycle, worded for the screen.
 final AutoDisposeFutureProviderFamily<List<CycleObjective>, int>
-cycleObjectivesProvider =
-    FutureProvider.autoDispose.family<List<CycleObjective>, int>((
-  ref,
-  careerId,
-) async {
-  final outcomes = await ref.watch(
-    cycleObjectiveOutcomesProvider(careerId).future,
-  );
-  final l = ref.watch(appLocalizationsProvider);
-  return [
-    for (final o in outcomes)
-      (
-        tier: o.tier,
-        competition: switch (o.competition) {
-          _worldCupName => l.objectiveWorldCup,
-          _nationsCupName => l.careerNationsCupLabel,
-          final name => name,
-        },
-        label: _labelFor(l, o.tier, o.target),
-        target: o.target,
-        decided: o.decided,
-        met: o.met,
-        actual: o.actual,
-        resultLabel: _resultLabel(l, o.tier, o.actual),
-      ),
-  ];
-});
+cycleObjectivesProvider = FutureProvider.autoDispose
+    .family<List<CycleObjective>, int>((
+      ref,
+      careerId,
+    ) async {
+      final outcomes = await ref.watch(
+        cycleObjectiveOutcomesProvider(careerId).future,
+      );
+      final l = ref.watch(appLocalizationsProvider);
+      return [
+        for (final o in outcomes)
+          (
+            tier: o.tier,
+            competition: switch (o.competition) {
+              _worldCupName => l.objectiveWorldCup,
+              _nationsCupName => l.careerNationsCupLabel,
+              final name => name,
+            },
+            label: _labelFor(l, o.tier, o.target),
+            target: o.target,
+            decided: o.decided,
+            met: o.met,
+            actual: o.actual,
+            resultLabel: _resultLabel(l, o.tier, o.actual),
+          ),
+      ];
+    });
 
 /// The objective the hub leads with: the next one still to be settled, or the
 /// World Cup once both are done.
@@ -455,7 +454,8 @@ int _rankWithin(
   // demand.
   final peers = <({int id, int rank})>[
     for (final n in nations)
-      if (n.confederation == conf) (id: n.id, rank: baseline[n.id] ?? n.ranking),
+      if (n.confederation == conf)
+        (id: n.id, rank: baseline[n.id] ?? n.ranking),
   ]..sort((a, b) => a.rank.compareTo(b.rank));
   final idx = peers.indexWhere((p) => p.id == nationId);
   return idx < 0 ? peers.length + 1 : idx + 1;
@@ -510,11 +510,10 @@ int _nationsCupTarget({
   final rankOf = {
     for (final n in nations) n.id: baseline[n.id] ?? n.ranking,
   };
-  final peers =
-      [
-        for (final e in tiers.entries)
-          if (e.value == tier && confOf[e.key] == confederation) e.key,
-      ]..sort((a, b) => (rankOf[a] ?? 9999).compareTo(rankOf[b] ?? 9999));
+  final peers = [
+    for (final e in tiers.entries)
+      if (e.value == tier && confOf[e.key] == confederation) e.key,
+  ]..sort((a, b) => (rankOf[a] ?? 9999).compareTo(rankOf[b] ?? 9999));
   final idx = peers.indexOf(nationId);
   // No ladder recorded for this side: ask for the middle of the road.
   if (idx < 0 || peers.isEmpty) return 3;

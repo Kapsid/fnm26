@@ -246,7 +246,8 @@ class CareerService {
         final draw = WorldCupFinals.drawGroups(
           qualifierIds: seeded.take(cont.size).map((n) => n.id).toList(),
           rankingById: {for (final n in nations) n.id: rankOf(n)},
-          rngSeed: rngSeed ^ (cycle * 0x71) ^ 0xC0FF ^ (confederation.index * 7),
+          rngSeed:
+              rngSeed ^ (cycle * 0x71) ^ 0xC0FF ^ (confederation.index * 7),
           perGroup: cont.groupSize,
         );
         await comp.saveTournamentGroups(
@@ -301,11 +302,14 @@ class CareerService {
         );
         final letter = NationsCup.leagueLetter(tier);
         for (var i = 0; i < gen.groups.length; i++) {
-          allGroups.add(GeneratedGroup(
-            name: '$letter${i + 1}', // 'A1'..'A4', 'B1'..'B4', … encodes league
-            nationIds: gen.groups[i].nationIds,
-            fixtures: gen.groups[i].fixtures,
-          ));
+          allGroups.add(
+            GeneratedGroup(
+              name:
+                  '$letter${i + 1}', // 'A1'..'A4', 'B1'..'B4', … encodes league
+              nationIds: gen.groups[i].nationIds,
+              fixtures: gen.groups[i].fixtures,
+            ),
+          );
         }
       }
       if (allGroups.isNotEmpty) {
@@ -377,8 +381,9 @@ class CareerService {
       seed: rngSeed,
     );
     for (final entry in byConfederation.entries) {
-      final quals =
-          entry.value.where((n) => !wcHostIds.contains(n.id)).toList();
+      final quals = entry.value
+          .where((n) => !wcHostIds.contains(n.id))
+          .toList();
       if (quals.length < 2) continue;
       final schedule = const ScheduleGenerator().generate(
         confederation: entry.key,
@@ -425,7 +430,8 @@ class CareerService {
       // Continental cups share the bronze between both beaten semi-finalists
       // (no third-place match), so those editions carry two bronzes here; all
       // others fall back to the single third-place team on the edition itself.
-      final shared = RealHistory.continentalBronzes['${e.competition}|${e.year}'];
+      final shared =
+          RealHistory.continentalBronzes['${e.competition}|${e.year}'];
       await compRepo.recordHonour(
         careerId: career.id,
         year: e.year,

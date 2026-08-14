@@ -309,8 +309,7 @@ class TacticsScreen extends ConsumerWidget {
                                         playstyleBlurb(l, tactic.playstyle),
                                         style: AppTypography.labelSmall
                                             .copyWith(
-                                              color:
-                                                  AppColors.onSurfaceVariant,
+                                              color: AppColors.onSurfaceVariant,
                                             ),
                                       ),
                                     ],

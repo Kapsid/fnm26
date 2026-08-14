@@ -123,10 +123,10 @@ class _StyleGalleryScreenState extends State<StyleGalleryScreen> {
   }
 
   Widget _section(String title) => Padding(
-        padding: const EdgeInsets.only(
-          top: AppSpacing.lg,
-          bottom: AppSpacing.sm,
-        ),
-        child: Text(title, style: AppTypography.labelMedium),
-      );
+    padding: const EdgeInsets.only(
+      top: AppSpacing.lg,
+      bottom: AppSpacing.sm,
+    ),
+    child: Text(title, style: AppTypography.labelMedium),
+  );
 }

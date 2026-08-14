@@ -14,8 +14,7 @@ const _finalsRounds = {
 /// of their nations played (a career can span several after job switches). The
 /// heavy lifting is the pure [CareerStats.compute]; this just gathers the rows.
 final AutoDisposeFutureProviderFamily<CareerStatsSnapshot, int>
-    careerStatsProvider =
-    FutureProvider.autoDispose.family<CareerStatsSnapshot, int>((
+careerStatsProvider = FutureProvider.autoDispose.family<CareerStatsSnapshot, int>((
   ref,
   careerId,
 ) async {
@@ -45,7 +44,8 @@ final AutoDisposeFutureProviderFamily<CareerStatsSnapshot, int>
     final my = iAmHome ? f.homeScore! : f.awayScore!;
     final opp = iAmHome ? f.awayScore! : f.homeScore!;
     final neutral = _finalsRounds.contains(f.round);
-    final wonShootout = f.wentToShootout &&
+    final wonShootout =
+        f.wentToShootout &&
         (iAmHome
             ? f.homePenalties! > f.awayPenalties!
             : f.awayPenalties! > f.homePenalties!);

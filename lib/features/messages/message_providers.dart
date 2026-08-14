@@ -512,10 +512,12 @@ class MessageService {
       final playerRepo = _ref.read(playerRepositoryProvider);
       // The same development inputs the rest of the app derives players with,
       // so the intake reported here is the intake the Youth screen shows.
-      final academyBonus =
-          await _ref.read(youthBonusByCycleProvider(careerId).future);
-      final careerDev =
-          await _ref.read(careerDevBonusProvider(careerId).future);
+      final academyBonus = await _ref.read(
+        youthBonusByCycleProvider(careerId).future,
+      );
+      final careerDev = await _ref.read(
+        careerDevBonusProvider(careerId).future,
+      );
       final needed = <int>{
         for (final y in missingYears) ...[y, y - 1],
       };
@@ -619,10 +621,11 @@ class MessageService {
           // finding out when the morale lift quietly stops.
           final wasCaptain = career.captainPlayerId == p.id;
           if (wasCaptain) {
-            await _ref.read(careerRepositoryProvider).setCaptain(careerId, null);
+            await _ref
+                .read(careerRepositoryProvider)
+                .setCaptain(careerId, null);
           }
-          if ((notable || wasCaptain) &&
-              !existing.contains('retire:${p.id}')) {
+          if ((notable || wasCaptain) && !existing.contains('retire:${p.id}')) {
             final tally = [
               if (pc > 0) '$pc caps',
               if (pg > 0) '$pg goals',
@@ -638,7 +641,7 @@ class MessageService {
                 '${p.name} has retired from international football at '
                     '${p.age}$sendoff.'
                     '${wasCaptain ? ' The armband is vacant — name a new '
-                        'captain from the call-up screen.' : ''}',
+                              'captain from the call-up screen.' : ''}',
                 reportYear,
                 4,
               ),

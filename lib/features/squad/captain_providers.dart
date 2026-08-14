@@ -13,23 +13,23 @@ import 'package:fnm/features/tactics/tactics_providers.dart';
 /// there. The stored id is the manager's INTENT; this is the fact.
 final AutoDisposeFutureProviderFamily<Player?, int> captainProvider =
     FutureProvider.autoDispose.family<Player?, int>((ref, careerId) async {
-  final career = await ref.watch(careerRepositoryProvider).byId(careerId);
-  final id = career?.captainPlayerId;
-  if (career == null || id == null) return null;
-  final squad = await ref.watch(squadDataProvider(careerId).future);
-  if (squad == null) return null;
-  if (!squad.callUps.contains(id)) return null;
-  return squad.pool.where((p) => p.id == id).firstOrNull;
-});
+      final career = await ref.watch(careerRepositoryProvider).byId(careerId);
+      final id = career?.captainPlayerId;
+      if (career == null || id == null) return null;
+      final squad = await ref.watch(squadDataProvider(careerId).future);
+      if (squad == null) return null;
+      if (!squad.callUps.contains(id)) return null;
+      return squad.pool.where((p) => p.id == id).firstOrNull;
+    });
 
 /// The morale the current captain is worth (0 when there is none).
 final AutoDisposeFutureProviderFamily<int, int> captainMoraleProvider =
     FutureProvider.autoDispose.family<int, int>((ref, careerId) async {
-  final captain = await ref.watch(captainProvider(careerId).future);
-  if (captain == null) return 0;
-  final career = await ref.watch(careerRepositoryProvider).byId(careerId);
-  return Captaincy.moraleBonus(captain, saveSeed: career?.rngSeed ?? 0);
-});
+      final captain = await ref.watch(captainProvider(careerId).future);
+      if (captain == null) return 0;
+      final career = await ref.watch(careerRepositoryProvider).byId(careerId);
+      return Captaincy.moraleBonus(captain, saveSeed: career?.rngSeed ?? 0);
+    });
 
 /// Names [playerId] captain (null clears the armband).
 ///

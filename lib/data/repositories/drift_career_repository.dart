@@ -18,7 +18,9 @@ class DriftCareerRepository implements CareerRepository {
     required int rngSeed,
     required DateTime startDate,
   }) async {
-    final id = await _db.into(_db.careers).insert(
+    final id = await _db
+        .into(_db.careers)
+        .insert(
           CareersCompanion.insert(
             managerName: managerName,
             nationId: nationId,
@@ -30,8 +32,9 @@ class DriftCareerRepository implements CareerRepository {
             lastPlayedAt: Value(DateTime.now()),
           ),
         );
-    final row = await (_db.select(_db.careers)..where((t) => t.id.equals(id)))
-        .getSingle();
+    final row = await (_db.select(
+      _db.careers,
+    )..where((t) => t.id.equals(id))).getSingle();
     return row.toDomain();
   }
 
@@ -42,7 +45,8 @@ class DriftCareerRepository implements CareerRepository {
     // bottom and are then ordered among themselves by creation date.
     final query = _db.select(_db.careers)
       ..orderBy([
-        (t) => OrderingTerm(expression: t.lastPlayedAt, mode: OrderingMode.desc),
+        (t) =>
+            OrderingTerm(expression: t.lastPlayedAt, mode: OrderingMode.desc),
         (t) => OrderingTerm(expression: t.createdAt, mode: OrderingMode.desc),
       ]);
     final rows = await query.get();
@@ -51,8 +55,9 @@ class DriftCareerRepository implements CareerRepository {
 
   @override
   Future<void> touch(int id, DateTime at) async {
-    await (_db.update(_db.careers)..where((t) => t.id.equals(id)))
-        .write(CareersCompanion(lastPlayedAt: Value(at)));
+    await (_db.update(_db.careers)..where((t) => t.id.equals(id))).write(
+      CareersCompanion(lastPlayedAt: Value(at)),
+    );
   }
 
   @override
@@ -64,8 +69,9 @@ class DriftCareerRepository implements CareerRepository {
 
   @override
   Future<void> updateInGameDate(int id, DateTime date) async {
-    await (_db.update(_db.careers)..where((t) => t.id.equals(id)))
-        .write(CareersCompanion(inGameDate: Value(date)));
+    await (_db.update(_db.careers)..where((t) => t.id.equals(id))).write(
+      CareersCompanion(inGameDate: Value(date)),
+    );
   }
 
   @override
@@ -80,21 +86,22 @@ class DriftCareerRepository implements CareerRepository {
 
   @override
   Future<void> switchNation(int id, int nationId) async {
-    await (_db.update(_db.careers)..where((t) => t.id.equals(id)))
-        .write(
-          // The armband does not travel: a captain named at the old nation is
-          // not even eligible for the new one, and leaving the id behind would
-          // point the captaincy at a player in somebody else's squad.
-          CareersCompanion(
-            nationId: Value(nationId),
-            captainPlayerId: const Value(null),
-          ),
-        );
+    await (_db.update(_db.careers)..where((t) => t.id.equals(id))).write(
+      // The armband does not travel: a captain named at the old nation is
+      // not even eligible for the new one, and leaving the id behind would
+      // point the captaincy at a player in somebody else's squad.
+      CareersCompanion(
+        nationId: Value(nationId),
+        captainPlayerId: const Value(null),
+      ),
+    );
   }
 
   @override
   Future<void> recordStint(int careerId, int cycle, int nationId) async {
-    await _db.into(_db.careerStints).insertOnConflictUpdate(
+    await _db
+        .into(_db.careerStints)
+        .insertOnConflictUpdate(
           CareerStintRow(
             careerId: careerId,
             cycle: cycle,
@@ -105,29 +112,40 @@ class DriftCareerRepository implements CareerRepository {
 
   @override
   Future<Map<int, int>> stints(int careerId) async {
-    final rows = await (_db.select(_db.careerStints)
-          ..where((t) => t.careerId.equals(careerId)))
-        .get();
+    final rows = await (_db.select(
+      _db.careerStints,
+    )..where((t) => t.careerId.equals(careerId))).get();
     return {for (final r in rows) r.cycle: r.nationId};
   }
 
   @override
   Future<void> setBudget(int id, int budget) async {
-    await (_db.update(_db.careers)..where((t) => t.id.equals(id)))
-        .write(CareersCompanion(budget: Value(budget)));
+    await (_db.update(_db.careers)..where((t) => t.id.equals(id))).write(
+      CareersCompanion(budget: Value(budget)),
+    );
   }
 
   @override
   Future<void> setCaptain(int id, int? playerId) async {
-    await (_db.update(_db.careers)..where((t) => t.id.equals(id)))
-        .write(CareersCompanion(captainPlayerId: Value(playerId)));
+    await (_db.update(_db.careers)..where((t) => t.id.equals(id))).write(
+      CareersCompanion(captainPlayerId: Value(playerId)),
+    );
+  }
+
+  @override
+  Future<void> setYReadAt(int id, DateTime date) async {
+    await (_db.update(_db.careers)..where((t) => t.id.equals(id))).write(
+      CareersCompanion(yReadAt: Value(date)),
+    );
   }
 
   @override
   Future<FederationInvestment> investment(int careerId, int cycle) async {
-    final row = await (_db.select(_db.federationInvestments)
-          ..where((t) => t.careerId.equals(careerId) & t.cycle.equals(cycle)))
-        .getSingleOrNull();
+    final row =
+        await (_db.select(_db.federationInvestments)..where(
+              (t) => t.careerId.equals(careerId) & t.cycle.equals(cycle),
+            ))
+            .getSingleOrNull();
     return row == null
         ? (
             youth: 0,
@@ -147,9 +165,9 @@ class DriftCareerRepository implements CareerRepository {
 
   @override
   Future<Map<int, FederationInvestment>> investments(int careerId) async {
-    final rows = await (_db.select(_db.federationInvestments)
-          ..where((t) => t.careerId.equals(careerId)))
-        .get();
+    final rows = await (_db.select(
+      _db.federationInvestments,
+    )..where((t) => t.careerId.equals(careerId))).get();
     return {
       for (final r in rows)
         r.cycle: (
@@ -168,7 +186,9 @@ class DriftCareerRepository implements CareerRepository {
     int cycle,
     FederationInvestment i,
   ) async {
-    await _db.into(_db.federationInvestments).insertOnConflictUpdate(
+    await _db
+        .into(_db.federationInvestments)
+        .insertOnConflictUpdate(
           FederationInvestmentRow(
             careerId: careerId,
             cycle: cycle,
@@ -188,7 +208,9 @@ class DriftCareerRepository implements CareerRepository {
     required int sourceNationId,
     required int cycle,
   }) async {
-    await _db.into(_db.naturalizedPlayers).insertOnConflictUpdate(
+    await _db
+        .into(_db.naturalizedPlayers)
+        .insertOnConflictUpdate(
           NaturalizedPlayerRow(
             careerId: careerId,
             playerId: playerId,
@@ -201,12 +223,13 @@ class DriftCareerRepository implements CareerRepository {
 
   @override
   Future<NaturalizationLink?> pendingNaturalization(int careerId) async {
-    final row = await (_db.select(_db.naturalizedPlayers)
-          ..where(
-            (t) => t.careerId.equals(careerId) & t.status.equals('pending'),
-          )
-          ..limit(1))
-        .getSingleOrNull();
+    final row =
+        await (_db.select(_db.naturalizedPlayers)
+              ..where(
+                (t) => t.careerId.equals(careerId) & t.status.equals('pending'),
+              )
+              ..limit(1))
+            .getSingleOrNull();
     return row == null
         ? null
         : (
@@ -222,10 +245,9 @@ class DriftCareerRepository implements CareerRepository {
     int playerId,
     String status,
   ) async {
-    await (_db.update(_db.naturalizedPlayers)
-          ..where(
-            (t) => t.careerId.equals(careerId) & t.playerId.equals(playerId),
-          ))
+    await (_db.update(_db.naturalizedPlayers)..where(
+          (t) => t.careerId.equals(careerId) & t.playerId.equals(playerId),
+        ))
         .write(NaturalizedPlayersCompanion(status: Value(status)));
   }
 
@@ -233,11 +255,11 @@ class DriftCareerRepository implements CareerRepository {
   Future<List<NaturalizationLink>> acceptedNaturalizations(
     int careerId,
   ) async {
-    final rows = await (_db.select(_db.naturalizedPlayers)
-          ..where(
-            (t) => t.careerId.equals(careerId) & t.status.equals('accepted'),
-          ))
-        .get();
+    final rows =
+        await (_db.select(_db.naturalizedPlayers)..where(
+              (t) => t.careerId.equals(careerId) & t.status.equals('accepted'),
+            ))
+            .get();
     return [
       for (final r in rows)
         (
@@ -250,9 +272,9 @@ class DriftCareerRepository implements CareerRepository {
 
   @override
   Future<Map<int, int>> nationsCupTiers(int careerId) async {
-    final rows = await (_db.select(_db.nationsCupTiers)
-          ..where((t) => t.careerId.equals(careerId)))
-        .get();
+    final rows = await (_db.select(
+      _db.nationsCupTiers,
+    )..where((t) => t.careerId.equals(careerId))).get();
     return {for (final r in rows) r.nationId: r.tier};
   }
 
@@ -328,18 +350,17 @@ class DriftCareerRepository implements CareerRepository {
     int cycle,
     String tournament,
   ) async {
-    final row = await (_db.select(_db.trainingCampChoices)
-          ..where(
-            (t) =>
-                t.careerId.equals(careerId) &
-                t.cycle.equals(cycle) &
-                t.tournament.equals(tournament),
-          )
-          ..limit(1))
-        .getSingleOrNull();
-    return row == null
-        ? null
-        : (hostId: row.hostId, campIndex: row.campIndex);
+    final row =
+        await (_db.select(_db.trainingCampChoices)
+              ..where(
+                (t) =>
+                    t.careerId.equals(careerId) &
+                    t.cycle.equals(cycle) &
+                    t.tournament.equals(tournament),
+              )
+              ..limit(1))
+            .getSingleOrNull();
+    return row == null ? null : (hostId: row.hostId, campIndex: row.campIndex);
   }
 
   @override
@@ -350,7 +371,9 @@ class DriftCareerRepository implements CareerRepository {
     required int hostId,
     required int campIndex,
   }) async {
-    await _db.into(_db.trainingCampChoices).insertOnConflictUpdate(
+    await _db
+        .into(_db.trainingCampChoices)
+        .insertOnConflictUpdate(
           TrainingCampChoicesCompanion.insert(
             careerId: careerId,
             cycle: cycle,

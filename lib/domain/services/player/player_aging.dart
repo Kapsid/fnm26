@@ -16,12 +16,14 @@ abstract final class PlayerAging {
   /// rather than jumping four years at a time.
   static Player agedYears(Player p, int years) {
     final grown = years <= 0 ? p.age : p.age + years;
-    final attrs = years <= 0
-        ? p.attributes
-        : _age(p.attributes, p.age, grown);
+    final attrs = years <= 0 ? p.attributes : _age(p.attributes, p.age, grown);
     return p.copyWith(
       age: grown,
-      attributes: _superstarLift(_youthDiscount(attrs, grown, p.id), grown, p.id),
+      attributes: _superstarLift(
+        _youthDiscount(attrs, grown, p.id),
+        grown,
+        p.id,
+      ),
     );
   }
 
@@ -48,9 +50,10 @@ abstract final class PlayerAging {
     final level = PlayerLifecycle.superstarLevel(playerId, age);
     int up(int v) => v >= level
         ? v
-        : (v + (level - v) * superstarBlend)
-            .round()
-            .clamp(20, PlayerLifecycle.superstarCeiling);
+        : (v + (level - v) * superstarBlend).round().clamp(
+            20,
+            PlayerLifecycle.superstarCeiling,
+          );
     return a.copyWith(
       physical: up(a.physical),
       technical: up(a.technical),

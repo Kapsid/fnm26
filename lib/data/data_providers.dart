@@ -41,8 +41,9 @@ final appDatabaseProvider = Provider<AppDatabase>((ref) {
 });
 
 /// Source of first-run seed data (bundled JSON assets).
-final seedSourceProvider =
-    Provider<SeedSource>((ref) => AssetSeedSource(rootBundle));
+final seedSourceProvider = Provider<SeedSource>(
+  (ref) => AssetSeedSource(rootBundle),
+);
 
 /// Seeds reference data on first run.
 final seedLoaderProvider = Provider<SeedLoader>(
@@ -83,8 +84,8 @@ final tacticsRepositoryProvider = Provider<TacticsRepository>(
 
 final tacticFamiliarityRepositoryProvider =
     Provider<TacticFamiliarityRepository>(
-  (ref) => DriftTacticFamiliarityRepository(ref.watch(appDatabaseProvider)),
-);
+      (ref) => DriftTacticFamiliarityRepository(ref.watch(appDatabaseProvider)),
+    );
 
 final squadRepositoryProvider = Provider<SquadRepository>(
   (ref) => DriftSquadRepository(ref.watch(appDatabaseProvider)),
