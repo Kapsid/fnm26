@@ -3385,6 +3385,121 @@ class AppLocalizationsEn extends AppLocalizations {
   String get grievanceDismiss => 'I pick the team';
 
   @override
+  String yScorerStar0(String name, String goals) {
+    return '$name got $goals of them. Nobody else is close.';
+  }
+
+  @override
+  String yScorerStar1(String name, String goals) {
+    return '$goals for $name. He is carrying this side.';
+  }
+
+  @override
+  String yScorerStar2(String name, String goals) {
+    return '$name: $goals on the day. Some player.';
+  }
+
+  @override
+  String yScorerStar3(String name, String goals) {
+    return 'Put $goals past them, did $name. Take a bow.';
+  }
+
+  @override
+  String yWinStreak0(String count) {
+    return '$count on the bounce. Whatever is being said in that dressing room, it is landing.';
+  }
+
+  @override
+  String yWinStreak1(String count) {
+    return 'That is $count straight. Sides do not stumble into runs like this.';
+  }
+
+  @override
+  String yWinStreak2(String count) {
+    return '$count in a row and counting. The confidence is visible from the stands.';
+  }
+
+  @override
+  String yWinStreak3(String count) {
+    return 'No defeats in $count. Ask anyone who has managed — that is the hard part.';
+  }
+
+  @override
+  String yLossStreak0(String count) {
+    return '$count without a win now. At some point the excuses run out.';
+  }
+
+  @override
+  String yLossStreak1(String count) {
+    return 'That is $count in a row gone. This is not a blip any more.';
+  }
+
+  @override
+  String yLossStreak2(String count) {
+    return '$count straight defeats. Somebody has to answer for it.';
+  }
+
+  @override
+  String yLossStreak3(String count) {
+    return 'No wins in $count. You can see it in how they play.';
+  }
+
+  @override
+  String yRivalry0(String opponent, String score) {
+    return '$opponent $score. Say what you like about the football — this one counts double.';
+  }
+
+  @override
+  String yRivalry1(String opponent, String score) {
+    return 'Against $opponent, of all of them. $score. Nobody here will forget it.';
+  }
+
+  @override
+  String yRivalry2(String opponent, String score) {
+    return '$score against $opponent. That is the one they will talk about in the pubs.';
+  }
+
+  @override
+  String yRivalry3(String opponent, String score) {
+    return 'Neighbours, $score. Bragging rights settled for a while.';
+  }
+
+  @override
+  String yInjuryBlow0(String name) {
+    return '$name off injured. That is the last thing this side needed.';
+  }
+
+  @override
+  String yInjuryBlow1(String name) {
+    return 'Losing $name changes the shape of everything.';
+  }
+
+  @override
+  String yInjuryBlow2(String name) {
+    return '$name limping. Hold your breath.';
+  }
+
+  @override
+  String yInjuryBlow3(String name) {
+    return 'No $name for a while, then. Somebody has to step up.';
+  }
+
+  @override
+  String get yBoardPressure0 =>
+      'The board have gone very quiet. That is never a good sign.';
+
+  @override
+  String get yBoardPressure1 =>
+      'Word is the boardroom has started asking questions.';
+
+  @override
+  String get yBoardPressure2 => 'You can feel the ground shifting upstairs.';
+
+  @override
+  String get yBoardPressure3 =>
+      'Nobody at the federation is saying anything supportive. Draw your own conclusions.';
+
+  @override
   String get yPlayerGrievance0 =>
       'Asked where I stand. Still waiting on an answer.';
 

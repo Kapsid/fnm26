@@ -18,8 +18,10 @@ void main() {
     key: key,
   );
 
+  // A match nothing else is known about — the shape these tests were written
+  // against, before the feed could read the rest of the save.
   List<YPost> posts(YMatch m) =>
-      YFeed.forMatch(m, nation: 'Czechia', seed: 4242);
+      YFeed.forMatch(plainContext(m), nation: 'Czechia', seed: 4242);
 
   group('YFeed.forMatch', () {
     test('every match is worth saying something about', () {

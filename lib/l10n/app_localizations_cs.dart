@@ -3410,6 +3410,120 @@ class AppLocalizationsCs extends AppLocalizations {
   String get grievanceDismiss => 'Sestavu určuji já';
 
   @override
+  String yScorerStar0(String name, String goals) {
+    return '$name z toho dal $goals. Nikdo jiný se nepřibližuje.';
+  }
+
+  @override
+  String yScorerStar1(String name, String goals) {
+    return '$goals pro hráče $name. Táhne celý tým.';
+  }
+
+  @override
+  String yScorerStar2(String name, String goals) {
+    return '$name: $goals za zápas. To je fotbalista.';
+  }
+
+  @override
+  String yScorerStar3(String name, String goals) {
+    return '$goals jim nasázel $name. Klobouk dolů.';
+  }
+
+  @override
+  String yWinStreak0(String count) {
+    return '$count v řadě. Ať se v kabině říká cokoli, funguje to.';
+  }
+
+  @override
+  String yWinStreak1(String count) {
+    return 'Je to $count za sebou. Do takové série se tým nepotká náhodou.';
+  }
+
+  @override
+  String yWinStreak2(String count) {
+    return '$count výher v řadě a pokračuje se. Sebevědomí je vidět až na tribunu.';
+  }
+
+  @override
+  String yWinStreak3(String count) {
+    return 'Ani jedna prohra v $count zápasech. Zeptejte se kohokoli, kdo trénoval — tohle je to těžké.';
+  }
+
+  @override
+  String yLossStreak0(String count) {
+    return 'Už $count zápasů bez výhry. Výmluvy jednou dojdou.';
+  }
+
+  @override
+  String yLossStreak1(String count) {
+    return 'To je $count proher v řadě. Tohle už není výkyv.';
+  }
+
+  @override
+  String yLossStreak2(String count) {
+    return '$count porážek za sebou. Někdo se z toho bude zpovídat.';
+  }
+
+  @override
+  String yLossStreak3(String count) {
+    return 'Žádná výhra v $count zápasech. Je to na nich vidět.';
+  }
+
+  @override
+  String yRivalry0(String opponent, String score) {
+    return '$opponent $score. Říkejte si o tom fotbale co chcete — tenhle počítá dvakrát.';
+  }
+
+  @override
+  String yRivalry1(String opponent, String score) {
+    return 'Zrovna proti týmu $opponent. $score. Tady na to nikdo nezapomene.';
+  }
+
+  @override
+  String yRivalry2(String opponent, String score) {
+    return '$score proti týmu $opponent. O tomhle se bude mluvit v hospodách.';
+  }
+
+  @override
+  String yRivalry3(String opponent, String score) {
+    return 'Sousedé, $score. Právo se chlubit je na nějakou dobu rozdané.';
+  }
+
+  @override
+  String yInjuryBlow0(String name) {
+    return '$name odstoupil zraněný. To bylo poslední, co tenhle tým potřeboval.';
+  }
+
+  @override
+  String yInjuryBlow1(String name) {
+    return 'Ztráta hráče $name mění celé rozestavení.';
+  }
+
+  @override
+  String yInjuryBlow2(String name) {
+    return '$name kulhá. Zadržte dech.';
+  }
+
+  @override
+  String yInjuryBlow3(String name) {
+    return 'Chvíli tedy bez hráče $name. Někdo to musí vzít na sebe.';
+  }
+
+  @override
+  String get yBoardPressure0 =>
+      'Vedení podezřele ztichlo. To nikdy nevěstí nic dobrého.';
+
+  @override
+  String get yBoardPressure1 => 'Prý se v kancelářích začalo ptát.';
+
+  @override
+  String get yBoardPressure2 => 'Je cítit, že se nahoře něco hýbe.';
+
+  @override
+  String get yBoardPressure3 =>
+      'Nikdo ve svazu neřekne jediné podporující slovo. Vyvoďte si z toho své.';
+
+  @override
   String get yPlayerGrievance0 =>
       'Zeptal jsem se, na čem jsem. Pořád čekám na odpověď.';
 

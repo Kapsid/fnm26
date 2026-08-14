@@ -161,7 +161,6 @@ typedef MessageItem = ({
   bool read,
 });
 
-
 /// One trophy in a player's cabinet.
 ///
 /// Named for the award rather than the row: drift generates its own
@@ -461,6 +460,17 @@ abstract interface class CompetitionRepository {
     int careerId,
   );
 
+  /// Who scored, match by match, for one nation: fixture id → that fixture's
+  /// scorers with their goals in it.
+  ///
+  /// [goalTimeline] answers "when", which is what a comeback needs; this
+  /// answers "who", which is what anything writing ABOUT a match needs — a
+  /// report that cannot name the scorer can only talk about the scoreline.
+  Future<Map<int, Map<int, int>>> scorersByFixture(
+    int careerId,
+    int nationId,
+  );
+
   /// Top scorers across the save, optionally restricted to a competition
   /// [kind] (qualifying vs finals), best first.
   Future<List<ScorerTally>> topScorers(
@@ -558,8 +568,7 @@ abstract interface class CompetitionRepository {
   /// All-time most STARTS in competitions of [kind] (e.g. World Cup finals),
   /// across every nation and edition (most starts first) — for the records
   /// screen's tournament leaderboards.
-  Future<List<({int playerId, int nationId, int starts})>>
-      mostTournamentStarts(
+  Future<List<({int playerId, int nationId, int starts})>> mostTournamentStarts(
     int careerId, {
     required CompetitionKind kind,
     int limit,
@@ -568,7 +577,7 @@ abstract interface class CompetitionRepository {
   /// All-time most distinct tournaments ATTENDED (an appearance in an edition of
   /// any of [kinds]) across every nation, most first — "most cups attended".
   Future<List<({int playerId, int nationId, int tournaments})>>
-      mostTournamentsAttended(
+  mostTournamentsAttended(
     int careerId, {
     required Set<CompetitionKind> kinds,
     int limit,
@@ -579,7 +588,7 @@ abstract interface class CompetitionRepository {
   /// [kind] (optionally narrowed to one [confederation], for a continental cup).
   /// Ordered by games played, most first.
   Future<List<({int playerId, int nationId, int games, int finals})>>
-      playerCupRecords(
+  playerCupRecords(
     int careerId, {
     required CompetitionKind kind,
     Confederation? confederation,
@@ -590,14 +599,17 @@ abstract interface class CompetitionRepository {
   /// size, and its Finals Four result if it reached the last four. One entry per
   /// cycle, for the career-history "which league, and how it ended".
   Future<
-      List<
-          ({
-            int cycle,
-            String league,
-            int position,
-            int groupSize,
-            String? finals,
-          })>> nationsCupFinishes(int careerId, int nationId);
+    List<
+      ({
+        int cycle,
+        String league,
+        int position,
+        int groupSize,
+        String? finals,
+      })
+    >
+  >
+  nationsCupFinishes(int careerId, int nationId);
 
   /// The all-time head-to-head record between [nationA] and [nationB] across
   /// every played fixture in the save (friendlies included).
@@ -636,7 +648,7 @@ abstract interface class CompetitionRepository {
   /// Recent match ratings (with their dates) for every player of [nationId],
   /// newest first and capped per player — the raw input for form and fatigue.
   Future<Map<int, List<({DateTime date, double rating})>>>
-      recentRatingsByNation(
+  recentRatingsByNation(
     int careerId,
     int nationId, {
     int perPlayer,
@@ -651,16 +663,19 @@ abstract interface class CompetitionRepository {
   /// nations actually being asked about; passing the manager's own stint
   /// nations gives their career feats as before.
   Future<
-      List<
-          ({
-            int playerId,
-            int goals,
-            int assists,
-            double rating,
-            bool motm,
-            int yellows,
-            int reds,
-          })>> careerPlayerLines(int careerId, Set<int> nationIds);
+    List<
+      ({
+        int playerId,
+        int goals,
+        int assists,
+        double rating,
+        bool motm,
+        int yellows,
+        int reds,
+      })
+    >
+  >
+  careerPlayerLines(int careerId, Set<int> nationIds);
 
   /// How everyone who appeared in [competitionId] actually played: one entry
   /// per player, aggregated across their appearances in that competition.
@@ -694,7 +709,6 @@ abstract interface class CompetitionRepository {
     int nationId, {
     int limit,
   });
-
 
   /// One individual trophy a player has won.
   ///

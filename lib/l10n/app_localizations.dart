@@ -5676,6 +5676,150 @@ abstract class AppLocalizations {
   /// **'I pick the team'**
   String get grievanceDismiss;
 
+  /// Y post naming the match scorer and how many he got. Variant 0.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} got {goals} of them. Nobody else is close.'**
+  String yScorerStar0(String name, String goals);
+
+  /// Y post naming the match scorer and how many he got. Variant 1.
+  ///
+  /// In en, this message translates to:
+  /// **'{goals} for {name}. He is carrying this side.'**
+  String yScorerStar1(String name, String goals);
+
+  /// Y post naming the match scorer and how many he got. Variant 2.
+  ///
+  /// In en, this message translates to:
+  /// **'{name}: {goals} on the day. Some player.'**
+  String yScorerStar2(String name, String goals);
+
+  /// Y post naming the match scorer and how many he got. Variant 3.
+  ///
+  /// In en, this message translates to:
+  /// **'Put {goals} past them, did {name}. Take a bow.'**
+  String yScorerStar3(String name, String goals);
+
+  /// Y post remarking on a run of wins. Variant 0.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} on the bounce. Whatever is being said in that dressing room, it is landing.'**
+  String yWinStreak0(String count);
+
+  /// Y post remarking on a run of wins. Variant 1.
+  ///
+  /// In en, this message translates to:
+  /// **'That is {count} straight. Sides do not stumble into runs like this.'**
+  String yWinStreak1(String count);
+
+  /// Y post remarking on a run of wins. Variant 2.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} in a row and counting. The confidence is visible from the stands.'**
+  String yWinStreak2(String count);
+
+  /// Y post remarking on a run of wins. Variant 3.
+  ///
+  /// In en, this message translates to:
+  /// **'No defeats in {count}. Ask anyone who has managed — that is the hard part.'**
+  String yWinStreak3(String count);
+
+  /// Y post remarking on a run without a win. Variant 0.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} without a win now. At some point the excuses run out.'**
+  String yLossStreak0(String count);
+
+  /// Y post remarking on a run without a win. Variant 1.
+  ///
+  /// In en, this message translates to:
+  /// **'That is {count} in a row gone. This is not a blip any more.'**
+  String yLossStreak1(String count);
+
+  /// Y post remarking on a run without a win. Variant 2.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} straight defeats. Somebody has to answer for it.'**
+  String yLossStreak2(String count);
+
+  /// Y post remarking on a run without a win. Variant 3.
+  ///
+  /// In en, this message translates to:
+  /// **'No wins in {count}. You can see it in how they play.'**
+  String yLossStreak3(String count);
+
+  /// Y post about a result against a rival nation. Variant 0.
+  ///
+  /// In en, this message translates to:
+  /// **'{opponent} {score}. Say what you like about the football — this one counts double.'**
+  String yRivalry0(String opponent, String score);
+
+  /// Y post about a result against a rival nation. Variant 1.
+  ///
+  /// In en, this message translates to:
+  /// **'Against {opponent}, of all of them. {score}. Nobody here will forget it.'**
+  String yRivalry1(String opponent, String score);
+
+  /// Y post about a result against a rival nation. Variant 2.
+  ///
+  /// In en, this message translates to:
+  /// **'{score} against {opponent}. That is the one they will talk about in the pubs.'**
+  String yRivalry2(String opponent, String score);
+
+  /// Y post about a result against a rival nation. Variant 3.
+  ///
+  /// In en, this message translates to:
+  /// **'Neighbours, {score}. Bragging rights settled for a while.'**
+  String yRivalry3(String opponent, String score);
+
+  /// Y post about a player picking up an injury. Variant 0.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} off injured. That is the last thing this side needed.'**
+  String yInjuryBlow0(String name);
+
+  /// Y post about a player picking up an injury. Variant 1.
+  ///
+  /// In en, this message translates to:
+  /// **'Losing {name} changes the shape of everything.'**
+  String yInjuryBlow1(String name);
+
+  /// Y post about a player picking up an injury. Variant 2.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} limping. Hold your breath.'**
+  String yInjuryBlow2(String name);
+
+  /// Y post about a player picking up an injury. Variant 3.
+  ///
+  /// In en, this message translates to:
+  /// **'No {name} for a while, then. Somebody has to step up.'**
+  String yInjuryBlow3(String name);
+
+  /// Y post about the board losing patience. Variant 0.
+  ///
+  /// In en, this message translates to:
+  /// **'The board have gone very quiet. That is never a good sign.'**
+  String get yBoardPressure0;
+
+  /// Y post about the board losing patience. Variant 1.
+  ///
+  /// In en, this message translates to:
+  /// **'Word is the boardroom has started asking questions.'**
+  String get yBoardPressure1;
+
+  /// Y post about the board losing patience. Variant 2.
+  ///
+  /// In en, this message translates to:
+  /// **'You can feel the ground shifting upstairs.'**
+  String get yBoardPressure2;
+
+  /// Y post about the board losing patience. Variant 3.
+  ///
+  /// In en, this message translates to:
+  /// **'Nobody at the federation is saying anything supportive. Draw your own conclusions.'**
+  String get yBoardPressure3;
+
   /// Player agency: yPlayerGrievance0.
   ///
   /// In en, this message translates to:

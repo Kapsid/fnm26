@@ -40,6 +40,24 @@ enum YTemplate {
 
   /// A player who asked where he stood and was not answered.
   playerGrievance,
+
+  /// A named scorer, and how many he got.
+  scorerStar,
+
+  /// A run of wins worth remarking on.
+  winStreak,
+
+  /// A run without a win, ditto.
+  lossStreak,
+
+  /// A result against the neighbours, which is never just a result.
+  rivalry,
+
+  /// Somebody important limping off.
+  injuryBlow,
+
+  /// The board's patience, in public.
+  boardPressure,
 }
 
 /// One post on the feed.
@@ -65,6 +83,36 @@ typedef YMatch = ({
   String key,
 });
 
+/// What the world knows when it writes about a match.
+///
+/// Everything here is already recorded elsewhere; gathering it is what lets a
+/// post name a player and a streak rather than saying "a good result". Without
+/// it every post is assembled from a scoreline and an opponent, which is why a
+/// long save read the same four sentences over and over.
+typedef YContext = ({
+  YMatch match,
+  String? scorerName,
+  int? scorerGoals,
+  int winStreak,
+  int lossStreak,
+  bool isRivalry,
+  List<String> injuredNames,
+  int boardMood,
+});
+
+/// A context for a match nothing else is known about — the shape the feed had
+/// before it could read the save.
+YContext plainContext(YMatch match) => (
+  match: match,
+  scorerName: null,
+  scorerGoals: null,
+  winStreak: 0,
+  lossStreak: 0,
+  isRivalry: false,
+  injuredNames: const [],
+  boardMood: 50,
+);
+
 /// The world talking about you.
 ///
 /// Every post is derived from an event the world already recorded, and the
@@ -76,8 +124,10 @@ abstract final class YFeed {
   /// repeat itself quickly.
   static const int variantCount = 4;
 
-  /// The most a single event is worth saying.
-  static const int maxPostsPerEvent = 3;
+  /// The most a single event is worth saying. Five rather than three now that
+  /// a match can be worth more than its scoreline — the scorer, the run, the
+  /// injury — but still a cap: a feed that says everything says nothing.
+  static const int maxPostsPerEvent = 5;
 
   /// How the country reads a result, before anyone opens their mouth.
   static YTemplate classify(YMatch m) {
@@ -92,16 +142,51 @@ abstract final class YFeed {
     return YTemplate.lost;
   }
 
+  /// How many posts back a shape must not have been used.
+  ///
+  /// The feed used to be assembled event by event with no memory, so a run of
+  /// similar results produced a run of near-identical posts. A shape is a
+  /// template and its arguments together: the same sentence about a different
+  /// opponent is not a repeat.
+  static const int noRepeatWindow = 10;
+
+  /// A run of results, oldest first, as the world talked about it.
+  ///
+  /// Assembled in one pass so the feed can remember what it has just said —
+  /// see [noRepeatWindow].
+  static List<YPost> forRun(
+    List<YContext> contexts, {
+    required String nation,
+    required int seed,
+  }) {
+    final out = <YPost>[];
+    final recent = <String>[];
+    for (final context in contexts) {
+      for (final post in forMatch(context, nation: nation, seed: seed)) {
+        final shape = '${post.template.name}|${post.args.join(",")}';
+        if (recent.contains(shape)) continue;
+        out.add(post);
+        recent.add(shape);
+        if (recent.length > noRepeatWindow) recent.removeAt(0);
+      }
+    }
+    return out;
+  }
+
   /// The posts a match draws.
   ///
   /// A bigger occasion is louder: a routine result gets a line from the stats
   /// account and little else, a triumph or a humiliation brings out the pundit,
-  /// the fans and — when you lose — someone enjoying it.
+  /// the fans and — when you lose — someone enjoying it. What the world knows
+  /// beyond the scoreline ([YContext]) adds its own shapes on top: the man who
+  /// scored them, the run the side is on, the neighbours, the injury, the
+  /// board.
   static List<YPost> forMatch(
-    YMatch m, {
+    YContext context, {
     required String nation,
     required int seed,
   }) {
+    final m = context.match;
     final template = classify(m);
     final lost = m.scored < m.conceded;
     final loud = switch (template) {
@@ -109,20 +194,61 @@ abstract final class YFeed {
       YTemplate.winTight || YTemplate.lost || YTemplate.drew => 2,
       _ => 1,
     };
-    final voices = <YVoice>[
-      YVoice.stats,
-      if (loud >= 2) YVoice.fan,
-      if (loud >= 3) YVoice.pundit,
-      if (lost && loud >= 3) YVoice.rival,
-    ].take(maxPostsPerEvent + 1).toList();
-
     final score = '${m.scored}–${m.conceded}';
+    final result = [m.opponent, score];
+
+    // The result itself, in as many voices as the occasion deserves.
+    final candidates = <(YVoice, YTemplate, List<String>)>[
+      (YVoice.stats, template, result),
+      if (loud >= 2) (YVoice.fan, template, result),
+      if (loud >= 3) (YVoice.pundit, template, result),
+      if (lost && loud >= 3) (YVoice.rival, template, result),
+    ];
+
+    // And what else the world happens to know.
+    final scorer = context.scorerName;
+    final goals = context.scorerGoals ?? 0;
+    if (scorer != null && goals >= 1) {
+      candidates.add((YVoice.stats, YTemplate.scorerStar, [scorer, '$goals']));
+    }
+    if (context.isRivalry) {
+      candidates.add((
+        lost ? YVoice.rival : YVoice.fan,
+        YTemplate.rivalry,
+        result,
+      ));
+    }
+    if (context.winStreak >= streakThreshold) {
+      candidates.add((
+        YVoice.pundit,
+        YTemplate.winStreak,
+        ['${context.winStreak}'],
+      ));
+    }
+    if (context.lossStreak >= streakThreshold) {
+      candidates.add((
+        YVoice.pundit,
+        YTemplate.lossStreak,
+        ['${context.lossStreak}'],
+      ));
+    }
+    if (context.injuredNames.isNotEmpty) {
+      candidates.add((
+        YVoice.pundit,
+        YTemplate.injuryBlow,
+        [context.injuredNames.first],
+      ));
+    }
+    if (context.boardMood <= boardPressureBelow) {
+      candidates.add((YVoice.pundit, YTemplate.boardPressure, const ['']));
+    }
+
     return [
-      for (final voice in voices)
+      for (final (voice, shape, args) in candidates.take(maxPostsPerEvent))
         _post(
           voice: voice,
-          template: template,
-          args: [m.opponent, score],
+          template: shape,
+          args: args,
           date: m.date,
           key: m.key,
           nation: nation,
@@ -130,6 +256,12 @@ abstract final class YFeed {
         ),
     ];
   }
+
+  /// How long a run has to be before anybody remarks on it.
+  static const int streakThreshold = 3;
+
+  /// The board mood at or below which the pundits start counting the days.
+  static const int boardPressureBelow = 30;
 
   /// The post a one-off event draws — a draw made, a host named, a tournament
   /// coming up.
@@ -140,27 +272,26 @@ abstract final class YFeed {
     required String key,
     required String nation,
     required int seed,
-  }) =>
-      [
-        _post(
-          voice: YVoice.stats,
-          template: template,
-          args: args,
-          date: date,
-          key: key,
-          nation: nation,
-          seed: seed,
-        ),
-        _post(
-          voice: YVoice.fan,
-          template: template,
-          args: args,
-          date: date,
-          key: key,
-          nation: nation,
-          seed: seed,
-        ),
-      ];
+  }) => [
+    _post(
+      voice: YVoice.stats,
+      template: template,
+      args: args,
+      date: date,
+      key: key,
+      nation: nation,
+      seed: seed,
+    ),
+    _post(
+      voice: YVoice.fan,
+      template: template,
+      args: args,
+      date: date,
+      key: key,
+      nation: nation,
+      seed: seed,
+    ),
+  ];
 
   /// A player saying in public what he could not get said in your office.
   static List<YPost> forGrievance({
@@ -169,19 +300,18 @@ abstract final class YFeed {
     required String key,
     required String nation,
     required int seed,
-  }) =>
-      [
-        _post(
-          voice: YVoice.player,
-          template: YTemplate.playerGrievance,
-          args: [playerName],
-          date: date,
-          key: key,
-          nation: nation,
-          seed: seed,
-          authorName: playerName,
-        ),
-      ];
+  }) => [
+    _post(
+      voice: YVoice.player,
+      template: YTemplate.playerGrievance,
+      args: [playerName],
+      date: date,
+      key: key,
+      nation: nation,
+      seed: seed,
+      authorName: playerName,
+    ),
+  ];
 
   /// Newest first, and capped — a long save would otherwise build a feed
   /// nobody can scroll to the end of.

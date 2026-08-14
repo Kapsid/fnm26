@@ -1407,6 +1407,13 @@ Today: `YTemplate` with `variantCount = 4` (`:77`) and `maxPostsPerEvent = 3`
 (`:80`), classified from a `YMatch` (`:58`) that carries little more than the
 scoreline. A long save therefore repeats.
 
+> **Landed (2026-08-14) with two deviations:** `variantCount` stays at 4 —
+> variety comes from six new shapes (scorer, win streak, loss streak, rivalry,
+> injury, board pressure) and a ten-post no-repeat window, rather than from two
+> more wordings for each of fifteen existing templates. And `YTemplate.streak`
+> is split into `winStreak`/`lossStreak`: "five in a row" and "five without a
+> win" are different sentences, and Czech declines them differently.
+
 **Interfaces:**
 - Consumes: `YPost`, `YVoice`, `YTemplate`, `YFeed.mostRecent` (existing)
 - Produces: `YContext` — the record of save state a post can draw on:
@@ -1427,7 +1434,7 @@ typedef YContext = ({
 });
 ```
 
-- [ ] **Step 1: Write the failing variety test**
+- [x] **Step 1: Write the failing variety test**
 
 ```dart
 // test/unit/press/y_variety_test.dart
@@ -1459,12 +1466,12 @@ test('a streak is remarked on', () {
 });
 ```
 
-- [ ] **Step 2: Run the tests to verify they fail**
+- [x] **Step 2: Run the tests to verify they fail**
 
 Run: `flutter test test/unit/press/y_variety_test.dart`
 Expected: FAIL — no `YContext`, no streak template, repeats inside the window.
 
-- [ ] **Step 3: Widen the context and the template set**
+- [x] **Step 3: Widen the context and the template set**
 
 Change `forMatch` to take a `YContext`. Add templates for the shapes the
 context now makes possible — a named scorer, a streak, a rivalry result, an
@@ -1474,17 +1481,17 @@ several wordings.
 Add a no-repeat window: a template-and-args pair already used in the last ten
 posts is skipped in favour of the next candidate.
 
-- [ ] **Step 4: Add the strings for every new template**
+- [x] **Step 4: Add the strings for every new template**
 
 Every new `YTemplate` needs its wordings in **both** `app_en.arb` and
 `app_cs.arb`. A template with no Czech wording renders blank in a Czech save.
 
-- [ ] **Step 5: Run the tests to verify they pass**
+- [x] **Step 5: Run the tests to verify they pass**
 
 Run: `flutter test test/unit/press/ test/widget/y_screen_test.dart`
 Expected: PASS
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add lib/domain/services/press/y_feed.dart lib/l10n/ test/unit/press/y_variety_test.dart

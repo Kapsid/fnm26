@@ -4386,6 +4386,226 @@
   "@grievanceDismiss": {
     "description": "Player agency: grievanceDismiss."
   },
+  "yScorerStar0": "{name} got {goals} of them. Nobody else is close.",
+  "@yScorerStar0": {
+    "description": "Y post naming the match scorer and how many he got. Variant 0.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "goals": {
+        "type": "String"
+      }
+    }
+  },
+  "yScorerStar1": "{goals} for {name}. He is carrying this side.",
+  "@yScorerStar1": {
+    "description": "Y post naming the match scorer and how many he got. Variant 1.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "goals": {
+        "type": "String"
+      }
+    }
+  },
+  "yScorerStar2": "{name}: {goals} on the day. Some player.",
+  "@yScorerStar2": {
+    "description": "Y post naming the match scorer and how many he got. Variant 2.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "goals": {
+        "type": "String"
+      }
+    }
+  },
+  "yScorerStar3": "Put {goals} past them, did {name}. Take a bow.",
+  "@yScorerStar3": {
+    "description": "Y post naming the match scorer and how many he got. Variant 3.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "goals": {
+        "type": "String"
+      }
+    }
+  },
+  "yWinStreak0": "{count} on the bounce. Whatever is being said in that dressing room, it is landing.",
+  "@yWinStreak0": {
+    "description": "Y post remarking on a run of wins. Variant 0.",
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "yWinStreak1": "That is {count} straight. Sides do not stumble into runs like this.",
+  "@yWinStreak1": {
+    "description": "Y post remarking on a run of wins. Variant 1.",
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "yWinStreak2": "{count} in a row and counting. The confidence is visible from the stands.",
+  "@yWinStreak2": {
+    "description": "Y post remarking on a run of wins. Variant 2.",
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "yWinStreak3": "No defeats in {count}. Ask anyone who has managed — that is the hard part.",
+  "@yWinStreak3": {
+    "description": "Y post remarking on a run of wins. Variant 3.",
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "yLossStreak0": "{count} without a win now. At some point the excuses run out.",
+  "@yLossStreak0": {
+    "description": "Y post remarking on a run without a win. Variant 0.",
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "yLossStreak1": "That is {count} in a row gone. This is not a blip any more.",
+  "@yLossStreak1": {
+    "description": "Y post remarking on a run without a win. Variant 1.",
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "yLossStreak2": "{count} straight defeats. Somebody has to answer for it.",
+  "@yLossStreak2": {
+    "description": "Y post remarking on a run without a win. Variant 2.",
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "yLossStreak3": "No wins in {count}. You can see it in how they play.",
+  "@yLossStreak3": {
+    "description": "Y post remarking on a run without a win. Variant 3.",
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "yRivalry0": "{opponent} {score}. Say what you like about the football — this one counts double.",
+  "@yRivalry0": {
+    "description": "Y post about a result against a rival nation. Variant 0.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      },
+      "score": {
+        "type": "String"
+      }
+    }
+  },
+  "yRivalry1": "Against {opponent}, of all of them. {score}. Nobody here will forget it.",
+  "@yRivalry1": {
+    "description": "Y post about a result against a rival nation. Variant 1.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      },
+      "score": {
+        "type": "String"
+      }
+    }
+  },
+  "yRivalry2": "{score} against {opponent}. That is the one they will talk about in the pubs.",
+  "@yRivalry2": {
+    "description": "Y post about a result against a rival nation. Variant 2.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      },
+      "score": {
+        "type": "String"
+      }
+    }
+  },
+  "yRivalry3": "Neighbours, {score}. Bragging rights settled for a while.",
+  "@yRivalry3": {
+    "description": "Y post about a result against a rival nation. Variant 3.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      },
+      "score": {
+        "type": "String"
+      }
+    }
+  },
+  "yInjuryBlow0": "{name} off injured. That is the last thing this side needed.",
+  "@yInjuryBlow0": {
+    "description": "Y post about a player picking up an injury. Variant 0.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "yInjuryBlow1": "Losing {name} changes the shape of everything.",
+  "@yInjuryBlow1": {
+    "description": "Y post about a player picking up an injury. Variant 1.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "yInjuryBlow2": "{name} limping. Hold your breath.",
+  "@yInjuryBlow2": {
+    "description": "Y post about a player picking up an injury. Variant 2.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "yInjuryBlow3": "No {name} for a while, then. Somebody has to step up.",
+  "@yInjuryBlow3": {
+    "description": "Y post about a player picking up an injury. Variant 3.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "yBoardPressure0": "The board have gone very quiet. That is never a good sign.",
+  "@yBoardPressure0": {
+    "description": "Y post about the board losing patience. Variant 0."
+  },
+  "yBoardPressure1": "Word is the boardroom has started asking questions.",
+  "@yBoardPressure1": {
+    "description": "Y post about the board losing patience. Variant 1."
+  },
+  "yBoardPressure2": "You can feel the ground shifting upstairs.",
+  "@yBoardPressure2": {
+    "description": "Y post about the board losing patience. Variant 2."
+  },
+  "yBoardPressure3": "Nobody at the federation is saying anything supportive. Draw your own conclusions.",
+  "@yBoardPressure3": {
+    "description": "Y post about the board losing patience. Variant 3."
+  },
   "yPlayerGrievance0": "Asked where I stand. Still waiting on an answer.",
   "@yPlayerGrievance0": {
     "description": "Player agency: yPlayerGrievance0."
