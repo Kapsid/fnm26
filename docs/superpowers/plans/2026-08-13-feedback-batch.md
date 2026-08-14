@@ -1769,7 +1769,7 @@ git commit -m "feat: a nation's overall is a curve you can see"
 a floor that has already been hit once: below roughly K=4 an expected friendly
 win rounds to zero and the table looks frozen. Do not go under it.
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 ```dart
 // test/unit/ranking/elo_weights_test.dart
@@ -1797,12 +1797,12 @@ test('an expected friendly win still moves the table', () {
 Read `elo.dart` for the real result-application function and match its
 signature; `applyResult` above is illustrative.
 
-- [ ] **Step 2: Run the tests to verify they fail**
+- [x] **Step 2: Run the tests to verify they fail**
 
 Run: `flutter test test/unit/ranking/elo_weights_test.dart`
 Expected: FAIL on the first two.
 
-- [ ] **Step 3: Retune the weights**
+- [x] **Step 3: Retune the weights**
 
 ```dart
 static const double friendly = 4;      // at the floor; do not lower
@@ -1812,15 +1812,23 @@ static const double finals = 24;       // was 30
 static const double finalsSettled = 72; // was 48
 ```
 
+> **Landed (2026-08-14) with the qualifier UNCHANGED at 16.** It has a floor of
+> its own, guarded by `test/unit/domain/elo_test.dart`: at 12 a favoured side
+> beating the team below it in qualifying gains three points, under the four
+> that make a world place — and the table would read as stuck for exactly the
+> nations who play the most qualifiers. The complaint was about the ratio, and
+> the ratio is delivered by the cups coming down and the settlement going up:
+> a World Cup is now worth 4.5 qualifiers where it was 3.
+
 Update the doc comments to record *why* — the same way the existing comments
 record the last retune.
 
-- [ ] **Step 4: Run the tests to verify they pass**
+- [x] **Step 4: Run the tests to verify they pass**
 
 Run: `flutter test test/unit/ranking/`
 Expected: PASS
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add lib/domain/services/ranking/elo.dart test/unit/ranking/elo_weights_test.dart

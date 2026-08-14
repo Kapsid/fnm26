@@ -26,24 +26,38 @@ abstract final class Elo {
   // rounds to zero and the table looks frozen. The finals weight is only used
   // for continental cups now — the World Cup finals are not settled live at all
   // (see [finalsSettled]).
+  //
+  // Retuned again (2026-08-14): the complaint was that an ordinary match swung
+  // the table while a World Cup barely showed. What was wrong is the RATIO, so
+  // the tournament settlement went up and the cups came down — but the
+  // QUALIFIER stayed at 16, because it has a floor of its own: at 12 a
+  // favoured side beating the team below it in qualifying gains three points,
+  // under the four that make a world place, and the table reads as stuck for
+  // exactly the sides who play the most qualifiers. Friendly is at its own
+  // documented floor and does not move either.
   static const double friendly = 4;
-  static const double nationsCup = 10;
+  static const double nationsCup = 8;
   static const double qualifier = 16;
 
-  /// The continental-cup weight. Trimmed from 40: a cup run is six or seven
-  /// matches at this weight and every one of them lands live, so winning a
-  /// continental championship was on its own worth a climb of dozens of world
-  /// places — more than a World Cup, which is settled once at [finalsSettled].
-  /// It is still comfortably the heaviest thing that happens outside a World
-  /// Cup, so lifting the trophy moves a nation a long way; it just no longer
-  /// rewrites the top of the table by itself.
-  static const double finals = 30;
+  /// The continental-cup weight. Trimmed from 40, then to 24: a cup run is six
+  /// or seven matches at this weight and every one of them lands live, so
+  /// winning a continental championship was on its own worth a climb of dozens
+  /// of world places — more than a World Cup, which is settled once at
+  /// [finalsSettled]. It is still comfortably the heaviest thing that happens
+  /// outside a World Cup, so lifting the trophy moves a nation a long way; it
+  /// just no longer rewrites the top of the table by itself.
+  static const double finals = 24;
 
   /// The weight used to settle the World Cup finals into the ranking *after* the
   /// tournament, in one pass, rather than live round by round. It is heavier
   /// than every other match, so a deep run at the World Cup is the single
   /// biggest thing that can move a nation's ranking in a cycle.
-  static const double finalsSettled = 48;
+  ///
+  /// Raised from 48 to 72 alongside the trim below it: at 48 against a
+  /// continental weight of 30, a cup run of seven live matches out-moved the
+  /// World Cup it was supposed to be the warm-up for. At 72 against 24 the
+  /// tournament is unmistakably the thing that decides where a nation stands.
+  static const double finalsSettled = 72;
 
   /// Knockout round codes, ignoring any competition prefix ('CQF', 'NSF', …).
   static const List<String> _knockoutSuffixes = [
