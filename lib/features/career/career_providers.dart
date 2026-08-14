@@ -1,3 +1,4 @@
+import 'package:fnm/features/career/play_time.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/core/result/result.dart';
 import 'package:fnm/data/data_providers.dart';
@@ -467,9 +468,11 @@ class CareerService {
   }
 
   /// Records that a save was just opened, so the saves list can show "last
-  /// played" and put the most recent one first.
+  /// played" and put the most recent one first — and starts the clock that
+  /// counts how long it is played for.
   Future<void> markPlayed(int id) async {
     await _ref.read(careerRepositoryProvider).touch(id, DateTime.now());
+    _ref.read(playTimeTrackerProvider).start(id);
     _ref.invalidate(savesProvider);
   }
 

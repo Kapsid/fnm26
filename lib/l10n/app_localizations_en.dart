@@ -1586,6 +1586,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get careerUnknownNation => 'Unknown';
 
   @override
+  String careerPlayedMinutes(int minutes) {
+    return 'Played ${minutes}m';
+  }
+
+  @override
+  String careerPlayedHours(int hours, int minutes) {
+    return 'Played ${hours}h ${minutes}m';
+  }
+
+  @override
   String careerLastPlayed(String when) {
     return 'Last played $when';
   }

@@ -1204,6 +1204,18 @@ class $CareersTable extends Careers with TableInfo<$CareersTable, CareerRow> {
     type: DriftSqlType.dateTime,
     requiredDuringInsert: false,
   );
+  static const VerificationMeta _playedSecondsMeta = const VerificationMeta(
+    'playedSeconds',
+  );
+  @override
+  late final GeneratedColumn<int> playedSeconds = GeneratedColumn<int>(
+    'played_seconds',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -1217,6 +1229,7 @@ class $CareersTable extends Careers with TableInfo<$CareersTable, CareerRow> {
     budget,
     captainPlayerId,
     yReadAt,
+    playedSeconds,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -1318,6 +1331,15 @@ class $CareersTable extends Careers with TableInfo<$CareersTable, CareerRow> {
         yReadAt.isAcceptableOrUnknown(data['y_read_at']!, _yReadAtMeta),
       );
     }
+    if (data.containsKey('played_seconds')) {
+      context.handle(
+        _playedSecondsMeta,
+        playedSeconds.isAcceptableOrUnknown(
+          data['played_seconds']!,
+          _playedSecondsMeta,
+        ),
+      );
+    }
     return context;
   }
 
@@ -1371,6 +1393,10 @@ class $CareersTable extends Careers with TableInfo<$CareersTable, CareerRow> {
         DriftSqlType.dateTime,
         data['${effectivePrefix}y_read_at'],
       ),
+      playedSeconds: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}played_seconds'],
+      )!,
     );
   }
 
@@ -1409,6 +1435,13 @@ class CareerRow extends DataClass implements Insertable<CareerRow> {
   /// row to mark read — a single watermark is what the unread count is
   /// counted against.
   final DateTime? yReadAt;
+
+  /// Real-world seconds spent playing this save, accumulated while it is open.
+  ///
+  /// Counted in ticks rather than from an opened-at stamp so that a crash, a
+  /// force-quit or a flat battery costs at most one tick instead of the whole
+  /// session.
+  final int playedSeconds;
   const CareerRow({
     required this.id,
     required this.managerName,
@@ -1421,6 +1454,7 @@ class CareerRow extends DataClass implements Insertable<CareerRow> {
     required this.budget,
     this.captainPlayerId,
     this.yReadAt,
+    required this.playedSeconds,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -1442,6 +1476,7 @@ class CareerRow extends DataClass implements Insertable<CareerRow> {
     if (!nullToAbsent || yReadAt != null) {
       map['y_read_at'] = Variable<DateTime>(yReadAt);
     }
+    map['played_seconds'] = Variable<int>(playedSeconds);
     return map;
   }
 
@@ -1464,6 +1499,7 @@ class CareerRow extends DataClass implements Insertable<CareerRow> {
       yReadAt: yReadAt == null && nullToAbsent
           ? const Value.absent()
           : Value(yReadAt),
+      playedSeconds: Value(playedSeconds),
     );
   }
 
@@ -1484,6 +1520,7 @@ class CareerRow extends DataClass implements Insertable<CareerRow> {
       budget: serializer.fromJson<int>(json['budget']),
       captainPlayerId: serializer.fromJson<int?>(json['captainPlayerId']),
       yReadAt: serializer.fromJson<DateTime?>(json['yReadAt']),
+      playedSeconds: serializer.fromJson<int>(json['playedSeconds']),
     );
   }
   @override
@@ -1501,6 +1538,7 @@ class CareerRow extends DataClass implements Insertable<CareerRow> {
       'budget': serializer.toJson<int>(budget),
       'captainPlayerId': serializer.toJson<int?>(captainPlayerId),
       'yReadAt': serializer.toJson<DateTime?>(yReadAt),
+      'playedSeconds': serializer.toJson<int>(playedSeconds),
     };
   }
 
@@ -1516,6 +1554,7 @@ class CareerRow extends DataClass implements Insertable<CareerRow> {
     int? budget,
     Value<int?> captainPlayerId = const Value.absent(),
     Value<DateTime?> yReadAt = const Value.absent(),
+    int? playedSeconds,
   }) => CareerRow(
     id: id ?? this.id,
     managerName: managerName ?? this.managerName,
@@ -1530,6 +1569,7 @@ class CareerRow extends DataClass implements Insertable<CareerRow> {
         ? captainPlayerId.value
         : this.captainPlayerId,
     yReadAt: yReadAt.present ? yReadAt.value : this.yReadAt,
+    playedSeconds: playedSeconds ?? this.playedSeconds,
   );
   CareerRow copyWithCompanion(CareersCompanion data) {
     return CareerRow(
@@ -1554,6 +1594,9 @@ class CareerRow extends DataClass implements Insertable<CareerRow> {
           ? data.captainPlayerId.value
           : this.captainPlayerId,
       yReadAt: data.yReadAt.present ? data.yReadAt.value : this.yReadAt,
+      playedSeconds: data.playedSeconds.present
+          ? data.playedSeconds.value
+          : this.playedSeconds,
     );
   }
 
@@ -1570,7 +1613,8 @@ class CareerRow extends DataClass implements Insertable<CareerRow> {
           ..write('lastPlayedAt: $lastPlayedAt, ')
           ..write('budget: $budget, ')
           ..write('captainPlayerId: $captainPlayerId, ')
-          ..write('yReadAt: $yReadAt')
+          ..write('yReadAt: $yReadAt, ')
+          ..write('playedSeconds: $playedSeconds')
           ..write(')'))
         .toString();
   }
@@ -1588,6 +1632,7 @@ class CareerRow extends DataClass implements Insertable<CareerRow> {
     budget,
     captainPlayerId,
     yReadAt,
+    playedSeconds,
   );
   @override
   bool operator ==(Object other) =>
@@ -1603,7 +1648,8 @@ class CareerRow extends DataClass implements Insertable<CareerRow> {
           other.lastPlayedAt == this.lastPlayedAt &&
           other.budget == this.budget &&
           other.captainPlayerId == this.captainPlayerId &&
-          other.yReadAt == this.yReadAt);
+          other.yReadAt == this.yReadAt &&
+          other.playedSeconds == this.playedSeconds);
 }
 
 class CareersCompanion extends UpdateCompanion<CareerRow> {
@@ -1618,6 +1664,7 @@ class CareersCompanion extends UpdateCompanion<CareerRow> {
   final Value<int> budget;
   final Value<int?> captainPlayerId;
   final Value<DateTime?> yReadAt;
+  final Value<int> playedSeconds;
   const CareersCompanion({
     this.id = const Value.absent(),
     this.managerName = const Value.absent(),
@@ -1630,6 +1677,7 @@ class CareersCompanion extends UpdateCompanion<CareerRow> {
     this.budget = const Value.absent(),
     this.captainPlayerId = const Value.absent(),
     this.yReadAt = const Value.absent(),
+    this.playedSeconds = const Value.absent(),
   });
   CareersCompanion.insert({
     this.id = const Value.absent(),
@@ -1643,6 +1691,7 @@ class CareersCompanion extends UpdateCompanion<CareerRow> {
     this.budget = const Value.absent(),
     this.captainPlayerId = const Value.absent(),
     this.yReadAt = const Value.absent(),
+    this.playedSeconds = const Value.absent(),
   }) : managerName = Value(managerName),
        nationId = Value(nationId),
        rngSeed = Value(rngSeed),
@@ -1660,6 +1709,7 @@ class CareersCompanion extends UpdateCompanion<CareerRow> {
     Expression<int>? budget,
     Expression<int>? captainPlayerId,
     Expression<DateTime>? yReadAt,
+    Expression<int>? playedSeconds,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -1673,6 +1723,7 @@ class CareersCompanion extends UpdateCompanion<CareerRow> {
       if (budget != null) 'budget': budget,
       if (captainPlayerId != null) 'captain_player_id': captainPlayerId,
       if (yReadAt != null) 'y_read_at': yReadAt,
+      if (playedSeconds != null) 'played_seconds': playedSeconds,
     });
   }
 
@@ -1688,6 +1739,7 @@ class CareersCompanion extends UpdateCompanion<CareerRow> {
     Value<int>? budget,
     Value<int?>? captainPlayerId,
     Value<DateTime?>? yReadAt,
+    Value<int>? playedSeconds,
   }) {
     return CareersCompanion(
       id: id ?? this.id,
@@ -1701,6 +1753,7 @@ class CareersCompanion extends UpdateCompanion<CareerRow> {
       budget: budget ?? this.budget,
       captainPlayerId: captainPlayerId ?? this.captainPlayerId,
       yReadAt: yReadAt ?? this.yReadAt,
+      playedSeconds: playedSeconds ?? this.playedSeconds,
     );
   }
 
@@ -1740,6 +1793,9 @@ class CareersCompanion extends UpdateCompanion<CareerRow> {
     if (yReadAt.present) {
       map['y_read_at'] = Variable<DateTime>(yReadAt.value);
     }
+    if (playedSeconds.present) {
+      map['played_seconds'] = Variable<int>(playedSeconds.value);
+    }
     return map;
   }
 
@@ -1756,7 +1812,8 @@ class CareersCompanion extends UpdateCompanion<CareerRow> {
           ..write('lastPlayedAt: $lastPlayedAt, ')
           ..write('budget: $budget, ')
           ..write('captainPlayerId: $captainPlayerId, ')
-          ..write('yReadAt: $yReadAt')
+          ..write('yReadAt: $yReadAt, ')
+          ..write('playedSeconds: $playedSeconds')
           ..write(')'))
         .toString();
   }
@@ -14722,6 +14779,7 @@ typedef $$CareersTableCreateCompanionBuilder =
       Value<int> budget,
       Value<int?> captainPlayerId,
       Value<DateTime?> yReadAt,
+      Value<int> playedSeconds,
     });
 typedef $$CareersTableUpdateCompanionBuilder =
     CareersCompanion Function({
@@ -14736,6 +14794,7 @@ typedef $$CareersTableUpdateCompanionBuilder =
       Value<int> budget,
       Value<int?> captainPlayerId,
       Value<DateTime?> yReadAt,
+      Value<int> playedSeconds,
     });
 
 final class $$CareersTableReferences
@@ -15338,6 +15397,11 @@ class $$CareersTableFilterComposer
 
   ColumnFilters<DateTime> get yReadAt => $composableBuilder(
     column: $table.yReadAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get playedSeconds => $composableBuilder(
+    column: $table.playedSeconds,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -16101,6 +16165,11 @@ class $$CareersTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<int> get playedSeconds => $composableBuilder(
+    column: $table.playedSeconds,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   $$NationsTableOrderingComposer get nationId {
     final $$NationsTableOrderingComposer composer = $composerBuilder(
       composer: this,
@@ -16173,6 +16242,11 @@ class $$CareersTableAnnotationComposer
 
   GeneratedColumn<DateTime> get yReadAt =>
       $composableBuilder(column: $table.yReadAt, builder: (column) => column);
+
+  GeneratedColumn<int> get playedSeconds => $composableBuilder(
+    column: $table.playedSeconds,
+    builder: (column) => column,
+  );
 
   $$NationsTableAnnotationComposer get nationId {
     final $$NationsTableAnnotationComposer composer = $composerBuilder(
@@ -16946,6 +17020,7 @@ class $$CareersTableTableManager
                 Value<int> budget = const Value.absent(),
                 Value<int?> captainPlayerId = const Value.absent(),
                 Value<DateTime?> yReadAt = const Value.absent(),
+                Value<int> playedSeconds = const Value.absent(),
               }) => CareersCompanion(
                 id: id,
                 managerName: managerName,
@@ -16958,6 +17033,7 @@ class $$CareersTableTableManager
                 budget: budget,
                 captainPlayerId: captainPlayerId,
                 yReadAt: yReadAt,
+                playedSeconds: playedSeconds,
               ),
           createCompanionCallback:
               ({
@@ -16972,6 +17048,7 @@ class $$CareersTableTableManager
                 Value<int> budget = const Value.absent(),
                 Value<int?> captainPlayerId = const Value.absent(),
                 Value<DateTime?> yReadAt = const Value.absent(),
+                Value<int> playedSeconds = const Value.absent(),
               }) => CareersCompanion.insert(
                 id: id,
                 managerName: managerName,
@@ -16984,6 +17061,7 @@ class $$CareersTableTableManager
                 budget: budget,
                 captainPlayerId: captainPlayerId,
                 yReadAt: yReadAt,
+                playedSeconds: playedSeconds,
               ),
           withReferenceMapper: (p0) => p0
               .map(

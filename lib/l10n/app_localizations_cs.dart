@@ -1592,6 +1592,16 @@ class AppLocalizationsCs extends AppLocalizations {
   String get careerUnknownNation => 'Neznámý';
 
   @override
+  String careerPlayedMinutes(int minutes) {
+    return 'Odehráno $minutes min';
+  }
+
+  @override
+  String careerPlayedHours(int hours, int minutes) {
+    return 'Odehráno $hours h $minutes min';
+  }
+
+  @override
   String careerLastPlayed(String when) {
     return 'Naposledy hráno $when';
   }

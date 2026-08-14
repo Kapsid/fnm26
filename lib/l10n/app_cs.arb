@@ -448,6 +448,8 @@
   "careerDelete": "Smazat",
   "careerNoSavesYet": "Zatím žádné uložené hry.\nZačněte novou hru a veďte reprezentaci.",
   "careerUnknownNation": "Neznámý",
+  "careerPlayedMinutes": "Odehráno {minutes} min",
+  "careerPlayedHours": "Odehráno {hours} h {minutes} min",
   "careerLastPlayed": "Naposledy hráno {when}",
   "careerJustNow": "právě teď",
   "careerYesterday": "včera",

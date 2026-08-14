@@ -75,6 +75,13 @@ abstract interface class CareerRepository {
   /// Marks the Y feed read up to [date] — the in-game date of its newest post.
   Future<void> setYReadAt(int id, DateTime date);
 
+  /// Adds [seconds] of real-world play time to a save.
+  ///
+  /// An increment rather than a set: the counter is written from a ticking
+  /// clock, and a read-modify-write would lose a tick whenever two landed
+  /// close together.
+  Future<void> addPlayedSeconds(int id, int seconds);
+
   /// The investment allocation committed for [cycle] (zeros if none).
   Future<FederationInvestment> investment(int careerId, int cycle);
 

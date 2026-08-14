@@ -74,5 +74,6 @@ extension CareerRowMapper on CareerRow {
     budget: budget,
     captainPlayerId: captainPlayerId,
     yReadAt: yReadAt,
+    playedSeconds: playedSeconds,
   );
 }

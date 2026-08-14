@@ -173,6 +173,18 @@ class SavesScreen extends ConsumerWidget {
 
 /// A short, human "when" for a last-played timestamp — "just now", "3h ago",
 /// "yesterday", then a plain date once it's more than a week old.
+/// How long a save has been played, or null when there is nothing worth
+/// saying yet.
+///
+/// Rounded to whole minutes and hours: a manager wants to know he has put
+/// twenty hours into a career, never that he has put in 20:14:37.
+String? playedLabel(AppLocalizations l, int seconds) {
+  if (seconds < 60) return null;
+  final minutes = seconds ~/ 60;
+  if (minutes < 60) return l.careerPlayedMinutes(minutes);
+  return l.careerPlayedHours(minutes ~/ 60, minutes % 60);
+}
+
 String _ago(AppLocalizations l, DateTime at) {
   final diff = DateTime.now().difference(at);
   if (diff.inMinutes < 2) return l.careerJustNow;
@@ -248,10 +260,42 @@ class _SaveTile extends StatelessWidget {
                         color: AppColors.onSurfaceVariant,
                       ),
                       const SizedBox(width: 4),
-                      Text(
-                        l.careerLastPlayed(_ago(l, save.lastPlayedAt!)),
-                        style: AppTypography.labelSmall.copyWith(
-                          color: AppColors.onSurfaceVariant,
+                      Flexible(
+                        child: Text(
+                          l.careerLastPlayed(_ago(l, save.lastPlayedAt!)),
+                          maxLines: 1,
+                          softWrap: false,
+                          overflow: TextOverflow.ellipsis,
+                          style: AppTypography.labelSmall.copyWith(
+                            color: AppColors.onSurfaceVariant,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+                // How long this save has had of the manager's life. Hidden
+                // under a minute: a save just started has nothing to say, and
+                // "Played 0m" reads like a bug.
+                if (playedLabel(l, save.playedSeconds) case final played?) ...[
+                  const SizedBox(height: 2),
+                  Row(
+                    children: [
+                      const Icon(
+                        Icons.timelapse_rounded,
+                        size: 12,
+                        color: AppColors.onSurfaceVariant,
+                      ),
+                      const SizedBox(width: 4),
+                      Flexible(
+                        child: Text(
+                          played,
+                          maxLines: 1,
+                          softWrap: false,
+                          overflow: TextOverflow.ellipsis,
+                          style: AppTypography.labelSmall.copyWith(
+                            color: AppColors.onSurfaceVariant,
+                          ),
                         ),
                       ),
                     ],

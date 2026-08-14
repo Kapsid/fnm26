@@ -39,5 +39,10 @@ abstract class Career with _$Career {
     /// he has never opened the feed. Posts are derived rather than stored, so
     /// this watermark is what "unread" is counted against.
     DateTime? yReadAt,
+
+    /// Real-world seconds spent playing this save. Zero for a save that
+    /// predates the counter — its earlier hours were never measured, and
+    /// inventing a number for them would be worse than starting at nothing.
+    @Default(0) int playedSeconds,
   }) = _Career;
 }

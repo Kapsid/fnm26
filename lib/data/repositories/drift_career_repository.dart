@@ -133,6 +133,17 @@ class DriftCareerRepository implements CareerRepository {
   }
 
   @override
+  Future<void> addPlayedSeconds(int id, int seconds) async {
+    if (seconds <= 0) return;
+    // Incremented in SQL so two ticks landing together cannot lose one.
+    await _db.customUpdate(
+      'UPDATE careers SET played_seconds = played_seconds + ? WHERE id = ?',
+      variables: [Variable.withInt(seconds), Variable.withInt(id)],
+      updates: {_db.careers},
+    );
+  }
+
+  @override
   Future<void> setYReadAt(int id, DateTime date) async {
     await (_db.update(_db.careers)..where((t) => t.id.equals(id))).write(
       CareersCompanion(yReadAt: Value(date)),

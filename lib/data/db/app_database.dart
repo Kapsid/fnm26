@@ -68,7 +68,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase.forTesting(QueryExecutor executor) : super(executor);
 
   @override
-  int get schemaVersion => 41;
+  int get schemaVersion => 42;
 
   /// The first schema version with a recorded shape in `drift_schemas/`, and so
   /// the oldest save that can be migrated forward rather than rebuilt.
@@ -161,6 +161,12 @@ class AppDatabase extends _$AppDatabase {
         // counts as unread until the manager looks.
         from40To41: (m, schema) async {
           await m.addColumn(schema.careers, schema.careers.yReadAt);
+        },
+        // 41 → 42 adds the played-time counter. Additive with a default of
+        // zero: a save that existed before it simply starts counting from
+        // here, which is honest — the time before this was never measured.
+        from41To42: (m, schema) async {
+          await m.addColumn(schema.careers, schema.careers.playedSeconds);
         },
       )(m, from, to);
     },

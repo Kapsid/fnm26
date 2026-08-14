@@ -87,6 +87,13 @@ class Careers extends Table {
   /// row to mark read — a single watermark is what the unread count is
   /// counted against.
   DateTimeColumn get yReadAt => dateTime().nullable()();
+
+  /// Real-world seconds spent playing this save, accumulated while it is open.
+  ///
+  /// Counted in ticks rather than from an opened-at stamp so that a crash, a
+  /// force-quit or a flat battery costs at most one tick instead of the whole
+  /// session.
+  IntColumn get playedSeconds => integer().withDefault(const Constant(0))();
 }
 
 /// A nation's Nations Cup league (0 = League A, 1 = League B, …) within its

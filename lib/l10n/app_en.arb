@@ -2373,6 +2373,21 @@
   "@careerUnknownNation": {
     "description": "Fallback for an unknown nation."
   },
+  "careerPlayedMinutes": "Played {minutes}m",
+  "@careerPlayedMinutes": {
+    "description": "Total real-world time spent in a save, under an hour.",
+    "placeholders": {
+      "minutes": { "type": "int" }
+    }
+  },
+  "careerPlayedHours": "Played {hours}h {minutes}m",
+  "@careerPlayedHours": {
+    "description": "Total real-world time spent in a save, an hour or more.",
+    "placeholders": {
+      "hours": { "type": "int" },
+      "minutes": { "type": "int" }
+    }
+  },
   "careerLastPlayed": "Last played {when}",
   "@careerLastPlayed": {
     "description": "Saves list: when this save was last opened.",

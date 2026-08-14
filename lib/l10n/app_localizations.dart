@@ -2786,6 +2786,18 @@ abstract class AppLocalizations {
   /// **'Unknown'**
   String get careerUnknownNation;
 
+  /// Total real-world time spent in a save, under an hour.
+  ///
+  /// In en, this message translates to:
+  /// **'Played {minutes}m'**
+  String careerPlayedMinutes(int minutes);
+
+  /// Total real-world time spent in a save, an hour or more.
+  ///
+  /// In en, this message translates to:
+  /// **'Played {hours}h {minutes}m'**
+  String careerPlayedHours(int hours, int minutes);
+
   /// Saves list: when this save was last opened.
   ///
   /// In en, this message translates to:
