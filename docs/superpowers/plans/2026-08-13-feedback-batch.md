@@ -1716,7 +1716,7 @@ git commit -m "fix: achievements use the licence-safe competition name"
 - Consumes: `squadOverall` from Task 4 [A4]. **Task 4 [A4] must land first.**
 - Produces: `teamOverallHistoryProvider(careerId) → List<({int year, int overall})>`
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 ```dart
 testWidgets('team detail charts the nation overall by year', (tester) async {
@@ -1729,28 +1729,28 @@ testWidgets('team detail charts the nation overall by year', (tester) async {
 });
 ```
 
-- [ ] **Step 2: Run the test to verify it fails**
+- [x] **Step 2: Run the test to verify it fails**
 
 Run: `flutter test test/widget/team_overall_history_test.dart`
 Expected: FAIL.
 
-- [ ] **Step 3: Build the history**
+- [x] **Step 3: Build the history**
 
 Compute `squadOverall` per year from the players who existed that year. Derived,
 not stored — a player is a function of seed and year, so the history is
 recomputable and needs no table.
 
-- [ ] **Step 4: Chart it**
+- [x] **Step 4: Chart it**
 
 A simple line, keyed `team-overall-history`. Follow whatever chart or sparkline
 convention the app already uses; do not add a charting dependency.
 
-- [ ] **Step 5: Run the test to verify it passes**
+- [x] **Step 5: Run the test to verify it passes**
 
 Run: `flutter test test/widget/team_overall_history_test.dart`
 Expected: PASS
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add lib/features/stats/ test/widget/team_overall_history_test.dart

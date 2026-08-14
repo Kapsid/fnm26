@@ -188,6 +188,10 @@
   "@matchTacticsLabel": {
     "description": "Live match control bar tactics pill label when no players are tired."
   },
+  "teamOverallOverTime": "OVERALL OVER TIME",
+  "@teamOverallOverTime": {
+    "description": "Heading over the chart of a nation's overall rating by year."
+  },
   "teamOverall": "Overall",
   "@teamOverall": {
     "description": "Label for a team's overall rating (the mean of its best eleven)."

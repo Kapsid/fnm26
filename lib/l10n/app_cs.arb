@@ -35,6 +35,7 @@
   "matchTacticsWithSubs": "Taktika · {used}/{max} střídání",
   "matchTiredCount": "ÚNAVA ×{count}",
   "matchTacticsLabel": "TAKTIKA",
+  "teamOverallOverTime": "VÝVOJ CELKOVÉHO HODNOCENÍ",
   "teamOverall": "Celkový přehled",
   "matchSecondYellow": "Druhá žlutá",
   "matchStraightRed": "Červená karta",

@@ -130,6 +130,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get matchTacticsLabel => 'TACTICS';
 
   @override
+  String get teamOverallOverTime => 'OVERALL OVER TIME';
+
+  @override
   String get teamOverall => 'Overall';
 
   @override
@@ -2611,10 +2614,10 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get achQualWc => 'World Cup Qualifier';
+  String get achQualWc => 'World Championship Qualifier';
 
   @override
-  String get achQualWcDesc => 'Reach the World Cup finals.';
+  String get achQualWcDesc => 'Reach the World Championship finals.';
 
   @override
   String get achQualCont => 'Continental Qualifier';
@@ -2626,7 +2629,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get achTitleWc => 'World Champions';
 
   @override
-  String get achTitleWcDesc => 'Win the World Cup.';
+  String get achTitleWcDesc => 'Win the World Championship.';
 
   @override
   String get achTitleEuro => 'European Champions';
@@ -2677,25 +2680,25 @@ class AppLocalizationsEn extends AppLocalizations {
   String get achTitleClashDesc => 'Win the Continental Clash.';
 
   @override
-  String get achMarksman => 'World Cup Marksman';
+  String get achMarksman => 'World Championship Marksman';
 
   @override
   String get achMarksmanDesc =>
-      'Have a squad player score 6+ World Cup finals goals.';
+      'Have a squad player score 6+ World Championship finals goals.';
 
   @override
   String get achSweep => 'Clean Sweep';
 
   @override
   String get achSweepDesc =>
-      'Hold the World Cup and your continental title in one career.';
+      'Hold the World Championship and your continental title in one career.';
 
   @override
   String get achAllstar => 'Tournament All-Star';
 
   @override
   String get achAllstarDesc =>
-      'Have a player named in a World Cup Team of the Tournament.';
+      'Have a player named in a World Championship Team of the Tournament.';
 
   @override
   String get achGoldenboot => 'Golden Boot';

@@ -308,6 +308,12 @@ abstract class AppLocalizations {
   /// **'TACTICS'**
   String get matchTacticsLabel;
 
+  /// Heading over the chart of a nation's overall rating by year.
+  ///
+  /// In en, this message translates to:
+  /// **'OVERALL OVER TIME'**
+  String get teamOverallOverTime;
+
   /// Label for a team's overall rating (the mean of its best eleven).
   ///
   /// In en, this message translates to:
@@ -4457,13 +4463,13 @@ abstract class AppLocalizations {
   /// Achievement title.
   ///
   /// In en, this message translates to:
-  /// **'World Cup Qualifier'**
+  /// **'World Championship Qualifier'**
   String get achQualWc;
 
   /// Achievement description.
   ///
   /// In en, this message translates to:
-  /// **'Reach the World Cup finals.'**
+  /// **'Reach the World Championship finals.'**
   String get achQualWcDesc;
 
   /// Achievement title.
@@ -4487,7 +4493,7 @@ abstract class AppLocalizations {
   /// Achievement description.
   ///
   /// In en, this message translates to:
-  /// **'Win the World Cup.'**
+  /// **'Win the World Championship.'**
   String get achTitleWcDesc;
 
   /// Achievement title.
@@ -4589,13 +4595,13 @@ abstract class AppLocalizations {
   /// Achievement title.
   ///
   /// In en, this message translates to:
-  /// **'World Cup Marksman'**
+  /// **'World Championship Marksman'**
   String get achMarksman;
 
   /// Achievement description.
   ///
   /// In en, this message translates to:
-  /// **'Have a squad player score 6+ World Cup finals goals.'**
+  /// **'Have a squad player score 6+ World Championship finals goals.'**
   String get achMarksmanDesc;
 
   /// Achievement title.
@@ -4607,7 +4613,7 @@ abstract class AppLocalizations {
   /// Achievement description.
   ///
   /// In en, this message translates to:
-  /// **'Hold the World Cup and your continental title in one career.'**
+  /// **'Hold the World Championship and your continental title in one career.'**
   String get achSweepDesc;
 
   /// Achievement title.
@@ -4619,7 +4625,7 @@ abstract class AppLocalizations {
   /// Achievement description.
   ///
   /// In en, this message translates to:
-  /// **'Have a player named in a World Cup Team of the Tournament.'**
+  /// **'Have a player named in a World Championship Team of the Tournament.'**
   String get achAllstarDesc;
 
   /// Achievement title.

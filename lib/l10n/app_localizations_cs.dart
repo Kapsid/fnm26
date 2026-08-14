@@ -130,6 +130,9 @@ class AppLocalizationsCs extends AppLocalizations {
   String get matchTacticsLabel => 'TAKTIKA';
 
   @override
+  String get teamOverallOverTime => 'VÝVOJ CELKOVÉHO HODNOCENÍ';
+
+  @override
   String get teamOverall => 'Celkový přehled';
 
   @override

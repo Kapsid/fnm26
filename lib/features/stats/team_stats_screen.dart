@@ -11,6 +11,7 @@ import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/records/record_book_screen.dart';
 import 'package:fnm/features/federation/federation_providers.dart';
 import 'package:fnm/features/stats/stats_providers.dart';
+import 'package:fnm/features/stats/team_overall_history.dart';
 import 'package:fnm/features/tactics/tactics_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
@@ -161,6 +162,22 @@ class _TeamStatsScreenState extends ConsumerState<TeamStatsScreen> {
                 child: _TeamHeader(
                   careerId: widget.careerId,
                   nation: view.nation,
+                ),
+              ),
+              const SizedBox(height: AppSpacing.sm),
+              // How the side has developed under this manager — the number on
+              // the match preview, read back through the save.
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: AppSpacing.marginMobile,
+                ),
+                child: TeamOverallHistoryCard(
+                  key: const Key('team-overall-history'),
+                  history:
+                      ref
+                          .watch(teamOverallHistoryProvider(widget.careerId))
+                          .valueOrNull ??
+                      const [],
                 ),
               ),
               const SizedBox(height: AppSpacing.sm),

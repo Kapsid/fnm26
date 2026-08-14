@@ -1,6 +1,9 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/data/data_providers.dart';
+import 'package:fnm/domain/services/rating/overall_rating.dart';
 import 'package:fnm/domain/services/stats/career_stats.dart';
+import 'package:fnm/features/career/career_providers.dart';
+import 'package:fnm/features/federation/federation_providers.dart';
 
 /// Finals-tournament rounds — played at a neutral venue. Qualifiers (round null
 /// or `CQ`) and friendlies are home-and-away, so they don't appear here.
@@ -111,3 +114,41 @@ bool _everTrailed(
   }
   return false;
 }
+
+/// One year of a nation's strength.
+typedef TeamOverallPoint = ({int year, int overall});
+
+/// How good the nation has been, year by year.
+///
+/// Derived, never stored: a player is a function of seed and year, so the whole
+/// curve is recomputed from the pool as it stood each season. That is also why
+/// it is honest — it is the same number the match preview shows, read back
+/// through time rather than a running total somebody remembered to write down.
+final AutoDisposeFutureProviderFamily<List<TeamOverallPoint>, int>
+teamOverallHistoryProvider = FutureProvider.autoDispose
+    .family<List<TeamOverallPoint>, int>((ref, careerId) async {
+      await ref.watch(seedLoaderProvider).ensureSeeded();
+      final career = await ref.watch(careerRepositoryProvider).byId(careerId);
+      if (career == null) return const [];
+      final repo = ref.watch(playerRepositoryProvider);
+      final years = CareerService.agingYears(career);
+      final youth = await ref.watch(youthBonusByCycleProvider(careerId).future);
+      final starts = await ref.watch(careerDevBonusProvider(careerId).future);
+
+      final out = <TeamOverallPoint>[];
+      for (var y = 0; y <= years; y++) {
+        final pool = await repo.byNation(
+          career.nationId,
+          agingYears: y,
+          saveSeed: career.rngSeed,
+          youthBonusByCycle: youth,
+          careerStartsByPlayer: starts,
+        );
+        if (pool.isEmpty) continue;
+        out.add((
+          year: CareerService.cycleStart.year + y,
+          overall: squadOverall(pool),
+        ));
+      }
+      return out;
+    });
