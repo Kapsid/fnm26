@@ -5,7 +5,9 @@
     "code": "ALB",
     "confederation": "europe",
     "ranking": 61,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#E41B17",
+    "secondaryColor": "#000000"
   },
   {
     "id": 2,
@@ -13,7 +15,9 @@
     "code": "AND",
     "confederation": "europe",
     "ranking": 176,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#0033A0",
+    "secondaryColor": "#D0103A"
   },
   {
     "id": 3,
@@ -21,7 +25,9 @@
     "code": "ARM",
     "confederation": "europe",
     "ranking": 89,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#D90012",
+    "secondaryColor": "#0033A0"
   },
   {
     "id": 4,
@@ -29,7 +35,9 @@
     "code": "AUT",
     "confederation": "europe",
     "ranking": 21,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#E4002B",
+    "secondaryColor": "#FFFFFF"
   },
   {
     "id": 5,
@@ -37,7 +45,9 @@
     "code": "AZE",
     "confederation": "europe",
     "ranking": 97,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#00B5E2",
+    "secondaryColor": "#EF3340"
   },
   {
     "id": 7,
@@ -45,7 +55,9 @@
     "code": "BEL",
     "confederation": "europe",
     "ranking": 9,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#E30613",
+    "secondaryColor": "#000000"
   },
   {
     "id": 8,
@@ -53,7 +65,9 @@
     "code": "BIH",
     "confederation": "europe",
     "ranking": 48,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#002F6C",
+    "secondaryColor": "#FFCD00"
   },
   {
     "id": 9,
@@ -61,7 +75,9 @@
     "code": "BUL",
     "confederation": "europe",
     "ranking": 72,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#FFFFFF",
+    "secondaryColor": "#D62612"
   },
   {
     "id": 10,
@@ -69,7 +85,9 @@
     "code": "CRO",
     "confederation": "europe",
     "ranking": 12,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#E40521",
+    "secondaryColor": "#FFFFFF"
   },
   {
     "id": 11,
@@ -77,7 +95,9 @@
     "code": "CYP",
     "confederation": "europe",
     "ranking": 105,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#005BAC",
+    "secondaryColor": "#D57800"
   },
   {
     "id": 12,
@@ -85,7 +105,9 @@
     "code": "CZE",
     "confederation": "europe",
     "ranking": 36,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#D7141A",
+    "secondaryColor": "#11457E"
   },
   {
     "id": 13,
@@ -93,7 +115,9 @@
     "code": "DEN",
     "confederation": "europe",
     "ranking": 15,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#C60C30",
+    "secondaryColor": "#FFFFFF"
   },
   {
     "id": 14,
@@ -101,7 +125,9 @@
     "code": "ENG",
     "confederation": "europe",
     "ranking": 4,
-    "isFreeDemo": true
+    "isFreeDemo": true,
+    "primaryColor": "#FFFFFF",
+    "secondaryColor": "#00205B"
   },
   {
     "id": 15,
@@ -109,7 +135,9 @@
     "code": "EST",
     "confederation": "europe",
     "ranking": 125,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#0072CE",
+    "secondaryColor": "#000000"
   },
   {
     "id": 16,
@@ -117,7 +145,9 @@
     "code": "FRO",
     "confederation": "europe",
     "ranking": 168,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#FFFFFF",
+    "secondaryColor": "#0065BD"
   },
   {
     "id": 17,
@@ -125,7 +155,9 @@
     "code": "FIN",
     "confederation": "europe",
     "ranking": 62,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#FFFFFF",
+    "secondaryColor": "#003580"
   },
   {
     "id": 18,
@@ -133,7 +165,9 @@
     "code": "FRA",
     "confederation": "europe",
     "ranking": 3,
-    "isFreeDemo": true
+    "isFreeDemo": true,
+    "primaryColor": "#002395",
+    "secondaryColor": "#FFFFFF"
   },
   {
     "id": 19,
@@ -141,7 +175,9 @@
     "code": "GEO",
     "confederation": "europe",
     "ranking": 74,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#FFFFFF",
+    "secondaryColor": "#DA291C"
   },
   {
     "id": 20,
@@ -149,7 +185,9 @@
     "code": "GER",
     "confederation": "europe",
     "ranking": 7,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#FFFFFF",
+    "secondaryColor": "#000000"
   },
   {
     "id": 21,
@@ -157,7 +195,9 @@
     "code": "GIB",
     "confederation": "europe",
     "ranking": 179,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#E03A3E",
+    "secondaryColor": "#FFFFFF"
   },
   {
     "id": 22,
@@ -165,7 +205,9 @@
     "code": "GRE",
     "confederation": "europe",
     "ranking": 49,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#004C98",
+    "secondaryColor": "#FFFFFF"
   },
   {
     "id": 23,
@@ -173,7 +215,9 @@
     "code": "HUN",
     "confederation": "europe",
     "ranking": 45,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#C8102E",
+    "secondaryColor": "#FFFFFF"
   },
   {
     "id": 24,
@@ -181,7 +225,9 @@
     "code": "ISL",
     "confederation": "europe",
     "ranking": 76,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#0055A4",
+    "secondaryColor": "#DC1E35"
   },
   {
     "id": 25,
@@ -189,7 +235,9 @@
     "code": "ISR",
     "confederation": "europe",
     "ranking": 71,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#0038B8",
+    "secondaryColor": "#FFFFFF"
   },
   {
     "id": 26,
@@ -197,7 +245,9 @@
     "code": "ITA",
     "confederation": "europe",
     "ranking": 10,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#0066B2",
+    "secondaryColor": "#FFFFFF"
   },
   {
     "id": 27,
@@ -205,7 +255,9 @@
     "code": "KAZ",
     "confederation": "europe",
     "ranking": 118,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#00AFCA",
+    "secondaryColor": "#FEC50C"
   },
   {
     "id": 28,
@@ -213,7 +265,9 @@
     "code": "KVX",
     "confederation": "europe",
     "ranking": 82,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#244AA5",
+    "secondaryColor": "#D0A650"
   },
   {
     "id": 29,
@@ -221,7 +275,9 @@
     "code": "LVA",
     "confederation": "europe",
     "ranking": 139,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#9E1B32",
+    "secondaryColor": "#FFFFFF"
   },
   {
     "id": 30,
@@ -229,7 +285,9 @@
     "code": "LIE",
     "confederation": "europe",
     "ranking": 187,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#002B7F",
+    "secondaryColor": "#CE1126"
   },
   {
     "id": 31,
@@ -237,7 +295,9 @@
     "code": "LTU",
     "confederation": "europe",
     "ranking": 140,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#FDB913",
+    "secondaryColor": "#006A44"
   },
   {
     "id": 32,
@@ -245,7 +305,9 @@
     "code": "LUX",
     "confederation": "europe",
     "ranking": 111,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#EF3340",
+    "secondaryColor": "#00A3E0"
   },
   {
     "id": 33,
@@ -253,7 +315,9 @@
     "code": "MLT",
     "confederation": "europe",
     "ranking": 154,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#C01920",
+    "secondaryColor": "#FFFFFF"
   },
   {
     "id": 34,
@@ -261,7 +325,9 @@
     "code": "MDA",
     "confederation": "europe",
     "ranking": 128,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#0046AE",
+    "secondaryColor": "#CC092F"
   },
   {
     "id": 35,
@@ -269,7 +335,9 @@
     "code": "MNE",
     "confederation": "europe",
     "ranking": 83,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#C40308",
+    "secondaryColor": "#D3A625"
   },
   {
     "id": 36,
@@ -277,7 +345,9 @@
     "code": "NED",
     "confederation": "europe",
     "ranking": 8,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#FF6C00",
+    "secondaryColor": "#FFFFFF"
   },
   {
     "id": 37,
@@ -285,7 +355,9 @@
     "code": "MKD",
     "confederation": "europe",
     "ranking": 78,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#D20000",
+    "secondaryColor": "#FFE600"
   },
   {
     "id": 38,
@@ -293,7 +365,9 @@
     "code": "NIR",
     "confederation": "europe",
     "ranking": 84,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#00843D",
+    "secondaryColor": "#FFFFFF"
   },
   {
     "id": 39,
@@ -301,7 +375,9 @@
     "code": "NOR",
     "confederation": "europe",
     "ranking": 32,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#BA0C2F",
+    "secondaryColor": "#00205B"
   },
   {
     "id": 40,
@@ -309,7 +385,9 @@
     "code": "POL",
     "confederation": "europe",
     "ranking": 33,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#FFFFFF",
+    "secondaryColor": "#DC143C"
   },
   {
     "id": 41,
@@ -317,7 +395,9 @@
     "code": "POR",
     "confederation": "europe",
     "ranking": 5,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#C8102E",
+    "secondaryColor": "#006600"
   },
   {
     "id": 42,
@@ -325,7 +405,9 @@
     "code": "IRL",
     "confederation": "europe",
     "ranking": 66,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#169B62",
+    "secondaryColor": "#FFFFFF"
   },
   {
     "id": 43,
@@ -333,7 +415,9 @@
     "code": "ROU",
     "confederation": "europe",
     "ranking": 57,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#FCD116",
+    "secondaryColor": "#002B7F"
   },
   {
     "id": 45,
@@ -341,7 +425,9 @@
     "code": "SMR",
     "confederation": "europe",
     "ranking": 203,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#5EB6E4",
+    "secondaryColor": "#FFFFFF"
   },
   {
     "id": 46,
@@ -349,7 +435,9 @@
     "code": "SCO",
     "confederation": "europe",
     "ranking": 47,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#005EB8",
+    "secondaryColor": "#FFFFFF"
   },
   {
     "id": 47,
@@ -357,7 +445,9 @@
     "code": "SRB",
     "confederation": "europe",
     "ranking": 30,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#C6363C",
+    "secondaryColor": "#0C4076"
   },
   {
     "id": 48,
@@ -365,7 +455,9 @@
     "code": "SVK",
     "confederation": "europe",
     "ranking": 58,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#0B4EA2",
+    "secondaryColor": "#FFFFFF"
   },
   {
     "id": 49,
@@ -373,7 +465,9 @@
     "code": "SVN",
     "confederation": "europe",
     "ranking": 59,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#FFFFFF",
+    "secondaryColor": "#00843D"
   },
   {
     "id": 50,
@@ -381,7 +475,9 @@
     "code": "ESP",
     "confederation": "europe",
     "ranking": 6,
-    "isFreeDemo": true
+    "isFreeDemo": true,
+    "primaryColor": "#C60B1E",
+    "secondaryColor": "#FFC400"
   },
   {
     "id": 51,
@@ -389,7 +485,9 @@
     "code": "SWE",
     "confederation": "europe",
     "ranking": 37,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#FFCD00",
+    "secondaryColor": "#005293"
   },
   {
     "id": 52,
@@ -397,7 +495,9 @@
     "code": "SUI",
     "confederation": "europe",
     "ranking": 23,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#D52B1E",
+    "secondaryColor": "#FFFFFF"
   },
   {
     "id": 53,
@@ -405,7 +505,9 @@
     "code": "TUR",
     "confederation": "europe",
     "ranking": 34,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#E30A17",
+    "secondaryColor": "#FFFFFF"
   },
   {
     "id": 54,
@@ -413,7 +515,9 @@
     "code": "UKR",
     "confederation": "europe",
     "ranking": 39,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#FFD500",
+    "secondaryColor": "#0057B7"
   },
   {
     "id": 55,
@@ -421,7 +525,9 @@
     "code": "WAL",
     "confederation": "europe",
     "ranking": 52,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#C8102E",
+    "secondaryColor": "#00843D"
   },
   {
     "id": 56,
@@ -429,7 +535,9 @@
     "code": "ARG",
     "confederation": "southAmerica",
     "ranking": 1,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#6CACE4",
+    "secondaryColor": "#FFFFFF"
   },
   {
     "id": 57,
@@ -437,7 +545,9 @@
     "code": "BOL",
     "confederation": "southAmerica",
     "ranking": 98,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#007A33",
+    "secondaryColor": "#FFD100"
   },
   {
     "id": 58,
@@ -445,7 +555,9 @@
     "code": "BRA",
     "confederation": "southAmerica",
     "ranking": 2,
-    "isFreeDemo": true
+    "isFreeDemo": true,
+    "primaryColor": "#FFDF00",
+    "secondaryColor": "#009C3B"
   },
   {
     "id": 59,
@@ -453,7 +565,9 @@
     "code": "CHI",
     "confederation": "southAmerica",
     "ranking": 43,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#DA291C",
+    "secondaryColor": "#0033A0"
   },
   {
     "id": 60,
@@ -461,7 +575,9 @@
     "code": "COL",
     "confederation": "southAmerica",
     "ranking": 11,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#FCD116",
+    "secondaryColor": "#003087"
   },
   {
     "id": 61,
@@ -469,7 +585,9 @@
     "code": "ECU",
     "confederation": "southAmerica",
     "ranking": 41,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#FFDD00",
+    "secondaryColor": "#0033A0"
   },
   {
     "id": 62,
@@ -477,7 +595,9 @@
     "code": "PAR",
     "confederation": "southAmerica",
     "ranking": 56,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#D52B1E",
+    "secondaryColor": "#0038A8"
   },
   {
     "id": 63,
@@ -485,7 +605,9 @@
     "code": "PER",
     "confederation": "southAmerica",
     "ranking": 50,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#FFFFFF",
+    "secondaryColor": "#D91023"
   },
   {
     "id": 64,
@@ -493,7 +615,9 @@
     "code": "URU",
     "confederation": "southAmerica",
     "ranking": 14,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#4B9CD3",
+    "secondaryColor": "#FFFFFF"
   },
   {
     "id": 65,
@@ -501,7 +625,9 @@
     "code": "VEN",
     "confederation": "southAmerica",
     "ranking": 69,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#7B1113",
+    "secondaryColor": "#FFFFFF"
   },
   {
     "id": 66,
@@ -509,7 +635,9 @@
     "code": "AIA",
     "confederation": "northAmerica",
     "ranking": 191,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#6DBDD6",
+    "secondaryColor": "#FFFFFF"
   },
   {
     "id": 67,
@@ -517,7 +645,9 @@
     "code": "ATG",
     "confederation": "northAmerica",
     "ranking": 147,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#CE1126",
+    "secondaryColor": "#000000"
   },
   {
     "id": 68,
@@ -525,7 +655,9 @@
     "code": "ARU",
     "confederation": "northAmerica",
     "ranking": 172,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#4189DD",
+    "secondaryColor": "#F9D616"
   },
   {
     "id": 69,
@@ -533,7 +665,9 @@
     "code": "BAH",
     "confederation": "northAmerica",
     "ranking": 177,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#00778B",
+    "secondaryColor": "#FFC72C"
   },
   {
     "id": 70,
@@ -541,7 +675,9 @@
     "code": "BRB",
     "confederation": "northAmerica",
     "ranking": 153,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#00267F",
+    "secondaryColor": "#FFC726"
   },
   {
     "id": 71,
@@ -549,7 +685,9 @@
     "code": "BLZ",
     "confederation": "northAmerica",
     "ranking": 159,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#CE1126",
+    "secondaryColor": "#003F87"
   },
   {
     "id": 72,
@@ -557,7 +695,9 @@
     "code": "BER",
     "confederation": "northAmerica",
     "ranking": 148,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#12284C",
+    "secondaryColor": "#EF3340"
   },
   {
     "id": 73,
@@ -565,7 +705,9 @@
     "code": "VGB",
     "confederation": "northAmerica",
     "ranking": 197,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#002D62",
+    "secondaryColor": "#FFFFFF"
   },
   {
     "id": 74,
@@ -573,7 +715,9 @@
     "code": "CAN",
     "confederation": "northAmerica",
     "ranking": 26,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#FF0000",
+    "secondaryColor": "#FFFFFF"
   },
   {
     "id": 75,
@@ -581,7 +725,9 @@
     "code": "CAY",
     "confederation": "northAmerica",
     "ranking": 193,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#C8102E",
+    "secondaryColor": "#012169"
   },
   {
     "id": 76,
@@ -589,7 +735,9 @@
     "code": "CRC",
     "confederation": "northAmerica",
     "ranking": 40,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#D90012",
+    "secondaryColor": "#002B7F"
   },
   {
     "id": 77,
@@ -597,7 +745,9 @@
     "code": "CUB",
     "confederation": "northAmerica",
     "ranking": 116,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#002A8F",
+    "secondaryColor": "#CF142B"
   },
   {
     "id": 78,
@@ -605,7 +755,9 @@
     "code": "CUW",
     "confederation": "northAmerica",
     "ranking": 87,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#002B7F",
+    "secondaryColor": "#F9D90F"
   },
   {
     "id": 79,
@@ -613,7 +765,9 @@
     "code": "DMA",
     "confederation": "northAmerica",
     "ranking": 185,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#006B3F",
+    "secondaryColor": "#D41C30"
   },
   {
     "id": 80,
@@ -621,7 +775,9 @@
     "code": "DOM",
     "confederation": "northAmerica",
     "ranking": 106,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#002D62",
+    "secondaryColor": "#CE1126"
   },
   {
     "id": 81,
@@ -629,7 +785,9 @@
     "code": "SLV",
     "confederation": "northAmerica",
     "ranking": 107,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#0F47AF",
+    "secondaryColor": "#FFFFFF"
   },
   {
     "id": 82,
@@ -637,7 +795,9 @@
     "code": "GRN",
     "confederation": "northAmerica",
     "ranking": 162,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#CE1126",
+    "secondaryColor": "#FFC72C"
   },
   {
     "id": 83,
@@ -645,7 +805,9 @@
     "code": "GUA",
     "confederation": "northAmerica",
     "ranking": 101,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#4997D0",
+    "secondaryColor": "#FFFFFF"
   },
   {
     "id": 84,
@@ -653,7 +815,9 @@
     "code": "GUY",
     "confederation": "northAmerica",
     "ranking": 149,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#009E49",
+    "secondaryColor": "#FCD116"
   },
   {
     "id": 85,
@@ -661,7 +825,9 @@
     "code": "HAI",
     "confederation": "northAmerica",
     "ranking": 81,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#00209F",
+    "secondaryColor": "#D21034"
   },
   {
     "id": 86,
@@ -669,7 +835,9 @@
     "code": "HON",
     "confederation": "northAmerica",
     "ranking": 75,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#FFFFFF",
+    "secondaryColor": "#0073CF"
   },
   {
     "id": 87,
@@ -677,7 +845,9 @@
     "code": "JAM",
     "confederation": "northAmerica",
     "ranking": 55,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#FCD116",
+    "secondaryColor": "#009B3A"
   },
   {
     "id": 88,
@@ -685,7 +855,9 @@
     "code": "MEX",
     "confederation": "northAmerica",
     "ranking": 17,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#006847",
+    "secondaryColor": "#FFFFFF"
   },
   {
     "id": 89,
@@ -693,7 +865,9 @@
     "code": "MSR",
     "confederation": "northAmerica",
     "ranking": 202,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#009739",
+    "secondaryColor": "#FFFFFF"
   },
   {
     "id": 90,
@@ -701,7 +875,9 @@
     "code": "NCA",
     "confederation": "northAmerica",
     "ranking": 145,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#0067C6",
+    "secondaryColor": "#FFFFFF"
   },
   {
     "id": 91,
@@ -709,7 +885,9 @@
     "code": "PAN",
     "confederation": "northAmerica",
     "ranking": 65,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#DA1A32",
+    "secondaryColor": "#005293"
   },
   {
     "id": 92,
@@ -717,7 +895,9 @@
     "code": "PUR",
     "confederation": "northAmerica",
     "ranking": 164,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#E31C23",
+    "secondaryColor": "#0050A4"
   },
   {
     "id": 93,
@@ -725,7 +905,9 @@
     "code": "SKN",
     "confederation": "northAmerica",
     "ranking": 165,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#009739",
+    "secondaryColor": "#CE1126"
   },
   {
     "id": 94,
@@ -733,7 +915,9 @@
     "code": "LCA",
     "confederation": "northAmerica",
     "ranking": 182,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#66CCFF",
+    "secondaryColor": "#FCD116"
   },
   {
     "id": 95,
@@ -741,7 +925,9 @@
     "code": "VIN",
     "confederation": "northAmerica",
     "ranking": 175,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#0072C6",
+    "secondaryColor": "#FCD116"
   },
   {
     "id": 96,
@@ -749,7 +935,9 @@
     "code": "SUR",
     "confederation": "northAmerica",
     "ranking": 92,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#377E3F",
+    "secondaryColor": "#B40A2D"
   },
   {
     "id": 97,
@@ -757,7 +945,9 @@
     "code": "TRI",
     "confederation": "northAmerica",
     "ranking": 85,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#DA1A35",
+    "secondaryColor": "#000000"
   },
   {
     "id": 98,
@@ -765,7 +955,9 @@
     "code": "TCA",
     "confederation": "northAmerica",
     "ranking": 208,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#002D62",
+    "secondaryColor": "#FFFFFF"
   },
   {
     "id": 99,
@@ -773,7 +965,9 @@
     "code": "USA",
     "confederation": "northAmerica",
     "ranking": 24,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#FFFFFF",
+    "secondaryColor": "#0A3161"
   },
   {
     "id": 100,
@@ -781,7 +975,9 @@
     "code": "VIR",
     "confederation": "northAmerica",
     "ranking": 206,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#0033A0",
+    "secondaryColor": "#FFFFFF"
   },
   {
     "id": 101,
@@ -789,7 +985,9 @@
     "code": "ALG",
     "confederation": "africa",
     "ranking": 25,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#FFFFFF",
+    "secondaryColor": "#006233"
   },
   {
     "id": 102,
@@ -797,7 +995,9 @@
     "code": "ANG",
     "confederation": "africa",
     "ranking": 79,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#CE1126",
+    "secondaryColor": "#000000"
   },
   {
     "id": 103,
@@ -805,7 +1005,9 @@
     "code": "BEN",
     "confederation": "africa",
     "ranking": 86,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#008751",
+    "secondaryColor": "#E8112D"
   },
   {
     "id": 104,
@@ -813,7 +1015,9 @@
     "code": "BOT",
     "confederation": "africa",
     "ranking": 132,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#6DA9D2",
+    "secondaryColor": "#000000"
   },
   {
     "id": 105,
@@ -821,7 +1025,9 @@
     "code": "BFA",
     "confederation": "africa",
     "ranking": 53,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#009639",
+    "secondaryColor": "#EF2B2D"
   },
   {
     "id": 106,
@@ -829,7 +1035,9 @@
     "code": "BDI",
     "confederation": "africa",
     "ranking": 133,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#CE1126",
+    "secondaryColor": "#1EB53A"
   },
   {
     "id": 107,
@@ -837,7 +1045,9 @@
     "code": "CMR",
     "confederation": "africa",
     "ranking": 35,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#009639",
+    "secondaryColor": "#FCD116"
   },
   {
     "id": 108,
@@ -845,7 +1055,9 @@
     "code": "CPV",
     "confederation": "africa",
     "ranking": 73,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#003893",
+    "secondaryColor": "#FFFFFF"
   },
   {
     "id": 109,
@@ -853,7 +1065,9 @@
     "code": "CTA",
     "confederation": "africa",
     "ranking": 143,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#003082",
+    "secondaryColor": "#FFFFFF"
   },
   {
     "id": 110,
@@ -861,7 +1075,9 @@
     "code": "CHA",
     "confederation": "africa",
     "ranking": 167,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#002664",
+    "secondaryColor": "#FECB00"
   },
   {
     "id": 111,
@@ -869,7 +1085,9 @@
     "code": "COM",
     "confederation": "africa",
     "ranking": 134,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#3A8E00",
+    "secondaryColor": "#FFFFFF"
   },
   {
     "id": 112,
@@ -877,7 +1095,9 @@
     "code": "CGO",
     "confederation": "africa",
     "ranking": 99,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#009543",
+    "secondaryColor": "#FBDE4A"
   },
   {
     "id": 113,
@@ -885,7 +1105,9 @@
     "code": "COD",
     "confederation": "africa",
     "ranking": 44,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#0085CA",
+    "secondaryColor": "#F7D618"
   },
   {
     "id": 114,
@@ -893,7 +1115,9 @@
     "code": "DJI",
     "confederation": "africa",
     "ranking": 184,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#6AB2E7",
+    "secondaryColor": "#12AD2B"
   },
   {
     "id": 115,
@@ -901,7 +1125,9 @@
     "code": "EGY",
     "confederation": "africa",
     "ranking": 27,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#CE1126",
+    "secondaryColor": "#FFFFFF"
   },
   {
     "id": 116,
@@ -909,7 +1135,9 @@
     "code": "EQG",
     "confederation": "africa",
     "ranking": 117,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#3E9A00",
+    "secondaryColor": "#0073CE"
   },
   {
     "id": 117,
@@ -917,7 +1145,9 @@
     "code": "ERI",
     "confederation": "africa",
     "ranking": 178,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#EA0437",
+    "secondaryColor": "#12AD2B"
   },
   {
     "id": 118,
@@ -925,7 +1155,9 @@
     "code": "SWZ",
     "confederation": "africa",
     "ranking": 161,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#B10C0C",
+    "secondaryColor": "#FFD100"
   },
   {
     "id": 119,
@@ -933,7 +1165,9 @@
     "code": "ETH",
     "confederation": "africa",
     "ranking": 135,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#078930",
+    "secondaryColor": "#FCDD09"
   },
   {
     "id": 120,
@@ -941,7 +1175,9 @@
     "code": "GAB",
     "confederation": "africa",
     "ranking": 80,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#009E60",
+    "secondaryColor": "#FCD116"
   },
   {
     "id": 121,
@@ -949,7 +1185,9 @@
     "code": "GAM",
     "confederation": "africa",
     "ranking": 100,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#CE1126",
+    "secondaryColor": "#3A7728"
   },
   {
     "id": 122,
@@ -957,7 +1195,9 @@
     "code": "GHA",
     "confederation": "africa",
     "ranking": 31,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#CE1126",
+    "secondaryColor": "#006B3F"
   },
   {
     "id": 123,
@@ -965,7 +1205,9 @@
     "code": "GUI",
     "confederation": "africa",
     "ranking": 63,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#CE1126",
+    "secondaryColor": "#009460"
   },
   {
     "id": 124,
@@ -973,7 +1215,9 @@
     "code": "GNB",
     "confederation": "africa",
     "ranking": 91,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#CE1126",
+    "secondaryColor": "#FCD116"
   },
   {
     "id": 125,
@@ -981,7 +1225,9 @@
     "code": "CIV",
     "confederation": "africa",
     "ranking": 28,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#FF8200",
+    "secondaryColor": "#009E60"
   },
   {
     "id": 126,
@@ -989,7 +1235,9 @@
     "code": "KEN",
     "confederation": "africa",
     "ranking": 109,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#B10C0C",
+    "secondaryColor": "#006600"
   },
   {
     "id": 127,
@@ -997,7 +1245,9 @@
     "code": "LES",
     "confederation": "africa",
     "ranking": 169,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#00209F",
+    "secondaryColor": "#009543"
   },
   {
     "id": 128,
@@ -1005,7 +1255,9 @@
     "code": "LBR",
     "confederation": "africa",
     "ranking": 127,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#002868",
+    "secondaryColor": "#BF0A30"
   },
   {
     "id": 129,
@@ -1013,7 +1265,9 @@
     "code": "LBY",
     "confederation": "africa",
     "ranking": 119,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#239E46",
+    "secondaryColor": "#E70013"
   },
   {
     "id": 130,
@@ -1021,7 +1275,9 @@
     "code": "MAD",
     "confederation": "africa",
     "ranking": 120,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#FC3D32",
+    "secondaryColor": "#007E3A"
   },
   {
     "id": 131,
@@ -1029,7 +1285,9 @@
     "code": "MWI",
     "confederation": "africa",
     "ranking": 150,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#CE1126",
+    "secondaryColor": "#009543"
   },
   {
     "id": 132,
@@ -1037,7 +1295,9 @@
     "code": "MLI",
     "confederation": "africa",
     "ranking": 46,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#14B53A",
+    "secondaryColor": "#CE1126"
   },
   {
     "id": 133,
@@ -1045,7 +1305,9 @@
     "code": "MTN",
     "confederation": "africa",
     "ranking": 112,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#006233",
+    "secondaryColor": "#FFD700"
   },
   {
     "id": 134,
@@ -1053,7 +1315,9 @@
     "code": "MRI",
     "confederation": "africa",
     "ranking": 181,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#EA2839",
+    "secondaryColor": "#00A551"
   },
   {
     "id": 135,
@@ -1061,7 +1325,9 @@
     "code": "MAR",
     "confederation": "africa",
     "ranking": 13,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#C1272D",
+    "secondaryColor": "#006233"
   },
   {
     "id": 136,
@@ -1069,7 +1335,9 @@
     "code": "MOZ",
     "confederation": "africa",
     "ranking": 122,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#007168",
+    "secondaryColor": "#FCD116"
   },
   {
     "id": 137,
@@ -1077,7 +1345,9 @@
     "code": "NAM",
     "confederation": "africa",
     "ranking": 129,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#003580",
+    "secondaryColor": "#009543"
   },
   {
     "id": 138,
@@ -1085,7 +1355,9 @@
     "code": "NIG",
     "confederation": "africa",
     "ranking": 141,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#E05206",
+    "secondaryColor": "#0DB02B"
   },
   {
     "id": 139,
@@ -1093,7 +1365,9 @@
     "code": "NGA",
     "confederation": "africa",
     "ranking": 29,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#008751",
+    "secondaryColor": "#FFFFFF"
   },
   {
     "id": 140,
@@ -1101,7 +1375,9 @@
     "code": "RWA",
     "confederation": "africa",
     "ranking": 142,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#00A1DE",
+    "secondaryColor": "#FAD201"
   },
   {
     "id": 141,
@@ -1109,7 +1385,9 @@
     "code": "STP",
     "confederation": "africa",
     "ranking": 196,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#12AD2B",
+    "secondaryColor": "#D21034"
   },
   {
     "id": 142,
@@ -1117,7 +1395,9 @@
     "code": "SEN",
     "confederation": "africa",
     "ranking": 18,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#00853F",
+    "secondaryColor": "#E31B23"
   },
   {
     "id": 143,
@@ -1125,7 +1405,9 @@
     "code": "SEY",
     "confederation": "africa",
     "ranking": 199,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#003F87",
+    "secondaryColor": "#D62828"
   },
   {
     "id": 144,
@@ -1133,7 +1415,9 @@
     "code": "SLE",
     "confederation": "africa",
     "ranking": 123,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#1EB53A",
+    "secondaryColor": "#0072C6"
   },
   {
     "id": 145,
@@ -1141,7 +1425,9 @@
     "code": "SOM",
     "confederation": "africa",
     "ranking": 195,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#4189DD",
+    "secondaryColor": "#FFFFFF"
   },
   {
     "id": 146,
@@ -1149,7 +1435,9 @@
     "code": "RSA",
     "confederation": "africa",
     "ranking": 67,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#FCB514",
+    "secondaryColor": "#007A4D"
   },
   {
     "id": 147,
@@ -1157,7 +1445,9 @@
     "code": "SSD",
     "confederation": "africa",
     "ranking": 183,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#0F47AF",
+    "secondaryColor": "#078930"
   },
   {
     "id": 148,
@@ -1165,7 +1455,9 @@
     "code": "SDN",
     "confederation": "africa",
     "ranking": 130,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#D21034",
+    "secondaryColor": "#007229"
   },
   {
     "id": 149,
@@ -1173,7 +1465,9 @@
     "code": "TAN",
     "confederation": "africa",
     "ranking": 124,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#1EB53A",
+    "secondaryColor": "#00A3DD"
   },
   {
     "id": 150,
@@ -1181,7 +1475,9 @@
     "code": "TOG",
     "confederation": "africa",
     "ranking": 104,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#006A4E",
+    "secondaryColor": "#FFCE00"
   },
   {
     "id": 151,
@@ -1189,7 +1485,9 @@
     "code": "TUN",
     "confederation": "africa",
     "ranking": 38,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#E70013",
+    "secondaryColor": "#FFFFFF"
   },
   {
     "id": 152,
@@ -1197,7 +1495,9 @@
     "code": "UGA",
     "confederation": "africa",
     "ranking": 114,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#FCDC04",
+    "secondaryColor": "#D90000"
   },
   {
     "id": 153,
@@ -1205,7 +1505,9 @@
     "code": "ZAM",
     "confederation": "africa",
     "ranking": 96,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#198A00",
+    "secondaryColor": "#EF7D00"
   },
   {
     "id": 154,
@@ -1213,7 +1515,9 @@
     "code": "ZIM",
     "confederation": "africa",
     "ranking": 115,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#006400",
+    "secondaryColor": "#FFD200"
   },
   {
     "id": 155,
@@ -1221,7 +1525,9 @@
     "code": "AFG",
     "confederation": "asia",
     "ranking": 158,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#007A36",
+    "secondaryColor": "#D32011"
   },
   {
     "id": 156,
@@ -1229,7 +1535,9 @@
     "code": "AUS",
     "confederation": "asia",
     "ranking": 20,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#FFCD00",
+    "secondaryColor": "#00843D"
   },
   {
     "id": 157,
@@ -1237,7 +1545,9 @@
     "code": "BHR",
     "confederation": "asia",
     "ranking": 90,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#CE1126",
+    "secondaryColor": "#FFFFFF"
   },
   {
     "id": 158,
@@ -1245,7 +1555,9 @@
     "code": "BAN",
     "confederation": "asia",
     "ranking": 166,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#006A4E",
+    "secondaryColor": "#F42A41"
   },
   {
     "id": 159,
@@ -1253,7 +1565,9 @@
     "code": "BHU",
     "confederation": "asia",
     "ranking": 200,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#FFD520",
+    "secondaryColor": "#FF4E12"
   },
   {
     "id": 160,
@@ -1261,7 +1575,9 @@
     "code": "BRU",
     "confederation": "asia",
     "ranking": 192,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#F7E017",
+    "secondaryColor": "#000000"
   },
   {
     "id": 161,
@@ -1269,7 +1585,9 @@
     "code": "CAM",
     "confederation": "asia",
     "ranking": 160,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#032EA1",
+    "secondaryColor": "#E00025"
   },
   {
     "id": 162,
@@ -1277,7 +1595,9 @@
     "code": "CHN",
     "confederation": "asia",
     "ranking": 70,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#DE2910",
+    "secondaryColor": "#FFDE00"
   },
   {
     "id": 163,
@@ -1285,7 +1605,9 @@
     "code": "TPE",
     "confederation": "asia",
     "ranking": 173,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#000095",
+    "secondaryColor": "#FE0000"
   },
   {
     "id": 164,
@@ -1293,7 +1615,9 @@
     "code": "GUM",
     "confederation": "asia",
     "ranking": 198,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#00308F",
+    "secondaryColor": "#C8102E"
   },
   {
     "id": 165,
@@ -1301,7 +1625,9 @@
     "code": "HKG",
     "confederation": "asia",
     "ranking": 137,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#DE2910",
+    "secondaryColor": "#FFFFFF"
   },
   {
     "id": 166,
@@ -1309,7 +1635,9 @@
     "code": "IND",
     "confederation": "asia",
     "ranking": 102,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#0099DC",
+    "secondaryColor": "#FF9933"
   },
   {
     "id": 167,
@@ -1317,7 +1645,9 @@
     "code": "IDN",
     "confederation": "asia",
     "ranking": 108,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#FF0000",
+    "secondaryColor": "#FFFFFF"
   },
   {
     "id": 168,
@@ -1325,7 +1655,9 @@
     "code": "IRN",
     "confederation": "asia",
     "ranking": 22,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#FFFFFF",
+    "secondaryColor": "#DA0000"
   },
   {
     "id": 169,
@@ -1333,7 +1665,9 @@
     "code": "IRQ",
     "confederation": "asia",
     "ranking": 54,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#007A3D",
+    "secondaryColor": "#FFFFFF"
   },
   {
     "id": 170,
@@ -1341,7 +1675,9 @@
     "code": "JPN",
     "confederation": "asia",
     "ranking": 16,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#002FA7",
+    "secondaryColor": "#FFFFFF"
   },
   {
     "id": 171,
@@ -1349,7 +1685,9 @@
     "code": "JOR",
     "confederation": "asia",
     "ranking": 77,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#FFFFFF",
+    "secondaryColor": "#CE1126"
   },
   {
     "id": 172,
@@ -1357,7 +1695,9 @@
     "code": "KUW",
     "confederation": "asia",
     "ranking": 126,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#0072C6",
+    "secondaryColor": "#FFFFFF"
   },
   {
     "id": 173,
@@ -1365,7 +1705,9 @@
     "code": "KGZ",
     "confederation": "asia",
     "ranking": 138,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#E8112D",
+    "secondaryColor": "#FFEF00"
   },
   {
     "id": 174,
@@ -1373,7 +1715,9 @@
     "code": "LAO",
     "confederation": "asia",
     "ranking": 186,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#CE1126",
+    "secondaryColor": "#002868"
   },
   {
     "id": 175,
@@ -1381,7 +1725,9 @@
     "code": "LIB",
     "confederation": "asia",
     "ranking": 110,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#ED1C24",
+    "secondaryColor": "#00A651"
   },
   {
     "id": 176,
@@ -1389,7 +1735,9 @@
     "code": "MAC",
     "confederation": "asia",
     "ranking": 201,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#00785E",
+    "secondaryColor": "#FFFFFF"
   },
   {
     "id": 177,
@@ -1397,7 +1745,9 @@
     "code": "MAS",
     "confederation": "asia",
     "ranking": 121,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#FFCC00",
+    "secondaryColor": "#010066"
   },
   {
     "id": 178,
@@ -1405,7 +1755,9 @@
     "code": "MDV",
     "confederation": "asia",
     "ranking": 180,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#D21034",
+    "secondaryColor": "#007E3A"
   },
   {
     "id": 179,
@@ -1413,7 +1765,9 @@
     "code": "MNG",
     "confederation": "asia",
     "ranking": 188,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#C4272E",
+    "secondaryColor": "#015197"
   },
   {
     "id": 180,
@@ -1421,7 +1775,9 @@
     "code": "MYA",
     "confederation": "asia",
     "ranking": 155,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#34B233",
+    "secondaryColor": "#FECB00"
   },
   {
     "id": 181,
@@ -1429,7 +1785,9 @@
     "code": "NEP",
     "confederation": "asia",
     "ranking": 170,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#DC143C",
+    "secondaryColor": "#003893"
   },
   {
     "id": 182,
@@ -1437,7 +1795,9 @@
     "code": "PRK",
     "confederation": "asia",
     "ranking": 103,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#ED1C27",
+    "secondaryColor": "#FFFFFF"
   },
   {
     "id": 183,
@@ -1445,7 +1805,9 @@
     "code": "OMA",
     "confederation": "asia",
     "ranking": 88,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#C8102E",
+    "secondaryColor": "#FFFFFF"
   },
   {
     "id": 184,
@@ -1453,7 +1815,9 @@
     "code": "PAK",
     "confederation": "asia",
     "ranking": 174,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#01411C",
+    "secondaryColor": "#FFFFFF"
   },
   {
     "id": 185,
@@ -1461,7 +1825,9 @@
     "code": "PLE",
     "confederation": "asia",
     "ranking": 113,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#007A3D",
+    "secondaryColor": "#CE1126"
   },
   {
     "id": 186,
@@ -1469,7 +1835,9 @@
     "code": "PHI",
     "confederation": "asia",
     "ranking": 146,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#0038A8",
+    "secondaryColor": "#CE1126"
   },
   {
     "id": 187,
@@ -1477,7 +1845,9 @@
     "code": "QAT",
     "confederation": "asia",
     "ranking": 51,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#8A1538",
+    "secondaryColor": "#FFFFFF"
   },
   {
     "id": 188,
@@ -1485,7 +1855,9 @@
     "code": "KSA",
     "confederation": "asia",
     "ranking": 42,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#006C35",
+    "secondaryColor": "#FFFFFF"
   },
   {
     "id": 189,
@@ -1493,7 +1865,9 @@
     "code": "SGP",
     "confederation": "asia",
     "ranking": 151,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#ED2939",
+    "secondaryColor": "#FFFFFF"
   },
   {
     "id": 190,
@@ -1501,7 +1875,9 @@
     "code": "KOR",
     "confederation": "asia",
     "ranking": 19,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#CD2E3A",
+    "secondaryColor": "#0047A0"
   },
   {
     "id": 191,
@@ -1509,7 +1885,9 @@
     "code": "SRI",
     "confederation": "asia",
     "ranking": 189,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#8D153A",
+    "secondaryColor": "#FFB700"
   },
   {
     "id": 192,
@@ -1517,7 +1895,9 @@
     "code": "SYR",
     "confederation": "asia",
     "ranking": 93,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#CE1126",
+    "secondaryColor": "#007A3D"
   },
   {
     "id": 193,
@@ -1525,7 +1905,9 @@
     "code": "TJK",
     "confederation": "asia",
     "ranking": 131,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#CE1126",
+    "secondaryColor": "#006600"
   },
   {
     "id": 194,
@@ -1533,7 +1915,9 @@
     "code": "THA",
     "confederation": "asia",
     "ranking": 94,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#241D4F",
+    "secondaryColor": "#A51931"
   },
   {
     "id": 195,
@@ -1541,7 +1925,9 @@
     "code": "TLS",
     "confederation": "asia",
     "ranking": 204,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#DC241F",
+    "secondaryColor": "#FFC726"
   },
   {
     "id": 196,
@@ -1549,7 +1935,9 @@
     "code": "TKM",
     "confederation": "asia",
     "ranking": 157,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#009739",
+    "secondaryColor": "#FFFFFF"
   },
   {
     "id": 197,
@@ -1557,7 +1945,9 @@
     "code": "UAE",
     "confederation": "asia",
     "ranking": 68,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#FFFFFF",
+    "secondaryColor": "#00732F"
   },
   {
     "id": 198,
@@ -1565,7 +1955,9 @@
     "code": "UZB",
     "confederation": "asia",
     "ranking": 60,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#FFFFFF",
+    "secondaryColor": "#0099B5"
   },
   {
     "id": 199,
@@ -1573,7 +1965,9 @@
     "code": "VIE",
     "confederation": "asia",
     "ranking": 95,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#DA251D",
+    "secondaryColor": "#FFFF00"
   },
   {
     "id": 200,
@@ -1581,7 +1975,9 @@
     "code": "YEM",
     "confederation": "asia",
     "ranking": 171,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#CE1126",
+    "secondaryColor": "#FFFFFF"
   },
   {
     "id": 201,
@@ -1589,7 +1985,9 @@
     "code": "ASA",
     "confederation": "oceania",
     "ranking": 209,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#00205B",
+    "secondaryColor": "#C8102E"
   },
   {
     "id": 202,
@@ -1597,7 +1995,9 @@
     "code": "COK",
     "confederation": "oceania",
     "ranking": 207,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#00247D",
+    "secondaryColor": "#FFFFFF"
   },
   {
     "id": 203,
@@ -1605,7 +2005,9 @@
     "code": "FIJ",
     "confederation": "oceania",
     "ranking": 136,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#68BFE5",
+    "secondaryColor": "#FFFFFF"
   },
   {
     "id": 204,
@@ -1613,7 +2015,9 @@
     "code": "NCL",
     "confederation": "oceania",
     "ranking": 144,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#002654",
+    "secondaryColor": "#ED2939"
   },
   {
     "id": 205,
@@ -1621,7 +2025,9 @@
     "code": "NZL",
     "confederation": "oceania",
     "ranking": 64,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#FFFFFF",
+    "secondaryColor": "#000000"
   },
   {
     "id": 206,
@@ -1629,7 +2035,9 @@
     "code": "PNG",
     "confederation": "oceania",
     "ranking": 163,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#CE1126",
+    "secondaryColor": "#000000"
   },
   {
     "id": 207,
@@ -1637,7 +2045,9 @@
     "code": "SAM",
     "confederation": "oceania",
     "ranking": 194,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#002B7F",
+    "secondaryColor": "#CE1126"
   },
   {
     "id": 208,
@@ -1645,7 +2055,9 @@
     "code": "SOL",
     "confederation": "oceania",
     "ranking": 152,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#0051BA",
+    "secondaryColor": "#215B33"
   },
   {
     "id": 209,
@@ -1653,7 +2065,9 @@
     "code": "TAH",
     "confederation": "oceania",
     "ranking": 156,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#FFFFFF",
+    "secondaryColor": "#DE2010"
   },
   {
     "id": 210,
@@ -1661,7 +2075,9 @@
     "code": "TGA",
     "confederation": "oceania",
     "ranking": 205,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#C10000",
+    "secondaryColor": "#FFFFFF"
   },
   {
     "id": 211,
@@ -1669,6 +2085,8 @@
     "code": "VAN",
     "confederation": "oceania",
     "ranking": 190,
-    "isFreeDemo": false
+    "isFreeDemo": false,
+    "primaryColor": "#009543",
+    "secondaryColor": "#D21034"
   }
 ]
