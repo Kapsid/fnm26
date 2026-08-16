@@ -289,7 +289,10 @@ class _CallUpScreenState extends ConsumerState<CallUpScreen> {
               count <= kMaxSquadSize &&
               fit >= kMinFitPlayers;
 
-          return Column(
+          // The chrome that sits above the pool: what this squad has to
+          // cover, how many are in it, and the two auto-picks.
+          final header = Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
               if (window != null && window.matches.isNotEmpty)
                 _CoverageBanner(window: window, locked: locked),
@@ -391,67 +394,102 @@ class _CallUpScreenState extends ConsumerState<CallUpScreen> {
                     ],
                   ),
                 ),
-              // One line at a time. A full pool is sixty-odd names, and as one
-              // list the manager had to scroll past every keeper and defender
-              // to find out whether he had enough forwards. The tabs are a view
-              // over one squad — selection lives on the state, not the tab.
+            ],
+          );
+
+          return Column(
+            children: [
+              // One line at a time, and the line fills the screen.
+              //
+              // The chrome above (the coverage banner, the count, the two
+              // auto-picks) used to hold its height while the players scrolled
+              // in whatever was left, which on a phone was a window a few names
+              // tall. It now scrolls away with the list and the tabs pin under
+              // the app bar, so picking a squad is one long scroll per line
+              // rather than a peephole. Selection lives on the state, so the
+              // tabs are only a view over one squad.
               Expanded(
                 child: DefaultTabController(
                   length: _order.length,
-                  child: Column(
-                    children: [
-                      TabBar(
-                        isScrollable: false,
-                        labelPadding: EdgeInsets.zero,
-                        labelColor: AppColors.primary,
-                        unselectedLabelColor: AppColors.onSurfaceVariant,
-                        indicatorColor: AppColors.primary,
-                        tabs: [
-                          for (final category in _order)
-                            Tab(
-                              height: 44,
-                              child: _LineTab(
-                                label: _shortHeading(l, category),
-                                // How many of this line are in the squad —
-                                // the number the manager is actually
-                                // balancing.
-                                count: data.pool
-                                    .where(
-                                      (p) =>
-                                          p.position.category == category &&
-                                          selected.contains(p.id),
-                                    )
-                                    .length,
-                              ),
-                            ),
-                        ],
-                      ),
-                      Expanded(
-                        child: TabBarView(
-                          children: [
-                            for (final category in _order)
-                              ListView(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: AppSpacing.marginMobile,
-                                ),
-                                children: [
-                                  ..._section(
-                                    category,
-                                    data.pool,
-                                    selected,
-                                    data.absences,
-                                    outlooks,
-                                    condition,
-                                    locked: locked,
-                                    saveSeed: saveSeed,
+                  child: NestedScrollView(
+                    headerSliverBuilder: (context, _) => [
+                      SliverToBoxAdapter(child: header),
+                      SliverOverlapAbsorber(
+                        handle: NestedScrollView.sliverOverlapAbsorberHandleFor(
+                          context,
+                        ),
+                        sliver: SliverPersistentHeader(
+                          pinned: true,
+                          delegate: _LineTabBarHeader(
+                            TabBar(
+                              labelPadding: EdgeInsets.zero,
+                              labelColor: AppColors.primary,
+                              unselectedLabelColor: AppColors.onSurfaceVariant,
+                              indicatorColor: AppColors.primary,
+                              tabs: [
+                                for (final category in _order)
+                                  Tab(
+                                    height: 44,
+                                    child: _LineTab(
+                                      label: _shortHeading(l, category),
+                                      // How many of this line are in the squad —
+                                      // the number the manager is balancing.
+                                      count: data.pool
+                                          .where(
+                                            (p) =>
+                                                p.position.category ==
+                                                    category &&
+                                                selected.contains(p.id),
+                                          )
+                                          .length,
+                                    ),
                                   ),
-                                  const SizedBox(height: AppSpacing.xl),
-                                ],
-                              ),
-                          ],
+                              ],
+                            ),
+                          ),
                         ),
                       ),
                     ],
+                    body: TabBarView(
+                      children: [
+                        for (final category in _order)
+                          Builder(
+                            builder: (context) => CustomScrollView(
+                              slivers: [
+                                // Ties this line's list to the header above, so
+                                // the chrome scrolls away once rather than once
+                                // per tab.
+                                SliverOverlapInjector(
+                                  handle:
+                                      NestedScrollView.sliverOverlapAbsorberHandleFor(
+                                        context,
+                                      ),
+                                ),
+                                SliverPadding(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: AppSpacing.marginMobile,
+                                  ),
+                                  sliver: SliverList.list(
+                                    children: [
+                                      ..._section(
+                                        category,
+                                        data.pool,
+                                        selected,
+                                        data.absences,
+                                        outlooks,
+                                        condition,
+                                        locked: locked,
+                                        saveSeed: saveSeed,
+                                      ),
+                                      const SizedBox(height: AppSpacing.xl),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -569,6 +607,45 @@ class _CallUpScreenState extends ConsumerState<CallUpScreen> {
 
 /// The banner atop the call-ups screen: whether the squad is open to change or
 /// locked between windows, and exactly which matches this nomination covers.
+/// Keeps the line tabs under the app bar while the pool scrolls past them.
+///
+/// A [SliverPersistentHeader] rather than a fixed row above the list: the
+/// chrome over it has to be able to scroll away, or the pool is left with a
+/// few names' worth of window on a phone.
+class _LineTabBarHeader extends SliverPersistentHeaderDelegate {
+  _LineTabBarHeader(this.tabBar);
+
+  final TabBar tabBar;
+
+  /// The strip's height, fixed here and forced on the bar below.
+  ///
+  /// Not `tabBar.preferredSize`: that reports the bar's natural height, which
+  /// is not what a bar of explicitly-sized tabs actually paints — and a header
+  /// that claims more room than it fills fails layout outright.
+  static const double height = 48;
+
+  @override
+  double get minExtent => height;
+
+  @override
+  double get maxExtent => height;
+
+  @override
+  Widget build(
+    BuildContext context,
+    double shrinkOffset,
+    bool overlapsContent,
+  ) =>
+      // Opaque: the names must not show through the tabs as they pass under.
+      ColoredBox(
+        color: AppColors.surface,
+        child: SizedBox(height: height, child: tabBar),
+      );
+
+  @override
+  bool shouldRebuild(covariant _LineTabBarHeader old) => old.tabBar != tabBar;
+}
+
 /// One line's tab: its short name, and how many of that line are in the squad.
 class _LineTab extends StatelessWidget {
   const _LineTab({required this.label, required this.count});

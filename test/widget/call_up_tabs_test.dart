@@ -192,4 +192,45 @@ void main() {
     expect(ticked(tester), 1);
     expect(find.text('SQUAD · 1/$kMaxSquadSize'), findsOneWidget);
   });
+
+  testWidgets('the pool gets the screen, not a peephole', (tester) async {
+    await pumpCallUps(tester);
+
+    // The chrome above the pool scrolls away with it, so the list is not
+    // squeezed into whatever is left under a fixed header. Before this, the
+    // eight defenders had a window a couple of names tall.
+    await tester.tap(find.text('DEF'));
+    await tester.pumpAndSettle();
+
+    final listHeight = tester
+        .getSize(find.byType(CustomScrollView).first)
+        .height;
+    final screenHeight = tester.getSize(find.byType(Scaffold)).height;
+    expect(
+      listHeight,
+      greaterThan(screenHeight * 0.6),
+      reason: 'the pool should own most of the screen',
+    );
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('the line tabs stay put while the pool scrolls', (tester) async {
+    await pumpCallUps(tester);
+    await tester.tap(find.text('DEF'));
+    await tester.pumpAndSettle();
+
+    final before = tester.getTopLeft(
+      find.descendant(of: find.byType(Tab), matching: find.text('DEF')),
+    );
+    await tester.drag(find.text('Back 0'), const Offset(0, -220));
+    await tester.pumpAndSettle();
+
+    // The header above has scrolled away; the tabs have not.
+    final after = tester.getTopLeft(
+      find.descendant(of: find.byType(Tab), matching: find.text('DEF')),
+    );
+    expect(after.dy, lessThanOrEqualTo(before.dy));
+    expect(find.byType(TabBar), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
 }

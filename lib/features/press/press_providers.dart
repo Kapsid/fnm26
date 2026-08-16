@@ -6,6 +6,7 @@ import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/services/competition/kickoff_keys.dart';
 import 'package:fnm/domain/services/competition/rounds.dart';
 import 'package:fnm/domain/services/press/press.dart';
+import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/ranking/world_ranking_providers.dart';
 
 /// The press question waiting right now, or null when they have nothing to ask
@@ -66,6 +67,14 @@ pressQuestionProvider = FutureProvider.autoDispose.family<PressQuestion?, int>((
     for (final f in fixtures)
       if (f.hasResult) f,
   ]..sort((a, b) => b.date.compareTo(a.date)); // newest first
+
+  // Nothing that has happened TO the nation is a question for a manager who
+  // has not taken charge of a match yet. On day one the trophy in the cabinet
+  // was won by somebody else, a "booked place" is a host's automatic berth,
+  // and the world ranking is where the nation started rather than anywhere it
+  // has climbed to — all three were being put to him as if he had done them.
+  // [PressTopic.newJob] is the day-one question, and it asks for itself below.
+  final hasManaged = played.isNotEmpty;
 
   PressQuestion? q(
     String key,
@@ -129,12 +138,18 @@ pressQuestionProvider = FutureProvider.autoDispose.family<PressQuestion?, int>((
     }
   }
 
-  // A trophy — the one question a manager enjoys.
-  for (final h in await comp.honours(careerId)) {
-    if (h.championId != career.nationId) continue;
-    if (h.year < now.year - 1) continue;
-    add(q('triumph:${h.competition}:${h.year}', PressTopic.triumph));
-    break;
+  // A trophy — the one question a manager enjoys, and only if it is his. The
+  // roll of honour is seeded with the real world's, so without the year floor
+  // a brand-new manager of Portugal was congratulated on a cup his nation won
+  // before he was appointed.
+  if (hasManaged) {
+    for (final h in await comp.honours(careerId)) {
+      if (h.championId != career.nationId) continue;
+      if (h.year < CareerService.cycleStart.year) continue;
+      if (h.year < now.year - 1) continue;
+      add(q('triumph:${h.competition}:${h.year}', PressTopic.triumph));
+      break;
+    }
   }
 
   // The other side of a hammering: a night when everything came off.
@@ -199,10 +214,13 @@ pressQuestionProvider = FutureProvider.autoDispose.family<PressQuestion?, int>((
       .where((n) => n.id == career.nationId)
       .firstOrNull
       ?.confederation;
-  for (final (round, kind, conf) in [
-    ('GROUP', CompetitionKind.worldCupFinals, null),
-    ('CGROUP', CompetitionKind.continentalFinals, myConf),
-  ]) {
+  for (final (round, kind, conf)
+      in !hasManaged
+          ? const <(String, CompetitionKind, Confederation?)>[]
+          : [
+              ('GROUP', CompetitionKind.worldCupFinals, null),
+              ('CGROUP', CompetitionKind.continentalFinals, myConf),
+            ]) {
     final field = await comp.fixturesByRound(
       careerId,
       round,
@@ -231,15 +249,27 @@ pressQuestionProvider = FutureProvider.autoDispose.family<PressQuestion?, int>((
     }
   }
 
-  // A world ranking the nation has never held before.
-  final extremes = await ref.watch(rankExtremesProvider(careerId).future);
+  // A world ranking the nation has never held before — measured against the
+  // releases already on record, not against the live position. Including the
+  // live one made a nation its own peak the moment a save opened, so a manager
+  // was asked about a climb on the day he walked in.
+  final releases = await ref
+      .watch(rankingReleaseRepositoryProvider)
+      .all(careerId);
+  final priorRanks = [
+    for (final r in releases)
+      if (r.nationId == career.nationId) r.playerRank,
+  ];
   final live = await ref.watch(worldRankingProvider(careerId).future);
   final rank = live?.position[career.nationId];
-  if (rank != null &&
-      rank <= _peakRankCeiling &&
-      extremes != null &&
-      rank <= extremes.best) {
-    add(q('peak:$rank', PressTopic.rankingPeak));
+  if (hasManaged && rank != null && rank <= _peakRankCeiling) {
+    final priorBest = priorRanks.isEmpty
+        ? null
+        : priorRanks.reduce((a, b) => a < b ? a : b);
+    // Strictly better: standing still at a rank held before is not a peak.
+    if (priorBest != null && rank < priorBest) {
+      add(q('peak:$rank', PressTopic.rankingPeak));
+    }
   }
 
   // The eve of a finals: asked once per tournament, before a ball is kicked,
