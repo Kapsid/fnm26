@@ -261,13 +261,14 @@ class _TeamStatsScreenState extends ConsumerState<TeamStatsScreen> {
                             itemCount: list.length,
                             itemBuilder: (context, i) {
                               final s = list[i];
-                              return _ScorerRow(
+                              return LeaderRow(
                                 rank: i + 1,
                                 name: view.names[s.playerId] ?? l.statsUnknown,
                                 flagCode: view.nation?.code,
-                                value: s.value,
-                                unit: unit,
-                                onInfo: () => context.push(
+                                value: unit.isEmpty
+                                    ? '${s.value}'
+                                    : '${s.value} $unit',
+                                onTap: () => context.push(
                                   '${Routes.player}?careerId=${widget.careerId}'
                                   '&playerId=${s.playerId}',
                                 ),
@@ -386,77 +387,6 @@ class _TeamHeader extends ConsumerWidget {
       ],
     ),
   );
-}
-
-/// One leaderboard line. A tight row rather than a card of its own: a card per
-/// player fitted six names on a phone screen and made a top-25 chart a scroll
-/// with no shape to it.
-class _ScorerRow extends StatelessWidget {
-  const _ScorerRow({
-    required this.rank,
-    required this.name,
-    required this.flagCode,
-    required this.value,
-    required this.onInfo,
-    this.unit = '',
-  });
-
-  final int rank;
-  final String name;
-  final String? flagCode;
-  final int value;
-
-  /// What the number counts ('goals'), shown after it. Empty for a bare count.
-  final String unit;
-  final VoidCallback onInfo;
-
-  @override
-  Widget build(BuildContext context) {
-    // The top three carry the chart, so they are marked rather than left to be
-    // counted down to.
-    final podium = rank <= 3;
-    return InkWell(
-      onTap: onInfo,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 7),
-        child: Row(
-          children: [
-            SizedBox(
-              width: 22,
-              child: Text(
-                '$rank',
-                style: AppTypography.labelMedium.copyWith(
-                  color: podium
-                      ? AppColors.primary
-                      : AppColors.onSurfaceVariant,
-                ),
-              ),
-            ),
-            if (flagCode != null) ...[
-              FlagDisc(flagCode!, size: 18),
-              const SizedBox(width: AppSpacing.sm),
-            ],
-            Expanded(
-              child: Text(
-                name,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: AppTypography.bodyMedium.copyWith(
-                  fontWeight: rank == 1 ? FontWeight.w700 : null,
-                ),
-              ),
-            ),
-            Text(
-              unit.isEmpty ? '$value' : '$value $unit',
-              style: AppTypography.labelMedium.copyWith(
-                color: AppColors.primary,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
 }
 
 /// One player's average-rating line.

@@ -13,6 +13,7 @@ export 'app_popup.dart';
 export 'app_text_field.dart';
 export 'country_flag.dart';
 export 'flag_disc.dart';
+export 'leader_row.dart';
 export 'match_result_row.dart';
 export 'nation_badge.dart';
 export 'primary_button.dart';

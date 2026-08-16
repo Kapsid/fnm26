@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/nation.dart';
+import 'package:fnm/domain/services/stats/nation_results.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
 
 /// The (career, nationA, nationB) key for a head-to-head query.
@@ -91,40 +92,28 @@ myHeadToHeadsProvider = FutureProvider.autoDispose.family<List<MyH2HLine>, int>(
       for (final n in await ref.watch(nationRepositoryProvider).all()) n.id: n,
     };
 
-    final fixtures = await comp.fixturesForNation(careerId, nationId);
-    final acc = <int, MyH2HLine>{};
-    for (final f in fixtures) {
-      if (!f.hasResult) continue;
-      final home = f.homeNationId == nationId;
-      final oppId = home ? f.awayNationId : f.homeNationId;
-      if (oppId == nationId) continue;
-      final my = home ? f.homeScore! : f.awayScore!;
-      final other = home ? f.awayScore! : f.homeScore!;
-      final cur =
-          acc[oppId] ??
-          (
-            opponentId: oppId,
-            opponentName: nations[oppId]?.name ?? 'Unknown',
-            opponentCode: nations[oppId]?.code ?? '??',
-            played: 0,
-            wins: 0,
-            draws: 0,
-            losses: 0,
-            goalsFor: 0,
-            goalsAgainst: 0,
-          );
-      acc[oppId] = (
-        opponentId: oppId,
-        opponentName: cur.opponentName,
-        opponentCode: cur.opponentCode,
-        played: cur.played + 1,
-        wins: cur.wins + (my > other ? 1 : 0),
-        draws: cur.draws + (my == other ? 1 : 0),
-        losses: cur.losses + (my < other ? 1 : 0),
-        goalsFor: cur.goalsFor + my,
-        goalsAgainst: cur.goalsAgainst + other,
-      );
-    }
+    // The same ledger the fiercest-rival card reads, so the two cannot
+    // disagree about a pairing — see [nationResults].
+    final ledger = opponentLedger(
+      nationResults(
+        await comp.fixturesForNation(careerId, nationId),
+        nationId,
+      ),
+    );
+    final acc = <int, MyH2HLine>{
+      for (final r in ledger.values)
+        r.opponentId: (
+          opponentId: r.opponentId,
+          opponentName: nations[r.opponentId]?.name ?? 'Unknown',
+          opponentCode: nations[r.opponentId]?.code ?? '??',
+          played: r.played,
+          wins: r.wins,
+          draws: r.draws,
+          losses: r.losses,
+          goalsFor: r.goalsFor,
+          goalsAgainst: r.goalsAgainst,
+        ),
+    };
     final list = acc.values.toList()
       ..sort((a, b) {
         final byPlayed = b.played.compareTo(a.played);

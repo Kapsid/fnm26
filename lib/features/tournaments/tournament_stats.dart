@@ -237,59 +237,17 @@ class _LeaderboardState extends State<_Leaderboard> {
           child: Column(
             children: [
               for (var i = 0; i < rows.length; i++)
-                () {
-                  // A player from one of the manager's nations (now or in the
-                  // past) is highlighted so their records stand out.
-                  final mine = widget.highlightNations.contains(
+                LeaderRow(
+                  rank: i + 1,
+                  name: rows[i].name,
+                  flagCode: widget.code(rows[i].nationId),
+                  value: '${rows[i].count}',
+                  // A player of one of the manager's nations, now or in the
+                  // past, so his own records stand out of a world chart.
+                  highlighted: widget.highlightNations.contains(
                     rows[i].nationId,
-                  );
-                  return Container(
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 3,
-                      horizontal: 4,
-                    ),
-                    decoration: mine
-                        ? BoxDecoration(
-                            color: AppColors.primary.withValues(alpha: 0.10),
-                            borderRadius: AppRadii.smAll,
-                          )
-                        : null,
-                    child: Row(
-                      children: [
-                        SizedBox(
-                          width: 22,
-                          child: Text(
-                            '${i + 1}',
-                            style: AppTypography.labelSmall.copyWith(
-                              color: AppColors.onSurfaceVariant,
-                            ),
-                          ),
-                        ),
-                        FlagDisc(widget.code(rows[i].nationId), size: 20),
-                        const SizedBox(width: AppSpacing.sm),
-                        Expanded(
-                          child: Text(
-                            rows[i].name,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: AppTypography.bodySmall.copyWith(
-                              fontWeight: mine
-                                  ? FontWeight.w700
-                                  : FontWeight.w400,
-                              color: mine ? AppColors.primary : null,
-                            ),
-                          ),
-                        ),
-                        Text(
-                          '${rows[i].count}',
-                          style: AppTypography.labelMedium.copyWith(
-                            color: AppColors.primary,
-                          ),
-                        ),
-                      ],
-                    ),
-                  );
-                }(),
+                  ),
+                ),
             ],
           ),
         ),

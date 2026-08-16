@@ -202,102 +202,24 @@ class _Board extends StatelessWidget {
             child: Column(
               children: [
                 for (var i = 0; i < leaders.length; i++)
-                  _LeaderRow(
+                  LeaderRow(
                     rank: i + 1,
-                    leader: leaders[i],
-                    unit: unit,
-                    careerId: careerId,
+                    name: leaders[i].name,
+                    // The nation under the name: this chart spans the world,
+                    // so who they played for is half the fact.
+                    subtitle: leaders[i].nationName,
+                    flagCode: leaders[i].nationCode,
+                    value: '${leaders[i].value} $unit',
+                    trailing: leaders[i].active ? const _ActiveDot() : null,
+                    onTap: () => context.push(
+                      '${Routes.player}?careerId=$careerId'
+                      '&playerId=${leaders[i].playerId}',
+                    ),
                   ),
               ],
             ),
           ),
       ],
-    );
-  }
-}
-
-class _LeaderRow extends StatelessWidget {
-  const _LeaderRow({
-    required this.rank,
-    required this.leader,
-    required this.unit,
-    required this.careerId,
-  });
-
-  final int rank;
-  final AllTimeLeader leader;
-  final String unit;
-  final int careerId;
-
-  @override
-  Widget build(BuildContext context) {
-    final top = rank == 1;
-    final nameStyle = AppTypography.bodyMedium.copyWith(
-      fontWeight: top ? FontWeight.w700 : FontWeight.w400,
-    );
-    return InkWell(
-      onTap: () => context.push(
-        '${Routes.player}?careerId=$careerId&playerId=${leader.playerId}',
-      ),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: AppSpacing.md,
-          vertical: AppSpacing.sm,
-        ),
-        child: Row(
-          children: [
-            SizedBox(
-              width: 22,
-              child: Text(
-                '$rank',
-                style: AppTypography.labelMedium.copyWith(
-                  color: top ? AppColors.primary : AppColors.onSurfaceVariant,
-                ),
-              ),
-            ),
-            FlagDisc(leader.nationCode, size: 22),
-            const SizedBox(width: AppSpacing.sm),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Flexible(
-                        child: Text(
-                          leader.name,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: nameStyle,
-                        ),
-                      ),
-                      if (leader.active) ...[
-                        const SizedBox(width: AppSpacing.sm),
-                        const _ActiveDot(),
-                      ],
-                    ],
-                  ),
-                  Text(
-                    leader.nationName,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: AppTypography.labelSmall.copyWith(
-                      color: AppColors.onSurfaceVariant,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(width: AppSpacing.sm),
-            Text(
-              '${leader.value} $unit',
-              style: AppTypography.labelMedium.copyWith(
-                color: AppColors.primary,
-              ),
-            ),
-          ],
-        ),
-      ),
     );
   }
 }

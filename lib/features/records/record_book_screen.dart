@@ -477,51 +477,15 @@ class _Leaderboard extends StatelessWidget {
           child: Column(
             children: [
               for (var i = 0; i < leaders.length; i++)
-                InkWell(
+                LeaderRow(
+                  rank: i + 1,
+                  name: leaders[i].name,
+                  value: unit.isEmpty
+                      ? '${leaders[i].value}'
+                      : '${leaders[i].value} $unit',
                   onTap: () => context.push(
                     '${Routes.player}?careerId=$careerId'
                     '&playerId=${leaders[i].playerId}',
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: AppSpacing.md,
-                      vertical: AppSpacing.sm,
-                    ),
-                    child: Row(
-                      children: [
-                        SizedBox(
-                          width: 20,
-                          child: Text(
-                            '${i + 1}',
-                            style: AppTypography.labelMedium.copyWith(
-                              color: i == 0
-                                  ? AppColors.primary
-                                  : AppColors.onSurfaceVariant,
-                            ),
-                          ),
-                        ),
-                        Expanded(
-                          child: Text(
-                            leaders[i].name,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: AppTypography.bodyMedium.copyWith(
-                              fontWeight: i == 0
-                                  ? FontWeight.w700
-                                  : FontWeight.w400,
-                            ),
-                          ),
-                        ),
-                        Text(
-                          unit.isEmpty
-                              ? '${leaders[i].value}'
-                              : '${leaders[i].value} $unit',
-                          style: AppTypography.labelMedium.copyWith(
-                            color: AppColors.primary,
-                          ),
-                        ),
-                      ],
-                    ),
                   ),
                 ),
             ],

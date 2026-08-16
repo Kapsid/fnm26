@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/nation.dart';
+import 'package:fnm/domain/services/stats/nation_results.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/federation/federation_providers.dart';
 
@@ -87,38 +88,27 @@ recordBookProvider = FutureProvider.autoDispose.family<RecordBook?, int>((
   ];
 
   // Biggest win, longest unbeaten run, and deepest World Cup run — over every
-  // competitive result the nation has ever posted.
-  final fixtures =
-      (await comp.fixturesForNation(
-          careerId,
-          nationId,
-        )).where((f) => f.hasResult).toList()
-        ..sort((a, b) => a.date.compareTo(b.date));
-  ({int oppId, int gf, int ga})? biggestWin;
-  var bestMargin = 0;
-  var unbeaten = 0;
-  var longestUnbeaten = 0;
+  // result the nation has ever posted, friendlies included. The comment here
+  // used to say "competitive" while the code counted everything; the rule is
+  // now stated once, in [nationResults], and shared with the rival card and
+  // the head-to-head screen.
+  final results = nationResults(
+    await comp.fixturesForNation(careerId, nationId),
+    nationId,
+  );
+  final best = biggestWinOf(results);
+  final biggestWin = best == null
+      ? null
+      : (oppId: best.opponentId, gf: best.scored, ga: best.conceded);
+  final longestUnbeaten = longestUnbeatenOf(results);
+
   var deepestRank = 0;
   var deepestRound = '';
-  for (final f in fixtures) {
-    final home = f.homeNationId == nationId;
-    final gf = home ? f.homeScore! : f.awayScore!;
-    final ga = home ? f.awayScore! : f.homeScore!;
-    final oppId = home ? f.awayNationId : f.homeNationId;
-    if (gf > ga && gf - ga > bestMargin) {
-      bestMargin = gf - ga;
-      biggestWin = (oppId: oppId, gf: gf, ga: ga);
-    }
-    if (gf >= ga) {
-      unbeaten++;
-      if (unbeaten > longestUnbeaten) longestUnbeaten = unbeaten;
-    } else {
-      unbeaten = 0;
-    }
-    final rank = _wcFinishRank[f.round] ?? 0;
+  for (final r in results) {
+    final rank = _wcFinishRank[r.round] ?? 0;
     if (rank > deepestRank) {
       deepestRank = rank;
-      deepestRound = f.round!;
+      deepestRound = r.round!;
     }
   }
 

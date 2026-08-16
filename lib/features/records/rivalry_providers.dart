@@ -1,9 +1,13 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/nation.dart';
+import 'package:fnm/domain/services/stats/nation_results.dart';
 
-/// The manager's fiercest rival — the nation they've met most often in
-/// competitive football — and the head-to-head record against them.
+/// The manager's fiercest rival — the nation they have met most often — and
+/// the head-to-head record against them.
+///
+/// Every meeting counts, friendlies included, so this card and the
+/// head-to-head screen tell the same story about the same pairing.
 typedef Rivalry = ({
   Nation rival,
   int played,
@@ -23,42 +27,24 @@ final AutoDisposeFutureProviderFamily<Rivalry?, int> rivalryProvider =
       final comp = ref.watch(competitionRepositoryProvider);
       final nationId = career.nationId;
 
-      final fixtures = (await comp.fixturesForNation(
-        careerId,
-        nationId,
-      )).where((f) => f.hasResult && f.round != 'FRIENDLY').toList();
-
-      // Tally meetings and the head-to-head record per opponent.
-      final meetings = <int, int>{};
-      final wins = <int, int>{};
-      final draws = <int, int>{};
-      final losses = <int, int>{};
-      final gf = <int, int>{};
-      final ga = <int, int>{};
-      for (final f in fixtures) {
-        final home = f.homeNationId == nationId;
-        final opp = home ? f.awayNationId : f.homeNationId;
-        final my = home ? f.homeScore! : f.awayScore!;
-        final other = home ? f.awayScore! : f.homeScore!;
-        meetings.update(opp, (v) => v + 1, ifAbsent: () => 1);
-        gf.update(opp, (v) => v + my, ifAbsent: () => my);
-        ga.update(opp, (v) => v + other, ifAbsent: () => other);
-        if (my > other) {
-          wins.update(opp, (v) => v + 1, ifAbsent: () => 1);
-        } else if (my == other) {
-          draws.update(opp, (v) => v + 1, ifAbsent: () => 1);
-        } else {
-          losses.update(opp, (v) => v + 1, ifAbsent: () => 1);
-        }
-      }
-      if (meetings.isEmpty) return null;
-
-      // The most-met opponent (ties broken by the tighter aggregate).
-      final topOpp = meetings.entries.reduce(
-        (a, b) => b.value > a.value ? b : a,
+      // Everything played, friendlies included — the rule lives in
+      // [nationResults]. This card used to drop friendlies while the
+      // head-to-head screen kept them, so the same pairing read P4 here and P5
+      // there.
+      final ledger = opponentLedger(
+        nationResults(
+          await comp.fixturesForNation(careerId, nationId),
+          nationId,
+        ),
       );
-      if (topOpp.value < 3) return null;
-      final opp = topOpp.key;
+      if (ledger.isEmpty) return null;
+
+      // The most-met opponent — who you have been up against most often.
+      final topOpp = ledger.values.reduce(
+        (a, b) => b.played > a.played ? b : a,
+      );
+      if (topOpp.played < 3) return null;
+      final opp = topOpp.opponentId;
 
       final nations = {
         for (final n in await ref.watch(nationRepositoryProvider).all())
@@ -69,11 +55,11 @@ final AutoDisposeFutureProviderFamily<Rivalry?, int> rivalryProvider =
 
       return (
         rival: rival,
-        played: meetings[opp] ?? 0,
-        wins: wins[opp] ?? 0,
-        draws: draws[opp] ?? 0,
-        losses: losses[opp] ?? 0,
-        goalsFor: gf[opp] ?? 0,
-        goalsAgainst: ga[opp] ?? 0,
+        played: topOpp.played,
+        wins: topOpp.wins,
+        draws: topOpp.draws,
+        losses: topOpp.losses,
+        goalsFor: topOpp.goalsFor,
+        goalsAgainst: topOpp.goalsAgainst,
       );
     });
