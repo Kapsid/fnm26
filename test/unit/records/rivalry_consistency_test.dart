@@ -45,7 +45,10 @@ void main() {
     addTearDown(container.dispose);
     await container.read(seedLoaderProvider).ensureSeeded();
     final me = nations.firstWhere((n) => n.code == 'CZE');
-    final them = nations.firstWhere((n) => n.code == 'SVK');
+    // A different confederation on purpose: two European sides can be drawn
+    // into the same qualifying group, and the extra fixtures between them
+    // would make what this test measures depend on the draw.
+    final them = nations.firstWhere((n) => n.code == 'NZL');
     nationId = me.id;
     opponentId = them.id;
     final career =
