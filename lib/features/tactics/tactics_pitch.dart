@@ -1050,23 +1050,16 @@ const double _discInnerHeight = 0.54;
 /// the great majority of them.
 const double _nameFontSize = 9.5;
 
-/// A zero-width space, inserted between the letters of a name so that a long
-/// SINGLE WORD can still break across two lines.
-///
-/// Surnames have no spaces in them, so without a break opportunity the layout
-/// has nowhere to wrap and a sixteen-letter name has to shrink to a fifth of
-/// its size to fit a circle. With one between every letter it wraps like a
-/// sentence would, and the type stays readable. It is invisible and adds
-/// nothing to the rendered glyphs.
-const String _breakOpportunity = '\u200B';
+
 
 /// What sits inside a player's disc: his position rating, his name, and — when
 /// he cannot play — the icon that says why.
 ///
 /// The name is never CUT. Surnames run to sixteen letters, so a fixed box plus
 /// `TextOverflow.ellipsis` truncates the long ones every single time, which is
-/// not a name any more. It wraps to a second line first (see
-/// [_breakOpportunity]) and only then scales down, so it always arrives whole.
+/// not a name any more. [WholeText] wraps it to a second line first and only
+/// then scales it down, so it always arrives whole — the same promise the
+/// squad list and the call-up screen now make.
 class _DiscContents extends StatelessWidget {
   const _DiscContents({
     required this.disc,
@@ -1122,8 +1115,8 @@ class _DiscContents extends StatelessWidget {
                   ),
                 ),
               if (label != null)
-                Text(
-                  label.toUpperCase().split('').join(_breakOpportunity),
+                WholeText(
+                  label.toUpperCase(),
                   maxLines: 2,
                   textAlign: TextAlign.center,
                   style: AppTypography.labelSmall.copyWith(

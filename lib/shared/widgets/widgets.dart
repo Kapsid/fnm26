@@ -19,3 +19,4 @@ export 'nation_badge.dart';
 export 'primary_button.dart';
 export 'stat_bar.dart';
 export 'tactical_chip.dart';
+export 'whole_text.dart';
