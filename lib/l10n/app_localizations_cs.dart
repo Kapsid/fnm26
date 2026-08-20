@@ -6023,6 +6023,15 @@ class AppLocalizationsCs extends AppLocalizations {
   }
 
   @override
+  String msgThroughTitle(int year) {
+    return 'Z akademie do áčka · $year';
+  }
+
+  @override
+  String get msgThroughNote =>
+      'Nejde o nový nábor — jsou to kluci, kteří přišli v jedenácti a teď dorostli do seniorského kádru.';
+
+  @override
   String msgNewFacesTitle(int year) {
     return 'Nové tváře · $year';
   }

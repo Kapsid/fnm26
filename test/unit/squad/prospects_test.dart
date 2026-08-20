@@ -99,11 +99,17 @@ void main() {
   });
 
   group('how well a scout can read a boy', () {
+    // Each gap is measured against the truth AT THAT AGE. It has to be: the
+    // few boys who bloom late have a higher ceiling at nineteen than they did
+    // at sixteen, and a scout who failed to see a rise that had not happened
+    // yet is not a scout who was wrong.
+
     test('a sixteen-year-old can be two stars out either way', () {
       var sawTwo = false;
       for (var id = 1; id < 3000; id++) {
         final gap =
-            (Prospects.scoutedStars(id, age: 16) - Prospects.trueStars(id))
+            (Prospects.scoutedStars(id, age: 16) -
+                    Prospects.trueStars(id, age: 16))
                 .abs();
         expect(gap, lessThanOrEqualTo(2));
         if (gap == 2) sawTwo = true;
@@ -115,7 +121,8 @@ void main() {
       var sawOne = false;
       for (var id = 1; id < 3000; id++) {
         final gap =
-            (Prospects.scoutedStars(id, age: 19) - Prospects.trueStars(id))
+            (Prospects.scoutedStars(id, age: 19) -
+                    Prospects.trueStars(id, age: 19))
                 .abs();
         expect(gap, lessThanOrEqualTo(1));
         if (gap == 1) sawOne = true;

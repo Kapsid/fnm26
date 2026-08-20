@@ -5998,6 +5998,15 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String msgThroughTitle(int year) {
+    return 'Through from the academy · $year';
+  }
+
+  @override
+  String get msgThroughNote =>
+      'These are not a new intake — they are the boys who came in at eleven and have now grown into the senior pool.';
+
+  @override
   String msgNewFacesTitle(int year) {
     return 'New faces · $year';
   }

@@ -307,7 +307,8 @@ abstract final class PlayerLifecycle {
   /// deterministically from their [id] alone (so it's stable across saves, like
   /// the rest of the derived pool). Triangular around ~1.05 — most players are
   /// ordinary, with rare wonderkids (~1.75×) and busts (~0.35×) at the tails.
-  static double developmentPotential(int id) {
+  /// The ceiling a player is BORN with, before any late bloom.
+  static double basePotential(int id) {
     final h = _mix(id);
     // Two sub-draws averaged → a triangular distribution centred on 0.5, so the
     // extremes (a true gem, a total flop) are uncommon rather than uniform.
@@ -315,6 +316,58 @@ abstract final class PlayerLifecycle {
     final b = ((h >> 10) & 0x3ff) / 1024.0;
     final r = (a + b) / 2;
     return 0.35 + r * 1.4; // 0.35 … 1.75, clustered near ~1.05
+  }
+
+  /// A player's hidden development potential, [age] years in.
+  ///
+  /// Identical to [basePotential] for everybody except the few who bloom late
+  /// (see [bloomsLate]), and identical for them too until [lateBloomAge]. The
+  /// age argument defaults to fully grown, so every existing caller — the
+  /// aging curve, the superstar test, the star ratings — reads a settled
+  /// ceiling exactly as it did.
+  static double developmentPotential(int id, {int age = 99}) {
+    final base = basePotential(id);
+    if (age < lateBloomAge || !bloomsLate(id)) return base;
+    return (base + lateBloomUplift).clamp(0.35, 1.75);
+  }
+
+  /// Roughly what share of an intake blooms LATE.
+  static const int lateBloomPercent = 4;
+
+  /// The uplift a late bloomer's ceiling gets, and the age it starts to show.
+  ///
+  /// Without this the pyramid is fully readable at thirteen: a boy's ceiling
+  /// is fixed by his id the day he arrives, so a manager who looks once has
+  /// seen the whole generation and the eight years of watching that follow
+  /// tell him nothing he did not already know. A few boys therefore find
+  /// something in their late teens.
+  ///
+  /// It is an UPLIFT to what was already there, not a second draw, and it is
+  /// gated at BOTH ends. Below [lateBloomFloor] nobody comes from nowhere: a
+  /// late bloomer is a good prospect who turns out to be a great one, which
+  /// happens, rather than a nobody who becomes a star, which does not. And
+  /// above [lateBloomCeiling] there is nothing to bloom into — a boy already
+  /// drawn at the top of the range was always going to be that good.
+  ///
+  /// The ceiling is what keeps the superstar count where it belongs. Without
+  /// it the uplift simply added a second doorway into [superstarPotential],
+  /// and a world of ~4800 players went from about a dozen of the era's names
+  /// to thirty-four of them. Ceiling plus uplift stays below that bar on
+  /// purpose: blooming late can make a boy a five-star prospect, never one of
+  /// the handful of players an era is described by.
+  static const double lateBloomUplift = 0.30;
+  static const int lateBloomAge = 17;
+  static const double lateBloomFloor = 0.95;
+  static const double lateBloomCeiling = 1.30;
+
+  /// Whether [playerId] is one of the boys who comes good late.
+  ///
+  /// Its own bit window again, so blooming late is independent of the ceiling
+  /// itself, of when a career ends, and of who is released.
+  static bool bloomsLate(int playerId) {
+    final base = basePotential(playerId);
+    if (base < lateBloomFloor || base >= lateBloomCeiling) return false;
+    return (_mix(playerId ^ 0x1A7EB100) >> 3) % 100 < lateBloomPercent;
   }
 
   /// The hidden potential at which a player is not merely a great one but a

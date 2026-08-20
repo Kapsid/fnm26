@@ -1591,6 +1591,8 @@
   "msgGoalsTitle": "{name} má {count} gólů",
   "msgGoalsBody": "{name} vstřelil za váš tým {count} reprezentačních gólů.",
   "msgDevTitle": "Vývoj kádru · {year}",
+  "msgThroughTitle": "Z akademie do áčka · {year}",
+  "msgThroughNote": "Nejde o nový nábor — jsou to kluci, kteří přišli v jedenácti a teď dorostli do seniorského kádru.",
   "msgNewFacesTitle": "Nové tváře · {year}",
   "msgIntakeTitle": "Nábor akademie · {year}",
   "msgRetireCaptainTitle": "Kapitán {name} končí",

@@ -585,13 +585,18 @@ class MessageService {
             4,
           ),
         );
-        final newcomers = _newcomerReport(before, after);
+        // These are the boys who have come THROUGH the pyramid and are old
+        // enough for the senior pool — not a second intake. Reported as one
+        // used to be ("New faces", rows tagged "new", scout stars beside
+        // them), it read as though the academy took an intake twice a year,
+        // once at eleven and again at seventeen. Same news, said properly.
+        final newcomers = _newcomerReport(before, after, l.msgThroughNote);
         if (newcomers != null) {
           drafts.add(
             _Draft(
               'newcomers:$y',
               'aging',
-              l.msgNewFacesTitle(reportYear),
+              l.msgThroughTitle(reportYear),
               newcomers,
               reportYear,
               4,
@@ -749,7 +754,11 @@ String _developmentReport(Map<int, Player> before, Map<int, Player> after) {
 /// The players who have come into the pool this year, with the scouting read on
 /// each — so a wonderkid is a headline rather than one line among a hundred.
 /// Null when nobody emerged.
-String? _newcomerReport(Map<int, Player> before, Map<int, Player> after) {
+String? _newcomerReport(
+  Map<int, Player> before,
+  Map<int, Player> after,
+  String note,
+) {
   final rows = <SquadDevRow>[
     for (final e in after.entries)
       if (!before.containsKey(e.key))
@@ -761,11 +770,14 @@ String? _newcomerReport(Map<int, Player> before, Map<int, Player> after) {
           status: SquadDevStatus.arrived,
           // Unproven, so this is the scout's read, not the truth — the same
           // estimate the under-21 watchlist shows, and it can be a star out.
-          stars: Prospects.scoutedStars(e.value.id),
+          stars: Prospects.scoutedStars(e.value.id, age: e.value.age),
+          wonderkid:
+              e.value.age <= 21 &&
+              Prospects.trueStars(e.value.id, age: e.value.age) >= 5,
         ),
   ];
   if (rows.isEmpty) return null;
-  return encodeSquadDevReport(rows);
+  return encodeSquadDevReport(rows, note: note);
 }
 
 final Provider<MessageService> messageServiceProvider =

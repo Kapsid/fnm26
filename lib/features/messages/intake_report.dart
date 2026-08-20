@@ -24,6 +24,11 @@ List<SquadDevRow> intakeRows(List<Player> pyramid) => [
         rating: p.overall,
         status: SquadDevStatus.arrived,
         stars: Prospects.scoutedStars(p.id, age: p.age),
+        // From his real ceiling, not from the stars beside it: the stars are
+        // what the coaches think, and at eleven what they think is two stars
+        // wide. The badge is the game telling the truth, which it can only
+        // afford to do because it is rare.
+        wonderkid: Prospects.trueStars(p.id, age: p.age) >= 5,
       ),
 ];
 

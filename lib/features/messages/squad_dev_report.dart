@@ -26,6 +26,7 @@ class SquadDevRow {
     required this.status,
     this.change,
     this.stars,
+    this.wonderkid = false,
   });
 
   final String name;
@@ -44,14 +45,26 @@ class SquadDevRow {
 
   /// The scouting read on a newcomer's ceiling, 1–5 stars; null for anyone
   /// already established (nobody scouts a player you have watched for years).
-  /// Four or more is a [wonderkid].
+  /// A guess, and below seventeen a vague one — see [wonderkid], which is not
+  /// derived from it.
   final int? stars;
 
-  /// Whether this is a genuine prospect: young, brand new, and rated near the
-  /// top of the scale by the scouts. It is the one thing in a squad report
-  /// worth stopping on.
-  bool get wonderkid =>
-      status == SquadDevStatus.arrived && age <= 21 && (stars ?? 0) >= 4;
+  /// Whether this really is a generational talent.
+  ///
+  /// It used to be "the scouts gave him four stars", which made the badge out
+  /// of scout NOISE rather than talent: below seventeen the star read is
+  /// deliberately vague by up to two stars either way, so an ordinary boy was
+  /// routinely flagged and roughly one intake child in every two and a half
+  /// wore the word — about three a year, at an intake of seven. Whatever that
+  /// is, it is not generational.
+  ///
+  /// So the badge is now set from the player's ACTUAL hidden ceiling rather
+  /// than from the estimate beside it. The stars stay the scout's guess,
+  /// because not knowing is the whole point of watching a boy come through;
+  /// the badge is the game saying this one is real, which it can afford to do
+  /// honestly precisely because it is now rare — one every two or three
+  /// intakes.
+  final bool wonderkid;
 
   final SquadDevStatus status;
 }
@@ -114,6 +127,7 @@ String encodeSquadDevReport(List<SquadDevRow> rows, {String? note}) {
           SquadDevStatus.gone => 'out',
         },
         r.stars?.toString() ?? '',
+        r.wonderkid ? 'wk' : '',
       ].join('|'),
   ];
   return lines.join('\n');
@@ -145,6 +159,9 @@ SquadDevReport? decodeSquadDevReport(String body) {
         // The stars column arrived with the split report; a body written before
         // it simply has no seventh field.
         stars: f.length > 6 ? int.tryParse(f[6]) : null,
+        // The badge arrived after the stars column; a body written before it
+        // simply has no eighth field and claims nobody.
+        wonderkid: f.length > 7 && f[7] == 'wk',
         status: switch (f[5]) {
           'new' => SquadDevStatus.arrived,
           'out' => SquadDevStatus.gone,

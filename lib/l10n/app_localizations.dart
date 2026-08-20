@@ -9672,6 +9672,18 @@ abstract class AppLocalizations {
   /// **'Squad development · {year}'**
   String msgDevTitle(int year);
 
+  /// Inbox: the boys who have come up through the youth pyramid into the senior pool.
+  ///
+  /// In en, this message translates to:
+  /// **'Through from the academy · {year}'**
+  String msgThroughTitle(int year);
+
+  /// Line above the academy-graduates table, distinguishing it from the yearly intake.
+  ///
+  /// In en, this message translates to:
+  /// **'These are not a new intake — they are the boys who came in at eleven and have now grown into the senior pool.'**
+  String get msgThroughNote;
+
   /// Inbox: yearly newcomers report headline.
   ///
   /// In en, this message translates to:

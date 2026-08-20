@@ -50,7 +50,9 @@ abstract final class Prospects {
         player: p,
         yearGain: p.overall - (before[p.id] ?? p.overall),
         caps: caps,
-        stars: certain ? trueStars(p.id) : scoutedStars(p.id, age: p.age),
+        stars: certain
+            ? trueStars(p.id, age: p.age)
+            : scoutedStars(p.id, age: p.age),
         certain: certain,
       ));
     }
@@ -60,12 +62,24 @@ abstract final class Prospects {
 
   /// The honest read on a player's ceiling, 1–5 stars, from the same hidden
   /// potential that decides whether game time turns him into anything.
-  static int trueStars(int playerId) {
+  /// [age] is how old he is NOW. It matters only for the few who bloom late:
+  /// their uplift has not happened yet at thirteen, so reading them then gives
+  /// the boy they were always going to be, and the one they turn into shows up
+  /// when it actually shows up. Defaults to fully grown, which is what every
+  /// caller looking at a senior player means.
+  static int trueStars(int playerId, {int age = 99}) {
     final potential = PlayerLifecycle.developmentPotential(
       playerId,
+      age: age,
     ); // .35–1.75
     // Bands chosen so five stars is genuinely rare — most players are ordinary.
-    if (potential >= 1.45) return 5;
+    //
+    // The five-star bar moved from 1.45 to 1.50 when the WONDERKID badge was
+    // fixed. At 1.45, roughly one intake child in eleven had a genuine
+    // five-star ceiling; at 1.50 it is one in seventeen, which at seven boys a
+    // year is one every two or three intakes — a generation, which is what the
+    // word is supposed to mean.
+    if (potential >= 1.50) return 5;
     if (potential >= 1.2) return 4;
     if (potential >= 0.95) return 3;
     if (potential >= 0.7) return 2;
@@ -81,7 +95,7 @@ abstract final class Prospects {
   static int scoutedStars(int playerId, {int age = 20}) {
     final spread = age >= YouthLevel.u19.minAge ? 1 : 2;
     final wobble = (_mix(playerId ^ 0x5CADE) % (spread * 2 + 1)) - spread;
-    return (trueStars(playerId) + wobble).clamp(1, 5);
+    return (trueStars(playerId, age: age) + wobble).clamp(1, 5);
   }
 
   /// Sort key: promise first, then what he already is, then who is closest to

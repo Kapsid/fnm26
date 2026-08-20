@@ -8568,6 +8568,19 @@
       }
     }
   },
+  "msgThroughTitle": "Through from the academy · {year}",
+  "@msgThroughTitle": {
+    "description": "Inbox: the boys who have come up through the youth pyramid into the senior pool.",
+    "placeholders": {
+      "year": {
+        "type": "int"
+      }
+    }
+  },
+  "msgThroughNote": "These are not a new intake — they are the boys who came in at eleven and have now grown into the senior pool.",
+  "@msgThroughNote": {
+    "description": "Line above the academy-graduates table, distinguishing it from the yearly intake."
+  },
   "msgNewFacesTitle": "New faces · {year}",
   "@msgNewFacesTitle": {
     "description": "Inbox: yearly newcomers report headline.",
