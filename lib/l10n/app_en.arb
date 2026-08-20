@@ -9996,6 +9996,14 @@
   "@managerRoleFitnessBlurb": {
     "description": "Staff role effect."
   },
+  "staffVacant": "Nobody in the job",
+  "@staffVacant": {
+    "description": "Shown against a staff role with nobody hired."
+  },
+  "staffLeaveVacant": "Leave the job empty",
+  "@staffLeaveVacant": {
+    "description": "Option in the staff picker that hires nobody."
+  },
   "managerTierNone": "None",
   "@managerTierNone": {
     "description": "Staff quality tier."

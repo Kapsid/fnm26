@@ -6991,6 +6991,12 @@ class AppLocalizationsCs extends AppLocalizations {
   String get managerRoleFitnessBlurb => 'Udrží hráče na hřišti.';
 
   @override
+  String get staffVacant => 'Místo je neobsazené';
+
+  @override
+  String get staffLeaveVacant => 'Nechat místo neobsazené';
+
+  @override
   String get managerTierNone => 'Nikdo';
 
   @override

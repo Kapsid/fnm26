@@ -1840,6 +1840,8 @@
   "managerRoleScoutBlurb": "Dřív vám řekne, co z mladého hráče bude.",
   "managerRoleFitness": "Kondiční trenér",
   "managerRoleFitnessBlurb": "Udrží hráče na hřišti.",
+  "staffVacant": "Místo je neobsazené",
+  "staffLeaveVacant": "Nechat místo neobsazené",
   "managerTierNone": "Nikdo",
   "managerTierBasic": "Základní",
   "managerTierGood": "Dobrý",

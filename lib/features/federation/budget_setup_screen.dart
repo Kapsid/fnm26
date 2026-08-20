@@ -11,6 +11,8 @@ import 'package:fnm/domain/entities/career.dart';
 import 'package:fnm/domain/repositories/career_repository.dart';
 import 'package:fnm/features/federation/federation_service.dart';
 import 'package:fnm/features/federation/investment_editor.dart';
+import 'package:fnm/features/federation/staff_card.dart';
+import 'package:fnm/features/federation/staff_providers.dart';
 import 'package:fnm/features/hub/hub_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
@@ -98,7 +100,18 @@ class _BudgetSetupScreenState extends ConsumerState<BudgetSetupScreen> {
           if (career == null) {
             return Center(child: Text(l.federationSaveNotFound));
           }
-          final available = career.budget;
+          // The wage bill comes off the top. Staff are a standing cost the
+          // federation pays at the rollover, so money already promised to
+          // people is not money there is to hand to a department — showing it
+          // any other way is how a budget ends up overspent by exactly the
+          // amount of an elite scout.
+          final wages =
+              ref
+                  .watch(staffRoomProvider(widget.careerId))
+                  .valueOrNull
+                  ?.wagesPerCycle ??
+              0;
+          final available = (career.budget - wages).clamp(0, career.budget);
           final alloc =
               _alloc ??
               const (
@@ -164,6 +177,8 @@ class _BudgetSetupScreenState extends ConsumerState<BudgetSetupScreen> {
                         ],
                       ),
                     ),
+                    const SizedBox(height: AppSpacing.md),
+                    StaffCard(careerId: widget.careerId),
                     const SizedBox(height: AppSpacing.md),
                     AppCard(
                       child: InvestmentEditor(

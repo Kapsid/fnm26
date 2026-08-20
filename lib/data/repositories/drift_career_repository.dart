@@ -152,13 +152,27 @@ class DriftCareerRepository implements CareerRepository {
   }
 
   @override
-  Future<void> setStaff(int id, StaffRole role, StaffTier tier) async {
-    final value = Value(tier.index);
+  Future<void> setStaff(int id, StaffRole role, int? candidateId) async {
+    // The tier is derived from the id rather than passed in, so the person and
+    // his ability can never disagree.
+    final tier = Value(
+      candidateId == null ? StaffTier.none.index : StaffMarket.tierOf(candidateId).index,
+    );
+    final person = Value(candidateId);
     await (_db.update(_db.careers)..where((t) => t.id.equals(id))).write(
       switch (role) {
-        StaffRole.assistant => CareersCompanion(staffAssistant: value),
-        StaffRole.scout => CareersCompanion(staffScout: value),
-        StaffRole.fitnessCoach => CareersCompanion(staffFitnessCoach: value),
+        StaffRole.assistant => CareersCompanion(
+          staffAssistant: tier,
+          staffAssistantId: person,
+        ),
+        StaffRole.scout => CareersCompanion(
+          staffScout: tier,
+          staffScoutId: person,
+        ),
+        StaffRole.fitnessCoach => CareersCompanion(
+          staffFitnessCoach: tier,
+          staffFitnessCoachId: person,
+        ),
       },
     );
   }

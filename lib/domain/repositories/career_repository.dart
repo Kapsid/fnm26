@@ -78,8 +78,13 @@ abstract interface class CareerRepository {
   /// a point is available — see `ManagerSkills.canRaise`.
   Future<void> raiseSkill(int id, ManagerSkill skill);
 
-  /// Hires (or lets go of) one member of staff.
-  Future<void> setStaff(int id, StaffRole role, StaffTier tier);
+
+  /// Puts [candidateId] in [role], or clears the post when it is null.
+  ///
+  /// The TIER is written alongside, because it is what every staff effect
+  /// reads; the id is who is actually in the chair. A cleared post is
+  /// [StaffTier.none] and nobody.
+  Future<void> setStaff(int id, StaffRole role, int? candidateId);
 
 
   /// Marks the Y feed read up to [date] — the in-game date of its newest post.

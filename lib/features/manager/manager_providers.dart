@@ -95,8 +95,10 @@ class ManagerService {
     return true;
   }
 
-  Future<void> hire(int careerId, StaffRole role, StaffTier tier) async {
-    await _ref.read(careerRepositoryProvider).setStaff(careerId, role, tier);
+  Future<void> hire(int careerId, StaffRole role, int? candidateId) async {
+    await _ref
+        .read(careerRepositoryProvider)
+        .setStaff(careerId, role, candidateId);
     _invalidate(careerId);
   }
 

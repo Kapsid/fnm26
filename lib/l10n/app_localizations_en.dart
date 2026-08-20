@@ -6967,6 +6967,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get managerRoleFitnessBlurb => 'Keeps them on the pitch.';
 
   @override
+  String get staffVacant => 'Nobody in the job';
+
+  @override
+  String get staffLeaveVacant => 'Leave the job empty';
+
+  @override
   String get managerTierNone => 'None';
 
   @override

@@ -46,9 +46,10 @@ class ManagerScreen extends ConsumerWidget {
             : ListView(
                 padding: const EdgeInsets.all(AppSpacing.marginMobile),
                 children: [
+                  // Skills and nothing else. The staff used to sit under
+                  // them, which put a standing COST on a screen with no money
+                  // on it; hiring now happens where the budget is.
                   _SkillsCard(careerId: careerId, view: view),
-                  const SizedBox(height: AppSpacing.md),
-                  _StaffCard(careerId: careerId, view: view),
                   const SizedBox(height: AppSpacing.xl),
                 ],
               ),
@@ -70,27 +71,6 @@ String _skillBlurb(AppLocalizations l, ManagerSkill s) => switch (s) {
   ManagerSkill.youthDevelopment => l.managerSkillYouthBlurb,
   ManagerSkill.negotiation => l.managerSkillNegotiationBlurb,
 };
-
-String _roleName(AppLocalizations l, StaffRole r) => switch (r) {
-  StaffRole.assistant => l.managerRoleAssistant,
-  StaffRole.scout => l.managerRoleScout,
-  StaffRole.fitnessCoach => l.managerRoleFitness,
-};
-
-String _roleBlurb(AppLocalizations l, StaffRole r) => switch (r) {
-  StaffRole.assistant => l.managerRoleAssistantBlurb,
-  StaffRole.scout => l.managerRoleScoutBlurb,
-  StaffRole.fitnessCoach => l.managerRoleFitnessBlurb,
-};
-
-String _tierName(AppLocalizations l, StaffTier t) => switch (t) {
-  StaffTier.none => l.managerTierNone,
-  StaffTier.basic => l.managerTierBasic,
-  StaffTier.good => l.managerTierGood,
-  StaffTier.elite => l.managerTierElite,
-};
-
-
 
 class _SkillsCard extends ConsumerWidget {
   const _SkillsCard({required this.careerId, required this.view});
@@ -212,78 +192,3 @@ class _SkillRow extends StatelessWidget {
     ],
   );
 }
-
-class _StaffCard extends ConsumerWidget {
-  const _StaffCard({required this.careerId, required this.view});
-
-  final int careerId;
-  final ManagerView view;
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final l = AppLocalizations.of(context);
-    final career = view.career;
-    final tiers = {
-      StaffRole.assistant: career.staffAssistant,
-      StaffRole.scout: career.staffScout,
-      StaffRole.fitnessCoach: career.staffFitnessCoach,
-    };
-    return AppCard(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Text(
-            l.managerStaff,
-            style: AppTypography.labelMedium.copyWith(
-              color: AppColors.primary,
-            ),
-          ),
-          const SizedBox(height: AppSpacing.xs),
-          Text(
-            l.managerStaffWages(formatEuros(view.staffWages)),
-            style: AppTypography.labelSmall.copyWith(
-              color: view.staffWages > career.budget
-                  ? AppColors.warning
-                  : AppColors.onSurfaceVariant,
-            ),
-          ),
-          const SizedBox(height: AppSpacing.md),
-          for (final role in StaffRole.values) ...[
-            Text(_roleName(l, role), style: AppTypography.bodyMedium),
-            Text(
-              _roleBlurb(l, role),
-              style: AppTypography.labelSmall.copyWith(
-                color: AppColors.onSurfaceVariant,
-              ),
-            ),
-            const SizedBox(height: AppSpacing.xs),
-            SegmentedButton<StaffTier>(
-              showSelectedIcon: false,
-              segments: [
-                for (final tier in StaffTier.values)
-                  ButtonSegment(
-                    value: tier,
-                    label: Text(
-                      tier == StaffTier.none
-                          ? _tierName(l, tier)
-                          : '${_tierName(l, tier)}\n'
-                                '${formatEuros(Staff.costPerCycle(tier))}',
-                      textAlign: TextAlign.center,
-                      style: AppTypography.labelSmall,
-                    ),
-                  ),
-              ],
-              selected: {tiers[role]!},
-              onSelectionChanged: (s) => ref
-                  .read(managerServiceProvider)
-                  .hire(careerId, role, s.first),
-            ),
-            if (role != StaffRole.values.last)
-              const Divider(height: AppSpacing.lg),
-          ],
-        ],
-      ),
-    );
-  }
-}
-

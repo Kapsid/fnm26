@@ -11187,6 +11187,18 @@ abstract class AppLocalizations {
   /// **'Keeps them on the pitch.'**
   String get managerRoleFitnessBlurb;
 
+  /// Shown against a staff role with nobody hired.
+  ///
+  /// In en, this message translates to:
+  /// **'Nobody in the job'**
+  String get staffVacant;
+
+  /// Option in the staff picker that hires nobody.
+  ///
+  /// In en, this message translates to:
+  /// **'Leave the job empty'**
+  String get staffLeaveVacant;
+
   /// Staff quality tier.
   ///
   /// In en, this message translates to:
