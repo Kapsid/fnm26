@@ -19,10 +19,13 @@ const kMaxMessagePopups = 3;
 /// badge — by the time anything could ask sync what was new, it would always
 /// answer "nothing".
 ///
-/// Reads the inbox straight from the repository rather than through
-/// [messageInboxProvider], which syncs as a side effect: showing news is not
-/// the right moment to generate it, and whoever displays the badge has already
-/// done so.
+/// SYNCS FIRST, then reads. This used to read the repository straight, on the
+/// reasoning that whoever displays the unread badge has already synced. They
+/// have — but not yet: the popup runs on the hub's FIRST frame, before
+/// [messageInboxProvider] has resolved, so a step that had just generated news
+/// found an empty inbox and the news appeared only on the manager's next visit
+/// to the hub. Sync is idempotent and deduplicated, so paying for it here
+/// costs a cache hit and buys news that arrives when it happened.
 ///
 /// Returns the number shown.
 Future<int> showUnreadMessagePopups(
@@ -31,6 +34,8 @@ Future<int> showUnreadMessagePopups(
   int careerId,
 ) async {
   final l = AppLocalizations.of(context);
+  // Generate before reading — see the note above.
+  await ref.read(messageServiceProvider).sync(careerId);
   final comp = ref.read(competitionRepositoryProvider);
   // Mid-tournament, the between-seasons reports wait. They stay unread and pop
   // once the final has been played — see [kBetweenSeasonsCategories].

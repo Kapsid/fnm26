@@ -7,6 +7,7 @@ import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/data/db/app_database.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
 import 'package:fnm/features/messages/message_popup.dart';
+import 'package:fnm/features/messages/message_providers.dart';
 
 import '../helpers/test_database.dart';
 
@@ -20,7 +21,14 @@ void main() {
   setUp(() async {
     db = createTestDatabase();
     container = ProviderContainer(
-      overrides: [appDatabaseProvider.overrideWithValue(db)],
+      overrides: [
+        appDatabaseProvider.overrideWithValue(db),
+        // These tests are about what the popup SHOWS, and they file their news
+        // by hand. The real generator would file its own on top and change
+        // what is on screen; standing it down keeps each test's subject the
+        // messages it wrote itself.
+        messageServiceProvider.overrideWith(_NoNewsService.new),
+      ],
     );
     comp = container.read(competitionRepositoryProvider);
     // A career row for the messages to hang off.
@@ -107,6 +115,39 @@ void main() {
     expect(await comp.unreadMessageCount(careerId), 0);
   });
 
+  testWidgets('news written by the sync pops on this visit, not the next', (
+    tester,
+  ) async {
+    // The whole point of the fix. The popup used to read the repository
+    // WITHOUT syncing, on the reasoning that the hub's unread badge syncs as a
+    // side effect of building. It does — but the popup runs on the hub's first
+    // frame, before that provider has resolved, so a step that had just
+    // generated news popped nothing, and the news appeared only on the NEXT
+    // visit to the hub. A fake service standing in for the real generator is
+    // the honest way to say "the message exists only once sync has run".
+    container.dispose();
+    db = createTestDatabase();
+    container = ProviderContainer(
+      overrides: [
+        appDatabaseProvider.overrideWithValue(db),
+        messageServiceProvider.overrideWith(_LateNewsService.new),
+      ],
+    );
+    comp = container.read(competitionRepositoryProvider);
+    await container
+        .read(careerRepositoryProvider)
+        .create(
+          managerName: 'M',
+          nationId: 1,
+          rngSeed: 1,
+          startDate: DateTime(2026, 9),
+        );
+
+    await pumpAndPop(tester);
+
+    expect(find.text('Filed by the sync'), findsOneWidget);
+  });
+
   testWidgets('nothing pops when everything has been read', (tester) async {
     await addMessage('a', 'Old news');
     await comp.markMessagesRead(careerId);
@@ -132,4 +173,32 @@ void main() {
     // Only the shown ones were marked read — the overflow waits in the inbox.
     expect(await comp.unreadMessageCount(careerId), 2);
   });
+}
+
+/// A generator that files nothing, for the tests that write their own news.
+class _NoNewsService extends MessageService {
+  _NoNewsService(super.ref);
+
+  @override
+  Future<void> sync(int careerId) async {}
+}
+
+/// A message service whose sync is the only thing that ever writes the news —
+/// exactly like the real one, and unlike a test that inserts rows by hand.
+class _LateNewsService extends MessageService {
+  _LateNewsService(this._ownRef) : super(_ownRef);
+
+  final Ref _ownRef;
+
+  @override
+  Future<void> sync(int careerId) => _ownRef
+      .read(competitionRepositoryProvider)
+      .addMessage(
+        careerId: careerId,
+        dedupKey: 'late',
+        category: 'ranking',
+        title: 'Filed by the sync',
+        body: 'Body',
+        year: 2026,
+      );
 }
