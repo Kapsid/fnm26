@@ -6489,6 +6489,30 @@
   "@boardObjectivesConfidence": {
     "description": "Label above the board-confidence verdict."
   },
+  "boardObjectiveBeatenBy": "{result} — {rounds, plural, =1{a round better than asked} other{{rounds} rounds better than asked}}",
+  "@boardObjectiveBeatenBy": {
+    "description": "A settled objective the nation beat, and by how many rounds.",
+    "placeholders": {
+      "result": {
+        "type": "String"
+      },
+      "rounds": {
+        "type": "int"
+      }
+    }
+  },
+  "boardObjectiveShortBy": "{result} — {rounds, plural, =1{a round short} other{{rounds} rounds short}}",
+  "@boardObjectiveShortBy": {
+    "description": "A settled objective the nation missed, and by how many rounds.",
+    "placeholders": {
+      "result": {
+        "type": "String"
+      },
+      "rounds": {
+        "type": "int"
+      }
+    }
+  },
   "boardObjectivesPending": "STILL TO BE DECIDED",
   "@boardObjectivesPending": {
     "description": "Status of an objective whose tournament has not finished."

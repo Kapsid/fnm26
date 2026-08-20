@@ -80,7 +80,7 @@ class AppDatabase extends _$AppDatabase {
   /// full set of upgrade paths from it — see `schema_migration_test.dart`.
   /// A hand-written list of paths is a step somebody forgets on the bump that
   /// matters.
-  static const int currentSchemaVersion = 44;
+  static const int currentSchemaVersion = 45;
 
   @override
   int get schemaVersion => currentSchemaVersion;
@@ -224,6 +224,13 @@ class AppDatabase extends _$AppDatabase {
             await m.addColumn(schema.careers, column);
           }
           await m.alterTable(TableMigration(schema.careers));
+        },
+        // 44 → 45 remembers where the board's gauge finished the last cycle.
+        // Additive and nullable: a save upgraded from before it has no closing
+        // figure to carry, so its next cycle opens neutral exactly as every
+        // cycle used to.
+        from44To45: (m, schema) async {
+          await m.addColumn(schema.careers, schema.careers.lastCycleBoard);
         },
       )(m, from, to);
     },

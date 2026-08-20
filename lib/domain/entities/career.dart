@@ -66,6 +66,10 @@ abstract class Career with _$Career {
     int? staffScoutId,
     int? staffFitnessCoachId,
 
+    /// Where the board's gauge finished the previous cycle, or null before a
+    /// cycle has closed.
+    int? lastCycleBoard,
+
     /// The international window the current squad was named for, or null when
     /// no squad has been named yet.
     String? callUpWindowId,

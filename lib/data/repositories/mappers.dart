@@ -102,6 +102,7 @@ extension CareerRowMapper on CareerRow {
     staffAssistantId: staffAssistantId,
     staffScoutId: staffScoutId,
     staffFitnessCoachId: staffFitnessCoachId,
+    lastCycleBoard: lastCycleBoard,
     callUpWindowId: callUpWindowId,
   );
 }

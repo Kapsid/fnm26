@@ -77,11 +77,21 @@ class DriftCareerRepository implements CareerRepository {
   }
 
   @override
-  Future<void> advanceCycle(int id, int cyclePointer, DateTime date) async {
+  Future<void> advanceCycle(
+    int id,
+    int cyclePointer,
+    DateTime date, {
+    int? closingBoard,
+  }) async {
     await (_db.update(_db.careers)..where((t) => t.id.equals(id))).write(
       CareersCompanion(
         cyclePointer: Value(cyclePointer),
         inGameDate: Value(date),
+        // Recorded as the cycle closes, because everything it was computed
+        // from is about to stop being this cycle.
+        lastCycleBoard: closingBoard == null
+            ? const Value.absent()
+            : Value(closingBoard),
       ),
     );
   }

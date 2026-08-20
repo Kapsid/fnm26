@@ -219,6 +219,8 @@ satisfactionProvider = FutureProvider.autoDispose.family<int, int>((
                 publicMood: await ref.watch(
                   publicMoodProvider(careerId).future,
                 ),
+                // A reputation is worth a little rope, and only a little.
+                previousCycle: career.lastCycleBoard,
               ) +
               press.board)
           .clamp(0, 100);

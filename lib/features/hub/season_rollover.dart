@@ -115,7 +115,16 @@ extension SeasonRollover on SeasonService {
       9,
     );
 
-    await _careers.advanceCycle(careerId, nextCycle, nextStart);
+    // Where the board finished, read BEFORE the pointer moves: satisfaction is
+    // derived from this cycle's objectives and form, and a moment from now
+    // none of that will be this cycle any more.
+    final closingBoard = await _ref.read(satisfactionProvider(careerId).future);
+    await _careers.advanceCycle(
+      careerId,
+      nextCycle,
+      nextStart,
+      closingBoard: closingBoard,
+    );
     await _careers.recordStint(careerId, nextCycle, nationId);
 
     // Freeze the current standings as the seeding ranking for the new cycle, so

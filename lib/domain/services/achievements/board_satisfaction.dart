@@ -29,6 +29,26 @@ abstract final class BoardSatisfaction {
   /// Where a board with nothing to judge sits.
   static const int neutral = 50;
 
+  /// How much of the LAST cycle's standing a manager keeps into the new one.
+  ///
+  /// The gauge used to reset to [neutral] every four years, so the man who had
+  /// just won the World Cup opened his next cycle on exactly the figure of the
+  /// man who had nearly been sacked. A reputation is not nothing, and it is not
+  /// everything either: at a quarter, winning the last cycle is worth about
+  /// twelve points of rope at the start of this one — enough to survive a bad
+  /// window, nowhere near enough to survive a bad cycle, which is the whole
+  /// point of a board.
+  static const double carryOver = 0.25;
+
+  /// Where the gauge STARTS this cycle, given where it finished the last one.
+  ///
+  /// [previous] is null for a save's first cycle, or one that predates the
+  /// figure being recorded — both of which start neutral, exactly as every
+  /// cycle used to.
+  static int openingFrom(int? previous) => previous == null
+      ? neutral
+      : (neutral + (previous - neutral) * carryOver).round().clamp(0, 100);
+
   /// How many recent matches count toward form.
   static const int formWindow = 10;
 
@@ -178,6 +198,10 @@ abstract final class BoardSatisfaction {
     /// What the country thinks, 0–100. [PublicMood.neutral] means the board has
     /// no public opinion to weigh and behaves exactly as it did before Y.
     int publicMood = PublicMood.neutral,
+
+    /// Where the gauge finished the PREVIOUS cycle, or null for a first cycle.
+    /// See [carryOver] — a reputation buys a little rope, not a free pass.
+    int? previousCycle,
   }) {
     var best = 0;
     for (final h in honours) {
@@ -188,7 +212,7 @@ abstract final class BoardSatisfaction {
     for (final o in objectives) {
       fromObjectives += objectiveSwing(o);
     }
-    return (neutral +
+    return (openingFrom(previousCycle) +
             formPoints(recent) +
             best +
             fromObjectives +

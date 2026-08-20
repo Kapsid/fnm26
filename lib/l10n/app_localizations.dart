@@ -7620,6 +7620,18 @@ abstract class AppLocalizations {
   /// **'Board confidence'**
   String get boardObjectivesConfidence;
 
+  /// A settled objective the nation beat, and by how many rounds.
+  ///
+  /// In en, this message translates to:
+  /// **'{result} — {rounds, plural, =1{a round better than asked} other{{rounds} rounds better than asked}}'**
+  String boardObjectiveBeatenBy(String result, int rounds);
+
+  /// A settled objective the nation missed, and by how many rounds.
+  ///
+  /// In en, this message translates to:
+  /// **'{result} — {rounds, plural, =1{a round short} other{{rounds} rounds short}}'**
+  String boardObjectiveShortBy(String result, int rounds);
+
   /// Status of an objective whose tournament has not finished.
   ///
   /// In en, this message translates to:

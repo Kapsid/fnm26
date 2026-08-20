@@ -4576,6 +4576,28 @@ class AppLocalizationsEn extends AppLocalizations {
   String get boardObjectivesConfidence => 'Board confidence';
 
   @override
+  String boardObjectiveBeatenBy(String result, int rounds) {
+    String _temp0 = intl.Intl.pluralLogic(
+      rounds,
+      locale: localeName,
+      other: '$rounds rounds better than asked',
+      one: 'a round better than asked',
+    );
+    return '$result — $_temp0';
+  }
+
+  @override
+  String boardObjectiveShortBy(String result, int rounds) {
+    String _temp0 = intl.Intl.pluralLogic(
+      rounds,
+      locale: localeName,
+      other: '$rounds rounds short',
+      one: 'a round short',
+    );
+    return '$result — $_temp0';
+  }
+
+  @override
   String get boardObjectivesPending => 'STILL TO BE DECIDED';
 
   @override

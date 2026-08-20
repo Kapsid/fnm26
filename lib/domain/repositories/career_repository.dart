@@ -57,7 +57,16 @@ abstract interface class CareerRepository {
   Future<void> updateInGameDate(int id, DateTime date);
 
   /// Advances the save to a new cycle, setting [cyclePointer] and [date].
-  Future<void> advanceCycle(int id, int cyclePointer, DateTime date);
+  /// Moves the save into [cyclePointer], dated [date].
+  ///
+  /// [closingBoard] is where the board's gauge finished the cycle just ended,
+  /// which the new one carries a quarter of — see `BoardSatisfaction.carryOver`.
+  Future<void> advanceCycle(
+    int id,
+    int cyclePointer,
+    DateTime date, {
+    int? closingBoard,
+  });
 
   /// Moves the manager to a new nation (a between-cycles job change).
   Future<void> switchNation(int id, int nationId);

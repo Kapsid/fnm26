@@ -1251,6 +1251,8 @@
   "squadDevEmpty": "Klidný rok. V kádru beze změn.",
   "boardObjectivesTitle": "Cíle vedení",
   "boardObjectivesConfidence": "Důvěra vedení",
+  "boardObjectiveBeatenBy": "{result} — {rounds, plural, =1{o kolo lepší, než se čekalo} few{o {rounds} kola lepší, než se čekalo} other{o {rounds} kol lepší, než se čekalo}}",
+  "boardObjectiveShortBy": "{result} — {rounds, plural, =1{o kolo méně} few{o {rounds} kola méně} other{o {rounds} kol méně}}",
   "boardObjectivesPending": "JEŠTĚ SE ROZHODNE",
   "boardObjectiveSoFar": "ZATÍM · {result}",
   "boardObjectivesEmpty": "Vedení pro tento cyklus nestanovilo cíl.",

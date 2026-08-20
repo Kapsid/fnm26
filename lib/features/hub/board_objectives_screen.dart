@@ -132,8 +132,13 @@ class _ObjectiveCard extends StatelessWidget {
     final l = AppLocalizations.of(context);
     final decided = objective.decided;
     final met = objective.met;
+    // Beating a brief outright is its own colour: a cycle carried three
+    // rounds past what was asked should not look like one that scraped it.
+    final gap = objective.actual - objective.target;
     final color = !decided
         ? AppColors.onSurfaceVariant
+        : gap > 0
+        ? AppColors.primary
         : (met ? AppColors.positive : AppColors.error);
     return AppCard(
       child: Column(
@@ -173,13 +178,24 @@ class _ObjectiveCard extends StatelessWidget {
               // Ordinals below 2 are not progress — they are "out of it" and
               // "bottom of the group", which read as an achievement if shown
               // as how far the run has got.
+              // Once graded, say by HOW MUCH. Met/missed alone read the same
+              // whether a side scraped the brief or was carried three rounds
+              // past it, and the two are not the same cycle.
               !decided
                   ? (objective.actual >= 2
                         ? l.boardObjectiveSoFar(objective.resultLabel)
                         : l.boardObjectivesPending)
-                  : met
-                  ? l.hubObjectiveMet(objective.resultLabel)
-                  : l.hubObjectiveMissed(objective.resultLabel),
+                  : switch (objective.actual - objective.target) {
+                      0 => l.hubObjectiveMet(objective.resultLabel),
+                      final gap when gap > 0 => l.boardObjectiveBeatenBy(
+                        objective.resultLabel,
+                        gap,
+                      ),
+                      final gap => l.boardObjectiveShortBy(
+                        objective.resultLabel,
+                        -gap,
+                      ),
+                    },
               style: AppTypography.labelSmall.copyWith(
                 color: color,
                 fontWeight: FontWeight.w700,

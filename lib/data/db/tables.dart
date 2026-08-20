@@ -129,6 +129,16 @@ class Careers extends Table {
   IntColumn get staffScoutId => integer().nullable()();
   IntColumn get staffFitnessCoachId => integer().nullable()();
 
+  /// Where the board's gauge finished the PREVIOUS cycle, or null before a
+  /// cycle has ever closed.
+  ///
+  /// Satisfaction is otherwise entirely derived, and derived only from THIS
+  /// cycle — which meant it reset to neutral every four years, so a manager
+  /// who had just won the World Cup opened the next cycle on the same figure
+  /// as one who had nearly been sacked. This one number is what a reputation
+  /// is made of; see `BoardSatisfaction.carryOver`.
+  IntColumn get lastCycleBoard => integer().nullable()();
+
   /// The international window this save's squad was named for, or null when no
   /// squad has been named yet.
   ///
