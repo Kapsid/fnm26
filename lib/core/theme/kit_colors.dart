@@ -95,6 +95,27 @@ abstract final class KitColors {
     return out;
   }
 
+  /// Two nations' colours, guaranteed to read as DIFFERENT from each other.
+  ///
+  /// A two-sided bar showing which way a match is going is only worth painting
+  /// in the teams' own colours if the two sides can be told apart — and two of
+  /// the reds in this game are all but identical. When the leads collide the
+  /// second kit's colour is tried, and failing that one side is pushed lighter
+  /// and the other darker, which separates any pair without either losing its
+  /// identity.
+  static (Color, Color) opposed(
+    (String, String) homeKit,
+    (String, String) awayKit,
+  ) {
+    final home = accent(homeKit.$1, homeKit.$2);
+    var away = accent(awayKit.$1, awayKit.$2);
+    if (!tooClose(home, away)) return (home, away);
+    // Their second colour, if that is genuinely a different colour.
+    final alt = legible(parse(awayKit.$2));
+    if (!tooClose(home, alt)) return (home, alt);
+    return (shade(home, 0.16), shade(away, -0.16));
+  }
+
   /// A two-stop fill for a small surface (a player disc, a chip) in a single
   /// nation's colours. Uses the second kit colour when it reads as genuinely
   /// different, otherwise a darker shade of the first — so every nation gets a

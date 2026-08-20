@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fnm/core/util/competition_label.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
@@ -152,7 +153,7 @@ class _MeetingRow extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    m.competition,
+                    competitionLabel(l, m.competition),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: AppTypography.bodyMedium,

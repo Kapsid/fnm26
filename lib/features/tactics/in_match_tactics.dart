@@ -8,6 +8,7 @@ import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/entities/tactics.dart';
 import 'package:fnm/domain/services/tactics/best_eleven.dart';
 import 'package:fnm/domain/services/tactics/position_fit.dart';
+import 'package:fnm/domain/services/rating/overall_rating.dart';
 import 'package:fnm/domain/services/tactics/substitution_rules.dart';
 import 'package:fnm/features/tactics/tactics_pitch.dart';
 import 'package:fnm/l10n/app_localizations.dart';
@@ -128,6 +129,12 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
   /// Ids currently on the pitch.
   Set<int> get _onPitch => _lineup.whereType<int>().toSet();
 
+  /// The eleven actually on the pitch, for the side's live overall.
+  List<Player> get _onPitchPlayers => [
+    for (final id in _lineup)
+      if (id != null && _byId[id] != null) _byId[id]!,
+  ];
+
   /// A sub is spent for every starter no longer on the pitch (chains of
   /// replacements still count as a single change to that starter's slot). A
   /// sending-off is not a substitution — it costs a player, not a change.
@@ -177,17 +184,28 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
   /// rules — the snackbar on [_apply] used to be the only thing standing in
   /// the way, which let the board reach a state football does not allow.
   void _setSlot(int slot, int playerId) {
-    if (!canBringOn(
+    final refusal = refusalToBringOn(
       startingIds: widget.startingIds,
       onPitch: _onPitch,
       sentOffIds: widget.sentOffIds,
       withdrawnIds: _withdrawn,
       maxSubs: widget.maxSubs,
       playerId: playerId,
-    )) {
+    );
+    if (refusal != SubRefusal.none) {
       final l = AppLocalizations.of(context);
+      // Say WHICH rule stopped him. Every refusal used to be reported as the
+      // sub count being spent, so a manager dragging a man he had already
+      // taken off was told he had made too many changes.
+      final who = _byId[playerId]?.name ?? '';
+      final message = switch (refusal) {
+        SubRefusal.alreadyWithdrawn => l.tacticsSubAlreadyOff(who),
+        SubRefusal.sentOff => l.tacticsSubSentOff(who),
+        SubRefusal.noSubsLeft ||
+        SubRefusal.none => l.tacticsTooManySubs(widget.maxSubs),
+      };
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(l.tacticsTooManySubs(widget.maxSubs))),
+        SnackBar(content: Text(message)),
       );
       return;
     }
@@ -239,9 +257,26 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
           icon: const Icon(Icons.close, color: AppColors.primary),
           onPressed: () => Navigator.of(context).pop(),
         ),
-        title: Text(
-          l.tacticsMinuteTitle(widget.minute),
-          style: AppTypography.labelMedium.copyWith(color: AppColors.primary),
+        // The minute, and under it the side's overall as it stands — the same
+        // number the pre-match screen shows either side of the "VS". It moves
+        // with every change made here, which is the point: a manager taking a
+        // tired star off should see what it costs him.
+        title: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              l.tacticsMinuteTitle(widget.minute),
+              style: AppTypography.labelMedium.copyWith(
+                color: AppColors.primary,
+              ),
+            ),
+            Text(
+              '${l.teamOverall} ${squadOverall(_onPitchPlayers)}',
+              style: AppTypography.labelSmall.copyWith(
+                color: AppColors.onSurfaceVariant,
+              ),
+            ),
+          ],
         ),
         centerTitle: true,
         actions: [

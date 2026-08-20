@@ -196,14 +196,6 @@
   "@teamOverall": {
     "description": "Label for a team's overall rating (the mean of its best eleven)."
   },
-  "matchSecondYellow": "Second yellow",
-  "@matchSecondYellow": {
-    "description": "Match timeline label for a dismissal that followed a second booking."
-  },
-  "matchStraightRed": "Red card",
-  "@matchStraightRed": {
-    "description": "Match timeline label for a straight red card."
-  },
   "teamTalkHeading": "TEAM TALK",
   "@teamTalkHeading": {
     "description": "Heading above the interval team-talk options."
@@ -1277,14 +1269,6 @@
   "tacticsOn": "ON",
   "@tacticsOn": {
     "description": "Chip marking a player already on the pitch."
-  },
-  "tacticsInjuredReplace": "INJURED — REPLACE",
-  "@tacticsInjuredReplace": {
-    "description": "Pitch flag on an injured player who must be replaced."
-  },
-  "tacticsSuspendedReplace": "SUSPENDED — REPLACE",
-  "@tacticsSuspendedReplace": {
-    "description": "Pitch flag on a suspended player who must be replaced."
   },
   "tacticsSquad": "SQUAD",
   "@tacticsSquad": {
@@ -2377,15 +2361,21 @@
   "@careerPlayedMinutes": {
     "description": "Total real-world time spent in a save, under an hour.",
     "placeholders": {
-      "minutes": { "type": "int" }
+      "minutes": {
+        "type": "int"
+      }
     }
   },
   "careerPlayedHours": "Played {hours}h {minutes}m",
   "@careerPlayedHours": {
     "description": "Total real-world time spent in a save, an hour or more.",
     "placeholders": {
-      "hours": { "type": "int" },
-      "minutes": { "type": "int" }
+      "hours": {
+        "type": "int"
+      },
+      "minutes": {
+        "type": "int"
+      }
     }
   },
   "careerLastPlayed": "Last played {when}",
@@ -2846,139 +2836,267 @@
   "matchStageMatchday": "MD {matchday}",
   "@matchStageMatchday": {
     "description": "Matchday number shown for a qualifying fixture, which has rounds but no named stage.",
-    "placeholders": { "matchday": { "type": "int" } }
+    "placeholders": {
+      "matchday": {
+        "type": "int"
+      }
+    }
   },
   "squadCaptain": "Captain",
-  "@squadCaptain": { "description": "Label for the squad captain row on the squad tab." },
+  "@squadCaptain": {
+    "description": "Label for the squad captain row on the squad tab."
+  },
   "deptEffectYouth": "Academy prospects arrive about {points} overall better",
   "@deptEffectYouth": {
     "description": "What youth-academy spending buys this cycle.",
-    "placeholders": { "points": { "type": "int" } }
+    "placeholders": {
+      "points": {
+        "type": "int"
+      }
+    }
   },
   "deptEffectCommercial": "{amount} back at the cycle's close",
   "@deptEffectCommercial": {
     "description": "What commercial spending pays back at the end of the cycle.",
-    "placeholders": { "amount": { "type": "String" } }
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
   },
   "deptEffectMedical": "{percent}% fewer injuries",
   "@deptEffectMedical": {
     "description": "How much medical spending cuts the injury rate.",
-    "placeholders": { "percent": { "type": "int" } }
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
   },
   "deptEffectNaturalisation": "{percent}% chance a foreign player asks to switch",
   "@deptEffectNaturalisation": {
     "description": "The chance naturalisation spending buys this cycle.",
-    "placeholders": { "percent": { "type": "int" } }
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
   },
   "deptEffectBoard": "+{points} board patience before your job is at risk",
   "@deptEffectBoard": {
     "description": "How much board-relations spending raises the sacking threshold.",
-    "placeholders": { "points": { "type": "int" } }
+    "placeholders": {
+      "points": {
+        "type": "int"
+      }
+    }
   },
   "deptEffectNone": "No effect while unfunded",
   "@deptEffectNone": {
     "description": "Shown under a department slider that is set to zero."
   },
   "statsBestRated": "Ratings",
-  "@statsBestRated": { "description": "Tab label: players ranked by average match rating." },
+  "@statsBestRated": {
+    "description": "Tab label: players ranked by average match rating."
+  },
   "statsMyCareer": "Career",
-  "@statsMyCareer": { "description": "Tab label: the manager's own career record." },
+  "@statsMyCareer": {
+    "description": "Tab label: the manager's own career record."
+  },
   "statsBestAverageRating": "BEST AVERAGE RATING",
-  "@statsBestAverageRating": { "description": "Stats screen label: BEST AVERAGE RATING" },
+  "@statsBestAverageRating": {
+    "description": "Stats screen label: BEST AVERAGE RATING"
+  },
   "statsMyCareerRecord": "YOUR RECORD",
-  "@statsMyCareerRecord": { "description": "Stats screen label: YOUR RECORD" },
+  "@statsMyCareerRecord": {
+    "description": "Stats screen label: YOUR RECORD"
+  },
   "statsNoRatingsRecorded": "No match ratings recorded yet.",
-  "@statsNoRatingsRecorded": { "description": "Stats screen label: No match ratings recorded yet." },
+  "@statsNoRatingsRecorded": {
+    "description": "Stats screen label: No match ratings recorded yet."
+  },
   "statsGroupRecord": "Record",
-  "@statsGroupRecord": { "description": "Stats screen label: Record" },
+  "@statsGroupRecord": {
+    "description": "Stats screen label: Record"
+  },
   "statsGroupRuns": "Runs",
-  "@statsGroupRuns": { "description": "Stats screen label: Runs" },
+  "@statsGroupRuns": {
+    "description": "Stats screen label: Runs"
+  },
   "statsGroupExtremes": "Extremes",
-  "@statsGroupExtremes": { "description": "Stats screen label: Extremes" },
+  "@statsGroupExtremes": {
+    "description": "Stats screen label: Extremes"
+  },
   "statsGroupSplits": "Home & away",
-  "@statsGroupSplits": { "description": "Stats screen label: Home & away" },
+  "@statsGroupSplits": {
+    "description": "Stats screen label: Home & away"
+  },
   "statsGroupSquad": "Your players",
-  "@statsGroupSquad": { "description": "Stats screen label: Your players" },
+  "@statsGroupSquad": {
+    "description": "Stats screen label: Your players"
+  },
   "statsPlayed": "Matches played",
-  "@statsPlayed": { "description": "Stats screen label: Matches played" },
-  "statsWinDrawLoss": "Won\u2013drawn\u2013lost",
-  "@statsWinDrawLoss": { "description": "Stats screen label: Won\u2013drawn\u2013lost" },
+  "@statsPlayed": {
+    "description": "Stats screen label: Matches played"
+  },
+  "statsWinDrawLoss": "Won–drawn–lost",
+  "@statsWinDrawLoss": {
+    "description": "Stats screen label: Won–drawn–lost"
+  },
   "statsWinRate": "Win rate",
-  "@statsWinRate": { "description": "Stats screen label: Win rate" },
+  "@statsWinRate": {
+    "description": "Stats screen label: Win rate"
+  },
   "statsGoals": "Goals for:against",
-  "@statsGoals": { "description": "Stats screen label: Goals for:against" },
+  "@statsGoals": {
+    "description": "Stats screen label: Goals for:against"
+  },
   "statsCleanSheets": "Clean sheets",
-  "@statsCleanSheets": { "description": "Stats screen label: Clean sheets" },
+  "@statsCleanSheets": {
+    "description": "Stats screen label: Clean sheets"
+  },
   "statsFailedToScore": "Failed to score",
-  "@statsFailedToScore": { "description": "Stats screen label: Failed to score" },
+  "@statsFailedToScore": {
+    "description": "Stats screen label: Failed to score"
+  },
   "statsLongestWinStreak": "Longest winning run",
-  "@statsLongestWinStreak": { "description": "Stats screen label: Longest winning run" },
+  "@statsLongestWinStreak": {
+    "description": "Stats screen label: Longest winning run"
+  },
   "statsLongestUnbeaten": "Longest unbeaten run",
-  "@statsLongestUnbeaten": { "description": "Stats screen label: Longest unbeaten run" },
+  "@statsLongestUnbeaten": {
+    "description": "Stats screen label: Longest unbeaten run"
+  },
   "statsLongestCleanSheets": "Longest clean-sheet run",
-  "@statsLongestCleanSheets": { "description": "Stats screen label: Longest clean-sheet run" },
+  "@statsLongestCleanSheets": {
+    "description": "Stats screen label: Longest clean-sheet run"
+  },
   "statsLongestWinless": "Longest winless run",
-  "@statsLongestWinless": { "description": "Stats screen label: Longest winless run" },
+  "@statsLongestWinless": {
+    "description": "Stats screen label: Longest winless run"
+  },
   "statsCurrentRun": "Current unbeaten run",
-  "@statsCurrentRun": { "description": "Stats screen label: Current unbeaten run" },
+  "@statsCurrentRun": {
+    "description": "Stats screen label: Current unbeaten run"
+  },
   "statsBiggestWin": "Biggest win",
-  "@statsBiggestWin": { "description": "Stats screen label: Biggest win" },
+  "@statsBiggestWin": {
+    "description": "Stats screen label: Biggest win"
+  },
   "statsHeaviestDefeat": "Heaviest defeat",
-  "@statsHeaviestDefeat": { "description": "Stats screen label: Heaviest defeat" },
+  "@statsHeaviestDefeat": {
+    "description": "Stats screen label: Heaviest defeat"
+  },
   "statsMostGoalsInAGame": "Most goals in a match",
-  "@statsMostGoalsInAGame": { "description": "Stats screen label: Most goals in a match" },
-  "statsShootouts": "Shootouts won\u2013lost",
-  "@statsShootouts": { "description": "Stats screen label: Shootouts won\u2013lost" },
+  "@statsMostGoalsInAGame": {
+    "description": "Stats screen label: Most goals in a match"
+  },
+  "statsShootouts": "Shootouts won–lost",
+  "@statsShootouts": {
+    "description": "Stats screen label: Shootouts won–lost"
+  },
   "statsComebackWins": "Wins from behind",
-  "@statsComebackWins": { "description": "Stats screen label: Wins from behind" },
+  "@statsComebackWins": {
+    "description": "Stats screen label: Wins from behind"
+  },
   "statsHome": "Home",
-  "@statsHome": { "description": "Stats screen label: Home" },
+  "@statsHome": {
+    "description": "Stats screen label: Home"
+  },
   "statsAway": "Away",
-  "@statsAway": { "description": "Stats screen label: Away" },
+  "@statsAway": {
+    "description": "Stats screen label: Away"
+  },
   "statsNeutral": "Neutral",
-  "@statsNeutral": { "description": "Stats screen label: Neutral" },
+  "@statsNeutral": {
+    "description": "Stats screen label: Neutral"
+  },
   "statsCompetitive": "Competitive",
-  "@statsCompetitive": { "description": "Stats screen label: Competitive" },
+  "@statsCompetitive": {
+    "description": "Stats screen label: Competitive"
+  },
   "statsFriendlies": "Friendlies",
-  "@statsFriendlies": { "description": "Stats screen label: Friendlies" },
+  "@statsFriendlies": {
+    "description": "Stats screen label: Friendlies"
+  },
   "statsHatTricks": "Hat-tricks",
-  "@statsHatTricks": { "description": "Stats screen label: Hat-tricks" },
+  "@statsHatTricks": {
+    "description": "Stats screen label: Hat-tricks"
+  },
   "statsBraces": "Braces",
-  "@statsBraces": { "description": "Stats screen label: Braces" },
+  "@statsBraces": {
+    "description": "Stats screen label: Braces"
+  },
   "statsMotms": "Man-of-the-match awards",
-  "@statsMotms": { "description": "Stats screen label: Man-of-the-match awards" },
+  "@statsMotms": {
+    "description": "Stats screen label: Man-of-the-match awards"
+  },
   "statsAssists": "Assists",
-  "@statsAssists": { "description": "Stats screen label: Assists" },
+  "@statsAssists": {
+    "description": "Stats screen label: Assists"
+  },
   "statsCards": "Cards",
-  "@statsCards": { "description": "Stats screen label: Cards" },
+  "@statsCards": {
+    "description": "Stats screen label: Cards"
+  },
   "statsBestRating": "Best individual rating",
-  "@statsBestRating": { "description": "Stats screen label: Best individual rating" },
+  "@statsBestRating": {
+    "description": "Stats screen label: Best individual rating"
+  },
   "statsAppsShort": "{apps} apps",
-  "@statsAppsShort": { "description": "Appearance count under a player on the ratings leaderboard.", "placeholders": { "apps": { "type": "int" } } },
+  "@statsAppsShort": {
+    "description": "Appearance count under a player on the ratings leaderboard.",
+    "placeholders": {
+      "apps": {
+        "type": "int"
+      }
+    }
+  },
   "statsMotmShort": "{motms} MOTM",
-  "@statsMotmShort": { "description": "Man-of-the-match count under a player on the ratings leaderboard.", "placeholders": { "motms": { "type": "int" } } },
+  "@statsMotmShort": {
+    "description": "Man-of-the-match count under a player on the ratings leaderboard.",
+    "placeholders": {
+      "motms": {
+        "type": "int"
+      }
+    }
+  },
   "captainArmband": "C",
   "@captainArmband": {
     "description": "The captain's armband badge on a squad row. A single letter."
   },
-  "captainCurrent": "Captain \u2014 tap to remove the armband",
+  "captainCurrent": "Captain — tap to remove the armband",
   "@captainCurrent": {
     "description": "Tooltip on the armband of the player who is currently captain."
   },
   "captainFitBorn": "A born leader",
-  "@captainFitBorn": { "description": "How well a player suits the captaincy: the best fit." },
+  "@captainFitBorn": {
+    "description": "How well a player suits the captaincy: the best fit."
+  },
   "captainFitNatural": "A natural captain",
-  "@captainFitNatural": { "description": "How well a player suits the captaincy: a good fit." },
+  "@captainFitNatural": {
+    "description": "How well a player suits the captaincy: a good fit."
+  },
   "captainFitCapable": "Could wear it",
-  "@captainFitCapable": { "description": "How well a player suits the captaincy: an adequate fit." },
+  "@captainFitCapable": {
+    "description": "How well a player suits the captaincy: an adequate fit."
+  },
   "captainFitUnproven": "Not a leader yet",
-  "@captainFitUnproven": { "description": "How well a player suits the captaincy: a poor fit." },
+  "@captainFitUnproven": {
+    "description": "How well a player suits the captaincy: a poor fit."
+  },
   "captainNone": "No captain named",
-  "@captainNone": { "description": "Shown where a captain would be, when none has been chosen." },
+  "@captainNone": {
+    "description": "Shown where a captain would be, when none has been chosen."
+  },
   "captainMoraleBoost": "+{morale} squad morale",
   "@captainMoraleBoost": {
     "description": "How much morale the current captain is worth.",
-    "placeholders": { "morale": { "type": "int" } }
+    "placeholders": {
+      "morale": {
+        "type": "int"
+      }
+    }
   },
   "resultsCategoryWorldCupQualifying": "World Cup Qualifying",
   "@resultsCategoryWorldCupQualifying": {
@@ -4086,272 +4204,560 @@
     "description": "Label: player market value."
   },
   "clubFirstChoice": "Plays every week",
-  "@clubFirstChoice": { "description": "Club standing: first choice." },
+  "@clubFirstChoice": {
+    "description": "Club standing: first choice."
+  },
   "clubRotation": "In and out",
-  "@clubRotation": { "description": "Club standing: rotation player." },
+  "@clubRotation": {
+    "description": "Club standing: rotation player."
+  },
   "clubFringe": "Barely playing",
-  "@clubFringe": { "description": "Club standing: fringe player." },
+  "@clubFringe": {
+    "description": "Club standing: fringe player."
+  },
   "clubFrozenOut": "Not playing",
-  "@clubFrozenOut": { "description": "Club standing: frozen out." },
+  "@clubFrozenOut": {
+    "description": "Club standing: frozen out."
+  },
   "yWinUpset0": "I have watched football for thirty years and I did not see that coming. {opponent} beaten {score}.",
   "@yWinUpset0": {
     "description": "Y post: winUpset, variant 0.",
-    "placeholders": { "opponent": {"type": "String"}, "score": {"type": "String"} }
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      },
+      "score": {
+        "type": "String"
+      }
+    }
   },
   "yWinUpset1": "Nobody gave them a prayer against {opponent}. {score}. Absolutely nobody.",
   "@yWinUpset1": {
     "description": "Y post: winUpset, variant 1.",
-    "placeholders": { "opponent": {"type": "String"}, "score": {"type": "String"} }
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      },
+      "score": {
+        "type": "String"
+      }
+    }
   },
   "yWinUpset2": "{score} against {opponent}. Go and wake the neighbours.",
   "@yWinUpset2": {
     "description": "Y post: winUpset, variant 2.",
-    "placeholders": { "opponent": {"type": "String"}, "score": {"type": "String"} }
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      },
+      "score": {
+        "type": "String"
+      }
+    }
   },
   "yWinUpset3": "That is the kind of night people describe to their grandchildren. {opponent} {score}.",
   "@yWinUpset3": {
     "description": "Y post: winUpset, variant 3.",
-    "placeholders": { "opponent": {"type": "String"}, "score": {"type": "String"} }
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      },
+      "score": {
+        "type": "String"
+      }
+    }
   },
   "yWinRoutine0": "{score} against {opponent}. Job done, nothing learned.",
   "@yWinRoutine0": {
     "description": "Y post: winRoutine, variant 0.",
-    "placeholders": { "opponent": {"type": "String"}, "score": {"type": "String"} }
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      },
+      "score": {
+        "type": "String"
+      }
+    }
   },
   "yWinRoutine1": "Beat {opponent} {score}. We were supposed to, and we did.",
   "@yWinRoutine1": {
     "description": "Y post: winRoutine, variant 1.",
-    "placeholders": { "opponent": {"type": "String"}, "score": {"type": "String"} }
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      },
+      "score": {
+        "type": "String"
+      }
+    }
   },
   "yWinRoutine2": "A professional {score} over {opponent}. Next.",
   "@yWinRoutine2": {
     "description": "Y post: winRoutine, variant 2.",
-    "placeholders": { "opponent": {"type": "String"}, "score": {"type": "String"} }
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      },
+      "score": {
+        "type": "String"
+      }
+    }
   },
   "yWinRoutine3": "{opponent} dispatched {score}. File it and move on.",
   "@yWinRoutine3": {
     "description": "Y post: winRoutine, variant 3.",
-    "placeholders": { "opponent": {"type": "String"}, "score": {"type": "String"} }
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      },
+      "score": {
+        "type": "String"
+      }
+    }
   },
   "yWinTight0": "{score} against {opponent} and every minute of it earned.",
   "@yWinTight0": {
     "description": "Y post: winTight, variant 0.",
-    "placeholders": { "opponent": {"type": "String"}, "score": {"type": "String"} }
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      },
+      "score": {
+        "type": "String"
+      }
+    }
   },
   "yWinTight1": "Nervy, ugly, and a win. {opponent} {score}.",
   "@yWinTight1": {
     "description": "Y post: winTight, variant 1.",
-    "placeholders": { "opponent": {"type": "String"}, "score": {"type": "String"} }
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      },
+      "score": {
+        "type": "String"
+      }
+    }
   },
   "yWinTight2": "Beat {opponent} {score}. Take the three points and never watch it again.",
   "@yWinTight2": {
     "description": "Y post: winTight, variant 2.",
-    "placeholders": { "opponent": {"type": "String"}, "score": {"type": "String"} }
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      },
+      "score": {
+        "type": "String"
+      }
+    }
   },
   "yWinTight3": "{score}. {opponent} made us work for every inch of that.",
   "@yWinTight3": {
     "description": "Y post: winTight, variant 3.",
-    "placeholders": { "opponent": {"type": "String"}, "score": {"type": "String"} }
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      },
+      "score": {
+        "type": "String"
+      }
+    }
   },
-  "yDrew0": "{score} with {opponent}. Two points dropped or one gained \u2014 pick your mood.",
+  "yDrew0": "{score} with {opponent}. Two points dropped or one gained — pick your mood.",
   "@yDrew0": {
     "description": "Y post: drew, variant 0.",
-    "placeholders": { "opponent": {"type": "String"}, "score": {"type": "String"} }
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      },
+      "score": {
+        "type": "String"
+      }
+    }
   },
   "yDrew1": "A draw against {opponent}, {score}. Nobody is happy, nobody is furious.",
   "@yDrew1": {
     "description": "Y post: drew, variant 1.",
-    "placeholders": { "opponent": {"type": "String"}, "score": {"type": "String"} }
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      },
+      "score": {
+        "type": "String"
+      }
+    }
   },
   "yDrew2": "{opponent} {score}. The most forgettable ninety minutes of the year.",
   "@yDrew2": {
     "description": "Y post: drew, variant 2.",
-    "placeholders": { "opponent": {"type": "String"}, "score": {"type": "String"} }
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      },
+      "score": {
+        "type": "String"
+      }
+    }
   },
   "yDrew3": "Shared the spoils with {opponent}, {score}. On we go.",
   "@yDrew3": {
     "description": "Y post: drew, variant 3.",
-    "placeholders": { "opponent": {"type": "String"}, "score": {"type": "String"} }
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      },
+      "score": {
+        "type": "String"
+      }
+    }
   },
   "yLost0": "Beaten {score} by {opponent}. It happens.",
   "@yLost0": {
     "description": "Y post: lost, variant 0.",
-    "placeholders": { "opponent": {"type": "String"}, "score": {"type": "String"} }
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      },
+      "score": {
+        "type": "String"
+      }
+    }
   },
   "yLost1": "{opponent} {score}. We were second best and there is no argument.",
   "@yLost1": {
     "description": "Y post: lost, variant 1.",
-    "placeholders": { "opponent": {"type": "String"}, "score": {"type": "String"} }
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      },
+      "score": {
+        "type": "String"
+      }
+    }
   },
   "yLost2": "Lost {score} to {opponent}. Regroup.",
   "@yLost2": {
     "description": "Y post: lost, variant 2.",
-    "placeholders": { "opponent": {"type": "String"}, "score": {"type": "String"} }
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      },
+      "score": {
+        "type": "String"
+      }
+    }
   },
   "yLost3": "{score} to {opponent}. Not a disgrace, not good enough.",
   "@yLost3": {
     "description": "Y post: lost, variant 3.",
-    "placeholders": { "opponent": {"type": "String"}, "score": {"type": "String"} }
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      },
+      "score": {
+        "type": "String"
+      }
+    }
   },
   "yLostBadly0": "{score}. To {opponent}. I have no words and I am paid to have words.",
   "@yLostBadly0": {
     "description": "Y post: lostBadly, variant 0.",
-    "placeholders": { "opponent": {"type": "String"}, "score": {"type": "String"} }
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      },
+      "score": {
+        "type": "String"
+      }
+    }
   },
   "yLostBadly1": "That was not a defeat to {opponent}, it was a surrender. {score}.",
   "@yLostBadly1": {
     "description": "Y post: lostBadly, variant 1.",
-    "placeholders": { "opponent": {"type": "String"}, "score": {"type": "String"} }
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      },
+      "score": {
+        "type": "String"
+      }
+    }
   },
   "yLostBadly2": "{opponent} {score}. Somebody has to answer for that.",
   "@yLostBadly2": {
     "description": "Y post: lostBadly, variant 2.",
-    "placeholders": { "opponent": {"type": "String"}, "score": {"type": "String"} }
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      },
+      "score": {
+        "type": "String"
+      }
+    }
   },
   "yLostBadly3": "I want the {score} against {opponent} struck from the record and from memory.",
   "@yLostBadly3": {
     "description": "Y post: lostBadly, variant 3.",
-    "placeholders": { "opponent": {"type": "String"}, "score": {"type": "String"} }
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      },
+      "score": {
+        "type": "String"
+      }
+    }
   },
   "yTrophy0": "CHAMPIONS. {opponent}. Say it out loud.",
   "@yTrophy0": {
     "description": "Y post: trophy, variant 0.",
-    "placeholders": { "opponent": {"type": "String"} }
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      }
+    }
   },
   "yTrophy1": "We won it. {opponent}. I am not okay.",
   "@yTrophy1": {
     "description": "Y post: trophy, variant 1.",
-    "placeholders": { "opponent": {"type": "String"} }
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      }
+    }
   },
-  "yTrophy2": "{opponent} \u2014 and the trophy is coming home.",
+  "yTrophy2": "{opponent} — and the trophy is coming home.",
   "@yTrophy2": {
     "description": "Y post: trophy, variant 2.",
-    "placeholders": { "opponent": {"type": "String"} }
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      }
+    }
   },
   "yTrophy3": "Every single one of them a legend. {opponent}.",
   "@yTrophy3": {
     "description": "Y post: trophy, variant 3.",
-    "placeholders": { "opponent": {"type": "String"} }
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      }
+    }
   },
   "yRunnerUp0": "So close. {opponent} and a medal nobody wants.",
   "@yRunnerUp0": {
     "description": "Y post: runnerUp, variant 0.",
-    "placeholders": { "opponent": {"type": "String"} }
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      }
+    }
   },
   "yRunnerUp1": "Runners-up at {opponent}. It will sting for years.",
   "@yRunnerUp1": {
     "description": "Y post: runnerUp, variant 1.",
-    "placeholders": { "opponent": {"type": "String"} }
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      }
+    }
   },
   "yRunnerUp2": "{opponent}: one match from everything.",
   "@yRunnerUp2": {
     "description": "Y post: runnerUp, variant 2.",
-    "placeholders": { "opponent": {"type": "String"} }
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      }
+    }
   },
   "yRunnerUp3": "Second. At {opponent}. Somebody pass the bottle.",
   "@yRunnerUp3": {
     "description": "Y post: runnerUp, variant 3.",
-    "placeholders": { "opponent": {"type": "String"} }
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      }
+    }
   },
   "yEliminated0": "Out at {opponent}. Same script, different year.",
   "@yEliminated0": {
     "description": "Y post: eliminated, variant 0.",
-    "placeholders": { "opponent": {"type": "String"} }
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      }
+    }
   },
   "yEliminated1": "{opponent} is where it ends. Again.",
   "@yEliminated1": {
     "description": "Y post: eliminated, variant 1.",
-    "placeholders": { "opponent": {"type": "String"} }
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      }
+    }
   },
   "yEliminated2": "Eliminated at {opponent}. Now the inquest.",
   "@yEliminated2": {
     "description": "Y post: eliminated, variant 2.",
-    "placeholders": { "opponent": {"type": "String"} }
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      }
+    }
   },
   "yEliminated3": "Knocked out at {opponent}. Somebody explain that to me.",
   "@yEliminated3": {
     "description": "Y post: eliminated, variant 3.",
-    "placeholders": { "opponent": {"type": "String"} }
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      }
+    }
   },
   "yQualified0": "WE ARE GOING TO {opponent}.",
   "@yQualified0": {
     "description": "Y post: qualified, variant 0.",
-    "placeholders": { "opponent": {"type": "String"} }
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      }
+    }
   },
   "yQualified1": "Qualified for {opponent}. Book the time off work.",
   "@yQualified1": {
     "description": "Y post: qualified, variant 1.",
-    "placeholders": { "opponent": {"type": "String"} }
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      }
+    }
   },
   "yQualified2": "{opponent}, here we come. Never in doubt (it was entirely in doubt).",
   "@yQualified2": {
     "description": "Y post: qualified, variant 2.",
-    "placeholders": { "opponent": {"type": "String"} }
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      }
+    }
   },
   "yQualified3": "Through to {opponent}. That is the hard part done.",
   "@yQualified3": {
     "description": "Y post: qualified, variant 3.",
-    "placeholders": { "opponent": {"type": "String"} }
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      }
+    }
   },
   "yGroupDrawn0": "Group drawn for {opponent}. Could be worse. Could be a lot worse.",
   "@yGroupDrawn0": {
     "description": "Y post: groupDrawn, variant 0.",
-    "placeholders": { "opponent": {"type": "String"} }
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      }
+    }
   },
   "yGroupDrawn1": "So that is the {opponent} draw. Interesting.",
   "@yGroupDrawn1": {
     "description": "Y post: groupDrawn, variant 1.",
-    "placeholders": { "opponent": {"type": "String"} }
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      }
+    }
   },
   "yGroupDrawn2": "The {opponent} groups are out and I already do not like ours.",
   "@yGroupDrawn2": {
     "description": "Y post: groupDrawn, variant 2.",
-    "placeholders": { "opponent": {"type": "String"} }
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      }
+    }
   },
   "yGroupDrawn3": "{opponent} draw made. Let the overreaction begin.",
   "@yGroupDrawn3": {
     "description": "Y post: groupDrawn, variant 3.",
-    "placeholders": { "opponent": {"type": "String"} }
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      }
+    }
   },
   "yHostNamed0": "{opponent} will host it. Start saving.",
   "@yHostNamed0": {
     "description": "Y post: hostNamed, variant 0.",
-    "placeholders": { "opponent": {"type": "String"} }
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      }
+    }
   },
   "yHostNamed1": "It is going to {opponent}. Predictable, but fine.",
   "@yHostNamed1": {
     "description": "Y post: hostNamed, variant 1.",
-    "placeholders": { "opponent": {"type": "String"} }
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      }
+    }
   },
   "yHostNamed2": "{opponent} gets the tournament. Congratulations to them, I suppose.",
   "@yHostNamed2": {
     "description": "Y post: hostNamed, variant 2.",
-    "placeholders": { "opponent": {"type": "String"} }
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      }
+    }
   },
   "yHostNamed3": "Hosts confirmed: {opponent}.",
   "@yHostNamed3": {
     "description": "Y post: hostNamed, variant 3.",
-    "placeholders": { "opponent": {"type": "String"} }
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      }
+    }
   },
   "yTournamentSoon0": "{opponent} starts soon and I cannot sit still.",
   "@yTournamentSoon0": {
     "description": "Y post: tournamentSoon, variant 0.",
-    "placeholders": { "opponent": {"type": "String"} }
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      }
+    }
   },
   "yTournamentSoon1": "Not long now until {opponent}.",
   "@yTournamentSoon1": {
     "description": "Y post: tournamentSoon, variant 1.",
-    "placeholders": { "opponent": {"type": "String"} }
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      }
+    }
   },
   "yTournamentSoon2": "{opponent} is nearly here. Squad announcement, please.",
   "@yTournamentSoon2": {
     "description": "Y post: tournamentSoon, variant 2.",
-    "placeholders": { "opponent": {"type": "String"} }
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      }
+    }
   },
   "yTournamentSoon3": "Countdown to {opponent} is officially unbearable.",
   "@yTournamentSoon3": {
     "description": "Y post: tournamentSoon, variant 3.",
-    "placeholders": { "opponent": {"type": "String"} }
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      }
+    }
   },
   "navY": "Y",
   "@navY": {
@@ -4368,7 +4774,11 @@
   "hubEventGrievance": "{player} wants a word",
   "@hubEventGrievance": {
     "description": "Player agency: hubEventGrievance.",
-    "placeholders": { "player": {"type": "String"} }
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
   },
   "hubEventGrievanceSub": "He wants to know where he stands",
   "@hubEventGrievanceSub": {
@@ -4381,17 +4791,29 @@
   "grievanceGameTime": "{player} has been in the squad and has not kicked a ball. He wants to know why.",
   "@grievanceGameTime": {
     "description": "Player agency: grievanceGameTime.",
-    "placeholders": { "player": {"type": "String"} }
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
   },
   "grievanceSquadPlace": "{player} is not in the squad and cannot understand it. He wants telling, one way or the other.",
   "@grievanceSquadPlace": {
     "description": "Player agency: grievanceSquadPlace.",
-    "placeholders": { "player": {"type": "String"} }
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
   },
   "grievanceRole": "{player} keeps being played out of position and has had enough of it.",
   "@grievanceRole": {
     "description": "Player agency: grievanceRole.",
-    "placeholders": { "player": {"type": "String"} }
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
   },
   "grievanceReassure": "You are in my plans",
   "@grievanceReassure": {
@@ -5903,7 +6325,7 @@
   },
   "objectiveReachFinal": "Reach the final",
   "@objectiveReachFinal": {
-    "description": "Board objective: reach the final. Generic \u2014 the board sets one for the continental cup as well as the World Cup, so it must not name a competition."
+    "description": "Board objective: reach the final. Generic — the board sets one for the continental cup as well as the World Cup, so it must not name a competition."
   },
   "objectiveReachSemis": "Reach the semi-finals",
   "@objectiveReachSemis": {
@@ -6049,10 +6471,14 @@
   "@boardObjectivesPending": {
     "description": "Status of an objective whose tournament has not finished."
   },
-  "boardObjectiveSoFar": "SO FAR \u00b7 {result}",
+  "boardObjectiveSoFar": "SO FAR · {result}",
   "@boardObjectiveSoFar": {
     "description": "How far the nation has got in a tournament that is still being played, shown against a board objective that cannot be graded yet.",
-    "placeholders": { "result": { "type": "String" } }
+    "placeholders": {
+      "result": {
+        "type": "String"
+      }
+    }
   },
   "boardObjectivesEmpty": "The board has not set an objective for this cycle.",
   "@boardObjectivesEmpty": {
@@ -6324,7 +6750,7 @@
   "@matchExtraTimeAhead": {
     "description": "Heading of the interval before extra time begins."
   },
-  "matchExtraTimeHalf": "EXTRA TIME \u00b7 HALF TIME",
+  "matchExtraTimeHalf": "EXTRA TIME · HALF TIME",
   "@matchExtraTimeHalf": {
     "description": "Heading of the interval midway through extra time."
   },
@@ -6332,7 +6758,7 @@
   "@hubEventPressConference": {
     "description": "Timeline action: the opening press conference of a tournament."
   },
-  "hubEventPressConferenceSub": "The world\u2019s media want a word before your first match",
+  "hubEventPressConferenceSub": "The world’s media want a word before your first match",
   "@hubEventPressConferenceSub": {
     "description": "Subtitle of the opening press conference action."
   },
@@ -6357,7 +6783,7 @@
   "@tacticsPlaystyleBlurb": {
     "description": "Blurb under the playing style selector."
   },
-  "tacticsPlaystyleCustom": "Your own settings \u2014 no named style matches these dials.",
+  "tacticsPlaystyleCustom": "Your own settings — no named style matches these dials.",
   "@tacticsPlaystyleCustom": {
     "description": "Shown when the instructions match no named style."
   },
@@ -6437,7 +6863,7 @@
   "@bottomStartHeading": {
     "description": "Heading on the unemployed-start screen."
   },
-  "bottomStartBlurb": "You have no job and no reputation. These are the only sides willing to take a chance on you \u2014 take one and build something from nothing.",
+  "bottomStartBlurb": "You have no job and no reputation. These are the only sides willing to take a chance on you — take one and build something from nothing.",
   "@bottomStartBlurb": {
     "description": "Blurb explaining the from-the-bottom start."
   },
@@ -6453,8 +6879,12 @@
   "@bottomStartRankOf": {
     "description": "Where an offering nation sits in the world ranking.",
     "placeholders": {
-      "rank": { "type": "int" },
-      "total": { "type": "int" }
+      "rank": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
     }
   },
   "campTitle": "Base camp",
@@ -6506,7 +6936,7 @@
   "@campTerrainNationalCentre": {
     "description": "Camp terrain: a purpose-built training centre."
   },
-  "campTerrainCityBlurb": "Everything on the doorstep and nothing to travel to \u2014 but no peace, and no escape from the noise.",
+  "campTerrainCityBlurb": "Everything on the doorstep and nothing to travel to — but no peace, and no escape from the noise.",
   "@campTerrainCityBlurb": {
     "description": "Camp terrain blurb: city centre."
   },
@@ -6623,7 +7053,7 @@
   "@squadTopScorer": {
     "description": "Label for the pool's leading scorer."
   },
-  "squadCapsValue": "{name} \u00b7 {caps} caps",
+  "squadCapsValue": "{name} · {caps} caps",
   "@squadCapsValue": {
     "description": "Most-capped player and their tally.",
     "placeholders": {
@@ -6635,7 +7065,7 @@
       }
     }
   },
-  "squadGoalsValue": "{name} \u00b7 {goals} goals",
+  "squadGoalsValue": "{name} · {goals} goals",
   "@squadGoalsValue": {
     "description": "Leading scorer and their tally.",
     "placeholders": {
@@ -6647,7 +7077,7 @@
       }
     }
   },
-  "squadAgeClub": "{age} \u00b7 {club}",
+  "squadAgeClub": "{age} · {club}",
   "@squadAgeClub": {
     "description": "A squad row's age and club line.",
     "placeholders": {
@@ -6668,237 +7098,2940 @@
     "description": "Column heading: international goals."
   },
   "pressAskHeavyDefeat2": "Four goals conceded against {opponent}. Where does a night like that leave you?",
-  "@pressAskHeavyDefeat2": {"description": "Press conference line.", "placeholders": {"opponent": {"type": "String"}}},
+  "@pressAskHeavyDefeat2": {
+    "description": "Press conference line.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      }
+    }
+  },
   "pressAskHeavyDefeat3": "{opponent} took you apart. Is this squad good enough?",
-  "@pressAskHeavyDefeat3": {"description": "Press conference line.", "placeholders": {"opponent": {"type": "String"}}},
+  "@pressAskHeavyDefeat3": {
+    "description": "Press conference line.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      }
+    }
+  },
   "pressAskElimination2": "{opponent} end it. Four years of work, gone in ninety minutes — talk us through it.",
-  "@pressAskElimination2": {"description": "Press conference line.", "placeholders": {"opponent": {"type": "String"}}},
+  "@pressAskElimination2": {
+    "description": "Press conference line.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      }
+    }
+  },
   "pressAskElimination3": "Out to {opponent}. Was that as far as this team was ever going?",
-  "@pressAskElimination3": {"description": "Press conference line.", "placeholders": {"opponent": {"type": "String"}}},
+  "@pressAskElimination3": {
+    "description": "Press conference line.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      }
+    }
+  },
   "pressAskUnderPressure2": "The results have dried up and your name is in every column. Worried?",
-  "@pressAskUnderPressure2": {"description": "Press conference line."},
+  "@pressAskUnderPressure2": {
+    "description": "Press conference line."
+  },
   "pressAskUnderPressure3": "No wins, no goals, no answers. What do you say to the supporters?",
-  "@pressAskUnderPressure3": {"description": "Press conference line."},
+  "@pressAskUnderPressure3": {
+    "description": "Press conference line."
+  },
   "pressAskPreview2": "Everyone wants a prediction. Give us yours.",
-  "@pressAskPreview2": {"description": "Press conference line."},
+  "@pressAskPreview2": {
+    "description": "Press conference line."
+  },
   "pressAskPreview3": "Realistically — group stage, quarters, or more than that?",
-  "@pressAskPreview3": {"description": "Press conference line."},
+  "@pressAskPreview3": {
+    "description": "Press conference line."
+  },
   "pressAskOpening2": "The whole country is watching and {opponent} are first up. Your message?",
-  "@pressAskOpening2": {"description": "Press conference line.", "placeholders": {"opponent": {"type": "String"}}},
+  "@pressAskOpening2": {
+    "description": "Press conference line.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      }
+    }
+  },
   "pressAskOpening3": "It starts against {opponent}. How do you want this side to be remembered?",
-  "@pressAskOpening3": {"description": "Press conference line.", "placeholders": {"opponent": {"type": "String"}}},
+  "@pressAskOpening3": {
+    "description": "Press conference line.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      }
+    }
+  },
   "pressAskTriumph2": "You've won it. Does it feel like the end of something, or the start?",
-  "@pressAskTriumph2": {"description": "Press conference line."},
+  "@pressAskTriumph2": {
+    "description": "Press conference line."
+  },
   "pressAskTriumph3": "Champions at last. Who does this one belong to?",
-  "@pressAskTriumph3": {"description": "Press conference line."},
+  "@pressAskTriumph3": {
+    "description": "Press conference line."
+  },
   "pressAskBigWin": "Three clear against {opponent}. Is this side finally clicking?",
-  "@pressAskBigWin": {"description": "Press conference line.", "placeholders": {"opponent": {"type": "String"}}},
+  "@pressAskBigWin": {
+    "description": "Press conference line.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      }
+    }
+  },
   "pressAskBigWin2": "You took {opponent} apart. How good was that?",
-  "@pressAskBigWin2": {"description": "Press conference line.", "placeholders": {"opponent": {"type": "String"}}},
+  "@pressAskBigWin2": {
+    "description": "Press conference line.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      }
+    }
+  },
   "pressAskBigWin3": "A statement result against {opponent}. Should the rest of them be worried?",
-  "@pressAskBigWin3": {"description": "Press conference line.", "placeholders": {"opponent": {"type": "String"}}},
+  "@pressAskBigWin3": {
+    "description": "Press conference line.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      }
+    }
+  },
   "pressAskQualified": "You're through. What does qualifying mean to this group?",
-  "@pressAskQualified": {"description": "Press conference line."},
+  "@pressAskQualified": {
+    "description": "Press conference line."
+  },
   "pressAskQualified2": "The place is booked. Job done, or is the job just starting?",
-  "@pressAskQualified2": {"description": "Press conference line."},
+  "@pressAskQualified2": {
+    "description": "Press conference line."
+  },
   "pressAskQualified3": "Qualification secured — now what is this squad actually capable of?",
-  "@pressAskQualified3": {"description": "Press conference line."},
+  "@pressAskQualified3": {
+    "description": "Press conference line."
+  },
   "pressAskMissedOut": "No tournament this time. How did it come to this?",
-  "@pressAskMissedOut": {"description": "Press conference line."},
+  "@pressAskMissedOut": {
+    "description": "Press conference line."
+  },
   "pressAskMissedOut3": "Watching it on television. What do you say to a country that expected better?",
-  "@pressAskMissedOut3": {"description": "Press conference line."},
+  "@pressAskMissedOut3": {
+    "description": "Press conference line."
+  },
   "pressAskMissedOut2": "The campaign is over and you're not in it. Who is accountable?",
-  "@pressAskMissedOut2": {"description": "Press conference line."},
+  "@pressAskMissedOut2": {
+    "description": "Press conference line."
+  },
   "pressAskUnbeaten": "Unbeaten for months now. How long can this go on?",
-  "@pressAskUnbeaten": {"description": "Press conference line."},
+  "@pressAskUnbeaten": {
+    "description": "Press conference line."
+  },
   "pressAskUnbeaten2": "Nobody has laid a glove on you all season. What's behind the run?",
-  "@pressAskUnbeaten2": {"description": "Press conference line."},
+  "@pressAskUnbeaten2": {
+    "description": "Press conference line."
+  },
   "pressAskUnbeaten3": "The run keeps going. Is this the best side you've had?",
-  "@pressAskUnbeaten3": {"description": "Press conference line."},
+  "@pressAskUnbeaten3": {
+    "description": "Press conference line."
+  },
   "pressAskNewJob": "Day one. What are you promising this country?",
-  "@pressAskNewJob": {"description": "Press conference line."},
+  "@pressAskNewJob": {
+    "description": "Press conference line."
+  },
   "pressAskNewJob2": "New job, new squad. What changes first?",
-  "@pressAskNewJob2": {"description": "Press conference line."},
+  "@pressAskNewJob2": {
+    "description": "Press conference line."
+  },
   "pressAskNewJob3": "You've taken the job. Why this one, and why now?",
-  "@pressAskNewJob3": {"description": "Press conference line."},
+  "@pressAskNewJob3": {
+    "description": "Press conference line."
+  },
   "pressAskRankingPeak": "A record world ranking. Does the table flatter this team?",
-  "@pressAskRankingPeak": {"description": "Press conference line."},
+  "@pressAskRankingPeak": {
+    "description": "Press conference line."
+  },
   "pressAskRankingPeak2": "Never been ranked this high. Is this side genuinely among the best?",
-  "@pressAskRankingPeak2": {"description": "Press conference line."},
+  "@pressAskRankingPeak2": {
+    "description": "Press conference line."
+  },
   "pressAskRankingPeak3": "Top of the pile on paper. Does that put a target on your back?",
-  "@pressAskRankingPeak3": {"description": "Press conference line."},
+  "@pressAskRankingPeak3": {
+    "description": "Press conference line."
+  },
   "pressAnswerBackPlayers2": "Nobody works harder than this group. I'll defend them all day.",
-  "@pressAnswerBackPlayers2": {"description": "Press conference line."},
+  "@pressAnswerBackPlayers2": {
+    "description": "Press conference line."
+  },
   "pressAnswerBackPlayers3": "You won't hear a word against my players from this seat.",
-  "@pressAnswerBackPlayers3": {"description": "Press conference line."},
+  "@pressAnswerBackPlayers3": {
+    "description": "Press conference line."
+  },
   "pressAnswerTakeBlame2": "Judge me, not them. It's my team and my responsibility.",
-  "@pressAnswerTakeBlame2": {"description": "Press conference line."},
+  "@pressAnswerTakeBlame2": {
+    "description": "Press conference line."
+  },
   "pressAnswerTakeBlame3": "If you want somebody to blame, I'm sitting right here.",
-  "@pressAnswerTakeBlame3": {"description": "Press conference line."},
+  "@pressAnswerTakeBlame3": {
+    "description": "Press conference line."
+  },
   "pressAnswerDemandMore2": "Standards slipped. Some of them know exactly what I mean.",
-  "@pressAnswerDemandMore2": {"description": "Press conference line."},
+  "@pressAnswerDemandMore2": {
+    "description": "Press conference line."
+  },
   "pressAnswerDemandMore3": "Effort isn't enough at this level. I want more, and I've told them so.",
-  "@pressAnswerDemandMore3": {"description": "Press conference line."},
+  "@pressAnswerDemandMore3": {
+    "description": "Press conference line."
+  },
   "pressAnswerRaiseBar2": "No hiding from it — we expect to lift the trophy.",
-  "@pressAnswerRaiseBar2": {"description": "Press conference line."},
+  "@pressAnswerRaiseBar2": {
+    "description": "Press conference line."
+  },
   "pressAnswerRaiseBar3": "Second place is not what this country sent us here for.",
-  "@pressAnswerRaiseBar3": {"description": "Press conference line."},
+  "@pressAnswerRaiseBar3": {
+    "description": "Press conference line."
+  },
   "pressAnswerPlayDown2": "I'm not going to make headlines for you today.",
-  "@pressAnswerPlayDown2": {"description": "Press conference line."},
+  "@pressAnswerPlayDown2": {
+    "description": "Press conference line."
+  },
   "pressAnswerPlayDown3": "Next game. That's all I'm thinking about.",
-  "@pressAnswerPlayDown3": {"description": "Press conference line."},
+  "@pressAnswerPlayDown3": {
+    "description": "Press conference line."
+  },
   "recordsRecordBookSubtitle": "Caps, goals and the team's headline records",
-  "@recordsRecordBookSubtitle": {"description": "Records/legacy label."},
+  "@recordsRecordBookSubtitle": {
+    "description": "Records/legacy label."
+  },
   "statsLegacy": "LEGACY",
-  "@statsLegacy": {"description": "Records/legacy label."},
+  "@statsLegacy": {
+    "description": "Records/legacy label."
+  },
   "pressAskHeavyDefeat4": "That was hard to watch. Did {opponent} simply want it more?",
-  "@pressAskHeavyDefeat4": {"description": "Press conference line.", "placeholders": {"opponent": {"type": "String"}}},
+  "@pressAskHeavyDefeat4": {
+    "description": "Press conference line.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      }
+    }
+  },
   "pressAskHeavyDefeat5": "You were second to everything against {opponent}. Fitness or attitude?",
-  "@pressAskHeavyDefeat5": {"description": "Press conference line.", "placeholders": {"opponent": {"type": "String"}}},
+  "@pressAskHeavyDefeat5": {
+    "description": "Press conference line.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      }
+    }
+  },
   "pressAskHeavyDefeat6": "{opponent} scored at will. Who is responsible for that defence?",
-  "@pressAskHeavyDefeat6": {"description": "Press conference line.", "placeholders": {"opponent": {"type": "String"}}},
+  "@pressAskHeavyDefeat6": {
+    "description": "Press conference line.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      }
+    }
+  },
   "pressAskHeavyDefeat7": "A result like that against {opponent} follows a manager around. How do you come back from it?",
-  "@pressAskHeavyDefeat7": {"description": "Press conference line.", "placeholders": {"opponent": {"type": "String"}}},
+  "@pressAskHeavyDefeat7": {
+    "description": "Press conference line.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      }
+    }
+  },
   "pressAskHeavyDefeat8": "You were booed off after {opponent}. Do you blame them?",
-  "@pressAskHeavyDefeat8": {"description": "Press conference line.", "placeholders": {"opponent": {"type": "String"}}},
+  "@pressAskHeavyDefeat8": {
+    "description": "Press conference line.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      }
+    }
+  },
   "pressAskElimination4": "{opponent} knocked you out. When did you know it had gone?",
-  "@pressAskElimination4": {"description": "Press conference line.", "placeholders": {"opponent": {"type": "String"}}},
+  "@pressAskElimination4": {
+    "description": "Press conference line.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      }
+    }
+  },
   "pressAskElimination5": "Another tournament, another early flight home, and {opponent} did it. Why?",
-  "@pressAskElimination5": {"description": "Press conference line.", "placeholders": {"opponent": {"type": "String"}}},
+  "@pressAskElimination5": {
+    "description": "Press conference line.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      }
+    }
+  },
   "pressAskElimination6": "Out to {opponent}. Is this squad short of quality or short of nerve?",
-  "@pressAskElimination6": {"description": "Press conference line.", "placeholders": {"opponent": {"type": "String"}}},
+  "@pressAskElimination6": {
+    "description": "Press conference line.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      }
+    }
+  },
   "pressAskElimination7": "{opponent} are through and you are not. What do you say in that dressing room?",
-  "@pressAskElimination7": {"description": "Press conference line.", "placeholders": {"opponent": {"type": "String"}}},
+  "@pressAskElimination7": {
+    "description": "Press conference line.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      }
+    }
+  },
   "pressAskElimination8": "Beaten by {opponent} when it mattered. Does that define your time here?",
-  "@pressAskElimination8": {"description": "Press conference line.", "placeholders": {"opponent": {"type": "String"}}},
+  "@pressAskElimination8": {
+    "description": "Press conference line.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      }
+    }
+  },
   "pressAskUnderPressure4": "The bookmakers have you favourite to go. Does that reach you?",
-  "@pressAskUnderPressure4": {"description": "Press conference line."},
+  "@pressAskUnderPressure4": {
+    "description": "Press conference line."
+  },
   "pressAskUnderPressure5": "Your predecessor was sacked on a run like this. What makes you different?",
-  "@pressAskUnderPressure5": {"description": "Press conference line."},
+  "@pressAskUnderPressure5": {
+    "description": "Press conference line."
+  },
   "pressAskUnderPressure6": "The board have said nothing publicly. Is silence support?",
-  "@pressAskUnderPressure6": {"description": "Press conference line."},
+  "@pressAskUnderPressure6": {
+    "description": "Press conference line."
+  },
   "pressAskUnderPressure7": "Every phone-in wants a new manager. Have you lost the country?",
-  "@pressAskUnderPressure7": {"description": "Press conference line."},
+  "@pressAskUnderPressure7": {
+    "description": "Press conference line."
+  },
   "pressAskUnderPressure8": "How many more games do you think you have?",
-  "@pressAskUnderPressure8": {"description": "Press conference line."},
+  "@pressAskUnderPressure8": {
+    "description": "Press conference line."
+  },
   "pressAskPreview4": "Who is the team to beat, and are you in that conversation?",
-  "@pressAskPreview4": {"description": "Press conference line."},
+  "@pressAskPreview4": {
+    "description": "Press conference line."
+  },
   "pressAskPreview5": "Nobody outside this room fancies you. Does that suit you?",
-  "@pressAskPreview5": {"description": "Press conference line."},
+  "@pressAskPreview5": {
+    "description": "Press conference line."
+  },
   "pressAskPreview6": "What would make this a successful tournament — honestly?",
-  "@pressAskPreview6": {"description": "Press conference line."},
+  "@pressAskPreview6": {
+    "description": "Press conference line."
+  },
   "pressAskPreview7": "Your group looks kind. Is anything less than qualification unacceptable?",
-  "@pressAskPreview7": {"description": "Press conference line."},
+  "@pressAskPreview7": {
+    "description": "Press conference line."
+  },
   "pressAskPreview8": "This is the youngest squad you have taken to a finals. Gamble or plan?",
-  "@pressAskPreview8": {"description": "Press conference line."},
+  "@pressAskPreview8": {
+    "description": "Press conference line."
+  },
   "pressAskOpening4": "First game, {opponent}, and everyone is nervous. How do you settle a side?",
-  "@pressAskOpening4": {"description": "Press conference line.", "placeholders": {"opponent": {"type": "String"}}},
+  "@pressAskOpening4": {
+    "description": "Press conference line.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      }
+    }
+  },
   "pressAskOpening5": "You have waited two years for this. Does the plan change now {opponent} are in front of you?",
-  "@pressAskOpening5": {"description": "Press conference line.", "placeholders": {"opponent": {"type": "String"}}},
+  "@pressAskOpening5": {
+    "description": "Press conference line.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      }
+    }
+  },
   "pressAskOpening6": "{opponent} to open. Win it and the whole tournament looks different — do you tell them that?",
-  "@pressAskOpening6": {"description": "Press conference line.", "placeholders": {"opponent": {"type": "String"}}},
+  "@pressAskOpening6": {
+    "description": "Press conference line.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      }
+    }
+  },
   "pressAskOpening7": "The country has stopped for this. Is {opponent} a good draw or a bad one?",
-  "@pressAskOpening7": {"description": "Press conference line.", "placeholders": {"opponent": {"type": "String"}}},
+  "@pressAskOpening7": {
+    "description": "Press conference line.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      }
+    }
+  },
   "pressAskOpening8": "Opening night against {opponent}. What is the one thing you cannot allow?",
-  "@pressAskOpening8": {"description": "Press conference line.", "placeholders": {"opponent": {"type": "String"}}},
+  "@pressAskOpening8": {
+    "description": "Press conference line.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      }
+    }
+  },
   "pressAskTriumph4": "You have made history. Has it landed yet?",
-  "@pressAskTriumph4": {"description": "Press conference line."},
+  "@pressAskTriumph4": {
+    "description": "Press conference line."
+  },
   "pressAskTriumph5": "The trophy is in the room. Who did you think of first?",
-  "@pressAskTriumph5": {"description": "Press conference line."},
+  "@pressAskTriumph5": {
+    "description": "Press conference line."
+  },
   "pressAskTriumph6": "A generation will remember this side. What should they remember about it?",
-  "@pressAskTriumph6": {"description": "Press conference line."},
+  "@pressAskTriumph6": {
+    "description": "Press conference line."
+  },
   "pressAskTriumph7": "You were written off in this very room. Enjoying the moment?",
-  "@pressAskTriumph7": {"description": "Press conference line."},
+  "@pressAskTriumph7": {
+    "description": "Press conference line."
+  },
   "pressAskTriumph8": "Is this the peak, or can this team win more?",
-  "@pressAskTriumph8": {"description": "Press conference line."},
+  "@pressAskTriumph8": {
+    "description": "Press conference line."
+  },
   "pressAskBigWin4": "{opponent} had no answer to that. The plan or the players?",
-  "@pressAskBigWin4": {"description": "Press conference line.", "placeholders": {"opponent": {"type": "String"}}},
+  "@pressAskBigWin4": {
+    "description": "Press conference line.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      }
+    }
+  },
   "pressAskBigWin5": "The best performance of your reign — and against {opponent}?",
-  "@pressAskBigWin5": {"description": "Press conference line.", "placeholders": {"opponent": {"type": "String"}}},
+  "@pressAskBigWin5": {
+    "description": "Press conference line.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      }
+    }
+  },
   "pressAskBigWin6": "You could have had more against {opponent}. Do you ask for ruthlessness or take the win?",
-  "@pressAskBigWin6": {"description": "Press conference line.", "placeholders": {"opponent": {"type": "String"}}},
+  "@pressAskBigWin6": {
+    "description": "Press conference line.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      }
+    }
+  },
   "pressAskBigWin7": "A scoreline like that against {opponent} raises expectations. Comfortable with that?",
-  "@pressAskBigWin7": {"description": "Press conference line.", "placeholders": {"opponent": {"type": "String"}}},
+  "@pressAskBigWin7": {
+    "description": "Press conference line.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      }
+    }
+  },
   "pressAskBigWin8": "{opponent} never laid a glove on you. Is this side finally what you wanted?",
-  "@pressAskBigWin8": {"description": "Press conference line.", "placeholders": {"opponent": {"type": "String"}}},
+  "@pressAskBigWin8": {
+    "description": "Press conference line.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      }
+    }
+  },
   "pressAskQualified4": "Job done. Was it ever in doubt?",
-  "@pressAskQualified4": {"description": "Press conference line."},
+  "@pressAskQualified4": {
+    "description": "Press conference line."
+  },
   "pressAskQualified5": "You are through. Does the campaign tell you how far you can go?",
-  "@pressAskQualified5": {"description": "Press conference line."},
+  "@pressAskQualified5": {
+    "description": "Press conference line."
+  },
   "pressAskQualified6": "A place at the finals — relief or satisfaction?",
-  "@pressAskQualified6": {"description": "Press conference line."},
+  "@pressAskQualified6": {
+    "description": "Press conference line."
+  },
   "pressAskQualified7": "You qualified with games to spare. What are the rest of them for?",
-  "@pressAskQualified7": {"description": "Press conference line."},
+  "@pressAskQualified7": {
+    "description": "Press conference line."
+  },
   "pressAskQualified8": "Now the hard part. Is this squad ready for a tournament?",
-  "@pressAskQualified8": {"description": "Press conference line."},
+  "@pressAskQualified8": {
+    "description": "Press conference line."
+  },
   "pressAskMissedOut4": "No tournament this time. A squad problem or a coaching one?",
-  "@pressAskMissedOut4": {"description": "Press conference line."},
+  "@pressAskMissedOut4": {
+    "description": "Press conference line."
+  },
   "pressAskMissedOut5": "Two years of work and nothing to show. Do you still believe in this group?",
-  "@pressAskMissedOut5": {"description": "Press conference line."},
+  "@pressAskMissedOut5": {
+    "description": "Press conference line."
+  },
   "pressAskMissedOut6": "The country will not see its team at a finals. What do you owe them?",
-  "@pressAskMissedOut6": {"description": "Press conference line."},
+  "@pressAskMissedOut6": {
+    "description": "Press conference line."
+  },
   "pressAskMissedOut7": "Was there one night that cost you?",
-  "@pressAskMissedOut7": {"description": "Press conference line."},
+  "@pressAskMissedOut7": {
+    "description": "Press conference line."
+  },
   "pressAskMissedOut8": "Do you expect to still be in this job next season?",
-  "@pressAskMissedOut8": {"description": "Press conference line."},
+  "@pressAskMissedOut8": {
+    "description": "Press conference line."
+  },
   "pressAskUnbeaten4": "Nobody has beaten you in a year. Are you thinking about records?",
-  "@pressAskUnbeaten4": {"description": "Press conference line."},
+  "@pressAskUnbeaten4": {
+    "description": "Press conference line."
+  },
   "pressAskUnbeaten5": "The run is the story now. Is it a burden yet?",
-  "@pressAskUnbeaten5": {"description": "Press conference line."},
+  "@pressAskUnbeaten5": {
+    "description": "Press conference line."
+  },
   "pressAskUnbeaten6": "Sides set up not to lose to you. Does that make it harder?",
-  "@pressAskUnbeaten6": {"description": "Press conference line."},
+  "@pressAskUnbeaten6": {
+    "description": "Press conference line."
+  },
   "pressAskUnbeaten7": "When it ends — and it will — how do you want it to end?",
-  "@pressAskUnbeaten7": {"description": "Press conference line."},
+  "@pressAskUnbeaten7": {
+    "description": "Press conference line."
+  },
   "pressAskUnbeaten8": "Unbeaten, but how many of those were convincing?",
-  "@pressAskUnbeaten8": {"description": "Press conference line."},
+  "@pressAskUnbeaten8": {
+    "description": "Press conference line."
+  },
   "pressAskNewJob4": "You inherit a squad in transition. Where do you start?",
-  "@pressAskNewJob4": {"description": "Press conference line."},
+  "@pressAskNewJob4": {
+    "description": "Press conference line."
+  },
   "pressAskNewJob5": "What does this team look like in two years?",
-  "@pressAskNewJob5": {"description": "Press conference line."},
+  "@pressAskNewJob5": {
+    "description": "Press conference line."
+  },
   "pressAskNewJob6": "You turned down other offers for this one. Why?",
-  "@pressAskNewJob6": {"description": "Press conference line."},
+  "@pressAskNewJob6": {
+    "description": "Press conference line."
+  },
   "pressAskNewJob7": "Some of these players were not picked by you. Does anyone start with a clean slate?",
-  "@pressAskNewJob7": {"description": "Press conference line."},
+  "@pressAskNewJob7": {
+    "description": "Press conference line."
+  },
   "pressAskNewJob8": "What has this country been getting wrong?",
-  "@pressAskNewJob8": {"description": "Press conference line."},
+  "@pressAskNewJob8": {
+    "description": "Press conference line."
+  },
   "pressAskRankingPeak4": "Top of the pile on paper. Does a ranking mean anything to you?",
-  "@pressAskRankingPeak4": {"description": "Press conference line."},
+  "@pressAskRankingPeak4": {
+    "description": "Press conference line."
+  },
   "pressAskRankingPeak5": "The highest this nation has ever been. Whose achievement is that?",
-  "@pressAskRankingPeak5": {"description": "Press conference line."},
+  "@pressAskRankingPeak5": {
+    "description": "Press conference line."
+  },
   "pressAskRankingPeak6": "You are ranked above sides with far more history. Fair?",
-  "@pressAskRankingPeak6": {"description": "Press conference line."},
+  "@pressAskRankingPeak6": {
+    "description": "Press conference line."
+  },
   "pressAskRankingPeak7": "The numbers say you are among the best. Do the trophies?",
-  "@pressAskRankingPeak7": {"description": "Press conference line."},
+  "@pressAskRankingPeak7": {
+    "description": "Press conference line."
+  },
   "pressAskRankingPeak8": "A record ranking and no trophy yet. Does that sit uneasily?",
-  "@pressAskRankingPeak8": {"description": "Press conference line."},
+  "@pressAskRankingPeak8": {
+    "description": "Press conference line."
+  },
   "pressAnswerBackPlayers4": "I'll take the questions. They'll take the credit — that's how it works here.",
-  "@pressAnswerBackPlayers4": {"description": "Press conference line."},
+  "@pressAnswerBackPlayers4": {
+    "description": "Press conference line."
+  },
   "pressAnswerBackPlayers5": "This group has never let me down. Not once.",
-  "@pressAnswerBackPlayers5": {"description": "Press conference line."},
+  "@pressAnswerBackPlayers5": {
+    "description": "Press conference line."
+  },
   "pressAnswerBackPlayers6": "They're hurting more than anyone. I'm not adding to it.",
-  "@pressAnswerBackPlayers6": {"description": "Press conference line."},
+  "@pressAnswerBackPlayers6": {
+    "description": "Press conference line."
+  },
   "pressAnswerTakeBlame4": "That's on the staff and it's on me. Nobody else.",
-  "@pressAnswerTakeBlame4": {"description": "Press conference line."},
+  "@pressAnswerTakeBlame4": {
+    "description": "Press conference line."
+  },
   "pressAnswerTakeBlame5": "I picked it, I set it up, I got it wrong.",
-  "@pressAnswerTakeBlame5": {"description": "Press conference line."},
+  "@pressAnswerTakeBlame5": {
+    "description": "Press conference line."
+  },
   "pressAnswerTakeBlame6": "Point it at me. That's what I'm paid for.",
-  "@pressAnswerTakeBlame6": {"description": "Press conference line."},
+  "@pressAnswerTakeBlame6": {
+    "description": "Press conference line."
+  },
   "pressAnswerDemandMore4": "Some of them are a long way short of what this shirt asks.",
-  "@pressAnswerDemandMore4": {"description": "Press conference line."},
+  "@pressAnswerDemandMore4": {
+    "description": "Press conference line."
+  },
   "pressAnswerDemandMore5": "I've told them privately and I'll say it here: it isn't good enough.",
-  "@pressAnswerDemandMore5": {"description": "Press conference line."},
+  "@pressAnswerDemandMore5": {
+    "description": "Press conference line."
+  },
   "pressAnswerDemandMore6": "Places are open. Everyone in that dressing room knows it.",
-  "@pressAnswerDemandMore6": {"description": "Press conference line."},
+  "@pressAnswerDemandMore6": {
+    "description": "Press conference line."
+  },
   "pressAnswerRaiseBar4": "We came here to win it. I'm not going to pretend otherwise.",
-  "@pressAnswerRaiseBar4": {"description": "Press conference line."},
+  "@pressAnswerRaiseBar4": {
+    "description": "Press conference line."
+  },
   "pressAnswerRaiseBar5": "Anything but the trophy and we'll have wasted this.",
-  "@pressAnswerRaiseBar5": {"description": "Press conference line."},
+  "@pressAnswerRaiseBar5": {
+    "description": "Press conference line."
+  },
   "pressAnswerRaiseBar6": "I'd rather be judged on winning than praised for trying.",
-  "@pressAnswerRaiseBar6": {"description": "Press conference line."},
+  "@pressAnswerRaiseBar6": {
+    "description": "Press conference line."
+  },
   "pressAnswerPlayDown4": "I'll keep my thoughts in the dressing room.",
-  "@pressAnswerPlayDown4": {"description": "Press conference line."},
+  "@pressAnswerPlayDown4": {
+    "description": "Press conference line."
+  },
   "pressAnswerPlayDown5": "You've seen the game. Your read is as good as mine.",
-  "@pressAnswerPlayDown5": {"description": "Press conference line."},
+  "@pressAnswerPlayDown5": {
+    "description": "Press conference line."
+  },
   "pressAnswerPlayDown6": "Nothing I say tonight changes the result.",
-  "@pressAnswerPlayDown6": {"description": "Press conference line."}
+  "@pressAnswerPlayDown6": {
+    "description": "Press conference line."
+  },
+  "tacticsSubAlreadyOff": "{name} has already been taken off — he cannot come back on.",
+  "@tacticsSubAlreadyOff": {
+    "description": "Snackbar when the manager tries to re-use a substituted player.",
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "example": "Silva"
+      }
+    }
+  },
+  "tacticsSubSentOff": "{name} has been sent off and takes no further part.",
+  "@tacticsSubSentOff": {
+    "description": "Snackbar when the manager tries to bring on a sent-off player.",
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "example": "Silva"
+      }
+    }
+  },
+  "tacticsInjuredShort": "INJURED",
+  "@tacticsInjuredShort": {
+    "description": "Pitch-node flag under an injured player's disc. Kept to one word so it fits inside the node's width."
+  },
+  "tacticsSuspendedShort": "SUSPENDED",
+  "@tacticsSuspendedShort": {
+    "description": "Pitch-node flag under a suspended player's disc."
+  },
+  "confEurope": "Europe",
+  "@confEurope": {
+    "description": "Continent name."
+  },
+  "confSouthAmerica": "South America",
+  "@confSouthAmerica": {
+    "description": "Continent name."
+  },
+  "confNorthAmerica": "North America",
+  "@confNorthAmerica": {
+    "description": "Continent name (North & Central America and the Caribbean)."
+  },
+  "confAfrica": "Africa",
+  "@confAfrica": {
+    "description": "Continent name."
+  },
+  "confAsia": "Asia",
+  "@confAsia": {
+    "description": "Continent name."
+  },
+  "confOceania": "Oceania",
+  "@confOceania": {
+    "description": "Continent name."
+  },
+  "compWorldCup": "World Cup",
+  "@compWorldCup": {
+    "description": "Competition name shown to the manager. The stored name stays English."
+  },
+  "compWorldCupFinals": "World Cup Finals",
+  "@compWorldCupFinals": {
+    "description": "Competition name: the World Cup finals tournament."
+  },
+  "compWorldCupQualifying": "World Cup Qualifying",
+  "@compWorldCupQualifying": {
+    "description": "Competition name: World Cup qualifying, region unspecified."
+  },
+  "compQualifiers": "{region} Qualifiers",
+  "@compQualifiers": {
+    "description": "Competition name: one continent's World Cup qualifying campaign.",
+    "placeholders": {
+      "region": {
+        "type": "String",
+        "example": "Europe"
+      }
+    }
+  },
+  "compFriendlies": "Friendlies",
+  "@compFriendlies": {
+    "description": "Competition name for the friendly-match container."
+  },
+  "compNationsCup": "Nations Cup",
+  "@compNationsCup": {
+    "description": "Competition name."
+  },
+  "compContinentalClash": "Continental Clash",
+  "@compContinentalClash": {
+    "description": "Competition name: the champions-of-champions one-off."
+  },
+  "compIntercontinentalPlayoff": "Intercontinental Play-off",
+  "@compIntercontinentalPlayoff": {
+    "description": "Competition name."
+  },
+  "compContinentalChampionship": "Continental Championship",
+  "@compContinentalChampionship": {
+    "description": "Generic name for a continental cup when the confederation is not known."
+  },
+  "compEuropeanChampionship": "European Championship",
+  "@compEuropeanChampionship": {
+    "description": "Continental cup name."
+  },
+  "compSouthAmericaCup": "South America Cup",
+  "@compSouthAmericaCup": {
+    "description": "Continental cup name."
+  },
+  "compAfricanChampionship": "African Championship",
+  "@compAfricanChampionship": {
+    "description": "Continental cup name."
+  },
+  "compAsianChampionship": "Asian Championship",
+  "@compAsianChampionship": {
+    "description": "Continental cup name."
+  },
+  "compNorthAmericaCup": "North America Cup",
+  "@compNorthAmericaCup": {
+    "description": "Continental cup name."
+  },
+  "compOceaniaCup": "Oceania Cup",
+  "@compOceaniaCup": {
+    "description": "Continental cup name."
+  },
+  "msgANation": "A nation",
+  "@msgANation": {
+    "description": "Inbox fallback when a nation cannot be named."
+  },
+  "msgAPlayer": "A player",
+  "@msgAPlayer": {
+    "description": "Inbox fallback when a player cannot be named."
+  },
+  "msgAHostNation": "a host nation",
+  "@msgAHostNation": {
+    "description": "Inbox fallback when the host of a continental cup is not known yet."
+  },
+  "msgCycleTitle1": "A new cycle begins",
+  "@msgCycleTitle1": {
+    "description": "Inbox: cycle-start headline, one of four."
+  },
+  "msgCycleTitle2": "The road to {year} opens",
+  "@msgCycleTitle2": {
+    "description": "Inbox: cycle-start headline, one of four.",
+    "placeholders": {
+      "year": {
+        "type": "int"
+      }
+    }
+  },
+  "msgCycleTitle3": "A fresh campaign dawns",
+  "@msgCycleTitle3": {
+    "description": "Inbox: cycle-start headline, one of four."
+  },
+  "msgCycleTitle4": "Back to work",
+  "@msgCycleTitle4": {
+    "description": "Inbox: cycle-start headline, one of four."
+  },
+  "msgCycleBody1": "The road to the {year} World Cup starts here.",
+  "@msgCycleBody1": {
+    "description": "Inbox: cycle-start body, one of four.",
+    "placeholders": {
+      "year": {
+        "type": "int"
+      }
+    }
+  },
+  "msgCycleBody2": "A new cycle. The {year} World Cup is the target.",
+  "@msgCycleBody2": {
+    "description": "Inbox: cycle-start body, one of four.",
+    "placeholders": {
+      "year": {
+        "type": "int"
+      }
+    }
+  },
+  "msgCycleBody3": "Four years to the {year} World Cup. Work starts now.",
+  "@msgCycleBody3": {
+    "description": "Inbox: cycle-start body, one of four.",
+    "placeholders": {
+      "year": {
+        "type": "int"
+      }
+    }
+  },
+  "msgCycleBody4": "The {year} campaign begins today.",
+  "@msgCycleBody4": {
+    "description": "Inbox: cycle-start body, one of four.",
+    "placeholders": {
+      "year": {
+        "type": "int"
+      }
+    }
+  },
+  "msgContHostTitle": "{cup} host: {host}",
+  "@msgContHostTitle": {
+    "description": "Inbox: continental cup host chosen.",
+    "placeholders": {
+      "cup": {
+        "type": "String"
+      },
+      "host": {
+        "type": "String"
+      }
+    }
+  },
+  "msgContHostBody": "{host} will host the next {cup}.",
+  "@msgContHostBody": {
+    "description": "Inbox: continental cup host chosen, body.",
+    "placeholders": {
+      "host": {
+        "type": "String"
+      },
+      "cup": {
+        "type": "String"
+      }
+    }
+  },
+  "msgContQualDrawTitle": "{cup} qualifying draw",
+  "@msgContQualDrawTitle": {
+    "description": "Inbox: continental qualifying draw made.",
+    "placeholders": {
+      "cup": {
+        "type": "String"
+      }
+    }
+  },
+  "msgContQualDrawBody": "The {cup} qualifying groups have been drawn.",
+  "@msgContQualDrawBody": {
+    "description": "Inbox: continental qualifying draw made, body.",
+    "placeholders": {
+      "cup": {
+        "type": "String"
+      }
+    }
+  },
+  "msgWcHostTitle": "{year} World Cup host: {host}",
+  "@msgWcHostTitle": {
+    "description": "Inbox: World Cup host chosen.",
+    "placeholders": {
+      "host": {
+        "type": "String"
+      },
+      "year": {
+        "type": "int"
+      }
+    }
+  },
+  "msgWcHostBody": "{host} will host the {year} World Cup.",
+  "@msgWcHostBody": {
+    "description": "Inbox: World Cup host chosen, body.",
+    "placeholders": {
+      "host": {
+        "type": "String"
+      },
+      "year": {
+        "type": "int"
+      }
+    }
+  },
+  "msgWcQualDrawTitle": "World Cup qualifying draw",
+  "@msgWcQualDrawTitle": {
+    "description": "Inbox: World Cup qualifying draw made."
+  },
+  "msgWcQualDrawBody": "The World Cup qualifying groups have been drawn.",
+  "@msgWcQualDrawBody": {
+    "description": "Inbox: World Cup qualifying draw made, body."
+  },
+  "msgContFinalsDrawTitle": "{cup} finals draw",
+  "@msgContFinalsDrawTitle": {
+    "description": "Inbox: continental finals draw made.",
+    "placeholders": {
+      "cup": {
+        "type": "String"
+      }
+    }
+  },
+  "msgContFinalsDrawBody": "The {cup} finals groups have been drawn.",
+  "@msgContFinalsDrawBody": {
+    "description": "Inbox: continental finals draw made, body.",
+    "placeholders": {
+      "cup": {
+        "type": "String"
+      }
+    }
+  },
+  "msgWcFinalsDrawTitle": "World Cup finals draw",
+  "@msgWcFinalsDrawTitle": {
+    "description": "Inbox: World Cup finals draw made."
+  },
+  "msgWcFinalsDrawBody": "The {year} World Cup finals draw has been made.",
+  "@msgWcFinalsDrawBody": {
+    "description": "Inbox: World Cup finals draw made, body.",
+    "placeholders": {
+      "year": {
+        "type": "int"
+      }
+    }
+  },
+  "msgQualWcTitle1": "Through to the World Cup",
+  "@msgQualWcTitle1": {
+    "description": "Inbox: qualified for the World Cup, headline."
+  },
+  "msgQualWcTitle2": "World Cup booked",
+  "@msgQualWcTitle2": {
+    "description": "Inbox: qualified for the World Cup, headline."
+  },
+  "msgQualWcTitle3": "We're going to the World Cup",
+  "@msgQualWcTitle3": {
+    "description": "Inbox: qualified for the World Cup, headline."
+  },
+  "msgQualWcTitle4": "Ticket punched",
+  "@msgQualWcTitle4": {
+    "description": "Inbox: qualified for the World Cup, headline."
+  },
+  "msgQualWcBody1": "You have qualified for the {year} World Cup finals.",
+  "@msgQualWcBody1": {
+    "description": "Inbox: qualified for the World Cup, body.",
+    "placeholders": {
+      "year": {
+        "type": "int"
+      }
+    }
+  },
+  "msgQualWcBody2": "It's official: your nation is at the {year} World Cup.",
+  "@msgQualWcBody2": {
+    "description": "Inbox: qualified for the World Cup, body.",
+    "placeholders": {
+      "year": {
+        "type": "int"
+      }
+    }
+  },
+  "msgQualWcBody3": "A place at the {year} World Cup is secured.",
+  "@msgQualWcBody3": {
+    "description": "Inbox: qualified for the World Cup, body.",
+    "placeholders": {
+      "year": {
+        "type": "int"
+      }
+    }
+  },
+  "msgQualWcBody4": "You're through to the {year} World Cup finals.",
+  "@msgQualWcBody4": {
+    "description": "Inbox: qualified for the World Cup, body.",
+    "placeholders": {
+      "year": {
+        "type": "int"
+      }
+    }
+  },
+  "msgQualContTitle1": "Through to {cup}",
+  "@msgQualContTitle1": {
+    "description": "Inbox: qualified for the continental cup, headline.",
+    "placeholders": {
+      "cup": {
+        "type": "String"
+      }
+    }
+  },
+  "msgQualContTitle2": "{cup} booked",
+  "@msgQualContTitle2": {
+    "description": "Inbox: qualified for the continental cup, headline.",
+    "placeholders": {
+      "cup": {
+        "type": "String"
+      }
+    }
+  },
+  "msgQualContTitle3": "Qualified for {cup}",
+  "@msgQualContTitle3": {
+    "description": "Inbox: qualified for the continental cup, headline.",
+    "placeholders": {
+      "cup": {
+        "type": "String"
+      }
+    }
+  },
+  "msgQualContBody1": "You have qualified for the {cup} finals.",
+  "@msgQualContBody1": {
+    "description": "Inbox: qualified for the continental cup, body.",
+    "placeholders": {
+      "cup": {
+        "type": "String"
+      }
+    }
+  },
+  "msgQualContBody2": "Your nation has sealed its place at {cup}.",
+  "@msgQualContBody2": {
+    "description": "Inbox: qualified for the continental cup, body.",
+    "placeholders": {
+      "cup": {
+        "type": "String"
+      }
+    }
+  },
+  "msgQualContBody3": "You're through to {cup}.",
+  "@msgQualContBody3": {
+    "description": "Inbox: qualified for the continental cup, body.",
+    "placeholders": {
+      "cup": {
+        "type": "String"
+      }
+    }
+  },
+  "msgChampTitleMine1": "{comp} CHAMPIONS!",
+  "@msgChampTitleMine1": {
+    "description": "Inbox: the manager's nation won a cup, headline.",
+    "placeholders": {
+      "comp": {
+        "type": "String"
+      }
+    }
+  },
+  "msgChampTitleMine2": "Champions of the {comp}!",
+  "@msgChampTitleMine2": {
+    "description": "Inbox: the manager's nation won a cup, headline.",
+    "placeholders": {
+      "comp": {
+        "type": "String"
+      }
+    }
+  },
+  "msgChampTitleMine3": "You've won the {comp}!",
+  "@msgChampTitleMine3": {
+    "description": "Inbox: the manager's nation won a cup, headline.",
+    "placeholders": {
+      "comp": {
+        "type": "String"
+      }
+    }
+  },
+  "msgChampTitleOther1": "{comp} decided",
+  "@msgChampTitleOther1": {
+    "description": "Inbox: somebody else won a cup, headline.",
+    "placeholders": {
+      "comp": {
+        "type": "String"
+      }
+    }
+  },
+  "msgChampTitleOther2": "{comp} champions crowned",
+  "@msgChampTitleOther2": {
+    "description": "Inbox: somebody else won a cup, headline.",
+    "placeholders": {
+      "comp": {
+        "type": "String"
+      }
+    }
+  },
+  "msgChampTitleOther3": "The {comp} is won",
+  "@msgChampTitleOther3": {
+    "description": "Inbox: somebody else won a cup, headline.",
+    "placeholders": {
+      "comp": {
+        "type": "String"
+      }
+    }
+  },
+  "msgChampBodyMine1": "Your nation are the {year} {comp} champions, beating {loser}{result}.",
+  "@msgChampBodyMine1": {
+    "description": "Inbox: the manager's nation won a cup, body.",
+    "placeholders": {
+      "comp": {
+        "type": "String"
+      },
+      "loser": {
+        "type": "String"
+      },
+      "result": {
+        "type": "String"
+      },
+      "year": {
+        "type": "int"
+      }
+    }
+  },
+  "msgChampBodyMine2": "You've won the {year} {comp}, seeing off {loser}{result}.",
+  "@msgChampBodyMine2": {
+    "description": "Inbox: the manager's nation won a cup, body.",
+    "placeholders": {
+      "comp": {
+        "type": "String"
+      },
+      "loser": {
+        "type": "String"
+      },
+      "result": {
+        "type": "String"
+      },
+      "year": {
+        "type": "int"
+      }
+    }
+  },
+  "msgChampBodyMine3": "The {year} {comp} is yours. {loser} beaten{result}.",
+  "@msgChampBodyMine3": {
+    "description": "Inbox: the manager's nation won a cup, body.",
+    "placeholders": {
+      "comp": {
+        "type": "String"
+      },
+      "loser": {
+        "type": "String"
+      },
+      "result": {
+        "type": "String"
+      },
+      "year": {
+        "type": "int"
+      }
+    }
+  },
+  "msgChampBodyOther1": "{winner} won the {year} {comp}, beating {loser}{result}.",
+  "@msgChampBodyOther1": {
+    "description": "Inbox: somebody else won a cup, body.",
+    "placeholders": {
+      "winner": {
+        "type": "String"
+      },
+      "comp": {
+        "type": "String"
+      },
+      "loser": {
+        "type": "String"
+      },
+      "result": {
+        "type": "String"
+      },
+      "year": {
+        "type": "int"
+      }
+    }
+  },
+  "msgChampBodyOther2": "{winner} are the {year} {comp} champions, defeating {loser}{result}.",
+  "@msgChampBodyOther2": {
+    "description": "Inbox: somebody else won a cup, body.",
+    "placeholders": {
+      "winner": {
+        "type": "String"
+      },
+      "comp": {
+        "type": "String"
+      },
+      "loser": {
+        "type": "String"
+      },
+      "result": {
+        "type": "String"
+      },
+      "year": {
+        "type": "int"
+      }
+    }
+  },
+  "msgFinalScoreSuffix": " {home}–{away} in the final",
+  "@msgFinalScoreSuffix": {
+    "description": "Inbox: the final's scoreline, appended to a champions message.",
+    "placeholders": {
+      "home": {
+        "type": "int"
+      },
+      "away": {
+        "type": "int"
+      }
+    }
+  },
+  "msgFinalPensSuffix": " on penalties, after a {home}–{away} final",
+  "@msgFinalPensSuffix": {
+    "description": "Inbox: a final settled on penalties, appended to a champions message.",
+    "placeholders": {
+      "home": {
+        "type": "int"
+      },
+      "away": {
+        "type": "int"
+      }
+    }
+  },
+  "msgWpotyTitle": "World Player of the Year",
+  "@msgWpotyTitle": {
+    "description": "Inbox: award headline."
+  },
+  "msgWpotyBodyMine": "{name} ({nation}) is named {year} World Player of the Year, one of yours.",
+  "@msgWpotyBodyMine": {
+    "description": "Inbox: award body, the manager's own player.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "nation": {
+        "type": "String"
+      },
+      "year": {
+        "type": "int"
+      }
+    }
+  },
+  "msgWpotyBodyOther": "{name} ({nation}) is named {year} World Player of the Year.",
+  "@msgWpotyBodyOther": {
+    "description": "Inbox: award body.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "nation": {
+        "type": "String"
+      },
+      "year": {
+        "type": "int"
+      }
+    }
+  },
+  "msgYpotTitle": "Young Player of the Tournament",
+  "@msgYpotTitle": {
+    "description": "Inbox: award headline."
+  },
+  "msgYpotBodyMine": "{name} ({nation}), aged {age}, is named {year} Young Player of the Tournament, one of yours.",
+  "@msgYpotBodyMine": {
+    "description": "Inbox: award body, the manager's own player.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "nation": {
+        "type": "String"
+      },
+      "age": {
+        "type": "int"
+      },
+      "year": {
+        "type": "int"
+      }
+    }
+  },
+  "msgYpotBodyOther": "{name} ({nation}), aged {age}, is named {year} Young Player of the Tournament.",
+  "@msgYpotBodyOther": {
+    "description": "Inbox: award body.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "nation": {
+        "type": "String"
+      },
+      "age": {
+        "type": "int"
+      },
+      "year": {
+        "type": "int"
+      }
+    }
+  },
+  "msgRankHold1": "You hold at #{rank}.",
+  "@msgRankHold1": {
+    "description": "Inbox: world ranking unchanged.",
+    "placeholders": {
+      "rank": {
+        "type": "int"
+      }
+    }
+  },
+  "msgRankHold2": "No change, still #{rank}.",
+  "@msgRankHold2": {
+    "description": "Inbox: world ranking unchanged.",
+    "placeholders": {
+      "rank": {
+        "type": "int"
+      }
+    }
+  },
+  "msgRankHold3": "Steady at #{rank}.",
+  "@msgRankHold3": {
+    "description": "Inbox: world ranking unchanged.",
+    "placeholders": {
+      "rank": {
+        "type": "int"
+      }
+    }
+  },
+  "msgRankUp1": "Up {move, plural, one{1 place} other{{move} places}} this cycle, to #{rank}.",
+  "@msgRankUp1": {
+    "description": "Inbox: world ranking climbed.",
+    "placeholders": {
+      "move": {
+        "type": "int"
+      },
+      "rank": {
+        "type": "int"
+      }
+    }
+  },
+  "msgRankUp2": "A climb of {move, plural, one{1 place} other{{move} places}} lifts you to #{rank}.",
+  "@msgRankUp2": {
+    "description": "Inbox: world ranking climbed.",
+    "placeholders": {
+      "move": {
+        "type": "int"
+      },
+      "rank": {
+        "type": "int"
+      }
+    }
+  },
+  "msgRankUp3": "Up {move, plural, one{1 place} other{{move} places}}, now #{rank}.",
+  "@msgRankUp3": {
+    "description": "Inbox: world ranking climbed.",
+    "placeholders": {
+      "move": {
+        "type": "int"
+      },
+      "rank": {
+        "type": "int"
+      }
+    }
+  },
+  "msgRankDown1": "Down {move, plural, one{1 place} other{{move} places}} this cycle, to #{rank}.",
+  "@msgRankDown1": {
+    "description": "Inbox: world ranking slipped.",
+    "placeholders": {
+      "move": {
+        "type": "int"
+      },
+      "rank": {
+        "type": "int"
+      }
+    }
+  },
+  "msgRankDown2": "A slide of {move, plural, one{1 place} other{{move} places}} drops you to #{rank}.",
+  "@msgRankDown2": {
+    "description": "Inbox: world ranking slipped.",
+    "placeholders": {
+      "move": {
+        "type": "int"
+      },
+      "rank": {
+        "type": "int"
+      }
+    }
+  },
+  "msgRankDown3": "Down {move, plural, one{1 place} other{{move} places}}, now #{rank}.",
+  "@msgRankDown3": {
+    "description": "Inbox: world ranking slipped.",
+    "placeholders": {
+      "move": {
+        "type": "int"
+      },
+      "rank": {
+        "type": "int"
+      }
+    }
+  },
+  "msgRankLeadYou": "You top the world.",
+  "@msgRankLeadYou": {
+    "description": "Inbox: the manager's nation is world number one."
+  },
+  "msgRankLeadOther": "{nation} top the world.",
+  "@msgRankLeadOther": {
+    "description": "Inbox: who leads the world ranking.",
+    "placeholders": {
+      "nation": {
+        "type": "String"
+      }
+    }
+  },
+  "msgRankTitle": "World ranking · #{rank}",
+  "@msgRankTitle": {
+    "description": "Inbox: ranking release headline.",
+    "placeholders": {
+      "rank": {
+        "type": "int"
+      }
+    }
+  },
+  "msgRankBody": "The world ranking has been updated. {lead} {movement}",
+  "@msgRankBody": {
+    "description": "Inbox: ranking release body.",
+    "placeholders": {
+      "lead": {
+        "type": "String"
+      },
+      "movement": {
+        "type": "String"
+      }
+    }
+  },
+  "msgCapsTitle": "{name} reaches {count} caps",
+  "@msgCapsTitle": {
+    "description": "Inbox: caps milestone headline.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "msgCapsBody": "{name} has now made {count} appearances for your nation.",
+  "@msgCapsBody": {
+    "description": "Inbox: caps milestone body.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "msgGoalsTitle": "{name} reaches {count} goals",
+  "@msgGoalsTitle": {
+    "description": "Inbox: goals milestone headline.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "msgGoalsBody": "{name} has scored {count} international goals for your nation.",
+  "@msgGoalsBody": {
+    "description": "Inbox: goals milestone body.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "msgDevTitle": "Squad development · {year}",
+  "@msgDevTitle": {
+    "description": "Inbox: yearly squad development report headline.",
+    "placeholders": {
+      "year": {
+        "type": "int"
+      }
+    }
+  },
+  "msgNewFacesTitle": "New faces · {year}",
+  "@msgNewFacesTitle": {
+    "description": "Inbox: yearly newcomers report headline.",
+    "placeholders": {
+      "year": {
+        "type": "int"
+      }
+    }
+  },
+  "msgIntakeTitle": "Academy intake · {year}",
+  "@msgIntakeTitle": {
+    "description": "Inbox: yearly youth intake headline.",
+    "placeholders": {
+      "year": {
+        "type": "int"
+      }
+    }
+  },
+  "msgRetireCaptainTitle": "Your captain {name} retires",
+  "@msgRetireCaptainTitle": {
+    "description": "Inbox: the captain retires.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "msgRetireTitle": "{name} retires from internationals",
+  "@msgRetireTitle": {
+    "description": "Inbox: a notable player retires.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "msgRetireBody": "{name} has retired from international football at {age}.",
+  "@msgRetireBody": {
+    "description": "Inbox: retirement body.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "age": {
+        "type": "int"
+      }
+    }
+  },
+  "msgRetireBodyWith": "{name} has retired from international football at {age}, bowing out with {tally}.",
+  "@msgRetireBodyWith": {
+    "description": "Inbox: retirement body with a career tally.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "tally": {
+        "type": "String"
+      },
+      "age": {
+        "type": "int"
+      }
+    }
+  },
+  "msgTallyCaps": "{count, plural, one{1 cap} other{{count} caps}}",
+  "@msgTallyCaps": {
+    "description": "Inbox: caps part of a retirement tally.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "msgTallyGoals": "{count, plural, one{1 goal} other{{count} goals}}",
+  "@msgTallyGoals": {
+    "description": "Inbox: goals part of a retirement tally.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "msgArmbandVacant": " The armband is vacant — name a new captain from the call-up screen.",
+  "@msgArmbandVacant": {
+    "description": "Inbox: appended when the retiree was captain."
+  },
+  "msgHofTitle": "{name} inducted into the Hall of Fame",
+  "@msgHofTitle": {
+    "description": "Inbox: hall-of-fame headline.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "msgHofBody": "{name} joins your nation’s Hall of Fame ({caps} caps, {goals} goals). See them in Legends.",
+  "@msgHofBody": {
+    "description": "Inbox: hall-of-fame body.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "caps": {
+        "type": "int"
+      },
+      "goals": {
+        "type": "int"
+      }
+    }
+  },
+  "hubBanTitle": "{name} suspended",
+  "@hubBanTitle": {
+    "description": "Inbox: a player is banned after a sending-off.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "hubBanBody": "{name} {how} and is banned for {matches, plural, one{your next match} other{the next {matches} matches}} — they will be unavailable for selection.",
+  "@hubBanBody": {
+    "description": "Inbox: suspension body. {how} is one of the hubBanHow* strings.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "how": {
+        "type": "String"
+      },
+      "matches": {
+        "type": "int"
+      }
+    }
+  },
+  "hubBanHowSecondYellow": "was sent off for a second booking",
+  "@hubBanHowSecondYellow": {
+    "description": "Inbox: how a player was sent off."
+  },
+  "hubBanHowViolent": "was shown a straight red for violent conduct",
+  "@hubBanHowViolent": {
+    "description": "Inbox: how a player was sent off."
+  },
+  "hubBanHowRed": "was sent off",
+  "@hubBanHowRed": {
+    "description": "Inbox: how a player was sent off."
+  },
+  "hubInjuryTitle": "{name} injured",
+  "@hubInjuryTitle": {
+    "description": "Inbox: a player picked up a knock.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "hubInjuryBody": "{name} picked up a knock and is out for {matches, plural, one{1 match} other{{matches} matches}}.",
+  "@hubInjuryBody": {
+    "description": "Inbox: injury body.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "matches": {
+        "type": "int"
+      }
+    }
+  },
+  "hubRunnerUpTitle1": "Runners-up",
+  "@hubRunnerUpTitle1": {
+    "description": "Inbox: lost a final, headline."
+  },
+  "hubRunnerUpTitle2": "So near, yet so far",
+  "@hubRunnerUpTitle2": {
+    "description": "Inbox: lost a final, headline."
+  },
+  "hubRunnerUpTitle3": "Silver medals",
+  "@hubRunnerUpTitle3": {
+    "description": "Inbox: lost a final, headline."
+  },
+  "hubRunnerUpBody1": "You reached the {cup} final but lost to {opponent}. So close — silver this time.",
+  "@hubRunnerUpBody1": {
+    "description": "Inbox: lost a final, body.",
+    "placeholders": {
+      "cup": {
+        "type": "String"
+      },
+      "opponent": {
+        "type": "String"
+      }
+    }
+  },
+  "hubRunnerUpBody2": "Beaten by {opponent} in the {cup} final. Runners-up — agonisingly close.",
+  "@hubRunnerUpBody2": {
+    "description": "Inbox: lost a final, body.",
+    "placeholders": {
+      "cup": {
+        "type": "String"
+      },
+      "opponent": {
+        "type": "String"
+      }
+    }
+  },
+  "hubRunnerUpBody3": "The {cup} final slipped away against {opponent}. So much to be proud of, but not the trophy.",
+  "@hubRunnerUpBody3": {
+    "description": "Inbox: lost a final, body.",
+    "placeholders": {
+      "cup": {
+        "type": "String"
+      },
+      "opponent": {
+        "type": "String"
+      }
+    }
+  },
+  "hubKnockedOutTitle1": "Knocked out",
+  "@hubKnockedOutTitle1": {
+    "description": "Inbox: knocked out of a tournament, headline."
+  },
+  "hubKnockedOutTitle2": "The end of the road",
+  "@hubKnockedOutTitle2": {
+    "description": "Inbox: knocked out of a tournament, headline."
+  },
+  "hubKnockedOutTitle3": "Journey over",
+  "@hubKnockedOutTitle3": {
+    "description": "Inbox: knocked out of a tournament, headline."
+  },
+  "hubKnockedOutBody1": "You're out of the {cup}, beaten by {opponent} in the {stage}.",
+  "@hubKnockedOutBody1": {
+    "description": "Inbox: knocked out of a tournament, body.",
+    "placeholders": {
+      "cup": {
+        "type": "String"
+      },
+      "opponent": {
+        "type": "String"
+      },
+      "stage": {
+        "type": "String"
+      }
+    }
+  },
+  "hubKnockedOutBody2": "{opponent} end your {cup} in the {stage}.",
+  "@hubKnockedOutBody2": {
+    "description": "Inbox: knocked out of a tournament, body.",
+    "placeholders": {
+      "cup": {
+        "type": "String"
+      },
+      "opponent": {
+        "type": "String"
+      },
+      "stage": {
+        "type": "String"
+      }
+    }
+  },
+  "hubKnockedOutBody3": "Your {cup} ends in the {stage}, beaten by {opponent}.",
+  "@hubKnockedOutBody3": {
+    "description": "Inbox: knocked out of a tournament, body.",
+    "placeholders": {
+      "cup": {
+        "type": "String"
+      },
+      "opponent": {
+        "type": "String"
+      },
+      "stage": {
+        "type": "String"
+      }
+    }
+  },
+  "hubGroupExitTitle1": "Group stage exit",
+  "@hubGroupExitTitle1": {
+    "description": "Inbox: eliminated in the group stage, headline."
+  },
+  "hubGroupExitTitle2": "Out at the group stage",
+  "@hubGroupExitTitle2": {
+    "description": "Inbox: eliminated in the group stage, headline."
+  },
+  "hubGroupExitTitle3": "Early bath",
+  "@hubGroupExitTitle3": {
+    "description": "Inbox: eliminated in the group stage, headline."
+  },
+  "hubGroupExitBody1": "Your {cup} is over at the group stage. Not enough to reach the knockouts.",
+  "@hubGroupExitBody1": {
+    "description": "Inbox: eliminated in the group stage, body.",
+    "placeholders": {
+      "cup": {
+        "type": "String"
+      }
+    }
+  },
+  "hubGroupExitBody2": "You failed to get out of the group. Your {cup} ends here.",
+  "@hubGroupExitBody2": {
+    "description": "Inbox: eliminated in the group stage, body.",
+    "placeholders": {
+      "cup": {
+        "type": "String"
+      }
+    }
+  },
+  "hubGroupExitBody3": "No knockout place this time. Your {cup} is done at the group stage.",
+  "@hubGroupExitBody3": {
+    "description": "Inbox: eliminated in the group stage, body.",
+    "placeholders": {
+      "cup": {
+        "type": "String"
+      }
+    }
+  },
+  "boardObjectiveMetTitle": "Objective met — {comp}",
+  "@boardObjectiveMetTitle": {
+    "description": "Inbox: the board's verdict on a cycle objective.",
+    "placeholders": {
+      "comp": {
+        "type": "String"
+      }
+    }
+  },
+  "boardObjectiveMissedTitle": "Objective missed — {comp}",
+  "@boardObjectiveMissedTitle": {
+    "description": "Inbox: the board's verdict on a cycle objective.",
+    "placeholders": {
+      "comp": {
+        "type": "String"
+      }
+    }
+  },
+  "boardObjectiveMetBody": "The board's target at the {comp}: {demand}. You finished: {finish}. They have what they asked for.",
+  "@boardObjectiveMetBody": {
+    "description": "Inbox: the board's verdict body when the objective was met.",
+    "placeholders": {
+      "comp": {
+        "type": "String"
+      },
+      "demand": {
+        "type": "String"
+      },
+      "finish": {
+        "type": "String"
+      }
+    }
+  },
+  "boardObjectiveMissedBody": "The board's target at the {comp}: {demand}. You finished: {finish}. That is short of what was expected.",
+  "@boardObjectiveMissedBody": {
+    "description": "Inbox: the board's verdict body when the objective was missed.",
+    "placeholders": {
+      "comp": {
+        "type": "String"
+      },
+      "demand": {
+        "type": "String"
+      },
+      "finish": {
+        "type": "String"
+      }
+    }
+  },
+  "newsWcMissTitle": "World Cup dream over",
+  "@newsWcMissTitle": {
+    "description": "Inbox: failed to qualify for the World Cup."
+  },
+  "newsWcMissBody": "You didn't make the {year} World Cup — the qualifying campaign fell short. Four more years.",
+  "@newsWcMissBody": {
+    "description": "Inbox: failed to qualify for the World Cup, body.",
+    "placeholders": {
+      "year": {
+        "type": "int"
+      }
+    }
+  },
+  "newsRecordScorerTitle": "All-time top scorer",
+  "@newsRecordScorerTitle": {
+    "description": "Inbox: a new all-time scoring record."
+  },
+  "newsRecordScorerBody": "{name} is now the game's all-time leading goalscorer with {goals} goals.",
+  "@newsRecordScorerBody": {
+    "description": "Inbox: all-time scoring record body.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "goals": {
+        "type": "int"
+      }
+    }
+  },
+  "newsRecordCapsTitle": "Most-capped player",
+  "@newsRecordCapsTitle": {
+    "description": "Inbox: a new all-time appearance record."
+  },
+  "newsRecordCapsBody": "{name} is now the game's most-capped player with {caps} appearances.",
+  "@newsRecordCapsBody": {
+    "description": "Inbox: all-time appearance record body.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "caps": {
+        "type": "int"
+      }
+    }
+  },
+  "newsARecordBreaker": "A new record-breaker",
+  "@newsARecordBreaker": {
+    "description": "Inbox fallback when the record holder cannot be named."
+  },
+  "newsTransferTitle": "{name} joins {club}",
+  "@newsTransferTitle": {
+    "description": "Inbox: a notable club transfer.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "club": {
+        "type": "String"
+      }
+    }
+  },
+  "newsTransferBody": "{name} ({position}, {rating}) has left {fromClub} to sign for {destination} for {fee}.",
+  "@newsTransferBody": {
+    "description": "Inbox: transfer body.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "position": {
+        "type": "String"
+      },
+      "fromClub": {
+        "type": "String"
+      },
+      "destination": {
+        "type": "String"
+      },
+      "fee": {
+        "type": "String"
+      },
+      "rating": {
+        "type": "int"
+      }
+    }
+  },
+  "newsTransferAbroad": "{club} in {country}",
+  "@newsTransferAbroad": {
+    "description": "How a club abroad is named in transfer news.",
+    "placeholders": {
+      "club": {
+        "type": "String"
+      },
+      "country": {
+        "type": "String"
+      }
+    }
+  },
+  "newsTransferFree": "a free transfer",
+  "@newsTransferFree": {
+    "description": "Transfer fee when there is none."
+  },
+  "newsNatzStarTitle": "⭐ {name} would switch to {nation}!",
+  "@newsNatzStarTitle": {
+    "description": "Inbox: a star naturalisation candidate.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "nation": {
+        "type": "String"
+      }
+    }
+  },
+  "newsNatzTitle": "{name} wants to play for {nation}",
+  "@newsNatzTitle": {
+    "description": "Inbox: a naturalisation candidate.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "nation": {
+        "type": "String"
+      }
+    }
+  },
+  "newsNatzBody": "{name}, a {age}-year-old {position} rated {rating} currently with {fromNation}, has family ties to {nation} and is open to switching. Open the Naturalisation offer to accept or decline.",
+  "@newsNatzBody": {
+    "description": "Inbox: naturalisation offer body.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "position": {
+        "type": "String"
+      },
+      "fromNation": {
+        "type": "String"
+      },
+      "nation": {
+        "type": "String"
+      },
+      "age": {
+        "type": "int"
+      },
+      "rating": {
+        "type": "int"
+      }
+    }
+  },
+  "newsNatzBodyStar": "{name}, a {age}-year-old {position} rated {rating} currently with {fromNation}, is a star name who has family ties to {nation} and is open to switching. Open the Naturalisation offer to accept or decline.",
+  "@newsNatzBodyStar": {
+    "description": "Inbox: naturalisation offer body for a star player.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "position": {
+        "type": "String"
+      },
+      "fromNation": {
+        "type": "String"
+      },
+      "nation": {
+        "type": "String"
+      },
+      "age": {
+        "type": "int"
+      },
+      "rating": {
+        "type": "int"
+      }
+    }
+  },
+  "newsTheirNation": "their nation",
+  "@newsTheirNation": {
+    "description": "Fallback for an unnamed source nation in naturalisation news."
+  },
+  "newsYourNation": "your nation",
+  "@newsYourNation": {
+    "description": "Fallback for an unnamed destination nation in naturalisation news."
+  },
+  "tourStatusChampions": "CHAMPIONS",
+  "@tourStatusChampions": {
+    "description": "Tournament tile status."
+  },
+  "tourStatusFinals": "FINALS",
+  "@tourStatusFinals": {
+    "description": "Tournament tile status."
+  },
+  "tourStatusQualifying": "QUALIFYING",
+  "@tourStatusQualifying": {
+    "description": "Tournament tile status."
+  },
+  "tourStatusUpcoming": "UPCOMING",
+  "@tourStatusUpcoming": {
+    "description": "Tournament tile status."
+  },
+  "tourStatusInProgress": "IN PROGRESS",
+  "@tourStatusInProgress": {
+    "description": "Tournament tile status."
+  },
+  "tourStatusComingSoon": "COMING SOON",
+  "@tourStatusComingSoon": {
+    "description": "Tournament tile status."
+  },
+  "tourStatusDecided": "DECIDED",
+  "@tourStatusDecided": {
+    "description": "Tournament tile status."
+  },
+  "tourStatusLeague": "LEAGUE {letter}",
+  "@tourStatusLeague": {
+    "description": "Tournament tile status: which Nations Cup league the manager is in.",
+    "placeholders": {
+      "letter": {
+        "type": "String",
+        "example": "A"
+      }
+    }
+  },
+  "tourDrawWcQualifying": "WORLD CUP QUALIFYING DRAW",
+  "@tourDrawWcQualifying": {
+    "description": "Draw-ceremony heading."
+  },
+  "tourDrawContQualifying": "{cup} QUALIFYING DRAW",
+  "@tourDrawContQualifying": {
+    "description": "Draw-ceremony heading.",
+    "placeholders": {
+      "cup": {
+        "type": "String",
+        "example": "EUROPEAN CHAMPIONSHIP"
+      }
+    }
+  },
+  "tourDrawWcHost": "WORLD CUP HOST",
+  "@tourDrawWcHost": {
+    "description": "Host-draw ceremony heading."
+  },
+  "tourDrawContHost": "{cup} HOST",
+  "@tourDrawContHost": {
+    "description": "Host-draw ceremony heading.",
+    "placeholders": {
+      "cup": {
+        "type": "String",
+        "example": "EUROPEAN CHAMPIONSHIP"
+      }
+    }
+  },
+  "tourKickoffContinentalCup": "CONTINENTAL CUP",
+  "@tourKickoffContinentalCup": {
+    "description": "Fallback tournament name on the opening-ceremony screen."
+  },
+  "tourHostCompetitionYear": "{competition} {year}",
+  "@tourHostCompetitionYear": {
+    "description": "Host banner: the competition and its year.",
+    "placeholders": {
+      "competition": {
+        "type": "String"
+      },
+      "year": {
+        "type": "int"
+      }
+    }
+  },
+  "newsContMissTitle": "{cup} missed",
+  "@newsContMissTitle": {
+    "description": "Inbox: failed to qualify for the continental cup.",
+    "placeholders": {
+      "cup": {
+        "type": "String"
+      }
+    }
+  },
+  "newsContMissBody": "You didn't qualify for {cup} — the campaign came up short this time.",
+  "@newsContMissBody": {
+    "description": "Inbox: failed to qualify for the continental cup, body.",
+    "placeholders": {
+      "cup": {
+        "type": "String"
+      }
+    }
+  },
+  "newsPotyTitle": "World Player of the Year {year}",
+  "@newsPotyTitle": {
+    "description": "Inbox: the year's player award.",
+    "placeholders": {
+      "year": {
+        "type": "int"
+      }
+    }
+  },
+  "newsPotyBody": "{name} is the best player in the world this year.",
+  "@newsPotyBody": {
+    "description": "Inbox: the year's player award, body.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "newsPotyYoungSuffix": " {name} takes the young player's award.",
+  "@newsPotyYoungSuffix": {
+    "description": "Inbox: appended when a different player takes the young-player award.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "matchTopBarTitle": "MATCH",
+  "@matchTopBarTitle": {
+    "description": "Live-match screen top bar."
+  },
+  "matchStatsAtFullTime": "Stats available at full time.",
+  "@matchStatsAtFullTime": {
+    "description": "Live match: stats tab before full time."
+  },
+  "matchPlayerRatings": "PLAYER RATINGS",
+  "@matchPlayerRatings": {
+    "description": "Live match: player-ratings heading."
+  },
+  "matchSubstitutions": "SUBSTITUTIONS",
+  "@matchSubstitutions": {
+    "description": "Live match: substitutions heading."
+  },
+  "matchSubstitutes": "SUBSTITUTES",
+  "@matchSubstitutes": {
+    "description": "Live match: bench heading."
+  },
+  "matchPlayerOfTheMatch": "PLAYER OF THE MATCH",
+  "@matchPlayerOfTheMatch": {
+    "description": "Live match: man-of-the-match heading."
+  },
+  "matchGoalShout": "GOAL!",
+  "@matchGoalShout": {
+    "description": "Live match: the goal flash."
+  },
+  "matchShootoutScore": "SHOOTOUT {home}–{away}",
+  "@matchShootoutScore": {
+    "description": "Live match: the shoot-out scoreline.",
+    "placeholders": {
+      "home": {
+        "type": "int"
+      },
+      "away": {
+        "type": "int"
+      }
+    }
+  },
+  "tourVenues": "VENUES",
+  "@tourVenues": {
+    "description": "Tournament screen: venues card heading."
+  },
+  "tourPot": "POT {number}",
+  "@tourPot": {
+    "description": "Draw ceremony: a seeding pot.",
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "tourHostSelection": "HOST SELECTION",
+  "@tourHostSelection": {
+    "description": "Host-draw screen heading."
+  },
+  "tourCandidates": "CANDIDATES",
+  "@tourCandidates": {
+    "description": "Host-draw screen: the bidding nations."
+  },
+  "tourJointBid": "JOINT BID",
+  "@tourJointBid": {
+    "description": "Host-draw screen: a shared bid."
+  },
+  "tourGoldenGlove": "GOLDEN GLOVE",
+  "@tourGoldenGlove": {
+    "description": "Tournament awards: best goalkeeper."
+  },
+  "tourTeamOfTournament": "TEAM OF THE TOURNAMENT",
+  "@tourTeamOfTournament": {
+    "description": "Tournament awards heading."
+  },
+  "tourYourRun": "YOUR RUN",
+  "@tourYourRun": {
+    "description": "Tournament bracket: the manager's own path."
+  },
+  "tourMedalTable": "MEDAL TABLE",
+  "@tourMedalTable": {
+    "description": "Tournament history heading."
+  },
+  "tourHostLine": "Host: {nation}",
+  "@tourHostLine": {
+    "description": "Tournament history: who hosted an edition.",
+    "placeholders": {
+      "nation": {
+        "type": "String"
+      }
+    }
+  },
+  "tourGroupNamed": "Group {name}",
+  "@tourGroupNamed": {
+    "description": "A group's name in a bracket or table.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "tourFinalsDrawBlurb": "Seeded by world ranking. Spot your nation before the draw.",
+  "@tourFinalsDrawBlurb": {
+    "description": "Finals-draw screen blurb."
+  },
+  "tourWorldRanking": "World Ranking",
+  "@tourWorldRanking": {
+    "description": "Tournaments screen: link to the world ranking."
+  },
+  "tourYourCompetitions": "YOUR COMPETITIONS",
+  "@tourYourCompetitions": {
+    "description": "Tournaments screen section heading."
+  },
+  "tourOtherContinents": "OTHER CONTINENTS",
+  "@tourOtherContinents": {
+    "description": "Tournaments screen section heading."
+  },
+  "tourHostedBy": "HOSTED BY  {hosts}",
+  "@tourHostedBy": {
+    "description": "Opening-ceremony screen: the host nations.",
+    "placeholders": {
+      "hosts": {
+        "type": "String"
+      }
+    }
+  },
+  "tourThirdsAdvance": "Top {count} advance to {destination}",
+  "@tourThirdsAdvance": {
+    "description": "Best-third-placed table: how many go through and where.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "destination": {
+        "type": "String"
+      }
+    }
+  },
+  "newsWalkoutTitle": "{name} walks away",
+  "@newsWalkoutTitle": {
+    "description": "Inbox: a player retires internationally after being ignored.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "newsWalkoutBody": "{name} has retired from international football at {age}, with {caps} caps. He asked to be told where he stood and was not, and he is not waiting any longer.",
+  "@newsWalkoutBody": {
+    "description": "Inbox: walkout body.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "age": {
+        "type": "int"
+      },
+      "caps": {
+        "type": "int"
+      }
+    }
+  },
+  "pressProbeAccountability1": "You've backed them again. Is nobody in that dressing room accountable?",
+  "@pressProbeAccountability1": {
+    "description": "Press conference: a Accountability follow-up question."
+  },
+  "pressProbeAccountability2": "That's the players defended. Who actually answers for a night like that?",
+  "@pressProbeAccountability2": {
+    "description": "Press conference: a Accountability follow-up question."
+  },
+  "pressProbeAccountability3": "Loyalty is easy from up there. Does anyone pay a price?",
+  "@pressProbeAccountability3": {
+    "description": "Press conference: a Accountability follow-up question."
+  },
+  "pressProbeAccountability4": "If it's never the players, we're left with one name. Yours.",
+  "@pressProbeAccountability4": {
+    "description": "Press conference: a Accountability follow-up question."
+  },
+  "pressProbeYourFuture1": "You've taken it on yourself. Should we be asking about your future?",
+  "@pressProbeYourFuture1": {
+    "description": "Press conference: a YourFuture follow-up question."
+  },
+  "pressProbeYourFuture2": "Falling on your sword is noble. Is the job still yours?",
+  "@pressProbeYourFuture2": {
+    "description": "Press conference: a YourFuture follow-up question."
+  },
+  "pressProbeYourFuture3": "You keep saying it's you. At what point is that a resignation?",
+  "@pressProbeYourFuture3": {
+    "description": "Press conference: a YourFuture follow-up question."
+  },
+  "pressProbeYourFuture4": "The board are listening too. Are you sure you want that on record?",
+  "@pressProbeYourFuture4": {
+    "description": "Press conference: a YourFuture follow-up question."
+  },
+  "pressProbeDressingRoom1": "Strong words in public. Have you lost that dressing room?",
+  "@pressProbeDressingRoom1": {
+    "description": "Press conference: a DressingRoom follow-up question."
+  },
+  "pressProbeDressingRoom2": "You've just told the country they're not good enough. How does that help?",
+  "@pressProbeDressingRoom2": {
+    "description": "Press conference: a DressingRoom follow-up question."
+  },
+  "pressProbeDressingRoom3": "Demanding it here rather than in there — is that leadership?",
+  "@pressProbeDressingRoom3": {
+    "description": "Press conference: a DressingRoom follow-up question."
+  },
+  "pressProbeDressingRoom4": "Players read this too. What do they hear tomorrow morning?",
+  "@pressProbeDressingRoom4": {
+    "description": "Press conference: a DressingRoom follow-up question."
+  },
+  "pressProbeExpectation1": "You've raised the bar in public. Is that not a hostage to fortune?",
+  "@pressProbeExpectation1": {
+    "description": "Press conference: a Expectation follow-up question."
+  },
+  "pressProbeExpectation2": "Big promise. What happens the day you don't deliver it?",
+  "@pressProbeExpectation2": {
+    "description": "Press conference: a Expectation follow-up question."
+  },
+  "pressProbeExpectation3": "Every manager before you said the same and packed a bag. Why are you different?",
+  "@pressProbeExpectation3": {
+    "description": "Press conference: a Expectation follow-up question."
+  },
+  "pressProbeExpectation4": "You've set the target. Will you resign if you miss it?",
+  "@pressProbeExpectation4": {
+    "description": "Press conference: a Expectation follow-up question."
+  },
+  "pressProbeSubstance1": "With respect, that's not an answer. Give us something.",
+  "@pressProbeSubstance1": {
+    "description": "Press conference: a Substance follow-up question."
+  },
+  "pressProbeSubstance2": "The country wants to hear from you. Anything at all?",
+  "@pressProbeSubstance2": {
+    "description": "Press conference: a Substance follow-up question."
+  },
+  "pressProbeSubstance3": "You can keep saying nothing. We'll keep printing it.",
+  "@pressProbeSubstance3": {
+    "description": "Press conference: a Substance follow-up question."
+  },
+  "pressProbeSubstance4": "One straight sentence. What do you actually think?",
+  "@pressProbeSubstance4": {
+    "description": "Press conference: a Substance follow-up question."
+  },
+  "pressProbeSelection1": "Same names, same shape, same result. Why does that team keep getting picked?",
+  "@pressProbeSelection1": {
+    "description": "Press conference: a Selection follow-up question."
+  },
+  "pressProbeSelection2": "There are players in form watching this on television. Explain the selection.",
+  "@pressProbeSelection2": {
+    "description": "Press conference: a Selection follow-up question."
+  },
+  "pressProbeSelection3": "Is the XI picked on merit, or on reputation?",
+  "@pressProbeSelection3": {
+    "description": "Press conference: a Selection follow-up question."
+  },
+  "pressProbeSelection4": "Tactically, we all saw the problem. Did you?",
+  "@pressProbeSelection4": {
+    "description": "Press conference: a Selection follow-up question."
+  },
+  "pressProbeTheFans1": "Thousands travelled for that. What do you say to them tonight?",
+  "@pressProbeTheFans1": {
+    "description": "Press conference: a TheFans follow-up question."
+  },
+  "pressProbeTheFans2": "The supporters have stuck with this team for years. What are you giving them?",
+  "@pressProbeTheFans2": {
+    "description": "Press conference: a TheFans follow-up question."
+  },
+  "pressProbeTheFans3": "They sing your name or they don't. Which is it going to be?",
+  "@pressProbeTheFans3": {
+    "description": "Press conference: a TheFans follow-up question."
+  },
+  "pressProbeTheFans4": "Message to the people back home. Go on.",
+  "@pressProbeTheFans4": {
+    "description": "Press conference: a TheFans follow-up question."
+  },
+  "pressProbeBigPicture1": "Step back for me. Where is this nation actually going?",
+  "@pressProbeBigPicture1": {
+    "description": "Press conference: a BigPicture follow-up question."
+  },
+  "pressProbeBigPicture2": "From the outside, nothing has changed here in years. Has it?",
+  "@pressProbeBigPicture2": {
+    "description": "Press conference: a BigPicture follow-up question."
+  },
+  "pressProbeBigPicture3": "In four years' time, what does this side look like?",
+  "@pressProbeBigPicture3": {
+    "description": "Press conference: a BigPicture follow-up question."
+  },
+  "pressProbeBigPicture4": "Is this a project, or is it just the next match?",
+  "@pressProbeBigPicture4": {
+    "description": "Press conference: a BigPicture follow-up question."
+  },
+  "pressNeedleBackPlayers": "You always back them. We've heard it.",
+  "@pressNeedleBackPlayers": {
+    "description": "Press conference: a reporter's aside when the manager keeps taking the same stance."
+  },
+  "pressNeedleTakeBlame": "It's always your fault, apparently.",
+  "@pressNeedleTakeBlame": {
+    "description": "Press conference: a reporter's aside when the manager keeps taking the same stance."
+  },
+  "pressNeedleDemandMore": "More demands. Again.",
+  "@pressNeedleDemandMore": {
+    "description": "Press conference: a reporter's aside when the manager keeps taking the same stance."
+  },
+  "pressNeedleRaiseBar": "Another promise for the file.",
+  "@pressNeedleRaiseBar": {
+    "description": "Press conference: a reporter's aside when the manager keeps taking the same stance."
+  },
+  "pressNeedlePlayDown": "You never give us anything.",
+  "@pressNeedlePlayDown": {
+    "description": "Press conference: a reporter's aside when the manager keeps taking the same stance."
+  },
+  "pressHeadlineWent1": "A manager in charge of the room",
+  "@pressHeadlineWent1": {
+    "description": "Press conference: the morning's headline after a conference that went went."
+  },
+  "pressHeadlineWent2": "They came for a row and got a leader",
+  "@pressHeadlineWent2": {
+    "description": "Press conference: the morning's headline after a conference that went went."
+  },
+  "pressHeadlineWent3": "Straight answers, and they landed",
+  "@pressHeadlineWent3": {
+    "description": "Press conference: the morning's headline after a conference that went went."
+  },
+  "pressHeadlineMixed1": "Plenty said, little settled",
+  "@pressHeadlineMixed1": {
+    "description": "Press conference: the morning's headline after a conference that went mixed."
+  },
+  "pressHeadlineMixed2": "Something for everyone, and nothing for anyone",
+  "@pressHeadlineMixed2": {
+    "description": "Press conference: the morning's headline after a conference that went mixed."
+  },
+  "pressHeadlineMixed3": "A conference that left the questions open",
+  "@pressHeadlineMixed3": {
+    "description": "Press conference: the morning's headline after a conference that went mixed."
+  },
+  "pressHeadlineBadly1": "A bruising afternoon in front of the cameras",
+  "@pressHeadlineBadly1": {
+    "description": "Press conference: the morning's headline after a conference that went badly."
+  },
+  "pressHeadlineBadly2": "The room turned, and it showed",
+  "@pressHeadlineBadly2": {
+    "description": "Press conference: the morning's headline after a conference that went badly."
+  },
+  "pressHeadlineBadly3": "Answers that will read worse in the morning",
+  "@pressHeadlineBadly3": {
+    "description": "Press conference: the morning's headline after a conference that went badly."
+  },
+  "pressHeadlineFlat1": "Nothing said, nothing gained",
+  "@pressHeadlineFlat1": {
+    "description": "Press conference: the morning's headline after a conference that went flat."
+  },
+  "pressHeadlineFlat2": "Ten minutes, no news",
+  "@pressHeadlineFlat2": {
+    "description": "Press conference: the morning's headline after a conference that went flat."
+  },
+  "pressHeadlineFlat3": "A blank page for the back page",
+  "@pressHeadlineFlat3": {
+    "description": "Press conference: the morning's headline after a conference that went flat."
+  },
+  "pressConferenceTitle": "PRESS CONFERENCE",
+  "@pressConferenceTitle": {
+    "description": "Press sheet heading."
+  },
+  "pressQuestionOf": "Question {index} of {total}",
+  "@pressQuestionOf": {
+    "description": "Press sheet progress line.",
+    "placeholders": {
+      "index": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "pressTomorrowsHeadline": "TOMORROW'S BACK PAGE",
+  "@pressTomorrowsHeadline": {
+    "description": "Press sheet: heading over the closing headline."
+  },
+  "pressLeaveRoom": "LEAVE THE ROOM",
+  "@pressLeaveRoom": {
+    "description": "Press sheet: the button that closes the conference."
+  },
+  "pressRoomVerdictSquad": "Dressing room",
+  "@pressRoomVerdictSquad": {
+    "description": "Press sheet: the summary line's squad column."
+  },
+  "pressRoomVerdictBoard": "Board",
+  "@pressRoomVerdictBoard": {
+    "description": "Press sheet: the summary line's board column."
+  },
+  "yReactionElation0": "no notes. none. perfect.",
+  "@yReactionElation0": {
+    "description": "Y feed: a elation reply under somebody else's post."
+  },
+  "yReactionElation1": "I am unwell (good).",
+  "@yReactionElation1": {
+    "description": "Y feed: a elation reply under somebody else's post."
+  },
+  "yReactionElation2": "framing this. putting it above the fireplace.",
+  "@yReactionElation2": {
+    "description": "Y feed: a elation reply under somebody else's post."
+  },
+  "yReactionElation3": "we are so back",
+  "@yReactionElation3": {
+    "description": "Y feed: a elation reply under somebody else's post."
+  },
+  "yReactionElation4": "Screenshotting this for the doubters. All of them.",
+  "@yReactionElation4": {
+    "description": "Y feed: a elation reply under somebody else's post."
+  },
+  "yReactionElation5": "I'm going to be insufferable about this for a decade.",
+  "@yReactionElation5": {
+    "description": "Y feed: a elation reply under somebody else's post."
+  },
+  "yReactionRelief0": "that took ten years off me",
+  "@yReactionRelief0": {
+    "description": "Y feed: a relief reply under somebody else's post."
+  },
+  "yReactionRelief1": "Ugly. Three points. Moving on.",
+  "@yReactionRelief1": {
+    "description": "Y feed: a relief reply under somebody else's post."
+  },
+  "yReactionRelief2": "Nobody speak. Nobody jinx it.",
+  "@yReactionRelief2": {
+    "description": "Y feed: a relief reply under somebody else's post."
+  },
+  "yReactionRelief3": "Not pretty, but I'll take it every single time.",
+  "@yReactionRelief3": {
+    "description": "Y feed: a relief reply under somebody else's post."
+  },
+  "yReactionRelief4": "Heart rate: unacceptable.",
+  "@yReactionRelief4": {
+    "description": "Y feed: a relief reply under somebody else's post."
+  },
+  "yReactionRelief5": "Somehow. Somehow!",
+  "@yReactionRelief5": {
+    "description": "Y feed: a relief reply under somebody else's post."
+  },
+  "yReactionFury0": "Absolute state of this.",
+  "@yReactionFury0": {
+    "description": "Y feed: a fury reply under somebody else's post."
+  },
+  "yReactionFury1": "Not good enough. Not remotely.",
+  "@yReactionFury1": {
+    "description": "Y feed: a fury reply under somebody else's post."
+  },
+  "yReactionFury2": "I want names.",
+  "@yReactionFury2": {
+    "description": "Y feed: a fury reply under somebody else's post."
+  },
+  "yReactionFury3": "Every four years, the same. EVERY four years.",
+  "@yReactionFury3": {
+    "description": "Y feed: a fury reply under somebody else's post."
+  },
+  "yReactionFury4": "Deleting the app. Reinstalling Thursday.",
+  "@yReactionFury4": {
+    "description": "Y feed: a fury reply under somebody else's post."
+  },
+  "yReactionFury5": "Somebody explain that to me slowly.",
+  "@yReactionFury5": {
+    "description": "Y feed: a fury reply under somebody else's post."
+  },
+  "yReactionDespair0": "well.",
+  "@yReactionDespair0": {
+    "description": "Y feed: a despair reply under somebody else's post."
+  },
+  "yReactionDespair1": "I have run out of ways to say this.",
+  "@yReactionDespair1": {
+    "description": "Y feed: a despair reply under somebody else's post."
+  },
+  "yReactionDespair2": "Going for a walk. A long one.",
+  "@yReactionDespair2": {
+    "description": "Y feed: a despair reply under somebody else's post."
+  },
+  "yReactionDespair3": "this is the darkest timeline",
+  "@yReactionDespair3": {
+    "description": "Y feed: a despair reply under somebody else's post."
+  },
+  "yReactionDespair4": "Wake me in four years.",
+  "@yReactionDespair4": {
+    "description": "Y feed: a despair reply under somebody else's post."
+  },
+  "yReactionDespair5": "No jokes today. Nothing.",
+  "@yReactionDespair5": {
+    "description": "Y feed: a despair reply under somebody else's post."
+  },
+  "yReactionSmugness0": "Said it in January. Check the timeline.",
+  "@yReactionSmugness0": {
+    "description": "Y feed: a smugness reply under somebody else's post."
+  },
+  "yReactionSmugness1": "Some of you owe some of us an apology.",
+  "@yReactionSmugness1": {
+    "description": "Y feed: a smugness reply under somebody else's post."
+  },
+  "yReactionSmugness2": "Quietly, but: told you.",
+  "@yReactionSmugness2": {
+    "description": "Y feed: a smugness reply under somebody else's post."
+  },
+  "yReactionSmugness3": "The doubters have gone very quiet.",
+  "@yReactionSmugness3": {
+    "description": "Y feed: a smugness reply under somebody else's post."
+  },
+  "yReactionSmugness4": "bookmark this one",
+  "@yReactionSmugness4": {
+    "description": "Y feed: a smugness reply under somebody else's post."
+  },
+  "yReactionSmugness5": "Not that anybody's counting. I'm counting.",
+  "@yReactionSmugness5": {
+    "description": "Y feed: a smugness reply under somebody else's post."
+  },
+  "yReactionShrug0": "it happened. next.",
+  "@yReactionShrug0": {
+    "description": "Y feed: a shrug reply under somebody else's post."
+  },
+  "yReactionShrug1": "Fine. Whatever. Onwards.",
+  "@yReactionShrug1": {
+    "description": "Y feed: a shrug reply under somebody else's post."
+  },
+  "yReactionShrug2": "Filing this one under 'football'.",
+  "@yReactionShrug2": {
+    "description": "Y feed: a shrug reply under somebody else's post."
+  },
+  "yReactionShrug3": "no thoughts, head empty",
+  "@yReactionShrug3": {
+    "description": "Y feed: a shrug reply under somebody else's post."
+  },
+  "yReactionShrug4": "Wake me for the next one.",
+  "@yReactionShrug4": {
+    "description": "Y feed: a shrug reply under somebody else's post."
+  },
+  "yReactionShrug5": "Genuinely nothing to add.",
+  "@yReactionShrug5": {
+    "description": "Y feed: a shrug reply under somebody else's post."
+  },
+  "tourThirdsUneven": "Groups are uneven — results against each big group's bottom side are dropped, so every team is judged over the same games.",
+  "@tourThirdsUneven": {
+    "description": "Best-third-placed table: why some results are dropped."
+  },
+  "gateTitle": "YOUR FIRST CYCLE IS OVER",
+  "@gateTitle": {
+    "description": "Premium gate: headline at the end of the free cycle."
+  },
+  "gateLead": "Four years, a continental championship and a World Cup — that was the free part, and nothing was held back. Carry this save on for a one-off payment.",
+  "@gateLead": {
+    "description": "Premium gate: the pitch under the headline."
+  },
+  "gateBenefitEndless": "Endless career — every cycle from here on",
+  "@gateBenefitEndless": {
+    "description": "Premium gate benefit."
+  },
+  "gateBenefitNations": "Every nation in the world to manage",
+  "@gateBenefitNations": {
+    "description": "Premium gate benefit."
+  },
+  "gateBenefitSaves": "Every save slot",
+  "@gateBenefitSaves": {
+    "description": "Premium gate benefit."
+  },
+  "gateBenefitUpdates": "Every future update included",
+  "@gateBenefitUpdates": {
+    "description": "Premium gate benefit."
+  },
+  "gateBenefitOffline": "No subscription, no ads, no account, works offline",
+  "@gateBenefitOffline": {
+    "description": "Premium gate benefit."
+  },
+  "gatePriceLead": "One payment, forever",
+  "@gatePriceLead": {
+    "description": "Premium gate: the line above the price."
+  },
+  "gatePrice": "€11.99",
+  "@gatePrice": {
+    "description": "Premium gate: the price. Placeholder until the store's own localised price is wired in."
+  },
+  "gateBuy": "BUY AND CONTINUE",
+  "@gateBuy": {
+    "description": "Premium gate: the button that continues the career."
+  },
+  "gateExit": "EXIT",
+  "@gateExit": {
+    "description": "Premium gate: the button that leaves the save."
+  },
+  "gateNotChargedYet": "Not connected to payment yet — this button just continues.",
+  "@gateNotChargedYet": {
+    "description": "Premium gate: an honest note while the store is not wired up."
+  },
+  "backupTitle": "SAVES",
+  "@backupTitle": {
+    "description": "Settings: heading for the backup section."
+  },
+  "backupBlurb": "Every save lives in one file on this phone. Export a copy so a lost or reinstalled phone does not cost you a career.",
+  "@backupBlurb": {
+    "description": "Settings: what the backup section is for."
+  },
+  "backupExport": "EXPORT A BACKUP",
+  "@backupExport": {
+    "description": "Settings: the export button."
+  },
+  "backupExportSubject": "FNM saves",
+  "@backupExportSubject": {
+    "description": "Subject line when the exported save is shared."
+  },
+  "backupRestore": "RESTORE FROM A FILE",
+  "@backupRestore": {
+    "description": "Settings: the restore button."
+  },
+  "backupRestoreWarnTitle": "Replace every save?",
+  "@backupRestoreWarnTitle": {
+    "description": "Confirmation title before a restore."
+  },
+  "backupRestoreWarnBody": "Restoring replaces every save on this phone with the ones in the file. The app will restart.",
+  "@backupRestoreWarnBody": {
+    "description": "Confirmation body before a restore."
+  },
+  "backupRestoreConfirm": "REPLACE",
+  "@backupRestoreConfirm": {
+    "description": "Confirmation button for a restore."
+  },
+  "backupCancel": "CANCEL",
+  "@backupCancel": {
+    "description": "Dismisses the restore confirmation."
+  },
+  "backupExported": "Backup ready — choose where to keep it.",
+  "@backupExported": {
+    "description": "Snackbar after a successful export."
+  },
+  "backupFailed": "Could not write the backup.",
+  "@backupFailed": {
+    "description": "Snackbar when an export fails."
+  },
+  "backupRejectedUnreadable": "That file could not be opened.",
+  "@backupRejectedUnreadable": {
+    "description": "Restore refused: not a readable database."
+  },
+  "backupRejectedNotFnm": "That is not an FNM save.",
+  "@backupRejectedNotFnm": {
+    "description": "Restore refused: a database, but not ours."
+  },
+  "backupRejectedNewer": "That save was made by a newer version of the app. Update first.",
+  "@backupRejectedNewer": {
+    "description": "Restore refused: the backup is from a later build."
+  },
+  "backupRejectedTooOld": "That save is too old to be restored by this version.",
+  "@backupRejectedTooOld": {
+    "description": "Restore refused: older than the migration path reaches."
+  },
+  "careerShare": "Share this career",
+  "@careerShare": {
+    "description": "Saves list: tooltip on the per-career export button."
+  },
+  "careerImport": "IMPORT A CAREER",
+  "@careerImport": {
+    "description": "Saves list: the button that adds a career from a file."
+  },
+  "careerShareSubject": "An FNM career",
+  "@careerShareSubject": {
+    "description": "Subject line when a single career is shared."
+  },
+  "careerImported": "Career imported.",
+  "@careerImported": {
+    "description": "Snackbar after a career has been added from a file."
+  },
+  "careerImportFailedUnreadable": "That file is not an FNM career.",
+  "@careerImportFailedUnreadable": {
+    "description": "Import refused: unreadable bundle."
+  },
+  "careerImportFailedNewer": "That career was exported by a newer version of the app. Update first.",
+  "@careerImportFailedNewer": {
+    "description": "Import refused: the bundle is from a later build."
+  },
+  "careerShareFailed": "Could not export that career.",
+  "@careerShareFailed": {
+    "description": "Snackbar when a per-career export fails."
+  },
+  "managerTitle": "MANAGER",
+  "@managerTitle": {
+    "description": "Manager screen: app bar title."
+  },
+  "managerSkills": "YOUR SKILLS",
+  "@managerSkills": {
+    "description": "Manager screen: skills section heading."
+  },
+  "managerPointsAvailable": "{count, plural, =0{No points to spend} one{1 point to spend} other{{count} points to spend}}",
+  "@managerPointsAvailable": {
+    "description": "Manager screen: unspent skill points.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "managerPointsHow": "Two points for every cycle you complete, one for every trophy you win.",
+  "@managerPointsHow": {
+    "description": "Manager screen: how points are earned."
+  },
+  "managerSkillManManagement": "Man Management",
+  "@managerSkillManManagement": {
+    "description": "Manager skill name."
+  },
+  "managerSkillManManagementBlurb": "What you say in public and in your office lands harder.",
+  "@managerSkillManManagementBlurb": {
+    "description": "Manager skill effect."
+  },
+  "managerSkillTactical": "Tactical",
+  "@managerSkillTactical": {
+    "description": "Manager skill name."
+  },
+  "managerSkillTacticalBlurb": "Your side settles into a new shape faster.",
+  "@managerSkillTacticalBlurb": {
+    "description": "Manager skill effect."
+  },
+  "managerSkillYouth": "Youth Development",
+  "@managerSkillYouth": {
+    "description": "Manager skill name."
+  },
+  "managerSkillYouthBlurb": "More comes out of the academy.",
+  "@managerSkillYouthBlurb": {
+    "description": "Manager skill effect."
+  },
+  "managerSkillNegotiation": "Negotiation",
+  "@managerSkillNegotiation": {
+    "description": "Manager skill name."
+  },
+  "managerSkillNegotiationBlurb": "The federation funds you better.",
+  "@managerSkillNegotiationBlurb": {
+    "description": "Manager skill effect."
+  },
+  "managerStaff": "YOUR STAFF",
+  "@managerStaff": {
+    "description": "Manager screen: staff section heading."
+  },
+  "managerStaffWages": "Wages: {amount} per cycle",
+  "@managerStaffWages": {
+    "description": "Manager screen: the standing staff cost.",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "managerRoleAssistant": "Assistant Manager",
+  "@managerRoleAssistant": {
+    "description": "Staff role."
+  },
+  "managerRoleAssistantBlurb": "Runs the training. Everything you focus on, he does more of.",
+  "@managerRoleAssistantBlurb": {
+    "description": "Staff role effect."
+  },
+  "managerRoleScout": "Chief Scout",
+  "@managerRoleScout": {
+    "description": "Staff role."
+  },
+  "managerRoleScoutBlurb": "Tells you what a young player will become, sooner.",
+  "@managerRoleScoutBlurb": {
+    "description": "Staff role effect."
+  },
+  "managerRoleFitness": "Fitness Coach",
+  "@managerRoleFitness": {
+    "description": "Staff role."
+  },
+  "managerRoleFitnessBlurb": "Keeps them on the pitch.",
+  "@managerRoleFitnessBlurb": {
+    "description": "Staff role effect."
+  },
+  "managerTierNone": "None",
+  "@managerTierNone": {
+    "description": "Staff quality tier."
+  },
+  "managerTierBasic": "Basic",
+  "@managerTierBasic": {
+    "description": "Staff quality tier."
+  },
+  "managerTierGood": "Good",
+  "@managerTierGood": {
+    "description": "Staff quality tier."
+  },
+  "managerTierElite": "Elite",
+  "@managerTierElite": {
+    "description": "Staff quality tier."
+  },
+  "managerFree": "free",
+  "@managerFree": {
+    "description": "Cost of hiring nobody."
+  },
+  "managerTraining": "BETWEEN WINDOWS",
+  "@managerTraining": {
+    "description": "Manager screen: training focus section heading."
+  },
+  "managerTrainingBlurb": "What the squad works on when there is no match to play.",
+  "@managerTrainingBlurb": {
+    "description": "Manager screen: what the training focus is."
+  },
+  "managerFocusBalanced": "Balanced",
+  "@managerFocusBalanced": {
+    "description": "Training focus."
+  },
+  "managerFocusBalancedBlurb": "A bit of everything.",
+  "@managerFocusBalancedBlurb": {
+    "description": "Training focus effect."
+  },
+  "managerFocusFitness": "Fitness",
+  "@managerFocusFitness": {
+    "description": "Training focus."
+  },
+  "managerFocusFitnessBlurb": "Fewer knocks.",
+  "@managerFocusFitnessBlurb": {
+    "description": "Training focus effect."
+  },
+  "managerFocusCohesion": "Cohesion",
+  "@managerFocusCohesion": {
+    "description": "Training focus."
+  },
+  "managerFocusCohesionBlurb": "The shape beds in faster.",
+  "@managerFocusCohesionBlurb": {
+    "description": "Training focus effect."
+  },
+  "managerFocusYouth": "Youth",
+  "@managerFocusYouth": {
+    "description": "Training focus."
+  },
+  "managerFocusYouthBlurb": "Hours with the youngest in the pool.",
+  "@managerFocusYouthBlurb": {
+    "description": "Training focus effect."
+  }
 }

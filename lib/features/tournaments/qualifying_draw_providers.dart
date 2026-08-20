@@ -1,4 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fnm/features/settings/settings_providers.dart';
+import 'package:fnm/core/util/competition_label.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/services/competition/continental_cups.dart';
@@ -49,6 +51,7 @@ qualifyingDrawProvider = FutureProvider.autoDispose
           .watch(careerRepositoryProvider)
           .byId(arg.careerId);
       if (career == null) return null;
+      final l = ref.watch(appLocalizationsProvider);
       final nations = {
         for (final n in await ref.watch(nationRepositoryProvider).all())
           n.id: n,
@@ -108,7 +111,7 @@ qualifyingDrawProvider = FutureProvider.autoDispose
           start: DateTime(wcYear - 2, 9),
           rankById: rankById,
         );
-        title = 'WORLD CUP QUALIFYING DRAW';
+        title = l.tourDrawWcQualifying;
         watchedKind = worldCupQualDrawKind;
       } else {
         final cont = ContinentalCups.byConfederation[conf];
@@ -134,7 +137,9 @@ qualifyingDrawProvider = FutureProvider.autoDispose
           groupSize: 6,
           rankById: rankById,
         );
-        title = '${cont.name.toUpperCase()} QUALIFYING DRAW';
+        title = l.tourDrawContQualifying(
+          continentalCupLabel(l, conf).toUpperCase(),
+        );
         watchedKind = continentalQualDrawKind;
       }
 

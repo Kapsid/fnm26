@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:share_plus/share_plus.dart';
+import 'package:fnm/features/settings/save_backup_providers.dart';
+import 'package:fnm/data/db/save_backup.dart';
+import 'package:fnm/core/diagnostics/app_log.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/theme/app_colors.dart';
@@ -142,6 +147,129 @@ class SettingsScreen extends ConsumerWidget {
                 color: AppColors.primary,
               ),
             ),
+          ),
+          const SizedBox(height: AppSpacing.md),
+          const _BackupCard(),
+        ],
+      ),
+    );
+  }
+}
+
+/// Exporting every save to a file, and putting one back.
+///
+/// Lives in Settings rather than on the saves list because the unit is the
+/// whole database: this is the "do not lose twenty years to a dead phone"
+/// control, not a per-career one.
+class _BackupCard extends ConsumerStatefulWidget {
+  const _BackupCard();
+
+  @override
+  ConsumerState<_BackupCard> createState() => _BackupCardState();
+}
+
+class _BackupCardState extends ConsumerState<_BackupCard> {
+  bool _busy = false;
+
+  Future<void> _export() async {
+    final l = AppLocalizations.of(context);
+    setState(() => _busy = true);
+    try {
+      final file = await ref.read(saveBackupServiceProvider).export();
+      if (!mounted) return;
+      await SharePlus.instance.share(
+        ShareParams(
+          files: [XFile(file.path)],
+          subject: l.backupExportSubject,
+        ),
+      );
+      if (mounted) _say(l.backupExported);
+    } on Object catch (e, stack) {
+      AppLog.error('backup-export', e, stack);
+      if (mounted) _say(l.backupFailed);
+    } finally {
+      if (mounted) setState(() => _busy = false);
+    }
+  }
+
+  Future<void> _restore() async {
+    final l = AppLocalizations.of(context);
+    final picked = await FilePicker.pickFiles();
+    final path = picked?.files.single.path;
+    if (path == null || !mounted) return;
+
+    // Asked BEFORE anything is touched, and worded as what it actually does:
+    // this replaces every save on the phone, not just the one you were on.
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        backgroundColor: AppColors.surfaceContainer,
+        title: Text(l.backupRestoreWarnTitle),
+        content: Text(l.backupRestoreWarnBody),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(false),
+            child: Text(l.backupCancel),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(true),
+            child: Text(l.backupRestoreConfirm),
+          ),
+        ],
+      ),
+    );
+    if (confirmed != true || !mounted) return;
+
+    setState(() => _busy = true);
+    final refusal = await ref.read(saveBackupServiceProvider).restore(path);
+    // On success the app has been torn down and rebuilt, so this State is
+    // gone; only a refusal has anyone left to tell.
+    if (refusal != null && mounted) {
+      setState(() => _busy = false);
+      _say(switch (refusal) {
+        BackupRejection.unreadable => l.backupRejectedUnreadable,
+        BackupRejection.notAFnmSave => l.backupRejectedNotFnm,
+        BackupRejection.fromANewerBuild => l.backupRejectedNewer,
+        BackupRejection.tooOldToMigrate => l.backupRejectedTooOld,
+      });
+    }
+  }
+
+  void _say(String message) => ScaffoldMessenger.of(
+    context,
+  ).showSnackBar(SnackBar(content: Text(message)));
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    return AppCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Text(
+            l.backupTitle,
+            style: AppTypography.labelMedium.copyWith(
+              color: AppColors.primary,
+            ),
+          ),
+          const SizedBox(height: AppSpacing.xs),
+          Text(
+            l.backupBlurb,
+            style: AppTypography.labelSmall.copyWith(
+              color: AppColors.onSurfaceVariant,
+            ),
+          ),
+          const SizedBox(height: AppSpacing.md),
+          PrimaryButton(
+            label: l.backupExport,
+            icon: Icons.ios_share_rounded,
+            onPressed: _busy ? null : _export,
+          ),
+          const SizedBox(height: AppSpacing.sm),
+          TextButton.icon(
+            onPressed: _busy ? null : _restore,
+            icon: const Icon(Icons.settings_backup_restore_rounded, size: 18),
+            label: Text(l.backupRestore),
           ),
         ],
       ),

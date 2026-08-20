@@ -66,14 +66,19 @@ void main() {
       // would render as a blank post.
       for (var i = 0; i < 200; i++) {
         for (final p in posts(match(key: 'fx:$i', scored: i % 4))) {
-          expect(p.variant, inInclusiveRange(0, YFeed.variantCount - 1));
+          // A reply has its own, wider set of wordings — see [YMood].
+          final spread = p.mood == null
+              ? YFeed.variantCount
+              : YFeed.reactionVariantCount;
+          expect(p.variant, inInclusiveRange(0, spread - 1));
         }
       }
     });
 
     test('every post carries the arguments its template needs', () {
       for (final p in posts(match())) {
-        expect(p.args, isNotEmpty);
+        // A reply needs none: its words come from its mood alone.
+        if (p.mood == null) expect(p.args, isNotEmpty);
         expect(p.handle, startsWith('@'));
         expect(p.displayName, isNotEmpty);
       }
@@ -90,6 +95,8 @@ void main() {
       args: const ['Norway', '1–1'],
       date: d,
       key: 'k${d.millisecondsSinceEpoch}',
+      replyTo: null,
+      mood: null,
     );
 
     test('newest first, and capped', () {

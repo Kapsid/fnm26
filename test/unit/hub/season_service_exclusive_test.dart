@@ -18,10 +18,20 @@ import '../../helpers/test_database.dart';
 /// These tests pin the gate by its OBSERVABLE effect — how far the world moved
 /// — rather than by which future object comes back, so the policy can be
 /// re-implemented without rewriting them.
+///
+/// EVERY world here is built from the SAME fixed seed. Without that these
+/// compare two independently generated worlds: a new career seeds itself from
+/// the clock, the seed decides the qualifying draw, and the draw decides what
+/// date the first advance lands on. Two runs of the identical scenario
+/// disagreed about half the time, which made this file fail at random and say
+/// nothing whatsoever about coalescing.
 void main() {
   /// A fresh world, advanced by [taps] calls made in the same frame (a
   /// double-tap) or [sequential] calls awaited one after another. Returns the
   /// in-game date the save ends on.
+  /// One fixed world for every run in this file — see the note above.
+  const seed = 20260819;
+
   Future<DateTime> advancedDate({int taps = 0, int sequential = 0}) async {
     final db = createTestDatabase();
     final nations = [
@@ -45,6 +55,7 @@ void main() {
                   .create(
                     nationId: 1,
                     managerName: 'A',
+                    rngSeed: seed,
                   ))
               .valueOrNull!;
       final season = container.read(seasonServiceProvider);
@@ -66,6 +77,17 @@ void main() {
       await db.close();
     }
   }
+
+  test('the same scenario twice gives the same world', () async {
+    // The bug this pins is in the TEST, and it hid a real question for months:
+    // every case below compares two separately built worlds, so unless the
+    // world is reproducible a passing run proves nothing and a failing one
+    // accuses the wrong code. It failed about half the time.
+    expect(
+      await advancedDate(sequential: 1),
+      await advancedDate(sequential: 1),
+    );
+  });
 
   test('two advances in one frame move the world exactly once', () async {
     final once = await advancedDate(sequential: 1);
@@ -110,6 +132,7 @@ void main() {
                 .create(
                   nationId: 1,
                   managerName: 'A',
+                  rngSeed: seed,
                 ))
             .valueOrNull!;
     final season = container.read(seasonServiceProvider);

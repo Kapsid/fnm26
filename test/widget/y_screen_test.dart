@@ -27,21 +27,31 @@ void main() {
     );
 
     for (final t in YTemplate.values) {
-      for (var v = 0; v < YFeed.variantCount; v++) {
-        final body = yPostBody(
-          l,
-          (
-            voice: YVoice.fan,
-            handle: '@someone',
-            displayName: 'Someone',
-            template: t,
-            variant: v,
-            args: const ['Norway', '2–1', 'Spain'],
-            date: DateTime(2030, 6, 10),
-            key: 'k',
-          ),
-        );
-        expect(body.trim(), isNotEmpty, reason: '$t variant $v is blank');
+      // A reply is worded by mood, and has more wordings than a report — so it
+      // is walked over its own moods rather than over the template variants.
+      final moods = t == YTemplate.reaction ? YMood.values : const [null];
+      final spread = t == YTemplate.reaction
+          ? YFeed.reactionVariantCount
+          : YFeed.variantCount;
+      for (final mood in moods) {
+        for (var v = 0; v < spread; v++) {
+          final body = yPostBody(
+            l,
+            (
+              voice: YVoice.fan,
+              handle: '@someone',
+              displayName: 'Someone',
+              template: t,
+              variant: v,
+              args: const ['Norway', '2–1', 'Spain'],
+              date: DateTime(2030, 6, 10),
+              key: 'k',
+              replyTo: null,
+              mood: mood,
+            ),
+          );
+          expect(body.trim(), isNotEmpty, reason: '$t variant $v is blank');
+        }
       }
     }
   });
@@ -56,6 +66,8 @@ void main() {
       args: const ['Spain', '2–1'],
       date: DateTime(2030, 6, 10),
       key: key,
+      replyTo: null,
+      mood: null,
     );
 
     final posts = [

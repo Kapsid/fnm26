@@ -272,10 +272,8 @@ extension SeasonFinals on SeasonService {
         careerId: careerId,
         dedupKey: 'wcmiss:$year',
         category: 'eliminated',
-        title: 'World Cup dream over',
-        body:
-            "You didn't make the $year World Cup — the qualifying campaign "
-            'fell short. Four more years.',
+        title: _l.newsWcMissTitle,
+        body: _l.newsWcMissBody(year),
         year: year - 1,
       );
     }

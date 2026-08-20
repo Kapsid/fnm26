@@ -82,7 +82,6 @@ class _TimelineRow extends StatelessWidget {
   }
 
   Widget _entry(BuildContext context, {required bool alignEnd}) {
-    final l = AppLocalizations.of(context);
     final isGoal = event.type == MatchEventType.goal;
     final iconData = switch (event.type) {
       MatchEventType.goal => Icons.sports_soccer,
@@ -108,9 +107,10 @@ class _TimelineRow extends StatelessWidget {
             '${_abbrevName(event.secondaryName ?? '')}',
       MatchEventType.goal when event.penalty =>
         '${_abbrevName(event.playerName)} (pen)',
-      MatchEventType.redCard =>
-        '${_abbrevName(event.playerName)} · '
-            '${event.secondYellow ? l.matchSecondYellow : l.matchStraightRed}',
+      // A dismissal carries the name alone. The CARD says which one it was —
+      // two overlapping cards for a second booking, one red for a straight
+      // one — so naming it again in text said nothing the icon had not
+      // already said, and ran the row off the edge doing it.
       _ => _abbrevName(event.playerName),
     };
     final text = Flexible(
@@ -188,7 +188,7 @@ class _StatsLocked extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: Text(
-        'Stats available at full time.',
+        AppLocalizations.of(context).matchStatsAtFullTime,
         style: AppTypography.bodyMedium.copyWith(
           color: AppColors.onSurfaceVariant,
         ),
@@ -259,7 +259,7 @@ class _Stats extends StatelessWidget {
         if (result.ratings.isNotEmpty) ...[
           const SizedBox(height: AppSpacing.lg),
           Text(
-            'PLAYER RATINGS',
+            AppLocalizations.of(context).matchPlayerRatings,
             style: AppTypography.labelMedium.copyWith(color: AppColors.primary),
           ),
           const SizedBox(height: AppSpacing.sm),
@@ -473,14 +473,15 @@ class _Lineups extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.all(AppSpacing.marginMobile),
       children: [
-        _xi(homeCode, home, homeSubs, homeBench),
+        _xi(context, homeCode, home, homeSubs, homeBench),
         const SizedBox(height: AppSpacing.lg),
-        _xi(awayCode, away, awaySubs, awayBench),
+        _xi(context, awayCode, away, awaySubs, awayBench),
       ],
     );
   }
 
   Widget _xi(
+    BuildContext context,
     String teamCode,
     List<Player> xi,
     List<MatchEvent> subs,
@@ -534,7 +535,7 @@ class _Lineups extends StatelessWidget {
         if (subs.isNotEmpty) ...[
           const SizedBox(height: AppSpacing.sm),
           Text(
-            'SUBSTITUTIONS',
+            AppLocalizations.of(context).matchSubstitutions,
             style: AppTypography.labelSmall.copyWith(
               color: AppColors.onSurfaceVariant,
             ),
@@ -596,7 +597,7 @@ class _Lineups extends StatelessWidget {
         if (remaining.isNotEmpty) ...[
           const SizedBox(height: AppSpacing.sm),
           Text(
-            'SUBSTITUTES',
+            AppLocalizations.of(context).matchSubstitutes,
             style: AppTypography.labelSmall.copyWith(
               color: AppColors.onSurfaceVariant,
             ),
@@ -723,7 +724,7 @@ class _MotmCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'PLAYER OF THE MATCH',
+                  AppLocalizations.of(context).matchPlayerOfTheMatch,
                   style: AppTypography.labelSmall.copyWith(
                     color: AppColors.primary,
                   ),
@@ -753,14 +754,21 @@ class _MomentumBar extends StatelessWidget {
     required this.homePercent,
     required this.homeCode,
     required this.awayCode,
+    required this.homeColor,
+    required this.awayColor,
   });
 
   final double homePercent; // 0..100
   final String homeCode;
   final String awayCode;
 
-  static const Color _homeColor = AppColors.primary;
-  static const Color _awayColor = AppColors.positive;
+  /// The two nations' own colours, already separated from each other so a bar
+  /// between two red teams still reads as two sides — see [KitColors.opposed].
+  /// The bar used to be the app's blue against the app's green, which said
+  /// nothing about who was who.
+  final Color homeColor;
+  final Color awayColor;
+
   static const _duration = Duration(milliseconds: 450);
   static const Curve _curve = Curves.easeOutCubic;
 
@@ -770,6 +778,8 @@ class _MomentumBar extends StatelessWidget {
     final h = (homePercent / 100).clamp(0.0, 1.0);
     final homePct = homePercent.round();
     final leaningHome = h >= 0.5;
+    final homeC = homeColor;
+    final awayC = awayColor;
     return Padding(
       padding: const EdgeInsets.symmetric(
         horizontal: AppSpacing.marginMobile,
@@ -782,13 +792,13 @@ class _MomentumBar extends StatelessWidget {
             children: [
               Text(
                 homeCode,
-                style: AppTypography.labelMedium.copyWith(color: _homeColor),
+                style: AppTypography.labelMedium.copyWith(color: homeC),
               ),
               const SizedBox(width: AppSpacing.xs),
               Text(
                 '$homePct%',
                 style: AppTypography.labelMedium.copyWith(
-                  color: leaningHome ? _homeColor : AppColors.onSurfaceVariant,
+                  color: leaningHome ? homeC : AppColors.onSurfaceVariant,
                 ),
               ),
               const Spacer(),
@@ -797,13 +807,13 @@ class _MomentumBar extends StatelessWidget {
               Text(
                 '${100 - homePct}%',
                 style: AppTypography.labelMedium.copyWith(
-                  color: leaningHome ? AppColors.onSurfaceVariant : _awayColor,
+                  color: leaningHome ? AppColors.onSurfaceVariant : awayC,
                 ),
               ),
               const SizedBox(width: AppSpacing.xs),
               Text(
                 awayCode,
-                style: AppTypography.labelMedium.copyWith(color: _awayColor),
+                style: AppTypography.labelMedium.copyWith(color: awayC),
               ),
             ],
           ),
@@ -816,11 +826,11 @@ class _MomentumBar extends StatelessWidget {
                 children: [
                   // Away side fills the whole track; the home fill overlays it
                   // from the left, so the boundary is where momentum sits.
-                  const Positioned.fill(
+                  Positioned.fill(
                     child: DecoratedBox(
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
-                          colors: [Color(0x33000000), _awayColor],
+                          colors: [const Color(0x33000000), awayC],
                         ),
                       ),
                     ),
@@ -831,10 +841,10 @@ class _MomentumBar extends StatelessWidget {
                       curve: _curve,
                       widthFactor: h,
                       alignment: Alignment.centerLeft,
-                      child: const DecoratedBox(
+                      child: DecoratedBox(
                         decoration: BoxDecoration(
                           gradient: LinearGradient(
-                            colors: [_homeColor, Color(0x33000000)],
+                            colors: [homeC, const Color(0x33000000)],
                           ),
                         ),
                       ),
@@ -854,8 +864,9 @@ class _MomentumBar extends StatelessWidget {
                           borderRadius: AppRadii.smAll,
                           boxShadow: [
                             BoxShadow(
-                              color: (leaningHome ? _homeColor : _awayColor)
-                                  .withValues(alpha: 0.8),
+                              color: (leaningHome ? homeC : awayC).withValues(
+                                alpha: 0.8,
+                              ),
                               blurRadius: 6,
                             ),
                           ],
@@ -912,7 +923,7 @@ class _GoalFlash extends StatelessWidget {
                   FlagDisc(flagCode, size: 44),
                   const SizedBox(height: AppSpacing.sm),
                   Text(
-                    'GOAL!',
+                    AppLocalizations.of(context).matchGoalShout,
                     style: AppTypography.headlineLargeMobile.copyWith(
                       color: AppColors.primary,
                     ),
@@ -997,7 +1008,10 @@ class _ShootoutStrip extends StatelessWidget {
       child: Column(
         children: [
           Text(
-            'SHOOTOUT $homePens–$awayPens',
+            AppLocalizations.of(context).matchShootoutScore(
+              homePens,
+              awayPens,
+            ),
             style: AppTypography.labelSmall.copyWith(color: AppColors.primary),
           ),
           const SizedBox(height: AppSpacing.xs),

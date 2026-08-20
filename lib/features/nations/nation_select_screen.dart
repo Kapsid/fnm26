@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fnm/core/util/competition_label.dart';
 import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
@@ -217,6 +218,7 @@ class _ConfederationTabs extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
     return SizedBox(
       height: 48,
       child: ListView.separated(
@@ -244,7 +246,7 @@ class _ConfederationTabs extends StatelessWidget {
                 ),
               ),
               child: Text(
-                conf.label.toUpperCase(),
+                confederationLabel(l, conf).toUpperCase(),
                 style: AppTypography.labelSmall.copyWith(
                   color: active
                       ? AppColors.onSecondaryContainer

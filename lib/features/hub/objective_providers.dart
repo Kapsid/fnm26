@@ -68,60 +68,24 @@ typedef ObjectiveOutcome = ({
   int actual,
 });
 
-/// The board's demand, in plain English, for a target ordinal in [tier].
+/// The board's demand for a target ordinal in [tier], worded for the manager.
 ///
-/// The knockout ladder (2 qualify … 7 win it) is shared by the World Cup and
-/// the continental championship; the Nations Cup runs on a league ladder and so
-/// reads off its own scale (see [_nationsCupDemandText]).
-String objectiveDemandText(TournamentTier tier, int target) =>
-    tier == TournamentTier.nationsCup
-    ? _nationsCupDemandText(target)
-    : switch (target) {
-        7 => 'win it',
-        6 => 'reach the final',
-        5 => 'reach the semi-finals',
-        4 => 'reach the quarter-finals',
-        3 => 'reach the knockout stage',
-        2 => 'qualify',
-        // Below "qualify": the weakest sides in the world are not asked to
-        // reach a tournament they have never been near. They are asked to
-        // compete — to come out of their qualifying group off the bottom.
-        _ => 'avoid finishing bottom of your qualifying group',
-      };
+/// A thin alias for [_labelFor], which is what every screen already uses: this
+/// used to be a SECOND, English-only copy of the same ladder, so the board's
+/// verdict in the inbox was the one place in the app still speaking English to
+/// a Czech manager.
+String objectiveDemandText(
+  AppLocalizations l,
+  TournamentTier tier,
+  int target,
+) => _labelFor(l, tier, target);
 
-/// A finish ordinal, in plain English.
-String objectiveFinishText(TournamentTier tier, int ordinal) =>
-    tier == TournamentTier.nationsCup
-    ? _nationsCupFinishText(ordinal)
-    : switch (ordinal) {
-        7 => 'champions',
-        6 => 'runners-up',
-        5 => 'the semi-finals',
-        4 => 'the quarter-finals',
-        3 => 'the round of 16',
-        2 => 'the group stage',
-        1 => 'short of qualification',
-        _ => 'bottom of your qualifying group',
-      };
-
-String _nationsCupDemandText(int target) => switch (target) {
-  7 => 'win the Nations Cup',
-  6 => 'reach the Nations Cup final',
-  5 => 'reach the Finals Four',
-  4 => 'win your league group',
-  3 => 'finish in the top half of your group',
-  _ => 'avoid the drop',
-};
-
-String _nationsCupFinishText(int ordinal) => switch (ordinal) {
-  7 => 'Nations Cup winners',
-  6 => 'Nations Cup runners-up',
-  5 => 'the Finals Four',
-  4 => 'top of your group',
-  3 => 'in the top half of your group',
-  2 => 'clear of the drop zone',
-  _ => 'bottom of your group',
-};
+/// A finish ordinal, worded for the manager.
+String objectiveFinishText(
+  AppLocalizations l,
+  TournamentTier tier,
+  int ordinal,
+) => _resultLabel(l, tier, ordinal);
 
 /// Every board objective for [careerId]'s current cycle, graded but unworded —
 /// the CONTINENTAL championship first, then the Nations Cup (for the nations

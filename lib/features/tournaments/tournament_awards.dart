@@ -159,7 +159,7 @@ class GoldenGloveCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'GOLDEN GLOVE',
+                    AppLocalizations.of(context).tourGoldenGlove,
                     style: AppTypography.labelSmall.copyWith(
                       color: AppColors.primary,
                     ),
@@ -224,7 +224,7 @@ class TeamOfTournamentCard extends StatelessWidget {
               // the card on a narrow phone.
               Flexible(
                 child: Text(
-                  'TEAM OF THE TOURNAMENT',
+                  AppLocalizations.of(context).tourTeamOfTournament,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: AppTypography.labelMedium.copyWith(

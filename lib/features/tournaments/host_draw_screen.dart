@@ -52,7 +52,7 @@ class _HostDrawScreenState extends ConsumerState<HostDrawScreen> {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         title: Text(
-          'HOST SELECTION',
+          l.tourHostSelection,
           style: AppTypography.labelMedium.copyWith(color: AppColors.primary),
         ),
         centerTitle: true,
@@ -103,7 +103,7 @@ class _HostDrawScreenState extends ConsumerState<HostDrawScreen> {
                     _Envelope(revealed: _revealed, hosts: hosts),
                     const SizedBox(height: AppSpacing.lg),
                     Text(
-                      'CANDIDATES',
+                      l.tourCandidates,
                       style: AppTypography.labelSmall.copyWith(
                         color: AppColors.primary,
                       ),
@@ -368,7 +368,7 @@ class _Candidate extends StatelessWidget {
             ),
             if (joint)
               Text(
-                'JOINT BID',
+                AppLocalizations.of(context).tourJointBid,
                 style: AppTypography.labelSmall.copyWith(
                   fontSize: 8,
                   color: AppColors.onSurfaceVariant,

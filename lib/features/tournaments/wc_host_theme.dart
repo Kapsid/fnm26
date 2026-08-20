@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fnm/features/settings/settings_providers.dart';
+import 'package:fnm/core/util/competition_label.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
@@ -69,6 +71,7 @@ Color onHostAccent(Color accent) => KitColors.onAccent(accent);
 final wcHostThemeProvider = FutureProvider.autoDispose.family<WcHostTheme, int>(
   (ref, careerId) async {
     final career = await ref.watch(careerRepositoryProvider).byId(careerId);
+    final l = ref.watch(appLocalizationsProvider);
     if (career == null) return _inactive();
     final comp = ref.watch(competitionRepositoryProvider);
     if (!await comp.hasFinals(careerId)) return _inactive();
@@ -110,7 +113,10 @@ final wcHostThemeProvider = FutureProvider.autoDispose.family<WcHostTheme, int>(
           .map((h) => byId[h]?.name.toUpperCase() ?? '')
           .where((s) => s.isNotEmpty)
           .join(' · '),
-      competitionLabel: 'WORLD CUP $year',
+      competitionLabel: l.tourHostCompetitionYear(
+        l.compWorldCup.toUpperCase(),
+        year,
+      ),
       year: year,
     );
   },
@@ -125,6 +131,7 @@ final wcHostThemeProvider = FutureProvider.autoDispose.family<WcHostTheme, int>(
 final continentalHostThemeProvider = FutureProvider.autoDispose
     .family<WcHostTheme, int>((ref, careerId) async {
       final career = await ref.watch(careerRepositoryProvider).byId(careerId);
+      final l = ref.watch(appLocalizationsProvider);
       if (career == null) return _inactive();
       final comp = ref.watch(competitionRepositoryProvider);
       final nations = await ref.watch(nationRepositoryProvider).all();
@@ -182,7 +189,10 @@ final continentalHostThemeProvider = FutureProvider.autoDispose
             .map((h) => byId[h]?.name.toUpperCase() ?? '')
             .where((s) => s.isNotEmpty)
             .join(' · '),
-        competitionLabel: '${cup.name.toUpperCase()} $year',
+        competitionLabel: l.tourHostCompetitionYear(
+          continentalCupLabel(l, me.confederation).toUpperCase(),
+          year,
+        ),
         year: year,
       );
     });

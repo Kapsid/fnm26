@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:share_plus/share_plus.dart';
+import 'package:fnm/features/career/career_transfer_providers.dart';
+import 'package:fnm/data/db/career_bundle.dart';
+import 'package:fnm/core/diagnostics/app_log.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/theme/app_colors.dart';
@@ -99,6 +104,7 @@ class SavesScreen extends ConsumerWidget {
                                   l.careerThisSave,
                               save.id,
                             ),
+                            onShare: () => _shareCareer(context, ref, save.id),
                           );
                         },
                       ),
@@ -107,16 +113,35 @@ class SavesScreen extends ConsumerWidget {
                 top: false,
                 child: Padding(
                   padding: const EdgeInsets.all(AppSpacing.marginMobile),
-                  child: PrimaryButton(
-                    label: full
-                        ? (premium ? l.careerSlotsFull : l.careerSlotsFullGoPro)
-                        : l.careerNewGame,
-                    icon: Icons.add,
-                    // On the free tier, full slots open the paywall (Pro more
-                    // than doubles them); with Pro, full really is full.
-                    onPressed: full
-                        ? (premium ? null : () => showPaywall(context))
-                        : () => context.go(Routes.nations),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      PrimaryButton(
+                        label: full
+                            ? (premium
+                                  ? l.careerSlotsFull
+                                  : l.careerSlotsFullGoPro)
+                            : l.careerNewGame,
+                        icon: Icons.add,
+                        // On the free tier, full slots open the paywall (Pro
+                        // more than doubles them); with Pro, full really is
+                        // full.
+                        onPressed: full
+                            ? (premium ? null : () => showPaywall(context))
+                            : () => context.go(Routes.nations),
+                      ),
+                      // An imported career takes a slot like any other, so it
+                      // is offered only while there is room for one.
+                      if (!full)
+                        TextButton.icon(
+                          onPressed: () => _importCareer(context, ref),
+                          icon: const Icon(
+                            Icons.file_download_outlined,
+                            size: 18,
+                          ),
+                          label: Text(l.careerImport),
+                        ),
+                    ],
                   ),
                 ),
               ),
@@ -195,18 +220,60 @@ String _ago(AppLocalizations l, DateTime at) {
   return DateFormat('d MMM yyyy').format(at);
 }
 
+/// Writes one career to a file and hands it to the share sheet.
+Future<void> _shareCareer(
+  BuildContext context,
+  WidgetRef ref,
+  int careerId,
+) async {
+  final l = AppLocalizations.of(context);
+  final messenger = ScaffoldMessenger.of(context);
+  try {
+    final file = await ref.read(careerTransferServiceProvider).export(careerId);
+    await SharePlus.instance.share(
+      ShareParams(files: [XFile(file.path)], subject: l.careerShareSubject),
+    );
+  } on Object catch (e, stack) {
+    AppLog.error('career-share', e, stack);
+    messenger.showSnackBar(SnackBar(content: Text(l.careerShareFailed)));
+  }
+}
+
+/// Adds a career from a file as a NEW save. Nothing already saved is touched.
+Future<void> _importCareer(BuildContext context, WidgetRef ref) async {
+  final l = AppLocalizations.of(context);
+  final picked = await FilePicker.pickFiles();
+  final path = picked?.files.single.path;
+  if (path == null || !context.mounted) return;
+  final messenger = ScaffoldMessenger.of(context);
+  final refusal = await ref.read(careerTransferServiceProvider).import(path);
+  messenger.showSnackBar(
+    SnackBar(
+      content: Text(switch (refusal) {
+        null => l.careerImported,
+        BundleRejection.unreadable => l.careerImportFailedUnreadable,
+        BundleRejection.fromANewerBuild => l.careerImportFailedNewer,
+      }),
+    ),
+  );
+}
+
 class _SaveTile extends StatelessWidget {
   const _SaveTile({
     required this.save,
     required this.nation,
     required this.onContinue,
     required this.onDelete,
+    required this.onShare,
   });
 
   final Career save;
   final Nation? nation;
   final VoidCallback onContinue;
   final VoidCallback onDelete;
+
+  /// Writes this one career to a file and hands it to the share sheet.
+  final VoidCallback onShare;
 
   @override
   Widget build(BuildContext context) {
@@ -303,6 +370,11 @@ class _SaveTile extends StatelessWidget {
                 ],
               ],
             ),
+          ),
+          IconButton(
+            tooltip: l.careerShare,
+            icon: const Icon(Icons.ios_share_rounded, color: AppColors.outline),
+            onPressed: onShare,
           ),
           IconButton(
             icon: const Icon(Icons.delete_outline, color: AppColors.outline),

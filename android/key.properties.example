@@ -1,0 +1,17 @@
+# Copy to android/key.properties and fill in. That file is git-ignored: it
+# names a keystore and holds its passwords, and neither belongs in the repo.
+#
+# Create the keystore once, and then BACK IT UP somewhere you will still have
+# in five years. Play ties an app to the key that first signed it: lose the
+# keystore and you can never publish an update to this listing again.
+#
+#   keytool -genkey -v \
+#     -keystore ~/fnm-upload-key.jks \
+#     -keyalg RSA -keysize 2048 -validity 10000 \
+#     -alias upload
+#
+# storeFile is resolved relative to android/app/.
+storePassword=
+keyPassword=
+keyAlias=upload
+storeFile=/absolute/path/to/fnm-upload-key.jks

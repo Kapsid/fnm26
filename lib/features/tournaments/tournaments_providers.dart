@@ -7,6 +7,7 @@ import 'package:fnm/domain/repositories/competition_repository.dart';
 import 'package:fnm/domain/services/competition/continental_cups.dart';
 import 'package:fnm/domain/services/competition/hosts.dart';
 import 'package:fnm/features/career/career_providers.dart';
+import 'package:fnm/features/settings/settings_providers.dart';
 import 'package:fnm/features/tournaments/finals_draw_providers.dart';
 
 /// Where a championship stands for the current save, used to label and unlock
@@ -99,6 +100,7 @@ tournamentsOverviewProvider = FutureProvider.autoDispose.family<TournamentsOverv
   final playerConf = nations[career.nationId]?.confederation;
   final honours = await comp.honours(careerId);
   final honourComps = {for (final h in honours) h.competition};
+  final l = ref.watch(appLocalizationsProvider);
 
   final statuses = <Confederation?, TournamentStatus>{};
 
@@ -158,12 +160,12 @@ tournamentsOverviewProvider = FutureProvider.autoDispose.family<TournamentsOverv
         ? TournamentPhase.history
         : TournamentPhase.upcoming,
     label: worldChampion != null
-        ? 'CHAMPIONS'
+        ? l.tourStatusChampions
         : wcLive
-        ? (finalsPhase ? 'FINALS' : 'QUALIFYING')
+        ? (finalsPhase ? l.tourStatusFinals : l.tourStatusQualifying)
         : wcHasHistory
-        ? 'PAST WINNERS'
-        : 'UPCOMING',
+        ? l.tourSharedPastWinners
+        : l.tourStatusUpcoming,
     championId: worldChampion,
   );
 
@@ -211,17 +213,17 @@ tournamentsOverviewProvider = FutureProvider.autoDispose.family<TournamentsOverv
           ? TournamentPhase.decided
           : TournamentPhase.live;
       label = continentalChampion != null
-          ? 'CHAMPIONS'
+          ? l.tourStatusChampions
           : hasContinental
-          ? 'IN PROGRESS'
-          : 'QUALIFYING';
+          ? l.tourStatusInProgress
+          : l.tourStatusQualifying;
       champion = continentalChampion;
     } else if (hasHistory) {
       phase = TournamentPhase.history;
-      label = 'PAST WINNERS';
+      label = l.tourSharedPastWinners;
     } else {
       phase = TournamentPhase.upcoming;
-      label = 'COMING SOON';
+      label = l.tourStatusComingSoon;
     }
     statuses[conf] = TournamentStatus(
       phase: phase,
@@ -290,10 +292,10 @@ tournamentsOverviewProvider = FutureProvider.autoDispose.family<TournamentsOverv
           ? TournamentPhase.live
           : TournamentPhase.history,
       label: champ != null
-          ? 'CHAMPIONS'
+          ? l.tourStatusChampions
           : started
-          ? 'LEAGUE $ncLeague'
-          : 'PAST WINNERS',
+          ? l.tourStatusLeague(ncLeague)
+          : l.tourSharedPastWinners,
       championId: champ,
     );
   }
@@ -321,13 +323,13 @@ tournamentsOverviewProvider = FutureProvider.autoDispose.family<TournamentsOverv
     );
     continentalClash = TournamentStatus(
       phase: champ != null ? TournamentPhase.decided : TournamentPhase.live,
-      label: champ != null ? 'DECIDED' : 'IN PROGRESS',
+      label: champ != null ? l.tourStatusDecided : l.tourStatusInProgress,
       championId: champ,
     );
   } else {
-    continentalClash = const TournamentStatus(
+    continentalClash = TournamentStatus(
       phase: TournamentPhase.history,
-      label: 'PAST WINNERS',
+      label: l.tourSharedPastWinners,
       championId: null,
     );
   }

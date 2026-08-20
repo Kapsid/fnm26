@@ -106,6 +106,7 @@ class _PotsPreview extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
     // Invert the nation→pot map into pot→nations, best-ranked first.
     final potCount = data.potByNation.values.fold(0, (m, p) => p > m ? p : m);
     final byPot = <int, List<int>>{};
@@ -130,7 +131,7 @@ class _PotsPreview extends StatelessWidget {
             padding: const EdgeInsets.all(AppSpacing.marginMobile),
             children: [
               Text(
-                'Seeded by world ranking. Spot your nation before the draw.',
+                l.tourFinalsDrawBlurb,
                 style: AppTypography.bodySmall.copyWith(
                   color: AppColors.onSurfaceVariant,
                 ),
@@ -138,7 +139,7 @@ class _PotsPreview extends StatelessWidget {
               const SizedBox(height: AppSpacing.md),
               for (var pot = 1; pot <= potCount; pot++) ...[
                 Text(
-                  'POT $pot',
+                  AppLocalizations.of(context).tourPot(pot),
                   style: AppTypography.labelMedium.copyWith(
                     color: AppColors.primary,
                   ),

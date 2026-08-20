@@ -249,7 +249,7 @@ class TournamentHistory extends StatelessWidget {
           const SizedBox(height: AppSpacing.md),
         ],
         Text(
-          'MEDAL TABLE',
+          AppLocalizations.of(context).tourMedalTable,
           style: AppTypography.labelMedium.copyWith(color: AppColors.primary),
         ),
         const SizedBox(height: AppSpacing.sm),
@@ -282,11 +282,11 @@ class TournamentHistory extends StatelessWidget {
         ),
         const SizedBox(height: AppSpacing.lg),
         Text(
-          'PAST WINNERS',
+          AppLocalizations.of(context).tourSharedPastWinners,
           style: AppTypography.labelMedium.copyWith(color: AppColors.primary),
         ),
         const SizedBox(height: AppSpacing.sm),
-        for (final h in honours) _editionCard(h),
+        for (final h in honours) _editionCard(AppLocalizations.of(context), h),
         const SizedBox(height: AppSpacing.xl),
       ],
     );
@@ -307,7 +307,7 @@ class TournamentHistory extends StatelessWidget {
   /// scoreline — but this card used to name only the champion and reduce the
   /// runner-up to an unlabelled flag, with third place not shown at all. For a
   /// competition simulated in the background, this card *is* the result.
-  Widget _editionCard(Honour h) {
+  Widget _editionCard(AppLocalizations l, Honour h) {
     final scored = h.finalHomeScore != null && h.finalAwayScore != null;
     final pens = scored && h.finalHomeScore == h.finalAwayScore;
     final score = !scored
@@ -331,7 +331,7 @@ class TournamentHistory extends StatelessWidget {
                 const Spacer(),
                 if (h.hostId != null)
                   Text(
-                    'Host: ${name(h.hostId!)}',
+                    l.tourHostLine(name(h.hostId!)),
                     style: AppTypography.labelSmall.copyWith(
                       color: AppColors.onSurfaceVariant,
                     ),

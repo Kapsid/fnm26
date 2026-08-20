@@ -45,19 +45,23 @@ const _layouts = <Formation, List<(double, double)>>{
     (0.5, 0.76),
     (0.72, 0.73),
     (0.10, 0.45),
-    (0.32, 0.50),
+    (0.30, 0.50),
     (0.5, 0.52),
-    (0.68, 0.50),
+    (0.70, 0.50),
     (0.90, 0.45),
     (0.38, 0.16),
     (0.62, 0.16),
   ],
+  // The back four sits deeper here than in the flat shapes: the two holding
+  // midfielders are directly above the centre-halves on the same x, so with a
+  // high defensive line pushing the defenders up they ended up almost on top
+  // of each other. Everything else about the shape is unchanged.
   Formation.f4231: [
     (0.5, 0.90),
-    (0.12, 0.70),
-    (0.37, 0.73),
-    (0.63, 0.73),
-    (0.88, 0.70),
+    (0.12, 0.76),
+    (0.37, 0.79),
+    (0.63, 0.79),
+    (0.88, 0.76),
     (0.38, 0.56),
     (0.62, 0.56),
     (0.5, 0.38),
@@ -104,12 +108,15 @@ const _layouts = <Formation, List<(double, double)>>{
     (0.5, 0.14),
     (0.82, 0.18),
   ],
+  // Like 4-2-3-1 and 4-1-2-1-2, the two holding midfielders sit close in front
+  // of the centre-halves, so the back four is drawn deeper to leave a line's
+  // worth of room between them.
   Formation.f4222: [
     (0.5, 0.90),
-    (0.12, 0.70),
-    (0.37, 0.73),
-    (0.63, 0.73),
-    (0.88, 0.70),
+    (0.12, 0.75),
+    (0.37, 0.78),
+    (0.63, 0.78),
+    (0.88, 0.75),
     (0.35, 0.52),
     (0.65, 0.52),
     (0.22, 0.34),
@@ -132,10 +139,10 @@ const _layouts = <Formation, List<(double, double)>>{
   ],
   Formation.f41212: [
     (0.5, 0.90),
-    (0.12, 0.70),
-    (0.37, 0.73),
-    (0.63, 0.73),
-    (0.88, 0.70),
+    (0.12, 0.76),
+    (0.37, 0.79),
+    (0.63, 0.79),
+    (0.88, 0.76),
     (0.5, 0.58),
     (0.28, 0.45),
     (0.72, 0.45),
@@ -153,8 +160,8 @@ const _layouts = <Formation, List<(double, double)>>{
     (0.38, 0.50),
     (0.62, 0.50),
     (0.88, 0.48),
-    (0.5, 0.30),
-    (0.5, 0.14),
+    (0.5, 0.31),
+    (0.5, 0.12),
   ],
   Formation.f4312: [
     (0.5, 0.90),
@@ -176,19 +183,19 @@ const _layouts = <Formation, List<(double, double)>>{
     (0.63, 0.73),
     (0.88, 0.70),
     (0.10, 0.45),
-    (0.32, 0.48),
+    (0.30, 0.48),
     (0.5, 0.50),
-    (0.68, 0.48),
+    (0.70, 0.48),
     (0.90, 0.45),
     (0.5, 0.15),
   ],
   Formation.f541: [
     (0.5, 0.90),
-    (0.08, 0.62),
+    (0.08, 0.70),
     (0.30, 0.74),
     (0.5, 0.76),
     (0.70, 0.74),
-    (0.92, 0.62),
+    (0.92, 0.70),
     (0.14, 0.45),
     (0.38, 0.48),
     (0.62, 0.48),
@@ -248,11 +255,49 @@ class _BenchDrag {
   final int playerId;
 }
 
-/// "Cristiano Ronaldo" → "C. Ronaldo" (surnames can repeat in a squad).
-String shortName(String full) {
+/// "Cristiano Ronaldo" → "Ronaldo".
+String surnameOf(String full) {
   final parts = full.trim().split(' ');
-  if (parts.length < 2) return full;
-  return '${parts.first[0]}. ${parts.last}';
+  return parts.isEmpty ? full : parts.last;
+}
+
+/// What to write under each of [shown]: the SURNAME on its own, with the first
+/// initial added back only for the men who would otherwise be
+/// indistinguishable from a team-mate.
+///
+/// Every name used to carry its initial ("C. Ronaldo") because two players can
+/// share a surname. They rarely do in the same eleven, so the initial was
+/// three wasted characters on ten of the eleven — and on a pitch node, where
+/// the width is the whole problem, three characters is the difference between
+/// a name that fits and a name that has to shrink to fit.
+Map<int, String> pitchNameLabels(Iterable<Player> shown) {
+  final bySurname = <String, List<Player>>{};
+  for (final p in shown) {
+    (bySurname[surnameOf(p.name).toUpperCase()] ??= []).add(p);
+  }
+  final out = <int, String>{};
+  for (final group in bySurname.values) {
+    if (group.length == 1) {
+      out[group.first.id] = surnameOf(group.first.name);
+      continue;
+    }
+    // Shared surname: the initial tells them apart. If it doesn't either —
+    // two men with the same initial AND surname — spell the first name out,
+    // because at that point nothing shorter distinguishes them at all.
+    final byInitial = <String, int>{};
+    for (final p in group) {
+      final initial = p.name.trim().isEmpty ? '' : p.name.trim()[0];
+      byInitial[initial] = (byInitial[initial] ?? 0) + 1;
+    }
+    for (final p in group) {
+      final first = p.name.trim().split(' ').first;
+      final initial = first.isEmpty ? '' : first[0];
+      out[p.id] = (byInitial[initial] ?? 0) > 1
+          ? '$first ${surnameOf(p.name)}'
+          : '$initial. ${surnameOf(p.name)}';
+    }
+  }
+  return out;
 }
 
 /// The outcome of dragging one pitch slot onto another.
@@ -292,11 +337,21 @@ double adjustedSlotY(
   TacticalInstructions i,
 ) {
   if (category == PositionCategory.goalkeeper) return _keeperLine;
-  var y = baseY - (i.mentality - 50) / 50 * 0.05;
+  // Mentality used to lift the whole outfield up the pitch (and the forwards
+  // further still), which squeezed the lines together at the attacking end and
+  // left the shape bunched in the middle of the pitch. It is a mentality, not
+  // a formation: what it changes is how the side plays, which the match engine
+  // already reads — it has no business redrawing the shape the manager set.
+  //
+  // The defensive LINE does still move, because that is exactly what that dial
+  // means, and it moves one line rather than all of them.
+  var y = baseY;
   if (category == PositionCategory.defender) {
-    y -= (i.defensiveLine - 50) / 50 * 0.10;
-  } else if (category == PositionCategory.forward) {
-    y -= (i.mentality - 50) / 50 * 0.02;
+    // Small on purpose. This is the one dial that still moves a line, and it
+    // moves it toward another one: at the old ±0.10 a high line was worth most
+    // of a ball on a phone, which drove the back four bodily into midfield in
+    // nearly every shape in the game.
+    y -= (i.defensiveLine - 50) / 50 * 0.04;
   }
   return y;
 }
@@ -496,21 +551,20 @@ class TacticsPitch extends StatelessWidget {
   /// still goes through [onSwap] either way.
   final void Function(int slot, double dropY)? onMoveToSpace;
 
-  /// The deepest an outfield node may sit. The keeper is pinned below it, and
-  /// a node is a good deal taller than its disc (position chip, name, and — in
-  /// a match — an energy gauge), so the gap has to hold a whole node's worth of
-  /// label. It used to be 0.77 against a keeper on 0.94, which was not enough
-  /// once the energy readout was added: in a three-at-the-back shape the middle
-  /// centre-half sits directly above the keeper (both on x = 0.5) and the two
-  /// ran into each other.
-  static const double _outfieldFloor = 0.68;
-  static const double _outfieldCeiling = 0.10;
+  /// The band the ten outfield players are drawn in. The keeper is pinned
+  /// below the floor, on his line.
+  ///
+  /// It used to be 0.10–0.68, which left the shape huddled in the top two
+  /// thirds with a wide empty strip in front of the keeper — every line closer
+  /// to the next than it needed to be. A node is now barely taller than its
+  /// own ball, so the band can open up: the same eleven, further apart.
+  static const double _outfieldFloor = 0.78;
+  static const double _outfieldCeiling = 0.06;
 
   /// Where the keeper stands. Below every outfield player, on the goal line.
 
   /// Nudges a slot's base coordinate by the instructions so the shape reads the
-  /// tactics: wider/narrower spread, a higher/deeper back line, and a more
-  /// advanced team when attacking.
+  /// tactics: a wider or narrower spread, and a higher or deeper back line.
   (double, double) _adjusted(
     (double, double) base,
     PositionCategory category,
@@ -519,34 +573,52 @@ class TacticsPitch extends StatelessWidget {
     // Width: spread outfield players out from / in toward the centre line. The
     // span is deliberately modest so a wide 3-back shape (e.g. 3-4-3) can't push
     // the widest players' name labels off the painted pitch.
-    final widthFactor = 0.82 + i.width / 100 * 0.24; // 0.82 … 1.06
+    // The narrow end used to pull the side into 0.82 of its shape, which put
+    // a five-across midfield closer together than a ball is wide — the eleven
+    // ended up huddled in the middle of the pitch and their discs touched.
+    // A narrow team should read narrower than a wide one, not collapse
+    // inward, so the dial now runs from nearly-natural to genuinely spread.
+    // The dial NARROWS from the drawn shape; it never widens past it.
+    //
+    // The layouts already put the wide men on the touchline, so a factor above
+    // 1.0 only pushed them into the edge clamp while their neighbours carried
+    // on spreading — which pulled the neighbour INTO the clamped player and
+    // made "wide" the tightest setting on the whole pitch, the opposite of
+    // what it says. And the old bottom of 0.82 hauled the whole side into the
+    // middle. Ten per cent either side of the drawn shape reads as a narrow
+    // team without either failure.
+    final widthFactor = 0.95 + i.width / 100 * 0.05; // 0.95 … 1.00
     final x = 0.5 + (base.$1 - 0.5) * widthFactor;
     // The keeper is pinned on the goal line and never shifts up the pitch, so
     // a deep defensive line can't drop the back line on top of them.
     if (category == PositionCategory.goalkeeper) {
-      return (x.clamp(0.12, 0.88), _keeperLine);
+      return (x.clamp(_edgeX, 1 - _edgeX), _keeperLine);
     }
-    // Attacking mentality lifts the whole outfield up the pitch, a high
-    // defensive line pushes the back line up — see [adjustedSlotY], which the
-    // drop resolver reads too so the two can never disagree.
+    // A high defensive line pushes the back line up — see [adjustedSlotY],
+    // which the drop resolver reads too so the two can never disagree.
     final y = adjustedSlotY(base.$2, category, i);
     // Compress the outfield into its band rather than clamping to the floor:
     // clamping flattened a staggered back line (centre-halves deeper than the
     // full-backs) into one straight row as soon as the deepest player hit the
     // cap. Squeezing keeps the shape and just fits it above the keeper.
-    const from = 0.78;
+    const from = 0.82;
     final squeezed =
         _outfieldCeiling +
         (y.clamp(_outfieldCeiling, from) - _outfieldCeiling) *
             ((_outfieldFloor - _outfieldCeiling) / (from - _outfieldCeiling));
-    // Cap the width so the widest players' labels stay on the pitch.
-    return (x.clamp(0.12, 0.88), squeezed);
+    // Cap the width so the widest players' balls stay on the pitch. With the
+    // dial no longer widening past the drawn shape this is a backstop, not a
+    // working part of the layout.
+    return (x.clamp(_edgeX, 1 - _edgeX), squeezed);
   }
 
   /// How tall a node is, so the layout can keep whole nodes inside the pitch.
-  /// The disc, the position chip and the name are always there; the energy
-  /// gauge only during a match.
-  double get _nodeHeight => 79 + (energyByPlayer.isEmpty ? 0 : 12);
+  ///
+  /// The ball and the two badges on its rim, and nothing else — the position,
+  /// the rating and the name all live inside the circle now. It used to be
+  /// half as tall again, which is what put one man's name on the next man's
+  /// disc in the tighter shapes.
+  double _nodeHeight(double disc) => disc + _badgeOverhang * 2;
 
   @override
   Widget build(BuildContext context) {
@@ -574,12 +646,21 @@ class TacticsPitch extends StatelessWidget {
             // top and the rest of a node at the bottom, in this pitch's own
             // units, so a whole node always fits whatever size it is drawn at.
             final height = constraints.maxHeight;
-            final top = height <= 0 ? 0.0 : (_discSize / 2) / height;
+            final m = _metricsFor(constraints.maxWidth);
+            final top = height <= 0 ? 0.0 : (m.disc / 2) / height;
             final bottom = height <= 0
                 ? 0.0
-                : (_nodeHeight - _discSize / 2) / height;
+                : (_nodeHeight(m.disc) - m.disc / 2) / height;
             final span = (1 - top - bottom).clamp(0.05, 1.0);
             double place(double y) => top + y * span;
+
+            // Whether a name needs its initial is a question about the OTHER
+            // ten, so it is answered once for the whole eleven rather than per
+            // node.
+            final names = pitchNameLabels([
+              for (final id in lineup)
+                if (id != null && byId[id] != null) byId[id]!,
+            ]);
 
             return Stack(
               children: [
@@ -617,6 +698,8 @@ class TacticsPitch extends StatelessWidget {
                         slot: slot,
                         position: positions[slot],
                         player: byId[lineup[slot]],
+                        name: names[lineup[slot]],
+                        metrics: m,
                         absent: absentIds.contains(lineup[slot]),
                         injured: injuredIds.contains(lineup[slot]),
                         energy: energyByPlayer[lineup[slot]],
@@ -636,8 +719,53 @@ class TacticsPitch extends StatelessWidget {
   }
 }
 
-/// The diameter of a player disc on the pitch.
-const double _discSize = 46;
+/// How wide a node may be, as a fraction of the pitch's width.
+///
+/// This is the whole layout budget, and it is a FRACTION rather than a number
+/// of points because the pitch is: every slot coordinate is a fraction of the
+/// width, so the distance between two team-mates is too.
+///
+/// MEASURED, not guessed, and measured as a straight line between two players
+/// rather than as a horizontal gap: the tightest pair in the whole game is the
+/// staggered middle of a 3-5-2, where the two inside midfielders sit closer to
+/// each other on the diagonal than any two players in the same row ever do.
+/// Reading off same-row pairs alone ships discs that visibly touch. Re-measure
+/// with the pitch's own widget test whenever the layouts, the width dial or
+/// the outfield band change — the figure moved from 0.1477 to 0.1616 the last
+/// time the narrow end of the width dial was opened up.
+const double _nodeWidthFraction = 0.150;
+
+/// The disc's own share of the pitch width, a little under a node's so the
+/// rim badges have somewhere to sit.
+///
+/// A FRACTION, like the node — these were points once, and a fixed number of
+/// points shaved off a proportional width means the clear air between two
+/// balls shrinks as the screen grows: the same layout that looked right on a
+/// phone drew balls almost touching on a tablet.
+const double _discWidthFraction = 0.145;
+
+/// How close to the touchline a player's CENTRE may sit — half a node, so a
+/// whole node stays on the painted pitch.
+const double _edgeX = _nodeWidthFraction / 2;
+
+/// The range a disc is kept inside, so it stays a legible circle on a small
+/// phone without becoming a dinner plate on a tablet.
+const double _discMin = 32;
+const double _discMax = 76;
+
+/// The sizes a node is drawn at on a pitch of a given width.
+typedef _NodeMetrics = ({double node, double disc});
+
+/// Node sizes for a pitch [width] points across.
+///
+/// Fixed sizes were the bug behind the bug: 46pt discs and a 58pt name label
+/// happen to fit a 390pt phone and overlap a 320pt one, and waste half the
+/// room on a tablet. Deriving both from the width means the eleven are drawn
+/// as large as they can be AND never closer than they can be read.
+_NodeMetrics _metricsFor(double width) => (
+  node: (width * _nodeWidthFraction).clamp(34.0, 96.0),
+  disc: (width * _discWidthFraction).clamp(_discMin, _discMax),
+);
 
 class _PlayerNode extends StatelessWidget {
   const _PlayerNode({
@@ -647,6 +775,8 @@ class _PlayerNode extends StatelessWidget {
     required this.onTap,
     required this.onSwap,
     required this.onBenchIn,
+    required this.metrics,
+    this.name,
     this.teamColors,
     this.absent = false,
     this.injured = false,
@@ -656,6 +786,15 @@ class _PlayerNode extends StatelessWidget {
   final int slot;
   final PlayerPosition position;
   final Player? player;
+
+  /// How big to draw, derived from the pitch's own width — see [_metricsFor].
+  final _NodeMetrics metrics;
+
+  /// What to write under the disc — the surname, with an initial in front of
+  /// it only when a team-mate shares it. Resolved for the whole eleven at once
+  /// (see [pitchNameLabels]), because whether a name needs its initial is a
+  /// question about the OTHER ten.
+  final String? name;
 
   /// The nation's kit colours filling the disc for team identity.
   final List<Color>? teamColors;
@@ -792,111 +931,255 @@ class _PlayerNode extends StatelessWidget {
               ? Colors.black
               : Colors.white)
         : AppColors.primary;
+    final nameColor = absent ? absentColor : onTeam;
+    // The whole node IS the ball, give or take the two badges that straddle
+    // its rim. Everything the manager reads — position, rating, name — sits
+    // INSIDE the circle, which is the only arrangement in which a label
+    // cannot end up written across the player standing next to him. It used
+    // to hang the name in a band below the disc, and in the tight shapes
+    // (five at the back, a deep midfield) that band landed squarely on the
+    // disc of the man in the row underneath.
+    final overhang = _badgeOverhang;
     return Material(
       type: MaterialType.transparency,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            width: _discSize,
-            height: _discSize,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: fillColors,
+      child: SizedBox(
+        width: metrics.node,
+        height: metrics.disc + overhang * 2,
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            Container(
+              // Keyed so a test can measure where the ball actually lands: the
+              // rule that matters is that nothing a node draws ever touches
+              // another player's DISC, and that cannot be checked without both
+              // rectangles.
+              key: ValueKey('pitchDisc$slot'),
+              width: metrics.disc,
+              height: metrics.disc,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: fillColors,
+                ),
+                border: Border.all(
+                  color: borderColor,
+                  width: highlighted || dragging ? 3 : 2,
+                ),
               ),
-              border: Border.all(
-                color: borderColor,
-                width: highlighted || dragging ? 3 : 2,
-              ),
-            ),
-            alignment: Alignment.center,
-            child: absent
-                ? Icon(
-                    injured ? Icons.personal_injury : Icons.gavel_rounded,
-                    size: 22,
-                    color: absentColor,
-                  )
-                // The rating this player actually plays at IN THIS SLOT. In his
-                // own position that is simply his overall; out of position it
-                // is the docked figure, and the amber bubble around it says
+              alignment: Alignment.center,
+              child: _DiscContents(
+                key: ValueKey('pitchName$slot'),
+                disc: metrics.disc,
+                // The rating this player actually plays at IN THIS SLOT. In
+                // his own position that is simply his overall; out of position
+                // it is the docked figure, and the amber bubble around it says
                 // why — so the number on the pitch is always the number the
                 // match engine will use.
-                : Text(
-                    p == null ? '+' : '${effective!}',
-                    style: AppTypography.labelMedium.copyWith(
-                      color: onTeam,
-                      fontWeight: penalised ? FontWeight.w800 : null,
-                    ),
-                  ),
-          ),
-          if (absent) ...[
-            const SizedBox(height: 2),
-            Text(
-              injured ? l.tacticsInjuredReplace : l.tacticsSuspendedReplace,
-              style: AppTypography.labelSmall.copyWith(
-                fontSize: 7,
-                color: absentColor,
-                fontWeight: FontWeight.w700,
+                rating: p == null ? '+' : '${effective!}',
+                name: p == null ? null : (name ?? surnameOf(p.name)),
+                icon: absent
+                    ? (injured ? Icons.personal_injury : Icons.gavel_rounded)
+                    : null,
+                iconColor: absentColor,
+                textColor: nameColor,
+                bold: penalised,
               ),
             ),
-          ],
-          const SizedBox(height: 3),
-          // The slot's exact position, always shown and tinted by fit.
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1),
-            decoration: BoxDecoration(
-              color: fit.withValues(alpha: 0.18),
-              borderRadius: AppRadii.smAll,
-              border: Border.all(color: fit),
-            ),
-            child: Text(
-              position.label,
-              style: AppTypography.labelSmall.copyWith(
-                fontSize: 9,
+            // The position, on top of the ball. Straddling the rim rather than
+            // sitting above it: a badge fully outside the circle is another
+            // row of node to collide with.
+            Positioned(
+              top: 0,
+              child: _RimBadge(
+                label: position.label,
                 color: fit,
-                fontWeight: FontWeight.w700,
+                background: fit.withValues(alpha: 0.18),
+                maxWidth: metrics.node,
               ),
             ),
-          ),
-          if (p != null) ...[
-            const SizedBox(height: 1),
-            // Fixed width + single line: a long name must never wrap onto a
-            // second row, which would push the node past the pitch edge.
-            SizedBox(
-              width: 58,
-              child: Text(
-                shortName(p.name).toUpperCase(),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                textAlign: TextAlign.center,
-                style: AppTypography.labelSmall.copyWith(fontSize: 8),
-              ),
-            ),
-          ],
-          if (p != null && energy != null) ...[
-            const SizedBox(height: 1),
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(Icons.bolt, size: 9, color: energyColor(energy!)),
-                Text(
-                  '$energy%',
-                  style: AppTypography.labelSmall.copyWith(
-                    fontSize: 8,
-                    color: energyColor(energy!),
-                    fontWeight: FontWeight.w700,
-                  ),
+            // The bottom of the rim says whatever is urgent: that he cannot
+            // play, or — during a match — how much he has left.
+            if (absent)
+              Positioned(
+                bottom: 0,
+                child: _RimBadge(
+                  label: injured
+                      ? l.tacticsInjuredShort
+                      : l.tacticsSuspendedShort,
+                  color: absentColor,
+                  background: absentColor.withValues(alpha: 0.18),
+                  maxWidth: metrics.node,
                 ),
-              ],
-            ),
+              )
+            else if (p != null && energy != null)
+              Positioned(
+                bottom: 0,
+                child: _RimBadge(
+                  label: '$energy%',
+                  color: energyColor(energy!),
+                  background: energyColor(energy!).withValues(alpha: 0.18),
+                  maxWidth: metrics.node,
+                ),
+              ),
           ],
-        ],
+        ),
       ),
     );
   }
+}
+
+/// How far a rim badge hangs outside the circle it is pinned to. Half its own
+/// height, so it straddles the edge: a badge sitting fully outside would add a
+/// whole extra band to the node, which is the thing being got rid of.
+const double _badgeOverhang = 7;
+
+/// The width of a disc's usable interior, as a fraction of its diameter, and
+/// the height that leaves. A rectangle fits inside a circle when its diagonal
+/// does, so these two are chosen together: 0.84² + 0.54² = 0.997 < 1.
+///
+/// Weighted toward WIDTH on purpose. What the interior has to hold is a name
+/// on one line, and every point of width buys a character; the height only has
+/// to clear the rating plus that one line. Trading a little of it for a wider
+/// box is what keeps a name off a second line.
+const double _discInnerWidth = 0.84;
+const double _discInnerHeight = 0.54;
+
+/// The size a name is drawn at when it fits — which, on a surname alone, is
+/// the great majority of them.
+const double _nameFontSize = 9.5;
+
+/// A zero-width space, inserted between the letters of a name so that a long
+/// SINGLE WORD can still break across two lines.
+///
+/// Surnames have no spaces in them, so without a break opportunity the layout
+/// has nowhere to wrap and a sixteen-letter name has to shrink to a fifth of
+/// its size to fit a circle. With one between every letter it wraps like a
+/// sentence would, and the type stays readable. It is invisible and adds
+/// nothing to the rendered glyphs.
+const String _breakOpportunity = '\u200B';
+
+/// What sits inside a player's disc: his position rating, his name, and — when
+/// he cannot play — the icon that says why.
+///
+/// The name is never CUT. Surnames run to sixteen letters, so a fixed box plus
+/// `TextOverflow.ellipsis` truncates the long ones every single time, which is
+/// not a name any more. It wraps to a second line first (see
+/// [_breakOpportunity]) and only then scales down, so it always arrives whole.
+class _DiscContents extends StatelessWidget {
+  const _DiscContents({
+    required this.disc,
+    required this.rating,
+    required this.name,
+    required this.icon,
+    required this.iconColor,
+    required this.textColor,
+    required this.bold,
+    super.key,
+  });
+
+  final double disc;
+  final String rating;
+  final String? name;
+  final IconData? icon;
+  final Color iconColor;
+  final Color textColor;
+  final bool bold;
+
+  @override
+  Widget build(BuildContext context) {
+    final inner = disc * _discInnerWidth;
+    final label = name;
+    return SizedBox(
+      width: inner,
+      height: disc * _discInnerHeight,
+      child: FittedBox(
+        fit: BoxFit.scaleDown,
+        child: SizedBox(
+          // A bounded width is what lets the name wrap before anything is
+          // scaled: an unbounded Text lays out on one endless line and the
+          // FittedBox then shrinks that line to nothing.
+          width: inner,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (icon case final glyph?)
+                Icon(glyph, size: disc * 0.30, color: iconColor)
+              else
+                Text(
+                  rating,
+                  maxLines: 1,
+                  textAlign: TextAlign.center,
+                  style: AppTypography.titleMedium.copyWith(
+                    // The number is the thing the manager reads across the
+                    // pitch, so it takes as much of the circle as the name
+                    // underneath can spare.
+                    fontSize: disc * 0.32,
+                    height: 1.05,
+                    color: textColor,
+                    fontWeight: bold ? FontWeight.w800 : FontWeight.w700,
+                  ),
+                ),
+              if (label != null)
+                Text(
+                  label.toUpperCase().split('').join(_breakOpportunity),
+                  maxLines: 2,
+                  textAlign: TextAlign.center,
+                  style: AppTypography.labelSmall.copyWith(
+                    fontSize: _nameFontSize,
+                    height: 1.05,
+                    letterSpacing: 0,
+                    fontWeight: FontWeight.w600,
+                    color: textColor,
+                  ),
+                ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// A small pill straddling the rim of a player's disc — the position on top,
+/// and whatever is urgent underneath.
+class _RimBadge extends StatelessWidget {
+  const _RimBadge({
+    required this.label,
+    required this.color,
+    required this.background,
+    required this.maxWidth,
+  });
+
+  final String label;
+  final Color color;
+  final Color background;
+  final double maxWidth;
+
+  @override
+  Widget build(BuildContext context) => Container(
+    constraints: BoxConstraints(maxWidth: maxWidth),
+    padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 1),
+    decoration: BoxDecoration(
+      color: Color.alphaBlend(background, AppColors.surfaceContainerLowest),
+      borderRadius: AppRadii.smAll,
+      border: Border.all(color: color),
+    ),
+    child: Text(
+      label,
+      maxLines: 1,
+      overflow: TextOverflow.clip,
+      softWrap: false,
+      style: AppTypography.labelSmall.copyWith(
+        fontSize: 8,
+        height: 1.1,
+        letterSpacing: 0,
+        color: color,
+        fontWeight: FontWeight.w700,
+      ),
+    ),
+  );
 }
 
 /// The colour cue for a remaining-energy value: green when fresh, orange once
@@ -982,7 +1265,7 @@ class SubDragRow extends StatelessWidget {
           border: Border.all(color: AppColors.primary),
         ),
         child: Text(
-          shortName(player.name).toUpperCase(),
+          surnameOf(player.name).toUpperCase(),
           style: AppTypography.labelMedium,
         ),
       ),

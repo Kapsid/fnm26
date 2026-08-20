@@ -48,9 +48,10 @@ dependencies:
   # build_runner's AOT bootstrap on Dart 3.10. drift only needs ^3.1.5.
   sqlite3: ">=3.1.5 <3.3.0"
   sqlite3_flutter_libs: ^0.6.0+eol # Bundled native SQLite.
-  supabase_flutter: ^2.15.0 # Cloud auth + storage, used only via CloudSyncService.
   flutter_svg: ^2.3.0
   shared_preferences: ^2.5.5
+  share_plus: ^12.0.0 # Hands an exported save to the OS share sheet.
+  file_picker: ^11.0.3 # Picks a save file back off the device to restore.
 
 dev_dependencies:
   flutter_test:

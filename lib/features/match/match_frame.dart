@@ -20,7 +20,7 @@ class _TopBar extends StatelessWidget {
             onPressed: onClose,
           ),
           Text(
-            'MATCH',
+            AppLocalizations.of(context).matchTopBarTitle,
             style: AppTypography.labelMedium.copyWith(color: AppColors.primary),
           ),
         ],
@@ -35,6 +35,8 @@ class _Header extends StatelessWidget {
     required this.awayCode,
     required this.homeName,
     required this.awayName,
+    required this.homeOverall,
+    required this.awayOverall,
     required this.homeScore,
     required this.awayScore,
     required this.clock,
@@ -45,6 +47,12 @@ class _Header extends StatelessWidget {
   final String awayCode;
   final String homeName;
   final String awayName;
+
+  /// Each side's team overall — the same number the pre-match screen shows
+  /// either side of the "VS", carried into the live game so the manager can
+  /// still see what he is up against once the whistle has gone.
+  final int homeOverall;
+  final int awayOverall;
   final int homeScore;
   final int awayScore;
   final String clock;
@@ -92,7 +100,11 @@ class _Header extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Expanded(
-                  child: _Side(code: homeCode, label: homeName),
+                  child: _Side(
+                    code: homeCode,
+                    label: homeName,
+                    overall: homeOverall,
+                  ),
                 ),
                 // The scoreline is allowed to shrink rather than shove the two
                 // sides out of the card: a long name next to a 4:3 used to run
@@ -112,7 +124,11 @@ class _Header extends StatelessWidget {
                   ),
                 ),
                 Expanded(
-                  child: _Side(code: awayCode, label: awayName),
+                  child: _Side(
+                    code: awayCode,
+                    label: awayName,
+                    overall: awayOverall,
+                  ),
                 ),
               ],
             ),
@@ -326,12 +342,21 @@ class _PillButton extends StatelessWidget {
 }
 
 class _Side extends StatelessWidget {
-  const _Side({required this.code, required this.label});
+  const _Side({
+    required this.code,
+    required this.label,
+    required this.overall,
+  });
   final String code;
   final String label;
 
+  /// The side's team overall, shown under the name. Zero hides it — a side
+  /// whose XI isn't known yet has no honest number to print.
+  final int overall;
+
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
     return Column(
       children: [
         FlagDisc(code, size: 56),
@@ -342,6 +367,14 @@ class _Side extends StatelessWidget {
           overflow: TextOverflow.ellipsis,
           style: AppTypography.titleMedium,
         ),
+        if (overall > 0)
+          Text(
+            '${l.teamOverall} $overall',
+            maxLines: 1,
+            style: AppTypography.labelSmall.copyWith(
+              color: AppColors.onSurfaceVariant,
+            ),
+          ),
       ],
     );
   }

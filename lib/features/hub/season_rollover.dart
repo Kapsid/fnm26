@@ -32,8 +32,23 @@ extension SeasonRollover on SeasonService {
     final income = await _ref
         .read(federationServiceProvider)
         .incomeForCycle(careerId, career.cyclePointer);
-    var budget =
-        career.budget + income.grant + income.prize + income.commercial;
+    // What the manager talked the federation into. Applied to everything
+    // coming in rather than to the grant alone: a negotiator gets a better
+    // deal on the commercial side and a better bonus for the run, not just a
+    // bigger cheque from the association.
+    final negotiated =
+        ((income.grant + income.prize + income.commercial) *
+                ManagerSkills.incomeBonus(career.skillNegotiation))
+            .round();
+    // And out again: the staff are paid for the cycle just finished. A manager
+    // who hires an elite room and then misses a tournament feels it.
+    final wages = Staff.totalCost({
+      StaffRole.assistant: career.staffAssistant,
+      StaffRole.scout: career.staffScout,
+      StaffRole.fitnessCoach: career.staffFitnessCoach,
+    });
+    var budget = career.budget + negotiated - wages;
+    if (budget < 0) budget = 0;
     if (nextInvestment != null) {
       final spend =
           nextInvestment.youth +
@@ -212,6 +227,7 @@ extension SeasonRollover on SeasonService {
       // transfer in the feed looked domestic. Name the country when the player
       // crosses a border — that is the part of the news that is the news.
       final destination = transferDestination(
+        _l,
         club: p.club,
         toCountryName: byCode[p.clubCountry]?.name,
         crossedBorder: was.clubCountry != p.clubCountry,
@@ -220,10 +236,15 @@ extension SeasonRollover on SeasonService {
         careerId: careerId,
         dedupKey: 'transfer:${p.id}:$year',
         category: 'transfer',
-        title: '${p.name} joins ${p.club}',
-        body:
-            '${p.name} (${p.position.label}, ${p.overall}) has left '
-            '${was.club} to sign for $destination for ${_feeLabel(fee)}.',
+        title: _l.newsTransferTitle(p.name, p.club),
+        body: _l.newsTransferBody(
+          p.name,
+          p.position.label,
+          was.club,
+          destination,
+          _feeLabel(fee),
+          p.overall,
+        ),
         year: year,
       );
     }
@@ -241,7 +262,7 @@ extension SeasonRollover on SeasonService {
             agingYears: CareerService.agingYears(career),
             saveSeed: career.rngSeed,
           );
-      return p?.name ?? 'A new record-breaker';
+      return p?.name ?? _l.newsARecordBreaker;
     }
 
     final scorers = await _comp.allTimeTopScorers(careerId, limit: 1);
@@ -251,10 +272,8 @@ extension SeasonRollover on SeasonService {
         careerId: careerId,
         dedupKey: 'record:scorer:${s.playerId}',
         category: 'record',
-        title: 'All-time top scorer',
-        body:
-            '${await nameOf(s.playerId)} is now the game\'s all-time leading '
-            'goalscorer with ${s.goals} goals.',
+        title: _l.newsRecordScorerTitle,
+        body: _l.newsRecordScorerBody(await nameOf(s.playerId), s.goals),
         year: year,
       );
     }
@@ -265,10 +284,8 @@ extension SeasonRollover on SeasonService {
         careerId: careerId,
         dedupKey: 'record:caps:${c.playerId}',
         category: 'record',
-        title: 'Most-capped player',
-        body:
-            '${await nameOf(c.playerId)} is now the game\'s most-capped '
-            'player with ${c.games} appearances.',
+        title: _l.newsRecordCapsTitle,
+        body: _l.newsRecordCapsBody(await nameOf(c.playerId), c.games),
         year: year,
       );
     }
@@ -301,6 +318,7 @@ extension SeasonRollover on SeasonService {
 
   /// Formats a euro fee compactly: €X.XM / €XXXk / €X.
   String _feeLabel(int euros) {
+    if (euros <= 0) return _l.newsTransferFree;
     if (euros >= 1000000) {
       return '€${(euros / 1000000).toStringAsFixed(euros >= 10000000 ? 0 : 1)}M';
     }
@@ -464,8 +482,9 @@ extension SeasonRollover on SeasonService {
       if (candidates.isEmpty) continue;
       final pick = candidates[rng.nextInt(candidates.length)];
       taken.add(pick.id);
-      final from = nations[pick.nationId]?.name ?? 'their nation';
-      final to = nations[nationId]?.name ?? 'your nation';
+      final l = _l;
+      final from = nations[pick.nationId]?.name ?? l.newsTheirNation;
+      final to = nations[nationId]?.name ?? l.newsYourNation;
 
       await _careers.addNaturalizationOffer(
         careerId: careerId,
@@ -478,14 +497,25 @@ extension SeasonRollover on SeasonService {
         dedupKey: 'natz:$nextCycle:${pick.id}',
         category: 'naturalize',
         title: pick.overall >= 85
-            ? '⭐ ${pick.name} would switch to $to!'
-            : '${pick.name} wants to play for $to',
-        body:
-            '${pick.name}, a ${pick.age}-year-old '
-            '${pick.position.name} rated ${pick.overall} currently with $from, '
-            '${pick.overall >= 85 ? 'is a star name who ' : ''}'
-            'has family ties to $to and is open to switching. '
-            'Open the Naturalisation offer to accept or decline.',
+            ? l.newsNatzStarTitle(pick.name, to)
+            : l.newsNatzTitle(pick.name, to),
+        body: pick.overall >= 85
+            ? l.newsNatzBodyStar(
+                pick.name,
+                pick.position.label,
+                from,
+                to,
+                pick.age,
+                pick.overall,
+              )
+            : l.newsNatzBody(
+                pick.name,
+                pick.position.label,
+                from,
+                to,
+                pick.age,
+                pick.overall,
+              ),
         year: SeasonService.finalsYear(nextCycle),
       );
     }

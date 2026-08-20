@@ -320,18 +320,6 @@ abstract class AppLocalizations {
   /// **'Overall'**
   String get teamOverall;
 
-  /// Match timeline label for a dismissal that followed a second booking.
-  ///
-  /// In en, this message translates to:
-  /// **'Second yellow'**
-  String get matchSecondYellow;
-
-  /// Match timeline label for a straight red card.
-  ///
-  /// In en, this message translates to:
-  /// **'Red card'**
-  String get matchStraightRed;
-
   /// Heading above the interval team-talk options.
   ///
   /// In en, this message translates to:
@@ -1465,18 +1453,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'ON'**
   String get tacticsOn;
-
-  /// Pitch flag on an injured player who must be replaced.
-  ///
-  /// In en, this message translates to:
-  /// **'INJURED — REPLACE'**
-  String get tacticsInjuredReplace;
-
-  /// Pitch flag on a suspended player who must be replaced.
-  ///
-  /// In en, this message translates to:
-  /// **'SUSPENDED — REPLACE'**
-  String get tacticsSuspendedReplace;
 
   /// Squad screen title and squad tab label.
   ///
@@ -9065,6 +9041,2217 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Nothing I say tonight changes the result.'**
   String get pressAnswerPlayDown6;
+
+  /// Snackbar when the manager tries to re-use a substituted player.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} has already been taken off — he cannot come back on.'**
+  String tacticsSubAlreadyOff(String name);
+
+  /// Snackbar when the manager tries to bring on a sent-off player.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} has been sent off and takes no further part.'**
+  String tacticsSubSentOff(String name);
+
+  /// Pitch-node flag under an injured player's disc. Kept to one word so it fits inside the node's width.
+  ///
+  /// In en, this message translates to:
+  /// **'INJURED'**
+  String get tacticsInjuredShort;
+
+  /// Pitch-node flag under a suspended player's disc.
+  ///
+  /// In en, this message translates to:
+  /// **'SUSPENDED'**
+  String get tacticsSuspendedShort;
+
+  /// Continent name.
+  ///
+  /// In en, this message translates to:
+  /// **'Europe'**
+  String get confEurope;
+
+  /// Continent name.
+  ///
+  /// In en, this message translates to:
+  /// **'South America'**
+  String get confSouthAmerica;
+
+  /// Continent name (North & Central America and the Caribbean).
+  ///
+  /// In en, this message translates to:
+  /// **'North America'**
+  String get confNorthAmerica;
+
+  /// Continent name.
+  ///
+  /// In en, this message translates to:
+  /// **'Africa'**
+  String get confAfrica;
+
+  /// Continent name.
+  ///
+  /// In en, this message translates to:
+  /// **'Asia'**
+  String get confAsia;
+
+  /// Continent name.
+  ///
+  /// In en, this message translates to:
+  /// **'Oceania'**
+  String get confOceania;
+
+  /// Competition name shown to the manager. The stored name stays English.
+  ///
+  /// In en, this message translates to:
+  /// **'World Cup'**
+  String get compWorldCup;
+
+  /// Competition name: the World Cup finals tournament.
+  ///
+  /// In en, this message translates to:
+  /// **'World Cup Finals'**
+  String get compWorldCupFinals;
+
+  /// Competition name: World Cup qualifying, region unspecified.
+  ///
+  /// In en, this message translates to:
+  /// **'World Cup Qualifying'**
+  String get compWorldCupQualifying;
+
+  /// Competition name: one continent's World Cup qualifying campaign.
+  ///
+  /// In en, this message translates to:
+  /// **'{region} Qualifiers'**
+  String compQualifiers(String region);
+
+  /// Competition name for the friendly-match container.
+  ///
+  /// In en, this message translates to:
+  /// **'Friendlies'**
+  String get compFriendlies;
+
+  /// Competition name.
+  ///
+  /// In en, this message translates to:
+  /// **'Nations Cup'**
+  String get compNationsCup;
+
+  /// Competition name: the champions-of-champions one-off.
+  ///
+  /// In en, this message translates to:
+  /// **'Continental Clash'**
+  String get compContinentalClash;
+
+  /// Competition name.
+  ///
+  /// In en, this message translates to:
+  /// **'Intercontinental Play-off'**
+  String get compIntercontinentalPlayoff;
+
+  /// Generic name for a continental cup when the confederation is not known.
+  ///
+  /// In en, this message translates to:
+  /// **'Continental Championship'**
+  String get compContinentalChampionship;
+
+  /// Continental cup name.
+  ///
+  /// In en, this message translates to:
+  /// **'European Championship'**
+  String get compEuropeanChampionship;
+
+  /// Continental cup name.
+  ///
+  /// In en, this message translates to:
+  /// **'South America Cup'**
+  String get compSouthAmericaCup;
+
+  /// Continental cup name.
+  ///
+  /// In en, this message translates to:
+  /// **'African Championship'**
+  String get compAfricanChampionship;
+
+  /// Continental cup name.
+  ///
+  /// In en, this message translates to:
+  /// **'Asian Championship'**
+  String get compAsianChampionship;
+
+  /// Continental cup name.
+  ///
+  /// In en, this message translates to:
+  /// **'North America Cup'**
+  String get compNorthAmericaCup;
+
+  /// Continental cup name.
+  ///
+  /// In en, this message translates to:
+  /// **'Oceania Cup'**
+  String get compOceaniaCup;
+
+  /// Inbox fallback when a nation cannot be named.
+  ///
+  /// In en, this message translates to:
+  /// **'A nation'**
+  String get msgANation;
+
+  /// Inbox fallback when a player cannot be named.
+  ///
+  /// In en, this message translates to:
+  /// **'A player'**
+  String get msgAPlayer;
+
+  /// Inbox fallback when the host of a continental cup is not known yet.
+  ///
+  /// In en, this message translates to:
+  /// **'a host nation'**
+  String get msgAHostNation;
+
+  /// Inbox: cycle-start headline, one of four.
+  ///
+  /// In en, this message translates to:
+  /// **'A new cycle begins'**
+  String get msgCycleTitle1;
+
+  /// Inbox: cycle-start headline, one of four.
+  ///
+  /// In en, this message translates to:
+  /// **'The road to {year} opens'**
+  String msgCycleTitle2(int year);
+
+  /// Inbox: cycle-start headline, one of four.
+  ///
+  /// In en, this message translates to:
+  /// **'A fresh campaign dawns'**
+  String get msgCycleTitle3;
+
+  /// Inbox: cycle-start headline, one of four.
+  ///
+  /// In en, this message translates to:
+  /// **'Back to work'**
+  String get msgCycleTitle4;
+
+  /// Inbox: cycle-start body, one of four.
+  ///
+  /// In en, this message translates to:
+  /// **'The road to the {year} World Cup starts here.'**
+  String msgCycleBody1(int year);
+
+  /// Inbox: cycle-start body, one of four.
+  ///
+  /// In en, this message translates to:
+  /// **'A new cycle. The {year} World Cup is the target.'**
+  String msgCycleBody2(int year);
+
+  /// Inbox: cycle-start body, one of four.
+  ///
+  /// In en, this message translates to:
+  /// **'Four years to the {year} World Cup. Work starts now.'**
+  String msgCycleBody3(int year);
+
+  /// Inbox: cycle-start body, one of four.
+  ///
+  /// In en, this message translates to:
+  /// **'The {year} campaign begins today.'**
+  String msgCycleBody4(int year);
+
+  /// Inbox: continental cup host chosen.
+  ///
+  /// In en, this message translates to:
+  /// **'{cup} host: {host}'**
+  String msgContHostTitle(String cup, String host);
+
+  /// Inbox: continental cup host chosen, body.
+  ///
+  /// In en, this message translates to:
+  /// **'{host} will host the next {cup}.'**
+  String msgContHostBody(String host, String cup);
+
+  /// Inbox: continental qualifying draw made.
+  ///
+  /// In en, this message translates to:
+  /// **'{cup} qualifying draw'**
+  String msgContQualDrawTitle(String cup);
+
+  /// Inbox: continental qualifying draw made, body.
+  ///
+  /// In en, this message translates to:
+  /// **'The {cup} qualifying groups have been drawn.'**
+  String msgContQualDrawBody(String cup);
+
+  /// Inbox: World Cup host chosen.
+  ///
+  /// In en, this message translates to:
+  /// **'{year} World Cup host: {host}'**
+  String msgWcHostTitle(String host, int year);
+
+  /// Inbox: World Cup host chosen, body.
+  ///
+  /// In en, this message translates to:
+  /// **'{host} will host the {year} World Cup.'**
+  String msgWcHostBody(String host, int year);
+
+  /// Inbox: World Cup qualifying draw made.
+  ///
+  /// In en, this message translates to:
+  /// **'World Cup qualifying draw'**
+  String get msgWcQualDrawTitle;
+
+  /// Inbox: World Cup qualifying draw made, body.
+  ///
+  /// In en, this message translates to:
+  /// **'The World Cup qualifying groups have been drawn.'**
+  String get msgWcQualDrawBody;
+
+  /// Inbox: continental finals draw made.
+  ///
+  /// In en, this message translates to:
+  /// **'{cup} finals draw'**
+  String msgContFinalsDrawTitle(String cup);
+
+  /// Inbox: continental finals draw made, body.
+  ///
+  /// In en, this message translates to:
+  /// **'The {cup} finals groups have been drawn.'**
+  String msgContFinalsDrawBody(String cup);
+
+  /// Inbox: World Cup finals draw made.
+  ///
+  /// In en, this message translates to:
+  /// **'World Cup finals draw'**
+  String get msgWcFinalsDrawTitle;
+
+  /// Inbox: World Cup finals draw made, body.
+  ///
+  /// In en, this message translates to:
+  /// **'The {year} World Cup finals draw has been made.'**
+  String msgWcFinalsDrawBody(int year);
+
+  /// Inbox: qualified for the World Cup, headline.
+  ///
+  /// In en, this message translates to:
+  /// **'Through to the World Cup'**
+  String get msgQualWcTitle1;
+
+  /// Inbox: qualified for the World Cup, headline.
+  ///
+  /// In en, this message translates to:
+  /// **'World Cup booked'**
+  String get msgQualWcTitle2;
+
+  /// Inbox: qualified for the World Cup, headline.
+  ///
+  /// In en, this message translates to:
+  /// **'We\'re going to the World Cup'**
+  String get msgQualWcTitle3;
+
+  /// Inbox: qualified for the World Cup, headline.
+  ///
+  /// In en, this message translates to:
+  /// **'Ticket punched'**
+  String get msgQualWcTitle4;
+
+  /// Inbox: qualified for the World Cup, body.
+  ///
+  /// In en, this message translates to:
+  /// **'You have qualified for the {year} World Cup finals.'**
+  String msgQualWcBody1(int year);
+
+  /// Inbox: qualified for the World Cup, body.
+  ///
+  /// In en, this message translates to:
+  /// **'It\'s official: your nation is at the {year} World Cup.'**
+  String msgQualWcBody2(int year);
+
+  /// Inbox: qualified for the World Cup, body.
+  ///
+  /// In en, this message translates to:
+  /// **'A place at the {year} World Cup is secured.'**
+  String msgQualWcBody3(int year);
+
+  /// Inbox: qualified for the World Cup, body.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'re through to the {year} World Cup finals.'**
+  String msgQualWcBody4(int year);
+
+  /// Inbox: qualified for the continental cup, headline.
+  ///
+  /// In en, this message translates to:
+  /// **'Through to {cup}'**
+  String msgQualContTitle1(String cup);
+
+  /// Inbox: qualified for the continental cup, headline.
+  ///
+  /// In en, this message translates to:
+  /// **'{cup} booked'**
+  String msgQualContTitle2(String cup);
+
+  /// Inbox: qualified for the continental cup, headline.
+  ///
+  /// In en, this message translates to:
+  /// **'Qualified for {cup}'**
+  String msgQualContTitle3(String cup);
+
+  /// Inbox: qualified for the continental cup, body.
+  ///
+  /// In en, this message translates to:
+  /// **'You have qualified for the {cup} finals.'**
+  String msgQualContBody1(String cup);
+
+  /// Inbox: qualified for the continental cup, body.
+  ///
+  /// In en, this message translates to:
+  /// **'Your nation has sealed its place at {cup}.'**
+  String msgQualContBody2(String cup);
+
+  /// Inbox: qualified for the continental cup, body.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'re through to {cup}.'**
+  String msgQualContBody3(String cup);
+
+  /// Inbox: the manager's nation won a cup, headline.
+  ///
+  /// In en, this message translates to:
+  /// **'{comp} CHAMPIONS!'**
+  String msgChampTitleMine1(String comp);
+
+  /// Inbox: the manager's nation won a cup, headline.
+  ///
+  /// In en, this message translates to:
+  /// **'Champions of the {comp}!'**
+  String msgChampTitleMine2(String comp);
+
+  /// Inbox: the manager's nation won a cup, headline.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'ve won the {comp}!'**
+  String msgChampTitleMine3(String comp);
+
+  /// Inbox: somebody else won a cup, headline.
+  ///
+  /// In en, this message translates to:
+  /// **'{comp} decided'**
+  String msgChampTitleOther1(String comp);
+
+  /// Inbox: somebody else won a cup, headline.
+  ///
+  /// In en, this message translates to:
+  /// **'{comp} champions crowned'**
+  String msgChampTitleOther2(String comp);
+
+  /// Inbox: somebody else won a cup, headline.
+  ///
+  /// In en, this message translates to:
+  /// **'The {comp} is won'**
+  String msgChampTitleOther3(String comp);
+
+  /// Inbox: the manager's nation won a cup, body.
+  ///
+  /// In en, this message translates to:
+  /// **'Your nation are the {year} {comp} champions, beating {loser}{result}.'**
+  String msgChampBodyMine1(String comp, String loser, String result, int year);
+
+  /// Inbox: the manager's nation won a cup, body.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'ve won the {year} {comp}, seeing off {loser}{result}.'**
+  String msgChampBodyMine2(String comp, String loser, String result, int year);
+
+  /// Inbox: the manager's nation won a cup, body.
+  ///
+  /// In en, this message translates to:
+  /// **'The {year} {comp} is yours. {loser} beaten{result}.'**
+  String msgChampBodyMine3(String comp, String loser, String result, int year);
+
+  /// Inbox: somebody else won a cup, body.
+  ///
+  /// In en, this message translates to:
+  /// **'{winner} won the {year} {comp}, beating {loser}{result}.'**
+  String msgChampBodyOther1(
+    String winner,
+    String comp,
+    String loser,
+    String result,
+    int year,
+  );
+
+  /// Inbox: somebody else won a cup, body.
+  ///
+  /// In en, this message translates to:
+  /// **'{winner} are the {year} {comp} champions, defeating {loser}{result}.'**
+  String msgChampBodyOther2(
+    String winner,
+    String comp,
+    String loser,
+    String result,
+    int year,
+  );
+
+  /// Inbox: the final's scoreline, appended to a champions message.
+  ///
+  /// In en, this message translates to:
+  /// **' {home}–{away} in the final'**
+  String msgFinalScoreSuffix(int home, int away);
+
+  /// Inbox: a final settled on penalties, appended to a champions message.
+  ///
+  /// In en, this message translates to:
+  /// **' on penalties, after a {home}–{away} final'**
+  String msgFinalPensSuffix(int home, int away);
+
+  /// Inbox: award headline.
+  ///
+  /// In en, this message translates to:
+  /// **'World Player of the Year'**
+  String get msgWpotyTitle;
+
+  /// Inbox: award body, the manager's own player.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} ({nation}) is named {year} World Player of the Year, one of yours.'**
+  String msgWpotyBodyMine(String name, String nation, int year);
+
+  /// Inbox: award body.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} ({nation}) is named {year} World Player of the Year.'**
+  String msgWpotyBodyOther(String name, String nation, int year);
+
+  /// Inbox: award headline.
+  ///
+  /// In en, this message translates to:
+  /// **'Young Player of the Tournament'**
+  String get msgYpotTitle;
+
+  /// Inbox: award body, the manager's own player.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} ({nation}), aged {age}, is named {year} Young Player of the Tournament, one of yours.'**
+  String msgYpotBodyMine(String name, String nation, int age, int year);
+
+  /// Inbox: award body.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} ({nation}), aged {age}, is named {year} Young Player of the Tournament.'**
+  String msgYpotBodyOther(String name, String nation, int age, int year);
+
+  /// Inbox: world ranking unchanged.
+  ///
+  /// In en, this message translates to:
+  /// **'You hold at #{rank}.'**
+  String msgRankHold1(int rank);
+
+  /// Inbox: world ranking unchanged.
+  ///
+  /// In en, this message translates to:
+  /// **'No change, still #{rank}.'**
+  String msgRankHold2(int rank);
+
+  /// Inbox: world ranking unchanged.
+  ///
+  /// In en, this message translates to:
+  /// **'Steady at #{rank}.'**
+  String msgRankHold3(int rank);
+
+  /// Inbox: world ranking climbed.
+  ///
+  /// In en, this message translates to:
+  /// **'Up {move, plural, one{1 place} other{{move} places}} this cycle, to #{rank}.'**
+  String msgRankUp1(int move, int rank);
+
+  /// Inbox: world ranking climbed.
+  ///
+  /// In en, this message translates to:
+  /// **'A climb of {move, plural, one{1 place} other{{move} places}} lifts you to #{rank}.'**
+  String msgRankUp2(int move, int rank);
+
+  /// Inbox: world ranking climbed.
+  ///
+  /// In en, this message translates to:
+  /// **'Up {move, plural, one{1 place} other{{move} places}}, now #{rank}.'**
+  String msgRankUp3(int move, int rank);
+
+  /// Inbox: world ranking slipped.
+  ///
+  /// In en, this message translates to:
+  /// **'Down {move, plural, one{1 place} other{{move} places}} this cycle, to #{rank}.'**
+  String msgRankDown1(int move, int rank);
+
+  /// Inbox: world ranking slipped.
+  ///
+  /// In en, this message translates to:
+  /// **'A slide of {move, plural, one{1 place} other{{move} places}} drops you to #{rank}.'**
+  String msgRankDown2(int move, int rank);
+
+  /// Inbox: world ranking slipped.
+  ///
+  /// In en, this message translates to:
+  /// **'Down {move, plural, one{1 place} other{{move} places}}, now #{rank}.'**
+  String msgRankDown3(int move, int rank);
+
+  /// Inbox: the manager's nation is world number one.
+  ///
+  /// In en, this message translates to:
+  /// **'You top the world.'**
+  String get msgRankLeadYou;
+
+  /// Inbox: who leads the world ranking.
+  ///
+  /// In en, this message translates to:
+  /// **'{nation} top the world.'**
+  String msgRankLeadOther(String nation);
+
+  /// Inbox: ranking release headline.
+  ///
+  /// In en, this message translates to:
+  /// **'World ranking · #{rank}'**
+  String msgRankTitle(int rank);
+
+  /// Inbox: ranking release body.
+  ///
+  /// In en, this message translates to:
+  /// **'The world ranking has been updated. {lead} {movement}'**
+  String msgRankBody(String lead, String movement);
+
+  /// Inbox: caps milestone headline.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} reaches {count} caps'**
+  String msgCapsTitle(String name, int count);
+
+  /// Inbox: caps milestone body.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} has now made {count} appearances for your nation.'**
+  String msgCapsBody(String name, int count);
+
+  /// Inbox: goals milestone headline.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} reaches {count} goals'**
+  String msgGoalsTitle(String name, int count);
+
+  /// Inbox: goals milestone body.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} has scored {count} international goals for your nation.'**
+  String msgGoalsBody(String name, int count);
+
+  /// Inbox: yearly squad development report headline.
+  ///
+  /// In en, this message translates to:
+  /// **'Squad development · {year}'**
+  String msgDevTitle(int year);
+
+  /// Inbox: yearly newcomers report headline.
+  ///
+  /// In en, this message translates to:
+  /// **'New faces · {year}'**
+  String msgNewFacesTitle(int year);
+
+  /// Inbox: yearly youth intake headline.
+  ///
+  /// In en, this message translates to:
+  /// **'Academy intake · {year}'**
+  String msgIntakeTitle(int year);
+
+  /// Inbox: the captain retires.
+  ///
+  /// In en, this message translates to:
+  /// **'Your captain {name} retires'**
+  String msgRetireCaptainTitle(String name);
+
+  /// Inbox: a notable player retires.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} retires from internationals'**
+  String msgRetireTitle(String name);
+
+  /// Inbox: retirement body.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} has retired from international football at {age}.'**
+  String msgRetireBody(String name, int age);
+
+  /// Inbox: retirement body with a career tally.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} has retired from international football at {age}, bowing out with {tally}.'**
+  String msgRetireBodyWith(String name, String tally, int age);
+
+  /// Inbox: caps part of a retirement tally.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, one{1 cap} other{{count} caps}}'**
+  String msgTallyCaps(int count);
+
+  /// Inbox: goals part of a retirement tally.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, one{1 goal} other{{count} goals}}'**
+  String msgTallyGoals(int count);
+
+  /// Inbox: appended when the retiree was captain.
+  ///
+  /// In en, this message translates to:
+  /// **' The armband is vacant — name a new captain from the call-up screen.'**
+  String get msgArmbandVacant;
+
+  /// Inbox: hall-of-fame headline.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} inducted into the Hall of Fame'**
+  String msgHofTitle(String name);
+
+  /// Inbox: hall-of-fame body.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} joins your nation’s Hall of Fame ({caps} caps, {goals} goals). See them in Legends.'**
+  String msgHofBody(String name, int caps, int goals);
+
+  /// Inbox: a player is banned after a sending-off.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} suspended'**
+  String hubBanTitle(String name);
+
+  /// Inbox: suspension body. {how} is one of the hubBanHow* strings.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} {how} and is banned for {matches, plural, one{your next match} other{the next {matches} matches}} — they will be unavailable for selection.'**
+  String hubBanBody(String name, String how, int matches);
+
+  /// Inbox: how a player was sent off.
+  ///
+  /// In en, this message translates to:
+  /// **'was sent off for a second booking'**
+  String get hubBanHowSecondYellow;
+
+  /// Inbox: how a player was sent off.
+  ///
+  /// In en, this message translates to:
+  /// **'was shown a straight red for violent conduct'**
+  String get hubBanHowViolent;
+
+  /// Inbox: how a player was sent off.
+  ///
+  /// In en, this message translates to:
+  /// **'was sent off'**
+  String get hubBanHowRed;
+
+  /// Inbox: a player picked up a knock.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} injured'**
+  String hubInjuryTitle(String name);
+
+  /// Inbox: injury body.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} picked up a knock and is out for {matches, plural, one{1 match} other{{matches} matches}}.'**
+  String hubInjuryBody(String name, int matches);
+
+  /// Inbox: lost a final, headline.
+  ///
+  /// In en, this message translates to:
+  /// **'Runners-up'**
+  String get hubRunnerUpTitle1;
+
+  /// Inbox: lost a final, headline.
+  ///
+  /// In en, this message translates to:
+  /// **'So near, yet so far'**
+  String get hubRunnerUpTitle2;
+
+  /// Inbox: lost a final, headline.
+  ///
+  /// In en, this message translates to:
+  /// **'Silver medals'**
+  String get hubRunnerUpTitle3;
+
+  /// Inbox: lost a final, body.
+  ///
+  /// In en, this message translates to:
+  /// **'You reached the {cup} final but lost to {opponent}. So close — silver this time.'**
+  String hubRunnerUpBody1(String cup, String opponent);
+
+  /// Inbox: lost a final, body.
+  ///
+  /// In en, this message translates to:
+  /// **'Beaten by {opponent} in the {cup} final. Runners-up — agonisingly close.'**
+  String hubRunnerUpBody2(String cup, String opponent);
+
+  /// Inbox: lost a final, body.
+  ///
+  /// In en, this message translates to:
+  /// **'The {cup} final slipped away against {opponent}. So much to be proud of, but not the trophy.'**
+  String hubRunnerUpBody3(String cup, String opponent);
+
+  /// Inbox: knocked out of a tournament, headline.
+  ///
+  /// In en, this message translates to:
+  /// **'Knocked out'**
+  String get hubKnockedOutTitle1;
+
+  /// Inbox: knocked out of a tournament, headline.
+  ///
+  /// In en, this message translates to:
+  /// **'The end of the road'**
+  String get hubKnockedOutTitle2;
+
+  /// Inbox: knocked out of a tournament, headline.
+  ///
+  /// In en, this message translates to:
+  /// **'Journey over'**
+  String get hubKnockedOutTitle3;
+
+  /// Inbox: knocked out of a tournament, body.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'re out of the {cup}, beaten by {opponent} in the {stage}.'**
+  String hubKnockedOutBody1(String cup, String opponent, String stage);
+
+  /// Inbox: knocked out of a tournament, body.
+  ///
+  /// In en, this message translates to:
+  /// **'{opponent} end your {cup} in the {stage}.'**
+  String hubKnockedOutBody2(String cup, String opponent, String stage);
+
+  /// Inbox: knocked out of a tournament, body.
+  ///
+  /// In en, this message translates to:
+  /// **'Your {cup} ends in the {stage}, beaten by {opponent}.'**
+  String hubKnockedOutBody3(String cup, String opponent, String stage);
+
+  /// Inbox: eliminated in the group stage, headline.
+  ///
+  /// In en, this message translates to:
+  /// **'Group stage exit'**
+  String get hubGroupExitTitle1;
+
+  /// Inbox: eliminated in the group stage, headline.
+  ///
+  /// In en, this message translates to:
+  /// **'Out at the group stage'**
+  String get hubGroupExitTitle2;
+
+  /// Inbox: eliminated in the group stage, headline.
+  ///
+  /// In en, this message translates to:
+  /// **'Early bath'**
+  String get hubGroupExitTitle3;
+
+  /// Inbox: eliminated in the group stage, body.
+  ///
+  /// In en, this message translates to:
+  /// **'Your {cup} is over at the group stage. Not enough to reach the knockouts.'**
+  String hubGroupExitBody1(String cup);
+
+  /// Inbox: eliminated in the group stage, body.
+  ///
+  /// In en, this message translates to:
+  /// **'You failed to get out of the group. Your {cup} ends here.'**
+  String hubGroupExitBody2(String cup);
+
+  /// Inbox: eliminated in the group stage, body.
+  ///
+  /// In en, this message translates to:
+  /// **'No knockout place this time. Your {cup} is done at the group stage.'**
+  String hubGroupExitBody3(String cup);
+
+  /// Inbox: the board's verdict on a cycle objective.
+  ///
+  /// In en, this message translates to:
+  /// **'Objective met — {comp}'**
+  String boardObjectiveMetTitle(String comp);
+
+  /// Inbox: the board's verdict on a cycle objective.
+  ///
+  /// In en, this message translates to:
+  /// **'Objective missed — {comp}'**
+  String boardObjectiveMissedTitle(String comp);
+
+  /// Inbox: the board's verdict body when the objective was met.
+  ///
+  /// In en, this message translates to:
+  /// **'The board\'s target at the {comp}: {demand}. You finished: {finish}. They have what they asked for.'**
+  String boardObjectiveMetBody(String comp, String demand, String finish);
+
+  /// Inbox: the board's verdict body when the objective was missed.
+  ///
+  /// In en, this message translates to:
+  /// **'The board\'s target at the {comp}: {demand}. You finished: {finish}. That is short of what was expected.'**
+  String boardObjectiveMissedBody(String comp, String demand, String finish);
+
+  /// Inbox: failed to qualify for the World Cup.
+  ///
+  /// In en, this message translates to:
+  /// **'World Cup dream over'**
+  String get newsWcMissTitle;
+
+  /// Inbox: failed to qualify for the World Cup, body.
+  ///
+  /// In en, this message translates to:
+  /// **'You didn\'t make the {year} World Cup — the qualifying campaign fell short. Four more years.'**
+  String newsWcMissBody(int year);
+
+  /// Inbox: a new all-time scoring record.
+  ///
+  /// In en, this message translates to:
+  /// **'All-time top scorer'**
+  String get newsRecordScorerTitle;
+
+  /// Inbox: all-time scoring record body.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} is now the game\'s all-time leading goalscorer with {goals} goals.'**
+  String newsRecordScorerBody(String name, int goals);
+
+  /// Inbox: a new all-time appearance record.
+  ///
+  /// In en, this message translates to:
+  /// **'Most-capped player'**
+  String get newsRecordCapsTitle;
+
+  /// Inbox: all-time appearance record body.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} is now the game\'s most-capped player with {caps} appearances.'**
+  String newsRecordCapsBody(String name, int caps);
+
+  /// Inbox fallback when the record holder cannot be named.
+  ///
+  /// In en, this message translates to:
+  /// **'A new record-breaker'**
+  String get newsARecordBreaker;
+
+  /// Inbox: a notable club transfer.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} joins {club}'**
+  String newsTransferTitle(String name, String club);
+
+  /// Inbox: transfer body.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} ({position}, {rating}) has left {fromClub} to sign for {destination} for {fee}.'**
+  String newsTransferBody(
+    String name,
+    String position,
+    String fromClub,
+    String destination,
+    String fee,
+    int rating,
+  );
+
+  /// How a club abroad is named in transfer news.
+  ///
+  /// In en, this message translates to:
+  /// **'{club} in {country}'**
+  String newsTransferAbroad(String club, String country);
+
+  /// Transfer fee when there is none.
+  ///
+  /// In en, this message translates to:
+  /// **'a free transfer'**
+  String get newsTransferFree;
+
+  /// Inbox: a star naturalisation candidate.
+  ///
+  /// In en, this message translates to:
+  /// **'⭐ {name} would switch to {nation}!'**
+  String newsNatzStarTitle(String name, String nation);
+
+  /// Inbox: a naturalisation candidate.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} wants to play for {nation}'**
+  String newsNatzTitle(String name, String nation);
+
+  /// Inbox: naturalisation offer body.
+  ///
+  /// In en, this message translates to:
+  /// **'{name}, a {age}-year-old {position} rated {rating} currently with {fromNation}, has family ties to {nation} and is open to switching. Open the Naturalisation offer to accept or decline.'**
+  String newsNatzBody(
+    String name,
+    String position,
+    String fromNation,
+    String nation,
+    int age,
+    int rating,
+  );
+
+  /// Inbox: naturalisation offer body for a star player.
+  ///
+  /// In en, this message translates to:
+  /// **'{name}, a {age}-year-old {position} rated {rating} currently with {fromNation}, is a star name who has family ties to {nation} and is open to switching. Open the Naturalisation offer to accept or decline.'**
+  String newsNatzBodyStar(
+    String name,
+    String position,
+    String fromNation,
+    String nation,
+    int age,
+    int rating,
+  );
+
+  /// Fallback for an unnamed source nation in naturalisation news.
+  ///
+  /// In en, this message translates to:
+  /// **'their nation'**
+  String get newsTheirNation;
+
+  /// Fallback for an unnamed destination nation in naturalisation news.
+  ///
+  /// In en, this message translates to:
+  /// **'your nation'**
+  String get newsYourNation;
+
+  /// Tournament tile status.
+  ///
+  /// In en, this message translates to:
+  /// **'CHAMPIONS'**
+  String get tourStatusChampions;
+
+  /// Tournament tile status.
+  ///
+  /// In en, this message translates to:
+  /// **'FINALS'**
+  String get tourStatusFinals;
+
+  /// Tournament tile status.
+  ///
+  /// In en, this message translates to:
+  /// **'QUALIFYING'**
+  String get tourStatusQualifying;
+
+  /// Tournament tile status.
+  ///
+  /// In en, this message translates to:
+  /// **'UPCOMING'**
+  String get tourStatusUpcoming;
+
+  /// Tournament tile status.
+  ///
+  /// In en, this message translates to:
+  /// **'IN PROGRESS'**
+  String get tourStatusInProgress;
+
+  /// Tournament tile status.
+  ///
+  /// In en, this message translates to:
+  /// **'COMING SOON'**
+  String get tourStatusComingSoon;
+
+  /// Tournament tile status.
+  ///
+  /// In en, this message translates to:
+  /// **'DECIDED'**
+  String get tourStatusDecided;
+
+  /// Tournament tile status: which Nations Cup league the manager is in.
+  ///
+  /// In en, this message translates to:
+  /// **'LEAGUE {letter}'**
+  String tourStatusLeague(String letter);
+
+  /// Draw-ceremony heading.
+  ///
+  /// In en, this message translates to:
+  /// **'WORLD CUP QUALIFYING DRAW'**
+  String get tourDrawWcQualifying;
+
+  /// Draw-ceremony heading.
+  ///
+  /// In en, this message translates to:
+  /// **'{cup} QUALIFYING DRAW'**
+  String tourDrawContQualifying(String cup);
+
+  /// Host-draw ceremony heading.
+  ///
+  /// In en, this message translates to:
+  /// **'WORLD CUP HOST'**
+  String get tourDrawWcHost;
+
+  /// Host-draw ceremony heading.
+  ///
+  /// In en, this message translates to:
+  /// **'{cup} HOST'**
+  String tourDrawContHost(String cup);
+
+  /// Fallback tournament name on the opening-ceremony screen.
+  ///
+  /// In en, this message translates to:
+  /// **'CONTINENTAL CUP'**
+  String get tourKickoffContinentalCup;
+
+  /// Host banner: the competition and its year.
+  ///
+  /// In en, this message translates to:
+  /// **'{competition} {year}'**
+  String tourHostCompetitionYear(String competition, int year);
+
+  /// Inbox: failed to qualify for the continental cup.
+  ///
+  /// In en, this message translates to:
+  /// **'{cup} missed'**
+  String newsContMissTitle(String cup);
+
+  /// Inbox: failed to qualify for the continental cup, body.
+  ///
+  /// In en, this message translates to:
+  /// **'You didn\'t qualify for {cup} — the campaign came up short this time.'**
+  String newsContMissBody(String cup);
+
+  /// Inbox: the year's player award.
+  ///
+  /// In en, this message translates to:
+  /// **'World Player of the Year {year}'**
+  String newsPotyTitle(int year);
+
+  /// Inbox: the year's player award, body.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} is the best player in the world this year.'**
+  String newsPotyBody(String name);
+
+  /// Inbox: appended when a different player takes the young-player award.
+  ///
+  /// In en, this message translates to:
+  /// **' {name} takes the young player\'s award.'**
+  String newsPotyYoungSuffix(String name);
+
+  /// Live-match screen top bar.
+  ///
+  /// In en, this message translates to:
+  /// **'MATCH'**
+  String get matchTopBarTitle;
+
+  /// Live match: stats tab before full time.
+  ///
+  /// In en, this message translates to:
+  /// **'Stats available at full time.'**
+  String get matchStatsAtFullTime;
+
+  /// Live match: player-ratings heading.
+  ///
+  /// In en, this message translates to:
+  /// **'PLAYER RATINGS'**
+  String get matchPlayerRatings;
+
+  /// Live match: substitutions heading.
+  ///
+  /// In en, this message translates to:
+  /// **'SUBSTITUTIONS'**
+  String get matchSubstitutions;
+
+  /// Live match: bench heading.
+  ///
+  /// In en, this message translates to:
+  /// **'SUBSTITUTES'**
+  String get matchSubstitutes;
+
+  /// Live match: man-of-the-match heading.
+  ///
+  /// In en, this message translates to:
+  /// **'PLAYER OF THE MATCH'**
+  String get matchPlayerOfTheMatch;
+
+  /// Live match: the goal flash.
+  ///
+  /// In en, this message translates to:
+  /// **'GOAL!'**
+  String get matchGoalShout;
+
+  /// Live match: the shoot-out scoreline.
+  ///
+  /// In en, this message translates to:
+  /// **'SHOOTOUT {home}–{away}'**
+  String matchShootoutScore(int home, int away);
+
+  /// Tournament screen: venues card heading.
+  ///
+  /// In en, this message translates to:
+  /// **'VENUES'**
+  String get tourVenues;
+
+  /// Draw ceremony: a seeding pot.
+  ///
+  /// In en, this message translates to:
+  /// **'POT {number}'**
+  String tourPot(int number);
+
+  /// Host-draw screen heading.
+  ///
+  /// In en, this message translates to:
+  /// **'HOST SELECTION'**
+  String get tourHostSelection;
+
+  /// Host-draw screen: the bidding nations.
+  ///
+  /// In en, this message translates to:
+  /// **'CANDIDATES'**
+  String get tourCandidates;
+
+  /// Host-draw screen: a shared bid.
+  ///
+  /// In en, this message translates to:
+  /// **'JOINT BID'**
+  String get tourJointBid;
+
+  /// Tournament awards: best goalkeeper.
+  ///
+  /// In en, this message translates to:
+  /// **'GOLDEN GLOVE'**
+  String get tourGoldenGlove;
+
+  /// Tournament awards heading.
+  ///
+  /// In en, this message translates to:
+  /// **'TEAM OF THE TOURNAMENT'**
+  String get tourTeamOfTournament;
+
+  /// Tournament bracket: the manager's own path.
+  ///
+  /// In en, this message translates to:
+  /// **'YOUR RUN'**
+  String get tourYourRun;
+
+  /// Tournament history heading.
+  ///
+  /// In en, this message translates to:
+  /// **'MEDAL TABLE'**
+  String get tourMedalTable;
+
+  /// Tournament history: who hosted an edition.
+  ///
+  /// In en, this message translates to:
+  /// **'Host: {nation}'**
+  String tourHostLine(String nation);
+
+  /// A group's name in a bracket or table.
+  ///
+  /// In en, this message translates to:
+  /// **'Group {name}'**
+  String tourGroupNamed(String name);
+
+  /// Finals-draw screen blurb.
+  ///
+  /// In en, this message translates to:
+  /// **'Seeded by world ranking. Spot your nation before the draw.'**
+  String get tourFinalsDrawBlurb;
+
+  /// Tournaments screen: link to the world ranking.
+  ///
+  /// In en, this message translates to:
+  /// **'World Ranking'**
+  String get tourWorldRanking;
+
+  /// Tournaments screen section heading.
+  ///
+  /// In en, this message translates to:
+  /// **'YOUR COMPETITIONS'**
+  String get tourYourCompetitions;
+
+  /// Tournaments screen section heading.
+  ///
+  /// In en, this message translates to:
+  /// **'OTHER CONTINENTS'**
+  String get tourOtherContinents;
+
+  /// Opening-ceremony screen: the host nations.
+  ///
+  /// In en, this message translates to:
+  /// **'HOSTED BY  {hosts}'**
+  String tourHostedBy(String hosts);
+
+  /// Best-third-placed table: how many go through and where.
+  ///
+  /// In en, this message translates to:
+  /// **'Top {count} advance to {destination}'**
+  String tourThirdsAdvance(int count, String destination);
+
+  /// Inbox: a player retires internationally after being ignored.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} walks away'**
+  String newsWalkoutTitle(String name);
+
+  /// Inbox: walkout body.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} has retired from international football at {age}, with {caps} caps. He asked to be told where he stood and was not, and he is not waiting any longer.'**
+  String newsWalkoutBody(String name, int age, int caps);
+
+  /// Press conference: a Accountability follow-up question.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'ve backed them again. Is nobody in that dressing room accountable?'**
+  String get pressProbeAccountability1;
+
+  /// Press conference: a Accountability follow-up question.
+  ///
+  /// In en, this message translates to:
+  /// **'That\'s the players defended. Who actually answers for a night like that?'**
+  String get pressProbeAccountability2;
+
+  /// Press conference: a Accountability follow-up question.
+  ///
+  /// In en, this message translates to:
+  /// **'Loyalty is easy from up there. Does anyone pay a price?'**
+  String get pressProbeAccountability3;
+
+  /// Press conference: a Accountability follow-up question.
+  ///
+  /// In en, this message translates to:
+  /// **'If it\'s never the players, we\'re left with one name. Yours.'**
+  String get pressProbeAccountability4;
+
+  /// Press conference: a YourFuture follow-up question.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'ve taken it on yourself. Should we be asking about your future?'**
+  String get pressProbeYourFuture1;
+
+  /// Press conference: a YourFuture follow-up question.
+  ///
+  /// In en, this message translates to:
+  /// **'Falling on your sword is noble. Is the job still yours?'**
+  String get pressProbeYourFuture2;
+
+  /// Press conference: a YourFuture follow-up question.
+  ///
+  /// In en, this message translates to:
+  /// **'You keep saying it\'s you. At what point is that a resignation?'**
+  String get pressProbeYourFuture3;
+
+  /// Press conference: a YourFuture follow-up question.
+  ///
+  /// In en, this message translates to:
+  /// **'The board are listening too. Are you sure you want that on record?'**
+  String get pressProbeYourFuture4;
+
+  /// Press conference: a DressingRoom follow-up question.
+  ///
+  /// In en, this message translates to:
+  /// **'Strong words in public. Have you lost that dressing room?'**
+  String get pressProbeDressingRoom1;
+
+  /// Press conference: a DressingRoom follow-up question.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'ve just told the country they\'re not good enough. How does that help?'**
+  String get pressProbeDressingRoom2;
+
+  /// Press conference: a DressingRoom follow-up question.
+  ///
+  /// In en, this message translates to:
+  /// **'Demanding it here rather than in there — is that leadership?'**
+  String get pressProbeDressingRoom3;
+
+  /// Press conference: a DressingRoom follow-up question.
+  ///
+  /// In en, this message translates to:
+  /// **'Players read this too. What do they hear tomorrow morning?'**
+  String get pressProbeDressingRoom4;
+
+  /// Press conference: a Expectation follow-up question.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'ve raised the bar in public. Is that not a hostage to fortune?'**
+  String get pressProbeExpectation1;
+
+  /// Press conference: a Expectation follow-up question.
+  ///
+  /// In en, this message translates to:
+  /// **'Big promise. What happens the day you don\'t deliver it?'**
+  String get pressProbeExpectation2;
+
+  /// Press conference: a Expectation follow-up question.
+  ///
+  /// In en, this message translates to:
+  /// **'Every manager before you said the same and packed a bag. Why are you different?'**
+  String get pressProbeExpectation3;
+
+  /// Press conference: a Expectation follow-up question.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'ve set the target. Will you resign if you miss it?'**
+  String get pressProbeExpectation4;
+
+  /// Press conference: a Substance follow-up question.
+  ///
+  /// In en, this message translates to:
+  /// **'With respect, that\'s not an answer. Give us something.'**
+  String get pressProbeSubstance1;
+
+  /// Press conference: a Substance follow-up question.
+  ///
+  /// In en, this message translates to:
+  /// **'The country wants to hear from you. Anything at all?'**
+  String get pressProbeSubstance2;
+
+  /// Press conference: a Substance follow-up question.
+  ///
+  /// In en, this message translates to:
+  /// **'You can keep saying nothing. We\'ll keep printing it.'**
+  String get pressProbeSubstance3;
+
+  /// Press conference: a Substance follow-up question.
+  ///
+  /// In en, this message translates to:
+  /// **'One straight sentence. What do you actually think?'**
+  String get pressProbeSubstance4;
+
+  /// Press conference: a Selection follow-up question.
+  ///
+  /// In en, this message translates to:
+  /// **'Same names, same shape, same result. Why does that team keep getting picked?'**
+  String get pressProbeSelection1;
+
+  /// Press conference: a Selection follow-up question.
+  ///
+  /// In en, this message translates to:
+  /// **'There are players in form watching this on television. Explain the selection.'**
+  String get pressProbeSelection2;
+
+  /// Press conference: a Selection follow-up question.
+  ///
+  /// In en, this message translates to:
+  /// **'Is the XI picked on merit, or on reputation?'**
+  String get pressProbeSelection3;
+
+  /// Press conference: a Selection follow-up question.
+  ///
+  /// In en, this message translates to:
+  /// **'Tactically, we all saw the problem. Did you?'**
+  String get pressProbeSelection4;
+
+  /// Press conference: a TheFans follow-up question.
+  ///
+  /// In en, this message translates to:
+  /// **'Thousands travelled for that. What do you say to them tonight?'**
+  String get pressProbeTheFans1;
+
+  /// Press conference: a TheFans follow-up question.
+  ///
+  /// In en, this message translates to:
+  /// **'The supporters have stuck with this team for years. What are you giving them?'**
+  String get pressProbeTheFans2;
+
+  /// Press conference: a TheFans follow-up question.
+  ///
+  /// In en, this message translates to:
+  /// **'They sing your name or they don\'t. Which is it going to be?'**
+  String get pressProbeTheFans3;
+
+  /// Press conference: a TheFans follow-up question.
+  ///
+  /// In en, this message translates to:
+  /// **'Message to the people back home. Go on.'**
+  String get pressProbeTheFans4;
+
+  /// Press conference: a BigPicture follow-up question.
+  ///
+  /// In en, this message translates to:
+  /// **'Step back for me. Where is this nation actually going?'**
+  String get pressProbeBigPicture1;
+
+  /// Press conference: a BigPicture follow-up question.
+  ///
+  /// In en, this message translates to:
+  /// **'From the outside, nothing has changed here in years. Has it?'**
+  String get pressProbeBigPicture2;
+
+  /// Press conference: a BigPicture follow-up question.
+  ///
+  /// In en, this message translates to:
+  /// **'In four years\' time, what does this side look like?'**
+  String get pressProbeBigPicture3;
+
+  /// Press conference: a BigPicture follow-up question.
+  ///
+  /// In en, this message translates to:
+  /// **'Is this a project, or is it just the next match?'**
+  String get pressProbeBigPicture4;
+
+  /// Press conference: a reporter's aside when the manager keeps taking the same stance.
+  ///
+  /// In en, this message translates to:
+  /// **'You always back them. We\'ve heard it.'**
+  String get pressNeedleBackPlayers;
+
+  /// Press conference: a reporter's aside when the manager keeps taking the same stance.
+  ///
+  /// In en, this message translates to:
+  /// **'It\'s always your fault, apparently.'**
+  String get pressNeedleTakeBlame;
+
+  /// Press conference: a reporter's aside when the manager keeps taking the same stance.
+  ///
+  /// In en, this message translates to:
+  /// **'More demands. Again.'**
+  String get pressNeedleDemandMore;
+
+  /// Press conference: a reporter's aside when the manager keeps taking the same stance.
+  ///
+  /// In en, this message translates to:
+  /// **'Another promise for the file.'**
+  String get pressNeedleRaiseBar;
+
+  /// Press conference: a reporter's aside when the manager keeps taking the same stance.
+  ///
+  /// In en, this message translates to:
+  /// **'You never give us anything.'**
+  String get pressNeedlePlayDown;
+
+  /// Press conference: the morning's headline after a conference that went went.
+  ///
+  /// In en, this message translates to:
+  /// **'A manager in charge of the room'**
+  String get pressHeadlineWent1;
+
+  /// Press conference: the morning's headline after a conference that went went.
+  ///
+  /// In en, this message translates to:
+  /// **'They came for a row and got a leader'**
+  String get pressHeadlineWent2;
+
+  /// Press conference: the morning's headline after a conference that went went.
+  ///
+  /// In en, this message translates to:
+  /// **'Straight answers, and they landed'**
+  String get pressHeadlineWent3;
+
+  /// Press conference: the morning's headline after a conference that went mixed.
+  ///
+  /// In en, this message translates to:
+  /// **'Plenty said, little settled'**
+  String get pressHeadlineMixed1;
+
+  /// Press conference: the morning's headline after a conference that went mixed.
+  ///
+  /// In en, this message translates to:
+  /// **'Something for everyone, and nothing for anyone'**
+  String get pressHeadlineMixed2;
+
+  /// Press conference: the morning's headline after a conference that went mixed.
+  ///
+  /// In en, this message translates to:
+  /// **'A conference that left the questions open'**
+  String get pressHeadlineMixed3;
+
+  /// Press conference: the morning's headline after a conference that went badly.
+  ///
+  /// In en, this message translates to:
+  /// **'A bruising afternoon in front of the cameras'**
+  String get pressHeadlineBadly1;
+
+  /// Press conference: the morning's headline after a conference that went badly.
+  ///
+  /// In en, this message translates to:
+  /// **'The room turned, and it showed'**
+  String get pressHeadlineBadly2;
+
+  /// Press conference: the morning's headline after a conference that went badly.
+  ///
+  /// In en, this message translates to:
+  /// **'Answers that will read worse in the morning'**
+  String get pressHeadlineBadly3;
+
+  /// Press conference: the morning's headline after a conference that went flat.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing said, nothing gained'**
+  String get pressHeadlineFlat1;
+
+  /// Press conference: the morning's headline after a conference that went flat.
+  ///
+  /// In en, this message translates to:
+  /// **'Ten minutes, no news'**
+  String get pressHeadlineFlat2;
+
+  /// Press conference: the morning's headline after a conference that went flat.
+  ///
+  /// In en, this message translates to:
+  /// **'A blank page for the back page'**
+  String get pressHeadlineFlat3;
+
+  /// Press sheet heading.
+  ///
+  /// In en, this message translates to:
+  /// **'PRESS CONFERENCE'**
+  String get pressConferenceTitle;
+
+  /// Press sheet progress line.
+  ///
+  /// In en, this message translates to:
+  /// **'Question {index} of {total}'**
+  String pressQuestionOf(int index, int total);
+
+  /// Press sheet: heading over the closing headline.
+  ///
+  /// In en, this message translates to:
+  /// **'TOMORROW\'S BACK PAGE'**
+  String get pressTomorrowsHeadline;
+
+  /// Press sheet: the button that closes the conference.
+  ///
+  /// In en, this message translates to:
+  /// **'LEAVE THE ROOM'**
+  String get pressLeaveRoom;
+
+  /// Press sheet: the summary line's squad column.
+  ///
+  /// In en, this message translates to:
+  /// **'Dressing room'**
+  String get pressRoomVerdictSquad;
+
+  /// Press sheet: the summary line's board column.
+  ///
+  /// In en, this message translates to:
+  /// **'Board'**
+  String get pressRoomVerdictBoard;
+
+  /// Y feed: a elation reply under somebody else's post.
+  ///
+  /// In en, this message translates to:
+  /// **'no notes. none. perfect.'**
+  String get yReactionElation0;
+
+  /// Y feed: a elation reply under somebody else's post.
+  ///
+  /// In en, this message translates to:
+  /// **'I am unwell (good).'**
+  String get yReactionElation1;
+
+  /// Y feed: a elation reply under somebody else's post.
+  ///
+  /// In en, this message translates to:
+  /// **'framing this. putting it above the fireplace.'**
+  String get yReactionElation2;
+
+  /// Y feed: a elation reply under somebody else's post.
+  ///
+  /// In en, this message translates to:
+  /// **'we are so back'**
+  String get yReactionElation3;
+
+  /// Y feed: a elation reply under somebody else's post.
+  ///
+  /// In en, this message translates to:
+  /// **'Screenshotting this for the doubters. All of them.'**
+  String get yReactionElation4;
+
+  /// Y feed: a elation reply under somebody else's post.
+  ///
+  /// In en, this message translates to:
+  /// **'I\'m going to be insufferable about this for a decade.'**
+  String get yReactionElation5;
+
+  /// Y feed: a relief reply under somebody else's post.
+  ///
+  /// In en, this message translates to:
+  /// **'that took ten years off me'**
+  String get yReactionRelief0;
+
+  /// Y feed: a relief reply under somebody else's post.
+  ///
+  /// In en, this message translates to:
+  /// **'Ugly. Three points. Moving on.'**
+  String get yReactionRelief1;
+
+  /// Y feed: a relief reply under somebody else's post.
+  ///
+  /// In en, this message translates to:
+  /// **'Nobody speak. Nobody jinx it.'**
+  String get yReactionRelief2;
+
+  /// Y feed: a relief reply under somebody else's post.
+  ///
+  /// In en, this message translates to:
+  /// **'Not pretty, but I\'ll take it every single time.'**
+  String get yReactionRelief3;
+
+  /// Y feed: a relief reply under somebody else's post.
+  ///
+  /// In en, this message translates to:
+  /// **'Heart rate: unacceptable.'**
+  String get yReactionRelief4;
+
+  /// Y feed: a relief reply under somebody else's post.
+  ///
+  /// In en, this message translates to:
+  /// **'Somehow. Somehow!'**
+  String get yReactionRelief5;
+
+  /// Y feed: a fury reply under somebody else's post.
+  ///
+  /// In en, this message translates to:
+  /// **'Absolute state of this.'**
+  String get yReactionFury0;
+
+  /// Y feed: a fury reply under somebody else's post.
+  ///
+  /// In en, this message translates to:
+  /// **'Not good enough. Not remotely.'**
+  String get yReactionFury1;
+
+  /// Y feed: a fury reply under somebody else's post.
+  ///
+  /// In en, this message translates to:
+  /// **'I want names.'**
+  String get yReactionFury2;
+
+  /// Y feed: a fury reply under somebody else's post.
+  ///
+  /// In en, this message translates to:
+  /// **'Every four years, the same. EVERY four years.'**
+  String get yReactionFury3;
+
+  /// Y feed: a fury reply under somebody else's post.
+  ///
+  /// In en, this message translates to:
+  /// **'Deleting the app. Reinstalling Thursday.'**
+  String get yReactionFury4;
+
+  /// Y feed: a fury reply under somebody else's post.
+  ///
+  /// In en, this message translates to:
+  /// **'Somebody explain that to me slowly.'**
+  String get yReactionFury5;
+
+  /// Y feed: a despair reply under somebody else's post.
+  ///
+  /// In en, this message translates to:
+  /// **'well.'**
+  String get yReactionDespair0;
+
+  /// Y feed: a despair reply under somebody else's post.
+  ///
+  /// In en, this message translates to:
+  /// **'I have run out of ways to say this.'**
+  String get yReactionDespair1;
+
+  /// Y feed: a despair reply under somebody else's post.
+  ///
+  /// In en, this message translates to:
+  /// **'Going for a walk. A long one.'**
+  String get yReactionDespair2;
+
+  /// Y feed: a despair reply under somebody else's post.
+  ///
+  /// In en, this message translates to:
+  /// **'this is the darkest timeline'**
+  String get yReactionDespair3;
+
+  /// Y feed: a despair reply under somebody else's post.
+  ///
+  /// In en, this message translates to:
+  /// **'Wake me in four years.'**
+  String get yReactionDespair4;
+
+  /// Y feed: a despair reply under somebody else's post.
+  ///
+  /// In en, this message translates to:
+  /// **'No jokes today. Nothing.'**
+  String get yReactionDespair5;
+
+  /// Y feed: a smugness reply under somebody else's post.
+  ///
+  /// In en, this message translates to:
+  /// **'Said it in January. Check the timeline.'**
+  String get yReactionSmugness0;
+
+  /// Y feed: a smugness reply under somebody else's post.
+  ///
+  /// In en, this message translates to:
+  /// **'Some of you owe some of us an apology.'**
+  String get yReactionSmugness1;
+
+  /// Y feed: a smugness reply under somebody else's post.
+  ///
+  /// In en, this message translates to:
+  /// **'Quietly, but: told you.'**
+  String get yReactionSmugness2;
+
+  /// Y feed: a smugness reply under somebody else's post.
+  ///
+  /// In en, this message translates to:
+  /// **'The doubters have gone very quiet.'**
+  String get yReactionSmugness3;
+
+  /// Y feed: a smugness reply under somebody else's post.
+  ///
+  /// In en, this message translates to:
+  /// **'bookmark this one'**
+  String get yReactionSmugness4;
+
+  /// Y feed: a smugness reply under somebody else's post.
+  ///
+  /// In en, this message translates to:
+  /// **'Not that anybody\'s counting. I\'m counting.'**
+  String get yReactionSmugness5;
+
+  /// Y feed: a shrug reply under somebody else's post.
+  ///
+  /// In en, this message translates to:
+  /// **'it happened. next.'**
+  String get yReactionShrug0;
+
+  /// Y feed: a shrug reply under somebody else's post.
+  ///
+  /// In en, this message translates to:
+  /// **'Fine. Whatever. Onwards.'**
+  String get yReactionShrug1;
+
+  /// Y feed: a shrug reply under somebody else's post.
+  ///
+  /// In en, this message translates to:
+  /// **'Filing this one under \'football\'.'**
+  String get yReactionShrug2;
+
+  /// Y feed: a shrug reply under somebody else's post.
+  ///
+  /// In en, this message translates to:
+  /// **'no thoughts, head empty'**
+  String get yReactionShrug3;
+
+  /// Y feed: a shrug reply under somebody else's post.
+  ///
+  /// In en, this message translates to:
+  /// **'Wake me for the next one.'**
+  String get yReactionShrug4;
+
+  /// Y feed: a shrug reply under somebody else's post.
+  ///
+  /// In en, this message translates to:
+  /// **'Genuinely nothing to add.'**
+  String get yReactionShrug5;
+
+  /// Best-third-placed table: why some results are dropped.
+  ///
+  /// In en, this message translates to:
+  /// **'Groups are uneven — results against each big group\'s bottom side are dropped, so every team is judged over the same games.'**
+  String get tourThirdsUneven;
+
+  /// Premium gate: headline at the end of the free cycle.
+  ///
+  /// In en, this message translates to:
+  /// **'YOUR FIRST CYCLE IS OVER'**
+  String get gateTitle;
+
+  /// Premium gate: the pitch under the headline.
+  ///
+  /// In en, this message translates to:
+  /// **'Four years, a continental championship and a World Cup — that was the free part, and nothing was held back. Carry this save on for a one-off payment.'**
+  String get gateLead;
+
+  /// Premium gate benefit.
+  ///
+  /// In en, this message translates to:
+  /// **'Endless career — every cycle from here on'**
+  String get gateBenefitEndless;
+
+  /// Premium gate benefit.
+  ///
+  /// In en, this message translates to:
+  /// **'Every nation in the world to manage'**
+  String get gateBenefitNations;
+
+  /// Premium gate benefit.
+  ///
+  /// In en, this message translates to:
+  /// **'Every save slot'**
+  String get gateBenefitSaves;
+
+  /// Premium gate benefit.
+  ///
+  /// In en, this message translates to:
+  /// **'Every future update included'**
+  String get gateBenefitUpdates;
+
+  /// Premium gate benefit.
+  ///
+  /// In en, this message translates to:
+  /// **'No subscription, no ads, no account, works offline'**
+  String get gateBenefitOffline;
+
+  /// Premium gate: the line above the price.
+  ///
+  /// In en, this message translates to:
+  /// **'One payment, forever'**
+  String get gatePriceLead;
+
+  /// Premium gate: the price. Placeholder until the store's own localised price is wired in.
+  ///
+  /// In en, this message translates to:
+  /// **'€11.99'**
+  String get gatePrice;
+
+  /// Premium gate: the button that continues the career.
+  ///
+  /// In en, this message translates to:
+  /// **'BUY AND CONTINUE'**
+  String get gateBuy;
+
+  /// Premium gate: the button that leaves the save.
+  ///
+  /// In en, this message translates to:
+  /// **'EXIT'**
+  String get gateExit;
+
+  /// Premium gate: an honest note while the store is not wired up.
+  ///
+  /// In en, this message translates to:
+  /// **'Not connected to payment yet — this button just continues.'**
+  String get gateNotChargedYet;
+
+  /// Settings: heading for the backup section.
+  ///
+  /// In en, this message translates to:
+  /// **'SAVES'**
+  String get backupTitle;
+
+  /// Settings: what the backup section is for.
+  ///
+  /// In en, this message translates to:
+  /// **'Every save lives in one file on this phone. Export a copy so a lost or reinstalled phone does not cost you a career.'**
+  String get backupBlurb;
+
+  /// Settings: the export button.
+  ///
+  /// In en, this message translates to:
+  /// **'EXPORT A BACKUP'**
+  String get backupExport;
+
+  /// Subject line when the exported save is shared.
+  ///
+  /// In en, this message translates to:
+  /// **'FNM saves'**
+  String get backupExportSubject;
+
+  /// Settings: the restore button.
+  ///
+  /// In en, this message translates to:
+  /// **'RESTORE FROM A FILE'**
+  String get backupRestore;
+
+  /// Confirmation title before a restore.
+  ///
+  /// In en, this message translates to:
+  /// **'Replace every save?'**
+  String get backupRestoreWarnTitle;
+
+  /// Confirmation body before a restore.
+  ///
+  /// In en, this message translates to:
+  /// **'Restoring replaces every save on this phone with the ones in the file. The app will restart.'**
+  String get backupRestoreWarnBody;
+
+  /// Confirmation button for a restore.
+  ///
+  /// In en, this message translates to:
+  /// **'REPLACE'**
+  String get backupRestoreConfirm;
+
+  /// Dismisses the restore confirmation.
+  ///
+  /// In en, this message translates to:
+  /// **'CANCEL'**
+  String get backupCancel;
+
+  /// Snackbar after a successful export.
+  ///
+  /// In en, this message translates to:
+  /// **'Backup ready — choose where to keep it.'**
+  String get backupExported;
+
+  /// Snackbar when an export fails.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not write the backup.'**
+  String get backupFailed;
+
+  /// Restore refused: not a readable database.
+  ///
+  /// In en, this message translates to:
+  /// **'That file could not be opened.'**
+  String get backupRejectedUnreadable;
+
+  /// Restore refused: a database, but not ours.
+  ///
+  /// In en, this message translates to:
+  /// **'That is not an FNM save.'**
+  String get backupRejectedNotFnm;
+
+  /// Restore refused: the backup is from a later build.
+  ///
+  /// In en, this message translates to:
+  /// **'That save was made by a newer version of the app. Update first.'**
+  String get backupRejectedNewer;
+
+  /// Restore refused: older than the migration path reaches.
+  ///
+  /// In en, this message translates to:
+  /// **'That save is too old to be restored by this version.'**
+  String get backupRejectedTooOld;
+
+  /// Saves list: tooltip on the per-career export button.
+  ///
+  /// In en, this message translates to:
+  /// **'Share this career'**
+  String get careerShare;
+
+  /// Saves list: the button that adds a career from a file.
+  ///
+  /// In en, this message translates to:
+  /// **'IMPORT A CAREER'**
+  String get careerImport;
+
+  /// Subject line when a single career is shared.
+  ///
+  /// In en, this message translates to:
+  /// **'An FNM career'**
+  String get careerShareSubject;
+
+  /// Snackbar after a career has been added from a file.
+  ///
+  /// In en, this message translates to:
+  /// **'Career imported.'**
+  String get careerImported;
+
+  /// Import refused: unreadable bundle.
+  ///
+  /// In en, this message translates to:
+  /// **'That file is not an FNM career.'**
+  String get careerImportFailedUnreadable;
+
+  /// Import refused: the bundle is from a later build.
+  ///
+  /// In en, this message translates to:
+  /// **'That career was exported by a newer version of the app. Update first.'**
+  String get careerImportFailedNewer;
+
+  /// Snackbar when a per-career export fails.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not export that career.'**
+  String get careerShareFailed;
+
+  /// Manager screen: app bar title.
+  ///
+  /// In en, this message translates to:
+  /// **'MANAGER'**
+  String get managerTitle;
+
+  /// Manager screen: skills section heading.
+  ///
+  /// In en, this message translates to:
+  /// **'YOUR SKILLS'**
+  String get managerSkills;
+
+  /// Manager screen: unspent skill points.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{No points to spend} one{1 point to spend} other{{count} points to spend}}'**
+  String managerPointsAvailable(int count);
+
+  /// Manager screen: how points are earned.
+  ///
+  /// In en, this message translates to:
+  /// **'Two points for every cycle you complete, one for every trophy you win.'**
+  String get managerPointsHow;
+
+  /// Manager skill name.
+  ///
+  /// In en, this message translates to:
+  /// **'Man Management'**
+  String get managerSkillManManagement;
+
+  /// Manager skill effect.
+  ///
+  /// In en, this message translates to:
+  /// **'What you say in public and in your office lands harder.'**
+  String get managerSkillManManagementBlurb;
+
+  /// Manager skill name.
+  ///
+  /// In en, this message translates to:
+  /// **'Tactical'**
+  String get managerSkillTactical;
+
+  /// Manager skill effect.
+  ///
+  /// In en, this message translates to:
+  /// **'Your side settles into a new shape faster.'**
+  String get managerSkillTacticalBlurb;
+
+  /// Manager skill name.
+  ///
+  /// In en, this message translates to:
+  /// **'Youth Development'**
+  String get managerSkillYouth;
+
+  /// Manager skill effect.
+  ///
+  /// In en, this message translates to:
+  /// **'More comes out of the academy.'**
+  String get managerSkillYouthBlurb;
+
+  /// Manager skill name.
+  ///
+  /// In en, this message translates to:
+  /// **'Negotiation'**
+  String get managerSkillNegotiation;
+
+  /// Manager skill effect.
+  ///
+  /// In en, this message translates to:
+  /// **'The federation funds you better.'**
+  String get managerSkillNegotiationBlurb;
+
+  /// Manager screen: staff section heading.
+  ///
+  /// In en, this message translates to:
+  /// **'YOUR STAFF'**
+  String get managerStaff;
+
+  /// Manager screen: the standing staff cost.
+  ///
+  /// In en, this message translates to:
+  /// **'Wages: {amount} per cycle'**
+  String managerStaffWages(String amount);
+
+  /// Staff role.
+  ///
+  /// In en, this message translates to:
+  /// **'Assistant Manager'**
+  String get managerRoleAssistant;
+
+  /// Staff role effect.
+  ///
+  /// In en, this message translates to:
+  /// **'Runs the training. Everything you focus on, he does more of.'**
+  String get managerRoleAssistantBlurb;
+
+  /// Staff role.
+  ///
+  /// In en, this message translates to:
+  /// **'Chief Scout'**
+  String get managerRoleScout;
+
+  /// Staff role effect.
+  ///
+  /// In en, this message translates to:
+  /// **'Tells you what a young player will become, sooner.'**
+  String get managerRoleScoutBlurb;
+
+  /// Staff role.
+  ///
+  /// In en, this message translates to:
+  /// **'Fitness Coach'**
+  String get managerRoleFitness;
+
+  /// Staff role effect.
+  ///
+  /// In en, this message translates to:
+  /// **'Keeps them on the pitch.'**
+  String get managerRoleFitnessBlurb;
+
+  /// Staff quality tier.
+  ///
+  /// In en, this message translates to:
+  /// **'None'**
+  String get managerTierNone;
+
+  /// Staff quality tier.
+  ///
+  /// In en, this message translates to:
+  /// **'Basic'**
+  String get managerTierBasic;
+
+  /// Staff quality tier.
+  ///
+  /// In en, this message translates to:
+  /// **'Good'**
+  String get managerTierGood;
+
+  /// Staff quality tier.
+  ///
+  /// In en, this message translates to:
+  /// **'Elite'**
+  String get managerTierElite;
+
+  /// Cost of hiring nobody.
+  ///
+  /// In en, this message translates to:
+  /// **'free'**
+  String get managerFree;
+
+  /// Manager screen: training focus section heading.
+  ///
+  /// In en, this message translates to:
+  /// **'BETWEEN WINDOWS'**
+  String get managerTraining;
+
+  /// Manager screen: what the training focus is.
+  ///
+  /// In en, this message translates to:
+  /// **'What the squad works on when there is no match to play.'**
+  String get managerTrainingBlurb;
+
+  /// Training focus.
+  ///
+  /// In en, this message translates to:
+  /// **'Balanced'**
+  String get managerFocusBalanced;
+
+  /// Training focus effect.
+  ///
+  /// In en, this message translates to:
+  /// **'A bit of everything.'**
+  String get managerFocusBalancedBlurb;
+
+  /// Training focus.
+  ///
+  /// In en, this message translates to:
+  /// **'Fitness'**
+  String get managerFocusFitness;
+
+  /// Training focus effect.
+  ///
+  /// In en, this message translates to:
+  /// **'Fewer knocks.'**
+  String get managerFocusFitnessBlurb;
+
+  /// Training focus.
+  ///
+  /// In en, this message translates to:
+  /// **'Cohesion'**
+  String get managerFocusCohesion;
+
+  /// Training focus effect.
+  ///
+  /// In en, this message translates to:
+  /// **'The shape beds in faster.'**
+  String get managerFocusCohesionBlurb;
+
+  /// Training focus.
+  ///
+  /// In en, this message translates to:
+  /// **'Youth'**
+  String get managerFocusYouth;
+
+  /// Training focus effect.
+  ///
+  /// In en, this message translates to:
+  /// **'Hours with the youngest in the pool.'**
+  String get managerFocusYouthBlurb;
 }
 
 class _AppLocalizationsDelegate

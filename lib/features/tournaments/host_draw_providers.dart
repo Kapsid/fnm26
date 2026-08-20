@@ -1,4 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fnm/features/settings/settings_providers.dart';
+import 'package:fnm/core/util/competition_label.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/services/competition/continental_cups.dart';
@@ -48,6 +50,7 @@ hostDrawProvider = FutureProvider.autoDispose.family<HostDrawData?, HostDrawArg>
 ) async {
   await ref.watch(seedLoaderProvider).ensureSeeded();
   final career = await ref.watch(careerRepositoryProvider).byId(arg.careerId);
+  final l = ref.watch(appLocalizationsProvider);
   if (career == null) return null;
   final all = await ref.watch(nationRepositoryProvider).all();
   final nations = {for (final n in all) n.id: n};
@@ -70,7 +73,7 @@ hostDrawProvider = FutureProvider.autoDispose.family<HostDrawData?, HostDrawArg>
       nations: all,
       seed: career.rngSeed,
     );
-    title = 'WORLD CUP HOST';
+    title = l.tourDrawWcHost;
     watchedKind = worldCupHostDrawKind;
   } else {
     final playerConf = nations[career.nationId]?.confederation;
@@ -90,7 +93,9 @@ hostDrawProvider = FutureProvider.autoDispose.family<HostDrawData?, HostDrawArg>
       seed: career.rngSeed,
       nations: all,
     );
-    title = '${cont.name.toUpperCase()} HOST';
+    title = l.tourDrawContHost(
+      continentalCupLabel(l, playerConf).toUpperCase(),
+    );
     watchedKind = continentalHostDrawKind;
     year = CareerService.worldCupYear(career.cyclePointer) - 2;
   }

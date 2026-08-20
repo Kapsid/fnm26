@@ -81,15 +81,16 @@ class BestThirdsCard extends StatelessWidget {
             style: AppTypography.labelSmall.copyWith(color: AppColors.primary),
           ),
           Text(
-            'Top $qualifyCount advance to $destination',
+            AppLocalizations.of(
+              context,
+            ).tourThirdsAdvance(qualifyCount, destination),
             style: AppTypography.labelSmall.copyWith(
               color: AppColors.onSurfaceVariant,
             ),
           ),
           if (adjustedForGroupSize)
             Text(
-              'Groups are uneven — results against each big group\'s bottom '
-              'side are dropped, so every team is judged over the same games.',
+              AppLocalizations.of(context).tourThirdsUneven,
               style: AppTypography.labelSmall.copyWith(
                 color: AppColors.warning,
               ),

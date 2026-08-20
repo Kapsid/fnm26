@@ -3,6 +3,7 @@ import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
 import 'package:fnm/domain/services/awards/awards.dart';
 import 'package:fnm/features/career/career_providers.dart';
+import 'package:fnm/features/settings/settings_providers.dart';
 
 /// A player's trophy cabinet, newest first.
 typedef AwardArg = ({int careerId, int playerId});
@@ -37,6 +38,7 @@ class AwardService {
     final career = await _ref.read(careerRepositoryProvider).byId(careerId);
     if (career == null) return;
     final comp = _ref.read(competitionRepositoryProvider);
+    final l = _ref.read(appLocalizationsProvider);
     // Only years that have finished: an award handed out in June would be
     // handed to whoever happened to have played by then.
     final year = career.inGameDate.year - 1;
@@ -99,11 +101,12 @@ class AwardService {
         careerId: careerId,
         dedupKey: 'poty:$year',
         category: 'award',
-        title: 'World Player of the Year $year',
+        title: l.newsPotyTitle(year),
         body:
-            '${best.name} is the best player in the world this year.'
-            '${young == null || young.playerId == best.playerId ? '' : ' '
-                      '${young.name} takes the young player\'s award.'}',
+            l.newsPotyBody(best.name) +
+            (young == null || young.playerId == best.playerId
+                ? ''
+                : l.newsPotyYoungSuffix(young.name)),
         year: year,
       );
     }

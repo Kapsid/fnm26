@@ -90,7 +90,7 @@ class _TournamentBracketState extends State<TournamentBracket> {
                   ),
                   const SizedBox(width: AppSpacing.sm),
                   Text(
-                    'YOUR RUN',
+                    AppLocalizations.of(context).tourYourRun,
                     style: AppTypography.labelSmall.copyWith(
                       color: AppColors.primary,
                     ),
@@ -458,7 +458,7 @@ class _TournamentBracketState extends State<TournamentBracket> {
           ),
           if (seed != null)
             Text(
-              'Group $seed',
+              AppLocalizations.of(context).tourGroupNamed(seed),
               style: AppTypography.labelSmall.copyWith(
                 fontSize: 9,
                 color: AppColors.onSurfaceVariant,

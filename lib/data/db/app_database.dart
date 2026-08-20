@@ -3,10 +3,17 @@ import 'package:fnm/data/db/connection.dart';
 import 'package:fnm/data/db/schema_versions.dart';
 import 'package:fnm/data/db/tables.dart';
 // Imported so the generated part file can resolve the enum types used by
-// `textEnum` columns (Confederation, PlayerPosition, Formation, Playstyle).
+// `textEnum` columns (Confederation, PlayerPosition, Formation, Playstyle,
+// TrainingFocus) AND the constants used as column defaults
+// (ManagerSkills.starting). The part file has no imports of its own, so a name
+// only tables.dart can see is a name it cannot compile against — an
+// unresolved one reads as "not a constant expression", which is a confusing
+// way to be told about a missing import.
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/formation.dart';
 import 'package:fnm/domain/entities/tactics.dart';
+import 'package:fnm/domain/services/manager/manager_skills.dart';
+import 'package:fnm/domain/services/manager/staff.dart';
 
 part 'app_database.g.dart';
 
@@ -67,8 +74,16 @@ class AppDatabase extends _$AppDatabase {
   // ignore: use_super_parameters
   AppDatabase.forTesting(QueryExecutor executor) : super(executor);
 
+  /// The schema this build expects.
+  ///
+  /// A constant as well as the override so the migration tests can derive the
+  /// full set of upgrade paths from it — see `schema_migration_test.dart`.
+  /// A hand-written list of paths is a step somebody forgets on the bump that
+  /// matters.
+  static const int currentSchemaVersion = 43;
+
   @override
-  int get schemaVersion => 42;
+  int get schemaVersion => currentSchemaVersion;
 
   /// The first schema version with a recorded shape in `drift_schemas/`, and so
   /// the oldest save that can be migrated forward rather than rebuilt.
@@ -167,6 +182,25 @@ class AppDatabase extends _$AppDatabase {
         // here, which is honest — the time before this was never measured.
         from41To42: (m, schema) async {
           await m.addColumn(schema.careers, schema.careers.playedSeconds);
+        },
+        // 42 → 43 gives the MANAGER a career of his own: four skills he can
+        // raise, the staff he has hired, and what the side works on between
+        // windows. Purely additive, and every column defaults to the neutral
+        // value — a save from before this played without any of it and must
+        // carry on playing exactly the same until the manager spends a point.
+        from42To43: (m, schema) async {
+          for (final column in [
+            schema.careers.skillManManagement,
+            schema.careers.skillTactical,
+            schema.careers.skillYouthDevelopment,
+            schema.careers.skillNegotiation,
+            schema.careers.staffAssistant,
+            schema.careers.staffScout,
+            schema.careers.staffFitnessCoach,
+            schema.careers.trainingFocus,
+          ]) {
+            await m.addColumn(schema.careers, column);
+          }
         },
       )(m, from, to);
     },

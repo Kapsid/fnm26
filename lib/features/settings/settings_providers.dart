@@ -1,7 +1,13 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fnm/core/config/ui_language.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+// The language providers live in core so the data layer can read them too;
+// re-exported here because Settings is where the rest of the app expects them.
+export 'package:fnm/core/config/ui_language.dart'
+    show localeProvider, uiLanguageCodeProvider;
 
 /// Prefs key for the sound-and-haptics toggle.
 const String _kSoundHapticsKey = 'settings.soundHaptics';
@@ -17,23 +23,13 @@ const List<Locale> supportedAppLocales = [Locale('en'), Locale('cs')];
 /// at startup via [loadSettings].
 final soundHapticsEnabledProvider = StateProvider<bool>((ref) => true);
 
-/// The UI language override, or null to follow the device locale. Read by the
-/// root [MaterialApp]; persisted so a chosen language survives relaunches.
-final localeProvider = StateProvider<Locale?>((ref) => null);
-
 /// [AppLocalizations] for the current UI language, usable WITHOUT a
 /// BuildContext — for providers/services that generate user-facing text (board
 /// objectives, tournament finishes, news). Resolves like the app itself does:
 /// the chosen override, else the device language, falling back to English for
 /// any unsupported one.
 final appLocalizationsProvider = Provider<AppLocalizations>((ref) {
-  final override = ref.watch(localeProvider);
-  final code =
-      override?.languageCode ??
-      WidgetsBinding.instance.platformDispatcher.locale.languageCode;
-  return lookupAppLocalizations(
-    code == 'cs' ? const Locale('cs') : const Locale('en'),
-  );
+  return lookupAppLocalizations(Locale(ref.watch(uiLanguageCodeProvider)));
 });
 
 /// Reads the persisted settings into their providers. Call once at app start

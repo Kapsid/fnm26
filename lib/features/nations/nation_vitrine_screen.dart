@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fnm/core/util/competition_label.dart';
 import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
-import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/services/nation/nation_identity.dart';
 import 'package:fnm/features/nations/nation_vitrine_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
@@ -135,7 +135,8 @@ class _Header extends StatelessWidget {
                   ),
                 const SizedBox(height: 2),
                 Text(
-                  '${v.nation.confederation.label} · ${v.nation.code}',
+                  '${confederationLabel(l, v.nation.confederation)} · '
+                  '${v.nation.code}',
                   style: AppTypography.bodyMedium.copyWith(
                     color: AppColors.onSurfaceVariant,
                   ),
@@ -451,7 +452,7 @@ class _TitlesCard extends StatelessWidget {
                 const SizedBox(width: AppSpacing.sm),
                 Expanded(
                   child: Text(
-                    v.titles[i].competition,
+                    competitionLabel(l, v.titles[i].competition),
                     style: AppTypography.bodyLarge,
                   ),
                 ),

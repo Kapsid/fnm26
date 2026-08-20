@@ -311,10 +311,11 @@ pressQuestionProvider = FutureProvider.autoDispose.family<PressQuestion?, int>((
   );
 });
 
-/// How many recent questions the press remember having asked. Small on
-/// purpose: they should avoid repeating themselves, not work through every
-/// topic before coming back to a story that matters.
-const int _recentTopicMemory = 3;
+/// How many recent ANSWERS the press remember having heard. A conference is
+/// [Press.conferenceLength] questions on one story, so this is three
+/// conferences' worth: they should avoid repeating themselves, not work
+/// through every topic before coming back to a story that matters.
+const int _recentTopicMemory = Press.conferenceLength * 3;
 
 /// How many competitive games without defeat make a run worth asking about.
 const int _unbeatenRunLength = 6;
@@ -338,34 +339,67 @@ final AutoDisposeFutureProviderFamily<PressEffect, int> pressEffectProvider =
       ]);
     });
 
+/// The manager's HABITS: how often each stance has been taken, across the
+/// whole career. A reporter who has heard the same line five times says so —
+/// which is the difference between a room of people and a form to fill in.
+final AutoDisposeFutureProviderFamily<Map<PressTone, int>, int>
+pressToneHistoryProvider = FutureProvider.autoDispose
+    .family<Map<PressTone, int>, int>((
+      ref,
+      careerId,
+    ) async {
+      final answers = await ref
+          .watch(careerRepositoryProvider)
+          .pressAnswers(careerId);
+      final byName = {for (final t in PressTone.values) t.name: t};
+      final counts = <PressTone, int>{};
+      for (final a in answers) {
+        if (byName[a.tone] case final tone?) {
+          counts[tone] = (counts[tone] ?? 0) + 1;
+        }
+      }
+      return counts;
+    });
+
+/// How many times a stance must have been taken before the room starts saying
+/// so out loud.
+const int pressNeedleThreshold = 4;
+
 /// Records an answer and refreshes everything it touches.
 class PressService {
   PressService(this._ref);
 
   final Ref _ref;
 
-  Future<void> answer(
+  /// Records one exchange of a conference. The follow-ups carry the opening
+  /// question's key with a suffix, so they store alongside it in the same
+  /// table — no new column, and an old save still reads back.
+  Future<PressEffect?> answerExchange(
     int careerId,
-    PressQuestion question,
+    PressExchange exchange,
     PressTone tone,
   ) async {
     final repo = _ref.read(careerRepositoryProvider);
     final career = await repo.byId(careerId);
-    if (career == null) return;
-    final effect = Press.effectOf(tone);
+    if (career == null) return null;
+    final effect = Press.effectOfExchange(exchange, tone);
     await repo.recordPressAnswer(
       careerId: careerId,
       cycle: career.cyclePointer,
-      questionKey: question.key,
+      questionKey: exchange.key,
       tone: tone.name,
       moraleDelta: effect.morale,
       boardDelta: effect.board,
       answeredAt: career.inGameDate,
     );
-    _ref
-      ..invalidate(pressQuestionProvider)
-      ..invalidate(pressEffectProvider);
+    return effect;
   }
+
+  /// Everything a conference touched, once the manager has left the room.
+  void refresh() => _ref
+    ..invalidate(pressQuestionProvider)
+    ..invalidate(pressEffectProvider)
+    ..invalidate(pressToneHistoryProvider);
 }
 
 final Provider<PressService> pressServiceProvider = Provider(PressService.new);

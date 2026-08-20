@@ -3,6 +3,7 @@ import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:fnm/core/util/competition_label.dart';
 import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
@@ -329,7 +330,7 @@ class _RankRow extends StatelessWidget {
                     ],
                   ),
                   Text(
-                    nation.confederation.label.toUpperCase(),
+                    confederationLabel(l, nation.confederation).toUpperCase(),
                     style: AppTypography.labelSmall.copyWith(
                       color: AppColors.outline,
                     ),

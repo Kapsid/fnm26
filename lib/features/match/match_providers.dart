@@ -9,6 +9,7 @@ import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/entities/tactics.dart';
 import 'package:fnm/domain/services/competition/hosts.dart';
 import 'package:fnm/domain/services/federation/federation_finance.dart';
+import 'package:fnm/domain/services/manager/staff.dart';
 import 'package:fnm/domain/services/match/ai_substitutions.dart';
 import 'package:fnm/domain/services/match/ai_tactics.dart';
 import 'package:fnm/domain/services/match/match_engine.dart';
@@ -290,9 +291,15 @@ matchPreviewProvider = FutureProvider.autoDispose.family<MatchPreview?, int>((
       ? 0.0
       : playerXi.map((p) => fatigueLevel(p.id)).fold<int>(0, (a, b) => a + b) /
             playerXi.length;
+  // The medical department is money; the fitness coach and what the side has
+  // been working on are people and time. All three compound — they are
+  // different ways of keeping a squad available, not alternatives.
   final injuryFactorByNation = {
     playerNationId:
-        FederationFinance.injuryFactor(medical) * (1 + avgFatigue * 0.14),
+        FederationFinance.injuryFactor(medical) *
+        Staff.injuryFactor(career.staffFitnessCoach) *
+        Training.injuryFactor(career.trainingFocus, career.staffAssistant) *
+        (1 + avgFatigue * 0.14),
   };
 
   // A settled side that keeps its shape is a little sharper — but a side that

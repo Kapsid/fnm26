@@ -3,6 +3,8 @@ import 'dart:io';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter/widgets.dart';
+import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/data/db/app_database.dart';
 import 'package:fnm/data/seed/seed_source.dart';
@@ -88,9 +90,11 @@ void main() {
   });
 
   group('the transfer feed names a move abroad', () {
+    final en = lookupAppLocalizations(const Locale('en'));
     test('a move across a border names the country', () {
       expect(
         transferDestination(
+          en,
           club: 'Madrid White',
           toCountryName: 'Spain',
           crossedBorder: true,
@@ -102,6 +106,7 @@ void main() {
     test('a move across town does not', () {
       expect(
         transferDestination(
+          en,
           club: 'Man Blue',
           toCountryName: 'England',
           crossedBorder: false,
@@ -113,6 +118,7 @@ void main() {
     test('an unknown country is simply left unsaid', () {
       expect(
         transferDestination(
+          en,
           club: 'Somewhere',
           toCountryName: null,
           crossedBorder: true,

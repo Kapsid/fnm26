@@ -1,11 +1,11 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fnm/core/util/competition_label.dart';
 import 'package:fnm/core/util/text_variety.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
 import 'package:fnm/domain/services/achievements/achievements.dart';
-import 'package:fnm/domain/services/competition/continental_cups.dart';
 import 'package:fnm/domain/services/competition/hosts.dart';
 import 'package:fnm/domain/services/player/prospects.dart';
 import 'package:fnm/features/career/career_providers.dart';
@@ -15,6 +15,7 @@ import 'package:fnm/features/federation/federation_providers.dart';
 import 'package:fnm/features/messages/intake_report.dart';
 import 'package:fnm/features/messages/squad_dev_report.dart';
 import 'package:fnm/features/tournaments/finals_draw_providers.dart';
+import 'package:fnm/features/settings/settings_providers.dart';
 import 'package:fnm/features/tournaments/host_draw_providers.dart';
 
 /// A message to be added to the inbox if not already present.
@@ -50,15 +51,19 @@ class MessageService {
     final career = await _ref.read(careerRepositoryProvider).byId(careerId);
     if (career == null) return;
     final comp = _ref.read(competitionRepositoryProvider);
+    // The news is WRITTEN in the manager's language and then stored, so a save
+    // started in Czech reads as Czech from the first message. Items filed
+    // before a language change keep the words they were filed in, which is the
+    // honest thing for a dated archive to do.
+    final l = _ref.read(appLocalizationsProvider);
     final nations = {
       for (final n in await _ref.read(nationRepositoryProvider).all()) n.id: n,
     };
-    String nameOf(int id) => nations[id]?.name ?? 'A nation';
+    String nameOf(int id) => nations[id]?.name ?? l.msgANation;
     final conf = nations[career.nationId]?.confederation;
     final contName = conf == null
-        ? 'the continental championship'
-        : ContinentalCups.byConfederation[conf]?.name ??
-              'the continental championship';
+        ? l.compContinentalChampionship
+        : continentalCupLabel(l, conf);
     final cycle = career.cyclePointer;
     final wcYear = CareerService.worldCupYear(cycle);
     final existing = await comp.messageKeys(careerId);
@@ -88,7 +93,7 @@ class MessageService {
             nations: nationList,
           );
     final contHostName = contHosts.isEmpty
-        ? 'a host nation'
+        ? l.msgAHostNation
         : contHosts.map(nameOf).join(' & ');
 
     final cycleSeed = varietySeed('cyclestart:$cycle:${career.rngSeed}');
@@ -97,16 +102,16 @@ class MessageService {
         'cycle:$cycle',
         'cycle',
         pickVariant([
-          'A new cycle begins',
-          'The road to $wcYear opens',
-          'A fresh campaign dawns',
-          'Back to work',
+          l.msgCycleTitle1,
+          l.msgCycleTitle2(wcYear),
+          l.msgCycleTitle3,
+          l.msgCycleTitle4,
         ], cycleSeed),
         pickVariant([
-          'The road to the $wcYear World Cup starts here.',
-          'A new cycle. The $wcYear World Cup is the target.',
-          'Four years to the $wcYear World Cup. Work starts now.',
-          'The $wcYear campaign begins today.',
+          l.msgCycleBody1(wcYear),
+          l.msgCycleBody2(wcYear),
+          l.msgCycleBody3(wcYear),
+          l.msgCycleBody4(wcYear),
         ], cycleSeed),
         cycleStartYear,
         0,
@@ -117,38 +122,38 @@ class MessageService {
     final drawSpecs = <(String, String, String, int)>[
       (
         continentalHostDrawKind,
-        '$contName host: $contHostName',
-        '$contHostName will host the next $contName.',
+        l.msgContHostTitle(contName, contHostName),
+        l.msgContHostBody(contHostName, contName),
         cycleStartYear,
       ),
       (
         continentalQualDrawKind,
-        '$contName qualifying draw',
-        'The $contName qualifying groups have been drawn.',
+        l.msgContQualDrawTitle(contName),
+        l.msgContQualDrawBody(contName),
         cycleStartYear,
       ),
       (
         worldCupHostDrawKind,
-        '$wcYear World Cup host: $wcHostName',
-        '$wcHostName will host the $wcYear World Cup.',
+        l.msgWcHostTitle(wcHostName, wcYear),
+        l.msgWcHostBody(wcHostName, wcYear),
         contYear,
       ),
       (
         worldCupQualDrawKind,
-        'World Cup qualifying draw',
-        'The World Cup qualifying groups have been drawn.',
+        l.msgWcQualDrawTitle,
+        l.msgWcQualDrawBody,
         contYear,
       ),
       (
         continentalFinalsDrawKind,
-        '$contName finals draw',
-        'The $contName finals groups have been drawn.',
+        l.msgContFinalsDrawTitle(contName),
+        l.msgContFinalsDrawBody(contName),
         contYear,
       ),
       (
         worldCupDrawKind,
-        'World Cup finals draw',
-        'The $wcYear World Cup finals draw has been made.',
+        l.msgWcFinalsDrawTitle,
+        l.msgWcFinalsDrawBody(wcYear),
         wcYear,
       ),
     ];
@@ -171,16 +176,16 @@ class MessageService {
           'qual:wc:$y',
           'qualify',
           pickVariant([
-            'Through to the World Cup',
-            'World Cup booked',
-            "We're going to the World Cup",
-            'Ticket punched',
+            l.msgQualWcTitle1,
+            l.msgQualWcTitle2,
+            l.msgQualWcTitle3,
+            l.msgQualWcTitle4,
           ], qs),
           pickVariant([
-            'You have qualified for the $y World Cup finals.',
-            "It's official: your nation is at the $y World Cup.",
-            'A place at the $y World Cup is secured.',
-            "You're through to the $y World Cup finals.",
+            l.msgQualWcBody1(y),
+            l.msgQualWcBody2(y),
+            l.msgQualWcBody3(y),
+            l.msgQualWcBody4(y),
           ], qs),
           y - 2,
           2,
@@ -197,14 +202,14 @@ class MessageService {
           'qual:cont:$y',
           'qualify',
           pickVariant([
-            'Through to $contName',
-            '$contName booked',
-            'Qualified for $contName',
+            l.msgQualContTitle1(contName),
+            l.msgQualContTitle2(contName),
+            l.msgQualContTitle3(contName),
           ], qcs),
           pickVariant([
-            'You have qualified for the $contName finals.',
-            'Your nation has sealed its place at $contName.',
-            "You're through to $contName.",
+            l.msgQualContBody1(contName),
+            l.msgQualContBody2(contName),
+            l.msgQualContBody3(contName),
           ], qcs),
           y - 1,
           2,
@@ -222,9 +227,10 @@ class MessageService {
     final honours = await comp.honours(careerId);
     for (final h in honours) {
       if (h.year < CareerService.cycleStart.year) continue;
-      final display = h.competition == worldCupHonourName
-          ? 'World Cup'
-          : h.competition;
+      final display = competitionLabel(
+        l,
+        h.competition == worldCupHonourName ? 'World Cup' : h.competition,
+      );
       final mine = h.championId == career.nationId;
 
       final scored = h.finalHomeScore != null && h.finalAwayScore != null;
@@ -233,38 +239,45 @@ class MessageService {
       final result = !scored
           ? ''
           : pens
-          ? ' on penalties, after a ${h.finalHomeScore}–'
-                '${h.finalAwayScore} final'
-          : ' ${h.finalHomeScore}–${h.finalAwayScore} in the final';
+          ? l.msgFinalPensSuffix(h.finalHomeScore!, h.finalAwayScore!)
+          : l.msgFinalScoreSuffix(h.finalHomeScore!, h.finalAwayScore!);
 
       final chSeed = varietySeed(
         'champ:${h.competition}:${h.year}:${career.rngSeed}',
       );
+      final loser = nameOf(h.runnerUpId);
       final champTitle = mine
           ? pickVariant([
-              '$display CHAMPIONS!',
-              'Champions of the $display!',
-              "You've won the $display!",
+              l.msgChampTitleMine1(display),
+              l.msgChampTitleMine2(display),
+              l.msgChampTitleMine3(display),
             ], chSeed)
           : pickVariant([
-              '$display decided',
-              '$display champions crowned',
-              'The $display is won',
+              l.msgChampTitleOther1(display),
+              l.msgChampTitleOther2(display),
+              l.msgChampTitleOther3(display),
             ], chSeed);
       final champBody = mine
           ? pickVariant([
-              'Your nation are the ${h.year} $display champions, beating '
-                  '${nameOf(h.runnerUpId)}$result.',
-              "You've won the ${h.year} $display, seeing off "
-                  '${nameOf(h.runnerUpId)}$result.',
-              'The ${h.year} $display is yours. '
-                  '${nameOf(h.runnerUpId)} beaten$result.',
+              l.msgChampBodyMine1(display, loser, result, h.year),
+              l.msgChampBodyMine2(display, loser, result, h.year),
+              l.msgChampBodyMine3(display, loser, result, h.year),
             ], chSeed)
           : pickVariant([
-              '${nameOf(h.championId)} won the ${h.year} $display, beating '
-                  '${nameOf(h.runnerUpId)}$result.',
-              '${nameOf(h.championId)} are the ${h.year} $display champions, '
-                  'defeating ${nameOf(h.runnerUpId)}$result.',
+              l.msgChampBodyOther1(
+                nameOf(h.championId),
+                display,
+                loser,
+                result,
+                h.year,
+              ),
+              l.msgChampBodyOther2(
+                nameOf(h.championId),
+                display,
+                loser,
+                result,
+                h.year,
+              ),
             ], chSeed);
       drafts.add(
         _Draft(
@@ -316,9 +329,18 @@ class MessageService {
             _Draft(
               'wpoty:$cycle',
               'award',
-              'World Player of the Year',
-              '${best.name} (${nameOf(best.nationId)}) is named $wcYear '
-                  'World Player of the Year${mine ? ', one of yours.' : '.'}',
+              l.msgWpotyTitle,
+              mine
+                  ? l.msgWpotyBodyMine(
+                      best.name,
+                      nameOf(best.nationId),
+                      wcYear,
+                    )
+                  : l.msgWpotyBodyOther(
+                      best.name,
+                      nameOf(best.nationId),
+                      wcYear,
+                    ),
               wcYear,
               4,
             ),
@@ -357,10 +379,20 @@ class MessageService {
             _Draft(
               'ypot:$cycle',
               'award',
-              'Young Player of the Tournament',
-              '${young.name} (${nameOf(young.nationId)}), aged ${young.age}, is '
-                  'named $wcYear Young Player of the Tournament'
-                  '${mine ? ', one of yours.' : '.'}',
+              l.msgYpotTitle,
+              mine
+                  ? l.msgYpotBodyMine(
+                      young.name,
+                      nameOf(young.nationId),
+                      young.age,
+                      wcYear,
+                    )
+                  : l.msgYpotBodyOther(
+                      young.name,
+                      nameOf(young.nationId),
+                      young.age,
+                      wcYear,
+                    ),
               wcYear,
               4,
             ),
@@ -399,35 +431,34 @@ class MessageService {
       final String movement;
       if (was == null || was == rank) {
         movement = pickVariant([
-          'You hold at #$rank.',
-          'No change, still #$rank.',
-          'Steady at #$rank.',
+          l.msgRankHold1(rank),
+          l.msgRankHold2(rank),
+          l.msgRankHold3(rank),
         ], rSeed);
       } else {
         final move = was - rank; // positive = climbed
-        final places = move.abs() == 1 ? 'place' : 'places';
         movement = move > 0
             ? pickVariant([
-                'Up $move $places this cycle, to #$rank.',
-                'A climb of $move $places lifts you to #$rank.',
-                "Up $move $places, now #$rank.",
+                l.msgRankUp1(move, rank),
+                l.msgRankUp2(move, rank),
+                l.msgRankUp3(move, rank),
               ], rSeed)
             : pickVariant([
-                'Down ${-move} $places this cycle, to #$rank.',
-                'A slide of ${-move} $places drops you to #$rank.',
-                "Down ${-move} $places, now #$rank.",
+                l.msgRankDown1(-move, rank),
+                l.msgRankDown2(-move, rank),
+                l.msgRankDown3(-move, rank),
               ], rSeed);
       }
       final lead = release.leaderNationId == release.nationId
-          ? 'You top the world.'
-          : '$leader top the world.';
+          ? l.msgRankLeadYou
+          : l.msgRankLeadOther(leader);
 
       drafts.add(
         _Draft(
           'rankrel:${release.publishedOn.toIso8601String()}',
           'ranking',
-          'World ranking · #$rank',
-          'The world ranking has been updated. $lead $movement',
+          l.msgRankTitle(rank),
+          l.msgRankBody(lead, movement),
           release.publishedOn.year,
           0,
         ),
@@ -447,7 +478,7 @@ class MessageService {
         agingYears: agingYears,
         saveSeed: career.rngSeed,
       );
-      return milestoneNames[id] = p?.name ?? 'A player';
+      return milestoneNames[id] = p?.name ?? l.msgAPlayer;
     }
 
     const capTiers = [25, 50, 100, 150];
@@ -468,8 +499,8 @@ class MessageService {
           _Draft(
             key,
             'milestone',
-            '$name reaches $t caps',
-            '$name has now made $t appearances for your nation.',
+            l.msgCapsTitle(name, t),
+            l.msgCapsBody(name, t),
             milestoneYear,
             5,
           ),
@@ -491,8 +522,8 @@ class MessageService {
           _Draft(
             key,
             'milestone',
-            '$name reaches $t goals',
-            '$name has scored $t international goals for your nation.',
+            l.msgGoalsTitle(name, t),
+            l.msgGoalsBody(name, t),
             milestoneYear,
             5,
           ),
@@ -548,7 +579,7 @@ class MessageService {
           _Draft(
             'aging:$y',
             'aging',
-            'Squad development · $reportYear',
+            l.msgDevTitle(reportYear),
             _developmentReport(before, after),
             reportYear,
             4,
@@ -560,7 +591,7 @@ class MessageService {
             _Draft(
               'newcomers:$y',
               'aging',
-              'New faces · $reportYear',
+              l.msgNewFacesTitle(reportYear),
               newcomers,
               reportYear,
               4,
@@ -584,7 +615,7 @@ class MessageService {
             _Draft(
               'intake:$y',
               'youth',
-              'Academy intake · $reportYear',
+              l.msgIntakeTitle(reportYear),
               encodeSquadDevReport(
                 intake,
                 note: intakeNote(
@@ -627,21 +658,20 @@ class MessageService {
           }
           if ((notable || wasCaptain) && !existing.contains('retire:${p.id}')) {
             final tally = [
-              if (pc > 0) '$pc caps',
-              if (pg > 0) '$pg goals',
+              if (pc > 0) l.msgTallyCaps(pc),
+              if (pg > 0) l.msgTallyGoals(pg),
             ].join(', ');
-            final sendoff = tally.isEmpty ? '' : ', bowing out with $tally';
             drafts.add(
               _Draft(
                 'retire:${p.id}',
                 'retirement',
                 wasCaptain
-                    ? 'Your captain ${p.name} retires'
-                    : '${p.name} retires from internationals',
-                '${p.name} has retired from international football at '
-                    '${p.age}$sendoff.'
-                    '${wasCaptain ? ' The armband is vacant — name a new '
-                              'captain from the call-up screen.' : ''}',
+                    ? l.msgRetireCaptainTitle(p.name)
+                    : l.msgRetireTitle(p.name),
+                (tally.isEmpty
+                        ? l.msgRetireBody(p.name, p.age)
+                        : l.msgRetireBodyWith(p.name, tally, p.age)) +
+                    (wasCaptain ? l.msgArmbandVacant : ''),
                 reportYear,
                 4,
               ),
@@ -654,9 +684,8 @@ class MessageService {
               _Draft(
                 'hof:${p.id}',
                 'halloffame',
-                '${p.name} inducted into the Hall of Fame',
-                '${p.name} joins your nation’s Hall of Fame '
-                    '($pc caps, $pg goals). See them in Legends.',
+                l.msgHofTitle(p.name),
+                l.msgHofBody(p.name, pc, pg),
                 reportYear,
                 4,
               ),
@@ -755,6 +784,76 @@ final AutoDisposeFutureProviderFamily<MessageInbox, int> messageInboxProvider =
       return (
         messages: messages,
         unread: messages.where((m) => !m.read).length,
+      );
+    });
+
+/// The inbox categories that are held back while a tournament is being played.
+///
+/// These are the between-seasons items — how the pool aged, who came through
+/// the academy, who moved club, the year's awards. They are worth reading and
+/// worth reading LATER: arriving as a popup between a quarter-final and a
+/// semi-final, they interrupt the one thing the manager is actually in the
+/// middle of. Match news (a ban, an injury, going out) is not held: that IS
+/// the tournament.
+const Set<String> kBetweenSeasonsCategories = {
+  'aging',
+  'youth',
+  'award',
+  'record',
+  'transfer',
+  'naturalize',
+  'halloffame',
+};
+
+/// Whether a tournament the manager is following is under way right now.
+///
+/// True from the moment a finals group stage kicks off until its final has
+/// been played — for the World Cup, or for the manager's own continental cup.
+/// Deliberately about the TOURNAMENT rather than about this nation's own
+/// fixtures: a manager knocked out in the group stage is still stepping
+/// through the rest of it, and a side between the group stage and a knockout
+/// round it has not been drawn into yet has no unplayed fixture to detect.
+final AutoDisposeFutureProviderFamily<bool, int> tournamentInProgressProvider =
+    FutureProvider.autoDispose.family<bool, int>((ref, careerId) async {
+      final career = await ref.watch(careerRepositoryProvider).byId(careerId);
+      if (career == null) return false;
+      final comp = ref.watch(competitionRepositoryProvider);
+      final conf = (await ref.watch(nationRepositoryProvider).all())
+          .where((n) => n.id == career.nationId)
+          .firstOrNull
+          ?.confederation;
+
+      Future<bool> running(
+        String groupRound,
+        String finalRound,
+        CompetitionKind kind, {
+        Confederation? confederation,
+      }) async {
+        final group = await comp.fixturesByRound(
+          careerId,
+          groupRound,
+          kind: kind,
+          confederation: confederation,
+        );
+        if (!group.any((f) => f.hasResult)) return false;
+        final decider = await comp.fixturesByRound(
+          careerId,
+          finalRound,
+          kind: kind,
+          confederation: confederation,
+        );
+        return decider.isEmpty || decider.any((f) => !f.hasResult);
+      }
+
+      if (await running('GROUP', 'FINAL', CompetitionKind.worldCupFinals)) {
+        return true;
+      }
+      if (conf == null) return false;
+      return running(
+        'CGROUP',
+        'CFINAL',
+        CompetitionKind.continentalFinals,
+        confederation: conf,
       );
     });
 

@@ -32,10 +32,23 @@ Future<int> showUnreadMessagePopups(
 ) async {
   final l = AppLocalizations.of(context);
   final comp = ref.read(competitionRepositoryProvider);
-  final unread = (await comp.messages(careerId)).where((m) => !m.read).toList()
-    // The inbox is newest first; a run of events reads better in the order it
-    // happened.
-    ..sort((a, b) => a.id.compareTo(b.id));
+  // Mid-tournament, the between-seasons reports wait. They stay unread and pop
+  // once the final has been played — see [kBetweenSeasonsCategories].
+  final duringTournament = await ref.read(
+    tournamentInProgressProvider(careerId).future,
+  );
+  final unread =
+      (await comp.messages(careerId))
+          .where(
+            (m) =>
+                !m.read &&
+                !(duringTournament &&
+                    kBetweenSeasonsCategories.contains(m.category)),
+          )
+          .toList()
+        // The inbox is newest first; a run of events reads better in the order
+        // it happened.
+        ..sort((a, b) => a.id.compareTo(b.id));
   if (unread.isEmpty) return 0;
 
   final showing = unread.take(kMaxMessagePopups).toList();

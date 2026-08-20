@@ -1,6 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/services/federation/federation_finance.dart';
+import 'package:fnm/domain/services/manager/staff.dart';
+import 'package:fnm/domain/services/manager/manager_skills.dart';
 import 'package:fnm/domain/services/player/player_lifecycle.dart';
 
 /// The talent shift applied to the manager's nation's newgen intakes, keyed by
@@ -21,11 +23,31 @@ youthBonusByCycleProvider = FutureProvider.autoDispose.family<Map<int, double>, 
   final invests = await ref
       .watch(careerRepositoryProvider)
       .investments(careerId);
+  // The academy's own funding, per cycle.
   final bonuses = <int, double>{
     for (final e in invests.entries)
       if (e.value.youth > 0)
         e.key: FederationFinance.youthTalentBonus(e.value.youth),
   };
+  // Plus the manager's own eye for a young player and any hours the side has
+  // been putting into them. Applied to EVERY cycle rather than only the funded
+  // ones: a manager who develops players does so whether or not the federation
+  // has written a cheque, and a cycle with no academy money should still show
+  // his hand.
+  final career = await ref.watch(careerRepositoryProvider).byId(careerId);
+  if (career != null) {
+    final fromManager =
+        ManagerSkills.youthTalentBonus(career.skillYouthDevelopment) +
+        Training.youthTalentBonus(
+          career.trainingFocus,
+          career.staffAssistant,
+        );
+    if (fromManager != 0) {
+      for (var cycle = 0; cycle <= career.cyclePointer; cycle++) {
+        bonuses[cycle] = (bonuses[cycle] ?? 0) + fromManager;
+      }
+    }
+  }
 
   // Where the nation finished each cycle in the world ranking. Releases arrive
   // oldest-first, so the last one written for a cycle is that cycle's standing.

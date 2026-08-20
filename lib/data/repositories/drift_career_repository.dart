@@ -1,3 +1,5 @@
+import 'package:fnm/domain/services/manager/staff.dart';
+import 'package:fnm/domain/services/manager/manager_skills.dart';
 import 'package:drift/drift.dart';
 import 'package:fnm/data/db/app_database.dart';
 import 'package:fnm/data/repositories/mappers.dart';
@@ -129,6 +131,42 @@ class DriftCareerRepository implements CareerRepository {
   Future<void> setCaptain(int id, int? playerId) async {
     await (_db.update(_db.careers)..where((t) => t.id.equals(id))).write(
       CareersCompanion(captainPlayerId: Value(playerId)),
+    );
+  }
+
+  @override
+  Future<void> raiseSkill(int id, ManagerSkill skill) async {
+    // Written as an increment in SQL rather than read-modify-write: two taps
+    // in the same frame would otherwise both read the old level and spend two
+    // points to buy one.
+    final column = switch (skill) {
+      ManagerSkill.manManagement => 'skill_man_management',
+      ManagerSkill.tactical => 'skill_tactical',
+      ManagerSkill.youthDevelopment => 'skill_youth_development',
+      ManagerSkill.negotiation => 'skill_negotiation',
+    };
+    await _db.customStatement(
+      'UPDATE careers SET $column = MIN($column + 1, ?) WHERE id = ?',
+      [ManagerSkills.ceiling, id],
+    );
+  }
+
+  @override
+  Future<void> setStaff(int id, StaffRole role, StaffTier tier) async {
+    final value = Value(tier.index);
+    await (_db.update(_db.careers)..where((t) => t.id.equals(id))).write(
+      switch (role) {
+        StaffRole.assistant => CareersCompanion(staffAssistant: value),
+        StaffRole.scout => CareersCompanion(staffScout: value),
+        StaffRole.fitnessCoach => CareersCompanion(staffFitnessCoach: value),
+      },
+    );
+  }
+
+  @override
+  Future<void> setTrainingFocus(int id, TrainingFocus focus) async {
+    await (_db.update(_db.careers)..where((t) => t.id.equals(id))).write(
+      CareersCompanion(trainingFocus: Value(focus)),
     );
   }
 

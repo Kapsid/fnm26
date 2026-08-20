@@ -49,6 +49,8 @@ void main() {
           args: const ['Spain', '2–1'],
           date: DateTime(2030, 6, 10 + i),
           key: 'fx:$i|fan',
+          replyTo: null,
+          mood: null,
         ),
     ];
 
@@ -100,6 +102,8 @@ void main() {
         args: const ['Italy', '0–2'],
         date: DateTime(2030, 7, 1),
         key: 'fx:9|pundit',
+        replyTo: null,
+        mood: null,
       ),
     ];
     container

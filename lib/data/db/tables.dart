@@ -2,6 +2,8 @@ import 'package:drift/drift.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/formation.dart';
 import 'package:fnm/domain/entities/tactics.dart';
+import 'package:fnm/domain/services/manager/manager_skills.dart';
+import 'package:fnm/domain/services/manager/staff.dart';
 
 /// Drift table definitions for the local SQLite database.
 ///
@@ -94,6 +96,31 @@ class Careers extends Table {
   /// force-quit or a flat battery costs at most one tick instead of the whole
   /// session.
   IntColumn get playedSeconds => integer().withDefault(const Constant(0))();
+
+  /// What the MANAGER is good at, 1–20 — see [ManagerSkills].
+  ///
+  /// Defaulted to [ManagerSkills.starting], which every effect treats as
+  /// neutral, so a save made before any of this existed plays exactly as it
+  /// did. Points are not stored: what has been spent is the distance these
+  /// have travelled from the starting level.
+  IntColumn get skillManManagement =>
+      integer().withDefault(const Constant(ManagerSkills.starting))();
+  IntColumn get skillTactical =>
+      integer().withDefault(const Constant(ManagerSkills.starting))();
+  IntColumn get skillYouthDevelopment =>
+      integer().withDefault(const Constant(ManagerSkills.starting))();
+  IntColumn get skillNegotiation =>
+      integer().withDefault(const Constant(ManagerSkills.starting))();
+
+  /// The people he has hired, as [StaffTier] indices. Zero is nobody, which
+  /// costs nothing and does nothing.
+  IntColumn get staffAssistant => integer().withDefault(const Constant(0))();
+  IntColumn get staffScout => integer().withDefault(const Constant(0))();
+  IntColumn get staffFitnessCoach => integer().withDefault(const Constant(0))();
+
+  /// What the side works on between windows.
+  TextColumn get trainingFocus =>
+      textEnum<TrainingFocus>().withDefault(const Constant('balanced'))();
 }
 
 /// A nation's Nations Cup league (0 = League A, 1 = League B, …) within its

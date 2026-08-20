@@ -3,6 +3,7 @@ import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/services/squad/grievances.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/federation/federation_providers.dart';
+import 'package:fnm/features/settings/settings_providers.dart';
 
 /// The prefix a walkout message is keyed with. The ANNOUNCEMENT IS THE RECORD:
 /// a permanent retirement needs a persisted fact, and a new table would cost
@@ -203,6 +204,7 @@ class GrievanceService {
     final comp = _ref.read(competitionRepositoryProvider);
     final career = await _ref.read(careerRepositoryProvider).byId(careerId);
     if (career == null) return;
+    final l = _ref.read(appLocalizationsProvider);
 
     for (final g in open) {
       final ignoredLong = (standing.longAbsence[g.playerId] ?? 1) == 0;
@@ -217,11 +219,8 @@ class GrievanceService {
         careerId: careerId,
         dedupKey: '$walkoutKeyPrefix${g.playerId}',
         category: 'retirement',
-        title: '${g.playerName} walks away',
-        body:
-            '${g.playerName} has retired from international football at '
-            '${g.age}, with ${g.caps} caps. He asked to be told where he '
-            'stood and was not, and he is not waiting any longer.',
+        title: l.newsWalkoutTitle(g.playerName),
+        body: l.newsWalkoutBody(g.playerName, g.age, g.caps),
         year: career.inGameDate.year,
       );
     }

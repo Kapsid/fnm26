@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fnm/core/util/competition_label.dart';
 import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
@@ -361,7 +362,7 @@ class _QualifyingState extends State<_Qualifying> {
               bottom: AppSpacing.sm,
             ),
             child: Text(
-              conf.label.toUpperCase(),
+              confederationLabel(l, conf).toUpperCase(),
               style: AppTypography.labelMedium.copyWith(
                 color: AppColors.primary,
               ),
@@ -990,11 +991,7 @@ class _HistoryState extends State<_History> {
                   ButtonSegment(
                     value: c,
                     label: Text(
-                      switch (c) {
-                        'World Championship' => l.tourCupCompWorld,
-                        'European Championship' => l.tourCupCompEurope,
-                        _ => l.tourCupCompSAmerica,
-                      },
+                      competitionLabel(l, c),
                     ),
                   ),
               ],

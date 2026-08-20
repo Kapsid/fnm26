@@ -458,7 +458,7 @@ class _Pot extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(
-            'POT ${index + 1}',
+            AppLocalizations.of(context).tourPot(index + 1),
             style:
                 (active ? AppTypography.labelMedium : AppTypography.labelSmall)
                     .copyWith(

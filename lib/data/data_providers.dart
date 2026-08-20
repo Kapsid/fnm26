@@ -1,5 +1,6 @@
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fnm/core/config/ui_language.dart';
 import 'package:fnm/data/db/app_database.dart';
 import 'package:fnm/data/repositories/drift_absence_repository.dart';
 import 'package:fnm/data/repositories/drift_career_repository.dart';
@@ -36,7 +37,18 @@ import 'package:fnm/domain/repositories/tactics_repository.dart';
 /// The singleton Drift database, closed when the scope is disposed.
 final appDatabaseProvider = Provider<AppDatabase>((ref) {
   final db = AppDatabase();
-  ref.onDispose(db.close);
+  // Restoring a backup closes the database ITSELF, before replacing the file
+  // underneath it, and only then tears the app down — so by the time this
+  // runs the handle is often already shut. Closing twice is expected here, and
+  // is the one case where there is nothing to report: the goal (a closed
+  // database) has been reached either way.
+  ref.onDispose(() async {
+    try {
+      await db.close();
+    } on Object {
+      // Already closed by SaveBackupService.restore.
+    }
+  });
   return db;
 });
 
@@ -60,7 +72,10 @@ final databaseReadyProvider = FutureProvider<void>((ref) async {
 });
 
 final nationRepositoryProvider = Provider<NationRepository>(
-  (ref) => DriftNationRepository(ref.watch(appDatabaseProvider)),
+  (ref) => DriftNationRepository(
+    ref.watch(appDatabaseProvider),
+    languageCode: ref.watch(uiLanguageCodeProvider),
+  ),
 );
 
 final playerRepositoryProvider = Provider<PlayerRepository>(

@@ -136,12 +136,6 @@ class AppLocalizationsCs extends AppLocalizations {
   String get teamOverall => 'Celkový přehled';
 
   @override
-  String get matchSecondYellow => 'Druhá žlutá';
-
-  @override
-  String get matchStraightRed => 'Červená karta';
-
-  @override
   String get teamTalkHeading => 'PORADA TÝMU';
 
   @override
@@ -802,12 +796,6 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get tacticsOn => 'HRAJE';
-
-  @override
-  String get tacticsInjuredReplace => 'ZRANĚN — VYSTŘÍDAT';
-
-  @override
-  String get tacticsSuspendedReplace => 'STOPKA — VYSTŘÍDAT';
 
   @override
   String get tacticsSquad => 'KÁDR';
@@ -5543,4 +5531,1491 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get pressAnswerPlayDown6 => 'Nic, co dneska řeknu, výsledek nezmění.';
+
+  @override
+  String tacticsSubAlreadyOff(String name) {
+    return '$name už byl vystřídán – zpátky na hřiště nemůže.';
+  }
+
+  @override
+  String tacticsSubSentOff(String name) {
+    return '$name byl vyloučen a do hry už nezasáhne.';
+  }
+
+  @override
+  String get tacticsInjuredShort => 'ZRANĚN';
+
+  @override
+  String get tacticsSuspendedShort => 'STOPKA';
+
+  @override
+  String get confEurope => 'Evropa';
+
+  @override
+  String get confSouthAmerica => 'Jižní Amerika';
+
+  @override
+  String get confNorthAmerica => 'Severní Amerika';
+
+  @override
+  String get confAfrica => 'Afrika';
+
+  @override
+  String get confAsia => 'Asie';
+
+  @override
+  String get confOceania => 'Oceánie';
+
+  @override
+  String get compWorldCup => 'Mistrovství světa';
+
+  @override
+  String get compWorldCupFinals => 'Finálový turnaj MS';
+
+  @override
+  String get compWorldCupQualifying => 'Kvalifikace MS';
+
+  @override
+  String compQualifiers(String region) {
+    return 'Kvalifikace – $region';
+  }
+
+  @override
+  String get compFriendlies => 'Přátelská utkání';
+
+  @override
+  String get compNationsCup => 'Pohár národů';
+
+  @override
+  String get compContinentalClash => 'Souboj kontinentů';
+
+  @override
+  String get compIntercontinentalPlayoff => 'Mezikontinentální baráž';
+
+  @override
+  String get compContinentalChampionship => 'Kontinentální šampionát';
+
+  @override
+  String get compEuropeanChampionship => 'Mistrovství Evropy';
+
+  @override
+  String get compSouthAmericaCup => 'Pohár Jižní Ameriky';
+
+  @override
+  String get compAfricanChampionship => 'Mistrovství Afriky';
+
+  @override
+  String get compAsianChampionship => 'Mistrovství Asie';
+
+  @override
+  String get compNorthAmericaCup => 'Pohár Severní Ameriky';
+
+  @override
+  String get compOceaniaCup => 'Pohár Oceánie';
+
+  @override
+  String get msgANation => 'Národní tým';
+
+  @override
+  String get msgAPlayer => 'Hráč';
+
+  @override
+  String get msgAHostNation => 'pořadatel';
+
+  @override
+  String get msgCycleTitle1 => 'Začíná nový cyklus';
+
+  @override
+  String msgCycleTitle2(int year) {
+    return 'Cesta na MS $year začíná';
+  }
+
+  @override
+  String get msgCycleTitle3 => 'Svítá nová kampaň';
+
+  @override
+  String get msgCycleTitle4 => 'Zpátky do práce';
+
+  @override
+  String msgCycleBody1(int year) {
+    return 'Cesta na mistrovství světa $year začíná tady.';
+  }
+
+  @override
+  String msgCycleBody2(int year) {
+    return 'Nový cyklus. Cílem je mistrovství světa $year.';
+  }
+
+  @override
+  String msgCycleBody3(int year) {
+    return 'Čtyři roky do MS $year. Práce začíná teď.';
+  }
+
+  @override
+  String msgCycleBody4(int year) {
+    return 'Kampaň $year začíná dnes.';
+  }
+
+  @override
+  String msgContHostTitle(String cup, String host) {
+    return 'Pořadatel $cup: $host';
+  }
+
+  @override
+  String msgContHostBody(String host, String cup) {
+    return '$host bude hostit příští $cup.';
+  }
+
+  @override
+  String msgContQualDrawTitle(String cup) {
+    return 'Los kvalifikace: $cup';
+  }
+
+  @override
+  String msgContQualDrawBody(String cup) {
+    return 'Kvalifikační skupiny turnaje $cup jsou vylosovány.';
+  }
+
+  @override
+  String msgWcHostTitle(String host, int year) {
+    return 'Pořadatel MS $year: $host';
+  }
+
+  @override
+  String msgWcHostBody(String host, int year) {
+    return '$host bude hostit mistrovství světa $year.';
+  }
+
+  @override
+  String get msgWcQualDrawTitle => 'Los kvalifikace MS';
+
+  @override
+  String get msgWcQualDrawBody => 'Kvalifikační skupiny MS jsou vylosovány.';
+
+  @override
+  String msgContFinalsDrawTitle(String cup) {
+    return 'Los turnaje $cup';
+  }
+
+  @override
+  String msgContFinalsDrawBody(String cup) {
+    return 'Skupiny turnaje $cup jsou vylosovány.';
+  }
+
+  @override
+  String get msgWcFinalsDrawTitle => 'Los MS';
+
+  @override
+  String msgWcFinalsDrawBody(int year) {
+    return 'Los mistrovství světa $year je hotový.';
+  }
+
+  @override
+  String get msgQualWcTitle1 => 'Jedeme na mistrovství světa';
+
+  @override
+  String get msgQualWcTitle2 => 'Místo na MS je zajištěné';
+
+  @override
+  String get msgQualWcTitle3 => 'Jedeme na MS';
+
+  @override
+  String get msgQualWcTitle4 => 'Letenka je orazítkovaná';
+
+  @override
+  String msgQualWcBody1(int year) {
+    return 'Postoupili jste na mistrovství světa $year.';
+  }
+
+  @override
+  String msgQualWcBody2(int year) {
+    return 'Je to oficiální: váš tým je na MS $year.';
+  }
+
+  @override
+  String msgQualWcBody3(int year) {
+    return 'Místo na mistrovství světa $year je jisté.';
+  }
+
+  @override
+  String msgQualWcBody4(int year) {
+    return 'Jste na závěrečném turnaji MS $year.';
+  }
+
+  @override
+  String msgQualContTitle1(String cup) {
+    return 'Postup na $cup';
+  }
+
+  @override
+  String msgQualContTitle2(String cup) {
+    return '$cup je zajištěné';
+  }
+
+  @override
+  String msgQualContTitle3(String cup) {
+    return 'Kvalifikace na $cup zvládnuta';
+  }
+
+  @override
+  String msgQualContBody1(String cup) {
+    return 'Postoupili jste na turnaj $cup.';
+  }
+
+  @override
+  String msgQualContBody2(String cup) {
+    return 'Váš tým si zajistil místo na turnaji $cup.';
+  }
+
+  @override
+  String msgQualContBody3(String cup) {
+    return 'Jste na turnaji $cup.';
+  }
+
+  @override
+  String msgChampTitleMine1(String comp) {
+    return '$comp – JSME MISTŘI!';
+  }
+
+  @override
+  String msgChampTitleMine2(String comp) {
+    return 'Mistři turnaje $comp!';
+  }
+
+  @override
+  String msgChampTitleMine3(String comp) {
+    return 'Vyhráli jste $comp!';
+  }
+
+  @override
+  String msgChampTitleOther1(String comp) {
+    return '$comp zná vítěze';
+  }
+
+  @override
+  String msgChampTitleOther2(String comp) {
+    return 'Mistr turnaje $comp je znám';
+  }
+
+  @override
+  String msgChampTitleOther3(String comp) {
+    return '$comp má svého vítěze';
+  }
+
+  @override
+  String msgChampBodyMine1(String comp, String loser, String result, int year) {
+    return 'Váš tým je mistrem turnaje $comp $year po výhře nad $loser$result.';
+  }
+
+  @override
+  String msgChampBodyMine2(String comp, String loser, String result, int year) {
+    return 'Vyhráli jste $comp $year, $loser nestačilo$result.';
+  }
+
+  @override
+  String msgChampBodyMine3(String comp, String loser, String result, int year) {
+    return '$comp $year je vaše. $loser poraženo$result.';
+  }
+
+  @override
+  String msgChampBodyOther1(
+    String winner,
+    String comp,
+    String loser,
+    String result,
+    int year,
+  ) {
+    return '$winner vyhrálo $comp $year po výhře nad $loser$result.';
+  }
+
+  @override
+  String msgChampBodyOther2(
+    String winner,
+    String comp,
+    String loser,
+    String result,
+    int year,
+  ) {
+    return '$winner je mistrem turnaje $comp $year, ve finále porazilo $loser$result.';
+  }
+
+  @override
+  String msgFinalScoreSuffix(int home, int away) {
+    return ' $home:$away ve finále';
+  }
+
+  @override
+  String msgFinalPensSuffix(int home, int away) {
+    return ' na penalty po remíze $home:$away ve finále';
+  }
+
+  @override
+  String get msgWpotyTitle => 'Světový hráč roku';
+
+  @override
+  String msgWpotyBodyMine(String name, String nation, int year) {
+    return '$name ($nation) je světovým hráčem roku $year – a je váš.';
+  }
+
+  @override
+  String msgWpotyBodyOther(String name, String nation, int year) {
+    return '$name ($nation) je světovým hráčem roku $year.';
+  }
+
+  @override
+  String get msgYpotTitle => 'Nejlepší mladý hráč turnaje';
+
+  @override
+  String msgYpotBodyMine(String name, String nation, int age, int year) {
+    return '$name ($nation), $age let, je nejlepším mladým hráčem turnaje $year – a je váš.';
+  }
+
+  @override
+  String msgYpotBodyOther(String name, String nation, int age, int year) {
+    return '$name ($nation), $age let, je nejlepším mladým hráčem turnaje $year.';
+  }
+
+  @override
+  String msgRankHold1(int rank) {
+    return 'Držíte se na #$rank.';
+  }
+
+  @override
+  String msgRankHold2(int rank) {
+    return 'Beze změny, stále #$rank.';
+  }
+
+  @override
+  String msgRankHold3(int rank) {
+    return 'Stabilně na #$rank.';
+  }
+
+  @override
+  String msgRankUp1(int move, int rank) {
+    String _temp0 = intl.Intl.pluralLogic(
+      move,
+      locale: localeName,
+      other: '$move míst',
+      few: '$move místa',
+      one: '1 místo',
+    );
+    return 'Postup o $_temp0 v tomto cyklu, na #$rank.';
+  }
+
+  @override
+  String msgRankUp2(int move, int rank) {
+    String _temp0 = intl.Intl.pluralLogic(
+      move,
+      locale: localeName,
+      other: '$move míst',
+      few: '$move místa',
+      one: '1 místo',
+    );
+    return 'Skok o $_temp0 vás posouvá na #$rank.';
+  }
+
+  @override
+  String msgRankUp3(int move, int rank) {
+    String _temp0 = intl.Intl.pluralLogic(
+      move,
+      locale: localeName,
+      other: '$move míst',
+      few: '$move místa',
+      one: '1 místo',
+    );
+    return 'Nahoru o $_temp0, teď #$rank.';
+  }
+
+  @override
+  String msgRankDown1(int move, int rank) {
+    String _temp0 = intl.Intl.pluralLogic(
+      move,
+      locale: localeName,
+      other: '$move míst',
+      few: '$move místa',
+      one: '1 místo',
+    );
+    return 'Pád o $_temp0 v tomto cyklu, na #$rank.';
+  }
+
+  @override
+  String msgRankDown2(int move, int rank) {
+    String _temp0 = intl.Intl.pluralLogic(
+      move,
+      locale: localeName,
+      other: '$move míst',
+      few: '$move místa',
+      one: '1 místo',
+    );
+    return 'Propad o $_temp0 vás sráží na #$rank.';
+  }
+
+  @override
+  String msgRankDown3(int move, int rank) {
+    String _temp0 = intl.Intl.pluralLogic(
+      move,
+      locale: localeName,
+      other: '$move míst',
+      few: '$move místa',
+      one: '1 místo',
+    );
+    return 'Dolů o $_temp0, teď #$rank.';
+  }
+
+  @override
+  String get msgRankLeadYou => 'Vedete světový žebříček.';
+
+  @override
+  String msgRankLeadOther(String nation) {
+    return 'V čele světa je $nation.';
+  }
+
+  @override
+  String msgRankTitle(int rank) {
+    return 'Světový žebříček · #$rank';
+  }
+
+  @override
+  String msgRankBody(String lead, String movement) {
+    return 'Světový žebříček byl aktualizován. $lead $movement';
+  }
+
+  @override
+  String msgCapsTitle(String name, int count) {
+    return '$name má $count startů';
+  }
+
+  @override
+  String msgCapsBody(String name, int count) {
+    return '$name nastoupil za váš tým už ${count}krát.';
+  }
+
+  @override
+  String msgGoalsTitle(String name, int count) {
+    return '$name má $count gólů';
+  }
+
+  @override
+  String msgGoalsBody(String name, int count) {
+    return '$name vstřelil za váš tým $count reprezentačních gólů.';
+  }
+
+  @override
+  String msgDevTitle(int year) {
+    return 'Vývoj kádru · $year';
+  }
+
+  @override
+  String msgNewFacesTitle(int year) {
+    return 'Nové tváře · $year';
+  }
+
+  @override
+  String msgIntakeTitle(int year) {
+    return 'Nábor akademie · $year';
+  }
+
+  @override
+  String msgRetireCaptainTitle(String name) {
+    return 'Kapitán $name končí';
+  }
+
+  @override
+  String msgRetireTitle(String name) {
+    return '$name končí v reprezentaci';
+  }
+
+  @override
+  String msgRetireBody(String name, int age) {
+    return '$name ukončil reprezentační kariéru ve $age letech.';
+  }
+
+  @override
+  String msgRetireBodyWith(String name, String tally, int age) {
+    return '$name ukončil reprezentační kariéru ve $age letech s bilancí $tally.';
+  }
+
+  @override
+  String msgTallyCaps(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count startů',
+      few: '$count starty',
+      one: '1 start',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String msgTallyGoals(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count gólů',
+      few: '$count góly',
+      one: '1 gól',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get msgArmbandVacant =>
+      ' Kapitánská páska je volná – nového kapitána jmenujte na obrazovce nominace.';
+
+  @override
+  String msgHofTitle(String name) {
+    return '$name uveden do Síně slávy';
+  }
+
+  @override
+  String msgHofBody(String name, int caps, int goals) {
+    return '$name vstupuje do Síně slávy vašeho týmu ($caps startů, $goals gólů). Najdete ho mezi Legendami.';
+  }
+
+  @override
+  String hubBanTitle(String name) {
+    return '$name má stopku';
+  }
+
+  @override
+  String hubBanBody(String name, String how, int matches) {
+    String _temp0 = intl.Intl.pluralLogic(
+      matches,
+      locale: localeName,
+      other: 'příštích $matches zápasů',
+      few: 'příští $matches zápasy',
+      one: 'příští zápas',
+    );
+    return '$name $how a má stop na $_temp0 – nebude k dispozici.';
+  }
+
+  @override
+  String get hubBanHowSecondYellow => 'byl vyloučen po druhé žluté kartě';
+
+  @override
+  String get hubBanHowViolent => 'dostal přímou červenou za surovou hru';
+
+  @override
+  String get hubBanHowRed => 'byl vyloučen';
+
+  @override
+  String hubInjuryTitle(String name) {
+    return '$name je zraněný';
+  }
+
+  @override
+  String hubInjuryBody(String name, int matches) {
+    String _temp0 = intl.Intl.pluralLogic(
+      matches,
+      locale: localeName,
+      other: '$matches zápasů',
+      few: '$matches zápasy',
+      one: '1 zápas',
+    );
+    return '$name se zranil a chybí $_temp0.';
+  }
+
+  @override
+  String get hubRunnerUpTitle1 => 'Stříbro';
+
+  @override
+  String get hubRunnerUpTitle2 => 'Tak blízko a přece daleko';
+
+  @override
+  String get hubRunnerUpTitle3 => 'Stříbrné medaile';
+
+  @override
+  String hubRunnerUpBody1(String cup, String opponent) {
+    return 'Došli jste ve finále turnaje $cup, ale $opponent bylo lepší. Tak blízko – tentokrát stříbro.';
+  }
+
+  @override
+  String hubRunnerUpBody2(String cup, String opponent) {
+    return 'Ve finále turnaje $cup vás porazilo $opponent. Stříbro – k zbláznění blízko.';
+  }
+
+  @override
+  String hubRunnerUpBody3(String cup, String opponent) {
+    return 'Finále turnaje $cup vám proti $opponent uteklo. Je na co být hrdý, jen ta trofej chybí.';
+  }
+
+  @override
+  String get hubKnockedOutTitle1 => 'Konec turnaje';
+
+  @override
+  String get hubKnockedOutTitle2 => 'Cesta končí';
+
+  @override
+  String get hubKnockedOutTitle3 => 'Dojeli jsme';
+
+  @override
+  String hubKnockedOutBody1(String cup, String opponent, String stage) {
+    return 'Končíte na turnaji $cup, v $stage vás vyřadilo $opponent.';
+  }
+
+  @override
+  String hubKnockedOutBody2(String cup, String opponent, String stage) {
+    return '$opponent vám ukončilo turnaj $cup v $stage.';
+  }
+
+  @override
+  String hubKnockedOutBody3(String cup, String opponent, String stage) {
+    return 'Váš turnaj $cup končí v $stage, porazilo vás $opponent.';
+  }
+
+  @override
+  String get hubGroupExitTitle1 => 'Konec ve skupině';
+
+  @override
+  String get hubGroupExitTitle2 => 'Vypadli jsme ve skupině';
+
+  @override
+  String get hubGroupExitTitle3 => 'Brzký konec';
+
+  @override
+  String hubGroupExitBody1(String cup) {
+    return 'Váš turnaj $cup končí už ve skupině. Na vyřazovací boje to nestačilo.';
+  }
+
+  @override
+  String hubGroupExitBody2(String cup) {
+    return 'Ze skupiny jste nepostoupili. Turnaj $cup pro vás končí.';
+  }
+
+  @override
+  String hubGroupExitBody3(String cup) {
+    return 'Vyřazovací fáze tentokrát nebude. Turnaj $cup končí ve skupině.';
+  }
+
+  @override
+  String boardObjectiveMetTitle(String comp) {
+    return 'Cíl splněn — $comp';
+  }
+
+  @override
+  String boardObjectiveMissedTitle(String comp) {
+    return 'Cíl nesplněn — $comp';
+  }
+
+  @override
+  String boardObjectiveMetBody(String comp, String demand, String finish) {
+    return 'Cíl vedení na turnaji $comp: $demand. Vaše umístění: $finish. Vedení má, oč žádalo.';
+  }
+
+  @override
+  String boardObjectiveMissedBody(String comp, String demand, String finish) {
+    return 'Cíl vedení na turnaji $comp: $demand. Vaše umístění: $finish. To je pod očekávání.';
+  }
+
+  @override
+  String get newsWcMissTitle => 'Sen o mistrovství světa končí';
+
+  @override
+  String newsWcMissBody(int year) {
+    return 'Na mistrovství světa $year jedete jen jako diváci – kvalifikace nevyšla. Další čtyři roky.';
+  }
+
+  @override
+  String get newsRecordScorerTitle => 'Nejlepší střelec historie';
+
+  @override
+  String newsRecordScorerBody(String name, int goals) {
+    return '$name je nejlepším střelcem historie s $goals góly.';
+  }
+
+  @override
+  String get newsRecordCapsTitle => 'Rekordman v počtu startů';
+
+  @override
+  String newsRecordCapsBody(String name, int caps) {
+    return '$name je rekordmanem v počtu startů s $caps zápasy.';
+  }
+
+  @override
+  String get newsARecordBreaker => 'Nový rekordman';
+
+  @override
+  String newsTransferTitle(String name, String club) {
+    return '$name přestupuje do $club';
+  }
+
+  @override
+  String newsTransferBody(
+    String name,
+    String position,
+    String fromClub,
+    String destination,
+    String fee,
+    int rating,
+  ) {
+    return '$name ($position, $rating) opouští $fromClub a míří do $destination za $fee.';
+  }
+
+  @override
+  String newsTransferAbroad(String club, String country) {
+    return '$club ($country)';
+  }
+
+  @override
+  String get newsTransferFree => 'volný přestup';
+
+  @override
+  String newsNatzStarTitle(String name, String nation) {
+    return '⭐ $name by přestoupil do reprezentace $nation!';
+  }
+
+  @override
+  String newsNatzTitle(String name, String nation) {
+    return '$name chce hrát za $nation';
+  }
+
+  @override
+  String newsNatzBody(
+    String name,
+    String position,
+    String fromNation,
+    String nation,
+    int age,
+    int rating,
+  ) {
+    return '$name, ${age}letý $position s ratingem $rating, momentálně reprezentuje $fromNation. Má rodinné vazby na $nation a je ochoten přestoupit. Nabídku naturalizace přijměte nebo odmítněte v menu.';
+  }
+
+  @override
+  String newsNatzBodyStar(
+    String name,
+    String position,
+    String fromNation,
+    String nation,
+    int age,
+    int rating,
+  ) {
+    return '$name, ${age}letý $position s ratingem $rating, momentálně reprezentuje $fromNation. Je to hvězda, má rodinné vazby na $nation a je ochoten přestoupit. Nabídku naturalizace přijměte nebo odmítněte v menu.';
+  }
+
+  @override
+  String get newsTheirNation => 'jejich reprezentace';
+
+  @override
+  String get newsYourNation => 'vaše reprezentace';
+
+  @override
+  String get tourStatusChampions => 'MISTŘI';
+
+  @override
+  String get tourStatusFinals => 'ZÁVĚREČNÝ TURNAJ';
+
+  @override
+  String get tourStatusQualifying => 'KVALIFIKACE';
+
+  @override
+  String get tourStatusUpcoming => 'PŘIPRAVUJE SE';
+
+  @override
+  String get tourStatusInProgress => 'PROBÍHÁ';
+
+  @override
+  String get tourStatusComingSoon => 'BRZY';
+
+  @override
+  String get tourStatusDecided => 'ROZHODNUTO';
+
+  @override
+  String tourStatusLeague(String letter) {
+    return 'LIGA $letter';
+  }
+
+  @override
+  String get tourDrawWcQualifying => 'LOS KVALIFIKACE MS';
+
+  @override
+  String tourDrawContQualifying(String cup) {
+    return 'LOS KVALIFIKACE: $cup';
+  }
+
+  @override
+  String get tourDrawWcHost => 'POŘADATEL MS';
+
+  @override
+  String tourDrawContHost(String cup) {
+    return 'POŘADATEL: $cup';
+  }
+
+  @override
+  String get tourKickoffContinentalCup => 'KONTINENTÁLNÍ POHÁR';
+
+  @override
+  String tourHostCompetitionYear(String competition, int year) {
+    return '$competition $year';
+  }
+
+  @override
+  String newsContMissTitle(String cup) {
+    return '$cup bez nás';
+  }
+
+  @override
+  String newsContMissBody(String cup) {
+    return 'Na turnaj $cup jste nepostoupili – kvalifikace tentokrát nevyšla.';
+  }
+
+  @override
+  String newsPotyTitle(int year) {
+    return 'Světový hráč roku $year';
+  }
+
+  @override
+  String newsPotyBody(String name) {
+    return '$name je letos nejlepším hráčem světa.';
+  }
+
+  @override
+  String newsPotyYoungSuffix(String name) {
+    return ' Cenu pro nejlepšího mladého hráče bere $name.';
+  }
+
+  @override
+  String get matchTopBarTitle => 'ZÁPAS';
+
+  @override
+  String get matchStatsAtFullTime =>
+      'Statistiky budou k dispozici po konci zápasu.';
+
+  @override
+  String get matchPlayerRatings => 'ZNÁMKY HRÁČŮ';
+
+  @override
+  String get matchSubstitutions => 'STŘÍDÁNÍ';
+
+  @override
+  String get matchSubstitutes => 'NÁHRADNÍCI';
+
+  @override
+  String get matchPlayerOfTheMatch => 'HRÁČ ZÁPASU';
+
+  @override
+  String get matchGoalShout => 'GÓL!';
+
+  @override
+  String matchShootoutScore(int home, int away) {
+    return 'PENALTY $home:$away';
+  }
+
+  @override
+  String get tourVenues => 'STADIONY';
+
+  @override
+  String tourPot(int number) {
+    return 'KOŠ $number';
+  }
+
+  @override
+  String get tourHostSelection => 'VOLBA POŘADATELE';
+
+  @override
+  String get tourCandidates => 'KANDIDÁTI';
+
+  @override
+  String get tourJointBid => 'SPOLEČNÁ KANDIDATURA';
+
+  @override
+  String get tourGoldenGlove => 'ZLATÁ RUKAVICE';
+
+  @override
+  String get tourTeamOfTournament => 'NEJLEPŠÍ JEDENÁCTKA TURNAJE';
+
+  @override
+  String get tourYourRun => 'VAŠE CESTA';
+
+  @override
+  String get tourMedalTable => 'MEDAILOVÉ POŘADÍ';
+
+  @override
+  String tourHostLine(String nation) {
+    return 'Pořadatel: $nation';
+  }
+
+  @override
+  String tourGroupNamed(String name) {
+    return 'Skupina $name';
+  }
+
+  @override
+  String get tourFinalsDrawBlurb =>
+      'Nasazení podle světového žebříčku. Najděte svůj tým, než začne los.';
+
+  @override
+  String get tourWorldRanking => 'Světový žebříček';
+
+  @override
+  String get tourYourCompetitions => 'VAŠE SOUTĚŽE';
+
+  @override
+  String get tourOtherContinents => 'OSTATNÍ KONTINENTY';
+
+  @override
+  String tourHostedBy(String hosts) {
+    return 'POŘÁDÁ  $hosts';
+  }
+
+  @override
+  String tourThirdsAdvance(int count, String destination) {
+    return 'Nejlepších $count postupuje do $destination';
+  }
+
+  @override
+  String newsWalkoutTitle(String name) {
+    return '$name končí v reprezentaci';
+  }
+
+  @override
+  String newsWalkoutBody(String name, int age, int caps) {
+    return '$name ukončil reprezentační kariéru ve $age letech s $caps starty. Chtěl vědět, na čem je, odpovědi se nedočkal – a déle už nečekal.';
+  }
+
+  @override
+  String get pressProbeAccountability1 =>
+      'Znovu se zastáváte hráčů. Nenese v té kabině nikdo odpovědnost?';
+
+  @override
+  String get pressProbeAccountability2 =>
+      'Hráče jste obhájil. Kdo se tedy za takový večer zodpovídá?';
+
+  @override
+  String get pressProbeAccountability3 =>
+      'Loajalita se hlásá snadno. Ponese to někdo?';
+
+  @override
+  String get pressProbeAccountability4 =>
+      'Když to nikdy nejsou hráči, zbývá jediné jméno. To vaše.';
+
+  @override
+  String get pressProbeYourFuture1 =>
+      'Berete to na sebe. Máme se ptát na vaši budoucnost?';
+
+  @override
+  String get pressProbeYourFuture2 =>
+      'Padnout na meč je ušlechtilé. Je to místo pořád vaše?';
+
+  @override
+  String get pressProbeYourFuture3 =>
+      'Pořád opakujete, že je to na vás. Odkdy je to rezignace?';
+
+  @override
+  String get pressProbeYourFuture4 =>
+      'Poslouchá i vedení. Určitě to chcete mít v záznamu?';
+
+  @override
+  String get pressProbeDressingRoom1 =>
+      'Ostrá slova na veřejnosti. Neztratil jste kabinu?';
+
+  @override
+  String get pressProbeDressingRoom2 =>
+      'Právě jste zemi řekl, že na to nemají. Jak jim to pomůže?';
+
+  @override
+  String get pressProbeDressingRoom3 =>
+      'Žádat to tady místo v kabině – je tohle vedení mužstva?';
+
+  @override
+  String get pressProbeDressingRoom4 =>
+      'Hráči to čtou taky. Co uslyší zítra ráno?';
+
+  @override
+  String get pressProbeExpectation1 =>
+      'Nahlas jste zvedl laťku. Není to sázka na štěstí?';
+
+  @override
+  String get pressProbeExpectation2 =>
+      'Velký slib. Co se stane v den, kdy ho nesplníte?';
+
+  @override
+  String get pressProbeExpectation3 =>
+      'Každý trenér před vámi říkal totéž a pak si sbalil. Proč jste jiný?';
+
+  @override
+  String get pressProbeExpectation4 =>
+      'Cíl jste si stanovil sám. Odejdete, když ho nesplníte?';
+
+  @override
+  String get pressProbeSubstance1 =>
+      'S dovolením, tohle není odpověď. Řekněte nám něco.';
+
+  @override
+  String get pressProbeSubstance2 => 'Země chce slyšet vás. Aspoň něco?';
+
+  @override
+  String get pressProbeSubstance3 =>
+      'Můžete dál mlčet. My to budeme dál otiskovat.';
+
+  @override
+  String get pressProbeSubstance4 =>
+      'Jednu jasnou větu. Co si o tom doopravdy myslíte?';
+
+  @override
+  String get pressProbeSelection1 =>
+      'Stejná jména, stejné rozestavení, stejný výsledek. Proč pořád nasazujete tuhle sestavu?';
+
+  @override
+  String get pressProbeSelection2 =>
+      'Hráči ve formě to sledují v televizi. Vysvětlete tu nominaci.';
+
+  @override
+  String get pressProbeSelection3 =>
+      'Vybíráte jedenáctku podle formy, nebo podle jména?';
+
+  @override
+  String get pressProbeSelection4 =>
+      'Takticky jsme ten problém viděli všichni. Vy taky?';
+
+  @override
+  String get pressProbeTheFans1 =>
+      'Tisíce lidí kvůli tomu cestovaly. Co jim dnes večer řeknete?';
+
+  @override
+  String get pressProbeTheFans2 =>
+      'Fanoušci u tohohle týmu vydrželi roky. Co jim dáváte vy?';
+
+  @override
+  String get pressProbeTheFans3 =>
+      'Buď vaše jméno skandují, nebo ne. Jak to bude?';
+
+  @override
+  String get pressProbeTheFans4 => 'Vzkaz pro lidi doma. Prosím.';
+
+  @override
+  String get pressProbeBigPicture1 =>
+      'Zkusme odstup. Kam tahle reprezentace vlastně směřuje?';
+
+  @override
+  String get pressProbeBigPicture2 =>
+      'Zvenčí se tu roky nic nezměnilo. Nebo ano?';
+
+  @override
+  String get pressProbeBigPicture3 =>
+      'Jak bude tenhle tým vypadat za čtyři roky?';
+
+  @override
+  String get pressProbeBigPicture4 => 'Je tohle projekt, nebo jen další zápas?';
+
+  @override
+  String get pressNeedleBackPlayers =>
+      'Vždycky se jich zastáváte. Slyšeli jsme to už mockrát.';
+
+  @override
+  String get pressNeedleTakeBlame => 'Podle vás je to prý vždycky vaše chyba.';
+
+  @override
+  String get pressNeedleDemandMore => 'Zase další požadavky.';
+
+  @override
+  String get pressNeedleRaiseBar => 'Další slib do archivu.';
+
+  @override
+  String get pressNeedlePlayDown => 'Nikdy nám nic neřeknete.';
+
+  @override
+  String get pressHeadlineWent1 => 'Trenér, který má situaci pevně v rukou';
+
+  @override
+  String get pressHeadlineWent2 => 'Přišli si pro hádku, odešli s vůdcem';
+
+  @override
+  String get pressHeadlineWent3 => 'Jasné odpovědi – a sedly';
+
+  @override
+  String get pressHeadlineMixed1 => 'Řečeno hodně, vyřešeno málo';
+
+  @override
+  String get pressHeadlineMixed2 => 'Něco pro každého – a nic pro nikoho';
+
+  @override
+  String get pressHeadlineMixed3 =>
+      'Tisková konference, po které otázky zůstaly';
+
+  @override
+  String get pressHeadlineBadly1 => 'Perná hodina před kamerami';
+
+  @override
+  String get pressHeadlineBadly2 =>
+      'Sál se otočil proti němu – a bylo to vidět';
+
+  @override
+  String get pressHeadlineBadly3 => 'Odpovědi, které ráno vyzní ještě hůř';
+
+  @override
+  String get pressHeadlineFlat1 => 'Nic neřečeno, nic nezískáno';
+
+  @override
+  String get pressHeadlineFlat2 => 'Deset minut, žádná zpráva';
+
+  @override
+  String get pressHeadlineFlat3 => 'Prázdná stránka pro zadní stranu';
+
+  @override
+  String get pressConferenceTitle => 'TISKOVÁ KONFERENCE';
+
+  @override
+  String pressQuestionOf(int index, int total) {
+    return 'Otázka $index z $total';
+  }
+
+  @override
+  String get pressTomorrowsHeadline => 'ZÍTŘEJŠÍ TITULEK';
+
+  @override
+  String get pressLeaveRoom => 'ODEJÍT ZE SÁLU';
+
+  @override
+  String get pressRoomVerdictSquad => 'Kabina';
+
+  @override
+  String get pressRoomVerdictBoard => 'Vedení';
+
+  @override
+  String get yReactionElation0 => 'bez připomínek. žádných. dokonalé.';
+
+  @override
+  String get yReactionElation1 => 'je mi zle (v dobrém).';
+
+  @override
+  String get yReactionElation2 => 'dávám to do rámečku. nad krb.';
+
+  @override
+  String get yReactionElation3 => 'jsme zpátky ve hře';
+
+  @override
+  String get yReactionElation4 =>
+      'screenshot pro všechny pochybovače. Pro všechny.';
+
+  @override
+  String get yReactionElation5 => 'budu s tím otravovat příštích deset let.';
+
+  @override
+  String get yReactionRelief0 => 'tohle mě stálo deset let života';
+
+  @override
+  String get yReactionRelief1 => 'Ošklivé. Body doma. Jedeme dál.';
+
+  @override
+  String get yReactionRelief2 => 'Nikdo nic neříkejte. Ať to nezakřiknete.';
+
+  @override
+  String get yReactionRelief3 => 'Krása to nebyla, ale beru to vždycky.';
+
+  @override
+  String get yReactionRelief4 => 'Tep: nepřijatelný.';
+
+  @override
+  String get yReactionRelief5 => 'Nějak. Prostě nějak!';
+
+  @override
+  String get yReactionFury0 => 'Tohle je fakt bída.';
+
+  @override
+  String get yReactionFury1 => 'Málo. Ani zdaleka to nestačí.';
+
+  @override
+  String get yReactionFury2 => 'Chci jména.';
+
+  @override
+  String get yReactionFury3 => 'Každé čtyři roky to samé. KAŽDÉ čtyři roky.';
+
+  @override
+  String get yReactionFury4 => 'Mažu aplikaci. Ve čtvrtek ji stáhnu zpátky.';
+
+  @override
+  String get yReactionFury5 => 'Ať mi to někdo vysvětlí. Pomalu.';
+
+  @override
+  String get yReactionDespair0 => 'tak.';
+
+  @override
+  String get yReactionDespair1 => 'Došla mi slova.';
+
+  @override
+  String get yReactionDespair2 => 'Jdu se projít. Na dlouho.';
+
+  @override
+  String get yReactionDespair3 => 'tohle je ta nejhorší verze reality';
+
+  @override
+  String get yReactionDespair4 => 'Vzbuďte mě za čtyři roky.';
+
+  @override
+  String get yReactionDespair5 => 'Dneska bez vtipů. Vůbec nic.';
+
+  @override
+  String get yReactionSmugness0 => 'Říkal jsem to v lednu. Zkontrolujte si to.';
+
+  @override
+  String get yReactionSmugness1 => 'Někteří z vás nám dluží omluvu.';
+
+  @override
+  String get yReactionSmugness2 => 'Potichu, ale: říkal jsem to.';
+
+  @override
+  String get yReactionSmugness3 => 'Pochybovači nějak ztichli.';
+
+  @override
+  String get yReactionSmugness4 => 'tohle si uložte';
+
+  @override
+  String get yReactionSmugness5 => 'Ne že by to někdo počítal. Já to počítám.';
+
+  @override
+  String get yReactionShrug0 => 'stalo se. jedeme dál.';
+
+  @override
+  String get yReactionShrug1 => 'Dobře. Nevadí. Dál.';
+
+  @override
+  String get yReactionShrug2 => 'Zařazuju do složky „fotbal“.';
+
+  @override
+  String get yReactionShrug3 => 'žádné myšlenky, prázdno';
+
+  @override
+  String get yReactionShrug4 => 'Vzbuďte mě na další.';
+
+  @override
+  String get yReactionShrug5 => 'Vážně nemám co dodat.';
+
+  @override
+  String get tourThirdsUneven =>
+      'Skupiny nejsou stejně velké – výsledky proti poslednímu týmu větších skupin se nezapočítávají, aby se všechny týmy hodnotily podle stejného počtu zápasů.';
+
+  @override
+  String get gateTitle => 'PRVNÍ CYKLUS KONČÍ';
+
+  @override
+  String get gateLead =>
+      'Čtyři roky, kontinentální šampionát a mistrovství světa – to byla část zdarma a nic v ní nechybělo. Za jednorázovou platbu pokračujte v této kariéře dál.';
+
+  @override
+  String get gateBenefitEndless => 'Nekonečná kariéra – všechny další cykly';
+
+  @override
+  String get gateBenefitNations => 'Můžete vést kteroukoli reprezentaci světa';
+
+  @override
+  String get gateBenefitSaves => 'Všechny pozice pro uložení';
+
+  @override
+  String get gateBenefitUpdates => 'Všechny budoucí aktualizace v ceně';
+
+  @override
+  String get gateBenefitOffline =>
+      'Žádné předplatné, žádné reklamy, žádný účet, funguje offline';
+
+  @override
+  String get gatePriceLead => 'Jedna platba, navždy';
+
+  @override
+  String get gatePrice => '11,99 €';
+
+  @override
+  String get gateBuy => 'KOUPIT A POKRAČOVAT';
+
+  @override
+  String get gateExit => 'ODEJÍT';
+
+  @override
+  String get gateNotChargedYet =>
+      'Zatím není napojeno na platbu – tlačítko jen pokračuje dál.';
+
+  @override
+  String get backupTitle => 'ULOŽENÉ HRY';
+
+  @override
+  String get backupBlurb =>
+      'Všechny uložené hry jsou v jednom souboru v tomto telefonu. Vytvořte si zálohu, aby vás ztráta nebo přeinstalace telefonu nestála kariéru.';
+
+  @override
+  String get backupExport => 'EXPORTOVAT ZÁLOHU';
+
+  @override
+  String get backupExportSubject => 'Uložené hry FNM';
+
+  @override
+  String get backupRestore => 'OBNOVIT ZE SOUBORU';
+
+  @override
+  String get backupRestoreWarnTitle => 'Nahradit všechny uložené hry?';
+
+  @override
+  String get backupRestoreWarnBody =>
+      'Obnovení nahradí všechny uložené hry v tomto telefonu těmi ze souboru. Aplikace se restartuje.';
+
+  @override
+  String get backupRestoreConfirm => 'NAHRADIT';
+
+  @override
+  String get backupCancel => 'ZRUŠIT';
+
+  @override
+  String get backupExported => 'Záloha je připravená – vyberte, kam ji uložit.';
+
+  @override
+  String get backupFailed => 'Zálohu se nepodařilo vytvořit.';
+
+  @override
+  String get backupRejectedUnreadable => 'Tento soubor nelze otevřít.';
+
+  @override
+  String get backupRejectedNotFnm => 'Tohle není uložená hra FNM.';
+
+  @override
+  String get backupRejectedNewer =>
+      'Tato záloha pochází z novější verze aplikace. Nejprve aplikaci aktualizujte.';
+
+  @override
+  String get backupRejectedTooOld =>
+      'Tato záloha je příliš stará, tato verze ji nedokáže obnovit.';
+
+  @override
+  String get careerShare => 'Sdílet tuto kariéru';
+
+  @override
+  String get careerImport => 'IMPORTOVAT KARIÉRU';
+
+  @override
+  String get careerShareSubject => 'Kariéra ve FNM';
+
+  @override
+  String get careerImported => 'Kariéra byla importována.';
+
+  @override
+  String get careerImportFailedUnreadable => 'Tento soubor není kariéra FNM.';
+
+  @override
+  String get careerImportFailedNewer =>
+      'Tato kariéra byla exportována novější verzí aplikace. Nejprve aplikaci aktualizujte.';
+
+  @override
+  String get careerShareFailed => 'Kariéru se nepodařilo exportovat.';
+
+  @override
+  String get managerTitle => 'TRENÉR';
+
+  @override
+  String get managerSkills => 'VAŠE SCHOPNOSTI';
+
+  @override
+  String managerPointsAvailable(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count bodů k rozdělení',
+      few: '$count body k rozdělení',
+      one: '1 bod k rozdělení',
+      zero: 'Žádné body k rozdělení',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get managerPointsHow =>
+      'Dva body za každý dokončený cyklus, jeden za každou vyhranou trofej.';
+
+  @override
+  String get managerSkillManManagement => 'Vedení lidí';
+
+  @override
+  String get managerSkillManManagementBlurb =>
+      'To, co řeknete na veřejnosti i ve své kanceláři, má větší dopad.';
+
+  @override
+  String get managerSkillTactical => 'Taktika';
+
+  @override
+  String get managerSkillTacticalBlurb =>
+      'Váš tým si rychleji zvykne na nové rozestavení.';
+
+  @override
+  String get managerSkillYouth => 'Práce s mládeží';
+
+  @override
+  String get managerSkillYouthBlurb => 'Z akademie vzejde víc talentů.';
+
+  @override
+  String get managerSkillNegotiation => 'Vyjednávání';
+
+  @override
+  String get managerSkillNegotiationBlurb => 'Federace vás lépe financuje.';
+
+  @override
+  String get managerStaff => 'VÁŠ REALIZAČNÍ TÝM';
+
+  @override
+  String managerStaffWages(String amount) {
+    return 'Mzdy: $amount za cyklus';
+  }
+
+  @override
+  String get managerRoleAssistant => 'Asistent trenéra';
+
+  @override
+  String get managerRoleAssistantBlurb =>
+      'Vede tréninky. Čemu se věnujete, toho udělá víc.';
+
+  @override
+  String get managerRoleScout => 'Hlavní skaut';
+
+  @override
+  String get managerRoleScoutBlurb =>
+      'Dřív vám řekne, co z mladého hráče bude.';
+
+  @override
+  String get managerRoleFitness => 'Kondiční trenér';
+
+  @override
+  String get managerRoleFitnessBlurb => 'Udrží hráče na hřišti.';
+
+  @override
+  String get managerTierNone => 'Nikdo';
+
+  @override
+  String get managerTierBasic => 'Základní';
+
+  @override
+  String get managerTierGood => 'Dobrý';
+
+  @override
+  String get managerTierElite => 'Špičkový';
+
+  @override
+  String get managerFree => 'zdarma';
+
+  @override
+  String get managerTraining => 'MEZI SRAZY';
+
+  @override
+  String get managerTrainingBlurb =>
+      'Na čem tým pracuje, když se zrovna nehraje.';
+
+  @override
+  String get managerFocusBalanced => 'Vyvážený';
+
+  @override
+  String get managerFocusBalancedBlurb => 'Od každého něco.';
+
+  @override
+  String get managerFocusFitness => 'Kondice';
+
+  @override
+  String get managerFocusFitnessBlurb => 'Méně zranění.';
+
+  @override
+  String get managerFocusCohesion => 'Sehranost';
+
+  @override
+  String get managerFocusCohesionBlurb => 'Rozestavení si sedne rychleji.';
+
+  @override
+  String get managerFocusYouth => 'Mládež';
+
+  @override
+  String get managerFocusYouthBlurb => 'Hodiny s nejmladšími hráči.';
 }

@@ -2,6 +2,7 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fnm/core/util/competition_label.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
@@ -698,7 +699,8 @@ class _TrophyCabinet extends ConsumerWidget {
                       Text(
                         a.competition.isEmpty
                             ? '${a.year}'
-                            : '${a.competition} ${a.year}',
+                            : '${competitionLabel(l, a.competition)} '
+                                  '${a.year}',
                         style: AppTypography.labelSmall.copyWith(
                           color: AppColors.onSurfaceVariant,
                         ),

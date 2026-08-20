@@ -64,22 +64,22 @@ extension SeasonCycle on SeasonService {
     final objectives = await _ref.read(
       cycleObjectiveOutcomesProvider(careerId).future,
     );
+    final l = _l;
     for (final o in objectives) {
       if (!o.decided) continue;
-      final demand = objectiveDemandText(o.tier, o.target);
-      final finish = objectiveFinishText(o.tier, o.actual);
+      final demand = objectiveDemandText(l, o.tier, o.target);
+      final finish = objectiveFinishText(l, o.tier, o.actual);
+      final comp = competitionLabel(l, o.competition);
       await _comp.addMessage(
         careerId: careerId,
         dedupKey: 'objective:${career.cyclePointer}:${o.tier.name}',
         category: 'board',
         title: o.met
-            ? 'Objective met — ${o.competition}'
-            : 'Objective missed — ${o.competition}',
+            ? l.boardObjectiveMetTitle(comp)
+            : l.boardObjectiveMissedTitle(comp),
         body: o.met
-            ? 'The board asked you to $demand at the ${o.competition}. '
-                  'You finished $finish. They have what they asked for.'
-            : 'The board asked you to $demand at the ${o.competition}. '
-                  'You finished $finish. That is short of what was expected.',
+            ? l.boardObjectiveMetBody(comp, demand, finish)
+            : l.boardObjectiveMissedBody(comp, demand, finish),
         year: career.inGameDate.year,
       );
     }
@@ -733,10 +733,8 @@ extension SeasonCycle on SeasonService {
         careerId: careerId,
         dedupKey: 'contmiss:$year',
         category: 'eliminated',
-        title: '${cont.name} missed',
-        body:
-            "You didn't qualify for ${cont.name} — the campaign came up "
-            'short this time.',
+        title: _l.newsContMissTitle(continentalCupLabel(_l, conf)),
+        body: _l.newsContMissBody(continentalCupLabel(_l, conf)),
         year: year - 1,
       );
     }

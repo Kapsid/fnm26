@@ -151,17 +151,17 @@ class TournamentsScreen extends ConsumerWidget {
               const SizedBox(height: AppSpacing.md),
               AppCard(
                 onTap: () => context.go('${Routes.ranking}?careerId=$careerId'),
-                child: const Row(
+                child: Row(
                   children: [
-                    Icon(Icons.leaderboard, color: AppColors.primary),
-                    SizedBox(width: AppSpacing.md),
+                    const Icon(Icons.leaderboard, color: AppColors.primary),
+                    const SizedBox(width: AppSpacing.md),
                     Expanded(
                       child: Text(
-                        'World Ranking',
+                        l.tourWorldRanking,
                         style: AppTypography.titleMedium,
                       ),
                     ),
-                    Icon(
+                    const Icon(
                       Icons.chevron_right,
                       color: AppColors.onSurfaceVariant,
                       size: 20,
@@ -171,7 +171,7 @@ class TournamentsScreen extends ConsumerWidget {
               ),
               const SizedBox(height: AppSpacing.md),
               Text(
-                'YOUR COMPETITIONS',
+                l.tourYourCompetitions,
                 style: AppTypography.labelMedium.copyWith(
                   color: AppColors.primary,
                 ),
@@ -202,7 +202,7 @@ class TournamentsScreen extends ConsumerWidget {
               ]),
               const SizedBox(height: AppSpacing.lg),
               Text(
-                'OTHER CONTINENTS',
+                l.tourOtherContinents,
                 style: AppTypography.labelMedium.copyWith(
                   color: AppColors.primary,
                 ),

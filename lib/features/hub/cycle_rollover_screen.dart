@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fnm/features/paywall/premium_gate_screen.dart';
 import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
@@ -71,6 +72,24 @@ class _CycleRolloverScreenState extends ConsumerState<CycleRolloverScreen> {
 
   Future<void> _begin(RolloverVerdict? v) async {
     if (_busy) return;
+    // The end of the FIRST cycle is where the free game stops: the manager has
+    // had a complete four years with nothing held back, and carrying the save
+    // on is what is being sold. This is the only gate — every later rollover
+    // runs straight through. See the monetisation spec.
+    final career = await ref
+        .read(careerRepositoryProvider)
+        .byId(widget.careerId);
+    if (career != null && career.cyclePointer == kFreeCycles - 1) {
+      if (!mounted) return;
+      final carryOn = await PremiumGateScreen.show(context);
+      if (!mounted) return;
+      if (!carryOn) {
+        // They chose to leave. The save is untouched and sits where it was.
+        context.go(Routes.saves);
+        return;
+      }
+    }
+    if (!mounted) return;
     setState(() => _busy = true);
     // The rollover banks the finished cycle's income and advances; the new
     // cycle's budget is allocated in the forced budget-setup event that opens

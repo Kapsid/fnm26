@@ -1,3 +1,4 @@
+import 'package:drift/drift.dart' show DriftSqlType, Table, TableInfo;
 import 'package:drift_dev/api/migrations_native.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/data/db/app_database.dart';
@@ -21,9 +22,23 @@ import '../../generated_migrations/schema_v41.dart' as v41;
 void main() {
   final verifier = SchemaVerifier(GeneratedHelper());
 
-  /// Every from → to pair that must carry data across. Extend as versions are
-  /// added: {38: 39}, then {38: 40, 39: 40}, and so on.
-  const upgrades = <int, int>{41: 42, 40: 42, 39: 42, 38: 42};
+  /// Every from → to pair that must carry data across, DERIVED rather than
+  /// listed: every managed version up to the one this build expects.
+  ///
+  /// It used to be a hand-written map, which made "add an entry here" a step
+  /// somebody had to remember on exactly the bump where forgetting it costs a
+  /// player their save. Now a new version is covered the moment
+  /// [AppDatabase.currentSchemaVersion] moves, and the run fails until its
+  /// schema has been dumped — because [SchemaVerifier] has nothing to validate
+  /// the result against otherwise.
+  final upgrades = <int, int>{
+    for (
+      var from = AppDatabase.firstManagedVersion;
+      from < AppDatabase.currentSchemaVersion;
+      from++
+    )
+      from: AppDatabase.currentSchemaVersion,
+  };
 
   test('the live schema still matches the recorded snapshot', () async {
     // Catches the mistake that breaks saves: changing a table without dumping
@@ -173,4 +188,85 @@ void main() {
       await verifier.migrateAndValidate(db, to);
     });
   }
+
+  test('a POPULATED save survives the whole migration path', () async {
+    // The loop above migrates EMPTY databases: it proves the schema arrives
+    // intact, and says nothing about whether the rows did. A step that
+    // recreates a table instead of altering it passes every test above and
+    // silently empties a twenty-year career.
+    //
+    // Generic on purpose. It fills every table the oldest managed schema
+    // defines by reading each table's own column metadata, so a table added
+    // years from now is covered the day it appears rather than the day
+    // somebody remembers to add it here.
+    final schema = await verifier.schemaAt(AppDatabase.firstManagedVersion);
+    final old = v38.DatabaseAtV38(schema.newConnection());
+    final populated = <String>[];
+    for (final table in old.allTables) {
+      await old.customStatement(_insertOneRow(table));
+      populated.add(table.actualTableName);
+    }
+    await old.close();
+    expect(
+      populated,
+      hasLength(greaterThan(20)),
+      reason: 'the oldest schema should have real tables to fill',
+    );
+
+    final db = AppDatabase.forTesting(schema.newConnection());
+    addTearDown(db.close);
+    await verifier.migrateAndValidate(db, AppDatabase.currentSchemaVersion);
+
+    for (final name in populated) {
+      final count = await db
+          .customSelect('SELECT COUNT(*) AS n FROM $name')
+          .map((r) => r.read<int>('n'))
+          .getSingle();
+      expect(
+        count,
+        1,
+        reason:
+            'the migration emptied "$name" — a save loses this table on '
+            'upgrade',
+      );
+    }
+  });
+}
+
+/// An INSERT that puts one row into [table], built from the table's own
+/// columns.
+///
+/// Only the columns that MUST be given a value are listed: anything nullable,
+/// defaulted or auto-incrementing is left to the database, which keeps this
+/// working as tables change shape.
+String _insertOneRow(TableInfo<Table, Object?> table) {
+  final names = <String>[];
+  final values = <String>[];
+  for (final column in table.$columns) {
+    if (column.$nullable ||
+        column.hasAutoIncrement ||
+        column.defaultValue != null ||
+        column.clientDefault != null) {
+      continue;
+    }
+    names.add(column.$name);
+    values.add(_sampleFor(column.type));
+  }
+  if (names.isEmpty)
+    return 'INSERT INTO ${table.actualTableName} DEFAULT VALUES';
+  return 'INSERT INTO ${table.actualTableName} '
+      '(${names.join(', ')}) VALUES (${values.join(', ')})';
+}
+
+/// A literal of the right shape for a column of [type]. The values are
+/// meaningless — what is under test is whether the ROW survives, not what is
+/// in it.
+String _sampleFor(Object type) {
+  if (type == DriftSqlType.string) return "'x'";
+  if (type == DriftSqlType.bool) return '0';
+  if (type == DriftSqlType.double) return '1.0';
+  if (type == DriftSqlType.blob) return "x''";
+  // Drift stores a DateTime as unix seconds unless configured otherwise, and
+  // an int literal is right for both that and a plain integer column.
+  return '1';
 }

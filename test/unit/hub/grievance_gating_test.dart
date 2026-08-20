@@ -84,8 +84,7 @@ void main() {
                 ))
             .valueOrNull!;
 
-    // Name a squad that leaves out the men at the top of the pool — which is
-    // exactly what a player comes to ask about.
+    // Name a squad, so the office is open for business at all.
     final pool = (await container.read(
       squadDataProvider(career.id).future,
     ))!.pool;
@@ -96,20 +95,33 @@ void main() {
     );
     container.invalidate(squadDataProvider);
 
-    final open1 = await container.read(grievanceProvider(career.id).future);
-    expect(open1, isNotEmpty, reason: 'a man left out should want a word');
-
+    // The grievance the manager answers. Built here rather than waited for:
+    // the one kind still raised needs a man with caps and no recent minutes,
+    // which takes a season of played matches to arrange — and what is under
+    // test is that the ANSWER is written down and read back, not what prompts
+    // one.
+    final man = pool.first;
+    final grievance = (
+      playerId: man.id,
+      playerName: man.name,
+      kind: GrievanceKind.gameTime,
+      age: man.age,
+      caps: 40,
+      key: 'grv:gameTime:${man.id}:2030',
+    );
     await container
         .read(grievanceServiceProvider)
-        .answer(career.id, open1.first, GrievanceTone.honest);
+        .answer(career.id, grievance, GrievanceTone.honest);
 
     // A restart is a fresh container over the same database: nothing is
     // remembered but what was written down.
     final restarted = open();
-    final after = await restarted.read(grievanceProvider(career.id).future);
+    final answered = await restarted
+        .read(careerRepositoryProvider)
+        .pressAnswers(career.id);
     expect(
-      after.any((g) => g.key == open1.first.key),
-      isFalse,
+      answered.map((a) => a.questionKey),
+      contains(grievance.key),
       reason: 'the man who has had his answer does not ask again',
     );
   });

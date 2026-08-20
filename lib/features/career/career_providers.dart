@@ -74,9 +74,16 @@ class CareerService {
   }
 
   /// Creates a new save for [nationId], or a failure if all slots are in use.
+  ///
+  /// [rngSeed] fixes the world this save will generate — the qualifying draw,
+  /// the hosts, every fixture date. It defaults to the clock, which is what
+  /// makes each new career its own world. Passing one makes a save
+  /// REPRODUCIBLE, which is what a test needs before it can compare two runs
+  /// and mean anything by the answer.
   Future<Result<Career>> create({
     required int nationId,
     required String managerName,
+    int? rngSeed,
   }) async {
     final repo = _ref.read(careerRepositoryProvider);
     final premium = _ref.read(premiumUnlockedProvider);
@@ -93,7 +100,7 @@ class CareerService {
     final career = await repo.create(
       managerName: name,
       nationId: nationId,
-      rngSeed: _seed(),
+      rngSeed: rngSeed ?? _seed(),
       startDate: cycleStart,
     );
     await repo.recordStint(career.id, 0, nationId);
@@ -417,7 +424,13 @@ class CareerService {
   /// populated from day one. Country-level facts only — no player names.
   Future<void> _seedHistory(Career career) async {
     final nations = await _ref.read(nationRepositoryProvider).all();
-    final idByName = {for (final n in nations) n.name: n.id};
+    // Keyed on the CANONICAL ENGLISH name: [RealHistory] is written in
+    // English, so resolving against the displayed name would fail to place a
+    // single historical champion the moment the app is run in Czech.
+    final idByName = {
+      for (final n in nations)
+        (n.englishName.isEmpty ? n.name : n.englishName): n.id,
+    };
     int? resolve(String? name) {
       if (name == null) return null;
       return idByName[name] ?? idByName[RealHistory.aliases[name] ?? name];

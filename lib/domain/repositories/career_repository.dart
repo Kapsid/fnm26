@@ -1,3 +1,5 @@
+import 'package:fnm/domain/services/manager/staff.dart';
+import 'package:fnm/domain/services/manager/manager_skills.dart';
 import 'package:fnm/domain/entities/career.dart';
 
 /// A cycle's federation investment split (euros committed to each department).
@@ -71,6 +73,16 @@ abstract interface class CareerRepository {
 
   /// Names (or, with null, un-names) the squad captain.
   Future<void> setCaptain(int id, int? playerId);
+
+  /// Raises one of the manager's own skills by a level. The CALLER checks that
+  /// a point is available — see `ManagerSkills.canRaise`.
+  Future<void> raiseSkill(int id, ManagerSkill skill);
+
+  /// Hires (or lets go of) one member of staff.
+  Future<void> setStaff(int id, StaffRole role, StaffTier tier);
+
+  /// Sets what the side works on between windows.
+  Future<void> setTrainingFocus(int id, TrainingFocus focus);
 
   /// Marks the Y feed read up to [date] — the in-game date of its newest post.
   Future<void> setYReadAt(int id, DateTime date);

@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fnm/features/settings/settings_providers.dart';
+import 'package:fnm/core/util/competition_label.dart';
 import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/enums.dart';
-import 'package:fnm/domain/services/competition/continental_cups.dart';
 import 'package:fnm/domain/services/competition/hosts.dart';
 import 'package:fnm/domain/services/competition/trophies.dart';
 import 'package:fnm/features/career/career_providers.dart';
@@ -40,6 +41,7 @@ tournamentKickoffProvider = FutureProvider.autoDispose
           .watch(careerRepositoryProvider)
           .byId(arg.careerId);
       if (career == null) return null;
+      final l = ref.watch(appLocalizationsProvider);
       final allNations = await ref.watch(nationRepositoryProvider).all();
       final byId = {for (final n in allNations) n.id: n};
 
@@ -49,7 +51,7 @@ tournamentKickoffProvider = FutureProvider.autoDispose
       final List<int> hosts;
       final conf = arg.conf;
       if (conf == null) {
-        title = 'WORLD CUP';
+        title = l.compWorldCup.toUpperCase();
         year = CareerService.worldCupYear(career.cyclePointer);
         trophy = Trophies.worldCup;
         hosts = WorldCupHosts.hostsFor(
@@ -58,9 +60,7 @@ tournamentKickoffProvider = FutureProvider.autoDispose
           seed: career.rngSeed,
         );
       } else {
-        title =
-            (ContinentalCups.byConfederation[conf]?.name ?? 'CONTINENTAL CUP')
-                .toUpperCase();
+        title = continentalCupLabel(l, conf).toUpperCase();
         // Continental finals sit two years off the World Cup in the cycle.
         year = CareerService.worldCupYear(career.cyclePointer) - 2;
         trophy = Trophies.forConfederation(conf);
@@ -175,7 +175,7 @@ class TournamentKickoffScreen extends ConsumerWidget {
                             ),
                             const SizedBox(height: AppSpacing.lg),
                             Text(
-                              'THE FINALS ARE HERE',
+                              l.tourSharedFinalsAreHere,
                               style: AppTypography.headlineMedium.copyWith(
                                 color: AppColors.onSurface,
                               ),
@@ -192,7 +192,7 @@ class TournamentKickoffScreen extends ConsumerWidget {
                               ),
                             const SizedBox(height: AppSpacing.sm),
                             Text(
-                              'HOSTED BY  $hostLabel',
+                              l.tourHostedBy(hostLabel),
                               textAlign: TextAlign.center,
                               style: AppTypography.labelSmall.copyWith(
                                 color: AppColors.onSurfaceVariant,

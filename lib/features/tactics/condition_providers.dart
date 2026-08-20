@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/services/club/club_form.dart';
+import 'package:fnm/domain/services/manager/manager_skills.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/squad/grievance_providers.dart';
 import 'package:fnm/domain/services/squad/condition.dart';
@@ -74,11 +75,12 @@ moraleProvider = FutureProvider.autoDispose.family<int, int>((
   // And men left to stew. A player who asked where he stood and was never
   // answered drags the room down until somebody talks to him.
   final aggrieved = await ref.watch(grievanceMoraleProvider(careerId).future);
-  return (Condition.morale(fixtures, career.nationId) +
-          press.morale +
-          captain +
-          aggrieved)
-      .clamp(0, 100);
+  // How hard any of that lands depends on the man saying it. A poor
+  // man-manager gets less back from the same words and does more damage with
+  // them; results are untouched, because nobody talks a defeat into a win.
+  final swing = ManagerSkills.moraleSwing(career.skillManManagement);
+  final said = ((press.morale + captain + aggrieved) * swing).round();
+  return (Condition.morale(fixtures, career.nationId) + said).clamp(0, 100);
 });
 
 /// Every squad player's live condition (form + fatigue + the morale shift),

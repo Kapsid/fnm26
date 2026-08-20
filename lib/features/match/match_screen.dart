@@ -19,6 +19,7 @@ import 'package:fnm/domain/services/competition/rounds.dart';
 import 'package:fnm/domain/services/match/attendance.dart';
 import 'package:fnm/domain/services/match/match_engine.dart';
 import 'package:fnm/domain/services/match/penalty_takers.dart';
+import 'package:fnm/domain/services/rating/overall_rating.dart';
 import 'package:fnm/features/achievements/achievement_popup.dart';
 import 'package:fnm/features/achievements/achievement_providers.dart';
 import 'package:fnm/features/hub/hub_providers.dart';
@@ -1160,6 +1161,19 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
                         awayCode: code(awayId),
                         homeName: name(homeId),
                         awayName: name(awayId),
+                        // The manager's own side is rated off the XI actually
+                        // on the pitch, so the number moves with his changes;
+                        // the opponent's off the team they named.
+                        homeOverall: squadOverall(
+                          preview.playerIsHome
+                              ? _currentXi(preview)
+                              : preview.homeTeam.xi,
+                        ),
+                        awayOverall: squadOverall(
+                          preview.playerIsHome
+                              ? preview.awayTeam.xi
+                              : _currentXi(preview),
+                        ),
                         homeScore: homeScore,
                         awayScore: awayScore,
                         clock: ft
@@ -1182,11 +1196,28 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
                         live: !ft,
                       ),
                       if (!ft && !showingShootout)
-                        _MomentumBar(
-                          homePercent: _homeMomentum(preview, homeId),
-                          homeCode: code(homeId),
-                          awayCode: code(awayId),
-                        ),
+                        () {
+                          // The two nations' own colours, pushed apart from
+                          // each other when the kits are too alike to tell
+                          // which end of the bar is whose.
+                          final (homeC, awayC) = KitColors.opposed(
+                            (
+                              preview.nations[homeId]?.primaryColor ?? '',
+                              preview.nations[homeId]?.secondaryColor ?? '',
+                            ),
+                            (
+                              preview.nations[awayId]?.primaryColor ?? '',
+                              preview.nations[awayId]?.secondaryColor ?? '',
+                            ),
+                          );
+                          return _MomentumBar(
+                            homePercent: _homeMomentum(preview, homeId),
+                            homeCode: code(homeId),
+                            awayCode: code(awayId),
+                            homeColor: homeC,
+                            awayColor: awayC,
+                          );
+                        }(),
                       if (showingShootout || decidedByShootout)
                         _ShootoutStrip(
                           outcome: knockout!,

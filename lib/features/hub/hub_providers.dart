@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/core/rng/seeded_rng.dart';
+import 'package:fnm/core/util/competition_label.dart';
 import 'package:fnm/core/util/text_variety.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/career.dart';
@@ -26,6 +27,8 @@ import 'package:fnm/domain/services/match/goal_attribution.dart';
 import 'package:fnm/domain/services/match/match_engine.dart';
 import 'package:fnm/domain/services/match/match_simulator.dart';
 import 'package:fnm/domain/services/match/venue.dart';
+import 'package:fnm/domain/services/manager/staff.dart';
+import 'package:fnm/domain/services/manager/manager_skills.dart';
 import 'package:fnm/domain/services/player/discipline.dart';
 import 'package:fnm/domain/services/ranking/elo.dart';
 import 'package:fnm/domain/services/tactics/best_eleven.dart';
@@ -41,7 +44,10 @@ import 'package:fnm/features/hub/objective_providers.dart';
 import 'package:fnm/features/ranking/world_ranking_providers.dart';
 import 'package:fnm/features/squad/training_camp_providers.dart';
 import 'package:fnm/features/tactics/tactics_providers.dart';
+import 'package:fnm/features/settings/settings_providers.dart';
+import 'package:fnm/features/hub/round_popup.dart' show stageLabelFor;
 import 'package:fnm/features/tournaments/playoff_paths.dart';
+import 'package:fnm/l10n/app_localizations.dart';
 
 part 'season_cycle.dart';
 part 'season_finals.dart';
@@ -225,12 +231,13 @@ hubDataProvider = FutureProvider.autoDispose.family<HubData?, int>((
 /// no country — so every transfer in the manager's feed looked domestic. When
 /// the player crosses a border the country is named, because that is the part
 /// of the news that is the news.
-String transferDestination({
+String transferDestination(
+  AppLocalizations l, {
   required String club,
   required String? toCountryName,
   required bool crossedBorder,
 }) => crossedBorder && toCountryName != null && toCountryName.isNotEmpty
-    ? '$club in $toCountryName'
+    ? l.newsTransferAbroad(club, toCountryName)
     : club;
 
 /// Drives the whole-world simulation: quick-sims due matches, advances the
@@ -240,6 +247,10 @@ class SeasonService {
   SeasonService(this._ref);
 
   final Ref _ref;
+
+  /// The manager's language, for the news this service files. Read per call
+  /// rather than cached so a mid-save language change is picked up.
+  AppLocalizations get _l => _ref.read(appLocalizationsProvider);
 
   CompetitionRepository get _comp => _ref.read(competitionRepositoryProvider);
   CareerRepository get _careers => _ref.read(careerRepositoryProvider);
@@ -1305,20 +1316,18 @@ class SeasonService {
       if (e.teamNationId != career.nationId) continue;
       if (e.type == MatchEventType.redCard && competitive) {
         final ban = after[e.playerId]?.banMatches ?? 1;
-        final games = ban == 1 ? 'your next match' : 'the next $ban matches';
+        final l = _l;
         final how = e.secondYellow
-            ? 'was sent off for a second booking'
+            ? l.hubBanHowSecondYellow
             : ban >= 3
-            ? 'was shown a straight red for violent conduct'
-            : 'was sent off';
+            ? l.hubBanHowViolent
+            : l.hubBanHowRed;
         await _comp.addMessage(
           careerId: careerId,
           dedupKey: 'ban:${fixture.id}:${e.playerId}',
           category: 'discipline',
-          title: '${e.playerName} suspended',
-          body:
-              '${e.playerName} $how and is banned for $games — they will '
-              'be unavailable for selection.',
+          title: l.hubBanTitle(e.playerName),
+          body: l.hubBanBody(e.playerName, how, ban),
           year: discYear,
         );
       } else if (e.type == MatchEventType.injury) {
@@ -1327,10 +1336,8 @@ class SeasonService {
           careerId: careerId,
           dedupKey: 'inj:${fixture.id}:${e.playerId}',
           category: 'injury',
-          title: '${e.playerName} injured',
-          body:
-              '${e.playerName} picked up a knock and is out for '
-              '$out match${out == 1 ? '' : 'es'}.',
+          title: _l.hubInjuryTitle(e.playerName),
+          body: _l.hubInjuryBody(e.playerName, out),
           year: discYear,
         );
       }
@@ -1480,14 +1487,14 @@ class SeasonService {
 
     // Which cup, and its display name.
     final nations = await _nationsById();
+    final l = _l;
     final conf = nations[me]?.confederation;
     final contName = conf == null
-        ? 'the continental championship'
-        : ContinentalCups.byConfederation[conf]?.name ??
-              'the continental championship';
+        ? l.compContinentalChampionship
+        : continentalCupLabel(l, conf);
     final ({String name, CompetitionKind kind})? cup = switch (round) {
       'GROUP' || 'R32' || 'R16' || 'QF' || 'SF' || '3RD' || 'FINAL' => (
-        name: 'the World Cup',
+        name: l.compWorldCup,
         kind: CompetitionKind.worldCupFinals,
       ),
       'CGROUP' || 'CR16' || 'CQF' || 'CSF' || 'CFINAL' => (
@@ -1498,7 +1505,7 @@ class SeasonService {
     };
     if (cup == null) return; // not a finals-tournament match
 
-    final oppName = nations[oppId]?.name ?? 'their opponent';
+    final oppName = nations[oppId]?.name ?? l.msgANation;
     final year = fixture.date.year;
 
     // A knockout tie: losing it (bar the final, which is a runner-up finish)
@@ -1513,17 +1520,14 @@ class SeasonService {
           dedupKey: 'runnerup:${fixture.id}',
           category: 'eliminated',
           title: pickVariant([
-            'Runners-up',
-            'So near, yet so far',
-            'Silver medals',
+            l.hubRunnerUpTitle1,
+            l.hubRunnerUpTitle2,
+            l.hubRunnerUpTitle3,
           ], s),
           body: pickVariant([
-            'You reached ${cup.name} final but lost to $oppName. So '
-                'close — silver this time.',
-            'Beaten by $oppName in the ${cup.name} final. Runners-up — '
-                'agonisingly close.',
-            'The ${cup.name} final slipped away against $oppName. So much '
-                'to be proud of, but not the trophy.',
+            l.hubRunnerUpBody1(cup.name, oppName),
+            l.hubRunnerUpBody2(oppName, cup.name),
+            l.hubRunnerUpBody3(cup.name, oppName),
           ], s),
           year: year,
         );
@@ -1534,17 +1538,18 @@ class SeasonService {
           dedupKey: 'out:${fixture.id}',
           category: 'eliminated',
           title: pickVariant([
-            'Knocked out',
-            'The end of the road',
-            'Journey over',
+            l.hubKnockedOutTitle1,
+            l.hubKnockedOutTitle2,
+            l.hubKnockedOutTitle3,
           ], s),
-          body: pickVariant([
-            "You're out of ${cup.name}, beaten by $oppName in the "
-                '${_stageName(core)}.',
-            '$oppName end your ${cup.name} in the ${_stageName(core)}.',
-            'Your ${cup.name} ends in the ${_stageName(core)}, '
-                'beaten by $oppName.',
-          ], s),
+          body: () {
+            final stage = stageLabelFor(l, core).toLowerCase();
+            return pickVariant([
+              l.hubKnockedOutBody1(cup.name, oppName, stage),
+              l.hubKnockedOutBody2(oppName, cup.name, stage),
+              l.hubKnockedOutBody3(cup.name, stage, oppName),
+            ], s);
+          }(),
           year: year,
         );
       }
@@ -1569,16 +1574,14 @@ class SeasonService {
           dedupKey: 'groupout:${cup.kind.name}:$year',
           category: 'eliminated',
           title: pickVariant([
-            'Group stage exit',
-            'Out at the group stage',
-            'Early bath',
+            l.hubGroupExitTitle1,
+            l.hubGroupExitTitle2,
+            l.hubGroupExitTitle3,
           ], s),
           body: pickVariant([
-            'Your ${cup.name} is over at the group stage. Not enough to '
-                'reach the knockouts.',
-            'You failed to get out of the group. Your ${cup.name} ends here.',
-            'No knockout place this time. Your ${cup.name} is done at the '
-                'group stage.',
+            l.hubGroupExitBody1(cup.name),
+            l.hubGroupExitBody2(cup.name),
+            l.hubGroupExitBody3(cup.name),
           ], s),
           year: year,
         );
@@ -1586,17 +1589,6 @@ class SeasonService {
       return;
     }
   }
-
-  /// A readable stage name from a bare knockout core code.
-  static String _stageName(String core) => switch (core) {
-    'R32' => 'round of 32',
-    'R16' => 'round of 16',
-    'QF' => 'quarter-finals',
-    'SF' => 'semi-finals',
-    '3RD' => 'third-place play-off',
-    'FINAL' => 'final',
-    _ => 'knockouts',
-  };
 
   /// The World Cup finals year for a cycle (clean 4-year cadence: 2030, 2034…).
   static int finalsYear(int cycle) => CareerService.worldCupYear(cycle);

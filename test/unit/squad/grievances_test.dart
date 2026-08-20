@@ -46,21 +46,15 @@ void main() {
       expect(raise([man(1, recent: 0, caps: 0)]), isEmpty);
     });
 
-    test('a good player left out entirely wants back in', () {
-      final out = raise([man(1, calledUp: false, recent: 0)]);
-      expect(out.single.kind, GrievanceKind.squadPlace);
-    });
-
-    test('a young man left out is waiting his turn, not aggrieved', () {
+    test('nobody left out of the squad complains about it', () {
+      // A squad is 23 of a pool of hundreds, so somebody is always the one
+      // left out — see [GrievanceKind.squadPlace].
+      expect(raise([man(1, calledUp: false, recent: 0)]), isEmpty);
       expect(raise([man(1, calledUp: false, recent: 0, age: 21)]), isEmpty);
-    });
-
-    test('a fringe player left out has no case', () {
-      final out = raise(
-        [man(1, calledUp: false, recent: 0)],
-        ranks: {1: 60},
+      expect(
+        raise([man(1, calledUp: false, recent: 0)], ranks: {1: 60}),
+        isEmpty,
       );
-      expect(out, isEmpty);
     });
   });
 
@@ -137,9 +131,7 @@ void main() {
     test('nobody complains before a squad has ever been named', () {
       // The bug this pins: with no call-ups yet, an empty squad reads as
       // everybody having been dropped and the whole country turns up at once.
-      final squad = [
-        for (var i = 1; i <= 20; i++) man(i, calledUp: false, recent: 0),
-      ];
+      final squad = [for (var i = 1; i <= 20; i++) man(i, recent: 0)];
       expect(
         Grievances.raise(
           squad,

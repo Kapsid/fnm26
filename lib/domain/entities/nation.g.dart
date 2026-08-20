@@ -15,6 +15,7 @@ _Nation _$NationFromJson(Map<String, dynamic> json) => _Nation(
   isFreeDemo: json['isFreeDemo'] as bool? ?? false,
   primaryColor: json['primaryColor'] as String? ?? '#1E88E5',
   secondaryColor: json['secondaryColor'] as String? ?? '#FFFFFF',
+  englishName: json['englishName'] as String? ?? '',
 );
 
 Map<String, dynamic> _$NationToJson(_Nation instance) => <String, dynamic>{
@@ -26,6 +27,7 @@ Map<String, dynamic> _$NationToJson(_Nation instance) => <String, dynamic>{
   'isFreeDemo': instance.isFreeDemo,
   'primaryColor': instance.primaryColor,
   'secondaryColor': instance.secondaryColor,
+  'englishName': instance.englishName,
 };
 
 const _$ConfederationEnumMap = {

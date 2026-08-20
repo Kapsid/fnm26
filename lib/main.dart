@@ -24,12 +24,44 @@ void main() {
         AppLog.error('build', details.exception, details.stack);
         return const AppCrashBox();
       };
-      runApp(
-        const ProviderScope(
-          child: FnmApp(),
-        ),
-      );
+      runApp(const FnmRoot());
     },
     (e, st) => AppLog.error('zone', e, st),
+  );
+}
+
+/// The app, and the one thing that can tear it down and build it again.
+///
+/// Restoring a backup replaces the database FILE under a running app. Nothing
+/// short of a full teardown is safe after that: every provider is holding
+/// queries against the handle that was open a moment ago. Rebuilding the
+/// [ProviderScope] under a new key disposes the old container — which closes
+/// the old database — and the new one opens whatever is on disk now.
+///
+/// Flutter cannot relaunch itself on iOS, so this is the closest thing there
+/// is to a restart, and it is enough: nothing outside the scope holds state.
+class FnmRoot extends StatefulWidget {
+  const FnmRoot({super.key});
+
+  /// Bumped to rebuild everything. A [ValueNotifier] rather than a callback so
+  /// the trigger does not need a BuildContext — a restore finishes on a screen
+  /// that is about to stop existing.
+  static final ValueNotifier<int> generation = ValueNotifier<int>(0);
+
+  /// Throws the whole app away and builds it again.
+  static void restart() => generation.value++;
+
+  @override
+  State<FnmRoot> createState() => _FnmRootState();
+}
+
+class _FnmRootState extends State<FnmRoot> {
+  @override
+  Widget build(BuildContext context) => ValueListenableBuilder<int>(
+    valueListenable: FnmRoot.generation,
+    builder: (_, generation, _) => ProviderScope(
+      key: ValueKey(generation),
+      child: const FnmApp(),
+    ),
   );
 }

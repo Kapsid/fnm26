@@ -67,8 +67,12 @@ void main() {
     expect(posts.length, greaterThan(40), reason: 'the feed should be busy');
     for (var i = 0; i < posts.length - YFeed.noRepeatWindow; i++) {
       final window = posts.skip(i).take(YFeed.noRepeatWindow);
+      // Shaped exactly as [YFeed.forRun] shapes them: a reply carries no
+      // arguments and one template, so its mood and wording ARE its shape.
       final shapes = window.map(
-        (p) => '${p.template.name}|${p.args.join(",")}',
+        (p) => p.mood == null
+            ? '${p.template.name}|${p.args.join(",")}'
+            : 'reaction|${p.mood!.name}|${p.variant}',
       );
       expect(
         shapes.toSet(),

@@ -118,6 +118,15 @@ class _HubScreenState extends ConsumerState<HubScreen> {
             onPressed: () => context.push('${Routes.y}?careerId=$careerId'),
           ),
           IconButton(
+            tooltip: l.managerTitle,
+            icon: const Icon(
+              Icons.badge_outlined,
+              color: AppColors.primary,
+            ),
+            onPressed: () =>
+                context.push('${Routes.manager}?careerId=$careerId'),
+          ),
+          IconButton(
             tooltip: l.homeSettings,
             icon: const Icon(Icons.settings_outlined, color: AppColors.primary),
             // push (not go) so Settings' back button returns to the hub.

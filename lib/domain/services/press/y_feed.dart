@@ -18,6 +18,42 @@ enum YVoice {
   /// One of your own players, saying in public what he could not get said in
   /// your office.
   player,
+
+  /// The meme account. Says nothing useful and is the first thing everybody
+  /// reads — a feed without one does not read like a feed.
+  meme,
+
+  /// A former international with a column and no patience. Blunt where the
+  /// pundit is measured.
+  expro,
+
+  /// The wire: posts the fact, in capitals, seconds before anyone else.
+  breaking,
+}
+
+/// The temperature of a reaction, which is all a reply needs to know.
+///
+/// Replies are keyed by MOOD rather than by what happened, so one set of
+/// wordings serves every event: a rout, a shoot-out exit and a player walking
+/// out all draw fury, and the room sounds the same about each.
+enum YMood {
+  /// It could not have gone better.
+  elation,
+
+  /// It could have gone much worse.
+  relief,
+
+  /// Somebody is going to hear about this.
+  fury,
+
+  /// There is nothing left to say.
+  despair,
+
+  /// Told you.
+  smugness,
+
+  /// It happened. Next.
+  shrug,
 }
 
 /// What a post is ABOUT. The words themselves are chosen at render, because
@@ -58,6 +94,10 @@ enum YTemplate {
 
   /// The board's patience, in public.
   boardPressure,
+
+  /// A reply under somebody else's post. Its words come from a [YMood], not
+  /// from what happened — see [YMood].
+  reaction,
 }
 
 /// One post on the feed.
@@ -70,6 +110,16 @@ typedef YPost = ({
   List<String> args,
   DateTime date,
   String key,
+
+  /// The [key] of the post this answers, or null when it stands on its own.
+  ///
+  /// A flat list with a parent pointer rather than a nested one: a record
+  /// typedef cannot refer to itself, and the feed has to stay a plain list for
+  /// the date sort and the cap to mean anything.
+  String? replyTo,
+
+  /// For a [YTemplate.reaction], how it is meant. Null for every other post.
+  YMood? mood,
 });
 
 /// A result, as Y sees it.
@@ -124,6 +174,11 @@ abstract final class YFeed {
   /// repeat itself quickly.
   static const int variantCount = 4;
 
+  /// How many phrasings a REPLY has. More than a template's, because one set
+  /// of six moods answers every event in the game — the same reply would come
+  /// round far faster than the same match report.
+  static const int reactionVariantCount = 6;
+
   /// The most a single event is worth saying. Five rather than three now that
   /// a match can be worth more than its scoreline — the scorer, the run, the
   /// injury — but still a cap: a feed that says everything says nothing.
@@ -163,7 +218,12 @@ abstract final class YFeed {
     final recent = <String>[];
     for (final context in contexts) {
       for (final post in forMatch(context, nation: nation, seed: seed)) {
-        final shape = '${post.template.name}|${post.args.join(",")}';
+        // A REPLY's shape is its mood and its wording: every reaction carries
+        // the same template and no arguments, so shaping them like a report
+        // would collapse a whole thread into its first line.
+        final shape = post.mood == null
+            ? '${post.template.name}|${post.args.join(",")}'
+            : 'reaction|${post.mood!.name}|${post.variant}';
         if (recent.contains(shape)) continue;
         out.add(post);
         recent.add(shape);
@@ -243,7 +303,7 @@ abstract final class YFeed {
       candidates.add((YVoice.pundit, YTemplate.boardPressure, const ['']));
     }
 
-    return [
+    final posts = [
       for (final (voice, shape, args) in candidates.take(maxPostsPerEvent))
         _post(
           voice: voice,
@@ -254,6 +314,21 @@ abstract final class YFeed {
           nation: nation,
           seed: seed,
         ),
+    ];
+    // The room answers itself. Only the LOUDEST post of an event draws a
+    // thread — every post drawing one would bury the feed under its own
+    // replies, and a match is one conversation, not five.
+    if (posts.isEmpty) return posts;
+    return [
+      ...posts,
+      ...repliesTo(
+        posts.first,
+        mood: lost && template == YTemplate.lostBadly
+            ? YMood.despair
+            : moodOf(template),
+        nation: nation,
+        seed: seed,
+      ),
     ];
   }
 
@@ -272,26 +347,57 @@ abstract final class YFeed {
     required String key,
     required String nation,
     required int seed,
-  }) => [
-    _post(
-      voice: YVoice.stats,
-      template: template,
-      args: args,
-      date: date,
-      key: key,
-      nation: nation,
-      seed: seed,
-    ),
-    _post(
-      voice: YVoice.fan,
-      template: template,
-      args: args,
-      date: date,
-      key: key,
-      nation: nation,
-      seed: seed,
-    ),
-  ];
+  }) {
+    // The wire breaks it, the fans react, and — for the events that matter —
+    // the ex-pro has a column to fill.
+    final posts = [
+      _post(
+        voice: YVoice.breaking,
+        template: template,
+        args: args,
+        date: date,
+        key: key,
+        nation: nation,
+        seed: seed,
+      ),
+      _post(
+        voice: YVoice.fan,
+        template: template,
+        args: args,
+        date: date,
+        key: key,
+        nation: nation,
+        seed: seed,
+      ),
+      if (_bigEvents.contains(template))
+        _post(
+          voice: YVoice.expro,
+          template: template,
+          args: args,
+          date: date,
+          key: key,
+          nation: nation,
+          seed: seed,
+        ),
+    ];
+    return [
+      ...posts,
+      ...repliesTo(
+        posts.first,
+        mood: moodOf(template),
+        nation: nation,
+        seed: seed,
+      ),
+    ];
+  }
+
+  /// The events big enough that a former international writes about them.
+  static const Set<YTemplate> _bigEvents = {
+    YTemplate.trophy,
+    YTemplate.runnerUp,
+    YTemplate.eliminated,
+    YTemplate.qualified,
+  };
 
   /// A player saying in public what he could not get said in your office.
   static List<YPost> forGrievance({
@@ -300,8 +406,8 @@ abstract final class YFeed {
     required String key,
     required String nation,
     required int seed,
-  }) => [
-    _post(
+  }) {
+    final post = _post(
       voice: YVoice.player,
       template: YTemplate.playerGrievance,
       args: [playerName],
@@ -310,14 +416,36 @@ abstract final class YFeed {
       nation: nation,
       seed: seed,
       authorName: playerName,
-    ),
-  ];
+    );
+    return [
+      post,
+      ...repliesTo(post, mood: YMood.fury, nation: nation, seed: seed),
+    ];
+  }
 
   /// Newest first, and capped — a long save would otherwise build a feed
   /// nobody can scroll to the end of.
+  ///
+  /// The cap counts POSTS OF THEIR OWN and carries each one's replies with it:
+  /// counting replies too would let a busy thread crowd out a whole month, and
+  /// cutting between a post and its replies would leave answers to nothing.
   static List<YPost> mostRecent(List<YPost> all, {int cap = 60}) {
-    final sorted = [...all]..sort((a, b) => b.date.compareTo(a.date));
-    return sorted.take(cap).toList();
+    final repliesByParent = <String, List<YPost>>{};
+    final roots = <YPost>[];
+    for (final p in all) {
+      if (p.replyTo case final parent?) {
+        (repliesByParent[parent] ??= []).add(p);
+      } else {
+        roots.add(p);
+      }
+    }
+    roots.sort((a, b) => b.date.compareTo(a.date));
+    return [
+      for (final root in roots.take(cap)) ...[
+        root,
+        ...?repliesByParent[root.key],
+      ],
+    ];
   }
 
   /// The nation's pundit: the same man all career, a different one next door.
@@ -335,10 +463,13 @@ abstract final class YFeed {
     required String nation,
     required int seed,
     String? authorName,
+    String? replyTo,
+    YMood? mood,
   }) {
     // Seeded by the event AND the voice, so two people reacting to the same
     // match never reach for the same sentence.
-    final variant = varietySeed('$key|${voice.name}') % variantCount;
+    final spread = mood == null ? variantCount : reactionVariantCount;
+    final variant = varietySeed('$key|${voice.name}') % spread;
     final (handle, display) = authorName == null
         ? _author(voice, nation, seed, key)
         : ('@${authorName.replaceAll(' ', '')}', authorName);
@@ -351,8 +482,78 @@ abstract final class YFeed {
       args: args,
       date: date,
       key: '$key|${voice.name}',
+      replyTo: replyTo,
+      mood: mood,
     );
   }
+
+  /// The replies under [parent] — the bit that makes a feed read like a feed
+  /// rather than a noticeboard.
+  ///
+  /// Who piles in depends on the mood: good news brings the meme account and
+  /// the fans, bad news brings the ex-pro and whoever is enjoying it.
+  static List<YPost> repliesTo(
+    YPost parent, {
+    required YMood mood,
+    required String nation,
+    required int seed,
+  }) {
+    final voices = switch (mood) {
+      YMood.elation => const [YVoice.meme, YVoice.fan],
+      YMood.relief => const [YVoice.fan, YVoice.expro],
+      YMood.fury => const [YVoice.expro, YVoice.rival, YVoice.meme],
+      YMood.despair => const [YVoice.meme, YVoice.expro, YVoice.rival],
+      YMood.smugness => const [YVoice.rival, YVoice.meme],
+      YMood.shrug => const [YVoice.meme],
+    };
+    // How many of them actually bother, drawn from the parent so the same post
+    // always draws the same thread.
+    final count = 1 + varietySeed('replies|${parent.key}') % voices.length;
+    // Keyed off the EVENT with a `re` segment: a post's key is
+    // `<event>|<voice>`, and the detail view groups a conversation by the part
+    // before the first `|`. A reply keyed any other way would either land
+    // under an event of its own or collide with a top-level post by the same
+    // voice.
+    final event = parent.key.split('|').first;
+    return [
+      for (final voice in voices.take(count))
+        _post(
+          voice: voice,
+          template: YTemplate.reaction,
+          args: const [],
+          date: parent.date,
+          key: '$event|re',
+          nation: nation,
+          seed: seed,
+          replyTo: parent.key,
+          mood: mood,
+        ),
+    ];
+  }
+
+  /// How a template reads to the room, for the replies it draws.
+  static YMood moodOf(YTemplate template) => switch (template) {
+    YTemplate.winUpset ||
+    YTemplate.trophy ||
+    YTemplate.scorerStar => YMood.elation,
+    YTemplate.winTight || YTemplate.qualified => YMood.relief,
+    YTemplate.lost ||
+    YTemplate.lossStreak ||
+    YTemplate.playerGrievance => YMood.fury,
+    YTemplate.lostBadly ||
+    YTemplate.runnerUp ||
+    YTemplate.eliminated ||
+    YTemplate.injuryBlow ||
+    YTemplate.boardPressure => YMood.despair,
+    YTemplate.winStreak => YMood.smugness,
+    YTemplate.winRoutine ||
+    YTemplate.drew ||
+    YTemplate.rivalry ||
+    YTemplate.groupDrawn ||
+    YTemplate.hostNamed ||
+    YTemplate.tournamentSoon ||
+    YTemplate.reaction => YMood.shrug,
+  };
 
   static (String, String) _author(
     YVoice voice,
@@ -365,7 +566,15 @@ abstract final class YFeed {
         final handle = punditHandle(nation, seed);
         return (handle, handle.substring(1));
       case YVoice.stats:
-        return ('@OptaLite', 'Numbers');
+        return ('@TheNumbersDesk', 'The Numbers Desk');
+      case YVoice.breaking:
+        return ('@TheWire', 'The Wire');
+      case YVoice.meme:
+        final n = _memeNames[varietySeed('meme|$key') % _memeNames.length];
+        return ('@$n', n);
+      case YVoice.expro:
+        final n = _exProNames[varietySeed('expro|$key') % _exProNames.length];
+        return ('@$n', n);
       case YVoice.fan:
         final n = _fanNames[varietySeed('fan|$key') % _fanNames.length];
         return ('@$n', n);
@@ -398,6 +607,26 @@ abstract final class YFeed {
     'BadgeKisser',
     'EternalOptimist',
     'LongSufferingLen',
+  ];
+
+  /// The account that posts a picture with three words on it. Nobody knows who
+  /// runs it and everybody reads it first.
+  static const List<String> _memeNames = [
+    'OffsideTrapHouse',
+    'SundayLeagueEnergy',
+    'ParkTheBusDepot',
+    'ThePostAndOut',
+    'VarDecisionPending',
+    'BallDidntMove',
+  ];
+
+  /// Former internationals with a column and no patience left.
+  static const List<String> _exProNames = [
+    'CappedTwiceOnly',
+    'TheOldNumberTen',
+    'BootsInTheAttic',
+    'NinetyCapsNoTrophy',
+    'HeUsedToRun',
   ];
 
   static const List<String> _rivalNames = [

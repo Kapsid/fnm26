@@ -23,6 +23,22 @@ enum PressTone {
 /// 0–100 scales. Deliberately small: a press answer is a nudge, not a result.
 typedef PressEffect = ({int morale, int board});
 
+/// How a whole conference read once it was over — the line the back pages take
+/// the next morning.
+enum PressVerdict {
+  /// It went well: the room got something and liked it.
+  went,
+
+  /// Something for everybody, which is to say nothing for anybody.
+  mixed,
+
+  /// It went badly.
+  badly,
+
+  /// Nothing was said at all, which is its own kind of story.
+  flat,
+}
+
 /// One question, asked once.
 typedef PressQuestion = ({
   /// Stable and unique — a question with this key is never asked again.
@@ -36,6 +52,84 @@ typedef PressQuestion = ({
 
   /// The tones on offer, in the order they are shown.
   List<PressTone> options,
+});
+
+/// The kind of reporter asking, which decides what they push on when they get
+/// their turn.
+///
+/// A press conference used to be one anonymous question. It read as a form to
+/// fill in rather than a room full of people, and — worse — nobody ever came
+/// back at an answer, so a manager could back his players every single time
+/// and never once be asked what that meant.
+enum PressAngle {
+  /// The tabloid. Wants a back page, so it pushes on blame and on jobs.
+  tabloid,
+
+  /// The national paper. Fair, and follows the thread of what was just said.
+  broadsheet,
+
+  /// The tactics writer. Interested in the team, not the temperature.
+  analyst,
+
+  /// The local radio voice, sitting with the supporters.
+  local,
+
+  /// The visiting correspondent, taking the long view.
+  foreign,
+}
+
+/// A named reporter. The same handful turn up across a career, so the room
+/// becomes people the manager recognises rather than a blank microphone.
+///
+/// [name] and [outlet] are invented and stay as written whatever the app's
+/// language — they are proper nouns, like the club names.
+typedef PressReporter = ({String name, String outlet, PressAngle angle});
+
+/// What a follow-up presses on.
+///
+/// The first five are answers to a STANCE — they are what a room says back
+/// when a manager has just committed to one — and the last three are a
+/// reporter's own hobby-horse, used for the question that closes a conference.
+enum PressProbe {
+  /// You backed them. So is nobody responsible?
+  accountability,
+
+  /// You took it on yourself. Is your own job safe?
+  yourFuture,
+
+  /// You demanded more, in public. Have you lost them?
+  dressingRoom,
+
+  /// You talked the target up. Is that not a hostage to fortune?
+  expectation,
+
+  /// You said nothing at all. Say something.
+  substance,
+
+  /// Why does that team keep getting picked?
+  selection,
+
+  /// What do you say to the people who travel?
+  theFans,
+
+  /// Where is this actually going?
+  bigPicture,
+}
+
+/// One exchange in a conference: who asked, what about, and what may be said
+/// back. [probe] is null for the opening question, which is about the STORY —
+/// every later one is a reaction to what the manager has just said.
+typedef PressExchange = ({
+  String key,
+  PressReporter reporter,
+  PressTopic topic,
+  PressProbe? probe,
+  int? subjectNationId,
+  List<PressTone> options,
+
+  /// How hard this answer lands, as a fraction of a full stance. The opening
+  /// question is the one that carries; a follow-up is a nudge on a nudge.
+  bool halfWeight,
 });
 
 /// What the press want to talk about. The wording lives in the UI layer (it is
@@ -234,6 +328,195 @@ abstract final class Press {
       PressTone.playItDown,
     ],
   };
+
+  /// How many questions a conference runs to: the story, a comeback at the
+  /// stance taken, and one last one from somebody with their own agenda.
+  static const int conferenceLength = 3;
+
+  /// The reporters who cover this nation, drawn from the pool by [seed] so a
+  /// manager sees the same faces across a career and a different set at his
+  /// next job.
+  ///
+  /// One of each angle would be tidy and wrong: a room is not a panel, so the
+  /// pool is drawn as it comes and a conference simply takes the next three.
+  static List<PressReporter> roomFor(int seed) {
+    final pool = [..._reporters];
+    // A deterministic shuffle — a rotation plus a stride — so two saves get
+    // different rooms without needing a random source in a pure function.
+    final stride = 1 + seed.abs() % (pool.length - 1);
+    final start = seed.abs() % pool.length;
+    final out = <PressReporter>[];
+    final taken = <int>{};
+    var i = start;
+    while (out.length < pool.length) {
+      while (taken.contains(i % pool.length)) {
+        i++;
+      }
+      taken.add(i % pool.length);
+      out.add(pool[i % pool.length]);
+      i += stride;
+    }
+    return out;
+  }
+
+  /// What the room comes back with after a manager has taken [tone].
+  static PressProbe probeAfter(PressTone tone) => switch (tone) {
+    PressTone.backThePlayers => PressProbe.accountability,
+    PressTone.takeTheBlame => PressProbe.yourFuture,
+    PressTone.demandMore => PressProbe.dressingRoom,
+    PressTone.raiseTheBar => PressProbe.expectation,
+    PressTone.playItDown => PressProbe.substance,
+  };
+
+  /// The question a reporter of this [angle] likes to finish on.
+  static PressProbe closingProbe(PressAngle angle) => switch (angle) {
+    PressAngle.tabloid => PressProbe.yourFuture,
+    PressAngle.broadsheet => PressProbe.substance,
+    PressAngle.analyst => PressProbe.selection,
+    PressAngle.local => PressProbe.theFans,
+    PressAngle.foreign => PressProbe.bigPicture,
+  };
+
+  /// The answers offered to a follow-up. Narrower than an opening question's:
+  /// a comeback is pointed, and only some stances are an answer to it — but
+  /// [PressTone.playItDown] is always there, as everywhere else.
+  static List<PressTone> optionsForProbe(PressProbe probe) => switch (probe) {
+    PressProbe.accountability => const [
+      PressTone.takeTheBlame,
+      PressTone.demandMore,
+      PressTone.playItDown,
+    ],
+    PressProbe.yourFuture => const [
+      PressTone.raiseTheBar,
+      PressTone.takeTheBlame,
+      PressTone.playItDown,
+    ],
+    PressProbe.dressingRoom => const [
+      PressTone.backThePlayers,
+      PressTone.demandMore,
+      PressTone.playItDown,
+    ],
+    PressProbe.expectation => const [
+      PressTone.raiseTheBar,
+      PressTone.takeTheBlame,
+      PressTone.playItDown,
+    ],
+    PressProbe.substance => const [
+      PressTone.raiseTheBar,
+      PressTone.backThePlayers,
+      PressTone.demandMore,
+      PressTone.playItDown,
+    ],
+    PressProbe.selection => const [
+      PressTone.backThePlayers,
+      PressTone.demandMore,
+      PressTone.playItDown,
+    ],
+    PressProbe.theFans => const [
+      PressTone.backThePlayers,
+      PressTone.raiseTheBar,
+      PressTone.playItDown,
+    ],
+    PressProbe.bigPicture => const [
+      PressTone.raiseTheBar,
+      PressTone.takeTheBlame,
+      PressTone.playItDown,
+    ],
+  };
+
+  /// The opening exchange of a conference about [question].
+  static PressExchange openingExchange(
+    PressQuestion question,
+    PressReporter reporter,
+  ) => (
+    key: question.key,
+    reporter: reporter,
+    topic: question.topic,
+    probe: null,
+    subjectNationId: question.subjectNationId,
+    options: question.options,
+    halfWeight: false,
+  );
+
+  /// The exchange that follows [previous] once the manager has answered it
+  /// with [tone]. [index] is its position in the conference (1 = the first
+  /// follow-up), which is what keeps its stored key unique.
+  static PressExchange followUp(
+    PressQuestion question,
+    PressReporter reporter,
+    PressTone tone, {
+    required int index,
+  }) {
+    // The last question of the conference belongs to whoever is asking it —
+    // that is the one place a reporter gets to ride their own hobby-horse
+    // rather than react to the manager.
+    final probe = index >= conferenceLength - 1
+        ? closingProbe(reporter.angle)
+        : probeAfter(tone);
+    return (
+      key: '${question.key}#$index',
+      reporter: reporter,
+      topic: question.topic,
+      probe: probe,
+      subjectNationId: question.subjectNationId,
+      options: optionsForProbe(probe),
+      halfWeight: true,
+    );
+  }
+
+  /// What an answer to [exchange] costs, in the same points as [effectOf]. A
+  /// follow-up is worth half a stance, rounded toward zero, so a whole
+  /// conference is a strong statement rather than three of them.
+  static PressEffect effectOfExchange(PressExchange exchange, PressTone tone) {
+    final full = effectOf(tone);
+    if (!exchange.halfWeight) return full;
+    return (morale: full.morale ~/ 2, board: full.board ~/ 2);
+  }
+
+  /// How a conference LANDED, as a single verdict on everything said in it:
+  /// the back page is written from the sum of the answers, not from any one.
+  static PressVerdict verdictOf(PressEffect total) {
+    final net = total.morale + total.board;
+    if (total.morale == 0 && total.board == 0) return PressVerdict.flat;
+    if (net >= 4) return PressVerdict.went;
+    if (net <= -4) return PressVerdict.badly;
+    return PressVerdict.mixed;
+  }
+
+  /// The invented press pack. Names and outlets are fiction and stay in this
+  /// form in every language, exactly like the club names.
+  static const List<PressReporter> _reporters = [
+    (
+      name: 'Elena Vasquez',
+      outlet: 'The Daily Whistle',
+      angle: PressAngle.tabloid,
+    ),
+    (
+      name: 'Tomas Riedel',
+      outlet: 'National Sport',
+      angle: PressAngle.broadsheet,
+    ),
+    (name: 'Priya Anand', outlet: 'The Chalkboard', angle: PressAngle.analyst),
+    (name: 'Danny Kerr', outlet: 'Radio Terrace', angle: PressAngle.local),
+    (
+      name: 'Ingrid Sollum',
+      outlet: 'World Football Weekly',
+      angle: PressAngle.foreign,
+    ),
+    (name: 'Marco Bellini', outlet: 'The Back Page', angle: PressAngle.tabloid),
+    (name: 'Hana Okafor', outlet: 'The Standard', angle: PressAngle.broadsheet),
+    (
+      name: 'Ruben Sattler',
+      outlet: 'Pressing Matters',
+      angle: PressAngle.analyst,
+    ),
+    (name: 'Colette Auger', outlet: 'Supporters Hour', angle: PressAngle.local),
+    (
+      name: 'Yusuf Demir',
+      outlet: 'Continental Review',
+      angle: PressAngle.foreign,
+    ),
+  ];
 
   /// The combined effect of everything said this cycle, clamped so a manager
   /// cannot talk their way to a title. Answers from earlier cycles are gone.

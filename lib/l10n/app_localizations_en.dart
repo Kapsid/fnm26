@@ -136,12 +136,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get teamOverall => 'Overall';
 
   @override
-  String get matchSecondYellow => 'Second yellow';
-
-  @override
-  String get matchStraightRed => 'Red card';
-
-  @override
   String get teamTalkHeading => 'TEAM TALK';
 
   @override
@@ -802,12 +796,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get tacticsOn => 'ON';
-
-  @override
-  String get tacticsInjuredReplace => 'INJURED — REPLACE';
-
-  @override
-  String get tacticsSuspendedReplace => 'SUSPENDED — REPLACE';
 
   @override
   String get tacticsSquad => 'SQUAD';
@@ -5523,4 +5511,1486 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get pressAnswerPlayDown6 =>
       'Nothing I say tonight changes the result.';
+
+  @override
+  String tacticsSubAlreadyOff(String name) {
+    return '$name has already been taken off — he cannot come back on.';
+  }
+
+  @override
+  String tacticsSubSentOff(String name) {
+    return '$name has been sent off and takes no further part.';
+  }
+
+  @override
+  String get tacticsInjuredShort => 'INJURED';
+
+  @override
+  String get tacticsSuspendedShort => 'SUSPENDED';
+
+  @override
+  String get confEurope => 'Europe';
+
+  @override
+  String get confSouthAmerica => 'South America';
+
+  @override
+  String get confNorthAmerica => 'North America';
+
+  @override
+  String get confAfrica => 'Africa';
+
+  @override
+  String get confAsia => 'Asia';
+
+  @override
+  String get confOceania => 'Oceania';
+
+  @override
+  String get compWorldCup => 'World Cup';
+
+  @override
+  String get compWorldCupFinals => 'World Cup Finals';
+
+  @override
+  String get compWorldCupQualifying => 'World Cup Qualifying';
+
+  @override
+  String compQualifiers(String region) {
+    return '$region Qualifiers';
+  }
+
+  @override
+  String get compFriendlies => 'Friendlies';
+
+  @override
+  String get compNationsCup => 'Nations Cup';
+
+  @override
+  String get compContinentalClash => 'Continental Clash';
+
+  @override
+  String get compIntercontinentalPlayoff => 'Intercontinental Play-off';
+
+  @override
+  String get compContinentalChampionship => 'Continental Championship';
+
+  @override
+  String get compEuropeanChampionship => 'European Championship';
+
+  @override
+  String get compSouthAmericaCup => 'South America Cup';
+
+  @override
+  String get compAfricanChampionship => 'African Championship';
+
+  @override
+  String get compAsianChampionship => 'Asian Championship';
+
+  @override
+  String get compNorthAmericaCup => 'North America Cup';
+
+  @override
+  String get compOceaniaCup => 'Oceania Cup';
+
+  @override
+  String get msgANation => 'A nation';
+
+  @override
+  String get msgAPlayer => 'A player';
+
+  @override
+  String get msgAHostNation => 'a host nation';
+
+  @override
+  String get msgCycleTitle1 => 'A new cycle begins';
+
+  @override
+  String msgCycleTitle2(int year) {
+    return 'The road to $year opens';
+  }
+
+  @override
+  String get msgCycleTitle3 => 'A fresh campaign dawns';
+
+  @override
+  String get msgCycleTitle4 => 'Back to work';
+
+  @override
+  String msgCycleBody1(int year) {
+    return 'The road to the $year World Cup starts here.';
+  }
+
+  @override
+  String msgCycleBody2(int year) {
+    return 'A new cycle. The $year World Cup is the target.';
+  }
+
+  @override
+  String msgCycleBody3(int year) {
+    return 'Four years to the $year World Cup. Work starts now.';
+  }
+
+  @override
+  String msgCycleBody4(int year) {
+    return 'The $year campaign begins today.';
+  }
+
+  @override
+  String msgContHostTitle(String cup, String host) {
+    return '$cup host: $host';
+  }
+
+  @override
+  String msgContHostBody(String host, String cup) {
+    return '$host will host the next $cup.';
+  }
+
+  @override
+  String msgContQualDrawTitle(String cup) {
+    return '$cup qualifying draw';
+  }
+
+  @override
+  String msgContQualDrawBody(String cup) {
+    return 'The $cup qualifying groups have been drawn.';
+  }
+
+  @override
+  String msgWcHostTitle(String host, int year) {
+    return '$year World Cup host: $host';
+  }
+
+  @override
+  String msgWcHostBody(String host, int year) {
+    return '$host will host the $year World Cup.';
+  }
+
+  @override
+  String get msgWcQualDrawTitle => 'World Cup qualifying draw';
+
+  @override
+  String get msgWcQualDrawBody =>
+      'The World Cup qualifying groups have been drawn.';
+
+  @override
+  String msgContFinalsDrawTitle(String cup) {
+    return '$cup finals draw';
+  }
+
+  @override
+  String msgContFinalsDrawBody(String cup) {
+    return 'The $cup finals groups have been drawn.';
+  }
+
+  @override
+  String get msgWcFinalsDrawTitle => 'World Cup finals draw';
+
+  @override
+  String msgWcFinalsDrawBody(int year) {
+    return 'The $year World Cup finals draw has been made.';
+  }
+
+  @override
+  String get msgQualWcTitle1 => 'Through to the World Cup';
+
+  @override
+  String get msgQualWcTitle2 => 'World Cup booked';
+
+  @override
+  String get msgQualWcTitle3 => 'We\'re going to the World Cup';
+
+  @override
+  String get msgQualWcTitle4 => 'Ticket punched';
+
+  @override
+  String msgQualWcBody1(int year) {
+    return 'You have qualified for the $year World Cup finals.';
+  }
+
+  @override
+  String msgQualWcBody2(int year) {
+    return 'It\'s official: your nation is at the $year World Cup.';
+  }
+
+  @override
+  String msgQualWcBody3(int year) {
+    return 'A place at the $year World Cup is secured.';
+  }
+
+  @override
+  String msgQualWcBody4(int year) {
+    return 'You\'re through to the $year World Cup finals.';
+  }
+
+  @override
+  String msgQualContTitle1(String cup) {
+    return 'Through to $cup';
+  }
+
+  @override
+  String msgQualContTitle2(String cup) {
+    return '$cup booked';
+  }
+
+  @override
+  String msgQualContTitle3(String cup) {
+    return 'Qualified for $cup';
+  }
+
+  @override
+  String msgQualContBody1(String cup) {
+    return 'You have qualified for the $cup finals.';
+  }
+
+  @override
+  String msgQualContBody2(String cup) {
+    return 'Your nation has sealed its place at $cup.';
+  }
+
+  @override
+  String msgQualContBody3(String cup) {
+    return 'You\'re through to $cup.';
+  }
+
+  @override
+  String msgChampTitleMine1(String comp) {
+    return '$comp CHAMPIONS!';
+  }
+
+  @override
+  String msgChampTitleMine2(String comp) {
+    return 'Champions of the $comp!';
+  }
+
+  @override
+  String msgChampTitleMine3(String comp) {
+    return 'You\'ve won the $comp!';
+  }
+
+  @override
+  String msgChampTitleOther1(String comp) {
+    return '$comp decided';
+  }
+
+  @override
+  String msgChampTitleOther2(String comp) {
+    return '$comp champions crowned';
+  }
+
+  @override
+  String msgChampTitleOther3(String comp) {
+    return 'The $comp is won';
+  }
+
+  @override
+  String msgChampBodyMine1(String comp, String loser, String result, int year) {
+    return 'Your nation are the $year $comp champions, beating $loser$result.';
+  }
+
+  @override
+  String msgChampBodyMine2(String comp, String loser, String result, int year) {
+    return 'You\'ve won the $year $comp, seeing off $loser$result.';
+  }
+
+  @override
+  String msgChampBodyMine3(String comp, String loser, String result, int year) {
+    return 'The $year $comp is yours. $loser beaten$result.';
+  }
+
+  @override
+  String msgChampBodyOther1(
+    String winner,
+    String comp,
+    String loser,
+    String result,
+    int year,
+  ) {
+    return '$winner won the $year $comp, beating $loser$result.';
+  }
+
+  @override
+  String msgChampBodyOther2(
+    String winner,
+    String comp,
+    String loser,
+    String result,
+    int year,
+  ) {
+    return '$winner are the $year $comp champions, defeating $loser$result.';
+  }
+
+  @override
+  String msgFinalScoreSuffix(int home, int away) {
+    return ' $home–$away in the final';
+  }
+
+  @override
+  String msgFinalPensSuffix(int home, int away) {
+    return ' on penalties, after a $home–$away final';
+  }
+
+  @override
+  String get msgWpotyTitle => 'World Player of the Year';
+
+  @override
+  String msgWpotyBodyMine(String name, String nation, int year) {
+    return '$name ($nation) is named $year World Player of the Year, one of yours.';
+  }
+
+  @override
+  String msgWpotyBodyOther(String name, String nation, int year) {
+    return '$name ($nation) is named $year World Player of the Year.';
+  }
+
+  @override
+  String get msgYpotTitle => 'Young Player of the Tournament';
+
+  @override
+  String msgYpotBodyMine(String name, String nation, int age, int year) {
+    return '$name ($nation), aged $age, is named $year Young Player of the Tournament, one of yours.';
+  }
+
+  @override
+  String msgYpotBodyOther(String name, String nation, int age, int year) {
+    return '$name ($nation), aged $age, is named $year Young Player of the Tournament.';
+  }
+
+  @override
+  String msgRankHold1(int rank) {
+    return 'You hold at #$rank.';
+  }
+
+  @override
+  String msgRankHold2(int rank) {
+    return 'No change, still #$rank.';
+  }
+
+  @override
+  String msgRankHold3(int rank) {
+    return 'Steady at #$rank.';
+  }
+
+  @override
+  String msgRankUp1(int move, int rank) {
+    String _temp0 = intl.Intl.pluralLogic(
+      move,
+      locale: localeName,
+      other: '$move places',
+      one: '1 place',
+    );
+    return 'Up $_temp0 this cycle, to #$rank.';
+  }
+
+  @override
+  String msgRankUp2(int move, int rank) {
+    String _temp0 = intl.Intl.pluralLogic(
+      move,
+      locale: localeName,
+      other: '$move places',
+      one: '1 place',
+    );
+    return 'A climb of $_temp0 lifts you to #$rank.';
+  }
+
+  @override
+  String msgRankUp3(int move, int rank) {
+    String _temp0 = intl.Intl.pluralLogic(
+      move,
+      locale: localeName,
+      other: '$move places',
+      one: '1 place',
+    );
+    return 'Up $_temp0, now #$rank.';
+  }
+
+  @override
+  String msgRankDown1(int move, int rank) {
+    String _temp0 = intl.Intl.pluralLogic(
+      move,
+      locale: localeName,
+      other: '$move places',
+      one: '1 place',
+    );
+    return 'Down $_temp0 this cycle, to #$rank.';
+  }
+
+  @override
+  String msgRankDown2(int move, int rank) {
+    String _temp0 = intl.Intl.pluralLogic(
+      move,
+      locale: localeName,
+      other: '$move places',
+      one: '1 place',
+    );
+    return 'A slide of $_temp0 drops you to #$rank.';
+  }
+
+  @override
+  String msgRankDown3(int move, int rank) {
+    String _temp0 = intl.Intl.pluralLogic(
+      move,
+      locale: localeName,
+      other: '$move places',
+      one: '1 place',
+    );
+    return 'Down $_temp0, now #$rank.';
+  }
+
+  @override
+  String get msgRankLeadYou => 'You top the world.';
+
+  @override
+  String msgRankLeadOther(String nation) {
+    return '$nation top the world.';
+  }
+
+  @override
+  String msgRankTitle(int rank) {
+    return 'World ranking · #$rank';
+  }
+
+  @override
+  String msgRankBody(String lead, String movement) {
+    return 'The world ranking has been updated. $lead $movement';
+  }
+
+  @override
+  String msgCapsTitle(String name, int count) {
+    return '$name reaches $count caps';
+  }
+
+  @override
+  String msgCapsBody(String name, int count) {
+    return '$name has now made $count appearances for your nation.';
+  }
+
+  @override
+  String msgGoalsTitle(String name, int count) {
+    return '$name reaches $count goals';
+  }
+
+  @override
+  String msgGoalsBody(String name, int count) {
+    return '$name has scored $count international goals for your nation.';
+  }
+
+  @override
+  String msgDevTitle(int year) {
+    return 'Squad development · $year';
+  }
+
+  @override
+  String msgNewFacesTitle(int year) {
+    return 'New faces · $year';
+  }
+
+  @override
+  String msgIntakeTitle(int year) {
+    return 'Academy intake · $year';
+  }
+
+  @override
+  String msgRetireCaptainTitle(String name) {
+    return 'Your captain $name retires';
+  }
+
+  @override
+  String msgRetireTitle(String name) {
+    return '$name retires from internationals';
+  }
+
+  @override
+  String msgRetireBody(String name, int age) {
+    return '$name has retired from international football at $age.';
+  }
+
+  @override
+  String msgRetireBodyWith(String name, String tally, int age) {
+    return '$name has retired from international football at $age, bowing out with $tally.';
+  }
+
+  @override
+  String msgTallyCaps(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count caps',
+      one: '1 cap',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String msgTallyGoals(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count goals',
+      one: '1 goal',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get msgArmbandVacant =>
+      ' The armband is vacant — name a new captain from the call-up screen.';
+
+  @override
+  String msgHofTitle(String name) {
+    return '$name inducted into the Hall of Fame';
+  }
+
+  @override
+  String msgHofBody(String name, int caps, int goals) {
+    return '$name joins your nation’s Hall of Fame ($caps caps, $goals goals). See them in Legends.';
+  }
+
+  @override
+  String hubBanTitle(String name) {
+    return '$name suspended';
+  }
+
+  @override
+  String hubBanBody(String name, String how, int matches) {
+    String _temp0 = intl.Intl.pluralLogic(
+      matches,
+      locale: localeName,
+      other: 'the next $matches matches',
+      one: 'your next match',
+    );
+    return '$name $how and is banned for $_temp0 — they will be unavailable for selection.';
+  }
+
+  @override
+  String get hubBanHowSecondYellow => 'was sent off for a second booking';
+
+  @override
+  String get hubBanHowViolent => 'was shown a straight red for violent conduct';
+
+  @override
+  String get hubBanHowRed => 'was sent off';
+
+  @override
+  String hubInjuryTitle(String name) {
+    return '$name injured';
+  }
+
+  @override
+  String hubInjuryBody(String name, int matches) {
+    String _temp0 = intl.Intl.pluralLogic(
+      matches,
+      locale: localeName,
+      other: '$matches matches',
+      one: '1 match',
+    );
+    return '$name picked up a knock and is out for $_temp0.';
+  }
+
+  @override
+  String get hubRunnerUpTitle1 => 'Runners-up';
+
+  @override
+  String get hubRunnerUpTitle2 => 'So near, yet so far';
+
+  @override
+  String get hubRunnerUpTitle3 => 'Silver medals';
+
+  @override
+  String hubRunnerUpBody1(String cup, String opponent) {
+    return 'You reached the $cup final but lost to $opponent. So close — silver this time.';
+  }
+
+  @override
+  String hubRunnerUpBody2(String cup, String opponent) {
+    return 'Beaten by $opponent in the $cup final. Runners-up — agonisingly close.';
+  }
+
+  @override
+  String hubRunnerUpBody3(String cup, String opponent) {
+    return 'The $cup final slipped away against $opponent. So much to be proud of, but not the trophy.';
+  }
+
+  @override
+  String get hubKnockedOutTitle1 => 'Knocked out';
+
+  @override
+  String get hubKnockedOutTitle2 => 'The end of the road';
+
+  @override
+  String get hubKnockedOutTitle3 => 'Journey over';
+
+  @override
+  String hubKnockedOutBody1(String cup, String opponent, String stage) {
+    return 'You\'re out of the $cup, beaten by $opponent in the $stage.';
+  }
+
+  @override
+  String hubKnockedOutBody2(String cup, String opponent, String stage) {
+    return '$opponent end your $cup in the $stage.';
+  }
+
+  @override
+  String hubKnockedOutBody3(String cup, String opponent, String stage) {
+    return 'Your $cup ends in the $stage, beaten by $opponent.';
+  }
+
+  @override
+  String get hubGroupExitTitle1 => 'Group stage exit';
+
+  @override
+  String get hubGroupExitTitle2 => 'Out at the group stage';
+
+  @override
+  String get hubGroupExitTitle3 => 'Early bath';
+
+  @override
+  String hubGroupExitBody1(String cup) {
+    return 'Your $cup is over at the group stage. Not enough to reach the knockouts.';
+  }
+
+  @override
+  String hubGroupExitBody2(String cup) {
+    return 'You failed to get out of the group. Your $cup ends here.';
+  }
+
+  @override
+  String hubGroupExitBody3(String cup) {
+    return 'No knockout place this time. Your $cup is done at the group stage.';
+  }
+
+  @override
+  String boardObjectiveMetTitle(String comp) {
+    return 'Objective met — $comp';
+  }
+
+  @override
+  String boardObjectiveMissedTitle(String comp) {
+    return 'Objective missed — $comp';
+  }
+
+  @override
+  String boardObjectiveMetBody(String comp, String demand, String finish) {
+    return 'The board\'s target at the $comp: $demand. You finished: $finish. They have what they asked for.';
+  }
+
+  @override
+  String boardObjectiveMissedBody(String comp, String demand, String finish) {
+    return 'The board\'s target at the $comp: $demand. You finished: $finish. That is short of what was expected.';
+  }
+
+  @override
+  String get newsWcMissTitle => 'World Cup dream over';
+
+  @override
+  String newsWcMissBody(int year) {
+    return 'You didn\'t make the $year World Cup — the qualifying campaign fell short. Four more years.';
+  }
+
+  @override
+  String get newsRecordScorerTitle => 'All-time top scorer';
+
+  @override
+  String newsRecordScorerBody(String name, int goals) {
+    return '$name is now the game\'s all-time leading goalscorer with $goals goals.';
+  }
+
+  @override
+  String get newsRecordCapsTitle => 'Most-capped player';
+
+  @override
+  String newsRecordCapsBody(String name, int caps) {
+    return '$name is now the game\'s most-capped player with $caps appearances.';
+  }
+
+  @override
+  String get newsARecordBreaker => 'A new record-breaker';
+
+  @override
+  String newsTransferTitle(String name, String club) {
+    return '$name joins $club';
+  }
+
+  @override
+  String newsTransferBody(
+    String name,
+    String position,
+    String fromClub,
+    String destination,
+    String fee,
+    int rating,
+  ) {
+    return '$name ($position, $rating) has left $fromClub to sign for $destination for $fee.';
+  }
+
+  @override
+  String newsTransferAbroad(String club, String country) {
+    return '$club in $country';
+  }
+
+  @override
+  String get newsTransferFree => 'a free transfer';
+
+  @override
+  String newsNatzStarTitle(String name, String nation) {
+    return '⭐ $name would switch to $nation!';
+  }
+
+  @override
+  String newsNatzTitle(String name, String nation) {
+    return '$name wants to play for $nation';
+  }
+
+  @override
+  String newsNatzBody(
+    String name,
+    String position,
+    String fromNation,
+    String nation,
+    int age,
+    int rating,
+  ) {
+    return '$name, a $age-year-old $position rated $rating currently with $fromNation, has family ties to $nation and is open to switching. Open the Naturalisation offer to accept or decline.';
+  }
+
+  @override
+  String newsNatzBodyStar(
+    String name,
+    String position,
+    String fromNation,
+    String nation,
+    int age,
+    int rating,
+  ) {
+    return '$name, a $age-year-old $position rated $rating currently with $fromNation, is a star name who has family ties to $nation and is open to switching. Open the Naturalisation offer to accept or decline.';
+  }
+
+  @override
+  String get newsTheirNation => 'their nation';
+
+  @override
+  String get newsYourNation => 'your nation';
+
+  @override
+  String get tourStatusChampions => 'CHAMPIONS';
+
+  @override
+  String get tourStatusFinals => 'FINALS';
+
+  @override
+  String get tourStatusQualifying => 'QUALIFYING';
+
+  @override
+  String get tourStatusUpcoming => 'UPCOMING';
+
+  @override
+  String get tourStatusInProgress => 'IN PROGRESS';
+
+  @override
+  String get tourStatusComingSoon => 'COMING SOON';
+
+  @override
+  String get tourStatusDecided => 'DECIDED';
+
+  @override
+  String tourStatusLeague(String letter) {
+    return 'LEAGUE $letter';
+  }
+
+  @override
+  String get tourDrawWcQualifying => 'WORLD CUP QUALIFYING DRAW';
+
+  @override
+  String tourDrawContQualifying(String cup) {
+    return '$cup QUALIFYING DRAW';
+  }
+
+  @override
+  String get tourDrawWcHost => 'WORLD CUP HOST';
+
+  @override
+  String tourDrawContHost(String cup) {
+    return '$cup HOST';
+  }
+
+  @override
+  String get tourKickoffContinentalCup => 'CONTINENTAL CUP';
+
+  @override
+  String tourHostCompetitionYear(String competition, int year) {
+    return '$competition $year';
+  }
+
+  @override
+  String newsContMissTitle(String cup) {
+    return '$cup missed';
+  }
+
+  @override
+  String newsContMissBody(String cup) {
+    return 'You didn\'t qualify for $cup — the campaign came up short this time.';
+  }
+
+  @override
+  String newsPotyTitle(int year) {
+    return 'World Player of the Year $year';
+  }
+
+  @override
+  String newsPotyBody(String name) {
+    return '$name is the best player in the world this year.';
+  }
+
+  @override
+  String newsPotyYoungSuffix(String name) {
+    return ' $name takes the young player\'s award.';
+  }
+
+  @override
+  String get matchTopBarTitle => 'MATCH';
+
+  @override
+  String get matchStatsAtFullTime => 'Stats available at full time.';
+
+  @override
+  String get matchPlayerRatings => 'PLAYER RATINGS';
+
+  @override
+  String get matchSubstitutions => 'SUBSTITUTIONS';
+
+  @override
+  String get matchSubstitutes => 'SUBSTITUTES';
+
+  @override
+  String get matchPlayerOfTheMatch => 'PLAYER OF THE MATCH';
+
+  @override
+  String get matchGoalShout => 'GOAL!';
+
+  @override
+  String matchShootoutScore(int home, int away) {
+    return 'SHOOTOUT $home–$away';
+  }
+
+  @override
+  String get tourVenues => 'VENUES';
+
+  @override
+  String tourPot(int number) {
+    return 'POT $number';
+  }
+
+  @override
+  String get tourHostSelection => 'HOST SELECTION';
+
+  @override
+  String get tourCandidates => 'CANDIDATES';
+
+  @override
+  String get tourJointBid => 'JOINT BID';
+
+  @override
+  String get tourGoldenGlove => 'GOLDEN GLOVE';
+
+  @override
+  String get tourTeamOfTournament => 'TEAM OF THE TOURNAMENT';
+
+  @override
+  String get tourYourRun => 'YOUR RUN';
+
+  @override
+  String get tourMedalTable => 'MEDAL TABLE';
+
+  @override
+  String tourHostLine(String nation) {
+    return 'Host: $nation';
+  }
+
+  @override
+  String tourGroupNamed(String name) {
+    return 'Group $name';
+  }
+
+  @override
+  String get tourFinalsDrawBlurb =>
+      'Seeded by world ranking. Spot your nation before the draw.';
+
+  @override
+  String get tourWorldRanking => 'World Ranking';
+
+  @override
+  String get tourYourCompetitions => 'YOUR COMPETITIONS';
+
+  @override
+  String get tourOtherContinents => 'OTHER CONTINENTS';
+
+  @override
+  String tourHostedBy(String hosts) {
+    return 'HOSTED BY  $hosts';
+  }
+
+  @override
+  String tourThirdsAdvance(int count, String destination) {
+    return 'Top $count advance to $destination';
+  }
+
+  @override
+  String newsWalkoutTitle(String name) {
+    return '$name walks away';
+  }
+
+  @override
+  String newsWalkoutBody(String name, int age, int caps) {
+    return '$name has retired from international football at $age, with $caps caps. He asked to be told where he stood and was not, and he is not waiting any longer.';
+  }
+
+  @override
+  String get pressProbeAccountability1 =>
+      'You\'ve backed them again. Is nobody in that dressing room accountable?';
+
+  @override
+  String get pressProbeAccountability2 =>
+      'That\'s the players defended. Who actually answers for a night like that?';
+
+  @override
+  String get pressProbeAccountability3 =>
+      'Loyalty is easy from up there. Does anyone pay a price?';
+
+  @override
+  String get pressProbeAccountability4 =>
+      'If it\'s never the players, we\'re left with one name. Yours.';
+
+  @override
+  String get pressProbeYourFuture1 =>
+      'You\'ve taken it on yourself. Should we be asking about your future?';
+
+  @override
+  String get pressProbeYourFuture2 =>
+      'Falling on your sword is noble. Is the job still yours?';
+
+  @override
+  String get pressProbeYourFuture3 =>
+      'You keep saying it\'s you. At what point is that a resignation?';
+
+  @override
+  String get pressProbeYourFuture4 =>
+      'The board are listening too. Are you sure you want that on record?';
+
+  @override
+  String get pressProbeDressingRoom1 =>
+      'Strong words in public. Have you lost that dressing room?';
+
+  @override
+  String get pressProbeDressingRoom2 =>
+      'You\'ve just told the country they\'re not good enough. How does that help?';
+
+  @override
+  String get pressProbeDressingRoom3 =>
+      'Demanding it here rather than in there — is that leadership?';
+
+  @override
+  String get pressProbeDressingRoom4 =>
+      'Players read this too. What do they hear tomorrow morning?';
+
+  @override
+  String get pressProbeExpectation1 =>
+      'You\'ve raised the bar in public. Is that not a hostage to fortune?';
+
+  @override
+  String get pressProbeExpectation2 =>
+      'Big promise. What happens the day you don\'t deliver it?';
+
+  @override
+  String get pressProbeExpectation3 =>
+      'Every manager before you said the same and packed a bag. Why are you different?';
+
+  @override
+  String get pressProbeExpectation4 =>
+      'You\'ve set the target. Will you resign if you miss it?';
+
+  @override
+  String get pressProbeSubstance1 =>
+      'With respect, that\'s not an answer. Give us something.';
+
+  @override
+  String get pressProbeSubstance2 =>
+      'The country wants to hear from you. Anything at all?';
+
+  @override
+  String get pressProbeSubstance3 =>
+      'You can keep saying nothing. We\'ll keep printing it.';
+
+  @override
+  String get pressProbeSubstance4 =>
+      'One straight sentence. What do you actually think?';
+
+  @override
+  String get pressProbeSelection1 =>
+      'Same names, same shape, same result. Why does that team keep getting picked?';
+
+  @override
+  String get pressProbeSelection2 =>
+      'There are players in form watching this on television. Explain the selection.';
+
+  @override
+  String get pressProbeSelection3 =>
+      'Is the XI picked on merit, or on reputation?';
+
+  @override
+  String get pressProbeSelection4 =>
+      'Tactically, we all saw the problem. Did you?';
+
+  @override
+  String get pressProbeTheFans1 =>
+      'Thousands travelled for that. What do you say to them tonight?';
+
+  @override
+  String get pressProbeTheFans2 =>
+      'The supporters have stuck with this team for years. What are you giving them?';
+
+  @override
+  String get pressProbeTheFans3 =>
+      'They sing your name or they don\'t. Which is it going to be?';
+
+  @override
+  String get pressProbeTheFans4 => 'Message to the people back home. Go on.';
+
+  @override
+  String get pressProbeBigPicture1 =>
+      'Step back for me. Where is this nation actually going?';
+
+  @override
+  String get pressProbeBigPicture2 =>
+      'From the outside, nothing has changed here in years. Has it?';
+
+  @override
+  String get pressProbeBigPicture3 =>
+      'In four years\' time, what does this side look like?';
+
+  @override
+  String get pressProbeBigPicture4 =>
+      'Is this a project, or is it just the next match?';
+
+  @override
+  String get pressNeedleBackPlayers => 'You always back them. We\'ve heard it.';
+
+  @override
+  String get pressNeedleTakeBlame => 'It\'s always your fault, apparently.';
+
+  @override
+  String get pressNeedleDemandMore => 'More demands. Again.';
+
+  @override
+  String get pressNeedleRaiseBar => 'Another promise for the file.';
+
+  @override
+  String get pressNeedlePlayDown => 'You never give us anything.';
+
+  @override
+  String get pressHeadlineWent1 => 'A manager in charge of the room';
+
+  @override
+  String get pressHeadlineWent2 => 'They came for a row and got a leader';
+
+  @override
+  String get pressHeadlineWent3 => 'Straight answers, and they landed';
+
+  @override
+  String get pressHeadlineMixed1 => 'Plenty said, little settled';
+
+  @override
+  String get pressHeadlineMixed2 =>
+      'Something for everyone, and nothing for anyone';
+
+  @override
+  String get pressHeadlineMixed3 => 'A conference that left the questions open';
+
+  @override
+  String get pressHeadlineBadly1 =>
+      'A bruising afternoon in front of the cameras';
+
+  @override
+  String get pressHeadlineBadly2 => 'The room turned, and it showed';
+
+  @override
+  String get pressHeadlineBadly3 =>
+      'Answers that will read worse in the morning';
+
+  @override
+  String get pressHeadlineFlat1 => 'Nothing said, nothing gained';
+
+  @override
+  String get pressHeadlineFlat2 => 'Ten minutes, no news';
+
+  @override
+  String get pressHeadlineFlat3 => 'A blank page for the back page';
+
+  @override
+  String get pressConferenceTitle => 'PRESS CONFERENCE';
+
+  @override
+  String pressQuestionOf(int index, int total) {
+    return 'Question $index of $total';
+  }
+
+  @override
+  String get pressTomorrowsHeadline => 'TOMORROW\'S BACK PAGE';
+
+  @override
+  String get pressLeaveRoom => 'LEAVE THE ROOM';
+
+  @override
+  String get pressRoomVerdictSquad => 'Dressing room';
+
+  @override
+  String get pressRoomVerdictBoard => 'Board';
+
+  @override
+  String get yReactionElation0 => 'no notes. none. perfect.';
+
+  @override
+  String get yReactionElation1 => 'I am unwell (good).';
+
+  @override
+  String get yReactionElation2 =>
+      'framing this. putting it above the fireplace.';
+
+  @override
+  String get yReactionElation3 => 'we are so back';
+
+  @override
+  String get yReactionElation4 =>
+      'Screenshotting this for the doubters. All of them.';
+
+  @override
+  String get yReactionElation5 =>
+      'I\'m going to be insufferable about this for a decade.';
+
+  @override
+  String get yReactionRelief0 => 'that took ten years off me';
+
+  @override
+  String get yReactionRelief1 => 'Ugly. Three points. Moving on.';
+
+  @override
+  String get yReactionRelief2 => 'Nobody speak. Nobody jinx it.';
+
+  @override
+  String get yReactionRelief3 =>
+      'Not pretty, but I\'ll take it every single time.';
+
+  @override
+  String get yReactionRelief4 => 'Heart rate: unacceptable.';
+
+  @override
+  String get yReactionRelief5 => 'Somehow. Somehow!';
+
+  @override
+  String get yReactionFury0 => 'Absolute state of this.';
+
+  @override
+  String get yReactionFury1 => 'Not good enough. Not remotely.';
+
+  @override
+  String get yReactionFury2 => 'I want names.';
+
+  @override
+  String get yReactionFury3 => 'Every four years, the same. EVERY four years.';
+
+  @override
+  String get yReactionFury4 => 'Deleting the app. Reinstalling Thursday.';
+
+  @override
+  String get yReactionFury5 => 'Somebody explain that to me slowly.';
+
+  @override
+  String get yReactionDespair0 => 'well.';
+
+  @override
+  String get yReactionDespair1 => 'I have run out of ways to say this.';
+
+  @override
+  String get yReactionDespair2 => 'Going for a walk. A long one.';
+
+  @override
+  String get yReactionDespair3 => 'this is the darkest timeline';
+
+  @override
+  String get yReactionDespair4 => 'Wake me in four years.';
+
+  @override
+  String get yReactionDespair5 => 'No jokes today. Nothing.';
+
+  @override
+  String get yReactionSmugness0 => 'Said it in January. Check the timeline.';
+
+  @override
+  String get yReactionSmugness1 => 'Some of you owe some of us an apology.';
+
+  @override
+  String get yReactionSmugness2 => 'Quietly, but: told you.';
+
+  @override
+  String get yReactionSmugness3 => 'The doubters have gone very quiet.';
+
+  @override
+  String get yReactionSmugness4 => 'bookmark this one';
+
+  @override
+  String get yReactionSmugness5 =>
+      'Not that anybody\'s counting. I\'m counting.';
+
+  @override
+  String get yReactionShrug0 => 'it happened. next.';
+
+  @override
+  String get yReactionShrug1 => 'Fine. Whatever. Onwards.';
+
+  @override
+  String get yReactionShrug2 => 'Filing this one under \'football\'.';
+
+  @override
+  String get yReactionShrug3 => 'no thoughts, head empty';
+
+  @override
+  String get yReactionShrug4 => 'Wake me for the next one.';
+
+  @override
+  String get yReactionShrug5 => 'Genuinely nothing to add.';
+
+  @override
+  String get tourThirdsUneven =>
+      'Groups are uneven — results against each big group\'s bottom side are dropped, so every team is judged over the same games.';
+
+  @override
+  String get gateTitle => 'YOUR FIRST CYCLE IS OVER';
+
+  @override
+  String get gateLead =>
+      'Four years, a continental championship and a World Cup — that was the free part, and nothing was held back. Carry this save on for a one-off payment.';
+
+  @override
+  String get gateBenefitEndless => 'Endless career — every cycle from here on';
+
+  @override
+  String get gateBenefitNations => 'Every nation in the world to manage';
+
+  @override
+  String get gateBenefitSaves => 'Every save slot';
+
+  @override
+  String get gateBenefitUpdates => 'Every future update included';
+
+  @override
+  String get gateBenefitOffline =>
+      'No subscription, no ads, no account, works offline';
+
+  @override
+  String get gatePriceLead => 'One payment, forever';
+
+  @override
+  String get gatePrice => '€11.99';
+
+  @override
+  String get gateBuy => 'BUY AND CONTINUE';
+
+  @override
+  String get gateExit => 'EXIT';
+
+  @override
+  String get gateNotChargedYet =>
+      'Not connected to payment yet — this button just continues.';
+
+  @override
+  String get backupTitle => 'SAVES';
+
+  @override
+  String get backupBlurb =>
+      'Every save lives in one file on this phone. Export a copy so a lost or reinstalled phone does not cost you a career.';
+
+  @override
+  String get backupExport => 'EXPORT A BACKUP';
+
+  @override
+  String get backupExportSubject => 'FNM saves';
+
+  @override
+  String get backupRestore => 'RESTORE FROM A FILE';
+
+  @override
+  String get backupRestoreWarnTitle => 'Replace every save?';
+
+  @override
+  String get backupRestoreWarnBody =>
+      'Restoring replaces every save on this phone with the ones in the file. The app will restart.';
+
+  @override
+  String get backupRestoreConfirm => 'REPLACE';
+
+  @override
+  String get backupCancel => 'CANCEL';
+
+  @override
+  String get backupExported => 'Backup ready — choose where to keep it.';
+
+  @override
+  String get backupFailed => 'Could not write the backup.';
+
+  @override
+  String get backupRejectedUnreadable => 'That file could not be opened.';
+
+  @override
+  String get backupRejectedNotFnm => 'That is not an FNM save.';
+
+  @override
+  String get backupRejectedNewer =>
+      'That save was made by a newer version of the app. Update first.';
+
+  @override
+  String get backupRejectedTooOld =>
+      'That save is too old to be restored by this version.';
+
+  @override
+  String get careerShare => 'Share this career';
+
+  @override
+  String get careerImport => 'IMPORT A CAREER';
+
+  @override
+  String get careerShareSubject => 'An FNM career';
+
+  @override
+  String get careerImported => 'Career imported.';
+
+  @override
+  String get careerImportFailedUnreadable => 'That file is not an FNM career.';
+
+  @override
+  String get careerImportFailedNewer =>
+      'That career was exported by a newer version of the app. Update first.';
+
+  @override
+  String get careerShareFailed => 'Could not export that career.';
+
+  @override
+  String get managerTitle => 'MANAGER';
+
+  @override
+  String get managerSkills => 'YOUR SKILLS';
+
+  @override
+  String managerPointsAvailable(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count points to spend',
+      one: '1 point to spend',
+      zero: 'No points to spend',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get managerPointsHow =>
+      'Two points for every cycle you complete, one for every trophy you win.';
+
+  @override
+  String get managerSkillManManagement => 'Man Management';
+
+  @override
+  String get managerSkillManManagementBlurb =>
+      'What you say in public and in your office lands harder.';
+
+  @override
+  String get managerSkillTactical => 'Tactical';
+
+  @override
+  String get managerSkillTacticalBlurb =>
+      'Your side settles into a new shape faster.';
+
+  @override
+  String get managerSkillYouth => 'Youth Development';
+
+  @override
+  String get managerSkillYouthBlurb => 'More comes out of the academy.';
+
+  @override
+  String get managerSkillNegotiation => 'Negotiation';
+
+  @override
+  String get managerSkillNegotiationBlurb => 'The federation funds you better.';
+
+  @override
+  String get managerStaff => 'YOUR STAFF';
+
+  @override
+  String managerStaffWages(String amount) {
+    return 'Wages: $amount per cycle';
+  }
+
+  @override
+  String get managerRoleAssistant => 'Assistant Manager';
+
+  @override
+  String get managerRoleAssistantBlurb =>
+      'Runs the training. Everything you focus on, he does more of.';
+
+  @override
+  String get managerRoleScout => 'Chief Scout';
+
+  @override
+  String get managerRoleScoutBlurb =>
+      'Tells you what a young player will become, sooner.';
+
+  @override
+  String get managerRoleFitness => 'Fitness Coach';
+
+  @override
+  String get managerRoleFitnessBlurb => 'Keeps them on the pitch.';
+
+  @override
+  String get managerTierNone => 'None';
+
+  @override
+  String get managerTierBasic => 'Basic';
+
+  @override
+  String get managerTierGood => 'Good';
+
+  @override
+  String get managerTierElite => 'Elite';
+
+  @override
+  String get managerFree => 'free';
+
+  @override
+  String get managerTraining => 'BETWEEN WINDOWS';
+
+  @override
+  String get managerTrainingBlurb =>
+      'What the squad works on when there is no match to play.';
+
+  @override
+  String get managerFocusBalanced => 'Balanced';
+
+  @override
+  String get managerFocusBalancedBlurb => 'A bit of everything.';
+
+  @override
+  String get managerFocusFitness => 'Fitness';
+
+  @override
+  String get managerFocusFitnessBlurb => 'Fewer knocks.';
+
+  @override
+  String get managerFocusCohesion => 'Cohesion';
+
+  @override
+  String get managerFocusCohesionBlurb => 'The shape beds in faster.';
+
+  @override
+  String get managerFocusYouth => 'Youth';
+
+  @override
+  String get managerFocusYouthBlurb => 'Hours with the youngest in the pool.';
 }

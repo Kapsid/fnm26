@@ -1,3 +1,5 @@
+import 'package:fnm/domain/services/manager/manager_skills.dart';
+import 'package:fnm/domain/services/manager/staff.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'career.freezed.dart';
@@ -44,5 +46,21 @@ abstract class Career with _$Career {
     /// predates the counter — its earlier hours were never measured, and
     /// inventing a number for them would be worse than starting at nothing.
     @Default(0) int playedSeconds,
+
+    /// What the manager himself is good at, 1–20 apiece. All four start at
+    /// [ManagerSkills.starting], which every effect reads as neutral — so a
+    /// save that predates them is unaffected until a point is spent.
+    @Default(ManagerSkills.starting) int skillManManagement,
+    @Default(ManagerSkills.starting) int skillTactical,
+    @Default(ManagerSkills.starting) int skillYouthDevelopment,
+    @Default(ManagerSkills.starting) int skillNegotiation,
+
+    /// The staff he has hired. Nobody, by default, which costs nothing.
+    @Default(StaffTier.none) StaffTier staffAssistant,
+    @Default(StaffTier.none) StaffTier staffScout,
+    @Default(StaffTier.none) StaffTier staffFitnessCoach,
+
+    /// What the side works on between windows.
+    @Default(TrainingFocus.balanced) TrainingFocus trainingFocus,
   }) = _Career;
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
@@ -81,7 +82,7 @@ class VenuesCard extends StatelessWidget {
           ),
           const Divider(height: AppSpacing.md),
           Text(
-            'VENUES',
+            AppLocalizations.of(context).tourVenues,
             style: AppTypography.labelSmall.copyWith(color: AppColors.primary),
           ),
           const SizedBox(height: AppSpacing.xs),

@@ -4,6 +4,11 @@ enum GrievanceKind {
   gameTime,
 
   /// Good enough for the pool and repeatedly left out of it.
+  ///
+  /// NOT RAISED. Being asked why a man was not named turned up far too often
+  /// to be an event — a squad is 23 of a pool of hundreds, so somebody is
+  /// always the one left out, and the question had no answer worth giving.
+  /// The member stays so keys stored by older saves still resolve.
   squadPlace,
 
   /// Played out of position, again and again.
@@ -142,8 +147,8 @@ abstract final class Grievances {
 
   /// One player's grievance, or null if he has nothing to complain about.
   ///
-  /// One man, one grievance: game time comes first, because being in the squad
-  /// and not playing is a sharper insult than not being picked at all.
+  /// One man, one grievance, and only one kind of it: a player who IS in the
+  /// squad and never gets on. Not being picked at all is no longer raised.
   static GrievanceKind? _kindFor(SquadStanding s, int? rank) {
     if (s.calledUp) {
       if (s.recentAppearances <= gameTimeThreshold && s.caps > 0) {
@@ -151,12 +156,7 @@ abstract final class Grievances {
       }
       return null;
     }
-    if (rank != null &&
-        rank <= poolTop &&
-        s.age >= squadPlaceMinAge &&
-        s.recentAppearances <= gameTimeThreshold) {
-      return GrievanceKind.squadPlace;
-    }
+    // A man not in the squad says nothing: see [GrievanceKind.squadPlace].
     return null;
   }
 

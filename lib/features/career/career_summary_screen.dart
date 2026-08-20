@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fnm/core/util/competition_label.dart';
 import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
@@ -276,20 +277,21 @@ class _TitlesList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
     return AppCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           for (var i = 0; i < titles.length; i++) ...[
             if (i > 0) const Divider(height: AppSpacing.md),
-            _titleRow(titles[i]),
+            _titleRow(l, titles[i]),
           ],
         ],
       ),
     );
   }
 
-  Widget _titleRow(TrophyTitle t) {
+  Widget _titleRow(AppLocalizations l, TrophyTitle t) {
     // "2038 (Brazil) · 2030 (Argentina)" — each win with its nation, since a
     // manager can lift the same trophy with different countries.
     final wins = t.wins.map((w) => '${w.year} (${w.nationName})').join('  ·  ');
@@ -306,7 +308,7 @@ class _TitlesList extends StatelessWidget {
                 children: [
                   Expanded(
                     child: Text(
-                      t.competition,
+                      competitionLabel(l, t.competition),
                       style: AppTypography.titleMedium,
                     ),
                   ),
@@ -442,7 +444,7 @@ class _RunRow extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    '${run.competition} ${run.year}',
+                    '${competitionLabel(l, run.competition)} ${run.year}',
                     style: AppTypography.bodyMedium,
                   ),
                   if (run.championName != null)

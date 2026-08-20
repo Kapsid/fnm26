@@ -104,9 +104,67 @@ String yPostBody(AppLocalizations l, YPost p) {
     (YTemplate.boardPressure, 1) => l.yBoardPressure1,
     (YTemplate.boardPressure, 2) => l.yBoardPressure2,
     (YTemplate.boardPressure, 3) => l.yBoardPressure3,
+    // A reply's words come from its MOOD, not from what happened — one set of
+    // six answers every event in the game (see [YMood]).
+    (YTemplate.reaction, _) => _reactionBody(l, p),
     // Unreachable: variant is always < YFeed.variantCount, which is 4.
     _ => throw ArgumentError('no words for ${p.template} v${p.variant}'),
   };
+}
+
+/// The words for a reply, by mood and variant.
+String _reactionBody(AppLocalizations l, YPost p) {
+  final options = switch (p.mood ?? YMood.shrug) {
+    YMood.elation => [
+      l.yReactionElation0,
+      l.yReactionElation1,
+      l.yReactionElation2,
+      l.yReactionElation3,
+      l.yReactionElation4,
+      l.yReactionElation5,
+    ],
+    YMood.relief => [
+      l.yReactionRelief0,
+      l.yReactionRelief1,
+      l.yReactionRelief2,
+      l.yReactionRelief3,
+      l.yReactionRelief4,
+      l.yReactionRelief5,
+    ],
+    YMood.fury => [
+      l.yReactionFury0,
+      l.yReactionFury1,
+      l.yReactionFury2,
+      l.yReactionFury3,
+      l.yReactionFury4,
+      l.yReactionFury5,
+    ],
+    YMood.despair => [
+      l.yReactionDespair0,
+      l.yReactionDespair1,
+      l.yReactionDespair2,
+      l.yReactionDespair3,
+      l.yReactionDespair4,
+      l.yReactionDespair5,
+    ],
+    YMood.smugness => [
+      l.yReactionSmugness0,
+      l.yReactionSmugness1,
+      l.yReactionSmugness2,
+      l.yReactionSmugness3,
+      l.yReactionSmugness4,
+      l.yReactionSmugness5,
+    ],
+    YMood.shrug => [
+      l.yReactionShrug0,
+      l.yReactionShrug1,
+      l.yReactionShrug2,
+      l.yReactionShrug3,
+      l.yReactionShrug4,
+      l.yReactionShrug5,
+    ],
+  };
+  return options[p.variant % options.length];
 }
 
 /// Y — where the world talks about you.
@@ -201,15 +259,25 @@ class YPostTile extends StatelessWidget {
     YVoice.pundit => AppColors.primary,
     YVoice.fan => AppColors.positive,
     YVoice.rival => AppColors.error,
-    YVoice.stats => AppColors.onSurfaceVariant,
+    YVoice.stats || YVoice.breaking => AppColors.onSurfaceVariant,
     YVoice.player => AppColors.warning,
+    YVoice.meme => AppColors.tertiary,
+    YVoice.expro => AppColors.error,
   };
+
+  /// Whether this post answers another one, in which case it is drawn stepped
+  /// in under it rather than as a card of its own — the thread has to LOOK
+  /// like a thread or the replies read as unrelated non-sequiturs.
+  bool get _isReply => post.replyTo != null;
 
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
     return Padding(
-      padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+      padding: EdgeInsets.only(
+        bottom: AppSpacing.sm,
+        left: _isReply ? AppSpacing.xl : 0,
+      ),
       child: AppCard(
         onTap: onTap,
         child: Row(

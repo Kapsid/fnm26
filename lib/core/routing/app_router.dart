@@ -8,6 +8,7 @@ import 'package:fnm/features/career/manager_history_screen.dart';
 import 'package:fnm/features/career/new_game_screen.dart';
 import 'package:fnm/features/career/saves_screen.dart';
 import 'package:fnm/features/settings/diagnostics_screen.dart';
+import 'package:fnm/features/manager/manager_screen.dart';
 import 'package:fnm/features/settings/settings_screen.dart';
 import 'package:fnm/features/squad/training_camp_screen.dart';
 import 'package:fnm/features/squad/youth_screen.dart';
@@ -76,6 +77,9 @@ abstract final class Routes {
 
   /// Squad & tactics. Expects `?careerId=`.
   static const tactics = '/tactics';
+
+  /// The manager's own page: skills, staff and training. Expects `?careerId=`.
+  static const manager = '/manager';
 
   /// Call-ups (squad selection). Expects `?careerId=`.
   static const callUps = '/call-ups';
@@ -261,6 +265,13 @@ final routerProvider = Provider<GoRouter>((ref) {
               0;
           return HubScreen(careerId: id);
         },
+      ),
+      GoRoute(
+        path: Routes.manager,
+        builder: (context, state) => ManagerScreen(
+          careerId:
+              int.tryParse(state.uri.queryParameters['careerId'] ?? '') ?? 0,
+        ),
       ),
       GoRoute(
         path: Routes.tactics,
