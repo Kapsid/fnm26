@@ -790,6 +790,11 @@ class AppLocalizationsCs extends AppLocalizations {
   }
 
   @override
+  String tacticsAgeOnly(int age) {
+    return 'Věk $age';
+  }
+
+  @override
   String tacticsRoleAge(String role, int age) {
     return '$role · Věk $age';
   }
@@ -1912,6 +1917,18 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get resultsStageThirdPlace => 'O TŘETÍ MÍSTO';
+
+  @override
+  String get matchSetupWarnCaptain =>
+      'Není určen kapitán — klepnutím mu dáte pásku';
+
+  @override
+  String get matchSetupWarnSetPieces =>
+      'Nejsou určeni exekutoři standardek — klepnutím je vyberete';
+
+  @override
+  String get matchSetupWarnBoth =>
+      'Není kapitán ani exekutoři standardek — klepnutím to nastavíte';
 
   @override
   String matchStageMatchday(int matchday) {

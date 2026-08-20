@@ -790,6 +790,11 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String tacticsAgeOnly(int age) {
+    return 'Age $age';
+  }
+
+  @override
   String tacticsRoleAge(String role, int age) {
     return '$role · Age $age';
   }
@@ -1901,6 +1906,18 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get resultsStageThirdPlace => 'THIRD PLACE';
+
+  @override
+  String get matchSetupWarnCaptain =>
+      'No captain named — tap to give somebody the armband';
+
+  @override
+  String get matchSetupWarnSetPieces =>
+      'No set-piece takers named — tap to choose who steps up';
+
+  @override
+  String get matchSetupWarnBoth =>
+      'No captain and no set-piece takers — tap to set them';
 
   @override
   String matchStageMatchday(int matchday) {

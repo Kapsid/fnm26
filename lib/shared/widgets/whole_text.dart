@@ -82,7 +82,10 @@ class WholeText extends StatelessWidget {
         return Text(text, maxLines: maxLines, textAlign: textAlign, style: style);
       }
       final resolved = style ?? DefaultTextStyle.of(context).style;
-      final needsBreaks = !_fits(text, resolved, width, context);
+      // Break opportunities only help if there is a second line to break
+      // ONTO. On a single line they would buy nothing and cost the raw string
+      // its readability, so a one-line WholeText simply scales instead.
+      final needsBreaks = maxLines > 1 && !_fits(text, resolved, width, context);
       return FittedBox(
         fit: BoxFit.scaleDown,
         alignment: switch (textAlign) {

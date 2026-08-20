@@ -301,10 +301,11 @@ class _Landmark extends StatelessWidget {
         ),
         const Spacer(),
         Flexible(
-          child: Text(
+          // These rows carry NAMES — the captain, the most-capped, the top
+          // scorer — so they get the same promise the squad list does.
+          child: WholeText(
             value,
             maxLines: 1,
-            overflow: TextOverflow.ellipsis,
             textAlign: TextAlign.end,
             style: AppTypography.bodySmall,
           ),
@@ -508,10 +509,12 @@ class _PlayerRow extends StatelessWidget {
                           ),
                         ),
                       Flexible(
-                        child: Text(
+                        // Never ellipsised: a surname that ends in "…" is not
+                        // a name, and this list is how the manager knows who
+                        // is in his squad.
+                        child: WholeText(
                           p.name,
                           maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
                           style: AppTypography.bodyMedium.copyWith(
                             color: out ? AppColors.onSurfaceVariant : null,
                           ),

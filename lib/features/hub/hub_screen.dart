@@ -622,10 +622,13 @@ class _NextMatch extends StatelessWidget {
               Text(l.hubNextMatch, style: AppTypography.labelMedium),
               const Spacer(),
               Flexible(
-                child: Text(
+                // "World Cup qualifying · Matchday 6" is longer than the room
+                // left beside the heading, and a stage that ends in "…" tells
+                // the manager nothing about which match this is.
+                child: WholeText(
                   MatchStage.label(l, f),
+                  maxLines: 1,
                   textAlign: TextAlign.end,
-                  overflow: TextOverflow.ellipsis,
                   style: AppTypography.labelSmall.copyWith(
                     color: f.round == null
                         ? AppColors.onSurfaceVariant

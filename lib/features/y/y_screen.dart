@@ -304,19 +304,17 @@ class YPostTile extends StatelessWidget {
                   Row(
                     children: [
                       Flexible(
-                        child: Text(
+                        child: WholeText(
                           post.displayName,
                           maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
                           style: AppTypography.labelMedium,
                         ),
                       ),
                       const SizedBox(width: AppSpacing.xs),
                       Flexible(
-                        child: Text(
+                        child: WholeText(
                           post.handle,
                           maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
                           style: AppTypography.labelSmall.copyWith(
                             color: AppColors.onSurfaceVariant,
                           ),

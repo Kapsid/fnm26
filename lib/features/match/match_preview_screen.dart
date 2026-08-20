@@ -13,6 +13,7 @@ import 'package:fnm/domain/services/squad/condition.dart';
 import 'package:fnm/domain/services/tactics/position_fit.dart';
 import 'package:fnm/features/match/ground_card.dart';
 import 'package:fnm/features/match/match_providers.dart';
+import 'package:fnm/features/match/setup_warning.dart';
 import 'package:fnm/features/player/player_detail_screen.dart'
     show PlayerTraitGlyphs;
 import 'package:fnm/features/records/head_to_head_providers.dart';
@@ -125,6 +126,10 @@ class MatchPreviewScreen extends ConsumerWidget {
                 ),
               ),
               const SizedBox(height: AppSpacing.md),
+              // Both the armband and the set-piece takers default to "let the
+              // engine decide", which is fine to play with and terrible to
+              // never be told about.
+              SquadSetupWarning(careerId: careerId),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [

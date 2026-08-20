@@ -24,32 +24,28 @@ void main() {
     return c;
   }
 
-  test('free tier allows 2 saves then blocks the 3rd', () async {
+  test('free tier allows 3 saves then blocks the 4th', () async {
     container = build(premium: false);
     final service = container.read(careerServiceProvider);
 
-    expect(
-      (await service.create(nationId: 1, managerName: 'A')).isSuccess,
-      isTrue,
-    );
-    expect(
-      (await service.create(nationId: 1, managerName: 'B')).isSuccess,
-      isTrue,
-    );
+    for (var i = 0; i < maxSaveSlots(premiumUnlocked: false); i++) {
+      final r = await service.create(nationId: 1, managerName: 'M$i');
+      expect(r.isSuccess, isTrue, reason: 'save ${i + 1}');
+    }
 
-    final third = await service.create(nationId: 1, managerName: 'C');
-    expect(third.isFailure, isTrue);
-    third.fold(
+    final over = await service.create(nationId: 1, managerName: 'X');
+    expect(over.isFailure, isTrue);
+    over.fold(
       (_) => fail('expected failure'),
       (f) => expect(f.code, 'slots_full'),
     );
   });
 
-  test('pro tier allows 5 saves then blocks the 6th', () async {
+  test('pro tier allows 10 saves then blocks the 11th', () async {
     container = build(premium: true);
     final service = container.read(careerServiceProvider);
 
-    for (var i = 0; i < 5; i++) {
+    for (var i = 0; i < maxSaveSlots(premiumUnlocked: true); i++) {
       final r = await service.create(nationId: 1, managerName: 'M$i');
       expect(r.isSuccess, isTrue, reason: 'save ${i + 1}');
     }

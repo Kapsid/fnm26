@@ -1252,6 +1252,16 @@
       }
     }
   },
+  "tacticsAgeOnly": "Age {age}",
+  "@tacticsAgeOnly": {
+    "description": "A player's age alone, where his position is already shown as a chip beside it.",
+    "placeholders": {
+      "age": {
+        "type": "int",
+        "example": "24"
+      }
+    }
+  },
   "tacticsRoleAge": "{role} · Age {age}",
   "@tacticsRoleAge": {
     "description": "A player's natural role and age.",
@@ -2832,6 +2842,18 @@
   "resultsStageThirdPlace": "THIRD PLACE",
   "@resultsStageThirdPlace": {
     "description": "Stage label: the third-place play-off."
+  },
+  "matchSetupWarnCaptain": "No captain named — tap to give somebody the armband",
+  "@matchSetupWarnCaptain": {
+    "description": "Pre-match warning that no captain has been chosen."
+  },
+  "matchSetupWarnSetPieces": "No set-piece takers named — tap to choose who steps up",
+  "@matchSetupWarnSetPieces": {
+    "description": "Pre-match warning that no penalty or dead-ball taker has been chosen."
+  },
+  "matchSetupWarnBoth": "No captain and no set-piece takers — tap to set them",
+  "@matchSetupWarnBoth": {
+    "description": "Pre-match warning that neither the armband nor the set-piece takers have been chosen."
   },
   "matchStageMatchday": "MD {matchday}",
   "@matchStageMatchday": {

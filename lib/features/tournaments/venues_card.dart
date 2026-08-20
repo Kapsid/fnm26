@@ -157,10 +157,11 @@ class VenuesCard extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
+              // Half a ground's name is not a ground.
+              WholeText(
                 v.stadium,
                 maxLines: 1,
-                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.start,
                 style: AppTypography.bodyMedium,
               ),
               Text(

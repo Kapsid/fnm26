@@ -643,9 +643,13 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
                   ),
                 ),
                 subtitle: Text(
+                  // The role is already on the row as the leading chip, so
+                  // repeating it in words bought nothing and cost the age,
+                  // which was pushed off the end. Out of position is the one
+                  // case where naming the role IS the message.
                   penalised
                       ? l.tacticsRoleOutOfPosition(p.position.roleName)
-                      : l.tacticsRoleAge(p.position.roleName, p.age),
+                      : l.tacticsAgeOnly(p.age),
                   style: AppTypography.labelSmall.copyWith(
                     color: penalised
                         ? AppColors.warning

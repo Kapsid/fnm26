@@ -1442,6 +1442,12 @@ abstract class AppLocalizations {
   /// **'{role} · out of position'**
   String tacticsRoleOutOfPosition(String role);
 
+  /// A player's age alone, where his position is already shown as a chip beside it.
+  ///
+  /// In en, this message translates to:
+  /// **'Age {age}'**
+  String tacticsAgeOnly(int age);
+
   /// A player's natural role and age.
   ///
   /// In en, this message translates to:
@@ -3259,6 +3265,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'THIRD PLACE'**
   String get resultsStageThirdPlace;
+
+  /// Pre-match warning that no captain has been chosen.
+  ///
+  /// In en, this message translates to:
+  /// **'No captain named — tap to give somebody the armband'**
+  String get matchSetupWarnCaptain;
+
+  /// Pre-match warning that no penalty or dead-ball taker has been chosen.
+  ///
+  /// In en, this message translates to:
+  /// **'No set-piece takers named — tap to choose who steps up'**
+  String get matchSetupWarnSetPieces;
+
+  /// Pre-match warning that neither the armband nor the set-piece takers have been chosen.
+  ///
+  /// In en, this message translates to:
+  /// **'No captain and no set-piece takers — tap to set them'**
+  String get matchSetupWarnBoth;
 
   /// Matchday number shown for a qualifying fixture, which has rounds but no named stage.
   ///

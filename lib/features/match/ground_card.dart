@@ -54,10 +54,11 @@ class GroundCard extends StatelessWidget {
           ),
         const SizedBox(width: AppSpacing.sm),
         Expanded(
-          child: Text(
+          // Ground and city together run long, and half a stadium name is not
+          // a place. It gives way by shrinking, not by being cut.
+          child: WholeText(
             '${ground.stadium} · ${ground.city}',
             maxLines: 1,
-            overflow: TextOverflow.ellipsis,
             style: AppTypography.labelMedium,
           ),
         ),

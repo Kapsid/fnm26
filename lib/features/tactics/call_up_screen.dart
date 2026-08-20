@@ -842,10 +842,11 @@ class _PlayerToggle extends StatelessWidget {
       title: Row(
         children: [
           Flexible(
-            child: Text(
+            // Naming a squad is the one screen where the manager MUST be able
+            // to read who he is picking, so the name is never cut.
+            child: WholeText(
               player.name,
               maxLines: 1,
-              overflow: TextOverflow.ellipsis,
               style: AppTypography.bodyMedium,
             ),
           ),
@@ -889,11 +890,9 @@ class _PlayerToggle extends StatelessWidget {
           // little more than a hundred pixels on a phone: age and value give
           // way to the badges, rather than running off the edge of the row.
           Flexible(
-            child: Text(
+            child: WholeText(
               l.tacticsAgeValue(player.age, _money(player.value)),
               maxLines: 1,
-              softWrap: false,
-              overflow: TextOverflow.ellipsis,
               style: AppTypography.labelSmall.copyWith(
                 color: AppColors.onSurfaceVariant,
               ),
