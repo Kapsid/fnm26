@@ -118,9 +118,25 @@ class Careers extends Table {
   IntColumn get staffScout => integer().withDefault(const Constant(0))();
   IntColumn get staffFitnessCoach => integer().withDefault(const Constant(0))();
 
-  /// What the side works on between windows.
-  TextColumn get trainingFocus =>
-      textEnum<TrainingFocus>().withDefault(const Constant('balanced'))();
+  /// WHO is in each job, as a [StaffCandidate] id, or null when the post is
+  /// vacant — or when the save predates named staff and knows only a tier.
+  ///
+  /// The TIER above stays the source of truth for every effect. This is the
+  /// person: the tier is recoverable from the id, but a save upgraded from
+  /// before this existed has a tier and nobody in the chair, and must keep
+  /// playing exactly as it did until the manager hires someone.
+  IntColumn get staffAssistantId => integer().nullable()();
+  IntColumn get staffScoutId => integer().nullable()();
+  IntColumn get staffFitnessCoachId => integer().nullable()();
+
+  /// The international window this save's squad was named for, or null when no
+  /// squad has been named yet.
+  ///
+  /// A squad used to be re-picked every few matches, which is not how national
+  /// football works: a manager names one squad for a window and lives with it.
+  /// Storing which window it was named for is what stops the hub asking again
+  /// in the middle of one.
+  TextColumn get callUpWindowId => text().nullable()();
 }
 
 /// A nation's Nations Cup league (0 = League A, 1 = League B, …) within its

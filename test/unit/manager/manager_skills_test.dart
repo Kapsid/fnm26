@@ -27,13 +27,6 @@ void main() {
       expect(Staff.capsToKnow(StaffTier.none, 20), 20);
     });
 
-    test('a balanced focus is a no-op whoever is running it', () {
-      for (final tier in StaffTier.values) {
-        expect(Training.injuryFactor(TrainingFocus.balanced, tier), 1.0);
-        expect(Training.familiarityGain(TrainingFocus.balanced, tier), 1.0);
-        expect(Training.youthTalentBonus(TrainingFocus.balanced, tier), 0.0);
-      }
-    });
   });
 
   group('earning and spending points', () {
@@ -160,48 +153,55 @@ void main() {
       expect(Staff.injuryFactor(StaffTier.elite), greaterThan(0.5));
     });
 
-    test(
-      'an assistant multiplies the training, and none of it is negative',
-      () {
-        expect(
-          Staff.trainingEffect(StaffTier.none),
-          lessThan(Staff.trainingEffect(StaffTier.elite)),
-        );
-        expect(Staff.trainingEffect(StaffTier.none), greaterThan(0));
-      },
-    );
+    test('an assistant multiplies the training, and nobody multiplies it by '
+        'nothing', () {
+      expect(
+        Staff.trainingEffect(StaffTier.none),
+        lessThan(Staff.trainingEffect(StaffTier.elite)),
+      );
+      // Zero, not a fraction. While the focus was a separate choice the
+      // manager made, an unassisted manager still ran his own session and 0.6
+      // was right. Now the assistant IS the training, so an empty job has to
+      // be worth nothing — otherwise hiring nobody quietly buys a bonus.
+      expect(Staff.trainingEffect(StaffTier.none), 0.0);
+    });
   });
 
-  group('training focus', () {
-    test('fitness cuts injuries, and a better assistant cuts more', () {
-      final none = Training.injuryFactor(TrainingFocus.fitness, StaffTier.none);
-      final elite = Training.injuryFactor(
-        TrainingFocus.fitness,
-        StaffTier.elite,
-      );
-      expect(none, lessThan(1));
-      expect(elite, lessThan(none));
-      expect(elite, greaterThan(0.5), reason: 'still a nudge, not immunity');
+  group('the assistant runs the training', () {
+    // The manager used to choose ONE of fitness, cohesion or youth work and
+    // get its full effect. The choice was noise — there was no reason to ever
+    // change it — so it is gone, and the assistant now does all three at half
+    // the old weight. A side with a good assistant is a little fitter, beds a
+    // shape in a little faster and finds a little more in its academy, and a
+    // side with no assistant at all is exactly where it always was.
+
+    test('no assistant is still perfectly neutral', () {
+      expect(Staff.assistantInjuryFactor(StaffTier.none), 1.0);
+      expect(Staff.familiarityGain(StaffTier.none), 1.0);
+      expect(Staff.youthTalentBonus(StaffTier.none), 0.0);
     });
 
-    test('cohesion beds a shape in faster', () {
+    test('an assistant cuts injuries, and a better one cuts more', () {
+      final basic = Staff.assistantInjuryFactor(StaffTier.basic);
+      final elite = Staff.assistantInjuryFactor(StaffTier.elite);
+      expect(basic, lessThan(1));
+      expect(elite, lessThan(basic));
+      expect(elite, greaterThan(0.5), reason: 'a nudge, not immunity');
+    });
+
+    test('an assistant beds a shape in faster', () {
+      expect(Staff.familiarityGain(StaffTier.good), greaterThan(1));
       expect(
-        Training.familiarityGain(TrainingFocus.cohesion, StaffTier.good),
-        greaterThan(1),
+        Staff.familiarityGain(StaffTier.elite),
+        greaterThan(Staff.familiarityGain(StaffTier.good)),
       );
     });
 
-    test('youth work adds to the academy rather than replacing it', () {
-      expect(
-        Training.youthTalentBonus(TrainingFocus.youth, StaffTier.good),
-        greaterThan(0),
-      );
-      // Each focus does its OWN thing only -- picking youth must not quietly
-      // also make the side fitter.
-      expect(
-        Training.injuryFactor(TrainingFocus.youth, StaffTier.elite),
-        1.0,
-      );
+    test('an assistant adds to the academy rather than replacing it', () {
+      expect(Staff.youthTalentBonus(StaffTier.good), greaterThan(0));
+      // Half of what picking youth work used to be worth: the manager no
+      // longer gives anything up to get it.
+      expect(Staff.youthTalentBonus(StaffTier.good), lessThan(0.05));
     });
   });
 }

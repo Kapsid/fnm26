@@ -44,10 +44,16 @@ abstract final class Staff {
     return total;
   }
 
-  /// How much of the training focus actually lands, as a multiplier. Without an
-  /// assistant a manager still trains his side; he just gets less out of it.
+  /// How much of the training actually lands, as a multiplier.
+  ///
+  /// [StaffTier.none] is ZERO rather than a fraction. It used to be 0.6 — a
+  /// manager with no assistant still trains his side, he just gets less out of
+  /// it — which was right while the focus was a separate CHOICE the manager
+  /// made. Now that the assistant IS the training, "nobody in the job" has to
+  /// mean "no effect", or hiring nobody would quietly buy a bonus and a save
+  /// from before any of this existed would stop playing the way it did.
   static double trainingEffect(StaffTier assistant) => switch (assistant) {
-    StaffTier.none => 0.6,
+    StaffTier.none => 0.0,
     StaffTier.basic => 1.0,
     StaffTier.good => 1.3,
     StaffTier.elite => 1.6,
@@ -74,43 +80,26 @@ abstract final class Staff {
     StaffTier.good => 0.87,
     StaffTier.elite => 0.78,
   };
-}
 
-/// What the side works on between windows.
-///
-/// International football is six or seven windows a year and a great deal of
-/// waiting. This is what the manager does with the waiting.
-enum TrainingFocus {
-  /// A bit of everything, which is to say nothing in particular.
-  balanced,
-
-  /// Conditioning. Fewer knocks, fresher legs.
-  fitness,
-
-  /// Drilling the shape until it is second nature.
-  cohesion,
-
-  /// Hours with the youngest players in the pool.
-  youth,
-}
-
-abstract final class Training {
-  /// The injury multiplier a focus earns, scaled by who is running it.
-  static double injuryFactor(TrainingFocus focus, StaffTier assistant) =>
-      focus == TrainingFocus.fitness
-      ? 1 - 0.12 * Staff.trainingEffect(assistant)
-      : 1.0;
+  /// What the ASSISTANT's conditioning work is worth on top of the fitness
+  /// coach's, as a multiplier on the injury rate.
+  ///
+  /// This, [familiarityGain] and [youthTalentBonus] are what became of the
+  /// training focus. The manager used to pick one of fitness, cohesion or
+  /// youth work and get its full effect; the choice was noise, because there
+  /// was never a reason to change it once made. The assistant now does all
+  /// three, each at HALF the old weight — so a manager gives nothing up to get
+  /// any of them, and a side with no assistant sits exactly where it always
+  /// did.
+  static double assistantInjuryFactor(StaffTier assistant) =>
+      1 - 0.06 * trainingEffect(assistant);
 
   /// The multiplier on how fast a shape beds in.
-  static double familiarityGain(TrainingFocus focus, StaffTier assistant) =>
-      focus == TrainingFocus.cohesion
-      ? 1 + 0.25 * Staff.trainingEffect(assistant)
-      : 1.0;
+  static double familiarityGain(StaffTier assistant) =>
+      1 + 0.12 * trainingEffect(assistant);
 
   /// Added to the youth-talent bonus, on top of the federation's academy
   /// spending and the manager's own eye for a young player.
-  static double youthTalentBonus(TrainingFocus focus, StaffTier assistant) =>
-      focus == TrainingFocus.youth
-      ? 0.05 * Staff.trainingEffect(assistant)
-      : 0.0;
+  static double youthTalentBonus(StaffTier assistant) =>
+      0.025 * trainingEffect(assistant);
 }

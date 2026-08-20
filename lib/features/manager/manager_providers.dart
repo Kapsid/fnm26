@@ -100,10 +100,7 @@ class ManagerService {
     _invalidate(careerId);
   }
 
-  Future<void> focusOn(int careerId, TrainingFocus focus) async {
-    await _ref.read(careerRepositoryProvider).setTrainingFocus(careerId, focus);
-    _invalidate(careerId);
-  }
+
 
   /// Everything a manager change touches. The skills feed morale, the academy
   /// and the injury rate, none of which recompute on their own — see

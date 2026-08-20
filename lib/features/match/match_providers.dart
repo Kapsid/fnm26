@@ -298,7 +298,7 @@ matchPreviewProvider = FutureProvider.autoDispose.family<MatchPreview?, int>((
     playerNationId:
         FederationFinance.injuryFactor(medical) *
         Staff.injuryFactor(career.staffFitnessCoach) *
-        Training.injuryFactor(career.trainingFocus, career.staffAssistant) *
+        Staff.assistantInjuryFactor(career.staffAssistant) *
         (1 + avgFatigue * 0.14),
   };
 

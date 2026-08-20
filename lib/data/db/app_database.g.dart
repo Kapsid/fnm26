@@ -1298,16 +1298,49 @@ class $CareersTable extends Careers with TableInfo<$CareersTable, CareerRow> {
     requiredDuringInsert: false,
     defaultValue: const Constant(0),
   );
+  static const VerificationMeta _staffAssistantIdMeta = const VerificationMeta(
+    'staffAssistantId',
+  );
   @override
-  late final GeneratedColumnWithTypeConverter<TrainingFocus, String>
-  trainingFocus = GeneratedColumn<String>(
-    'training_focus',
+  late final GeneratedColumn<int> staffAssistantId = GeneratedColumn<int>(
+    'staff_assistant_id',
     aliasedName,
-    false,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _staffScoutIdMeta = const VerificationMeta(
+    'staffScoutId',
+  );
+  @override
+  late final GeneratedColumn<int> staffScoutId = GeneratedColumn<int>(
+    'staff_scout_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _staffFitnessCoachIdMeta =
+      const VerificationMeta('staffFitnessCoachId');
+  @override
+  late final GeneratedColumn<int> staffFitnessCoachId = GeneratedColumn<int>(
+    'staff_fitness_coach_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _callUpWindowIdMeta = const VerificationMeta(
+    'callUpWindowId',
+  );
+  @override
+  late final GeneratedColumn<String> callUpWindowId = GeneratedColumn<String>(
+    'call_up_window_id',
+    aliasedName,
+    true,
     type: DriftSqlType.string,
     requiredDuringInsert: false,
-    defaultValue: const Constant('balanced'),
-  ).withConverter<TrainingFocus>($CareersTable.$convertertrainingFocus);
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -1329,7 +1362,10 @@ class $CareersTable extends Careers with TableInfo<$CareersTable, CareerRow> {
     staffAssistant,
     staffScout,
     staffFitnessCoach,
-    trainingFocus,
+    staffAssistantId,
+    staffScoutId,
+    staffFitnessCoachId,
+    callUpWindowId,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -1500,6 +1536,42 @@ class $CareersTable extends Careers with TableInfo<$CareersTable, CareerRow> {
         ),
       );
     }
+    if (data.containsKey('staff_assistant_id')) {
+      context.handle(
+        _staffAssistantIdMeta,
+        staffAssistantId.isAcceptableOrUnknown(
+          data['staff_assistant_id']!,
+          _staffAssistantIdMeta,
+        ),
+      );
+    }
+    if (data.containsKey('staff_scout_id')) {
+      context.handle(
+        _staffScoutIdMeta,
+        staffScoutId.isAcceptableOrUnknown(
+          data['staff_scout_id']!,
+          _staffScoutIdMeta,
+        ),
+      );
+    }
+    if (data.containsKey('staff_fitness_coach_id')) {
+      context.handle(
+        _staffFitnessCoachIdMeta,
+        staffFitnessCoachId.isAcceptableOrUnknown(
+          data['staff_fitness_coach_id']!,
+          _staffFitnessCoachIdMeta,
+        ),
+      );
+    }
+    if (data.containsKey('call_up_window_id')) {
+      context.handle(
+        _callUpWindowIdMeta,
+        callUpWindowId.isAcceptableOrUnknown(
+          data['call_up_window_id']!,
+          _callUpWindowIdMeta,
+        ),
+      );
+    }
     return context;
   }
 
@@ -1585,11 +1657,21 @@ class $CareersTable extends Careers with TableInfo<$CareersTable, CareerRow> {
         DriftSqlType.int,
         data['${effectivePrefix}staff_fitness_coach'],
       )!,
-      trainingFocus: $CareersTable.$convertertrainingFocus.fromSql(
-        attachedDatabase.typeMapping.read(
-          DriftSqlType.string,
-          data['${effectivePrefix}training_focus'],
-        )!,
+      staffAssistantId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}staff_assistant_id'],
+      ),
+      staffScoutId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}staff_scout_id'],
+      ),
+      staffFitnessCoachId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}staff_fitness_coach_id'],
+      ),
+      callUpWindowId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}call_up_window_id'],
       ),
     );
   }
@@ -1598,11 +1680,6 @@ class $CareersTable extends Careers with TableInfo<$CareersTable, CareerRow> {
   $CareersTable createAlias(String alias) {
     return $CareersTable(attachedDatabase, alias);
   }
-
-  static JsonTypeConverter2<TrainingFocus, String, String>
-  $convertertrainingFocus = const EnumNameConverter<TrainingFocus>(
-    TrainingFocus.values,
-  );
 }
 
 class CareerRow extends DataClass implements Insertable<CareerRow> {
@@ -1659,8 +1736,25 @@ class CareerRow extends DataClass implements Insertable<CareerRow> {
   final int staffScout;
   final int staffFitnessCoach;
 
-  /// What the side works on between windows.
-  final TrainingFocus trainingFocus;
+  /// WHO is in each job, as a [StaffCandidate] id, or null when the post is
+  /// vacant — or when the save predates named staff and knows only a tier.
+  ///
+  /// The TIER above stays the source of truth for every effect. This is the
+  /// person: the tier is recoverable from the id, but a save upgraded from
+  /// before this existed has a tier and nobody in the chair, and must keep
+  /// playing exactly as it did until the manager hires someone.
+  final int? staffAssistantId;
+  final int? staffScoutId;
+  final int? staffFitnessCoachId;
+
+  /// The international window this save's squad was named for, or null when no
+  /// squad has been named yet.
+  ///
+  /// A squad used to be re-picked every few matches, which is not how national
+  /// football works: a manager names one squad for a window and lives with it.
+  /// Storing which window it was named for is what stops the hub asking again
+  /// in the middle of one.
+  final String? callUpWindowId;
   const CareerRow({
     required this.id,
     required this.managerName,
@@ -1681,7 +1775,10 @@ class CareerRow extends DataClass implements Insertable<CareerRow> {
     required this.staffAssistant,
     required this.staffScout,
     required this.staffFitnessCoach,
-    required this.trainingFocus,
+    this.staffAssistantId,
+    this.staffScoutId,
+    this.staffFitnessCoachId,
+    this.callUpWindowId,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -1711,10 +1808,17 @@ class CareerRow extends DataClass implements Insertable<CareerRow> {
     map['staff_assistant'] = Variable<int>(staffAssistant);
     map['staff_scout'] = Variable<int>(staffScout);
     map['staff_fitness_coach'] = Variable<int>(staffFitnessCoach);
-    {
-      map['training_focus'] = Variable<String>(
-        $CareersTable.$convertertrainingFocus.toSql(trainingFocus),
-      );
+    if (!nullToAbsent || staffAssistantId != null) {
+      map['staff_assistant_id'] = Variable<int>(staffAssistantId);
+    }
+    if (!nullToAbsent || staffScoutId != null) {
+      map['staff_scout_id'] = Variable<int>(staffScoutId);
+    }
+    if (!nullToAbsent || staffFitnessCoachId != null) {
+      map['staff_fitness_coach_id'] = Variable<int>(staffFitnessCoachId);
+    }
+    if (!nullToAbsent || callUpWindowId != null) {
+      map['call_up_window_id'] = Variable<String>(callUpWindowId);
     }
     return map;
   }
@@ -1746,7 +1850,18 @@ class CareerRow extends DataClass implements Insertable<CareerRow> {
       staffAssistant: Value(staffAssistant),
       staffScout: Value(staffScout),
       staffFitnessCoach: Value(staffFitnessCoach),
-      trainingFocus: Value(trainingFocus),
+      staffAssistantId: staffAssistantId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(staffAssistantId),
+      staffScoutId: staffScoutId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(staffScoutId),
+      staffFitnessCoachId: staffFitnessCoachId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(staffFitnessCoachId),
+      callUpWindowId: callUpWindowId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(callUpWindowId),
     );
   }
 
@@ -1777,9 +1892,12 @@ class CareerRow extends DataClass implements Insertable<CareerRow> {
       staffAssistant: serializer.fromJson<int>(json['staffAssistant']),
       staffScout: serializer.fromJson<int>(json['staffScout']),
       staffFitnessCoach: serializer.fromJson<int>(json['staffFitnessCoach']),
-      trainingFocus: $CareersTable.$convertertrainingFocus.fromJson(
-        serializer.fromJson<String>(json['trainingFocus']),
+      staffAssistantId: serializer.fromJson<int?>(json['staffAssistantId']),
+      staffScoutId: serializer.fromJson<int?>(json['staffScoutId']),
+      staffFitnessCoachId: serializer.fromJson<int?>(
+        json['staffFitnessCoachId'],
       ),
+      callUpWindowId: serializer.fromJson<String?>(json['callUpWindowId']),
     );
   }
   @override
@@ -1805,9 +1923,10 @@ class CareerRow extends DataClass implements Insertable<CareerRow> {
       'staffAssistant': serializer.toJson<int>(staffAssistant),
       'staffScout': serializer.toJson<int>(staffScout),
       'staffFitnessCoach': serializer.toJson<int>(staffFitnessCoach),
-      'trainingFocus': serializer.toJson<String>(
-        $CareersTable.$convertertrainingFocus.toJson(trainingFocus),
-      ),
+      'staffAssistantId': serializer.toJson<int?>(staffAssistantId),
+      'staffScoutId': serializer.toJson<int?>(staffScoutId),
+      'staffFitnessCoachId': serializer.toJson<int?>(staffFitnessCoachId),
+      'callUpWindowId': serializer.toJson<String?>(callUpWindowId),
     };
   }
 
@@ -1831,7 +1950,10 @@ class CareerRow extends DataClass implements Insertable<CareerRow> {
     int? staffAssistant,
     int? staffScout,
     int? staffFitnessCoach,
-    TrainingFocus? trainingFocus,
+    Value<int?> staffAssistantId = const Value.absent(),
+    Value<int?> staffScoutId = const Value.absent(),
+    Value<int?> staffFitnessCoachId = const Value.absent(),
+    Value<String?> callUpWindowId = const Value.absent(),
   }) => CareerRow(
     id: id ?? this.id,
     managerName: managerName ?? this.managerName,
@@ -1854,7 +1976,16 @@ class CareerRow extends DataClass implements Insertable<CareerRow> {
     staffAssistant: staffAssistant ?? this.staffAssistant,
     staffScout: staffScout ?? this.staffScout,
     staffFitnessCoach: staffFitnessCoach ?? this.staffFitnessCoach,
-    trainingFocus: trainingFocus ?? this.trainingFocus,
+    staffAssistantId: staffAssistantId.present
+        ? staffAssistantId.value
+        : this.staffAssistantId,
+    staffScoutId: staffScoutId.present ? staffScoutId.value : this.staffScoutId,
+    staffFitnessCoachId: staffFitnessCoachId.present
+        ? staffFitnessCoachId.value
+        : this.staffFitnessCoachId,
+    callUpWindowId: callUpWindowId.present
+        ? callUpWindowId.value
+        : this.callUpWindowId,
   );
   CareerRow copyWithCompanion(CareersCompanion data) {
     return CareerRow(
@@ -1903,9 +2034,18 @@ class CareerRow extends DataClass implements Insertable<CareerRow> {
       staffFitnessCoach: data.staffFitnessCoach.present
           ? data.staffFitnessCoach.value
           : this.staffFitnessCoach,
-      trainingFocus: data.trainingFocus.present
-          ? data.trainingFocus.value
-          : this.trainingFocus,
+      staffAssistantId: data.staffAssistantId.present
+          ? data.staffAssistantId.value
+          : this.staffAssistantId,
+      staffScoutId: data.staffScoutId.present
+          ? data.staffScoutId.value
+          : this.staffScoutId,
+      staffFitnessCoachId: data.staffFitnessCoachId.present
+          ? data.staffFitnessCoachId.value
+          : this.staffFitnessCoachId,
+      callUpWindowId: data.callUpWindowId.present
+          ? data.callUpWindowId.value
+          : this.callUpWindowId,
     );
   }
 
@@ -1931,13 +2071,16 @@ class CareerRow extends DataClass implements Insertable<CareerRow> {
           ..write('staffAssistant: $staffAssistant, ')
           ..write('staffScout: $staffScout, ')
           ..write('staffFitnessCoach: $staffFitnessCoach, ')
-          ..write('trainingFocus: $trainingFocus')
+          ..write('staffAssistantId: $staffAssistantId, ')
+          ..write('staffScoutId: $staffScoutId, ')
+          ..write('staffFitnessCoachId: $staffFitnessCoachId, ')
+          ..write('callUpWindowId: $callUpWindowId')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(
+  int get hashCode => Object.hashAll([
     id,
     managerName,
     nationId,
@@ -1957,8 +2100,11 @@ class CareerRow extends DataClass implements Insertable<CareerRow> {
     staffAssistant,
     staffScout,
     staffFitnessCoach,
-    trainingFocus,
-  );
+    staffAssistantId,
+    staffScoutId,
+    staffFitnessCoachId,
+    callUpWindowId,
+  ]);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -1982,7 +2128,10 @@ class CareerRow extends DataClass implements Insertable<CareerRow> {
           other.staffAssistant == this.staffAssistant &&
           other.staffScout == this.staffScout &&
           other.staffFitnessCoach == this.staffFitnessCoach &&
-          other.trainingFocus == this.trainingFocus);
+          other.staffAssistantId == this.staffAssistantId &&
+          other.staffScoutId == this.staffScoutId &&
+          other.staffFitnessCoachId == this.staffFitnessCoachId &&
+          other.callUpWindowId == this.callUpWindowId);
 }
 
 class CareersCompanion extends UpdateCompanion<CareerRow> {
@@ -2005,7 +2154,10 @@ class CareersCompanion extends UpdateCompanion<CareerRow> {
   final Value<int> staffAssistant;
   final Value<int> staffScout;
   final Value<int> staffFitnessCoach;
-  final Value<TrainingFocus> trainingFocus;
+  final Value<int?> staffAssistantId;
+  final Value<int?> staffScoutId;
+  final Value<int?> staffFitnessCoachId;
+  final Value<String?> callUpWindowId;
   const CareersCompanion({
     this.id = const Value.absent(),
     this.managerName = const Value.absent(),
@@ -2026,7 +2178,10 @@ class CareersCompanion extends UpdateCompanion<CareerRow> {
     this.staffAssistant = const Value.absent(),
     this.staffScout = const Value.absent(),
     this.staffFitnessCoach = const Value.absent(),
-    this.trainingFocus = const Value.absent(),
+    this.staffAssistantId = const Value.absent(),
+    this.staffScoutId = const Value.absent(),
+    this.staffFitnessCoachId = const Value.absent(),
+    this.callUpWindowId = const Value.absent(),
   });
   CareersCompanion.insert({
     this.id = const Value.absent(),
@@ -2048,7 +2203,10 @@ class CareersCompanion extends UpdateCompanion<CareerRow> {
     this.staffAssistant = const Value.absent(),
     this.staffScout = const Value.absent(),
     this.staffFitnessCoach = const Value.absent(),
-    this.trainingFocus = const Value.absent(),
+    this.staffAssistantId = const Value.absent(),
+    this.staffScoutId = const Value.absent(),
+    this.staffFitnessCoachId = const Value.absent(),
+    this.callUpWindowId = const Value.absent(),
   }) : managerName = Value(managerName),
        nationId = Value(nationId),
        rngSeed = Value(rngSeed),
@@ -2074,7 +2232,10 @@ class CareersCompanion extends UpdateCompanion<CareerRow> {
     Expression<int>? staffAssistant,
     Expression<int>? staffScout,
     Expression<int>? staffFitnessCoach,
-    Expression<String>? trainingFocus,
+    Expression<int>? staffAssistantId,
+    Expression<int>? staffScoutId,
+    Expression<int>? staffFitnessCoachId,
+    Expression<String>? callUpWindowId,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -2098,7 +2259,11 @@ class CareersCompanion extends UpdateCompanion<CareerRow> {
       if (staffAssistant != null) 'staff_assistant': staffAssistant,
       if (staffScout != null) 'staff_scout': staffScout,
       if (staffFitnessCoach != null) 'staff_fitness_coach': staffFitnessCoach,
-      if (trainingFocus != null) 'training_focus': trainingFocus,
+      if (staffAssistantId != null) 'staff_assistant_id': staffAssistantId,
+      if (staffScoutId != null) 'staff_scout_id': staffScoutId,
+      if (staffFitnessCoachId != null)
+        'staff_fitness_coach_id': staffFitnessCoachId,
+      if (callUpWindowId != null) 'call_up_window_id': callUpWindowId,
     });
   }
 
@@ -2122,7 +2287,10 @@ class CareersCompanion extends UpdateCompanion<CareerRow> {
     Value<int>? staffAssistant,
     Value<int>? staffScout,
     Value<int>? staffFitnessCoach,
-    Value<TrainingFocus>? trainingFocus,
+    Value<int?>? staffAssistantId,
+    Value<int?>? staffScoutId,
+    Value<int?>? staffFitnessCoachId,
+    Value<String?>? callUpWindowId,
   }) {
     return CareersCompanion(
       id: id ?? this.id,
@@ -2145,7 +2313,10 @@ class CareersCompanion extends UpdateCompanion<CareerRow> {
       staffAssistant: staffAssistant ?? this.staffAssistant,
       staffScout: staffScout ?? this.staffScout,
       staffFitnessCoach: staffFitnessCoach ?? this.staffFitnessCoach,
-      trainingFocus: trainingFocus ?? this.trainingFocus,
+      staffAssistantId: staffAssistantId ?? this.staffAssistantId,
+      staffScoutId: staffScoutId ?? this.staffScoutId,
+      staffFitnessCoachId: staffFitnessCoachId ?? this.staffFitnessCoachId,
+      callUpWindowId: callUpWindowId ?? this.callUpWindowId,
     );
   }
 
@@ -2211,10 +2382,17 @@ class CareersCompanion extends UpdateCompanion<CareerRow> {
     if (staffFitnessCoach.present) {
       map['staff_fitness_coach'] = Variable<int>(staffFitnessCoach.value);
     }
-    if (trainingFocus.present) {
-      map['training_focus'] = Variable<String>(
-        $CareersTable.$convertertrainingFocus.toSql(trainingFocus.value),
-      );
+    if (staffAssistantId.present) {
+      map['staff_assistant_id'] = Variable<int>(staffAssistantId.value);
+    }
+    if (staffScoutId.present) {
+      map['staff_scout_id'] = Variable<int>(staffScoutId.value);
+    }
+    if (staffFitnessCoachId.present) {
+      map['staff_fitness_coach_id'] = Variable<int>(staffFitnessCoachId.value);
+    }
+    if (callUpWindowId.present) {
+      map['call_up_window_id'] = Variable<String>(callUpWindowId.value);
     }
     return map;
   }
@@ -2241,7 +2419,10 @@ class CareersCompanion extends UpdateCompanion<CareerRow> {
           ..write('staffAssistant: $staffAssistant, ')
           ..write('staffScout: $staffScout, ')
           ..write('staffFitnessCoach: $staffFitnessCoach, ')
-          ..write('trainingFocus: $trainingFocus')
+          ..write('staffAssistantId: $staffAssistantId, ')
+          ..write('staffScoutId: $staffScoutId, ')
+          ..write('staffFitnessCoachId: $staffFitnessCoachId, ')
+          ..write('callUpWindowId: $callUpWindowId')
           ..write(')'))
         .toString();
   }
@@ -15215,7 +15396,10 @@ typedef $$CareersTableCreateCompanionBuilder =
       Value<int> staffAssistant,
       Value<int> staffScout,
       Value<int> staffFitnessCoach,
-      Value<TrainingFocus> trainingFocus,
+      Value<int?> staffAssistantId,
+      Value<int?> staffScoutId,
+      Value<int?> staffFitnessCoachId,
+      Value<String?> callUpWindowId,
     });
 typedef $$CareersTableUpdateCompanionBuilder =
     CareersCompanion Function({
@@ -15238,7 +15422,10 @@ typedef $$CareersTableUpdateCompanionBuilder =
       Value<int> staffAssistant,
       Value<int> staffScout,
       Value<int> staffFitnessCoach,
-      Value<TrainingFocus> trainingFocus,
+      Value<int?> staffAssistantId,
+      Value<int?> staffScoutId,
+      Value<int?> staffFitnessCoachId,
+      Value<String?> callUpWindowId,
     });
 
 final class $$CareersTableReferences
@@ -15884,10 +16071,24 @@ class $$CareersTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnWithTypeConverterFilters<TrainingFocus, TrainingFocus, String>
-  get trainingFocus => $composableBuilder(
-    column: $table.trainingFocus,
-    builder: (column) => ColumnWithTypeConverterFilters(column),
+  ColumnFilters<int> get staffAssistantId => $composableBuilder(
+    column: $table.staffAssistantId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get staffScoutId => $composableBuilder(
+    column: $table.staffScoutId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get staffFitnessCoachId => $composableBuilder(
+    column: $table.staffFitnessCoachId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get callUpWindowId => $composableBuilder(
+    column: $table.callUpWindowId,
+    builder: (column) => ColumnFilters(column),
   );
 
   $$NationsTableFilterComposer get nationId {
@@ -16690,8 +16891,23 @@ class $$CareersTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get trainingFocus => $composableBuilder(
-    column: $table.trainingFocus,
+  ColumnOrderings<int> get staffAssistantId => $composableBuilder(
+    column: $table.staffAssistantId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get staffScoutId => $composableBuilder(
+    column: $table.staffScoutId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get staffFitnessCoachId => $composableBuilder(
+    column: $table.staffFitnessCoachId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get callUpWindowId => $composableBuilder(
+    column: $table.callUpWindowId,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -16808,11 +17024,25 @@ class $$CareersTableAnnotationComposer
     builder: (column) => column,
   );
 
-  GeneratedColumnWithTypeConverter<TrainingFocus, String> get trainingFocus =>
-      $composableBuilder(
-        column: $table.trainingFocus,
-        builder: (column) => column,
-      );
+  GeneratedColumn<int> get staffAssistantId => $composableBuilder(
+    column: $table.staffAssistantId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get staffScoutId => $composableBuilder(
+    column: $table.staffScoutId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get staffFitnessCoachId => $composableBuilder(
+    column: $table.staffFitnessCoachId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get callUpWindowId => $composableBuilder(
+    column: $table.callUpWindowId,
+    builder: (column) => column,
+  );
 
   $$NationsTableAnnotationComposer get nationId {
     final $$NationsTableAnnotationComposer composer = $composerBuilder(
@@ -17594,7 +17824,10 @@ class $$CareersTableTableManager
                 Value<int> staffAssistant = const Value.absent(),
                 Value<int> staffScout = const Value.absent(),
                 Value<int> staffFitnessCoach = const Value.absent(),
-                Value<TrainingFocus> trainingFocus = const Value.absent(),
+                Value<int?> staffAssistantId = const Value.absent(),
+                Value<int?> staffScoutId = const Value.absent(),
+                Value<int?> staffFitnessCoachId = const Value.absent(),
+                Value<String?> callUpWindowId = const Value.absent(),
               }) => CareersCompanion(
                 id: id,
                 managerName: managerName,
@@ -17615,7 +17848,10 @@ class $$CareersTableTableManager
                 staffAssistant: staffAssistant,
                 staffScout: staffScout,
                 staffFitnessCoach: staffFitnessCoach,
-                trainingFocus: trainingFocus,
+                staffAssistantId: staffAssistantId,
+                staffScoutId: staffScoutId,
+                staffFitnessCoachId: staffFitnessCoachId,
+                callUpWindowId: callUpWindowId,
               ),
           createCompanionCallback:
               ({
@@ -17638,7 +17874,10 @@ class $$CareersTableTableManager
                 Value<int> staffAssistant = const Value.absent(),
                 Value<int> staffScout = const Value.absent(),
                 Value<int> staffFitnessCoach = const Value.absent(),
-                Value<TrainingFocus> trainingFocus = const Value.absent(),
+                Value<int?> staffAssistantId = const Value.absent(),
+                Value<int?> staffScoutId = const Value.absent(),
+                Value<int?> staffFitnessCoachId = const Value.absent(),
+                Value<String?> callUpWindowId = const Value.absent(),
               }) => CareersCompanion.insert(
                 id: id,
                 managerName: managerName,
@@ -17659,7 +17898,10 @@ class $$CareersTableTableManager
                 staffAssistant: staffAssistant,
                 staffScout: staffScout,
                 staffFitnessCoach: staffFitnessCoach,
-                trainingFocus: trainingFocus,
+                staffAssistantId: staffAssistantId,
+                staffScoutId: staffScoutId,
+                staffFitnessCoachId: staffFitnessCoachId,
+                callUpWindowId: callUpWindowId,
               ),
           withReferenceMapper: (p0) => p0
               .map(

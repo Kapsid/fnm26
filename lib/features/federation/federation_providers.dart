@@ -38,10 +38,7 @@ youthBonusByCycleProvider = FutureProvider.autoDispose.family<Map<int, double>, 
   if (career != null) {
     final fromManager =
         ManagerSkills.youthTalentBonus(career.skillYouthDevelopment) +
-        Training.youthTalentBonus(
-          career.trainingFocus,
-          career.staffAssistant,
-        );
+        Staff.youthTalentBonus(career.staffAssistant);
     if (fromManager != 0) {
       for (var cycle = 0; cycle <= career.cyclePointer; cycle++) {
         bonuses[cycle] = (bonuses[cycle] ?? 0) + fromManager;

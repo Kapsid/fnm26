@@ -81,8 +81,6 @@ abstract interface class CareerRepository {
   /// Hires (or lets go of) one member of staff.
   Future<void> setStaff(int id, StaffRole role, StaffTier tier);
 
-  /// Sets what the side works on between windows.
-  Future<void> setTrainingFocus(int id, TrainingFocus focus);
 
   /// Marks the Y feed read up to [date] — the in-game date of its newest post.
   Future<void> setYReadAt(int id, DateTime date);

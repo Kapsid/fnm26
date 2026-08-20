@@ -80,7 +80,7 @@ class AppDatabase extends _$AppDatabase {
   /// full set of upgrade paths from it — see `schema_migration_test.dart`.
   /// A hand-written list of paths is a step somebody forgets on the bump that
   /// matters.
-  static const int currentSchemaVersion = 43;
+  static const int currentSchemaVersion = 44;
 
   @override
   int get schemaVersion => currentSchemaVersion;
@@ -201,6 +201,29 @@ class AppDatabase extends _$AppDatabase {
           ]) {
             await m.addColumn(schema.careers, column);
           }
+        },
+        // 43 → 44 names the staff and pins the call-up window.
+        //
+        // The staff columns are additive and nullable: a save that already has
+        // a tier in a job keeps the tier and has nobody in the chair, so every
+        // effect reads exactly as it did until the manager hires a person.
+        //
+        // The training focus goes the other way — it is DROPPED. The choice
+        // was noise (there was never a reason to change it once made), so the
+        // assistant now does all three of its jobs at half weight and the
+        // column has nothing left to say. A dropped column needs the table
+        // rebuilt, which is what alterTable does here; every other column and
+        // every row survives it.
+        from43To44: (m, schema) async {
+          for (final column in [
+            schema.careers.staffAssistantId,
+            schema.careers.staffScoutId,
+            schema.careers.staffFitnessCoachId,
+            schema.careers.callUpWindowId,
+          ]) {
+            await m.addColumn(schema.careers, column);
+          }
+          await m.alterTable(TableMigration(schema.careers));
         },
       )(m, from, to);
     },

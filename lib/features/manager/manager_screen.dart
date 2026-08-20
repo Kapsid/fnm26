@@ -49,8 +49,6 @@ class ManagerScreen extends ConsumerWidget {
                   _SkillsCard(careerId: careerId, view: view),
                   const SizedBox(height: AppSpacing.md),
                   _StaffCard(careerId: careerId, view: view),
-                  const SizedBox(height: AppSpacing.md),
-                  _TrainingCard(careerId: careerId, view: view),
                   const SizedBox(height: AppSpacing.xl),
                 ],
               ),
@@ -92,19 +90,7 @@ String _tierName(AppLocalizations l, StaffTier t) => switch (t) {
   StaffTier.elite => l.managerTierElite,
 };
 
-String _focusName(AppLocalizations l, TrainingFocus f) => switch (f) {
-  TrainingFocus.balanced => l.managerFocusBalanced,
-  TrainingFocus.fitness => l.managerFocusFitness,
-  TrainingFocus.cohesion => l.managerFocusCohesion,
-  TrainingFocus.youth => l.managerFocusYouth,
-};
 
-String _focusBlurb(AppLocalizations l, TrainingFocus f) => switch (f) {
-  TrainingFocus.balanced => l.managerFocusBalancedBlurb,
-  TrainingFocus.fitness => l.managerFocusFitnessBlurb,
-  TrainingFocus.cohesion => l.managerFocusCohesionBlurb,
-  TrainingFocus.youth => l.managerFocusYouthBlurb,
-};
 
 class _SkillsCard extends ConsumerWidget {
   const _SkillsCard({required this.careerId, required this.view});
@@ -301,57 +287,3 @@ class _StaffCard extends ConsumerWidget {
   }
 }
 
-class _TrainingCard extends ConsumerWidget {
-  const _TrainingCard({required this.careerId, required this.view});
-
-  final int careerId;
-  final ManagerView view;
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final l = AppLocalizations.of(context);
-    return AppCard(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Text(
-            l.managerTraining,
-            style: AppTypography.labelMedium.copyWith(
-              color: AppColors.primary,
-            ),
-          ),
-          const SizedBox(height: AppSpacing.xs),
-          Text(
-            l.managerTrainingBlurb,
-            style: AppTypography.labelSmall.copyWith(
-              color: AppColors.onSurfaceVariant,
-            ),
-          ),
-          const SizedBox(height: AppSpacing.md),
-          for (final focus in TrainingFocus.values)
-            RadioListTile<TrainingFocus>(
-              value: focus,
-              // ignore: deprecated_member_use - the Radio group API this
-              // replaces is not in the Flutter version this project pins.
-              groupValue: view.career.trainingFocus,
-              // ignore: deprecated_member_use - as above.
-              onChanged: (picked) {
-                if (picked != null) {
-                  ref.read(managerServiceProvider).focusOn(careerId, picked);
-                }
-              },
-              contentPadding: EdgeInsets.zero,
-              dense: true,
-              title: Text(_focusName(l, focus)),
-              subtitle: Text(
-                _focusBlurb(l, focus),
-                style: AppTypography.labelSmall.copyWith(
-                  color: AppColors.onSurfaceVariant,
-                ),
-              ),
-            ),
-        ],
-      ),
-    );
-  }
-}

@@ -60,7 +60,14 @@ abstract class Career with _$Career {
     @Default(StaffTier.none) StaffTier staffScout,
     @Default(StaffTier.none) StaffTier staffFitnessCoach,
 
-    /// What the side works on between windows.
-    @Default(TrainingFocus.balanced) TrainingFocus trainingFocus,
+    /// WHO is in each job, or null when the post is vacant. The tier above
+    /// stays the source of truth for every effect; this is the person.
+    int? staffAssistantId,
+    int? staffScoutId,
+    int? staffFitnessCoachId,
+
+    /// The international window the current squad was named for, or null when
+    /// no squad has been named yet.
+    String? callUpWindowId,
   }) = _Career;
 }

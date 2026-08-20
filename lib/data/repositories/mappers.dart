@@ -99,6 +99,9 @@ extension CareerRowMapper on CareerRow {
           0,
           StaffTier.values.length - 1,
         )],
-    trainingFocus: trainingFocus,
+    staffAssistantId: staffAssistantId,
+    staffScoutId: staffScoutId,
+    staffFitnessCoachId: staffFitnessCoachId,
+    callUpWindowId: callUpWindowId,
   );
 }
