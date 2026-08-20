@@ -509,7 +509,7 @@ abstract class AppLocalizations {
   /// Bottom navigation label for the careers tab.
   ///
   /// In en, this message translates to:
-  /// **'Careers'**
+  /// **'My Career'**
   String get navCareers;
 
   /// App-bar title on the settings screen.
@@ -2696,10 +2696,10 @@ abstract class AppLocalizations {
   /// **'SLOTS  {used}/{limit}'**
   String careerSlotsCount(int used, int limit);
 
-  /// Note that Pro allows up to five saves.
+  /// Note that Pro allows up to ten saves.
   ///
   /// In en, this message translates to:
-  /// **'Pro: up to 5'**
+  /// **'Pro: up to 10'**
   String get careerProUpTo5;
 
   /// Marker for the current save.
@@ -2717,7 +2717,7 @@ abstract class AppLocalizations {
   /// Shown when slots are full, prompting Pro.
   ///
   /// In en, this message translates to:
-  /// **'Slots full — go Pro for 5'**
+  /// **'Slots full — go Pro for 10'**
   String get careerSlotsFullGoPro;
 
   /// Button starting a new game.
@@ -4685,13 +4685,13 @@ abstract class AppLocalizations {
   /// Paywall benefit line.
   ///
   /// In en, this message translates to:
-  /// **'Five save slots instead of two'**
+  /// **'10 save slots instead of 3'**
   String get paywallBenefitSaveSlots;
 
   /// Paywall benefit line.
   ///
   /// In en, this message translates to:
-  /// **'Endless careers, forever'**
+  /// **'Unlimited careers, forever'**
   String get paywallBenefitEndless;
 
   /// Shown on the paywall once premium is already unlocked.
@@ -10854,7 +10854,7 @@ abstract class AppLocalizations {
   /// Premium gate benefit.
   ///
   /// In en, this message translates to:
-  /// **'Endless career — every cycle from here on'**
+  /// **'Unlimited careers — every cycle from here on'**
   String get gateBenefitEndless;
 
   /// Premium gate benefit.
@@ -10866,7 +10866,7 @@ abstract class AppLocalizations {
   /// Premium gate benefit.
   ///
   /// In en, this message translates to:
-  /// **'Every save slot'**
+  /// **'10 save slots instead of 3'**
   String get gateBenefitSaves;
 
   /// Premium gate benefit.
@@ -10878,7 +10878,7 @@ abstract class AppLocalizations {
   /// Premium gate benefit.
   ///
   /// In en, this message translates to:
-  /// **'No subscription, no ads, no account, works offline'**
+  /// **'Works offline — no subscription, no ads, no account'**
   String get gateBenefitOffline;
 
   /// Premium gate: the line above the price.

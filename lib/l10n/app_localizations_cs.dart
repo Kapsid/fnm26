@@ -235,7 +235,7 @@ class AppLocalizationsCs extends AppLocalizations {
   String get navStandings => 'Tabulky';
 
   @override
-  String get navCareers => 'Kariéry';
+  String get navCareers => 'Moje kariéra';
 
   @override
   String get settingsTitle => 'NASTAVENÍ';
@@ -1544,7 +1544,7 @@ class AppLocalizationsCs extends AppLocalizations {
   }
 
   @override
-  String get careerProUpTo5 => 'Pro: až 5';
+  String get careerProUpTo5 => 'Pro: až 10';
 
   @override
   String get careerThisSave => 'toto uložení';
@@ -1553,7 +1553,7 @@ class AppLocalizationsCs extends AppLocalizations {
   String get careerSlotsFull => 'Pozice plné';
 
   @override
-  String get careerSlotsFullGoPro => 'Pozice plné — pořiďte si Pro pro 5';
+  String get careerSlotsFullGoPro => 'Pozice plné — pořiďte si Pro pro 10';
 
   @override
   String get careerNewGame => 'Nová hra';
@@ -2758,10 +2758,10 @@ class AppLocalizationsCs extends AppLocalizations {
   String get paywallBenefitEveryNation => 'Spravujte každou zemi na světě';
 
   @override
-  String get paywallBenefitSaveSlots => 'Pět pozic pro uložení místo dvou';
+  String get paywallBenefitSaveSlots => '10 pozic pro uložení místo 3';
 
   @override
-  String get paywallBenefitEndless => 'Nekonečné kariéry, navždy';
+  String get paywallBenefitEndless => 'Neomezené kariéry, navždy';
 
   @override
   String get paywallUnlocked => 'Prémiová verze je odemčená — užijte si ji!';
@@ -6794,20 +6794,20 @@ class AppLocalizationsCs extends AppLocalizations {
       'Čtyři roky, kontinentální šampionát a mistrovství světa – to byla část zdarma a nic v ní nechybělo. Za jednorázovou platbu pokračujte v této kariéře dál.';
 
   @override
-  String get gateBenefitEndless => 'Nekonečná kariéra – všechny další cykly';
+  String get gateBenefitEndless => 'Neomezené kariéry – všechny další cykly';
 
   @override
   String get gateBenefitNations => 'Můžete vést kteroukoli reprezentaci světa';
 
   @override
-  String get gateBenefitSaves => 'Všechny pozice pro uložení';
+  String get gateBenefitSaves => '10 pozic pro uložení místo 3';
 
   @override
   String get gateBenefitUpdates => 'Všechny budoucí aktualizace v ceně';
 
   @override
   String get gateBenefitOffline =>
-      'Žádné předplatné, žádné reklamy, žádný účet, funguje offline';
+      'Funguje offline – bez předplatného, reklam a účtu';
 
   @override
   String get gatePriceLead => 'Jedna platba, navždy';

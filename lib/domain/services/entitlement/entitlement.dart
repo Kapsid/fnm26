@@ -17,5 +17,9 @@ final premiumUnlockedProvider = StateProvider<bool>((ref) => true);
 bool nationSelectable(Nation nation, {required bool premiumUnlocked}) =>
     nation.isFreeDemo || premiumUnlocked;
 
-/// Maximum number of concurrent save games: 2 on the free tier, 5 with Pro.
-int maxSaveSlots({required bool premiumUnlocked}) => premiumUnlocked ? 5 : 2;
+/// Maximum number of concurrent save games: 3 on the free tier, 10 with Pro.
+///
+/// Three is enough to keep a second nation and an experiment alongside the
+/// real save, which is what a manager wants before he has decided to buy; ten
+/// is past anyone's need, which is the point of it.
+int maxSaveSlots({required bool premiumUnlocked}) => premiumUnlocked ? 10 : 3;

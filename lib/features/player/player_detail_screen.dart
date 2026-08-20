@@ -10,13 +10,12 @@ import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/entities/player.dart';
-import 'package:fnm/domain/services/club/club_history.dart';
 import 'package:fnm/domain/services/player/player_lifecycle.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
 import 'package:fnm/features/awards/award_providers.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/federation/federation_providers.dart';
-import 'package:fnm/features/player/club_history_providers.dart';
+import 'package:fnm/features/player/club_history_card.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/domain/services/player/player_traits.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
@@ -308,7 +307,7 @@ class PlayerDetailScreen extends ConsumerWidget {
                   ],
                 ),
               ),
-              _ClubHistoryCard(careerId: careerId, playerId: p.id),
+              ClubHistoryCard(careerId: careerId, playerId: p.id),
               _TrophyCabinet(careerId: careerId, playerId: p.id),
               const SizedBox(height: AppSpacing.md),
               Text(
@@ -556,88 +555,6 @@ class _RingPainter extends CustomPainter {
 
 /// One match on the player's history list: date, opponent, the scoreline from
 /// this player's perspective (win/draw/loss coloured), any goals, and the mark.
-/// Where a player has played, season by season, collapsed into spells.
-///
-/// Clubs follow a player's rating, so this is the transfer record the save has
-/// been writing all along without ever showing it: the move up after a good
-/// cycle, the drop down as he fades, the years he stayed put.
-class _ClubHistoryCard extends ConsumerWidget {
-  const _ClubHistoryCard({required this.careerId, required this.playerId});
-
-  final int careerId;
-  final int playerId;
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final l = AppLocalizations.of(context);
-    final spells =
-        ref
-            .watch(
-              clubHistoryProvider((
-                careerId: careerId,
-                playerId: playerId,
-              )),
-            )
-            .valueOrNull ??
-        const <ClubSpell>[];
-    // One spell is just the club already shown at the top of the card.
-    if (spells.length < 2) return const SizedBox.shrink();
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const SizedBox(height: AppSpacing.md),
-        Text(
-          l.playerClubHistory,
-          style: AppTypography.labelMedium.copyWith(color: AppColors.primary),
-        ),
-        const SizedBox(height: AppSpacing.sm),
-        AppCard(
-          padding: EdgeInsets.zero,
-          child: Column(
-            children: [
-              // Newest first — where he is now, then how he got here.
-              for (final s in spells.reversed)
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: AppSpacing.md,
-                    vertical: AppSpacing.sm,
-                  ),
-                  child: Row(
-                    children: [
-                      SizedBox(
-                        width: 74,
-                        child: Text(
-                          s.fromYear == s.toYear
-                              ? '${s.fromYear}'
-                              : '${s.fromYear}–${s.toYear}',
-                          style: AppTypography.labelSmall.copyWith(
-                            color: AppColors.onSurfaceVariant,
-                          ),
-                        ),
-                      ),
-                      if (s.country.isNotEmpty) ...[
-                        FlagDisc(s.country, size: 18),
-                        const SizedBox(width: AppSpacing.sm),
-                      ],
-                      Expanded(
-                        child: Text(
-                          s.club,
-                          style: AppTypography.bodyMedium,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-}
-
 /// What he has won.
 ///
 /// A player who has won nothing shows nothing at all — an empty cabinet is a

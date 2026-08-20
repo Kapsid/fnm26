@@ -235,7 +235,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get navStandings => 'Standings';
 
   @override
-  String get navCareers => 'Careers';
+  String get navCareers => 'My Career';
 
   @override
   String get settingsTitle => 'SETTINGS';
@@ -1538,7 +1538,7 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get careerProUpTo5 => 'Pro: up to 5';
+  String get careerProUpTo5 => 'Pro: up to 10';
 
   @override
   String get careerThisSave => 'this save';
@@ -1547,7 +1547,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get careerSlotsFull => 'Slots full';
 
   @override
-  String get careerSlotsFullGoPro => 'Slots full — go Pro for 5';
+  String get careerSlotsFullGoPro => 'Slots full — go Pro for 10';
 
   @override
   String get careerNewGame => 'New Game';
@@ -2734,10 +2734,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get paywallBenefitEveryNation => 'Manage every nation in the world';
 
   @override
-  String get paywallBenefitSaveSlots => 'Five save slots instead of two';
+  String get paywallBenefitSaveSlots => '10 save slots instead of 3';
 
   @override
-  String get paywallBenefitEndless => 'Endless careers, forever';
+  String get paywallBenefitEndless => 'Unlimited careers, forever';
 
   @override
   String get paywallUnlocked => 'Premium is unlocked — enjoy!';
@@ -6770,20 +6770,21 @@ class AppLocalizationsEn extends AppLocalizations {
       'Four years, a continental championship and a World Cup — that was the free part, and nothing was held back. Carry this save on for a one-off payment.';
 
   @override
-  String get gateBenefitEndless => 'Endless career — every cycle from here on';
+  String get gateBenefitEndless =>
+      'Unlimited careers — every cycle from here on';
 
   @override
   String get gateBenefitNations => 'Every nation in the world to manage';
 
   @override
-  String get gateBenefitSaves => 'Every save slot';
+  String get gateBenefitSaves => '10 save slots instead of 3';
 
   @override
   String get gateBenefitUpdates => 'Every future update included';
 
   @override
   String get gateBenefitOffline =>
-      'No subscription, no ads, no account, works offline';
+      'Works offline — no subscription, no ads, no account';
 
   @override
   String get gatePriceLead => 'One payment, forever';

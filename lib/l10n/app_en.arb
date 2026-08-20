@@ -325,7 +325,7 @@
   "@navStandings": {
     "description": "Bottom navigation label for the tournaments/standings tab."
   },
-  "navCareers": "Careers",
+  "navCareers": "My Career",
   "@navCareers": {
     "description": "Bottom navigation label for the careers tab."
   },
@@ -2308,9 +2308,9 @@
       }
     }
   },
-  "careerProUpTo5": "Pro: up to 5",
+  "careerProUpTo5": "Pro: up to 10",
   "@careerProUpTo5": {
-    "description": "Note that Pro allows up to five saves."
+    "description": "Note that Pro allows up to ten saves."
   },
   "careerThisSave": "this save",
   "@careerThisSave": {
@@ -2320,7 +2320,7 @@
   "@careerSlotsFull": {
     "description": "Shown when all save slots are used."
   },
-  "careerSlotsFullGoPro": "Slots full — go Pro for 5",
+  "careerSlotsFullGoPro": "Slots full — go Pro for 10",
   "@careerSlotsFullGoPro": {
     "description": "Shown when slots are full, prompting Pro."
   },
@@ -3706,11 +3706,11 @@
   "@paywallBenefitEveryNation": {
     "description": "Paywall benefit line."
   },
-  "paywallBenefitSaveSlots": "Five save slots instead of two",
+  "paywallBenefitSaveSlots": "10 save slots instead of 3",
   "@paywallBenefitSaveSlots": {
     "description": "Paywall benefit line."
   },
-  "paywallBenefitEndless": "Endless careers, forever",
+  "paywallBenefitEndless": "Unlimited careers, forever",
   "@paywallBenefitEndless": {
     "description": "Paywall benefit line."
   },
@@ -9756,7 +9756,7 @@
   "@gateLead": {
     "description": "Premium gate: the pitch under the headline."
   },
-  "gateBenefitEndless": "Endless career — every cycle from here on",
+  "gateBenefitEndless": "Unlimited careers — every cycle from here on",
   "@gateBenefitEndless": {
     "description": "Premium gate benefit."
   },
@@ -9764,7 +9764,7 @@
   "@gateBenefitNations": {
     "description": "Premium gate benefit."
   },
-  "gateBenefitSaves": "Every save slot",
+  "gateBenefitSaves": "10 save slots instead of 3",
   "@gateBenefitSaves": {
     "description": "Premium gate benefit."
   },
@@ -9772,7 +9772,7 @@
   "@gateBenefitUpdates": {
     "description": "Premium gate benefit."
   },
-  "gateBenefitOffline": "No subscription, no ads, no account, works offline",
+  "gateBenefitOffline": "Works offline — no subscription, no ads, no account",
   "@gateBenefitOffline": {
     "description": "Premium gate benefit."
   },
