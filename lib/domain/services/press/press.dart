@@ -181,7 +181,14 @@ abstract final class Press {
   /// How long a question stays askable. Press conferences are about something
   /// that just happened — an unanswered question about a match six weeks ago
   /// is stale, so it is dropped rather than queued.
-  static const int askWindowDays = 45;
+  ///
+  /// Cut from 45 days to 30 once the conference became a blocking event. At 45
+  /// a manager could be asked about a hammering from a month and a half ago,
+  /// which was the reported "I can answer older things". It cannot go below
+  /// [quietDays] — a window shorter than the silence after an answer means
+  /// every story goes stale inside the gap and the press never speak again —
+  /// so the forcing does most of the work and this does the rest.
+  static const int askWindowDays = 30;
 
   /// The minimum gap between questions, so the press are an occasional presence
   /// rather than a chore after every match.
@@ -256,7 +263,44 @@ abstract final class Press {
 
   /// The answers offered for a topic. Every question keeps [PressTone.playItDown]
   /// as a way out, so a manager is never forced into a stance.
-  static List<PressTone> optionsFor(PressTopic topic) => switch (topic) {
+  /// What the manager can say to a question on [topic], given who he is.
+  ///
+  /// [target] is the height of the board's stated objective on the 2 (be
+  /// there) … 7 (win it) scale, and [worldRank] is where the nation actually
+  /// stands. Both are needed because a tone is only an option if it is a thing
+  /// this manager could plausibly say: a side told to qualify, ranked
+  /// sixtieth, being offered "we are here to win this" made the conference
+  /// read as generic — the same four answers whoever you were, one of them
+  /// absurd. [PressTone.playItDown] survives every filter, because saying as
+  /// little as possible is always available to anybody.
+  static List<PressTone> optionsFor(
+    PressTopic topic, {
+    int target = 7,
+    int? worldRank,
+  }) {
+    final tones = _tonesFor(topic);
+    // Talking the target up belongs to a side with something to talk up. An
+    // UNKNOWN ranking is not evidence against him — a save before its first
+    // release has no position yet, and a manager should not be silenced by the
+    // game not having got round to ranking him.
+    final canRaise =
+        target > qualifyTarget && (worldRank == null || worldRank <= raiseRankBar);
+    if (canRaise) return tones;
+    final filtered = [
+      for (final t in tones)
+        if (t != PressTone.raiseTheBar) t,
+    ];
+    return filtered.isEmpty ? const [PressTone.playItDown] : filtered;
+  }
+
+  /// The objective height that means "just be there".
+  static const int qualifyTarget = 2;
+
+  /// The world ranking beyond which talking a target up is not a stance, it is
+  /// a punchline.
+  static const int raiseRankBar = 40;
+
+  static List<PressTone> _tonesFor(PressTopic topic) => switch (topic) {
     PressTopic.heavyDefeat => const [
       PressTone.backThePlayers,
       PressTone.takeTheBlame,
@@ -329,9 +373,31 @@ abstract final class Press {
     ],
   };
 
-  /// How many questions a conference runs to: the story, a comeback at the
-  /// stance taken, and one last one from somebody with their own agenda.
-  static const int conferenceLength = 3;
+  /// The longest a conference can run to, for the sizes the UI has to reserve.
+  static const int maxConferenceLength = 4;
+
+  /// How many questions a conference runs to, by what it is ABOUT.
+  ///
+  /// It used to be three, always, which is what made it read as a form to fill
+  /// in rather than a room: a World Cup final and a ranking milestone drew the
+  /// same three questions. A triumph or an exit is a long afternoon; a nation
+  /// climbing a place or two is a question and a thank-you.
+  static int lengthFor(PressTopic topic) => switch (topic) {
+    // The whole cycle in one room.
+    PressTopic.triumph ||
+    PressTopic.elimination ||
+    PressTopic.tournamentPreview ||
+    PressTopic.tournamentOpening => 4,
+    // Something happened and it needs explaining.
+    PressTopic.heavyDefeat ||
+    PressTopic.underPressure ||
+    PressTopic.missedOut ||
+    PressTopic.qualified ||
+    PressTopic.newJob => 3,
+    // Worth a word, not an afternoon.
+    PressTopic.bigWin || PressTopic.unbeatenRun => 2,
+    PressTopic.rankingPeak => 1,
+  };
 
   /// The reporters who cover this nation, drawn from the pool by [seed] so a
   /// manager sees the same faces across a career and a different set at his
@@ -450,7 +516,7 @@ abstract final class Press {
     // The last question of the conference belongs to whoever is asking it —
     // that is the one place a reporter gets to ride their own hobby-horse
     // rather than react to the manager.
-    final probe = index >= conferenceLength - 1
+    final probe = index >= lengthFor(question.topic) - 1
         ? closingProbe(reporter.angle)
         : probeAfter(tone);
     return (

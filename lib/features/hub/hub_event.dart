@@ -395,9 +395,13 @@ nextEventProvider = FutureProvider.autoDispose.family<HubEvent, int>((
     );
   }
 
+  // EVERY question the press has is an event, not just the one before a
+  // tournament. A conference the manager could walk past was a conference he
+  // answered whenever he happened to open the screen — which meant answering
+  // questions about a match played weeks earlier, and reading as a form rather
+  // than a room full of people waiting.
   final pressQuestion = await ref.watch(pressQuestionProvider(careerId).future);
-  if (pressQuestion != null &&
-      pressQuestion.topic == PressTopic.tournamentOpening) {
+  if (pressQuestion != null) {
     return HubEvent(
       kind: HubEventKind.press,
       label: l.hubEventPressConference,

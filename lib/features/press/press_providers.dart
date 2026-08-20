@@ -7,6 +7,7 @@ import 'package:fnm/domain/services/competition/kickoff_keys.dart';
 import 'package:fnm/domain/services/competition/rounds.dart';
 import 'package:fnm/domain/services/press/press.dart';
 import 'package:fnm/features/career/career_providers.dart';
+import 'package:fnm/features/hub/objective_providers.dart';
 import 'package:fnm/features/ranking/world_ranking_providers.dart';
 
 /// The press question waiting right now, or null when they have nothing to ask
@@ -32,6 +33,19 @@ pressQuestionProvider = FutureProvider.autoDispose.family<PressQuestion?, int>((
   final asked = {for (final a in answers) a.questionKey};
   final now = career.inGameDate;
 
+  // Who this manager IS, so the answers offered are things he could
+  // plausibly say. A side told only to qualify, ranked outside the top forty,
+  // used to be offered "we are here to win this" — which is what made the room
+  // read as generic.
+  final ranking = await ref.watch(worldRankingProvider(careerId).future);
+  final worldRank = ranking?.position[career.nationId];
+  final objectives = await ref.watch(
+    cycleObjectivesProvider(careerId).future,
+  );
+  final highestDemand = objectives.isEmpty
+      ? Press.qualifyTarget
+      : objectives.map((o) => o.target).reduce((a, b) => a > b ? a : b);
+
   final comp = ref.watch(competitionRepositoryProvider);
   final fixtures = await comp.fixturesForNation(careerId, career.nationId);
 
@@ -48,6 +62,8 @@ pressQuestionProvider = FutureProvider.autoDispose.family<PressQuestion?, int>((
     career.nationId,
     await comp.cycleFixturesForNation(careerId, career.nationId),
     asked,
+    target: highestDemand,
+    worldRank: worldRank,
   );
   if (opening != null &&
       await comp.hasWatchedDraw(
@@ -86,7 +102,11 @@ pressQuestionProvider = FutureProvider.autoDispose.family<PressQuestion?, int>((
           key: key,
           topic: topic,
           subjectNationId: subjectNationId,
-          options: Press.optionsFor(topic),
+          options: Press.optionsFor(
+            topic,
+            target: highestDemand,
+            worldRank: worldRank,
+          ),
         );
 
   // Only the recent past is news.
@@ -260,8 +280,7 @@ pressQuestionProvider = FutureProvider.autoDispose.family<PressQuestion?, int>((
     for (final r in releases)
       if (r.nationId == career.nationId) r.playerRank,
   ];
-  final live = await ref.watch(worldRankingProvider(careerId).future);
-  final rank = live?.position[career.nationId];
+  final rank = worldRank;
   if (hasManaged && rank != null && rank <= _peakRankCeiling) {
     final priorBest = priorRanks.isEmpty
         ? null
@@ -312,10 +331,10 @@ pressQuestionProvider = FutureProvider.autoDispose.family<PressQuestion?, int>((
 });
 
 /// How many recent ANSWERS the press remember having heard. A conference is
-/// [Press.conferenceLength] questions on one story, so this is three
+/// [Press.maxConferenceLength] questions on one story, so this is three
 /// conferences' worth: they should avoid repeating themselves, not work
 /// through every topic before coming back to a story that matters.
-const int _recentTopicMemory = Press.conferenceLength * 3;
+const int _recentTopicMemory = Press.maxConferenceLength * 3;
 
 /// How many competitive games without defeat make a run worth asking about.
 const int _unbeatenRunLength = 6;
@@ -423,8 +442,10 @@ String _kickoffKindFor(String round) =>
 ({PressQuestion question, String round})? _openingQuestion(
   int nationId,
   List<Fixture> fixtures,
-  Set<String> asked,
-) {
+  Set<String> asked, {
+  required int target,
+  required int? worldRank,
+}) {
   for (final rounds in [_wcFinalsRounds, _contFinalsRounds]) {
     final mine = [
       for (final f in fixtures)
@@ -443,7 +464,11 @@ String _kickoffKindFor(String round) =>
         subjectNationId: opener.homeNationId == nationId
             ? opener.awayNationId
             : opener.homeNationId,
-        options: Press.optionsFor(PressTopic.tournamentOpening),
+        options: Press.optionsFor(
+          PressTopic.tournamentOpening,
+          target: target,
+          worldRank: worldRank,
+        ),
       ),
       round: group,
     );

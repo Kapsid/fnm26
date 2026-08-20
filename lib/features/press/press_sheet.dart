@@ -45,9 +45,11 @@ class _PressSheetState extends ConsumerState<PressSheet> {
   /// Who is in the room, in the order they get the microphone. Drawn from the
   /// question's key rather than at random so reopening the sheet is the same
   /// conference, not a new one.
+  late final int _length = Press.lengthFor(widget.question.topic);
+
   late final List<PressReporter> _room = Press.roomFor(
     _seed,
-  ).take(Press.conferenceLength).toList();
+  ).take(_length).toList();
 
   /// The exchanges asked so far, and what was said to each. The list grows as
   /// the manager answers: a follow-up cannot exist until there is a stance for
@@ -60,7 +62,7 @@ class _PressSheetState extends ConsumerState<PressSheet> {
   /// Everything this conference has cost so far.
   PressEffect _total = (morale: 0, board: 0);
 
-  bool get _over => _said.length >= Press.conferenceLength;
+  bool get _over => _said.length >= _length;
   PressExchange get _current => _asked.last;
 
   Future<void> _answer(PressTone tone) async {
@@ -416,8 +418,8 @@ class _PressSheetState extends ConsumerState<PressSheet> {
                   ),
                   Text(
                     l.pressQuestionOf(
-                      (_said.length + 1).clamp(1, Press.conferenceLength),
-                      Press.conferenceLength,
+                      (_said.length + 1).clamp(1, _length),
+                      _length,
                     ),
                     style: AppTypography.labelSmall.copyWith(
                       color: AppColors.onSurfaceVariant,
