@@ -90,6 +90,7 @@ class HomeScreen extends ConsumerWidget {
               ],
               PrimaryButton(
                 label: l.homeNewGame,
+                icon: Icons.play_arrow_rounded,
                 onPressed: () => context.go(Routes.nations),
               ),
               const SizedBox(height: AppSpacing.sm),

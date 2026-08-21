@@ -52,6 +52,53 @@ void main() {
       );
     });
 
+    testWidgets('the icon stays beside its label, centred, at any length', (
+      tester,
+    ) async {
+      // The icon and the label are one group in the middle of the button.
+      // Constraining the LABEL to stop it overflowing is the obvious fix and
+      // the wrong one: a flex child forces a Row to take all the width it is
+      // offered, defeating mainAxisSize.min — the label then spread across the
+      // whole button and the icon was pinned to the far left of it, on every
+      // screen with a primary button.
+      for (final label in ['Go', 'New Game', 'Pozice plné — pořiďte si Pro pro 10']) {
+        await tester.pumpApp(
+          Scaffold(
+            body: Padding(
+              padding: const EdgeInsets.all(16),
+              child: PrimaryButton(
+                label: label,
+                icon: Icons.add,
+                onPressed: () {},
+              ),
+            ),
+          ),
+        );
+        await tester.pumpAndSettle();
+
+        final button = tester.getRect(find.byType(PrimaryButton));
+        final icon = tester.getRect(find.byIcon(Icons.add));
+        final text = tester.getRect(find.text(label));
+
+        expect(
+          (icon.left + text.right) / 2,
+          closeTo(button.center.dx, 1.5),
+          reason: '"$label": the icon and label should be centred together',
+        );
+        expect(
+          icon.left,
+          greaterThan(button.left + 4),
+          reason: '"$label": the icon is jammed against the button edge',
+        );
+        expect(
+          text.left - icon.right,
+          lessThan(24),
+          reason: '"$label": the icon drifted away from its label',
+        );
+        expect(tester.takeException(), isNull, reason: '"$label" overflowed');
+      }
+    });
+
     testWidgets('does not fire while loading', (tester) async {
       var taps = 0;
       await tester.pumpApp(

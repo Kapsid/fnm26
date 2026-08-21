@@ -122,6 +122,7 @@ class SavesScreen extends ConsumerWidget {
                                   ? l.careerSlotsFull
                                   : l.careerSlotsFullGoPro)
                             : l.careerNewGame,
+                        icon: Icons.add,
                         // On the free tier, full slots open the paywall (Pro
                         // more than doubles them); with Pro, full really is
                         // full.

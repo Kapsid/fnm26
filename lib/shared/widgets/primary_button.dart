@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
-import 'package:fnm/shared/widgets/whole_text.dart';
 
 /// Primary call-to-action button: a brushed silver-to-steel vertical gradient
 /// with a 1px metal stroke and dark text, per the "Pro Pitch Executive" button
@@ -48,19 +47,13 @@ class PrimaryButton extends StatelessWidget {
                 Icon(icon, size: 20, color: AppColors.onPrimary),
                 const SizedBox(width: AppSpacing.sm),
               ],
-              // Flexible, and never cut. The label sat here unconstrained, so
-              // a long one ran straight out of the button and painted the
-              // overflow stripes — a call to action nobody can read. It gives
-              // way by shrinking to fit, which is the one concession a button
-              // label can make and still be a button label.
-              Flexible(
-                child: WholeText(
-                  label,
-                  maxLines: 1,
-                  textAlign: TextAlign.center,
-                  style: AppTypography.labelLarge.copyWith(
-                    color: AppColors.onPrimary,
-                  ),
+              Text(
+                label,
+                maxLines: 1,
+                softWrap: false,
+                textAlign: TextAlign.center,
+                style: AppTypography.labelLarge.copyWith(
+                  color: AppColors.onPrimary,
                 ),
               ),
             ],
@@ -85,7 +78,25 @@ class PrimaryButton extends StatelessWidget {
                 colors: [AppColors.primaryFixed, AppColors.primaryContainer],
               ),
             ),
-            child: Center(child: child),
+            // The icon and the label are ONE group, centred together, and the
+            // group scales down when it will not fit.
+            //
+            // Constraining the label itself instead — a Flexible around it —
+            // is the obvious fix and the wrong one: a flex child forces a Row
+            // to take all the width available to it, which silently defeats
+            // mainAxisSize.min. The label then spread across the whole button
+            // and the icon was pinned to the far left of it, on every screen
+            // with a primary button. Scaling the whole Row keeps the group
+            // together and keeps it in the middle, at any label length and in
+            // any language.
+            child: Center(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: AppSpacing.md,
+                ),
+                child: FittedBox(fit: BoxFit.scaleDown, child: child),
+              ),
+            ),
           ),
         ),
       ),
