@@ -3886,6 +3886,15 @@
       }
     }
   },
+  "federationOverBudget": "{amount} more than the federation has — take some back",
+  "@federationOverBudget": {
+    "description": "Shown when departments plus staff wages exceed the budget.",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
   "federationAllocateFullBudget": "Allocate the full budget to begin the cycle.",
   "@federationAllocateFullBudget": {
     "description": "Hint shown until the whole budget is allocated."

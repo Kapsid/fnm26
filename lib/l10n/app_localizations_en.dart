@@ -2841,6 +2841,11 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String federationOverBudget(String amount) {
+    return '$amount more than the federation has — take some back';
+  }
+
+  @override
   String get federationAllocateFullBudget =>
       'Allocate the full budget to begin the cycle.';
 

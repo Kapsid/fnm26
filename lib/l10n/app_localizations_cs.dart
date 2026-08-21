@@ -2865,6 +2865,11 @@ class AppLocalizationsCs extends AppLocalizations {
   }
 
   @override
+  String federationOverBudget(String amount) {
+    return '$amount nad rámec rozpočtu — část je potřeba vrátit';
+  }
+
+  @override
   String get federationAllocateFullBudget =>
       'Rozdělte celý rozpočet, abyste mohli zahájit cyklus.';
 

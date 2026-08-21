@@ -42,11 +42,28 @@ class BudgetSetupScreen extends ConsumerStatefulWidget {
   ConsumerState<BudgetSetupScreen> createState() => _BudgetSetupScreenState();
 }
 
+/// The smallest slice of the budget a department can be given.
+const int kBudgetStep = 500000;
+
+/// Whether an allocation of [allocated] out of [available] may be confirmed.
+///
+/// BOTH ends matter, and only one of them used to. The rule was "the remainder
+/// is smaller than one step", which is true of every NEGATIVE remainder too —
+/// so an over-committed budget read as a finished one and could be confirmed,
+/// spending money the federation does not have.
+///
+/// Over-committing is reachable without touching a slider: staff are hired on
+/// this same screen and their wages come off the top, so allocating everything
+/// and then hiring an elite assistant moves the ceiling down underneath an
+/// allocation that was legal when it was made.
+bool budgetReady({required int available, required int allocated}) {
+  final remaining = available - allocated;
+  return remaining >= 0 && remaining < kBudgetStep;
+}
+
 class _BudgetSetupScreenState extends ConsumerState<BudgetSetupScreen> {
   FederationInvestment? _alloc;
   bool _busy = false;
-
-  static const int _step = 500000;
 
   Future<void> _confirm(Career career, FederationInvestment alloc) async {
     if (_busy) return;
@@ -60,6 +77,12 @@ class _BudgetSetupScreenState extends ConsumerState<BudgetSetupScreen> {
         alloc.naturalization +
         alloc.boardRelations;
     // Charge the allocation to this cycle and lock the war chest in.
+    //
+    // Refuse rather than go negative. The button is disabled unless
+    // [budgetReady] says so, and this is the belt to that pair of braces: a
+    // federation cannot spend money it does not have, and a negative balance
+    // would be carried into the rollover and compound there.
+    if (spend > career.budget) return;
     await repo.setInvestment(widget.careerId, career.cyclePointer, alloc);
     await repo.setBudget(widget.careerId, career.budget - spend);
     await comp.markDrawWatched(
@@ -139,7 +162,10 @@ class _BudgetSetupScreenState extends ConsumerState<BudgetSetupScreen> {
               alloc.medical +
               alloc.naturalization +
               alloc.boardRelations;
-          final ready = _alloc != null && available - allocated < _step;
+          final overCommitted = allocated > available;
+          final ready =
+              _alloc != null &&
+              budgetReady(available: available, allocated: allocated);
           return Column(
             children: [
               Expanded(
@@ -214,9 +240,19 @@ class _BudgetSetupScreenState extends ConsumerState<BudgetSetupScreen> {
                         Padding(
                           padding: const EdgeInsets.only(bottom: AppSpacing.sm),
                           child: Text(
-                            l.federationAllocateFullBudget,
+                            // Over-committed says something different from
+                            // "not finished yet": the manager has promised
+                            // money that is not there, usually by hiring staff
+                            // after allocating, and needs to take some back.
+                            overCommitted
+                                ? l.federationOverBudget(
+                                    formatEuros(allocated - available),
+                                  )
+                                : l.federationAllocateFullBudget,
                             style: AppTypography.labelSmall.copyWith(
-                              color: AppColors.onSurfaceVariant,
+                              color: overCommitted
+                                  ? AppColors.error
+                                  : AppColors.onSurfaceVariant,
                             ),
                           ),
                         ),

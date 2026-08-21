@@ -4848,6 +4848,12 @@ abstract class AppLocalizations {
   /// **'Distribute {amount} across the departments to open the cycle. Spend it wisely.'**
   String federationDistributeBudget(String amount);
 
+  /// Shown when departments plus staff wages exceed the budget.
+  ///
+  /// In en, this message translates to:
+  /// **'{amount} more than the federation has — take some back'**
+  String federationOverBudget(String amount);
+
   /// Hint shown until the whole budget is allocated.
   ///
   /// In en, this message translates to:

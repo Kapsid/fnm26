@@ -789,6 +789,7 @@
   "federationSaveNotFound": "Uložená hra nenalezena.",
   "federationBudgetHeading": "ROZPOČET FEDERACE",
   "federationDistributeBudget": "Rozdělte {amount} mezi jednotlivá oddělení a zahajte cyklus. Utraťte je moudře.",
+  "federationOverBudget": "{amount} nad rámec rozpočtu — část je potřeba vrátit",
   "federationAllocateFullBudget": "Rozdělte celý rozpočet, abyste mohli zahájit cyklus.",
   "federationConfirming": "Potvrzuji…",
   "federationConfirmBudget": "Potvrdit rozpočet",
