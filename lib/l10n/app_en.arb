@@ -3851,6 +3851,10 @@
   "@federationNaturalise": {
     "description": "Button accepting the naturalisation offer."
   },
+  "federationBudgetLater": "Decide later",
+  "@federationBudgetLater": {
+    "description": "Leaves the budget screen without allocating; the hub will ask again."
+  },
   "federationSetYourBudget": "SET YOUR BUDGET",
   "@federationSetYourBudget": {
     "description": "App-bar title on the forced budget-setup screen."

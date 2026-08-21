@@ -85,7 +85,19 @@ class _BudgetSetupScreenState extends ConsumerState<BudgetSetupScreen> {
     final l = AppLocalizations.of(context);
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: false,
+        // A way out. The budget is a FORCED event and stays one — the hub
+        // presents it again and again until it is actually distributed, since
+        // the event clears on the allocation being confirmed and on nothing
+        // else. What it must not be is a TRAP: this screen replaces the stack,
+        // so with no leading control and no swipe back, a manager who opened
+        // it to look at the numbers could not leave without spending the
+        // money. Forced and inescapable are different things.
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: AppColors.primary),
+          tooltip: l.federationBudgetLater,
+          onPressed: () =>
+              context.go('${Routes.hub}?careerId=${widget.careerId}'),
+        ),
         title: Text(
           l.federationSetYourBudget,
           style: AppTypography.labelMedium.copyWith(color: AppColors.primary),

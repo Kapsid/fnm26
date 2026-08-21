@@ -2819,6 +2819,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get federationNaturalise => 'Naturalise';
 
   @override
+  String get federationBudgetLater => 'Decide later';
+
+  @override
   String get federationSetYourBudget => 'SET YOUR BUDGET';
 
   @override

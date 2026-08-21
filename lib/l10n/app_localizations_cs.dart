@@ -2843,6 +2843,9 @@ class AppLocalizationsCs extends AppLocalizations {
   String get federationNaturalise => 'Naturalizovat';
 
   @override
+  String get federationBudgetLater => 'Rozhodnout později';
+
+  @override
   String get federationSetYourBudget => 'NASTAVTE ROZPOČET';
 
   @override

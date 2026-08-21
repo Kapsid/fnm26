@@ -783,6 +783,7 @@
   "federationNaturalisationBlurb": "{name} má vazby na {playerNation} a je ochoten se nechat naturalizovat. Přijměte a bude k dispozici pro nominaci; odmítněte a zůstane u reprezentace {sourceNation}.",
   "federationDecline": "Odmítnout",
   "federationNaturalise": "Naturalizovat",
+  "federationBudgetLater": "Rozhodnout později",
   "federationSetYourBudget": "NASTAVTE ROZPOČET",
   "federationCouldNotLoadFinances": "Finance se nepodařilo načíst.\n{error}",
   "federationSaveNotFound": "Uložená hra nenalezena.",

@@ -4812,6 +4812,12 @@ abstract class AppLocalizations {
   /// **'Naturalise'**
   String get federationNaturalise;
 
+  /// Leaves the budget screen without allocating; the hub will ask again.
+  ///
+  /// In en, this message translates to:
+  /// **'Decide later'**
+  String get federationBudgetLater;
+
   /// App-bar title on the forced budget-setup screen.
   ///
   /// In en, this message translates to:
