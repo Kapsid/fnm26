@@ -1,3 +1,4 @@
+import 'package:fnm/features/onboarding/tour_keys.dart';
 import 'dart:async';
 
 import 'package:flutter/material.dart';
@@ -85,7 +86,7 @@ class TacticsScreen extends ConsumerWidget {
             tabs: [
               Tab(text: l.tacticsTabLineup),
               Tab(text: l.tacticsTabRolesSetPieces),
-              Tab(text: l.tacticsSquad),
+              Tab(key: TourKeys.squadTab, text: l.tacticsSquad),
             ],
           ),
           actions: [
@@ -263,6 +264,7 @@ class TacticsScreen extends ConsumerWidget {
                           // screen while he is choosing and worth a line the
                           // rest of the time.
                           FormationField(
+                            key: TourKeys.tacticsFormation,
                             selected: tactic.formation,
                             onSelected: (f) => service.setFormation(careerId, f),
                           ),
@@ -277,6 +279,7 @@ class TacticsScreen extends ConsumerWidget {
                           ),
                           const SizedBox(height: AppSpacing.sm),
                           AppCard(
+                            key: TourKeys.tacticsPlaystyle,
                             onTap: () =>
                                 _openInstructions(context, ref, tactic),
                             child: Row(

@@ -26,6 +26,7 @@ import 'package:fnm/features/squad/grievance_sheet.dart';
 import 'package:fnm/features/press/press_sheet.dart';
 import 'package:fnm/features/hub/round_popup.dart';
 import 'package:fnm/features/messages/message_popup.dart';
+import 'package:fnm/features/onboarding/tour_keys.dart';
 import 'package:fnm/features/onboarding/tour_providers.dart';
 import 'package:fnm/features/messages/message_providers.dart';
 import 'package:fnm/features/tactics/condition_providers.dart';
@@ -264,6 +265,7 @@ class _HubScreenState extends ConsumerState<HubScreen> {
               // manager would rather not talk.
               _PressCard(careerId: careerId, name: name),
               _BoardFinanceCard(
+                key: TourKeys.hubBoard,
                 careerId: careerId,
                 budget: hub.career.budget,
                 onFinances: () =>
@@ -445,6 +447,7 @@ class _PressCard extends ConsumerWidget {
 class _BoardFinanceCard extends ConsumerWidget {
   const _BoardFinanceCard({
     required this.careerId,
+    super.key,
     required this.budget,
     required this.onFinances,
     required this.onObjectives,
@@ -537,6 +540,7 @@ class _EventButton extends ConsumerWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         PrimaryButton(
+          key: TourKeys.hubAction,
           label: event?.label ?? l.hubContinue,
           icon: event?.icon ?? Icons.play_arrow_rounded,
           onPressed: event == null

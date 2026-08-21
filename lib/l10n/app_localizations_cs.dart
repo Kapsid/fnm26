@@ -7166,4 +7166,25 @@ class AppLocalizationsCs extends AppLocalizations {
   @override
   String get settingsTourBlurb =>
       'Znovu si projděte klíčové obrazovky od začátku.';
+
+  @override
+  String get tourBoardTitle => 'Komu se zodpovídáte';
+
+  @override
+  String get tourBoardBody =>
+      'Důvěra vedení a cíle, které vám na tenhle cyklus dalo. Když je neplníte, poznáte to právě tady.';
+
+  @override
+  String get tourStaffTitle => 'Lidé kolem vás';
+
+  @override
+  String get tourStaffBody =>
+      'Asistent, skaut a kondiční trenér, každý jmenovitě. Jejich mzdy se platí z tohohle rozpočtu dřív než oddělení, takže špičkový skaut je rozhodnutí proti akademii.';
+
+  @override
+  String get tourPlaystyleTitle => 'Jak chcete hrát';
+
+  @override
+  String get tourPlaystyleBody =>
+      'Rozestavení je jen půlka taktiky. Tohle je ta druhá — jak vysoko napadáte, jak přímočaře hrajete, kolik riskujete.';
 }

@@ -34,6 +34,42 @@ class TourOverlay extends ConsumerStatefulWidget {
 class _TourOverlayState extends ConsumerState<TourOverlay> {
   int? _navigatedFor;
 
+  /// Where the control being talked about actually is, in global coordinates.
+  Rect? _hole;
+
+  /// How much room to leave around it, so the ring does not sit on the glyphs.
+  static const double _padding = 6;
+
+  /// Finds the step's target on screen and remembers its rect.
+  ///
+  /// Scrolls it into view first — a control the manager cannot see is not one
+  /// he can be shown — and re-measures on the frame after, because the rect
+  /// before a scroll is not the rect after one.
+  Future<void> _locate(GlobalKey? key) async {
+    if (key == null) {
+      if (_hole != null && mounted) setState(() => _hole = null);
+      return;
+    }
+    final context = key.currentContext;
+    if (context == null) {
+      // The screen has not built it — or this save has no such control. The
+      // step still reads; it just dims everything, as it used to.
+      if (_hole != null && mounted) setState(() => _hole = null);
+      return;
+    }
+    await Scrollable.ensureVisible(
+      context,
+      duration: const Duration(milliseconds: 250),
+      alignment: 0.5,
+    );
+    if (!mounted) return;
+    final box = key.currentContext?.findRenderObject();
+    if (box is! RenderBox || !box.hasSize) return;
+    final origin = box.localToGlobal(Offset.zero);
+    final rect = (origin & box.size).inflate(_padding);
+    if (rect != _hole) setState(() => _hole = rect);
+  }
+
   void _goTo(int index) {
     final careerId = widget.careerId;
     if (careerId == null) return;
@@ -42,9 +78,16 @@ class _TourOverlayState extends ConsumerState<TourOverlay> {
     // whenever the screen underneath it does.
     if (_navigatedFor == index) return;
     _navigatedFor = index;
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
       if (!mounted) return;
       context.go('$route?careerId=$careerId');
+      // Two frames: one for the route to build, one for it to lay out. Only
+      // then does the target have a position worth measuring.
+      await WidgetsBinding.instance.endOfFrame;
+      if (!mounted) return;
+      await WidgetsBinding.instance.endOfFrame;
+      if (!mounted) return;
+      await _locate(kTourSteps[index].target);
     });
   }
 
@@ -59,6 +102,15 @@ class _TourOverlayState extends ConsumerState<TourOverlay> {
     });
   }
 
+  /// Whether the caption belongs at the top, because the hole is at the
+  /// bottom. Judged against the middle of the screen.
+  bool get _captionAtTop {
+    final rect = _hole;
+    if (rect == null) return false;
+    final height = MediaQuery.sizeOf(context).height;
+    return rect.center.dy > height / 2;
+  }
+
   @override
   Widget build(BuildContext context) {
     final step = ref.watch(tourStepProvider);
@@ -67,6 +119,13 @@ class _TourOverlayState extends ConsumerState<TourOverlay> {
       return widget.child;
     }
     _goTo(step);
+    // Same screen, different control: no navigation happens, so the target is
+    // re-found here instead.
+    if (_navigatedFor == step) {
+      WidgetsBinding.instance.addPostFrameCallback(
+        (_) => _locate(kTourSteps[step].target),
+      );
+    }
 
     final l = AppLocalizations.of(context);
     final current = kTourSteps[step];
@@ -79,12 +138,19 @@ class _TourOverlayState extends ConsumerState<TourOverlay> {
         // budget half way through it is not a tour, it is a modal argument.
         Positioned.fill(
           child: AbsorbPointer(
-            child: ColoredBox(color: Colors.black.withValues(alpha: 0.72)),
+            child: CustomPaint(
+              painter: _SpotlightPainter(hole: _hole, radius: AppRadii.md),
+            ),
           ),
         ),
         Positioned.fill(
           child: Align(
-            alignment: Alignment.bottomCenter,
+            // Above the lit control when it sits low on the screen, below it
+            // otherwise: a caption that covers the thing it is describing is
+            // the one arrangement that cannot work.
+            alignment: _captionAtTop
+                ? Alignment.topCenter
+                : Alignment.bottomCenter,
             child: SafeArea(
               child: Padding(
                 padding: const EdgeInsets.all(AppSpacing.marginMobile),
@@ -166,4 +232,49 @@ class _TourOverlayState extends ConsumerState<TourOverlay> {
       ],
     );
   }
+}
+
+/// Paints the scrim with a hole in it.
+///
+/// The hole is what makes this a tour rather than a curtain: everything is
+/// dimmed EXCEPT the control being talked about, which stays at full
+/// brightness with a ring around it.
+class _SpotlightPainter extends CustomPainter {
+  const _SpotlightPainter({required this.hole, required this.radius});
+
+  /// The control's rect in global coordinates, or null for no cut-out.
+  final Rect? hole;
+  final double radius;
+
+  static const _scrim = Color(0xB8000000);
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final full = Offset.zero & size;
+    final target = hole;
+    if (target == null) {
+      canvas.drawRect(full, Paint()..color = _scrim);
+      return;
+    }
+    final cut = RRect.fromRectAndRadius(target, Radius.circular(radius));
+    canvas.drawPath(
+      Path.combine(
+        PathOperation.difference,
+        Path()..addRect(full),
+        Path()..addRRect(cut),
+      ),
+      Paint()..color = _scrim,
+    );
+    canvas.drawRRect(
+      cut,
+      Paint()
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 2
+        ..color = AppColors.primary,
+    );
+  }
+
+  @override
+  bool shouldRepaint(_SpotlightPainter old) =>
+      old.hole != hole || old.radius != radius;
 }

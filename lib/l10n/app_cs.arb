@@ -1887,5 +1887,11 @@
   "tourCupsTitle": "Zbytek světa",
   "tourCupsBody": "Všechny soutěže, které právě běží — skupiny, tabulky i vyřazovací fáze — včetně těch, kde nejste. Svět hraje dál, ať jste postoupili nebo ne.",
   "settingsTourTitle": "Spustit tutoriál znovu",
-  "settingsTourBlurb": "Znovu si projděte klíčové obrazovky od začátku."
+  "settingsTourBlurb": "Znovu si projděte klíčové obrazovky od začátku.",
+  "tourBoardTitle": "Komu se zodpovídáte",
+  "tourBoardBody": "Důvěra vedení a cíle, které vám na tenhle cyklus dalo. Když je neplníte, poznáte to právě tady.",
+  "tourStaffTitle": "Lidé kolem vás",
+  "tourStaffBody": "Asistent, skaut a kondiční trenér, každý jmenovitě. Jejich mzdy se platí z tohohle rozpočtu dřív než oddělení, takže špičkový skaut je rozhodnutí proti akademii.",
+  "tourPlaystyleTitle": "Jak chcete hrát",
+  "tourPlaystyleBody": "Rozestavení je jen půlka taktiky. Tohle je ta druhá — jak vysoko napadáte, jak přímočaře hrajete, kolik riskujete."
 }

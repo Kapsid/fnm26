@@ -10213,5 +10213,29 @@
   "settingsTourBlurb": "Walk through the key screens again from the start.",
   "@settingsTourBlurb": {
     "description": "Guided tour string."
+  },
+  "tourBoardTitle": "Who you answer to",
+  "@tourBoardTitle": {
+    "description": "Guided tour string."
+  },
+  "tourBoardBody": "The board's confidence in you, and the objectives they have set for this cycle. Miss the brief and this is where you will see it coming.",
+  "@tourBoardBody": {
+    "description": "Guided tour string."
+  },
+  "tourStaffTitle": "The people around you",
+  "@tourStaffTitle": {
+    "description": "Guided tour string."
+  },
+  "tourStaffBody": "An assistant, a scout and a fitness coach, hired by name. Their wages come out of this budget before the departments do, so a great scout is a decision against the academy.",
+  "@tourStaffBody": {
+    "description": "Guided tour string."
+  },
+  "tourPlaystyleTitle": "Your way of playing",
+  "@tourPlaystyleTitle": {
+    "description": "Guided tour string."
+  },
+  "tourPlaystyleBody": "The shape is only half a tactic. This is the other half — how high you press, how direct you are, how much you risk.",
+  "@tourPlaystyleBody": {
+    "description": "Guided tour string."
   }
 }

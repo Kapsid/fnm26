@@ -1,3 +1,4 @@
+import 'package:fnm/features/onboarding/tour_keys.dart';
 import 'dart:async';
 
 import 'package:flutter/material.dart';
@@ -216,9 +217,13 @@ class _BudgetSetupScreenState extends ConsumerState<BudgetSetupScreen> {
                       ),
                     ),
                     const SizedBox(height: AppSpacing.md),
-                    StaffCard(careerId: widget.careerId),
+                    StaffCard(
+                      key: TourKeys.budgetStaff,
+                      careerId: widget.careerId,
+                    ),
                     const SizedBox(height: AppSpacing.md),
                     AppCard(
+                      key: TourKeys.budgetDepartments,
                       child: InvestmentEditor(
                         available: available,
                         initial: alloc,

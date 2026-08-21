@@ -11474,6 +11474,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Walk through the key screens again from the start.'**
   String get settingsTourBlurb;
+
+  /// Guided tour string.
+  ///
+  /// In en, this message translates to:
+  /// **'Who you answer to'**
+  String get tourBoardTitle;
+
+  /// Guided tour string.
+  ///
+  /// In en, this message translates to:
+  /// **'The board\'s confidence in you, and the objectives they have set for this cycle. Miss the brief and this is where you will see it coming.'**
+  String get tourBoardBody;
+
+  /// Guided tour string.
+  ///
+  /// In en, this message translates to:
+  /// **'The people around you'**
+  String get tourStaffTitle;
+
+  /// Guided tour string.
+  ///
+  /// In en, this message translates to:
+  /// **'An assistant, a scout and a fitness coach, hired by name. Their wages come out of this budget before the departments do, so a great scout is a decision against the academy.'**
+  String get tourStaffBody;
+
+  /// Guided tour string.
+  ///
+  /// In en, this message translates to:
+  /// **'Your way of playing'**
+  String get tourPlaystyleTitle;
+
+  /// Guided tour string.
+  ///
+  /// In en, this message translates to:
+  /// **'The shape is only half a tactic. This is the other half — how high you press, how direct you are, how much you risk.'**
+  String get tourPlaystyleBody;
 }
 
 class _AppLocalizationsDelegate

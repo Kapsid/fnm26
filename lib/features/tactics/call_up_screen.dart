@@ -1,3 +1,4 @@
+import 'package:fnm/features/onboarding/tour_keys.dart';
 import 'dart:async';
 
 import 'package:flutter/material.dart';
@@ -292,6 +293,7 @@ class _CallUpScreenState extends ConsumerState<CallUpScreen> {
           // The chrome that sits above the pool: what this squad has to
           // cover, how many are in it, and the two auto-picks.
           final header = Column(
+            key: TourKeys.callUpCount,
             mainAxisSize: MainAxisSize.min,
             children: [
               if (window != null && window.matches.isNotEmpty)

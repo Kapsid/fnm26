@@ -7140,4 +7140,25 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get settingsTourBlurb =>
       'Walk through the key screens again from the start.';
+
+  @override
+  String get tourBoardTitle => 'Who you answer to';
+
+  @override
+  String get tourBoardBody =>
+      'The board\'s confidence in you, and the objectives they have set for this cycle. Miss the brief and this is where you will see it coming.';
+
+  @override
+  String get tourStaffTitle => 'The people around you';
+
+  @override
+  String get tourStaffBody =>
+      'An assistant, a scout and a fitness coach, hired by name. Their wages come out of this budget before the departments do, so a great scout is a decision against the academy.';
+
+  @override
+  String get tourPlaystyleTitle => 'Your way of playing';
+
+  @override
+  String get tourPlaystyleBody =>
+      'The shape is only half a tactic. This is the other half — how high you press, how direct you are, how much you risk.';
 }

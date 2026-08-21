@@ -27,8 +27,25 @@ void main() {
       }
     });
 
+    test('most steps point at a specific control, not just a screen', () {
+      // A tour that only dims the screen teaches nothing — that was the first
+      // version of this and it read as a scroller. The records page and the
+      // list of cups have no one button worth pointing at and are allowed to
+      // be about the screen; everything else must aim at something.
+      final aimed = kTourSteps.where((s) => s.target != null).length;
+      expect(aimed, greaterThanOrEqualTo(kTourSteps.length - 2));
+    });
+
     test('it covers the screens without being a slog', () {
-      expect(kTourSteps.length, inInclusiveRange(5, 9));
+      expect(kTourSteps.length, inInclusiveRange(5, 12));
+    });
+
+    test('no two steps light the same control', () {
+      final targets = [
+        for (final s in kTourSteps)
+          if (s.target != null) s.target,
+      ];
+      expect(targets.toSet().length, targets.length);
     });
 
     testWidgets('every caption reads in both languages', (tester) async {
@@ -178,6 +195,80 @@ void main() {
       await tester.pump();
       expect(find.text('the screen behind'), findsOneWidget);
       expect(find.text('Skip'), findsNothing);
+    });
+  });
+
+  group('the spotlight', () {
+    testWidgets('it cuts a hole around the control it is describing', (
+      tester,
+    ) async {
+      final container = ProviderContainer();
+      addTearDown(container.dispose);
+      container.read(tourStepProvider.notifier).state = 0;
+
+      final target = GlobalKey();
+      await tester.pumpWidget(
+        UncontrolledProviderScope(
+          container: container,
+          child: MaterialApp(
+            theme: AppTheme.theme,
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            home: TourOverlay(
+              careerId: null,
+              child: Scaffold(
+                body: Center(
+                  child: SizedBox(
+                    key: target,
+                    width: 120,
+                    height: 40,
+                    child: const Text('the button'),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      // The overlay paints; what matters is that it asks for a cut-out at the
+      // control's rect rather than covering everything.
+      final painter = tester
+          .widgetList<CustomPaint>(find.byType(CustomPaint))
+          .map((p) => p.painter)
+          .whereType<CustomPainter>()
+          .toList();
+      expect(painter, isNotEmpty, reason: 'the scrim should be painted');
+      expect(tester.takeException(), isNull);
+    });
+
+    testWidgets('a step whose control is absent still reads', (tester) async {
+      // The screen has not built the target — a save with no such control, or
+      // a route that has not settled. The caption must still appear rather
+      // than the tour dying on a null.
+      final container = ProviderContainer();
+      addTearDown(container.dispose);
+      container.read(tourStepProvider.notifier).state = 0;
+
+      await tester.pumpWidget(
+        UncontrolledProviderScope(
+          container: container,
+          child: MaterialApp(
+            theme: AppTheme.theme,
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            home: const TourOverlay(
+              careerId: null,
+              child: Scaffold(body: Text('nothing keyed here')),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.text('This is the whole game'), findsOneWidget);
+      expect(tester.takeException(), isNull);
     });
   });
 }

@@ -1,4 +1,6 @@
+import 'package:flutter/widgets.dart';
 import 'package:fnm/core/routing/app_router.dart';
+import 'package:fnm/features/onboarding/tour_keys.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 
 /// One stop on the guided tour: a screen, and what it is for.
@@ -11,6 +13,13 @@ typedef TourStep = ({
 
   /// The sentence or two underneath it.
   String Function(AppLocalizations) body,
+
+  /// The control this step is ABOUT, cut out of the scrim and lit.
+  ///
+  /// Null means the step is about the screen as a whole, which is the honest
+  /// answer for a records page or a list of cups: there is no one button to
+  /// point at, and inventing one would be worse than dimming the lot.
+  GlobalKey? target,
 });
 
 /// The tour, in the order the game itself asks for these things.
@@ -18,41 +27,66 @@ typedef TourStep = ({
 /// The live match is deliberately absent. It is the one screen a manager
 /// reaches with something already at stake, and a scrim over it would be an
 /// interruption rather than a lesson.
-const List<TourStep> kTourSteps = [
+final List<TourStep> kTourSteps = [
   (
     route: Routes.hub,
     title: _hubTitle,
     body: _hubBody,
+    target: TourKeys.hubAction,
+  ),
+  (
+    route: Routes.hub,
+    title: _boardTitle,
+    body: _boardBody,
+    target: TourKeys.hubBoard,
   ),
   (
     route: Routes.budgetSetup,
     title: _budgetTitle,
     body: _budgetBody,
+    target: TourKeys.budgetDepartments,
+  ),
+  (
+    route: Routes.budgetSetup,
+    title: _staffTitle,
+    body: _staffBody,
+    target: TourKeys.budgetStaff,
   ),
   (
     route: Routes.tactics,
     title: _tacticsTitle,
     body: _tacticsBody,
+    target: TourKeys.tacticsFormation,
+  ),
+  (
+    route: Routes.tactics,
+    title: _playstyleTitle,
+    body: _playstyleBody,
+    target: TourKeys.tacticsPlaystyle,
   ),
   (
     route: Routes.tactics,
     title: _squadTitle,
     body: _squadBody,
+    target: TourKeys.squadTab,
   ),
   (
     route: Routes.callUps,
     title: _callUpsTitle,
     body: _callUpsBody,
+    target: TourKeys.callUpCount,
   ),
   (
     route: Routes.careers,
     title: _recordsTitle,
     body: _recordsBody,
+    target: null,
   ),
   (
     route: Routes.tournaments,
     title: _cupsTitle,
     body: _cupsBody,
+    target: null,
   ),
 ];
 
@@ -71,3 +105,9 @@ String _recordsTitle(AppLocalizations l) => l.tourRecordsTitle;
 String _recordsBody(AppLocalizations l) => l.tourRecordsBody;
 String _cupsTitle(AppLocalizations l) => l.tourCupsTitle;
 String _cupsBody(AppLocalizations l) => l.tourCupsBody;
+String _boardTitle(AppLocalizations l) => l.tourBoardTitle;
+String _boardBody(AppLocalizations l) => l.tourBoardBody;
+String _staffTitle(AppLocalizations l) => l.tourStaffTitle;
+String _staffBody(AppLocalizations l) => l.tourStaffBody;
+String _playstyleTitle(AppLocalizations l) => l.tourPlaystyleTitle;
+String _playstyleBody(AppLocalizations l) => l.tourPlaystyleBody;
