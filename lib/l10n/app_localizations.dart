@@ -11330,6 +11330,150 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Hours with the youngest in the pool.'**
   String get managerFocusYouthBlurb;
+
+  /// Guided tour string.
+  ///
+  /// In en, this message translates to:
+  /// **'First time here?'**
+  String get tourOfferTitle;
+
+  /// Guided tour string.
+  ///
+  /// In en, this message translates to:
+  /// **'This is a big game. Want a quick walk through the screens that matter? It takes a minute, and you can start it again any time from Settings.'**
+  String get tourOfferBody;
+
+  /// Guided tour string.
+  ///
+  /// In en, this message translates to:
+  /// **'Show me around'**
+  String get tourOfferYes;
+
+  /// Guided tour string.
+  ///
+  /// In en, this message translates to:
+  /// **'No thanks'**
+  String get tourOfferNo;
+
+  /// Guided tour string.
+  ///
+  /// In en, this message translates to:
+  /// **'Back'**
+  String get tourBack;
+
+  /// Guided tour string.
+  ///
+  /// In en, this message translates to:
+  /// **'Next'**
+  String get tourNext;
+
+  /// Guided tour string.
+  ///
+  /// In en, this message translates to:
+  /// **'Done'**
+  String get tourDone;
+
+  /// Guided tour string.
+  ///
+  /// In en, this message translates to:
+  /// **'Skip'**
+  String get tourSkip;
+
+  /// Guided tour string.
+  ///
+  /// In en, this message translates to:
+  /// **'This is the whole game'**
+  String get tourHubTitle;
+
+  /// Guided tour string.
+  ///
+  /// In en, this message translates to:
+  /// **'One button, and it changes as the cycle moves: a draw to watch, a squad to name, a match to play. Above it sit the board\'s confidence in you and the objectives they have set.'**
+  String get tourHubBody;
+
+  /// Guided tour string.
+  ///
+  /// In en, this message translates to:
+  /// **'The federation\'s money'**
+  String get tourBudgetTitle;
+
+  /// Guided tour string.
+  ///
+  /// In en, this message translates to:
+  /// **'Once every four-year cycle you split the war chest between the departments. Your staff are paid out of it first, so hiring an elite scout is a decision you make against the academy, not alongside it.'**
+  String get tourBudgetBody;
+
+  /// Guided tour string.
+  ///
+  /// In en, this message translates to:
+  /// **'How the side plays'**
+  String get tourTacticsTitle;
+
+  /// Guided tour string.
+  ///
+  /// In en, this message translates to:
+  /// **'Your shape, your way of playing, your captain and who takes the set pieces. Leave the last two unset and the game will warn you before kick-off rather than quietly picking for you.'**
+  String get tourTacticsBody;
+
+  /// Guided tour string.
+  ///
+  /// In en, this message translates to:
+  /// **'Everyone you can pick'**
+  String get tourSquadTitle;
+
+  /// Guided tour string.
+  ///
+  /// In en, this message translates to:
+  /// **'The whole pool, not just the squad: who is in form, who is carrying a knock, who is banned, and who has just come through the academy.'**
+  String get tourSquadBody;
+
+  /// Guided tour string.
+  ///
+  /// In en, this message translates to:
+  /// **'Naming a squad'**
+  String get tourCallUpsTitle;
+
+  /// Guided tour string.
+  ///
+  /// In en, this message translates to:
+  /// **'You name one squad per international window and it plays every match of that window, exactly as a real manager does. An injury inside the window pulls in a replacement for you.'**
+  String get tourCallUpsBody;
+
+  /// Guided tour string.
+  ///
+  /// In en, this message translates to:
+  /// **'Your career'**
+  String get tourRecordsTitle;
+
+  /// Guided tour string.
+  ///
+  /// In en, this message translates to:
+  /// **'Everything you have done: the matches, the team records, the trophies, and every nation you have managed.'**
+  String get tourRecordsBody;
+
+  /// Guided tour string.
+  ///
+  /// In en, this message translates to:
+  /// **'The rest of the world'**
+  String get tourCupsTitle;
+
+  /// Guided tour string.
+  ///
+  /// In en, this message translates to:
+  /// **'Every competition running right now — groups, standings and knockouts — including the ones you are not in. The world keeps playing whether or not you qualified.'**
+  String get tourCupsBody;
+
+  /// Guided tour string.
+  ///
+  /// In en, this message translates to:
+  /// **'Replay the tutorial'**
+  String get settingsTourTitle;
+
+  /// Guided tour string.
+  ///
+  /// In en, this message translates to:
+  /// **'Walk through the key screens again from the start.'**
+  String get settingsTourBlurb;
 }
 
 class _AppLocalizationsDelegate

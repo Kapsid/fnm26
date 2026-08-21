@@ -26,6 +26,7 @@ import 'package:fnm/features/squad/grievance_sheet.dart';
 import 'package:fnm/features/press/press_sheet.dart';
 import 'package:fnm/features/hub/round_popup.dart';
 import 'package:fnm/features/messages/message_popup.dart';
+import 'package:fnm/features/onboarding/tour_providers.dart';
 import 'package:fnm/features/messages/message_providers.dart';
 import 'package:fnm/features/tactics/condition_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
@@ -48,6 +49,57 @@ class _HubScreenState extends ConsumerState<HubScreen> {
   /// Guards against a second run while a sheet is already up — the hub rebuilds
   /// often, and each rebuild would otherwise stack another popup.
   bool _popping = false;
+
+  /// Guards the offer against firing twice while its popup is opening.
+  bool _offeringTour = false;
+
+  /// Asks, once ever, whether the manager wants showing around.
+  ///
+  /// Recorded whatever the answer is: "no thanks" is an answer, and asking it
+  /// again would make an offer into a nag. Settings is the way back in.
+  Future<void> _offerTour() async {
+    if (!mounted || appPopupBusy) return;
+    final l = AppLocalizations.of(context);
+    await markTourOffered(ref);
+    if (!mounted) return;
+    final wants = await showAppPopup<bool>(
+      context: context,
+      builder: (popupContext) => Padding(
+        padding: const EdgeInsets.fromLTRB(
+          AppSpacing.lg,
+          0,
+          AppSpacing.lg,
+          AppSpacing.lg,
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              l.tourOfferTitle,
+              style: AppTypography.titleMedium.copyWith(
+                color: AppColors.primary,
+              ),
+            ),
+            const SizedBox(height: AppSpacing.sm),
+            Text(l.tourOfferBody, style: AppTypography.bodySmall),
+            const SizedBox(height: AppSpacing.lg),
+            PrimaryButton(
+              label: l.tourOfferYes,
+              onPressed: () => Navigator.of(popupContext).pop(true),
+            ),
+            const SizedBox(height: AppSpacing.xs),
+            TextButton(
+              onPressed: () => Navigator.of(popupContext).pop(false),
+              child: Text(l.tourOfferNo),
+            ),
+          ],
+        ),
+      ),
+    );
+    if (!mounted) return;
+    if (wants ?? false) startTour(ref);
+  }
 
   int get careerId => widget.careerId;
 
@@ -84,6 +136,14 @@ class _HubScreenState extends ConsumerState<HubScreen> {
     // Surface news the moment it lands, rather than leaving it to be found.
     if (unread > 0 && !_popping) {
       WidgetsBinding.instance.addPostFrameCallback((_) => _popMessages());
+    }
+
+    // The offer of a walk through, made once ever. The hub is where it
+    // belongs: every path into a save ends here — a new career, an imported
+    // one, a start from the bottom — so one hook catches them all.
+    if (!ref.watch(tourOfferedProvider) && !_offeringTour) {
+      _offeringTour = true;
+      WidgetsBinding.instance.addPostFrameCallback((_) => _offerTour());
     }
 
     return Scaffold(

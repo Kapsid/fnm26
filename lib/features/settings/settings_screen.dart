@@ -9,6 +9,7 @@ import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
+import 'package:fnm/features/onboarding/tour_providers.dart';
 import 'package:fnm/features/settings/settings_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
@@ -120,6 +121,35 @@ class SettingsScreen extends ConsumerWidget {
                   ),
                 ),
               ],
+            ),
+          ),
+          const SizedBox(height: AppSpacing.md),
+          // The way back into the walk through. It is offered once ever, so
+          // without this a manager who said "no thanks" on his first day would
+          // have no way of ever changing his mind.
+          AppCard(
+            padding: EdgeInsets.zero,
+            child: ListTile(
+              onTap: () => startTour(ref),
+              leading: const Icon(
+                Icons.school_outlined,
+                color: AppColors.primary,
+              ),
+              title: Text(
+                l.settingsTourTitle,
+                style: AppTypography.bodyMedium,
+              ),
+              subtitle: Text(
+                l.settingsTourBlurb,
+                style: AppTypography.labelSmall.copyWith(
+                  color: AppColors.onSurfaceVariant,
+                ),
+              ),
+              trailing: const Icon(
+                Icons.chevron_right,
+                size: 18,
+                color: AppColors.primary,
+              ),
             ),
           ),
           const SizedBox(height: AppSpacing.md),

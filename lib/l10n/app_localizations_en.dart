@@ -7059,4 +7059,85 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get managerFocusYouthBlurb => 'Hours with the youngest in the pool.';
+
+  @override
+  String get tourOfferTitle => 'First time here?';
+
+  @override
+  String get tourOfferBody =>
+      'This is a big game. Want a quick walk through the screens that matter? It takes a minute, and you can start it again any time from Settings.';
+
+  @override
+  String get tourOfferYes => 'Show me around';
+
+  @override
+  String get tourOfferNo => 'No thanks';
+
+  @override
+  String get tourBack => 'Back';
+
+  @override
+  String get tourNext => 'Next';
+
+  @override
+  String get tourDone => 'Done';
+
+  @override
+  String get tourSkip => 'Skip';
+
+  @override
+  String get tourHubTitle => 'This is the whole game';
+
+  @override
+  String get tourHubBody =>
+      'One button, and it changes as the cycle moves: a draw to watch, a squad to name, a match to play. Above it sit the board\'s confidence in you and the objectives they have set.';
+
+  @override
+  String get tourBudgetTitle => 'The federation\'s money';
+
+  @override
+  String get tourBudgetBody =>
+      'Once every four-year cycle you split the war chest between the departments. Your staff are paid out of it first, so hiring an elite scout is a decision you make against the academy, not alongside it.';
+
+  @override
+  String get tourTacticsTitle => 'How the side plays';
+
+  @override
+  String get tourTacticsBody =>
+      'Your shape, your way of playing, your captain and who takes the set pieces. Leave the last two unset and the game will warn you before kick-off rather than quietly picking for you.';
+
+  @override
+  String get tourSquadTitle => 'Everyone you can pick';
+
+  @override
+  String get tourSquadBody =>
+      'The whole pool, not just the squad: who is in form, who is carrying a knock, who is banned, and who has just come through the academy.';
+
+  @override
+  String get tourCallUpsTitle => 'Naming a squad';
+
+  @override
+  String get tourCallUpsBody =>
+      'You name one squad per international window and it plays every match of that window, exactly as a real manager does. An injury inside the window pulls in a replacement for you.';
+
+  @override
+  String get tourRecordsTitle => 'Your career';
+
+  @override
+  String get tourRecordsBody =>
+      'Everything you have done: the matches, the team records, the trophies, and every nation you have managed.';
+
+  @override
+  String get tourCupsTitle => 'The rest of the world';
+
+  @override
+  String get tourCupsBody =>
+      'Every competition running right now — groups, standings and knockouts — including the ones you are not in. The world keeps playing whether or not you qualified.';
+
+  @override
+  String get settingsTourTitle => 'Replay the tutorial';
+
+  @override
+  String get settingsTourBlurb =>
+      'Walk through the key screens again from the start.';
 }

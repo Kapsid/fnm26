@@ -8,6 +8,8 @@ import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/theme/app_theme.dart';
 import 'package:fnm/domain/services/entitlement/entitlement_service.dart';
 import 'package:fnm/features/career/play_time.dart';
+import 'package:fnm/features/onboarding/tour_overlay.dart';
+import 'package:fnm/features/onboarding/tour_providers.dart';
 import 'package:fnm/features/settings/settings_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
@@ -34,6 +36,10 @@ class _FnmAppState extends ConsumerState<FnmApp> {
     unawaited(ref.read(entitlementServiceProvider).init());
     // Load persisted settings (sound & haptics) into their providers.
     unawaited(loadSettings(ref));
+    // Whether the walk through has ever been offered — see [loadTourOffered],
+    // which defaults to "already offered" so a slow read cannot flash the
+    // question at somebody who answered it long ago.
+    unawaited(loadTourOffered(ref));
     // Time spent with the phone in a pocket is not time spent playing, so the
     // play clock stops with the app and picks up again when it comes back.
     _lifecycle = AppLifecycleListener(
@@ -68,6 +74,11 @@ class _FnmAppState extends ConsumerState<FnmApp> {
     _routeListener = () => information.removeListener(onRoute);
   }
 
+  /// The save the app is currently in, or null outside one.
+  int? _careerIdOf(GoRouter router) => int.tryParse(
+    router.routeInformationProvider.value.uri.queryParameters['careerId'] ?? '',
+  );
+
   @override
   void dispose() {
     _routeListener?.call();
@@ -90,6 +101,12 @@ class _FnmAppState extends ConsumerState<FnmApp> {
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       routerConfig: router,
+      // The tour draws over whatever screen it has navigated to, so it wraps
+      // the router's output rather than living on any one screen.
+      builder: (context, child) => TourOverlay(
+        careerId: _careerIdOf(router),
+        child: child ?? const SizedBox.shrink(),
+      ),
     );
   }
 }

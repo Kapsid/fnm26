@@ -10117,5 +10117,101 @@
   "managerFocusYouthBlurb": "Hours with the youngest in the pool.",
   "@managerFocusYouthBlurb": {
     "description": "Training focus effect."
+  },
+  "tourOfferTitle": "First time here?",
+  "@tourOfferTitle": {
+    "description": "Guided tour string."
+  },
+  "tourOfferBody": "This is a big game. Want a quick walk through the screens that matter? It takes a minute, and you can start it again any time from Settings.",
+  "@tourOfferBody": {
+    "description": "Guided tour string."
+  },
+  "tourOfferYes": "Show me around",
+  "@tourOfferYes": {
+    "description": "Guided tour string."
+  },
+  "tourOfferNo": "No thanks",
+  "@tourOfferNo": {
+    "description": "Guided tour string."
+  },
+  "tourBack": "Back",
+  "@tourBack": {
+    "description": "Guided tour string."
+  },
+  "tourNext": "Next",
+  "@tourNext": {
+    "description": "Guided tour string."
+  },
+  "tourDone": "Done",
+  "@tourDone": {
+    "description": "Guided tour string."
+  },
+  "tourSkip": "Skip",
+  "@tourSkip": {
+    "description": "Guided tour string."
+  },
+  "tourHubTitle": "This is the whole game",
+  "@tourHubTitle": {
+    "description": "Guided tour string."
+  },
+  "tourHubBody": "One button, and it changes as the cycle moves: a draw to watch, a squad to name, a match to play. Above it sit the board's confidence in you and the objectives they have set.",
+  "@tourHubBody": {
+    "description": "Guided tour string."
+  },
+  "tourBudgetTitle": "The federation's money",
+  "@tourBudgetTitle": {
+    "description": "Guided tour string."
+  },
+  "tourBudgetBody": "Once every four-year cycle you split the war chest between the departments. Your staff are paid out of it first, so hiring an elite scout is a decision you make against the academy, not alongside it.",
+  "@tourBudgetBody": {
+    "description": "Guided tour string."
+  },
+  "tourTacticsTitle": "How the side plays",
+  "@tourTacticsTitle": {
+    "description": "Guided tour string."
+  },
+  "tourTacticsBody": "Your shape, your way of playing, your captain and who takes the set pieces. Leave the last two unset and the game will warn you before kick-off rather than quietly picking for you.",
+  "@tourTacticsBody": {
+    "description": "Guided tour string."
+  },
+  "tourSquadTitle": "Everyone you can pick",
+  "@tourSquadTitle": {
+    "description": "Guided tour string."
+  },
+  "tourSquadBody": "The whole pool, not just the squad: who is in form, who is carrying a knock, who is banned, and who has just come through the academy.",
+  "@tourSquadBody": {
+    "description": "Guided tour string."
+  },
+  "tourCallUpsTitle": "Naming a squad",
+  "@tourCallUpsTitle": {
+    "description": "Guided tour string."
+  },
+  "tourCallUpsBody": "You name one squad per international window and it plays every match of that window, exactly as a real manager does. An injury inside the window pulls in a replacement for you.",
+  "@tourCallUpsBody": {
+    "description": "Guided tour string."
+  },
+  "tourRecordsTitle": "Your career",
+  "@tourRecordsTitle": {
+    "description": "Guided tour string."
+  },
+  "tourRecordsBody": "Everything you have done: the matches, the team records, the trophies, and every nation you have managed.",
+  "@tourRecordsBody": {
+    "description": "Guided tour string."
+  },
+  "tourCupsTitle": "The rest of the world",
+  "@tourCupsTitle": {
+    "description": "Guided tour string."
+  },
+  "tourCupsBody": "Every competition running right now — groups, standings and knockouts — including the ones you are not in. The world keeps playing whether or not you qualified.",
+  "@tourCupsBody": {
+    "description": "Guided tour string."
+  },
+  "settingsTourTitle": "Replay the tutorial",
+  "@settingsTourTitle": {
+    "description": "Guided tour string."
+  },
+  "settingsTourBlurb": "Walk through the key screens again from the start.",
+  "@settingsTourBlurb": {
+    "description": "Guided tour string."
   }
 }

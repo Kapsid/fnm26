@@ -7085,4 +7085,85 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get managerFocusYouthBlurb => 'Hodiny s nejmladšími hráči.';
+
+  @override
+  String get tourOfferTitle => 'Poprvé tady?';
+
+  @override
+  String get tourOfferBody =>
+      'Tahle hra toho umí hodně. Chcete rychle provést obrazovkami, na kterých záleží? Zabere to minutu a kdykoli to můžete spustit znovu v Nastavení.';
+
+  @override
+  String get tourOfferYes => 'Proveďte mě';
+
+  @override
+  String get tourOfferNo => 'Teď ne';
+
+  @override
+  String get tourBack => 'Zpět';
+
+  @override
+  String get tourNext => 'Dál';
+
+  @override
+  String get tourDone => 'Hotovo';
+
+  @override
+  String get tourSkip => 'Přeskočit';
+
+  @override
+  String get tourHubTitle => 'Tohle je celá hra';
+
+  @override
+  String get tourHubBody =>
+      'Jedno tlačítko, které se mění podle toho, kde je cyklus: los k vidění, nominace, zápas. Nad ním je důvěra vedení a cíle, které vám dalo.';
+
+  @override
+  String get tourBudgetTitle => 'Peníze federace';
+
+  @override
+  String get tourBudgetBody =>
+      'Jednou za čtyřletý cyklus rozdělíte rozpočet mezi oddělení. Nejdřív se z něj platí štáb, takže špičkový skaut je rozhodnutí proti akademii, ne vedle ní.';
+
+  @override
+  String get tourTacticsTitle => 'Jak tým hraje';
+
+  @override
+  String get tourTacticsBody =>
+      'Rozestavení, styl hry, kapitán a exekutoři standardek. Poslední dvě věci nemusíte nastavit — hra vás před výkopem upozorní, místo aby za vás tiše vybrala.';
+
+  @override
+  String get tourSquadTitle => 'Všichni, koho můžete vzít';
+
+  @override
+  String get tourSquadBody =>
+      'Celý kádr, ne jen nominace: kdo je ve formě, kdo se doléčuje, kdo má stopku a kdo právě prošel akademií.';
+
+  @override
+  String get tourCallUpsTitle => 'Nominace';
+
+  @override
+  String get tourCallUpsBody =>
+      'Nominujete jednou na reprezentační okno a ta soupiska odehraje všechny zápasy okna, přesně jako skutečný trenér. Zranění uvnitř okna za vás doplní náhradník.';
+
+  @override
+  String get tourRecordsTitle => 'Vaše kariéra';
+
+  @override
+  String get tourRecordsBody =>
+      'Všechno, co jste dokázali: zápasy, týmové rekordy, trofeje a každý národ, který jste vedli.';
+
+  @override
+  String get tourCupsTitle => 'Zbytek světa';
+
+  @override
+  String get tourCupsBody =>
+      'Všechny soutěže, které právě běží — skupiny, tabulky i vyřazovací fáze — včetně těch, kde nejste. Svět hraje dál, ať jste postoupili nebo ne.';
+
+  @override
+  String get settingsTourTitle => 'Spustit tutoriál znovu';
+
+  @override
+  String get settingsTourBlurb =>
+      'Znovu si projděte klíčové obrazovky od začátku.';
 }
