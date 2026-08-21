@@ -74,11 +74,6 @@ class _FnmAppState extends ConsumerState<FnmApp> {
     _routeListener = () => information.removeListener(onRoute);
   }
 
-  /// The save the app is currently in, or null outside one.
-  int? _careerIdOf(GoRouter router) => int.tryParse(
-    router.routeInformationProvider.value.uri.queryParameters['careerId'] ?? '',
-  );
-
   @override
   void dispose() {
     _routeListener?.call();
@@ -103,10 +98,8 @@ class _FnmAppState extends ConsumerState<FnmApp> {
       routerConfig: router,
       // The tour draws over whatever screen it has navigated to, so it wraps
       // the router's output rather than living on any one screen.
-      builder: (context, child) => TourOverlay(
-        careerId: _careerIdOf(router),
-        child: child ?? const SizedBox.shrink(),
-      ),
+      builder: (context, child) =>
+          TourOverlay(child: child ?? const SizedBox.shrink()),
     );
   }
 }

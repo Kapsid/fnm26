@@ -9,6 +9,8 @@ import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
+import 'package:fnm/domain/entities/career.dart';
+import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/onboarding/tour_providers.dart';
 import 'package:fnm/features/settings/settings_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
@@ -26,6 +28,16 @@ class SettingsScreen extends ConsumerWidget {
     final soundHaptics = ref.watch(soundHapticsEnabledProvider);
     // 'system' when there is no override, otherwise the forced language code.
     final current = ref.watch(localeProvider)?.languageCode ?? 'system';
+    // The save to walk: the one played most recently, or the newest if none
+    // has ever been opened.
+    final saves = ref.watch(savesProvider).valueOrNull ?? const <Career>[];
+    final replayable = saves.isEmpty
+        ? null
+        : (saves.toList()..sort((a, b) {
+            final at = a.lastPlayedAt ?? a.createdAt;
+            final bt = b.lastPlayedAt ?? b.createdAt;
+            return bt.compareTo(at);
+          })).first;
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -127,10 +139,21 @@ class SettingsScreen extends ConsumerWidget {
           // The way back into the walk through. It is offered once ever, so
           // without this a manager who said "no thanks" on his first day would
           // have no way of ever changing his mind.
+          //
+          // It walks the save he played last, because the tour navigates real
+          // screens and every one of them needs a save to show. With no save
+          // at all there is nothing to walk, and the row says so rather than
+          // starting a tour of empty rooms.
           AppCard(
             padding: EdgeInsets.zero,
             child: ListTile(
-              onTap: () => startTour(ref),
+              enabled: replayable != null,
+              onTap: replayable == null
+                  ? null
+                  : () {
+                      startTour(ref, replayable.id);
+                      context.go('${Routes.hub}?careerId=${replayable.id}');
+                    },
               leading: const Icon(
                 Icons.school_outlined,
                 color: AppColors.primary,
@@ -140,7 +163,7 @@ class SettingsScreen extends ConsumerWidget {
                 style: AppTypography.bodyMedium,
               ),
               subtitle: Text(
-                l.settingsTourBlurb,
+                replayable == null ? l.settingsTourNoSave : l.settingsTourBlurb,
                 style: AppTypography.labelSmall.copyWith(
                   color: AppColors.onSurfaceVariant,
                 ),

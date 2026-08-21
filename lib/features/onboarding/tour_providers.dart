@@ -15,6 +15,17 @@ final tourOfferedProvider = StateProvider<bool>((ref) => true);
 /// Which step the tour is on, or null when it is not running.
 final tourStepProvider = StateProvider<int?>((ref) => null);
 
+/// The save the tour is walking through.
+///
+/// Carried explicitly rather than read back off the router. Sniffing the
+/// current route for a careerId looked tidy and failed silently: the overlay
+/// sits above the Navigator, its builder does not necessarily re-run on a
+/// route change, and a null id made it skip BOTH the navigation and the
+/// measuring — so the tour became a popup that appeared over whatever screen
+/// you happened to be on and lit nothing at all. Whoever starts the tour
+/// knows which save it is; they say so.
+final tourCareerProvider = StateProvider<int?>((ref) => null);
+
 /// Reads the stored flag into [tourOfferedProvider].
 ///
 /// Defaults to "already offered" until proven otherwise, so a slow read can
@@ -32,9 +43,11 @@ Future<void> markTourOffered(WidgetRef ref) async {
   await prefs.setBool(kTourOfferedKey, true);
 }
 
-/// Starts the tour at its first step.
-void startTour(WidgetRef ref) =>
-    ref.read(tourStepProvider.notifier).state = 0;
+/// Starts the tour at its first step, for [careerId].
+void startTour(WidgetRef ref, int? careerId) {
+  ref.read(tourCareerProvider.notifier).state = careerId;
+  ref.read(tourStepProvider.notifier).state = 0;
+}
 
 /// Ends it, whether it was finished or skipped.
 void endTour(WidgetRef ref) => ref.read(tourStepProvider.notifier).state = null;

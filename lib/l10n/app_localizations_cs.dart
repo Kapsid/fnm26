@@ -7187,4 +7187,8 @@ class AppLocalizationsCs extends AppLocalizations {
   @override
   String get tourPlaystyleBody =>
       'Rozestavení je jen půlka taktiky. Tohle je ta druhá — jak vysoko napadáte, jak přímočaře hrajete, kolik riskujete.';
+
+  @override
+  String get settingsTourNoSave =>
+      'Nejdřív si založte kariéru — průvodce prochází vaše vlastní obrazovky.';
 }

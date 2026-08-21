@@ -10237,5 +10237,9 @@
   "tourPlaystyleBody": "The shape is only half a tactic. This is the other half — how high you press, how direct you are, how much you risk.",
   "@tourPlaystyleBody": {
     "description": "Guided tour string."
+  },
+  "settingsTourNoSave": "Start a career first — the walk through visits your own screens.",
+  "@settingsTourNoSave": {
+    "description": "Guided tour string."
   }
 }

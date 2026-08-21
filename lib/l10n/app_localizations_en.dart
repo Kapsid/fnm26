@@ -7161,4 +7161,8 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get tourPlaystyleBody =>
       'The shape is only half a tactic. This is the other half — how high you press, how direct you are, how much you risk.';
+
+  @override
+  String get settingsTourNoSave =>
+      'Start a career first — the walk through visits your own screens.';
 }

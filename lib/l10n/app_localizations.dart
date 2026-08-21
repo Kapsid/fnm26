@@ -11510,6 +11510,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'The shape is only half a tactic. This is the other half — how high you press, how direct you are, how much you risk.'**
   String get tourPlaystyleBody;
+
+  /// Guided tour string.
+  ///
+  /// In en, this message translates to:
+  /// **'Start a career first — the walk through visits your own screens.'**
+  String get settingsTourNoSave;
 }
 
 class _AppLocalizationsDelegate

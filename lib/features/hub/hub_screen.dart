@@ -99,7 +99,7 @@ class _HubScreenState extends ConsumerState<HubScreen> {
       ),
     );
     if (!mounted) return;
-    if (wants ?? false) startTour(ref);
+    if (wants ?? false) startTour(ref, careerId);
   }
 
   int get careerId => widget.careerId;

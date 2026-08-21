@@ -19,11 +19,7 @@ import 'package:go_router/go_router.dart';
 /// Navigation is `go` per step, never `push`, so the tour cannot build a stack
 /// behind itself and leaving lands on the hub from any step.
 class TourOverlay extends ConsumerStatefulWidget {
-  const TourOverlay({required this.careerId, required this.child, super.key});
-
-  /// The save being toured. The tour is about screens, but every screen in a
-  /// save needs to know which one.
-  final int? careerId;
+  const TourOverlay({required this.child, super.key});
 
   final Widget child;
 
@@ -71,8 +67,7 @@ class _TourOverlayState extends ConsumerState<TourOverlay> {
   }
 
   void _goTo(int index) {
-    final careerId = widget.careerId;
-    if (careerId == null) return;
+    final careerId = ref.read(tourCareerProvider);
     final route = kTourSteps[index].route;
     // Guard against navigating on every rebuild — the overlay rebuilds
     // whenever the screen underneath it does.
@@ -80,7 +75,10 @@ class _TourOverlayState extends ConsumerState<TourOverlay> {
     _navigatedFor = index;
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       if (!mounted) return;
-      context.go('$route?careerId=$careerId');
+      // No save to walk through — a replay from Settings, say, before one is
+      // open. The step still reads and still lights whatever it can find on
+      // the screen already showing.
+      if (careerId != null) context.go('$route?careerId=$careerId');
       // Two frames: one for the route to build, one for it to lay out. Only
       // then does the target have a position worth measuring.
       await WidgetsBinding.instance.endOfFrame;
@@ -92,7 +90,7 @@ class _TourOverlayState extends ConsumerState<TourOverlay> {
   }
 
   void _finish() {
-    final careerId = widget.careerId;
+    final careerId = ref.read(tourCareerProvider);
     endTour(ref);
     _navigatedFor = null;
     if (careerId == null) return;
@@ -119,13 +117,13 @@ class _TourOverlayState extends ConsumerState<TourOverlay> {
       return widget.child;
     }
     _goTo(step);
-    // Same screen, different control: no navigation happens, so the target is
-    // re-found here instead.
-    if (_navigatedFor == step) {
-      WidgetsBinding.instance.addPostFrameCallback(
-        (_) => _locate(kTourSteps[step].target),
-      );
-    }
+    // ALWAYS, not only after a navigation. Tying the measuring to the
+    // navigation meant that any step which did not navigate — a second step on
+    // the same screen, or any step at all when there was no save to navigate
+    // with — lit nothing, and the tour silently became a curtain.
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) => _locate(kTourSteps[step].target),
+    );
 
     final l = AppLocalizations.of(context);
     final current = kTourSteps[step];
@@ -139,7 +137,7 @@ class _TourOverlayState extends ConsumerState<TourOverlay> {
         Positioned.fill(
           child: AbsorbPointer(
             child: CustomPaint(
-              painter: _SpotlightPainter(hole: _hole, radius: AppRadii.md),
+              painter: SpotlightPainter(hole: _hole, radius: AppRadii.md),
             ),
           ),
         ),
@@ -236,11 +234,15 @@ class _TourOverlayState extends ConsumerState<TourOverlay> {
 
 /// Paints the scrim with a hole in it.
 ///
+/// Public so a test can read [hole] back: "the overlay drew something" is not
+/// the same claim as "the overlay lit the right control", and only the second
+/// one is the feature.
+///
 /// The hole is what makes this a tour rather than a curtain: everything is
 /// dimmed EXCEPT the control being talked about, which stays at full
 /// brightness with a ring around it.
-class _SpotlightPainter extends CustomPainter {
-  const _SpotlightPainter({required this.hole, required this.radius});
+class SpotlightPainter extends CustomPainter {
+  const SpotlightPainter({required this.hole, required this.radius});
 
   /// The control's rect in global coordinates, or null for no cut-out.
   final Rect? hole;
@@ -275,6 +277,6 @@ class _SpotlightPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(_SpotlightPainter old) =>
+  bool shouldRepaint(SpotlightPainter old) =>
       old.hole != hole || old.radius != radius;
 }

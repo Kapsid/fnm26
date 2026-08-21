@@ -4,6 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/theme/app_theme.dart';
 import 'package:fnm/features/onboarding/tour_overlay.dart';
+import 'package:fnm/features/onboarding/tour_keys.dart';
 import 'package:fnm/features/onboarding/tour_providers.dart';
 import 'package:fnm/features/onboarding/tour_steps.dart';
 import 'package:fnm/l10n/app_localizations.dart';
@@ -89,7 +90,6 @@ void main() {
             // No careerId: the overlay must draw without navigating, so the
             // caption can be tested without a router underneath it.
             home: const TourOverlay(
-              careerId: null,
               child: Scaffold(body: Text('the screen behind')),
             ),
           ),
@@ -158,7 +158,6 @@ void main() {
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
             home: TourOverlay(
-              careerId: null,
               child: Scaffold(
                 body: Align(
                   alignment: Alignment.topCenter,
@@ -188,7 +187,6 @@ void main() {
     ) async {
       await tester.pumpApp(
         const TourOverlay(
-          careerId: null,
           child: Scaffold(body: Text('the screen behind')),
         ),
       );
@@ -206,7 +204,7 @@ void main() {
       addTearDown(container.dispose);
       container.read(tourStepProvider.notifier).state = 0;
 
-      final target = GlobalKey();
+      final target = TourKeys.hubAction;
       await tester.pumpWidget(
         UncontrolledProviderScope(
           container: container,
@@ -215,7 +213,6 @@ void main() {
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
             home: TourOverlay(
-              careerId: null,
               child: Scaffold(
                 body: Center(
                   child: SizedBox(
@@ -232,14 +229,22 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      // The overlay paints; what matters is that it asks for a cut-out at the
-      // control's rect rather than covering everything.
-      final painter = tester
+      // Not "it painted something" — that was true of the version that lit
+      // nothing. The hole has to land on the control's own rect.
+      final spotlight = tester
           .widgetList<CustomPaint>(find.byType(CustomPaint))
           .map((p) => p.painter)
-          .whereType<CustomPainter>()
-          .toList();
-      expect(painter, isNotEmpty, reason: 'the scrim should be painted');
+          .whereType<SpotlightPainter>()
+          .single;
+      final wanted = tester.getRect(find.byKey(target));
+      expect(
+        spotlight.hole,
+        isNotNull,
+        reason: 'nothing was lit — the tour is a curtain again',
+      );
+      expect(spotlight.hole!.center.dx, closeTo(wanted.center.dx, 1));
+      expect(spotlight.hole!.center.dy, closeTo(wanted.center.dy, 1));
+      expect(spotlight.hole!.width, greaterThanOrEqualTo(wanted.width));
       expect(tester.takeException(), isNull);
     });
 
@@ -259,7 +264,6 @@ void main() {
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
             home: const TourOverlay(
-              careerId: null,
               child: Scaffold(body: Text('nothing keyed here')),
             ),
           ),
