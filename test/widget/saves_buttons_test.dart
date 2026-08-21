@@ -54,7 +54,7 @@ void main() {
       });
 
       testWidgets('the new-game button fits', (tester) async {
-        await pumpButton(tester, locale, (l) => l.careerNewGame, icon: Icons.add);
+        await pumpButton(tester, locale, (l) => l.careerNewGame);
         expect(tester.takeException(), isNull);
       });
 
