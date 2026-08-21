@@ -509,16 +509,6 @@
             "default_dart": null,
             "default_client_dart": null,
             "dsl_features": []
-          },
-          {
-            "name": "call_up_window_id",
-            "getter_name": "callUpWindowId",
-            "moor_type": "string",
-            "nullable": true,
-            "customConstraints": null,
-            "default_dart": null,
-            "default_client_dart": null,
-            "dsl_features": []
           }
         ],
         "is_virtual": false,
@@ -3419,7 +3409,7 @@
       "sql": [
         {
           "dialect": "sqlite",
-          "sql": "CREATE TABLE IF NOT EXISTS \"careers\" (\"id\" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, \"manager_name\" TEXT NOT NULL, \"nation_id\" INTEGER NOT NULL REFERENCES nations (id), \"rng_seed\" INTEGER NOT NULL, \"created_at\" INTEGER NOT NULL, \"in_game_date\" INTEGER NOT NULL, \"cycle_pointer\" INTEGER NOT NULL DEFAULT 0, \"last_played_at\" INTEGER NULL, \"budget\" INTEGER NOT NULL DEFAULT 0, \"captain_player_id\" INTEGER NULL, \"y_read_at\" INTEGER NULL, \"played_seconds\" INTEGER NOT NULL DEFAULT 0, \"skill_man_management\" INTEGER NOT NULL DEFAULT 5, \"skill_tactical\" INTEGER NOT NULL DEFAULT 5, \"skill_youth_development\" INTEGER NOT NULL DEFAULT 5, \"skill_negotiation\" INTEGER NOT NULL DEFAULT 5, \"staff_assistant\" INTEGER NOT NULL DEFAULT 0, \"staff_scout\" INTEGER NOT NULL DEFAULT 0, \"staff_fitness_coach\" INTEGER NOT NULL DEFAULT 0, \"staff_assistant_id\" INTEGER NULL, \"staff_scout_id\" INTEGER NULL, \"staff_fitness_coach_id\" INTEGER NULL, \"last_cycle_board\" INTEGER NULL, \"call_up_window_id\" TEXT NULL);"
+          "sql": "CREATE TABLE IF NOT EXISTS \"careers\" (\"id\" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, \"manager_name\" TEXT NOT NULL, \"nation_id\" INTEGER NOT NULL REFERENCES nations (id), \"rng_seed\" INTEGER NOT NULL, \"created_at\" INTEGER NOT NULL, \"in_game_date\" INTEGER NOT NULL, \"cycle_pointer\" INTEGER NOT NULL DEFAULT 0, \"last_played_at\" INTEGER NULL, \"budget\" INTEGER NOT NULL DEFAULT 0, \"captain_player_id\" INTEGER NULL, \"y_read_at\" INTEGER NULL, \"played_seconds\" INTEGER NOT NULL DEFAULT 0, \"skill_man_management\" INTEGER NOT NULL DEFAULT 5, \"skill_tactical\" INTEGER NOT NULL DEFAULT 5, \"skill_youth_development\" INTEGER NOT NULL DEFAULT 5, \"skill_negotiation\" INTEGER NOT NULL DEFAULT 5, \"staff_assistant\" INTEGER NOT NULL DEFAULT 0, \"staff_scout\" INTEGER NOT NULL DEFAULT 0, \"staff_fitness_coach\" INTEGER NOT NULL DEFAULT 0, \"staff_assistant_id\" INTEGER NULL, \"staff_scout_id\" INTEGER NULL, \"staff_fitness_coach_id\" INTEGER NULL, \"last_cycle_board\" INTEGER NULL);"
         }
       ]
     },

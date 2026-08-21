@@ -70,6 +70,19 @@ typedef SquadStanding = ({
 /// save already holds — who is in the squad, who has been playing, how many
 /// caps a man has — so nothing new is stored to make the dressing room talk.
 abstract final class Grievances {
+  /// Whether players come to the manager's door at all.
+  ///
+  /// OFF. In play it fired constantly — a squad of 23 always contains somebody
+  /// who has not played in three matches, so "somebody wants a word" became
+  /// the thing that happened between every pair of matches, and an interruption
+  /// that always happens is not an event, it is a toll.
+  ///
+  /// Everything below stays exactly as it was rather than being deleted: the
+  /// detection rules, the tones, their costs and their tests are all still
+  /// here and still correct, so turning this back on is one word rather than
+  /// an excavation. What is gone is the door knocking.
+  static const bool enabled = false;
+
   /// How many of the nation's recent matches count when judging whether a man
   /// is being played.
   static const int recentWindow = 3;

@@ -48,6 +48,7 @@ import 'package:fnm/features/settings/settings_providers.dart';
 import 'package:fnm/features/hub/round_popup.dart' show stageLabelFor;
 import 'package:fnm/features/tournaments/playoff_paths.dart';
 import 'package:fnm/l10n/app_localizations.dart';
+import 'package:fnm/domain/services/club/clubs.dart';
 
 part 'season_cycle.dart';
 part 'season_finals.dart';

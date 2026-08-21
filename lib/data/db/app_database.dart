@@ -219,6 +219,9 @@ class AppDatabase extends _$AppDatabase {
             schema.careers.staffAssistantId,
             schema.careers.staffScoutId,
             schema.careers.staffFitnessCoachId,
+            // Added here and dropped again at 45 — see that step. A save that
+            // upgrades straight from 43 still passes through this one, so the
+            // column has to be created for the drop to have something to drop.
             schema.careers.callUpWindowId,
           ]) {
             await m.addColumn(schema.careers, column);
@@ -226,11 +229,20 @@ class AppDatabase extends _$AppDatabase {
           await m.alterTable(TableMigration(schema.careers));
         },
         // 44 → 45 remembers where the board's gauge finished the last cycle.
+        //
+        // It also drops call_up_window_id, added one version earlier to pin a
+        // squad to its window — which turned out to be a mechanism the save
+        // already had: hasWatchedDraw, keyed on the window's first fixture,
+        // has always fired a nomination exactly once per period. What was
+        // actually wrong was the PERIOD, four matchdays long, so a manager
+        // named one squad and lived with it through half a year of qualifiers.
+        // See Nomination._qualWindowEvery, now two.
         // Additive and nullable: a save upgraded from before it has no closing
         // figure to carry, so its next cycle opens neutral exactly as every
         // cycle used to.
         from44To45: (m, schema) async {
           await m.addColumn(schema.careers, schema.careers.lastCycleBoard);
+          await m.alterTable(TableMigration(schema.careers));
         },
       )(m, from, to);
     },

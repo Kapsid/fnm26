@@ -424,14 +424,6 @@ class Careers extends Table with TableInfo {
     requiredDuringInsert: false,
     $customConstraints: 'NULL',
   );
-  late final GeneratedColumn<String> callUpWindowId = GeneratedColumn<String>(
-    'call_up_window_id',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-    $customConstraints: 'NULL',
-  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -457,7 +449,6 @@ class Careers extends Table with TableInfo {
     staffScoutId,
     staffFitnessCoachId,
     lastCycleBoard,
-    callUpWindowId,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;

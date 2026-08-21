@@ -26,7 +26,12 @@ abstract final class Nomination {
   static const _qualRounds = <String?>{null, 'CQ'};
 
   /// How often (in matchdays) a qualifying campaign re-opens the squad.
-  static const _qualWindowEvery = 4;
+  ///
+  /// TWO, because that is what an international window is. At four, a manager
+  /// named one squad and lived with it through four or six qualifiers spread
+  /// across half a year — nobody does that. A country names a squad, plays the
+  /// two matches of that window with it, and names another one next time.
+  static const _qualWindowEvery = 2;
 
   /// Whether [f] begins a new nomination period, given the fixture immediately
   /// before it by date ([previous], null if [f] is the very first).

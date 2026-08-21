@@ -314,7 +314,15 @@ extension SeasonRollover on SeasonService {
   static const int _transferPoolSize = 10;
 
   /// A plausible transfer fee: the player's value with a deterministic premium
-  /// (a fee usually tops the book value), so a marquee move reads big.
+  /// (a fee usually tops the book value), so a marquee move reads big — capped
+  /// by what the league he is joining could actually pay.
+  ///
+  /// The cap is the fix for thirty-million-euro moves to Romania. What a player
+  /// is worth and what a buying league can afford are two different numbers,
+  /// and a transfer fee is the smaller of them. It is a SOFT cap: a fee
+  /// approaches the ceiling asymptotically rather than stopping dead on it, so
+  /// a lesser league's record signing still reads as a bigger deal than its
+  /// ordinary business instead of every good move printing the same number.
   ///
   /// Floored well above zero — [Player.value] is zero for anyone under 44
   /// overall, which would have every move in a smaller nation announced as a
@@ -322,7 +330,16 @@ extension SeasonRollover on SeasonService {
   int _transferFee(Player p) {
     final premium = 1.0 + (p.id.abs() % 60) / 100; // 1.00–1.59×
     final floor = 100000 + (p.overall.clamp(20, 99) * 6000);
-    return (p.value * premium).round().clamp(floor, 1 << 62);
+    final raw = (p.value * premium).round().clamp(floor, 1 << 62);
+    final ceiling = ClubService.feeCeilingForTier(
+      ClubService.tierOfCountry(p.clubCountry),
+    );
+    if (raw <= ceiling) return raw;
+    // Everything above the ceiling is compressed into the last tenth of it, so
+    // the ordering of moves within a league survives while the numbers stop
+    // being absurd.
+    final over = raw - ceiling;
+    return (ceiling * 0.9 + ceiling * 0.1 * (over / (over + ceiling))).round();
   }
 
   /// Formats a euro fee compactly: €X.XM / €XXXk / €X.

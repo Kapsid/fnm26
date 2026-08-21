@@ -24,6 +24,7 @@ import 'package:fnm/features/tactics/player_roles_providers.dart';
 import 'package:fnm/features/tactics/set_piece_takers_providers.dart';
 import 'package:fnm/features/tactics/tactic_preset_providers.dart';
 import 'package:fnm/features/tactics/tactics_pitch.dart';
+import 'package:fnm/features/tactics/formation_picker.dart';
 import 'package:fnm/features/tactics/tactics_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
@@ -260,20 +261,9 @@ class TacticsScreen extends ConsumerWidget {
                             style: AppTypography.labelMedium,
                           ),
                           const SizedBox(height: AppSpacing.sm),
-                          Wrap(
-                            spacing: AppSpacing.sm,
-                            runSpacing: AppSpacing.sm,
-                            children: [
-                              for (final f in Formation.values)
-                                GestureDetector(
-                                  onTap: () =>
-                                      service.setFormation(careerId, f),
-                                  child: TacticalChip(
-                                    f.label,
-                                    emphasized: f == tactic.formation,
-                                  ),
-                                ),
-                            ],
+                          FormationPicker(
+                            selected: tactic.formation,
+                            onSelected: (f) => service.setFormation(careerId, f),
                           ),
                           const SizedBox(height: AppSpacing.lg),
                           // The side's way of playing, stated in words, with a

@@ -148,7 +148,15 @@ abstract final class ClubService {
   /// first-choice international — and how much the share falls per rating point
   /// above it. Deliberately gentle: the measured figure should survive.
   static const double _retentionAnchor = 78;
-  static const double _listedTilt = 0.7;
+
+  /// Raised from 0.7 to 1.1 with the fee ceiling. The measured retention
+  /// figures are right for a country's pool as a whole and were too flat at
+  /// the top of it: the elite leagues come hardest for a country's very best,
+  /// so a player well above the level the figure was measured at should leave
+  /// noticeably more often than his team-mates. Still gentle enough that the
+  /// measured figure survives for the bulk of a squad, which is the point of
+  /// having measured it.
+  static const double _listedTilt = 1.1;
 
   /// The fallback curve for a country with no measured figure: a high base at
   /// [_unlistedAnchor] falling away steeply with quality, so an unlisted minnow
@@ -238,6 +246,32 @@ abstract final class ClubService {
   /// Overall → league tier (1 elite … 5 lower). Bands are six wide so a player
   /// only changes tier (and so club) on a real step up or down, not on aging
   /// noise. Public so player development can weight growth by league strength.
+  /// The strength tier of the league [country] plays in (1 = elite … 5 =
+  /// lower), or the lowest tier for a country with no curated league — a
+  /// generated domestic side is a domestic side.
+  static int tierOfCountry(String country) =>
+      _tierByCountry[country.toLowerCase()] ?? 5;
+
+  static final Map<String, int> _tierByCountry = {
+    for (final l in _leagues) l.country: l.tier,
+  };
+
+  /// The most a move INTO a league of this tier can plausibly be worth.
+  ///
+  /// Fees used to be the player's book value times a premium, with no
+  /// reference at all to who was paying — so a 90-rated player moving to
+  /// Romania was announced at thirty million euros, which is the arithmetic
+  /// working exactly as written and nothing like a transfer. What a player is
+  /// worth and what a league can pay are two different numbers, and the
+  /// smaller one is the fee.
+  static int feeCeilingForTier(int tier) => switch (tier) {
+    1 => 120000000,
+    2 => 45000000,
+    3 => 15000000,
+    4 => 5000000,
+    _ => 2000000,
+  };
+
   static int tierForOverall(int overall) {
     if (overall >= 84) return 1;
     if (overall >= 78) return 2;

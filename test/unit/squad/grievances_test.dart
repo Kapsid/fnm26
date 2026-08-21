@@ -174,4 +174,15 @@ void main() {
       expect(a, endsWith(':2032'));
     });
   });
+
+  group('the door is closed', () {
+    test('nobody comes to see the manager any more', () {
+      // The detection rules below are all still correct and still tested — a
+      // squad of 23 always contains somebody with a real case, which is
+      // precisely why this fired between every pair of matches and became a
+      // toll rather than an event. The provider returns nothing while this is
+      // false, so turning it back on is one word.
+      expect(Grievances.enabled, isFalse);
+    });
+  });
 }

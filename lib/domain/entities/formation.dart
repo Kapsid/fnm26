@@ -20,6 +20,12 @@ enum Formation {
   f3421,
   f3412,
   f5212,
+
+  /// The christmas tree.
+  f4321,
+
+  /// A back three with a lone striker off a second forward.
+  f3511,
 }
 
 extension FormationX on Formation {
@@ -42,6 +48,8 @@ extension FormationX on Formation {
     Formation.f3421 => '3-4-2-1',
     Formation.f3412 => '3-4-1-2',
     Formation.f5212 => '5-2-1-2',
+    Formation.f4321 => '4-3-2-1',
+    Formation.f3511 => '3-5-1-1',
   };
 
   /// The 11 positions for this formation, in slot order.
@@ -266,6 +274,32 @@ extension FormationX on Formation {
       PlayerPosition.cm,
       PlayerPosition.am,
       PlayerPosition.st,
+      PlayerPosition.st,
+    ],
+    Formation.f4321 => const [
+      PlayerPosition.gk,
+      PlayerPosition.lb,
+      PlayerPosition.cb,
+      PlayerPosition.cb,
+      PlayerPosition.rb,
+      PlayerPosition.cm,
+      PlayerPosition.cm,
+      PlayerPosition.cm,
+      PlayerPosition.am,
+      PlayerPosition.am,
+      PlayerPosition.st,
+    ],
+    Formation.f3511 => const [
+      PlayerPosition.gk,
+      PlayerPosition.cb,
+      PlayerPosition.cb,
+      PlayerPosition.cb,
+      PlayerPosition.lm,
+      PlayerPosition.cm,
+      PlayerPosition.cm,
+      PlayerPosition.cm,
+      PlayerPosition.rm,
+      PlayerPosition.am,
       PlayerPosition.st,
     ],
   };

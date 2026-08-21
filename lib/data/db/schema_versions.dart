@@ -5231,7 +5231,6 @@ final class Schema45 extends i0.VersionedSchema {
         _column_133,
         _column_134,
         _column_136,
-        _column_135,
       ],
       attachedDatabase: database,
     ),
@@ -5730,8 +5729,6 @@ class Shape36 extends i0.VersionedTable {
       columnsByName['staff_fitness_coach_id']! as i1.GeneratedColumn<int>;
   i1.GeneratedColumn<int> get lastCycleBoard =>
       columnsByName['last_cycle_board']! as i1.GeneratedColumn<int>;
-  i1.GeneratedColumn<String> get callUpWindowId =>
-      columnsByName['call_up_window_id']! as i1.GeneratedColumn<String>;
 }
 
 i1.GeneratedColumn<int> _column_136(String aliasedName) =>

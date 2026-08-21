@@ -70,8 +70,5 @@ abstract class Career with _$Career {
     /// cycle has closed.
     int? lastCycleBoard,
 
-    /// The international window the current squad was named for, or null when
-    /// no squad has been named yet.
-    String? callUpWindowId,
   }) = _Career;
 }

@@ -139,14 +139,7 @@ class Careers extends Table {
   /// is made of; see `BoardSatisfaction.carryOver`.
   IntColumn get lastCycleBoard => integer().nullable()();
 
-  /// The international window this save's squad was named for, or null when no
-  /// squad has been named yet.
-  ///
-  /// A squad used to be re-picked every few matches, which is not how national
-  /// football works: a manager names one squad for a window and lives with it.
-  /// Storing which window it was named for is what stops the hub asking again
-  /// in the middle of one.
-  TextColumn get callUpWindowId => text().nullable()();
+
 }
 
 /// A nation's Nations Cup league (0 = League A, 1 = League B, …) within its

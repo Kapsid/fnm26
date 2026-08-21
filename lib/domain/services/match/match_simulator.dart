@@ -48,7 +48,16 @@ class RatingMatchSimulator implements MatchSimulator {
     // like a mismatch. Scaling instead means a modest gap barely moves the
     // scoreline while a real gulf still runs away — and the underdog's xG tails
     // off toward zero rather than hitting a floor.
-    final edge = exp(0.026 * diff);
+    // 0.026 → 0.028: ONE notch, measured either side. At 0.026 a top-eight
+    // seed won 63% of simulated 32-team brackets and a bottom-half seed won
+    // one in six, which is why the world kept throwing up champions nobody
+    // could place and then watching them dominate. At 0.028 the favourites
+    // hold rather more of it without the top end moving at all — the
+    // Brazil-against-San-Marino rout is held up by the chance-rate cap, not by
+    // this exponent, which is exactly why this is the right dial to turn.
+    // See world_variance_test for the numbers and match_balance_test, which
+    // pins the other simulator this is calibrated against.
+    final edge = exp(0.028 * diff);
     final homeXg = (1.30 * edge).clamp(0.10, 5.5);
     final awayXg = (1.15 / edge).clamp(0.10, 5.5);
     return _scoreline(homeXg, awayXg, rng);

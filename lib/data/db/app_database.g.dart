@@ -1341,17 +1341,6 @@ class $CareersTable extends Careers with TableInfo<$CareersTable, CareerRow> {
     type: DriftSqlType.int,
     requiredDuringInsert: false,
   );
-  static const VerificationMeta _callUpWindowIdMeta = const VerificationMeta(
-    'callUpWindowId',
-  );
-  @override
-  late final GeneratedColumn<String> callUpWindowId = GeneratedColumn<String>(
-    'call_up_window_id',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -1377,7 +1366,6 @@ class $CareersTable extends Careers with TableInfo<$CareersTable, CareerRow> {
     staffScoutId,
     staffFitnessCoachId,
     lastCycleBoard,
-    callUpWindowId,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -1584,15 +1572,6 @@ class $CareersTable extends Careers with TableInfo<$CareersTable, CareerRow> {
         ),
       );
     }
-    if (data.containsKey('call_up_window_id')) {
-      context.handle(
-        _callUpWindowIdMeta,
-        callUpWindowId.isAcceptableOrUnknown(
-          data['call_up_window_id']!,
-          _callUpWindowIdMeta,
-        ),
-      );
-    }
     return context;
   }
 
@@ -1694,10 +1673,6 @@ class $CareersTable extends Careers with TableInfo<$CareersTable, CareerRow> {
         DriftSqlType.int,
         data['${effectivePrefix}last_cycle_board'],
       ),
-      callUpWindowId: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}call_up_window_id'],
-      ),
     );
   }
 
@@ -1781,15 +1756,6 @@ class CareerRow extends DataClass implements Insertable<CareerRow> {
   /// as one who had nearly been sacked. This one number is what a reputation
   /// is made of; see `BoardSatisfaction.carryOver`.
   final int? lastCycleBoard;
-
-  /// The international window this save's squad was named for, or null when no
-  /// squad has been named yet.
-  ///
-  /// A squad used to be re-picked every few matches, which is not how national
-  /// football works: a manager names one squad for a window and lives with it.
-  /// Storing which window it was named for is what stops the hub asking again
-  /// in the middle of one.
-  final String? callUpWindowId;
   const CareerRow({
     required this.id,
     required this.managerName,
@@ -1814,7 +1780,6 @@ class CareerRow extends DataClass implements Insertable<CareerRow> {
     this.staffScoutId,
     this.staffFitnessCoachId,
     this.lastCycleBoard,
-    this.callUpWindowId,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -1855,9 +1820,6 @@ class CareerRow extends DataClass implements Insertable<CareerRow> {
     }
     if (!nullToAbsent || lastCycleBoard != null) {
       map['last_cycle_board'] = Variable<int>(lastCycleBoard);
-    }
-    if (!nullToAbsent || callUpWindowId != null) {
-      map['call_up_window_id'] = Variable<String>(callUpWindowId);
     }
     return map;
   }
@@ -1901,9 +1863,6 @@ class CareerRow extends DataClass implements Insertable<CareerRow> {
       lastCycleBoard: lastCycleBoard == null && nullToAbsent
           ? const Value.absent()
           : Value(lastCycleBoard),
-      callUpWindowId: callUpWindowId == null && nullToAbsent
-          ? const Value.absent()
-          : Value(callUpWindowId),
     );
   }
 
@@ -1940,7 +1899,6 @@ class CareerRow extends DataClass implements Insertable<CareerRow> {
         json['staffFitnessCoachId'],
       ),
       lastCycleBoard: serializer.fromJson<int?>(json['lastCycleBoard']),
-      callUpWindowId: serializer.fromJson<String?>(json['callUpWindowId']),
     );
   }
   @override
@@ -1970,7 +1928,6 @@ class CareerRow extends DataClass implements Insertable<CareerRow> {
       'staffScoutId': serializer.toJson<int?>(staffScoutId),
       'staffFitnessCoachId': serializer.toJson<int?>(staffFitnessCoachId),
       'lastCycleBoard': serializer.toJson<int?>(lastCycleBoard),
-      'callUpWindowId': serializer.toJson<String?>(callUpWindowId),
     };
   }
 
@@ -1998,7 +1955,6 @@ class CareerRow extends DataClass implements Insertable<CareerRow> {
     Value<int?> staffScoutId = const Value.absent(),
     Value<int?> staffFitnessCoachId = const Value.absent(),
     Value<int?> lastCycleBoard = const Value.absent(),
-    Value<String?> callUpWindowId = const Value.absent(),
   }) => CareerRow(
     id: id ?? this.id,
     managerName: managerName ?? this.managerName,
@@ -2031,9 +1987,6 @@ class CareerRow extends DataClass implements Insertable<CareerRow> {
     lastCycleBoard: lastCycleBoard.present
         ? lastCycleBoard.value
         : this.lastCycleBoard,
-    callUpWindowId: callUpWindowId.present
-        ? callUpWindowId.value
-        : this.callUpWindowId,
   );
   CareerRow copyWithCompanion(CareersCompanion data) {
     return CareerRow(
@@ -2094,9 +2047,6 @@ class CareerRow extends DataClass implements Insertable<CareerRow> {
       lastCycleBoard: data.lastCycleBoard.present
           ? data.lastCycleBoard.value
           : this.lastCycleBoard,
-      callUpWindowId: data.callUpWindowId.present
-          ? data.callUpWindowId.value
-          : this.callUpWindowId,
     );
   }
 
@@ -2125,8 +2075,7 @@ class CareerRow extends DataClass implements Insertable<CareerRow> {
           ..write('staffAssistantId: $staffAssistantId, ')
           ..write('staffScoutId: $staffScoutId, ')
           ..write('staffFitnessCoachId: $staffFitnessCoachId, ')
-          ..write('lastCycleBoard: $lastCycleBoard, ')
-          ..write('callUpWindowId: $callUpWindowId')
+          ..write('lastCycleBoard: $lastCycleBoard')
           ..write(')'))
         .toString();
   }
@@ -2156,7 +2105,6 @@ class CareerRow extends DataClass implements Insertable<CareerRow> {
     staffScoutId,
     staffFitnessCoachId,
     lastCycleBoard,
-    callUpWindowId,
   ]);
   @override
   bool operator ==(Object other) =>
@@ -2184,8 +2132,7 @@ class CareerRow extends DataClass implements Insertable<CareerRow> {
           other.staffAssistantId == this.staffAssistantId &&
           other.staffScoutId == this.staffScoutId &&
           other.staffFitnessCoachId == this.staffFitnessCoachId &&
-          other.lastCycleBoard == this.lastCycleBoard &&
-          other.callUpWindowId == this.callUpWindowId);
+          other.lastCycleBoard == this.lastCycleBoard);
 }
 
 class CareersCompanion extends UpdateCompanion<CareerRow> {
@@ -2212,7 +2159,6 @@ class CareersCompanion extends UpdateCompanion<CareerRow> {
   final Value<int?> staffScoutId;
   final Value<int?> staffFitnessCoachId;
   final Value<int?> lastCycleBoard;
-  final Value<String?> callUpWindowId;
   const CareersCompanion({
     this.id = const Value.absent(),
     this.managerName = const Value.absent(),
@@ -2237,7 +2183,6 @@ class CareersCompanion extends UpdateCompanion<CareerRow> {
     this.staffScoutId = const Value.absent(),
     this.staffFitnessCoachId = const Value.absent(),
     this.lastCycleBoard = const Value.absent(),
-    this.callUpWindowId = const Value.absent(),
   });
   CareersCompanion.insert({
     this.id = const Value.absent(),
@@ -2263,7 +2208,6 @@ class CareersCompanion extends UpdateCompanion<CareerRow> {
     this.staffScoutId = const Value.absent(),
     this.staffFitnessCoachId = const Value.absent(),
     this.lastCycleBoard = const Value.absent(),
-    this.callUpWindowId = const Value.absent(),
   }) : managerName = Value(managerName),
        nationId = Value(nationId),
        rngSeed = Value(rngSeed),
@@ -2293,7 +2237,6 @@ class CareersCompanion extends UpdateCompanion<CareerRow> {
     Expression<int>? staffScoutId,
     Expression<int>? staffFitnessCoachId,
     Expression<int>? lastCycleBoard,
-    Expression<String>? callUpWindowId,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -2322,7 +2265,6 @@ class CareersCompanion extends UpdateCompanion<CareerRow> {
       if (staffFitnessCoachId != null)
         'staff_fitness_coach_id': staffFitnessCoachId,
       if (lastCycleBoard != null) 'last_cycle_board': lastCycleBoard,
-      if (callUpWindowId != null) 'call_up_window_id': callUpWindowId,
     });
   }
 
@@ -2350,7 +2292,6 @@ class CareersCompanion extends UpdateCompanion<CareerRow> {
     Value<int?>? staffScoutId,
     Value<int?>? staffFitnessCoachId,
     Value<int?>? lastCycleBoard,
-    Value<String?>? callUpWindowId,
   }) {
     return CareersCompanion(
       id: id ?? this.id,
@@ -2377,7 +2318,6 @@ class CareersCompanion extends UpdateCompanion<CareerRow> {
       staffScoutId: staffScoutId ?? this.staffScoutId,
       staffFitnessCoachId: staffFitnessCoachId ?? this.staffFitnessCoachId,
       lastCycleBoard: lastCycleBoard ?? this.lastCycleBoard,
-      callUpWindowId: callUpWindowId ?? this.callUpWindowId,
     );
   }
 
@@ -2455,9 +2395,6 @@ class CareersCompanion extends UpdateCompanion<CareerRow> {
     if (lastCycleBoard.present) {
       map['last_cycle_board'] = Variable<int>(lastCycleBoard.value);
     }
-    if (callUpWindowId.present) {
-      map['call_up_window_id'] = Variable<String>(callUpWindowId.value);
-    }
     return map;
   }
 
@@ -2486,8 +2423,7 @@ class CareersCompanion extends UpdateCompanion<CareerRow> {
           ..write('staffAssistantId: $staffAssistantId, ')
           ..write('staffScoutId: $staffScoutId, ')
           ..write('staffFitnessCoachId: $staffFitnessCoachId, ')
-          ..write('lastCycleBoard: $lastCycleBoard, ')
-          ..write('callUpWindowId: $callUpWindowId')
+          ..write('lastCycleBoard: $lastCycleBoard')
           ..write(')'))
         .toString();
   }
@@ -15465,7 +15401,6 @@ typedef $$CareersTableCreateCompanionBuilder =
       Value<int?> staffScoutId,
       Value<int?> staffFitnessCoachId,
       Value<int?> lastCycleBoard,
-      Value<String?> callUpWindowId,
     });
 typedef $$CareersTableUpdateCompanionBuilder =
     CareersCompanion Function({
@@ -15492,7 +15427,6 @@ typedef $$CareersTableUpdateCompanionBuilder =
       Value<int?> staffScoutId,
       Value<int?> staffFitnessCoachId,
       Value<int?> lastCycleBoard,
-      Value<String?> callUpWindowId,
     });
 
 final class $$CareersTableReferences
@@ -16155,11 +16089,6 @@ class $$CareersTableFilterComposer
 
   ColumnFilters<int> get lastCycleBoard => $composableBuilder(
     column: $table.lastCycleBoard,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get callUpWindowId => $composableBuilder(
-    column: $table.callUpWindowId,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -16983,11 +16912,6 @@ class $$CareersTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get callUpWindowId => $composableBuilder(
-    column: $table.callUpWindowId,
-    builder: (column) => ColumnOrderings(column),
-  );
-
   $$NationsTableOrderingComposer get nationId {
     final $$NationsTableOrderingComposer composer = $composerBuilder(
       composer: this,
@@ -17118,11 +17042,6 @@ class $$CareersTableAnnotationComposer
 
   GeneratedColumn<int> get lastCycleBoard => $composableBuilder(
     column: $table.lastCycleBoard,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<String> get callUpWindowId => $composableBuilder(
-    column: $table.callUpWindowId,
     builder: (column) => column,
   );
 
@@ -17910,7 +17829,6 @@ class $$CareersTableTableManager
                 Value<int?> staffScoutId = const Value.absent(),
                 Value<int?> staffFitnessCoachId = const Value.absent(),
                 Value<int?> lastCycleBoard = const Value.absent(),
-                Value<String?> callUpWindowId = const Value.absent(),
               }) => CareersCompanion(
                 id: id,
                 managerName: managerName,
@@ -17935,7 +17853,6 @@ class $$CareersTableTableManager
                 staffScoutId: staffScoutId,
                 staffFitnessCoachId: staffFitnessCoachId,
                 lastCycleBoard: lastCycleBoard,
-                callUpWindowId: callUpWindowId,
               ),
           createCompanionCallback:
               ({
@@ -17962,7 +17879,6 @@ class $$CareersTableTableManager
                 Value<int?> staffScoutId = const Value.absent(),
                 Value<int?> staffFitnessCoachId = const Value.absent(),
                 Value<int?> lastCycleBoard = const Value.absent(),
-                Value<String?> callUpWindowId = const Value.absent(),
               }) => CareersCompanion.insert(
                 id: id,
                 managerName: managerName,
@@ -17987,7 +17903,6 @@ class $$CareersTableTableManager
                 staffScoutId: staffScoutId,
                 staffFitnessCoachId: staffFitnessCoachId,
                 lastCycleBoard: lastCycleBoard,
-                callUpWindowId: callUpWindowId,
               ),
           withReferenceMapper: (p0) => p0
               .map(

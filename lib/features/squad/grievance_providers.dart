@@ -132,6 +132,7 @@ grievanceProvider = FutureProvider.autoDispose.family<List<Grievance>, int>((
   ref,
   careerId,
 ) async {
+  if (!Grievances.enabled) return const [];
   final standing = await ref.watch(_standingProvider(careerId).future);
   if (standing == null) return const [];
   final answered = {

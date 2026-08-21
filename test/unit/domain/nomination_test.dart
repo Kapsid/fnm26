@@ -58,13 +58,17 @@ void main() {
     });
 
     test(
-      'period starts before qualifying, every 4 MDs, friendlies, tournaments',
+      'period starts before qualifying, every window, friendlies, tournaments',
       () {
-        // Qualifying re-opens at MD1, 5, 9, …; the matchdays in between do not.
+        // Qualifying re-opens at MD1, 3, 5, … — every international WINDOW,
+        // which is two matches. It used to be every four matchdays, so a
+        // manager named one squad and lived with it through four or six
+        // qualifiers spread over half a year, which nobody does.
         expect(
           Nomination.isPeriodStart(_f(md: 1, round: null, day: 1), null),
           isTrue,
         );
+        // The second match of a gathering is played by the side named for it.
         expect(
           Nomination.isPeriodStart(
             _f(md: 2, round: null, day: 2),
@@ -74,12 +78,19 @@ void main() {
         );
         expect(
           Nomination.isPeriodStart(
+            _f(md: 3, round: null, day: 3),
+            _f(md: 2, round: null, day: 2),
+          ),
+          isTrue,
+        );
+        expect(
+          Nomination.isPeriodStart(
             _f(md: 5, round: null, day: 5),
             _f(md: 4, round: null, day: 4),
           ),
           isTrue,
         );
-        // MD6 is now mid-period, not a window.
+        // MD6 is the second match of the MD5 gathering, not a new one.
         expect(
           Nomination.isPeriodStart(
             _f(md: 6, round: null, day: 6),
@@ -117,11 +128,13 @@ void main() {
         _f(md: 2, round: null, day: 2), // next unplayed
         _f(md: 3, round: null, day: 3),
         _f(md: 4, round: null, day: 4),
-        _f(md: 5, round: null, day: 5), // next window boundary (every 4)
+        _f(md: 5, round: null, day: 5),
         _f(md: 6, round: null, day: 6),
       ];
       final period = Nomination.currentPeriod(fixtures);
-      expect(period.map((f) => f.matchday), [2, 3, 4]);
+      // MD2 is the back half of the MD1 gathering; MD3 opens the next one, so
+      // the squad currently named has exactly one match left to play.
+      expect(period.map((f) => f.matchday), [2]);
       // Mid-period → the nomination window is closed.
       expect(Nomination.windowOpen(fixtures), isFalse);
     });

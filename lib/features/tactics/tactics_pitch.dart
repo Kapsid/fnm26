@@ -241,6 +241,35 @@ const _layouts = <Formation, List<(double, double)>>{
     (0.38, 0.15),
     (0.62, 0.15),
   ],
+  Formation.f4321: [
+    (0.5, 0.90),
+    (0.12, 0.70),
+    (0.37, 0.73),
+    (0.63, 0.73),
+    (0.88, 0.70),
+    (0.28, 0.52),
+    (0.5, 0.55),
+    (0.72, 0.52),
+    (0.36, 0.32),
+    (0.64, 0.32),
+    (0.5, 0.13),
+  ],
+  // The five across midfield sit on the same spacing as 3-5-2's, which is the
+  // widest the discs go without crowding: the wing-backs at 0.10/0.90 and the
+  // three inside at 0.30/0.50/0.70.
+  Formation.f3511: [
+    (0.5, 0.90),
+    (0.28, 0.73),
+    (0.5, 0.76),
+    (0.72, 0.73),
+    (0.10, 0.45),
+    (0.30, 0.50),
+    (0.5, 0.52),
+    (0.70, 0.50),
+    (0.90, 0.45),
+    (0.5, 0.29),
+    (0.5, 0.11),
+  ],
 };
 
 /// Dragging an occupied XI slot off the pitch (to swap with another slot).
