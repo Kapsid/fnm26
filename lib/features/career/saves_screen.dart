@@ -86,7 +86,7 @@ class SavesScreen extends ConsumerWidget {
                             const SizedBox(height: AppSpacing.sm),
                         itemBuilder: (context, i) {
                           final save = saves[i];
-                          return _SaveTile(
+                          return SaveTile(
                             save: save,
                             nation: nationsById[save.nationId],
                             onContinue: () {
@@ -258,13 +258,16 @@ Future<void> _importCareer(BuildContext context, WidgetRef ref) async {
   );
 }
 
-class _SaveTile extends StatelessWidget {
-  const _SaveTile({
+/// One save in the list: who you are, where you are, and the three things you
+/// can do with it.
+class SaveTile extends StatelessWidget {
+  const SaveTile({
     required this.save,
     required this.nation,
     required this.onContinue,
     required this.onDelete,
     required this.onShare,
+    super.key,
   });
 
   final Career save;
@@ -309,10 +312,19 @@ class _SaveTile extends StatelessWidget {
                       color: AppColors.primary,
                     ),
                     const SizedBox(width: 4),
-                    Text(
-                      l.careerRoadToWorldCup(wcYear),
-                      style: AppTypography.labelSmall.copyWith(
-                        color: AppColors.primary,
+                    // Flexible: this line sat in the Row unconstrained, so it
+                    // spilled out of the column it belongs to and painted
+                    // underneath the share and delete buttons on the right of
+                    // the card — "Road to the 2034 World Cup" ran 242 pixels
+                    // past the end of its own space on a narrow phone.
+                    Flexible(
+                      child: WholeText(
+                        l.careerRoadToWorldCup(wcYear),
+                        maxLines: 1,
+                        textAlign: TextAlign.start,
+                        style: AppTypography.labelSmall.copyWith(
+                          color: AppColors.primary,
+                        ),
                       ),
                     ),
                   ],

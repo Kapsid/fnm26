@@ -19,6 +19,39 @@ void main() {
       expect(taps, 1);
     });
 
+    testWidgets('a long label fits the button instead of overflowing', (
+      tester,
+    ) async {
+      // The label sat in a Row with nothing constraining it, so a long one —
+      // "Pozice plné — pořiďte si Pro pro 10" on a narrow phone — ran straight
+      // out of the button and painted the yellow overflow stripes. A call to
+      // action that cannot be read is not one.
+      tester.view
+        ..physicalSize = const Size(360, 780)
+        ..devicePixelRatio = 1.0;
+      addTearDown(tester.view.reset);
+
+      await tester.pumpApp(
+        Scaffold(
+          body: Padding(
+            padding: const EdgeInsets.all(16),
+            child: PrimaryButton(
+              label: 'Pozice plné — pořiďte si Pro pro 10',
+              icon: Icons.add,
+              onPressed: () {},
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(
+        tester.takeException(),
+        isNull,
+        reason: 'the label must not overflow the button',
+      );
+    });
+
     testWidgets('does not fire while loading', (tester) async {
       var taps = 0;
       await tester.pumpApp(

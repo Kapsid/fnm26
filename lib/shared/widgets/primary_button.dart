@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
+import 'package:fnm/shared/widgets/whole_text.dart';
 
 /// Primary call-to-action button: a brushed silver-to-steel vertical gradient
 /// with a 1px metal stroke and dark text, per the "Pro Pitch Executive" button
@@ -47,10 +48,19 @@ class PrimaryButton extends StatelessWidget {
                 Icon(icon, size: 20, color: AppColors.onPrimary),
                 const SizedBox(width: AppSpacing.sm),
               ],
-              Text(
-                label,
-                style: AppTypography.labelLarge.copyWith(
-                  color: AppColors.onPrimary,
+              // Flexible, and never cut. The label sat here unconstrained, so
+              // a long one ran straight out of the button and painted the
+              // overflow stripes — a call to action nobody can read. It gives
+              // way by shrinking to fit, which is the one concession a button
+              // label can make and still be a button label.
+              Flexible(
+                child: WholeText(
+                  label,
+                  maxLines: 1,
+                  textAlign: TextAlign.center,
+                  style: AppTypography.labelLarge.copyWith(
+                    color: AppColors.onPrimary,
+                  ),
                 ),
               ),
             ],
