@@ -447,7 +447,7 @@ class _PressSheetState extends ConsumerState<PressSheet> {
                             Text(_prompt(l), style: AppTypography.bodyMedium),
                             const SizedBox(height: AppSpacing.lg),
                             for (final tone in _current.options)
-                              _AnswerTile(
+                              AnswerTile(
                                 label: _answerText(l, tone),
                                 effect: Press.effectOfExchange(_current, tone),
                                 onTap: () => _answer(tone),
@@ -529,11 +529,12 @@ class _Byline extends StatelessWidget {
 /// One answer, with what it does to the dressing room and the board shown up
 /// front — the choice is the trade-off, so hiding it would only make it a
 /// guess.
-class _AnswerTile extends StatelessWidget {
-  const _AnswerTile({
+class AnswerTile extends StatelessWidget {
+  const AnswerTile({
     required this.label,
     required this.effect,
     required this.onTap,
+    super.key,
   });
 
   final String label;
@@ -653,25 +654,31 @@ class _Swing extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (value == 0) return const SizedBox.shrink();
+    final arrows = Press.arrowsFor(value);
+    if (arrows == 0) return const SizedBox.shrink();
     final up = value > 0;
     final color = up ? AppColors.positive : AppColors.error;
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Icon(
-          up ? Icons.arrow_upward_rounded : Icons.arrow_downward_rounded,
-          size: 13,
-          color: color,
-        ),
-        const SizedBox(width: 2),
         Text(
-          '$label ${value.abs()}',
+          label,
           style: AppTypography.labelSmall.copyWith(
             color: color,
             fontWeight: FontWeight.w700,
           ),
         ),
+        const SizedBox(width: 3),
+        // One, two or three arrows rather than the raw figure. The number was
+        // a point on a hidden 0-100 scale the manager has never seen — "Squad
+        // 6" reads as six of something unknowable. How far the room moves is
+        // the whole of what it was trying to say.
+        for (var i = 0; i < arrows; i++)
+          Icon(
+            up ? Icons.arrow_upward_rounded : Icons.arrow_downward_rounded,
+            size: 13,
+            color: color,
+          ),
       ],
     );
   }

@@ -252,6 +252,26 @@ abstract final class Press {
     return pool[seed % pool.length];
   }
 
+  /// How strongly a swing of [value] reads, as one, two or three arrows.
+  ///
+  /// The sheet used to print the raw number — "Squad 6" — which is a figure on
+  /// a hidden 0–100 scale that the manager has never been shown and cannot
+  /// place. Six of what? Arrows say the only thing the number was ever meant
+  /// to say: whether this answer moves the room a little, a fair amount, or a
+  /// great deal.
+  ///
+  /// The bands hold for a single answer and for a whole conference alike. One
+  /// stance is worth at most six (see [effectOf]) and a follow-up half that,
+  /// so a single answer spans the full range; a conference of four can total
+  /// far more, and everything beyond a great deal is still a great deal.
+  static int arrowsFor(int value) {
+    final size = value.abs();
+    if (size == 0) return 0;
+    if (size <= 2) return 1;
+    if (size <= 5) return 2;
+    return 3;
+  }
+
   /// What each tone does.
   static PressEffect effectOf(PressTone tone) => switch (tone) {
     PressTone.backThePlayers => (morale: 6, board: -3),
