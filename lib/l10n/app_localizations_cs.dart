@@ -713,6 +713,9 @@ class AppLocalizationsCs extends AppLocalizations {
   String get tacticsNoSubs => 'Žádní náhradníci k dispozici.';
 
   @override
+  String get tacticsChooseShape => 'VYBERTE ROZESTAVENÍ';
+
+  @override
   String get tacticsFormation => 'ROZESTAVENÍ';
 
   @override

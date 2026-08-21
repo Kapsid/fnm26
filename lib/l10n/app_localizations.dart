@@ -1298,6 +1298,12 @@ abstract class AppLocalizations {
   /// **'No substitutes available.'**
   String get tacticsNoSubs;
 
+  /// Heading of the formation picker sheet.
+  ///
+  /// In en, this message translates to:
+  /// **'CHOOSE A SHAPE'**
+  String get tacticsChooseShape;
+
   /// Heading above the formation selector.
   ///
   /// In en, this message translates to:

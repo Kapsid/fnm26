@@ -73,4 +73,71 @@ void main() {
       expect(layoutOf(f), hasLength(11), reason: '${f.label} layout');
     }
   });
+
+  group('the compact field on the tactics screen', () {
+    testWidgets('shows the shape you are playing, drawn, in one line', (
+      tester,
+    ) async {
+      await tester.pumpApp(
+        Scaffold(
+          body: FormationField(
+            selected: Formation.f433,
+            onSelected: (_) {},
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.text('4-3-3'), findsOneWidget);
+      // The whole grid is NOT on the screen — that is the point of it.
+      expect(find.byType(FormationTile), findsNothing);
+    });
+
+    testWidgets('it fits in a fraction of what the grid took', (tester) async {
+      tester.view
+        ..physicalSize = const Size(360, 780)
+        ..devicePixelRatio = 1.0;
+      addTearDown(tester.view.reset);
+      await tester.pumpApp(
+        Scaffold(
+          body: Align(
+            alignment: Alignment.topCenter,
+            child: FormationField(
+              selected: Formation.f433,
+              onSelected: (_) {},
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      // The inline grid was about 981pt on this width.
+      expect(tester.getSize(find.byType(FormationField)).height, lessThan(120));
+    });
+
+    testWidgets('tapping it opens the full grid, and picking reports back', (
+      tester,
+    ) async {
+      Formation? picked;
+      await tester.pumpApp(
+        Scaffold(
+          body: FormationField(
+            selected: Formation.f433,
+            onSelected: (f) => picked = f,
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.byType(FormationField));
+      await tester.pumpAndSettle();
+      expect(find.byType(FormationTile), findsWidgets);
+
+      await tester.tap(find.text('4-4-2').last);
+      await tester.pumpAndSettle();
+      expect(picked, Formation.f442);
+      // And the sheet closes behind the choice.
+      expect(find.byType(FormationTile), findsNothing);
+    });
+  });
 }

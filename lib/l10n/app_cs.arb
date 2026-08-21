@@ -200,6 +200,7 @@
   "tacticsSubsUsed": "STŘÍDÁNÍ · {used}/{max}",
   "tacticsDragSubOn": "Přetáhněte náhradníka na hráče a pošlete ho na hřiště.",
   "tacticsNoSubs": "Žádní náhradníci k dispozici.",
+  "tacticsChooseShape": "VYBERTE ROZESTAVENÍ",
   "tacticsFormation": "ROZESTAVENÍ",
   "tacticsInstructions": "POKYNY",
   "matchInstructionsLocked": "Nastaveno před výkopem. Rozestavení a střídání měnit můžeš, ale herní styl už v průběhu zápasu ne.",

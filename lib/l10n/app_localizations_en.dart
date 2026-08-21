@@ -713,6 +713,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get tacticsNoSubs => 'No substitutes available.';
 
   @override
+  String get tacticsChooseShape => 'CHOOSE A SHAPE';
+
+  @override
   String get tacticsFormation => 'FORMATION';
 
   @override

@@ -1144,6 +1144,10 @@
   "@tacticsNoSubs": {
     "description": "Shown when the bench is empty."
   },
+  "tacticsChooseShape": "CHOOSE A SHAPE",
+  "@tacticsChooseShape": {
+    "description": "Heading of the formation picker sheet."
+  },
   "tacticsFormation": "FORMATION",
   "@tacticsFormation": {
     "description": "Heading above the formation selector."

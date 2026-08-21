@@ -256,12 +256,13 @@ class TacticsScreen extends ConsumerWidget {
                             ),
                           ),
                           const SizedBox(height: AppSpacing.lg),
-                          Text(
-                            l.tacticsFormation,
-                            style: AppTypography.labelMedium,
-                          ),
-                          const SizedBox(height: AppSpacing.sm),
-                          FormationPicker(
+                          // One line, not the whole grid. Nineteen shapes at
+                          // three across is seven rows — about 981 points, a
+                          // screen and a half of formations sitting between
+                          // the manager and his own pitch. The grid is worth a
+                          // screen while he is choosing and worth a line the
+                          // rest of the time.
+                          FormationField(
                             selected: tactic.formation,
                             onSelected: (f) => service.setFormation(careerId, f),
                           ),
