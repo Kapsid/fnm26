@@ -156,9 +156,14 @@ abstract final class StaffMarket {
 
   /// The people applying for [role] this [cycle].
   ///
-  /// [namePool] is the nation's own senior squad, which is where the names
-  /// come from — a coach is from somewhere, and the somewhere that reads right
-  /// is the country he is coaching in. [country] is that nation's flag code.
+  /// [namePool] is a map of flag code to the names that country produces —
+  /// the manager's own nation and a handful of others.
+  ///
+  /// Coaching is an international trade and always has been: a federation
+  /// hires the best man who will come, not the best man who happens to hold
+  /// its passport. Drawing every candidate from the home pool made a staff
+  /// room that read like a village, so the market now offers foreigners
+  /// alongside locals and the flag beside a name means something.
   ///
   /// The tiers offered are spread deliberately: the first slot is always
   /// affordable and the last is always the best on offer, so a manager with no
@@ -168,10 +173,13 @@ abstract final class StaffMarket {
     required int saveSeed,
     required int cycle,
     required StaffRole role,
-    required List<String> namePool,
-    required String country,
+    required Map<String, List<String>> namePool,
   }) {
-    if (namePool.isEmpty) return const [];
+    final countries = [
+      for (final e in namePool.entries)
+        if (e.value.isNotEmpty) e.key,
+    ]..sort();
+    if (countries.isEmpty) return const [];
     final rng = SeededRng(
       (saveSeed * 0x9E3779B1) ^ (cycle * 0x85EBCA77) ^ (role.index * 0x27D4EB2F),
     );
@@ -181,18 +189,21 @@ abstract final class StaffMarket {
     const tiers = [StaffTier.basic, StaffTier.good, StaffTier.elite];
     return [
       for (var slot = 0; slot < candidatesPerRole; slot++)
-        (
-          id:
-              idBase +
-              cycle * _cycleStride +
-              role.index * _roleStride +
-              tiers[slot].index * _tierStride +
-              slot,
-          name: _nameFrom(namePool, rng),
-          country: country,
-          role: role,
-          tier: tiers[slot],
-        ),
+        () {
+          final from = countries[rng.nextInt(countries.length)];
+          return (
+            id:
+                idBase +
+                cycle * _cycleStride +
+                role.index * _roleStride +
+                tiers[slot].index * _tierStride +
+                slot,
+            name: _nameFrom(namePool[from]!, rng),
+            country: from,
+            role: role,
+            tier: tiers[slot],
+          );
+        }(),
     ];
   }
 

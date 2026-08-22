@@ -4941,16 +4941,16 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get campBlurb =>
-      'Where the squad lives for the tournament. Each base trades one preparation for another.';
+      'Where the squad lives for the whole tournament. It cannot be changed once play starts, and it works on three things every match: how fresh they arrive, how fast a knock heals, and how sharp they are.';
 
   @override
-  String get campEffectTravel => 'Travel';
+  String get campEffectTravel => 'Arrive fresh';
 
   @override
-  String get campEffectRecovery => 'Recovery';
+  String get campEffectRecovery => 'Injuries heal';
 
   @override
-  String get campEffectSharpness => 'Sharpness';
+  String get campEffectSharpness => 'Match sharpness';
 
   @override
   String get campTerrainCity => 'City centre';
@@ -7165,4 +7165,36 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get settingsTourNoSave =>
       'Start a career first — the walk through visits your own screens.';
+
+  @override
+  String tacticsOutOfPositionAge(int age) {
+    return 'Out of position · Age $age';
+  }
+
+  @override
+  String get federationNextCycleLocked =>
+      'The next cycle\'s budget is set at the start of that cycle, in one go. Until then this is what your money is doing.';
+
+  @override
+  String get federationBudgetAlreadySet => 'Already set for this cycle';
+
+  @override
+  String yFinalLooms0(String opponent) {
+    return 'It\'s $opponent for the big one. All week, this is all anybody is going to talk about.';
+  }
+
+  @override
+  String yFinalLooms1(String opponent) {
+    return 'Confirmed: $opponent stand between us and it. Four years for this.';
+  }
+
+  @override
+  String yFinalLooms2(String opponent) {
+    return 'Right. $opponent. Nobody sleeps until this is over.';
+  }
+
+  @override
+  String yFinalLooms3(String opponent) {
+    return '$opponent next, and everything else can wait. What a week to be alive.';
+  }
 }

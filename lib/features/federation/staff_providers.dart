@@ -24,11 +24,39 @@ final AutoDisposeFutureProviderFamily<StaffRoom?, int> staffRoomProvider =
       final career = await ref.watch(careerRepositoryProvider).byId(careerId);
       if (career == null) return null;
       final squad = await ref.watch(squadDataProvider(careerId).future);
-      final nation = await ref
-          .watch(nationRepositoryProvider)
-          .byId(career.nationId);
-      final names = <String>[for (final p in squad?.pool ?? const <Player>[]) p.name];
-      final country = nation?.code.toLowerCase() ?? '';
+      final nations = await ref.watch(nationRepositoryProvider).all();
+      final me = nations.where((n) => n.id == career.nationId).firstOrNull;
+      final home = me?.code.toLowerCase() ?? '';
+
+      // Where the candidates come from: home, plus a handful of the game's
+      // strongest football nations. Coaching is an international trade, so a
+      // staff room drawn entirely from one country reads like a village.
+      final playerRepo = ref.watch(playerRepositoryProvider);
+      final sources = <int>{
+        career.nationId,
+        // Deterministic per save and per cycle, so the room is stable while
+        // the manager looks at it and different next time round.
+        for (final n
+            in (nations.toList()
+              ..sort((a, b) => a.ranking.compareTo(b.ranking))).take(20))
+          n.id,
+      }.take(8).toList();
+
+      final namePool = <String, List<String>>{};
+      for (final id in sources) {
+        final nation = nations.where((n) => n.id == id).firstOrNull;
+        if (nation == null) continue;
+        final code = nation.code.toLowerCase();
+        if (id == career.nationId) {
+          namePool[code] = [
+            for (final p in squad?.pool ?? const <Player>[]) p.name,
+          ];
+          continue;
+        }
+        final pool = await playerRepo.byNation(id);
+        namePool[code] = [for (final p in pool) p.name];
+      }
+      namePool.removeWhere((_, names) => names.isEmpty);
 
       final applicants = {
         for (final role in StaffRole.values)
@@ -36,8 +64,7 @@ final AutoDisposeFutureProviderFamily<StaffRoom?, int> staffRoomProvider =
             saveSeed: career.rngSeed,
             cycle: career.cyclePointer,
             role: role,
-            namePool: names,
-            country: country,
+            namePool: namePool,
           ),
       };
       final ids = {
@@ -68,7 +95,7 @@ final AutoDisposeFutureProviderFamily<StaffRoom?, int> staffRoomProvider =
             (
               id: id,
               name: '',
-              country: country,
+              country: home,
               role: role,
               tier: StaffMarket.tierOf(id),
             );

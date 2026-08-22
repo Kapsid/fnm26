@@ -6,13 +6,19 @@ import 'package:fnm/domain/services/manager/staff.dart';
 /// from the save and the cycle, nothing is stored but the id of the man hired,
 /// and his tier is readable straight back out of that id.
 void main() {
-  const pool = [
-    'Tomas Novak',
-    'Petr Svoboda',
-    'Jan Dvorak',
-    'Martin Cerny',
-    'Lukas Prochazka',
-  ];
+  // Home, and abroad. Coaching is an international trade: a federation hires
+  // the best man who will come, not the best man who holds its passport.
+  const pool = <String, List<String>>{
+    'cze': [
+      'Tomas Novak',
+      'Petr Svoboda',
+      'Jan Dvorak',
+      'Martin Cerny',
+      'Lukas Prochazka',
+    ],
+    'ita': ['Marco Rossi', 'Luca Bianchi', 'Andrea Conti', 'Paolo Greco'],
+    'ned': ['Daan Visser', 'Bram Jansen', 'Sem Bakker', 'Luuk de Vries'],
+  };
 
   List<StaffCandidate> market({
     int saveSeed = 7,
@@ -23,7 +29,6 @@ void main() {
     cycle: cycle,
     role: role,
     namePool: pool,
-    country: 'cze',
   );
 
   test('the same save and cycle always offer the same people', () {
@@ -82,8 +87,8 @@ void main() {
         expect(people, hasLength(StaffMarket.candidatesPerRole));
         expect(people.map((c) => c.id).toSet(), hasLength(3));
         for (final c in people) {
-          expect(c.name.trim().split(' ').length, 2);
-          expect(c.country, 'cze');
+          expect(c.name.trim().split(' ').length, greaterThanOrEqualTo(2));
+          expect(pool.keys, contains(c.country));
         }
       }
     }
@@ -95,10 +100,55 @@ void main() {
         saveSeed: 1,
         cycle: 0,
         role: StaffRole.scout,
-        namePool: const [],
-        country: 'cze',
+        namePool: const {},
       ),
       isEmpty,
     );
+  });
+
+  test('the staff room is not a village', () {
+    // Every candidate coming from the manager's own country made a room that
+    // read like one club's coaching badge intake. Across enough cycles the
+    // market has to reach abroad.
+    final seen = <String>{};
+    for (var cycle = 0; cycle < 25; cycle++) {
+      for (final role in StaffRole.values) {
+        for (final c in market(cycle: cycle, role: role)) {
+          seen.add(c.country);
+        }
+      }
+    }
+    expect(seen.length, greaterThan(1), reason: 'saw only $seen');
+  });
+
+  test('a pool with one country still works', () {
+    final only = StaffMarket.forRole(
+      saveSeed: 3,
+      cycle: 0,
+      role: StaffRole.assistant,
+      namePool: const {
+        'cze': ['Tomas Novak', 'Petr Svoboda'],
+      },
+    );
+    expect(only, hasLength(StaffMarket.candidatesPerRole));
+    for (final c in only) {
+      expect(c.country, 'cze');
+    }
+  });
+
+  test('a country with no names is skipped rather than crashing', () {
+    final some = StaffMarket.forRole(
+      saveSeed: 4,
+      cycle: 0,
+      role: StaffRole.scout,
+      namePool: const {
+        'cze': [],
+        'ita': ['Marco Rossi', 'Luca Bianchi'],
+      },
+    );
+    expect(some, hasLength(StaffMarket.candidatesPerRole));
+    for (final c in some) {
+      expect(c.country, 'ita');
+    }
   });
 }

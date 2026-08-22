@@ -163,34 +163,21 @@ class _FinancesScreenState extends ConsumerState<FinancesScreen> {
                 const SizedBox(height: AppSpacing.sm),
                 _LockedInvestment(investment: view.current),
               ],
+              // The next cycle's allocation is NOT editable here.
+              //
+              // A budget is decided once, at the start of its cycle, on the
+              // screen that forces the decision — that is what makes it a
+              // decision. Leaving a planner open here meant the same money
+              // could be re-cut at any moment, including money for a cycle
+              // that had not begun, so nothing was ever actually committed to
+              // and the forced allocation was theatre. What this screen shows
+              // now is where the money went and what came back.
               const SizedBox(height: AppSpacing.md),
               Text(
-                l.federationInvestForNextSeason,
+                l.federationNextCycleLocked,
                 style: AppTypography.labelSmall.copyWith(
-                  color: AppColors.primary,
+                  color: AppColors.onSurfaceVariant,
                 ),
-              ),
-              const SizedBox(height: AppSpacing.sm),
-              AppCard(
-                child: InvestmentEditor(
-                  available: available,
-                  initial: alloc,
-                  onChanged: (a) => setState(() => _alloc = a),
-                ),
-              ),
-              // The "next season impact" preview is deliberately NOT shown here.
-              // It compared a planned allocation against the one already
-              // committed and stated the difference as fact, which it isn't —
-              // the departments only pay out over the cycle, so the figures it
-              // quoted did not match what the manager actually got. The sliders
-              // themselves state what each department buys.
-              const SizedBox(height: AppSpacing.lg),
-              PrimaryButton(
-                label: _busy
-                    ? l.federationSaving
-                    : l.federationConfirmInvestment,
-                icon: Icons.savings_rounded,
-                onPressed: _busy ? null : () => unawaited(_commit(view)),
               ),
               const SizedBox(height: AppSpacing.xl),
             ],

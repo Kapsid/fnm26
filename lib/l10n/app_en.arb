@@ -6963,19 +6963,19 @@
       }
     }
   },
-  "campBlurb": "Where the squad lives for the tournament. Each base trades one preparation for another.",
+  "campBlurb": "Where the squad lives for the whole tournament. It cannot be changed once play starts, and it works on three things every match: how fresh they arrive, how fast a knock heals, and how sharp they are.",
   "@campBlurb": {
     "description": "Blurb on the base camp screen."
   },
-  "campEffectTravel": "Travel",
+  "campEffectTravel": "Arrive fresh",
   "@campEffectTravel": {
     "description": "Camp effect chip: travel wear on the squad."
   },
-  "campEffectRecovery": "Recovery",
+  "campEffectRecovery": "Injuries heal",
   "@campEffectRecovery": {
     "description": "Camp effect chip: how fast injuries clear."
   },
-  "campEffectSharpness": "Sharpness",
+  "campEffectSharpness": "Match sharpness",
   "@campEffectSharpness": {
     "description": "Camp effect chip: flat condition lift."
   },
@@ -10241,5 +10241,58 @@
   "settingsTourNoSave": "Start a career first — the walk through visits your own screens.",
   "@settingsTourNoSave": {
     "description": "Guided tour string."
+  },
+  "tacticsOutOfPositionAge": "Out of position · Age {age}",
+  "@tacticsOutOfPositionAge": {
+    "description": "Sub picker: an out-of-position candidate, with his age.",
+    "placeholders": {
+      "age": {
+        "type": "int"
+      }
+    }
+  },
+  "federationNextCycleLocked": "The next cycle's budget is set at the start of that cycle, in one go. Until then this is what your money is doing.",
+  "@federationNextCycleLocked": {
+    "description": "Finances: says the next cycle's budget is decided at its start, not here."
+  },
+  "federationBudgetAlreadySet": "Already set for this cycle",
+  "@federationBudgetAlreadySet": {
+    "description": "Budget screen: the allocation for this cycle is already committed."
+  },
+  "yFinalLooms0": "It's {opponent} for the big one. All week, this is all anybody is going to talk about.",
+  "@yFinalLooms0": {
+    "description": "Y feed: anticipation before a final.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      }
+    }
+  },
+  "yFinalLooms1": "Confirmed: {opponent} stand between us and it. Four years for this.",
+  "@yFinalLooms1": {
+    "description": "Y feed: anticipation before a final.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      }
+    }
+  },
+  "yFinalLooms2": "Right. {opponent}. Nobody sleeps until this is over.",
+  "@yFinalLooms2": {
+    "description": "Y feed: anticipation before a final.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      }
+    }
+  },
+  "yFinalLooms3": "{opponent} next, and everything else can wait. What a week to be alive.",
+  "@yFinalLooms3": {
+    "description": "Y feed: anticipation before a final.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      }
+    }
   }
 }

@@ -37,9 +37,22 @@ String tierName(AppLocalizations l, StaffTier tier) => switch (tier) {
 /// competes with, and the wage bill comes off the top of what there is to
 /// spend.
 class StaffCard extends ConsumerWidget {
-  const StaffCard({required this.careerId, super.key});
+  const StaffCard({
+    required this.careerId,
+    this.readOnly = false,
+    super.key,
+  });
 
   final int careerId;
+
+  /// Shows who is in each job without offering to change it.
+  ///
+  /// Hiring happens once a cycle, on the budget screen, where the wages can be
+  /// weighed against the departments they compete with. That left the staff
+  /// invisible for the rest of the cycle — the one screen that named them was
+  /// the one screen you could not get back to — so the manager's own page
+  /// carries this, read-only.
+  final bool readOnly;
 
   Future<void> _pick(
     BuildContext context,
@@ -146,7 +159,7 @@ class StaffCard extends ConsumerWidget {
             ListTile(
               dense: true,
               contentPadding: EdgeInsets.zero,
-              onTap: () => _pick(context, ref, role, room),
+              onTap: readOnly ? null : () => _pick(context, ref, role, room),
               title: Text(roleName(l, role), style: AppTypography.bodyMedium),
               subtitle: switch (room.hired[role]) {
                 null => Text(
@@ -166,11 +179,15 @@ class StaffCard extends ConsumerWidget {
                   ),
                 ),
               },
-              trailing: const Icon(
-                Icons.chevron_right_rounded,
-                size: 18,
-                color: AppColors.onSurfaceVariant,
-              ),
+              trailing: readOnly
+                  ? (room.hired[role] == null
+                        ? null
+                        : FlagDisc(room.hired[role]!.country, size: 20))
+                  : const Icon(
+                      Icons.chevron_right_rounded,
+                      size: 18,
+                      color: AppColors.onSurfaceVariant,
+                    ),
             ),
         ],
       ),

@@ -191,6 +191,41 @@ final AutoDisposeFutureProviderFamily<List<YPost>, int> yFeedProvider =
         nation: nation,
         seed: career.rngSeed,
       );
+      // The one post drawn from a match that has NOT been played. Every other
+      // shape on the feed reacts to a result, so the biggest game of a cycle
+      // used to arrive in silence and the reaction to it landed before any
+      // anticipation of it — the wrong way round for the game everybody is
+      // waiting for.
+      final upcoming =
+          (await ref
+                  .watch(competitionRepositoryProvider)
+                  .fixturesForNation(careerId, career.nationId))
+              .where((f) => !f.hasResult && f.round != null)
+              .where((f) => YFeed.hypeRounds.contains(f.round))
+              .toList()
+            ..sort((a, b) => a.date.compareTo(b.date));
+      if (upcoming.isNotEmpty) {
+        final next = upcoming.first;
+        final opponentId = next.homeNationId == career.nationId
+            ? next.awayNationId
+            : next.homeNationId;
+        final opponent = nations
+            .where((n) => n.id == opponentId)
+            .map((n) => n.name)
+            .firstOrNull;
+        if (opponent != null) {
+          posts.addAll(
+            YFeed.forUpcoming(
+              round: next.round!,
+              opponent: opponent,
+              date: next.date,
+              nation: nation,
+              seed: career.rngSeed,
+            ),
+          );
+        }
+      }
+
       // And anybody left to stew says so in public — the thing he could not get
       // said in the manager's office.
       for (final g in await ref.watch(grievanceProvider(careerId).future)) {

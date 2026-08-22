@@ -7,6 +7,7 @@ import 'package:fnm/domain/services/manager/manager_skills.dart';
 import 'package:fnm/domain/services/manager/staff.dart';
 import 'package:fnm/features/federation/investment_editor.dart'
     show formatEuros;
+import 'package:fnm/features/federation/staff_card.dart';
 import 'package:fnm/features/manager/manager_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
@@ -46,10 +47,14 @@ class ManagerScreen extends ConsumerWidget {
             : ListView(
                 padding: const EdgeInsets.all(AppSpacing.marginMobile),
                 children: [
-                  // Skills and nothing else. The staff used to sit under
-                  // them, which put a standing COST on a screen with no money
-                  // on it; hiring now happens where the budget is.
                   _SkillsCard(careerId: careerId, view: view),
+                  const SizedBox(height: AppSpacing.md),
+                  // Who is in each job, read-only. HIRING happens on the
+                  // budget screen, where the wages can be weighed against the
+                  // departments they are competing with — but that screen is
+                  // reachable once a cycle, so without this the staff were
+                  // named on the one page you could not get back to.
+                  StaffCard(careerId: careerId, readOnly: true),
                   const SizedBox(height: AppSpacing.xl),
                 ],
               ),

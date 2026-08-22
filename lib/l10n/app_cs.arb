@@ -1340,10 +1340,10 @@
   "bottomStartRankOf": "{rank}. z {total} na světě",
   "campTitle": "Základní tábor",
   "campBasedIn": "Sídlo v zemi {host}",
-  "campBlurb": "Kde tým během turnaje bydlí. Každá základna vyměňuje jednu výhodu za druhou.",
-  "campEffectTravel": "Cestování",
-  "campEffectRecovery": "Regenerace",
-  "campEffectSharpness": "Forma",
+  "campBlurb": "Kde tým bydlí po celý turnaj. Po začátku už to nejde změnit a působí to na tři věci v každém zápase: jak svěží přijedou, jak rychle se hojí zranění a jak jsou sehraní.",
+  "campEffectTravel": "Svěžest na zápas",
+  "campEffectRecovery": "Hojení zranění",
+  "campEffectSharpness": "Sehranost",
   "campTerrainCity": "Centrum města",
   "campTerrainCoastal": "Letovisko u moře",
   "campTerrainMountain": "Horské útočiště",
@@ -1894,5 +1894,12 @@
   "tourStaffBody": "Asistent, skaut a kondiční trenér, každý jmenovitě. Jejich mzdy se platí z tohohle rozpočtu dřív než oddělení, takže špičkový skaut je rozhodnutí proti akademii.",
   "tourPlaystyleTitle": "Jak chcete hrát",
   "tourPlaystyleBody": "Rozestavení je jen půlka taktiky. Tohle je ta druhá — jak vysoko napadáte, jak přímočaře hrajete, kolik riskujete.",
-  "settingsTourNoSave": "Nejdřív si založte kariéru — průvodce prochází vaše vlastní obrazovky."
+  "settingsTourNoSave": "Nejdřív si založte kariéru — průvodce prochází vaše vlastní obrazovky.",
+  "tacticsOutOfPositionAge": "Mimo pozici · Věk {age}",
+  "federationNextCycleLocked": "Rozpočet na další cyklus se rozděluje na jeho začátku, najednou. Do té doby tady vidíte, co vaše peníze dělají.",
+  "federationBudgetAlreadySet": "Pro tenhle cyklus už je rozdělený",
+  "yFinalLooms0": "Je to {opponent} a jde se o všechno. Celý týden se nebude mluvit o ničem jiném.",
+  "yFinalLooms1": "Potvrzeno: mezi námi a tím stojí {opponent}. Čtyři roky kvůli tomuhle.",
+  "yFinalLooms2": "Tak jo. {opponent}. Dokud tohle neskončí, nikdo nespí.",
+  "yFinalLooms3": "Další je {opponent} a všechno ostatní počká. To je týden."
 }

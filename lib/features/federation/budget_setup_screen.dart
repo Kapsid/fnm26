@@ -43,6 +43,16 @@ class BudgetSetupScreen extends ConsumerStatefulWidget {
   ConsumerState<BudgetSetupScreen> createState() => _BudgetSetupScreenState();
 }
 
+/// Whether this cycle's budget has already been distributed.
+final AutoDisposeFutureProviderFamily<bool, int> budgetSettledProvider =
+    FutureProvider.autoDispose.family<bool, int>((ref, careerId) async {
+      final career = await ref.watch(careerRepositoryProvider).byId(careerId);
+      if (career == null) return false;
+      return ref
+          .watch(competitionRepositoryProvider)
+          .hasWatchedDraw(careerId, career.cyclePointer, budgetSetupKind);
+    });
+
 /// The smallest slice of the budget a department can be given.
 const int kBudgetStep = 500000;
 
@@ -163,6 +173,11 @@ class _BudgetSetupScreenState extends ConsumerState<BudgetSetupScreen> {
               alloc.medical +
               alloc.naturalization +
               alloc.boardRelations;
+          // Already distributed this cycle? Then this screen is a record, not
+          // an editor. The hub only offers the event while it is unset, but
+          // the guided tour visits this route directly and a re-cut here would
+          // undo a decision the manager has already lived with.
+          final settled = ref.watch(budgetSettledProvider(widget.careerId));
           final overCommitted = allocated > available;
           final ready =
               _alloc != null &&
@@ -262,11 +277,14 @@ class _BudgetSetupScreenState extends ConsumerState<BudgetSetupScreen> {
                           ),
                         ),
                       PrimaryButton(
-                        label: _busy
+                        label: settled.valueOrNull ?? false
+                            ? l.federationBudgetAlreadySet
+                            : _busy
                             ? l.federationConfirming
                             : l.federationConfirmBudget,
                         icon: Icons.savings_rounded,
-                        onPressed: (!ready || _busy)
+                        onPressed:
+                            (!ready || _busy || (settled.valueOrNull ?? false))
                             ? null
                             : () => unawaited(_confirm(career, alloc)),
                       ),

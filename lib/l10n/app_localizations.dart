@@ -8157,25 +8157,25 @@ abstract class AppLocalizations {
   /// Blurb on the base camp screen.
   ///
   /// In en, this message translates to:
-  /// **'Where the squad lives for the tournament. Each base trades one preparation for another.'**
+  /// **'Where the squad lives for the whole tournament. It cannot be changed once play starts, and it works on three things every match: how fresh they arrive, how fast a knock heals, and how sharp they are.'**
   String get campBlurb;
 
   /// Camp effect chip: travel wear on the squad.
   ///
   /// In en, this message translates to:
-  /// **'Travel'**
+  /// **'Arrive fresh'**
   String get campEffectTravel;
 
   /// Camp effect chip: how fast injuries clear.
   ///
   /// In en, this message translates to:
-  /// **'Recovery'**
+  /// **'Injuries heal'**
   String get campEffectRecovery;
 
   /// Camp effect chip: flat condition lift.
   ///
   /// In en, this message translates to:
-  /// **'Sharpness'**
+  /// **'Match sharpness'**
   String get campEffectSharpness;
 
   /// Camp terrain: in the host's biggest city.
@@ -11516,6 +11516,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Start a career first — the walk through visits your own screens.'**
   String get settingsTourNoSave;
+
+  /// Sub picker: an out-of-position candidate, with his age.
+  ///
+  /// In en, this message translates to:
+  /// **'Out of position · Age {age}'**
+  String tacticsOutOfPositionAge(int age);
+
+  /// Finances: says the next cycle's budget is decided at its start, not here.
+  ///
+  /// In en, this message translates to:
+  /// **'The next cycle\'s budget is set at the start of that cycle, in one go. Until then this is what your money is doing.'**
+  String get federationNextCycleLocked;
+
+  /// Budget screen: the allocation for this cycle is already committed.
+  ///
+  /// In en, this message translates to:
+  /// **'Already set for this cycle'**
+  String get federationBudgetAlreadySet;
+
+  /// Y feed: anticipation before a final.
+  ///
+  /// In en, this message translates to:
+  /// **'It\'s {opponent} for the big one. All week, this is all anybody is going to talk about.'**
+  String yFinalLooms0(String opponent);
+
+  /// Y feed: anticipation before a final.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirmed: {opponent} stand between us and it. Four years for this.'**
+  String yFinalLooms1(String opponent);
+
+  /// Y feed: anticipation before a final.
+  ///
+  /// In en, this message translates to:
+  /// **'Right. {opponent}. Nobody sleeps until this is over.'**
+  String yFinalLooms2(String opponent);
+
+  /// Y feed: anticipation before a final.
+  ///
+  /// In en, this message translates to:
+  /// **'{opponent} next, and everything else can wait. What a week to be alive.'**
+  String yFinalLooms3(String opponent);
 }
 
 class _AppLocalizationsDelegate

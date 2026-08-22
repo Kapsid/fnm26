@@ -95,6 +95,15 @@ enum YTemplate {
   /// The board's patience, in public.
   boardPressure,
 
+  /// A final is coming, and the country has noticed.
+  ///
+  /// The only template drawn from a fixture that has NOT been played. Every
+  /// other post on the feed reacts to a result, which left the biggest match
+  /// of a cycle arriving in total silence and the reaction to it landing
+  /// before any anticipation of it — the wrong way round for the one game
+  /// everybody is waiting for.
+  finalLooms,
+
   /// A reply under somebody else's post. Its words come from a [YMood], not
   /// from what happened — see [YMood].
   reaction,
@@ -232,6 +241,62 @@ abstract final class YFeed {
     }
     return out;
   }
+
+  /// The posts a match that has not been played yet draws.
+  ///
+  /// [round] is the fixture's round code, [opponent] the other nation, and
+  /// [days] how long there is to wait. Only the last rounds of a tournament
+  /// get this: hype before a group game is not hype, it is noise.
+  static List<YPost> forUpcoming({
+    required String round,
+    required String opponent,
+    required DateTime date,
+    required String nation,
+    required int seed,
+  }) {
+    if (!hypeRounds.contains(round)) return const [];
+    final key = 'looms|$round|${date.year}|$opponent';
+    return [
+      _post(
+        voice: YVoice.breaking,
+        template: YTemplate.finalLooms,
+        args: [opponent],
+        date: date,
+        key: key,
+        nation: nation,
+        seed: seed,
+      ),
+      _post(
+        voice: YVoice.fan,
+        template: YTemplate.finalLooms,
+        args: [opponent],
+        date: date,
+        key: key,
+        nation: nation,
+        seed: seed,
+      ),
+      _post(
+        voice: YVoice.pundit,
+        template: YTemplate.finalLooms,
+        args: [opponent],
+        date: date,
+        key: key,
+        nation: nation,
+        seed: seed,
+      ),
+    ];
+  }
+
+  /// The rounds worth building hype for: the last four of either main
+  /// tournament, and the Nations Cup's own final weekend.
+  static const Set<String> hypeRounds = {
+    'SF',
+    'FINAL',
+    'CSF',
+    'CFINAL',
+    'NSF',
+    'NFINAL',
+  };
 
   /// The posts a match draws.
   ///
@@ -537,6 +602,10 @@ abstract final class YFeed {
     YTemplate.trophy ||
     YTemplate.scorerStar => YMood.elation,
     YTemplate.winTight || YTemplate.qualified => YMood.relief,
+    // Anticipation, which is nerves — the replies under it should read like a
+    // country holding its breath, not celebrating something that has not
+    // happened.
+    YTemplate.finalLooms => YMood.relief,
     YTemplate.lost ||
     YTemplate.lossStreak ||
     YTemplate.playerGrievance => YMood.fury,

@@ -6,6 +6,7 @@ import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/features/squad/captain_providers.dart';
 import 'package:fnm/features/tactics/set_piece_takers_providers.dart';
+import 'package:fnm/features/tactics/tactics_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
@@ -13,21 +14,41 @@ import 'package:go_router/go_router.dart';
 /// What the manager has left unset before kick-off.
 typedef SquadSetup = ({bool captain, bool setPieces});
 
-/// Whether the armband and the set-piece takers have been named for this save.
+/// Whether the armband and the set-piece takers are actually COVERED for the
+/// next match.
 ///
 /// Both default to "let the engine decide", which is a reasonable default and
 /// a terrible secret: a manager who never opened the tactics screen had no way
-/// of learning there was a decision there at all. This is what the warning
-/// strip reads.
+/// of learning there was a decision there at all.
+///
+/// The question is availability, not storage. Asking only whether an id had
+/// been saved meant the warning fired on day one, when nothing was set, and
+/// then never again — a captain who picked up a six-week injury, or a penalty
+/// taker dropped from the squad, left the id sitting in the save and the
+/// warning silent, which is precisely the match where it was needed. A named
+/// man who cannot play is not a named man.
 final AutoDisposeFutureProviderFamily<SquadSetup, int> squadSetupProvider =
     FutureProvider.autoDispose.family<SquadSetup, int>((ref, careerId) async {
       final captain = await ref.watch(captainProvider(careerId).future);
       final takers = await ref.watch(setPieceTakersProvider(careerId).future);
+      final squad = await ref.watch(squadDataProvider(careerId).future);
+
+      /// Whether [id] is named for the next match and fit to play it.
+      bool available(int? id) {
+        if (id == null) return false;
+        if (squad == null) return true;
+        if (!squad.callUps.contains(id)) return false;
+        final absence = squad.absences[id];
+        return absence == null || absence.isAvailable;
+      }
+
       return (
-        captain: captain != null,
+        // captainProvider already drops a captain who is out of the squad;
+        // this also catches the one who is in it with a broken metatarsal.
+        captain: available(captain?.id),
         // Penalties are the half of this that decides matches, so a save with
         // a dead-ball taker and nobody on penalties still counts as unset.
-        setPieces: takers.penalty != null && takers.deadBall != null,
+        setPieces: available(takers.penalty) && available(takers.deadBall),
       );
     });
 

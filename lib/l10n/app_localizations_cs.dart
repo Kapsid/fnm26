@@ -4976,16 +4976,16 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get campBlurb =>
-      'Kde tým během turnaje bydlí. Každá základna vyměňuje jednu výhodu za druhou.';
+      'Kde tým bydlí po celý turnaj. Po začátku už to nejde změnit a působí to na tři věci v každém zápase: jak svěží přijedou, jak rychle se hojí zranění a jak jsou sehraní.';
 
   @override
-  String get campEffectTravel => 'Cestování';
+  String get campEffectTravel => 'Svěžest na zápas';
 
   @override
-  String get campEffectRecovery => 'Regenerace';
+  String get campEffectRecovery => 'Hojení zranění';
 
   @override
-  String get campEffectSharpness => 'Forma';
+  String get campEffectSharpness => 'Sehranost';
 
   @override
   String get campTerrainCity => 'Centrum města';
@@ -7191,4 +7191,36 @@ class AppLocalizationsCs extends AppLocalizations {
   @override
   String get settingsTourNoSave =>
       'Nejdřív si založte kariéru — průvodce prochází vaše vlastní obrazovky.';
+
+  @override
+  String tacticsOutOfPositionAge(int age) {
+    return 'Mimo pozici · Věk $age';
+  }
+
+  @override
+  String get federationNextCycleLocked =>
+      'Rozpočet na další cyklus se rozděluje na jeho začátku, najednou. Do té doby tady vidíte, co vaše peníze dělají.';
+
+  @override
+  String get federationBudgetAlreadySet => 'Pro tenhle cyklus už je rozdělený';
+
+  @override
+  String yFinalLooms0(String opponent) {
+    return 'Je to $opponent a jde se o všechno. Celý týden se nebude mluvit o ničem jiném.';
+  }
+
+  @override
+  String yFinalLooms1(String opponent) {
+    return 'Potvrzeno: mezi námi a tím stojí $opponent. Čtyři roky kvůli tomuhle.';
+  }
+
+  @override
+  String yFinalLooms2(String opponent) {
+    return 'Tak jo. $opponent. Dokud tohle neskončí, nikdo nespí.';
+  }
+
+  @override
+  String yFinalLooms3(String opponent) {
+    return 'Další je $opponent a všechno ostatní počká. To je týden.';
+  }
 }
