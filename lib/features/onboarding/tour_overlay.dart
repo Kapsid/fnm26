@@ -63,14 +63,20 @@ class _TourOverlayState extends ConsumerState<TourOverlay> {
   /// a row half under the app bar — and lighting it there draws a ring hanging
   /// off the side of the screen around nothing, which is worse than not
   /// lighting it at all. Trimmed if it overlaps, dropped if it does not.
-  Rect? _onScreen(Rect globalRect) {
+  /// Where [box] sits on the canvas, or null when it is not really visible.
+  ///
+  /// Mapped through the actual transform between the two, rather than by
+  /// translating a corner: a route mid-transition, or anything scaled or
+  /// rotated between the control and the scrim, moves the box in ways two
+  /// corner points do not describe — which is a ring a few pixels out from
+  /// what it is meant to be around.
+  Rect? _onScreen(RenderBox box) {
     final surface = _surfaceKey.currentContext?.findRenderObject();
     if (surface is! RenderBox || !surface.hasSize) return null;
-    // Into the canvas's own coordinates.
-    final rect = Rect.fromPoints(
-      surface.globalToLocal(globalRect.topLeft),
-      surface.globalToLocal(globalRect.bottomRight),
-    );
+    final rect = MatrixUtils.transformRect(
+      box.getTransformTo(surface),
+      Offset.zero & box.size,
+    ).inflate(_padding);
     final bounds = Offset.zero & surface.size;
     if (!rect.overlaps(bounds)) return null;
     final clipped = rect.intersect(bounds);
@@ -131,21 +137,15 @@ class _TourOverlayState extends ConsumerState<TourOverlay> {
       if (!mounted) return;
       final box = key.currentContext?.findRenderObject();
       if (box is! RenderBox || !box.hasSize) return;
-      final rect = (box.localToGlobal(Offset.zero) & box.size).inflate(
-        _padding,
-      );
+      final rect = _onScreen(box);
       if (rect == previous) {
-        final visible = _onScreen(rect);
-        if (visible != _hole) setState(() => _hole = visible);
+        if (rect != _hole) setState(() => _hole = rect);
         return;
       }
       previous = rect;
     }
     // Never settled — light where it last was rather than not at all.
-    if (previous != null) {
-      final visible = _onScreen(previous);
-      if (visible != _hole) setState(() => _hole = visible);
-    }
+    if (previous != _hole) setState(() => _hole = previous);
   }
 
   void _goTo(int index) {

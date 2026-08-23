@@ -508,4 +508,60 @@ void main() {
       );
     });
   });
+
+  group('a transformed control', () {
+    testWidgets('is ringed at the size it is actually drawn', (tester) async {
+      // A route mid-transition is scaled as well as moved. Reading the box's
+      // own size and translating one corner gets the position roughly right
+      // and the SIZE wrong, which is a ring a few pixels out from what it is
+      // meant to be around — the "moved a little bit" that survives every
+      // other fix.
+      final container = ProviderContainer();
+      addTearDown(container.dispose);
+      container.read(tourStepProvider.notifier).state = 0;
+
+      await tester.pumpWidget(
+        UncontrolledProviderScope(
+          container: container,
+          child: MaterialApp(
+            theme: AppTheme.theme,
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            home: TourOverlay(
+              child: Scaffold(
+                body: Center(
+                  child: Transform.scale(
+                    scale: 0.5,
+                    child: SizedBox(
+                      key: TourKeys.hubAction,
+                      width: 200,
+                      height: 80,
+                      child: const Text('shrunk'),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      final spotlight = tester
+          .widgetList<CustomPaint>(find.byType(CustomPaint))
+          .map((p) => p.painter)
+          .whereType<SpotlightPainter>()
+          .single;
+      final hole = spotlight.hole;
+      expect(hole, isNotNull);
+
+      // Drawn at 200x80 scaled by a half: 100x40, plus the ring's padding.
+      expect(
+        hole!.width,
+        closeTo(100 + 12, 2),
+        reason: 'ring is ${hole.width}px wide for a 100px control',
+      );
+      expect(hole.height, closeTo(40 + 12, 2));
+    });
+  });
 }
