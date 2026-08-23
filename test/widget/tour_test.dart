@@ -631,4 +631,67 @@ void main() {
       expect(spotlight.hole!.width, closeTo(control.width + 12, 2));
     });
   });
+
+  group('a page still sliding in', () {
+    testWidgets('the ring ends up on the control, not behind it', (
+      tester,
+    ) async {
+      // The reported bug: steps that follow a route change lit slightly to the
+      // LEFT of their control. A page slides horizontally into place, and a
+      // rect read during that slide is where the control was, not where it
+      // stops. "Two identical frames" did not save it — at the tail of an ease
+      // curve two consecutive positions round to the same rect with a pixel or
+      // two still to travel.
+      final container = ProviderContainer();
+      addTearDown(container.dispose);
+      container.read(tourStepProvider.notifier).state = 0;
+
+      await tester.pumpWidget(
+        UncontrolledProviderScope(
+          container: container,
+          child: MaterialApp(
+            theme: AppTheme.theme,
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            home: TourOverlay(
+              child: Scaffold(
+                body: Center(
+                  child: TweenAnimationBuilder<double>(
+                    // Slides in from the left, decelerating — a page arriving.
+                    tween: Tween(begin: -140, end: 0),
+                    duration: const Duration(milliseconds: 400),
+                    curve: Curves.easeOutCubic,
+                    builder: (context, dx, child) =>
+                        Transform.translate(offset: Offset(dx, 0), child: child),
+                    child: SizedBox(
+                      key: TourKeys.hubAction,
+                      width: 160,
+                      height: 44,
+                      child: const Text('arriving'),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      final spotlight = tester
+          .widgetList<CustomPaint>(find.byType(CustomPaint))
+          .map((p) => p.painter)
+          .whereType<SpotlightPainter>()
+          .single;
+      final control = tester.getRect(find.byKey(TourKeys.hubAction));
+      expect(spotlight.hole, isNotNull, reason: 'nothing was lit');
+      expect(
+        spotlight.hole!.center.dx,
+        closeTo(control.center.dx, 1),
+        reason:
+            'the ring is ${control.center.dx - spotlight.hole!.center.dx}px '
+            'left of where the control came to rest',
+      );
+    });
+  });
 }

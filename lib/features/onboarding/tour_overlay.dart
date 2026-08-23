@@ -1,3 +1,4 @@
+import 'package:flutter/scheduler.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/core/routing/app_router.dart';
@@ -27,7 +28,11 @@ class TourOverlay extends ConsumerStatefulWidget {
   ConsumerState<TourOverlay> createState() => _TourOverlayState();
 }
 
-class _TourOverlayState extends ConsumerState<TourOverlay> {
+class _TourOverlayState extends ConsumerState<TourOverlay>
+        // Several tickers over a tour's life — one per step — so the plain
+        // TickerProviderStateMixin rather than the single-shot one.
+        with
+        TickerProviderStateMixin {
   int? _navigatedFor;
 
   /// Where the control being talked about actually is, in global coordinates.
@@ -52,6 +57,19 @@ class _TourOverlayState extends ConsumerState<TourOverlay> {
   /// control with no obvious cause. Converting explicitly costs one lookup
   /// and cannot drift.
   final GlobalKey _surfaceKey = GlobalKey(debugLabel: 'tour.surface');
+
+  /// Re-measures the lit control on every frame while a step is showing.
+  ///
+  /// Measuring once and freezing meant picking a moment and hoping — and the
+  /// moment was wrong on exactly the steps that follow a route change, where
+  /// the page is still sliding. "Two identical frames" was supposed to catch
+  /// that and does not quite: at the tail of an ease curve two consecutive
+  /// positions round to the same rect while the page still has a pixel or two
+  /// left to travel, which is a ring settling slightly to one side. Tracking
+  /// costs a comparison a frame while a tutorial is on screen, and there is no
+  /// moment left to get wrong: transitions, scrolls and late layout all
+  /// correct themselves.
+  Ticker? _tracker;
 
   /// How long the light takes to travel, and the caption to change ends.
   ///
@@ -97,6 +115,7 @@ class _TourOverlayState extends ConsumerState<TourOverlay> {
   /// he can be shown — and re-measures on the frame after, because the rect
   /// before a scroll is not the rect after one.
   Future<void> _locate(GlobalKey? key) async {
+    _stopTracking();
     if (key == null) {
       if (_hole != null && mounted) setState(() => _hole = null);
       return;
@@ -136,37 +155,43 @@ class _TourOverlayState extends ConsumerState<TourOverlay> {
     // left, which is the ring sitting slightly off the thing it is meant to be
     // around. Two identical readings in a row mean the screen has come to
     // rest; the cap stops a permanently animating screen from spinning here.
-    // NULL never counts as settled. A reading can come back null while the
-    // screen is still arriving — the canvas not laid out yet, the control not
-    // on screen yet — and treating two nulls in a row as "come to rest" ended
-    // the search before it had ever seen the control, leaving that step lit by
-    // nothing at all. Only two identical REAL rects mean the screen has
-    // stopped moving.
-    Rect? previous;
-    for (var frame = 0; frame < 30; frame++) {
-      WidgetsBinding.instance.scheduleFrame();
-      await WidgetsBinding.instance.endOfFrame;
-      if (!mounted) return;
+    // From here the ticker keeps it honest, so there is no settling to wait
+    // for and no moment to pick.
+    _startTracking(key);
+  }
+
+  /// How long to keep watching after a step opens.
+  ///
+  /// Bounded, not forever. Nothing under the scrim can be touched, so the only
+  /// thing that moves a control is an animation the screen started itself — a
+  /// route sliding, a list settling — and those are done inside a second. A
+  /// ticker that never stops would also never let a widget test finish, which
+  /// is a fair warning about leaving one running on a phone.
+  static const int _trackFrames = 90;
+
+  /// Watches [key] and keeps [_hole] on it while the screen settles.
+  void _startTracking(GlobalKey key) {
+    _tracker?.dispose();
+    var frames = 0;
+    _tracker = createTicker((_) {
+      if (!mounted) return _stopTracking();
+      if (frames++ >= _trackFrames) return _stopTracking();
       final box = key.currentContext?.findRenderObject();
-      if (box is! RenderBox || !box.hasSize) {
-        previous = null;
-        continue;
-      }
+      if (box is! RenderBox || !box.hasSize) return;
       final rect = _onScreen(box);
-      if (rect == null) {
-        previous = null;
-        continue;
-      }
-      if (rect == previous) {
-        if (rect != _hole) setState(() => _hole = rect);
-        return;
-      }
-      previous = rect;
-    }
-    // Never settled — light where it last was rather than not at all.
-    if (previous != null && previous != _hole) {
-      setState(() => _hole = previous);
-    }
+      if (rect != _hole) setState(() => _hole = rect);
+    })..start();
+  }
+
+  void _stopTracking() {
+    _tracker?.dispose();
+    _tracker = null;
+  }
+
+  @override
+  void dispose() {
+    _stopTracking();
+    super.dispose();
   }
 
   void _goTo(int index) {
@@ -228,6 +253,7 @@ class _TourOverlayState extends ConsumerState<TourOverlay> {
     if (step == null || step < 0 || step >= kTourSteps.length) {
       _navigatedFor = null;
       _locatedFor = null;
+      _stopTracking();
       return widget.child;
     }
     _goTo(step);
