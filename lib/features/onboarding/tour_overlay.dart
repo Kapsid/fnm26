@@ -36,8 +36,31 @@ class _TourOverlayState extends ConsumerState<TourOverlay> {
   /// The step [_hole] belongs to, so a rebuild does not start the search over.
   int? _locatedFor;
 
+  /// How long the light takes to travel, and the caption to change ends.
+  ///
+  /// Long enough to be followed by eye, short enough not to be a wait: the
+  /// whole point is that the manager sees WHERE it went.
+  static const Duration _moveDuration = Duration(milliseconds: 320);
+
   /// How much room to leave around it, so the ring does not sit on the glyphs.
   static const double _padding = 6;
+
+  /// A rect trimmed to what is actually on screen, or null if the control is
+  /// not really visible.
+  ///
+  /// A control can sit off the edge — a list that would not scroll far enough,
+  /// a row half under the app bar — and lighting it there draws a ring hanging
+  /// off the side of the screen around nothing, which is worse than not
+  /// lighting it at all. Trimmed if it overlaps, dropped if it does not.
+  Rect? _onScreen(Rect rect) {
+    final size = MediaQuery.sizeOf(context);
+    final screen = Offset.zero & size;
+    if (!rect.overlaps(screen)) return null;
+    final clipped = rect.intersect(screen);
+    // A sliver of a control is not the control.
+    if (clipped.width < 8 || clipped.height < 8) return null;
+    return clipped;
+  }
 
   /// Finds the step's target on screen and remembers its rect.
   ///
@@ -95,14 +118,16 @@ class _TourOverlayState extends ConsumerState<TourOverlay> {
         _padding,
       );
       if (rect == previous) {
-        if (rect != _hole) setState(() => _hole = rect);
+        final visible = _onScreen(rect);
+        if (visible != _hole) setState(() => _hole = visible);
         return;
       }
       previous = rect;
     }
     // Never settled — light where it last was rather than not at all.
-    if (previous != null && previous != _hole) {
-      setState(() => _hole = previous);
+    if (previous != null) {
+      final visible = _onScreen(previous);
+      if (visible != _hole) setState(() => _hole = visible);
     }
   }
 
@@ -191,9 +216,31 @@ class _TourOverlayState extends ConsumerState<TourOverlay> {
         // budget half way through it is not a tour, it is a modal argument.
         Positioned.fill(
           child: AbsorbPointer(
-            child: CustomPaint(
-              painter: SpotlightPainter(hole: _hole, radius: AppRadii.md),
-            ),
+            // The light MOVES from one control to the next rather than
+            // blinking out and reappearing somewhere else. A cut that jumps
+            // reads as two separate things being lit; a cut that travels reads
+            // as one thing being pointed at, and the eye follows it without
+            // having to search the screen again.
+            child: _hole == null
+                // Nothing to travel to or from: a plain curtain, drawn at once.
+                ? const CustomPaint(
+                    painter: SpotlightPainter(hole: null, radius: AppRadii.md),
+                  )
+                : TweenAnimationBuilder<Rect?>(
+                    // Only `end` is given: TweenAnimationBuilder interpolates
+                    // from whatever it last showed, which is the previous
+                    // control's rect — so the light glides between them
+                    // instead of blinking out and reappearing.
+                    tween: RectTween(end: _hole),
+                    duration: _moveDuration,
+                    curve: Curves.easeInOutCubic,
+                    builder: (context, hole, _) => CustomPaint(
+                      painter: SpotlightPainter(
+                        hole: hole ?? _hole,
+                        radius: AppRadii.md,
+                      ),
+                    ),
+                  ),
           ),
         ),
         Positioned.fill(

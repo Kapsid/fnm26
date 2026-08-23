@@ -337,4 +337,104 @@ void main() {
       );
     });
   });
+
+  group('the light stays on the screen', () {
+    testWidgets('a control off the edge is not lit at all', (tester) async {
+      // A ring hanging off the side of the screen, around nothing, is worse
+      // than no ring: the manager looks where it points and there is nothing
+      // there.
+      final container = ProviderContainer();
+      addTearDown(container.dispose);
+      container.read(tourStepProvider.notifier).state = 0;
+
+      await tester.pumpWidget(
+        UncontrolledProviderScope(
+          container: container,
+          child: MaterialApp(
+            theme: AppTheme.theme,
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            home: TourOverlay(
+              child: Scaffold(
+                body: Transform.translate(
+                  // Well past the right-hand edge.
+                  offset: const Offset(5000, 0),
+                  child: SizedBox(
+                    key: TourKeys.hubAction,
+                    width: 120,
+                    height: 40,
+                    child: const Text('miles away'),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      final spotlight = tester
+          .widgetList<CustomPaint>(find.byType(CustomPaint))
+          .map((p) => p.painter)
+          .whereType<SpotlightPainter>()
+          .single;
+      expect(
+        spotlight.hole,
+        isNull,
+        reason: 'it lit a control that is not on the screen',
+      );
+      // The caption still reads — the step is not lost, only the ring.
+      expect(find.text('This is the whole game'), findsOneWidget);
+    });
+
+    testWidgets('a control half off the edge is trimmed to what is visible', (
+      tester,
+    ) async {
+      tester.view
+        ..physicalSize = const Size(400, 800)
+        ..devicePixelRatio = 1.0;
+      addTearDown(tester.view.reset);
+
+      final container = ProviderContainer();
+      addTearDown(container.dispose);
+      container.read(tourStepProvider.notifier).state = 0;
+
+      await tester.pumpWidget(
+        UncontrolledProviderScope(
+          container: container,
+          child: MaterialApp(
+            theme: AppTheme.theme,
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            home: TourOverlay(
+              child: Scaffold(
+                body: Transform.translate(
+                  offset: const Offset(340, 100),
+                  child: SizedBox(
+                    key: TourKeys.hubAction,
+                    width: 200,
+                    height: 40,
+                    child: const Text('half off'),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      final spotlight = tester
+          .widgetList<CustomPaint>(find.byType(CustomPaint))
+          .map((p) => p.painter)
+          .whereType<SpotlightPainter>()
+          .single;
+      expect(spotlight.hole, isNotNull);
+      expect(
+        spotlight.hole!.right,
+        lessThanOrEqualTo(400),
+        reason: 'the ring ran off the side of the screen',
+      );
+    });
+  });
 }
