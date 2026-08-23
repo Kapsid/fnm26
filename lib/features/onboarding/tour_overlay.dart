@@ -33,6 +33,9 @@ class _TourOverlayState extends ConsumerState<TourOverlay> {
   /// Where the control being talked about actually is, in global coordinates.
   Rect? _hole;
 
+  /// The step [_hole] belongs to, so a rebuild does not start the search over.
+  int? _locatedFor;
+
   /// How much room to leave around it, so the ring does not sit on the glyphs.
   static const double _padding = 6;
 
@@ -46,10 +49,24 @@ class _TourOverlayState extends ConsumerState<TourOverlay> {
       if (_hole != null && mounted) setState(() => _hole = null);
       return;
     }
-    final context = key.currentContext;
+    // A screen does not finish arriving in one frame: the route builds, its
+    // providers resolve, a list lays out. Looking once and giving up meant a
+    // step whose screen was still loading fell back to dimming everything and
+    // stayed that way, because nothing looks again. So look for a while.
+    // Waited out in FRAMES, not on a timer. What the target is waiting for is
+    // frames — the route building, its providers resolving, a list laying out
+    // — so a frame is the honest unit, and a timer left pending outlives the
+    // screen it was watching.
+    var context = key.currentContext;
+    for (var attempt = 0; attempt < 12 && context == null; attempt++) {
+      WidgetsBinding.instance.scheduleFrame();
+      await WidgetsBinding.instance.endOfFrame;
+      if (!mounted) return;
+      context = key.currentContext;
+    }
     if (context == null) {
-      // The screen has not built it — or this save has no such control. The
-      // step still reads; it just dims everything, as it used to.
+      // Genuinely not on this screen — a control this save does not have. The
+      // step still reads; it just dims everything.
       if (_hole != null && mounted) setState(() => _hole = null);
       return;
     }
@@ -78,7 +95,16 @@ class _TourOverlayState extends ConsumerState<TourOverlay> {
       // No save to walk through — a replay from Settings, say, before one is
       // open. The step still reads and still lights whatever it can find on
       // the screen already showing.
-      if (careerId != null) context.go('$route?careerId=$careerId');
+      // Through the ROUTER, not through this context.
+      //
+      // The overlay is built by MaterialApp.router's builder, which sits above
+      // the Navigator — so context.go() had no InheritedGoRouter to find and
+      // navigated nowhere. Every step after the first stayed on the hub, only
+      // the steps whose target happened to be on the hub ever lit up, and the
+      // tour read as a caption box counting to ten.
+      if (careerId != null) {
+        ref.read(routerProvider).go('$route?careerId=$careerId');
+      }
       // Two frames: one for the route to build, one for it to lay out. Only
       // then does the target have a position worth measuring.
       await WidgetsBinding.instance.endOfFrame;
@@ -93,10 +119,11 @@ class _TourOverlayState extends ConsumerState<TourOverlay> {
     final careerId = ref.read(tourCareerProvider);
     endTour(ref);
     _navigatedFor = null;
+    _locatedFor = null;
     if (careerId == null) return;
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
-      context.go('${Routes.hub}?careerId=$careerId');
+      ref.read(routerProvider).go('${Routes.hub}?careerId=$careerId');
     });
   }
 
@@ -114,16 +141,21 @@ class _TourOverlayState extends ConsumerState<TourOverlay> {
     final step = ref.watch(tourStepProvider);
     if (step == null || step < 0 || step >= kTourSteps.length) {
       _navigatedFor = null;
+      _locatedFor = null;
       return widget.child;
     }
     _goTo(step);
-    // ALWAYS, not only after a navigation. Tying the measuring to the
-    // navigation meant that any step which did not navigate — a second step on
-    // the same screen, or any step at all when there was no save to navigate
-    // with — lit nothing, and the tour silently became a curtain.
-    WidgetsBinding.instance.addPostFrameCallback(
-      (_) => _locate(kTourSteps[step].target),
-    );
+    // Measured for every step, not only the ones that navigate — a second step
+    // on the same screen moves the light without moving the page, and tying
+    // the two together left those steps dark. Once per step, though: _locate
+    // retries for a screen that is still arriving, and starting that over on
+    // every rebuild would be a treadmill.
+    if (_locatedFor != step) {
+      _locatedFor = step;
+      WidgetsBinding.instance.addPostFrameCallback(
+        (_) => _locate(kTourSteps[step].target),
+      );
+    }
 
     final l = AppLocalizations.of(context);
     final current = kTourSteps[step];
@@ -199,6 +231,7 @@ class _TourOverlayState extends ConsumerState<TourOverlay> {
                               TextButton(
                                 onPressed: () {
                                   _navigatedFor = null;
+                                  _locatedFor = null;
                                   ref.read(tourStepProvider.notifier).state =
                                       step - 1;
                                 },
@@ -214,6 +247,7 @@ class _TourOverlayState extends ConsumerState<TourOverlay> {
                               _finish();
                             } else {
                               _navigatedFor = null;
+                              _locatedFor = null;
                               ref.read(tourStepProvider.notifier).state =
                                   step + 1;
                             }
