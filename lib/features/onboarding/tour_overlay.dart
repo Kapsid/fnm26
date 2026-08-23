@@ -36,8 +36,14 @@ class _TourOverlayState extends ConsumerState<TourOverlay> {
   /// The step [_hole] belongs to, so a rebuild does not start the search over.
   int? _locatedFor;
 
-  /// The painting surface itself, so a control's position can be converted
-  /// into the coordinates the scrim is actually drawn in.
+  /// The painting surface, so a control's position can be converted into the
+  /// coordinates the scrim is actually drawn in.
+  ///
+  /// It sits on the AbsorbPointer that is always there, NOT on the CustomPaint
+  /// — that swaps between an animated one and a plain one as a hole appears
+  /// and disappears, and a GlobalKey moving between two subtrees is null for
+  /// the frames in between. Every lookup that landed in one of those frames
+  /// came back with nothing to measure against.
   ///
   /// localToGlobal gives a rect in SCREEN space, and the canvas is in the
   /// overlay's own — identical only while the overlay starts exactly at the
@@ -130,14 +136,27 @@ class _TourOverlayState extends ConsumerState<TourOverlay> {
     // left, which is the ring sitting slightly off the thing it is meant to be
     // around. Two identical readings in a row mean the screen has come to
     // rest; the cap stops a permanently animating screen from spinning here.
+    // NULL never counts as settled. A reading can come back null while the
+    // screen is still arriving — the canvas not laid out yet, the control not
+    // on screen yet — and treating two nulls in a row as "come to rest" ended
+    // the search before it had ever seen the control, leaving that step lit by
+    // nothing at all. Only two identical REAL rects mean the screen has
+    // stopped moving.
     Rect? previous;
     for (var frame = 0; frame < 30; frame++) {
       WidgetsBinding.instance.scheduleFrame();
       await WidgetsBinding.instance.endOfFrame;
       if (!mounted) return;
       final box = key.currentContext?.findRenderObject();
-      if (box is! RenderBox || !box.hasSize) return;
+      if (box is! RenderBox || !box.hasSize) {
+        previous = null;
+        continue;
+      }
       final rect = _onScreen(box);
+      if (rect == null) {
+        previous = null;
+        continue;
+      }
       if (rect == previous) {
         if (rect != _hole) setState(() => _hole = rect);
         return;
@@ -145,7 +164,9 @@ class _TourOverlayState extends ConsumerState<TourOverlay> {
       previous = rect;
     }
     // Never settled — light where it last was rather than not at all.
-    if (previous != _hole) setState(() => _hole = previous);
+    if (previous != null && previous != _hole) {
+      setState(() => _hole = previous);
+    }
   }
 
   void _goTo(int index) {
@@ -233,6 +254,7 @@ class _TourOverlayState extends ConsumerState<TourOverlay> {
         // budget half way through it is not a tour, it is a modal argument.
         Positioned.fill(
           child: AbsorbPointer(
+            key: _surfaceKey,
             // The light MOVES from one control to the next rather than
             // blinking out and reappearing somewhere else. A cut that jumps
             // reads as two separate things being lit; a cut that travels reads
@@ -240,9 +262,8 @@ class _TourOverlayState extends ConsumerState<TourOverlay> {
             // having to search the screen again.
             child: _hole == null
                 // Nothing to travel to or from: a plain curtain, drawn at once.
-                ? CustomPaint(
-                    key: _surfaceKey,
-                    painter: const SpotlightPainter(
+                ? const CustomPaint(
+                    painter: SpotlightPainter(
                       hole: null,
                       radius: AppRadii.md,
                     ),
@@ -256,7 +277,6 @@ class _TourOverlayState extends ConsumerState<TourOverlay> {
                     duration: _moveDuration,
                     curve: Curves.easeInOutCubic,
                     builder: (context, hole, _) => CustomPaint(
-                      key: _surfaceKey,
                       painter: SpotlightPainter(
                         hole: hole ?? _hole,
                         radius: AppRadii.md,

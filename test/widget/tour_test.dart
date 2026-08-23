@@ -564,4 +564,71 @@ void main() {
       expect(hole.height, closeTo(40 + 12, 2));
     });
   });
+
+  group('a screen that is still arriving', () {
+    testWidgets('is waited for, not written off', (tester) async {
+      // The control is not in the tree at all for the first few frames, which
+      // is what a route still building looks like. This pins the WAIT: the
+      // search keeps looking rather than lighting nothing.
+      //
+      // It does not reproduce the careers step going dark — that survived
+      // this test — so it is coverage, not the regression test for that bug.
+      final container = ProviderContainer();
+      addTearDown(container.dispose);
+      container.read(tourStepProvider.notifier).state = 0;
+
+      var arrived = false;
+      await tester.pumpWidget(
+        UncontrolledProviderScope(
+          container: container,
+          child: MaterialApp(
+            theme: AppTheme.theme,
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            home: TourOverlay(
+              child: Scaffold(
+                body: StatefulBuilder(
+                  builder: (context, setState) {
+                    if (!arrived) {
+                      // Turn up a few frames late, like a route does.
+                      Future<void>.delayed(
+                        const Duration(milliseconds: 40),
+                        () {
+                          arrived = true;
+                          setState(() {});
+                        },
+                      );
+                      return const SizedBox.shrink();
+                    }
+                    return Center(
+                      child: SizedBox(
+                        key: TourKeys.hubAction,
+                        width: 120,
+                        height: 40,
+                        child: const Text('finally here'),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      final spotlight = tester
+          .widgetList<CustomPaint>(find.byType(CustomPaint))
+          .map((p) => p.painter)
+          .whereType<SpotlightPainter>()
+          .single;
+      expect(
+        spotlight.hole,
+        isNotNull,
+        reason: 'it gave up before the control had arrived',
+      );
+      final control = tester.getRect(find.byKey(TourKeys.hubAction));
+      expect(spotlight.hole!.width, closeTo(control.width + 12, 2));
+    });
+  });
 }
