@@ -7207,4 +7207,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String newsTransferWindowTitle(int year) {
     return 'Transfer window · $year';
   }
+
+  @override
+  String careerLastAgo(String when) {
+    return 'Last $when ago';
+  }
 }

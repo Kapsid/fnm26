@@ -210,14 +210,22 @@ String? playedLabel(AppLocalizations l, int seconds) {
   return l.careerPlayedHours(minutes ~/ 60, minutes % 60);
 }
 
-String _ago(AppLocalizations l, DateTime at) {
-  final diff = DateTime.now().difference(at);
-  if (diff.inMinutes < 2) return l.careerJustNow;
-  if (diff.inMinutes < 60) return l.careerMinutesAgo(diff.inMinutes);
-  if (diff.inHours < 24) return l.careerHoursAgo(diff.inHours);
-  if (diff.inDays == 1) return l.careerYesterday;
-  if (diff.inDays < 7) return l.careerDaysAgo(diff.inDays);
-  return DateFormat('d MMM yyyy').format(at);
+/// How long ago, in one unit and as few characters as it takes.
+///
+/// "Last played 3 days ago" is a sentence, and this line shares a narrow row
+/// with the share and delete buttons — so the sentence was the thing that got
+/// cut, which left the manager reading "Last played 3 days…" and learning
+/// nothing he could not already guess. A unit and a number always fit.
+///
+/// Deliberately coarse. Nobody picking a save needs the minute; they need to
+/// know which of these they were playing yesterday.
+String agoShort(DateTime at, {DateTime? now}) {
+  final diff = (now ?? DateTime.now()).difference(at);
+  if (diff.inMinutes < 60) return '${diff.inMinutes.clamp(1, 59)}m';
+  if (diff.inHours < 24) return '${diff.inHours}h';
+  if (diff.inDays < 7) return '${diff.inDays}d';
+  if (diff.inDays < 365) return '${diff.inDays ~/ 7}w';
+  return '${diff.inDays ~/ 365}y';
 }
 
 /// Writes one career to a file and hands it to the share sheet.
@@ -319,11 +327,12 @@ class SaveTile extends StatelessWidget {
                       ),
                       const SizedBox(width: 4),
                       Flexible(
-                        child: Text(
-                          l.careerLastPlayed(_ago(l, save.lastPlayedAt!)),
+                        // Never cut, on top of being short: this line is the
+                        // one thing telling two saves apart.
+                        child: WholeText(
+                          l.careerLastAgo(agoShort(save.lastPlayedAt!)),
                           maxLines: 1,
-                          softWrap: false,
-                          overflow: TextOverflow.ellipsis,
+                          textAlign: TextAlign.start,
                           style: AppTypography.labelSmall.copyWith(
                             color: AppColors.onSurfaceVariant,
                           ),

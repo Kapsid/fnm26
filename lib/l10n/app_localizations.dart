@@ -11570,6 +11570,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Transfer window · {year}'**
   String newsTransferWindowTitle(int year);
+
+  /// Saves list: how long since this save was opened, in one short unit.
+  ///
+  /// In en, this message translates to:
+  /// **'Last {when} ago'**
+  String careerLastAgo(String when);
 }
 
 class _AppLocalizationsDelegate

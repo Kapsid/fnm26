@@ -1903,5 +1903,6 @@
   "yFinalLooms2": "Tak jo. {opponent}. Dokud tohle neskončí, nikdo nespí.",
   "yFinalLooms3": "Další je {opponent} a všechno ostatní počká. To je týden.",
   "friendliesLikeYourGroup": "Nahoře jsou týmy podobné soupeřům ze skupiny: {rivals}.",
-  "newsTransferWindowTitle": "Přestupní okno · {year}"
+  "newsTransferWindowTitle": "Přestupní okno · {year}",
+  "careerLastAgo": "Naposledy před {when}"
 }

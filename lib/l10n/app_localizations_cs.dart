@@ -7233,4 +7233,9 @@ class AppLocalizationsCs extends AppLocalizations {
   String newsTransferWindowTitle(int year) {
     return 'Přestupní okno · $year';
   }
+
+  @override
+  String careerLastAgo(String when) {
+    return 'Naposledy před $when';
+  }
 }

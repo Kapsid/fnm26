@@ -10312,5 +10312,15 @@
         "type": "int"
       }
     }
+  },
+  "careerLastAgo": "Last {when} ago",
+  "@careerLastAgo": {
+    "description": "Saves list: how long since this save was opened, in one short unit.",
+    "placeholders": {
+      "when": {
+        "type": "String",
+        "example": "3h"
+      }
+    }
   }
 }
