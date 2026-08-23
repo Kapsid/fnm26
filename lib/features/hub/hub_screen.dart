@@ -263,7 +263,6 @@ class _HubScreenState extends ConsumerState<HubScreen> {
               // The press, when they have something to ask. A card, not a
               // forced step: it waits, and it goes away on its own if the
               // manager would rather not talk.
-              _PressCard(careerId: careerId, name: name),
               _BoardFinanceCard(
                 key: TourKeys.hubBoard,
                 careerId: careerId,
@@ -378,68 +377,6 @@ class _ChampionBanner extends StatelessWidget {
   }
 }
 
-/// The press card: shown only when there is a question waiting, and gone the
-/// moment it is answered or goes stale. It sits below the board strip rather
-/// than in the primary action, so talking to the press is never in the way of
-/// playing the next match.
-class _PressCard extends ConsumerWidget {
-  const _PressCard({required this.careerId, required this.name});
-
-  final int careerId;
-
-  /// Resolves a nation id to its name, for a question about a specific match.
-  final String Function(int) name;
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final l = AppLocalizations.of(context);
-    final question = ref.watch(pressQuestionProvider(careerId)).valueOrNull;
-    if (question == null) return const SizedBox.shrink();
-    return Padding(
-      padding: const EdgeInsets.only(bottom: AppSpacing.md),
-      child: AppCard(
-        onTap: () => showModalBottomSheet<void>(
-          context: context,
-          backgroundColor: AppColors.surfaceContainer,
-          isScrollControlled: true,
-          builder: (_) => PressSheet(
-            careerId: careerId,
-            question: question,
-            opponentName: switch (question.subjectNationId) {
-              final id? => name(id),
-              _ => null,
-            },
-          ),
-        ),
-        child: Row(
-          children: [
-            const Icon(Icons.mic_rounded, color: AppColors.primary, size: 20),
-            const SizedBox(width: AppSpacing.md),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(l.pressCardTitle, style: AppTypography.titleMedium),
-                  Text(
-                    l.pressCardSub,
-                    style: AppTypography.labelSmall.copyWith(
-                      color: AppColors.onSurfaceVariant,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const Icon(
-              Icons.chevron_right,
-              size: 18,
-              color: AppColors.onSurfaceVariant,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
 
 /// A single compact strip: board confidence (shown immediately, colour-coded)
 /// on the left, the federation funds as a button through to the finances screen

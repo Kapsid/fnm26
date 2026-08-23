@@ -282,7 +282,6 @@ class SaveTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
     final date = DateFormat('MMM yyyy').format(save.inGameDate);
-    final wcYear = CareerService.worldCupYear(save.cyclePointer);
     return AppCard(
       onTap: onContinue,
       child: Row(
@@ -304,31 +303,11 @@ class SaveTile extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 2),
-                Row(
-                  children: [
-                    const Icon(
-                      Icons.emoji_events_outlined,
-                      size: 12,
-                      color: AppColors.primary,
-                    ),
-                    const SizedBox(width: 4),
-                    // Flexible: this line sat in the Row unconstrained, so it
-                    // spilled out of the column it belongs to and painted
-                    // underneath the share and delete buttons on the right of
-                    // the card — "Road to the 2034 World Cup" ran 242 pixels
-                    // past the end of its own space on a narrow phone.
-                    Flexible(
-                      child: WholeText(
-                        l.careerRoadToWorldCup(wcYear),
-                        maxLines: 1,
-                        textAlign: TextAlign.start,
-                        style: AppTypography.labelSmall.copyWith(
-                          color: AppColors.primary,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+                // The two lines under the manager's name say WHEN you last
+                // played and for how long. They used to carry "Road to the
+                // 2034 World Cup", which is the same sentence on every save in
+                // the list and tells you nothing about which of them to open.
+                // What a saves list is for is telling them apart.
                 if (save.lastPlayedAt != null) ...[
                   const SizedBox(height: 2),
                   Row(

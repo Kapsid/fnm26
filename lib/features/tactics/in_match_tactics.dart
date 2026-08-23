@@ -10,6 +10,7 @@ import 'package:fnm/domain/services/tactics/best_eleven.dart';
 import 'package:fnm/domain/services/tactics/position_fit.dart';
 import 'package:fnm/domain/services/rating/overall_rating.dart';
 import 'package:fnm/domain/services/tactics/substitution_rules.dart';
+import 'package:fnm/features/tactics/formation_picker.dart';
 import 'package:fnm/features/tactics/tactics_pitch.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
@@ -153,15 +154,19 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
 
   void _setFormation(Formation f) {
     if (f == _formation) return;
-    // Keep the players currently on the pitch, refitting them to the new shape.
-    final ids = _onPitch;
-    final current = _eligible.where((p) => ids.contains(p.id)).toList();
-    final fitPool = current.length >= 11
-        ? current
-        : [...current, ..._eligible.where((p) => !ids.contains(p.id))];
+    // Refits the players who are ALREADY ON THE PITCH to the new shape, and
+    // nobody else.
+    //
+    // It used to top the pool up from the bench whenever fewer than eleven
+    // were out there, which is precisely the situation after a sending-off:
+    // changing shape with ten men silently brought a substitute on, spending
+    // no substitution, and the red card was undone by dragging a player
+    // sideways. A reshape rearranges who is on the pitch. Putting somebody new
+    // on is a substitution, and has to cost one.
     setState(() {
       _formation = f;
-      _lineup = bestEleven(f, fitPool);
+      // Short by however many have walked: bestEleven leaves those slots null.
+      _lineup = bestEleven(f, reshapePool(_eligible, _onPitch));
     });
   }
 
@@ -480,18 +485,14 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
     return ListView(
       padding: const EdgeInsets.all(AppSpacing.marginMobile),
       children: [
-        Text(l.tacticsFormation, style: AppTypography.labelMedium),
-        const SizedBox(height: AppSpacing.sm),
-        Wrap(
-          spacing: AppSpacing.sm,
-          runSpacing: AppSpacing.sm,
-          children: [
-            for (final f in Formation.values)
-              GestureDetector(
-                onTap: () => _setFormation(f),
-                child: TacticalChip(f.label, emphasized: f == _formation),
-              ),
-          ],
+        // The same control as before kick-off. Two different ways of picking
+        // a shape — a row of text chips in here, a drawn grid out there — made
+        // the same decision look like two unrelated features, and the text
+        // chips are the version nobody could read: "4-1-4-1" and "4-4-1-1" are
+        // one glyph apart and neither says what the side would look like.
+        FormationField(
+          selected: _formation,
+          onSelected: _setFormation,
         ),
         const SizedBox(height: AppSpacing.lg),
         Text(l.tacticsInstructions, style: AppTypography.labelMedium),

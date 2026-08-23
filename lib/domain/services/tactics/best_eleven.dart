@@ -57,3 +57,19 @@ Player? _pickAny(List<Player> sorted, Set<int> used) {
   }
   return null;
 }
+
+/// Who a SHAPE CHANGE may draw on: exactly the players already on the pitch.
+///
+/// A reshape rearranges the men out there. It never brings anybody on —
+/// putting a fresh player on is a substitution, and has to cost one.
+///
+/// This existed inline in the in-match editor and topped the pool up from the
+/// bench whenever fewer than eleven were on the pitch. That is precisely the
+/// state after a sending-off, so changing shape with ten men quietly restored
+/// the eleventh from the bench, spent no substitution, and undid the red card.
+/// Passing a short pool to [bestEleven] leaves the spare slots empty, which is
+/// what playing a man down looks like.
+List<Player> reshapePool(List<Player> eligible, Set<int> onPitch) => [
+  for (final p in eligible)
+    if (onPitch.contains(p.id)) p,
+];

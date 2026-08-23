@@ -73,7 +73,8 @@ class _InvestmentEditorState extends State<InvestmentEditor> {
           Department.naturalization => _naturalization,
           Department.boardRelations => _boardRelations,
         };
-    final capped = (raw ~/ _step * _step).clamp(0, widget.available - others);
+    final room = widget.available - others;
+    final capped = clampDepartment(raw: raw, room: room, step: _step);
     setState(() {
       switch (dept) {
         case Department.youth:
@@ -191,4 +192,24 @@ class _InvestmentEditorState extends State<InvestmentEditor> {
       ),
     );
   }
+}
+
+/// What a department actually takes when the slider is dragged to [raw], given
+/// there is [room] left in the budget.
+///
+/// Rounds DOWN to [step] like the slider does, except at the very top, where
+/// it takes the exact remainder instead.
+///
+/// Without that exception a budget that is not a whole number of steps could
+/// never be finished: the balance is whatever the federation happens to hold,
+/// so a manager dragging every slider to its limit was still left staring at a
+/// few hundred thousand — or, with an odd balance and five roundings, rather
+/// more — that no slider would accept. Money you can see and cannot assign
+/// reads as a bug whatever the arithmetic behind it, and the screen refuses to
+/// confirm until the balance is spent, so it could also strand the manager on
+/// the one screen he is forced to finish.
+int clampDepartment({required double raw, required int room, required int step}) {
+  if (room <= 0) return 0;
+  final rounded = raw ~/ step * step;
+  return rounded >= room ? room : rounded.clamp(0, room);
 }

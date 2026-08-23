@@ -28,6 +28,9 @@ const kMaxMessagePopups = 3;
 /// costs a cache hit and buys news that arrives when it happened.
 ///
 /// Returns the number shown.
+///
+/// Anything past [kMaxMessagePopups] is marked read along with them and waits
+/// in the inbox — see the note at the bottom of this function.
 Future<int> showUnreadMessagePopups(
   BuildContext context,
   WidgetRef ref,
@@ -75,10 +78,22 @@ Future<int> showUnreadMessagePopups(
     );
   }
 
-  // Only what was shown — the rest stay unread and pop next time.
+  // The WHOLE eligible batch is marked read, not only the three that were
+  // shown.
+  //
+  // Leaving the remainder unread turned the cap into a queue: a save with a
+  // backlog — and one builds every tournament, since the between-seasons
+  // reports are held until the final is played and then all arrive at once —
+  // popped three items on every single visit to the hub, for ever. Opening the
+  // app and being handed three reports about players, again, is the reported
+  // bug, and it was the cap draining three at a time rather than anything
+  // being generated twice.
+  //
+  // News is announced once. The inbox is where it lives afterwards, and the
+  // count below says how much of it went straight there.
   await ref
       .read(competitionRepositoryProvider)
-      .markMessagesRead(careerId, ids: showing.map((m) => m.id).toList());
+      .markMessagesRead(careerId, ids: unread.map((m) => m.id).toList());
   ref
     ..invalidate(messageInboxProvider(careerId))
     ..invalidate(unreadMessagesProvider(careerId));

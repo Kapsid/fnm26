@@ -7,6 +7,7 @@ import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/data/db/app_database.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
 import 'package:fnm/features/messages/message_popup.dart';
+import 'package:fnm/features/messages/message_sheet.dart';
 import 'package:fnm/features/messages/message_providers.dart';
 
 import '../helpers/test_database.dart';
@@ -148,6 +149,31 @@ void main() {
     expect(find.text('Filed by the sync'), findsOneWidget);
   });
 
+  testWidgets('a backlog is announced once, not three at a time for ever', (
+    tester,
+  ) async {
+    // The reported bug: restart the app, open a save, get three popups about
+    // players. Again. And again. A tournament holds the between-seasons
+    // reports until its final is played, so a dozen land together, and a cap
+    // that left the remainder unread handed out three of them per hub visit
+    // until they ran out.
+    for (var i = 0; i < 12; i++) {
+      await addMessage('backlog$i', 'Report $i');
+    }
+    await pumpAndPop(tester);
+    for (var i = 0; i < kMaxMessagePopups; i++) {
+      await tester.tap(find.text(i == kMaxMessagePopups - 1 ? 'Done' : 'Next'));
+      await tester.pumpAndSettle();
+    }
+
+    expect(await comp.unreadMessageCount(careerId), 0);
+
+    // The next visit — a restart, say — is quiet.
+    await pumpAndPop(tester);
+    expect(find.text('Report 3'), findsNothing);
+    expect(find.byType(MessageSheet), findsNothing);
+  });
+
   testWidgets('nothing pops when everything has been read', (tester) async {
     await addMessage('a', 'Old news');
     await comp.markMessagesRead(careerId);
@@ -169,9 +195,13 @@ void main() {
       await tester.tap(find.text(i == kMaxMessagePopups - 1 ? 'Done' : 'Next'));
       await tester.pumpAndSettle();
     }
+    // The ones past the cap were never put on screen.
+    expect(find.text('News ${kMaxMessagePopups}'), findsNothing);
 
-    // Only the shown ones were marked read — the overflow waits in the inbox.
-    expect(await comp.unreadMessageCount(careerId), 2);
+    // The overflow is marked read WITH them and waits in the inbox. Leaving
+    // it unread made the cap a queue: three popups on every visit to the hub,
+    // for ever, which is what a backlog after a tournament produced.
+    expect(await comp.unreadMessageCount(careerId), 0);
   });
 }
 

@@ -885,52 +885,40 @@ class _PlayerToggle extends StatelessWidget {
       // The absence badge lives on the subtitle line, not beside the name: in
       // the title it crowded the name into an ellipsis on a phone, so it read
       // as if the badge were covering it.
-      subtitle: Row(
+      // A WRAP, not a row. This line can carry four things at once — his age
+      // and value, why he is unavailable, how much club football he is
+      // getting, how tired he is — and on a phone they do not fit beside each
+      // other, so the longest of them was cut and the manager lost exactly the
+      // detail he was reading the line for. Given a second line they all
+      // arrive whole, and a row only grows when it has something to say.
+      subtitle: Wrap(
+        spacing: AppSpacing.sm,
+        runSpacing: 2,
+        crossAxisAlignment: WrapCrossAlignment.center,
         children: [
           // Position is already shown by the leading chip — no role text.
-          // Flexible because the tile's trailing controls leave this line
-          // little more than a hundred pixels on a phone: age and value give
-          // way to the badges, rather than running off the edge of the row.
-          Flexible(
-            child: WholeText(
-              l.tacticsAgeValue(player.age, _money(player.value)),
-              maxLines: 1,
-              style: AppTypography.labelSmall.copyWith(
-                color: AppColors.onSurfaceVariant,
-              ),
+          Text(
+            l.tacticsAgeValue(player.age, _money(player.value)),
+            style: AppTypography.labelSmall.copyWith(
+              color: AppColors.onSurfaceVariant,
             ),
           ),
-          if (reason != null) ...[
-            const SizedBox(width: AppSpacing.sm),
-            _AbsenceBadge(reason: reason, isInjury: isInjury),
-          ],
+          if (reason != null) _AbsenceBadge(reason: reason, isInjury: isInjury),
           // Only when it is worth saying: a rotation player is the norm and a
           // badge on every row would say nothing at all.
           if (condition?.clubStanding case final s?)
-            if (s != ClubStanding.rotation) ...[
-              const SizedBox(width: AppSpacing.sm),
-              // The one thing on this line that can be long ("Plays every
-              // week"), so it is the one thing that gives way. Unconstrained it
-              // pushed the fatigue tag off the row and read as overlapping it.
-              Flexible(
-                child: Text(
-                  clubStandingLabel(l, s),
-                  maxLines: 1,
-                  softWrap: false,
-                  overflow: TextOverflow.ellipsis,
-                  style: AppTypography.labelSmall.copyWith(
-                    color: s == ClubStanding.firstChoice
-                        ? AppColors.positive
-                        : AppColors.warning,
-                  ),
+            if (s != ClubStanding.rotation)
+              Text(
+                clubStandingLabel(l, s),
+                style: AppTypography.labelSmall.copyWith(
+                  color: s == ClubStanding.firstChoice
+                      ? AppColors.positive
+                      : AppColors.warning,
                 ),
               ),
-            ],
           if (condition != null &&
-              condition!.fatigueState != FatigueState.fresh) ...[
-            const SizedBox(width: AppSpacing.sm),
+              condition!.fatigueState != FatigueState.fresh)
             _FatigueTag(state: condition!.fatigueState),
-          ],
         ],
       ),
       trailing: Row(
