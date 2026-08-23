@@ -36,6 +36,17 @@ class _TourOverlayState extends ConsumerState<TourOverlay> {
   /// The step [_hole] belongs to, so a rebuild does not start the search over.
   int? _locatedFor;
 
+  /// The painting surface itself, so a control's position can be converted
+  /// into the coordinates the scrim is actually drawn in.
+  ///
+  /// localToGlobal gives a rect in SCREEN space, and the canvas is in the
+  /// overlay's own — identical only while the overlay starts exactly at the
+  /// screen's top-left. Anything that insets it, now or later, shifts every
+  /// ring by that inset, which is the highlight sitting a little off the
+  /// control with no obvious cause. Converting explicitly costs one lookup
+  /// and cannot drift.
+  final GlobalKey _surfaceKey = GlobalKey(debugLabel: 'tour.surface');
+
   /// How long the light takes to travel, and the caption to change ends.
   ///
   /// Long enough to be followed by eye, short enough not to be a wait: the
@@ -52,11 +63,17 @@ class _TourOverlayState extends ConsumerState<TourOverlay> {
   /// a row half under the app bar — and lighting it there draws a ring hanging
   /// off the side of the screen around nothing, which is worse than not
   /// lighting it at all. Trimmed if it overlaps, dropped if it does not.
-  Rect? _onScreen(Rect rect) {
-    final size = MediaQuery.sizeOf(context);
-    final screen = Offset.zero & size;
-    if (!rect.overlaps(screen)) return null;
-    final clipped = rect.intersect(screen);
+  Rect? _onScreen(Rect globalRect) {
+    final surface = _surfaceKey.currentContext?.findRenderObject();
+    if (surface is! RenderBox || !surface.hasSize) return null;
+    // Into the canvas's own coordinates.
+    final rect = Rect.fromPoints(
+      surface.globalToLocal(globalRect.topLeft),
+      surface.globalToLocal(globalRect.bottomRight),
+    );
+    final bounds = Offset.zero & surface.size;
+    if (!rect.overlaps(bounds)) return null;
+    final clipped = rect.intersect(bounds);
     // A sliver of a control is not the control.
     if (clipped.width < 8 || clipped.height < 8) return null;
     return clipped;
@@ -223,8 +240,12 @@ class _TourOverlayState extends ConsumerState<TourOverlay> {
             // having to search the screen again.
             child: _hole == null
                 // Nothing to travel to or from: a plain curtain, drawn at once.
-                ? const CustomPaint(
-                    painter: SpotlightPainter(hole: null, radius: AppRadii.md),
+                ? CustomPaint(
+                    key: _surfaceKey,
+                    painter: const SpotlightPainter(
+                      hole: null,
+                      radius: AppRadii.md,
+                    ),
                   )
                 : TweenAnimationBuilder<Rect?>(
                     // Only `end` is given: TweenAnimationBuilder interpolates
@@ -235,6 +256,7 @@ class _TourOverlayState extends ConsumerState<TourOverlay> {
                     duration: _moveDuration,
                     curve: Curves.easeInOutCubic,
                     builder: (context, hole, _) => CustomPaint(
+                      key: _surfaceKey,
                       painter: SpotlightPainter(
                         hole: hole ?? _hole,
                         radius: AppRadii.md,

@@ -437,4 +437,75 @@ void main() {
       );
     });
   });
+
+  group('the ring is exactly where the control is', () {
+    testWidgets('even when the overlay does not start at the screen corner', (
+      tester,
+    ) async {
+      // localToGlobal gives a rect in SCREEN space; the canvas is in the
+      // overlay's own. They are identical only while the overlay starts at the
+      // top-left, and anything that insets it shifts every ring by that inset
+      // — the highlight sitting slightly off the control with no obvious
+      // cause. This pads the overlay to force the two spaces apart.
+      final container = ProviderContainer();
+      addTearDown(container.dispose);
+      container.read(tourStepProvider.notifier).state = 0;
+
+      await tester.pumpWidget(
+        UncontrolledProviderScope(
+          container: container,
+          child: MaterialApp(
+            theme: AppTheme.theme,
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            home: Padding(
+              padding: const EdgeInsets.only(left: 40, top: 60),
+              child: TourOverlay(
+                child: Scaffold(
+                  body: Center(
+                    child: SizedBox(
+                      key: TourKeys.hubAction,
+                      width: 120,
+                      height: 40,
+                      child: const Text('the button'),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      final paint = find.byType(CustomPaint).evaluate().map((e) => e.widget);
+      final spotlight = paint.whereType<CustomPaint>().firstWhere(
+        (p) => p.painter is SpotlightPainter,
+      );
+      final hole = (spotlight.painter! as SpotlightPainter).hole;
+      expect(hole, isNotNull, reason: 'nothing was lit');
+
+      // Convert the painted hole back into screen space and compare it with
+      // where the control actually is.
+      final surface = tester.renderObject<RenderBox>(
+        find.byWidget(spotlight),
+      );
+      final drawn = Rect.fromPoints(
+        surface.localToGlobal(hole!.topLeft),
+        surface.localToGlobal(hole.bottomRight),
+      );
+      final control = tester.getRect(find.byKey(TourKeys.hubAction));
+
+      expect(
+        drawn.center.dx,
+        closeTo(control.center.dx, 1),
+        reason: 'the ring is ${drawn.center.dx - control.center.dx}px sideways',
+      );
+      expect(
+        drawn.center.dy,
+        closeTo(control.center.dy, 1),
+        reason: 'the ring is ${drawn.center.dy - control.center.dy}px out',
+      );
+    });
+  });
 }
