@@ -7212,4 +7212,18 @@ class AppLocalizationsEn extends AppLocalizations {
   String careerLastAgo(String when) {
     return 'Last $when ago';
   }
+
+  @override
+  String get settingsFreeScopeTitle => 'One free four-year cycle';
+
+  @override
+  String get settingsFreeScopeBlurb =>
+      'A complete cycle — qualifying, a continental championship and a World Cup — with nothing held back. Carrying a save on past it is a single payment, once, and it covers every save and every future update.';
+
+  @override
+  String get settingsUnlockedTitle => 'Unlocked';
+
+  @override
+  String get settingsUnlockedBlurb =>
+      'Unlimited careers, every nation, ten save slots and every future update. Thank you.';
 }

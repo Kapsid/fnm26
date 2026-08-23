@@ -11576,6 +11576,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Last {when} ago'**
   String careerLastAgo(String when);
+
+  /// Settings: what the free game covers.
+  ///
+  /// In en, this message translates to:
+  /// **'One free four-year cycle'**
+  String get settingsFreeScopeTitle;
+
+  /// Settings: what the free game covers.
+  ///
+  /// In en, this message translates to:
+  /// **'A complete cycle — qualifying, a continental championship and a World Cup — with nothing held back. Carrying a save on past it is a single payment, once, and it covers every save and every future update.'**
+  String get settingsFreeScopeBlurb;
+
+  /// Settings: what the free game covers.
+  ///
+  /// In en, this message translates to:
+  /// **'Unlocked'**
+  String get settingsUnlockedTitle;
+
+  /// Settings: what the free game covers.
+  ///
+  /// In en, this message translates to:
+  /// **'Unlimited careers, every nation, ten save slots and every future update. Thank you.'**
+  String get settingsUnlockedBlurb;
 }
 
 class _AppLocalizationsDelegate

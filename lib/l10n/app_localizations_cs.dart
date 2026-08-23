@@ -7238,4 +7238,18 @@ class AppLocalizationsCs extends AppLocalizations {
   String careerLastAgo(String when) {
     return 'Naposledy před $when';
   }
+
+  @override
+  String get settingsFreeScopeTitle => 'Jeden čtyřletý cyklus zdarma';
+
+  @override
+  String get settingsFreeScopeBlurb =>
+      'Celý cyklus — kvalifikace, kontinentální šampionát i mistrovství světa — bez jakéhokoli omezení. Pokračovat s uloženou hrou dál je jednorázová platba, jednou, a platí pro všechny uložené hry i všechny budoucí aktualizace.';
+
+  @override
+  String get settingsUnlockedTitle => 'Odemčeno';
+
+  @override
+  String get settingsUnlockedBlurb =>
+      'Neomezené kariéry, všechny národy, deset pozic pro uložení a všechny budoucí aktualizace. Děkujeme.';
 }

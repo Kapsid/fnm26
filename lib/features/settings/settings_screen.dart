@@ -10,6 +10,7 @@ import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/domain/entities/career.dart';
+import 'package:fnm/domain/services/entitlement/entitlement.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/onboarding/tour_providers.dart';
 import 'package:fnm/features/settings/settings_providers.dart';
@@ -30,6 +31,7 @@ class SettingsScreen extends ConsumerWidget {
     final current = ref.watch(localeProvider)?.languageCode ?? 'system';
     // The save to walk: the one played most recently, or the newest if none
     // has ever been opened.
+    final premium = ref.watch(premiumUnlockedProvider);
     final saves = ref.watch(savesProvider).valueOrNull ?? const <Career>[];
     final replayable = saves.isEmpty
         ? null
@@ -130,6 +132,51 @@ class SettingsScreen extends ConsumerWidget {
                   onSelectionChanged: (sel) => setLocale(
                     ref,
                     sel.first == 'system' ? null : Locale(sel.first),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: AppSpacing.md),
+          // What the free game covers, stated plainly and stated ONCE, here.
+          //
+          // Deliberately not on the hub, not before a tournament, and not on
+          // the way into a save: a manager on his first day is being asked to
+          // care about a nation, not about a price, and putting the terms in
+          // front of him there costs the people who would have stayed. The
+          // trade is that the gate arrives at the first rollover without a
+          // run-up — this page is where somebody who wants to know can find
+          // out, and it is the whole of the disclosure.
+          AppCard(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Icon(
+                  premium ? Icons.verified_rounded : Icons.lock_open_rounded,
+                  size: 18,
+                  color: AppColors.primary,
+                ),
+                const SizedBox(width: AppSpacing.md),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        premium
+                            ? l.settingsUnlockedTitle
+                            : l.settingsFreeScopeTitle,
+                        style: AppTypography.bodyMedium,
+                      ),
+                      const SizedBox(height: 2),
+                      Text(
+                        premium
+                            ? l.settingsUnlockedBlurb
+                            : l.settingsFreeScopeBlurb,
+                        style: AppTypography.labelSmall.copyWith(
+                          color: AppColors.onSurfaceVariant,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ],
