@@ -7223,4 +7223,14 @@ class AppLocalizationsCs extends AppLocalizations {
   String yFinalLooms3(String opponent) {
     return 'Další je $opponent a všechno ostatní počká. To je týden.';
   }
+
+  @override
+  String friendliesLikeYourGroup(String rivals) {
+    return 'Nahoře jsou týmy podobné soupeřům ze skupiny: $rivals.';
+  }
+
+  @override
+  String newsTransferWindowTitle(int year) {
+    return 'Přestupní okno · $year';
+  }
 }

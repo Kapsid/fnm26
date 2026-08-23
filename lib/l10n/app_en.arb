@@ -10294,5 +10294,23 @@
         "type": "String"
       }
     }
+  },
+  "friendliesLikeYourGroup": "Suggested first: sides who play like {rivals}, who you have drawn.",
+  "@friendliesLikeYourGroup": {
+    "description": "Friendlies: why these opponents are suggested first.",
+    "placeholders": {
+      "rivals": {
+        "type": "String"
+      }
+    }
+  },
+  "newsTransferWindowTitle": "Transfer window · {year}",
+  "@newsTransferWindowTitle": {
+    "description": "Inbox: the window's transfers, as one report.",
+    "placeholders": {
+      "year": {
+        "type": "int"
+      }
+    }
   }
 }

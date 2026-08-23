@@ -229,31 +229,34 @@ extension SeasonRollover on SeasonService {
       for (final n in (await _nationsById()).values) n.code.toLowerCase(): n,
     };
 
-    for (final m in moves.take(3)) {
-      final (p, was) = m;
-      final fee = _transferFee(p);
-      // A move abroad used to read exactly like a move across town, so every
-      // transfer in the feed looked domestic. Name the country when the player
-      // crosses a border — that is the part of the news that is the news.
-      final destination = transferDestination(
-        _l,
-        club: p.club,
-        toCountryName: byCode[p.clubCountry]?.name,
-        crossedBorder: was.clubCountry != p.clubCountry,
-      );
+    // ONE message for the window, not one per player.
+    //
+    // Moves used to arrive as separate items capped at three, so a manager
+    // watched a handful of his squad change club and got no account of the
+    // rest — his own players moved and nobody told him. A window is the unit a
+    // transfer market happens in, so it is the unit the news comes in, and it
+    // reads as a table like the development report it sits beside.
+    if (moves.isNotEmpty) {
+      final rows = [
+        for (final m in moves)
+          () {
+            final (p, was) = m;
+            return (
+              name: p.name,
+              position: p.position.label,
+              from: was.club,
+              to: p.club,
+              fee: _feeLabel(_transferFee(p)),
+              abroad: was.clubCountry != p.clubCountry,
+            );
+          }(),
+      ];
       await _comp.addMessage(
         careerId: careerId,
-        dedupKey: 'transfer:${p.id}:$year',
+        dedupKey: 'transfers:$year',
         category: 'transfer',
-        title: _l.newsTransferTitle(p.name, p.club),
-        body: _l.newsTransferBody(
-          p.name,
-          p.position.label,
-          was.club,
-          destination,
-          _feeLabel(fee),
-          p.overall,
-        ),
+        title: _l.newsTransferWindowTitle(year),
+        body: encodeTransferReport(rows),
         year: year,
       );
     }

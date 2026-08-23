@@ -4,6 +4,7 @@ import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
 import 'package:fnm/features/messages/squad_dev_report.dart';
+import 'package:fnm/features/messages/transfer_report.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 
 /// The icon and colour a message category is shown with. Shared so a message
@@ -100,6 +101,8 @@ class MessageSheet extends StatelessWidget {
                 const SizedBox(height: AppSpacing.sm),
               ],
               SquadDevTable(rows: report.rows),
+            ] else if (decodeTransferReport(message.body) case final moves?) ...[
+              TransferTable(rows: moves),
             ] else
               Text(message.body, style: AppTypography.bodyMedium),
             if (action != null) ...[

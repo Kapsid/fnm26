@@ -7197,4 +7197,14 @@ class AppLocalizationsEn extends AppLocalizations {
   String yFinalLooms3(String opponent) {
     return '$opponent next, and everything else can wait. What a week to be alive.';
   }
+
+  @override
+  String friendliesLikeYourGroup(String rivals) {
+    return 'Suggested first: sides who play like $rivals, who you have drawn.';
+  }
+
+  @override
+  String newsTransferWindowTitle(int year) {
+    return 'Transfer window · $year';
+  }
 }

@@ -1901,5 +1901,7 @@
   "yFinalLooms0": "Je to {opponent} a jde se o všechno. Celý týden se nebude mluvit o ničem jiném.",
   "yFinalLooms1": "Potvrzeno: mezi námi a tím stojí {opponent}. Čtyři roky kvůli tomuhle.",
   "yFinalLooms2": "Tak jo. {opponent}. Dokud tohle neskončí, nikdo nespí.",
-  "yFinalLooms3": "Další je {opponent} a všechno ostatní počká. To je týden."
+  "yFinalLooms3": "Další je {opponent} a všechno ostatní počká. To je týden.",
+  "friendliesLikeYourGroup": "Nahoře jsou týmy podobné soupeřům ze skupiny: {rivals}.",
+  "newsTransferWindowTitle": "Přestupní okno · {year}"
 }

@@ -131,6 +131,38 @@ class _FriendliesScreenState extends ConsumerState<FriendliesScreen> {
                   ),
                 ),
               ),
+              // Says WHY these names are at the top. A shortlist reordered
+              // silently is just a different shortlist; the manager has to
+              // know it is preparation for the sides he has actually drawn.
+              if (plan.rivals.isNotEmpty)
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(
+                    AppSpacing.marginMobile,
+                    0,
+                    AppSpacing.marginMobile,
+                    AppSpacing.sm,
+                  ),
+                  child: Row(
+                    children: [
+                      const Icon(
+                        Icons.lightbulb_outline_rounded,
+                        size: 14,
+                        color: AppColors.primary,
+                      ),
+                      const SizedBox(width: AppSpacing.xs),
+                      Expanded(
+                        child: Text(
+                          l.friendliesLikeYourGroup(
+                            plan.rivals.map((n) => n.name).join(', '),
+                          ),
+                          style: AppTypography.labelSmall.copyWith(
+                            color: AppColors.primary,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               Expanded(
                 child: ListView(
                   padding: const EdgeInsets.symmetric(

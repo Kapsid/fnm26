@@ -11558,6 +11558,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{opponent} next, and everything else can wait. What a week to be alive.'**
   String yFinalLooms3(String opponent);
+
+  /// Friendlies: why these opponents are suggested first.
+  ///
+  /// In en, this message translates to:
+  /// **'Suggested first: sides who play like {rivals}, who you have drawn.'**
+  String friendliesLikeYourGroup(String rivals);
+
+  /// Inbox: the window's transfers, as one report.
+  ///
+  /// In en, this message translates to:
+  /// **'Transfer window · {year}'**
+  String newsTransferWindowTitle(int year);
 }
 
 class _AppLocalizationsDelegate

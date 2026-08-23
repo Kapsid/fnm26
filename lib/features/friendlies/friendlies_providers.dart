@@ -23,11 +23,12 @@ String friendlyWindowKey(DateTime d) => 'friendly:${d.year}-${d.month}';
 bool friendlyIsHome(DateTime d) => d.month.isEven;
 
 /// The friendlies the manager can arrange in the current gap before their next
-/// competitive fixture: the open [windows] (up to three) and a shortlist of
+/// competitive fixture: every open window in that gap and a shortlist of
 /// suggested [opponents] (by ranking proximity). Null when there is no gap.
 class FriendliesPlan {
   const FriendliesPlan({
     required this.windows,
+    this.rivals = const [],
     required this.opponents,
     required this.nations,
     required this.playerNationId,
@@ -35,6 +36,10 @@ class FriendliesPlan {
   });
 
   final List<DateTime> windows;
+
+  /// Who the nation has been drawn against, when a group is already known.
+  /// Empty otherwise, and then the suggestions are simply ranking-plausible.
+  final List<Nation> rivals;
   final List<Nation> opponents;
   final Map<int, Nation> nations;
   final int playerNationId;
@@ -104,7 +109,13 @@ friendliesPlanProvider = FutureProvider.autoDispose.family<FriendliesPlan?, int>
         continue;
       }
       windows.add(d);
-      if (windows.length >= 3) break;
+      // The WHOLE gap, in one sitting. It used to stop at three, and arranging
+      // those three simply revealed the next three — so a long gap before a
+      // tournament asked the same question at three consecutive events, which
+      // reads as the game having lost track of what you already answered.
+      // Six is a ceiling against an absurd calendar, not a page size; a real
+      // gap holds two or three.
+      if (windows.length >= 6) break;
     }
     if (windows.isEmpty) return null;
 
@@ -122,11 +133,40 @@ friendliesPlanProvider = FutureProvider.autoDispose.family<FriendliesPlan?, int>
     final rng = SeededRng(
       career.rngSeed ^ (career.cyclePointer * 0x2F) ^ 0xF1E4,
     );
-    final opponents = rng.shuffled(pool);
+    final shuffled = rng.shuffled(pool);
+
+    // If the finals group is already drawn, the point of a friendly changes.
+    // It stops being an exhibition and becomes preparation for three specific
+    // sides, which is what a real federation books them for — you play
+    // somebody who resembles who you have got.
+    //
+    // Ranking is the proxy for resemblance the rest of the game already uses,
+    // so a candidate is scored by how close he is to the NEAREST of the drawn
+    // rivals, and the closest float to the front. A confederation match is
+    // worth something too: sides from the same continent play a recognisable
+    // way, and that is half of what the manager is trying to rehearse.
+    final rivals = await _drawnGroupRivals(comp, careerId, career.nationId);
+    final rivalNations = [
+      for (final id in rivals)
+        if (nations[id] != null) nations[id]!,
+    ];
+    final opponents = rivalNations.isEmpty
+        ? shuffled
+        : (shuffled.toList()..sort((a, b) {
+            int distance(Nation n) => rivalNations
+                .map(
+                  (r) =>
+                      (n.ranking - r.ranking).abs() +
+                      (n.confederation == r.confederation ? 0 : 12),
+                )
+                .reduce((x, y) => x < y ? x : y);
+            return distance(a).compareTo(distance(b));
+          }));
 
     return FriendliesPlan(
       windows: windows,
       opponents: opponents.take(24).toList(),
+      rivals: rivalNations,
       nations: nations,
       playerNationId: career.nationId,
       cycle: career.cyclePointer,
@@ -214,3 +254,22 @@ class FriendliesService {
 final Provider<FriendliesService> friendliesServiceProvider = Provider(
   FriendliesService.new,
 );
+
+/// The sides the manager has been drawn against in a finals group that has NOT
+/// been played yet, or empty when there is no such group.
+///
+/// Only the group stage: a knockout opponent is not known far enough ahead to
+/// prepare for, and by the time he is there are no friendly windows left.
+Future<Set<int>> _drawnGroupRivals(
+  CompetitionRepository comp,
+  int careerId,
+  int nationId,
+) async {
+  const groupRounds = {'GROUP', 'CGROUP', 'NGROUP'};
+  final fixtures = await comp.cycleFixturesForNation(careerId, nationId);
+  return {
+    for (final f in fixtures)
+      if (groupRounds.contains(f.round) && !f.hasResult)
+        if (f.homeNationId == nationId) f.awayNationId else f.homeNationId,
+  };
+}
