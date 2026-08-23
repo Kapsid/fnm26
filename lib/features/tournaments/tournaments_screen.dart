@@ -1,3 +1,4 @@
+import 'package:fnm/features/onboarding/tour_keys.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/core/routing/app_router.dart';
@@ -150,6 +151,7 @@ class TournamentsScreen extends ConsumerWidget {
               ),
               const SizedBox(height: AppSpacing.md),
               AppCard(
+                key: TourKeys.worldRanking,
                 onTap: () => context.go('${Routes.ranking}?careerId=$careerId'),
                 child: Row(
                   children: [

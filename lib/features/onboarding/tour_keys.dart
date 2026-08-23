@@ -36,4 +36,10 @@ abstract final class TourKeys {
 
   /// How many are named, and how many may be.
   static final callUpCount = GlobalKey(debugLabel: 'tour.callUpCount');
+
+  /// The record of everything the manager has done.
+  static final careerHistory = GlobalKey(debugLabel: 'tour.careerHistory');
+
+  /// Where the rest of the world's competitions live.
+  static final worldRanking = GlobalKey(debugLabel: 'tour.worldRanking');
 }

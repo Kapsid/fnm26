@@ -76,11 +76,34 @@ class _TourOverlayState extends ConsumerState<TourOverlay> {
       alignment: 0.5,
     );
     if (!mounted) return;
-    final box = key.currentContext?.findRenderObject();
-    if (box is! RenderBox || !box.hasSize) return;
-    final origin = box.localToGlobal(Offset.zero);
-    final rect = (origin & box.size).inflate(_padding);
-    if (rect != _hole) setState(() => _hole = rect);
+
+    // Measured until it STOPS MOVING, not once.
+    //
+    // A route transition slides, ensureVisible scrolls, a list settles — and a
+    // rect read in the middle of any of that is a rect the control has already
+    // left, which is the ring sitting slightly off the thing it is meant to be
+    // around. Two identical readings in a row mean the screen has come to
+    // rest; the cap stops a permanently animating screen from spinning here.
+    Rect? previous;
+    for (var frame = 0; frame < 30; frame++) {
+      WidgetsBinding.instance.scheduleFrame();
+      await WidgetsBinding.instance.endOfFrame;
+      if (!mounted) return;
+      final box = key.currentContext?.findRenderObject();
+      if (box is! RenderBox || !box.hasSize) return;
+      final rect = (box.localToGlobal(Offset.zero) & box.size).inflate(
+        _padding,
+      );
+      if (rect == previous) {
+        if (rect != _hole) setState(() => _hole = rect);
+        return;
+      }
+      previous = rect;
+    }
+    // Never settled — light where it last was rather than not at all.
+    if (previous != null && previous != _hole) {
+      setState(() => _hole = previous);
+    }
   }
 
   void _goTo(int index) {

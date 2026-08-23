@@ -1,3 +1,4 @@
+import 'package:fnm/features/onboarding/tour_keys.dart';
 import 'package:flutter/material.dart';
 import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/theme/app_colors.dart';
@@ -33,6 +34,7 @@ class CareersScreen extends StatelessWidget {
         padding: const EdgeInsets.all(AppSpacing.marginMobile),
         children: [
           _MenuTile(
+            key: TourKeys.careerHistory,
             icon: Icons.timeline,
             title: l.careerManagerCareer,
             subtitle: l.careerManagerCareerSubtitle,
@@ -77,6 +79,7 @@ class CareersScreen extends StatelessWidget {
 
 class _MenuTile extends StatelessWidget {
   const _MenuTile({
+    super.key,
     required this.icon,
     required this.title,
     required this.subtitle,

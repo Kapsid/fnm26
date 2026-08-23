@@ -16,9 +16,10 @@ typedef TourStep = ({
 
   /// The control this step is ABOUT, cut out of the scrim and lit.
   ///
-  /// Null means the step is about the screen as a whole, which is the honest
-  /// answer for a records page or a list of cups: there is no one button to
-  /// point at, and inventing one would be worse than dimming the lot.
+  /// Null dims the whole screen instead. Nothing uses that any more — a step
+  /// with nothing lit is a step that teaches nothing, which is what the first
+  /// version of this was — but it stays as the fallback for a target that
+  /// turns out not to be on screen.
   GlobalKey? target,
 });
 
@@ -80,13 +81,13 @@ final List<TourStep> kTourSteps = [
     route: Routes.careers,
     title: _recordsTitle,
     body: _recordsBody,
-    target: null,
+    target: TourKeys.careerHistory,
   ),
   (
     route: Routes.tournaments,
     title: _cupsTitle,
     body: _cupsBody,
-    target: null,
+    target: TourKeys.worldRanking,
   ),
 ];
 

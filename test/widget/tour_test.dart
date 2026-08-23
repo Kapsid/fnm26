@@ -28,13 +28,15 @@ void main() {
       }
     });
 
-    test('most steps point at a specific control, not just a screen', () {
-      // A tour that only dims the screen teaches nothing — that was the first
-      // version of this and it read as a scroller. The records page and the
-      // list of cups have no one button worth pointing at and are allowed to
-      // be about the screen; everything else must aim at something.
-      final aimed = kTourSteps.where((s) => s.target != null).length;
-      expect(aimed, greaterThanOrEqualTo(kTourSteps.length - 2));
+    test('every step points at a specific control', () {
+      // A step that lights nothing teaches nothing — that was the first
+      // version of this and it read as a scroller. Two steps were left aiming
+      // at "the screen" on the grounds that a records page has no one button
+      // worth pointing at; on a device they were simply the two steps where
+      // the tour stopped working.
+      for (final step in kTourSteps) {
+        expect(step.target, isNotNull, reason: 'step on ${step.route}');
+      }
     });
 
     test('it covers the screens without being a slog', () {
@@ -273,6 +275,66 @@ void main() {
 
       expect(find.text('This is the whole game'), findsOneWidget);
       expect(tester.takeException(), isNull);
+    });
+  });
+
+  group('the light settles', () {
+    testWidgets('the hole lands on a control that arrives late', (
+      tester,
+    ) async {
+      // A route transition slides, ensureVisible scrolls, a list settles. A
+      // rect read in the middle of any of that is one the control has already
+      // left — the ring sitting slightly off the thing it is meant to circle.
+      final container = ProviderContainer();
+      addTearDown(container.dispose);
+      container.read(tourStepProvider.notifier).state = 0;
+
+      await tester.pumpWidget(
+        UncontrolledProviderScope(
+          container: container,
+          child: MaterialApp(
+            theme: AppTheme.theme,
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            home: TourOverlay(
+              child: Scaffold(
+                body: Center(
+                  // Slides into place over 300ms, like a route does.
+                  child: TweenAnimationBuilder<double>(
+                    tween: Tween(begin: 0, end: 200),
+                    duration: const Duration(milliseconds: 300),
+                    builder: (context, offset, child) => Transform.translate(
+                      offset: Offset(0, offset),
+                      child: child,
+                    ),
+                    child: SizedBox(
+                      key: TourKeys.hubAction,
+                      width: 120,
+                      height: 40,
+                      child: const Text('the button'),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      final spotlight = tester
+          .widgetList<CustomPaint>(find.byType(CustomPaint))
+          .map((p) => p.painter)
+          .whereType<SpotlightPainter>()
+          .single;
+      final settled = tester.getRect(find.byKey(TourKeys.hubAction));
+
+      expect(spotlight.hole, isNotNull, reason: 'nothing was lit');
+      expect(
+        spotlight.hole!.center.dy,
+        closeTo(settled.center.dy, 1),
+        reason: 'the ring is where the control USED to be',
+      );
     });
   });
 }
