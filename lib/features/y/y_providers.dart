@@ -1,6 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/data/data_providers.dart';
+import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/entities/nation.dart';
+import 'package:fnm/domain/services/competition/rounds.dart';
 import 'package:fnm/domain/services/press/public_mood.dart';
 import 'package:fnm/domain/services/press/y_feed.dart';
 import 'package:fnm/features/ranking/world_ranking_providers.dart';
@@ -226,6 +228,21 @@ final AutoDisposeFutureProviderFamily<List<YPost>, int> yFeedProvider =
         }
       }
 
+      // The tournaments themselves. Every post above reacts to a SCORELINE,
+      // which left the biggest things that happen to a nation — lifting the
+      // trophy, going out, booking the place at all — passing without a word:
+      // `YFeed.forEvent` had full copy in both languages, its own tests, and
+      // not one caller anywhere in the app.
+      posts.addAll(
+        await _tournamentPosts(
+          ref,
+          careerId: careerId,
+          nationId: career.nationId,
+          nation: nation,
+          seed: career.rngSeed,
+        ),
+      );
+
       // And anybody left to stew says so in public — the thing he could not get
       // said in the manager's office.
       for (final g in await ref.watch(grievanceProvider(careerId).future)) {
@@ -303,3 +320,171 @@ final AutoDisposeFutureProviderFamily<int, int> publicMoodProvider =
           ),
       ]);
     });
+
+/// A qualifying campaign counts as a place BOOKED when the nation turns up at
+/// a finals within this long of its last qualifier. Two years: qualifying ends
+/// roughly a year before the tournament it feeds, and a slack window is safer
+/// than a tight one — a missed campaign has no finals fixtures at all, so
+/// nothing here can turn a miss into a celebration.
+const Duration _qualifyingReach = Duration(days: 730);
+
+/// What the country said about the tournaments themselves — the trophy, the
+/// exit, the place booked, the one that is nearly here.
+///
+/// Everything is derived from fixtures the save already holds, so each post
+/// carries a REAL date and sorts among the match reports where it belongs. A
+/// tournament is one competition row, which is what makes this safe across an
+/// endless career: round codes repeat every four years, competition ids do not.
+Future<List<YPost>> _tournamentPosts(
+  Ref ref, {
+  required int careerId,
+  required int nationId,
+  required String nation,
+  required int seed,
+}) async {
+  final comp = ref.watch(competitionRepositoryProvider);
+  final fixtures = await comp.fixturesForNation(careerId, nationId);
+  if (fixtures.isEmpty) return const [];
+  final names = await comp.competitionNames(careerId);
+
+  final byCompetition = <int, List<Fixture>>{};
+  for (final f in fixtures) {
+    (byCompetition[f.competitionId] ??= []).add(f);
+  }
+  for (final list in byCompetition.values) {
+    list.sort((a, b) => a.date.compareTo(b.date));
+  }
+
+  final milestones = <YMilestone>[];
+  for (final entry in byCompetition.entries) {
+    final list = entry.value;
+    final competition = names[entry.key];
+    if (competition == null) continue;
+    final played = [
+      for (final f in list)
+        if (f.hasResult) f,
+    ];
+    // A campaign still has matches to come: nobody writes its obituary yet.
+    final finished = played.length == list.length;
+    final last = played.isEmpty ? null : played.last;
+
+    // A finals tournament the nation has finished: it ended in a trophy, a
+    // runners-up medal, or an exit. Which one is the last round they played.
+    if (finished && last != null) {
+      final home = last.homeNationId == nationId;
+      final mine = home ? last.homeScore! : last.awayScore!;
+      final theirs = home ? last.awayScore! : last.homeScore!;
+      final milestone = YFeed.endOfCampaign(
+        round: last.round,
+        competition: competition,
+        // A final settled on penalties is won by the shoot-out, not the score.
+        won: last.wentToShootout
+            ? (home
+                  ? last.homePenalties! > last.awayPenalties!
+                  : last.awayPenalties! > last.homePenalties!)
+            : mine > theirs,
+        date: last.date,
+        key: 'cmp:${entry.key}',
+      );
+      if (milestone != null) milestones.add(milestone);
+    }
+
+    // A qualifying campaign that ended in a place at the finals. Qualifying is
+    // the rounds a finals tournament does NOT use — World Cup qualifiers carry
+    // no round code at all, continental ones carry 'CQ'.
+    if (finished && last != null && _isQualifying(list)) {
+      final reached = _finalsAfter(byCompetition, _familyOf(list), last.date);
+      if (reached != null && names[reached] != null) {
+        milestones.add((
+          template: YTemplate.qualified,
+          args: [names[reached]!],
+          date: last.date,
+          key: 'qual:${entry.key}',
+        ));
+      }
+    }
+
+    // And the one that has not started yet. Dated at its first match rather
+    // than invented: the feed sorts by date, and a post about a tournament
+    // must not land before the results it is anticipating.
+    final firstUnplayed = list.where((f) => !f.hasResult).firstOrNull;
+    if (firstUnplayed != null && played.isEmpty && _isFinals(list)) {
+      milestones.add((
+        template: YTemplate.tournamentSoon,
+        args: [competition],
+        date: firstUnplayed.date,
+        key: 'soon:${entry.key}',
+      ));
+    }
+  }
+
+  return [
+    for (final m in milestones)
+      ...YFeed.forEvent(
+        template: m.template,
+        args: m.args,
+        date: m.date,
+        key: m.key,
+        nation: nation,
+        seed: seed,
+      ),
+  ];
+}
+
+/// The core (confederation prefix stripped) of a fixture's round code.
+String? _coreRound(String? round) {
+  if (round == null) return null;
+  return round.startsWith('C') || round.startsWith('N')
+      ? round.substring(1)
+      : round;
+}
+
+/// Whether a competition is a FINALS tournament — the rounds a trophy is won
+/// in, as opposed to the campaign that gets a nation there.
+bool _isFinals(List<Fixture> list) => list.any(
+  (f) => YFeed.finalsRounds.contains(_coreRound(f.round)),
+);
+
+/// Whether a competition is a QUALIFYING campaign: no finals round anywhere in
+/// it, and not a run of friendlies.
+bool _isQualifying(List<Fixture> list) =>
+    !_isFinals(list) && list.any((f) => f.round != Rounds.friendly);
+
+/// Which competition a set of fixtures belongs to: 'C' for the continental
+/// cup and its qualifiers, 'N' for the Nations Cup, '' for the World Cup and
+/// its qualifiers (which carry the bare round codes, or none at all).
+///
+/// This is what stops a European qualifying campaign being credited with a
+/// place at the NATIONS CUP, which runs alongside it: without a family the
+/// rule "a finals tournament started shortly after this campaign ended" is
+/// true of every tournament in the calendar.
+String _familyOf(List<Fixture> list) {
+  for (final f in list) {
+    final round = f.round;
+    if (round == null || round == Rounds.friendly) continue;
+    if (round.startsWith('C')) return 'C';
+    if (round.startsWith('N')) return 'N';
+    return '';
+  }
+  // Nothing but uncoded fixtures: World Cup qualifying carries no round code.
+  return '';
+}
+
+/// The finals competition of [family] the nation turned up at after [after],
+/// or null when they did not — which is what a missed campaign looks like.
+int? _finalsAfter(
+  Map<int, List<Fixture>> byCompetition,
+  String family,
+  DateTime after,
+) {
+  for (final entry in byCompetition.entries) {
+    final list = entry.value;
+    if (!_isFinals(list)) continue;
+    if (_familyOf(list) != family) continue;
+    final first = list.first.date;
+    if (first.isAfter(after) && first.difference(after) <= _qualifyingReach) {
+      return entry.key;
+    }
+  }
+  return null;
+}

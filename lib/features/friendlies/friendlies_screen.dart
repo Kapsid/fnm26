@@ -62,12 +62,33 @@ class _FriendliesScreenState extends ConsumerState<FriendliesScreen> {
       '${_monthAbbr(l, d.month)} ${d.year}';
 
   /// A distinct block of suggested opponents for window [index], so each window
-  /// offers a different (already seed-shuffled) set rather than the same list.
+  /// offers a different set rather than the same list.
+  ///
+  /// DEALT round-robin, not sliced. The pool is ordered by how closely a side
+  /// resembles who the manager is preparing for, and handing window 0 the first
+  /// block gave it every good suggestion and left the later windows the tail —
+  /// so the shortlist only meant anything for the first game. Dealing one card
+  /// at a time round the table gives every window a share off the top.
   List<Nation> _opponentsFor(List<Nation> pool, int index, int windowCount) {
     if (pool.isEmpty) return pool;
     final per = (pool.length ~/ windowCount).clamp(6, 12);
-    final start = (index * per) % pool.length;
-    return [for (var k = 0; k < per; k++) pool[(start + k) % pool.length]];
+    return [
+      for (var k = 0; k < per; k++)
+        pool[(k * windowCount + index) % pool.length],
+    ];
+  }
+
+  /// Why these names are at the top. A shortlist reordered silently is just a
+  /// different shortlist; the manager has to be told what it is preparation
+  /// for — and told SOMETHING even when nothing has been drawn yet, which is
+  /// most of the time a friendly window is open.
+  String _reasonFor(AppLocalizations l, FriendliesPlan plan) {
+    final names = plan.rivals.map((n) => n.name).join(', ');
+    return switch (plan.reason) {
+      FriendlyReason.finalsGroup => l.friendliesLikeYourGroup(names),
+      FriendlyReason.qualifyingGroup => l.friendliesLikeYourCampaign(names),
+      FriendlyReason.ranking => l.friendliesCloseToYou,
+    };
   }
 
   Future<void> _confirm(FriendliesPlan plan) async {
@@ -131,38 +152,37 @@ class _FriendliesScreenState extends ConsumerState<FriendliesScreen> {
                   ),
                 ),
               ),
-              // Says WHY these names are at the top. A shortlist reordered
-              // silently is just a different shortlist; the manager has to
-              // know it is preparation for the sides he has actually drawn.
-              if (plan.rivals.isNotEmpty)
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(
-                    AppSpacing.marginMobile,
-                    0,
-                    AppSpacing.marginMobile,
-                    AppSpacing.sm,
-                  ),
-                  child: Row(
-                    children: [
-                      const Icon(
+              // Always says WHY these names are at the top — see [_reasonFor].
+              Padding(
+                padding: const EdgeInsets.fromLTRB(
+                  AppSpacing.marginMobile,
+                  0,
+                  AppSpacing.marginMobile,
+                  AppSpacing.sm,
+                ),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Padding(
+                      padding: EdgeInsets.only(top: 2),
+                      child: Icon(
                         Icons.lightbulb_outline_rounded,
                         size: 14,
                         color: AppColors.primary,
                       ),
-                      const SizedBox(width: AppSpacing.xs),
-                      Expanded(
-                        child: Text(
-                          l.friendliesLikeYourGroup(
-                            plan.rivals.map((n) => n.name).join(', '),
-                          ),
-                          style: AppTypography.labelSmall.copyWith(
-                            color: AppColors.primary,
-                          ),
+                    ),
+                    const SizedBox(width: AppSpacing.xs),
+                    Expanded(
+                      child: Text(
+                        _reasonFor(l, plan),
+                        style: AppTypography.labelSmall.copyWith(
+                          color: AppColors.primary,
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
+              ),
               Expanded(
                 child: ListView(
                   padding: const EdgeInsets.symmetric(

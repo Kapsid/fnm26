@@ -83,18 +83,32 @@ class _OverallCard extends StatelessWidget {
             ),
           ),
           const SizedBox(height: AppSpacing.md),
+          // Five equal columns, not five natural widths laid side by side.
+          // "TITULY ODEHRANÉ VÝHRY REMÍZY PROHRY" is half again as wide as
+          // "TITLES PLAYED WON DRAWN LOST", and a spaceBetween Row has no
+          // spare space to give back once its children have asked for more
+          // than the card holds — so the strip ran off the right of the
+          // manager's career screen in Czech.
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _Stat(
-                label: l.careerStatTitles,
-                value: '${h.titles}',
-                highlight: true,
+              Expanded(
+                child: _Stat(
+                  label: l.careerStatTitles,
+                  value: '${h.titles}',
+                  highlight: true,
+                ),
               ),
-              _Stat(label: l.careerStatPlayed, value: '${h.played}'),
-              _Stat(label: l.careerStatWon, value: '${h.won}'),
-              _Stat(label: l.careerStatDrawn, value: '${h.drawn}'),
-              _Stat(label: l.careerStatLost, value: '${h.lost}'),
+              Expanded(
+                child: _Stat(label: l.careerStatPlayed, value: '${h.played}'),
+              ),
+              Expanded(child: _Stat(label: l.careerStatWon, value: '${h.won}')),
+              Expanded(
+                child: _Stat(label: l.careerStatDrawn, value: '${h.drawn}'),
+              ),
+              Expanded(
+                child: _Stat(label: l.careerStatLost, value: '${h.lost}'),
+              ),
             ],
           ),
           const SizedBox(height: AppSpacing.sm),
@@ -142,8 +156,16 @@ class _OverallCard extends StatelessWidget {
   }
 }
 
-/// One record result row: the label, the scoreline (manager's team first) and
-/// the opponent, plus the month it happened.
+/// One record result: the label, the scoreline (manager's team first) and the
+/// opponent, plus the month it happened.
+///
+/// Two lines, and it used to be one. The label sat in a box 82 pixels wide with
+/// the scoreline and the opponent laid out beside it — three pieces of text
+/// across the width of a phone, none of which knew how long the other two were.
+/// "Nejhorší porážka" is half again as long as "Worst defeat", and at any font
+/// size above the default the row ran off its card. Nothing here is measured in
+/// pixels now: the label and the score share the first line, the opponent has
+/// the second to itself, and the row is as tall as it needs to be.
 class _RecordResult extends StatelessWidget {
   const _RecordResult({required this.label, required this.result});
 
@@ -156,38 +178,41 @@ class _RecordResult extends StatelessWidget {
     final win = result.scoreFor > result.scoreAgainst;
     final accent = win ? AppColors.positive : AppColors.error;
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 3),
-      child: Row(
+      padding: const EdgeInsets.symmetric(vertical: 5),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(
-            width: 82,
-            child: Text(
-              label.toUpperCase(),
-              style: AppTypography.labelSmall.copyWith(
-                color: AppColors.onSurfaceVariant,
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Expanded(
+                child: Text(
+                  label.toUpperCase(),
+                  style: AppTypography.labelSmall.copyWith(
+                    color: AppColors.onSurfaceVariant,
+                  ),
+                ),
               ),
-            ),
+              const SizedBox(width: AppSpacing.sm),
+              Text(
+                '${result.code} ${result.scoreFor}–${result.scoreAgainst} '
+                '${result.opponentCode}',
+                style: AppTypography.bodyMedium.copyWith(
+                  color: accent,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ],
           ),
           Text(
-            '${result.code} ${result.scoreFor}–${result.scoreAgainst} '
-            '${result.opponentCode}',
-            style: AppTypography.bodyMedium.copyWith(
-              color: accent,
-              fontWeight: FontWeight.w700,
+            l.careerVsOpponentDate(
+              result.opponentName,
+              DateFormat('MMM yyyy').format(result.date),
             ),
-          ),
-          const SizedBox(width: AppSpacing.sm),
-          Expanded(
-            child: Text(
-              l.careerVsOpponentDate(
-                result.opponentName,
-                DateFormat('MMM yyyy').format(result.date),
-              ),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: AppTypography.labelSmall.copyWith(
-                color: AppColors.onSurfaceVariant,
-              ),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: AppTypography.labelSmall.copyWith(
+              color: AppColors.onSurfaceVariant,
             ),
           ),
         ],
@@ -458,14 +483,18 @@ class _Stat extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Text(
+        WholeText(
           value,
+          maxLines: 1,
           style: AppTypography.titleMedium.copyWith(
             color: highlight ? AppColors.primary : AppColors.onSurface,
           ),
         ),
-        Text(
+        // Scales into its fifth of the card rather than demanding the width a
+        // long word wants — see [WholeText].
+        WholeText(
           label.toUpperCase(),
+          maxLines: 1,
           style: AppTypography.labelSmall.copyWith(
             color: AppColors.onSurfaceVariant,
           ),

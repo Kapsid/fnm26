@@ -72,6 +72,83 @@ void main() {
     );
   });
 
+  test('the door stays shut, however good a case somebody has', () async {
+    // THE regression test. `Grievances.enabled` is false, and the only check on
+    // it used to be a unit test reading the constant back — so when a commit
+    // moved the gate out of this provider and forgot to put it anywhere else,
+    // nothing failed and players went on being interrupted three times a year,
+    // the same men each time, for months. This asserts the BEHAVIOUR: a squad
+    // is named, and a man in it with caps who has played none of the recent
+    // matches — the one case still raised, and the strongest one there is —
+    // still does not come to the office.
+    final container = open();
+    await container.read(seedLoaderProvider).ensureSeeded();
+    final career =
+        (await container
+                .read(careerServiceProvider)
+                .create(nationId: nations.first.id, managerName: 'M'))
+            .valueOrNull!;
+
+    final pool = (await container.read(
+      squadDataProvider(career.id).future,
+    ))!.pool;
+    final named = pool.take(kMinSquadSize).map((p) => p.id).toSet();
+    expect(
+      await container.read(squadServiceProvider).setCallUps(career.id, named),
+      isTrue,
+    );
+
+    // Three matches, and the man at the front of the squad in none of them.
+    final comp = container.read(competitionRepositoryProvider);
+    final benched = pool.first;
+    final played = (await comp.fixturesForNation(
+      career.id,
+      career.nationId,
+    )).take(Grievances.recentWindow).toList();
+    expect(played, hasLength(Grievances.recentWindow));
+    for (final f in played) {
+      await comp.recordResult(fixtureId: f.id, homeScore: 1, awayScore: 0);
+      await comp.recordPlayerMatchStats(career.id, f.id, [
+        for (final id in named)
+          if (id != benched.id)
+            (
+              playerId: id,
+              nationId: career.nationId,
+              rating: 7,
+              goals: 0,
+              assists: 0,
+              cleanSheet: false,
+              motm: false,
+              yellows: 0,
+              reds: 0,
+            ),
+      ]);
+      await comp.recordAppearances(
+        career.id,
+        career.nationId,
+        named.where((id) => id != benched.id),
+      );
+    }
+    // His caps are in the bank from earlier years, not from these three.
+    await comp.recordAppearances(career.id, career.nationId, [benched.id]);
+
+    expect(
+      await container.read(grievanceProvider(career.id).future),
+      isEmpty,
+      reason: 'Grievances.enabled is false, so nobody knocks',
+    );
+
+    // And still nothing after a restart — a fresh container over the same
+    // database, which is when the complaints were reported to come back.
+    final restarted = open();
+    await restarted.read(seedLoaderProvider).ensureSeeded();
+    expect(
+      await restarted.read(grievanceProvider(career.id).future),
+      isEmpty,
+      reason: 'reopening the career does not reopen the door',
+    );
+  });
+
   test('a grievance answered stays answered after a restart', () async {
     final container = open();
     await container.read(seedLoaderProvider).ensureSeeded();

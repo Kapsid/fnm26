@@ -13,7 +13,6 @@ import 'package:fnm/domain/repositories/career_repository.dart';
 import 'package:fnm/features/federation/federation_service.dart';
 import 'package:fnm/features/federation/investment_editor.dart';
 import 'package:fnm/features/federation/staff_card.dart';
-import 'package:fnm/features/federation/staff_providers.dart';
 import 'package:fnm/features/hub/hub_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
@@ -109,6 +108,10 @@ class _BudgetSetupScreenState extends ConsumerState<BudgetSetupScreen> {
     // moves on to its next step.
     ref
       ..invalidate(financeViewProvider(widget.careerId))
+      // The balance has just changed, and the money indicator on the hub reads
+      // it through here — a derived provider never notices a write it did not
+      // make, so it is told.
+      ..invalidate(federationFundsProvider(widget.careerId))
       ..invalidate(hubDataProvider(widget.careerId));
     context.go('${Routes.hub}?careerId=${widget.careerId}');
   }
@@ -151,13 +154,12 @@ class _BudgetSetupScreenState extends ConsumerState<BudgetSetupScreen> {
           // people is not money there is to hand to a department — showing it
           // any other way is how a budget ends up overspent by exactly the
           // amount of an elite scout.
-          final wages =
+          final available =
               ref
-                  .watch(staffRoomProvider(widget.careerId))
+                  .watch(federationFundsProvider(widget.careerId))
                   .valueOrNull
-                  ?.wagesPerCycle ??
-              0;
-          final available = (career.budget - wages).clamp(0, career.budget);
+                  ?.free ??
+              career.budget;
           final alloc =
               _alloc ??
               const (

@@ -187,7 +187,7 @@ class TournamentsScreen extends ConsumerWidget {
                       name: 'Nations Cup',
                       region: 'LEAGUE ${overview!.nationsCupLeague}',
                       icon: Icons.military_tech,
-                      description: 'Your league — promotion and relegation.',
+                      description: 'Your league, with promotion and relegation.',
                     ),
                     status: overview.nationsCup,
                     championName:

@@ -28,11 +28,46 @@ import 'package:fnm/features/tactics/player_roles_providers.dart';
 import 'package:fnm/features/tactics/set_piece_takers_providers.dart';
 import 'package:fnm/features/tactics/tactics_providers.dart';
 import 'package:fnm/features/tournaments/city_providers.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 /// The player's preferred live-match playback speed, as an index into the
 /// screen's speed steps. Kept in a session-wide provider so the choice carries
 /// from one match to the next instead of resetting each game.
+///
+/// The session provider is the FAST path — the live screen reads it every
+/// frame — and [MatchSpeedStore] is what makes the choice outlive the session.
 final matchSpeedProvider = StateProvider<int>((ref) => 0);
+
+/// Prefs key: outside the save database (so no schema bump), one per career,
+/// because a manager who watches one save at full speed may well want to sit
+/// through another.
+String _matchSpeedKey(int careerId) => 'match_speed_v1:$careerId';
+
+/// Remembers the playback speed a career was last watched at.
+///
+/// It used to live only in [matchSpeedProvider], which is session-wide: the
+/// choice held for as long as the app was open and was forgotten the moment it
+/// closed, so every play session began by turning the speed back up.
+class MatchSpeedStore {
+  const MatchSpeedStore();
+
+  /// The speed index saved for [careerId], clamped into [stepCount] so a value
+  /// written by a build with more steps cannot index off the end.
+  Future<int> load(int careerId, {required int stepCount}) async {
+    final prefs = await SharedPreferences.getInstance();
+    final saved = prefs.getInt(_matchSpeedKey(careerId));
+    if (saved == null) return 0;
+    return saved.clamp(0, stepCount - 1);
+  }
+
+  Future<void> save(int careerId, int index) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt(_matchSpeedKey(careerId), index);
+  }
+}
+
+final Provider<MatchSpeedStore> matchSpeedStoreProvider =
+    Provider<MatchSpeedStore>((ref) => const MatchSpeedStore());
 
 /// How many substitutes are named on a teamsheet — the rest of a twenty-three
 /// man squad once the eleven are picked.

@@ -196,7 +196,7 @@ rolloverVerdictProvider = FutureProvider.autoDispose.family<RolloverVerdict?, in
   final best = _bestResult(summary, career.cyclePointer);
   final (headline, detail) = _verdict(perf, sacked, best);
   final heroNote = nationalHero && !sacked
-      ? ' ${currentNation?.name ?? 'The nation'} adore you — a national hero '
+      ? ' ${currentNation?.name ?? 'The nation'} adore you, a national hero '
             'after $cyclesAtNation cycles; your job is safe for as long as you '
             'want it.'
       : '';

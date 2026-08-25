@@ -10,6 +10,9 @@ import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/entities/player.dart';
+import 'package:fnm/domain/services/club/club_form.dart';
+import 'package:fnm/features/tactics/call_up_screen.dart'
+    show clubStandingLabel;
 import 'package:fnm/domain/services/player/player_lifecycle.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
 import 'package:fnm/features/awards/award_providers.dart';
@@ -33,6 +36,11 @@ typedef _PlayerView = ({
   /// The save's RNG seed, so derived facts (traits, clubs) match the rest of
   /// the save rather than being recomputed from a different stream.
   int saveSeed,
+
+  /// The in-game date, which decides WHICH transfer window a club standing is
+  /// read for — the same player is a first-choice one season and a squad man
+  /// the next.
+  DateTime asOf,
 });
 typedef _PlayerArg = ({int careerId, int playerId});
 
@@ -92,6 +100,7 @@ _playerDetailProvider = FutureProvider.autoDispose
       }
       return (
         saveSeed: career?.rngSeed ?? 0,
+        asOf: career?.inGameDate ?? CareerService.cycleStart,
         player: player,
         nation: nation,
         goals: goals,
@@ -297,6 +306,25 @@ class PlayerDetailScreen extends ConsumerWidget {
                 child: Column(
                   children: [
                     _clubFact(p, l.playerClub),
+                    // How much football he is actually getting THERE. It used
+                    // to be a badge on the call-up row, where it appeared on
+                    // some players and not others and read as a warning the
+                    // game had raised about the man rather than a fact about
+                    // his season. Here every player has one, and it sits next
+                    // to the club it is about.
+                    _fact(
+                      l.playerClubRole,
+                      clubStandingLabel(
+                        l,
+                        ClubForm.standingFor(
+                          playerId: p.id,
+                          overall: p.overall,
+                          age: p.age,
+                          saveSeed: view.saveSeed,
+                          windowIndex: ClubForm.windowIndexFor(view.asOf),
+                        ),
+                      ),
+                    ),
                     _fact(l.playerPosition, p.position.roleName),
                     _fact(l.playerAge, '${p.age}'),
                     // A coarse scouted ceiling for prospects — deliberately

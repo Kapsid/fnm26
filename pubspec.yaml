@@ -68,11 +68,16 @@ dev_dependencies:
 flutter_launcher_icons:
   android: true
   ios: true
-  image_path: "assets/images/fnm_logo.png"
-  # iOS icons can't have transparency — flatten onto the app's dark background.
+  # The launcher tile: the artwork already carries its own dark rounded plate,
+  # cropped full-bleed so iOS and Android apply their OWN mask to it. Supplying
+  # the plate with its margin left the icon visibly inset beside its neighbours.
+  image_path: "assets/images/fnm_icon.png"
+  # iOS icons can't have transparency - flatten onto the app's dark background.
   background_color_ios: "#121416"
   remove_alpha_ios: true
   min_sdk_android: 21
+  # Android's adaptive icon is a flat ground plus a transparent foreground it
+  # masks and parallaxes, so the foreground is the LOGO, not the plate.
   adaptive_icon_background: "#121416"
   adaptive_icon_foreground: "assets/images/fnm_logo.png"
 

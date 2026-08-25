@@ -134,6 +134,12 @@ grievanceProvider = FutureProvider.autoDispose.family<List<Grievance>, int>((
 ) async {
   final standing = await ref.watch(_standingProvider(careerId).future);
   if (standing == null) return const [];
+  // The door is shut — see [Grievances.enabled]. Read HERE, after the await
+  // above, and not at the top of the provider: returning before watching any
+  // dependency leaves nothing keeping an autoDispose provider alive, and it
+  // spins build → dispose → build until every widget test that reaches squad
+  // morale hangs on pumpAndSettle.
+  if (!Grievances.enabled) return const [];
   final answered = {
     for (final a
         in await ref.watch(careerRepositoryProvider).pressAnswers(careerId))

@@ -904,18 +904,13 @@ class _PlayerToggle extends StatelessWidget {
             ),
           ),
           if (reason != null) _AbsenceBadge(reason: reason, isInjury: isInjury),
-          // Only when it is worth saying: a rotation player is the norm and a
-          // badge on every row would say nothing at all.
-          if (condition?.clubStanding case final s?)
-            if (s != ClubStanding.rotation)
-              Text(
-                clubStandingLabel(l, s),
-                style: AppTypography.labelSmall.copyWith(
-                  color: s == ClubStanding.firstChoice
-                      ? AppColors.positive
-                      : AppColors.warning,
-                ),
-              ),
+
+          // Club standing is NOT on this row. It appeared on some rows and
+          // not others (only men with recent minutes have a condition at all),
+          // which made a badge that was really about a player's club read as a
+          // flag the game had raised about him. It lives on his own screen,
+          // where every player has one and it can be read against the rest of
+          // his situation.
           if (condition != null &&
               condition!.fatigueState != FatigueState.fresh)
             _FatigueTag(state: condition!.fatigueState),

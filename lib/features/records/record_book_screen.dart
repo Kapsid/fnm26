@@ -422,10 +422,18 @@ class _TeamRecords extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 4),
       child: Row(
         children: [
-          Text(
-            label.toUpperCase(),
-            style: AppTypography.labelSmall.copyWith(
-              color: AppColors.onSurfaceVariant,
+          // Flexible, because a Row hands a plain Text every pixel it asks for
+          // and the label is the piece nobody thinks about: "NEJVĚTŠÍ VÍTĚZSTVÍ"
+          // is nearly twice "BIGGEST WIN", and a Spacer has nothing to give
+          // back once the label has taken the row.
+          Flexible(
+            child: Text(
+              label.toUpperCase(),
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              style: AppTypography.labelSmall.copyWith(
+                color: AppColors.onSurfaceVariant,
+              ),
             ),
           ),
           const Spacer(),

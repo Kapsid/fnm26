@@ -1,18 +1,13 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
-import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/repositories/career_repository.dart';
 import 'package:fnm/domain/services/federation/federation_finance.dart';
-import 'package:fnm/features/federation/federation_providers.dart';
 import 'package:fnm/features/federation/federation_service.dart';
 import 'package:fnm/features/federation/investment_editor.dart';
-import 'package:fnm/features/hub/hub_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
@@ -31,52 +26,6 @@ class FinancesScreen extends ConsumerStatefulWidget {
 }
 
 class _FinancesScreenState extends ConsumerState<FinancesScreen> {
-  FederationInvestment? _alloc; // editor state (opening cycle only)
-  bool _busy = false;
-
-  Future<void> _commit(FinanceView view) async {
-    final alloc = _alloc ?? view.planned;
-    if (_busy) return;
-    setState(() => _busy = true);
-    final repo = ref.read(careerRepositoryProvider);
-    // Refund the previously-planned spend and charge the new one (delta).
-    final prevSpend =
-        view.planned.youth +
-        view.planned.commercial +
-        view.planned.medical +
-        view.planned.naturalization +
-        view.planned.boardRelations;
-    final newSpend =
-        alloc.youth +
-        alloc.commercial +
-        alloc.medical +
-        alloc.naturalization +
-        alloc.boardRelations;
-    final career = await repo.byId(widget.careerId);
-    if (career == null) return;
-    // Plan the NEXT cycle's investment (its effects — better prospects, fewer
-    // injuries, commercial return — all land then).
-    await repo.setInvestment(widget.careerId, view.cycle + 1, alloc);
-    await repo.setBudget(
-      widget.careerId,
-      career.budget - (newSpend - prevSpend),
-    );
-    ref
-      ..invalidate(financeViewProvider(widget.careerId))
-      ..invalidate(youthBonusByCycleProvider(widget.careerId))
-      ..invalidate(hubDataProvider);
-    if (mounted) {
-      final l = AppLocalizations.of(context);
-      setState(() {
-        _busy = false;
-        _alloc = null;
-      });
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(l.federationInvestmentUpdated)),
-      );
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     final viewAsync = ref.watch(financeViewProvider(widget.careerId));
@@ -103,15 +52,6 @@ class _FinancesScreenState extends ConsumerState<FinancesScreen> {
           if (view == null) {
             return Center(child: Text(l.federationSaveNotFound));
           }
-          final alloc = _alloc ?? view.planned;
-          // Refundable: current balance plus whatever is already planned.
-          final available =
-              view.budget +
-              view.planned.youth +
-              view.planned.commercial +
-              view.planned.medical +
-              view.planned.naturalization +
-              view.planned.boardRelations;
           final income = view.projectedIncome;
           final hasCurrent =
               view.current.youth +
@@ -124,7 +64,16 @@ class _FinancesScreenState extends ConsumerState<FinancesScreen> {
           return ListView(
             padding: const EdgeInsets.all(AppSpacing.marginMobile),
             children: [
-              _BalanceCard(budget: view.budget),
+              // The balance is NOT all spendable, and one number said it
+              // was — see [federationFundsProvider], which is the single
+              // answer the hub and the budget screen read too.
+              _BalanceCard(
+                funds:
+                    ref
+                        .watch(federationFundsProvider(widget.careerId))
+                        .valueOrNull ??
+                    (balance: view.budget, wages: 0, free: view.budget),
+              ),
               const SizedBox(height: AppSpacing.md),
               Text(
                 l.federationDevelopment,
@@ -207,34 +156,113 @@ class _FinancesScreenState extends ConsumerState<FinancesScreen> {
 }
 
 class _BalanceCard extends StatelessWidget {
-  const _BalanceCard({required this.budget});
+  const _BalanceCard({required this.funds});
 
-  final int budget;
+  /// What the federation holds, what is owed to the staff, and what is left.
+  final FederationFunds funds;
 
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
+    final budget = funds.balance;
+    final wages = funds.wages;
+    final free = funds.free;
     return AppCard(
-      child: Row(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          const Icon(Icons.account_balance, color: AppColors.primary, size: 32),
-          const SizedBox(width: AppSpacing.md),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          Row(
             children: [
-              Text(
-                l.federationBalance,
-                style: AppTypography.labelSmall.copyWith(
-                  color: AppColors.onSurfaceVariant,
-                ),
+              const Icon(
+                Icons.account_balance,
+                color: AppColors.primary,
+                size: 32,
               ),
-              Text(formatEuros(budget), style: AppTypography.headlineMedium),
+              const SizedBox(width: AppSpacing.md),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    l.federationBalance,
+                    style: AppTypography.labelSmall.copyWith(
+                      color: AppColors.onSurfaceVariant,
+                    ),
+                  ),
+                  Text(
+                    formatEuros(budget),
+                    style: AppTypography.headlineMedium,
+                  ),
+                ],
+              ),
             ],
           ),
+          // Only worth breaking down when somebody is actually employed: with
+          // no staff the balance IS the free money, and a second line saying
+          // so twice is noise.
+          if (wages > 0) ...[
+            const Divider(height: AppSpacing.lg),
+            _Split(
+              label: l.federationCommittedToStaff,
+              amount: wages,
+              color: AppColors.warning,
+            ),
+            const SizedBox(height: AppSpacing.xs),
+            _Split(
+              label: l.federationFreeToSpend,
+              amount: free,
+              color: free > 0 ? AppColors.positive : AppColors.onSurfaceVariant,
+            ),
+            const SizedBox(height: AppSpacing.sm),
+            Text(
+              l.federationWagesNote,
+              style: AppTypography.labelSmall.copyWith(
+                color: AppColors.onSurfaceVariant,
+              ),
+            ),
+          ],
         ],
       ),
     );
   }
+}
+
+/// One line of the balance breakdown: what it is, and how much of it.
+class _Split extends StatelessWidget {
+  const _Split({
+    required this.label,
+    required this.amount,
+    required this.color,
+  });
+
+  final String label;
+  final int amount;
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) => Row(
+    children: [
+      Container(
+        width: 8,
+        height: 8,
+        decoration: BoxDecoration(color: color, shape: BoxShape.circle),
+      ),
+      const SizedBox(width: AppSpacing.sm),
+      Text(
+        label.toUpperCase(),
+        style: AppTypography.labelSmall.copyWith(
+          color: AppColors.onSurfaceVariant,
+        ),
+      ),
+      const Spacer(),
+      Text(
+        formatEuros(amount),
+        style: AppTypography.bodyMedium.copyWith(
+          color: color,
+          fontWeight: FontWeight.w700,
+        ),
+      ),
+    ],
+  );
 }
 
 class _LockedInvestment extends StatelessWidget {

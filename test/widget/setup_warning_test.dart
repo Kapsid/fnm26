@@ -18,7 +18,12 @@ void main() {
       overrides: [
         squadSetupProvider(
           1,
-        ).overrideWith((ref) async => (captain: captain, setPieces: setPieces)),
+        ).overrideWith(
+          (ref) async => (
+            captain: captain ? null : CaptainIssue.unnamed,
+            setPieces: setPieces,
+          ),
+        ),
       ],
     );
     await tester.pumpAndSettle();
@@ -32,7 +37,7 @@ void main() {
   testWidgets('no captain is called out', (tester) async {
     await pumpWith(tester, captain: false, setPieces: true);
     expect(
-      find.text('No captain named — tap to give somebody the armband'),
+      find.text('No captain named. Tap to give somebody the armband'),
       findsOneWidget,
     );
   });
@@ -40,7 +45,7 @@ void main() {
   testWidgets('no set-piece takers are called out', (tester) async {
     await pumpWith(tester, captain: true, setPieces: false);
     expect(
-      find.text('No set-piece takers named — tap to choose who steps up'),
+      find.text('No set-piece takers named. Tap to choose who steps up'),
       findsOneWidget,
     );
   });
@@ -48,7 +53,7 @@ void main() {
   testWidgets('neither set reads as one warning, not two', (tester) async {
     await pumpWith(tester, captain: false, setPieces: false);
     expect(
-      find.text('No captain and no set-piece takers — tap to set them'),
+      find.text('No captain and no set-piece takers. Tap to set them'),
       findsOneWidget,
     );
     expect(find.byIcon(Icons.error_outline_rounded), findsOneWidget);

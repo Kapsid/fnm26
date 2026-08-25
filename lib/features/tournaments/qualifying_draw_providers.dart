@@ -7,7 +7,9 @@ import 'package:fnm/domain/services/competition/continental_cups.dart';
 import 'package:fnm/domain/services/competition/hosts.dart';
 import 'package:fnm/domain/services/competition/schedule_generator.dart';
 import 'package:fnm/features/career/career_providers.dart';
+import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/features/hub/hub_event.dart';
+import 'package:fnm/features/tournaments/drawn_groups.dart';
 import 'package:fnm/features/ranking/world_ranking_providers.dart';
 
 /// The recomputed qualifying draw for the player's confederation, used by the
@@ -143,18 +145,38 @@ qualifyingDrawProvider = FutureProvider.autoDispose
         watchedKind = continentalQualDrawKind;
       }
 
-      final groups = [
-        for (final g in schedule.groups) (name: g.name, nationIds: g.nationIds),
-      ];
+      // The draw as it was actually made, whenever it has been made — see
+      // [drawnGroups]. Re-running the generator only reproduces the real groups
+      // while every input still agrees, and the ranking the pots were seeded
+      // from is one of them: a save with no snapshot of it seeds off the static
+      // ranking instead and animates a ceremony belonging to no tournament.
+      final stored = await ref
+          .watch(competitionRepositoryProvider)
+          .tournamentGroupTables(
+            arg.careerId,
+            arg.worldCup
+                ? CompetitionKind.worldCupQualifying
+                : CompetitionKind.continentalQualifying,
+            confederation: conf,
+          );
+      final groups = stored.isNotEmpty
+          ? drawnGroups(stored, rankById: rankById)
+          : [
+              for (final g in schedule.groups)
+                (name: g.name, nationIds: g.nationIds),
+            ];
       if (groups.isEmpty) return null;
 
-      // Pots: the confederation seeded by ranking, split into as many pots as there
-      // are groups (top group first).
+      // Pots: read off the drawn groups themselves (one ball per pot per
+      // group), or — before the draw exists — the confederation seeded by
+      // ranking and split into as many pots as there are groups.
       final groupCount = groups.length;
-      final potByNation = <int, int>{
-        for (var i = 0; i < drawMembers.length; i++)
-          drawMembers[i].id: (i ~/ groupCount) + 1,
-      };
+      final potByNation = stored.isNotEmpty
+          ? potsFromGroups(groups)
+          : <int, int>{
+              for (var i = 0; i < drawMembers.length; i++)
+                drawMembers[i].id: (i ~/ groupCount) + 1,
+            };
 
       return QualifyingDrawData(
         title: title,

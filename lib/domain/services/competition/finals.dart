@@ -131,17 +131,120 @@ abstract final class WorldCupFinals {
     return qualifiers;
   }
 
+  /// The most teams from each confederation a single group may hold.
+  ///
+  /// Derived from the field rather than written down, which is the whole trick:
+  /// a confederation with more entrants than there are groups CANNOT be held to
+  /// one per group, so its cap is however few it can be squeezed to. At a
+  /// 48-team World Cup that gives Europe two and everybody else one, which is
+  /// the real rule — and it arrives at it by arithmetic instead of by naming
+  /// Europe as a special case.
+  ///
+  /// It also switches itself off where it must. Every team in a CONTINENTAL cup
+  /// shares a confederation, so its cap works out to the group size and no
+  /// grouping is forbidden. Without that this same function, shared by both
+  /// draws, would make a continental group stage impossible to draw at all.
+  static Map<Confederation, int> confederationCaps({
+    required List<Confederation> confederations,
+    required int groupCount,
+  }) {
+    if (groupCount <= 0) return const {};
+    final counted = <Confederation, int>{};
+    for (final c in confederations) {
+      counted[c] = (counted[c] ?? 0) + 1;
+    }
+    return {
+      for (final e in counted.entries)
+        // Ceiling division: the fewest any group can be held to.
+        e.key: ((e.value + groupCount - 1) ~/ groupCount).clamp(1, 1 << 30),
+    };
+  }
+
+  /// Which group each team of one pot is drawn into, or null when no
+  /// arrangement satisfies [caps].
+  ///
+  /// A pot holds exactly one team per group, so this is a perfect matching
+  /// between the two. Searched by backtracking: the field is at most a dozen
+  /// either side, and a search that is allowed to fail and say so is better
+  /// than a shuffle that is re-rolled until it happens to be legal.
+  ///
+  /// The first [pinnedCount] slots are already fixed (the hosts, each in its
+  /// own opening group) and are matched where they stand.
+  static List<int>? _placePot({
+    required List<int> slice,
+    required List<List<int>> groups,
+    required Map<Confederation, int> caps,
+    required Map<int, Confederation> confederationById,
+    required int pinnedCount,
+    required SeededRng rng,
+  }) {
+    if (caps.isEmpty) return null;
+    final n = slice.length;
+    // What each group already holds, by confederation, from the pots drawn
+    // before this one.
+    final tally = [for (final _ in groups) <Confederation, int>{}];
+    for (var gi = 0; gi < groups.length; gi++) {
+      for (final id in groups[gi]) {
+        if (confederationById[id] case final c?) {
+          tally[gi][c] = (tally[gi][c] ?? 0) + 1;
+        }
+      }
+    }
+
+    // One shuffled order of groups, reused for every team in the pot, so the
+    // search is seeded and repeatable rather than depending on how far it
+    // happened to backtrack.
+    final order = [
+      ...rng.shuffled([for (var i = 0; i < n; i++) i]),
+    ];
+    final taken = List<bool>.filled(n, false);
+    final out = List<int>.filled(n, -1);
+
+    bool fits(int team, int gi) {
+      final c = confederationById[team];
+      if (c == null) return true;
+      return (tally[gi][c] ?? 0) < (caps[c] ?? 1 << 30);
+    }
+
+    bool place(int i) {
+      if (i == n) return true;
+      final team = slice[i];
+      // A pinned host is not free to move: it takes its own group or nothing.
+      final choices = i < pinnedCount ? [i] : order;
+      for (final gi in choices) {
+        if (taken[gi] || !fits(team, gi)) continue;
+        final c = confederationById[team];
+        taken[gi] = true;
+        out[i] = gi;
+        if (c != null) tally[gi][c] = (tally[gi][c] ?? 0) + 1;
+        if (place(i + 1)) return true;
+        taken[gi] = false;
+        out[i] = -1;
+        if (c != null) tally[gi][c] = tally[gi][c]! - 1;
+      }
+      return false;
+    }
+
+    return place(0) ? out : null;
+  }
+
   /// Draws [qualifierIds] into groups of four. Teams are seeded into four pots
   /// by world ranking, then one team per pot is drawn into each group. Each
   /// [hosts] entry (when it is one of the qualifiers) is a top seed placed into
   /// its own opening group (host 0 → Group A, host 1 → Group B, …), as at a
   /// real finals with co-hosts.
+  ///
+  /// Give [confederationById] and no group may contain more teams from one
+  /// confederation than it has to — see [confederationCaps]. Leave it out and
+  /// the draw is exactly what it always was, which is what keeps every caller
+  /// that does not care (and every already-drawn save) untouched.
   static FinalsDraw drawGroups({
     required List<int> qualifierIds,
     required Map<int, int> rankingById,
     required int rngSeed,
     List<int> hosts = const [],
     int perGroup = 4,
+    Map<int, Confederation> confederationById = const {},
   }) {
     final rng = SeededRng(rngSeed ^ 0xF1A15);
     final groupCount = qualifierIds.length ~/ perGroup;
@@ -163,6 +266,27 @@ abstract final class WorldCupFinals {
         ..insert(0, h);
     }
 
+    // How many of each confederation any one group may hold. Empty when the
+    // caller supplied no confederations, which switches the rule off.
+    final rawCaps = confederationById.isEmpty
+        ? const <Confederation, int>{}
+        : confederationCaps(
+            confederations: [
+              for (final id in qualifierIds)
+                if (confederationById[id] case final c?) c,
+            ],
+            groupCount: groupCount,
+          );
+    // A cap only means something if it is smaller than the group. Where every
+    // cap is the whole group — a continental cup, where one confederation is
+    // all there is — the rule forbids nothing, and the placement search is
+    // skipped rather than run to reach the answer it started from. Skipping it
+    // also leaves the seeded draw BIT FOR BIT what it was before this existed,
+    // because the search consumes randomness of its own.
+    final caps = rawCaps.values.any((c) => c < perGroup)
+        ? rawCaps
+        : const <Confederation, int>{};
+
     final groups = List.generate(groupCount, (_) => <int>[]);
     for (var pot = 0; pot < perGroup; pot++) {
       final slice = [
@@ -181,8 +305,21 @@ abstract final class WorldCupFinals {
           }
         }
       }
-      for (var i = 0; i < groupCount; i++) {
-        groups[i].add(slice[i]);
+      // Slot i → group i is the draw when nothing constrains it, and it stays
+      // the draw whenever the constraint cannot be met — a tournament with an
+      // awkward field still gets drawn rather than throwing.
+      final placement =
+          _placePot(
+            slice: slice,
+            groups: groups,
+            caps: caps,
+            confederationById: confederationById,
+            pinnedCount: pot == 0 ? activeHosts.length : 0,
+            rng: rng,
+          ) ??
+          [for (var i = 0; i < slice.length; i++) i];
+      for (var i = 0; i < slice.length; i++) {
+        groups[placement[i]].add(slice[i]);
       }
     }
 

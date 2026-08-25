@@ -1,4 +1,5 @@
 import 'package:fnm/core/util/text_variety.dart';
+import 'package:fnm/domain/services/competition/rounds.dart';
 
 /// Who is talking on Y.
 enum YVoice {
@@ -129,6 +130,18 @@ typedef YPost = ({
 
   /// For a [YTemplate.reaction], how it is meant. Null for every other post.
   YMood? mood,
+});
+
+/// One thing worth a headline that is not a scoreline: a trophy lifted, a
+/// tournament exit, a place at the finals booked, a tournament coming up.
+///
+/// The `key` must be stable for the event, so the same happening always draws
+/// the same authors and the same phrasings every time the feed is rebuilt.
+typedef YMilestone = ({
+  YTemplate template,
+  List<String> args,
+  DateTime date,
+  String key,
 });
 
 /// A result, as Y sees it.
@@ -455,6 +468,67 @@ abstract final class YFeed {
       ),
     ];
   }
+
+  /// One thing that happened to a nation that is not a scoreline — a trophy, a
+  /// exit, a place booked — ready to be handed to [forEvent].
+  ///
+  /// These templates have had full copy in both languages since the feed was
+  /// built and NONE of them ever reached a screen: [forEvent] was written,
+  /// tested, and never called by the app. A manager could win the World Cup and
+  /// the country would post four match reports about the final and not one word
+  /// about the trophy.
+  static YMilestone? endOfCampaign({
+    required String? round,
+    required String competition,
+    required bool won,
+    required DateTime date,
+    required String key,
+  }) {
+    if (round == null || round == Rounds.friendly) return null;
+    // Continental rounds prefix a C, the Nations Cup an N; the World Cup uses
+    // the bare code. What a round MEANS is its suffix.
+    final core = round.startsWith('C') || round.startsWith('N')
+        ? round.substring(1)
+        : round;
+    if (core == 'FINAL') {
+      return (
+        template: won ? YTemplate.trophy : YTemplate.runnerUp,
+        args: [competition],
+        date: date,
+        // ':' and never '|': a post's key is `<event>|<voice>`, and the
+        // detail view groups a conversation by the part before the FIRST
+        // pipe — so a pipe in here would file every trophy ever won under
+        // one conversation called "trophy".
+        key: '${won ? "trophy" : "runnerup"}:$key',
+      );
+    }
+    // Anything else that ENDS a nation's tournament ends it in the same way,
+    // whether the last word was a knockout defeat or a group table: they are
+    // out. Only the caller knows a campaign is over — see the provider.
+    if (!finalsRounds.contains(core)) return null;
+    return (
+      template: YTemplate.eliminated,
+      args: [competition],
+      date: date,
+      key: 'out:$key',
+    );
+  }
+
+  /// The round codes (suffixes) a FINALS tournament is played in. Qualifying
+  /// carries 'Q' or no code at all, and a qualifying campaign ending is not an
+  /// elimination — it is either a place booked or a miss.
+  ///
+  /// Public because the feed provider has to tell a tournament from a campaign
+  /// to know which of those two a finished competition was.
+  static const Set<String> finalsRounds = {
+    'GROUP',
+    'R32',
+    'R16',
+    'QF',
+    'SF',
+    '3RD',
+    'FINAL',
+  };
 
   /// The events big enough that a former international writes about them.
   static const Set<YTemplate> _bigEvents = {

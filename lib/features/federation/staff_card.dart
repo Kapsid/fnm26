@@ -5,6 +5,7 @@ import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/domain/services/manager/staff.dart';
 import 'package:fnm/features/federation/investment_editor.dart';
+import 'package:fnm/features/federation/federation_service.dart';
 import 'package:fnm/features/federation/staff_providers.dart';
 import 'package:fnm/features/manager/manager_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
@@ -128,7 +129,11 @@ class StaffCard extends ConsumerWidget {
     await ref
         .read(managerServiceProvider)
         .hire(careerId, role, picked == -1 ? null : picked);
-    ref.invalidate(staffRoomProvider(careerId));
+    ref
+      ..invalidate(staffRoomProvider(careerId))
+      // Hiring changes the wage bill, and the wage bill is what the budget
+      // screen allocates against and what the hub reports as free.
+      ..invalidate(federationFundsProvider(careerId));
   }
 
   @override

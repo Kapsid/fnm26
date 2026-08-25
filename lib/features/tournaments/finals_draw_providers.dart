@@ -7,6 +7,7 @@ import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/services/competition/finals.dart';
 import 'package:fnm/domain/services/competition/hosts.dart';
 import 'package:fnm/features/career/career_providers.dart';
+import 'package:fnm/features/tournaments/drawn_groups.dart';
 import 'package:fnm/features/ranking/world_ranking_providers.dart';
 
 /// The finals draw recomputed for the draw ceremony. It reuses the exact same
@@ -89,8 +90,32 @@ finalsDrawProvider = FutureProvider.autoDispose.family<FinalsDrawData?, int>((
     rankingById: rankingById,
     rngSeed: career.rngSeed ^ (career.cyclePointer * 0x2D31),
     hosts: hosts,
+    // MUST match `SeasonFinals` exactly — this re-runs the draw to animate it,
+    // so any argument missing here shows the manager a ceremony that disagrees
+    // with the groups his tournament is actually played in.
+    confederationById: {for (final n in nations.values) n.id: n.confederation},
   );
   if (draw.groups.isEmpty) return null;
+
+  // The draw as it was ACTUALLY made, whenever it has been made — see
+  // [drawnGroups]. The recomputation above stays as the pre-draw preview and as
+  // the fallback for a save with nothing stored, but it is not the answer: a
+  // re-run only reproduces the real groups while every input still agrees, and
+  // one of them (the ranking the pots were seeded from) is a snapshot a save
+  // may simply not have.
+  final storedGroups = await comp.finalsGroupTables(careerId);
+  final shown = storedGroups.isEmpty
+      ? draw
+      : FinalsDraw(
+          groups: [
+            for (final g in drawnGroups(
+              storedGroups,
+              rankById: rankingById,
+              hosts: hosts.toSet(),
+            ))
+              FinalsGroupDraw(name: g.name, nationIds: g.nationIds, fixtures: []),
+          ],
+        );
 
   // Reconstruct the seeding pots (top-ranked → pot 1) for the pre-draw view,
   // mirroring drawGroups exactly: every host is forced to the top of pot 1 so
@@ -109,9 +134,16 @@ finalsDrawProvider = FutureProvider.autoDispose.family<FinalsDrawData?, int>((
       ..remove(h)
       ..insert(0, h);
   }
-  final potByNation = {
-    for (var i = 0; i < seeded.length; i++) seeded[i]: (i ~/ groupCount) + 1,
-  };
+  // With a stored draw in hand the pots are read off it (one ball per pot per
+  // group), so the pot board and the balls that drop out of it agree.
+  final potByNation = storedGroups.isEmpty
+      ? {
+          for (var i = 0; i < seeded.length; i++)
+            seeded[i]: (i ~/ groupCount) + 1,
+        }
+      : potsFromGroups([
+          for (final g in shown.groups) (name: g.name, nationIds: g.nationIds),
+        ]);
 
   final alreadyWatched = await comp.hasWatchedDraw(
     careerId,
@@ -120,7 +152,7 @@ finalsDrawProvider = FutureProvider.autoDispose.family<FinalsDrawData?, int>((
   );
 
   return FinalsDrawData(
-    draw: draw,
+    draw: shown,
     nations: nations,
     playerNationId: career.nationId,
     potByNation: potByNation,

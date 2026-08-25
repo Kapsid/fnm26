@@ -81,6 +81,19 @@ abstract final class Grievances {
   /// detection rules, the tones, their costs and their tests are all still
   /// here and still correct, so turning this back on is one word rather than
   /// an excavation. What is gone is the door knocking.
+  ///
+  /// THE GATE IS IN `grievanceProvider`, not in [raise] — [raise] stays pure so
+  /// the detection rules can go on being tested with the door shut. It sits
+  /// AFTER that provider's awaits: read before them it returned without ever
+  /// watching a dependency, which left nothing keeping an autoDispose provider
+  /// alive and spun it build → dispose → build for ever.
+  ///
+  /// It has gone missing once already. A commit that moved it out of the
+  /// provider "into `Grievances.raise`" deleted it from the one place and never
+  /// added it to the other, and because the only test for it read this constant
+  /// rather than the behaviour, nothing failed: players kept turning up at the
+  /// office three a year for months. `grievance_gating_test` now asserts the
+  /// PROVIDER stays silent, which is the assertion that would have caught it.
   static const bool enabled = false;
 
   /// How many of the nation's recent matches count when judging whether a man

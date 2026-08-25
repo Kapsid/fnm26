@@ -11,16 +11,35 @@ void main() {
       expect(BoardSatisfaction.openingFrom(null), BoardSatisfaction.neutral);
     });
 
-    test('a triumphant cycle buys about a dozen points of rope', () {
+    test('a triumphant cycle is very largely still standing', () {
       final opening = BoardSatisfaction.openingFrom(100);
       expect(opening, greaterThan(BoardSatisfaction.neutral));
-      expect(opening - BoardSatisfaction.neutral, inInclusiveRange(8, 16));
+      // The board does not forget four good years at a rollover: a manager who
+      // finished on a hundred opens the next cycle in the nineties, not the
+      // sixties.
+      expect(opening, greaterThanOrEqualTo(90));
+    });
+
+    test('and a good one loses only a few points to the turn of the cycle', () {
+      // The complaint this constant answers: satisfaction fell off a cliff
+      // between cycles when nothing about the job had changed. A manager who
+      // finished on ninety must open the next one within a handful of points
+      // of it, not thirty below.
+      expect(90 - BoardSatisfaction.openingFrom(90), lessThanOrEqualTo(8));
     });
 
     test('a disastrous one is remembered too, and by the same amount', () {
       final good = BoardSatisfaction.openingFrom(90) - BoardSatisfaction.neutral;
       final bad = BoardSatisfaction.neutral - BoardSatisfaction.openingFrom(10);
       expect(bad, good);
+    });
+
+    test('but it drifts toward neutral rather than being banked forever', () {
+      // Two cycles of coasting on one triumph brings the gauge back down: the
+      // carry is a decay, not a permanent credit.
+      final once = BoardSatisfaction.openingFrom(100);
+      final twice = BoardSatisfaction.openingFrom(once);
+      expect(twice, lessThan(once));
     });
 
     test('a cycle that finished neutral changes nothing', () {

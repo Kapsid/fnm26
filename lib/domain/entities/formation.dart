@@ -99,8 +99,13 @@ extension FormationX on Formation {
       PlayerPosition.cb,
       PlayerPosition.cb,
       PlayerPosition.rb,
+      // BOTH holding slots are DM. The "2" of a 4-2-3-1 is a double pivot, and
+      // these two sit at the same depth on the pitch (0.38/0.62 at y 0.56) —
+      // so declaring one DM and the other CM made mirror-image slots disagree
+      // about who fitted them. The same midfielder was in position on one side
+      // of the pitch and out of it on the other.
       PlayerPosition.dm,
-      PlayerPosition.cm,
+      PlayerPosition.dm,
       PlayerPosition.am,
       PlayerPosition.lw,
       PlayerPosition.rw,

@@ -145,7 +145,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get teamTalkCalmLabel => 'Calm heads';
 
   @override
-  String get teamTalkCalmBlurb => 'Steady the side — a small all-round lift.';
+  String get teamTalkCalmBlurb => 'Steady the side. A small all-round lift.';
 
   @override
   String get teamTalkEncourageLabel => 'Encourage';
@@ -157,7 +157,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get teamTalkDemandMoreLabel => 'Demand more';
 
   @override
-  String get teamTalkDemandMoreBlurb => 'Throw everything at it — attack hard.';
+  String get teamTalkDemandMoreBlurb => 'Throw everything at it. Attack hard.';
 
   @override
   String get teamTalkPraiseLabel => 'Keep it tight';
@@ -170,20 +170,20 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get teamTalkBelieveBlurb =>
-      'Back yourselves — lift both ends of the pitch.';
+      'Back yourselves. A lift at both ends of the pitch.';
 
   @override
   String get teamTalkFocusLabel => 'Stay switched on';
 
   @override
-  String get teamTalkFocusBlurb => 'Total concentration — lock the game down.';
+  String get teamTalkFocusBlurb => 'Total concentration. Lock the game down.';
 
   @override
   String get teamTalkUrgencyLabel => 'Sense of urgency';
 
   @override
   String get teamTalkUrgencyBlurb =>
-      'Chase it down now — go all-out, leave gaps.';
+      'Chase it down now. All-out, and it leaves gaps.';
 
   @override
   String get teamTalkReassureLabel => 'No pressure';
@@ -464,7 +464,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String tacticsSentOffNote(String names) {
-    return '$names sent off — no replacement, you play a man down.';
+    return '$names sent off. No replacement, so you play a man down.';
   }
 
   @override
@@ -604,21 +604,21 @@ class AppLocalizationsEn extends AppLocalizations {
   String get tacticsPreviousSquad => 'Previous squad';
 
   @override
-  String get tacticsSquadLockedBack => 'Squad locked — back';
+  String get tacticsSquadLockedBack => 'Back (squad locked)';
 
   @override
   String get tacticsConfirmSquad => 'Confirm squad';
 
   @override
   String tacticsSquadFullMax(int max) {
-    return 'Squad full — max $max';
+    return 'Squad full (max $max)';
   }
 
   @override
   String get tacticsSquadLocked => 'SQUAD LOCKED';
 
   @override
-  String get tacticsNominationOpen => 'NOMINATION OPEN — PICK YOUR SQUAD';
+  String get tacticsNominationOpen => 'NOMINATION OPEN. PICK YOUR SQUAD';
 
   @override
   String get tacticsSquadFixedBlurb =>
@@ -849,7 +849,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String tacticsPlayerOut(String name, String reason) {
-    return '$name — $reason';
+    return '$name: $reason';
   }
 
   @override
@@ -1170,9 +1170,8 @@ class AppLocalizationsEn extends AppLocalizations {
       count,
       locale: localeName,
       other:
-          '$count of your XI are out (suspended or injured) — pick their replacements',
-      one:
-          '1 of your XI is out (suspended or injured) — pick their replacement',
+          '$count of your XI are out (suspended or injured). Pick their replacements',
+      one: '1 of your XI is out (suspended or injured). Pick their replacement',
     );
     return '$_temp0';
   }
@@ -1182,8 +1181,8 @@ class AppLocalizationsEn extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'Your starting XI is short — fill the open slots',
-      one: 'Your starting XI is short — fill the open slot',
+      other: 'Your starting XI is short. Fill the open slots',
+      one: 'Your starting XI is short. Fill the open slot',
     );
     return '$_temp0';
   }
@@ -1304,7 +1303,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get hubGroupsToBeDrawn =>
-      'Groups to be drawn — watch the draw to reveal them.';
+      'Groups to be drawn. Watch the draw to reveal them.';
 
   @override
   String hubGroupName(String name) {
@@ -1516,7 +1515,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get careerStatGoalDiffShort => 'GD';
 
   @override
-  String get careerNoSilverware => 'No silverware yet — go win one.';
+  String get careerNoSilverware => 'No silverware yet. Go win one.';
 
   @override
   String get careerMedalGold => 'GOLD';
@@ -1555,7 +1554,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get careerSlotsFull => 'Slots full';
 
   @override
-  String get careerSlotsFullGoPro => 'Slots full — go Pro for 10';
+  String get careerSlotsFullGoPro => 'Slots full. Go Pro for 10';
 
   @override
   String get careerNewGame => 'New Game';
@@ -1912,15 +1911,19 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get matchSetupWarnCaptain =>
-      'No captain named — tap to give somebody the armband';
+      'No captain named. Tap to give somebody the armband';
+
+  @override
+  String get matchSetupWarnCaptainOut =>
+      'Your captain cannot play this one. Tap to give somebody else the armband';
 
   @override
   String get matchSetupWarnSetPieces =>
-      'No set-piece takers named — tap to choose who steps up';
+      'No set-piece takers named. Tap to choose who steps up';
 
   @override
   String get matchSetupWarnBoth =>
-      'No captain and no set-piece takers — tap to set them';
+      'No captain and no set-piece takers. Tap to set them';
 
   @override
   String matchStageMatchday(int matchday) {
@@ -2083,7 +2086,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get captainArmband => 'C';
 
   @override
-  String get captainCurrent => 'Captain — tap to remove the armband';
+  String get captainCurrent => 'Captain. Tap to remove the armband';
 
   @override
   String get captainFitBorn => 'A born leader';
@@ -2760,7 +2763,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get paywallBenefitEndless => 'Unlimited careers, forever';
 
   @override
-  String get paywallUnlocked => 'Premium is unlocked — enjoy!';
+  String get paywallUnlocked => 'Premium is unlocked. Enjoy!';
 
   @override
   String get paywallContactingStore => 'Contacting the store…';
@@ -2845,7 +2848,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String federationOverBudget(String amount) {
-    return '$amount more than the federation has — take some back';
+    return '$amount more than the federation has. Take some back';
   }
 
   @override
@@ -2896,6 +2899,16 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get federationBalance => 'FEDERATION BALANCE';
+
+  @override
+  String get federationCommittedToStaff => 'Committed to staff';
+
+  @override
+  String get federationFreeToSpend => 'Free to spend';
+
+  @override
+  String get federationWagesNote =>
+      'Wages come off the balance at the end of the cycle, so this much is spoken for.';
 
   @override
   String get federationInvestAtCeremony =>
@@ -2974,7 +2987,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get nationsNotEnoughHistory =>
-      'Not enough history yet — check back after a cycle or two.';
+      'Not enough history yet. Check back after a cycle or two.';
 
   @override
   String nationsBestRank(int rank) {
@@ -3086,6 +3099,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get playerClub => 'CLUB';
 
   @override
+  String get playerClubRole => 'At his club';
+
+  @override
   String get playerPosition => 'Position';
 
   @override
@@ -3108,6 +3124,11 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get clubFrozenOut => 'Not playing';
+
+  @override
+  String clubAtClub(String club, String standing) {
+    return '$club: $standing';
+  }
 
   @override
   String yWinUpset0(String opponent, String score) {
@@ -3171,7 +3192,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String yDrew0(String opponent, String score) {
-    return '$score with $opponent. Two points dropped or one gained — pick your mood.';
+    return '$score with $opponent. Two points dropped or one gained. Pick your mood.';
   }
 
   @override
@@ -3241,7 +3262,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String yTrophy2(String opponent) {
-    return '$opponent — and the trophy is coming home.';
+    return '$opponent, and the trophy is coming home.';
   }
 
   @override
@@ -3387,6 +3408,21 @@ class AppLocalizationsEn extends AppLocalizations {
   String get hubEventGrievanceSub => 'He wants to know where he stands';
 
   @override
+  String hubEventManagerSkills(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count skill points to spend',
+      one: '1 skill point to spend',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get hubEventManagerSkillsSub =>
+      'What you are good at makes your side better';
+
+  @override
   String get grievanceTitle => 'A word in your office';
 
   @override
@@ -3450,7 +3486,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String yWinStreak3(String count) {
-    return 'No defeats in $count. Ask anyone who has managed — that is the hard part.';
+    return 'No defeats in $count. Ask anyone who has managed: that is the hard part.';
   }
 
   @override
@@ -3475,7 +3511,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String yRivalry0(String opponent, String score) {
-    return '$opponent $score. Say what you like about the football — this one counts double.';
+    return '$opponent $score. Say what you like about the football. This one counts double.';
   }
 
   @override
@@ -4218,11 +4254,11 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get tourContPlayoffThrough =>
-      'You came through the play-off — you\'re at the World Cup!';
+      'You came through the play-off. You\'re at the World Cup!';
 
   @override
   String get tourContPlayoffOut =>
-      'You fell short in the play-off — no World Cup this time.';
+      'You fell short in the play-off. No World Cup this time.';
 
   @override
   String get tourContContinue => 'Continue';
@@ -4231,7 +4267,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get tourContPlayoffFinals => 'PLAY-OFF FINALS';
 
   @override
-  String get tourContPlayoffSeeded => 'Seeded — bye';
+  String get tourContPlayoffSeeded => 'Seeded (bye)';
 
   @override
   String get tourCupTabSummary => 'SUMMARY';
@@ -4323,7 +4359,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get tourCupFinalsDrawSoon =>
-      'Groups to be drawn — watch the World Cup draw from the hub to reveal them.';
+      'Groups to be drawn. Watch the World Cup draw from the hub to reveal them.';
 
   @override
   String tourCupGroupName(String name) {
@@ -4358,7 +4394,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String tourCupMostTitlesValue(String nation, int titles, int editions) {
-    return '$nation — $titles titles from $editions editions';
+    return '$nation: $titles titles from $editions editions';
   }
 
   @override
@@ -4379,7 +4415,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get tourCupQualDrawSoon =>
-      'Groups to be drawn — watch the qualifying draw from the hub to reveal them.';
+      'Groups to be drawn. Watch the qualifying draw from the hub to reveal them.';
 
   @override
   String tourCupRegionYours(String region) {
@@ -4414,7 +4450,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get traitSetPieceBlurb =>
-      'Better delivery — more goals from dead balls.';
+      'Better delivery, and more goals from dead balls.';
 
   @override
   String get traitHothead => 'Hothead';
@@ -4446,7 +4482,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get traitPacey => 'Pacey';
 
   @override
-  String get traitPaceyBlurb => 'Blistering pace — a threat in behind.';
+  String get traitPaceyBlurb => 'Blistering pace, a threat in behind.';
 
   @override
   String get traitOldHead => 'Old head';
@@ -4594,7 +4630,7 @@ class AppLocalizationsEn extends AppLocalizations {
       other: '$rounds rounds better than asked',
       one: 'a round better than asked',
     );
-    return '$result — $_temp0';
+    return '$result: $_temp0';
   }
 
   @override
@@ -4605,7 +4641,7 @@ class AppLocalizationsEn extends AppLocalizations {
       other: '$rounds rounds short',
       one: 'a round short',
     );
-    return '$result — $_temp0';
+    return '$result: $_temp0';
   }
 
   @override
@@ -4726,7 +4762,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get u21Blurb =>
-      'The next generation, best prospect first. Hollow stars are a scout\'s estimate — cap a player to find out what he really has.';
+      'The next generation, best prospect first. Hollow stars are a scout\'s estimate. Cap a player to find out what he really has.';
 
   @override
   String get u21Empty =>
@@ -4850,7 +4886,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get tacticsPlaystyleCustom =>
-      'Your own settings — no named style matches these dials.';
+      'Your own settings. No named style matches these dials.';
 
   @override
   String get playstyleCustom => 'Custom';
@@ -4918,7 +4954,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get bottomStartBlurb =>
-      'You have no job and no reputation. These are the only sides willing to take a chance on you — take one and build something from nothing.';
+      'You have no job and no reputation. These are the only sides willing to take a chance on you. Take one and build something from nothing.';
 
   @override
   String get bottomStartAccept => 'Take it';
@@ -4969,7 +5005,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get campTerrainCityBlurb =>
-      'Everything on the doorstep and nothing to travel to — but no peace, and no escape from the noise.';
+      'Everything on the doorstep and nothing to travel to, but no peace and no escape from the noise.';
 
   @override
   String get campTerrainCoastalBlurb =>
@@ -5087,7 +5123,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String pressAskElimination2(String opponent) {
-    return '$opponent end it. Four years of work, gone in ninety minutes — talk us through it.';
+    return '$opponent end it. Four years of work, gone in ninety minutes. Talk us through it.';
   }
 
   @override
@@ -5108,7 +5144,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get pressAskPreview3 =>
-      'Realistically — group stage, quarters, or more than that?';
+      'Realistically: group stage, quarters, or more than that?';
 
   @override
   String pressAskOpening2(String opponent) {
@@ -5153,7 +5189,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get pressAskQualified3 =>
-      'Qualification secured — now what is this squad actually capable of?';
+      'Qualification secured. Now what is this squad actually capable of?';
 
   @override
   String get pressAskMissedOut =>
@@ -5227,7 +5263,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get pressAnswerRaiseBar2 =>
-      'No hiding from it — we expect to lift the trophy.';
+      'No hiding from it. We expect to lift the trophy.';
 
   @override
   String get pressAnswerRaiseBar3 =>
@@ -5328,7 +5364,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get pressAskPreview6 =>
-      'What would make this a successful tournament — honestly?';
+      'What would make this a successful tournament, honestly?';
 
   @override
   String get pressAskPreview7 =>
@@ -5350,7 +5386,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String pressAskOpening6(String opponent) {
-    return '$opponent to open. Win it and the whole tournament looks different — do you tell them that?';
+    return '$opponent to open. Win it and the whole tournament looks different. Do you tell them that?';
   }
 
   @override
@@ -5388,7 +5424,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String pressAskBigWin5(String opponent) {
-    return 'The best performance of your reign — and against $opponent?';
+    return 'The best performance of your reign, and against $opponent?';
   }
 
   @override
@@ -5415,7 +5451,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get pressAskQualified6 =>
-      'A place at the finals — relief or satisfaction?';
+      'A place at the finals: relief or satisfaction?';
 
   @override
   String get pressAskQualified7 =>
@@ -5458,7 +5494,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get pressAskUnbeaten7 =>
-      'When it ends — and it will — how do you want it to end?';
+      'When it ends, and it will, how do you want it to end?';
 
   @override
   String get pressAskUnbeaten8 =>
@@ -5504,7 +5540,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get pressAnswerBackPlayers4 =>
-      'I\'ll take the questions. They\'ll take the credit — that\'s how it works here.';
+      'I\'ll take the questions. They\'ll take the credit. That\'s how it works here.';
 
   @override
   String get pressAnswerBackPlayers5 =>
@@ -5564,7 +5600,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String tacticsSubAlreadyOff(String name) {
-    return '$name has already been taken off — he cannot come back on.';
+    return '$name has already been taken off and cannot come back on.';
   }
 
   @override
@@ -6037,7 +6073,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get msgThroughNote =>
-      'These are not a new intake — they are the boys who came in at eleven and have now grown into the senior pool.';
+      'These are not a new intake. They are the boys who came in at eleven and have now grown into the senior pool.';
 
   @override
   String msgNewFacesTitle(int year) {
@@ -6093,7 +6129,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get msgArmbandVacant =>
-      ' The armband is vacant — name a new captain from the call-up screen.';
+      ' The armband is vacant. Name a new captain from the call-up screen.';
 
   @override
   String msgHofTitle(String name) {
@@ -6118,7 +6154,7 @@ class AppLocalizationsEn extends AppLocalizations {
       other: 'the next $matches matches',
       one: 'your next match',
     );
-    return '$name $how and is banned for $_temp0 — they will be unavailable for selection.';
+    return '$name $how and is banned for $_temp0. They will be unavailable for selection.';
   }
 
   @override
@@ -6157,12 +6193,12 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String hubRunnerUpBody1(String cup, String opponent) {
-    return 'You reached the $cup final but lost to $opponent. So close — silver this time.';
+    return 'You reached the $cup final but lost to $opponent. So close. Silver this time.';
   }
 
   @override
   String hubRunnerUpBody2(String cup, String opponent) {
-    return 'Beaten by $opponent in the $cup final. Runners-up — agonisingly close.';
+    return 'Beaten by $opponent in the $cup final. Runners-up, agonisingly close.';
   }
 
   @override
@@ -6220,12 +6256,12 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String boardObjectiveMetTitle(String comp) {
-    return 'Objective met — $comp';
+    return 'Objective met: $comp';
   }
 
   @override
   String boardObjectiveMissedTitle(String comp) {
-    return 'Objective missed — $comp';
+    return 'Objective missed: $comp';
   }
 
   @override
@@ -6243,7 +6279,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String newsWcMissBody(int year) {
-    return 'You didn\'t make the $year World Cup — the qualifying campaign fell short. Four more years.';
+    return 'You didn\'t make the $year World Cup. The qualifying campaign fell short. Four more years.';
   }
 
   @override
@@ -6387,7 +6423,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String newsContMissBody(String cup) {
-    return 'You didn\'t qualify for $cup — the campaign came up short this time.';
+    return 'You didn\'t qualify for $cup. The campaign came up short this time.';
   }
 
   @override
@@ -6545,7 +6581,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get pressProbeDressingRoom3 =>
-      'Demanding it here rather than in there — is that leadership?';
+      'Demanding it here rather than in there. Is that leadership?';
 
   @override
   String get pressProbeDressingRoom4 =>
@@ -6819,31 +6855,23 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get tourThirdsUneven =>
-      'Groups are uneven — results against each big group\'s bottom side are dropped, so every team is judged over the same games.';
+      'Groups are uneven, so results against each big group\'s bottom side are dropped and every team is judged over the same games.';
 
   @override
   String get gateTitle => 'YOUR FIRST CYCLE IS OVER';
 
   @override
   String get gateLead =>
-      'Four years, a continental championship and a World Cup — that was the free part, and nothing was held back. Carry this save on for a one-off payment.';
+      'Four years, and nothing was held back. Carry this save on for one payment.';
 
   @override
-  String get gateBenefitEndless =>
-      'Unlimited careers — every cycle from here on';
+  String get gateBenefitEndless => 'Every cycle from here on';
 
   @override
-  String get gateBenefitNations => 'Every nation in the world to manage';
+  String get gateBenefitNations => 'Every nation in the world';
 
   @override
-  String get gateBenefitSaves => '10 save slots instead of 3';
-
-  @override
-  String get gateBenefitUpdates => 'Every future update included';
-
-  @override
-  String get gateBenefitOffline =>
-      'Works offline — no subscription, no ads, no account';
+  String get gateBenefitOffline => 'No subscription, no ads, no account';
 
   @override
   String get gatePriceLead => 'One payment, forever';
@@ -6859,7 +6887,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get gateNotChargedYet =>
-      'Not connected to payment yet — this button just continues.';
+      'Not connected to payment yet. This button just continues.';
 
   @override
   String get backupTitle => 'SAVES';
@@ -6891,7 +6919,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get backupCancel => 'CANCEL';
 
   @override
-  String get backupExported => 'Backup ready — choose where to keep it.';
+  String get backupExported => 'Backup ready. Choose where to keep it.';
 
   @override
   String get backupFailed => 'Could not write the backup.';
@@ -6955,30 +6983,36 @@ class AppLocalizationsEn extends AppLocalizations {
       'Two points for every cycle you complete, one for every trophy you win.';
 
   @override
+  String get managerSkillsScale =>
+      'Every skill starts at 5 and stops at 20. A point spent is permanent.';
+
+  @override
   String get managerSkillManManagement => 'Man Management';
 
   @override
   String get managerSkillManManagementBlurb =>
-      'What you say in public and in your office lands harder.';
+      'Each point makes what you say to the press and to your players land 3% harder in the dressing room.';
 
   @override
   String get managerSkillTactical => 'Tactical';
 
   @override
   String get managerSkillTacticalBlurb =>
-      'Your side settles into a new shape faster.';
+      'Each point beds a new formation in 3% faster, so changing shape costs you fewer matches.';
 
   @override
   String get managerSkillYouth => 'Youth Development';
 
   @override
-  String get managerSkillYouthBlurb => 'More comes out of the academy.';
+  String get managerSkillYouthBlurb =>
+      'Each point adds 1% to the talent coming out of your academy, on top of what you fund it with.';
 
   @override
   String get managerSkillNegotiation => 'Negotiation';
 
   @override
-  String get managerSkillNegotiationBlurb => 'The federation funds you better.';
+  String get managerSkillNegotiationBlurb =>
+      'Each point is 2% more money out of the federation, every cycle.';
 
   @override
   String get managerStaff => 'YOUR STAFF';
@@ -7132,7 +7166,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get tourCupsBody =>
-      'Every competition running right now — groups, standings and knockouts — including the ones you are not in. The world keeps playing whether or not you qualified.';
+      'Every competition running right now: groups, standings and knockouts, including the ones you are not in. The world keeps playing whether or not you qualified.';
 
   @override
   String get settingsTourTitle => 'Replay the tutorial';
@@ -7160,11 +7194,11 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get tourPlaystyleBody =>
-      'The shape is only half a tactic. This is the other half — how high you press, how direct you are, how much you risk.';
+      'The shape is only half a tactic. This is the other half: how high you press, how direct you are, how much you risk.';
 
   @override
   String get settingsTourNoSave =>
-      'Start a career first — the walk through visits your own screens.';
+      'Start a career first. The walk through visits your own screens.';
 
   @override
   String tacticsOutOfPositionAge(int age) {
@@ -7218,7 +7252,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get settingsFreeScopeBlurb =>
-      'A complete cycle — qualifying, a continental championship and a World Cup — with nothing held back. Carrying a save on past it is a single payment, once, and it covers every save and every future update.';
+      'A complete cycle (qualifying, a continental championship and a World Cup) with nothing held back. Carrying a save on past it is a single payment, once, and it covers every save and every future update.';
 
   @override
   String get settingsUnlockedTitle => 'Unlocked';
@@ -7226,4 +7260,35 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get settingsUnlockedBlurb =>
       'Unlimited careers, every nation, ten save slots and every future update. Thank you.';
+
+  @override
+  String friendliesLikeYourCampaign(String rivals) {
+    return 'Suggested first: sides who play like $rivals, who you still have to face.';
+  }
+
+  @override
+  String get friendliesCloseToYou =>
+      'Suggested first: the sides closest to you in the world ranking. Once you are drawn, they are picked to resemble your group.';
+
+  @override
+  String transfersMoves(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count moves',
+      one: '1 move',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String transfersRange(int from, int to, int total) {
+    return '$from–$to of $total';
+  }
+
+  @override
+  String get transfersNewer => 'Newer';
+
+  @override
+  String get transfersOlder => 'More';
 }

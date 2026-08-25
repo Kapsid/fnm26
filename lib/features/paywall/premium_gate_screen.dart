@@ -48,12 +48,17 @@ class PremiumGateScreen extends ConsumerWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
+                // Centred in the space left over rather than scrolled. The
+                // page used to be a scroll view of a paragraph, five benefit
+                // lines and a price — enough text that the decision was
+                // buried in it, and on a small phone the price sat below the
+                // fold on the one screen where the price is the point.
                 Expanded(
-                  child: SingleChildScrollView(
+                  child: Center(
                     child: Column(
+                      mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        const SizedBox(height: AppSpacing.lg),
                         const Icon(
                           Icons.workspace_premium,
                           size: 56,
@@ -75,13 +80,15 @@ class PremiumGateScreen extends ConsumerWidget {
                             color: AppColors.onSurfaceVariant,
                           ),
                         ),
-                        const SizedBox(height: AppSpacing.xl),
+                        const SizedBox(height: AppSpacing.lg),
+                        // Three, not five. Ten save slots and "every future
+                        // update included" are true and neither of them is why
+                        // anybody pays: a list long enough to skim is a list
+                        // nobody reads.
                         _Benefit(Icons.all_inclusive, l.gateBenefitEndless),
                         _Benefit(Icons.public, l.gateBenefitNations),
-                        _Benefit(Icons.save, l.gateBenefitSaves),
-                        _Benefit(Icons.upgrade_rounded, l.gateBenefitUpdates),
                         _Benefit(Icons.wifi_off_rounded, l.gateBenefitOffline),
-                        const SizedBox(height: AppSpacing.xl),
+                        const SizedBox(height: AppSpacing.lg),
                         Text(
                           l.gatePriceLead,
                           textAlign: TextAlign.center,
@@ -136,9 +143,8 @@ class _Benefit extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Padding(
-    padding: const EdgeInsets.symmetric(vertical: AppSpacing.sm),
+    padding: const EdgeInsets.symmetric(vertical: AppSpacing.xs),
     child: Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Icon(icon, size: 22, color: AppColors.primary),
         const SizedBox(width: AppSpacing.md),

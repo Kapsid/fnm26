@@ -60,7 +60,7 @@ abstract interface class CareerRepository {
   /// Moves the save into [cyclePointer], dated [date].
   ///
   /// [closingBoard] is where the board's gauge finished the cycle just ended,
-  /// which the new one carries a quarter of — see `BoardSatisfaction.carryOver`.
+  /// which the new one carries most of — see `BoardSatisfaction.carryOver`.
   Future<void> advanceCycle(
     int id,
     int cyclePointer,

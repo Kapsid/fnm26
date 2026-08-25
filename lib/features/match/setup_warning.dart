@@ -11,8 +11,19 @@ import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
 
+/// What is wrong with the armband, or null when nothing is.
+enum CaptainIssue {
+  /// Nobody has been given it.
+  unnamed,
+
+  /// Somebody has, and he cannot play this one — injured, suspended, or left
+  /// out of the squad. A rollover clears the call-ups, so the squad that gets
+  /// picked for him afterwards may simply not contain him.
+  unavailable,
+}
+
 /// What the manager has left unset before kick-off.
-typedef SquadSetup = ({bool captain, bool setPieces});
+typedef SquadSetup = ({CaptainIssue? captain, bool setPieces});
 
 /// Whether the armband and the set-piece takers are actually COVERED for the
 /// next match.
@@ -42,10 +53,25 @@ final AutoDisposeFutureProviderFamily<SquadSetup, int> squadSetupProvider =
         return absence == null || absence.isAvailable;
       }
 
+      // NAMED and AVAILABLE are different problems and used to be the same
+      // one. `captainProvider` returns null both for a manager who never gave
+      // the armband to anybody and for one whose captain is injured or was
+      // left out of the squad, so a man who had been captain for six years was
+      // reported as "No captain named" the week he pulled a hamstring — which
+      // reads as the game having lost the setting, and sends the manager to a
+      // screen that already says what he expects it to say.
+      // Whether the armband was given to ANYBODY. A resolved captain is proof
+      // of it by itself; only when nobody resolved is the stored intent worth
+      // reading, and that is exactly the case the two messages differ on.
+      final storedCaptain =
+          captain?.id ??
+          await ref.watch(storedCaptainIdProvider(careerId).future);
       return (
-        // captainProvider already drops a captain who is out of the squad;
-        // this also catches the one who is in it with a broken metatarsal.
-        captain: available(captain?.id),
+        captain: storedCaptain == null
+            ? CaptainIssue.unnamed
+            : (captain != null && available(captain.id)
+                  ? null
+                  : CaptainIssue.unavailable),
         // Penalties are the half of this that decides matches, so a save with
         // a dead-ball taker and nobody on penalties still counts as unset.
         setPieces: available(takers.penalty) && available(takers.deadBall),
@@ -67,12 +93,15 @@ class SquadSetupWarning extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l = AppLocalizations.of(context);
     final setup = ref.watch(squadSetupProvider(careerId)).valueOrNull;
-    if (setup == null || (setup.captain && setup.setPieces)) {
+    if (setup == null || (setup.captain == null && setup.setPieces)) {
       return const SizedBox.shrink();
     }
     final message = switch (setup) {
-      (captain: false, setPieces: false) => l.matchSetupWarnBoth,
-      (captain: false, setPieces: true) => l.matchSetupWarnCaptain,
+      (captain: CaptainIssue.unavailable, setPieces: _) =>
+        l.matchSetupWarnCaptainOut,
+      (captain: CaptainIssue.unnamed, setPieces: false) => l.matchSetupWarnBoth,
+      (captain: CaptainIssue.unnamed, setPieces: true) =>
+        l.matchSetupWarnCaptain,
       _ => l.matchSetupWarnSetPieces,
     };
 

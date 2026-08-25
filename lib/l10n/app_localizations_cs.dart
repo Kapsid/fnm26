@@ -145,7 +145,7 @@ class AppLocalizationsCs extends AppLocalizations {
   String get teamTalkCalmLabel => 'Chladné hlavy';
 
   @override
-  String get teamTalkCalmBlurb => 'Uklidněte tým — mírné celkové zlepšení.';
+  String get teamTalkCalmBlurb => 'Uklidněte tým. Mírné celkové zlepšení.';
 
   @override
   String get teamTalkEncourageLabel => 'Povzbuzení';
@@ -157,7 +157,7 @@ class AppLocalizationsCs extends AppLocalizations {
   String get teamTalkDemandMoreLabel => 'Žádejte víc';
 
   @override
-  String get teamTalkDemandMoreBlurb => 'Vsaďte vše na útok — zaútočte naplno.';
+  String get teamTalkDemandMoreBlurb => 'Vsaďte vše na útok. Zaútočte naplno.';
 
   @override
   String get teamTalkPraiseLabel => 'Držte to vzadu';
@@ -170,20 +170,20 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get teamTalkBelieveBlurb =>
-      'Věřte si — zlepšení na obou koncích hřiště.';
+      'Věřte si. Zlepšení na obou koncích hřiště.';
 
   @override
   String get teamTalkFocusLabel => 'Zůstaňte koncentrovaní';
 
   @override
-  String get teamTalkFocusBlurb => 'Naprostá koncentrace — zamkněte zápas.';
+  String get teamTalkFocusBlurb => 'Naprostá koncentrace. Zamkněte zápas.';
 
   @override
   String get teamTalkUrgencyLabel => 'Pocit naléhavosti';
 
   @override
   String get teamTalkUrgencyBlurb =>
-      'Hned to dožeňte — vše dopředu, otevřete obranu.';
+      'Hned to dožeňte. Vše dopředu, otevřete obranu.';
 
   @override
   String get teamTalkReassureLabel => 'Žádný tlak';
@@ -464,7 +464,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String tacticsSentOffNote(String names) {
-    return '$names vyloučen — bez náhrady, hrajete v oslabení.';
+    return '$names vyloučen. Bez náhrady, hrajete v oslabení.';
   }
 
   @override
@@ -604,21 +604,21 @@ class AppLocalizationsCs extends AppLocalizations {
   String get tacticsPreviousSquad => 'Předchozí kádr';
 
   @override
-  String get tacticsSquadLockedBack => 'Kádr uzamčen — zpět';
+  String get tacticsSquadLockedBack => 'Zpět (kádr uzamčen)';
 
   @override
   String get tacticsConfirmSquad => 'Potvrdit kádr';
 
   @override
   String tacticsSquadFullMax(int max) {
-    return 'Kádr je plný — max $max';
+    return 'Kádr je plný (max $max)';
   }
 
   @override
   String get tacticsSquadLocked => 'KÁDR UZAMČEN';
 
   @override
-  String get tacticsNominationOpen => 'NOMINACE OTEVŘENA — VYBERTE KÁDR';
+  String get tacticsNominationOpen => 'NOMINACE OTEVŘENA. VYBERTE KÁDR';
 
   @override
   String get tacticsSquadFixedBlurb =>
@@ -851,7 +851,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String tacticsPlayerOut(String name, String reason) {
-    return '$name — $reason';
+    return '$name: $reason';
   }
 
   @override
@@ -1172,11 +1172,11 @@ class AppLocalizationsCs extends AppLocalizations {
       count,
       locale: localeName,
       other:
-          '$count hráčů základní sestavy chybí (trest nebo zranění) — vyberte náhrady',
+          '$count hráčů základní sestavy chybí (trest nebo zranění). Vyberte náhrady',
       few:
-          '$count hráči základní sestavy chybí (trest nebo zranění) — vyberte náhrady',
+          '$count hráči základní sestavy chybí (trest nebo zranění). Vyberte náhrady',
       one:
-          '1 hráč základní sestavy chybí (trest nebo zranění) — vyberte náhradu',
+          '1 hráč základní sestavy chybí (trest nebo zranění). Vyberte náhradu',
     );
     return '$_temp0';
   }
@@ -1186,8 +1186,8 @@ class AppLocalizationsCs extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'Základní sestava není kompletní — obsaďte volná místa',
-      one: 'Základní sestava není kompletní — obsaďte volné místo',
+      other: 'Základní sestava není kompletní. Obsaďte volná místa',
+      one: 'Základní sestava není kompletní. Obsaďte volné místo',
     );
     return '$_temp0';
   }
@@ -1308,7 +1308,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get hubGroupsToBeDrawn =>
-      'Skupiny budou vylosovány — sledujte losování a odhalte je.';
+      'Skupiny budou vylosovány. Sledujte losování a odhalte je.';
 
   @override
   String hubGroupName(String name) {
@@ -1521,8 +1521,7 @@ class AppLocalizationsCs extends AppLocalizations {
   String get careerStatGoalDiffShort => 'RS';
 
   @override
-  String get careerNoSilverware =>
-      'Zatím žádné trofeje — běžte nějakou získat.';
+  String get careerNoSilverware => 'Zatím žádné trofeje. Běžte nějakou získat.';
 
   @override
   String get careerMedalGold => 'ZLATO';
@@ -1561,7 +1560,7 @@ class AppLocalizationsCs extends AppLocalizations {
   String get careerSlotsFull => 'Pozice plné';
 
   @override
-  String get careerSlotsFullGoPro => 'Pozice plné — pořiďte si Pro pro 10';
+  String get careerSlotsFullGoPro => 'Pozice plné. Pořiďte si Pro pro 10';
 
   @override
   String get careerNewGame => 'Nová hra';
@@ -1923,15 +1922,19 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get matchSetupWarnCaptain =>
-      'Není určen kapitán — klepnutím mu dáte pásku';
+      'Není určen kapitán. Klepnutím mu dáte pásku';
+
+  @override
+  String get matchSetupWarnCaptainOut =>
+      'Váš kapitán tenhle zápas nemůže hrát. Klepnutím dejte pásku někomu jinému';
 
   @override
   String get matchSetupWarnSetPieces =>
-      'Nejsou určeni exekutoři standardek — klepnutím je vyberete';
+      'Nejsou určeni exekutoři standardek. Klepnutím je vyberete';
 
   @override
   String get matchSetupWarnBoth =>
-      'Není kapitán ani exekutoři standardek — klepnutím to nastavíte';
+      'Není kapitán ani exekutoři standardek. Klepnutím to nastavíte';
 
   @override
   String matchStageMatchday(int matchday) {
@@ -2094,7 +2097,7 @@ class AppLocalizationsCs extends AppLocalizations {
   String get captainArmband => 'K';
 
   @override
-  String get captainCurrent => 'Kapitán — klepnutím pásku sejmete';
+  String get captainCurrent => 'Kapitán. Klepnutím pásku sejmete';
 
   @override
   String get captainFitBorn => 'Rozený vůdce';
@@ -2784,7 +2787,7 @@ class AppLocalizationsCs extends AppLocalizations {
   String get paywallBenefitEndless => 'Neomezené kariéry, navždy';
 
   @override
-  String get paywallUnlocked => 'Prémiová verze je odemčená — užijte si ji!';
+  String get paywallUnlocked => 'Prémiová verze je odemčená. Užijte si ji!';
 
   @override
   String get paywallContactingStore => 'Kontaktuji obchod…';
@@ -2869,7 +2872,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String federationOverBudget(String amount) {
-    return '$amount nad rámec rozpočtu — část je potřeba vrátit';
+    return '$amount nad rámec rozpočtu. Část je potřeba vrátit';
   }
 
   @override
@@ -2920,6 +2923,16 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get federationBalance => 'ZŮSTATEK FEDERACE';
+
+  @override
+  String get federationCommittedToStaff => 'Slíbeno realizačnímu týmu';
+
+  @override
+  String get federationFreeToSpend => 'Volné k utracení';
+
+  @override
+  String get federationWagesNote =>
+      'Mzdy se z rozpočtu strhnou na konci cyklu, takže tato část je už zadaná.';
 
   @override
   String get federationInvestAtCeremony =>
@@ -2999,7 +3012,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get nationsNotEnoughHistory =>
-      'Zatím není dost historie — vraťte se po jednom či dvou cyklech.';
+      'Zatím není dost historie. Vraťte se po jednom či dvou cyklech.';
 
   @override
   String nationsBestRank(int rank) {
@@ -3111,6 +3124,9 @@ class AppLocalizationsCs extends AppLocalizations {
   String get playerClub => 'KLUB';
 
   @override
+  String get playerClubRole => 'V klubu';
+
+  @override
   String get playerPosition => 'Pozice';
 
   @override
@@ -3133,6 +3149,11 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get clubFrozenOut => 'Nehraje';
+
+  @override
+  String clubAtClub(String club, String standing) {
+    return '$club: $standing';
+  }
 
   @override
   String yWinUpset0(String opponent, String score) {
@@ -3196,7 +3217,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String yDrew0(String opponent, String score) {
-    return '$score s $opponent. Ztracené dva body, nebo získaný jeden — vyber si.';
+    return '$score s $opponent. Ztracené dva body, nebo získaný jeden. Vyber si.';
   }
 
   @override
@@ -3266,7 +3287,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String yTrophy2(String opponent) {
-    return '$opponent — a pohár jede domů.';
+    return '$opponent, a pohár jede domů.';
   }
 
   @override
@@ -3412,6 +3433,22 @@ class AppLocalizationsCs extends AppLocalizations {
   String get hubEventGrievanceSub => 'Chce vědět, na čem je';
 
   @override
+  String hubEventManagerSkills(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count bodů dovedností k rozdělení',
+      few: '$count body dovedností k rozdělení',
+      one: '1 bod dovedností k rozdělení',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get hubEventManagerSkillsSub =>
+      'To, v čem jste dobří, dělá váš tým lepším';
+
+  @override
   String get grievanceTitle => 'Slovo v kanceláři';
 
   @override
@@ -3475,7 +3512,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String yWinStreak3(String count) {
-    return 'Ani jedna prohra v $count zápasech. Zeptejte se kohokoli, kdo trénoval — tohle je to těžké.';
+    return 'Ani jedna prohra v $count zápasech. Zeptejte se kohokoli, kdo trénoval: tohle je to těžké.';
   }
 
   @override
@@ -3500,7 +3537,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String yRivalry0(String opponent, String score) {
-    return '$opponent $score. Říkejte si o tom fotbale co chcete — tenhle počítá dvakrát.';
+    return '$opponent $score. Říkejte si o tom fotbale co chcete. Tenhle počítá dvakrát.';
   }
 
   @override
@@ -4107,7 +4144,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String tourContChampionsHeading(String name) {
-    return '$name – ŠAMPIONI';
+    return '$name: ŠAMPIONI';
   }
 
   @override
@@ -4259,11 +4296,11 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get tourContPlayoffThrough =>
-      'Prošli jste baráží — jedete na mistrovství světa!';
+      'Prošli jste baráží. Jedete na mistrovství světa!';
 
   @override
   String get tourContPlayoffOut =>
-      'V baráži jste nestačili — mistrovství světa tentokrát nebude.';
+      'V baráži jste nestačili. Mistrovství světa tentokrát nebude.';
 
   @override
   String get tourContContinue => 'Pokračovat';
@@ -4272,7 +4309,7 @@ class AppLocalizationsCs extends AppLocalizations {
   String get tourContPlayoffFinals => 'FINÁLE BARÁŽE';
 
   @override
-  String get tourContPlayoffSeeded => 'Nasazen — volný los';
+  String get tourContPlayoffSeeded => 'Nasazen (volný los)';
 
   @override
   String get tourCupTabSummary => 'PŘEHLED';
@@ -4364,7 +4401,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get tourCupFinalsDrawSoon =>
-      'Skupiny budou vylosovány — sledujte los MS z rozcestníku.';
+      'Skupiny budou vylosovány. Sledujte los MS z rozcestníku.';
 
   @override
   String tourCupGroupName(String name) {
@@ -4398,7 +4435,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String tourCupMostTitlesValue(String nation, int titles, int editions) {
-    return '$nation — $titles titulů z $editions ročníků';
+    return '$nation: $titles titulů z $editions ročníků';
   }
 
   @override
@@ -4419,7 +4456,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get tourCupQualDrawSoon =>
-      'Skupiny budou vylosovány — sledujte los kvalifikace z rozcestníku.';
+      'Skupiny budou vylosovány. Sledujte los kvalifikace z rozcestníku.';
 
   @override
   String tourCupRegionYours(String region) {
@@ -4453,7 +4490,7 @@ class AppLocalizationsCs extends AppLocalizations {
   String get traitSetPiece => 'Specialista na standardky';
 
   @override
-  String get traitSetPieceBlurb => 'Lepší centry — více gólů ze standardek.';
+  String get traitSetPieceBlurb => 'Lepší centry a více gólů ze standardek.';
 
   @override
   String get traitHothead => 'Vznětlivý';
@@ -4483,7 +4520,7 @@ class AppLocalizationsCs extends AppLocalizations {
   String get traitPacey => 'Rychlík';
 
   @override
-  String get traitPaceyBlurb => 'Extrémní rychlost — hrozba za obranou.';
+  String get traitPaceyBlurb => 'Extrémní rychlost, hrozba za obranou.';
 
   @override
   String get traitOldHead => 'Zkušený matador';
@@ -4631,7 +4668,7 @@ class AppLocalizationsCs extends AppLocalizations {
       few: 'o $rounds kola lepší, než se čekalo',
       one: 'o kolo lepší, než se čekalo',
     );
-    return '$result — $_temp0';
+    return '$result: $_temp0';
   }
 
   @override
@@ -4643,7 +4680,7 @@ class AppLocalizationsCs extends AppLocalizations {
       few: 'o $rounds kola méně',
       one: 'o kolo méně',
     );
-    return '$result — $_temp0';
+    return '$result: $_temp0';
   }
 
   @override
@@ -4765,7 +4802,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get u21Blurb =>
-      'Nová generace, nejlepší talenty nahoře. Prázdné hvězdy jsou odhad skauta — teprve start v reprezentaci ukáže pravdu.';
+      'Nová generace, nejlepší talenty nahoře. Prázdné hvězdy jsou odhad skauta. Teprve start v reprezentaci ukáže pravdu.';
 
   @override
   String get u21Empty =>
@@ -4887,7 +4924,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get tacticsPlaystyleCustom =>
-      'Vlastní nastavení — žádný pojmenovaný styl neodpovídá.';
+      'Vlastní nastavení. Žádný pojmenovaný styl neodpovídá.';
 
   @override
   String get playstyleCustom => 'Vlastní';
@@ -4953,7 +4990,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get bottomStartBlurb =>
-      'Nemáte práci ani jméno. Tohle jsou jediní, kdo do vás půjde — vezměte jednu z nabídek a vybudujte něco z ničeho.';
+      'Nemáte práci ani jméno. Tohle jsou jediní, kdo do vás půjde. Vezměte jednu z nabídek a vybudujte něco z ničeho.';
 
   @override
   String get bottomStartAccept => 'Beru';
@@ -5004,7 +5041,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get campTerrainCityBlurb =>
-      'Vše po ruce a nikam se necestuje — ale žádný klid a žádný únik před ruchem.';
+      'Vše po ruce a nikam se necestuje, ale žádný klid a žádný únik před ruchem.';
 
   @override
   String get campTerrainCoastalBlurb =>
@@ -5122,7 +5159,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String pressAskElimination2(String opponent) {
-    return '$opponent to ukončil. Čtyři roky práce pryč za devadesát minut — vysvětlete nám to.';
+    return '$opponent to ukončil. Čtyři roky práce pryč za devadesát minut. Vysvětlete nám to.';
   }
 
   @override
@@ -5142,8 +5179,7 @@ class AppLocalizationsCs extends AppLocalizations {
   String get pressAskPreview2 => 'Všichni chtějí tip. Dejte nám ten svůj.';
 
   @override
-  String get pressAskPreview3 =>
-      'Realisticky — skupina, čtvrtfinále, nebo víc?';
+  String get pressAskPreview3 => 'Realisticky: skupina, čtvrtfinále, nebo víc?';
 
   @override
   String pressAskOpening2(String opponent) {
@@ -5186,7 +5222,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get pressAskQualified3 =>
-      'Postup je doma — na co tenhle tým doopravdy má?';
+      'Postup je doma. Na co tenhle tým doopravdy má?';
 
   @override
   String get pressAskMissedOut => 'Tentokrát bez turnaje. Jak k tomu došlo?';
@@ -5258,7 +5294,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get pressAnswerRaiseBar2 =>
-      'Nebudu to obcházet — čekáme, že zvedneme trofej.';
+      'Nebudu to obcházet. Čekáme, že zvedneme trofej.';
 
   @override
   String get pressAnswerRaiseBar3 =>
@@ -5308,7 +5344,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String pressAskElimination5(String opponent) {
-    return 'Další turnaj, další brzký let domů — a postaral se o to $opponent. Proč?';
+    return 'Další turnaj, další brzký let domů, a postaral se o to $opponent. Proč?';
   }
 
   @override
@@ -5355,7 +5391,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get pressAskPreview6 =>
-      'Co by z tohohle turnaje udělalo úspěch — upřímně?';
+      'Co by z tohohle turnaje udělalo úspěch, upřímně?';
 
   @override
   String get pressAskPreview7 =>
@@ -5377,7 +5413,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String pressAskOpening6(String opponent) {
-    return 'Na úvod $opponent. Výhra a celý turnaj vypadá jinak — říkáte jim to?';
+    return 'Na úvod $opponent. Výhra a celý turnaj vypadá jinak. Říkáte jim to?';
   }
 
   @override
@@ -5416,7 +5452,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String pressAskBigWin5(String opponent) {
-    return 'Nejlepší výkon vaší éry — a proti soupeři $opponent?';
+    return 'Nejlepší výkon vaší éry, a proti soupeři $opponent?';
   }
 
   @override
@@ -5443,7 +5479,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get pressAskQualified6 =>
-      'Místo na turnaji — úleva, nebo zadostiučinění?';
+      'Místo na turnaji: úleva, nebo zadostiučinění?';
 
   @override
   String get pressAskQualified7 =>
@@ -5485,7 +5521,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get pressAskUnbeaten7 =>
-      'Až to skončí — a skončí — jak byste chtěl, aby to skončilo?';
+      'Až to skončí, a ono skončí, jak byste chtěl, aby to skončilo?';
 
   @override
   String get pressAskUnbeaten8 =>
@@ -5529,7 +5565,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get pressAnswerBackPlayers4 =>
-      'Otázky vezmu já. Zásluhy oni — tak se to tady dělá.';
+      'Otázky vezmu já. Zásluhy oni. Tak se to tady dělá.';
 
   @override
   String get pressAnswerBackPlayers5 =>
@@ -5586,7 +5622,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String tacticsSubAlreadyOff(String name) {
-    return '$name už byl vystřídán – zpátky na hřiště nemůže.';
+    return '$name už byl vystřídán a zpátky na hřiště nemůže.';
   }
 
   @override
@@ -5629,7 +5665,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String compQualifiers(String region) {
-    return 'Kvalifikace – $region';
+    return 'Kvalifikace: $region';
   }
 
   @override
@@ -5826,7 +5862,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String msgChampTitleMine1(String comp) {
-    return '$comp – JSME MISTŘI!';
+    return '$comp: JSME MISTŘI!';
   }
 
   @override
@@ -5906,7 +5942,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String msgWpotyBodyMine(String name, String nation, int year) {
-    return '$name ($nation) je světovým hráčem roku $year – a je váš.';
+    return '$name ($nation) je světovým hráčem roku $year, a je váš.';
   }
 
   @override
@@ -5919,7 +5955,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String msgYpotBodyMine(String name, String nation, int age, int year) {
-    return '$name ($nation), $age let, je nejlepším mladým hráčem turnaje $year – a je váš.';
+    return '$name ($nation), $age let, je nejlepším mladým hráčem turnaje $year, a je váš.';
   }
 
   @override
@@ -6064,7 +6100,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get msgThroughNote =>
-      'Nejde o nový nábor — jsou to kluci, kteří přišli v jedenácti a teď dorostli do seniorského kádru.';
+      'Nejde o nový nábor. Jsou to kluci, kteří přišli v jedenácti a teď dorostli do seniorského kádru.';
 
   @override
   String msgNewFacesTitle(int year) {
@@ -6122,7 +6158,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get msgArmbandVacant =>
-      ' Kapitánská páska je volná – nového kapitána jmenujte na obrazovce nominace.';
+      ' Kapitánská páska je volná. Nového kapitána jmenujte na obrazovce nominace.';
 
   @override
   String msgHofTitle(String name) {
@@ -6148,7 +6184,7 @@ class AppLocalizationsCs extends AppLocalizations {
       few: 'příští $matches zápasy',
       one: 'příští zápas',
     );
-    return '$name $how a má stop na $_temp0 – nebude k dispozici.';
+    return '$name $how a má stop na $_temp0. Nebude k dispozici.';
   }
 
   @override
@@ -6188,12 +6224,12 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String hubRunnerUpBody1(String cup, String opponent) {
-    return 'Došli jste ve finále turnaje $cup, ale $opponent bylo lepší. Tak blízko – tentokrát stříbro.';
+    return 'Došli jste ve finále turnaje $cup, ale $opponent bylo lepší. Tak blízko. Tentokrát stříbro.';
   }
 
   @override
   String hubRunnerUpBody2(String cup, String opponent) {
-    return 'Ve finále turnaje $cup vás porazilo $opponent. Stříbro – k zbláznění blízko.';
+    return 'Ve finále turnaje $cup vás porazilo $opponent. Stříbro, k zbláznění blízko.';
   }
 
   @override
@@ -6251,12 +6287,12 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String boardObjectiveMetTitle(String comp) {
-    return 'Cíl splněn — $comp';
+    return 'Cíl splněn: $comp';
   }
 
   @override
   String boardObjectiveMissedTitle(String comp) {
-    return 'Cíl nesplněn — $comp';
+    return 'Cíl nesplněn: $comp';
   }
 
   @override
@@ -6274,7 +6310,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String newsWcMissBody(int year) {
-    return 'Na mistrovství světa $year jedete jen jako diváci – kvalifikace nevyšla. Další čtyři roky.';
+    return 'Na mistrovství světa $year jedete jen jako diváci. Kvalifikace nevyšla. Další čtyři roky.';
   }
 
   @override
@@ -6418,7 +6454,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String newsContMissBody(String cup) {
-    return 'Na turnaj $cup jste nepostoupili – kvalifikace tentokrát nevyšla.';
+    return 'Na turnaj $cup jste nepostoupili. Kvalifikace tentokrát nevyšla.';
   }
 
   @override
@@ -6532,7 +6568,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String newsWalkoutBody(String name, int age, int caps) {
-    return '$name ukončil reprezentační kariéru ve $age letech s $caps starty. Chtěl vědět, na čem je, odpovědi se nedočkal – a déle už nečekal.';
+    return '$name ukončil reprezentační kariéru ve $age letech s $caps starty. Chtěl vědět, na čem je, odpovědi se nedočkal, a déle už nečekal.';
   }
 
   @override
@@ -6577,7 +6613,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get pressProbeDressingRoom3 =>
-      'Žádat to tady místo v kabině – je tohle vedení mužstva?';
+      'Žádat to tady místo v kabině. Je tohle vedení mužstva?';
 
   @override
   String get pressProbeDressingRoom4 =>
@@ -6683,13 +6719,13 @@ class AppLocalizationsCs extends AppLocalizations {
   String get pressHeadlineWent2 => 'Přišli si pro hádku, odešli s vůdcem';
 
   @override
-  String get pressHeadlineWent3 => 'Jasné odpovědi – a sedly';
+  String get pressHeadlineWent3 => 'Jasné odpovědi, a sedly';
 
   @override
   String get pressHeadlineMixed1 => 'Řečeno hodně, vyřešeno málo';
 
   @override
-  String get pressHeadlineMixed2 => 'Něco pro každého – a nic pro nikoho';
+  String get pressHeadlineMixed2 => 'Něco pro každého, a nic pro nikoho';
 
   @override
   String get pressHeadlineMixed3 =>
@@ -6699,8 +6735,7 @@ class AppLocalizationsCs extends AppLocalizations {
   String get pressHeadlineBadly1 => 'Perná hodina před kamerami';
 
   @override
-  String get pressHeadlineBadly2 =>
-      'Sál se otočil proti němu – a bylo to vidět';
+  String get pressHeadlineBadly2 => 'Sál se otočil proti němu, a bylo to vidět';
 
   @override
   String get pressHeadlineBadly3 => 'Odpovědi, které ráno vyzní ještě hůř';
@@ -6845,30 +6880,24 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get tourThirdsUneven =>
-      'Skupiny nejsou stejně velké – výsledky proti poslednímu týmu větších skupin se nezapočítávají, aby se všechny týmy hodnotily podle stejného počtu zápasů.';
+      'Skupiny nejsou stejně velké, takže výsledky proti poslednímu týmu větších skupin se nezapočítávají a všechny týmy se hodnotí podle stejného počtu zápasů.';
 
   @override
   String get gateTitle => 'PRVNÍ CYKLUS KONČÍ';
 
   @override
   String get gateLead =>
-      'Čtyři roky, kontinentální šampionát a mistrovství světa – to byla část zdarma a nic v ní nechybělo. Za jednorázovou platbu pokračujte v této kariéře dál.';
+      'Čtyři roky a nic vám nebylo zatajeno. Pokračujte v této hře za jednu platbu.';
 
   @override
-  String get gateBenefitEndless => 'Neomezené kariéry – všechny další cykly';
+  String get gateBenefitEndless => 'Každý další cyklus';
 
   @override
-  String get gateBenefitNations => 'Můžete vést kteroukoli reprezentaci světa';
-
-  @override
-  String get gateBenefitSaves => '10 pozic pro uložení místo 3';
-
-  @override
-  String get gateBenefitUpdates => 'Všechny budoucí aktualizace v ceně';
+  String get gateBenefitNations => 'Všechny země světa';
 
   @override
   String get gateBenefitOffline =>
-      'Funguje offline – bez předplatného, reklam a účtu';
+      'Žádné předplatné, žádné reklamy, žádný účet';
 
   @override
   String get gatePriceLead => 'Jedna platba, navždy';
@@ -6884,7 +6913,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get gateNotChargedYet =>
-      'Zatím není napojeno na platbu – tlačítko jen pokračuje dál.';
+      'Zatím není napojeno na platbu. Tlačítko jen pokračuje dál.';
 
   @override
   String get backupTitle => 'ULOŽENÉ HRY';
@@ -6916,7 +6945,7 @@ class AppLocalizationsCs extends AppLocalizations {
   String get backupCancel => 'ZRUŠIT';
 
   @override
-  String get backupExported => 'Záloha je připravená – vyberte, kam ji uložit.';
+  String get backupExported => 'Záloha je připravená. Vyberte, kam ji uložit.';
 
   @override
   String get backupFailed => 'Zálohu se nepodařilo vytvořit.';
@@ -6981,30 +7010,36 @@ class AppLocalizationsCs extends AppLocalizations {
       'Dva body za každý dokončený cyklus, jeden za každou vyhranou trofej.';
 
   @override
+  String get managerSkillsScale =>
+      'Každá dovednost začíná na 5 a končí na 20. Vložený bod je trvalý.';
+
+  @override
   String get managerSkillManManagement => 'Vedení lidí';
 
   @override
   String get managerSkillManManagementBlurb =>
-      'To, co řeknete na veřejnosti i ve své kanceláři, má větší dopad.';
+      'Každý bod zvýší o 3 %, jak silně na kabinu působí to, co řeknete novinářům i hráčům.';
 
   @override
   String get managerSkillTactical => 'Taktika';
 
   @override
   String get managerSkillTacticalBlurb =>
-      'Váš tým si rychleji zvykne na nové rozestavení.';
+      'Každý bod o 3 % zrychlí zažití nové formace, takže změna rozestavení stojí méně zápasů.';
 
   @override
   String get managerSkillYouth => 'Práce s mládeží';
 
   @override
-  String get managerSkillYouthBlurb => 'Z akademie vzejde víc talentů.';
+  String get managerSkillYouthBlurb =>
+      'Každý bod přidá 1 % k talentu vycházejícímu z akademie, nad rámec toho, co do ní vložíte.';
 
   @override
   String get managerSkillNegotiation => 'Vyjednávání';
 
   @override
-  String get managerSkillNegotiationBlurb => 'Federace vás lépe financuje.';
+  String get managerSkillNegotiationBlurb =>
+      'Každý bod znamená o 2 % více peněz od federace, každý cyklus.';
 
   @override
   String get managerStaff => 'VÁŠ REALIZAČNÍ TÝM';
@@ -7130,7 +7165,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get tourTacticsBody =>
-      'Rozestavení, styl hry, kapitán a exekutoři standardek. Poslední dvě věci nemusíte nastavit — hra vás před výkopem upozorní, místo aby za vás tiše vybrala.';
+      'Rozestavení, styl hry, kapitán a exekutoři standardek. Poslední dvě věci nemusíte nastavit. Hra vás před výkopem upozorní, místo aby za vás tiše vybrala.';
 
   @override
   String get tourSquadTitle => 'Všichni, koho můžete vzít';
@@ -7158,7 +7193,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get tourCupsBody =>
-      'Všechny soutěže, které právě běží — skupiny, tabulky i vyřazovací fáze — včetně těch, kde nejste. Svět hraje dál, ať jste postoupili nebo ne.';
+      'Všechny soutěže, které právě běží: skupiny, tabulky i vyřazovací fáze, včetně těch, kde nejste. Svět hraje dál, ať jste postoupili nebo ne.';
 
   @override
   String get settingsTourTitle => 'Spustit tutoriál znovu';
@@ -7186,11 +7221,11 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get tourPlaystyleBody =>
-      'Rozestavení je jen půlka taktiky. Tohle je ta druhá — jak vysoko napadáte, jak přímočaře hrajete, kolik riskujete.';
+      'Rozestavení je jen půlka taktiky. Tohle je ta druhá: jak vysoko napadáte, jak přímočaře hrajete, kolik riskujete.';
 
   @override
   String get settingsTourNoSave =>
-      'Nejdřív si založte kariéru — průvodce prochází vaše vlastní obrazovky.';
+      'Nejdřív si založte kariéru. Průvodce prochází vaše vlastní obrazovky.';
 
   @override
   String tacticsOutOfPositionAge(int age) {
@@ -7244,7 +7279,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get settingsFreeScopeBlurb =>
-      'Celý cyklus — kvalifikace, kontinentální šampionát i mistrovství světa — bez jakéhokoli omezení. Pokračovat s uloženou hrou dál je jednorázová platba, jednou, a platí pro všechny uložené hry i všechny budoucí aktualizace.';
+      'Celý cyklus (kvalifikace, kontinentální šampionát i mistrovství světa) bez jakéhokoli omezení. Pokračovat s uloženou hrou dál je jednorázová platba, jednou, a platí pro všechny uložené hry i všechny budoucí aktualizace.';
 
   @override
   String get settingsUnlockedTitle => 'Odemčeno';
@@ -7252,4 +7287,36 @@ class AppLocalizationsCs extends AppLocalizations {
   @override
   String get settingsUnlockedBlurb =>
       'Neomezené kariéry, všechny národy, deset pozic pro uložení a všechny budoucí aktualizace. Děkujeme.';
+
+  @override
+  String friendliesLikeYourCampaign(String rivals) {
+    return 'Nahoře jsou týmy podobné soupeřům, kteří vás ještě čekají: $rivals.';
+  }
+
+  @override
+  String get friendliesCloseToYou =>
+      'Nahoře jsou týmy nejblíž vám ve světovém žebříčku. Až vás vylosují, budou vybírány podle vaší skupiny.';
+
+  @override
+  String transfersMoves(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count přestupů',
+      few: '$count přestupy',
+      one: '1 přestup',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String transfersRange(int from, int to, int total) {
+    return '$from–$to z $total';
+  }
+
+  @override
+  String get transfersNewer => 'Novější';
+
+  @override
+  String get transfersOlder => 'Další';
 }

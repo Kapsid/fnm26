@@ -44,11 +44,11 @@ extension PlayerRoleX on PlayerRole {
   /// One-line description of what the role does.
   String get blurb => switch (this) {
     PlayerRole.none => 'Plays their natural game.',
-    PlayerRole.targetMan => 'Wins headers, lays it off — assists & set pieces.',
-    PlayerRole.poacher => 'Lurks in the box — many more goals.',
-    PlayerRole.playmaker => 'Creates chances — far more assists.',
+    PlayerRole.targetMan => 'Wins headers, lays it off. Assists and set pieces.',
+    PlayerRole.poacher => 'Lurks in the box. Many more goals.',
+    PlayerRole.playmaker => 'Creates chances. Far more assists.',
     PlayerRole.ballWinner => 'Breaks up play rather than finishing it.',
-    PlayerRole.invertedWinger => 'Cuts inside to shoot — more goals.',
+    PlayerRole.invertedWinger => 'Cuts inside to shoot. More goals.',
     PlayerRole.ballPlayingDefender => 'Starts moves from the back.',
   };
 

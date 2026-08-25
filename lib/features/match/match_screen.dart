@@ -255,8 +255,21 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
   @override
   void initState() {
     super.initState();
-    // Restore the playback speed chosen in a previous match this session.
+    // Restore the playback speed chosen in a previous match this session...
     _speedIdx = ref.read(matchSpeedProvider);
+    // ...and, if this is the first match of the session, the one this CAREER
+    // was last watched at. Async, so the match starts at the session speed and
+    // corrects itself a frame later rather than waiting on a disk read.
+    unawaited(
+      ref
+          .read(matchSpeedStoreProvider)
+          .load(widget.careerId, stepCount: _speeds.length)
+          .then((saved) {
+            if (!mounted || saved == _speedIdx) return;
+            setState(() => _speedIdx = saved);
+            ref.read(matchSpeedProvider.notifier).state = saved;
+          }),
+    );
   }
 
   @override
@@ -812,6 +825,11 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
     setState(() => _speedIdx = (_speedIdx + 1) % _speeds.length);
     // Remember the choice for the next match this session.
     ref.read(matchSpeedProvider.notifier).state = _speedIdx;
+    // Remembered for the next time this career is opened, not just the next
+    // match of this session.
+    unawaited(
+      ref.read(matchSpeedStoreProvider).save(widget.careerId, _speedIdx),
+    );
     if (_playing) _restartTimer();
   }
 

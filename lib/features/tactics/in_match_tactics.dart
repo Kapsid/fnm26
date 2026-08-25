@@ -643,22 +643,17 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
                         : null,
                   ),
                 ),
+                // Age, and only age. The row ALREADY says he is out of
+                // position twice over: the leading chip names the position he
+                // actually plays, and the trailing rating is docked and amber
+                // with his real overall in brackets behind it. Saying it a
+                // third time in amber words made the row shout, and the amber
+                // that matters — the number the match is decided on — stopped
+                // standing out for being one of three.
                 subtitle: Text(
-                  // The role is already on the row as the leading chip, so
-                  // repeating it in words bought nothing and cost the age,
-                  // which was pushed off the end. Out of position is the one
-                  // case where naming the role IS the message.
-                  // Neither branch names the role: the leading chip already
-                  // shows it, and the heading above says which slot is being
-                  // filled, so the mismatch is on the row twice over before a
-                  // word is spent on it.
-                  penalised
-                      ? l.tacticsOutOfPositionAge(p.age)
-                      : l.tacticsAgeOnly(p.age),
+                  l.tacticsAgeOnly(p.age),
                   style: AppTypography.labelSmall.copyWith(
-                    color: penalised
-                        ? AppColors.warning
-                        : AppColors.onSurfaceVariant,
+                    color: AppColors.onSurfaceVariant,
                   ),
                 ),
                 trailing: Row(

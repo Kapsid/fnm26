@@ -129,6 +129,59 @@ void main() {
     });
   });
 
+  group('YFeed.endOfCampaign', () {
+    // Every one of these templates had full copy in English and Czech, its own
+    // tests, and no caller anywhere in the app: a manager could win the World
+    // Cup and the feed would post four reports about the final and not a word
+    // about the trophy.
+    YMilestone? end(String? round, {required bool won}) => YFeed.endOfCampaign(
+      round: round,
+      competition: 'World Championship',
+      won: won,
+      date: DateTime(2030, 7, 14),
+      key: 'cmp:9',
+    );
+
+    test('winning the final is a trophy, losing it is a runners-up medal', () {
+      expect(end('FINAL', won: true)?.template, YTemplate.trophy);
+      expect(end('FINAL', won: false)?.template, YTemplate.runnerUp);
+    });
+
+    test('a continental or Nations Cup final counts the same', () {
+      expect(end('CFINAL', won: true)?.template, YTemplate.trophy);
+      expect(end('NFINAL', won: false)?.template, YTemplate.runnerUp);
+    });
+
+    test('any other last round of a finals tournament is an exit', () {
+      for (final round in ['GROUP', 'R32', 'R16', 'QF', 'SF', '3RD']) {
+        expect(
+          end(round, won: false)?.template,
+          YTemplate.eliminated,
+          reason: 'a campaign that ends at $round ended in an exit',
+        );
+      }
+    });
+
+    test('a friendly and an uncoded qualifier end no campaign', () {
+      // World Cup qualifiers carry no round code at all, and a qualifying
+      // campaign ending is a place booked or a miss — never an elimination.
+      expect(end(null, won: false), isNull);
+      expect(end('FRIENDLY', won: true), isNull);
+      expect(end('CQ', won: false), isNull);
+    });
+
+    test('the trophy and the exit are keyed apart', () {
+      expect(
+        end('FINAL', won: true)?.key,
+        isNot(end('SF', won: false)?.key),
+      );
+    });
+
+    test('the competition is named, so the post can say which one', () {
+      expect(end('FINAL', won: true)?.args, ['World Championship']);
+    });
+  });
+
   group('YFeed.forEvent', () {
     test('a one-off event still produces a post', () {
       final p = YFeed.forEvent(

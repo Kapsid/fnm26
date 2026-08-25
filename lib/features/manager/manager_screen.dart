@@ -4,9 +4,6 @@ import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/domain/services/manager/manager_skills.dart';
-import 'package:fnm/domain/services/manager/staff.dart';
-import 'package:fnm/features/federation/investment_editor.dart'
-    show formatEuros;
 import 'package:fnm/features/federation/staff_card.dart';
 import 'package:fnm/features/manager/manager_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
@@ -111,6 +108,16 @@ class _SkillsCard extends ConsumerWidget {
               color: AppColors.onSurfaceVariant,
             ),
           ),
+          // What the numbers on the bars MEAN. Four levels on a twenty-point
+          // scale, all starting at five, is not readable from the bars alone —
+          // and a manager deciding where to put a permanent point should be
+          // told it is permanent before he taps.
+          Text(
+            l.managerSkillsScale,
+            style: AppTypography.labelSmall.copyWith(
+              color: AppColors.onSurfaceVariant,
+            ),
+          ),
           const SizedBox(height: AppSpacing.md),
           for (final skill in ManagerSkill.values) ...[
             _SkillRow(
@@ -157,13 +164,15 @@ class _SkillRow extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(name, style: AppTypography.bodyMedium),
+            const SizedBox(height: 2),
             Text(
               blurb,
               style: AppTypography.labelSmall.copyWith(
                 color: AppColors.onSurfaceVariant,
+                height: 1.3,
               ),
             ),
-            const SizedBox(height: AppSpacing.xs),
+            const SizedBox(height: AppSpacing.sm),
             // The bar reads at a glance; the number is there because a
             // twenty-point scale is not readable from a bar alone.
             ClipRRect(

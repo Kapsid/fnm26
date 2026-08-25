@@ -9,7 +9,6 @@ import 'package:fnm/domain/services/competition/continental_cups.dart';
 import 'package:fnm/domain/services/competition/hosts.dart';
 import 'package:fnm/domain/services/competition/kickoff_keys.dart';
 import 'package:fnm/domain/services/squad/nomination.dart';
-import 'package:fnm/domain/services/press/press.dart';
 import 'package:fnm/features/press/press_providers.dart';
 import 'package:fnm/features/squad/grievance_providers.dart';
 
@@ -19,6 +18,7 @@ import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/federation/budget_setup_screen.dart';
 import 'package:fnm/features/friendlies/friendlies_providers.dart';
 import 'package:fnm/features/hub/hub_providers.dart';
+import 'package:fnm/features/manager/manager_providers.dart';
 import 'package:fnm/features/settings/settings_providers.dart';
 import 'package:fnm/features/squad/training_camp_providers.dart';
 import 'package:fnm/features/tournaments/finals_draw_providers.dart';
@@ -54,6 +54,9 @@ enum HubEventKind {
 
   /// A player wants a word.
   grievance,
+
+  /// Points to spend on the manager's own skills, offered once a cycle.
+  managerSkills,
 
   /// Choosing the squad's base camp in the host country, before a tournament's
   /// opening ceremony.
@@ -100,6 +103,11 @@ const worldCupQualDrawKind = 'wcQualDraw';
 
 /// Watched-draw key for the continental championship (finals) group draw.
 const continentalFinalsDrawKind = 'contFinalsDraw';
+
+/// Watched key for the once-a-cycle prompt to spend manager skill points.
+/// Stamped when the prompt is TAKEN rather than when points are spent — see
+/// where it is offered for why.
+const skillsPromptKind = 'skillsPrompt';
 
 /// Watched key for the intercontinental play-off reveal (fires once, after
 /// qualifying and before the finals draw).
@@ -210,6 +218,29 @@ nextEventProvider = FutureProvider.autoDispose.family<HubEvent, int>((
       route: '${Routes.budgetSetup}?careerId=$careerId',
       subtitle: l.hubEventSetBudgetSub,
     );
+  }
+
+  // 1a-ii. Points to spend on the manager himself. Two arrive at the end of
+  //         every cycle and one with every trophy, and NOTHING ever said so:
+  //         the manager page is reachable from a menu, so a manager who never
+  //         opened it banked points for a decade and played the whole save
+  //         with the skills he started with. It sits beside the budget because
+  //         it is the same decision about a different pot.
+  //
+  //         Marked seen the moment it is offered, so it is a prompt and not a
+  //         toll: a manager who would rather save his points is not asked
+  //         again until the next cycle turns.
+  if (!await comp.hasWatchedDraw(careerId, cycle, skillsPromptKind)) {
+    final manager = await ref.watch(managerViewProvider(careerId).future);
+    if (manager != null && manager.pointsAvailable > 0) {
+      return HubEvent(
+        kind: HubEventKind.managerSkills,
+        label: l.hubEventManagerSkills(manager.pointsAvailable),
+        icon: Icons.school_rounded,
+        route: '${Routes.manager}?careerId=$careerId',
+        subtitle: l.hubEventManagerSkillsSub,
+      );
+    }
   }
 
   // 1b. A foreign player is asking to naturalise — a one-time decision the

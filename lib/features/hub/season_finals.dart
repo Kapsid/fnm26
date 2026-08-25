@@ -246,6 +246,14 @@ extension SeasonFinals on SeasonService {
       rankingById: rankingById,
       rngSeed: career.rngSeed ^ (career.cyclePointer * 0x2D31),
       hosts: hosts,
+      // Keeps a group from being two-thirds one continent. The World Cup is
+      // the only draw in the game with a mixed field, so it is the only one
+      // that has anything to separate — see `confederationCaps`. The draw
+      // ceremony passes the same map, because it re-runs this call to animate
+      // what was persisted here and the two must not diverge.
+      confederationById: {
+        for (final n in nations.values) n.id: n.confederation,
+      },
     );
     if (draw.groups.isEmpty) return;
 

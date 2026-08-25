@@ -208,7 +208,7 @@
   "@teamTalkCalmLabel": {
     "description": "Team-talk tone button label."
   },
-  "teamTalkCalmBlurb": "Steady the side — a small all-round lift.",
+  "teamTalkCalmBlurb": "Steady the side. A small all-round lift.",
   "@teamTalkCalmBlurb": {
     "description": "Team-talk tone description."
   },
@@ -224,7 +224,7 @@
   "@teamTalkDemandMoreLabel": {
     "description": "Team-talk tone button label."
   },
-  "teamTalkDemandMoreBlurb": "Throw everything at it — attack hard.",
+  "teamTalkDemandMoreBlurb": "Throw everything at it. Attack hard.",
   "@teamTalkDemandMoreBlurb": {
     "description": "Team-talk tone description."
   },
@@ -240,7 +240,7 @@
   "@teamTalkBelieveLabel": {
     "description": "Team-talk tone button label."
   },
-  "teamTalkBelieveBlurb": "Back yourselves — lift both ends of the pitch.",
+  "teamTalkBelieveBlurb": "Back yourselves. A lift at both ends of the pitch.",
   "@teamTalkBelieveBlurb": {
     "description": "Team-talk tone description."
   },
@@ -248,7 +248,7 @@
   "@teamTalkFocusLabel": {
     "description": "Team-talk tone button label."
   },
-  "teamTalkFocusBlurb": "Total concentration — lock the game down.",
+  "teamTalkFocusBlurb": "Total concentration. Lock the game down.",
   "@teamTalkFocusBlurb": {
     "description": "Team-talk tone description."
   },
@@ -256,7 +256,7 @@
   "@teamTalkUrgencyLabel": {
     "description": "Team-talk tone button label."
   },
-  "teamTalkUrgencyBlurb": "Chase it down now — go all-out, leave gaps.",
+  "teamTalkUrgencyBlurb": "Chase it down now. All-out, and it leaves gaps.",
   "@teamTalkUrgencyBlurb": {
     "description": "Team-talk tone description."
   },
@@ -691,7 +691,7 @@
       }
     }
   },
-  "tacticsSentOffNote": "{names} sent off — no replacement, you play a man down.",
+  "tacticsSentOffNote": "{names} sent off. No replacement, so you play a man down.",
   "@tacticsSentOffNote": {
     "description": "In-match tactics: names the player(s) sent off, who cannot be substituted.",
     "placeholders": {
@@ -970,7 +970,7 @@
   "@tacticsPreviousSquad": {
     "description": "Button that restores the previously named squad."
   },
-  "tacticsSquadLockedBack": "Squad locked — back",
+  "tacticsSquadLockedBack": "Back (squad locked)",
   "@tacticsSquadLockedBack": {
     "description": "Button shown when the squad is locked; returns to the previous screen."
   },
@@ -978,7 +978,7 @@
   "@tacticsConfirmSquad": {
     "description": "Button that confirms and saves the picked squad."
   },
-  "tacticsSquadFullMax": "Squad full — max {max}",
+  "tacticsSquadFullMax": "Squad full (max {max})",
   "@tacticsSquadFullMax": {
     "description": "Snackbar when trying to add past the squad limit.",
     "placeholders": {
@@ -992,7 +992,7 @@
   "@tacticsSquadLocked": {
     "description": "Banner heading when the squad cannot be changed."
   },
-  "tacticsNominationOpen": "NOMINATION OPEN — PICK YOUR SQUAD",
+  "tacticsNominationOpen": "NOMINATION OPEN. PICK YOUR SQUAD",
   "@tacticsNominationOpen": {
     "description": "Banner heading when the nomination window is open."
   },
@@ -1334,7 +1334,7 @@
       }
     }
   },
-  "tacticsPlayerOut": "{name} — {reason}",
+  "tacticsPlayerOut": "{name}: {reason}",
   "@tacticsPlayerOut": {
     "description": "An unavailable player and the reason they are out.",
     "placeholders": {
@@ -1786,7 +1786,7 @@
   "@hubEventReshapeXi": {
     "description": "Hub action: fix the starting XI after a ban/injury."
   },
-  "hubEventReshapeOutSub": "{count, plural, =1{1 of your XI is out (suspended or injured) — pick their replacement} other{{count} of your XI are out (suspended or injured) — pick their replacements}}",
+  "hubEventReshapeOutSub": "{count, plural, =1{1 of your XI is out (suspended or injured). Pick their replacement} other{{count} of your XI are out (suspended or injured). Pick their replacements}}",
   "@hubEventReshapeOutSub": {
     "description": "Hub subtitle: XI players unavailable.",
     "placeholders": {
@@ -1795,7 +1795,7 @@
       }
     }
   },
-  "hubEventReshapeShortSub": "{count, plural, =1{Your starting XI is short — fill the open slot} other{Your starting XI is short — fill the open slots}}",
+  "hubEventReshapeShortSub": "{count, plural, =1{Your starting XI is short. Fill the open slot} other{Your starting XI is short. Fill the open slots}}",
   "@hubEventReshapeShortSub": {
     "description": "Hub subtitle: XI not full.",
     "placeholders": {
@@ -1973,7 +1973,7 @@
   "@hubManageTeam": {
     "description": "Button to open team management."
   },
-  "hubGroupsToBeDrawn": "Groups to be drawn — watch the draw to reveal them.",
+  "hubGroupsToBeDrawn": "Groups to be drawn. Watch the draw to reveal them.",
   "@hubGroupsToBeDrawn": {
     "description": "Shown before the group draw has happened."
   },
@@ -2272,7 +2272,7 @@
   "@careerStatGoalDiffShort": {
     "description": "Abbreviated stat: goal difference."
   },
-  "careerNoSilverware": "No silverware yet — go win one.",
+  "careerNoSilverware": "No silverware yet. Go win one.",
   "@careerNoSilverware": {
     "description": "Empty state for the trophy cabinet."
   },
@@ -2334,7 +2334,7 @@
   "@careerSlotsFull": {
     "description": "Shown when all save slots are used."
   },
-  "careerSlotsFullGoPro": "Slots full — go Pro for 10",
+  "careerSlotsFullGoPro": "Slots full. Go Pro for 10",
   "@careerSlotsFullGoPro": {
     "description": "Shown when slots are full, prompting Pro."
   },
@@ -2847,15 +2847,19 @@
   "@resultsStageThirdPlace": {
     "description": "Stage label: the third-place play-off."
   },
-  "matchSetupWarnCaptain": "No captain named — tap to give somebody the armband",
+  "matchSetupWarnCaptain": "No captain named. Tap to give somebody the armband",
   "@matchSetupWarnCaptain": {
     "description": "Pre-match warning that no captain has been chosen."
   },
-  "matchSetupWarnSetPieces": "No set-piece takers named — tap to choose who steps up",
+  "matchSetupWarnCaptainOut": "Your captain cannot play this one. Tap to give somebody else the armband",
+  "@matchSetupWarnCaptainOut": {
+    "description": "Pre-match warning: a captain is named but is injured, suspended or not in the squad."
+  },
+  "matchSetupWarnSetPieces": "No set-piece takers named. Tap to choose who steps up",
   "@matchSetupWarnSetPieces": {
     "description": "Pre-match warning that no penalty or dead-ball taker has been chosen."
   },
-  "matchSetupWarnBoth": "No captain and no set-piece takers — tap to set them",
+  "matchSetupWarnBoth": "No captain and no set-piece takers. Tap to set them",
   "@matchSetupWarnBoth": {
     "description": "Pre-match warning that neither the armband nor the set-piece takers have been chosen."
   },
@@ -3091,7 +3095,7 @@
   "@captainArmband": {
     "description": "The captain's armband badge on a squad row. A single letter."
   },
-  "captainCurrent": "Captain — tap to remove the armband",
+  "captainCurrent": "Captain. Tap to remove the armband",
   "@captainCurrent": {
     "description": "Tooltip on the armband of the player who is currently captain."
   },
@@ -3740,7 +3744,7 @@
   "@paywallBenefitEndless": {
     "description": "Paywall benefit line."
   },
-  "paywallUnlocked": "Premium is unlocked — enjoy!",
+  "paywallUnlocked": "Premium is unlocked. Enjoy!",
   "@paywallUnlocked": {
     "description": "Shown on the paywall once premium is already unlocked."
   },
@@ -3890,7 +3894,7 @@
       }
     }
   },
-  "federationOverBudget": "{amount} more than the federation has — take some back",
+  "federationOverBudget": "{amount} more than the federation has. Take some back",
   "@federationOverBudget": {
     "description": "Shown when departments plus staff wages exceed the budget.",
     "placeholders": {
@@ -3962,6 +3966,18 @@
   "federationBalance": "FEDERATION BALANCE",
   "@federationBalance": {
     "description": "Label above the cash balance figure."
+  },
+  "federationCommittedToStaff": "Committed to staff",
+  "@federationCommittedToStaff": {
+    "description": "Finances: the part of the balance already promised to staff wages, paid at the end of the cycle."
+  },
+  "federationFreeToSpend": "Free to spend",
+  "@federationFreeToSpend": {
+    "description": "Finances: the part of the balance not already promised to anybody."
+  },
+  "federationWagesNote": "Wages come off the balance at the end of the cycle, so this much is spoken for.",
+  "@federationWagesNote": {
+    "description": "Finances: why part of the balance cannot be invested."
   },
   "federationInvestAtCeremony": "Invest for next season at the end-of-cycle ceremony.",
   "@federationInvestAtCeremony": {
@@ -4065,7 +4081,7 @@
       }
     }
   },
-  "nationsNotEnoughHistory": "Not enough history yet — check back after a cycle or two.",
+  "nationsNotEnoughHistory": "Not enough history yet. Check back after a cycle or two.",
   "@nationsNotEnoughHistory": {
     "description": "Empty state when there isn't enough ranking history yet."
   },
@@ -4226,6 +4242,10 @@
   "@playerClub": {
     "description": "Heading over the player's club."
   },
+  "playerClubRole": "At his club",
+  "@playerClubRole": {
+    "description": "Player detail: label for how much football the player gets at his club."
+  },
   "playerPosition": "Position",
   "@playerPosition": {
     "description": "Label: player position."
@@ -4257,6 +4277,18 @@
   "clubFrozenOut": "Not playing",
   "@clubFrozenOut": {
     "description": "Club standing: frozen out."
+  },
+  "clubAtClub": "{club}: {standing}",
+  "@clubAtClub": {
+    "description": "Call-up row: a player's standing AT HIS CLUB, so \"Barely playing\" cannot be read as his standing with the national side.",
+    "placeholders": {
+      "club": {
+        "type": "String"
+      },
+      "standing": {
+        "type": "String"
+      }
+    }
   },
   "yWinUpset0": "I have watched football for thirty years and I did not see that coming. {opponent} beaten {score}.",
   "@yWinUpset0": {
@@ -4402,7 +4434,7 @@
       }
     }
   },
-  "yDrew0": "{score} with {opponent}. Two points dropped or one gained — pick your mood.",
+  "yDrew0": "{score} with {opponent}. Two points dropped or one gained. Pick your mood.",
   "@yDrew0": {
     "description": "Y post: drew, variant 0.",
     "placeholders": {
@@ -4564,7 +4596,7 @@
       }
     }
   },
-  "yTrophy2": "{opponent} — and the trophy is coming home.",
+  "yTrophy2": "{opponent}, and the trophy is coming home.",
   "@yTrophy2": {
     "description": "Y post: trophy, variant 2.",
     "placeholders": {
@@ -4823,6 +4855,19 @@
   "@hubEventGrievanceSub": {
     "description": "Player agency: hubEventGrievanceSub."
   },
+  "hubEventManagerSkills": "{count, plural, =1{1 skill point to spend} other{{count} skill points to spend}}",
+  "@hubEventManagerSkills": {
+    "description": "Hub event: the once-a-cycle prompt to raise the manager's own skills.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "hubEventManagerSkillsSub": "What you are good at makes your side better",
+  "@hubEventManagerSkillsSub": {
+    "description": "Hub event subtitle: why the manager should spend his points."
+  },
   "grievanceTitle": "A word in your office",
   "@grievanceTitle": {
     "description": "Player agency: grievanceTitle."
@@ -4941,7 +4986,7 @@
       }
     }
   },
-  "yWinStreak3": "No defeats in {count}. Ask anyone who has managed — that is the hard part.",
+  "yWinStreak3": "No defeats in {count}. Ask anyone who has managed: that is the hard part.",
   "@yWinStreak3": {
     "description": "Y post remarking on a run of wins. Variant 3.",
     "placeholders": {
@@ -4986,7 +5031,7 @@
       }
     }
   },
-  "yRivalry0": "{opponent} {score}. Say what you like about the football — this one counts double.",
+  "yRivalry0": "{opponent} {score}. Say what you like about the football. This one counts double.",
   "@yRivalry0": {
     "description": "Y post about a result against a rival nation. Variant 0.",
     "placeholders": {
@@ -5996,11 +6041,11 @@
   "@tourContPlayoffIntro": {
     "description": "Intro explaining the intercontinental play-off."
   },
-  "tourContPlayoffThrough": "You came through the play-off — you're at the World Cup!",
+  "tourContPlayoffThrough": "You came through the play-off. You're at the World Cup!",
   "@tourContPlayoffThrough": {
     "description": "Shown when the manager wins the play-off."
   },
-  "tourContPlayoffOut": "You fell short in the play-off — no World Cup this time.",
+  "tourContPlayoffOut": "You fell short in the play-off. No World Cup this time.",
   "@tourContPlayoffOut": {
     "description": "Shown when the manager loses the play-off."
   },
@@ -6012,7 +6057,7 @@
   "@tourContPlayoffFinals": {
     "description": "Heading: play-off finals."
   },
-  "tourContPlayoffSeeded": "Seeded — bye",
+  "tourContPlayoffSeeded": "Seeded (bye)",
   "@tourContPlayoffSeeded": {
     "description": "Tag on the two top-ranked play-off teams that skip the semi-finals and enter a path final directly."
   },
@@ -6133,7 +6178,7 @@
   "@tourCupFinalsDrawnAfterQual": {
     "description": "World Cup detail: tourCupFinalsDrawnAfterQual"
   },
-  "tourCupFinalsDrawSoon": "Groups to be drawn — watch the World Cup draw from the hub to reveal them.",
+  "tourCupFinalsDrawSoon": "Groups to be drawn. Watch the World Cup draw from the hub to reveal them.",
   "@tourCupFinalsDrawSoon": {
     "description": "World Cup detail: tourCupFinalsDrawSoon"
   },
@@ -6184,7 +6229,7 @@
   "@tourCupMostTitles": {
     "description": "World Cup detail: tourCupMostTitles"
   },
-  "tourCupMostTitlesValue": "{nation} — {titles} titles from {editions} editions",
+  "tourCupMostTitlesValue": "{nation}: {titles} titles from {editions} editions",
   "@tourCupMostTitlesValue": {
     "description": "World Cup detail: tourCupMostTitlesValue",
     "placeholders": {
@@ -6219,7 +6264,7 @@
   "@tourCupPlayoffIntro": {
     "description": "World Cup detail: tourCupPlayoffIntro"
   },
-  "tourCupQualDrawSoon": "Groups to be drawn — watch the qualifying draw from the hub to reveal them.",
+  "tourCupQualDrawSoon": "Groups to be drawn. Watch the qualifying draw from the hub to reveal them.",
   "@tourCupQualDrawSoon": {
     "description": "World Cup detail: tourCupQualDrawSoon"
   },
@@ -6272,7 +6317,7 @@
   "@traitSetPiece": {
     "description": "Trait name: dead-ball delivery."
   },
-  "traitSetPieceBlurb": "Better delivery — more goals from dead balls.",
+  "traitSetPieceBlurb": "Better delivery, and more goals from dead balls.",
   "@traitSetPieceBlurb": {
     "description": "Trait effect."
   },
@@ -6312,7 +6357,7 @@
   "@traitPacey": {
     "description": "Trait name: quick."
   },
-  "traitPaceyBlurb": "Blistering pace — a threat in behind.",
+  "traitPaceyBlurb": "Blistering pace, a threat in behind.",
   "@traitPaceyBlurb": {
     "description": "Trait effect."
   },
@@ -6506,7 +6551,7 @@
   "@boardObjectivesConfidence": {
     "description": "Label above the board-confidence verdict."
   },
-  "boardObjectiveBeatenBy": "{result} — {rounds, plural, =1{a round better than asked} other{{rounds} rounds better than asked}}",
+  "boardObjectiveBeatenBy": "{result}: {rounds, plural, =1{a round better than asked} other{{rounds} rounds better than asked}}",
   "@boardObjectiveBeatenBy": {
     "description": "A settled objective the nation beat, and by how many rounds.",
     "placeholders": {
@@ -6518,7 +6563,7 @@
       }
     }
   },
-  "boardObjectiveShortBy": "{result} — {rounds, plural, =1{a round short} other{{rounds} rounds short}}",
+  "boardObjectiveShortBy": "{result}: {rounds, plural, =1{a round short} other{{rounds} rounds short}}",
   "@boardObjectiveShortBy": {
     "description": "A settled objective the nation missed, and by how many rounds.",
     "placeholders": {
@@ -6681,7 +6726,7 @@
   "@u21Title": {
     "description": "Title of the youth watchlist screen."
   },
-  "u21Blurb": "The next generation, best prospect first. Hollow stars are a scout's estimate — cap a player to find out what he really has.",
+  "u21Blurb": "The next generation, best prospect first. Hollow stars are a scout's estimate. Cap a player to find out what he really has.",
   "@u21Blurb": {
     "description": "Explains the watchlist and its star ratings."
   },
@@ -6846,7 +6891,7 @@
   "@tacticsPlaystyleBlurb": {
     "description": "Blurb under the playing style selector."
   },
-  "tacticsPlaystyleCustom": "Your own settings — no named style matches these dials.",
+  "tacticsPlaystyleCustom": "Your own settings. No named style matches these dials.",
   "@tacticsPlaystyleCustom": {
     "description": "Shown when the instructions match no named style."
   },
@@ -6926,7 +6971,7 @@
   "@bottomStartHeading": {
     "description": "Heading on the unemployed-start screen."
   },
-  "bottomStartBlurb": "You have no job and no reputation. These are the only sides willing to take a chance on you — take one and build something from nothing.",
+  "bottomStartBlurb": "You have no job and no reputation. These are the only sides willing to take a chance on you. Take one and build something from nothing.",
   "@bottomStartBlurb": {
     "description": "Blurb explaining the from-the-bottom start."
   },
@@ -6999,7 +7044,7 @@
   "@campTerrainNationalCentre": {
     "description": "Camp terrain: a purpose-built training centre."
   },
-  "campTerrainCityBlurb": "Everything on the doorstep and nothing to travel to — but no peace, and no escape from the noise.",
+  "campTerrainCityBlurb": "Everything on the doorstep and nothing to travel to, but no peace and no escape from the noise.",
   "@campTerrainCityBlurb": {
     "description": "Camp terrain blurb: city centre."
   },
@@ -7178,7 +7223,7 @@
       }
     }
   },
-  "pressAskElimination2": "{opponent} end it. Four years of work, gone in ninety minutes — talk us through it.",
+  "pressAskElimination2": "{opponent} end it. Four years of work, gone in ninety minutes. Talk us through it.",
   "@pressAskElimination2": {
     "description": "Press conference line.",
     "placeholders": {
@@ -7208,7 +7253,7 @@
   "@pressAskPreview2": {
     "description": "Press conference line."
   },
-  "pressAskPreview3": "Realistically — group stage, quarters, or more than that?",
+  "pressAskPreview3": "Realistically: group stage, quarters, or more than that?",
   "@pressAskPreview3": {
     "description": "Press conference line."
   },
@@ -7273,7 +7318,7 @@
   "@pressAskQualified2": {
     "description": "Press conference line."
   },
-  "pressAskQualified3": "Qualification secured — now what is this squad actually capable of?",
+  "pressAskQualified3": "Qualification secured. Now what is this squad actually capable of?",
   "@pressAskQualified3": {
     "description": "Press conference line."
   },
@@ -7349,7 +7394,7 @@
   "@pressAnswerDemandMore3": {
     "description": "Press conference line."
   },
-  "pressAnswerRaiseBar2": "No hiding from it — we expect to lift the trophy.",
+  "pressAnswerRaiseBar2": "No hiding from it. We expect to lift the trophy.",
   "@pressAnswerRaiseBar2": {
     "description": "Press conference line."
   },
@@ -7491,7 +7536,7 @@
   "@pressAskPreview5": {
     "description": "Press conference line."
   },
-  "pressAskPreview6": "What would make this a successful tournament — honestly?",
+  "pressAskPreview6": "What would make this a successful tournament, honestly?",
   "@pressAskPreview6": {
     "description": "Press conference line."
   },
@@ -7521,7 +7566,7 @@
       }
     }
   },
-  "pressAskOpening6": "{opponent} to open. Win it and the whole tournament looks different — do you tell them that?",
+  "pressAskOpening6": "{opponent} to open. Win it and the whole tournament looks different. Do you tell them that?",
   "@pressAskOpening6": {
     "description": "Press conference line.",
     "placeholders": {
@@ -7577,7 +7622,7 @@
       }
     }
   },
-  "pressAskBigWin5": "The best performance of your reign — and against {opponent}?",
+  "pressAskBigWin5": "The best performance of your reign, and against {opponent}?",
   "@pressAskBigWin5": {
     "description": "Press conference line.",
     "placeholders": {
@@ -7621,7 +7666,7 @@
   "@pressAskQualified5": {
     "description": "Press conference line."
   },
-  "pressAskQualified6": "A place at the finals — relief or satisfaction?",
+  "pressAskQualified6": "A place at the finals: relief or satisfaction?",
   "@pressAskQualified6": {
     "description": "Press conference line."
   },
@@ -7665,7 +7710,7 @@
   "@pressAskUnbeaten6": {
     "description": "Press conference line."
   },
-  "pressAskUnbeaten7": "When it ends — and it will — how do you want it to end?",
+  "pressAskUnbeaten7": "When it ends, and it will, how do you want it to end?",
   "@pressAskUnbeaten7": {
     "description": "Press conference line."
   },
@@ -7713,7 +7758,7 @@
   "@pressAskRankingPeak8": {
     "description": "Press conference line."
   },
-  "pressAnswerBackPlayers4": "I'll take the questions. They'll take the credit — that's how it works here.",
+  "pressAnswerBackPlayers4": "I'll take the questions. They'll take the credit. That's how it works here.",
   "@pressAnswerBackPlayers4": {
     "description": "Press conference line."
   },
@@ -7773,7 +7818,7 @@
   "@pressAnswerPlayDown6": {
     "description": "Press conference line."
   },
-  "tacticsSubAlreadyOff": "{name} has already been taken off — he cannot come back on.",
+  "tacticsSubAlreadyOff": "{name} has already been taken off and cannot come back on.",
   "@tacticsSubAlreadyOff": {
     "description": "Snackbar when the manager tries to re-use a substituted player.",
     "placeholders": {
@@ -8618,7 +8663,7 @@
       }
     }
   },
-  "msgThroughNote": "These are not a new intake — they are the boys who came in at eleven and have now grown into the senior pool.",
+  "msgThroughNote": "These are not a new intake. They are the boys who came in at eleven and have now grown into the senior pool.",
   "@msgThroughNote": {
     "description": "Line above the academy-graduates table, distinguishing it from the yearly intake."
   },
@@ -8703,7 +8748,7 @@
       }
     }
   },
-  "msgArmbandVacant": " The armband is vacant — name a new captain from the call-up screen.",
+  "msgArmbandVacant": " The armband is vacant. Name a new captain from the call-up screen.",
   "@msgArmbandVacant": {
     "description": "Inbox: appended when the retiree was captain."
   },
@@ -8740,7 +8785,7 @@
       }
     }
   },
-  "hubBanBody": "{name} {how} and is banned for {matches, plural, one{your next match} other{the next {matches} matches}} — they will be unavailable for selection.",
+  "hubBanBody": "{name} {how} and is banned for {matches, plural, one{your next match} other{the next {matches} matches}}. They will be unavailable for selection.",
   "@hubBanBody": {
     "description": "Inbox: suspension body. {how} is one of the hubBanHow* strings.",
     "placeholders": {
@@ -8800,7 +8845,7 @@
   "@hubRunnerUpTitle3": {
     "description": "Inbox: lost a final, headline."
   },
-  "hubRunnerUpBody1": "You reached the {cup} final but lost to {opponent}. So close — silver this time.",
+  "hubRunnerUpBody1": "You reached the {cup} final but lost to {opponent}. So close. Silver this time.",
   "@hubRunnerUpBody1": {
     "description": "Inbox: lost a final, body.",
     "placeholders": {
@@ -8812,7 +8857,7 @@
       }
     }
   },
-  "hubRunnerUpBody2": "Beaten by {opponent} in the {cup} final. Runners-up — agonisingly close.",
+  "hubRunnerUpBody2": "Beaten by {opponent} in the {cup} final. Runners-up, agonisingly close.",
   "@hubRunnerUpBody2": {
     "description": "Inbox: lost a final, body.",
     "placeholders": {
@@ -8932,7 +8977,7 @@
       }
     }
   },
-  "boardObjectiveMetTitle": "Objective met — {comp}",
+  "boardObjectiveMetTitle": "Objective met: {comp}",
   "@boardObjectiveMetTitle": {
     "description": "Inbox: the board's verdict on a cycle objective.",
     "placeholders": {
@@ -8941,7 +8986,7 @@
       }
     }
   },
-  "boardObjectiveMissedTitle": "Objective missed — {comp}",
+  "boardObjectiveMissedTitle": "Objective missed: {comp}",
   "@boardObjectiveMissedTitle": {
     "description": "Inbox: the board's verdict on a cycle objective.",
     "placeholders": {
@@ -8984,7 +9029,7 @@
   "@newsWcMissTitle": {
     "description": "Inbox: failed to qualify for the World Cup."
   },
-  "newsWcMissBody": "You didn't make the {year} World Cup — the qualifying campaign fell short. Four more years.",
+  "newsWcMissBody": "You didn't make the {year} World Cup. The qualifying campaign fell short. Four more years.",
   "@newsWcMissBody": {
     "description": "Inbox: failed to qualify for the World Cup, body.",
     "placeholders": {
@@ -9252,7 +9297,7 @@
       }
     }
   },
-  "newsContMissBody": "You didn't qualify for {cup} — the campaign came up short this time.",
+  "newsContMissBody": "You didn't qualify for {cup}. The campaign came up short this time.",
   "@newsContMissBody": {
     "description": "Inbox: failed to qualify for the continental cup, body.",
     "placeholders": {
@@ -9488,7 +9533,7 @@
   "@pressProbeDressingRoom2": {
     "description": "Press conference: a DressingRoom follow-up question."
   },
-  "pressProbeDressingRoom3": "Demanding it here rather than in there — is that leadership?",
+  "pressProbeDressingRoom3": "Demanding it here rather than in there. Is that leadership?",
   "@pressProbeDressingRoom3": {
     "description": "Press conference: a DressingRoom follow-up question."
   },
@@ -9820,7 +9865,7 @@
   "@yReactionShrug5": {
     "description": "Y feed: a shrug reply under somebody else's post."
   },
-  "tourThirdsUneven": "Groups are uneven — results against each big group's bottom side are dropped, so every team is judged over the same games.",
+  "tourThirdsUneven": "Groups are uneven, so results against each big group's bottom side are dropped and every team is judged over the same games.",
   "@tourThirdsUneven": {
     "description": "Best-third-placed table: why some results are dropped."
   },
@@ -9828,27 +9873,19 @@
   "@gateTitle": {
     "description": "Premium gate: headline at the end of the free cycle."
   },
-  "gateLead": "Four years, a continental championship and a World Cup — that was the free part, and nothing was held back. Carry this save on for a one-off payment.",
+  "gateLead": "Four years, and nothing was held back. Carry this save on for one payment.",
   "@gateLead": {
     "description": "Premium gate: the pitch under the headline."
   },
-  "gateBenefitEndless": "Unlimited careers — every cycle from here on",
+  "gateBenefitEndless": "Every cycle from here on",
   "@gateBenefitEndless": {
     "description": "Premium gate benefit."
   },
-  "gateBenefitNations": "Every nation in the world to manage",
+  "gateBenefitNations": "Every nation in the world",
   "@gateBenefitNations": {
     "description": "Premium gate benefit."
   },
-  "gateBenefitSaves": "10 save slots instead of 3",
-  "@gateBenefitSaves": {
-    "description": "Premium gate benefit."
-  },
-  "gateBenefitUpdates": "Every future update included",
-  "@gateBenefitUpdates": {
-    "description": "Premium gate benefit."
-  },
-  "gateBenefitOffline": "Works offline — no subscription, no ads, no account",
+  "gateBenefitOffline": "No subscription, no ads, no account",
   "@gateBenefitOffline": {
     "description": "Premium gate benefit."
   },
@@ -9868,7 +9905,7 @@
   "@gateExit": {
     "description": "Premium gate: the button that leaves the save."
   },
-  "gateNotChargedYet": "Not connected to payment yet — this button just continues.",
+  "gateNotChargedYet": "Not connected to payment yet. This button just continues.",
   "@gateNotChargedYet": {
     "description": "Premium gate: an honest note while the store is not wired up."
   },
@@ -9908,7 +9945,7 @@
   "@backupCancel": {
     "description": "Dismisses the restore confirmation."
   },
-  "backupExported": "Backup ready — choose where to keep it.",
+  "backupExported": "Backup ready. Choose where to keep it.",
   "@backupExported": {
     "description": "Snackbar after a successful export."
   },
@@ -9981,11 +10018,15 @@
   "@managerPointsHow": {
     "description": "Manager screen: how points are earned."
   },
+  "managerSkillsScale": "Every skill starts at 5 and stops at 20. A point spent is permanent.",
+  "@managerSkillsScale": {
+    "description": "Manager screen: how the skill scale works, above the four skills."
+  },
   "managerSkillManManagement": "Man Management",
   "@managerSkillManManagement": {
     "description": "Manager skill name."
   },
-  "managerSkillManManagementBlurb": "What you say in public and in your office lands harder.",
+  "managerSkillManManagementBlurb": "Each point makes what you say to the press and to your players land 3% harder in the dressing room.",
   "@managerSkillManManagementBlurb": {
     "description": "Manager skill effect."
   },
@@ -9993,7 +10034,7 @@
   "@managerSkillTactical": {
     "description": "Manager skill name."
   },
-  "managerSkillTacticalBlurb": "Your side settles into a new shape faster.",
+  "managerSkillTacticalBlurb": "Each point beds a new formation in 3% faster, so changing shape costs you fewer matches.",
   "@managerSkillTacticalBlurb": {
     "description": "Manager skill effect."
   },
@@ -10001,7 +10042,7 @@
   "@managerSkillYouth": {
     "description": "Manager skill name."
   },
-  "managerSkillYouthBlurb": "More comes out of the academy.",
+  "managerSkillYouthBlurb": "Each point adds 1% to the talent coming out of your academy, on top of what you fund it with.",
   "@managerSkillYouthBlurb": {
     "description": "Manager skill effect."
   },
@@ -10009,7 +10050,7 @@
   "@managerSkillNegotiation": {
     "description": "Manager skill name."
   },
-  "managerSkillNegotiationBlurb": "The federation funds you better.",
+  "managerSkillNegotiationBlurb": "Each point is 2% more money out of the federation, every cycle.",
   "@managerSkillNegotiationBlurb": {
     "description": "Manager skill effect."
   },
@@ -10202,7 +10243,7 @@
   "@tourCupsTitle": {
     "description": "Guided tour string."
   },
-  "tourCupsBody": "Every competition running right now — groups, standings and knockouts — including the ones you are not in. The world keeps playing whether or not you qualified.",
+  "tourCupsBody": "Every competition running right now: groups, standings and knockouts, including the ones you are not in. The world keeps playing whether or not you qualified.",
   "@tourCupsBody": {
     "description": "Guided tour string."
   },
@@ -10234,11 +10275,11 @@
   "@tourPlaystyleTitle": {
     "description": "Guided tour string."
   },
-  "tourPlaystyleBody": "The shape is only half a tactic. This is the other half — how high you press, how direct you are, how much you risk.",
+  "tourPlaystyleBody": "The shape is only half a tactic. This is the other half: how high you press, how direct you are, how much you risk.",
   "@tourPlaystyleBody": {
     "description": "Guided tour string."
   },
-  "settingsTourNoSave": "Start a career first — the walk through visits your own screens.",
+  "settingsTourNoSave": "Start a career first. The walk through visits your own screens.",
   "@settingsTourNoSave": {
     "description": "Guided tour string."
   },
@@ -10327,7 +10368,7 @@
   "@settingsFreeScopeTitle": {
     "description": "Settings: what the free game covers."
   },
-  "settingsFreeScopeBlurb": "A complete cycle — qualifying, a continental championship and a World Cup — with nothing held back. Carrying a save on past it is a single payment, once, and it covers every save and every future update.",
+  "settingsFreeScopeBlurb": "A complete cycle (qualifying, a continental championship and a World Cup) with nothing held back. Carrying a save on past it is a single payment, once, and it covers every save and every future update.",
   "@settingsFreeScopeBlurb": {
     "description": "Settings: what the free game covers."
   },
@@ -10338,5 +10379,50 @@
   "settingsUnlockedBlurb": "Unlimited careers, every nation, ten save slots and every future update. Thank you.",
   "@settingsUnlockedBlurb": {
     "description": "Settings: what the free game covers."
+  },
+  "friendliesLikeYourCampaign": "Suggested first: sides who play like {rivals}, who you still have to face.",
+  "@friendliesLikeYourCampaign": {
+    "description": "Friendlies: why these opponents are suggested first, when the group is a qualifying campaign rather than a finals draw.",
+    "placeholders": {
+      "rivals": {
+        "type": "String"
+      }
+    }
+  },
+  "friendliesCloseToYou": "Suggested first: the sides closest to you in the world ranking. Once you are drawn, they are picked to resemble your group.",
+  "@friendliesCloseToYou": {
+    "description": "Friendlies: why these opponents are suggested first, before anything is drawn."
+  },
+  "transfersMoves": "{count, plural, =1{1 move} other{{count} moves}}",
+  "@transfersMoves": {
+    "description": "Transfer report: how many moves the window held.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "transfersRange": "{from}–{to} of {total}",
+  "@transfersRange": {
+    "description": "Transfer report: which slice of the moves is on screen.",
+    "placeholders": {
+      "from": {
+        "type": "int"
+      },
+      "to": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "transfersNewer": "Newer",
+  "@transfersNewer": {
+    "description": "Transfer report: previous page of moves."
+  },
+  "transfersOlder": "More",
+  "@transfersOlder": {
+    "description": "Transfer report: next page of moves."
   }
 }

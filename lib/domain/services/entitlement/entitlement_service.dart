@@ -68,7 +68,7 @@ class EntitlementService {
     _setFlow(PurchaseFlowState.loading);
     final details = await product();
     if (details == null) {
-      lastError = 'The store is unavailable right now — try again later.';
+      lastError = 'The store is unavailable right now. Try again later.';
       _setFlow(PurchaseFlowState.error);
       return false;
     }

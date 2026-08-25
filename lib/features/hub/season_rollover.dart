@@ -224,11 +224,6 @@ extension SeasonRollover on SeasonService {
           (p, beforeById[p.id]!),
     ]..sort((a, b) => b.$1.value.compareTo(a.$1.value));
 
-    // The country a club plays in, for naming a move that crosses a border.
-    final byCode = {
-      for (final n in (await _nationsById()).values) n.code.toLowerCase(): n,
-    };
-
     // ONE message for the window, not one per player.
     //
     // Moves used to arrive as separate items capped at three, so a manager
@@ -241,6 +236,12 @@ extension SeasonRollover on SeasonService {
         for (final m in moves)
           () {
             final (p, was) = m;
+            // Which way the move went between league tiers. A club name says
+            // nothing about that to anybody who does not already know the
+            // leagues, and it is the thing a manager actually wants read off
+            // the line: 1 is elite, 5 is lower, so a SMALLER tier is a step UP.
+            final from = ClubService.tierOfCountry(was.clubCountry);
+            final to = ClubService.tierOfCountry(p.clubCountry);
             return (
               name: p.name,
               position: p.position.label,
@@ -248,6 +249,9 @@ extension SeasonRollover on SeasonService {
               to: p.club,
               fee: _feeLabel(_transferFee(p)),
               abroad: was.clubCountry != p.clubCountry,
+              rating: p.overall,
+              change: p.overall - was.overall,
+              step: from.compareTo(to),
             );
           }(),
       ];

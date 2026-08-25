@@ -47,10 +47,16 @@ class HomeScreen extends ConsumerWidget {
                 ),
               ),
               const Spacer(),
+              // The box MATCHES THE ARTWORK's aspect (about 0.96:1, a shade
+              // taller than square). A box of the wrong shape does not crop —
+              // it letterboxes, so the logo is drawn to whichever side runs
+              // out first and the rest of the box is wasted. Re-measure this
+              // if the artwork is ever replaced.
               Image.asset(
                 'assets/images/fnm_logo.png',
-                width: 168,
-                height: 168,
+                width: 200,
+                height: 208,
+                fit: BoxFit.contain,
                 // Graceful fallback if the asset is missing in a bare test env.
                 errorBuilder: (context, error, stack) => const Icon(
                   Icons.sports_soccer,

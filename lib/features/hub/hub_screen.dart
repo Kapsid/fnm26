@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/core/diagnostics/app_log.dart';
+import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
@@ -15,6 +16,7 @@ import 'package:fnm/domain/repositories/competition_repository.dart';
 import 'package:fnm/domain/services/squad/condition.dart';
 import 'package:fnm/features/achievements/achievement_providers.dart';
 import 'package:fnm/features/tournaments/wc_host_theme.dart';
+import 'package:fnm/features/federation/federation_service.dart';
 import 'package:fnm/features/federation/investment_editor.dart';
 import 'package:fnm/features/hub/hub_event.dart';
 import 'package:fnm/features/hub/hub_providers.dart';
@@ -266,7 +268,6 @@ class _HubScreenState extends ConsumerState<HubScreen> {
               _BoardFinanceCard(
                 key: TourKeys.hubBoard,
                 careerId: careerId,
-                budget: hub.career.budget,
                 onFinances: () =>
                     context.go('${Routes.finances}?careerId=$careerId'),
                 onObjectives: () => context.go(
@@ -385,13 +386,11 @@ class _BoardFinanceCard extends ConsumerWidget {
   const _BoardFinanceCard({
     required this.careerId,
     super.key,
-    required this.budget,
     required this.onFinances,
     required this.onObjectives,
   });
 
   final int careerId;
-  final int budget;
   final VoidCallback onFinances;
   final VoidCallback onObjectives;
 
@@ -400,6 +399,12 @@ class _BoardFinanceCard extends ConsumerWidget {
     final l = AppLocalizations.of(context);
     final value = ref.watch(satisfactionProvider(careerId)).valueOrNull;
     final (color, verdict) = boardVerdict(l, value);
+    // What is left to SPEND, not what the federation holds. The balance still
+    // contains the staff's wages — they are paid at the rollover — so a manager
+    // who had just committed every last euro on the budget screen came back to
+    // the hub, saw the wage bill sitting there as a balance, and read it as his
+    // allocation having gone nowhere. See [federationFundsProvider].
+    final funds = ref.watch(federationFundsProvider(careerId)).valueOrNull;
     return AppCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -428,7 +433,7 @@ class _BoardFinanceCard extends ConsumerWidget {
               OutlinedButton.icon(
                 onPressed: onFinances,
                 icon: const Icon(Icons.account_balance, size: 16),
-                label: Text(formatEuros(budget)),
+                label: Text(formatEuros(funds?.free ?? 0)),
                 style: OutlinedButton.styleFrom(
                   foregroundColor: AppColors.primary,
                   side: const BorderSide(color: AppColors.outlineVariant),
@@ -583,6 +588,25 @@ class _EventButton extends ConsumerWidget {
             ),
           ),
         );
+      case HubEventKind.managerSkills:
+        // Marked seen as it is TAKEN, not when the points are spent: a manager
+        // who looks at his skills and decides to bank them has answered the
+        // prompt, and asking again every time he returns to the hub would make
+        // an offer into a toll. It comes back when the next cycle turns.
+        final cycle = ref
+            .read(hubDataProvider(careerId))
+            .valueOrNull
+            ?.career
+            .cyclePointer;
+        if (cycle != null) {
+          _guarded(context, () async {
+            await ref
+                .read(competitionRepositoryProvider)
+                .markDrawWatched(careerId, cycle, skillsPromptKind);
+            ref.invalidate(nextEventProvider(careerId));
+          });
+        }
+        if (event.route != null) context.go(event.route!);
       case HubEventKind.cycleRollover:
       case HubEventKind.draw:
       case HubEventKind.tournamentKickoff:

@@ -6,6 +6,7 @@ import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
 import 'package:fnm/domain/services/competition/continental_cups.dart';
+import 'package:fnm/domain/services/competition/rounds.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/hub/hub_providers.dart';
 
@@ -22,6 +23,21 @@ String friendlyWindowKey(DateTime d) => 'friendly:${d.year}-${d.month}';
 /// actually saves.
 bool friendlyIsHome(DateTime d) => d.month.isEven;
 
+/// Why the shortlist is ordered the way it is — the thing a manager has to be
+/// told, because a list reordered silently is just a different list.
+enum FriendlyReason {
+  /// A finals group is drawn: the shortlist resembles the sides in it.
+  finalsGroup,
+
+  /// The next competitive block is a qualifying campaign: the shortlist
+  /// resembles the sides still to be played in it.
+  qualifyingGroup,
+
+  /// Nothing is drawn yet, so the shortlist is simply close to the manager's
+  /// own standing in the world.
+  ranking,
+}
+
 /// The friendlies the manager can arrange in the current gap before their next
 /// competitive fixture: every open window in that gap and a shortlist of
 /// suggested [opponents] (by ranking proximity). Null when there is no gap.
@@ -29,6 +45,7 @@ class FriendliesPlan {
   const FriendliesPlan({
     required this.windows,
     this.rivals = const [],
+    this.reason = FriendlyReason.ranking,
     required this.opponents,
     required this.nations,
     required this.playerNationId,
@@ -37,9 +54,11 @@ class FriendliesPlan {
 
   final List<DateTime> windows;
 
-  /// Who the nation has been drawn against, when a group is already known.
-  /// Empty otherwise, and then the suggestions are simply ranking-plausible.
+  /// Who the nation is warming up FOR, and why the shortlist looks the way it
+  /// does. Never empty of meaning: with no group drawn yet the reason is the
+  /// ranking, and the screen says so.
   final List<Nation> rivals;
+  final FriendlyReason reason;
   final List<Nation> opponents;
   final Map<int, Nation> nations;
   final int playerNationId;
@@ -145,7 +164,20 @@ friendliesPlanProvider = FutureProvider.autoDispose.family<FriendliesPlan?, int>
     // rivals, and the closest float to the front. A confederation match is
     // worth something too: sides from the same continent play a recognisable
     // way, and that is half of what the manager is trying to rehearse.
-    final rivals = await _drawnGroupRivals(comp, careerId, career.nationId);
+    //
+    // And when NO group is drawn, the campaign the manager is in the middle of
+    // is the next best thing: the sides he still has to play in his qualifying
+    // group are who he is warming up for, and they are known long before any
+    // finals draw. The tip used to appear only in the narrow stretch between a
+    // finals draw and the finals themselves — which is almost never when a
+    // friendly window is open — so in practice there was no tip at all.
+    var reason = FriendlyReason.finalsGroup;
+    var rivals = await _drawnGroupRivals(comp, careerId, career.nationId);
+    if (rivals.isEmpty) {
+      reason = FriendlyReason.qualifyingGroup;
+      rivals = await _campaignRivals(comp, careerId, career.nationId);
+    }
+    if (rivals.isEmpty) reason = FriendlyReason.ranking;
     final rivalNations = [
       for (final id in rivals)
         if (nations[id] != null) nations[id]!,
@@ -165,8 +197,13 @@ friendliesPlanProvider = FutureProvider.autoDispose.family<FriendliesPlan?, int>
 
     return FriendliesPlan(
       windows: windows,
-      opponents: opponents.take(24).toList(),
+      // Enough for every window to be dealt a slice off the TOP of the
+      // ordering — see [FriendliesScreen._opponentsFor]. Twenty-four was the
+      // whole shortlist for one window and the leftovers for the rest, so only
+      // the first window was ever offered the sides that resemble the rivals.
+      opponents: opponents.take(48).toList(),
       rivals: rivalNations,
+      reason: reason,
       nations: nations,
       playerNationId: career.nationId,
       cycle: career.cyclePointer,
@@ -270,6 +307,29 @@ Future<Set<int>> _drawnGroupRivals(
   return {
     for (final f in fixtures)
       if (groupRounds.contains(f.round) && !f.hasResult)
+        if (f.homeNationId == nationId) f.awayNationId else f.homeNationId,
+  };
+}
+
+/// The sides left to play in the campaign the manager is in the middle of —
+/// continental or World Cup qualifying — or empty when there is no such game
+/// left on the calendar.
+///
+/// World Cup qualifying carries NO round code (see [Rounds]), so this is framed
+/// as "every competitive fixture still to come that isn't a finals tie" rather
+/// than as a list of round names: naming them is how the World Cup campaign
+/// got left out of a rule that was written with the continental one in mind.
+Future<Set<int>> _campaignRivals(
+  CompetitionRepository comp,
+  int careerId,
+  int nationId,
+) async {
+  final fixtures = await comp.cycleFixturesForNation(careerId, nationId);
+  return {
+    for (final f in fixtures)
+      if (!f.hasResult &&
+          f.round != Rounds.friendly &&
+          !Rounds.isKnockout(f.round))
         if (f.homeNationId == nationId) f.awayNationId else f.homeNationId,
   };
 }

@@ -1021,7 +1021,7 @@ class _ShootoutStrip extends StatelessWidget {
           if (lastName != null && lastScored != null) ...[
             const SizedBox(height: AppSpacing.xs),
             Text(
-              '$lastName — ${lastScored ? 'SCORED' : 'MISSED'}',
+              '$lastName: ${lastScored ? 'SCORED' : 'MISSED'}',
               style: AppTypography.labelSmall.copyWith(
                 color: lastScored ? AppColors.positive : AppColors.error,
                 fontWeight: FontWeight.w700,

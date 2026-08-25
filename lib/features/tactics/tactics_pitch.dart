@@ -1072,8 +1072,14 @@ const double _badgeOverhang = 7;
 /// on one line, and every point of width buys a character; the height only has
 /// to clear the rating plus that one line. Trading a little of it for a wider
 /// box is what keeps a name off a second line.
-const double _discInnerWidth = 0.84;
-const double _discInnerHeight = 0.54;
+/// Widened again (0.84 → 0.87) at the cost of height (0.54 → 0.49), keeping
+/// the diagonal inside the circle: 0.87² + 0.49² = 0.997 < 1. The disc itself
+/// CANNOT grow — its size is measured right up against the closest two players
+/// ever stand and the pitch's widget test fails the moment they crowd — so the
+/// only room left to find for a long surname is inside the circle, and width
+/// is the axis that buys characters.
+const double _discInnerWidth = 0.87;
+const double _discInnerHeight = 0.49;
 
 /// The size a name is drawn at when it fits — which, on a surname alone, is
 /// the great majority of them.

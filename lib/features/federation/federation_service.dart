@@ -4,6 +4,7 @@ import 'package:fnm/domain/repositories/career_repository.dart';
 import 'package:fnm/domain/services/competition/continental_cups.dart';
 import 'package:fnm/domain/services/federation/federation_finance.dart';
 import 'package:fnm/features/career/career_providers.dart';
+import 'package:fnm/features/federation/staff_providers.dart';
 
 /// The finals rounds counted for prize money, split by tournament.
 const _wcFinalsRounds = {'GROUP', 'R32', 'R16', 'QF', 'SF', '3RD', 'FINAL'};
@@ -134,6 +135,36 @@ final AutoDisposeFutureProviderFamily<FinanceView?, int> financeViewProvider =
         projectedIncome: income,
       );
     });
+
+/// The federation's money, split the only way that matters: what it holds, what
+/// is already promised to the staff, and what is therefore left to spend.
+typedef FederationFunds = ({int balance, int wages, int free});
+
+/// What the federation can actually spend.
+///
+/// The balance alone is NOT it, and every screen that printed the balance alone
+/// said it was. Staff are paid at the rollover, so their wages sit inside the
+/// balance already owed to somebody: a manager who had handed every euro the
+/// budget screen offered him to a department still saw a large figure on the
+/// hub and read his allocation as not having saved. One answer, so the hub, the
+/// budget screen and the finances screen cannot disagree about it.
+final AutoDisposeFutureProviderFamily<FederationFunds, int>
+federationFundsProvider = FutureProvider.autoDispose.family<FederationFunds, int>((
+  ref,
+  careerId,
+) async {
+  final career = await ref.watch(careerRepositoryProvider).byId(careerId);
+  final balance = career?.budget ?? 0;
+  final wages =
+      (await ref.watch(staffRoomProvider(careerId).future))?.wagesPerCycle ?? 0;
+  // Never negative: an over-committed wage bill means nothing is free, not that
+  // the manager owes money he can invest.
+  return (
+    balance: balance,
+    wages: wages,
+    free: (balance - wages).clamp(0, balance),
+  );
+});
 
 /// A department's long-term standing: its building level and the total euros
 /// invested in it across every cycle of the save so far.

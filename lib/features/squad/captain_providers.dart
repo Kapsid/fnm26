@@ -22,6 +22,18 @@ final AutoDisposeFutureProviderFamily<Player?, int> captainProvider =
       return squad.pool.where((p) => p.id == id).firstOrNull;
     });
 
+/// The id the manager last gave the armband to, resolved or not.
+///
+/// [captainProvider] answers "who is leading the side out", which is null both
+/// for a manager who never named anybody and for one whose captain is injured
+/// or was left out — two different situations that need two different things
+/// said about them. This is the raw INTENT, so the two can be told apart.
+final AutoDisposeFutureProviderFamily<int?, int> storedCaptainIdProvider =
+    FutureProvider.autoDispose.family<int?, int>((ref, careerId) async {
+      final career = await ref.watch(careerRepositoryProvider).byId(careerId);
+      return career?.captainPlayerId;
+    });
+
 /// The morale the current captain is worth (0 when there is none).
 final AutoDisposeFutureProviderFamily<int, int> captainMoraleProvider =
     FutureProvider.autoDispose.family<int, int>((ref, careerId) async {

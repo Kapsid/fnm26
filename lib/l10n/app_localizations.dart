@@ -341,7 +341,7 @@ abstract class AppLocalizations {
   /// Team-talk tone description.
   ///
   /// In en, this message translates to:
-  /// **'Steady the side — a small all-round lift.'**
+  /// **'Steady the side. A small all-round lift.'**
   String get teamTalkCalmBlurb;
 
   /// Team-talk tone button label.
@@ -365,7 +365,7 @@ abstract class AppLocalizations {
   /// Team-talk tone description.
   ///
   /// In en, this message translates to:
-  /// **'Throw everything at it — attack hard.'**
+  /// **'Throw everything at it. Attack hard.'**
   String get teamTalkDemandMoreBlurb;
 
   /// Team-talk tone button label.
@@ -389,7 +389,7 @@ abstract class AppLocalizations {
   /// Team-talk tone description.
   ///
   /// In en, this message translates to:
-  /// **'Back yourselves — lift both ends of the pitch.'**
+  /// **'Back yourselves. A lift at both ends of the pitch.'**
   String get teamTalkBelieveBlurb;
 
   /// Team-talk tone button label.
@@ -401,7 +401,7 @@ abstract class AppLocalizations {
   /// Team-talk tone description.
   ///
   /// In en, this message translates to:
-  /// **'Total concentration — lock the game down.'**
+  /// **'Total concentration. Lock the game down.'**
   String get teamTalkFocusBlurb;
 
   /// Team-talk tone button label.
@@ -413,7 +413,7 @@ abstract class AppLocalizations {
   /// Team-talk tone description.
   ///
   /// In en, this message translates to:
-  /// **'Chase it down now — go all-out, leave gaps.'**
+  /// **'Chase it down now. All-out, and it leaves gaps.'**
   String get teamTalkUrgencyBlurb;
 
   /// Team-talk tone button label.
@@ -911,7 +911,7 @@ abstract class AppLocalizations {
   /// In-match tactics: names the player(s) sent off, who cannot be substituted.
   ///
   /// In en, this message translates to:
-  /// **'{names} sent off — no replacement, you play a man down.'**
+  /// **'{names} sent off. No replacement, so you play a man down.'**
   String tacticsSentOffNote(String names);
 
   /// Call-up screen: the squad is the right size but too few of its players are fit to field an XI.
@@ -1115,7 +1115,7 @@ abstract class AppLocalizations {
   /// Button shown when the squad is locked; returns to the previous screen.
   ///
   /// In en, this message translates to:
-  /// **'Squad locked — back'**
+  /// **'Back (squad locked)'**
   String get tacticsSquadLockedBack;
 
   /// Button that confirms and saves the picked squad.
@@ -1127,7 +1127,7 @@ abstract class AppLocalizations {
   /// Snackbar when trying to add past the squad limit.
   ///
   /// In en, this message translates to:
-  /// **'Squad full — max {max}'**
+  /// **'Squad full (max {max})'**
   String tacticsSquadFullMax(int max);
 
   /// Banner heading when the squad cannot be changed.
@@ -1139,7 +1139,7 @@ abstract class AppLocalizations {
   /// Banner heading when the nomination window is open.
   ///
   /// In en, this message translates to:
-  /// **'NOMINATION OPEN — PICK YOUR SQUAD'**
+  /// **'NOMINATION OPEN. PICK YOUR SQUAD'**
   String get tacticsNominationOpen;
 
   /// Explanation shown when the squad is locked.
@@ -1535,7 +1535,7 @@ abstract class AppLocalizations {
   /// An unavailable player and the reason they are out.
   ///
   /// In en, this message translates to:
-  /// **'{name} — {reason}'**
+  /// **'{name}: {reason}'**
   String tacticsPlayerOut(String name, String reason);
 
   /// Fallback reason for an unavailable player.
@@ -2063,13 +2063,13 @@ abstract class AppLocalizations {
   /// Hub subtitle: XI players unavailable.
   ///
   /// In en, this message translates to:
-  /// **'{count, plural, =1{1 of your XI is out (suspended or injured) — pick their replacement} other{{count} of your XI are out (suspended or injured) — pick their replacements}}'**
+  /// **'{count, plural, =1{1 of your XI is out (suspended or injured). Pick their replacement} other{{count} of your XI are out (suspended or injured). Pick their replacements}}'**
   String hubEventReshapeOutSub(int count);
 
   /// Hub subtitle: XI not full.
   ///
   /// In en, this message translates to:
-  /// **'{count, plural, =1{Your starting XI is short — fill the open slot} other{Your starting XI is short — fill the open slots}}'**
+  /// **'{count, plural, =1{Your starting XI is short. Fill the open slot} other{Your starting XI is short. Fill the open slots}}'**
   String hubEventReshapeShortSub(int count);
 
   /// Hub action: play the next match against an opponent.
@@ -2279,7 +2279,7 @@ abstract class AppLocalizations {
   /// Shown before the group draw has happened.
   ///
   /// In en, this message translates to:
-  /// **'Groups to be drawn — watch the draw to reveal them.'**
+  /// **'Groups to be drawn. Watch the draw to reveal them.'**
   String get hubGroupsToBeDrawn;
 
   /// Group heading with its letter.
@@ -2663,7 +2663,7 @@ abstract class AppLocalizations {
   /// Empty state for the trophy cabinet.
   ///
   /// In en, this message translates to:
-  /// **'No silverware yet — go win one.'**
+  /// **'No silverware yet. Go win one.'**
   String get careerNoSilverware;
 
   /// Medal label: gold.
@@ -2729,7 +2729,7 @@ abstract class AppLocalizations {
   /// Shown when slots are full, prompting Pro.
   ///
   /// In en, this message translates to:
-  /// **'Slots full — go Pro for 10'**
+  /// **'Slots full. Go Pro for 10'**
   String get careerSlotsFullGoPro;
 
   /// Button starting a new game.
@@ -3275,19 +3275,25 @@ abstract class AppLocalizations {
   /// Pre-match warning that no captain has been chosen.
   ///
   /// In en, this message translates to:
-  /// **'No captain named — tap to give somebody the armband'**
+  /// **'No captain named. Tap to give somebody the armband'**
   String get matchSetupWarnCaptain;
+
+  /// Pre-match warning: a captain is named but is injured, suspended or not in the squad.
+  ///
+  /// In en, this message translates to:
+  /// **'Your captain cannot play this one. Tap to give somebody else the armband'**
+  String get matchSetupWarnCaptainOut;
 
   /// Pre-match warning that no penalty or dead-ball taker has been chosen.
   ///
   /// In en, this message translates to:
-  /// **'No set-piece takers named — tap to choose who steps up'**
+  /// **'No set-piece takers named. Tap to choose who steps up'**
   String get matchSetupWarnSetPieces;
 
   /// Pre-match warning that neither the armband nor the set-piece takers have been chosen.
   ///
   /// In en, this message translates to:
-  /// **'No captain and no set-piece takers — tap to set them'**
+  /// **'No captain and no set-piece takers. Tap to set them'**
   String get matchSetupWarnBoth;
 
   /// Matchday number shown for a qualifying fixture, which has rounds but no named stage.
@@ -3581,7 +3587,7 @@ abstract class AppLocalizations {
   /// Tooltip on the armband of the player who is currently captain.
   ///
   /// In en, this message translates to:
-  /// **'Captain — tap to remove the armband'**
+  /// **'Captain. Tap to remove the armband'**
   String get captainCurrent;
 
   /// How well a player suits the captaincy: the best fit.
@@ -4727,7 +4733,7 @@ abstract class AppLocalizations {
   /// Shown on the paywall once premium is already unlocked.
   ///
   /// In en, this message translates to:
-  /// **'Premium is unlocked — enjoy!'**
+  /// **'Premium is unlocked. Enjoy!'**
   String get paywallUnlocked;
 
   /// Buy-button label while the purchase flow is in progress.
@@ -4857,7 +4863,7 @@ abstract class AppLocalizations {
   /// Shown when departments plus staff wages exceed the budget.
   ///
   /// In en, this message translates to:
-  /// **'{amount} more than the federation has — take some back'**
+  /// **'{amount} more than the federation has. Take some back'**
   String federationOverBudget(String amount);
 
   /// Hint shown until the whole budget is allocated.
@@ -4955,6 +4961,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'FEDERATION BALANCE'**
   String get federationBalance;
+
+  /// Finances: the part of the balance already promised to staff wages, paid at the end of the cycle.
+  ///
+  /// In en, this message translates to:
+  /// **'Committed to staff'**
+  String get federationCommittedToStaff;
+
+  /// Finances: the part of the balance not already promised to anybody.
+  ///
+  /// In en, this message translates to:
+  /// **'Free to spend'**
+  String get federationFreeToSpend;
+
+  /// Finances: why part of the balance cannot be invested.
+  ///
+  /// In en, this message translates to:
+  /// **'Wages come off the balance at the end of the cycle, so this much is spoken for.'**
+  String get federationWagesNote;
 
   /// Hint under the locked-investment card.
   ///
@@ -5079,7 +5103,7 @@ abstract class AppLocalizations {
   /// Empty state when there isn't enough ranking history yet.
   ///
   /// In en, this message translates to:
-  /// **'Not enough history yet — check back after a cycle or two.'**
+  /// **'Not enough history yet. Check back after a cycle or two.'**
   String get nationsNotEnoughHistory;
 
   /// Best world ranking reached.
@@ -5280,6 +5304,12 @@ abstract class AppLocalizations {
   /// **'CLUB'**
   String get playerClub;
 
+  /// Player detail: label for how much football the player gets at his club.
+  ///
+  /// In en, this message translates to:
+  /// **'At his club'**
+  String get playerClubRole;
+
   /// Label: player position.
   ///
   /// In en, this message translates to:
@@ -5327,6 +5357,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Not playing'**
   String get clubFrozenOut;
+
+  /// Call-up row: a player's standing AT HIS CLUB, so "Barely playing" cannot be read as his standing with the national side.
+  ///
+  /// In en, this message translates to:
+  /// **'{club}: {standing}'**
+  String clubAtClub(String club, String standing);
 
   /// Y post: winUpset, variant 0.
   ///
@@ -5403,7 +5439,7 @@ abstract class AppLocalizations {
   /// Y post: drew, variant 0.
   ///
   /// In en, this message translates to:
-  /// **'{score} with {opponent}. Two points dropped or one gained — pick your mood.'**
+  /// **'{score} with {opponent}. Two points dropped or one gained. Pick your mood.'**
   String yDrew0(String opponent, String score);
 
   /// Y post: drew, variant 1.
@@ -5487,7 +5523,7 @@ abstract class AppLocalizations {
   /// Y post: trophy, variant 2.
   ///
   /// In en, this message translates to:
-  /// **'{opponent} — and the trophy is coming home.'**
+  /// **'{opponent}, and the trophy is coming home.'**
   String yTrophy2(String opponent);
 
   /// Y post: trophy, variant 3.
@@ -5670,6 +5706,18 @@ abstract class AppLocalizations {
   /// **'He wants to know where he stands'**
   String get hubEventGrievanceSub;
 
+  /// Hub event: the once-a-cycle prompt to raise the manager's own skills.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 skill point to spend} other{{count} skill points to spend}}'**
+  String hubEventManagerSkills(int count);
+
+  /// Hub event subtitle: why the manager should spend his points.
+  ///
+  /// In en, this message translates to:
+  /// **'What you are good at makes your side better'**
+  String get hubEventManagerSkillsSub;
+
   /// Player agency: grievanceTitle.
   ///
   /// In en, this message translates to:
@@ -5757,7 +5805,7 @@ abstract class AppLocalizations {
   /// Y post remarking on a run of wins. Variant 3.
   ///
   /// In en, this message translates to:
-  /// **'No defeats in {count}. Ask anyone who has managed — that is the hard part.'**
+  /// **'No defeats in {count}. Ask anyone who has managed: that is the hard part.'**
   String yWinStreak3(String count);
 
   /// Y post remarking on a run without a win. Variant 0.
@@ -5787,7 +5835,7 @@ abstract class AppLocalizations {
   /// Y post about a result against a rival nation. Variant 0.
   ///
   /// In en, this message translates to:
-  /// **'{opponent} {score}. Say what you like about the football — this one counts double.'**
+  /// **'{opponent} {score}. Say what you like about the football. This one counts double.'**
   String yRivalry0(String opponent, String score);
 
   /// Y post about a result against a rival nation. Variant 1.
@@ -6957,13 +7005,13 @@ abstract class AppLocalizations {
   /// Shown when the manager wins the play-off.
   ///
   /// In en, this message translates to:
-  /// **'You came through the play-off — you\'re at the World Cup!'**
+  /// **'You came through the play-off. You\'re at the World Cup!'**
   String get tourContPlayoffThrough;
 
   /// Shown when the manager loses the play-off.
   ///
   /// In en, this message translates to:
-  /// **'You fell short in the play-off — no World Cup this time.'**
+  /// **'You fell short in the play-off. No World Cup this time.'**
   String get tourContPlayoffOut;
 
   /// Button to continue.
@@ -6981,7 +7029,7 @@ abstract class AppLocalizations {
   /// Tag on the two top-ranked play-off teams that skip the semi-finals and enter a path final directly.
   ///
   /// In en, this message translates to:
-  /// **'Seeded — bye'**
+  /// **'Seeded (bye)'**
   String get tourContPlayoffSeeded;
 
   /// World Cup detail: tourCupTabSummary
@@ -7155,7 +7203,7 @@ abstract class AppLocalizations {
   /// World Cup detail: tourCupFinalsDrawSoon
   ///
   /// In en, this message translates to:
-  /// **'Groups to be drawn — watch the World Cup draw from the hub to reveal them.'**
+  /// **'Groups to be drawn. Watch the World Cup draw from the hub to reveal them.'**
   String get tourCupFinalsDrawSoon;
 
   /// World Cup detail: tourCupGroupName
@@ -7209,7 +7257,7 @@ abstract class AppLocalizations {
   /// World Cup detail: tourCupMostTitlesValue
   ///
   /// In en, this message translates to:
-  /// **'{nation} — {titles} titles from {editions} editions'**
+  /// **'{nation}: {titles} titles from {editions} editions'**
   String tourCupMostTitlesValue(String nation, int titles, int editions);
 
   /// World Cup detail: tourCupNoGoals
@@ -7245,7 +7293,7 @@ abstract class AppLocalizations {
   /// World Cup detail: tourCupQualDrawSoon
   ///
   /// In en, this message translates to:
-  /// **'Groups to be drawn — watch the qualifying draw from the hub to reveal them.'**
+  /// **'Groups to be drawn. Watch the qualifying draw from the hub to reveal them.'**
   String get tourCupQualDrawSoon;
 
   /// World Cup detail: tourCupRegionYours
@@ -7305,7 +7353,7 @@ abstract class AppLocalizations {
   /// Trait effect.
   ///
   /// In en, this message translates to:
-  /// **'Better delivery — more goals from dead balls.'**
+  /// **'Better delivery, and more goals from dead balls.'**
   String get traitSetPieceBlurb;
 
   /// Trait name: card-prone.
@@ -7365,7 +7413,7 @@ abstract class AppLocalizations {
   /// Trait effect.
   ///
   /// In en, this message translates to:
-  /// **'Blistering pace — a threat in behind.'**
+  /// **'Blistering pace, a threat in behind.'**
   String get traitPaceyBlurb;
 
   /// Trait name: veteran.
@@ -7641,13 +7689,13 @@ abstract class AppLocalizations {
   /// A settled objective the nation beat, and by how many rounds.
   ///
   /// In en, this message translates to:
-  /// **'{result} — {rounds, plural, =1{a round better than asked} other{{rounds} rounds better than asked}}'**
+  /// **'{result}: {rounds, plural, =1{a round better than asked} other{{rounds} rounds better than asked}}'**
   String boardObjectiveBeatenBy(String result, int rounds);
 
   /// A settled objective the nation missed, and by how many rounds.
   ///
   /// In en, this message translates to:
-  /// **'{result} — {rounds, plural, =1{a round short} other{{rounds} rounds short}}'**
+  /// **'{result}: {rounds, plural, =1{a round short} other{{rounds} rounds short}}'**
   String boardObjectiveShortBy(String result, int rounds);
 
   /// Status of an objective whose tournament has not finished.
@@ -7803,7 +7851,7 @@ abstract class AppLocalizations {
   /// Explains the watchlist and its star ratings.
   ///
   /// In en, this message translates to:
-  /// **'The next generation, best prospect first. Hollow stars are a scout\'s estimate — cap a player to find out what he really has.'**
+  /// **'The next generation, best prospect first. Hollow stars are a scout\'s estimate. Cap a player to find out what he really has.'**
   String get u21Blurb;
 
   /// Shown when there are no under-21s.
@@ -8001,7 +8049,7 @@ abstract class AppLocalizations {
   /// Shown when the instructions match no named style.
   ///
   /// In en, this message translates to:
-  /// **'Your own settings — no named style matches these dials.'**
+  /// **'Your own settings. No named style matches these dials.'**
   String get tacticsPlaystyleCustom;
 
   /// Playing style: hand-set dials.
@@ -8121,7 +8169,7 @@ abstract class AppLocalizations {
   /// Blurb explaining the from-the-bottom start.
   ///
   /// In en, this message translates to:
-  /// **'You have no job and no reputation. These are the only sides willing to take a chance on you — take one and build something from nothing.'**
+  /// **'You have no job and no reputation. These are the only sides willing to take a chance on you. Take one and build something from nothing.'**
   String get bottomStartBlurb;
 
   /// Button on an offer card: accept this job.
@@ -8211,7 +8259,7 @@ abstract class AppLocalizations {
   /// Camp terrain blurb: city centre.
   ///
   /// In en, this message translates to:
-  /// **'Everything on the doorstep and nothing to travel to — but no peace, and no escape from the noise.'**
+  /// **'Everything on the doorstep and nothing to travel to, but no peace and no escape from the noise.'**
   String get campTerrainCityBlurb;
 
   /// Camp terrain blurb: coastal.
@@ -8409,7 +8457,7 @@ abstract class AppLocalizations {
   /// Press conference line.
   ///
   /// In en, this message translates to:
-  /// **'{opponent} end it. Four years of work, gone in ninety minutes — talk us through it.'**
+  /// **'{opponent} end it. Four years of work, gone in ninety minutes. Talk us through it.'**
   String pressAskElimination2(String opponent);
 
   /// Press conference line.
@@ -8439,7 +8487,7 @@ abstract class AppLocalizations {
   /// Press conference line.
   ///
   /// In en, this message translates to:
-  /// **'Realistically — group stage, quarters, or more than that?'**
+  /// **'Realistically: group stage, quarters, or more than that?'**
   String get pressAskPreview3;
 
   /// Press conference line.
@@ -8499,7 +8547,7 @@ abstract class AppLocalizations {
   /// Press conference line.
   ///
   /// In en, this message translates to:
-  /// **'Qualification secured — now what is this squad actually capable of?'**
+  /// **'Qualification secured. Now what is this squad actually capable of?'**
   String get pressAskQualified3;
 
   /// Press conference line.
@@ -8613,7 +8661,7 @@ abstract class AppLocalizations {
   /// Press conference line.
   ///
   /// In en, this message translates to:
-  /// **'No hiding from it — we expect to lift the trophy.'**
+  /// **'No hiding from it. We expect to lift the trophy.'**
   String get pressAnswerRaiseBar2;
 
   /// Press conference line.
@@ -8751,7 +8799,7 @@ abstract class AppLocalizations {
   /// Press conference line.
   ///
   /// In en, this message translates to:
-  /// **'What would make this a successful tournament — honestly?'**
+  /// **'What would make this a successful tournament, honestly?'**
   String get pressAskPreview6;
 
   /// Press conference line.
@@ -8781,7 +8829,7 @@ abstract class AppLocalizations {
   /// Press conference line.
   ///
   /// In en, this message translates to:
-  /// **'{opponent} to open. Win it and the whole tournament looks different — do you tell them that?'**
+  /// **'{opponent} to open. Win it and the whole tournament looks different. Do you tell them that?'**
   String pressAskOpening6(String opponent);
 
   /// Press conference line.
@@ -8835,7 +8883,7 @@ abstract class AppLocalizations {
   /// Press conference line.
   ///
   /// In en, this message translates to:
-  /// **'The best performance of your reign — and against {opponent}?'**
+  /// **'The best performance of your reign, and against {opponent}?'**
   String pressAskBigWin5(String opponent);
 
   /// Press conference line.
@@ -8871,7 +8919,7 @@ abstract class AppLocalizations {
   /// Press conference line.
   ///
   /// In en, this message translates to:
-  /// **'A place at the finals — relief or satisfaction?'**
+  /// **'A place at the finals: relief or satisfaction?'**
   String get pressAskQualified6;
 
   /// Press conference line.
@@ -8937,7 +8985,7 @@ abstract class AppLocalizations {
   /// Press conference line.
   ///
   /// In en, this message translates to:
-  /// **'When it ends — and it will — how do you want it to end?'**
+  /// **'When it ends, and it will, how do you want it to end?'**
   String get pressAskUnbeaten7;
 
   /// Press conference line.
@@ -9009,7 +9057,7 @@ abstract class AppLocalizations {
   /// Press conference line.
   ///
   /// In en, this message translates to:
-  /// **'I\'ll take the questions. They\'ll take the credit — that\'s how it works here.'**
+  /// **'I\'ll take the questions. They\'ll take the credit. That\'s how it works here.'**
   String get pressAnswerBackPlayers4;
 
   /// Press conference line.
@@ -9099,7 +9147,7 @@ abstract class AppLocalizations {
   /// Snackbar when the manager tries to re-use a substituted player.
   ///
   /// In en, this message translates to:
-  /// **'{name} has already been taken off — he cannot come back on.'**
+  /// **'{name} has already been taken off and cannot come back on.'**
   String tacticsSubAlreadyOff(String name);
 
   /// Snackbar when the manager tries to bring on a sent-off player.
@@ -9711,7 +9759,7 @@ abstract class AppLocalizations {
   /// Line above the academy-graduates table, distinguishing it from the yearly intake.
   ///
   /// In en, this message translates to:
-  /// **'These are not a new intake — they are the boys who came in at eleven and have now grown into the senior pool.'**
+  /// **'These are not a new intake. They are the boys who came in at eleven and have now grown into the senior pool.'**
   String get msgThroughNote;
 
   /// Inbox: yearly newcomers report headline.
@@ -9765,7 +9813,7 @@ abstract class AppLocalizations {
   /// Inbox: appended when the retiree was captain.
   ///
   /// In en, this message translates to:
-  /// **' The armband is vacant — name a new captain from the call-up screen.'**
+  /// **' The armband is vacant. Name a new captain from the call-up screen.'**
   String get msgArmbandVacant;
 
   /// Inbox: hall-of-fame headline.
@@ -9789,7 +9837,7 @@ abstract class AppLocalizations {
   /// Inbox: suspension body. {how} is one of the hubBanHow* strings.
   ///
   /// In en, this message translates to:
-  /// **'{name} {how} and is banned for {matches, plural, one{your next match} other{the next {matches} matches}} — they will be unavailable for selection.'**
+  /// **'{name} {how} and is banned for {matches, plural, one{your next match} other{the next {matches} matches}}. They will be unavailable for selection.'**
   String hubBanBody(String name, String how, int matches);
 
   /// Inbox: how a player was sent off.
@@ -9843,13 +9891,13 @@ abstract class AppLocalizations {
   /// Inbox: lost a final, body.
   ///
   /// In en, this message translates to:
-  /// **'You reached the {cup} final but lost to {opponent}. So close — silver this time.'**
+  /// **'You reached the {cup} final but lost to {opponent}. So close. Silver this time.'**
   String hubRunnerUpBody1(String cup, String opponent);
 
   /// Inbox: lost a final, body.
   ///
   /// In en, this message translates to:
-  /// **'Beaten by {opponent} in the {cup} final. Runners-up — agonisingly close.'**
+  /// **'Beaten by {opponent} in the {cup} final. Runners-up, agonisingly close.'**
   String hubRunnerUpBody2(String cup, String opponent);
 
   /// Inbox: lost a final, body.
@@ -9933,13 +9981,13 @@ abstract class AppLocalizations {
   /// Inbox: the board's verdict on a cycle objective.
   ///
   /// In en, this message translates to:
-  /// **'Objective met — {comp}'**
+  /// **'Objective met: {comp}'**
   String boardObjectiveMetTitle(String comp);
 
   /// Inbox: the board's verdict on a cycle objective.
   ///
   /// In en, this message translates to:
-  /// **'Objective missed — {comp}'**
+  /// **'Objective missed: {comp}'**
   String boardObjectiveMissedTitle(String comp);
 
   /// Inbox: the board's verdict body when the objective was met.
@@ -9963,7 +10011,7 @@ abstract class AppLocalizations {
   /// Inbox: failed to qualify for the World Cup, body.
   ///
   /// In en, this message translates to:
-  /// **'You didn\'t make the {year} World Cup — the qualifying campaign fell short. Four more years.'**
+  /// **'You didn\'t make the {year} World Cup. The qualifying campaign fell short. Four more years.'**
   String newsWcMissBody(int year);
 
   /// Inbox: a new all-time scoring record.
@@ -10170,7 +10218,7 @@ abstract class AppLocalizations {
   /// Inbox: failed to qualify for the continental cup, body.
   ///
   /// In en, this message translates to:
-  /// **'You didn\'t qualify for {cup} — the campaign came up short this time.'**
+  /// **'You didn\'t qualify for {cup}. The campaign came up short this time.'**
   String newsContMissBody(String cup);
 
   /// Inbox: the year's player award.
@@ -10416,7 +10464,7 @@ abstract class AppLocalizations {
   /// Press conference: a DressingRoom follow-up question.
   ///
   /// In en, this message translates to:
-  /// **'Demanding it here rather than in there — is that leadership?'**
+  /// **'Demanding it here rather than in there. Is that leadership?'**
   String get pressProbeDressingRoom3;
 
   /// Press conference: a DressingRoom follow-up question.
@@ -10902,7 +10950,7 @@ abstract class AppLocalizations {
   /// Best-third-placed table: why some results are dropped.
   ///
   /// In en, this message translates to:
-  /// **'Groups are uneven — results against each big group\'s bottom side are dropped, so every team is judged over the same games.'**
+  /// **'Groups are uneven, so results against each big group\'s bottom side are dropped and every team is judged over the same games.'**
   String get tourThirdsUneven;
 
   /// Premium gate: headline at the end of the free cycle.
@@ -10914,37 +10962,25 @@ abstract class AppLocalizations {
   /// Premium gate: the pitch under the headline.
   ///
   /// In en, this message translates to:
-  /// **'Four years, a continental championship and a World Cup — that was the free part, and nothing was held back. Carry this save on for a one-off payment.'**
+  /// **'Four years, and nothing was held back. Carry this save on for one payment.'**
   String get gateLead;
 
   /// Premium gate benefit.
   ///
   /// In en, this message translates to:
-  /// **'Unlimited careers — every cycle from here on'**
+  /// **'Every cycle from here on'**
   String get gateBenefitEndless;
 
   /// Premium gate benefit.
   ///
   /// In en, this message translates to:
-  /// **'Every nation in the world to manage'**
+  /// **'Every nation in the world'**
   String get gateBenefitNations;
 
   /// Premium gate benefit.
   ///
   /// In en, this message translates to:
-  /// **'10 save slots instead of 3'**
-  String get gateBenefitSaves;
-
-  /// Premium gate benefit.
-  ///
-  /// In en, this message translates to:
-  /// **'Every future update included'**
-  String get gateBenefitUpdates;
-
-  /// Premium gate benefit.
-  ///
-  /// In en, this message translates to:
-  /// **'Works offline — no subscription, no ads, no account'**
+  /// **'No subscription, no ads, no account'**
   String get gateBenefitOffline;
 
   /// Premium gate: the line above the price.
@@ -10974,7 +11010,7 @@ abstract class AppLocalizations {
   /// Premium gate: an honest note while the store is not wired up.
   ///
   /// In en, this message translates to:
-  /// **'Not connected to payment yet — this button just continues.'**
+  /// **'Not connected to payment yet. This button just continues.'**
   String get gateNotChargedYet;
 
   /// Settings: heading for the backup section.
@@ -11034,7 +11070,7 @@ abstract class AppLocalizations {
   /// Snackbar after a successful export.
   ///
   /// In en, this message translates to:
-  /// **'Backup ready — choose where to keep it.'**
+  /// **'Backup ready. Choose where to keep it.'**
   String get backupExported;
 
   /// Snackbar when an export fails.
@@ -11133,6 +11169,12 @@ abstract class AppLocalizations {
   /// **'Two points for every cycle you complete, one for every trophy you win.'**
   String get managerPointsHow;
 
+  /// Manager screen: how the skill scale works, above the four skills.
+  ///
+  /// In en, this message translates to:
+  /// **'Every skill starts at 5 and stops at 20. A point spent is permanent.'**
+  String get managerSkillsScale;
+
   /// Manager skill name.
   ///
   /// In en, this message translates to:
@@ -11142,7 +11184,7 @@ abstract class AppLocalizations {
   /// Manager skill effect.
   ///
   /// In en, this message translates to:
-  /// **'What you say in public and in your office lands harder.'**
+  /// **'Each point makes what you say to the press and to your players land 3% harder in the dressing room.'**
   String get managerSkillManManagementBlurb;
 
   /// Manager skill name.
@@ -11154,7 +11196,7 @@ abstract class AppLocalizations {
   /// Manager skill effect.
   ///
   /// In en, this message translates to:
-  /// **'Your side settles into a new shape faster.'**
+  /// **'Each point beds a new formation in 3% faster, so changing shape costs you fewer matches.'**
   String get managerSkillTacticalBlurb;
 
   /// Manager skill name.
@@ -11166,7 +11208,7 @@ abstract class AppLocalizations {
   /// Manager skill effect.
   ///
   /// In en, this message translates to:
-  /// **'More comes out of the academy.'**
+  /// **'Each point adds 1% to the talent coming out of your academy, on top of what you fund it with.'**
   String get managerSkillYouthBlurb;
 
   /// Manager skill name.
@@ -11178,7 +11220,7 @@ abstract class AppLocalizations {
   /// Manager skill effect.
   ///
   /// In en, this message translates to:
-  /// **'The federation funds you better.'**
+  /// **'Each point is 2% more money out of the federation, every cycle.'**
   String get managerSkillNegotiationBlurb;
 
   /// Manager screen: staff section heading.
@@ -11460,7 +11502,7 @@ abstract class AppLocalizations {
   /// Guided tour string.
   ///
   /// In en, this message translates to:
-  /// **'Every competition running right now — groups, standings and knockouts — including the ones you are not in. The world keeps playing whether or not you qualified.'**
+  /// **'Every competition running right now: groups, standings and knockouts, including the ones you are not in. The world keeps playing whether or not you qualified.'**
   String get tourCupsBody;
 
   /// Guided tour string.
@@ -11508,13 +11550,13 @@ abstract class AppLocalizations {
   /// Guided tour string.
   ///
   /// In en, this message translates to:
-  /// **'The shape is only half a tactic. This is the other half — how high you press, how direct you are, how much you risk.'**
+  /// **'The shape is only half a tactic. This is the other half: how high you press, how direct you are, how much you risk.'**
   String get tourPlaystyleBody;
 
   /// Guided tour string.
   ///
   /// In en, this message translates to:
-  /// **'Start a career first — the walk through visits your own screens.'**
+  /// **'Start a career first. The walk through visits your own screens.'**
   String get settingsTourNoSave;
 
   /// Sub picker: an out-of-position candidate, with his age.
@@ -11586,7 +11628,7 @@ abstract class AppLocalizations {
   /// Settings: what the free game covers.
   ///
   /// In en, this message translates to:
-  /// **'A complete cycle — qualifying, a continental championship and a World Cup — with nothing held back. Carrying a save on past it is a single payment, once, and it covers every save and every future update.'**
+  /// **'A complete cycle (qualifying, a continental championship and a World Cup) with nothing held back. Carrying a save on past it is a single payment, once, and it covers every save and every future update.'**
   String get settingsFreeScopeBlurb;
 
   /// Settings: what the free game covers.
@@ -11600,6 +11642,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Unlimited careers, every nation, ten save slots and every future update. Thank you.'**
   String get settingsUnlockedBlurb;
+
+  /// Friendlies: why these opponents are suggested first, when the group is a qualifying campaign rather than a finals draw.
+  ///
+  /// In en, this message translates to:
+  /// **'Suggested first: sides who play like {rivals}, who you still have to face.'**
+  String friendliesLikeYourCampaign(String rivals);
+
+  /// Friendlies: why these opponents are suggested first, before anything is drawn.
+  ///
+  /// In en, this message translates to:
+  /// **'Suggested first: the sides closest to you in the world ranking. Once you are drawn, they are picked to resemble your group.'**
+  String get friendliesCloseToYou;
+
+  /// Transfer report: how many moves the window held.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 move} other{{count} moves}}'**
+  String transfersMoves(int count);
+
+  /// Transfer report: which slice of the moves is on screen.
+  ///
+  /// In en, this message translates to:
+  /// **'{from}–{to} of {total}'**
+  String transfersRange(int from, int to, int total);
+
+  /// Transfer report: previous page of moves.
+  ///
+  /// In en, this message translates to:
+  /// **'Newer'**
+  String get transfersNewer;
+
+  /// Transfer report: next page of moves.
+  ///
+  /// In en, this message translates to:
+  /// **'More'**
+  String get transfersOlder;
 }
 
 class _AppLocalizationsDelegate

@@ -16,6 +16,7 @@ import 'package:fnm/domain/services/player/player_lifecycle.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/federation/federation_providers.dart';
 import 'package:fnm/features/hub/hub_event.dart';
+import 'package:fnm/features/tournaments/drawn_groups.dart';
 import 'package:fnm/features/tournaments/host_draw_providers.dart';
 import 'package:fnm/features/ranking/world_ranking_providers.dart';
 import 'package:fnm/features/tournaments/city_providers.dart';
@@ -153,9 +154,13 @@ continentalDrawProvider = FutureProvider.autoDispose.family<ContinentalDrawData?
   if (config == null) return null;
 
   final comp = ref.watch(competitionRepositoryProvider);
+  // Named confederation: every continent's cup is a competition of this same
+  // kind, so an unqualified check answers "yes" on somebody else's tournament
+  // and this screen goes on to invent a draw for a cup that has not been made.
   if (!await comp.hasTournament(
     key.careerId,
     CompetitionKind.continentalFinals,
+    confederation: key.confederation,
   )) {
     return null;
   }
@@ -174,13 +179,9 @@ continentalDrawProvider = FutureProvider.autoDispose.family<ContinentalDrawData?
   );
   int rankOf(Nation n) => rankById[n.id] ?? n.ranking;
 
-  // Mirror _generateContinentalFinals EXACTLY so the shown draw matches the
-  // played tournament: for a qualifying cup the hosts auto-qualify and reserve
-  // a berth each (so only size − hosts come through qualifying), and are then
-  // appended. A no-qualifying cup (Copa) has no host reservation — its field is
-  // the top `size` by ranking, as the calendar builder creates it. Getting this
-  // wrong showed a cutoff qualifier in the draw that the real field then dropped.
-  final hosts = config.qualifying
+  // The hosts are needed either way: to reserve berths in the recomputation
+  // below, and to put a host at the top of pot 1 when reading the stored draw.
+  final hostIds = config.qualifying
       ? WorldCupHosts.continentalHostsFor(
           confederation: key.confederation,
           cycle: career.cyclePointer,
@@ -188,6 +189,41 @@ continentalDrawProvider = FutureProvider.autoDispose.family<ContinentalDrawData?
           nations: all,
         )
       : const <int>[];
+
+  // The draw as it was actually made. See [drawnGroups]: re-running a draw
+  // only reproduces it while every input still agrees, and the ranking its
+  // pots were seeded from is one of them — a save with no snapshot of it
+  // animated a ceremony with nothing to do with the tournament it then played.
+  final storedGroups = await comp.tournamentGroupTables(
+    key.careerId,
+    CompetitionKind.continentalFinals,
+    confederation: key.confederation,
+  );
+  if (storedGroups.isNotEmpty) {
+    return ContinentalDrawData(
+      draw: FinalsDraw(
+        groups: [
+          for (final g in drawnGroups(
+            storedGroups,
+            rankById: {for (final n in all) n.id: rankOf(n)},
+            hosts: hostIds.toSet(),
+          ))
+            FinalsGroupDraw(name: g.name, nationIds: g.nationIds, fixtures: []),
+        ],
+      ),
+      nations: {for (final n in all) n.id: n},
+      playerNationId: career.nationId,
+    );
+  }
+
+  // Nothing stored yet — the draw is being previewed before it is made. Mirror
+  // _generateContinentalFinals EXACTLY so the shown draw matches the
+  // played tournament: for a qualifying cup the hosts auto-qualify and reserve
+  // a berth each (so only size − hosts come through qualifying), and are then
+  // appended. A no-qualifying cup (Copa) has no host reservation — its field is
+  // the top `size` by ranking, as the calendar builder creates it. Getting this
+  // wrong showed a cutoff qualifier in the draw that the real field then dropped.
+  final hosts = hostIds;
   final berths = (config.size - hosts.length).clamp(1, config.size);
   List<int> qualifierIds;
   // Named confederation throughout: every confederation runs its own qualifying
@@ -275,6 +311,30 @@ continentalQualifyingDrawProvider = FutureProvider.autoDispose
           cycle: career.cyclePointer,
         )).future,
       );
+      // The draw as it was actually made — see [drawnGroups]. Recomputing it
+      // is the fallback for a draw that does not exist yet, not the answer.
+      final storedGroups = await comp.tournamentGroupTables(
+        key.careerId,
+        CompetitionKind.continentalQualifying,
+        confederation: key.confederation,
+      );
+      if (storedGroups.isNotEmpty) {
+        return ContinentalDrawData(
+          draw: FinalsDraw(
+            groups: [
+              for (final g in drawnGroups(storedGroups, rankById: rankById))
+                FinalsGroupDraw(
+                  name: g.name,
+                  nationIds: g.nationIds,
+                  fixtures: [],
+                ),
+            ],
+          ),
+          nations: {for (final n in all) n.id: n},
+          playerNationId: career.nationId,
+        );
+      }
+
       // The one shared definition of who is in the draw — see
       // [WorldCupHosts.continentalQualifiers].
       final members = WorldCupHosts.continentalQualifiers(

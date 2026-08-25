@@ -2,7 +2,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/services/manager/staff.dart';
-import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/tactics/tactics_providers.dart';
 
 /// Who is in each of the three jobs, and who is applying for them this cycle.

@@ -231,10 +231,17 @@ class _YScreenState extends ConsumerState<YScreen> {
             );
           }
           return ListView.builder(
-            padding: const EdgeInsets.all(AppSpacing.marginMobile),
+            // No page padding: a feed runs edge to edge and each row carries
+            // its own margins, so the hairlines between conversations reach
+            // the sides of the screen the way they do in a timeline.
+            padding: EdgeInsets.zero,
             itemCount: posts.length,
             itemBuilder: (context, i) => YPostTile(
               post: posts[i],
+              // A rule ABOVE each new conversation, and none inside one: a
+              // post and its replies are one thing being talked about, and a
+              // line through the middle of them read as unrelated posts.
+              topRule: i > 0 && posts[i].replyTo == null,
               // A post is the start of a conversation, not a dead line of
               // text: opening it shows everyone who said something about the
               // same match.
@@ -253,11 +260,27 @@ class _YScreenState extends ConsumerState<YScreen> {
 
 /// One post in the feed. Public so the detail view — and the tests — can use
 /// the same row rather than a second, subtly different one.
+///
+/// A FLAT ROW, not a card. Every post used to sit in its own raised, rounded
+/// box with a gap under it, which is the shape of a list of separate notices —
+/// a noticeboard. A feed is a single column of voices divided by hairlines,
+/// with replies hanging off the post they answer on a visible rail, and that
+/// difference is most of what makes one read as a conversation and the other
+/// as an inbox.
 class YPostTile extends StatelessWidget {
-  const YPostTile({required this.post, this.onTap, super.key});
+  const YPostTile({
+    required this.post,
+    this.onTap,
+    this.topRule = false,
+    super.key,
+  });
 
   final YPost post;
   final VoidCallback? onTap;
+
+  /// Whether a hairline is drawn above this row — true for the first post of
+  /// each conversation, so the rules separate stories rather than sentences.
+  final bool topRule;
 
   Color get _tint => switch (post.voice) {
     YVoice.pundit => AppColors.primary,
@@ -270,71 +293,116 @@ class YPostTile extends StatelessWidget {
   };
 
   /// Whether this post answers another one, in which case it is drawn stepped
-  /// in under it rather than as a card of its own — the thread has to LOOK
+  /// in under it rather than as a story of its own — the thread has to LOOK
   /// like a thread or the replies read as unrelated non-sequiturs.
   bool get _isReply => post.replyTo != null;
+
+  /// The avatar. Smaller for a reply, which is what puts the parent visually
+  /// above its answers without indenting the text off the screen.
+  double get _avatarSize => _isReply ? 28 : 40;
+
+  /// How far a reply is stepped in from the edge.
+  static const double _replyIndent = 22;
 
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
-    return Padding(
-      padding: EdgeInsets.only(
-        bottom: AppSpacing.sm,
-        left: _isReply ? AppSpacing.xl : 0,
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        border: Border(
+          top: topRule
+              ? const BorderSide(color: AppColors.outlineVariant)
+              : BorderSide.none,
+        ),
       ),
-      child: AppCard(
+      child: InkWell(
         onTap: onTap,
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        child: Stack(
           children: [
-            Container(
-              width: 36,
-              height: 36,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: _tint.withValues(alpha: 0.16),
+            // The rail a reply hangs off, drawn FULL HEIGHT down the gutter it
+            // is indented by. Positioned rather than laid out beside the
+            // avatar: a rail that has to stretch to the row's height cannot be
+            // an Expanded inside a Row aligned to the top — the column it
+            // would sit in has no height to expand into. Consecutive replies
+            // each draw their own segment, so a thread of three is one
+            // unbroken line.
+            if (_isReply)
+              const Positioned(
+                top: 0,
+                bottom: 0,
+                left: AppSpacing.marginMobile + _replyIndent / 2 - 1,
+                width: 2,
+                child: ColoredBox(color: AppColors.outlineVariant),
               ),
-              child: Text(
-                post.displayName.characters.first,
-                style: AppTypography.labelMedium.copyWith(color: _tint),
+            Padding(
+              padding: EdgeInsets.only(
+                left: AppSpacing.marginMobile + (_isReply ? _replyIndent : 0),
+                right: AppSpacing.marginMobile,
+                top: _isReply ? 6 : AppSpacing.sm,
+                bottom: _isReply ? 6 : AppSpacing.sm,
               ),
-            ),
-            const SizedBox(width: AppSpacing.sm),
-            Expanded(
-              child: Column(
+              child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
-                    children: [
-                      Flexible(
-                        child: WholeText(
-                          post.displayName,
-                          maxLines: 1,
-                          style: AppTypography.labelMedium,
-                        ),
-                      ),
-                      const SizedBox(width: AppSpacing.xs),
-                      Flexible(
-                        child: WholeText(
-                          post.handle,
-                          maxLines: 1,
-                          style: AppTypography.labelSmall.copyWith(
-                            color: AppColors.onSurfaceVariant,
-                          ),
-                        ),
-                      ),
-                      const Spacer(),
-                      Text(
-                        DateFormat('d MMM yy').format(post.date),
-                        style: AppTypography.labelSmall.copyWith(
-                          color: AppColors.onSurfaceVariant,
-                        ),
-                      ),
-                    ],
+                  Container(
+                    width: _avatarSize,
+                    height: _avatarSize,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: _tint.withValues(alpha: 0.16),
+                    ),
+                    child: Text(
+                      post.displayName.characters.first,
+                      style: AppTypography.labelMedium.copyWith(color: _tint),
+                    ),
                   ),
-                  const SizedBox(height: 4),
-                  Text(yPostBody(l, post), style: AppTypography.bodyMedium),
+                  const SizedBox(width: AppSpacing.sm),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Name, handle and date on ONE line, in that order —
+                        // the date sat right-aligned at the far edge before,
+                        // which put a column of dates down the side of the
+                        // feed and read as a table of records rather than as
+                        // people talking.
+                        Row(
+                          children: [
+                            Flexible(
+                              child: WholeText(
+                                post.displayName,
+                                maxLines: 1,
+                                style: AppTypography.labelMedium,
+                              ),
+                            ),
+                            const SizedBox(width: AppSpacing.xs),
+                            Flexible(
+                              child: WholeText(
+                                post.handle,
+                                maxLines: 1,
+                                style: AppTypography.labelSmall.copyWith(
+                                  color: AppColors.onSurfaceVariant,
+                                ),
+                              ),
+                            ),
+                            Text(
+                              ' · ${DateFormat('d MMM yy').format(post.date)}',
+                              maxLines: 1,
+                              style: AppTypography.labelSmall.copyWith(
+                                color: AppColors.onSurfaceVariant,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 2),
+                        Text(
+                          yPostBody(l, post),
+                          style: AppTypography.bodyMedium,
+                        ),
+                      ],
+                    ),
+                  ),
                 ],
               ),
             ),

@@ -1,0 +1,107 @@
+{
+  "pages": [
+    {
+      "id": "carousel",
+      "name": "Carousel 4:5"
+    },
+    {
+      "id": "stories",
+      "name": "Stories 9:16"
+    }
+  ],
+  "artboards": [
+    {
+      "file": "Main.dc.html",
+      "title": "01 Cover",
+      "page": "carousel",
+      "x": 0,
+      "y": 0,
+      "w": 1080,
+      "h": 1350
+    },
+    {
+      "file": "Hub.dc.html",
+      "title": "02 Hub",
+      "page": "carousel",
+      "x": 1180,
+      "y": 0,
+      "w": 1080,
+      "h": 1350
+    },
+    {
+      "file": "Tactics.dc.html",
+      "title": "03 Tactics",
+      "page": "carousel",
+      "x": 2360,
+      "y": 0,
+      "w": 1080,
+      "h": 1350
+    },
+    {
+      "file": "World.dc.html",
+      "title": "04 World",
+      "page": "carousel",
+      "x": 3540,
+      "y": 0,
+      "w": 1080,
+      "h": 1350
+    },
+    {
+      "file": "Close.dc.html",
+      "title": "05 Close",
+      "page": "carousel",
+      "x": 4720,
+      "y": 0,
+      "w": 1080,
+      "h": 1350
+    },
+    {
+      "file": "StoryScreen.dc.html",
+      "title": "Story · screen",
+      "page": "stories",
+      "x": 0,
+      "y": 0,
+      "w": 1080,
+      "h": 1920
+    },
+    {
+      "file": "StoryStatement.dc.html",
+      "title": "Story · statement",
+      "page": "stories",
+      "x": 1180,
+      "y": 0,
+      "w": 1080,
+      "h": 1920
+    }
+  ],
+  "annotations": [
+    {
+      "id": "shots",
+      "x": 0,
+      "y": -240,
+      "w": 700,
+      "page": "carousel",
+      "text": "The screenshot is the design. Everything else is one line of type and a lot of black.\n\nExport at 1206 x 2622 and drop each one into its frame. The slide sizes the frame at 560 x 1010, so the shot is scaled, not cropped."
+    },
+    {
+      "id": "system",
+      "x": 760,
+      "y": -240,
+      "w": 700,
+      "page": "carousel",
+      "text": "Lifted from the app: #121416 ground, #C4C6CB for the line of text, #44474B for the wordmark, Hanken Grotesk at 500 weight, JetBrains Mono for the mark.\n\nNo headline weight, no accent colour, no rules. If a slide needs decoration to work, the screenshot is the wrong one."
+    },
+    {
+      "id": "safe",
+      "x": 0,
+      "y": -200,
+      "w": 700,
+      "page": "stories",
+      "text": "Top 260 and bottom 300 are left empty: Instagram draws the profile row and the reply bar over them."
+    }
+  ],
+  "launch": {
+    "view": "canvas",
+    "page": "carousel"
+  }
+}

@@ -33,12 +33,21 @@ abstract final class BoardSatisfaction {
   ///
   /// The gauge used to reset to [neutral] every four years, so the man who had
   /// just won the World Cup opened his next cycle on exactly the figure of the
-  /// man who had nearly been sacked. A reputation is not nothing, and it is not
-  /// everything either: at a quarter, winning the last cycle is worth about
-  /// twelve points of rope at the start of this one — enough to survive a bad
-  /// window, nowhere near enough to survive a bad cycle, which is the whole
-  /// point of a board.
-  static const double carryOver = 0.25;
+  /// man who had nearly been sacked. A reputation is not nothing.
+  ///
+  /// At a quarter it was very nearly nothing: a manager who finished on ninety
+  /// opened the next cycle on sixty, and since a new cycle also has no settled
+  /// objective yet — the term that dominates the gauge — the board appeared to
+  /// forget four good years overnight and open every cycle unimpressed. Nobody
+  /// is sacked at a rollover, and the same job carries on across it, so the
+  /// standing should carry on across it too.
+  ///
+  /// At [carryOver] the same manager opens on eighty-four: the cycle turns and
+  /// the board is still onside, but the gauge drifts back toward [neutral]
+  /// rather than banking a triumph forever, and a bad cycle still costs him
+  /// almost everything he had — the guard below is that no reputation survives
+  /// a missed World Cup brief and a window of defeats.
+  static const double carryOver = 0.85;
 
   /// Where the gauge STARTS this cycle, given where it finished the last one.
   ///

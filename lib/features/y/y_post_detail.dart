@@ -40,19 +40,28 @@ class YPostDetail extends StatelessWidget {
         title: Text(l.yTitle, style: AppTypography.titleMedium),
         centerTitle: true,
       ),
+      // Edge to edge, like the feed it was opened from: the rows carry their
+      // own margins now, so a page padding here would inset the conversation
+      // by twice as much as the timeline behind it.
       body: ListView(
-        padding: const EdgeInsets.all(AppSpacing.marginMobile),
+        padding: EdgeInsets.zero,
         children: [
           YPostTile(post: post),
           if (replies.isNotEmpty) ...[
-            const SizedBox(height: AppSpacing.sm),
-            Text(
-              l.yReplies,
-              style: AppTypography.labelMedium.copyWith(
-                color: AppColors.onSurfaceVariant,
+            Padding(
+              padding: const EdgeInsets.fromLTRB(
+                AppSpacing.marginMobile,
+                AppSpacing.sm,
+                AppSpacing.marginMobile,
+                AppSpacing.xs,
+              ),
+              child: Text(
+                l.yReplies,
+                style: AppTypography.labelMedium.copyWith(
+                  color: AppColors.onSurfaceVariant,
+                ),
               ),
             ),
-            const SizedBox(height: AppSpacing.sm),
             for (final r in replies) YPostTile(post: r),
           ],
           const SizedBox(height: AppSpacing.xl),
