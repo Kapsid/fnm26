@@ -35,9 +35,16 @@ import 'package:go_router/go_router.dart';
 /// and formation selector. Players can be tapped to pick, or dragged to swap
 /// positions / bring a substitute on. Instructions live behind the tune action.
 class TacticsScreen extends ConsumerWidget {
-  const TacticsScreen({required this.careerId, super.key});
+  const TacticsScreen({required this.careerId, this.initialTab = 0, super.key});
 
   final int careerId;
+
+  /// Which tab to open on (0 lineup, 1 instructions, 2 roles & set pieces,
+  /// 3 squad).
+  ///
+  /// The pre-match setup strip sends the manager here about the armband or the
+  /// set-piece takers, both of which sit on tab 2, so it names it.
+  final int initialTab;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -59,7 +66,8 @@ class TacticsScreen extends ConsumerWidget {
         const <int, AbsenceOutlook>{};
 
     return DefaultTabController(
-      length: 3,
+      length: 4,
+      initialIndex: initialTab.clamp(0, 3),
       child: Scaffold(
         appBar: AppBar(
           leading: IconButton(
@@ -74,7 +82,10 @@ class TacticsScreen extends ConsumerWidget {
             l.tacticsSquad,
             style: AppTypography.labelMedium.copyWith(color: AppColors.primary),
           ),
-          centerTitle: true,
+          // Left, beside the arrow. Centred, it sat in the middle of four
+          // actions and read as one of them.
+          centerTitle: false,
+          titleSpacing: 0,
           // Split into sections so it's not one long scroll — the pitch, each
           // player's role, the set-piece takers, and the wider squad each get
           // their own tab.
@@ -85,16 +96,30 @@ class TacticsScreen extends ConsumerWidget {
             indicatorColor: AppColors.primary,
             tabs: [
               Tab(text: l.tacticsTabLineup),
+              Tab(text: l.tacticsTabInstructions),
               Tab(text: l.tacticsTabRolesSetPieces),
               Tab(key: TourKeys.squadTab, text: l.tacticsSquad),
             ],
           ),
+          // Squad, instructions, saving how they play, then who is coming
+          // through: the order a manager works in.
           actions: [
             IconButton(
               icon: const Icon(Icons.groups, color: AppColors.primary),
               tooltip: l.tacticsTooltipCallUps,
               onPressed: () =>
                   context.go('${Routes.callUps}?careerId=$careerId'),
+            ),
+            // The instructions have a tab of their own now, and this still
+            // goes to them — the icon is where a manager's hand already is,
+            // and a shortcut to a tab is not a second version of it. The
+            // Builder is what gives it a context below the tab controller.
+            Builder(
+              builder: (context) => IconButton(
+                icon: const Icon(Icons.tune, color: AppColors.primary),
+                tooltip: l.tacticsTooltipInstructions,
+                onPressed: () => DefaultTabController.of(context).animateTo(1),
+              ),
             ),
             dataAsync.maybeWhen(
               data: (data) => IconButton(
@@ -109,15 +134,14 @@ class TacticsScreen extends ConsumerWidget {
               ),
               orElse: () => const SizedBox.shrink(),
             ),
-            dataAsync.maybeWhen(
-              data: (data) => IconButton(
-                icon: const Icon(Icons.tune, color: AppColors.primary),
-                tooltip: l.tacticsTooltipInstructions,
-                onPressed: data == null
-                    ? null
-                    : () => _openInstructions(context, ref, data.tactic),
-              ),
-              orElse: () => const SizedBox.shrink(),
+            // The same watchlist the call-up screen carries, reachable from
+            // here too: "who is coming through" is asked while looking at the
+            // squad, not only while naming one.
+            IconButton(
+              icon: const Icon(Icons.school_outlined, color: AppColors.primary),
+              tooltip: l.tacticsYouth,
+              onPressed: () =>
+                  context.push('${Routes.youth}?careerId=$careerId'),
             ),
           ],
         ),
@@ -266,7 +290,8 @@ class TacticsScreen extends ConsumerWidget {
                           FormationField(
                             key: TourKeys.tacticsFormation,
                             selected: tactic.formation,
-                            onSelected: (f) => service.setFormation(careerId, f),
+                            onSelected: (f) =>
+                                service.setFormation(careerId, f),
                           ),
                           const SizedBox(height: AppSpacing.lg),
                           // The side's way of playing, stated in words, with a
@@ -278,43 +303,55 @@ class TacticsScreen extends ConsumerWidget {
                             style: AppTypography.labelMedium,
                           ),
                           const SizedBox(height: AppSpacing.sm),
-                          AppCard(
-                            key: TourKeys.tacticsPlaystyle,
-                            onTap: () =>
-                                _openInstructions(context, ref, tactic),
-                            child: Row(
-                              children: [
-                                const Icon(
-                                  Icons.auto_graph_rounded,
-                                  size: 18,
-                                  color: AppColors.primary,
-                                ),
-                                const SizedBox(width: AppSpacing.md),
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        playstyleLabel(l, tactic.playstyle),
-                                        style: AppTypography.titleMedium,
-                                      ),
-                                      Text(
-                                        playstyleBlurb(l, tactic.playstyle),
-                                        style: AppTypography.labelSmall
-                                            .copyWith(
-                                              color: AppColors.onSurfaceVariant,
-                                            ),
-                                      ),
-                                    ],
+                          // The Builder is load-bearing: this screen's own
+                          // context sits ABOVE the DefaultTabController it
+                          // creates, so looking the controller up from it
+                          // throws. Everything that moves tabs needs a context
+                          // from underneath.
+                          Builder(
+                            builder: (context) => AppCard(
+                              key: TourKeys.tacticsPlaystyle,
+                              // Across to the instructions tab rather than up
+                              // in a sheet: it is the next tab along, and a
+                              // sheet over a screen that is already there reads
+                              // as two different places for one decision.
+                              onTap: () =>
+                                  DefaultTabController.of(context).animateTo(1),
+                              child: Row(
+                                children: [
+                                  const Icon(
+                                    Icons.auto_graph_rounded,
+                                    size: 18,
+                                    color: AppColors.primary,
                                   ),
-                                ),
-                                const Icon(
-                                  Icons.chevron_right,
-                                  size: 18,
-                                  color: AppColors.onSurfaceVariant,
-                                ),
-                              ],
+                                  const SizedBox(width: AppSpacing.md),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          playstyleLabel(l, tactic.playstyle),
+                                          style: AppTypography.titleMedium,
+                                        ),
+                                        Text(
+                                          playstyleBlurb(l, tactic.playstyle),
+                                          style: AppTypography.labelSmall
+                                              .copyWith(
+                                                color:
+                                                    AppColors.onSurfaceVariant,
+                                              ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  const Icon(
+                                    Icons.chevron_right,
+                                    size: 18,
+                                    color: AppColors.onSurfaceVariant,
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         ],
@@ -322,7 +359,11 @@ class TacticsScreen extends ConsumerWidget {
                     ),
                   ],
                 ),
-                // 2. ROLES & SET PIECES — one row per starter: their job, plus
+                // 2. INSTRUCTIONS — the playstyle and the six dials that trim
+                //    it. Half of what a tactic is, and it used to live behind
+                //    an icon in the app bar.
+                _InstructionsTab(careerId: careerId, tactic: tactic),
+                // 3. ROLES & SET PIECES — one row per starter: their job, plus
                 //    the penalty and free-kick badges (tap to make them taker).
                 //    The armband sits at the top of it: naming a captain is the
                 //    same kind of decision as naming a penalty taker — one job,
@@ -374,7 +415,7 @@ class TacticsScreen extends ConsumerWidget {
                         ),
                   ],
                 ),
-                // 3. SQUAD — the nation's whole pool: every eligible player,
+                // 4. SQUAD — the nation's whole pool: every eligible player,
                 //    their club, age, form and international record, filterable
                 //    and sortable. See [NationSquadTab] for why it is the pool
                 //    rather than the bench.
@@ -540,16 +581,20 @@ class TacticsScreen extends ConsumerWidget {
                     fontWeight: inXi ? FontWeight.w400 : FontWeight.w600,
                   ),
                 ),
+                // Age, and only age — the same row the in-match sheet shows.
+                // The row ALREADY says he is out of position twice over: the
+                // leading chip names the position he actually plays, and the
+                // trailing rating is docked and amber with his real overall in
+                // brackets behind it. Naming the position a third time in
+                // words made the row shout, and the amber that matters — the
+                // number the match is decided on — stopped standing out for
+                // being one of three.
                 subtitle: Text(
-                  eff < p.overall
-                      ? l.tacticsRoleOutOfPosition(p.position.roleName)
-                      : l.tacticsRoleAge(p.position.roleName, p.age),
+                  l.tacticsAgeOnly(p.age),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: AppTypography.labelSmall.copyWith(
-                    color: eff < p.overall
-                        ? AppColors.warning
-                        : AppColors.onSurfaceVariant,
+                    color: AppColors.onSurfaceVariant,
                   ),
                 ),
                 trailing: Row(
@@ -612,19 +657,6 @@ class TacticsScreen extends ConsumerWidget {
     }
   }
 
-  Future<void> _openInstructions(
-    BuildContext context,
-    WidgetRef ref,
-    Tactic tactic,
-  ) {
-    return showModalBottomSheet<void>(
-      context: context,
-      backgroundColor: AppColors.surfaceContainer,
-      isScrollControlled: true,
-      builder: (_) => _InstructionsSheet(careerId: careerId, tactic: tactic),
-    );
-  }
-
   Future<void> _openPresets(
     BuildContext context,
     WidgetRef ref,
@@ -663,19 +695,39 @@ String playstyleBlurb(AppLocalizations l, Playstyle s) => switch (s) {
   Playstyle.wingPlay => l.playstyleWingPlayBlurb,
 };
 
-class _InstructionsSheet extends ConsumerStatefulWidget {
-  const _InstructionsSheet({required this.careerId, required this.tactic});
+/// The side's way of playing: one named style, and the six dials that trim it.
+///
+/// This was a bottom sheet behind an icon, which is a poor home for half of
+/// what a tactic IS — the shape got a whole screen and the instructions got a
+/// button most managers never pressed. It is a tab now, beside the lineup.
+class _InstructionsTab extends ConsumerStatefulWidget {
+  const _InstructionsTab({required this.careerId, required this.tactic});
 
   final int careerId;
   final Tactic tactic;
 
   @override
-  ConsumerState<_InstructionsSheet> createState() => _InstructionsSheetState();
+  ConsumerState<_InstructionsTab> createState() => _InstructionsTabState();
 }
 
-class _InstructionsSheetState extends ConsumerState<_InstructionsSheet> {
+class _InstructionsTabState extends ConsumerState<_InstructionsTab> {
   late TacticalInstructions _i = widget.tactic.instructions;
   late Playstyle _style = widget.tactic.playstyle;
+
+  @override
+  void didUpdateWidget(_InstructionsTab old) {
+    super.didUpdateWidget(old);
+    // A preset applied from the app bar rewrites the instructions underneath
+    // this. As a sheet it was thrown away and rebuilt every time it opened, so
+    // it never had to notice; a tab stays alive and would have gone on showing
+    // the dials the preset replaced.
+    if (widget.tactic.instructions != old.tactic.instructions) {
+      setState(() {
+        _i = widget.tactic.instructions;
+        _style = widget.tactic.playstyle;
+      });
+    }
+  }
 
   void _set(TacticalInstructions next) {
     setState(() {
@@ -703,147 +755,110 @@ class _InstructionsSheetState extends ConsumerState<_InstructionsSheet> {
 
   @override
   Widget build(BuildContext context) {
-    // Roomier than a plain sheet: a tall, scrollable panel so each instruction
-    // has space to breathe and reads clearly.
     final l = AppLocalizations.of(context);
-    final maxHeight = MediaQuery.of(context).size.height * 0.85;
-    return ConstrainedBox(
-      constraints: BoxConstraints(maxHeight: maxHeight),
-      child: Padding(
-        padding: EdgeInsets.fromLTRB(
-          AppSpacing.lg,
-          AppSpacing.md,
-          AppSpacing.lg,
-          AppSpacing.lg + MediaQuery.of(context).viewInsets.bottom,
+    return ListView(
+      padding: const EdgeInsets.fromLTRB(
+        AppSpacing.lg,
+        AppSpacing.md,
+        AppSpacing.lg,
+        AppSpacing.xl,
+      ),
+      children: [
+        Text(
+          l.tacticsTeamInstructions,
+          style: AppTypography.titleMedium.copyWith(color: AppColors.primary),
         ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
+        const SizedBox(height: AppSpacing.xs),
+        Text(
+          l.tacticsTeamInstructionsBlurb,
+          style: AppTypography.bodySmall.copyWith(
+            color: AppColors.onSurfaceVariant,
+          ),
+        ),
+        const SizedBox(height: AppSpacing.lg),
+        // The style comes first: one decision that sets all six dials below,
+        // which are then there to trim it. Managing a side by six unlabelled
+        // sliders asked the manager to reverse-engineer a way of playing they
+        // could simply have named.
+        Text(l.tacticsPlaystyle, style: AppTypography.titleMedium),
+        const SizedBox(height: AppSpacing.xs),
+        Text(
+          l.tacticsPlaystyleBlurb,
+          style: AppTypography.bodySmall.copyWith(
+            color: AppColors.onSurfaceVariant,
+          ),
+        ),
+        const SizedBox(height: AppSpacing.sm),
+        Wrap(
+          spacing: AppSpacing.sm,
+          runSpacing: AppSpacing.sm,
           children: [
-            // A small grab handle so the panel reads as a draggable sheet.
-            Center(
-              child: Container(
-                width: 40,
-                height: 4,
-                margin: const EdgeInsets.only(bottom: AppSpacing.md),
-                decoration: const BoxDecoration(
-                  color: AppColors.outlineVariant,
-                  borderRadius: AppRadii.smAll,
+            for (final s in Playstyle.values)
+              if (s != Playstyle.custom)
+                GestureDetector(
+                  onTap: () => _setStyle(s),
+                  child: TacticalChip(
+                    playstyleLabel(l, s),
+                    emphasized: s == _style,
+                  ),
                 ),
-              ),
-            ),
-            Text(
-              l.tacticsTeamInstructions,
-              style: AppTypography.titleMedium.copyWith(
-                color: AppColors.primary,
-              ),
-            ),
-            const SizedBox(height: AppSpacing.xs),
-            Text(
-              l.tacticsTeamInstructionsBlurb,
-              style: AppTypography.bodySmall.copyWith(
-                color: AppColors.onSurfaceVariant,
-              ),
-            ),
-            const SizedBox(height: AppSpacing.md),
-            Flexible(
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // The style comes first: one decision that sets all six
-                    // dials below, which are then there to trim it. Managing a
-                    // side by six unlabelled sliders asked the manager to
-                    // reverse-engineer a way of playing they could simply have
-                    // named.
-                    Text(
-                      l.tacticsPlaystyle,
-                      style: AppTypography.titleMedium,
-                    ),
-                    const SizedBox(height: AppSpacing.xs),
-                    Text(
-                      l.tacticsPlaystyleBlurb,
-                      style: AppTypography.bodySmall.copyWith(
-                        color: AppColors.onSurfaceVariant,
-                      ),
-                    ),
-                    const SizedBox(height: AppSpacing.sm),
-                    Wrap(
-                      spacing: AppSpacing.sm,
-                      runSpacing: AppSpacing.sm,
-                      children: [
-                        for (final s in Playstyle.values)
-                          if (s != Playstyle.custom)
-                            GestureDetector(
-                              onTap: () => _setStyle(s),
-                              child: TacticalChip(
-                                playstyleLabel(l, s),
-                                emphasized: s == _style,
-                              ),
-                            ),
-                      ],
-                    ),
-                    const SizedBox(height: AppSpacing.sm),
-                    Text(
-                      _style == Playstyle.custom
-                          ? l.tacticsPlaystyleCustom
-                          : playstyleBlurb(l, _style),
-                      style: AppTypography.labelSmall.copyWith(
-                        color: _style == Playstyle.custom
-                            ? AppColors.onSurfaceVariant
-                            : AppColors.primary,
-                      ),
-                    ),
-                    const SizedBox(height: AppSpacing.lg),
-                    _slider(
-                      l.tacticsInstrMentality,
-                      l.tacticsInstrDefensive,
-                      l.tacticsInstrAttacking,
-                      _i.mentality,
-                      (v) => _set(_i.copyWith(mentality: v)),
-                    ),
-                    _slider(
-                      l.tacticsInstrPressing,
-                      l.tacticsInstrLowBlock,
-                      l.tacticsInstrHighPress,
-                      _i.pressing,
-                      (v) => _set(_i.copyWith(pressing: v)),
-                    ),
-                    _slider(
-                      l.tacticsInstrTempo,
-                      l.tacticsInstrPatient,
-                      l.tacticsInstrFast,
-                      _i.tempo,
-                      (v) => _set(_i.copyWith(tempo: v)),
-                    ),
-                    _slider(
-                      l.tacticsInstrWidth,
-                      l.tacticsInstrNarrow,
-                      l.tacticsInstrWide,
-                      _i.width,
-                      (v) => _set(_i.copyWith(width: v)),
-                    ),
-                    _slider(
-                      l.tacticsInstrDefensiveLine,
-                      l.tacticsInstrDeep,
-                      l.tacticsInstrHigh,
-                      _i.defensiveLine,
-                      (v) => _set(_i.copyWith(defensiveLine: v)),
-                    ),
-                    _slider(
-                      l.tacticsInstrDirectness,
-                      l.tacticsInstrPossession,
-                      l.tacticsInstrDirect,
-                      _i.directness,
-                      (v) => _set(_i.copyWith(directness: v)),
-                    ),
-                  ],
-                ),
-              ),
-            ),
           ],
         ),
-      ),
+        const SizedBox(height: AppSpacing.sm),
+        Text(
+          _style == Playstyle.custom
+              ? l.tacticsPlaystyleCustom
+              : playstyleBlurb(l, _style),
+          style: AppTypography.labelSmall.copyWith(
+            color: _style == Playstyle.custom
+                ? AppColors.onSurfaceVariant
+                : AppColors.primary,
+          ),
+        ),
+        const SizedBox(height: AppSpacing.lg),
+        _slider(
+          l.tacticsInstrMentality,
+          l.tacticsInstrDefensive,
+          l.tacticsInstrAttacking,
+          _i.mentality,
+          (v) => _set(_i.copyWith(mentality: v)),
+        ),
+        _slider(
+          l.tacticsInstrPressing,
+          l.tacticsInstrLowBlock,
+          l.tacticsInstrHighPress,
+          _i.pressing,
+          (v) => _set(_i.copyWith(pressing: v)),
+        ),
+        _slider(
+          l.tacticsInstrTempo,
+          l.tacticsInstrPatient,
+          l.tacticsInstrFast,
+          _i.tempo,
+          (v) => _set(_i.copyWith(tempo: v)),
+        ),
+        _slider(
+          l.tacticsInstrWidth,
+          l.tacticsInstrNarrow,
+          l.tacticsInstrWide,
+          _i.width,
+          (v) => _set(_i.copyWith(width: v)),
+        ),
+        _slider(
+          l.tacticsInstrDefensiveLine,
+          l.tacticsInstrDeep,
+          l.tacticsInstrHigh,
+          _i.defensiveLine,
+          (v) => _set(_i.copyWith(defensiveLine: v)),
+        ),
+        _slider(
+          l.tacticsInstrDirectness,
+          l.tacticsInstrPossession,
+          l.tacticsInstrDirect,
+          _i.directness,
+          (v) => _set(_i.copyWith(directness: v)),
+        ),
+      ],
     );
   }
 
@@ -1328,64 +1343,20 @@ class _PlayerTacticRow extends StatelessWidget {
             ],
           ),
           const SizedBox(width: AppSpacing.md),
-          _SpBadge(
+          SetPieceBadge(
             icon: Icons.sports_soccer,
             active: isPenaltyTaker,
             tooltip: l.tacticsPenalties,
             onTap: onTogglePenalty,
           ),
           const SizedBox(width: 6),
-          _SpBadge(
+          SetPieceBadge(
             icon: Icons.flag_rounded,
             active: isDeadBallTaker,
             tooltip: l.tacticsCornersFreeKicks,
             onTap: onToggleDeadBall,
           ),
         ],
-      ),
-    );
-  }
-}
-
-/// A round set-piece toggle badge: filled in the accent when this player is the
-/// current taker, an outline otherwise.
-class _SpBadge extends StatelessWidget {
-  const _SpBadge({
-    required this.icon,
-    required this.active,
-    required this.tooltip,
-    required this.onTap,
-  });
-
-  final IconData icon;
-  final bool active;
-  final String tooltip;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return Tooltip(
-      message: tooltip,
-      child: InkWell(
-        onTap: onTap,
-        customBorder: const CircleBorder(),
-        child: Container(
-          width: 34,
-          height: 34,
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-            color: active ? AppColors.primary.withValues(alpha: 0.18) : null,
-            shape: BoxShape.circle,
-            border: Border.all(
-              color: active ? AppColors.primary : AppColors.outlineVariant,
-            ),
-          ),
-          child: Icon(
-            icon,
-            size: 18,
-            color: active ? AppColors.primary : AppColors.onSurfaceVariant,
-          ),
-        ),
       ),
     );
   }

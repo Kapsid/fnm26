@@ -62,6 +62,12 @@ Map<String, String> _byEnglishName(AppLocalizations l) => {
   'World Championship': l.compWorldCup,
   'World Championship Finals': l.compWorldCupFinals,
   'World Cup Qualifying': l.compWorldCupQualifying,
+  // The name the schedule generator actually stores for the player's own
+  // qualifying campaign. Without it the ' Qualifiers' branch below reads
+  // "World Cup" as if it were a continent and prints it back untranslated —
+  // the one place the old name survived the rename.
+  'World Cup Qualifiers': l.compWorldCupQualifying,
+  'World Championship Qualifiers': l.compWorldCupQualifying,
   'Friendlies': l.compFriendlies,
   'Nations Cup': l.compNationsCup,
   'Continental Clash': l.compContinentalClash,

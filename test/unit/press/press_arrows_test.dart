@@ -57,7 +57,10 @@ void main() {
     });
 
     test('the strongest stances reach three arrows', () {
-      expect(Press.arrowsFor(Press.effectOf(PressTone.backThePlayers).morale), 3);
+      expect(
+        Press.arrowsFor(Press.effectOf(PressTone.backThePlayers).morale),
+        3,
+      );
       expect(Press.arrowsFor(Press.effectOf(PressTone.raiseTheBar).board), 3);
     });
 

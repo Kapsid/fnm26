@@ -165,6 +165,19 @@ class SquadData {
   final bool hasPreviousSquad;
 }
 
+/// The shape the manager is currently playing, without loading a squad.
+///
+/// [tacticDataProvider] carries the formation too, but it resolves the whole
+/// nation pool to do it — far too much to ask of a screen that only needs to
+/// know how many defenders the side lines up with.
+final AutoDisposeFutureProviderFamily<Formation, int> currentFormationProvider =
+    FutureProvider.autoDispose.family<Formation, int>((ref, careerId) async {
+      final tactic = await ref
+          .watch(tacticsRepositoryProvider)
+          .tacticForCareer(careerId);
+      return tactic?.formation ?? Formation.f433;
+    });
+
 // Auto-disposed for the same reason as [tacticDataProvider].
 /// The squad a manager who has named nobody starts from: every senior.
 ///

@@ -5,6 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/services/club/clubs.dart';
+import 'package:fnm/domain/services/player/player_aging.dart';
 
 import '../../helpers/fixtures.dart';
 
@@ -16,21 +17,31 @@ Player at(int overall, {int id = 5001, int age = 26}) => player(
   attributes: flatAttributes(overall),
 );
 
-/// The share (%) of a notional 24-player squad rated around [overall] that ends
-/// up at a club in [code]'s own country.
+/// The share (%) of a notional squad rated around [overall] that ends up at a
+/// club in [code]'s own country.
+///
+/// Measured across several SAVE SEEDS, not one. A single seed's 240 players
+/// carry about three points of sampling noise, which is the same size as the
+/// gaps these tests assert — so a thresholds-by-a-point assertion passed or
+/// failed on the draw rather than on the model, and re-tuning the threshold
+/// when it flipped would have been fitting the test to the noise.
 int domesticShare(String code, int overall) {
   var home = 0;
-  const n = 240;
-  for (var i = 0; i < n; i++) {
-    final c = ClubService.clubForSeed(
-      at(overall, id: 4000 + i * 7),
-      31,
-      homeCode: code,
-      homeCities: const ['Alpha', 'Beta', 'Gamma', 'Delta'],
-    );
-    if (c.country == code) home++;
+  var total = 0;
+  const seeds = [3, 17, 31, 64, 99, 512, 1234, 5678];
+  for (final seed in seeds) {
+    for (var i = 0; i < 240; i++) {
+      final c = ClubService.clubForSeed(
+        at(overall, id: 4000 + i * 7),
+        seed,
+        homeCode: code,
+        homeCities: const ['Alpha', 'Beta', 'Gamma', 'Delta'],
+      );
+      if (c.country == code) home++;
+      total++;
+    }
   }
-  return (100 * home / n).round();
+  return (100 * home / total).round();
 }
 
 void main() {
@@ -63,6 +74,144 @@ void main() {
     final before = ClubService.clubForSeed(at(72), 4, homeCode: 'zzz');
     final after = ClubService.clubForSeed(at(73), 4, homeCode: 'zzz');
     expect(after.name, before.name);
+  });
+
+  group('the transfer clock', () {
+    /// Walks a whole career one season at a time and reports how many clubs it
+    /// passed through, and in what share of its seasons the club changed.
+    ({double clubs, double movedPercent}) career(String code) {
+      var moves = 0, years = 0;
+      var totalClubs = 0, careers = 0;
+      for (var i = 0; i < 240; i++) {
+        final base = player(
+          id: 5000 + i * 3,
+          nationId: 7,
+          position: PlayerPosition.cm,
+          age: 17,
+          attributes: flatAttributes(52 + (i * 11) % 30),
+        );
+        final seen = <String>{};
+        String? previous;
+        for (var year = 0; year <= 19; year++) {
+          final aged = PlayerAging.agedYears(base, year);
+          final c = ClubService.clubForSeed(
+            aged,
+            77,
+            homeCode: code,
+            homeCities: const ['Alpha', 'Beta', 'Gamma', 'Delta'],
+          );
+          final key = '${c.name}|${c.country}';
+          seen.add(key);
+          if (previous != null) {
+            years++;
+            if (key != previous) moves++;
+          }
+          previous = key;
+        }
+        totalClubs += seen.length;
+        careers++;
+      }
+      return (
+        clubs: totalClubs / careers,
+        movedPercent: 100 * moves / years,
+      );
+    }
+
+    test('a career is a handful of clubs, not one a season', () {
+      // The whole point of [ClubService.contractAt]. Reading the club off the
+      // live overall meant a developing teenager crossed a standing band most
+      // years and an aging veteran crossed one on the way back down, so the
+      // history card said "transferred" in four seasons out of five and a
+      // twenty-year career came out as nine clubs. Nobody's does.
+      for (final code in ['eng', 'bra', 'cze', 'mex', 'zzz']) {
+        final c = career(code);
+        expect(
+          c.clubs,
+          inInclusiveRange(3, 6.5),
+          reason: '$code: ${c.clubs} clubs in a twenty-season career',
+        );
+        expect(
+          c.movedPercent,
+          lessThan(35),
+          reason: '$code moved in ${c.movedPercent}% of seasons',
+        );
+      }
+    });
+
+    test('a contract runs for years, and is often signed again', () {
+      // Every deal is two to four seasons and half of them are renewed, so a
+      // player is on his fourth or fifth CLUB, not his fifteenth, by the end.
+      final spans = <int>[];
+      for (var i = 0; i < 400; i++) {
+        final id = 9000 + i * 13;
+        var previous = ClubService.contractAt(id, 17).since;
+        for (var age = 18; age <= 36; age++) {
+          final since = ClubService.contractAt(id, age).since;
+          if (since != previous) {
+            spans.add(since - previous);
+            previous = since;
+          }
+        }
+      }
+      expect(spans, isNotEmpty);
+      final mean = spans.reduce((a, b) => a + b) / spans.length;
+      expect(mean, inInclusiveRange(2.0, 4.0));
+      // A deal is never open-ended, and never a single season by design (only
+      // the rare early exit is).
+      expect(spans.every((s) => s >= 1 && s <= 4), isTrue);
+    });
+
+    test('a running deal holds a player where an expiring one moves him', () {
+      // The bug this whole clock exists for. A club used to be read off the
+      // LIVE overall in five-point bands, and a developing player crosses a
+      // band every couple of seasons — so the history card said "transferred"
+      // in four seasons out of five, at every age. A move now belongs to the
+      // end of a contract: a season in the middle of one moves a player far
+      // less often than the season his deal runs out.
+      var midMoves = 0, midSeasons = 0;
+      var endMoves = 0, endSeasons = 0;
+      for (var i = 0; i < 300; i++) {
+        final base = player(
+          id: 3100 + i * 7,
+          nationId: 7,
+          position: PlayerPosition.cm,
+          age: 17,
+          attributes: flatAttributes(50 + (i * 13) % 32),
+        );
+        ClubSide clubOf(Player p) => ClubService.clubForSeed(
+          p,
+          5,
+          homeCode: 'cze',
+          homeCities: const ['Alpha', 'Beta'],
+        );
+        for (var year = 1; year <= 18; year++) {
+          final before = PlayerAging.agedYears(base, year - 1);
+          final after = PlayerAging.agedYears(base, year);
+          final expired =
+              ClubService.contractAt(base.id, before.age).index !=
+              ClubService.contractAt(base.id, after.age).index;
+          final moved = clubOf(before) != clubOf(after);
+          if (expired) {
+            endSeasons++;
+            if (moved) endMoves++;
+          } else {
+            midSeasons++;
+            if (moved) midMoves++;
+          }
+        }
+      }
+      expect(midSeasons, greaterThan(1000));
+      expect(endSeasons, greaterThan(200));
+      final mid = 100 * midMoves / midSeasons;
+      final end = 100 * endMoves / endSeasons;
+      expect(end, greaterThan(80), reason: 'an expiry should be a move');
+      expect(
+        mid,
+        lessThan(15),
+        reason: 'mid-contract seasons moved $mid% of the time',
+      );
+      expect(end, greaterThan(mid * 4));
+    });
   });
 
   test('standing bands span five rating points', () {

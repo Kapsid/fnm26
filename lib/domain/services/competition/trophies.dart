@@ -60,7 +60,7 @@ abstract final class Trophies {
     String cont(Confederation c) =>
         ContinentalCups.byConfederation[c]?.name ?? c.name;
     return [
-      (key: 'world', asset: worldCup, label: 'World Cup'),
+      (key: 'world', asset: worldCup, label: 'World Championship'),
       (
         key: Confederation.europe.name,
         asset: forConfederation(Confederation.europe),

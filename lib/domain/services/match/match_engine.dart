@@ -96,6 +96,7 @@ class TacticalChange {
     required this.formation,
     required this.instructions,
     required this.xi,
+    this.takers,
   });
 
   final int teamNationId;
@@ -103,6 +104,16 @@ class TacticalChange {
   final Formation formation;
   final TacticalInstructions instructions;
   final List<Player> xi;
+
+  /// New set-piece takers from this minute on, or null to leave the side's
+  /// existing pair alone. Either id inside may itself be null, which hands that
+  /// duty back to the engine's own pick.
+  ///
+  /// Carried on the CHANGE rather than swapped on the team because a match is
+  /// re-simulated from the first minute every time the manager touches
+  /// anything: setting the taker on the team would rewrite the penalty he has
+  /// already watched being taken.
+  final ({int? penalty, int? deadBall})? takers;
 }
 
 /// The tone a manager strikes in a team talk (at the interval). Each tone shifts
@@ -313,9 +324,17 @@ class _Live {
   _Live(this.team)
     : xi = [...team.xi],
       slots = [...team.formation.positions],
-      instructions = team.instructions;
+      instructions = team.instructions,
+      penaltyTakerId = team.penaltyTakerId,
+      deadBallTakerId = team.deadBallTakerId;
 
   final MatchTeam team;
+
+  /// Who takes the side's penalties and dead balls RIGHT NOW. Seeded from the
+  /// team sheet and reassignable mid-match, so a manager whose taker has gone
+  /// off (or has just missed one) can hand the ball to somebody else.
+  int? penaltyTakerId;
+  int? deadBallTakerId;
 
   /// The players on the pitch right now (reassigned wholesale by a live
   /// tactical change; individual slots are edited by subs and sendings-off).
@@ -937,6 +956,11 @@ class MatchEngine {
       ..xi = newXi
       ..slots = newSlots
       ..instructions = c.instructions;
+    if (c.takers case final t?) {
+      live
+        ..penaltyTakerId = t.penalty
+        ..deadBallTakerId = t.deadBall;
+    }
   }
 
   /// Rolls one minute of discipline for [live]: a possible booking (a second
@@ -1225,7 +1249,7 @@ class MatchEngine {
   /// pitch, else the outfield player with the best finishing; the first player
   /// when a team is somehow empty.
   Player _penaltyTaker(_Live team) {
-    final chosen = _designated(team, team.team.penaltyTakerId);
+    final chosen = _designated(team, team.penaltyTakerId);
     if (chosen != null) return chosen;
     final outfield = team.xi
         .where((p) => p.category != PositionCategory.goalkeeper)
@@ -1414,7 +1438,7 @@ class MatchEngine {
   /// dead-ball taker if on the pitch (and not the scorer), else the side's best
   /// passer. Null when nobody else is on the pitch.
   Player? _setPieceTaker(_Live team, Player scorer) {
-    final chosen = _designated(team, team.team.deadBallTakerId);
+    final chosen = _designated(team, team.deadBallTakerId);
     if (chosen != null && chosen.id != scorer.id) return chosen;
     final pool = team.xi.where((p) => p.id != scorer.id).toList();
     if (pool.isEmpty) return null;
@@ -1437,8 +1461,15 @@ class MatchEngine {
   /// Each further sending-off costs more than the last (nine men is far worse
   /// than ten), and the ten who are left also cover more ground (see
   /// [_deplete]), so a red still compounds over what's left of the game.
-  static const double _shortHandedAttackPenalty = 16.0;
-  static const double _shortHandedEscalation = 5.5;
+  ///
+  /// Sixteen points was too polite: measured over six thousand games between
+  /// two equal sides, a red cost the offending team 0.44 goals of the final
+  /// difference and about a sixth of a point, so a sending-off read as a
+  /// caption rather than as the thing that decided the night. At 26 it costs
+  /// 0.67 goals and a fifth of a point, which is nearer what an hour with ten
+  /// men is actually worth.
+  static const double _shortHandedAttackPenalty = 26.0;
+  static const double _shortHandedEscalation = 8.0;
   static const double _shortHandedDefenceShare = 0.85;
 
   double _shortHandedPenalty(_Live t) {
@@ -1688,7 +1719,7 @@ class MatchEngine {
     final i = t.instructions;
     // A man down means the ten who are left cover the missing man's ground, so
     // a sending-off also burns the side out faster.
-    final shortHanded = 1 + 0.24 * t.sentOff.length;
+    final shortHanded = 1 + 0.30 * t.sentOff.length;
     final workload =
         (1 + (i.tempo - 50) / 250 + (i.pressing - 50) / 250) * shortHanded;
     for (final p in t.xi) {

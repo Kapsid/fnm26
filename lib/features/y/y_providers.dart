@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/fixture.dart';
+import 'package:fnm/domain/entities/group_standing.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/services/competition/rounds.dart';
 import 'package:fnm/domain/services/press/public_mood.dart';
@@ -26,6 +27,7 @@ typedef _Judged = ({
   int conceded,
   DateTime date,
   String key,
+  bool competitive,
 });
 
 final AutoDisposeFutureProviderFamily<List<_Judged>, int> _judgedProvider =
@@ -67,6 +69,7 @@ final AutoDisposeFutureProviderFamily<List<_Judged>, int> _judgedProvider =
           conceded: home ? f.awayScore! : f.homeScore!,
           date: f.date,
           key: 'fx:${f.id}',
+          competitive: f.round != Rounds.friendly,
         ));
       }
       return out;
@@ -143,6 +146,7 @@ final AutoDisposeFutureProviderFamily<List<YPost>, int> yFeedProvider =
             conceded: j.conceded,
             date: j.date,
             key: j.key,
+            competitive: j.competitive,
           ),
           scorerName: scorerName,
           scorerGoals: scorerGoals,
@@ -355,6 +359,12 @@ Future<List<YPost>> _tournamentPosts(
     list.sort((a, b) => a.date.compareTo(b.date));
   }
 
+  // The rest of the world's fixtures, which is what a group finish has to be
+  // read against: the nation's own say only that it has no match left, and
+  // that is true of a group winner waiting on a draw as much as of a side on
+  // the plane home.
+  final worldFixtures = await comp.allFixtures(careerId);
+
   final milestones = <YMilestone>[];
   for (final entry in byCompetition.entries) {
     final list = entry.value;
@@ -385,6 +395,12 @@ Future<List<YPost>> _tournamentPosts(
             : mine > theirs,
         date: last.date,
         key: 'cmp:${entry.key}',
+        goneAtGroup: _goneAtGroup(
+          worldFixtures,
+          competitionId: entry.key,
+          nationId: nationId,
+          groupId: last.groupId,
+        ),
       );
       if (milestone != null) milestones.add(milestone);
     }
@@ -429,6 +445,50 @@ Future<List<YPost>> _tournamentPosts(
         seed: seed,
       ),
   ];
+}
+
+/// Whether the nation's tournament ENDED in the group stage — really ended,
+/// rather than merely running out of fixtures for the moment.
+///
+/// Three things have to hold, and each of them rules out a case that used to
+/// be reported as an elimination:
+///
+///  * the tournament has knockout ties already drawn — otherwise the side may
+///    be a group winner waiting on a draw nobody has made yet;
+///  * the nation is in none of them — the plain meaning of going out;
+///  * and it did not win its group — the Nations Cup is one competition with
+///    several leagues stacked inside it, so the ties above belong to League A
+///    and a side that topped League B has been PROMOTED, not knocked out.
+bool _goneAtGroup(
+  List<Fixture> worldFixtures, {
+  required int competitionId,
+  required int nationId,
+  required int? groupId,
+}) {
+  final knockout = [
+    for (final f in worldFixtures)
+      if (f.competitionId == competitionId &&
+          _coreRound(f.round) != null &&
+          _coreRound(f.round) != 'GROUP' &&
+          YFeed.finalsRounds.contains(_coreRound(f.round)))
+        f,
+  ];
+  if (knockout.isEmpty) return false;
+  final playing = knockout.any(
+    (f) => f.homeNationId == nationId || f.awayNationId == nationId,
+  );
+  if (playing) return false;
+  if (groupId == null) return true;
+
+  final groupFixtures = [
+    for (final f in worldFixtures)
+      if (f.groupId == groupId) f,
+  ];
+  final members = <int>{
+    for (final f in groupFixtures) ...[f.homeNationId, f.awayNationId],
+  };
+  final table = GroupStanding.table(members.toList(), groupFixtures);
+  return table.isEmpty || table.first.nationId != nationId;
 }
 
 /// The core (confederation prefix stripped) of a fixture's round code.

@@ -29,20 +29,29 @@ typedef TransferRow = ({
   /// The thing a transfer actually MEANS for a player's season, which a club
   /// name alone does not say to anybody who does not know the leagues.
   int step,
+
+  /// FIFA codes of the two clubs' countries, so each side of the move can wear
+  /// its flag. Empty in a report written before v3, and in that case the row
+  /// simply shows the names — which is what it always did.
+  String fromCountry,
+  String toCountry,
 });
 
 /// v1 carried name, position, from, to, fee and the abroad flag. v2 adds the
 /// player's rating, what the year did to it, and which way the move went
-/// between tiers. Both decode: v1 bodies are sitting in players' saves.
+/// between tiers. v3 adds the two clubs' countries, so the move can be read at
+/// a glance off a pair of flags. All three decode: older bodies are sitting in
+/// players' saves and must keep opening.
 const String _tagV1 = '#transfers/v1';
 const String _tagV2 = '#transfers/v2';
+const String _tagV3 = '#transfers/v3';
 
 /// Encodes the window's moves as a message body.
 ///
 /// Line-based like the squad-development report, and for the same reason: the
 /// inbox stores plain text, so a table has to survive a round trip through it.
 String encodeTransferReport(List<TransferRow> rows) => [
-  _tagV2,
+  _tagV3,
   for (final r in rows)
     [
       r.name.replaceAll('|', ' '),
@@ -54,6 +63,8 @@ String encodeTransferReport(List<TransferRow> rows) => [
       '${r.rating}',
       r.change?.toString() ?? '',
       '${r.step}',
+      r.fromCountry,
+      r.toCountry,
     ].join('|'),
 ].join('\n');
 
@@ -62,7 +73,7 @@ List<TransferRow>? decodeTransferReport(String body) {
   final lines = body.split('\n');
   if (lines.isEmpty) return null;
   final tag = lines.first.trim();
-  if (tag != _tagV1 && tag != _tagV2) return null;
+  if (tag != _tagV1 && tag != _tagV2 && tag != _tagV3) return null;
   final out = <TransferRow>[];
   for (final line in lines.skip(1)) {
     if (line.trim().isEmpty) continue;
@@ -81,6 +92,8 @@ List<TransferRow>? decodeTransferReport(String body) {
       rating: f.length > 6 ? (int.tryParse(f[6]) ?? 0) : 0,
       change: f.length > 7 ? int.tryParse(f[7]) : null,
       step: f.length > 8 ? (int.tryParse(f[8]) ?? 0) : 0,
+      fromCountry: f.length > 9 ? f[9] : '',
+      toCountry: f.length > 10 ? f[10] : '',
     ));
   }
   return out;
@@ -106,9 +119,10 @@ class TransferTable extends StatefulWidget {
 
   final List<TransferRow> rows;
 
-  /// Moves per page. Eight leaves the popup a shape a phone can hold, header
-  /// and confirming button included.
-  static const int perPage = 8;
+  /// Moves per page. A move is two lines now — who and for how much, then
+  /// where from and where to — so six is the count that leaves the popup a
+  /// shape a phone can hold, header and confirming button included.
+  static const int perPage = 6;
 
   @override
   State<TransferTable> createState() => _TransferTableState();
@@ -154,13 +168,13 @@ class _TransferTableState extends State<TransferTable> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              _PageButton(
+              PagerButton(
                 label: l.transfersNewer,
                 icon: Icons.chevron_left_rounded,
                 leading: true,
                 onTap: _page == 0 ? null : () => setState(() => _page--),
               ),
-              _PageButton(
+              PagerButton(
                 label: l.transfersOlder,
                 icon: Icons.chevron_right_rounded,
                 leading: false,
@@ -188,91 +202,98 @@ class _MoveRow extends StatelessWidget {
 
   final TransferRow row;
 
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 5),
+  /// The two club names, each under its flag, with the arrow between them.
+  ///
+  /// A LINE OF ITS OWN. Squeezed in beside the name and the fee, two club
+  /// names and an arrow had about a third of the row to live in: they were
+  /// scaled down to something unreadable, and a long pair read as one club and
+  /// a smudge. Given the width of the row they are simply legible, and the
+  /// flags say where the move went without spending a word on it.
+  Widget _move(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    Widget side(String club, String country) => Flexible(
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
         children: [
-          SizedBox(width: 32, child: TacticalChip(row.position)),
-          const SizedBox(width: AppSpacing.sm),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                WholeText(row.name, maxLines: 1, textAlign: TextAlign.start),
-                const SizedBox(height: 1),
-                WholeText(
-                  '${row.from} → ${row.to}',
-                  maxLines: 1,
-                  textAlign: TextAlign.start,
-                  style: AppTypography.labelSmall.copyWith(
-                    // A move abroad is the one thing about a transfer worth a
-                    // colour, because it is the one thing the two club names do
-                    // not already say.
-                    color: row.abroad
-                        ? AppColors.primary
-                        : AppColors.onSurfaceVariant,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(width: AppSpacing.sm),
-          SizedBox(
-            width: 76,
+          if (country.isNotEmpty) ...[
+            FlagDisc(country, size: 14),
+            const SizedBox(width: 4),
+          ],
+          Flexible(
             child: WholeText(
-              row.fee,
+              // A club with no name is a club the report never learned; say so
+              // rather than leaving the side of the move blank, which reads as
+              // a bug in the row.
+              club.isEmpty ? l.transfersUnknownClub : club,
               maxLines: 1,
-              textAlign: TextAlign.right,
-              style: AppTypography.labelMedium.copyWith(
-                color: AppColors.onSurface,
+              textAlign: TextAlign.start,
+              style: AppTypography.labelSmall.copyWith(
+                color: AppColors.onSurfaceVariant,
               ),
             ),
           ),
         ],
       ),
     );
+
+    return Row(
+      children: [
+        side(row.from, row.fromCountry),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xs),
+          child: Icon(
+            Icons.arrow_forward_rounded,
+            size: 13,
+            // A move abroad is the one thing about a transfer worth a colour,
+            // because it is the one thing the two club names do not already
+            // say.
+            color: row.abroad ? AppColors.primary : AppColors.onSurfaceVariant,
+          ),
+        ),
+        side(row.to, row.toCountry),
+      ],
+    );
   }
-}
-
-class _PageButton extends StatelessWidget {
-  const _PageButton({
-    required this.label,
-    required this.icon,
-    required this.leading,
-    required this.onTap,
-  });
-
-  final String label;
-  final IconData icon;
-
-  /// Whether the chevron sits before the label (going back) or after it.
-  final bool leading;
-  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
-    final color = onTap == null
-        ? AppColors.onSurfaceVariant.withValues(alpha: 0.4)
-        : AppColors.primary;
-    return TextButton(
-      onPressed: onTap,
-      style: TextButton.styleFrom(
-        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm),
-        minimumSize: const Size(0, 36),
-        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: AppSpacing.sm),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          if (leading) Icon(icon, size: 16, color: color),
-          Text(
-            label,
-            style: AppTypography.labelSmall.copyWith(color: color),
+          Row(
+            children: [
+              // Wide enough for the widest position code there is. At 32 a
+              // two-letter code had 14 points to sit in and came out stacked.
+              SizedBox(width: 44, child: TacticalChip(row.position)),
+              const SizedBox(width: AppSpacing.sm),
+              Expanded(
+                child: WholeText(
+                  row.name,
+                  maxLines: 1,
+                  textAlign: TextAlign.start,
+                ),
+              ),
+              const SizedBox(width: AppSpacing.sm),
+              SizedBox(
+                width: 76,
+                child: WholeText(
+                  row.fee,
+                  maxLines: 1,
+                  textAlign: TextAlign.right,
+                  style: AppTypography.labelMedium.copyWith(
+                    color: AppColors.onSurface,
+                  ),
+                ),
+              ),
+            ],
           ),
-          if (!leading) Icon(icon, size: 16, color: color),
+          const SizedBox(height: 3),
+          Padding(
+            padding: const EdgeInsets.only(left: 44 + AppSpacing.sm),
+            child: _move(context),
+          ),
         ],
       ),
     );

@@ -117,14 +117,34 @@ void main() {
       }
     });
 
-    test('nothing above eighteen moved', () {
-      // The senior world must be untouched — ages 19+ keep exactly the
-      // discounts they had before this change.
+    test('the markdown is pinned, and gone by twenty-three', () {
+      // The table is pinned so it can only move on purpose: it decides what a
+      // teenager is worth, and every youth band on the pyramid screen is read
+      // off it. Twenty-three and up is the senior world and must stay at nought
+      // whatever happens below it.
+      expect(PlayerAging.agedYears(boy(17), 0).overall, 70 - 11);
+      expect(PlayerAging.agedYears(boy(18), 0).overall, 70 - 9);
       expect(PlayerAging.agedYears(boy(19), 0).overall, 70 - 6);
-      expect(PlayerAging.agedYears(boy(20), 0).overall, 70 - 5);
+      expect(PlayerAging.agedYears(boy(20), 0).overall, 70 - 4);
       expect(PlayerAging.agedYears(boy(21), 0).overall, 70 - 3);
       expect(PlayerAging.agedYears(boy(22), 0).overall, 70 - 1);
       expect(PlayerAging.agedYears(boy(23), 0).overall, 70);
+      expect(PlayerAging.agedYears(boy(26), 0).overall, 70);
+    });
+
+    test('the markdown sheds evenly through the teenage years', () {
+      // The flat spot between eighteen and twenty was why a nation's U-19s
+      // read as good as its U-21s: two years of growing up separated them by
+      // barely two rating points, and seven boys an intake are noisier than
+      // that. No single year of the ramp may shed less than half of what its
+      // neighbour does.
+      final steps = [
+        for (var age = 17; age <= 22; age++)
+          PlayerAging.agedYears(boy(age + 1), 0).overall -
+              PlayerAging.agedYears(boy(age), 0).overall,
+      ];
+      expect(steps.every((s) => s >= 1), isTrue, reason: '$steps');
+      expect(steps.reduce((a, b) => a > b ? a : b), lessThanOrEqualTo(3));
     });
 
     test('a boy grows fast and then slows down', () {

@@ -18,6 +18,8 @@ void main() {
       rating: 84,
       change: 3,
       step: 1,
+      fromCountry: 'cze',
+      toCountry: 'eng',
     ),
     (
       name: 'Petr Svoboda',
@@ -29,6 +31,8 @@ void main() {
       rating: 71,
       change: -2,
       step: -1,
+      fromCountry: 'cze',
+      toCountry: 'cze',
     ),
   ];
 
@@ -67,6 +71,17 @@ void main() {
     expect(decoded.single.rating, 0, reason: 'nothing was recorded');
     expect(decoded.single.change, isNull);
     expect(decoded.single.step, 0);
+    expect(
+      decoded.single.fromCountry,
+      isEmpty,
+      reason: 'a v1 body names no countries, so the row wears no flags',
+    );
+  });
+
+  test('a report carries the flags each side of the move wears', () {
+    final decoded = decodeTransferReport(encodeTransferReport(rows))!;
+    expect(decoded.first.fromCountry, 'cze');
+    expect(decoded.first.toCountry, 'eng');
   });
 
   test('every move is carried, not the top three', () {
@@ -82,6 +97,8 @@ void main() {
           rating: 70,
           change: 0,
           step: 0,
+          fromCountry: '',
+          toCountry: '',
         ),
     ];
     expect(decodeTransferReport(encodeTransferReport(many)), hasLength(14));
@@ -99,6 +116,8 @@ void main() {
         rating: 70,
         change: null,
         step: 0,
+        fromCountry: '',
+        toCountry: '',
       ),
     ];
     final decoded = decodeTransferReport(encodeTransferReport(odd));

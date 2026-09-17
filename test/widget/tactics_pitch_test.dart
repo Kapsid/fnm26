@@ -14,10 +14,13 @@ import '../helpers/pump_app.dart';
 /// How far apart two balls must stay, as a multiple of their own diameter.
 ///
 /// A shade over 1.0 would only mean "not overlapping", which still reads as
-/// one blob on the pitch. Measured headroom at the time of writing is 1.134,
-/// so this leaves room to move the layouts a little without a false alarm —
-/// but if a change pushes below it, the answer is to open the spacing, not to
-/// lower the bar.
+/// one blob on the pitch. The tightest pair in the whole matrix (4-1-4-1 at
+/// 320pt, a high line) measures 1.1026 — so the balls are drawn at very nearly
+/// the largest size this bar allows and there is no room left in the width
+/// dial. An earlier note here claimed 1.134, which was measured before the
+/// layouts moved and cost an afternoon: whatever a disc needs, it has to be
+/// found INSIDE the circle. If a change pushes below the bar, the answer is to
+/// open the spacing, not to lower it.
 const double _minBallClearance = 1.10;
 
 /// The pitch wrapped the way the real screens wrap it.

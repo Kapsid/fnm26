@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
@@ -8,6 +9,7 @@ import 'package:fnm/features/federation/staff_card.dart';
 import 'package:fnm/features/manager/manager_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
+import 'package:go_router/go_router.dart';
 
 /// The manager's own page: what he is good at, who he employs, and what the
 /// side works on when there is no match to play.
@@ -28,7 +30,11 @@ class ManagerScreen extends ConsumerWidget {
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: AppColors.primary),
-          onPressed: () => Navigator.of(context).pop(),
+          // Back to whatever opened this, or to the hub when nothing did:
+          // popping an empty stack leaves a black screen rather than a screen.
+          onPressed: () => context.canPop()
+              ? context.pop()
+              : context.go('${Routes.hub}?careerId=$careerId'),
         ),
         title: Text(
           l.managerTitle,

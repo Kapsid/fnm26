@@ -5,10 +5,13 @@ import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/services/competition/kickoff_keys.dart';
 import 'package:fnm/domain/services/competition/rounds.dart';
+import 'package:fnm/domain/services/press/expectation.dart';
 import 'package:fnm/domain/services/press/press.dart';
+import 'package:fnm/features/achievements/achievement_providers.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/hub/objective_providers.dart';
 import 'package:fnm/features/ranking/world_ranking_providers.dart';
+import 'package:fnm/features/tactics/condition_providers.dart';
 
 /// The press question waiting right now, or null when they have nothing to ask
 /// — which is most of the time, and deliberately so.
@@ -39,6 +42,14 @@ pressQuestionProvider = FutureProvider.autoDispose.family<PressQuestion?, int>((
   // read as generic.
   final ranking = await ref.watch(worldRankingProvider(careerId).future);
   final worldRank = ranking?.position[career.nationId];
+  // Opponent ranks, for the questions that weigh a result against the form
+  // book rather than reading its scoreline.
+  final allNations = {
+    for (final n in await ref.watch(nationRepositoryProvider).all()) n.id: n,
+  };
+  int rankOf(int id) =>
+      ranking?.position[id] ?? allNations[id]?.ranking ?? allNations.length;
+  final boardMood = await ref.watch(satisfactionProvider(careerId).future);
   final objectives = await ref.watch(
     cycleObjectivesProvider(careerId).future,
   );
@@ -210,6 +221,51 @@ pressQuestionProvider = FutureProvider.autoDispose.family<PressQuestion?, int>((
     }
   }
 
+  // The three questions that need to know how good this side is SUPPOSED to
+  // be. Everything above reads a scoreline; these read it against the form
+  // book — see [Expectation] — which is what lets the press tell a minnow's
+  // fine month from a favourite's ordinary one.
+  final standings = [
+    for (final f in competitive.take(_standingWindow))
+      () {
+        final mine = _mine(f, career.nationId);
+        return Expectation.standing(
+          nationRank: worldRank ?? 100,
+          opponentRank: rankOf(_opponent(f, career.nationId)),
+          scored: mine.forGoals,
+          conceded: mine.against,
+        );
+      }(),
+  ];
+
+  if (standings.length >= _standingWindow) {
+    // Punching above your weight: most of a recent run was better than this
+    // side had any business producing.
+    final above = standings.where((s) => Expectation.weight(s) > 0).length;
+    if (above >= _standingWindow - 1) {
+      add(q('above:${competitive.first.id}', PressTopic.overachieving));
+    }
+    // Bad results AND an unhappy board. Either alone is already a question;
+    // both at once is a different one.
+    final below = standings.where((s) => Expectation.weight(s) < 0).length;
+    if (below >= _standingWindow - 1 && boardMood < _crisisBoard) {
+      add(q('crisis:${competitive.first.id}', PressTopic.crisis));
+    }
+  }
+
+  // Winning without convincing: the last one was a win the side should have
+  // had comfortably, and did not.
+  if (competitive.isNotEmpty && standings.isNotEmpty) {
+    final f = competitive.first;
+    final mine = _mine(f, career.nationId);
+    final won = mine.forGoals > mine.against;
+    if (won &&
+        mine.forGoals - mine.against <= 1 &&
+        standings.first == ResultStanding.par) {
+      add(q('flattered:${f.id}', PressTopic.luckyWin));
+    }
+  }
+
   // The first days in a job, before a ball has been kicked for this nation.
   if (played.isEmpty) {
     add(
@@ -339,6 +395,12 @@ const int _recentTopicMemory = Press.maxConferenceLength * 3;
 /// How many competitive games without defeat make a run worth asking about.
 const int _unbeatenRunLength = 6;
 
+/// How many recent competitive results the form-book questions read.
+const int _standingWindow = 4;
+
+/// The board mood below which bad results become a crisis rather than a run.
+const int _crisisBoard = 40;
+
 /// A new world-ranking high is only news near the top of the table.
 const int _peakRankCeiling = 20;
 
@@ -401,7 +463,17 @@ class PressService {
     final repo = _ref.read(careerRepositoryProvider);
     final career = await repo.byId(careerId);
     if (career == null) return null;
-    final effect = Press.effectOfExchange(exchange, tone);
+    // The same answer is not worth the same thing after a humiliation as
+    // after a good week, and the sheet shows the manager exactly this figure
+    // before he picks — so both have to read the mood the same way.
+    final mood = await _ref.read(pressMoodProvider(careerId).future);
+    final effect = Press.effectOfExchange(
+      exchange,
+      tone,
+      standing: mood.standing,
+      squadMorale: mood.squadMorale,
+      boardMood: mood.boardMood,
+    );
     await repo.recordPressAnswer(
       careerId: careerId,
       cycle: career.cyclePointer,
@@ -420,6 +492,53 @@ class PressService {
     ..invalidate(pressEffectProvider)
     ..invalidate(pressToneHistoryProvider);
 }
+
+/// What the room already knows when the manager answers: the last result as
+/// the country read it, how the dressing room is, and how the board is.
+///
+/// Gathered in one place so the sheet and the service both weigh an answer the
+/// same way — see [Press.effectInContext].
+typedef PressMood = ({
+  ResultStanding? standing,
+  int squadMorale,
+  int boardMood,
+});
+
+final AutoDisposeFutureProviderFamily<PressMood, int> pressMoodProvider =
+    FutureProvider.autoDispose.family<PressMood, int>((ref, careerId) async {
+      final career = await ref.watch(careerRepositoryProvider).byId(careerId);
+      final morale = await ref.watch(moraleProvider(careerId).future);
+      final board = await ref.watch(satisfactionProvider(careerId).future);
+      ResultStanding? standing;
+      if (career != null) {
+        final ranking = await ref.watch(worldRankingProvider(careerId).future);
+        final nations = {
+          for (final n in await ref.watch(nationRepositoryProvider).all())
+            n.id: n,
+        };
+        int rankOf(int id) =>
+            ranking?.position[id] ?? nations[id]?.ranking ?? nations.length;
+        final fixtures = await ref
+            .watch(competitionRepositoryProvider)
+            .fixturesForNation(careerId, career.nationId);
+        final played = [
+          for (final f in fixtures)
+            if (f.hasResult) f,
+        ]..sort((a, b) => b.date.compareTo(a.date));
+        if (played.isNotEmpty) {
+          final f = played.first;
+          final home = f.homeNationId == career.nationId;
+          standing = Expectation.standing(
+            nationRank: rankOf(career.nationId),
+            opponentRank: rankOf(home ? f.awayNationId : f.homeNationId),
+            scored: home ? f.homeScore! : f.awayScore!,
+            conceded: home ? f.awayScore! : f.homeScore!,
+            competitive: f.round != Rounds.friendly,
+          );
+        }
+      }
+      return (standing: standing, squadMorale: morale, boardMood: board);
+    });
 
 final Provider<PressService> pressServiceProvider = Provider(PressService.new);
 

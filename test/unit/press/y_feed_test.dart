@@ -16,6 +16,7 @@ void main() {
     conceded: conceded,
     date: DateTime(2030, 6, 10),
     key: key,
+    competitive: true,
   );
 
   // A match nothing else is known about — the shape these tests were written
@@ -43,6 +44,8 @@ void main() {
     });
 
     test('a routine win is read as routine', () {
+      // A favourite doing the job. Whether it is 1-0 or 3-0 does not change
+      // what it MEANS, which is why the margin is damped by expectation.
       final p = posts(match(mine: 4, theirs: 70, scored: 3, conceded: 0));
       expect(p.map((x) => x.template), contains(YTemplate.winRoutine));
     });
@@ -66,9 +69,11 @@ void main() {
       // would render as a blank post.
       for (var i = 0; i < 200; i++) {
         for (final p in posts(match(key: 'fx:$i', scored: i % 4))) {
-          // A reply has its own, wider set of wordings — see [YMood].
+          // A reply has its own set of wordings — see [YMood]. Everything
+          // else is as deep as its template is: the templates that fire every
+          // match carry more phrasings than the ones that fire once a cycle.
           final spread = p.mood == null
-              ? YFeed.variantCount
+              ? YFeed.variantsFor(p.template)
               : YFeed.reactionVariantCount;
           expect(p.variant, inInclusiveRange(0, spread - 1));
         }
@@ -152,8 +157,10 @@ void main() {
       expect(end('NFINAL', won: false)?.template, YTemplate.runnerUp);
     });
 
+    // GROUP is deliberately not in this list: a group table on its own is not
+    // an exit, and needs `goneAtGroup` — see y_group_exit_test.dart.
     test('any other last round of a finals tournament is an exit', () {
-      for (final round in ['GROUP', 'R32', 'R16', 'QF', 'SF', '3RD']) {
+      for (final round in ['R32', 'R16', 'QF', 'SF', '3RD']) {
         expect(
           end(round, won: false)?.template,
           YTemplate.eliminated,

@@ -102,9 +102,21 @@ class DriftCareerRepository implements CareerRepository {
       // The armband does not travel: a captain named at the old nation is
       // not even eligible for the new one, and leaving the id behind would
       // point the captaincy at a player in somebody else's squad.
+      //
+      // Neither does the staff room. An assistant, a scout and a fitness coach
+      // are the old federation's employees on the old federation's payroll:
+      // carrying them over meant a manager walked into his new job with three
+      // posts already filled by people he had not hired there, and their wages
+      // already committed. He hires his own.
       CareersCompanion(
         nationId: Value(nationId),
         captainPlayerId: const Value(null),
+        staffAssistant: const Value(0),
+        staffScout: const Value(0),
+        staffFitnessCoach: const Value(0),
+        staffAssistantId: const Value(null),
+        staffScoutId: const Value(null),
+        staffFitnessCoachId: const Value(null),
       ),
     );
   }

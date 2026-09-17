@@ -65,8 +65,8 @@ abstract final class PlayerAging {
   static const int youthCeiling = 22;
 
   /// The markdown applied at eighteen. Younger players are marked down harder
-  /// still — see the bands in [_youthDiscount].
-  static const int maxYouthDiscount = 7;
+  /// still — see the bands in [_plainYouthDiscount].
+  static const int maxYouthDiscount = 9;
 
   /// A player is not the finished article at twenty.
   ///
@@ -86,20 +86,7 @@ abstract final class PlayerAging {
     int age,
     int playerId,
   ) {
-    final base = switch (age) {
-      <= 12 => 24,
-      13 => 21,
-      14 => 18,
-      15 => 15,
-      16 => 12,
-      17 => 9,
-      18 => maxYouthDiscount,
-      19 => 6,
-      20 => 5,
-      21 => 3,
-      22 => 1,
-      _ => 0,
-    };
+    final base = _plainYouthDiscount(age);
     if (base == 0) return a;
     // Relief only in the top tail of the potential draw (~1.55 of a 0.35–1.75
     // range), rising to a full exemption at the very top.
@@ -139,6 +126,68 @@ abstract final class PlayerAging {
   /// and the manager never had to decide when to blood him — he simply arrived
   /// ready. Growth now takes most of a decade, which is what makes bringing a
   /// young player through a choice: he costs you results while he learns.
+  /// How far a player of [age] is from his own peak, in overall points, on the
+  /// curve above — the PREDICTABLE part of a rating, which every player of that
+  /// age carries whatever else he is.
+  ///
+  /// Positive at every age but the peak: a teenager is that far short of what
+  /// he will be, a veteran that far past it. Subtracting it from a live overall
+  /// leaves the part that is actually about the footballer, which is what a
+  /// club has to be picked off — see [ClubService.clubLevel]. Reading the
+  /// figure off [_yearlyDelta] and [_youthDiscount] rather than restating it
+  /// keeps the two from drifting the day the curve is retuned.
+  static double peakOffset(int age) {
+    // The overall is a position-weighted blend of the three attributes, two of
+    // which move on the physical curve; a plain mean of the three is close
+    // enough for a club pick and needs no position.
+    double mean(int a) =>
+        (_yearlyDelta(a, physical: true) * 2 +
+            _yearlyDelta(a, physical: false)) /
+        3;
+    var gap = 0.0;
+    if (age < peakAge) {
+      for (var a = age; a < peakAge; a++) {
+        gap += mean(a);
+      }
+    } else {
+      for (var a = peakAge; a < age; a++) {
+        gap -= mean(a);
+      }
+    }
+    // The youth markdown comes off as he grows up, so it is part of the gap
+    // between a boy and the player he becomes. The wonderkid's relief is left
+    // out on purpose: he really IS ahead of his age group, and a club should
+    // see that.
+    return gap + _plainYouthDiscount(age);
+  }
+
+  /// The age the curve tops out at — where [peakOffset] is nought.
+  static const int peakAge = 28;
+
+  /// [_youthDiscount]'s markdown at an age, before any wonderkid relief.
+  /// The markdown sheds EVENLY, about two points a season from seventeen. It
+  /// used to go 9, 7, 6, 5 across the four teenage years — a flat spot right
+  /// where the U-19s and the U-21s are compared, so two years of development
+  /// separated the bands by barely two rating points and the seven boys in an
+  /// intake are noisier than that. A nation's U-19s therefore read as good as
+  /// its U-21s about one save in six, which is not a golden generation, it is
+  /// the ramp. Evened out, a year older is a year better and the pyramid reads
+  /// like one.
+  static int _plainYouthDiscount(int age) => switch (age) {
+    <= 12 => 24,
+    13 => 21,
+    14 => 18,
+    15 => 15,
+    16 => 13,
+    17 => 11,
+    18 => maxYouthDiscount,
+    19 => 6,
+    20 => 4,
+    21 => 3,
+    22 => 1,
+    _ => 0,
+  };
+
   static double _yearlyDelta(int age, {required bool physical}) {
     // A child grows into an athlete far faster than a young man improves as a
     // footballer. Without these bands an eleven-year-old would arrive at

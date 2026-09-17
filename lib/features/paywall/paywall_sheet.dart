@@ -71,7 +71,7 @@ class _PaywallSheetState extends ConsumerState<PaywallSheet> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           const Icon(
-            Icons.workspace_premium,
+            Icons.sports_soccer,
             size: 44,
             color: AppColors.primary,
           ),

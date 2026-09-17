@@ -252,6 +252,8 @@ extension SeasonRollover on SeasonService {
               rating: p.overall,
               change: p.overall - was.overall,
               step: from.compareTo(to),
+              fromCountry: was.clubCountry,
+              toCountry: p.clubCountry,
             );
           }(),
       ];

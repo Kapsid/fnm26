@@ -98,6 +98,8 @@ void main() {
           rating: 0,
           change: null,
           step: 0,
+          fromCountry: 'cze',
+          toCountry: 'eng',
         ),
     ];
 
@@ -125,14 +127,14 @@ void main() {
 
     // One page, not all thirty-four.
     expect(find.textContaining('Jméno Příjmení 0'), findsOneWidget);
-    expect(find.textContaining('Jméno Příjmení 8'), findsNothing);
-    expect(find.text('1–8 z 34'), findsOneWidget);
+    expect(find.textContaining('Jméno Příjmení 6'), findsNothing);
+    expect(find.text('1–6 z 34'), findsOneWidget);
     expect(tester.takeException(), isNull);
 
     await tester.tap(find.text('Další'));
     await tester.pumpAndSettle();
-    expect(find.textContaining('Jméno Příjmení 8'), findsOneWidget);
-    expect(find.text('9–16 z 34'), findsOneWidget);
+    expect(find.textContaining('Jméno Příjmení 6'), findsOneWidget);
+    expect(find.text('7–12 z 34'), findsOneWidget);
     expect(
       tester.takeException(),
       isNull,

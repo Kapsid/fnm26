@@ -1,5 +1,7 @@
 import 'dart:math' as math;
 
+import 'package:fnm/domain/services/press/expectation.dart';
+
 /// One result as the public reads it: who was ranked where, and how it went.
 typedef MoodResult = ({
   int nationRank,
@@ -46,9 +48,13 @@ abstract final class PublicMood {
 
   /// One result on a −1 … +1 scale, judged against the ranking gap.
   static double _verdict(MoodResult g) {
-    // How much the public EXPECTED to win: +1 when the opponent is ranked far
-    // worse (a higher number is a worse rank), −1 when they are far better.
-    final expected = ((g.opponentRank - g.nationRank) / 60.0).clamp(-1.0, 1.0);
+    // How much the public EXPECTED to win. This used to be worked out here,
+    // which is how the game came to hold three disagreeing opinions of the
+    // same scoreline — see [Expectation].
+    final expected = Expectation.of(
+      nationRank: g.nationRank,
+      opponentRank: g.opponentRank,
+    );
     if (g.won) {
       // Beating a better side is everything; beating a worse one is the job,
       // and the floor keeps it from reading as a disappointment.

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/player.dart';
@@ -44,7 +43,9 @@ void main() {
     await tester.pumpApp(
       const Scaffold(body: SquadSetupWarning(careerId: 1)),
       overrides: [
-        captainProvider(1).overrideWith((ref) async => player(captainId)),
+        // The stored INTENT: who the manager gave the armband to. Whether he
+        // can actually wear it this week is what the strip works out.
+        storedCaptainIdProvider(1).overrideWith((ref) async => captainId),
         setPieceTakersProvider(
           1,
         ).overrideWith((ref) async => (penalty: takerId, deadBall: takerId)),

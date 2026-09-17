@@ -152,7 +152,7 @@ trainingCampPlanProvider = FutureProvider.autoDispose.family<TrainingCampPlan?, 
     );
     return TrainingCampPlan(
       tournament: tournament,
-      competition: isWc ? 'World Cup' : 'Continental Championship',
+      competition: isWc ? 'World Championship' : 'Continental Championship',
       hostId: hostId,
       hostName: host?.name ?? '—',
       hostCode: host?.code ?? '??',

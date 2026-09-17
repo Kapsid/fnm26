@@ -38,8 +38,14 @@ void main() {
       if (r.homeScore >= 7 || r.awayScore >= 7) blowouts++;
     }
 
-    // Well under one in two hundred. A 7-0 should be a story, not a Tuesday.
-    expect(blowouts / runs, lessThan(0.005));
+    // Well under one in a hundred. A 7-0 should be a story, not a Tuesday.
+    //
+    // The band was one in two hundred until a sending-off started costing what
+    // it should (see MatchEngine's short-handed penalty). This fixture is a
+    // heavy mismatch, and the handful of games that now reach seven are the
+    // ones where the weaker side finished with ten men — which is precisely
+    // when a rout is the honest result.
+    expect(blowouts / runs, lessThan(0.0075));
   });
 
   test('ordinary scorelines are unaffected', () {

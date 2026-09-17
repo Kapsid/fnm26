@@ -78,10 +78,15 @@ class _FriendliesScreenState extends ConsumerState<FriendliesScreen> {
     ];
   }
 
-  /// Why these names are at the top. A shortlist reordered silently is just a
-  /// different shortlist; the manager has to be told what it is preparation
-  /// for — and told SOMETHING even when nothing has been drawn yet, which is
-  /// most of the time a friendly window is open.
+  /// How many of a window's opponents carry the recommended mark. The list is
+  /// dealt best-first, so these are the closest matches for that window.
+  static const int _markedPerWindow = 3;
+
+  /// What the mark on those chips MEANS. A shortlist reordered silently is just
+  /// a different shortlist, and "suggested first" was the whole of the hint —
+  /// which told the manager nothing he could see, because the chips were all
+  /// drawn identically and he had no way of knowing where "first" ended. The
+  /// line now names what is marked, and the marks are on the chips.
   String _reasonFor(AppLocalizations l, FriendliesPlan plan) {
     final names = plan.rivals.map((n) => n.name).join(', ');
     return switch (plan.reason) {
@@ -189,15 +194,23 @@ class _FriendliesScreenState extends ConsumerState<FriendliesScreen> {
                     horizontal: AppSpacing.marginMobile,
                   ),
                   children: [
-                    for (var i = 0; i < plan.windows.length; i++)
+                    for (final (i, offered) in [
+                      for (var i = 0; i < plan.windows.length; i++)
+                        (
+                          i,
+                          _opponentsFor(plan.opponents, i, plan.windows.length),
+                        ),
+                    ])
                       _WindowCard(
                         label: _label(l, plan.windows[i]),
                         home: friendlyIsHome(plan.windows[i]),
-                        opponents: _opponentsFor(
-                          plan.opponents,
-                          i,
-                          plan.windows.length,
-                        ),
+                        opponents: offered,
+                        // The head of this window's own deal: the sides the
+                        // line above is talking about.
+                        marked: offered
+                            .take(_markedPerWindow)
+                            .map((n) => n.id)
+                            .toSet(),
                         selected: _picks[plan.windows[i]],
                         code: (id) => plan.nations[id]?.code ?? '??',
                         name: (id) => plan.nations[id]?.name ?? '—',
@@ -240,6 +253,7 @@ class _WindowCard extends StatelessWidget {
     required this.label,
     required this.home,
     required this.opponents,
+    required this.marked,
     required this.selected,
     required this.code,
     required this.name,
@@ -253,6 +267,10 @@ class _WindowCard extends StatelessWidget {
   /// home advantage is yours or theirs).
   final bool home;
   final List<Nation> opponents;
+
+  /// The opponents the hint at the top of the screen is recommending, drawn
+  /// with the same lightbulb it carries so the two read as one thing.
+  final Set<int> marked;
   final int? selected;
   final String Function(int) code;
   final String Function(int) name;
@@ -303,6 +321,7 @@ class _WindowCard extends StatelessWidget {
                   _OppChip(
                     code: code(o.id),
                     selected: selected == o.id,
+                    recommended: marked.contains(o.id),
                     onTap: () => onPick(o.id),
                   ),
               ],
@@ -355,11 +374,15 @@ class _OppChip extends StatelessWidget {
   const _OppChip({
     required this.code,
     required this.selected,
+    required this.recommended,
     required this.onTap,
   });
 
   final String code;
   final bool selected;
+
+  /// One of the sides the hint at the top is pointing at.
+  final bool recommended;
   final VoidCallback onTap;
 
   @override
@@ -374,24 +397,42 @@ class _OppChip extends StatelessWidget {
         decoration: BoxDecoration(
           color: selected
               ? AppColors.secondaryContainer
+              : recommended
+              ? AppColors.primary.withValues(alpha: 0.10)
               : AppColors.surfaceContainer,
           borderRadius: AppRadii.smAll,
           border: Border.all(
-            color: selected ? AppColors.primary : AppColors.outlineVariant,
+            color: selected
+                ? AppColors.primary
+                : recommended
+                ? AppColors.primary.withValues(alpha: 0.55)
+                : AppColors.outlineVariant,
           ),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            FlagDisc(code, size: 16, highlighted: selected),
+            FlagDisc(code, size: 16, highlighted: selected || recommended),
             const SizedBox(width: 4),
             Text(
               code,
               style: AppTypography.labelSmall.copyWith(
-                color: selected ? AppColors.primary : AppColors.onSurface,
-                fontWeight: selected ? FontWeight.w700 : FontWeight.w400,
+                color: selected || recommended
+                    ? AppColors.primary
+                    : AppColors.onSurface,
+                fontWeight: selected || recommended
+                    ? FontWeight.w700
+                    : FontWeight.w400,
               ),
             ),
+            if (recommended && !selected) ...[
+              const SizedBox(width: 3),
+              const Icon(
+                Icons.lightbulb_outline_rounded,
+                size: 11,
+                color: AppColors.primary,
+              ),
+            ],
           ],
         ),
       ),

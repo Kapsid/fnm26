@@ -6,19 +6,20 @@ part of 'match_screen.dart';
 /// A part rather than its own library so these stay private to the match
 /// screen — they are its furniture, not widgets anything else should build.
 class _TopBar extends StatelessWidget {
-  const _TopBar({required this.onClose});
-  final VoidCallback onClose;
+  const _TopBar();
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm),
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppSpacing.md,
+        vertical: AppSpacing.sm,
+      ),
       child: Row(
         children: [
-          IconButton(
-            icon: const Icon(Icons.close, color: AppColors.primary),
-            onPressed: onClose,
-          ),
+          // No way out of here: once the whistle has gone the only exit is
+          // Continue at full time, so the result is always committed rather
+          // than a half-played match being abandoned back to the hub.
           Text(
             AppLocalizations.of(context).matchTopBarTitle,
             style: AppTypography.labelMedium.copyWith(color: AppColors.primary),

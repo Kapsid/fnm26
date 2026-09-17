@@ -4,6 +4,8 @@ import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/services/stats/nation_results.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/federation/federation_providers.dart';
+import 'package:fnm/features/settings/settings_providers.dart';
+import 'package:fnm/l10n/app_localizations.dart';
 
 /// One leaderboard entry (a player and their tally).
 typedef RecordLeader = ({int playerId, String name, int value});
@@ -20,15 +22,22 @@ typedef RecordBook = ({
   Map<int, Nation> nations,
 });
 
-/// The deepest World Cup finals round reached maps to a "best finish" label.
-const _wcFinishLabel = {
-  'FINAL': 'World Cup Final',
-  '3RD': 'World Cup Semi-final',
-  'SF': 'World Cup Semi-final',
-  'QF': 'World Cup Quarter-final',
-  'R16': 'World Cup Round of 16',
-  'R32': 'World Cup Round of 32',
-  'GROUP': 'World Cup Group Stage',
+/// The deepest World Championship finals round reached, written for the
+/// manager.
+///
+/// This was a const map of English sentences printed straight onto the record
+/// book — the one row on that screen that never spoke Czech, and the last
+/// place the old competition name survived. The round code is the data; the
+/// wording is a display decision, so it is made here, against the same finish
+/// labels every other screen uses.
+String _wcFinishLabel(AppLocalizations l, String round) => switch (round) {
+  'FINAL' => l.finishRunnersUp,
+  '3RD' || 'SF' => l.finishSemiFinals,
+  'QF' => l.finishQuarterFinals,
+  'R16' => l.finishRoundOf16,
+  'R32' => l.hubStageRoundOf32,
+  'GROUP' => l.finishGroupStage,
+  _ => l.compWorldCupFinals,
 };
 const _wcFinishRank = {
   'GROUP': 1,
@@ -120,11 +129,12 @@ recordBookProvider = FutureProvider.autoDispose.family<RecordBook?, int>((
         h.championId == nationId &&
         h.year >= CareerService.cycleStart.year,
   );
+  final l = ref.watch(appLocalizationsProvider);
   final bestFinish = wonWc
-      ? 'World Champions'
+      ? l.tourCupWorldChampionsTitle
       : deepestRound.isEmpty
-      ? 'No finals appearance yet'
-      : _wcFinishLabel[deepestRound] ?? 'World Cup Finals';
+      ? l.recordsNoFinalsYet
+      : _wcFinishLabel(l, deepestRound);
 
   return (
     nationName: nations[nationId]?.name ?? 'Your nation',

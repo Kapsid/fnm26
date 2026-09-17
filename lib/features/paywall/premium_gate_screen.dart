@@ -60,7 +60,7 @@ class PremiumGateScreen extends ConsumerWidget {
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         const Icon(
-                          Icons.workspace_premium,
+                          Icons.sports_soccer,
                           size: 56,
                           color: AppColors.primary,
                         ),

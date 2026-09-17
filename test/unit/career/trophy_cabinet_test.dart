@@ -98,11 +98,16 @@ void main() {
       );
       final titles = summary!.titles;
 
-      // Two competitions won: World Cup (×2) and South America Cup (×1).
-      final wc = titles.firstWhere((t) => t.competition == 'World Cup');
+      // Two competitions won: World Championship (×2) and South America Cup.
+      // The STORED name. The cabinet used to rewrite it to a second English
+      // spelling on the way out, which is exactly how "World Cup" kept
+      // reappearing on screens after the rename.
+      final wc = titles.firstWhere(
+        (t) => t.competition == 'World Championship',
+      );
       expect(wc.count, 2);
       // Most-won first.
-      expect(titles.first.competition, 'World Cup');
+      expect(titles.first.competition, 'World Championship');
 
       // Each World Cup win carries the nation the manager held THAT cycle.
       final wc2030 = wc.wins.firstWhere((w) => w.year == 2030);

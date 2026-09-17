@@ -1,12 +1,18 @@
 # Football Nations Manager (FNM)
 
-An **offline-first** international football management sim built with Flutter.
-Manage a national team through a four-year World-Cup cycle: call up a squad, set
-your lineup and tactics, play qualifiers, and reach the finals.
+A **fully offline** international football management sim built with Flutter.
+Manage a national team through a four-year World Championship cycle: call up a
+squad, set your lineup and tactics, play qualifiers, and reach the finals.
 
-**Business model:** a free demo (one 4-year cycle + a handful of nations) with
-everything else — all nations, multiple cycles, and **cloud save backup** —
-unlocked by a one-time **€9.99** in-app purchase.
+**Business model:** the first full four-year cycle is free — qualifying, a
+continental championship and the World Championship, with nothing held back.
+Carrying a save on past it, every nation, and the extra save slots unlock with a
+one-time **€12.99** in-app purchase. The price shown in the app is always the
+store's own localised `ProductDetails.price`; €12.99 is the tier configured in
+the consoles.
+
+There is no account, no server and no network call in the whole app. The store
+is the only thing it ever talks to, and only when you buy or restore.
 
 ## Tech stack
 
@@ -17,7 +23,7 @@ unlocked by a one-time **€9.99** in-app purchase.
 | Models             | `freezed` + `json_serializable`                     |
 | Routing            | `go_router`                                         |
 | Monetization       | `in_app_purchase` (non-consumable unlock)           |
-| Cloud (premium)    | Supabase, isolated behind `CloudSyncService`        |
+| Backup             | Local file export/import (`VACUUM INTO` + bundles)  |
 | Lint               | `very_good_analysis`                                |
 
 > **Note:** Riverpod is used **without** code generation. Its codegen package
@@ -31,27 +37,28 @@ lib/
   core/      cross-cutting: theme, routing, rng, result, di, utils
   data/      Drift db + DAOs, seed loaders, repository implementations
   domain/    freezed entities, repository interfaces, services:
-             match_engine · competition · entitlement · cloud
-  features/  one folder per feature (home, career, squad, tactics,
-             competition, match, paywall, cloud, settings, onboarding)
+             match_engine · competition · entitlement · squad
+  features/  one folder per feature (hub, career, squad, tactics,
+             tournaments, match, paywall, settings, onboarding)
   shared/    reusable design-system widgets
-assets/      data/ (seed JSON) · images/ (logo, flags)
-test/        unit · widget · golden  (+ helpers/, integration_test/)
+assets/      data/ (seed JSON) · flags/ · trophies/ · images/ · fonts/
+test/        unit · widget · golden  (+ helpers/, generated_migrations/)
 ```
 
 Dependency rule: `features → domain → data`; `domain` depends only on
-interfaces, never on concrete data/cloud implementations.
+interfaces, never on concrete data implementations.
 
 ## Design principles
 
-- **Offline-first** — every gameplay feature works with no network; cloud is
-  opt-in backup only.
+- **Offline, not offline-first** — there is no backend to fall back to. Every
+  feature works with the radio off, and backups are files you own: a whole-DB
+  copy or a single career bundle, exported and imported by hand.
 - **Deterministic core** — the match engine is a pure function seeded by
   `SeededRng` (see `lib/core/rng/`), so the same `(saveSeed, fixtureId)` always
   reproduces the same match. This makes the engine unit-testable and replay-safe.
 - **DRY / reusable** — one design-system widget library; repository pattern with
   interfaces; a single source of truth for premium gating.
-- **Tested everywhere** — unit, widget, golden, and integration tests; CI runs
+- **Tested everywhere** — unit, widget and golden tests under `test/`; CI runs
   `dart format` check + `flutter analyze` + `flutter test`.
 
 ## Getting started

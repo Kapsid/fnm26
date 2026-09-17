@@ -39,9 +39,20 @@ class AwardService {
     if (career == null) return;
     final comp = _ref.read(competitionRepositoryProvider);
     final l = _ref.read(appLocalizationsProvider);
-    // Only years that have finished: an award handed out in June would be
-    // handed to whoever happened to have played by then.
-    final year = career.inGameDate.year - 1;
+    // Only years whose FOOTBALL has finished: an award handed out in June would
+    // be handed to whoever happened to have played by then. That moment is 1
+    // December — the gap between the November qualifying window and January's
+    // African and Asian finals, and the same date the squads re-rate on (see
+    // [CareerService.developmentMonth]).
+    //
+    // It used to wait for the calendar to roll over instead, which put the
+    // trophy in the inbox in the NEW year: at a cycle boundary that meant
+    // "Player of the Year 2029" arriving as the first thing a manager read in
+    // 2030, alongside the new cycle, months after the season it was for.
+    final date = career.inGameDate;
+    final year = date.month >= CareerService.developmentMonth
+        ? date.year
+        : date.year - 1;
     if (year < CareerService.cycleStart.year) return;
     final existing = await comp.messageKeys(careerId);
     if (existing.contains('poty:$year')) return;

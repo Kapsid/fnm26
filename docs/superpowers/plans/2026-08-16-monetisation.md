@@ -2,7 +2,7 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Sell the game. One free four-year cycle, then a one-time €11.99 unlock, on an app that stays offline and collects nothing.
+**Goal:** Sell the game. One free four-year cycle, then a one-time €12.99 unlock, on an app that stays offline and collects nothing.
 
 **Architecture:** Three independent pieces. The **gate** decides when to ask (one choke point, `startNextCycle`). The **entitlement** decides whether the answer is yes (a signed receipt, verified on device). The **build** raises the cost of patching it out. They can land in any order, but the gate is worthless without the entitlement it reads, so build 1 → 2 → 3.
 
@@ -18,7 +18,7 @@
 - **Every user-facing string is localised** in both `lib/l10n/app_en.arb` and `lib/l10n/app_cs.arb`.
 - **No `@riverpod` codegen**; hand-write providers.
 - **Verification:** `dart format` check + `flutter analyze` + `flutter test` all pass before any commit.
-- **The price is set in the consoles, not in code.** €11.99 is a Play/App Store price tier; the app only ever shows `ProductDetails.price`, which is already how the paywall reads it.
+- **The price is set in the consoles, not in code.** €12.99 is a Play/App Store price tier; the app only ever shows `ProductDetails.price`, which is already how the paywall reads it.
 
 ---
 
@@ -220,7 +220,7 @@ git commit -m "build: sign release properly and obfuscate the binary"
 
 ## Console work (not code)
 
-- [ ] Create the non-consumable `com.fnm.fnm.premium` in both consoles at the €11.99 tier.
+- [ ] Create the non-consumable `com.fnm.fnm.premium` in both consoles at the €12.99 tier.
 - [ ] Enable **Family Sharing** (App Store) and **family library** (Play). Free toggles that remove a common refund request.
 - [ ] Copy the Play **public key** (Monetisation setup) into the app constant used by Task 2.
 - [ ] Fill the App Store privacy questionnaire: nothing collected. It stays true — keep it that way.

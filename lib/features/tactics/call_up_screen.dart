@@ -10,10 +10,12 @@ import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/core/util/match_stage.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/enums.dart';
+import 'package:fnm/domain/entities/formation.dart';
 import 'package:fnm/domain/services/club/club_form.dart';
 import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/entities/player_absence.dart';
+import 'package:fnm/domain/services/squad/squad_selection.dart';
 import 'package:fnm/domain/services/squad/condition.dart';
 import 'package:fnm/domain/services/squad/absence_outlook.dart';
 import 'package:fnm/features/tactics/absence_providers.dart';
@@ -81,7 +83,7 @@ class _CallUpScreenState extends ConsumerState<CallUpScreen> {
   /// Nominating used to open with the previous squad already ticked, which
   /// quietly answered the question it was asking — and it re-ticked players who
   /// had since been banned or injured. Picking a squad should be a decision,
-  /// with [_bestQuality] and [_previousSquad] there for when it isn't.
+  /// with [SquadSelection] there for when it isn't.
   Set<int> _initialSquad(List<Player> pool, Iterable<int> current) => {};
 
   /// Records the squad as it currently stands, so leaving the screen part-way
@@ -102,68 +104,6 @@ class _CallUpScreenState extends ConsumerState<CallUpScreen> {
   void _edit(void Function(Set<int> selected) change) {
     setState(() => change(_selected ??= {}));
     _saveDraft();
-  }
-
-  /// Whether a player is worth naming for a squad covering [coverage] matches.
-  ///
-  /// A one-match knock or ban does NOT rule a player out of a squad that covers
-  /// four games — he sits out the first and plays the rest, exactly as a real
-  /// call-up list works. Only someone missing EVERY match in the period is left
-  /// out, which is what the auto-picks used to do to anyone carrying so much as
-  /// a single-game absence.
-  static bool _usableInPeriod(
-    PlayerAbsence? absence,
-    int coverage,
-  ) {
-    if (absence == null || absence.isAvailable) return true;
-    final out = absence.injuryMatches > absence.banMatches
-        ? absence.injuryMatches
-        : absence.banMatches;
-    return out < (coverage < 1 ? 1 : coverage);
-  }
-
-  /// The best [kMaxSquadSize] players by rating who are usable at some point in
-  /// the period, but with **at most three goalkeepers** — a real squad carries
-  /// three keepers and fills the rest with outfielders, rather than stacking
-  /// whoever rates highest.
-  Set<int> _bestQuality(
-    List<Player> pool,
-    Map<int, PlayerAbsence> absences,
-    int coverage,
-  ) {
-    final fit =
-        pool.where((p) => _usableInPeriod(absences[p.id], coverage)).toList()
-          // Whoever can play the FIRST match comes first at equal quality, so
-          // the named squad can always field an XI straight away.
-          ..sort((a, b) {
-            final aFit = absences[a.id]?.isAvailable ?? true;
-            final bFit = absences[b.id]?.isAvailable ?? true;
-            if (aFit != bFit) return aFit ? -1 : 1;
-            return b.overall.compareTo(a.overall);
-          });
-    bool isGk(Player p) => p.position.category == PositionCategory.goalkeeper;
-    final keepers = fit.where(isGk).take(3).toList();
-    final outfield = fit
-        .where((p) => !isGk(p))
-        .take(kMaxSquadSize - keepers.length);
-    return {...keepers, ...outfield}.map((p) => p.id).toSet();
-  }
-
-  /// Last time's squad, minus anyone who cannot play at all in this period.
-  Set<int> _previousSquad(
-    List<Player> pool,
-    Iterable<int> previous,
-    Map<int, PlayerAbsence> absences,
-    int coverage,
-  ) {
-    final was = previous.toSet();
-    final fit =
-        pool
-            .where((p) => was.contains(p.id))
-            .where((p) => _usableInPeriod(absences[p.id], coverage))
-            .toList()
-          ..sort((a, b) => b.overall.compareTo(a.overall));
-    return fit.take(kMaxSquadSize).map((p) => p.id).toSet();
   }
 
   /// Back to the hub when this was a timeline event, else back to tactics.
@@ -224,6 +164,11 @@ class _CallUpScreenState extends ConsumerState<CallUpScreen> {
     // How many matches this squad has to cover — a player carrying a shorter
     // absence than that is still worth naming.
     final coverage = window?.matches.length ?? 1;
+    // The shape being played, so the auto-pick names a squad that can field it
+    // rather than the highest-rated names in the country.
+    final formation =
+        ref.watch(currentFormationProvider(widget.careerId)).valueOrNull ??
+        Formation.f433;
 
     // Restore a nomination the manager had already started. Resolved once the
     // window is known (it decides which draft this is), and applied once.
@@ -360,10 +305,12 @@ class _CallUpScreenState extends ConsumerState<CallUpScreen> {
                             s
                               ..clear()
                               ..addAll(
-                                _bestQuality(
-                                  data.pool,
-                                  data.absences,
-                                  coverage,
+                                SquadSelection.bestQuality(
+                                  pool: data.pool,
+                                  absences: data.absences,
+                                  coverage: coverage,
+                                  formation: formation,
+                                  max: kMaxSquadSize,
                                 ),
                               );
                           }),
@@ -381,11 +328,12 @@ class _CallUpScreenState extends ConsumerState<CallUpScreen> {
                                   s
                                     ..clear()
                                     ..addAll(
-                                      _previousSquad(
-                                        data.pool,
-                                        data.callUps,
-                                        data.absences,
-                                        coverage,
+                                      SquadSelection.previousSquad(
+                                        pool: data.pool,
+                                        previous: data.callUps,
+                                        absences: data.absences,
+                                        coverage: coverage,
+                                        max: kMaxSquadSize,
                                       ),
                                     );
                                 }),
@@ -845,10 +793,14 @@ class _PlayerToggle extends StatelessWidget {
         children: [
           Flexible(
             // Naming a squad is the one screen where the manager MUST be able
-            // to read who he is picking, so the name is never cut.
+            // to read who he is picking, so the name is never cut. When the
+            // full name will not fit beside the badges, the forename gives way
+            // to an initial ("X. John") rather than the surname being lost or
+            // the whole name shrinking away.
             child: WholeText(
               player.name,
               maxLines: 1,
+              shortText: initialledName(player.name),
               style: AppTypography.bodyMedium,
             ),
           ),

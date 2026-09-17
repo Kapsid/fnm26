@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/domain/entities/nation.dart';
 
-/// Whether the premium upgrade (€9.99) is unlocked.
+/// Whether the premium upgrade (€12.99) is unlocked.
 ///
 /// This is the single source of truth for all paywall gating — UI and data
 /// code should consult it rather than scattering `if (premium)` checks.

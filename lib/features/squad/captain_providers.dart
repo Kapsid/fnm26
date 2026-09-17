@@ -51,6 +51,11 @@ Future<void> setCaptain(WidgetRef ref, int careerId, int? playerId) async {
   await ref.read(careerRepositoryProvider).setCaptain(careerId, playerId);
   ref
     ..invalidate(captainProvider)
+    // The stored INTENT is read straight from the career row, so it goes stale
+    // the moment the row changes. Leaving it out meant taking the armband back
+    // off somebody left the old id cached, and the pre-match strip went on
+    // reporting a captain who could not play for a save that had no captain.
+    ..invalidate(storedCaptainIdProvider)
     ..invalidate(captainMoraleProvider)
     ..invalidate(squadDataProvider);
 }

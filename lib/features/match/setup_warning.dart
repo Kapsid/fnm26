@@ -12,18 +12,35 @@ import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
 
 /// What is wrong with the armband, or null when nothing is.
+///
+/// Four different situations, because they are four different things to do
+/// about it. "Your captain cannot play this one" covered three of them at once
+/// and named nobody, so a manager who knew perfectly well who his captain was
+/// could only read it as the game having lost track of him.
 enum CaptainIssue {
-  /// Nobody has been given it.
+  /// Nobody has it. Either it was never given out, or the man who had it is no
+  /// longer in the game at all (retired, or left behind by a move to another
+  /// nation) — in which case there is nobody to name, only somebody to pick.
   unnamed,
 
-  /// Somebody has, and he cannot play this one — injured, suspended, or left
-  /// out of the squad. A rollover clears the call-ups, so the squad that gets
-  /// picked for him afterwards may simply not contain him.
-  unavailable,
+  /// He is in the squad and hurt.
+  injured,
+
+  /// He is in the squad and serving a ban.
+  suspended,
+
+  /// He was left out of the squad that was named. A rollover clears the
+  /// call-ups, so the squad picked for him afterwards may simply not contain
+  /// him.
+  dropped,
 }
 
-/// What the manager has left unset before kick-off.
-typedef SquadSetup = ({CaptainIssue? captain, bool setPieces});
+/// What the manager has left unset before kick-off, and who it is about.
+typedef SquadSetup = ({
+  CaptainIssue? captain,
+  String? captainName,
+  bool setPieces,
+});
 
 /// Whether the armband and the set-piece takers are actually COVERED for the
 /// next match.
@@ -38,11 +55,20 @@ typedef SquadSetup = ({CaptainIssue? captain, bool setPieces});
 /// taker dropped from the squad, left the id sitting in the save and the
 /// warning silent, which is precisely the match where it was needed. A named
 /// man who cannot play is not a named man.
+///
+/// The armband is resolved HERE, from the stored id against the squad, rather
+/// than read off [captainProvider]. That provider answers "who leads the side
+/// out", which is null for a captain who is merely left out of the squad — so
+/// asking it first and then re-deriving the reason meant two reads of the same
+/// facts, taken at different moments, disagreeing with each other and with the
+/// name the tactics screen was showing.
 final AutoDisposeFutureProviderFamily<SquadSetup, int> squadSetupProvider =
     FutureProvider.autoDispose.family<SquadSetup, int>((ref, careerId) async {
-      final captain = await ref.watch(captainProvider(careerId).future);
       final takers = await ref.watch(setPieceTakersProvider(careerId).future);
       final squad = await ref.watch(squadDataProvider(careerId).future);
+      final storedId = await ref.watch(
+        storedCaptainIdProvider(careerId).future,
+      );
 
       /// Whether [id] is named for the next match and fit to play it.
       bool available(int? id) {
@@ -53,25 +79,34 @@ final AutoDisposeFutureProviderFamily<SquadSetup, int> squadSetupProvider =
         return absence == null || absence.isAvailable;
       }
 
-      // NAMED and AVAILABLE are different problems and used to be the same
-      // one. `captainProvider` returns null both for a manager who never gave
-      // the armband to anybody and for one whose captain is injured or was
-      // left out of the squad, so a man who had been captain for six years was
-      // reported as "No captain named" the week he pulled a hamstring — which
-      // reads as the game having lost the setting, and sends the manager to a
-      // screen that already says what he expects it to say.
-      // Whether the armband was given to ANYBODY. A resolved captain is proof
-      // of it by itself; only when nobody resolved is the stored intent worth
-      // reading, and that is exactly the case the two messages differ on.
-      final storedCaptain =
-          captain?.id ??
-          await ref.watch(storedCaptainIdProvider(careerId).future);
+      // The man himself, wherever he is in the pool — in the squad or not, fit
+      // or not. Resolving him over the whole pool rather than the call-ups is
+      // what lets the warning say his NAME while telling the manager he is out
+      // of it.
+      final skipper = storedId == null || squad == null
+          ? null
+          : squad.pool.where((p) => p.id == storedId).firstOrNull;
+      final absence = skipper == null ? null : squad!.absences[skipper.id];
+      final CaptainIssue? issue;
+      if (storedId == null || (squad != null && skipper == null)) {
+        // Nobody named, or the named man is gone from the game entirely.
+        issue = CaptainIssue.unnamed;
+      } else if (skipper == null) {
+        // Nothing loaded to check him against: say nothing rather than accuse.
+        issue = null;
+      } else if ((absence?.injuryMatches ?? 0) > 0) {
+        issue = CaptainIssue.injured;
+      } else if ((absence?.banMatches ?? 0) > 0) {
+        issue = CaptainIssue.suspended;
+      } else if (!squad!.callUps.contains(skipper.id)) {
+        issue = CaptainIssue.dropped;
+      } else {
+        issue = null;
+      }
+
       return (
-        captain: storedCaptain == null
-            ? CaptainIssue.unnamed
-            : (captain != null && available(captain.id)
-                  ? null
-                  : CaptainIssue.unavailable),
+        captain: issue,
+        captainName: skipper?.name,
         // Penalties are the half of this that decides matches, so a save with
         // a dead-ball taker and nobody on penalties still counts as unset.
         setPieces: available(takers.penalty) && available(takers.deadBall),
@@ -96,19 +131,26 @@ class SquadSetupWarning extends ConsumerWidget {
     if (setup == null || (setup.captain == null && setup.setPieces)) {
       return const SizedBox.shrink();
     }
-    final message = switch (setup) {
-      (captain: CaptainIssue.unavailable, setPieces: _) =>
-        l.matchSetupWarnCaptainOut,
-      (captain: CaptainIssue.unnamed, setPieces: false) => l.matchSetupWarnBoth,
-      (captain: CaptainIssue.unnamed, setPieces: true) =>
-        l.matchSetupWarnCaptain,
-      _ => l.matchSetupWarnSetPieces,
+    // A named captain is always named BY NAME. A manager who is told his
+    // skipper is suspended can act on it; one told "your captain cannot play"
+    // has to go and find out who that even is.
+    final name = setup.captainName ?? '';
+    final message = switch (setup.captain) {
+      CaptainIssue.injured => l.matchSetupWarnCaptainInjured(name),
+      CaptainIssue.suspended => l.matchSetupWarnCaptainSuspended(name),
+      CaptainIssue.dropped => l.matchSetupWarnCaptainDropped(name),
+      CaptainIssue.unnamed when setup.setPieces => l.matchSetupWarnCaptain,
+      CaptainIssue.unnamed => l.matchSetupWarnBoth,
+      null => l.matchSetupWarnSetPieces,
     };
 
     return Padding(
       padding: const EdgeInsets.only(bottom: AppSpacing.md),
       child: AppCard(
-        onTap: () => context.push('${Routes.tactics}?careerId=$careerId'),
+        // Straight to the tab that holds both the armband and the takers,
+        // rather than the lineup the manager then has to navigate off. Index 2
+        // since the instructions took a tab of their own.
+        onTap: () => context.push('${Routes.tactics}?careerId=$careerId&tab=2'),
         child: Row(
           children: [
             const Icon(

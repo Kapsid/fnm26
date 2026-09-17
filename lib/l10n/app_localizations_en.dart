@@ -342,6 +342,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get recordsBestFinish => 'Best finish';
 
   @override
+  String get recordsNoFinalsYet => 'No finals appearance yet';
+
+  @override
   String get recordsLongestUnbeaten => 'Longest unbeaten';
 
   @override
@@ -812,6 +815,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get tacticsTabLineup => 'LINEUP';
 
   @override
+  String get tacticsTabInstructions => 'INSTRUCTIONS';
+
+  @override
   String get tacticsTabRoles => 'ROLES';
 
   @override
@@ -1108,10 +1114,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get hubEventIntercontinentalPlayoff => 'The intercontinental play-off';
 
   @override
-  String get hubEventWatchWcDraw => 'Watch the World Cup draw';
+  String get hubEventWatchWcDraw => 'Watch the World Championship draw';
 
   @override
-  String get hubEventWorldCupHere => 'The World Cup is here';
+  String get hubEventWorldCupHere => 'The World Championship is here';
 
   @override
   String get hubEventWatchFinalsDraw => 'Watch the finals draw';
@@ -1120,7 +1126,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get hubEventFinalsHere => 'The finals are here';
 
   @override
-  String get hubEventPlayWcRound => 'Play the next World Cup round';
+  String get hubEventPlayWcRound => 'Play the next World Championship round';
 
   @override
   String hubEventPlayCupMatch(String cup) {
@@ -1141,11 +1147,11 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get hubEventWatchWcHostSelection =>
-      'Watch the World Cup host selection';
+      'Watch the World Championship host selection';
 
   @override
   String get hubEventWatchWcQualifyingDraw =>
-      'Watch the World Cup qualifying draw';
+      'Watch the World Championship qualifying draw';
 
   @override
   String get hubEventArrangeFriendlies => 'Arrange friendlies';
@@ -1202,7 +1208,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get hubCallUpRequalify => 'Re-name your qualifying squad';
 
   @override
-  String get hubCallUpWorldCup => 'Name your World Cup squad';
+  String get hubCallUpWorldCup => 'Name your World Championship squad';
 
   @override
   String get hubCallUpFinals => 'Name your squad for the finals';
@@ -1345,7 +1351,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String homeRoadToWorldCup(String date, int year) {
-    return '$date · Road to the $year World Cup';
+    return '$date · Road to the $year World Championship';
   }
 
   @override
@@ -1375,7 +1381,11 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get careerBeginsBlurb =>
-      'Your career begins in September 2026, on the road to the 2030 World Cup.';
+      'Your career begins in September 2026, on the road to the 2030 World Championship.';
+
+  @override
+  String get careerFreeCycleNote =>
+      'The first full cycle is free: qualifying, your continental championship and the World Championship. Carrying on afterwards, and extra save slots, unlock once for €12.99.';
 
   @override
   String get careerStartCareer => 'Start Career';
@@ -1618,7 +1628,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String careerRoadToWorldCup(int year) {
-    return 'Road to the $year World Cup';
+    return 'Road to the $year World Championship';
   }
 
   @override
@@ -1701,7 +1711,7 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get careerWorldCupLabel => 'World Cup';
+  String get careerWorldCupLabel => 'World Championship';
 
   @override
   String get careerContinentalLabel => 'Continental';
@@ -1914,8 +1924,19 @@ class AppLocalizationsEn extends AppLocalizations {
       'No captain named. Tap to give somebody the armband';
 
   @override
-  String get matchSetupWarnCaptainOut =>
-      'Your captain cannot play this one. Tap to give somebody else the armband';
+  String matchSetupWarnCaptainInjured(String name) {
+    return '$name is injured and cannot lead this one out. Tap to hand the armband on';
+  }
+
+  @override
+  String matchSetupWarnCaptainSuspended(String name) {
+    return '$name is suspended for this one. Tap to hand the armband on';
+  }
+
+  @override
+  String matchSetupWarnCaptainDropped(String name) {
+    return '$name has the armband but is not in your squad. Tap to hand it on';
+  }
 
   @override
   String get matchSetupWarnSetPieces =>
@@ -2109,7 +2130,8 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get resultsCategoryWorldCupQualifying => 'World Cup Qualifying';
+  String get resultsCategoryWorldCupQualifying =>
+      'World Championship Qualifying';
 
   @override
   String get resultsCategoryFriendlies => 'Friendlies';
@@ -2124,7 +2146,17 @@ class AppLocalizationsEn extends AppLocalizations {
   String get resultsCategoryContinentalCup => 'Continental Cup';
 
   @override
-  String get resultsCategoryWorldCupFinals => 'World Cup Finals';
+  String get resultsCategoryWorldCupQualifyingShort => 'World Champ. Q';
+
+  @override
+  String get resultsCategoryContinentalQualifyingShort => 'Continental Cup Q';
+
+  @override
+  String get resultsCategoryContinentalQualifying =>
+      'Continental Cup Qualifying';
+
+  @override
+  String get resultsCategoryWorldCupFinals => 'World Championship Finals';
 
   @override
   String get resultsRoundResults => 'ROUND RESULTS';
@@ -2385,7 +2417,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get chWc1 => 'World Champion';
 
   @override
-  String get chWc1Desc => 'Win the World Cup.';
+  String get chWc1Desc => 'Win the World Championship.';
 
   @override
   String get chYears25 => 'Establishment';
@@ -2397,44 +2429,46 @@ class AppLocalizationsEn extends AppLocalizations {
   String get chWc3 => 'Serial Winner';
 
   @override
-  String get chWc3Desc => 'Win 3 World Cups.';
+  String get chWc3Desc => 'Win 3 World Championships.';
 
   @override
   String get chWc5 => 'Dynasty';
 
   @override
-  String get chWc5Desc => 'Win 5 World Cups.';
+  String get chWc5Desc => 'Win 5 World Championships.';
 
   @override
   String get chWc10 => 'Immortal';
 
   @override
-  String get chWc10Desc => 'Win 10 World Cups.';
+  String get chWc10Desc => 'Win 10 World Championships.';
 
   @override
   String get chWc2Teams => 'Have Boots, Will Travel';
 
   @override
-  String get chWc2TeamsDesc => 'Win the World Cup with 2 different nations.';
+  String get chWc2TeamsDesc =>
+      'Win the World Championship with 2 different nations.';
 
   @override
   String get chWc3Teams => 'Globetrotter';
 
   @override
-  String get chWc3TeamsDesc => 'Win the World Cup with 3 different nations.';
+  String get chWc3TeamsDesc =>
+      'Win the World Championship with 3 different nations.';
 
   @override
   String get chWcStreak3 => 'Three-Peat';
 
   @override
-  String get chWcStreak3Desc => 'Win 3 World Cups in a row.';
+  String get chWcStreak3Desc => 'Win 3 World Championships in a row.';
 
   @override
   String get chWcAllconf => 'World Conqueror';
 
   @override
   String get chWcAllconfDesc =>
-      'Win the World Cup with a nation from every confederation (6).';
+      'Win the World Championship with a nation from every confederation (6).';
 
   @override
   String get chCont5 => 'Continental King';
@@ -2454,7 +2488,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get chTrebleDesc =>
-      'Win the World Cup, a continental title and the Nations Cup in one career.';
+      'Win the World Championship, a continental title and the Nations Cup in one career.';
 
   @override
   String get chNations10 => 'Nomad';
@@ -2485,35 +2519,35 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get chGrandmasterDesc =>
-      'Win 3 World Cups AND 5 continental championships.';
+      'Win 3 World Championships AND 5 continental championships.';
 
   @override
   String get chUndefeated => 'Untouchable';
 
   @override
   String get chUndefeatedDesc =>
-      'Win a World Cup without losing a single match.';
+      'Win a World Championship without losing a single match.';
 
   @override
   String get chPerfectQual => 'Flawless Passage';
 
   @override
   String get chPerfectQualDesc =>
-      'Win every match of a World Cup qualifying campaign.';
+      'Win every match of a World Championship qualifying campaign.';
 
   @override
   String get chMinnow => 'Minnow Miracle';
 
   @override
   String get chMinnowDesc =>
-      'Win the World Cup with a nation ranked outside the world top 32.';
+      'Win the World Championship with a nation ranked outside the world top 32.';
 
   @override
   String get chGrandTour => 'Home & Away';
 
   @override
   String get chGrandTourDesc =>
-      'Win a World Cup as hosts and win one away from home.';
+      'Win a World Championship as hosts and win one away from home.';
 
   @override
   String get chUnbeaten25 => 'The Wall';
@@ -2556,7 +2590,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String chPcWcDesc(int count) {
-    return 'Win $count World Cups this save.';
+    return 'Win $count World Championships this save.';
   }
 
   @override
@@ -2564,7 +2598,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String chPcMajorsDesc(int count) {
-    return 'Win $count major trophies (World Cup, continental or Nations Cup).';
+    return 'Win $count major trophies (World Championship, continental or Nations Cup).';
   }
 
   @override
@@ -2969,7 +3003,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get nationsWorld => 'WORLD';
 
   @override
-  String get nationsWorldCup => 'World Cup';
+  String get nationsWorldCup => 'World Championship';
 
   @override
   String get nationsContinental => 'Continental';
@@ -3151,23 +3185,103 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String yWinUpset4(String opponent, String score) {
+    return '$score against $opponent. However that happened, it happened.';
+  }
+
+  @override
+  String yWinUpset5(String opponent, String score) {
+    return 'On paper this was over before it started. $opponent $score says otherwise.';
+  }
+
+  @override
+  String yWinUpset6(String opponent, String score) {
+    return 'Beat $opponent $score. Nobody will believe that scoreline in a year.';
+  }
+
+  @override
+  String yWinUpset7(String opponent, String score) {
+    return '$opponent $score. Enjoy it, then look at the fixture list.';
+  }
+
+  @override
+  String yWinUpset8(String opponent, String score) {
+    return '$score against $opponent, and we rode our luck for eighty of the ninety.';
+  }
+
+  @override
+  String yWinUpset9(String opponent, String score) {
+    return 'One night against $opponent does not undo a year. $score.';
+  }
+
+  @override
+  String yWinUpset10(String opponent, String score) {
+    return 'Beat $opponent $score and now we will be told we have turned a corner. We have not.';
+  }
+
+  @override
+  String yWinUpset11(String opponent, String score) {
+    return '$opponent $score. Wonderful. Ask me again when it matters.';
+  }
+
+  @override
   String yWinRoutine0(String opponent, String score) {
-    return '$score against $opponent. Job done, nothing learned.';
+    return 'Beat $opponent $score. Exactly as it should be, and there is a pleasure in that.';
   }
 
   @override
   String yWinRoutine1(String opponent, String score) {
-    return 'Beat $opponent $score. We were supposed to, and we did.';
+    return '$score over $opponent. Ruthless, and ruthless is a compliment.';
   }
 
   @override
   String yWinRoutine2(String opponent, String score) {
-    return 'A professional $score over $opponent. Next.';
+    return '$opponent $score. No fuss, no scare, no complaints.';
   }
 
   @override
   String yWinRoutine3(String opponent, String score) {
+    return 'A tidy $score against $opponent. This is what a good side looks like on a quiet day.';
+  }
+
+  @override
+  String yWinRoutine4(String opponent, String score) {
+    return '$score against $opponent. Job done, nothing learned.';
+  }
+
+  @override
+  String yWinRoutine5(String opponent, String score) {
+    return 'Beat $opponent $score. We were supposed to, and we did.';
+  }
+
+  @override
+  String yWinRoutine6(String opponent, String score) {
+    return 'A professional $score over $opponent. Next.';
+  }
+
+  @override
+  String yWinRoutine7(String opponent, String score) {
     return '$opponent dispatched $score. File it and move on.';
+  }
+
+  @override
+  String yWinRoutine8(String opponent, String score) {
+    return '$score against $opponent and we are supposed to applaud. For beating them.';
+  }
+
+  @override
+  String yWinRoutine9(String opponent, String score) {
+    return 'Well done to everyone involved in the $score over $opponent, I suppose.';
+  }
+
+  @override
+  String yWinRoutine10(String opponent, String score) {
+    return '$opponent $score. Beating sides like that is the floor, not the achievement.';
+  }
+
+  @override
+  String yWinRoutine11(String opponent, String score) {
+    return 'We beat $opponent $score and looked laboured doing it.';
   }
 
   @override
@@ -3177,37 +3291,117 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String yWinTight1(String opponent, String score) {
-    return 'Nervy, ugly, and a win. $opponent $score.';
+    return 'That took character. $opponent $score.';
   }
 
   @override
   String yWinTight2(String opponent, String score) {
-    return 'Beat $opponent $score. Take the three points and never watch it again.';
+    return 'Beat $opponent $score the hard way, which is the way that lasts.';
   }
 
   @override
   String yWinTight3(String opponent, String score) {
+    return '$score against $opponent. Sides that win these are the sides still standing in June.';
+  }
+
+  @override
+  String yWinTight4(String opponent, String score) {
+    return 'Nervy, ugly, and a win. $opponent $score.';
+  }
+
+  @override
+  String yWinTight5(String opponent, String score) {
+    return 'Beat $opponent $score. Take the three points and never watch it again.';
+  }
+
+  @override
+  String yWinTight6(String opponent, String score) {
     return '$score. $opponent made us work for every inch of that.';
   }
 
   @override
+  String yWinTight7(String opponent, String score) {
+    return '$opponent $score. Not pretty. Counts the same.';
+  }
+
+  @override
+  String yWinTight8(String opponent, String score) {
+    return '$score against $opponent and we made it ten times harder than it was.';
+  }
+
+  @override
+  String yWinTight9(String opponent, String score) {
+    return 'We should not be hanging on against $opponent. $score.';
+  }
+
+  @override
+  String yWinTight10(String opponent, String score) {
+    return '$opponent $score. Won it, and learned nothing good about ourselves.';
+  }
+
+  @override
+  String yWinTight11(String opponent, String score) {
+    return 'A $score that flattered us against $opponent.';
+  }
+
+  @override
   String yDrew0(String opponent, String score) {
-    return '$score with $opponent. Two points dropped or one gained. Pick your mood.';
+    return 'A point against $opponent, $score. Take it and move on.';
   }
 
   @override
   String yDrew1(String opponent, String score) {
-    return 'A draw against $opponent, $score. Nobody is happy, nobody is furious.';
+    return '$score with $opponent. There are worse afternoons than this.';
   }
 
   @override
   String yDrew2(String opponent, String score) {
-    return '$opponent $score. The most forgettable ninety minutes of the year.';
+    return 'Held $opponent to $score. Not everything has to be a story.';
   }
 
   @override
   String yDrew3(String opponent, String score) {
+    return '$opponent $score. A point is a point and the table does not ask how.';
+  }
+
+  @override
+  String yDrew4(String opponent, String score) {
+    return '$score with $opponent. Two points dropped or one gained. Pick your mood.';
+  }
+
+  @override
+  String yDrew5(String opponent, String score) {
+    return 'A draw against $opponent, $score. Nobody is happy, nobody is furious.';
+  }
+
+  @override
+  String yDrew6(String opponent, String score) {
+    return '$opponent $score. The most forgettable ninety minutes of the year.';
+  }
+
+  @override
+  String yDrew7(String opponent, String score) {
     return 'Shared the spoils with $opponent, $score. On we go.';
+  }
+
+  @override
+  String yDrew8(String opponent, String score) {
+    return '$score against $opponent. Draws like this are how campaigns quietly die.';
+  }
+
+  @override
+  String yDrew9(String opponent, String score) {
+    return 'Two points thrown away against $opponent. $score. Nothing else to call it.';
+  }
+
+  @override
+  String yDrew10(String opponent, String score) {
+    return '$opponent $score. We had ninety minutes and no idea what to do with them.';
+  }
+
+  @override
+  String yDrew11(String opponent, String score) {
+    return 'A $score with $opponent that nobody will remember and everybody will pay for.';
   }
 
   @override
@@ -3217,37 +3411,117 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String yLost1(String opponent, String score) {
-    return '$opponent $score. We were second best and there is no argument.';
+    return '$opponent $score. Nothing to hang anybody for. On to the next.';
   }
 
   @override
   String yLost2(String opponent, String score) {
-    return 'Lost $score to $opponent. Regroup.';
+    return 'Lost $score to $opponent and gave everything. Some days that is not enough.';
   }
 
   @override
   String yLost3(String opponent, String score) {
+    return '$score to $opponent. Heads up. This side has plenty left.';
+  }
+
+  @override
+  String yLost4(String opponent, String score) {
+    return '$opponent $score. We were second best and there is no argument.';
+  }
+
+  @override
+  String yLost5(String opponent, String score) {
+    return 'Lost $score to $opponent. Regroup.';
+  }
+
+  @override
+  String yLost6(String opponent, String score) {
     return '$score to $opponent. Not a disgrace, not good enough.';
   }
 
   @override
+  String yLost7(String opponent, String score) {
+    return 'Beaten $score by $opponent. Learn something from it or it was wasted.';
+  }
+
+  @override
+  String yLost8(String opponent, String score) {
+    return '$score to $opponent and we did not lay a glove on them.';
+  }
+
+  @override
+  String yLost9(String opponent, String score) {
+    return 'Lost to $opponent, $score. Same problems, same month, same excuses coming.';
+  }
+
+  @override
+  String yLost10(String opponent, String score) {
+    return '$opponent $score. At what point does this stop being bad luck?';
+  }
+
+  @override
+  String yLost11(String opponent, String score) {
+    return 'Beaten $score by $opponent. That is a result that should cost somebody something.';
+  }
+
+  @override
   String yLostBadly0(String opponent, String score) {
-    return '$score. To $opponent. I have no words and I am paid to have words.';
+    return '$score to $opponent. One bad night. Judge the side on the campaign, not this.';
   }
 
   @override
   String yLostBadly1(String opponent, String score) {
-    return 'That was not a defeat to $opponent, it was a surrender. $score.';
+    return 'Nobody wanted that $score against $opponent less than the players did.';
   }
 
   @override
   String yLostBadly2(String opponent, String score) {
-    return '$opponent $score. Somebody has to answer for that.';
+    return '$opponent $score. Ugly, and not who this team is.';
   }
 
   @override
   String yLostBadly3(String opponent, String score) {
+    return 'A $score to forget against $opponent. They will front up next time.';
+  }
+
+  @override
+  String yLostBadly4(String opponent, String score) {
+    return '$score. To $opponent. I have no words and I am paid to have words.';
+  }
+
+  @override
+  String yLostBadly5(String opponent, String score) {
+    return '$opponent $score. Somebody has to answer for that.';
+  }
+
+  @override
+  String yLostBadly6(String opponent, String score) {
     return 'I want the $score against $opponent struck from the record and from memory.';
+  }
+
+  @override
+  String yLostBadly7(String opponent, String score) {
+    return 'Beaten $score by $opponent. There is no spinning a scoreline like that.';
+  }
+
+  @override
+  String yLostBadly8(String opponent, String score) {
+    return 'That was not a defeat to $opponent, it was a surrender. $score.';
+  }
+
+  @override
+  String yLostBadly9(String opponent, String score) {
+    return '$score. Against $opponent. People paid money to watch that.';
+  }
+
+  @override
+  String yLostBadly10(String opponent, String score) {
+    return '$opponent $score. If that does not change something, nothing will.';
+  }
+
+  @override
+  String yLostBadly11(String opponent, String score) {
+    return 'I have seen this side humiliated before, but $score by $opponent is a new floor.';
   }
 
   @override
@@ -3470,6 +3744,26 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String yScorerStar4(String name, String goals) {
+    return '$goals for $name, and the rest of them were passengers.';
+  }
+
+  @override
+  String yScorerStar5(String name, String goals) {
+    return '$name again. $goals. Imagine this side without him.';
+  }
+
+  @override
+  String yScorerStar6(String name, String goals) {
+    return '$goals from $name. One man should not have to do this much.';
+  }
+
+  @override
+  String yScorerStar7(String name, String goals) {
+    return 'Take $name out of that and it is $goals fewer and a very different afternoon.';
+  }
+
+  @override
   String yWinStreak0(String count) {
     return '$count on the bounce. Whatever is being said in that dressing room, it is landing.';
   }
@@ -3487,6 +3781,26 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String yWinStreak3(String count) {
     return 'No defeats in $count. Ask anyone who has managed: that is the hard part.';
+  }
+
+  @override
+  String yWinStreak4(String count) {
+    return '$count in a row. Enjoy it while the fixtures are kind.';
+  }
+
+  @override
+  String yWinStreak5(String count) {
+    return '$count straight, and we have beaten nobody of consequence.';
+  }
+
+  @override
+  String yWinStreak6(String count) {
+    return 'A run of $count. Ask me again when it is tested.';
+  }
+
+  @override
+  String yWinStreak7(String count) {
+    return '$count on the trot. Every side has one of these in them once.';
   }
 
   @override
@@ -3510,6 +3824,26 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String yLossStreak4(String count) {
+    return '$count without a win and the same mistakes every week.';
+  }
+
+  @override
+  String yLossStreak5(String count) {
+    return '$count in a row. Whatever is being tried, it is not working.';
+  }
+
+  @override
+  String yLossStreak6(String count) {
+    return '$count straight. This is a direction, not a dip.';
+  }
+
+  @override
+  String yLossStreak7(String count) {
+    return 'No wins in $count, and nobody upstairs has said a word.';
+  }
+
+  @override
   String yRivalry0(String opponent, String score) {
     return '$opponent $score. Say what you like about the football. This one counts double.';
   }
@@ -3527,6 +3861,26 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String yRivalry3(String opponent, String score) {
     return 'Neighbours, $score. Bragging rights settled for a while.';
+  }
+
+  @override
+  String yRivalry4(String opponent, String score) {
+    return '$opponent $score. Whatever else happens this year, there is that.';
+  }
+
+  @override
+  String yRivalry5(String opponent, String score) {
+    return '$score against $opponent. Some of us needed that more than the table did.';
+  }
+
+  @override
+  String yRivalry6(String opponent, String score) {
+    return '$opponent $score. And they will have it back next time, they always do.';
+  }
+
+  @override
+  String yRivalry7(String opponent, String score) {
+    return 'Against $opponent, $score. A whole year of being reminded about this one.';
   }
 
   @override
@@ -3550,6 +3904,26 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String yInjuryBlow4(String name) {
+    return '$name out. Of course it is $name.';
+  }
+
+  @override
+  String yInjuryBlow5(String name) {
+    return 'Without $name this becomes a very ordinary team.';
+  }
+
+  @override
+  String yInjuryBlow6(String name) {
+    return '$name injured again. Somebody should be asking why.';
+  }
+
+  @override
+  String yInjuryBlow7(String name) {
+    return 'Lost $name, and there is nobody behind him. That is the real problem.';
+  }
+
+  @override
   String get yBoardPressure0 =>
       'The board have gone very quiet. That is never a good sign.';
 
@@ -3563,6 +3937,22 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get yBoardPressure3 =>
       'Nobody at the federation is saying anything supportive. Draw your own conclusions.';
+
+  @override
+  String get yBoardPressure4 =>
+      'Nobody upstairs has backed him in public for weeks now.';
+
+  @override
+  String get yBoardPressure5 =>
+      'The federation is briefing against its own manager. Same as always.';
+
+  @override
+  String get yBoardPressure6 =>
+      'When a board goes silent, they have already decided.';
+
+  @override
+  String get yBoardPressure7 =>
+      'They will let this drift until it is somebody else’s decision to make.';
 
   @override
   String get yReplies => 'ALSO ABOUT THIS MATCH';
@@ -4100,7 +4490,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get tourContContestedBeforeWc =>
-      'The knockout rounds are played out before the World Cup.';
+      'The knockout rounds are played out before the World Championship.';
 
   @override
   String tourContChampionsHeading(String name) {
@@ -4250,15 +4640,15 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get tourContPlayoffIntro =>
-      'Two World Cup places decided across a knockout of the best qualifying also-rans.';
+      'Two World Championship places decided across a knockout of the best qualifying also-rans.';
 
   @override
   String get tourContPlayoffThrough =>
-      'You came through the play-off. You\'re at the World Cup!';
+      'You came through the play-off. You\'re at the World Championship!';
 
   @override
   String get tourContPlayoffOut =>
-      'You fell short in the play-off. No World Cup this time.';
+      'You fell short in the play-off. No World Championship this time.';
 
   @override
   String get tourContContinue => 'Continue';
@@ -4336,7 +4726,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get tourCupBestRunnersUp => 'Best runners-up';
 
   @override
-  String get tourCupCompWorld => 'World Cup';
+  String get tourCupCompWorld => 'World Championship';
 
   @override
   String get tourCupCompEurope => 'European Championship';
@@ -4359,7 +4749,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get tourCupFinalsDrawSoon =>
-      'Groups to be drawn. Watch the World Cup draw from the hub to reveal them.';
+      'Groups to be drawn. Watch the World Championship draw from the hub to reveal them.';
 
   @override
   String tourCupGroupName(String name) {
@@ -4411,7 +4801,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get tourCupPlayoffIntro =>
-      'Two World Cup places decided across a knockout of the best qualifying also-rans.';
+      'Two World Championship places decided across a knockout of the best qualifying also-rans.';
 
   @override
   String get tourCupQualDrawSoon =>
@@ -4498,7 +4888,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get traitWastefulBlurb => 'Puts too many good chances wide.';
 
   @override
-  String get objectiveWorldCup => 'World Cup';
+  String get objectiveWorldCup => 'World Championship';
 
   @override
   String get objectiveWinTournament => 'Win it';
@@ -4512,7 +4902,7 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get objectiveWinWorldCup => 'Win the World Cup';
+  String get objectiveWinWorldCup => 'Win the World Championship';
 
   @override
   String get objectiveReachFinal => 'Reach the final';
@@ -4527,7 +4917,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get objectiveReachKnockouts => 'Reach the knockout rounds';
 
   @override
-  String get objectiveQualify => 'Qualify for the World Cup';
+  String get objectiveQualify => 'Qualify for the World Championship';
 
   @override
   String get finishChampions => 'Champions';
@@ -5633,13 +6023,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get confOceania => 'Oceania';
 
   @override
-  String get compWorldCup => 'World Cup';
+  String get compWorldCup => 'World Championship';
 
   @override
-  String get compWorldCupFinals => 'World Cup Finals';
+  String get compWorldCupFinals => 'World Championship Finals';
 
   @override
-  String get compWorldCupQualifying => 'World Cup Qualifying';
+  String get compWorldCupQualifying => 'World Championship Qualifying';
 
   @override
   String compQualifiers(String region) {
@@ -5704,17 +6094,17 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String msgCycleBody1(int year) {
-    return 'The road to the $year World Cup starts here.';
+    return 'The road to the $year World Championship starts here.';
   }
 
   @override
   String msgCycleBody2(int year) {
-    return 'A new cycle. The $year World Cup is the target.';
+    return 'A new cycle. The $year World Championship is the target.';
   }
 
   @override
   String msgCycleBody3(int year) {
-    return 'Four years to the $year World Cup. Work starts now.';
+    return 'Four years to the $year World Championship. Work starts now.';
   }
 
   @override
@@ -5744,20 +6134,20 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String msgWcHostTitle(String host, int year) {
-    return '$year World Cup host: $host';
+    return '$year World Championship host: $host';
   }
 
   @override
   String msgWcHostBody(String host, int year) {
-    return '$host will host the $year World Cup.';
+    return '$host will host the $year World Championship.';
   }
 
   @override
-  String get msgWcQualDrawTitle => 'World Cup qualifying draw';
+  String get msgWcQualDrawTitle => 'World Championship qualifying draw';
 
   @override
   String get msgWcQualDrawBody =>
-      'The World Cup qualifying groups have been drawn.';
+      'The World Championship qualifying groups have been drawn.';
 
   @override
   String msgContFinalsDrawTitle(String cup) {
@@ -5770,43 +6160,43 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get msgWcFinalsDrawTitle => 'World Cup finals draw';
+  String get msgWcFinalsDrawTitle => 'World Championship finals draw';
 
   @override
   String msgWcFinalsDrawBody(int year) {
-    return 'The $year World Cup finals draw has been made.';
+    return 'The $year World Championship finals draw has been made.';
   }
 
   @override
-  String get msgQualWcTitle1 => 'Through to the World Cup';
+  String get msgQualWcTitle1 => 'Through to the World Championship';
 
   @override
-  String get msgQualWcTitle2 => 'World Cup booked';
+  String get msgQualWcTitle2 => 'World Championship booked';
 
   @override
-  String get msgQualWcTitle3 => 'We\'re going to the World Cup';
+  String get msgQualWcTitle3 => 'We\'re going to the World Championship';
 
   @override
   String get msgQualWcTitle4 => 'Ticket punched';
 
   @override
   String msgQualWcBody1(int year) {
-    return 'You have qualified for the $year World Cup finals.';
+    return 'You have qualified for the $year World Championship finals.';
   }
 
   @override
   String msgQualWcBody2(int year) {
-    return 'It\'s official: your nation is at the $year World Cup.';
+    return 'It\'s official: your nation is at the $year World Championship.';
   }
 
   @override
   String msgQualWcBody3(int year) {
-    return 'A place at the $year World Cup is secured.';
+    return 'A place at the $year World Championship is secured.';
   }
 
   @override
   String msgQualWcBody4(int year) {
-    return 'You\'re through to the $year World Cup finals.';
+    return 'You\'re through to the $year World Championship finals.';
   }
 
   @override
@@ -6275,11 +6665,11 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get newsWcMissTitle => 'World Cup dream over';
+  String get newsWcMissTitle => 'World Championship dream over';
 
   @override
   String newsWcMissBody(int year) {
-    return 'You didn\'t make the $year World Cup. The qualifying campaign fell short. Four more years.';
+    return 'You didn\'t make the $year World Championship. The qualifying campaign fell short. Four more years.';
   }
 
   @override
@@ -6762,78 +7152,188 @@ class AppLocalizationsEn extends AppLocalizations {
       'I\'m going to be insufferable about this for a decade.';
 
   @override
-  String get yReactionRelief0 => 'that took ten years off me';
+  String get yReactionElation6 => 'Right. That is why we watch.';
 
   @override
-  String get yReactionRelief1 => 'Ugly. Three points. Moving on.';
+  String get yReactionElation7 => 'Days like this pay for the other ones.';
 
   @override
-  String get yReactionRelief2 => 'Nobody speak. Nobody jinx it.';
+  String get yReactionElation8 => 'About time. Genuinely, about time.';
 
   @override
-  String get yReactionRelief3 =>
+  String get yReactionElation9 =>
+      'Great. Now do it again next week and I will believe it.';
+
+  @override
+  String get yReactionElation10 =>
+      'Enjoy tonight, because this lot will find a way to ruin it.';
+
+  @override
+  String get yReactionElation11 =>
+      'One good night does not make anybody a great side.';
+
+  @override
+  String get yReactionRelief0 =>
       'Not pretty, but I\'ll take it every single time.';
 
   @override
-  String get yReactionRelief4 => 'Heart rate: unacceptable.';
+  String get yReactionRelief1 => 'Somehow. Somehow!';
 
   @override
-  String get yReactionRelief5 => 'Somehow. Somehow!';
+  String get yReactionRelief2 => 'Ugly. Three points. Moving on.';
 
   @override
-  String get yReactionFury0 => 'Absolute state of this.';
+  String get yReactionRelief3 =>
+      'I will take ugly all day if it comes with points.';
 
   @override
-  String get yReactionFury1 => 'Not good enough. Not remotely.';
+  String get yReactionRelief4 => 'that took ten years off me';
 
   @override
-  String get yReactionFury2 => 'I want names.';
+  String get yReactionRelief5 => 'Nobody speak. Nobody jinx it.';
 
   @override
-  String get yReactionFury3 => 'Every four years, the same. EVERY four years.';
+  String get yReactionRelief6 => 'Heart rate: unacceptable.';
 
   @override
-  String get yReactionFury4 => 'Deleting the app. Reinstalling Thursday.';
+  String get yReactionRelief7 => 'Survived. That is the word. Survived.';
 
   @override
-  String get yReactionFury5 => 'Somebody explain that to me slowly.';
+  String get yReactionRelief8 =>
+      'We should not need relief from games like that.';
+
+  @override
+  String get yReactionRelief9 =>
+      'Relieved, and a bit embarrassed about being relieved.';
+
+  @override
+  String get yReactionRelief10 =>
+      'If that is the standard we are cheering, we are in trouble.';
+
+  @override
+  String get yReactionRelief11 =>
+      'Scraping through is a habit, and it is not a good one.';
+
+  @override
+  String get yReactionFury0 => 'Not good enough. Not remotely.';
+
+  @override
+  String get yReactionFury1 => 'Somebody explain that to me slowly.';
+
+  @override
+  String get yReactionFury2 => 'That is a hard watch and I am being polite.';
+
+  @override
+  String get yReactionFury3 => 'Disappointed. Genuinely disappointed.';
+
+  @override
+  String get yReactionFury4 => 'Absolute state of this.';
+
+  @override
+  String get yReactionFury5 => 'I want names.';
+
+  @override
+  String get yReactionFury6 => 'Deleting the app. Reinstalling Thursday.';
+
+  @override
+  String get yReactionFury7 => 'Nobody out there looked like they wanted it.';
+
+  @override
+  String get yReactionFury8 => 'Every four years, the same. EVERY four years.';
+
+  @override
+  String get yReactionFury9 => 'That is not a performance, it is an insult.';
+
+  @override
+  String get yReactionFury10 =>
+      'People give up weekends and money for that. Think about it.';
+
+  @override
+  String get yReactionFury11 =>
+      'I have defended this side for years. Not tonight. Not after that.';
 
   @override
   String get yReactionDespair0 => 'well.';
 
   @override
-  String get yReactionDespair1 => 'I have run out of ways to say this.';
+  String get yReactionDespair1 => 'No jokes today. Nothing.';
 
   @override
   String get yReactionDespair2 => 'Going for a walk. A long one.';
 
   @override
-  String get yReactionDespair3 => 'this is the darkest timeline';
+  String get yReactionDespair3 => 'I have run out of ways to say this.';
 
   @override
   String get yReactionDespair4 => 'Wake me in four years.';
 
   @override
-  String get yReactionDespair5 => 'No jokes today. Nothing.';
+  String get yReactionDespair5 => 'this is the darkest timeline';
 
   @override
-  String get yReactionSmugness0 => 'Said it in January. Check the timeline.';
+  String get yReactionDespair6 =>
+      'Not even angry any more. That is the worrying part.';
 
   @override
-  String get yReactionSmugness1 => 'Some of you owe some of us an apology.';
+  String get yReactionDespair7 => 'Same feeling, different year.';
 
   @override
-  String get yReactionSmugness2 => 'Quietly, but: told you.';
+  String get yReactionDespair8 =>
+      'I do not know what this is any more, but it is not a football team.';
 
   @override
-  String get yReactionSmugness3 => 'The doubters have gone very quiet.';
+  String get yReactionDespair9 =>
+      'We are further away than we were, and nobody will say it.';
 
   @override
-  String get yReactionSmugness4 => 'bookmark this one';
+  String get yReactionDespair10 =>
+      'A whole generation wasted and the same people decide what happens next.';
 
   @override
-  String get yReactionSmugness5 =>
+  String get yReactionDespair11 =>
+      'Stop telling me it is a process. It is not going anywhere.';
+
+  @override
+  String get yReactionSmugness0 => 'Quietly, but: told you.';
+
+  @override
+  String get yReactionSmugness1 => 'bookmark this one';
+
+  @override
+  String get yReactionSmugness2 => 'The doubters have gone very quiet.';
+
+  @override
+  String get yReactionSmugness3 =>
       'Not that anybody\'s counting. I\'m counting.';
+
+  @override
+  String get yReactionSmugness4 => 'Said it in January. Check the timeline.';
+
+  @override
+  String get yReactionSmugness5 => 'Some of you owe some of us an apology.';
+
+  @override
+  String get yReactionSmugness6 =>
+      'Filing this under things I mentioned first.';
+
+  @override
+  String get yReactionSmugness7 => 'No gloating. A little gloating.';
+
+  @override
+  String get yReactionSmugness8 =>
+      'Where are all the experts now? Genuine question.';
+
+  @override
+  String get yReactionSmugness9 =>
+      'I would like every single one of you to say it back to me.';
+
+  @override
+  String get yReactionSmugness10 =>
+      'Screenshot, printed, framed, sent to the people who laughed.';
+
+  @override
+  String get yReactionSmugness11 =>
+      'I will be bringing this up for the rest of my life and you have earned it.';
 
   @override
   String get yReactionShrug0 => 'it happened. next.';
@@ -6845,13 +7345,34 @@ class AppLocalizationsEn extends AppLocalizations {
   String get yReactionShrug2 => 'Filing this one under \'football\'.';
 
   @override
-  String get yReactionShrug3 => 'no thoughts, head empty';
+  String get yReactionShrug3 => 'Genuinely nothing to add.';
 
   @override
-  String get yReactionShrug4 => 'Wake me for the next one.';
+  String get yReactionShrug4 => 'no thoughts, head empty';
 
   @override
-  String get yReactionShrug5 => 'Genuinely nothing to add.';
+  String get yReactionShrug5 => 'Wake me for the next one.';
+
+  @override
+  String get yReactionShrug6 => 'That is ninety minutes I am not getting back.';
+
+  @override
+  String get yReactionShrug7 => 'Neither here nor there, really.';
+
+  @override
+  String get yReactionShrug8 =>
+      'Could not tell you a single thing that happened.';
+
+  @override
+  String get yReactionShrug9 =>
+      'Another one of those. There are a lot of those.';
+
+  @override
+  String get yReactionShrug10 => 'I watched all of it and felt nothing at all.';
+
+  @override
+  String get yReactionShrug11 =>
+      'If nobody mentions this again, that is fine by me.';
 
   @override
   String get tourThirdsUneven =>
@@ -6877,7 +7398,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get gatePriceLead => 'One payment, forever';
 
   @override
-  String get gatePrice => '€11.99';
+  String get gatePrice => '€12.99';
 
   @override
   String get gateBuy => 'BUY AND CONTINUE';
@@ -7234,7 +7755,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String friendliesLikeYourGroup(String rivals) {
-    return 'Suggested first: sides who play like $rivals, who you have drawn.';
+    return 'Marked below: sides who play like $rivals, who you have drawn.';
   }
 
   @override
@@ -7252,7 +7773,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get settingsFreeScopeBlurb =>
-      'A complete cycle (qualifying, a continental championship and a World Cup) with nothing held back. Carrying a save on past it is a single payment, once, and it covers every save and every future update.';
+      'A complete cycle (qualifying, your continental championship and the World Championship) with nothing held back. Carrying a save on past it is a single payment, once, and it covers every save and every future update.';
 
   @override
   String get settingsUnlockedTitle => 'Unlocked';
@@ -7263,12 +7784,12 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String friendliesLikeYourCampaign(String rivals) {
-    return 'Suggested first: sides who play like $rivals, who you still have to face.';
+    return 'Marked below: sides who play like $rivals, who you still have to face.';
   }
 
   @override
   String get friendliesCloseToYou =>
-      'Suggested first: the sides closest to you in the world ranking. Once you are drawn, they are picked to resemble your group.';
+      'Marked below: the sides closest to you in the world ranking. Once you are drawn, the marks follow your group.';
 
   @override
   String transfersMoves(int count) {
@@ -7287,8 +7808,193 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String hubRoundPage(int page, int pages) {
+    return '$page / $pages';
+  }
+
+  @override
   String get transfersNewer => 'Newer';
 
   @override
   String get transfersOlder => 'More';
+
+  @override
+  String get transfersUnknownClub => 'Unknown club';
+
+  @override
+  String yAgainstThemAgain0(String opponent, String count) {
+    return 'That is $count times against $opponent now. Somebody is keeping score, and it is them.';
+  }
+
+  @override
+  String yAgainstThemAgain1(String opponent, String count) {
+    return '$opponent again. $count meetings, and we still have not worked them out.';
+  }
+
+  @override
+  String yAgainstThemAgain2(String opponent, String count) {
+    return 'Number $count against $opponent. This has stopped being a coincidence.';
+  }
+
+  @override
+  String yAgainstThemAgain3(String opponent, String count) {
+    return 'We have played $opponent $count times and learned nothing from any of them.';
+  }
+
+  @override
+  String yAgainstThemAgain4(String opponent, String count) {
+    return '$opponent, $count times. They know exactly what we are going to do.';
+  }
+
+  @override
+  String yAgainstThemAgain5(String opponent, String count) {
+    return 'Whatever $opponent have on us, $count meetings in, they still have it.';
+  }
+
+  @override
+  String ySameOldStory0(String count) {
+    return 'That is the ${count}th time this has happened lately. At what point is it just what we are?';
+  }
+
+  @override
+  String ySameOldStory1(String count) {
+    return '$count afternoons like this now. It is a pattern, not a run of luck.';
+  }
+
+  @override
+  String ySameOldStory2(String count) {
+    return 'We have seen this exact game $count times recently. Same script, same ending.';
+  }
+
+  @override
+  String ySameOldStory3(String count) {
+    return 'The ${count}th version of the same ninety minutes. Nobody is fixing it.';
+  }
+
+  @override
+  String ySameOldStory4(String count) {
+    return '$count times. If you cannot see the pattern by now you are not looking.';
+  }
+
+  @override
+  String ySameOldStory5(String count) {
+    return 'Same story, $count times over. The excuses have run out before the results did.';
+  }
+
+  @override
+  String get yToldYouSo0 =>
+      'I said this was coming while everybody was busy celebrating.';
+
+  @override
+  String get yToldYouSo1 =>
+      'Two good weeks and we were a golden generation again. And here we are.';
+
+  @override
+  String get yToldYouSo2 =>
+      'The people telling me to enjoy it last month have gone quiet.';
+
+  @override
+  String get yToldYouSo3 =>
+      'I take no pleasure in this. Very little pleasure. Some.';
+
+  @override
+  String get yToldYouSo4 =>
+      'It was never as good as they told you, and this is the proof.';
+
+  @override
+  String get yToldYouSo5 =>
+      'Every time. We are told it is different, and every time it is not.';
+
+  @override
+  String get pressAskAbove =>
+      'Nobody expected this side to be where it is. Is it real, or is it a good few months?';
+
+  @override
+  String get pressAskAbove2 =>
+      'You are getting results against sides ranked well above you. How?';
+
+  @override
+  String get pressAskAbove3 =>
+      'Every neutral has you overachieving. Does that description annoy you?';
+
+  @override
+  String get pressAskAbove4 =>
+      'This squad is punching above its weight. What happens when it stops?';
+
+  @override
+  String get pressAskAbove5 =>
+      'You keep beating teams you have no business beating. What have you found?';
+
+  @override
+  String get pressAskAbove6 =>
+      'People are starting to take this seriously. Are you?';
+
+  @override
+  String get pressAskAbove7 =>
+      'Is this side better than the ranking says, or are you catching people out?';
+
+  @override
+  String get pressAskAbove8 => 'How long can a group like this keep this up?';
+
+  @override
+  String get pressAskFlattered =>
+      'You are winning without convincing anybody. Does that worry you?';
+
+  @override
+  String get pressAskFlattered2 =>
+      'Another narrow one against a side you should be beating comfortably. Why is it so hard?';
+
+  @override
+  String get pressAskFlattered3 =>
+      'Three points, and not much else. Is that enough for you?';
+
+  @override
+  String get pressAskFlattered4 => 'You got away with that. Would you agree?';
+
+  @override
+  String get pressAskFlattered5 =>
+      'The results are there and the performances are not. Which one are you judging yourself on?';
+
+  @override
+  String get pressAskFlattered6 =>
+      'Sides that ride their luck this often usually run out of it. Are you worried?';
+
+  @override
+  String get pressAskFlattered7 =>
+      'That was hard work for what it was. What is missing?';
+
+  @override
+  String get pressAskFlattered8 =>
+      'Do you care how you win, or only that you win?';
+
+  @override
+  String get pressAskCrisis =>
+      'Bad results and a board that has stopped defending you. How bad is it?';
+
+  @override
+  String get pressAskCrisis2 =>
+      'Nobody upstairs will say your name. Do you still have their backing?';
+
+  @override
+  String get pressAskCrisis3 =>
+      'The results are poor and the silence from above is loud. What now?';
+
+  @override
+  String get pressAskCrisis4 =>
+      'This has gone past a bad run. Do you accept that?';
+
+  @override
+  String get pressAskCrisis5 =>
+      'You are losing the room and the boardroom at the same time. Which worries you more?';
+
+  @override
+  String get pressAskCrisis6 => 'Is there a point at which you would walk?';
+
+  @override
+  String get pressAskCrisis7 =>
+      'What do you say to people who think this has run its course?';
+
+  @override
+  String get pressAskCrisis8 =>
+      'Give us one reason to believe this turns around.';
 }

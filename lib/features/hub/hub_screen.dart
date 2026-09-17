@@ -378,6 +378,16 @@ class _ChampionBanner extends StatelessWidget {
   }
 }
 
+/// The strip's buttons: short enough that two of them plus the confidence
+/// figure read as one line of status rather than three stacked controls.
+final ButtonStyle _stripButton = OutlinedButton.styleFrom(
+  foregroundColor: AppColors.primary,
+  side: const BorderSide(color: AppColors.outlineVariant),
+  textStyle: AppTypography.labelSmall,
+  padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm),
+  minimumSize: const Size(0, 32),
+  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+);
 
 /// A single compact strip: board confidence (shown immediately, colour-coded)
 /// on the left, the federation funds as a button through to the finances screen
@@ -405,7 +415,14 @@ class _BoardFinanceCard extends ConsumerWidget {
     // the hub, saw the wage bill sitting there as a balance, and read it as his
     // allocation having gone nowhere. See [federationFundsProvider].
     final funds = ref.watch(federationFundsProvider(careerId)).valueOrNull;
+    // Tighter than a default pod. This strip is a STATUS line, not a section:
+    // at full padding with two full-height buttons it took as much of the hub
+    // as the fixture it sits above, for two numbers and a way through.
     return AppCard(
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppSpacing.md,
+        vertical: AppSpacing.sm,
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -419,7 +436,7 @@ class _BoardFinanceCard extends ConsumerWidget {
                 children: [
                   Text(
                     value == null ? l.hubBoard : '$value%',
-                    style: AppTypography.titleMedium.copyWith(color: color),
+                    style: AppTypography.bodyMedium.copyWith(color: color),
                   ),
                   Text(
                     verdict,
@@ -432,19 +449,13 @@ class _BoardFinanceCard extends ConsumerWidget {
               const Spacer(),
               OutlinedButton.icon(
                 onPressed: onFinances,
-                icon: const Icon(Icons.account_balance, size: 16),
+                icon: const Icon(Icons.account_balance, size: 14),
                 label: Text(formatEuros(funds?.free ?? 0)),
-                style: OutlinedButton.styleFrom(
-                  foregroundColor: AppColors.primary,
-                  side: const BorderSide(color: AppColors.outlineVariant),
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: AppSpacing.md,
-                  ),
-                ),
+                style: _stripButton,
               ),
             ],
           ),
-          const SizedBox(height: AppSpacing.sm),
+          const SizedBox(height: AppSpacing.xs),
           // The objectives themselves live on their own screen: spelled out in
           // full they never fit this strip, and an ellipsised half-sentence
           // told the manager less than the confidence figure above already
@@ -453,12 +464,9 @@ class _BoardFinanceCard extends ConsumerWidget {
             width: double.infinity,
             child: OutlinedButton.icon(
               onPressed: onObjectives,
-              icon: const Icon(Icons.flag_outlined, size: 16),
+              icon: const Icon(Icons.flag_outlined, size: 14),
               label: Text(l.boardObjectivesTitle),
-              style: OutlinedButton.styleFrom(
-                foregroundColor: AppColors.primary,
-                side: const BorderSide(color: AppColors.outlineVariant),
-              ),
+              style: _stripButton,
             ),
           ),
         ],
@@ -469,13 +477,30 @@ class _BoardFinanceCard extends ConsumerWidget {
 
 /// The hub's primary action, driven by the next timeline event: watch a draw,
 /// play the next match, step a live tournament, or roll into the next cycle.
-class _EventButton extends ConsumerWidget {
+class _EventButton extends ConsumerStatefulWidget {
   const _EventButton({required this.careerId});
 
   final int careerId;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<_EventButton> createState() => _EventButtonState();
+}
+
+class _EventButtonState extends ConsumerState<_EventButton> {
+  /// Whether a world-simulating step is running right now.
+  ///
+  /// Stepping a tournament the manager is only watching simulates every match
+  /// of a round across the world, which on a big matchday takes a couple of
+  /// seconds — and until now NOTHING said so. The button stayed as it was, the
+  /// screen did not move, and the only honest reading was that the tap had
+  /// missed. The spinner is the whole difference between "working" and
+  /// "broken".
+  bool _busy = false;
+
+  int get careerId => widget.careerId;
+
+  @override
+  Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
     final event = ref.watch(nextEventProvider(careerId)).valueOrNull;
     return Column(
@@ -485,6 +510,7 @@ class _EventButton extends ConsumerWidget {
           key: TourKeys.hubAction,
           label: event?.label ?? l.hubContinue,
           icon: event?.icon ?? Icons.play_arrow_rounded,
+          isLoading: _busy,
           onPressed: event == null
               ? null
               : () => _dispatch(context, ref, event),
@@ -511,6 +537,8 @@ class _EventButton extends ConsumerWidget {
   /// the player was left tapping a button that looked dead. Now the error is
   /// recorded for Settings → Diagnostics and shown as a snackbar.
   void _guarded(BuildContext context, Future<void> Function() op) {
+    if (_busy) return;
+    setState(() => _busy = true);
     unawaited(() async {
       try {
         await op();
@@ -521,6 +549,8 @@ class _EventButton extends ConsumerWidget {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(l.hubCouldNotAdvance('$e'))),
         );
+      } finally {
+        if (mounted) setState(() => _busy = false);
       }
     }());
   }
@@ -606,7 +636,11 @@ class _EventButton extends ConsumerWidget {
             ref.invalidate(nextEventProvider(careerId));
           });
         }
-        if (event.route != null) context.go(event.route!);
+        // PUSHED, not `go`: the manager page is the one event screen that
+        // leaves by popping itself. Replacing the hub with it left nothing
+        // underneath, so its back arrow popped the last route in the stack and
+        // the player was staring at a black screen.
+        if (event.route != null) context.push(event.route!);
       case HubEventKind.cycleRollover:
       case HubEventKind.draw:
       case HubEventKind.tournamentKickoff:
@@ -649,9 +683,12 @@ class _NextMatch extends StatelessWidget {
               Flexible(
                 // "World Cup qualifying · Matchday 6" is longer than the room
                 // left beside the heading, and a stage that ends in "…" tells
-                // the manager nothing about which match this is.
+                // the manager nothing about which match this is. The compact
+                // form writes the qualifying campaigns with a Q, which is the
+                // difference between a banner you can read here and one that
+                // has been scaled down to a grey smear.
                 child: WholeText(
-                  MatchStage.label(l, f),
+                  MatchStage.labelCompact(l, f),
                   maxLines: 1,
                   textAlign: TextAlign.end,
                   style: AppTypography.labelSmall.copyWith(

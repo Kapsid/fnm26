@@ -40,6 +40,11 @@ abstract final class MatchStage {
     if (round == 'FRIENDLY') return l.resultsCategoryFriendlies;
     if (round == 'FFINAL') return l.resultsCategoryContinentalClash;
     if (round.startsWith('N')) return l.resultsCategoryNationsCup;
+    // Continental QUALIFYING is its own competition, and it used to answer
+    // "Continental Cup" — the same heading the cup itself carries. So a
+    // qualifier and the final of the tournament it leads to read identically
+    // on the hub, and the word "qualifying" appeared nowhere on either.
+    if (round == 'CQ') return l.resultsCategoryContinentalQualifying;
     if (round.startsWith('C')) return l.resultsCategoryContinentalCup;
     return l.resultsCategoryWorldCupFinals;
   }
@@ -47,7 +52,20 @@ abstract final class MatchStage {
   /// The one-line banner above a fixture: the competition and where in it the
   /// match falls ("WORLD CUP FINALS · QUARTER-FINAL"), or the matchday number
   /// for a qualifying campaign, which has rounds but no named stages.
-  static String label(AppLocalizations l, Fixture f) {
+  static String label(AppLocalizations l, Fixture f) => _label(l, f, false);
+
+  /// [label] with the word "qualifying" written as a Q.
+  ///
+  /// For the hub's next-match strip, which has a heading beside it and about
+  /// half a line to fit in. "WORLD CUP QUALIFYING · MATCHDAY 6" is the longest
+  /// banner in the game, and shrunk into that gap it came out too small to
+  /// read — which defeated the point of naming the competition at all. Only
+  /// the qualifying campaigns say it differently; every other banner is short
+  /// enough already and stays exactly as it reads elsewhere.
+  static String labelCompact(AppLocalizations l, Fixture f) =>
+      _label(l, f, true);
+
+  static String _label(AppLocalizations l, Fixture f, bool compact) {
     final round = f.round;
     // A friendly and a Continental Clash are one-offs: naming them twice
     // ("FRIENDLIES · FRIENDLY") reads as a bug.
@@ -55,10 +73,16 @@ abstract final class MatchStage {
     if (round == 'FFINAL') {
       return l.resultsStageContinentalClash.toUpperCase();
     }
-    final head = category(l, round).toUpperCase();
     if (round == null || round == 'CQ') {
+      final head = (compact
+              ? (round == null
+                    ? l.resultsCategoryWorldCupQualifyingShort
+                    : l.resultsCategoryContinentalQualifyingShort)
+              : category(l, round))
+          .toUpperCase();
       return '$head · ${l.matchStageMatchday(f.matchday).toUpperCase()}';
     }
-    return '$head · ${stage(l, round).toUpperCase()}';
+    return '${category(l, round).toUpperCase()} · '
+        '${stage(l, round).toUpperCase()}';
   }
 }

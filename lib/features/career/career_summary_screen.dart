@@ -75,7 +75,8 @@ class CareerSummaryScreen extends ConsumerWidget {
               if (s.runs.isEmpty)
                 AppCard(child: Text(l.careerNoTournamentsYet))
               else
-                for (final r in s.runs) _RunRow(r),
+                for (final r in s.runs)
+                  _RunRow(r, showNation: s.spansNations),
               const SizedBox(height: AppSpacing.xl),
             ],
           );
@@ -403,9 +404,14 @@ class _TrophyCabinet extends StatelessWidget {
 }
 
 class _RunRow extends StatelessWidget {
-  const _RunRow(this.run);
+  const _RunRow(this.run, {this.showNation = false});
 
   final TournamentRun run;
+
+  /// Whether to name the side. A manager who has only ever had one job knows
+  /// whose campaign this was; one who has moved does not, and the row used to
+  /// leave him working it out from the year.
+  final bool showNation;
 
   @override
   Widget build(BuildContext context) {
@@ -447,6 +453,26 @@ class _RunRow extends StatelessWidget {
                     '${competitionLabel(l, run.competition)} ${run.year}',
                     style: AppTypography.bodyMedium,
                   ),
+                  if (showNation && run.nationName.isNotEmpty)
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 2),
+                      child: Row(
+                        children: [
+                          FlagDisc(run.nationCode, size: 14),
+                          const SizedBox(width: AppSpacing.xs),
+                          Flexible(
+                            child: WholeText(
+                              run.nationName,
+                              maxLines: 1,
+                              textAlign: TextAlign.start,
+                              style: AppTypography.labelSmall.copyWith(
+                                color: AppColors.onSurfaceVariant,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   if (run.championName != null)
                     Text(
                       l.careerWinnersName(run.championName!),

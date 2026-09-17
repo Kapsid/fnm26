@@ -281,7 +281,12 @@ final routerProvider = Provider<GoRouter>((ref) {
                 state.uri.queryParameters['careerId'] ?? '',
               ) ??
               0;
-          return TacticsScreen(careerId: id);
+          // `?tab=` opens straight onto one of the three tabs. The pre-match
+          // setup strip warns about the armband and the set-piece takers,
+          // which both live on the second one; landing on the lineup instead
+          // left the manager to find the thing they had just been told about.
+          final tab = int.tryParse(state.uri.queryParameters['tab'] ?? '') ?? 0;
+          return TacticsScreen(careerId: id, initialTab: tab);
         },
       ),
       GoRoute(

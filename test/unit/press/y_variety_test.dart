@@ -16,6 +16,7 @@ void main() {
         conceded: conceded,
         date: DateTime(2030, 1, 1).add(Duration(days: i * 7)),
         key: 'fx:$i',
+        competitive: true,
       ),
       scorerName: scored > 0 ? 'Scorer ${i % 5}' : null,
       scorerGoals: scored > 0 ? scored : null,
@@ -67,11 +68,13 @@ void main() {
     expect(posts.length, greaterThan(40), reason: 'the feed should be busy');
     for (var i = 0; i < posts.length - YFeed.noRepeatWindow; i++) {
       final window = posts.skip(i).take(YFeed.noRepeatWindow);
-      // Shaped exactly as [YFeed.forRun] shapes them: a reply carries no
-      // arguments and one template, so its mood and wording ARE its shape.
+      // Shaped exactly as [YFeed.forRun] shapes them: the SENTENCE, which is
+      // the template, the wording and the arguments together. Two people
+      // reporting one match are not a repeat — they are a feed — but nobody
+      // says the same sentence twice inside the window.
       final shapes = window.map(
         (p) => p.mood == null
-            ? '${p.template.name}|${p.args.join(",")}'
+            ? '${p.template.name}|${p.variant}|${p.args.join(",")}'
             : 'reaction|${p.mood!.name}|${p.variant}',
       );
       expect(
@@ -114,6 +117,7 @@ void main() {
         conceded: 0,
         date: DateTime(2030, 6, 1),
         key: 'fx:quiet',
+        competitive: true,
       )),
       nation: 'Testland',
       seed: 1,

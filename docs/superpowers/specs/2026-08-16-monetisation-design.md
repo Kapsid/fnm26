@@ -17,7 +17,7 @@ endless career.
 
 ## Decisions
 
-- **One free cycle, then €11.99, once.** The first four-year cycle is the whole
+- **One free cycle, then €12.99, once.** The first four-year cycle is the whole
   game with nothing held back: qualifying, a continental championship, a World
   Cup. Paying continues the save into the next cycle. A trial that ends at a
   natural boundary reads as generous; a padlocked nation list reads as a demo.
@@ -86,7 +86,7 @@ it, the receipt is local again and every launch verifies offline.
 
 **Not solved:** an Android purchase does not carry to an iPhone. Different
 stores, different transactions. The only fix is an account system, which means
-a backend; at €11.99 it is not worth it. Answer it in a FAQ line.
+a backend; at €12.99 it is not worth it. Answer it in a FAQ line.
 
 **Saves usually travel too**, incidentally: the database lives in
 `getApplicationDocumentsDirectory()`, which iOS backs up to iCloud and Android

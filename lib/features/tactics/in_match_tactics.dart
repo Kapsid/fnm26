@@ -23,11 +23,16 @@ class InMatchTacticsResult {
     required this.formation,
     required this.lineup,
     required this.instructions,
+    required this.takers,
   });
 
   final Formation formation;
   final List<int?> lineup;
   final TacticalInstructions instructions;
+
+  /// Who takes penalties and dead balls from here on. Either may be null,
+  /// which hands that duty back to the engine's own pick.
+  final ({int? penalty, int? deadBall}) takers;
 }
 
 /// Opens the full in-match tactics editor (shape, XI, subs and instructions) as
@@ -41,6 +46,7 @@ Future<InMatchTacticsResult?> showInMatchTactics(
   required List<Player> pool,
   required Set<int> startingIds,
   required int maxSubs,
+  ({int? penalty, int? deadBall}) takers = (penalty: null, deadBall: null),
   Set<int> injuredIds = const {},
   Set<int> sentOffIds = const {},
   Map<int, int> energyByPlayer = const {},
@@ -57,6 +63,7 @@ Future<InMatchTacticsResult?> showInMatchTactics(
         pool: pool,
         startingIds: startingIds,
         maxSubs: maxSubs,
+        takers: takers,
         injuredIds: injuredIds,
         sentOffIds: sentOffIds,
         energyByPlayer: energyByPlayer,
@@ -75,6 +82,7 @@ class _InMatchTacticsEditor extends StatefulWidget {
     required this.pool,
     required this.startingIds,
     required this.maxSubs,
+    required this.takers,
     this.injuredIds = const {},
     this.sentOffIds = const {},
     this.energyByPlayer = const {},
@@ -88,6 +96,9 @@ class _InMatchTacticsEditor extends StatefulWidget {
   final List<Player> pool;
   final Set<int> startingIds;
   final int maxSubs;
+
+  /// The side's set-piece takers as the editor opens.
+  final ({int? penalty, int? deadBall}) takers;
 
   /// Live remaining energy (0–100) per player id, shown on the pitch and bench
   /// so the manager can see who's tiring before making a sub.
@@ -119,6 +130,7 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
       if (id != null && widget.sentOffIds.contains(id)) null else id,
   ];
   late TacticalInstructions _instructions = widget.instructions;
+  late ({int? penalty, int? deadBall}) _takers = widget.takers;
 
   /// Everyone still eligible to be on the pitch: the squad minus the sent off.
   late final List<Player> _eligible = widget.pool
@@ -244,6 +256,7 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
         formation: _formation,
         lineup: _lineup,
         instructions: _instructions,
+        takers: _takers,
       ),
     );
   }
@@ -538,6 +551,46 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
           _instructions.directness,
           (v) => _instructions = _instructions.copyWith(directness: v),
         ),
+        const SizedBox(height: AppSpacing.lg),
+        // Set-piece takers, live. The pair was fixed at kick-off and could not
+        // be touched again, so a manager whose penalty taker had just been
+        // substituted (or had just put one over the bar) had no way to hand the
+        // ball to anyone else. Only the eleven ON THE PITCH are offered: a
+        // designated taker sitting on the bench is ignored by the engine
+        // anyway, and offering him would read as a change that did nothing.
+        Text(l.tacticsSetPieceTakers, style: AppTypography.labelMedium),
+        const SizedBox(height: 2),
+        Text(
+          l.tacticsSetPieceBlurb,
+          style: AppTypography.labelSmall.copyWith(
+            color: AppColors.onSurfaceVariant,
+          ),
+        ),
+        const SizedBox(height: AppSpacing.sm),
+        AppCard(
+          child: Column(
+            children: [
+              for (final p in _onPitchPlayers)
+                _TakerRow(
+                  player: p,
+                  isPenaltyTaker: _takers.penalty == p.id,
+                  isDeadBallTaker: _takers.deadBall == p.id,
+                  onTogglePenalty: () => setState(() {
+                    _takers = (
+                      penalty: _takers.penalty == p.id ? null : p.id,
+                      deadBall: _takers.deadBall,
+                    );
+                  }),
+                  onToggleDeadBall: () => setState(() {
+                    _takers = (
+                      penalty: _takers.penalty,
+                      deadBall: _takers.deadBall == p.id ? null : p.id,
+                    );
+                  }),
+                ),
+            ],
+          ),
+        ),
         const SizedBox(height: AppSpacing.xl),
       ],
     );
@@ -688,5 +741,69 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
       ),
     );
     if (picked != null) _setSlot(slot, picked);
+  }
+}
+
+/// One player on the pitch, with the two set-piece badges beside him. The same
+/// controls as the tactics screen before kick-off, minus the role picker: a
+/// role is a brief you give a player, not a call you make at 70 minutes.
+class _TakerRow extends StatelessWidget {
+  const _TakerRow({
+    required this.player,
+    required this.isPenaltyTaker,
+    required this.isDeadBallTaker,
+    required this.onTogglePenalty,
+    required this.onToggleDeadBall,
+  });
+
+  final Player player;
+  final bool isPenaltyTaker;
+  final bool isDeadBallTaker;
+  final VoidCallback onTogglePenalty;
+  final VoidCallback onToggleDeadBall;
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: Row(
+        children: [
+          SizedBox(width: 36, child: TacticalChip(player.position.label)),
+          const SizedBox(width: AppSpacing.sm),
+          Expanded(
+            child: Text(
+              player.name,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: AppTypography.bodyMedium,
+            ),
+          ),
+          // Technical ability, the quality that decides a penalty or a free
+          // kick, so the choice is made on a number rather than a hunch.
+          Text(
+            '${player.attributes.technical}',
+            style: AppTypography.labelMedium.copyWith(
+              color: AppColors.ratingColor(player.attributes.technical / 10),
+              fontWeight: FontWeight.w800,
+            ),
+          ),
+          const SizedBox(width: AppSpacing.md),
+          SetPieceBadge(
+            icon: Icons.sports_soccer,
+            active: isPenaltyTaker,
+            tooltip: l.tacticsPenalties,
+            onTap: onTogglePenalty,
+          ),
+          const SizedBox(width: 6),
+          SetPieceBadge(
+            icon: Icons.flag_rounded,
+            active: isDeadBallTaker,
+            tooltip: l.tacticsCornersFreeKicks,
+            onTap: onToggleDeadBall,
+          ),
+        ],
+      ),
+    );
   }
 }

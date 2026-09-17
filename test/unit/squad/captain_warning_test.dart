@@ -92,13 +92,18 @@ void main() {
     final setup = await c.read(squadSetupProvider(career.id).future);
     expect(
       setup.captain,
-      CaptainIssue.unavailable,
-      reason: 'he IS named, he just cannot lead this one out',
+      CaptainIssue.dropped,
+      reason: 'he IS named, he was just left out of the squad',
     );
     expect(
       setup.captain,
       isNot(CaptainIssue.unnamed),
       reason: 'telling him nobody is captain reads as a lost setting',
+    );
+    expect(
+      setup.captainName,
+      skipper.name,
+      reason: 'the strip has to say WHO, or the manager cannot act on it',
     );
   });
 
@@ -166,6 +171,43 @@ void main() {
       await c.read(captainProvider(career.id).future),
       isNull,
       reason: 'a man who is not in the squad cannot lead it out',
+    );
+  });
+
+  test('taking the armband back off somebody reports nobody named', () async {
+    // The stored id is read straight off the career row, so clearing it and
+    // not saying so left the strip announcing a captain who could not play for
+    // a save whose armband was vacant.
+    final c = open();
+    await c.read(seedLoaderProvider).ensureSeeded();
+    final career =
+        (await c
+                .read(careerServiceProvider)
+                .create(nationId: nations.first.id, managerName: 'M'))
+            .valueOrNull!;
+    final squad = (await c.read(squadDataProvider(career.id).future))!;
+    final skipper = squad.pool.firstWhere((p) => squad.callUps.contains(p.id));
+    final repo = c.read(careerRepositoryProvider);
+
+    await repo.setCaptain(career.id, skipper.id);
+    c
+      ..invalidate(storedCaptainIdProvider)
+      ..invalidate(captainProvider)
+      ..invalidate(careerByIdProvider);
+    expect(
+      (await c.read(squadSetupProvider(career.id).future)).captain,
+      isNull,
+    );
+
+    await repo.setCaptain(career.id, null);
+    c
+      ..invalidate(storedCaptainIdProvider)
+      ..invalidate(captainProvider)
+      ..invalidate(careerByIdProvider);
+    expect(
+      (await c.read(squadSetupProvider(career.id).future)).captain,
+      CaptainIssue.unnamed,
+      reason: 'nobody has it, so nobody is out with it',
     );
   });
 }

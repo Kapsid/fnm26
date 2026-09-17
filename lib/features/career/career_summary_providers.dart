@@ -15,12 +15,21 @@ class TournamentRun {
     required this.placement,
     required this.medal,
     required this.qualified,
+    required this.nationName,
+    required this.nationCode,
     this.championName,
   });
 
   final int year;
 
-  /// Display name, e.g. 'World Cup' or a continental cup name.
+  /// The nation the manager was in charge of for this tournament, and its
+  /// three-letter code. A career can run through several, and a row that does
+  /// not say which one leaves the manager reading his own history guessing.
+  final String nationName;
+  final String nationCode;
+
+  /// Stored competition name, e.g. 'World Championship' or a continental cup
+  /// name. Written for the manager with `competitionLabel` at display.
   final String competition;
 
   /// Human placement, e.g. 'Champions', 'Runners-up', 'Round of 16',
@@ -45,7 +54,8 @@ typedef TrophyWin = ({int year, String nationName});
 class TrophyTitle {
   const TrophyTitle({required this.competition, required this.wins});
 
-  /// Display name, e.g. 'World Cup'.
+  /// Stored competition name, e.g. 'World Championship'. Written for the
+  /// manager with `competitionLabel` at display.
   final String competition;
 
   /// Each win, newest first.
@@ -73,6 +83,7 @@ class CareerSummary {
     required this.bronzes,
     required this.runs,
     required this.titles,
+    required this.spansNations,
   });
 
   final Career career;
@@ -102,6 +113,10 @@ class CareerSummary {
   /// Every competition the manager has won, with each win's year and nation —
   /// the trophy cabinet in full, most-won first.
   final List<TrophyTitle> titles;
+
+  /// Whether this career has been spent at more than one nation. A one-nation
+  /// manager does not need every row telling him who he manages.
+  final bool spansNations;
 
   int get goalDifference => goalsFor - goalsAgainst;
   int get trophies => golds;
@@ -184,18 +199,32 @@ careerSummaryProvider = FutureProvider.autoDispose.family<CareerSummary?, int>((
   var golds = 0;
   var silvers = 0;
   var bronzes = 0;
+  // A campaign belongs to the nation that was managed THAT cycle, so its
+  // fixtures have to be read from that nation's list. Read from the current
+  // one, every tournament contested before a change of job came back empty and
+  // the row said "Did not qualify" for a cup the manager had actually won.
+  final fixturesByNation = <int, List<Fixture>>{career.nationId: fixtures};
+  Future<List<Fixture>> fixturesOf(int nationId) async =>
+      fixturesByNation[nationId] ??= await comp.fixturesForNation(
+        careerId,
+        nationId,
+      );
   for (final h in honours) {
     final isWc = h.competition == 'World Championship';
+    final managedId = stints[cycleForYear(h.year)] ?? career.nationId;
     if (!isWc) {
-      final managedId = stints[cycleForYear(h.year)] ?? career.nationId;
       final conf = nations[managedId]?.confederation;
       final ownCup = conf == null
           ? null
           : ContinentalCups.byConfederation[conf]?.name;
       if (h.competition != ownCup) continue;
     }
-    final display = isWc ? 'World Cup' : h.competition;
-    final mine = fixtures.where((f) {
+    // The stored name IS the name; `competitionLabel` writes it for the
+    // manager at the point it is printed. Rewriting it to a second English
+    // spelling here just to have that map it back was a detour that had to be
+    // kept in step with the copy, and wasn't.
+    final display = h.competition;
+    final mine = (await fixturesOf(managedId)).where((f) {
       final core = _coreRound(f.round);
       return f.hasResult &&
           core != null &&
@@ -203,7 +232,7 @@ careerSummaryProvider = FutureProvider.autoDispose.family<CareerSummary?, int>((
           f.date.year == h.year;
     }).toList();
 
-    final (placement, medal) = _placement(mine, career.nationId);
+    final (placement, medal) = _placement(mine, managedId);
     runs.add(
       TournamentRun(
         year: h.year,
@@ -211,6 +240,8 @@ careerSummaryProvider = FutureProvider.autoDispose.family<CareerSummary?, int>((
         placement: placement,
         medal: medal,
         qualified: mine.isNotEmpty,
+        nationName: nations[managedId]?.name ?? '',
+        nationCode: nations[managedId]?.code ?? '',
         championName: nations[h.championId]?.name,
       ),
     );
@@ -241,10 +272,7 @@ careerSummaryProvider = FutureProvider.autoDispose.family<CareerSummary?, int>((
   for (final h in honours) {
     final managedNation = stints[cycleForYear(h.year)] ?? career.nationId;
     if (h.championId != managedNation) continue;
-    final display = h.competition == 'World Championship'
-        ? 'World Cup'
-        : h.competition;
-    (byCompetition[display] ??= []).add((
+    (byCompetition[h.competition] ??= []).add((
       year: h.year,
       nationName: nations[managedNation]?.name ?? 'Unknown',
     ));
@@ -278,6 +306,7 @@ careerSummaryProvider = FutureProvider.autoDispose.family<CareerSummary?, int>((
     bronzes: bronzes,
     runs: runs,
     titles: titles,
+    spansNations: {...stints.values, career.nationId}.length > 1,
   );
 });
 

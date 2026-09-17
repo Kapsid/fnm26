@@ -15,13 +15,32 @@ const String breakOpportunity = '​';
 String withBreakOpportunities(String text) =>
     text.split(' ').map((w) => w.split('').join(breakOpportunity)).join(' ');
 
+/// A person's name with the forename cut down to an initial: "Xenon John"
+/// becomes "X. John".
+///
+/// The surname is the half that identifies a footballer, so when a name has to
+/// give something up it gives up the front. Anything that is already one word
+/// is returned untouched, and everything after the first word is kept whole —
+/// "Jan van der Berg" shortens to "J. van der Berg", not to "J. Berg".
+String initialledName(String name) {
+  final parts = name.trim().split(RegExp(r'\s+'));
+  if (parts.length < 2) return name;
+  final first = parts.first;
+  if (first.isEmpty) return name;
+  final initial = first.characters.first;
+  // Already an initial ("J. Berg") — nothing to shorten.
+  if (first.length <= 2 && first.endsWith('.')) return name;
+  return '$initial. ${parts.skip(1).join(' ')}';
+}
+
 /// Text that is NEVER cut.
 ///
 /// A name that ends in `…` is not a name any more, and the squad list, the
 /// call-up screen and the pitch all deal in names. So the order of concessions
 /// here is deliberate and it never reaches truncation: the text wraps first
 /// (up to [maxLines], with [withBreakOpportunities] giving a long surname
-/// somewhere to break), and only if it still does not fit does it scale down.
+/// somewhere to break), then falls back to [shortText] if one was offered, and
+/// only then does it scale down.
 ///
 /// The pitch solved this first, disc by disc; this is that treatment lifted
 /// out so every list that shows a person's name can promise the same thing.
@@ -40,6 +59,7 @@ class WholeText extends StatelessWidget {
     this.style,
     this.maxLines = 2,
     this.textAlign,
+    this.shortText,
     super.key,
   });
 
@@ -53,12 +73,17 @@ class WholeText extends StatelessWidget {
 
   final TextAlign? textAlign;
 
-  /// Whether [text] lays out inside [width] without needing anywhere new to
-  /// break. Measured rather than guessed, so short names are left untouched.
-  static bool _fits(
+  /// A shorter way of saying the same thing, used when [text] itself will not
+  /// fit — see [initialledName]. Shrinking a name to half its size is worse
+  /// than writing it shorter, so a caller that has a shorter form offers it
+  /// here and the widget only scales once even that has run out of room.
+  final String? shortText;
+
+  /// How wide [text] wants to be on one unbroken line. Measured rather than
+  /// guessed, so short names are left untouched.
+  static double _lineWidth(
     String text,
     TextStyle style,
-    double width,
     BuildContext context,
   ) {
     final painter = TextPainter(
@@ -66,8 +91,22 @@ class WholeText extends StatelessWidget {
       textDirection: Directionality.of(context),
       textScaler: MediaQuery.textScalerOf(context),
     )..layout();
-    return painter.width <= width;
+    return painter.width;
   }
+
+  /// Whether [text] lays out inside [width] on a single line — no need to
+  /// break, and nothing to gain from shortening.
+  static bool _fits(
+    String text,
+    TextStyle style,
+    double width,
+    BuildContext context,
+  ) => _lineWidth(text, style, context) <= width;
+
+  /// How far the type may be scaled down before writing the text shorter is
+  /// the better of the two concessions. A name a shade too wide is better
+  /// slightly smaller than initialled; one that needs to halve is not.
+  static const double _shrinkBeforeShortening = 0.85;
 
   @override
   Widget build(BuildContext context) => LayoutBuilder(
@@ -79,27 +118,57 @@ class WholeText extends StatelessWidget {
       final width = constraints.maxWidth;
       if (!width.isFinite) {
         // Nothing to wrap against; just draw it.
-        return Text(text, maxLines: maxLines, textAlign: textAlign, style: style);
+        return Text(
+          text,
+          maxLines: maxLines,
+          textAlign: textAlign,
+          style: style,
+        );
       }
       final resolved = style ?? DefaultTextStyle.of(context).style;
-      // Break opportunities only help if there is a second line to break
-      // ONTO. On a single line they would buy nothing and cost the raw string
-      // its readability, so a one-line WholeText simply scales instead.
-      final needsBreaks = maxLines > 1 && !_fits(text, resolved, width, context);
+      // What actually gets drawn. The shorter form is the LAST concession
+      // before the type gets too small to read, so a name that fits — or that
+      // only has to give up a little size — is written out in full.
+      final short = shortText;
+      final drawn =
+          short != null &&
+              short != text &&
+              _lineWidth(text, resolved, context) >
+                  width / _shrinkBeforeShortening
+          ? short
+          : text;
+
+      if (maxLines == 1) {
+        // One line has nowhere to wrap onto, so the only concession left is
+        // size — and the text must be handed to the FittedBox UNBOUNDED to
+        // get it. Bounded (as this used to be), a two-word name wrapped onto
+        // a second line that maxLines then threw away: the squad list showed
+        // a forename and silently swallowed the surname.
+        return FittedBox(
+          fit: BoxFit.scaleDown,
+          alignment: _alignment,
+          child: Text(
+            drawn,
+            maxLines: 1,
+            softWrap: false,
+            textAlign: textAlign,
+            style: style,
+          ),
+        );
+      }
+
+      // Break opportunities only help if there is a second line to break onto.
+      final needsBreaks = !_fits(drawn, resolved, width, context);
       return FittedBox(
         fit: BoxFit.scaleDown,
-        alignment: switch (textAlign) {
-          TextAlign.left || TextAlign.start => Alignment.centerLeft,
-          TextAlign.right || TextAlign.end => Alignment.centerRight,
-          _ => Alignment.center,
-        },
+        alignment: _alignment,
         child: SizedBox(
           // A bounded width is what lets the wrap happen BEFORE any scaling:
           // an unbounded Text lays out on one endless line and the FittedBox
           // then shrinks that line to nothing.
           width: width,
           child: Text(
-            needsBreaks ? withBreakOpportunities(text) : text,
+            needsBreaks ? withBreakOpportunities(drawn) : drawn,
             maxLines: maxLines,
             textAlign: textAlign,
             style: style,
@@ -110,4 +179,17 @@ class WholeText extends StatelessWidget {
       );
     },
   );
+
+  /// Where the drawn text sits in the box when it is NARROWER than the box —
+  /// which, inside a [FittedBox], is most of the time.
+  ///
+  /// The default follows [Text]: against the leading edge. It used to centre
+  /// whatever did not say otherwise, so a short name in a list row floated
+  /// into the middle of its column while the flag and the icon beside it
+  /// stayed put — the row read as broken, and only for the SHORT names.
+  Alignment get _alignment => switch (textAlign) {
+    TextAlign.right || TextAlign.end => Alignment.centerRight,
+    TextAlign.center => Alignment.center,
+    _ => Alignment.centerLeft,
+  };
 }

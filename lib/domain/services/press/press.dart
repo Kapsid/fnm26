@@ -1,3 +1,5 @@
+import 'package:fnm/domain/services/press/expectation.dart';
+
 /// The tone a manager takes with the press. Each is a real trade: the dressing
 /// room and the boardroom want different things said, and no answer pleases
 /// both.
@@ -175,6 +177,18 @@ enum PressTopic {
 
   /// The nation has climbed to a world ranking it has never held before.
   rankingPeak,
+
+  /// A run of results better than this side has any business producing. The
+  /// question everybody asks a side punching above its weight: is it real?
+  overachieving,
+
+  /// Won, and did not convince. A side that keeps scraping past opponents it
+  /// ought to be beating properly gets asked about it.
+  luckyWin,
+
+  /// The results are bad, the board is unhappy, and both at once is a
+  /// different question from either alone.
+  crisis,
 }
 
 abstract final class Press {
@@ -220,6 +234,9 @@ abstract final class Press {
     PressTopic.unbeatenRun => 'unbeaten',
     PressTopic.newJob => 'newjob',
     PressTopic.rankingPeak => 'peak',
+    PressTopic.overachieving => 'above',
+    PressTopic.luckyWin => 'flattered',
+    PressTopic.crisis => 'crisis',
   };
 
   /// The topic a stored question key belongs to, or null if it is not a press
@@ -272,7 +289,7 @@ abstract final class Press {
     return 3;
   }
 
-  /// What each tone does.
+  /// What each tone does, before the situation is taken into account.
   static PressEffect effectOf(PressTone tone) => switch (tone) {
     PressTone.backThePlayers => (morale: 6, board: -3),
     PressTone.takeTheBlame => (morale: 4, board: -1),
@@ -280,6 +297,66 @@ abstract final class Press {
     PressTone.raiseTheBar => (morale: -3, board: 6),
     PressTone.playItDown => (morale: 0, board: 0),
   };
+
+  /// What a tone does GIVEN what has just happened and who is listening.
+  ///
+  /// The flat table above says backing the players is always worth the same
+  /// six, whether they have just been humiliated by a minnow or have just held
+  /// the world champions. That is the same failure the feed had: an answer
+  /// with no idea what it is an answer to.
+  ///
+  /// Two adjustments, both small, because a press answer is a nudge and should
+  /// stay one:
+  ///
+  /// * **The result.** Defending a side that has just disgraced itself costs
+  ///   the board more and earns the dressing room less — everyone can hear
+  ///   that it is a defence. After a creditable afternoon the same words are
+  ///   simply agreement, and cost almost nothing.
+  /// * **The room.** Demanding more from a squad already on the floor lands
+  ///   harder than demanding it from a happy one, so morale damage grows as
+  ///   morale falls. Praise works the other way: a confident squad has less
+  ///   left to gain.
+  static PressEffect effectInContext(
+    PressTone tone, {
+    ResultStanding? standing,
+    int squadMorale = 50,
+    int boardMood = 50,
+  }) {
+    final base = effectOf(tone);
+    if (base.morale == 0 && base.board == 0) return base;
+    // −2 (humiliating) … +2 (heroic), 0 when there is no result in view.
+    final read = standing == null ? 0 : Expectation.weight(standing);
+    var morale = base.morale.toDouble();
+    var board = base.board.toDouble();
+
+    if (base.morale > 0) {
+      // Backing them is worth most when they are low and least when they are
+      // already flying, and worth less the more indefensible the result.
+      morale *= 1 + (50 - squadMorale) / 200 + read * _resultSway;
+      // The standing SCALES the cost rather than shifting it. Adding to it
+      // pushed the board term past zero after a good result, so taking the
+      // blame for a triumph both lifted the dressing room and pleased the
+      // board — the one thing no answer in this game is allowed to do.
+      board *= 1 - read * _resultSway * 2;
+    } else {
+      // Criticism bites a fragile dressing room harder.
+      morale *= 1 + (50 - squadMorale) / 150;
+      // And a board that is already unhappy takes more convincing.
+      board *= 1 + (50 - boardMood) / 250;
+    }
+
+    return (
+      morale: morale.round().clamp(-_effectCap, _effectCap),
+      board: board.round().clamp(-_effectCap, _effectCap),
+    );
+  }
+
+  /// How much the afternoon's standing sways the two scales.
+  static const double _resultSway = 0.12;
+
+  /// Nothing said in a press conference moves either scale further than this.
+  /// The bands in [arrowsFor] are written against it.
+  static const int _effectCap = 9;
 
   /// The answers offered for a topic. Every question keeps [PressTone.playItDown]
   /// as a way out, so a manager is never forced into a stance.
@@ -304,7 +381,8 @@ abstract final class Press {
     // release has no position yet, and a manager should not be silenced by the
     // game not having got round to ranking him.
     final canRaise =
-        target > qualifyTarget && (worldRank == null || worldRank <= raiseRankBar);
+        target > qualifyTarget &&
+        (worldRank == null || worldRank <= raiseRankBar);
     if (canRaise) return tones;
     final filtered = [
       for (final t in tones)
@@ -391,6 +469,28 @@ abstract final class Press {
       PressTone.raiseTheBar,
       PressTone.playItDown,
     ],
+    // Punching above your weight: you can credit them, raise the bar and
+    // invite the fall, or refuse to get carried away.
+    PressTopic.overachieving => const [
+      PressTone.backThePlayers,
+      PressTone.raiseTheBar,
+      PressTone.playItDown,
+    ],
+    // Winning without convincing. Defending it, demanding better, or saying
+    // a win is a win.
+    PressTopic.luckyWin => const [
+      PressTone.backThePlayers,
+      PressTone.demandMore,
+      PressTone.playItDown,
+    ],
+    // Bad results AND an unhappy board. Every stance is available because
+    // every stance is a real option when it has got this far.
+    PressTopic.crisis => const [
+      PressTone.backThePlayers,
+      PressTone.takeTheBlame,
+      PressTone.demandMore,
+      PressTone.playItDown,
+    ],
   };
 
   /// The longest a conference can run to, for the sizes the UI has to reserve.
@@ -413,10 +513,13 @@ abstract final class Press {
     PressTopic.underPressure ||
     PressTopic.missedOut ||
     PressTopic.qualified ||
+    PressTopic.crisis ||
     PressTopic.newJob => 3,
     // Worth a word, not an afternoon.
-    PressTopic.bigWin || PressTopic.unbeatenRun => 2,
-    PressTopic.rankingPeak => 1,
+    PressTopic.bigWin ||
+    PressTopic.unbeatenRun ||
+    PressTopic.overachieving => 2,
+    PressTopic.rankingPeak || PressTopic.luckyWin => 1,
   };
 
   /// The reporters who cover this nation, drawn from the pool by [seed] so a
@@ -553,8 +656,19 @@ abstract final class Press {
   /// What an answer to [exchange] costs, in the same points as [effectOf]. A
   /// follow-up is worth half a stance, rounded toward zero, so a whole
   /// conference is a strong statement rather than three of them.
-  static PressEffect effectOfExchange(PressExchange exchange, PressTone tone) {
-    final full = effectOf(tone);
+  static PressEffect effectOfExchange(
+    PressExchange exchange,
+    PressTone tone, {
+    ResultStanding? standing,
+    int squadMorale = 50,
+    int boardMood = 50,
+  }) {
+    final full = effectInContext(
+      tone,
+      standing: standing,
+      squadMorale: squadMorale,
+      boardMood: boardMood,
+    );
     if (!exchange.halfWeight) return full;
     return (morale: full.morale ~/ 2, board: full.board ~/ 2);
   }

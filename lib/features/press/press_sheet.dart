@@ -113,6 +113,36 @@ class _PressSheetState extends ConsumerState<PressSheet> {
   String _openingPrompt(AppLocalizations l) {
     final who = widget.opponentName ?? l.pressTheOpposition;
     final options = switch (widget.question.topic) {
+      PressTopic.overachieving => [
+        l.pressAskAbove,
+        l.pressAskAbove2,
+        l.pressAskAbove3,
+        l.pressAskAbove4,
+        l.pressAskAbove5,
+        l.pressAskAbove6,
+        l.pressAskAbove7,
+        l.pressAskAbove8,
+      ],
+      PressTopic.luckyWin => [
+        l.pressAskFlattered,
+        l.pressAskFlattered2,
+        l.pressAskFlattered3,
+        l.pressAskFlattered4,
+        l.pressAskFlattered5,
+        l.pressAskFlattered6,
+        l.pressAskFlattered7,
+        l.pressAskFlattered8,
+      ],
+      PressTopic.crisis => [
+        l.pressAskCrisis,
+        l.pressAskCrisis2,
+        l.pressAskCrisis3,
+        l.pressAskCrisis4,
+        l.pressAskCrisis5,
+        l.pressAskCrisis6,
+        l.pressAskCrisis7,
+        l.pressAskCrisis8,
+      ],
       PressTopic.heavyDefeat => [
         l.pressAskHeavyDefeat(who),
         l.pressAskHeavyDefeat2(who),
@@ -389,6 +419,9 @@ class _PressSheetState extends ConsumerState<PressSheet> {
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
+    // What the room already knows: the last result as the country read it,
+    // and how the dressing room and the board are sitting.
+    final mood = ref.watch(pressMoodProvider(widget.careerId)).valueOrNull;
     final habits =
         ref.watch(pressToneHistoryProvider(widget.careerId)).valueOrNull ??
         const <PressTone, int>{};
@@ -449,7 +482,18 @@ class _PressSheetState extends ConsumerState<PressSheet> {
                             for (final tone in _current.options)
                               AnswerTile(
                                 label: _answerText(l, tone),
-                                effect: Press.effectOfExchange(_current, tone),
+                                // The SAME reading the service will apply when
+                                // the answer is recorded. Shown from the flat
+                                // table and applied from the contextual one,
+                                // the arrows on the sheet would be a promise
+                                // the save does not keep.
+                                effect: Press.effectOfExchange(
+                                  _current,
+                                  tone,
+                                  standing: mood?.standing,
+                                  squadMorale: mood?.squadMorale ?? 50,
+                                  boardMood: mood?.boardMood ?? 50,
+                                ),
                                 onTap: () => _answer(tone),
                               ),
                           ],

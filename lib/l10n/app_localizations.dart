@@ -716,6 +716,12 @@ abstract class AppLocalizations {
   /// **'Best finish'**
   String get recordsBestFinish;
 
+  /// Record book: the nation has never reached the World Championship finals.
+  ///
+  /// In en, this message translates to:
+  /// **'No finals appearance yet'**
+  String get recordsNoFinalsYet;
+
   /// Team-record row label.
   ///
   /// In en, this message translates to:
@@ -824,7 +830,7 @@ abstract class AppLocalizations {
   /// **'caps'**
   String get recordsUnitCaps;
 
-  /// Unit appended to a World Cup starts tally.
+  /// Unit appended to a World Championship starts tally.
   ///
   /// In en, this message translates to:
   /// **'starts'**
@@ -1478,6 +1484,12 @@ abstract class AppLocalizations {
   /// **'LINEUP'**
   String get tacticsTabLineup;
 
+  /// Squad screen tab holding the playstyle and the team instruction dials.
+  ///
+  /// In en, this message translates to:
+  /// **'INSTRUCTIONS'**
+  String get tacticsTabInstructions;
+
   /// Tab for assigning player roles.
   ///
   /// In en, this message translates to:
@@ -1928,13 +1940,13 @@ abstract class AppLocalizations {
   /// **'Advance the world'**
   String get hubEventAdvanceWorld;
 
-  /// Hub action: begin the next World Cup cycle.
+  /// Hub action: begin the next World Championship cycle.
   ///
   /// In en, this message translates to:
   /// **'Start {year} cycle'**
   String hubEventStartCycle(int year);
 
-  /// Hub subtitle naming the reigning World Cup winner.
+  /// Hub subtitle naming the reigning World Championship winner.
   ///
   /// In en, this message translates to:
   /// **'{nation} are World Champions'**
@@ -1970,16 +1982,16 @@ abstract class AppLocalizations {
   /// **'The intercontinental play-off'**
   String get hubEventIntercontinentalPlayoff;
 
-  /// Hub action: watch the World Cup finals draw.
+  /// Hub action: watch the World Championship finals draw.
   ///
   /// In en, this message translates to:
-  /// **'Watch the World Cup draw'**
+  /// **'Watch the World Championship draw'**
   String get hubEventWatchWcDraw;
 
-  /// Hub action: the World Cup opening ceremony.
+  /// Hub action: the World Championship opening ceremony.
   ///
   /// In en, this message translates to:
-  /// **'The World Cup is here'**
+  /// **'The World Championship is here'**
   String get hubEventWorldCupHere;
 
   /// Hub action: watch the continental finals draw.
@@ -1994,10 +2006,10 @@ abstract class AppLocalizations {
   /// **'The finals are here'**
   String get hubEventFinalsHere;
 
-  /// Hub action: step the World Cup forward one round.
+  /// Hub action: step the World Championship forward one round.
   ///
   /// In en, this message translates to:
-  /// **'Play the next World Cup round'**
+  /// **'Play the next World Championship round'**
   String get hubEventPlayWcRound;
 
   /// Hub action: step a continental cup forward one match.
@@ -2030,16 +2042,16 @@ abstract class AppLocalizations {
   /// **'Watch the qualifying draw'**
   String get hubEventWatchQualifyingDraw;
 
-  /// Hub action: watch the World Cup host selection.
+  /// Hub action: watch the World Championship host selection.
   ///
   /// In en, this message translates to:
-  /// **'Watch the World Cup host selection'**
+  /// **'Watch the World Championship host selection'**
   String get hubEventWatchWcHostSelection;
 
-  /// Hub action: watch the World Cup qualifying draw.
+  /// Hub action: watch the World Championship qualifying draw.
   ///
   /// In en, this message translates to:
-  /// **'Watch the World Cup qualifying draw'**
+  /// **'Watch the World Championship qualifying draw'**
   String get hubEventWatchWcQualifyingDraw;
 
   /// Hub action: arrange friendlies.
@@ -2096,10 +2108,10 @@ abstract class AppLocalizations {
   /// **'Re-name your qualifying squad'**
   String get hubCallUpRequalify;
 
-  /// Call-up label before the World Cup group stage.
+  /// Call-up label before the World Championship group stage.
   ///
   /// In en, this message translates to:
-  /// **'Name your World Cup squad'**
+  /// **'Name your World Championship squad'**
   String get hubCallUpWorldCup;
 
   /// Call-up label before a continental finals.
@@ -2354,10 +2366,10 @@ abstract class AppLocalizations {
   /// **'CONTINUE'**
   String get homeContinue;
 
-  /// Continue-card subtitle with date and World Cup year.
+  /// Continue-card subtitle with date and World Championship year.
   ///
   /// In en, this message translates to:
-  /// **'{date} · Road to the {year} World Cup'**
+  /// **'{date} · Road to the {year} World Championship'**
   String homeRoadToWorldCup(String date, int year);
 
   /// Button to manage saved games.
@@ -2405,8 +2417,14 @@ abstract class AppLocalizations {
   /// Intro describing when the career begins.
   ///
   /// In en, this message translates to:
-  /// **'Your career begins in September 2026, on the road to the 2030 World Cup.'**
+  /// **'Your career begins in September 2026, on the road to the 2030 World Championship.'**
   String get careerBeginsBlurb;
+
+  /// Note under the new-game blurb saying what is free and what the one-time purchase unlocks.
+  ///
+  /// In en, this message translates to:
+  /// **'The first full cycle is free: qualifying, your continental championship and the World Championship. Carrying on afterwards, and extra save slots, unlock once for €12.99.'**
+  String get careerFreeCycleNote;
 
   /// Button starting the career.
   ///
@@ -2822,10 +2840,10 @@ abstract class AppLocalizations {
   /// **'{n}d ago'**
   String careerDaysAgo(int n);
 
-  /// Save subtitle: road to the World Cup.
+  /// Save subtitle: road to the World Championship.
   ///
   /// In en, this message translates to:
-  /// **'Road to the {year} World Cup'**
+  /// **'Road to the {year} World Championship'**
   String careerRoadToWorldCup(int year);
 
   /// App-bar title on the manager-career screen.
@@ -2930,10 +2948,10 @@ abstract class AppLocalizations {
     String gd,
   );
 
-  /// Tournament label: World Cup.
+  /// Tournament label: World Championship.
   ///
   /// In en, this message translates to:
-  /// **'World Cup'**
+  /// **'World Championship'**
   String get careerWorldCupLabel;
 
   /// Tournament label: continental.
@@ -3278,11 +3296,23 @@ abstract class AppLocalizations {
   /// **'No captain named. Tap to give somebody the armband'**
   String get matchSetupWarnCaptain;
 
-  /// Pre-match warning: a captain is named but is injured, suspended or not in the squad.
+  /// Pre-match warning: the captain is named but injured.
   ///
   /// In en, this message translates to:
-  /// **'Your captain cannot play this one. Tap to give somebody else the armband'**
-  String get matchSetupWarnCaptainOut;
+  /// **'{name} is injured and cannot lead this one out. Tap to hand the armband on'**
+  String matchSetupWarnCaptainInjured(String name);
+
+  /// Pre-match warning: the captain is named but serving a ban.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} is suspended for this one. Tap to hand the armband on'**
+  String matchSetupWarnCaptainSuspended(String name);
+
+  /// Pre-match warning: the captain is named but was left out of the called-up squad.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} has the armband but is not in your squad. Tap to hand it on'**
+  String matchSetupWarnCaptainDropped(String name);
 
   /// Pre-match warning that no penalty or dead-ball taker has been chosen.
   ///
@@ -3626,10 +3656,10 @@ abstract class AppLocalizations {
   /// **'+{morale} squad morale'**
   String captainMoraleBoost(int morale);
 
-  /// Competition group heading: World Cup qualifying.
+  /// Competition group heading: World Championship qualifying.
   ///
   /// In en, this message translates to:
-  /// **'World Cup Qualifying'**
+  /// **'World Championship Qualifying'**
   String get resultsCategoryWorldCupQualifying;
 
   /// Competition group heading: friendlies.
@@ -3656,10 +3686,28 @@ abstract class AppLocalizations {
   /// **'Continental Cup'**
   String get resultsCategoryContinentalCup;
 
-  /// Competition group heading: World Cup finals.
+  /// Short form of the World Championship qualifying heading, for the hub's next-match strip where the full words are shrunk to nothing.
   ///
   /// In en, this message translates to:
-  /// **'World Cup Finals'**
+  /// **'World Champ. Q'**
+  String get resultsCategoryWorldCupQualifyingShort;
+
+  /// Short form of the continental qualifying heading, for the hub's next-match strip.
+  ///
+  /// In en, this message translates to:
+  /// **'Continental Cup Q'**
+  String get resultsCategoryContinentalQualifyingShort;
+
+  /// Competition group heading: continental cup qualifying.
+  ///
+  /// In en, this message translates to:
+  /// **'Continental Cup Qualifying'**
+  String get resultsCategoryContinentalQualifying;
+
+  /// Competition group heading: World Championship finals.
+  ///
+  /// In en, this message translates to:
+  /// **'World Championship Finals'**
   String get resultsCategoryWorldCupFinals;
 
   /// App-bar title on the round-results screen.
@@ -4085,7 +4133,7 @@ abstract class AppLocalizations {
   /// No description provided for @chWc1Desc.
   ///
   /// In en, this message translates to:
-  /// **'Win the World Cup.'**
+  /// **'Win the World Championship.'**
   String get chWc1Desc;
 
   /// No description provided for @chYears25.
@@ -4109,7 +4157,7 @@ abstract class AppLocalizations {
   /// No description provided for @chWc3Desc.
   ///
   /// In en, this message translates to:
-  /// **'Win 3 World Cups.'**
+  /// **'Win 3 World Championships.'**
   String get chWc3Desc;
 
   /// No description provided for @chWc5.
@@ -4121,7 +4169,7 @@ abstract class AppLocalizations {
   /// No description provided for @chWc5Desc.
   ///
   /// In en, this message translates to:
-  /// **'Win 5 World Cups.'**
+  /// **'Win 5 World Championships.'**
   String get chWc5Desc;
 
   /// No description provided for @chWc10.
@@ -4133,7 +4181,7 @@ abstract class AppLocalizations {
   /// No description provided for @chWc10Desc.
   ///
   /// In en, this message translates to:
-  /// **'Win 10 World Cups.'**
+  /// **'Win 10 World Championships.'**
   String get chWc10Desc;
 
   /// No description provided for @chWc2Teams.
@@ -4145,7 +4193,7 @@ abstract class AppLocalizations {
   /// No description provided for @chWc2TeamsDesc.
   ///
   /// In en, this message translates to:
-  /// **'Win the World Cup with 2 different nations.'**
+  /// **'Win the World Championship with 2 different nations.'**
   String get chWc2TeamsDesc;
 
   /// No description provided for @chWc3Teams.
@@ -4157,7 +4205,7 @@ abstract class AppLocalizations {
   /// No description provided for @chWc3TeamsDesc.
   ///
   /// In en, this message translates to:
-  /// **'Win the World Cup with 3 different nations.'**
+  /// **'Win the World Championship with 3 different nations.'**
   String get chWc3TeamsDesc;
 
   /// No description provided for @chWcStreak3.
@@ -4169,7 +4217,7 @@ abstract class AppLocalizations {
   /// No description provided for @chWcStreak3Desc.
   ///
   /// In en, this message translates to:
-  /// **'Win 3 World Cups in a row.'**
+  /// **'Win 3 World Championships in a row.'**
   String get chWcStreak3Desc;
 
   /// No description provided for @chWcAllconf.
@@ -4181,7 +4229,7 @@ abstract class AppLocalizations {
   /// No description provided for @chWcAllconfDesc.
   ///
   /// In en, this message translates to:
-  /// **'Win the World Cup with a nation from every confederation (6).'**
+  /// **'Win the World Championship with a nation from every confederation (6).'**
   String get chWcAllconfDesc;
 
   /// No description provided for @chCont5.
@@ -4217,7 +4265,7 @@ abstract class AppLocalizations {
   /// No description provided for @chTrebleDesc.
   ///
   /// In en, this message translates to:
-  /// **'Win the World Cup, a continental title and the Nations Cup in one career.'**
+  /// **'Win the World Championship, a continental title and the Nations Cup in one career.'**
   String get chTrebleDesc;
 
   /// No description provided for @chNations10.
@@ -4277,7 +4325,7 @@ abstract class AppLocalizations {
   /// No description provided for @chGrandmasterDesc.
   ///
   /// In en, this message translates to:
-  /// **'Win 3 World Cups AND 5 continental championships.'**
+  /// **'Win 3 World Championships AND 5 continental championships.'**
   String get chGrandmasterDesc;
 
   /// No description provided for @chUndefeated.
@@ -4289,7 +4337,7 @@ abstract class AppLocalizations {
   /// No description provided for @chUndefeatedDesc.
   ///
   /// In en, this message translates to:
-  /// **'Win a World Cup without losing a single match.'**
+  /// **'Win a World Championship without losing a single match.'**
   String get chUndefeatedDesc;
 
   /// No description provided for @chPerfectQual.
@@ -4301,7 +4349,7 @@ abstract class AppLocalizations {
   /// No description provided for @chPerfectQualDesc.
   ///
   /// In en, this message translates to:
-  /// **'Win every match of a World Cup qualifying campaign.'**
+  /// **'Win every match of a World Championship qualifying campaign.'**
   String get chPerfectQualDesc;
 
   /// No description provided for @chMinnow.
@@ -4313,7 +4361,7 @@ abstract class AppLocalizations {
   /// No description provided for @chMinnowDesc.
   ///
   /// In en, this message translates to:
-  /// **'Win the World Cup with a nation ranked outside the world top 32.'**
+  /// **'Win the World Championship with a nation ranked outside the world top 32.'**
   String get chMinnowDesc;
 
   /// No description provided for @chGrandTour.
@@ -4325,7 +4373,7 @@ abstract class AppLocalizations {
   /// No description provided for @chGrandTourDesc.
   ///
   /// In en, this message translates to:
-  /// **'Win a World Cup as hosts and win one away from home.'**
+  /// **'Win a World Championship as hosts and win one away from home.'**
   String get chGrandTourDesc;
 
   /// No description provided for @chUnbeaten25.
@@ -4409,7 +4457,7 @@ abstract class AppLocalizations {
   /// No description provided for @chPcWcDesc.
   ///
   /// In en, this message translates to:
-  /// **'Win {count} World Cups this save.'**
+  /// **'Win {count} World Championships this save.'**
   String chPcWcDesc(int count);
 
   /// No description provided for @chPcMajors.
@@ -4421,7 +4469,7 @@ abstract class AppLocalizations {
   /// No description provided for @chPcMajorsDesc.
   ///
   /// In en, this message translates to:
-  /// **'Win {count} major trophies (World Cup, continental or Nations Cup).'**
+  /// **'Win {count} major trophies (World Championship, continental or Nations Cup).'**
   String chPcMajorsDesc(int count);
 
   /// No description provided for @chPcUnbeaten.
@@ -5082,10 +5130,10 @@ abstract class AppLocalizations {
   /// **'WORLD'**
   String get nationsWorld;
 
-  /// Honours label: World Cup.
+  /// Honours label: World Championship.
   ///
   /// In en, this message translates to:
-  /// **'World Cup'**
+  /// **'World Championship'**
   String get nationsWorldCup;
 
   /// Honours label: continental title.
@@ -5388,29 +5436,125 @@ abstract class AppLocalizations {
   /// **'That is the kind of night people describe to their grandchildren. {opponent} {score}.'**
   String yWinUpset3(String opponent, String score);
 
+  /// Y post: winUpset, variant 4.
+  ///
+  /// In en, this message translates to:
+  /// **'{score} against {opponent}. However that happened, it happened.'**
+  String yWinUpset4(String opponent, String score);
+
+  /// Y post: winUpset, variant 5.
+  ///
+  /// In en, this message translates to:
+  /// **'On paper this was over before it started. {opponent} {score} says otherwise.'**
+  String yWinUpset5(String opponent, String score);
+
+  /// Y post: winUpset, variant 6.
+  ///
+  /// In en, this message translates to:
+  /// **'Beat {opponent} {score}. Nobody will believe that scoreline in a year.'**
+  String yWinUpset6(String opponent, String score);
+
+  /// Y post: winUpset, variant 7.
+  ///
+  /// In en, this message translates to:
+  /// **'{opponent} {score}. Enjoy it, then look at the fixture list.'**
+  String yWinUpset7(String opponent, String score);
+
+  /// Y post: winUpset, variant 8.
+  ///
+  /// In en, this message translates to:
+  /// **'{score} against {opponent}, and we rode our luck for eighty of the ninety.'**
+  String yWinUpset8(String opponent, String score);
+
+  /// Y post: winUpset, variant 9.
+  ///
+  /// In en, this message translates to:
+  /// **'One night against {opponent} does not undo a year. {score}.'**
+  String yWinUpset9(String opponent, String score);
+
+  /// Y post: winUpset, variant 10.
+  ///
+  /// In en, this message translates to:
+  /// **'Beat {opponent} {score} and now we will be told we have turned a corner. We have not.'**
+  String yWinUpset10(String opponent, String score);
+
+  /// Y post: winUpset, variant 11.
+  ///
+  /// In en, this message translates to:
+  /// **'{opponent} {score}. Wonderful. Ask me again when it matters.'**
+  String yWinUpset11(String opponent, String score);
+
   /// Y post: winRoutine, variant 0.
   ///
   /// In en, this message translates to:
-  /// **'{score} against {opponent}. Job done, nothing learned.'**
+  /// **'Beat {opponent} {score}. Exactly as it should be, and there is a pleasure in that.'**
   String yWinRoutine0(String opponent, String score);
 
   /// Y post: winRoutine, variant 1.
   ///
   /// In en, this message translates to:
-  /// **'Beat {opponent} {score}. We were supposed to, and we did.'**
+  /// **'{score} over {opponent}. Ruthless, and ruthless is a compliment.'**
   String yWinRoutine1(String opponent, String score);
 
   /// Y post: winRoutine, variant 2.
   ///
   /// In en, this message translates to:
-  /// **'A professional {score} over {opponent}. Next.'**
+  /// **'{opponent} {score}. No fuss, no scare, no complaints.'**
   String yWinRoutine2(String opponent, String score);
 
   /// Y post: winRoutine, variant 3.
   ///
   /// In en, this message translates to:
-  /// **'{opponent} dispatched {score}. File it and move on.'**
+  /// **'A tidy {score} against {opponent}. This is what a good side looks like on a quiet day.'**
   String yWinRoutine3(String opponent, String score);
+
+  /// Y post: winRoutine, variant 4.
+  ///
+  /// In en, this message translates to:
+  /// **'{score} against {opponent}. Job done, nothing learned.'**
+  String yWinRoutine4(String opponent, String score);
+
+  /// Y post: winRoutine, variant 5.
+  ///
+  /// In en, this message translates to:
+  /// **'Beat {opponent} {score}. We were supposed to, and we did.'**
+  String yWinRoutine5(String opponent, String score);
+
+  /// Y post: winRoutine, variant 6.
+  ///
+  /// In en, this message translates to:
+  /// **'A professional {score} over {opponent}. Next.'**
+  String yWinRoutine6(String opponent, String score);
+
+  /// Y post: winRoutine, variant 7.
+  ///
+  /// In en, this message translates to:
+  /// **'{opponent} dispatched {score}. File it and move on.'**
+  String yWinRoutine7(String opponent, String score);
+
+  /// Y post: winRoutine, variant 8.
+  ///
+  /// In en, this message translates to:
+  /// **'{score} against {opponent} and we are supposed to applaud. For beating them.'**
+  String yWinRoutine8(String opponent, String score);
+
+  /// Y post: winRoutine, variant 9.
+  ///
+  /// In en, this message translates to:
+  /// **'Well done to everyone involved in the {score} over {opponent}, I suppose.'**
+  String yWinRoutine9(String opponent, String score);
+
+  /// Y post: winRoutine, variant 10.
+  ///
+  /// In en, this message translates to:
+  /// **'{opponent} {score}. Beating sides like that is the floor, not the achievement.'**
+  String yWinRoutine10(String opponent, String score);
+
+  /// Y post: winRoutine, variant 11.
+  ///
+  /// In en, this message translates to:
+  /// **'We beat {opponent} {score} and looked laboured doing it.'**
+  String yWinRoutine11(String opponent, String score);
 
   /// Y post: winTight, variant 0.
   ///
@@ -5421,44 +5565,140 @@ abstract class AppLocalizations {
   /// Y post: winTight, variant 1.
   ///
   /// In en, this message translates to:
-  /// **'Nervy, ugly, and a win. {opponent} {score}.'**
+  /// **'That took character. {opponent} {score}.'**
   String yWinTight1(String opponent, String score);
 
   /// Y post: winTight, variant 2.
   ///
   /// In en, this message translates to:
-  /// **'Beat {opponent} {score}. Take the three points and never watch it again.'**
+  /// **'Beat {opponent} {score} the hard way, which is the way that lasts.'**
   String yWinTight2(String opponent, String score);
 
   /// Y post: winTight, variant 3.
   ///
   /// In en, this message translates to:
-  /// **'{score}. {opponent} made us work for every inch of that.'**
+  /// **'{score} against {opponent}. Sides that win these are the sides still standing in June.'**
   String yWinTight3(String opponent, String score);
+
+  /// Y post: winTight, variant 4.
+  ///
+  /// In en, this message translates to:
+  /// **'Nervy, ugly, and a win. {opponent} {score}.'**
+  String yWinTight4(String opponent, String score);
+
+  /// Y post: winTight, variant 5.
+  ///
+  /// In en, this message translates to:
+  /// **'Beat {opponent} {score}. Take the three points and never watch it again.'**
+  String yWinTight5(String opponent, String score);
+
+  /// Y post: winTight, variant 6.
+  ///
+  /// In en, this message translates to:
+  /// **'{score}. {opponent} made us work for every inch of that.'**
+  String yWinTight6(String opponent, String score);
+
+  /// Y post: winTight, variant 7.
+  ///
+  /// In en, this message translates to:
+  /// **'{opponent} {score}. Not pretty. Counts the same.'**
+  String yWinTight7(String opponent, String score);
+
+  /// Y post: winTight, variant 8.
+  ///
+  /// In en, this message translates to:
+  /// **'{score} against {opponent} and we made it ten times harder than it was.'**
+  String yWinTight8(String opponent, String score);
+
+  /// Y post: winTight, variant 9.
+  ///
+  /// In en, this message translates to:
+  /// **'We should not be hanging on against {opponent}. {score}.'**
+  String yWinTight9(String opponent, String score);
+
+  /// Y post: winTight, variant 10.
+  ///
+  /// In en, this message translates to:
+  /// **'{opponent} {score}. Won it, and learned nothing good about ourselves.'**
+  String yWinTight10(String opponent, String score);
+
+  /// Y post: winTight, variant 11.
+  ///
+  /// In en, this message translates to:
+  /// **'A {score} that flattered us against {opponent}.'**
+  String yWinTight11(String opponent, String score);
 
   /// Y post: drew, variant 0.
   ///
   /// In en, this message translates to:
-  /// **'{score} with {opponent}. Two points dropped or one gained. Pick your mood.'**
+  /// **'A point against {opponent}, {score}. Take it and move on.'**
   String yDrew0(String opponent, String score);
 
   /// Y post: drew, variant 1.
   ///
   /// In en, this message translates to:
-  /// **'A draw against {opponent}, {score}. Nobody is happy, nobody is furious.'**
+  /// **'{score} with {opponent}. There are worse afternoons than this.'**
   String yDrew1(String opponent, String score);
 
   /// Y post: drew, variant 2.
   ///
   /// In en, this message translates to:
-  /// **'{opponent} {score}. The most forgettable ninety minutes of the year.'**
+  /// **'Held {opponent} to {score}. Not everything has to be a story.'**
   String yDrew2(String opponent, String score);
 
   /// Y post: drew, variant 3.
   ///
   /// In en, this message translates to:
-  /// **'Shared the spoils with {opponent}, {score}. On we go.'**
+  /// **'{opponent} {score}. A point is a point and the table does not ask how.'**
   String yDrew3(String opponent, String score);
+
+  /// Y post: drew, variant 4.
+  ///
+  /// In en, this message translates to:
+  /// **'{score} with {opponent}. Two points dropped or one gained. Pick your mood.'**
+  String yDrew4(String opponent, String score);
+
+  /// Y post: drew, variant 5.
+  ///
+  /// In en, this message translates to:
+  /// **'A draw against {opponent}, {score}. Nobody is happy, nobody is furious.'**
+  String yDrew5(String opponent, String score);
+
+  /// Y post: drew, variant 6.
+  ///
+  /// In en, this message translates to:
+  /// **'{opponent} {score}. The most forgettable ninety minutes of the year.'**
+  String yDrew6(String opponent, String score);
+
+  /// Y post: drew, variant 7.
+  ///
+  /// In en, this message translates to:
+  /// **'Shared the spoils with {opponent}, {score}. On we go.'**
+  String yDrew7(String opponent, String score);
+
+  /// Y post: drew, variant 8.
+  ///
+  /// In en, this message translates to:
+  /// **'{score} against {opponent}. Draws like this are how campaigns quietly die.'**
+  String yDrew8(String opponent, String score);
+
+  /// Y post: drew, variant 9.
+  ///
+  /// In en, this message translates to:
+  /// **'Two points thrown away against {opponent}. {score}. Nothing else to call it.'**
+  String yDrew9(String opponent, String score);
+
+  /// Y post: drew, variant 10.
+  ///
+  /// In en, this message translates to:
+  /// **'{opponent} {score}. We had ninety minutes and no idea what to do with them.'**
+  String yDrew10(String opponent, String score);
+
+  /// Y post: drew, variant 11.
+  ///
+  /// In en, this message translates to:
+  /// **'A {score} with {opponent} that nobody will remember and everybody will pay for.'**
+  String yDrew11(String opponent, String score);
 
   /// Y post: lost, variant 0.
   ///
@@ -5469,44 +5709,140 @@ abstract class AppLocalizations {
   /// Y post: lost, variant 1.
   ///
   /// In en, this message translates to:
-  /// **'{opponent} {score}. We were second best and there is no argument.'**
+  /// **'{opponent} {score}. Nothing to hang anybody for. On to the next.'**
   String yLost1(String opponent, String score);
 
   /// Y post: lost, variant 2.
   ///
   /// In en, this message translates to:
-  /// **'Lost {score} to {opponent}. Regroup.'**
+  /// **'Lost {score} to {opponent} and gave everything. Some days that is not enough.'**
   String yLost2(String opponent, String score);
 
   /// Y post: lost, variant 3.
   ///
   /// In en, this message translates to:
-  /// **'{score} to {opponent}. Not a disgrace, not good enough.'**
+  /// **'{score} to {opponent}. Heads up. This side has plenty left.'**
   String yLost3(String opponent, String score);
+
+  /// Y post: lost, variant 4.
+  ///
+  /// In en, this message translates to:
+  /// **'{opponent} {score}. We were second best and there is no argument.'**
+  String yLost4(String opponent, String score);
+
+  /// Y post: lost, variant 5.
+  ///
+  /// In en, this message translates to:
+  /// **'Lost {score} to {opponent}. Regroup.'**
+  String yLost5(String opponent, String score);
+
+  /// Y post: lost, variant 6.
+  ///
+  /// In en, this message translates to:
+  /// **'{score} to {opponent}. Not a disgrace, not good enough.'**
+  String yLost6(String opponent, String score);
+
+  /// Y post: lost, variant 7.
+  ///
+  /// In en, this message translates to:
+  /// **'Beaten {score} by {opponent}. Learn something from it or it was wasted.'**
+  String yLost7(String opponent, String score);
+
+  /// Y post: lost, variant 8.
+  ///
+  /// In en, this message translates to:
+  /// **'{score} to {opponent} and we did not lay a glove on them.'**
+  String yLost8(String opponent, String score);
+
+  /// Y post: lost, variant 9.
+  ///
+  /// In en, this message translates to:
+  /// **'Lost to {opponent}, {score}. Same problems, same month, same excuses coming.'**
+  String yLost9(String opponent, String score);
+
+  /// Y post: lost, variant 10.
+  ///
+  /// In en, this message translates to:
+  /// **'{opponent} {score}. At what point does this stop being bad luck?'**
+  String yLost10(String opponent, String score);
+
+  /// Y post: lost, variant 11.
+  ///
+  /// In en, this message translates to:
+  /// **'Beaten {score} by {opponent}. That is a result that should cost somebody something.'**
+  String yLost11(String opponent, String score);
 
   /// Y post: lostBadly, variant 0.
   ///
   /// In en, this message translates to:
-  /// **'{score}. To {opponent}. I have no words and I am paid to have words.'**
+  /// **'{score} to {opponent}. One bad night. Judge the side on the campaign, not this.'**
   String yLostBadly0(String opponent, String score);
 
   /// Y post: lostBadly, variant 1.
   ///
   /// In en, this message translates to:
-  /// **'That was not a defeat to {opponent}, it was a surrender. {score}.'**
+  /// **'Nobody wanted that {score} against {opponent} less than the players did.'**
   String yLostBadly1(String opponent, String score);
 
   /// Y post: lostBadly, variant 2.
   ///
   /// In en, this message translates to:
-  /// **'{opponent} {score}. Somebody has to answer for that.'**
+  /// **'{opponent} {score}. Ugly, and not who this team is.'**
   String yLostBadly2(String opponent, String score);
 
   /// Y post: lostBadly, variant 3.
   ///
   /// In en, this message translates to:
-  /// **'I want the {score} against {opponent} struck from the record and from memory.'**
+  /// **'A {score} to forget against {opponent}. They will front up next time.'**
   String yLostBadly3(String opponent, String score);
+
+  /// Y post: lostBadly, variant 4.
+  ///
+  /// In en, this message translates to:
+  /// **'{score}. To {opponent}. I have no words and I am paid to have words.'**
+  String yLostBadly4(String opponent, String score);
+
+  /// Y post: lostBadly, variant 5.
+  ///
+  /// In en, this message translates to:
+  /// **'{opponent} {score}. Somebody has to answer for that.'**
+  String yLostBadly5(String opponent, String score);
+
+  /// Y post: lostBadly, variant 6.
+  ///
+  /// In en, this message translates to:
+  /// **'I want the {score} against {opponent} struck from the record and from memory.'**
+  String yLostBadly6(String opponent, String score);
+
+  /// Y post: lostBadly, variant 7.
+  ///
+  /// In en, this message translates to:
+  /// **'Beaten {score} by {opponent}. There is no spinning a scoreline like that.'**
+  String yLostBadly7(String opponent, String score);
+
+  /// Y post: lostBadly, variant 8.
+  ///
+  /// In en, this message translates to:
+  /// **'That was not a defeat to {opponent}, it was a surrender. {score}.'**
+  String yLostBadly8(String opponent, String score);
+
+  /// Y post: lostBadly, variant 9.
+  ///
+  /// In en, this message translates to:
+  /// **'{score}. Against {opponent}. People paid money to watch that.'**
+  String yLostBadly9(String opponent, String score);
+
+  /// Y post: lostBadly, variant 10.
+  ///
+  /// In en, this message translates to:
+  /// **'{opponent} {score}. If that does not change something, nothing will.'**
+  String yLostBadly10(String opponent, String score);
+
+  /// Y post: lostBadly, variant 11.
+  ///
+  /// In en, this message translates to:
+  /// **'I have seen this side humiliated before, but {score} by {opponent} is a new floor.'**
+  String yLostBadly11(String opponent, String score);
 
   /// Y post: trophy, variant 0.
   ///
@@ -5784,6 +6120,30 @@ abstract class AppLocalizations {
   /// **'Put {goals} past them, did {name}. Take a bow.'**
   String yScorerStar3(String name, String goals);
 
+  /// Y post: scorerStar, variant 4.
+  ///
+  /// In en, this message translates to:
+  /// **'{goals} for {name}, and the rest of them were passengers.'**
+  String yScorerStar4(String name, String goals);
+
+  /// Y post: scorerStar, variant 5.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} again. {goals}. Imagine this side without him.'**
+  String yScorerStar5(String name, String goals);
+
+  /// Y post: scorerStar, variant 6.
+  ///
+  /// In en, this message translates to:
+  /// **'{goals} from {name}. One man should not have to do this much.'**
+  String yScorerStar6(String name, String goals);
+
+  /// Y post: scorerStar, variant 7.
+  ///
+  /// In en, this message translates to:
+  /// **'Take {name} out of that and it is {goals} fewer and a very different afternoon.'**
+  String yScorerStar7(String name, String goals);
+
   /// Y post remarking on a run of wins. Variant 0.
   ///
   /// In en, this message translates to:
@@ -5807,6 +6167,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No defeats in {count}. Ask anyone who has managed: that is the hard part.'**
   String yWinStreak3(String count);
+
+  /// Y post: winStreak, variant 4.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} in a row. Enjoy it while the fixtures are kind.'**
+  String yWinStreak4(String count);
+
+  /// Y post: winStreak, variant 5.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} straight, and we have beaten nobody of consequence.'**
+  String yWinStreak5(String count);
+
+  /// Y post: winStreak, variant 6.
+  ///
+  /// In en, this message translates to:
+  /// **'A run of {count}. Ask me again when it is tested.'**
+  String yWinStreak6(String count);
+
+  /// Y post: winStreak, variant 7.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} on the trot. Every side has one of these in them once.'**
+  String yWinStreak7(String count);
 
   /// Y post remarking on a run without a win. Variant 0.
   ///
@@ -5832,6 +6216,30 @@ abstract class AppLocalizations {
   /// **'No wins in {count}. You can see it in how they play.'**
   String yLossStreak3(String count);
 
+  /// Y post: lossStreak, variant 4.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} without a win and the same mistakes every week.'**
+  String yLossStreak4(String count);
+
+  /// Y post: lossStreak, variant 5.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} in a row. Whatever is being tried, it is not working.'**
+  String yLossStreak5(String count);
+
+  /// Y post: lossStreak, variant 6.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} straight. This is a direction, not a dip.'**
+  String yLossStreak6(String count);
+
+  /// Y post: lossStreak, variant 7.
+  ///
+  /// In en, this message translates to:
+  /// **'No wins in {count}, and nobody upstairs has said a word.'**
+  String yLossStreak7(String count);
+
   /// Y post about a result against a rival nation. Variant 0.
   ///
   /// In en, this message translates to:
@@ -5855,6 +6263,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Neighbours, {score}. Bragging rights settled for a while.'**
   String yRivalry3(String opponent, String score);
+
+  /// Y post: rivalry, variant 4.
+  ///
+  /// In en, this message translates to:
+  /// **'{opponent} {score}. Whatever else happens this year, there is that.'**
+  String yRivalry4(String opponent, String score);
+
+  /// Y post: rivalry, variant 5.
+  ///
+  /// In en, this message translates to:
+  /// **'{score} against {opponent}. Some of us needed that more than the table did.'**
+  String yRivalry5(String opponent, String score);
+
+  /// Y post: rivalry, variant 6.
+  ///
+  /// In en, this message translates to:
+  /// **'{opponent} {score}. And they will have it back next time, they always do.'**
+  String yRivalry6(String opponent, String score);
+
+  /// Y post: rivalry, variant 7.
+  ///
+  /// In en, this message translates to:
+  /// **'Against {opponent}, {score}. A whole year of being reminded about this one.'**
+  String yRivalry7(String opponent, String score);
 
   /// Y post about a player picking up an injury. Variant 0.
   ///
@@ -5880,6 +6312,30 @@ abstract class AppLocalizations {
   /// **'No {name} for a while, then. Somebody has to step up.'**
   String yInjuryBlow3(String name);
 
+  /// Y post: injuryBlow, variant 4.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} out. Of course it is {name}.'**
+  String yInjuryBlow4(String name);
+
+  /// Y post: injuryBlow, variant 5.
+  ///
+  /// In en, this message translates to:
+  /// **'Without {name} this becomes a very ordinary team.'**
+  String yInjuryBlow5(String name);
+
+  /// Y post: injuryBlow, variant 6.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} injured again. Somebody should be asking why.'**
+  String yInjuryBlow6(String name);
+
+  /// Y post: injuryBlow, variant 7.
+  ///
+  /// In en, this message translates to:
+  /// **'Lost {name}, and there is nobody behind him. That is the real problem.'**
+  String yInjuryBlow7(String name);
+
   /// Y post about the board losing patience. Variant 0.
   ///
   /// In en, this message translates to:
@@ -5903,6 +6359,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Nobody at the federation is saying anything supportive. Draw your own conclusions.'**
   String get yBoardPressure3;
+
+  /// Y post: boardPressure, variant 4.
+  ///
+  /// In en, this message translates to:
+  /// **'Nobody upstairs has backed him in public for weeks now.'**
+  String get yBoardPressure4;
+
+  /// Y post: boardPressure, variant 5.
+  ///
+  /// In en, this message translates to:
+  /// **'The federation is briefing against its own manager. Same as always.'**
+  String get yBoardPressure5;
+
+  /// Y post: boardPressure, variant 6.
+  ///
+  /// In en, this message translates to:
+  /// **'When a board goes silent, they have already decided.'**
+  String get yBoardPressure6;
+
+  /// Y post: boardPressure, variant 7.
+  ///
+  /// In en, this message translates to:
+  /// **'They will let this drift until it is somebody else’s decision to make.'**
+  String get yBoardPressure7;
 
   /// Heading over the other posts about the same event, on a Y post's detail.
   ///
@@ -6564,7 +7044,7 @@ abstract class AppLocalizations {
   /// **'No qualifying draw.'**
   String get tourSharedNoQualifyingDraw;
 
-  /// Button that reveals the drawn World Cup host.
+  /// Button that reveals the drawn World Championship host.
   ///
   /// In en, this message translates to:
   /// **'Open the envelope'**
@@ -6756,10 +7236,10 @@ abstract class AppLocalizations {
   /// **'The finals draw takes place once qualifying is complete.'**
   String get tourContFinalsDrawAfterQual;
 
-  /// Explains the knockout rounds precede the World Cup.
+  /// Explains the knockout rounds precede the World Championship.
   ///
   /// In en, this message translates to:
-  /// **'The knockout rounds are played out before the World Cup.'**
+  /// **'The knockout rounds are played out before the World Championship.'**
   String get tourContContestedBeforeWc;
 
   /// Heading naming a tournament's champions.
@@ -6999,19 +7479,19 @@ abstract class AppLocalizations {
   /// Intro explaining the intercontinental play-off.
   ///
   /// In en, this message translates to:
-  /// **'Two World Cup places decided across a knockout of the best qualifying also-rans.'**
+  /// **'Two World Championship places decided across a knockout of the best qualifying also-rans.'**
   String get tourContPlayoffIntro;
 
   /// Shown when the manager wins the play-off.
   ///
   /// In en, this message translates to:
-  /// **'You came through the play-off. You\'re at the World Cup!'**
+  /// **'You came through the play-off. You\'re at the World Championship!'**
   String get tourContPlayoffThrough;
 
   /// Shown when the manager loses the play-off.
   ///
   /// In en, this message translates to:
-  /// **'You fell short in the play-off. No World Cup this time.'**
+  /// **'You fell short in the play-off. No World Championship this time.'**
   String get tourContPlayoffOut;
 
   /// Button to continue.
@@ -7032,19 +7512,19 @@ abstract class AppLocalizations {
   /// **'Seeded (bye)'**
   String get tourContPlayoffSeeded;
 
-  /// World Cup detail: tourCupTabSummary
+  /// World Championship detail: tourCupTabSummary
   ///
   /// In en, this message translates to:
   /// **'SUMMARY'**
   String get tourCupTabSummary;
 
-  /// World Cup detail: tourCupTabQualifying
+  /// World Championship detail: tourCupTabQualifying
   ///
   /// In en, this message translates to:
   /// **'QUALIFYING'**
   String get tourCupTabQualifying;
 
-  /// World Cup detail tab: the intercontinental play-off.
+  /// World Championship detail tab: the intercontinental play-off.
   ///
   /// In en, this message translates to:
   /// **'PLAY-OFF'**
@@ -7056,271 +7536,271 @@ abstract class AppLocalizations {
   /// **'The intercontinental play-off is decided once every confederation\'s qualifying is complete.'**
   String get tourCupPlayoffSoon;
 
-  /// World Cup detail: tourCupTabFinals
+  /// World Championship detail: tourCupTabFinals
   ///
   /// In en, this message translates to:
   /// **'FINALS'**
   String get tourCupTabFinals;
 
-  /// World Cup detail: tourCupTabBracket
+  /// World Championship detail: tourCupTabBracket
   ///
   /// In en, this message translates to:
   /// **'BRACKET'**
   String get tourCupTabBracket;
 
-  /// World Cup detail: tourCupTabAwards
+  /// World Championship detail: tourCupTabAwards
   ///
   /// In en, this message translates to:
   /// **'AWARDS'**
   String get tourCupTabAwards;
 
-  /// World Cup detail: tourCupTabScorers
+  /// World Championship detail: tourCupTabScorers
   ///
   /// In en, this message translates to:
   /// **'SCORERS'**
   String get tourCupTabScorers;
 
-  /// World Cup detail: tourCupTabHistory
+  /// World Championship detail: tourCupTabHistory
   ///
   /// In en, this message translates to:
   /// **'HISTORY'**
   String get tourCupTabHistory;
 
-  /// World Cup detail: tourCupTabRecords
+  /// World Championship detail: tourCupTabRecords
   ///
   /// In en, this message translates to:
   /// **'RECORDS'**
   String get tourCupTabRecords;
 
-  /// World Cup detail: tourCupTitle
+  /// World Championship detail: tourCupTitle
   ///
   /// In en, this message translates to:
   /// **'WORLD CHAMPIONSHIP'**
   String get tourCupTitle;
 
-  /// World Cup detail: tourCupNoData
+  /// World Championship detail: tourCupNoData
   ///
   /// In en, this message translates to:
   /// **'No cup data.'**
   String get tourCupNoData;
 
-  /// World Cup detail: tourCupLoadError
+  /// World Championship detail: tourCupLoadError
   ///
   /// In en, this message translates to:
   /// **'Could not load cup.\n{error}'**
   String tourCupLoadError(String error);
 
-  /// World Cup detail: tourCupUnknown
+  /// World Championship detail: tourCupUnknown
   ///
   /// In en, this message translates to:
   /// **'Unknown'**
   String get tourCupUnknown;
 
-  /// World Cup detail: tourCupWorldChampions
+  /// World Championship detail: tourCupWorldChampions
   ///
   /// In en, this message translates to:
   /// **'WORLD CHAMPIONS'**
   String get tourCupWorldChampions;
 
-  /// World Cup detail: tourCupWorldChampionsTitle
+  /// World Championship detail: tourCupWorldChampionsTitle
   ///
   /// In en, this message translates to:
   /// **'World Champions'**
   String get tourCupWorldChampionsTitle;
 
-  /// World Cup detail: tourCupActive
+  /// World Championship detail: tourCupActive
   ///
   /// In en, this message translates to:
   /// **'ACTIVE'**
   String get tourCupActive;
 
-  /// World Cup detail: tourCupStillActive
+  /// World Championship detail: tourCupStillActive
   ///
   /// In en, this message translates to:
   /// **'Still active'**
   String get tourCupStillActive;
 
-  /// World Cup detail: tourCupAllTimeScorers
+  /// World Championship detail: tourCupAllTimeScorers
   ///
   /// In en, this message translates to:
   /// **'ALL-TIME SCORERS'**
   String get tourCupAllTimeScorers;
 
-  /// World Cup detail: tourCupAllConfederations
+  /// World Championship detail: tourCupAllConfederations
   ///
   /// In en, this message translates to:
   /// **'All confederations'**
   String get tourCupAllConfederations;
 
-  /// World Cup detail: tourCupBestRunnersUp
+  /// World Championship detail: tourCupBestRunnersUp
   ///
   /// In en, this message translates to:
   /// **'Best runners-up'**
   String get tourCupBestRunnersUp;
 
-  /// World Cup detail: tourCupCompWorld
+  /// World Championship detail: tourCupCompWorld
   ///
   /// In en, this message translates to:
-  /// **'World Cup'**
+  /// **'World Championship'**
   String get tourCupCompWorld;
 
-  /// World Cup detail: tourCupCompEurope
+  /// World Championship detail: tourCupCompEurope
   ///
   /// In en, this message translates to:
   /// **'European Championship'**
   String get tourCupCompEurope;
 
-  /// World Cup detail: tourCupCompSAmerica
+  /// World Championship detail: tourCupCompSAmerica
   ///
   /// In en, this message translates to:
   /// **'South America Cup'**
   String get tourCupCompSAmerica;
 
-  /// World Cup detail: tourCupDestFinals
+  /// World Championship detail: tourCupDestFinals
   ///
   /// In en, this message translates to:
   /// **'the finals'**
   String get tourCupDestFinals;
 
-  /// World Cup detail: tourCupDestFinalsPlayoff
+  /// World Championship detail: tourCupDestFinalsPlayoff
   ///
   /// In en, this message translates to:
   /// **'the finals play-off'**
   String get tourCupDestFinalsPlayoff;
 
-  /// World Cup detail: tourCupDestIntercontPlayoff
+  /// World Championship detail: tourCupDestIntercontPlayoff
   ///
   /// In en, this message translates to:
   /// **'the intercontinental play-off'**
   String get tourCupDestIntercontPlayoff;
 
-  /// World Cup detail: tourCupFinalsDrawnAfterQual
+  /// World Championship detail: tourCupFinalsDrawnAfterQual
   ///
   /// In en, this message translates to:
   /// **'The finals are drawn once qualifying ends.'**
   String get tourCupFinalsDrawnAfterQual;
 
-  /// World Cup detail: tourCupFinalsDrawSoon
+  /// World Championship detail: tourCupFinalsDrawSoon
   ///
   /// In en, this message translates to:
-  /// **'Groups to be drawn. Watch the World Cup draw from the hub to reveal them.'**
+  /// **'Groups to be drawn. Watch the World Championship draw from the hub to reveal them.'**
   String get tourCupFinalsDrawSoon;
 
-  /// World Cup detail: tourCupGroupName
+  /// World Championship detail: tourCupGroupName
   ///
   /// In en, this message translates to:
   /// **'Group {name}'**
   String tourCupGroupName(String name);
 
-  /// World Cup detail: tourCupGroupNameShort
+  /// World Championship detail: tourCupGroupNameShort
   ///
   /// In en, this message translates to:
   /// **'Group {name}'**
   String tourCupGroupNameShort(String name);
 
-  /// World Cup detail: tourCupHostLabel
+  /// World Championship detail: tourCupHostLabel
   ///
   /// In en, this message translates to:
   /// **'Hosted by {host}'**
   String tourCupHostLabel(String host);
 
-  /// World Cup detail: tourCupIntercontPlayoff
+  /// World Championship detail: tourCupIntercontPlayoff
   ///
   /// In en, this message translates to:
   /// **'Intercontinental play-off'**
   String get tourCupIntercontPlayoff;
 
-  /// World Cup detail: tourCupKnockoutSoon
+  /// World Championship detail: tourCupKnockoutSoon
   ///
   /// In en, this message translates to:
   /// **'The bracket begins once the group stage ends.'**
   String get tourCupKnockoutSoon;
 
-  /// World Cup detail: tourCupMatches
+  /// World Championship detail: tourCupMatches
   ///
   /// In en, this message translates to:
   /// **'MATCHES'**
   String get tourCupMatches;
 
-  /// World Cup detail: tourCupMedalTable
+  /// World Championship detail: tourCupMedalTable
   ///
   /// In en, this message translates to:
   /// **'MEDAL TABLE'**
   String get tourCupMedalTable;
 
-  /// World Cup detail: tourCupMostTitles
+  /// World Championship detail: tourCupMostTitles
   ///
   /// In en, this message translates to:
   /// **'MOST TITLES'**
   String get tourCupMostTitles;
 
-  /// World Cup detail: tourCupMostTitlesValue
+  /// World Championship detail: tourCupMostTitlesValue
   ///
   /// In en, this message translates to:
   /// **'{nation}: {titles} titles from {editions} editions'**
   String tourCupMostTitlesValue(String nation, int titles, int editions);
 
-  /// World Cup detail: tourCupNoGoals
+  /// World Championship detail: tourCupNoGoals
   ///
   /// In en, this message translates to:
   /// **'No goals yet.'**
   String get tourCupNoGoals;
 
-  /// World Cup detail: tourCupNoGroups
+  /// World Championship detail: tourCupNoGroups
   ///
   /// In en, this message translates to:
   /// **'No groups drawn.'**
   String get tourCupNoGroups;
 
-  /// World Cup detail: tourCupNoHistory
+  /// World Championship detail: tourCupNoHistory
   ///
   /// In en, this message translates to:
   /// **'No history yet.'**
   String get tourCupNoHistory;
 
-  /// World Cup detail: tourCupPastWinners
+  /// World Championship detail: tourCupPastWinners
   ///
   /// In en, this message translates to:
   /// **'PAST WINNERS'**
   String get tourCupPastWinners;
 
-  /// World Cup detail: tourCupPlayoffIntro
+  /// World Championship detail: tourCupPlayoffIntro
   ///
   /// In en, this message translates to:
-  /// **'Two World Cup places decided across a knockout of the best qualifying also-rans.'**
+  /// **'Two World Championship places decided across a knockout of the best qualifying also-rans.'**
   String get tourCupPlayoffIntro;
 
-  /// World Cup detail: tourCupQualDrawSoon
+  /// World Championship detail: tourCupQualDrawSoon
   ///
   /// In en, this message translates to:
   /// **'Groups to be drawn. Watch the qualifying draw from the hub to reveal them.'**
   String get tourCupQualDrawSoon;
 
-  /// World Cup detail: tourCupRegionYours
+  /// World Championship detail: tourCupRegionYours
   ///
   /// In en, this message translates to:
   /// **'{region} · yours'**
   String tourCupRegionYours(String region);
 
-  /// World Cup detail: tourCupScorePens
+  /// World Championship detail: tourCupScorePens
   ///
   /// In en, this message translates to:
   /// **'{home}–{away} (pens)'**
   String tourCupScorePens(int home, int away);
 
-  /// World Cup detail: tourCupSegAllTime
+  /// World Championship detail: tourCupSegAllTime
   ///
   /// In en, this message translates to:
   /// **'All-time'**
   String get tourCupSegAllTime;
 
-  /// World Cup detail: tourCupSegFinals
+  /// World Championship detail: tourCupSegFinals
   ///
   /// In en, this message translates to:
   /// **'Finals'**
   String get tourCupSegFinals;
 
-  /// World Cup detail: tourCupSegQualifying
+  /// World Championship detail: tourCupSegQualifying
   ///
   /// In en, this message translates to:
   /// **'Qualifying'**
@@ -7440,13 +7920,13 @@ abstract class AppLocalizations {
   /// **'Puts too many good chances wide.'**
   String get traitWastefulBlurb;
 
-  /// The World Cup, named as a competition in a board objective.
+  /// The World Championship, named as a competition in a board objective.
   ///
   /// In en, this message translates to:
-  /// **'World Cup'**
+  /// **'World Championship'**
   String get objectiveWorldCup;
 
-  /// Board objective for the strongest sides: win the tournament. Generic, because the board now sets one for the continental cup as well as the World Cup.
+  /// Board objective for the strongest sides: win the tournament. Generic, because the board now sets one for the continental cup as well as the World Championship.
   ///
   /// In en, this message translates to:
   /// **'Win it'**
@@ -7467,10 +7947,10 @@ abstract class AppLocalizations {
   /// Shared label: objectiveWinWorldCup
   ///
   /// In en, this message translates to:
-  /// **'Win the World Cup'**
+  /// **'Win the World Championship'**
   String get objectiveWinWorldCup;
 
-  /// Board objective: reach the final. Generic — the board sets one for the continental cup as well as the World Cup, so it must not name a competition.
+  /// Board objective: reach the final. Generic — the board sets one for the continental cup as well as the World Championship, so it must not name a competition.
   ///
   /// In en, this message translates to:
   /// **'Reach the final'**
@@ -7497,7 +7977,7 @@ abstract class AppLocalizations {
   /// Shared label: objectiveQualify
   ///
   /// In en, this message translates to:
-  /// **'Qualify for the World Cup'**
+  /// **'Qualify for the World Championship'**
   String get objectiveQualify;
 
   /// Shared label: finishChampions
@@ -9207,22 +9687,22 @@ abstract class AppLocalizations {
   /// Competition name shown to the manager. The stored name stays English.
   ///
   /// In en, this message translates to:
-  /// **'World Cup'**
+  /// **'World Championship'**
   String get compWorldCup;
 
-  /// Competition name: the World Cup finals tournament.
+  /// Competition name: the World Championship finals tournament.
   ///
   /// In en, this message translates to:
-  /// **'World Cup Finals'**
+  /// **'World Championship Finals'**
   String get compWorldCupFinals;
 
-  /// Competition name: World Cup qualifying, region unspecified.
+  /// Competition name: World Championship qualifying, region unspecified.
   ///
   /// In en, this message translates to:
-  /// **'World Cup Qualifying'**
+  /// **'World Championship Qualifying'**
   String get compWorldCupQualifying;
 
-  /// Competition name: one continent's World Cup qualifying campaign.
+  /// Competition name: one continent's World Championship qualifying campaign.
   ///
   /// In en, this message translates to:
   /// **'{region} Qualifiers'**
@@ -9339,19 +9819,19 @@ abstract class AppLocalizations {
   /// Inbox: cycle-start body, one of four.
   ///
   /// In en, this message translates to:
-  /// **'The road to the {year} World Cup starts here.'**
+  /// **'The road to the {year} World Championship starts here.'**
   String msgCycleBody1(int year);
 
   /// Inbox: cycle-start body, one of four.
   ///
   /// In en, this message translates to:
-  /// **'A new cycle. The {year} World Cup is the target.'**
+  /// **'A new cycle. The {year} World Championship is the target.'**
   String msgCycleBody2(int year);
 
   /// Inbox: cycle-start body, one of four.
   ///
   /// In en, this message translates to:
-  /// **'Four years to the {year} World Cup. Work starts now.'**
+  /// **'Four years to the {year} World Championship. Work starts now.'**
   String msgCycleBody3(int year);
 
   /// Inbox: cycle-start body, one of four.
@@ -9384,28 +9864,28 @@ abstract class AppLocalizations {
   /// **'The {cup} qualifying groups have been drawn.'**
   String msgContQualDrawBody(String cup);
 
-  /// Inbox: World Cup host chosen.
+  /// Inbox: World Championship host chosen.
   ///
   /// In en, this message translates to:
-  /// **'{year} World Cup host: {host}'**
+  /// **'{year} World Championship host: {host}'**
   String msgWcHostTitle(String host, int year);
 
-  /// Inbox: World Cup host chosen, body.
+  /// Inbox: World Championship host chosen, body.
   ///
   /// In en, this message translates to:
-  /// **'{host} will host the {year} World Cup.'**
+  /// **'{host} will host the {year} World Championship.'**
   String msgWcHostBody(String host, int year);
 
-  /// Inbox: World Cup qualifying draw made.
+  /// Inbox: World Championship qualifying draw made.
   ///
   /// In en, this message translates to:
-  /// **'World Cup qualifying draw'**
+  /// **'World Championship qualifying draw'**
   String get msgWcQualDrawTitle;
 
-  /// Inbox: World Cup qualifying draw made, body.
+  /// Inbox: World Championship qualifying draw made, body.
   ///
   /// In en, this message translates to:
-  /// **'The World Cup qualifying groups have been drawn.'**
+  /// **'The World Championship qualifying groups have been drawn.'**
   String get msgWcQualDrawBody;
 
   /// Inbox: continental finals draw made.
@@ -9420,64 +9900,64 @@ abstract class AppLocalizations {
   /// **'The {cup} finals groups have been drawn.'**
   String msgContFinalsDrawBody(String cup);
 
-  /// Inbox: World Cup finals draw made.
+  /// Inbox: World Championship finals draw made.
   ///
   /// In en, this message translates to:
-  /// **'World Cup finals draw'**
+  /// **'World Championship finals draw'**
   String get msgWcFinalsDrawTitle;
 
-  /// Inbox: World Cup finals draw made, body.
+  /// Inbox: World Championship finals draw made, body.
   ///
   /// In en, this message translates to:
-  /// **'The {year} World Cup finals draw has been made.'**
+  /// **'The {year} World Championship finals draw has been made.'**
   String msgWcFinalsDrawBody(int year);
 
-  /// Inbox: qualified for the World Cup, headline.
+  /// Inbox: qualified for the World Championship, headline.
   ///
   /// In en, this message translates to:
-  /// **'Through to the World Cup'**
+  /// **'Through to the World Championship'**
   String get msgQualWcTitle1;
 
-  /// Inbox: qualified for the World Cup, headline.
+  /// Inbox: qualified for the World Championship, headline.
   ///
   /// In en, this message translates to:
-  /// **'World Cup booked'**
+  /// **'World Championship booked'**
   String get msgQualWcTitle2;
 
-  /// Inbox: qualified for the World Cup, headline.
+  /// Inbox: qualified for the World Championship, headline.
   ///
   /// In en, this message translates to:
-  /// **'We\'re going to the World Cup'**
+  /// **'We\'re going to the World Championship'**
   String get msgQualWcTitle3;
 
-  /// Inbox: qualified for the World Cup, headline.
+  /// Inbox: qualified for the World Championship, headline.
   ///
   /// In en, this message translates to:
   /// **'Ticket punched'**
   String get msgQualWcTitle4;
 
-  /// Inbox: qualified for the World Cup, body.
+  /// Inbox: qualified for the World Championship, body.
   ///
   /// In en, this message translates to:
-  /// **'You have qualified for the {year} World Cup finals.'**
+  /// **'You have qualified for the {year} World Championship finals.'**
   String msgQualWcBody1(int year);
 
-  /// Inbox: qualified for the World Cup, body.
+  /// Inbox: qualified for the World Championship, body.
   ///
   /// In en, this message translates to:
-  /// **'It\'s official: your nation is at the {year} World Cup.'**
+  /// **'It\'s official: your nation is at the {year} World Championship.'**
   String msgQualWcBody2(int year);
 
-  /// Inbox: qualified for the World Cup, body.
+  /// Inbox: qualified for the World Championship, body.
   ///
   /// In en, this message translates to:
-  /// **'A place at the {year} World Cup is secured.'**
+  /// **'A place at the {year} World Championship is secured.'**
   String msgQualWcBody3(int year);
 
-  /// Inbox: qualified for the World Cup, body.
+  /// Inbox: qualified for the World Championship, body.
   ///
   /// In en, this message translates to:
-  /// **'You\'re through to the {year} World Cup finals.'**
+  /// **'You\'re through to the {year} World Championship finals.'**
   String msgQualWcBody4(int year);
 
   /// Inbox: qualified for the continental cup, headline.
@@ -10002,16 +10482,16 @@ abstract class AppLocalizations {
   /// **'The board\'s target at the {comp}: {demand}. You finished: {finish}. That is short of what was expected.'**
   String boardObjectiveMissedBody(String comp, String demand, String finish);
 
-  /// Inbox: failed to qualify for the World Cup.
+  /// Inbox: failed to qualify for the World Championship.
   ///
   /// In en, this message translates to:
-  /// **'World Cup dream over'**
+  /// **'World Championship dream over'**
   String get newsWcMissTitle;
 
-  /// Inbox: failed to qualify for the World Cup, body.
+  /// Inbox: failed to qualify for the World Championship, body.
   ///
   /// In en, this message translates to:
-  /// **'You didn\'t make the {year} World Cup. The qualifying campaign fell short. Four more years.'**
+  /// **'You didn\'t make the {year} World Championship. The qualifying campaign fell short. Four more years.'**
   String newsWcMissBody(int year);
 
   /// Inbox: a new all-time scoring record.
@@ -10767,77 +11247,185 @@ abstract class AppLocalizations {
   /// **'I\'m going to be insufferable about this for a decade.'**
   String get yReactionElation5;
 
-  /// Y feed: a relief reply under somebody else's post.
+  /// Y reply: elation, variant 6.
   ///
   /// In en, this message translates to:
-  /// **'that took ten years off me'**
-  String get yReactionRelief0;
+  /// **'Right. That is why we watch.'**
+  String get yReactionElation6;
 
-  /// Y feed: a relief reply under somebody else's post.
+  /// Y reply: elation, variant 7.
   ///
   /// In en, this message translates to:
-  /// **'Ugly. Three points. Moving on.'**
-  String get yReactionRelief1;
+  /// **'Days like this pay for the other ones.'**
+  String get yReactionElation7;
 
-  /// Y feed: a relief reply under somebody else's post.
+  /// Y reply: elation, variant 8.
   ///
   /// In en, this message translates to:
-  /// **'Nobody speak. Nobody jinx it.'**
-  String get yReactionRelief2;
+  /// **'About time. Genuinely, about time.'**
+  String get yReactionElation8;
+
+  /// Y reply: elation, variant 9.
+  ///
+  /// In en, this message translates to:
+  /// **'Great. Now do it again next week and I will believe it.'**
+  String get yReactionElation9;
+
+  /// Y reply: elation, variant 10.
+  ///
+  /// In en, this message translates to:
+  /// **'Enjoy tonight, because this lot will find a way to ruin it.'**
+  String get yReactionElation10;
+
+  /// Y reply: elation, variant 11.
+  ///
+  /// In en, this message translates to:
+  /// **'One good night does not make anybody a great side.'**
+  String get yReactionElation11;
 
   /// Y feed: a relief reply under somebody else's post.
   ///
   /// In en, this message translates to:
   /// **'Not pretty, but I\'ll take it every single time.'**
-  String get yReactionRelief3;
-
-  /// Y feed: a relief reply under somebody else's post.
-  ///
-  /// In en, this message translates to:
-  /// **'Heart rate: unacceptable.'**
-  String get yReactionRelief4;
+  String get yReactionRelief0;
 
   /// Y feed: a relief reply under somebody else's post.
   ///
   /// In en, this message translates to:
   /// **'Somehow. Somehow!'**
-  String get yReactionRelief5;
+  String get yReactionRelief1;
 
-  /// Y feed: a fury reply under somebody else's post.
+  /// Y feed: a relief reply under somebody else's post.
   ///
   /// In en, this message translates to:
-  /// **'Absolute state of this.'**
-  String get yReactionFury0;
+  /// **'Ugly. Three points. Moving on.'**
+  String get yReactionRelief2;
+
+  /// Y feed: a relief reply under somebody else's post.
+  ///
+  /// In en, this message translates to:
+  /// **'I will take ugly all day if it comes with points.'**
+  String get yReactionRelief3;
+
+  /// Y feed: a relief reply under somebody else's post.
+  ///
+  /// In en, this message translates to:
+  /// **'that took ten years off me'**
+  String get yReactionRelief4;
+
+  /// Y feed: a relief reply under somebody else's post.
+  ///
+  /// In en, this message translates to:
+  /// **'Nobody speak. Nobody jinx it.'**
+  String get yReactionRelief5;
+
+  /// Y reply: relief, variant 6.
+  ///
+  /// In en, this message translates to:
+  /// **'Heart rate: unacceptable.'**
+  String get yReactionRelief6;
+
+  /// Y reply: relief, variant 7.
+  ///
+  /// In en, this message translates to:
+  /// **'Survived. That is the word. Survived.'**
+  String get yReactionRelief7;
+
+  /// Y reply: relief, variant 8.
+  ///
+  /// In en, this message translates to:
+  /// **'We should not need relief from games like that.'**
+  String get yReactionRelief8;
+
+  /// Y reply: relief, variant 9.
+  ///
+  /// In en, this message translates to:
+  /// **'Relieved, and a bit embarrassed about being relieved.'**
+  String get yReactionRelief9;
+
+  /// Y reply: relief, variant 10.
+  ///
+  /// In en, this message translates to:
+  /// **'If that is the standard we are cheering, we are in trouble.'**
+  String get yReactionRelief10;
+
+  /// Y reply: relief, variant 11.
+  ///
+  /// In en, this message translates to:
+  /// **'Scraping through is a habit, and it is not a good one.'**
+  String get yReactionRelief11;
 
   /// Y feed: a fury reply under somebody else's post.
   ///
   /// In en, this message translates to:
   /// **'Not good enough. Not remotely.'**
-  String get yReactionFury1;
-
-  /// Y feed: a fury reply under somebody else's post.
-  ///
-  /// In en, this message translates to:
-  /// **'I want names.'**
-  String get yReactionFury2;
-
-  /// Y feed: a fury reply under somebody else's post.
-  ///
-  /// In en, this message translates to:
-  /// **'Every four years, the same. EVERY four years.'**
-  String get yReactionFury3;
-
-  /// Y feed: a fury reply under somebody else's post.
-  ///
-  /// In en, this message translates to:
-  /// **'Deleting the app. Reinstalling Thursday.'**
-  String get yReactionFury4;
+  String get yReactionFury0;
 
   /// Y feed: a fury reply under somebody else's post.
   ///
   /// In en, this message translates to:
   /// **'Somebody explain that to me slowly.'**
+  String get yReactionFury1;
+
+  /// Y feed: a fury reply under somebody else's post.
+  ///
+  /// In en, this message translates to:
+  /// **'That is a hard watch and I am being polite.'**
+  String get yReactionFury2;
+
+  /// Y feed: a fury reply under somebody else's post.
+  ///
+  /// In en, this message translates to:
+  /// **'Disappointed. Genuinely disappointed.'**
+  String get yReactionFury3;
+
+  /// Y feed: a fury reply under somebody else's post.
+  ///
+  /// In en, this message translates to:
+  /// **'Absolute state of this.'**
+  String get yReactionFury4;
+
+  /// Y feed: a fury reply under somebody else's post.
+  ///
+  /// In en, this message translates to:
+  /// **'I want names.'**
   String get yReactionFury5;
+
+  /// Y reply: fury, variant 6.
+  ///
+  /// In en, this message translates to:
+  /// **'Deleting the app. Reinstalling Thursday.'**
+  String get yReactionFury6;
+
+  /// Y reply: fury, variant 7.
+  ///
+  /// In en, this message translates to:
+  /// **'Nobody out there looked like they wanted it.'**
+  String get yReactionFury7;
+
+  /// Y reply: fury, variant 8.
+  ///
+  /// In en, this message translates to:
+  /// **'Every four years, the same. EVERY four years.'**
+  String get yReactionFury8;
+
+  /// Y reply: fury, variant 9.
+  ///
+  /// In en, this message translates to:
+  /// **'That is not a performance, it is an insult.'**
+  String get yReactionFury9;
+
+  /// Y reply: fury, variant 10.
+  ///
+  /// In en, this message translates to:
+  /// **'People give up weekends and money for that. Think about it.'**
+  String get yReactionFury10;
+
+  /// Y reply: fury, variant 11.
+  ///
+  /// In en, this message translates to:
+  /// **'I have defended this side for years. Not tonight. Not after that.'**
+  String get yReactionFury11;
 
   /// Y feed: a despair reply under somebody else's post.
   ///
@@ -10848,7 +11436,7 @@ abstract class AppLocalizations {
   /// Y feed: a despair reply under somebody else's post.
   ///
   /// In en, this message translates to:
-  /// **'I have run out of ways to say this.'**
+  /// **'No jokes today. Nothing.'**
   String get yReactionDespair1;
 
   /// Y feed: a despair reply under somebody else's post.
@@ -10860,7 +11448,7 @@ abstract class AppLocalizations {
   /// Y feed: a despair reply under somebody else's post.
   ///
   /// In en, this message translates to:
-  /// **'this is the darkest timeline'**
+  /// **'I have run out of ways to say this.'**
   String get yReactionDespair3;
 
   /// Y feed: a despair reply under somebody else's post.
@@ -10872,44 +11460,116 @@ abstract class AppLocalizations {
   /// Y feed: a despair reply under somebody else's post.
   ///
   /// In en, this message translates to:
-  /// **'No jokes today. Nothing.'**
+  /// **'this is the darkest timeline'**
   String get yReactionDespair5;
 
-  /// Y feed: a smugness reply under somebody else's post.
+  /// Y reply: despair, variant 6.
   ///
   /// In en, this message translates to:
-  /// **'Said it in January. Check the timeline.'**
-  String get yReactionSmugness0;
+  /// **'Not even angry any more. That is the worrying part.'**
+  String get yReactionDespair6;
 
-  /// Y feed: a smugness reply under somebody else's post.
+  /// Y reply: despair, variant 7.
   ///
   /// In en, this message translates to:
-  /// **'Some of you owe some of us an apology.'**
-  String get yReactionSmugness1;
+  /// **'Same feeling, different year.'**
+  String get yReactionDespair7;
+
+  /// Y reply: despair, variant 8.
+  ///
+  /// In en, this message translates to:
+  /// **'I do not know what this is any more, but it is not a football team.'**
+  String get yReactionDespair8;
+
+  /// Y reply: despair, variant 9.
+  ///
+  /// In en, this message translates to:
+  /// **'We are further away than we were, and nobody will say it.'**
+  String get yReactionDespair9;
+
+  /// Y reply: despair, variant 10.
+  ///
+  /// In en, this message translates to:
+  /// **'A whole generation wasted and the same people decide what happens next.'**
+  String get yReactionDespair10;
+
+  /// Y reply: despair, variant 11.
+  ///
+  /// In en, this message translates to:
+  /// **'Stop telling me it is a process. It is not going anywhere.'**
+  String get yReactionDespair11;
 
   /// Y feed: a smugness reply under somebody else's post.
   ///
   /// In en, this message translates to:
   /// **'Quietly, but: told you.'**
-  String get yReactionSmugness2;
-
-  /// Y feed: a smugness reply under somebody else's post.
-  ///
-  /// In en, this message translates to:
-  /// **'The doubters have gone very quiet.'**
-  String get yReactionSmugness3;
+  String get yReactionSmugness0;
 
   /// Y feed: a smugness reply under somebody else's post.
   ///
   /// In en, this message translates to:
   /// **'bookmark this one'**
-  String get yReactionSmugness4;
+  String get yReactionSmugness1;
+
+  /// Y feed: a smugness reply under somebody else's post.
+  ///
+  /// In en, this message translates to:
+  /// **'The doubters have gone very quiet.'**
+  String get yReactionSmugness2;
 
   /// Y feed: a smugness reply under somebody else's post.
   ///
   /// In en, this message translates to:
   /// **'Not that anybody\'s counting. I\'m counting.'**
+  String get yReactionSmugness3;
+
+  /// Y feed: a smugness reply under somebody else's post.
+  ///
+  /// In en, this message translates to:
+  /// **'Said it in January. Check the timeline.'**
+  String get yReactionSmugness4;
+
+  /// Y feed: a smugness reply under somebody else's post.
+  ///
+  /// In en, this message translates to:
+  /// **'Some of you owe some of us an apology.'**
   String get yReactionSmugness5;
+
+  /// Y reply: smugness, variant 6.
+  ///
+  /// In en, this message translates to:
+  /// **'Filing this under things I mentioned first.'**
+  String get yReactionSmugness6;
+
+  /// Y reply: smugness, variant 7.
+  ///
+  /// In en, this message translates to:
+  /// **'No gloating. A little gloating.'**
+  String get yReactionSmugness7;
+
+  /// Y reply: smugness, variant 8.
+  ///
+  /// In en, this message translates to:
+  /// **'Where are all the experts now? Genuine question.'**
+  String get yReactionSmugness8;
+
+  /// Y reply: smugness, variant 9.
+  ///
+  /// In en, this message translates to:
+  /// **'I would like every single one of you to say it back to me.'**
+  String get yReactionSmugness9;
+
+  /// Y reply: smugness, variant 10.
+  ///
+  /// In en, this message translates to:
+  /// **'Screenshot, printed, framed, sent to the people who laughed.'**
+  String get yReactionSmugness10;
+
+  /// Y reply: smugness, variant 11.
+  ///
+  /// In en, this message translates to:
+  /// **'I will be bringing this up for the rest of my life and you have earned it.'**
+  String get yReactionSmugness11;
 
   /// Y feed: a shrug reply under somebody else's post.
   ///
@@ -10932,20 +11592,56 @@ abstract class AppLocalizations {
   /// Y feed: a shrug reply under somebody else's post.
   ///
   /// In en, this message translates to:
-  /// **'no thoughts, head empty'**
+  /// **'Genuinely nothing to add.'**
   String get yReactionShrug3;
 
   /// Y feed: a shrug reply under somebody else's post.
   ///
   /// In en, this message translates to:
-  /// **'Wake me for the next one.'**
+  /// **'no thoughts, head empty'**
   String get yReactionShrug4;
 
   /// Y feed: a shrug reply under somebody else's post.
   ///
   /// In en, this message translates to:
-  /// **'Genuinely nothing to add.'**
+  /// **'Wake me for the next one.'**
   String get yReactionShrug5;
+
+  /// Y reply: shrug, variant 6.
+  ///
+  /// In en, this message translates to:
+  /// **'That is ninety minutes I am not getting back.'**
+  String get yReactionShrug6;
+
+  /// Y reply: shrug, variant 7.
+  ///
+  /// In en, this message translates to:
+  /// **'Neither here nor there, really.'**
+  String get yReactionShrug7;
+
+  /// Y reply: shrug, variant 8.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not tell you a single thing that happened.'**
+  String get yReactionShrug8;
+
+  /// Y reply: shrug, variant 9.
+  ///
+  /// In en, this message translates to:
+  /// **'Another one of those. There are a lot of those.'**
+  String get yReactionShrug9;
+
+  /// Y reply: shrug, variant 10.
+  ///
+  /// In en, this message translates to:
+  /// **'I watched all of it and felt nothing at all.'**
+  String get yReactionShrug10;
+
+  /// Y reply: shrug, variant 11.
+  ///
+  /// In en, this message translates to:
+  /// **'If nobody mentions this again, that is fine by me.'**
+  String get yReactionShrug11;
 
   /// Best-third-placed table: why some results are dropped.
   ///
@@ -10992,7 +11688,7 @@ abstract class AppLocalizations {
   /// Premium gate: the price. Placeholder until the store's own localised price is wired in.
   ///
   /// In en, this message translates to:
-  /// **'€11.99'**
+  /// **'€12.99'**
   String get gatePrice;
 
   /// Premium gate: the button that continues the career.
@@ -11604,7 +12300,7 @@ abstract class AppLocalizations {
   /// Friendlies: why these opponents are suggested first.
   ///
   /// In en, this message translates to:
-  /// **'Suggested first: sides who play like {rivals}, who you have drawn.'**
+  /// **'Marked below: sides who play like {rivals}, who you have drawn.'**
   String friendliesLikeYourGroup(String rivals);
 
   /// Inbox: the window's transfers, as one report.
@@ -11628,7 +12324,7 @@ abstract class AppLocalizations {
   /// Settings: what the free game covers.
   ///
   /// In en, this message translates to:
-  /// **'A complete cycle (qualifying, a continental championship and a World Cup) with nothing held back. Carrying a save on past it is a single payment, once, and it covers every save and every future update.'**
+  /// **'A complete cycle (qualifying, your continental championship and the World Championship) with nothing held back. Carrying a save on past it is a single payment, once, and it covers every save and every future update.'**
   String get settingsFreeScopeBlurb;
 
   /// Settings: what the free game covers.
@@ -11646,13 +12342,13 @@ abstract class AppLocalizations {
   /// Friendlies: why these opponents are suggested first, when the group is a qualifying campaign rather than a finals draw.
   ///
   /// In en, this message translates to:
-  /// **'Suggested first: sides who play like {rivals}, who you still have to face.'**
+  /// **'Marked below: sides who play like {rivals}, who you still have to face.'**
   String friendliesLikeYourCampaign(String rivals);
 
   /// Friendlies: why these opponents are suggested first, before anything is drawn.
   ///
   /// In en, this message translates to:
-  /// **'Suggested first: the sides closest to you in the world ranking. Once you are drawn, they are picked to resemble your group.'**
+  /// **'Marked below: the sides closest to you in the world ranking. Once you are drawn, the marks follow your group.'**
   String get friendliesCloseToYou;
 
   /// Transfer report: how many moves the window held.
@@ -11667,6 +12363,12 @@ abstract class AppLocalizations {
   /// **'{from}–{to} of {total}'**
   String transfersRange(int from, int to, int total);
 
+  /// Round-results popup: which page of a long matchday is shown.
+  ///
+  /// In en, this message translates to:
+  /// **'{page} / {pages}'**
+  String hubRoundPage(int page, int pages);
+
   /// Transfer report: previous page of moves.
   ///
   /// In en, this message translates to:
@@ -11678,6 +12380,264 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'More'**
   String get transfersOlder;
+
+  /// Transfer report: stands in for a side of the move whose club the report does not name.
+  ///
+  /// In en, this message translates to:
+  /// **'Unknown club'**
+  String get transfersUnknownClub;
+
+  /// Y post: againstThemAgain, variant 0.
+  ///
+  /// In en, this message translates to:
+  /// **'That is {count} times against {opponent} now. Somebody is keeping score, and it is them.'**
+  String yAgainstThemAgain0(String opponent, String count);
+
+  /// Y post: againstThemAgain, variant 1.
+  ///
+  /// In en, this message translates to:
+  /// **'{opponent} again. {count} meetings, and we still have not worked them out.'**
+  String yAgainstThemAgain1(String opponent, String count);
+
+  /// Y post: againstThemAgain, variant 2.
+  ///
+  /// In en, this message translates to:
+  /// **'Number {count} against {opponent}. This has stopped being a coincidence.'**
+  String yAgainstThemAgain2(String opponent, String count);
+
+  /// Y post: againstThemAgain, variant 3.
+  ///
+  /// In en, this message translates to:
+  /// **'We have played {opponent} {count} times and learned nothing from any of them.'**
+  String yAgainstThemAgain3(String opponent, String count);
+
+  /// Y post: againstThemAgain, variant 4.
+  ///
+  /// In en, this message translates to:
+  /// **'{opponent}, {count} times. They know exactly what we are going to do.'**
+  String yAgainstThemAgain4(String opponent, String count);
+
+  /// Y post: againstThemAgain, variant 5.
+  ///
+  /// In en, this message translates to:
+  /// **'Whatever {opponent} have on us, {count} meetings in, they still have it.'**
+  String yAgainstThemAgain5(String opponent, String count);
+
+  /// Y post: sameOldStory, variant 0.
+  ///
+  /// In en, this message translates to:
+  /// **'That is the {count}th time this has happened lately. At what point is it just what we are?'**
+  String ySameOldStory0(String count);
+
+  /// Y post: sameOldStory, variant 1.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} afternoons like this now. It is a pattern, not a run of luck.'**
+  String ySameOldStory1(String count);
+
+  /// Y post: sameOldStory, variant 2.
+  ///
+  /// In en, this message translates to:
+  /// **'We have seen this exact game {count} times recently. Same script, same ending.'**
+  String ySameOldStory2(String count);
+
+  /// Y post: sameOldStory, variant 3.
+  ///
+  /// In en, this message translates to:
+  /// **'The {count}th version of the same ninety minutes. Nobody is fixing it.'**
+  String ySameOldStory3(String count);
+
+  /// Y post: sameOldStory, variant 4.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} times. If you cannot see the pattern by now you are not looking.'**
+  String ySameOldStory4(String count);
+
+  /// Y post: sameOldStory, variant 5.
+  ///
+  /// In en, this message translates to:
+  /// **'Same story, {count} times over. The excuses have run out before the results did.'**
+  String ySameOldStory5(String count);
+
+  /// Y post: toldYouSo, variant 0.
+  ///
+  /// In en, this message translates to:
+  /// **'I said this was coming while everybody was busy celebrating.'**
+  String get yToldYouSo0;
+
+  /// Y post: toldYouSo, variant 1.
+  ///
+  /// In en, this message translates to:
+  /// **'Two good weeks and we were a golden generation again. And here we are.'**
+  String get yToldYouSo1;
+
+  /// Y post: toldYouSo, variant 2.
+  ///
+  /// In en, this message translates to:
+  /// **'The people telling me to enjoy it last month have gone quiet.'**
+  String get yToldYouSo2;
+
+  /// Y post: toldYouSo, variant 3.
+  ///
+  /// In en, this message translates to:
+  /// **'I take no pleasure in this. Very little pleasure. Some.'**
+  String get yToldYouSo3;
+
+  /// Y post: toldYouSo, variant 4.
+  ///
+  /// In en, this message translates to:
+  /// **'It was never as good as they told you, and this is the proof.'**
+  String get yToldYouSo4;
+
+  /// Y post: toldYouSo, variant 5.
+  ///
+  /// In en, this message translates to:
+  /// **'Every time. We are told it is different, and every time it is not.'**
+  String get yToldYouSo5;
+
+  /// Press conference line.
+  ///
+  /// In en, this message translates to:
+  /// **'Nobody expected this side to be where it is. Is it real, or is it a good few months?'**
+  String get pressAskAbove;
+
+  /// Press conference line.
+  ///
+  /// In en, this message translates to:
+  /// **'You are getting results against sides ranked well above you. How?'**
+  String get pressAskAbove2;
+
+  /// Press conference line.
+  ///
+  /// In en, this message translates to:
+  /// **'Every neutral has you overachieving. Does that description annoy you?'**
+  String get pressAskAbove3;
+
+  /// Press conference line.
+  ///
+  /// In en, this message translates to:
+  /// **'This squad is punching above its weight. What happens when it stops?'**
+  String get pressAskAbove4;
+
+  /// Press conference line.
+  ///
+  /// In en, this message translates to:
+  /// **'You keep beating teams you have no business beating. What have you found?'**
+  String get pressAskAbove5;
+
+  /// Press conference line.
+  ///
+  /// In en, this message translates to:
+  /// **'People are starting to take this seriously. Are you?'**
+  String get pressAskAbove6;
+
+  /// Press conference line.
+  ///
+  /// In en, this message translates to:
+  /// **'Is this side better than the ranking says, or are you catching people out?'**
+  String get pressAskAbove7;
+
+  /// Press conference line.
+  ///
+  /// In en, this message translates to:
+  /// **'How long can a group like this keep this up?'**
+  String get pressAskAbove8;
+
+  /// Press conference line.
+  ///
+  /// In en, this message translates to:
+  /// **'You are winning without convincing anybody. Does that worry you?'**
+  String get pressAskFlattered;
+
+  /// Press conference line.
+  ///
+  /// In en, this message translates to:
+  /// **'Another narrow one against a side you should be beating comfortably. Why is it so hard?'**
+  String get pressAskFlattered2;
+
+  /// Press conference line.
+  ///
+  /// In en, this message translates to:
+  /// **'Three points, and not much else. Is that enough for you?'**
+  String get pressAskFlattered3;
+
+  /// Press conference line.
+  ///
+  /// In en, this message translates to:
+  /// **'You got away with that. Would you agree?'**
+  String get pressAskFlattered4;
+
+  /// Press conference line.
+  ///
+  /// In en, this message translates to:
+  /// **'The results are there and the performances are not. Which one are you judging yourself on?'**
+  String get pressAskFlattered5;
+
+  /// Press conference line.
+  ///
+  /// In en, this message translates to:
+  /// **'Sides that ride their luck this often usually run out of it. Are you worried?'**
+  String get pressAskFlattered6;
+
+  /// Press conference line.
+  ///
+  /// In en, this message translates to:
+  /// **'That was hard work for what it was. What is missing?'**
+  String get pressAskFlattered7;
+
+  /// Press conference line.
+  ///
+  /// In en, this message translates to:
+  /// **'Do you care how you win, or only that you win?'**
+  String get pressAskFlattered8;
+
+  /// Press conference line.
+  ///
+  /// In en, this message translates to:
+  /// **'Bad results and a board that has stopped defending you. How bad is it?'**
+  String get pressAskCrisis;
+
+  /// Press conference line.
+  ///
+  /// In en, this message translates to:
+  /// **'Nobody upstairs will say your name. Do you still have their backing?'**
+  String get pressAskCrisis2;
+
+  /// Press conference line.
+  ///
+  /// In en, this message translates to:
+  /// **'The results are poor and the silence from above is loud. What now?'**
+  String get pressAskCrisis3;
+
+  /// Press conference line.
+  ///
+  /// In en, this message translates to:
+  /// **'This has gone past a bad run. Do you accept that?'**
+  String get pressAskCrisis4;
+
+  /// Press conference line.
+  ///
+  /// In en, this message translates to:
+  /// **'You are losing the room and the boardroom at the same time. Which worries you more?'**
+  String get pressAskCrisis5;
+
+  /// Press conference line.
+  ///
+  /// In en, this message translates to:
+  /// **'Is there a point at which you would walk?'**
+  String get pressAskCrisis6;
+
+  /// Press conference line.
+  ///
+  /// In en, this message translates to:
+  /// **'What do you say to people who think this has run its course?'**
+  String get pressAskCrisis7;
+
+  /// Press conference line.
+  ///
+  /// In en, this message translates to:
+  /// **'Give us one reason to believe this turns around.'**
+  String get pressAskCrisis8;
 }
 
 class _AppLocalizationsDelegate

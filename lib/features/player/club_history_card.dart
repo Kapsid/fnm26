@@ -4,6 +4,7 @@ import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/domain/services/club/club_history.dart';
+import 'package:fnm/domain/services/club/clubs.dart';
 import 'package:fnm/features/player/club_history_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
@@ -59,7 +60,7 @@ class ClubHistoryCard extends ConsumerWidget {
           child: Column(
             children: [
               // Newest first — where he is now, then how he got here.
-              for (final s in spells.reversed)
+              for (var i = spells.length - 1; i >= 0; i--)
                 Padding(
                   padding: const EdgeInsets.symmetric(
                     horizontal: AppSpacing.md,
@@ -72,22 +73,33 @@ class ClubHistoryCard extends ConsumerWidget {
                         child: Text(
                           spells.length == 1
                               // He is still there, so the span is open.
-                              ? '${s.fromYear}–'
-                              : s.fromYear == s.toYear
-                              ? '${s.fromYear}'
-                              : '${s.fromYear}–${s.toYear}',
+                              ? '${spells[i].fromYear}–'
+                              : spells[i].fromYear == spells[i].toYear
+                              ? '${spells[i].fromYear}'
+                              : '${spells[i].fromYear}–${spells[i].toYear}',
                           style: AppTypography.labelSmall.copyWith(
                             color: AppColors.onSurfaceVariant,
                           ),
                         ),
                       ),
-                      if (s.country.isNotEmpty) ...[
-                        FlagDisc(s.country, size: 18),
+                      // Which of these rows is a TRANSFER, and which way it
+                      // went. Every row but the first is a move, and the card
+                      // used to draw them all identically — so the season he
+                      // stepped up to a big league read exactly like the season
+                      // he dropped out of one. The arrow is the whole point of
+                      // keeping the history at all.
+                      _MoveMark(
+                        from: i == 0 ? null : spells[i - 1],
+                        to: spells[i],
+                      ),
+                      const SizedBox(width: AppSpacing.sm),
+                      if (spells[i].country.isNotEmpty) ...[
+                        FlagDisc(spells[i].country, size: 18),
                         const SizedBox(width: AppSpacing.sm),
                       ],
                       Expanded(
                         child: Text(
-                          s.club,
+                          spells[i].club,
                           style: AppTypography.bodyMedium,
                           overflow: TextOverflow.ellipsis,
                         ),
@@ -100,5 +112,40 @@ class ClubHistoryCard extends ConsumerWidget {
         ),
       ],
     );
+  }
+}
+
+/// The marker on one row of a club history: whether the player ARRIVED there by
+/// transfer, and whether that move was a step up, a step down or a sideways one.
+///
+/// [from] is the spell before this one — null for the club he started at, which
+/// is not a transfer and gets a quiet dot instead of an arrow.
+class _MoveMark extends StatelessWidget {
+  const _MoveMark({required this.from, required this.to});
+
+  final ClubSpell? from;
+  final ClubSpell to;
+
+  @override
+  Widget build(BuildContext context) {
+    final previous = from;
+    if (previous == null) {
+      return const Icon(
+        Icons.circle,
+        size: 8,
+        color: AppColors.outlineVariant,
+      );
+    }
+    // League strength runs 1 (elite) … 5 (lower), so a SMALLER number is the
+    // better league — a move to a lower number is a step up.
+    final step =
+        ClubService.tierOfCountry(previous.country) -
+        ClubService.tierOfCountry(to.country);
+    final (icon, color) = switch (step) {
+      > 0 => (Icons.arrow_upward_rounded, AppColors.positive),
+      < 0 => (Icons.arrow_downward_rounded, AppColors.warning),
+      _ => (Icons.swap_horiz_rounded, AppColors.onSurfaceVariant),
+    };
+    return Icon(icon, size: 14, color: color);
   }
 }

@@ -10,6 +10,7 @@ import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/services/entitlement/entitlement.dart';
+import 'package:fnm/domain/services/manager/staff.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/hub/hub_providers.dart';
 import 'package:fnm/features/tactics/tactics_providers.dart';
@@ -97,6 +98,24 @@ void main() {
       final fromIds = fromPool.take(23).map((p) => p.id).toSet();
       await squadRepo.setCallUps(career.id, fromIds);
 
+      // He also hires a staff room at that first job — they are the old
+      // federation's employees, and must not follow him to the next one.
+      final careerRepo = container.read(careerRepositoryProvider);
+      for (final role in StaffRole.values) {
+        final hire = StaffMarket.forRole(
+          saveSeed: career.rngSeed,
+          cycle: career.cyclePointer,
+          role: role,
+          namePool: const {'gb': ['A Name']},
+        ).first;
+        await careerRepo.setStaff(career.id, role, hire.id);
+      }
+      expect(
+        (await careerRepo.byId(career.id))!.staffAssistantId,
+        isNotNull,
+        reason: 'the assistant must actually be in the job before the move',
+      );
+
       // Play out the cycle so the next one can begin.
       final season = container.read(seasonServiceProvider);
       var last = DateTime(1900);
@@ -159,6 +178,15 @@ void main() {
         isEmpty,
         reason: 'the squad screen must show the new nation, not the old one',
       );
+
+      // The staff room is empty again: three posts to fill, at the new
+      // federation's expense, rather than three people he never hired there.
+      expect(moved.staffAssistantId, isNull);
+      expect(moved.staffScoutId, isNull);
+      expect(moved.staffFitnessCoachId, isNull);
+      expect(moved.staffAssistant, StaffTier.none);
+      expect(moved.staffScout, StaffTier.none);
+      expect(moved.staffFitnessCoach, StaffTier.none);
 
       // And the manager must be able to field a team.
       final tactic = await container.read(tacticDataProvider(career.id).future);

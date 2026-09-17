@@ -35,8 +35,14 @@ class TacticalChip extends StatelessWidget {
         borderRadius: AppRadii.smAll,
         border: Border.all(color: borderColor),
       ),
+      // A badge NEVER wraps. Squeezed into a narrow column, "RM" came out as
+      // an R with an M under it, which is not a position — it is two letters
+      // stacked. It gives way by overflowing its box, which is visible and
+      // fixable, rather than by silently turning into nonsense.
       child: Text(
         label.toUpperCase(),
+        maxLines: 1,
+        softWrap: false,
         style: AppTypography.labelSmall.copyWith(color: textColor),
       ),
     );

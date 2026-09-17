@@ -284,8 +284,11 @@ String _bestResult(CareerSummary? summary, int cycle) {
   if (summary == null) return 'a quiet cycle';
   final year = CareerService.worldCupYear(cycle);
   for (final r in summary.runs) {
-    if (r.competition == 'World Cup' && r.year == year) {
-      return 'the World Cup: ${r.placement}';
+    // The STORED name, which is what `summary.runs` carries. It used to be
+    // rewritten to a second English spelling on the way out of the summary
+    // provider, and this comparison was quietly keyed to that spelling.
+    if (r.competition == 'World Championship' && r.year == year) {
+      return 'the World Championship: ${r.placement}';
     }
   }
   return 'the cycle';

@@ -12,7 +12,19 @@ import 'package:fnm/domain/services/player/player_aging.dart';
 import 'package:fnm/domain/services/player/player_lifecycle.dart';
 
 /// A nation's authentic first-name / surname pools.
-typedef _NamePool = ({List<String> first, List<String> sur});
+typedef _NamePool = ({
+  List<String> first,
+  List<String> sur,
+
+  /// Surnames added to the pool AFTER saves existed.
+  ///
+  /// Kept apart from [sur] on purpose. A name is drawn by index into a
+  /// save-seeded shuffle of the whole first x surname cross product, so
+  /// growing that product renames every player of the nation in every save
+  /// that already exists. These are spliced into a handful of slots instead —
+  /// see `_namerFor`.
+  List<String> surLate,
+});
 
 /// The no-op namer (leaves a player untouched).
 Player _identity(Player p) => p;
@@ -234,6 +246,8 @@ class DriftPlayerRepository implements PlayerRepository {
           int.parse(e.key): (
             first: ((e.value! as Map)['first'] as List).cast<String>(),
             sur: ((e.value! as Map)['sur'] as List).cast<String>(),
+            surLate: (((e.value! as Map)['surLate'] as List?) ?? const [])
+                .cast<String>(),
           ),
       };
     } on Object {
@@ -241,6 +255,63 @@ class DriftPlayerRepository implements PlayerRepository {
     }
     return _namePools!;
   }
+
+  /// The save's shuffled name list, with each late-added surname spliced into
+  /// one low slot.
+  ///
+  /// Appending them would have been simpler and completely pointless: a
+  /// nation's cross product runs to a couple of thousand combinations and a
+  /// whole career consumes a few hundred, so anything added at the end is
+  /// never reached. A name nobody can ever be given is not in the game.
+  ///
+  /// So they are spliced instead, into slots inside the range a save actually
+  /// uses. The cost is honest and small: one existing player per added surname
+  /// is renamed, and everybody else keeps the name they had. Which slots is
+  /// save-seeded, so two saves of the same nation give the shirt to different
+  /// men.
+  static List<String> _combosFor(
+    _NamePool pool, {
+    required int nationId,
+    required int saveSeed,
+    required int stored,
+  }) {
+    final combos = SeededRng(saveSeed ^ (nationId * 0x9E3779B1) ^ 0x5F5E)
+        .shuffled([
+          for (final f in pool.first)
+            for (final s in pool.sur) '$f $s',
+        ]);
+    if (combos.isEmpty || pool.surLate.isEmpty || pool.first.isEmpty) {
+      return combos;
+    }
+    // Inside the range the nation's STORED rows actually occupy, so the name
+    // belongs to somebody who exists from the first day of the save rather
+    // than to a newgen thirty years out — or, if the span overshot the pool,
+    // to nobody at all. A fixed span did exactly that: it was written for the
+    // full 23 + 80 pool and silently lost two of the four names on any nation
+    // holding fewer rows than the number it guessed.
+    final reach = stored < _lateSlotSpan ? stored : _lateSlotSpan;
+    final span = combos.length < reach ? combos.length : reach;
+    if (span <= 0) return combos;
+    final rng = SeededRng(saveSeed ^ (nationId * 0x85EBCA6B) ^ 0x1A7E);
+    final taken = <int>{};
+    for (final surname in pool.surLate) {
+      if (taken.length >= span) break;
+      // Two late surnames must not land on the same player, or the second
+      // silently replaces the first and one of them is missing again.
+      var slot = rng.nextInt(span);
+      while (taken.contains(slot)) {
+        slot = (slot + 1) % span;
+      }
+      taken.add(slot);
+      combos[slot] = '${pool.first[rng.nextInt(pool.first.length)]} $surname';
+    }
+    return combos;
+  }
+
+  /// The furthest into the shuffle a late surname may be placed, before the
+  /// nation's own stored count trims it further. Keeps the name on a
+  /// first-team-adjacent player rather than the deepest reserve.
+  static const int _lateSlotSpan = 96;
 
   /// Builds a namer that assigns every player of [nationId] a unique name from
   /// the nation's pool. [seeded] gives the nation's stored rows (to rank the
@@ -257,14 +328,15 @@ class DriftPlayerRepository implements PlayerRepository {
       return _identity;
     }
     // A save-specific shuffle of every first+surname combination, so each save
-    // fields a distinct set drawn from the SAME pool.
-    final combos = _comboCache[(nationId, saveSeed)] ??=
-        SeededRng(
-          saveSeed ^ (nationId * 0x9E3779B1) ^ 0x5F5E,
-        ).shuffled([
-          for (final f in pool.first)
-            for (final s in pool.sur) '$f $s',
-        ]);
+    // fields a distinct set drawn from the SAME pool. Built once per (nation,
+    // save) — the splice below is part of building it, not something done to
+    // it on every read.
+    final combos = _comboCache[(nationId, saveSeed)] ??= _combosFor(
+      pool,
+      nationId: nationId,
+      saveSeed: saveSeed,
+      stored: seeded.length,
+    );
     if (combos.isEmpty) return _identity;
 
     // A stable, distinct index for every player: stored rows (base + fringe)

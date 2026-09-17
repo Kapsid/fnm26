@@ -771,6 +771,11 @@ const double _nodeWidthFraction = 0.150;
 /// points shaved off a proportional width means the clear air between two
 /// balls shrinks as the screen grows: the same layout that looked right on a
 /// phone drew balls almost touching on a tablet.
+///
+/// This is the CEILING, measured: the vertical insets are derived from the disc
+/// too, so a bigger ball also pulls the rows closer together, and the pitch's
+/// own clear-air test fails at 0.147. A "make the balls bigger" is therefore
+/// always a request for padding INSIDE them — see [_discInnerWidth].
 const double _discWidthFraction = 0.145;
 
 /// How close to the touchline a player's CENTRE may sit — half a node, so a
@@ -1072,20 +1077,27 @@ const double _badgeOverhang = 7;
 /// on one line, and every point of width buys a character; the height only has
 /// to clear the rating plus that one line. Trading a little of it for a wider
 /// box is what keeps a name off a second line.
-/// Widened again (0.84 → 0.87) at the cost of height (0.54 → 0.49), keeping
-/// the diagonal inside the circle: 0.87² + 0.49² = 0.997 < 1. The disc itself
-/// CANNOT grow — its size is measured right up against the closest two players
-/// ever stand and the pitch's widget test fails the moment they crowd — so the
-/// only room left to find for a long surname is inside the circle, and width
-/// is the axis that buys characters.
-const double _discInnerWidth = 0.87;
-const double _discInnerHeight = 0.49;
+/// Widened once (0.84 → 0.87) at the cost of height (0.54 → 0.49), and pulled
+/// back in again since. At 0.87 × 0.49 the interior's own corners sat at 0.499
+/// of the diameter — ON the rim — so a long surname ran into the edge of the
+/// ball with nothing around it and the type read as crammed. At 0.84 × 0.48
+/// the corners sit at 0.484 and the name has air on every side.
+///
+/// The ball itself could not be grown instead: [_discWidthFraction] is already
+/// at the size the clear-air rule allows, so padding has to be found in here.
+const double _discInnerWidth = 0.84;
+const double _discInnerHeight = 0.48;
 
-/// The size a name is drawn at when it fits — which, on a surname alone, is
-/// the great majority of them.
-const double _nameFontSize = 9.5;
-
-
+/// The size a name is asks to be drawn at, RELATIVE to the rating above it.
+///
+/// It is not the size that reaches the screen: the two of them share one
+/// [FittedBox], which scales the pair together into the interior. So what this
+/// number actually sets is how the circle is divided between the rating and
+/// the name — raise it and the name comes out larger and the rating smaller.
+/// At 9.5 against a rating of 0.32 of the disc, the number was half again the
+/// size of the name and the name was the half a manager cannot work out for
+/// himself.
+const double _nameFontSize = 11.5;
 
 /// What sits inside a player's disc: his position rating, his name, and — when
 /// he cannot play — the icon that says why.
@@ -1143,8 +1155,17 @@ class _DiscContents extends StatelessWidget {
                     // The number is the thing the manager reads across the
                     // pitch, so it takes as much of the circle as the name
                     // underneath can spare.
-                    fontSize: disc * 0.32,
-                    height: 1.05,
+                    // Was 0.32, which left the rating taking two thirds of the
+                    // interior and the name squeezed into what was left — and
+                    // the name is the half a manager cannot work out for
+                    // himself. Still comfortably the largest thing in the
+                    // circle, and the name is drawn a quarter larger for it.
+                    fontSize: disc * 0.30,
+                    // Tight leading on both this and the name: the interior is
+                    // half a dozen points tall and every point of it spent on
+                    // the space ABOVE a line is a point the type itself does
+                    // not get.
+                    height: 0.95,
                     color: textColor,
                     fontWeight: bold ? FontWeight.w800 : FontWeight.w700,
                   ),
@@ -1152,11 +1173,18 @@ class _DiscContents extends StatelessWidget {
               if (label != null)
                 WholeText(
                   label.toUpperCase(),
-                  maxLines: 2,
+                  // THREE lines, not two. A name too long for two was CLIPPED
+                  // — [Text] drops the lines past its limit, and no amount of
+                  // scaling down brings them back — so the very longest
+                  // surnames arrived on the pitch with their ends missing,
+                  // which is the one thing this widget exists to prevent. A
+                  // third line costs the short names nothing: a block is only
+                  // as tall as the lines it actually uses.
+                  maxLines: 3,
                   textAlign: TextAlign.center,
                   style: AppTypography.labelSmall.copyWith(
                     fontSize: _nameFontSize,
-                    height: 1.05,
+                    height: 0.95,
                     letterSpacing: 0,
                     fontWeight: FontWeight.w600,
                     color: textColor,

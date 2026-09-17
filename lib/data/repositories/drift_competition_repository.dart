@@ -545,6 +545,19 @@ class DriftCompetitionRepository implements CompetitionRepository {
   }
 
   @override
+  Future<Map<int, String>> groupNames(int careerId) async {
+    final comps = await (_db.select(
+      _db.competitions,
+    )..where((t) => t.careerId.equals(careerId))).get();
+    if (comps.isEmpty) return const {};
+    final ids = [for (final c in comps) c.id];
+    final groups = await (_db.select(
+      _db.qualifyingGroups,
+    )..where((t) => t.competitionId.isIn(ids))).get();
+    return {for (final g in groups) g.id: g.name};
+  }
+
+  @override
   Future<List<GroupTable>> allGroupTables(int careerId) async {
     final comp =
         await (_db.select(_db.competitions)

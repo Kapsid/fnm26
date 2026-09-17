@@ -515,6 +515,9 @@ class _PlayerRow extends StatelessWidget {
                         child: WholeText(
                           p.name,
                           maxLines: 1,
+                          // Squeezed for room, the forename goes first: a
+                          // surname is what names a footballer.
+                          shortText: initialledName(p.name),
                           style: AppTypography.bodyMedium.copyWith(
                             color: out ? AppColors.onSurfaceVariant : null,
                           ),

@@ -134,6 +134,35 @@ class _NewGameScreenState extends ConsumerState<NewGameScreen> {
                             ),
                           ),
                           const Spacer(),
+                          // What the manager is about to get for nothing, and
+                          // what the one payment is for. Said HERE, before the
+                          // save exists, rather than only at the wall four
+                          // years later: a player who finds out what is paid
+                          // for at the moment he is asked to pay reads it as a
+                          // trap, even when the free part was the whole game.
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Padding(
+                                padding: EdgeInsets.only(top: 1),
+                                child: Icon(
+                                  Icons.info_outline_rounded,
+                                  size: 13,
+                                  color: AppColors.onSurfaceVariant,
+                                ),
+                              ),
+                              const SizedBox(width: AppSpacing.xs),
+                              Expanded(
+                                child: Text(
+                                  l.careerFreeCycleNote,
+                                  style: AppTypography.labelSmall.copyWith(
+                                    color: AppColors.onSurfaceVariant,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: AppSpacing.md),
                           PrimaryButton(
                             label: l.careerStartCareer,
                             icon: Icons.play_arrow_rounded,

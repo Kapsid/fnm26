@@ -166,7 +166,7 @@ nationVitrineProvider = FutureProvider.autoDispose
           titles.add(
             TitleWon(
               year: h.year,
-              competition: isWc ? 'World Cup' : h.competition,
+              competition: h.competition,
               wasHost: h.hostId == arg.nationId,
             ),
           );

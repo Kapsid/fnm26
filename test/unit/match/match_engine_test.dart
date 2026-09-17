@@ -557,6 +557,111 @@ void main() {
         reason: 'the taker takes the overwhelming majority',
       );
     });
+
+    test('a taker named mid-match takes them from that minute on', () {
+      // The manager can change his mind at 60 minutes, and the change must be
+      // scoped to the REST of the match: the penalty already taken (and
+      // already watched, on a screen that re-simulates from minute one every
+      // time anything is touched) stays taken by whoever took it.
+      final base = team(1, 80);
+      final first = base.xi.firstWhere(
+        (p) => p.position.category == PositionCategory.defender,
+      );
+      final second = base.xi.lastWhere(
+        (p) => p.position.category == PositionCategory.defender && p != first,
+      );
+      var beforeByFirst = 0, beforeBySecond = 0;
+      var afterByFirst = 0, afterBySecond = 0;
+      for (var seed = 0; seed < 400; seed++) {
+        final r = engine.play(
+          home: MatchTeam(
+            nationId: 1,
+            xi: base.xi,
+            instructions: const TacticalInstructions(),
+            penaltyTakerId: first.id,
+          ),
+          away: team(2, 78),
+          rng: SeededRng.forFixture(seed, 3),
+          changes: [
+            TacticalChange(
+              teamNationId: 1,
+              minute: 60,
+              formation: Formation.f433,
+              instructions: const TacticalInstructions(),
+              xi: base.xi,
+              takers: (penalty: second.id, deadBall: null),
+            ),
+          ],
+        );
+        for (final g in r.events.where(
+          (e) =>
+              e.type == MatchEventType.goal && e.penalty && e.teamNationId == 1,
+        )) {
+          if (g.minute < 60) {
+            if (g.playerId == first.id) beforeByFirst++;
+            if (g.playerId == second.id) beforeBySecond++;
+          } else {
+            if (g.playerId == first.id) afterByFirst++;
+            if (g.playerId == second.id) afterBySecond++;
+          }
+        }
+      }
+      expect(beforeByFirst, greaterThan(0));
+      expect(afterBySecond, greaterThan(0));
+      expect(
+        beforeByFirst,
+        greaterThan(beforeBySecond * 5),
+        reason: 'the first hour still belongs to the original taker',
+      );
+      expect(
+        afterBySecond,
+        greaterThan(afterByFirst * 5),
+        reason: 'the new taker takes them from the change on',
+      );
+    });
+
+    test('a change that names no takers leaves the pair alone', () {
+      // Every substitution is a TacticalChange, and a sub must not quietly
+      // hand the penalties back to the engine's own pick.
+      final base = team(1, 80);
+      final taker = base.xi.firstWhere(
+        (p) => p.position.category == PositionCategory.defender,
+      );
+      MatchResult play({required bool withChange}) => engine.play(
+        home: MatchTeam(
+          nationId: 1,
+          xi: base.xi,
+          instructions: const TacticalInstructions(),
+          penaltyTakerId: taker.id,
+        ),
+        away: team(2, 78),
+        rng: SeededRng.forFixture(11, 3),
+        changes: withChange
+            ? [
+                TacticalChange(
+                  teamNationId: 1,
+                  minute: 60,
+                  formation: Formation.f433,
+                  instructions: const TacticalInstructions(),
+                  xi: base.xi,
+                ),
+              ]
+            : const [],
+      );
+      int penaltiesByTaker(MatchResult r) => r.events
+          .where(
+            (e) =>
+                e.type == MatchEventType.goal &&
+                e.penalty &&
+                e.teamNationId == 1 &&
+                e.playerId == taker.id,
+          )
+          .length;
+      expect(
+        penaltiesByTaker(play(withChange: true)),
+        penaltiesByTaker(play(withChange: false)),
+      );
+    });
   });
 
   group('player roles', () {
@@ -930,14 +1035,27 @@ void main() {
         78,
         instructions: const TacticalInstructions(width: 90),
       );
-      // The width edge is the smallest of the tactical swings — about two parts
-      // in a thousand — so it needs far more samples than the default to rise
-      // clear of match-to-match noise. At 800 runs the ordering flips on any
-      // change that merely shifts the RNG stream.
-      expect(
-        homeXg(wide, narrowDef, runs: 3000),
-        greaterThan(homeXg(wide, wideDef, runs: 3000)),
+      final narrowAttack = team(
+        1,
+        78,
+        instructions: const TacticalInstructions(width: 10),
       );
+      // Measured as a DIFFERENCE of differences, because a narrow defence is
+      // also a more solid one: `_defenceRating` rewards a tight shape by very
+      // nearly as much as the width match-up rewards attacking into it, so
+      // comparing the two fixtures head-on measured a swing of about one part
+      // in a thousand — noise, and it flipped on any change that merely moved
+      // the RNG stream. Asking instead how much MORE a wide plan is worth than
+      // a narrow one against each defence cancels the solidity out and leaves
+      // the match-up itself, which is what this is about.
+      const runs = 1500;
+      final wideGainVsNarrow =
+          homeXg(wide, narrowDef, runs: runs) -
+          homeXg(narrowAttack, narrowDef, runs: runs);
+      final wideGainVsWide =
+          homeXg(wide, wideDef, runs: runs) -
+          homeXg(narrowAttack, wideDef, runs: runs);
+      expect(wideGainVsNarrow, greaterThan(wideGainVsWide));
     });
 
     test('the match-up keeps the game deterministic', () {

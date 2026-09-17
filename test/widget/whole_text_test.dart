@@ -18,6 +18,37 @@ void main() {
         ),
       );
 
+  testWidgets('a short name is ranged left, like any other text', (
+    tester,
+  ) async {
+    // It used to centre anything that did not ask for an alignment, so a short
+    // name floated into the middle of its column while the flag and the icon
+    // beside it stayed put. The row read as broken, and only ever for the
+    // SHORT names — which is what made it look random.
+    await tester.pumpApp(
+      Scaffold(
+        body: Row(
+          children: [
+            const SizedBox(width: 20, height: 20),
+            SizedBox(
+              width: 200,
+              child: WholeText('Vlk', key: const ValueKey('name')),
+            ),
+          ],
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    final box = tester.getRect(find.byKey(const ValueKey('name')));
+    final text = tester.getRect(find.text('Vlk'));
+    expect(
+      text.left - box.left,
+      lessThan(1),
+      reason: 'the name sits against the leading edge of its box',
+    );
+  });
+
   testWidgets('a sixteen-letter surname arrives whole in a narrow box', (
     tester,
   ) async {
@@ -69,6 +100,80 @@ void main() {
       isTrue,
       reason: 'it should have been given somewhere to break',
     );
+  });
+
+  testWidgets('a two-word name never loses its surname on one line', (
+    tester,
+  ) async {
+    await tester.pumpApp(
+      const Scaffold(
+        body: Center(
+          child: SizedBox(
+            width: 50,
+            child: WholeText('Xenon John', maxLines: 1),
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    // It used to wrap onto a second line that maxLines then threw away, so the
+    // squad list showed "Xenon" and swallowed the man's surname.
+    final rendered = tester
+        .widgetList<Text>(find.byType(Text))
+        .map((t) => t.data ?? '')
+        .join();
+    expect(rendered, contains('John'));
+  });
+
+  testWidgets('offered a shorter form, a name too long is initialled', (
+    tester,
+  ) async {
+    await tester.pumpApp(
+      Scaffold(
+        body: Center(
+          child: SizedBox(
+            width: 40,
+            child: WholeText(
+              'Xenon John',
+              maxLines: 1,
+              shortText: initialledName('Xenon John'),
+            ),
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('X. John'), findsOneWidget);
+  });
+
+  testWidgets('a name with room to spare is never initialled', (tester) async {
+    await tester.pumpApp(
+      Scaffold(
+        body: Center(
+          child: SizedBox(
+            width: 400,
+            child: WholeText(
+              'Xenon John',
+              maxLines: 1,
+              shortText: initialledName('Xenon John'),
+            ),
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('Xenon John'), findsOneWidget);
+  });
+
+  test('the forename gives way first, and only the forename', () {
+    expect(initialledName('Xenon John'), 'X. John');
+    expect(initialledName('Jan van der Berg'), 'J. van der Berg');
+    // One word is already as short as it goes, and an initial stays one.
+    expect(initialledName('Ronaldo'), 'Ronaldo');
+    expect(initialledName('J. Berg'), 'J. Berg');
   });
 
   test('break opportunities go between letters, not between words', () {

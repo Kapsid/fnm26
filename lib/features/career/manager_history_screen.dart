@@ -4,6 +4,7 @@ import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
+import 'package:fnm/core/util/competition_label.dart';
 import 'package:fnm/domain/services/competition/trophies.dart';
 import 'package:fnm/features/career/manager_history_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
@@ -102,7 +103,9 @@ class _OverallCard extends StatelessWidget {
               Expanded(
                 child: _Stat(label: l.careerStatPlayed, value: '${h.played}'),
               ),
-              Expanded(child: _Stat(label: l.careerStatWon, value: '${h.won}')),
+              Expanded(
+                child: _Stat(label: l.careerStatWon, value: '${h.won}'),
+              ),
               Expanded(
                 child: _Stat(label: l.careerStatDrawn, value: '${h.drawn}'),
               ),
@@ -238,7 +241,11 @@ class _TrophyCabinet extends StatelessWidget {
         for (final t in Trophies.cabinet)
           _TrophySlot(
             asset: t.asset,
-            label: t.label,
+            // The cabinet holds the competitions' canonical stored names, so
+            // they go through the same translator every other competition
+            // name does. Printed raw, this was the one shelf in the game
+            // still labelled in English.
+            label: competitionLabel(AppLocalizations.of(context), t.label),
             count: counts[t.key] ?? 0,
           ),
       ],
@@ -486,6 +493,9 @@ class _Stat extends StatelessWidget {
         WholeText(
           value,
           maxLines: 1,
+          // A stat tile, so it is centred under its own heading rather than
+          // ranged left like a list row.
+          textAlign: TextAlign.center,
           style: AppTypography.titleMedium.copyWith(
             color: highlight ? AppColors.primary : AppColors.onSurface,
           ),
@@ -495,6 +505,7 @@ class _Stat extends StatelessWidget {
         WholeText(
           label.toUpperCase(),
           maxLines: 1,
+          textAlign: TextAlign.center,
           style: AppTypography.labelSmall.copyWith(
             color: AppColors.onSurfaceVariant,
           ),

@@ -29,6 +29,7 @@ import 'package:fnm/features/match/penalty_order_sheet.dart';
 import 'package:fnm/features/match/match_providers.dart';
 import 'package:fnm/features/settings/settings_providers.dart';
 import 'package:fnm/features/tactics/in_match_tactics.dart';
+import 'package:fnm/features/tactics/set_piece_takers_providers.dart';
 import 'package:fnm/features/tactics/tactics_pitch.dart' show energyColor;
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
@@ -150,6 +151,12 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
   /// paused-and-resumed clock never re-notifies the same one.
   final Set<int> _injuredIds = {};
   final Set<int> _injuriesPrompted = {};
+
+  /// The set-piece takers as they stand RIGHT NOW, seeded from the team sheet
+  /// and changeable from the in-match editor. Held here rather than read back
+  /// off the provider each time so a change takes effect on the very next
+  /// re-sim rather than a frame later.
+  ({int? penalty, int? deadBall})? _takers;
 
   /// The latest loaded preview, stashed so timer callbacks (e.g. an injury
   /// opening the squad) can reach it without a build context.
@@ -976,6 +983,10 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
       pool: _playerPool(preview),
       startingIds: team.xi.map((p) => p.id).toSet(),
       maxSubs: kMaxSubs,
+      takers: _takers ??= (
+        penalty: team.penaltyTakerId,
+        deadBall: team.deadBallTakerId,
+      ),
       injuredIds: _injuredIds,
       sentOffIds: _sentOffIds(),
       energyByPlayer: energyNow,
@@ -988,7 +999,7 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
             : KitColors.discFill(n.primaryColor, n.secondaryColor);
       }(),
     );
-    if (result != null && mounted) _applyTactics(preview, result);
+    if (result != null && mounted) await _applyTactics(preview, result);
     if (wasPlaying && _minute < 90 && !_playing) _togglePlay();
   }
 
@@ -1021,7 +1032,10 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
     atmosphere: Attendance.atmosphere(preview.ground),
   );
 
-  void _applyTactics(MatchPreview preview, InMatchTacticsResult r) {
+  Future<void> _applyTactics(
+    MatchPreview preview,
+    InMatchTacticsResult r,
+  ) async {
     final byId = {for (final p in _playerPool(preview)) p.id: p};
     final xi = r.lineup
         .whereType<int>()
@@ -1038,10 +1052,12 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
     // engine only applies changes on minutes 1–90 in normal time, so a sub made
     // during stoppage updates the lineups display without rewriting the match.
     final minute = _minute + 1;
+    final takersChanged = r.takers != _takers;
     setState(() {
       _liveFormation = r.formation;
       _liveLineup = r.lineup;
       _liveInstructions = r.instructions;
+      _takers = r.takers;
       // Any hurt player taken off is no longer flagged as an unaddressed injury.
       _injuredIds.removeWhere((id) => !r.lineup.contains(id));
       _changes.add(
@@ -1051,10 +1067,29 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
           formation: r.formation,
           instructions: r.instructions,
           xi: xi,
+          // From this minute on, never retroactively: the penalty already
+          // taken stays taken by whoever took it.
+          takers: takersChanged ? r.takers : null,
         ),
       );
       _result = _resim(preview);
     });
+    // The choice outlives the match: a taker named at 70 minutes is the taker
+    // the next team sheet opens with, exactly as if it had been set before
+    // kick-off. Fire and forget; nothing on this screen reads it back.
+    if (takersChanged) {
+      final store = ref.read(setPieceTakersStoreProvider);
+      await store.set(
+        widget.careerId,
+        penalty: true,
+        playerId: r.takers.penalty,
+      );
+      await store.set(
+        widget.careerId,
+        penalty: false,
+        playerId: r.takers.deadBall,
+      );
+    }
   }
 
   /// Applies the manager's interval team talk: it lifts (or steadies) the side
@@ -1083,351 +1118,358 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
     final l = AppLocalizations.of(context);
     final previewAsync = ref.watch(matchPreviewProvider(widget.careerId));
 
-    return Scaffold(
-      body: previewAsync.when(
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => Center(child: Text(l.matchCouldNotLoad('$e'))),
-        data: (preview) {
-          if (preview == null) {
-            return Center(child: Text(l.matchNoUpcoming));
-          }
-          _result ??= preview.result;
-          _livePreview = preview;
-          _ensureLiveSetup(preview);
-          final r = _result!;
-          _stoppage = r.stoppage;
-          _ensureKnockoutSetup(preview, r);
-          if (!_started) {
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              if (mounted && !_started) _begin();
-            });
-          }
-
-          final homeId = preview.homeTeam.nationId;
-          final awayId = preview.awayTeam.nationId;
-          String code(int id) => preview.nations[id]?.code ?? '??';
-          String name(int id) => preview.nations[id]?.name ?? 'Unknown';
-
-          final shown = r.events.where(_reached).toList();
-          // The event feed also shows extra-time goals (kept OUT of `shown` so
-          // the score isn't double-counted — it adds ET via _etGoals below).
-          final timelineEvents =
-              [
-                ...shown,
-                ..._etEvents.where(_reached),
-              ]..sort((a, b) {
-                final byMin = a.minute.compareTo(b.minute);
-                return byMin != 0 ? byMin : a.stoppage.compareTo(b.stoppage);
+    return PopScope(
+      // A match in progress cannot be backed out of: leaving early would drop
+      // the result on the floor. Full time's Continue is the only exit.
+      canPop: false,
+      child: Scaffold(
+        body: previewAsync.when(
+          loading: () => const Center(child: CircularProgressIndicator()),
+          error: (e, _) => Center(child: Text(l.matchCouldNotLoad('$e'))),
+          data: (preview) {
+            if (preview == null) {
+              return Center(child: Text(l.matchNoUpcoming));
+            }
+            _result ??= preview.result;
+            _livePreview = preview;
+            _ensureLiveSetup(preview);
+            final r = _result!;
+            _stoppage = r.stoppage;
+            _ensureKnockoutSetup(preview, r);
+            if (!_started) {
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                if (mounted && !_started) _begin();
               });
-          final ft = _fullTime;
-          final inExtraTime = _minute > 90 && _minute < _fullTimeMinute;
-          final inStoppage = _minute == 90 && _added > 0 && !ft;
-          // While playing, the score is the running tally of shown goal events.
-          // In extra time it adds the synthesised ET goals up to the minute; at
-          // full time it is the true recorded result (a level knockout settled
-          // by a shootout), so the screen never disagrees with what gets saved.
-          final (finalHome, finalAway) = _finalScore(preview, r);
-          final liveHome = shown
-              .where((e) => e.type == MatchEventType.goal)
-              .where((e) => e.teamNationId == homeId)
-              .length;
-          final liveAway =
-              shown.where((e) => e.type == MatchEventType.goal).length -
-              liveHome;
-          // Extra-time score: the 90' tally plus revealed ET goals.
-          final etHome = _etGoals
-              .where((g) => g.$1 <= _minute && g.$2 == homeId)
-              .length;
-          final etAway = _etGoals
-              .where((g) => g.$1 <= _minute && g.$2 == awayId)
-              .length;
-          final int homeScore;
-          final int awayScore;
-          if (ft) {
-            homeScore = finalHome;
-            awayScore = finalAway;
-          } else if (_koOutcome != null && _minute > 90) {
-            homeScore = liveHome + etHome;
-            awayScore = liveAway + etAway;
-          } else {
-            homeScore = liveHome;
-            awayScore = liveAway;
-          }
-          final knockout = _koOutcome;
-          // Reveal the shootout as it plays out (or in full once decided).
-          final showingShootout = _isShootout && _minute >= _fullTimeMinute;
-          final decidedByShootout = ft && (knockout?.wentToShootout ?? false);
+            }
 
-          return DefaultTabController(
-            length: 3,
-            // Jump to the Stats tab (player ratings, MOTM) at full time; the
-            // key recreates the controller so the switch takes effect.
-            initialIndex: ft ? 1 : 0,
-            key: ValueKey(ft),
-            child: SafeArea(
-              child: Stack(
-                children: [
-                  Column(
-                    children: [
-                      _TopBar(
-                        onClose: () => context.go(
-                          '${Routes.hub}?careerId=${widget.careerId}',
-                        ),
-                      ),
-                      _Header(
-                        homeCode: code(homeId),
-                        awayCode: code(awayId),
-                        homeName: name(homeId),
-                        awayName: name(awayId),
-                        // The manager's own side is rated off the XI actually
-                        // on the pitch, so the number moves with his changes;
-                        // the opponent's off the team they named.
-                        homeOverall: squadOverall(
-                          preview.playerIsHome
-                              ? _currentXi(preview)
-                              : preview.homeTeam.xi,
-                        ),
-                        awayOverall: squadOverall(
-                          preview.playerIsHome
-                              ? preview.awayTeam.xi
-                              : _currentXi(preview),
-                        ),
-                        homeScore: homeScore,
-                        awayScore: awayScore,
-                        clock: ft
-                            ? (decidedByShootout
-                                  ? 'FULL TIME · PENALTIES'
-                                  : knockout != null
-                                  ? 'AFTER EXTRA TIME'
-                                  : 'FULL TIME')
-                            : showingShootout
-                            ? 'PENALTIES'
-                            : inExtraTime
-                            // No trailing apostrophe: it adds right-side
-                            // width that pushes the digits left of the
-                            // plate's centre. The bare number reads as the
-                            // minute and sits dead-centre.
-                            ? 'ET $_minute'
-                            : inStoppage
-                            ? '90+$_added'
-                            : '$_minute',
-                        live: !ft,
-                      ),
-                      if (!ft && !showingShootout)
-                        () {
-                          // The two nations' own colours, pushed apart from
-                          // each other when the kits are too alike to tell
-                          // which end of the bar is whose.
-                          final (homeC, awayC) = KitColors.opposed(
-                            (
-                              preview.nations[homeId]?.primaryColor ?? '',
-                              preview.nations[homeId]?.secondaryColor ?? '',
-                            ),
-                            (
-                              preview.nations[awayId]?.primaryColor ?? '',
-                              preview.nations[awayId]?.secondaryColor ?? '',
-                            ),
-                          );
-                          return _MomentumBar(
-                            homePercent: _homeMomentum(preview, homeId),
-                            homeCode: code(homeId),
-                            awayCode: code(awayId),
-                            homeColor: homeC,
-                            awayColor: awayC,
-                          );
-                        }(),
-                      if (showingShootout || decidedByShootout)
-                        _ShootoutStrip(
-                          outcome: knockout!,
+            final homeId = preview.homeTeam.nationId;
+            final awayId = preview.awayTeam.nationId;
+            String code(int id) => preview.nations[id]?.code ?? '??';
+            String name(int id) => preview.nations[id]?.name ?? 'Unknown';
+
+            final shown = r.events.where(_reached).toList();
+            // The event feed also shows extra-time goals (kept OUT of `shown` so
+            // the score isn't double-counted — it adds ET via _etGoals below).
+            final timelineEvents =
+                [
+                  ...shown,
+                  ..._etEvents.where(_reached),
+                ]..sort((a, b) {
+                  final byMin = a.minute.compareTo(b.minute);
+                  return byMin != 0 ? byMin : a.stoppage.compareTo(b.stoppage);
+                });
+            final ft = _fullTime;
+            final inExtraTime = _minute > 90 && _minute < _fullTimeMinute;
+            final inStoppage = _minute == 90 && _added > 0 && !ft;
+            // While playing, the score is the running tally of shown goal events.
+            // In extra time it adds the synthesised ET goals up to the minute; at
+            // full time it is the true recorded result (a level knockout settled
+            // by a shootout), so the screen never disagrees with what gets saved.
+            final (finalHome, finalAway) = _finalScore(preview, r);
+            final liveHome = shown
+                .where((e) => e.type == MatchEventType.goal)
+                .where((e) => e.teamNationId == homeId)
+                .length;
+            final liveAway =
+                shown.where((e) => e.type == MatchEventType.goal).length -
+                liveHome;
+            // Extra-time score: the 90' tally plus revealed ET goals.
+            final etHome = _etGoals
+                .where((g) => g.$1 <= _minute && g.$2 == homeId)
+                .length;
+            final etAway = _etGoals
+                .where((g) => g.$1 <= _minute && g.$2 == awayId)
+                .length;
+            final int homeScore;
+            final int awayScore;
+            if (ft) {
+              homeScore = finalHome;
+              awayScore = finalAway;
+            } else if (_koOutcome != null && _minute > 90) {
+              homeScore = liveHome + etHome;
+              awayScore = liveAway + etAway;
+            } else {
+              homeScore = liveHome;
+              awayScore = liveAway;
+            }
+            final knockout = _koOutcome;
+            // Reveal the shootout as it plays out (or in full once decided).
+            final showingShootout = _isShootout && _minute >= _fullTimeMinute;
+            final decidedByShootout = ft && (knockout?.wentToShootout ?? false);
+
+            return DefaultTabController(
+              length: 3,
+              // Jump to the Stats tab (player ratings, MOTM) at full time; the
+              // key recreates the controller so the switch takes effect.
+              initialIndex: ft ? 1 : 0,
+              key: ValueKey(ft),
+              child: SafeArea(
+                child: Stack(
+                  children: [
+                    Column(
+                      children: [
+                        const _TopBar(),
+                        _Header(
                           homeCode: code(homeId),
                           awayCode: code(awayId),
-                          revealed: showingShootout ? _penRevealed : _penTotal,
-                          homeTakers: preview.playerIsHome
-                              ? _takerNames(preview)
-                              : const [],
-                          awayTakers: preview.playerIsHome
-                              ? const []
-                              : _takerNames(preview),
+                          homeName: name(homeId),
+                          awayName: name(awayId),
+                          // The manager's own side is rated off the XI actually
+                          // on the pitch, so the number moves with his changes;
+                          // the opponent's off the team they named.
+                          homeOverall: squadOverall(
+                            preview.playerIsHome
+                                ? _currentXi(preview)
+                                : preview.homeTeam.xi,
+                          ),
+                          awayOverall: squadOverall(
+                            preview.playerIsHome
+                                ? preview.awayTeam.xi
+                                : _currentXi(preview),
+                          ),
+                          homeScore: homeScore,
+                          awayScore: awayScore,
+                          clock: ft
+                              ? (decidedByShootout
+                                    ? 'FULL TIME · PENALTIES'
+                                    : knockout != null
+                                    ? 'AFTER EXTRA TIME'
+                                    : 'FULL TIME')
+                              : showingShootout
+                              ? 'PENALTIES'
+                              : inExtraTime
+                              // No trailing apostrophe: it adds right-side
+                              // width that pushes the digits left of the
+                              // plate's centre. The bare number reads as the
+                              // minute and sits dead-centre.
+                              ? 'ET $_minute'
+                              : inStoppage
+                              ? '90+$_added'
+                              : '$_minute',
+                          live: !ft,
                         ),
-                      const TabBar(
-                        labelColor: AppColors.onSurface,
-                        unselectedLabelColor: AppColors.onSurfaceVariant,
-                        indicatorColor: AppColors.primary,
-                        tabs: [
-                          Tab(text: 'TIMELINE'),
-                          Tab(text: 'STATS'),
-                          Tab(text: 'LINEUPS'),
-                        ],
-                      ),
-                      Expanded(
-                        child: TabBarView(
-                          children: [
-                            _Timeline(
-                              events: timelineEvents,
-                              live: !ft,
-                              homeId: homeId,
-                            ),
-                            if (ft)
-                              _Stats(
-                                result: r,
-                                homeCode: code(homeId),
-                                awayCode: code(awayId),
-                                homeNationId: homeId,
-                                ground: preview.ground,
-                                neutral: preview.neutralVenue,
-                                groundCode: code(
-                                  preview.ground.groundNationId,
-                                ),
-                              )
-                            else
-                              const _StatsLocked(),
-                            _Lineups(
-                              home: preview.playerIsHome
-                                  ? _currentXi(preview)
-                                  : preview.homeTeam.xi,
-                              away: preview.playerIsHome
-                                  ? preview.awayTeam.xi
-                                  : _currentXi(preview),
+                        if (!ft && !showingShootout)
+                          () {
+                            // The two nations' own colours, pushed apart from
+                            // each other when the kits are too alike to tell
+                            // which end of the bar is whose.
+                            final (homeC, awayC) = KitColors.opposed(
+                              (
+                                preview.nations[homeId]?.primaryColor ?? '',
+                                preview.nations[homeId]?.secondaryColor ?? '',
+                              ),
+                              (
+                                preview.nations[awayId]?.primaryColor ?? '',
+                                preview.nations[awayId]?.secondaryColor ?? '',
+                              ),
+                            );
+                            return _MomentumBar(
+                              homePercent: _homeMomentum(preview, homeId),
                               homeCode: code(homeId),
                               awayCode: code(awayId),
-                              homeSubs: shown
-                                  .where(
-                                    (e) =>
-                                        e.type == MatchEventType.substitution &&
-                                        e.teamNationId == homeId,
-                                  )
-                                  .toList(),
-                              awaySubs: shown
-                                  .where(
-                                    (e) =>
-                                        e.type == MatchEventType.substitution &&
-                                        e.teamNationId == awayId,
-                                  )
-                                  .toList(),
-                              homeBench: preview.playerIsHome
-                                  ? preview.bench
-                                  : preview.opponentBench,
-                              awayBench: preview.playerIsHome
-                                  ? preview.opponentBench
-                                  : preview.bench,
-                              ratings: ft
-                                  ? {
-                                      for (final x in r.ratings)
-                                        x.playerId: x.rating,
-                                    }
-                                  : const {},
-                              energy: _liveEnergy(r),
-                            ),
+                              homeColor: homeC,
+                              awayColor: awayC,
+                            );
+                          }(),
+                        if (showingShootout || decidedByShootout)
+                          _ShootoutStrip(
+                            outcome: knockout!,
+                            homeCode: code(homeId),
+                            awayCode: code(awayId),
+                            revealed: showingShootout
+                                ? _penRevealed
+                                : _penTotal,
+                            homeTakers: preview.playerIsHome
+                                ? _takerNames(preview)
+                                : const [],
+                            awayTakers: preview.playerIsHome
+                                ? const []
+                                : _takerNames(preview),
+                          ),
+                        const TabBar(
+                          labelColor: AppColors.onSurface,
+                          unselectedLabelColor: AppColors.onSurfaceVariant,
+                          indicatorColor: AppColors.primary,
+                          tabs: [
+                            Tab(text: 'TIMELINE'),
+                            Tab(text: 'STATS'),
+                            Tab(text: 'LINEUPS'),
                           ],
                         ),
-                      ),
-                    ],
-                  ),
-                  if (_goalFlash != null)
-                    _GoalFlash(
-                      event: _goalFlash!,
-                      flagCode: code(_goalFlash!.teamNationId),
+                        Expanded(
+                          child: TabBarView(
+                            children: [
+                              _Timeline(
+                                events: timelineEvents,
+                                live: !ft,
+                                homeId: homeId,
+                              ),
+                              if (ft)
+                                _Stats(
+                                  result: r,
+                                  homeCode: code(homeId),
+                                  awayCode: code(awayId),
+                                  homeNationId: homeId,
+                                  ground: preview.ground,
+                                  neutral: preview.neutralVenue,
+                                  groundCode: code(
+                                    preview.ground.groundNationId,
+                                  ),
+                                )
+                              else
+                                const _StatsLocked(),
+                              _Lineups(
+                                home: preview.playerIsHome
+                                    ? _currentXi(preview)
+                                    : preview.homeTeam.xi,
+                                away: preview.playerIsHome
+                                    ? preview.awayTeam.xi
+                                    : _currentXi(preview),
+                                homeCode: code(homeId),
+                                awayCode: code(awayId),
+                                homeSubs: shown
+                                    .where(
+                                      (e) =>
+                                          e.type ==
+                                              MatchEventType.substitution &&
+                                          e.teamNationId == homeId,
+                                    )
+                                    .toList(),
+                                awaySubs: shown
+                                    .where(
+                                      (e) =>
+                                          e.type ==
+                                              MatchEventType.substitution &&
+                                          e.teamNationId == awayId,
+                                    )
+                                    .toList(),
+                                homeBench: preview.playerIsHome
+                                    ? preview.bench
+                                    : preview.opponentBench,
+                                awayBench: preview.playerIsHome
+                                    ? preview.opponentBench
+                                    : preview.bench,
+                                ratings: ft
+                                    ? {
+                                        for (final x in r.ratings)
+                                          x.playerId: x.rating,
+                                      }
+                                    : const {},
+                                energy: _liveEnergy(r),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
                     ),
-                  // Half-time interval — play only resumes on Continue (the
-                  // manager may reshape the side first).
-                  if (_atHalfTime)
-                    _HalfTimePrompt(
-                      heading: l.matchHalfTime,
-                      homeCode: code(homeId),
-                      awayCode: code(awayId),
-                      homeScore: homeScore,
-                      awayScore: awayScore,
-                      playerIsHome: preview.playerIsHome,
-                      possession: preview.playerIsHome
-                          ? r.homePossession
-                          : 100 - r.homePossession,
-                      subsUsed: _subsUsed(preview),
-                      selectedTalk: _halfTimeTalk,
-                      options: offeredTalkTones(
-                        preview.saveSeed,
-                        preview.fixture.id,
+                    if (_goalFlash != null)
+                      _GoalFlash(
+                        event: _goalFlash!,
+                        flagCode: code(_goalFlash!.teamNationId),
                       ),
-                      onTalk: (tone) => _applyTeamTalk(preview, tone),
-                      onTactics: () => _openTactics(preview),
-                      onContinue: _resumeFromHalfTime,
-                    ),
-                  // The two extra-time intervals of a level knockout: the
-                  // huddle before the first period, and the turnaround at 105'.
-                  if (_atExtraTimeStart || _atExtraTimeHalf)
-                    _HalfTimePrompt(
-                      heading: _atExtraTimeStart
-                          ? l.matchExtraTimeAhead
-                          : l.matchExtraTimeHalf,
-                      homeCode: code(homeId),
-                      awayCode: code(awayId),
-                      homeScore: homeScore,
-                      awayScore: awayScore,
-                      playerIsHome: preview.playerIsHome,
-                      possession: preview.playerIsHome
-                          ? r.homePossession
-                          : 100 - r.homePossession,
-                      subsUsed: _subsUsed(preview),
-                      selectedTalk: _atExtraTimeStart
-                          ? _extraTimeTalk
-                          : _extraTimeHalfTalk,
-                      // A different salt per interval, so the huddle and the
-                      // turnaround don't offer the identical three lines.
-                      options: offeredTalkTones(
-                        preview.saveSeed,
-                        preview.fixture.id ^
-                            (_atExtraTimeStart ? 0x0E71 : 0x0E72),
+                    // Half-time interval — play only resumes on Continue (the
+                    // manager may reshape the side first).
+                    if (_atHalfTime)
+                      _HalfTimePrompt(
+                        heading: l.matchHalfTime,
+                        homeCode: code(homeId),
+                        awayCode: code(awayId),
+                        homeScore: homeScore,
+                        awayScore: awayScore,
+                        playerIsHome: preview.playerIsHome,
+                        possession: preview.playerIsHome
+                            ? r.homePossession
+                            : 100 - r.homePossession,
+                        subsUsed: _subsUsed(preview),
+                        selectedTalk: _halfTimeTalk,
+                        options: offeredTalkTones(
+                          preview.saveSeed,
+                          preview.fixture.id,
+                        ),
+                        onTalk: (tone) => _applyTeamTalk(preview, tone),
+                        onTactics: () => _openTactics(preview),
+                        onContinue: _resumeFromHalfTime,
                       ),
-                      onTalk: (tone) => _applyExtraTimeTalk(
-                        preview,
-                        tone,
-                        atStart: _atExtraTimeStart,
+                    // The two extra-time intervals of a level knockout: the
+                    // huddle before the first period, and the turnaround at 105'.
+                    if (_atExtraTimeStart || _atExtraTimeHalf)
+                      _HalfTimePrompt(
+                        heading: _atExtraTimeStart
+                            ? l.matchExtraTimeAhead
+                            : l.matchExtraTimeHalf,
+                        homeCode: code(homeId),
+                        awayCode: code(awayId),
+                        homeScore: homeScore,
+                        awayScore: awayScore,
+                        playerIsHome: preview.playerIsHome,
+                        possession: preview.playerIsHome
+                            ? r.homePossession
+                            : 100 - r.homePossession,
+                        subsUsed: _subsUsed(preview),
+                        selectedTalk: _atExtraTimeStart
+                            ? _extraTimeTalk
+                            : _extraTimeHalfTalk,
+                        // A different salt per interval, so the huddle and the
+                        // turnaround don't offer the identical three lines.
+                        options: offeredTalkTones(
+                          preview.saveSeed,
+                          preview.fixture.id ^
+                              (_atExtraTimeStart ? 0x0E71 : 0x0E72),
+                        ),
+                        onTalk: (tone) => _applyExtraTimeTalk(
+                          preview,
+                          tone,
+                          atStart: _atExtraTimeStart,
+                        ),
+                        onTactics: () => _openTactics(preview),
+                        onContinue: _resumeFromExtraTimeBreak,
                       ),
-                      onTactics: () => _openTactics(preview),
-                      onContinue: _resumeFromExtraTimeBreak,
-                    ),
-                ],
+                  ],
+                ),
               ),
-            ),
-          );
-        },
-      ),
-      // A single pinned bottom bar: the live transport/tactics controls while
-      // the match plays, and the full-time Continue action once it ends. Pinned
-      // here so it is always visible and never overflows on shorter screens.
-      bottomNavigationBar: previewAsync.whenOrNull(
-        data: (preview) {
-          if (preview == null) return null;
-          final ft = _fullTime;
-          final r = _result ?? preview.result;
-          final bar = ft
-              ? Padding(
-                  padding: const EdgeInsets.all(AppSpacing.marginMobile),
-                  child: PrimaryButton(
-                    label: _committing ? 'Continuing…' : 'Continue',
-                    icon: Icons.check_rounded,
-                    onPressed: _committing ? null : () => _continue(preview, r),
-                  ),
-                )
-              : _MatchControlBar(
-                  playing: _playing,
-                  speed: _speeds[_speedIdx],
-                  subsUsed: _subsUsed(preview),
-                  spent: _spentCount(preview, r),
-                  onPlayPause: _togglePlay,
-                  onSpeed: _cycleSpeed,
-                  onSkip: _skip,
-                  onTactics: () => _openTactics(preview),
-                );
-          return DecoratedBox(
-            decoration: const BoxDecoration(
-              color: AppColors.surfaceContainerHigh,
-              border: Border(
-                top: BorderSide(color: AppColors.outlineVariant),
+            );
+          },
+        ),
+        // A single pinned bottom bar: the live transport/tactics controls while
+        // the match plays, and the full-time Continue action once it ends. Pinned
+        // here so it is always visible and never overflows on shorter screens.
+        bottomNavigationBar: previewAsync.whenOrNull(
+          data: (preview) {
+            if (preview == null) return null;
+            final ft = _fullTime;
+            final r = _result ?? preview.result;
+            final bar = ft
+                ? Padding(
+                    padding: const EdgeInsets.all(AppSpacing.marginMobile),
+                    child: PrimaryButton(
+                      label: _committing ? 'Continuing…' : 'Continue',
+                      icon: Icons.check_rounded,
+                      onPressed: _committing
+                          ? null
+                          : () => _continue(preview, r),
+                    ),
+                  )
+                : _MatchControlBar(
+                    playing: _playing,
+                    speed: _speeds[_speedIdx],
+                    subsUsed: _subsUsed(preview),
+                    spent: _spentCount(preview, r),
+                    onPlayPause: _togglePlay,
+                    onSpeed: _cycleSpeed,
+                    onSkip: _skip,
+                    onTactics: () => _openTactics(preview),
+                  );
+            return DecoratedBox(
+              decoration: const BoxDecoration(
+                color: AppColors.surfaceContainerHigh,
+                border: Border(
+                  top: BorderSide(color: AppColors.outlineVariant),
+                ),
               ),
-            ),
-            child: SafeArea(top: false, child: bar),
-          );
-        },
+              child: SafeArea(top: false, child: bar),
+            );
+          },
+        ),
       ),
     );
   }

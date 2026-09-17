@@ -465,6 +465,10 @@
   "@recordsBestFinish": {
     "description": "Team-record row label."
   },
+  "recordsNoFinalsYet": "No finals appearance yet",
+  "@recordsNoFinalsYet": {
+    "description": "Record book: the nation has never reached the World Championship finals."
+  },
   "recordsLongestUnbeaten": "Longest unbeaten",
   "@recordsLongestUnbeaten": {
     "description": "Team-record row label."
@@ -539,7 +543,7 @@
   },
   "recordsUnitStarts": "starts",
   "@recordsUnitStarts": {
-    "description": "Unit appended to a World Cup starts tally."
+    "description": "Unit appended to a World Championship starts tally."
   },
   "recordsUnitCups": "cups",
   "@recordsUnitCups": {
@@ -1292,6 +1296,10 @@
   "@tacticsTabLineup": {
     "description": "Tab showing the pitch and formation."
   },
+  "tacticsTabInstructions": "INSTRUCTIONS",
+  "@tacticsTabInstructions": {
+    "description": "Squad screen tab holding the playstyle and the team instruction dials."
+  },
   "tacticsTabRoles": "ROLES",
   "@tacticsTabRoles": {
     "description": "Tab for assigning player roles."
@@ -1680,7 +1688,7 @@
   },
   "hubEventStartCycle": "Start {year} cycle",
   "@hubEventStartCycle": {
-    "description": "Hub action: begin the next World Cup cycle.",
+    "description": "Hub action: begin the next World Championship cycle.",
     "placeholders": {
       "year": {
         "type": "int"
@@ -1689,7 +1697,7 @@
   },
   "hubEventWorldChampions": "{nation} are World Champions",
   "@hubEventWorldChampions": {
-    "description": "Hub subtitle naming the reigning World Cup winner.",
+    "description": "Hub subtitle naming the reigning World Championship winner.",
     "placeholders": {
       "nation": {
         "type": "String"
@@ -1716,13 +1724,13 @@
   "@hubEventIntercontinentalPlayoff": {
     "description": "Hub action: the intercontinental play-off."
   },
-  "hubEventWatchWcDraw": "Watch the World Cup draw",
+  "hubEventWatchWcDraw": "Watch the World Championship draw",
   "@hubEventWatchWcDraw": {
-    "description": "Hub action: watch the World Cup finals draw."
+    "description": "Hub action: watch the World Championship finals draw."
   },
-  "hubEventWorldCupHere": "The World Cup is here",
+  "hubEventWorldCupHere": "The World Championship is here",
   "@hubEventWorldCupHere": {
-    "description": "Hub action: the World Cup opening ceremony."
+    "description": "Hub action: the World Championship opening ceremony."
   },
   "hubEventWatchFinalsDraw": "Watch the finals draw",
   "@hubEventWatchFinalsDraw": {
@@ -1732,9 +1740,9 @@
   "@hubEventFinalsHere": {
     "description": "Hub action: the continental opening ceremony."
   },
-  "hubEventPlayWcRound": "Play the next World Cup round",
+  "hubEventPlayWcRound": "Play the next World Championship round",
   "@hubEventPlayWcRound": {
-    "description": "Hub action: step the World Cup forward one round."
+    "description": "Hub action: step the World Championship forward one round."
   },
   "hubEventPlayCupMatch": "Play the next {cup} match",
   "@hubEventPlayCupMatch": {
@@ -1761,13 +1769,13 @@
   "@hubEventWatchQualifyingDraw": {
     "description": "Hub action: watch the continental qualifying draw."
   },
-  "hubEventWatchWcHostSelection": "Watch the World Cup host selection",
+  "hubEventWatchWcHostSelection": "Watch the World Championship host selection",
   "@hubEventWatchWcHostSelection": {
-    "description": "Hub action: watch the World Cup host selection."
+    "description": "Hub action: watch the World Championship host selection."
   },
-  "hubEventWatchWcQualifyingDraw": "Watch the World Cup qualifying draw",
+  "hubEventWatchWcQualifyingDraw": "Watch the World Championship qualifying draw",
   "@hubEventWatchWcQualifyingDraw": {
-    "description": "Hub action: watch the World Cup qualifying draw."
+    "description": "Hub action: watch the World Championship qualifying draw."
   },
   "hubEventArrangeFriendlies": "Arrange friendlies",
   "@hubEventArrangeFriendlies": {
@@ -1825,9 +1833,9 @@
   "@hubCallUpRequalify": {
     "description": "Call-up label at qualifying matchday 6."
   },
-  "hubCallUpWorldCup": "Name your World Cup squad",
+  "hubCallUpWorldCup": "Name your World Championship squad",
   "@hubCallUpWorldCup": {
-    "description": "Call-up label before the World Cup group stage."
+    "description": "Call-up label before the World Championship group stage."
   },
   "hubCallUpFinals": "Name your squad for the finals",
   "@hubCallUpFinals": {
@@ -2030,9 +2038,9 @@
   "@homeContinue": {
     "description": "Heading over the continue card."
   },
-  "homeRoadToWorldCup": "{date} · Road to the {year} World Cup",
+  "homeRoadToWorldCup": "{date} · Road to the {year} World Championship",
   "@homeRoadToWorldCup": {
-    "description": "Continue-card subtitle with date and World Cup year.",
+    "description": "Continue-card subtitle with date and World Championship year.",
     "placeholders": {
       "date": {
         "type": "String"
@@ -2080,7 +2088,11 @@
   "@careerManagerNameHint": {
     "description": "Hint text for the manager-name field."
   },
-  "careerBeginsBlurb": "Your career begins in September 2026, on the road to the 2030 World Cup.",
+  "careerBeginsBlurb": "Your career begins in September 2026, on the road to the 2030 World Championship.",
+  "careerFreeCycleNote": "The first full cycle is free: qualifying, your continental championship and the World Championship. Carrying on afterwards, and extra save slots, unlock once for €12.99.",
+  "@careerFreeCycleNote": {
+    "description": "Note under the new-game blurb saying what is free and what the one-time purchase unlocks."
+  },
   "@careerBeginsBlurb": {
     "description": "Intro describing when the career begins."
   },
@@ -2440,9 +2452,9 @@
       }
     }
   },
-  "careerRoadToWorldCup": "Road to the {year} World Cup",
+  "careerRoadToWorldCup": "Road to the {year} World Championship",
   "@careerRoadToWorldCup": {
-    "description": "Save subtitle: road to the World Cup.",
+    "description": "Save subtitle: road to the World Championship.",
     "placeholders": {
       "year": {
         "type": "int"
@@ -2564,9 +2576,9 @@
       }
     }
   },
-  "careerWorldCupLabel": "World Cup",
+  "careerWorldCupLabel": "World Championship",
   "@careerWorldCupLabel": {
-    "description": "Tournament label: World Cup."
+    "description": "Tournament label: World Championship."
   },
   "careerContinentalLabel": "Continental",
   "@careerContinentalLabel": {
@@ -2851,9 +2863,32 @@
   "@matchSetupWarnCaptain": {
     "description": "Pre-match warning that no captain has been chosen."
   },
-  "matchSetupWarnCaptainOut": "Your captain cannot play this one. Tap to give somebody else the armband",
-  "@matchSetupWarnCaptainOut": {
-    "description": "Pre-match warning: a captain is named but is injured, suspended or not in the squad."
+  "matchSetupWarnCaptainInjured": "{name} is injured and cannot lead this one out. Tap to hand the armband on",
+  "@matchSetupWarnCaptainInjured": {
+    "description": "Pre-match warning: the captain is named but injured.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "matchSetupWarnCaptainSuspended": "{name} is suspended for this one. Tap to hand the armband on",
+  "@matchSetupWarnCaptainSuspended": {
+    "description": "Pre-match warning: the captain is named but serving a ban.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "matchSetupWarnCaptainDropped": "{name} has the armband but is not in your squad. Tap to hand it on",
+  "@matchSetupWarnCaptainDropped": {
+    "description": "Pre-match warning: the captain is named but was left out of the called-up squad.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
   },
   "matchSetupWarnSetPieces": "No set-piece takers named. Tap to choose who steps up",
   "@matchSetupWarnSetPieces": {
@@ -3128,9 +3163,9 @@
       }
     }
   },
-  "resultsCategoryWorldCupQualifying": "World Cup Qualifying",
+  "resultsCategoryWorldCupQualifying": "World Championship Qualifying",
   "@resultsCategoryWorldCupQualifying": {
-    "description": "Competition group heading: World Cup qualifying."
+    "description": "Competition group heading: World Championship qualifying."
   },
   "resultsCategoryFriendlies": "Friendlies",
   "@resultsCategoryFriendlies": {
@@ -3148,9 +3183,21 @@
   "@resultsCategoryContinentalCup": {
     "description": "Competition group heading: continental cup."
   },
-  "resultsCategoryWorldCupFinals": "World Cup Finals",
+  "resultsCategoryWorldCupQualifyingShort": "World Champ. Q",
+  "@resultsCategoryWorldCupQualifyingShort": {
+    "description": "Short form of the World Championship qualifying heading, for the hub's next-match strip where the full words are shrunk to nothing."
+  },
+  "resultsCategoryContinentalQualifyingShort": "Continental Cup Q",
+  "@resultsCategoryContinentalQualifyingShort": {
+    "description": "Short form of the continental qualifying heading, for the hub's next-match strip."
+  },
+  "resultsCategoryContinentalQualifying": "Continental Cup Qualifying",
+  "@resultsCategoryContinentalQualifying": {
+    "description": "Competition group heading: continental cup qualifying."
+  },
+  "resultsCategoryWorldCupFinals": "World Championship Finals",
   "@resultsCategoryWorldCupFinals": {
-    "description": "Competition group heading: World Cup finals."
+    "description": "Competition group heading: World Championship finals."
   },
   "resultsRoundResults": "ROUND RESULTS",
   "@resultsRoundResults": {
@@ -3446,29 +3493,29 @@
   "chNc1": "Nations Cup Winner",
   "chNc1Desc": "Win the Nations Cup.",
   "chWc1": "World Champion",
-  "chWc1Desc": "Win the World Cup.",
+  "chWc1Desc": "Win the World Championship.",
   "chYears25": "Establishment",
   "chYears25Desc": "Manage for 25 years.",
   "chWc3": "Serial Winner",
-  "chWc3Desc": "Win 3 World Cups.",
+  "chWc3Desc": "Win 3 World Championships.",
   "chWc5": "Dynasty",
-  "chWc5Desc": "Win 5 World Cups.",
+  "chWc5Desc": "Win 5 World Championships.",
   "chWc10": "Immortal",
-  "chWc10Desc": "Win 10 World Cups.",
+  "chWc10Desc": "Win 10 World Championships.",
   "chWc2Teams": "Have Boots, Will Travel",
-  "chWc2TeamsDesc": "Win the World Cup with 2 different nations.",
+  "chWc2TeamsDesc": "Win the World Championship with 2 different nations.",
   "chWc3Teams": "Globetrotter",
-  "chWc3TeamsDesc": "Win the World Cup with 3 different nations.",
+  "chWc3TeamsDesc": "Win the World Championship with 3 different nations.",
   "chWcStreak3": "Three-Peat",
-  "chWcStreak3Desc": "Win 3 World Cups in a row.",
+  "chWcStreak3Desc": "Win 3 World Championships in a row.",
   "chWcAllconf": "World Conqueror",
-  "chWcAllconfDesc": "Win the World Cup with a nation from every confederation (6).",
+  "chWcAllconfDesc": "Win the World Championship with a nation from every confederation (6).",
   "chCont5": "Continental King",
   "chCont5Desc": "Win 5 continental championships.",
   "chContAll": "Six-Continent Slam",
   "chContAllDesc": "Win every confederation’s continental championship (6).",
   "chTreble": "Clean Sweep",
-  "chTrebleDesc": "Win the World Cup, a continental title and the Nations Cup in one career.",
+  "chTrebleDesc": "Win the World Championship, a continental title and the Nations Cup in one career.",
   "chNations10": "Nomad",
   "chNations10Desc": "Manage 10 different nations.",
   "chYears100": "Century",
@@ -3478,15 +3525,15 @@
   "chYears1000": "Eternal",
   "chYears1000Desc": "Manage for 1000 years.",
   "chGrandmaster": "Grandmaster",
-  "chGrandmasterDesc": "Win 3 World Cups AND 5 continental championships.",
+  "chGrandmasterDesc": "Win 3 World Championships AND 5 continental championships.",
   "chUndefeated": "Untouchable",
-  "chUndefeatedDesc": "Win a World Cup without losing a single match.",
+  "chUndefeatedDesc": "Win a World Championship without losing a single match.",
   "chPerfectQual": "Flawless Passage",
-  "chPerfectQualDesc": "Win every match of a World Cup qualifying campaign.",
+  "chPerfectQualDesc": "Win every match of a World Championship qualifying campaign.",
   "chMinnow": "Minnow Miracle",
-  "chMinnowDesc": "Win the World Cup with a nation ranked outside the world top 32.",
+  "chMinnowDesc": "Win the World Championship with a nation ranked outside the world top 32.",
   "chGrandTour": "Home & Away",
-  "chGrandTourDesc": "Win a World Cup as hosts and win one away from home.",
+  "chGrandTourDesc": "Win a World Championship as hosts and win one away from home.",
   "chUnbeaten25": "The Wall",
   "chUnbeaten25Desc": "Go 25 competitive matches unbeaten.",
   "chGoals10k": "Goal Machine",
@@ -3500,7 +3547,7 @@
   "chCont10": "Continental Dynasty",
   "chCont10Desc": "Win 10 continental championships.",
   "chPcWc": "Serial Champion",
-  "chPcWcDesc": "Win {count} World Cups this save.",
+  "chPcWcDesc": "Win {count} World Championships this save.",
   "@chPcWcDesc": {
     "placeholders": {
       "count": {
@@ -3509,7 +3556,7 @@
     }
   },
   "chPcMajors": "Silverware Collector",
-  "chPcMajorsDesc": "Win {count} major trophies (World Cup, continental or Nations Cup).",
+  "chPcMajorsDesc": "Win {count} major trophies (World Championship, continental or Nations Cup).",
   "@chPcMajorsDesc": {
     "placeholders": {
       "count": {
@@ -4064,9 +4111,9 @@
   "@nationsWorld": {
     "description": "Column header for the world/global column."
   },
-  "nationsWorldCup": "World Cup",
+  "nationsWorldCup": "World Championship",
   "@nationsWorldCup": {
-    "description": "Honours label: World Cup."
+    "description": "Honours label: World Championship."
   },
   "nationsContinental": "Continental",
   "@nationsContinental": {
@@ -4338,7 +4385,103 @@
       }
     }
   },
-  "yWinRoutine0": "{score} against {opponent}. Job done, nothing learned.",
+  "yWinUpset4": "{score} against {opponent}. However that happened, it happened.",
+  "@yWinUpset4": {
+    "description": "Y post: winUpset, variant 4.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      },
+      "score": {
+        "type": "String"
+      }
+    }
+  },
+  "yWinUpset5": "On paper this was over before it started. {opponent} {score} says otherwise.",
+  "@yWinUpset5": {
+    "description": "Y post: winUpset, variant 5.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      },
+      "score": {
+        "type": "String"
+      }
+    }
+  },
+  "yWinUpset6": "Beat {opponent} {score}. Nobody will believe that scoreline in a year.",
+  "@yWinUpset6": {
+    "description": "Y post: winUpset, variant 6.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      },
+      "score": {
+        "type": "String"
+      }
+    }
+  },
+  "yWinUpset7": "{opponent} {score}. Enjoy it, then look at the fixture list.",
+  "@yWinUpset7": {
+    "description": "Y post: winUpset, variant 7.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      },
+      "score": {
+        "type": "String"
+      }
+    }
+  },
+  "yWinUpset8": "{score} against {opponent}, and we rode our luck for eighty of the ninety.",
+  "@yWinUpset8": {
+    "description": "Y post: winUpset, variant 8.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      },
+      "score": {
+        "type": "String"
+      }
+    }
+  },
+  "yWinUpset9": "One night against {opponent} does not undo a year. {score}.",
+  "@yWinUpset9": {
+    "description": "Y post: winUpset, variant 9.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      },
+      "score": {
+        "type": "String"
+      }
+    }
+  },
+  "yWinUpset10": "Beat {opponent} {score} and now we will be told we have turned a corner. We have not.",
+  "@yWinUpset10": {
+    "description": "Y post: winUpset, variant 10.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      },
+      "score": {
+        "type": "String"
+      }
+    }
+  },
+  "yWinUpset11": "{opponent} {score}. Wonderful. Ask me again when it matters.",
+  "@yWinUpset11": {
+    "description": "Y post: winUpset, variant 11.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      },
+      "score": {
+        "type": "String"
+      }
+    }
+  },
+  "yWinRoutine0": "Beat {opponent} {score}. Exactly as it should be, and there is a pleasure in that.",
   "@yWinRoutine0": {
     "description": "Y post: winRoutine, variant 0.",
     "placeholders": {
@@ -4350,7 +4493,7 @@
       }
     }
   },
-  "yWinRoutine1": "Beat {opponent} {score}. We were supposed to, and we did.",
+  "yWinRoutine1": "{score} over {opponent}. Ruthless, and ruthless is a compliment.",
   "@yWinRoutine1": {
     "description": "Y post: winRoutine, variant 1.",
     "placeholders": {
@@ -4362,7 +4505,7 @@
       }
     }
   },
-  "yWinRoutine2": "A professional {score} over {opponent}. Next.",
+  "yWinRoutine2": "{opponent} {score}. No fuss, no scare, no complaints.",
   "@yWinRoutine2": {
     "description": "Y post: winRoutine, variant 2.",
     "placeholders": {
@@ -4374,9 +4517,105 @@
       }
     }
   },
-  "yWinRoutine3": "{opponent} dispatched {score}. File it and move on.",
+  "yWinRoutine3": "A tidy {score} against {opponent}. This is what a good side looks like on a quiet day.",
   "@yWinRoutine3": {
     "description": "Y post: winRoutine, variant 3.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      },
+      "score": {
+        "type": "String"
+      }
+    }
+  },
+  "yWinRoutine4": "{score} against {opponent}. Job done, nothing learned.",
+  "@yWinRoutine4": {
+    "description": "Y post: winRoutine, variant 4.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      },
+      "score": {
+        "type": "String"
+      }
+    }
+  },
+  "yWinRoutine5": "Beat {opponent} {score}. We were supposed to, and we did.",
+  "@yWinRoutine5": {
+    "description": "Y post: winRoutine, variant 5.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      },
+      "score": {
+        "type": "String"
+      }
+    }
+  },
+  "yWinRoutine6": "A professional {score} over {opponent}. Next.",
+  "@yWinRoutine6": {
+    "description": "Y post: winRoutine, variant 6.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      },
+      "score": {
+        "type": "String"
+      }
+    }
+  },
+  "yWinRoutine7": "{opponent} dispatched {score}. File it and move on.",
+  "@yWinRoutine7": {
+    "description": "Y post: winRoutine, variant 7.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      },
+      "score": {
+        "type": "String"
+      }
+    }
+  },
+  "yWinRoutine8": "{score} against {opponent} and we are supposed to applaud. For beating them.",
+  "@yWinRoutine8": {
+    "description": "Y post: winRoutine, variant 8.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      },
+      "score": {
+        "type": "String"
+      }
+    }
+  },
+  "yWinRoutine9": "Well done to everyone involved in the {score} over {opponent}, I suppose.",
+  "@yWinRoutine9": {
+    "description": "Y post: winRoutine, variant 9.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      },
+      "score": {
+        "type": "String"
+      }
+    }
+  },
+  "yWinRoutine10": "{opponent} {score}. Beating sides like that is the floor, not the achievement.",
+  "@yWinRoutine10": {
+    "description": "Y post: winRoutine, variant 10.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      },
+      "score": {
+        "type": "String"
+      }
+    }
+  },
+  "yWinRoutine11": "We beat {opponent} {score} and looked laboured doing it.",
+  "@yWinRoutine11": {
+    "description": "Y post: winRoutine, variant 11.",
     "placeholders": {
       "opponent": {
         "type": "String"
@@ -4398,7 +4637,7 @@
       }
     }
   },
-  "yWinTight1": "Nervy, ugly, and a win. {opponent} {score}.",
+  "yWinTight1": "That took character. {opponent} {score}.",
   "@yWinTight1": {
     "description": "Y post: winTight, variant 1.",
     "placeholders": {
@@ -4410,7 +4649,7 @@
       }
     }
   },
-  "yWinTight2": "Beat {opponent} {score}. Take the three points and never watch it again.",
+  "yWinTight2": "Beat {opponent} {score} the hard way, which is the way that lasts.",
   "@yWinTight2": {
     "description": "Y post: winTight, variant 2.",
     "placeholders": {
@@ -4422,7 +4661,7 @@
       }
     }
   },
-  "yWinTight3": "{score}. {opponent} made us work for every inch of that.",
+  "yWinTight3": "{score} against {opponent}. Sides that win these are the sides still standing in June.",
   "@yWinTight3": {
     "description": "Y post: winTight, variant 3.",
     "placeholders": {
@@ -4434,7 +4673,103 @@
       }
     }
   },
-  "yDrew0": "{score} with {opponent}. Two points dropped or one gained. Pick your mood.",
+  "yWinTight4": "Nervy, ugly, and a win. {opponent} {score}.",
+  "@yWinTight4": {
+    "description": "Y post: winTight, variant 4.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      },
+      "score": {
+        "type": "String"
+      }
+    }
+  },
+  "yWinTight5": "Beat {opponent} {score}. Take the three points and never watch it again.",
+  "@yWinTight5": {
+    "description": "Y post: winTight, variant 5.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      },
+      "score": {
+        "type": "String"
+      }
+    }
+  },
+  "yWinTight6": "{score}. {opponent} made us work for every inch of that.",
+  "@yWinTight6": {
+    "description": "Y post: winTight, variant 6.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      },
+      "score": {
+        "type": "String"
+      }
+    }
+  },
+  "yWinTight7": "{opponent} {score}. Not pretty. Counts the same.",
+  "@yWinTight7": {
+    "description": "Y post: winTight, variant 7.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      },
+      "score": {
+        "type": "String"
+      }
+    }
+  },
+  "yWinTight8": "{score} against {opponent} and we made it ten times harder than it was.",
+  "@yWinTight8": {
+    "description": "Y post: winTight, variant 8.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      },
+      "score": {
+        "type": "String"
+      }
+    }
+  },
+  "yWinTight9": "We should not be hanging on against {opponent}. {score}.",
+  "@yWinTight9": {
+    "description": "Y post: winTight, variant 9.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      },
+      "score": {
+        "type": "String"
+      }
+    }
+  },
+  "yWinTight10": "{opponent} {score}. Won it, and learned nothing good about ourselves.",
+  "@yWinTight10": {
+    "description": "Y post: winTight, variant 10.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      },
+      "score": {
+        "type": "String"
+      }
+    }
+  },
+  "yWinTight11": "A {score} that flattered us against {opponent}.",
+  "@yWinTight11": {
+    "description": "Y post: winTight, variant 11.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      },
+      "score": {
+        "type": "String"
+      }
+    }
+  },
+  "yDrew0": "A point against {opponent}, {score}. Take it and move on.",
   "@yDrew0": {
     "description": "Y post: drew, variant 0.",
     "placeholders": {
@@ -4446,7 +4781,7 @@
       }
     }
   },
-  "yDrew1": "A draw against {opponent}, {score}. Nobody is happy, nobody is furious.",
+  "yDrew1": "{score} with {opponent}. There are worse afternoons than this.",
   "@yDrew1": {
     "description": "Y post: drew, variant 1.",
     "placeholders": {
@@ -4458,7 +4793,7 @@
       }
     }
   },
-  "yDrew2": "{opponent} {score}. The most forgettable ninety minutes of the year.",
+  "yDrew2": "Held {opponent} to {score}. Not everything has to be a story.",
   "@yDrew2": {
     "description": "Y post: drew, variant 2.",
     "placeholders": {
@@ -4470,9 +4805,105 @@
       }
     }
   },
-  "yDrew3": "Shared the spoils with {opponent}, {score}. On we go.",
+  "yDrew3": "{opponent} {score}. A point is a point and the table does not ask how.",
   "@yDrew3": {
     "description": "Y post: drew, variant 3.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      },
+      "score": {
+        "type": "String"
+      }
+    }
+  },
+  "yDrew4": "{score} with {opponent}. Two points dropped or one gained. Pick your mood.",
+  "@yDrew4": {
+    "description": "Y post: drew, variant 4.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      },
+      "score": {
+        "type": "String"
+      }
+    }
+  },
+  "yDrew5": "A draw against {opponent}, {score}. Nobody is happy, nobody is furious.",
+  "@yDrew5": {
+    "description": "Y post: drew, variant 5.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      },
+      "score": {
+        "type": "String"
+      }
+    }
+  },
+  "yDrew6": "{opponent} {score}. The most forgettable ninety minutes of the year.",
+  "@yDrew6": {
+    "description": "Y post: drew, variant 6.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      },
+      "score": {
+        "type": "String"
+      }
+    }
+  },
+  "yDrew7": "Shared the spoils with {opponent}, {score}. On we go.",
+  "@yDrew7": {
+    "description": "Y post: drew, variant 7.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      },
+      "score": {
+        "type": "String"
+      }
+    }
+  },
+  "yDrew8": "{score} against {opponent}. Draws like this are how campaigns quietly die.",
+  "@yDrew8": {
+    "description": "Y post: drew, variant 8.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      },
+      "score": {
+        "type": "String"
+      }
+    }
+  },
+  "yDrew9": "Two points thrown away against {opponent}. {score}. Nothing else to call it.",
+  "@yDrew9": {
+    "description": "Y post: drew, variant 9.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      },
+      "score": {
+        "type": "String"
+      }
+    }
+  },
+  "yDrew10": "{opponent} {score}. We had ninety minutes and no idea what to do with them.",
+  "@yDrew10": {
+    "description": "Y post: drew, variant 10.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      },
+      "score": {
+        "type": "String"
+      }
+    }
+  },
+  "yDrew11": "A {score} with {opponent} that nobody will remember and everybody will pay for.",
+  "@yDrew11": {
+    "description": "Y post: drew, variant 11.",
     "placeholders": {
       "opponent": {
         "type": "String"
@@ -4494,7 +4925,7 @@
       }
     }
   },
-  "yLost1": "{opponent} {score}. We were second best and there is no argument.",
+  "yLost1": "{opponent} {score}. Nothing to hang anybody for. On to the next.",
   "@yLost1": {
     "description": "Y post: lost, variant 1.",
     "placeholders": {
@@ -4506,7 +4937,7 @@
       }
     }
   },
-  "yLost2": "Lost {score} to {opponent}. Regroup.",
+  "yLost2": "Lost {score} to {opponent} and gave everything. Some days that is not enough.",
   "@yLost2": {
     "description": "Y post: lost, variant 2.",
     "placeholders": {
@@ -4518,7 +4949,7 @@
       }
     }
   },
-  "yLost3": "{score} to {opponent}. Not a disgrace, not good enough.",
+  "yLost3": "{score} to {opponent}. Heads up. This side has plenty left.",
   "@yLost3": {
     "description": "Y post: lost, variant 3.",
     "placeholders": {
@@ -4530,7 +4961,103 @@
       }
     }
   },
-  "yLostBadly0": "{score}. To {opponent}. I have no words and I am paid to have words.",
+  "yLost4": "{opponent} {score}. We were second best and there is no argument.",
+  "@yLost4": {
+    "description": "Y post: lost, variant 4.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      },
+      "score": {
+        "type": "String"
+      }
+    }
+  },
+  "yLost5": "Lost {score} to {opponent}. Regroup.",
+  "@yLost5": {
+    "description": "Y post: lost, variant 5.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      },
+      "score": {
+        "type": "String"
+      }
+    }
+  },
+  "yLost6": "{score} to {opponent}. Not a disgrace, not good enough.",
+  "@yLost6": {
+    "description": "Y post: lost, variant 6.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      },
+      "score": {
+        "type": "String"
+      }
+    }
+  },
+  "yLost7": "Beaten {score} by {opponent}. Learn something from it or it was wasted.",
+  "@yLost7": {
+    "description": "Y post: lost, variant 7.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      },
+      "score": {
+        "type": "String"
+      }
+    }
+  },
+  "yLost8": "{score} to {opponent} and we did not lay a glove on them.",
+  "@yLost8": {
+    "description": "Y post: lost, variant 8.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      },
+      "score": {
+        "type": "String"
+      }
+    }
+  },
+  "yLost9": "Lost to {opponent}, {score}. Same problems, same month, same excuses coming.",
+  "@yLost9": {
+    "description": "Y post: lost, variant 9.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      },
+      "score": {
+        "type": "String"
+      }
+    }
+  },
+  "yLost10": "{opponent} {score}. At what point does this stop being bad luck?",
+  "@yLost10": {
+    "description": "Y post: lost, variant 10.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      },
+      "score": {
+        "type": "String"
+      }
+    }
+  },
+  "yLost11": "Beaten {score} by {opponent}. That is a result that should cost somebody something.",
+  "@yLost11": {
+    "description": "Y post: lost, variant 11.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      },
+      "score": {
+        "type": "String"
+      }
+    }
+  },
+  "yLostBadly0": "{score} to {opponent}. One bad night. Judge the side on the campaign, not this.",
   "@yLostBadly0": {
     "description": "Y post: lostBadly, variant 0.",
     "placeholders": {
@@ -4542,7 +5069,7 @@
       }
     }
   },
-  "yLostBadly1": "That was not a defeat to {opponent}, it was a surrender. {score}.",
+  "yLostBadly1": "Nobody wanted that {score} against {opponent} less than the players did.",
   "@yLostBadly1": {
     "description": "Y post: lostBadly, variant 1.",
     "placeholders": {
@@ -4554,7 +5081,7 @@
       }
     }
   },
-  "yLostBadly2": "{opponent} {score}. Somebody has to answer for that.",
+  "yLostBadly2": "{opponent} {score}. Ugly, and not who this team is.",
   "@yLostBadly2": {
     "description": "Y post: lostBadly, variant 2.",
     "placeholders": {
@@ -4566,9 +5093,105 @@
       }
     }
   },
-  "yLostBadly3": "I want the {score} against {opponent} struck from the record and from memory.",
+  "yLostBadly3": "A {score} to forget against {opponent}. They will front up next time.",
   "@yLostBadly3": {
     "description": "Y post: lostBadly, variant 3.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      },
+      "score": {
+        "type": "String"
+      }
+    }
+  },
+  "yLostBadly4": "{score}. To {opponent}. I have no words and I am paid to have words.",
+  "@yLostBadly4": {
+    "description": "Y post: lostBadly, variant 4.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      },
+      "score": {
+        "type": "String"
+      }
+    }
+  },
+  "yLostBadly5": "{opponent} {score}. Somebody has to answer for that.",
+  "@yLostBadly5": {
+    "description": "Y post: lostBadly, variant 5.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      },
+      "score": {
+        "type": "String"
+      }
+    }
+  },
+  "yLostBadly6": "I want the {score} against {opponent} struck from the record and from memory.",
+  "@yLostBadly6": {
+    "description": "Y post: lostBadly, variant 6.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      },
+      "score": {
+        "type": "String"
+      }
+    }
+  },
+  "yLostBadly7": "Beaten {score} by {opponent}. There is no spinning a scoreline like that.",
+  "@yLostBadly7": {
+    "description": "Y post: lostBadly, variant 7.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      },
+      "score": {
+        "type": "String"
+      }
+    }
+  },
+  "yLostBadly8": "That was not a defeat to {opponent}, it was a surrender. {score}.",
+  "@yLostBadly8": {
+    "description": "Y post: lostBadly, variant 8.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      },
+      "score": {
+        "type": "String"
+      }
+    }
+  },
+  "yLostBadly9": "{score}. Against {opponent}. People paid money to watch that.",
+  "@yLostBadly9": {
+    "description": "Y post: lostBadly, variant 9.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      },
+      "score": {
+        "type": "String"
+      }
+    }
+  },
+  "yLostBadly10": "{opponent} {score}. If that does not change something, nothing will.",
+  "@yLostBadly10": {
+    "description": "Y post: lostBadly, variant 10.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      },
+      "score": {
+        "type": "String"
+      }
+    }
+  },
+  "yLostBadly11": "I have seen this side humiliated before, but {score} by {opponent} is a new floor.",
+  "@yLostBadly11": {
+    "description": "Y post: lostBadly, variant 11.",
     "placeholders": {
       "opponent": {
         "type": "String"
@@ -4959,6 +5582,54 @@
       }
     }
   },
+  "yScorerStar4": "{goals} for {name}, and the rest of them were passengers.",
+  "@yScorerStar4": {
+    "description": "Y post: scorerStar, variant 4.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "goals": {
+        "type": "String"
+      }
+    }
+  },
+  "yScorerStar5": "{name} again. {goals}. Imagine this side without him.",
+  "@yScorerStar5": {
+    "description": "Y post: scorerStar, variant 5.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "goals": {
+        "type": "String"
+      }
+    }
+  },
+  "yScorerStar6": "{goals} from {name}. One man should not have to do this much.",
+  "@yScorerStar6": {
+    "description": "Y post: scorerStar, variant 6.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "goals": {
+        "type": "String"
+      }
+    }
+  },
+  "yScorerStar7": "Take {name} out of that and it is {goals} fewer and a very different afternoon.",
+  "@yScorerStar7": {
+    "description": "Y post: scorerStar, variant 7.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "goals": {
+        "type": "String"
+      }
+    }
+  },
   "yWinStreak0": "{count} on the bounce. Whatever is being said in that dressing room, it is landing.",
   "@yWinStreak0": {
     "description": "Y post remarking on a run of wins. Variant 0.",
@@ -4995,6 +5666,42 @@
       }
     }
   },
+  "yWinStreak4": "{count} in a row. Enjoy it while the fixtures are kind.",
+  "@yWinStreak4": {
+    "description": "Y post: winStreak, variant 4.",
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "yWinStreak5": "{count} straight, and we have beaten nobody of consequence.",
+  "@yWinStreak5": {
+    "description": "Y post: winStreak, variant 5.",
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "yWinStreak6": "A run of {count}. Ask me again when it is tested.",
+  "@yWinStreak6": {
+    "description": "Y post: winStreak, variant 6.",
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "yWinStreak7": "{count} on the trot. Every side has one of these in them once.",
+  "@yWinStreak7": {
+    "description": "Y post: winStreak, variant 7.",
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
   "yLossStreak0": "{count} without a win now. At some point the excuses run out.",
   "@yLossStreak0": {
     "description": "Y post remarking on a run without a win. Variant 0.",
@@ -5025,6 +5732,42 @@
   "yLossStreak3": "No wins in {count}. You can see it in how they play.",
   "@yLossStreak3": {
     "description": "Y post remarking on a run without a win. Variant 3.",
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "yLossStreak4": "{count} without a win and the same mistakes every week.",
+  "@yLossStreak4": {
+    "description": "Y post: lossStreak, variant 4.",
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "yLossStreak5": "{count} in a row. Whatever is being tried, it is not working.",
+  "@yLossStreak5": {
+    "description": "Y post: lossStreak, variant 5.",
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "yLossStreak6": "{count} straight. This is a direction, not a dip.",
+  "@yLossStreak6": {
+    "description": "Y post: lossStreak, variant 6.",
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "yLossStreak7": "No wins in {count}, and nobody upstairs has said a word.",
+  "@yLossStreak7": {
+    "description": "Y post: lossStreak, variant 7.",
     "placeholders": {
       "count": {
         "type": "String"
@@ -5079,6 +5822,54 @@
       }
     }
   },
+  "yRivalry4": "{opponent} {score}. Whatever else happens this year, there is that.",
+  "@yRivalry4": {
+    "description": "Y post: rivalry, variant 4.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      },
+      "score": {
+        "type": "String"
+      }
+    }
+  },
+  "yRivalry5": "{score} against {opponent}. Some of us needed that more than the table did.",
+  "@yRivalry5": {
+    "description": "Y post: rivalry, variant 5.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      },
+      "score": {
+        "type": "String"
+      }
+    }
+  },
+  "yRivalry6": "{opponent} {score}. And they will have it back next time, they always do.",
+  "@yRivalry6": {
+    "description": "Y post: rivalry, variant 6.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      },
+      "score": {
+        "type": "String"
+      }
+    }
+  },
+  "yRivalry7": "Against {opponent}, {score}. A whole year of being reminded about this one.",
+  "@yRivalry7": {
+    "description": "Y post: rivalry, variant 7.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      },
+      "score": {
+        "type": "String"
+      }
+    }
+  },
   "yInjuryBlow0": "{name} off injured. That is the last thing this side needed.",
   "@yInjuryBlow0": {
     "description": "Y post about a player picking up an injury. Variant 0.",
@@ -5115,6 +5906,42 @@
       }
     }
   },
+  "yInjuryBlow4": "{name} out. Of course it is {name}.",
+  "@yInjuryBlow4": {
+    "description": "Y post: injuryBlow, variant 4.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "yInjuryBlow5": "Without {name} this becomes a very ordinary team.",
+  "@yInjuryBlow5": {
+    "description": "Y post: injuryBlow, variant 5.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "yInjuryBlow6": "{name} injured again. Somebody should be asking why.",
+  "@yInjuryBlow6": {
+    "description": "Y post: injuryBlow, variant 6.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "yInjuryBlow7": "Lost {name}, and there is nobody behind him. That is the real problem.",
+  "@yInjuryBlow7": {
+    "description": "Y post: injuryBlow, variant 7.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
   "yBoardPressure0": "The board have gone very quiet. That is never a good sign.",
   "@yBoardPressure0": {
     "description": "Y post about the board losing patience. Variant 0."
@@ -5130,6 +5957,22 @@
   "yBoardPressure3": "Nobody at the federation is saying anything supportive. Draw your own conclusions.",
   "@yBoardPressure3": {
     "description": "Y post about the board losing patience. Variant 3."
+  },
+  "yBoardPressure4": "Nobody upstairs has backed him in public for weeks now.",
+  "@yBoardPressure4": {
+    "description": "Y post: boardPressure, variant 4."
+  },
+  "yBoardPressure5": "The federation is briefing against its own manager. Same as always.",
+  "@yBoardPressure5": {
+    "description": "Y post: boardPressure, variant 5."
+  },
+  "yBoardPressure6": "When a board goes silent, they have already decided.",
+  "@yBoardPressure6": {
+    "description": "Y post: boardPressure, variant 6."
+  },
+  "yBoardPressure7": "They will let this drift until it is somebody else’s decision to make.",
+  "@yBoardPressure7": {
+    "description": "Y post: boardPressure, variant 7."
   },
   "yReplies": "ALSO ABOUT THIS MATCH",
   "@yReplies": {
@@ -5669,7 +6512,7 @@
   },
   "tourSharedOpenEnvelope": "Open the envelope",
   "@tourSharedOpenEnvelope": {
-    "description": "Button that reveals the drawn World Cup host."
+    "description": "Button that reveals the drawn World Championship host."
   },
   "tourSharedGroupName": "GROUP {name}",
   "@tourSharedGroupName": {
@@ -5817,9 +6660,9 @@
   "@tourContFinalsDrawAfterQual": {
     "description": "Shown when the finals draw awaits qualifying completion."
   },
-  "tourContContestedBeforeWc": "The knockout rounds are played out before the World Cup.",
+  "tourContContestedBeforeWc": "The knockout rounds are played out before the World Championship.",
   "@tourContContestedBeforeWc": {
-    "description": "Explains the knockout rounds precede the World Cup."
+    "description": "Explains the knockout rounds precede the World Championship."
   },
   "tourContChampionsHeading": "{name} CHAMPIONS",
   "@tourContChampionsHeading": {
@@ -6037,15 +6880,15 @@
   "@tourContNoPlayoffThisCycle": {
     "description": "Shown when there is no play-off this cycle."
   },
-  "tourContPlayoffIntro": "Two World Cup places decided across a knockout of the best qualifying also-rans.",
+  "tourContPlayoffIntro": "Two World Championship places decided across a knockout of the best qualifying also-rans.",
   "@tourContPlayoffIntro": {
     "description": "Intro explaining the intercontinental play-off."
   },
-  "tourContPlayoffThrough": "You came through the play-off. You're at the World Cup!",
+  "tourContPlayoffThrough": "You came through the play-off. You're at the World Championship!",
   "@tourContPlayoffThrough": {
     "description": "Shown when the manager wins the play-off."
   },
-  "tourContPlayoffOut": "You fell short in the play-off. No World Cup this time.",
+  "tourContPlayoffOut": "You fell short in the play-off. No World Championship this time.",
   "@tourContPlayoffOut": {
     "description": "Shown when the manager loses the play-off."
   },
@@ -6063,15 +6906,15 @@
   },
   "tourCupTabSummary": "SUMMARY",
   "@tourCupTabSummary": {
-    "description": "World Cup detail: tourCupTabSummary"
+    "description": "World Championship detail: tourCupTabSummary"
   },
   "tourCupTabQualifying": "QUALIFYING",
   "@tourCupTabQualifying": {
-    "description": "World Cup detail: tourCupTabQualifying"
+    "description": "World Championship detail: tourCupTabQualifying"
   },
   "tourCupTabPlayoff": "PLAY-OFF",
   "@tourCupTabPlayoff": {
-    "description": "World Cup detail tab: the intercontinental play-off."
+    "description": "World Championship detail tab: the intercontinental play-off."
   },
   "tourCupPlayoffSoon": "The intercontinental play-off is decided once every confederation's qualifying is complete.",
   "@tourCupPlayoffSoon": {
@@ -6079,39 +6922,39 @@
   },
   "tourCupTabFinals": "FINALS",
   "@tourCupTabFinals": {
-    "description": "World Cup detail: tourCupTabFinals"
+    "description": "World Championship detail: tourCupTabFinals"
   },
   "tourCupTabBracket": "BRACKET",
   "@tourCupTabBracket": {
-    "description": "World Cup detail: tourCupTabBracket"
+    "description": "World Championship detail: tourCupTabBracket"
   },
   "tourCupTabAwards": "AWARDS",
   "@tourCupTabAwards": {
-    "description": "World Cup detail: tourCupTabAwards"
+    "description": "World Championship detail: tourCupTabAwards"
   },
   "tourCupTabScorers": "SCORERS",
   "@tourCupTabScorers": {
-    "description": "World Cup detail: tourCupTabScorers"
+    "description": "World Championship detail: tourCupTabScorers"
   },
   "tourCupTabHistory": "HISTORY",
   "@tourCupTabHistory": {
-    "description": "World Cup detail: tourCupTabHistory"
+    "description": "World Championship detail: tourCupTabHistory"
   },
   "tourCupTabRecords": "RECORDS",
   "@tourCupTabRecords": {
-    "description": "World Cup detail: tourCupTabRecords"
+    "description": "World Championship detail: tourCupTabRecords"
   },
   "tourCupTitle": "WORLD CHAMPIONSHIP",
   "@tourCupTitle": {
-    "description": "World Cup detail: tourCupTitle"
+    "description": "World Championship detail: tourCupTitle"
   },
   "tourCupNoData": "No cup data.",
   "@tourCupNoData": {
-    "description": "World Cup detail: tourCupNoData"
+    "description": "World Championship detail: tourCupNoData"
   },
   "tourCupLoadError": "Could not load cup.\n{error}",
   "@tourCupLoadError": {
-    "description": "World Cup detail: tourCupLoadError",
+    "description": "World Championship detail: tourCupLoadError",
     "placeholders": {
       "error": {
         "type": "String"
@@ -6120,71 +6963,71 @@
   },
   "tourCupUnknown": "Unknown",
   "@tourCupUnknown": {
-    "description": "World Cup detail: tourCupUnknown"
+    "description": "World Championship detail: tourCupUnknown"
   },
   "tourCupWorldChampions": "WORLD CHAMPIONS",
   "@tourCupWorldChampions": {
-    "description": "World Cup detail: tourCupWorldChampions"
+    "description": "World Championship detail: tourCupWorldChampions"
   },
   "tourCupWorldChampionsTitle": "World Champions",
   "@tourCupWorldChampionsTitle": {
-    "description": "World Cup detail: tourCupWorldChampionsTitle"
+    "description": "World Championship detail: tourCupWorldChampionsTitle"
   },
   "tourCupActive": "ACTIVE",
   "@tourCupActive": {
-    "description": "World Cup detail: tourCupActive"
+    "description": "World Championship detail: tourCupActive"
   },
   "tourCupStillActive": "Still active",
   "@tourCupStillActive": {
-    "description": "World Cup detail: tourCupStillActive"
+    "description": "World Championship detail: tourCupStillActive"
   },
   "tourCupAllTimeScorers": "ALL-TIME SCORERS",
   "@tourCupAllTimeScorers": {
-    "description": "World Cup detail: tourCupAllTimeScorers"
+    "description": "World Championship detail: tourCupAllTimeScorers"
   },
   "tourCupAllConfederations": "All confederations",
   "@tourCupAllConfederations": {
-    "description": "World Cup detail: tourCupAllConfederations"
+    "description": "World Championship detail: tourCupAllConfederations"
   },
   "tourCupBestRunnersUp": "Best runners-up",
   "@tourCupBestRunnersUp": {
-    "description": "World Cup detail: tourCupBestRunnersUp"
+    "description": "World Championship detail: tourCupBestRunnersUp"
   },
-  "tourCupCompWorld": "World Cup",
+  "tourCupCompWorld": "World Championship",
   "@tourCupCompWorld": {
-    "description": "World Cup detail: tourCupCompWorld"
+    "description": "World Championship detail: tourCupCompWorld"
   },
   "tourCupCompEurope": "European Championship",
   "@tourCupCompEurope": {
-    "description": "World Cup detail: tourCupCompEurope"
+    "description": "World Championship detail: tourCupCompEurope"
   },
   "tourCupCompSAmerica": "South America Cup",
   "@tourCupCompSAmerica": {
-    "description": "World Cup detail: tourCupCompSAmerica"
+    "description": "World Championship detail: tourCupCompSAmerica"
   },
   "tourCupDestFinals": "the finals",
   "@tourCupDestFinals": {
-    "description": "World Cup detail: tourCupDestFinals"
+    "description": "World Championship detail: tourCupDestFinals"
   },
   "tourCupDestFinalsPlayoff": "the finals play-off",
   "@tourCupDestFinalsPlayoff": {
-    "description": "World Cup detail: tourCupDestFinalsPlayoff"
+    "description": "World Championship detail: tourCupDestFinalsPlayoff"
   },
   "tourCupDestIntercontPlayoff": "the intercontinental play-off",
   "@tourCupDestIntercontPlayoff": {
-    "description": "World Cup detail: tourCupDestIntercontPlayoff"
+    "description": "World Championship detail: tourCupDestIntercontPlayoff"
   },
   "tourCupFinalsDrawnAfterQual": "The finals are drawn once qualifying ends.",
   "@tourCupFinalsDrawnAfterQual": {
-    "description": "World Cup detail: tourCupFinalsDrawnAfterQual"
+    "description": "World Championship detail: tourCupFinalsDrawnAfterQual"
   },
-  "tourCupFinalsDrawSoon": "Groups to be drawn. Watch the World Cup draw from the hub to reveal them.",
+  "tourCupFinalsDrawSoon": "Groups to be drawn. Watch the World Championship draw from the hub to reveal them.",
   "@tourCupFinalsDrawSoon": {
-    "description": "World Cup detail: tourCupFinalsDrawSoon"
+    "description": "World Championship detail: tourCupFinalsDrawSoon"
   },
   "tourCupGroupName": "Group {name}",
   "@tourCupGroupName": {
-    "description": "World Cup detail: tourCupGroupName",
+    "description": "World Championship detail: tourCupGroupName",
     "placeholders": {
       "name": {
         "type": "String"
@@ -6193,7 +7036,7 @@
   },
   "tourCupGroupNameShort": "Group {name}",
   "@tourCupGroupNameShort": {
-    "description": "World Cup detail: tourCupGroupNameShort",
+    "description": "World Championship detail: tourCupGroupNameShort",
     "placeholders": {
       "name": {
         "type": "String"
@@ -6202,7 +7045,7 @@
   },
   "tourCupHostLabel": "Hosted by {host}",
   "@tourCupHostLabel": {
-    "description": "World Cup detail: tourCupHostLabel",
+    "description": "World Championship detail: tourCupHostLabel",
     "placeholders": {
       "host": {
         "type": "String"
@@ -6211,27 +7054,27 @@
   },
   "tourCupIntercontPlayoff": "Intercontinental play-off",
   "@tourCupIntercontPlayoff": {
-    "description": "World Cup detail: tourCupIntercontPlayoff"
+    "description": "World Championship detail: tourCupIntercontPlayoff"
   },
   "tourCupKnockoutSoon": "The bracket begins once the group stage ends.",
   "@tourCupKnockoutSoon": {
-    "description": "World Cup detail: tourCupKnockoutSoon"
+    "description": "World Championship detail: tourCupKnockoutSoon"
   },
   "tourCupMatches": "MATCHES",
   "@tourCupMatches": {
-    "description": "World Cup detail: tourCupMatches"
+    "description": "World Championship detail: tourCupMatches"
   },
   "tourCupMedalTable": "MEDAL TABLE",
   "@tourCupMedalTable": {
-    "description": "World Cup detail: tourCupMedalTable"
+    "description": "World Championship detail: tourCupMedalTable"
   },
   "tourCupMostTitles": "MOST TITLES",
   "@tourCupMostTitles": {
-    "description": "World Cup detail: tourCupMostTitles"
+    "description": "World Championship detail: tourCupMostTitles"
   },
   "tourCupMostTitlesValue": "{nation}: {titles} titles from {editions} editions",
   "@tourCupMostTitlesValue": {
-    "description": "World Cup detail: tourCupMostTitlesValue",
+    "description": "World Championship detail: tourCupMostTitlesValue",
     "placeholders": {
       "nation": {
         "type": "String"
@@ -6246,31 +7089,31 @@
   },
   "tourCupNoGoals": "No goals yet.",
   "@tourCupNoGoals": {
-    "description": "World Cup detail: tourCupNoGoals"
+    "description": "World Championship detail: tourCupNoGoals"
   },
   "tourCupNoGroups": "No groups drawn.",
   "@tourCupNoGroups": {
-    "description": "World Cup detail: tourCupNoGroups"
+    "description": "World Championship detail: tourCupNoGroups"
   },
   "tourCupNoHistory": "No history yet.",
   "@tourCupNoHistory": {
-    "description": "World Cup detail: tourCupNoHistory"
+    "description": "World Championship detail: tourCupNoHistory"
   },
   "tourCupPastWinners": "PAST WINNERS",
   "@tourCupPastWinners": {
-    "description": "World Cup detail: tourCupPastWinners"
+    "description": "World Championship detail: tourCupPastWinners"
   },
-  "tourCupPlayoffIntro": "Two World Cup places decided across a knockout of the best qualifying also-rans.",
+  "tourCupPlayoffIntro": "Two World Championship places decided across a knockout of the best qualifying also-rans.",
   "@tourCupPlayoffIntro": {
-    "description": "World Cup detail: tourCupPlayoffIntro"
+    "description": "World Championship detail: tourCupPlayoffIntro"
   },
   "tourCupQualDrawSoon": "Groups to be drawn. Watch the qualifying draw from the hub to reveal them.",
   "@tourCupQualDrawSoon": {
-    "description": "World Cup detail: tourCupQualDrawSoon"
+    "description": "World Championship detail: tourCupQualDrawSoon"
   },
   "tourCupRegionYours": "{region} · yours",
   "@tourCupRegionYours": {
-    "description": "World Cup detail: tourCupRegionYours",
+    "description": "World Championship detail: tourCupRegionYours",
     "placeholders": {
       "region": {
         "type": "String"
@@ -6279,7 +7122,7 @@
   },
   "tourCupScorePens": "{home}–{away} (pens)",
   "@tourCupScorePens": {
-    "description": "World Cup detail: tourCupScorePens",
+    "description": "World Championship detail: tourCupScorePens",
     "placeholders": {
       "home": {
         "type": "int"
@@ -6291,15 +7134,15 @@
   },
   "tourCupSegAllTime": "All-time",
   "@tourCupSegAllTime": {
-    "description": "World Cup detail: tourCupSegAllTime"
+    "description": "World Championship detail: tourCupSegAllTime"
   },
   "tourCupSegFinals": "Finals",
   "@tourCupSegFinals": {
-    "description": "World Cup detail: tourCupSegFinals"
+    "description": "World Championship detail: tourCupSegFinals"
   },
   "tourCupSegQualifying": "Qualifying",
   "@tourCupSegQualifying": {
-    "description": "World Cup detail: tourCupSegQualifying"
+    "description": "World Championship detail: tourCupSegQualifying"
   },
   "playerTraitsTitle": "KNOWN FOR",
   "@playerTraitsTitle": {
@@ -6377,13 +7220,13 @@
   "@traitWastefulBlurb": {
     "description": "Trait effect."
   },
-  "objectiveWorldCup": "World Cup",
+  "objectiveWorldCup": "World Championship",
   "@objectiveWorldCup": {
-    "description": "The World Cup, named as a competition in a board objective."
+    "description": "The World Championship, named as a competition in a board objective."
   },
   "objectiveWinTournament": "Win it",
   "@objectiveWinTournament": {
-    "description": "Board objective for the strongest sides: win the tournament. Generic, because the board now sets one for the continental cup as well as the World Cup."
+    "description": "Board objective for the strongest sides: win the tournament. Generic, because the board now sets one for the continental cup as well as the World Championship."
   },
   "objectiveQualifyGeneric": "Qualify",
   "@objectiveQualifyGeneric": {
@@ -6403,13 +7246,13 @@
       }
     }
   },
-  "objectiveWinWorldCup": "Win the World Cup",
+  "objectiveWinWorldCup": "Win the World Championship",
   "@objectiveWinWorldCup": {
     "description": "Shared label: objectiveWinWorldCup"
   },
   "objectiveReachFinal": "Reach the final",
   "@objectiveReachFinal": {
-    "description": "Board objective: reach the final. Generic — the board sets one for the continental cup as well as the World Cup, so it must not name a competition."
+    "description": "Board objective: reach the final. Generic — the board sets one for the continental cup as well as the World Championship, so it must not name a competition."
   },
   "objectiveReachSemis": "Reach the semi-finals",
   "@objectiveReachSemis": {
@@ -6423,7 +7266,7 @@
   "@objectiveReachKnockouts": {
     "description": "Shared label: objectiveReachKnockouts"
   },
-  "objectiveQualify": "Qualify for the World Cup",
+  "objectiveQualify": "Qualify for the World Championship",
   "@objectiveQualify": {
     "description": "Shared label: objectiveQualify"
   },
@@ -7870,21 +8713,21 @@
   "@confOceania": {
     "description": "Continent name."
   },
-  "compWorldCup": "World Cup",
+  "compWorldCup": "World Championship",
   "@compWorldCup": {
     "description": "Competition name shown to the manager. The stored name stays English."
   },
-  "compWorldCupFinals": "World Cup Finals",
+  "compWorldCupFinals": "World Championship Finals",
   "@compWorldCupFinals": {
-    "description": "Competition name: the World Cup finals tournament."
+    "description": "Competition name: the World Championship finals tournament."
   },
-  "compWorldCupQualifying": "World Cup Qualifying",
+  "compWorldCupQualifying": "World Championship Qualifying",
   "@compWorldCupQualifying": {
-    "description": "Competition name: World Cup qualifying, region unspecified."
+    "description": "Competition name: World Championship qualifying, region unspecified."
   },
   "compQualifiers": "{region} Qualifiers",
   "@compQualifiers": {
-    "description": "Competition name: one continent's World Cup qualifying campaign.",
+    "description": "Competition name: one continent's World Championship qualifying campaign.",
     "placeholders": {
       "region": {
         "type": "String",
@@ -7969,7 +8812,7 @@
   "@msgCycleTitle4": {
     "description": "Inbox: cycle-start headline, one of four."
   },
-  "msgCycleBody1": "The road to the {year} World Cup starts here.",
+  "msgCycleBody1": "The road to the {year} World Championship starts here.",
   "@msgCycleBody1": {
     "description": "Inbox: cycle-start body, one of four.",
     "placeholders": {
@@ -7978,7 +8821,7 @@
       }
     }
   },
-  "msgCycleBody2": "A new cycle. The {year} World Cup is the target.",
+  "msgCycleBody2": "A new cycle. The {year} World Championship is the target.",
   "@msgCycleBody2": {
     "description": "Inbox: cycle-start body, one of four.",
     "placeholders": {
@@ -7987,7 +8830,7 @@
       }
     }
   },
-  "msgCycleBody3": "Four years to the {year} World Cup. Work starts now.",
+  "msgCycleBody3": "Four years to the {year} World Championship. Work starts now.",
   "@msgCycleBody3": {
     "description": "Inbox: cycle-start body, one of four.",
     "placeholders": {
@@ -8047,9 +8890,9 @@
       }
     }
   },
-  "msgWcHostTitle": "{year} World Cup host: {host}",
+  "msgWcHostTitle": "{year} World Championship host: {host}",
   "@msgWcHostTitle": {
-    "description": "Inbox: World Cup host chosen.",
+    "description": "Inbox: World Championship host chosen.",
     "placeholders": {
       "host": {
         "type": "String"
@@ -8059,9 +8902,9 @@
       }
     }
   },
-  "msgWcHostBody": "{host} will host the {year} World Cup.",
+  "msgWcHostBody": "{host} will host the {year} World Championship.",
   "@msgWcHostBody": {
-    "description": "Inbox: World Cup host chosen, body.",
+    "description": "Inbox: World Championship host chosen, body.",
     "placeholders": {
       "host": {
         "type": "String"
@@ -8071,13 +8914,13 @@
       }
     }
   },
-  "msgWcQualDrawTitle": "World Cup qualifying draw",
+  "msgWcQualDrawTitle": "World Championship qualifying draw",
   "@msgWcQualDrawTitle": {
-    "description": "Inbox: World Cup qualifying draw made."
+    "description": "Inbox: World Championship qualifying draw made."
   },
-  "msgWcQualDrawBody": "The World Cup qualifying groups have been drawn.",
+  "msgWcQualDrawBody": "The World Championship qualifying groups have been drawn.",
   "@msgWcQualDrawBody": {
-    "description": "Inbox: World Cup qualifying draw made, body."
+    "description": "Inbox: World Championship qualifying draw made, body."
   },
   "msgContFinalsDrawTitle": "{cup} finals draw",
   "@msgContFinalsDrawTitle": {
@@ -8097,65 +8940,65 @@
       }
     }
   },
-  "msgWcFinalsDrawTitle": "World Cup finals draw",
+  "msgWcFinalsDrawTitle": "World Championship finals draw",
   "@msgWcFinalsDrawTitle": {
-    "description": "Inbox: World Cup finals draw made."
+    "description": "Inbox: World Championship finals draw made."
   },
-  "msgWcFinalsDrawBody": "The {year} World Cup finals draw has been made.",
+  "msgWcFinalsDrawBody": "The {year} World Championship finals draw has been made.",
   "@msgWcFinalsDrawBody": {
-    "description": "Inbox: World Cup finals draw made, body.",
+    "description": "Inbox: World Championship finals draw made, body.",
     "placeholders": {
       "year": {
         "type": "int"
       }
     }
   },
-  "msgQualWcTitle1": "Through to the World Cup",
+  "msgQualWcTitle1": "Through to the World Championship",
   "@msgQualWcTitle1": {
-    "description": "Inbox: qualified for the World Cup, headline."
+    "description": "Inbox: qualified for the World Championship, headline."
   },
-  "msgQualWcTitle2": "World Cup booked",
+  "msgQualWcTitle2": "World Championship booked",
   "@msgQualWcTitle2": {
-    "description": "Inbox: qualified for the World Cup, headline."
+    "description": "Inbox: qualified for the World Championship, headline."
   },
-  "msgQualWcTitle3": "We're going to the World Cup",
+  "msgQualWcTitle3": "We're going to the World Championship",
   "@msgQualWcTitle3": {
-    "description": "Inbox: qualified for the World Cup, headline."
+    "description": "Inbox: qualified for the World Championship, headline."
   },
   "msgQualWcTitle4": "Ticket punched",
   "@msgQualWcTitle4": {
-    "description": "Inbox: qualified for the World Cup, headline."
+    "description": "Inbox: qualified for the World Championship, headline."
   },
-  "msgQualWcBody1": "You have qualified for the {year} World Cup finals.",
+  "msgQualWcBody1": "You have qualified for the {year} World Championship finals.",
   "@msgQualWcBody1": {
-    "description": "Inbox: qualified for the World Cup, body.",
+    "description": "Inbox: qualified for the World Championship, body.",
     "placeholders": {
       "year": {
         "type": "int"
       }
     }
   },
-  "msgQualWcBody2": "It's official: your nation is at the {year} World Cup.",
+  "msgQualWcBody2": "It's official: your nation is at the {year} World Championship.",
   "@msgQualWcBody2": {
-    "description": "Inbox: qualified for the World Cup, body.",
+    "description": "Inbox: qualified for the World Championship, body.",
     "placeholders": {
       "year": {
         "type": "int"
       }
     }
   },
-  "msgQualWcBody3": "A place at the {year} World Cup is secured.",
+  "msgQualWcBody3": "A place at the {year} World Championship is secured.",
   "@msgQualWcBody3": {
-    "description": "Inbox: qualified for the World Cup, body.",
+    "description": "Inbox: qualified for the World Championship, body.",
     "placeholders": {
       "year": {
         "type": "int"
       }
     }
   },
-  "msgQualWcBody4": "You're through to the {year} World Cup finals.",
+  "msgQualWcBody4": "You're through to the {year} World Championship finals.",
   "@msgQualWcBody4": {
-    "description": "Inbox: qualified for the World Cup, body.",
+    "description": "Inbox: qualified for the World Championship, body.",
     "placeholders": {
       "year": {
         "type": "int"
@@ -9025,13 +9868,13 @@
       }
     }
   },
-  "newsWcMissTitle": "World Cup dream over",
+  "newsWcMissTitle": "World Championship dream over",
   "@newsWcMissTitle": {
-    "description": "Inbox: failed to qualify for the World Cup."
+    "description": "Inbox: failed to qualify for the World Championship."
   },
-  "newsWcMissBody": "You didn't make the {year} World Cup. The qualifying campaign fell short. Four more years.",
+  "newsWcMissBody": "You didn't make the {year} World Championship. The qualifying campaign fell short. Four more years.",
   "@newsWcMissBody": {
-    "description": "Inbox: failed to qualify for the World Cup, body.",
+    "description": "Inbox: failed to qualify for the World Championship, body.",
     "placeholders": {
       "year": {
         "type": "int"
@@ -9745,59 +10588,131 @@
   "@yReactionElation5": {
     "description": "Y feed: a elation reply under somebody else's post."
   },
-  "yReactionRelief0": "that took ten years off me",
+  "yReactionElation6": "Right. That is why we watch.",
+  "@yReactionElation6": {
+    "description": "Y reply: elation, variant 6."
+  },
+  "yReactionElation7": "Days like this pay for the other ones.",
+  "@yReactionElation7": {
+    "description": "Y reply: elation, variant 7."
+  },
+  "yReactionElation8": "About time. Genuinely, about time.",
+  "@yReactionElation8": {
+    "description": "Y reply: elation, variant 8."
+  },
+  "yReactionElation9": "Great. Now do it again next week and I will believe it.",
+  "@yReactionElation9": {
+    "description": "Y reply: elation, variant 9."
+  },
+  "yReactionElation10": "Enjoy tonight, because this lot will find a way to ruin it.",
+  "@yReactionElation10": {
+    "description": "Y reply: elation, variant 10."
+  },
+  "yReactionElation11": "One good night does not make anybody a great side.",
+  "@yReactionElation11": {
+    "description": "Y reply: elation, variant 11."
+  },
+  "yReactionRelief0": "Not pretty, but I'll take it every single time.",
   "@yReactionRelief0": {
     "description": "Y feed: a relief reply under somebody else's post."
   },
-  "yReactionRelief1": "Ugly. Three points. Moving on.",
+  "yReactionRelief1": "Somehow. Somehow!",
   "@yReactionRelief1": {
     "description": "Y feed: a relief reply under somebody else's post."
   },
-  "yReactionRelief2": "Nobody speak. Nobody jinx it.",
+  "yReactionRelief2": "Ugly. Three points. Moving on.",
   "@yReactionRelief2": {
     "description": "Y feed: a relief reply under somebody else's post."
   },
-  "yReactionRelief3": "Not pretty, but I'll take it every single time.",
+  "yReactionRelief3": "I will take ugly all day if it comes with points.",
   "@yReactionRelief3": {
     "description": "Y feed: a relief reply under somebody else's post."
   },
-  "yReactionRelief4": "Heart rate: unacceptable.",
+  "yReactionRelief4": "that took ten years off me",
   "@yReactionRelief4": {
     "description": "Y feed: a relief reply under somebody else's post."
   },
-  "yReactionRelief5": "Somehow. Somehow!",
+  "yReactionRelief5": "Nobody speak. Nobody jinx it.",
   "@yReactionRelief5": {
     "description": "Y feed: a relief reply under somebody else's post."
   },
-  "yReactionFury0": "Absolute state of this.",
+  "yReactionRelief6": "Heart rate: unacceptable.",
+  "@yReactionRelief6": {
+    "description": "Y reply: relief, variant 6."
+  },
+  "yReactionRelief7": "Survived. That is the word. Survived.",
+  "@yReactionRelief7": {
+    "description": "Y reply: relief, variant 7."
+  },
+  "yReactionRelief8": "We should not need relief from games like that.",
+  "@yReactionRelief8": {
+    "description": "Y reply: relief, variant 8."
+  },
+  "yReactionRelief9": "Relieved, and a bit embarrassed about being relieved.",
+  "@yReactionRelief9": {
+    "description": "Y reply: relief, variant 9."
+  },
+  "yReactionRelief10": "If that is the standard we are cheering, we are in trouble.",
+  "@yReactionRelief10": {
+    "description": "Y reply: relief, variant 10."
+  },
+  "yReactionRelief11": "Scraping through is a habit, and it is not a good one.",
+  "@yReactionRelief11": {
+    "description": "Y reply: relief, variant 11."
+  },
+  "yReactionFury0": "Not good enough. Not remotely.",
   "@yReactionFury0": {
     "description": "Y feed: a fury reply under somebody else's post."
   },
-  "yReactionFury1": "Not good enough. Not remotely.",
+  "yReactionFury1": "Somebody explain that to me slowly.",
   "@yReactionFury1": {
     "description": "Y feed: a fury reply under somebody else's post."
   },
-  "yReactionFury2": "I want names.",
+  "yReactionFury2": "That is a hard watch and I am being polite.",
   "@yReactionFury2": {
     "description": "Y feed: a fury reply under somebody else's post."
   },
-  "yReactionFury3": "Every four years, the same. EVERY four years.",
+  "yReactionFury3": "Disappointed. Genuinely disappointed.",
   "@yReactionFury3": {
     "description": "Y feed: a fury reply under somebody else's post."
   },
-  "yReactionFury4": "Deleting the app. Reinstalling Thursday.",
+  "yReactionFury4": "Absolute state of this.",
   "@yReactionFury4": {
     "description": "Y feed: a fury reply under somebody else's post."
   },
-  "yReactionFury5": "Somebody explain that to me slowly.",
+  "yReactionFury5": "I want names.",
   "@yReactionFury5": {
     "description": "Y feed: a fury reply under somebody else's post."
+  },
+  "yReactionFury6": "Deleting the app. Reinstalling Thursday.",
+  "@yReactionFury6": {
+    "description": "Y reply: fury, variant 6."
+  },
+  "yReactionFury7": "Nobody out there looked like they wanted it.",
+  "@yReactionFury7": {
+    "description": "Y reply: fury, variant 7."
+  },
+  "yReactionFury8": "Every four years, the same. EVERY four years.",
+  "@yReactionFury8": {
+    "description": "Y reply: fury, variant 8."
+  },
+  "yReactionFury9": "That is not a performance, it is an insult.",
+  "@yReactionFury9": {
+    "description": "Y reply: fury, variant 9."
+  },
+  "yReactionFury10": "People give up weekends and money for that. Think about it.",
+  "@yReactionFury10": {
+    "description": "Y reply: fury, variant 10."
+  },
+  "yReactionFury11": "I have defended this side for years. Not tonight. Not after that.",
+  "@yReactionFury11": {
+    "description": "Y reply: fury, variant 11."
   },
   "yReactionDespair0": "well.",
   "@yReactionDespair0": {
     "description": "Y feed: a despair reply under somebody else's post."
   },
-  "yReactionDespair1": "I have run out of ways to say this.",
+  "yReactionDespair1": "No jokes today. Nothing.",
   "@yReactionDespair1": {
     "description": "Y feed: a despair reply under somebody else's post."
   },
@@ -9805,7 +10720,7 @@
   "@yReactionDespair2": {
     "description": "Y feed: a despair reply under somebody else's post."
   },
-  "yReactionDespair3": "this is the darkest timeline",
+  "yReactionDespair3": "I have run out of ways to say this.",
   "@yReactionDespair3": {
     "description": "Y feed: a despair reply under somebody else's post."
   },
@@ -9813,33 +10728,81 @@
   "@yReactionDespair4": {
     "description": "Y feed: a despair reply under somebody else's post."
   },
-  "yReactionDespair5": "No jokes today. Nothing.",
+  "yReactionDespair5": "this is the darkest timeline",
   "@yReactionDespair5": {
     "description": "Y feed: a despair reply under somebody else's post."
   },
-  "yReactionSmugness0": "Said it in January. Check the timeline.",
+  "yReactionDespair6": "Not even angry any more. That is the worrying part.",
+  "@yReactionDespair6": {
+    "description": "Y reply: despair, variant 6."
+  },
+  "yReactionDespair7": "Same feeling, different year.",
+  "@yReactionDespair7": {
+    "description": "Y reply: despair, variant 7."
+  },
+  "yReactionDespair8": "I do not know what this is any more, but it is not a football team.",
+  "@yReactionDespair8": {
+    "description": "Y reply: despair, variant 8."
+  },
+  "yReactionDespair9": "We are further away than we were, and nobody will say it.",
+  "@yReactionDespair9": {
+    "description": "Y reply: despair, variant 9."
+  },
+  "yReactionDespair10": "A whole generation wasted and the same people decide what happens next.",
+  "@yReactionDespair10": {
+    "description": "Y reply: despair, variant 10."
+  },
+  "yReactionDespair11": "Stop telling me it is a process. It is not going anywhere.",
+  "@yReactionDespair11": {
+    "description": "Y reply: despair, variant 11."
+  },
+  "yReactionSmugness0": "Quietly, but: told you.",
   "@yReactionSmugness0": {
     "description": "Y feed: a smugness reply under somebody else's post."
   },
-  "yReactionSmugness1": "Some of you owe some of us an apology.",
+  "yReactionSmugness1": "bookmark this one",
   "@yReactionSmugness1": {
     "description": "Y feed: a smugness reply under somebody else's post."
   },
-  "yReactionSmugness2": "Quietly, but: told you.",
+  "yReactionSmugness2": "The doubters have gone very quiet.",
   "@yReactionSmugness2": {
     "description": "Y feed: a smugness reply under somebody else's post."
   },
-  "yReactionSmugness3": "The doubters have gone very quiet.",
+  "yReactionSmugness3": "Not that anybody's counting. I'm counting.",
   "@yReactionSmugness3": {
     "description": "Y feed: a smugness reply under somebody else's post."
   },
-  "yReactionSmugness4": "bookmark this one",
+  "yReactionSmugness4": "Said it in January. Check the timeline.",
   "@yReactionSmugness4": {
     "description": "Y feed: a smugness reply under somebody else's post."
   },
-  "yReactionSmugness5": "Not that anybody's counting. I'm counting.",
+  "yReactionSmugness5": "Some of you owe some of us an apology.",
   "@yReactionSmugness5": {
     "description": "Y feed: a smugness reply under somebody else's post."
+  },
+  "yReactionSmugness6": "Filing this under things I mentioned first.",
+  "@yReactionSmugness6": {
+    "description": "Y reply: smugness, variant 6."
+  },
+  "yReactionSmugness7": "No gloating. A little gloating.",
+  "@yReactionSmugness7": {
+    "description": "Y reply: smugness, variant 7."
+  },
+  "yReactionSmugness8": "Where are all the experts now? Genuine question.",
+  "@yReactionSmugness8": {
+    "description": "Y reply: smugness, variant 8."
+  },
+  "yReactionSmugness9": "I would like every single one of you to say it back to me.",
+  "@yReactionSmugness9": {
+    "description": "Y reply: smugness, variant 9."
+  },
+  "yReactionSmugness10": "Screenshot, printed, framed, sent to the people who laughed.",
+  "@yReactionSmugness10": {
+    "description": "Y reply: smugness, variant 10."
+  },
+  "yReactionSmugness11": "I will be bringing this up for the rest of my life and you have earned it.",
+  "@yReactionSmugness11": {
+    "description": "Y reply: smugness, variant 11."
   },
   "yReactionShrug0": "it happened. next.",
   "@yReactionShrug0": {
@@ -9853,17 +10816,41 @@
   "@yReactionShrug2": {
     "description": "Y feed: a shrug reply under somebody else's post."
   },
-  "yReactionShrug3": "no thoughts, head empty",
+  "yReactionShrug3": "Genuinely nothing to add.",
   "@yReactionShrug3": {
     "description": "Y feed: a shrug reply under somebody else's post."
   },
-  "yReactionShrug4": "Wake me for the next one.",
+  "yReactionShrug4": "no thoughts, head empty",
   "@yReactionShrug4": {
     "description": "Y feed: a shrug reply under somebody else's post."
   },
-  "yReactionShrug5": "Genuinely nothing to add.",
+  "yReactionShrug5": "Wake me for the next one.",
   "@yReactionShrug5": {
     "description": "Y feed: a shrug reply under somebody else's post."
+  },
+  "yReactionShrug6": "That is ninety minutes I am not getting back.",
+  "@yReactionShrug6": {
+    "description": "Y reply: shrug, variant 6."
+  },
+  "yReactionShrug7": "Neither here nor there, really.",
+  "@yReactionShrug7": {
+    "description": "Y reply: shrug, variant 7."
+  },
+  "yReactionShrug8": "Could not tell you a single thing that happened.",
+  "@yReactionShrug8": {
+    "description": "Y reply: shrug, variant 8."
+  },
+  "yReactionShrug9": "Another one of those. There are a lot of those.",
+  "@yReactionShrug9": {
+    "description": "Y reply: shrug, variant 9."
+  },
+  "yReactionShrug10": "I watched all of it and felt nothing at all.",
+  "@yReactionShrug10": {
+    "description": "Y reply: shrug, variant 10."
+  },
+  "yReactionShrug11": "If nobody mentions this again, that is fine by me.",
+  "@yReactionShrug11": {
+    "description": "Y reply: shrug, variant 11."
   },
   "tourThirdsUneven": "Groups are uneven, so results against each big group's bottom side are dropped and every team is judged over the same games.",
   "@tourThirdsUneven": {
@@ -9893,7 +10880,7 @@
   "@gatePriceLead": {
     "description": "Premium gate: the line above the price."
   },
-  "gatePrice": "€11.99",
+  "gatePrice": "€12.99",
   "@gatePrice": {
     "description": "Premium gate: the price. Placeholder until the store's own localised price is wired in."
   },
@@ -10336,7 +11323,7 @@
       }
     }
   },
-  "friendliesLikeYourGroup": "Suggested first: sides who play like {rivals}, who you have drawn.",
+  "friendliesLikeYourGroup": "Marked below: sides who play like {rivals}, who you have drawn.",
   "@friendliesLikeYourGroup": {
     "description": "Friendlies: why these opponents are suggested first.",
     "placeholders": {
@@ -10368,7 +11355,7 @@
   "@settingsFreeScopeTitle": {
     "description": "Settings: what the free game covers."
   },
-  "settingsFreeScopeBlurb": "A complete cycle (qualifying, a continental championship and a World Cup) with nothing held back. Carrying a save on past it is a single payment, once, and it covers every save and every future update.",
+  "settingsFreeScopeBlurb": "A complete cycle (qualifying, your continental championship and the World Championship) with nothing held back. Carrying a save on past it is a single payment, once, and it covers every save and every future update.",
   "@settingsFreeScopeBlurb": {
     "description": "Settings: what the free game covers."
   },
@@ -10380,7 +11367,7 @@
   "@settingsUnlockedBlurb": {
     "description": "Settings: what the free game covers."
   },
-  "friendliesLikeYourCampaign": "Suggested first: sides who play like {rivals}, who you still have to face.",
+  "friendliesLikeYourCampaign": "Marked below: sides who play like {rivals}, who you still have to face.",
   "@friendliesLikeYourCampaign": {
     "description": "Friendlies: why these opponents are suggested first, when the group is a qualifying campaign rather than a finals draw.",
     "placeholders": {
@@ -10389,7 +11376,7 @@
       }
     }
   },
-  "friendliesCloseToYou": "Suggested first: the sides closest to you in the world ranking. Once you are drawn, they are picked to resemble your group.",
+  "friendliesCloseToYou": "Marked below: the sides closest to you in the world ranking. Once you are drawn, the marks follow your group.",
   "@friendliesCloseToYou": {
     "description": "Friendlies: why these opponents are suggested first, before anything is drawn."
   },
@@ -10417,6 +11404,18 @@
       }
     }
   },
+  "hubRoundPage": "{page} / {pages}",
+  "@hubRoundPage": {
+    "description": "Round-results popup: which page of a long matchday is shown.",
+    "placeholders": {
+      "page": {
+        "type": "int"
+      },
+      "pages": {
+        "type": "int"
+      }
+    }
+  },
   "transfersNewer": "Newer",
   "@transfersNewer": {
     "description": "Transfer report: previous page of moves."
@@ -10424,5 +11423,255 @@
   "transfersOlder": "More",
   "@transfersOlder": {
     "description": "Transfer report: next page of moves."
+  },
+  "transfersUnknownClub": "Unknown club",
+  "@transfersUnknownClub": {
+    "description": "Transfer report: stands in for a side of the move whose club the report does not name."
+  },
+  "yAgainstThemAgain0": "That is {count} times against {opponent} now. Somebody is keeping score, and it is them.",
+  "@yAgainstThemAgain0": {
+    "description": "Y post: againstThemAgain, variant 0.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      },
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "yAgainstThemAgain1": "{opponent} again. {count} meetings, and we still have not worked them out.",
+  "@yAgainstThemAgain1": {
+    "description": "Y post: againstThemAgain, variant 1.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      },
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "yAgainstThemAgain2": "Number {count} against {opponent}. This has stopped being a coincidence.",
+  "@yAgainstThemAgain2": {
+    "description": "Y post: againstThemAgain, variant 2.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      },
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "yAgainstThemAgain3": "We have played {opponent} {count} times and learned nothing from any of them.",
+  "@yAgainstThemAgain3": {
+    "description": "Y post: againstThemAgain, variant 3.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      },
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "yAgainstThemAgain4": "{opponent}, {count} times. They know exactly what we are going to do.",
+  "@yAgainstThemAgain4": {
+    "description": "Y post: againstThemAgain, variant 4.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      },
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "yAgainstThemAgain5": "Whatever {opponent} have on us, {count} meetings in, they still have it.",
+  "@yAgainstThemAgain5": {
+    "description": "Y post: againstThemAgain, variant 5.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      },
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "ySameOldStory0": "That is the {count}th time this has happened lately. At what point is it just what we are?",
+  "@ySameOldStory0": {
+    "description": "Y post: sameOldStory, variant 0.",
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "ySameOldStory1": "{count} afternoons like this now. It is a pattern, not a run of luck.",
+  "@ySameOldStory1": {
+    "description": "Y post: sameOldStory, variant 1.",
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "ySameOldStory2": "We have seen this exact game {count} times recently. Same script, same ending.",
+  "@ySameOldStory2": {
+    "description": "Y post: sameOldStory, variant 2.",
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "ySameOldStory3": "The {count}th version of the same ninety minutes. Nobody is fixing it.",
+  "@ySameOldStory3": {
+    "description": "Y post: sameOldStory, variant 3.",
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "ySameOldStory4": "{count} times. If you cannot see the pattern by now you are not looking.",
+  "@ySameOldStory4": {
+    "description": "Y post: sameOldStory, variant 4.",
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "ySameOldStory5": "Same story, {count} times over. The excuses have run out before the results did.",
+  "@ySameOldStory5": {
+    "description": "Y post: sameOldStory, variant 5.",
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "yToldYouSo0": "I said this was coming while everybody was busy celebrating.",
+  "@yToldYouSo0": {
+    "description": "Y post: toldYouSo, variant 0."
+  },
+  "yToldYouSo1": "Two good weeks and we were a golden generation again. And here we are.",
+  "@yToldYouSo1": {
+    "description": "Y post: toldYouSo, variant 1."
+  },
+  "yToldYouSo2": "The people telling me to enjoy it last month have gone quiet.",
+  "@yToldYouSo2": {
+    "description": "Y post: toldYouSo, variant 2."
+  },
+  "yToldYouSo3": "I take no pleasure in this. Very little pleasure. Some.",
+  "@yToldYouSo3": {
+    "description": "Y post: toldYouSo, variant 3."
+  },
+  "yToldYouSo4": "It was never as good as they told you, and this is the proof.",
+  "@yToldYouSo4": {
+    "description": "Y post: toldYouSo, variant 4."
+  },
+  "yToldYouSo5": "Every time. We are told it is different, and every time it is not.",
+  "@yToldYouSo5": {
+    "description": "Y post: toldYouSo, variant 5."
+  },
+  "pressAskAbove": "Nobody expected this side to be where it is. Is it real, or is it a good few months?",
+  "@pressAskAbove": {
+    "description": "Press conference line."
+  },
+  "pressAskAbove2": "You are getting results against sides ranked well above you. How?",
+  "@pressAskAbove2": {
+    "description": "Press conference line."
+  },
+  "pressAskAbove3": "Every neutral has you overachieving. Does that description annoy you?",
+  "@pressAskAbove3": {
+    "description": "Press conference line."
+  },
+  "pressAskAbove4": "This squad is punching above its weight. What happens when it stops?",
+  "@pressAskAbove4": {
+    "description": "Press conference line."
+  },
+  "pressAskAbove5": "You keep beating teams you have no business beating. What have you found?",
+  "@pressAskAbove5": {
+    "description": "Press conference line."
+  },
+  "pressAskAbove6": "People are starting to take this seriously. Are you?",
+  "@pressAskAbove6": {
+    "description": "Press conference line."
+  },
+  "pressAskAbove7": "Is this side better than the ranking says, or are you catching people out?",
+  "@pressAskAbove7": {
+    "description": "Press conference line."
+  },
+  "pressAskAbove8": "How long can a group like this keep this up?",
+  "@pressAskAbove8": {
+    "description": "Press conference line."
+  },
+  "pressAskFlattered": "You are winning without convincing anybody. Does that worry you?",
+  "@pressAskFlattered": {
+    "description": "Press conference line."
+  },
+  "pressAskFlattered2": "Another narrow one against a side you should be beating comfortably. Why is it so hard?",
+  "@pressAskFlattered2": {
+    "description": "Press conference line."
+  },
+  "pressAskFlattered3": "Three points, and not much else. Is that enough for you?",
+  "@pressAskFlattered3": {
+    "description": "Press conference line."
+  },
+  "pressAskFlattered4": "You got away with that. Would you agree?",
+  "@pressAskFlattered4": {
+    "description": "Press conference line."
+  },
+  "pressAskFlattered5": "The results are there and the performances are not. Which one are you judging yourself on?",
+  "@pressAskFlattered5": {
+    "description": "Press conference line."
+  },
+  "pressAskFlattered6": "Sides that ride their luck this often usually run out of it. Are you worried?",
+  "@pressAskFlattered6": {
+    "description": "Press conference line."
+  },
+  "pressAskFlattered7": "That was hard work for what it was. What is missing?",
+  "@pressAskFlattered7": {
+    "description": "Press conference line."
+  },
+  "pressAskFlattered8": "Do you care how you win, or only that you win?",
+  "@pressAskFlattered8": {
+    "description": "Press conference line."
+  },
+  "pressAskCrisis": "Bad results and a board that has stopped defending you. How bad is it?",
+  "@pressAskCrisis": {
+    "description": "Press conference line."
+  },
+  "pressAskCrisis2": "Nobody upstairs will say your name. Do you still have their backing?",
+  "@pressAskCrisis2": {
+    "description": "Press conference line."
+  },
+  "pressAskCrisis3": "The results are poor and the silence from above is loud. What now?",
+  "@pressAskCrisis3": {
+    "description": "Press conference line."
+  },
+  "pressAskCrisis4": "This has gone past a bad run. Do you accept that?",
+  "@pressAskCrisis4": {
+    "description": "Press conference line."
+  },
+  "pressAskCrisis5": "You are losing the room and the boardroom at the same time. Which worries you more?",
+  "@pressAskCrisis5": {
+    "description": "Press conference line."
+  },
+  "pressAskCrisis6": "Is there a point at which you would walk?",
+  "@pressAskCrisis6": {
+    "description": "Press conference line."
+  },
+  "pressAskCrisis7": "What do you say to people who think this has run its course?",
+  "@pressAskCrisis7": {
+    "description": "Press conference line."
+  },
+  "pressAskCrisis8": "Give us one reason to believe this turns around.",
+  "@pressAskCrisis8": {
+    "description": "Press conference line."
   }
 }

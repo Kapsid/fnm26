@@ -31,16 +31,16 @@ class ChallengeStats {
     this.careerHatTricks = 0,
   });
 
-  /// World Cups won by the manager (whichever nation they led that cycle).
+  /// World Championships won by the manager (whichever nation they led that cycle).
   final int worldCupTitles;
 
-  /// How many DIFFERENT nations the manager has won the World Cup with.
+  /// How many DIFFERENT nations the manager has won the World Championship with.
   final int distinctWorldCupNations;
 
-  /// The confederations of the nations the manager has won the World Cup with.
+  /// The confederations of the nations the manager has won the World Championship with.
   final Set<Confederation> worldCupConfederations;
 
-  /// The longest run of consecutive World Cups (4 years apart) the manager won.
+  /// The longest run of consecutive World Championships (4 years apart) the manager won.
   final int mostWorldCupsInARow;
 
   /// Continental championships won by the manager, in total.
@@ -62,19 +62,19 @@ class ChallengeStats {
   /// Distinct nations the manager has led.
   final int nationsManaged;
 
-  /// Won a World Cup without losing a single match in that finals tournament.
+  /// Won a World Championship without losing a single match in that finals tournament.
   final bool wonWorldCupUndefeated;
 
-  /// Won every match of a World Cup qualifying campaign (min. six games).
+  /// Won every match of a World Championship qualifying campaign (min. six games).
   final bool perfectQualifying;
 
-  /// Won a World Cup as the host nation.
+  /// Won a World Championship as the host nation.
   final bool wonWorldCupAsHost;
 
-  /// Won a World Cup away from home (a nation that wasn't the host).
+  /// Won a World Championship away from home (a nation that wasn't the host).
   final bool wonWorldCupAsVisitor;
 
-  /// Won a World Cup with a nation ranked outside the world's top 32.
+  /// Won a World Championship with a nation ranked outside the world's top 32.
   final bool wonWorldCupAsMinnow;
 
   /// The manager's longest unbeaten run of competitive matches, any nation.
@@ -184,7 +184,7 @@ abstract final class ChallengeCatalog {
     ChallengeDef(
       id: 'ch_wc_1',
       title: 'World Champion',
-      description: 'Win the World Cup.',
+      description: 'Win the World Championship.',
       progressOf: _wc1,
       tier: ChallengeTier.silver,
     ),
@@ -199,19 +199,19 @@ abstract final class ChallengeCatalog {
     ChallengeDef(
       id: 'ch_wc_3',
       title: 'Serial Winner',
-      description: 'Win 3 World Cups.',
+      description: 'Win 3 World Championships.',
       progressOf: _wc3,
     ),
     ChallengeDef(
       id: 'ch_wc_5',
       title: 'Dynasty',
-      description: 'Win 5 World Cups.',
+      description: 'Win 5 World Championships.',
       progressOf: _wc5,
     ),
     ChallengeDef(
       id: 'ch_wc_10',
       title: 'Immortal',
-      description: 'Win 10 World Cups.',
+      description: 'Win 10 World Championships.',
       progressOf: _wc10,
       tier: ChallengeTier.legendary,
       brutal: true,
@@ -219,19 +219,19 @@ abstract final class ChallengeCatalog {
     ChallengeDef(
       id: 'ch_wc_2teams',
       title: 'Have Boots, Will Travel',
-      description: 'Win the World Cup with 2 different nations.',
+      description: 'Win the World Championship with 2 different nations.',
       progressOf: _wc2Teams,
     ),
     ChallengeDef(
       id: 'ch_wc_3teams',
       title: 'Globetrotter',
-      description: 'Win the World Cup with 3 different nations.',
+      description: 'Win the World Championship with 3 different nations.',
       progressOf: _wc3Teams,
     ),
     ChallengeDef(
       id: 'ch_wc_streak3',
       title: 'Three-Peat',
-      description: 'Win 3 World Cups in a row.',
+      description: 'Win 3 World Championships in a row.',
       progressOf: _wcStreak3,
       tier: ChallengeTier.legendary,
       brutal: true,
@@ -240,7 +240,7 @@ abstract final class ChallengeCatalog {
       id: 'ch_wc_allconf',
       title: 'World Conqueror',
       description:
-          'Win the World Cup with a nation from every confederation (6).',
+          'Win the World Championship with a nation from every confederation (6).',
       progressOf: _wcAllConf,
       tier: ChallengeTier.legendary,
       brutal: true,
@@ -263,7 +263,7 @@ abstract final class ChallengeCatalog {
       id: 'ch_treble',
       title: 'Clean Sweep',
       description:
-          'Win the World Cup, a continental title and the Nations Cup in one '
+          'Win the World Championship, a continental title and the Nations Cup in one '
           'career.',
       progressOf: _cleanSweep,
     ),
@@ -298,7 +298,7 @@ abstract final class ChallengeCatalog {
     ChallengeDef(
       id: 'ch_grandmaster',
       title: 'Grandmaster',
-      description: 'Win 3 World Cups AND 5 continental championships.',
+      description: 'Win 3 World Championships AND 5 continental championships.',
       progressOf: _grandmaster,
       tier: ChallengeTier.legendary,
       brutal: true,
@@ -306,7 +306,7 @@ abstract final class ChallengeCatalog {
     ChallengeDef(
       id: 'ch_undefeated',
       title: 'Untouchable',
-      description: 'Win a World Cup without losing a single match.',
+      description: 'Win a World Championship without losing a single match.',
       progressOf: _undefeated,
       tier: ChallengeTier.legendary,
       brutal: true,
@@ -314,7 +314,8 @@ abstract final class ChallengeCatalog {
     ChallengeDef(
       id: 'ch_perfect_qual',
       title: 'Flawless Passage',
-      description: 'Win every match of a World Cup qualifying campaign.',
+      description:
+          'Win every match of a World Championship qualifying campaign.',
       progressOf: _perfectQual,
       tier: ChallengeTier.legendary,
       brutal: true,
@@ -323,7 +324,7 @@ abstract final class ChallengeCatalog {
       id: 'ch_minnow',
       title: 'Minnow Miracle',
       description:
-          'Win the World Cup with a nation ranked outside the world top 32.',
+          'Win the World Championship with a nation ranked outside the world top 32.',
       progressOf: _minnow,
       tier: ChallengeTier.legendary,
       brutal: true,
@@ -331,7 +332,8 @@ abstract final class ChallengeCatalog {
     ChallengeDef(
       id: 'ch_grand_tour',
       title: 'Home & Away',
-      description: 'Win a World Cup as hosts and win one away from home.',
+      description:
+          'Win a World Championship as hosts and win one away from home.',
       progressOf: _grandTour,
       tier: ChallengeTier.legendary,
       brutal: true,
@@ -404,7 +406,7 @@ abstract final class ChallengeCatalog {
       (s.continentalCupsWon.length, 6);
   static (int, int) _cleanSweep(ChallengeStats s) {
     // The Continental Clash is deliberately excluded — a true clean sweep is
-    // the World Cup, a continental title and the Nations Cup.
+    // the World Championship, a continental title and the Nations Cup.
     var done = 0;
     if (s.worldCupTitles > 0) done++;
     if (s.continentalTitles > 0) done++;
@@ -462,7 +464,7 @@ abstract final class ProceduralChallenges {
       ChallengeDef(
         id: 'pc_wc',
         title: 'Serial Champion',
-        description: 'Win $wc World Cups this save.',
+        description: 'Win $wc World Championships this save.',
         progressOf: (s) => (s.worldCupTitles, wc),
         procedural: true,
       ),
@@ -470,7 +472,7 @@ abstract final class ProceduralChallenges {
         id: 'pc_majors',
         title: 'Silverware Collector',
         description:
-            'Win $majors major trophies (World Cup, continental or Nations Cup).',
+            'Win $majors major trophies (World Championship, continental or Nations Cup).',
         progressOf: (s) => (
           s.worldCupTitles + s.continentalTitles + s.nationsCupTitles,
           majors,

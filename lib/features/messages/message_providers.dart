@@ -9,6 +9,7 @@ import 'package:fnm/domain/services/achievements/achievements.dart';
 import 'package:fnm/domain/services/competition/hosts.dart';
 import 'package:fnm/domain/services/player/prospects.dart';
 import 'package:fnm/features/career/career_providers.dart';
+import 'package:fnm/features/squad/captain_providers.dart';
 import 'package:fnm/features/hub/hub_event.dart';
 import 'package:fnm/domain/services/player/player_lifecycle.dart';
 import 'package:fnm/features/federation/federation_providers.dart';
@@ -227,10 +228,7 @@ class MessageService {
     final honours = await comp.honours(careerId);
     for (final h in honours) {
       if (h.year < CareerService.cycleStart.year) continue;
-      final display = competitionLabel(
-        l,
-        h.competition == worldCupHonourName ? 'World Cup' : h.competition,
-      );
+      final display = competitionLabel(l, h.competition);
       final mine = h.championId == career.nationId;
 
       final scored = h.finalHomeScore != null && h.finalAwayScore != null;
@@ -660,6 +658,14 @@ class MessageService {
             await _ref
                 .read(careerRepositoryProvider)
                 .setCaptain(careerId, null);
+            // Everything that answers "who is captain" reads the career row
+            // imperatively, so clearing it behind their backs left the screens
+            // (and the pre-match strip) still naming a man who has retired.
+            _ref
+              ..invalidate(captainProvider)
+              ..invalidate(storedCaptainIdProvider)
+              ..invalidate(captainMoraleProvider)
+              ..invalidate(careerByIdProvider);
           }
           if ((notable || wasCaptain) && !existing.contains('retire:${p.id}')) {
             final tally = [

@@ -1,8 +1,13 @@
 import 'package:fnm/domain/entities/player.dart';
+import 'package:fnm/domain/services/player/player_aging.dart';
 
 /// A club a player is attached to: a fictional name and the FIFA code of the
 /// country whose league it plays in (so a flag can be shown next to it).
 typedef ClubSide = ({String name, String country});
+
+/// Where a player is in his contract clock: which deal he is on (every club
+/// draw is salted with it) and the age he signed it at.
+typedef ClubContract = ({int index, int since});
 
 /// One country's league: the FIFA [country] code (for the flag), a strength
 /// [tier] (1 = elite, 5 = lower), and its fictional club names.
@@ -47,15 +52,26 @@ abstract final class ClubService {
     String homeCode = '',
     List<String> homeCities = const [],
   }) {
-    final h = _hash(p.id ^ (saveSeed * 0x9E3779B1));
-    final band = standingBand(p.overall);
+    // Which contract he is on. Every draw below is salted with it, so the club
+    // is settled once and then STANDS until the deal runs out — see
+    // [contractIndex].
+    final contract = contractAt(p.id, p.age);
+    final deal = contract.index;
+    final level = clubLevel(p.overall, p.age, signedAt: contract.since);
+    final h = _hash(p.id ^ (saveSeed * 0x9E3779B1) ^ (deal * 0x2545F491));
+    final band = standingBand(level);
     // The home/abroad draw runs on its OWN mix of the id. Reusing `h ~/ 7` for
     // it drew a mean percentile of 61 rather than 50 across every squad
     // measured, so every retention figure came out well under target — the
     // clubs were right and the dice were loaded.
-    final stayRoll = _hash(p.id * 0x27D4EB2D ^ saveSeed) % 100;
+    final stayRoll =
+        _hash(p.id * 0x27D4EB2D ^ saveSeed ^ (deal * 0x9E3779B9)) % 100;
+    // The boy floor is read off the age he SIGNED at, not the age he is: a
+    // seventeen-year-old on a three-year academy deal leaves when it runs out,
+    // not on his nineteenth birthday. Reading it live emptied every academy in
+    // the world in the same season.
     if (homeCode.isNotEmpty &&
-        _staysHome(p.overall, p.age, homeCode, stayRoll)) {
+        _staysHome(level, contract.since, homeCode, stayRoll)) {
       final home = _homeClub(homeCode, homeCities, h, band);
       if (home != null) return home;
     }
@@ -69,13 +85,16 @@ abstract final class ClubService {
     // A step DOWN is the money move that keeps the top end from being a clean
     // sweep of the big five — the Saudi or Turkish contract, the season in
     // Portugal.
-    final step = switch (_hash(p.id * 0x85EBCA6B ^ saveSeed) % 100) {
+    final step = switch (_hash(
+          p.id * 0x85EBCA6B ^ saveSeed ^ (deal * 0x165667B1),
+        ) %
+        100) {
       < 12 => -1,
       < 50 => 0,
       < 80 => 1,
       _ => 2,
     };
-    final tier = (_tierFor(p.overall) - step).clamp(1, 5);
+    final tier = (_tierFor(level) - step).clamp(1, 5);
     final leagues = _byTier[tier] ?? _byTier[5]!;
     // Never "move abroad" into the player's own league by the foreign path —
     // that would be a domestic club dressed up as a transfer.
@@ -85,6 +104,93 @@ abstract final class ClubService {
     final club = league.clubs[(h ~/ pool.length + band) % league.clubs.length];
     return (name: club, country: league.country);
   }
+
+  /// The rating a club is picked off: the live overall with the PREDICTABLE
+  /// part of the age curve taken back out (see [PlayerAging.peakOffset]).
+  ///
+  /// The live overall was the wrong number to hang a club on, and it showed:
+  /// a teenager gains a couple of points a year as the youth markdown comes
+  /// off, a veteran loses a couple as his legs go, and either crosses a
+  /// five-point band often enough that the history card read as a transfer
+  /// every single season. Nobody's career looks like that. Detrending for age
+  /// leaves the part of a rating that is about the FOOTBALLER, which barely
+  /// moves — so a move now means he genuinely stepped up or fell away.
+  ///
+  /// Only [_ageBlend] of the offset is taken out, not all of it: a seventeen
+  /// year old placed at the club his projected peak deserves would skip the
+  /// climb entirely, and the climb is half the story. The part that is left in
+  /// is frozen at [signedAt] — the age he signed his current deal — so the
+  /// climb happens BETWEEN contracts, in steps, rather than a little every
+  /// season. Without that freeze the leftover trend was still enough to walk a
+  /// player across a standing band mid-contract about one season in seven.
+  static int clubLevel(int overall, int age, {int? signedAt}) =>
+      (overall +
+              PlayerAging.peakOffset(age) -
+              PlayerAging.peakOffset(signedAt ?? age) * (1 - _ageBlend))
+          .round()
+          .clamp(20, 99);
+
+  /// How much of the age curve [clubLevel] takes out. Under 1 on purpose — a
+  /// prospect is placed ABOVE what he is today and still has ground to make up.
+  static const double _ageBlend = 0.80;
+
+  /// Where a player is in his transfer clock at [age]: which deal he is on and
+  /// the age he signed it at.
+  ///
+  /// A footballer signs for a few years and then stays put; he does not
+  /// renegotiate his life every August because his rating ticked over. Salting
+  /// every club draw with this index is what turns the club from a running
+  /// function of the rating into a DECISION taken at a point in time and then
+  /// left alone.
+  ///
+  /// Deals run [_minContractYears]–[_maxContractYears] seasons, and a few end
+  /// early: the bid nobody expected, the fallout, the relegation. That is the
+  /// unscheduled transfer, and it has to be decided INSIDE this walk rather
+  /// than sprung on a single season, or the move would un-happen the next year.
+  static ClubContract contractAt(int playerId, int age) {
+    var index = 0;
+    var deal = 0;
+    var start = _firstContractAge;
+    while (start < age) {
+      final span =
+          _minContractYears +
+          _hash(playerId * 0x1B873593 ^ deal * 0x2545F491) %
+              (_maxContractYears - _minContractYears + 1);
+      var end = start + span;
+      for (var year = start + 1; year < end; year++) {
+        if (_hash(playerId * 0x27220A95 ^ year * 0x9E3779B1) % 100 <
+            _surpriseMovePercent) {
+          end = year;
+          break;
+        }
+      }
+      if (end > age) break;
+      start = end;
+      deal++;
+      // Most footballers sign again where they already are. Without this every
+      // expiry was a transfer and a career came out as eight clubs; with it a
+      // career reads as the three to six a real one does.
+      if (_hash(playerId * 0x7FEB352D ^ deal * 0x846CA68B) % 100 >=
+          _renewalPercent) {
+        index++;
+      }
+    }
+    return (index: index, since: age < _firstContractAge ? age : start);
+  }
+
+  /// The age a player signs his first professional deal. Below it he is at his
+  /// academy and the boy floor in [_staysHome] keeps him there anyway.
+  static const int _firstContractAge = 17;
+
+  /// How long a deal runs, in seasons.
+  static const int _minContractYears = 2;
+  static const int _maxContractYears = 4;
+
+  /// The chance, per season of a running contract, that it ends early anyway.
+  static const int _surpriseMovePercent = 6;
+
+  /// The chance that an expiring deal is simply signed again at the same club.
+  static const int _renewalPercent = 50;
 
   /// A player's standing WITHIN their league, in [standingBandWidth]-point
   /// bands.

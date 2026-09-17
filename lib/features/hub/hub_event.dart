@@ -408,14 +408,9 @@ nextEventProvider = FutureProvider.autoDispose.family<HubEvent, int>((
     );
   }
 
-  // 2b. The opening press conference. Every tournament the manager is in is
-  //     opened by facing the world's press, right after the ceremony and before
-  //     a ball is kicked — the point in a cycle where setting the expectation is
-  //     actually a decision. The press otherwise only ever turned up in the
-  //     wreckage afterwards.
-  // 2b-i. Somebody wants a word. A man who has been in the squad without
-  //       playing, or left out of it altogether, has come to ask where he
-  //       stands — and leaving him unanswered has a price.
+  // 2b. Somebody wants a word. A man who has been in the squad without
+  //     playing, or left out of it altogether, has come to ask where he
+  //     stands — and leaving him unanswered has a price.
   final wantsAWord = await ref.watch(grievanceProvider(careerId).future);
   if (wantsAWord.isNotEmpty) {
     return HubEvent(
@@ -423,21 +418,6 @@ nextEventProvider = FutureProvider.autoDispose.family<HubEvent, int>((
       label: l.hubEventGrievance(wantsAWord.first.playerName),
       icon: Icons.record_voice_over_outlined,
       subtitle: l.hubEventGrievanceSub,
-    );
-  }
-
-  // EVERY question the press has is an event, not just the one before a
-  // tournament. A conference the manager could walk past was a conference he
-  // answered whenever he happened to open the screen — which meant answering
-  // questions about a match played weeks earlier, and reading as a form rather
-  // than a room full of people waiting.
-  final pressQuestion = await ref.watch(pressQuestionProvider(careerId).future);
-  if (pressQuestion != null) {
-    return HubEvent(
-      kind: HubEventKind.press,
-      label: l.hubEventPressConference,
-      icon: Icons.mic_rounded,
-      subtitle: l.hubEventPressConferenceSub,
     );
   }
 
@@ -518,6 +498,28 @@ nextEventProvider = FutureProvider.autoDispose.family<HubEvent, int>((
       label: l.hubEventPlayNationsCupMatch,
       icon: Icons.fast_forward_rounded,
       route: '${Routes.nationsCup}?careerId=$careerId',
+    );
+  }
+
+  // EVERY question the press has is an event, not just the one before a
+  // tournament. A conference the manager could walk past was a conference he
+  // answered whenever he happened to open the screen — which meant answering
+  // questions about a match played weeks earlier, and reading as a form rather
+  // than a room full of people waiting.
+  //
+  // It sits BELOW the watch-the-tournament events on purpose. A tournament the
+  // manager is not in is one he steps through from the stands, and the press
+  // were stopping him between rounds of it — a conference on the night of
+  // somebody else's final, held by a manager who was not there. His own
+  // fixtures are what the room turns up for, so the questions wait until the
+  // tournament he is only watching has been played out.
+  final pressQuestion = await ref.watch(pressQuestionProvider(careerId).future);
+  if (pressQuestion != null) {
+    return HubEvent(
+      kind: HubEventKind.press,
+      label: l.hubEventPressConference,
+      icon: Icons.mic_rounded,
+      subtitle: l.hubEventPressConferenceSub,
     );
   }
 

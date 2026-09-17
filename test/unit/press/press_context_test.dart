@@ -18,7 +18,10 @@ void main() {
 
     test('nothing runs past what the sheet reserves room for', () {
       for (final topic in PressTopic.values) {
-        expect(Press.lengthFor(topic), inInclusiveRange(1, Press.maxConferenceLength));
+        expect(
+          Press.lengthFor(topic),
+          inInclusiveRange(1, Press.maxConferenceLength),
+        );
       }
     });
 
@@ -87,6 +90,51 @@ void main() {
           isNotEmpty,
         );
       }
+    });
+  });
+
+  group('the questions that read the form book', () {
+    // Three topics the press could not ask before, because nothing in the
+    // conference knew how good the side was supposed to be.
+    test('each has a way out and a real stance', () {
+      for (final topic in [
+        PressTopic.overachieving,
+        PressTopic.luckyWin,
+        PressTopic.crisis,
+      ]) {
+        final options = Press.optionsFor(topic, worldRank: 60);
+        expect(options, contains(PressTone.playItDown), reason: topic.name);
+        expect(options.length, greaterThan(1), reason: topic.name);
+      }
+    });
+
+    test('a side ranked sixtieth is not offered "we will win it"', () {
+      expect(
+        Press.optionsFor(PressTopic.overachieving, target: 7, worldRank: 60),
+        isNot(contains(PressTone.raiseTheBar)),
+      );
+    });
+
+    test('each has its own key prefix, so answers round-trip', () {
+      for (final topic in [
+        PressTopic.overachieving,
+        PressTopic.luckyWin,
+        PressTopic.crisis,
+      ]) {
+        final prefix = Press.keyPrefixOf(topic);
+        expect(Press.topicOfKey('$prefix:12'), topic, reason: topic.name);
+      }
+    });
+
+    test('a crisis is a longer afternoon than a flattering win', () {
+      expect(
+        Press.lengthFor(PressTopic.crisis),
+        greaterThan(Press.lengthFor(PressTopic.luckyWin)),
+      );
+      expect(
+        Press.lengthFor(PressTopic.crisis),
+        lessThanOrEqualTo(Press.maxConferenceLength),
+      );
     });
   });
 }

@@ -269,6 +269,14 @@ abstract interface class CompetitionRepository {
   /// All group tables for the save's competition, ordered by group name.
   Future<List<GroupTable>> allGroupTables(int careerId);
 
+  /// Every group in the save by id, with the letter it is known by ("A", "B").
+  ///
+  /// Fixtures carry a group id and nothing else, so a screen that wants to
+  /// SHOW its results group by group — the round popup a manager steps a
+  /// tournament through — has no way to name what it is grouping without
+  /// this.
+  Future<Map<int, String>> groupNames(int careerId);
+
   /// Every group table across all confederations (for browsing all draws).
   Future<List<ConfederationGroupTable>> allGroupTablesByConfederation(
     int careerId,
