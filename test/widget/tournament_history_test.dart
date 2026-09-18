@@ -36,6 +36,7 @@ void main() {
     thirdId: third,
     thirdId2: null,
     hostId: host,
+    hostIds: host == null ? const <int>[] : [host],
     finalHomeScore: homeScore,
     finalAwayScore: awayScore,
     topScorerName: null,

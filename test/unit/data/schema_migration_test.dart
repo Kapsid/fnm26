@@ -7,6 +7,7 @@ import '../../generated_migrations/schema.dart';
 import '../../generated_migrations/schema_v38.dart' as v38;
 import '../../generated_migrations/schema_v40.dart' as v40;
 import '../../generated_migrations/schema_v41.dart' as v41;
+import '../../generated_migrations/schema_v45.dart' as v45;
 
 /// Guards the promise that a save survives a schema bump.
 ///
@@ -175,6 +176,36 @@ void main() {
         .getSingle();
     expect(row.read<String>('manager_name'), 'Timekeeper');
     expect(row.read<int>('played_seconds'), 0);
+  });
+
+  test('v46 keeps an honour and leaves its host list unrecorded', () async {
+    // 45 → 46 adds the full host list. Additive and nullable: an honour
+    // recorded before it keeps its single host_id and has no list, which the
+    // repository reads back as that one host — which is what it was.
+    final schema = await verifier.schemaAt(45);
+    final old = v45.DatabaseAtV45(schema.newConnection());
+    await old.customStatement(
+      'INSERT INTO careers (id, nation_id, manager_name, created_at, '
+      'in_game_date, rng_seed, cycle_pointer, budget) '
+      'VALUES (1, 1, ?, 0, 0, 7, 0, 0)',
+      ['Historian'],
+    );
+    await old.customStatement(
+      'INSERT INTO honours (career_id, year, competition, champion_id, '
+      'runner_up_id, host_id) VALUES (1, 2022, ?, 5, 6, 9)',
+      ['World Championship'],
+    );
+    await old.close();
+
+    final db = AppDatabase.forTesting(schema.newConnection());
+    addTearDown(db.close);
+    await verifier.migrateAndValidate(db, 46);
+
+    final row = await db
+        .customSelect('SELECT host_id, host_ids FROM honours')
+        .getSingle();
+    expect(row.read<int>('host_id'), 9);
+    expect(row.readNullable<String>('host_ids'), isNull);
   });
 
   for (final MapEntry(key: from, value: to) in upgrades.entries) {

@@ -1,0 +1,3688 @@
+{
+  "_meta": {
+    "description": "This file contains a serialized version of schema entities for drift.",
+    "version": "1.3.0"
+  },
+  "options": {
+    "store_date_time_values_as_text": false
+  },
+  "entities": [
+    {
+      "id": 0,
+      "references": [],
+      "type": "table",
+      "data": {
+        "name": "nations",
+        "was_declared_in_moor": false,
+        "columns": [
+          {
+            "name": "id",
+            "getter_name": "id",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "name",
+            "getter_name": "name",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "code",
+            "getter_name": "code",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [
+              {
+                "allowed-lengths": {
+                  "min": 2,
+                  "max": 3
+                }
+              }
+            ]
+          },
+          {
+            "name": "confederation",
+            "getter_name": "confederation",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [],
+            "type_converter": {
+              "dart_expr": "const EnumNameConverter<Confederation>(Confederation.values)",
+              "dart_type_name": "Confederation"
+            }
+          },
+          {
+            "name": "ranking",
+            "getter_name": "ranking",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": "const CustomExpression('0')",
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "is_free_demo",
+            "getter_name": "isFreeDemo",
+            "moor_type": "bool",
+            "nullable": false,
+            "customConstraints": null,
+            "defaultConstraints": "CHECK (\"is_free_demo\" IN (0, 1))",
+            "dialectAwareDefaultConstraints": {
+              "sqlite": "CHECK (\"is_free_demo\" IN (0, 1))"
+            },
+            "default_dart": "const CustomExpression('0')",
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "primary_color",
+            "getter_name": "primaryColor",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": "const CustomExpression('\\'#1E88E5\\'')",
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "secondary_color",
+            "getter_name": "secondaryColor",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": "const CustomExpression('\\'#FFFFFF\\'')",
+            "default_client_dart": null,
+            "dsl_features": []
+          }
+        ],
+        "is_virtual": false,
+        "without_rowid": false,
+        "constraints": [],
+        "explicit_pk": [
+          "id"
+        ]
+      }
+    },
+    {
+      "id": 1,
+      "references": [
+        0
+      ],
+      "type": "table",
+      "data": {
+        "name": "players",
+        "was_declared_in_moor": false,
+        "columns": [
+          {
+            "name": "id",
+            "getter_name": "id",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "nation_id",
+            "getter_name": "nationId",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "defaultConstraints": "REFERENCES nations (id) ON DELETE CASCADE",
+            "dialectAwareDefaultConstraints": {
+              "sqlite": "REFERENCES nations (id) ON DELETE CASCADE"
+            },
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [
+              {
+                "foreign_key": {
+                  "to": {
+                    "table": "nations",
+                    "column": "id"
+                  },
+                  "initially_deferred": false,
+                  "on_update": null,
+                  "on_delete": "cascade"
+                }
+              }
+            ]
+          },
+          {
+            "name": "name",
+            "getter_name": "name",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "age",
+            "getter_name": "age",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "position",
+            "getter_name": "position",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [],
+            "type_converter": {
+              "dart_expr": "const EnumNameConverter<PlayerPosition>(PlayerPosition.values)",
+              "dart_type_name": "PlayerPosition"
+            }
+          },
+          {
+            "name": "physical",
+            "getter_name": "physical",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "technical",
+            "getter_name": "technical",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "stamina",
+            "getter_name": "stamina",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "club",
+            "getter_name": "club",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": "const CustomExpression('\\'Free agent\\'')",
+            "default_client_dart": null,
+            "dsl_features": []
+          }
+        ],
+        "is_virtual": false,
+        "without_rowid": false,
+        "constraints": [],
+        "explicit_pk": [
+          "id"
+        ]
+      }
+    },
+    {
+      "id": 2,
+      "references": [
+        0
+      ],
+      "type": "table",
+      "data": {
+        "name": "careers",
+        "was_declared_in_moor": false,
+        "columns": [
+          {
+            "name": "id",
+            "getter_name": "id",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "defaultConstraints": "PRIMARY KEY AUTOINCREMENT",
+            "dialectAwareDefaultConstraints": {
+              "sqlite": "PRIMARY KEY AUTOINCREMENT"
+            },
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [
+              "auto-increment"
+            ]
+          },
+          {
+            "name": "manager_name",
+            "getter_name": "managerName",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "nation_id",
+            "getter_name": "nationId",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "defaultConstraints": "REFERENCES nations (id)",
+            "dialectAwareDefaultConstraints": {
+              "sqlite": "REFERENCES nations (id)"
+            },
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [
+              {
+                "foreign_key": {
+                  "to": {
+                    "table": "nations",
+                    "column": "id"
+                  },
+                  "initially_deferred": false,
+                  "on_update": null,
+                  "on_delete": null
+                }
+              }
+            ]
+          },
+          {
+            "name": "rng_seed",
+            "getter_name": "rngSeed",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "created_at",
+            "getter_name": "createdAt",
+            "moor_type": "dateTime",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "in_game_date",
+            "getter_name": "inGameDate",
+            "moor_type": "dateTime",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "cycle_pointer",
+            "getter_name": "cyclePointer",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": "const CustomExpression('0')",
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "last_played_at",
+            "getter_name": "lastPlayedAt",
+            "moor_type": "dateTime",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "budget",
+            "getter_name": "budget",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": "const CustomExpression('0')",
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "captain_player_id",
+            "getter_name": "captainPlayerId",
+            "moor_type": "int",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "y_read_at",
+            "getter_name": "yReadAt",
+            "moor_type": "dateTime",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "played_seconds",
+            "getter_name": "playedSeconds",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": "const CustomExpression('0')",
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "skill_man_management",
+            "getter_name": "skillManManagement",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": "const CustomExpression('5')",
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "skill_tactical",
+            "getter_name": "skillTactical",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": "const CustomExpression('5')",
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "skill_youth_development",
+            "getter_name": "skillYouthDevelopment",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": "const CustomExpression('5')",
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "skill_negotiation",
+            "getter_name": "skillNegotiation",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": "const CustomExpression('5')",
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "staff_assistant",
+            "getter_name": "staffAssistant",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": "const CustomExpression('0')",
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "staff_scout",
+            "getter_name": "staffScout",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": "const CustomExpression('0')",
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "staff_fitness_coach",
+            "getter_name": "staffFitnessCoach",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": "const CustomExpression('0')",
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "staff_assistant_id",
+            "getter_name": "staffAssistantId",
+            "moor_type": "int",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "staff_scout_id",
+            "getter_name": "staffScoutId",
+            "moor_type": "int",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "staff_fitness_coach_id",
+            "getter_name": "staffFitnessCoachId",
+            "moor_type": "int",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "last_cycle_board",
+            "getter_name": "lastCycleBoard",
+            "moor_type": "int",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          }
+        ],
+        "is_virtual": false,
+        "without_rowid": false,
+        "constraints": []
+      }
+    },
+    {
+      "id": 3,
+      "references": [
+        2
+      ],
+      "type": "table",
+      "data": {
+        "name": "competitions",
+        "was_declared_in_moor": false,
+        "columns": [
+          {
+            "name": "id",
+            "getter_name": "id",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "defaultConstraints": "PRIMARY KEY AUTOINCREMENT",
+            "dialectAwareDefaultConstraints": {
+              "sqlite": "PRIMARY KEY AUTOINCREMENT"
+            },
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [
+              "auto-increment"
+            ]
+          },
+          {
+            "name": "career_id",
+            "getter_name": "careerId",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "defaultConstraints": "REFERENCES careers (id) ON DELETE CASCADE",
+            "dialectAwareDefaultConstraints": {
+              "sqlite": "REFERENCES careers (id) ON DELETE CASCADE"
+            },
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [
+              {
+                "foreign_key": {
+                  "to": {
+                    "table": "careers",
+                    "column": "id"
+                  },
+                  "initially_deferred": false,
+                  "on_update": null,
+                  "on_delete": "cascade"
+                }
+              }
+            ]
+          },
+          {
+            "name": "confederation",
+            "getter_name": "confederation",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [],
+            "type_converter": {
+              "dart_expr": "const EnumNameConverter<Confederation>(Confederation.values)",
+              "dart_type_name": "Confederation"
+            }
+          },
+          {
+            "name": "name",
+            "getter_name": "name",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "kind",
+            "getter_name": "kind",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": "const CustomExpression('\\'worldCupQualifying\\'')",
+            "default_client_dart": null,
+            "dsl_features": [],
+            "type_converter": {
+              "dart_expr": "const EnumNameConverter<CompetitionKind>(CompetitionKind.values)",
+              "dart_type_name": "CompetitionKind"
+            }
+          },
+          {
+            "name": "cycle",
+            "getter_name": "cycle",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": "const CustomExpression('0')",
+            "default_client_dart": null,
+            "dsl_features": []
+          }
+        ],
+        "is_virtual": false,
+        "without_rowid": false,
+        "constraints": []
+      }
+    },
+    {
+      "id": 4,
+      "references": [
+        3
+      ],
+      "type": "table",
+      "data": {
+        "name": "qualifying_groups",
+        "was_declared_in_moor": false,
+        "columns": [
+          {
+            "name": "id",
+            "getter_name": "id",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "defaultConstraints": "PRIMARY KEY AUTOINCREMENT",
+            "dialectAwareDefaultConstraints": {
+              "sqlite": "PRIMARY KEY AUTOINCREMENT"
+            },
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [
+              "auto-increment"
+            ]
+          },
+          {
+            "name": "competition_id",
+            "getter_name": "competitionId",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "defaultConstraints": "REFERENCES competitions (id) ON DELETE CASCADE",
+            "dialectAwareDefaultConstraints": {
+              "sqlite": "REFERENCES competitions (id) ON DELETE CASCADE"
+            },
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [
+              {
+                "foreign_key": {
+                  "to": {
+                    "table": "competitions",
+                    "column": "id"
+                  },
+                  "initially_deferred": false,
+                  "on_update": null,
+                  "on_delete": "cascade"
+                }
+              }
+            ]
+          },
+          {
+            "name": "name",
+            "getter_name": "name",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          }
+        ],
+        "is_virtual": false,
+        "without_rowid": false,
+        "constraints": []
+      }
+    },
+    {
+      "id": 5,
+      "references": [
+        4
+      ],
+      "type": "table",
+      "data": {
+        "name": "group_members",
+        "was_declared_in_moor": false,
+        "columns": [
+          {
+            "name": "group_id",
+            "getter_name": "groupId",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "defaultConstraints": "REFERENCES qualifying_groups (id) ON DELETE CASCADE",
+            "dialectAwareDefaultConstraints": {
+              "sqlite": "REFERENCES qualifying_groups (id) ON DELETE CASCADE"
+            },
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [
+              {
+                "foreign_key": {
+                  "to": {
+                    "table": "qualifying_groups",
+                    "column": "id"
+                  },
+                  "initially_deferred": false,
+                  "on_update": null,
+                  "on_delete": "cascade"
+                }
+              }
+            ]
+          },
+          {
+            "name": "nation_id",
+            "getter_name": "nationId",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          }
+        ],
+        "is_virtual": false,
+        "without_rowid": false,
+        "constraints": [],
+        "explicit_pk": [
+          "group_id",
+          "nation_id"
+        ]
+      }
+    },
+    {
+      "id": 6,
+      "references": [
+        2,
+        3,
+        4
+      ],
+      "type": "table",
+      "data": {
+        "name": "fixtures",
+        "was_declared_in_moor": false,
+        "columns": [
+          {
+            "name": "id",
+            "getter_name": "id",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "defaultConstraints": "PRIMARY KEY AUTOINCREMENT",
+            "dialectAwareDefaultConstraints": {
+              "sqlite": "PRIMARY KEY AUTOINCREMENT"
+            },
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [
+              "auto-increment"
+            ]
+          },
+          {
+            "name": "career_id",
+            "getter_name": "careerId",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "defaultConstraints": "REFERENCES careers (id) ON DELETE CASCADE",
+            "dialectAwareDefaultConstraints": {
+              "sqlite": "REFERENCES careers (id) ON DELETE CASCADE"
+            },
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [
+              {
+                "foreign_key": {
+                  "to": {
+                    "table": "careers",
+                    "column": "id"
+                  },
+                  "initially_deferred": false,
+                  "on_update": null,
+                  "on_delete": "cascade"
+                }
+              }
+            ]
+          },
+          {
+            "name": "competition_id",
+            "getter_name": "competitionId",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "defaultConstraints": "REFERENCES competitions (id)",
+            "dialectAwareDefaultConstraints": {
+              "sqlite": "REFERENCES competitions (id)"
+            },
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [
+              {
+                "foreign_key": {
+                  "to": {
+                    "table": "competitions",
+                    "column": "id"
+                  },
+                  "initially_deferred": false,
+                  "on_update": null,
+                  "on_delete": null
+                }
+              }
+            ]
+          },
+          {
+            "name": "group_id",
+            "getter_name": "groupId",
+            "moor_type": "int",
+            "nullable": true,
+            "customConstraints": null,
+            "defaultConstraints": "REFERENCES qualifying_groups (id)",
+            "dialectAwareDefaultConstraints": {
+              "sqlite": "REFERENCES qualifying_groups (id)"
+            },
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [
+              {
+                "foreign_key": {
+                  "to": {
+                    "table": "qualifying_groups",
+                    "column": "id"
+                  },
+                  "initially_deferred": false,
+                  "on_update": null,
+                  "on_delete": null
+                }
+              }
+            ]
+          },
+          {
+            "name": "matchday",
+            "getter_name": "matchday",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "date",
+            "getter_name": "date",
+            "moor_type": "dateTime",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "home_nation_id",
+            "getter_name": "homeNationId",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "away_nation_id",
+            "getter_name": "awayNationId",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "home_score",
+            "getter_name": "homeScore",
+            "moor_type": "int",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "away_score",
+            "getter_name": "awayScore",
+            "moor_type": "int",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "played",
+            "getter_name": "played",
+            "moor_type": "bool",
+            "nullable": false,
+            "customConstraints": null,
+            "defaultConstraints": "CHECK (\"played\" IN (0, 1))",
+            "dialectAwareDefaultConstraints": {
+              "sqlite": "CHECK (\"played\" IN (0, 1))"
+            },
+            "default_dart": "const CustomExpression('0')",
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "round",
+            "getter_name": "round",
+            "moor_type": "string",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "after_extra_time",
+            "getter_name": "afterExtraTime",
+            "moor_type": "bool",
+            "nullable": false,
+            "customConstraints": null,
+            "defaultConstraints": "CHECK (\"after_extra_time\" IN (0, 1))",
+            "dialectAwareDefaultConstraints": {
+              "sqlite": "CHECK (\"after_extra_time\" IN (0, 1))"
+            },
+            "default_dart": "const CustomExpression('0')",
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "home_penalties",
+            "getter_name": "homePenalties",
+            "moor_type": "int",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "away_penalties",
+            "getter_name": "awayPenalties",
+            "moor_type": "int",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          }
+        ],
+        "is_virtual": false,
+        "without_rowid": false,
+        "constraints": []
+      }
+    },
+    {
+      "id": 7,
+      "references": [
+        2
+      ],
+      "type": "table",
+      "data": {
+        "name": "tactics",
+        "was_declared_in_moor": false,
+        "columns": [
+          {
+            "name": "career_id",
+            "getter_name": "careerId",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "defaultConstraints": "REFERENCES careers (id) ON DELETE CASCADE",
+            "dialectAwareDefaultConstraints": {
+              "sqlite": "REFERENCES careers (id) ON DELETE CASCADE"
+            },
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [
+              {
+                "foreign_key": {
+                  "to": {
+                    "table": "careers",
+                    "column": "id"
+                  },
+                  "initially_deferred": false,
+                  "on_update": null,
+                  "on_delete": "cascade"
+                }
+              }
+            ]
+          },
+          {
+            "name": "formation",
+            "getter_name": "formation",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [],
+            "type_converter": {
+              "dart_expr": "const EnumNameConverter<Formation>(Formation.values)",
+              "dart_type_name": "Formation"
+            }
+          },
+          {
+            "name": "playstyle",
+            "getter_name": "playstyle",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": "const CustomExpression('\\'custom\\'')",
+            "default_client_dart": null,
+            "dsl_features": [],
+            "type_converter": {
+              "dart_expr": "const EnumNameConverter<Playstyle>(Playstyle.values)",
+              "dart_type_name": "Playstyle"
+            }
+          },
+          {
+            "name": "mentality",
+            "getter_name": "mentality",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": "const CustomExpression('50')",
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "pressing",
+            "getter_name": "pressing",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": "const CustomExpression('50')",
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "tempo",
+            "getter_name": "tempo",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": "const CustomExpression('50')",
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "width",
+            "getter_name": "width",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": "const CustomExpression('50')",
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "defensive_line",
+            "getter_name": "defensiveLine",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": "const CustomExpression('50')",
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "directness",
+            "getter_name": "directness",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": "const CustomExpression('50')",
+            "default_client_dart": null,
+            "dsl_features": []
+          }
+        ],
+        "is_virtual": false,
+        "without_rowid": false,
+        "constraints": [],
+        "explicit_pk": [
+          "career_id"
+        ]
+      }
+    },
+    {
+      "id": 8,
+      "references": [
+        2
+      ],
+      "type": "table",
+      "data": {
+        "name": "lineup_slots",
+        "was_declared_in_moor": false,
+        "columns": [
+          {
+            "name": "career_id",
+            "getter_name": "careerId",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "defaultConstraints": "REFERENCES careers (id) ON DELETE CASCADE",
+            "dialectAwareDefaultConstraints": {
+              "sqlite": "REFERENCES careers (id) ON DELETE CASCADE"
+            },
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [
+              {
+                "foreign_key": {
+                  "to": {
+                    "table": "careers",
+                    "column": "id"
+                  },
+                  "initially_deferred": false,
+                  "on_update": null,
+                  "on_delete": "cascade"
+                }
+              }
+            ]
+          },
+          {
+            "name": "slot",
+            "getter_name": "slot",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "player_id",
+            "getter_name": "playerId",
+            "moor_type": "int",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          }
+        ],
+        "is_virtual": false,
+        "without_rowid": false,
+        "constraints": [],
+        "explicit_pk": [
+          "career_id",
+          "slot"
+        ]
+      }
+    },
+    {
+      "id": 9,
+      "references": [
+        2
+      ],
+      "type": "table",
+      "data": {
+        "name": "call_ups",
+        "was_declared_in_moor": false,
+        "columns": [
+          {
+            "name": "career_id",
+            "getter_name": "careerId",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "defaultConstraints": "REFERENCES careers (id) ON DELETE CASCADE",
+            "dialectAwareDefaultConstraints": {
+              "sqlite": "REFERENCES careers (id) ON DELETE CASCADE"
+            },
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [
+              {
+                "foreign_key": {
+                  "to": {
+                    "table": "careers",
+                    "column": "id"
+                  },
+                  "initially_deferred": false,
+                  "on_update": null,
+                  "on_delete": "cascade"
+                }
+              }
+            ]
+          },
+          {
+            "name": "player_id",
+            "getter_name": "playerId",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          }
+        ],
+        "is_virtual": false,
+        "without_rowid": false,
+        "constraints": [],
+        "explicit_pk": [
+          "career_id",
+          "player_id"
+        ]
+      }
+    },
+    {
+      "id": 10,
+      "references": [
+        2
+      ],
+      "type": "table",
+      "data": {
+        "name": "call_up_drafts",
+        "was_declared_in_moor": false,
+        "columns": [
+          {
+            "name": "career_id",
+            "getter_name": "careerId",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "defaultConstraints": "REFERENCES careers (id) ON DELETE CASCADE",
+            "dialectAwareDefaultConstraints": {
+              "sqlite": "REFERENCES careers (id) ON DELETE CASCADE"
+            },
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [
+              {
+                "foreign_key": {
+                  "to": {
+                    "table": "careers",
+                    "column": "id"
+                  },
+                  "initially_deferred": false,
+                  "on_update": null,
+                  "on_delete": "cascade"
+                }
+              }
+            ]
+          },
+          {
+            "name": "draft_key",
+            "getter_name": "draftKey",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "player_id",
+            "getter_name": "playerId",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          }
+        ],
+        "is_virtual": false,
+        "without_rowid": false,
+        "constraints": [],
+        "explicit_pk": [
+          "career_id",
+          "draft_key",
+          "player_id"
+        ]
+      }
+    },
+    {
+      "id": 11,
+      "references": [
+        2
+      ],
+      "type": "table",
+      "data": {
+        "name": "training_camp_choices",
+        "was_declared_in_moor": false,
+        "columns": [
+          {
+            "name": "career_id",
+            "getter_name": "careerId",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "defaultConstraints": "REFERENCES careers (id) ON DELETE CASCADE",
+            "dialectAwareDefaultConstraints": {
+              "sqlite": "REFERENCES careers (id) ON DELETE CASCADE"
+            },
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [
+              {
+                "foreign_key": {
+                  "to": {
+                    "table": "careers",
+                    "column": "id"
+                  },
+                  "initially_deferred": false,
+                  "on_update": null,
+                  "on_delete": "cascade"
+                }
+              }
+            ]
+          },
+          {
+            "name": "cycle",
+            "getter_name": "cycle",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "tournament",
+            "getter_name": "tournament",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "host_id",
+            "getter_name": "hostId",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "camp_index",
+            "getter_name": "campIndex",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          }
+        ],
+        "is_virtual": false,
+        "without_rowid": false,
+        "constraints": [],
+        "explicit_pk": [
+          "career_id",
+          "cycle",
+          "tournament"
+        ]
+      }
+    },
+    {
+      "id": 12,
+      "references": [
+        2,
+        3,
+        6
+      ],
+      "type": "table",
+      "data": {
+        "name": "goal_events",
+        "was_declared_in_moor": false,
+        "columns": [
+          {
+            "name": "id",
+            "getter_name": "id",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "defaultConstraints": "PRIMARY KEY AUTOINCREMENT",
+            "dialectAwareDefaultConstraints": {
+              "sqlite": "PRIMARY KEY AUTOINCREMENT"
+            },
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [
+              "auto-increment"
+            ]
+          },
+          {
+            "name": "career_id",
+            "getter_name": "careerId",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "defaultConstraints": "REFERENCES careers (id) ON DELETE CASCADE",
+            "dialectAwareDefaultConstraints": {
+              "sqlite": "REFERENCES careers (id) ON DELETE CASCADE"
+            },
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [
+              {
+                "foreign_key": {
+                  "to": {
+                    "table": "careers",
+                    "column": "id"
+                  },
+                  "initially_deferred": false,
+                  "on_update": null,
+                  "on_delete": "cascade"
+                }
+              }
+            ]
+          },
+          {
+            "name": "competition_id",
+            "getter_name": "competitionId",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "defaultConstraints": "REFERENCES competitions (id)",
+            "dialectAwareDefaultConstraints": {
+              "sqlite": "REFERENCES competitions (id)"
+            },
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [
+              {
+                "foreign_key": {
+                  "to": {
+                    "table": "competitions",
+                    "column": "id"
+                  },
+                  "initially_deferred": false,
+                  "on_update": null,
+                  "on_delete": null
+                }
+              }
+            ]
+          },
+          {
+            "name": "fixture_id",
+            "getter_name": "fixtureId",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "defaultConstraints": "REFERENCES fixtures (id)",
+            "dialectAwareDefaultConstraints": {
+              "sqlite": "REFERENCES fixtures (id)"
+            },
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [
+              {
+                "foreign_key": {
+                  "to": {
+                    "table": "fixtures",
+                    "column": "id"
+                  },
+                  "initially_deferred": false,
+                  "on_update": null,
+                  "on_delete": null
+                }
+              }
+            ]
+          },
+          {
+            "name": "nation_id",
+            "getter_name": "nationId",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "player_id",
+            "getter_name": "playerId",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "minute",
+            "getter_name": "minute",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          }
+        ],
+        "is_virtual": false,
+        "without_rowid": false,
+        "constraints": []
+      }
+    },
+    {
+      "id": 13,
+      "references": [
+        2
+      ],
+      "type": "table",
+      "data": {
+        "name": "honours",
+        "was_declared_in_moor": false,
+        "columns": [
+          {
+            "name": "id",
+            "getter_name": "id",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "defaultConstraints": "PRIMARY KEY AUTOINCREMENT",
+            "dialectAwareDefaultConstraints": {
+              "sqlite": "PRIMARY KEY AUTOINCREMENT"
+            },
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [
+              "auto-increment"
+            ]
+          },
+          {
+            "name": "career_id",
+            "getter_name": "careerId",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "defaultConstraints": "REFERENCES careers (id) ON DELETE CASCADE",
+            "dialectAwareDefaultConstraints": {
+              "sqlite": "REFERENCES careers (id) ON DELETE CASCADE"
+            },
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [
+              {
+                "foreign_key": {
+                  "to": {
+                    "table": "careers",
+                    "column": "id"
+                  },
+                  "initially_deferred": false,
+                  "on_update": null,
+                  "on_delete": "cascade"
+                }
+              }
+            ]
+          },
+          {
+            "name": "year",
+            "getter_name": "year",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "competition",
+            "getter_name": "competition",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "champion_id",
+            "getter_name": "championId",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "runner_up_id",
+            "getter_name": "runnerUpId",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "third_id",
+            "getter_name": "thirdId",
+            "moor_type": "int",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "third_id2",
+            "getter_name": "thirdId2",
+            "moor_type": "int",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "host_id",
+            "getter_name": "hostId",
+            "moor_type": "int",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "host_ids",
+            "getter_name": "hostIds",
+            "moor_type": "string",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "final_home_score",
+            "getter_name": "finalHomeScore",
+            "moor_type": "int",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "final_away_score",
+            "getter_name": "finalAwayScore",
+            "moor_type": "int",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "top_scorer_name",
+            "getter_name": "topScorerName",
+            "moor_type": "string",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "top_scorer_goals",
+            "getter_name": "topScorerGoals",
+            "moor_type": "int",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          }
+        ],
+        "is_virtual": false,
+        "without_rowid": false,
+        "constraints": []
+      }
+    },
+    {
+      "id": 14,
+      "references": [
+        2
+      ],
+      "type": "table",
+      "data": {
+        "name": "draws_watched",
+        "was_declared_in_moor": false,
+        "columns": [
+          {
+            "name": "career_id",
+            "getter_name": "careerId",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "defaultConstraints": "REFERENCES careers (id) ON DELETE CASCADE",
+            "dialectAwareDefaultConstraints": {
+              "sqlite": "REFERENCES careers (id) ON DELETE CASCADE"
+            },
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [
+              {
+                "foreign_key": {
+                  "to": {
+                    "table": "careers",
+                    "column": "id"
+                  },
+                  "initially_deferred": false,
+                  "on_update": null,
+                  "on_delete": "cascade"
+                }
+              }
+            ]
+          },
+          {
+            "name": "cycle",
+            "getter_name": "cycle",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "kind",
+            "getter_name": "kind",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          }
+        ],
+        "is_virtual": false,
+        "without_rowid": false,
+        "constraints": [],
+        "explicit_pk": [
+          "career_id",
+          "cycle",
+          "kind"
+        ]
+      }
+    },
+    {
+      "id": 15,
+      "references": [
+        2
+      ],
+      "type": "table",
+      "data": {
+        "name": "player_absences",
+        "was_declared_in_moor": false,
+        "columns": [
+          {
+            "name": "career_id",
+            "getter_name": "careerId",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "defaultConstraints": "REFERENCES careers (id) ON DELETE CASCADE",
+            "dialectAwareDefaultConstraints": {
+              "sqlite": "REFERENCES careers (id) ON DELETE CASCADE"
+            },
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [
+              {
+                "foreign_key": {
+                  "to": {
+                    "table": "careers",
+                    "column": "id"
+                  },
+                  "initially_deferred": false,
+                  "on_update": null,
+                  "on_delete": "cascade"
+                }
+              }
+            ]
+          },
+          {
+            "name": "player_id",
+            "getter_name": "playerId",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "yellows",
+            "getter_name": "yellows",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": "const CustomExpression('0')",
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "ban_matches",
+            "getter_name": "banMatches",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": "const CustomExpression('0')",
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "injury_matches",
+            "getter_name": "injuryMatches",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": "const CustomExpression('0')",
+            "default_client_dart": null,
+            "dsl_features": []
+          }
+        ],
+        "is_virtual": false,
+        "without_rowid": false,
+        "constraints": [],
+        "explicit_pk": [
+          "career_id",
+          "player_id"
+        ]
+      }
+    },
+    {
+      "id": 16,
+      "references": [
+        2
+      ],
+      "type": "table",
+      "data": {
+        "name": "rank_points",
+        "was_declared_in_moor": false,
+        "columns": [
+          {
+            "name": "career_id",
+            "getter_name": "careerId",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "defaultConstraints": "REFERENCES careers (id) ON DELETE CASCADE",
+            "dialectAwareDefaultConstraints": {
+              "sqlite": "REFERENCES careers (id) ON DELETE CASCADE"
+            },
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [
+              {
+                "foreign_key": {
+                  "to": {
+                    "table": "careers",
+                    "column": "id"
+                  },
+                  "initially_deferred": false,
+                  "on_update": null,
+                  "on_delete": "cascade"
+                }
+              }
+            ]
+          },
+          {
+            "name": "nation_id",
+            "getter_name": "nationId",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "points",
+            "getter_name": "points",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          }
+        ],
+        "is_virtual": false,
+        "without_rowid": false,
+        "constraints": [],
+        "explicit_pk": [
+          "career_id",
+          "nation_id"
+        ]
+      }
+    },
+    {
+      "id": 17,
+      "references": [
+        2
+      ],
+      "type": "table",
+      "data": {
+        "name": "seed_rankings",
+        "was_declared_in_moor": false,
+        "columns": [
+          {
+            "name": "career_id",
+            "getter_name": "careerId",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "defaultConstraints": "REFERENCES careers (id) ON DELETE CASCADE",
+            "dialectAwareDefaultConstraints": {
+              "sqlite": "REFERENCES careers (id) ON DELETE CASCADE"
+            },
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [
+              {
+                "foreign_key": {
+                  "to": {
+                    "table": "careers",
+                    "column": "id"
+                  },
+                  "initially_deferred": false,
+                  "on_update": null,
+                  "on_delete": "cascade"
+                }
+              }
+            ]
+          },
+          {
+            "name": "cycle",
+            "getter_name": "cycle",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "nation_id",
+            "getter_name": "nationId",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "rank",
+            "getter_name": "rank",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          }
+        ],
+        "is_virtual": false,
+        "without_rowid": false,
+        "constraints": [],
+        "explicit_pk": [
+          "career_id",
+          "cycle",
+          "nation_id"
+        ]
+      }
+    },
+    {
+      "id": 18,
+      "references": [
+        2
+      ],
+      "type": "table",
+      "data": {
+        "name": "ranking_releases",
+        "was_declared_in_moor": false,
+        "columns": [
+          {
+            "name": "career_id",
+            "getter_name": "careerId",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "defaultConstraints": "REFERENCES careers (id) ON DELETE CASCADE",
+            "dialectAwareDefaultConstraints": {
+              "sqlite": "REFERENCES careers (id) ON DELETE CASCADE"
+            },
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [
+              {
+                "foreign_key": {
+                  "to": {
+                    "table": "careers",
+                    "column": "id"
+                  },
+                  "initially_deferred": false,
+                  "on_update": null,
+                  "on_delete": "cascade"
+                }
+              }
+            ]
+          },
+          {
+            "name": "published_on",
+            "getter_name": "publishedOn",
+            "moor_type": "dateTime",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "cycle",
+            "getter_name": "cycle",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": "const CustomExpression('0')",
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "nation_id",
+            "getter_name": "nationId",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": "const CustomExpression('0')",
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "player_rank",
+            "getter_name": "playerRank",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "leader_nation_id",
+            "getter_name": "leaderNationId",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          }
+        ],
+        "is_virtual": false,
+        "without_rowid": false,
+        "constraints": [],
+        "explicit_pk": [
+          "career_id",
+          "published_on"
+        ]
+      }
+    },
+    {
+      "id": 19,
+      "references": [
+        2
+      ],
+      "type": "table",
+      "data": {
+        "name": "achievements",
+        "was_declared_in_moor": false,
+        "columns": [
+          {
+            "name": "career_id",
+            "getter_name": "careerId",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "defaultConstraints": "REFERENCES careers (id) ON DELETE CASCADE",
+            "dialectAwareDefaultConstraints": {
+              "sqlite": "REFERENCES careers (id) ON DELETE CASCADE"
+            },
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [
+              {
+                "foreign_key": {
+                  "to": {
+                    "table": "careers",
+                    "column": "id"
+                  },
+                  "initially_deferred": false,
+                  "on_update": null,
+                  "on_delete": "cascade"
+                }
+              }
+            ]
+          },
+          {
+            "name": "achievement_id",
+            "getter_name": "achievementId",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "earned_year",
+            "getter_name": "earnedYear",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          }
+        ],
+        "is_virtual": false,
+        "without_rowid": false,
+        "constraints": [],
+        "explicit_pk": [
+          "career_id",
+          "achievement_id"
+        ]
+      }
+    },
+    {
+      "id": 20,
+      "references": [
+        2
+      ],
+      "type": "table",
+      "data": {
+        "name": "appearances",
+        "was_declared_in_moor": false,
+        "columns": [
+          {
+            "name": "career_id",
+            "getter_name": "careerId",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "defaultConstraints": "REFERENCES careers (id) ON DELETE CASCADE",
+            "dialectAwareDefaultConstraints": {
+              "sqlite": "REFERENCES careers (id) ON DELETE CASCADE"
+            },
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [
+              {
+                "foreign_key": {
+                  "to": {
+                    "table": "careers",
+                    "column": "id"
+                  },
+                  "initially_deferred": false,
+                  "on_update": null,
+                  "on_delete": "cascade"
+                }
+              }
+            ]
+          },
+          {
+            "name": "nation_id",
+            "getter_name": "nationId",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "player_id",
+            "getter_name": "playerId",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "count",
+            "getter_name": "count",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": "const CustomExpression('0')",
+            "default_client_dart": null,
+            "dsl_features": []
+          }
+        ],
+        "is_virtual": false,
+        "without_rowid": false,
+        "constraints": [],
+        "explicit_pk": [
+          "career_id",
+          "player_id"
+        ]
+      }
+    },
+    {
+      "id": 21,
+      "references": [
+        2
+      ],
+      "type": "table",
+      "data": {
+        "name": "tournament_appearances",
+        "was_declared_in_moor": false,
+        "columns": [
+          {
+            "name": "career_id",
+            "getter_name": "careerId",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "defaultConstraints": "REFERENCES careers (id) ON DELETE CASCADE",
+            "dialectAwareDefaultConstraints": {
+              "sqlite": "REFERENCES careers (id) ON DELETE CASCADE"
+            },
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [
+              {
+                "foreign_key": {
+                  "to": {
+                    "table": "careers",
+                    "column": "id"
+                  },
+                  "initially_deferred": false,
+                  "on_update": null,
+                  "on_delete": "cascade"
+                }
+              }
+            ]
+          },
+          {
+            "name": "competition_id",
+            "getter_name": "competitionId",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "nation_id",
+            "getter_name": "nationId",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "player_id",
+            "getter_name": "playerId",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "starts",
+            "getter_name": "starts",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": "const CustomExpression('0')",
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "apps",
+            "getter_name": "apps",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": "const CustomExpression('0')",
+            "default_client_dart": null,
+            "dsl_features": []
+          }
+        ],
+        "is_virtual": false,
+        "without_rowid": false,
+        "constraints": [],
+        "explicit_pk": [
+          "career_id",
+          "competition_id",
+          "player_id"
+        ]
+      }
+    },
+    {
+      "id": 22,
+      "references": [
+        2
+      ],
+      "type": "table",
+      "data": {
+        "name": "messages",
+        "was_declared_in_moor": false,
+        "columns": [
+          {
+            "name": "id",
+            "getter_name": "id",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "defaultConstraints": "PRIMARY KEY AUTOINCREMENT",
+            "dialectAwareDefaultConstraints": {
+              "sqlite": "PRIMARY KEY AUTOINCREMENT"
+            },
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [
+              "auto-increment"
+            ]
+          },
+          {
+            "name": "career_id",
+            "getter_name": "careerId",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "defaultConstraints": "REFERENCES careers (id) ON DELETE CASCADE",
+            "dialectAwareDefaultConstraints": {
+              "sqlite": "REFERENCES careers (id) ON DELETE CASCADE"
+            },
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [
+              {
+                "foreign_key": {
+                  "to": {
+                    "table": "careers",
+                    "column": "id"
+                  },
+                  "initially_deferred": false,
+                  "on_update": null,
+                  "on_delete": "cascade"
+                }
+              }
+            ]
+          },
+          {
+            "name": "dedup_key",
+            "getter_name": "dedupKey",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "category",
+            "getter_name": "category",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "title",
+            "getter_name": "title",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "body",
+            "getter_name": "body",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "year",
+            "getter_name": "year",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "read",
+            "getter_name": "read",
+            "moor_type": "bool",
+            "nullable": false,
+            "customConstraints": null,
+            "defaultConstraints": "CHECK (\"read\" IN (0, 1))",
+            "dialectAwareDefaultConstraints": {
+              "sqlite": "CHECK (\"read\" IN (0, 1))"
+            },
+            "default_dart": "const CustomExpression('0')",
+            "default_client_dart": null,
+            "dsl_features": []
+          }
+        ],
+        "is_virtual": false,
+        "without_rowid": false,
+        "constraints": [],
+        "unique_keys": [
+          [
+            "career_id",
+            "dedup_key"
+          ]
+        ]
+      }
+    },
+    {
+      "id": 23,
+      "references": [
+        2
+      ],
+      "type": "table",
+      "data": {
+        "name": "career_stints",
+        "was_declared_in_moor": false,
+        "columns": [
+          {
+            "name": "career_id",
+            "getter_name": "careerId",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "defaultConstraints": "REFERENCES careers (id) ON DELETE CASCADE",
+            "dialectAwareDefaultConstraints": {
+              "sqlite": "REFERENCES careers (id) ON DELETE CASCADE"
+            },
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [
+              {
+                "foreign_key": {
+                  "to": {
+                    "table": "careers",
+                    "column": "id"
+                  },
+                  "initially_deferred": false,
+                  "on_update": null,
+                  "on_delete": "cascade"
+                }
+              }
+            ]
+          },
+          {
+            "name": "cycle",
+            "getter_name": "cycle",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "nation_id",
+            "getter_name": "nationId",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          }
+        ],
+        "is_virtual": false,
+        "without_rowid": false,
+        "constraints": [],
+        "explicit_pk": [
+          "career_id",
+          "cycle"
+        ]
+      }
+    },
+    {
+      "id": 24,
+      "references": [
+        2,
+        6
+      ],
+      "type": "table",
+      "data": {
+        "name": "player_ratings",
+        "was_declared_in_moor": false,
+        "columns": [
+          {
+            "name": "career_id",
+            "getter_name": "careerId",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "defaultConstraints": "REFERENCES careers (id) ON DELETE CASCADE",
+            "dialectAwareDefaultConstraints": {
+              "sqlite": "REFERENCES careers (id) ON DELETE CASCADE"
+            },
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [
+              {
+                "foreign_key": {
+                  "to": {
+                    "table": "careers",
+                    "column": "id"
+                  },
+                  "initially_deferred": false,
+                  "on_update": null,
+                  "on_delete": "cascade"
+                }
+              }
+            ]
+          },
+          {
+            "name": "fixture_id",
+            "getter_name": "fixtureId",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "defaultConstraints": "REFERENCES fixtures (id)",
+            "dialectAwareDefaultConstraints": {
+              "sqlite": "REFERENCES fixtures (id)"
+            },
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [
+              {
+                "foreign_key": {
+                  "to": {
+                    "table": "fixtures",
+                    "column": "id"
+                  },
+                  "initially_deferred": false,
+                  "on_update": null,
+                  "on_delete": null
+                }
+              }
+            ]
+          },
+          {
+            "name": "player_id",
+            "getter_name": "playerId",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "nation_id",
+            "getter_name": "nationId",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": "const CustomExpression('0')",
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "rating",
+            "getter_name": "rating",
+            "moor_type": "double",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "goals",
+            "getter_name": "goals",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": "const CustomExpression('0')",
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "assists",
+            "getter_name": "assists",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": "const CustomExpression('0')",
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "clean_sheet",
+            "getter_name": "cleanSheet",
+            "moor_type": "bool",
+            "nullable": false,
+            "customConstraints": null,
+            "defaultConstraints": "CHECK (\"clean_sheet\" IN (0, 1))",
+            "dialectAwareDefaultConstraints": {
+              "sqlite": "CHECK (\"clean_sheet\" IN (0, 1))"
+            },
+            "default_dart": "const CustomExpression('0')",
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "motm",
+            "getter_name": "motm",
+            "moor_type": "bool",
+            "nullable": false,
+            "customConstraints": null,
+            "defaultConstraints": "CHECK (\"motm\" IN (0, 1))",
+            "dialectAwareDefaultConstraints": {
+              "sqlite": "CHECK (\"motm\" IN (0, 1))"
+            },
+            "default_dart": "const CustomExpression('0')",
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "yellows",
+            "getter_name": "yellows",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": "const CustomExpression('0')",
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "reds",
+            "getter_name": "reds",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": "const CustomExpression('0')",
+            "default_client_dart": null,
+            "dsl_features": []
+          }
+        ],
+        "is_virtual": false,
+        "without_rowid": false,
+        "constraints": [],
+        "explicit_pk": [
+          "career_id",
+          "fixture_id",
+          "player_id"
+        ]
+      }
+    },
+    {
+      "id": 25,
+      "references": [
+        2
+      ],
+      "type": "table",
+      "data": {
+        "name": "federation_investments",
+        "was_declared_in_moor": false,
+        "columns": [
+          {
+            "name": "career_id",
+            "getter_name": "careerId",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "defaultConstraints": "REFERENCES careers (id) ON DELETE CASCADE",
+            "dialectAwareDefaultConstraints": {
+              "sqlite": "REFERENCES careers (id) ON DELETE CASCADE"
+            },
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [
+              {
+                "foreign_key": {
+                  "to": {
+                    "table": "careers",
+                    "column": "id"
+                  },
+                  "initially_deferred": false,
+                  "on_update": null,
+                  "on_delete": "cascade"
+                }
+              }
+            ]
+          },
+          {
+            "name": "cycle",
+            "getter_name": "cycle",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "youth",
+            "getter_name": "youth",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": "const CustomExpression('0')",
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "commercial",
+            "getter_name": "commercial",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": "const CustomExpression('0')",
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "medical",
+            "getter_name": "medical",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": "const CustomExpression('0')",
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "naturalization",
+            "getter_name": "naturalization",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": "const CustomExpression('0')",
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "board_relations",
+            "getter_name": "boardRelations",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": "const CustomExpression('0')",
+            "default_client_dart": null,
+            "dsl_features": []
+          }
+        ],
+        "is_virtual": false,
+        "without_rowid": false,
+        "constraints": [],
+        "explicit_pk": [
+          "career_id",
+          "cycle"
+        ]
+      }
+    },
+    {
+      "id": 26,
+      "references": [
+        2,
+        6
+      ],
+      "type": "table",
+      "data": {
+        "name": "match_team_stats",
+        "was_declared_in_moor": false,
+        "columns": [
+          {
+            "name": "career_id",
+            "getter_name": "careerId",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "defaultConstraints": "REFERENCES careers (id) ON DELETE CASCADE",
+            "dialectAwareDefaultConstraints": {
+              "sqlite": "REFERENCES careers (id) ON DELETE CASCADE"
+            },
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [
+              {
+                "foreign_key": {
+                  "to": {
+                    "table": "careers",
+                    "column": "id"
+                  },
+                  "initially_deferred": false,
+                  "on_update": null,
+                  "on_delete": "cascade"
+                }
+              }
+            ]
+          },
+          {
+            "name": "fixture_id",
+            "getter_name": "fixtureId",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "defaultConstraints": "REFERENCES fixtures (id)",
+            "dialectAwareDefaultConstraints": {
+              "sqlite": "REFERENCES fixtures (id)"
+            },
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [
+              {
+                "foreign_key": {
+                  "to": {
+                    "table": "fixtures",
+                    "column": "id"
+                  },
+                  "initially_deferred": false,
+                  "on_update": null,
+                  "on_delete": null
+                }
+              }
+            ]
+          },
+          {
+            "name": "home_shots",
+            "getter_name": "homeShots",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": "const CustomExpression('0')",
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "away_shots",
+            "getter_name": "awayShots",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": "const CustomExpression('0')",
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "home_possession",
+            "getter_name": "homePossession",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": "const CustomExpression('50')",
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "home_xg",
+            "getter_name": "homeXg",
+            "moor_type": "double",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": "const CustomExpression('0.0')",
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "away_xg",
+            "getter_name": "awayXg",
+            "moor_type": "double",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": "const CustomExpression('0.0')",
+            "default_client_dart": null,
+            "dsl_features": []
+          }
+        ],
+        "is_virtual": false,
+        "without_rowid": false,
+        "constraints": [],
+        "explicit_pk": [
+          "career_id",
+          "fixture_id"
+        ]
+      }
+    },
+    {
+      "id": 27,
+      "references": [
+        2
+      ],
+      "type": "table",
+      "data": {
+        "name": "nations_cup_tiers",
+        "was_declared_in_moor": false,
+        "columns": [
+          {
+            "name": "career_id",
+            "getter_name": "careerId",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "defaultConstraints": "REFERENCES careers (id) ON DELETE CASCADE",
+            "dialectAwareDefaultConstraints": {
+              "sqlite": "REFERENCES careers (id) ON DELETE CASCADE"
+            },
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [
+              {
+                "foreign_key": {
+                  "to": {
+                    "table": "careers",
+                    "column": "id"
+                  },
+                  "initially_deferred": false,
+                  "on_update": null,
+                  "on_delete": "cascade"
+                }
+              }
+            ]
+          },
+          {
+            "name": "nation_id",
+            "getter_name": "nationId",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "tier",
+            "getter_name": "tier",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": "const CustomExpression('0')",
+            "default_client_dart": null,
+            "dsl_features": []
+          }
+        ],
+        "is_virtual": false,
+        "without_rowid": false,
+        "constraints": [],
+        "explicit_pk": [
+          "career_id",
+          "nation_id"
+        ]
+      }
+    },
+    {
+      "id": 28,
+      "references": [
+        2
+      ],
+      "type": "table",
+      "data": {
+        "name": "naturalized_players",
+        "was_declared_in_moor": false,
+        "columns": [
+          {
+            "name": "career_id",
+            "getter_name": "careerId",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "defaultConstraints": "REFERENCES careers (id) ON DELETE CASCADE",
+            "dialectAwareDefaultConstraints": {
+              "sqlite": "REFERENCES careers (id) ON DELETE CASCADE"
+            },
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [
+              {
+                "foreign_key": {
+                  "to": {
+                    "table": "careers",
+                    "column": "id"
+                  },
+                  "initially_deferred": false,
+                  "on_update": null,
+                  "on_delete": "cascade"
+                }
+              }
+            ]
+          },
+          {
+            "name": "player_id",
+            "getter_name": "playerId",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "source_nation_id",
+            "getter_name": "sourceNationId",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "cycle",
+            "getter_name": "cycle",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "status",
+            "getter_name": "status",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": "const CustomExpression('\\'pending\\'')",
+            "default_client_dart": null,
+            "dsl_features": []
+          }
+        ],
+        "is_virtual": false,
+        "without_rowid": false,
+        "constraints": [],
+        "explicit_pk": [
+          "career_id",
+          "player_id"
+        ]
+      }
+    },
+    {
+      "id": 29,
+      "references": [
+        2
+      ],
+      "type": "table",
+      "data": {
+        "name": "tactic_familiarities",
+        "was_declared_in_moor": false,
+        "columns": [
+          {
+            "name": "career_id",
+            "getter_name": "careerId",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "defaultConstraints": "REFERENCES careers (id) ON DELETE CASCADE",
+            "dialectAwareDefaultConstraints": {
+              "sqlite": "REFERENCES careers (id) ON DELETE CASCADE"
+            },
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [
+              {
+                "foreign_key": {
+                  "to": {
+                    "table": "careers",
+                    "column": "id"
+                  },
+                  "initially_deferred": false,
+                  "on_update": null,
+                  "on_delete": "cascade"
+                }
+              }
+            ]
+          },
+          {
+            "name": "formation",
+            "getter_name": "formation",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [],
+            "type_converter": {
+              "dart_expr": "const EnumNameConverter<Formation>(Formation.values)",
+              "dart_type_name": "Formation"
+            }
+          },
+          {
+            "name": "familiarity",
+            "getter_name": "familiarity",
+            "moor_type": "double",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": "const CustomExpression('0.0')",
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "predictability",
+            "getter_name": "predictability",
+            "moor_type": "double",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": "const CustomExpression('0.0')",
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "last_plan_key",
+            "getter_name": "lastPlanKey",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": "const CustomExpression('0')",
+            "default_client_dart": null,
+            "dsl_features": []
+          }
+        ],
+        "is_virtual": false,
+        "without_rowid": false,
+        "constraints": [],
+        "explicit_pk": [
+          "career_id",
+          "formation"
+        ]
+      }
+    },
+    {
+      "id": 30,
+      "references": [
+        2
+      ],
+      "type": "table",
+      "data": {
+        "name": "press_answers",
+        "was_declared_in_moor": false,
+        "columns": [
+          {
+            "name": "id",
+            "getter_name": "id",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "defaultConstraints": "PRIMARY KEY AUTOINCREMENT",
+            "dialectAwareDefaultConstraints": {
+              "sqlite": "PRIMARY KEY AUTOINCREMENT"
+            },
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [
+              "auto-increment"
+            ]
+          },
+          {
+            "name": "career_id",
+            "getter_name": "careerId",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "defaultConstraints": "REFERENCES careers (id) ON DELETE CASCADE",
+            "dialectAwareDefaultConstraints": {
+              "sqlite": "REFERENCES careers (id) ON DELETE CASCADE"
+            },
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [
+              {
+                "foreign_key": {
+                  "to": {
+                    "table": "careers",
+                    "column": "id"
+                  },
+                  "initially_deferred": false,
+                  "on_update": null,
+                  "on_delete": "cascade"
+                }
+              }
+            ]
+          },
+          {
+            "name": "cycle",
+            "getter_name": "cycle",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "question_key",
+            "getter_name": "questionKey",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "tone",
+            "getter_name": "tone",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "morale_delta",
+            "getter_name": "moraleDelta",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "board_delta",
+            "getter_name": "boardDelta",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "answered_at",
+            "getter_name": "answeredAt",
+            "moor_type": "dateTime",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          }
+        ],
+        "is_virtual": false,
+        "without_rowid": false,
+        "constraints": []
+      }
+    },
+    {
+      "id": 31,
+      "references": [
+        2
+      ],
+      "type": "table",
+      "data": {
+        "name": "player_honours",
+        "was_declared_in_moor": false,
+        "columns": [
+          {
+            "name": "career_id",
+            "getter_name": "careerId",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "defaultConstraints": "REFERENCES careers (id) ON DELETE CASCADE",
+            "dialectAwareDefaultConstraints": {
+              "sqlite": "REFERENCES careers (id) ON DELETE CASCADE"
+            },
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [
+              {
+                "foreign_key": {
+                  "to": {
+                    "table": "careers",
+                    "column": "id"
+                  },
+                  "initially_deferred": false,
+                  "on_update": null,
+                  "on_delete": "cascade"
+                }
+              }
+            ]
+          },
+          {
+            "name": "player_id",
+            "getter_name": "playerId",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "nation_id",
+            "getter_name": "nationId",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "kind",
+            "getter_name": "kind",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [],
+            "type_converter": {
+              "dart_expr": "const EnumNameConverter<AwardKind>(AwardKind.values)",
+              "dart_type_name": "AwardKind"
+            }
+          },
+          {
+            "name": "competition",
+            "getter_name": "competition",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": "const CustomExpression('\\'\\'')",
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "year",
+            "getter_name": "year",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          }
+        ],
+        "is_virtual": false,
+        "without_rowid": false,
+        "constraints": [],
+        "explicit_pk": [
+          "career_id",
+          "kind",
+          "competition",
+          "year",
+          "player_id"
+        ]
+      }
+    }
+  ],
+  "fixed_sql": [
+    {
+      "name": "nations",
+      "sql": [
+        {
+          "dialect": "sqlite",
+          "sql": "CREATE TABLE IF NOT EXISTS \"nations\" (\"id\" INTEGER NOT NULL, \"name\" TEXT NOT NULL, \"code\" TEXT NOT NULL, \"confederation\" TEXT NOT NULL, \"ranking\" INTEGER NOT NULL DEFAULT 0, \"is_free_demo\" INTEGER NOT NULL DEFAULT 0 CHECK (\"is_free_demo\" IN (0, 1)), \"primary_color\" TEXT NOT NULL DEFAULT '#1E88E5', \"secondary_color\" TEXT NOT NULL DEFAULT '#FFFFFF', PRIMARY KEY (\"id\"));"
+        }
+      ]
+    },
+    {
+      "name": "players",
+      "sql": [
+        {
+          "dialect": "sqlite",
+          "sql": "CREATE TABLE IF NOT EXISTS \"players\" (\"id\" INTEGER NOT NULL, \"nation_id\" INTEGER NOT NULL REFERENCES nations (id) ON DELETE CASCADE, \"name\" TEXT NOT NULL, \"age\" INTEGER NOT NULL, \"position\" TEXT NOT NULL, \"physical\" INTEGER NOT NULL, \"technical\" INTEGER NOT NULL, \"stamina\" INTEGER NOT NULL, \"club\" TEXT NOT NULL DEFAULT 'Free agent', PRIMARY KEY (\"id\"));"
+        }
+      ]
+    },
+    {
+      "name": "careers",
+      "sql": [
+        {
+          "dialect": "sqlite",
+          "sql": "CREATE TABLE IF NOT EXISTS \"careers\" (\"id\" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, \"manager_name\" TEXT NOT NULL, \"nation_id\" INTEGER NOT NULL REFERENCES nations (id), \"rng_seed\" INTEGER NOT NULL, \"created_at\" INTEGER NOT NULL, \"in_game_date\" INTEGER NOT NULL, \"cycle_pointer\" INTEGER NOT NULL DEFAULT 0, \"last_played_at\" INTEGER NULL, \"budget\" INTEGER NOT NULL DEFAULT 0, \"captain_player_id\" INTEGER NULL, \"y_read_at\" INTEGER NULL, \"played_seconds\" INTEGER NOT NULL DEFAULT 0, \"skill_man_management\" INTEGER NOT NULL DEFAULT 5, \"skill_tactical\" INTEGER NOT NULL DEFAULT 5, \"skill_youth_development\" INTEGER NOT NULL DEFAULT 5, \"skill_negotiation\" INTEGER NOT NULL DEFAULT 5, \"staff_assistant\" INTEGER NOT NULL DEFAULT 0, \"staff_scout\" INTEGER NOT NULL DEFAULT 0, \"staff_fitness_coach\" INTEGER NOT NULL DEFAULT 0, \"staff_assistant_id\" INTEGER NULL, \"staff_scout_id\" INTEGER NULL, \"staff_fitness_coach_id\" INTEGER NULL, \"last_cycle_board\" INTEGER NULL);"
+        }
+      ]
+    },
+    {
+      "name": "competitions",
+      "sql": [
+        {
+          "dialect": "sqlite",
+          "sql": "CREATE TABLE IF NOT EXISTS \"competitions\" (\"id\" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, \"career_id\" INTEGER NOT NULL REFERENCES careers (id) ON DELETE CASCADE, \"confederation\" TEXT NOT NULL, \"name\" TEXT NOT NULL, \"kind\" TEXT NOT NULL DEFAULT 'worldCupQualifying', \"cycle\" INTEGER NOT NULL DEFAULT 0);"
+        }
+      ]
+    },
+    {
+      "name": "qualifying_groups",
+      "sql": [
+        {
+          "dialect": "sqlite",
+          "sql": "CREATE TABLE IF NOT EXISTS \"qualifying_groups\" (\"id\" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, \"competition_id\" INTEGER NOT NULL REFERENCES competitions (id) ON DELETE CASCADE, \"name\" TEXT NOT NULL);"
+        }
+      ]
+    },
+    {
+      "name": "group_members",
+      "sql": [
+        {
+          "dialect": "sqlite",
+          "sql": "CREATE TABLE IF NOT EXISTS \"group_members\" (\"group_id\" INTEGER NOT NULL REFERENCES qualifying_groups (id) ON DELETE CASCADE, \"nation_id\" INTEGER NOT NULL, PRIMARY KEY (\"group_id\", \"nation_id\"));"
+        }
+      ]
+    },
+    {
+      "name": "fixtures",
+      "sql": [
+        {
+          "dialect": "sqlite",
+          "sql": "CREATE TABLE IF NOT EXISTS \"fixtures\" (\"id\" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, \"career_id\" INTEGER NOT NULL REFERENCES careers (id) ON DELETE CASCADE, \"competition_id\" INTEGER NOT NULL REFERENCES competitions (id), \"group_id\" INTEGER NULL REFERENCES qualifying_groups (id), \"matchday\" INTEGER NOT NULL, \"date\" INTEGER NOT NULL, \"home_nation_id\" INTEGER NOT NULL, \"away_nation_id\" INTEGER NOT NULL, \"home_score\" INTEGER NULL, \"away_score\" INTEGER NULL, \"played\" INTEGER NOT NULL DEFAULT 0 CHECK (\"played\" IN (0, 1)), \"round\" TEXT NULL, \"after_extra_time\" INTEGER NOT NULL DEFAULT 0 CHECK (\"after_extra_time\" IN (0, 1)), \"home_penalties\" INTEGER NULL, \"away_penalties\" INTEGER NULL);"
+        }
+      ]
+    },
+    {
+      "name": "tactics",
+      "sql": [
+        {
+          "dialect": "sqlite",
+          "sql": "CREATE TABLE IF NOT EXISTS \"tactics\" (\"career_id\" INTEGER NOT NULL REFERENCES careers (id) ON DELETE CASCADE, \"formation\" TEXT NOT NULL, \"playstyle\" TEXT NOT NULL DEFAULT 'custom', \"mentality\" INTEGER NOT NULL DEFAULT 50, \"pressing\" INTEGER NOT NULL DEFAULT 50, \"tempo\" INTEGER NOT NULL DEFAULT 50, \"width\" INTEGER NOT NULL DEFAULT 50, \"defensive_line\" INTEGER NOT NULL DEFAULT 50, \"directness\" INTEGER NOT NULL DEFAULT 50, PRIMARY KEY (\"career_id\"));"
+        }
+      ]
+    },
+    {
+      "name": "lineup_slots",
+      "sql": [
+        {
+          "dialect": "sqlite",
+          "sql": "CREATE TABLE IF NOT EXISTS \"lineup_slots\" (\"career_id\" INTEGER NOT NULL REFERENCES careers (id) ON DELETE CASCADE, \"slot\" INTEGER NOT NULL, \"player_id\" INTEGER NULL, PRIMARY KEY (\"career_id\", \"slot\"));"
+        }
+      ]
+    },
+    {
+      "name": "call_ups",
+      "sql": [
+        {
+          "dialect": "sqlite",
+          "sql": "CREATE TABLE IF NOT EXISTS \"call_ups\" (\"career_id\" INTEGER NOT NULL REFERENCES careers (id) ON DELETE CASCADE, \"player_id\" INTEGER NOT NULL, PRIMARY KEY (\"career_id\", \"player_id\"));"
+        }
+      ]
+    },
+    {
+      "name": "call_up_drafts",
+      "sql": [
+        {
+          "dialect": "sqlite",
+          "sql": "CREATE TABLE IF NOT EXISTS \"call_up_drafts\" (\"career_id\" INTEGER NOT NULL REFERENCES careers (id) ON DELETE CASCADE, \"draft_key\" TEXT NOT NULL, \"player_id\" INTEGER NOT NULL, PRIMARY KEY (\"career_id\", \"draft_key\", \"player_id\"));"
+        }
+      ]
+    },
+    {
+      "name": "training_camp_choices",
+      "sql": [
+        {
+          "dialect": "sqlite",
+          "sql": "CREATE TABLE IF NOT EXISTS \"training_camp_choices\" (\"career_id\" INTEGER NOT NULL REFERENCES careers (id) ON DELETE CASCADE, \"cycle\" INTEGER NOT NULL, \"tournament\" TEXT NOT NULL, \"host_id\" INTEGER NOT NULL, \"camp_index\" INTEGER NOT NULL, PRIMARY KEY (\"career_id\", \"cycle\", \"tournament\"));"
+        }
+      ]
+    },
+    {
+      "name": "goal_events",
+      "sql": [
+        {
+          "dialect": "sqlite",
+          "sql": "CREATE TABLE IF NOT EXISTS \"goal_events\" (\"id\" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, \"career_id\" INTEGER NOT NULL REFERENCES careers (id) ON DELETE CASCADE, \"competition_id\" INTEGER NOT NULL REFERENCES competitions (id), \"fixture_id\" INTEGER NOT NULL REFERENCES fixtures (id), \"nation_id\" INTEGER NOT NULL, \"player_id\" INTEGER NOT NULL, \"minute\" INTEGER NOT NULL);"
+        }
+      ]
+    },
+    {
+      "name": "honours",
+      "sql": [
+        {
+          "dialect": "sqlite",
+          "sql": "CREATE TABLE IF NOT EXISTS \"honours\" (\"id\" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, \"career_id\" INTEGER NOT NULL REFERENCES careers (id) ON DELETE CASCADE, \"year\" INTEGER NOT NULL, \"competition\" TEXT NOT NULL, \"champion_id\" INTEGER NOT NULL, \"runner_up_id\" INTEGER NOT NULL, \"third_id\" INTEGER NULL, \"third_id2\" INTEGER NULL, \"host_id\" INTEGER NULL, \"host_ids\" TEXT NULL, \"final_home_score\" INTEGER NULL, \"final_away_score\" INTEGER NULL, \"top_scorer_name\" TEXT NULL, \"top_scorer_goals\" INTEGER NULL);"
+        }
+      ]
+    },
+    {
+      "name": "draws_watched",
+      "sql": [
+        {
+          "dialect": "sqlite",
+          "sql": "CREATE TABLE IF NOT EXISTS \"draws_watched\" (\"career_id\" INTEGER NOT NULL REFERENCES careers (id) ON DELETE CASCADE, \"cycle\" INTEGER NOT NULL, \"kind\" TEXT NOT NULL, PRIMARY KEY (\"career_id\", \"cycle\", \"kind\"));"
+        }
+      ]
+    },
+    {
+      "name": "player_absences",
+      "sql": [
+        {
+          "dialect": "sqlite",
+          "sql": "CREATE TABLE IF NOT EXISTS \"player_absences\" (\"career_id\" INTEGER NOT NULL REFERENCES careers (id) ON DELETE CASCADE, \"player_id\" INTEGER NOT NULL, \"yellows\" INTEGER NOT NULL DEFAULT 0, \"ban_matches\" INTEGER NOT NULL DEFAULT 0, \"injury_matches\" INTEGER NOT NULL DEFAULT 0, PRIMARY KEY (\"career_id\", \"player_id\"));"
+        }
+      ]
+    },
+    {
+      "name": "rank_points",
+      "sql": [
+        {
+          "dialect": "sqlite",
+          "sql": "CREATE TABLE IF NOT EXISTS \"rank_points\" (\"career_id\" INTEGER NOT NULL REFERENCES careers (id) ON DELETE CASCADE, \"nation_id\" INTEGER NOT NULL, \"points\" INTEGER NOT NULL, PRIMARY KEY (\"career_id\", \"nation_id\"));"
+        }
+      ]
+    },
+    {
+      "name": "seed_rankings",
+      "sql": [
+        {
+          "dialect": "sqlite",
+          "sql": "CREATE TABLE IF NOT EXISTS \"seed_rankings\" (\"career_id\" INTEGER NOT NULL REFERENCES careers (id) ON DELETE CASCADE, \"cycle\" INTEGER NOT NULL, \"nation_id\" INTEGER NOT NULL, \"rank\" INTEGER NOT NULL, PRIMARY KEY (\"career_id\", \"cycle\", \"nation_id\"));"
+        }
+      ]
+    },
+    {
+      "name": "ranking_releases",
+      "sql": [
+        {
+          "dialect": "sqlite",
+          "sql": "CREATE TABLE IF NOT EXISTS \"ranking_releases\" (\"career_id\" INTEGER NOT NULL REFERENCES careers (id) ON DELETE CASCADE, \"published_on\" INTEGER NOT NULL, \"cycle\" INTEGER NOT NULL DEFAULT 0, \"nation_id\" INTEGER NOT NULL DEFAULT 0, \"player_rank\" INTEGER NOT NULL, \"leader_nation_id\" INTEGER NOT NULL, PRIMARY KEY (\"career_id\", \"published_on\"));"
+        }
+      ]
+    },
+    {
+      "name": "achievements",
+      "sql": [
+        {
+          "dialect": "sqlite",
+          "sql": "CREATE TABLE IF NOT EXISTS \"achievements\" (\"career_id\" INTEGER NOT NULL REFERENCES careers (id) ON DELETE CASCADE, \"achievement_id\" TEXT NOT NULL, \"earned_year\" INTEGER NOT NULL, PRIMARY KEY (\"career_id\", \"achievement_id\"));"
+        }
+      ]
+    },
+    {
+      "name": "appearances",
+      "sql": [
+        {
+          "dialect": "sqlite",
+          "sql": "CREATE TABLE IF NOT EXISTS \"appearances\" (\"career_id\" INTEGER NOT NULL REFERENCES careers (id) ON DELETE CASCADE, \"nation_id\" INTEGER NOT NULL, \"player_id\" INTEGER NOT NULL, \"count\" INTEGER NOT NULL DEFAULT 0, PRIMARY KEY (\"career_id\", \"player_id\"));"
+        }
+      ]
+    },
+    {
+      "name": "tournament_appearances",
+      "sql": [
+        {
+          "dialect": "sqlite",
+          "sql": "CREATE TABLE IF NOT EXISTS \"tournament_appearances\" (\"career_id\" INTEGER NOT NULL REFERENCES careers (id) ON DELETE CASCADE, \"competition_id\" INTEGER NOT NULL, \"nation_id\" INTEGER NOT NULL, \"player_id\" INTEGER NOT NULL, \"starts\" INTEGER NOT NULL DEFAULT 0, \"apps\" INTEGER NOT NULL DEFAULT 0, PRIMARY KEY (\"career_id\", \"competition_id\", \"player_id\"));"
+        }
+      ]
+    },
+    {
+      "name": "messages",
+      "sql": [
+        {
+          "dialect": "sqlite",
+          "sql": "CREATE TABLE IF NOT EXISTS \"messages\" (\"id\" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, \"career_id\" INTEGER NOT NULL REFERENCES careers (id) ON DELETE CASCADE, \"dedup_key\" TEXT NOT NULL, \"category\" TEXT NOT NULL, \"title\" TEXT NOT NULL, \"body\" TEXT NOT NULL, \"year\" INTEGER NOT NULL, \"read\" INTEGER NOT NULL DEFAULT 0 CHECK (\"read\" IN (0, 1)), UNIQUE (\"career_id\", \"dedup_key\"));"
+        }
+      ]
+    },
+    {
+      "name": "career_stints",
+      "sql": [
+        {
+          "dialect": "sqlite",
+          "sql": "CREATE TABLE IF NOT EXISTS \"career_stints\" (\"career_id\" INTEGER NOT NULL REFERENCES careers (id) ON DELETE CASCADE, \"cycle\" INTEGER NOT NULL, \"nation_id\" INTEGER NOT NULL, PRIMARY KEY (\"career_id\", \"cycle\"));"
+        }
+      ]
+    },
+    {
+      "name": "player_ratings",
+      "sql": [
+        {
+          "dialect": "sqlite",
+          "sql": "CREATE TABLE IF NOT EXISTS \"player_ratings\" (\"career_id\" INTEGER NOT NULL REFERENCES careers (id) ON DELETE CASCADE, \"fixture_id\" INTEGER NOT NULL REFERENCES fixtures (id), \"player_id\" INTEGER NOT NULL, \"nation_id\" INTEGER NOT NULL DEFAULT 0, \"rating\" REAL NOT NULL, \"goals\" INTEGER NOT NULL DEFAULT 0, \"assists\" INTEGER NOT NULL DEFAULT 0, \"clean_sheet\" INTEGER NOT NULL DEFAULT 0 CHECK (\"clean_sheet\" IN (0, 1)), \"motm\" INTEGER NOT NULL DEFAULT 0 CHECK (\"motm\" IN (0, 1)), \"yellows\" INTEGER NOT NULL DEFAULT 0, \"reds\" INTEGER NOT NULL DEFAULT 0, PRIMARY KEY (\"career_id\", \"fixture_id\", \"player_id\"));"
+        }
+      ]
+    },
+    {
+      "name": "federation_investments",
+      "sql": [
+        {
+          "dialect": "sqlite",
+          "sql": "CREATE TABLE IF NOT EXISTS \"federation_investments\" (\"career_id\" INTEGER NOT NULL REFERENCES careers (id) ON DELETE CASCADE, \"cycle\" INTEGER NOT NULL, \"youth\" INTEGER NOT NULL DEFAULT 0, \"commercial\" INTEGER NOT NULL DEFAULT 0, \"medical\" INTEGER NOT NULL DEFAULT 0, \"naturalization\" INTEGER NOT NULL DEFAULT 0, \"board_relations\" INTEGER NOT NULL DEFAULT 0, PRIMARY KEY (\"career_id\", \"cycle\"));"
+        }
+      ]
+    },
+    {
+      "name": "match_team_stats",
+      "sql": [
+        {
+          "dialect": "sqlite",
+          "sql": "CREATE TABLE IF NOT EXISTS \"match_team_stats\" (\"career_id\" INTEGER NOT NULL REFERENCES careers (id) ON DELETE CASCADE, \"fixture_id\" INTEGER NOT NULL REFERENCES fixtures (id), \"home_shots\" INTEGER NOT NULL DEFAULT 0, \"away_shots\" INTEGER NOT NULL DEFAULT 0, \"home_possession\" INTEGER NOT NULL DEFAULT 50, \"home_xg\" REAL NOT NULL DEFAULT 0.0, \"away_xg\" REAL NOT NULL DEFAULT 0.0, PRIMARY KEY (\"career_id\", \"fixture_id\"));"
+        }
+      ]
+    },
+    {
+      "name": "nations_cup_tiers",
+      "sql": [
+        {
+          "dialect": "sqlite",
+          "sql": "CREATE TABLE IF NOT EXISTS \"nations_cup_tiers\" (\"career_id\" INTEGER NOT NULL REFERENCES careers (id) ON DELETE CASCADE, \"nation_id\" INTEGER NOT NULL, \"tier\" INTEGER NOT NULL DEFAULT 0, PRIMARY KEY (\"career_id\", \"nation_id\"));"
+        }
+      ]
+    },
+    {
+      "name": "naturalized_players",
+      "sql": [
+        {
+          "dialect": "sqlite",
+          "sql": "CREATE TABLE IF NOT EXISTS \"naturalized_players\" (\"career_id\" INTEGER NOT NULL REFERENCES careers (id) ON DELETE CASCADE, \"player_id\" INTEGER NOT NULL, \"source_nation_id\" INTEGER NOT NULL, \"cycle\" INTEGER NOT NULL, \"status\" TEXT NOT NULL DEFAULT 'pending', PRIMARY KEY (\"career_id\", \"player_id\"));"
+        }
+      ]
+    },
+    {
+      "name": "tactic_familiarities",
+      "sql": [
+        {
+          "dialect": "sqlite",
+          "sql": "CREATE TABLE IF NOT EXISTS \"tactic_familiarities\" (\"career_id\" INTEGER NOT NULL REFERENCES careers (id) ON DELETE CASCADE, \"formation\" TEXT NOT NULL, \"familiarity\" REAL NOT NULL DEFAULT 0.0, \"predictability\" REAL NOT NULL DEFAULT 0.0, \"last_plan_key\" INTEGER NOT NULL DEFAULT 0, PRIMARY KEY (\"career_id\", \"formation\"));"
+        }
+      ]
+    },
+    {
+      "name": "press_answers",
+      "sql": [
+        {
+          "dialect": "sqlite",
+          "sql": "CREATE TABLE IF NOT EXISTS \"press_answers\" (\"id\" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, \"career_id\" INTEGER NOT NULL REFERENCES careers (id) ON DELETE CASCADE, \"cycle\" INTEGER NOT NULL, \"question_key\" TEXT NOT NULL, \"tone\" TEXT NOT NULL, \"morale_delta\" INTEGER NOT NULL, \"board_delta\" INTEGER NOT NULL, \"answered_at\" INTEGER NOT NULL);"
+        }
+      ]
+    },
+    {
+      "name": "player_honours",
+      "sql": [
+        {
+          "dialect": "sqlite",
+          "sql": "CREATE TABLE IF NOT EXISTS \"player_honours\" (\"career_id\" INTEGER NOT NULL REFERENCES careers (id) ON DELETE CASCADE, \"player_id\" INTEGER NOT NULL, \"nation_id\" INTEGER NOT NULL, \"kind\" TEXT NOT NULL, \"competition\" TEXT NOT NULL DEFAULT '', \"year\" INTEGER NOT NULL, PRIMARY KEY (\"career_id\", \"kind\", \"competition\", \"year\", \"player_id\"));"
+        }
+      ]
+    }
+  ]
+}

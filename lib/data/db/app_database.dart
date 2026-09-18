@@ -80,7 +80,7 @@ class AppDatabase extends _$AppDatabase {
   /// full set of upgrade paths from it — see `schema_migration_test.dart`.
   /// A hand-written list of paths is a step somebody forgets on the bump that
   /// matters.
-  static const int currentSchemaVersion = 45;
+  static const int currentSchemaVersion = 46;
 
   @override
   int get schemaVersion => currentSchemaVersion;
@@ -243,6 +243,12 @@ class AppDatabase extends _$AppDatabase {
         from44To45: (m, schema) async {
           await m.addColumn(schema.careers, schema.careers.lastCycleBoard);
           await m.alterTable(TableMigration(schema.careers));
+        },
+        // 45 → 46 records every host of an edition, not only the first. Purely
+        // additive and nullable: an existing honour simply has no list, and
+        // reads back as its single stored [hostId], which is what it was.
+        from45To46: (m, schema) async {
+          await m.addColumn(schema.honours, schema.honours.hostIds);
         },
       )(m, from, to);
     },

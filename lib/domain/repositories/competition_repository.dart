@@ -185,6 +185,10 @@ typedef Honour = ({
   // semi-finalists share bronze). Null for the World Cup.
   int? thirdId2,
   int? hostId,
+
+  /// Every host, primary first. Single-element for an ordinary edition, empty
+  /// only for a historical row that never recorded one.
+  List<int> hostIds,
   int? finalHomeScore,
   int? finalAwayScore,
   String? topScorerName,
@@ -515,6 +519,10 @@ abstract interface class CompetitionRepository {
   });
 
   /// Records a tournament's roll-of-honour entry.
+  ///
+  /// Pass [hostIds] for a co-hosted edition, primary host first; [hostId] alone
+  /// is enough for the ordinary single-host case and stays the primary host
+  /// either way.
   Future<void> recordHonour({
     required int careerId,
     required int year,
@@ -524,6 +532,7 @@ abstract interface class CompetitionRepository {
     int? thirdId,
     int? thirdId2,
     int? hostId,
+    List<int> hostIds = const [],
     int? finalHomeScore,
     int? finalAwayScore,
     String? topScorerName,

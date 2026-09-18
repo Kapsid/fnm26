@@ -659,6 +659,15 @@ class Honours extends Table {
 
   /// Host nation, final scoreline, and golden-boot winner.
   IntColumn get hostId => integer().nullable()();
+
+  /// Every host of this edition, primary first, comma-separated ("10,11,12").
+  ///
+  /// [hostId] holds the primary host on its own and stays authoritative for
+  /// the single-host case. A co-hosted tournament used to lose everyone but
+  /// the first, so a shared edition read as one country's in the history.
+  /// Recorded rather than re-derived: a roll of honour must hold what
+  /// happened, not what a host-rotation function would say today.
+  TextColumn get hostIds => text().nullable()();
   IntColumn get finalHomeScore => integer().nullable()();
   IntColumn get finalAwayScore => integer().nullable()();
   TextColumn get topScorerName => text().nullable()();

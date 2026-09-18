@@ -1484,11 +1484,16 @@ class DriftCompetitionRepository implements CompetitionRepository {
     int? thirdId,
     int? thirdId2,
     int? hostId,
+    List<int> hostIds = const [],
     int? finalHomeScore,
     int? finalAwayScore,
     String? topScorerName,
     int? topScorerGoals,
   }) async {
+    // The primary host is the first of the list when the caller gave one, so a
+    // co-hosted edition still answers "whose tournament was it" the way every
+    // existing reader of [hostId] expects.
+    final primaryId = hostId ?? (hostIds.isEmpty ? null : hostIds.first);
     await _db
         .into(_db.honours)
         .insert(
@@ -1500,7 +1505,8 @@ class DriftCompetitionRepository implements CompetitionRepository {
             runnerUpId: runnerUpId,
             thirdId: Value(thirdId),
             thirdId2: Value(thirdId2),
-            hostId: Value(hostId),
+            hostId: Value(primaryId),
+            hostIds: Value(hostIds.isEmpty ? null : hostIds.join(',')),
             finalHomeScore: Value(finalHomeScore),
             finalAwayScore: Value(finalAwayScore),
             topScorerName: Value(topScorerName),
@@ -1569,6 +1575,7 @@ class DriftCompetitionRepository implements CompetitionRepository {
           thirdId: r.thirdId,
           thirdId2: r.thirdId2,
           hostId: r.hostId,
+          hostIds: _hostIds(r),
           finalHomeScore: r.finalHomeScore,
           finalAwayScore: r.finalAwayScore,
           topScorerName: r.topScorerName,
@@ -2495,4 +2502,21 @@ class DriftCompetitionRepository implements CompetitionRepository {
           mode: InsertMode.insertOrIgnore,
         );
   }
+}
+
+/// The hosts of [row], primary first.
+///
+/// The list column is nullable because it arrived after the table did: a row
+/// written before it holds only [HonourRow.hostId], and that lone host is
+/// exactly who hosted, so it reads back as a one-element list rather than as
+/// nothing. Empty only for a row that never recorded a host at all.
+List<int> _hostIds(HonourRow row) {
+  final stored = row.hostIds;
+  if (stored == null || stored.isEmpty) {
+    return row.hostId == null ? const [] : [row.hostId!];
+  }
+  return [
+    for (final part in stored.split(','))
+      if (int.tryParse(part.trim()) case final id?) id,
+  ];
 }

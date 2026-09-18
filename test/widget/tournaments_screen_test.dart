@@ -93,6 +93,7 @@ void main() {
             thirdId: null,
             thirdId2: null,
             hostId: null,
+            hostIds: <int>[],
             finalHomeScore: 2,
             finalAwayScore: 1,
             topScorerName: null,
