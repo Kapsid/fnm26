@@ -4767,6 +4767,11 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String tourCupHostLabelMulti(String hosts) {
+    return 'Hosted by $hosts';
+  }
+
+  @override
   String get tourCupIntercontPlayoff => 'Intercontinental play-off';
 
   @override
@@ -6889,6 +6894,11 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String tourHostLine(String nation) {
     return 'Host: $nation';
+  }
+
+  @override
+  String tourHostLineMulti(String hosts) {
+    return 'Hosts: $hosts';
   }
 
   @override

@@ -167,7 +167,9 @@ nationVitrineProvider = FutureProvider.autoDispose
             TitleWon(
               year: h.year,
               competition: h.competition,
-              wasHost: h.hostId == arg.nationId,
+              // A co-host in any slot still counts as "at home" — see the
+              // same fix in challenge_providers.dart.
+              wasHost: h.hostIds.contains(arg.nationId),
             ),
           );
         }

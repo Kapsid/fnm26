@@ -246,7 +246,10 @@ challengesViewProvider = FutureProvider.autoDispose.family<List<ChallengeView>, 
           topScorerGoals: null,
         ),
       );
-      if (honour.hostId == nationId) {
+      // A co-host in any slot still counts as "at home" — `hostIds` already
+      // reads back as [hostId] for a single-host row, so this alone decides
+      // it.
+      if (honour.hostIds.contains(nationId)) {
         wonAsHost = true;
       } else {
         wonAsVisitor = true;

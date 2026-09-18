@@ -1264,6 +1264,7 @@ tourCupFinalsDrawSoon,World Championship detail: tourCupFinalsDrawSoon,,Groups t
 tourCupGroupName,World Championship detail: tourCupGroupName,{name},Group {name},Skupina {name}
 tourCupGroupNameShort,World Championship detail: tourCupGroupNameShort,{name},Group {name},Skupina {name}
 tourCupHostLabel,World Championship detail: tourCupHostLabel,{host},Hosted by {host},Pořádá {host}
+tourCupHostLabelMulti,"World Championship detail: hosted by two or more co-hosts, shown as country codes separated by middle dots (e.g. ""USA · CAN · MEX"").",{hosts},Hosted by {hosts},Pořádají {hosts}
 tourCupIntercontPlayoff,World Championship detail: tourCupIntercontPlayoff,,Intercontinental play-off,Mezikontinentální baráž
 tourCupKnockoutSoon,World Championship detail: tourCupKnockoutSoon,,The bracket begins once the group stage ends.,Pavouk začíná po skončení skupinové fáze.
 tourCupMatches,World Championship detail: tourCupMatches,,MATCHES,ZÁPASY
@@ -1779,6 +1780,7 @@ tourTeamOfTournament,Tournament awards heading.,,TEAM OF THE TOURNAMENT,NEJLEPŠ
 tourYourRun,Tournament bracket: the manager's own path.,,YOUR RUN,VAŠE CESTA
 tourMedalTable,Tournament history heading.,,MEDAL TABLE,MEDAILOVÉ POŘADÍ
 tourHostLine,Tournament history: who hosted an edition.,{nation},Host: {nation},Pořadatel: {nation}
+tourHostLineMulti,"Tournament history: an edition shared by two or more co-hosts, shown as country codes separated by middle dots (e.g. ""USA · CAN · MEX"").",{hosts},Hosts: {hosts},Pořadatelé: {hosts}
 tourGroupNamed,A group's name in a bracket or table.,{name},Group {name},Skupina {name}
 tourFinalsDrawBlurb,Finals-draw screen blurb.,,Seeded by world ranking. Spot your nation before the draw.,"Nasazení podle světového žebříčku. Najděte svůj tým, než začne los."
 tourWorldRanking,Tournaments screen: link to the world ranking.,,World Ranking,Světový žebříček

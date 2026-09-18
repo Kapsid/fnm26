@@ -7052,6 +7052,15 @@
       }
     }
   },
+  "tourCupHostLabelMulti": "Hosted by {hosts}",
+  "@tourCupHostLabelMulti": {
+    "description": "World Championship detail: hosted by two or more co-hosts, shown as country codes separated by middle dots (e.g. \"USA · CAN · MEX\").",
+    "placeholders": {
+      "hosts": {
+        "type": "String"
+      }
+    }
+  },
   "tourCupIntercontPlayoff": "Intercontinental play-off",
   "@tourCupIntercontPlayoff": {
     "description": "World Championship detail: tourCupIntercontPlayoff"
@@ -10262,6 +10271,15 @@
     "description": "Tournament history: who hosted an edition.",
     "placeholders": {
       "nation": {
+        "type": "String"
+      }
+    }
+  },
+  "tourHostLineMulti": "Hosts: {hosts}",
+  "@tourHostLineMulti": {
+    "description": "Tournament history: an edition shared by two or more co-hosts, shown as country codes separated by middle dots (e.g. \"USA · CAN · MEX\").",
+    "placeholders": {
+      "hosts": {
         "type": "String"
       }
     }

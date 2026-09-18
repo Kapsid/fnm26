@@ -9,6 +9,7 @@ import 'package:fnm/data/repositories/drift_competition_repository.dart';
 import 'package:fnm/data/seed/seed_source.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
+import 'package:fnm/features/achievements/challenge_providers.dart';
 import 'package:fnm/features/career/career_providers.dart';
 
 import '../../helpers/test_database.dart';
@@ -77,6 +78,86 @@ void main() {
 
     expect((await _edition(repo, careerId, 2034)).hostIds, [9]);
   });
+
+  test(
+    'recordHonour given both hostId and a disagreeing hostIds normalises '
+    'the list to start with hostId',
+    () async {
+      final db = createTestDatabase();
+      addTearDown(db.close);
+      final repo = DriftCompetitionRepository(db);
+      final careerId = await aCareer(db);
+
+      // hostIds.first (11) disagrees with hostId (10) — the stored list must
+      // still begin with the stored primary, so the history row and the "won
+      // at home" check never name different countries.
+      await repo.recordHonour(
+        careerId: careerId,
+        year: 2038,
+        competition: 'World Championship',
+        championId: 1,
+        runnerUpId: 2,
+        hostId: 10,
+        hostIds: const [11, 10, 12],
+      );
+
+      final edition = await _edition(repo, careerId, 2038);
+      expect(edition.hostId, 10);
+      expect(edition.hostIds, [10, 11, 12]);
+    },
+  );
+
+  test(
+    'a nation that is the second of three co-hosts is credited with winning '
+    'at home',
+    () async {
+      final db = createTestDatabase();
+      addTearDown(db.close);
+      final repo = DriftCompetitionRepository(db);
+      final nations =
+          (jsonDecode(File('assets/data/nations.json').readAsStringSync())
+                  as List<dynamic>)
+              .map((e) => Nation.fromJson(e as Map<String, Object?>))
+              .toList();
+
+      final container = ProviderContainer(
+        overrides: [
+          appDatabaseProvider.overrideWithValue(db),
+          seedSourceProvider.overrideWithValue(
+            InMemorySeedSource(nationList: nations, playerList: const []),
+          ),
+        ],
+      );
+      addTearDown(container.dispose);
+      await container.read(seedLoaderProvider).ensureSeeded();
+      final career =
+          (await container
+                  .read(careerServiceProvider)
+                  .create(nationId: nations.first.id, managerName: 'M'))
+              .valueOrNull!;
+
+      final coHostA = nations[1].id;
+      final coHostB = nations[2].id;
+      // The manager's own nation wins the World Championship it co-hosted —
+      // but sits in the SECOND slot of the bid, behind coHostA.
+      await repo.recordHonour(
+        careerId: career.id,
+        year: CareerService.worldCupYear(0),
+        competition: 'World Championship',
+        championId: career.nationId,
+        runnerUpId: coHostA,
+        hostIds: [coHostA, career.nationId, coHostB],
+      );
+
+      final views = await container.read(
+        challengesViewProvider(career.id).future,
+      );
+      final grandTour = views.firstWhere((v) => v.def.id == 'ch_grand_tour');
+      // "Home & Away" tracks two sub-goals (won as host, won as visitor); a
+      // co-host win in any slot must still tick off the "host" half.
+      expect(grandTour.current, 1);
+    },
+  );
 }
 
 /// The roll-of-honour entry for [year].

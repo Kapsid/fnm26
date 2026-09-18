@@ -812,7 +812,7 @@ extension SeasonCycle on SeasonService {
       runnerUpId: SeasonService._loser(f),
       thirdId: bronzes.isNotEmpty ? bronzes[0] : null,
       thirdId2: bronzes.length > 1 ? bronzes[1] : null,
-      hostId: WorldCupHosts.continentalHostFor(
+      hostIds: WorldCupHosts.continentalHostsFor(
         confederation: conf,
         cycle: career.cyclePointer,
         seed: career.rngSeed,
@@ -842,7 +842,7 @@ extension SeasonCycle on SeasonService {
 
     final thirds = await _comp.fixturesByRound(careerId, WorldCupFinals.third);
     final nations = await _nationsById();
-    final host = WorldCupHosts.hostFor(
+    final hosts = WorldCupHosts.hostsFor(
       year: year,
       nations: nations.values.toList(),
       seed: (await _careers.byId(careerId))?.rngSeed ?? 0,
@@ -877,7 +877,7 @@ extension SeasonCycle on SeasonService {
       thirdId: thirds.isNotEmpty && thirds.first.hasResult
           ? SeasonService._winner(thirds.first)
           : null,
-      hostId: host,
+      hostIds: hosts,
       finalHomeScore: champIsHome ? f.homeScore : f.awayScore,
       finalAwayScore: champIsHome ? f.awayScore : f.homeScore,
       topScorerName: bootName,
@@ -1083,6 +1083,21 @@ extension SeasonCycle on SeasonService {
       bootGoals = boot.first.goals;
     }
     final champIsHome = f.homeScore! >= f.awayScore!;
+    // This cup was never drawn through the normal host ceremony (it's a
+    // background catch-up for an older save or a missed draw), so there is
+    // no stored bid to read back. The cycle its host draw WOULD have run
+    // under is still derivable from the year alone — the same
+    // year-to-cycle arithmetic used to re-key an honour elsewhere (see
+    // challenge_providers.dart, manager_providers.dart) — so the real
+    // deterministic bid can be recomputed rather than crediting an
+    // arbitrary top-ranked member as "host".
+    final cycle = ((year - CareerService.cycleStart.year) / 4).floor();
+    final hosts = WorldCupHosts.continentalHostsFor(
+      confederation: confederation,
+      cycle: cycle,
+      seed: career.rngSeed,
+      nations: allNations,
+    );
     await _comp.recordHonour(
       careerId: careerId,
       year: year,
@@ -1091,7 +1106,7 @@ extension SeasonCycle on SeasonService {
       runnerUpId: SeasonService._loser(f),
       thirdId: bronzes.isNotEmpty ? bronzes[0] : null,
       thirdId2: bronzes.length > 1 ? bronzes[1] : null,
-      hostId: members.first.id,
+      hostIds: hosts.isEmpty ? [members.first.id] : hosts,
       finalHomeScore: champIsHome ? f.homeScore : f.awayScore,
       finalAwayScore: champIsHome ? f.awayScore : f.homeScore,
       topScorerName: bootName,

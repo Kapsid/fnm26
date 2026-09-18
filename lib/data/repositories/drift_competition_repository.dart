@@ -1494,6 +1494,13 @@ class DriftCompetitionRepository implements CompetitionRepository {
     // co-hosted edition still answers "whose tournament was it" the way every
     // existing reader of [hostId] expects.
     final primaryId = hostId ?? (hostIds.isEmpty ? null : hostIds.first);
+    // A caller can pass both `hostId` and `hostIds` and disagree about who's
+    // primary (e.g. hostIds.first is a different nation). Normalise so the
+    // stored list always begins with the stored hostId, rather than letting
+    // the history row and the "won as host" check name different countries.
+    final normalizedHostIds = hostIds.isEmpty || hostIds.first == primaryId
+        ? hostIds
+        : [primaryId!, ...hostIds.where((id) => id != primaryId)];
     await _db
         .into(_db.honours)
         .insert(
@@ -1506,7 +1513,9 @@ class DriftCompetitionRepository implements CompetitionRepository {
             thirdId: Value(thirdId),
             thirdId2: Value(thirdId2),
             hostId: Value(primaryId),
-            hostIds: Value(hostIds.isEmpty ? null : hostIds.join(',')),
+            hostIds: Value(
+              normalizedHostIds.isEmpty ? null : normalizedHostIds.join(','),
+            ),
             finalHomeScore: Value(finalHomeScore),
             finalAwayScore: Value(finalAwayScore),
             topScorerName: Value(topScorerName),

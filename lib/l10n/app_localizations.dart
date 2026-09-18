@@ -7704,6 +7704,12 @@ abstract class AppLocalizations {
   /// **'Hosted by {host}'**
   String tourCupHostLabel(String host);
 
+  /// World Championship detail: hosted by two or more co-hosts, shown as country codes separated by middle dots (e.g. "USA · CAN · MEX").
+  ///
+  /// In en, this message translates to:
+  /// **'Hosted by {hosts}'**
+  String tourCupHostLabelMulti(String hosts);
+
   /// World Championship detail: tourCupIntercontPlayoff
   ///
   /// In en, this message translates to:
@@ -10826,6 +10832,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Host: {nation}'**
   String tourHostLine(String nation);
+
+  /// Tournament history: an edition shared by two or more co-hosts, shown as country codes separated by middle dots (e.g. "USA · CAN · MEX").
+  ///
+  /// In en, this message translates to:
+  /// **'Hosts: {hosts}'**
+  String tourHostLineMulti(String hosts);
 
   /// A group's name in a bracket or table.
   ///

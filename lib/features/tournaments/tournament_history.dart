@@ -301,6 +301,11 @@ class TournamentHistory extends StatelessWidget {
     ),
   );
 
+  /// Every host of [h], falling back to the lone `Honour.hostId` for a row
+  /// written before co-hosts were tracked as a list.
+  List<int> _hostsOf(Honour h) =>
+      h.hostIds.isNotEmpty ? h.hostIds : [if (h.hostId != null) h.hostId!];
+
   /// One edition's full podium.
   ///
   /// Every tournament records its runner-up, its third place and the final's
@@ -329,9 +334,13 @@ class TournamentHistory extends StatelessWidget {
                   ),
                 ),
                 const Spacer(),
-                if (h.hostId != null)
+                if (_hostsOf(h).isNotEmpty)
                   Text(
-                    l.tourHostLine(name(h.hostId!)),
+                    _hostsOf(h).length == 1
+                        ? l.tourHostLine(name(_hostsOf(h).single))
+                        : l.tourHostLineMulti(
+                            _hostsOf(h).map(code).join(' · '),
+                          ),
                     style: AppTypography.labelSmall.copyWith(
                       color: AppColors.onSurfaceVariant,
                     ),

@@ -163,7 +163,7 @@ class _CycleRolloverScreenState extends ConsumerState<CycleRolloverScreen> {
                 ],
               ),
               const SizedBox(height: AppSpacing.md),
-              _SummaryCard(wc: wc, name: name),
+              _SummaryCard(wc: wc, name: name, code: code),
             ] else
               Text(
                 l.hubCycleComplete,
@@ -625,10 +625,20 @@ class _OfferTile extends StatelessWidget {
 }
 
 class _SummaryCard extends StatelessWidget {
-  const _SummaryCard({required this.wc, required this.name});
+  const _SummaryCard({
+    required this.wc,
+    required this.name,
+    required this.code,
+  });
 
   final Honour wc;
   final String Function(int) name;
+  final String Function(int) code;
+
+  /// Every host of [wc], falling back to the lone `Honour.hostId` for a row
+  /// written before co-hosts were tracked as a list.
+  List<int> get _hosts =>
+      wc.hostIds.isNotEmpty ? wc.hostIds : [if (wc.hostId != null) wc.hostId!];
 
   @override
   Widget build(BuildContext context) {
@@ -638,6 +648,7 @@ class _SummaryCard extends StatelessWidget {
               ? '${wc.finalHomeScore}–${wc.finalAwayScore} ${l.hubPens}'
               : '${wc.finalHomeScore}–${wc.finalAwayScore}')
         : null;
+    final hosts = _hosts;
     return AppCard(
       child: Column(
         children: [
@@ -645,7 +656,13 @@ class _SummaryCard extends StatelessWidget {
             l.hubFinal,
             '${name(wc.championId)} $score ${name(wc.runnerUpId)}',
           ),
-          if (wc.hostId != null) _row(l.hubHost, name(wc.hostId!)),
+          if (hosts.isNotEmpty)
+            _row(
+              l.hubHost,
+              hosts.length == 1
+                  ? name(hosts.single)
+                  : hosts.map(code).join(' · '),
+            ),
           if (wc.topScorerName != null)
             _row(
               l.hubGoldenBoot,

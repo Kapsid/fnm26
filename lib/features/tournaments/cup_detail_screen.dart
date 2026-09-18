@@ -1089,6 +1089,11 @@ class _HistoryState extends State<_History> {
     ),
   );
 
+  /// Every host of [h], falling back to the lone `Honour.hostId` for a row
+  /// written before co-hosts were tracked as a list.
+  List<int> _hostsOf(Honour h) =>
+      h.hostIds.isNotEmpty ? h.hostIds : [if (h.hostId != null) h.hostId!];
+
   Widget _editionCard(Honour h) {
     final l = AppLocalizations.of(context);
     final score = (h.finalHomeScore != null && h.finalAwayScore != null)
@@ -1111,9 +1116,13 @@ class _HistoryState extends State<_History> {
                   ),
                 ),
                 const Spacer(),
-                if (h.hostId != null)
+                if (_hostsOf(h).isNotEmpty)
                   Text(
-                    l.tourCupHostLabel(widget.name(h.hostId!)),
+                    _hostsOf(h).length == 1
+                        ? l.tourCupHostLabel(widget.name(_hostsOf(h).single))
+                        : l.tourCupHostLabelMulti(
+                            _hostsOf(h).map(widget.code).join(' · '),
+                          ),
                     style: AppTypography.labelSmall.copyWith(
                       color: AppColors.onSurfaceVariant,
                     ),

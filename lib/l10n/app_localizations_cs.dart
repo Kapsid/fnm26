@@ -4805,6 +4805,11 @@ class AppLocalizationsCs extends AppLocalizations {
   }
 
   @override
+  String tourCupHostLabelMulti(String hosts) {
+    return 'Pořádají $hosts';
+  }
+
+  @override
   String get tourCupIntercontPlayoff => 'Mezikontinentální baráž';
 
   @override
@@ -6917,6 +6922,11 @@ class AppLocalizationsCs extends AppLocalizations {
   @override
   String tourHostLine(String nation) {
     return 'Pořadatel: $nation';
+  }
+
+  @override
+  String tourHostLineMulti(String hosts) {
+    return 'Pořadatelé: $hosts';
   }
 
   @override
