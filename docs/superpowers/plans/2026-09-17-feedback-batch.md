@@ -60,11 +60,13 @@ import 'package:fnm/data/repositories/drift_competition_repository.dart';
 import '../../helpers/test_database.dart';
 
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+
   test('a co-hosted edition keeps every host, primary first', () async {
-    final db = testDatabase();
+    final db = createTestDatabase();
     addTearDown(db.close);
     final repo = DriftCompetitionRepository(db);
-    final careerId = await seedCareer(db);
+    final careerId = await aCareer(db);
 
     await repo.recordHonour(
       careerId: careerId,
@@ -82,10 +84,10 @@ void main() {
   });
 
   test('a single-host edition reads back one host', () async {
-    final db = testDatabase();
+    final db = createTestDatabase();
     addTearDown(db.close);
     final repo = DriftCompetitionRepository(db);
-    final careerId = await seedCareer(db);
+    final careerId = await aCareer(db);
 
     await repo.recordHonour(
       careerId: careerId,
@@ -102,7 +104,7 @@ void main() {
 }
 ```
 
-Read `test/helpers/test_database.dart` first and use whatever it actually exposes for building a database and a career row; match the existing helper names rather than the ones sketched here.
+`createTestDatabase()` is the real helper (`test/helpers/test_database.dart:6`); there is no career-seeding helper yet. Write `aCareer(db)` as a local helper in this test file, following the setup in `test/unit/competition/lazy_wc_qualifying_test.dart:29-58`: a `ProviderContainer` overriding `appDatabaseProvider` and `seedSourceProvider`, `seedLoaderProvider.ensureSeeded()`, then `careerServiceProvider.create(nationId:, managerName:)`. If a later task needs the same helper, lift it into `test/helpers/` then, not now.
 
 - [ ] **Step 2: Run the test to verify it fails**
 
@@ -232,15 +234,22 @@ Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>"
 - [ ] **Step 1: Write the failing test**
 
 ```dart
-test('the 2026 World Championship is in the seeded history, with its hosts', () async {
-  final honours = RealHistory.entries
-      .where((e) => e.year == 2026 && e.competition == RealHistory.worldChampionship);
-  expect(honours, hasLength(1));
-  expect(honours.single.hosts, hasLength(3));
+test('the 2026 World Championship is in the seeded history, with its hosts', () {
+  final editions = RealHistory.editions.where(
+    (e) => e.year == 2026 && e.competition == RealHistory.worldChampionship,
+  );
+  expect(editions, hasLength(1));
+  expect(editions.single.hosts, hasLength(3));
+});
+
+test('every other edition carries exactly one host', () {
+  for (final e in RealHistory.editions.where((e) => e.year != 2026)) {
+    expect(e.hosts, hasLength(1), reason: '${e.competition} ${e.year}');
+  }
 });
 ```
 
-Match the actual names in `real_history.dart` (`worldChampionship`, the entry record's field names) rather than assuming the ones written here.
+The real names are `RealHistory.editions` (a `List<HistoryEdition>`) and the record typedef `HistoryEdition` at `real_history.dart:12-21`, whose host field is today a single `String host`.
 
 - [ ] **Step 2: Run it to verify it fails**
 
@@ -249,7 +258,7 @@ Expected: FAIL — no 2026 entry.
 
 - [ ] **Step 3: Add the entry and widen host to a list**
 
-Replace the "2026 is deliberately ABSENT" comment with the edition, and change every entry in the file from a single `host` to a host list so there is one shape:
+Widen `HistoryEdition.host` (`String`) to `hosts` (`List<String>`) and migrate every existing edition literal to a single-element list, so the file has one shape rather than two. **Do not research historical co-hosts**: editions that really were shared (2002, Euro 2000/2008/2012/2020) keep the single host they store today. Correcting real history is not in this batch. Then replace the "2026 is deliberately ABSENT" comment with the edition:
 
 ```dart
     (
@@ -781,7 +790,9 @@ abstract final class StrengthFactors {
 test('a drilled shape and a tired squad both show up, biggest first', () {
   final factors = StrengthFactors.of(
     familiarity: 1,
-    conditionByPlayer: {1: tired(-6), 2: tired(-4)},
+    // PlayerCondition is a plain record typedef: build it inline with the
+    // overallDelta the case needs rather than reaching for a helper.
+    conditionByPlayer: {1: aCondition(overallDelta: -6), 2: aCondition(overallDelta: -4)},
     morale: 50,
     hasCaptain: false,
     staff: const {},
