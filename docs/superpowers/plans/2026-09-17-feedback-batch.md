@@ -1,0 +1,1770 @@
+# Feedback batch 2026-09-17 Implementation Plan
+
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+
+**Goal:** Land 35 pieces of playtest feedback (one item is answered, not worked) as one reviewed batch: close the gates that are implemented in one place and not asked in another, show the manager the effects the engine has always applied, fill the holes in recorded history, and make a nation's standing matter.
+
+**Architecture:** Seven areas, executed in dependency order. Data and schema first (the honours bump is the only migration, and later history work reads it), then selection rules, then the visibility layer that reads existing engine numbers without inventing a parallel model, then press and feed, then the standing pass, then dashboard and presentation. Every rule change is a pure function in `lib/domain/services/` with a unit test; every screen change reads a provider and gets a widget test.
+
+**Tech Stack:** Flutter, Riverpod (manual providers, no codegen), Drift, freezed, go_router, `flutter_test`.
+
+**Spec:** `docs/superpowers/specs/2026-09-17-feedback-batch-design.md`
+
+## Global Constraints
+
+Every task's requirements implicitly include all of these.
+
+- **Riverpod without codegen.** Never add `@riverpod`. Its codegen package pins an older `analyzer` that conflicts with `drift_dev`. Write manual providers.
+- **Drift codegen needs the JIT flag:** `dart run build_runner build --delete-conflicting-outputs --force-jit`. Without `--force-jit` the sqlite3 build hook fails.
+- **All user-facing text is localised.** Add the string to `lib/l10n/app_en.arb` AND `lib/l10n/app_cs.arb`, run `flutter gen-l10n`, then `dart run tool/export_copy.dart` so `copy/strings.csv` stays in sync. Never hardcode a user-facing string in a widget.
+- **No em dashes in user-facing copy.** Code comments may use them; strings in the `.arb` files may not.
+- **Never "World Cup" in English user-facing copy.** It is the **World Championship**. Stored competition names are canonical and translated at display time. A guard test enforces this; do not weaken it.
+- **The two simulators move together.** Any balance change to `lib/domain/services/match/match_engine.dart` must be mirrored in the background simulator, or live and simulated football desync.
+- **Derived providers go stale.** After any simulation step, invalidate the providers that read the database imperatively. A provider that is not invalidated grades against a pre-tournament snapshot.
+- **Schema bumps preserve saves.** From `firstManagedVersion` on, every bump is a recorded stepwise migration. Follow the five-step recipe in `lib/data/db/app_database.dart:117-127`.
+- **The analyzer stays at zero errors.** `flutter analyze` reports ~595 `info`-level lints as its baseline; that is fine. `error •` count must remain 0.
+- **Run the full suite before each commit:** `flutter test`.
+
+## Out of scope
+
+Türkiye stays. It is the current official English name. No work.
+
+---
+
+## Area 1: History and the schema
+
+### Task 1: Honours record every host, not just the first
+
+A co-hosted edition stores one host (`Honours.hostId`), so a World Championship shared by three nations shows one flag in history and the manager's own co-hosted tournament reads as somebody else's.
+
+**Files:**
+- Modify: `lib/data/db/tables.dart:642-666` (the `Honours` table)
+- Modify: `lib/data/db/app_database.dart:83` (schema version), and the `stepByStep` block for the new step
+- Modify: `lib/data/db/schema_versions.dart` (generated stub, then filled in)
+- Modify: `lib/domain/repositories/competition_repository.dart:177-192` (the `Honour` typedef), and `recordHonour`
+- Modify: `lib/data/repositories/drift_competition_repository.dart` (around `:1493`, the honours insert and the row mapper)
+- Test: `test/unit/data/schema_migration_test.dart`, `test/unit/competition/honour_cohosts_test.dart` (create)
+
+**Interfaces:**
+- Produces: `Honour` gains `List<int> hostIds` (empty when nothing was recorded). `hostId` stays as the primary host so existing call sites keep working; `hostIds` is the full list, primary first.
+- Produces: `CompetitionRepository.recordHonour(... , List<int> hostIds = const [])`.
+
+- [ ] **Step 1: Write the failing test**
+
+Create `test/unit/competition/honour_cohosts_test.dart`:
+
+```dart
+import 'package:flutter_test/flutter_test.dart';
+import 'package:fnm/data/repositories/drift_competition_repository.dart';
+
+import '../../helpers/test_database.dart';
+
+void main() {
+  test('a co-hosted edition keeps every host, primary first', () async {
+    final db = testDatabase();
+    addTearDown(db.close);
+    final repo = DriftCompetitionRepository(db);
+    final careerId = await seedCareer(db);
+
+    await repo.recordHonour(
+      careerId: careerId,
+      year: 2026,
+      competition: 'World Championship',
+      championId: 1,
+      runnerUpId: 2,
+      thirdId: 3,
+      hostIds: const [10, 11, 12],
+    );
+
+    final honours = await repo.honours(careerId);
+    expect(honours.single.hostId, 10);
+    expect(honours.single.hostIds, [10, 11, 12]);
+  });
+
+  test('a single-host edition reads back one host', () async {
+    final db = testDatabase();
+    addTearDown(db.close);
+    final repo = DriftCompetitionRepository(db);
+    final careerId = await seedCareer(db);
+
+    await repo.recordHonour(
+      careerId: careerId,
+      year: 2030,
+      competition: 'World Championship',
+      championId: 1,
+      runnerUpId: 2,
+      hostIds: const [7],
+    );
+
+    final honours = await repo.honours(careerId);
+    expect(honours.single.hostIds, [7]);
+  });
+}
+```
+
+Read `test/helpers/test_database.dart` first and use whatever it actually exposes for building a database and a career row; match the existing helper names rather than the ones sketched here.
+
+- [ ] **Step 2: Run the test to verify it fails**
+
+Run: `flutter test test/unit/competition/honour_cohosts_test.dart`
+Expected: FAIL — `hostIds` is not defined on `Honour`, and `recordHonour` has no `hostIds` parameter.
+
+- [ ] **Step 3: Add the column and bump the schema**
+
+In `lib/data/db/tables.dart`, inside `Honours`:
+
+```dart
+  /// Every host of this edition, primary first, comma-separated ("10,11,12").
+  ///
+  /// [hostId] holds the primary host on its own and stays authoritative for
+  /// the single-host case. A co-hosted tournament used to lose everyone but
+  /// the first, so a shared edition read as one country's in the history.
+  /// Recorded rather than re-derived: a roll of honour must hold what
+  /// happened, not what a host-rotation function would say today.
+  TextColumn get hostIds => text().nullable()();
+```
+
+Then:
+1. `lib/data/db/app_database.dart:83` — `currentSchemaVersion = 46`.
+2. `dart run drift_dev schema dump lib/data/db/app_database.dart drift_schemas/`
+3. `dart run drift_dev schema steps drift_schemas/ lib/data/db/schema_versions.dart`
+4. Fill the new callback in the `stepByStep` block in `app_database.dart`:
+
+```dart
+        // 45 → 46 records every host of an edition, not only the first. Purely
+        // additive and nullable: an existing honour simply has no list, and
+        // reads back as its single stored [hostId], which is what it was.
+        from45To46: (m, schema) async {
+          await m.addColumn(schema.honours, schema.honours.hostIds);
+        },
+```
+5. `dart run drift_dev schema generate drift_schemas/ test/generated_migrations/` and extend `test/unit/data/schema_migration_test.dart` with the 45→46 step following the pattern already in that file.
+6. `dart run build_runner build --delete-conflicting-outputs --force-jit`
+
+- [ ] **Step 4: Thread `hostIds` through the repository**
+
+In `lib/domain/repositories/competition_repository.dart`, add to the `Honour` typedef:
+
+```dart
+  /// Every host, primary first. Single-element for an ordinary edition, empty
+  /// only for a historical row that never recorded one.
+  List<int> hostIds,
+```
+
+Add `List<int> hostIds = const []` to the `recordHonour` signature. In `drift_competition_repository.dart`, write `hostIds.join(',')` on insert (null when empty), and on read parse it back, falling back to `[hostId]` when the column is null so pre-migration rows still answer the question.
+
+- [ ] **Step 5: Run the tests**
+
+Run: `flutter test test/unit/competition/honour_cohosts_test.dart test/unit/data/schema_migration_test.dart`
+Expected: PASS.
+
+- [ ] **Step 6: Commit**
+
+```bash
+git add -A
+git commit -m "feat: a co-hosted edition keeps every host in the record
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>"
+```
+
+---
+
+### Task 2: Every screen that names a host names all of them
+
+**Files:**
+- Modify: `lib/features/tournaments/cup_detail_screen.dart`, `lib/features/tournaments/continental_detail_screen.dart`, `lib/features/tournaments/tournament_history.dart` — wherever a stored honour's host is rendered
+- Modify: wherever honours are recorded, to pass the full host list (grep `recordHonour(`)
+- Test: `test/widget/honour_cohost_row_test.dart` (create)
+
+**Interfaces:**
+- Consumes: `Honour.hostIds` from Task 1.
+
+- [ ] **Step 1: Find every caller**
+
+```bash
+grep -rn "recordHonour(" lib --include="*.dart"
+grep -rn "hostId" lib/features/tournaments --include="*.dart"
+```
+
+Every recording site that knows the tournament's hosts (the World Championship crowning path already computes `WorldCupHosts.hostsFor`) passes the whole list.
+
+- [ ] **Step 2: Write the failing widget test**
+
+Create `test/widget/honour_cohost_row_test.dart` asserting that a history row built from an honour with `hostIds: [10, 11, 12]` renders all three nation codes, and one with a single host renders exactly one. Use `test/helpers/pump_app.dart` for the harness, following an existing widget test in `test/widget/` for the setup shape.
+
+- [ ] **Step 3: Run it to verify it fails**
+
+Run: `flutter test test/widget/honour_cohost_row_test.dart`
+Expected: FAIL — only the primary host renders.
+
+- [ ] **Step 4: Render the list**
+
+Where a single host flag/code is shown, render each of `hostIds` (falling back to `hostId` when the list is empty). Keep the row on one line at phone width: codes, not full names, when there is more than one host.
+
+- [ ] **Step 5: Run the tests**
+
+Run: `flutter test test/widget/honour_cohost_row_test.dart && flutter test`
+Expected: PASS.
+
+- [ ] **Step 6: Commit**
+
+```bash
+git add -A
+git commit -m "feat: history names every host of a shared edition
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>"
+```
+
+---
+
+### Task 3: WC 2026 enters the record
+
+`lib/domain/services/competition/real_history.dart:299` deliberately omits 2026 because a save opens on 1 July 2026 while that tournament is being played. The manager expects to find it in history. Seed it with a fixed champion and its three co-hosts, which also exercises Task 1 end to end.
+
+**Files:**
+- Modify: `lib/domain/services/competition/real_history.dart` (the entry list, around `:299`; and the host handling so an entry can carry more than one host nation name)
+- Test: `test/unit/competition/real_history_test.dart` (extend, or create if absent)
+
+**Interfaces:**
+- Consumes: `recordHonour(..., hostIds:)` from Task 1.
+- Produces: the seeded entry record gains `hosts` (a `List<String>` of nation names) alongside the existing single `host`, or `host` becomes a list — pick one and apply it to every entry in the file so there is one shape, not two.
+
+- [ ] **Step 1: Write the failing test**
+
+```dart
+test('the 2026 World Championship is in the seeded history, with its hosts', () async {
+  final honours = RealHistory.entries
+      .where((e) => e.year == 2026 && e.competition == RealHistory.worldChampionship);
+  expect(honours, hasLength(1));
+  expect(honours.single.hosts, hasLength(3));
+});
+```
+
+Match the actual names in `real_history.dart` (`worldChampionship`, the entry record's field names) rather than assuming the ones written here.
+
+- [ ] **Step 2: Run it to verify it fails**
+
+Run: `flutter test test/unit/competition/real_history_test.dart`
+Expected: FAIL — no 2026 entry.
+
+- [ ] **Step 3: Add the entry and widen host to a list**
+
+Replace the "2026 is deliberately ABSENT" comment with the edition, and change every entry in the file from a single `host` to a host list so there is one shape:
+
+```dart
+    (
+      year: 2026,
+      competition: worldChampionship,
+      hosts: ['United States', 'Canada', 'Mexico'],
+      champion: 'Spain',
+      runnerUp: 'Argentina',
+      third: 'France',
+      finalHome: 2,
+      finalAway: 1,
+    ),
+```
+
+The comment that replaces the old one must say what changed and why: the edition is now seeded as finished, because a manager opening a save looks for it and finding nothing reads as a hole in the world rather than as a tournament still in progress.
+
+Resolve the host names to nation ids the same way the existing loader resolves `champion`/`runnerUp`, and pass them as `hostIds`.
+
+- [ ] **Step 4: Run the tests**
+
+Run: `flutter test test/unit/competition/real_history_test.dart test/unit/competition/honour_cohosts_test.dart`
+Expected: PASS.
+
+- [ ] **Step 5: Verify in a real save**
+
+Start a new career and open the World Championship history. 2026 is listed, with three hosts.
+
+- [ ] **Step 6: Commit**
+
+```bash
+git add -A
+git commit -m "feat: the 2026 World Championship is part of the world's history
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>"
+```
+
+---
+
+### Task 4: Scorers in future editions have names
+
+Top-scorer lists in later World Championships mostly read "Unknown". The name comes from `playerRepository.byId(...)` (see `lib/features/tournaments/cup_detail_providers.dart:212-219`); when that returns null the UI falls back to the literal `'Unknown'`.
+
+**Files:**
+- Modify: `lib/features/tournaments/cup_detail_providers.dart:207-219` and any sibling provider doing the same resolution (grep for `playerNames`)
+- Modify: `lib/data/repositories/drift_player_repository.dart:181` (`byId`) if the cause is there
+- Test: `test/unit/records/scorer_names_test.dart` (create)
+
+**Interfaces:**
+- Consumes: `PlayerRepository.byId(id, agingYears:, saveSeed:, youthBonusByCycle:, careerStartsByPlayer:)`.
+
+- [ ] **Step 1: Reproduce it in a test before changing anything**
+
+This is a debugging task, not a known fix. Write a test that resolves the scorer ids of a simulated future World Championship and asserts every one of them has a name:
+
+```dart
+test('every scorer in a future edition resolves to a name', () async {
+  // Simulate forward to a World Championship several cycles out, take the
+  // stored goal events for its finals competition, and resolve each scorer.
+  final ids = await repo.topScorers(careerId,
+      kind: CompetitionKind.worldCupFinals, limit: 15);
+  for (final s in ids) {
+    final p = await players.byId(s.playerId,
+        saveSeed: career.rngSeed,
+        agingYears: agingYears,
+        youthBonusByCycle: youthBonus,
+        careerStartsByPlayer: careerStarts);
+    expect(p, isNotNull, reason: 'scorer ${s.playerId} has no name');
+  }
+});
+```
+
+Follow `test/unit/full_cycle_test.dart` for how to advance a save far enough that newgens are scoring.
+
+- [ ] **Step 2: Run it and read the failure**
+
+Run: `flutter test test/unit/records/scorer_names_test.dart`
+Expected: FAIL, naming the ids that do not resolve. **Before writing any fix, establish which kind of id fails** — a newgen id (`PlayerLifecycle.isNewgenId`) whose intake year is outside the seeded window, or a seeded id whose row was deleted. The fix follows the answer.
+
+- [ ] **Step 3: Fix at the cause**
+
+Likely candidates, in order of probability:
+- the provider passes no `agingYears` / `youthBonusByCycle` / `careerStartsByPlayer`, so a newgen cannot be reconstructed (the other call sites at `match_providers.dart:177-195` do pass them — compare);
+- `newgenById` returns null for an intake year the reconstruction no longer covers.
+
+Fix whichever it is. Keep the `'Unknown'` fallback: it is correct for a genuinely missing player, it just must stop being the common case.
+
+- [ ] **Step 4: Run the tests**
+
+Run: `flutter test test/unit/records/scorer_names_test.dart && flutter test`
+Expected: PASS.
+
+- [ ] **Step 5: Commit**
+
+```bash
+git add -A
+git commit -m "fix: a scorer in a future edition has a name
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>"
+```
+
+---
+
+### Task 5: Holders on tournament detail
+
+**Files:**
+- Modify: `lib/features/tournaments/cup_detail_providers.dart` (expose the most recent honour as `holders`), `lib/features/tournaments/cup_detail_screen.dart`, `lib/features/tournaments/continental_detail_screen.dart`
+- Modify: `lib/l10n/app_en.arb`, `lib/l10n/app_cs.arb`
+- Test: `test/widget/tournament_holders_test.dart` (create)
+
+**Interfaces:**
+- Consumes: `CompetitionRepository.honours(careerId)` (newest first).
+- Produces: the detail view model gains `({int nationId, int year})? holders` — the champion of the most recent completed edition of THIS competition, null before there is one.
+
+- [ ] **Step 1: Write the failing widget test**
+
+Assert that a tournament detail built with a previous edition in the honours list shows the holders' name and the year, and that a first-ever edition shows no holders row at all.
+
+- [ ] **Step 2: Run it to verify it fails**
+
+Run: `flutter test test/widget/tournament_holders_test.dart`
+Expected: FAIL — no holders row exists.
+
+- [ ] **Step 3: Implement**
+
+In the provider, pick the newest honour whose `competition` matches this competition's stored name and whose year is before this edition's year. In the screen, render a compact row under the header: flag, nation, and the year they won it. New strings: `tourHolders` ("Holders") and `tourHoldersSince` with a `{year}` placeholder. Add both to `app_en.arb` and `app_cs.arb`, run `flutter gen-l10n`, then `dart run tool/export_copy.dart`.
+
+- [ ] **Step 4: Run the tests**
+
+Run: `flutter test test/widget/tournament_holders_test.dart`
+Expected: PASS.
+
+- [ ] **Step 5: Commit**
+
+```bash
+git add -A
+git commit -m "feat: a tournament says who holds it
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>"
+```
+
+---
+
+### Task 6: A team's strength across the career
+
+**Files:**
+- Modify: `lib/features/stats/team_overall_history.dart` (read it first — a rating-history spec already exists at `docs/superpowers/specs/2026-09-05-rating-history-design.md`; reuse what is there rather than building a second curve)
+- Modify: the history screen that should carry it (`lib/features/career/manager_history_screen.dart` or `lib/features/stats/team_stats_screen.dart` — put it where the manager looks for history)
+- Test: `test/widget/team_strength_history_test.dart` (create)
+
+**Interfaces:**
+- Produces: a widget taking `List<({int year, int overall})>` and drawing the curve.
+
+- [ ] **Step 1: Read what already exists**
+
+```bash
+cat lib/features/stats/team_overall_history.dart
+cat docs/superpowers/specs/2026-09-05-rating-history-design.md
+```
+
+If the curve already exists and is simply not shown in history, this task is wiring, not building. Say which it was in the commit message.
+
+- [ ] **Step 2: Write the failing widget test**
+
+Assert the history screen renders a strength point per year of the career, and renders nothing (no empty chart frame) for a career with one year.
+
+- [ ] **Step 3: Run it to verify it fails**
+
+Run: `flutter test test/widget/team_strength_history_test.dart`
+Expected: FAIL.
+
+- [ ] **Step 4: Implement**
+
+Squad-average overall per year, from the pool as it stood each year — the same average the match header already shows, so one number means one thing across the app.
+
+- [ ] **Step 5: Run the tests and commit**
+
+```bash
+flutter test test/widget/team_strength_history_test.dart
+git add -A
+git commit -m "feat: history shows where the side's strength has been
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>"
+```
+
+---
+
+### Task 7: All-time scorers mark who is still playing
+
+`AllTimeScorer` already carries an active flag (`cup_detail_providers.dart:73`). Verify it is rendered everywhere an all-time list appears; where it is not, render it.
+
+**Files:**
+- Modify: `lib/features/tournaments/tournament_history.dart:100-140` (`TournamentScorers`), `lib/features/records/all_time_records_screen.dart`, `lib/features/nations/nation_vitrine_providers.dart:205` and its screen
+- Test: `test/widget/all_time_scorers_active_test.dart` (create)
+
+- [ ] **Step 1: Write the failing widget test**
+
+Assert an all-time scorer list marks an active player distinctly from a retired one, in every list that shows all-time scorers.
+
+- [ ] **Step 2: Run it to verify it fails**
+
+Run: `flutter test test/widget/all_time_scorers_active_test.dart`
+Expected: FAIL in whichever lists do not mark it.
+
+- [ ] **Step 3: Implement**
+
+One marker, used in every list: a small dot or a bolder name for a player still in the pool. `nation_vitrine_providers.dart:205` builds `ScorerRecord` without an active flag — give it one from the same source the cup detail provider uses.
+
+- [ ] **Step 4: Run the tests and commit**
+
+```bash
+flutter test test/widget/all_time_scorers_active_test.dart
+git add -A
+git commit -m "feat: an all-time list says who is still playing
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>"
+```
+
+---
+## Area 2: Selection and availability
+
+### Task 8: The call-up screen asks the right question
+
+`SquadSelection.usableInPeriod` (`lib/domain/services/squad/squad_selection.dart:27-31`) already encodes the rule: a player is nameable when his ban or knock does not cover EVERY match the squad is being picked for. The screen asks a stricter, wrong question — `isAvailable` (`lib/features/tactics/call_up_screen.dart:231`) — which is "can he play the very next game".
+
+**Files:**
+- Modify: `lib/features/tactics/call_up_screen.dart:228-236` and its per-row availability rendering around `:786`
+- Test: `test/unit/squad/squad_selection_test.dart` (extend), `test/widget/call_up_availability_test.dart` (create)
+
+**Interfaces:**
+- Consumes: `SquadSelection.usableInPeriod(PlayerAbsence?, int coverage)`; the camp's match count from the coverage window the screen already reads (`_CoverageBanner(window: window)` — `window.matches.length`).
+
+- [ ] **Step 1: Write the failing test**
+
+Create `test/widget/call_up_availability_test.dart`. Given a camp covering three matches:
+- a player banned for one match may be selected, and his row says he misses one of the three;
+- a player banned for three matches may not be selected;
+- the "fit players" count that gates the confirm button counts the men who can play at least one of the matches, not only those available for the first.
+
+- [ ] **Step 2: Run it to verify it fails**
+
+Run: `flutter test test/widget/call_up_availability_test.dart`
+Expected: FAIL — the one-match ban is treated as unavailable.
+
+- [ ] **Step 3: Implement**
+
+Replace the `isAvailable` filter at `:231` with `SquadSelection.usableInPeriod(data.absences[id], coverage)` where `coverage` is the camp's match count (1 when there is no window). The row label already distinguishes injury from ban (`:786`); extend it to say how many of the camp's matches the player misses.
+
+Keep `kMinFitPlayers` meaning what it says — eleven men who can actually be fielded in a given match is still the gate; what changes is that a man missing only the first game counts toward the squad, not toward that match's eleven.
+
+- [ ] **Step 4: Run the tests**
+
+Run: `flutter test test/widget/call_up_availability_test.dart test/unit/squad/squad_selection_test.dart`
+Expected: PASS.
+
+- [ ] **Step 5: Commit**
+
+```bash
+git add -A
+git commit -m "fix: a one-game ban no longer costs a player the whole camp
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>"
+```
+
+---
+
+### Task 9: An injured player cannot be fielded
+
+A player carrying `injuryMatches == 1` was named in the XI for the very match he is missing. `selectable()` (`lib/features/tactics/tactics_providers.dart:46`) filters him out, so something else put him there. **Find the cause before fixing anything.**
+
+**Files:**
+- Investigate: `lib/features/tactics/tactics_providers.dart:40-140`, `lib/features/tactics/tactics_screen.dart:160-180`, `lib/features/match/setup_warning.dart`, the lineup repair on save (grep `repairLineup` / `lineup_slots`)
+- Test: `test/unit/tactics/injured_not_fieldable_test.dart` (create)
+
+- [ ] **Step 1: Reproduce with a failing test**
+
+```dart
+test('a player injured for one match cannot be in the XI for it', () {
+  final pool = [player(1), player(2), player(3)];
+  final absences = {2: const PlayerAbsence(playerId: 2, injuryMatches: 1)};
+  expect(selectable(pool, absences).map((p) => p.id), [1, 3]);
+});
+```
+
+That much probably passes already — which is the point. Then write the test that actually fails, at the level where the bug lives: a stored XI naming player 2, loaded through the tactics provider, must not hand player 2 to the match. Work outward from `selectable` until a test fails.
+
+- [ ] **Step 2: Run it and read the failure**
+
+Run: `flutter test test/unit/tactics/injured_not_fieldable_test.dart`
+Expected: FAIL at the layer that has the hole. Candidates, to check in this order:
+1. the stored XI is loaded and used without re-checking absences (a lineup saved before the injury);
+2. `bestEleven` / auto-pick runs over `pool` rather than `selectable(pool, absences)`;
+3. absences load asynchronously and the XI is built from an empty map on first frame, then never rebuilt;
+4. the match start path reads the stored lineup directly rather than through the provider that filters.
+
+- [ ] **Step 3: Fix at the cause**
+
+Whatever the layer, the rule belongs in ONE place: the XI handed to the match is filtered through absences at the point it is read, not repaired in the widget. Add the guard where the lineup becomes a `MatchTeam`, so no future screen can route around it.
+
+- [ ] **Step 4: Run the tests**
+
+Run: `flutter test test/unit/tactics/injured_not_fieldable_test.dart && flutter test`
+Expected: PASS.
+
+- [ ] **Step 5: Commit**
+
+```bash
+git add -A
+git commit -m "fix: an injured man stays out of the eleven
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>"
+```
+
+---
+
+### Task 10: The substitution sheet shows who cannot come on, and lets a misclick be taken back
+
+Two faults in `lib/features/tactics/in_match_tactics.dart`:
+- the bench list gives no sign that a man has already been withdrawn or is carrying a knock. `injuredIds` and `sentOffIds` are known to the editor (`:106-115`) and painted on the pitch, but the list a manager picks from does not say;
+- a change made inside the sheet cannot be taken back without leaving. `_withdrawn` is seeded once at open (`:163-166`), so the rules are right, but there is no way to reverse a slot the manager has just filled by accident.
+
+**Files:**
+- Modify: `lib/features/tactics/in_match_tactics.dart` (the player list rows, and `_setSlot` / a new undo)
+- Modify: `lib/l10n/app_en.arb`, `lib/l10n/app_cs.arb`
+- Test: `test/widget/in_match_sub_undo_test.dart` (create)
+
+**Interfaces:**
+- Consumes: `refusalToBringOn(...)` and `SubRefusal` from `lib/domain/services/tactics/substitution_rules.dart`. Do not reimplement the rules; ask them.
+
+- [ ] **Step 1: Write the failing widget test**
+
+```
+- a bench player already withdrawn renders with a marker and is not tappable
+- a bench player injured this match renders with a marker
+- after putting a substitute into a slot, an "undo" restores the previous
+  occupant and gives the substitution back (the counter returns to its
+  previous value)
+- undo is available only for changes made in this sheet, never for one
+  committed earlier in the match
+```
+
+- [ ] **Step 2: Run it to verify it fails**
+
+Run: `flutter test test/widget/in_match_sub_undo_test.dart`
+Expected: FAIL — no markers, no undo.
+
+- [ ] **Step 3: Implement the markers**
+
+In the bench/squad list, each row asks `refusalToBringOn` for its player and renders accordingly: already off, sent off, or carrying a knock (`widget.injuredIds`). A row that cannot come on is visibly out and does not respond to a tap. New strings: `tacticsSubOffAlready`, `tacticsSubInjured`.
+
+- [ ] **Step 4: Implement undo**
+
+Keep a stack of the changes made since the sheet opened:
+
+```dart
+  /// The slot states this sheet has changed, newest last, so a misclick can be
+  /// taken back. Only changes made HERE are undoable: a substitution made ten
+  /// minutes ago is part of the match, not of this sheet.
+  final List<({int slot, int? previous})> _undo = [];
+```
+
+`_setSlot` pushes `(slot: slot, previous: _lineup[slot])` before it writes. An undo button (enabled only while `_undo` is not empty) pops the last entry and restores it. Because `_subsUsed` and `_withdrawn` are both derived from the lineup against `widget.startingIds`, restoring the slot restores the count with no extra bookkeeping — verify that in the test rather than assuming it.
+
+- [ ] **Step 5: Run the tests**
+
+Run: `flutter test test/widget/in_match_sub_undo_test.dart && flutter test`
+Expected: PASS.
+
+- [ ] **Step 6: Commit**
+
+```bash
+git add -A
+git commit -m "feat: the bench says who cannot come on, and a misclick can be taken back
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>"
+```
+
+---
+
+### Task 11: Set-piece takers are filled in, not blank
+
+`SetPieceTakers` stores null to mean "let the engine pick" (`lib/features/tactics/set_piece_takers_providers.dart:8-9`), and the engine's automatic rule is the best `technical` outfielder for a penalty (`match_engine.dart:1251-1262`) and the best `technical` other than the scorer for a dead ball (`:1440-1448`). The manager sees an empty slot and has to guess.
+
+**Files:**
+- Create: `lib/domain/services/tactics/set_piece_picks.dart`
+- Modify: `lib/features/tactics/tactics_screen.dart` (the takers UI), `lib/features/tactics/in_match_tactics.dart` (the same UI mid-match)
+- Test: `test/unit/tactics/set_piece_picks_test.dart` (create)
+
+**Interfaces:**
+- Produces:
+
+```dart
+/// Who takes a set piece when the manager has not said, mirroring the engine's
+/// own automatic choice so the screen shows what will actually happen.
+abstract final class SetPiecePicks {
+  static int? penalty(List<Player> xi);
+  static int? deadBall(List<Player> xi);
+}
+```
+
+- [ ] **Step 1: Write the failing test**
+
+```dart
+import 'package:flutter_test/flutter_test.dart';
+import 'package:fnm/domain/entities/enums.dart';
+import 'package:fnm/domain/services/tactics/set_piece_picks.dart';
+
+void main() {
+  test('the penalty falls to the best technical outfielder', () {
+    final xi = [
+      player(id: 1, position: PlayerPosition.gk, technical: 99),
+      player(id: 2, position: PlayerPosition.cb, technical: 60),
+      player(id: 3, position: PlayerPosition.am, technical: 88),
+    ];
+    expect(SetPiecePicks.penalty(xi), 3);
+  });
+
+  test('an empty eleven has no taker', () {
+    expect(SetPiecePicks.penalty(const []), isNull);
+  });
+}
+```
+
+Write the `player(...)` builder the way `test/unit/squad/squad_selection_test.dart` does.
+
+- [ ] **Step 2: Run it to verify it fails**
+
+Run: `flutter test test/unit/tactics/set_piece_picks_test.dart`
+Expected: FAIL — the file does not exist.
+
+- [ ] **Step 3: Implement**
+
+```dart
+import 'package:fnm/domain/entities/enums.dart';
+import 'package:fnm/domain/entities/player.dart';
+
+/// Who takes a set piece when the manager has not said.
+///
+/// A deliberate duplicate of the engine's own automatic choice
+/// (`MatchEngine._penaltyTaker` and `_setPieceTaker`): a screen that shows a
+/// different taker than the one who actually steps up is worse than the blank
+/// slot it replaced. If the engine's rule changes, this changes with it.
+abstract final class SetPiecePicks {
+  /// The best technical outfielder in [xi], or the best of whoever is there
+  /// when a side is somehow all keepers. Null for an empty eleven.
+  static int? penalty(List<Player> xi) {
+    if (xi.isEmpty) return null;
+    final outfield = xi
+        .where((p) => p.position.category != PositionCategory.goalkeeper)
+        .toList();
+    final pool = outfield.isEmpty ? xi : outfield;
+    return pool
+        .reduce((a, b) => b.attributes.technical > a.attributes.technical ? b : a)
+        .id;
+  }
+
+  /// The best technical player in [xi]. This is the engine's dead-ball rule
+  /// without its "not the scorer" clause, which only exists at the moment a
+  /// goal is being attributed and has no meaning on a team sheet.
+  static int? deadBall(List<Player> xi) {
+    if (xi.isEmpty) return null;
+    return xi
+        .reduce((a, b) => b.attributes.technical > a.attributes.technical ? b : a)
+        .id;
+  }
+}
+```
+
+- [ ] **Step 4: Show the automatic pick in the UI**
+
+In both taker pickers, a slot with no manual choice shows the automatic pick's name with a marker saying it is automatic (a new string `tacticsTakerAuto`). Recompute whenever the XI changes. A manual pick sticks until that player is out of the side, at which point the slot falls back to automatic — the store already treats null as automatic, so clear the stored id rather than inventing a second state.
+
+- [ ] **Step 5: Run the tests**
+
+Run: `flutter test test/unit/tactics/set_piece_picks_test.dart && flutter test`
+Expected: PASS.
+
+- [ ] **Step 6: Commit**
+
+```bash
+git add -A
+git commit -m "feat: the set-piece slots say who is actually taking them
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>"
+```
+
+---
+
+## Area 3: Effects made visible
+
+### Task 12: One reading of what is moving the side
+
+Fatigue, club form, familiarity, morale, the captain and the staff room all move the side's strength today and none of them are shown. Build the reading ONCE, as a pure function over numbers that already exist, and let every screen render the same thing.
+
+**Files:**
+- Create: `lib/domain/services/match/strength_factors.dart`
+- Test: `test/unit/match/strength_factors_test.dart` (create)
+
+**Interfaces:**
+- Produces:
+
+```dart
+/// One thing making the side stronger or weaker, in the manager's terms.
+typedef StrengthFactor = ({
+  StrengthFactorKind kind,
+  /// Rating points, signed. Positive helps.
+  int delta,
+  /// The subject when there is one: a formation name, a player's name.
+  String? subject,
+});
+
+enum StrengthFactorKind { familiarity, fatigue, clubForm, morale, captain, staff }
+
+abstract final class StrengthFactors {
+  /// Every factor currently acting on the side, biggest absolute first,
+  /// dropping the ones that are doing nothing.
+  static List<StrengthFactor> of({
+    required double familiarity,
+    required Map<int, PlayerCondition> conditionByPlayer,
+    required int morale,
+    required bool hasCaptain,
+    required Map<StaffRole, StaffTier> staff,
+  });
+}
+```
+
+- [ ] **Step 1: Write the failing test**
+
+```dart
+test('a drilled shape and a tired squad both show up, biggest first', () {
+  final factors = StrengthFactors.of(
+    familiarity: 1,
+    conditionByPlayer: {1: tired(-6), 2: tired(-4)},
+    morale: 50,
+    hasCaptain: false,
+    staff: const {},
+  );
+  expect(factors.first.kind, StrengthFactorKind.fatigue);
+  expect(factors.map((f) => f.kind), contains(StrengthFactorKind.familiarity));
+  expect(factors.every((f) => f.delta != 0), isTrue);
+});
+
+test('a neutral side has nothing to report', () {
+  expect(
+    StrengthFactors.of(
+      familiarity: 0,
+      conditionByPlayer: const {},
+      morale: 50,
+      hasCaptain: false,
+      staff: const {},
+    ),
+    isEmpty,
+  );
+});
+```
+
+- [ ] **Step 2: Run it to verify it fails**
+
+Run: `flutter test test/unit/match/strength_factors_test.dart`
+Expected: FAIL — the file does not exist.
+
+- [ ] **Step 3: Implement**
+
+Read the numbers from where they already live, converting each to rating points so one scale means one thing:
+- familiarity: `TeamChemistry.factor(familiarity)` minus 1, times the side's rating, rounded — the multiplier expressed as points;
+- fatigue and club form: sum the per-player `overallDelta` contributions from `PlayerCondition` (`lib/domain/services/squad/condition.dart`), split by cause so a tired squad and a squad in form at their clubs read as two different lines;
+- morale, captain, staff: the same values those seams already apply.
+
+Do not invent a number anywhere. If a factor's effect is not currently computed as points, express it as the points it is worth and say so in a comment.
+
+- [ ] **Step 4: Run the tests and commit**
+
+```bash
+flutter test test/unit/match/strength_factors_test.dart
+git add -A
+git commit -m "feat: one reading of what is making the side stronger or weaker
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>"
+```
+
+---
+
+### Task 13: The manager can see it before he picks
+
+**Files:**
+- Create: `lib/features/match/strength_panel.dart`
+- Modify: `lib/features/match/match_preview_screen.dart`
+- Modify: `lib/l10n/app_en.arb`, `lib/l10n/app_cs.arb`
+- Test: `test/widget/strength_panel_test.dart` (create)
+
+**Interfaces:**
+- Consumes: `StrengthFactors.of(...)` from Task 12, via a provider assembled from the existing condition, familiarity, morale, captain and staff providers.
+
+- [ ] **Step 1: Write the failing widget test**
+
+Assert the preview shows a line per factor with its direction and size, that a side with nothing acting on it shows no panel at all (not an empty box), and that the panel survives phone width without overflow.
+
+- [ ] **Step 2: Run it to verify it fails**
+
+Run: `flutter test test/widget/strength_panel_test.dart`
+Expected: FAIL.
+
+- [ ] **Step 3: Implement**
+
+A compact list: label, signed points, and the subject when there is one ("4-3-3", "12 tired legs"). New strings, one per `StrengthFactorKind`, plus a heading. No em dashes.
+
+Predictability is NOT in this panel and must not be added to it. It is what the opposition knows, not what the manager is told; that asymmetry is deliberate and older than this batch.
+
+- [ ] **Step 4: Run the tests and commit**
+
+```bash
+flutter test test/widget/strength_panel_test.dart
+git add -A
+git commit -m "feat: the preview says what is helping and what is hurting
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>"
+```
+
+---
+
+### Task 14: Familiarity you can watch build
+
+**Files:**
+- Modify: `lib/features/tactics/tactics_screen.dart` (and `formation_picker.dart` if the shape list lives there)
+- Modify: `lib/l10n/app_en.arb`, `lib/l10n/app_cs.arb`
+- Test: `test/widget/familiarity_bar_test.dart` (create)
+
+**Interfaces:**
+- Consumes: the stored familiarity per formation (`lib/domain/repositories/tactic_familiarity_repository.dart`).
+
+- [ ] **Step 1: Write the failing widget test**
+
+Assert each formation in the picker shows a fill proportional to its stored familiarity, that a never-fielded shape reads as empty rather than absent, and that no predictability value appears anywhere in the rendered tree.
+
+- [ ] **Step 2: Run it to verify it fails**
+
+Run: `flutter test test/widget/familiarity_bar_test.dart`
+Expected: FAIL.
+
+- [ ] **Step 3: Implement**
+
+A thin bar under each formation name, with a label banding the value ("new", "settling", "drilled"). Bands, not a percentage: the manager is being told how well his side knows the shape, not given a number to optimise.
+
+- [ ] **Step 4: Run the tests and commit**
+
+```bash
+flutter test test/widget/familiarity_bar_test.dart
+git add -A
+git commit -m "feat: the tactics screen shows how drilled each shape is
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>"
+```
+
+---
+
+### Task 15: Staff say what they do
+
+**Files:**
+- Modify: `lib/features/manager/manager_screen.dart` (the staff room)
+- Modify: `lib/domain/services/manager/staff.dart` if the effect of a tier is not currently expressible as a sentence
+- Modify: `lib/l10n/app_en.arb`, `lib/l10n/app_cs.arb`
+- Test: `test/widget/staff_effect_test.dart` (create)
+
+- [ ] **Step 1: Write the failing widget test**
+
+Assert each staff role shows the effect of the tier currently hired, in the units the manager already understands, and that an empty role says what hiring one would be worth.
+
+- [ ] **Step 2: Run it to verify it fails**
+
+Run: `flutter test test/widget/staff_effect_test.dart`
+Expected: FAIL.
+
+- [ ] **Step 3: Implement**
+
+Read the real effect each role has at each tier from where it is applied (grep each `StaffRole` to find its seam) and state it. Do not write a marketing line: if the fitness coach is worth one rating point of fatigue recovery, the screen says one point.
+
+- [ ] **Step 4: Run the tests and commit**
+
+```bash
+flutter test test/widget/staff_effect_test.dart
+git add -A
+git commit -m "feat: the staff room says what each hire is doing
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>"
+```
+
+---
+
+### Task 16: Tactics that bite
+
+The only balance change in Area 3. `TeamChemistry.drilledBonus` is 0.07 and `readPenalty` 0.04 (`lib/domain/services/tactics/team_chemistry.dart:18-22`); the instruction effects sit in the engine.
+
+**Files:**
+- Modify: `lib/domain/services/tactics/team_chemistry.dart:18-22`
+- Modify: `lib/domain/services/match/match_engine.dart` (instruction effects) AND the background simulator, together
+- Test: `test/unit/tactics/team_chemistry_test.dart` (extend), `test/unit/match/tactics_swing_test.dart` (create)
+
+- [ ] **Step 1: Write the guard test first**
+
+Over a large number of seeded matches between two equal sides, one drilled and well-judged, the other neither: the drilled side's points-per-game advantage must land inside a stated band. Write the band as the intent ("a drilled side is worth roughly a goal every three or four games, not every game") and assert bounds either side of it, so the test catches both "still does nothing" and "runs away".
+
+Follow `test/unit/match/` for how existing balance guards are written; there is already one for rating-gap response.
+
+- [ ] **Step 2: Run it to verify it fails**
+
+Run: `flutter test test/unit/match/tactics_swing_test.dart`
+Expected: FAIL below the band — which is the complaint.
+
+- [ ] **Step 3: Widen the effects**
+
+Raise `drilledBonus` and the instruction effects together until the guard passes. Keep `readPenalty` proportionally below `drilledBonus` so continuity stays worth having. Update the doc comments with the new numbers and the reason: the previous values were small enough that the manager could not tell the dial was connected.
+
+Mirror every change in the background simulator in the same commit.
+
+- [ ] **Step 4: Run the tests**
+
+Run: `flutter test test/unit/match test/unit/tactics`
+Expected: PASS, including the existing rating-gap guard. If the rating-gap guard now fails, the change went too far.
+
+- [ ] **Step 5: Commit**
+
+```bash
+git add -A
+git commit -m "balance: a drilled, well-judged side wins more than it used to
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>"
+```
+
+---
+## Area 4: The press and the feed
+
+### Task 17: The feed talks about every tournament, not only the Nations Cup
+
+The manager saw posts about the Nations Cup and nothing about the continental championship. `_tournamentPosts` (`lib/features/y/y_providers.dart:342-449`) looks correct on inspection — `_coreRound` strips the `C`/`N` prefix and `YFeed.finalsRounds` covers the stripped codes — so the fault is somewhere the reading did not reach. **Reproduce before changing.**
+
+**Files:**
+- Investigate: `lib/features/y/y_providers.dart:342-449`, `:495-540`, `lib/domain/services/press/y_feed.dart:690-728`
+- Test: `test/unit/press/y_tournament_coverage_test.dart` (create)
+
+- [ ] **Step 1: Write the failing test**
+
+A table-driven test over every finals competition the game runs — World Championship, each continental championship, Nations Cup — asserting each one produces at least one post when the nation plays it and finishes it:
+
+```dart
+for (final family in ['', 'C', 'N']) {
+  test('a finished finals tournament in family "$family" produces posts', () async {
+    // fixtures: a group stage and a knockout exit, round codes prefixed by
+    // `family`, all with results, in one competition with a name.
+    final posts = await tournamentPostsFor(family);
+    expect(posts, isNotEmpty, reason: 'family "$family" said nothing');
+  });
+}
+```
+
+Extract whatever `_tournamentPosts` needs into a testable seam if it is not reachable from a test today; a private function that cannot be tested is part of this bug's cause.
+
+- [ ] **Step 2: Run it and read the failure**
+
+Run: `flutter test test/unit/press/y_tournament_coverage_test.dart`
+Expected: at least one family FAILS. Check, in order: whether `names[entry.key]` is null for that competition (a competition with no stored name is skipped outright at `:371`), whether the continental competition's fixtures carry the round codes the test assumes, and whether the feed's outer date window drops posts dated at the tournament.
+
+- [ ] **Step 3: Fix at the cause and keep the guard**
+
+The table-driven test stays in the suite. This bug's shape — "one competition works and the others silently do not" — is exactly what a guard over every family prevents recurring.
+
+- [ ] **Step 4: Run the tests**
+
+Run: `flutter test test/unit/press && flutter test`
+Expected: PASS.
+
+- [ ] **Step 5: Commit**
+
+```bash
+git add -A
+git commit -m "fix: the country tweets about every tournament, not just the one that worked
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>"
+```
+
+---
+
+### Task 18: The press asks about things that happened to this manager, recently
+
+Two faults with one symptom:
+- a tournament the nation never entered produces triumph and elimination questions. There is already a participant-check pattern in the codebase for live-finals routing (hosts' friendlies trip a naive check) — reuse it rather than writing a second one;
+- `Press.askWindowDays` is 30 (`lib/domain/services/press/press.dart:205`), so a month-old result is still asked about after two more games have been played.
+
+**Files:**
+- Modify: `lib/features/press/press_providers.dart:120-140` and the tournament-topic candidates further down
+- Modify: `lib/domain/services/press/press.dart:205`
+- Test: `test/unit/press/press_relevance_test.dart` (create)
+
+**Interfaces:**
+- Consumes: the all-fixtures participant check already used for finals routing (grep `participant` in `lib/features/hub/`).
+
+- [ ] **Step 1: Write the failing test**
+
+```
+- a tournament in which the nation has no fixture produces no triumph,
+  elimination, or tournament-preview question
+- a defeat with two competitive matches played since produces no question
+  about that defeat, even inside the calendar window
+- a defeat with nothing played since still produces one
+```
+
+- [ ] **Step 2: Run it to verify it fails**
+
+Run: `flutter test test/unit/press/press_relevance_test.dart`
+Expected: FAIL on all three.
+
+- [ ] **Step 3: Implement**
+
+Gate every tournament topic on the nation having a fixture in that competition. Add a matches-since rule alongside the day window: a result stops being news once a stated number of competitive matches have been played after it. Keep `askWindowDays` as the outer bound.
+
+Document the reason in the code: a manager who has played twice since being beaten is not still being asked about it, whatever the calendar says.
+
+- [ ] **Step 4: Run the tests and commit**
+
+```bash
+flutter test test/unit/press
+git add -A
+git commit -m "fix: the press asks about this manager's recent football, and nothing else
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>"
+```
+
+---
+
+### Task 19: The accounts have faces
+
+`YCast` derives a small recurring cast per voice with a `YTrait` each (`lib/domain/services/press/persona.dart`). None of it reaches the manager.
+
+**Files:**
+- Modify: `lib/features/y/y_screen.dart` (the post row), `lib/features/y/y_post_detail.dart`
+- Create: `lib/features/y/y_profile_sheet.dart`
+- Modify: `lib/l10n/app_en.arb`, `lib/l10n/app_cs.arb`
+- Test: `test/widget/y_persona_test.dart` (create)
+
+**Interfaces:**
+- Consumes: `YPersona` (`{handle, displayName, trait}`) and `YCast` from `persona.dart`.
+
+- [ ] **Step 1: Write the failing widget test**
+
+```
+- a post shows its account's display name and handle
+- tapping the account opens a profile naming its disposition and listing its
+  recent posts
+- the same account shows the same disposition across a career (nothing stored,
+  so this is a derivation test as much as a widget one)
+```
+
+- [ ] **Step 2: Run it to verify it fails**
+
+Run: `flutter test test/widget/y_persona_test.dart`
+Expected: FAIL.
+
+- [ ] **Step 3: Implement**
+
+The row gains the display name and handle. A tap opens a profile sheet: the account, a one-line description of its disposition (a string per `YTrait`), and its posts from this save, newest first. Nothing new is stored — the profile re-derives from the same seed and the same run of results the feed already walks.
+
+- [ ] **Step 4: Run the tests and commit**
+
+```bash
+flutter test test/widget/y_persona_test.dart
+git add -A
+git commit -m "feat: the accounts in the feed are somebody
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>"
+```
+
+---
+
+## Area 5: Standing matters
+
+These four tasks are tuned together and playtested together. Land them in order, and do not sign any of them off on tests alone.
+
+### Task 20: A tournament run moves the ranking
+
+`Elo` weights a finals match at 24 and a settled finals at 72 (`lib/domain/services/ranking/elo.dart:49-60`). Winning a tournament does not move a nation the way the manager expects.
+
+**Files:**
+- Modify: `lib/domain/services/ranking/elo.dart`
+- Test: `test/unit/ranking/tournament_swing_test.dart` (create), `test/unit/ranking/` (existing tests must still pass)
+
+- [ ] **Step 1: Write the failing test**
+
+```
+- a nation that wins the World Championship from outside the top twenty
+  climbs by at least N places
+- a nation that goes out in the group stage of a tournament it was expected
+  to win loses ground
+- an ordinary qualifier still moves a nation by less than a place
+  (the existing guard: this must not regress)
+```
+
+Put real numbers on N from the intent: winning the biggest tournament there is should put a nation among the best handful, because that is what it has just proved.
+
+- [ ] **Step 2: Run it to verify it fails**
+
+Run: `flutter test test/unit/ranking/tournament_swing_test.dart`
+Expected: FAIL — the climb is too small.
+
+- [ ] **Step 3: Implement**
+
+Raise the finals weights, and give a placing itself weight rather than only the matches that produced it. Update the doc comments: the file already records its retunings and why, and this one continues that record.
+
+- [ ] **Step 4: Run every ranking test**
+
+Run: `flutter test test/unit/ranking`
+Expected: PASS, including the "an ordinary match must not swing the ladder" guard from 2026-08-14.
+
+- [ ] **Step 5: Commit**
+
+```bash
+git add -A
+git commit -m "balance: winning a tournament moves a nation up the ladder
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>"
+```
+
+---
+
+### Task 21: A rising nation produces better teenagers
+
+`PlayerLifecycle` already takes `youthBonusByCycle` (`:152-210`), fed today by academy investment (`youthBonusByCycleProvider`). Add a standing term to the same bonus rather than a second mechanism.
+
+**Files:**
+- Modify: wherever `youthBonusByCycleProvider` is defined (grep it; it is read from `lib/features/messages/message_providers.dart:544` and six other places)
+- Create: `lib/domain/services/player/intake_standing.dart`
+- Test: `test/unit/player/intake_standing_test.dart` (create)
+
+**Interfaces:**
+- Produces:
+
+```dart
+/// The talent bonus a nation's intake earns from how the senior side is doing:
+/// where it sits in the world, how far it has moved, and what it has just won.
+/// Added to the academy's own bonus, never replacing it.
+abstract final class IntakeStanding {
+  static double bonus({
+    required int worldRank,
+    required int rankChangeOverCycle,
+    required Set<String> titlesWon,
+  });
+}
+```
+
+- [ ] **Step 1: Write the failing test**
+
+```dart
+test('a nation climbing the ladder produces better boys than a falling one', () {
+  final rising = IntakeStanding.bonus(
+      worldRank: 30, rankChangeOverCycle: 25, titlesWon: const {});
+  final falling = IntakeStanding.bonus(
+      worldRank: 30, rankChangeOverCycle: -25, titlesWon: const {});
+  expect(rising, greaterThan(falling));
+});
+
+test('the bonus stays inside a band a generation cannot break', () {
+  final best = IntakeStanding.bonus(
+      worldRank: 1, rankChangeOverCycle: 60,
+      titlesWon: const {'World Championship'});
+  expect(best, lessThanOrEqualTo(0.06));
+});
+```
+
+The ceiling matters: `_intake` clamps talent around `0.56 + rng * 0.38 + bonus` (`player_lifecycle.dart:510`), so an unbounded bonus produces a nation of superstars inside two cycles.
+
+- [ ] **Step 2: Run it to verify it fails**
+
+Run: `flutter test test/unit/player/intake_standing_test.dart`
+Expected: FAIL — the file does not exist.
+
+- [ ] **Step 3: Implement and wire**
+
+Implement the bonus, then add it to the academy bonus in `youthBonusByCycleProvider`. The intake report's note (`intakeNote`, `lib/features/messages/intake_report.dart:40`) should say when the nation's standing is what brought a better crop through, so the manager can connect the two.
+
+- [ ] **Step 4: Run the tests and commit**
+
+```bash
+flutter test test/unit/player
+git add -A
+git commit -m "feat: a nation on the rise brings better teenagers through
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>"
+```
+
+---
+
+### Task 22: The federation's money follows the results
+
+`FederationFinance.centralGrant` is a flat 12M every cycle (`lib/domain/services/federation/federation_finance.dart:52`), on top of prize money that already scales with the run. The flat half should move too.
+
+**Files:**
+- Modify: `lib/domain/services/federation/federation_finance.dart`
+- Test: `test/unit/federation/` (extend the existing finance test; create `funding_by_results_test.dart` if there is none)
+
+**Interfaces:**
+- Produces: `FederationFinance.centralGrantFor({required int worldRank, required int rankChangeOverCycle})`, replacing the constant at its call sites. Keep `centralGrant` as the midpoint so existing tests have an anchor.
+
+- [ ] **Step 1: Write the failing test**
+
+```
+- a nation that reached a final gets a bigger grant than one that missed out
+- a nation that fell down the ladder gets less than it did last cycle
+- the swing stays inside a band: the worst cycle a nation can have must still
+  leave it able to run a federation
+```
+
+- [ ] **Step 2: Run it to verify it fails**
+
+Run: `flutter test test/unit/federation`
+Expected: FAIL.
+
+- [ ] **Step 3: Implement**
+
+Scale the grant around `centralGrant` by standing and movement. State the band in the doc comment. The prize tables stay as they are: they already do the "how far did you go" job, and doubling that signal would make one good tournament fund a decade.
+
+- [ ] **Step 4: Run the tests and commit**
+
+```bash
+flutter test test/unit/federation
+git add -A
+git commit -m "balance: the federation's funding follows the results
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>"
+```
+
+---
+
+### Task 23: The jump is shown
+
+After the World Championship the nation moves a long way up and the manager never sees it.
+
+**Files:**
+- Modify: `lib/features/ranking/` (the ranking screen — add movement since the last snapshot)
+- Modify: `lib/features/messages/message_providers.dart` (a message when the nation's place changes materially after a tournament)
+- Modify: `lib/l10n/app_en.arb`, `lib/l10n/app_cs.arb`
+- Test: `test/widget/ranking_movement_test.dart` (create), `test/unit/messages/ranking_message_test.dart` (create)
+
+**Interfaces:**
+- Consumes: the per-draw ranking snapshots that already exist (memory: snapshots are stored per draw; grep `snapshot` in `lib/data/repositories/drift_competition_repository.dart`). Read the stored snapshot rather than recomputing, so the movement shown is the movement that happened.
+
+- [ ] **Step 1: Write the failing tests**
+
+```
+- the ranking screen shows each nation's movement since the previous snapshot,
+  with direction
+- finishing a tournament that moves the manager's nation by five or more places
+  files an inbox message saying where it came from and where it is now
+- a tournament that moves it by one place files nothing
+```
+
+- [ ] **Step 2: Run them to verify they fail**
+
+Run: `flutter test test/widget/ranking_movement_test.dart test/unit/messages/ranking_message_test.dart`
+Expected: FAIL.
+
+- [ ] **Step 3: Implement**
+
+Remember the "derived providers go stale" constraint: the message is filed during the same sync that runs after a tournament, so invalidate the ranking providers before reading them or the message grades against a pre-tournament snapshot.
+
+- [ ] **Step 4: Run the tests and commit**
+
+```bash
+flutter test test/widget/ranking_movement_test.dart test/unit/messages/ranking_message_test.dart
+git add -A
+git commit -m "feat: a nation's climb is something the manager can see
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>"
+```
+
+---
+
+### Task 24: Playtest the standing pass
+
+Not a code task. Tasks 16 and 20 to 23 change how a career feels and cannot be signed off by tests.
+
+- [ ] **Step 1: Build and install**
+
+Follow the device recipe in memory: release APK over wireless ADB, or build and install to the connected iPhone.
+
+- [ ] **Step 2: Play a full cycle**
+
+Qualifying, the continental championship, the World Championship. Watch specifically: does winning something move the nation visibly; does the intake improve when the nation rises; does the budget change enough to notice without breaking the economy; does a drilled shape feel different from a scattered one.
+
+- [ ] **Step 3: Record what you find**
+
+Write the findings into the plan file under this task before adjusting any number, so the next pass knows what the last one saw.
+
+---
+
+## Area 6: Dashboard and navigation
+
+### Task 25: World ranking beside the date
+
+**Files:**
+- Modify: `lib/features/hub/hub_screen.dart:215` (where the date is formatted)
+- Test: `test/widget/hub_ranking_test.dart` (create)
+
+- [ ] **Step 1: Write the failing widget test**
+
+Assert the hub header shows the nation's world ranking beside the date, with its movement, and that squad status is still present (it stays).
+
+- [ ] **Step 2: Run it to verify it fails**
+
+Run: `flutter test test/widget/hub_ranking_test.dart`
+Expected: FAIL.
+
+- [ ] **Step 3: Implement**
+
+Rank and movement arrow next to the formatted date. Keep the header on one line at 400px: the rank is a number and an arrow, not a sentence.
+
+- [ ] **Step 4: Run the tests and commit**
+
+```bash
+flutter test test/widget/hub_ranking_test.dart
+git add -A
+git commit -m "feat: the dashboard says where the nation stands
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>"
+```
+
+---
+
+### Task 26: Challenges get their own place in My Career
+
+**Files:**
+- Modify: `lib/features/career/career_summary_screen.dart` (the menu), `lib/core/routing/app_router.dart` if a route is missing
+- Modify: `lib/l10n/app_en.arb`, `lib/l10n/app_cs.arb`
+- Test: `test/widget/career_menu_challenges_test.dart` (create)
+
+- [ ] **Step 1: Write the failing widget test**
+
+Assert My Career lists Challenges as its own entry and that tapping it routes to the challenges screen.
+
+- [ ] **Step 2: Run it to verify it fails**
+
+Run: `flutter test test/widget/career_menu_challenges_test.dart`
+Expected: FAIL.
+
+- [ ] **Step 3: Implement**
+
+`lib/domain/services/achievements/challenges.dart` already exists; find where challenges are shown today and give them a first-class entry beside achievements.
+
+- [ ] **Step 4: Run the tests and commit**
+
+```bash
+flutter test test/widget/career_menu_challenges_test.dart
+git add -A
+git commit -m "feat: challenges have their own place in My Career
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>"
+```
+
+---
+
+### Task 27: The Nations Cup matchday splits by league
+
+**Files:**
+- Modify: `lib/features/tournaments/nations_cup_screen.dart`
+- Test: `test/widget/nations_cup_tabs_test.dart` (create)
+
+- [ ] **Step 1: Write the failing widget test**
+
+Assert the matchday view has a tab per league, that it opens on the manager's own league, and that a league with no matches this round still has its tab (empty, not missing).
+
+- [ ] **Step 2: Run it to verify it fails**
+
+Run: `flutter test test/widget/nations_cup_tabs_test.dart`
+Expected: FAIL.
+
+- [ ] **Step 3: Implement**
+
+Follow the tab pattern already used in `lib/features/tournaments/` (see `tournament_history.dart:14`, `kTournamentTabBarHeight`) so the tabs match the rest of the app.
+
+- [ ] **Step 4: Run the tests and commit**
+
+```bash
+flutter test test/widget/nations_cup_tabs_test.dart
+git add -A
+git commit -m "feat: the Nations Cup matchday splits into its leagues
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>"
+```
+
+---
+## Area 7: Presentation
+
+### Task 28: Names in the lineup stop wrapping
+
+**Files:**
+- Modify: `lib/features/tactics/tactics_pitch.dart` (the disc labels), and the lineup lists that show a name in a constrained row
+- Test: `test/widget/lineup_name_overflow_test.dart` (create)
+
+**Constraint from memory:** the pitch discs are already as large as the layout allows. Do not enlarge the disc to fit the name; change how the name is rendered inside it.
+
+- [ ] **Step 1: Write the failing widget test**
+
+Render the pitch at 360px wide with the longest names in the seed data and assert no `RenderFlex` overflow and no wrapped label. Find a genuinely long name first:
+
+```bash
+grep -o '"[^"]\{18,\}"' assets/data/players.json | sort -u | head
+```
+
+- [ ] **Step 2: Run it to verify it fails**
+
+Run: `flutter test test/widget/lineup_name_overflow_test.dart`
+Expected: FAIL with an overflow or a two-line label.
+
+- [ ] **Step 3: Implement**
+
+One line, ellipsized, with the surname preferred over the full name when the full name does not fit. A shirt number plus a surname is what a real team sheet shows.
+
+- [ ] **Step 4: Run the tests and commit**
+
+```bash
+flutter test test/widget/lineup_name_overflow_test.dart
+git add -A
+git commit -m "fix: a long name fits the team sheet instead of wrapping
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>"
+```
+
+---
+
+### Task 29: The transfer report reads like one thing
+
+Four complaints: mismatched icons, implausible moves, a layout that is hard to follow, and a report that lists fewer moves than the player's own club history contains.
+
+**Files:**
+- Modify: `lib/features/messages/transfer_report.dart` (icons at `:173-179`, `:244-245`; the table at `:120-200`)
+- Modify: `lib/features/player/club_history_card.dart`
+- Modify: `lib/domain/services/club/clubs.dart` if the two sources genuinely disagree
+- Test: `test/unit/club/transfer_report_matches_history_test.dart` (create), `test/widget/transfer_report_test.dart` (extend or create)
+
+**Interfaces:**
+- The report and the club history card must read the SAME source. `ClubService.contractAt(playerId, age)` is the one that knows a player's moves; whatever the window report is built from today must agree with it.
+
+- [ ] **Step 1: Write the failing consistency test first — it is the real bug**
+
+```dart
+test('every move in a player\'s history appears in the window report', () {
+  // For a player with several moves across a career: the moves the club
+  // history card shows in a given window must be exactly the moves the
+  // transfer report for that window lists.
+  for (var age = 18; age < 34; age++) {
+    final contract = ClubService.contractAt(playerId, age);
+    // a change of contract index between two ages IS a move; assert the
+    // window's report contains it.
+  }
+});
+```
+
+- [ ] **Step 2: Run it to verify it fails**
+
+Run: `flutter test test/unit/club/transfer_report_matches_history_test.dart`
+Expected: FAIL — the report is missing moves the history has.
+
+- [ ] **Step 3: Fix the source disagreement**
+
+Build the report from the same contract walk the history card uses. If the report is deliberately limited (a window shows only that window's moves), then the history card is what is wrong — establish which, and say so in the commit message.
+
+- [ ] **Step 4: One icon language**
+
+Every row uses the same three marks: in, out, and loan. `Icons.chevron_left_rounded` / `chevron_right_rounded` at `:173-179` are PAGING controls and must not look like move direction; `Icons.arrow_forward_rounded` at `:245` is the move. Make the paging controls unmistakably paging (a label with the page numbers) and reserve arrows for moves.
+
+- [ ] **Step 5: Plausible destinations**
+
+`TransferRow.step` already says whether a move went up, down or sideways between tiers. Assert in a test that a high-rated player does not move down more than a stated share of the time, and fix `ClubService` if he does.
+
+- [ ] **Step 6: Layout**
+
+`perPage` is 6 (`:125`). Make each row say, in order: who, from where, to where, for how much, and which way that is a step. Flags for the two countries are already in the row model (`fromCountry`, `toCountry`); use them instead of spelling out country names.
+
+- [ ] **Step 7: Run the tests and commit**
+
+```bash
+flutter test test/unit/club test/widget/transfer_report_test.dart
+git add -A
+git commit -m "fix: the transfer report agrees with the players' own histories
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>"
+```
+
+---
+
+### Task 30: The results screen leads with now
+
+`_grouped` (`lib/features/results/results_screen.dart:24-48`) orders competitions by the soonest unplayed fixture, but inside a group the fixtures are rendered in stored order, oldest first, and every past round is expanded.
+
+**Files:**
+- Modify: `lib/features/results/results_screen.dart:24-48` and the body at `:75-140`
+- Test: `test/widget/results_order_test.dart` (create)
+
+- [ ] **Step 1: Write the failing widget test**
+
+```
+- the current round's fixtures appear above older ones
+- within the played fixtures, the most recent is first
+- rounds older than the current one are collapsed behind a header that says
+  how many they hold, and expand on tap
+```
+
+- [ ] **Step 2: Run it to verify it fails**
+
+Run: `flutter test test/widget/results_order_test.dart`
+Expected: FAIL — oldest first, everything expanded.
+
+- [ ] **Step 3: Implement**
+
+Sort within each group: unplayed by date ascending (what is coming), then played by date descending (what just happened). Collapse the tail.
+
+- [ ] **Step 4: Run the tests and commit**
+
+```bash
+flutter test test/widget/results_order_test.dart
+git add -A
+git commit -m "fix: the results screen starts where the manager is
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>"
+```
+
+---
+
+### Task 31: The development report groups by tier
+
+"Improved from 34" tells the manager nothing. `SquadDevRow` already carries name, age, position, rating, change, stars and the wonderkid flag (`lib/features/messages/squad_dev_report.dart:20-60`) — what is missing is the grouping.
+
+**Files:**
+- Modify: `lib/features/messages/squad_dev_report.dart`
+- Modify: `lib/features/messages/message_providers.dart:600-640` (where the report is built)
+- Modify: `lib/l10n/app_en.arb`, `lib/l10n/app_cs.arb`
+- Test: `test/widget/squad_dev_report_test.dart` (create or extend)
+
+**Interfaces:**
+- Produces: `SquadDevRow` gains a tier — `enum SquadDevTier { regular, fringe, youth }` — derived from whether the player was called up in the last cycle, is in the pool, or is under 21.
+
+- [ ] **Step 1: Write the failing widget test**
+
+```
+- the report renders three sections, regulars first
+- a player who has been called up appears under regulars, not youth,
+  whatever his age
+- a section with nobody in it is not rendered at all
+- each row names the player, his age and his old to new rating
+```
+
+- [ ] **Step 2: Run it to verify it fails**
+
+Run: `flutter test test/widget/squad_dev_report_test.dart`
+Expected: FAIL.
+
+- [ ] **Step 3: Implement**
+
+Tier from call-up history first, then age. Within a section, biggest mover first. The encoded message body must keep decoding older reports: follow the versioned-tag pattern the transfer report uses (`_tagV1` / `_tagV2` / `_tagV3` at `transfer_report.dart:43-45`) rather than breaking saved messages.
+
+- [ ] **Step 4: Run the tests and commit**
+
+```bash
+flutter test test/widget/squad_dev_report_test.dart
+git add -A
+git commit -m "feat: the development report says who got better and whether it matters
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>"
+```
+
+---
+
+### Task 32: Player of the year is shown properly
+
+**Files:**
+- Modify: `lib/features/awards/award_providers.dart` and the popup that renders the award (grep `playerOfTheYear`)
+- Test: `test/widget/player_of_year_test.dart` (create)
+
+- [ ] **Step 1: Write the failing widget test**
+
+Assert the popup shows the player's flag, his season stats (caps and goals at least) and his rating, alongside his name.
+
+- [ ] **Step 2: Run it to verify it fails**
+
+Run: `flutter test test/widget/player_of_year_test.dart`
+Expected: FAIL.
+
+- [ ] **Step 3: Implement**
+
+The provider already resolves the player; add the nation for the flag and the season tally. Keep the popup to one screen at 400px.
+
+- [ ] **Step 4: Run the tests and commit**
+
+```bash
+flutter test test/widget/player_of_year_test.dart
+git add -A
+git commit -m "feat: the player of the year arrives with his flag and his numbers
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>"
+```
+
+---
+
+### Task 33: The World Championship final is shown, not announced
+
+Simulating passively, the continental final is shown and the World Championship's is not: the champion simply appears.
+
+**Files:**
+- Investigate: `lib/features/hub/season_finals.dart`, `lib/features/hub/season_cycle.dart`, `lib/features/hub/hub_event.dart`
+- Test: `test/unit/hub/finals_shown_test.dart` (create)
+
+- [ ] **Step 1: Reproduce with a test**
+
+Assert that simulating through both finals produces the same kind of event for each: whatever the continental final emits, the World Championship final must emit too. A table over both competitions, so the asymmetry cannot come back.
+
+- [ ] **Step 2: Run it and read the failure**
+
+Run: `flutter test test/unit/hub/finals_shown_test.dart`
+Expected: FAIL for the World Championship. Then find why: likely the World Championship's final is played inside a bulk world-simulation step that emits a champion rather than a match, while the continental final goes through the per-round path.
+
+- [ ] **Step 3: Fix at the cause**
+
+Route both finals through the same path. Do not special-case the World Championship in the UI.
+
+- [ ] **Step 4: Run the tests and commit**
+
+```bash
+flutter test test/unit/hub
+git add -A
+git commit -m "fix: the World Championship final is played in front of you
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>"
+```
+
+---
+
+### Task 34: A naturalised player reads the same rating everywhere
+
+A naturalised player shows a much lower rating in the match preview than elsewhere. There is a `naturalized_players` table (see the 38→39 migration in `app_database.dart`), so the preview is probably resolving him down a path that misses whatever the naturalisation applies.
+
+**Files:**
+- Investigate: `lib/features/match/match_preview_screen.dart`, `lib/features/match/match_providers.dart:177-195`, the naturalisation service (grep `naturaliz`)
+- Test: `test/unit/player/naturalized_rating_test.dart` (create)
+
+- [ ] **Step 1: Reproduce with a test**
+
+```dart
+test('a naturalised player has one rating, wherever he is read', () async {
+  // Resolve the same naturalised player through the squad path and through
+  // the match-preview path; the overall must match.
+  expect(fromPreview.overall, fromSquad.overall);
+});
+```
+
+- [ ] **Step 2: Run it and read the failure**
+
+Run: `flutter test test/unit/player/naturalized_rating_test.dart`
+Expected: FAIL. Compare the arguments each path passes to `PlayerRepository.byId` — `agingYears`, `saveSeed`, `youthBonusByCycle`, `careerStartsByPlayer`. A path that omits one reconstructs a different player. This is the same class of fault as Task 4 and the two may share a cause; if so, say so and fix once.
+
+- [ ] **Step 3: Fix at the cause**
+
+One resolution path, used by both. A rating that differs by screen is the bug; the number that is right is the one the squad screen shows, because that is the one the manager picks on.
+
+- [ ] **Step 4: Run the tests and commit**
+
+```bash
+flutter test test/unit/player
+git add -A
+git commit -m "fix: a naturalised player is the same footballer on every screen
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>"
+```
+
+---
+
+## Wrap-up
+
+### Task 35: Whole-suite verification and the copy round trip
+
+- [ ] **Step 1: Regenerate the copy file**
+
+```bash
+flutter gen-l10n
+dart run tool/export_copy.dart
+git diff --stat copy/strings.csv
+```
+
+Every new string added in this batch must appear in `copy/strings.csv` with both an `en` and a `cs` value.
+
+- [ ] **Step 2: Check the naming guard**
+
+```bash
+flutter test test/unit/l10n
+```
+
+No English user-facing string says "World Cup".
+
+- [ ] **Step 3: Full suite and analyzer**
+
+```bash
+flutter test
+flutter analyze 2>&1 | grep -c "error •"
+```
+
+Expected: all tests pass; the error count is `0`.
+
+- [ ] **Step 4: Walk the 35 items**
+
+Open the spec and check each item off against the branch. Anything not done is either done now or reported as not done, with the reason. Do not report the batch complete with silent gaps.
+
+- [ ] **Step 5: Device playtest**
+
+Tasks 16 and 20 to 23 changed how a career feels. Build to a device and play a cycle before calling the batch finished.
+
+- [ ] **Step 6: Commit**
+
+```bash
+git add -A
+git commit -m "chore: copy round trip and whole-suite verification for the batch
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>"
+```
