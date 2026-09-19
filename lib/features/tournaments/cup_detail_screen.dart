@@ -1115,16 +1115,20 @@ class _HistoryState extends State<_History> {
                     color: AppColors.primary,
                   ),
                 ),
-                const Spacer(),
                 if (_hostsOf(h).isNotEmpty)
-                  Text(
-                    _hostsOf(h).length == 1
-                        ? l.tourCupHostLabel(widget.name(_hostsOf(h).single))
-                        : l.tourCupHostLabelMulti(
-                            _hostsOf(h).map(widget.code).join(' · '),
-                          ),
-                    style: AppTypography.labelSmall.copyWith(
-                      color: AppColors.onSurfaceVariant,
+                  Expanded(
+                    child: Text(
+                      _hostsOf(h).length == 1
+                          ? l.tourCupHostLabel(widget.name(_hostsOf(h).single))
+                          : l.tourCupHostLabelMulti(
+                              _hostsOf(h).map(widget.code).join(' · '),
+                            ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      textAlign: TextAlign.end,
+                      style: AppTypography.labelSmall.copyWith(
+                        color: AppColors.onSurfaceVariant,
+                      ),
                     ),
                   ),
               ],

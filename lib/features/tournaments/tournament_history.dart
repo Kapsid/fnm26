@@ -333,16 +333,20 @@ class TournamentHistory extends StatelessWidget {
                     color: AppColors.primary,
                   ),
                 ),
-                const Spacer(),
                 if (_hostsOf(h).isNotEmpty)
-                  Text(
-                    _hostsOf(h).length == 1
-                        ? l.tourHostLine(name(_hostsOf(h).single))
-                        : l.tourHostLineMulti(
-                            _hostsOf(h).map(code).join(' · '),
-                          ),
-                    style: AppTypography.labelSmall.copyWith(
-                      color: AppColors.onSurfaceVariant,
+                  Expanded(
+                    child: Text(
+                      _hostsOf(h).length == 1
+                          ? l.tourHostLine(name(_hostsOf(h).single))
+                          : l.tourHostLineMulti(
+                              _hostsOf(h).map(code).join(' · '),
+                            ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      textAlign: TextAlign.end,
+                      style: AppTypography.labelSmall.copyWith(
+                        color: AppColors.onSurfaceVariant,
+                      ),
                     ),
                   ),
               ],
