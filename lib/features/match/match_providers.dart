@@ -216,9 +216,10 @@ matchPreviewProvider = FutureProvider.autoDispose.family<MatchPreview?, int>((
       .watch(absenceRepositoryProvider)
       .forCareer(careerId);
   final calledUp = availableSquad(fullPool, callUps);
-  final playerPool = calledUp
-      .where((p) => absences[p.id]?.isAvailable ?? true)
-      .toList();
+  // One rule, one helper: [selectable] is what the tactics screen, the squad
+  // service and the world simulator all ask, so "can he play the next match"
+  // cannot drift into three slightly different answers.
+  final playerPool = selectable(calledUp, absences);
   final byId = {for (final p in playerPool) p.id: p};
   final tactic = await ref
       .watch(tacticsRepositoryProvider)
@@ -261,11 +262,14 @@ matchPreviewProvider = FutureProvider.autoDispose.family<MatchPreview?, int>((
   // Opponent: a real setup, not a shapeless best XI. Drop their injured /
   // suspended players too (the human already loses theirs — this closes the
   // asymmetry where the AI always fielded a full-strength side).
-  final oppPool = (await playerRepo.byNation(
-    opponentId,
-    agingYears: CareerService.agingYears(career),
-    saveSeed: career.rngSeed,
-  )).where((p) => absences[p.id]?.isAvailable ?? true).toList();
+  final oppPool = selectable(
+    await playerRepo.byNation(
+      opponentId,
+      agingYears: CareerService.agingYears(career),
+      saveSeed: career.rngSeed,
+    ),
+    absences,
+  );
   // Pick the AI's posture from how its strength compares to the player's:
   // favourites take the game to you, underdogs sit deep and counter. Keyed
   // to the fixture so it's stable across re-sims.

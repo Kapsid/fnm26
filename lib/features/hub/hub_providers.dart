@@ -377,11 +377,6 @@ class SeasonService {
     return after;
   }
 
-  /// Whether [playerId] is currently banned or injured.
-  bool _isAbsent(int playerId) {
-    final a = _absences?[playerId];
-    return a != null && !a.isAvailable;
-  }
 
   /// Loads (seeding if needed) the ranking points for [careerId].
   Future<void> _ensureRank(int careerId) async {
@@ -578,15 +573,15 @@ class SeasonService {
     // whether or not the manager is at that team. Fielding the XI first also
     // lets the scoreline be driven by the squad actually on the pitch (an
     // aging, evolving pool), not just the nation's static seeding.
-    final homeXi = await _fieldedXi(f.homeNationId);
-    final awayXi = await _fieldedXi(f.awayNationId);
+    final homeXi = await _fieldedXi(f.careerId, f.homeNationId);
+    final awayXi = await _fieldedXi(f.careerId, f.awayNationId);
     // …and the substitutes it brings on. Background sides used to play the
     // whole ninety with eleven men, so outside the manager's own fixtures no
     // substitute ever won a cap, scored, was booked or was marked — the rest of
     // the world had no bench at all. Strength is still read off the XI: the
     // subs change who is on the pitch, not how good the side is.
-    final homeSubs = await _fieldedSubs(f.homeNationId, homeXi);
-    final awaySubs = await _fieldedSubs(f.awayNationId, awayXi);
+    final homeSubs = await _fieldedSubs(f.careerId, f.homeNationId, homeXi);
+    final awaySubs = await _fieldedSubs(f.careerId, f.awayNationId, awayXi);
     final homeStrength = _squadStrength(homeXi, home);
     final awayStrength = _squadStrength(awayXi, away);
     const sim = RatingMatchSimulator();
@@ -824,17 +819,23 @@ class SeasonService {
 
   /// The players a background-simulated side actually fields: its best 4-3-3
   /// from the pool (the whole pool if an XI can't be formed).
-  Future<List<Player>> _fieldedXi(int nationId) async {
+  ///
+  /// The absences are LOADED here, never merely consulted. They used to be read
+  /// off the in-memory cache, which is empty until the first match of an
+  /// operation has been played and its discipline applied — and this runs
+  /// BEFORE that. So the first fixture any session simulated fielded every
+  /// banned and injured man in it, the manager's own side included whenever he
+  /// skipped a match rather than playing it out.
+  Future<List<Player>> _fieldedXi(int careerId, int nationId) async {
     final pool = await _pool(nationId);
     if (pool.isEmpty) return const [];
     // A suspended or injured player does not play — for ANY nation, not just
     // the manager's. This is what makes the world's cards and knocks mean
     // something: a rival losing its centre-forward for a quarter-final really
     // does field a weaker side, because `_squadStrength` reads this XI.
-    final available = [
-      for (final p in pool)
-        if (!_isAbsent(p.id)) p,
-    ];
+    // The same [selectable] the manager's own XI is filtered through, so "can
+    // he play the next match" has one answer in the whole game.
+    final available = selectable(pool, await _ensureAbsences(careerId));
     // Never field nobody: a pool decimated by absences still puts out its best
     // available eleven, and a pool somehow entirely absent falls back to itself
     // rather than forfeiting.
@@ -852,14 +853,19 @@ class SeasonService {
   /// The substitutes a background side uses: the best available players outside
   /// its [xi]. Deterministic — the same pool and the same absences always give
   /// the same bench, like everything else in the derived world.
-  Future<List<Player>> _fieldedSubs(int nationId, List<Player> xi) async {
+  Future<List<Player>> _fieldedSubs(
+    int careerId,
+    int nationId,
+    List<Player> xi,
+  ) async {
     if (xi.isEmpty) return const [];
     final pool = await _pool(nationId);
     final onPitch = xi.map((p) => p.id).toSet();
+    final absences = await _ensureAbsences(careerId);
     final available =
         [
-          for (final p in pool)
-            if (!onPitch.contains(p.id) && !_isAbsent(p.id)) p,
+          for (final p in selectable(pool, absences))
+            if (!onPitch.contains(p.id)) p,
         ]..sort((a, b) {
           final byOverall = b.overall.compareTo(a.overall);
           return byOverall != 0 ? byOverall : a.id.compareTo(b.id);
@@ -887,7 +893,7 @@ class SeasonService {
     // striker ever builds a tally. The best XI concentrates goals on the front
     // line, matching the detailed engine's behaviour. Substitutes are in the
     // draw too, weighted down for the half-hour they get.
-    final fielded = xi ?? await _fieldedXi(nationId);
+    final fielded = xi ?? await _fieldedXi(f.careerId, nationId);
     if (fielded.isEmpty) return const [];
     final rng = SeededRng.forFixture(rngSeed, f.id ^ salt);
     final ids = GoalAttribution.scorers(
