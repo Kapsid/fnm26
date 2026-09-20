@@ -7,6 +7,7 @@ import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/services/rating/overall_rating.dart';
+import 'package:fnm/domain/services/player/player_lifecycle.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/records/record_book_screen.dart';
 import 'package:fnm/features/federation/federation_providers.dart';
@@ -32,6 +33,7 @@ typedef _StatsView = ({
   List<_StatEntry> appearances,
   List<_RatingEntry> ratings,
   Map<int, String> names,
+  Set<int> active,
 });
 
 final AutoDisposeFutureProviderFamily<_StatsView?, int>
@@ -69,6 +71,10 @@ _teamStatsProvider = FutureProvider.autoDispose.family<_StatsView?, int>((
     for (final r in ratings) r.playerId,
   };
   final names = <int, String>{};
+  // Who on these all-time boards is still playing — the same rule the pool
+  // retires on, so a chart-topper you could still pick stands apart from the
+  // legends above and below him.
+  final active = <int>{};
   for (final id in ids) {
     final p = await playerRepo.byId(
       id,
@@ -78,6 +84,9 @@ _teamStatsProvider = FutureProvider.autoDispose.family<_StatsView?, int>((
       careerStartsByPlayer: careerDev,
     );
     names[id] = p?.name ?? 'Unknown';
+    if (p != null && !PlayerLifecycle.hasRetiredAt(p.id, p.age, aging)) {
+      active.add(id);
+    }
   }
 
   final nations = await ref.watch(nationRepositoryProvider).all();
@@ -87,6 +96,7 @@ _teamStatsProvider = FutureProvider.autoDispose.family<_StatsView?, int>((
     appearances: appearances,
     ratings: ratings,
     names: names,
+    active: active,
   );
 });
 
@@ -268,6 +278,9 @@ class _TeamStatsScreenState extends ConsumerState<TeamStatsScreen> {
                                 value: unit.isEmpty
                                     ? '${s.value}'
                                     : '${s.value} $unit',
+                                trailing: view.active.contains(s.playerId)
+                                    ? const ActiveBadge()
+                                    : null,
                                 onTap: () => context.push(
                                   '${Routes.player}?careerId=${widget.careerId}'
                                   '&playerId=${s.playerId}',

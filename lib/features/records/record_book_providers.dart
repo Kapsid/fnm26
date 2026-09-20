@@ -2,13 +2,22 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/services/stats/nation_results.dart';
+import 'package:fnm/domain/services/player/player_lifecycle.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/federation/federation_providers.dart';
 import 'package:fnm/features/settings/settings_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 
 /// One leaderboard entry (a player and their tally).
-typedef RecordLeader = ({int playerId, String name, int value});
+/// One line of a nation's record book: a player, his tally, and whether he is
+/// still playing — the same rule the pool retires on, so a record book reads
+/// as half history and half squad rather than as one flat list.
+typedef RecordLeader = ({
+  int playerId,
+  String name,
+  int value,
+  bool active,
+});
 
 /// The manager's nation's all-time record book, spanning every cycle.
 typedef RecordBook = ({
@@ -66,9 +75,10 @@ recordBookProvider = FutureProvider.autoDispose.family<RecordBook?, int>((
     for (final n in await ref.watch(nationRepositoryProvider).all()) n.id: n,
   };
 
-  final nameCache = <int, String>{};
-  Future<String> nameOf(int id) async {
-    if (nameCache.containsKey(id)) return nameCache[id]!;
+  final playerCache = <int, ({String name, bool active})>{};
+  Future<({String name, bool active})> resolve(int id) async {
+    final hit = playerCache[id];
+    if (hit != null) return hit;
     final p = await playerRepo.byId(
       id,
       agingYears: aging,
@@ -76,7 +86,10 @@ recordBookProvider = FutureProvider.autoDispose.family<RecordBook?, int>((
       youthBonusByCycle: youth,
       careerStartsByPlayer: careerDev,
     );
-    return nameCache[id] = p?.name ?? 'Unknown';
+    return playerCache[id] = (
+      name: p?.name ?? 'Unknown',
+      active: p != null && !PlayerLifecycle.hasRetiredAt(p.id, p.age, aging),
+    );
   }
 
   final capsRaw = await comp.nationTopAppearances(careerId, nationId, limit: 5);
@@ -85,15 +98,30 @@ recordBookProvider = FutureProvider.autoDispose.family<RecordBook?, int>((
 
   final mostCaps = <RecordLeader>[
     for (final c in capsRaw)
-      (playerId: c.playerId, name: await nameOf(c.playerId), value: c.games),
+      (
+        playerId: c.playerId,
+        name: (await resolve(c.playerId)).name,
+        value: c.games,
+        active: (await resolve(c.playerId)).active,
+      ),
   ];
   final topScorers = <RecordLeader>[
     for (final s in scorersRaw)
-      (playerId: s.playerId, name: await nameOf(s.playerId), value: s.goals),
+      (
+        playerId: s.playerId,
+        name: (await resolve(s.playerId)).name,
+        value: s.goals,
+        active: (await resolve(s.playerId)).active,
+      ),
   ];
   final topAssists = <RecordLeader>[
     for (final a in assistsRaw)
-      (playerId: a.playerId, name: await nameOf(a.playerId), value: a.assists),
+      (
+        playerId: a.playerId,
+        name: (await resolve(a.playerId)).name,
+        value: a.assists,
+        active: (await resolve(a.playerId)).active,
+      ),
   ];
 
   // Biggest win, longest unbeaten run, and deepest World Cup run — over every

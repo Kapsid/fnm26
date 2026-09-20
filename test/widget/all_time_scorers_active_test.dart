@@ -173,6 +173,8 @@ void main() {
       'lib/features/tournaments/tournament_history.dart',
       'lib/features/tournaments/tournament_stats.dart',
       'lib/features/nations/nation_vitrine_screen.dart',
+      'lib/features/records/record_book_screen.dart',
+      'lib/features/stats/team_stats_screen.dart',
     ];
     for (final path in lists) {
       expect(
