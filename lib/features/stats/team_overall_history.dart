@@ -12,9 +12,19 @@ import 'package:fnm/shared/widgets/widgets.dart';
 /// Follows the world-ranking chart's shape rather than adding a charting
 /// dependency: a painted line, its ends labelled.
 class TeamOverallHistoryCard extends StatelessWidget {
-  const TeamOverallHistoryCard({required this.history, super.key});
+  const TeamOverallHistoryCard({
+    required this.history,
+    this.nationName,
+    super.key,
+  });
 
   final List<TeamOverallPoint> history;
+
+  /// The side the curve belongs to, named when the screen around it isn't
+  /// already about one nation. The manager's career screen spans every job he
+  /// has held, so a curve with no name on it would read as "my teams" when it
+  /// is only the side he runs now.
+  final String? nationName;
 
   @override
   Widget build(BuildContext context) {
@@ -54,6 +64,17 @@ class TeamOverallHistoryCard extends StatelessWidget {
               ),
             ],
           ),
+          // Its own line, never a third item in the header row: that row is
+          // already two long words wide in Czech at 360px.
+          if (nationName != null)
+            Text(
+              nationName!,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: AppTypography.labelSmall.copyWith(
+                color: AppColors.onSurfaceVariant,
+              ),
+            ),
           const SizedBox(height: AppSpacing.sm),
           SizedBox(
             height: 110,

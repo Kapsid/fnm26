@@ -7,6 +7,8 @@ import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/core/util/competition_label.dart';
 import 'package:fnm/domain/services/competition/trophies.dart';
 import 'package:fnm/features/career/manager_history_providers.dart';
+import 'package:fnm/features/stats/stats_providers.dart';
+import 'package:fnm/features/stats/team_overall_history.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
@@ -40,11 +42,29 @@ class ManagerHistoryScreen extends ConsumerWidget {
         error: (e, _) => Center(child: Text(l.careerCouldNotLoad('$e'))),
         data: (h) {
           if (h == null) return Center(child: Text(l.careerNoCareer));
+          // How strong the side actually got. The results and the trophies are
+          // already here; whether the team he built was rising or ageing out
+          // from under him was only ever on the team screen, which is not where
+          // anyone goes to read their history.
+          final strength =
+              ref.watch(teamOverallHistoryProvider(careerId)).valueOrNull ??
+              const <TeamOverallPoint>[];
           return ListView(
             padding: const EdgeInsets.all(AppSpacing.marginMobile),
             children: [
               _OverallCard(history: h),
               const SizedBox(height: AppSpacing.md),
+              // One year is not a curve, and a career can be one year old.
+              if (strength.length > 1) ...[
+                TeamOverallHistoryCard(
+                  key: const Key('career-team-strength'),
+                  history: strength,
+                  nationName: h.cycles.isEmpty
+                      ? null
+                      : h.cycles.first.nation?.name,
+                ),
+                const SizedBox(height: AppSpacing.md),
+              ],
               Text(
                 l.careerCycleByCycle,
                 style: AppTypography.labelSmall.copyWith(
