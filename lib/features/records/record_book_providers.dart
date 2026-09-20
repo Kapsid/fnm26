@@ -1,8 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/nation.dart';
-import 'package:fnm/domain/services/stats/nation_results.dart';
 import 'package:fnm/domain/services/player/player_lifecycle.dart';
+import 'package:fnm/domain/services/stats/nation_results.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/federation/federation_providers.dart';
 import 'package:fnm/features/settings/settings_providers.dart';

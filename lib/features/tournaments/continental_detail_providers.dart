@@ -507,6 +507,9 @@ continentalDetailProvider = FutureProvider.autoDispose.family<ContinentalData?, 
         name: p?.name ?? 'Unknown',
         nationId: r.nationId,
         count: key(r),
+        // His own career, not a flat cut-off — the rule the scorer chart a
+        // few lines up reads.
+        active: p != null && !PlayerLifecycle.hasRetiredAt(p.id, p.age, aging),
       ));
     }
     return out;

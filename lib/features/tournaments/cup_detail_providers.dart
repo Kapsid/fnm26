@@ -148,13 +148,19 @@ typedef AllTimeScorer = ({
   bool active,
 });
 
-/// A per-player cup record holder: their name, nation, and the count that put
-/// them top (matches played, or finals tournaments attended).
+/// A per-player cup record holder: their name, nation, the count that put them
+/// top (matches played, or finals tournaments attended), and whether they are
+/// still playing.
+///
+/// The same flag [AllTimeScorer] carries, from the same rule: these three
+/// boards sit behind one segmented switch on the records tab, and a badge that
+/// appeared on only one of them would read as a bug.
 typedef CupPlayerRecord = ({
   int playerId,
   String name,
   int nationId,
   int count,
+  bool active,
 });
 
 /// Deepest knockout round each nation reached (0 = group stage only).
@@ -482,6 +488,9 @@ cupDetailProvider = FutureProvider.autoDispose.family<CupData?, int>((
         name: p?.name ?? 'Unknown',
         nationId: r.nationId,
         count: key(r),
+        // His own career, not a flat cut-off — the rule the scorer chart a
+        // few lines up reads.
+        active: p != null && !PlayerLifecycle.hasRetiredAt(p.id, p.age, aging),
       ));
     }
     return out;

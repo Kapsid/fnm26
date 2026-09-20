@@ -147,8 +147,9 @@ class TournamentStatsTab extends StatelessWidget {
 
 /// One row of a leaderboard: a nation (for the flag), a holder name, a count,
 /// and whether the holder is still playing — an all-time chart otherwise reads
-/// the same whether a man retired last cycle or is in this week's squad. Only
-/// the scorers board knows that today; the others say false.
+/// the same whether a man retired last cycle or is in this week's squad. All
+/// three boards carry it: they sit behind one switch, and a badge on one
+/// segment only would read as a bug rather than as a fact about that board.
 typedef _LbRow = ({int nationId, String name, int count, bool active});
 
 /// The all-time player leaderboard: a segmented switch between Games, Cups and
@@ -191,7 +192,7 @@ class _LeaderboardState extends State<_Leaderboard> {
                 nationId: r.nationId,
                 name: r.name,
                 count: r.count,
-                active: false,
+                active: r.active,
               ),
           ],
         ),
@@ -206,7 +207,7 @@ class _LeaderboardState extends State<_Leaderboard> {
                 nationId: r.nationId,
                 name: r.name,
                 count: r.count,
-                active: false,
+                active: r.active,
               ),
           ],
         ),

@@ -14,6 +14,7 @@ import 'package:fnm/domain/services/competition/finals.dart';
 import 'package:fnm/domain/services/competition/group_advancement.dart';
 import 'package:fnm/domain/services/competition/qualification_format.dart';
 import 'package:fnm/domain/services/competition/trophies.dart';
+import 'package:fnm/features/tournaments/all_time_scorers_legend.dart';
 import 'package:fnm/features/tournaments/best_thirds.dart';
 import 'package:fnm/features/tournaments/cup_detail_providers.dart';
 import 'package:fnm/features/tournaments/intercontinental_playoff_bracket.dart';
@@ -820,32 +821,7 @@ class _ScorersState extends State<_Scorers> {
               AppSpacing.marginMobile,
               AppSpacing.sm,
             ),
-            child: Row(
-              children: [
-                // The heading is the part allowed to shorten: the legend
-                // explaining the badge is no use half-printed, and Czech runs
-                // longer than English on both halves of this line.
-                Expanded(
-                  child: Text(
-                    l.tourCupAllTimeScorers,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: AppTypography.labelSmall.copyWith(
-                      color: AppColors.primary,
-                    ),
-                  ),
-                ),
-                const SizedBox(width: AppSpacing.sm),
-                const ActiveBadge(),
-                const SizedBox(width: AppSpacing.xs),
-                Text(
-                  l.tourCupStillActive,
-                  style: AppTypography.labelSmall.copyWith(
-                    color: AppColors.onSurfaceVariant,
-                  ),
-                ),
-              ],
-            ),
+            child: const AllTimeScorersLegend(),
           ),
         if (rows.isEmpty)
           Expanded(

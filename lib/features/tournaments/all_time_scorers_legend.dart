@@ -1,0 +1,46 @@
+import 'package:flutter/material.dart';
+import 'package:fnm/core/theme/app_colors.dart';
+import 'package:fnm/core/theme/app_dimens.dart';
+import 'package:fnm/core/theme/app_typography.dart';
+import 'package:fnm/l10n/app_localizations.dart';
+import 'package:fnm/shared/widgets/widgets.dart';
+
+/// The line above an all-time scorer chart: what the chart is, and what the
+/// badge on some of its rows means.
+///
+/// A widget of its own rather than a Row buried in a screen, so the one thing
+/// that can go wrong with it — running off the side of a phone in a language
+/// that spells both halves longer than English does — can be pumped and
+/// proven instead of eyeballed.
+class AllTimeScorersLegend extends StatelessWidget {
+  const AllTimeScorersLegend({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    return Row(
+      children: [
+        // The heading is the half allowed to shorten: a legend that explains
+        // the badge is no use half-printed.
+        Expanded(
+          child: Text(
+            l.tourCupAllTimeScorers,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: AppTypography.labelSmall.copyWith(color: AppColors.primary),
+          ),
+        ),
+        const SizedBox(width: AppSpacing.sm),
+        const ActiveBadge(),
+        const SizedBox(width: AppSpacing.xs),
+        Text(
+          l.tourCupStillActive,
+          maxLines: 1,
+          style: AppTypography.labelSmall.copyWith(
+            color: AppColors.onSurfaceVariant,
+          ),
+        ),
+      ],
+    );
+  }
+}
