@@ -13,7 +13,6 @@ import 'package:fnm/domain/repositories/competition_repository.dart';
 import 'package:fnm/domain/services/competition/group_advancement.dart';
 import 'package:fnm/domain/services/competition/nations_cup.dart';
 import 'package:fnm/features/career/career_providers.dart';
-import 'package:fnm/features/federation/federation_providers.dart';
 import 'package:fnm/features/tournaments/nations_cup_draw_providers.dart';
 import 'package:fnm/features/tournaments/tournament_history.dart';
 import 'package:fnm/l10n/app_localizations.dart';
@@ -106,17 +105,17 @@ _nationsCupProvider = FutureProvider.autoDispose.family<_NcView?, int>((
   // row, and the reconstruction only reaches an intake year that has already
   // happened — so the lookup has to say which year of the save it is asking
   // about, or every newgen scorer comes back null and prints as "Unknown".
-  final aging = CareerService.agingYears(career);
-  final youth = await ref.watch(youthBonusByCycleProvider(careerId).future);
-  final careerDev = await ref.watch(careerDevBonusProvider(careerId).future);
+  //
+  // The year and the seed are all a NAME needs. The two development maps
+  // (youth-academy bonuses, career starts) only shift attribute magnitudes,
+  // and the career-starts one is an appearance-table scan across the whole
+  // save — a real cost for a chart that reads nothing but `p.name`.
   final playerNames = <int, String>{};
   for (final id in {for (final s in scorers) s.playerId}) {
     final p = await playerRepo.byId(
       id,
-      agingYears: aging,
+      agingYears: CareerService.agingYears(career),
       saveSeed: career.rngSeed,
-      youthBonusByCycle: youth,
-      careerStartsByPlayer: careerDev,
     );
     if (p != null) playerNames[id] = p.name;
   }
