@@ -454,7 +454,7 @@ class CareerService {
         runnerUpId: runnerUp,
         thirdId: shared != null ? resolve(shared.$1) : resolve(e.third),
         thirdId2: shared != null ? resolve(shared.$2) : null,
-        hostId: resolve(e.host),
+        hostIds: e.hosts.map(resolve).whereType<int>().toList(),
         finalHomeScore: e.finalHome,
         finalAwayScore: e.finalAway,
       );

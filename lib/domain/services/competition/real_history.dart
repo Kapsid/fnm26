@@ -12,7 +12,11 @@
 typedef HistoryEdition = ({
   int year,
   String competition,
-  String host,
+  /// Every host, primary first. Single-element for an ordinary edition; an
+  /// edition that recorded no host at all (the 1975-1983 South America Cups,
+  /// played home-and-away with no fixed venue) still carries one element, an
+  /// empty string, rather than an empty list.
+  List<String> hosts,
   String champion,
   String runnerUp,
   String? third,
@@ -79,7 +83,7 @@ abstract final class RealHistory {
     (
       year: 1930,
       competition: worldChampionship,
-      host: 'Uruguay',
+      hosts: ['Uruguay'],
       champion: 'Uruguay',
       runnerUp: 'Argentina',
       third: 'United States',
@@ -89,7 +93,7 @@ abstract final class RealHistory {
     (
       year: 1934,
       competition: worldChampionship,
-      host: 'Italy',
+      hosts: ['Italy'],
       champion: 'Italy',
       runnerUp: 'Czechoslovakia',
       third: 'Germany',
@@ -99,7 +103,7 @@ abstract final class RealHistory {
     (
       year: 1938,
       competition: worldChampionship,
-      host: 'France',
+      hosts: ['France'],
       champion: 'Italy',
       runnerUp: 'Hungary',
       third: 'Brazil',
@@ -109,7 +113,7 @@ abstract final class RealHistory {
     (
       year: 1950,
       competition: worldChampionship,
-      host: 'Brazil',
+      hosts: ['Brazil'],
       champion: 'Uruguay',
       runnerUp: 'Brazil',
       third: 'Sweden',
@@ -119,7 +123,7 @@ abstract final class RealHistory {
     (
       year: 1954,
       competition: worldChampionship,
-      host: 'Switzerland',
+      hosts: ['Switzerland'],
       champion: 'West Germany',
       runnerUp: 'Hungary',
       third: 'Austria',
@@ -129,7 +133,7 @@ abstract final class RealHistory {
     (
       year: 1958,
       competition: worldChampionship,
-      host: 'Sweden',
+      hosts: ['Sweden'],
       champion: 'Brazil',
       runnerUp: 'Sweden',
       third: 'France',
@@ -139,7 +143,7 @@ abstract final class RealHistory {
     (
       year: 1962,
       competition: worldChampionship,
-      host: 'Chile',
+      hosts: ['Chile'],
       champion: 'Brazil',
       runnerUp: 'Czechoslovakia',
       third: 'Chile',
@@ -149,7 +153,7 @@ abstract final class RealHistory {
     (
       year: 1966,
       competition: worldChampionship,
-      host: 'England',
+      hosts: ['England'],
       champion: 'England',
       runnerUp: 'West Germany',
       third: 'Portugal',
@@ -159,7 +163,7 @@ abstract final class RealHistory {
     (
       year: 1970,
       competition: worldChampionship,
-      host: 'Mexico',
+      hosts: ['Mexico'],
       champion: 'Brazil',
       runnerUp: 'Italy',
       third: 'West Germany',
@@ -169,7 +173,7 @@ abstract final class RealHistory {
     (
       year: 1974,
       competition: worldChampionship,
-      host: 'West Germany',
+      hosts: ['West Germany'],
       champion: 'West Germany',
       runnerUp: 'Netherlands',
       third: 'Poland',
@@ -179,7 +183,7 @@ abstract final class RealHistory {
     (
       year: 1978,
       competition: worldChampionship,
-      host: 'Argentina',
+      hosts: ['Argentina'],
       champion: 'Argentina',
       runnerUp: 'Netherlands',
       third: 'Brazil',
@@ -189,7 +193,7 @@ abstract final class RealHistory {
     (
       year: 1982,
       competition: worldChampionship,
-      host: 'Spain',
+      hosts: ['Spain'],
       champion: 'Italy',
       runnerUp: 'West Germany',
       third: 'Poland',
@@ -199,7 +203,7 @@ abstract final class RealHistory {
     (
       year: 1986,
       competition: worldChampionship,
-      host: 'Mexico',
+      hosts: ['Mexico'],
       champion: 'Argentina',
       runnerUp: 'West Germany',
       third: 'France',
@@ -209,7 +213,7 @@ abstract final class RealHistory {
     (
       year: 1990,
       competition: worldChampionship,
-      host: 'Italy',
+      hosts: ['Italy'],
       champion: 'West Germany',
       runnerUp: 'Argentina',
       third: 'Italy',
@@ -219,7 +223,7 @@ abstract final class RealHistory {
     (
       year: 1994,
       competition: worldChampionship,
-      host: 'United States',
+      hosts: ['United States'],
       champion: 'Brazil',
       runnerUp: 'Italy',
       third: 'Sweden',
@@ -229,7 +233,7 @@ abstract final class RealHistory {
     (
       year: 1998,
       competition: worldChampionship,
-      host: 'France',
+      hosts: ['France'],
       champion: 'France',
       runnerUp: 'Brazil',
       third: 'Croatia',
@@ -239,7 +243,7 @@ abstract final class RealHistory {
     (
       year: 2002,
       competition: worldChampionship,
-      host: 'Japan',
+      hosts: ['Japan'],
       champion: 'Brazil',
       runnerUp: 'Germany',
       third: 'Turkey', // resolves via aliases → Türkiye
@@ -249,7 +253,7 @@ abstract final class RealHistory {
     (
       year: 2006,
       competition: worldChampionship,
-      host: 'Germany',
+      hosts: ['Germany'],
       champion: 'Italy',
       runnerUp: 'France',
       third: 'Germany',
@@ -259,7 +263,7 @@ abstract final class RealHistory {
     (
       year: 2010,
       competition: worldChampionship,
-      host: 'South Africa',
+      hosts: ['South Africa'],
       champion: 'Spain',
       runnerUp: 'Netherlands',
       third: 'Germany',
@@ -269,7 +273,7 @@ abstract final class RealHistory {
     (
       year: 2014,
       competition: worldChampionship,
-      host: 'Brazil',
+      hosts: ['Brazil'],
       champion: 'Germany',
       runnerUp: 'Argentina',
       third: 'Netherlands',
@@ -279,7 +283,7 @@ abstract final class RealHistory {
     (
       year: 2018,
       competition: worldChampionship,
-      host: 'Russia',
+      hosts: ['Russia'],
       champion: 'France',
       runnerUp: 'Croatia',
       third: 'Belgium',
@@ -289,23 +293,34 @@ abstract final class RealHistory {
     (
       year: 2022,
       competition: worldChampionship,
-      host: 'Qatar',
+      hosts: ['Qatar'],
       champion: 'Argentina',
       runnerUp: 'France',
       third: 'Croatia',
       finalHome: 3,
       finalAway: 3,
     ),
-    // 2026 is deliberately ABSENT. A save opens on 1 July 2026, while that
-    // World Cup is still being played — so recording a champion for it put a
-    // decided edition on a nation's history before the competition it belongs
-    // to had been won. The roll of honour ends with the last edition that was
-    // actually finished when the career begins.
+    // 2026 is now seeded as finished, even though a save opens on 1 July
+    // 2026 while that World Championship is still being played in reality: a
+    // manager opening a new save looks for it in the record, and finding
+    // nothing there reads as a hole in the world rather than as a tournament
+    // still in progress. Co-hosted by all three of North America's automatic
+    // qualifiers.
+    (
+      year: 2026,
+      competition: worldChampionship,
+      hosts: ['United States', 'Canada', 'Mexico'],
+      champion: 'Spain',
+      runnerUp: 'Argentina',
+      third: 'France',
+      finalHome: 2,
+      finalAway: 1,
+    ),
     // --- European Championship --------------------------------------------
     (
       year: 1960,
       competition: europeanChampionship,
-      host: 'France',
+      hosts: ['France'],
       champion: 'Soviet Union',
       runnerUp: 'Yugoslavia',
       third: null,
@@ -315,7 +330,7 @@ abstract final class RealHistory {
     (
       year: 1964,
       competition: europeanChampionship,
-      host: 'Spain',
+      hosts: ['Spain'],
       champion: 'Spain',
       runnerUp: 'Soviet Union',
       third: null,
@@ -325,7 +340,7 @@ abstract final class RealHistory {
     (
       year: 1968,
       competition: europeanChampionship,
-      host: 'Italy',
+      hosts: ['Italy'],
       champion: 'Italy',
       runnerUp: 'Yugoslavia',
       third: null,
@@ -335,7 +350,7 @@ abstract final class RealHistory {
     (
       year: 1972,
       competition: europeanChampionship,
-      host: 'Belgium',
+      hosts: ['Belgium'],
       champion: 'West Germany',
       runnerUp: 'Soviet Union',
       third: null,
@@ -345,7 +360,7 @@ abstract final class RealHistory {
     (
       year: 1976,
       competition: europeanChampionship,
-      host: 'Yugoslavia',
+      hosts: ['Yugoslavia'],
       champion: 'Czechoslovakia',
       runnerUp: 'West Germany',
       third: null,
@@ -355,7 +370,7 @@ abstract final class RealHistory {
     (
       year: 1980,
       competition: europeanChampionship,
-      host: 'Italy',
+      hosts: ['Italy'],
       champion: 'West Germany',
       runnerUp: 'Belgium',
       third: null,
@@ -365,7 +380,7 @@ abstract final class RealHistory {
     (
       year: 1984,
       competition: europeanChampionship,
-      host: 'France',
+      hosts: ['France'],
       champion: 'France',
       runnerUp: 'Spain',
       third: null,
@@ -375,7 +390,7 @@ abstract final class RealHistory {
     (
       year: 1988,
       competition: europeanChampionship,
-      host: 'West Germany',
+      hosts: ['West Germany'],
       champion: 'Netherlands',
       runnerUp: 'Soviet Union',
       third: null,
@@ -385,7 +400,7 @@ abstract final class RealHistory {
     (
       year: 1992,
       competition: europeanChampionship,
-      host: 'Sweden',
+      hosts: ['Sweden'],
       champion: 'Denmark',
       runnerUp: 'Germany',
       third: null,
@@ -395,7 +410,7 @@ abstract final class RealHistory {
     (
       year: 1996,
       competition: europeanChampionship,
-      host: 'England',
+      hosts: ['England'],
       champion: 'Germany',
       runnerUp: 'Czechia',
       third: null,
@@ -405,7 +420,7 @@ abstract final class RealHistory {
     (
       year: 2000,
       competition: europeanChampionship,
-      host: 'Netherlands',
+      hosts: ['Netherlands'],
       champion: 'France',
       runnerUp: 'Italy',
       third: null,
@@ -415,7 +430,7 @@ abstract final class RealHistory {
     (
       year: 2004,
       competition: europeanChampionship,
-      host: 'Portugal',
+      hosts: ['Portugal'],
       champion: 'Greece',
       runnerUp: 'Portugal',
       third: null,
@@ -425,7 +440,7 @@ abstract final class RealHistory {
     (
       year: 2008,
       competition: europeanChampionship,
-      host: 'Switzerland',
+      hosts: ['Switzerland'],
       champion: 'Spain',
       runnerUp: 'Germany',
       third: null,
@@ -435,7 +450,7 @@ abstract final class RealHistory {
     (
       year: 2012,
       competition: europeanChampionship,
-      host: 'Poland',
+      hosts: ['Poland'],
       champion: 'Spain',
       runnerUp: 'Italy',
       third: null,
@@ -445,7 +460,7 @@ abstract final class RealHistory {
     (
       year: 2016,
       competition: europeanChampionship,
-      host: 'France',
+      hosts: ['France'],
       champion: 'Portugal',
       runnerUp: 'France',
       third: null,
@@ -455,7 +470,7 @@ abstract final class RealHistory {
     (
       year: 2020,
       competition: europeanChampionship,
-      host: 'England',
+      hosts: ['England'],
       champion: 'Italy',
       runnerUp: 'England',
       third: null,
@@ -465,7 +480,7 @@ abstract final class RealHistory {
     (
       year: 2024,
       competition: europeanChampionship,
-      host: 'Germany',
+      hosts: ['Germany'],
       champion: 'Spain',
       runnerUp: 'England',
       third: null,
@@ -483,7 +498,7 @@ abstract final class RealHistory {
     (
       year: 1916,
       competition: southAmericaCup,
-      host: 'Argentina',
+      hosts: ['Argentina'],
       champion: 'Uruguay',
       runnerUp: 'Argentina',
       third: null,
@@ -493,7 +508,7 @@ abstract final class RealHistory {
     (
       year: 1917,
       competition: southAmericaCup,
-      host: 'Uruguay',
+      hosts: ['Uruguay'],
       champion: 'Uruguay',
       runnerUp: 'Argentina',
       third: null,
@@ -503,7 +518,7 @@ abstract final class RealHistory {
     (
       year: 1919,
       competition: southAmericaCup,
-      host: 'Brazil',
+      hosts: ['Brazil'],
       champion: 'Brazil',
       runnerUp: 'Uruguay',
       third: null,
@@ -514,7 +529,7 @@ abstract final class RealHistory {
     (
       year: 1920,
       competition: southAmericaCup,
-      host: 'Chile',
+      hosts: ['Chile'],
       champion: 'Uruguay',
       runnerUp: 'Argentina',
       third: null,
@@ -524,7 +539,7 @@ abstract final class RealHistory {
     (
       year: 1921,
       competition: southAmericaCup,
-      host: 'Argentina',
+      hosts: ['Argentina'],
       champion: 'Argentina',
       runnerUp: 'Brazil',
       third: null,
@@ -534,7 +549,7 @@ abstract final class RealHistory {
     (
       year: 1922,
       competition: southAmericaCup,
-      host: 'Brazil',
+      hosts: ['Brazil'],
       champion: 'Brazil',
       runnerUp: 'Paraguay',
       third: null,
@@ -545,7 +560,7 @@ abstract final class RealHistory {
     (
       year: 1923,
       competition: southAmericaCup,
-      host: 'Uruguay',
+      hosts: ['Uruguay'],
       champion: 'Uruguay',
       runnerUp: 'Argentina',
       third: null,
@@ -555,7 +570,7 @@ abstract final class RealHistory {
     (
       year: 1924,
       competition: southAmericaCup,
-      host: 'Uruguay',
+      hosts: ['Uruguay'],
       champion: 'Uruguay',
       runnerUp: 'Argentina',
       third: null,
@@ -565,7 +580,7 @@ abstract final class RealHistory {
     (
       year: 1925,
       competition: southAmericaCup,
-      host: 'Argentina',
+      hosts: ['Argentina'],
       champion: 'Argentina',
       runnerUp: 'Brazil',
       third: null,
@@ -575,7 +590,7 @@ abstract final class RealHistory {
     (
       year: 1926,
       competition: southAmericaCup,
-      host: 'Chile',
+      hosts: ['Chile'],
       champion: 'Uruguay',
       runnerUp: 'Argentina',
       third: null,
@@ -585,7 +600,7 @@ abstract final class RealHistory {
     (
       year: 1927,
       competition: southAmericaCup,
-      host: 'Peru',
+      hosts: ['Peru'],
       champion: 'Argentina',
       runnerUp: 'Uruguay',
       third: null,
@@ -595,7 +610,7 @@ abstract final class RealHistory {
     (
       year: 1929,
       competition: southAmericaCup,
-      host: 'Argentina',
+      hosts: ['Argentina'],
       champion: 'Argentina',
       runnerUp: 'Paraguay',
       third: null,
@@ -605,7 +620,7 @@ abstract final class RealHistory {
     (
       year: 1935,
       competition: southAmericaCup,
-      host: 'Peru',
+      hosts: ['Peru'],
       champion: 'Uruguay',
       runnerUp: 'Argentina',
       third: null,
@@ -615,7 +630,7 @@ abstract final class RealHistory {
     (
       year: 1937,
       competition: southAmericaCup,
-      host: 'Argentina',
+      hosts: ['Argentina'],
       champion: 'Argentina',
       runnerUp: 'Brazil',
       third: null,
@@ -627,7 +642,7 @@ abstract final class RealHistory {
     (
       year: 1939,
       competition: southAmericaCup,
-      host: 'Peru',
+      hosts: ['Peru'],
       champion: 'Peru',
       runnerUp: 'Uruguay',
       third: null,
@@ -637,7 +652,7 @@ abstract final class RealHistory {
     (
       year: 1941,
       competition: southAmericaCup,
-      host: 'Chile',
+      hosts: ['Chile'],
       champion: 'Argentina',
       runnerUp: 'Uruguay',
       third: null,
@@ -647,7 +662,7 @@ abstract final class RealHistory {
     (
       year: 1942,
       competition: southAmericaCup,
-      host: 'Uruguay',
+      hosts: ['Uruguay'],
       champion: 'Uruguay',
       runnerUp: 'Argentina',
       third: null,
@@ -657,7 +672,7 @@ abstract final class RealHistory {
     (
       year: 1945,
       competition: southAmericaCup,
-      host: 'Chile',
+      hosts: ['Chile'],
       champion: 'Argentina',
       runnerUp: 'Brazil',
       third: null,
@@ -667,7 +682,7 @@ abstract final class RealHistory {
     (
       year: 1946,
       competition: southAmericaCup,
-      host: 'Argentina',
+      hosts: ['Argentina'],
       champion: 'Argentina',
       runnerUp: 'Brazil',
       third: null,
@@ -677,7 +692,7 @@ abstract final class RealHistory {
     (
       year: 1947,
       competition: southAmericaCup,
-      host: 'Ecuador',
+      hosts: ['Ecuador'],
       champion: 'Argentina',
       runnerUp: 'Paraguay',
       third: null,
@@ -687,7 +702,7 @@ abstract final class RealHistory {
     (
       year: 1949,
       competition: southAmericaCup,
-      host: 'Brazil',
+      hosts: ['Brazil'],
       champion: 'Brazil',
       runnerUp: 'Paraguay',
       third: null,
@@ -698,7 +713,7 @@ abstract final class RealHistory {
     (
       year: 1953,
       competition: southAmericaCup,
-      host: 'Peru',
+      hosts: ['Peru'],
       champion: 'Paraguay',
       runnerUp: 'Brazil',
       third: null,
@@ -709,7 +724,7 @@ abstract final class RealHistory {
     (
       year: 1955,
       competition: southAmericaCup,
-      host: 'Chile',
+      hosts: ['Chile'],
       champion: 'Argentina',
       runnerUp: 'Chile',
       third: null,
@@ -719,7 +734,7 @@ abstract final class RealHistory {
     (
       year: 1956,
       competition: southAmericaCup,
-      host: 'Uruguay',
+      hosts: ['Uruguay'],
       champion: 'Uruguay',
       runnerUp: 'Chile',
       third: null,
@@ -729,7 +744,7 @@ abstract final class RealHistory {
     (
       year: 1957,
       competition: southAmericaCup,
-      host: 'Peru',
+      hosts: ['Peru'],
       champion: 'Argentina',
       runnerUp: 'Brazil',
       third: null,
@@ -739,7 +754,7 @@ abstract final class RealHistory {
     (
       year: 1959,
       competition: southAmericaCup,
-      host: 'Argentina',
+      hosts: ['Argentina'],
       champion: 'Argentina',
       runnerUp: 'Brazil',
       third: null,
@@ -749,7 +764,7 @@ abstract final class RealHistory {
     (
       year: 1963,
       competition: southAmericaCup,
-      host: 'Bolivia',
+      hosts: ['Bolivia'],
       champion: 'Bolivia',
       runnerUp: 'Paraguay',
       third: null,
@@ -759,7 +774,7 @@ abstract final class RealHistory {
     (
       year: 1967,
       competition: southAmericaCup,
-      host: 'Uruguay',
+      hosts: ['Uruguay'],
       champion: 'Uruguay',
       runnerUp: 'Argentina',
       third: null,
@@ -771,7 +786,7 @@ abstract final class RealHistory {
     (
       year: 1975,
       competition: southAmericaCup,
-      host: '',
+      hosts: [''],
       champion: 'Peru',
       runnerUp: 'Colombia',
       third: null,
@@ -782,7 +797,7 @@ abstract final class RealHistory {
     (
       year: 1979,
       competition: southAmericaCup,
-      host: '',
+      hosts: [''],
       champion: 'Paraguay',
       runnerUp: 'Chile',
       third: null,
@@ -795,7 +810,7 @@ abstract final class RealHistory {
     (
       year: 1983,
       competition: southAmericaCup,
-      host: '',
+      hosts: [''],
       champion: 'Uruguay',
       runnerUp: 'Brazil',
       third: null,
@@ -806,7 +821,7 @@ abstract final class RealHistory {
     (
       year: 1987,
       competition: southAmericaCup,
-      host: 'Argentina',
+      hosts: ['Argentina'],
       champion: 'Uruguay',
       runnerUp: 'Chile',
       third: null,
@@ -816,7 +831,7 @@ abstract final class RealHistory {
     (
       year: 1989,
       competition: southAmericaCup,
-      host: 'Brazil',
+      hosts: ['Brazil'],
       champion: 'Brazil',
       runnerUp: 'Uruguay',
       third: null,
@@ -827,7 +842,7 @@ abstract final class RealHistory {
     (
       year: 1991,
       competition: southAmericaCup,
-      host: 'Chile',
+      hosts: ['Chile'],
       champion: 'Argentina',
       runnerUp: 'Brazil',
       third: null,
@@ -838,7 +853,7 @@ abstract final class RealHistory {
     (
       year: 1993,
       competition: southAmericaCup,
-      host: 'Ecuador',
+      hosts: ['Ecuador'],
       champion: 'Argentina',
       runnerUp: 'Mexico',
       third: null,
@@ -848,7 +863,7 @@ abstract final class RealHistory {
     (
       year: 1995,
       competition: southAmericaCup,
-      host: 'Uruguay',
+      hosts: ['Uruguay'],
       champion: 'Uruguay',
       runnerUp: 'Brazil',
       third: null,
@@ -858,7 +873,7 @@ abstract final class RealHistory {
     (
       year: 1997,
       competition: southAmericaCup,
-      host: 'Bolivia',
+      hosts: ['Bolivia'],
       champion: 'Brazil',
       runnerUp: 'Bolivia',
       third: null,
@@ -868,7 +883,7 @@ abstract final class RealHistory {
     (
       year: 1999,
       competition: southAmericaCup,
-      host: 'Paraguay',
+      hosts: ['Paraguay'],
       champion: 'Brazil',
       runnerUp: 'Uruguay',
       third: null,
@@ -878,7 +893,7 @@ abstract final class RealHistory {
     (
       year: 2001,
       competition: southAmericaCup,
-      host: 'Colombia',
+      hosts: ['Colombia'],
       champion: 'Colombia',
       runnerUp: 'Mexico',
       third: null,
@@ -888,7 +903,7 @@ abstract final class RealHistory {
     (
       year: 2004,
       competition: southAmericaCup,
-      host: 'Peru',
+      hosts: ['Peru'],
       champion: 'Brazil',
       runnerUp: 'Argentina',
       third: null,
@@ -898,7 +913,7 @@ abstract final class RealHistory {
     (
       year: 2007,
       competition: southAmericaCup,
-      host: 'Venezuela',
+      hosts: ['Venezuela'],
       champion: 'Brazil',
       runnerUp: 'Argentina',
       third: null,
@@ -908,7 +923,7 @@ abstract final class RealHistory {
     (
       year: 2011,
       competition: southAmericaCup,
-      host: 'Argentina',
+      hosts: ['Argentina'],
       champion: 'Uruguay',
       runnerUp: 'Paraguay',
       third: null,
@@ -918,7 +933,7 @@ abstract final class RealHistory {
     (
       year: 2015,
       competition: southAmericaCup,
-      host: 'Chile',
+      hosts: ['Chile'],
       champion: 'Chile',
       runnerUp: 'Argentina',
       third: null,
@@ -928,7 +943,7 @@ abstract final class RealHistory {
     (
       year: 2016,
       competition: southAmericaCup,
-      host: 'United States',
+      hosts: ['United States'],
       champion: 'Chile',
       runnerUp: 'Argentina',
       third: null,
@@ -938,7 +953,7 @@ abstract final class RealHistory {
     (
       year: 2019,
       competition: southAmericaCup,
-      host: 'Brazil',
+      hosts: ['Brazil'],
       champion: 'Brazil',
       runnerUp: 'Peru',
       third: null,
@@ -948,7 +963,7 @@ abstract final class RealHistory {
     (
       year: 2021,
       competition: southAmericaCup,
-      host: 'Brazil',
+      hosts: ['Brazil'],
       champion: 'Argentina',
       runnerUp: 'Brazil',
       third: null,
@@ -958,7 +973,7 @@ abstract final class RealHistory {
     (
       year: 2024,
       competition: southAmericaCup,
-      host: 'United States',
+      hosts: ['United States'],
       champion: 'Argentina',
       runnerUp: 'Colombia',
       third: null,
@@ -970,7 +985,7 @@ abstract final class RealHistory {
     (
       year: 2019,
       competition: nationsCup,
-      host: 'Portugal',
+      hosts: ['Portugal'],
       champion: 'Portugal',
       runnerUp: 'Netherlands',
       third: 'England',
@@ -980,7 +995,7 @@ abstract final class RealHistory {
     (
       year: 2021,
       competition: nationsCup,
-      host: 'Italy',
+      hosts: ['Italy'],
       champion: 'France',
       runnerUp: 'Spain',
       third: 'Italy',
@@ -990,7 +1005,7 @@ abstract final class RealHistory {
     (
       year: 2023,
       competition: nationsCup,
-      host: 'Netherlands',
+      hosts: ['Netherlands'],
       champion: 'Spain',
       runnerUp: 'Croatia',
       third: 'Italy',
@@ -1001,7 +1016,7 @@ abstract final class RealHistory {
     (
       year: 2025,
       competition: nationsCup,
-      host: 'Germany',
+      hosts: ['Germany'],
       champion: 'Portugal',
       runnerUp: 'Spain',
       third: 'Germany',
@@ -1014,7 +1029,7 @@ abstract final class RealHistory {
     (
       year: 2006,
       competition: africanChampionship,
-      host: 'Egypt',
+      hosts: ['Egypt'],
       champion: 'Egypt',
       runnerUp: 'Ivory Coast',
       third: 'Nigeria',
@@ -1024,7 +1039,7 @@ abstract final class RealHistory {
     (
       year: 2008,
       competition: africanChampionship,
-      host: 'Ghana',
+      hosts: ['Ghana'],
       champion: 'Egypt',
       runnerUp: 'Cameroon',
       third: 'Ghana',
@@ -1034,7 +1049,7 @@ abstract final class RealHistory {
     (
       year: 2010,
       competition: africanChampionship,
-      host: 'Angola',
+      hosts: ['Angola'],
       champion: 'Egypt',
       runnerUp: 'Ghana',
       third: 'Nigeria',
@@ -1044,7 +1059,7 @@ abstract final class RealHistory {
     (
       year: 2012,
       competition: africanChampionship,
-      host: 'Gabon',
+      hosts: ['Gabon'],
       champion: 'Zambia',
       runnerUp: 'Ivory Coast',
       third: 'Mali',
@@ -1054,7 +1069,7 @@ abstract final class RealHistory {
     (
       year: 2013,
       competition: africanChampionship,
-      host: 'South Africa',
+      hosts: ['South Africa'],
       champion: 'Nigeria',
       runnerUp: 'Burkina Faso',
       third: 'Mali',
@@ -1064,7 +1079,7 @@ abstract final class RealHistory {
     (
       year: 2015,
       competition: africanChampionship,
-      host: 'Equatorial Guinea',
+      hosts: ['Equatorial Guinea'],
       champion: 'Ivory Coast',
       runnerUp: 'Ghana',
       third: 'DR Congo',
@@ -1074,7 +1089,7 @@ abstract final class RealHistory {
     (
       year: 2017,
       competition: africanChampionship,
-      host: 'Gabon',
+      hosts: ['Gabon'],
       champion: 'Cameroon',
       runnerUp: 'Egypt',
       third: 'Burkina Faso',
@@ -1084,7 +1099,7 @@ abstract final class RealHistory {
     (
       year: 2019,
       competition: africanChampionship,
-      host: 'Egypt',
+      hosts: ['Egypt'],
       champion: 'Algeria',
       runnerUp: 'Senegal',
       third: 'Nigeria',
@@ -1094,7 +1109,7 @@ abstract final class RealHistory {
     (
       year: 2021,
       competition: africanChampionship,
-      host: 'Cameroon',
+      hosts: ['Cameroon'],
       champion: 'Senegal',
       runnerUp: 'Egypt',
       third: 'Cameroon',
@@ -1104,7 +1119,7 @@ abstract final class RealHistory {
     (
       year: 2023,
       competition: africanChampionship,
-      host: 'Ivory Coast',
+      hosts: ['Ivory Coast'],
       champion: 'Ivory Coast',
       runnerUp: 'Nigeria',
       third: 'South Africa',
@@ -1114,7 +1129,7 @@ abstract final class RealHistory {
     (
       year: 2025,
       competition: africanChampionship,
-      host: 'Morocco',
+      hosts: ['Morocco'],
       champion: 'Morocco',
       runnerUp: 'Senegal',
       third: 'Egypt',
@@ -1126,7 +1141,7 @@ abstract final class RealHistory {
     (
       year: 2000,
       competition: asianChampionship,
-      host: 'Lebanon',
+      hosts: ['Lebanon'],
       champion: 'Japan',
       runnerUp: 'Saudi Arabia',
       third: 'South Korea',
@@ -1136,7 +1151,7 @@ abstract final class RealHistory {
     (
       year: 2004,
       competition: asianChampionship,
-      host: 'China PR',
+      hosts: ['China PR'],
       champion: 'Japan',
       runnerUp: 'China PR',
       third: 'Iran',
@@ -1146,7 +1161,7 @@ abstract final class RealHistory {
     (
       year: 2007,
       competition: asianChampionship,
-      host: 'Indonesia',
+      hosts: ['Indonesia'],
       champion: 'Iraq',
       runnerUp: 'Saudi Arabia',
       third: 'South Korea',
@@ -1156,7 +1171,7 @@ abstract final class RealHistory {
     (
       year: 2011,
       competition: asianChampionship,
-      host: 'Qatar',
+      hosts: ['Qatar'],
       champion: 'Japan',
       runnerUp: 'Australia',
       third: 'South Korea',
@@ -1166,7 +1181,7 @@ abstract final class RealHistory {
     (
       year: 2015,
       competition: asianChampionship,
-      host: 'Australia',
+      hosts: ['Australia'],
       champion: 'Australia',
       runnerUp: 'South Korea',
       third: 'United Arab Emirates',
@@ -1176,7 +1191,7 @@ abstract final class RealHistory {
     (
       year: 2019,
       competition: asianChampionship,
-      host: 'United Arab Emirates',
+      hosts: ['United Arab Emirates'],
       champion: 'Qatar',
       runnerUp: 'Japan',
       third: 'Iran',
@@ -1186,7 +1201,7 @@ abstract final class RealHistory {
     (
       year: 2023,
       competition: asianChampionship,
-      host: 'Qatar',
+      hosts: ['Qatar'],
       champion: 'Qatar',
       runnerUp: 'Jordan',
       third: 'Iran',
@@ -1198,7 +1213,7 @@ abstract final class RealHistory {
     (
       year: 2009,
       competition: northAmericaCup,
-      host: 'United States',
+      hosts: ['United States'],
       champion: 'Mexico',
       runnerUp: 'United States',
       third: 'Costa Rica',
@@ -1208,7 +1223,7 @@ abstract final class RealHistory {
     (
       year: 2011,
       competition: northAmericaCup,
-      host: 'United States',
+      hosts: ['United States'],
       champion: 'Mexico',
       runnerUp: 'United States',
       third: 'Honduras',
@@ -1218,7 +1233,7 @@ abstract final class RealHistory {
     (
       year: 2013,
       competition: northAmericaCup,
-      host: 'United States',
+      hosts: ['United States'],
       champion: 'United States',
       runnerUp: 'Panama',
       third: 'Honduras',
@@ -1228,7 +1243,7 @@ abstract final class RealHistory {
     (
       year: 2015,
       competition: northAmericaCup,
-      host: 'Canada',
+      hosts: ['Canada'],
       champion: 'Mexico',
       runnerUp: 'Jamaica',
       third: 'Panama',
@@ -1238,7 +1253,7 @@ abstract final class RealHistory {
     (
       year: 2017,
       competition: northAmericaCup,
-      host: 'United States',
+      hosts: ['United States'],
       champion: 'United States',
       runnerUp: 'Jamaica',
       third: 'Costa Rica',
@@ -1248,7 +1263,7 @@ abstract final class RealHistory {
     (
       year: 2019,
       competition: northAmericaCup,
-      host: 'United States',
+      hosts: ['United States'],
       champion: 'Mexico',
       runnerUp: 'United States',
       third: 'Haiti',
@@ -1258,7 +1273,7 @@ abstract final class RealHistory {
     (
       year: 2021,
       competition: northAmericaCup,
-      host: 'United States',
+      hosts: ['United States'],
       champion: 'United States',
       runnerUp: 'Mexico',
       third: 'Canada',
@@ -1268,7 +1283,7 @@ abstract final class RealHistory {
     (
       year: 2023,
       competition: northAmericaCup,
-      host: 'United States',
+      hosts: ['United States'],
       champion: 'Mexico',
       runnerUp: 'Panama',
       third: 'United States',
@@ -1280,7 +1295,7 @@ abstract final class RealHistory {
     (
       year: 2025,
       competition: northAmericaCup,
-      host: 'United States',
+      hosts: ['United States'],
       champion: 'Mexico',
       runnerUp: 'United States',
       third: 'Honduras',
@@ -1292,7 +1307,7 @@ abstract final class RealHistory {
     (
       year: 2008,
       competition: oceaniaCup,
-      host: 'Fiji',
+      hosts: ['Fiji'],
       champion: 'New Zealand',
       runnerUp: 'New Caledonia',
       third: 'Fiji',
@@ -1302,7 +1317,7 @@ abstract final class RealHistory {
     (
       year: 2012,
       competition: oceaniaCup,
-      host: 'Solomon Islands',
+      hosts: ['Solomon Islands'],
       champion: 'Tahiti',
       runnerUp: 'New Caledonia',
       third: 'New Zealand',
@@ -1312,7 +1327,7 @@ abstract final class RealHistory {
     (
       year: 2016,
       competition: oceaniaCup,
-      host: 'Papua New Guinea',
+      hosts: ['Papua New Guinea'],
       champion: 'New Zealand',
       runnerUp: 'Papua New Guinea',
       third: 'New Caledonia',
@@ -1325,7 +1340,7 @@ abstract final class RealHistory {
     (
       year: 2024,
       competition: oceaniaCup,
-      host: 'Fiji',
+      hosts: ['Fiji'],
       champion: 'New Zealand',
       runnerUp: 'Vanuatu',
       third: 'Tahiti', // beat Fiji 2-1 in the third-place match

@@ -26,9 +26,12 @@ void main() {
     final repo = DriftCompetitionRepository(db);
     final careerId = await aCareer(db);
 
+    // 2058, not 2026: the real seeded history now carries a 2026 World
+    // Championship of its own, and `aCareer` seeds it into this same
+    // database, so a synthetic edition needs a year real history never uses.
     await repo.recordHonour(
       careerId: careerId,
-      year: 2026,
+      year: 2058,
       competition: 'World Championship',
       championId: 1,
       runnerUpId: 2,
@@ -36,7 +39,7 @@ void main() {
       hostIds: const [10, 11, 12],
     );
 
-    final edition = await _edition(repo, careerId, 2026);
+    final edition = await _edition(repo, careerId, 2058);
     expect(edition.hostId, 10);
     expect(edition.hostIds, [10, 11, 12]);
   });
