@@ -822,13 +822,20 @@ class _ScorersState extends State<_Scorers> {
             ),
             child: Row(
               children: [
-                Text(
-                  l.tourCupAllTimeScorers,
-                  style: AppTypography.labelSmall.copyWith(
-                    color: AppColors.primary,
+                // The heading is the part allowed to shorten: the legend
+                // explaining the badge is no use half-printed, and Czech runs
+                // longer than English on both halves of this line.
+                Expanded(
+                  child: Text(
+                    l.tourCupAllTimeScorers,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: AppTypography.labelSmall.copyWith(
+                      color: AppColors.primary,
+                    ),
                   ),
                 ),
-                const Spacer(),
+                const SizedBox(width: AppSpacing.sm),
                 const ActiveBadge(),
                 const SizedBox(width: AppSpacing.xs),
                 Text(
