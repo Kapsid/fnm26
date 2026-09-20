@@ -12,6 +12,8 @@ import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
 import 'package:fnm/domain/services/competition/group_advancement.dart';
 import 'package:fnm/domain/services/competition/nations_cup.dart';
+import 'package:fnm/features/career/career_providers.dart';
+import 'package:fnm/features/federation/federation_providers.dart';
 import 'package:fnm/features/tournaments/nations_cup_draw_providers.dart';
 import 'package:fnm/features/tournaments/tournament_history.dart';
 import 'package:fnm/l10n/app_localizations.dart';
@@ -100,9 +102,22 @@ _nationsCupProvider = FutureProvider.autoDispose.family<_NcView?, int>((
     limit: 15,
   );
   final playerRepo = ref.watch(playerRepositoryProvider);
+  // A generated player is reconstructed from his id rather than read from a
+  // row, and the reconstruction only reaches an intake year that has already
+  // happened — so the lookup has to say which year of the save it is asking
+  // about, or every newgen scorer comes back null and prints as "Unknown".
+  final aging = CareerService.agingYears(career);
+  final youth = await ref.watch(youthBonusByCycleProvider(careerId).future);
+  final careerDev = await ref.watch(careerDevBonusProvider(careerId).future);
   final playerNames = <int, String>{};
   for (final id in {for (final s in scorers) s.playerId}) {
-    final p = await playerRepo.byId(id, saveSeed: career.rngSeed);
+    final p = await playerRepo.byId(
+      id,
+      agingYears: aging,
+      saveSeed: career.rngSeed,
+      youthBonusByCycle: youth,
+      careerStartsByPlayer: careerDev,
+    );
     if (p != null) playerNames[id] = p.name;
   }
 

@@ -856,10 +856,15 @@ extension SeasonCycle on SeasonService {
     String? bootName;
     int? bootGoals;
     if (boot.isNotEmpty) {
+      // As of THIS year of the save: a generated player is reconstructed from
+      // his id, and an intake that has not happened yet cannot be reached —
+      // so without the year the golden boot of every future edition would be
+      // stored nameless. The continental honours already pass it.
       final p = await _ref
           .read(playerRepositoryProvider)
           .byId(
             boot.first.playerId,
+            agingYears: _simYears,
             saveSeed: _simSeed,
           );
       bootName = p?.name;

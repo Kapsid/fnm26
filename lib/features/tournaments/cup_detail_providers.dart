@@ -208,13 +208,29 @@ cupDetailProvider = FutureProvider.autoDispose.family<CupData?, int>((
   };
 
   final playerRepo = ref.watch(playerRepositoryProvider);
+  // How far into the save we are, and the two development inputs. A generated
+  // player is not a row in the database: he is reconstructed from his id, and
+  // the reconstruction can only reach an intake year that has already
+  // happened. Ask for him as of year zero and every newgen who came through
+  // after the save opened is outside the window, so the lookup returns null
+  // and the list prints "Unknown" — which, several cycles in, is most of the
+  // scorers.
+  final aging = CareerService.agingYears(career);
+  final youth = await ref.watch(youthBonusByCycleProvider(careerId).future);
+  final careerDev = await ref.watch(careerDevBonusProvider(careerId).future);
   final scorerIds = {
     for (final s in scorersQualifying) s.playerId,
     for (final s in scorersFinals) s.playerId,
   };
   final playerNames = <int, String>{};
   for (final id in scorerIds) {
-    final p = await playerRepo.byId(id, saveSeed: career.rngSeed);
+    final p = await playerRepo.byId(
+      id,
+      agingYears: aging,
+      saveSeed: career.rngSeed,
+      youthBonusByCycle: youth,
+      careerStartsByPlayer: careerDev,
+    );
     if (p != null) playerNames[id] = p.name;
   }
 
@@ -400,9 +416,6 @@ cupDetailProvider = FutureProvider.autoDispose.family<CupData?, int>((
     kind: CompetitionKind.worldCupFinals,
     limit: 30,
   );
-  final aging = CareerService.agingYears(career);
-  final youth = await ref.watch(youthBonusByCycleProvider(careerId).future);
-  final careerDev = await ref.watch(careerDevBonusProvider(careerId).future);
   final allTimeScorers = <AllTimeScorer>[];
   for (final s in allTimeTally) {
     final p = await playerRepo.byId(
