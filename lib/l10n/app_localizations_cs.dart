@@ -4336,6 +4336,14 @@ class AppLocalizationsCs extends AppLocalizations {
   }
 
   @override
+  String get tourHolders => 'OBHÁJCE';
+
+  @override
+  String tourHoldersSince(int year) {
+    return 'od $year';
+  }
+
+  @override
   String get tourSharedAllTimeScorers => 'NEJLEPŠÍ STŘELCI HISTORIE';
 
   @override

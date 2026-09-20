@@ -9,6 +9,7 @@ import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
 import 'package:fnm/domain/services/competition/finals.dart';
 import 'package:fnm/domain/services/competition/hosts.dart';
+import 'package:fnm/domain/services/competition/tournament_holders.dart';
 import 'package:fnm/domain/services/competition/tournament_identity.dart';
 import 'package:fnm/domain/services/competition/tournament_stars.dart';
 import 'package:fnm/domain/services/player/player_lifecycle.dart';
@@ -36,6 +37,7 @@ class CupData {
     required this.scorersFinals,
     required this.honours,
     required this.playerNames,
+    this.holders,
     this.hostIds = const [],
     this.teamOfTournament = const [],
     this.hostCities = const {},
@@ -122,6 +124,11 @@ class CupData {
   /// Roll of honour (past champions), newest first.
   final List<Honour> honours;
 
+  /// The nation that held the World Championship coming into this edition —
+  /// null before there has ever been one (a save's very first cycle, on a
+  /// competition with no prior history).
+  final ({int nationId, int year})? holders;
+
   /// Names for any player id referenced by the scorer charts.
   final Map<int, String> playerNames;
 
@@ -191,12 +198,21 @@ cupDetailProvider = FutureProvider.autoDispose.family<CupData?, int>((
   // The competition's full roll of honour — all past winners, including the
   // pre-seeded real-world history (career summary is the career-only view).
   final honours = await comp.honours(careerId);
+  final wcYear = CareerService.worldCupYear(career.cyclePointer);
+  // Who held the trophy walking into THIS edition — the newest honour older
+  // than it, never the edition itself even once its own final has been
+  // recorded (see `TournamentHolders`).
+  final holders = TournamentHolders.forEdition(
+    honours: honours,
+    competition: 'World Championship',
+    beforeYear: wcYear,
+  );
   final nations = {
     for (final n in await ref.watch(nationRepositoryProvider).all()) n.id: n,
   };
 
   final hostIds = WorldCupHosts.hostsFor(
-    year: CareerService.worldCupYear(career.cyclePointer),
+    year: wcYear,
     nations: nations.values.toList(),
     seed: career.rngSeed,
   );
@@ -484,6 +500,7 @@ cupDetailProvider = FutureProvider.autoDispose.family<CupData?, int>((
     groupFixtures: groupFixtures,
     champion: champion,
     hostId: hostId,
+    holders: holders,
     // The host and its stadiums surface once the host-selection ceremony is
     // watched — before that the summary shows its "appear once drawn"
     // placeholder instead.

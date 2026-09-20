@@ -4301,6 +4301,14 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get tourHolders => 'HOLDERS';
+
+  @override
+  String tourHoldersSince(int year) {
+    return 'won in $year';
+  }
+
+  @override
   String get tourSharedAllTimeScorers => 'ALL-TIME SCORERS';
 
   @override

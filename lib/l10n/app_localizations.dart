@@ -6894,6 +6894,18 @@ abstract class AppLocalizations {
   /// **'v {opponent} · {year}'**
   String tourSharedFinalWinDetail(String opponent, int year);
 
+  /// Tournament detail: label on the strip naming the nation that holds the trophy coming into this edition.
+  ///
+  /// In en, this message translates to:
+  /// **'HOLDERS'**
+  String get tourHolders;
+
+  /// Tournament detail: the year the holders won the trophy, shown beside their name.
+  ///
+  /// In en, this message translates to:
+  /// **'won in {year}'**
+  String tourHoldersSince(int year);
+
   /// Heading over the all-time scorer chart on the stats tab.
   ///
   /// In en, this message translates to:

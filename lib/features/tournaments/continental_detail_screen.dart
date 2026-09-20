@@ -18,6 +18,7 @@ import 'package:fnm/features/tournaments/continental_detail_providers.dart';
 import 'package:fnm/features/tournaments/tournament_bracket.dart';
 import 'package:fnm/features/tournaments/tournament_awards.dart';
 import 'package:fnm/features/tournaments/tournament_history.dart';
+import 'package:fnm/features/tournaments/tournament_holders_row.dart';
 import 'package:fnm/features/tournaments/tournament_stats.dart';
 import 'package:fnm/features/tournaments/tournament_summary.dart';
 import 'package:fnm/l10n/app_localizations.dart';
@@ -179,7 +180,7 @@ class ContinentalDetailScreen extends ConsumerWidget {
               );
             }
 
-            return TabBarView(
+            final tabs = TabBarView(
               children: [
                 TournamentSummaryTab(
                   hostIds: data.hostIds,
@@ -285,6 +286,19 @@ class ContinentalDetailScreen extends ConsumerWidget {
                   code: code,
                   name: name,
                 ),
+              ],
+            );
+
+            return Column(
+              children: [
+                // Who walks into this edition holding the trophy — the last
+                // nation to win it, not the champion of the edition on screen.
+                TournamentHoldersRow(
+                  holders: data.holders,
+                  code: code,
+                  name: name,
+                ),
+                Expanded(child: tabs),
               ],
             );
           },

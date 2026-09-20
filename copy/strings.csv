@@ -1129,6 +1129,8 @@ tourStatsTabGames,Leaderboard tab: most matches played.,,Games,Zápasy
 tourStatsTabCups,Leaderboard tab: most cup editions played.,,Cups,Turnaje
 tourStatsTabScorers,Leaderboard tab: top goalscorers.,,Scorers,Střelci
 tourSharedFinalWinDetail,Detail line under the biggest-final-win record: opponent and year.,{opponent} {year},v {opponent} · {year},s {opponent} · {year}
+tourHolders,Tournament detail: label on the strip naming the nation that holds the trophy coming into this edition.,,HOLDERS,OBHÁJCE
+tourHoldersSince,"Tournament detail: the year the holders won the trophy, shown beside their name.",{year},won in {year},od {year}
 tourSharedAllTimeScorers,Heading over the all-time scorer chart on the stats tab.,,ALL-TIME SCORERS,NEJLEPŠÍ STŘELCI HISTORIE
 tourSharedSummaryEmpty,Empty state on the summary tab before the edition is drawn.,,The host and its stadiums appear once this edition is drawn.,Pořadatel a jeho stadiony se objeví po vylosování ročníku.
 tourSharedHostHeading,Heading over a single host nation.,,HOST,POŘADATEL

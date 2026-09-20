@@ -6394,6 +6394,20 @@
       }
     }
   },
+  "tourHolders": "HOLDERS",
+  "@tourHolders": {
+    "description": "Tournament detail: label on the strip naming the nation that holds the trophy coming into this edition."
+  },
+  "tourHoldersSince": "won in {year}",
+  "@tourHoldersSince": {
+    "description": "Tournament detail: the year the holders won the trophy, shown beside their name.",
+    "placeholders": {
+      "year": {
+        "type": "int",
+        "example": "2026"
+      }
+    }
+  },
   "tourSharedAllTimeScorers": "ALL-TIME SCORERS",
   "@tourSharedAllTimeScorers": {
     "description": "Heading over the all-time scorer chart on the stats tab."

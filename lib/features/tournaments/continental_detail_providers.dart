@@ -11,6 +11,7 @@ import 'package:fnm/domain/services/competition/tournament_stars.dart';
 import 'package:fnm/domain/services/competition/hosts.dart';
 import 'package:fnm/domain/services/competition/qualification.dart';
 import 'package:fnm/domain/services/competition/schedule_generator.dart';
+import 'package:fnm/domain/services/competition/tournament_holders.dart';
 import 'package:fnm/domain/services/competition/tournament_identity.dart';
 import 'package:fnm/domain/services/player/player_lifecycle.dart';
 import 'package:fnm/features/career/career_providers.dart';
@@ -43,6 +44,7 @@ class ContinentalData {
     required this.nations,
     required this.playerNationId,
     required this.playerNames,
+    this.holders,
     this.allTimeScorers = const [],
     this.hostIds = const [],
     this.hostCities = const {},
@@ -107,6 +109,10 @@ class ContinentalData {
 
   /// Past editions of this championship, newest first.
   final List<Honour> honours;
+
+  /// The nation that held this championship coming into the edition on screen
+  /// — null before it has ever been won (a continent with no history yet).
+  final ({int nationId, int year})? holders;
   final Map<int, Nation> nations;
   final int playerNationId;
   final Map<int, String> playerNames;
@@ -455,6 +461,16 @@ continentalDetailProvider = FutureProvider.autoDispose.family<ContinentalData?, 
   final allHonours = await comp.honours(key.careerId);
   final honours = allHonours.where((h) => h.competition == config.name).toList()
     ..sort((a, b) => b.year.compareTo(a.year));
+  // A continental edition is staged two years before the World Championship
+  // that closes the cycle. Who held the trophy walking into THIS edition is
+  // the newest honour older than it — never the edition itself, even once its
+  // own final has been recorded (see `TournamentHolders`).
+  final editionYear = CareerService.worldCupYear(career.cyclePointer) - 2;
+  final holders = TournamentHolders.forEdition(
+    honours: honours,
+    competition: config.name,
+    beforeYear: editionYear,
+  );
 
   final playerRepo = ref.watch(playerRepositoryProvider);
   final aging = CareerService.agingYears(career);
@@ -721,6 +737,7 @@ continentalDetailProvider = FutureProvider.autoDispose.family<ContinentalData?, 
     scorers: scorers,
     allTimeScorers: allTimeScorers,
     honours: honours,
+    holders: holders,
     topGames: topGames,
     topCups: topCups,
     myNationIds: {
@@ -738,7 +755,7 @@ continentalDetailProvider = FutureProvider.autoDispose.family<ContinentalData?, 
         ? null
         : TournamentBranding.forEdition(
             hostName: nations[hostIds.first]?.name ?? 'Host',
-            year: CareerService.worldCupYear(career.cyclePointer) - 2,
+            year: editionYear,
             seed: career.rngSeed,
           ),
     teamOfTournament: teamOfTournament,
