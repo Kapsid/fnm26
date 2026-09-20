@@ -4719,9 +4719,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get tourCupWorldChampionsTitle => 'World Champions';
 
   @override
-  String get tourCupActive => 'ACTIVE';
-
-  @override
   String get tourCupStillActive => 'Still active';
 
   @override

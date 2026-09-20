@@ -94,7 +94,7 @@ recordsMostAssists,Leaderboard heading.,,MOST ASSISTS,NEJVÍCE ASISTENCÍ
 recordsYourRecord,Heading over the manager's head-to-head ledger.,,YOUR RECORD,VAŠE BILANCE
 recordsHome,Label over the home nation slot in head-to-head.,,HOME,DOMA
 recordsAway,Label over the away nation slot in head-to-head.,,AWAY,VENKU
-recordsActive,Badge on a still-active player.,,ACTIVE,AKTIVNÍ
+recordsActive,Badge every all-time chart puts on a player who is still playing.,,ACTIVE,AKTIVNÍ
 recordsStillActive,Legend text next to the active marker dot.,,Still active,Stále aktivní
 recordsAvg,Tiny label under a legend's average rating.,,avg,prům.
 recordsSelect,Placeholder in an empty nation slot.,,Select,Vybrat
@@ -1250,7 +1250,6 @@ tourCupLoadError,World Championship detail: tourCupLoadError,{error},Could not l
 tourCupUnknown,World Championship detail: tourCupUnknown,,Unknown,Neznámý
 tourCupWorldChampions,World Championship detail: tourCupWorldChampions,,WORLD CHAMPIONS,MISTŘI SVĚTA
 tourCupWorldChampionsTitle,World Championship detail: tourCupWorldChampionsTitle,,World Champions,Mistři světa
-tourCupActive,World Championship detail: tourCupActive,,ACTIVE,AKTIVNÍ
 tourCupStillActive,World Championship detail: tourCupStillActive,,Still active,Stále aktivní
 tourCupAllTimeScorers,World Championship detail: tourCupAllTimeScorers,,ALL-TIME SCORERS,NEJLEPŠÍ STŘELCI HISTORIE
 tourCupAllConfederations,World Championship detail: tourCupAllConfederations,,All confederations,Všechny konfederace

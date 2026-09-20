@@ -170,8 +170,10 @@ class _TournamentScorersState extends State<TournamentScorers> {
                 style: AppTypography.bodyMedium,
               ),
             ),
+            // The one mark every all-time chart uses for a man still playing
+            // (and the edition chart never needs, since everyone on it is).
             if (active) ...[
-              const TacticalChip('ACTIVE', emphasized: true),
+              const ActiveBadge(),
               const SizedBox(width: AppSpacing.sm),
             ],
             Text(

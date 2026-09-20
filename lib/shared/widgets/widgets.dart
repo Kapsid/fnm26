@@ -4,6 +4,7 @@
 /// component in one line.
 library;
 
+export 'active_badge.dart';
 export 'app_bottom_nav.dart';
 export 'app_card.dart';
 export 'app_crash_box.dart';

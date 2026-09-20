@@ -829,14 +829,7 @@ class _ScorersState extends State<_Scorers> {
                   ),
                 ),
                 const Spacer(),
-                Container(
-                  width: 8,
-                  height: 8,
-                  decoration: const BoxDecoration(
-                    color: AppColors.positive,
-                    shape: BoxShape.circle,
-                  ),
-                ),
+                const ActiveBadge(),
                 const SizedBox(width: AppSpacing.xs),
                 Text(
                   l.tourCupStillActive,
@@ -898,7 +891,7 @@ class _ScorersState extends State<_Scorers> {
                               ),
                               if (s.active) ...[
                                 const SizedBox(width: AppSpacing.sm),
-                                TacticalChip(l.tourCupActive, emphasized: true),
+                                const ActiveBadge(),
                               ],
                             ],
                           ),

@@ -668,7 +668,7 @@ abstract class AppLocalizations {
   /// **'AWAY'**
   String get recordsAway;
 
-  /// Badge on a still-active player.
+  /// Badge every all-time chart puts on a player who is still playing.
   ///
   /// In en, this message translates to:
   /// **'ACTIVE'**
@@ -7619,12 +7619,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'World Champions'**
   String get tourCupWorldChampionsTitle;
-
-  /// World Championship detail: tourCupActive
-  ///
-  /// In en, this message translates to:
-  /// **'ACTIVE'**
-  String get tourCupActive;
 
   /// World Championship detail: tourCupStillActive
   ///

@@ -4757,9 +4757,6 @@ class AppLocalizationsCs extends AppLocalizations {
   String get tourCupWorldChampionsTitle => 'Mistři světa';
 
   @override
-  String get tourCupActive => 'AKTIVNÍ';
-
-  @override
   String get tourCupStillActive => 'Stále aktivní';
 
   @override

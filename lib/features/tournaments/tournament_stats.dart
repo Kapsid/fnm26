@@ -145,8 +145,11 @@ class TournamentStatsTab extends StatelessWidget {
   }
 }
 
-/// One row of a leaderboard: a nation (for the flag), a holder name and a count.
-typedef _LbRow = ({int nationId, String name, int count});
+/// One row of a leaderboard: a nation (for the flag), a holder name, a count,
+/// and whether the holder is still playing — an all-time chart otherwise reads
+/// the same whether a man retired last cycle or is in this week's squad. Only
+/// the scorers board knows that today; the others say false.
+typedef _LbRow = ({int nationId, String name, int count, bool active});
 
 /// The all-time player leaderboard: a segmented switch between Games, Cups and
 /// Scorers, each a top-ten table. The Cups board is offered only from the
@@ -184,7 +187,12 @@ class _LeaderboardState extends State<_Leaderboard> {
           label: l.tourStatsTabGames,
           rows: [
             for (final r in widget.topGames)
-              (nationId: r.nationId, name: r.name, count: r.count),
+              (
+                nationId: r.nationId,
+                name: r.name,
+                count: r.count,
+                active: false,
+              ),
           ],
         ),
       // "Cups played" is meaningless in edition one (everyone's on one), so it
@@ -194,7 +202,12 @@ class _LeaderboardState extends State<_Leaderboard> {
           label: l.tourStatsTabCups,
           rows: [
             for (final r in widget.topCups)
-              (nationId: r.nationId, name: r.name, count: r.count),
+              (
+                nationId: r.nationId,
+                name: r.name,
+                count: r.count,
+                active: false,
+              ),
           ],
         ),
       if (widget.scorers.isNotEmpty)
@@ -202,7 +215,12 @@ class _LeaderboardState extends State<_Leaderboard> {
           label: l.tourStatsTabScorers,
           rows: [
             for (final s in widget.scorers.take(10))
-              (nationId: s.nationId, name: s.name, count: s.goals),
+              (
+                nationId: s.nationId,
+                name: s.name,
+                count: s.goals,
+                active: s.active,
+              ),
           ],
         ),
     ];
@@ -242,6 +260,8 @@ class _LeaderboardState extends State<_Leaderboard> {
                   name: rows[i].name,
                   flagCode: widget.code(rows[i].nationId),
                   value: '${rows[i].count}',
+                  // Still playing: the same badge every all-time list uses.
+                  trailing: rows[i].active ? const ActiveBadge() : null,
                   // A player of one of the manager's nations, now or in the
                   // past, so his own records stand out of a world chart.
                   highlighted: widget.highlightNations.contains(

@@ -412,6 +412,12 @@ class _TopScorersCard extends StatelessWidget {
                     style: AppTypography.bodyLarge,
                   ),
                 ),
+                // Which of these men you could still pick: the same badge the
+                // world records board and the tournament charts use.
+                if (v.topScorers[i].active) ...[
+                  const ActiveBadge(),
+                  const SizedBox(width: AppSpacing.sm),
+                ],
                 Text(
                   '${v.topScorers[i].goals}',
                   style: AppTypography.titleMedium.copyWith(

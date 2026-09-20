@@ -210,7 +210,7 @@ class _Board extends StatelessWidget {
                     subtitle: leaders[i].nationName,
                     flagCode: leaders[i].nationCode,
                     value: '${leaders[i].value} $unit',
-                    trailing: leaders[i].active ? const _ActiveDot() : null,
+                    trailing: leaders[i].active ? const ActiveBadge() : null,
                     onTap: () => context.push(
                       '${Routes.player}?careerId=$careerId'
                       '&playerId=${leaders[i].playerId}',
@@ -220,30 +220,6 @@ class _Board extends StatelessWidget {
             ),
           ),
       ],
-    );
-  }
-}
-
-class _ActiveDot extends StatelessWidget {
-  const _ActiveDot();
-
-  @override
-  Widget build(BuildContext context) {
-    final l = AppLocalizations.of(context);
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-      decoration: BoxDecoration(
-        color: AppColors.positive.withValues(alpha: 0.15),
-        borderRadius: AppRadii.smAll,
-      ),
-      child: Text(
-        l.recordsActive,
-        style: AppTypography.labelSmall.copyWith(
-          color: AppColors.positive,
-          fontSize: 9,
-          fontWeight: FontWeight.w700,
-        ),
-      ),
     );
   }
 }

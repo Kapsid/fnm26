@@ -2,7 +2,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/services/competition/continental_cups.dart';
+import 'package:fnm/domain/services/player/player_lifecycle.dart';
 import 'package:fnm/features/career/career_providers.dart';
+import 'package:fnm/features/federation/federation_providers.dart';
 import 'package:fnm/features/ranking/world_ranking_providers.dart';
 
 /// Which nation's vitrine to show, within a given save.
@@ -42,9 +44,19 @@ class TitleWon {
 
 /// A nation's all-time top scorer entry.
 class ScorerRecord {
-  const ScorerRecord({required this.name, required this.goals});
+  const ScorerRecord({
+    required this.name,
+    required this.goals,
+    required this.active,
+  });
   final String name;
   final int goals;
+
+  /// Whether he is still playing — the same rule the pool itself retires on
+  /// ([PlayerLifecycle.hasRetiredAt]), not a flat age cut-off. An all-time
+  /// chart is half legends and half men you could pick on Saturday, and
+  /// without this the two read the same.
+  final bool active;
 }
 
 /// One point on the world-ranking history line: the world position the nation
@@ -197,14 +209,34 @@ nationVitrineProvider = FutureProvider.autoDispose
         limit: 8,
       );
       final playerRepo = ref.watch(playerRepositoryProvider);
+      final aging = CareerService.agingYears(career);
+      // The same two development inputs every other by-id resolver passes, so
+      // a generated player comes back here exactly as he does on the world
+      // records board rather than as "Unknown".
+      final youth = await ref.watch(
+        youthBonusByCycleProvider(arg.careerId).future,
+      );
+      final careerDev = await ref.watch(
+        careerDevBonusProvider(arg.careerId).future,
+      );
       final scorers = <ScorerRecord>[];
       for (final t in tallies) {
         final p = await playerRepo.byId(
           t.playerId,
-          agingYears: CareerService.agingYears(career),
+          agingYears: aging,
           saveSeed: career.rngSeed,
+          youthBonusByCycle: youth,
+          careerStartsByPlayer: careerDev,
         );
-        scorers.add(ScorerRecord(name: p?.name ?? 'Unknown', goals: t.goals));
+        scorers.add(
+          ScorerRecord(
+            name: p?.name ?? 'Unknown',
+            goals: t.goals,
+            // A missing player (shouldn't happen) reads as retired.
+            active:
+                p != null && !PlayerLifecycle.hasRetiredAt(p.id, p.age, aging),
+          ),
+        );
       }
 
       // World-ranking history: the frozen snapshot entering each past cycle,

@@ -435,7 +435,7 @@
   },
   "recordsActive": "ACTIVE",
   "@recordsActive": {
-    "description": "Badge on a still-active player."
+    "description": "Badge every all-time chart puts on a player who is still playing."
   },
   "recordsStillActive": "Still active",
   "@recordsStillActive": {
@@ -6986,10 +6986,6 @@
   "tourCupWorldChampionsTitle": "World Champions",
   "@tourCupWorldChampionsTitle": {
     "description": "World Championship detail: tourCupWorldChampionsTitle"
-  },
-  "tourCupActive": "ACTIVE",
-  "@tourCupActive": {
-    "description": "World Championship detail: tourCupActive"
   },
   "tourCupStillActive": "Still active",
   "@tourCupStillActive": {
