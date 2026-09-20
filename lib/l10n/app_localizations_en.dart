@@ -476,6 +476,14 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String tacticsMissesOfCamp(int missed, int total) {
+    return 'Misses $missed/$total';
+  }
+
+  @override
+  String get tacticsOutForWholeCamp => 'Out for this whole call-up';
+
+  @override
   String get rankingCentreOnMe => 'Centre on my nation';
 
   @override

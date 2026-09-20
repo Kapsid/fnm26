@@ -137,6 +137,8 @@ recordsRivalLine,"Fiercest-rival summary line combining meetings, W-D-L record a
 recordsNeverMet,Shown when two nations have no meetings in the save.,{a} {b},{a} and {b} have never met in this save.,{a} a {b} se v této hře nikdy nepotkali.
 tacticsSentOffNote,"In-match tactics: names the player(s) sent off, who cannot be substituted.",{names},"{names} sent off. No replacement, so you play a man down.","{names} vyloučen. Bez náhrady, hrajete v oslabení."
 tacticsNeedFitPlayers,Call-up screen: the squad is the right size but too few of its players are fit to field an XI.,{required} {have},Need {required} available ({have} fit),Potřeba {required} k dispozici ({have} fit)
+tacticsMissesOfCamp,"Call-up row: how many of THIS squad's matches the player sits out, out of the matches it covers.",{missed} {total},Misses {missed}/{total},Chybí {missed}/{total}
+tacticsOutForWholeCamp,"Call-up screen: shown when a player is tapped who cannot play in any of the matches this squad covers, so he may not be named.",,Out for this whole call-up,Chybí v celé této nominaci
 rankingCentreOnMe,World ranking action: scroll back to the manager's own nation.,,Centre on my nation,Vycentrovat na můj tým
 recordsAfterExtraTime,Marks a meeting that was decided in extra time.,,a.e.t.,po prodl.
 recordsOnPenalties,"Marks a meeting decided by a penalty shootout, with the shootout score from the viewing nation's point of view.",{a} {b},{a}–{b} pens,{a}–{b} na pen.

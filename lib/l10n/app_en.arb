@@ -719,6 +719,24 @@
       }
     }
   },
+  "tacticsMissesOfCamp": "Misses {missed}/{total}",
+  "@tacticsMissesOfCamp": {
+    "description": "Call-up row: how many of THIS squad's matches the player sits out, out of the matches it covers.",
+    "placeholders": {
+      "missed": {
+        "type": "int",
+        "example": "1"
+      },
+      "total": {
+        "type": "int",
+        "example": "3"
+      }
+    }
+  },
+  "tacticsOutForWholeCamp": "Out for this whole call-up",
+  "@tacticsOutForWholeCamp": {
+    "description": "Call-up screen: shown when a player is tapped who cannot play in any of the matches this squad covers, so he may not be named."
+  },
   "rankingCentreOnMe": "Centre on my nation",
   "@rankingCentreOnMe": {
     "description": "World ranking action: scroll back to the manager's own nation."

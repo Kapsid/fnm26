@@ -138,6 +138,8 @@
   "recordsNeverMet": "{a} a {b} se v této hře nikdy nepotkali.",
   "tacticsSentOffNote": "{names} vyloučen. Bez náhrady, hrajete v oslabení.",
   "tacticsNeedFitPlayers": "Potřeba {required} k dispozici ({have} fit)",
+  "tacticsMissesOfCamp": "Chybí {missed}/{total}",
+  "tacticsOutForWholeCamp": "Chybí v celé této nominaci",
   "rankingCentreOnMe": "Vycentrovat na můj tým",
   "recordsAfterExtraTime": "po prodl.",
   "recordsOnPenalties": "{a}–{b} na pen.",

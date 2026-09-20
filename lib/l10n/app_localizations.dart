@@ -926,6 +926,18 @@ abstract class AppLocalizations {
   /// **'Need {required} available ({have} fit)'**
   String tacticsNeedFitPlayers(int required, int have);
 
+  /// Call-up row: how many of THIS squad's matches the player sits out, out of the matches it covers.
+  ///
+  /// In en, this message translates to:
+  /// **'Misses {missed}/{total}'**
+  String tacticsMissesOfCamp(int missed, int total);
+
+  /// Call-up screen: shown when a player is tapped who cannot play in any of the matches this squad covers, so he may not be named.
+  ///
+  /// In en, this message translates to:
+  /// **'Out for this whole call-up'**
+  String get tacticsOutForWholeCamp;
+
   /// World ranking action: scroll back to the manager's own nation.
   ///
   /// In en, this message translates to:

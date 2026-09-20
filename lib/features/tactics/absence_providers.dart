@@ -37,8 +37,15 @@ absenceOutlookProvider = FutureProvider.autoDispose
 
 /// The compact badge text for an absence — "Injured · 3 weeks", falling back to
 /// a game count when the calendar has nothing scheduled that far ahead.
+///
+/// A SUSPENSION is always stated in matches. A ban is served in games, not in
+/// time: it does not tick down while the player sits at home, so "suspended for
+/// three weeks" is both untrue and unactionable. Only a knock, which heals on a
+/// calendar, is worth putting in weeks.
 String absenceLabel(AppLocalizations l, AbsenceOutlook o) {
   final what = o.injured ? l.absenceInjured : l.absenceSuspended;
-  final how = o.weeks > 0 ? l.absenceWeeks(o.weeks) : l.absenceGames(o.matches);
+  final how = o.injured && o.weeks > 0
+      ? l.absenceWeeks(o.weeks)
+      : l.absenceGames(o.matches);
   return '$what · $how';
 }

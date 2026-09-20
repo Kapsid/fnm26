@@ -226,9 +226,18 @@ class _CallUpScreenState extends ConsumerState<CallUpScreen> {
           final selected = _selected ??= _initialSquad(data.pool, data.callUps);
           final count = selected.length;
           // Banned/injured players may be named, but a squad still has to be
-          // able to put eleven fit players on the pitch.
+          // able to put eleven players on the pitch.
+          //
+          // "Fit" is asked of the PERIOD, not of the next kick-off: a man
+          // serving one game of a three-match camp plays the other two, so he
+          // counts toward the squad being fieldable. Asking `isAvailable`
+          // instead asked "can he play the very next game", which is the
+          // question the XI picker asks, not the one a call-up list answers.
           final fit = selected
-              .where((id) => data.absences[id]?.isAvailable ?? true)
+              .where(
+                (id) =>
+                    SquadSelection.usableInPeriod(data.absences[id], coverage),
+              )
               .length;
           final ok =
               count >= kMinSquadSize &&
@@ -428,6 +437,7 @@ class _CallUpScreenState extends ConsumerState<CallUpScreen> {
                                         data.absences,
                                         outlooks,
                                         condition,
+                                        coverage: coverage,
                                         locked: locked,
                                         saveSeed: saveSeed,
                                       ),
@@ -480,6 +490,7 @@ class _CallUpScreenState extends ConsumerState<CallUpScreen> {
     Map<int, PlayerAbsence> absences,
     Map<int, AbsenceOutlook> outlooks,
     Map<int, PlayerCondition> condition, {
+    required int coverage,
     bool locked = false,
     int saveSeed = 0,
   }) {
@@ -512,6 +523,7 @@ class _CallUpScreenState extends ConsumerState<CallUpScreen> {
                 absence: absences[p.id],
                 outlook: outlooks[p.id],
                 condition: condition[p.id],
+                coverage: coverage,
                 saveSeed: saveSeed,
                 // A banned or injured player CAN be named in the squad — real
                 // managers call up someone serving a one-game ban or returning
@@ -519,9 +531,27 @@ class _CallUpScreenState extends ConsumerState<CallUpScreen> {
                 // The badge says why, the XI picker keeps them out, and the
                 // engine still refuses to play them; nomination itself is the
                 // manager's call, not the game's.
+                //
+                // The one man who cannot be named is the one who misses EVERY
+                // match this squad covers: naming him is a wasted place, since
+                // he will not kick a ball before the squad is picked again.
                 onChanged: locked
                     ? null
                     : (on) {
+                        if (on &&
+                            !SquadSelection.usableInPeriod(
+                              absences[p.id],
+                              coverage,
+                            )) {
+                          ScaffoldMessenger.of(context)
+                            ..hideCurrentSnackBar()
+                            ..showSnackBar(
+                              SnackBar(
+                                content: Text(l.tacticsOutForWholeCamp),
+                              ),
+                            );
+                          return;
+                        }
                         if (on && selected.length >= kMaxSquadSize) {
                           ScaffoldMessenger.of(context)
                             ..hideCurrentSnackBar()
@@ -760,6 +790,7 @@ class _PlayerToggle extends StatelessWidget {
     this.absence,
     this.outlook,
     this.condition,
+    this.coverage = 1,
   });
 
   final Player player;
@@ -775,6 +806,10 @@ class _PlayerToggle extends StatelessWidget {
   final AbsenceOutlook? outlook;
   final PlayerCondition? condition;
 
+  /// How many matches the squad being picked has to cover, so the row can say
+  /// how many of THEM this player sits out rather than only that he is out.
+  final int coverage;
+
   /// The save seed, so the derived traits match the rest of the save.
   final int saveSeed;
 
@@ -784,6 +819,11 @@ class _PlayerToggle extends StatelessWidget {
     final out = outlook;
     final reason = out != null ? absenceLabel(l, out) : absence?.reason;
     final isInjury = (absence?.injuryMatches ?? 0) > 0;
+    // What this absence costs THIS squad. A three-game ban is a different
+    // proposition for a one-match friendly window than for a four-match
+    // qualifying camp, and the bare ban length never said which.
+    final missed = SquadSelection.matchesMissed(absence);
+    final missedHere = missed > coverage ? coverage : missed;
     final change = onChanged;
     return ListTile(
       dense: true,
@@ -856,6 +896,16 @@ class _PlayerToggle extends StatelessWidget {
             ),
           ),
           if (reason != null) _AbsenceBadge(reason: reason, isInjury: isInjury),
+          // How much of THIS camp he actually misses. Only worth saying when
+          // the camp is more than one match, because otherwise the badge above
+          // has already said it.
+          if (missedHere > 0 && coverage > 1)
+            Text(
+              l.tacticsMissesOfCamp(missedHere, coverage),
+              style: AppTypography.labelSmall.copyWith(
+                color: AppColors.onSurfaceVariant,
+              ),
+            ),
 
           // Club standing is NOT on this row. It appeared on some rows and
           // not others (only men with recent minutes have a condition at all),
@@ -982,9 +1032,15 @@ class _AbsenceBadge extends StatelessWidget {
             color: color,
           ),
           const SizedBox(width: 3),
-          Text(
-            reason,
-            style: AppTypography.labelSmall.copyWith(color: color),
+          // Flexible, because Czech runs longer than English everywhere and a
+          // badge is not allowed to be the thing that overflows a phone row.
+          Flexible(
+            child: Text(
+              reason,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: AppTypography.labelSmall.copyWith(color: color),
+            ),
           ),
         ],
       ),

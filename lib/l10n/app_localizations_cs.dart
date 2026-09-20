@@ -476,6 +476,14 @@ class AppLocalizationsCs extends AppLocalizations {
   }
 
   @override
+  String tacticsMissesOfCamp(int missed, int total) {
+    return 'Chybí $missed/$total';
+  }
+
+  @override
+  String get tacticsOutForWholeCamp => 'Chybí v celé této nominaci';
+
+  @override
   String get rankingCentreOnMe => 'Vycentrovat na můj tým';
 
   @override

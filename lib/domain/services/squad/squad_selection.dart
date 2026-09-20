@@ -23,12 +23,19 @@ abstract final class SquadSelection {
   /// call-up list works. Only someone missing EVERY match in the period is left
   /// out, which is what the auto-picks used to do to anyone carrying so much as
   /// a single-game absence.
-  static bool usableInPeriod(PlayerAbsence? absence, int coverage) {
-    if (absence == null || absence.isAvailable) return true;
-    final out = absence.injuryMatches > absence.banMatches
+  static bool usableInPeriod(PlayerAbsence? absence, int coverage) =>
+      matchesMissed(absence) < (coverage < 1 ? 1 : coverage);
+
+  /// How many MATCHES [absence] still costs the player.
+  ///
+  /// A ban and a knock run concurrently — every game played serves a match off
+  /// both — so the player is out for the longer of the two, never their sum.
+  /// Both are counted in matches, which is the only unit a suspension has.
+  static int matchesMissed(PlayerAbsence? absence) {
+    if (absence == null || absence.isAvailable) return 0;
+    return absence.injuryMatches > absence.banMatches
         ? absence.injuryMatches
         : absence.banMatches;
-    return out < (coverage < 1 ? 1 : coverage);
   }
 
   /// The best [max] players who are usable at some point in the period, with
