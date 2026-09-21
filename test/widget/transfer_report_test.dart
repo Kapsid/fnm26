@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/features/messages/transfer_report.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 
+import '../helpers/expect_whole.dart';
 import '../helpers/pump_app.dart';
 
 /// The transfer table, at the widths a phone really is and in both languages.
@@ -21,40 +21,6 @@ import '../helpers/pump_app.dart';
 /// more than its forename, which `expectNothingCut` and the name assertions
 /// below check together.
 void main() {
-  /// Asserts that every paragraph [finder] matches printed in full.
-  void expectWhole(Finder finder, String what) {
-    final elements = finder.evaluate();
-    expect(elements, isNotEmpty, reason: '$what is not on screen at all');
-    for (final element in elements) {
-      final paragraph = element.renderObject! as RenderParagraph;
-      expect(
-        paragraph.didExceedMaxLines,
-        isFalse,
-        reason:
-            '$what is cut off: it wants '
-            '${paragraph.getMaxIntrinsicWidth(double.infinity)}px '
-            'and was given ${paragraph.size.width}px',
-      );
-    }
-  }
-
-  /// Asserts that NOTHING anywhere on the screen ran out of room. Catches the
-  /// label somebody added without a maxLines, which wraps and makes its row
-  /// taller than the row beside it rather than overflowing loudly.
-  void expectNothingCut(WidgetTester tester) {
-    for (final element in find.byType(Text).evaluate()) {
-      final paragraph = element.renderObject;
-      if (paragraph is! RenderParagraph) continue;
-      expect(
-        paragraph.didExceedMaxLines,
-        isFalse,
-        reason:
-            'something on the transfer table is cut off: '
-            '"${(element.widget as Text).data}"',
-      );
-    }
-  }
-
   /// The longest name in the shipped pool, and the worst row the report can
   /// write around it: a long pair of clubs and the widest fee there is.
   const longName = 'Nomenjanahary Raheriniaina';
@@ -118,7 +84,7 @@ void main() {
         // word for a free transfer used to read "Zdarm…" on every phone.
         expectWhole(find.text('€1200M'), 'the largest fee');
         expectWhole(find.text('Zdarma'), 'a free transfer');
-        expectNothingCut(tester);
+        expectNothingCut(tester, 'the transfer table');
         expect(tester.takeException(), isNull);
       });
 
@@ -132,7 +98,7 @@ void main() {
           rows: window(name: shortName),
         );
         expect(find.text(shortName), findsNWidgets(TransferTable.perPage));
-        expectNothingCut(tester);
+        expectNothingCut(tester, 'the transfer table');
       });
 
       testWidgets('a name too long gives up its forename, never its end, $at', (
@@ -152,7 +118,7 @@ void main() {
           TransferTable.perPage,
           reason: 'the name on screen is neither the name nor its initial',
         );
-        expectNothingCut(tester);
+        expectNothingCut(tester, 'the transfer table');
       });
 
       testWidgets('the pager says which page it is on, $at', (tester) async {
@@ -168,7 +134,7 @@ void main() {
         );
         expect(find.byIcon(Icons.chevron_left_rounded), findsNothing);
         expect(find.byIcon(Icons.chevron_right_rounded), findsNothing);
-        expectNothingCut(tester);
+        expectNothingCut(tester, 'the transfer table');
       });
 
       testWidgets('every row says which way the move was, $at', (tester) async {
@@ -191,7 +157,7 @@ void main() {
         await tester.tap(find.byType(TextButton).last);
         await tester.pumpAndSettle();
         expectWhole(find.text('€1200M'), 'the largest fee');
-        expectNothingCut(tester);
+        expectNothingCut(tester, 'the transfer table');
         expect(tester.takeException(), isNull);
       });
     }

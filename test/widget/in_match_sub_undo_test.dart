@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/core/theme/app_theme.dart';
@@ -9,6 +8,7 @@ import 'package:fnm/domain/entities/tactics.dart';
 import 'package:fnm/features/tactics/in_match_tactics.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 
+import '../helpers/expect_whole.dart';
 import '../helpers/fixtures.dart';
 
 /// The in-match substitution sheet: what it says about a man before he is
@@ -33,30 +33,6 @@ void main() {
     description: 'pitch name "$text"',
   );
 
-  /// Asserts that every [finder] match is rendered WHOLE, not ellipsised.
-  ///
-  /// `takeException` alone is not enough and never was: it passes for any
-  /// amount of quiet truncation, which is how a 40px overflow lived in this
-  /// file behind width tests that already existed, and how a first attempt at
-  /// fixing it cut the substitution counter to "SUBS · ..." on every phone in
-  /// both languages without failing anything. Numbers and names the manager
-  /// acts on have to survive intact.
-  void expectWhole(Finder finder, String what) {
-    final elements = finder.evaluate();
-    expect(elements, isNotEmpty, reason: '$what is not on screen at all');
-    for (final element in elements) {
-      final paragraph = element.renderObject! as RenderParagraph;
-      expect(
-        paragraph.didExceedMaxLines,
-        isFalse,
-        reason:
-            '$what is cut off: it wants '
-            '${paragraph.getMaxIntrinsicWidth(double.infinity)}px '
-            'and was given ${paragraph.size.width}px',
-      );
-    }
-  }
-
   /// Eleven starters (ids 1..11, named Starter1..Starter11, each in his slot's
   /// own position) and five substitutes (ids 12..16, all midfielders).
   List<Player> squad() => [
@@ -67,8 +43,7 @@ void main() {
         name: 'Starter${i + 1}',
         position: formation.positions[i],
       ),
-    for (var i = 12; i <= 16; i++)
-      player(id: i, nationId: 1, name: 'Bench$i'),
+    for (var i = 12; i <= 16; i++) player(id: i, nationId: 1, name: 'Bench$i'),
   ];
 
   /// Opens the real editor over a launcher, the way the match screen does.

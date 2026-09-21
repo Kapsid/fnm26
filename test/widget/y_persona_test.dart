@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_theme.dart';
@@ -11,6 +10,8 @@ import 'package:fnm/features/y/y_profile_sheet.dart';
 import 'package:fnm/features/y/y_screen.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
+
+import '../helpers/expect_whole.dart';
 
 /// The accounts on Y are somebody.
 ///
@@ -48,54 +49,6 @@ void main() {
     (w) => w is Text && w.data?.replaceAll('​', '') == text,
     description: 'text "$text"',
   );
-
-  /// Asserts that every [finder] match is rendered WHOLE, not ellipsised.
-  ///
-  /// `takeException` alone is not enough and never was: it passes for any
-  /// amount of quiet truncation. A handle cut to "@SundayLeague..." is not a
-  /// handle any more, and a disposition cut in half says nothing.
-  ///
-  /// This only works on a plain [Text]. A [WholeText] scales ITSELF down to
-  /// fit and so never exceeds its lines, which is exactly why the profile
-  /// header uses neither the widget nor the excuse.
-  void expectWhole(Finder finder, String what) {
-    final elements = finder.evaluate();
-    expect(elements, isNotEmpty, reason: '$what is not on screen at all');
-    for (final element in elements) {
-      final paragraph = element.renderObject! as RenderParagraph;
-      expect(
-        paragraph.didExceedMaxLines,
-        isFalse,
-        reason:
-            '$what is cut off: it wants '
-            '${paragraph.getMaxIntrinsicWidth(double.infinity)}px '
-            'and was given ${paragraph.size.width}px',
-      );
-    }
-  }
-
-  /// How far a [WholeText] had to shrink to fit, 1.0 being not at all.
-  ///
-  /// [expectWhole] cannot see inside a [WholeText]: it wraps, then falls
-  /// back, then SCALES ITSELF DOWN, so `didExceedMaxLines` is false however
-  /// small the type has got. The paragraph keeps its natural size and a
-  /// transform does the shrinking, so the painted width over the paragraph's
-  /// own width is the scale factor.
-  ///
-  /// Reported, NOT asserted on, and the reason is the font. Widget tests
-  /// render in Flutter's fallback face, which draws every glyph a full em
-  /// wide; the app's own [AppFonts.mono] is about six tenths of that, so a
-  /// row measured here is roughly seventy per cent wider than the one the
-  /// manager sees. An absolute floor calibrated on that font would fail the
-  /// feed row for a squeeze that does not exist on a phone. What IS asserted
-  /// below is the date, which is a plain Text and can fail honestly.
-  double shrinkOf(WidgetTester tester, Finder finder) {
-    final element = finder.evaluate().single;
-    final paragraph = element.renderObject! as RenderParagraph;
-    final f = find.byWidget(element.widget);
-    final painted = tester.getBottomRight(f).dx - tester.getTopLeft(f).dx;
-    return painted / paragraph.size.width;
-  }
 
   Future<void> pump(
     WidgetTester tester,
