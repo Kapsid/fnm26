@@ -2102,3 +2102,56 @@ git commit -m "feat: a match you opened is a match you watch
 
 Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>"
 ```
+
+---
+
+### Task 42: Dates speak the manager's language
+
+Found during Task 30. Every `DateFormat` in the app is constructed with no locale, so `intl` falls back to English and a Czech save reads "1 Sep 2030" and "WED 12 JUN". Twelve sites, none localised — including the dashboard date, which is the single most-seen string in the game.
+
+This matters more than its size suggests: the manager who reported this whole batch plays in Czech, and the game otherwise translates carefully enough that English dates stand out as a defect rather than a convention.
+
+**Files — every `DateFormat(` in `lib/`:**
+- `lib/features/hub/hub_screen.dart:216` (the dashboard date) and `:667`
+- `lib/features/home/home_screen.dart:165`
+- `lib/features/career/manager_history_screen.dart:233`, `lib/features/career/saves_screen.dart:292`
+- `lib/features/records/h2h_meetings_screen.dart:164`
+- `lib/features/ranking/world_ranking_screen.dart:658`
+- `lib/features/match/match_preview_screen.dart:151`
+- `lib/features/tactics/call_up_screen.dart:733`
+- `lib/features/results/results_screen.dart:165`
+- `lib/features/player/player_detail_screen.dart:721`
+- `lib/features/y/y_screen.dart:644`
+- Test: `test/widget/localised_dates_test.dart` (create)
+
+- [ ] **Step 1: Check the locale data is actually initialised**
+
+`intl` needs its locale data loaded before a non-English `DateFormat` works. Find out whether this app does that (grep `initializeDateFormatting`, and check what `flutter gen-l10n` set up). If it does not, that is the first fix, and a `DateFormat('d MMM', 'cs')` will otherwise throw or silently fall back. Establish this BEFORE converting any call site.
+
+- [ ] **Step 2: Write the failing test**
+
+Pump a widget rendering a date under a Czech locale and assert the Czech month name appears. Then a second test asserting English under an English locale, so a change that hardcodes Czech fails too.
+
+- [ ] **Step 3: Run it to verify it fails**
+
+Run: `flutter test test/widget/localised_dates_test.dart`
+Expected: FAIL, the Czech case renders English.
+
+- [ ] **Step 4: One helper, not twelve conversions**
+
+Add a single place that formats a date for the current locale, and route every site through it. Twelve hand-written `DateFormat` constructions is how all twelve came to be wrong together; a thirteenth would be the next one. The pattern to follow is `CareerService.isOwnHonourYear`, added earlier in this batch for exactly this reason.
+
+Two sites uppercase their output (`match_preview_screen.dart:151`, `hub_screen.dart:667`). Czech month abbreviations uppercase differently and some carry diacritics; check the result reads properly rather than assuming `toUpperCase()` is safe.
+
+- [ ] **Step 5: Width**
+
+Czech day and month names differ in length from English, and several of these dates sit in tight rows. Use `expectNothingCut` (test/widget/transfer_report_test.dart) at 360px and 400px in BOTH languages on the dashboard header, the match preview and the results rows at minimum.
+
+- [ ] **Step 6: Commit**
+
+```bash
+git add -A
+git commit -m "fix: a Czech save reads Czech dates
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>"
+```
