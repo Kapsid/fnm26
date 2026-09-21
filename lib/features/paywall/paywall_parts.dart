@@ -38,6 +38,7 @@ class PaywallBenefits extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         _row(Icons.all_inclusive, l.paywallBenefitEndless),
+        _row(Icons.save_rounded, l.paywallBenefitSaves),
         _row(Icons.bookmark_rounded, l.paywallBenefitCarryOn),
         _row(Icons.wifi_off_rounded, l.paywallBenefitOffline),
       ],

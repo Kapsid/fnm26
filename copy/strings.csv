@@ -453,6 +453,9 @@ careerCouldNotLoadSaves,Error when saves fail to load.,{error},Could not load sa
 careerSlotsCount,Save-slot usage out of the limit.,{used} {limit},SLOTS  {used}/{limit},POZICE  {used}/{limit}
 careerThisSave,Marker for the current save.,,this save,toto uložení
 careerSlotsFull,Shown when all save slots are used.,,Slots full,Pozice plné
+careerSlotsUsed,Save-slot usage when there is no limit to count against.,{used},SLOTS  {used},POZICE  {used}
+careerSlotsUnlockMore,Button label when the free save limit is reached; opens the purchase.,,Unlock more saves,Odemknout více pozic
+careerSlotsKeepNote,Reassurance under the saves list when a free player is at or over the limit.,,Every save you already have stays playable. Only a new one needs the unlock.,"Každé uložení, které už máte, zůstává hratelné. Odemčení potřebuje jen nové."
 careerNewGame,Button starting a new game.,,New Game,Nová hra
 careerDeleteSaveTitle,Title of the delete-save dialog.,,Delete save?,Smazat uloženou hru?
 careerDeleteSaveBody,Body of the delete-save dialog.,{label},This permanently deletes your {label} career.,Tímto trvale smažete vaši kariéru ({label}).
@@ -789,6 +792,7 @@ paywallGoPro,Paywall heading inviting the player to upgrade to Pro.,,GO PRO,PŘE
 paywallOneTimeUnlock,Paywall subtitle clarifying it is a one-off purchase.,,One-time unlock. No subscription.,Jednorázové odemčení. Žádné předplatné.
 paywallBenefitCarryOn,Paywall benefit line: the existing career continues.,,Your save carries on exactly where it stopped,"Vaše uložená hra pokračuje přesně tam, kde skončila"
 paywallBenefitOffline,Paywall benefit line: one payment and nothing collected.,,"No subscription, no ads, no account","Žádné předplatné, žádné reklamy, žádný účet"
+paywallBenefitSaves,Paywall benefit line: the save-slot limit goes away.,,"As many saves as you want, not two","Tolik uložení, kolik chcete, ne dvě"
 paywallBenefitEndless,Paywall benefit line.,,Every cycle from here on,Každý další cyklus už bez omezení
 paywallUnlocked,Shown on the paywall once premium is already unlocked.,,Premium is unlocked. Enjoy!,Prémiová verze je odemčená. Užijte si ji!
 paywallContactingStore,Buy-button label while the purchase flow is in progress.,,Contacting the store…,Kontaktuji obchod…
@@ -2077,7 +2081,7 @@ careerLastAgo,"Saves list: how long since this save was opened, in one short uni
 settingsFreeScopeTitle,Settings: what the free game covers.,,One free four-year cycle,Jeden čtyřletý cyklus zdarma
 settingsFreeScopeBlurb,Settings: what the free game covers.,,"A complete cycle (qualifying, your continental championship and the World Championship) with nothing held back. Carrying a save on past it is a single payment, once, and it covers every save and every future update.","Celý cyklus (kvalifikace, kontinentální šampionát i mistrovství světa) bez jakéhokoli omezení. Pokračovat s uloženou hrou dál je jednorázová platba, jednou, a platí pro všechny uložené hry i všechny budoucí aktualizace."
 settingsUnlockedTitle,Settings: what the free game covers.,,Unlocked,Odemčeno
-settingsUnlockedBlurb,Settings: what the free game covers.,,"Unlimited careers, every nation and every future update. Thank you.","Neomezené kariéry, každá země a všechny budoucí aktualizace. Děkujeme."
+settingsUnlockedBlurb,Settings: what the free game covers.,,"Endless cycles, unlimited saves and every future update. Thank you.","Nekonečné cykly, neomezená uložení a všechny budoucí aktualizace. Děkujeme."
 friendliesLikeYourCampaign,"Friendlies: why these opponents are suggested first, when the group is a qualifying campaign rather than a finals draw.",{rivals},"Marked below: sides who play like {rivals}, who you still have to face.","Označené jsou týmy podobné soupeřům, kteří vás ještě čekají: {rivals}."
 friendliesCloseToYou,"Friendlies: why these opponents are suggested first, before anything is drawn.",,"Marked below: the sides closest to you in the world ranking. Once you are drawn, the marks follow your group.","Označené jsou týmy nejblíž vám ve světovém žebříčku. Až vás vylosují, budou označovány podle vaší skupiny."
 transfersMoves,Transfer report: how many moves the window held.,"PLURAL — keep the {count, plural, …} skeleton exactly; translate only the words inside the branches","{count, plural, =1{1 move} other{{count} moves}}","{count, plural, =1{1 přestup} few{{count} přestupy} other{{count} přestupů}}"

@@ -15,9 +15,10 @@ void main() {
     Locale locale,
     String Function(AppLocalizations) label, {
     IconData? icon,
+    double width = 320,
   }) async {
     tester.view
-      ..physicalSize = const Size(320, 700)
+      ..physicalSize = Size(width, 700)
       ..devicePixelRatio = 1.0;
     addTearDown(tester.view.reset);
     await tester.pumpWidget(
@@ -34,6 +35,38 @@ void main() {
                 label: label(AppLocalizations.of(context)),
                 icon: icon,
                 onPressed: () {},
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+  }
+
+  Future<void> pumpText(
+    WidgetTester tester,
+    Locale locale,
+    double width,
+    String Function(AppLocalizations) text,
+  ) async {
+    tester.view
+      ..physicalSize = Size(width, 700)
+      ..devicePixelRatio = 1.0;
+    addTearDown(tester.view.reset);
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: AppTheme.theme,
+        locale: locale,
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        home: Scaffold(
+          body: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Builder(
+              builder: (context) => Text(
+                text(AppLocalizations.of(context)),
+                textAlign: TextAlign.center,
               ),
             ),
           ),
@@ -66,6 +99,40 @@ void main() {
         expect(tester.takeException(), isNull);
         expectNothingCut(tester);
       });
+
+      // What a FREE manager sees once his two saves are taken: the button
+      // becomes the door to the purchase, and a line underneath promises the
+      // saves he already has are not going anywhere.
+      for (final width in [360.0, 400.0]) {
+        testWidgets(
+          'the unlock-more label fits at ${width.toInt()}px',
+          (tester) async {
+            await pumpButton(
+              tester,
+              locale,
+              (l) => l.careerSlotsUnlockMore,
+              icon: Icons.lock_open,
+              width: width,
+            );
+            expect(tester.takeException(), isNull);
+            expectNothingCut(tester);
+          },
+        );
+
+        testWidgets(
+          'the over-limit reassurance fits at ${width.toInt()}px',
+          (tester) async {
+            await pumpText(
+              tester,
+              locale,
+              width,
+              (l) => '${l.careerSlotsUsed(12)}  ${l.careerSlotsKeepNote}',
+            );
+            expect(tester.takeException(), isNull);
+            expectNothingCut(tester);
+          },
+        );
+      }
     });
   }
 }

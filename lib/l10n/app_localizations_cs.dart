@@ -1613,6 +1613,18 @@ class AppLocalizationsCs extends AppLocalizations {
   String get careerSlotsFull => 'Pozice plné';
 
   @override
+  String careerSlotsUsed(int used) {
+    return 'POZICE  $used';
+  }
+
+  @override
+  String get careerSlotsUnlockMore => 'Odemknout více pozic';
+
+  @override
+  String get careerSlotsKeepNote =>
+      'Každé uložení, které už máte, zůstává hratelné. Odemčení potřebuje jen nové.';
+
+  @override
   String get careerNewGame => 'Nová hra';
 
   @override
@@ -2861,6 +2873,9 @@ class AppLocalizationsCs extends AppLocalizations {
   @override
   String get paywallBenefitOffline =>
       'Žádné předplatné, žádné reklamy, žádný účet';
+
+  @override
+  String get paywallBenefitSaves => 'Tolik uložení, kolik chcete, ne dvě';
 
   @override
   String get paywallBenefitEndless => 'Každý další cyklus už bez omezení';
@@ -8011,7 +8026,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get settingsUnlockedBlurb =>
-      'Neomezené kariéry, každá země a všechny budoucí aktualizace. Děkujeme.';
+      'Nekonečné cykly, neomezená uložení a všechny budoucí aktualizace. Děkujeme.';
 
   @override
   String friendliesLikeYourCampaign(String rivals) {

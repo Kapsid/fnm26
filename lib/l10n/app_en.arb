@@ -2413,6 +2413,23 @@
   "@careerSlotsFull": {
     "description": "Shown when all save slots are used."
   },
+  "careerSlotsUsed": "SLOTS  {used}",
+  "@careerSlotsUsed": {
+    "description": "Save-slot usage when there is no limit to count against.",
+    "placeholders": {
+      "used": {
+        "type": "int"
+      }
+    }
+  },
+  "careerSlotsUnlockMore": "Unlock more saves",
+  "@careerSlotsUnlockMore": {
+    "description": "Button label when the free save limit is reached; opens the purchase."
+  },
+  "careerSlotsKeepNote": "Every save you already have stays playable. Only a new one needs the unlock.",
+  "@careerSlotsKeepNote": {
+    "description": "Reassurance under the saves list when a free player is at or over the limit."
+  },
   "careerNewGame": "New Game",
   "@careerNewGame": {
     "description": "Button starting a new game."
@@ -3859,6 +3876,10 @@
   "paywallBenefitOffline": "No subscription, no ads, no account",
   "@paywallBenefitOffline": {
     "description": "Paywall benefit line: one payment and nothing collected."
+  },
+  "paywallBenefitSaves": "As many saves as you want, not two",
+  "@paywallBenefitSaves": {
+    "description": "Paywall benefit line: the save-slot limit goes away."
   },
   "paywallBenefitEndless": "Every cycle from here on",
   "@paywallBenefitEndless": {
@@ -11681,7 +11702,7 @@
   "@settingsUnlockedTitle": {
     "description": "Settings: what the free game covers."
   },
-  "settingsUnlockedBlurb": "Unlimited careers, every nation and every future update. Thank you.",
+  "settingsUnlockedBlurb": "Endless cycles, unlimited saves and every future update. Thank you.",
   "@settingsUnlockedBlurb": {
     "description": "Settings: what the free game covers."
   },

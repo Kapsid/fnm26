@@ -2822,6 +2822,24 @@ abstract class AppLocalizations {
   /// **'Slots full'**
   String get careerSlotsFull;
 
+  /// Save-slot usage when there is no limit to count against.
+  ///
+  /// In en, this message translates to:
+  /// **'SLOTS  {used}'**
+  String careerSlotsUsed(int used);
+
+  /// Button label when the free save limit is reached; opens the purchase.
+  ///
+  /// In en, this message translates to:
+  /// **'Unlock more saves'**
+  String get careerSlotsUnlockMore;
+
+  /// Reassurance under the saves list when a free player is at or over the limit.
+  ///
+  /// In en, this message translates to:
+  /// **'Every save you already have stays playable. Only a new one needs the unlock.'**
+  String get careerSlotsKeepNote;
+
   /// Button starting a new game.
   ///
   /// In en, this message translates to:
@@ -4849,6 +4867,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No subscription, no ads, no account'**
   String get paywallBenefitOffline;
+
+  /// Paywall benefit line: the save-slot limit goes away.
+  ///
+  /// In en, this message translates to:
+  /// **'As many saves as you want, not two'**
+  String get paywallBenefitSaves;
 
   /// Paywall benefit line.
   ///
@@ -12630,7 +12654,7 @@ abstract class AppLocalizations {
   /// Settings: what the free game covers.
   ///
   /// In en, this message translates to:
-  /// **'Unlimited careers, every nation and every future update. Thank you.'**
+  /// **'Endless cycles, unlimited saves and every future update. Thank you.'**
   String get settingsUnlockedBlurb;
 
   /// Friendlies: why these opponents are suggested first, when the group is a qualifying campaign rather than a finals draw.

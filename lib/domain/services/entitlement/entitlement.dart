@@ -18,9 +18,37 @@ final premiumUnlockedProvider = StateProvider<bool>((ref) => false);
 /// than a nation list with padlocks on it.
 const int kFreeCycles = 1;
 
-/// Maximum number of concurrent save games. The same for everyone: the trial
-/// is the whole game for one cycle, and nothing else is held back.
-const int kSaveSlots = 10;
+/// How many concurrent saves the free trial allows. Two: enough to keep a
+/// second nation running alongside the first, and few enough that a manager
+/// who wants a stable of careers can feel the ceiling.
+const int kFreeSaveSlots = 2;
+
+/// How many concurrent saves the purchase allows: no ceiling at all.
+///
+/// The product is sold as *unlimited*. A cap of any size is a promise a buyer
+/// can count up to and find false, so there is none; null means "no limit".
+/// Read it through [saveSlotLimit] rather than directly.
+const int? kPremiumSaveSlots = null;
+
+/// The concurrent-save ceiling for this entitlement, or null when unlimited.
+///
+/// Pure, like [trialExhausted], so the rule is testable without a store.
+int? saveSlotLimit({required bool premiumUnlocked}) =>
+    premiumUnlocked ? kPremiumSaveSlots : kFreeSaveSlots;
+
+/// Whether another save may be created when [existingSaves] already exist.
+///
+/// Being OVER the limit answers false here, exactly as being AT it does, and
+/// that is the whole point: a manager who made six saves while everything was
+/// free keeps all six and can play and delete any of them. He is refused a
+/// seventh, not relieved of the other five.
+bool canCreateSave({
+  required int existingSaves,
+  required bool premiumUnlocked,
+}) {
+  final limit = saveSlotLimit(premiumUnlocked: premiumUnlocked);
+  return limit == null || existingSaves < limit;
+}
 
 /// Whether this save has used up the free trial and may not roll into another
 /// four-year cycle.

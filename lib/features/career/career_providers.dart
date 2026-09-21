@@ -104,9 +104,13 @@ class CareerService {
   }) async {
     final repo = _ref.read(careerRepositoryProvider);
     final existing = await repo.all();
-    const limit = kSaveSlots;
+    final premium = _ref.read(premiumUnlockedProvider);
 
-    if (existing.length >= limit) {
+    if (!canCreateSave(
+      existingSaves: existing.length,
+      premiumUnlocked: premium,
+    )) {
+      final limit = saveSlotLimit(premiumUnlocked: premium);
       return Result.failure(
         Failure('All $limit save slots are in use.', code: 'slots_full'),
       );

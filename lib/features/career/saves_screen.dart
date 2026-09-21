@@ -15,6 +15,7 @@ import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/services/entitlement/entitlement.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/nations/nation_select_providers.dart';
+import 'package:fnm/features/paywall/paywall_sheet.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
@@ -28,7 +29,9 @@ class SavesScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l = AppLocalizations.of(context);
     final savesAsync = ref.watch(savesProvider);
-    const limit = kSaveSlots;
+    final premium = ref.watch(premiumUnlockedProvider);
+    // Null means no ceiling, which is what the purchase buys.
+    final limit = saveSlotLimit(premiumUnlocked: premium);
     final nations = ref.watch(nationsProvider).valueOrNull ?? const <Nation>[];
     final nationsById = {for (final n in nations) n.id: n};
 
@@ -48,7 +51,11 @@ class SavesScreen extends ConsumerWidget {
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (e, _) => Center(child: Text(l.careerCouldNotLoadSaves('$e'))),
         data: (saves) {
-          final full = saves.length >= limit;
+          // Over the limit counts as full too. A manager can arrive here with
+          // more saves than the free tier allows (they were made when it was
+          // uncapped, or restored from a paid device); every one of them stays
+          // in the list, playable and deletable. Only a NEW one is refused.
+          final full = limit != null && saves.length >= limit;
           return Column(
             children: [
               Padding(
@@ -57,7 +64,9 @@ class SavesScreen extends ConsumerWidget {
                   children: [
                     Expanded(
                       child: Text(
-                        l.careerSlotsCount(saves.length, limit),
+                        limit == null
+                            ? l.careerSlotsUsed(saves.length)
+                            : l.careerSlotsCount(saves.length, limit),
                         style: AppTypography.labelMedium,
                       ),
                     ),
@@ -107,14 +116,32 @@ class SavesScreen extends ConsumerWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       PrimaryButton(
-                        label: full ? l.careerSlotsFull : l.careerNewGame,
-                        icon: Icons.add,
-                        // Slots are the same for everyone now, so full is
-                        // simply full: delete one to start another.
-                        onPressed: full
+                        label: full
+                            ? (premium
+                                  ? l.careerSlotsFull
+                                  : l.careerSlotsUnlockMore)
+                            : l.careerNewGame,
+                        icon: full && !premium ? Icons.lock_open : Icons.add,
+                        // A full free player is not sent to a dead button:
+                        // more saves are exactly what the purchase sells, so
+                        // the button becomes the door to it.
+                        onPressed: !full
+                            ? () => context.go(Routes.nations)
+                            : premium
                             ? null
-                            : () => context.go(Routes.nations),
+                            : () => showPaywall(context),
                       ),
+                      if (full && !premium)
+                        Padding(
+                          padding: const EdgeInsets.only(top: AppSpacing.sm),
+                          child: Text(
+                            l.careerSlotsKeepNote,
+                            textAlign: TextAlign.center,
+                            style: AppTypography.bodySmall.copyWith(
+                              color: AppColors.onSurfaceVariant,
+                            ),
+                          ),
+                        ),
                       // An imported career takes a slot like any other, so it
                       // is offered only while there is room for one.
                       if (!full)

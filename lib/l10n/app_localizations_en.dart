@@ -1607,6 +1607,18 @@ class AppLocalizationsEn extends AppLocalizations {
   String get careerSlotsFull => 'Slots full';
 
   @override
+  String careerSlotsUsed(int used) {
+    return 'SLOTS  $used';
+  }
+
+  @override
+  String get careerSlotsUnlockMore => 'Unlock more saves';
+
+  @override
+  String get careerSlotsKeepNote =>
+      'Every save you already have stays playable. Only a new one needs the unlock.';
+
+  @override
   String get careerNewGame => 'New Game';
 
   @override
@@ -2838,6 +2850,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get paywallBenefitOffline => 'No subscription, no ads, no account';
+
+  @override
+  String get paywallBenefitSaves => 'As many saves as you want, not two';
 
   @override
   String get paywallBenefitEndless => 'Every cycle from here on';
@@ -7998,7 +8013,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get settingsUnlockedBlurb =>
-      'Unlimited careers, every nation and every future update. Thank you.';
+      'Endless cycles, unlimited saves and every future update. Thank you.';
 
   @override
   String friendliesLikeYourCampaign(String rivals) {

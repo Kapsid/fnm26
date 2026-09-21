@@ -34,8 +34,9 @@ void main() {
       expect(kFreeCycles, 1);
     });
 
-    test('save slots are the same for everyone', () {
-      expect(kSaveSlots, 10);
+    test('the free tier runs two saves, the paid tier has no ceiling', () {
+      expect(saveSlotLimit(premiumUnlocked: false), 2);
+      expect(saveSlotLimit(premiumUnlocked: true), isNull);
     });
   });
 

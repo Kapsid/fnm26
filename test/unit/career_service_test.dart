@@ -24,11 +24,11 @@ void main() {
     return c;
   }
 
-  test('a free player gets the same slots as anyone else', () async {
+  test('a free player gets two saves, and the third is refused', () async {
     container = build(premium: false);
     final service = container.read(careerServiceProvider);
 
-    for (var i = 0; i < kSaveSlots; i++) {
+    for (var i = 0; i < kFreeSaveSlots; i++) {
       final r = await service.create(nationId: 1, managerName: 'M$i');
       expect(r.isSuccess, isTrue, reason: 'save ${i + 1}');
     }
@@ -41,18 +41,16 @@ void main() {
     );
   });
 
-  test('the slots fill up and then block the next one', () async {
+  test('a buyer is never told the slots are full', () async {
     container = build(premium: true);
     final service = container.read(careerServiceProvider);
 
-    for (var i = 0; i < kSaveSlots; i++) {
+    // Well past both the free limit and the ten-slot cap this used to carry:
+    // the purchase is sold as unlimited, so there is nothing left to hit.
+    for (var i = 0; i < 12; i++) {
       final r = await service.create(nationId: 1, managerName: 'M$i');
       expect(r.isSuccess, isTrue, reason: 'save ${i + 1}');
     }
-    expect(
-      (await service.create(nationId: 1, managerName: 'X')).isFailure,
-      isTrue,
-    );
   });
 
   test('created save starts in July 2026 with cycle 0', () async {
