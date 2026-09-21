@@ -6,6 +6,7 @@ import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
 import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/services/competition/continental_cups.dart';
+import 'package:fnm/domain/services/competition/finals_participation.dart';
 import 'package:fnm/domain/services/competition/hosts.dart';
 import 'package:fnm/domain/services/competition/kickoff_keys.dart';
 import 'package:fnm/domain/services/squad/nomination.dart';
@@ -128,17 +129,13 @@ String _callUpLabel(AppLocalizations l, Fixture f) {
   };
 }
 
-/// The World Cup finals rounds.
-const _wcFinalsRounds = {'GROUP', 'R32', 'R16', 'QF', 'SF', '3RD', 'FINAL'};
-
-/// The continental championship's finals rounds.
-const _contFinalsRounds = {'CGROUP', 'CR16', 'CQF', 'CSF', 'C3RD', 'CFINAL'};
-
-/// Every main-tournament finals round (World Cup + continental) — a fixture in
-/// one of these means the player is contesting that tournament themselves.
+/// Every main-tournament finals round (World Championship + continental) — a
+/// fixture in one of these means the player is contesting that tournament
+/// themselves. The round sets themselves live in [FinalsRounds], shared with
+/// everything else that has to tell a participant from a spectator.
 const Set<String> _mainFinalsRounds = {
-  ..._wcFinalsRounds,
-  ..._contFinalsRounds,
+  ...FinalsRounds.worldChampionship,
+  ...FinalsRounds.continental,
 };
 
 /// Whether a tournament of [kind] is about to kick off: its first unplayed
@@ -189,11 +186,15 @@ nextEventProvider = FutureProvider.autoDispose.family<HubEvent, int>((
   // opening ceremony may be held back behind their own friendly windows: a
   // participant's warm-ups genuinely come first, but a manager who is only
   // WATCHING the tournament must still see it opened before its first match.
-  final playerInWcFinals = hub.fixtures.any(
-    (f) => !f.hasResult && _wcFinalsRounds.contains(f.round),
+  final playerInWcFinals = contestsFinals(
+    hub.fixtures,
+    FinalsRounds.worldChampionship,
+    unplayedOnly: true,
   );
-  final playerInContFinals = hub.fixtures.any(
-    (f) => !f.hasResult && _contFinalsRounds.contains(f.round),
+  final playerInContFinals = contestsFinals(
+    hub.fixtures,
+    FinalsRounds.continental,
+    unplayedOnly: true,
   );
 
   // 1. The World Cup is decided — roll into the next cycle.

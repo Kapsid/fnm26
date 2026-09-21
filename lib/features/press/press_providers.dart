@@ -3,6 +3,7 @@ import 'package:fnm/core/util/text_variety.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/fixture.dart';
+import 'package:fnm/domain/services/competition/finals_participation.dart';
 import 'package:fnm/domain/services/competition/kickoff_keys.dart';
 import 'package:fnm/domain/services/competition/rounds.dart';
 import 'package:fnm/domain/services/press/expectation.dart';
@@ -59,6 +60,41 @@ pressQuestionProvider = FutureProvider.autoDispose.family<PressQuestion?, int>((
 
   final comp = ref.watch(competitionRepositoryProvider);
   final fixtures = await comp.fixturesForNation(careerId, career.nationId);
+
+  // WHICH football this manager may be asked about. A press room asks about
+  // the tournaments his side turned up to; the roll of honour carries every
+  // trophy in the world and the fixture list carries four years of repeating
+  // round codes, so without a gate a manager was congratulated on a cup his
+  // nation never entered and questioned about a tournament he watched on
+  // television.
+  //
+  // Participation is read from the WHOLE fixture list rather than from the
+  // next match, via [contestsFinals] — the same check the timeline uses to
+  // decide whether a manager plays a finals or watches it. A naive "is the
+  // next fixture a finals match" once told a host it was not in its own
+  // tournament, because a host fills the weeks before it with friendlies.
+  final competitionNames = await comp.competitionNames(careerId);
+  final entered = {
+    for (final f in fixtures) ?competitionNames[f.competitionId],
+  };
+
+  /// Whether the nation played in the competition an honour names.
+  ///
+  /// The roll of honour stores a tournament's public name ('World
+  /// Championship'); the fixture list stores the competition row that ran it
+  /// ('World Championship Finals'). Matching both spellings — and nothing
+  /// looser — keeps a qualifying campaign ('European Championship
+  /// Qualifiers') from passing as the cup itself.
+  bool enteredCompetition(String name) =>
+      entered.contains(name) || entered.contains('$name Finals');
+
+  /// Whether the nation contests the tournament [round] belongs to. A round
+  /// that is not a finals round at all — qualifying, a friendly — is the
+  /// nation's own by definition.
+  bool contestsTournamentOf(String? round) {
+    final family = FinalsRounds.familyOf(round);
+    return family == null || contestsFinals(fixtures, family);
+  }
 
   // 0. The opening press conference, held the moment a tournament the nation is
   //    contesting has been opened and before a ball is kicked. It jumps the
@@ -130,6 +166,25 @@ pressQuestionProvider = FutureProvider.autoDispose.family<PressQuestion?, int>((
       if (f.round != Rounds.friendly) f,
   ];
 
+  /// How many COMPETITIVE matches have been played since [f].
+  int playedSince(Fixture f) => played
+      .where((p) => p.date.isAfter(f.date) && p.round != Rounds.friendly)
+      .length;
+
+  // The results a reporter would still lead with: inside the calendar window
+  // AND not yet buried by the football played since. A manager who has played
+  // twice since being beaten is not still being asked about that defeat,
+  // whatever the date says — see [Press.askWindowMatches].
+  //
+  // This narrower list is for the questions about ONE result (a hammering, an
+  // exit, a rout). The run-of-form questions below keep reading [competitive],
+  // because a run of four or six matches is about the matches themselves and
+  // is current by construction.
+  final news = [
+    for (final f in recent)
+      if (playedSince(f) < Press.askWindowMatches) f,
+  ];
+
   // Every story the press could lead with right now, biggest first. One of the
   // top few is then drawn (see [Press.storyPool]) — asking strictly in order
   // meant a manager always got the same question for the same situation.
@@ -139,7 +194,7 @@ pressQuestionProvider = FutureProvider.autoDispose.family<PressQuestion?, int>((
   }
 
   // A hammering — the biggest story there is.
-  for (final f in recent) {
+  for (final f in news) {
     final mine = _mine(f, career.nationId);
     if (mine.against - mine.forGoals >= 3) {
       add(
@@ -153,9 +208,11 @@ pressQuestionProvider = FutureProvider.autoDispose.family<PressQuestion?, int>((
     }
   }
 
-  // Out of a tournament: a knockout defeat ends the run there and then.
-  for (final f in recent) {
+  // Out of a tournament: a knockout defeat ends the run there and then, and
+  // only in a tournament the nation was actually contesting.
+  for (final f in news) {
     if (!Rounds.isKnockout(f.round)) continue;
+    if (!contestsTournamentOf(f.round)) continue;
     final mine = _mine(f, career.nationId);
     if (mine.forGoals < mine.against) {
       add(
@@ -178,13 +235,17 @@ pressQuestionProvider = FutureProvider.autoDispose.family<PressQuestion?, int>((
       if (h.championId != career.nationId) continue;
       if (h.year < CareerService.cycleStart.year) continue;
       if (h.year < now.year - 1) continue;
+      // …and only if the side was there. A trophy in a competition this
+      // nation has no fixture in is somebody else's record, however the roll
+      // of honour credits it.
+      if (!enteredCompetition(h.competition)) continue;
       add(q('triumph:${h.competition}:${h.year}', PressTopic.triumph));
       break;
     }
   }
 
   // The other side of a hammering: a night when everything came off.
-  for (final f in recent) {
+  for (final f in news) {
     final mine = _mine(f, career.nationId);
     if (mine.forGoals - mine.against >= 3) {
       add(
@@ -356,6 +417,7 @@ pressQuestionProvider = FutureProvider.autoDispose.family<PressQuestion?, int>((
   final opener = next.firstOrNull;
   if (opener != null &&
       (opener.round == 'GROUP' || opener.round == 'CGROUP') &&
+      contestsTournamentOf(opener.round) &&
       opener.matchday == 1 &&
       opener.date.difference(now).inDays <= 21) {
     add(
@@ -542,10 +604,6 @@ final AutoDisposeFutureProviderFamily<PressMood, int> pressMoodProvider =
 
 final Provider<PressService> pressServiceProvider = Provider(PressService.new);
 
-/// The World Cup finals rounds and the continental finals rounds, so the
-/// nation's own tournament can be spotted from its fixture list.
-const _wcFinalsRounds = {'GROUP', 'R32', 'R16', 'QF', 'SF', '3RD', 'FINAL'};
-const _contFinalsRounds = {'CGROUP', 'CR16', 'CQF', 'CSF', 'C3RD', 'CFINAL'};
 
 /// Which opening-ceremony key gates the conference for a tournament whose group
 /// round is [round].
@@ -565,14 +623,19 @@ String _kickoffKindFor(String round) =>
   required int target,
   required int? worldRank,
 }) {
-  for (final rounds in [_wcFinalsRounds, _contFinalsRounds]) {
+  for (final rounds in [
+    FinalsRounds.worldChampionship,
+    FinalsRounds.continental,
+  ]) {
     final mine = [
       for (final f in fixtures)
         if (f.round != null && rounds.contains(f.round)) f,
     ]..sort((a, b) => a.date.compareTo(b.date));
     if (mine.isEmpty) continue;
     if (mine.any((f) => f.hasResult)) continue; // already under way
-    final group = rounds == _wcFinalsRounds ? 'GROUP' : 'CGROUP';
+    final group = rounds == FinalsRounds.worldChampionship
+        ? 'GROUP'
+        : 'CGROUP';
     final opener = mine.first;
     final key = 'opening:$group:${opener.date.year}';
     if (asked.contains(key)) continue;

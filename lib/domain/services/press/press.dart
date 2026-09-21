@@ -204,6 +204,20 @@ abstract final class Press {
   /// so the forcing does most of the work and this does the rest.
   static const int askWindowDays = 30;
 
+  /// How many COMPETITIVE matches may be played after a result before it stops
+  /// being news, whatever [askWindowDays] still allows.
+  ///
+  /// The calendar is a poor judge of what a press room is still interested in.
+  /// A manager who has played twice since being beaten is not asked about that
+  /// defeat again: the football played since IS the answer, and the room has
+  /// two newer matches to ask about. Thirty days can hold three competitive
+  /// fixtures in a qualifying window and barely one in a quiet summer, so the
+  /// day window stays as the outer bound and this decides inside it.
+  ///
+  /// Friendlies do not count. A warm-up does not bury a tournament exit, which
+  /// is why this reads the same competitive list the run-of-form questions do.
+  static const int askWindowMatches = 2;
+
   /// The minimum gap between questions, so the press are an occasional presence
   /// rather than a chore after every match.
   static const int quietDays = 30;
