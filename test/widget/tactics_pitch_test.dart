@@ -6,6 +6,7 @@ import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/entities/tactics.dart';
 import 'package:fnm/features/tactics/tactics_pitch.dart';
 
+import '../helpers/expect_whole.dart';
 import '../helpers/fixtures.dart';
 import '../helpers/pump_app.dart';
 
@@ -115,6 +116,16 @@ void main() {
       );
     }
 
+    /// Every name drawn on the pitch, as it READS.
+    ///
+    /// A long surname may arrive shortened, so a test that wants to know what
+    /// became of one cannot look it up by the name it started as.
+    List<String> pitchNames(WidgetTester tester) => [
+      for (final t in tester.widgetList<Text>(find.byType(Text)))
+        if (t.data case final d?)
+          if (d == d.toUpperCase() && d.length > 2) d.replaceAll('\u200b', ''),
+    ];
+
     testWidgets('is the surname alone when nobody shares it', (tester) async {
       await pumpNames(tester, ['Cristiano Ronaldo']);
       expect(findName('RONALDO'), findsOneWidget);
@@ -137,23 +148,44 @@ void main() {
       expect(findName('JOSEF NOVAK'), findsOneWidget);
     });
 
-    testWidgets('is never cut, however long it is', (tester) async {
-      // The longest surname in the seed data. It used to be drawn in a fixed
-      // box with TextOverflow.ellipsis, so it arrived as "RAKOTOHA…" every
-      // time — the bug this pins. It is scaled down to fit instead.
+    testWidgets('is never broken in the middle of itself', (tester) async {
+      // The manager's report, in his own words: "zalamující se jména v
+      // sestavě". Every surname over eight letters arrived split across two
+      // or three lines, mid-syllable — LEWANDO / WSKI — because the name was
+      // drawn with an invisible break opportunity between every letter so it
+      // could wrap rather than be cut. A name in three pieces is not a name.
+      //
+      // What it does instead: one line, stepped down in size, and when even
+      // the floor will not hold it, written SHORTER by its ending. The three
+      // longest surnames in the seed data, on the narrowest phone.
       await pumpNames(tester, [
         'Koto Rakotoharimalala',
         'Sione Falepapalangi',
         'Bidzina Tkeshelashvili',
       ]);
-      expect(findName('RAKOTOHARIMALALA'), findsOneWidget);
-      expect(findName('FALEPAPALANGI'), findsOneWidget);
-      expect(findName('TKESHELASHVILI'), findsOneWidget);
+      for (final surname in const [
+        'RAKOTOHARIMALALA',
+        'FALEPAPALANGI',
+        'TKESHELASHVILI',
+      ]) {
+        final drawn = pitchNames(tester).firstWhere(
+          (n) => surname.startsWith(n.replaceAll('.', '')),
+          orElse: () => fail('$surname is not on the pitch in any form'),
+        );
+        expectOneLine(findName(drawn), 'the name "$drawn" on the pitch');
+        expect(
+          drawn.endsWith('.') || drawn == surname,
+          isTrue,
+          reason:
+              '"$drawn" is neither the whole surname nor a shortened one: a '
+              'name that gives something up has to say so',
+        );
+      }
       for (final t in tester.widgetList<Text>(find.byType(Text))) {
         expect(
           t.overflow,
           isNot(TextOverflow.ellipsis),
-          reason: 'a name on the pitch must scale, never clip',
+          reason: 'a name on the pitch must be shortened, never clipped',
         );
       }
     });
@@ -163,11 +195,11 @@ void main() {
     ) async {
       // A node wider than the gap between two players is the whole original
       // complaint: the label writes across the next man's disc.
-      //
-      // getRect, not getSize — the label is SCALED to fit, so its natural
-      // layout size is deliberately bigger than what is actually painted.
       await pumpNames(tester, ['Koto Rakotoharimalala']);
-      final label = tester.getRect(findName('RAKOTOHARIMALALA'));
+      final drawn = pitchNames(
+        tester,
+      ).firstWhere((n) => 'RAKOTOHARIMALALA'.startsWith(n.replaceAll('.', '')));
+      final label = tester.getRect(findName(drawn));
       // A node is 0.16 of the pitch, and on this 320pt surface the pitch is
       // the full width — so no label may be wider than that share of it.
       expect(label.width, lessThanOrEqualTo(320 * 0.16));
@@ -281,6 +313,110 @@ void main() {
         }
       }
     });
+  });
+
+  /// The eleven at the widths a phone really is, in both languages.
+  ///
+  /// The names are data and do not translate, but the pitch around them does
+  /// — the position badges, the instruction pills — and Czech is the longer
+  /// language in every one of them.
+  group('the eleven at phone widths', () {
+    /// A worst-case XI: the longest surnames the seed pools hold, one name
+    /// with spaces in it, and two short ones that must come out untouched.
+    const surnames = [
+      'Rakotoharimalala',
+      'Tkeshelashvili',
+      'Falepapalangi',
+      'Papastathopoulos',
+      'Schweinsteiger',
+      'Lewandowski',
+      'van der Berg',
+      'Oyarzabal',
+      'Zielinski',
+      'Novak',
+      'Sery',
+    ];
+
+    /// The smallest a name may be drawn at: [_nameFontSize] times the floor
+    /// the widget keeps, less a rounding hair.
+    const floorSize = 11.5 * 0.62 - 0.01;
+
+    for (final width in [400.0, 360.0]) {
+      for (final locale in [const Locale('en'), const Locale('cs')]) {
+        testWidgets(
+          'every name holds together at ${width.toInt()}px in '
+          '${locale.languageCode}',
+          (tester) async {
+            tester.view
+              ..devicePixelRatio = 1
+              ..physicalSize = Size(width, 900);
+            addTearDown(tester.view.reset);
+            final squad = <int, Player>{
+              for (var i = 0; i < 11; i++)
+                100 + i: player(
+                  id: 100 + i,
+                  nationId: 1,
+                  name: 'Q$i ${surnames[i]}',
+                  position: formation.positions[i],
+                ),
+            };
+            await tester.pumpApp(
+              pitchAsTheAppLaysItOut(
+                TacticsPitch(
+                  formation: formation,
+                  instructions: const TacticalInstructions(),
+                  lineup: lineup,
+                  byId: squad,
+                  onTapSlot: (_) {},
+                  onSwap: (_, __) {},
+                  onBenchIn: (_, __) {},
+                ),
+              ),
+              locale: locale,
+            );
+            await tester.pumpAndSettle();
+            expectLocale(
+              tester,
+              find.byType(TacticsPitch),
+              locale.languageCode,
+            );
+            expectNothingCut(tester, 'the pitch in ${locale.languageCode}');
+
+            // Every name: one line, no smaller than the floor, and either the
+            // whole surname or a beginning of it with a full stop to say so.
+            var seen = 0;
+            for (final text in tester.widgetList<Text>(find.byType(Text))) {
+              final drawn = text.data;
+              if (drawn == null) continue;
+              final surname = surnames
+                  .map((s) => s.split(' ').last.toUpperCase())
+                  .where((s) => s.startsWith(drawn.replaceAll('.', '')))
+                  .firstOrNull;
+              if (surname == null) continue;
+              seen++;
+              expectOneLine(find.byWidget(text), 'the name "$drawn"');
+              expect(
+                text.style!.fontSize,
+                greaterThanOrEqualTo(floorSize),
+                reason: '"$drawn" is drawn too small to read',
+              );
+              expect(
+                drawn == surname || drawn.endsWith('.'),
+                isTrue,
+                reason:
+                    '"$drawn" is neither the whole of "$surname" nor a '
+                    'shortened form that admits it',
+              );
+            }
+            expect(
+              seen,
+              11,
+              reason: 'all eleven names should be on the pitch, found $seen',
+            );
+          },
+        );
+      }
+    }
   });
 
   /// A phone-sized surface tall enough for the whole 3:4 pitch, so every slot

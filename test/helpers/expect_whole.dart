@@ -133,3 +133,31 @@ void expectLocale(WidgetTester tester, Finder inside, String languageCode) {
         'the width measured below is the wrong language',
   );
 }
+
+/// Asserts that every paragraph [finder] matches is drawn on ONE line.
+///
+/// The failure this catches is not an overflow and not an ellipsis: Flutter
+/// does not overflow a word that is wider than its line, it BREAKS it wherever
+/// the edge happens to fall. A surname arriving as LEWANDO / WSKI passes every
+/// other guard in this file — it exceeded no line count and lost no letters —
+/// and is still unreadable. Where a label is meant to sit on one line, this is
+/// what says so.
+///
+/// A paragraph's maximum intrinsic height is the height it takes at unbounded
+/// width, which is exactly one line; anything taller than that has wrapped.
+void expectOneLine(Finder finder, String what) {
+  final elements = finder.evaluate();
+  expect(elements, isNotEmpty, reason: '$what is not on screen at all');
+  for (final element in elements) {
+    final paragraph = element.renderObject! as RenderParagraph;
+    final oneLine = paragraph.getMaxIntrinsicHeight(double.infinity);
+    expect(
+      paragraph.size.height,
+      lessThanOrEqualTo(oneLine + 0.5),
+      reason:
+          '$what wrapped onto another line: it is '
+          '${paragraph.size.height}px tall where one line is ${oneLine}px, '
+          'and a word with no space in it breaks mid-word when it does',
+    );
+  }
+}

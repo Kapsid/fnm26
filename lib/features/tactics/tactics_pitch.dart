@@ -1102,11 +1102,8 @@ const double _nameFontSize = 11.5;
 /// What sits inside a player's disc: his position rating, his name, and — when
 /// he cannot play — the icon that says why.
 ///
-/// The name is never CUT. Surnames run to sixteen letters, so a fixed box plus
-/// `TextOverflow.ellipsis` truncates the long ones every single time, which is
-/// not a name any more. [WholeText] wraps it to a second line first and only
-/// then scales it down, so it always arrives whole — the same promise the
-/// squad list and the call-up screen now make.
+/// The name is drawn the way a team sheet draws one: a number, and a surname
+/// on a line of its own. See [_DiscName] for what happens to the long ones.
 class _DiscContents extends StatelessWidget {
   const _DiscContents({
     required this.disc,
@@ -1171,17 +1168,9 @@ class _DiscContents extends StatelessWidget {
                   ),
                 ),
               if (label != null)
-                WholeText(
-                  label.toUpperCase(),
-                  // THREE lines, not two. A name too long for two was CLIPPED
-                  // — [Text] drops the lines past its limit, and no amount of
-                  // scaling down brings them back — so the very longest
-                  // surnames arrived on the pitch with their ends missing,
-                  // which is the one thing this widget exists to prevent. A
-                  // third line costs the short names nothing: a block is only
-                  // as tall as the lines it actually uses.
-                  maxLines: 3,
-                  textAlign: TextAlign.center,
+                _DiscName(
+                  name: label.toUpperCase(),
+                  width: inner,
                   style: AppTypography.labelSmall.copyWith(
                     fontSize: _nameFontSize,
                     height: 0.95,
@@ -1194,6 +1183,135 @@ class _DiscContents extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+/// The smallest a name may be drawn on the pitch, as a fraction of
+/// [_nameFontSize]: a shade over seven points against the eleven and a half a
+/// name asks for.
+///
+/// Below this the type stops being a name and becomes a grey smudge, so a
+/// surname that still will not fit is written SHORTER instead of smaller. The
+/// floor is where it is for what it buys at 360 points: every surname up to
+/// about eleven letters is printed WHOLE, where before this every surname
+/// over eight was split down the middle.
+const double _minNameScale = 0.62;
+
+/// How far the size is stepped down while looking for one that fits. Quarter
+/// of a point: fine enough that nothing is given up needlessly, coarse enough
+/// that the search is a dozen measurements at worst.
+const double _nameSizeStep = 0.25;
+
+/// A player's name inside his disc, on ONE line per word and never broken
+/// mid-word.
+///
+/// The bug this exists to fix was reported as "zalamující se jména v sestavě":
+/// every surname of nine letters or more arrived split across two or three
+/// lines, in the middle of a syllable — LEWANDO / WSKI — because the name was
+/// drawn with an invisible break opportunity between every letter so that it
+/// could wrap rather than be cut. It could not be cut, which was the point,
+/// but a word broken in three places is not a name either, and at 360 points
+/// that was most of the eleven.
+///
+/// The disc cannot be made bigger: [_discWidthFraction] is already at the size
+/// the clear-air rule between two team-mates allows, so the room has to be
+/// found inside the circle. What is given up instead, in this order:
+///
+/// 1. The name is drawn at [_nameFontSize] if it fits.
+/// 2. Failing that it is stepped down, never past [_minNameScale].
+/// 3. Failing that the name itself is written shorter, by its ENDING —
+///    "PAPASTATHOPOULOS" becomes "PAPASTAT." A truncated surname still reads
+///    as the man; the same surname in three unreadable pieces does not.
+///
+/// A name with a space in it — "VAN DER BERG", "DE BRUYNE" — wraps at the
+/// space onto a second line before any of that, which is what a team sheet
+/// does too. It is only a single long WORD that has nowhere to break.
+class _DiscName extends StatelessWidget {
+  const _DiscName({
+    required this.name,
+    required this.width,
+    required this.style,
+  });
+
+  /// The surname, already upper-cased.
+  final String name;
+
+  /// The interior of the disc: all the room there is.
+  final double width;
+
+  final TextStyle style;
+
+  /// How many lines a name may wrap to — at a SPACE, never inside a word.
+  static const int _maxLines = 2;
+
+  /// How wide [text] is on one unbroken line at [size].
+  double _lineWidth(String text, double size, BuildContext context) {
+    final painter = TextPainter(
+      text: TextSpan(
+        text: text,
+        style: style.copyWith(fontSize: size),
+      ),
+      textDirection: Directionality.of(context),
+      textScaler: MediaQuery.textScalerOf(context),
+    )..layout();
+    return painter.width;
+  }
+
+  /// Whether [text] lays out inside [width] in at most [_maxLines] lines,
+  /// WITHOUT any word being broken in the middle.
+  ///
+  /// The last clause is the whole point and it is easy to miss: Flutter does
+  /// not overflow a word wider than its line, it breaks it wherever the edge
+  /// happens to fall. So a paragraph check on its own reports a contented
+  /// two-line fit for LEWANDO / WSKI. Measuring each WORD alone is what tells
+  /// the two apart: a name wraps here only where a space invited it to.
+  bool _fits(String text, double size, BuildContext context) {
+    for (final word in text.split(' ')) {
+      if (_lineWidth(word, size, context) > width + 0.01) return false;
+    }
+    final painter = TextPainter(
+      text: TextSpan(
+        text: text,
+        style: style.copyWith(fontSize: size),
+      ),
+      textDirection: Directionality.of(context),
+      textScaler: MediaQuery.textScalerOf(context),
+      maxLines: _maxLines,
+      textAlign: TextAlign.center,
+    )..layout(maxWidth: width);
+    return !painter.didExceedMaxLines && painter.width <= width + 0.01;
+  }
+
+  /// The longest beginning of [text] that fits at [size], with a full stop in
+  /// place of what was dropped.
+  ///
+  /// Never shorter than three letters plus the stop: past that it identifies
+  /// nobody and the manager is better off with the position badge.
+  String _shortened(String text, double size, BuildContext context) {
+    final letters = text.characters.toList();
+    for (var keep = letters.length - 1; keep >= 3; keep--) {
+      final candidate = '${letters.take(keep).join()}.';
+      if (_fits(candidate, size, context)) return candidate;
+    }
+    return '${letters.take(3).join()}.';
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final floor = style.fontSize! * _minNameScale;
+    var size = style.fontSize!;
+    while (size > floor && !_fits(name, size, context)) {
+      size -= _nameSizeStep;
+    }
+    final drawn = _fits(name, size, context)
+        ? name
+        : _shortened(name, floor, context);
+    return Text(
+      drawn,
+      maxLines: _maxLines,
+      textAlign: TextAlign.center,
+      style: style.copyWith(fontSize: size.clamp(floor, style.fontSize!)),
     );
   }
 }
