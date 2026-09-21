@@ -449,10 +449,23 @@ nextEventProvider = FutureProvider.autoDispose.family<HubEvent, int>((
   // priority so it's always watched through to the champion rather than being
   // silently caught up behind a friendly. A finals participant is never
   // fast-forwarded past their own matches.
+  //
+  // A finals round due BEFORE the player's own next finals match is his to
+  // watch too: the World Championship's third-place play-off is played two days
+  // ahead of its final, so the step that carried a finalist to his own match
+  // used to resolve the play-off underneath it, unseen. The continental
+  // championship has no third-place play-off — its final is always the last
+  // fixture of its tournament — which is the only reason it never showed this.
+  // Mirrors the same guard in [SeasonService._advance].
+  final finalsRoundBeforeOwn =
+      finalsDate != null &&
+      nextIsFinalsMatch &&
+      finalsDate.isBefore(next.date);
   if (finalsDate != null &&
-      !nextIsFinalsMatch &&
-      !playerInFinals &&
-      (next == null || !finalsDate.isAfter(next.date) || wcLive)) {
+      (finalsRoundBeforeOwn ||
+          (!nextIsFinalsMatch &&
+              !playerInFinals &&
+              (next == null || !finalsDate.isAfter(next.date) || wcLive)))) {
     if (wcLive) {
       return HubEvent(
         kind: HubEventKind.watchTournament,

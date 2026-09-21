@@ -1271,10 +1271,30 @@ class SeasonService {
       //    step it ONE matchday and hand back so they watch the results. This
       //    is what lets a non-qualifier or knocked-out nation follow the whole
       //    tournament, day by day, instead of it fast-forwarding.
+      //
+      //    A finals round due BEFORE the player's own next finals match is
+      //    stepped the same way, even though they are contesting the
+      //    tournament: the World Championship's third-place play-off is played
+      //    two days ahead of its final, and the catch-up that carries a
+      //    finalist to his own match swallowed it whole — a round of the
+      //    tournament resolved with nothing to watch. The continental
+      //    championship has no third-place play-off, so its final is always the
+      //    last fixture of its tournament and nothing could ever hide behind
+      //    it: that is the ONLY reason it looked right while this did not, and
+      //    it is why the rule belongs here rather than on one competition.
+      //    `next` is the player's earliest unplayed fixture, so a finals
+      //    fixture strictly before it is never one of theirs.
+      final finalsRoundBeforeOwn =
+          finalsDate != null &&
+          nextIsFinals &&
+          finalsDate.isBefore(next.date);
       if (finalsDate != null &&
-          !nextIsFinals &&
-          !playerInFinals &&
-          (next == null || !finalsDate.isAfter(next.date) || wcLive)) {
+          (finalsRoundBeforeOwn ||
+              (!nextIsFinals &&
+                  !playerInFinals &&
+                  (next == null ||
+                      !finalsDate.isAfter(next.date) ||
+                      wcLive)))) {
         await _careers.updateInGameDate(careerId, finalsDate);
         await _catchUp(
           careerId,
