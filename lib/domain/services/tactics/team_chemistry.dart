@@ -14,17 +14,33 @@ import 'package:fnm/domain/entities/tactics.dart';
 /// what the opposition knows, not what the manager is told.
 abstract final class TeamChemistry {
   /// The most a perfectly drilled shape adds.
-  static const double drilledBonus = 0.07;
+  ///
+  /// 0.07 → 0.08. The ceiling deliberately barely moves: at 0.07 a perfectly
+  /// drilled, unread side was ALREADY worth about a third of a goal a game,
+  /// which is plenty. The problem was that almost nobody plays at the ceiling —
+  /// a manager who names the same shape for years also gets read, and against
+  /// the old 0.04 [readPenalty] that left a settled side a net 0.03, one goal
+  /// every seven games, which is below what a human being can detect across a
+  /// career. So the change here is mostly in the RATIO below, not in this
+  /// number.
+  static const double drilledBonus = 0.08;
 
   /// The most a completely read side gives back. Smaller than [drilledBonus],
   /// so continuity is still worth having — it just stops being free.
+  ///
+  /// Held at 0.04 while [drilledBonus] rose, which is the point of the pair:
+  /// the RATIO moves from 4/7 to 1/2, so the video room now takes half of the
+  /// drilling rather than four sevenths of it. A settled, thoroughly scouted
+  /// side nets 0.04 instead of 0.03 — a third again as much — while the ceiling
+  /// for a manager who keeps his shape but varies his plan moves only 0.07 →
+  /// 0.08. The dial grew where it was invisible, not where it was already loud.
   static const double readPenalty = 0.04;
 
   /// The attack/defence multiplier for a side whose current formation sits at
   /// [familiarity] (0..1) and has been read to [predictability] (0..1).
   ///
-  /// Neutral (1.0) for an unfamiliar/new side, up to ~1.07 for a long-settled
-  /// shape nobody has worked out, settling around ~1.03 for a manager who has
+  /// Neutral (1.0) for an unfamiliar/new side, up to ~1.08 for a long-settled
+  /// shape nobody has worked out, settling around ~1.04 for a manager who has
   /// named the same team and the same plan for years.
   static double factor(double familiarity, [double predictability = 0]) =>
       1 +

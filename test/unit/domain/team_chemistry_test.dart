@@ -9,20 +9,22 @@ void main() {
     });
 
     test('rises with familiarity, capped at the drilled bonus', () {
-      expect(TeamChemistry.factor(1), closeTo(1.07, 1e-9));
+      expect(TeamChemistry.factor(1), closeTo(1.08, 1e-9));
       expect(TeamChemistry.factor(0.5), greaterThan(TeamChemistry.factor(0)));
       // Out-of-range inputs are clamped.
-      expect(TeamChemistry.factor(2), closeTo(1.07, 1e-9));
+      expect(TeamChemistry.factor(2), closeTo(1.08, 1e-9));
       expect(TeamChemistry.factor(-1), 1.0);
     });
 
     test('a side that has been read gives part of the bonus back', () {
-      // Drilled but completely worked out: still ahead of a raw side, but only
-      // just — continuity is worth having, not free.
-      expect(TeamChemistry.factor(1, 1), closeTo(1.03, 1e-9));
+      // Drilled but completely worked out: still ahead of a raw side, but by
+      // half of what it would otherwise be worth — continuity stays worth
+      // having, it is just never free. The HALF is the guarantee (see
+      // `readPenalty`); the old figures took four sevenths.
+      expect(TeamChemistry.factor(1, 1), closeTo(1.04, 1e-9));
       expect(TeamChemistry.factor(1, 1), lessThan(TeamChemistry.factor(1)));
       expect(TeamChemistry.factor(1, 1), greaterThan(TeamChemistry.factor(0)));
-      expect(TeamChemistry.factor(1, 2), closeTo(1.03, 1e-9));
+      expect(TeamChemistry.factor(1, 2), closeTo(1.04, 1e-9));
     });
   });
 

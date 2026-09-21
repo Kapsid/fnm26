@@ -1565,6 +1565,16 @@ class MatchEngine {
       (x) => x.stamina,
     );
 
+    // MAGNITUDE (2026-09): every coefficient below was tripled, and the clamp
+    // widened with them. The shapes and signs are unchanged — what changed is
+    // how much they are worth. Measured against an identical squad playing an
+    // exploitable plan, the old numbers bought a well-judged manager 0.04 of a
+    // goal a game: statistically real, humanly invisible, and the reason the
+    // feedback was that the dials were not connected to anything. Tripled, the
+    // same plan is worth about a sixth of a goal a game — a goal every six
+    // games from out-thinking the opponent alone, on top of what drilling the
+    // shape is worth. See test/unit/match/tactics_swing_test.dart, which pins
+    // the band from both sides.
     var bonus = 0.0;
 
     // 1) DIRECT play into a high line finds space in behind (deep block smothers
@@ -1572,29 +1582,34 @@ class MatchEngine {
     //    control instead, so it takes nothing from this term.
     final directAttack = n(a.directness).clamp(0.0, 1.0);
     final paceDuel = ((fwdPace - defPace) / 40).clamp(-1.0, 1.0);
-    bonus += directAttack * n(d.defensiveLine) * (3.5 + 2.5 * paceDuel);
+    bonus += directAttack * n(d.defensiveLine) * (10.5 + 7.5 * paceDuel);
 
     // 2) Press vs build-up, bypassed by directness.
     final press = n(d.pressing).clamp(0.0, 1.0);
     final slow = (-n(a.directness)).clamp(0.0, 1.0); // possession-minded
     final passRelief = ((midPass - 55) / 60).clamp(0.0, 0.6);
     final engine = ((pressEngine - 55) / 45).clamp(-0.4, 1.0);
-    bonus -= press * slow * (2.5 + 2.0 * engine) * (1 - passRelief);
+    bonus -= press * slow * (7.5 + 6.0 * engine) * (1 - passRelief);
     bonus +=
-        press * n(a.directness).clamp(0.0, 1.0) * 2.5; // direct beats press
+        press * n(a.directness).clamp(0.0, 1.0) * 7.5; // direct beats press
 
     // 3) Width mismatch.
-    bonus += (n(a.width) * -n(d.width)).clamp(0.0, 1.0) * 2.5; // wide vs narrow
-    bonus += (-n(a.width) * n(d.width)).clamp(0.0, 1.0) * 2.0; // narrow vs wide
+    bonus += (n(a.width) * -n(d.width)).clamp(0.0, 1.0) * 7.5; // wide vs narrow
+    bonus += (-n(a.width) * n(d.width)).clamp(0.0, 1.0) * 6.0; // narrow vs wide
 
     // 4) Mentality clash. Committing men forward against a side that has ALSO
     //    committed forward leaves space everywhere and the game opens up;
     //    against a team sitting deep there is no space to attack, and the
     //    same commitment buys much less. Makes the choice of mentality read
     //    off the opponent rather than being a flat "more is better" dial.
-    bonus += n(a.mentality).clamp(0.0, 1.0) * n(d.mentality) * 3.5;
+    bonus += n(a.mentality).clamp(0.0, 1.0) * n(d.mentality) * 10.5;
 
-    return bonus.clamp(-9.0, 11.0);
+    // The safety valve: a plan can win or lose a match, but it can never
+    // replace a squad. Widened from ±9/11 with the coefficients above, and
+    // deliberately by LESS than they grew (2x, not 3x), so the ordinary
+    // match-up gets its full new weight while the all-dials-to-the-extreme
+    // case is held well short of the rating gulf that makes a rout.
+    return bonus.clamp(-18.0, 22.0);
   }
 
   /// How far the mentality slider moves a side's attack, per point away from
@@ -1621,14 +1636,20 @@ class MatchEngine {
     // ~±10/±4 nudge it used to be — which was small enough next to squad
     // quality that the slider barely changed a match.
     //
+    // Tempo and the defensive line were doubled (0.04 → 0.08, 0.05 → 0.10) for
+    // the same reason mentality was raised before them: at the old weights a
+    // manager could drag either slider from end to end and move his attack by
+    // two rating points, which is not a decision, it is a decoration. Mentality
+    // is untouched — it was already the loud one.
+    //
     // Directness and width carry NO flat bonus here — their value is entirely
     // situational, decided by the match-up against the opponent's shape (see
     // [_matchup]), so a plan can be strong or weak depending on who it meets.
     final v =
         base +
         (i.mentality - 50) * kMentalityAttack +
-        (i.tempo - 50) * 0.04 +
-        (i.defensiveLine - 50) * 0.05 -
+        (i.tempo - 50) * 0.08 +
+        (i.defensiveLine - 50) * 0.10 -
         _shortHandedPenalty(t);
     return v * t.chemistry;
   }
@@ -1641,12 +1662,16 @@ class MatchEngine {
         _mean(t, PositionCategory.midfielder) * 0.20;
     // Attacking mentality, a high line (space in behind) and a stretched, wide
     // shape all leave the defence more exposed; heavy pressing wins it back.
+    // Pressing, the line and width were doubled here alongside their attacking
+    // counterparts, so the bargain each slider offers keeps its shape: a high
+    // line is worth more going forward AND costs more at the back than it did,
+    // rather than quietly becoming a free lunch.
     final v =
         base -
         (i.mentality - 50) * kMentalityDefence +
-        (i.pressing - 50) * 0.03 -
-        (i.defensiveLine - 50) * 0.06 -
-        (i.width - 50) * 0.03 -
+        (i.pressing - 50) * 0.06 -
+        (i.defensiveLine - 50) * 0.12 -
+        (i.width - 50) * 0.06 -
         _shortHandedPenalty(t) * _shortHandedDefenceShare;
     return v * t.chemistry;
   }
