@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:fnm/features/settings/save_backup_providers.dart';
@@ -13,6 +15,7 @@ import 'package:fnm/domain/entities/career.dart';
 import 'package:fnm/domain/services/entitlement/entitlement.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/onboarding/tour_providers.dart';
+import 'package:fnm/features/paywall/paywall_sheet.dart';
 import 'package:fnm/features/settings/settings_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
@@ -36,10 +39,11 @@ class SettingsScreen extends ConsumerWidget {
     final replayable = saves.isEmpty
         ? null
         : (saves.toList()..sort((a, b) {
-            final at = a.lastPlayedAt ?? a.createdAt;
-            final bt = b.lastPlayedAt ?? b.createdAt;
-            return bt.compareTo(at);
-          })).first;
+                final at = a.lastPlayedAt ?? a.createdAt;
+                final bt = b.lastPlayedAt ?? b.createdAt;
+                return bt.compareTo(at);
+              }))
+              .first;
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -148,6 +152,12 @@ class SettingsScreen extends ConsumerWidget {
           // run-up — this page is where somebody who wants to know can find
           // out, and it is the whole of the disclosure.
           AppCard(
+            // Tapping it opens the paywall, which is where "Restore
+            // purchases" lives. A manager who paid on his old phone needs a
+            // way to say so that does not involve finishing a whole cycle
+            // first, and Apple requires a visible restore control for a
+            // non-consumable.
+            onTap: () => unawaited(showPaywall(context)),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [

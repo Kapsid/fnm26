@@ -103,9 +103,8 @@ class CareerService {
     int? rngSeed,
   }) async {
     final repo = _ref.read(careerRepositoryProvider);
-    final premium = _ref.read(premiumUnlockedProvider);
     final existing = await repo.all();
-    final limit = maxSaveSlots(premiumUnlocked: premium);
+    const limit = kSaveSlots;
 
     if (existing.length >= limit) {
       return Result.failure(

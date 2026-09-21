@@ -40,11 +40,25 @@ class EntitlementService {
   /// Loads the cached entitlement and starts listening to the store's purchase
   /// stream. Call once at app start; safe if the store is unreachable.
   Future<void> init() async {
-    final prefs = await SharedPreferences.getInstance();
-    if (prefs.getBool(_kPremiumCacheKey) ?? false) {
-      _ref.read(premiumUnlockedProvider.notifier).state = true;
+    // Fail open, in both directions. A cache that will not read grants
+    // nothing new, but it also never takes the grant away — and a store that
+    // will not start is not evidence that anybody pirated anything. Only a
+    // receipt that is present and provably wrong could deny, and nothing here
+    // ever writes `false`.
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      if (prefs.getBool(_kPremiumCacheKey) ?? false) {
+        _ref.read(premiumUnlockedProvider.notifier).state = true;
+      }
+    } on Object {
+      // Unreadable cache: leave the entitlement exactly as it is.
     }
-    _sub ??= _iap.purchaseStream.listen(_onPurchases);
+    try {
+      _sub ??= _iap.purchaseStream.listen(_onPurchases);
+    } on Object {
+      // No store on this device (or it refused to start). The game runs; the
+      // paywall will simply report the store as unavailable.
+    }
   }
 
   void dispose() {
@@ -118,10 +132,17 @@ class EntitlementService {
   }
 
   Future<void> _grant() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool(_kPremiumCacheKey, true);
+    // The grant lands in memory first: a preferences write that fails must not
+    // cost a player the unlock he has just paid for in this session.
     _ref.read(premiumUnlockedProvider.notifier).state = true;
     _setFlow(PurchaseFlowState.idle);
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setBool(_kPremiumCacheKey, true);
+    } on Object {
+      // Not cached. The store replays the purchase on the next launch, and
+      // `restore()` is always there.
+    }
   }
 
   // ignore: use_setters_to_change_properties - mutates a provider, not a field

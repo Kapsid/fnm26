@@ -1080,6 +1080,12 @@ class AppLocalizationsCs extends AppLocalizations {
   String get hubBeginNextCycle => 'Zahájit další cyklus';
 
   @override
+  String get hubContinueCareer => 'Pokračovat v kariéře';
+
+  @override
+  String get hubBackToSaves => 'Zpět na uložené hry';
+
+  @override
   String get hubOpeningBalance => 'Počáteční zůstatek';
 
   @override
@@ -1601,16 +1607,10 @@ class AppLocalizationsCs extends AppLocalizations {
   }
 
   @override
-  String get careerProUpTo5 => 'Pro: až 10';
-
-  @override
   String get careerThisSave => 'toto uložení';
 
   @override
   String get careerSlotsFull => 'Pozice plné';
-
-  @override
-  String get careerSlotsFullGoPro => 'Pozice plné. Pořiďte si Pro pro 10';
 
   @override
   String get careerNewGame => 'Nová hra';
@@ -2855,13 +2855,15 @@ class AppLocalizationsCs extends AppLocalizations {
   String get paywallOneTimeUnlock => 'Jednorázové odemčení. Žádné předplatné.';
 
   @override
-  String get paywallBenefitEveryNation => 'Spravujte každou zemi na světě';
+  String get paywallBenefitCarryOn =>
+      'Vaše uložená hra pokračuje přesně tam, kde skončila';
 
   @override
-  String get paywallBenefitSaveSlots => '10 pozic pro uložení místo 3';
+  String get paywallBenefitOffline =>
+      'Žádné předplatné, žádné reklamy, žádný účet';
 
   @override
-  String get paywallBenefitEndless => 'Neomezené kariéry, navždy';
+  String get paywallBenefitEndless => 'Každý další cyklus už bez omezení';
 
   @override
   String get paywallUnlocked => 'Prémiová verze je odemčená. Užijte si ji!';
@@ -7593,39 +7595,6 @@ class AppLocalizationsCs extends AppLocalizations {
       'Skupiny nejsou stejně velké, takže výsledky proti poslednímu týmu větších skupin se nezapočítávají a všechny týmy se hodnotí podle stejného počtu zápasů.';
 
   @override
-  String get gateTitle => 'PRVNÍ CYKLUS KONČÍ';
-
-  @override
-  String get gateLead =>
-      'Čtyři roky a nic vám nebylo zatajeno. Pokračujte v této hře za jednu platbu.';
-
-  @override
-  String get gateBenefitEndless => 'Každý další cyklus';
-
-  @override
-  String get gateBenefitNations => 'Všechny země světa';
-
-  @override
-  String get gateBenefitOffline =>
-      'Žádné předplatné, žádné reklamy, žádný účet';
-
-  @override
-  String get gatePriceLead => 'Jedna platba, navždy';
-
-  @override
-  String get gatePrice => '12,99 €';
-
-  @override
-  String get gateBuy => 'KOUPIT A POKRAČOVAT';
-
-  @override
-  String get gateExit => 'ODEJÍT';
-
-  @override
-  String get gateNotChargedYet =>
-      'Zatím není napojeno na platbu. Tlačítko jen pokračuje dál.';
-
-  @override
   String get backupTitle => 'ULOŽENÉ HRY';
 
   @override
@@ -8019,7 +7988,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get settingsUnlockedBlurb =>
-      'Neomezené kariéry, všechny národy, deset pozic pro uložení a všechny budoucí aktualizace. Děkujeme.';
+      'Neomezené kariéry, každá země a všechny budoucí aktualizace. Děkujeme.';
 
   @override
   String friendliesLikeYourCampaign(String rivals) {

@@ -92,9 +92,9 @@ class _PaywallSheetState extends ConsumerState<PaywallSheet> {
             ),
           ),
           const SizedBox(height: AppSpacing.lg),
-          _benefit(Icons.public, l.paywallBenefitEveryNation),
-          _benefit(Icons.save, l.paywallBenefitSaveSlots),
           _benefit(Icons.all_inclusive, l.paywallBenefitEndless),
+          _benefit(Icons.bookmark_rounded, l.paywallBenefitCarryOn),
+          _benefit(Icons.wifi_off_rounded, l.paywallBenefitOffline),
           const SizedBox(height: AppSpacing.lg),
           if (premium)
             Text(

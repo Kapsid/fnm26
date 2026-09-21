@@ -7,8 +7,8 @@ import 'package:fnm/shared/widgets/widgets.dart';
 import '../helpers/expect_whole.dart';
 
 /// The buttons on the saves screen, in both languages, at the narrowest phone
-/// the app supports. Czech is the longer language nearly everywhere, and it is
-/// where "Pozice plné — pořiďte si Pro pro 10" ran out of its button.
+/// the app supports. Czech is the longer language nearly everywhere, and this
+/// is where its labels run out of their buttons.
 void main() {
   Future<void> pumpButton(
     WidgetTester tester,
@@ -45,17 +45,6 @@ void main() {
 
   for (final locale in [const Locale('en'), const Locale('cs')]) {
     group('${locale.languageCode} saves screen', () {
-      testWidgets('the slots-full Pro prompt fits its button', (tester) async {
-        await pumpButton(
-          tester,
-          locale,
-          (l) => l.careerSlotsFullGoPro,
-          icon: Icons.add,
-        );
-        expect(tester.takeException(), isNull);
-        expectNothingCut(tester);
-      });
-
       testWidgets('the new-game button fits', (tester) async {
         await pumpButton(
           tester,

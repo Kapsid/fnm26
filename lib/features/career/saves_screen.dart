@@ -15,7 +15,6 @@ import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/services/entitlement/entitlement.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/nations/nation_select_providers.dart';
-import 'package:fnm/features/paywall/paywall_sheet.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
@@ -29,8 +28,7 @@ class SavesScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l = AppLocalizations.of(context);
     final savesAsync = ref.watch(savesProvider);
-    final premium = ref.watch(premiumUnlockedProvider);
-    final limit = maxSaveSlots(premiumUnlocked: premium);
+    const limit = kSaveSlots;
     final nations = ref.watch(nationsProvider).valueOrNull ?? const <Nation>[];
     final nationsById = {for (final n in nations) n.id: n};
 
@@ -63,14 +61,6 @@ class SavesScreen extends ConsumerWidget {
                         style: AppTypography.labelMedium,
                       ),
                     ),
-                    if (!premium)
-                      TextButton(
-                        onPressed: () => showPaywall(context),
-                        style: TextButton.styleFrom(
-                          visualDensity: VisualDensity.compact,
-                        ),
-                        child: Text(l.careerProUpTo5),
-                      ),
                   ],
                 ),
               ),
@@ -117,17 +107,12 @@ class SavesScreen extends ConsumerWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       PrimaryButton(
-                        label: full
-                            ? (premium
-                                  ? l.careerSlotsFull
-                                  : l.careerSlotsFullGoPro)
-                            : l.careerNewGame,
+                        label: full ? l.careerSlotsFull : l.careerNewGame,
                         icon: Icons.add,
-                        // On the free tier, full slots open the paywall (Pro
-                        // more than doubles them); with Pro, full really is
-                        // full.
+                        // Slots are the same for everyone now, so full is
+                        // simply full: delete one to start another.
                         onPressed: full
-                            ? (premium ? null : () => showPaywall(context))
+                            ? null
                             : () => context.go(Routes.nations),
                       ),
                       // An imported career takes a slot like any other, so it

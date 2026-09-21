@@ -22,6 +22,7 @@ import 'package:fnm/domain/services/competition/hosts.dart';
 import 'package:fnm/domain/services/competition/nations_cup.dart';
 import 'package:fnm/domain/services/competition/qualification.dart';
 import 'package:fnm/domain/services/competition/rounds.dart';
+import 'package:fnm/domain/services/entitlement/entitlement.dart';
 import 'package:fnm/domain/services/federation/federation_finance.dart';
 import 'package:fnm/domain/services/match/background_match.dart';
 import 'package:fnm/domain/services/match/goal_attribution.dart';
@@ -1893,6 +1894,20 @@ class SeasonService {
   /// nation (an accepted offer or a forced move after the sack); [boardTitle]/
   /// [boardBody], when given, are filed as a board-verdict message.
   ///
+  /// Whether [careerId] has used up the free trial, so [startNextCycle] would
+  /// refuse to roll it. The rollover screen asks this to put the paywall where
+  /// the roll would have been.
+  ///
+  /// Fails open: a career it cannot read is not blocked.
+  Future<bool> trialBlocksNextCycle(int careerId) async {
+    final career = await _careers.byId(careerId);
+    if (career == null) return false;
+    return trialExhausted(
+      cyclePointer: career.cyclePointer,
+      premiumUnlocked: _ref.read(premiumUnlockedProvider),
+    );
+  }
+
   /// Queued, never dropped — the rollover would be lost. See [_exclusive].
   Future<void> startNextCycle(
     int careerId, {

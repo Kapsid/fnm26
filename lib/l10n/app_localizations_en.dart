@@ -1078,6 +1078,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get hubBeginNextCycle => 'Begin next cycle';
 
   @override
+  String get hubContinueCareer => 'Continue your career';
+
+  @override
+  String get hubBackToSaves => 'Back to your saves';
+
+  @override
   String get hubOpeningBalance => 'Opening balance';
 
   @override
@@ -1595,16 +1601,10 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get careerProUpTo5 => 'Pro: up to 10';
-
-  @override
   String get careerThisSave => 'this save';
 
   @override
   String get careerSlotsFull => 'Slots full';
-
-  @override
-  String get careerSlotsFullGoPro => 'Slots full. Go Pro for 10';
 
   @override
   String get careerNewGame => 'New Game';
@@ -2833,13 +2833,14 @@ class AppLocalizationsEn extends AppLocalizations {
   String get paywallOneTimeUnlock => 'One-time unlock. No subscription.';
 
   @override
-  String get paywallBenefitEveryNation => 'Manage every nation in the world';
+  String get paywallBenefitCarryOn =>
+      'Your save carries on exactly where it stopped';
 
   @override
-  String get paywallBenefitSaveSlots => '10 save slots instead of 3';
+  String get paywallBenefitOffline => 'No subscription, no ads, no account';
 
   @override
-  String get paywallBenefitEndless => 'Unlimited careers, forever';
+  String get paywallBenefitEndless => 'Every cycle from here on';
 
   @override
   String get paywallUnlocked => 'Premium is unlocked. Enjoy!';
@@ -7582,38 +7583,6 @@ class AppLocalizationsEn extends AppLocalizations {
       'Groups are uneven, so results against each big group\'s bottom side are dropped and every team is judged over the same games.';
 
   @override
-  String get gateTitle => 'YOUR FIRST CYCLE IS OVER';
-
-  @override
-  String get gateLead =>
-      'Four years, and nothing was held back. Carry this save on for one payment.';
-
-  @override
-  String get gateBenefitEndless => 'Every cycle from here on';
-
-  @override
-  String get gateBenefitNations => 'Every nation in the world';
-
-  @override
-  String get gateBenefitOffline => 'No subscription, no ads, no account';
-
-  @override
-  String get gatePriceLead => 'One payment, forever';
-
-  @override
-  String get gatePrice => '€12.99';
-
-  @override
-  String get gateBuy => 'BUY AND CONTINUE';
-
-  @override
-  String get gateExit => 'EXIT';
-
-  @override
-  String get gateNotChargedYet =>
-      'Not connected to payment yet. This button just continues.';
-
-  @override
   String get backupTitle => 'SAVES';
 
   @override
@@ -8006,7 +7975,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get settingsUnlockedBlurb =>
-      'Unlimited careers, every nation, ten save slots and every future update. Thank you.';
+      'Unlimited careers, every nation and every future update. Thank you.';
 
   @override
   String friendliesLikeYourCampaign(String rivals) {

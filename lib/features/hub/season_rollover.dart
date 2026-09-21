@@ -18,6 +18,19 @@ extension SeasonRollover on SeasonService {
     if (career == null) return;
     if (await _comp.worldChampion(careerId) == null) return; // not finished
 
+    // The free tier is one complete cycle. Rolling a save from cycle 0 to
+    // cycle 1 is the single thing being sold, so this is the single gate — and
+    // it sits here, below the UI, because a save must not be half-rolled by any
+    // route. Returning (rather than throwing) leaves the save exactly as it
+    // was: the manager keeps everything he has played, and declining to pay
+    // costs him nothing. The caller shows the paywall.
+    if (trialExhausted(
+      cyclePointer: career.cyclePointer,
+      premiumUnlocked: _ref.read(premiumUnlockedProvider),
+    )) {
+      return;
+    }
+
     // The board answers for every brief it set BEFORE the cycle pointer moves
     // on. Grading is normally filed the moment a tournament settles, but every
     // one of those hooks hangs off a step of the world; a cycle that ends

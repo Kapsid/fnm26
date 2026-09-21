@@ -38,9 +38,9 @@ void main() {
     expect(find.text('Brazil'), findsNothing);
   });
 
-  testWidgets('without premium, free shows SELECT and locked shows PREMIUM', (
-    tester,
-  ) async {
+  testWidgets('every nation is selectable on the free tier', (tester) async {
+    // The nation list is not what the trial holds back: a free player picks
+    // any country in the world and plays a whole cycle with it.
     await tester.pumpApp(
       const NationSelectScreen(),
       overrides: [
@@ -50,26 +50,10 @@ void main() {
     );
     await tester.pump();
 
-    expect(find.text('SELECT'), findsOneWidget); // France (free)
-    expect(find.text('PREMIUM'), findsOneWidget); // Germany (locked)
-    // The star-player line was removed from the card by design.
-    expect(find.textContaining('Luc Mercier'), findsNothing);
-  });
-
-  testWidgets('premium unlocked makes every nation selectable', (tester) async {
-    // The provider defaults to LOCKED (real builds unlock via the store), so
-    // Pro must be granted explicitly here.
-    await tester.pumpApp(
-      const NationSelectScreen(),
-      overrides: [
-        ...overrides,
-        premiumUnlockedProvider.overrideWith((ref) => true),
-      ],
-    );
-    await tester.pump();
-
     expect(find.text('SELECT'), findsNWidgets(2)); // France + Germany
     expect(find.text('PREMIUM'), findsNothing);
+    // The star-player line was removed from the card by design.
+    expect(find.textContaining('Luc Mercier'), findsNothing);
   });
 
   testWidgets('search filters the list', (tester) async {

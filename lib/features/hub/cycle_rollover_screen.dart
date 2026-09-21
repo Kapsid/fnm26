@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:fnm/features/paywall/premium_gate_screen.dart';
 import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
@@ -10,6 +9,7 @@ import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
+import 'package:fnm/domain/services/entitlement/entitlement.dart';
 import 'package:fnm/domain/services/federation/federation_finance.dart';
 import 'package:fnm/features/career/nation_offers_providers.dart';
 import 'package:fnm/features/federation/federation_service.dart';
@@ -17,6 +17,7 @@ import 'package:fnm/features/federation/investment_editor.dart';
 import 'package:fnm/features/hub/hub_providers.dart';
 import 'package:fnm/features/hub/objective_providers.dart';
 import 'package:fnm/features/messages/message_providers.dart';
+import 'package:fnm/features/paywall/paywall_sheet.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
@@ -26,6 +27,7 @@ typedef _RolloverView = ({
   Map<int, Nation> nations,
   int nextYear,
   int budget,
+  int cyclePointer,
 });
 
 final AutoDisposeFutureProviderFamily<_RolloverView?, int> _rolloverProvider =
@@ -50,6 +52,7 @@ final AutoDisposeFutureProviderFamily<_RolloverView?, int> _rolloverProvider =
         nations: nations,
         nextYear: SeasonService.finalsYear(career.cyclePointer + 1),
         budget: career.budget,
+        cyclePointer: career.cyclePointer,
       );
     });
 
@@ -76,32 +79,29 @@ class _CycleRolloverScreenState extends ConsumerState<CycleRolloverScreen> {
     // had a complete four years with nothing held back, and carrying the save
     // on is what is being sold. This is the only gate — every later rollover
     // runs straight through. See the monetisation spec.
-    final career = await ref
-        .read(careerRepositoryProvider)
-        .byId(widget.careerId);
-    if (career != null && career.cyclePointer == kFreeCycles - 1) {
+    final season = ref.read(seasonServiceProvider);
+    if (await season.trialBlocksNextCycle(widget.careerId)) {
       if (!mounted) return;
-      final carryOn = await PremiumGateScreen.show(context);
+      await showPaywall(context);
       if (!mounted) return;
-      if (!carryOn) {
-        // They chose to leave. The save is untouched and sits where it was.
-        context.go(Routes.saves);
-        return;
-      }
+      // Dismissed without buying. Nothing has rolled: the save sits exactly
+      // where it was, this screen is still in front of him, and he can open
+      // the wall again or go back to his saves. Declining costs him nothing.
+      if (!ref.read(premiumUnlockedProvider)) return;
+      // Bought. Roll straight away rather than making him find the button
+      // again.
     }
     if (!mounted) return;
     setState(() => _busy = true);
     // The rollover banks the finished cycle's income and advances; the new
     // cycle's budget is allocated in the forced budget-setup event that opens
     // it (see nextEventProvider).
-    await ref
-        .read(seasonServiceProvider)
-        .startNextCycle(
-          widget.careerId,
-          switchToNationId: _selected,
-          boardTitle: v?.headline,
-          boardBody: v?.detail,
-        );
+    await season.startNextCycle(
+      widget.careerId,
+      switchToNationId: _selected,
+      boardTitle: v?.headline,
+      boardBody: v?.detail,
+    );
     if (mounted) {
       ref
         ..invalidate(messageInboxProvider(widget.careerId))
@@ -280,6 +280,12 @@ class _CycleRolloverScreenState extends ConsumerState<CycleRolloverScreen> {
     final verdict = ref
         .watch(rolloverVerdictProvider(widget.careerId))
         .valueOrNull;
+    // The wall: a free save that has finished its one cycle cannot roll, so
+    // the button that would have rolled it opens the paywall instead.
+    final blocked = trialExhausted(
+      cyclePointer: view?.cyclePointer ?? 0,
+      premiumUnlocked: ref.watch(premiumUnlockedProvider),
+    );
     return SafeArea(
       child: incomeAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
@@ -317,10 +323,32 @@ class _CycleRolloverScreenState extends ConsumerState<CycleRolloverScreen> {
                 top: false,
                 child: Padding(
                   padding: const EdgeInsets.all(AppSpacing.marginMobile),
-                  child: PrimaryButton(
-                    label: _busy ? l.hubStarting : l.hubBeginNextCycle,
-                    icon: Icons.skip_next_rounded,
-                    onPressed: _busy ? null : () => unawaited(_begin(verdict)),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      PrimaryButton(
+                        label: _busy
+                            ? l.hubStarting
+                            : (blocked
+                                  ? l.hubContinueCareer
+                                  : l.hubBeginNextCycle),
+                        icon: blocked
+                            ? Icons.lock_open_rounded
+                            : Icons.skip_next_rounded,
+                        onPressed: _busy
+                            ? null
+                            : () => unawaited(_begin(verdict)),
+                      ),
+                      // The wall is a decision, not a dead end. Without this
+                      // the screen has no way out, and a manager who is not
+                      // buying today would be trapped on it with a finished
+                      // save he can still open any time.
+                      if (blocked)
+                        TextButton(
+                          onPressed: () => context.go(Routes.saves),
+                          child: Text(l.hubBackToSaves),
+                        ),
+                    ],
                   ),
                 ),
               ),

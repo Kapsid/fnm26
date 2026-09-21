@@ -1922,6 +1922,18 @@ abstract class AppLocalizations {
   /// **'Begin next cycle'**
   String get hubBeginNextCycle;
 
+  /// Rollover button at the end of the free cycle: opens the paywall.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue your career'**
+  String get hubContinueCareer;
+
+  /// Way out of the end-of-trial rollover screen without buying.
+  ///
+  /// In en, this message translates to:
+  /// **'Back to your saves'**
+  String get hubBackToSaves;
+
   /// Finances row: opening balance.
   ///
   /// In en, this message translates to:
@@ -2798,12 +2810,6 @@ abstract class AppLocalizations {
   /// **'SLOTS  {used}/{limit}'**
   String careerSlotsCount(int used, int limit);
 
-  /// Note that Pro allows up to ten saves.
-  ///
-  /// In en, this message translates to:
-  /// **'Pro: up to 10'**
-  String get careerProUpTo5;
-
   /// Marker for the current save.
   ///
   /// In en, this message translates to:
@@ -2815,12 +2821,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Slots full'**
   String get careerSlotsFull;
-
-  /// Shown when slots are full, prompting Pro.
-  ///
-  /// In en, this message translates to:
-  /// **'Slots full. Go Pro for 10'**
-  String get careerSlotsFullGoPro;
 
   /// Button starting a new game.
   ///
@@ -4838,22 +4838,22 @@ abstract class AppLocalizations {
   /// **'One-time unlock. No subscription.'**
   String get paywallOneTimeUnlock;
 
-  /// Paywall benefit line.
+  /// Paywall benefit line: the existing career continues.
   ///
   /// In en, this message translates to:
-  /// **'Manage every nation in the world'**
-  String get paywallBenefitEveryNation;
+  /// **'Your save carries on exactly where it stopped'**
+  String get paywallBenefitCarryOn;
+
+  /// Paywall benefit line: one payment and nothing collected.
+  ///
+  /// In en, this message translates to:
+  /// **'No subscription, no ads, no account'**
+  String get paywallBenefitOffline;
 
   /// Paywall benefit line.
   ///
   /// In en, this message translates to:
-  /// **'10 save slots instead of 3'**
-  String get paywallBenefitSaveSlots;
-
-  /// Paywall benefit line.
-  ///
-  /// In en, this message translates to:
-  /// **'Unlimited careers, forever'**
+  /// **'Every cycle from here on'**
   String get paywallBenefitEndless;
 
   /// Shown on the paywall once premium is already unlocked.
@@ -11931,66 +11931,6 @@ abstract class AppLocalizations {
   /// **'Groups are uneven, so results against each big group\'s bottom side are dropped and every team is judged over the same games.'**
   String get tourThirdsUneven;
 
-  /// Premium gate: headline at the end of the free cycle.
-  ///
-  /// In en, this message translates to:
-  /// **'YOUR FIRST CYCLE IS OVER'**
-  String get gateTitle;
-
-  /// Premium gate: the pitch under the headline.
-  ///
-  /// In en, this message translates to:
-  /// **'Four years, and nothing was held back. Carry this save on for one payment.'**
-  String get gateLead;
-
-  /// Premium gate benefit.
-  ///
-  /// In en, this message translates to:
-  /// **'Every cycle from here on'**
-  String get gateBenefitEndless;
-
-  /// Premium gate benefit.
-  ///
-  /// In en, this message translates to:
-  /// **'Every nation in the world'**
-  String get gateBenefitNations;
-
-  /// Premium gate benefit.
-  ///
-  /// In en, this message translates to:
-  /// **'No subscription, no ads, no account'**
-  String get gateBenefitOffline;
-
-  /// Premium gate: the line above the price.
-  ///
-  /// In en, this message translates to:
-  /// **'One payment, forever'**
-  String get gatePriceLead;
-
-  /// Premium gate: the price. Placeholder until the store's own localised price is wired in.
-  ///
-  /// In en, this message translates to:
-  /// **'€12.99'**
-  String get gatePrice;
-
-  /// Premium gate: the button that continues the career.
-  ///
-  /// In en, this message translates to:
-  /// **'BUY AND CONTINUE'**
-  String get gateBuy;
-
-  /// Premium gate: the button that leaves the save.
-  ///
-  /// In en, this message translates to:
-  /// **'EXIT'**
-  String get gateExit;
-
-  /// Premium gate: an honest note while the store is not wired up.
-  ///
-  /// In en, this message translates to:
-  /// **'Not connected to payment yet. This button just continues.'**
-  String get gateNotChargedYet;
-
   /// Settings: heading for the backup section.
   ///
   /// In en, this message translates to:
@@ -12648,7 +12588,7 @@ abstract class AppLocalizations {
   /// Settings: what the free game covers.
   ///
   /// In en, this message translates to:
-  /// **'Unlimited careers, every nation, ten save slots and every future update. Thank you.'**
+  /// **'Unlimited careers, every nation and every future update. Thank you.'**
   String get settingsUnlockedBlurb;
 
   /// Friendlies: why these opponents are suggested first, when the group is a qualifying campaign rather than a finals draw.

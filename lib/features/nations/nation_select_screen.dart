@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -11,17 +10,16 @@ import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/entities/player.dart';
-import 'package:fnm/domain/services/entitlement/entitlement.dart';
 import 'package:fnm/features/nations/nation_select_providers.dart';
-import 'package:fnm/features/paywall/paywall_sheet.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
 
 /// Country selection — pick the national team to manage.
 ///
-/// Free-demo nations are selectable; the rest are gated behind the premium
-/// unlock (a placeholder until the paywall lands in M7).
+/// Every nation is selectable. What the free tier holds back is the second
+/// four-year cycle, not the list: a padlocked nation list reads as a demo,
+/// which is exactly what this game is not selling.
 class NationSelectScreen extends ConsumerWidget {
   const NationSelectScreen({super.key});
 
@@ -31,7 +29,6 @@ class NationSelectScreen extends ConsumerWidget {
     final stars = ref.watch(starPlayersProvider).valueOrNull ?? const {};
     final selectedConf = ref.watch(selectedConfederationProvider);
     final query = ref.watch(nationSearchProvider).trim().toLowerCase();
-    final premium = ref.watch(premiumUnlockedProvider);
     final l = AppLocalizations.of(context);
 
     return Scaffold(
@@ -64,11 +61,7 @@ class NationSelectScreen extends ConsumerWidget {
           // always going to pick": let the draw choose, or take whatever job an
           // out-of-work manager can get.
           _StartModes(
-            onRandom: () => _startRandom(
-              context,
-              nationsAsync.valueOrNull,
-              premium: premium,
-            ),
+            onRandom: () => _startRandom(context, nationsAsync.valueOrNull),
             onBottom: () => context.go(Routes.startFromBottom),
           ),
           _ConfederationTabs(
@@ -113,16 +106,12 @@ class NationSelectScreen extends ConsumerWidget {
                       const SizedBox(height: AppSpacing.sm + 4),
                   itemBuilder: (context, i) {
                     final nation = filtered[i];
-                    final selectable = nationSelectable(
-                      nation,
-                      premiumUnlocked: premium,
-                    );
                     return _NationCard(
                       nation: nation,
                       star: stars[nation.id],
-                      locked: !selectable,
-                      onSelect: () =>
-                          _onSelect(context, nation, selectable: selectable),
+                      onSelect: () => context.go(
+                        '${Routes.newGame}?nationId=${nation.id}',
+                      ),
                     );
                   },
                 );
@@ -136,32 +125,11 @@ class NationSelectScreen extends ConsumerWidget {
 
   /// Picks a nation at random from everything this player may manage and goes
   /// straight to naming the manager.
-  void _startRandom(
-    BuildContext context,
-    List<Nation>? nations, {
-    required bool premium,
-  }) {
-    final pool = [
-      for (final n in nations ?? const <Nation>[])
-        if (nationSelectable(n, premiumUnlocked: premium)) n,
-    ];
+  void _startRandom(BuildContext context, List<Nation>? nations) {
+    final pool = nations ?? const <Nation>[];
     if (pool.isEmpty) return;
     final pick = pool[Random().nextInt(pool.length)];
     context.go('${Routes.newGame}?nationId=${pick.id}');
-  }
-
-  void _onSelect(
-    BuildContext context,
-    Nation nation, {
-    required bool selectable,
-  }) {
-    if (selectable) {
-      context.go('${Routes.newGame}?nationId=${nation.id}');
-    } else {
-      // A locked nation opens the paywall; if the unlock completes, the card
-      // rebuilds unlocked and the player selects it normally.
-      unawaited(showPaywall(context));
-    }
   }
 }
 
@@ -336,13 +304,11 @@ class _NationCard extends StatelessWidget {
   const _NationCard({
     required this.nation,
     required this.star,
-    required this.locked,
     required this.onSelect,
   });
 
   final Nation nation;
   final Player? star;
-  final bool locked;
   final VoidCallback onSelect;
 
   @override
@@ -430,7 +396,7 @@ class _NationCard extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(width: AppSpacing.sm),
-                _SelectButton(locked: locked, onTap: onSelect),
+                _SelectButton(onTap: onSelect),
               ],
             ),
           ),
@@ -441,27 +407,13 @@ class _NationCard extends StatelessWidget {
 }
 
 class _SelectButton extends StatelessWidget {
-  const _SelectButton({required this.locked, required this.onTap});
+  const _SelectButton({required this.onTap});
 
-  final bool locked;
   final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
-    if (locked) {
-      return OutlinedButton.icon(
-        onPressed: onTap,
-        style: OutlinedButton.styleFrom(
-          foregroundColor: AppColors.onSurfaceVariant,
-          side: const BorderSide(color: AppColors.outlineVariant),
-          shape: const RoundedRectangleBorder(borderRadius: AppRadii.baseAll),
-        ),
-        icon: const Icon(Icons.lock, size: 16),
-        label: Text(l.nationsPremium, style: AppTypography.labelSmall),
-      );
-    }
-
     return Material(
       color: Colors.transparent,
       borderRadius: AppRadii.baseAll,

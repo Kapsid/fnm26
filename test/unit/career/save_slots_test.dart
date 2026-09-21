@@ -3,12 +3,10 @@ import 'package:fnm/domain/services/entitlement/entitlement.dart';
 
 void main() {
   group('save slots', () {
-    test('the free tier gets three', () {
-      expect(maxSaveSlots(premiumUnlocked: false), 3);
-    });
-
-    test('Pro gets ten', () {
-      expect(maxSaveSlots(premiumUnlocked: true), 10);
+    test('are the same for everyone', () {
+      // The trial holds back the second cycle, and nothing else. A free
+      // player who wants three saves on the go gets three saves on the go.
+      expect(kSaveSlots, 10);
     });
   });
 }

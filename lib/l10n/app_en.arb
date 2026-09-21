@@ -1676,6 +1676,14 @@
   "@hubBeginNextCycle": {
     "description": "Button to begin the next cycle."
   },
+  "hubContinueCareer": "Continue your career",
+  "@hubContinueCareer": {
+    "description": "Rollover button at the end of the free cycle: opens the paywall."
+  },
+  "hubBackToSaves": "Back to your saves",
+  "@hubBackToSaves": {
+    "description": "Way out of the end-of-trial rollover screen without buying."
+  },
   "hubOpeningBalance": "Opening balance",
   "@hubOpeningBalance": {
     "description": "Finances row: opening balance."
@@ -2397,10 +2405,6 @@
       }
     }
   },
-  "careerProUpTo5": "Pro: up to 10",
-  "@careerProUpTo5": {
-    "description": "Note that Pro allows up to ten saves."
-  },
   "careerThisSave": "this save",
   "@careerThisSave": {
     "description": "Marker for the current save."
@@ -2408,10 +2412,6 @@
   "careerSlotsFull": "Slots full",
   "@careerSlotsFull": {
     "description": "Shown when all save slots are used."
-  },
-  "careerSlotsFullGoPro": "Slots full. Go Pro for 10",
-  "@careerSlotsFullGoPro": {
-    "description": "Shown when slots are full, prompting Pro."
   },
   "careerNewGame": "New Game",
   "@careerNewGame": {
@@ -3852,15 +3852,15 @@
   "@paywallOneTimeUnlock": {
     "description": "Paywall subtitle clarifying it is a one-off purchase."
   },
-  "paywallBenefitEveryNation": "Manage every nation in the world",
-  "@paywallBenefitEveryNation": {
-    "description": "Paywall benefit line."
+  "paywallBenefitCarryOn": "Your save carries on exactly where it stopped",
+  "@paywallBenefitCarryOn": {
+    "description": "Paywall benefit line: the existing career continues."
   },
-  "paywallBenefitSaveSlots": "10 save slots instead of 3",
-  "@paywallBenefitSaveSlots": {
-    "description": "Paywall benefit line."
+  "paywallBenefitOffline": "No subscription, no ads, no account",
+  "@paywallBenefitOffline": {
+    "description": "Paywall benefit line: one payment and nothing collected."
   },
-  "paywallBenefitEndless": "Unlimited careers, forever",
+  "paywallBenefitEndless": "Every cycle from here on",
   "@paywallBenefitEndless": {
     "description": "Paywall benefit line."
   },
@@ -11140,46 +11140,6 @@
   "@tourThirdsUneven": {
     "description": "Best-third-placed table: why some results are dropped."
   },
-  "gateTitle": "YOUR FIRST CYCLE IS OVER",
-  "@gateTitle": {
-    "description": "Premium gate: headline at the end of the free cycle."
-  },
-  "gateLead": "Four years, and nothing was held back. Carry this save on for one payment.",
-  "@gateLead": {
-    "description": "Premium gate: the pitch under the headline."
-  },
-  "gateBenefitEndless": "Every cycle from here on",
-  "@gateBenefitEndless": {
-    "description": "Premium gate benefit."
-  },
-  "gateBenefitNations": "Every nation in the world",
-  "@gateBenefitNations": {
-    "description": "Premium gate benefit."
-  },
-  "gateBenefitOffline": "No subscription, no ads, no account",
-  "@gateBenefitOffline": {
-    "description": "Premium gate benefit."
-  },
-  "gatePriceLead": "One payment, forever",
-  "@gatePriceLead": {
-    "description": "Premium gate: the line above the price."
-  },
-  "gatePrice": "€12.99",
-  "@gatePrice": {
-    "description": "Premium gate: the price. Placeholder until the store's own localised price is wired in."
-  },
-  "gateBuy": "BUY AND CONTINUE",
-  "@gateBuy": {
-    "description": "Premium gate: the button that continues the career."
-  },
-  "gateExit": "EXIT",
-  "@gateExit": {
-    "description": "Premium gate: the button that leaves the save."
-  },
-  "gateNotChargedYet": "Not connected to payment yet. This button just continues.",
-  "@gateNotChargedYet": {
-    "description": "Premium gate: an honest note while the store is not wired up."
-  },
   "backupTitle": "SAVES",
   "@backupTitle": {
     "description": "Settings: heading for the backup section."
@@ -11693,7 +11653,7 @@
   "@settingsUnlockedTitle": {
     "description": "Settings: what the free game covers."
   },
-  "settingsUnlockedBlurb": "Unlimited careers, every nation, ten save slots and every future update. Thank you.",
+  "settingsUnlockedBlurb": "Unlimited careers, every nation and every future update. Thank you.",
   "@settingsUnlockedBlurb": {
     "description": "Settings: what the free game covers."
   },

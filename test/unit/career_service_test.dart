@@ -24,11 +24,11 @@ void main() {
     return c;
   }
 
-  test('free tier allows 3 saves then blocks the 4th', () async {
+  test('a free player gets the same slots as anyone else', () async {
     container = build(premium: false);
     final service = container.read(careerServiceProvider);
 
-    for (var i = 0; i < maxSaveSlots(premiumUnlocked: false); i++) {
+    for (var i = 0; i < kSaveSlots; i++) {
       final r = await service.create(nationId: 1, managerName: 'M$i');
       expect(r.isSuccess, isTrue, reason: 'save ${i + 1}');
     }
@@ -41,11 +41,11 @@ void main() {
     );
   });
 
-  test('pro tier allows 10 saves then blocks the 11th', () async {
+  test('the slots fill up and then block the next one', () async {
     container = build(premium: true);
     final service = container.read(careerServiceProvider);
 
-    for (var i = 0; i < maxSaveSlots(premiumUnlocked: true); i++) {
+    for (var i = 0; i < kSaveSlots; i++) {
       final r = await service.create(nationId: 1, managerName: 'M$i');
       expect(r.isSuccess, isTrue, reason: 'save ${i + 1}');
     }

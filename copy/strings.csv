@@ -303,6 +303,8 @@ hubFederationFinances,Heading of the federation finances panel.,,FEDERATION FINA
 hubBudgetIntro,Intro explaining the budget-setting task.,,Your first job next cycle is to set the federation budget and split it across the departments.,Vaším prvním úkolem v příštím cyklu bude sestavit rozpočet svazu a rozdělit ho mezi jednotlivé úseky.
 hubStarting,Progress label while the next cycle starts.,,Starting…,Spouštění…
 hubBeginNextCycle,Button to begin the next cycle.,,Begin next cycle,Zahájit další cyklus
+hubContinueCareer,Rollover button at the end of the free cycle: opens the paywall.,,Continue your career,Pokračovat v kariéře
+hubBackToSaves,Way out of the end-of-trial rollover screen without buying.,,Back to your saves,Zpět na uložené hry
 hubOpeningBalance,Finances row: opening balance.,,Opening balance,Počáteční zůstatek
 hubCentralFunding,Finances row: central funding.,,Central funding,Centrální dotace
 hubPrizeMoney,Finances row: prize money.,,Prize money,Prémie
@@ -449,10 +451,8 @@ careerWinnersName,Winners line with the winner name.,{name},Winners: {name},Vít
 careerSavesTitle,App-bar title on the saves screen.,,SAVES,ULOŽENÉ HRY
 careerCouldNotLoadSaves,Error when saves fail to load.,{error},Could not load saves.\n{error},Uložené hry se nepodařilo načíst.\n{error}
 careerSlotsCount,Save-slot usage out of the limit.,{used} {limit},SLOTS  {used}/{limit},POZICE  {used}/{limit}
-careerProUpTo5,Note that Pro allows up to ten saves.,,Pro: up to 10,Pro: až 10
 careerThisSave,Marker for the current save.,,this save,toto uložení
 careerSlotsFull,Shown when all save slots are used.,,Slots full,Pozice plné
-careerSlotsFullGoPro,"Shown when slots are full, prompting Pro.",,Slots full. Go Pro for 10,Pozice plné. Pořiďte si Pro pro 10
 careerNewGame,Button starting a new game.,,New Game,Nová hra
 careerDeleteSaveTitle,Title of the delete-save dialog.,,Delete save?,Smazat uloženou hru?
 careerDeleteSaveBody,Body of the delete-save dialog.,{label},This permanently deletes your {label} career.,Tímto trvale smažete vaši kariéru ({label}).
@@ -787,9 +787,9 @@ achievementsThisSave,Section heading for this save's procedural challenges.,,THI
 achievementsBrutalBadge,Badge marking an especially hard challenge.,,BRUTAL,BRUTÁLNÍ
 paywallGoPro,Paywall heading inviting the player to upgrade to Pro.,,GO PRO,PŘEJÍT NA PRO
 paywallOneTimeUnlock,Paywall subtitle clarifying it is a one-off purchase.,,One-time unlock. No subscription.,Jednorázové odemčení. Žádné předplatné.
-paywallBenefitEveryNation,Paywall benefit line.,,Manage every nation in the world,Spravujte každou zemi na světě
-paywallBenefitSaveSlots,Paywall benefit line.,,10 save slots instead of 3,10 pozic pro uložení místo 3
-paywallBenefitEndless,Paywall benefit line.,,"Unlimited careers, forever","Neomezené kariéry, navždy"
+paywallBenefitCarryOn,Paywall benefit line: the existing career continues.,,Your save carries on exactly where it stopped,"Vaše uložená hra pokračuje přesně tam, kde skončila"
+paywallBenefitOffline,Paywall benefit line: one payment and nothing collected.,,"No subscription, no ads, no account","Žádné předplatné, žádné reklamy, žádný účet"
+paywallBenefitEndless,Paywall benefit line.,,Every cycle from here on,Každý další cyklus už bez omezení
 paywallUnlocked,Shown on the paywall once premium is already unlocked.,,Premium is unlocked. Enjoy!,Prémiová verze je odemčená. Užijte si ji!
 paywallContactingStore,Buy-button label while the purchase flow is in progress.,,Contacting the store…,Kontaktuji obchod…
 paywallUnlockPro,Buy-button label before the store price has loaded.,,Unlock Pro,Odemknout Pro
@@ -1961,16 +1961,6 @@ yReactionShrug9,"Y reply: shrug, variant 9.",,Another one of those. There are a 
 yReactionShrug10,"Y reply: shrug, variant 10.",,I watched all of it and felt nothing at all.,Viděl jsem to celé a necítil vůbec nic.
 yReactionShrug11,"Y reply: shrug, variant 11.",,"If nobody mentions this again, that is fine by me.","Jestli to už nikdo nezmíní, budu jen rád."
 tourThirdsUneven,Best-third-placed table: why some results are dropped.,,"Groups are uneven, so results against each big group's bottom side are dropped and every team is judged over the same games.","Skupiny nejsou stejně velké, takže výsledky proti poslednímu týmu větších skupin se nezapočítávají a všechny týmy se hodnotí podle stejného počtu zápasů."
-gateTitle,Premium gate: headline at the end of the free cycle.,,YOUR FIRST CYCLE IS OVER,PRVNÍ CYKLUS KONČÍ
-gateLead,Premium gate: the pitch under the headline.,,"Four years, and nothing was held back. Carry this save on for one payment.",Čtyři roky a nic vám nebylo zatajeno. Pokračujte v této hře za jednu platbu.
-gateBenefitEndless,Premium gate benefit.,,Every cycle from here on,Každý další cyklus
-gateBenefitNations,Premium gate benefit.,,Every nation in the world,Všechny země světa
-gateBenefitOffline,Premium gate benefit.,,"No subscription, no ads, no account","Žádné předplatné, žádné reklamy, žádný účet"
-gatePriceLead,Premium gate: the line above the price.,,"One payment, forever","Jedna platba, navždy"
-gatePrice,Premium gate: the price. Placeholder until the store's own localised price is wired in.,,€12.99,"12,99 €"
-gateBuy,Premium gate: the button that continues the career.,,BUY AND CONTINUE,KOUPIT A POKRAČOVAT
-gateExit,Premium gate: the button that leaves the save.,,EXIT,ODEJÍT
-gateNotChargedYet,Premium gate: an honest note while the store is not wired up.,,Not connected to payment yet. This button just continues.,Zatím není napojeno na platbu. Tlačítko jen pokračuje dál.
 backupTitle,Settings: heading for the backup section.,,SAVES,ULOŽENÉ HRY
 backupBlurb,Settings: what the backup section is for.,,Every save lives in one file on this phone. Export a copy so a lost or reinstalled phone does not cost you a career.,"Všechny uložené hry jsou v jednom souboru v tomto telefonu. Vytvořte si zálohu, aby vás ztráta nebo přeinstalace telefonu nestála kariéru."
 backupExport,Settings: the export button.,,EXPORT A BACKUP,EXPORTOVAT ZÁLOHU
@@ -2080,7 +2070,7 @@ careerLastAgo,"Saves list: how long since this save was opened, in one short uni
 settingsFreeScopeTitle,Settings: what the free game covers.,,One free four-year cycle,Jeden čtyřletý cyklus zdarma
 settingsFreeScopeBlurb,Settings: what the free game covers.,,"A complete cycle (qualifying, your continental championship and the World Championship) with nothing held back. Carrying a save on past it is a single payment, once, and it covers every save and every future update.","Celý cyklus (kvalifikace, kontinentální šampionát i mistrovství světa) bez jakéhokoli omezení. Pokračovat s uloženou hrou dál je jednorázová platba, jednou, a platí pro všechny uložené hry i všechny budoucí aktualizace."
 settingsUnlockedTitle,Settings: what the free game covers.,,Unlocked,Odemčeno
-settingsUnlockedBlurb,Settings: what the free game covers.,,"Unlimited careers, every nation, ten save slots and every future update. Thank you.","Neomezené kariéry, všechny národy, deset pozic pro uložení a všechny budoucí aktualizace. Děkujeme."
+settingsUnlockedBlurb,Settings: what the free game covers.,,"Unlimited careers, every nation and every future update. Thank you.","Neomezené kariéry, každá země a všechny budoucí aktualizace. Děkujeme."
 friendliesLikeYourCampaign,"Friendlies: why these opponents are suggested first, when the group is a qualifying campaign rather than a finals draw.",{rivals},"Marked below: sides who play like {rivals}, who you still have to face.","Označené jsou týmy podobné soupeřům, kteří vás ještě čekají: {rivals}."
 friendliesCloseToYou,"Friendlies: why these opponents are suggested first, before anything is drawn.",,"Marked below: the sides closest to you in the world ranking. Once you are drawn, the marks follow your group.","Označené jsou týmy nejblíž vám ve světovém žebříčku. Až vás vylosují, budou označovány podle vaší skupiny."
 transfersMoves,Transfer report: how many moves the window held.,"PLURAL — keep the {count, plural, …} skeleton exactly; translate only the words inside the branches","{count, plural, =1{1 move} other{{count} moves}}","{count, plural, =1{1 přestup} few{{count} přestupy} other{{count} přestupů}}"
