@@ -1,3 +1,4 @@
+import 'package:fnm/core/util/app_date.dart';
 import 'package:fnm/features/onboarding/tour_keys.dart';
 import 'dart:async';
 
@@ -28,7 +29,6 @@ import 'package:fnm/features/player/player_detail_screen.dart'
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart';
 
 /// Call-ups: choose which of the nation's eligible players are in the squad
 /// for this save. Only called-up players can be picked in the XI or brought on
@@ -707,14 +707,14 @@ class _CoverageBanner extends StatelessWidget {
               ),
             ),
             const SizedBox(height: AppSpacing.sm),
-            for (final f in window.matches.take(6)) _matchLine(l, f),
+            for (final f in window.matches.take(6)) _matchLine(context, l, f),
           ],
         ),
       ),
     );
   }
 
-  Widget _matchLine(AppLocalizations l, Fixture f) {
+  Widget _matchLine(BuildContext context, AppLocalizations l, Fixture f) {
     final oppId = f.homeNationId == window.playerNationId
         ? f.awayNationId
         : f.homeNationId;
@@ -728,9 +728,13 @@ class _CoverageBanner extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           SizedBox(
-            width: 52,
+            // 58, not the 52 it was: a Czech date carries the full stop of an
+            // ordinal ("30. lis"), and a seventh monospace character does not
+            // fit in 52 points. It wrapped rather than overflowed, which is
+            // the quiet kind of cut no exception reports.
+            width: 58,
             child: Text(
-              DateFormat('d MMM').format(f.date),
+              AppDate.dayMonth(context, f.date),
               style: AppTypography.labelSmall.copyWith(
                 color: AppColors.onSurfaceVariant,
               ),

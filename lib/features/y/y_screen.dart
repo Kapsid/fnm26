@@ -6,6 +6,7 @@ import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/core/routing/app_router.dart';
+import 'package:fnm/core/util/app_date.dart';
 import 'package:fnm/domain/services/press/y_feed.dart';
 import 'package:fnm/features/y/y_post_detail.dart';
 import 'package:fnm/features/y/y_profile_sheet.dart';
@@ -13,7 +14,6 @@ import 'package:fnm/features/y/y_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart';
 
 /// The words for a post.
 ///
@@ -641,7 +641,7 @@ class YPostTile extends StatelessWidget {
                               ),
                             ),
                             Text(
-                              ' · ${DateFormat('d MMM yy').format(post.date)}',
+                              ' · ${AppDate.dayMonthShortYear(context, post.date)}',
                               maxLines: 1,
                               style: AppTypography.labelSmall.copyWith(
                                 color: AppColors.onSurfaceVariant,

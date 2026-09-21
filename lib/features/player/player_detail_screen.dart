@@ -2,6 +2,7 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fnm/core/util/app_date.dart';
 import 'package:fnm/core/util/competition_label.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
@@ -23,7 +24,6 @@ import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/domain/services/player/player_traits.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart';
 
 typedef _PlayerView = ({
   Player? player,
@@ -716,9 +716,14 @@ class _HistoryRow extends StatelessWidget {
       child: Row(
         children: [
           SizedBox(
-            width: 58,
+            // 80, not the 58 it was. "30 Nov 30" is nine monospace characters
+            // and wanted 70 points before this change ever touched it; the
+            // Czech "30. lis 30" wants ten. Both were wrapping onto a second
+            // line inside a row built for one.
+            width: 80,
             child: Text(
-              DateFormat('d MMM yy').format(stat.date),
+              AppDate.dayMonthShortYear(context, stat.date),
+              maxLines: 1,
               style: AppTypography.labelSmall.copyWith(
                 color: AppColors.onSurfaceVariant,
               ),

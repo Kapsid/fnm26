@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/core/diagnostics/app_log.dart';
+import 'package:fnm/core/util/app_date.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/theme/app_colors.dart';
@@ -36,7 +37,6 @@ import 'package:fnm/features/tactics/condition_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart';
 
 /// In-game home ("National Hub"): continue/play, calendar, next match, squad
 /// status, and the group table, with the in-game bottom navigation.
@@ -213,7 +213,7 @@ class _HubScreenState extends ConsumerState<HubScreen> {
             return Center(child: Text(l.hubSaveNotFound));
           }
           final nation = hub.nations[hub.career.nationId];
-          final date = DateFormat('d MMM yyyy').format(hub.career.inGameDate);
+          final date = AppDate.dayMonthYear(context, hub.career.inGameDate);
           String code(int id) => hub.nations[id]?.code ?? '??';
           String name(int id) => hub.nations[id]?.name ?? l.hubUnknown;
           // Hide the opponent and group table until the draw has been watched.
@@ -664,7 +664,7 @@ class _NextMatch extends StatelessWidget {
         child: Center(child: Text(l.hubNoMoreFixtures)),
       );
     }
-    final date = DateFormat('EEE d MMM').format(f.date).toUpperCase();
+    final date = AppDate.weekdayDayMonthCaps(context, f.date);
     return AppCard(
       child: Column(
         children: [

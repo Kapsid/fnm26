@@ -2,7 +2,7 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:intl/intl.dart';
+import 'package:fnm/core/util/app_date.dart';
 import 'package:fnm/core/util/competition_label.dart';
 import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/theme/app_colors.dart';
@@ -655,7 +655,7 @@ class _RankChartPainter extends CustomPainter {
       }
 
       final date = label(
-        DateFormat('MM/yy').format(points[i].date),
+        AppDate.monthYearNumeric(points[i].date),
         AppColors.onSurfaceVariant,
         8,
         FontWeight.w600,

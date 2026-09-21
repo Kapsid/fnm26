@@ -4,11 +4,11 @@ import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
+import 'package:fnm/core/util/app_date.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart';
 
 /// The app's landing screen: jump straight back into the last save, start a new
 /// game, or open the full saves list.
@@ -162,7 +162,7 @@ class _ContinueCard extends StatelessWidget {
                   const SizedBox(height: 2),
                   Text(
                     l.homeRoadToWorldCup(
-                      DateFormat('MMM yyyy').format(inGameDate),
+                      AppDate.monthYear(context, inGameDate),
                       CareerService.worldCupYear(cyclePointer),
                     ),
                     maxLines: 1,

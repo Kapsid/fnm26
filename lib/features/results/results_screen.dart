@@ -4,13 +4,13 @@ import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
+import 'package:fnm/core/util/app_date.dart';
 import 'package:fnm/core/util/match_stage.dart';
 import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/features/results/results_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart';
 
 /// One competition's matches, split into what the manager is living through
 /// and the campaigns that are already history.
@@ -162,7 +162,7 @@ class _ResultsScreenState extends ConsumerState<ResultsScreen> {
                       ),
                       const SizedBox(width: AppSpacing.sm),
                       Text(
-                        DateFormat('d MMM yyyy').format(f.date),
+                        AppDate.dayMonthYear(context, f.date),
                         maxLines: 1,
                         style: AppTypography.labelSmall.copyWith(
                           color: AppColors.onSurfaceVariant,

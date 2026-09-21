@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fnm/core/util/app_date.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:fnm/features/career/career_transfer_providers.dart';
 import 'package:fnm/data/db/career_bundle.dart';
@@ -18,7 +19,6 @@ import 'package:fnm/features/paywall/paywall_sheet.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart';
 
 /// Lists save games: continue, delete, or start a new one (subject to the
 /// free/Pro slot limit).
@@ -289,7 +289,7 @@ class SaveTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
-    final date = DateFormat('MMM yyyy').format(save.inGameDate);
+    final date = AppDate.monthYear(context, save.inGameDate);
     return AppCard(
       onTap: onContinue,
       child: Row(

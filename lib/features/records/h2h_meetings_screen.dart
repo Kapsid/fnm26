@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fnm/core/util/app_date.dart';
 import 'package:fnm/core/util/competition_label.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
@@ -10,7 +11,6 @@ import 'package:fnm/features/records/head_to_head_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart';
 
 /// Every past meeting between two nations — result, date and competition — the
 /// detail behind a head-to-head record. Reached from the match preview or the
@@ -161,7 +161,7 @@ class _MeetingRow extends StatelessWidget {
                   Row(
                     children: [
                       Text(
-                        DateFormat('d MMM yyyy').format(m.date),
+                        AppDate.dayMonthYear(context, m.date),
                         style: AppTypography.labelSmall.copyWith(
                           color: AppColors.onSurfaceVariant,
                         ),

@@ -225,7 +225,10 @@ void main() {
       );
     }
     // And it sits below everything from the campaign being played now.
-    expect(topOf(tester, '1 Sep 2026'), greaterThan(topOf(tester, '1 Mar 2030')));
+    expect(
+      topOf(tester, '1 Sep 2026'),
+      greaterThan(topOf(tester, '1 Mar 2030')),
+    );
   });
 
   testWidgets('a competition with no history offers nothing to open', (
@@ -256,10 +259,16 @@ void main() {
   for (final width in [360.0, 400.0]) {
     for (final locale in [const Locale('en'), const Locale('cs')]) {
       final at = 'at ${width.toInt()}px in ${locale.languageCode}';
+      // Dates are written in the manager's language now (see AppDate), so a
+      // Czech run reads "1. zář 2030" where an English one reads "1 Sep
+      // 2030". Same day, same row, one more character.
+      final czech = locale.languageCode == 'cs';
+      final soonest = czech ? '1. zář 2030' : '1 Sep 2030';
+      final oldest = czech ? '1. zář 2026' : '1 Sep 2026';
 
       testWidgets('the screen prints every word whole, $at', (tester) async {
-            await pumpResults(tester, width: width, locale: locale);
-        expectWhole(find.text('1 Sep 2030'), 'a fixture date');
+        await pumpResults(tester, width: width, locale: locale);
+        expectWhole(find.text(soonest), 'a fixture date');
         expectNothingCut(tester);
         expect(tester.takeException(), isNull);
       });
@@ -280,14 +289,14 @@ void main() {
       testWidgets('the opened history prints every word whole, $at', (
         tester,
       ) async {
-            await pumpResults(tester, width: width, locale: locale);
+        await pumpResults(tester, width: width, locale: locale);
         final header = locale.languageCode == 'cs'
             ? 'Starší zápasy (3)'
             : 'Earlier matches (3)';
         expectWhole(find.text(header), 'the earlier-matches line');
         await tester.tap(find.text(header));
         await tester.pumpAndSettle();
-        expectWhole(find.text('1 Sep 2026'), 'an older fixture date');
+        expectWhole(find.text(oldest), 'an older fixture date');
         expectNothingCut(tester);
         expect(tester.takeException(), isNull);
       });

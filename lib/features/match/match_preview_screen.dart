@@ -4,6 +4,7 @@ import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
+import 'package:fnm/core/util/app_date.dart';
 import 'package:fnm/core/util/match_stage.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/formation.dart';
@@ -24,7 +25,6 @@ import 'package:fnm/features/tournaments/wc_host_theme.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart';
 
 /// The World Cup finals rounds — a match on one of these is host-themed once
 /// the tournament has kicked off.
@@ -136,30 +136,12 @@ class MatchPreviewScreen extends ConsumerWidget {
               // engine decide", which is fine to play with and terrible to
               // never be told about.
               SquadSetupWarning(careerId: careerId),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  _Side(
-                    code: code(f.homeNationId),
-                    overall: squadOverall(preview.homeTeam.xi),
-                  ),
-                  Column(
-                    children: [
-                      const Text('VS', style: AppTypography.labelLarge),
-                      const SizedBox(height: 2),
-                      Text(
-                        DateFormat('EEE d MMM').format(f.date).toUpperCase(),
-                        style: AppTypography.labelSmall.copyWith(
-                          color: AppColors.onSurfaceVariant,
-                        ),
-                      ),
-                    ],
-                  ),
-                  _Side(
-                    code: code(f.awayNationId),
-                    overall: squadOverall(preview.awayTeam.xi),
-                  ),
-                ],
+              MatchHeadline(
+                homeCode: code(f.homeNationId),
+                homeOverall: squadOverall(preview.homeTeam.xi),
+                awayCode: code(f.awayNationId),
+                awayOverall: squadOverall(preview.awayTeam.xi),
+                date: f.date,
               ),
               const SizedBox(height: AppSpacing.lg),
               // Head-to-head and the scouting report share one card as two
@@ -726,6 +708,70 @@ class _Tally extends StatelessWidget {
   }
 }
 
+/// The fixture's headline: both squads' strength either side of the kick-off.
+///
+/// Its own widget so the width guard can pump the one row on this screen that
+/// is genuinely tight — three columns laid out `spaceEvenly` with no [Expanded]
+/// anywhere, so every one of them takes the width its longest word asks for
+/// and the row bursts rather than ellipsising when they do not fit. Czech asks
+/// for more of that width than English at every point: a longer word for the
+/// squad's overall, and a date that carries a full stop the English one does
+/// not.
+class MatchHeadline extends StatelessWidget {
+  const MatchHeadline({
+    required this.homeCode,
+    required this.homeOverall,
+    required this.awayCode,
+    required this.awayOverall,
+    required this.date,
+    super.key,
+  });
+
+  final String homeCode;
+  final int homeOverall;
+  final String awayCode;
+  final int awayOverall;
+
+  /// When the match kicks off, written for the manager by [AppDate].
+  final DateTime date;
+
+  @override
+  Widget build(BuildContext context) => Row(
+    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+    children: [
+      // Flexible, all three: every child here used to take the width its
+      // longest word asked for, and the Czech word for a squad's overall is
+      // "Celkový přehled" — fifteen characters against the English seven. Two
+      // of those plus the date is more than a 360pt phone has, so the row
+      // painted outside its own card. Given a share of the width they can be
+      // held to, they give up their last letters instead, which is a thing
+      // the manager can at least see happening.
+      Flexible(
+        child: _Side(code: homeCode, overall: homeOverall),
+      ),
+      Flexible(
+        child: Column(
+          children: [
+            const Text('VS', style: AppTypography.labelLarge),
+            const SizedBox(height: 2),
+            Text(
+              AppDate.weekdayDayMonthCaps(context, date),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: AppTypography.labelSmall.copyWith(
+                color: AppColors.onSurfaceVariant,
+              ),
+            ),
+          ],
+        ),
+      ),
+      Flexible(
+        child: _Side(code: awayCode, overall: awayOverall),
+      ),
+    ],
+  );
+}
+
 class _Side extends StatelessWidget {
   const _Side({required this.code, required this.overall});
   final String code;
@@ -741,10 +787,13 @@ class _Side extends StatelessWidget {
       children: [
         FlagDisc(code, size: 48),
         const SizedBox(height: AppSpacing.xs),
-        Text(code, style: AppTypography.labelMedium),
+        Text(code, maxLines: 1, style: AppTypography.labelMedium),
         const SizedBox(height: 2),
         Text(
           '${l10n.teamOverall} $overall',
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          textAlign: TextAlign.center,
           style: AppTypography.labelSmall.copyWith(
             color: AppColors.onSurfaceVariant,
           ),

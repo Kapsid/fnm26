@@ -408,8 +408,14 @@ void main() {
               shrinkOf(tester, wrappable('@$longestCast')),
               greaterThan(0),
             );
+            // Written in the manager's language now (see AppDate): "30. pro
+            // 31" in Czech against "30 Dec 31" in English, one character
+            // longer, in the tightest row the feed has.
             expectWhole(
-              find.textContaining('30 Dec 31', findRichText: false),
+              find.textContaining(
+                locale.languageCode == 'cs' ? '30. pro 31' : '30 Dec 31',
+                findRichText: false,
+              ),
               'the date',
             );
             expect(tester.takeException(), isNull);

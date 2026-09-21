@@ -4,6 +4,7 @@ import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
+import 'package:fnm/core/util/app_date.dart';
 import 'package:fnm/core/util/competition_label.dart';
 import 'package:fnm/domain/services/competition/trophies.dart';
 import 'package:fnm/features/career/manager_history_providers.dart';
@@ -12,7 +13,6 @@ import 'package:fnm/features/stats/team_overall_history.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart';
 
 /// The manager's whole journey: every cycle they've managed (nation, balance,
 /// tournament finishes) plus the career totals across all of them.
@@ -230,7 +230,7 @@ class _RecordResult extends StatelessWidget {
           Text(
             l.careerVsOpponentDate(
               result.opponentName,
-              DateFormat('MMM yyyy').format(result.date),
+              AppDate.monthYear(context, result.date),
             ),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
