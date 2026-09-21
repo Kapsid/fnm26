@@ -733,6 +733,21 @@ class AppLocalizationsEn extends AppLocalizations {
   String get tacticsInstructions => 'INSTRUCTIONS';
 
   @override
+  String get tacticsDrilling => 'DRILLING';
+
+  @override
+  String get tacticsDrillingUnplayed => 'UNPLAYED';
+
+  @override
+  String get tacticsDrillingNew => 'NEW';
+
+  @override
+  String get tacticsDrillingSettling => 'SETTLING';
+
+  @override
+  String get tacticsDrillingDrilled => 'DRILLED';
+
+  @override
   String get matchInstructionsLocked =>
       'Set before kick-off. You can change shape and make substitutions, but not rewrite your approach mid-match.';
 

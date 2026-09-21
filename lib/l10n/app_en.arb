@@ -1178,6 +1178,26 @@
   "@tacticsInstructions": {
     "description": "Heading above the tactical instruction sliders."
   },
+  "tacticsDrilling": "DRILLING",
+  "@tacticsDrilling": {
+    "description": "Label for the bar showing how well the side knows the shape it is playing."
+  },
+  "tacticsDrillingUnplayed": "UNPLAYED",
+  "@tacticsDrillingUnplayed": {
+    "description": "Familiarity band for a shape the side has never been fielded in."
+  },
+  "tacticsDrillingNew": "NEW",
+  "@tacticsDrillingNew": {
+    "description": "Familiarity band for a shape the side has only just started playing."
+  },
+  "tacticsDrillingSettling": "SETTLING",
+  "@tacticsDrillingSettling": {
+    "description": "Familiarity band for a shape that is starting to take hold."
+  },
+  "tacticsDrillingDrilled": "DRILLED",
+  "@tacticsDrillingDrilled": {
+    "description": "Familiarity band for a shape the side knows inside out."
+  },
   "matchInstructionsLocked": "Set before kick-off. You can change shape and make substitutions, but not rewrite your approach mid-match.",
   "@matchInstructionsLocked": {
     "description": "Shown in place of the instruction sliders during a live match, where they cannot be changed."

@@ -205,6 +205,11 @@ tacticsNoSubs,Shown when the bench is empty.,,No substitutes available.,Žádní
 tacticsChooseShape,Heading of the formation picker sheet.,,CHOOSE A SHAPE,VYBERTE ROZESTAVENÍ
 tacticsFormation,Heading above the formation selector.,,FORMATION,ROZESTAVENÍ
 tacticsInstructions,Heading above the tactical instruction sliders.,,INSTRUCTIONS,POKYNY
+tacticsDrilling,Label for the bar showing how well the side knows the shape it is playing.,,DRILLING,SEHRANOST
+tacticsDrillingUnplayed,Familiarity band for a shape the side has never been fielded in.,,UNPLAYED,NEHRANÉ
+tacticsDrillingNew,Familiarity band for a shape the side has only just started playing.,,NEW,NOVÉ
+tacticsDrillingSettling,Familiarity band for a shape that is starting to take hold.,,SETTLING,SEHRÁVÁ SE
+tacticsDrillingDrilled,Familiarity band for a shape the side knows inside out.,,DRILLED,SEHRANÉ
 matchInstructionsLocked,"Shown in place of the instruction sliders during a live match, where they cannot be changed.",,"Set before kick-off. You can change shape and make substitutions, but not rewrite your approach mid-match.","Nastaveno před výkopem. Rozestavení a střídání měnit můžeš, ale herní styl už v průběhu zápasu ne."
 tacticsInstrMentality,Instruction slider: overall mentality.,,Mentality,Mentalita
 tacticsInstrDefensive,Low end of the mentality slider.,,Defensive,Defenzivní

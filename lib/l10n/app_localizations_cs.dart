@@ -733,6 +733,21 @@ class AppLocalizationsCs extends AppLocalizations {
   String get tacticsInstructions => 'POKYNY';
 
   @override
+  String get tacticsDrilling => 'SEHRANOST';
+
+  @override
+  String get tacticsDrillingUnplayed => 'NEHRANÉ';
+
+  @override
+  String get tacticsDrillingNew => 'NOVÉ';
+
+  @override
+  String get tacticsDrillingSettling => 'SEHRÁVÁ SE';
+
+  @override
+  String get tacticsDrillingDrilled => 'SEHRANÉ';
+
+  @override
   String get matchInstructionsLocked =>
       'Nastaveno před výkopem. Rozestavení a střídání měnit můžeš, ale herní styl už v průběhu zápasu ne.';
 

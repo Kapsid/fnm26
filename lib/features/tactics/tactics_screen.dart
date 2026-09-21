@@ -21,6 +21,7 @@ import 'package:fnm/domain/services/squad/absence_outlook.dart';
 import 'package:fnm/domain/services/squad/captaincy.dart';
 import 'package:fnm/features/squad/captain_providers.dart';
 import 'package:fnm/features/tactics/absence_providers.dart';
+import 'package:fnm/features/tactics/familiarity_providers.dart';
 import 'package:fnm/features/tactics/nation_squad_tab.dart';
 import 'package:fnm/features/tactics/player_roles_providers.dart';
 import 'package:fnm/features/tactics/set_piece_takers_providers.dart';
@@ -80,6 +81,11 @@ class TacticsScreen extends ConsumerWidget {
     final outlooks =
         ref.watch(absenceOutlookProvider(careerId)).valueOrNull ??
         const <int, AbsenceOutlook>{};
+    // Familiarity per shape, 0..1 — and only familiarity: what the opposition
+    // has worked out is hidden by design and never leaves the data layer.
+    final drilling =
+        ref.watch(shapeDrillingProvider(careerId)).valueOrNull ??
+        const <Formation, double>{};
 
     return DefaultTabController(
       length: 4,
@@ -334,6 +340,11 @@ class TacticsScreen extends ConsumerWidget {
                           FormationField(
                             key: TourKeys.tacticsFormation,
                             selected: tactic.formation,
+                            // How well the side knows each shape. The drilling
+                            // bonus was already in the engine and already
+                            // moved results, with nothing on screen to say so,
+                            // which makes a real effect read as imaginary.
+                            drilling: drilling,
                             onSelected: (f) =>
                                 service.setFormation(careerId, f),
                           ),

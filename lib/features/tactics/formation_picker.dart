@@ -3,6 +3,7 @@ import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/domain/entities/formation.dart';
+import 'package:fnm/domain/services/tactics/familiarity_band.dart';
 import 'package:fnm/features/tactics/tactics_pitch.dart' show layoutOf;
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
@@ -19,11 +20,20 @@ class FormationField extends StatelessWidget {
   const FormationField({
     required this.selected,
     required this.onSelected,
+    this.drilling,
     super.key,
   });
 
   final Formation selected;
   final ValueChanged<Formation> onSelected;
+
+  /// How drilled the side is in each shape it has been fielded in, `0..1`;
+  /// shapes never played are absent from the map and read as unplayed.
+  ///
+  /// Null means "no reading available" and shows none at all — the in-match
+  /// editor uses the same control, and drilling is preparation, not something
+  /// that moves at half-time.
+  final Map<Formation, double>? drilling;
 
   Future<void> _open(BuildContext context) async {
     final picked = await showModalBottomSheet<Formation>(
@@ -51,6 +61,7 @@ class FormationField extends StatelessWidget {
                   controller: controller,
                   child: FormationPicker(
                     selected: selected,
+                    drilling: drilling,
                     onSelected: (f) => Navigator.of(sheetContext).pop(f),
                   ),
                 ),
@@ -93,6 +104,24 @@ class FormationField extends StatelessWidget {
                     color: AppColors.onSurfaceVariant,
                   ),
                 ),
+                // How well the side knows the shape it is in. The effect was
+                // always in the engine and never on the screen, which makes a
+                // real thing read as imaginary.
+                if (drilling case final d?) ...[
+                  const SizedBox(height: 6),
+                  Row(
+                    children: [
+                      SizedBox(
+                        width: 56,
+                        child: DrillingBar(familiarity: d[selected]),
+                      ),
+                      const SizedBox(width: AppSpacing.sm),
+                      Flexible(
+                        child: DrillingLabel(familiarity: d[selected]),
+                      ),
+                    ],
+                  ),
+                ],
               ],
             ),
           ),
@@ -119,20 +148,25 @@ class FormationPicker extends StatelessWidget {
   const FormationPicker({
     required this.selected,
     required this.onSelected,
+    this.drilling,
     super.key,
   });
 
   final Formation selected;
   final ValueChanged<Formation> onSelected;
 
+  /// Familiarity per shape, `0..1`. See [FormationField.drilling].
+  final Map<Formation, double>? drilling;
+
   @override
   Widget build(BuildContext context) => GridView.builder(
     shrinkWrap: true,
     physics: const NeverScrollableScrollPhysics(),
     padding: EdgeInsets.zero,
-    gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+    gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
       maxCrossAxisExtent: 92,
-      childAspectRatio: 0.78,
+      // Room under the label for the drilling reading, where there is one.
+      childAspectRatio: drilling == null ? 0.78 : 0.60,
       mainAxisSpacing: AppSpacing.sm,
       crossAxisSpacing: AppSpacing.sm,
     ),
@@ -142,6 +176,8 @@ class FormationPicker extends StatelessWidget {
       return FormationTile(
         formation: f,
         selected: f == selected,
+        familiarity: drilling?[f],
+        showDrilling: drilling != null,
         onTap: () => onSelected(f),
       );
     },
@@ -155,12 +191,21 @@ class FormationTile extends StatelessWidget {
     required this.formation,
     required this.selected,
     required this.onTap,
+    this.familiarity,
+    this.showDrilling = false,
     super.key,
   });
 
   final Formation formation;
   final bool selected;
   final VoidCallback onTap;
+
+  /// Stored familiarity with this shape, `0..1`, or null for a shape the side
+  /// has never been fielded in.
+  final double? familiarity;
+
+  /// Whether a drilling reading belongs on this tile at all.
+  final bool showDrilling;
 
   @override
   Widget build(BuildContext context) {
@@ -195,14 +240,32 @@ class FormationTile extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 3),
-          Text(
-            formation.label,
-            maxLines: 1,
-            style: AppTypography.labelSmall.copyWith(
-              color: selected ? AppColors.primary : AppColors.onSurfaceVariant,
-              fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
+          // Scaled down rather than clipped. Four across on a narrow phone
+          // leaves about seventy points a tile, and the longest shapes
+          // ("4-1-2-1-2") are the ones a manager is least able to guess from
+          // half of themselves.
+          SizedBox(
+            width: double.infinity,
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Text(
+                formation.label,
+                maxLines: 1,
+                style: AppTypography.labelSmall.copyWith(
+                  color: selected
+                      ? AppColors.primary
+                      : AppColors.onSurfaceVariant,
+                  fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
+                ),
+              ),
             ),
           ),
+          if (showDrilling) ...[
+            const SizedBox(height: 4),
+            DrillingBar(familiarity: familiarity),
+            const SizedBox(height: 2),
+            DrillingLabel(familiarity: familiarity, align: TextAlign.center),
+          ],
         ],
       ),
     );
@@ -240,3 +303,87 @@ class _ShapePainter extends CustomPainter {
   bool shouldRepaint(_ShapePainter old) =>
       old.color != color || old.layout != layout;
 }
+
+/// A thin bar that fills with how drilled the side is in one shape.
+///
+/// A null [familiarity] is a shape never fielded: the track is still drawn,
+/// empty. "You have never played this" is a real state and has to look
+/// different from "absent", which is what leaving the bar off would say.
+///
+/// The bar is fed familiarity ALONE. Predictability — how well opponents have
+/// read the side — is hidden by design, and a manager who could subtract this
+/// reading from anything else on screen would have it back.
+class DrillingBar extends StatelessWidget {
+  const DrillingBar({required this.familiarity, super.key});
+
+  final double? familiarity;
+
+  @override
+  Widget build(BuildContext context) {
+    final band = familiarityBand(familiarity);
+    return Semantics(
+      label: AppLocalizations.of(context).tacticsDrilling,
+      value: _bandWord(AppLocalizations.of(context), band),
+      child: Container(
+        height: 4,
+        decoration: const BoxDecoration(
+          color: AppColors.outlineVariant,
+          borderRadius: AppRadii.smAll,
+        ),
+        child: FractionallySizedBox(
+          alignment: Alignment.centerLeft,
+          widthFactor: (familiarity ?? 0).clamp(0.0, 1.0),
+          child: DecoratedBox(
+            decoration: BoxDecoration(
+              color: _bandColor(band),
+              borderRadius: AppRadii.smAll,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// The band under the bar, in words: new, settling, drilled.
+///
+/// Words and not a percentage on purpose. The manager is being told how well
+/// his side knows the shape, not handed a number to farm to 100.
+class DrillingLabel extends StatelessWidget {
+  const DrillingLabel({required this.familiarity, this.align, super.key});
+
+  final double? familiarity;
+  final TextAlign? align;
+
+  @override
+  Widget build(BuildContext context) {
+    final band = familiarityBand(familiarity);
+    return Text(
+      _bandWord(AppLocalizations.of(context), band),
+      textAlign: align,
+      // Two lines, because the longest band word in Czech is two words and the
+      // narrowest tile in the grid is about seventy points across.
+      maxLines: 2,
+      style: AppTypography.labelSmall.copyWith(
+        fontSize: 9,
+        letterSpacing: 0.2,
+        height: 1.2,
+        color: _bandColor(band),
+      ),
+    );
+  }
+}
+
+String _bandWord(AppLocalizations l, FamiliarityBand band) => switch (band) {
+  FamiliarityBand.unplayed => l.tacticsDrillingUnplayed,
+  FamiliarityBand.fresh => l.tacticsDrillingNew,
+  FamiliarityBand.settling => l.tacticsDrillingSettling,
+  FamiliarityBand.drilled => l.tacticsDrillingDrilled,
+};
+
+Color _bandColor(FamiliarityBand band) => switch (band) {
+  FamiliarityBand.unplayed => AppColors.onSurfaceVariant,
+  FamiliarityBand.fresh => AppColors.onSurfaceVariant,
+  FamiliarityBand.settling => AppColors.onSurfaceVariant,
+  FamiliarityBand.drilled => AppColors.primary,
+};

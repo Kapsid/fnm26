@@ -1334,6 +1334,36 @@ abstract class AppLocalizations {
   /// **'INSTRUCTIONS'**
   String get tacticsInstructions;
 
+  /// Label for the bar showing how well the side knows the shape it is playing.
+  ///
+  /// In en, this message translates to:
+  /// **'DRILLING'**
+  String get tacticsDrilling;
+
+  /// Familiarity band for a shape the side has never been fielded in.
+  ///
+  /// In en, this message translates to:
+  /// **'UNPLAYED'**
+  String get tacticsDrillingUnplayed;
+
+  /// Familiarity band for a shape the side has only just started playing.
+  ///
+  /// In en, this message translates to:
+  /// **'NEW'**
+  String get tacticsDrillingNew;
+
+  /// Familiarity band for a shape that is starting to take hold.
+  ///
+  /// In en, this message translates to:
+  /// **'SETTLING'**
+  String get tacticsDrillingSettling;
+
+  /// Familiarity band for a shape the side knows inside out.
+  ///
+  /// In en, this message translates to:
+  /// **'DRILLED'**
+  String get tacticsDrillingDrilled;
+
   /// Shown in place of the instruction sliders during a live match, where they cannot be changed.
   ///
   /// In en, this message translates to:
