@@ -12006,7 +12006,7 @@ abstract class AppLocalizations {
   /// Staff role effect.
   ///
   /// In en, this message translates to:
-  /// **'Runs the training. Everything you focus on, he does more of.'**
+  /// **'Runs the training: fewer injuries, and better youngsters coming through.'**
   String get managerRoleAssistantBlurb;
 
   /// Staff role.
@@ -12018,7 +12018,7 @@ abstract class AppLocalizations {
   /// Staff role effect.
   ///
   /// In en, this message translates to:
-  /// **'Tells you what a young player will become, sooner.'**
+  /// **'Watches the world\'s teenagers. Nothing he reports reaches your squad yet.'**
   String get managerRoleScoutBlurb;
 
   /// Staff role.
@@ -12032,6 +12032,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Keeps them on the pitch.'**
   String get managerRoleFitnessBlurb;
+
+  /// What the fitness coach in the job is doing, in injury rate.
+  ///
+  /// In en, this message translates to:
+  /// **'{percent}% fewer injuries'**
+  String staffEffectInjury(int percent);
+
+  /// What the assistant's hours with the youngest players are worth on the next intake.
+  ///
+  /// In en, this message translates to:
+  /// **'Youngsters +{points} overall'**
+  String staffEffectYouth(int points);
+
+  /// What filling the vacant fitness coach job would be worth.
+  ///
+  /// In en, this message translates to:
+  /// **'Hiring one: {min}% to {max}% fewer injuries'**
+  String staffHiringInjury(int min, int max);
+
+  /// Second line of what filling the vacant assistant job would be worth.
+  ///
+  /// In en, this message translates to:
+  /// **'and youngsters +{minPoints} to +{maxPoints} overall'**
+  String staffHiringYouth(int minPoints, int maxPoints);
+
+  /// Shown against a staff role that is wired to nothing in the game.
+  ///
+  /// In en, this message translates to:
+  /// **'No effect on your squad yet'**
+  String get staffEffectNone;
 
   /// Shown against a staff role with nobody hired.
   ///

@@ -4,8 +4,9 @@ import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/domain/services/manager/staff.dart';
-import 'package:fnm/features/federation/investment_editor.dart';
 import 'package:fnm/features/federation/federation_service.dart';
+import 'package:fnm/features/federation/investment_editor.dart';
+import 'package:fnm/features/federation/staff_effect.dart';
 import 'package:fnm/features/federation/staff_providers.dart';
 import 'package:fnm/features/manager/manager_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
@@ -92,12 +93,23 @@ class StaffCard extends ConsumerWidget {
                   contentPadding: EdgeInsets.zero,
                   leading: FlagDisc(c.country, size: 22),
                   title: WholeText(c.name, maxLines: 1),
-                  subtitle: Text(
-                    '${tierName(l, c.tier)} · '
-                    '${formatEuros(Staff.costPerCycle(c.tier))}',
-                    style: AppTypography.labelSmall.copyWith(
-                      color: AppColors.onSurfaceVariant,
-                    ),
+                  subtitle: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      WholeText(
+                        '${tierName(l, c.tier)} · '
+                        '${formatEuros(Staff.costPerCycle(c.tier))}',
+                        maxLines: 1,
+                        style: AppTypography.labelSmall.copyWith(
+                          color: AppColors.onSurfaceVariant,
+                        ),
+                      ),
+                      // The price is only half the decision. What THIS man at
+                      // THIS tier buys goes beside it, so the spend is weighed
+                      // where it is made.
+                      _RoleEffect(role: role, hired: c.tier),
+                    ],
                   ),
                   trailing: room.hired[role]?.id == c.id
                       ? const Icon(
@@ -165,25 +177,37 @@ class StaffCard extends ConsumerWidget {
               dense: true,
               contentPadding: EdgeInsets.zero,
               onTap: readOnly ? null : () => _pick(context, ref, role, room),
-              title: Text(roleName(l, role), style: AppTypography.bodyMedium),
-              subtitle: switch (room.hired[role]) {
-                null => Text(
-                  l.staffVacant,
-                  style: AppTypography.labelSmall.copyWith(
-                    color: AppColors.warning,
-                  ),
-                ),
-                final hired => Text(
-                  hired.name.isEmpty
-                      // Hired in an earlier cycle, so his name is no longer in
-                      // this cycle's applicant list — his standing still is.
-                      ? tierName(l, hired.tier)
-                      : '${hired.name} · ${tierName(l, hired.tier)}',
-                  style: AppTypography.labelSmall.copyWith(
-                    color: AppColors.onSurfaceVariant,
-                  ),
-                ),
-              },
+              title: WholeText(
+                roleName(l, role),
+                maxLines: 1,
+                style: AppTypography.bodyMedium,
+              ),
+              subtitle: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  switch (room.hired[role]) {
+                    null => Text(
+                      l.staffVacant,
+                      style: AppTypography.labelSmall.copyWith(
+                        color: AppColors.warning,
+                      ),
+                    ),
+                    final hired => WholeText(
+                      hired.name.isEmpty
+                          // Hired in an earlier cycle, so his name is no longer
+                          // in this cycle's applicant list — his standing is.
+                          ? tierName(l, hired.tier)
+                          : '${hired.name} · ${tierName(l, hired.tier)}',
+                      maxLines: 1,
+                      style: AppTypography.labelSmall.copyWith(
+                        color: AppColors.onSurfaceVariant,
+                      ),
+                    ),
+                  },
+                  _RoleEffect(role: role, hired: room.hired[role]?.tier),
+                ],
+              ),
               trailing: readOnly
                   ? (room.hired[role] == null
                         ? null
@@ -194,6 +218,52 @@ class StaffCard extends ConsumerWidget {
                       color: AppColors.onSurfaceVariant,
                     ),
             ),
+        ],
+      ),
+    );
+  }
+}
+
+/// What the person in this job is worth, stated in the unit his effect is
+/// applied in.
+///
+/// The manager's report was that hiring changed nothing he could see. It very
+/// nearly does not: see [StaffEffect] for which seam each role reaches and
+/// which reaches none. This line says the true figure and, where the answer is
+/// nothing, says that instead of a sentence that sounds like something.
+class _RoleEffect extends StatelessWidget {
+  const _RoleEffect({required this.role, required this.hired});
+
+  final StaffRole role;
+
+  /// How good the man in the job is, or null when nobody is in it.
+  final StaffTier? hired;
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    final lines = hired == null
+        ? StaffEffect.describeHiring(l, role)
+        : StaffEffect.describe(l, role, hired!);
+    final style = AppTypography.labelSmall.copyWith(
+      color: lines.isEmpty ? AppColors.onSurfaceVariant : AppColors.positive,
+      fontWeight: lines.isEmpty ? null : FontWeight.w700,
+    );
+    return Padding(
+      padding: const EdgeInsets.only(top: 2),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // A role wired to nothing gets the plain truth rather than a blank,
+          // so a manager can stop paying for it.
+          if (lines.isEmpty)
+            WholeText(l.staffEffectNone, maxLines: 1, style: style)
+          else
+            // One effect to a line. Run together they ran off a 360px phone in
+            // both languages, and a figure that has been scaled down to fit is
+            // a figure the manager has to squint at.
+            for (final line in lines) WholeText(line, style: style),
         ],
       ),
     );

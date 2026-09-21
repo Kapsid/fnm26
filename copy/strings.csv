@@ -1975,11 +1975,16 @@ managerSkillNegotiationBlurb,Manager skill effect.,,"Each point is 2% more money
 managerStaff,Manager screen: staff section heading.,,YOUR STAFF,VÁŠ REALIZAČNÍ TÝM
 managerStaffWages,Manager screen: the standing staff cost.,{amount},Wages: {amount} per cycle,Mzdy: {amount} za cyklus
 managerRoleAssistant,Staff role.,,Assistant Manager,Asistent trenéra
-managerRoleAssistantBlurb,Staff role effect.,,"Runs the training. Everything you focus on, he does more of.","Vede tréninky. Čemu se věnujete, toho udělá víc."
+managerRoleAssistantBlurb,Staff role effect.,,"Runs the training: fewer injuries, and better youngsters coming through.",Vede tréninky: méně zranění a lepší mladí hráči.
 managerRoleScout,Staff role.,,Chief Scout,Hlavní skaut
-managerRoleScoutBlurb,Staff role effect.,,"Tells you what a young player will become, sooner.","Dřív vám řekne, co z mladého hráče bude."
+managerRoleScoutBlurb,Staff role effect.,,Watches the world's teenagers. Nothing he reports reaches your squad yet.,Sleduje mladé hráče po celém světě. Jeho zprávy se k týmu zatím nedostanou.
 managerRoleFitness,Staff role.,,Fitness Coach,Kondiční trenér
 managerRoleFitnessBlurb,Staff role effect.,,Keeps them on the pitch.,Udrží hráče na hřišti.
+staffEffectInjury,"What the fitness coach in the job is doing, in injury rate.",{percent},{percent}% fewer injuries,O {percent} % méně zranění
+staffEffectYouth,What the assistant's hours with the youngest players are worth on the next intake.,{points},Youngsters +{points} overall,Mladíci +{points} na celkovém
+staffHiringInjury,What filling the vacant fitness coach job would be worth.,{min} {max},Hiring one: {min}% to {max}% fewer injuries,Po najmutí: o {min} až {max} % méně zranění
+staffHiringYouth,Second line of what filling the vacant assistant job would be worth.,{minPoints} {maxPoints},and youngsters +{minPoints} to +{maxPoints} overall,a mladíci +{minPoints} až +{maxPoints} na celkovém
+staffEffectNone,Shown against a staff role that is wired to nothing in the game.,,No effect on your squad yet,Na tým zatím nemá žádný vliv
 staffVacant,Shown against a staff role with nobody hired.,,Nobody in the job,Místo je neobsazené
 staffLeaveVacant,Option in the staff picker that hires nobody.,,Leave the job empty,Nechat místo neobsazené
 managerTierNone,Staff quality tier.,,None,Nikdo

@@ -16,7 +16,18 @@ abstract final class DepartmentEffect {
   /// The academy bonus expressed as approximate overall points (~+12 at full
   /// investment), which is a far more tangible read than a talent multiplier.
   static int youthOverall(int euros) =>
-      (FederationFinance.youthTalentBonus(euros) / 0.18 * 12).round();
+      overallFromTalentBonus(FederationFinance.youthTalentBonus(euros));
+
+  /// Any talent-scale bonus on the newgen intake, put on the same overall-point
+  /// scale the academy slider reads in.
+  ///
+  /// The academy is not the only thing feeding that bonus — the manager's own
+  /// eye and his assistant's hours are added to it in
+  /// `youthBonusByCycleProvider` — so the conversion lives on its own and the
+  /// staff room prices its share off exactly this, never off a second copy of
+  /// the ratio.
+  static int overallFromTalentBonus(double bonus) =>
+      (bonus / 0.18 * 12).round();
 
   /// The injury-rate reduction as a percentage off the base rate.
   static int injuryReductionPct(int euros) =>

@@ -11128,7 +11128,7 @@
   "@managerRoleAssistant": {
     "description": "Staff role."
   },
-  "managerRoleAssistantBlurb": "Runs the training. Everything you focus on, he does more of.",
+  "managerRoleAssistantBlurb": "Runs the training: fewer injuries, and better youngsters coming through.",
   "@managerRoleAssistantBlurb": {
     "description": "Staff role effect."
   },
@@ -11136,7 +11136,7 @@
   "@managerRoleScout": {
     "description": "Staff role."
   },
-  "managerRoleScoutBlurb": "Tells you what a young player will become, sooner.",
+  "managerRoleScoutBlurb": "Watches the world's teenagers. Nothing he reports reaches your squad yet.",
   "@managerRoleScoutBlurb": {
     "description": "Staff role effect."
   },
@@ -11147,6 +11147,52 @@
   "managerRoleFitnessBlurb": "Keeps them on the pitch.",
   "@managerRoleFitnessBlurb": {
     "description": "Staff role effect."
+  },
+  "staffEffectInjury": "{percent}% fewer injuries",
+  "@staffEffectInjury": {
+    "description": "What the fitness coach in the job is doing, in injury rate.",
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "staffEffectYouth": "Youngsters +{points} overall",
+  "@staffEffectYouth": {
+    "description": "What the assistant's hours with the youngest players are worth on the next intake.",
+    "placeholders": {
+      "points": {
+        "type": "int"
+      }
+    }
+  },
+  "staffHiringInjury": "Hiring one: {min}% to {max}% fewer injuries",
+  "@staffHiringInjury": {
+    "description": "What filling the vacant fitness coach job would be worth.",
+    "placeholders": {
+      "min": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "staffHiringYouth": "and youngsters +{minPoints} to +{maxPoints} overall",
+  "@staffHiringYouth": {
+    "description": "Second line of what filling the vacant assistant job would be worth.",
+    "placeholders": {
+      "minPoints": {
+        "type": "int"
+      },
+      "maxPoints": {
+        "type": "int"
+      }
+    }
+  },
+  "staffEffectNone": "No effect on your squad yet",
+  "@staffEffectNone": {
+    "description": "Shown against a staff role that is wired to nothing in the game."
   },
   "staffVacant": "Nobody in the job",
   "@staffVacant": {

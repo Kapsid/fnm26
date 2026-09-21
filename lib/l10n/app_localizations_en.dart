@@ -7589,20 +7589,43 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get managerRoleAssistantBlurb =>
-      'Runs the training. Everything you focus on, he does more of.';
+      'Runs the training: fewer injuries, and better youngsters coming through.';
 
   @override
   String get managerRoleScout => 'Chief Scout';
 
   @override
   String get managerRoleScoutBlurb =>
-      'Tells you what a young player will become, sooner.';
+      'Watches the world\'s teenagers. Nothing he reports reaches your squad yet.';
 
   @override
   String get managerRoleFitness => 'Fitness Coach';
 
   @override
   String get managerRoleFitnessBlurb => 'Keeps them on the pitch.';
+
+  @override
+  String staffEffectInjury(int percent) {
+    return '$percent% fewer injuries';
+  }
+
+  @override
+  String staffEffectYouth(int points) {
+    return 'Youngsters +$points overall';
+  }
+
+  @override
+  String staffHiringInjury(int min, int max) {
+    return 'Hiring one: $min% to $max% fewer injuries';
+  }
+
+  @override
+  String staffHiringYouth(int minPoints, int maxPoints) {
+    return 'and youngsters +$minPoints to +$maxPoints overall';
+  }
+
+  @override
+  String get staffEffectNone => 'No effect on your squad yet';
 
   @override
   String get staffVacant => 'Nobody in the job';

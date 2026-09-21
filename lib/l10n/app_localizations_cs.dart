@@ -7602,20 +7602,43 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get managerRoleAssistantBlurb =>
-      'Vede tréninky. Čemu se věnujete, toho udělá víc.';
+      'Vede tréninky: méně zranění a lepší mladí hráči.';
 
   @override
   String get managerRoleScout => 'Hlavní skaut';
 
   @override
   String get managerRoleScoutBlurb =>
-      'Dřív vám řekne, co z mladého hráče bude.';
+      'Sleduje mladé hráče po celém světě. Jeho zprávy se k týmu zatím nedostanou.';
 
   @override
   String get managerRoleFitness => 'Kondiční trenér';
 
   @override
   String get managerRoleFitnessBlurb => 'Udrží hráče na hřišti.';
+
+  @override
+  String staffEffectInjury(int percent) {
+    return 'O $percent % méně zranění';
+  }
+
+  @override
+  String staffEffectYouth(int points) {
+    return 'Mladíci +$points na celkovém';
+  }
+
+  @override
+  String staffHiringInjury(int min, int max) {
+    return 'Po najmutí: o $min až $max % méně zranění';
+  }
+
+  @override
+  String staffHiringYouth(int minPoints, int maxPoints) {
+    return 'a mladíci +$minPoints až +$maxPoints na celkovém';
+  }
+
+  @override
+  String get staffEffectNone => 'Na tým zatím nemá žádný vliv';
 
   @override
   String get staffVacant => 'Místo je neobsazené';
