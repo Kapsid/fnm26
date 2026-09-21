@@ -1834,3 +1834,98 @@ git commit -m "test: a width guard that fails when the manager cannot read it
 
 Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>"
 ```
+
+---
+
+## Amendments (user decisions, 2026-09-21)
+
+### Task 15 is rescoped: show the honest truth, do not make staff matter
+
+Building `StrengthFactors` (Task 12) established that staff barely affect a match at all. A full elite staff room is worth about **+1 rating point**; anything less rounds to zero. The only effect a match feels is the injury rate. `Staff.familiarityGain` — the assistant coach's drilling work — is **defined but never wired into anything**, and the scouting reach never touches a match.
+
+So the plan's premise for Task 15 ("surface the effect that already exists") was wrong: there is almost no effect to surface.
+
+**The user's decision: show what staff actually do today, and leave "make staff matter" to its own piece of work with its own design.** Task 15 therefore states the real numbers plainly — the injury-rate percentage and what it is worth — and does NOT wire up `familiarityGain` or raise any staff constant. A manager reading that screen learns the truth, which is that the staff room is near-cosmetic. That is a finding to act on later, not a thing to paper over now.
+
+---
+
+### Task 37: A man you left at home cannot score your extra-time winner
+
+Found during Task 9. In a match the manager **actually played**, extra-time goals are attributed through `_fieldedXi` with no `xi:` argument, so they are credited to the nation's best available 4-3-3 rather than the eleven he fielded.
+
+**Files:**
+- Modify: `lib/features/hub/hub_providers.dart:1235` and `:1244` (both inside `_playPlayerMatch`)
+- Test: `test/unit/hub/extra_time_attribution_test.dart` (create)
+
+**Interfaces:**
+- Consumes: `result.ratings`, which normal-time attribution already uses to know who was on the pitch.
+
+- [ ] **Step 1: Write the failing test**
+
+Play a match that goes to extra time with a manager-named XI that deliberately EXCLUDES the nation's best player. Assert no goal in the match is credited to anyone outside the eleven actually fielded (plus substitutes who came on).
+
+- [ ] **Step 2: Run it to verify it fails**
+
+Run: `flutter test test/unit/hub/extra_time_attribution_test.dart`
+Expected: FAIL, crediting a man who never played.
+
+- [ ] **Step 3: Thread the real XI**
+
+Pass the fielded eleven to `_attributeGoals` the way normal-time attribution already does, rather than letting it fall back to `xi ?? await _fieldedXi(...)`.
+
+- [ ] **Step 4: Run the tests and commit**
+
+```bash
+flutter test test/unit/hub/extra_time_attribution_test.dart
+git add -A
+git commit -m "fix: extra-time goals go to the men who were on the pitch
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>"
+```
+
+---
+
+### Task 38: A quick-simmed match is still the manager's team
+
+Found during Task 9. When the manager's own fixture is quick-simmed or skipped, `_fieldedXi` builds the nation's best 4-3-3 and ignores his call-ups, his saved XI and his formation entirely. Absences are now honoured (Task 9), but a man he never selected can still play for him.
+
+This decides what "the manager's team" means in a match he did not watch, so it is a design decision as much as a fix.
+
+**Files:**
+- Modify: `lib/features/hub/hub_providers.dart` (`_fieldedXi` / `_fieldedSubs` and their callers)
+- Test: `test/unit/hub/quick_sim_uses_squad_test.dart` (create)
+
+**Interfaces:**
+- Consumes: the stored lineup and call-ups for the manager's career; `selectable(pool, absences)` for per-match availability.
+
+- [ ] **Step 1: Decide the rule and write it down**
+
+The rule: a quick-simmed match for the MANAGER'S nation fields his saved XI and formation, with his call-ups as the pool, minus anyone the absences rule out, topped up from his named squad where the XI is short. Every OTHER nation keeps the current behaviour (best available, since nobody picked them).
+
+State this in the commit message and in a doc comment. Do not change the rule for other nations.
+
+- [ ] **Step 2: Write the failing test**
+
+Name a squad and an XI that deliberately leaves out the nation's best player, quick-sim that fixture, and assert the best player did not appear while the named XI did.
+
+- [ ] **Step 3: Run it to verify it fails**
+
+Run: `flutter test test/unit/hub/quick_sim_uses_squad_test.dart`
+Expected: FAIL, the best player plays.
+
+- [ ] **Step 4: Implement**
+
+`_fieldedXi` takes the manager's stored lineup when the nation is his and one exists. A stored XI may be stale (a named man since injured, retired or dropped), so filter through `selectable` and fill the gaps from his call-ups before falling back to the nation pool.
+
+- [ ] **Step 5: Check what it breaks**
+
+This changes which players appear in every skipped match, so results shift. Run `test/unit/hub`, `test/unit/match`, `test/unit/career/nation_switch_test.dart`, `test/unit/season_flow_test.dart` and `test/unit/full_cycle_test.dart` one file at a time. A test that encoded the OLD behaviour must be re-verified deliberately, not silently adjusted.
+
+- [ ] **Step 6: Commit**
+
+```bash
+git add -A
+git commit -m "fix: a match you skipped is still played by your team
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>"
+```
