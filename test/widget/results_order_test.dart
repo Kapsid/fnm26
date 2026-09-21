@@ -106,42 +106,6 @@ void main() {
   /// order the screen used to print them in.
   final storedOrder = [...oldCampaign, ...currentCampaign];
 
-  /// Asserts that every paragraph [finder] matches printed in full.
-  ///
-  /// `takeException` is not a width test: it passes for any amount of quiet
-  /// ellipsis, and a date that reads "1 Sep 20..." has failed at its only job.
-  void expectWhole(Finder finder, String what) {
-    final elements = finder.evaluate();
-    expect(elements, isNotEmpty, reason: '$what is not on screen at all');
-    for (final element in elements) {
-      final paragraph = element.renderObject! as RenderParagraph;
-      expect(
-        paragraph.didExceedMaxLines,
-        isFalse,
-        reason:
-            '$what is cut off: it wants '
-            '${paragraph.getMaxIntrinsicWidth(double.infinity)}px '
-            'and was given ${paragraph.size.width}px',
-      );
-    }
-  }
-
-  /// Asserts that NOTHING anywhere on the screen ran out of room, including
-  /// the label somebody added without a maxLines.
-  void expectNothingCut(WidgetTester tester) {
-    for (final element in find.byType(Text).evaluate()) {
-      final paragraph = element.renderObject;
-      if (paragraph is! RenderParagraph) continue;
-      expect(
-        paragraph.didExceedMaxLines,
-        isFalse,
-        reason:
-            'something on the results screen is cut off: '
-            '"${(element.widget as Text).data}"',
-      );
-    }
-  }
-
   Future<void> pumpResults(
     WidgetTester tester, {
     double width = 400,

@@ -30,27 +30,6 @@ import '../helpers/expect_whole.dart';
 /// ONE scale, that a quiet side is left alone rather than handed an empty box,
 /// and that the figure the whole panel exists for is never cut off.
 void main() {
-  /// Asserts that every [finder] match is rendered WHOLE, not ellipsised.
-  ///
-  /// `takeException` alone is not enough and never was: it passes for any
-  /// amount of quiet truncation, which is how six width bugs shipped past
-  /// width tests that already existed in this batch — two of them in English.
-  void expectWhole(Finder finder, String what) {
-    final elements = finder.evaluate();
-    expect(elements, isNotEmpty, reason: '$what is not on screen at all');
-    for (final element in elements) {
-      final paragraph = element.renderObject! as RenderParagraph;
-      expect(
-        paragraph.didExceedMaxLines,
-        isFalse,
-        reason:
-            '$what is cut off: it wants '
-            '${paragraph.getMaxIntrinsicWidth(double.infinity)}px '
-            'and was given ${paragraph.size.width}px',
-      );
-    }
-  }
-
   /// Pumps [panel] with the locale set on the MaterialApp itself.
   ///
   /// `Localizations.override` around a launcher does NOT reach a route pushed

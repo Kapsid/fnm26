@@ -9,6 +9,8 @@ import 'package:fnm/features/ranking/world_ranking_screen.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 
+import '../helpers/expect_whole.dart';
+
 /// What the ranking screen says about movement: the direction a nation has
 /// gone since the last freeze, how far, and — for the manager's own nation —
 /// the two places it came from and went to, spelled out above the table.
@@ -19,26 +21,6 @@ import 'package:fnm/shared/widgets/widgets.dart';
 /// so `expectWhole` can actually fail: this project's WholeText scales itself
 /// down to fit, which makes a width guard blind inside one.
 void main() {
-  /// Asserts that every [finder] match is rendered WHOLE, not ellipsised.
-  ///
-  /// `takeException` alone is not enough and never was: it passes for any
-  /// amount of quiet truncation.
-  void expectWhole(Finder finder, String what) {
-    final elements = finder.evaluate();
-    expect(elements, isNotEmpty, reason: '$what is not on screen at all');
-    for (final element in elements) {
-      final paragraph = element.renderObject! as RenderParagraph;
-      expect(
-        paragraph.didExceedMaxLines,
-        isFalse,
-        reason:
-            '$what is cut off: it wants '
-            '${paragraph.getMaxIntrinsicWidth(double.infinity)}px '
-            'and was given ${paragraph.size.width}px',
-      );
-    }
-  }
-
   Nation nation(int id, String name) => Nation(
     id: id,
     name: name,
@@ -148,6 +130,7 @@ void main() {
           // Three digits: the worst a 200-nation table can produce.
           await pumpAt(tester, row(-104), width: width, locale: locale);
           expectWhole(find.text('104'), 'the movement figure');
+          expectNothingCut(tester);
         });
       }
     }
@@ -179,6 +162,7 @@ void main() {
             'the from-and-to figure',
           );
           expectWhole(find.text('121'), 'the header movement figure');
+          expectNothingCut(tester);
         });
 
         testWidgets('whole at $width in $locale before any draw', (
@@ -202,6 +186,7 @@ void main() {
             find.text(l.rankingSinceCycleStart),
             'the arrows caption',
           );
+          expectNothingCut(tester);
         });
       }
     }
@@ -270,6 +255,7 @@ void main() {
 
           expectWhole(find.text(title), 'the jump message title');
           expectWhole(find.text(body), 'the jump message body');
+          expectNothingCut(tester);
         });
       }
     }

@@ -9,6 +9,8 @@ import 'package:fnm/features/federation/staff_effect.dart';
 import 'package:fnm/features/federation/staff_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 
+import '../helpers/expect_whole.dart';
+
 /// What the staff room says each hire is doing.
 ///
 /// The manager's report was that he could see no effect from the people he
@@ -25,27 +27,6 @@ import 'package:fnm/l10n/app_localizations.dart';
 /// `Staff.capsToKnow` is defined and never called. A screen that says so is
 /// worth more than one that pads the line.
 void main() {
-  /// Asserts that every [finder] match is rendered WHOLE, not ellipsised.
-  ///
-  /// `takeException` alone is not enough and never was: it passes for any
-  /// amount of quiet truncation, which is how six width bugs shipped past
-  /// width tests that already existed in this batch — two of them in English.
-  void expectWhole(Finder finder, String what) {
-    final elements = finder.evaluate();
-    expect(elements, isNotEmpty, reason: '$what is not on screen at all');
-    for (final element in elements) {
-      final paragraph = element.renderObject! as RenderParagraph;
-      expect(
-        paragraph.didExceedMaxLines,
-        isFalse,
-        reason:
-            '$what is cut off: it wants '
-            '${paragraph.getMaxIntrinsicWidth(double.infinity)}px '
-            'and was given ${paragraph.size.width}px',
-      );
-    }
-  }
-
   /// Text as it READS: [WholeText] threads zero-width spaces through a string
   /// so a long one can break anywhere, so plain `find.text` never finds it.
   Finder reading(String text) => find.byWidgetPredicate(
@@ -271,6 +252,7 @@ void main() {
           reading('No effect on your squad yet'),
           'the scout\'s line',
         );
+        expectNothingCut(tester);
       });
 
       testWidgets('every figure fits whole in Czech at ${width}px', (
@@ -306,6 +288,7 @@ void main() {
           reading('Na tým zatím nemá žádný vliv'),
           'the scout\'s line',
         );
+        expectNothingCut(tester);
       });
 
       testWidgets('an empty room fits whole in Czech at ${width}px', (
@@ -331,6 +314,7 @@ void main() {
           reading('a mladíci +2 až +3 na celkovém'),
           'the vacant assistant youth line',
         );
+        expectNothingCut(tester);
       });
     }
   });

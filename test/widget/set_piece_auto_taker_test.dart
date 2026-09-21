@@ -21,27 +21,6 @@ import '../helpers/fixtures.dart';
 void main() {
   const formation = Formation.f442;
 
-  /// Asserts that every [finder] match is rendered WHOLE, not ellipsised.
-  ///
-  /// `takeException` alone is not enough and never was: it passes for any
-  /// amount of quiet truncation. A taker's name cut to "Karel Vondráče…" is
-  /// exactly the guessing this feature exists to end.
-  void expectWhole(Finder finder, String what) {
-    final elements = finder.evaluate();
-    expect(elements, isNotEmpty, reason: '$what is not on screen at all');
-    for (final element in elements) {
-      final paragraph = element.renderObject! as RenderParagraph;
-      expect(
-        paragraph.didExceedMaxLines,
-        isFalse,
-        reason:
-            '$what is cut off: it wants '
-            '${paragraph.getMaxIntrinsicWidth(double.infinity)}px '
-            'and was given ${paragraph.size.width}px',
-      );
-    }
-  }
-
   /// The best technical man on the pitch, and a long name at that: the slot
   /// has to name him whether or not he fits comfortably.
   const bestName = 'Vondráčkovský-Nejedlý';

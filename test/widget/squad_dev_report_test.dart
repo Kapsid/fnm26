@@ -5,6 +5,7 @@ import 'package:fnm/features/messages/squad_dev_report.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 
+import '../helpers/expect_whole.dart';
 import '../helpers/pump_app.dart';
 
 /// The yearly development report, grouped.
@@ -16,23 +17,6 @@ import '../helpers/pump_app.dart';
 /// able to tell which block a name is in, at the widths a phone really is and
 /// in both languages.
 void main() {
-  /// Asserts that NOTHING anywhere on the screen ran out of room. Catches the
-  /// label somebody added without a maxLines, which wraps and makes its row
-  /// taller than the row beside it rather than overflowing loudly.
-  void expectNothingCut(WidgetTester tester) {
-    for (final element in find.byType(Text).evaluate()) {
-      final paragraph = element.renderObject;
-      if (paragraph is! RenderParagraph) continue;
-      expect(
-        paragraph.didExceedMaxLines,
-        isFalse,
-        reason:
-            'something on the development report is cut off: '
-            '"${(element.widget as Text).data}"',
-      );
-    }
-  }
-
   SquadDevRow row(
     String name, {
     required int age,

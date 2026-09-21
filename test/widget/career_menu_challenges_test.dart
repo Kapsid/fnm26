@@ -16,26 +16,6 @@ import '../helpers/expect_whole.dart';
 /// The menu is where the rest of a career lives, so they get a line of their
 /// own there, beside Achievements, and tapping it opens the challenges route.
 void main() {
-  /// Asserts that every [finder] match is rendered WHOLE, not ellipsised.
-  ///
-  /// `takeException` alone is not enough and never was: it passes for any
-  /// amount of quiet truncation.
-  void expectWhole(Finder finder, String what) {
-    final elements = finder.evaluate();
-    expect(elements, isNotEmpty, reason: '$what is not on screen at all');
-    for (final element in elements) {
-      final paragraph = element.renderObject! as RenderParagraph;
-      expect(
-        paragraph.didExceedMaxLines,
-        isFalse,
-        reason:
-            '$what is cut off: it wants '
-            '${paragraph.getMaxIntrinsicWidth(double.infinity)}px '
-            'and was given ${paragraph.size.width}px',
-      );
-    }
-  }
-
   /// The menu on its own router, so a tap can be followed to the route it
   /// asks for without standing up the whole app (and its database).
   ///

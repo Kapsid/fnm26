@@ -23,21 +23,6 @@ import '../helpers/pump_app.dart';
 /// and asks whether it ran out of room, which is the only guard that catches a
 /// label somebody forgot to bound.
 void main() {
-  /// Asserts that NOTHING anywhere on the screen ran out of room.
-  void expectNothingCut(WidgetTester tester) {
-    for (final element in find.byType(Text).evaluate()) {
-      final paragraph = element.renderObject;
-      if (paragraph is! RenderParagraph) continue;
-      expect(
-        paragraph.didExceedMaxLines,
-        isFalse,
-        reason:
-            'something on the award card is cut off: '
-            '"${(element.widget as Text).data}"',
-      );
-    }
-  }
-
   /// The longest first-and-surname pair the shipped pools can generate — the
   /// worst name this card will ever have to print.
   const longName = 'Nomenjanahary Raheriniaina';

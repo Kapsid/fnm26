@@ -242,27 +242,6 @@ void main() {
       expect(find.byType(YPostTile), findsNWidgets(2));
     });
 
-    /// Asserts that every [finder] match is rendered WHOLE, not ellipsised.
-    ///
-    /// `takeException` is not enough and never was: it passes for any amount
-    /// of quiet truncation. A heading cut to "Earlier this..." would answer
-    /// the manager's complaint no better than no heading at all.
-    void expectWhole(Finder finder, String what) {
-      final elements = finder.evaluate();
-      expect(elements, isNotEmpty, reason: '$what is not on screen at all');
-      for (final element in elements) {
-        final paragraph = element.renderObject! as RenderParagraph;
-        expect(
-          paragraph.didExceedMaxLines,
-          isFalse,
-          reason:
-              '$what is cut off: it wants '
-              '${paragraph.getMaxIntrinsicWidth(double.infinity)}px '
-              'and was given ${paragraph.size.width}px',
-        );
-      }
-    }
-
     for (final width in <double>[400, 360]) {
       for (final locale in [const Locale('en'), const Locale('cs')]) {
         testWidgets(

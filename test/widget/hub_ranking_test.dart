@@ -19,26 +19,6 @@ import '../helpers/expect_whole.dart';
 /// actually fail — this project's WholeText scales itself down to fit, which
 /// makes a width guard blind inside one.
 void main() {
-  /// Asserts that every [finder] match is rendered WHOLE, not ellipsised.
-  ///
-  /// `takeException` alone is not enough and never was: it passes for any
-  /// amount of quiet truncation.
-  void expectWhole(Finder finder, String what) {
-    final elements = finder.evaluate();
-    expect(elements, isNotEmpty, reason: '$what is not on screen at all');
-    for (final element in elements) {
-      final paragraph = element.renderObject! as RenderParagraph;
-      expect(
-        paragraph.didExceedMaxLines,
-        isFalse,
-        reason:
-            '$what is cut off: it wants '
-            '${paragraph.getMaxIntrinsicWidth(double.infinity)}px '
-            'and was given ${paragraph.size.width}px',
-      );
-    }
-  }
-
   /// Pumps [child] at [width] in [locale], with the locale on the MaterialApp
   /// itself rather than a Localizations.override around the child.
   Future<void> pumpAt(

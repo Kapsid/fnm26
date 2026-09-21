@@ -11,6 +11,8 @@ import 'package:fnm/features/tactics/familiarity_providers.dart';
 import 'package:fnm/features/tactics/formation_picker.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 
+import '../helpers/expect_whole.dart';
+
 /// Familiarity you can watch build.
 ///
 /// The mechanic was already in the engine and already moved results — a side
@@ -24,27 +26,6 @@ import 'package:fnm/l10n/app_localizations.dart';
 /// opposition has worked out, hidden by design — must not reach the screen,
 /// nor be recoverable from what does.
 void main() {
-  /// Asserts that every [finder] match is rendered WHOLE, not ellipsised.
-  ///
-  /// `takeException` alone is not enough and never was: it passes for any
-  /// amount of quiet truncation, which is how five width bugs shipped past
-  /// width tests that already existed in this batch.
-  void expectWhole(Finder finder, String what) {
-    final elements = finder.evaluate();
-    expect(elements, isNotEmpty, reason: '$what is not on screen at all');
-    for (final element in elements) {
-      final paragraph = element.renderObject! as RenderParagraph;
-      expect(
-        paragraph.didExceedMaxLines,
-        isFalse,
-        reason:
-            '$what is cut off: it wants '
-            '${paragraph.getMaxIntrinsicWidth(double.infinity)}px '
-            'and was given ${paragraph.size.width}px',
-      );
-    }
-  }
-
   /// Pumps [widget] with the locale set on the MaterialApp itself.
   ///
   /// `Localizations.override` around a launcher does NOT reach a route pushed
@@ -295,6 +276,7 @@ void main() {
             ),
             'a drilling band in the grid',
           );
+          expectNothingCut(tester);
         });
       }
     }

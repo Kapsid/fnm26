@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/features/match/match_screen.dart';
 import 'package:fnm/l10n/app_localizations.dart';
+
+import '../helpers/expect_whole.dart';
 
 /// Pumps the live match control bar's tactics pill content in isolation, at
 /// a narrow phone width, so a test can check what survives the ellipsis.
@@ -56,23 +57,6 @@ Future<void> pumpWholeControlBar(
 }
 
 void main() {
-  /// Asserts that every [finder] match is rendered WHOLE, not ellipsised.
-  void expectWhole(Finder finder, String what) {
-    final elements = finder.evaluate();
-    expect(elements, isNotEmpty, reason: '$what is not on screen at all');
-    for (final element in elements) {
-      final paragraph = element.renderObject! as RenderParagraph;
-      expect(
-        paragraph.didExceedMaxLines,
-        isFalse,
-        reason:
-            '$what is cut off: it wants '
-            '${paragraph.getMaxIntrinsicWidth(double.infinity)}px '
-            'and was given ${paragraph.size.width}px',
-      );
-    }
-  }
-
   testWidgets('sub count stays visible when the tired label is long', (
     tester,
   ) async {
@@ -129,6 +113,7 @@ void main() {
           expect(tester.takeException(), isNull);
           expectWhole(find.text('2×'), 'the speed');
           expectWhole(find.text('1/$kMaxSubs'), 'the sub count');
+          expectNothingCut(tester, 'the control bar in ${locale.languageCode}');
         },
       );
     }
