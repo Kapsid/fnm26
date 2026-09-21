@@ -11,11 +11,13 @@ import '../helpers/pump_app.dart';
 void main() {
   Future<void> pumpChart(
     WidgetTester tester,
-    List<TeamOverallPoint> history,
-  ) async {
+    List<TeamOverallPoint> history, {
+    double width = 360,
+    Locale locale = const Locale('en'),
+  }) async {
     tester.view
       ..devicePixelRatio = 1
-      ..physicalSize = const Size(360, 690);
+      ..physicalSize = Size(width, 690);
     addTearDown(tester.view.reset);
     await tester.pumpApp(
       Scaffold(
@@ -24,6 +26,7 @@ void main() {
           history: history,
         ),
       ),
+      locale: locale,
     );
     await tester.pumpAndSettle();
   }
@@ -59,4 +62,38 @@ void main() {
     expect(tester.takeException(), isNull);
     expectNothingCut(tester);
   });
+
+  // Both phone widths in both languages. The card is a heading, a run of
+  // years and a rating, and the rating is the reason anyone opens it.
+  for (final width in [360.0, 400.0]) {
+    for (final locale in [const Locale('en'), const Locale('cs')]) {
+      testWidgets(
+        'the curve holds its labels at ${width.toInt()}px in '
+        '${locale.languageCode}',
+        (tester) async {
+          await pumpChart(
+            tester,
+            const [
+              (year: 2030, overall: 71),
+              (year: 2031, overall: 74),
+              (year: 2032, overall: 78),
+              (year: 2033, overall: 81),
+              (year: 2034, overall: 88),
+            ],
+            width: width,
+            locale: locale,
+          );
+          expectLocale(
+            tester,
+            find.byType(TeamOverallHistoryCard),
+            locale.languageCode,
+          );
+          expectNothingCut(
+            tester,
+            'the overall curve in ${locale.languageCode}',
+          );
+        },
+      );
+    }
+  }
 }
