@@ -53,6 +53,29 @@ const _outplanned = TacticalInstructions(
   defensiveLine: 70,
 );
 
+/// A one-sided plan that moves only the FLAT dials — the line, the tempo and
+/// the press — leaving width and directness neutral so `MatchEngine._matchup`
+/// contributes nothing and these constants are measured alone. Nothing else in
+/// the repo covers them: this file's other cases mirror them exactly, and both
+/// older balance guards run at a neutral 50 on every slider, where every
+/// `(i.x - 50)` term is zero.
+const _forward = TacticalInstructions(
+  defensiveLine: 85,
+  tempo: 85,
+  pressing: 30,
+);
+
+/// Its opposite number: deep, slow, and pressing to make up for it.
+const _cautious = TacticalInstructions(
+  defensiveLine: 30,
+  tempo: 30,
+  pressing: 70,
+);
+
+/// Two sides with nothing chosen at all — the baseline every flat dial is
+/// measured against, since each one contributes exactly zero at 50.
+const _neutral = TacticalInstructions();
+
 MatchTeam _team(int nationId, TacticalInstructions instructions) {
   final positions = Formation.f433.positions;
   return MatchTeam(
@@ -70,19 +93,35 @@ MatchTeam _team(int nationId, TacticalInstructions instructions) {
   );
 }
 
-typedef Swing = ({double goalDiffPerGame, double pointsPerGameEdge});
+typedef Swing = ({
+  double goalDiffPerGame,
+  double pointsPerGameEdge,
+  double goalsPerGame,
+});
 
-/// Plays [n] neutral-venue matches, half with the drilled side at home, and
-/// reports what the drilling and the plan were worth.
+/// Plays [seeds] x 2 neutral-venue matches — EVERY seed played twice, once with
+/// the drilled side at home and once with it away — and reports what the
+/// drilling and the plan were worth per match.
 ///
-/// Home advantage is off and the sides swap ends every other match, so nothing
-/// but the tactics can show up in the difference.
+/// Playing each seed BOTH ways is the whole point, and it is not the obvious
+/// alternative of swapping ends on alternate seeds. That version shipped first
+/// and was wrong: `drilledAtHome = i.isEven` ties the venue slot to the PARITY
+/// of the seed index, and `SeededRng.forFixture` is not parity-neutral, so the
+/// two ends were sampled from systematically different streams. The null case
+/// below — identical sides, identical plans, identical chemistry, which must
+/// read zero — came out at +0.083 on 2000 seeds and +0.041 on 20000, a 3-sigma
+/// bias that inflated every figure this file measures by about 0.08. Pairing
+/// each seed with itself cancels the venue slot exactly instead of relying on
+/// it to average out.
+///
+/// Home advantage is off as well, so nothing but the tactics can show up in
+/// the difference.
 Swing swing({
   required double familiarity,
   required double predictability,
   required TacticalInstructions plan,
   required TacticalInstructions counterPlan,
-  int n = 2000,
+  int seeds = 1000,
 }) {
   const engine = MatchEngine();
   const drilledId = 1;
@@ -91,39 +130,77 @@ Swing swing({
   var ordinaryGoals = 0;
   var drilledPoints = 0;
   var ordinaryPoints = 0;
-  for (var i = 0; i < n; i++) {
-    final drilledAtHome = i.isEven;
-    final drilled = _team(drilledId, plan);
-    final ordinary = _team(ordinaryId, counterPlan);
-    final r = engine.play(
-      home: drilledAtHome ? drilled : ordinary,
-      away: drilledAtHome ? ordinary : drilled,
-      rng: SeededRng.forFixture(0x7AC7, i),
-      neutralVenue: true,
-      chemistryByNation: {
-        drilledId: TeamChemistry.factor(familiarity, predictability),
-      },
-    );
-    final forDrilled = drilledAtHome ? r.homeScore : r.awayScore;
-    final forOrdinary = drilledAtHome ? r.awayScore : r.homeScore;
-    drilledGoals += forDrilled;
-    ordinaryGoals += forOrdinary;
-    if (forDrilled > forOrdinary) {
-      drilledPoints += 3;
-    } else if (forDrilled < forOrdinary) {
-      ordinaryPoints += 3;
-    } else {
-      drilledPoints += 1;
-      ordinaryPoints += 1;
+  for (var i = 0; i < seeds; i++) {
+    for (final drilledAtHome in const [true, false]) {
+      final drilled = _team(drilledId, plan);
+      final ordinary = _team(ordinaryId, counterPlan);
+      final r = engine.play(
+        home: drilledAtHome ? drilled : ordinary,
+        away: drilledAtHome ? ordinary : drilled,
+        rng: SeededRng.forFixture(0x7AC7, i),
+        neutralVenue: true,
+        chemistryByNation: {
+          drilledId: TeamChemistry.factor(familiarity, predictability),
+        },
+      );
+      final forDrilled = drilledAtHome ? r.homeScore : r.awayScore;
+      final forOrdinary = drilledAtHome ? r.awayScore : r.homeScore;
+      drilledGoals += forDrilled;
+      ordinaryGoals += forOrdinary;
+      if (forDrilled > forOrdinary) {
+        drilledPoints += 3;
+      } else if (forDrilled < forOrdinary) {
+        ordinaryPoints += 3;
+      } else {
+        drilledPoints += 1;
+        ordinaryPoints += 1;
+      }
     }
   }
+  final matches = seeds * 2;
   return (
-    goalDiffPerGame: (drilledGoals - ordinaryGoals) / n,
-    pointsPerGameEdge: (drilledPoints - ordinaryPoints) / n,
+    goalDiffPerGame: (drilledGoals - ordinaryGoals) / matches,
+    pointsPerGameEdge: (drilledPoints - ordinaryPoints) / matches,
+    goalsPerGame: (drilledGoals + ordinaryGoals) / matches,
   );
 }
 
 void main() {
+  group('the harness itself', () {
+    test('two identical sides with identical plans read exactly nothing', () {
+      // THE NULL CONTROL, and the reason this file can be trusted at all.
+      //
+      // The first version of this guard swapped ends on alternate seeds
+      // (`drilledAtHome = i.isEven`). That ties the venue slot to the PARITY of
+      // the seed index, and `SeededRng.forFixture` is not parity-neutral, so
+      // the two ends drew from systematically different streams: this control
+      // read +0.083 on 2000 seeds and +0.041 on 20000 (3.2 sigma), and every
+      // headline figure in the file was inflated by about that much. Playing
+      // each seed BOTH ways cancels it exactly rather than hoping it averages
+      // out.
+      //
+      // This assertion is cheap, it is the one that would have caught the bug,
+      // and it must never be deleted.
+      final nothing = swing(
+        familiarity: 0,
+        predictability: 0,
+        plan: _outplanned,
+        counterPlan: _outplanned,
+      );
+      expect(nothing.goalDiffPerGame.abs(), lessThan(0.01));
+      expect(nothing.pointsPerGameEdge.abs(), lessThan(0.01));
+
+      // Equal chemistry on both sides must cancel too, not just equal plans.
+      final drilledBoth = swing(
+        familiarity: 0,
+        predictability: 0,
+        plan: _neutral,
+        counterPlan: _neutral,
+      );
+      expect(drilledBoth.goalDiffPerGame.abs(), lessThan(0.01));
+    });
+  });
+
   group('tactics are worth something the manager can feel', () {
     test('a drilled, well-judged side beats an identical one that is neither', () {
       // The side a long-serving manager actually HAS: the shape drilled to the
@@ -138,40 +215,41 @@ void main() {
         counterPlan: _outplanned,
       );
 
-      // THE BAND. Roughly a goal every three games, with room either side.
+      // THE BAND. Roughly a goal every three or four games (0.25-0.33), with
+      // room either side. Measures 0.311 as written.
       //
       // Lower bound: below this the manager is right — the dials do nothing.
-      // Before this was tuned the same match-up measured 0.16, which is one
-      // goal every six games from drilling AND out-thinking the opponent put
-      // together, and it failed here.
+      // On the constants that drew the feedback, and on THIS corrected harness,
+      // the same match-up measured 0.090: one goal every eleven games from
+      // drilling AND out-thinking the opponent put together.
       //
       // Upper bound: above this a plan starts beating a better squad, and the
-      // game stops being about players. Note what it is NOT allowed to reach:
+      // game stops being about players. Note what it is not allowed to reach:
       // a goal a game.
       expect(
         s.goalDiffPerGame,
-        inInclusiveRange(0.22, 0.55),
+        inInclusiveRange(0.18, 0.45),
         reason:
             'a drilled, well-judged side should be worth about a goal every '
             'three or four games — not nothing, and not one a game',
       );
 
       // The same statement in the currency the manager actually reads.
-      expect(s.pointsPerGameEdge, inInclusiveRange(0.28, 0.85));
+      expect(s.pointsPerGameEdge, inInclusiveRange(0.22, 0.70));
     });
 
     test('the best a manager can do still does not run away with it', () {
       // The ceiling: the same drilled shape, kept unpredictable by varying the
       // plan behind it, plus the right plan on the day. This is the most
       // tactics can ever be worth between two identical squads, and it must
-      // stay well short of a goal a game.
+      // stay well short of a goal a game. Measures 0.472.
       final s = swing(
         familiarity: 1,
         predictability: 0,
         plan: _wellJudged,
         counterPlan: _outplanned,
       );
-      expect(s.goalDiffPerGame, lessThan(0.80));
+      expect(s.goalDiffPerGame, lessThan(0.70));
       // …and still clearly better than being read, or there is no reason to
       // vary the plan.
       final read = swing(
@@ -185,13 +263,18 @@ void main() {
 
     test('the instruction dials carry a real share of it on their own', () {
       // THE DIAL GUARD. Both sides equally unfamiliar, so the chemistry
-      // multiplier cancels and the ONLY thing left is the plan: the six
-      // sliders on the tactics screen, judged against the opponent's shape.
+      // multiplier cancels and the ONLY thing left is the plan: the sliders on
+      // the tactics screen, judged against the opponent's shape.
       //
-      // This is the test that failed when the feedback was written. The plan
-      // was worth 0.065 of a goal a game — real in a spreadsheet, invisible
-      // across a career, which is exactly what "the dials aren't connected to
-      // anything" feels like from the inside.
+      // This is what the feedback was about. On the old constants, measured on
+      // this corrected harness, picking the textbook counter was worth −0.038
+      // of a goal a game — not merely nothing, marginally WORSE than not
+      // bothering. Measures +0.056 now.
+      //
+      // The band is small on purpose. Out-thinking an opponent should be worth
+      // about a goal every twenty games by itself; the rest of what a good
+      // manager gets comes from drilling the shape, which is the slower and
+      // more expensive thing to earn.
       final planOnly = swing(
         familiarity: 0,
         predictability: 0,
@@ -200,10 +283,10 @@ void main() {
       );
       expect(
         planOnly.goalDiffPerGame,
-        inInclusiveRange(0.08, 0.30),
+        inInclusiveRange(0.025, 0.11),
         reason:
-            'reading the opponent right should be worth roughly a goal every '
-            'eight to ten games by itself',
+            'reading the opponent right should be worth something real and '
+            'small — and never, as it once did, less than nothing',
       );
 
       // And it must be a genuine ADDITION to the drilling, not absorbed by it.
@@ -223,6 +306,83 @@ void main() {
         both.goalDiffPerGame - drillingOnly.goalDiffPerGame,
         greaterThan(0.05),
       );
+    });
+
+    test('the flat dials open a game up or shut it down', () {
+      // COVERAGE FOR THE FLAT TERMS in `_attack` / `_defence` — the line, the
+      // tempo and the press. Every other case in this file mirrors them so
+      // they cancel, and both older balance guards run at a neutral 50 where
+      // they contribute zero, so without this they are measured nowhere.
+      //
+      // They do not show up in goal DIFFERENCE, and that is by design: each
+      // dial's attacking gain is paired with a defensive cost, so pushing up
+      // is a fair-ish bargain rather than free. What they move is how OPEN the
+      // game is. A side playing a high line at a quick tempo against one
+      // sitting deep and slow produces a more stretched, higher-scoring match
+      // than two sides with nothing chosen.
+      final base = swing(
+        familiarity: 0,
+        predictability: 0,
+        plan: _neutral,
+        counterPlan: _neutral,
+      );
+      final onesided = swing(
+        familiarity: 0,
+        predictability: 0,
+        plan: _forward,
+        counterPlan: _cautious,
+      );
+      final lift = onesided.goalsPerGame - base.goalsPerGame;
+      // Measures +0.20 goals a match on a 2.52 baseline. On the old, halved
+      // constants it was +0.13 — the sliders moved an attack about two rating
+      // points end to end, which is a decoration rather than a decision.
+      expect(
+        lift,
+        inInclusiveRange(0.15, 0.35),
+        reason:
+            'committing forward should visibly open the game up, without '
+            'turning every match into a basketball score',
+      );
+      // The bargain stays fair: committing forward is favourable, never a
+      // free win. Measures +0.15.
+      expect(onesided.goalDiffPerGame.abs(), lessThan(0.30));
+    });
+
+    test('a width mismatch does not quietly inflate the scoreline', () {
+      // A TRIPWIRE, not an endorsement. `_matchup` has a long-standing sign
+      // quirk: both width terms reward the ATTACKER, so wide-vs-narrow and
+      // narrow-vs-wide fire positive at the same time and width adds to both
+      // sides at once. It nets out of goal difference — which is all the rest
+      // of this file measures — but it does NOT net out of the scoreline, and
+      // tripling the match-up coefficients made it louder.
+      //
+      // Real playstyles routinely straddle 50 on width, so this lifts scoring
+      // across ordinary world fixtures with nothing watching it. Fixing the
+      // sign is its own task; this bounds the damage in the meantime so it
+      // cannot grow again unnoticed.
+      final base = swing(
+        familiarity: 0,
+        predictability: 0,
+        plan: _neutral,
+        counterPlan: _neutral,
+      );
+      final mismatch = swing(
+        familiarity: 0,
+        predictability: 0,
+        plan: const TacticalInstructions(width: 80),
+        counterPlan: const TacticalInstructions(width: 20),
+      );
+      final extreme = swing(
+        familiarity: 0,
+        predictability: 0,
+        plan: const TacticalInstructions(width: 100),
+        counterPlan: const TacticalInstructions(width: 0),
+      );
+      // Baseline 2.52. An ordinary width mismatch measures 2.84, the extreme
+      // 3.39 — both already more than they should be, neither allowed to grow.
+      expect(base.goalsPerGame, inInclusiveRange(2.2, 2.9));
+      expect(mismatch.goalsPerGame, lessThan(3.05));
+      expect(extreme.goalsPerGame, lessThan(3.60));
     });
 
     test('a side that has been read gives part of it back, never all of it', () {
