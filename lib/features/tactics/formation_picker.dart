@@ -97,9 +97,18 @@ class FormationField extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text(selected.label, style: AppTypography.titleMedium),
+                // Both hold a line each. A label with no maxLines does not
+                // overflow when it runs out of room, it WRAPS — and what the
+                // manager sees is not an error but the row growing taller and
+                // the shape drawing beside it squashed to fit.
+                Text(
+                  selected.label,
+                  maxLines: 1,
+                  style: AppTypography.titleMedium,
+                ),
                 Text(
                   l.tacticsFormation,
+                  maxLines: 1,
                   style: AppTypography.labelSmall.copyWith(
                     color: AppColors.onSurfaceVariant,
                   ),
