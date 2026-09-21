@@ -3872,10 +3872,6 @@
   "@paywallContactingStore": {
     "description": "Buy-button label while the purchase flow is in progress."
   },
-  "paywallUnlockPro": "Unlock Pro",
-  "@paywallUnlockPro": {
-    "description": "Buy-button label before the store price has loaded."
-  },
   "paywallUnlockProPriced": "Unlock Pro · {price}",
   "@paywallUnlockProPriced": {
     "description": "Buy-button label with the store's localised price.",
@@ -3889,6 +3885,38 @@
   "paywallRestorePurchases": "Restore purchases",
   "@paywallRestorePurchases": {
     "description": "Button that restores a previous purchase."
+  },
+  "paywallStoreUnavailable": "Store unavailable",
+  "@paywallStoreUnavailable": {
+    "description": "Buy-button label when the store has no listing to sell."
+  },
+  "paywallStoreUnavailableNote": "The price could not be loaded. Check your connection and try again.",
+  "@paywallStoreUnavailableNote": {
+    "description": "Explains a disabled buy button when the store cannot be reached."
+  },
+  "paywallTryAgain": "Try again",
+  "@paywallTryAgain": {
+    "description": "Button that re-asks the store for the price."
+  },
+  "gateTitle": "YOUR FIRST CYCLE IS OVER",
+  "@gateTitle": {
+    "description": "Heading on the full-page wall at the end of the free cycle."
+  },
+  "gateLead": "Four years, and nothing was held back. Carry this save on for one payment.",
+  "@gateLead": {
+    "description": "Lead paragraph on the end-of-cycle wall."
+  },
+  "gatePriceLead": "One payment, forever",
+  "@gatePriceLead": {
+    "description": "Label above the store price on the end-of-cycle wall."
+  },
+  "gateBuy": "BUY AND CONTINUE",
+  "@gateBuy": {
+    "description": "Buy button on the end-of-cycle wall."
+  },
+  "gateExit": "EXIT",
+  "@gateExit": {
+    "description": "Button that leaves the end-of-cycle wall without buying."
   },
   "federationNaturalisation": "NATURALISATION",
   "@federationNaturalisation": {

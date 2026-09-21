@@ -2872,15 +2872,38 @@ class AppLocalizationsCs extends AppLocalizations {
   String get paywallContactingStore => 'Kontaktuji obchod…';
 
   @override
-  String get paywallUnlockPro => 'Odemknout Pro';
-
-  @override
   String paywallUnlockProPriced(String price) {
     return 'Odemknout Pro · $price';
   }
 
   @override
   String get paywallRestorePurchases => 'Obnovit nákupy';
+
+  @override
+  String get paywallStoreUnavailable => 'Obchod není dostupný';
+
+  @override
+  String get paywallStoreUnavailableNote =>
+      'Cenu se nepodařilo načíst. Zkontrolujte připojení a zkuste to znovu.';
+
+  @override
+  String get paywallTryAgain => 'Zkusit znovu';
+
+  @override
+  String get gateTitle => 'PRVNÍ CYKLUS KONČÍ';
+
+  @override
+  String get gateLead =>
+      'Čtyři roky a nic vám nebylo zatajeno. Pokračujte v této hře za jednu platbu.';
+
+  @override
+  String get gatePriceLead => 'Jedna platba, navždy';
+
+  @override
+  String get gateBuy => 'KOUPIT A POKRAČOVAT';
+
+  @override
+  String get gateExit => 'ODEJÍT';
 
   @override
   String get federationNaturalisation => 'NATURALIZACE';

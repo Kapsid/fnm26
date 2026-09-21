@@ -792,9 +792,16 @@ paywallBenefitOffline,Paywall benefit line: one payment and nothing collected.,,
 paywallBenefitEndless,Paywall benefit line.,,Every cycle from here on,Každý další cyklus už bez omezení
 paywallUnlocked,Shown on the paywall once premium is already unlocked.,,Premium is unlocked. Enjoy!,Prémiová verze je odemčená. Užijte si ji!
 paywallContactingStore,Buy-button label while the purchase flow is in progress.,,Contacting the store…,Kontaktuji obchod…
-paywallUnlockPro,Buy-button label before the store price has loaded.,,Unlock Pro,Odemknout Pro
 paywallUnlockProPriced,Buy-button label with the store's localised price.,{price},Unlock Pro · {price},Odemknout Pro · {price}
 paywallRestorePurchases,Button that restores a previous purchase.,,Restore purchases,Obnovit nákupy
+paywallStoreUnavailable,Buy-button label when the store has no listing to sell.,,Store unavailable,Obchod není dostupný
+paywallStoreUnavailableNote,Explains a disabled buy button when the store cannot be reached.,,The price could not be loaded. Check your connection and try again.,Cenu se nepodařilo načíst. Zkontrolujte připojení a zkuste to znovu.
+paywallTryAgain,Button that re-asks the store for the price.,,Try again,Zkusit znovu
+gateTitle,Heading on the full-page wall at the end of the free cycle.,,YOUR FIRST CYCLE IS OVER,PRVNÍ CYKLUS KONČÍ
+gateLead,Lead paragraph on the end-of-cycle wall.,,"Four years, and nothing was held back. Carry this save on for one payment.",Čtyři roky a nic vám nebylo zatajeno. Pokračujte v této hře za jednu platbu.
+gatePriceLead,Label above the store price on the end-of-cycle wall.,,"One payment, forever","Jedna platba, navždy"
+gateBuy,Buy button on the end-of-cycle wall.,,BUY AND CONTINUE,KOUPIT A POKRAČOVAT
+gateExit,Button that leaves the end-of-cycle wall without buying.,,EXIT,ODEJÍT
 federationNaturalisation,App-bar title on the naturalisation decision screen.,,NATURALISATION,NATURALIZACE
 federationNaturalisedTitle,Inbox message title when a player completes naturalisation.,{name},{name} naturalised,{name} naturalizován
 federationNaturalisedBody,Inbox message body when a player completes naturalisation.,{name} {nation},{name} has completed the switch and is now eligible for {nation}. Call them up from your squad selection.,{name} dokončil změnu reprezentace a je nyní k dispozici za {nation}. Povolejte ho ve své nominaci.

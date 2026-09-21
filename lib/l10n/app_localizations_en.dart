@@ -2849,15 +2849,38 @@ class AppLocalizationsEn extends AppLocalizations {
   String get paywallContactingStore => 'Contacting the store…';
 
   @override
-  String get paywallUnlockPro => 'Unlock Pro';
-
-  @override
   String paywallUnlockProPriced(String price) {
     return 'Unlock Pro · $price';
   }
 
   @override
   String get paywallRestorePurchases => 'Restore purchases';
+
+  @override
+  String get paywallStoreUnavailable => 'Store unavailable';
+
+  @override
+  String get paywallStoreUnavailableNote =>
+      'The price could not be loaded. Check your connection and try again.';
+
+  @override
+  String get paywallTryAgain => 'Try again';
+
+  @override
+  String get gateTitle => 'YOUR FIRST CYCLE IS OVER';
+
+  @override
+  String get gateLead =>
+      'Four years, and nothing was held back. Carry this save on for one payment.';
+
+  @override
+  String get gatePriceLead => 'One payment, forever';
+
+  @override
+  String get gateBuy => 'BUY AND CONTINUE';
+
+  @override
+  String get gateExit => 'EXIT';
 
   @override
   String get federationNaturalisation => 'NATURALISATION';

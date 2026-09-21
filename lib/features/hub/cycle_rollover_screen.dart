@@ -17,7 +17,7 @@ import 'package:fnm/features/federation/investment_editor.dart';
 import 'package:fnm/features/hub/hub_providers.dart';
 import 'package:fnm/features/hub/objective_providers.dart';
 import 'package:fnm/features/messages/message_providers.dart';
-import 'package:fnm/features/paywall/paywall_sheet.dart';
+import 'package:fnm/features/paywall/premium_gate_screen.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
@@ -82,12 +82,14 @@ class _CycleRolloverScreenState extends ConsumerState<CycleRolloverScreen> {
     final season = ref.read(seasonServiceProvider);
     if (await season.trialBlocksNextCycle(widget.careerId)) {
       if (!mounted) return;
-      await showPaywall(context);
+      // A full page, not a sheet. A sheet is something you flick away; this
+      // is the decision the career turns on.
+      final carriedOn = await PremiumGateScreen.show(context);
       if (!mounted) return;
       // Dismissed without buying. Nothing has rolled: the save sits exactly
       // where it was, this screen is still in front of him, and he can open
       // the wall again or go back to his saves. Declining costs him nothing.
-      if (!ref.read(premiumUnlockedProvider)) return;
+      if (!carriedOn || !ref.read(premiumUnlockedProvider)) return;
       // Bought. Roll straight away rather than making him find the button
       // again.
     }

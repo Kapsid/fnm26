@@ -4868,12 +4868,6 @@ abstract class AppLocalizations {
   /// **'Contacting the store…'**
   String get paywallContactingStore;
 
-  /// Buy-button label before the store price has loaded.
-  ///
-  /// In en, this message translates to:
-  /// **'Unlock Pro'**
-  String get paywallUnlockPro;
-
   /// Buy-button label with the store's localised price.
   ///
   /// In en, this message translates to:
@@ -4885,6 +4879,54 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Restore purchases'**
   String get paywallRestorePurchases;
+
+  /// Buy-button label when the store has no listing to sell.
+  ///
+  /// In en, this message translates to:
+  /// **'Store unavailable'**
+  String get paywallStoreUnavailable;
+
+  /// Explains a disabled buy button when the store cannot be reached.
+  ///
+  /// In en, this message translates to:
+  /// **'The price could not be loaded. Check your connection and try again.'**
+  String get paywallStoreUnavailableNote;
+
+  /// Button that re-asks the store for the price.
+  ///
+  /// In en, this message translates to:
+  /// **'Try again'**
+  String get paywallTryAgain;
+
+  /// Heading on the full-page wall at the end of the free cycle.
+  ///
+  /// In en, this message translates to:
+  /// **'YOUR FIRST CYCLE IS OVER'**
+  String get gateTitle;
+
+  /// Lead paragraph on the end-of-cycle wall.
+  ///
+  /// In en, this message translates to:
+  /// **'Four years, and nothing was held back. Carry this save on for one payment.'**
+  String get gateLead;
+
+  /// Label above the store price on the end-of-cycle wall.
+  ///
+  /// In en, this message translates to:
+  /// **'One payment, forever'**
+  String get gatePriceLead;
+
+  /// Buy button on the end-of-cycle wall.
+  ///
+  /// In en, this message translates to:
+  /// **'BUY AND CONTINUE'**
+  String get gateBuy;
+
+  /// Button that leaves the end-of-cycle wall without buying.
+  ///
+  /// In en, this message translates to:
+  /// **'EXIT'**
+  String get gateExit;
 
   /// App-bar title on the naturalisation decision screen.
   ///
