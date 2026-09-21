@@ -125,16 +125,19 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    // One page, not all thirty-four.
-    expect(find.textContaining('Jméno Příjmení 0'), findsOneWidget);
-    expect(find.textContaining('Jméno Příjmení 6'), findsNothing);
-    expect(find.text('1–6 z 34'), findsOneWidget);
+    // One page, not all thirty-four. The name may come out initialled — at
+    // 320 points a full one does not fit and [WholeText] gives up the
+    // forename before it gives up anything else — so the surname is what to
+    // look for.
+    expect(find.textContaining('Příjmení 0'), findsOneWidget);
+    expect(find.textContaining('Příjmení 6'), findsNothing);
+    expect(find.text('Stránka 1 z 6'), findsOneWidget);
     expect(tester.takeException(), isNull);
 
     await tester.tap(find.text('Další'));
     await tester.pumpAndSettle();
-    expect(find.textContaining('Jméno Příjmení 6'), findsOneWidget);
-    expect(find.text('7–12 z 34'), findsOneWidget);
+    expect(find.textContaining('Příjmení 6'), findsOneWidget);
+    expect(find.text('Stránka 2 z 6'), findsOneWidget);
     expect(
       tester.takeException(),
       isNull,

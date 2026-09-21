@@ -6866,7 +6866,7 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get newsTransferFree => 'a free transfer';
+  String get newsTransferFree => 'Free';
 
   @override
   String newsNatzStarTitle(String name, String nation) {
@@ -7983,11 +7983,6 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String transfersRange(int from, int to, int total) {
-    return '$from–$to of $total';
-  }
-
-  @override
   String hubRoundPage(int page, int pages) {
     return '$page / $pages';
   }
@@ -7997,6 +7992,26 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get transfersOlder => 'More';
+
+  @override
+  String get transfersPagePrevious => 'Previous';
+
+  @override
+  String get transfersPageNext => 'Next';
+
+  @override
+  String transfersPageOf(int page, int pages) {
+    return 'Page $page of $pages';
+  }
+
+  @override
+  String get transfersStepUp => 'A step up';
+
+  @override
+  String get transfersStepDown => 'A step down';
+
+  @override
+  String get transfersStepLevel => 'The same level';
 
   @override
   String get transfersUnknownClub => 'Unknown club';

@@ -10179,7 +10179,7 @@
       }
     }
   },
-  "newsTransferFree": "a free transfer",
+  "newsTransferFree": "Free",
   "@newsTransferFree": {
     "description": "Transfer fee when there is none."
   },
@@ -11658,21 +11658,6 @@
       }
     }
   },
-  "transfersRange": "{from}–{to} of {total}",
-  "@transfersRange": {
-    "description": "Transfer report: which slice of the moves is on screen.",
-    "placeholders": {
-      "from": {
-        "type": "int"
-      },
-      "to": {
-        "type": "int"
-      },
-      "total": {
-        "type": "int"
-      }
-    }
-  },
   "hubRoundPage": "{page} / {pages}",
   "@hubRoundPage": {
     "description": "Round-results popup: which page of a long matchday is shown.",
@@ -11692,6 +11677,38 @@
   "transfersOlder": "More",
   "@transfersOlder": {
     "description": "Transfer report: next page of moves."
+  },
+  "transfersPagePrevious": "Previous",
+  "@transfersPagePrevious": {
+    "description": "Transfer report: the previous page of moves."
+  },
+  "transfersPageNext": "Next",
+  "@transfersPageNext": {
+    "description": "Transfer report: the next page of moves."
+  },
+  "transfersPageOf": "Page {page} of {pages}",
+  "@transfersPageOf": {
+    "description": "Transfer report: which page of moves is shown.",
+    "placeholders": {
+      "page": {
+        "type": "int"
+      },
+      "pages": {
+        "type": "int"
+      }
+    }
+  },
+  "transfersStepUp": "A step up",
+  "@transfersStepUp": {
+    "description": "Transfer report: the move went to a stronger league."
+  },
+  "transfersStepDown": "A step down",
+  "@transfersStepDown": {
+    "description": "Transfer report: the move went to a weaker league."
+  },
+  "transfersStepLevel": "The same level",
+  "@transfersStepLevel": {
+    "description": "Transfer report: the move held its league level."
   },
   "transfersUnknownClub": "Unknown club",
   "@transfersUnknownClub": {

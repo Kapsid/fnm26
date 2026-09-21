@@ -1769,7 +1769,7 @@ newsARecordBreaker,Inbox fallback when the record holder cannot be named.,,A new
 newsTransferTitle,Inbox: a notable club transfer.,{name} {club},{name} joins {club},{name} přestupuje do {club}
 newsTransferBody,Inbox: transfer body.,{name} {position} {rating} {fromClub} {destination} {fee},"{name} ({position}, {rating}) has left {fromClub} to sign for {destination} for {fee}.","{name} ({position}, {rating}) opouští {fromClub} a míří do {destination} za {fee}."
 newsTransferAbroad,How a club abroad is named in transfer news.,{club} {country},{club} in {country},{club} ({country})
-newsTransferFree,Transfer fee when there is none.,,a free transfer,volný přestup
+newsTransferFree,Transfer fee when there is none.,,Free,Zdarma
 newsNatzStarTitle,Inbox: a star naturalisation candidate.,{name} {nation},⭐ {name} would switch to {nation}!,⭐ {name} by přestoupil do reprezentace {nation}!
 newsNatzTitle,Inbox: a naturalisation candidate.,{name} {nation},{name} wants to play for {nation},{name} chce hrát za {nation}
 newsNatzBody,Inbox: naturalisation offer body.,{name} {age} {position} {rating} {fromNation} {nation},"{name}, a {age}-year-old {position} rated {rating} currently with {fromNation}, has family ties to {nation} and is open to switching. Open the Naturalisation offer to accept or decline.","{name}, {age}letý {position} s ratingem {rating}, momentálně reprezentuje {fromNation}. Má rodinné vazby na {nation} a je ochoten přestoupit. Nabídku naturalizace přijměte nebo odmítněte v menu."
@@ -2074,10 +2074,15 @@ settingsUnlockedBlurb,Settings: what the free game covers.,,"Unlimited careers, 
 friendliesLikeYourCampaign,"Friendlies: why these opponents are suggested first, when the group is a qualifying campaign rather than a finals draw.",{rivals},"Marked below: sides who play like {rivals}, who you still have to face.","Označené jsou týmy podobné soupeřům, kteří vás ještě čekají: {rivals}."
 friendliesCloseToYou,"Friendlies: why these opponents are suggested first, before anything is drawn.",,"Marked below: the sides closest to you in the world ranking. Once you are drawn, the marks follow your group.","Označené jsou týmy nejblíž vám ve světovém žebříčku. Až vás vylosují, budou označovány podle vaší skupiny."
 transfersMoves,Transfer report: how many moves the window held.,"PLURAL — keep the {count, plural, …} skeleton exactly; translate only the words inside the branches","{count, plural, =1{1 move} other{{count} moves}}","{count, plural, =1{1 přestup} few{{count} přestupy} other{{count} přestupů}}"
-transfersRange,Transfer report: which slice of the moves is on screen.,{from} {to} {total},{from}–{to} of {total},{from}–{to} z {total}
 hubRoundPage,Round-results popup: which page of a long matchday is shown.,{page} {pages},{page} / {pages},{page} / {pages}
 transfersNewer,Transfer report: previous page of moves.,,Newer,Novější
 transfersOlder,Transfer report: next page of moves.,,More,Další
+transfersPagePrevious,Transfer report: the previous page of moves.,,Previous,Předchozí
+transfersPageNext,Transfer report: the next page of moves.,,Next,Další
+transfersPageOf,Transfer report: which page of moves is shown.,{page} {pages},Page {page} of {pages},Stránka {page} z {pages}
+transfersStepUp,Transfer report: the move went to a stronger league.,,A step up,Krok nahoru
+transfersStepDown,Transfer report: the move went to a weaker league.,,A step down,Krok dolů
+transfersStepLevel,Transfer report: the move held its league level.,,The same level,Stejná úroveň
 transfersUnknownClub,Transfer report: stands in for a side of the move whose club the report does not name.,,Unknown club,Neznámý klub
 yAgainstThemAgain0,"Y post: againstThemAgain, variant 0.",{count} {opponent},"That is {count} times against {opponent} now. Somebody is keeping score, and it is them.","To už je {count}. proti {opponent}. Někdo si to počítá, a jsou to oni."
 yAgainstThemAgain1,"Y post: againstThemAgain, variant 1.",{opponent} {count},"{opponent} again. {count} meetings, and we still have not worked them out.",Zase {opponent}. {count} zápasů a pořád na ně nemáme recept.

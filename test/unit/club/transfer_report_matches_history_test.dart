@@ -60,7 +60,7 @@ void main() {
     await container.read(seedLoaderProvider).ensureSeeded();
   });
 
-  test('every move in a player\'s history is in that year\'s window', () async {
+  test("every move in a player's history is in that year's window", () async {
     final nation = nations.first;
     final career =
         (await container

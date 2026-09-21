@@ -10768,7 +10768,7 @@ abstract class AppLocalizations {
   /// Transfer fee when there is none.
   ///
   /// In en, this message translates to:
-  /// **'a free transfer'**
+  /// **'Free'**
   String get newsTransferFree;
 
   /// Inbox: a star naturalisation candidate.
@@ -12609,12 +12609,6 @@ abstract class AppLocalizations {
   /// **'{count, plural, =1{1 move} other{{count} moves}}'**
   String transfersMoves(int count);
 
-  /// Transfer report: which slice of the moves is on screen.
-  ///
-  /// In en, this message translates to:
-  /// **'{from}–{to} of {total}'**
-  String transfersRange(int from, int to, int total);
-
   /// Round-results popup: which page of a long matchday is shown.
   ///
   /// In en, this message translates to:
@@ -12632,6 +12626,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'More'**
   String get transfersOlder;
+
+  /// Transfer report: the previous page of moves.
+  ///
+  /// In en, this message translates to:
+  /// **'Previous'**
+  String get transfersPagePrevious;
+
+  /// Transfer report: the next page of moves.
+  ///
+  /// In en, this message translates to:
+  /// **'Next'**
+  String get transfersPageNext;
+
+  /// Transfer report: which page of moves is shown.
+  ///
+  /// In en, this message translates to:
+  /// **'Page {page} of {pages}'**
+  String transfersPageOf(int page, int pages);
+
+  /// Transfer report: the move went to a stronger league.
+  ///
+  /// In en, this message translates to:
+  /// **'A step up'**
+  String get transfersStepUp;
+
+  /// Transfer report: the move went to a weaker league.
+  ///
+  /// In en, this message translates to:
+  /// **'A step down'**
+  String get transfersStepDown;
+
+  /// Transfer report: the move held its league level.
+  ///
+  /// In en, this message translates to:
+  /// **'The same level'**
+  String get transfersStepLevel;
 
   /// Transfer report: stands in for a side of the move whose club the report does not name.
   ///

@@ -6892,7 +6892,7 @@ class AppLocalizationsCs extends AppLocalizations {
   }
 
   @override
-  String get newsTransferFree => 'volný přestup';
+  String get newsTransferFree => 'Zdarma';
 
   @override
   String newsNatzStarTitle(String name, String nation) {
@@ -7996,11 +7996,6 @@ class AppLocalizationsCs extends AppLocalizations {
   }
 
   @override
-  String transfersRange(int from, int to, int total) {
-    return '$from–$to z $total';
-  }
-
-  @override
   String hubRoundPage(int page, int pages) {
     return '$page / $pages';
   }
@@ -8010,6 +8005,26 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get transfersOlder => 'Další';
+
+  @override
+  String get transfersPagePrevious => 'Předchozí';
+
+  @override
+  String get transfersPageNext => 'Další';
+
+  @override
+  String transfersPageOf(int page, int pages) {
+    return 'Stránka $page z $pages';
+  }
+
+  @override
+  String get transfersStepUp => 'Krok nahoru';
+
+  @override
+  String get transfersStepDown => 'Krok dolů';
+
+  @override
+  String get transfersStepLevel => 'Stejná úroveň';
 
   @override
   String get transfersUnknownClub => 'Neznámý klub';
