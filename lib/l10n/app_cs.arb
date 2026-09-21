@@ -528,6 +528,7 @@
   "friendliesMonthDec": "pro",
   "resultsMyMatches": "MOJE ZÁPASY",
   "resultsCouldNotLoad": "Nepodařilo se načíst výsledky.\n{error}",
+  "resultsEarlierMatches": "Starší zápasy ({count})",
   "resultsNoFixtures": "Žádné zápasy.",
   "resultsVs": "vs",
   "resultsStageQualifier": "KVALIFIKACE",

@@ -2216,6 +2216,11 @@ class AppLocalizationsCs extends AppLocalizations {
   String get resultsKnockout => 'Vyřazovací fáze';
 
   @override
+  String resultsEarlierMatches(int count) {
+    return 'Starší zápasy ($count)';
+  }
+
+  @override
   String resultsMatchday(int matchday) {
     return '$matchday. KOLO';
   }

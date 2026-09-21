@@ -3794,6 +3794,12 @@ abstract class AppLocalizations {
   /// **'Knockout'**
   String get resultsKnockout;
 
+  /// Tappable header that reveals a competition's matches from before the current campaign.
+  ///
+  /// In en, this message translates to:
+  /// **'Earlier matches ({count})'**
+  String resultsEarlierMatches(int count);
+
   /// Heading naming the current group-stage matchday.
   ///
   /// In en, this message translates to:

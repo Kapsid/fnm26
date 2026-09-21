@@ -613,6 +613,7 @@ resultsCategoryWorldCupFinals,Competition group heading: World Championship fina
 resultsRoundResults,App-bar title on the round-results screen.,,ROUND RESULTS,VÝSLEDKY KOLA
 resultsFriendlyInternationals,Heading over other nations' friendly internationals.,,FRIENDLY INTERNATIONALS,PŘÁTELSKÉ REPREZENTAČNÍ ZÁPASY
 resultsKnockout,Fallback stage heading for a knockout round.,,Knockout,Vyřazovací fáze
+resultsEarlierMatches,Tappable header that reveals a competition's matches from before the current campaign.,{count},Earlier matches ({count}),Starší zápasy ({count})
 resultsMatchday,Heading naming the current group-stage matchday.,{matchday},MATCHDAY {matchday},{matchday}. KOLO
 resultsContinue,Button that carries on to the hub.,,Continue,Pokračovat
 resultsGroup,Group heading with its letter.,{name},GROUP {name},SKUPINA {name}

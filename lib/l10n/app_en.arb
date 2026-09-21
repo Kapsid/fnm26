@@ -3270,6 +3270,16 @@
   "@resultsKnockout": {
     "description": "Fallback stage heading for a knockout round."
   },
+  "resultsEarlierMatches": "Earlier matches ({count})",
+  "@resultsEarlierMatches": {
+    "description": "Tappable header that reveals a competition's matches from before the current campaign.",
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "example": "12"
+      }
+    }
+  },
   "resultsMatchday": "MATCHDAY {matchday}",
   "@resultsMatchday": {
     "description": "Heading naming the current group-stage matchday.",

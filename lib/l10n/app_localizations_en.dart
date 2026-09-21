@@ -2205,6 +2205,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String get resultsKnockout => 'Knockout';
 
   @override
+  String resultsEarlierMatches(int count) {
+    return 'Earlier matches ($count)';
+  }
+
+  @override
   String resultsMatchday(int matchday) {
     return 'MATCHDAY $matchday';
   }
