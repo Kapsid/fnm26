@@ -15,7 +15,7 @@ import 'package:flutter_test/flutter_test.dart';
 /// * [expectWhole] — this particular number or name is printed in full.
 /// * [expectNothingCut] — NOTHING anywhere on the screen is cut. It found
 ///   bugs nobody was looking for; prefer it where a screen can afford it.
-/// * [expectLegible] — for a [WholeText], which no ellipsis guard can fail
+/// * [expectLegible] — for a `WholeText`, which no ellipsis guard can fail
 ///   because it scales itself down instead. Asks how far it had to shrink.
 ///
 /// A caveat that applies to all of them: a widget test renders in Flutter's
@@ -64,7 +64,7 @@ void expectNothingCut(WidgetTester tester, [String where = 'the screen']) {
   }
 }
 
-/// How far a [WholeText] had to scale its child down to fit: 1.0 is untouched,
+/// How far a `WholeText` had to scale its child down to fit: 1.0 is untouched,
 /// 0.5 is half size.
 ///
 /// A `WholeText` never ellipsises, so [expectWhole] can never fail inside one
@@ -81,7 +81,7 @@ double shrinkOf(WidgetTester tester, Finder finder) {
   return painted / paragraph.size.width;
 }
 
-/// Asserts a [WholeText] is still readable: it did not have to scale below
+/// Asserts a `WholeText` is still readable: it did not have to scale below
 /// [min] to fit.
 ///
 /// Converting to what the manager sees: the test font is about an em per
