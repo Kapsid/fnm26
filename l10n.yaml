@@ -12,3 +12,11 @@ output-class: AppLocalizations
 # Untranslated keys fall back to the template (English) rather than failing.
 untranslated-messages-file: lib/l10n/untranslated.txt
 nullable-getter: false
+# English first in `supportedLocales`, which is what makes it the FALLBACK.
+# Flutter's default locale resolution hands a device whose language we do not
+# support the FIRST supported locale, and gen-l10n otherwise orders the list
+# alphabetically by locale code — which put Czech first and gave every German,
+# French or Spanish phone in the world the whole app in Czech. English is the
+# template language (`app_en.arb`), so English is what an unsupported language
+# should fall back to.
+preferred-supported-locales: [en]
