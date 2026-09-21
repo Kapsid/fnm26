@@ -343,7 +343,12 @@ class SaveTile extends StatelessWidget {
                 ],
                 // How long this save has had of the manager's life. Hidden
                 // under a minute: a save just started has nothing to say, and
-                // "Played 0m" reads like a bug.
+                // a row reading "0m" beside a clock looks like a bug.
+                //
+                // The verb went for width. "Odehráno 2 h 0 min" was cut on a
+                // 320pt phone and the number went with it, which is the only
+                // part of the line worth reading; the clock icon beside it
+                // already says what the number counts.
                 if (playedLabel(l, save.playedSeconds) case final played?) ...[
                   const SizedBox(height: 2),
                   Row(

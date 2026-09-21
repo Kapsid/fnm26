@@ -11,6 +11,7 @@ import 'package:fnm/features/tournaments/tournament_history.dart';
 import 'package:fnm/features/tournaments/tournament_stats.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 
+import '../helpers/expect_whole.dart';
 import '../helpers/pump_app.dart';
 
 /// An all-time scoring chart mixes two kinds of player: men you could still
@@ -224,6 +225,7 @@ void main() {
           isNull,
           reason: 'a marked all-time row must never run off a phone',
         );
+        expectNothingCut(tester);
         expect(find.byType(ActiveBadge), findsOneWidget);
       });
 
@@ -247,6 +249,7 @@ void main() {
           isNull,
           reason: 'the legend must never run off a phone-width screen',
         );
+        expectNothingCut(tester);
         expect(find.byType(ActiveBadge), findsOneWidget);
       });
 
@@ -257,6 +260,7 @@ void main() {
           isNull,
           reason: 'a marked leaderboard row must never run off a phone',
         );
+        expectNothingCut(tester);
         expect(find.byType(ActiveBadge), findsOneWidget);
       });
     }

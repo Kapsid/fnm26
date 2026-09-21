@@ -2442,16 +2442,16 @@
   "@careerUnknownNation": {
     "description": "Fallback for an unknown nation."
   },
-  "careerPlayedMinutes": "Played {minutes}m",
+  "careerPlayedMinutes": "{minutes}m",
   "@careerPlayedMinutes": {
-    "description": "Total real-world time spent in a save, under an hour.",
+    "description": "Total real-world time spent in a save, under an hour. Sits beside a clock icon, which is what says it is a playing time, so the line carries no verb.",
     "placeholders": {
       "minutes": {
         "type": "int"
       }
     }
   },
-  "careerPlayedHours": "Played {hours}h {minutes}m",
+  "careerPlayedHours": "{hours}h {minutes}m",
   "@careerPlayedHours": {
     "description": "Total real-world time spent in a save, an hour or more.",
     "placeholders": {

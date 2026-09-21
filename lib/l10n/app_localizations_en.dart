@@ -1629,12 +1629,12 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String careerPlayedMinutes(int minutes) {
-    return 'Played ${minutes}m';
+    return '${minutes}m';
   }
 
   @override
   String careerPlayedHours(int hours, int minutes) {
-    return 'Played ${hours}h ${minutes}m';
+    return '${hours}h ${minutes}m';
   }
 
   @override

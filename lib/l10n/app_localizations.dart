@@ -2858,16 +2858,16 @@ abstract class AppLocalizations {
   /// **'Unknown'**
   String get careerUnknownNation;
 
-  /// Total real-world time spent in a save, under an hour.
+  /// Total real-world time spent in a save, under an hour. Sits beside a clock icon, which is what says it is a playing time, so the line carries no verb.
   ///
   /// In en, this message translates to:
-  /// **'Played {minutes}m'**
+  /// **'{minutes}m'**
   String careerPlayedMinutes(int minutes);
 
   /// Total real-world time spent in a save, an hour or more.
   ///
   /// In en, this message translates to:
-  /// **'Played {hours}h {minutes}m'**
+  /// **'{hours}h {minutes}m'**
   String careerPlayedHours(int hours, int minutes);
 
   /// Saves list: when this save was last opened.

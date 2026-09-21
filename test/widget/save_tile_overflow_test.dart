@@ -7,6 +7,8 @@ import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/features/career/saves_screen.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 
+import '../helpers/expect_whole.dart';
+
 /// A save row carries three buttons on its right — share, delete, and the
 /// chevron into the save — and the text beside them ran straight underneath.
 /// "Cesta na MS 2030" sat in a Row with nothing constraining it, so it spilled
@@ -32,9 +34,13 @@ void main() {
     ranking: 60,
   );
 
-  Future<void> pumpTile(WidgetTester tester, Locale locale) async {
+  Future<void> pumpTile(
+    WidgetTester tester,
+    Locale locale, {
+    double width = 320,
+  }) async {
     tester.view
-      ..physicalSize = const Size(320, 700)
+      ..physicalSize = Size(width, 700)
       ..devicePixelRatio = 1.0;
     addTearDown(tester.view.reset);
     await tester.pumpWidget(
@@ -58,16 +64,25 @@ void main() {
   }
 
   for (final locale in [const Locale('en'), const Locale('cs')]) {
-    testWidgets('${locale.languageCode}: nothing spills out of the row', (
-      tester,
-    ) async {
-      await pumpTile(tester, locale);
-      expect(
-        tester.takeException(),
-        isNull,
-        reason: 'the save row must not overflow',
+    // Three widths, not one. A row that holds at the narrowest is not
+    // guaranteed to hold wider — one of this batch's bugs failed at 400 and
+    // passed at 360, because what changes with the width is which of the
+    // things sharing the row gets the leftover.
+    for (final width in [320.0, 360.0, 400.0]) {
+      testWidgets(
+        '${locale.languageCode}: nothing spills out of the row at '
+        '${width.toInt()}px',
+        (tester) async {
+          await pumpTile(tester, locale, width: width);
+          expect(
+            tester.takeException(),
+            isNull,
+            reason: 'the save row must not overflow',
+          );
+          expectNothingCut(tester, 'the save row in ${locale.languageCode}');
+        },
       );
-    });
+    }
 
     testWidgets('${locale.languageCode}: no text reaches the controls', (
       tester,

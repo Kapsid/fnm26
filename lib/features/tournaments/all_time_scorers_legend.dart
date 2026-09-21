@@ -20,8 +20,14 @@ class AllTimeScorersLegend extends StatelessWidget {
     final l = AppLocalizations.of(context);
     return Row(
       children: [
-        // The heading is the half allowed to shorten: a legend that explains
-        // the badge is no use half-printed.
+        // The heading shares the row with the legend, which is the half that
+        // must be printed whole: a badge nobody has explained is worse than a
+        // heading nobody needed.
+        //
+        // That was the excuse for letting the heading ellipsise, and it was
+        // not good enough — "NEJLEPSI STRELCI HIST..." is not a heading. The
+        // Czech gives up its first word instead ("STRELCI HISTORIE"), and
+        // both halves of the row are now printed in full at 360 and at 400.
         Expanded(
           child: Text(
             l.tourCupAllTimeScorers,

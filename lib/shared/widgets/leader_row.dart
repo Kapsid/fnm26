@@ -3,6 +3,7 @@ import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/shared/widgets/flag_disc.dart';
+import 'package:fnm/shared/widgets/whole_text.dart';
 
 /// One line of a leaderboard: where they rank, who they are, and the number
 /// that put them there.
@@ -83,10 +84,15 @@ class LeaderRow extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text(
+                // Every leaderboard in the game draws its holders through
+                // here, and a holder is a NAME: the row shares its width with
+                // a rank, a flag, a badge and the number itself, so an
+                // ellipsis here reads "Bartholomew Vanderb..." on a 400pt
+                // phone. It gives up the forename first, its size after.
+                WholeText(
                   name,
                   maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
+                  shortText: initialledName(name),
                   style: AppTypography.bodyMedium.copyWith(
                     fontWeight: isLeader ? FontWeight.w700 : FontWeight.w400,
                     color: highlighted ? AppColors.primary : null,

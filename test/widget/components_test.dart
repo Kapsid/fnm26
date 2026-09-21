@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 
+import '../helpers/expect_whole.dart';
 import '../helpers/pump_app.dart';
 
 void main() {
@@ -50,6 +51,7 @@ void main() {
         isNull,
         reason: 'the label must not overflow the button',
       );
+      expectNothingCut(tester);
     });
 
     testWidgets('the icon stays beside its label, centred, at any length', (
@@ -100,6 +102,7 @@ void main() {
           reason: '"$label": the icon drifted away from its label',
         );
         expect(tester.takeException(), isNull, reason: '"$label" overflowed');
+        expectNothingCut(tester);
       }
     });
 

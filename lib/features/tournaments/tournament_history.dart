@@ -163,10 +163,15 @@ class _TournamentScorersState extends State<TournamentScorers> {
             FlagDisc(widget.code(nationId), size: 24),
             const SizedBox(width: AppSpacing.md),
             Expanded(
-              child: Text(
+              // The scorer's name, and an ellipsis is not an option: the row
+              // shares its width with a rank, a flag, an ACTIVE badge and the
+              // goal count, which left "Bartholomew Vanderberghe" reading
+              // "Bartholomew Vanderb..." at 400 points. It gives up its
+              // forename first, and only then a little of its size.
+              child: WholeText(
                 name,
                 maxLines: 1,
-                overflow: TextOverflow.ellipsis,
+                shortText: initialledName(name),
                 style: AppTypography.bodyMedium,
               ),
             ),

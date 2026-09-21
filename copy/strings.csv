@@ -459,8 +459,8 @@ careerCancel,Dismiss the delete-save dialog.,,Cancel,Zrušit
 careerDelete,Confirm the delete-save dialog.,,Delete,Smazat
 careerNoSavesYet,Empty state on the saves screen.,,No saves yet.\nStart a new game to lead a nation.,Zatím žádné uložené hry.\nZačněte novou hru a veďte reprezentaci.
 careerUnknownNation,Fallback for an unknown nation.,,Unknown,Neznámý
-careerPlayedMinutes,"Total real-world time spent in a save, under an hour.",{minutes},Played {minutes}m,Odehráno {minutes} min
-careerPlayedHours,"Total real-world time spent in a save, an hour or more.",{hours} {minutes},Played {hours}h {minutes}m,Odehráno {hours} h {minutes} min
+careerPlayedMinutes,"Total real-world time spent in a save, under an hour. Sits beside a clock icon, which is what says it is a playing time, so the line carries no verb.",{minutes},{minutes}m,{minutes} min
+careerPlayedHours,"Total real-world time spent in a save, an hour or more.",{hours} {minutes},{hours}h {minutes}m,{hours} h {minutes} min
 careerLastPlayed,Saves list: when this save was last opened.,{when},Last played {when},Naposledy hráno {when}
 careerJustNow,Relative time: within the last couple of minutes.,,just now,právě teď
 careerYesterday,Relative time: one day ago.,,yesterday,včera
@@ -1274,7 +1274,7 @@ tourCupUnknown,World Championship detail: tourCupUnknown,,Unknown,Neznámý
 tourCupWorldChampions,World Championship detail: tourCupWorldChampions,,WORLD CHAMPIONS,MISTŘI SVĚTA
 tourCupWorldChampionsTitle,World Championship detail: tourCupWorldChampionsTitle,,World Champions,Mistři světa
 tourCupStillActive,World Championship detail: tourCupStillActive,,Still active,Stále aktivní
-tourCupAllTimeScorers,World Championship detail: tourCupAllTimeScorers,,ALL-TIME SCORERS,NEJLEPŠÍ STŘELCI HISTORIE
+tourCupAllTimeScorers,World Championship detail: tourCupAllTimeScorers,,ALL-TIME SCORERS,STŘELCI HISTORIE
 tourCupAllConfederations,World Championship detail: tourCupAllConfederations,,All confederations,Všechny konfederace
 tourCupBestRunnersUp,World Championship detail: tourCupBestRunnersUp,,Best runners-up,Nejlepší týmy na druhých místech
 tourCupCompWorld,World Championship detail: tourCupCompWorld,,World Championship,Mistrovství světa

@@ -1635,12 +1635,12 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String careerPlayedMinutes(int minutes) {
-    return 'Odehráno $minutes min';
+    return '$minutes min';
   }
 
   @override
   String careerPlayedHours(int hours, int minutes) {
-    return 'Odehráno $hours h $minutes min';
+    return '$hours h $minutes min';
   }
 
   @override
@@ -4837,7 +4837,7 @@ class AppLocalizationsCs extends AppLocalizations {
   String get tourCupStillActive => 'Stále aktivní';
 
   @override
-  String get tourCupAllTimeScorers => 'NEJLEPŠÍ STŘELCI HISTORIE';
+  String get tourCupAllTimeScorers => 'STŘELCI HISTORIE';
 
   @override
   String get tourCupAllConfederations => 'Všechny konfederace';
