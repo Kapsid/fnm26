@@ -342,8 +342,8 @@ class _YScreenState extends ConsumerState<YScreen> {
       body: async.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (e, _) => Center(child: Text('$e')),
-        data: (posts) {
-          if (posts.isEmpty) {
+        data: (feed) {
+          if (feed.posts.isEmpty) {
             return Center(
               child: Padding(
                 padding: const EdgeInsets.all(AppSpacing.xl),
@@ -357,29 +357,96 @@ class _YScreenState extends ConsumerState<YScreen> {
               ),
             );
           }
-          return ListView.builder(
-            // No page padding: a feed runs edge to edge and each row carries
-            // its own margins, so the hairlines between conversations reach
-            // the sides of the screen the way they do in a timeline.
-            padding: EdgeInsets.zero,
-            itemCount: posts.length,
-            itemBuilder: (context, i) => YPostTile(
-              post: posts[i],
-              // A rule ABOVE each new conversation, and none inside one: a
-              // post and its replies are one thing being talked about, and a
-              // line through the middle of them read as unrelated posts.
-              topRule: i > 0 && posts[i].replyTo == null,
-              // A post is the start of a conversation, not a dead line of
-              // text: opening it shows everyone who said something about the
-              // same match.
-              onTap: () => Navigator.of(context).push(
-                MaterialPageRoute<void>(
-                  builder: (_) => YPostDetail(post: posts[i], all: posts),
-                ),
-              ),
-            ),
-          );
+          return YFeedList(feed: feed);
         },
+      ),
+    );
+  }
+}
+
+/// The feed itself.
+///
+/// Its own widget so the seam heading can be tested without a save behind it:
+/// what this draws is entirely decided by the [YTimeline] handed to it.
+class YFeedList extends StatelessWidget {
+  const YFeedList({required this.feed, super.key});
+
+  final YTimeline feed;
+
+  @override
+  Widget build(BuildContext context) {
+    final posts = feed.posts;
+    final seam = feed.reserveFrom;
+    // One extra row for the heading, and only when there is a reserve to head.
+    // A feed short enough to fit inside the recency window draws no heading at
+    // all rather than an empty one.
+    final rows = posts.length + (seam == null ? 0 : 1);
+    return ListView.builder(
+      // No page padding: a feed runs edge to edge and each row carries its own
+      // margins, so the hairlines between conversations reach the sides of the
+      // screen the way they do in a timeline.
+      padding: EdgeInsets.zero,
+      itemCount: rows,
+      itemBuilder: (context, row) {
+        if (seam != null && row == seam) return const _YEarlierHeading();
+        // Everything below the heading has shifted down by its row.
+        final i = seam != null && row > seam ? row - 1 : row;
+        return YPostTile(
+          post: posts[i],
+          // A rule ABOVE each new conversation, and none inside one: a post
+          // and its replies are one thing being talked about, and a line
+          // through the middle of them read as unrelated posts. The heading
+          // draws its own, so the post directly under it needs none.
+          topRule: i > 0 && posts[i].replyTo == null && row != (seam ?? -1) + 1,
+          // A post is the start of a conversation, not a dead line of text:
+          // opening it shows everyone who said something about the same match.
+          onTap: () => Navigator.of(context).push(
+            MaterialPageRoute<void>(
+              builder: (_) => YPostDetail(post: posts[i], all: posts),
+            ),
+          ),
+        );
+      },
+    );
+  }
+}
+
+/// The seam between the recent feed and the tournaments kept back from earlier
+/// in the cycle.
+///
+/// Without it the feed simply jumps back in time partway down — from this
+/// spring to a summer two years ago, with no date headers anywhere to explain
+/// it — and the manager who went looking for the continental championship
+/// found something that read like a fault rather than like older news.
+class _YEarlierHeading extends StatelessWidget {
+  const _YEarlierHeading();
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    return Container(
+      width: double.infinity,
+      decoration: const BoxDecoration(
+        color: AppColors.surfaceVariant,
+        border: Border(
+          top: BorderSide(color: AppColors.outlineVariant),
+          bottom: BorderSide(color: AppColors.outlineVariant),
+        ),
+      ),
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppSpacing.marginMobile,
+        vertical: AppSpacing.sm,
+      ),
+      // A plain [Text], not a [WholeText]: this is a fixed heading in two
+      // known languages, and a widget that quietly scales itself down to fit
+      // would hide a copy change that no longer does — the width test reads
+      // `didExceedMaxLines`, which only a real Text can fail.
+      child: Text(
+        l.yEarlierHeading,
+        maxLines: 1,
+        style: AppTypography.labelMedium.copyWith(
+          color: AppColors.onSurfaceVariant,
+        ),
       ),
     );
   }

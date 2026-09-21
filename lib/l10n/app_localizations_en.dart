@@ -3700,6 +3700,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get yEmpty => 'Nothing to say yet. Play a match.';
 
   @override
+  String get yEarlierHeading => 'Earlier this cycle';
+
+  @override
   String hubEventGrievance(String player) {
     return '$player wants a word';
   }

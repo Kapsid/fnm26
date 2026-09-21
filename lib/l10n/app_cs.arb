@@ -994,6 +994,7 @@
   "navY": "Y",
   "yTitle": "Y",
   "yEmpty": "Zatím není o čem. Odehraj zápas.",
+  "yEarlierHeading": "Dříve v tomto cyklu",
   "hubEventGrievance": "{player} si chce promluvit",
   "hubEventGrievanceSub": "Chce vědět, na čem je",
   "hubEventManagerSkills": "{count, plural, =1{1 bod dovedností k rozdělení} few{{count} body dovedností k rozdělení} other{{count} bodů dovedností k rozdělení}}",

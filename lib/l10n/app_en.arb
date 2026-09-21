@@ -5507,6 +5507,10 @@
   "@yEmpty": {
     "description": "Empty state on the Y feed."
   },
+  "yEarlierHeading": "Earlier this cycle",
+  "@yEarlierHeading": {
+    "description": "Heading on the Y feed where the recent posts end and the older tournament news kept back from earlier in the cycle begins."
+  },
   "hubEventGrievance": "{player} wants a word",
   "@hubEventGrievance": {
     "description": "Player agency: hubEventGrievance.",

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:fnm/core/theme/app_theme.dart';
 import 'package:fnm/domain/services/press/y_feed.dart';
 import 'package:fnm/features/y/y_post_detail.dart';
 import 'package:fnm/features/y/y_screen.dart';
@@ -128,5 +130,154 @@ void main() {
       await tester.pumpAndSettle();
       expect(find.text('ALSO ABOUT THIS MATCH'), findsNothing);
     });
+  });
+
+  group('the seam under the reserve', () {
+    // The fix that put the tournaments back in the feed put them BELOW the
+    // recent posts, where the dates jump back two years with nothing to say
+    // so. A manager scrolling for the continental championship found what
+    // looked like a fault in the feed. This is the heading that says it is
+    // older news, and these are the two things that can go wrong with it: it
+    // must sit exactly at the seam, and it must not appear at all when there
+    // is no reserve.
+    YPost chatter(int i) => (
+      voice: YVoice.fan,
+      handle: '@fan$i',
+      displayName: 'Recent$i',
+      template: YTemplate.winTight,
+      variant: 0,
+      args: const ['Spain', '2-1'],
+      date: DateTime(2030, 6, 10 - i),
+      key: 'fx:$i|fan',
+      replyTo: null,
+      mood: null,
+    );
+
+    YPost landmark(int i) => (
+      voice: YVoice.breaking,
+      handle: '@wire$i',
+      displayName: 'Older$i',
+      template: YTemplate.eliminated,
+      variant: 0,
+      args: const ['European Championship'],
+      date: DateTime(2028, 6, 21 - i),
+      key: 'out:cmp:$i|breaking',
+      replyTo: null,
+      mood: null,
+    );
+
+    /// Three recent posts, then two kept back from earlier in the cycle.
+    YTimeline withReserve() => (
+      posts: [chatter(0), chatter(1), chatter(2), landmark(0), landmark(1)],
+      reserveFrom: 3,
+    );
+
+    Future<void> pumpFeed(
+      WidgetTester tester,
+      YTimeline feed, {
+      double width = 400,
+      Locale locale = const Locale('en'),
+    }) async {
+      tester.view
+        ..physicalSize = Size(width, 1600)
+        ..devicePixelRatio = 1.0;
+      addTearDown(tester.view.reset);
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: AppTheme.theme,
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          // On the MaterialApp itself, not a Localizations.override around a
+          // launcher: an override does not reach a route pushed out of it.
+          locale: locale,
+          home: Scaffold(body: YFeedList(feed: feed)),
+        ),
+      );
+      await tester.pumpAndSettle();
+    }
+
+    /// The heading, in whichever language is on screen.
+    Finder heading(WidgetTester tester) => find.text(
+      AppLocalizations.of(
+        tester.element(find.byType(YFeedList)),
+      ).yEarlierHeading,
+    );
+
+    testWidgets('appears exactly once, at the seam', (tester) async {
+      await pumpFeed(tester, withReserve());
+      expect(heading(tester), findsOneWidget);
+      // Between the last recent post and the first one kept back: an
+      // unmarked jump from 2030 to 2028 is what the manager read as a bug.
+      expect(
+        tester.getTopLeft(heading(tester)).dy,
+        greaterThan(tester.getTopLeft(find.text('Recent2')).dy),
+      );
+      expect(
+        tester.getTopLeft(heading(tester)).dy,
+        lessThan(tester.getTopLeft(find.text('Older0')).dy),
+      );
+      // And every post is still there: the extra row displaces nothing.
+      for (final name in [
+        'Recent0',
+        'Recent1',
+        'Recent2',
+        'Older0',
+        'Older1',
+      ]) {
+        expect(find.text(name), findsOneWidget, reason: name);
+      }
+    });
+
+    testWidgets('is absent when nothing was kept back', (tester) async {
+      await pumpFeed(tester, (
+        posts: [chatter(0), chatter(1)],
+        reserveFrom: null,
+      ));
+      expect(
+        heading(tester),
+        findsNothing,
+        reason: 'a feed with no reserve shows no heading, not an empty one',
+      );
+      expect(find.byType(YPostTile), findsNWidgets(2));
+    });
+
+    /// Asserts that every [finder] match is rendered WHOLE, not ellipsised.
+    ///
+    /// `takeException` is not enough and never was: it passes for any amount
+    /// of quiet truncation. A heading cut to "Earlier this..." would answer
+    /// the manager's complaint no better than no heading at all.
+    void expectWhole(Finder finder, String what) {
+      final elements = finder.evaluate();
+      expect(elements, isNotEmpty, reason: '$what is not on screen at all');
+      for (final element in elements) {
+        final paragraph = element.renderObject! as RenderParagraph;
+        expect(
+          paragraph.didExceedMaxLines,
+          isFalse,
+          reason:
+              '$what is cut off: it wants '
+              '${paragraph.getMaxIntrinsicWidth(double.infinity)}px '
+              'and was given ${paragraph.size.width}px',
+        );
+      }
+    }
+
+    for (final width in <double>[400, 360]) {
+      for (final locale in [const Locale('en'), const Locale('cs')]) {
+        testWidgets(
+          'fits whole at ${width.toInt()}px in ${locale.languageCode}',
+          (tester) async {
+            await pumpFeed(
+              tester,
+              withReserve(),
+              width: width,
+              locale: locale,
+            );
+            expectWhole(heading(tester), 'the earlier-news heading');
+            expect(tester.takeException(), isNull);
+          },
+        );
+      }
+    }
   });
 }

@@ -115,7 +115,7 @@ void main() {
     await playNationsCupGroup(career, win: false);
     await drawFinalsFourWithout(career);
 
-    final feed = await open().read(yFeedProvider(career.id).future);
+    final feed = (await open().read(yFeedProvider(career.id).future)).posts;
     expect(
       feed.map((p) => p.template),
       contains(YTemplate.eliminated),
@@ -136,7 +136,7 @@ void main() {
     await playNationsCupGroup(career, win: true);
     await drawFinalsFourWithout(career);
 
-    final feed = await open().read(yFeedProvider(career.id).future);
+    final feed = (await open().read(yFeedProvider(career.id).future)).posts;
     expect(
       feed.map((p) => p.template),
       isNot(contains(YTemplate.eliminated)),
@@ -154,7 +154,7 @@ void main() {
             .valueOrNull!;
     await playNationsCupGroup(career, win: false);
 
-    final feed = await open().read(yFeedProvider(career.id).future);
+    final feed = (await open().read(yFeedProvider(career.id).future)).posts;
     expect(
       feed.map((p) => p.template),
       isNot(contains(YTemplate.eliminated)),
@@ -179,7 +179,7 @@ void main() {
       await comp.recordResult(fixtureId: f.id, homeScore: 0, awayScore: 1);
     }
 
-    final feed = await open().read(yFeedProvider(career.id).future);
+    final feed = (await open().read(yFeedProvider(career.id).future)).posts;
     expect(
       feed.map((p) => p.template),
       isNot(contains(YTemplate.eliminated)),
@@ -216,7 +216,7 @@ void main() {
         );
       }
 
-      final feed = await open().read(yFeedProvider(career.id).future);
+      final feed = (await open().read(yFeedProvider(career.id).future)).posts;
       expect(
         feed.map((p) => p.template),
         isNot(contains(YTemplate.qualified)),

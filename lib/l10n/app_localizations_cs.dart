@@ -3723,6 +3723,9 @@ class AppLocalizationsCs extends AppLocalizations {
   String get yEmpty => 'Zatím není o čem. Odehraj zápas.';
 
   @override
+  String get yEarlierHeading => 'Dříve v tomto cyklu';
+
+  @override
   String hubEventGrievance(String player) {
     return '$player si chce promluvit';
   }

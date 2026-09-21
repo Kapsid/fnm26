@@ -993,6 +993,7 @@ yTournamentSoon3,"Y post: tournamentSoon, variant 3.",{opponent},Countdown to {o
 navY,Bottom navigation label for the Y feed.,,Y,Y
 yTitle,Title of the Y feed screen.,,Y,Y
 yEmpty,Empty state on the Y feed.,,Nothing to say yet. Play a match.,Zatím není o čem. Odehraj zápas.
+yEarlierHeading,Heading on the Y feed where the recent posts end and the older tournament news kept back from earlier in the cycle begins.,,Earlier this cycle,Dříve v tomto cyklu
 hubEventGrievance,Player agency: hubEventGrievance.,{player},{player} wants a word,{player} si chce promluvit
 hubEventGrievanceSub,Player agency: hubEventGrievanceSub.,,He wants to know where he stands,"Chce vědět, na čem je"
 hubEventManagerSkills,Hub event: the once-a-cycle prompt to raise the manager's own skills.,"PLURAL — keep the {count, plural, …} skeleton exactly; translate only the words inside the branches","{count, plural, =1{1 skill point to spend} other{{count} skill points to spend}}","{count, plural, =1{1 bod dovedností k rozdělení} few{{count} body dovedností k rozdělení} other{{count} bodů dovedností k rozdělení}}"

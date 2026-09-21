@@ -78,17 +78,19 @@ final AutoDisposeFutureProviderFamily<List<_Judged>, int> _judgedProvider =
 /// fixture as a rivalry.
 const int rivalryMeetings = 4;
 
-/// The feed: what the world has been saying, newest first.
-final AutoDisposeFutureProviderFamily<List<YPost>, int> yFeedProvider =
-    FutureProvider.autoDispose.family<List<YPost>, int>((ref, careerId) async {
+/// The feed: what the world has been saying, newest first, and where the
+/// reserved older landmarks begin (see [YFeed.timeline]).
+final AutoDisposeFutureProviderFamily<YTimeline, int> yFeedProvider =
+    FutureProvider.autoDispose.family<YTimeline, int>((ref, careerId) async {
+      const empty = (posts: <YPost>[], reserveFrom: null);
       final career = await ref.watch(careerRepositoryProvider).byId(careerId);
-      if (career == null) return const [];
+      if (career == null) return empty;
       final nations = await ref.watch(nationRepositoryProvider).all();
       final nation = nations
           .where((Nation n) => n.id == career.nationId)
           .map((n) => n.name)
           .firstOrNull;
-      if (nation == null) return const [];
+      if (nation == null) return empty;
       final judged = await ref.watch(_judgedProvider(careerId).future);
 
       // What else the world knows about each of those results: who scored,
@@ -260,8 +262,8 @@ final AutoDisposeFutureProviderFamily<List<YPost>, int> yFeedProvider =
         );
       }
 
-      // Ordering and the cap live in the tested pure layer, not here.
-      return YFeed.mostRecent(posts);
+      // Ordering, the cap and the reserve live in the tested pure layer.
+      return YFeed.timeline(posts);
     });
 
 /// How many posts the manager has not seen.
@@ -274,7 +276,7 @@ final AutoDisposeFutureProviderFamily<int, int> yUnreadCountProvider =
     FutureProvider.autoDispose.family<int, int>((ref, careerId) async {
       final career = await ref.watch(careerRepositoryProvider).byId(careerId);
       if (career == null) return 0;
-      final posts = await ref.watch(yFeedProvider(careerId).future);
+      final posts = (await ref.watch(yFeedProvider(careerId).future)).posts;
       final since = career.yReadAt;
       if (since == null) return posts.length;
       return posts.where((p) => p.date.isAfter(since)).length;
@@ -294,7 +296,7 @@ class YReadService {
   /// Stamps the watermark at the newest post's date, so opening the feed
   /// clears the badge — and a post that arrives later still counts as unread.
   Future<void> markRead(int careerId) async {
-    final posts = await _ref.read(yFeedProvider(careerId).future);
+    final posts = (await _ref.read(yFeedProvider(careerId).future)).posts;
     if (posts.isEmpty) return;
     final newest = posts
         .map((p) => p.date)

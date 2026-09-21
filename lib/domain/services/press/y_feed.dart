@@ -169,6 +169,15 @@ typedef YPost = ({
   YMood? mood,
 });
 
+/// The feed as it is shown: the posts in order, and where the reserved older
+/// landmarks begin.
+///
+/// `reserveFrom` is an index into `posts`, or null when nothing was rescued —
+/// which is the ordinary case for a career short enough to fit inside the
+/// recency window, and the case in which the screen must draw no heading at
+/// all rather than an empty one.
+typedef YTimeline = ({List<YPost> posts, int? reserveFrom});
+
 /// One thing worth a headline that is not a scoreline: a trophy lifted, a
 /// tournament exit, a place at the finals booked, a tournament coming up.
 ///
@@ -795,6 +804,22 @@ abstract final class YFeed {
     List<YPost> all, {
     int cap = 60,
     int landmarkCap = 24,
+  }) => timeline(all, cap: cap, landmarkCap: landmarkCap).posts;
+
+  /// The same feed, with the seam reported.
+  ///
+  /// The rescued landmarks sit BELOW the recency window, which means the feed
+  /// jumps back in time partway down — from this spring to a tournament two
+  /// summers ago, with nothing on screen to say so. That reads as a bug in the
+  /// feed rather than as older news, so the screen draws a heading at the
+  /// seam. It is told where the seam is rather than left to infer it from the
+  /// dates: this is the only place that knows which posts were rescued, and a
+  /// widget guessing from a date gap would be wrong the moment two tournaments
+  /// fell in the same month.
+  static YTimeline timeline(
+    List<YPost> all, {
+    int cap = 60,
+    int landmarkCap = 24,
   }) {
     final repliesByParent = <String, List<YPost>>{};
     final roots = <YPost>[];
@@ -811,15 +836,29 @@ abstract final class YFeed {
     // Whatever the recency window cut, the newest landmarks come back — never
     // more than [landmarkCap] of them, so an endless career cannot grow a feed
     // of nothing but old trophies.
+    //
+    // Appended rather than merged and re-sorted: every rescued root is older
+    // than everything the window kept, so the two runs are already in order,
+    // and concatenating them keeps the reserve one unbroken block with a seam
+    // that can be pointed at.
     final rescued = [
       for (final r in roots)
         if (landmarks.contains(r.template) && !keptKeys.contains(r.key)) r,
-    ].take(landmarkCap);
-    final shown = [...kept, ...rescued]
-      ..sort((a, b) => b.date.compareTo(a.date));
-    return [
-      for (final root in shown) ...[root, ...?repliesByParent[root.key]],
-    ];
+    ].take(landmarkCap).toList();
+
+    final posts = <YPost>[];
+    for (final root in kept) {
+      posts
+        ..add(root)
+        ..addAll(repliesByParent[root.key] ?? const []);
+    }
+    final reserveFrom = rescued.isEmpty ? null : posts.length;
+    for (final root in rescued) {
+      posts
+        ..add(root)
+        ..addAll(repliesByParent[root.key] ?? const []);
+    }
+    return (posts: posts, reserveFrom: reserveFrom);
   }
 
   /// The nation's pundit: the same man all career, a different one next door.

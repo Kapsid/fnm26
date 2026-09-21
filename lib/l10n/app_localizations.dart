@@ -6078,6 +6078,12 @@ abstract class AppLocalizations {
   /// **'Nothing to say yet. Play a match.'**
   String get yEmpty;
 
+  /// Heading on the Y feed where the recent posts end and the older tournament news kept back from earlier in the cycle begins.
+  ///
+  /// In en, this message translates to:
+  /// **'Earlier this cycle'**
+  String get yEarlierHeading;
+
   /// Player agency: hubEventGrievance.
   ///
   /// In en, this message translates to:

@@ -63,7 +63,9 @@ void main() {
         ),
         // The feed itself is not what is under test — the watermark is. A
         // fixed feed keeps the count honest and the test fast.
-        yFeedProvider.overrideWith((ref, id) async => feed),
+        yFeedProvider.overrideWith(
+          (ref, id) async => (posts: feed, reserveFrom: null),
+        ),
       ],
     );
     addTearDown(container.dispose);
