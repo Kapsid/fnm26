@@ -1593,9 +1593,33 @@ class MatchEngine {
     bonus +=
         press * n(a.directness).clamp(0.0, 1.0) * 7.5; // direct beats press
 
-    // 3) Width mismatch.
-    bonus += (n(a.width) * -n(d.width)).clamp(0.0, 1.0) * 7.5; // wide vs narrow
-    bonus += (-n(a.width) * n(d.width)).clamp(0.0, 1.0) * 6.0; // narrow vs wide
+    // 3) Width mismatch. BOTH cases are a gain for the attacker, and that is
+    //    deliberate: stretching a narrow block and overloading the middle of a
+    //    stretched one are both real ways to find a chance, so a width mismatch
+    //    opens the game at BOTH ends rather than one side taking what the other
+    //    loses. What it is not allowed to do is pay each side twice.
+    //
+    //    Until 2026-09 it did exactly that. `n(a) * -n(d)` and `-n(a) * n(d)`
+    //    are the SAME expression — both are `-n(a) * n(d)` — so whenever the
+    //    two widths straddled 50 the clamp let both through, in either
+    //    direction, and every side collected 7.5 AND 6.0 of the same quantity.
+    //    It cancelled out of goal difference, which is all the guards watched,
+    //    but not out of the scoreline: at the tripled coefficients a 100-vs-0
+    //    mismatch was adding +0.87 goals a game to a 2.52 baseline. The sign
+    //    was never the problem — the two cases simply were not separated.
+    //
+    //    So each case is now gated on which side of 50 the ATTACKER is: a wide
+    //    side gets the wide-vs-narrow term and nothing else, a narrow side the
+    //    narrow-vs-wide term and nothing else. Two sides on the same side of 50
+    //    still get neither, exactly as before, and a neutral 50 is untouched.
+    //    The wide reading is worth more because the attacker also pays for it:
+    //    a stretched shape costs at the back (see [kWidthDefence] in
+    //    [_defence]), where a narrow one is paid there instead.
+    final wideAttack = n(a.width).clamp(0.0, 1.0);
+    final narrowAttack = (-n(a.width)).clamp(0.0, 1.0);
+    // wide vs narrow, then narrow vs wide
+    bonus += (wideAttack * -n(d.width)).clamp(0.0, 1.0) * 7.5;
+    bonus += (narrowAttack * n(d.width)).clamp(0.0, 1.0) * 6.0;
 
     // 4) Mentality clash. Committing men forward against a side that has ALSO
     //    committed forward leaves space everywhere and the game opens up;

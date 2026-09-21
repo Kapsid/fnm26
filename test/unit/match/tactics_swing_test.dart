@@ -216,7 +216,10 @@ void main() {
       );
 
       // THE BAND. Roughly a goal every three or four games (0.25-0.33), with
-      // room either side. Measures 0.311 as written.
+      // room either side. Measures 0.3255 as written (0.311 before the two
+      // width terms in `_matchup` were separated — see the width case below;
+      // the wide reading is worth a shade more than the narrow one, so the
+      // drilled side keeps a little of what it used to hand back).
       //
       // Lower bound: below this the manager is right — the dials do nothing.
       // On the constants that drew the feedback, and on THIS corrected harness,
@@ -242,7 +245,7 @@ void main() {
       // The ceiling: the same drilled shape, kept unpredictable by varying the
       // plan behind it, plus the right plan on the day. This is the most
       // tactics can ever be worth between two identical squads, and it must
-      // stay well short of a goal a game. Measures 0.472.
+      // stay well short of a goal a game. Measures 0.4815.
       final s = swing(
         familiarity: 1,
         predictability: 0,
@@ -269,7 +272,10 @@ void main() {
       // This is what the feedback was about. On the old constants, measured on
       // this corrected harness, picking the textbook counter was worth −0.038
       // of a goal a game — not merely nothing, marginally WORSE than not
-      // bothering. Measures +0.056 now.
+      // bothering. Measures +0.090 now (+0.056 before the width terms in
+      // `_matchup` were separated: the double pay was identical on both sides
+      // and so cancelled here, and paying each side once leaves the wide
+      // reading its intended 7.5-against-6.0 edge).
       //
       // The band is small on purpose. Out-thinking an opponent should be worth
       // about a goal every twenty games by itself; the rest of what a good
@@ -348,18 +354,22 @@ void main() {
       expect(onesided.goalDiffPerGame.abs(), lessThan(0.30));
     });
 
-    test('a width mismatch does not quietly inflate the scoreline', () {
-      // A TRIPWIRE, not an endorsement. `_matchup` has a long-standing sign
-      // quirk: both width terms reward the ATTACKER, so wide-vs-narrow and
-      // narrow-vs-wide fire positive at the same time and width adds to both
-      // sides at once. It nets out of goal difference — which is all the rest
-      // of this file measures — but it does NOT net out of the scoreline, and
-      // tripling the match-up coefficients made it louder.
+    test('a width mismatch stretches a game, it does not double it', () {
+      // WIDTH, FROM BOTH ENDS. A wide side against a narrow one is SUPPOSED to
+      // open the game up at both ends — one stretches the block, the other
+      // overloads the middle it left — so this is a band, not a ceiling. It
+      // fails in both directions: too high and width is quietly inflating
+      // every scoreline in the world, too low and the dial has been flattened
+      // out of existence.
       //
-      // Real playstyles routinely straddle 50 on width, so this lifts scoring
-      // across ordinary world fixtures with nothing watching it. Fixing the
-      // sign is its own task; this bounds the damage in the meantime so it
-      // cannot grow again unnoticed.
+      // It was a bare ceiling until 2026-09, when the two terms in
+      // `MatchEngine._matchup` turned out to be the same expression written
+      // twice (`n(a) * -n(d)` and `-n(a) * n(d)` are both `-n(a) * n(d)`), so
+      // every side collected BOTH coefficients whenever the widths straddled
+      // 50 — double pay, in either direction, cancelling out of goal
+      // difference and so out of every other measurement in this file.
+      // Separating the two cases halved it. The figures below are what each
+      // case reads with each side paid once.
       final base = swing(
         familiarity: 0,
         predictability: 0,
@@ -378,11 +388,42 @@ void main() {
         plan: const TacticalInstructions(width: 100),
         counterPlan: const TacticalInstructions(width: 0),
       );
-      // Baseline 2.52. An ordinary width mismatch measures 2.84, the extreme
-      // 3.39 — both already more than they should be, neither allowed to grow.
+
+      // The neutral case is the anchor: at 50 on every dial both width terms
+      // are exactly zero, so this must not move when width is retuned. 2.515.
       expect(base.goalsPerGame, inInclusiveRange(2.2, 2.9));
-      expect(mismatch.goalsPerGame, lessThan(3.05));
-      expect(extreme.goalsPerGame, lessThan(3.60));
+
+      // The bands are stated as a LIFT over that neutral baseline, so a future
+      // change to overall scoring rates moves both ends together instead of
+      // silently eating the headroom.
+      //
+      // An ordinary mismatch — wing play at 70-80 against a narrow counter,
+      // which real playstyles produce constantly — is worth +0.166 of a goal
+      // a game. Call it a goal every six matches: felt over a season, not over
+      // a match. The double-paid version read +0.327 and fails this.
+      final ordinaryLift = mismatch.goalsPerGame - base.goalsPerGame;
+      expect(
+        ordinaryLift,
+        inInclusiveRange(0.06, 0.28),
+        reason:
+            'a routine width mismatch should open a game by a fraction of a '
+            'goal — neither invisible nor a third of a scoreline',
+      );
+
+      // The extreme, which no sane plan reaches: touchline-to-touchline
+      // against a side in a phone box. +0.467. Double-paid it read +0.874, a
+      // third of the whole baseline scoreline, and fails this.
+      final extremeLift = extreme.goalsPerGame - base.goalsPerGame;
+      expect(
+        extremeLift,
+        inInclusiveRange(0.25, 0.70),
+        reason:
+            'even the most lopsided width mismatch imaginable must stay under '
+            'half a goal-and-a-bit a game',
+      );
+
+      // And the shape has to stay monotonic: more mismatch, more open game.
+      expect(extremeLift, greaterThan(ordinaryLift));
     });
 
     test('a side that has been read gives part of it back, never all of it', () {
