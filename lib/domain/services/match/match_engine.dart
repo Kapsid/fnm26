@@ -431,7 +431,7 @@ class MatchEngine {
   static const double _secondBookingChance = 0.45;
 
   /// Per-team, per-minute probability of a player picking up a knock.
-  static const double _injuryPerMinute = 0.0016;
+  static const double injuryPerMinute = 0.0016;
 
   /// [injuryFactorByNation] scales a team's per-minute injury rate (1.0 = base;
   /// below 1.0 = a nation's medical/sports-science investment keeping players
@@ -1031,7 +1031,7 @@ class MatchEngine {
     }
 
     if (live.xi.isNotEmpty &&
-        rng.chance(_injuryPerMinute * injuryFactor * tiredness)) {
+        rng.chance(injuryPerMinute * injuryFactor * tiredness)) {
       final hurt = _pickCulprit(live, rng, injury: true);
       events.add(
         _card(minute, live, hurt, MatchEventType.injury, stoppage: stoppage),
@@ -1468,14 +1468,14 @@ class MatchEngine {
   /// caption rather than as the thing that decided the night. At 26 it costs
   /// 0.67 goals and a fifth of a point, which is nearer what an hour with ten
   /// men is actually worth.
-  static const double _shortHandedAttackPenalty = 26.0;
+  static const double shortHandedAttackPenalty = 26.0;
   static const double _shortHandedEscalation = 8.0;
   static const double _shortHandedDefenceShare = 0.85;
 
   double _shortHandedPenalty(_Live t) {
     final n = t.sentOff.length;
     if (n == 0) return 0;
-    return n * _shortHandedAttackPenalty +
+    return n * shortHandedAttackPenalty +
         n * (n - 1) / 2 * _shortHandedEscalation;
   }
 
