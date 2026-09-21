@@ -564,7 +564,9 @@ class _PlayerRow extends StatelessWidget {
                           child: Text(
                             switch (outlook) {
                               final o? => absenceLabel(l, o),
-                              _ => row.absence?.reason ?? l.tacticsOut,
+                              _ =>
+                                absenceShortLabel(l, row.absence) ??
+                                    l.tacticsOut,
                             },
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,

@@ -44,6 +44,8 @@ import 'package:fnm/features/achievements/achievement_providers.dart';
 import 'package:fnm/features/hub/objective_providers.dart';
 import 'package:fnm/features/ranking/world_ranking_providers.dart';
 import 'package:fnm/features/squad/training_camp_providers.dart';
+import 'package:fnm/features/tactics/absence_providers.dart';
+import 'package:fnm/features/tactics/nation_squad_providers.dart';
 import 'package:fnm/features/tactics/tactics_providers.dart';
 import 'package:fnm/features/settings/settings_providers.dart';
 import 'package:fnm/features/hub/round_popup.dart' show stageLabelFor;
@@ -404,11 +406,27 @@ class SeasonService {
     return _managerSetup;
   }
 
+  /// Writes the operation's suspensions and injuries back, and tells the
+  /// screens that show them.
+  ///
+  /// THE INVALIDATION IS PART OF THE WRITE, not an afterthought at the call
+  /// site. Every screen that reads an absence — the call-up list, the tactics
+  /// board, the nation squad — does so through an auto-disposed provider, and
+  /// an auto-disposed provider that a mounted screen keeps alive is never told
+  /// the world moved. Nothing here refreshed them, so a knock served down to
+  /// nothing on the database went on being BADGED: the call-up row still read
+  /// "Injured · 4g" for a man the match path (whose provider the preview screen
+  /// does refresh) would quite correctly field. The badge and the eleven read
+  /// the same column, so they have to read it at the same moment.
   Future<void> _flushAbsences(int careerId) async {
     final a = _absences;
-    if (a != null && _absenceCareer == careerId) {
-      await _ref.read(absenceRepositoryProvider).replace(careerId, a.values);
-    }
+    if (a == null || _absenceCareer != careerId) return;
+    await _ref.read(absenceRepositoryProvider).replace(careerId, a.values);
+    _ref
+      ..invalidate(absenceOutlookProvider)
+      ..invalidate(squadDataProvider)
+      ..invalidate(tacticDataProvider)
+      ..invalidate(nationSquadProvider);
   }
 
   /// Applies one match's cards and knocks to [nationId]'s standing.

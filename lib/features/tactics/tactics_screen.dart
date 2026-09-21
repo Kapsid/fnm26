@@ -266,7 +266,10 @@ class TacticsScreen extends ConsumerWidget {
                                           switch (outlooks[p.id]) {
                                             final o? => absenceLabel(l, o),
                                             _ =>
-                                              data.absences[p.id]?.reason ??
+                                              absenceShortLabel(
+                                                    l,
+                                                    data.absences[p.id],
+                                                  ) ??
                                                   l.tacticsOut,
                                           },
                                         ),

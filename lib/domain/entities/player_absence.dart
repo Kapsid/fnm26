@@ -23,16 +23,12 @@ class PlayerAbsence {
   /// Whether this standing is worth persisting (anything non-zero).
   bool get isNotable => yellows > 0 || banMatches > 0 || injuryMatches > 0;
 
-  /// A short reason the player is unavailable, or null if they are available.
-  String? get reason {
-    if (injuryMatches > 0) {
-      return 'Injured · ${injuryMatches}g';
-    }
-    if (banMatches > 0) {
-      return 'Suspended · ${banMatches}g';
-    }
-    return null;
-  }
+  // There is deliberately no `reason` getter here. It returned a hard-coded
+  // English "Injured · 4g", which three screens printed whenever the localised
+  // outlook had nothing for a player — untranslated in a Czech save, and built
+  // from a snapshot of this table that the rest of the game had already moved
+  // past. `absenceShortLabel` (absence_providers.dart) says the same thing in
+  // the manager's language, and says nothing at all for an available player.
 
   PlayerAbsence copyWith({int? yellows, int? banMatches, int? injuryMatches}) =>
       PlayerAbsence(

@@ -1,6 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/data/data_providers.dart';
+import 'package:fnm/domain/entities/player_absence.dart';
 import 'package:fnm/domain/services/squad/absence_outlook.dart';
+import 'package:fnm/domain/services/squad/squad_selection.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 
 /// Every unavailable player's outlook (player id → how long they are out for),
@@ -48,4 +50,20 @@ String absenceLabel(AppLocalizations l, AbsenceOutlook o) {
       ? l.absenceWeeks(o.weeks)
       : l.absenceGames(o.matches);
   return '$what · $how';
+}
+
+/// The badge for an absence when the outlook has nothing to say about it — the
+/// same two facts in the manager's own language, read off the very
+/// [PlayerAbsence] the selection rules are using.
+///
+/// The outlook is a SECOND read of the absence table, taken a moment after the
+/// one the screen is drawing from, and the two can disagree. When they did, the
+/// row used to fall back to a hard-coded English string built from the first
+/// read ("Injured · 4g"), so a Czech save printed English and printed it about
+/// a player the rest of the game had already cleared to play. Null when [a] is
+/// available, so a badge can never outlive the absence it describes.
+String? absenceShortLabel(AppLocalizations l, PlayerAbsence? a) {
+  if (a == null || a.isAvailable) return null;
+  final what = a.injuryMatches > 0 ? l.absenceInjured : l.absenceSuspended;
+  return '$what · ${l.absenceGames(SquadSelection.matchesMissed(a))}';
 }

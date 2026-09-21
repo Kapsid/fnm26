@@ -821,7 +821,9 @@ class _PlayerToggle extends StatelessWidget {
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
     final out = outlook;
-    final reason = out != null ? absenceLabel(l, out) : absence?.reason;
+    final reason = out != null
+        ? absenceLabel(l, out)
+        : absenceShortLabel(l, absence);
     final isInjury = (absence?.injuryMatches ?? 0) > 0;
     // What this absence costs THIS squad. A three-game ban is a different
     // proposition for a one-match friendly window than for a four-match
@@ -899,7 +901,20 @@ class _PlayerToggle extends StatelessWidget {
               color: AppColors.onSurfaceVariant,
             ),
           ),
-          if (reason != null) _AbsenceBadge(reason: reason, isInjury: isInjury),
+          // A LINE OF ITS OWN. Sharing a run with the age and value left the
+          // badge roughly a hundred and forty pixels on a 400px phone, which
+          // is under what "Suspended · 1 game" needs — so the one thing on the
+          // row that says why a man cannot play was the thing that got cut.
+          // Full width here means a full RUN, not a full-width badge: the
+          // align keeps it its own size, hard left, with room to be read.
+          if (reason != null)
+            SizedBox(
+              width: double.infinity,
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: _AbsenceBadge(reason: reason, isInjury: isInjury),
+              ),
+            ),
           // How much of THIS camp he actually misses. Only worth saying when
           // the camp is more than one match, because otherwise the badge above
           // has already said it.
@@ -1020,8 +1035,13 @@ class _AbsenceBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final color = isInjury ? const Color(0xFFD64545) : const Color(0xFFEFC94C);
+    // Every pixel of chrome here is a pixel the reason does not get. The
+    // subtitle is 168px wide on a 400px phone, and the padding, the border and
+    // the icon gap were taking 28 of them — enough that "Suspended · 1 game"
+    // came up half a pixel short and ellipsised the word the badge exists to
+    // say. Trimmed to what still reads as a chip.
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
+      padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1),
       decoration: BoxDecoration(
         color: color.withValues(alpha: 0.16),
         borderRadius: AppRadii.smAll,
@@ -1035,7 +1055,7 @@ class _AbsenceBadge extends StatelessWidget {
             size: 11,
             color: color,
           ),
-          const SizedBox(width: 3),
+          const SizedBox(width: 2),
           // Flexible, because Czech runs longer than English everywhere and a
           // badge is not allowed to be the thing that overflows a phone row.
           Flexible(
