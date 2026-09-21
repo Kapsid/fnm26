@@ -12728,6 +12728,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Undo last change'**
   String get tacticsUndoLastChange;
+
+  /// Heading over the pre-match panel listing what is helping or hurting the manager's side, in rating points.
+  ///
+  /// In en, this message translates to:
+  /// **'WHAT IS MOVING THE SIDE'**
+  String get matchStrengthTitle;
+
+  /// Pre-match strength line: how well the side knows the formation it is lining up in.
+  ///
+  /// In en, this message translates to:
+  /// **'Drilled shape'**
+  String get strengthFactorFamiliarity;
+
+  /// Pre-match strength line: what fatigue and recent form are costing the squad, per man named.
+  ///
+  /// In en, this message translates to:
+  /// **'Tired legs'**
+  String get strengthFactorFatigue;
+
+  /// Pre-match strength line: where the squad stands at their clubs, per man named.
+  ///
+  /// In en, this message translates to:
+  /// **'Club form'**
+  String get strengthFactorClubForm;
+
+  /// Pre-match strength line: squad morale.
+  ///
+  /// In en, this message translates to:
+  /// **'Dressing room'**
+  String get strengthFactorMorale;
+
+  /// Pre-match strength line: what the armband is worth.
+  ///
+  /// In en, this message translates to:
+  /// **'Captain'**
+  String get strengthFactorCaptain;
+
+  /// Pre-match strength line: what the hired staff are worth to this match.
+  ///
+  /// In en, this message translates to:
+  /// **'Staff room'**
+  String get strengthFactorStaff;
 }
 
 class _AppLocalizationsDelegate

@@ -8059,4 +8059,25 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get tacticsUndoLastChange => 'Vrátit změnu';
+
+  @override
+  String get matchStrengthTitle => 'CO OVLIVŇUJE TÝM';
+
+  @override
+  String get strengthFactorFamiliarity => 'Nacvičené rozestavení';
+
+  @override
+  String get strengthFactorFatigue => 'Únava';
+
+  @override
+  String get strengthFactorClubForm => 'Forma v klubu';
+
+  @override
+  String get strengthFactorMorale => 'Nálada v kabině';
+
+  @override
+  String get strengthFactorCaptain => 'Kapitán';
+
+  @override
+  String get strengthFactorStaff => 'Realizační tým';
 }

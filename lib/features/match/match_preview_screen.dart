@@ -8,12 +8,14 @@ import 'package:fnm/core/util/match_stage.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/formation.dart';
 import 'package:fnm/domain/entities/player.dart';
+import 'package:fnm/domain/services/match/strength_factors.dart';
 import 'package:fnm/domain/services/rating/overall_rating.dart';
 import 'package:fnm/domain/services/squad/condition.dart';
 import 'package:fnm/domain/services/tactics/position_fit.dart';
 import 'package:fnm/features/match/ground_card.dart';
 import 'package:fnm/features/match/match_providers.dart';
 import 'package:fnm/features/match/setup_warning.dart';
+import 'package:fnm/features/match/strength_panel.dart';
 import 'package:fnm/features/player/player_detail_screen.dart'
     show PlayerTraitGlyphs;
 import 'package:fnm/features/records/head_to_head_providers.dart';
@@ -186,6 +188,16 @@ class MatchPreviewScreen extends ConsumerWidget {
                 groundNationCode: code(preview.ground.groundNationId),
               ),
               const SizedBox(height: AppSpacing.lg),
+              // What is helping and what is hurting, before he picks. Every
+              // line of it already moved the result and none of it was ever
+              // said out loud.
+              StrengthPanel(
+                careerId: careerId,
+                formation: team.formation,
+                sideRating: team.xi.isEmpty
+                    ? StrengthFactors.defaultSideRating
+                    : squadOverall(team.xi),
+              ),
               Row(
                 children: [
                   Text(

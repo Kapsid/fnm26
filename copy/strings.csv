@@ -2096,3 +2096,10 @@ tacticsSubOffAlready,Marker under a squad row for a player who has already been 
 tacticsSubInjured,Marker under a squad row for a player hurt in this match.,,Injured,Zraněný
 tacticsSubNoneLeft,Marker under a squad row when the side has spent every change it has.,,No changes left,Došla střídání
 tacticsUndoLastChange,Button in the in-match lineup tab that takes back the last change made in this sheet.,,Undo last change,Vrátit změnu
+matchStrengthTitle,"Heading over the pre-match panel listing what is helping or hurting the manager's side, in rating points.",,WHAT IS MOVING THE SIDE,CO OVLIVŇUJE TÝM
+strengthFactorFamiliarity,Pre-match strength line: how well the side knows the formation it is lining up in.,,Drilled shape,Nacvičené rozestavení
+strengthFactorFatigue,"Pre-match strength line: what fatigue and recent form are costing the squad, per man named.",,Tired legs,Únava
+strengthFactorClubForm,"Pre-match strength line: where the squad stands at their clubs, per man named.",,Club form,Forma v klubu
+strengthFactorMorale,Pre-match strength line: squad morale.,,Dressing room,Nálada v kabině
+strengthFactorCaptain,Pre-match strength line: what the armband is worth.,,Captain,Kapitán
+strengthFactorStaff,Pre-match strength line: what the hired staff are worth to this match.,,Staff room,Realizační tým

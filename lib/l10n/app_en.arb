@@ -11759,5 +11759,33 @@
   "tacticsUndoLastChange": "Undo last change",
   "@tacticsUndoLastChange": {
     "description": "Button in the in-match lineup tab that takes back the last change made in this sheet."
+  },
+  "matchStrengthTitle": "WHAT IS MOVING THE SIDE",
+  "@matchStrengthTitle": {
+    "description": "Heading over the pre-match panel listing what is helping or hurting the manager's side, in rating points."
+  },
+  "strengthFactorFamiliarity": "Drilled shape",
+  "@strengthFactorFamiliarity": {
+    "description": "Pre-match strength line: how well the side knows the formation it is lining up in."
+  },
+  "strengthFactorFatigue": "Tired legs",
+  "@strengthFactorFatigue": {
+    "description": "Pre-match strength line: what fatigue and recent form are costing the squad, per man named."
+  },
+  "strengthFactorClubForm": "Club form",
+  "@strengthFactorClubForm": {
+    "description": "Pre-match strength line: where the squad stands at their clubs, per man named."
+  },
+  "strengthFactorMorale": "Dressing room",
+  "@strengthFactorMorale": {
+    "description": "Pre-match strength line: squad morale."
+  },
+  "strengthFactorCaptain": "Captain",
+  "@strengthFactorCaptain": {
+    "description": "Pre-match strength line: what the armband is worth."
+  },
+  "strengthFactorStaff": "Staff room",
+  "@strengthFactorStaff": {
+    "description": "Pre-match strength line: what the hired staff are worth to this match."
   }
 }

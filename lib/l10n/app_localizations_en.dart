@@ -8050,4 +8050,25 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get tacticsUndoLastChange => 'Undo last change';
+
+  @override
+  String get matchStrengthTitle => 'WHAT IS MOVING THE SIDE';
+
+  @override
+  String get strengthFactorFamiliarity => 'Drilled shape';
+
+  @override
+  String get strengthFactorFatigue => 'Tired legs';
+
+  @override
+  String get strengthFactorClubForm => 'Club form';
+
+  @override
+  String get strengthFactorMorale => 'Dressing room';
+
+  @override
+  String get strengthFactorCaptain => 'Captain';
+
+  @override
+  String get strengthFactorStaff => 'Staff room';
 }

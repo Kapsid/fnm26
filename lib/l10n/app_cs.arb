@@ -2096,5 +2096,12 @@
   "tacticsSubOffAlready": "Už vystřídán",
   "tacticsSubInjured": "Zraněný",
   "tacticsSubNoneLeft": "Došla střídání",
-  "tacticsUndoLastChange": "Vrátit změnu"
+  "tacticsUndoLastChange": "Vrátit změnu",
+  "matchStrengthTitle": "CO OVLIVŇUJE TÝM",
+  "strengthFactorFamiliarity": "Nacvičené rozestavení",
+  "strengthFactorFatigue": "Únava",
+  "strengthFactorClubForm": "Forma v klubu",
+  "strengthFactorMorale": "Nálada v kabině",
+  "strengthFactorCaptain": "Kapitán",
+  "strengthFactorStaff": "Realizační tým"
 }
