@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:fnm/core/util/app_date.dart';
 import 'package:share_plus/share_plus.dart';
@@ -129,7 +131,7 @@ class SavesScreen extends ConsumerWidget {
                             ? () => context.go(Routes.nations)
                             : premium
                             ? null
-                            : () => showPaywall(context),
+                            : () => unawaited(showPaywall(context)),
                       ),
                       if (full && !premium)
                         Padding(
