@@ -145,18 +145,26 @@ class _Header extends StatelessWidget {
 }
 
 /// The live match control bar pinned to the bottom of the screen: a prominent
-/// play/pause transport on the left, then speed, tactics (with the subs count)
-/// and skip-to-full-time as matching pill buttons.
-class _MatchControlBar extends StatelessWidget {
-  const _MatchControlBar({
+/// play/pause transport on the left, then speed and tactics (with the subs
+/// count) as matching pill buttons.
+///
+/// A match the manager opened is a match he watches: there is no way from here
+/// to the final whistle but the clock. Simulating a match without watching it
+/// is offered by the hub, before it is opened.
+///
+/// Public only so a widget test can pump the bar itself and check what it does
+/// and does not offer; nothing outside the match screen builds it.
+@visibleForTesting
+class MatchControlBar extends StatelessWidget {
+  const MatchControlBar({
     required this.playing,
     required this.speed,
     required this.subsUsed,
     required this.spent,
     required this.onPlayPause,
     required this.onSpeed,
-    required this.onSkip,
     required this.onTactics,
+    super.key,
   });
 
   final bool playing;
@@ -167,14 +175,12 @@ class _MatchControlBar extends StatelessWidget {
   final int spent;
   final VoidCallback onPlayPause;
   final VoidCallback onSpeed;
-  final VoidCallback onSkip;
   final VoidCallback onTactics;
 
   static const double _height = 52;
 
   @override
   Widget build(BuildContext context) {
-    final l = AppLocalizations.of(context);
     // Spent legs call attention to themselves: the tactics pill turns amber
     // and counts the players who have nothing left, so a fading side is
     // something the manager sees rather than something they only notice in
@@ -220,15 +226,6 @@ class _MatchControlBar extends StatelessWidget {
             accent: tired ? AppColors.warning : null,
             child: MatchTacticsPillContent(subsUsed: subsUsed, spent: spent),
           ),
-          const SizedBox(width: AppSpacing.sm),
-          _PillButton(
-            onTap: onSkip,
-            tooltip: l.matchSkipToFullTime,
-            child: const Icon(
-              Icons.skip_next_rounded,
-              color: AppColors.primary,
-            ),
-          ),
         ],
       ),
     );
@@ -238,12 +235,12 @@ class _MatchControlBar extends StatelessWidget {
 /// The content of the live match control bar's tactics pill: an icon, an
 /// ellipsizing tired/tactics label, and the substitution count.
 ///
-/// Extracted out of [_MatchControlBar] so the count can be a fixed-width
+/// Extracted out of [MatchControlBar] so the count can be a fixed-width
 /// sibling of the label rather than folded into one ellipsized string — on a
 /// narrow screen the label gives way first, never the count, which is the
 /// number the manager is actually reading. The extraction also lets a widget
 /// test pump this content directly without reaching into the private
-/// [_MatchControlBar].
+/// [MatchControlBar].
 @visibleForTesting
 class MatchTacticsPillContent extends StatelessWidget {
   const MatchTacticsPillContent({
@@ -299,14 +296,12 @@ class _PillButton extends StatelessWidget {
     required this.onTap,
     required this.child,
     this.expand = false,
-    this.tooltip,
     this.accent,
   });
 
   final VoidCallback onTap;
   final Widget child;
   final bool expand;
-  final String? tooltip;
 
   /// An alert colour for the pill's fill and border (null = the neutral look).
   final Color? accent;
@@ -314,7 +309,7 @@ class _PillButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final accent = this.accent;
-    Widget button = Material(
+    final Widget button = Material(
       color: accent == null
           ? AppColors.surfaceContainerHighest
           : accent.withValues(alpha: 0.16),
@@ -323,7 +318,7 @@ class _PillButton extends StatelessWidget {
         borderRadius: AppRadii.mdAll,
         onTap: onTap,
         child: Container(
-          height: _MatchControlBar._height,
+          height: MatchControlBar._height,
           alignment: Alignment.center,
           padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
           decoration: BoxDecoration(
@@ -336,8 +331,6 @@ class _PillButton extends StatelessWidget {
         ),
       ),
     );
-    final tip = tooltip;
-    if (tip != null) button = Tooltip(message: tip, child: button);
     return expand ? Expanded(child: button) : button;
   }
 }

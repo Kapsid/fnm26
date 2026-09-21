@@ -227,8 +227,8 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
   Timer? _penTimer;
 
   /// The five takers the manager has named, in the order they step up. Null
-  /// until they choose (or the shootout is skipped, which takes the automatic
-  /// order). Sudden death cycles back through the same list.
+  /// until they choose, or until they dismiss the sheet, which takes the
+  /// automatic order. Sudden death cycles back through the same list.
   List<Player>? _penOrder;
 
   /// Whether the taker sheet has already been offered this match, so it is
@@ -840,22 +840,6 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
     if (_playing) _restartTimer();
   }
 
-  void _skip() {
-    _timer?.cancel();
-    _penTimer?.cancel();
-    setState(() {
-      // Skipping past a shootout accepts the automatic taker order.
-      _penOrderAsked = true;
-      // Jump straight to the result, revealing any stoppage / extra time /
-      // shootout at once rather than playing the drama out.
-      _minute = _fullTimeMinute;
-      _added = _stoppage;
-      _playing = false;
-      _penRevealed = _penTotal;
-    });
-    MatchFeedback.fullTime(ref.read(soundHapticsEnabledProvider));
-  }
-
   /// Commits the full-time result, simulates the world forward, and returns to
   /// the hub. Any failure is surfaced instead of being silently swallowed by
   /// the async callback (which would make the Continue button appear dead).
@@ -1449,14 +1433,13 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
                           : () => _continue(preview, r),
                     ),
                   )
-                : _MatchControlBar(
+                : MatchControlBar(
                     playing: _playing,
                     speed: _speeds[_speedIdx],
                     subsUsed: _subsUsed(preview),
                     spent: _spentCount(preview, r),
                     onPlayPause: _togglePlay,
                     onSpeed: _cycleSpeed,
-                    onSkip: _skip,
                     onTactics: () => _openTactics(preview),
                   );
             return DecoratedBox(

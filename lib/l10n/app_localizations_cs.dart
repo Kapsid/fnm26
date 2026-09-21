@@ -80,9 +80,6 @@ class AppLocalizationsCs extends AppLocalizations {
   }
 
   @override
-  String get matchSkipToFullTime => 'Přeskočit do konce';
-
-  @override
   String get matchStatShots => 'Střely';
 
   @override
