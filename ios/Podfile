@@ -4,6 +4,15 @@
 # CocoaPods analytics sends network stats synchronously affecting flutter build latency.
 ENV['COCOAPODS_DISABLE_STATS'] = 'true'
 
+# file_picker is here for one thing only: picking a save file back off the
+# device through the document picker. Compiling its media and audio pickers in
+# would drag DKImagePickerController (and SDWebImage, SwiftyGif) along, link
+# Photos and AVFoundation into the binary and make Apple demand photo-library
+# purpose strings for a capability this app does not have. Both are switched
+# off; the document picker, which is what we actually call, stays.
+Pod::PICKER_MEDIA = false
+Pod::PICKER_AUDIO = false
+
 project 'Runner', {
   'Debug' => :debug,
   'Profile' => :release,
