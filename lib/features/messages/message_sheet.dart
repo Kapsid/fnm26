@@ -3,6 +3,7 @@ import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
+import 'package:fnm/features/messages/poty_card.dart';
 import 'package:fnm/features/messages/squad_dev_report.dart';
 import 'package:fnm/features/messages/transfer_report.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
@@ -101,8 +102,14 @@ class MessageSheet extends StatelessWidget {
                 const SizedBox(height: AppSpacing.sm),
               ],
               SquadDevTable(rows: report.rows),
-            ] else if (decodeTransferReport(message.body) case final moves?) ...[
+            ] else if (decodeTransferReport(message.body)
+                case final moves?) ...[
               TransferTable(rows: moves),
+            ] else if (decodePotyReport(message.body) case final winners?) ...[
+              // The year's individual awards are a card each, not a sentence:
+              // a name on its own says nothing about the season that earned
+              // it. See [PotyCard].
+              PotyCard(rows: winners),
             ] else
               Text(message.body, style: AppTypography.bodyMedium),
             if (action != null) ...[

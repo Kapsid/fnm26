@@ -6983,6 +6983,33 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get potyLabelBest => 'Player of the Year';
+
+  @override
+  String get potyLabelYoung => 'Young Player of the Year';
+
+  @override
+  String potyTallyAssists(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count assists',
+      one: '1 assist',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String potyOverallValue(int value) {
+    return 'Rating $value';
+  }
+
+  @override
+  String potyRatingValue(String value) {
+    return 'Marked $value';
+  }
+
+  @override
   String newsPotyTitle(int year) {
     return 'World Player of the Year $year';
   }

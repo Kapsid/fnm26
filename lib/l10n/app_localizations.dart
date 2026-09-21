@@ -10941,6 +10941,36 @@ abstract class AppLocalizations {
   /// **'You didn\'t qualify for {cup}. The campaign came up short this time.'**
   String newsContMissBody(String cup);
 
+  /// Award card: the world's best player over the year.
+  ///
+  /// In en, this message translates to:
+  /// **'Player of the Year'**
+  String get potyLabelBest;
+
+  /// Award card: the best under-21 player over the year.
+  ///
+  /// In en, this message translates to:
+  /// **'Young Player of the Year'**
+  String get potyLabelYoung;
+
+  /// Award card: the winner's assists over the year.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, one{1 assist} other{{count} assists}}'**
+  String potyTallyAssists(int count);
+
+  /// Award card: how good the winner is, 1-99.
+  ///
+  /// In en, this message translates to:
+  /// **'Rating {value}'**
+  String potyOverallValue(int value);
+
+  /// Award card: the winner's mean match mark over the year.
+  ///
+  /// In en, this message translates to:
+  /// **'Marked {value}'**
+  String potyRatingValue(String value);
+
   /// Inbox: the year's player award.
   ///
   /// In en, this message translates to:

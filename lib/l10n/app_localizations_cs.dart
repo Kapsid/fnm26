@@ -7009,6 +7009,34 @@ class AppLocalizationsCs extends AppLocalizations {
   }
 
   @override
+  String get potyLabelBest => 'Hráč roku';
+
+  @override
+  String get potyLabelYoung => 'Mladý hráč roku';
+
+  @override
+  String potyTallyAssists(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count asistencí',
+      few: '$count asistence',
+      one: '1 asistence',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String potyOverallValue(int value) {
+    return 'Rating $value';
+  }
+
+  @override
+  String potyRatingValue(String value) {
+    return 'Známka $value';
+  }
+
+  @override
   String newsPotyTitle(int year) {
     return 'Světový hráč roku $year';
   }

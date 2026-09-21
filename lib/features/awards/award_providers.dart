@@ -1,8 +1,12 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/data/data_providers.dart';
+import 'package:fnm/domain/entities/career.dart';
+import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
 import 'package:fnm/domain/services/awards/awards.dart';
 import 'package:fnm/features/career/career_providers.dart';
+import 'package:fnm/features/federation/federation_providers.dart';
+import 'package:fnm/features/messages/poty_card.dart';
 import 'package:fnm/features/settings/settings_providers.dart';
 
 /// A player's trophy cabinet, newest first.
@@ -113,15 +117,86 @@ class AwardService {
         dedupKey: 'poty:$year',
         category: 'award',
         title: l.newsPotyTitle(year),
-        body:
-            l.newsPotyBody(best.name) +
-            (young == null || young.playerId == best.playerId
-                ? ''
-                : l.newsPotyYoungSuffix(young.name)),
+        body: await _body(
+          careerId: careerId,
+          career: career,
+          best: best,
+          young: young,
+          lines: {for (final r in resolved) r.playerId: r},
+          fallback:
+              l.newsPotyBody(best.name) +
+              (young == null || young.playerId == best.playerId
+                  ? ''
+                  : l.newsPotyYoungSuffix(young.name)),
+        ),
         year: year,
       );
     }
     _ref.invalidate(playerAwardsProvider);
+  }
+
+  /// The award's message body: a card per winner, or the old sentence if the
+  /// winners cannot be resolved.
+  ///
+  /// The announcement used to be that sentence and nothing else — a name, and
+  /// not one word about the season that earned it or the man who played it.
+  /// What goes in the body now is [encodePotyReport], so the popup can show
+  /// his flag, his year and his rating (see [PotyCard]).
+  ///
+  /// The rating is why this resolves each winner AGAIN, by id, rather than
+  /// reading the pool the shortlist was built from: a rating is only right
+  /// with all four of the repository's inputs, and the pool above is read with
+  /// two of them. A name is the same either way; a number is not.
+  Future<String> _body({
+    required int careerId,
+    required Career career,
+    required AwardWinner best,
+    required AwardWinner? young,
+    required Map<int, AwardLine> lines,
+    required String fallback,
+  }) async {
+    final repo = _ref.read(playerRepositoryProvider);
+    final nations = {
+      for (final n in await _ref.read(nationRepositoryProvider).all()) n.id: n,
+    };
+    final youth = await _ref.read(
+      youthBonusByCycleProvider(careerId).future,
+    );
+    final careerDev = await _ref.read(
+      careerDevBonusProvider(careerId).future,
+    );
+    final rows = <PotyRow>[];
+    for (final w in [best, if (young?.playerId != best.playerId) young]) {
+      if (w == null) continue;
+      final line = lines[w.playerId];
+      if (line == null) continue;
+      final player = await repo.byId(
+        w.playerId,
+        agingYears: CareerService.agingYears(career),
+        saveSeed: career.rngSeed,
+        youthBonusByCycle: youth,
+        careerStartsByPlayer: careerDev,
+      );
+      if (player == null) continue;
+      final nation = nations[w.nationId];
+      rows.add((
+        young: w.kind == AwardKind.youngPlayerOfYear,
+        name: player.name,
+        nationCode: nation?.code.toLowerCase() ?? '',
+        nationName: nation?.name ?? '',
+        age: player.age,
+        overall: player.overall,
+        apps: line.apps,
+        goals: line.goals,
+        assists: line.assists,
+        meanRating: line.meanRating,
+        motms: line.motms,
+      ));
+    }
+    // Nothing resolved: say it the way it was always said rather than file an
+    // empty card. A body that renders as a blank popup is worse than a name.
+    if (rows.isEmpty) return fallback;
+    return encodePotyReport(rows);
   }
 }
 

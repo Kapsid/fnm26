@@ -10385,6 +10385,41 @@
       }
     }
   },
+  "potyLabelBest": "Player of the Year",
+  "@potyLabelBest": {
+    "description": "Award card: the world's best player over the year."
+  },
+  "potyLabelYoung": "Young Player of the Year",
+  "@potyLabelYoung": {
+    "description": "Award card: the best under-21 player over the year."
+  },
+  "potyTallyAssists": "{count, plural, one{1 assist} other{{count} assists}}",
+  "@potyTallyAssists": {
+    "description": "Award card: the winner's assists over the year.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "potyOverallValue": "Rating {value}",
+  "@potyOverallValue": {
+    "description": "Award card: how good the winner is, 1-99.",
+    "placeholders": {
+      "value": {
+        "type": "int"
+      }
+    }
+  },
+  "potyRatingValue": "Marked {value}",
+  "@potyRatingValue": {
+    "description": "Award card: the winner's mean match mark over the year.",
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
   "newsPotyTitle": "World Player of the Year {year}",
   "@newsPotyTitle": {
     "description": "Inbox: the year's player award.",
