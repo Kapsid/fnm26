@@ -1430,7 +1430,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get careerFreeCycleNote =>
-      'První cyklus je zdarma celý: kvalifikace, kontinentální šampionát i mistrovství světa. Pokračování po něm a další pozice pro uložení odemknete jednorázově za 12,99 €.';
+      'První cyklus je zdarma celý na dvou uložených hrách: kvalifikace, kontinentální šampionát i mistrovství světa, všechny země světa. Nekonečné cykly a neomezený počet uložených her odemknete jednorázově.';
 
   @override
   String get careerStartCareer => 'Začít kariéru';
@@ -8019,7 +8019,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get settingsFreeScopeBlurb =>
-      'Celý cyklus (kvalifikace, kontinentální šampionát i mistrovství světa) bez jakéhokoli omezení. Pokračovat s uloženou hrou dál je jednorázová platba, jednou, a platí pro všechny uložené hry i všechny budoucí aktualizace.';
+      'Celý cyklus (kvalifikace, kontinentální šampionát i mistrovství světa) na dvou uložených hrách, všechny země světa, nic není zamčené. Nekonečné cykly a neomezený počet uložených her jsou jednorázová platba, jednou, a platí i pro všechny budoucí aktualizace.';
 
   @override
   String get settingsUnlockedTitle => 'Odemčeno';

@@ -1,7 +1,16 @@
 # Monetisation — 2026-08-16
 
 **Date:** 2026-08-16
-**Status:** approved design, not yet built
+**Status:** built, and SUPERSEDED on two points by the owner's definition of
+the product (2026-09-21): it is sold as *unlimited*, which unlocks **endless
+cycles and more than two saves**, and nothing else.
+
+- The free-demo nation flag is retired for good. Every nation is free, in the
+  trial and after it, and no copy anywhere may offer nations as a paid benefit.
+- The save-slot split is NOT retired, contrary to "Decisions" below. It is two
+  slots free and no ceiling at all once bought, as the pure rule
+  `saveSlotLimit(premiumUnlocked:)` in `entitlement.dart`. Saves made while the
+  limit was flat stay playable; only a new one past the limit is refused.
 
 ## Problem
 

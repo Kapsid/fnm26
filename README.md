@@ -4,12 +4,15 @@ A **fully offline** international football management sim built with Flutter.
 Manage a national team through a four-year World Championship cycle: call up a
 squad, set your lineup and tactics, play qualifiers, and reach the finals.
 
-**Business model:** the first full four-year cycle is free — qualifying, a
-continental championship and the World Championship, with nothing held back.
-Carrying a save on past it, every nation, and the extra save slots unlock with a
-one-time **€12.99** in-app purchase. The price shown in the app is always the
-store's own localised `ProductDetails.price`; €12.99 is the tier configured in
-the consoles.
+**Business model:** the first full four-year cycle is free, on two save slots:
+qualifying, a continental championship and the World Championship, every nation
+in the world, with nothing held back. The purchase unlocks two things and only
+those two: **endless cycles** (a save carries on past its first four years) and
+**unlimited saves** (the two-slot ceiling goes away entirely). One-time
+**€12.99** in-app purchase. Nations are not part of it and never will be: a
+trial that shows the whole world converts better than a padlocked one. The price
+shown in the app is always the store's own localised `ProductDetails.price`;
+€12.99 is the tier configured in the consoles.
 
 There is no account, no server and no network call in the whole app. The store
 is the only thing it ever talks to, and only when you buy or restore.

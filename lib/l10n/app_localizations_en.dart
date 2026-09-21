@@ -1425,7 +1425,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get careerFreeCycleNote =>
-      'The first full cycle is free: qualifying, your continental championship and the World Championship. Carrying on afterwards, and extra save slots, unlock once for €12.99.';
+      'The first full cycle is free on two saves: qualifying, your continental championship and the World Championship, every nation in the world. Endless cycles and unlimited saves unlock once.';
 
   @override
   String get careerStartCareer => 'Start Career';
@@ -8006,7 +8006,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get settingsFreeScopeBlurb =>
-      'A complete cycle (qualifying, your continental championship and the World Championship) with nothing held back. Carrying a save on past it is a single payment, once, and it covers every save and every future update.';
+      'A complete cycle (qualifying, your continental championship and the World Championship) on two saves, every nation in the world, nothing held back. Endless cycles and unlimited saves are a single payment, once, and it covers every future update.';
 
   @override
   String get settingsUnlockedTitle => 'Unlocked';
