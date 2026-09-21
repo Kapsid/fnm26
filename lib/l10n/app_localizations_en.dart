@@ -5028,13 +5028,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get finishGroupStage => 'Group stage';
 
   @override
-  String get finishDidNotQualify => 'Did not qualify';
+  String get objectiveQualifyingTopHalf =>
+      'Finish in the top half of qualifying';
 
   @override
-  String get objectiveAvoidBottom => 'Avoid finishing bottom in qualifying';
+  String get finishQualifyingTopHalf => 'Top half of the qualifying group';
 
   @override
-  String get finishBottomOfQualifyingGroup => 'Bottom of the qualifying group';
+  String get finishQualifyingBottomHalf =>
+      'Bottom half of the qualifying group';
 
   @override
   String get objectiveNcWinIt => 'Win the Nations Cup';

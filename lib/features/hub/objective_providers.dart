@@ -39,7 +39,8 @@ typedef CycleObjective = ({
   /// The nation's actual finish as an ordinal, for the board's maths.
   int actual,
 
-  /// The nation's actual finish, e.g. "Quarter-finals" / "Did not qualify".
+  /// The nation's actual finish, e.g. "Quarter-finals" / "Top half of the
+  /// qualifying group".
   String resultLabel,
 });
 
@@ -439,7 +440,7 @@ int worldObjectiveTarget(int rank) {
   if (rank <= 20) return 4; // quarter-finals
   if (rank <= 32) return 3; // knockouts
   if (rank <= 50) return 2; // qualify
-  return 1; // come out of the qualifying group off the bottom
+  return 1; // come through qualifying in the top half of the group
 }
 
 /// What the board demands at the continental championship, by standing within
@@ -455,7 +456,7 @@ int continentalObjectiveTarget(int confederationRank) {
   if (confederationRank <= 11) return 4; // quarter-finals
   if (confederationRank <= 16) return 3; // knockouts
   if (confederationRank <= 24) return 2; // qualify
-  return 1; // come out of the qualifying group off the bottom
+  return 1; // come through qualifying in the top half of the group
 }
 
 /// What the board demands of the nation's Nations Cup campaign, from where it
@@ -529,12 +530,21 @@ int _nationsCupOrdinal({
 }
 
 /// How the nation's QUALIFYING campaign went, for a side that never reached the
-/// tournament: 1 when it came out of its group off the bottom, 0 when it
-/// finished last. The lowest rung of the board's ladder is judged on this.
+/// tournament: 1 when it came through in the TOP HALF of its group, 0 when it
+/// finished in the bottom half. The lowest rung of the board's ladder is judged
+/// on this.
+///
+/// The bar used to be "did not finish last", and that is why the board's news
+/// said "they have what they asked for" whatever happened. In a group of five
+/// or six, four or five sides in every group clear a not-last bar: the brief
+/// passed itself, and a manager who was never within sight of the tournament
+/// was congratulated for it every cycle — with the verdict printed next to a
+/// finish line that read "did not qualify". Half a group is a bar a campaign
+/// can actually fall under, which is what makes the rung a brief at all.
 ///
 /// A nation with no qualifying group at all (a host, or a confederation that
 /// seeds its field straight off the ranking) is credited with the 1: there was
-/// no campaign to finish bottom of.
+/// no campaign to fall short in.
 Future<int> _qualifyingOrdinal({
   required CompetitionRepository comp,
   required int careerId,
@@ -550,7 +560,9 @@ Future<int> _qualifyingOrdinal({
   for (final t in tables) {
     final idx = t.standings.indexWhere((s) => s.nationId == nationId);
     if (idx < 0) continue;
-    return idx == t.standings.length - 1 ? 0 : 1;
+    // Top half, counted the same way the Nations Cup counts it: an odd group
+    // gives the middle place to the top half.
+    return idx < (t.standings.length + 1) ~/ 2 ? 1 : 0;
   }
   return 1;
 }
@@ -576,7 +588,7 @@ String _labelFor(AppLocalizations l, TournamentTier tier, int target) {
     4 => l.objectiveReachQuarters,
     3 => l.objectiveReachKnockouts,
     2 => l.objectiveQualifyGeneric,
-    _ => l.objectiveAvoidBottom,
+    _ => l.objectiveQualifyingTopHalf,
   };
 }
 
@@ -642,7 +654,11 @@ String _resultLabel(AppLocalizations l, TournamentTier tier, int ordinal) {
     4 => l.finishQuarterFinals,
     3 => l.finishRoundOf16,
     2 => l.finishGroupStage,
-    1 => l.finishDidNotQualify,
-    _ => l.finishBottomOfQualifyingGroup,
+    // Both bottom rungs describe the QUALIFYING campaign, because that is what
+    // a side that never reached the tournament actually played. A flat "did not
+    // qualify" here read as a contradiction next to a met verdict, and told a
+    // manager whose brief was the campaign itself nothing about how it went.
+    1 => l.finishQualifyingTopHalf,
+    _ => l.finishQualifyingBottomHalf,
   };
 }

@@ -7426,17 +7426,17 @@
   "@finishGroupStage": {
     "description": "Shared label: finishGroupStage"
   },
-  "finishDidNotQualify": "Did not qualify",
-  "@finishDidNotQualify": {
-    "description": "Shared label: finishDidNotQualify"
+  "objectiveQualifyingTopHalf": "Finish in the top half of qualifying",
+  "@objectiveQualifyingTopHalf": {
+    "description": "The board's lowest bar, for a nation with no realistic route to the finals: come through qualifying in the top half of its group."
   },
-  "objectiveAvoidBottom": "Avoid finishing bottom in qualifying",
-  "@objectiveAvoidBottom": {
-    "description": "The board's lowest bar, for a nation with no realistic route to the finals: come out of the qualifying group off the bottom."
+  "finishQualifyingTopHalf": "Top half of the qualifying group",
+  "@finishQualifyingTopHalf": {
+    "description": "Objective result: the nation did not reach the tournament but came through qualifying in the top half of its group."
   },
-  "finishBottomOfQualifyingGroup": "Bottom of the qualifying group",
-  "@finishBottomOfQualifyingGroup": {
-    "description": "Objective result: the nation finished last in its qualifying group."
+  "finishQualifyingBottomHalf": "Bottom half of the qualifying group",
+  "@finishQualifyingBottomHalf": {
+    "description": "Objective result: the nation did not reach the tournament and finished in the bottom half of its qualifying group."
   },
   "objectiveNcWinIt": "Win the Nations Cup",
   "@objectiveNcWinIt": {

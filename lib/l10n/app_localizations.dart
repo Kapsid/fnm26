@@ -8166,23 +8166,23 @@ abstract class AppLocalizations {
   /// **'Group stage'**
   String get finishGroupStage;
 
-  /// Shared label: finishDidNotQualify
+  /// The board's lowest bar, for a nation with no realistic route to the finals: come through qualifying in the top half of its group.
   ///
   /// In en, this message translates to:
-  /// **'Did not qualify'**
-  String get finishDidNotQualify;
+  /// **'Finish in the top half of qualifying'**
+  String get objectiveQualifyingTopHalf;
 
-  /// The board's lowest bar, for a nation with no realistic route to the finals: come out of the qualifying group off the bottom.
+  /// Objective result: the nation did not reach the tournament but came through qualifying in the top half of its group.
   ///
   /// In en, this message translates to:
-  /// **'Avoid finishing bottom in qualifying'**
-  String get objectiveAvoidBottom;
+  /// **'Top half of the qualifying group'**
+  String get finishQualifyingTopHalf;
 
-  /// Objective result: the nation finished last in its qualifying group.
+  /// Objective result: the nation did not reach the tournament and finished in the bottom half of its qualifying group.
   ///
   /// In en, this message translates to:
-  /// **'Bottom of the qualifying group'**
-  String get finishBottomOfQualifyingGroup;
+  /// **'Bottom half of the qualifying group'**
+  String get finishQualifyingBottomHalf;
 
   /// Nations Cup board objective: lift the trophy.
   ///

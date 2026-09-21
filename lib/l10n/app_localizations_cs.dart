@@ -5058,13 +5058,15 @@ class AppLocalizationsCs extends AppLocalizations {
   String get finishGroupStage => 'Skupinová fáze';
 
   @override
-  String get finishDidNotQualify => 'Nepostoupili';
+  String get objectiveQualifyingTopHalf =>
+      'Skončit v horní polovině kvalifikační skupiny';
 
   @override
-  String get objectiveAvoidBottom => 'Neskončit v kvalifikaci poslední';
+  String get finishQualifyingTopHalf => 'Horní polovina kvalifikační skupiny';
 
   @override
-  String get finishBottomOfQualifyingGroup => 'Poslední v kvalifikační skupině';
+  String get finishQualifyingBottomHalf =>
+      'Spodní polovina kvalifikační skupiny';
 
   @override
   String get objectiveNcWinIt => 'Vyhrát Pohár národů';

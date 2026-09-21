@@ -1341,9 +1341,9 @@ finishSemiFinals,Shared label: finishSemiFinals,,Semi-finals,Semifinále
 finishQuarterFinals,Shared label: finishQuarterFinals,,Quarter-finals,Čtvrtfinále
 finishRoundOf16,Shared label: finishRoundOf16,,Round of 16,Osmifinále
 finishGroupStage,Shared label: finishGroupStage,,Group stage,Skupinová fáze
-finishDidNotQualify,Shared label: finishDidNotQualify,,Did not qualify,Nepostoupili
-objectiveAvoidBottom,"The board's lowest bar, for a nation with no realistic route to the finals: come out of the qualifying group off the bottom.",,Avoid finishing bottom in qualifying,Neskončit v kvalifikaci poslední
-finishBottomOfQualifyingGroup,Objective result: the nation finished last in its qualifying group.,,Bottom of the qualifying group,Poslední v kvalifikační skupině
+objectiveQualifyingTopHalf,"The board's lowest bar, for a nation with no realistic route to the finals: come through qualifying in the top half of its group.",,Finish in the top half of qualifying,Skončit v horní polovině kvalifikační skupiny
+finishQualifyingTopHalf,Objective result: the nation did not reach the tournament but came through qualifying in the top half of its group.,,Top half of the qualifying group,Horní polovina kvalifikační skupiny
+finishQualifyingBottomHalf,Objective result: the nation did not reach the tournament and finished in the bottom half of its qualifying group.,,Bottom half of the qualifying group,Spodní polovina kvalifikační skupiny
 objectiveNcWinIt,Nations Cup board objective: lift the trophy.,,Win the Nations Cup,Vyhrát Pohár národů
 objectiveNcReachFinal,Nations Cup board objective: reach the final.,,Reach the Nations Cup final,Postoupit do finále Poháru národů
 objectiveNcFinalsFour,Nations Cup board objective: win your League A group and reach the Finals Four.,,Reach the Finals Four,Postoupit do Final Four
