@@ -30,9 +30,23 @@ class WorldRankingScreen extends ConsumerStatefulWidget {
 /// exactly this size (via `itemExtent`) so "scroll to my nation" is arithmetic
 /// rather than an estimate — the old guess drifted a pixel or two per row and
 /// pushed the player's team off-screen further down a 200-nation list.
-const double _rowHeight = 56;
+///
+/// The height is unchanged at 56, but the padding inside it is not: see
+/// [_rowPadV]. A moved row carries a 3px outline where a steady one carries
+/// 1px, and the 8px of vertical padding the row used to have left only 36px
+/// for a 36px flag and a two-line name — so the flag came out 36x34 on
+/// exactly the rows that have MOVED, which is every row worth looking at
+/// after a championship. Trimming the padding rather than growing the row
+/// keeps the list's geometry (and the "centre on my nation" arithmetic that
+/// reads off it) exactly where it was.
+const double kRankRowHeight = 56;
+
+/// Vertical padding inside a rank row. 4, not 8: 56 minus 8 of padding minus
+/// a moved row's 6 of border leaves 42, which carries the 36px flag and the
+/// 40px two-line name column with room to spare.
+const double _rowPadV = AppSpacing.xs;
 const double _rowGap = 8;
-const double _rowExtent = _rowHeight + _rowGap;
+const double _rowExtent = kRankRowHeight + _rowGap;
 
 class _WorldRankingScreenState extends ConsumerState<WorldRankingScreen> {
   final _controller = ScrollController();
@@ -68,7 +82,7 @@ class _WorldRankingScreenState extends ConsumerState<WorldRankingScreen> {
     final target =
         (AppSpacing.marginMobile +
                 index * _rowExtent +
-                _rowHeight / 2 -
+                kRankRowHeight / 2 -
                 viewport / 2)
             .clamp(0.0, _controller.position.maxScrollExtent);
     if (animate) {
@@ -265,7 +279,8 @@ class RankRow extends StatelessWidget {
   final int rank;
   final int points;
 
-  /// Positions climbed (positive) or dropped (negative) since the season began.
+  /// Positions climbed (positive) or dropped (negative) since the ranking
+  /// freeze the screen measures from (see [movementBaselineFor]).
   final int movement;
   final bool isPlayer;
   final VoidCallback onTap;
@@ -273,8 +288,8 @@ class RankRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
-    // The left edge highlights the row: the player's colour always, otherwise a
-    // green/red tint when the team has moved since the campaign began.
+    // The outline highlights the row: the player's colour always, otherwise a
+    // green/red tint when the team has moved since the last ranking freeze.
     final (edgeColor, edgeWidth) = isPlayer
         ? (AppColors.primary, 3.0)
         : movement > 0
@@ -291,17 +306,20 @@ class RankRow extends StatelessWidget {
               ? AppColors.surfaceContainerHigh
               : AppColors.surfaceContainer,
           borderRadius: AppRadii.baseAll,
-          // The whole outline, not just the left edge. A rounded box can only
-          // be painted with a UNIFORM border: the old left-edge-only colour
-          // threw "a borderRadius can only be given on borders with uniform
-          // colors" on every paint of every row, which a release build
-          // swallows and a debug one does not. Outlining the row also makes a
-          // climb easier to spot than a 3px stripe did.
+          // The whole outline, not just the left edge. A rounded border is
+          // painted as one path, so it can carry only ONE visible colour: the
+          // old coloured-left-edge-on-grey-sides threw "a borderRadius can
+          // only be given on borders with uniform colors" on every paint of
+          // every row, which a release build swallows and a debug one does
+          // not. (Sides that differ only in WIDTH, or where the odd one out is
+          // transparent, are fine and are used elsewhere in the app.)
+          // Outlining the row also makes a climb easier to spot than a 3px
+          // stripe did.
           border: Border.all(color: edgeColor, width: edgeWidth),
         ),
         padding: const EdgeInsets.symmetric(
           horizontal: AppSpacing.md,
-          vertical: AppSpacing.sm,
+          vertical: _rowPadV,
         ),
         child: Row(
           children: [
@@ -341,8 +359,13 @@ class RankRow extends StatelessWidget {
                       ],
                     ],
                   ),
+                  // One line, always: left to wrap, a long continent name in
+                  // a narrow column silently made the row two lines taller
+                  // than the list gives it.
                   Text(
                     confederationLabel(l, nation.confederation).toUpperCase(),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                     style: AppTypography.labelSmall.copyWith(
                       color: AppColors.outline,
                     ),

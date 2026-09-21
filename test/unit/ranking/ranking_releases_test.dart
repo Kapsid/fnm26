@@ -119,8 +119,15 @@ void main() {
       final inbox = await container.read(
         messageInboxProvider(career.id).future,
       );
+      // Release announcements only. The championship-swing message shares the
+      // category (it is ranking news) but is not a release, and counting it
+      // here would make "one message per release" fail whenever the simulated
+      // world happened to produce a big enough swing.
       final rankMessages = inbox.messages
-          .where((m) => m.category == 'ranking')
+          .where(
+            (m) =>
+                m.category == 'ranking' && m.title.startsWith('World ranking'),
+          )
           .toList();
       expect(
         rankMessages.length,
@@ -161,12 +168,12 @@ void main() {
         if (expectedMove == 0) {
           expect(body, contains('#${r.playerRank}'));
         } else {
-          // The message must report the cycle move's magnitude ("N place(s)"),
-          // not a release-to-release delta — the exact phrasing varies.
+          // The message must report the move since the SHARED baseline ("N
+          // place(s)"), not a release-to-release delta — the phrasing varies.
           expect(
             body.toLowerCase(),
             contains('${expectedMove.abs()} place'),
-            reason: 'movement must be cycle-anchored, not release-to-release',
+            reason: 'movement must be baseline-anchored, not release-to-release',
           );
         }
       }
@@ -199,7 +206,13 @@ void main() {
         messageInboxProvider(career.id).future,
       );
       expect(
-        again.messages.where((m) => m.category == 'ranking').length,
+        again.messages
+            .where(
+              (m) =>
+                  m.category == 'ranking' &&
+                  m.title.startsWith('World ranking'),
+            )
+            .length,
         rankMessages.length,
         reason: 'dedup keys must keep re-syncs idempotent',
       );
@@ -228,6 +241,110 @@ void main() {
         );
       }
       expect(history.every((p) => p.rank >= 1), isTrue);
+
+      // ── THE ANCHOR, SECOND HALF ─────────────────────────────────────────
+      //
+      // Everything above happens inside cycle 0, where no previous cycle's
+      // finals draw exists and `movementBaselineFor` falls straight through to
+      // the cycle's own starting positions — which is exactly what the screen
+      // used before the two were unified. The baselines COINCIDE there, so the
+      // agreement asserted above would hold even for a screen that had quietly
+      // stopped reading the shared helper.
+      //
+      // So: roll the save past one championship, the way the rollover does.
+      // The rollover freezes the new cycle's table from the standings the
+      // final produced, so measuring against THAT gives zero for every nation
+      // in the world; measuring against the finals draw gives the swing. Now
+      // the two baselines genuinely differ, and only a screen still on the
+      // helper can agree with the inbox.
+      final before = (await container.read(
+        worldRankingProvider(career.id).future,
+      ))!;
+      final byRank = [...before.position.keys]
+        ..sort((a, b) => before.position[a]!.compareTo(before.position[b]!));
+
+      // Where the world was frozen for the cycle-0 finals draw: as it stands
+      // now, except the manager's nation was 40th before the finals.
+      const wasBeforeFinals = 40;
+      final drawn = [...byRank]..remove(player.id);
+      drawn.insert(wasBeforeFinals - 1, player.id);
+      await seedRanks.snapshot(
+        career.id,
+        drawSeedCycle(0, drawSlotWorldCupFinals),
+        {for (var i = 0; i < drawn.length; i++) drawn[i]: i + 1},
+      );
+      // And the rollover's own snapshot: the post-final table itself.
+      await seedRanks.snapshot(career.id, 1, before.position);
+      await container
+          .read(careerRepositoryProvider)
+          .advanceCycle(career.id, 1, lastDate);
+
+      container.invalidate(worldRankingProvider);
+      container.invalidate(movementBaselineProvider);
+      final rolled = (await container.read(
+        worldRankingProvider(career.id).future,
+      ))!;
+      final nowRank = rolled.position[player.id]!;
+      final swing = wasBeforeFinals - nowRank;
+      expect(
+        swing,
+        isNot(0),
+        reason: 'the fixture must put the two baselines genuinely apart',
+      );
+      expect(
+        rolled.baseline,
+        RankBaseline.worldChampionshipDraw,
+        reason: 'the screen fell back to the post-final cycle snapshot, which '
+            'reads zero for the entire world',
+      );
+      expect(
+        rolled.movement[player.id],
+        swing,
+        reason: 'the screen is not measuring from the shared baseline',
+      );
+
+      // The inbox, on the same save, must say the same number. A release filed
+      // in the new cycle is announced by the next sync.
+      // Every ranking message already in the inbox, releases and swings alike,
+      // so "fresh" below really means "filed by the roll".
+      final ranking2 = again.messages
+          .where((m) => m.category == 'ranking')
+          .map((m) => m.body)
+          .toSet();
+      await container
+          .read(rankingReleaseRepositoryProvider)
+          .add(
+            careerId: career.id,
+            publishedOn: lastDate.add(const Duration(days: 80)),
+            cycle: 1,
+            nationId: player.id,
+            playerRank: nowRank,
+            leaderNationId: byRank.first,
+          );
+      await container.read(messageServiceProvider).sync(career.id);
+      container.invalidate(messageInboxProvider);
+      final rolledInbox = await container.read(
+        messageInboxProvider(career.id).future,
+      );
+      final fresh = rolledInbox.messages
+          .where((m) => m.category == 'ranking' && !ranking2.contains(m.body))
+          .toList();
+      expect(
+        fresh.where((m) => m.title.startsWith('World ranking')),
+        hasLength(1),
+        reason: 'the release in the new cycle was not announced',
+      );
+      // Every ranking message the roll produced — the release announcement and
+      // the championship-swing message that sits beside it — reports the SAME
+      // number as the screen's arrow.
+      for (final m in fresh) {
+        expect(
+          m.body.toLowerCase(),
+          contains('${swing.abs()} place'),
+          reason: 'the inbox and the screen must measure the same thing across '
+              'a championship, not just within a cycle: "${m.body}"',
+        );
+      }
     },
     timeout: const Timeout(Duration(minutes: 5)),
   );

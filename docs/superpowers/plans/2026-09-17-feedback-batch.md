@@ -2051,3 +2051,54 @@ git commit -m "fix: a trophy won before the save began is not the manager's
 
 Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>"
 ```
+
+---
+
+### Task 41: No skipping a match you chose to play
+
+**Requested by the user mid-batch.** The live match screen offers play/pause, a speed control and "skip to full time". The skip goes. Play and the speeds remain.
+
+The reasoning is the manager's own: a match he opened is a match he is watching. If he does not want to watch it, the hub already lets him simulate it without opening it at all. Two ways to not watch a match is one too many, and the in-match one undercuts every decision the screen exists to offer.
+
+**Files:**
+- Modify: `lib/features/match/match_frame.dart:149-230` (`MatchControlBar` — the `onSkip` parameter and its pill button)
+- Modify: `lib/features/match/match_screen.dart:843-858` (`_skip()`), and `:1459` (where it is wired in)
+- Modify: `lib/l10n/app_en.arb` and `lib/l10n/app_cs.arb` (remove `matchSkipToFullTime`; leave `tourSkip` and `tourSharedSkip` alone, they belong to the guided tour)
+- Test: `test/widget/match_control_bar_test.dart` (exists; update), plus wherever the control bar is pumped
+
+**Interfaces:**
+- `MatchControlBar` loses its required `onSkip`. Every call site must be updated; it is required, so the compiler finds them.
+
+- [ ] **Step 1: Check what else the skip path was doing**
+
+`_skip()` sets `_penOrderAsked = true`, with the comment "Skipping past a shootout accepts the automatic taker order". That is the ONLY thing in the method that is not simply jumping the clock. Establish where else `_penOrderAsked` is set, and confirm that with the skip gone the manager is always asked for his shoot-out order rather than the flag being left unset and the prompt never appearing — or appearing twice.
+
+Write down what you find before changing anything. A shoot-out that silently takes an automatic order, or asks twice, is a worse bug than the button.
+
+- [ ] **Step 2: Write the failing test**
+
+The control bar renders play/pause and the speed control, and NO skip control. Assert by absence of the skip icon AND of its tooltip, so a renamed icon cannot let it back in.
+
+- [ ] **Step 3: Run it to verify it fails**
+
+Run: `flutter test test/widget/match_control_bar_test.dart`
+Expected: FAIL, the skip control is present.
+
+- [ ] **Step 4: Remove it**
+
+Delete the pill button, the `onSkip` parameter, `_skip()`, and the wiring. Remove `matchSkipToFullTime` from both `.arb` files, then `flutter gen-l10n`, then `dart run tool/export_copy.dart`.
+
+Do not leave a disabled button or a hidden flag. The control is gone.
+
+- [ ] **Step 5: Confirm the shoot-out still behaves**
+
+Run whatever covers the interactive shoot-out (grep test/ for the penalty order sheet). The manager must be asked exactly once for his order.
+
+- [ ] **Step 6: Commit**
+
+```bash
+git add -A
+git commit -m "feat: a match you opened is a match you watch
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>"
+```

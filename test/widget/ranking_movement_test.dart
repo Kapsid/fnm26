@@ -7,6 +7,7 @@ import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/features/ranking/world_ranking_providers.dart';
 import 'package:fnm/features/ranking/world_ranking_screen.dart';
 import 'package:fnm/l10n/app_localizations.dart';
+import 'package:fnm/shared/widgets/widgets.dart';
 
 /// What the ranking screen says about movement: the direction a nation has
 /// gone since the last freeze, how far, and — for the manager's own nation —
@@ -69,22 +70,24 @@ void main() {
     await tester.pumpAndSettle();
   }
 
+  Widget rankRow(int movement) => RankRow(
+    nation: nation(4, 'Peru'),
+    rank: 4,
+    points: 1987,
+    movement: movement,
+    // Not the manager's own row: that one carries a "your team" chip beside
+    // the name, and the chip plus a long name overflows the row's name column
+    // under the test font. That is its own fault, older than this change, and
+    // nothing to do with the movement cell being measured here.
+    isPlayer: false,
+    onTap: () {},
+  );
+
+  /// The row as the list lays it out: the list's own side padding, so the row
+  /// gets exactly the width it gets on the screen.
   Widget row(int movement) => Padding(
-    // The list's own padding, so the row gets exactly the width it gets on
-    // the screen and the guard measures the real thing.
-    padding: const EdgeInsets.all(16),
-    child: RankRow(
-      nation: nation(4, 'Peru'),
-      rank: 4,
-      points: 1987,
-      movement: movement,
-      // Not the manager's own row: that one carries a "your team" chip beside
-      // the name, and the chip plus a long name overflows the row's name
-      // column under the test font. That is its own fault, older than this
-      // change, and nothing to do with the movement cell being measured here.
-      isPlayer: false,
-      onTap: () {},
-    ),
+    padding: const EdgeInsets.symmetric(horizontal: 16),
+    child: rankRow(movement),
   );
 
   group('a nation movement is on the row', () {
@@ -115,6 +118,29 @@ void main() {
       expect(find.byIcon(Icons.arrow_drop_down), findsNothing);
       expect(find.byIcon(Icons.remove), findsOneWidget);
     });
+
+    // A moved row draws a 3px outline where a steady one draws 1px, which is
+    // 4px more height. The row height has to carry it: at 56 the flag was
+    // quietly squashed to 36x34 on exactly the rows a championship moves.
+    for (final movement in [0, -13]) {
+      testWidgets('the flag stays square at the row height ($movement)', (
+        tester,
+      ) async {
+        await pumpAt(
+          tester,
+          SizedBox(
+            height: kRankRowHeight,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: rankRow(movement),
+            ),
+          ),
+          width: 360,
+          locale: 'en',
+        );
+        expect(tester.getSize(find.byType(FlagDisc)), const Size(36, 36));
+      });
+    }
 
     for (final width in [360.0, 400.0]) {
       for (final locale in ['en', 'cs']) {
