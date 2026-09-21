@@ -3,6 +3,7 @@ import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/l10n/app_localizations.dart';
+import 'package:fnm/shared/widgets/widgets.dart';
 
 /// Where a player stands in this year's squad report.
 enum SquadDevStatus {
@@ -16,6 +17,34 @@ enum SquadDevStatus {
   gone,
 }
 
+/// Which part of the squad a player belongs to.
+///
+/// The report used to be one flat list, and "improved from 34" in a flat list
+/// says nothing: a 34-rated boy nobody has picked is noise, while the same
+/// line about a first-choice regular is the most important thing on the
+/// screen. The tier is what turns the one into the other.
+enum SquadDevTier {
+  /// Has been called up: he is the team, whatever his age.
+  regular,
+
+  /// In the pool, never picked, old enough that he probably never will be.
+  fringe,
+
+  /// Young and uncapped: the side you might have, not the side you have.
+  youth,
+}
+
+/// Which tier a player belongs to.
+///
+/// CALL-UP HISTORY FIRST, then age — and that order is the whole point. A boy
+/// of nineteen who has played for you is a regular, and a man of thirty who
+/// has never been near the squad is not; read the other way round the report
+/// is just a second list of teenagers.
+SquadDevTier squadDevTierFor({required bool calledUp, required int age}) {
+  if (calledUp) return SquadDevTier.regular;
+  return age < 21 ? SquadDevTier.youth : SquadDevTier.fringe;
+}
+
 /// One player's line in the yearly squad-development report.
 class SquadDevRow {
   const SquadDevRow({
@@ -27,6 +56,7 @@ class SquadDevRow {
     this.change,
     this.stars,
     this.wonderkid = false,
+    this.tier,
   });
 
   final String name;
@@ -66,16 +96,32 @@ class SquadDevRow {
   /// intakes.
   final bool wonderkid;
 
+  /// Which block of the squad this line belongs under, or null for a report
+  /// that does not group at all — a newcomers list, or a body written by a
+  /// build from before the tiers existed and now sitting in somebody's save.
+  final SquadDevTier? tier;
+
   final SquadDevStatus status;
 }
 
 /// Marks a message body as an encoded squad-development report. Versioned so a
 /// message written by an older build still renders — as its own plain text.
 ///
-/// v2 adds an optional note line directly under the tag. v1 bodies are still
-/// decoded: they are sitting in players' saves and must keep rendering.
+/// v2 adds an optional note line directly under the tag. v3 adds each
+/// player's tier, so the table can be read in blocks. v1 and v2 bodies are
+/// still decoded: they are sitting in players' saves and must keep rendering,
+/// tierless and therefore flat, exactly as they always did.
 const String _devReportTagV1 = 'SQUADDEV1';
 const String _devReportTagV2 = 'SQUADDEV2';
+const String _devReportTagV3 = 'SQUADDEV3';
+
+/// The tier column's wire values. Short, and never the enum's own name: the
+/// body is stored in saves, so it must not move when the enum does.
+const Map<SquadDevTier, String> _tierCodes = {
+  SquadDevTier.regular: 'reg',
+  SquadDevTier.fringe: 'frn',
+  SquadDevTier.youth: 'yth',
+};
 
 /// A decoded report: the table, and the line of context above it.
 typedef SquadDevReport = ({String? note, List<SquadDevRow> rows});
@@ -109,7 +155,7 @@ String encodeSquadDevReport(List<SquadDevRow> rows, {String? note}) {
       return b.rating.compareTo(a.rating);
     });
   final lines = [
-    _devReportTagV2,
+    _devReportTagV3,
     // Always present, so the row block always begins at the same offset. A
     // note is flattened to one line: the format is line-based, and a stray
     // newline would otherwise be read as a malformed row.
@@ -127,10 +173,19 @@ String encodeSquadDevReport(List<SquadDevRow> rows, {String? note}) {
           SquadDevStatus.gone => 'out',
         },
         r.stars?.toString() ?? '',
-        r.wonderkid ? 'wk' : '',
+        if (r.wonderkid) 'wk' else '',
+        if (r.tier case final tier?) _tierCodes[tier]! else '',
       ].join('|'),
   ];
   return lines.join('\n');
+}
+
+/// The tier a wire code names, or null for a blank or unknown one.
+SquadDevTier? _tierFrom(String code) {
+  for (final e in _tierCodes.entries) {
+    if (e.value == code) return e.key;
+  }
+  return null;
 }
 
 /// Decodes a body written by [encodeSquadDevReport], or null if [body] is not
@@ -139,13 +194,18 @@ SquadDevReport? decodeSquadDevReport(String body) {
   final lines = body.split('\n');
   if (lines.isEmpty) return null;
   final tag = lines.first.trim();
-  if (tag != _devReportTagV1 && tag != _devReportTagV2) return null;
-  final isV2 = tag == _devReportTagV2;
-  final note = isV2 && lines.length > 1 && lines[1].trim().isNotEmpty
+  if (tag != _devReportTagV1 &&
+      tag != _devReportTagV2 &&
+      tag != _devReportTagV3) {
+    return null;
+  }
+  // The note line arrived with v2 and every version since carries it.
+  final hasNote = tag != _devReportTagV1;
+  final note = hasNote && lines.length > 1 && lines[1].trim().isNotEmpty
       ? lines[1].trim()
       : null;
   final rows = <SquadDevRow>[];
-  for (final line in lines.skip(isV2 ? 2 : 1)) {
+  for (final line in lines.skip(hasNote ? 2 : 1)) {
     if (line.trim().isEmpty) continue;
     final f = line.split('|');
     if (f.length < 6) continue;
@@ -162,6 +222,9 @@ SquadDevReport? decodeSquadDevReport(String body) {
         // The badge arrived after the stars column; a body written before it
         // simply has no eighth field and claims nobody.
         wonderkid: f.length > 7 && f[7] == 'wk',
+        // The tier arrived with v3; an older body simply has no ninth field,
+        // claims no tier, and renders as the flat table it was written as.
+        tier: f.length > 8 ? _tierFrom(f[8]) : null,
         status: switch (f[5]) {
           'new' => SquadDevStatus.arrived,
           'out' => SquadDevStatus.gone,
@@ -177,7 +240,12 @@ SquadDevReport? decodeSquadDevReport(String body) {
 /// position, rating and what the year did to it — newcomers flagged as a first
 /// call-up, retirements at the bottom.
 ///
-/// PAGED, a fixed [_pageSize] rows at a time. A full pool is a hundred players,
+/// Read in blocks — regulars, fringe, youth — because a rating move only
+/// means something once you know whose it is. A report whose rows carry no
+/// tier (an older body, or the newcomers list) is the flat table it always
+/// was.
+///
+/// PAGED, a fixed number of lines at a time. A full pool is a hundred players,
 /// and printing them all pushed the popup's own "Next" button off the bottom of
 /// the screen — the news could be read but not dismissed. A page keeps the
 /// sheet a constant height whatever the year did to the squad.
@@ -190,20 +258,81 @@ class SquadDevTable extends StatefulWidget {
   State<SquadDevTable> createState() => _SquadDevTableState();
 }
 
+/// One slot on a page: a section heading, a player's line, or neither — a
+/// blank that keeps a short last page the height of a full one.
+typedef _Slot = ({SquadDevTier? head, SquadDevRow? row});
+
 class _SquadDevTableState extends State<SquadDevTable> {
-  static const int _pageSize = 10;
+  /// Slots, not players: a heading costs one, which is what keeps the sheet
+  /// the same height whichever page is open.
+  static const int _pageSize = 12;
 
   int _page = 0;
 
-  int get _pageCount => (widget.rows.length / _pageSize).ceil();
+  /// The report as a run of slots: any untiered rows first — a report that
+  /// does not group (a newcomers list, or a body from an older build) is the
+  /// flat table it always was — then each tier that has somebody in it, under
+  /// its own heading. A tier nobody is in is not written at all.
+  List<_Slot> get _slots {
+    final out = <_Slot>[
+      for (final r in widget.rows)
+        if (r.tier == null) (head: null, row: r),
+    ];
+    for (final tier in SquadDevTier.values) {
+      final inTier = widget.rows.where((r) => r.tier == tier).toList()
+        ..sort(_byMovement);
+      if (inTier.isEmpty) continue;
+      out.add((head: tier, row: null));
+      for (final r in inTier) {
+        out.add((head: null, row: r));
+      }
+    }
+    return out;
+  }
+
+  /// Inside a section the biggest mover leads and whoever has left the pool
+  /// comes last. A block is read for who moved, so the man who moved most is
+  /// the first name in it whatever order the body happened to be written in.
+  static int _byMovement(SquadDevRow a, SquadDevRow b) {
+    int left(SquadDevRow r) => r.status == SquadDevStatus.gone ? 1 : 0;
+    final byLeaving = left(a).compareTo(left(b));
+    if (byLeaving != 0) return byLeaving;
+    final byChange = (b.change ?? 0).compareTo(a.change ?? 0);
+    if (byChange != 0) return byChange;
+    return b.rating.compareTo(a.rating);
+  }
+
+  /// Those slots cut into pages. A heading is never left alone at the foot of
+  /// a page, and a section that runs on says its name again at the top of the
+  /// next one — otherwise a whole page of names sits under no heading and the
+  /// grouping stops answering the only question it was added to answer.
+  List<List<_Slot>> get _pages {
+    final pages = <List<_Slot>>[];
+    var current = <_Slot>[];
+    SquadDevTier? open;
+    for (final slot in _slots) {
+      if (slot.head != null) open = slot.head;
+      final orphanHead = slot.head != null && current.length >= _pageSize - 1;
+      if (current.length >= _pageSize || orphanHead) {
+        pages.add(current);
+        current = [
+          if (slot.head == null && open != null) (head: open, row: null),
+        ];
+      }
+      current.add(slot);
+    }
+    if (current.isNotEmpty) pages.add(current);
+    return pages.isEmpty ? [const []] : pages;
+  }
 
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
     if (widget.rows.isEmpty) return Text(l.squadDevEmpty);
-    final page = _page.clamp(0, _pageCount - 1);
-    final start = page * _pageSize;
-    final shown = widget.rows.skip(start).take(_pageSize).toList();
+    final pages = _pages;
+    final pageCount = pages.length;
+    final page = _page.clamp(0, pageCount - 1);
+    final shown = pages[page];
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -212,19 +341,32 @@ class _SquadDevTableState extends State<SquadDevTable> {
           child: Row(
             children: [
               Expanded(child: _head(l.squadDevPlayer)),
-              SizedBox(width: 30, child: _head(l.squadDevAge)),
-              SizedBox(width: 34, child: _head(l.squadDevPosition)),
-              SizedBox(width: 62, child: _head(l.squadDevChange)),
+              SizedBox(
+                width: _SquadDevLine.ageWidth,
+                child: _head(l.squadDevAge),
+              ),
+              SizedBox(
+                width: _SquadDevLine.positionWidth,
+                child: _head(l.squadDevPosition),
+              ),
+              SizedBox(
+                width: _SquadDevLine.ratingWidth,
+                child: _head(l.squadDevChange),
+              ),
             ],
           ),
         ),
         const Divider(height: 1, color: AppColors.outlineVariant),
-        for (final r in shown) _SquadDevLine(row: r),
+        for (final slot in shown)
+          if (slot.head case final tier?)
+            _SectionHead(tier: tier)
+          else
+            _SquadDevLine(row: slot.row),
         // Every page holds the same number of lines, so paging never resizes
         // the sheet under the reader's thumb.
         for (var i = shown.length; i < _pageSize; i++)
           const _SquadDevLine(row: null),
-        if (_pageCount > 1) ...[
+        if (pageCount > 1) ...[
           const Divider(height: 1, color: AppColors.outlineVariant),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -240,7 +382,7 @@ class _SquadDevTableState extends State<SquadDevTable> {
               Text(
                 l.squadDevPageOf(
                   '${page + 1}',
-                  '$_pageCount',
+                  '$pageCount',
                   '${widget.rows.length}',
                 ),
                 style: AppTypography.labelSmall.copyWith(
@@ -249,7 +391,7 @@ class _SquadDevTableState extends State<SquadDevTable> {
               ),
               IconButton(
                 visualDensity: VisualDensity.compact,
-                onPressed: page >= _pageCount - 1
+                onPressed: page >= pageCount - 1
                     ? null
                     : () => setState(() => _page = page + 1),
                 icon: const Icon(Icons.chevron_right_rounded),
@@ -276,6 +418,16 @@ class _SquadDevTableState extends State<SquadDevTable> {
 class _SquadDevLine extends StatelessWidget {
   const _SquadDevLine({required this.row});
 
+  /// Column widths, sized to the WORD above them rather than to the two or
+  /// three characters below it: a header that reads "POS…" is a cut label, and
+  /// a cut label is the bug this batch keeps finding.
+  static const double ageWidth = 40;
+  static const double positionWidth = 52;
+
+  /// Wide enough for a rating, an arrow and a rating: the line's whole point
+  /// is where a player came FROM, so 84 on its own will not do.
+  static const double ratingWidth = 78;
+
   /// The player on this line, or null for a blank line that keeps a short last
   /// page the same height as a full one.
   final SquadDevRow? row;
@@ -300,10 +452,11 @@ class _SquadDevLine extends StatelessWidget {
             child: Row(
               children: [
                 Flexible(
-                  child: Text(
+                  child: WholeText(
                     row.name,
+                    shortText: initialledName(row.name),
                     maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
+                    textAlign: TextAlign.start,
                     style: AppTypography.bodySmall.copyWith(
                       color: gone
                           ? AppColors.onSurfaceVariant
@@ -328,8 +481,8 @@ class _SquadDevLine extends StatelessWidget {
               ],
             ),
           ),
-          SizedBox(width: 30, child: _cell('${row.age}')),
-          SizedBox(width: 34, child: _cell(row.position)),
+          SizedBox(width: ageWidth, child: _cell('${row.age}')),
+          SizedBox(width: positionWidth, child: _cell(row.position)),
           // The scouts' ceiling, for a face nobody has seen play yet. It is an
           // estimate, which is exactly why it belongs next to the name.
           if (row.stars != null)
@@ -357,30 +510,36 @@ class _SquadDevLine extends StatelessWidget {
                 ],
               ),
             ),
+          // Where he came from, and where he got to. "+3" beside a rating made
+          // the reader do the subtraction; "81 → 84" is the sentence the
+          // manager was trying to read in the first place.
           SizedBox(
-            width: 62,
+            width: ratingWidth,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
+                if (change != null && change != 0) ...[
+                  Text(
+                    '${row.rating - change}',
+                    maxLines: 1,
+                    style: AppTypography.bodySmall.copyWith(
+                      color: AppColors.onSurfaceVariant,
+                    ),
+                  ),
+                  Icon(
+                    Icons.arrow_right_alt_rounded,
+                    size: 14,
+                    color: change > 0 ? AppColors.positive : AppColors.error,
+                  ),
+                ],
                 Text(
                   '${row.rating}',
+                  maxLines: 1,
                   style: AppTypography.bodySmall.copyWith(
+                    color: change == null || change == 0
+                        ? AppColors.onSurface
+                        : (change > 0 ? AppColors.positive : AppColors.error),
                     fontWeight: FontWeight.w700,
-                  ),
-                ),
-                SizedBox(
-                  width: 30,
-                  child: Text(
-                    change == null || change == 0
-                        ? ''
-                        : (change > 0 ? '+$change' : '$change'),
-                    textAlign: TextAlign.right,
-                    style: AppTypography.labelSmall.copyWith(
-                      color: change == null || change == 0
-                          ? AppColors.onSurfaceVariant
-                          : (change > 0 ? AppColors.positive : AppColors.error),
-                      fontWeight: FontWeight.w700,
-                    ),
                   ),
                 ),
               ],
@@ -398,6 +557,34 @@ class _SquadDevLine extends StatelessWidget {
       color: AppColors.onSurfaceVariant,
     ),
   );
+}
+
+/// The heading over one block of the table.
+class _SectionHead extends StatelessWidget {
+  const _SectionHead({required this.tier});
+
+  final SquadDevTier tier;
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    final label = switch (tier) {
+      SquadDevTier.regular => l.squadDevTierRegulars,
+      SquadDevTier.fringe => l.squadDevTierFringe,
+      SquadDevTier.youth => l.squadDevTierYouth,
+    };
+    return Padding(
+      padding: const EdgeInsets.only(top: AppSpacing.sm, bottom: 2),
+      child: Text(
+        label,
+        maxLines: 1,
+        style: AppTypography.labelSmall.copyWith(
+          color: AppColors.primary,
+          fontWeight: FontWeight.w700,
+        ),
+      ),
+    );
+  }
 }
 
 class _Tag extends StatelessWidget {

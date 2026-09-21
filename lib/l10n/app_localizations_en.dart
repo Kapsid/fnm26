@@ -5097,6 +5097,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get squadDevEmpty => 'A settled year. No changes across the squad.';
 
   @override
+  String get squadDevTierRegulars => 'REGULARS';
+
+  @override
+  String get squadDevTierFringe => 'FRINGE';
+
+  @override
+  String get squadDevTierYouth => 'YOUTH';
+
+  @override
   String get boardObjectivesTitle => 'Board objectives';
 
   @override
@@ -5149,7 +5158,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String squadDevPageOf(String page, String pages, String total) {
-    return 'Page $page of $pages · $total players';
+    return '$page/$pages · $total players';
   }
 
   @override

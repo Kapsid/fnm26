@@ -7518,6 +7518,18 @@
   "@squadDevEmpty": {
     "description": "Shown when the yearly squad report has no rows."
   },
+  "squadDevTierRegulars": "REGULARS",
+  "@squadDevTierRegulars": {
+    "description": "Heading over the block of the development report holding players who have been called up."
+  },
+  "squadDevTierFringe": "FRINGE",
+  "@squadDevTierFringe": {
+    "description": "Heading over the block of the development report holding uncapped players past 21."
+  },
+  "squadDevTierYouth": "YOUTH",
+  "@squadDevTierYouth": {
+    "description": "Heading over the block of the development report holding uncapped players under 21."
+  },
   "boardObjectivesTitle": "Board objectives",
   "@boardObjectivesTitle": {
     "description": "Title of the board-objectives screen, and the hub button opening it."
@@ -7584,7 +7596,7 @@
       }
     }
   },
-  "squadDevPageOf": "Page {page} of {pages} · {total} players",
+  "squadDevPageOf": "{page}/{pages} · {total} players",
   "@squadDevPageOf": {
     "description": "Pager line under the squad-report table.",
     "placeholders": {

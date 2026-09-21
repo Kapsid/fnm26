@@ -5127,6 +5127,15 @@ class AppLocalizationsCs extends AppLocalizations {
   String get squadDevEmpty => 'Klidný rok. V kádru beze změn.';
 
   @override
+  String get squadDevTierRegulars => 'ZÁKLADNÍ KÁDR';
+
+  @override
+  String get squadDevTierFringe => 'ŠIRŠÍ KÁDR';
+
+  @override
+  String get squadDevTierYouth => 'MLÁDEŽ';
+
+  @override
   String get boardObjectivesTitle => 'Cíle vedení';
 
   @override
@@ -5180,7 +5189,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String squadDevPageOf(String page, String pages, String total) {
-    return 'Strana $page z $pages · $total hráčů';
+    return '$page/$pages · $total hráčů';
   }
 
   @override

@@ -634,6 +634,20 @@ class MessageService {
       // belongs in the hall of fame.
       final capsById = {for (final c in caps) c.playerId: c.games};
       final goalsById = {for (final s in scorers) s.playerId: s.goals};
+      // Who has actually been in the squad. The milestone list above is a
+      // top-sixty leaderboard and would call four fifths of the pool fringe;
+      // this is every man with a cap to his name, plus whoever is called up
+      // right now and has yet to play one.
+      final everCapped = await comp.nationTopAppearances(
+        careerId,
+        career.nationId,
+        limit: 500,
+      );
+      final calledUp = <int>{
+        for (final a in everCapped)
+          if (a.games > 0) a.playerId,
+        ...await _ref.read(squadRepositoryProvider).callUps(careerId),
+      };
 
       for (final y in missingYears) {
         final reportYear = CareerService.cycleStart.year + y;
@@ -649,7 +663,7 @@ class MessageService {
             'aging:$y',
             'aging',
             l.msgDevTitle(reportYear),
-            _developmentReport(before, after),
+            _developmentReport(before, after, calledUp),
             reportYear,
             4,
           ),
@@ -828,7 +842,11 @@ class MessageService {
 ///
 /// Newcomers are deliberately absent — they get [_newcomerReport] to
 /// themselves.
-String _developmentReport(Map<int, Player> before, Map<int, Player> after) {
+String _developmentReport(
+  Map<int, Player> before,
+  Map<int, Player> after,
+  Set<int> calledUp,
+) {
   final rows = <SquadDevRow>[];
   for (final e in after.entries) {
     final was = before[e.key];
@@ -841,6 +859,10 @@ String _developmentReport(Map<int, Player> before, Map<int, Player> after) {
         rating: e.value.overall,
         change: e.value.overall - was.overall,
         status: SquadDevStatus.stayed,
+        tier: squadDevTierFor(
+          calledUp: calledUp.contains(e.key),
+          age: e.value.age,
+        ),
       ),
     );
   }
@@ -853,6 +875,12 @@ String _developmentReport(Map<int, Player> before, Map<int, Player> after) {
         position: e.value.position.label,
         rating: e.value.overall,
         status: SquadDevStatus.gone,
+        // A man who has left is read where he played: a retiring regular is
+        // news about the first eleven, not about the reserves.
+        tier: squadDevTierFor(
+          calledUp: calledUp.contains(e.key),
+          age: e.value.age,
+        ),
       ),
     );
   }

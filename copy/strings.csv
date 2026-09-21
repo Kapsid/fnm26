@@ -1364,6 +1364,9 @@ squadDevChange,Squad-report table header: rating and its change over the year.,,
 squadDevNew,Tag on a player in the pool for the first time.,,NEW,NOVÝ
 squadDevRetired,Tag on a player who has left the international pool.,,RETIRED,KONEC
 squadDevEmpty,Shown when the yearly squad report has no rows.,,A settled year. No changes across the squad.,Klidný rok. V kádru beze změn.
+squadDevTierRegulars,Heading over the block of the development report holding players who have been called up.,,REGULARS,ZÁKLADNÍ KÁDR
+squadDevTierFringe,Heading over the block of the development report holding uncapped players past 21.,,FRINGE,ŠIRŠÍ KÁDR
+squadDevTierYouth,Heading over the block of the development report holding uncapped players under 21.,,YOUTH,MLÁDEŽ
 boardObjectivesTitle,"Title of the board-objectives screen, and the hub button opening it.",,Board objectives,Cíle vedení
 boardObjectivesConfidence,Label above the board-confidence verdict.,,Board confidence,Důvěra vedení
 boardObjectiveBeatenBy,"A settled objective the nation beat, and by how many rounds.","PLURAL — keep the {count, plural, …} skeleton exactly; translate only the words inside the branches","{result}: {rounds, plural, =1{a round better than asked} other{{rounds} rounds better than asked}}","{result}: {rounds, plural, =1{o kolo lepší, než se čekalo} few{o {rounds} kola lepší, než se čekalo} other{o {rounds} kol lepší, než se čekalo}}"
@@ -1374,7 +1377,7 @@ boardObjectivesEmpty,Shown when there are no objectives.,,The board has not set 
 tourContBestWinners,Ladder card heading when the contested place is first — fewer berths than groups.,,BEST GROUP WINNERS,NEJLEPŠÍ VÍTĚZOVÉ SKUPIN
 tourContBestThirds,Ladder card heading for the best third-placed sides.,,BEST THIRD-PLACED,NEJLEPŠÍ TŘETÍ
 tourContBestPlaced,Ladder card heading for a contested position deeper than third.,{position},BEST {position}TH-PLACED,NEJLEPŠÍ NA {position}. MÍSTĚ
-squadDevPageOf,Pager line under the squad-report table.,{page} {pages} {total},Page {page} of {pages} · {total} players,Strana {page} z {pages} · {total} hráčů
+squadDevPageOf,Pager line under the squad-report table.,{page} {pages} {total},{page}/{pages} · {total} players,{page}/{pages} · {total} hráčů
 matchSoldOut,Tag on the ground card when the stadium is full.,,SOLD OUT,VYPRODÁNO
 matchAttendanceOf,Crowd figure against stadium capacity.,{attendance} {capacity},{attendance} of {capacity} seats filled,{attendance} z {capacity} míst zaplněno
 matchGroundTitle,Heading over the match venue on the pre-match screen.,,VENUE,STADION

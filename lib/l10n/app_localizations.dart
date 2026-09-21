@@ -8304,6 +8304,24 @@ abstract class AppLocalizations {
   /// **'A settled year. No changes across the squad.'**
   String get squadDevEmpty;
 
+  /// Heading over the block of the development report holding players who have been called up.
+  ///
+  /// In en, this message translates to:
+  /// **'REGULARS'**
+  String get squadDevTierRegulars;
+
+  /// Heading over the block of the development report holding uncapped players past 21.
+  ///
+  /// In en, this message translates to:
+  /// **'FRINGE'**
+  String get squadDevTierFringe;
+
+  /// Heading over the block of the development report holding uncapped players under 21.
+  ///
+  /// In en, this message translates to:
+  /// **'YOUTH'**
+  String get squadDevTierYouth;
+
   /// Title of the board-objectives screen, and the hub button opening it.
   ///
   /// In en, this message translates to:
@@ -8367,7 +8385,7 @@ abstract class AppLocalizations {
   /// Pager line under the squad-report table.
   ///
   /// In en, this message translates to:
-  /// **'Page {page} of {pages} · {total} players'**
+  /// **'{page}/{pages} · {total} players'**
   String squadDevPageOf(String page, String pages, String total);
 
   /// Tag on the ground card when the stadium is full.
