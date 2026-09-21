@@ -243,6 +243,17 @@ String transferDestination(
     ? l.newsTransferAbroad(club, toCountryName)
     : club;
 
+/// What the manager has actually picked for his own nation: the squad he called
+/// up, the tactic he saved (shape, eleven, instructions) and how drilled — and
+/// how read — that shape is. See [SeasonService._ensureManagerSetup].
+typedef _ManagerSetup = ({
+  int nationId,
+  Set<int> callUps,
+  Tactic? tactic,
+  double familiarity,
+  double predictability,
+});
+
 /// Drives the whole-world simulation: quick-sims due matches, advances the
 /// date, and progresses the cycle (qualifying → finals draw → knockout →
 /// champion). Knockout ties are always resolved to a winner.
@@ -291,12 +302,22 @@ class SeasonService {
   }) {
     final running = _inFlight;
     if (running != null && dropIfBusy) return running;
+    // The manager's selection is re-read at the start of every operation: he
+    // may have named a different squad, a different eleven or a different shape
+    // since the last one, and a cache that outlived the operation would field
+    // the team he used to pick.
+    Future<void> run() {
+      _managerSetup = null;
+      _managerSetupCareer = null;
+      return body();
+    }
+
     // Chain behind whatever is running. Its failure is not ours to report —
     // that call surfaces its own error to its own caller — so either outcome
     // simply lets us start.
     final next = running == null
-        ? body()
-        : running.then((_) => body(), onError: (_) => body());
+        ? run()
+        : running.then((_) => run(), onError: (_) => run());
     _inFlight = next;
     return next.whenComplete(() {
       // Only clear the slot if nothing has queued behind us in the meantime.
@@ -338,6 +359,48 @@ class SeasonService {
     _absences = await _ref.read(absenceRepositoryProvider).forCareer(careerId);
     _absenceCareer = careerId;
     return _absences!;
+  }
+
+  /// The manager's own selection for the save being simulated: who he called
+  /// up, the eleven and shape he named, and how drilled that shape is. Null
+  /// until the first fixture of an operation asks for it, and dropped at the
+  /// start of every operation (see [_exclusive]).
+  _ManagerSetup? _managerSetup;
+  int? _managerSetupCareer;
+
+  /// Loads (once per operation) what the manager has actually picked.
+  ///
+  /// THE RULE this serves: a quick-simmed match for the MANAGER'S nation is
+  /// played with his squad, his XI, his formation and his tactical standing —
+  /// the stored familiarity for that shape, and his instructions — so that
+  /// skipping a match is a choice about WATCHING, not a choice about how his
+  /// side plays. Every OTHER nation keeps the best-available behaviour, since
+  /// nobody picked them.
+  ///
+  /// Four repository reads, paid ONCE per operation and never per nation: a
+  /// world matchday is hundreds of fixtures and only one of them is his.
+  Future<_ManagerSetup?> _ensureManagerSetup(int careerId) async {
+    if (_managerSetupCareer == careerId && _managerSetup != null) {
+      return _managerSetup;
+    }
+    final career = await _careers.byId(careerId);
+    if (career == null) return null;
+    final tactic = await _ref
+        .read(tacticsRepositoryProvider)
+        .tacticForCareer(careerId);
+    final drilling = await _ref
+        .read(tacticFamiliarityRepositoryProvider)
+        .forCareer(careerId);
+    final shape = drilling[tactic?.formation ?? Formation.f433];
+    _managerSetup = (
+      nationId: career.nationId,
+      callUps: await _ref.read(squadRepositoryProvider).callUps(careerId),
+      tactic: tactic,
+      familiarity: shape?.familiarity ?? 0,
+      predictability: shape?.predictability ?? 0,
+    );
+    _managerSetupCareer = careerId;
+    return _managerSetup;
   }
 
   Future<void> _flushAbsences(int careerId) async {
@@ -844,8 +907,79 @@ class SeasonService {
     return (mean * 0.75 + ranked * 0.25).round().clamp(40, 92);
   }
 
+  /// The men the manager may field for his own nation in a match he skipped:
+  /// his call-ups, minus anyone the absences rule out. Empty when he is not the
+  /// manager of [nationId], and empty when nothing he named can play — both
+  /// leave the caller on the ordinary best-available path.
+  Future<List<Player>> _managerSquad(
+    int careerId,
+    int nationId,
+    List<Player> pool,
+  ) async {
+    final setup = await _ensureManagerSetup(careerId);
+    if (setup == null || setup.nationId != nationId) return const [];
+    return selectable(
+      availableSquad(pool, setup.callUps),
+      await _ensureAbsences(careerId),
+    );
+  }
+
+  /// The eleven the MANAGER named, for a match of his the world simulated
+  /// rather than him playing it out. Null when this is not his nation, or when
+  /// he has named nothing that can play — then the ordinary best-available XI
+  /// stands.
+  ///
+  /// A stored XI goes stale: a man in it may since have been injured, banned,
+  /// dropped from the squad or retired out of the pool. So the saved names are
+  /// filtered through [selectable] first, and every slot they no longer fill is
+  /// topped up from the rest of his squad — in HIS shape, so the replacement
+  /// suits the hole — before the nation pool is touched at all. The alternative
+  /// (throw the whole XI away the moment one name is stale) is how the live
+  /// match screen does it, and it would hand a skipped match back to the
+  /// automatic selection for the sake of one hamstring.
+  Future<List<Player>?> _managerXi(
+    int careerId,
+    int nationId,
+    List<Player> pool,
+  ) async {
+    final squad = await _managerSquad(careerId, nationId, pool);
+    if (squad.isEmpty) return null;
+    final setup = _managerSetup!;
+    final shape = setup.tactic?.formation ?? Formation.f433;
+    final byId = {for (final p in squad) p.id: p};
+    final lineup = setup.tactic?.lineup ?? const <int?>[];
+    final slots = List<Player?>.filled(11, null);
+    final used = <int>{};
+    for (var i = 0; i < slots.length && i < lineup.length; i++) {
+      final p = byId[lineup[i]];
+      if (p != null && used.add(p.id)) slots[i] = p;
+    }
+    if (used.length < slots.length) {
+      // Gap-filling is slot-aware: `bestEleven` picks for the same shape in the
+      // same slot order, so the man who comes in for a missing centre-half is a
+      // centre-half.
+      final rest = [
+        for (final p in squad)
+          if (!used.contains(p.id)) p,
+      ];
+      final filler = bestEleven(shape, rest);
+      final restById = {for (final p in rest) p.id: p};
+      for (var i = 0; i < slots.length; i++) {
+        if (slots[i] != null) continue;
+        final p = restById[filler[i]];
+        if (p != null && used.add(p.id)) slots[i] = p;
+      }
+    }
+    final xi = slots.whereType<Player>().toList();
+    return xi.isEmpty ? null : xi;
+  }
+
   /// The players a background-simulated side actually fields: its best 4-3-3
   /// from the pool (the whole pool if an XI can't be formed).
+  ///
+  /// The manager's OWN nation is the exception, and the only one: it fields the
+  /// team he picked (see [_managerXi] for the rule). Every other nation is the
+  /// best available, since nobody picked them.
   ///
   /// The absences are LOADED here, never merely consulted. They used to be read
   /// off the in-memory cache, which is empty until the first match of an
@@ -856,6 +990,8 @@ class SeasonService {
   Future<List<Player>> _fieldedXi(int careerId, int nationId) async {
     final pool = await _pool(nationId);
     if (pool.isEmpty) return const [];
+    final mine = await _managerXi(careerId, nationId, pool);
+    if (mine != null) return mine;
     // A suspended or injured player does not play — for ANY nation, not just
     // the manager's. This is what makes the world's cards and knocks mean
     // something: a rival losing its centre-forward for a quarter-final really
@@ -889,9 +1025,14 @@ class SeasonService {
     final pool = await _pool(nationId);
     final onPitch = xi.map((p) => p.id).toSet();
     final absences = await _ensureAbsences(careerId);
+    // The manager's bench is drawn from the squad HE named, like his XI — a
+    // man he left at home does not come on in the 60th minute of a match he
+    // skipped. Every other nation benches its best available.
+    final mine = await _managerSquad(careerId, nationId, pool);
+    final fit = mine.isEmpty ? selectable(pool, absences) : mine;
     final available =
         [
-          for (final p in selectable(pool, absences))
+          for (final p in fit)
             if (!onPitch.contains(p.id)) p,
         ]..sort((a, b) {
           final byOverall = b.overall.compareTo(a.overall);
