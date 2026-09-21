@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_theme.dart';
+import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/domain/services/press/persona.dart';
 import 'package:fnm/domain/services/press/y_feed.dart';
+import 'package:fnm/features/y/y_post_detail.dart';
 import 'package:fnm/features/y/y_profile_sheet.dart';
 import 'package:fnm/features/y/y_screen.dart';
 import 'package:fnm/l10n/app_localizations.dart';
+import 'package:fnm/shared/widgets/widgets.dart';
 
 /// The accounts on Y are somebody.
 ///
@@ -68,6 +72,29 @@ void main() {
             'and was given ${paragraph.size.width}px',
       );
     }
+  }
+
+  /// How far a [WholeText] had to shrink to fit, 1.0 being not at all.
+  ///
+  /// [expectWhole] cannot see inside a [WholeText]: it wraps, then falls
+  /// back, then SCALES ITSELF DOWN, so `didExceedMaxLines` is false however
+  /// small the type has got. The paragraph keeps its natural size and a
+  /// transform does the shrinking, so the painted width over the paragraph's
+  /// own width is the scale factor.
+  ///
+  /// Reported, NOT asserted on, and the reason is the font. Widget tests
+  /// render in Flutter's fallback face, which draws every glyph a full em
+  /// wide; the app's own [AppFonts.mono] is about six tenths of that, so a
+  /// row measured here is roughly seventy per cent wider than the one the
+  /// manager sees. An absolute floor calibrated on that font would fail the
+  /// feed row for a squeeze that does not exist on a phone. What IS asserted
+  /// below is the date, which is a plain Text and can fail honestly.
+  double shrinkOf(WidgetTester tester, Finder finder) {
+    final element = finder.evaluate().single;
+    final paragraph = element.renderObject! as RenderParagraph;
+    final f = find.byWidget(element.widget);
+    final painted = tester.getBottomRight(f).dx - tester.getTopLeft(f).dx;
+    return painted / paragraph.size.width;
   }
 
   Future<void> pump(
@@ -274,6 +301,122 @@ void main() {
         reason: 'Len in 2031 is the same man as Len in 2027',
       );
     });
+  });
+
+  group('a name that opens somebody looks like it', () {
+    /// The [WholeText] a row writes [name] in.
+    Finder nameText(String name) => find.byWidgetPredicate(
+      (w) => w is WholeText && w.text == name,
+      description: 'the name "$name" on a post row',
+    );
+
+    final len = post('LongSufferingLen', date: DateTime(2030, 6, 10), key: 'a');
+
+    testWidgets('in the feed it carries the interactive tint', (tester) async {
+      await pump(
+        tester,
+        Scaffold(
+          body: YFeedList(feed: (posts: [len], reserveFrom: null)),
+        ),
+      );
+      expect(
+        tester.widget<YPostTile>(find.byType(YPostTile)).onAccountTap,
+        isNotNull,
+      );
+      expect(
+        tester.widget<WholeText>(nameText('LongSufferingLen')).style?.color,
+        AppColors.primary,
+        reason:
+            'a profile nobody can tell is there answers the complaint no '
+            'better than no profile',
+      );
+    });
+
+    testWidgets('on its own profile it does not', (tester) async {
+      await pump(
+        tester,
+        YProfileSheet(persona: YFeed.personaOf(len), all: [len]),
+      );
+      // The header writes the name as a plain Text; the row below writes it
+      // as a WholeText, and that is the one that must look inert.
+      final style = tester
+          .widget<WholeText>(nameText('LongSufferingLen'))
+          .style;
+      expect(
+        style?.color,
+        isNot(AppColors.primary),
+        reason: 'an affordance that lies is worse than none',
+      );
+      expect(style?.color, AppTypography.labelMedium.color);
+    });
+
+    testWidgets('and tapping it cannot push the profile onto itself', (
+      tester,
+    ) async {
+      await pump(
+        tester,
+        YProfileSheet(persona: YFeed.personaOf(len), all: [len]),
+      );
+      expect(
+        tester.widget<YPostTile>(find.byType(YPostTile)).onAccountTap,
+        isNull,
+        reason: 'the account is already open; the name opens nothing',
+      );
+      await tester.tap(nameText('LongSufferingLen'));
+      await tester.pumpAndSettle();
+      // The tap still LANDS: it goes to the post, which is what the rest of
+      // the row has always done. A self-push would have put a second profile
+      // on top instead, and this page is opaque, so the one underneath would
+      // be gone from the tree either way.
+      expect(find.byType(YPostDetail), findsOneWidget);
+      expect(find.byType(YProfileSheet), findsNothing);
+    });
+  });
+
+  group('the feed row fits', () {
+    // The row gained a tint and a padded tap target, so it is measured again
+    // at both widths in both languages. Its name and handle are WholeTexts,
+    // which no ellipsis guard can fail: they are only checked to be on
+    // screen and unellipsised, and [shrinkOf] says why the amount they were
+    // scaled by is not asserted on. The date beside them is a plain Text and
+    // is held to the ordinary guard.
+    final longestCast = YFeed.castNames.reduce(
+      (a, b) => b.length > a.length ? b : a,
+    );
+
+    for (final width in <double>[400, 360]) {
+      for (final locale in [const Locale('en'), const Locale('cs')]) {
+        testWidgets(
+          '$longestCast at ${width.toInt()}px in ${locale.languageCode}',
+          (tester) async {
+            final p = post(
+              longestCast,
+              date: DateTime(2031, 12, 30),
+              key: 'a',
+            );
+            await pump(
+              tester,
+              Scaffold(body: YFeedList(feed: (posts: [p], reserveFrom: null))),
+              width: width,
+              locale: locale,
+            );
+            // Present and never ellipsised, whatever the face they are
+            // drawn in; see [shrinkOf] for why the amount is recorded here
+            // rather than asserted on.
+            expect(shrinkOf(tester, wrappable(longestCast)), greaterThan(0));
+            expect(
+              shrinkOf(tester, wrappable('@$longestCast')),
+              greaterThan(0),
+            );
+            expectWhole(
+              find.textContaining('30 Dec 31', findRichText: false),
+              'the date',
+            );
+            expect(tester.takeException(), isNull);
+          },
+        );
+      }
+    }
   });
 
   group('the profile fits', () {

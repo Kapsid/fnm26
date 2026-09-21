@@ -501,6 +501,19 @@ class YPostTile extends StatelessWidget {
     YVoice.expro => AppColors.error,
   };
 
+  /// How the name is written, which is the only sign the manager gets that it
+  /// can be opened.
+  ///
+  /// [AppColors.primary] is this app's one interactive tint: it is on every
+  /// back arrow, every action icon and every selected state, so a name in it
+  /// reads as something you can press without inventing a link convention
+  /// this app has nowhere else. A name that opens nothing is written in the
+  /// ordinary colour, because an affordance that lies is worse than none: the
+  /// profile lists its own posts, and there is nothing behind those names.
+  TextStyle get _nameStyle => onAccountTap == null
+      ? AppTypography.labelMedium
+      : AppTypography.labelMedium.copyWith(color: AppColors.primary);
+
   /// Whether this post answers another one, in which case it is drawn stepped
   /// in under it rather than as a story of its own — the thread has to LOOK
   /// like a thread or the replies read as unrelated non-sequiturs.
@@ -586,25 +599,43 @@ class YPostTile extends StatelessWidget {
                             // in a feed has meant "who is this" for twenty
                             // years, and this feed has a cast worth asking
                             // about.
+                            //
+                            // ONE target, not two. Two gestures around two
+                            // words left a pair of glyph-sized hit boxes with
+                            // a dead gap between them; wrapping the pair and
+                            // padding it out gives a finger something to land
+                            // on, and [HitTestBehavior.opaque] means the
+                            // padding counts.
                             Flexible(
                               child: _Account(
                                 onTap: onAccountTap,
-                                child: WholeText(
-                                  post.displayName,
-                                  maxLines: 1,
-                                  style: AppTypography.labelMedium,
-                                ),
-                              ),
-                            ),
-                            const SizedBox(width: AppSpacing.xs),
-                            Flexible(
-                              child: _Account(
-                                onTap: onAccountTap,
-                                child: WholeText(
-                                  post.handle,
-                                  maxLines: 1,
-                                  style: AppTypography.labelSmall.copyWith(
-                                    color: AppColors.onSurfaceVariant,
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: AppSpacing.xs,
+                                  ),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Flexible(
+                                        child: WholeText(
+                                          post.displayName,
+                                          maxLines: 1,
+                                          style: _nameStyle,
+                                        ),
+                                      ),
+                                      const SizedBox(width: AppSpacing.xs),
+                                      Flexible(
+                                        child: WholeText(
+                                          post.handle,
+                                          maxLines: 1,
+                                          style: AppTypography.labelSmall
+                                              .copyWith(
+                                                color:
+                                                    AppColors.onSurfaceVariant,
+                                              ),
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
                               ),
