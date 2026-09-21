@@ -92,7 +92,15 @@ class StaffCard extends ConsumerWidget {
                   dense: true,
                   contentPadding: EdgeInsets.zero,
                   leading: FlagDisc(c.country, size: 22),
-                  title: WholeText(c.name, maxLines: 1),
+                  // A person, so the concession is his forename and not his
+                  // size: an applicant list is read to tell one man from
+                  // another, and "J. Vondrackovsky" still does that where a
+                  // name scaled to half its height does not.
+                  title: WholeText(
+                    c.name,
+                    maxLines: 1,
+                    shortText: initialledName(c.name),
+                  ),
                   subtitle: Column(
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -199,6 +207,10 @@ class StaffCard extends ConsumerWidget {
                           // in this cycle's applicant list — his standing is.
                           ? tierName(l, hired.tier)
                           : '${hired.name} · ${tierName(l, hired.tier)}',
+                      shortText: hired.name.isEmpty
+                          ? null
+                          : '${initialledName(hired.name)} · '
+                                '${tierName(l, hired.tier)}',
                       maxLines: 1,
                       style: AppTypography.labelSmall.copyWith(
                         color: AppColors.onSurfaceVariant,

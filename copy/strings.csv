@@ -1472,7 +1472,7 @@ campTerrainNationalCentreBlurb,Camp terrain blurb: national centre.,,"The federa
 hubEventChooseCamp,Timeline action: pick the squad's tournament base.,,Choose the base camp,Vybrat základní tábor
 hubEventChooseCampSub,Subtitle of the base camp action.,{host},Where the squad will be based in {host},Kde bude tým sídlit v zemi {host}
 tacticsTabBench,Tab: the named squad outside the starting XI.,,Bench,Lavička
-squadSearchHint,Placeholder in the squad pool search field.,,Search by name or club,Hledat podle jména nebo klubu
+squadSearchHint,Placeholder in the squad pool search field.,,Search by name or club,Jméno nebo klub
 squadFilterAll,Squad filter: the whole pool.,,Everyone,Všichni
 squadFilterInSquad,Squad filter: only called-up players.,,In the squad,V nominaci
 squadFilterUncapped,Squad filter: players yet to win a cap.,,Uncapped,Bez startu

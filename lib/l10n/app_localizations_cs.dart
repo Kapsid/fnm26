@@ -5553,7 +5553,7 @@ class AppLocalizationsCs extends AppLocalizations {
   String get tacticsTabBench => 'Lavička';
 
   @override
-  String get squadSearchHint => 'Hledat podle jména nebo klubu';
+  String get squadSearchHint => 'Jméno nebo klub';
 
   @override
   String get squadFilterAll => 'Všichni';

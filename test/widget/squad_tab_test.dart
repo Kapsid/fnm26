@@ -170,35 +170,64 @@ void main() {
     expect(find.text('Rating'), findsNothing, reason: 'the menu closed');
   });
 
-  testWidgets('a very long surname is shown whole, not cut', (tester) async {
-    // The reported bug: surnames arrived as "Papastathop…", which is not a
-    // name, on the one screen whose whole job is telling the manager who is
-    // in his pool.
-    tester.view
-      ..physicalSize = const Size(360, 780)
-      ..devicePixelRatio = 1.0;
-    addTearDown(tester.view.reset);
-    await tester.pumpApp(
-      const Scaffold(body: NationSquadTab(careerId: 1)),
-      overrides: [
-        nationSquadProvider(1).overrideWith(
-          (ref) async => NationSquadData(
-            rows: [_row(_p(1, 'Papastathopoulos', PlayerPosition.cb, 82))],
-            calledUp: 0,
-            saveSeed: 7,
-          ),
-        ),
-        absenceOutlookProvider(
-          1,
-        ).overrideWith((ref) async => const <int, AbsenceOutlook>{}),
-        captainProvider(1).overrideWith((ref) async => null),
-        captainMoraleProvider(1).overrideWith((ref) async => 0),
-      ],
-    );
-    await tester.pumpAndSettle();
+  // Both widths and both languages. The names are data and do not translate,
+  // but everything sharing their rows does — the filter strip, the sort menu,
+  // the caps and the standing beside each man — and one of this batch's width
+  // bugs failed at 400 while passing at 360, because what changes with the
+  // width is which of the things sharing a row gets the leftover.
+  for (final width in [360.0, 400.0]) {
+    for (final locale in [const Locale('en'), const Locale('cs')]) {
+      testWidgets(
+        'a very long surname is shown whole at ${width.toInt()}px in '
+        '${locale.languageCode}',
+        (tester) async {
+          // The reported bug: surnames arrived as "Papastathop…", which is not a
+          // name, on the one screen whose whole job is telling the manager who is
+          // in his pool.
+          tester.view
+            ..physicalSize = Size(width, 780)
+            ..devicePixelRatio = 1.0;
+          addTearDown(tester.view.reset);
+          await tester.pumpApp(
+            const Scaffold(body: NationSquadTab(careerId: 1)),
+            locale: locale,
+            overrides: [
+              nationSquadProvider(1).overrideWith(
+                (ref) async => NationSquadData(
+                  rows: [
+                    _row(_p(1, 'Papastathopoulos', PlayerPosition.cb, 82)),
+                  ],
+                  calledUp: 0,
+                  saveSeed: 7,
+                ),
+              ),
+              absenceOutlookProvider(
+                1,
+              ).overrideWith((ref) async => const <int, AbsenceOutlook>{}),
+              captainProvider(1).overrideWith((ref) async => null),
+              captainMoraleProvider(1).overrideWith((ref) async => 0),
+            ],
+          );
+          await tester.pumpAndSettle();
 
-    expect(findName('Papastathopoulos'), findsOneWidget);
-    expect(tester.takeException(), isNull);
-    expectNothingCut(tester);
-  });
+          expectLocale(
+            tester,
+            find.byType(NationSquadTab),
+            locale.languageCode,
+          );
+          expect(findName('Papastathopoulos'), findsOneWidget);
+          expect(tester.takeException(), isNull);
+          expectNothingCut(tester, 'the squad tab in ${locale.languageCode}');
+          // The name is a WholeText, which scales itself rather than ellipsising,
+          // so no cut guard can fail inside one. What is held there is how far it
+          // had to shrink.
+          expectLegible(
+            tester,
+            findName('Papastathopoulos'),
+            "the longest surname in the pool",
+          );
+        },
+      );
+    }
+  }
 }

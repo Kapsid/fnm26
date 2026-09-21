@@ -1473,7 +1473,7 @@
   "hubEventChooseCamp": "Vybrat základní tábor",
   "hubEventChooseCampSub": "Kde bude tým sídlit v zemi {host}",
   "tacticsTabBench": "Lavička",
-  "squadSearchHint": "Hledat podle jména nebo klubu",
+  "squadSearchHint": "Jméno nebo klub",
   "squadFilterAll": "Všichni",
   "squadFilterInSquad": "V nominaci",
   "squadFilterUncapped": "Bez startu",
