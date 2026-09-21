@@ -141,10 +141,13 @@ class _MoveMark extends StatelessWidget {
     final step =
         ClubService.tierOfCountry(previous.country) -
         ClubService.tierOfCountry(to.country);
+    // The same three marks the transfer report prints on every move, because
+    // this card and that report are two views of ONE walk and a manager
+    // should not have to learn the glyphs twice.
     final (icon, color) = switch (step) {
-      > 0 => (Icons.arrow_upward_rounded, AppColors.positive),
-      < 0 => (Icons.arrow_downward_rounded, AppColors.warning),
-      _ => (Icons.swap_horiz_rounded, AppColors.onSurfaceVariant),
+      > 0 => (Icons.north_east_rounded, AppColors.positive),
+      < 0 => (Icons.south_east_rounded, AppColors.warning),
+      _ => (Icons.east_rounded, AppColors.onSurfaceVariant),
     };
     return Icon(icon, size: 14, color: color);
   }
