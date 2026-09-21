@@ -377,7 +377,6 @@ class SeasonService {
     return after;
   }
 
-
   /// Loads (seeding if needed) the ranking points for [careerId].
   Future<void> _ensureRank(int careerId) async {
     if (_rankCareer == careerId && _rankPoints != null) return;

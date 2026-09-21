@@ -182,45 +182,55 @@ void main() {
   /// session simulated, the cache was empty, every absence read as "available",
   /// and a man carrying a one-match knock took the field in the very match he
   /// was missing.
-  test('the first fixture a session simulates leaves the injured at home', () async {
-    final setup = open();
-    await setup.read(seedLoaderProvider).ensureSeeded();
-    final career =
-        (await setup
-                .read(careerServiceProvider)
-                .create(nationId: nations.first.id, managerName: 'M'))
-            .valueOrNull!;
-    final comp = setup.read(competitionRepositoryProvider);
-    final due = await comp.unplayedDueBy(
-      career.id,
-      career.inGameDate.add(const Duration(days: 120)),
-    );
-    final first = due.first;
-    final playerRepo = setup.read(playerRepositoryProvider);
-    final hurt = <int>{};
-    for (final n in [first.homeNationId, first.awayNationId]) {
-      final pool = (await playerRepo.byNation(n, saveSeed: career.rngSeed))
-        ..sort((a, b) => b.overall.compareTo(a.overall));
-      // The eleven a best XI would certainly pick, all carrying a knock.
-      hurt.addAll(pool.take(11).map((p) => p.id));
-    }
-    await setup.read(absenceRepositoryProvider).replace(career.id, [
-      for (final id in hurt) PlayerAbsence(playerId: id, injuryMatches: 1),
-    ]);
+  test(
+    'the first fixture a session simulates leaves the injured at home',
+    () async {
+      final setup = open();
+      await setup.read(seedLoaderProvider).ensureSeeded();
+      final career =
+          (await setup
+                  .read(careerServiceProvider)
+                  .create(nationId: nations.first.id, managerName: 'M'))
+              .valueOrNull!;
+      final comp = setup.read(competitionRepositoryProvider);
+      final due = await comp.unplayedDueBy(
+        career.id,
+        career.inGameDate.add(const Duration(days: 120)),
+      );
+      final first = due.first;
+      final playerRepo = setup.read(playerRepositoryProvider);
+      final hurt = <int>{};
+      for (final n in [first.homeNationId, first.awayNationId]) {
+        final pool = (await playerRepo.byNation(n, saveSeed: career.rngSeed))
+          ..sort((a, b) => b.overall.compareTo(a.overall));
+        // The eleven a best XI would certainly pick, all carrying a knock.
+        hurt.addAll(pool.take(11).map((p) => p.id));
+      }
+      await setup.read(absenceRepositoryProvider).replace(career.id, [
+        for (final id in hurt) PlayerAbsence(playerId: id, injuryMatches: 1),
+      ]);
 
-    // A FRESH session: nothing has been simulated yet, so nothing has had
-    // occasion to load the absences.
-    final fresh = open();
-    await fresh.read(seasonServiceProvider).advance(career.id);
+      // A FRESH session: nothing has been simulated yet, so nothing has had
+      // occasion to load the absences.
+      final fresh = open();
+      await fresh.read(seasonServiceProvider).advance(career.id);
 
-    final fielded = (await db.select(db.playerRatings).get())
-        .where((r) => r.fixtureId == first.id && hurt.contains(r.playerId))
-        .map((r) => r.playerId)
-        .toSet();
-    expect(
-      fielded,
-      isEmpty,
-      reason: 'a man injured for this match may not play in it',
-    );
-  });
+      final rated = (await db.select(db.playerRatings).get())
+          .where((r) => r.fixtureId == first.id)
+          .toList();
+      // Pin the match down before reading who played in it. Without this the
+      // whole test passes the day the advance path stops simulating that fixture
+      // at all — no rows, nobody absent in them, green, and the guard gone.
+      expect(
+        rated,
+        isNotEmpty,
+        reason: 'the fixture must actually have been simulated',
+      );
+      expect(
+        rated.map((r) => r.playerId).where(hurt.contains),
+        isEmpty,
+        reason: 'a man injured for this match may not play in it',
+      );
+    },
+  );
 }

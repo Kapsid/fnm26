@@ -216,9 +216,16 @@ matchPreviewProvider = FutureProvider.autoDispose.family<MatchPreview?, int>((
       .watch(absenceRepositoryProvider)
       .forCareer(careerId);
   final calledUp = availableSquad(fullPool, callUps);
-  // One rule, one helper: [selectable] is what the tactics screen, the squad
-  // service and the world simulator all ask, so "can he play the next match"
-  // cannot drift into three slightly different answers.
+  // "Can he play THIS match" has one helper — [selectable] — and every caller
+  // that asks it uses that helper: the tactics screen, the reshape pool, the
+  // world simulator's fielded XI and bench, and here.
+  //
+  // It is not the only availability question in the game, and must not be
+  // confused with the other one. [SquadSelection.usableInPeriod] asks whether a
+  // man may be NAMED for a camp — a one-game knock does not rule him out of a
+  // three-match squad — and the call-up screen asks that one. This asks whether
+  // he may be FIELDED in the next match, and the answer is no while anything at
+  // all is outstanding.
   final playerPool = selectable(calledUp, absences);
   final byId = {for (final p in playerPool) p.id: p};
   final tactic = await ref
