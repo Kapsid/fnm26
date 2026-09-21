@@ -2155,3 +2155,91 @@ git commit -m "fix: a Czech save reads Czech dates
 
 Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>"
 ```
+
+---
+
+# Device playtest round 2 — 2026-09-21
+
+Five items from playing the installed build. Two are regressions this batch
+introduced; one is a partial revert of work this batch did.
+
+### Task 44: a player injured for four games could play at once
+
+**A correctness bug, and the second time this shape has appeared.** The manager
+saw "injured 4g" against a name in the call-up list and that player was
+available immediately.
+
+Task 9 fixed one instance of this — a cold absence cache in the WORLD
+SIMULATOR — and proved the tactics path innocent with tests that pass against
+unmodified code. So this is either a third path, or the absence itself is wrong
+(shown as 4 games but stored as something else), or the call-up display and the
+XI are reading different absence sources.
+
+Reproduce before fixing. Establish FIRST whether the player was wrongly
+FIELDABLE or wrongly LABELLED — those are opposite bugs and the fix for one
+makes the other worse. `PlayerAbsence.injuryMatches` is the stored figure;
+`selectable()` (tactics_providers.dart:45) is the per-match gate;
+`SquadSelection.usableInPeriod` is the squad-level rule.
+
+Nine `selectable(` call sites exist. Task 9 established the rule belongs where
+the XI becomes a `MatchTeam`, so no screen can route around it — check that
+still holds.
+
+### Task 45: passive matches take far too long
+
+**A performance regression.** Several candidates, all introduced or widened in
+this batch. MEASURE before changing anything; do not optimise by guesswork.
+
+Known suspects, in the order they were flagged during the batch:
+- `playerRankProvider` on the dashboard sorts every one of 209 nations, and the
+  hub rebuilds repeatedly during a simulation. This was explicitly flagged as
+  "the first thing to check if the dashboard feels slow on device".
+- `_fieldedXi`/`_fieldedSubs` now await absences and filter through
+  `selectable` per side per fixture (Task 9).
+- `_withManagerTactics` and `_managerXi` per fixture for the manager's nation
+  (Task 38), though the setup is cached per operation.
+- `_pool` is cached per `(nation, simYears)`, so verify the cache is actually
+  hitting rather than assuming it.
+
+Profile a real passive cycle, report where the time goes with numbers, and fix
+the largest cost. State the before and after in seconds.
+
+### Task 46: the objectives news always says the board got what it asked for
+
+`season_cycle.dart:68-85` picks the met/missed title and body from `o.met`, and
+the selection logic is correct — so `o.met` is the suspect, in
+`cycleObjectiveOutcomesProvider`. The manager reports ALWAYS seeing the "they
+have what they asked for" wording, including when he did not meet the brief.
+
+Reproduce with a missed objective before changing anything. Note that a nearby
+comment records a previous bug in this exact area (a verdict graded against a
+cached "still to be decided"), so check the invalidation is doing what that
+comment claims.
+
+### Task 47: the set-piece takers do nothing, and want a button
+
+Task 11 made the taker slots SHOW the engine's automatic pick rather than sit
+blank. The manager reports they "now do nothing" and asks for a button for a
+quick pick.
+
+Establish what is actually wrong before building the button: is the automatic
+name not displaying, is it displaying but not applied, or is it applied but
+there is no way to accept or change it quickly? `SetPiecePicks` mirrors the
+engine's rule; `SetPieceTakers` stores null to mean automatic.
+
+Then add the quick-pick button the manager asked for: one tap fills every duty
+with the best available taker, storing the choice so it is visibly HIS rather
+than an implicit default.
+
+### Task 48: the transfer report's direction arrows go
+
+Task 29 gave each move an arrow carrying `TransferRow.step` — up, level or
+down between league tiers. The manager's verdict: "různé šipky - zbytečné,
+prostě je to přestup". Different arrows, pointless, it is just a transfer.
+
+Remove the per-move direction arrows and use ONE consistent mark for a move.
+Keep `TransferRow.step` in the encoded body — old reports must still decode,
+and the field costs nothing — but stop varying the icon by it.
+
+Do not remove the paging controls or the flags; those were separate complaints
+and are fine.
