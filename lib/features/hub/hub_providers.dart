@@ -433,9 +433,16 @@ class SeasonService {
   /// than any live result. Called once, from [_recordHonourIfDecided], so the
   /// whole tournament lands after the final rather than creeping through it.
   /// Rounds are replayed in bracket order for a stable, deterministic result.
+  ///
+  /// Two things are settled: the matches, and then the FINISHING PLACES
+  /// themselves ([Elo.placementDeltas]). Elo pays for results against
+  /// expectation, so a champion who beat the sides it was supposed to beat and
+  /// won its shootouts barely moved on the matches alone — the trophy has to
+  /// be worth something of its own (see [Elo.placement]).
   Future<void> _settleWorldCupRanking(int careerId) async {
     final pts = _rankPoints;
     if (pts == null) return;
+    final played = <FinalsResult>[];
     for (final round in const [
       'GROUP',
       'R32',
@@ -459,7 +466,18 @@ class SeasonService {
         );
         pts[f.homeNationId] = hp + delta;
         pts[f.awayNationId] = ap - delta;
+        played.add((
+          round: round,
+          home: f.homeNationId,
+          away: f.awayNationId,
+          homeScore: f.homeScore!,
+          awayScore: f.awayScore!,
+        ));
       }
+    }
+    final placings = Elo.placementDeltas(Elo.placingsFromRounds(played));
+    for (final e in placings.entries) {
+      pts[e.key] = (pts[e.key] ?? Elo.base) + e.value;
     }
   }
 
