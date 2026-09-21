@@ -16,7 +16,8 @@ enum FinalsPlacing {
   fourth(0.48),
   third(0.56),
   runnerUp(0.72),
-  champion(1);
+  champion(1)
+  ;
 
   const FinalsPlacing(this.credit);
 
@@ -52,12 +53,21 @@ abstract final class Elo {
   /// Final tournaments carry far more weight than qualifiers, which outweigh
   /// the Nations Cup, which outweighs friendlies.
   ///
-  /// These are sized against [seedFromRanking]'s spread of 4 points per world
-  /// place. Weights that are too small round away entirely: at K=8 an expected
+  /// These are sized against the MID-TABLE spread — about 3.4 points per world
+  /// place around a hundredth place, which is where nearly all qualifying is
+  /// played. Weights that are too small round away entirely: at K=8 an expected
   /// qualifying win is `8 × 0.1 = 0.8` → 1 point → a quarter of a place, and an
   /// expected friendly win rounds to 0 and moves nothing at all. The table then
   /// looks frozen. These follow FIFA's own K-factors, so a win is worth a
   /// visible move and an upset is worth a real climb.
+  //
+  // A correction (2026-09-21): every retune below used to say these were sized
+  // against "4 points per world place", which was [seedFromRanking]'s old flat
+  // line and true of no table anybody had played on. The real ranking is
+  // stretched at the top and dense in the middle. The floors argued below were
+  // all argued about mid-table qualifying sides, where the spread is still
+  // about 3.4 points a place, so the reasoning stands — but a place near the
+  // top of the table costs tens of points, and no ordinary result buys one.
   // Trimmed from the FIFA-scale K-factors: a single result still moves a side,
   // but the table drifts more gently game to game (it read as swinging too far,
   // too often). Friendly stays at 4 — any lower and an expected friendly win
@@ -113,21 +123,30 @@ abstract final class Elo {
   /// RESULTS AGAINST EXPECTATION, not for trophies: a champion who beats the
   /// sides it was supposed to beat and wins three shootouts on the way has, by
   /// Elo's reckoning, done nothing surprising, and barely moves. Measured on a
-  /// seeded table, such a champion starting 25th climbed to 8th under the old
-  /// weights — a good tournament, not a coronation.
+  /// played-in table, such a champion starting 25th finished 15th on the
+  /// matches alone — a good tournament, not a coronation.
   ///
   /// So the placing is paid for separately. [placementDeltas] hands every
   /// entrant `placement × (its credit − the field's mean credit)`, which is
   /// zero-sum like every other exchange here: the champion is paid by the
   /// nations that went out early, and the world's total is conserved. Winning
-  /// is worth about +82 points — some twenty world places at the seeded spread
-  /// of four points a place — on top of whatever the matches were worth, and a
-  /// group-stage exit costs about −13 whoever you are.
+  /// is worth +82 points — about ten world places from the twenties, and only
+  /// two or three at the very top, where the table is stretched — on top of
+  /// whatever the matches were worth. A group-stage exit costs 14, whoever you
+  /// are.
   ///
-  /// Sized so that the unconvincing champion above lands in the top five
-  /// instead of eighth, and a convincing one goes top; and deliberately smaller
-  /// than the match half of a run, so HOW a tournament was won still matters
-  /// more than that it was won.
+  /// MEASURED, on tables across the range a played-in ranking occupies (the gap
+  /// from 1st to 25th runs 321 to 436 points): that unconvincing champion from
+  /// 25th finishes between 5th and 9th, a convincing one 2nd to 4th, and a
+  /// favourite dumped out in the group slips and loses over a hundred points.
+  /// Both ends matter. Half this weight leaves the scrappy champion around 9th
+  /// to 11th and the original complaint stands; much more and it simply buys
+  /// the top spot, which winning three shootouts has not proved. The tests hold
+  /// it between those.
+  ///
+  /// Note what it is NOT sized against: the old flat seeding, on which a
+  /// champion reached number one under the previous weights and any award at
+  /// all looked enormous. See [seedFromRanking].
   ///
   /// This is the World Championship's weight. The continental cups are not
   /// settled this way — their matches land live at [finals], which went up with
@@ -223,8 +242,19 @@ abstract final class Elo {
   /// so the exchange is zero-sum like every other one here: the champion is
   /// paid by the nations that went out early, and the world's total points are
   /// conserved. Rounding is settled the same way — the residue is handed back
-  /// to the nations rounding treated best (or worst), deterministically by
-  /// nation id, so the returned deltas sum to exactly zero.
+  /// to the nations rounding treated best (or worst), so the returned deltas
+  /// sum to exactly zero.
+  ///
+  /// [rotation] (the tournament's year, from the caller) decides WHICH of the
+  /// tied nations take that residue. It must not be left at its default for a
+  /// real tournament: a 48-team field's residue is the same nine points every
+  /// edition, and the nations tied for it are the whole group stage, so any
+  /// tie-break that reads nation id hands those nine points to the same nations
+  /// — in practice the same confederation — forever. Measured before this was
+  /// fixed: over a hundred confederation-shaped editions one confederation took
+  /// 59% of the residue on 33% of the field, in one direction, for no
+  /// footballing reason. The year mixes into the ordering instead, so the
+  /// residue lands somewhere different every edition.
   ///
   /// Because the credits are measured against the field's own mean, this works
   /// for any bracket: a 48-team World Championship, a 16-team continental cup,
@@ -232,6 +262,7 @@ abstract final class Elo {
   static Map<int, int> placementDeltas(
     Map<int, FinalsPlacing> placingByNation, {
     double weight = placement,
+    int rotation = 0,
   }) {
     if (placingByNation.isEmpty) return const {};
     final ids = placingByNation.keys.toList()..sort();
@@ -254,7 +285,8 @@ abstract final class Elo {
           final byGain = residue > 0
               ? gainB.compareTo(gainA)
               : gainA.compareTo(gainB);
-          return byGain != 0 ? byGain : a.compareTo(b);
+          if (byGain != 0) return byGain;
+          return _residueKey(a, rotation).compareTo(_residueKey(b, rotation));
         });
       for (var i = 0; residue != 0; i++) {
         final id = order[i % order.length];
@@ -265,11 +297,80 @@ abstract final class Elo {
     return deltas;
   }
 
+  /// The ordering key that decides who takes a rounding residue point.
+  ///
+  /// A cheap integer mix of the nation id and the tournament year: stable for a
+  /// given pair (so a settlement is reproducible), but with no order in common
+  /// with the id, so neither the low ids nor any block of them is favoured, and
+  /// a different edition favours a different nine nations. Ties are broken on
+  /// this and never on the id itself — see [placementDeltas].
+  static int _residueKey(int id, int rotation) {
+    var h = (id * 0x9E3779B1) ^ (rotation * 0x85EBCA77 + 0x165667B1);
+    h &= 0x3FFFFFFF;
+    h ^= h >> 15;
+    h = (h * 0x2545F491) & 0x3FFFFFFF;
+    return h ^ (h >> 13);
+  }
+
+  /// The shape a played-in world ranking actually settles into: (world place,
+  /// points), measured off the engine's own equilibrium after one to four full
+  /// cycles of simulated football with the whole world of nations.
+  ///
+  /// The table is nothing like a straight line. The top is stretched — the gap
+  /// between first and fifth is bigger than the gap between fortieth and
+  /// hundredth — because the best sides keep beating everyone and the points
+  /// pile up at the top.
+  static const List<(int, int)> _seedShape = [
+    (1, 2130),
+    (5, 1930),
+    (25, 1760),
+    (40, 1700),
+    (100, 1495),
+  ];
+
   /// Starting points for a nation seeded from its static seed [ranking]
   /// position (1 = strongest). Keeps early tables looking sensible before any
   /// results have moved anyone.
-  static int seedFromRanking(int ranking) =>
-      (1900 - (ranking - 1) * 4).clamp(1000, 1900);
+  ///
+  /// Widened (2026-09-21) from a flat `1900 - 4 × (place - 1)` to the measured
+  /// [_seedShape]. The flat line was about four times too compressed at the top
+  /// — 96 points from 1st to 25th, where a table that has seen one cycle of
+  /// football carries 321 to 436 — so in a NEW save the first World
+  /// Championship sent its champion straight to number one however it had won,
+  /// and no tuning of [placement] could have fixed that: on the old flat table
+  /// the match half of a championship run was on its own worth the entire
+  /// top 25.
+  /// It also made this file's own reasoning a fiction: every retune above says
+  /// it is "sized against a spread of 4 points per world place", which was only
+  /// ever true of a table nobody had played on.
+  ///
+  /// Mid-table — where nearly all qualifying is played, and where all those
+  /// floors were argued — the spread is still about 3.4 points per place, so
+  /// they hold. The top of the table is now properly sticky: at fifth a place
+  /// costs some 40 points, so a nation arrives there by winning things, not by
+  /// grinding out qualifiers.
+  ///
+  /// Saves in progress store their own points and are untouched; this changes
+  /// where a NEW save starts.
+  static int seedFromRanking(int ranking) {
+    final place = ranking < 1 ? 1 : ranking;
+    for (var i = 1; i < _seedShape.length; i++) {
+      final (lowPlace, lowPoints) = _seedShape[i - 1];
+      final (highPlace, highPoints) = _seedShape[i];
+      if (place <= highPlace) {
+        final t = (place - lowPlace) / (highPlace - lowPlace);
+        return (lowPoints + (highPoints - lowPoints) * t).round().clamp(
+          1000,
+          2130,
+        );
+      }
+    }
+    // Past the last anchor the tail keeps the slope it arrived with.
+    final (lowPlace, lowPoints) = _seedShape[_seedShape.length - 2];
+    final (lastPlace, lastPoints) = _seedShape.last;
+    final slope = (lastPoints - lowPoints) / (lastPlace - lowPlace);
+    return (lastPoints + slope * (place - lastPlace)).round().clamp(1000, 2130);
+  }
 
   /// World positions (1 = top) for every nation in [pointsById], ordered by
   /// points. Ties break by [seedRankById] (the static seed order) when given,

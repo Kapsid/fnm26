@@ -443,6 +443,7 @@ class SeasonService {
     final pts = _rankPoints;
     if (pts == null) return;
     final played = <FinalsResult>[];
+    var year = 0;
     for (final round in const [
       'GROUP',
       'R32',
@@ -473,9 +474,17 @@ class SeasonService {
           homeScore: f.homeScore!,
           awayScore: f.awayScore!,
         ));
+        if (f.date.year > year) year = f.date.year;
       }
     }
-    final placings = Elo.placementDeltas(Elo.placingsFromRounds(played));
+    // The edition's year decides only which of the nations tied for the
+    // rounding residue take it — without it the same nations, and in practice
+    // the same confederation, would collect it at every World Championship
+    // there will ever be (see [Elo.placementDeltas]).
+    final placings = Elo.placementDeltas(
+      Elo.placingsFromRounds(played),
+      rotation: year,
+    );
     for (final e in placings.entries) {
       pts[e.key] = (pts[e.key] ?? Elo.base) + e.value;
     }
