@@ -41,13 +41,10 @@ void main() {
           data: MediaQuery.of(
             context,
           ).copyWith(textScaler: const TextScaler.linear(1.3)),
-          child: Localizations.override(
-            context: context,
-            locale: const Locale('cs'),
-            child: const ManagerHistoryScreen(careerId: 1),
-          ),
+          child: const ManagerHistoryScreen(careerId: 1),
         ),
       ),
+      locale: const Locale('cs'),
       overrides: [
         managerHistoryProvider(1).overrideWith(
           (ref) async => ManagerHistory(
@@ -112,16 +109,11 @@ void main() {
         body: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.all(16),
-            child: Builder(
-              builder: (context) => Localizations.override(
-                context: context,
-                locale: const Locale('cs'),
-                child: TransferTable(rows: rows),
-              ),
-            ),
+            child: TransferTable(rows: rows),
           ),
         ),
       ),
+      locale: const Locale('cs'),
     );
     await tester.pumpAndSettle();
 

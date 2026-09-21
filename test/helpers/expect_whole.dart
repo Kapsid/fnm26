@@ -106,3 +106,30 @@ void expectLegible(
         'Give it a shortText, or write the label around it shorter.',
   );
 }
+
+/// Asserts that the widget [inside] matches was really built in
+/// [languageCode], before anything about its width is measured.
+///
+/// The trap this closes: `Localizations.override` wrapped around a launcher
+/// does NOT reach a route pushed on the root [Navigator], so a test written
+/// that way renders ENGLISH while believing it is measuring Czech — and a
+/// Czech width case becomes the English one run twice. Reading the locale off
+/// an element of the screen under test says which language is actually on
+/// screen, whatever the harness intended. Pass a finder for something that
+/// belongs to the screen being measured, not to the launcher behind it.
+void expectLocale(WidgetTester tester, Finder inside, String languageCode) {
+  final elements = inside.evaluate();
+  expect(
+    elements,
+    isNotEmpty,
+    reason: 'nothing to read a locale from: the screen never appeared',
+  );
+  final locale = Localizations.localeOf(elements.first);
+  expect(
+    locale.languageCode,
+    languageCode,
+    reason:
+        'this screen rendered in ${locale.languageCode}, not $languageCode: '
+        'the width measured below is the wrong language',
+  );
+}

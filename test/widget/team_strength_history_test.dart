@@ -60,13 +60,8 @@ void main() {
       ..devicePixelRatio = 1.0;
     addTearDown(tester.view.reset);
     await tester.pumpApp(
-      Builder(
-        builder: (context) => Localizations.override(
-          context: context,
-          locale: locale,
-          child: const ManagerHistoryScreen(careerId: 1),
-        ),
-      ),
+      const ManagerHistoryScreen(careerId: 1),
+      locale: locale,
       overrides: [
         managerHistoryProvider(
           1,

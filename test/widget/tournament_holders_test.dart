@@ -28,17 +28,8 @@ void main() {
       ..devicePixelRatio = 1.0;
     addTearDown(tester.view.reset);
     await tester.pumpApp(
-      Builder(
-        builder: (context) => Localizations.override(
-          context: context,
-          locale: locale,
-          child: TournamentHoldersRow(
-            holders: holders,
-            code: code,
-            name: name,
-          ),
-        ),
-      ),
+      TournamentHoldersRow(holders: holders, code: code, name: name),
+      locale: locale,
     );
     await tester.pumpAndSettle();
   }
