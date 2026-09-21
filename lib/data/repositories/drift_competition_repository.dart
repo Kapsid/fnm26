@@ -1599,14 +1599,61 @@ class DriftCompetitionRepository implements CompetitionRepository {
     int nationId,
     Iterable<int> playerIds,
   ) async {
-    for (final id in playerIds) {
+    // ONE statement for the whole team sheet, not one per man.
+    //
+    // A world matchday is around ninety fixtures and each of them logged
+    // twenty-eight caps here, one round-trip apiece — over two thousand
+    // statements for a single tap of "advance", and the same again below for
+    // tournament participation. Both are now multi-row upserts: the rows
+    // written are identical, there are simply two statements per fixture
+    // instead of fifty-six.
+    //
+    // `excluded.count` is the 1 each row carries in, so
+    // `count + excluded.count` is exactly the `count + 1` the per-row
+    // statement did.
+    for (final pass in _distinctPasses(playerIds, (id) => id)) {
+      final values = List.filled(pass.length, '(?, ?, ?, 1)').join(', ');
       await _db.customStatement(
         'INSERT INTO appearances (career_id, nation_id, player_id, count) '
-        'VALUES (?, ?, ?, 1) '
-        'ON CONFLICT(career_id, player_id) DO UPDATE SET count = count + 1',
-        [careerId, nationId, id],
+        'VALUES $values '
+        'ON CONFLICT(career_id, player_id) DO UPDATE SET '
+        'count = count + excluded.count',
+        [
+          for (final id in pass) ...[careerId, nationId, id],
+        ],
       );
     }
+  }
+
+  /// [items] split into runs that each hold a distinct [key], in order.
+  ///
+  /// SQLite refuses to let one upsert statement touch the same row twice, so a
+  /// list that names the same player twice — which the per-row loops these
+  /// replaced counted twice, quite deliberately — is split across as many
+  /// statements as its worst repeat needs. Ordinary team sheets name every man
+  /// once and come out as a single pass.
+  static List<List<T>> _distinctPasses<T, K>(
+    Iterable<T> items,
+    K Function(T) key,
+  ) {
+    final passes = <List<T>>[];
+    final seen = <Set<K>>[];
+    for (final item in items) {
+      final k = key(item);
+      var placed = false;
+      for (var i = 0; i < passes.length; i++) {
+        if (seen[i].add(k)) {
+          passes[i].add(item);
+          placed = true;
+          break;
+        }
+      }
+      if (!placed) {
+        passes.add([item]);
+        seen.add({k});
+      }
+    }
+    return passes;
   }
 
   @override
@@ -1659,15 +1706,28 @@ class DriftCompetitionRepository implements CompetitionRepository {
     int competitionId,
     Iterable<({int playerId, int nationId, bool started})> players,
   ) async {
-    for (final p in players) {
-      final s = p.started ? 1 : 0;
+    // One statement per team sheet — see [recordAppearances] for why.
+    for (final pass in _distinctPasses(players, (p) => p.playerId)) {
+      final values = List.filled(pass.length, '(?, ?, ?, ?, ?, 1)').join(', ');
+      // A start carries a 1 into `starts`, a man off the bench a 0; both carry
+      // the 1 into `apps` that the VALUES row above spells out.
+      final args = <Object?>[];
+      for (final p in pass) {
+        final started = p.started ? 1 : 0;
+        args
+          ..add(careerId)
+          ..add(competitionId)
+          ..add(p.nationId)
+          ..add(p.playerId)
+          ..add(started);
+      }
       await _db.customStatement(
         'INSERT INTO tournament_appearances '
         '(career_id, competition_id, nation_id, player_id, starts, apps) '
-        'VALUES (?, ?, ?, ?, ?, 1) '
+        'VALUES $values '
         'ON CONFLICT(career_id, competition_id, player_id) DO UPDATE SET '
-        'starts = starts + ?, apps = apps + 1',
-        [careerId, competitionId, p.nationId, p.playerId, s, s],
+        'starts = starts + excluded.starts, apps = apps + excluded.apps',
+        args,
       );
     }
   }
@@ -2359,15 +2419,33 @@ class DriftCompetitionRepository implements CompetitionRepository {
   Future<List<AwardLine>> awardLinesForYear(int careerId, int year) async {
     // Every match played anywhere in the world is rated, so a year can be
     // judged on the whole world rather than the manager's corner of it.
-    final ratings =
-        await (_db.select(
-          _db.playerRatings,
-        )..where((t) => t.careerId.equals(careerId))).join([
+    //
+    // THE YEAR IS NARROWED IN SQL, not in Dart. Twenty-two men are rated in
+    // every fixture of every nation, so a save accumulates tens of thousands
+    // of these rows a cycle and hundreds of thousands over a long career — and
+    // this read, which the world-advance runs on the first step of every year,
+    // used to pull ALL of them across and throw away every row but one year's.
+    // The cost therefore grew with the age of the save, which is exactly the
+    // wrong shape for something a manager taps hundreds of times.
+    //
+    // The bounds are deliberately a couple of days wider than the year and the
+    // exact `date.year` test below is kept: the window can only ever be a
+    // superset of what that test accepts, so this selects fewer rows and
+    // returns the same ones.
+    final from = DateTime(year - 1, 12, 30);
+    final to = DateTime(year + 1, 1, 2);
+    final query =
+        _db.select(_db.playerRatings).join([
           innerJoin(
             _db.fixtures,
             _db.fixtures.id.equalsExp(_db.playerRatings.fixtureId),
           ),
-        ]).get();
+        ])..where(
+          _db.playerRatings.careerId.equals(careerId) &
+              _db.fixtures.date.isBiggerOrEqualValue(from) &
+              _db.fixtures.date.isSmallerThanValue(to),
+        );
+    final ratings = await query.get();
 
     final apps = <int, int>{};
     final nation = <int, int>{};
