@@ -74,15 +74,27 @@ abstract final class YCast {
           return (
             handle: '@$name',
             displayName: name,
-            // The trait travels with the NAME, not the slot, so an account
-            // called LongSufferingLen is a doomer in every save he turns up
-            // in — which is the difference between a cast and a shuffle.
-            trait: YTrait
-                .values[varietySeed('trait|$name') % YTrait.values.length],
+            trait: traitFor(name),
           );
         }(),
     ];
   }
+
+  /// What sort of account somebody called [name] is.
+  ///
+  /// The trait travels with the NAME, not with the slot it was drawn into, so
+  /// an account called LongSufferingLen is a doomer in every save he turns up
+  /// in — which is the difference between a cast and a shuffle.
+  ///
+  /// Public because the PROFILE needs it too, and needs it to agree with the
+  /// feed. Nothing about a persona is stored, so a screen showing a post from
+  /// 2031 re-derives its author's disposition from the one thing the post
+  /// carries: the name above it. Deriving it twice from the same name is what
+  /// makes the account read the same in 2031 as it did in 2027; a second copy
+  /// of this arithmetic somewhere else would be a second answer waiting to
+  /// drift.
+  static YTrait traitFor(String name) =>
+      YTrait.values[varietySeed('trait|$name') % YTrait.values.length];
 
   /// A prime-ish stride so a cast of three is spread across the name list
   /// rather than being three consecutive entries.

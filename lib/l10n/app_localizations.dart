@@ -6084,6 +6084,60 @@ abstract class AppLocalizations {
   /// **'Earlier this cycle'**
   String get yEarlierHeading;
 
+  /// One-line disposition of a loyalist account on its Y profile.
+  ///
+  /// In en, this message translates to:
+  /// **'Backs the side whatever happens. Slow to turn, quick to forgive.'**
+  String get yTraitLoyalist;
+
+  /// One-line disposition of a cynical account on its Y profile.
+  ///
+  /// In en, this message translates to:
+  /// **'Assumes the worst and is delighted to be proved right.'**
+  String get yTraitCynic;
+
+  /// One-line disposition of a nostalgic account on its Y profile.
+  ///
+  /// In en, this message translates to:
+  /// **'Everything was better before. Measures you against men who retired.'**
+  String get yTraitNostalgic;
+
+  /// One-line disposition of a numbers-only account on its Y profile.
+  ///
+  /// In en, this message translates to:
+  /// **'Posts the numbers and nothing else. Barely has a mood.'**
+  String get yTraitStatshead;
+
+  /// One-line disposition of an over-excitable account on its Y profile.
+  ///
+  /// In en, this message translates to:
+  /// **'Two good results and it is a golden generation.'**
+  String get yTraitHypeman;
+
+  /// One-line disposition of a contrarian account on its Y profile.
+  ///
+  /// In en, this message translates to:
+  /// **'Whatever the room thinks, the opposite.'**
+  String get yTraitContrarian;
+
+  /// One-line disposition of a doom-laden account on its Y profile.
+  ///
+  /// In en, this message translates to:
+  /// **'It is going to go wrong. It is always going to go wrong.'**
+  String get yTraitDoomer;
+
+  /// Heading over an account's own posts on its Y profile.
+  ///
+  /// In en, this message translates to:
+  /// **'POSTS'**
+  String get yProfilePosts;
+
+  /// Shown on a Y profile when the account has said nothing in this save.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing from this account yet.'**
+  String get yProfileEmpty;
+
   /// Player agency: hubEventGrievance.
   ///
   /// In en, this message translates to:

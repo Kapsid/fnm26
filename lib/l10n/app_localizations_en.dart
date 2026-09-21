@@ -3703,6 +3703,38 @@ class AppLocalizationsEn extends AppLocalizations {
   String get yEarlierHeading => 'Earlier this cycle';
 
   @override
+  String get yTraitLoyalist =>
+      'Backs the side whatever happens. Slow to turn, quick to forgive.';
+
+  @override
+  String get yTraitCynic =>
+      'Assumes the worst and is delighted to be proved right.';
+
+  @override
+  String get yTraitNostalgic =>
+      'Everything was better before. Measures you against men who retired.';
+
+  @override
+  String get yTraitStatshead =>
+      'Posts the numbers and nothing else. Barely has a mood.';
+
+  @override
+  String get yTraitHypeman => 'Two good results and it is a golden generation.';
+
+  @override
+  String get yTraitContrarian => 'Whatever the room thinks, the opposite.';
+
+  @override
+  String get yTraitDoomer =>
+      'It is going to go wrong. It is always going to go wrong.';
+
+  @override
+  String get yProfilePosts => 'POSTS';
+
+  @override
+  String get yProfileEmpty => 'Nothing from this account yet.';
+
+  @override
   String hubEventGrievance(String player) {
     return '$player wants a word';
   }

@@ -1005,6 +1005,28 @@ abstract final class YFeed {
     YTemplate.reaction => YMood.shrug,
   };
 
+  /// The account that wrote [post], re-derived from the post itself.
+  ///
+  /// The profile needs a disposition and a [YPost] does not carry one, on
+  /// purpose: a stance is read off the run of results up to the post's own
+  /// date, so storing one would show today's opinion under a post from 2031.
+  /// The trait is the part that never moves, and it comes from the name — so
+  /// this is a pure function of what is already above the post, and the same
+  /// account opened from a post two careers apart gives the same answer.
+  static YPersona personaOf(YPost post) => (
+    handle: post.handle,
+    displayName: post.displayName,
+    trait: switch (post.voice) {
+      // The desks are fixed accounts with fixed dispositions — see
+      // [personaFor], which builds them the same way.
+      YVoice.stats || YVoice.breaking => YTrait.statshead,
+      // A player posts under his own name, which is not a cast name and must
+      // not be run through the cast's arithmetic: he is one of yours.
+      YVoice.player => YTrait.loyalist,
+      _ => YCast.traitFor(post.displayName),
+    },
+  );
+
   /// The nation's recurring account for [voice], and what sort of person it
   /// is.
   ///
@@ -1059,6 +1081,20 @@ abstract final class YFeed {
     return YCast.pick(cast, '$key|${voice.name}') ??
         (handle: '@$nation', displayName: nation, trait: YTrait.loyalist);
   }
+
+  /// Every name an account in the cast can be given.
+  ///
+  /// Public so a width guard can measure the LONGEST name the feed can
+  /// actually produce rather than a typical one — the difference between a
+  /// profile header that fits and one that fits until somebody adds
+  /// SundayLeagueEnergy to a list.
+  static List<String> get castNames => const [
+    ..._punditNames,
+    ..._fanNames,
+    ..._memeNames,
+    ..._exProNames,
+    ..._rivalNames,
+  ];
 
   /// Invented names — never a real pundit, player or journalist.
   static const List<String> _punditNames = [

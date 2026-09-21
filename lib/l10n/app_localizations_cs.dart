@@ -3726,6 +3726,35 @@ class AppLocalizationsCs extends AppLocalizations {
   String get yEarlierHeading => 'Dříve v tomto cyklu';
 
   @override
+  String get yTraitLoyalist =>
+      'Drží se týmu za každé situace. Pomalu se obrací, rychle odpouští.';
+
+  @override
+  String get yTraitCynic => 'Čeká to nejhorší a je nadšený, když má pravdu.';
+
+  @override
+  String get yTraitNostalgic =>
+      'Dřív bylo všechno lepší. Měří tě podle těch, co už skončili.';
+
+  @override
+  String get yTraitStatshead => 'Píše čísla a nic jiného. Náladu skoro nemá.';
+
+  @override
+  String get yTraitHypeman => 'Dvě dobrá utkání a je to zlatá generace.';
+
+  @override
+  String get yTraitContrarian => 'Ať si většina myslí cokoli, on je proti.';
+
+  @override
+  String get yTraitDoomer => 'Dopadne to špatně. Vždycky to dopadne špatně.';
+
+  @override
+  String get yProfilePosts => 'PŘÍSPĚVKY';
+
+  @override
+  String get yProfileEmpty => 'Od tohoto účtu zatím nic.';
+
+  @override
   String hubEventGrievance(String player) {
     return '$player si chce promluvit';
   }

@@ -3,6 +3,7 @@ import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/domain/services/press/y_feed.dart';
+import 'package:fnm/features/y/y_profile_sheet.dart';
 import 'package:fnm/features/y/y_screen.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 
@@ -22,6 +23,15 @@ class YPostDetail extends StatelessWidget {
   /// The event a post came from — its key without the voice that said it and
   /// the shape they said it in.
   static String eventOf(YPost p) => p.key.split('|').first;
+
+  /// Opens whoever wrote [p]. The persona is re-derived from the post, so the
+  /// detail view needs to carry nothing extra to get there.
+  void _openAccount(BuildContext context, YPost p) =>
+      Navigator.of(context).push(
+        MaterialPageRoute<void>(
+          builder: (_) => YProfileSheet(persona: YFeed.personaOf(p), all: all),
+        ),
+      );
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +57,10 @@ class YPostDetail extends StatelessWidget {
       body: ListView(
         padding: EdgeInsets.zero,
         children: [
-          YPostTile(post: post),
+          YPostTile(
+            post: post,
+            onAccountTap: () => _openAccount(context, post),
+          ),
           if (replies.isNotEmpty) ...[
             Padding(
               padding: const EdgeInsets.fromLTRB(
@@ -63,7 +76,11 @@ class YPostDetail extends StatelessWidget {
                 ),
               ),
             ),
-            for (final r in replies) YPostTile(post: r),
+            for (final r in replies)
+              YPostTile(
+                post: r,
+                onAccountTap: () => _openAccount(context, r),
+              ),
           ],
           const SizedBox(height: AppSpacing.xl),
         ],

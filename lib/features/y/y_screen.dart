@@ -8,6 +8,7 @@ import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/domain/services/press/y_feed.dart';
 import 'package:fnm/features/y/y_post_detail.dart';
+import 'package:fnm/features/y/y_profile_sheet.dart';
 import 'package:fnm/features/y/y_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
@@ -405,6 +406,14 @@ class YFeedList extends StatelessWidget {
               builder: (_) => YPostDetail(post: posts[i], all: posts),
             ),
           ),
+          onAccountTap: () => Navigator.of(context).push(
+            MaterialPageRoute<void>(
+              builder: (_) => YProfileSheet(
+                persona: YFeed.personaOf(posts[i]),
+                all: posts,
+              ),
+            ),
+          ),
         );
       },
     );
@@ -465,12 +474,18 @@ class YPostTile extends StatelessWidget {
   const YPostTile({
     required this.post,
     this.onTap,
+    this.onAccountTap,
     this.topRule = false,
     super.key,
   });
 
   final YPost post;
   final VoidCallback? onTap;
+
+  /// Tapping the avatar or the name opens whoever wrote this, rather than
+  /// what they wrote. Null leaves the account inert, which is what the
+  /// profile's own list of posts wants: it is already that account.
+  final VoidCallback? onAccountTap;
 
   /// Whether a hairline is drawn above this row — true for the first post of
   /// each conversation, so the rules separate stories rather than sentences.
@@ -538,17 +553,20 @@ class YPostTile extends StatelessWidget {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Container(
-                    width: _avatarSize,
-                    height: _avatarSize,
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: _tint.withValues(alpha: 0.16),
-                    ),
-                    child: Text(
-                      post.displayName.characters.first,
-                      style: AppTypography.labelMedium.copyWith(color: _tint),
+                  _Account(
+                    onTap: onAccountTap,
+                    child: Container(
+                      width: _avatarSize,
+                      height: _avatarSize,
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: _tint.withValues(alpha: 0.16),
+                      ),
+                      child: Text(
+                        post.displayName.characters.first,
+                        style: AppTypography.labelMedium.copyWith(color: _tint),
+                      ),
                     ),
                   ),
                   const SizedBox(width: AppSpacing.sm),
@@ -563,20 +581,31 @@ class YPostTile extends StatelessWidget {
                         // people talking.
                         Row(
                           children: [
+                            // The name and the handle open the ACCOUNT; the
+                            // rest of the row opens the post. Tapping a name
+                            // in a feed has meant "who is this" for twenty
+                            // years, and this feed has a cast worth asking
+                            // about.
                             Flexible(
-                              child: WholeText(
-                                post.displayName,
-                                maxLines: 1,
-                                style: AppTypography.labelMedium,
+                              child: _Account(
+                                onTap: onAccountTap,
+                                child: WholeText(
+                                  post.displayName,
+                                  maxLines: 1,
+                                  style: AppTypography.labelMedium,
+                                ),
                               ),
                             ),
                             const SizedBox(width: AppSpacing.xs),
                             Flexible(
-                              child: WholeText(
-                                post.handle,
-                                maxLines: 1,
-                                style: AppTypography.labelSmall.copyWith(
-                                  color: AppColors.onSurfaceVariant,
+                              child: _Account(
+                                onTap: onAccountTap,
+                                child: WholeText(
+                                  post.handle,
+                                  maxLines: 1,
+                                  style: AppTypography.labelSmall.copyWith(
+                                    color: AppColors.onSurfaceVariant,
+                                  ),
                                 ),
                               ),
                             ),
@@ -605,4 +634,28 @@ class YPostTile extends StatelessWidget {
       ),
     );
   }
+}
+
+/// Whatever part of a row identifies the account, made tappable.
+///
+/// A plain [GestureDetector] rather than an [InkWell]: the whole tile is
+/// already an InkWell, and a second one nested inside it would paint a ripple
+/// over the name at the same time as the row's own. The gesture still wins the
+/// tap, which is the part that matters. A null [onTap] leaves the child
+/// exactly as it was, so a profile listing its own posts offers no way to open
+/// itself again.
+class _Account extends StatelessWidget {
+  const _Account({required this.child, this.onTap});
+
+  final Widget child;
+  final VoidCallback? onTap;
+
+  @override
+  Widget build(BuildContext context) => onTap == null
+      ? child
+      : GestureDetector(
+          onTap: onTap,
+          behavior: HitTestBehavior.opaque,
+          child: child,
+        );
 }

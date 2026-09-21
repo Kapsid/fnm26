@@ -5511,6 +5511,42 @@
   "@yEarlierHeading": {
     "description": "Heading on the Y feed where the recent posts end and the older tournament news kept back from earlier in the cycle begins."
   },
+  "yTraitLoyalist": "Backs the side whatever happens. Slow to turn, quick to forgive.",
+  "@yTraitLoyalist": {
+    "description": "One-line disposition of a loyalist account on its Y profile."
+  },
+  "yTraitCynic": "Assumes the worst and is delighted to be proved right.",
+  "@yTraitCynic": {
+    "description": "One-line disposition of a cynical account on its Y profile."
+  },
+  "yTraitNostalgic": "Everything was better before. Measures you against men who retired.",
+  "@yTraitNostalgic": {
+    "description": "One-line disposition of a nostalgic account on its Y profile."
+  },
+  "yTraitStatshead": "Posts the numbers and nothing else. Barely has a mood.",
+  "@yTraitStatshead": {
+    "description": "One-line disposition of a numbers-only account on its Y profile."
+  },
+  "yTraitHypeman": "Two good results and it is a golden generation.",
+  "@yTraitHypeman": {
+    "description": "One-line disposition of an over-excitable account on its Y profile."
+  },
+  "yTraitContrarian": "Whatever the room thinks, the opposite.",
+  "@yTraitContrarian": {
+    "description": "One-line disposition of a contrarian account on its Y profile."
+  },
+  "yTraitDoomer": "It is going to go wrong. It is always going to go wrong.",
+  "@yTraitDoomer": {
+    "description": "One-line disposition of a doom-laden account on its Y profile."
+  },
+  "yProfilePosts": "POSTS",
+  "@yProfilePosts": {
+    "description": "Heading over an account's own posts on its Y profile."
+  },
+  "yProfileEmpty": "Nothing from this account yet.",
+  "@yProfileEmpty": {
+    "description": "Shown on a Y profile when the account has said nothing in this save."
+  },
   "hubEventGrievance": "{player} wants a word",
   "@hubEventGrievance": {
     "description": "Player agency: hubEventGrievance.",
