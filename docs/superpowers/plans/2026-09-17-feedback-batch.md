@@ -1943,3 +1943,55 @@ This is the same seam Task 38 already opens (a skipped match should field the ma
 > A quick-simmed match for the MANAGER'S nation is played with his squad, his XI, his formation AND his tactical standing — the stored familiarity for that shape, and his instructions — so that skipping a match is a choice about watching, not a choice about how his side plays. Every other nation keeps the current behaviour.
 
 Closing it means threading the career's formation and stored familiarity into an async repository read per world fixture. That is real work, and it is why the effect is worth having at all: a manager who drills a shape for four years should not lose the benefit by pressing skip.
+
+---
+
+### Task 39: The width dials push both sides the same way
+
+Found by the review of Task 16, and made three times louder by it.
+
+In `MatchEngine._matchup`, the two width terms both fire POSITIVE for BOTH sides whenever the two widths straddle 50. With `a.width = 80` and `d.width = 20`: term 3 computes `(0.6 x 0.6) = 0.36` and term 3b computes `(-0.6 x -0.6) = 0.36`. Two negatives multiplied. Each side gains attack rating from the mismatch, rather than one side gaining what the other loses.
+
+It nets out of goal DIFFERENCE, which is why no guard sees it, and it does not net out of SCORELINES:
+
+| widths | goals/game before Task 16 | after |
+|---|---|---|
+| 50 vs 50 | 2.637 | 2.637 |
+| 80 vs 20 | 2.731 | 2.912 |
+| 100 vs 0 | 2.892 | **3.449** |
+
+A full width mismatch now adds +0.81 goals per match to a 2.64 baseline, up from +0.26. Real playstyles straddle 50 on width routinely (wing play around 70, a low block or counter narrow), so this lifts scoring across ordinary world fixtures.
+
+**Files:**
+- Modify: `lib/domain/services/match/match_engine.dart` (`_matchup`, the two width terms)
+- Test: `test/unit/match/tactics_swing_test.dart` (extend — a total-goals assertion with mismatched widths should already exist there from Task 16's fix round)
+
+- [ ] **Step 1: Establish what the term is FOR before changing its sign**
+
+Read the surrounding code and comments. A width mismatch plausibly SHOULD create chances at both ends — a wide side against a narrow one stretches the game. If that is the intent, the bug is only that it is now three times too strong, and the fix is a coefficient, not a sign. If the intent was that one side gains what the other loses, the fix is the sign. Decide which, state the reasoning in the report, and say so in a doc comment.
+
+- [ ] **Step 2: Write the failing test**
+
+Assert total goals per game with mismatched widths (100 vs 0, and 80 vs 20) sits within a stated band of the neutral 50-vs-50 baseline. Put the band on the intent: a width mismatch should be worth a fraction of a goal, not a third of the scoreline.
+
+- [ ] **Step 3: Run it to verify it fails**
+
+Run: `flutter test test/unit/match/tactics_swing_test.dart`
+Expected: FAIL at the extreme mismatch.
+
+- [ ] **Step 4: Fix per the decision in step 1, and re-measure**
+
+Both the mismatch case AND the neutral case must land in band — a fix that flattens width entirely is as wrong as leaving it loud.
+
+- [ ] **Step 5: Check the scoreline distribution guard**
+
+Run `test/unit/match/scoreline_distribution_test.dart`. It runs at neutral 50s so it should be unmoved; if it moves, the fix reached further than intended.
+
+- [ ] **Step 6: Commit**
+
+```bash
+git add -A
+git commit -m "fix: a width mismatch stretches the game, it does not double it
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>"
+```
