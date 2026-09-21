@@ -104,4 +104,68 @@ void main() {
     expect(tester.takeException(), isNull);
     expectNothingCut(tester);
   });
+
+  // Both phone widths in both languages, with the longest names the pools
+  // hold. Every row is a name, a position, a mark and sometimes a goal count
+  // — four things sharing 360 points, and the mark is the one the card exists
+  // to show.
+  for (final width in [360.0, 400.0]) {
+    for (final locale in [const Locale('en'), const Locale('cs')]) {
+      testWidgets(
+        'the team of the tournament fits ${width.toInt()}px in '
+        '${locale.languageCode}',
+        (tester) async {
+          tester.view
+            ..physicalSize = Size(width, 900)
+            ..devicePixelRatio = 1.0;
+          addTearDown(tester.view.reset);
+
+          await tester.pumpApp(
+            Scaffold(
+              body: SingleChildScrollView(
+                child: TeamOfTournamentCard(
+                  stars: [
+                    _star(
+                      1,
+                      'Papastathopoulos',
+                      PlayerPosition.gk,
+                      rating: 7.21,
+                    ),
+                    _star(
+                      2,
+                      'Rakotoharimalala',
+                      PlayerPosition.cb,
+                      rating: 7.85,
+                    ),
+                    _star(3, 'Schweinsteiger', PlayerPosition.cm, rating: 8.02),
+                    _star(
+                      4,
+                      'Vanderberghe',
+                      PlayerPosition.st,
+                      rating: 7.6,
+                      goals: 15,
+                    ),
+                  ],
+                  code: (_) => 'BIH',
+                  name: (_) => 'Bosnia and Herzegovina',
+                ),
+              ),
+            ),
+            locale: locale,
+          );
+          await tester.pumpAndSettle();
+
+          expectLocale(
+            tester,
+            find.byType(TeamOfTournamentCard),
+            locale.languageCode,
+          );
+          expectNothingCut(
+            tester,
+            'the team of the tournament in ${locale.languageCode}',
+          );
+        },
+      );
+    }
+  }
 }

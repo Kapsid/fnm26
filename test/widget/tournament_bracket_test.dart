@@ -295,4 +295,57 @@ void main() {
     expect(baseRound('QF'), 'QF');
     expect(baseRound('FINAL'), 'FINAL');
   });
+
+  // Both phone widths in both languages. A bracket tie is two nations and a
+  // scoreline, and the scoreline is the whole content of the screen — so the
+  // longest nation names the world holds are given to it on purpose.
+  for (final width in [360.0, 400.0]) {
+    for (final locale in [const Locale('en'), const Locale('cs')]) {
+      testWidgets(
+        'the knockout ties hold at ${width.toInt()}px in '
+        '${locale.languageCode}',
+        (tester) async {
+          tester.view
+            ..devicePixelRatio = 1
+            ..physicalSize = Size(width, 1000);
+          addTearDown(tester.view.reset);
+
+          await tester.pumpApp(
+            Scaffold(
+              body: TournamentBracket(
+                fixtures: [
+                  tie('SF', 100, 101, hs: 3, as: 2),
+                  tie('SF', 102, 103, hs: 1, as: 0),
+                  tie('3RD', 101, 103, hs: 2, as: 2),
+                  tie('FINAL', 100, 102, hs: 4, as: 3),
+                ],
+                rounds: wcRounds,
+                ladder: wcRounds,
+                champion: 100,
+                championLabel: 'CHAMPIONS',
+                playerNationId: 1,
+                code: code,
+                // The longest names in the shipped nation pool.
+                name: (id) => switch (id) {
+                  100 => 'Bosnia and Herzegovina',
+                  101 => 'Trinidad and Tobago',
+                  102 => 'Central African Republic',
+                  _ => 'Saint Vincent and the Grenadines',
+                },
+              ),
+            ),
+            locale: locale,
+          );
+          await tester.pumpAndSettle();
+
+          expectLocale(
+            tester,
+            find.byType(TournamentBracket),
+            locale.languageCode,
+          );
+          expectNothingCut(tester, 'the bracket in ${locale.languageCode}');
+        },
+      );
+    }
+  }
 }

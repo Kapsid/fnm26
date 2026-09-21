@@ -86,10 +86,14 @@ void main() {
     await db.close();
   });
 
-  Future<void> pumpCallUps(WidgetTester tester) async {
+  Future<void> pumpCallUps(
+    WidgetTester tester, {
+    double width = 360,
+    Locale locale = const Locale('en'),
+  }) async {
     tester.view
       ..devicePixelRatio = 1
-      ..physicalSize = const Size(360, 690);
+      ..physicalSize = Size(width, 690);
     addTearDown(tester.view.reset);
 
     final scoped = ProviderContainer(
@@ -125,6 +129,9 @@ void main() {
         container: scoped,
         child: MaterialApp(
           theme: AppTheme.theme,
+          // On the MaterialApp, never a Localizations.override around a
+          // launcher: this screen pushes its own routes.
+          locale: locale,
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: CallUpScreen(careerId: careerId),
@@ -238,4 +245,24 @@ void main() {
     expect(tester.takeException(), isNull);
     expectNothingCut(tester);
   });
+
+  // Both phone widths in both languages. Every row here carries a name, a
+  // position and a rating, and the strip above them is all Czech words in
+  // Czech — the longer language in nearly every one of them.
+  for (final width in [360.0, 400.0]) {
+    for (final locale in [const Locale('en'), const Locale('cs')]) {
+      testWidgets(
+        'nothing on the call-up list is cut at ${width.toInt()}px in '
+        '${locale.languageCode}',
+        (tester) async {
+          await pumpCallUps(tester, width: width, locale: locale);
+          expectLocale(tester, find.byType(CallUpScreen), locale.languageCode);
+          expectNothingCut(
+            tester,
+            'the call-up list in ${locale.languageCode}',
+          );
+        },
+      );
+    }
+  }
 }
