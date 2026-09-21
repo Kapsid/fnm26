@@ -1929,3 +1929,17 @@ git commit -m "fix: a match you skipped is still played by your team
 
 Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>"
 ```
+
+---
+
+### Task 38 amendment: a skipped match must also use the manager's TACTICS
+
+Found during Task 16. `HubProviders._simAndRecord` runs the manager's own fixtures through `RatingMatchSimulator` when he SKIPS a match. That simulator takes two integer strengths and has no formation, no instructions, no familiarity and no chemistry at all.
+
+So the drilled bonus applies when the manager watches a match and not when he skips one — and Task 16 roughly doubled the size of that discrepancy by making tactics matter more.
+
+This is the same seam Task 38 already opens (a skipped match should field the manager's own team), so it joins that task rather than becoming a separate one. Task 38's rule becomes:
+
+> A quick-simmed match for the MANAGER'S nation is played with his squad, his XI, his formation AND his tactical standing — the stored familiarity for that shape, and his instructions — so that skipping a match is a choice about watching, not a choice about how his side plays. Every other nation keeps the current behaviour.
+
+Closing it means threading the career's formation and stored familiarity into an async repository read per world fixture. That is real work, and it is why the effect is worth having at all: a manager who drills a shape for four years should not lose the benefit by pressing skip.
