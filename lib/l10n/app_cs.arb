@@ -1154,6 +1154,7 @@
   "tourContNoNationsCupChampions": "Zatím nebyl korunován žádný vítěz Poháru národů.",
   "tourContNationsCupOffSeason": "Pohár národů tohoto cyklu začíná po kontinentálních šampionátech. Dřívější vítězové jsou v sekci Historie.",
   "tourContNationsCupGroupsSoon": "Skupiny Poháru národů se v tomto cyklu losují při ceremoniálu. Sledujte z rozcestníku, koho dostanete.",
+  "tourContLeagueNoGroups": "V této lize se toto kolo nehraje.",
   "tourContLeagueHeading": "LIGA {letter}",
   "tourContLeagueHeadingYours": "LIGA {letter} · VAŠE LIGA",
   "tourContFinalsFourSoon": "Finálovou čtyřku hrají vítězové skupin Ligy A po skončení skupinové fáze.",

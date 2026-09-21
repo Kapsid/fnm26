@@ -7554,6 +7554,12 @@ abstract class AppLocalizations {
   /// **'This cycle’s Nations Cup groups are drawn at the ceremony. Watch from the hub to see who you face.'**
   String get tourContNationsCupGroupsSoon;
 
+  /// Empty state on a Nations Cup league tab with nothing drawn.
+  ///
+  /// In en, this message translates to:
+  /// **'No matches in this league this round.'**
+  String get tourContLeagueNoGroups;
+
   /// League heading with its letter.
   ///
   /// In en, this message translates to:

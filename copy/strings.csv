@@ -1239,6 +1239,7 @@ tourContNoNationsCupGoals,Empty state for Nations Cup scorers.,,No Nations Cup g
 tourContNoNationsCupChampions,Empty state for Nations Cup champions.,,No Nations Cup champions crowned yet.,Zatím nebyl korunován žádný vítěz Poháru národů.
 tourContNationsCupOffSeason,Shown when the Nations Cup is off-season.,,This cycle’s Nations Cup begins after the continental finals. Past winners are under History.,Pohár národů tohoto cyklu začíná po kontinentálních šampionátech. Dřívější vítězové jsou v sekci Historie.
 tourContNationsCupGroupsSoon,Shown before the Nations Cup groups are drawn.,,This cycle’s Nations Cup groups are drawn at the ceremony. Watch from the hub to see who you face.,"Skupiny Poháru národů se v tomto cyklu losují při ceremoniálu. Sledujte z rozcestníku, koho dostanete."
+tourContLeagueNoGroups,Empty state on a Nations Cup league tab with nothing drawn.,,No matches in this league this round.,V této lize se toto kolo nehraje.
 tourContLeagueHeading,League heading with its letter.,{letter},LEAGUE {letter},LIGA {letter}
 tourContLeagueHeadingYours,League heading marking the manager's league.,{letter},LEAGUE {letter} · YOUR LEAGUE,LIGA {letter} · VAŠE LIGA
 tourContFinalsFourSoon,Explains when the Finals Four is contested.,,The Finals Four is contested by League A’s group winners once the group stage is done.,Finálovou čtyřku hrají vítězové skupin Ligy A po skončení skupinové fáze.

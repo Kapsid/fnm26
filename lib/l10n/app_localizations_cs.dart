@@ -4715,6 +4715,9 @@ class AppLocalizationsCs extends AppLocalizations {
       'Skupiny Poháru národů se v tomto cyklu losují při ceremoniálu. Sledujte z rozcestníku, koho dostanete.';
 
   @override
+  String get tourContLeagueNoGroups => 'V této lize se toto kolo nehraje.';
+
+  @override
   String tourContLeagueHeading(String letter) {
     return 'LIGA $letter';
   }

@@ -4680,6 +4680,9 @@ class AppLocalizationsEn extends AppLocalizations {
       'This cycle’s Nations Cup groups are drawn at the ceremony. Watch from the hub to see who you face.';
 
   @override
+  String get tourContLeagueNoGroups => 'No matches in this league this round.';
+
+  @override
   String tourContLeagueHeading(String letter) {
     return 'LEAGUE $letter';
   }

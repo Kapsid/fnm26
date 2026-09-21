@@ -6933,6 +6933,10 @@
   "@tourContNationsCupGroupsSoon": {
     "description": "Shown before the Nations Cup groups are drawn."
   },
+  "tourContLeagueNoGroups": "No matches in this league this round.",
+  "@tourContLeagueNoGroups": {
+    "description": "Empty state on a Nations Cup league tab with nothing drawn."
+  },
   "tourContLeagueHeading": "LEAGUE {letter}",
   "@tourContLeagueHeading": {
     "description": "League heading with its letter.",

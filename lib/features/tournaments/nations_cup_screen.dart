@@ -148,8 +148,6 @@ class NationsCupScreen extends ConsumerStatefulWidget {
 }
 
 class _NationsCupScreenState extends ConsumerState<NationsCupScreen> {
-  String? _league; // selected league letter (null → the player's own league)
-
   /// The tab to land on: wherever the cup actually is.
   static int _liveTab(_NcView? v) {
     if (v == null) return 0;
@@ -261,48 +259,58 @@ class _NationsCupScreenState extends ConsumerState<NationsCupScreen> {
       );
     }
 
-    // Leagues present, in order (A, B, C…).
-    final leagues = {for (final g in v.groups) g.name[0]}.toList()..sort();
-    final selected = _league ?? v.playerLeague;
+    // Every league of the confederation, in order (A, B, C…) — not only the
+    // ones with a group drawn this round. A league with nothing on is an
+    // EMPTY tab, never a missing one: a tab bar that changes length between
+    // rounds is a tab bar the manager cannot learn.
+    final leagues = <String>{
+      for (var tier = 0; tier <= v.maxTier; tier++)
+        String.fromCharCode(65 + tier),
+      for (final g in v.groups) g.name[0],
+      v.playerLeague,
+    }.toList()..sort();
 
-    // Groups of the selected league; the player's own group first when it's
-    // their league.
-    final shown = v.groups.where((g) => g.name[0] == selected).toList()
-      ..sort((a, b) {
-        if (a.name == v.playerGroup) return -1;
-        if (b.name == v.playerGroup) return 1;
-        return a.name.compareTo(b.name);
-      });
-
-    return ListView(
-      padding: const EdgeInsets.all(AppSpacing.marginMobile),
-      children: [
-        if (leagues.length > 1)
-          _LeagueSelector(
-            leagues: leagues,
-            selected: selected,
-            playerLeague: v.playerLeague,
-            onSelect: (l) => setState(() => _league = l),
-          ),
-        const SizedBox(height: AppSpacing.sm),
-        Text(
-          selected == v.playerLeague
-              ? l.tourContLeagueHeadingYours(selected)
-              : l.tourContLeagueHeading(selected),
-          style: AppTypography.labelMedium.copyWith(color: AppColors.primary),
-        ),
-        const SizedBox(height: AppSpacing.md),
-        for (final g in shown) ...[
-          _GroupCard(
-            group: g,
-            playerNationId: v.playerNationId,
-            name: name,
-            code: code,
-            isLowestLeague: NationsCup.tierOfGroupName(g.name) >= v.maxTier,
-          ),
-          const SizedBox(height: AppSpacing.md),
-        ],
-      ],
+    return _LeagueTabs(
+      leagues: leagues,
+      playerLeague: v.playerLeague,
+      builder: (context, league) {
+        // Groups of this league; the player's own group first when it's his.
+        final shown = v.groups.where((g) => g.name[0] == league).toList()
+          ..sort((a, b) {
+            if (a.name == v.playerGroup) return -1;
+            if (b.name == v.playerGroup) return 1;
+            return a.name.compareTo(b.name);
+          });
+        if (shown.isEmpty) {
+          return TournamentSoon(message: l.tourContLeagueNoGroups);
+        }
+        return ListView(
+          padding: const EdgeInsets.all(AppSpacing.marginMobile),
+          children: [
+            Text(
+              league == v.playerLeague
+                  ? l.tourContLeagueHeadingYours(league)
+                  : l.tourContLeagueHeading(league),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: AppTypography.labelMedium.copyWith(
+                color: AppColors.primary,
+              ),
+            ),
+            const SizedBox(height: AppSpacing.md),
+            for (final g in shown) ...[
+              _GroupCard(
+                group: g,
+                playerNationId: v.playerNationId,
+                name: name,
+                code: code,
+                isLowestLeague: NationsCup.tierOfGroupName(g.name) >= v.maxTier,
+              ),
+              const SizedBox(height: AppSpacing.md),
+            ],
+          ],
+        );
+      },
     );
   }
 
@@ -334,61 +342,72 @@ class _NationsCupScreenState extends ConsumerState<NationsCupScreen> {
   }
 }
 
-class _LeagueSelector extends StatelessWidget {
-  const _LeagueSelector({
+/// The leagues of the Nations Cup as tabs, opening on the manager's own.
+///
+/// They used to be a row of chips above the tables, which is a control the
+/// rest of the app does not use anywhere else; the tournament screens are
+/// tabbed, so these are tabs too, at the same [kTournamentTabBarHeight].
+class _LeagueTabs extends StatelessWidget {
+  const _LeagueTabs({
     required this.leagues,
-    required this.selected,
     required this.playerLeague,
-    required this.onSelect,
+    required this.builder,
   });
 
+  /// Every league of the confederation, A first — including any with no
+  /// matches this round, which get an empty tab rather than none.
   final List<String> leagues;
-  final String selected;
+
+  /// The league the manager's nation plays in: the tab this opens on, and the
+  /// one carrying the star.
   final String playerLeague;
-  final ValueChanged<String> onSelect;
+
+  final Widget Function(BuildContext context, String league) builder;
 
   @override
   Widget build(BuildContext context) {
-    final loc = AppLocalizations.of(context);
-    return SizedBox(
-      height: 36,
-      child: ListView(
-        scrollDirection: Axis.horizontal,
+    final l = AppLocalizations.of(context);
+    final mine = leagues.indexOf(playerLeague);
+    return DefaultTabController(
+      length: leagues.length,
+      initialIndex: mine < 0 ? 0 : mine,
+      child: Column(
         children: [
-          for (final l in leagues)
-            Padding(
-              padding: const EdgeInsets.only(right: AppSpacing.sm),
-              child: GestureDetector(
-                onTap: () => onSelect(l),
-                child: Container(
-                  alignment: Alignment.center,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: AppSpacing.md,
-                  ),
-                  decoration: BoxDecoration(
-                    color: l == selected
-                        ? AppColors.secondaryContainer
-                        : AppColors.surfaceContainer,
-                    borderRadius: AppRadii.xlAll,
-                    border: Border.all(
-                      color: l == selected
-                          ? AppColors.primary
-                          : AppColors.outlineVariant,
+          SizedBox(
+            height: kTournamentTabBarHeight,
+            child: TabBar(
+              // Scrollable, so each label is laid out at the width it asks
+              // for: a confederation can run to half a dozen leagues, and a
+              // fixed bar would divide the phone between them and cut every
+              // one of them in half.
+              isScrollable: true,
+              labelColor: AppColors.onSurface,
+              unselectedLabelColor: AppColors.onSurfaceVariant,
+              indicatorColor: AppColors.primary,
+              tabs: [
+                for (final league in leagues)
+                  Tab(
+                    // A plain Text, not a Tab(text:) — that one wraps its
+                    // label with softWrap off and no maxLines, so a width
+                    // guard reading didExceedMaxLines never fires on it.
+                    child: Text(
+                      league == playerLeague
+                          ? l.tourContLeagueChipStar(league)
+                          : l.tourContLeagueChip(league),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
-                  child: Text(
-                    l == playerLeague
-                        ? loc.tourContLeagueChipStar(l)
-                        : loc.tourContLeagueChip(l),
-                    style: AppTypography.labelSmall.copyWith(
-                      color: l == selected
-                          ? AppColors.onSecondaryContainer
-                          : AppColors.onSurfaceVariant,
-                    ),
-                  ),
-                ),
-              ),
+              ],
             ),
+          ),
+          Expanded(
+            child: TabBarView(
+              children: [
+                for (final league in leagues) builder(context, league),
+              ],
+            ),
+          ),
         ],
       ),
     );
