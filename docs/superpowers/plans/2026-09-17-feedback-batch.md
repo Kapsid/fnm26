@@ -1995,3 +1995,59 @@ git commit -m "fix: a width mismatch stretches the game, it does not double it
 
 Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>"
 ```
+
+---
+
+### Task 40: The manager is not credited with the 2026 World Championship
+
+**A regression this batch introduced.** Task 3 seeded the 2026 World Championship into history. `CareerService.cycleStart` is `DateTime(2026, 7)`, so `cycleStart.year` is **2026**, and roughly a dozen places filter a manager's own honours with `h.year >= CareerService.cycleStart.year`.
+
+That filter now includes the seeded 2026 edition. A manager who takes the nation that won it is credited with a World Championship before kicking a ball. `career_summary_providers.dart:158` carries the comment "Only this career's own editions — not the pre-seeded real-world history" directly above the line that no longer does that.
+
+Found by Task 21's null control, which caught the same off-by-one in its own cycle arithmetic (`ceil((year - 2030) / 4)` filed a 2026 honour under cycle 0) and flagged the sibling sites.
+
+**Files — every site that asks "is this honour the manager's?":**
+- `lib/features/career/career_summary_providers.dart:158`
+- `lib/features/career/nation_offers_providers.dart:234`, `:275`
+- `lib/features/career/manager_history_providers.dart:266`
+- `lib/features/messages/message_providers.dart:230`
+- `lib/features/records/record_book_providers.dart:158`
+- `lib/features/achievements/achievement_providers.dart:318`
+- `lib/features/achievements/challenge_providers.dart:129`
+- `lib/features/press/press_providers.dart:236`
+- `lib/features/manager/manager_providers.dart:41`
+- `lib/features/awards/award_providers.dart:56`
+- Already correct, and the model for the fix: `lib/features/federation/federation_providers.dart:104` uses `h.year <= cycleStart.year` and so excludes 2026.
+- Test: `test/unit/career/seeded_honour_not_mine_test.dart` (create)
+
+- [ ] **Step 1: Write the failing test**
+
+Start a career with the nation that won the seeded 2026 World Championship, before playing anything. Assert it has no honours of its own: the career summary shows none, the achievement for winning the World Championship is not unlocked, and the press does not ask about a triumph.
+
+Read `RealHistory.editions` for the 2026 champion rather than hardcoding the name, so a change to the seeded result does not silently void the test.
+
+- [ ] **Step 2: Run it to verify it fails**
+
+Run: `flutter test test/unit/career/seeded_honour_not_mine_test.dart`
+Expected: FAIL. The nation is credited with a trophy it won before the save began.
+
+- [ ] **Step 3: One shared predicate, not a dozen fixed comparisons**
+
+Add a single question to `CareerService` — "is this honour one this career could have won?" — and route every site above through it. Twelve copies of a date comparison is how this broke; a thirteenth copy would be the same bug waiting.
+
+The boundary belongs to the career, not the calendar: the 2026 edition concluded before a save opens on 1 July 2026, and the first edition a manager can affect is the one their own cycle produces.
+
+- [ ] **Step 4: Check each call site still means what it meant**
+
+Some of these ask a slightly different question (a cycle index, a years-managed count). Do not flatten a site into the shared predicate if it was asking something else; convert only the ones asking "is this mine".
+
+- [ ] **Step 5: Run the covering tests and commit**
+
+```bash
+flutter test test/unit/career/seeded_honour_not_mine_test.dart
+flutter test test/unit/achievements
+git add -A
+git commit -m "fix: a trophy won before the save began is not the manager's
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>"
+```
