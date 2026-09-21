@@ -13,6 +13,7 @@ import 'package:fnm/domain/entities/formation.dart';
 import 'package:fnm/domain/entities/tactic_preset.dart';
 import 'package:fnm/domain/entities/tactics.dart';
 import 'package:fnm/domain/services/tactics/position_fit.dart';
+import 'package:fnm/domain/services/tactics/set_piece_picks.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/entities/player_role.dart';
@@ -30,6 +31,21 @@ import 'package:fnm/features/tactics/tactics_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
+
+/// Drops a designated set-piece taker who is no longer in the eleven, once
+/// this frame is done — a build must not write to a provider.
+///
+/// The store is captured by the caller rather than read in here, so the write
+/// still lands if the screen has been left in the meantime.
+void _clearTakerAfterFrame(
+  SetPieceTakersStore store,
+  int careerId, {
+  required bool penalty,
+}) {
+  WidgetsBinding.instance.addPostFrameCallback((_) {
+    store.set(careerId, penalty: penalty, playerId: null);
+  });
+}
 
 /// Squad: a tactical pitch view of the starting XI with the substitutes list
 /// and formation selector. Players can be tapped to pick, or dragged to swap
@@ -170,6 +186,34 @@ class TacticsScreen extends ConsumerWidget {
                 if ((data.absences[p.id]?.injuryMatches ?? 0) > 0) p.id,
             };
             final outStarters = data.unavailableStarters;
+            // The eleven as named, for the set pieces. A designated taker who
+            // is no longer in the side goes back to automatic: null already
+            // means "let the engine pick", so the stale id is cleared rather
+            // than kept as a second kind of empty.
+            final xi = [
+              for (final id in tactic.lineup.whereType<int>()) ?data.byId[id],
+            ];
+            final xiIds = {for (final p in xi) p.id};
+            final namedPenalty = xiIds.contains(takers?.penalty)
+                ? takers?.penalty
+                : null;
+            final namedDeadBall = xiIds.contains(takers?.deadBall)
+                ? takers?.deadBall
+                : null;
+            if (takers != null && xi.isNotEmpty) {
+              final store = ref.read(setPieceTakersStoreProvider);
+              if (takers.penalty != null && namedPenalty == null) {
+                _clearTakerAfterFrame(store, careerId, penalty: true);
+              }
+              if (takers.deadBall != null && namedDeadBall == null) {
+                _clearTakerAfterFrame(store, careerId, penalty: false);
+              }
+            }
+            // Who actually steps up: the manager's man where he has named one,
+            // and otherwise the engine's own choice, shown rather than left
+            // blank for him to guess at.
+            final penaltyId = namedPenalty ?? SetPiecePicks.penalty(xi);
+            final deadBallId = namedDeadBall ?? SetPiecePicks.deadBall(xi);
 
             return TabBarView(
               children: [
@@ -388,31 +432,41 @@ class TacticsScreen extends ConsumerWidget {
                       ),
                     ),
                     const SizedBox(height: AppSpacing.sm),
-                    for (final id in tactic.lineup.whereType<int>())
-                      if (data.byId[id] case final p?)
-                        _PlayerTacticRow(
-                          player: p,
-                          role: roles[id] ?? PlayerRole.none,
-                          isPenaltyTaker: takers?.penalty == p.id,
-                          isDeadBallTaker: takers?.deadBall == p.id,
-                          onRole: () => _pickRole(context, ref, p),
-                          onTogglePenalty: () => ref
-                              .read(setPieceTakersStoreProvider)
-                              .set(
-                                careerId,
-                                penalty: true,
-                                playerId: takers?.penalty == p.id ? null : p.id,
-                              ),
-                          onToggleDeadBall: () => ref
-                              .read(setPieceTakersStoreProvider)
-                              .set(
-                                careerId,
-                                penalty: false,
-                                playerId: takers?.deadBall == p.id
-                                    ? null
-                                    : p.id,
-                              ),
-                        ),
+                    AppCard(
+                      child: SetPieceTakerSummary(
+                        penaltyName: data.byId[penaltyId]?.name,
+                        penaltyIsAuto: namedPenalty == null,
+                        deadBallName: data.byId[deadBallId]?.name,
+                        deadBallIsAuto: namedDeadBall == null,
+                      ),
+                    ),
+                    const SizedBox(height: AppSpacing.sm),
+                    for (final p in xi)
+                      _PlayerTacticRow(
+                        player: p,
+                        role: roles[p.id] ?? PlayerRole.none,
+                        isPenaltyTaker: namedPenalty == p.id,
+                        isDeadBallTaker: namedDeadBall == p.id,
+                        isAutoPenalty:
+                            namedPenalty == null && penaltyId == p.id,
+                        isAutoDeadBall:
+                            namedDeadBall == null && deadBallId == p.id,
+                        onRole: () => _pickRole(context, ref, p),
+                        onTogglePenalty: () => ref
+                            .read(setPieceTakersStoreProvider)
+                            .set(
+                              careerId,
+                              penalty: true,
+                              playerId: namedPenalty == p.id ? null : p.id,
+                            ),
+                        onToggleDeadBall: () => ref
+                            .read(setPieceTakersStoreProvider)
+                            .set(
+                              careerId,
+                              penalty: false,
+                              playerId: namedDeadBall == p.id ? null : p.id,
+                            ),
+                      ),
                   ],
                 ),
                 // 4. SQUAD — the nation's whole pool: every eligible player,
@@ -1256,6 +1310,8 @@ class _PlayerTacticRow extends StatelessWidget {
     required this.role,
     required this.isPenaltyTaker,
     required this.isDeadBallTaker,
+    required this.isAutoPenalty,
+    required this.isAutoDeadBall,
     required this.onRole,
     required this.onTogglePenalty,
     required this.onToggleDeadBall,
@@ -1265,6 +1321,11 @@ class _PlayerTacticRow extends StatelessWidget {
   final PlayerRole role;
   final bool isPenaltyTaker;
   final bool isDeadBallTaker;
+
+  /// Nobody has been named and this is the man the engine would pick.
+  final bool isAutoPenalty;
+  final bool isAutoDeadBall;
+
   final VoidCallback onRole;
   final VoidCallback onTogglePenalty;
   final VoidCallback onToggleDeadBall;
@@ -1346,6 +1407,7 @@ class _PlayerTacticRow extends StatelessWidget {
           SetPieceBadge(
             icon: Icons.sports_soccer,
             active: isPenaltyTaker,
+            auto: isAutoPenalty,
             tooltip: l.tacticsPenalties,
             onTap: onTogglePenalty,
           ),
@@ -1353,6 +1415,7 @@ class _PlayerTacticRow extends StatelessWidget {
           SetPieceBadge(
             icon: Icons.flag_rounded,
             active: isDeadBallTaker,
+            auto: isAutoDeadBall,
             tooltip: l.tacticsCornersFreeKicks,
             onTap: onToggleDeadBall,
           ),

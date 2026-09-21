@@ -20,6 +20,7 @@ export 'nation_badge.dart';
 export 'pager_button.dart';
 export 'primary_button.dart';
 export 'set_piece_badge.dart';
+export 'set_piece_taker_summary.dart';
 export 'stat_bar.dart';
 export 'tactical_chip.dart';
 export 'whole_text.dart';

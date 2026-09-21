@@ -894,6 +894,9 @@ class AppLocalizationsCs extends AppLocalizations {
       'Kdo kope penalty a standardky, nebo to nechte na nejvhodnějším hráči.';
 
   @override
+  String get tacticsTakerAuto => 'Automaticky';
+
+  @override
   String get tacticsPenalties => 'Penalty';
 
   @override

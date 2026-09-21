@@ -250,6 +250,7 @@ tacticsPlayerRoles,Heading of the roles tab.,,PLAYER ROLES,ROLE HRÁČŮ
 tacticsRolesBlurb,Explanation of what player roles do.,,"Give a player a job: a poacher, a playmaker, a target man. Shapes who scores and who creates.","Dejte hráči úkol: lovec gólů, rozehrávač, cílový hrot. Ovlivňuje, kdo střílí a kdo tvoří."
 tacticsSetPieceTakers,Heading of the set-pieces tab.,,SET-PIECE TAKERS,EXEKUTOŘI STANDARDEK
 tacticsSetPieceBlurb,Explanation of the set-piece takers.,,"Who takes penalties and dead balls, or leave it to the best-suited player.","Kdo kope penalty a standardky, nebo to nechte na nejvhodnějším hráči."
+tacticsTakerAuto,Marker on a set-piece slot nobody has been named for: the engine picks the best-suited man.,,Automatic,Automaticky
 tacticsPenalties,Set-piece situation: penalties.,,Penalties,Penalty
 tacticsCornersFreeKicks,Set-piece situation: corners and free-kicks.,,Corners & free-kicks,Rohy a volné kopy
 tacticsSkillFin,Abbreviated skill label for finishing/shooting.,,FIN,ZAK

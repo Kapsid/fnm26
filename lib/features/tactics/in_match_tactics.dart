@@ -6,9 +6,10 @@ import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/formation.dart';
 import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/entities/tactics.dart';
+import 'package:fnm/domain/services/rating/overall_rating.dart';
 import 'package:fnm/domain/services/tactics/best_eleven.dart';
 import 'package:fnm/domain/services/tactics/position_fit.dart';
-import 'package:fnm/domain/services/rating/overall_rating.dart';
+import 'package:fnm/domain/services/tactics/set_piece_picks.dart';
 import 'package:fnm/domain/services/tactics/substitution_rules.dart';
 import 'package:fnm/features/tactics/formation_picker.dart';
 import 'package:fnm/features/tactics/tactics_pitch.dart';
@@ -147,6 +148,20 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
     for (final id in _lineup)
       if (id != null && _byId[id] != null) _byId[id]!,
   ];
+
+  /// The designated takers with anyone no longer on the pitch dropped.
+  ///
+  /// A named taker who has been substituted or sent off is ignored by the
+  /// engine anyway, so the slot falls back to automatic rather than to nobody:
+  /// null already means "let the engine pick", and a second state for "he has
+  /// gone" would only be the same thing under another name.
+  ({int? penalty, int? deadBall}) get _liveTakers {
+    final on = _onPitch;
+    return (
+      penalty: on.contains(_takers.penalty) ? _takers.penalty : null,
+      deadBall: on.contains(_takers.deadBall) ? _takers.deadBall : null,
+    );
+  }
 
   /// A sub is spent for every starter no longer on the pitch (chains of
   /// replacements still count as a single change to that starter's slot). A
@@ -293,7 +308,7 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
         formation: _formation,
         lineup: _lineup,
         instructions: _instructions,
-        takers: _takers,
+        takers: _liveTakers,
       ),
     );
   }
@@ -627,6 +642,12 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
   /// rather than in this editor.
   Widget _tacticsTab() {
     final l = AppLocalizations.of(context);
+    // Who takes what as things stand: the manager's own picks where he has
+    // made them, and otherwise the man the engine steps up on its own.
+    final live = _liveTakers;
+    final xi = _onPitchPlayers;
+    final penaltyId = live.penalty ?? SetPiecePicks.penalty(xi);
+    final deadBallId = live.deadBall ?? SetPiecePicks.deadBall(xi);
     return ListView(
       padding: const EdgeInsets.all(AppSpacing.marginMobile),
       children: [
@@ -702,21 +723,32 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
         AppCard(
           child: Column(
             children: [
+              // Who steps up as things stand. The engine has always had an
+              // answer; only the screen was blank.
+              SetPieceTakerSummary(
+                penaltyName: _byId[penaltyId]?.name,
+                penaltyIsAuto: live.penalty == null,
+                deadBallName: _byId[deadBallId]?.name,
+                deadBallIsAuto: live.deadBall == null,
+              ),
+              const Divider(height: AppSpacing.lg),
               for (final p in _onPitchPlayers)
                 _TakerRow(
                   player: p,
-                  isPenaltyTaker: _takers.penalty == p.id,
-                  isDeadBallTaker: _takers.deadBall == p.id,
+                  isPenaltyTaker: live.penalty == p.id,
+                  isDeadBallTaker: live.deadBall == p.id,
+                  isAutoPenalty: live.penalty == null && penaltyId == p.id,
+                  isAutoDeadBall: live.deadBall == null && deadBallId == p.id,
                   onTogglePenalty: () => setState(() {
                     _takers = (
-                      penalty: _takers.penalty == p.id ? null : p.id,
-                      deadBall: _takers.deadBall,
+                      penalty: live.penalty == p.id ? null : p.id,
+                      deadBall: live.deadBall,
                     );
                   }),
                   onToggleDeadBall: () => setState(() {
                     _takers = (
-                      penalty: _takers.penalty,
-                      deadBall: _takers.deadBall == p.id ? null : p.id,
+                      penalty: live.penalty,
+                      deadBall: live.deadBall == p.id ? null : p.id,
                     );
                   }),
                 ),
@@ -900,6 +932,8 @@ class _TakerRow extends StatelessWidget {
     required this.player,
     required this.isPenaltyTaker,
     required this.isDeadBallTaker,
+    required this.isAutoPenalty,
+    required this.isAutoDeadBall,
     required this.onTogglePenalty,
     required this.onToggleDeadBall,
   });
@@ -907,6 +941,10 @@ class _TakerRow extends StatelessWidget {
   final Player player;
   final bool isPenaltyTaker;
   final bool isDeadBallTaker;
+
+  /// Nobody has been named and this is the man the engine would pick.
+  final bool isAutoPenalty;
+  final bool isAutoDeadBall;
   final VoidCallback onTogglePenalty;
   final VoidCallback onToggleDeadBall;
 
@@ -940,6 +978,7 @@ class _TakerRow extends StatelessWidget {
           SetPieceBadge(
             icon: Icons.sports_soccer,
             active: isPenaltyTaker,
+            auto: isAutoPenalty,
             tooltip: l.tacticsPenalties,
             onTap: onTogglePenalty,
           ),
@@ -947,6 +986,7 @@ class _TakerRow extends StatelessWidget {
           SetPieceBadge(
             icon: Icons.flag_rounded,
             active: isDeadBallTaker,
+            auto: isAutoDeadBall,
             tooltip: l.tacticsCornersFreeKicks,
             onTap: onToggleDeadBall,
           ),

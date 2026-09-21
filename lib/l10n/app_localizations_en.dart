@@ -892,6 +892,9 @@ class AppLocalizationsEn extends AppLocalizations {
       'Who takes penalties and dead balls, or leave it to the best-suited player.';
 
   @override
+  String get tacticsTakerAuto => 'Automatic';
+
+  @override
   String get tacticsPenalties => 'Penalties';
 
   @override

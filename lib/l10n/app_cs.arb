@@ -251,6 +251,7 @@
   "tacticsRolesBlurb": "Dejte hráči úkol: lovec gólů, rozehrávač, cílový hrot. Ovlivňuje, kdo střílí a kdo tvoří.",
   "tacticsSetPieceTakers": "EXEKUTOŘI STANDARDEK",
   "tacticsSetPieceBlurb": "Kdo kope penalty a standardky, nebo to nechte na nejvhodnějším hráči.",
+  "tacticsTakerAuto": "Automaticky",
   "tacticsPenalties": "Penalty",
   "tacticsCornersFreeKicks": "Rohy a volné kopy",
   "tacticsSkillFin": "ZAK",

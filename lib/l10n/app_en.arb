@@ -1402,6 +1402,10 @@
   "@tacticsSetPieceBlurb": {
     "description": "Explanation of the set-piece takers."
   },
+  "tacticsTakerAuto": "Automatic",
+  "@tacticsTakerAuto": {
+    "description": "Marker on a set-piece slot nobody has been named for: the engine picks the best-suited man."
+  },
   "tacticsPenalties": "Penalties",
   "@tacticsPenalties": {
     "description": "Set-piece situation: penalties."

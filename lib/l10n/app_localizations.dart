@@ -1604,6 +1604,12 @@ abstract class AppLocalizations {
   /// **'Who takes penalties and dead balls, or leave it to the best-suited player.'**
   String get tacticsSetPieceBlurb;
 
+  /// Marker on a set-piece slot nobody has been named for: the engine picks the best-suited man.
+  ///
+  /// In en, this message translates to:
+  /// **'Automatic'**
+  String get tacticsTakerAuto;
+
   /// Set-piece situation: penalties.
   ///
   /// In en, this message translates to:
