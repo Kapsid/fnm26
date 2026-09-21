@@ -266,8 +266,9 @@ void main() {
       // Where the world was frozen for the cycle-0 finals draw: as it stands
       // now, except the manager's nation was 40th before the finals.
       const wasBeforeFinals = 40;
-      final drawn = [...byRank]..remove(player.id);
-      drawn.insert(wasBeforeFinals - 1, player.id);
+      final drawn = [...byRank]
+        ..remove(player.id)
+        ..insert(wasBeforeFinals - 1, player.id);
       await seedRanks.snapshot(
         career.id,
         drawSeedCycle(0, drawSlotWorldCupFinals),
@@ -279,8 +280,9 @@ void main() {
           .read(careerRepositoryProvider)
           .advanceCycle(career.id, 1, lastDate);
 
-      container.invalidate(worldRankingProvider);
-      container.invalidate(movementBaselineProvider);
+      container
+        ..invalidate(worldRankingProvider)
+        ..invalidate(movementBaselineProvider);
       final rolled = (await container.read(
         worldRankingProvider(career.id).future,
       ))!;
