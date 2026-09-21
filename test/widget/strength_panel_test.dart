@@ -1,9 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/core/theme/app_theme.dart';
+import 'package:fnm/data/data_providers.dart';
+import 'package:fnm/domain/entities/career.dart';
+import 'package:fnm/domain/entities/formation.dart';
+import 'package:fnm/domain/repositories/career_repository.dart';
+import 'package:fnm/domain/services/manager/staff.dart';
 import 'package:fnm/domain/services/match/strength_factors.dart';
+import 'package:fnm/domain/services/squad/condition.dart';
 import 'package:fnm/features/match/strength_panel.dart';
+import 'package:fnm/features/squad/captain_providers.dart';
+import 'package:fnm/features/tactics/condition_providers.dart';
+import 'package:fnm/features/tactics/familiarity_providers.dart';
+import 'package:fnm/features/tactics/tactics_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 
@@ -201,6 +212,139 @@ void main() {
     }
   });
 
+  group('a reading from before the manager changed his shape', () {
+    // A side that has drilled 4-3-3 for years and has barely played 4-4-2.
+    const stored = {Formation.f433: 0.9, Formation.f442: 0.2};
+    const careerId = 1;
+
+    StrengthPanelKey keyFor(Formation f) =>
+        (careerId: careerId, formation: f, sideRating: 80);
+
+    /// Everything `strengthFactorsProvider` reads, faked flat, so the only
+    /// thing that can move the reading is the shape: no conditions (so the two
+    /// squad lines are zero and drop), morale at the neutral 50, no captain,
+    /// and whatever staff [careers] is holding.
+    List<Override> overrides(_FakeCareers careers) => [
+      careerRepositoryProvider.overrideWithValue(careers),
+      shapeDrillingProvider.overrideWith((ref, id) async => stored),
+      squadConditionProvider.overrideWith(
+        (ref, id) async => const <int, PlayerCondition>{},
+      ),
+      squadDataProvider.overrideWith(
+        (ref, id) async => SquadData(
+          pool: const [],
+          callUps: {for (var i = 1; i <= 23; i++) i},
+          absences: const {},
+        ),
+      ),
+      moraleProvider.overrideWith((ref, id) async => 50),
+      captainProvider.overrideWith((ref, id) async => null),
+      captainMoraleProvider.overrideWith((ref, id) async => 0),
+    ];
+
+    test(
+      'a different shape is a different reading, never a cached one',
+      () async {
+        final container = ProviderContainer(
+          overrides: overrides(_FakeCareers()),
+        );
+        addTearDown(container.dispose);
+
+        // The shape is part of the provider KEY, so a manager who comes back
+        // from the tactics screen having changed it is not reading the same
+        // provider any more — there is no instance holding the old figure to
+        // serve him. This is the guarantee the panel actually rests on.
+        final drilled = await container.read(
+          strengthFactorsProvider(keyFor(Formation.f433)).future,
+        );
+        final strange = await container.read(
+          strengthFactorsProvider(keyFor(Formation.f442)).future,
+        );
+
+        expect(drilled.single.kind, StrengthFactorKind.familiarity);
+        expect(drilled.single.delta, 5);
+        expect(drilled.single.subject, '4-3-3');
+        expect(strange.single.delta, 1);
+        expect(strange.single.subject, '4-4-2');
+      },
+    );
+
+    testWidgets('changing the shape changes the figure on screen', (
+      tester,
+    ) async {
+      Future<void> show(Formation f) => tester.pumpWidget(
+        ProviderScope(
+          overrides: overrides(_FakeCareers()),
+          child: MaterialApp(
+            theme: AppTheme.theme,
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            home: Scaffold(
+              body: StrengthPanel(
+                careerId: careerId,
+                formation: f,
+                sideRating: 80,
+              ),
+            ),
+          ),
+        ),
+      );
+
+      await show(Formation.f433);
+      await tester.pumpAndSettle();
+      expect(find.text('+5'), findsOneWidget);
+      expect(find.text('4-3-3'), findsOneWidget);
+
+      // The manager goes to the tactics screen and comes back in a shape his
+      // side hardly knows. The panel has to say so.
+      await show(Formation.f442);
+      await tester.pumpAndSettle();
+      expect(find.text('4-4-2'), findsOneWidget);
+      expect(
+        find.text('+5'),
+        findsNothing,
+        reason: 'the panel is still reading the shape he left behind',
+      );
+      expect(find.text('+1'), findsOneWidget);
+    });
+
+    test('an input the key cannot see still reaches the panel', () async {
+      // The shape is in the key; the staff room is not. So this is what the
+      // invalidation on the way back from the tactics screen is FOR — and it
+      // is kept for the inputs that work this way, not for the shape, which
+      // could not go stale if the invalidation were deleted tomorrow.
+      final careers = _FakeCareers();
+      final container = ProviderContainer(overrides: overrides(careers));
+      addTearDown(container.dispose);
+      // Held open, so the value below really is a cached one and the
+      // invalidation really is doing the work.
+      final key = keyFor(Formation.f433);
+      container.listen(strengthFactorsProvider(key), (_, _) {});
+
+      final before = await container.read(
+        strengthFactorsProvider(key).future,
+      );
+      expect(
+        before.where((f) => f.kind == StrengthFactorKind.staff),
+        isEmpty,
+        reason: 'nobody is hired yet',
+      );
+
+      careers.career = careers.career.copyWith(
+        staffFitnessCoach: StaffTier.elite,
+        staffAssistant: StaffTier.elite,
+      );
+      container.invalidate(strengthFactorsProvider);
+      final after = await container.read(strengthFactorsProvider(key).future);
+
+      expect(
+        after.where((f) => f.kind == StrengthFactorKind.staff),
+        isNotEmpty,
+        reason: 'a full staff room is worth a point and the panel missed it',
+      );
+    });
+  });
+
   group('width', () {
     for (final width in [360.0, 400.0]) {
       for (final locale in [const Locale('en'), const Locale('cs')]) {
@@ -270,3 +414,25 @@ const _labels = {
   'Kapitán',
   'Realizační tým',
 };
+
+/// A save whose staff room can be changed under the panel, so an input that is
+/// NOT part of the provider key can be shown reaching the screen.
+class _FakeCareers implements CareerRepository {
+  Career career = Career(
+    id: 1,
+    managerName: 'Tester',
+    nationId: 1,
+    rngSeed: 1,
+    createdAt: DateTime(2026),
+    inGameDate: DateTime(2026, 6),
+  );
+
+  @override
+  Future<Career?> byId(int id) async => career;
+
+  /// Everything else on the interface would only be noise here; a call to one
+  /// is a test reading something it never meant to.
+  @override
+  dynamic noSuchMethod(Invocation invocation) =>
+      throw UnimplementedError('${invocation.memberName} is not faked');
+}

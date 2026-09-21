@@ -55,6 +55,10 @@ class MatchPreviewScreen extends ConsumerWidget {
     // it to pick up the new lineup.
     await context.push('${Routes.tactics}?careerId=$careerId');
     ref.invalidate(matchPreviewProvider(careerId));
+    // And the strength panel with it: a familiarity reading taken before the
+    // manager changed his shape is the one failure this panel cannot have, as
+    // the whole point of it is to show him that changing his shape matters.
+    ref.invalidate(strengthFactorsProvider);
   }
 
   @override
