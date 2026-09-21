@@ -12705,23 +12705,11 @@ abstract class AppLocalizations {
   /// **'Page {page} of {pages}'**
   String transfersPageOf(int page, int pages);
 
-  /// Transfer report: the move went to a stronger league.
+  /// Transfer report: screen reader label for the mark between the club a player left and the club he joined.
   ///
   /// In en, this message translates to:
-  /// **'A step up'**
-  String get transfersStepUp;
-
-  /// Transfer report: the move went to a weaker league.
-  ///
-  /// In en, this message translates to:
-  /// **'A step down'**
-  String get transfersStepDown;
-
-  /// Transfer report: the move held its league level.
-  ///
-  /// In en, this message translates to:
-  /// **'The same level'**
-  String get transfersStepLevel;
+  /// **'Moved to'**
+  String get transfersMovedTo;
 
   /// Transfer report: stands in for a side of the move whose club the report does not name.
   ///

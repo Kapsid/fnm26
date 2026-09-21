@@ -26,8 +26,11 @@ typedef TransferRow = ({
   int? change,
 
   /// Which way the move went between league tiers: +1 up, −1 down, 0 sideways.
-  /// The thing a transfer actually MEANS for a player's season, which a club
-  /// name alone does not say to anybody who does not know the leagues.
+  ///
+  /// Encoded and decoded, never drawn. The table used to tilt its arrow by it;
+  /// the manager asked for one mark per move instead, and the field stayed so
+  /// that every report already sitting in a save keeps decoding without
+  /// another version tag.
   int step,
 
   /// FIFA codes of the two clubs' countries, so each side of the move can wear
@@ -238,8 +241,7 @@ class _PageButton extends StatelessWidget {
   }
 }
 
-/// One move, read in one order: WHO, from where, to where, for how much, and
-/// which way that is a step.
+/// One move, read in one order: WHO, from where, to where, and for how much.
 ///
 /// The fee is given a column of its own rather than being laid after the name.
 /// A Row hands a plain [Text] all the width it asks for, so a long name and a
@@ -309,34 +311,27 @@ class _MoveRow extends StatelessWidget {
       ),
     );
 
-    // ONE arrow, and it is the move. It points right because that is the way
-    // the row is read, and it tilts to say which way the move went between
-    // league tiers — the thing a pair of club names does not tell anybody who
-    // does not already know the leagues. The row used to draw a flat arrow
-    // here and leave [TransferRow.step] unprinted, so the two chevrons under
-    // the table were the only arrows that meant anything, and they meant
-    // paging.
-    final (icon, colour, label) = switch (row.step) {
-      > 0 => (Icons.north_east_rounded, AppColors.positive, l.transfersStepUp),
-      < 0 => (
-        Icons.south_east_rounded,
-        AppColors.warning,
-        l.transfersStepDown,
-      ),
-      _ => (
-        Icons.east_rounded,
-        AppColors.onSurfaceVariant,
-        l.transfersStepLevel,
-      ),
-    };
+    // ONE mark, and it is the move. It points right because that is the way
+    // the row is read, and it looks the same on every row.
+    //
+    // It used to tilt and change colour with [TransferRow.step] — north-east
+    // and green for a step up a league tier, south-east and amber for a step
+    // down. The manager's verdict on the device was that a move is a move:
+    // three glyphs to learn where one would do. [TransferRow.step] is still
+    // decoded, so old reports read and the field costs nothing, but nothing
+    // on the screen varies by it now.
     return Row(
       children: [
         side(row.from, row.fromCountry),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xs),
           child: Semantics(
-            label: label,
-            child: Icon(icon, size: 13, color: colour),
+            label: l.transfersMovedTo,
+            child: const Icon(
+              Icons.east_rounded,
+              size: 13,
+              color: AppColors.onSurfaceVariant,
+            ),
           ),
         ),
         side(row.to, row.toCountry),

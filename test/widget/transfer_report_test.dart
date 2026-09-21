@@ -138,19 +138,19 @@ void main() {
         expectNothingCut(tester, 'the transfer table');
       });
 
-      testWidgets('every row says which way the move was, $at', (tester) async {
+      testWidgets('every move wears the same mark, $at', (tester) async {
         await pumpTable(tester, width: width, locale: locale);
-        // Six rows a page, one arrow each, and between them all three
-        // directions: up, down and level.
+        // Six rows a page, one mark each, and the SAME mark on all six. The
+        // rows pumped here carry every value of TransferRow.step there is
+        // (`step: i % 3 - 1`), so a table that still tilted its arrow by the
+        // step would show north-east and south-east here.
         expect(
-          find.byIcon(Icons.north_east_rounded).evaluate().length +
-              find.byIcon(Icons.south_east_rounded).evaluate().length +
-              find.byIcon(Icons.east_rounded).evaluate().length,
+          find.byIcon(Icons.east_rounded).evaluate().length,
           TransferTable.perPage,
         );
-        expect(find.byIcon(Icons.north_east_rounded), findsWidgets);
-        expect(find.byIcon(Icons.south_east_rounded), findsWidgets);
-        expect(find.byIcon(Icons.east_rounded), findsWidgets);
+        expect(find.byIcon(Icons.north_east_rounded), findsNothing);
+        expect(find.byIcon(Icons.south_east_rounded), findsNothing);
+        expectNothingCut(tester, 'the transfer table');
       });
 
       testWidgets('paging holds the row together, $at', (tester) async {

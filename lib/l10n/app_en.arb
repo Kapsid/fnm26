@@ -11759,17 +11759,9 @@
       }
     }
   },
-  "transfersStepUp": "A step up",
-  "@transfersStepUp": {
-    "description": "Transfer report: the move went to a stronger league."
-  },
-  "transfersStepDown": "A step down",
-  "@transfersStepDown": {
-    "description": "Transfer report: the move went to a weaker league."
-  },
-  "transfersStepLevel": "The same level",
-  "@transfersStepLevel": {
-    "description": "Transfer report: the move held its league level."
+  "transfersMovedTo": "Moved to",
+  "@transfersMovedTo": {
+    "description": "Transfer report: screen reader label for the mark between the club a player left and the club he joined."
   },
   "transfersUnknownClub": "Unknown club",
   "@transfersUnknownClub": {

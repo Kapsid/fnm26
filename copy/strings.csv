@@ -2090,9 +2090,7 @@ transfersOlder,Transfer report: next page of moves.,,More,Další
 transfersPagePrevious,Transfer report: the previous page of moves.,,Previous,Předchozí
 transfersPageNext,Transfer report: the next page of moves.,,Next,Další
 transfersPageOf,Transfer report: which page of moves is shown.,{page} {pages},Page {page} of {pages},Stránka {page} z {pages}
-transfersStepUp,Transfer report: the move went to a stronger league.,,A step up,Krok nahoru
-transfersStepDown,Transfer report: the move went to a weaker league.,,A step down,Krok dolů
-transfersStepLevel,Transfer report: the move held its league level.,,The same level,Stejná úroveň
+transfersMovedTo,Transfer report: screen reader label for the mark between the club a player left and the club he joined.,,Moved to,Přestup do
 transfersUnknownClub,Transfer report: stands in for a side of the move whose club the report does not name.,,Unknown club,Neznámý klub
 yAgainstThemAgain0,"Y post: againstThemAgain, variant 0.",{count} {opponent},"That is {count} times against {opponent} now. Somebody is keeping score, and it is them.","To už je {count}. proti {opponent}. Někdo si to počítá, a jsou to oni."
 yAgainstThemAgain1,"Y post: againstThemAgain, variant 1.",{opponent} {count},"{opponent} again. {count} meetings, and we still have not worked them out.",Zase {opponent}. {count} zápasů a pořád na ně nemáme recept.

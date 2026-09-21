@@ -8051,13 +8051,7 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get transfersStepUp => 'A step up';
-
-  @override
-  String get transfersStepDown => 'A step down';
-
-  @override
-  String get transfersStepLevel => 'The same level';
+  String get transfersMovedTo => 'Moved to';
 
   @override
   String get transfersUnknownClub => 'Unknown club';

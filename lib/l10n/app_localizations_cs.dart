@@ -8065,13 +8065,7 @@ class AppLocalizationsCs extends AppLocalizations {
   }
 
   @override
-  String get transfersStepUp => 'Krok nahoru';
-
-  @override
-  String get transfersStepDown => 'Krok dolů';
-
-  @override
-  String get transfersStepLevel => 'Stejná úroveň';
+  String get transfersMovedTo => 'Přestup do';
 
   @override
   String get transfersUnknownClub => 'Neznámý klub';

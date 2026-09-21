@@ -4,7 +4,6 @@ import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/domain/services/club/club_history.dart';
-import 'package:fnm/domain/services/club/clubs.dart';
 import 'package:fnm/features/player/club_history_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
@@ -82,16 +81,10 @@ class ClubHistoryCard extends ConsumerWidget {
                           ),
                         ),
                       ),
-                      // Which of these rows is a TRANSFER, and which way it
-                      // went. Every row but the first is a move, and the card
-                      // used to draw them all identically — so the season he
-                      // stepped up to a big league read exactly like the season
-                      // he dropped out of one. The arrow is the whole point of
-                      // keeping the history at all.
-                      _MoveMark(
-                        from: i == 0 ? null : spells[i - 1],
-                        to: spells[i],
-                      ),
+                      // Which of these rows is a TRANSFER: every row but the
+                      // first is a move, and they all look alike, because a
+                      // move is a move.
+                      _MoveMark(isMove: i != 0),
                       const SizedBox(width: AppSpacing.sm),
                       if (spells[i].country.isNotEmpty) ...[
                         FlagDisc(spells[i].country, size: 18),
@@ -115,40 +108,34 @@ class ClubHistoryCard extends ConsumerWidget {
   }
 }
 
-/// The marker on one row of a club history: whether the player ARRIVED there by
-/// transfer, and whether that move was a step up, a step down or a sideways one.
+/// The marker on one row of a club history: whether the player ARRIVED there
+/// by transfer.
 ///
-/// [from] is the spell before this one — null for the club he started at, which
-/// is not a transfer and gets a quiet dot instead of an arrow.
+/// [isMove] is false for the club he started at, which is not a transfer and
+/// gets a quiet dot instead of the move mark.
+///
+/// The mark used to tilt and change colour with the step between league tiers,
+/// matching what the transfer report drew at the time. The report now prints
+/// one mark per move, so this card does too: the two views of one walk still
+/// agree, and there is a single glyph to learn instead of three.
 class _MoveMark extends StatelessWidget {
-  const _MoveMark({required this.from, required this.to});
+  const _MoveMark({required this.isMove});
 
-  final ClubSpell? from;
-  final ClubSpell to;
+  final bool isMove;
 
   @override
   Widget build(BuildContext context) {
-    final previous = from;
-    if (previous == null) {
+    if (!isMove) {
       return const Icon(
         Icons.circle,
         size: 8,
         color: AppColors.outlineVariant,
       );
     }
-    // League strength runs 1 (elite) … 5 (lower), so a SMALLER number is the
-    // better league — a move to a lower number is a step up.
-    final step =
-        ClubService.tierOfCountry(previous.country) -
-        ClubService.tierOfCountry(to.country);
-    // The same three marks the transfer report prints on every move, because
-    // this card and that report are two views of ONE walk and a manager
-    // should not have to learn the glyphs twice.
-    final (icon, color) = switch (step) {
-      > 0 => (Icons.north_east_rounded, AppColors.positive),
-      < 0 => (Icons.south_east_rounded, AppColors.warning),
-      _ => (Icons.east_rounded, AppColors.onSurfaceVariant),
-    };
-    return Icon(icon, size: 14, color: color);
+    return const Icon(
+      Icons.east_rounded,
+      size: 14,
+      color: AppColors.onSurfaceVariant,
+    );
   }
 }
