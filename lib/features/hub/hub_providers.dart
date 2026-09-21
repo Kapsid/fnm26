@@ -16,6 +16,7 @@ import 'package:fnm/domain/repositories/career_repository.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
 import 'package:fnm/domain/services/competition/continental_cups.dart';
 import 'package:fnm/domain/services/competition/finals.dart';
+import 'package:fnm/domain/services/competition/finals_participation.dart';
 import 'package:fnm/domain/services/competition/group_advancement.dart';
 import 'package:fnm/domain/services/competition/hosts.dart';
 import 'package:fnm/domain/services/competition/nations_cup.dart';
@@ -459,15 +460,7 @@ class SeasonService {
   /// settled in one heavier pass once the champion is known (see
   /// [_settleWorldCupRanking]). These round codes are unique to the World Cup
   /// finals (continental uses a 'C' prefix, the Nations Cup an 'N' prefix).
-  static const _wcFinalsRounds = {
-    'GROUP',
-    'R32',
-    'R16',
-    'QF',
-    'SF',
-    '3RD',
-    'FINAL',
-  };
+  static const Set<String> _wcFinalsRounds = FinalsRounds.worldChampionship;
 
   static bool _isWcFinalsMatch(Fixture f) =>
       f.round != null && _wcFinalsRounds.contains(f.round);
@@ -1334,7 +1327,19 @@ class SeasonService {
       }
 
       // 2. The player's next fixture (a finals match they contest, or their
-      //    next competition) — advance up to it and hand back to play it.
+      //    next competition) — advance the clock to it and QUICK-SIM it along
+      //    with everything else due. It is not handed back to be played by
+      //    hand: this is the skip path, and the manager's own match is
+      //    simulated with the squad he named, the XI he picked and his
+      //    tactics, exactly as it would be if he watched it.
+      //
+      //    No `excludeNationId` here, and that is deliberate. `_catchUp` reads
+      //    a null exclude as "an explicit quick-sim/skip, everything due is
+      //    played" (see its doc comment); passing the manager's nation would
+      //    hold his own fixture back, the clock would stop moving and the
+      //    cycle would never reach a champion.
+      //    `test/unit/career/nation_switch_test.dart` drives a whole cycle
+      //    through repeated `advance` calls and depends on exactly that.
       if (next != null) {
         await _careers.updateInGameDate(careerId, next.date);
         await _catchUp(careerId, next.date, career.rngSeed);
@@ -1895,20 +1900,9 @@ class SeasonService {
   // type that declares it.
   /// Rounds that belong to the main finals tournaments (World Cup + continental
   /// championship) — the ones the player steps through even when not in them.
-  static const _finalsMatchRounds = {
-    'GROUP',
-    'R32',
-    'R16',
-    'QF',
-    'SF',
-    '3RD',
-    'FINAL',
-    'CGROUP',
-    'CR16',
-    'CQF',
-    'CSF',
-    'C3RD',
-    'CFINAL',
+  static const Set<String> _finalsMatchRounds = {
+    ...FinalsRounds.worldChampionship,
+    ...FinalsRounds.continental,
   };
 
   static bool _isFinalsMatch(Fixture f) =>
