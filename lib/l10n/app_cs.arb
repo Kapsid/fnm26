@@ -367,6 +367,8 @@
   "hubNoMoreFixtures": "V tomto cyklu už nejsou žádné zápasy.",
   "hubNextMatch": "PŘÍŠTÍ ZÁPAS",
   "hubVs": "VS",
+  "hubWorldRank": "#{rank}",
+  "hubWorldRankLabel": "Světový žebříček",
   "hubSquadStatus": "STAV KÁDRU",
   "hubPlayers": "{count} hráčů",
   "hubAvgRating": "Prům. hodnocení",

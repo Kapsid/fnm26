@@ -23,6 +23,7 @@ import 'package:fnm/features/hub/hub_providers.dart';
 import 'package:fnm/features/y/y_providers.dart';
 import 'package:fnm/features/hub/board_objectives_screen.dart';
 import 'package:fnm/features/press/press_providers.dart';
+import 'package:fnm/features/ranking/world_ranking_providers.dart';
 import 'package:fnm/features/squad/grievance_providers.dart';
 import 'package:fnm/features/squad/grievance_sheet.dart';
 import 'package:fnm/features/press/press_sheet.dart';
@@ -217,32 +218,23 @@ class _HubScreenState extends ConsumerState<HubScreen> {
           String name(int id) => hub.nations[id]?.name ?? l.hubUnknown;
           // Hide the opponent and group table until the draw has been watched.
           final drawWatched = hub.nextDrawWatched;
+          // The same figure the world ranking screen shows, read from the same
+          // provider: two screens quoting different movement for one nation is
+          // a bug the manager reports as "which one is right?".
+          final playerRank = ref
+              .watch(playerRankProvider(careerId))
+              .valueOrNull;
 
           return ListView(
             padding: const EdgeInsets.all(AppSpacing.marginMobile),
             children: [
-              Row(
-                children: [
-                  FlagDisc(nation?.code ?? '??', size: 44),
-                  const SizedBox(width: AppSpacing.md),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          nation?.name ?? '…',
-                          style: AppTypography.headlineMedium,
-                        ),
-                        Text(
-                          '${hub.career.managerName} · $date',
-                          style: AppTypography.bodySmall.copyWith(
-                            color: AppColors.onSurfaceVariant,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
+              HubHeader(
+                code: nation?.code ?? '??',
+                nationName: nation?.name ?? '…',
+                managerName: hub.career.managerName,
+                date: date,
+                rank: playerRank?.rank,
+                movement: playerRank?.movement ?? 0,
               ),
               const SizedBox(height: AppSpacing.md),
               // Host-nation strip while a finals is under way — the World Cup,
@@ -738,6 +730,138 @@ class _Side extends StatelessWidget {
         const SizedBox(height: AppSpacing.xs),
         Text(code, style: AppTypography.labelMedium),
       ],
+    );
+  }
+}
+
+/// The dashboard's identity line: the flag and the nation, and under them who
+/// is in charge, what day it is, and where the nation stands in the world.
+///
+/// The ranking sits beside the date because that is where the manager already
+/// looks for "where am I today": it is a number and an arrow, not a sentence,
+/// so it survives a 360px phone in either language.
+class HubHeader extends StatelessWidget {
+  const HubHeader({
+    required this.code,
+    required this.nationName,
+    required this.managerName,
+    required this.date,
+    required this.rank,
+    required this.movement,
+    super.key,
+  });
+
+  final String code;
+  final String nationName;
+  final String managerName;
+
+  /// Today, already formatted.
+  final String date;
+
+  /// The nation's world position, or null while the ranking is still loading.
+  final int? rank;
+
+  /// Places climbed (positive) or dropped (negative) since the freeze the
+  /// world ranking screen measures its own arrows from.
+  final int movement;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        FlagDisc(code, size: 44),
+        const SizedBox(width: AppSpacing.md),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                nationName,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: AppTypography.headlineMedium,
+              ),
+              Row(
+                children: [
+                  // The name and the date give way first. Every label here
+                  // carries a maxLines: one left free to wrap would make this
+                  // row taller than the header, which reads as a squashed
+                  // flag rather than as an overflow anyone can see.
+                  Flexible(
+                    child: Text(
+                      '$managerName · $date',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: AppTypography.bodySmall.copyWith(
+                        color: AppColors.onSurfaceVariant,
+                      ),
+                    ),
+                  ),
+                  if (rank != null) ...[
+                    const SizedBox(width: AppSpacing.sm),
+                    HubRank(rank: rank!, movement: movement),
+                  ],
+                ],
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+/// The nation's world position with its movement, laid out to sit on the
+/// date's own line: an inline arrow rather than the ranking screen's stacked
+/// cell, which is twice as tall as this line allows.
+class HubRank extends StatelessWidget {
+  const HubRank({required this.rank, required this.movement, super.key});
+
+  final int rank;
+
+  /// Places climbed (positive) or dropped (negative).
+  final int movement;
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    final up = movement > 0;
+    final color = up ? AppColors.up : AppColors.down;
+    return Tooltip(
+      message: l.hubWorldRankLabel,
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          // Plain Text, deliberately: WholeText scales itself down to fit, so
+          // a width guard reading didExceedMaxLines can never fail inside one.
+          Text(
+            l.hubWorldRank(rank),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: AppTypography.labelSmall.copyWith(
+              color: AppColors.primary,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+          if (movement != 0) ...[
+            Icon(
+              up ? Icons.arrow_drop_up : Icons.arrow_drop_down,
+              size: 16,
+              color: color,
+            ),
+            Text(
+              '${movement.abs()}',
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: AppTypography.labelSmall.copyWith(
+                color: color,
+                fontWeight: FontWeight.w700,
+                letterSpacing: 0,
+              ),
+            ),
+          ],
+        ],
+      ),
     );
   }
 }

@@ -366,6 +366,8 @@ hubObjectiveMissed,"Objective missed, with the result.",{result},MISSED · {resu
 hubNoMoreFixtures,Shown when no fixtures remain this cycle.,,No more fixtures this cycle.,V tomto cyklu už nejsou žádné zápasy.
 hubNextMatch,Heading above the next match card.,,NEXT MATCH,PŘÍŠTÍ ZÁPAS
 hubVs,Versus separator between two teams.,,VS,VS
+hubWorldRank,"The nation's world ranking position, shown beside the date on the dashboard.",{rank},#{rank},#{rank}
+hubWorldRankLabel,Tooltip on the dashboard's world ranking figure.,,World ranking,Světový žebříček
 hubSquadStatus,Heading of the squad-status panel.,,SQUAD STATUS,STAV KÁDRU
 hubPlayers,Player count.,{count},{count} players,{count} hráčů
 hubAvgRating,Label for the squad average rating.,,Avg rating,Prům. hodnocení

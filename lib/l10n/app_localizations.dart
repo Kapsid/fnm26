@@ -2300,6 +2300,18 @@ abstract class AppLocalizations {
   /// **'VS'**
   String get hubVs;
 
+  /// The nation's world ranking position, shown beside the date on the dashboard.
+  ///
+  /// In en, this message translates to:
+  /// **'#{rank}'**
+  String hubWorldRank(int rank);
+
+  /// Tooltip on the dashboard's world ranking figure.
+  ///
+  /// In en, this message translates to:
+  /// **'World ranking'**
+  String get hubWorldRankLabel;
+
   /// Heading of the squad-status panel.
   ///
   /// In en, this message translates to:

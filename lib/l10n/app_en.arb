@@ -1994,6 +1994,19 @@
   "@hubVs": {
     "description": "Versus separator between two teams."
   },
+  "hubWorldRank": "#{rank}",
+  "@hubWorldRank": {
+    "description": "The nation's world ranking position, shown beside the date on the dashboard.",
+    "placeholders": {
+      "rank": {
+        "type": "int"
+      }
+    }
+  },
+  "hubWorldRankLabel": "World ranking",
+  "@hubWorldRankLabel": {
+    "description": "Tooltip on the dashboard's world ranking figure."
+  },
   "hubSquadStatus": "SQUAD STATUS",
   "@hubSquadStatus": {
     "description": "Heading of the squad-status panel."

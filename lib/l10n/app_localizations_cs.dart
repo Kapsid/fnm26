@@ -1319,6 +1319,14 @@ class AppLocalizationsCs extends AppLocalizations {
   String get hubVs => 'VS';
 
   @override
+  String hubWorldRank(int rank) {
+    return '#$rank';
+  }
+
+  @override
+  String get hubWorldRankLabel => 'Světový žebříček';
+
+  @override
   String get hubSquadStatus => 'STAV KÁDRU';
 
   @override

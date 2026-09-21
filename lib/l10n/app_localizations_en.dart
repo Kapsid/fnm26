@@ -1314,6 +1314,14 @@ class AppLocalizationsEn extends AppLocalizations {
   String get hubVs => 'VS';
 
   @override
+  String hubWorldRank(int rank) {
+    return '#$rank';
+  }
+
+  @override
+  String get hubWorldRankLabel => 'World ranking';
+
+  @override
   String get hubSquadStatus => 'SQUAD STATUS';
 
   @override

@@ -307,3 +307,19 @@ final AutoDisposeFutureProviderFamily<RankingData?, int> worldRankingProvider =
         baseline: baseline.kind,
       );
     });
+
+/// Where the manager's own nation stands in the world right now, and how far
+/// it has moved since the freeze the ranking screen measures from.
+///
+/// Derived from [worldRankingProvider] rather than computed again, so the
+/// dashboard and the ranking screen can never quote two different numbers for
+/// the same nation on the same day. Null before the save has a nation at all.
+final AutoDisposeFutureProviderFamily<({int rank, int movement})?, int>
+playerRankProvider = FutureProvider.autoDispose
+    .family<({int rank, int movement})?, int>((ref, careerId) async {
+      final data = await ref.watch(worldRankingProvider(careerId).future);
+      if (data == null) return null;
+      final rank = data.position[data.playerNationId];
+      if (rank == null) return null;
+      return (rank: rank, movement: data.movement[data.playerNationId] ?? 0);
+    });
