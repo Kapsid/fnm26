@@ -740,12 +740,14 @@ class MatchHeadline extends StatelessWidget {
     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
     children: [
       // Flexible, all three: every child here used to take the width its
-      // longest word asked for, and the Czech word for a squad's overall is
-      // "Celkový přehled" — fifteen characters against the English seven. Two
-      // of those plus the date is more than a 360pt phone has, so the row
-      // painted outside its own card. Given a share of the width they can be
-      // held to, they give up their last letters instead, which is a thing
-      // the manager can at least see happening.
+      // longest word asked for, so two overalls plus the date came to more
+      // than a 360pt phone has and the row painted outside its own card.
+      //
+      // The share of the width is only half the fix. The Czech label read
+      // "Celkový přehled" — fifteen characters against the English seven —
+      // and a share it could be held to still cut the NUMBER off the end,
+      // which is the one thing on this card the manager came to read. So the
+      // label gave way instead: "Celkově" says the same thing in seven.
       Flexible(
         child: _Side(code: homeCode, overall: homeOverall),
       ),

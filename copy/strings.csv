@@ -34,7 +34,7 @@ matchTacticsWithSubs,"Tactics button on the interval overlay, with subs used.",{
 matchTiredCount,Live match control bar tactics pill label when players are out of energy; the substitution count is shown separately so it is never clipped.,{count},TIRED ×{count},ÚNAVA ×{count}
 matchTacticsLabel,Live match control bar tactics pill label when no players are tired.,,TACTICS,TAKTIKA
 teamOverallOverTime,Heading over the chart of a nation's overall rating by year.,,OVERALL OVER TIME,VÝVOJ CELKOVÉHO HODNOCENÍ
-teamOverall,Label for a team's overall rating (the mean of its best eleven).,,Overall,Celkový přehled
+teamOverall,Label for a team's overall rating (the mean of its best eleven).,,Overall,Celkově
 teamTalkHeading,Heading above the interval team-talk options.,,TEAM TALK,PORADA TÝMU
 teamTalkPrompt,Prompt shown before a team talk is chosen.,,Set the tone for the second half.,Nastavte tón pro druhý poločas.
 teamTalkCalmLabel,Team-talk tone button label.,,Calm heads,Chladné hlavy

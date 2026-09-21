@@ -130,7 +130,7 @@ class AppLocalizationsCs extends AppLocalizations {
   String get teamOverallOverTime => 'VÝVOJ CELKOVÉHO HODNOCENÍ';
 
   @override
-  String get teamOverall => 'Celkový přehled';
+  String get teamOverall => 'Celkově';
 
   @override
   String get teamTalkHeading => 'PORADA TÝMU';

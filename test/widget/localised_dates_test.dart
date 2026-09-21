@@ -11,6 +11,7 @@ import 'package:fnm/features/match/match_preview_screen.dart';
 import 'package:fnm/features/results/results_providers.dart';
 import 'package:fnm/features/results/results_screen.dart';
 
+import '../helpers/expect_whole.dart';
 import '../helpers/pump_app.dart';
 
 /// Dates in the manager's own language, and the room they take to say it.
@@ -140,45 +141,32 @@ void main() {
 
   // ---------------------------------------------------------------- width --
 
-  /// Asserts that NOTHING on screen ran out of room.
-  ///
-  /// Borrowed from transfer_report_test.dart, and the strongest tool there is:
-  /// it walks every paragraph rather than the one the test remembered to name.
-  /// `expect(tester.takeException(), isNull)` is not a width test and never
-  /// was — it passes happily for a row of dates reading "30. lis 20…".
-  void expectNothingCut(WidgetTester tester, String where) {
-    for (final element in find.byType(Text).evaluate()) {
-      final paragraph = element.renderObject;
-      if (paragraph is! RenderParagraph) continue;
-      expect(
-        paragraph.didExceedMaxLines,
-        isFalse,
-        reason:
-            'something on $where is cut off: '
-            '"${(element.widget as Text).data}" wants '
-            '${paragraph.getMaxIntrinsicWidth(double.infinity).toStringAsFixed(0)}px '
-            'and was given ${paragraph.size.width.toStringAsFixed(0)}px',
-      );
-    }
-  }
-
   /// How much room the one date on screen is asking for.
   ///
-  /// Used where [expectNothingCut] cannot honestly be used, and it is worth
-  /// being exact about why. A widget test loads no real fonts: every glyph is
-  /// a square of the full point size, about 1.75x the advance of JetBrains
-  /// Mono. The dashboard header's "manager · date" line is therefore already
-  /// ellipsised in ENGLISH at 360 and at 400, and would be with an empty
-  /// manager name; the match headline's row already overflows in English at
-  /// 360. Holding either to "nothing is cut" would be asserting the test font,
-  /// not the layout, and it would have failed before this change was written.
-  ///
-  /// What regresses, and what this measures instead, is how much MORE room
-  /// Czech asks for than English. The answer has to be one character: the full
-  /// stop that makes the day an ordinal. A Czech date that grew to a full
-  /// month name — "30. listopadu 2030" — would blow the budget by eight
+  /// What this measures, beside [expectNothingCut], is how much MORE room
+  /// Czech asks for than English. The answer has to be about one character:
+  /// the full stop that makes the day an ordinal. A Czech date that grew to a
+  /// full month name — "30. listopadu 2030" — would blow the budget by eight
   /// characters, and that is the change that would burst these rows on a real
   /// phone.
+  ///
+  /// Which language comes out WIDER is not asserted, and the reason is worth
+  /// keeping: it depends on the face. In Flutter's fallback font every glyph
+  /// is a full em, so the language with more characters always wins; in Hanken
+  /// Grotesk, which `test/flutter_test_config.dart` now loads, "30. lis 2030"
+  /// is narrower than "30 Nov 2030" despite being longer. The budget is
+  /// two-sided for that reason.
+  /// The one date on screen, as it READS — so a test can prove the language
+  /// it rendered before it measures anything about the width.
+  String dateText(WidgetTester tester) {
+    final dates = find.byType(Text).evaluate().where((element) {
+      final data = (element.widget as Text).data;
+      return data != null && data.contains('30');
+    }).toList();
+    expect(dates, hasLength(1), reason: 'exactly one date should be on screen');
+    return (dates.single.widget as Text).data!;
+  }
+
   double dateWidth(WidgetTester tester) {
     final dates = find.byType(Text).evaluate().where((element) {
       final data = (element.widget as Text).data;
@@ -298,22 +286,32 @@ void main() {
         }
       });
 
-      testWidgets('the dashboard date asks Czech for one more character', (
+      testWidgets('the dashboard date costs Czech no more than a character', (
         tester,
       ) async {
         await pumpAt(tester, header(), width: width, locale: 'en');
         final english = dateWidth(tester);
+        final englishText = dateText(tester);
+        expectNothingCut(tester, 'the dashboard header in en');
+
         await pumpAt(tester, header(), width: width, locale: 'cs');
         final czech = dateWidth(tester);
-
-        expect(czech, greaterThan(english), reason: 'Czech should differ');
+        expectNothingCut(tester, 'the dashboard header in cs');
+        // Proof of which language was measured. Without it a harness that
+        // quietly fell back to English would pass this whole test twice.
         expect(
-          czech - english,
+          dateText(tester),
+          isNot(englishText),
+          reason: 'the dashboard date rendered in English while asked for cs',
+        );
+
+        expect(
+          (czech - english).abs(),
           lessThanOrEqualTo(oneCharacter(13)), // bodySmall
           reason:
-              'the Czech dashboard date wants ${(czech - english).toStringAsFixed(0)}px '
-              'more than the English one, which is more than the ordinal full '
-              'stop can account for',
+              'the Czech dashboard date differs from the English one by '
+              '${(czech - english).abs().toStringAsFixed(0)}px, which is more '
+              'than the ordinal full stop can account for',
         );
       });
 
@@ -327,6 +325,7 @@ void main() {
           findsOneWidget,
           reason: 'the English stamp reads as a label',
         );
+        expectNothingCut(tester, 'the match headline in en');
 
         await pumpAt(tester, headline(), width: width, locale: 'cs');
         final czech = dateWidth(tester);
@@ -335,6 +334,7 @@ void main() {
           findsOneWidget,
           reason: 'the Czech stamp reads as a label, diacritics intact',
         );
+        expectNothingCut(tester, 'the match headline in cs');
 
         expect(
           czech - english,
