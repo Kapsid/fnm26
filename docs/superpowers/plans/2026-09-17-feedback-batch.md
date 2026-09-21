@@ -1779,3 +1779,58 @@ git commit -m "chore: copy round trip and whole-suite verification for the batch
 
 Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>"
 ```
+
+---
+
+### Task 36: A width sweep, with a guard that can actually fail
+
+**Added mid-batch**, after four width bugs shipped past tests that were structurally incapable of catching them. Two of the four broke in ENGLISH, in files that already had width tests.
+
+Two root causes, both now known:
+
+- `expect(tester.takeException(), isNull)` passes for ANY amount of ellipsis. A `Text` that wants 220px and is given 120px does not throw; it truncates silently. Every width test in this repo that rests on `takeException` proves only "no RenderFlex overflow", which is a different and much weaker claim than "the manager can read this".
+- `Localizations.override` around a launcher does NOT reach a route pushed on the root `Navigator`. A test written that way renders ENGLISH while claiming to test Czech. Confirmed in `test/widget/in_match_sub_undo_test.dart` before it was corrected.
+
+**Files:**
+- Create: `test/helpers/expect_whole.dart` — lift `expectWhole` out of `test/widget/in_match_sub_undo_test.dart:44-58`
+- Audit: every file under `test/widget/` that sets `physicalSize` or calls `Localizations.override`
+- Modify: whichever widgets the sweep proves are truncating
+
+**Interfaces:**
+- Produces: `void expectWhole(Finder finder, String what)` — reads `RenderParagraph.didExceedMaxLines`, and on failure reports the natural width it wanted against the width it was granted.
+
+- [ ] **Step 1: Lift the helper**
+
+Move `expectWhole` to `test/helpers/expect_whole.dart` and re-point `in_match_sub_undo_test.dart` at it. Run that file: it must stay green.
+
+- [ ] **Step 2: Find every test making the weaker claim**
+
+```bash
+grep -rln "takeException" test/widget/
+grep -rln "Localizations.override" test/widget/
+```
+
+For each hit, record in the report: does it pump a route (locale trap), and does it assert only `takeException` (ellipsis blind spot)?
+
+- [ ] **Step 3: Fix the harnesses before trusting any of them**
+
+Any test overriding the locale around a pushed route moves the locale onto the `MaterialApp`, and asserts a locale-only string is present before measuring. A test that cannot prove which language it rendered proves nothing about width.
+
+- [ ] **Step 4: Strengthen the assertions where it matters**
+
+Not every string needs this. Apply `expectWhole` to text carrying **a number or a name the manager acts on**: scores, counts, ratings, player names, nation names, money, dates. Decorative labels and headings can keep the weaker check.
+
+Test at 360px AND 400px, in English AND Czech. Czech is the longer language, but note that two of this batch's four width bugs broke in English, so never test Czech alone.
+
+- [ ] **Step 5: Fix what the sweep finds**
+
+Expect to find some. A `ListTile` subtitle beside a 40px leading and a trailing widget has only about 198px usable at 360px, which is narrower than it looks. Where a string cannot be made to fit, shorten the string rather than letting the number give way: the count, score or rating is what the manager reads, and the label around it is what can yield.
+
+- [ ] **Step 6: Commit**
+
+```bash
+git add -A
+git commit -m "test: a width guard that fails when the manager cannot read it
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>"
+```
