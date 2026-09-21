@@ -759,13 +759,43 @@ abstract final class YFeed {
     ];
   }
 
+  /// The things that happen to a nation a handful of times a cycle, as opposed
+  /// to the running commentary on its results.
+  ///
+  /// These get a reserved share of the feed. Every one of them is outnumbered
+  /// hundreds to one by match reports, and a feed capped purely by recency
+  /// therefore buried them: by the time a manager reached the World
+  /// Championship, the continental championship two years earlier — the place
+  /// booked, the group drawn, the way it ended — had scrolled off the bottom
+  /// and the country appeared never to have mentioned it at all.
+  static const Set<YTemplate> landmarks = {
+    YTemplate.trophy,
+    YTemplate.runnerUp,
+    YTemplate.eliminated,
+    YTemplate.qualified,
+    YTemplate.groupDrawn,
+    YTemplate.hostNamed,
+    YTemplate.tournamentSoon,
+  };
+
   /// Newest first, and capped — a long save would otherwise build a feed
   /// nobody can scroll to the end of.
   ///
   /// The cap counts POSTS OF THEIR OWN and carries each one's replies with it:
   /// counting replies too would let a busy thread crowd out a whole month, and
   /// cutting between a post and its replies would leave answers to nothing.
-  static List<YPost> mostRecent(List<YPost> all, {int cap = 60}) {
+  ///
+  /// [landmarkCap] is a second, smaller window reserved for the [landmarks] —
+  /// the tournaments themselves — so that a cycle's story survives the chatter
+  /// of the matches that fill the months between them. Twenty-four roots is
+  /// comfortably a whole cycle's worth: a tournament speaks two or three times
+  /// (the wire, the fans, and for the big ones a former international), and a
+  /// cycle holds about eight such moments.
+  static List<YPost> mostRecent(
+    List<YPost> all, {
+    int cap = 60,
+    int landmarkCap = 24,
+  }) {
     final repliesByParent = <String, List<YPost>>{};
     final roots = <YPost>[];
     for (final p in all) {
@@ -776,11 +806,19 @@ abstract final class YFeed {
       }
     }
     roots.sort((a, b) => b.date.compareTo(a.date));
+    final kept = roots.take(cap).toList();
+    final keptKeys = {for (final r in kept) r.key};
+    // Whatever the recency window cut, the newest landmarks come back — never
+    // more than [landmarkCap] of them, so an endless career cannot grow a feed
+    // of nothing but old trophies.
+    final rescued = [
+      for (final r in roots)
+        if (landmarks.contains(r.template) && !keptKeys.contains(r.key)) r,
+    ].take(landmarkCap);
+    final shown = [...kept, ...rescued]
+      ..sort((a, b) => b.date.compareTo(a.date));
     return [
-      for (final root in roots.take(cap)) ...[
-        root,
-        ...?repliesByParent[root.key],
-      ],
+      for (final root in shown) ...[root, ...?repliesByParent[root.key]],
     ];
   }
 
