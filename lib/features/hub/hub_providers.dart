@@ -900,6 +900,29 @@ class SeasonService {
     return available.take(_backgroundSubs).toList();
   }
 
+  /// The men who actually took the field for [nationId] in a match the manager
+  /// played out, read off the engine's ratings — one mark per participant, the
+  /// substitutes who came on included.
+  ///
+  /// Extra-time goals in his own match are drawn from THIS eleven. They used to
+  /// be drawn from [_fieldedXi], the best available 4-3-3, so a man he left out
+  /// of the squad entirely could score his winner in the 113th minute.
+  ///
+  /// Null when the result carries no marks for the side (nothing to go on), so
+  /// attribution falls back to the best XI rather than crediting nobody.
+  Future<List<Player>?> _playedXi(MatchResult result, int nationId) async {
+    final ids = {
+      for (final r in result.ratings)
+        if (r.teamNationId == nationId) r.playerId,
+    };
+    if (ids.isEmpty) return null;
+    final played = [
+      for (final p in await _pool(nationId))
+        if (ids.contains(p.id)) p,
+    ];
+    return played.isEmpty ? null : played;
+  }
+
   /// Attributes [goals] to the fielded XI and records them, returning the
   /// scorer of each goal (repeated for a brace) so the caller can build the
   /// match's player lines from the same attribution.
@@ -1259,13 +1282,16 @@ class SeasonService {
           );
       aet = true;
       // Attribute the extra-time goals (91'–120') so they reach the scorer
-      // charts too, matching the live screen.
+      // charts too, matching the live screen. They go to the eleven that was
+      // ACTUALLY on the pitch — the manager's own selection, subs included —
+      // and not to the best XI the game would have picked for him.
       await _attributeGoals(
         fixture,
         fixture.homeNationId,
         ko.homeScore - hs,
         career.rngSeed,
         0x7E01,
+        xi: await _playedXi(result, fixture.homeNationId),
         minuteFrom: 91,
         minuteSpan: 30,
       );
@@ -1275,6 +1301,7 @@ class SeasonService {
         ko.awayScore - as,
         career.rngSeed,
         0x7E02,
+        xi: await _playedXi(result, fixture.awayNationId),
         minuteFrom: 91,
         minuteSpan: 30,
       );
