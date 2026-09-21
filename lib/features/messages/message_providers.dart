@@ -544,6 +544,11 @@ class MessageService {
       final academyBonus = await _ref.read(
         youthBonusByCycleProvider(careerId).future,
       );
+      // The standing half of that same total, so the intake note can name the
+      // cause rather than leaving the manager to guess which of the two paid.
+      final standingBonus = await _ref.read(
+        intakeStandingByCycleProvider(careerId).future,
+      );
       final careerDev = await _ref.read(
         careerDevBonusProvider(careerId).future,
       );
@@ -621,9 +626,17 @@ class MessageService {
               l.msgIntakeTitle(reportYear),
               encodeSquadDevReport(
                 intake,
-                note: intakeNote(
-                  academyBonus[PlayerLifecycle.cycleOfIntake(y)] ?? 0,
-                ),
+                note: () {
+                  final cycle = PlayerLifecycle.cycleOfIntake(y);
+                  final standing = standingBonus[cycle] ?? 0;
+                  return intakeNote(
+                    l,
+                    // The stored total carries both; the academy's own share
+                    // is what is left once the standing is taken back out.
+                    academyBonus: (academyBonus[cycle] ?? 0) - standing,
+                    standingBonus: standing,
+                  );
+                }(),
               ),
               reportYear,
               4,

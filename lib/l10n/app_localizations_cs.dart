@@ -6562,6 +6562,18 @@ class AppLocalizationsCs extends AppLocalizations {
   }
 
   @override
+  String get msgIntakeNoteAcademy =>
+      'Investice do akademie se projevuje: tenhle nábor přišel silnější, než by přišel.';
+
+  @override
+  String get msgIntakeNoteStanding =>
+      'Země tenhle tým sleduje: jak reprezentace stoupá světovým žebříčkem, nejlepší kluci si vybírají fotbal a nábor je díky tomu silnější.';
+
+  @override
+  String get msgIntakeNoteBoth =>
+      'Peníze do akademie i vzestup reprezentace ve světovém žebříčku se oboje projevují: tenhle nábor přišel silnější, než by přišel.';
+
+  @override
   String msgIntakeTitle(int year) {
     return 'Nábor akademie · $year';
   }

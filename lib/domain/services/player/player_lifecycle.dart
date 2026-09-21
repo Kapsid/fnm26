@@ -290,19 +290,6 @@ abstract final class PlayerLifecycle {
     return aged.copyWith(attributes: _bumpAll(aged.attributes, delta));
   }
 
-  /// The talent shift a nation's youth intake inherits from where the senior
-  /// side is heading, given how many ranking places it [climbed] over the cycle
-  /// just finished (negative = slid down).
-  ///
-  /// A rising national team is a magnet: the best kids in the country pick
-  /// football over other sports, the good ones get taken seriously by bigger
-  /// clubs, and the next generation arrives better than the last. A side falling
-  /// out of the reckoning loses that pull. Sized to be a real but gradual tilt
-  /// (±0.10 of talent scale, roughly ±7 overall at the extremes), so it takes a
-  /// sustained rise or slump to reshape a nation — one good cycle doesn't.
-  static double rankTrendTalentBonus(int climbed) =>
-      (climbed / 30 * 0.06).clamp(-0.10, 0.10);
-
   /// A player's hidden development potential as a growth multiplier, derived
   /// deterministically from their [id] alone (so it's stable across saves, like
   /// the rest of the derived pool). Triangular around ~1.05 — most players are

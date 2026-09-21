@@ -6542,6 +6542,18 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get msgIntakeNoteAcademy =>
+      'The academy investment is showing: this intake arrived stronger than it would have.';
+
+  @override
+  String get msgIntakeNoteStanding =>
+      'The country is watching this team: with the side climbing the world ranking, the best boys are picking football, and this intake arrived stronger for it.';
+
+  @override
+  String get msgIntakeNoteBoth =>
+      'The academy money and the side\'s rise up the world ranking are both showing: this intake arrived stronger than it would have.';
+
+  @override
   String msgIntakeTitle(int year) {
     return 'Academy intake · $year';
   }

@@ -3,6 +3,7 @@ import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/services/player/player_lifecycle.dart';
 import 'package:fnm/domain/services/player/prospects.dart';
 import 'package:fnm/features/messages/squad_dev_report.dart';
+import 'package:fnm/l10n/app_localizations.dart';
 
 /// The year's academy intake, as report rows.
 ///
@@ -34,10 +35,25 @@ List<SquadDevRow> intakeRows(List<Player> pyramid) => [
 
 /// The line above the table, or null when there is nothing to say.
 ///
-/// Only a POSITIVE bonus is reported. A nation sliding down the rankings draws
-/// a negative talent shift into its intake, and announcing that as though the
-/// academy had paid off would be a lie in the manager's own inbox.
-String? intakeNote(double academyBonus) => academyBonus <= 0
-    ? null
-    : 'The academy investment is showing: this intake arrived stronger than '
-          'it would have.';
+/// Only a POSITIVE shift is reported, and the note names WHICH of the two
+/// causes did it. A nation sliding down the rankings draws a negative talent
+/// shift into its intake, and announcing that as though the academy had paid
+/// off would be a lie in the manager's own inbox.
+///
+/// [academyBonus] is the federation's money plus the manager's own eye;
+/// [standingBonus] is what the senior side earned by climbing the world
+/// ranking and winning things. Half of what this batch is about is mechanics
+/// the manager could not see working, so when the standing is what brought a
+/// better crop through, the note says so.
+String? intakeNote(
+  AppLocalizations l, {
+  required double academyBonus,
+  required double standingBonus,
+}) {
+  final academy = academyBonus > 0;
+  final standing = standingBonus > 0;
+  if (academy && standing) return l.msgIntakeNoteBoth;
+  if (standing) return l.msgIntakeNoteStanding;
+  if (academy) return l.msgIntakeNoteAcademy;
+  return null;
+}

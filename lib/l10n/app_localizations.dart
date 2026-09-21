@@ -10368,6 +10368,24 @@ abstract class AppLocalizations {
   /// **'New faces · {year}'**
   String msgNewFacesTitle(int year);
 
+  /// Line above the academy intake table when the federation's youth money is what lifted the crop.
+  ///
+  /// In en, this message translates to:
+  /// **'The academy investment is showing: this intake arrived stronger than it would have.'**
+  String get msgIntakeNoteAcademy;
+
+  /// Line above the academy intake table when the senior side's rise up the world ranking is what lifted the crop.
+  ///
+  /// In en, this message translates to:
+  /// **'The country is watching this team: with the side climbing the world ranking, the best boys are picking football, and this intake arrived stronger for it.'**
+  String get msgIntakeNoteStanding;
+
+  /// Line above the academy intake table when both the academy investment and the senior side's standing lifted the crop.
+  ///
+  /// In en, this message translates to:
+  /// **'The academy money and the side\'s rise up the world ranking are both showing: this intake arrived stronger than it would have.'**
+  String get msgIntakeNoteBoth;
+
   /// Inbox: yearly youth intake headline.
   ///
   /// In en, this message translates to:
