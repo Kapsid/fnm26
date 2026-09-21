@@ -194,6 +194,8 @@ class DriftPlayerRepository implements PlayerRepository {
         agingYears,
         youthBonusByCycle: youthBonusByCycle,
         careerStartsByPlayer: careerStartsByPlayer,
+        // Same club-minutes weight the nation pool applies — see below.
+        clubSeed: saveSeed,
       );
       if (p == null) return null;
       final home = await _home(nationId);
@@ -211,9 +213,21 @@ class DriftPlayerRepository implements PlayerRepository {
     // Identity lookups resolve a player even once they've retired out of the
     // selectable pool — a retired legend still has a name and a record.
     if (p == null) return null;
+    // The club-minutes weight on his development, identical to the one
+    // [byNation] applies through `poolAt` — without it a player looked up by
+    // identity developed at a flat rate while the very same player, read out
+    // of his nation's pool, developed at his club's. He is one footballer, so
+    // he reads one rating: the naturalised player, always resolved here and
+    // always listed beside pool-built team-mates, is where that showed.
+    final agedOnly = PlayerAging.agedYears(p, agingYears);
     final aged = PlayerLifecycle.withCareerDev(
-      PlayerAging.agedYears(p, agingYears),
+      agedOnly,
       careerStartsByPlayer[id] ?? 0,
+      minutesFactor: PlayerLifecycle.minutesFactorFor(
+        agedOnly,
+        agingYears,
+        saveSeed,
+      ),
     );
     final seeded = await _seededRows(p.nationId);
     final home = await _home(p.nationId);

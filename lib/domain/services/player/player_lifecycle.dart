@@ -179,15 +179,8 @@ abstract final class PlayerLifecycle {
     // see [hasRetiredAt], which the all-time charts read too.
     bool retired(Player aged) => hasRetiredAt(aged.id, aged.age, agingYears);
 
-    double factorFor(Player aged) => clubSeed == 0
-        ? 1
-        : ClubForm.yearMinutesFactor(
-            playerId: aged.id,
-            overall: aged.overall,
-            age: aged.age,
-            saveSeed: clubSeed,
-            year: agingYears,
-          );
+    double factorFor(Player aged) =>
+        minutesFactorFor(aged, agingYears, clubSeed);
 
     final out = <Player>[];
     for (final p in seeded) {
@@ -243,6 +236,26 @@ abstract final class PlayerLifecycle {
     minAge: intakeAge,
     clubSeed: clubSeed,
   ).where((p) => p.age <= YouthLevel.u21.maxAge).toList();
+
+  /// The club-minutes weight on [aged]'s development in this save year: how
+  /// much of his club season he actually played. Asked in ONE place, because
+  /// the pool build and the by-identity lookup both need it and a player who
+  /// is reconstructed either way has to come out the same man. A naturalised
+  /// player is the case that proves it — he is the only squad member always
+  /// resolved by identity, sitting next to team-mates built from the pool.
+  ///
+  /// [clubSeed] ZERO means no club effect at all, which is what the world
+  /// simulation wants.
+  static double minutesFactorFor(Player aged, int agingYears, int clubSeed) =>
+      clubSeed == 0
+      ? 1
+      : ClubForm.yearMinutesFactor(
+          playerId: aged.id,
+          overall: aged.overall,
+          age: aged.age,
+          saveSeed: clubSeed,
+          year: agingYears,
+        );
 
   /// The four-year cycle an intake year belongs to, for the academy bonus.
   /// Backfilled years are before the save and take no investment.
@@ -433,6 +446,10 @@ abstract final class PlayerLifecycle {
     int agingYears, {
     Map<int, double> youthBonusByCycle = const {},
     Map<int, int> careerStartsByPlayer = const {},
+
+    /// The save seed, for the club-minutes factor — exactly as [poolAt] takes
+    /// it. ZERO means no club effect.
+    int clubSeed = 0,
   }) {
     if (!isNewgenId(id)) return null;
     final rem = id - _idBase;
@@ -444,7 +461,11 @@ abstract final class PlayerLifecycle {
     for (final g in _intake(seeded, nationId, intakeYear, youthBonus: bonus)) {
       if (g.id != id) continue;
       final aged = PlayerAging.agedYears(g, agingYears - intakeYear);
-      return withCareerDev(aged, careerStartsByPlayer[aged.id] ?? 0);
+      return withCareerDev(
+        aged,
+        careerStartsByPlayer[aged.id] ?? 0,
+        minutesFactor: minutesFactorFor(aged, agingYears, clubSeed),
+      );
     }
     return null;
   }

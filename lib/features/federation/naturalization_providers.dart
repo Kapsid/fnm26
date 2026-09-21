@@ -28,12 +28,23 @@ pendingNaturalizationProvider = FutureProvider.autoDispose
           .watch(careerRepositoryProvider)
           .pendingNaturalization(careerId);
       if (link == null) return null;
+      // The SAME four development inputs the squad pool is built from — see
+      // [naturalizedPlayersFor]. Reconstructing him from a subset showed the
+      // manager a base rating on the offer screen and the developed one the
+      // moment he signed: one footballer reading two ratings, and the decision
+      // taken on the wrong one.
       final player = await ref
           .watch(playerRepositoryProvider)
           .byId(
             link.playerId,
             agingYears: CareerService.agingYears(career),
             saveSeed: career.rngSeed,
+            youthBonusByCycle: await ref.watch(
+              youthBonusByCycleProvider(careerId).future,
+            ),
+            careerStartsByPlayer: await ref.watch(
+              careerDevBonusProvider(careerId).future,
+            ),
           );
       if (player == null) return null;
       final nations = {
