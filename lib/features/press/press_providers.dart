@@ -233,7 +233,7 @@ pressQuestionProvider = FutureProvider.autoDispose.family<PressQuestion?, int>((
   if (hasManaged) {
     for (final h in await comp.honours(careerId)) {
       if (h.championId != career.nationId) continue;
-      if (h.year < CareerService.cycleStart.year) continue;
+      if (!CareerService.isOwnHonourYear(h.year)) continue;
       if (h.year < now.year - 1) continue;
       // …and only if the side was there. A trophy in a competition this
       // nation has no fixture in is somebody else's record, however the roll

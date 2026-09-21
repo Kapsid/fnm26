@@ -231,7 +231,7 @@ int _reputation(Career career, Map<int, int> stints, List<Honour> honours) {
   var cont = 0;
   var other = 0;
   for (final h in honours) {
-    if (h.year < CareerService.cycleStart.year) continue;
+    if (!CareerService.isOwnHonourYear(h.year)) continue;
     final managed = _managedIn(career, stints, _cycleForYear(h.year));
     if (h.championId != managed) continue;
     switch (h.competition) {
@@ -272,7 +272,7 @@ int _titlesAtNation(
 ) {
   var titles = 0;
   for (final h in honours) {
-    if (h.year < CareerService.cycleStart.year) continue;
+    if (!CareerService.isOwnHonourYear(h.year)) continue;
     final managed = _managedIn(career, stints, _cycleForYear(h.year));
     if (managed == nationId && h.championId == nationId) titles++;
   }

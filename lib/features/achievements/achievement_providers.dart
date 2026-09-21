@@ -315,7 +315,7 @@ class AchievementService {
     // nation that won a real Euro/World Cup would unlock the title instantly.
     final honours = (await comp.honours(
       careerId,
-    )).where((h) => h.year >= CareerService.cycleStart.year).toList();
+    )).where((h) => CareerService.isOwnHonourYear(h.year)).toList();
     final titlesWon = {
       for (final h in honours)
         if (h.championId == nationId) h.competition,

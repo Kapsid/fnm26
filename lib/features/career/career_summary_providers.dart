@@ -155,7 +155,7 @@ careerSummaryProvider = FutureProvider.autoDispose.family<CareerSummary?, int>((
   // Only this career's own editions — not the pre-seeded real-world history.
   final honours = (await comp.honours(
     careerId,
-  )).where((h) => h.year >= CareerService.cycleStart.year).toList();
+  )).where((h) => CareerService.isOwnHonourYear(h.year)).toList();
 
   // Overall record across every played international.
   var played = 0;

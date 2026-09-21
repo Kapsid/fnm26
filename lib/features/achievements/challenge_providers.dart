@@ -126,7 +126,7 @@ challengesViewProvider = FutureProvider.autoDispose.family<List<ChallengeView>, 
 
   // Only this career's own editions count — not the pre-seeded real history.
   final ownHonours = honours.where(
-    (h) => h.year >= CareerService.cycleStart.year,
+    (h) => CareerService.isOwnHonourYear(h.year),
   );
 
   final continentalNames = {

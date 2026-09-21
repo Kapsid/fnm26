@@ -155,7 +155,7 @@ recordBookProvider = FutureProvider.autoDispose.family<RecordBook?, int>((
     (h) =>
         h.competition == 'World Championship' &&
         h.championId == nationId &&
-        h.year >= CareerService.cycleStart.year,
+        CareerService.isOwnHonourYear(h.year),
   );
   final l = ref.watch(appLocalizationsProvider);
   final bestFinish = wonWc

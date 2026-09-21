@@ -51,6 +51,23 @@ class CareerService {
   /// The World Cup year for a given cycle (clean cadence: 2030, 2034, …).
   static int worldCupYear(int cycle) => cycleStart.year + 4 * (cycle + 1);
 
+  /// Whether an honour won in [year] is one THIS career could have won.
+  ///
+  /// Every save is seeded with the real world's roll of honour (see
+  /// `RealHistory`), so "did my nation win this?" is never the whole question:
+  /// a screen also has to ask whether the trophy was lifted on this manager's
+  /// watch. The boundary belongs to the career rather than the calendar. A save
+  /// opens on 1 July 2026, by which point the seeded 2026 World Championship
+  /// has already been decided, so a `>= cycleStart.year` floor credited the
+  /// champion's brand-new manager with a title before his first training
+  /// session. The first edition a manager can affect is the one his own cycle
+  /// produces.
+  ///
+  /// Every "is this honour mine?" site asks through here. A dozen hand-written
+  /// copies of the comparison is how the 2026 seeding slipped past all of them
+  /// at once; a thirteenth would be the same bug waiting.
+  static bool isOwnHonourYear(int year) => year > cycleStart.year;
+
   /// The month a year of development lands on. December, not January.
   ///
   /// The African and Asian championships are played in JANUARY (see

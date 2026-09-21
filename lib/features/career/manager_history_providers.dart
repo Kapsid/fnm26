@@ -263,7 +263,7 @@ managerHistoryProvider = FutureProvider.autoDispose.family<ManagerHistory?, int>
     }
 
     for (final h in honours) {
-      if (h.year < CareerService.cycleStart.year) continue;
+      if (!CareerService.isOwnHonourYear(h.year)) continue;
       final managed = stints[cycleForYear(h.year)] ?? career.nationId;
       if (h.championId != managed) continue;
       final key = Trophies.keyForCompetitionName(h.competition);

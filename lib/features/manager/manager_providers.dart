@@ -38,7 +38,7 @@ final AutoDisposeFutureProviderFamily<ManagerView?, int> managerViewProvider =
           .stints(careerId);
       var trophies = 0;
       for (final h in honours) {
-        if (h.year < CareerService.cycleStart.year) continue;
+        if (!CareerService.isOwnHonourYear(h.year)) continue;
         final cycle = ((h.year - CareerService.cycleStart.year) / 4).floor();
         if (h.championId == (nationByCycle[cycle] ?? career.nationId)) {
           trophies++;

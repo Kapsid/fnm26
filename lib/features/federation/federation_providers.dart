@@ -101,7 +101,7 @@ intakeStandingByCycleProvider =
         // 2026 edition predates the save, and the ceil below would file it
         // under cycle 0 — handing the intake a bonus for a tournament nobody
         // played. The save's own cycle 0 is contested in 2028 and 2030.
-        if (h.year <= CareerService.cycleStart.year) continue;
+        if (!CareerService.isOwnHonourYear(h.year)) continue;
         final c = ((h.year - CareerService.worldCupYear(0)) / 4).ceil();
         final cycle = c < 0 ? 0 : c;
         // Only the nation the manager actually held that cycle; the roll of

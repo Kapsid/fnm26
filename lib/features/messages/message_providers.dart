@@ -227,7 +227,7 @@ class MessageService {
     // final score, so this is the one message and it carries the result.
     final honours = await comp.honours(careerId);
     for (final h in honours) {
-      if (h.year < CareerService.cycleStart.year) continue;
+      if (!CareerService.isOwnHonourYear(h.year)) continue;
       final display = competitionLabel(l, h.competition);
       final mine = h.championId == career.nationId;
 
