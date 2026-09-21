@@ -127,4 +127,74 @@ void main() {
       );
     }
   });
+
+  /// …and with the tactics he drilled.
+  ///
+  /// A skipped match goes through the rating simulator, which has two integer
+  /// strengths and no formation, no instructions and no chemistry — so the
+  /// drilled bonus used to arrive only when he watched. Two identical worlds,
+  /// same seed and same eleven: the only difference is the plan and the
+  /// drilling.
+  test('a skipped match is played with the tactics he drilled', () async {
+    Future<int> goalDifferenceOver(
+      int matches, {
+      required bool drilled,
+    }) async {
+      db = createTestDatabase();
+      final c = open();
+      await c.read(seedLoaderProvider).ensureSeeded();
+      final career =
+          (await c.read(careerServiceProvider).create(
+                nationId: nations.first.id,
+                managerName: 'M',
+                rngSeed: 4242,
+              ))
+              .valueOrNull!;
+      if (drilled) {
+        await c.read(tacticsRepositoryProvider).saveTactic(
+          career.id,
+          Tactic(
+            formation: Formation.f433,
+            lineup: const [],
+            instructions: Playstyle.gegenpress.instructions!,
+            playstyle: Playstyle.gegenpress,
+          ),
+        );
+        // Years of the same shape, with a plan that keeps changing, so the
+        // side is drilled without being read (see TeamChemistry).
+        final fam = c.read(tacticFamiliarityRepositoryProvider);
+        for (var i = 0; i < 15; i++) {
+          await fam.recordMatch(career.id, Formation.f433, planKey: 7 + i % 2);
+        }
+      }
+      final season = c.read(seasonServiceProvider);
+      for (var i = 0; i < matches; i++) {
+        await season.advance(career.id);
+      }
+      var gd = 0;
+      for (final f in await db.select(db.fixtures).get()) {
+        if (!f.played) continue;
+        final hs = f.homeScore;
+        final as = f.awayScore;
+        if (hs == null || as == null) continue;
+        if (f.homeNationId == career.nationId) gd += hs - as;
+        if (f.awayNationId == career.nationId) gd += as - hs;
+      }
+      await db.close();
+      return gd;
+    }
+
+    // Ten matches each. With this seed it comes out +10 against +4: a clear,
+    // repeatable edge rather than one lucky goal.
+    final flat = await goalDifferenceOver(10, drilled: false);
+    final sharp = await goalDifferenceOver(10, drilled: true);
+    expect(
+      sharp,
+      greaterThan(flat),
+      reason:
+          'the same side, same seed and same eleven, drilled in an attacking '
+          'plan, must do better in matches it skipped than one that drilled '
+          'nothing',
+    );
+  });
 }

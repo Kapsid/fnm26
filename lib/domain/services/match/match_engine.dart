@@ -1623,6 +1623,47 @@ class MatchEngine {
   /// favourable-but-real trade and parking the bus genuinely shuts a game down.
   static const double kMentalityDefence = 0.18;
 
+  /// What a quick tempo is worth going forward, and a high line either way
+  /// (it wins the ball higher and leaves more behind it), per point off the
+  /// neutral 50.
+  static const double kTempoAttack = 0.08;
+  static const double kLineAttack = 0.10;
+  static const double kLineDefence = 0.12;
+
+  /// What pressing is worth at the back, and what a stretched, wide shape costs
+  /// there, per point off the neutral 50.
+  static const double kPressingDefence = 0.06;
+  static const double kWidthDefence = 0.06;
+
+  /// What a plan is worth to a side described by a SINGLE strength number, in
+  /// rating points.
+  ///
+  /// The engine never needs this: it builds an attack and a defence and moves
+  /// them separately. `RatingMatchSimulator` — which plays every match the
+  /// manager does not watch — has one number per side, and the honest scalar
+  /// reading of a plan that lifts the attack by one thing and the defence by
+  /// another is the MEAN of the two, because that one number drives what the
+  /// side scores and what it concedes symmetrically.
+  ///
+  /// Every coefficient is the engine's own, read from [_attack] and [_defence]
+  /// above rather than restated, so the two can never drift apart. Directness
+  /// and width carry no flat term in the attack for the same reason they carry
+  /// none there: their value is decided by the match-up (see [_matchup]), which
+  /// a scalar simulator has no shape to compare against.
+  static double planRatingDelta(TacticalInstructions i) {
+    double off(int v) => (v - 50).toDouble();
+    final attack =
+        off(i.mentality) * kMentalityAttack +
+        off(i.tempo) * kTempoAttack +
+        off(i.defensiveLine) * kLineAttack;
+    final defence =
+        -off(i.mentality) * kMentalityDefence +
+        off(i.pressing) * kPressingDefence -
+        off(i.defensiveLine) * kLineDefence -
+        off(i.width) * kWidthDefence;
+    return (attack + defence) / 2;
+  }
+
   double _attack(_Live t) {
     final i = t.instructions;
     final base =
@@ -1648,8 +1689,8 @@ class MatchEngine {
     final v =
         base +
         (i.mentality - 50) * kMentalityAttack +
-        (i.tempo - 50) * 0.08 +
-        (i.defensiveLine - 50) * 0.10 -
+        (i.tempo - 50) * kTempoAttack +
+        (i.defensiveLine - 50) * kLineAttack -
         _shortHandedPenalty(t);
     return v * t.chemistry;
   }
@@ -1669,9 +1710,9 @@ class MatchEngine {
     final v =
         base -
         (i.mentality - 50) * kMentalityDefence +
-        (i.pressing - 50) * 0.06 -
-        (i.defensiveLine - 50) * 0.12 -
-        (i.width - 50) * 0.06 -
+        (i.pressing - 50) * kPressingDefence -
+        (i.defensiveLine - 50) * kLineDefence -
+        (i.width - 50) * kWidthDefence -
         _shortHandedPenalty(t) * _shortHandedDefenceShare;
     return v * t.chemistry;
   }

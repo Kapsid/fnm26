@@ -672,8 +672,16 @@ class SeasonService {
     // subs change who is on the pitch, not how good the side is.
     final homeSubs = await _fieldedSubs(f.careerId, f.homeNationId, homeXi);
     final awaySubs = await _fieldedSubs(f.careerId, f.awayNationId, awayXi);
-    final homeStrength = _squadStrength(homeXi, home);
-    final awayStrength = _squadStrength(awayXi, away);
+    final homeStrength = await _withManagerTactics(
+      f.careerId,
+      f.homeNationId,
+      _squadStrength(homeXi, home),
+    );
+    final awayStrength = await _withManagerTactics(
+      f.careerId,
+      f.awayNationId,
+      _squadStrength(awayXi, away),
+    );
     const sim = RatingMatchSimulator();
     final outcome = sim.simulate(
       homeStrength: homeStrength,
@@ -905,6 +913,46 @@ class SeasonService {
     final mean = eleven.fold<int>(0, (s, p) => s + p.overall) / eleven.length;
     // Weight the squad heavily; keep a quarter on the ranking as an anchor.
     return (mean * 0.75 + ranked * 0.25).round().clamp(40, 92);
+  }
+
+  /// [strength] as the manager's own side plays it: his instructions and his
+  /// tactical standing applied, exactly as the live engine would apply them.
+  /// Returned unchanged for every other nation — nobody drills them.
+  ///
+  /// The drilled bonus used to arrive only when he WATCHED, because a skipped
+  /// match goes through [RatingMatchSimulator], which has no formation, no
+  /// instructions and no chemistry at all. So a manager who had spent four
+  /// years drilling a shape gave the benefit back the moment he pressed skip —
+  /// and the more tactics were made to matter, the bigger that hole grew.
+  ///
+  /// Two conversions, neither of them invented here:
+  ///  * the plan, via [MatchEngine.planRatingDelta] — the engine's own slider
+  ///    coefficients, read as the one number this simulator works in;
+  ///  * the drilling, via [TeamChemistry.factor] — a MULTIPLIER on a side's
+  ///    attack and defence, both of which are built from its players' ratings,
+  ///    so it multiplies a rating here too (the same reading `StrengthFactors`
+  ///    shows the manager). Predictability goes in with it: the engine passes
+  ///    the stored figure, so a side the world has worked out gives the same
+  ///    part of it back whether or not he watched.
+  ///
+  /// The result is deliberately NOT re-clamped to the 40–92 ranking scale that
+  /// [_squadStrength] ends on: that scale describes a nation, and this is what
+  /// his side is worth on the day.
+  Future<int> _withManagerTactics(
+    int careerId,
+    int nationId,
+    int strength,
+  ) async {
+    final setup = await _ensureManagerSetup(careerId);
+    if (setup == null || setup.nationId != nationId) return strength;
+    final plan =
+        strength +
+        MatchEngine.planRatingDelta(
+          setup.tactic?.instructions ?? const TacticalInstructions(),
+        );
+    return (plan *
+            TeamChemistry.factor(setup.familiarity, setup.predictability))
+        .round();
   }
 
   /// The men the manager may field for his own nation in a match he skipped:
