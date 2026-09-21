@@ -80,8 +80,35 @@ class FederationService {
         .investment(careerId, cycle);
     final commercialInvested = invest.commercial;
 
+    // Where the nation stands and how far it moved over the cycle, from the
+    // stored ranking releases — the same history the intake bonus reads, so
+    // both halves of "results matter" agree about what happened. Releases
+    // arrive oldest-first, so the last one written for a cycle is that cycle's
+    // standing.
+    final releases = await _ref
+        .read(rankingReleaseRepositoryProvider)
+        .all(careerId);
+    final rankByCycle = <int, int>{};
+    final nationByCycle = <int, int>{};
+    for (final r in releases) {
+      rankByCycle[r.cycle] = r.playerRank;
+      nationByCycle[r.cycle] = r.nationId;
+    }
+    // No release yet (a save graded before the first publication) means no
+    // evidence either way, so pay the anchor.
+    final now = rankByCycle[cycle] ?? FederationFinance.midpointRank;
+    final before = rankByCycle[cycle - 1];
+    // Never price a "climb" across a change of nation: taking over a better
+    // side is not the same as having improved the one you had.
+    final sameNation =
+        before != null && nationByCycle[cycle - 1] == nationByCycle[cycle];
+
     return (
-      grant: FederationFinance.centralGrant,
+      grant: FederationFinance.centralGrantFor(
+        worldRank: now,
+        // A lower rank number is better, so a drop in the number is a climb.
+        rankChangeOverCycle: sameNation ? before - now : 0,
+      ),
       prize: prize,
       commercial: FederationFinance.commercialReturn(commercialInvested),
     );

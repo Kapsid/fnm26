@@ -1,5 +1,7 @@
 import 'dart:math';
 
+import 'package:fnm/domain/services/ranking/elo.dart';
+
 /// A cycle's earnings, split by source (all euros).
 typedef IncomeBreakdown = ({int grant, int prize, int commercial});
 
@@ -38,6 +40,16 @@ abstract final class FederationFinance {
 
   /// A new save's opening cash, scaled by the nation's world standing so
   /// footballing powers run richer federations than minnows.
+  ///
+  /// Deliberately still STEPPED, where the per-cycle grant
+  /// ([centralGrantFor]) is now smooth. The two are different kinds of number:
+  /// the grant is paid every cycle and has to answer to what just happened on
+  /// the pitch, while this is read once, before a ball is kicked, and its
+  /// bands are a legible promise about the save you are starting ("a top-eight
+  /// nation runs a rich federation"). Its one artefact is the cliff at each
+  /// boundary — ninth place opens 15M poorer than eighth — which is worth
+  /// revisiting on its own, with its own measurement, rather than as a side
+  /// effect of the grant moving.
   static int initialBudget(int worldRank) {
     if (worldRank <= 8) return 45000000;
     if (worldRank <= 20) return 30000000;
@@ -48,8 +60,124 @@ abstract final class FederationFinance {
 
   // --- Income (earned each cycle) ------------------------------------------
 
-  /// Flat central funding every federation receives each cycle.
+  /// The central funding a federation at [midpointRank] receives for a cycle
+  /// it neither climbed nor slid through. Every other grant is this number
+  /// moved by standing and movement — see [centralGrantFor], which is what the
+  /// game actually pays. Kept as a named constant because it is the anchor the
+  /// whole economy is reasoned against: it is also what a mid-table nation
+  /// opens a save with (see [initialBudget]) and what the staff wage table is
+  /// priced against (see `Staff.costPerCycle`).
   static const int centralGrant = 12000000;
+
+  /// The world place whose federation is paid exactly [centralGrant]. The
+  /// middle of the 41–80 band [initialBudget] already hands 12M to, so the
+  /// grant's anchor and the opening balance agree about what "mid-table" means.
+  static const int midpointRank = 60;
+
+  /// Ranking points that separate [midpointRank] from either end of the world
+  /// table. Measured off the widened seed table (2026-09-21): first place is
+  /// 498 points above the midpoint and 209th is 509 below it, so 500 is the
+  /// distance to "as good as it gets" in both directions.
+  static const int standingSpanPoints = 500;
+
+  /// Ranking points a championship-winning cycle is worth — the same measured
+  /// figure `IntakeStanding.fullClimbPoints` uses, and for the same reason: a
+  /// champion climbing from 25th to 5th gains about 170 points, so 200 is a
+  /// cycle nobody has a right to expect.
+  static const int fullClimbPoints = 200;
+
+  /// The most standing alone adds to the grant, as a fraction of
+  /// [centralGrant]: +35% for the best side in the world.
+  static const double maxStandingBonus = 0.35;
+
+  /// The most standing alone takes away. Shallower than [maxStandingBonus] on
+  /// purpose: a small nation's federation still has to function.
+  static const double maxStandingPenalty = 0.15;
+
+  /// The most one cycle's climb adds, as a fraction of [centralGrant].
+  static const double maxMovementBonus = 0.25;
+
+  /// The most one cycle's slide takes away. Shallower again — a bad cycle
+  /// should hurt, not end a footballing nation.
+  static const double maxMovementPenalty = 0.10;
+
+  /// The band the grant is held inside, as multiples of [centralGrant]:
+  /// **€9.0M to €19.2M**.
+  ///
+  /// The floor is the load-bearing half. The federation's only compulsory
+  /// outgoing is the staff wage bill (`Staff.totalCost`), which tops out at
+  /// €8.4M a cycle for three elite hires; investment in departments is
+  /// voluntary and capped by the budget the manager can see. So the worst cycle
+  /// the game can produce — bottom of the world, having slid there — still pays
+  /// an elite back room and leaves change, and a manager can never be
+  /// bankrupted by one bad cycle.
+  static const double minGrantMultiplier =
+      1 - maxStandingPenalty - maxMovementPenalty;
+  static const double maxGrantMultiplier =
+      1 + maxStandingBonus + maxMovementBonus;
+
+  /// Euros the grant is rounded to, so the finance screen shows a figure a
+  /// person would write down. [centralGrant] and both band ends are exact
+  /// multiples of it, so rounding never moves the anchor.
+  static const int grantRounding = 10000;
+
+  /// The central funding a federation earns for a finished cycle:
+  /// [centralGrant] moved by where the nation stands and how far it climbed.
+  ///
+  /// The flat grant used to be the same 12M for the world champion and for
+  /// 200th, which made half the federation's income deaf to everything that
+  /// happened on the pitch. The prize tables ([resultsPrize]) already pay for
+  /// how deep a run went; this pays for the STANDING that run built, which is
+  /// a slower, longer-lived signal — a nation that spent a cycle climbing is
+  /// funded like one on the way up for the cycle after, whether or not it
+  /// happened to draw a quarter-final.
+  ///
+  /// Two rules it obeys, both borrowed from `IntakeStanding` because they were
+  /// right there:
+  ///
+  ///  * **Movement is measured in POINTS, not places.** The world table is not
+  ///    a straight line (see [Elo.seedFromRanking]): the gap between first and
+  ///    fifth is wider than the gap between fortieth and hundredth. Counting
+  ///    places would pay a climb from 60th to 55th the same as one from 6th to
+  ///    1st. Standing is measured the same way, for the same reason.
+  ///  * **The midpoint is the null control.** A nation at [midpointRank] whose
+  ///    position has not moved is paid exactly [centralGrant], to the euro. It
+  ///    is asserted as a permanent test.
+  ///
+  /// [worldRank] is where the nation finished the cycle (1 = best) and
+  /// [rankChangeOverCycle] is how many places it CLIMBED getting there
+  /// (negative = slid down), so the rank it started from is the sum of the two.
+  static int centralGrantFor({
+    required int worldRank,
+    required int rankChangeOverCycle,
+  }) {
+    final now = worldRank < 1 ? 1 : worldRank;
+    final before = max(1, now + rankChangeOverCycle);
+    final nowPoints = Elo.seedFromRanking(now);
+
+    // Where the nation stands, priced against the midpoint.
+    final standingPoints = nowPoints - Elo.seedFromRanking(midpointRank);
+    final standing =
+        (standingPoints /
+                standingSpanPoints *
+                (standingPoints >= 0 ? maxStandingBonus : maxStandingPenalty))
+            .clamp(-maxStandingPenalty, maxStandingBonus);
+
+    // What the cycle's movement was worth.
+    final gained = nowPoints - Elo.seedFromRanking(before);
+    final movement =
+        (gained /
+                fullClimbPoints *
+                (gained >= 0 ? maxMovementBonus : maxMovementPenalty))
+            .clamp(-maxMovementPenalty, maxMovementBonus);
+
+    final multiplier = (1 + standing + movement).clamp(
+      minGrantMultiplier,
+      maxGrantMultiplier,
+    );
+    final euros = centralGrant * multiplier;
+    return (euros / grantRounding).round() * grantRounding;
+  }
 
   /// Prize money for how deep a nation went in the World Cup finals, by the
   /// deepest round they reached (cumulative, not per round).
