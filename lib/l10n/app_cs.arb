@@ -2086,5 +2086,9 @@
   "pressAskCrisis5": "Ztrácíte kabinu i kanceláře najednou. Co vás trápí víc?",
   "pressAskCrisis6": "Existuje bod, kdy byste sám odešel?",
   "pressAskCrisis7": "Co řeknete lidem, podle kterých je tohle u konce?",
-  "pressAskCrisis8": "Dejte nám jeden důvod věřit, že se to otočí."
+  "pressAskCrisis8": "Dejte nám jeden důvod věřit, že se to otočí.",
+  "tacticsSubOffAlready": "Už byl vystřídán, zpět nemůže",
+  "tacticsSubInjured": "Zraněný",
+  "tacticsSubNoneLeft": "Nezbývá žádné střídání",
+  "tacticsUndoLastChange": "Vrátit poslední změnu"
 }

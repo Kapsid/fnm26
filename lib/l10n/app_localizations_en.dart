@@ -8020,4 +8020,16 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get pressAskCrisis8 =>
       'Give us one reason to believe this turns around.';
+
+  @override
+  String get tacticsSubOffAlready => 'Already substituted, cannot return';
+
+  @override
+  String get tacticsSubInjured => 'Carrying a knock';
+
+  @override
+  String get tacticsSubNoneLeft => 'No substitutions left';
+
+  @override
+  String get tacticsUndoLastChange => 'Undo last change';
 }

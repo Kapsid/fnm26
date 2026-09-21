@@ -11719,5 +11719,21 @@
   "pressAskCrisis8": "Give us one reason to believe this turns around.",
   "@pressAskCrisis8": {
     "description": "Press conference line."
+  },
+  "tacticsSubOffAlready": "Already substituted, cannot return",
+  "@tacticsSubOffAlready": {
+    "description": "Marker under a squad row for a player who has already been taken off this match."
+  },
+  "tacticsSubInjured": "Carrying a knock",
+  "@tacticsSubInjured": {
+    "description": "Marker under a squad row for a player hurt in this match."
+  },
+  "tacticsSubNoneLeft": "No substitutions left",
+  "@tacticsSubNoneLeft": {
+    "description": "Marker under a squad row when the side has spent every change it has."
+  },
+  "tacticsUndoLastChange": "Undo last change",
+  "@tacticsUndoLastChange": {
+    "description": "Button in the in-match lineup tab that takes back the last change made in this sheet."
   }
 }

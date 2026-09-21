@@ -2086,3 +2086,7 @@ pressAskCrisis5,Press conference line.,,You are losing the room and the boardroo
 pressAskCrisis6,Press conference line.,,Is there a point at which you would walk?,"Existuje bod, kdy byste sám odešel?"
 pressAskCrisis7,Press conference line.,,What do you say to people who think this has run its course?,"Co řeknete lidem, podle kterých je tohle u konce?"
 pressAskCrisis8,Press conference line.,,Give us one reason to believe this turns around.,"Dejte nám jeden důvod věřit, že se to otočí."
+tacticsSubOffAlready,Marker under a squad row for a player who has already been taken off this match.,,"Already substituted, cannot return","Už byl vystřídán, zpět nemůže"
+tacticsSubInjured,Marker under a squad row for a player hurt in this match.,,Carrying a knock,Zraněný
+tacticsSubNoneLeft,Marker under a squad row when the side has spent every change it has.,,No substitutions left,Nezbývá žádné střídání
+tacticsUndoLastChange,Button in the in-match lineup tab that takes back the last change made in this sheet.,,Undo last change,Vrátit poslední změnu

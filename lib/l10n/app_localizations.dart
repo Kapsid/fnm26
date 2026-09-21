@@ -12668,6 +12668,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Give us one reason to believe this turns around.'**
   String get pressAskCrisis8;
+
+  /// Marker under a squad row for a player who has already been taken off this match.
+  ///
+  /// In en, this message translates to:
+  /// **'Already substituted, cannot return'**
+  String get tacticsSubOffAlready;
+
+  /// Marker under a squad row for a player hurt in this match.
+  ///
+  /// In en, this message translates to:
+  /// **'Carrying a knock'**
+  String get tacticsSubInjured;
+
+  /// Marker under a squad row when the side has spent every change it has.
+  ///
+  /// In en, this message translates to:
+  /// **'No substitutions left'**
+  String get tacticsSubNoneLeft;
+
+  /// Button in the in-match lineup tab that takes back the last change made in this sheet.
+  ///
+  /// In en, this message translates to:
+  /// **'Undo last change'**
+  String get tacticsUndoLastChange;
 }
 
 class _AppLocalizationsDelegate

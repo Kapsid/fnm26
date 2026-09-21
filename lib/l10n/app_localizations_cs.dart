@@ -8029,4 +8029,16 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get pressAskCrisis8 => 'Dejte nám jeden důvod věřit, že se to otočí.';
+
+  @override
+  String get tacticsSubOffAlready => 'Už byl vystřídán, zpět nemůže';
+
+  @override
+  String get tacticsSubInjured => 'Zraněný';
+
+  @override
+  String get tacticsSubNoneLeft => 'Nezbývá žádné střídání';
+
+  @override
+  String get tacticsUndoLastChange => 'Vrátit poslední změnu';
 }

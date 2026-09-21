@@ -164,6 +164,36 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
       .where((id) => !_onPitch.contains(id))
       .toSet();
 
+  /// The states the XI has passed through in THIS sheet, newest last, so a
+  /// misclick can be taken back. A manager who put the wrong man on had to
+  /// leave the editor and lose every other change with him.
+  ///
+  /// Only what this sheet did is on here: the oldest entry is the XI the sheet
+  /// opened with, so a substitution made ten minutes ago — part of the match,
+  /// not of this sheet — can never be popped off, and football's ban on
+  /// re-entry survives the undo intact.
+  ///
+  /// The withdrawn set travels alongside the lineup because it is not purely
+  /// derived: a substitute who came on earlier in this sheet and was then
+  /// taken off again belongs in it, and no formula over the starting XI
+  /// would find him. The substitution COUNT needs no such help — [_subsUsed]
+  /// reads the lineup, so restoring the lineup restores the count.
+  final List<({List<int?> lineup, Set<int> withdrawn})> _undo = [];
+
+  /// Remembers the XI as it stands, just before it is changed.
+  void _pushUndo() =>
+      _undo.add((lineup: [..._lineup], withdrawn: {..._withdrawn}));
+
+  /// Takes back the last change made in this sheet.
+  void _undoLast() {
+    if (_undo.isEmpty) return;
+    setState(() {
+      final previous = _undo.removeLast();
+      _lineup = previous.lineup;
+      _withdrawn = previous.withdrawn;
+    });
+  }
+
   void _setFormation(Formation f) {
     if (f == _formation) return;
     // Refits the players who are ALREADY ON THE PITCH to the new shape, and
@@ -179,12 +209,18 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
       _formation = f;
       // Short by however many have walked: bestEleven leaves those slots null.
       _lineup = bestEleven(f, reshapePool(_eligible, _onPitch));
+      // A reshape re-derives the whole XI against a different set of slots, so
+      // the lineups remembered under the old shape no longer mean anything:
+      // restoring one would put players in positions they were never picked
+      // for. The history starts again from the new shape.
+      _undo.clear();
     });
   }
 
   void _swap(int a, int b) {
     if (a == b) return;
     setState(() {
+      _pushUndo();
       final l = [..._lineup];
       final tmp = l[a];
       l[a] = l[b];
@@ -227,6 +263,7 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
       return;
     }
     setState(() {
+      _pushUndo();
       final l = [..._lineup];
       final existing = l.indexOf(playerId);
       if (existing != -1) {
@@ -391,17 +428,30 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              // Both halves give way rather than run off the edge: at 360px
+              // this row overflowed by 40 in ENGLISH, before Czech was even
+              // asked, and the count of changes left is exactly the number a
+              // manager must not lose sight of.
               Row(
                 children: [
-                  Text(
-                    l.tacticsSubstitutesCount(subs.length),
-                    style: AppTypography.labelMedium,
+                  Flexible(
+                    child: Text(
+                      l.tacticsSubstitutesCount(subs.length),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: AppTypography.labelMedium,
+                    ),
                   ),
+                  const SizedBox(width: AppSpacing.sm),
                   const Spacer(),
-                  Text(
-                    l.tacticsSubsUsed(_subsUsed, widget.maxSubs),
-                    style: AppTypography.labelMedium.copyWith(
-                      color: _overLimit ? AppColors.error : AppColors.primary,
+                  Flexible(
+                    child: Text(
+                      l.tacticsSubsUsed(_subsUsed, widget.maxSubs),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: AppTypography.labelMedium.copyWith(
+                        color: _overLimit ? AppColors.error : AppColors.primary,
+                      ),
                     ),
                   ),
                 ],
@@ -413,6 +463,39 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
                   color: AppColors.onSurfaceVariant,
                 ),
               ),
+              // Only while there is something to take back, and only ever what
+              // THIS sheet changed. A misclicked substitution used to be final
+              // the moment it landed: the one way out was to leave the editor,
+              // which threw away every other change made with it.
+              if (_undo.isNotEmpty)
+                InkWell(
+                  onTap: _undoLast,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: AppSpacing.xs,
+                    ),
+                    child: Row(
+                      children: [
+                        const Icon(
+                          Icons.undo_rounded,
+                          size: 16,
+                          color: AppColors.primary,
+                        ),
+                        const SizedBox(width: AppSpacing.xs),
+                        Expanded(
+                          child: Text(
+                            l.tacticsUndoLastChange,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: AppTypography.labelMedium.copyWith(
+                              color: AppColors.primary,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
               // Say plainly that the side is short — the vacated slot on the
               // pitch is otherwise easy to read as an empty position to fill.
               if (widget.sentOffIds.isNotEmpty) ...[
@@ -455,10 +538,16 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
                         ),
                       ),
                     for (final p in subs)
-                      SubDragRow(
-                        player: p,
-                        trailing: _energyTrailing(p.id),
-                      ),
+                      () {
+                        final standing = _standing(p);
+                        return SubDragRow(
+                          player: p,
+                          trailing: _energyTrailing(p.id),
+                          note: standing.note,
+                          noteColor: standing.color,
+                          enabled: !standing.blocked,
+                        );
+                      }(),
                   ],
                 ),
               ),
@@ -468,6 +557,49 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
         ),
       ],
     );
+  }
+
+  /// What a squad list has to say about [p] BEFORE the manager picks him, and
+  /// whether he may be picked at all.
+  ///
+  /// The rules themselves live in [refusalToBringOn] and are asked here, never
+  /// restated: the lists used to show every player identically, so a manager
+  /// learned that a man was already off, or that his changes were spent, only
+  /// by being refused after he had chosen.
+  ({String? note, Color color, bool blocked}) _standing(Player p) {
+    final l = AppLocalizations.of(context);
+    final refusal = refusalToBringOn(
+      startingIds: widget.startingIds,
+      onPitch: _onPitch,
+      sentOffIds: widget.sentOffIds,
+      withdrawnIds: _withdrawn,
+      maxSubs: widget.maxSubs,
+      playerId: p.id,
+    );
+    return switch (refusal) {
+      SubRefusal.alreadyWithdrawn => (
+        note: l.tacticsSubOffAlready,
+        color: AppColors.error,
+        blocked: true,
+      ),
+      SubRefusal.sentOff => (
+        note: l.tacticsSubSentOff(p.name),
+        color: AppColors.error,
+        blocked: true,
+      ),
+      SubRefusal.noSubsLeft => (
+        note: l.tacticsSubNoneLeft,
+        color: AppColors.error,
+        blocked: true,
+      ),
+      // A knock does not stop a man playing: it is the manager's call whether
+      // to risk him, so it is said in amber and he stays pickable.
+      SubRefusal.none => (
+        note: widget.injuredIds.contains(p.id) ? l.tacticsSubInjured : null,
+        color: AppColors.warning,
+        blocked: false,
+      ),
+    };
   }
 
   /// A small energy gauge for a bench row, or null when energy isn't tracked
@@ -685,13 +817,18 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
             () {
               final eff = PositionFit.effectiveOverall(p, position);
               final penalised = eff < p.overall;
+              // The same standing the squad list shows. This is the list the
+              // manager actually picks from, and it offered a man already
+              // taken off exactly as it offered a fit substitute.
+              final standing = _standing(p);
               return ListTile(
                 dense: true,
+                enabled: !standing.blocked,
                 leading: TacticalChip(p.position.label),
                 title: Text(
                   p.name,
                   style: AppTypography.bodyMedium.copyWith(
-                    color: onPitch.contains(p.id)
+                    color: onPitch.contains(p.id) || standing.blocked
                         ? AppColors.onSurfaceVariant
                         : null,
                   ),
@@ -703,10 +840,19 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
                 // third time in amber words made the row shout, and the amber
                 // that matters — the number the match is decided on — stopped
                 // standing out for being one of three.
+                //
+                // What DOES belong beside the age is the one thing the list
+                // never said: whether he may come on at all.
                 subtitle: Text(
-                  l.tacticsAgeOnly(p.age),
+                  standing.note == null
+                      ? l.tacticsAgeOnly(p.age)
+                      : '${l.tacticsAgeOnly(p.age)} · ${standing.note}',
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                   style: AppTypography.labelSmall.copyWith(
-                    color: AppColors.onSurfaceVariant,
+                    color: standing.note == null
+                        ? AppColors.onSurfaceVariant
+                        : standing.color,
                   ),
                 ),
                 trailing: Row(
@@ -734,7 +880,9 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
                       ),
                   ],
                 ),
-                onTap: () => Navigator.of(context).pop(p.id),
+                onTap: standing.blocked
+                    ? null
+                    : () => Navigator.of(context).pop(p.id),
               );
             }(),
         ],

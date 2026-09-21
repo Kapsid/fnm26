@@ -1287,10 +1287,33 @@ const kDragHoldDelay = Duration(milliseconds: 150);
 /// bring them on. The [trailing] slot lets callers annotate the row (e.g. a
 /// rating).
 class SubDragRow extends StatelessWidget {
-  const SubDragRow({required this.player, this.trailing, super.key});
+  const SubDragRow({
+    required this.player,
+    this.trailing,
+    this.note,
+    this.noteColor,
+    this.enabled = true,
+    super.key,
+  });
 
   final Player player;
   final Widget? trailing;
+
+  /// A short line under the name saying what is wrong with this man: already
+  /// substituted, carrying a knock, no changes left. Null when nothing is.
+  ///
+  /// The list used to say nothing at all, so a manager learned that the man he
+  /// had taken off at 55 minutes could not go back on by being refused after
+  /// he had already picked him.
+  final String? note;
+
+  /// The colour of [note] — the caller knows whether it is a refusal (error)
+  /// or merely a warning about a fit player.
+  final Color? noteColor;
+
+  /// Whether he may be brought on at all. A row that cannot answers no
+  /// gesture: dragging a man the rules forbid is a wasted attempt.
+  final bool enabled;
 
   @override
   Widget build(BuildContext context) {
@@ -1299,14 +1322,31 @@ class SubDragRow extends StatelessWidget {
       leading: SizedBox(width: 40, child: TacticalChip(player.position.label)),
       // Position is already shown by the leading chip — no role subtitle.
       title: Text(player.name, style: AppTypography.bodyMedium),
+      subtitle: note == null
+          ? null
+          : Text(
+              note!,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: AppTypography.labelSmall.copyWith(
+                color: noteColor ?? AppColors.onSurfaceVariant,
+              ),
+            ),
       trailing:
           trailing ??
-          const Icon(
-            Icons.drag_indicator,
-            color: AppColors.onSurfaceVariant,
+          Icon(
+            enabled ? Icons.drag_indicator : Icons.block_rounded,
+            color: enabled ? AppColors.onSurfaceVariant : AppColors.error,
             size: 18,
           ),
     );
+
+    if (!enabled) {
+      return Opacity(
+        opacity: 0.45,
+        child: IgnorePointer(child: row),
+      );
+    }
 
     Widget chip() => Material(
       color: Colors.transparent,
