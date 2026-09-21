@@ -909,6 +909,9 @@ class AppLocalizationsCs extends AppLocalizations {
   String get tacticsTakerAuto => 'Automaticky';
 
   @override
+  String get tacticsTakerQuickPick => 'Vybrat nejlepší';
+
+  @override
   String get tacticsPenalties => 'Penalty';
 
   @override

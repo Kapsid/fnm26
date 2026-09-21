@@ -1634,6 +1634,12 @@ abstract class AppLocalizations {
   /// **'Automatic'**
   String get tacticsTakerAuto;
 
+  /// Button that fills both set-piece duties with the best available taker in one tap.
+  ///
+  /// In en, this message translates to:
+  /// **'Use best takers'**
+  String get tacticsTakerQuickPick;
+
   /// Set-piece situation: penalties.
   ///
   /// In en, this message translates to:

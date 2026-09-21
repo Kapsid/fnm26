@@ -16,6 +16,7 @@ class SetPieceTakerSummary extends StatelessWidget {
     required this.penaltyIsAuto,
     required this.deadBallName,
     required this.deadBallIsAuto,
+    this.onQuickPick,
     super.key,
   });
 
@@ -27,6 +28,13 @@ class SetPieceTakerSummary extends StatelessWidget {
 
   final String? deadBallName;
   final bool deadBallIsAuto;
+
+  /// Takes the men named above and makes them the manager's own, in one tap.
+  ///
+  /// The automatic pick was already correct and already on screen, which is
+  /// exactly why it read as inert: there was nothing to press. This is the
+  /// press. Null on a screen that offers no such button.
+  final VoidCallback? onQuickPick;
 
   @override
   Widget build(BuildContext context) {
@@ -49,6 +57,19 @@ class SetPieceTakerSummary extends StatelessWidget {
           isAuto: deadBallIsAuto,
           auto: l.tacticsTakerAuto,
         ),
+        // Only while something is still automatic, and only when there is a
+        // man to name: the button vanishing is how the manager sees that both
+        // duties are now his, and a tap that changed nothing visible is the
+        // complaint this whole thing answers.
+        if (onQuickPick != null &&
+            (penaltyIsAuto || deadBallIsAuto) &&
+            (penaltyName != null || deadBallName != null)) ...[
+          const SizedBox(height: AppSpacing.md),
+          _QuickPickButton(
+            label: l.tacticsTakerQuickPick,
+            onTap: onQuickPick!,
+          ),
+        ],
       ],
     );
   }
@@ -98,6 +119,68 @@ class SetPieceTakerSummary extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+}
+
+/// The one-tap accept: a bordered pill with the bolt and the label.
+///
+/// A PrimaryButton would have been the obvious reach, and it holds its label
+/// to one line with no wrapping — which is how a Czech label on a 360px phone
+/// loses its tail. This one lets the text wrap instead: two short lines are
+/// read, half a label is guessed at.
+class _QuickPickButton extends StatelessWidget {
+  const _QuickPickButton({required this.label, required this.onTap});
+
+  final String label;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: Material(
+        color: Colors.transparent,
+        borderRadius: AppRadii.mdAll,
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: AppRadii.mdAll,
+          child: Container(
+            constraints: const BoxConstraints(
+              minHeight: AppSpacing.minHitArea,
+            ),
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppSpacing.md,
+              vertical: AppSpacing.sm,
+            ),
+            decoration: BoxDecoration(
+              borderRadius: AppRadii.mdAll,
+              color: AppColors.primary.withValues(alpha: 0.12),
+              border: Border.all(color: AppColors.primary),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Icon(
+                  Icons.bolt_rounded,
+                  size: 18,
+                  color: AppColors.primary,
+                ),
+                const SizedBox(width: AppSpacing.sm),
+                Flexible(
+                  child: Text(
+                    label,
+                    maxLines: 2,
+                    style: AppTypography.labelMedium.copyWith(
+                      color: AppColors.primary,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

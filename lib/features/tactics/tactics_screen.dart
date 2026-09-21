@@ -452,6 +452,18 @@ class TacticsScreen extends ConsumerWidget {
                         penaltyIsAuto: namedPenalty == null,
                         deadBallName: data.byId[deadBallId]?.name,
                         deadBallIsAuto: namedDeadBall == null,
+                        // One tap makes the two men already named above the
+                        // manager's own choice. The names do not change; what
+                        // changes is that they are now his, which is also what
+                        // settles the "set-piece takers are not set" strip
+                        // before kick-off.
+                        onQuickPick: () => ref
+                            .read(setPieceTakersStoreProvider)
+                            .setBoth(
+                              careerId,
+                              penalty: penaltyId,
+                              deadBall: deadBallId,
+                            ),
                       ),
                     ),
                     const SizedBox(height: AppSpacing.sm),

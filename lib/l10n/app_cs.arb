@@ -256,6 +256,7 @@
   "tacticsSetPieceTakers": "EXEKUTOŘI STANDARDEK",
   "tacticsSetPieceBlurb": "Kdo kope penalty a standardky, nebo to nechte na nejvhodnějším hráči.",
   "tacticsTakerAuto": "Automaticky",
+  "tacticsTakerQuickPick": "Vybrat nejlepší",
   "tacticsPenalties": "Penalty",
   "tacticsCornersFreeKicks": "Rohy a volné kopy",
   "tacticsSkillFin": "ZAK",

@@ -907,6 +907,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get tacticsTakerAuto => 'Automatic';
 
   @override
+  String get tacticsTakerQuickPick => 'Use best takers';
+
+  @override
   String get tacticsPenalties => 'Penalties';
 
   @override

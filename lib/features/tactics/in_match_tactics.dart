@@ -730,6 +730,14 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
                 penaltyIsAuto: live.penalty == null,
                 deadBallName: _byId[deadBallId]?.name,
                 deadBallIsAuto: live.deadBall == null,
+                // One tap takes the two men already named above and makes them
+                // the manager's own. They are the same names either way; what
+                // changes is that they are now a decision, and they stop
+                // drifting with the eleven as it is picked apart by
+                // substitutions.
+                onQuickPick: () => setState(() {
+                  _takers = (penalty: penaltyId, deadBall: deadBallId);
+                }),
               ),
               const Divider(height: AppSpacing.lg),
               for (final p in _onPitchPlayers)

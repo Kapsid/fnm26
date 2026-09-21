@@ -1062,17 +1062,13 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
     // the next team sheet opens with, exactly as if it had been set before
     // kick-off. Fire and forget; nothing on this screen reads it back.
     if (takersChanged) {
-      final store = ref.read(setPieceTakersStoreProvider);
-      await store.set(
-        widget.careerId,
-        penalty: true,
-        playerId: r.takers.penalty,
-      );
-      await store.set(
-        widget.careerId,
-        penalty: false,
-        playerId: r.takers.deadBall,
-      );
+      await ref
+          .read(setPieceTakersStoreProvider)
+          .setBoth(
+            widget.careerId,
+            penalty: r.takers.penalty,
+            deadBall: r.takers.deadBall,
+          );
     }
   }
 

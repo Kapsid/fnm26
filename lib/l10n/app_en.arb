@@ -1422,6 +1422,10 @@
   "@tacticsTakerAuto": {
     "description": "Marker on a set-piece slot nobody has been named for: the engine picks the best-suited man."
   },
+  "tacticsTakerQuickPick": "Use best takers",
+  "@tacticsTakerQuickPick": {
+    "description": "Button that fills both set-piece duties with the best available taker in one tap."
+  },
   "tacticsPenalties": "Penalties",
   "@tacticsPenalties": {
     "description": "Set-piece situation: penalties."

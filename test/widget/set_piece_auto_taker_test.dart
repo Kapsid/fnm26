@@ -173,6 +173,56 @@ void main() {
     expect(summaryLabel(bestName), findsWidgets);
   });
 
+  testWidgets("the quick pick makes the automatic men the manager's own", (
+    tester,
+  ) async {
+    final l = await openTakers(tester);
+
+    // Both duties are on automatic, so there is something to accept.
+    expect(find.text(l.tacticsTakerQuickPick), findsOneWidget);
+    await tester.tap(find.text(l.tacticsTakerQuickPick));
+    await tester.pumpAndSettle();
+
+    // The same two men, now named rather than assumed: the automatic markers
+    // are gone and the button with them, which is the whole visible answer to
+    // "the automatic takers do nothing".
+    expect(
+      summaryLabel('${l.tacticsPenalties}  ·  ${l.tacticsTakerAuto}'),
+      findsNothing,
+    );
+    expect(
+      summaryLabel('${l.tacticsCornersFreeKicks}  ·  ${l.tacticsTakerAuto}'),
+      findsNothing,
+    );
+    expect(summaryLabel(l.tacticsPenalties), findsOneWidget);
+    expect(summaryLabel(bestName), findsOneWidget);
+    expect(summaryLabel('Starter1'), findsOneWidget);
+    expect(find.text(l.tacticsTakerQuickPick), findsNothing);
+  });
+
+  testWidgets('the quick pick is gone once both takers are named', (
+    tester,
+  ) async {
+    final l = await openTakers(tester, takers: (penalty: 3, deadBall: 4));
+
+    expect(find.text(l.tacticsTakerQuickPick), findsNothing);
+  });
+
+  testWidgets('a half-named pair still offers the quick pick', (tester) async {
+    final l = await openTakers(tester, takers: (penalty: 3, deadBall: null));
+
+    expect(find.text(l.tacticsTakerQuickPick), findsOneWidget);
+    await tester.tap(find.text(l.tacticsTakerQuickPick));
+    await tester.pumpAndSettle();
+
+    // The man already named keeps the penalties; only the automatic half is
+    // filled, and with the dead-ball rule's own answer (the keeper, who is the
+    // best technical man of all) rather than the penalty taker's.
+    expect(summaryLabel('Starter3'), findsOneWidget);
+    expect(summaryLabel('Starter1'), findsOneWidget);
+    expect(find.text(l.tacticsTakerQuickPick), findsNothing);
+  });
+
   for (final width in [360.0, 400.0]) {
     testWidgets('the taker names survive ${width.toInt()}px in English', (
       tester,
@@ -187,6 +237,10 @@ void main() {
       expectWhole(
         summaryLabel('${l.tacticsCornersFreeKicks}  ·  ${l.tacticsTakerAuto}'),
         'the dead-ball slot label',
+      );
+      expectWhole(
+        find.text(l.tacticsTakerQuickPick),
+        "the quick pick button's label",
       );
       expect(tester.takeException(), isNull);
       expectNothingCut(tester);
@@ -226,6 +280,10 @@ void main() {
       expectWhole(
         summaryLabel('${l.tacticsCornersFreeKicks}  ·  ${l.tacticsTakerAuto}'),
         'the dead-ball slot label',
+      );
+      expectWhole(
+        find.text(l.tacticsTakerQuickPick),
+        "the quick pick button's label",
       );
       expect(tester.takeException(), isNull);
       expectNothingCut(tester);
