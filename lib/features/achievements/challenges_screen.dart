@@ -25,8 +25,10 @@ class ChallengesScreen extends ConsumerWidget {
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: AppColors.primary),
-          onPressed: () =>
-              context.go('${Routes.achievements}?careerId=$careerId'),
+          // Back to the careers menu, not to achievements: challenges are a
+          // line of that menu in their own right now, and achievements are a
+          // sibling rather than the way in.
+          onPressed: () => context.go('${Routes.careers}?careerId=$careerId'),
         ),
         title: Text(
           l.achievementsChallengesHeading,

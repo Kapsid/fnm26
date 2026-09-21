@@ -404,6 +404,8 @@ careerSummaryTitle,Nav card: career summary.,,Career summary,Přehled kariéry
 careerSummarySubtitle,Subtitle of the career-summary card.,,Your trophy cabinet and manager record,Vaše sbírka trofejí a trenérská bilance
 careerAchievements,Nav card: achievements.,,Achievements,Úspěchy
 careerAchievementsSubtitle,Subtitle of the achievements card.,,"Milestones, titles and board satisfaction","Milníky, tituly a spokojenost vedení"
+careerChallenges,Nav card: the career-long challenges.,,Challenges,Výzvy
+careerChallengesSubtitle,Subtitle of the challenges card in the careers menu.,,Brutal career-long tests to take on,Nelítostné zkoušky na celou kariéru
 careerTeamRecords,Nav card: team records.,,Team records,Týmové rekordy
 careerTeamRecordsSubtitle,Subtitle of the team-records card.,,All-time top scorers and appearances,Historicky nejlepší střelci a počty startů
 careerMyMatches,Nav card: my matches.,,My matches,Moje zápasy

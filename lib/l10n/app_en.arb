@@ -2179,6 +2179,14 @@
   "@careerAchievementsSubtitle": {
     "description": "Subtitle of the achievements card."
   },
+  "careerChallenges": "Challenges",
+  "@careerChallenges": {
+    "description": "Nav card: the career-long challenges."
+  },
+  "careerChallengesSubtitle": "Brutal career-long tests to take on",
+  "@careerChallengesSubtitle": {
+    "description": "Subtitle of the challenges card in the careers menu."
+  },
   "careerTeamRecords": "Team records",
   "@careerTeamRecords": {
     "description": "Nav card: team records."

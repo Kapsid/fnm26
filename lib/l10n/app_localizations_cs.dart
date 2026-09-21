@@ -1450,6 +1450,12 @@ class AppLocalizationsCs extends AppLocalizations {
       'Milníky, tituly a spokojenost vedení';
 
   @override
+  String get careerChallenges => 'Výzvy';
+
+  @override
+  String get careerChallengesSubtitle => 'Nelítostné zkoušky na celou kariéru';
+
+  @override
   String get careerTeamRecords => 'Týmové rekordy';
 
   @override

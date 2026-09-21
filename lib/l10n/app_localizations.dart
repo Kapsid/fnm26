@@ -2528,6 +2528,18 @@ abstract class AppLocalizations {
   /// **'Milestones, titles and board satisfaction'**
   String get careerAchievementsSubtitle;
 
+  /// Nav card: the career-long challenges.
+  ///
+  /// In en, this message translates to:
+  /// **'Challenges'**
+  String get careerChallenges;
+
+  /// Subtitle of the challenges card in the careers menu.
+  ///
+  /// In en, this message translates to:
+  /// **'Brutal career-long tests to take on'**
+  String get careerChallengesSubtitle;
+
   /// Nav card: team records.
   ///
   /// In en, this message translates to:

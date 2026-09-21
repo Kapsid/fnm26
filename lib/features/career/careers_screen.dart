@@ -58,6 +58,16 @@ class CareersScreen extends StatelessWidget {
                 context.go('${Routes.achievements}?careerId=$careerId'),
           ),
           const SizedBox(height: AppSpacing.sm),
+          // Beside achievements, not buried inside them: the challenges used
+          // to be reachable only from a button in the achievements app bar,
+          // so a manager who never went looking never knew they were there.
+          _MenuTile(
+            icon: Icons.local_fire_department_rounded,
+            title: l.careerChallenges,
+            subtitle: l.careerChallengesSubtitle,
+            onTap: () => context.go('${Routes.challenges}?careerId=$careerId'),
+          ),
+          const SizedBox(height: AppSpacing.sm),
           _MenuTile(
             icon: Icons.leaderboard,
             title: l.careerTeamRecords,

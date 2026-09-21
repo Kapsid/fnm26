@@ -1445,6 +1445,12 @@ class AppLocalizationsEn extends AppLocalizations {
       'Milestones, titles and board satisfaction';
 
   @override
+  String get careerChallenges => 'Challenges';
+
+  @override
+  String get careerChallengesSubtitle => 'Brutal career-long tests to take on';
+
+  @override
   String get careerTeamRecords => 'Team records';
 
   @override
