@@ -346,22 +346,11 @@ class _NationCard extends StatelessWidget {
               ),
             ),
           ),
-          // Left "active" accent bar for free-demo nations.
-          if (nation.isFreeDemo)
-            const Positioned(
-              left: 0,
-              top: 0,
-              bottom: 0,
-              child: SizedBox(
-                width: 4,
-                child: ColoredBox(color: AppColors.primary),
-              ),
-            ),
           Padding(
             padding: const EdgeInsets.all(AppSpacing.sm + 4),
             child: Row(
               children: [
-                FlagDisc(nation.code, size: 60, highlighted: nation.isFreeDemo),
+                FlagDisc(nation.code, size: 60),
                 const SizedBox(width: AppSpacing.sm + 4),
                 Expanded(
                   child: Column(
