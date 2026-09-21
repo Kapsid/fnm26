@@ -9435,7 +9435,7 @@
       }
     }
   },
-  "msgRankUp1": "Up {move, plural, one{1 place} other{{move} places}} this cycle, to #{rank}.",
+  "msgRankUp1": "Up {move, plural, one{1 place} other{{move} places}} in all, to #{rank}.",
   "@msgRankUp1": {
     "description": "Inbox: world ranking climbed.",
     "placeholders": {
@@ -9471,7 +9471,7 @@
       }
     }
   },
-  "msgRankDown1": "Down {move, plural, one{1 place} other{{move} places}} this cycle, to #{rank}.",
+  "msgRankDown1": "Down {move, plural, one{1 place} other{{move} places}} in all, to #{rank}.",
   "@msgRankDown1": {
     "description": "Inbox: world ranking slipped.",
     "placeholders": {
@@ -9538,6 +9538,86 @@
       },
       "movement": {
         "type": "String"
+      }
+    }
+  },
+  "msgRankJumpTitleUp": "A climb to #{rank}",
+  "@msgRankJumpTitleUp": {
+    "description": "Inbox: headline when a tournament lifted the nation several places.",
+    "placeholders": {
+      "rank": {
+        "type": "int"
+      }
+    }
+  },
+  "msgRankJumpTitleDown": "A slide to #{rank}",
+  "@msgRankJumpTitleDown": {
+    "description": "Inbox: headline when a tournament dropped the nation several places.",
+    "placeholders": {
+      "rank": {
+        "type": "int"
+      }
+    }
+  },
+  "msgRankJumpBodyUp": "{tournament} has moved the world ranking. {nation} went in #{from} and came out #{to}, a climb of {move, plural, one{1 place} other{{move} places}}.",
+  "@msgRankJumpBodyUp": {
+    "description": "Inbox: where the nation stood before a tournament and where it stands after it, having climbed.",
+    "placeholders": {
+      "tournament": {
+        "type": "String"
+      },
+      "nation": {
+        "type": "String"
+      },
+      "from": {
+        "type": "int"
+      },
+      "to": {
+        "type": "int"
+      },
+      "move": {
+        "type": "int"
+      }
+    }
+  },
+  "msgRankJumpBodyDown": "{tournament} has moved the world ranking. {nation} went in #{from} and came out #{to}, a slide of {move, plural, one{1 place} other{{move} places}}.",
+  "@msgRankJumpBodyDown": {
+    "description": "Inbox: where the nation stood before a tournament and where it stands after it, having slipped.",
+    "placeholders": {
+      "tournament": {
+        "type": "String"
+      },
+      "nation": {
+        "type": "String"
+      },
+      "from": {
+        "type": "int"
+      },
+      "to": {
+        "type": "int"
+      },
+      "move": {
+        "type": "int"
+      }
+    }
+  },
+  "rankingSinceWcDraw": "Since the World Championship draw",
+  "@rankingSinceWcDraw": {
+    "description": "Ranking screen: what the movement arrows are measured from."
+  },
+  "rankingSinceCycleStart": "Since the campaign began",
+  "@rankingSinceCycleStart": {
+    "description": "Ranking screen: what the movement arrows are measured from, before any World Championship draw exists."
+  },
+  "rankingMovedFromTo": "#{from} to #{now}",
+  "@rankingMovedFromTo": {
+    "description": "Ranking screen: the manager's nation moved from one world place to another.",
+    "placeholders": {
+      "from": {
+        "type": "int"
+      },
+      "now": {
+        "type": "int"
       }
     }
   },

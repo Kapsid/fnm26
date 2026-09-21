@@ -139,14 +139,20 @@ void main() {
         expect(r.cycle, greaterThanOrEqualTo(0));
       }
 
-      // THE ANCHOR: a message's movement must be measured from the cycle's
-      // starting positions — the same baseline the ranking screen's arrows use.
+      // THE ANCHOR: a message's movement must be measured from the shared
+      // freeze — `movementBaselineFor`, the World Championship draw that ended
+      // the previous cycle, falling back to the cycle's own starting positions
+      // — which is the same baseline the ranking screen's arrows use.
       // Reporting the move since the previous release made the inbox narrate
       // monthly wiggles the screen never showed.
       final seedRanks = container.read(seedRankingRepositoryProvider);
       final staticRank = {for (final n in nations) n.id: n.ranking};
       for (final r in releases) {
-        final baseline = await seedRanks.forCycle(career.id, r.cycle);
+        final baseline = (await movementBaselineFor(
+          seedRanks,
+          career.id,
+          r.cycle,
+        )).rankById;
         final was = baseline[r.nationId] ?? staticRank[r.nationId]!;
         final expectedMove = was - r.playerRank;
         final body = rankMessages
@@ -173,7 +179,11 @@ void main() {
       final live = ranking!.position[player.id];
       final latest = releases.last;
       if (latest.playerRank == live) {
-        final baseline = await seedRanks.forCycle(career.id, latest.cycle);
+        final baseline = (await movementBaselineFor(
+          seedRanks,
+          career.id,
+          latest.cycle,
+        )).rankById;
         final was = baseline[latest.nationId] ?? staticRank[latest.nationId]!;
         expect(
           ranking.movement[player.id],

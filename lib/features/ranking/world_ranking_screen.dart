@@ -137,6 +137,14 @@ class _WorldRankingScreenState extends ConsumerState<WorldRankingScreen> {
           return Column(
             children: [
               _RankHistoryChart(careerId: careerId),
+              RankMovementHeader(
+                baseline: data.baseline,
+                from: data.position[data.playerNationId] == null
+                    ? null
+                    : (data.position[data.playerNationId]! +
+                          (data.movement[data.playerNationId] ?? 0)),
+                now: data.position[data.playerNationId],
+              ),
               _RegionFilter(
                 selected: region,
                 onSelect: (r) =>
@@ -152,7 +160,7 @@ class _WorldRankingScreenState extends ConsumerState<WorldRankingScreen> {
                   itemExtent: _rowExtent,
                   itemBuilder: (context, i) => Padding(
                     padding: const EdgeInsets.only(bottom: _rowGap),
-                    child: _RankRow(
+                    child: RankRow(
                       nation: filtered[i],
                       rank: data.position[filtered[i].id] ?? (i + 1),
                       points: data.points[filtered[i].id] ?? 0,
@@ -240,14 +248,17 @@ class _RegionFilter extends StatelessWidget {
   }
 }
 
-class _RankRow extends StatelessWidget {
-  const _RankRow({
+/// One nation's line in the world ranking: its place, how far it has moved
+/// since the last freeze, its flag, its name and its points.
+class RankRow extends StatelessWidget {
+  const RankRow({
     required this.nation,
     required this.rank,
     required this.points,
     required this.movement,
     required this.isPlayer,
     required this.onTap,
+    super.key,
   });
 
   final Nation nation;
@@ -280,12 +291,13 @@ class _RankRow extends StatelessWidget {
               ? AppColors.surfaceContainerHigh
               : AppColors.surfaceContainer,
           borderRadius: AppRadii.baseAll,
-          border: Border(
-            left: BorderSide(color: edgeColor, width: edgeWidth),
-            top: const BorderSide(color: AppColors.outlineVariant),
-            right: const BorderSide(color: AppColors.outlineVariant),
-            bottom: const BorderSide(color: AppColors.outlineVariant),
-          ),
+          // The whole outline, not just the left edge. A rounded box can only
+          // be painted with a UNIFORM border: the old left-edge-only colour
+          // threw "a borderRadius can only be given on borders with uniform
+          // colors" on every paint of every row, which a release build
+          // swallows and a debug one does not. Outlining the row also makes a
+          // climb easier to spot than a 3px stripe did.
+          border: Border.all(color: edgeColor, width: edgeWidth),
         ),
         padding: const EdgeInsets.symmetric(
           horizontal: AppSpacing.md,
@@ -305,7 +317,7 @@ class _RankRow extends StatelessWidget {
               ),
             ),
             const SizedBox(width: 4),
-            SizedBox(width: 20, child: _Movement(movement)),
+            SizedBox(width: _movementWidth, child: RankMovement(movement)),
             const SizedBox(width: AppSpacing.sm),
             FlagDisc(nation.code, size: 36, highlighted: isPlayer),
             const SizedBox(width: AppSpacing.md),
@@ -346,10 +358,20 @@ class _RankRow extends StatelessWidget {
   }
 }
 
-/// A small up/down/steady arrow showing a nation's movement since kick-off.
-class _Movement extends StatelessWidget {
-  const _Movement(this.delta);
+/// Width of the movement cell in a rank row.
+///
+/// The old cell was 20px and drew the figure at 9pt, which was enough for a
+/// friendly's worth of drift and nothing more: a World Championship can move a
+/// nation twenty places and the table runs past two hundred, so the figure is
+/// now readable and the cell is measured for three digits of it.
+const double _movementWidth = 38;
 
+/// A nation's movement since the last ranking freeze: an arrow for the
+/// direction and the number of places beside it, or a dash for no change.
+class RankMovement extends StatelessWidget {
+  const RankMovement(this.delta, {super.key});
+
+  /// Places climbed (positive) or dropped (negative).
   final int delta;
 
   @override
@@ -357,7 +379,7 @@ class _Movement extends StatelessWidget {
     if (delta == 0) {
       return const Icon(
         Icons.remove,
-        size: 12,
+        size: 14,
         color: AppColors.outlineVariant,
       );
     }
@@ -371,11 +393,88 @@ class _Movement extends StatelessWidget {
           size: 16,
           color: color,
         ),
+        // A plain Text, deliberately: WholeText scales itself down to fit, so
+        // a width guard reading didExceedMaxLines can never fail inside one.
         Text(
           '${delta.abs()}',
-          style: AppTypography.labelSmall.copyWith(color: color, fontSize: 9),
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          style: AppTypography.labelSmall.copyWith(
+            color: color,
+            fontWeight: FontWeight.w700,
+            letterSpacing: 0,
+          ),
         ),
       ],
+    );
+  }
+}
+
+/// The line above the table saying what the arrows are measured from, with the
+/// manager's own nation's move spelled out: where it was, where it is now.
+///
+/// Without this the arrows are a column of unexplained numbers, and the one
+/// move the manager actually cares about is somewhere in a list of two hundred.
+class RankMovementHeader extends StatelessWidget {
+  const RankMovementHeader({
+    required this.baseline,
+    required this.from,
+    required this.now,
+    super.key,
+  });
+
+  final RankBaseline baseline;
+
+  /// Where the manager's nation stood when the baseline was frozen, and where
+  /// it stands now. Null when the nation is not in the baseline at all.
+  final int? from;
+  final int? now;
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    final caption = switch (baseline) {
+      RankBaseline.worldChampionshipDraw => l.rankingSinceWcDraw,
+      RankBaseline.cycleStart => l.rankingSinceCycleStart,
+    };
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(
+        AppSpacing.marginMobile,
+        AppSpacing.sm,
+        AppSpacing.marginMobile,
+        0,
+      ),
+      // A column, not a row: the caption is a sentence and the figure is a
+      // figure, and squeezing them onto one line left the caption 107px to
+      // say "Since the World Championship draw" in.
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (from != null && now != null)
+            Row(
+              children: [
+                RankMovement(from! - now!),
+                const SizedBox(width: AppSpacing.xs),
+                Flexible(
+                  child: Text(
+                    l.rankingMovedFromTo(from!, now!),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: AppTypography.labelMedium,
+                  ),
+                ),
+              ],
+            ),
+          Text(
+            caption,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            style: AppTypography.labelSmall.copyWith(
+              color: AppColors.onSurfaceVariant,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

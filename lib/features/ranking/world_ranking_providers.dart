@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/nation.dart';
+import 'package:fnm/domain/repositories/seed_ranking_repository.dart';
 import 'package:fnm/domain/services/ranking/elo.dart';
 
 /// World ranking data: nations ordered by their live points, each nation's
@@ -14,6 +15,7 @@ class RankingData {
     required this.position,
     required this.movement,
     required this.playerNationId,
+    required this.baseline,
   });
 
   /// Nations ordered by live points (strongest first).
@@ -25,10 +27,24 @@ class RankingData {
   /// Live world position (1 = top), keyed by nation id.
   final Map<int, int> position;
 
-  /// Positions climbed since the season began (negative = dropped).
+  /// Positions climbed since [baseline] was frozen (negative = dropped).
   final Map<int, int> movement;
 
   final int playerNationId;
+
+  /// Which freeze [movement] is measured from, so the screen can say so.
+  final RankBaseline baseline;
+}
+
+/// Which stored ranking freeze the movement arrows are measured from.
+enum RankBaseline {
+  /// The live ranking snapshotted when the last World Championship finals draw
+  /// was made: the freeze a tournament's swing is visible against.
+  worldChampionshipDraw,
+
+  /// The cycle's starting positions, before any World Championship draw of
+  /// this career has been made.
+  cycleStart,
 }
 
 /// Selected confederation filter (null = all).
@@ -178,6 +194,67 @@ rankExtremesProvider = FutureProvider.autoDispose
       );
     });
 
+/// The ranking freeze that movement during [cycle] is measured from: the world
+/// as it was frozen for the World Championship draw that ENDED the cycle
+/// before, so the swing that championship produced is what the movement shows.
+///
+/// Shared by the ranking screen's arrows and the inbox's release messages,
+/// which have to answer the same question with the same number: the two have
+/// disagreed before and it read as a bug in both.
+///
+/// The cycle's own starting positions stand in when no championship has been
+/// drawn yet, and an empty map means even that is missing (cycle 0, or a
+/// legacy save) — callers fall back to the static seed ranking there.
+///
+/// The cycle's OWN draw snapshot is deliberately not used: it is frozen three
+/// and a half years in, so an earlier release of the same cycle would be
+/// measured against a table from its own future.
+Future<({Map<int, int> rankById, RankBaseline kind})> movementBaselineFor(
+  SeedRankingRepository repo,
+  int careerId,
+  int cycle,
+) async {
+  if (cycle > 0) {
+    final drawn = await repo.forCycle(
+      careerId,
+      drawSeedCycle(cycle - 1, drawSlotWorldCupFinals),
+    );
+    if (drawn.isNotEmpty) {
+      return (rankById: drawn, kind: RankBaseline.worldChampionshipDraw);
+    }
+  }
+  return (
+    rankById: await repo.forCycle(careerId, cycle),
+    kind: RankBaseline.cycleStart,
+  );
+}
+
+/// [movementBaselineFor] the save's current cycle, with the static seed
+/// ranking filled in when nothing is stored.
+final AutoDisposeFutureProviderFamily<
+  ({Map<int, int> rankById, RankBaseline kind}),
+  int
+>
+movementBaselineProvider = FutureProvider.autoDispose
+    .family<({Map<int, int> rankById, RankBaseline kind}), int>((
+      ref,
+      careerId,
+    ) async {
+      final career = await ref.watch(careerRepositoryProvider).byId(careerId);
+      final cycle = career?.cyclePointer ?? 0;
+      final found = await movementBaselineFor(
+        ref.watch(seedRankingRepositoryProvider),
+        careerId,
+        cycle,
+      );
+      if (found.rankById.isNotEmpty) return found;
+      final nations = await ref.watch(nationRepositoryProvider).all();
+      return (
+        rankById: {for (final n in nations) n.id: n.ranking},
+        kind: RankBaseline.cycleStart,
+      );
+    });
+
 final AutoDisposeFutureProviderFamily<RankingData?, int> worldRankingProvider =
     FutureProvider.autoDispose.family<RankingData?, int>((ref, careerId) async {
       await ref.watch(seedLoaderProvider).ensureSeeded();
@@ -191,13 +268,16 @@ final AutoDisposeFutureProviderFamily<RankingData?, int> worldRankingProvider =
           .watch(rankingRepositoryProvider)
           .pointsFor(careerId, seed);
 
-      // Baseline: where each nation stood when the current cycle began, so the
-      // arrows highlight how form has moved them this campaign.
+      // Baseline: the last time the world ranking was FROZEN for a World
+      // Championship draw, falling back to the cycle's starting positions.
+      //
+      // The cycle baseline alone could not show a tournament at all: it is
+      // re-frozen at the rollover that follows the final, from the standings
+      // the final itself produced, so the moment the new cycle began every
+      // arrow on the screen read zero and the biggest swing in the game was
+      // gone before the manager could look at it.
       final baseline = await ref.watch(
-        seedRankByIdProvider((
-          careerId: careerId,
-          cycle: career?.cyclePointer ?? 0,
-        )).future,
+        movementBaselineProvider(careerId).future,
       );
 
       final ordered = [...nations]
@@ -214,8 +294,8 @@ final AutoDisposeFutureProviderFamily<RankingData?, int> worldRankingProvider =
         final n = ordered[i];
         final rank = i + 1;
         position[n.id] = rank;
-        // + = climbed since the cycle's starting position.
-        movement[n.id] = (baseline[n.id] ?? n.ranking) - rank;
+        // + = climbed since the baseline was frozen.
+        movement[n.id] = (baseline.rankById[n.id] ?? n.ranking) - rank;
       }
 
       return RankingData(
@@ -224,5 +304,6 @@ final AutoDisposeFutureProviderFamily<RankingData?, int> worldRankingProvider =
         position: position,
         movement: movement,
         playerNationId: career?.nationId ?? -1,
+        baseline: baseline.kind,
       );
     });

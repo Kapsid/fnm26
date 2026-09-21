@@ -10263,7 +10263,7 @@ abstract class AppLocalizations {
   /// Inbox: world ranking climbed.
   ///
   /// In en, this message translates to:
-  /// **'Up {move, plural, one{1 place} other{{move} places}} this cycle, to #{rank}.'**
+  /// **'Up {move, plural, one{1 place} other{{move} places}} in all, to #{rank}.'**
   String msgRankUp1(int move, int rank);
 
   /// Inbox: world ranking climbed.
@@ -10281,7 +10281,7 @@ abstract class AppLocalizations {
   /// Inbox: world ranking slipped.
   ///
   /// In en, this message translates to:
-  /// **'Down {move, plural, one{1 place} other{{move} places}} this cycle, to #{rank}.'**
+  /// **'Down {move, plural, one{1 place} other{{move} places}} in all, to #{rank}.'**
   String msgRankDown1(int move, int rank);
 
   /// Inbox: world ranking slipped.
@@ -10319,6 +10319,60 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'The world ranking has been updated. {lead} {movement}'**
   String msgRankBody(String lead, String movement);
+
+  /// Inbox: headline when a tournament lifted the nation several places.
+  ///
+  /// In en, this message translates to:
+  /// **'A climb to #{rank}'**
+  String msgRankJumpTitleUp(int rank);
+
+  /// Inbox: headline when a tournament dropped the nation several places.
+  ///
+  /// In en, this message translates to:
+  /// **'A slide to #{rank}'**
+  String msgRankJumpTitleDown(int rank);
+
+  /// Inbox: where the nation stood before a tournament and where it stands after it, having climbed.
+  ///
+  /// In en, this message translates to:
+  /// **'{tournament} has moved the world ranking. {nation} went in #{from} and came out #{to}, a climb of {move, plural, one{1 place} other{{move} places}}.'**
+  String msgRankJumpBodyUp(
+    String tournament,
+    String nation,
+    int from,
+    int to,
+    int move,
+  );
+
+  /// Inbox: where the nation stood before a tournament and where it stands after it, having slipped.
+  ///
+  /// In en, this message translates to:
+  /// **'{tournament} has moved the world ranking. {nation} went in #{from} and came out #{to}, a slide of {move, plural, one{1 place} other{{move} places}}.'**
+  String msgRankJumpBodyDown(
+    String tournament,
+    String nation,
+    int from,
+    int to,
+    int move,
+  );
+
+  /// Ranking screen: what the movement arrows are measured from.
+  ///
+  /// In en, this message translates to:
+  /// **'Since the World Championship draw'**
+  String get rankingSinceWcDraw;
+
+  /// Ranking screen: what the movement arrows are measured from, before any World Championship draw exists.
+  ///
+  /// In en, this message translates to:
+  /// **'Since the campaign began'**
+  String get rankingSinceCycleStart;
+
+  /// Ranking screen: the manager's nation moved from one world place to another.
+  ///
+  /// In en, this message translates to:
+  /// **'#{from} to #{now}'**
+  String rankingMovedFromTo(int from, int now);
 
   /// Inbox: caps milestone headline.
   ///

@@ -6441,7 +6441,7 @@ class AppLocalizationsCs extends AppLocalizations {
       few: '$move místa',
       one: '1 místo',
     );
-    return 'Postup o $_temp0 v tomto cyklu, na #$rank.';
+    return 'Celkem postup o $_temp0, na #$rank.';
   }
 
   @override
@@ -6477,7 +6477,7 @@ class AppLocalizationsCs extends AppLocalizations {
       few: '$move místa',
       one: '1 místo',
     );
-    return 'Pád o $_temp0 v tomto cyklu, na #$rank.';
+    return 'Celkem pád o $_temp0, na #$rank.';
   }
 
   @override
@@ -6520,6 +6520,63 @@ class AppLocalizationsCs extends AppLocalizations {
   @override
   String msgRankBody(String lead, String movement) {
     return 'Světový žebříček byl aktualizován. $lead $movement';
+  }
+
+  @override
+  String msgRankJumpTitleUp(int rank) {
+    return 'Skok na #$rank';
+  }
+
+  @override
+  String msgRankJumpTitleDown(int rank) {
+    return 'Propad na #$rank';
+  }
+
+  @override
+  String msgRankJumpBodyUp(
+    String tournament,
+    String nation,
+    int from,
+    int to,
+    int move,
+  ) {
+    String _temp0 = intl.Intl.pluralLogic(
+      move,
+      locale: localeName,
+      other: '$move míst',
+      few: '$move místa',
+      one: '1 místo',
+    );
+    return '$tournament zamíchalo světovým žebříčkem. $nation do něj šli z #$from a vycházejí na #$to, tedy skok o $_temp0.';
+  }
+
+  @override
+  String msgRankJumpBodyDown(
+    String tournament,
+    String nation,
+    int from,
+    int to,
+    int move,
+  ) {
+    String _temp0 = intl.Intl.pluralLogic(
+      move,
+      locale: localeName,
+      other: '$move míst',
+      few: '$move místa',
+      one: '1 místo',
+    );
+    return '$tournament zamíchalo světovým žebříčkem. $nation do něj šli z #$from a vycházejí na #$to, tedy propad o $_temp0.';
+  }
+
+  @override
+  String get rankingSinceWcDraw => 'Od losu mistrovství světa';
+
+  @override
+  String get rankingSinceCycleStart => 'Od začátku kampaně';
+
+  @override
+  String rankingMovedFromTo(int from, int now) {
+    return '#$from na #$now';
   }
 
   @override

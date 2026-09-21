@@ -15,9 +15,21 @@ import 'package:fnm/domain/services/player/player_lifecycle.dart';
 import 'package:fnm/features/federation/federation_providers.dart';
 import 'package:fnm/features/messages/intake_report.dart';
 import 'package:fnm/features/messages/squad_dev_report.dart';
+import 'package:fnm/features/ranking/world_ranking_providers.dart';
 import 'package:fnm/features/tournaments/finals_draw_providers.dart';
 import 'package:fnm/features/settings/settings_providers.dart';
 import 'package:fnm/features/tournaments/host_draw_providers.dart';
+
+/// How far a tournament must move the manager's nation before the inbox says
+/// so, in world places.
+///
+/// A place is worth roughly three and a half ranking points in the middle of
+/// the widened table, so five places is about seventeen points: more than a
+/// campaign of qualifiers and friendlies can drift a side, and well inside
+/// what one tournament does (a championship win can be worth twenty places).
+/// Anything smaller is noise, and the brief is explicit that a one-place move
+/// files nothing.
+const int kRankJumpPlaces = 5;
 
 /// A message to be added to the inbox if not already present.
 class _Draft {
@@ -402,23 +414,28 @@ class MessageService {
     // Every world-ranking release: who leads, where the manager's nation sits,
     // and how far it has moved this cycle.
     //
-    // Movement is measured against the cycle's starting positions — the SAME
-    // baseline the ranking screen's arrows use (see worldRankingProvider).
-    // Reporting the move since the previous release instead made the inbox
-    // narrate every monthly wiggle while the screen showed only the net change,
-    // so the two flatly disagreed; and across a change of nation it compared
-    // the old nation's rank with the new one's, announcing a job change as a
-    // 37-place climb.
+    // Movement is measured against the SAME freeze the ranking screen's arrows
+    // use — [movementBaselineFor], the World Championship draw that ended the
+    // previous cycle. Reporting the move since the previous release instead
+    // made the inbox narrate every monthly wiggle while the screen showed only
+    // the net change, so the two flatly disagreed; and across a change of
+    // nation it compared the old nation's rank with the new one's, announcing
+    // a job change as a 37-place climb.
     final releases = await _ref
         .read(rankingReleaseRepositoryProvider)
         .all(careerId);
     final seedRanks = _ref.read(seedRankingRepositoryProvider);
     for (final release in releases) {
-      final baseline = await seedRanks.forCycle(careerId, release.cycle);
+      final baseline = await movementBaselineFor(
+        seedRanks,
+        careerId,
+        release.cycle,
+      );
       // Cycle 0 (and any legacy save) has no snapshot: fall back to the static
-      // seed ranking, exactly as seedRankByIdProvider does.
+      // seed ranking, exactly as the screen's baseline provider does.
       final was =
-          baseline[release.nationId] ?? nations[release.nationId]?.ranking;
+          baseline.rankById[release.nationId] ??
+          nations[release.nationId]?.ranking;
       final leader = nameOf(release.leaderNationId);
       final rank = release.playerRank;
 
@@ -459,6 +476,55 @@ class MessageService {
           l.msgRankBody(lead, movement),
           release.publishedOn.year,
           0,
+        ),
+      );
+    }
+
+    // The swing a World Championship itself produced: where the nation went
+    // into the finals and where it came out.
+    //
+    // Tournament placings move the ranking hard now — a champion can climb
+    // twenty places — but the move was, until this, invisible: the cycle
+    // baseline the screen's arrows measure against is re-frozen at the
+    // rollover that follows the final, from the standings that final produced,
+    // so by the time the manager looked every arrow read zero. This is the one
+    // record of it, and being a stored message it survives the rollover.
+    final stints = await _ref.read(careerRepositoryProvider).stints(careerId);
+    for (final h in honours) {
+      if (h.competition != worldCupHonourName) continue;
+      if (!CareerService.isOwnHonourYear(h.year)) continue;
+      final tournamentCycle = (h.year - CareerService.cycleStart.year) ~/ 4 - 1;
+      if (tournamentCycle < 0) continue;
+      if (existing.contains('rankjump:$tournamentCycle')) continue;
+
+      // Whose climb it was: the nation the manager held that cycle, not
+      // whoever he has moved on to since.
+      final movedNation = stints[tournamentCycle] ?? career.nationId;
+      // Before: the live ranking frozen when the finals were drawn, which is
+      // after every qualifier and before a ball of the finals was kicked.
+      final before = await seedRanks.forCycle(
+        careerId,
+        drawSeedCycle(tournamentCycle, drawSlotWorldCupFinals),
+      );
+      final from = before[movedNation];
+      if (from == null) continue;
+      final to = await _rankAfter(careerId, tournamentCycle, movedNation);
+      if (to == null) continue;
+
+      final move = from - to; // positive = climbed
+      if (move.abs() < kRankJumpPlaces) continue;
+      final tournament = competitionLabel(l, h.competition);
+      final who = nameOf(movedNation);
+      drafts.add(
+        _Draft(
+          'rankjump:$tournamentCycle',
+          'ranking',
+          move > 0 ? l.msgRankJumpTitleUp(to) : l.msgRankJumpTitleDown(to),
+          move > 0
+              ? l.msgRankJumpBodyUp(tournament, who, from, to, move)
+              : l.msgRankJumpBodyDown(tournament, who, from, to, -move),
+          h.year,
+          3,
         ),
       );
     }
@@ -731,6 +797,29 @@ class MessageService {
         year: d.year,
       );
     }
+  }
+
+  /// Where [nationId] stood once the [cycle] World Championship was over.
+  ///
+  /// A cycle that has already rolled over has the answer in store: the seeding
+  /// snapshot for the NEXT cycle is frozen at the rollover, which happens
+  /// straight after the final, so it is the post-tournament table itself.
+  ///
+  /// Otherwise the live ranking answers — and this is where the save can lie.
+  /// The message is filed by the sync that runs immediately after the final,
+  /// in the same step that settled it, and `worldRankingProvider` is a derived
+  /// provider that does not notice a simulation step: read as it stands it
+  /// hands back the table from BEFORE the tournament, and the message would
+  /// state, confidently and permanently, the position the nation held before
+  /// the thing it is reporting. So it is invalidated first.
+  Future<int?> _rankAfter(int careerId, int cycle, int nationId) async {
+    final rolled = await _ref
+        .read(seedRankingRepositoryProvider)
+        .forCycle(careerId, cycle + 1);
+    if (rolled.isNotEmpty) return rolled[nationId];
+    _ref.invalidate(worldRankingProvider(careerId));
+    final live = await _ref.read(worldRankingProvider(careerId).future);
+    return live?.position[nationId];
   }
 }
 

@@ -6426,7 +6426,7 @@ class AppLocalizationsEn extends AppLocalizations {
       other: '$move places',
       one: '1 place',
     );
-    return 'Up $_temp0 this cycle, to #$rank.';
+    return 'Up $_temp0 in all, to #$rank.';
   }
 
   @override
@@ -6459,7 +6459,7 @@ class AppLocalizationsEn extends AppLocalizations {
       other: '$move places',
       one: '1 place',
     );
-    return 'Down $_temp0 this cycle, to #$rank.';
+    return 'Down $_temp0 in all, to #$rank.';
   }
 
   @override
@@ -6500,6 +6500,61 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String msgRankBody(String lead, String movement) {
     return 'The world ranking has been updated. $lead $movement';
+  }
+
+  @override
+  String msgRankJumpTitleUp(int rank) {
+    return 'A climb to #$rank';
+  }
+
+  @override
+  String msgRankJumpTitleDown(int rank) {
+    return 'A slide to #$rank';
+  }
+
+  @override
+  String msgRankJumpBodyUp(
+    String tournament,
+    String nation,
+    int from,
+    int to,
+    int move,
+  ) {
+    String _temp0 = intl.Intl.pluralLogic(
+      move,
+      locale: localeName,
+      other: '$move places',
+      one: '1 place',
+    );
+    return '$tournament has moved the world ranking. $nation went in #$from and came out #$to, a climb of $_temp0.';
+  }
+
+  @override
+  String msgRankJumpBodyDown(
+    String tournament,
+    String nation,
+    int from,
+    int to,
+    int move,
+  ) {
+    String _temp0 = intl.Intl.pluralLogic(
+      move,
+      locale: localeName,
+      other: '$move places',
+      one: '1 place',
+    );
+    return '$tournament has moved the world ranking. $nation went in #$from and came out #$to, a slide of $_temp0.';
+  }
+
+  @override
+  String get rankingSinceWcDraw => 'Since the World Championship draw';
+
+  @override
+  String get rankingSinceCycleStart => 'Since the campaign began';
+
+  @override
+  String rankingMovedFromTo(int from, int now) {
+    return '#$from to #$now';
   }
 
   @override
