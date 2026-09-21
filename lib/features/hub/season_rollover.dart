@@ -205,24 +205,11 @@ extension SeasonRollover on SeasonService {
       youthBonusByCycle: youth,
       careerStartsByPlayer: careerDev,
     );
-    final beforeById = {for (final p in before) p.id: p};
-    // Notable players whose club changed over the year, biggest first.
-    //
-    // "Notable" is RELATIVE to the nation, not an absolute rating: a fixed
-    // >=78 bar meant only the giants ever had a transfer window, and a manager
-    // of anyone outside the top thirty nations saw an empty one every single
-    // year. The bar is now the nation's own senior pool, so a minnow's best
-    // players moving club is news there exactly as a superstar's move is news
-    // in Brazil.
-    final ranked = [...after]..sort((a, b) => b.overall.compareTo(a.overall));
-    final notable = {for (final p in ranked.take(_transferPoolSize)) p.id};
-    final moves = <(Player now, Player was)>[
-      for (final p in after)
-        if (notable.contains(p.id) &&
-            beforeById[p.id] != null &&
-            beforeById[p.id]!.club != p.club)
-          (p, beforeById[p.id]!),
-    ]..sort((a, b) => b.$1.value.compareTo(a.$1.value));
+    // Everyone in the nation's selectable pool whose club changed, biggest
+    // first — the same walk a player's own club history card reads, through
+    // the one helper that decides what a window contains. See
+    // [TransferWindow.moves] for why there is no longer a cap on it.
+    final moves = TransferWindow.moves(before, after);
 
     // ONE message for the window, not one per player.
     //
@@ -235,7 +222,7 @@ extension SeasonRollover on SeasonService {
       final rows = [
         for (final m in moves)
           () {
-            final (p, was) = m;
+            final (now: p, was: was) = m;
             // Which way the move went between league tiers. A club name says
             // nothing about that to anybody who does not already know the
             // leagues, and it is the thing a manager actually wants read off
@@ -308,19 +295,6 @@ extension SeasonRollover on SeasonService {
       );
     }
   }
-
-  /// How deep into a nation's pool a club move still counts as news: the
-  /// nation's top ten, so the window reports the players a manager would
-  /// actually recognise rather than the hundredth man on the depth chart.
-  ///
-  /// This is the dial that decides how BUSY a transfer window looks, and it was
-  /// set far too deep at first. With sixteen players in scope, more than three
-  /// of them moved in 69% of years — so the `take(3)` cap below was doing all
-  /// the work and every window reported exactly three transfers. Measured over
-  /// five nations × 16 years, ten in scope gives a mean of 1.4 moves a year and
-  /// hits the cap in 18% of them: sometimes none, usually one or two,
-  /// occasionally a full three.
-  static const int _transferPoolSize = 10;
 
   /// A plausible transfer fee: the player's value with a deterministic premium
   /// (a fee usually tops the book value), so a marquee move reads big — capped
