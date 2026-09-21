@@ -4,6 +4,8 @@ import 'package:fnm/core/theme/app_theme.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 
+import '../helpers/expect_whole.dart';
+
 /// The buttons on the saves screen, in both languages, at the narrowest phone
 /// the app supports. Czech is the longer language nearly everywhere, and it is
 /// where "Pozice plné — pořiďte si Pro pro 10" ran out of its button.
@@ -51,11 +53,18 @@ void main() {
           icon: Icons.add,
         );
         expect(tester.takeException(), isNull);
+        expectNothingCut(tester);
       });
 
       testWidgets('the new-game button fits', (tester) async {
-        await pumpButton(tester, locale, (l) => l.careerNewGame, icon: Icons.add);
+        await pumpButton(
+          tester,
+          locale,
+          (l) => l.careerNewGame,
+          icon: Icons.add,
+        );
         expect(tester.takeException(), isNull);
+        expectNothingCut(tester);
       });
 
       testWidgets('the slots-full label fits', (tester) async {
@@ -66,6 +75,7 @@ void main() {
           icon: Icons.add,
         );
         expect(tester.takeException(), isNull);
+        expectNothingCut(tester);
       });
     });
   }

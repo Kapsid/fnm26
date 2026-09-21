@@ -10,6 +10,7 @@ import 'package:fnm/features/tactics/absence_providers.dart';
 import 'package:fnm/features/tactics/nation_squad_providers.dart';
 import 'package:fnm/features/tactics/nation_squad_tab.dart';
 
+import '../helpers/expect_whole.dart';
 import '../helpers/find_name.dart';
 import '../helpers/pump_app.dart';
 
@@ -198,5 +199,6 @@ void main() {
 
     expect(findName('Papastathopoulos'), findsOneWidget);
     expect(tester.takeException(), isNull);
+    expectNothingCut(tester);
   });
 }

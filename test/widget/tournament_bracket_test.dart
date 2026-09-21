@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/features/tournaments/tournament_bracket.dart';
 
+import '../helpers/expect_whole.dart';
 import '../helpers/pump_app.dart';
 
 /// The shared knockout bracket — the World Cup and the continental cups run the
@@ -144,6 +145,7 @@ void main() {
 
     // A RenderFlex overflow would be reported as a test exception.
     expect(tester.takeException(), isNull);
+    expectNothingCut(tester);
 
     // Every tie is laid out — the column is tall enough for all sixteen.
     for (var i = 0; i < 16; i++) {
@@ -198,6 +200,7 @@ void main() {
       reason: 'the bracket must scroll horizontally',
     );
     expect(tester.takeException(), isNull);
+    expectNothingCut(tester);
   });
 
   testWidgets('the run banner shows only when there is a run', (tester) async {

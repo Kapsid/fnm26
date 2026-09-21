@@ -232,7 +232,7 @@ class AppLocalizationsCs extends AppLocalizations {
   String get navStandings => 'Tabulky';
 
   @override
-  String get navCareers => 'Moje kariéra';
+  String get navCareers => 'Kariéra';
 
   @override
   String get settingsTitle => 'NASTAVENÍ';

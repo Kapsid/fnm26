@@ -19,6 +19,8 @@ import 'package:fnm/features/tactics/tactics_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 
+import '../helpers/expect_whole.dart';
+
 /// The pre-match reading of what is helping and what is hurting.
 ///
 /// Four separate pieces of feedback said the same thing in four ways: tired
@@ -426,6 +428,7 @@ void main() {
             'the panel heading',
           );
           expect(tester.takeException(), isNull);
+          expectNothingCut(tester);
         });
       }
     }

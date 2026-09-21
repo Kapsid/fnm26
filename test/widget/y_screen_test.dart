@@ -7,6 +7,7 @@ import 'package:fnm/features/y/y_post_detail.dart';
 import 'package:fnm/features/y/y_screen.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 
+import '../helpers/expect_whole.dart';
 import '../helpers/pump_app.dart';
 
 void main() {
@@ -275,6 +276,7 @@ void main() {
             );
             expectWhole(heading(tester), 'the earlier-news heading');
             expect(tester.takeException(), isNull);
+            expectNothingCut(tester);
           },
         );
       }

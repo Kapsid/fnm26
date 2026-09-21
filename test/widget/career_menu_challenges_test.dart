@@ -7,6 +7,8 @@ import 'package:fnm/features/career/careers_screen.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
 
+import '../helpers/expect_whole.dart';
+
 /// Challenges in the careers menu.
 ///
 /// They were reachable only by opening Achievements and finding a button in
@@ -117,6 +119,7 @@ void main() {
             'the challenges subtitle',
           );
           expect(tester.takeException(), isNull);
+          expectNothingCut(tester);
         });
       }
     }

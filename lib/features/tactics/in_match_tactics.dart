@@ -958,10 +958,15 @@ class _TakerRow extends StatelessWidget {
           SizedBox(width: 36, child: TacticalChip(player.position.label)),
           const SizedBox(width: AppSpacing.sm),
           Expanded(
-            child: Text(
+            // The name of the man who takes the penalty is the whole point of
+            // this row, and a Text with an ellipsis handed the manager
+            // "Vondrackovs..." at 360 points. [WholeText] gives up the
+            // forename before it gives up anything else, and its size before
+            // it gives up a letter.
+            child: WholeText(
               player.name,
               maxLines: 1,
-              overflow: TextOverflow.ellipsis,
+              shortText: initialledName(player.name),
               style: AppTypography.bodyMedium,
             ),
           ),

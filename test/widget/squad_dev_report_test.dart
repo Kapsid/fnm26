@@ -99,7 +99,9 @@ void main() {
           locale: locale,
           rows: mixed,
         );
-        final regulars = tester.getTopLeft(find.text(l.squadDevTierRegulars)).dy;
+        final regulars = tester
+            .getTopLeft(find.text(l.squadDevTierRegulars))
+            .dy;
         final fringe = tester.getTopLeft(find.text(l.squadDevTierFringe)).dy;
         final youth = tester.getTopLeft(find.text(l.squadDevTierYouth)).dy;
         expect(regulars, lessThan(fringe));
@@ -120,8 +122,14 @@ void main() {
         // a call-up outranks a birthday, which is the whole point of the
         // grouping.
         final boy = tester.getTopLeft(find.text('Mladík')).dy;
-        expect(boy, greaterThan(tester.getTopLeft(find.text(l.squadDevTierRegulars)).dy));
-        expect(boy, lessThan(tester.getTopLeft(find.text(l.squadDevTierFringe)).dy));
+        expect(
+          boy,
+          greaterThan(tester.getTopLeft(find.text(l.squadDevTierRegulars)).dy),
+        );
+        expect(
+          boy,
+          lessThan(tester.getTopLeft(find.text(l.squadDevTierFringe)).dy),
+        );
         expectNothingCut(tester);
       });
 
@@ -170,7 +178,13 @@ void main() {
       width: 360,
       locale: const Locale('cs'),
       rows: [
-        row(longName, age: 26, rating: 79, change: 4, tier: SquadDevTier.regular),
+        row(
+          longName,
+          age: 26,
+          rating: 79,
+          change: 4,
+          tier: SquadDevTier.regular,
+        ),
       ],
     );
     expect(
@@ -190,7 +204,13 @@ void main() {
       width: 360,
       locale: const Locale('en'),
       rows: [
-        row('Only Regular', age: 28, rating: 80, change: 2, tier: SquadDevTier.regular),
+        row(
+          'Only Regular',
+          age: 28,
+          rating: 80,
+          change: 2,
+          tier: SquadDevTier.regular,
+        ),
       ],
     );
     expect(find.text(l.squadDevTierRegulars), findsOneWidget);

@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
 import 'package:fnm/features/tournaments/tournament_history.dart';
 
+import '../helpers/expect_whole.dart';
 import '../helpers/pump_app.dart';
 
 /// A shared edition's history row names every co-host, not just the primary.
@@ -84,6 +85,7 @@ void main() {
     expect(find.textContaining('POR'), findsOneWidget);
     expect(find.textContaining('MAR'), findsOneWidget);
     expect(tester.takeException(), isNull);
+    expectNothingCut(tester);
   });
 
   testWidgets('a single host still renders by name, not a bare code', (

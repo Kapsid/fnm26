@@ -7,6 +7,7 @@ import 'package:fnm/features/messages/poty_card.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 
+import '../helpers/expect_whole.dart';
 import '../helpers/pump_app.dart';
 
 /// The player of the year, announced properly.
@@ -172,6 +173,7 @@ void main() {
             );
             expectNothingCut(tester);
             expect(tester.takeException(), isNull);
+            expectNothingCut(tester);
           },
         );
       }

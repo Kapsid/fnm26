@@ -115,40 +115,73 @@ void main() {
   }
 
   group('what the numbers are priced off', () {
-    test('the fitness coach is priced off the injury factor he is applied by', () {
-      // The match preview multiplies the side's per-minute injury rate by
-      // exactly this, so the percentage the screen quotes has to fall out of
-      // it rather than sit beside it in the copy.
-      for (final tier in StaffTier.values) {
+    test(
+      'the fitness coach is priced off the injury factor he is applied by',
+      () {
+        // The match preview multiplies the side's per-minute injury rate by
+        // exactly this, so the percentage the screen quotes has to fall out of
+        // it rather than sit beside it in the copy.
+        for (final tier in StaffTier.values) {
+          expect(
+            StaffEffect.injuryReductionPct(StaffRole.fitnessCoach, tier),
+            ((1 - Staff.injuryFactor(tier)) * 100).round(),
+            reason: '$tier',
+          );
+        }
+        // And the figures themselves, so a change to the constants shows up here
+        // rather than quietly changing what the manager is promised.
         expect(
-          StaffEffect.injuryReductionPct(StaffRole.fitnessCoach, tier),
-          ((1 - Staff.injuryFactor(tier)) * 100).round(),
-          reason: '$tier',
+          StaffEffect.injuryReductionPct(
+            StaffRole.fitnessCoach,
+            StaffTier.none,
+          ),
+          0,
         );
-      }
-      // And the figures themselves, so a change to the constants shows up here
-      // rather than quietly changing what the manager is promised.
-      expect(StaffEffect.injuryReductionPct(StaffRole.fitnessCoach, StaffTier.none), 0);
-      expect(StaffEffect.injuryReductionPct(StaffRole.fitnessCoach, StaffTier.basic), 6);
-      expect(StaffEffect.injuryReductionPct(StaffRole.fitnessCoach, StaffTier.good), 13);
-      expect(StaffEffect.injuryReductionPct(StaffRole.fitnessCoach, StaffTier.elite), 22);
-    });
+        expect(
+          StaffEffect.injuryReductionPct(
+            StaffRole.fitnessCoach,
+            StaffTier.basic,
+          ),
+          6,
+        );
+        expect(
+          StaffEffect.injuryReductionPct(
+            StaffRole.fitnessCoach,
+            StaffTier.good,
+          ),
+          13,
+        );
+        expect(
+          StaffEffect.injuryReductionPct(
+            StaffRole.fitnessCoach,
+            StaffTier.elite,
+          ),
+          22,
+        );
+      },
+    );
 
-    test('the assistant is priced off his own injury factor and his youth hours', () {
-      for (final tier in StaffTier.values) {
+    test(
+      'the assistant is priced off his own injury factor and his youth hours',
+      () {
+        for (final tier in StaffTier.values) {
+          expect(
+            StaffEffect.injuryReductionPct(StaffRole.assistant, tier),
+            ((1 - Staff.assistantInjuryFactor(tier)) * 100).round(),
+            reason: '$tier',
+          );
+        }
         expect(
-          StaffEffect.injuryReductionPct(StaffRole.assistant, tier),
-          ((1 - Staff.assistantInjuryFactor(tier)) * 100).round(),
-          reason: '$tier',
+          StaffEffect.injuryReductionPct(StaffRole.assistant, StaffTier.elite),
+          10,
         );
-      }
-      expect(StaffEffect.injuryReductionPct(StaffRole.assistant, StaffTier.elite), 10);
-      // His youth work reaches the newgen intake through
-      // `youthBonusByCycleProvider`, and is put on the same overall-point
-      // scale the academy slider reads in.
-      expect(StaffEffect.youthOverall(StaffTier.none), 0);
-      expect(StaffEffect.youthOverall(StaffTier.elite), 3);
-    });
+        // His youth work reaches the newgen intake through
+        // `youthBonusByCycleProvider`, and is put on the same overall-point
+        // scale the academy slider reads in.
+        expect(StaffEffect.youthOverall(StaffTier.none), 0);
+        expect(StaffEffect.youthOverall(StaffTier.elite), 3);
+      },
+    );
 
     test('the scout reaches nothing, and the card is told so', () {
       // `Staff.capsToKnow` is defined and never called; `Prospects.capsToKnow`
@@ -225,13 +258,19 @@ void main() {
         expectWhole(reading('Fitness Coach'), 'the fitness coach\'s job');
         expectWhole(reading('Assistant Manager'), 'the assistant\'s job');
         expectWhole(reading('Chief Scout'), 'the scout\'s job');
-        expectWhole(reading('22% fewer injuries'), 'the fitness coach\'s figure');
+        expectWhole(
+          reading('22% fewer injuries'),
+          'the fitness coach\'s figure',
+        );
         expectWhole(reading('10% fewer injuries'), "the assistant's figure");
         expectWhole(
           reading('Youngsters +3 overall'),
           "the assistant's youth figure",
         );
-        expectWhole(reading('No effect on your squad yet'), 'the scout\'s line');
+        expectWhole(
+          reading('No effect on your squad yet'),
+          'the scout\'s line',
+        );
       });
 
       testWidgets('every figure fits whole in Czech at ${width}px', (
@@ -254,7 +293,10 @@ void main() {
         expectWhole(reading('Kondiční trenér'), 'the fitness coach\'s job');
         expectWhole(reading('Asistent trenéra'), 'the assistant\'s job');
         expectWhole(reading('Hlavní skaut'), 'the scout\'s job');
-        expectWhole(reading('O 22 % méně zranění'), 'the fitness coach\'s figure');
+        expectWhole(
+          reading('O 22 % méně zranění'),
+          'the fitness coach\'s figure',
+        );
         expectWhole(reading('O 10 % méně zranění'), "the assistant's figure");
         expectWhole(
           reading('Mladíci +3 na celkovém'),

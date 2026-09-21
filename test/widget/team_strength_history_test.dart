@@ -6,6 +6,7 @@ import 'package:fnm/features/career/manager_history_providers.dart';
 import 'package:fnm/features/career/manager_history_screen.dart';
 import 'package:fnm/features/stats/stats_providers.dart';
 
+import '../helpers/expect_whole.dart';
 import '../helpers/pump_app.dart';
 
 /// The manager's career screen is where anyone goes to read their history, and
@@ -90,6 +91,7 @@ void main() {
     expect(find.text('Overall 78'), findsOneWidget);
     expect(find.text('Czechia'), findsWidgets);
     expect(tester.takeException(), isNull);
+    expectNothingCut(tester);
   });
 
   testWidgets('a one-year career draws no empty frame', (tester) async {
@@ -98,6 +100,7 @@ void main() {
     expect(find.byKey(const Key('career-team-strength')), findsNothing);
     expect(find.text('Overall 71'), findsNothing);
     expect(tester.takeException(), isNull);
+    expectNothingCut(tester);
   });
 
   testWidgets('a career with no recorded seasons draws nothing', (
@@ -107,6 +110,7 @@ void main() {
 
     expect(find.byKey(const Key('career-team-strength')), findsNothing);
     expect(tester.takeException(), isNull);
+    expectNothingCut(tester);
   });
 
   // Two rows have shipped broken in Czech this batch. Prove it instead.

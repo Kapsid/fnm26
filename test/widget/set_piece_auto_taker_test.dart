@@ -10,6 +10,7 @@ import 'package:fnm/features/tactics/in_match_tactics.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 
+import '../helpers/expect_whole.dart';
 import '../helpers/fixtures.dart';
 
 /// The set-piece slots used to sit blank until the manager named somebody,
@@ -156,6 +157,7 @@ void main() {
       findsOneWidget,
     );
     expect(tester.takeException(), isNull);
+    expectNothingCut(tester);
   });
 
   testWidgets('naming a man drops the automatic marker', (tester) async {
@@ -208,6 +210,19 @@ void main() {
         'the dead-ball slot label',
       );
       expect(tester.takeException(), isNull);
+      expectNothingCut(tester);
+      // The picker row beneath spells the same man's name in a [WholeText],
+      // which no ellipsis guard can fail because it scales itself down
+      // instead. What is held there is how far it had to: it was a plain
+      // [Text] with an ellipsis and read "Vondrackovs..." at 360 points.
+      expectLegible(
+        tester,
+        find.descendant(
+          of: find.byType(WholeText),
+          matching: find.text(bestName),
+        ),
+        "the taker list's name",
+      );
     });
 
     testWidgets('the taker names survive ${width.toInt()}px in Czech', (
@@ -234,6 +249,19 @@ void main() {
         'the dead-ball slot label',
       );
       expect(tester.takeException(), isNull);
+      expectNothingCut(tester);
+      // The picker row beneath spells the same man's name in a [WholeText],
+      // which no ellipsis guard can fail because it scales itself down
+      // instead. What is held there is how far it had to: it was a plain
+      // [Text] with an ellipsis and read "Vondrackovs..." at 360 points.
+      expectLegible(
+        tester,
+        find.descendant(
+          of: find.byType(WholeText),
+          matching: find.text(bestName),
+        ),
+        "the taker list's name",
+      );
     });
   }
 }

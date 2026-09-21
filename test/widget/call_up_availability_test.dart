@@ -22,6 +22,7 @@ import 'package:fnm/features/tactics/tactics_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 
+import '../helpers/expect_whole.dart';
 import '../helpers/test_database.dart';
 
 /// A ban is served in MATCHES, and a call-up list covers more than one of them.
@@ -186,6 +187,7 @@ void main() {
     expect(ticked(tester), 1, reason: 'he plays two of the three, so he goes');
     expect(find.text('SQUAD · 1/$kMaxSquadSize'), findsOneWidget);
     expect(tester.takeException(), isNull);
+    expectNothingCut(tester);
   });
 
   testWidgets('his row says how much of THIS camp he misses', (tester) async {
@@ -196,6 +198,7 @@ void main() {
     // length never said what it cost the squad being picked.
     expect(find.text('Misses 1/3'), findsOneWidget);
     expect(tester.takeException(), isNull);
+    expectNothingCut(tester);
   });
 
   testWidgets('a man who misses every match of the camp cannot be named', (

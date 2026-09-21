@@ -29,6 +29,7 @@ void main() {
       findsNWidgets(Formation.values.length),
     );
     expect(tester.takeException(), isNull);
+    expectNothingCut(tester);
   });
 
   testWidgets('the shapes added with the picker are among them', (

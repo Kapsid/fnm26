@@ -7,6 +7,7 @@ import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/features/results/results_providers.dart';
 import 'package:fnm/features/results/results_screen.dart';
 
+import '../helpers/expect_whole.dart';
 import '../helpers/pump_app.dart';
 
 /// The results screen opens where the manager is.
@@ -271,6 +272,7 @@ void main() {
         expectWhole(find.text(soonest), 'a fixture date');
         expectNothingCut(tester);
         expect(tester.takeException(), isNull);
+        expectNothingCut(tester);
       });
 
       testWidgets('the widest names in the game still read whole, $at', (
@@ -284,6 +286,7 @@ void main() {
         );
         expectNothingCut(tester);
         expect(tester.takeException(), isNull);
+        expectNothingCut(tester);
       });
 
       testWidgets('the opened history prints every word whole, $at', (
@@ -299,6 +302,7 @@ void main() {
         expectWhole(find.text(oldest), 'an older fixture date');
         expectNothingCut(tester);
         expect(tester.takeException(), isNull);
+        expectNothingCut(tester);
       });
     }
   }

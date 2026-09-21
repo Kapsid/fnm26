@@ -61,7 +61,11 @@ void main() {
       // offered, defeating mainAxisSize.min — the label then spread across the
       // whole button and the icon was pinned to the far left of it, on every
       // screen with a primary button.
-      for (final label in ['Go', 'New Game', 'Pozice plné — pořiďte si Pro pro 10']) {
+      for (final label in [
+        'Go',
+        'New Game',
+        'Pozice plné — pořiďte si Pro pro 10',
+      ]) {
         await tester.pumpApp(
           Scaffold(
             body: Padding(

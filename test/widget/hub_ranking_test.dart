@@ -5,6 +5,8 @@ import 'package:fnm/core/theme/app_theme.dart';
 import 'package:fnm/features/hub/hub_screen.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 
+import '../helpers/expect_whole.dart';
+
 /// The dashboard header: the nation's world ranking beside the date.
 ///
 /// The manager asked for it there because that is the line he already reads
@@ -139,6 +141,7 @@ void main() {
           expectWhole(find.text('#137'), 'the world position');
           expectWhole(find.text('24'), 'the movement');
           expect(tester.takeException(), isNull);
+          expectNothingCut(tester);
         });
 
         testWidgets('the header stays one line at $width in $locale', (

@@ -17,6 +17,7 @@ import 'package:fnm/features/tournaments/nations_cup_draw_providers.dart';
 import 'package:fnm/features/tournaments/nations_cup_screen.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 
+import '../helpers/expect_whole.dart';
 import '../helpers/test_database.dart';
 
 /// The Nations Cup's leagues as tabs.
@@ -213,6 +214,7 @@ void main() {
           );
           expectWhole(find.text(l.tourContLeagueChip('B')), 'the league B tab');
           expect(tester.takeException(), isNull);
+          expectNothingCut(tester);
         });
       }
     }

@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/features/stats/stats_providers.dart';
 import 'package:fnm/features/stats/team_overall_history.dart';
 
+import '../helpers/expect_whole.dart';
 import '../helpers/pump_app.dart';
 
 /// A manager can read his squad's overall on any match preview, but not
@@ -40,6 +41,7 @@ void main() {
     expect(find.text('2032'), findsOneWidget);
     expect(find.text('Overall 78'), findsOneWidget);
     expect(tester.takeException(), isNull);
+    expectNothingCut(tester);
   });
 
   testWidgets('a save with one season shows no curve yet', (tester) async {
@@ -55,5 +57,6 @@ void main() {
       (year: 2032, overall: 70),
     ]);
     expect(tester.takeException(), isNull);
+    expectNothingCut(tester);
   });
 }

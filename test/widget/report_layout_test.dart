@@ -4,6 +4,7 @@ import 'package:fnm/features/career/manager_history_providers.dart';
 import 'package:fnm/features/career/manager_history_screen.dart';
 import 'package:fnm/features/messages/transfer_report.dart';
 
+import '../helpers/expect_whole.dart';
 import '../helpers/pump_app.dart';
 
 /// The two reports a playtest found running off the edge of a phone: the
@@ -125,6 +126,7 @@ void main() {
     expect(find.textContaining('Příjmení 6'), findsNothing);
     expect(find.text('Stránka 1 z 6'), findsOneWidget);
     expect(tester.takeException(), isNull);
+    expectNothingCut(tester);
 
     await tester.tap(find.text('Další'));
     await tester.pumpAndSettle();

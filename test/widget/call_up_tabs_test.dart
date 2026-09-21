@@ -20,6 +20,7 @@ import 'package:fnm/features/tactics/nomination_providers.dart';
 import 'package:fnm/features/tactics/tactics_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 
+import '../helpers/expect_whole.dart';
 import '../helpers/test_database.dart';
 
 /// Picking a squad used to be one list of sixty-odd names: it overflowed, it
@@ -160,6 +161,7 @@ void main() {
 
     // Nothing overflows at phone width.
     expect(tester.takeException(), isNull);
+    expectNothingCut(tester);
   });
 
   testWidgets('a tab change shows that line and no other', (tester) async {
@@ -172,6 +174,7 @@ void main() {
     expect(find.text('Keeper 0'), findsNothing);
     expect(rows(tester), 8);
     expect(tester.takeException(), isNull);
+    expectNothingCut(tester);
   });
 
   testWidgets('selection survives a tab change — it is one squad', (
@@ -212,6 +215,7 @@ void main() {
       reason: 'the pool should own most of the screen',
     );
     expect(tester.takeException(), isNull);
+    expectNothingCut(tester);
   });
 
   testWidgets('the line tabs stay put while the pool scrolls', (tester) async {
@@ -232,5 +236,6 @@ void main() {
     expect(after.dy, lessThanOrEqualTo(before.dy));
     expect(find.byType(TabBar), findsOneWidget);
     expect(tester.takeException(), isNull);
+    expectNothingCut(tester);
   });
 }

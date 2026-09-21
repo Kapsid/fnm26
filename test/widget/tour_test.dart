@@ -9,6 +9,7 @@ import 'package:fnm/features/onboarding/tour_providers.dart';
 import 'package:fnm/features/onboarding/tour_steps.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 
+import '../helpers/expect_whole.dart';
 import '../helpers/pump_app.dart';
 
 /// The walk through a manager gets on his first day.
@@ -248,6 +249,7 @@ void main() {
       expect(spotlight.hole!.center.dy, closeTo(wanted.center.dy, 1));
       expect(spotlight.hole!.width, greaterThanOrEqualTo(wanted.width));
       expect(tester.takeException(), isNull);
+      expectNothingCut(tester);
     });
 
     testWidgets('a step whose control is absent still reads', (tester) async {
@@ -275,6 +277,7 @@ void main() {
 
       expect(find.text('This is the whole game'), findsOneWidget);
       expect(tester.takeException(), isNull);
+      expectNothingCut(tester);
     });
   });
 
@@ -661,8 +664,10 @@ void main() {
                     tween: Tween(begin: -140, end: 0),
                     duration: const Duration(milliseconds: 400),
                     curve: Curves.easeOutCubic,
-                    builder: (context, dx, child) =>
-                        Transform.translate(offset: Offset(dx, 0), child: child),
+                    builder: (context, dx, child) => Transform.translate(
+                      offset: Offset(dx, 0),
+                      child: child,
+                    ),
                     child: SizedBox(
                       key: TourKeys.hubAction,
                       width: 160,

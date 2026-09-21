@@ -6,6 +6,7 @@ import 'package:fnm/domain/entities/player_attributes.dart';
 import 'package:fnm/domain/services/competition/tournament_stars.dart';
 import 'package:fnm/features/tournaments/tournament_awards.dart';
 
+import '../helpers/expect_whole.dart';
 import '../helpers/pump_app.dart';
 
 Player _p(int id, String name, PlayerPosition pos) => Player(
@@ -75,6 +76,7 @@ void main() {
     // A defender can make the team, and does here on his mark alone.
     expect(find.text('Stopper'), findsOneWidget);
     expect(tester.takeException(), isNull);
+    expectNothingCut(tester);
   });
 
   testWidgets('an unrated edition still renders without marks', (
@@ -100,5 +102,6 @@ void main() {
     expect(find.text('Legend'), findsOneWidget);
     expect(find.text('7.40'), findsNothing, reason: 'no marks to show');
     expect(tester.takeException(), isNull);
+    expectNothingCut(tester);
   });
 }

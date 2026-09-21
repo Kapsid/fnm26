@@ -66,7 +66,7 @@ diagnosticsClear,Button emptying the error log.,,Clear,Vymazat
 navHub,Bottom navigation label for the hub tab.,,Hub,Rozcestník
 navSquad,Bottom navigation label for the squad/tactics tab.,,Squad,Tým
 navStandings,Bottom navigation label for the tournaments/standings tab.,,Standings,Tabulky
-navCareers,Bottom navigation label for the careers tab.,,My Career,Moje kariéra
+navCareers,Bottom navigation label for the careers tab.,,My Career,Kariéra
 settingsTitle,App-bar title on the settings screen.,,SETTINGS,NASTAVENÍ
 settingsSoundHapticsTitle,Sound-and-haptics toggle label.,,Sound & haptics,Zvuk a vibrace
 settingsSoundHapticsBlurb,Sound-and-haptics toggle description.,,"Vibration and a short tone on goals, kick-off and full time.","Vibrace a krátký tón při gólech, výkopu a konci zápasu."

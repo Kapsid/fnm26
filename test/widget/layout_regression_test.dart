@@ -4,6 +4,7 @@ import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/features/tournaments/draw_ceremony.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 
+import '../helpers/expect_whole.dart';
 import '../helpers/fixtures.dart';
 import '../helpers/pump_app.dart';
 
@@ -95,6 +96,7 @@ void main() {
     );
     await tester.pump();
     expect(tester.takeException(), isNull);
+    expectNothingCut(tester);
   });
 
   testWidgets('the draw still finishes with six pots', (tester) async {
@@ -125,6 +127,7 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('GROUP A'), findsOneWidget);
     expect(tester.takeException(), isNull);
+    expectNothingCut(tester);
 
     await tester.tap(find.text('Continue'));
     await tester.pump();
@@ -147,6 +150,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(tester.takeException(), isNull);
+    expectNothingCut(tester);
     for (final tab in AppTab.values) {
       expect(tab, isNotNull);
     }

@@ -150,6 +150,7 @@ void main() {
       reason: 'a man who cannot come on must not answer a drag',
     );
     expect(tester.takeException(), isNull);
+    expectNothingCut(tester);
   });
 
   testWidgets('a man hurt in this match is marked in the squad list', (
@@ -160,6 +161,7 @@ void main() {
 
     expect(find.text(l.tacticsSubInjured), findsOneWidget);
     expect(tester.takeException(), isNull);
+    expectNothingCut(tester);
   });
 
   testWidgets('undo restores the man and gives the substitution back', (
@@ -187,6 +189,7 @@ void main() {
     // And with nothing left to take back, the button is gone again.
     expect(find.text(l.tacticsUndoLastChange), findsNothing);
     expect(tester.takeException(), isNull);
+    expectNothingCut(tester);
   });
 
   testWidgets('undo does not reach a change made earlier in the match', (
@@ -215,6 +218,7 @@ void main() {
     // Football has no re-entry: he is still marked out of the game.
     expect(find.text(l.tacticsSubOffAlready), findsOneWidget);
     expect(tester.takeException(), isNull);
+    expectNothingCut(tester);
   });
 
   testWidgets('undoing a chain hands the middle man back as pickable', (
@@ -259,6 +263,7 @@ void main() {
       findsNothing,
     );
     expect(tester.takeException(), isNull);
+    expectNothingCut(tester);
   });
 
   testWidgets('undoing a swap puts both men back, and neither twice', (
@@ -283,6 +288,7 @@ void main() {
     expect(onPitchName('STARTER11'), findsOneWidget);
     expect(find.text(l.tacticsSubsUsed(0, 5)), findsOneWidget);
     expect(tester.takeException(), isNull);
+    expectNothingCut(tester);
   });
 
   for (final width in <double>[400, 360]) {
@@ -300,6 +306,7 @@ void main() {
             locale: locale,
           );
           expect(tester.takeException(), isNull);
+          expectNothingCut(tester);
 
           // The sheet really is in this language. It is a pushed route, so an
           // override around the launcher would never have reached it.
@@ -326,6 +333,7 @@ void main() {
           // not on a 360px sheet.
           await substitute(tester, 'Starter11', 'Starter10');
           expect(tester.takeException(), isNull);
+          expectNothingCut(tester);
           expectWhole(
             find.text(l.tacticsSubsUsed(1, 5)),
             'the count of changes left',

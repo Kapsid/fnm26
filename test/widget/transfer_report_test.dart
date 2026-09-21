@@ -86,6 +86,7 @@ void main() {
         expectWhole(find.text('Zdarma'), 'a free transfer');
         expectNothingCut(tester, 'the transfer table');
         expect(tester.takeException(), isNull);
+        expectNothingCut(tester);
       });
 
       testWidgets('a name a phone can hold is printed in full, $at', (
@@ -159,6 +160,7 @@ void main() {
         expectWhole(find.text('€1200M'), 'the largest fee');
         expectNothingCut(tester, 'the transfer table');
         expect(tester.takeException(), isNull);
+        expectNothingCut(tester);
       });
     }
   }
@@ -172,5 +174,6 @@ void main() {
     );
     expect(find.byType(TextButton), findsNothing);
     expect(tester.takeException(), isNull);
+    expectNothingCut(tester);
   });
 }

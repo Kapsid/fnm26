@@ -372,6 +372,7 @@ void main() {
               'the date',
             );
             expect(tester.takeException(), isNull);
+            expectNothingCut(tester);
           },
         );
       }
@@ -422,6 +423,7 @@ void main() {
               );
               expectWhole(find.text(l.yProfilePosts), 'the posts heading');
               expect(tester.takeException(), isNull);
+              expectNothingCut(tester);
             },
           );
         }

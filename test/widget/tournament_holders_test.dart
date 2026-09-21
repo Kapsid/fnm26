@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/features/tournaments/tournament_holders_row.dart';
 
+import '../helpers/expect_whole.dart';
 import '../helpers/pump_app.dart';
 
 /// The holders strip on a tournament detail screen.
@@ -46,6 +47,7 @@ void main() {
     expect(find.text('NED'), findsNothing);
     expect(find.textContaining('2022'), findsNothing);
     expect(tester.takeException(), isNull);
+    expectNothingCut(tester);
   });
 
   testWidgets('the holders are named with the year they won it', (
@@ -63,6 +65,7 @@ void main() {
     expect(find.text('Netherlands'), findsOneWidget);
     expect(find.textContaining('2022'), findsOneWidget);
     expect(tester.takeException(), isNull);
+    expectNothingCut(tester);
   });
 
   for (final width in [400.0, 360.0]) {
