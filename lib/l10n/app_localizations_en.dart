@@ -8022,13 +8022,13 @@ class AppLocalizationsEn extends AppLocalizations {
       'Give us one reason to believe this turns around.';
 
   @override
-  String get tacticsSubOffAlready => 'Already substituted, cannot return';
+  String get tacticsSubOffAlready => 'Already off';
 
   @override
-  String get tacticsSubInjured => 'Carrying a knock';
+  String get tacticsSubInjured => 'Injured';
 
   @override
-  String get tacticsSubNoneLeft => 'No substitutions left';
+  String get tacticsSubNoneLeft => 'No changes left';
 
   @override
   String get tacticsUndoLastChange => 'Undo last change';

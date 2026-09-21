@@ -8031,14 +8031,14 @@ class AppLocalizationsCs extends AppLocalizations {
   String get pressAskCrisis8 => 'Dejte nám jeden důvod věřit, že se to otočí.';
 
   @override
-  String get tacticsSubOffAlready => 'Už byl vystřídán, zpět nemůže';
+  String get tacticsSubOffAlready => 'Už vystřídán';
 
   @override
   String get tacticsSubInjured => 'Zraněný';
 
   @override
-  String get tacticsSubNoneLeft => 'Nezbývá žádné střídání';
+  String get tacticsSubNoneLeft => 'Došla střídání';
 
   @override
-  String get tacticsUndoLastChange => 'Vrátit poslední změnu';
+  String get tacticsUndoLastChange => 'Vrátit změnu';
 }

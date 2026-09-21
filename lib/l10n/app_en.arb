@@ -11720,15 +11720,15 @@
   "@pressAskCrisis8": {
     "description": "Press conference line."
   },
-  "tacticsSubOffAlready": "Already substituted, cannot return",
+  "tacticsSubOffAlready": "Already off",
   "@tacticsSubOffAlready": {
     "description": "Marker under a squad row for a player who has already been taken off this match."
   },
-  "tacticsSubInjured": "Carrying a knock",
+  "tacticsSubInjured": "Injured",
   "@tacticsSubInjured": {
     "description": "Marker under a squad row for a player hurt in this match."
   },
-  "tacticsSubNoneLeft": "No substitutions left",
+  "tacticsSubNoneLeft": "No changes left",
   "@tacticsSubNoneLeft": {
     "description": "Marker under a squad row when the side has spent every change it has."
   },

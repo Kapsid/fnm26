@@ -428,13 +428,17 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Both halves give way rather than run off the edge: at 360px
-              // this row overflowed by 40 in ENGLISH, before Czech was even
-              // asked, and the count of changes left is exactly the number a
-              // manager must not lose sight of.
+              // The LABEL gives way, and only the label. At 360px this row
+              // overflowed by 40 in ENGLISH, before Czech was even asked, so
+              // something has to yield — but the count of changes left is the
+              // number a manager must not lose sight of, so it is never the
+              // thing that yields. Flexing both halves is the trap: two
+              // Flexibles either side of a Spacer share the width three ways,
+              // which caps each at a third of the row and cuts the counter to
+              // "SUBS · ..." on every phone in both languages.
               Row(
                 children: [
-                  Flexible(
+                  Expanded(
                     child: Text(
                       l.tacticsSubstitutesCount(subs.length),
                       maxLines: 1,
@@ -443,15 +447,11 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
                     ),
                   ),
                   const SizedBox(width: AppSpacing.sm),
-                  const Spacer(),
-                  Flexible(
-                    child: Text(
-                      l.tacticsSubsUsed(_subsUsed, widget.maxSubs),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: AppTypography.labelMedium.copyWith(
-                        color: _overLimit ? AppColors.error : AppColors.primary,
-                      ),
+                  Text(
+                    l.tacticsSubsUsed(_subsUsed, widget.maxSubs),
+                    maxLines: 1,
+                    style: AppTypography.labelMedium.copyWith(
+                      color: _overLimit ? AppColors.error : AppColors.primary,
                     ),
                   ),
                 ],
