@@ -10,6 +10,7 @@ import 'package:fnm/domain/repositories/career_repository.dart';
 import 'package:fnm/domain/services/manager/staff.dart';
 import 'package:fnm/domain/services/match/strength_factors.dart';
 import 'package:fnm/domain/services/squad/condition.dart';
+import 'package:fnm/domain/services/tactics/team_chemistry.dart';
 import 'package:fnm/features/match/strength_panel.dart';
 import 'package:fnm/features/squad/captain_providers.dart';
 import 'package:fnm/features/tactics/condition_providers.dart';
@@ -216,9 +217,36 @@ void main() {
     // A side that has drilled 4-3-3 for years and has barely played 4-4-2.
     const stored = {Formation.f433: 0.9, Formation.f442: 0.2};
     const careerId = 1;
+    const sideRating = 80;
 
     StrengthPanelKey keyFor(Formation f) =>
-        (careerId: careerId, formation: f, sideRating: 80);
+        (careerId: careerId, formation: f, sideRating: sideRating);
+
+    /// What the drilled-shape line MUST read for [f], derived from the model
+    /// the panel reads through rather than restated as a number here.
+    ///
+    /// `StrengthFactors._familiarity` turns `TeamChemistry.factor`'s
+    /// multiplier into points against the side's rating, and the panel prints
+    /// whatever that comes to. A figure typed in here instead would be
+    /// asserting the value of a balance dial — which `TeamChemistry`'s own
+    /// tests own — and would go stale the next time the dial moves, as it did
+    /// when `drilledBonus` went 0.07 to 0.08 and this reading went +5 to +6.
+    /// Derived, the assertion is the one these tests exist for: the panel says
+    /// what the model says.
+    int pointsFor(Formation f) =>
+        ((TeamChemistry.factor(stored[f]!) - 1) * sideRating).round();
+
+    /// The two shapes must read DIFFERENTLY, or neither test below can tell a
+    /// fresh reading from a cached one. Derived expectations could in
+    /// principle collapse onto each other if a dial moved far enough; this
+    /// fails loudly if they ever do, rather than passing vacuously.
+    void expectTellableApart() => expect(
+      pointsFor(Formation.f433),
+      isNot(pointsFor(Formation.f442)),
+      reason:
+          'the drilled shape and the strange one now read the same, so '
+          'nothing below could prove the panel re-read anything',
+    );
 
     /// Everything `strengthFactorsProvider` reads, faked flat, so the only
     /// thing that can move the reading is the shape: no conditions (so the two
@@ -261,10 +289,11 @@ void main() {
           strengthFactorsProvider(keyFor(Formation.f442)).future,
         );
 
+        expectTellableApart();
         expect(drilled.single.kind, StrengthFactorKind.familiarity);
-        expect(drilled.single.delta, 5);
+        expect(drilled.single.delta, pointsFor(Formation.f433));
         expect(drilled.single.subject, '4-3-3');
-        expect(strange.single.delta, 1);
+        expect(strange.single.delta, pointsFor(Formation.f442));
         expect(strange.single.subject, '4-4-2');
       },
     );
@@ -283,16 +312,21 @@ void main() {
               body: StrengthPanel(
                 careerId: careerId,
                 formation: f,
-                sideRating: 80,
+                sideRating: sideRating,
               ),
             ),
           ),
         ),
       );
 
+      expectTellableApart();
+      // Signed exactly as the panel signs it, from the model's own figure.
+      final drilled = signed(pointsFor(Formation.f433));
+      final strange = signed(pointsFor(Formation.f442));
+
       await show(Formation.f433);
       await tester.pumpAndSettle();
-      expect(find.text('+5'), findsOneWidget);
+      expect(find.text(drilled), findsOneWidget);
       expect(find.text('4-3-3'), findsOneWidget);
 
       // The manager goes to the tactics screen and comes back in a shape his
@@ -301,11 +335,11 @@ void main() {
       await tester.pumpAndSettle();
       expect(find.text('4-4-2'), findsOneWidget);
       expect(
-        find.text('+5'),
+        find.text(drilled),
         findsNothing,
         reason: 'the panel is still reading the shape he left behind',
       );
-      expect(find.text('+1'), findsOneWidget);
+      expect(find.text(strange), findsOneWidget);
     });
 
     test('an input the key cannot see still reaches the panel', () async {
