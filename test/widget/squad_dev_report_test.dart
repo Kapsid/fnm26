@@ -8,14 +8,16 @@ import 'package:fnm/shared/widgets/widgets.dart';
 import '../helpers/expect_whole.dart';
 import '../helpers/pump_app.dart';
 
-/// The yearly development report, grouped.
+/// The yearly development report, tabbed.
 ///
 /// "He improved from 34" says nothing on its own: a 34-rated boy nobody has
 /// picked is not news, and the same line about a first-choice regular is the
 /// most important thing on the screen. So the table is read in three blocks —
-/// regulars, fringe, youth — and every assertion here is about a manager being
-/// able to tell which block a name is in, at the widths a phone really is and
-/// in both languages.
+/// regulars, fringe, youth — each its own tab, each paging on its own: the
+/// manager's own complaint was that reaching the youth meant paging through
+/// the regulars and the fringe first. Every assertion here is about a
+/// manager being able to find the right tab, trust its page count, and read
+/// it at the widths a phone really is, in both languages.
 void main() {
   SquadDevRow row(
     String name, {
@@ -35,7 +37,7 @@ void main() {
 
   /// One of each: a regular who is a boy, a regular who is not, a fringe man
   /// and a youth nobody has picked. Short names, because what these four are
-  /// for is the grouping; the long name has a test of its own below.
+  /// for is the tabbing; the long name has a test of its own below.
   final mixed = [
     row('Kapitán', age: 30, rating: 84, change: 1, tier: SquadDevTier.regular),
     row('Mladík', age: 19, rating: 71, change: 6, tier: SquadDevTier.regular),
@@ -74,7 +76,7 @@ void main() {
     for (final locale in [const Locale('en'), const Locale('cs')]) {
       final at = 'at ${width.toInt()}px in ${locale.languageCode}';
 
-      testWidgets('the report reads regulars, fringe, youth, $at', (
+      testWidgets('the strip carries a tab for every tier, $at', (
         tester,
       ) async {
         final l = await pumpTable(
@@ -83,17 +85,32 @@ void main() {
           locale: locale,
           rows: mixed,
         );
-        final regulars = tester
-            .getTopLeft(find.text(l.squadDevTierRegulars))
-            .dy;
-        final fringe = tester.getTopLeft(find.text(l.squadDevTierFringe)).dy;
-        final youth = tester.getTopLeft(find.text(l.squadDevTierYouth)).dy;
-        expect(regulars, lessThan(fringe));
-        expect(fringe, lessThan(youth));
+        expect(find.text('${l.squadDevTierRegulars} · 2'), findsOneWidget);
+        expect(find.text('${l.squadDevTierFringe} · 1'), findsOneWidget);
+        expect(find.text('${l.squadDevTierYouth} · 1'), findsOneWidget);
         expectNothingCut(tester);
       });
 
-      testWidgets('a boy who has been called up is a regular, $at', (
+      testWidgets(
+        'the regulars tab is open by default, and a boy who has been '
+        'called up sits in it, $at',
+        (tester) async {
+          await pumpTable(
+            tester,
+            width: width,
+            locale: locale,
+            rows: mixed,
+          );
+          // Nineteen, and shown under the default tab — a call-up outranks a
+          // birthday, which is the whole point of the tiering.
+          expect(find.text('Mladík'), findsOneWidget);
+          expect(find.text('Kapitán'), findsOneWidget);
+          expect(find.text('Obránce'), findsNothing);
+          expect(find.text('Dorost'), findsNothing);
+        },
+      );
+
+      testWidgets('tapping the youth tab shows youth and no regulars, $at', (
         tester,
       ) async {
         final l = await pumpTable(
@@ -102,29 +119,23 @@ void main() {
           locale: locale,
           rows: mixed,
         );
-        // Nineteen, and under the regulars heading rather than under youth —
-        // a call-up outranks a birthday, which is the whole point of the
-        // grouping.
-        final boy = tester.getTopLeft(find.text('Mladík')).dy;
-        expect(
-          boy,
-          greaterThan(tester.getTopLeft(find.text(l.squadDevTierRegulars)).dy),
-        );
-        expect(
-          boy,
-          lessThan(tester.getTopLeft(find.text(l.squadDevTierFringe)).dy),
-        );
+        await tester.ensureVisible(find.text('${l.squadDevTierYouth} · 1'));
+        await tester.tap(find.text('${l.squadDevTierYouth} · 1'));
+        await tester.pumpAndSettle();
+        expect(find.text('Dorost'), findsOneWidget);
+        expect(find.text('Kapitán'), findsNothing);
+        expect(find.text('Mladík'), findsNothing);
+        expect(find.text('Obránce'), findsNothing);
         expectNothingCut(tester);
       });
 
-      testWidgets('the biggest mover leads his section, $at', (tester) async {
-        final l = await pumpTable(
+      testWidgets('the biggest mover leads his tab, $at', (tester) async {
+        await pumpTable(
           tester,
           width: width,
           locale: locale,
           rows: mixed,
         );
-        expect(l.squadDevTierRegulars, isNotEmpty);
         expect(
           tester.getTopLeft(find.text('Mladík')).dy,
           lessThan(tester.getTopLeft(find.text('Kapitán')).dy),
@@ -180,9 +191,7 @@ void main() {
     expectNothingCut(tester);
   });
 
-  testWidgets('a section with nobody in it is not rendered at all', (
-    tester,
-  ) async {
+  testWidgets('a tier with nobody in it gets no tab', (tester) async {
     final l = await pumpTable(
       tester,
       width: 360,
@@ -197,12 +206,12 @@ void main() {
         ),
       ],
     );
-    expect(find.text(l.squadDevTierRegulars), findsOneWidget);
-    expect(find.text(l.squadDevTierFringe), findsNothing);
-    expect(find.text(l.squadDevTierYouth), findsNothing);
+    expect(find.textContaining(l.squadDevTierRegulars), findsOneWidget);
+    expect(find.textContaining(l.squadDevTierFringe), findsNothing);
+    expect(find.textContaining(l.squadDevTierYouth), findsNothing);
   });
 
-  testWidgets('a report from an older save has no headings at all', (
+  testWidgets('a report whose rows are all untiered has no tab strip', (
     tester,
   ) async {
     // Rows decoded from a body written before tiers existed carry none, and
@@ -216,38 +225,117 @@ void main() {
         row('Other Body', age: 31, rating: 72, change: -1),
       ],
     );
-    expect(find.text(l.squadDevTierRegulars), findsNothing);
-    expect(find.text(l.squadDevTierFringe), findsNothing);
-    expect(find.text(l.squadDevTierYouth), findsNothing);
+    expect(find.textContaining(l.squadDevTierRegulars), findsNothing);
+    expect(find.textContaining(l.squadDevTierFringe), findsNothing);
+    expect(find.textContaining(l.squadDevTierYouth), findsNothing);
     expect(find.text('Old Body'), findsOneWidget);
     expect(find.text('Other Body'), findsOneWidget);
   });
 
-  testWidgets('a long pool still pages, and every page keeps its headings', (
+  testWidgets(
+    'a long pool pages within its own tab, twelve players at a time',
+    (tester) async {
+      final l = await pumpTable(
+        tester,
+        width: 360,
+        locale: const Locale('cs'),
+        rows: [
+          for (var i = 0; i < 24; i++)
+            row(
+              'Hráč Číslo $i',
+              age: 28,
+              rating: 70 + i % 9,
+              change: 24 - i,
+              tier: SquadDevTier.regular,
+            ),
+        ],
+      );
+      expect(find.text('${l.squadDevTierRegulars} · 24'), findsOneWidget);
+      // Twelve players a page, twenty-four rows: the footer should read
+      // page 1 of 2, out of the tab's own 24 — not the whole report.
+      expect(find.text(l.squadDevPageOf('1', '2', '24')), findsOneWidget);
+      expectNothingCut(tester);
+      await tester.tap(find.byIcon(Icons.chevron_right_rounded));
+      await tester.pumpAndSettle();
+      expect(find.text(l.squadDevPageOf('2', '2', '24')), findsOneWidget);
+      // The tab strip persists across a page turn inside the same tab.
+      expect(find.text('${l.squadDevTierRegulars} · 24'), findsOneWidget);
+      expectNothingCut(tester);
+    },
+  );
+
+  testWidgets('switching tabs resets the page to the first', (tester) async {
+    final l = await pumpTable(
+      tester,
+      width: 360,
+      locale: const Locale('en'),
+      rows: [
+        for (var i = 0; i < 24; i++)
+          row(
+            'Regular $i',
+            age: 28,
+            rating: 70,
+            change: 1,
+            tier: SquadDevTier.regular,
+          ),
+        row('Only Youth', age: 18, rating: 40, change: 0, tier: SquadDevTier.youth),
+      ],
+    );
+    // Page into the regulars tab first.
+    await tester.tap(find.byIcon(Icons.chevron_right_rounded));
+    await tester.pumpAndSettle();
+    expect(find.text(l.squadDevPageOf('2', '2', '24')), findsOneWidget);
+    // Now switch to youth: the page must be back at the first, not still on
+    // whatever page the previous tab was showing.
+    await tester.ensureVisible(find.text('${l.squadDevTierYouth} · 1'));
+        await tester.tap(find.text('${l.squadDevTierYouth} · 1'));
+    await tester.pumpAndSettle();
+    expect(find.text('Only Youth'), findsOneWidget);
+    // A single-row tab has one page, so no pager is shown at all.
+    expect(find.byIcon(Icons.chevron_left_rounded), findsNothing);
+  });
+
+  testWidgets('the pager total matches the selected tab, not the report', (
     tester,
   ) async {
     final l = await pumpTable(
       tester,
       width: 360,
-      locale: const Locale('cs'),
+      locale: const Locale('en'),
       rows: [
-        for (var i = 0; i < 24; i++)
+        for (var i = 0; i < 14; i++)
           row(
-            'Hráč Číslo $i',
+            'Regular $i',
             age: 28,
-            rating: 70 + i % 9,
-            change: 24 - i,
+            rating: 70,
+            change: 1,
             tier: SquadDevTier.regular,
           ),
+        row('Lone Youth', age: 18, rating: 40, change: 0, tier: SquadDevTier.youth),
       ],
     );
-    expect(find.text(l.squadDevTierRegulars), findsOneWidget);
-    expectNothingCut(tester);
-    await tester.tap(find.byIcon(Icons.chevron_right_rounded));
+    // 14 regulars page as 12 + 2, and the total printed is 14 — the tab's own
+    // count, not fifteen for the whole report.
+    expect(find.text(l.squadDevPageOf('1', '2', '14')), findsOneWidget);
+    await tester.ensureVisible(find.text('${l.squadDevTierYouth} · 1'));
+        await tester.tap(find.text('${l.squadDevTierYouth} · 1'));
     await tester.pumpAndSettle();
-    // The section carries on, so it says so again rather than leaving a page
-    // of names under no heading at all.
-    expect(find.text(l.squadDevTierRegulars), findsOneWidget);
-    expectNothingCut(tester);
+    // One youth is one page: no pager at all, so nothing claims a total.
+    expect(find.textContaining(l.squadDevTierYouth), findsOneWidget);
+    expect(find.byIcon(Icons.chevron_right_rounded), findsNothing);
   });
+
+  for (final locale in [const Locale('en'), const Locale('cs')]) {
+    testWidgets('the tab strip is not cut at phone width, ${locale.languageCode}', (
+      tester,
+    ) async {
+      await pumpTable(
+        tester,
+        width: 320,
+        locale: locale,
+        rows: mixed,
+      );
+      expectNothingCut(tester);
+    });
+  }
 }

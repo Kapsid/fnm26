@@ -241,9 +241,12 @@ SquadDevReport? decodeSquadDevReport(String body) {
 /// call-up, retirements at the bottom.
 ///
 /// Read in blocks — regulars, fringe, youth — because a rating move only
-/// means something once you know whose it is. A report whose rows carry no
-/// tier (an older body, or the newcomers list) is the flat table it always
-/// was.
+/// means something once you know whose it is. The blocks are TABS, one chip
+/// per tier that has somebody in it, and each tab pages on its own: reaching
+/// the youth used to mean paging through the regulars and the fringe first,
+/// which was the whole complaint. A report whose rows carry no tier (an older
+/// body, or the newcomers list) is the flat table it always was, with no tab
+/// strip above it.
 ///
 /// PAGED, a fixed number of lines at a time. A full pool is a hundred players,
 /// and printing them all pushed the popup's own "Next" button off the bottom of
@@ -258,37 +261,20 @@ class SquadDevTable extends StatefulWidget {
   State<SquadDevTable> createState() => _SquadDevTableState();
 }
 
-/// One slot on a page: a section heading, a player's line, or neither — a
-/// blank that keeps a short last page the height of a full one.
-typedef _Slot = ({SquadDevTier? head, SquadDevRow? row});
-
 class _SquadDevTableState extends State<SquadDevTable> {
-  /// Slots, not players: a heading costs one, which is what keeps the sheet
-  /// the same height whichever page is open.
+  /// Now players, not slots: the tab strip is the heading, so a page no
+  /// longer spends a line on one.
   static const int _pageSize = 12;
 
   int _page = 0;
+  SquadDevTier? _tier;
 
-  /// The report as a run of slots: any untiered rows first — a report that
-  /// does not group (a newcomers list, or a body from an older build) is the
-  /// flat table it always was — then each tier that has somebody in it, under
-  /// its own heading. A tier nobody is in is not written at all.
-  List<_Slot> get _slots {
-    final out = <_Slot>[
-      for (final r in widget.rows)
-        if (r.tier == null) (head: null, row: r),
-    ];
-    for (final tier in SquadDevTier.values) {
-      final inTier = widget.rows.where((r) => r.tier == tier).toList()
-        ..sort(_byMovement);
-      if (inTier.isEmpty) continue;
-      out.add((head: tier, row: null));
-      for (final r in inTier) {
-        out.add((head: null, row: r));
-      }
-    }
-    return out;
-  }
+  /// Tiers with somebody in them, in the order the tabs are shown. A tier
+  /// nobody is in gets no tab — the rule the section headings used to follow.
+  List<SquadDevTier> get _tiersPresent => [
+    for (final tier in SquadDevTier.values)
+      if (widget.rows.any((r) => r.tier == tier)) tier,
+  ];
 
   /// Inside a section the biggest mover leads and whoever has left the pool
   /// comes last. A block is read for who moved, so the man who moved most is
@@ -302,40 +288,60 @@ class _SquadDevTableState extends State<SquadDevTable> {
     return b.rating.compareTo(a.rating);
   }
 
-  /// Those slots cut into pages. A heading is never left alone at the foot of
-  /// a page, and a section that runs on says its name again at the top of the
-  /// next one — otherwise a whole page of names sits under no heading and the
-  /// grouping stops answering the only question it was added to answer.
-  List<List<_Slot>> get _pages {
-    final pages = <List<_Slot>>[];
-    var current = <_Slot>[];
-    SquadDevTier? open;
-    for (final slot in _slots) {
-      if (slot.head != null) open = slot.head;
-      final orphanHead = slot.head != null && current.length >= _pageSize - 1;
-      if (current.length >= _pageSize || orphanHead) {
-        pages.add(current);
-        current = [
-          if (slot.head == null && open != null) (head: open, row: null),
-        ];
-      }
-      current.add(slot);
-    }
-    if (current.isNotEmpty) pages.add(current);
-    return pages.isEmpty ? [const []] : pages;
-  }
-
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
     if (widget.rows.isEmpty) return Text(l.squadDevEmpty);
-    final pages = _pages;
-    final pageCount = pages.length;
+    final tiers = _tiersPresent;
+    // No row carries a tier: an older body, or the newcomers list. Rendered
+    // exactly as the flat table it always was, with no tab strip above it.
+    if (tiers.isEmpty) {
+      return _table(l, rows: widget.rows, tabStrip: null);
+    }
+    // A body that mixes tiered and untiered rows does not happen in practice
+    // — a writer tags either every row or none — but if one ever reaches this
+    // widget the untiered rows are simply excluded from every tab below,
+    // rather than inventing a fourth, unlabelled tab or crashing on one.
+    final selected = tiers.contains(_tier) ? _tier! : tiers.first;
+    final tierRows = widget.rows.where((r) => r.tier == selected).toList()
+      ..sort(_byMovement);
+    return _table(
+      l,
+      rows: tierRows,
+      tabStrip: _TabStrip(
+        tiers: tiers,
+        selected: selected,
+        countOf: (tier) => widget.rows.where((r) => r.tier == tier).length,
+        onSelected: (tier) {
+          if (tier == selected) return;
+          setState(() {
+            _tier = tier;
+            _page = 0;
+          });
+        },
+      ),
+    );
+  }
+
+  /// The header row, the visible page of [rows] and the pager underneath —
+  /// shared by the tabbed and the flat rendering. [tabStrip] is null in flat
+  /// mode. The pager's total is `rows.length`: the selected tab's count, not
+  /// the whole report, or the footer would contradict the tab above it.
+  Widget _table(
+    AppLocalizations l, {
+    required List<SquadDevRow> rows,
+    required Widget? tabStrip,
+  }) {
+    final pageCount = (rows.length / _pageSize).ceil().clamp(1, 1 << 30);
     final page = _page.clamp(0, pageCount - 1);
-    final shown = pages[page];
+    final shown = rows.skip(page * _pageSize).take(_pageSize).toList();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        if (tabStrip != null) ...[
+          tabStrip,
+          const SizedBox(height: AppSpacing.xs),
+        ],
         Padding(
           padding: const EdgeInsets.only(bottom: AppSpacing.xs),
           child: Row(
@@ -357,11 +363,7 @@ class _SquadDevTableState extends State<SquadDevTable> {
           ),
         ),
         const Divider(height: 1, color: AppColors.outlineVariant),
-        for (final slot in shown)
-          if (slot.head case final tier?)
-            _SectionHead(tier: tier)
-          else
-            _SquadDevLine(row: slot.row),
+        for (final row in shown) _SquadDevLine(row: row),
         // Every page holds the same number of lines, so paging never resizes
         // the sheet under the reader's thumb.
         for (var i = shown.length; i < _pageSize; i++)
@@ -380,11 +382,7 @@ class _SquadDevTableState extends State<SquadDevTable> {
                 color: AppColors.primary,
               ),
               Text(
-                l.squadDevPageOf(
-                  '${page + 1}',
-                  '$pageCount',
-                  '${widget.rows.length}',
-                ),
+                l.squadDevPageOf('${page + 1}', '$pageCount', '${rows.length}'),
                 style: AppTypography.labelSmall.copyWith(
                   color: AppColors.onSurfaceVariant,
                 ),
@@ -411,6 +409,95 @@ class _SquadDevTableState extends State<SquadDevTable> {
     style: AppTypography.labelSmall.copyWith(
       color: AppColors.onSurfaceVariant,
       fontWeight: FontWeight.w700,
+    ),
+  );
+}
+
+/// The strip of tier tabs above the table: one chip per tier with somebody in
+/// it, each showing the tier's label and its player count. Horizontally
+/// scrollable so a label can never be ellipsised — the Czech labels
+/// ("ZÁKLADNÍ KÁDR", "ŠIRŠÍ KÁDR", "MLÁDEŽ") plus three counts do not fit a
+/// 320-wide sheet as a plain [Row], and this repo has a long history of cut
+/// labels.
+class _TabStrip extends StatelessWidget {
+  const _TabStrip({
+    required this.tiers,
+    required this.selected,
+    required this.countOf,
+    required this.onSelected,
+  });
+
+  final List<SquadDevTier> tiers;
+  final SquadDevTier selected;
+  final int Function(SquadDevTier tier) countOf;
+  final ValueChanged<SquadDevTier> onSelected;
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        children: [
+          for (final tier in tiers)
+            _TierChip(
+              label: switch (tier) {
+                SquadDevTier.regular => l.squadDevTierRegulars,
+                SquadDevTier.fringe => l.squadDevTierFringe,
+                SquadDevTier.youth => l.squadDevTierYouth,
+              },
+              count: countOf(tier),
+              on: tier == selected,
+              onTap: () => onSelected(tier),
+            ),
+        ],
+      ),
+    );
+  }
+}
+
+/// One tab: a tier's label and how many players are in it. Selection FILLS
+/// the chip rather than only recolouring its border, so the active tier is
+/// legible at a glance rather than reading as one of three identical chips.
+class _TierChip extends StatelessWidget {
+  const _TierChip({
+    required this.label,
+    required this.count,
+    required this.on,
+    required this.onTap,
+  });
+
+  final String label;
+  final int count;
+  final bool on;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) => Padding(
+    padding: const EdgeInsets.only(right: AppSpacing.xs),
+    child: GestureDetector(
+      onTap: onTap,
+      behavior: HitTestBehavior.opaque,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm),
+        height: 28,
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          color: on ? AppColors.primary : AppColors.surfaceContainerLowest,
+          borderRadius: AppRadii.smAll,
+          border: Border.all(
+            color: on ? AppColors.primary : AppColors.outlineVariant,
+          ),
+        ),
+        child: Text(
+          '$label · $count',
+          maxLines: 1,
+          style: AppTypography.labelSmall.copyWith(
+            color: on ? AppColors.onPrimary : AppColors.onSurfaceVariant,
+            fontWeight: on ? FontWeight.w800 : FontWeight.w600,
+          ),
+        ),
+      ),
     ),
   );
 }
@@ -557,34 +644,6 @@ class _SquadDevLine extends StatelessWidget {
       color: AppColors.onSurfaceVariant,
     ),
   );
-}
-
-/// The heading over one block of the table.
-class _SectionHead extends StatelessWidget {
-  const _SectionHead({required this.tier});
-
-  final SquadDevTier tier;
-
-  @override
-  Widget build(BuildContext context) {
-    final l = AppLocalizations.of(context);
-    final label = switch (tier) {
-      SquadDevTier.regular => l.squadDevTierRegulars,
-      SquadDevTier.fringe => l.squadDevTierFringe,
-      SquadDevTier.youth => l.squadDevTierYouth,
-    };
-    return Padding(
-      padding: const EdgeInsets.only(top: AppSpacing.sm, bottom: 2),
-      child: Text(
-        label,
-        maxLines: 1,
-        style: AppTypography.labelSmall.copyWith(
-          color: AppColors.primary,
-          fontWeight: FontWeight.w700,
-        ),
-      ),
-    );
-  }
 }
 
 class _Tag extends StatelessWidget {
