@@ -1096,7 +1096,19 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
-    final previewAsync = ref.watch(matchPreviewProvider(widget.careerId));
+    // A match is played from the teamsheet it kicked off with. Once the preview
+    // has landed it is PINNED — the screen stops watching the provider — so the
+    // world moving underneath can never repaint this match with another
+    // fixture. It moves at exactly the wrong moment: committing the result
+    // (Continue) refreshes "the player's next fixture" while this screen is
+    // still up, leaving through its route transition, with the final score in
+    // its own state. Redrawn from a fresher preview, it would put the NEXT
+    // opponent's flags, names and ratings either side of the score of the match
+    // just finished — for as long as the transition lasts.
+    final pinned = _livePreview;
+    final previewAsync = pinned != null
+        ? AsyncValue<MatchPreview?>.data(pinned)
+        : ref.watch(matchPreviewProvider(widget.careerId));
 
     return PopScope(
       // A match in progress cannot be backed out of: leaving early would drop

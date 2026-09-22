@@ -43,6 +43,7 @@ import 'package:fnm/features/federation/federation_service.dart';
 import 'package:fnm/features/hub/draw_reveal.dart';
 import 'package:fnm/features/achievements/achievement_providers.dart';
 import 'package:fnm/features/hub/objective_providers.dart';
+import 'package:fnm/features/match/match_providers.dart';
 import 'package:fnm/features/ranking/world_ranking_providers.dart';
 import 'package:fnm/features/squad/training_camp_providers.dart';
 import 'package:fnm/features/tactics/absence_providers.dart';
@@ -1761,7 +1762,13 @@ class SeasonService {
       // verdict it computed before the tournament was played.
       ..invalidate(cycleObjectiveOutcomesProvider)
       ..invalidate(cycleObjectivesProvider)
-      ..invalidate(satisfactionProvider);
+      ..invalidate(satisfactionProvider)
+      // "The player's NEXT fixture" is now a different fixture: the one this
+      // provider is holding has just been played, and the result it carries is
+      // the score the manager is still looking at. Anything that keeps it open
+      // across the commit would be handed the finished match — which is how a
+      // just-played scoreline turns up under the next opponent's flags.
+      ..invalidate(matchPreviewProvider);
   }
 
   /// Files an inbox message when [fixture] knocked the manager out of a cup —
