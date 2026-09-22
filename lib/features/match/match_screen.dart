@@ -862,6 +862,11 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
       _minute = _fullTimeMinute;
       _added = _stoppage;
       _playing = false;
+      // A skip taken AT an interval must not leave its panel sitting over the
+      // finished match: the whistle those breaks were waiting for has gone.
+      _atHalfTime = false;
+      _atExtraTimeStart = false;
+      _atExtraTimeHalf = false;
       if (askPreview != null) {
         // The sheet is about to open: it draws the kicks and reveals them.
         _penOrderAsked = true;

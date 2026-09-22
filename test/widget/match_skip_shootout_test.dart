@@ -213,4 +213,36 @@ void main() {
       reason: 'skip takes a match with no shootout straight to full time',
     );
   }, skip: aidOff);
+
+  // The skip pill sits on the bar during half time too, and the interval is a
+  // panel over the pitch waiting for a whistle that skipping has already blown.
+  // Skipping from there must leave a finished match, not a finished match with
+  // HALF TIME still written across it.
+  testWidgets('skipping from half time leaves no interval panel behind', (
+    tester,
+  ) async {
+    tester.view
+      ..physicalSize = const Size(400, 900)
+      ..devicePixelRatio = 1.0;
+    addTearDown(tester.view.reset);
+
+    await pumpMatch(tester, saveSeed: extraTimeSeed);
+
+    // Play up to the interval.
+    for (var i = 0; i < 400; i++) {
+      await tester.pump(const Duration(milliseconds: 200));
+      if (find.text('HALF TIME').evaluate().isNotEmpty) break;
+    }
+    expect(
+      find.text('HALF TIME'),
+      findsOneWidget,
+      reason: 'the clock must actually reach the interval',
+    );
+
+    await tester.tap(find.byIcon(Icons.skip_next_rounded));
+    await tester.pumpAndSettle();
+
+    expect(find.text('HALF TIME'), findsNothing);
+    expect(find.text('Continue'), findsOneWidget);
+  }, skip: aidOff);
 }
