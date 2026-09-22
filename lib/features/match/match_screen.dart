@@ -3,6 +3,7 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fnm/core/config/testing_flags.dart';
 import 'package:fnm/core/rng/seeded_rng.dart';
 import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/theme/app_colors.dart';
@@ -840,6 +841,46 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
     if (_playing) _restartTimer();
   }
 
+  /// Jumps the clock to the final whistle, revealing the stoppage minutes and
+  /// any extra time at once rather than playing the drama out.
+  ///
+  /// A TESTING AID, on the bar only while [kShowSkipMatch] is true, so a match
+  /// can be moved through quickly instead of watched.
+  ///
+  /// A shootout is the one thing it does NOT jump: those kicks are the
+  /// manager's to order. If the taker sheet has not been offered yet this
+  /// match, skipping takes the clock to full time and then opens it, exactly as
+  /// the clock running out does — so skipping can never answer for him, which
+  /// is precisely what the control used to do (it pre-set [_penOrderAsked] and
+  /// revealed every kick, silently accepting the automatic order). Once the
+  /// kicks are revealing, a second tap lands the rest of them at once; the
+  /// sheet has been offered, and nothing offers it again.
+  void _skip() {
+    _timer?.cancel();
+    final askPreview = _isShootout && !_penOrderAsked ? _livePreview : null;
+    setState(() {
+      _minute = _fullTimeMinute;
+      _added = _stoppage;
+      _playing = false;
+      if (askPreview != null) {
+        // The sheet is about to open: it draws the kicks and reveals them.
+        _penOrderAsked = true;
+      } else {
+        // Nothing left to ask — no shootout, or the takers are already named —
+        // so every remaining kick lands now.
+        _penTimer?.cancel();
+        _penTimer = null;
+        _penRevealed = _penTotal;
+      }
+    });
+    MatchFeedback.fullTime(ref.read(soundHapticsEnabledProvider));
+    if (askPreview != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) unawaited(_askPenaltyOrder(askPreview));
+      });
+    }
+  }
+
   /// Commits the full-time result, simulates the world forward, and returns to
   /// the hub. Any failure is surfaced instead of being silently swallowed by
   /// the async callback (which would make the Continue button appear dead).
@@ -1449,6 +1490,9 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
                     onPlayPause: _togglePlay,
                     onSpeed: _cycleSpeed,
                     onTactics: () => _openTactics(preview),
+                    // The only wiring of the skip aid: off here is off
+                    // everywhere, and the pill is absent rather than dead.
+                    onSkip: kShowSkipMatch ? _skip : null,
                   );
             return DecoratedBox(
               decoration: const BoxDecoration(

@@ -80,6 +80,9 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get matchSkipToFullTime => 'Skip to full time';
+
+  @override
   String get matchStatShots => 'Shots';
 
   @override

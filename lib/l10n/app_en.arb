@@ -104,6 +104,10 @@
       }
     }
   },
+  "matchSkipToFullTime": "Skip to full time",
+  "@matchSkipToFullTime": {
+    "description": "Tooltip on the button that fast-forwards to the final whistle."
+  },
   "matchStatShots": "Shots",
   "@matchStatShots": {
     "description": "Match stat bar label: shots."

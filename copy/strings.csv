@@ -20,6 +20,7 @@ matchDossierForm,Label before the opponent's recent-form strip.,,FORM,FORMA
 matchDossierNoGames,Shown when the opponent has no recent results.,,No recent games,Žádné nedávné zápasy
 matchDossierKeyMen,Label above the opponent's danger men.,,KEY MEN,KLÍČOVÍ HRÁČI
 matchCouldNotContinue,Snackbar when advancing past the match fails.,{error},Could not continue: {error},Nelze pokračovat: {error}
+matchSkipToFullTime,Tooltip on the button that fast-forwards to the final whistle.,,Skip to full time,Přeskočit do konce
 matchStatShots,Match stat bar label: shots.,,Shots,Střely
 matchMomentum,Label on the live momentum bar.,,MOMENTUM,MOMENTUM
 matchSwingAtk,Abbreviation for the attack swing from a team talk.,,ATK,ÚT

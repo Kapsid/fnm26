@@ -21,6 +21,7 @@
   "matchDossierNoGames": "Žádné nedávné zápasy",
   "matchDossierKeyMen": "KLÍČOVÍ HRÁČI",
   "matchCouldNotContinue": "Nelze pokračovat: {error}",
+  "matchSkipToFullTime": "Přeskočit do konce",
   "matchStatShots": "Střely",
   "matchMomentum": "MOMENTUM",
   "matchSwingAtk": "ÚT",

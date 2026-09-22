@@ -146,11 +146,12 @@ class _Header extends StatelessWidget {
 
 /// The live match control bar pinned to the bottom of the screen: a prominent
 /// play/pause transport on the left, then speed and tactics (with the subs
-/// count) as matching pill buttons.
+/// count) as matching pill buttons, and — only while the testing aid is on —
+/// skip-to-full-time.
 ///
-/// A match the manager opened is a match he watches: there is no way from here
-/// to the final whistle but the clock. Simulating a match without watching it
-/// is offered by the hub, before it is opened.
+/// A match the manager opened is a match he watches: but for the skip pill,
+/// there is no way from here to the final whistle but the clock. Simulating a
+/// match without watching it is offered by the hub, before it is opened.
 ///
 /// Public only so a widget test can pump the bar itself and check what it does
 /// and does not offer; nothing outside the match screen builds it.
@@ -164,6 +165,7 @@ class MatchControlBar extends StatelessWidget {
     required this.onPlayPause,
     required this.onSpeed,
     required this.onTactics,
+    this.onSkip,
     super.key,
   });
 
@@ -177,10 +179,18 @@ class MatchControlBar extends StatelessWidget {
   final VoidCallback onSpeed;
   final VoidCallback onTactics;
 
+  /// Jumps the clock to the final whistle, or null when the control is not
+  /// offered — the pill is on the bar if and only if this is non-null, and the
+  /// match screen passes it only while [kShowSkipMatch] is true. It is a
+  /// testing aid; see that constant before wiring it unconditionally.
+  final VoidCallback? onSkip;
+
   static const double _height = 52;
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    final onSkip = this.onSkip;
     // Spent legs call attention to themselves: the tactics pill turns amber
     // and counts the players who have nothing left, so a fading side is
     // something the manager sees rather than something they only notice in
@@ -226,6 +236,17 @@ class MatchControlBar extends StatelessWidget {
             accent: tired ? AppColors.warning : null,
             child: MatchTacticsPillContent(subsUsed: subsUsed, spent: spent),
           ),
+          if (onSkip != null) ...[
+            const SizedBox(width: AppSpacing.sm),
+            _PillButton(
+              onTap: onSkip,
+              tooltip: l.matchSkipToFullTime,
+              child: const Icon(
+                Icons.skip_next_rounded,
+                color: AppColors.primary,
+              ),
+            ),
+          ],
         ],
       ),
     );
@@ -296,6 +317,7 @@ class _PillButton extends StatelessWidget {
     required this.onTap,
     required this.child,
     this.expand = false,
+    this.tooltip,
     this.accent,
   });
 
@@ -303,13 +325,16 @@ class _PillButton extends StatelessWidget {
   final Widget child;
   final bool expand;
 
+  /// A long-press label, for a pill whose icon carries no words of its own.
+  final String? tooltip;
+
   /// An alert colour for the pill's fill and border (null = the neutral look).
   final Color? accent;
 
   @override
   Widget build(BuildContext context) {
     final accent = this.accent;
-    final Widget button = Material(
+    Widget button = Material(
       color: accent == null
           ? AppColors.surfaceContainerHighest
           : accent.withValues(alpha: 0.16),
@@ -331,6 +356,8 @@ class _PillButton extends StatelessWidget {
         ),
       ),
     );
+    final tip = tooltip;
+    if (tip != null) button = Tooltip(message: tip, child: button);
     return expand ? Expanded(child: button) : button;
   }
 }

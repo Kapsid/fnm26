@@ -224,6 +224,12 @@ abstract class AppLocalizations {
   /// **'Could not continue: {error}'**
   String matchCouldNotContinue(String error);
 
+  /// Tooltip on the button that fast-forwards to the final whistle.
+  ///
+  /// In en, this message translates to:
+  /// **'Skip to full time'**
+  String get matchSkipToFullTime;
+
   /// Match stat bar label: shots.
   ///
   /// In en, this message translates to:
