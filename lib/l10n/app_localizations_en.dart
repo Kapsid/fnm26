@@ -2842,7 +2842,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get achievementsBrutalBadge => 'BRUTAL';
 
   @override
-  String get paywallGoPro => 'GO PRO';
+  String get paywallGoPro => 'GO UNLIMITED';
 
   @override
   String get paywallOneTimeUnlock => 'One-time unlock. No subscription.';
@@ -2858,17 +2858,18 @@ class AppLocalizationsEn extends AppLocalizations {
   String get paywallBenefitSaves => 'As many saves as you want, not two';
 
   @override
-  String get paywallBenefitEndless => 'Every cycle from here on';
+  String get paywallBenefitEndless =>
+      'Every cycle from here on, all the way to 3000';
 
   @override
-  String get paywallUnlocked => 'Premium is unlocked. Enjoy!';
+  String get paywallUnlocked => 'Unlimited is unlocked. Enjoy!';
 
   @override
   String get paywallContactingStore => 'Contacting the store…';
 
   @override
   String paywallUnlockProPriced(String price) {
-    return 'Unlock Pro · $price';
+    return 'Unlock Unlimited · $price';
   }
 
   @override

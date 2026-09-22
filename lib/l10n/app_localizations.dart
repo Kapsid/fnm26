@@ -4850,10 +4850,10 @@ abstract class AppLocalizations {
   /// **'BRUTAL'**
   String get achievementsBrutalBadge;
 
-  /// Paywall heading inviting the player to upgrade to Pro.
+  /// Paywall heading inviting the player to upgrade to Unlimited.
   ///
   /// In en, this message translates to:
-  /// **'GO PRO'**
+  /// **'GO UNLIMITED'**
   String get paywallGoPro;
 
   /// Paywall subtitle clarifying it is a one-off purchase.
@@ -4883,13 +4883,13 @@ abstract class AppLocalizations {
   /// Paywall benefit line.
   ///
   /// In en, this message translates to:
-  /// **'Every cycle from here on'**
+  /// **'Every cycle from here on, all the way to 3000'**
   String get paywallBenefitEndless;
 
   /// Shown on the paywall once premium is already unlocked.
   ///
   /// In en, this message translates to:
-  /// **'Premium is unlocked. Enjoy!'**
+  /// **'Unlimited is unlocked. Enjoy!'**
   String get paywallUnlocked;
 
   /// Buy-button label while the purchase flow is in progress.
@@ -4901,7 +4901,7 @@ abstract class AppLocalizations {
   /// Buy-button label with the store's localised price.
   ///
   /// In en, this message translates to:
-  /// **'Unlock Pro · {price}'**
+  /// **'Unlock Unlimited · {price}'**
   String paywallUnlockProPriced(String price);
 
   /// Button that restores a previous purchase.

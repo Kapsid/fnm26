@@ -789,15 +789,15 @@ achievementsNice,Dismiss button on the achievement-unlocked dialog.,,Nice!,Pará
 achievementsHardestTests,Intro blurb on the challenges screen.,,"The hardest tests of a manager, across a whole career and many nations.","Nejtěžší zkoušky trenéra, napříč celou kariérou a mnoha zeměmi."
 achievementsThisSave,Section heading for this save's procedural challenges.,,THIS SAVE,TATO HRA
 achievementsBrutalBadge,Badge marking an especially hard challenge.,,BRUTAL,BRUTÁLNÍ
-paywallGoPro,Paywall heading inviting the player to upgrade to Pro.,,GO PRO,PŘEJÍT NA PRO
+paywallGoPro,Paywall heading inviting the player to upgrade to Unlimited.,,GO UNLIMITED,NEOMEZENÉ FNM
 paywallOneTimeUnlock,Paywall subtitle clarifying it is a one-off purchase.,,One-time unlock. No subscription.,Jednorázové odemčení. Žádné předplatné.
 paywallBenefitCarryOn,Paywall benefit line: the existing career continues.,,Your save carries on exactly where it stopped,"Vaše uložená hra pokračuje přesně tam, kde skončila"
 paywallBenefitOffline,Paywall benefit line: one payment and nothing collected.,,"No subscription, no ads, no account","Žádné předplatné, žádné reklamy, žádný účet"
 paywallBenefitSaves,Paywall benefit line: the save-slot limit goes away.,,"As many saves as you want, not two","Tolik uložení, kolik chcete, ne dvě"
-paywallBenefitEndless,Paywall benefit line.,,Every cycle from here on,Každý další cyklus už bez omezení
-paywallUnlocked,Shown on the paywall once premium is already unlocked.,,Premium is unlocked. Enjoy!,Prémiová verze je odemčená. Užijte si ji!
+paywallBenefitEndless,Paywall benefit line.,,"Every cycle from here on, all the way to 3000","Každý další cyklus, klidně až do roku 3000"
+paywallUnlocked,Shown on the paywall once premium is already unlocked.,,Unlimited is unlocked. Enjoy!,Neomezené FNM je odemčené. Užijte si ho!
 paywallContactingStore,Buy-button label while the purchase flow is in progress.,,Contacting the store…,Kontaktuji obchod…
-paywallUnlockProPriced,Buy-button label with the store's localised price.,{price},Unlock Pro · {price},Odemknout Pro · {price}
+paywallUnlockProPriced,Buy-button label with the store's localised price.,{price},Unlock Unlimited · {price},Odemknout neomezené FNM · {price}
 paywallRestorePurchases,Button that restores a previous purchase.,,Restore purchases,Obnovit nákupy
 paywallStoreUnavailable,Buy-button label when the store has no listing to sell.,,Store unavailable,Obchod není dostupný
 paywallStoreUnavailableNote,Explains a disabled buy button when the store cannot be reached.,,The price could not be loaded. Check your connection and try again.,Cenu se nepodařilo načíst. Zkontrolujte připojení a zkuste to znovu.

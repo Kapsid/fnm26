@@ -2864,7 +2864,7 @@ class AppLocalizationsCs extends AppLocalizations {
   String get achievementsBrutalBadge => 'BRUTÁLNÍ';
 
   @override
-  String get paywallGoPro => 'PŘEJÍT NA PRO';
+  String get paywallGoPro => 'NEOMEZENÉ FNM';
 
   @override
   String get paywallOneTimeUnlock => 'Jednorázové odemčení. Žádné předplatné.';
@@ -2881,17 +2881,18 @@ class AppLocalizationsCs extends AppLocalizations {
   String get paywallBenefitSaves => 'Tolik uložení, kolik chcete, ne dvě';
 
   @override
-  String get paywallBenefitEndless => 'Každý další cyklus už bez omezení';
+  String get paywallBenefitEndless =>
+      'Každý další cyklus, klidně až do roku 3000';
 
   @override
-  String get paywallUnlocked => 'Prémiová verze je odemčená. Užijte si ji!';
+  String get paywallUnlocked => 'Neomezené FNM je odemčené. Užijte si ho!';
 
   @override
   String get paywallContactingStore => 'Kontaktuji obchod…';
 
   @override
   String paywallUnlockProPriced(String price) {
-    return 'Odemknout Pro · $price';
+    return 'Odemknout neomezené FNM · $price';
   }
 
   @override

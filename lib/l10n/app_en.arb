@@ -3865,9 +3865,9 @@
   "@achievementsBrutalBadge": {
     "description": "Badge marking an especially hard challenge."
   },
-  "paywallGoPro": "GO PRO",
+  "paywallGoPro": "GO UNLIMITED",
   "@paywallGoPro": {
-    "description": "Paywall heading inviting the player to upgrade to Pro."
+    "description": "Paywall heading inviting the player to upgrade to Unlimited."
   },
   "paywallOneTimeUnlock": "One-time unlock. No subscription.",
   "@paywallOneTimeUnlock": {
@@ -3885,11 +3885,11 @@
   "@paywallBenefitSaves": {
     "description": "Paywall benefit line: the save-slot limit goes away."
   },
-  "paywallBenefitEndless": "Every cycle from here on",
+  "paywallBenefitEndless": "Every cycle from here on, all the way to 3000",
   "@paywallBenefitEndless": {
     "description": "Paywall benefit line."
   },
-  "paywallUnlocked": "Premium is unlocked. Enjoy!",
+  "paywallUnlocked": "Unlimited is unlocked. Enjoy!",
   "@paywallUnlocked": {
     "description": "Shown on the paywall once premium is already unlocked."
   },
@@ -3897,7 +3897,7 @@
   "@paywallContactingStore": {
     "description": "Buy-button label while the purchase flow is in progress."
   },
-  "paywallUnlockProPriced": "Unlock Pro · {price}",
+  "paywallUnlockProPriced": "Unlock Unlimited · {price}",
   "@paywallUnlockProPriced": {
     "description": "Buy-button label with the store's localised price.",
     "placeholders": {
