@@ -76,6 +76,39 @@ void main() {
     await tester.pumpAndSettle();
   }
 
+  Future<void> pumpTextButton(
+    WidgetTester tester,
+    Locale locale,
+    double width,
+    String Function(AppLocalizations) label,
+  ) async {
+    tester.view
+      ..physicalSize = Size(width, 700)
+      ..devicePixelRatio = 1.0;
+    addTearDown(tester.view.reset);
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: AppTheme.theme,
+        locale: locale,
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        home: Scaffold(
+          body: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Builder(
+              builder: (context) => TextButton.icon(
+                onPressed: () {},
+                icon: const Icon(Icons.lock_open_rounded, size: 18),
+                label: Text(label(AppLocalizations.of(context))),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+  }
+
   for (final locale in [const Locale('en'), const Locale('cs')]) {
     group('${locale.languageCode} saves screen', () {
       testWidgets('the new-game button fits', (tester) async {
@@ -113,6 +146,23 @@ void main() {
               (l) => l.careerSlotsUnlockMore,
               icon: Icons.lock_open,
               width: width,
+            );
+            expect(tester.takeException(), isNull);
+            expectNothingCut(tester);
+          },
+        );
+
+        // The door to the shop, which stands on this screen whether or not
+        // the slots are full. Czech runs it to "PREJIT NA PRO", which is four
+        // times the English label.
+        testWidgets(
+          'the go-pro label fits at ${width.toInt()}px',
+          (tester) async {
+            await pumpTextButton(
+              tester,
+              locale,
+              width,
+              (l) => l.paywallGoPro,
             );
             expect(tester.takeException(), isNull);
             expectNothingCut(tester);

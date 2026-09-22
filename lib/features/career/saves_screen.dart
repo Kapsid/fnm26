@@ -144,6 +144,30 @@ class SavesScreen extends ConsumerWidget {
                             ),
                           ),
                         ),
+                      // The way to the shop, open whether or not the slots are
+                      // full.
+                      //
+                      // It used to appear only when they were, which made the
+                      // offer a consequence of running out rather than
+                      // something a manager could take up when he wanted it.
+                      // He asked for it on this screen with room to spare, and
+                      // he is right: what the purchase sells is endless
+                      // cycles, and the second save is the smaller half of it.
+                      // When the slots ARE full the primary button above is
+                      // already that door, so this one stands down rather than
+                      // print the same offer twice.
+                      if (!premium && !full)
+                        Padding(
+                          padding: const EdgeInsets.only(top: AppSpacing.sm),
+                          child: TextButton.icon(
+                            onPressed: () => unawaited(showPaywall(context)),
+                            icon: const Icon(
+                              Icons.lock_open_rounded,
+                              size: 18,
+                            ),
+                            label: Text(l.paywallGoPro),
+                          ),
+                        ),
                       // An imported career takes a slot like any other, so it
                       // is offered only while there is room for one.
                       if (!full)

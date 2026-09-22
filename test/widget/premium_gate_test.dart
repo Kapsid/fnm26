@@ -88,9 +88,10 @@ void main() {
     double width = 400,
     List<ProductDetails> products = const [],
     bool premium = false,
+    bool? storeAvailable,
   }) async {
     final store = _EmptyStore()
-      ..available = products.isNotEmpty
+      ..available = storeAvailable ?? products.isNotEmpty
       ..products = products;
     tester.view
       ..physicalSize = Size(width, 780)
@@ -117,6 +118,28 @@ void main() {
     await tester.pumpAndSettle();
     return store;
   }
+
+  // "Store unavailable" covers three unrelated failures, and on a build that
+  // cannot buy anything the only way to tell them apart is to be told which.
+  // The line is a testing aid behind kShowStoreDiagnostics; these two hold it
+  // to naming the right one.
+  testWidgets('a device with no store says so', (tester) async {
+    await pumpGate(tester, storeAvailable: false);
+
+    expect(find.text('Store unavailable'), findsOneWidget);
+    expect(find.textContaining('No store on this device'), findsOneWidget);
+    expect(find.textContaining(kPremiumProductId), findsNothing);
+  });
+
+  testWidgets('a store that does not sell the product names it', (
+    tester,
+  ) async {
+    await pumpGate(tester, storeAvailable: true);
+
+    expect(find.text('Store unavailable'), findsOneWidget);
+    expect(find.textContaining(kPremiumProductId), findsOneWidget);
+    expect(find.textContaining('No store on this device'), findsNothing);
+  });
 
   testWidgets("the price on screen is the store's, not ours", (tester) async {
     await pumpGate(tester, products: [_product(r'$14.49')]);

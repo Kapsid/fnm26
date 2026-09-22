@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fnm/core/config/testing_flags.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
@@ -172,6 +173,20 @@ class _PaywallActionsState extends ConsumerState<PaywallActions> {
               color: AppColors.onSurfaceVariant,
             ),
           ),
+          // Which of the three failures this is, for a build that cannot buy
+          // anything yet. Untranslated and one edit from gone; see
+          // [kShowStoreDiagnostics].
+          if (kShowStoreDiagnostics && service.storeDiagnostic != null)
+            Padding(
+              padding: const EdgeInsets.only(top: AppSpacing.xs),
+              child: Text(
+                service.storeDiagnostic!,
+                textAlign: TextAlign.center,
+                style: AppTypography.labelSmall.copyWith(
+                  color: AppColors.onSurfaceVariant,
+                ),
+              ),
+            ),
           TextButton(
             onPressed: _loadProduct,
             child: Text(l.paywallTryAgain),

@@ -55,6 +55,10 @@ class EntitlementService {
   /// Human-readable reason the last purchase attempt failed, for the paywall.
   String? lastError;
 
+  /// Why the last [product] lookup came back empty, or null if it did not.
+  /// Untranslated on purpose: see `kShowStoreDiagnostics`.
+  String? storeDiagnostic;
+
   /// Establishes the entitlement and starts listening to the store's purchase
   /// stream. Call once at app start; safe if the store is unreachable.
   ///
@@ -114,12 +118,34 @@ class EntitlementService {
 
   /// The premium product's store listing (localised price), or null when the
   /// store can't be reached or the product isn't configured yet.
+  ///
+  /// Every null return leaves a reason in [storeDiagnostic], because the three
+  /// of them are unrelated problems wearing one message. A device with no
+  /// store is a device; a store that answers with an error is a store; a
+  /// product id the store has never heard of is App Store Connect. The paywall
+  /// prints the reason behind `kShowStoreDiagnostics`.
   Future<ProductDetails?> product() async {
-    if (!await _iap.isAvailable()) return null;
+    storeDiagnostic = null;
+    if (!await _iap.isAvailable()) {
+      storeDiagnostic =
+          'No store on this device. In TestFlight, sign in under '
+          'Settings > App Store > Sandbox Account.';
+      return null;
+    }
     final response = await _iap.queryProductDetails({kPremiumProductId});
-    return response.productDetails
+    final found = response.productDetails
         .where((p) => p.id == kPremiumProductId)
         .firstOrNull;
+    if (found != null) return found;
+    if (response.error case final e?) {
+      storeDiagnostic = 'Store error ${e.code}: ${e.message}';
+    } else {
+      // The store answered and does not sell this. Either the id does not
+      // match App Store Connect, or the product is not Ready to Submit, or
+      // the Paid Applications Agreement is not active.
+      storeDiagnostic = 'Store has no product "$kPremiumProductId".';
+    }
+    return null;
   }
 
   /// Starts the store purchase flow. Completion arrives via the purchase
@@ -128,7 +154,9 @@ class EntitlementService {
     _setFlow(PurchaseFlowState.loading);
     final details = await product();
     if (details == null) {
-      lastError = 'The store is unavailable right now. Try again later.';
+      lastError =
+          storeDiagnostic ??
+          'The store is unavailable right now. Try again later.';
       _setFlow(PurchaseFlowState.error);
       return false;
     }

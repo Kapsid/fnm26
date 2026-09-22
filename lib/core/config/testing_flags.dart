@@ -25,3 +25,18 @@ library;
 /// taker sheet is asked by the clock either way, so turning the aid off cannot
 /// leave a manager un-asked.
 const bool kShowSkipMatch = true;
+
+/// Whether the paywall prints the reason the store gave, under the
+/// "Store unavailable" note.
+///
+/// A testing aid for a build that cannot yet buy anything. "Store unavailable"
+/// is one message covering three unrelated failures — the device has no store,
+/// the store answered with an error, or the product id simply is not
+/// configured — and on a TestFlight build the only way to tell them apart is
+/// to be told. The line is deliberately technical, carries the product id, and
+/// is NOT translated: it is a note to the bench, not copy for a manager.
+///
+/// Setting this to `false` removes the line; the note above it and the "Try
+/// again" button stay, which is the whole of what a real player is meant to
+/// see.
+const bool kShowStoreDiagnostics = true;
