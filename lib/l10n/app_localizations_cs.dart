@@ -2882,7 +2882,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get paywallBenefitEndless =>
-      'Každý další cyklus, klidně až do roku 3000';
+      'Každý další cyklus, klidně až do roku 2600';
 
   @override
   String get paywallUnlocked => 'Neomezené FNM je odemčené. Užijte si ho!';

@@ -794,7 +794,7 @@ paywallOneTimeUnlock,Paywall subtitle clarifying it is a one-off purchase.,,One-
 paywallBenefitCarryOn,Paywall benefit line: the existing career continues.,,Your save carries on exactly where it stopped,"Vaše uložená hra pokračuje přesně tam, kde skončila"
 paywallBenefitOffline,Paywall benefit line: one payment and nothing collected.,,"No subscription, no ads, no account","Žádné předplatné, žádné reklamy, žádný účet"
 paywallBenefitSaves,Paywall benefit line: the save-slot limit goes away.,,"As many saves as you want, not two","Tolik uložení, kolik chcete, ne dvě"
-paywallBenefitEndless,Paywall benefit line.,,"Every cycle from here on, all the way to 3000","Každý další cyklus, klidně až do roku 3000"
+paywallBenefitEndless,Paywall benefit line.,,"Every cycle from here on, all the way to 2600","Každý další cyklus, klidně až do roku 2600"
 paywallUnlocked,Shown on the paywall once premium is already unlocked.,,Unlimited is unlocked. Enjoy!,Neomezené FNM je odemčené. Užijte si ho!
 paywallContactingStore,Buy-button label while the purchase flow is in progress.,,Contacting the store…,Kontaktuji obchod…
 paywallUnlockProPriced,Buy-button label with the store's localised price.,{price},Unlock Unlimited · {price},Odemknout neomezené FNM · {price}

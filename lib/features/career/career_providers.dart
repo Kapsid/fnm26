@@ -78,16 +78,38 @@ class CareerService {
   /// those finals, where no competition is being played.
   static const int developmentMonth = 12;
 
+  /// The furthest the player pool is aged, in years from [cycleStart].
+  ///
+  /// A ceiling, not an ending. The calendar and the competitions run past it
+  /// perfectly well; what stops is the pool. `PlayerLifecycle.poolAt` builds a
+  /// nation by walking ONE INTAKE COHORT PER ELAPSED YEAR, so its cost is
+  /// linear in this number — measured, about 3ms at ten years, 7ms at fifty,
+  /// 15ms at four hundred, per nation per query — and a world simulation step
+  /// touches every nation. The clamp is what keeps that walk bounded.
+  ///
+  /// Past the ceiling `agingYears` stops climbing, and because every age,
+  /// retirement and intake is derived from it, the world freezes: no new
+  /// intakes, nobody ages, nobody retires, the same squads for ever. That is
+  /// the real edge of the game, so it is worth stating in one place rather
+  /// than leaving as a magic number in two.
+  ///
+  /// Six hundred puts it at the year 2626. Raising it further is free in
+  /// correctness and linear in cost; making it unbounded is a different piece
+  /// of work, because the cohort walk would first have to start at the oldest
+  /// cohort that can still contain a living player instead of at the
+  /// beginning of the save.
+  static const int maxAgingYears = 600;
+
   /// Elapsed in-game years since the save began — how much to age the player
   /// pool, so squads evolve one season at a time as the calendar advances.
   ///
   /// Counted off [developmentMonth], so each tick falls between competitions
-  /// rather than inside one.
+  /// rather than inside one. Capped at [maxAgingYears].
   static int agingYears(Career c) {
     final d = c.inGameDate;
     final years =
         d.year - cycleStart.year + (d.month >= developmentMonth ? 1 : 0);
-    return years.clamp(0, 400);
+    return years.clamp(0, maxAgingYears);
   }
 
   /// Creates a new save for [nationId], or a failure if all slots are in use.

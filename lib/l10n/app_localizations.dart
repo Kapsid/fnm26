@@ -4883,7 +4883,7 @@ abstract class AppLocalizations {
   /// Paywall benefit line.
   ///
   /// In en, this message translates to:
-  /// **'Every cycle from here on, all the way to 3000'**
+  /// **'Every cycle from here on, all the way to 2600'**
   String get paywallBenefitEndless;
 
   /// Shown on the paywall once premium is already unlocked.

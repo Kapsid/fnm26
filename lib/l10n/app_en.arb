@@ -3885,7 +3885,7 @@
   "@paywallBenefitSaves": {
     "description": "Paywall benefit line: the save-slot limit goes away."
   },
-  "paywallBenefitEndless": "Every cycle from here on, all the way to 3000",
+  "paywallBenefitEndless": "Every cycle from here on, all the way to 2600",
   "@paywallBenefitEndless": {
     "description": "Paywall benefit line."
   },

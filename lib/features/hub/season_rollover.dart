@@ -198,8 +198,11 @@ extension SeasonRollover on SeasonService {
     int saveSeed,
     int year,
   ) async {
-    final agingNow = (year - CareerService.cycleStart.year).clamp(0, 400);
-    final agingPrev = (agingNow - 1).clamp(0, 400);
+    final agingNow = (year - CareerService.cycleStart.year).clamp(
+      0,
+      CareerService.maxAgingYears,
+    );
+    final agingPrev = (agingNow - 1).clamp(0, CareerService.maxAgingYears);
     if (agingNow <= agingPrev) return; // save's first year — nothing before it
     final youth = await _ref.read(youthBonusByCycleProvider(careerId).future);
     final careerDev = await _ref.read(careerDevBonusProvider(careerId).future);

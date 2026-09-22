@@ -2859,7 +2859,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get paywallBenefitEndless =>
-      'Every cycle from here on, all the way to 3000';
+      'Every cycle from here on, all the way to 2600';
 
   @override
   String get paywallUnlocked => 'Unlimited is unlocked. Enjoy!';
