@@ -10,11 +10,14 @@ import '../../helpers/test_database.dart';
 /// The one rule the free tier rests on: a complete first cycle, then the wall.
 void main() {
   group('the trial gate', () {
-    test('the first cycle is free', () {
-      expect(trialExhausted(cyclePointer: 0, premiumUnlocked: false), isFalse);
+    // The question is never "may he play the cycle he is in" — it is "may he
+    // start the next one". A save sitting in its first cycle has had the whole
+    // free allowance, so the roll OUT of it is the one being sold.
+    test('the roll out of the first cycle is the wall', () {
+      expect(trialExhausted(cyclePointer: 0, premiumUnlocked: false), isTrue);
     });
 
-    test('the second cycle is not', () {
+    test('and every roll after it', () {
       expect(trialExhausted(cyclePointer: 1, premiumUnlocked: false), isTrue);
     });
 
@@ -54,7 +57,11 @@ void main() {
       return c;
     }
 
-    test('a free save is not blocked inside its first cycle', () async {
+    // The bug this pins: a brand-new free save answered "not blocked" here, so
+    // the end of its first cycle rolled straight through and the wall was
+    // never opened. The manager got a second complete cycle for nothing and
+    // the one moment the product is sold at never happened.
+    test('a free save is blocked at the end of its FIRST cycle', () async {
       final c = build(premium: false);
       final career =
           (await c
@@ -64,7 +71,7 @@ void main() {
       expect(career.cyclePointer, 0);
       expect(
         await c.read(seasonServiceProvider).trialBlocksNextCycle(career.id),
-        isFalse,
+        isTrue,
       );
     });
 

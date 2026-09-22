@@ -98,19 +98,79 @@ class _CycleRolloverScreenState extends ConsumerState<CycleRolloverScreen> {
     // The rollover banks the finished cycle's income and advances; the new
     // cycle's budget is allocated in the forced budget-setup event that opens
     // it (see nextEventProvider).
-    await season.startNextCycle(
-      widget.careerId,
-      switchToNationId: _selected,
-      boardTitle: v?.headline,
-      boardBody: v?.detail,
-    );
-    if (mounted) {
+    //
+    // Wrapped, because this is the one screen with nowhere to fall back to.
+    // The roll was awaited bare inside an unawaited call: a throw anywhere in
+    // it (and it moves the whole world) went nowhere, `_busy` stayed true for
+    // ever, and the single button on the screen was left reading "Starting…"
+    // with nothing behind it.
+    try {
+      await season.startNextCycle(
+        widget.careerId,
+        switchToNationId: _selected,
+        boardTitle: v?.headline,
+        boardBody: v?.detail,
+      );
+      if (!mounted) return;
       ref
         ..invalidate(messageInboxProvider(widget.careerId))
         ..invalidate(unreadMessagesProvider(widget.careerId));
       context.go('${Routes.hub}?careerId=${widget.careerId}');
+    } on Object catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(AppLocalizations.of(context).hubCouldNotAdvance('$e')),
+        ),
+      );
+    } finally {
+      if (mounted) setState(() => _busy = false);
     }
   }
+
+  /// The way out that has to exist in EVERY state of this screen.
+  ///
+  /// The rollover is entered with `context.go`, so there is nothing behind it,
+  /// and it carries no app bar, so there is no arrow either. A state that
+  /// renders no control is therefore a manager with no next action at all, at
+  /// the one moment in the career that cannot afford one. His save is safe and
+  /// openable; the list of saves is always somewhere to go.
+  Widget _backToSaves() => TextButton(
+    onPressed: () => context.go(Routes.saves),
+    child: Text(AppLocalizations.of(context).hubBackToSaves),
+  );
+
+  /// Waiting on a read. The spinner used to be the whole screen, so a read
+  /// that never came back was a career that never came back.
+  Widget _waiting() => Center(
+    child: Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        const CircularProgressIndicator(),
+        const SizedBox(height: AppSpacing.lg),
+        _backToSaves(),
+      ],
+    ),
+  );
+
+  /// A read that failed. It said so and offered nothing.
+  Widget _failed(String message) => Center(
+    child: Padding(
+      padding: const EdgeInsets.all(AppSpacing.marginMobile),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            message,
+            textAlign: TextAlign.center,
+            style: AppTypography.bodyMedium,
+          ),
+          const SizedBox(height: AppSpacing.md),
+          _backToSaves(),
+        ],
+      ),
+    ),
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -118,8 +178,8 @@ class _CycleRolloverScreenState extends ConsumerState<CycleRolloverScreen> {
     final viewAsync = ref.watch(_rolloverProvider(widget.careerId));
     return Scaffold(
       body: viewAsync.when(
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => Center(child: Text(l.hubCouldNotLoad('$e'))),
+        loading: _waiting,
+        error: (e, _) => _failed(l.hubCouldNotLoad('$e')),
         data: (view) => switch (_step) {
           0 => _championStep(view),
           1 => _boardStep(view),
@@ -188,8 +248,8 @@ class _CycleRolloverScreenState extends ConsumerState<CycleRolloverScreen> {
     final verdictAsync = ref.watch(rolloverVerdictProvider(widget.careerId));
     return SafeArea(
       child: verdictAsync.when(
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => Center(child: Text(l.hubCouldNotLoad('$e'))),
+        loading: _waiting,
+        error: (e, _) => _failed(l.hubCouldNotLoad('$e')),
         data: (v) {
           if (v == null) {
             return Center(
@@ -290,8 +350,8 @@ class _CycleRolloverScreenState extends ConsumerState<CycleRolloverScreen> {
     );
     return SafeArea(
       child: incomeAsync.when(
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => Center(child: Text(l.hubCouldNotLoadFinances('$e'))),
+        loading: _waiting,
+        error: (e, _) => _failed(l.hubCouldNotLoadFinances('$e')),
         data: (income) {
           return Column(
             children: [
@@ -341,15 +401,13 @@ class _CycleRolloverScreenState extends ConsumerState<CycleRolloverScreen> {
                             ? null
                             : () => unawaited(_begin(verdict)),
                       ),
-                      // The wall is a decision, not a dead end. Without this
-                      // the screen has no way out, and a manager who is not
-                      // buying today would be trapped on it with a finished
-                      // save he can still open any time.
-                      if (blocked)
-                        TextButton(
-                          onPressed: () => context.go(Routes.saves),
-                          child: Text(l.hubBackToSaves),
-                        ),
+                      // The wall is a decision, not a dead end — and so is the
+                      // roll itself. Shown whether or not the manager is
+                      // blocked: tied to `blocked`, the one screen a free save
+                      // reaches FIRST (the end of a cycle it may still roll
+                      // out of) was the one screen rendering a single button,
+                      // so a roll that threw or hung left nothing at all.
+                      _backToSaves(),
                     ],
                   ),
                 ),

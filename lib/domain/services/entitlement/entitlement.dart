@@ -54,10 +54,18 @@ bool canCreateSave({
 /// four-year cycle.
 ///
 /// The one rule the whole free tier rests on, kept pure so it is testable
-/// without a store. [cyclePointer] is the cycle the save is sitting in, so a
-/// save still inside its first cycle (pointer 0) is free; moving it to pointer
-/// 1 is what is being sold.
+/// without a store. [cyclePointer] is the cycle the save is sitting IN, and
+/// what is being asked is whether it may move to the NEXT one — so the cycle
+/// the answer is about is `cyclePointer + 1`.
+///
+/// That `+ 1` is the whole rule, and it was missing. A free save sitting in
+/// its first cycle (pointer 0) answered "not exhausted", so the roll into
+/// pointer 1 went through untouched: the wall was never asked for at the end
+/// of the first cycle, the manager was handed a second complete cycle, and the
+/// one moment the product is sold at simply did not happen. He is not blocked
+/// from playing the cycle he is in — [kFreeCycles] of those are free — he is
+/// blocked from starting one he has not paid for.
 bool trialExhausted({
   required int cyclePointer,
   required bool premiumUnlocked,
-}) => !premiumUnlocked && cyclePointer >= kFreeCycles;
+}) => !premiumUnlocked && cyclePointer + 1 >= kFreeCycles;
