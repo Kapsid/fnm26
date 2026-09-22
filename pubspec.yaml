@@ -39,6 +39,9 @@ dependencies:
   freezed_annotation: ^3.1.0 # Immutable data models.
   go_router: ^17.3.0 # Declarative routing.
   in_app_purchase: ^3.3.0 # One-time premium unlock.
+  # Direct, so the entitlement can be read from StoreKit 2's verified
+  # transactions instead of a boolean anyone with the file could write.
+  in_app_purchase_storekit: ^0.4.10
   intl: ^0.20.2
   json_annotation: ^4.12.0 # JSON for seed data + models.
   meta: ^1.17.0 # @immutable etc. for pure-Dart core.

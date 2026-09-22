@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/domain/services/entitlement/entitlement.dart';
+import 'package:fnm/domain/services/entitlement/store_entitlements.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -13,6 +14,10 @@ const String kPremiumProductId = 'com.fnm.fnm.premium';
 /// Local cache key for the granted entitlement, so an offline launch keeps
 /// premium without asking the store.
 const String _kPremiumCacheKey = 'entitlement.premium';
+
+/// The key an even earlier build wrote. Read, never written: a player who
+/// bought under it keeps his unlock.
+const String _kLegacyPremiumCacheKey = 'premium_unlocked';
 
 /// The one-off purchase state the paywall shows.
 enum PurchaseFlowState { idle, loading, pending, error }
@@ -26,38 +31,79 @@ enum PurchaseFlowState { idle, loading, pending, error }
 /// only reports purchases it accepted), and the grant is then cached locally
 /// so the game never needs the network just to launch. `restorePurchases()`
 /// re-asks the store, which is what heals a reinstall or a new device.
+///
+/// On iOS the cached boolean is no longer the source of truth. StoreKit 2's
+/// verified transactions are, and they read locally: [init] asks the OS what
+/// this Apple ID owns before it trusts anything on disk. That also fixes the
+/// honest player's side of it, because a reinstall or a second device is
+/// entitled without anyone having to find the Restore button. The cache stays
+/// as the fallback for when the store cannot answer, and for Android, whose
+/// own verification is not built yet.
 class EntitlementService {
-  EntitlementService(this._ref, {InAppPurchase? iap})
-    : _iap = iap ?? InAppPurchase.instance;
+  EntitlementService(
+    this._ref, {
+    InAppPurchase? iap,
+    StoreEntitlementReader? storeEntitlements,
+  }) : _iap = iap ?? InAppPurchase.instance,
+       _storeEntitlements = storeEntitlements ?? readAppleEntitlements;
 
   final Ref _ref;
   final InAppPurchase _iap;
+  final StoreEntitlementReader _storeEntitlements;
   StreamSubscription<List<PurchaseDetails>>? _sub;
 
   /// Human-readable reason the last purchase attempt failed, for the paywall.
   String? lastError;
 
-  /// Loads the cached entitlement and starts listening to the store's purchase
+  /// Establishes the entitlement and starts listening to the store's purchase
   /// stream. Call once at app start; safe if the store is unreachable.
+  ///
+  /// The order is the whole point. The store is asked first, because on iOS
+  /// it knows what was actually bought and the file on disk does not. Only
+  /// when the store cannot answer at all does the cached grant decide, and
+  /// then it always decides in the player's favour: nothing here ever writes
+  /// `false`, and a check that fails to run is not evidence of anything.
   Future<void> init() async {
-    // Fail open, in both directions. A cache that will not read grants
-    // nothing new, but it also never takes the grant away — and a store that
-    // will not start is not evidence that anybody pirated anything. Only a
-    // receipt that is present and provably wrong could deny, and nothing here
-    // ever writes `false`.
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      if (prefs.getBool(_kPremiumCacheKey) ?? false) {
-        _ref.read(premiumUnlockedProvider.notifier).state = true;
-      }
-    } on Object {
-      // Unreadable cache: leave the entitlement exactly as it is.
+    final cached = await _cachedGrant();
+    final owned = await _storeOwnedProducts();
+    if (owned != null) {
+      // The store answered. Its answer is the truth on this device, in both
+      // directions: it entitles a reinstall nobody restored by hand, and it
+      // is the one thing that can decline a boolean somebody wrote himself.
+      if (owned.contains(kPremiumProductId)) await _grant();
+    } else if (cached) {
+      // Simulator, StoreKit missing, a wedged channel, Android. Grant, and
+      // leave the cache alone so the next launch can try the store again.
+      _ref.read(premiumUnlockedProvider.notifier).state = true;
     }
     try {
       _sub ??= _iap.purchaseStream.listen(_onPurchases);
     } on Object {
       // No store on this device (or it refused to start). The game runs; the
       // paywall will simply report the store as unavailable.
+    }
+  }
+
+  /// The products the OS says this account owns, or null when it would not
+  /// say. Never throws: an entitlement read that blows up is an unanswered
+  /// question, not a denial.
+  Future<Set<String>?> _storeOwnedProducts() async {
+    try {
+      return await _storeEntitlements();
+    } on Object {
+      return null;
+    }
+  }
+
+  /// The locally cached grant, under either key any build has written.
+  Future<bool> _cachedGrant() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      return (prefs.getBool(_kPremiumCacheKey) ?? false) ||
+          (prefs.getBool(_kLegacyPremiumCacheKey) ?? false);
+    } on Object {
+      // Unreadable cache: it grants nothing, and it takes nothing away.
+      return false;
     }
   }
 
