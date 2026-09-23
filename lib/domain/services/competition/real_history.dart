@@ -300,19 +300,24 @@ abstract final class RealHistory {
       finalHome: 3,
       finalAway: 3,
     ),
-    // 2026 is now seeded as finished, even though a save opens on 1 July
-    // 2026 while that World Championship is still being played in reality: a
+    // 2026 is seeded as finished, even though a save opens on 1 July 2026: a
     // manager opening a new save looks for it in the record, and finding
     // nothing there reads as a hole in the world rather than as a tournament
     // still in progress. Co-hosted by all three of North America's automatic
     // qualifiers.
+    //
+    // CHECK THIS ROW AGAINST THE ACTUAL TOURNAMENT before trusting it. Every
+    // other row here is settled history; this one was written from outside it
+    // and has already been wrong once, with France in third until the manager
+    // pointed out it was England. The champion, the runner-up and the final
+    // score came from the same place and carry the same doubt.
     (
       year: 2026,
       competition: worldChampionship,
       hosts: ['United States', 'Canada', 'Mexico'],
       champion: 'Spain',
       runnerUp: 'Argentina',
-      third: 'France',
+      third: 'England',
       finalHome: 2,
       finalAway: 1,
     ),
