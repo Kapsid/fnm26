@@ -11197,7 +11197,7 @@
   "@backupTitle": {
     "description": "Settings: heading for the backup section."
   },
-  "backupBlurb": "Every save lives in one file on this phone. Export a copy so a lost or reinstalled phone does not cost you a career.",
+  "backupBlurb": "Every save lives in one file on this phone, and nothing backs it up on its own. Export a copy and keep it somewhere off the phone, in Files or iCloud Drive, so a lost phone or a deleted app does not cost you a career.",
   "@backupBlurb": {
     "description": "Settings: what the backup section is for."
   },

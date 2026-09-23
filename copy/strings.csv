@@ -1974,7 +1974,7 @@ yReactionShrug10,"Y reply: shrug, variant 10.",,I watched all of it and felt not
 yReactionShrug11,"Y reply: shrug, variant 11.",,"If nobody mentions this again, that is fine by me.","Jestli to už nikdo nezmíní, budu jen rád."
 tourThirdsUneven,Best-third-placed table: why some results are dropped.,,"Groups are uneven, so results against each big group's bottom side are dropped and every team is judged over the same games.","Skupiny nejsou stejně velké, takže výsledky proti poslednímu týmu větších skupin se nezapočítávají a všechny týmy se hodnotí podle stejného počtu zápasů."
 backupTitle,Settings: heading for the backup section.,,SAVES,ULOŽENÉ HRY
-backupBlurb,Settings: what the backup section is for.,,Every save lives in one file on this phone. Export a copy so a lost or reinstalled phone does not cost you a career.,"Všechny uložené hry jsou v jednom souboru v tomto telefonu. Vytvořte si zálohu, aby vás ztráta nebo přeinstalace telefonu nestála kariéru."
+backupBlurb,Settings: what the backup section is for.,,"Every save lives in one file on this phone, and nothing backs it up on its own. Export a copy and keep it somewhere off the phone, in Files or iCloud Drive, so a lost phone or a deleted app does not cost you a career.","Všechny uložené hry jsou v jednom souboru v tomto telefonu a nic je samo nezálohuje. Vytvořte si kopii a uložte ji mimo telefon, do Souborů nebo na iCloud Drive, aby vás ztráta telefonu nebo smazání aplikace nestála kariéru."
 backupExport,Settings: the export button.,,EXPORT A BACKUP,EXPORTOVAT ZÁLOHU
 backupExportSubject,Subject line when the exported save is shared.,,FNM saves,Uložené hry FNM
 backupRestore,Settings: the restore button.,,RESTORE FROM A FILE,OBNOVIT ZE SOUBORU

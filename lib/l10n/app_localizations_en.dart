@@ -7629,7 +7629,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get backupBlurb =>
-      'Every save lives in one file on this phone. Export a copy so a lost or reinstalled phone does not cost you a career.';
+      'Every save lives in one file on this phone, and nothing backs it up on its own. Export a copy and keep it somewhere off the phone, in Files or iCloud Drive, so a lost phone or a deleted app does not cost you a career.';
 
   @override
   String get backupExport => 'EXPORT A BACKUP';

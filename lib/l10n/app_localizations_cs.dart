@@ -7641,7 +7641,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get backupBlurb =>
-      'Všechny uložené hry jsou v jednom souboru v tomto telefonu. Vytvořte si zálohu, aby vás ztráta nebo přeinstalace telefonu nestála kariéru.';
+      'Všechny uložené hry jsou v jednom souboru v tomto telefonu a nic je samo nezálohuje. Vytvořte si kopii a uložte ji mimo telefon, do Souborů nebo na iCloud Drive, aby vás ztráta telefonu nebo smazání aplikace nestála kariéru.';
 
   @override
   String get backupExport => 'EXPORTOVAT ZÁLOHU';

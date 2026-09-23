@@ -12012,7 +12012,7 @@ abstract class AppLocalizations {
   /// Settings: what the backup section is for.
   ///
   /// In en, this message translates to:
-  /// **'Every save lives in one file on this phone. Export a copy so a lost or reinstalled phone does not cost you a career.'**
+  /// **'Every save lives in one file on this phone, and nothing backs it up on its own. Export a copy and keep it somewhere off the phone, in Files or iCloud Drive, so a lost phone or a deleted app does not cost you a career.'**
   String get backupBlurb;
 
   /// Settings: the export button.
