@@ -37,3 +37,28 @@ footer {
   border-top: 1px solid var(--line);
   color: var(--muted); font-size: 14px;
 }
+
+/* ---- landing page ---- */
+.hero { text-align: center; padding: 56px 0 8px; border: 0; }
+.hero img.logo { width: min(320px, 72vw); height: auto; }
+.hero h1 { font-size: clamp(34px, 9vw, 52px); margin: 18px 0 6px; }
+.hero .tag { color: var(--muted); font-size: clamp(16px, 4vw, 19px); max-width: 30ch; margin: 0 auto; }
+.badges { margin: 28px 0 8px; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+.pill {
+  display: inline-block; padding: 7px 14px; border-radius: 999px;
+  border: 1px solid var(--line); color: var(--muted); font-size: 13px;
+  white-space: nowrap;
+}
+.grid { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); margin: 18px 0; }
+.grid .card { margin: 0; }
+.grid h3 { margin: 0 0 6px; font-size: 16px; color: var(--primary); }
+.grid p { margin: 0; color: var(--muted); font-size: 15px; }
+.shots { display: flex; gap: 14px; overflow-x: auto; padding: 6px 0 14px; scroll-snap-type: x mandatory; }
+.shots img {
+  width: 210px; flex: 0 0 auto; border-radius: 14px;
+  border: 1px solid var(--line); scroll-snap-align: start;
+}
+.tiers { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+.tiers .card { margin: 0; }
+.tiers .price { font-size: 22px; margin: 0 0 8px; }
+.tiers ul { margin: 0; color: var(--muted); font-size: 15px; }

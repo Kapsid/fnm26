@@ -4,39 +4,123 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>FNM — offline international football management</title>
-<meta name="description" content="Manage a national team through endless four-year cycles. Offline, no accounts, no ads.">
+<meta name="description" content="Take a national team through qualifying, a continental championship and the World Championship. Offline, no accounts, no ads.">
+<meta property="og:title" content="FNM">
+<meta property="og:description" content="Offline international football management. Endless four-year cycles, every nation in the world.">
+<meta property="og:image" content="icon.png">
+<link rel="icon" href="icon.png">
+<link rel="apple-touch-icon" href="icon.png">
 <link rel="stylesheet" href="_style.css">
 </head>
 <body>
 <div class="wrap">
-<header>
+
+<header class="hero">
+  <img class="logo" src="logo.png" alt="FNM">
   <h1>FNM</h1>
-  <p class="lede">Take a national team through qualifying, a continental
-  championship and the World Championship. Then do it again, for as long as you
-  like.</p>
-  <nav><a href="privacy.html">Privacy</a><a href="support.html">Support</a></nav>
+  <p class="tag">Take a national team through qualifying, a continental
+  championship and the World Championship. Then do it again.</p>
+  <div class="badges">
+    <span class="pill">iPhone</span>
+    <span class="pill">Works offline</span>
+    <span class="pill">English &amp; Čeština</span>
+  </div>
 </header>
 
 <div class="card">
-  <p><strong>Offline by design.</strong> No accounts, no ads, no subscription,
-  no tracking, and no network. The whole world is simulated on your phone.</p>
+  <p><strong>No accounts. No ads. No subscription. No network.</strong>
+  The whole football world is simulated on your phone, and it stays there.</p>
 </div>
 
-<h2>What it is</h2>
-<p>Every nation in the world, a full player pool that ages, develops and
-retires, a youth pyramid from the under-13s up, transfers, injuries, press,
-board expectations and a calendar that keeps turning. You pick one nation and
-live with the consequences.</p>
+<h2>What you get</h2>
+<div class="grid">
+  <div class="card">
+    <h3>Every nation</h3>
+    <p>Pick any country in the world, from the giants to the ones nobody
+    fancies. The rest of the world plays on without you.</p>
+  </div>
+  <div class="card">
+    <h3>Players with careers</h3>
+    <p>A full pool that ages, develops, peaks and retires, with a youth
+    pyramid running from the under-13s up to the seniors.</p>
+  </div>
+  <div class="card">
+    <h3>The whole cycle</h3>
+    <p>Qualifying, your continental championship, the World Championship,
+    friendlies, draws and base camps.</p>
+  </div>
+  <div class="card">
+    <h3>Life around the team</h3>
+    <p>Transfers, injuries, suspensions, the press, player grievances and a
+    board with expectations you can miss.</p>
+  </div>
+  <div class="card">
+    <h3>Matches you can steer</h3>
+    <p>Tactics, roles, set-piece takers, team talks, substitutions and
+    penalty shootouts you take yourself.</p>
+  </div>
+  <div class="card">
+    <h3>A record that lasts</h3>
+    <p>All-time scorers, most-capped, honours, rivalries, achievements and
+    a manager history that outlives any one job.</p>
+  </div>
+</div>
+
+<section id="shots" hidden>
+  <h2>A look at it</h2>
+  <div class="shots">
+    <img src="shots/shot-1.jpg" alt="">
+    <img src="shots/shot-2.jpg" alt="">
+    <img src="shots/shot-3.jpg" alt="">
+    <img src="shots/shot-4.jpg" alt="">
+    <img src="shots/shot-5.jpg" alt="">
+  </div>
+</section>
 
 <h2>Free, and Unlimited</h2>
-<p>The free game is one complete four-year cycle on two saves, with every
-nation available and nothing held back. <strong>Unlimited</strong> is one
-payment, once, for every cycle after that and as many saves as you want.</p>
-
-<h2>Languages</h2>
-<p>English and Czech.</p>
-
-<footer>FNM &middot; <a href="privacy.html">Privacy</a> &middot; <a href="support.html">Support</a></footer>
+<div class="tiers">
+  <div class="card">
+    <p class="price">Free</p>
+    <ul>
+      <li>One complete four-year cycle</li>
+      <li>Two save slots</li>
+      <li>Every nation in the world</li>
+      <li>Nothing held back</li>
+    </ul>
+  </div>
+  <div class="card">
+    <p class="price">Unlimited</p>
+    <ul>
+      <li>Every cycle from there on</li>
+      <li>As many saves as you want</li>
+      <li>One payment, once, no subscription</li>
+      <li>Every future update included</li>
+    </ul>
+  </div>
 </div>
+
+<footer>
+  FNM &middot; <a href="privacy.html">Privacy</a> &middot;
+  <a href="support.html">Support</a>
+</footer>
+
+</div>
+
+<script>
+// The gallery shows itself only once there are shots to show. Until then a
+// row of broken-image icons would be worse than no section at all.
+(function () {
+  var section = document.getElementById('shots');
+  var imgs = section.querySelectorAll('img');
+  var alive = imgs.length;
+  imgs.forEach(function (img) {
+    img.addEventListener('error', function () {
+      img.remove();
+      if (--alive === 0) section.hidden = true;
+    });
+    img.addEventListener('load', function () { section.hidden = false; });
+  });
+})();
+</script>
 </body>
 </html>
