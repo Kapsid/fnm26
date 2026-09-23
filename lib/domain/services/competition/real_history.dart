@@ -306,11 +306,11 @@ abstract final class RealHistory {
     // still in progress. Co-hosted by all three of North America's automatic
     // qualifiers.
     //
-    // CHECK THIS ROW AGAINST THE ACTUAL TOURNAMENT before trusting it. Every
-    // other row here is settled history; this one was written from outside it
-    // and has already been wrong once, with France in third until the manager
-    // pointed out it was England. The champion, the runner-up and the final
-    // score came from the same place and carry the same doubt.
+    // Every other row here is settled history. This one was written from
+    // outside the tournament and was wrong twice: France in third, and a 2-1
+    // final. The manager corrected both, so third and the score below are his
+    // and are right. Spain and Argentina have not been confirmed by anybody
+    // and came from the same place as the two mistakes.
     (
       year: 2026,
       competition: worldChampionship,
@@ -318,8 +318,8 @@ abstract final class RealHistory {
       champion: 'Spain',
       runnerUp: 'Argentina',
       third: 'England',
-      finalHome: 2,
-      finalAway: 1,
+      finalHome: 1,
+      finalAway: 0,
     ),
     // --- European Championship --------------------------------------------
     (
