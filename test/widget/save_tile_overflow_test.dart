@@ -38,10 +38,14 @@ void main() {
     ranking: 60,
   );
 
+  String _exportLabel(Locale locale) =>
+      locale.languageCode == 'en' ? 'Export this save' : 'Exportovat tuto hru';
+
   Future<void> pumpTile(
     WidgetTester tester,
     Locale locale, {
     double width = 320,
+    bool busy = false,
   }) async {
     tester.view
       ..physicalSize = Size(width, 700)
@@ -59,12 +63,17 @@ void main() {
             nation: nation,
             onContinue: () {},
             onDelete: () {},
-            onShare: () {},
+            onShare: busy ? null : () {},
           ),
         ),
       ),
     );
-    await tester.pumpAndSettle();
+    // A spinner never stops, so a busy tile would hang pumpAndSettle.
+    if (busy) {
+      await tester.pump();
+    } else {
+      await tester.pumpAndSettle();
+    }
   }
 
   for (final locale in [const Locale('en'), const Locale('cs')]) {
@@ -87,6 +96,44 @@ void main() {
         },
       );
     }
+
+    // A file action that is running has to LOOK like it is running. Writing a
+    // career out takes seconds on a long save, and a row that does not change
+    // when pressed reads as a row that ignored you, so it gets pressed again.
+    testWidgets('${locale.languageCode}: a running export shows a spinner', (
+      tester,
+    ) async {
+      await pumpTile(tester, locale, busy: true);
+
+      expect(find.byType(CircularProgressIndicator), findsOneWidget);
+      expect(find.text(_exportLabel(locale)), findsOneWidget);
+      // While it runs the row must be DEAD, or a second write queues behind
+      // the first. Found by predicate rather than by type: TextButton.icon
+      // builds a private SUBCLASS of TextButton, and byType is an exact match.
+      expect(
+        find.byWidgetPredicate(
+          (w) => w is TextButton && w.onPressed == null,
+        ),
+        findsOneWidget,
+        reason: 'a second export must not queue behind the first',
+      );
+    });
+
+    testWidgets('${locale.languageCode}: an idle export shows its icon', (
+      tester,
+    ) async {
+      await pumpTile(tester, locale);
+
+      expect(find.byType(CircularProgressIndicator), findsNothing);
+      expect(find.byIcon(Icons.ios_share_rounded), findsOneWidget);
+      expect(
+        find.byWidgetPredicate(
+          (w) => w is TextButton && w.onPressed != null,
+        ),
+        findsOneWidget,
+        reason: 'an idle export must be pressable',
+      );
+    });
 
     testWidgets('${locale.languageCode}: no text reaches the controls', (
       tester,

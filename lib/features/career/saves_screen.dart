@@ -26,12 +26,39 @@ import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
 
 /// Lists save games: continue, delete, or start a new one (subject to the
-/// free/Pro slot limit).
-class SavesScreen extends ConsumerWidget {
+/// free/Unlimited slot limit).
+class SavesScreen extends ConsumerStatefulWidget {
   const SavesScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<SavesScreen> createState() => _SavesScreenState();
+}
+
+class _SavesScreenState extends ConsumerState<SavesScreen> {
+  /// Whether one of the three file actions is running.
+  ///
+  /// Writing a career out, writing every save out, and reading one back all
+  /// go to disk and can take seconds on a long save. Nothing said so: the
+  /// manager pressed import, the share sheet did not appear yet, and the
+  /// screen sat there looking exactly as it had before, so he pressed it
+  /// again. One flag disables all three and puts a spinner on the one he
+  /// pressed, because a control that is working has to look different from a
+  /// control that ignored him.
+  bool _busy = false;
+
+  /// Runs a file action with the screen marked busy for its whole duration.
+  Future<void> _run(Future<void> Function() action) async {
+    if (_busy) return;
+    setState(() => _busy = true);
+    try {
+      await action();
+    } finally {
+      if (mounted) setState(() => _busy = false);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
     final savesAsync = ref.watch(savesProvider);
     final premium = ref.watch(premiumUnlockedProvider);
@@ -108,7 +135,15 @@ class SavesScreen extends ConsumerWidget {
                                   l.careerThisSave,
                               save.id,
                             ),
-                            onShare: () => _shareCareer(context, ref, save.id),
+                            onShare: _busy
+                                ? null
+                                : () => _run(
+                                    () => _shareCareer(
+                                      context,
+                                      ref,
+                                      save.id,
+                                    ),
+                                  ),
                           );
                         },
                       ),
@@ -175,11 +210,15 @@ class SavesScreen extends ConsumerWidget {
                       // is offered only while there is room for one.
                       if (!full)
                         TextButton.icon(
-                          onPressed: () => _importCareer(context, ref),
-                          icon: const Icon(
-                            Icons.file_download_outlined,
-                            size: 18,
-                          ),
+                          onPressed: _busy
+                              ? null
+                              : () => _run(() => _importCareer(context, ref)),
+                          icon: _busy
+                              ? const _Spinner()
+                              : const Icon(
+                                  Icons.file_download_outlined,
+                                  size: 18,
+                                ),
                           label: Text(l.careerImport),
                         ),
                       // Every save at once, which is the backup that actually
@@ -382,6 +421,24 @@ Future<void> _importCareer(BuildContext context, WidgetRef ref) async {
   );
 }
 
+/// The icon-sized spinner a file action wears while it runs.
+///
+/// Exactly the size of the icon it stands in for, so a button does not change
+/// width the moment it is pressed.
+class _Spinner extends StatelessWidget {
+  const _Spinner();
+
+  @override
+  Widget build(BuildContext context) => const SizedBox(
+    width: 18,
+    height: 18,
+    child: CircularProgressIndicator(
+      strokeWidth: 2,
+      color: AppColors.primary,
+    ),
+  );
+}
+
 /// One save in the list: who you are, where you are, and the three things you
 /// can do with it.
 class SaveTile extends StatelessWidget {
@@ -400,7 +457,9 @@ class SaveTile extends StatelessWidget {
   final VoidCallback onDelete;
 
   /// Writes this one career to a file and hands it to the share sheet.
-  final VoidCallback onShare;
+  /// Null while another file action is already running, which disables the
+  /// row's export button rather than queueing a second write behind the first.
+  final VoidCallback? onShare;
 
   @override
   Widget build(BuildContext context) {
@@ -503,7 +562,16 @@ class SaveTile extends StatelessWidget {
                       tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                     ),
                     onPressed: onShare,
-                    icon: const Icon(Icons.ios_share_rounded, size: 16),
+                    icon: onShare == null
+                        ? const SizedBox(
+                            width: 16,
+                            height: 16,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              color: AppColors.primary,
+                            ),
+                          )
+                        : const Icon(Icons.ios_share_rounded, size: 16),
                     label: Text(
                       l.careerExportSave,
                       style: AppTypography.labelSmall.copyWith(
