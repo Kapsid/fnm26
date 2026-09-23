@@ -24,30 +24,33 @@ void main() {
     return c;
   }
 
-  test('free tier allows 2 saves then blocks the 3rd', () async {
+  test('a free player gets two saves, and the third is refused', () async {
     container = build(premium: false);
     final service = container.read(careerServiceProvider);
 
-    expect((await service.create(nationId: 1, managerName: 'A')).isSuccess, isTrue);
-    expect((await service.create(nationId: 1, managerName: 'B')).isSuccess, isTrue);
+    for (var i = 0; i < kFreeSaveSlots; i++) {
+      final r = await service.create(nationId: 1, managerName: 'M$i');
+      expect(r.isSuccess, isTrue, reason: 'save ${i + 1}');
+    }
 
-    final third = await service.create(nationId: 1, managerName: 'C');
-    expect(third.isFailure, isTrue);
-    third.fold(
+    final over = await service.create(nationId: 1, managerName: 'X');
+    expect(over.isFailure, isTrue);
+    over.fold(
       (_) => fail('expected failure'),
       (f) => expect(f.code, 'slots_full'),
     );
   });
 
-  test('pro tier allows 5 saves then blocks the 6th', () async {
+  test('a buyer is never told the slots are full', () async {
     container = build(premium: true);
     final service = container.read(careerServiceProvider);
 
-    for (var i = 0; i < 5; i++) {
+    // Well past both the free limit and the ten-slot cap this used to carry:
+    // the purchase is sold as unlimited, so there is nothing left to hit.
+    for (var i = 0; i < 12; i++) {
       final r = await service.create(nationId: 1, managerName: 'M$i');
       expect(r.isSuccess, isTrue, reason: 'save ${i + 1}');
     }
-    expect((await service.create(nationId: 1, managerName: 'X')).isFailure, isTrue);
   });
 
   test('created save starts in July 2026 with cycle 0', () async {
@@ -65,8 +68,10 @@ void main() {
     container = build(premium: true);
     final service = container.read(careerServiceProvider);
 
-    final career =
-        (await service.create(nationId: 1, managerName: '   ')).valueOrNull!;
+    final career = (await service.create(
+      nationId: 1,
+      managerName: '   ',
+    )).valueOrNull!;
     expect(career.managerName, 'Manager');
   });
 }

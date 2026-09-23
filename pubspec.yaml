@@ -16,7 +16,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 # In Windows, build-name is used as the major, minor, and patch parts
 # of the product and file versions while build-number is used as the build suffix.
-version: 1.0.0+1
+version: 1.0.0+2
 
 environment:
   sdk: ^3.10.4
@@ -30,6 +30,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_localizations: # Generated AppLocalizations + Material/Cupertino l10n.
+    sdk: flutter
 
   cupertino_icons: ^1.0.8
   drift: ^2.34.0 # Local relational storage; the save file is the cloud artifact.
@@ -37,6 +39,9 @@ dependencies:
   freezed_annotation: ^3.1.0 # Immutable data models.
   go_router: ^17.3.0 # Declarative routing.
   in_app_purchase: ^3.3.0 # One-time premium unlock.
+  # Direct, so the entitlement can be read from StoreKit 2's verified
+  # transactions instead of a boolean anyone with the file could write.
+  in_app_purchase_storekit: ^0.4.10
   intl: ^0.20.2
   json_annotation: ^4.12.0 # JSON for seed data + models.
   meta: ^1.17.0 # @immutable etc. for pure-Dart core.
@@ -46,8 +51,10 @@ dependencies:
   # build_runner's AOT bootstrap on Dart 3.10. drift only needs ^3.1.5.
   sqlite3: ">=3.1.5 <3.3.0"
   sqlite3_flutter_libs: ^0.6.0+eol # Bundled native SQLite.
-  supabase_flutter: ^2.15.0 # Cloud auth + storage, used only via CloudSyncService.
   flutter_svg: ^2.3.0
+  shared_preferences: ^2.5.5
+  share_plus: ^12.0.0 # Hands an exported save to the OS share sheet.
+  file_picker: ^11.0.3 # Picks a save file back off the device to restore.
 
 dev_dependencies:
   flutter_test:
@@ -59,12 +66,32 @@ dev_dependencies:
   json_serializable: ^6.14.0
   mocktail: ^1.0.5
   very_good_analysis: ^10.1.0
+  flutter_launcher_icons: ^0.14.4
+
+flutter_launcher_icons:
+  android: true
+  ios: true
+  # The launcher tile: the artwork already carries its own dark rounded plate,
+  # cropped full-bleed so iOS and Android apply their OWN mask to it. Supplying
+  # the plate with its margin left the icon visibly inset beside its neighbours.
+  image_path: "assets/images/fnm_icon.png"
+  # iOS icons can't have transparency - flatten onto the app's dark background.
+  background_color_ios: "#121416"
+  remove_alpha_ios: true
+  min_sdk_android: 21
+  # Android's adaptive icon is a flat ground plus a transparent foreground it
+  # masks and parallaxes, so the foreground is the LOGO, not the plate.
+  adaptive_icon_background: "#121416"
+  adaptive_icon_foreground: "assets/images/fnm_logo.png"
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
 # The following section is specific to Flutter packages.
 flutter:
+
+  # Generate the AppLocalizations classes from lib/l10n/*.arb (see l10n.yaml).
+  generate: true
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
@@ -75,6 +102,7 @@ flutter:
     - assets/images/
     - assets/data/
     - assets/flags/
+    - assets/trophies/
 
   # Bundled variable fonts (offline-first). The wght axis is driven by
   # `fontWeight` in TextStyle — see lib/core/theme/app_typography.dart.

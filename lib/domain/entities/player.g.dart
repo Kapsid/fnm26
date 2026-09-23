@@ -15,6 +15,8 @@ _Player _$PlayerFromJson(Map<String, dynamic> json) => _Player(
   attributes: PlayerAttributes.fromJson(
     json['attributes'] as Map<String, dynamic>,
   ),
+  club: json['club'] as String? ?? 'Free agent',
+  clubCountry: json['clubCountry'] as String? ?? '',
 );
 
 Map<String, dynamic> _$PlayerToJson(_Player instance) => <String, dynamic>{
@@ -24,6 +26,8 @@ Map<String, dynamic> _$PlayerToJson(_Player instance) => <String, dynamic>{
   'age': instance.age,
   'position': _$PlayerPositionEnumMap[instance.position]!,
   'attributes': instance.attributes,
+  'club': instance.club,
+  'clubCountry': instance.clubCountry,
 };
 
 const _$PlayerPositionEnumMap = {

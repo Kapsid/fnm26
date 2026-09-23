@@ -1,19 +1,30 @@
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fnm/core/config/ui_language.dart';
 import 'package:fnm/data/db/app_database.dart';
+import 'package:fnm/data/repositories/drift_absence_repository.dart';
 import 'package:fnm/data/repositories/drift_career_repository.dart';
 import 'package:fnm/data/repositories/drift_competition_repository.dart';
 import 'package:fnm/data/repositories/drift_nation_repository.dart';
 import 'package:fnm/data/repositories/drift_player_repository.dart';
+import 'package:fnm/data/repositories/drift_ranking_release_repository.dart';
+import 'package:fnm/data/repositories/drift_ranking_repository.dart';
+import 'package:fnm/data/repositories/drift_seed_ranking_repository.dart';
 import 'package:fnm/data/repositories/drift_squad_repository.dart';
+import 'package:fnm/data/repositories/drift_tactic_familiarity_repository.dart';
 import 'package:fnm/data/repositories/drift_tactics_repository.dart';
 import 'package:fnm/data/seed/seed_loader.dart';
 import 'package:fnm/data/seed/seed_source.dart';
+import 'package:fnm/domain/repositories/absence_repository.dart';
 import 'package:fnm/domain/repositories/career_repository.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
 import 'package:fnm/domain/repositories/nation_repository.dart';
 import 'package:fnm/domain/repositories/player_repository.dart';
+import 'package:fnm/domain/repositories/ranking_release_repository.dart';
+import 'package:fnm/domain/repositories/ranking_repository.dart';
+import 'package:fnm/domain/repositories/seed_ranking_repository.dart';
 import 'package:fnm/domain/repositories/squad_repository.dart';
+import 'package:fnm/domain/repositories/tactic_familiarity_repository.dart';
 import 'package:fnm/domain/repositories/tactics_repository.dart';
 
 /// Data-layer dependency wiring.
@@ -26,13 +37,25 @@ import 'package:fnm/domain/repositories/tactics_repository.dart';
 /// The singleton Drift database, closed when the scope is disposed.
 final appDatabaseProvider = Provider<AppDatabase>((ref) {
   final db = AppDatabase();
-  ref.onDispose(db.close);
+  // Restoring a backup closes the database ITSELF, before replacing the file
+  // underneath it, and only then tears the app down — so by the time this
+  // runs the handle is often already shut. Closing twice is expected here, and
+  // is the one case where there is nothing to report: the goal (a closed
+  // database) has been reached either way.
+  ref.onDispose(() async {
+    try {
+      await db.close();
+    } on Object {
+      // Already closed by SaveBackupService.restore.
+    }
+  });
   return db;
 });
 
 /// Source of first-run seed data (bundled JSON assets).
-final seedSourceProvider =
-    Provider<SeedSource>((ref) => AssetSeedSource(rootBundle));
+final seedSourceProvider = Provider<SeedSource>(
+  (ref) => AssetSeedSource(rootBundle),
+);
 
 /// Seeds reference data on first run.
 final seedLoaderProvider = Provider<SeedLoader>(
@@ -49,11 +72,17 @@ final databaseReadyProvider = FutureProvider<void>((ref) async {
 });
 
 final nationRepositoryProvider = Provider<NationRepository>(
-  (ref) => DriftNationRepository(ref.watch(appDatabaseProvider)),
+  (ref) => DriftNationRepository(
+    ref.watch(appDatabaseProvider),
+    languageCode: ref.watch(uiLanguageCodeProvider),
+  ),
 );
 
 final playerRepositoryProvider = Provider<PlayerRepository>(
-  (ref) => DriftPlayerRepository(ref.watch(appDatabaseProvider)),
+  (ref) => DriftPlayerRepository(
+    ref.watch(appDatabaseProvider),
+    ref.watch(seedSourceProvider),
+  ),
 );
 
 final careerRepositoryProvider = Provider<CareerRepository>(
@@ -68,6 +97,27 @@ final tacticsRepositoryProvider = Provider<TacticsRepository>(
   (ref) => DriftTacticsRepository(ref.watch(appDatabaseProvider)),
 );
 
+final tacticFamiliarityRepositoryProvider =
+    Provider<TacticFamiliarityRepository>(
+      (ref) => DriftTacticFamiliarityRepository(ref.watch(appDatabaseProvider)),
+    );
+
 final squadRepositoryProvider = Provider<SquadRepository>(
   (ref) => DriftSquadRepository(ref.watch(appDatabaseProvider)),
+);
+
+final absenceRepositoryProvider = Provider<AbsenceRepository>(
+  (ref) => DriftAbsenceRepository(ref.watch(appDatabaseProvider)),
+);
+
+final rankingRepositoryProvider = Provider<RankingRepository>(
+  (ref) => DriftRankingRepository(ref.watch(appDatabaseProvider)),
+);
+
+final seedRankingRepositoryProvider = Provider<SeedRankingRepository>(
+  (ref) => DriftSeedRankingRepository(ref.watch(appDatabaseProvider)),
+);
+
+final rankingReleaseRepositoryProvider = Provider<RankingReleaseRepository>(
+  (ref) => DriftRankingReleaseRepository(ref.watch(appDatabaseProvider)),
 );

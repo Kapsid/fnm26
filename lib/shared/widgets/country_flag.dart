@@ -22,12 +22,12 @@ class CountryFlag extends StatelessWidget {
   }
 
   Widget _fallback() => ColoredBox(
-        color: const Color(0xFF1E2022),
-        child: Center(
-          child: Text(
-            code.toUpperCase(),
-            style: AppTypography.labelSmall,
-          ),
-        ),
-      );
+    color: const Color(0xFF1E2022),
+    child: Center(
+      child: Text(
+        code.toUpperCase(),
+        style: AppTypography.labelSmall,
+      ),
+    ),
+  );
 }

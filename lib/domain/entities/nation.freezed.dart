@@ -15,10 +15,20 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Nation {
 
- int get id; String get name;/// Short country code (e.g. `BRA`, `ENG`).
+ int get id;/// The name to SHOW — already resolved for the app's language (see
+/// `NationNames`). Everything user-facing prints this.
+ String get name;/// Short country code (e.g. `BRA`, `ENG`).
  String get code; Confederation get confederation;/// FIFA-style ranking position (lower is stronger).
  int get ranking;/// Whether this nation is available in the free demo.
- bool get isFreeDemo;
+ bool get isFreeDemo;/// The national team's home-kit colours as `#RRGGBB` hex — primary (shirt)
+/// and secondary (trim). Defined for every FIFA nation; the defaults are
+/// only a fallback for a nation constructed without them (e.g. in tests).
+ String get primaryColor; String get secondaryColor;/// The canonical ENGLISH name as stored in the seed data, whatever the UI
+/// language. A handful of things resolve a nation by name rather than by
+/// id — the real-history seeder above all — and those must not start
+/// missing every country the moment the app is switched to Czech.
+/// Empty means "same as [name]".
+ String get englishName;
 /// Create a copy of Nation
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -31,16 +41,16 @@ $NationCopyWith<Nation> get copyWith => _$NationCopyWithImpl<Nation>(this as Nat
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Nation&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.code, code) || other.code == code)&&(identical(other.confederation, confederation) || other.confederation == confederation)&&(identical(other.ranking, ranking) || other.ranking == ranking)&&(identical(other.isFreeDemo, isFreeDemo) || other.isFreeDemo == isFreeDemo));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Nation&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.code, code) || other.code == code)&&(identical(other.confederation, confederation) || other.confederation == confederation)&&(identical(other.ranking, ranking) || other.ranking == ranking)&&(identical(other.isFreeDemo, isFreeDemo) || other.isFreeDemo == isFreeDemo)&&(identical(other.primaryColor, primaryColor) || other.primaryColor == primaryColor)&&(identical(other.secondaryColor, secondaryColor) || other.secondaryColor == secondaryColor)&&(identical(other.englishName, englishName) || other.englishName == englishName));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,name,code,confederation,ranking,isFreeDemo);
+int get hashCode => Object.hash(runtimeType,id,name,code,confederation,ranking,isFreeDemo,primaryColor,secondaryColor,englishName);
 
 @override
 String toString() {
-  return 'Nation(id: $id, name: $name, code: $code, confederation: $confederation, ranking: $ranking, isFreeDemo: $isFreeDemo)';
+  return 'Nation(id: $id, name: $name, code: $code, confederation: $confederation, ranking: $ranking, isFreeDemo: $isFreeDemo, primaryColor: $primaryColor, secondaryColor: $secondaryColor, englishName: $englishName)';
 }
 
 
@@ -51,7 +61,7 @@ abstract mixin class $NationCopyWith<$Res>  {
   factory $NationCopyWith(Nation value, $Res Function(Nation) _then) = _$NationCopyWithImpl;
 @useResult
 $Res call({
- int id, String name, String code, Confederation confederation, int ranking, bool isFreeDemo
+ int id, String name, String code, Confederation confederation, int ranking, bool isFreeDemo, String primaryColor, String secondaryColor, String englishName
 });
 
 
@@ -68,7 +78,7 @@ class _$NationCopyWithImpl<$Res>
 
 /// Create a copy of Nation
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? code = null,Object? confederation = null,Object? ranking = null,Object? isFreeDemo = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? code = null,Object? confederation = null,Object? ranking = null,Object? isFreeDemo = null,Object? primaryColor = null,Object? secondaryColor = null,Object? englishName = null,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
@@ -76,7 +86,10 @@ as String,code: null == code ? _self.code : code // ignore: cast_nullable_to_non
 as String,confederation: null == confederation ? _self.confederation : confederation // ignore: cast_nullable_to_non_nullable
 as Confederation,ranking: null == ranking ? _self.ranking : ranking // ignore: cast_nullable_to_non_nullable
 as int,isFreeDemo: null == isFreeDemo ? _self.isFreeDemo : isFreeDemo // ignore: cast_nullable_to_non_nullable
-as bool,
+as bool,primaryColor: null == primaryColor ? _self.primaryColor : primaryColor // ignore: cast_nullable_to_non_nullable
+as String,secondaryColor: null == secondaryColor ? _self.secondaryColor : secondaryColor // ignore: cast_nullable_to_non_nullable
+as String,englishName: null == englishName ? _self.englishName : englishName // ignore: cast_nullable_to_non_nullable
+as String,
   ));
 }
 
@@ -161,10 +174,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  String name,  String code,  Confederation confederation,  int ranking,  bool isFreeDemo)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  String name,  String code,  Confederation confederation,  int ranking,  bool isFreeDemo,  String primaryColor,  String secondaryColor,  String englishName)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Nation() when $default != null:
-return $default(_that.id,_that.name,_that.code,_that.confederation,_that.ranking,_that.isFreeDemo);case _:
+return $default(_that.id,_that.name,_that.code,_that.confederation,_that.ranking,_that.isFreeDemo,_that.primaryColor,_that.secondaryColor,_that.englishName);case _:
   return orElse();
 
 }
@@ -182,10 +195,10 @@ return $default(_that.id,_that.name,_that.code,_that.confederation,_that.ranking
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  String name,  String code,  Confederation confederation,  int ranking,  bool isFreeDemo)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  String name,  String code,  Confederation confederation,  int ranking,  bool isFreeDemo,  String primaryColor,  String secondaryColor,  String englishName)  $default,) {final _that = this;
 switch (_that) {
 case _Nation():
-return $default(_that.id,_that.name,_that.code,_that.confederation,_that.ranking,_that.isFreeDemo);case _:
+return $default(_that.id,_that.name,_that.code,_that.confederation,_that.ranking,_that.isFreeDemo,_that.primaryColor,_that.secondaryColor,_that.englishName);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -202,10 +215,10 @@ return $default(_that.id,_that.name,_that.code,_that.confederation,_that.ranking
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  String name,  String code,  Confederation confederation,  int ranking,  bool isFreeDemo)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  String name,  String code,  Confederation confederation,  int ranking,  bool isFreeDemo,  String primaryColor,  String secondaryColor,  String englishName)?  $default,) {final _that = this;
 switch (_that) {
 case _Nation() when $default != null:
-return $default(_that.id,_that.name,_that.code,_that.confederation,_that.ranking,_that.isFreeDemo);case _:
+return $default(_that.id,_that.name,_that.code,_that.confederation,_that.ranking,_that.isFreeDemo,_that.primaryColor,_that.secondaryColor,_that.englishName);case _:
   return null;
 
 }
@@ -217,10 +230,12 @@ return $default(_that.id,_that.name,_that.code,_that.confederation,_that.ranking
 @JsonSerializable()
 
 class _Nation implements Nation {
-  const _Nation({required this.id, required this.name, required this.code, required this.confederation, required this.ranking, this.isFreeDemo = false});
+  const _Nation({required this.id, required this.name, required this.code, required this.confederation, required this.ranking, this.isFreeDemo = false, this.primaryColor = '#1E88E5', this.secondaryColor = '#FFFFFF', this.englishName = ''});
   factory _Nation.fromJson(Map<String, dynamic> json) => _$NationFromJson(json);
 
 @override final  int id;
+/// The name to SHOW — already resolved for the app's language (see
+/// `NationNames`). Everything user-facing prints this.
 @override final  String name;
 /// Short country code (e.g. `BRA`, `ENG`).
 @override final  String code;
@@ -229,6 +244,17 @@ class _Nation implements Nation {
 @override final  int ranking;
 /// Whether this nation is available in the free demo.
 @override@JsonKey() final  bool isFreeDemo;
+/// The national team's home-kit colours as `#RRGGBB` hex — primary (shirt)
+/// and secondary (trim). Defined for every FIFA nation; the defaults are
+/// only a fallback for a nation constructed without them (e.g. in tests).
+@override@JsonKey() final  String primaryColor;
+@override@JsonKey() final  String secondaryColor;
+/// The canonical ENGLISH name as stored in the seed data, whatever the UI
+/// language. A handful of things resolve a nation by name rather than by
+/// id — the real-history seeder above all — and those must not start
+/// missing every country the moment the app is switched to Czech.
+/// Empty means "same as [name]".
+@override@JsonKey() final  String englishName;
 
 /// Create a copy of Nation
 /// with the given fields replaced by the non-null parameter values.
@@ -243,16 +269,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Nation&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.code, code) || other.code == code)&&(identical(other.confederation, confederation) || other.confederation == confederation)&&(identical(other.ranking, ranking) || other.ranking == ranking)&&(identical(other.isFreeDemo, isFreeDemo) || other.isFreeDemo == isFreeDemo));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Nation&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.code, code) || other.code == code)&&(identical(other.confederation, confederation) || other.confederation == confederation)&&(identical(other.ranking, ranking) || other.ranking == ranking)&&(identical(other.isFreeDemo, isFreeDemo) || other.isFreeDemo == isFreeDemo)&&(identical(other.primaryColor, primaryColor) || other.primaryColor == primaryColor)&&(identical(other.secondaryColor, secondaryColor) || other.secondaryColor == secondaryColor)&&(identical(other.englishName, englishName) || other.englishName == englishName));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,name,code,confederation,ranking,isFreeDemo);
+int get hashCode => Object.hash(runtimeType,id,name,code,confederation,ranking,isFreeDemo,primaryColor,secondaryColor,englishName);
 
 @override
 String toString() {
-  return 'Nation(id: $id, name: $name, code: $code, confederation: $confederation, ranking: $ranking, isFreeDemo: $isFreeDemo)';
+  return 'Nation(id: $id, name: $name, code: $code, confederation: $confederation, ranking: $ranking, isFreeDemo: $isFreeDemo, primaryColor: $primaryColor, secondaryColor: $secondaryColor, englishName: $englishName)';
 }
 
 
@@ -263,7 +289,7 @@ abstract mixin class _$NationCopyWith<$Res> implements $NationCopyWith<$Res> {
   factory _$NationCopyWith(_Nation value, $Res Function(_Nation) _then) = __$NationCopyWithImpl;
 @override @useResult
 $Res call({
- int id, String name, String code, Confederation confederation, int ranking, bool isFreeDemo
+ int id, String name, String code, Confederation confederation, int ranking, bool isFreeDemo, String primaryColor, String secondaryColor, String englishName
 });
 
 
@@ -280,7 +306,7 @@ class __$NationCopyWithImpl<$Res>
 
 /// Create a copy of Nation
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = null,Object? code = null,Object? confederation = null,Object? ranking = null,Object? isFreeDemo = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = null,Object? code = null,Object? confederation = null,Object? ranking = null,Object? isFreeDemo = null,Object? primaryColor = null,Object? secondaryColor = null,Object? englishName = null,}) {
   return _then(_Nation(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
@@ -288,7 +314,10 @@ as String,code: null == code ? _self.code : code // ignore: cast_nullable_to_non
 as String,confederation: null == confederation ? _self.confederation : confederation // ignore: cast_nullable_to_non_nullable
 as Confederation,ranking: null == ranking ? _self.ranking : ranking // ignore: cast_nullable_to_non_nullable
 as int,isFreeDemo: null == isFreeDemo ? _self.isFreeDemo : isFreeDemo // ignore: cast_nullable_to_non_nullable
-as bool,
+as bool,primaryColor: null == primaryColor ? _self.primaryColor : primaryColor // ignore: cast_nullable_to_non_nullable
+as String,secondaryColor: null == secondaryColor ? _self.secondaryColor : secondaryColor // ignore: cast_nullable_to_non_nullable
+as String,englishName: null == englishName ? _self.englishName : englishName // ignore: cast_nullable_to_non_nullable
+as String,
   ));
 }
 

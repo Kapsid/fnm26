@@ -38,8 +38,8 @@ class _StyleGalleryScreenState extends State<StyleGalleryScreen> {
           Text('Display Large', style: text.displayLarge),
           Text('Headline Large', style: text.headlineLarge),
           Text('Headline Medium', style: text.headlineMedium),
-          Text('Body large — lead your nation.', style: text.bodyLarge),
-          Text('Body medium — squad and tactics.', style: text.bodyMedium),
+          Text('Body large, lead your nation.', style: text.bodyLarge),
+          Text('Body medium, squad and tactics.', style: text.bodyMedium),
           const Text('LABEL · MONO 0042', style: AppTypography.labelMedium),
 
           _section('Buttons'),
@@ -123,10 +123,10 @@ class _StyleGalleryScreenState extends State<StyleGalleryScreen> {
   }
 
   Widget _section(String title) => Padding(
-        padding: const EdgeInsets.only(
-          top: AppSpacing.lg,
-          bottom: AppSpacing.sm,
-        ),
-        child: Text(title, style: AppTypography.labelMedium),
-      );
+    padding: const EdgeInsets.only(
+      top: AppSpacing.lg,
+      bottom: AppSpacing.sm,
+    ),
+    child: Text(title, style: AppTypography.labelMedium),
+  );
 }

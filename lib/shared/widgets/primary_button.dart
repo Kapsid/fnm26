@@ -49,6 +49,9 @@ class PrimaryButton extends StatelessWidget {
               ],
               Text(
                 label,
+                maxLines: 1,
+                softWrap: false,
+                textAlign: TextAlign.center,
                 style: AppTypography.labelLarge.copyWith(
                   color: AppColors.onPrimary,
                 ),
@@ -75,7 +78,25 @@ class PrimaryButton extends StatelessWidget {
                 colors: [AppColors.primaryFixed, AppColors.primaryContainer],
               ),
             ),
-            child: Center(child: child),
+            // The icon and the label are ONE group, centred together, and the
+            // group scales down when it will not fit.
+            //
+            // Constraining the label itself instead — a Flexible around it —
+            // is the obvious fix and the wrong one: a flex child forces a Row
+            // to take all the width available to it, which silently defeats
+            // mainAxisSize.min. The label then spread across the whole button
+            // and the icon was pinned to the far left of it, on every screen
+            // with a primary button. Scaling the whole Row keeps the group
+            // together and keeps it in the middle, at any label length and in
+            // any language.
+            child: Center(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: AppSpacing.md,
+                ),
+                child: FittedBox(fit: BoxFit.scaleDown, child: child),
+              ),
+            ),
           ),
         ),
       ),

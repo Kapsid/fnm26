@@ -1,0 +1,179 @@
+import 'package:flutter/material.dart';
+import 'package:fnm/l10n/app_localizations.dart';
+import 'package:fnm/core/theme/app_colors.dart';
+import 'package:fnm/core/theme/app_dimens.dart';
+import 'package:fnm/core/theme/app_typography.dart';
+import 'package:fnm/domain/services/competition/venues.dart';
+import 'package:fnm/shared/widgets/widgets.dart';
+
+/// One host country and the grounds it stages the tournament in.
+typedef HostVenues = ({String code, String name, List<Venue> venues});
+
+/// The host nation(s) and their tournament cities/stadiums.
+///
+/// Takes every host rather than one: a co-hosted tournament is played across
+/// all of them, and showing a single country's grounds under a "HOSTS" heading
+/// simply loses the others.
+class VenuesCard extends StatelessWidget {
+  const VenuesCard({
+    required this.hosts,
+    this.mascot,
+    this.ball,
+    super.key,
+  });
+
+  final List<HostVenues> hosts;
+
+  /// This edition's official mascot and match ball, shown as the tournament's
+  /// flavour identity under the host. Null when the edition isn't drawn yet.
+  final String? mascot;
+  final String? ball;
+
+  /// "58,000" from 58000 — a thousands-separated seat count.
+  static String _capacity(int seats) {
+    final s = seats.toString();
+    final buf = StringBuffer();
+    for (var i = 0; i < s.length; i++) {
+      if (i > 0 && (s.length - i) % 3 == 0) buf.write(',');
+      buf.write(s[i]);
+    }
+    return buf.toString();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (hosts.isEmpty) return const SizedBox.shrink();
+    final joint = hosts.length > 1;
+
+    return AppCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              for (final h in hosts) ...[
+                FlagDisc(h.code, size: 28, highlighted: true),
+                const SizedBox(width: AppSpacing.xs),
+              ],
+              const SizedBox(width: AppSpacing.xs),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      joint ? 'CO-HOSTS' : 'HOST',
+                      style: AppTypography.labelSmall.copyWith(
+                        color: AppColors.primary,
+                      ),
+                    ),
+                    Text(
+                      hosts.map((h) => h.name).join(' & '),
+                      style: AppTypography.titleMedium,
+                    ),
+                  ],
+                ),
+              ),
+              const Icon(
+                Icons.stadium,
+                size: 20,
+                color: AppColors.onSurfaceVariant,
+              ),
+            ],
+          ),
+          const Divider(height: AppSpacing.md),
+          Text(
+            AppLocalizations.of(context).tourVenues,
+            style: AppTypography.labelSmall.copyWith(color: AppColors.primary),
+          ),
+          const SizedBox(height: AppSpacing.xs),
+          for (final h in hosts) ...[
+            // Only worth naming the country when there's more than one.
+            if (joint) ...[
+              const SizedBox(height: AppSpacing.xs),
+              Row(
+                children: [
+                  FlagDisc(h.code, size: 14),
+                  const SizedBox(width: AppSpacing.xs),
+                  Text(
+                    h.name.toUpperCase(),
+                    style: AppTypography.labelSmall.copyWith(
+                      color: AppColors.onSurfaceVariant,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+            for (final v in h.venues) _venueRow(v),
+          ],
+          if (mascot != null || ball != null) ...[
+            const Divider(height: AppSpacing.md),
+            if (mascot != null)
+              _identityRow(Icons.emoji_emotions_outlined, 'MASCOT', mascot!),
+            if (ball != null)
+              _identityRow(Icons.sports_soccer, 'MATCH BALL', ball!),
+          ],
+        ],
+      ),
+    );
+  }
+
+  Widget _identityRow(IconData icon, String label, String value) => Padding(
+    padding: const EdgeInsets.symmetric(vertical: 3),
+    child: Row(
+      children: [
+        Icon(icon, size: 16, color: AppColors.onSurfaceVariant),
+        const SizedBox(width: AppSpacing.sm),
+        Text(
+          label,
+          style: AppTypography.labelSmall.copyWith(
+            color: AppColors.primary,
+          ),
+        ),
+        const SizedBox(width: AppSpacing.sm),
+        Expanded(
+          child: Text(
+            value,
+            textAlign: TextAlign.end,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: AppTypography.bodyMedium,
+          ),
+        ),
+      ],
+    ),
+  );
+
+  Widget _venueRow(Venue v) => Padding(
+    padding: const EdgeInsets.symmetric(vertical: 3),
+    child: Row(
+      children: [
+        const Icon(
+          Icons.place_outlined,
+          size: 16,
+          color: AppColors.onSurfaceVariant,
+        ),
+        const SizedBox(width: AppSpacing.sm),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Half a ground's name is not a ground.
+              WholeText(
+                v.stadium,
+                maxLines: 1,
+                textAlign: TextAlign.start,
+                style: AppTypography.bodyMedium,
+              ),
+              Text(
+                '${v.city} · ${_capacity(v.capacity)} seats',
+                style: AppTypography.labelSmall.copyWith(
+                  color: AppColors.onSurfaceVariant,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    ),
+  );
+}

@@ -1,7 +1,7 @@
 # Game Mode — Design
 
 Everything is **local** (offline-first, SQLite). A "game" is a `Career` save. The
-manager picks a nation, names themselves, and plays through a **4-year World Cup
+manager picks a nation, names themselves, and plays through a **4-year World Championship
 cycle** starting **1 September 2026** (cycle 2026→2030).
 
 ## Saves & slots

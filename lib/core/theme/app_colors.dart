@@ -71,6 +71,50 @@ abstract final class AppColors {
   /// Positive accent (qualification / advancing positions).
   static const positive = Color(0xFF7FD1A6);
 
+  /// Caution accent (a best-third place that may advance via the play-off).
+  static const warning = Color(0xFFE7A85A);
+
+  // --- Rating / performance marks (match & player ratings) -----------------
+  // One scale, used app-wide. Previously these three hexes were copy-pasted
+  // into every screen that drew a rating pill; read [ratingColor] instead.
+  /// A strong performance (rating ≥ 7.5).
+  static const ratingGreat = Color(0xFF2E9E5B);
+
+  /// A solid performance (rating ≥ 6.5).
+  static const ratingGood = Color(0xFF4C86C6);
+
+  /// A poor performance (rating < 5.5).
+  static const ratingPoor = Color(0xFFD64545);
+
+  /// Parses a `#RRGGBB` (or `#AARRGGBB`) hex string — e.g. a nation's team
+  /// colour — into a [Color]. Falls back to [primary] on a malformed value.
+  static Color hex(String s) {
+    var h = s.replaceAll('#', '').trim();
+    if (h.length == 6) h = 'FF$h';
+    final v = int.tryParse(h, radix: 16);
+    return v == null ? primary : Color(v);
+  }
+
+  /// A match rating's colour on the shared 0–10 scale; 5.5–6.5 reads neutral.
+  static Color ratingColor(double r) {
+    if (r >= 7.5) return ratingGreat;
+    if (r >= 6.5) return ratingGood;
+    if (r >= 5.5) return onSurfaceVariant;
+    return ratingPoor;
+  }
+
+  // --- Podium / medals ------------------------------------------------------
+  // Single source for gold/silver/bronze/platinum; the same four hexes had
+  // drifted apart across the medal, achievement and challenge screens.
+  static const medalGold = Color(0xFFEFC94C);
+  static const medalSilver = Color(0xFFBFC7CE);
+  static const medalBronze = Color(0xFFCD8B62);
+  static const medalPlatinum = Color(0xFF8AD9D2);
+
+  // --- Movement (rank moved up / down since the campaign began) ------------
+  static const up = ratingGreat;
+  static const down = ratingPoor;
+
   // Brand extras (not part of ColorScheme)
   /// Hairline divider — silver-tinted at ~10% opacity (per the data-list spec).
   static Color get divider => onSurface.withValues(alpha: 0.10);

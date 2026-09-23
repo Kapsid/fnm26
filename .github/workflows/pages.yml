@@ -1,0 +1,37 @@
+# Publishes docs/site to GitHub Pages.
+#
+# Only that folder. The rest of docs/ is working material - the App Store
+# checklist, specs, progress notes - and none of it belongs at a public URL
+# just because Apple needs a privacy policy to point at.
+name: pages
+
+on:
+  push:
+    branches: [main]
+    paths: ['docs/site/**', '.github/workflows/pages.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# One deploy at a time; never cancel one that is mid-flight.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: docs/site
+      - id: deployment
+        uses: actions/deploy-pages@v4

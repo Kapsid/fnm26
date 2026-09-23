@@ -4,7 +4,6 @@ import 'package:fnm/features/tournaments/continental_detail_providers.dart';
 import 'package:fnm/features/tournaments/continental_detail_screen.dart';
 import 'package:fnm/features/tournaments/tournaments_providers.dart';
 import 'package:fnm/features/tournaments/tournaments_screen.dart';
-import 'package:fnm/shared/widgets/primary_button.dart';
 
 import '../helpers/fixtures.dart';
 import '../helpers/pump_app.dart';
@@ -23,6 +22,9 @@ void main() {
       final overview = TournamentsOverview(
         playerConfederation: Confederation.europe,
         nations: nations,
+        nextMatches: const {},
+        playerGroup: null,
+        worldCupHostId: null,
         statuses: {
           null: const TournamentStatus(
             phase: TournamentPhase.live,
@@ -61,16 +63,12 @@ void main() {
       // The decided continental cup surfaces its champion and unlocks.
       expect(find.text('CHAMPIONS'), findsOneWidget);
       expect(find.text('Spain'), findsWidgets);
-      expect(
-        find.widgetWithText(PrimaryButton, 'View Standings'),
-        findsWidgets,
-      );
       // Scroll the lazy list to reach the lower tiles.
       await tester.scrollUntilVisible(find.text('PAST WINNERS'), 300);
       expect(find.text('PAST WINNERS'), findsOneWidget);
-      // The upcoming African Championship stays locked.
-      await tester.scrollUntilVisible(find.text('Locked'), 300);
-      expect(find.text('Locked'), findsOneWidget);
+      // The upcoming African Championship stays locked (its status shows).
+      await tester.scrollUntilVisible(find.text('COMING SOON'), 300);
+      expect(find.text('COMING SOON'), findsOneWidget);
     });
   });
 
@@ -80,6 +78,9 @@ void main() {
         name: 'European Championship',
         confederation: Confederation.europe,
         isPlayerRegion: false,
+        hostCount: 1,
+        qualifyingGroups: const [],
+        groups: const [],
         knockout: const [],
         champion: null,
         scorers: const [],
@@ -90,7 +91,9 @@ void main() {
             championId: 1,
             runnerUpId: 2,
             thirdId: null,
+            thirdId2: null,
             hostId: null,
+            hostIds: <int>[],
             finalHomeScore: 2,
             finalAwayScore: 1,
             topScorerName: null,

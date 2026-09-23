@@ -1,5 +1,9 @@
 import 'package:fnm/core/rng/seeded_rng.dart';
+import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/group_standing.dart';
+import 'package:fnm/domain/services/competition/cross_group.dart';
+import 'package:fnm/domain/services/competition/qualification.dart';
+import 'package:fnm/domain/services/competition/qualification_format.dart';
 import 'package:fnm/domain/services/competition/round_robin.dart';
 
 /// A finals group draw: four nations plus their single round-robin fixtures.
@@ -23,41 +27,299 @@ class FinalsDraw {
   final List<FinalsGroupDraw> groups;
 }
 
+/// The outcome of a level knockout tie taken to extra time and, if needed, a
+/// penalty shootout. [homeScore]/[awayScore] are the score after extra time;
+/// the shootout kick lists are empty when extra time settled it.
+class KnockoutOutcome {
+  const KnockoutOutcome({
+    required this.homeScore,
+    required this.awayScore,
+    required this.afterExtraTime,
+    required this.homeKicks,
+    required this.awayKicks,
+  });
+
+  /// Score after extra time (equal when it went to penalties).
+  final int homeScore;
+  final int awayScore;
+
+  /// Whether the tie needed extra time (always true here — it is only built
+  /// from a level 90-minute score).
+  final bool afterExtraTime;
+
+  /// The shootout: one entry per kick taken, true = scored. Empty when extra
+  /// time produced a winner.
+  final List<bool> homeKicks;
+  final List<bool> awayKicks;
+
+  bool get wentToShootout => homeKicks.isNotEmpty || awayKicks.isNotEmpty;
+
+  int get homePens => homeKicks.where((s) => s).length;
+  int get awayPens => awayKicks.where((s) => s).length;
+
+  /// Whether the home side won the tie (in extra time or on penalties).
+  bool get homeWon =>
+      wentToShootout ? homePens > awayPens : homeScore > awayScore;
+}
+
 /// World Cup finals: a pot-based group draw (by world ranking) and the knockout
 /// bracket helpers. Pure and deterministic.
 abstract final class WorldCupFinals {
-  static const groupNames = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
+  static const groupNames = [
+    'A', 'B', 'C', 'D', 'E', 'F',
+    'G', 'H', 'I', 'J', 'K', 'L', //
+  ];
 
   /// Knockout round labels in progression order.
+  static const r32 = 'R32';
   static const r16 = 'R16';
   static const qf = 'QF';
   static const sf = 'SF';
   static const third = '3RD';
   static const finalRound = 'FINAL';
 
+  /// Selects the 48 World Cup finalists from every confederation's qualifying
+  /// tables: direct berths per confederation, then the two best entrants of the
+  /// intercontinental playoff, and finally every host in [hosts] (each replaces
+  /// the weakest-ranked qualifier it isn't already among). Shared by the finals
+  /// generator and the draw ceremony so both always agree.
+  static List<int> selectFinalists({
+    required Map<Confederation, List<List<GroupStanding>>> byConfederation,
+    required Map<int, int> rankingById,
+    required List<int> hosts,
+    SeededRng? playoffRng,
+    List<int>? playoffWinnersOverride,
+  }) {
+    int rank(int id) => rankingById[id] ?? 9999;
+    final qualifiers = <int>[];
+    for (final entry in byConfederation.entries) {
+      final fmt = QualificationFormat.forConfederation(entry.key);
+      qualifiers.addAll(
+        Qualification.qualifiers(entry.value, fmt.finalsBerths),
+      );
+    }
+    // The two remaining places go through the intercontinental play-off. A
+    // caller that has actually PLAYED the play-off passes its real winners in
+    // [playoffWinnersOverride]; otherwise the tie is decided here — an
+    // actually-simulated mini-bracket (strength-weighted) when an rng is given,
+    // else simply the two best-ranked entrants.
+    final playoffPool = playoffPoolFor(
+      byConfederation: byConfederation,
+      rankingById: rankingById,
+    );
+    qualifiers.addAll(
+      playoffWinnersOverride ??
+          (playoffRng == null
+              ? playoffPool.take(QualificationFormat.playoffBerths)
+              : playoffWinners(playoffPool, rankingById, playoffRng)),
+    );
+
+    // Every host auto-qualifies, each replacing the weakest non-host qualifier.
+    final missing = hosts.where((h) => !qualifiers.contains(h)).toList();
+    if (missing.isNotEmpty && qualifiers.isNotEmpty) {
+      qualifiers.sort((a, b) => rank(a).compareTo(rank(b)));
+      for (final h in missing) {
+        for (var i = qualifiers.length - 1; i >= 0; i--) {
+          if (!hosts.contains(qualifiers[i])) {
+            qualifiers.removeAt(i);
+            break;
+          }
+        }
+        qualifiers.add(h);
+      }
+    }
+    return qualifiers;
+  }
+
+  /// The most teams from each confederation a single group may hold.
+  ///
+  /// Derived from the field rather than written down, which is the whole trick:
+  /// a confederation with more entrants than there are groups CANNOT be held to
+  /// one per group, so its cap is however few it can be squeezed to. At a
+  /// 48-team World Cup that gives Europe two and everybody else one, which is
+  /// the real rule — and it arrives at it by arithmetic instead of by naming
+  /// Europe as a special case.
+  ///
+  /// It also switches itself off where it must. Every team in a CONTINENTAL cup
+  /// shares a confederation, so its cap works out to the group size and no
+  /// grouping is forbidden. Without that this same function, shared by both
+  /// draws, would make a continental group stage impossible to draw at all.
+  static Map<Confederation, int> confederationCaps({
+    required List<Confederation> confederations,
+    required int groupCount,
+  }) {
+    if (groupCount <= 0) return const {};
+    final counted = <Confederation, int>{};
+    for (final c in confederations) {
+      counted[c] = (counted[c] ?? 0) + 1;
+    }
+    return {
+      for (final e in counted.entries)
+        // Ceiling division: the fewest any group can be held to.
+        e.key: ((e.value + groupCount - 1) ~/ groupCount).clamp(1, 1 << 30),
+    };
+  }
+
+  /// Which group each team of one pot is drawn into, or null when no
+  /// arrangement satisfies [caps].
+  ///
+  /// A pot holds exactly one team per group, so this is a perfect matching
+  /// between the two. Searched by backtracking: the field is at most a dozen
+  /// either side, and a search that is allowed to fail and say so is better
+  /// than a shuffle that is re-rolled until it happens to be legal.
+  ///
+  /// The first [pinnedCount] slots are already fixed (the hosts, each in its
+  /// own opening group) and are matched where they stand.
+  static List<int>? _placePot({
+    required List<int> slice,
+    required List<List<int>> groups,
+    required Map<Confederation, int> caps,
+    required Map<int, Confederation> confederationById,
+    required int pinnedCount,
+    required SeededRng rng,
+  }) {
+    if (caps.isEmpty) return null;
+    final n = slice.length;
+    // What each group already holds, by confederation, from the pots drawn
+    // before this one.
+    final tally = [for (final _ in groups) <Confederation, int>{}];
+    for (var gi = 0; gi < groups.length; gi++) {
+      for (final id in groups[gi]) {
+        if (confederationById[id] case final c?) {
+          tally[gi][c] = (tally[gi][c] ?? 0) + 1;
+        }
+      }
+    }
+
+    // One shuffled order of groups, reused for every team in the pot, so the
+    // search is seeded and repeatable rather than depending on how far it
+    // happened to backtrack.
+    final order = [
+      ...rng.shuffled([for (var i = 0; i < n; i++) i]),
+    ];
+    final taken = List<bool>.filled(n, false);
+    final out = List<int>.filled(n, -1);
+
+    bool fits(int team, int gi) {
+      final c = confederationById[team];
+      if (c == null) return true;
+      return (tally[gi][c] ?? 0) < (caps[c] ?? 1 << 30);
+    }
+
+    bool place(int i) {
+      if (i == n) return true;
+      final team = slice[i];
+      // A pinned host is not free to move: it takes its own group or nothing.
+      final choices = i < pinnedCount ? [i] : order;
+      for (final gi in choices) {
+        if (taken[gi] || !fits(team, gi)) continue;
+        final c = confederationById[team];
+        taken[gi] = true;
+        out[i] = gi;
+        if (c != null) tally[gi][c] = (tally[gi][c] ?? 0) + 1;
+        if (place(i + 1)) return true;
+        taken[gi] = false;
+        out[i] = -1;
+        if (c != null) tally[gi][c] = tally[gi][c]! - 1;
+      }
+      return false;
+    }
+
+    return place(0) ? out : null;
+  }
+
   /// Draws [qualifierIds] into groups of four. Teams are seeded into four pots
-  /// by world ranking, then one team per pot is drawn into each group.
+  /// by world ranking, then one team per pot is drawn into each group. Each
+  /// [hosts] entry (when it is one of the qualifiers) is a top seed placed into
+  /// its own opening group (host 0 → Group A, host 1 → Group B, …), as at a
+  /// real finals with co-hosts.
+  ///
+  /// Give [confederationById] and no group may contain more teams from one
+  /// confederation than it has to — see [confederationCaps]. Leave it out and
+  /// the draw is exactly what it always was, which is what keeps every caller
+  /// that does not care (and every already-drawn save) untouched.
   static FinalsDraw drawGroups({
     required List<int> qualifierIds,
     required Map<int, int> rankingById,
     required int rngSeed,
+    List<int> hosts = const [],
+    int perGroup = 4,
+    Map<int, Confederation> confederationById = const {},
   }) {
     final rng = SeededRng(rngSeed ^ 0xF1A15);
-    final groupCount = qualifierIds.length ~/ 4;
+    final groupCount = qualifierIds.length ~/ perGroup;
     if (groupCount == 0) return const FinalsDraw(groups: []);
 
     final seeded = [...qualifierIds]
       ..sort(
         (a, b) => (rankingById[a] ?? 9999).compareTo(rankingById[b] ?? 9999),
       );
+    // Hosts are top seeds (pot 1) regardless of ranking — one per group,
+    // and never more than there are groups.
+    final activeHosts = [
+      for (final h in hosts)
+        if (seeded.contains(h)) h,
+    ].take(groupCount).toList();
+    for (final h in activeHosts.reversed) {
+      seeded
+        ..remove(h)
+        ..insert(0, h);
+    }
+
+    // How many of each confederation any one group may hold. Empty when the
+    // caller supplied no confederations, which switches the rule off.
+    final rawCaps = confederationById.isEmpty
+        ? const <Confederation, int>{}
+        : confederationCaps(
+            confederations: [
+              for (final id in qualifierIds)
+                if (confederationById[id] case final c?) c,
+            ],
+            groupCount: groupCount,
+          );
+    // A cap only means something if it is smaller than the group. Where every
+    // cap is the whole group — a continental cup, where one confederation is
+    // all there is — the rule forbids nothing, and the placement search is
+    // skipped rather than run to reach the answer it started from. Skipping it
+    // also leaves the seeded draw BIT FOR BIT what it was before this existed,
+    // because the search consumes randomness of its own.
+    final caps = rawCaps.values.any((c) => c < perGroup)
+        ? rawCaps
+        : const <Confederation, int>{};
 
     final groups = List.generate(groupCount, (_) => <int>[]);
-    for (var pot = 0; pot < 4; pot++) {
-      final slice = rng.shuffled(
-        seeded.sublist(pot * groupCount, (pot + 1) * groupCount),
-      );
-      for (var i = 0; i < groupCount; i++) {
-        groups[i].add(slice[i]);
+    for (var pot = 0; pot < perGroup; pot++) {
+      final slice = [
+        ...rng.shuffled(
+          seeded.sublist(pot * groupCount, (pot + 1) * groupCount),
+        ),
+      ];
+      // Force each host into its own opening group within pot 1 (host k → k).
+      if (pot == 0) {
+        for (var k = 0; k < activeHosts.length; k++) {
+          final hi = slice.indexOf(activeHosts[k]);
+          if (hi >= 0 && hi != k) {
+            final tmp = slice[k];
+            slice[k] = slice[hi];
+            slice[hi] = tmp;
+          }
+        }
+      }
+      // Slot i → group i is the draw when nothing constrains it, and it stays
+      // the draw whenever the constraint cannot be met — a tournament with an
+      // awkward field still gets drawn rather than throwing.
+      final placement =
+          _placePot(
+            slice: slice,
+            groups: groups,
+            caps: caps,
+            confederationById: confederationById,
+            pinnedCount: pot == 0 ? activeHosts.length : 0,
+            rng: rng,
+          ) ??
+          [for (var i = 0; i < slice.length; i++) i];
+      for (var i = 0; i < slice.length; i++) {
+        groups[placement[i]].add(slice[i]);
       }
     }
 
@@ -81,6 +343,86 @@ abstract final class WorldCupFinals {
     return FinalsDraw(groups: result);
   }
 
+  /// Cross-group ranking of standings: points, then goal difference, then goals
+  /// scored (best first).
+  static int _rank(GroupStanding a, GroupStanding b) {
+    final byPoints = b.points.compareTo(a.points);
+    if (byPoints != 0) return byPoints;
+    final byGd = b.goalDifference.compareTo(a.goalDifference);
+    if (byGd != 0) return byGd;
+    return b.goalsFor.compareTo(a.goalsFor);
+  }
+
+  /// Seeds the group winners, runners-up and the [bestThirds] best third-placed
+  /// teams into one bracket by cross-group rank, pairing the strongest seed
+  /// with the weakest. Models the modern formats that advance the best
+  /// third-placed teams: a 48-team World Cup (12 groups, 8 thirds → 32) and a
+  /// 24-team European Championship (6 groups, 4 thirds → 16). [pairWinners]
+  /// carries the bracket through to the final.
+  static List<(int, int)> knockoutWithThirds(
+    List<List<GroupStanding>> groups,
+    int bestThirds,
+  ) {
+    // Cross-group seeding compares teams that never met, so it runs on
+    // comparable records: with uneven groups, results against the bottom side
+    // of the bigger ones are stripped out first (see CrossGroup). Positions
+    // within each group are untouched.
+    final comparable = CrossGroup.comparable(groups);
+    // Which group each standing came from, so two teams out of the same group
+    // are never drawn against each other in the first knockout round.
+    final groupOf = <GroupStanding, int>{};
+    for (var gi = 0; gi < comparable.length; gi++) {
+      for (final s in comparable[gi]) {
+        groupOf[s] = gi;
+      }
+    }
+    final winners = [for (final g in comparable) g[0]]..sort(_rank);
+    final runners = [
+      for (final g in comparable)
+        if (g.length > 1) g[1],
+    ]..sort(_rank);
+    final thirds = [
+      for (final g in comparable)
+        if (g.length > 2) g[2],
+    ]..sort(_rank);
+    final seeds = [...winners, ...runners, ...thirds.take(bestThirds)];
+    final n = seeds.length;
+    // Strongest-vs-weakest pairs, then repair any that pit two teams from the
+    // same group by swapping the weaker side with another tie's — the standard
+    // fix real draw seedings use.
+    final pairs = [
+      for (var i = 0; i * 2 < n; i++) [seeds[i], seeds[n - 1 - i]],
+    ];
+    for (var p = 0; p < pairs.length; p++) {
+      if (groupOf[pairs[p][0]] != groupOf[pairs[p][1]]) continue;
+      for (var q = 0; q < pairs.length; q++) {
+        if (q == p) continue;
+        if (groupOf[pairs[p][0]] != groupOf[pairs[q][1]] &&
+            groupOf[pairs[q][0]] != groupOf[pairs[p][1]]) {
+          final tmp = pairs[p][1];
+          pairs[p][1] = pairs[q][1];
+          pairs[q][1] = tmp;
+          break;
+        }
+      }
+    }
+    return [for (final pr in pairs) (pr[0].nationId, pr[1].nationId)];
+  }
+
+  /// Round-of-32 pairings for a 48-team finals (12 groups of four): the 24
+  /// group qualifiers plus the eight best third-placed teams.
+  static List<(int, int)> roundOf32(List<List<GroupStanding>> groups) =>
+      knockoutWithThirds(groups, 8);
+
+  /// The best third-placed teams that reach the knockout for a groups-of-four
+  /// finals: 8 for a 48-team World Cup (12 groups), 4 for a 24-team continental
+  /// (6 groups), otherwise none (top two only).
+  static int bestThirdsFor(int groupCount) => switch (groupCount) {
+    12 => 8,
+    6 => 4,
+    _ => 0,
+  };
+
   /// Round-of-16 pairings from the finals group tables (ordered A…H): each
   /// group winner meets a runner-up from another group, halves kept apart.
   static List<(int, int)> roundOf16(List<List<GroupStanding>> groups) {
@@ -98,16 +440,376 @@ abstract final class WorldCupFinals {
     ];
   }
 
+  /// First knockout-round pairings for a continental finals with 2 or 4 groups:
+  /// each group winner meets a runner-up from another group, halves kept apart.
+  /// Four groups → quarter-finals (8 teams); two groups → semi-finals (4).
+  static List<(int, int)> knockoutFromGroups(List<List<GroupStanding>> groups) {
+    int w(int i) => groups[i][0].nationId;
+    int r(int i) => groups[i][1].nationId;
+    if (groups.length == 4) {
+      return [(w(0), r(1)), (w(2), r(3)), (w(1), r(0)), (w(3), r(2))];
+    }
+    if (groups.length == 2) {
+      return [(w(0), r(1)), (w(1), r(0))];
+    }
+    return [
+      for (var i = 0; i + 1 < groups.length; i += 2) (w(i), r(i + 1)),
+    ];
+  }
+
+  /// The Copa América format: two groups of five, the top FOUR of each group
+  /// advancing to the quarter-finals (only the last-placed side in each group
+  /// goes out). Cross-paired so group winners are kept apart to the final.
+  static List<(int, int)> copaQuarters(List<List<GroupStanding>> groups) {
+    int p(int g, int pos) => groups[g][pos].nationId;
+    // A = group 0, B = group 1; positions 0-3 are 1st-4th.
+    return [
+      (p(0, 0), p(1, 3)), // A1 v B4
+      (p(1, 1), p(0, 2)), // B2 v A3
+      (p(1, 0), p(0, 3)), // B1 v A4
+      (p(0, 1), p(1, 2)), // A2 v B3
+    ];
+  }
+
   /// Pairs consecutive winners (in bracket order) into the next round's ties.
   static List<(int, int)> pairWinners(List<int> winners) => [
-        for (var i = 0; i + 1 < winners.length; i += 2)
-          (winners[i], winners[i + 1]),
-      ];
+    for (var i = 0; i + 1 < winners.length; i += 2)
+      (winners[i], winners[i + 1]),
+  ];
 
-  /// Resolves a knockout score so there is always a winner: a level game goes
-  /// to a (seeded) shootout, modelled as one extra goal for the chosen side.
-  static (int, int) resolveTie(int home, int away, SeededRng rng) {
+  /// Resolves a knockout score so there is always a winner. A level game after
+  /// 90 goes to extra time and, if still level, a penalty shootout — see
+  /// [decideKnockout]. Returns the score to STORE: the after-extra-time score
+  /// when ET settled it, or the winner's score nudged by one when a shootout
+  /// did (so the stored fixture always shows a winner).
+  ///
+  /// The tie is tight but the stronger side is favoured — a coin flip made
+  /// every knockout a lottery, so [homeStrength]/[awayStrength] tilt both the
+  /// extra-time chances and the shootout.
+  static (int, int) resolveTie(
+    int home,
+    int away,
+    SeededRng rng, {
+    double homeStrength = 1,
+    double awayStrength = 1,
+  }) {
     if (home != away) return (home, away);
-    return rng.chance(0.5) ? (home + 1, away) : (home, away + 1);
+    final o = decideKnockout(
+      home,
+      away,
+      rng,
+      homeStrength: homeStrength,
+      awayStrength: awayStrength,
+    );
+    if (!o.wentToShootout) return (o.homeScore, o.awayScore);
+    // A shootout: store the winner one goal clear of the after-ET score.
+    return o.homeWon
+        ? (o.homeScore + 1, o.awayScore)
+        : (o.homeScore, o.awayScore + 1);
+  }
+
+  /// Plays out a level knockout: extra time (which may produce goals), then a
+  /// penalty shootout if still level. Deterministic from [rng]. The full detail
+  /// — the after-ET score and, if it went that far, the kick-by-kick shootout —
+  /// lets the match screen show the drama rather than just a nudged scoreline.
+  static KnockoutOutcome decideKnockout(
+    int home,
+    int away,
+    SeededRng rng, {
+    double homeStrength = 1,
+    double awayStrength = 1,
+    List<double> homeTakerSkill = const [],
+    List<double> awayTakerSkill = const [],
+  }) {
+    final total = homeStrength + awayStrength;
+    final homeShare = total <= 0 ? 0.5 : homeStrength / total;
+
+    // Extra time: a handful of half-chances, each falling to a side by strength
+    // and converting at a modest rate — so ET decides some ties and the rest go
+    // to penalties, as in the real game.
+    var h = home;
+    var a = away;
+    final chances = rng.rangeInt(2, 5);
+    for (var i = 0; i < chances; i++) {
+      if (!rng.chance(0.22)) continue; // most half-chances come to nothing
+      if (rng.chance(homeShare)) {
+        h++;
+      } else {
+        a++;
+      }
+    }
+    if (h != a) {
+      return KnockoutOutcome(
+        homeScore: h,
+        awayScore: a,
+        afterExtraTime: true,
+        homeKicks: const [],
+        awayKicks: const [],
+      );
+    }
+
+    // Still level — a shootout. Each side's per-kick conversion is tilted by
+    // strength (the stronger side, and its keeper, edge it) and then by WHO is
+    // taking it: [homeTakerSkill]/[awayTakerSkill] are per-kick multipliers in
+    // the order the takers step up, cycled once sudden death runs past the
+    // named five. Empty lists leave the old strength-only shootout, so a
+    // background tie between two AI sides is unchanged.
+    final homeBase = (0.75 + 0.12 * (homeShare - 0.5) * 2).clamp(0.55, 0.9);
+    final awayBase = (0.75 + 0.12 * (0.5 - homeShare) * 2).clamp(0.55, 0.9);
+    double convOf(double base, List<double> skill, int kick) => skill.isEmpty
+        ? base
+        : (base * skill[kick % skill.length]).clamp(0.35, 0.96);
+    final homeKicks = <bool>[];
+    final awayKicks = <bool>[];
+    int hs() => homeKicks.where((s) => s).length;
+    int as_() => awayKicks.where((s) => s).length;
+
+    // Whether the best-of-five result is already beyond reach — one side leads
+    // by more than the other has kicks remaining.
+    bool decided() {
+      final hRem = 5 - homeKicks.length;
+      final aRem = 5 - awayKicks.length;
+      return hs() > as_() + aRem || as_() > hs() + hRem;
+    }
+
+    // Best of five, home first — stop the moment it is decided.
+    for (var round = 0; round < 5; round++) {
+      if (decided()) break;
+      homeKicks.add(
+        rng.chance(convOf(homeBase, homeTakerSkill, homeKicks.length)),
+      );
+      if (decided()) break;
+      awayKicks.add(
+        rng.chance(convOf(awayBase, awayTakerSkill, awayKicks.length)),
+      );
+    }
+    // Sudden death: a pair of kicks each round until one side leads.
+    while (hs() == as_()) {
+      homeKicks.add(
+        rng.chance(convOf(homeBase, homeTakerSkill, homeKicks.length)),
+      );
+      awayKicks.add(
+        rng.chance(convOf(awayBase, awayTakerSkill, awayKicks.length)),
+      );
+    }
+
+    return KnockoutOutcome(
+      homeScore: h,
+      awayScore: a,
+      afterExtraTime: true,
+      homeKicks: homeKicks,
+      awayKicks: awayKicks,
+    );
+  }
+
+  /// The intercontinental play-off pool: each confederation's best entrants
+  /// below its direct cut-off, sorted by ranking (seeds first). The standard
+  /// field is six teams. Shared by finalist selection, the display bracket and
+  /// the playable play-off so all three agree on who is in it.
+  static List<int> playoffPoolFor({
+    required Map<Confederation, List<List<GroupStanding>>> byConfederation,
+    required Map<int, int> rankingById,
+  }) {
+    int rank(int id) => rankingById[id] ?? 9999;
+    final pool = <int>[];
+    for (final entry in byConfederation.entries) {
+      final fmt = QualificationFormat.forConfederation(entry.key);
+      if (fmt.playoffEntrants <= 0) continue;
+      final direct = Qualification.qualifiers(entry.value, fmt.finalsBerths);
+      final withEntrants = Qualification.qualifiers(
+        entry.value,
+        fmt.finalsBerths + fmt.playoffEntrants,
+      );
+      pool.addAll(withEntrants.skip(direct.length));
+    }
+    pool.sort((a, b) => rank(a).compareTo(rank(b)));
+    return pool;
+  }
+
+  /// The intercontinental play-off winners ([QualificationFormat.playoffBerths]
+  /// places). The entrants are seeded by ranking; in the standard six-team
+  /// field the top two get byes to the path finals while the other four contest
+  /// two semis, and each semi winner meets a seed for a World Cup place. Each
+  /// tie is a strength-weighted, deterministic single match.
+  ///
+  /// A tie listed in [playedResults] — keyed by [tieKey] — was actually played,
+  /// and its winner stands. That is how a manager in the pool decides his own
+  /// fate: without it every tie was settled here, at finalist selection, and a
+  /// manager was eliminated from a World Cup he never got to play for.
+  static List<int> playoffWinners(
+    List<int> pool,
+    Map<int, int> rankingById,
+    SeededRng rng, {
+    Map<String, int> playedResults = const {},
+  }) {
+    const berths = QualificationFormat.playoffBerths;
+    if (pool.length <= berths) return pool;
+    int r(int id) => rankingById[id] ?? 9999;
+    final seeds = [...pool]..sort((a, b) => r(a).compareTo(r(b)));
+    if (seeds.length == 6) {
+      final w1 = _settle(
+        tieKey(round: playoffSemiRound, slot: 0),
+        seeds[2],
+        seeds[5],
+        rankingById,
+        rng,
+        playedResults,
+      );
+      final w2 = _settle(
+        tieKey(round: playoffSemiRound, slot: 1),
+        seeds[3],
+        seeds[4],
+        rankingById,
+        rng,
+        playedResults,
+      );
+      return [
+        _settle(
+          tieKey(round: playoffFinalRound, slot: 0),
+          seeds[0],
+          w1,
+          rankingById,
+          rng,
+          playedResults,
+        ),
+        _settle(
+          tieKey(round: playoffFinalRound, slot: 1),
+          seeds[1],
+          w2,
+          rankingById,
+          rng,
+          playedResults,
+        ),
+      ];
+    }
+    // Uncommon field size — take the best-ranked to fill the berths.
+    return seeds.take(berths).toList();
+  }
+
+  /// The two rounds of the six-team play-off, as they appear in a [tieKey] and
+  /// on a stored fixture.
+  static const String playoffSemiRound = 'SEMI';
+  static const String playoffFinalRound = 'FINAL';
+
+  /// A stable identifier for one play-off tie, so a played result can be matched
+  /// back to the slot it settled. Deliberately derived from the slot rather than
+  /// from the nations in it: the bracket is recomputed every time it is shown,
+  /// and a key made of nation ids would move the moment an earlier round was
+  /// played for real.
+  static String tieKey({required String round, required int slot}) =>
+      'ICPO-$round-$slot';
+
+  /// Settles one tie: a played result if there is one, otherwise the model.
+  static int _settle(
+    String key,
+    int a,
+    int b,
+    Map<int, int> rankingById,
+    SeededRng rng,
+    Map<String, int> playedResults,
+  ) {
+    final played = playedResults[key];
+    // A played tie is the truth. A result naming somebody who is not in this
+    // tie is stale — an earlier round has since been replayed — and is ignored
+    // rather than allowed to put a nation into a bracket it never reached.
+    if (played != null && (played == a || played == b)) return played;
+    return _playoffMatch(a, b, rankingById, rng);
+  }
+
+  /// One play-off tie: the stronger (lower-ranked) side is favoured, but a
+  /// single knockout always leaves room for a surprise.
+  static int _playoffMatch(
+    int a,
+    int b,
+    Map<int, int> rankingById,
+    SeededRng rng,
+  ) {
+    final ra = rankingById[a] ?? 9999;
+    final rb = rankingById[b] ?? 9999;
+    final winA = (0.5 + (rb - ra) * 0.006).clamp(0.2, 0.8);
+    return rng.chance(winA) ? a : b;
+  }
+
+  /// The full intercontinental play-off bracket as a list of ties, for display.
+  ///
+  /// Rebuilds the same six-team field as [selectFinalists]/[playoffWinners] and
+  /// replays it tie-by-tie, so — called with the SAME seed the finalist
+  /// selection used — the recorded winners are exactly the two nations that
+  /// took the final World Cup places. The two path finals decide those places.
+  ///
+  /// [pool] overrides the field when the caller already has it (it is otherwise
+  /// derived from [byConfederation] by [playoffPoolFor]). [playedResults] and
+  /// [playedScores] carry the ties the manager actually played, keyed by
+  /// [tieKey] — the bracket must show what happened on the pitch, or it would
+  /// contradict the finals draw it is explaining.
+  static List<PlayoffTie> playoffBracket({
+    required Map<Confederation, List<List<GroupStanding>>> byConfederation,
+    required Map<int, int> rankingById,
+    required SeededRng rng,
+    List<int>? pool,
+    Map<String, int> playedResults = const {},
+    Map<String, (int, int)> playedScores = const {},
+  }) {
+    final field =
+        pool ??
+        playoffPoolFor(
+          byConfederation: byConfederation,
+          rankingById: rankingById,
+        );
+    int rank(int id) => rankingById[id] ?? 9999;
+    final seeds = [...field]..sort((a, b) => rank(a).compareTo(rank(b)));
+    // Mirror playoffWinners' six-team bracket exactly (same tie order, same
+    // keys, same match function) so the winners match the real finalist
+    // selection.
+    if (seeds.length != 6) return const [];
+    final ties = <PlayoffTie>[];
+    int add(int a, int b, {required String round, required int slot}) {
+      // The winner is decided on the SAME rng stream as playoffWinners, so the
+      // finals berths shown here match the real selection exactly. A plausible
+      // scoreline is then drawn on a SEPARATE, tie-derived stream, so adding it
+      // for display never shifts who actually goes through — unless the tie was
+      // really played, in which case both come from the match.
+      final key = tieKey(round: round, slot: slot);
+      final w = _settle(key, a, b, rankingById, rng, playedResults);
+      final loser = w == a ? b : a;
+      final (wg, lg) = playedScores[key] ?? _playoffScore(w, loser);
+      ties.add((
+        home: a,
+        away: b,
+        homeScore: a == w ? wg : lg,
+        awayScore: a == w ? lg : wg,
+        winner: w,
+        isFinal: round == playoffFinalRound,
+      ));
+      return w;
+    }
+
+    final w1 = add(seeds[2], seeds[5], round: playoffSemiRound, slot: 0);
+    final w2 = add(seeds[3], seeds[4], round: playoffSemiRound, slot: 1);
+    add(seeds[0], w1, round: playoffFinalRound, slot: 0);
+    add(seeds[1], w2, round: playoffFinalRound, slot: 1);
+    return ties;
+  }
+
+  /// A plausible decisive scoreline for a play-off tie, as (winnerGoals,
+  /// loserGoals), on a stream derived only from the two nations — independent of
+  /// the winner-deciding rng, so it's purely cosmetic and deterministic.
+  static (int, int) _playoffScore(int winner, int loser) {
+    final side = SeededRng((winner * 131) ^ (loser * 17) ^ 0x9E3B);
+    final wg = 1 + side.nextInt(3); // 1..3
+    final lg = side.nextInt(wg); // 0..wg-1 (winner always ahead)
+    return (wg, lg);
   }
 }
+
+/// One intercontinental play-off tie for display: the two nations, the
+/// scoreline, the winner, and whether it's a path final (whose winner takes a
+/// World Cup place).
+typedef PlayoffTie = ({
+  int home,
+  int away,
+  int homeScore,
+  int awayScore,
+  int winner,
+  bool isFinal,
+});

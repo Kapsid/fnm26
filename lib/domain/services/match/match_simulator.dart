@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:fnm/core/rng/seeded_rng.dart';
 import 'package:fnm/domain/entities/nation.dart';
 
@@ -35,19 +37,52 @@ class RatingMatchSimulator implements MatchSimulator {
     required int homeStrength,
     required int awayStrength,
     required SeededRng rng,
+    bool homeAdvantage = true,
   }) {
-    final diff = (homeStrength + 5) - awayStrength; // +5 home advantage
-    final homeXg = (1.3 + diff * 0.03).clamp(0.2, 4.5);
-    final awayXg = (1.1 - diff * 0.03).clamp(0.2, 4.5);
-    return MatchOutcome(_goals(homeXg, rng), _goals(awayXg, rng));
+    // +5 home advantage — but a neutral-venue finals gives neither side one.
+    final diff = (homeStrength + (homeAdvantage ? 5 : 0)) - awayStrength;
+    // Strength tells MULTIPLICATIVELY, not as a flat slope. The old linear
+    // +0.05 goals per point meant every point of the gap was worth as much
+    // between two good sides as between a superpower and a minnow: ten points
+    // (a Brazil against an Ecuador) already swung a full goal each way and read
+    // like a mismatch. Scaling instead means a modest gap barely moves the
+    // scoreline while a real gulf still runs away — and the underdog's xG tails
+    // off toward zero rather than hitting a floor.
+    // 0.026 → 0.028: ONE notch, measured either side. At 0.026 a top-eight
+    // seed won 63% of simulated 32-team brackets and a bottom-half seed won
+    // one in six, which is why the world kept throwing up champions nobody
+    // could place and then watching them dominate. At 0.028 the favourites
+    // hold rather more of it without the top end moving at all — the
+    // Brazil-against-San-Marino rout is held up by the chance-rate cap, not by
+    // this exponent, which is exactly why this is the right dial to turn.
+    // See world_variance_test for the numbers and match_balance_test, which
+    // pins the other simulator this is calibrated against.
+    final edge = exp(0.028 * diff);
+    final homeXg = (1.30 * edge).clamp(0.10, 5.5);
+    final awayXg = (1.15 / edge).clamp(0.10, 5.5);
+    return _scoreline(homeXg, awayXg, rng);
   }
 
-  int _goals(double expected, SeededRng rng) {
-    var goals = 0;
-    // Sample ~Poisson by summing independent chances across 8 segments.
+  /// Samples both scorelines together — segment by segment, in step — so a side
+  /// that has pulled well clear can ease off for the rest of the match. Sampled
+  /// apart, the two are memoryless and a hot seed runs away to seven.
+  MatchOutcome _scoreline(double homeXg, double awayXg, SeededRng rng) {
+    var home = 0;
+    var away = 0;
+    // ~Poisson by summing independent chances across 8 segments.
     for (var i = 0; i < 8; i++) {
-      if (rng.chance(expected / 8)) goals++;
+      if (rng.chance(homeXg / 8 * _blowoutDamping(home, away))) home++;
+      if (rng.chance(awayXg / 8 * _blowoutDamping(away, home))) away++;
     }
-    return goals;
+    return MatchOutcome(home, away);
+  }
+
+  /// Once a side is well clear it stops chasing goals — substitutions, a
+  /// dropped tempo, and an opponent packing the box. The live engine damps its
+  /// scoring the same way; the two are always tuned together.
+  double _blowoutDamping(int scored, int conceded) {
+    final margin = scored - conceded;
+    if (margin < 3) return 1.0;
+    return 1.0 / (1.0 + (margin - 2) * 0.6);
   }
 }

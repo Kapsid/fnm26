@@ -9,7 +9,11 @@ void main() {
   group('PlayerPosition.category', () {
     test('maps every position to the right broad category', () {
       expect(PlayerPosition.gk.category, PositionCategory.goalkeeper);
-      for (final p in [PlayerPosition.lb, PlayerPosition.cb, PlayerPosition.rb]) {
+      for (final p in [
+        PlayerPosition.lb,
+        PlayerPosition.cb,
+        PlayerPosition.rb,
+      ]) {
         expect(p.category, PositionCategory.defender, reason: p.name);
       }
       for (final p in [
@@ -21,7 +25,11 @@ void main() {
       ]) {
         expect(p.category, PositionCategory.midfielder, reason: p.name);
       }
-      for (final p in [PlayerPosition.lw, PlayerPosition.rw, PlayerPosition.st]) {
+      for (final p in [
+        PlayerPosition.lw,
+        PlayerPosition.rw,
+        PlayerPosition.st,
+      ]) {
         expect(p.category, PositionCategory.forward, reason: p.name);
       }
     });
@@ -38,45 +46,39 @@ void main() {
       }
     });
 
-    test('a striker is rewarded for finishing more than for tackling', () {
-      const finisher = PlayerAttributes(
-        passing: 60,
-        shooting: 95,
-        dribbling: 80,
-        tackling: 30,
-        positioning: 80,
-        composure: 85,
-        decisions: 70,
-        pace: 88,
-        stamina: 70,
-        strength: 70,
+    test('a striker weights technical ability above stamina', () {
+      const technician = PlayerAttributes(
+        physical: 70,
+        technical: 95,
+        stamina: 50,
       );
-      const tackler = PlayerAttributes(
-        passing: 60,
-        shooting: 30,
-        dribbling: 80,
-        tackling: 95,
-        positioning: 80,
-        composure: 85,
-        decisions: 70,
-        pace: 88,
-        stamina: 70,
-        strength: 70,
+      const runner = PlayerAttributes(
+        physical: 70,
+        technical: 50,
+        stamina: 95,
       );
 
-      final finisherOverall =
-          OverallRating.forPosition(PlayerPosition.st, finisher);
-      final tacklerOverall =
-          OverallRating.forPosition(PlayerPosition.st, tackler);
+      final technicianOverall = OverallRating.forPosition(
+        PlayerPosition.st,
+        technician,
+      );
+      final runnerOverall = OverallRating.forPosition(
+        PlayerPosition.st,
+        runner,
+      );
 
-      expect(finisherOverall, greaterThan(tacklerOverall));
+      expect(technicianOverall, greaterThan(runnerOverall));
     });
 
     test('result is clamped to 1..99', () {
-      expect(OverallRating.forPosition(PlayerPosition.st, flatAttributes(99)),
-          lessThanOrEqualTo(99));
-      expect(OverallRating.forPosition(PlayerPosition.gk, flatAttributes(1)),
-          greaterThanOrEqualTo(1));
+      expect(
+        OverallRating.forPosition(PlayerPosition.st, flatAttributes(99)),
+        lessThanOrEqualTo(99),
+      );
+      expect(
+        OverallRating.forPosition(PlayerPosition.gk, flatAttributes(1)),
+        greaterThanOrEqualTo(1),
+      );
     });
   });
 

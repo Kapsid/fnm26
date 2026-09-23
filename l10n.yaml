@@ -1,0 +1,22 @@
+# Configuration for Flutter's gen-l10n. Runs automatically on build (because
+# `flutter: generate: true` is set in pubspec.yaml) and turns the ARB files in
+# lib/l10n/ into a typed `AppLocalizations` class.
+#
+# To add a language: copy lib/l10n/app_en.arb to app_<locale>.arb (e.g.
+# app_es.arb), translate the values (keep the keys and any {placeholders}), and
+# rebuild — the new locale is picked up automatically.
+arb-dir: lib/l10n
+template-arb-file: app_en.arb
+output-localization-file: app_localizations.dart
+output-class: AppLocalizations
+# Untranslated keys fall back to the template (English) rather than failing.
+untranslated-messages-file: lib/l10n/untranslated.txt
+nullable-getter: false
+# English first in `supportedLocales`, which is what makes it the FALLBACK.
+# Flutter's default locale resolution hands a device whose language we do not
+# support the FIRST supported locale, and gen-l10n otherwise orders the list
+# alphabetically by locale code — which put Czech first and gave every German,
+# French or Spanish phone in the world the whole app in Czech. English is the
+# template language (`app_en.arb`), so English is what an unsupported language
+# should fall back to.
+preferred-supported-locales: [en]

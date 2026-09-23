@@ -6,8 +6,22 @@ import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/fixture.dart';
+import 'package:fnm/domain/entities/group_standing.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
+import 'package:fnm/domain/services/competition/continental_cups.dart';
+import 'package:fnm/domain/services/competition/cross_group.dart';
+import 'package:fnm/domain/services/competition/finals.dart';
+import 'package:fnm/domain/services/competition/group_advancement.dart';
+import 'package:fnm/domain/services/competition/trophies.dart';
+import 'package:fnm/features/tournaments/best_thirds.dart';
 import 'package:fnm/features/tournaments/continental_detail_providers.dart';
+import 'package:fnm/features/tournaments/tournament_bracket.dart';
+import 'package:fnm/features/tournaments/tournament_awards.dart';
+import 'package:fnm/features/tournaments/tournament_history.dart';
+import 'package:fnm/features/tournaments/tournament_holders_row.dart';
+import 'package:fnm/features/tournaments/tournament_stats.dart';
+import 'package:fnm/features/tournaments/tournament_summary.dart';
+import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
 
@@ -24,25 +38,66 @@ class ContinentalDetailScreen extends ConsumerWidget {
   final int careerId;
   final Confederation confederation;
 
-  static const List<(String, String)> _bracketRounds = [
+  static const List<BracketRound> _bracketRounds = [
     ('CR16', 'Round of 16'),
     ('CQF', 'Quarter-finals'),
     ('CSF', 'Semi-finals'),
-    ('C3RD', 'Third place'),
     ('CFINAL', 'Final'),
   ];
 
+  /// The main knockout ladder (excludes the third-place play-off, which hangs
+  /// off the side rather than feeding the final), for the bracket columns.
+  static const List<BracketRound> _ladder = [
+    ('CR16', 'R16'),
+    ('CQF', 'QF'),
+    ('CSF', 'SF'),
+    ('CFINAL', 'Final'),
+  ];
+
+  /// Whether this cup is reached through a qualifying campaign at all.
+  ///
+  /// The South America Cup is contested by the whole confederation — every
+  /// CONMEBOL nation is in it, so there is nothing to qualify for. Its
+  /// qualifying tab was permanently empty and only ever explained its own
+  /// absence, so the cup simply doesn't have one.
+  bool get _hasQualifying =>
+      ContinentalCups.byConfederation[confederation]?.qualifying ?? true;
+
+  /// The tab to land on: wherever this championship actually is, as a real tab
+  /// index (0 = summary) — everything after summary shifts down by one on a cup
+  /// with no qualifying tab.
+  int _liveTab(ContinentalData? data) {
+    final finals = _hasQualifying ? 2 : 1;
+    final bracket = finals + 1;
+    final history = bracket + 3; // awards, scorers, history
+    if (data == null) return 0;
+    // Another confederation's cup is simulated in the background but now has
+    // real fixtures — land on its bracket if one exists, else its history.
+    if (!data.isPlayerRegion) {
+      return data.knockout.isNotEmpty ? bracket : history;
+    }
+    if (data.knockout.isNotEmpty) return bracket;
+    if (data.groups.isNotEmpty && data.finalsDrawWatched) return finals;
+    // Qualifying when there is one, else the finals group stage.
+    return 1;
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l = AppLocalizations.of(context);
     final dataAsync = ref.watch(
       continentalDetailProvider((
         careerId: careerId,
         confederation: confederation,
       )),
     );
+    final liveTab = _liveTab(dataAsync.valueOrNull);
 
     return DefaultTabController(
-      length: 3,
+      // See CupDetailScreen: initialIndex is read once, before the data lands.
+      key: ValueKey(liveTab),
+      length: _hasQualifying ? 8 : 7,
+      initialIndex: liveTab,
       child: Scaffold(
         appBar: AppBar(
           leading: IconButton(
@@ -52,63 +107,198 @@ class ContinentalDetailScreen extends ConsumerWidget {
           ),
           title: Text(
             dataAsync.maybeWhen(
-              data: (d) => d?.name.toUpperCase() ?? 'CHAMPIONSHIP',
-              orElse: () => 'CHAMPIONSHIP',
+              data: (d) => d?.name.toUpperCase() ?? l.tourContChampionship,
+              orElse: () => l.tourContChampionship,
             ),
             style: AppTypography.labelMedium.copyWith(color: AppColors.primary),
           ),
           centerTitle: true,
-          bottom: const TabBar(
-            labelColor: AppColors.onSurface,
-            unselectedLabelColor: AppColors.onSurfaceVariant,
-            indicatorColor: AppColors.primary,
-            tabs: [
-              Tab(text: 'BRACKET'),
-              Tab(text: 'SCORERS'),
-              Tab(text: 'HISTORY'),
-            ],
+          // The tabs sit right on top of the content otherwise; the extra
+          // height gives them room to breathe.
+          bottom: PreferredSize(
+            preferredSize: const Size.fromHeight(kTournamentTabBarHeight),
+            child: TabBar(
+              isScrollable: true,
+              labelColor: AppColors.onSurface,
+              unselectedLabelColor: AppColors.onSurfaceVariant,
+              indicatorColor: AppColors.primary,
+              tabs: [
+                Tab(text: l.tourContTabSummary),
+                if (_hasQualifying) Tab(text: l.tourContTabQualifying),
+                Tab(text: l.tourContTabFinals),
+                Tab(text: l.tourContTabBracket),
+                Tab(text: l.tourContTabAwards),
+                Tab(text: l.tourContTabScorers),
+                Tab(text: l.tourContTabHistory),
+                Tab(text: l.tourContTabRecords),
+              ],
+            ),
           ),
         ),
         body: dataAsync.when(
           loading: () => const Center(child: CircularProgressIndicator()),
-          error: (e, _) => Center(child: Text('Could not load cup.\n$e')),
+          error: (e, _) =>
+              Center(child: Text(l.tourContCouldNotLoadCup(e.toString()))),
           data: (data) {
             if (data == null) {
-              return const Center(child: Text('No cup data.'));
+              return Center(child: Text(l.tourContNoCupData));
             }
             String code(int id) => data.nations[id]?.code ?? '??';
-            String name(int id) => data.nations[id]?.name ?? 'Unknown';
+            String name(int id) => data.nations[id]?.name ?? l.tourContUnknown;
 
-            return TabBarView(
+            Widget qualifyingTab() {
+              if (data.qualifyingGroups.isEmpty) {
+                return TournamentSoon(
+                  message: data.isPlayerRegion
+                      ? l.tourContQualSeeded
+                      : l.tourContBackgroundRegion(data.name),
+                );
+              }
+              if (!data.qualDrawWatched) {
+                return TournamentSoon(message: l.tourContGroupsToBeDrawnQual);
+              }
+              final size =
+                  ContinentalCups.byConfederation[data.confederation]?.size ??
+                  24;
+              // Hosts reserve finals berths, so fewer teams (and fewer
+              // best-thirds) come through qualifying.
+              final adv = GroupAdvancement.continentalQualifying(
+                (size - data.hostCount).clamp(1, size),
+                data.qualifyingGroups.length,
+              );
+              return _Groups(
+                groups: data.qualifyingGroups,
+                playerNationId: data.playerNationId,
+                directCount: adv.direct,
+                contentionPos: adv.contention,
+                contentionQualify: adv.contentionQualify,
+                // The contested places lead to the finals here, not to a
+                // knockout round.
+                contentionDestination: 'the finals',
+                code: code,
+                name: name,
+              );
+            }
+
+            final tabs = TabBarView(
               children: [
+                TournamentSummaryTab(
+                  hostIds: data.hostIds,
+                  hostCities: data.hostCities,
+                  identity: data.identity,
+                  trophyAsset: Trophies.forConfederation(data.confederation),
+                  code: code,
+                  name: name,
+                ),
+                if (_hasQualifying) qualifyingTab(),
+                if (data.groups.isNotEmpty && !data.finalsDrawWatched)
+                  TournamentSoon(
+                    message: l.tourContGroupsToBeDrawnFinals,
+                  )
+                else if (data.groups.isNotEmpty)
+                  () {
+                    // Copa América: two groups of five, top four into the
+                    // quarters. Every other format advances the top two (plus
+                    // any best-thirds).
+                    final copa =
+                        data.groups.length == 2 &&
+                        data.groups.every((g) => g.standings.length >= 5);
+                    return _ContFinalsGroups(
+                      groups: data.groups,
+                      groupFixtures: data.groupFixtures,
+                      playerNationId: data.playerNationId,
+                      // Finals: top two advance; best thirds are in contention
+                      // (top four for the Copa América groups of five).
+                      directCount: copa ? 4 : 2,
+                      contentionPos: copa
+                          ? null
+                          : WorldCupFinals.bestThirdsFor(data.groups.length) > 0
+                          ? 3
+                          : null,
+                      thirdsQualify: copa
+                          ? 0
+                          : WorldCupFinals.bestThirdsFor(data.groups.length),
+                      code: code,
+                      name: name,
+                    );
+                  }()
+                else
+                  TournamentSoon(
+                    message: data.isPlayerRegion
+                        ? l.tourContFinalsDrawAfterQual
+                        : l.tourContBackgroundRegion(data.name),
+                  ),
                 if (data.knockout.isNotEmpty)
-                  _Bracket(
+                  TournamentBracket(
                     fixtures: data.knockout,
-                    champion: data.champion,
-                    championLabel: data.name,
-                    playerNationId: data.playerNationId,
                     rounds: _bracketRounds,
+                    ladder: _ladder,
+                    champion: data.champion,
+                    championLabel: l.tourContChampionsHeading(
+                      data.name.toUpperCase(),
+                    ),
+                    playerNationId: data.playerNationId,
+                    // Only the manager's own confederation is played out, so a
+                    // run to highlight exists only there.
+                    runSummary: !data.isPlayerRegion
+                        ? null
+                        : playerRunSummary(
+                            playerNationId: data.playerNationId,
+                            champion: data.champion,
+                            knockout: data.knockout,
+                            groups: data.groups,
+                            championTitle: l.tourContWinnersTitle(data.name),
+                          ),
+                    groupSeeds: groupSeedsOf(data.groups),
                     code: code,
                     name: name,
                   )
                 else
-                  _Soon(
+                  TournamentSoon(
                     message: data.isPlayerRegion
-                        ? 'Your continental championship is contested in the '
-                            'season before the World Cup.'
-                        : 'Only your own confederation is played in detail. '
-                            '${data.name} is decided in the background — see '
-                            'its winners under History.',
+                        ? l.tourContContestedBeforeWc
+                        : l.tourContBackgroundRegion(data.name),
                   ),
-                if (data.scorers.isEmpty)
-                  const _Soon(message: 'No goals recorded yet.')
-                else
-                  _Scorers(
-                    scorers: data.scorers,
-                    playerNames: data.playerNames,
-                    code: code,
-                  ),
-                _History(honours: data.honours, name: name, code: code),
+                TournamentAwardsTab(
+                  team: data.teamOfTournament,
+                  goldenGlove: data.goldenGlove,
+                  code: code,
+                  name: name,
+                ),
+                TournamentScorers(
+                  scorers: data.scorers,
+                  playerNames: data.playerNames,
+                  allTime: data.allTimeScorers,
+                  code: code,
+                  emptyMessage: l.tourContNoGoalsYet,
+                ),
+                TournamentHistory(
+                  honours: data.honours,
+                  name: name,
+                  code: code,
+                ),
+                TournamentStatsTab(
+                  honours: data.honours,
+                  allTimeScorers: data.allTimeScorers,
+                  topGames: data.topGames,
+                  topCups: data.topCups,
+                  highlightNations: data.myNationIds,
+                  code: code,
+                  name: name,
+                ),
+              ],
+            );
+
+            return Column(
+              children: [
+                // Who walks into this edition holding the trophy — the last
+                // nation to win it, not the champion of the edition on screen.
+                TournamentHoldersRow(
+                  holders: data.holders,
+                  code: code,
+                  name: name,
+                ),
+                Expanded(child: tabs),
               ],
             );
           },
@@ -118,365 +308,330 @@ class ContinentalDetailScreen extends ConsumerWidget {
   }
 }
 
-class _Bracket extends StatelessWidget {
-  const _Bracket({
-    required this.fixtures,
-    required this.champion,
-    required this.championLabel,
+class _Groups extends StatelessWidget {
+  const _Groups({
+    required this.groups,
     required this.playerNationId,
-    required this.rounds,
+    required this.directCount,
+    required this.contentionPos,
     required this.code,
     required this.name,
+    this.contentionQualify = 0,
+    this.contentionDestination = 'the knockouts',
   });
 
-  final List<Fixture> fixtures;
-  final int? champion;
-  final String championLabel;
+  final List<FinalsGroupTable> groups;
   final int playerNationId;
-  final List<(String, String)> rounds;
+
+  /// Positions that advance/qualify outright (green).
+  final int directCount;
+
+  /// A single position marked "in contention" (amber — best runner-up / best
+  /// third), or null when there is no such spot.
+  final int? contentionPos;
+
+  /// How many teams at [contentionPos] actually go through. Drives the
+  /// cross-group ladder card, so the amber stripe is backed by a real "1 of 2
+  /// advance" list rather than left to be guessed at.
+  final int contentionQualify;
+
+  /// Where the contested places lead ('the finals' in qualifying).
+  final String contentionDestination;
+
   final String Function(int) code;
   final String Function(int) name;
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    // Cross-group ladders compare teams that never met, so they run on
+    // comparable records when the groups are uneven (see CrossGroup).
+    final tables = [for (final g in groups) g.standings];
+    final uneven = CrossGroup.isUneven(tables);
+    // The contested tier — second-placed sides, or fourth-placed ones in a
+    // confederation where the field reaches that deep.
+    final contended = contentionPos == null
+        ? const <GroupStanding>[]
+        : crossGroupTier(tables, contentionPos! - 1);
+
+    // The player's own group first, the rest in their drawn order.
+    final ordered = [
+      for (final g in groups)
+        if (g.standings.any((s) => s.nationId == playerNationId)) g,
+      for (final g in groups)
+        if (!g.standings.any((s) => s.nationId == playerNationId)) g,
+    ];
+
     return ListView(
       padding: const EdgeInsets.all(AppSpacing.marginMobile),
       children: [
-        if (champion != null)
+        for (final g in ordered) ...[
           AppCard(
-            child: Row(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Icon(Icons.emoji_events, color: AppColors.primary),
-                const SizedBox(width: AppSpacing.md),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'CHAMPIONS',
-                        style: AppTypography.labelSmall.copyWith(
-                          color: AppColors.primary,
-                        ),
-                      ),
-                      Text(name(champion!), style: AppTypography.titleMedium),
-                    ],
+                Text(
+                  l.tourContGroupHeading(g.name),
+                  style: AppTypography.labelSmall.copyWith(
+                    color: AppColors.onSurfaceVariant,
                   ),
                 ),
-                FlagDisc(code(champion!), size: 40, highlighted: true),
+                const SizedBox(height: AppSpacing.sm),
+                for (var i = 0; i < g.standings.length; i++)
+                  _row(i + 1, g.standings[i]),
               ],
             ),
           ),
-        for (final (round, label) in rounds)
-          () {
-            final inRound = fixtures.where((f) => f.round == round).toList();
-            if (inRound.isEmpty) return const SizedBox.shrink();
-            return Padding(
-              padding: const EdgeInsets.only(top: AppSpacing.md),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    label.toUpperCase(),
-                    style: AppTypography.labelMedium.copyWith(
-                      color: AppColors.primary,
-                    ),
-                  ),
-                  const SizedBox(height: AppSpacing.sm),
-                  for (final f in inRound) _tie(f),
-                ],
-              ),
-            );
-          }(),
+          const SizedBox(height: AppSpacing.sm),
+        ],
+        if (contentionPos case final pos?)
+          if (contentionQualify > 0 && contended.length > contentionQualify)
+            BestThirdsCard(
+              thirds: contended,
+              qualifyCount: contentionQualify,
+              playerNationId: playerNationId,
+              code: code,
+              name: name,
+              destination: contentionDestination,
+              title: contentionLadderTitle(l, pos),
+              adjustedForGroupSize: uneven,
+            ),
         const SizedBox(height: AppSpacing.xl),
       ],
     );
   }
 
-  Widget _tie(Fixture f) {
-    final decided = f.hasResult;
-    final homeWon = decided && f.homeScore! >= f.awayScore!;
-    return AppCard(
-      padding: const EdgeInsets.symmetric(
-        horizontal: AppSpacing.md,
-        vertical: AppSpacing.sm,
+  Widget _row(int pos, GroupStanding s) {
+    final isPlayer = s.nationId == playerNationId;
+    final advancing = pos <= directCount;
+    final inContention = pos == contentionPos;
+    final accent = advancing
+        ? AppColors.positive
+        : inContention
+        ? AppColors.warning
+        : null;
+    final gd = s.goalDifference;
+    return Container(
+      decoration: BoxDecoration(
+        color: isPlayer ? AppColors.surfaceContainerHigh : null,
+        border: Border(
+          left: BorderSide(
+            color: accent ?? Colors.transparent,
+            width: 3,
+          ),
+        ),
       ),
+      padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 4),
       child: Row(
         children: [
-          Expanded(child: _side(f.homeNationId, decided && homeWon)),
-          Text(
-            decided ? '${f.homeScore} - ${f.awayScore}' : 'vs',
-            style: AppTypography.labelMedium,
+          SizedBox(
+            width: 18,
+            child: Text(
+              '$pos',
+              style: AppTypography.labelSmall.copyWith(
+                color: accent ?? AppColors.onSurfaceVariant,
+                fontWeight: accent != null ? FontWeight.w700 : FontWeight.w500,
+              ),
+            ),
           ),
+          FlagDisc(code(s.nationId), size: 22),
+          const SizedBox(width: AppSpacing.sm),
           Expanded(
-            child: _side(f.awayNationId, decided && !homeWon, end: true),
+            child: Text(
+              name(s.nationId),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: AppTypography.bodySmall.copyWith(
+                fontWeight: isPlayer ? FontWeight.w700 : FontWeight.w400,
+              ),
+            ),
           ),
+          _cell('${s.played}'),
+          _cell('${s.goalsFor}:${s.goalsAgainst}', width: 42),
+          _cell(gd > 0 ? '+$gd' : '$gd'),
+          _cell('${s.points}', emphasize: true),
         ],
       ),
     );
   }
 
-  Widget _side(int nationId, bool winner, {bool end = false}) {
-    final isPlayer = nationId == playerNationId;
-    final label = Flexible(
-      child: Text(
-        name(nationId),
-        textAlign: end ? TextAlign.end : TextAlign.start,
-        maxLines: 1,
-        overflow: TextOverflow.ellipsis,
-        style: AppTypography.bodySmall.copyWith(
-          fontWeight: winner || isPlayer ? FontWeight.w700 : FontWeight.w400,
-          color: winner ? AppColors.onSurface : AppColors.onSurfaceVariant,
-        ),
-      ),
-    );
-    final flag = FlagDisc(code(nationId), size: 22, highlighted: isPlayer);
-    final children = end
-        ? [label, const SizedBox(width: AppSpacing.sm), flag]
-        : [flag, const SizedBox(width: AppSpacing.sm), label];
-    return Row(
-      mainAxisAlignment: end ? MainAxisAlignment.end : MainAxisAlignment.start,
-      children: children,
-    );
-  }
-}
-
-class _Scorers extends StatelessWidget {
-  const _Scorers({
-    required this.scorers,
-    required this.playerNames,
-    required this.code,
-  });
-
-  final List<ScorerTally> scorers;
-  final Map<int, String> playerNames;
-  final String Function(int) code;
-
-  @override
-  Widget build(BuildContext context) {
-    return ListView.builder(
-      padding: const EdgeInsets.all(AppSpacing.marginMobile),
-      itemCount: scorers.length,
-      itemBuilder: (context, i) {
-        final s = scorers[i];
-        return Padding(
-          padding: const EdgeInsets.only(bottom: AppSpacing.sm),
-          child: AppCard(
-            padding: const EdgeInsets.symmetric(
-              vertical: AppSpacing.sm,
-              horizontal: AppSpacing.md,
-            ),
-            child: Row(
-              children: [
-                SizedBox(
-                  width: 24,
-                  child: Text(
-                    '${i + 1}',
-                    style: AppTypography.labelMedium.copyWith(
-                      color: AppColors.onSurfaceVariant,
-                    ),
-                  ),
-                ),
-                FlagDisc(code(s.nationId), size: 24),
-                const SizedBox(width: AppSpacing.md),
-                Expanded(
-                  child: Text(
-                    playerNames[s.playerId] ?? 'Unknown',
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: AppTypography.bodyMedium,
-                  ),
-                ),
-                Text(
-                  '${s.goals}',
-                  style: AppTypography.titleMedium.copyWith(
-                    color: AppColors.primary,
-                  ),
-                ),
-              ],
-            ),
+  Widget _cell(String text, {bool emphasize = false, double width = 30}) =>
+      SizedBox(
+        width: width,
+        child: Text(
+          text,
+          textAlign: TextAlign.center,
+          style: AppTypography.labelSmall.copyWith(
+            color: emphasize ? AppColors.primary : AppColors.onSurface,
+            fontWeight: emphasize ? FontWeight.w700 : FontWeight.w500,
           ),
-        );
-      },
-    );
-  }
+        ),
+      );
 }
 
-class _History extends StatelessWidget {
-  const _History({
-    required this.honours,
-    required this.name,
+/// The continental FINALS groups view: every group's table and matches on one
+/// scrollable page, the player's own group first, then the rest.
+class _ContFinalsGroups extends StatefulWidget {
+  const _ContFinalsGroups({
+    required this.groups,
+    required this.groupFixtures,
+    required this.playerNationId,
+    required this.directCount,
+    required this.contentionPos,
+    required this.thirdsQualify,
     required this.code,
+    required this.name,
   });
 
-  final List<Honour> honours;
-  final String Function(int) name;
+  final List<FinalsGroupTable> groups;
+  final List<Fixture> groupFixtures;
+  final int playerNationId;
+  final int directCount;
+  final int? contentionPos;
+  final int thirdsQualify;
   final String Function(int) code;
+  final String Function(int) name;
+
+  @override
+  State<_ContFinalsGroups> createState() => _ContFinalsGroupsState();
+}
+
+class _ContFinalsGroupsState extends State<_ContFinalsGroups> {
+  bool _isMine(FinalsGroupTable g) =>
+      g.standings.any((s) => s.nationId == widget.playerNationId);
 
   @override
   Widget build(BuildContext context) {
-    if (honours.isEmpty) {
-      return const _Soon(message: 'No past winners yet.');
+    final l = AppLocalizations.of(context);
+    final groups = widget.groups;
+    if (groups.isEmpty) {
+      return Center(child: Text(l.tourContNoGroupsDrawn));
     }
+    // Every group on one page — the player's own group first, then the rest.
+    final ordered = [
+      ...groups.where(_isMine),
+      ...groups.where((g) => !_isMine(g)),
+    ];
+    final tables = [for (final g in groups) g.standings];
+    final uneven = CrossGroup.isUneven(tables);
+    final thirds = crossGroupTier(tables, 2);
 
-    final gold = <int, int>{};
-    final silver = <int, int>{};
-    final bronze = <int, int>{};
-    for (final h in honours) {
-      gold[h.championId] = (gold[h.championId] ?? 0) + 1;
-      silver[h.runnerUpId] = (silver[h.runnerUpId] ?? 0) + 1;
-      if (h.thirdId != null) {
-        bronze[h.thirdId!] = (bronze[h.thirdId!] ?? 0) + 1;
-      }
+    List<Fixture> matchesOf(FinalsGroupTable g) {
+      final ids = {for (final s in g.standings) s.nationId};
+      return widget.groupFixtures
+          .where(
+            (f) => ids.contains(f.homeNationId) && ids.contains(f.awayNationId),
+          )
+          .toList()
+        ..sort((a, b) => a.date.compareTo(b.date));
     }
-    final medalNations = {...gold.keys, ...silver.keys, ...bronze.keys}.toList()
-      ..sort((a, b) {
-        final g = (gold[b] ?? 0).compareTo(gold[a] ?? 0);
-        if (g != 0) return g;
-        final s = (silver[b] ?? 0).compareTo(silver[a] ?? 0);
-        if (s != 0) return s;
-        return (bronze[b] ?? 0).compareTo(bronze[a] ?? 0);
-      });
 
     return ListView(
       padding: const EdgeInsets.all(AppSpacing.marginMobile),
       children: [
-        Text(
-          'MEDAL TABLE',
-          style: AppTypography.labelMedium.copyWith(color: AppColors.primary),
-        ),
-        const SizedBox(height: AppSpacing.sm),
-        AppCard(
-          child: Column(
-            children: [
-              for (final id in medalNations.take(10))
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 3),
-                  child: Row(
-                    children: [
-                      FlagDisc(code(id), size: 20),
-                      const SizedBox(width: AppSpacing.sm),
-                      Expanded(
-                        child: Text(
-                          name(id),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: AppTypography.bodySmall,
-                        ),
-                      ),
-                      _medalCount('🥇', gold[id] ?? 0),
-                      _medalCount('🥈', silver[id] ?? 0),
-                      _medalCount('🥉', bronze[id] ?? 0),
-                    ],
+        for (final g in ordered) ...[
+          AppCard(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  l.tourContGroupHeading(g.name),
+                  style: AppTypography.labelSmall.copyWith(
+                    color: AppColors.onSurfaceVariant,
                   ),
                 ),
-            ],
+                // Matches on top, then the table — one box per group.
+                if (matchesOf(g) case final ms when ms.isNotEmpty) ...[
+                  const SizedBox(height: AppSpacing.xs),
+                  for (final f in ms)
+                    MatchResultRow(fixture: f, code: widget.code),
+                  const Divider(height: AppSpacing.lg),
+                ],
+                const SizedBox(height: AppSpacing.sm),
+                for (var i = 0; i < g.standings.length; i++)
+                  _row(i + 1, g.standings[i]),
+              ],
+            ),
           ),
-        ),
-        const SizedBox(height: AppSpacing.lg),
-        Text(
-          'PAST WINNERS',
-          style: AppTypography.labelMedium.copyWith(color: AppColors.primary),
-        ),
-        const SizedBox(height: AppSpacing.sm),
-        for (final h in honours) _editionCard(h),
+          const SizedBox(height: AppSpacing.md),
+        ],
+        if (widget.thirdsQualify > 0 &&
+            thirds.length > widget.thirdsQualify) ...[
+          BestThirdsCard(
+            thirds: thirds,
+            qualifyCount: widget.thirdsQualify,
+            playerNationId: widget.playerNationId,
+            code: widget.code,
+            name: widget.name,
+            adjustedForGroupSize: uneven,
+          ),
+        ],
         const SizedBox(height: AppSpacing.xl),
       ],
     );
   }
 
-  Widget _medalCount(String emoji, int n) => SizedBox(
-        width: 34,
-        child: Text(
-          '$emoji$n',
-          textAlign: TextAlign.center,
-          style: AppTypography.labelSmall,
-        ),
-      );
-
-  Widget _editionCard(Honour h) {
-    final score = (h.finalHomeScore != null && h.finalAwayScore != null)
-        ? (h.finalHomeScore == h.finalAwayScore
-            ? '${h.finalHomeScore}–${h.finalAwayScore} (pens)'
-            : '${h.finalHomeScore}–${h.finalAwayScore}')
-        : '';
-    return Padding(
-      padding: const EdgeInsets.only(bottom: AppSpacing.sm),
-      child: AppCard(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Text(
-                  '${h.year}',
-                  style: AppTypography.labelMedium
-                      .copyWith(color: AppColors.primary),
-                ),
-                const Spacer(),
-                if (h.hostId != null)
-                  Text(
-                    'Host: ${name(h.hostId!)}',
-                    style: AppTypography.labelSmall
-                        .copyWith(color: AppColors.onSurfaceVariant),
-                  ),
-              ],
-            ),
-            const SizedBox(height: AppSpacing.xs),
-            Row(
-              children: [
-                const Icon(
-                  Icons.emoji_events,
-                  color: AppColors.primary,
-                  size: 18,
-                ),
-                const SizedBox(width: AppSpacing.sm),
-                FlagDisc(code(h.championId), size: 22),
-                const SizedBox(width: AppSpacing.sm),
-                Expanded(
-                  child: Text(
-                    name(h.championId),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: AppTypography.bodyMedium
-                        .copyWith(fontWeight: FontWeight.w700),
-                  ),
-                ),
-                Text(score, style: AppTypography.labelSmall),
-                const SizedBox(width: AppSpacing.sm),
-                FlagDisc(code(h.runnerUpId), size: 18),
-              ],
-            ),
-          ],
+  Widget _row(int pos, GroupStanding s) {
+    final isPlayer = s.nationId == widget.playerNationId;
+    final advancing = pos <= widget.directCount;
+    final inContention = pos == widget.contentionPos;
+    final accent = advancing
+        ? AppColors.positive
+        : inContention
+        ? AppColors.warning
+        : null;
+    final gd = s.goalDifference;
+    return Container(
+      decoration: BoxDecoration(
+        color: isPlayer ? AppColors.surfaceContainerHigh : null,
+        border: Border(
+          left: BorderSide(color: accent ?? Colors.transparent, width: 3),
         ),
       ),
-    );
-  }
-}
-
-class _Soon extends StatelessWidget {
-  const _Soon({required this.message});
-  final String message;
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(AppSpacing.xl),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Icon(Icons.hourglass_empty, color: AppColors.outline),
-            const SizedBox(height: AppSpacing.sm),
-            Text(
-              message,
-              textAlign: TextAlign.center,
-              style: AppTypography.bodyMedium.copyWith(
-                color: AppColors.onSurfaceVariant,
+      padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 4),
+      child: Row(
+        children: [
+          SizedBox(
+            width: 18,
+            child: Text(
+              '$pos',
+              style: AppTypography.labelSmall.copyWith(
+                color: accent ?? AppColors.onSurfaceVariant,
+                fontWeight: accent != null ? FontWeight.w700 : FontWeight.w500,
               ),
             ),
-          ],
-        ),
+          ),
+          FlagDisc(widget.code(s.nationId), size: 22),
+          const SizedBox(width: AppSpacing.sm),
+          Expanded(
+            child: Text(
+              widget.name(s.nationId),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: AppTypography.bodySmall.copyWith(
+                fontWeight: isPlayer ? FontWeight.w700 : FontWeight.w400,
+              ),
+            ),
+          ),
+          _cell('${s.played}'),
+          _cell('${s.goalsFor}:${s.goalsAgainst}', width: 42),
+          _cell(gd > 0 ? '+$gd' : '$gd'),
+          _cell('${s.points}', emphasize: true),
+        ],
       ),
     );
   }
+
+  Widget _cell(String text, {bool emphasize = false, double width = 30}) =>
+      SizedBox(
+        width: width,
+        child: Text(
+          text,
+          textAlign: TextAlign.center,
+          style: AppTypography.labelSmall.copyWith(
+            color: emphasize ? AppColors.primary : AppColors.onSurface,
+            fontWeight: emphasize ? FontWeight.w700 : FontWeight.w500,
+          ),
+        ),
+      );
 }

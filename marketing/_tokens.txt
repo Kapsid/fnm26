@@ -1,0 +1,7 @@
+surface #121416 | containerLowest #0C0E10 | container #1E2022 | containerHigh #282A2C
+onSurface #E2E2E5 | onSurfaceVariant #C4C6CB | outline #8E9195 | outlineVariant #44474B
+primary #C3CDD9 | primaryFixed #DAE4EF | primaryContainer #A8B2BD | positive #7FD1A6 | error #FFB4AB
+Hanken Grotesk (sans) / JetBrains Mono (labels, stats)
+display 48/56 w800 -0.96 | headline 32/40 w700 | title 18/24 w600
+body 16/24 w400 | bodySmall 13/18 | labelMedium 14/20 w500 +0.7 | labelSmall mono 12/16 w500 +0.6
+radii 4 / 8 / 12 / 16 / 24

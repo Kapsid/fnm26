@@ -13,14 +13,16 @@ void main() {
   late List<Player> players;
 
   setUpAll(() {
-    nations = (jsonDecode(File('assets/data/nations.json').readAsStringSync())
-            as List<dynamic>)
-        .map((e) => Nation.fromJson(e as Map<String, Object?>))
-        .toList();
-    players = (jsonDecode(File('assets/data/players.json').readAsStringSync())
-            as List<dynamic>)
-        .map((e) => Player.fromJson(e as Map<String, Object?>))
-        .toList();
+    nations =
+        (jsonDecode(File('assets/data/nations.json').readAsStringSync())
+                as List<dynamic>)
+            .map((e) => Nation.fromJson(e as Map<String, Object?>))
+            .toList();
+    players =
+        (jsonDecode(File('assets/data/players.json').readAsStringSync())
+                as List<dynamic>)
+            .map((e) => Player.fromJson(e as Map<String, Object?>))
+            .toList();
   });
 
   test('covers (nearly) all FIFA nations across every confederation', () {
@@ -54,10 +56,9 @@ void main() {
       expect(nationIds.contains(p.nationId), isTrue, reason: p.name);
       expect(p.overall, inInclusiveRange(1, 99));
       for (final v in [
-        p.attributes.passing,
-        p.attributes.shooting,
-        p.attributes.pace,
-        p.attributes.strength,
+        p.attributes.physical,
+        p.attributes.technical,
+        p.attributes.stamina,
       ]) {
         expect(v, inInclusiveRange(1, 99));
       }

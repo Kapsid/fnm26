@@ -1,12 +1,32 @@
+import 'package:fnm/core/util/app_date.dart';
+import 'package:fnm/features/onboarding/tour_keys.dart';
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
+import 'package:fnm/core/util/match_stage.dart';
+import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/enums.dart';
+import 'package:fnm/domain/entities/formation.dart';
+import 'package:fnm/domain/services/club/club_form.dart';
+import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/entities/player.dart';
+import 'package:fnm/domain/entities/player_absence.dart';
+import 'package:fnm/domain/services/squad/squad_selection.dart';
+import 'package:fnm/domain/services/squad/condition.dart';
+import 'package:fnm/domain/services/squad/absence_outlook.dart';
+import 'package:fnm/features/tactics/absence_providers.dart';
+import 'package:fnm/features/tactics/condition_providers.dart';
+import 'package:fnm/features/tactics/nomination_providers.dart';
 import 'package:fnm/features/tactics/tactics_providers.dart';
+import 'package:fnm/features/career/career_providers.dart';
+import 'package:fnm/features/player/player_detail_screen.dart'
+    show PlayerTraitGlyphs;
+import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
 
@@ -14,9 +34,19 @@ import 'package:go_router/go_router.dart';
 /// for this save. Only called-up players can be picked in the XI or brought on
 /// as substitutes. The squad must keep at least [kMinSquadSize] players.
 class CallUpScreen extends ConsumerStatefulWidget {
-  const CallUpScreen({required this.careerId, super.key});
+  const CallUpScreen({
+    required this.careerId,
+    this.eventKind,
+    this.eventCycle,
+    super.key,
+  });
 
   final int careerId;
+
+  /// When launched as a timeline event, confirming the squad records this
+  /// call-up window as done (so it fires only once) and returns to the hub.
+  final String? eventKind;
+  final int? eventCycle;
 
   @override
   ConsumerState<CallUpScreen> createState() => _CallUpScreenState();
@@ -25,6 +55,14 @@ class CallUpScreen extends ConsumerStatefulWidget {
 class _CallUpScreenState extends ConsumerState<CallUpScreen> {
   Set<int>? _selected;
 
+  /// The key this screen's draft is stored under, resolved once the nomination
+  /// window is known.
+  String? _draftKey;
+
+  /// Whether the saved draft has been read back into [_selected] yet, so a
+  /// rebuild never re-applies it over later edits.
+  bool _draftLoaded = false;
+
   static const List<PositionCategory> _order = [
     PositionCategory.goalkeeper,
     PositionCategory.defender,
@@ -32,94 +70,410 @@ class _CallUpScreenState extends ConsumerState<CallUpScreen> {
     PositionCategory.forward,
   ];
 
-  static String _heading(PositionCategory c) => switch (c) {
-        PositionCategory.goalkeeper => 'GOALKEEPERS',
-        PositionCategory.defender => 'DEFENDERS',
-        PositionCategory.midfielder => 'MIDFIELDERS',
-        PositionCategory.forward => 'FORWARDS',
-      };
+  /// The line's name, short enough that four of them fit across a phone.
+  String _shortHeading(AppLocalizations l, PositionCategory c) => switch (c) {
+    PositionCategory.goalkeeper => l.tacticsLineGk,
+    PositionCategory.defender => l.tacticsLineDef,
+    PositionCategory.midfielder => l.tacticsLineMid,
+    PositionCategory.forward => l.tacticsLineFwd,
+  };
+
+  /// Nobody, to start with.
+  ///
+  /// Nominating used to open with the previous squad already ticked, which
+  /// quietly answered the question it was asking — and it re-ticked players who
+  /// had since been banned or injured. Picking a squad should be a decision,
+  /// with [SquadSelection] there for when it isn't.
+  Set<int> _initialSquad(List<Player> pool, Iterable<int> current) => {};
+
+  /// Records the squad as it currently stands, so leaving the screen part-way
+  /// through a nomination — to read a player's card, or just to look at the
+  /// fixtures — no longer means starting again from an empty sheet.
+  void _saveDraft() {
+    final key = _draftKey;
+    final selected = _selected;
+    if (key == null || selected == null) return;
+    unawaited(
+      ref.read(squadRepositoryProvider).saveCallUpDraft(widget.careerId, key, {
+        ...selected,
+      }),
+    );
+  }
+
+  /// Applies any change to the selection and drafts the result.
+  void _edit(void Function(Set<int> selected) change) {
+    setState(() => change(_selected ??= {}));
+    _saveDraft();
+  }
+
+  /// Back to the hub when this was a timeline event, else back to tactics.
+  String get _exitRoute => widget.eventKind != null
+      ? '${Routes.hub}?careerId=${widget.careerId}'
+      : '${Routes.tactics}?careerId=${widget.careerId}';
+
+  Future<void> _confirm(Set<int> selected) async {
+    final saved = await ref
+        .read(squadServiceProvider)
+        .setCallUps(widget.careerId, selected);
+    // Don't retire the event (or leave) for a squad that wasn't saved — the
+    // manager would come back to no squad and no way to be asked again.
+    if (!saved) {
+      if (mounted) {
+        final l = AppLocalizations.of(context);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(l.tacticsPickAtLeastPlayers(kMinSquadSize)),
+          ),
+        );
+      }
+      return;
+    }
+    // The squad is named: the draft has served its purpose.
+    final key = _draftKey;
+    if (key != null) {
+      await ref
+          .read(squadRepositoryProvider)
+          .clearCallUpDraft(widget.careerId, key);
+    }
+    // A timeline call-up records itself done so the event fires only once.
+    final kind = widget.eventKind;
+    final cycle = widget.eventCycle;
+    if (kind != null && cycle != null) {
+      await ref
+          .read(competitionRepositoryProvider)
+          .markDrawWatched(widget.careerId, cycle, kind);
+    }
+    if (mounted) context.go(_exitRoute);
+  }
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
     final dataAsync = ref.watch(squadDataProvider(widget.careerId));
+    // The save seed, so a player's derived traits are the same here as
+    // everywhere else in the save.
+    final saveSeed =
+        ref.watch(careerByIdProvider(widget.careerId)).valueOrNull?.rngSeed ??
+        0;
+    final window = ref
+        .watch(nominationWindowProvider(widget.careerId))
+        .valueOrNull;
+    // Editable only during a nomination window (or when opened as the forced
+    // pre-campaign event); otherwise the squad is locked between windows.
+    final locked = widget.eventKind == null && window != null && !window.open;
+    // How many matches this squad has to cover — a player carrying a shorter
+    // absence than that is still worth naming.
+    final coverage = window?.matches.length ?? 1;
+    // The shape being played, so the auto-pick names a squad that can field it
+    // rather than the highest-rated names in the country.
+    final formation =
+        ref.watch(currentFormationProvider(widget.careerId)).valueOrNull ??
+        Formation.f433;
+
+    // Restore a nomination the manager had already started. Resolved once the
+    // window is known (it decides which draft this is), and applied once.
+    if (_draftKey == null && (window != null || widget.eventKind != null)) {
+      _draftKey = callUpDraftKey(
+        eventKind: widget.eventKind,
+        periodStart: window?.matches.firstOrNull,
+      );
+    }
+    final draftAsync = _draftKey == null
+        ? null
+        : ref.watch(
+            callUpDraftProvider((careerId: widget.careerId, key: _draftKey!)),
+          );
+    if (!_draftLoaded && draftAsync?.valueOrNull != null) {
+      _draftLoaded = true;
+      final saved = draftAsync!.valueOrNull!;
+      if (saved.isNotEmpty) _selected = {...saved};
+    }
 
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: AppColors.primary),
-          onPressed: () =>
-              context.go('${Routes.tactics}?careerId=${widget.careerId}'),
+          onPressed: () => context.go(_exitRoute),
         ),
         title: Text(
-          'CALL-UPS',
+          l.tacticsCallUpsTitle,
           style: AppTypography.labelMedium.copyWith(color: AppColors.primary),
         ),
         centerTitle: true,
+        actions: [
+          // "Who's coming through?" is a question asked while picking a squad,
+          // so the watchlist hangs off the call-up screen.
+          IconButton(
+            icon: const Icon(Icons.school_outlined, color: AppColors.primary),
+            tooltip: l.tacticsYouth,
+            onPressed: () =>
+                context.push('${Routes.youth}?careerId=${widget.careerId}'),
+          ),
+        ],
       ),
       body: dataAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => Center(child: Text('Could not load squad.\n$e')),
+        error: (e, _) =>
+            Center(child: Text(l.tacticsCouldNotLoadSquad(e.toString()))),
         data: (data) {
-          if (data == null) return const Center(child: Text('No squad.'));
-          final selected = _selected ??= {...data.callUps};
+          if (data == null) return Center(child: Text(l.tacticsNoSquad));
+          final condition =
+              ref.watch(squadConditionProvider(widget.careerId)).valueOrNull ??
+              const <int, PlayerCondition>{};
+          final outlooks =
+              ref.watch(absenceOutlookProvider(widget.careerId)).valueOrNull ??
+              const <int, AbsenceOutlook>{};
+          final selected = _selected ??= _initialSquad(data.pool, data.callUps);
           final count = selected.length;
-          final ok = count >= kMinSquadSize;
+          // Banned/injured players may be named, but a squad still has to be
+          // able to put eleven players on the pitch.
+          //
+          // "Fit" is asked of the PERIOD, not of the next kick-off: a man
+          // serving one game of a three-match camp plays the other two, so he
+          // counts toward the squad being fieldable. Asking `isAvailable`
+          // instead asked "can he play the very next game", which is the
+          // question the XI picker asks, not the one a call-up list answers.
+          final fit = selected
+              .where(
+                (id) =>
+                    SquadSelection.usableInPeriod(data.absences[id], coverage),
+              )
+              .length;
+          final ok =
+              count >= kMinSquadSize &&
+              count <= kMaxSquadSize &&
+              fit >= kMinFitPlayers;
 
-          return Column(
+          // The chrome that sits above the pool: what this squad has to
+          // cover, how many are in it, and the two auto-picks.
+          final header = Column(
+            key: TourKeys.callUpCount,
+            mainAxisSize: MainAxisSize.min,
             children: [
+              if (window != null && window.matches.isNotEmpty)
+                _CoverageBanner(window: window, locked: locked),
               Padding(
-                padding: const EdgeInsets.all(AppSpacing.marginMobile),
+                padding: const EdgeInsets.fromLTRB(
+                  AppSpacing.marginMobile,
+                  AppSpacing.sm,
+                  AppSpacing.marginMobile,
+                  0,
+                ),
+                // Both halves ellipsize: a translated "you need eleven fit
+                // players, you have nine" is long enough to run the count off
+                // the right-hand edge of a phone, which is what it did.
                 child: Row(
                   children: [
                     Text(
-                      'SQUAD · $count',
+                      l.tacticsSquadCount(count, kMaxSquadSize),
+                      maxLines: 1,
+                      softWrap: false,
                       style: AppTypography.labelMedium.copyWith(
                         color: ok ? AppColors.onSurface : AppColors.error,
                       ),
                     ),
-                    const Spacer(),
-                    Text(
-                      ok ? 'Min $kMinSquadSize' : 'At least $kMinSquadSize',
-                      style: AppTypography.labelSmall.copyWith(
-                        color: ok
-                            ? AppColors.onSurfaceVariant
-                            : AppColors.error,
+                    const SizedBox(width: AppSpacing.sm),
+                    Expanded(
+                      child: Text(
+                        // Once the size is right, the remaining constraint
+                        // worth stating is how many of them can actually play.
+                        count >= kMinSquadSize &&
+                                count <= kMaxSquadSize &&
+                                fit < kMinFitPlayers
+                            ? l.tacticsNeedFitPlayers(kMinFitPlayers, fit)
+                            : l.tacticsMinMax(kMinSquadSize, kMaxSquadSize),
+                        textAlign: TextAlign.end,
+                        maxLines: 1,
+                        softWrap: false,
+                        overflow: TextOverflow.ellipsis,
+                        style: AppTypography.labelSmall.copyWith(
+                          color: ok
+                              ? AppColors.onSurfaceVariant
+                              : AppColors.error,
+                        ),
                       ),
                     ),
                   ],
                 ),
               ),
-              Expanded(
-                child: ListView(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: AppSpacing.marginMobile,
+              // The squad starts empty, so offer the two answers a manager
+              // actually wants: the best available, or the last lot again.
+              if (!locked)
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(
+                    AppSpacing.marginMobile,
+                    AppSpacing.sm,
+                    AppSpacing.marginMobile,
+                    0,
                   ),
-                  children: [
-                    for (final category in _order)
-                      ..._section(category, data.pool, selected),
-                    const SizedBox(height: AppSpacing.xl),
-                  ],
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: OutlinedButton.icon(
+                          onPressed: () => _edit((s) {
+                            s
+                              ..clear()
+                              ..addAll(
+                                SquadSelection.bestQuality(
+                                  pool: data.pool,
+                                  absences: data.absences,
+                                  coverage: coverage,
+                                  formation: formation,
+                                  max: kMaxSquadSize,
+                                ),
+                              );
+                          }),
+                          icon: const Icon(Icons.auto_awesome, size: 16),
+                          label: Text(l.tacticsBestQuality),
+                        ),
+                      ),
+                      const SizedBox(width: AppSpacing.sm),
+                      Expanded(
+                        child: OutlinedButton.icon(
+                          // Nothing to restore before a squad has been named.
+                          onPressed: !data.hasPreviousSquad
+                              ? null
+                              : () => _edit((s) {
+                                  s
+                                    ..clear()
+                                    ..addAll(
+                                      SquadSelection.previousSquad(
+                                        pool: data.pool,
+                                        previous: data.callUps,
+                                        absences: data.absences,
+                                        coverage: coverage,
+                                        max: kMaxSquadSize,
+                                      ),
+                                    );
+                                }),
+                          icon: const Icon(Icons.history, size: 16),
+                          label: Text(l.tacticsPreviousSquad),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+            ],
+          );
+
+          return Column(
+            children: [
+              // One line at a time, and the line fills the screen.
+              //
+              // The chrome above (the coverage banner, the count, the two
+              // auto-picks) used to hold its height while the players scrolled
+              // in whatever was left, which on a phone was a window a few names
+              // tall. It now scrolls away with the list and the tabs pin under
+              // the app bar, so picking a squad is one long scroll per line
+              // rather than a peephole. Selection lives on the state, so the
+              // tabs are only a view over one squad.
+              Expanded(
+                child: DefaultTabController(
+                  length: _order.length,
+                  child: NestedScrollView(
+                    headerSliverBuilder: (context, _) => [
+                      SliverToBoxAdapter(child: header),
+                      SliverOverlapAbsorber(
+                        handle: NestedScrollView.sliverOverlapAbsorberHandleFor(
+                          context,
+                        ),
+                        sliver: SliverPersistentHeader(
+                          pinned: true,
+                          delegate: _LineTabBarHeader(
+                            TabBar(
+                              labelPadding: EdgeInsets.zero,
+                              labelColor: AppColors.primary,
+                              unselectedLabelColor: AppColors.onSurfaceVariant,
+                              indicatorColor: AppColors.primary,
+                              tabs: [
+                                for (final category in _order)
+                                  Tab(
+                                    height: 44,
+                                    child: _LineTab(
+                                      label: _shortHeading(l, category),
+                                      // How many of this line are in the squad —
+                                      // the number the manager is balancing.
+                                      count: data.pool
+                                          .where(
+                                            (p) =>
+                                                p.position.category ==
+                                                    category &&
+                                                selected.contains(p.id),
+                                          )
+                                          .length,
+                                    ),
+                                  ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                    body: TabBarView(
+                      children: [
+                        for (final category in _order)
+                          Builder(
+                            builder: (context) => CustomScrollView(
+                              slivers: [
+                                // Ties this line's list to the header above, so
+                                // the chrome scrolls away once rather than once
+                                // per tab.
+                                SliverOverlapInjector(
+                                  handle:
+                                      NestedScrollView.sliverOverlapAbsorberHandleFor(
+                                        context,
+                                      ),
+                                ),
+                                SliverPadding(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: AppSpacing.marginMobile,
+                                  ),
+                                  sliver: SliverList.list(
+                                    children: [
+                                      ..._section(
+                                        category,
+                                        data.pool,
+                                        selected,
+                                        data.absences,
+                                        outlooks,
+                                        condition,
+                                        coverage: coverage,
+                                        locked: locked,
+                                        saveSeed: saveSeed,
+                                      ),
+                                      const SizedBox(height: AppSpacing.xl),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                      ],
+                    ),
+                  ),
                 ),
               ),
               SafeArea(
                 child: Padding(
                   padding: const EdgeInsets.all(AppSpacing.marginMobile),
-                  child: PrimaryButton(
-                    label: 'Confirm squad',
-                    icon: Icons.check_rounded,
-                    onPressed: ok
-                        ? () async {
-                            await ref
-                                .read(squadServiceProvider)
-                                .setCallUps(widget.careerId, selected);
-                            if (context.mounted) {
-                              context.go(
-                                '${Routes.tactics}?careerId=${widget.careerId}',
-                              );
-                            }
-                          }
-                        : null,
-                  ),
+                  child: locked
+                      ? OutlinedButton.icon(
+                          onPressed: () => context.go(_exitRoute),
+                          icon: const Icon(Icons.lock_outline, size: 18),
+                          label: Text(l.tacticsSquadLockedBack),
+                          style: OutlinedButton.styleFrom(
+                            foregroundColor: AppColors.onSurfaceVariant,
+                            side: const BorderSide(
+                              color: AppColors.outlineVariant,
+                            ),
+                            minimumSize: const Size.fromHeight(48),
+                          ),
+                        )
+                      : PrimaryButton(
+                          label: l.tacticsConfirmSquad,
+                          icon: Icons.check_rounded,
+                          onPressed: ok ? () => _confirm(selected) : null,
+                        ),
                 ),
               ),
             ],
@@ -133,14 +487,31 @@ class _CallUpScreenState extends ConsumerState<CallUpScreen> {
     PositionCategory category,
     List<Player> pool,
     Set<int> selected,
-  ) {
+    Map<int, PlayerAbsence> absences,
+    Map<int, AbsenceOutlook> outlooks,
+    Map<int, PlayerCondition> condition, {
+    required int coverage,
+    bool locked = false,
+    int saveSeed = 0,
+  }) {
+    final l = AppLocalizations.of(context);
     final players = pool.where((p) => p.position.category == category).toList()
       ..sort((a, b) => b.overall.compareTo(a.overall));
-    if (players.isEmpty) return const [];
+    if (players.isEmpty) {
+      return [
+        const SizedBox(height: AppSpacing.lg),
+        Text(
+          l.tacticsNoSquad,
+          textAlign: TextAlign.center,
+          style: AppTypography.bodyMedium.copyWith(
+            color: AppColors.onSurfaceVariant,
+          ),
+        ),
+      ];
+    }
     return [
       const SizedBox(height: AppSpacing.sm),
-      Text(_heading(category), style: AppTypography.labelMedium),
-      const SizedBox(height: AppSpacing.sm),
+      // No heading: the tab above already names the line.
       AppCard(
         padding: EdgeInsets.zero,
         child: Column(
@@ -149,13 +520,62 @@ class _CallUpScreenState extends ConsumerState<CallUpScreen> {
               _PlayerToggle(
                 player: p,
                 selected: selected.contains(p.id),
-                onChanged: (on) => setState(() {
-                  if (on) {
-                    selected.add(p.id);
-                  } else {
-                    selected.remove(p.id);
-                  }
-                }),
+                absence: absences[p.id],
+                outlook: outlooks[p.id],
+                condition: condition[p.id],
+                coverage: coverage,
+                saveSeed: saveSeed,
+                // A banned or injured player CAN be named in the squad — real
+                // managers call up someone serving a one-game ban or returning
+                // from a knock, they just can't field them until they're clear.
+                // The badge says why, the XI picker keeps them out, and the
+                // engine still refuses to play them; nomination itself is the
+                // manager's call, not the game's.
+                //
+                // The one man who cannot be named is the one who misses EVERY
+                // match this squad covers: naming him is a wasted place, since
+                // he will not kick a ball before the squad is picked again.
+                onChanged: locked
+                    ? null
+                    : (on) {
+                        if (on &&
+                            !SquadSelection.usableInPeriod(
+                              absences[p.id],
+                              coverage,
+                            )) {
+                          ScaffoldMessenger.of(context)
+                            ..hideCurrentSnackBar()
+                            ..showSnackBar(
+                              SnackBar(
+                                content: Text(l.tacticsOutForWholeCamp),
+                              ),
+                            );
+                          return;
+                        }
+                        if (on && selected.length >= kMaxSquadSize) {
+                          ScaffoldMessenger.of(context)
+                            ..hideCurrentSnackBar()
+                            ..showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                  l.tacticsSquadFullMax(kMaxSquadSize),
+                                ),
+                              ),
+                            );
+                          return;
+                        }
+                        _edit((s) {
+                          if (on) {
+                            s.add(p.id);
+                          } else {
+                            s.remove(p.id);
+                          }
+                        });
+                      },
+                onInfo: () => context.push(
+                  '${Routes.player}?careerId=${widget.careerId}'
+                  '&playerId=${p.id}',
+                ),
               ),
           ],
         ),
@@ -165,39 +585,486 @@ class _CallUpScreenState extends ConsumerState<CallUpScreen> {
   }
 }
 
+/// The banner atop the call-ups screen: whether the squad is open to change or
+/// locked between windows, and exactly which matches this nomination covers.
+/// Keeps the line tabs under the app bar while the pool scrolls past them.
+///
+/// A [SliverPersistentHeader] rather than a fixed row above the list: the
+/// chrome over it has to be able to scroll away, or the pool is left with a
+/// few names' worth of window on a phone.
+class _LineTabBarHeader extends SliverPersistentHeaderDelegate {
+  _LineTabBarHeader(this.tabBar);
+
+  final TabBar tabBar;
+
+  /// The strip's height, fixed here and forced on the bar below.
+  ///
+  /// Not `tabBar.preferredSize`: that reports the bar's natural height, which
+  /// is not what a bar of explicitly-sized tabs actually paints — and a header
+  /// that claims more room than it fills fails layout outright.
+  static const double height = 48;
+
+  @override
+  double get minExtent => height;
+
+  @override
+  double get maxExtent => height;
+
+  @override
+  Widget build(
+    BuildContext context,
+    double shrinkOffset,
+    bool overlapsContent,
+  ) =>
+      // Opaque: the names must not show through the tabs as they pass under.
+      ColoredBox(
+        color: AppColors.surface,
+        child: SizedBox(height: height, child: tabBar),
+      );
+
+  @override
+  bool shouldRebuild(covariant _LineTabBarHeader old) => old.tabBar != tabBar;
+}
+
+/// One line's tab: its short name, and how many of that line are in the squad.
+class _LineTab extends StatelessWidget {
+  const _LineTab({required this.label, required this.count});
+
+  final String label;
+  final int count;
+
+  @override
+  Widget build(BuildContext context) => Row(
+    mainAxisAlignment: MainAxisAlignment.center,
+    mainAxisSize: MainAxisSize.min,
+    children: [
+      Flexible(
+        child: Text(
+          label,
+          maxLines: 1,
+          softWrap: false,
+          overflow: TextOverflow.ellipsis,
+          style: AppTypography.labelMedium,
+        ),
+      ),
+      if (count > 0) ...[
+        const SizedBox(width: AppSpacing.xs),
+        Text(
+          '$count',
+          style: AppTypography.labelSmall.copyWith(
+            color: AppColors.onSurfaceVariant,
+          ),
+        ),
+      ],
+    ],
+  );
+}
+
+class _CoverageBanner extends StatelessWidget {
+  const _CoverageBanner({required this.window, required this.locked});
+
+  final NominationWindow window;
+  final bool locked;
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    final accent = locked ? AppColors.onSurfaceVariant : AppColors.positive;
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(
+        AppSpacing.marginMobile,
+        AppSpacing.sm,
+        AppSpacing.marginMobile,
+        0,
+      ),
+      // A plain card — the open/locked state reads from the small icon and
+      // label colour, not a full green fill and border (which was too loud).
+      child: AppCard(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Icon(
+                  locked ? Icons.lock_outline : Icons.how_to_reg,
+                  size: 18,
+                  color: accent,
+                ),
+                const SizedBox(width: AppSpacing.sm),
+                Expanded(
+                  child: Text(
+                    locked ? l.tacticsSquadLocked : l.tacticsNominationOpen,
+                    style: AppTypography.labelSmall.copyWith(color: accent),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: AppSpacing.xs),
+            Text(
+              locked ? l.tacticsSquadFixedBlurb : l.tacticsSquadWillPlayBlurb,
+              style: AppTypography.labelSmall.copyWith(
+                color: AppColors.onSurfaceVariant,
+              ),
+            ),
+            const SizedBox(height: AppSpacing.sm),
+            for (final f in window.matches.take(6)) _matchLine(context, l, f),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _matchLine(BuildContext context, AppLocalizations l, Fixture f) {
+    final oppId = f.homeNationId == window.playerNationId
+        ? f.awayNationId
+        : f.homeNationId;
+    final opp = window.nations[oppId];
+    final home = f.homeNationId == window.playerNationId;
+    // Two lines: the opponent gets the full width up top (no more squeezing it
+    // to an ellipsis to fit the competition), and the stage sits underneath.
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          SizedBox(
+            // 58, not the 52 it was: a Czech date carries the full stop of an
+            // ordinal ("30. lis"), and a seventh monospace character does not
+            // fit in 52 points. It wrapped rather than overflowed, which is
+            // the quiet kind of cut no exception reports.
+            width: 58,
+            child: Text(
+              AppDate.dayMonth(context, f.date),
+              style: AppTypography.labelSmall.copyWith(
+                color: AppColors.onSurfaceVariant,
+              ),
+            ),
+          ),
+          Text(
+            home ? 'v ' : '@ ',
+            style: AppTypography.labelSmall.copyWith(
+              color: AppColors.onSurfaceVariant,
+            ),
+          ),
+          FlagDisc(opp?.code ?? '??', size: 16),
+          const SizedBox(width: AppSpacing.sm),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  opp?.name ?? l.tacticsUnknown,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: AppTypography.bodySmall,
+                ),
+                Text(
+                  MatchStage.label(l, f),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: AppTypography.labelSmall.copyWith(
+                    color: AppColors.primary,
+                    fontSize: 10,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// What a club standing reads as on a call-up row.
+String clubStandingLabel(AppLocalizations l, ClubStanding s) => switch (s) {
+  ClubStanding.firstChoice => l.clubFirstChoice,
+  ClubStanding.rotation => l.clubRotation,
+  ClubStanding.fringe => l.clubFringe,
+  ClubStanding.frozenOut => l.clubFrozenOut,
+};
+
 class _PlayerToggle extends StatelessWidget {
   const _PlayerToggle({
     required this.player,
     required this.selected,
     required this.onChanged,
+    required this.onInfo,
+    required this.saveSeed,
+    this.absence,
+    this.outlook,
+    this.condition,
+    this.coverage = 1,
   });
 
   final Player player;
   final bool selected;
-  final ValueChanged<bool> onChanged;
+
+  /// Toggles the call-up; null when the squad is locked (between windows).
+  final ValueChanged<bool>? onChanged;
+  final VoidCallback onInfo;
+  final PlayerAbsence? absence;
+
+  /// How long the absence actually runs — in weeks and a return match, rather
+  /// than the raw game count on [absence].
+  final AbsenceOutlook? outlook;
+  final PlayerCondition? condition;
+
+  /// How many matches the squad being picked has to cover, so the row can say
+  /// how many of THEM this player sits out rather than only that he is out.
+  final int coverage;
+
+  /// The save seed, so the derived traits match the rest of the save.
+  final int saveSeed;
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    final out = outlook;
+    final reason = out != null
+        ? absenceLabel(l, out)
+        : absenceShortLabel(l, absence);
+    final isInjury = (absence?.injuryMatches ?? 0) > 0;
+    // What this absence costs THIS squad. A three-game ban is a different
+    // proposition for a one-match friendly window than for a four-match
+    // qualifying camp, and the bare ban length never said which.
+    final missed = SquadSelection.matchesMissed(absence);
+    final missedHere = missed > coverage ? coverage : missed;
+    final change = onChanged;
     return ListTile(
       dense: true,
-      onTap: () => onChanged(!selected),
+      onTap: change == null ? null : () => change(!selected),
       leading: SizedBox(width: 40, child: TacticalChip(player.position.label)),
-      title: Text(player.name, style: AppTypography.bodyMedium),
-      subtitle: Text(
-        '${player.position.roleName} · Age ${player.age}',
-        style: AppTypography.labelSmall.copyWith(
-          color: AppColors.onSurfaceVariant,
-        ),
+      title: Row(
+        children: [
+          Flexible(
+            // Naming a squad is the one screen where the manager MUST be able
+            // to read who he is picking, so the name is never cut. When the
+            // full name will not fit beside the badges, the forename gives way
+            // to an initial ("X. John") rather than the surname being lost or
+            // the whole name shrinking away.
+            child: WholeText(
+              player.name,
+              maxLines: 1,
+              shortText: initialledName(player.name),
+              style: AppTypography.bodyMedium,
+            ),
+          ),
+          // A boy still in the youth pyramid wears his level, so naming him is
+          // never something that happens by accident.
+          if (YouthLevel.forAge(player.age) case final level?) ...[
+            const SizedBox(width: AppSpacing.xs),
+            Container(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 6,
+                vertical: 2,
+              ),
+              decoration: BoxDecoration(
+                color: AppColors.primary.withValues(alpha: 0.16),
+                borderRadius: AppRadii.smAll,
+              ),
+              child: Text(
+                level.label,
+                style: AppTypography.labelSmall.copyWith(
+                  color: AppColors.primary,
+                ),
+              ),
+            ),
+          ],
+          if (condition != null) ...[
+            const SizedBox(width: AppSpacing.xs),
+            _FormDot(form: condition!.form),
+          ],
+          // What this player is known for, as a compact glyph strip — the
+          // thing that makes one 74-rated midfielder different from the next.
+          PlayerTraitGlyphs(player: player, saveSeed: saveSeed),
+        ],
+      ),
+      // The absence badge lives on the subtitle line, not beside the name: in
+      // the title it crowded the name into an ellipsis on a phone, so it read
+      // as if the badge were covering it.
+      // A WRAP, not a row. This line can carry four things at once — his age
+      // and value, why he is unavailable, how much club football he is
+      // getting, how tired he is — and on a phone they do not fit beside each
+      // other, so the longest of them was cut and the manager lost exactly the
+      // detail he was reading the line for. Given a second line they all
+      // arrive whole, and a row only grows when it has something to say.
+      subtitle: Wrap(
+        spacing: AppSpacing.sm,
+        runSpacing: 2,
+        crossAxisAlignment: WrapCrossAlignment.center,
+        children: [
+          // Position is already shown by the leading chip — no role text.
+          Text(
+            l.tacticsAgeValue(player.age, _money(player.value)),
+            style: AppTypography.labelSmall.copyWith(
+              color: AppColors.onSurfaceVariant,
+            ),
+          ),
+          // A LINE OF ITS OWN. Sharing a run with the age and value left the
+          // badge roughly a hundred and forty pixels on a 400px phone, which
+          // is under what "Suspended · 1 game" needs — so the one thing on the
+          // row that says why a man cannot play was the thing that got cut.
+          // Full width here means a full RUN, not a full-width badge: the
+          // align keeps it its own size, hard left, with room to be read.
+          if (reason != null)
+            SizedBox(
+              width: double.infinity,
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: _AbsenceBadge(reason: reason, isInjury: isInjury),
+              ),
+            ),
+          // How much of THIS camp he actually misses. Only worth saying when
+          // the camp is more than one match, because otherwise the badge above
+          // has already said it.
+          if (missedHere > 0 && coverage > 1)
+            Text(
+              l.tacticsMissesOfCamp(missedHere, coverage),
+              style: AppTypography.labelSmall.copyWith(
+                color: AppColors.onSurfaceVariant,
+              ),
+            ),
+
+          // Club standing is NOT on this row. It appeared on some rows and
+          // not others (only men with recent minutes have a condition at all),
+          // which made a badge that was really about a player's club read as a
+          // flag the game had raised about him. It lives on his own screen,
+          // where every player has one and it can be read against the rest of
+          // his situation.
+          if (condition != null &&
+              condition!.fatigueState != FatigueState.fresh)
+            _FatigueTag(state: condition!.fatigueState),
+        ],
       ),
       trailing: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
+          IconButton(
+            visualDensity: VisualDensity.compact,
+            icon: const Icon(
+              Icons.info_outline,
+              size: 20,
+              color: AppColors.onSurfaceVariant,
+            ),
+            onPressed: onInfo,
+          ),
           Text('${player.overall}', style: AppTypography.labelMedium),
           const SizedBox(width: AppSpacing.sm),
           Icon(
             selected ? Icons.check_circle : Icons.circle_outlined,
             color: selected ? AppColors.primary : AppColors.outlineVariant,
             size: 22,
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// Formats a euro value compactly, e.g. €12.5M / €650K / €0.
+  static String _money(int euros) {
+    if (euros >= 1000000) return '€${(euros / 1000000).toStringAsFixed(1)}M';
+    if (euros >= 1000) return '€${(euros / 1000).round()}K';
+    return '€$euros';
+  }
+}
+
+/// A compact chip flagging an unavailable player as injured or suspended.
+/// A small coloured dot showing a player's current form (hidden for steady).
+class _FormDot extends StatelessWidget {
+  const _FormDot({required this.form});
+
+  final PlayerForm form;
+
+  @override
+  Widget build(BuildContext context) {
+    final (color, icon) = switch (form) {
+      PlayerForm.onFire => (
+        const Color(0xFFE8622C),
+        Icons.local_fire_department,
+      ),
+      PlayerForm.good => (AppColors.positive, Icons.trending_up),
+      PlayerForm.steady => (AppColors.onSurfaceVariant, Icons.remove),
+      PlayerForm.poor => (const Color(0xFFEFC94C), Icons.trending_down),
+      PlayerForm.cold => (const Color(0xFFD64545), Icons.ac_unit),
+    };
+    if (form == PlayerForm.steady) return const SizedBox.shrink();
+    return Icon(icon, size: 14, color: color);
+  }
+}
+
+/// A compact tag flagging a fatigued player, to nudge rotation.
+class _FatigueTag extends StatelessWidget {
+  const _FatigueTag({required this.state});
+
+  final FatigueState state;
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    final (color, label) = switch (state) {
+      FatigueState.exhausted => (
+        const Color(0xFFD64545),
+        l.tacticsFatigueExhausted,
+      ),
+      FatigueState.tired => (const Color(0xFFEFC94C), l.tacticsFatigueTired),
+      FatigueState.ready => (
+        AppColors.onSurfaceVariant,
+        l.tacticsFatigueMatchLegs,
+      ),
+      FatigueState.fresh => (AppColors.onSurfaceVariant, ''),
+    };
+    if (state == FatigueState.fresh) return const SizedBox.shrink();
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Icon(Icons.battery_alert_rounded, size: 11, color: color),
+        const SizedBox(width: 2),
+        Text(label, style: AppTypography.labelSmall.copyWith(color: color)),
+      ],
+    );
+  }
+}
+
+class _AbsenceBadge extends StatelessWidget {
+  const _AbsenceBadge({required this.reason, required this.isInjury});
+
+  final String reason;
+  final bool isInjury;
+
+  @override
+  Widget build(BuildContext context) {
+    final color = isInjury ? const Color(0xFFD64545) : const Color(0xFFEFC94C);
+    // Every pixel of chrome here is a pixel the reason does not get. The
+    // subtitle is 168px wide on a 400px phone, and the padding, the border and
+    // the icon gap were taking 28 of them — enough that "Suspended · 1 game"
+    // came up half a pixel short and ellipsised the word the badge exists to
+    // say. Trimmed to what still reads as a chip.
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1),
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: 0.16),
+        borderRadius: AppRadii.smAll,
+        border: Border.all(color: color.withValues(alpha: 0.5)),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            isInjury ? Icons.medical_services : Icons.gavel,
+            size: 11,
+            color: color,
+          ),
+          const SizedBox(width: 2),
+          // Flexible, because Czech runs longer than English everywhere and a
+          // badge is not allowed to be the thing that overflows a phone row.
+          Flexible(
+            child: Text(
+              reason,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: AppTypography.labelSmall.copyWith(color: color),
+            ),
           ),
         ],
       ),

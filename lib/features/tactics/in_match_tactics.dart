@@ -1,0 +1,1010 @@
+import 'package:flutter/material.dart';
+import 'package:fnm/core/theme/app_colors.dart';
+import 'package:fnm/core/theme/app_dimens.dart';
+import 'package:fnm/core/theme/app_typography.dart';
+import 'package:fnm/domain/entities/enums.dart';
+import 'package:fnm/domain/entities/formation.dart';
+import 'package:fnm/domain/entities/player.dart';
+import 'package:fnm/domain/entities/tactics.dart';
+import 'package:fnm/domain/services/rating/overall_rating.dart';
+import 'package:fnm/domain/services/tactics/best_eleven.dart';
+import 'package:fnm/domain/services/tactics/position_fit.dart';
+import 'package:fnm/domain/services/tactics/set_piece_picks.dart';
+import 'package:fnm/domain/services/tactics/substitution_rules.dart';
+import 'package:fnm/features/tactics/formation_picker.dart';
+import 'package:fnm/features/tactics/tactics_pitch.dart';
+import 'package:fnm/l10n/app_localizations.dart';
+import 'package:fnm/shared/widgets/widgets.dart';
+
+/// The tactical setup a manager confirms from the in-match editor: the shape,
+/// the on-pitch XI (slot → player id, in [formation]'s order) and instructions,
+/// to take effect from the current minute onward.
+class InMatchTacticsResult {
+  const InMatchTacticsResult({
+    required this.formation,
+    required this.lineup,
+    required this.instructions,
+    required this.takers,
+  });
+
+  final Formation formation;
+  final List<int?> lineup;
+  final TacticalInstructions instructions;
+
+  /// Who takes penalties and dead balls from here on. Either may be null,
+  /// which hands that duty back to the engine's own pick.
+  final ({int? penalty, int? deadBall}) takers;
+}
+
+/// Opens the full in-match tactics editor (shape, XI, subs and instructions) as
+/// a page and returns the confirmed setup, or null if the manager backed out.
+Future<InMatchTacticsResult?> showInMatchTactics(
+  BuildContext context, {
+  required int minute,
+  required Formation formation,
+  required List<int?> lineup,
+  required TacticalInstructions instructions,
+  required List<Player> pool,
+  required Set<int> startingIds,
+  required int maxSubs,
+  ({int? penalty, int? deadBall}) takers = (penalty: null, deadBall: null),
+  Set<int> injuredIds = const {},
+  Set<int> sentOffIds = const {},
+  Map<int, int> energyByPlayer = const {},
+  List<Color>? teamColors,
+}) {
+  return Navigator.of(context).push<InMatchTacticsResult>(
+    MaterialPageRoute(
+      fullscreenDialog: true,
+      builder: (_) => _InMatchTacticsEditor(
+        minute: minute,
+        formation: formation,
+        lineup: lineup,
+        instructions: instructions,
+        pool: pool,
+        startingIds: startingIds,
+        maxSubs: maxSubs,
+        takers: takers,
+        injuredIds: injuredIds,
+        sentOffIds: sentOffIds,
+        energyByPlayer: energyByPlayer,
+        teamColors: teamColors,
+      ),
+    ),
+  );
+}
+
+class _InMatchTacticsEditor extends StatefulWidget {
+  const _InMatchTacticsEditor({
+    required this.minute,
+    required this.formation,
+    required this.lineup,
+    required this.instructions,
+    required this.pool,
+    required this.startingIds,
+    required this.maxSubs,
+    required this.takers,
+    this.injuredIds = const {},
+    this.sentOffIds = const {},
+    this.energyByPlayer = const {},
+    this.teamColors,
+  });
+
+  final int minute;
+  final Formation formation;
+  final List<int?> lineup;
+  final TacticalInstructions instructions;
+  final List<Player> pool;
+  final Set<int> startingIds;
+  final int maxSubs;
+
+  /// The side's set-piece takers as the editor opens.
+  final ({int? penalty, int? deadBall}) takers;
+
+  /// Live remaining energy (0–100) per player id, shown on the pitch and bench
+  /// so the manager can see who's tiring before making a sub.
+  final Map<int, int> energyByPlayer;
+
+  /// Players hurt this match and not yet replaced — flagged orange on the pitch
+  /// so the manager knows exactly who to take off.
+  final Set<int> injuredIds;
+
+  /// Players sent off this match. They are gone for good: off the pitch, off
+  /// the bench, and NOT replaceable — the side simply plays a man down. They
+  /// used to sit in the squad list unmarked and could be subbed on again.
+  final Set<int> sentOffIds;
+
+  /// The manager's kit colours, filling the player discs on the pitch.
+  final List<Color>? teamColors;
+
+  @override
+  State<_InMatchTacticsEditor> createState() => _InMatchTacticsEditorState();
+}
+
+class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
+  late Formation _formation = widget.formation;
+
+  /// The XI with any sent-off player's slot vacated — the shape the manager is
+  /// actually working with once someone has walked.
+  late List<int?> _lineup = [
+    for (final id in widget.lineup)
+      if (id != null && widget.sentOffIds.contains(id)) null else id,
+  ];
+  late TacticalInstructions _instructions = widget.instructions;
+  late ({int? penalty, int? deadBall}) _takers = widget.takers;
+
+  /// Everyone still eligible to be on the pitch: the squad minus the sent off.
+  late final List<Player> _eligible = widget.pool
+      .where((p) => !widget.sentOffIds.contains(p.id))
+      .toList();
+
+  late final Map<int, Player> _byId = {for (final p in widget.pool) p.id: p};
+
+  /// Ids currently on the pitch.
+  Set<int> get _onPitch => _lineup.whereType<int>().toSet();
+
+  /// The eleven actually on the pitch, for the side's live overall.
+  List<Player> get _onPitchPlayers => [
+    for (final id in _lineup)
+      if (id != null && _byId[id] != null) _byId[id]!,
+  ];
+
+  /// The designated takers with anyone no longer on the pitch dropped.
+  ///
+  /// A named taker who has been substituted or sent off is ignored by the
+  /// engine anyway, so the slot falls back to automatic rather than to nobody:
+  /// null already means "let the engine pick", and a second state for "he has
+  /// gone" would only be the same thing under another name.
+  ({int? penalty, int? deadBall}) get _liveTakers {
+    final on = _onPitch;
+    return (
+      penalty: on.contains(_takers.penalty) ? _takers.penalty : null,
+      deadBall: on.contains(_takers.deadBall) ? _takers.deadBall : null,
+    );
+  }
+
+  /// A sub is spent for every starter no longer on the pitch (chains of
+  /// replacements still count as a single change to that starter's slot). A
+  /// sending-off is not a substitution — it costs a player, not a change.
+  int get _subsUsed => widget.startingIds
+      .where((id) => !_onPitch.contains(id) && !widget.sentOffIds.contains(id))
+      .length;
+
+  bool get _overLimit => _subsUsed > widget.maxSubs;
+
+  /// Starters already taken off. They cannot come back on: football has no
+  /// re-entry. Seeded from the XI the sheet opened with, so a manager reopening
+  /// the editor later in the match still cannot undo an earlier change.
+  late Set<int> _withdrawn = widget.startingIds
+      .where((id) => !_onPitch.contains(id))
+      .toSet();
+
+  /// The states the XI has passed through in THIS sheet, newest last, so a
+  /// misclick can be taken back. A manager who put the wrong man on had to
+  /// leave the editor and lose every other change with him.
+  ///
+  /// Only what this sheet did is on here: the oldest entry is the XI the sheet
+  /// opened with, so a substitution made ten minutes ago — part of the match,
+  /// not of this sheet — can never be popped off, and football's ban on
+  /// re-entry survives the undo intact.
+  ///
+  /// The withdrawn set travels alongside the lineup because it is not purely
+  /// derived: a substitute who came on earlier in this sheet and was then
+  /// taken off again belongs in it, and no formula over the starting XI
+  /// would find him. The substitution COUNT needs no such help — [_subsUsed]
+  /// reads the lineup, so restoring the lineup restores the count.
+  final List<({List<int?> lineup, Set<int> withdrawn})> _undo = [];
+
+  /// Remembers the XI as it stands, just before it is changed.
+  void _pushUndo() =>
+      _undo.add((lineup: [..._lineup], withdrawn: {..._withdrawn}));
+
+  /// Takes back the last change made in this sheet.
+  void _undoLast() {
+    if (_undo.isEmpty) return;
+    setState(() {
+      final previous = _undo.removeLast();
+      _lineup = previous.lineup;
+      _withdrawn = previous.withdrawn;
+    });
+  }
+
+  void _setFormation(Formation f) {
+    if (f == _formation) return;
+    // Refits the players who are ALREADY ON THE PITCH to the new shape, and
+    // nobody else.
+    //
+    // It used to top the pool up from the bench whenever fewer than eleven
+    // were out there, which is precisely the situation after a sending-off:
+    // changing shape with ten men silently brought a substitute on, spending
+    // no substitution, and the red card was undone by dragging a player
+    // sideways. A reshape rearranges who is on the pitch. Putting somebody new
+    // on is a substitution, and has to cost one.
+    setState(() {
+      _formation = f;
+      // Short by however many have walked: bestEleven leaves those slots null.
+      _lineup = bestEleven(f, reshapePool(_eligible, _onPitch));
+      // A reshape re-derives the whole XI against a different set of slots, so
+      // the lineups remembered under the old shape no longer mean anything:
+      // restoring one would put players in positions they were never picked
+      // for. The history starts again from the new shape.
+      _undo.clear();
+    });
+  }
+
+  void _swap(int a, int b) {
+    if (a == b) return;
+    setState(() {
+      _pushUndo();
+      final l = [..._lineup];
+      final tmp = l[a];
+      l[a] = l[b];
+      l[b] = tmp;
+      _lineup = l;
+    });
+  }
+
+  /// Puts [playerId] into [slot], swapping if they already start elsewhere (so
+  /// the displaced player moves rather than duplicating), or otherwise pushing
+  /// the previous occupant off the pitch (a substitution).
+  ///
+  /// The change is refused outright when it would break the substitution
+  /// rules — the snackbar on [_apply] used to be the only thing standing in
+  /// the way, which let the board reach a state football does not allow.
+  void _setSlot(int slot, int playerId) {
+    final refusal = refusalToBringOn(
+      startingIds: widget.startingIds,
+      onPitch: _onPitch,
+      sentOffIds: widget.sentOffIds,
+      withdrawnIds: _withdrawn,
+      maxSubs: widget.maxSubs,
+      playerId: playerId,
+    );
+    if (refusal != SubRefusal.none) {
+      final l = AppLocalizations.of(context);
+      // Say WHICH rule stopped him. Every refusal used to be reported as the
+      // sub count being spent, so a manager dragging a man he had already
+      // taken off was told he had made too many changes.
+      final who = _byId[playerId]?.name ?? '';
+      final message = switch (refusal) {
+        SubRefusal.alreadyWithdrawn => l.tacticsSubAlreadyOff(who),
+        SubRefusal.sentOff => l.tacticsSubSentOff(who),
+        SubRefusal.noSubsLeft ||
+        SubRefusal.none => l.tacticsTooManySubs(widget.maxSubs),
+      };
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(message)),
+      );
+      return;
+    }
+    setState(() {
+      _pushUndo();
+      final l = [..._lineup];
+      final existing = l.indexOf(playerId);
+      if (existing != -1) {
+        l[existing] = l[slot];
+      } else if (l[slot] case final out?) {
+        _withdrawn = {..._withdrawn, out};
+      }
+      l[slot] = playerId;
+      _lineup = l;
+    });
+  }
+
+  void _apply() {
+    if (_overLimit) {
+      final l = AppLocalizations.of(context);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            l.tacticsTooManySubs(widget.maxSubs),
+          ),
+        ),
+      );
+      return;
+    }
+    Navigator.of(context).pop(
+      InMatchTacticsResult(
+        formation: _formation,
+        lineup: _lineup,
+        instructions: _instructions,
+        takers: _liveTakers,
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    final onPitch = _onPitch;
+    // A sent-off player is not a substitute — he's out of the game.
+    final subs = _eligible.where((p) => !onPitch.contains(p.id)).toList()
+      ..sort((a, b) => b.overall.compareTo(a.overall));
+
+    return Scaffold(
+      appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.close, color: AppColors.primary),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+        // The minute, and under it the side's overall as it stands — the same
+        // number the pre-match screen shows either side of the "VS". It moves
+        // with every change made here, which is the point: a manager taking a
+        // tired star off should see what it costs him.
+        title: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              l.tacticsMinuteTitle(widget.minute),
+              style: AppTypography.labelMedium.copyWith(
+                color: AppColors.primary,
+              ),
+            ),
+            Text(
+              '${l.teamOverall} ${squadOverall(_onPitchPlayers)}',
+              style: AppTypography.labelSmall.copyWith(
+                color: AppColors.onSurfaceVariant,
+              ),
+            ),
+          ],
+        ),
+        centerTitle: true,
+        actions: [
+          TextButton(
+            onPressed: _apply,
+            child: Text(
+              l.tacticsApply,
+              style: AppTypography.labelMedium.copyWith(
+                color: _overLimit ? AppColors.error : AppColors.primary,
+              ),
+            ),
+          ),
+        ],
+      ),
+      body: DefaultTabController(
+        length: 2,
+        child: Column(
+          children: [
+            TabBar(
+              labelColor: AppColors.onSurface,
+              unselectedLabelColor: AppColors.onSurfaceVariant,
+              indicatorColor: AppColors.primary,
+              tabs: [
+                Tab(text: l.tacticsTabLineupSubs),
+                Tab(text: l.tacticsTabTactics),
+              ],
+            ),
+            Expanded(
+              child: TabBarView(
+                children: [
+                  _lineupTab(subs),
+                  _tacticsTab(),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// The pitch and the bench: pick a slot or drag a substitute on. An injured
+  /// player is flagged directly on the pitch (orange, "INJURED — REPLACE"), so
+  /// no banner is needed above the squad.
+  Widget _lineupTab(List<Player> subs) {
+    final l = AppLocalizations.of(context);
+    return ListView(
+      children: [
+        // The formation picker lives on the Tactics tab and nowhere else. It
+        // used to be repeated here, above the pitch, so the same row of shape
+        // chips appeared twice in one sheet — two controls for one setting,
+        // which reads as a bug whichever one you touch.
+        AspectRatio(
+          aspectRatio: 3 / 4,
+          child: TacticsPitch(
+            formation: _formation,
+            instructions: _instructions,
+            lineup: _lineup,
+            byId: _byId,
+            teamColors: widget.teamColors,
+            energyByPlayer: widget.energyByPlayer,
+            // Mark the hurt players absent AND injured so their node renders the
+            // orange "INJURED — REPLACE" flag, exactly like a pre-match injury.
+            absentIds: widget.injuredIds,
+            injuredIds: widget.injuredIds,
+            onTapSlot: _pickPlayer,
+            onSwap: (a, b) {
+              switch (resolveDrag(_formation, a, b)) {
+                case SwapSlots():
+                  _swap(a, b);
+                case ReshapeTo(:final formation):
+                  _reshapeKeeping(formation, a, b);
+              }
+            },
+            onBenchIn: _setSlot,
+            onMoveToSpace: (slot, dropY) {
+              final outcome = resolveSpaceDrag(
+                _formation,
+                _instructions,
+                slot,
+                dropY,
+              );
+              // Through _setFormation, which refits the players already on the
+              // pitch — assigning _formation directly would scramble the side
+              // mid-match.
+              if (outcome case ReshapeTo(:final formation)) {
+                _setFormation(formation);
+              }
+            },
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(AppSpacing.marginMobile),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // The LABEL gives way, and only the label. At 360px this row
+              // overflowed by 40 in ENGLISH, before Czech was even asked, so
+              // something has to yield — but the count of changes left is the
+              // number a manager must not lose sight of, so it is never the
+              // thing that yields. Flexing both halves is the trap: two
+              // Flexibles either side of a Spacer share the width three ways,
+              // which caps each at a third of the row and cuts the counter to
+              // "SUBS · ..." on every phone in both languages.
+              Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      l.tacticsSubstitutesCount(subs.length),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: AppTypography.labelMedium,
+                    ),
+                  ),
+                  const SizedBox(width: AppSpacing.sm),
+                  Text(
+                    l.tacticsSubsUsed(_subsUsed, widget.maxSubs),
+                    maxLines: 1,
+                    style: AppTypography.labelMedium.copyWith(
+                      color: _overLimit ? AppColors.error : AppColors.primary,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: AppSpacing.xs),
+              Text(
+                l.tacticsDragSubOn,
+                style: AppTypography.labelSmall.copyWith(
+                  color: AppColors.onSurfaceVariant,
+                ),
+              ),
+              // Only while there is something to take back, and only ever what
+              // THIS sheet changed. A misclicked substitution used to be final
+              // the moment it landed: the one way out was to leave the editor,
+              // which threw away every other change made with it.
+              if (_undo.isNotEmpty)
+                InkWell(
+                  onTap: _undoLast,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: AppSpacing.xs,
+                    ),
+                    child: Row(
+                      children: [
+                        const Icon(
+                          Icons.undo_rounded,
+                          size: 16,
+                          color: AppColors.primary,
+                        ),
+                        const SizedBox(width: AppSpacing.xs),
+                        Expanded(
+                          child: Text(
+                            l.tacticsUndoLastChange,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: AppTypography.labelMedium.copyWith(
+                              color: AppColors.primary,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              // Say plainly that the side is short — the vacated slot on the
+              // pitch is otherwise easy to read as an empty position to fill.
+              if (widget.sentOffIds.isNotEmpty) ...[
+                const SizedBox(height: AppSpacing.sm),
+                Row(
+                  children: [
+                    const Icon(
+                      Icons.block_rounded,
+                      size: 14,
+                      color: AppColors.error,
+                    ),
+                    const SizedBox(width: AppSpacing.xs),
+                    Expanded(
+                      child: Text(
+                        l.tacticsSentOffNote(
+                          widget.sentOffIds
+                              .map((id) => _byId[id]?.name)
+                              .whereType<String>()
+                              .join(', '),
+                        ),
+                        style: AppTypography.labelSmall.copyWith(
+                          color: AppColors.error,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+              const SizedBox(height: AppSpacing.sm),
+              AppCard(
+                padding: EdgeInsets.zero,
+                child: Column(
+                  children: [
+                    if (subs.isEmpty)
+                      Padding(
+                        padding: const EdgeInsets.all(AppSpacing.md),
+                        child: Text(
+                          l.tacticsNoSubs,
+                          style: AppTypography.bodyMedium,
+                        ),
+                      ),
+                    for (final p in subs)
+                      () {
+                        final standing = _standing(p);
+                        return SubDragRow(
+                          player: p,
+                          trailing: _energyTrailing(p.id),
+                          note: standing.note,
+                          noteColor: standing.color,
+                          enabled: !standing.blocked,
+                        );
+                      }(),
+                  ],
+                ),
+              ),
+              const SizedBox(height: AppSpacing.xl),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  /// What a squad list has to say about [p] BEFORE the manager picks him, and
+  /// whether he may be picked at all.
+  ///
+  /// The rules themselves live in [refusalToBringOn] and are asked here, never
+  /// restated: the lists used to show every player identically, so a manager
+  /// learned that a man was already off, or that his changes were spent, only
+  /// by being refused after he had chosen.
+  ({String? note, Color color, bool blocked}) _standing(Player p) {
+    final l = AppLocalizations.of(context);
+    final refusal = refusalToBringOn(
+      startingIds: widget.startingIds,
+      onPitch: _onPitch,
+      sentOffIds: widget.sentOffIds,
+      withdrawnIds: _withdrawn,
+      maxSubs: widget.maxSubs,
+      playerId: p.id,
+    );
+    return switch (refusal) {
+      SubRefusal.alreadyWithdrawn => (
+        note: l.tacticsSubOffAlready,
+        color: AppColors.error,
+        blocked: true,
+      ),
+      SubRefusal.sentOff => (
+        note: l.tacticsSubSentOff(p.name),
+        color: AppColors.error,
+        blocked: true,
+      ),
+      SubRefusal.noSubsLeft => (
+        note: l.tacticsSubNoneLeft,
+        color: AppColors.error,
+        blocked: true,
+      ),
+      // A knock does not stop a man playing: it is the manager's call whether
+      // to risk him, so it is said in amber and he stays pickable.
+      SubRefusal.none => (
+        note: widget.injuredIds.contains(p.id) ? l.tacticsSubInjured : null,
+        color: AppColors.warning,
+        blocked: false,
+      ),
+    };
+  }
+
+  /// A small energy gauge for a bench row, or null when energy isn't tracked
+  /// (pre-match) or this player has no recorded energy yet.
+  Widget? _energyTrailing(int id) {
+    final e = widget.energyByPlayer[id];
+    if (e == null) return null;
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Icon(Icons.bolt, size: 14, color: energyColor(e)),
+        Text(
+          '$e%',
+          style: AppTypography.labelMedium.copyWith(color: energyColor(e)),
+        ),
+      ],
+    );
+  }
+
+  /// Formation and the tactical instruction sliders.
+  ///
+  /// Shouting a side further forward when you are chasing a game is management,
+  /// not an exploit — the sliders belong here. What does not belong is applying
+  /// a whole prepared PLAYSTYLE mid-match, and that lives on the tactics screen
+  /// rather than in this editor.
+  Widget _tacticsTab() {
+    final l = AppLocalizations.of(context);
+    // Who takes what as things stand: the manager's own picks where he has
+    // made them, and otherwise the man the engine steps up on its own.
+    final live = _liveTakers;
+    final xi = _onPitchPlayers;
+    final penaltyId = live.penalty ?? SetPiecePicks.penalty(xi);
+    final deadBallId = live.deadBall ?? SetPiecePicks.deadBall(xi);
+    return ListView(
+      padding: const EdgeInsets.all(AppSpacing.marginMobile),
+      children: [
+        // The same control as before kick-off. Two different ways of picking
+        // a shape — a row of text chips in here, a drawn grid out there — made
+        // the same decision look like two unrelated features, and the text
+        // chips are the version nobody could read: "4-1-4-1" and "4-4-1-1" are
+        // one glyph apart and neither says what the side would look like.
+        FormationField(
+          selected: _formation,
+          onSelected: _setFormation,
+        ),
+        const SizedBox(height: AppSpacing.lg),
+        Text(l.tacticsInstructions, style: AppTypography.labelMedium),
+        _slider(
+          l.tacticsInstrMentality,
+          l.tacticsInstrDefensive,
+          l.tacticsInstrAttacking,
+          _instructions.mentality,
+          (v) => _instructions = _instructions.copyWith(mentality: v),
+        ),
+        _slider(
+          l.tacticsInstrPressing,
+          l.tacticsInstrLowBlock,
+          l.tacticsInstrHighPress,
+          _instructions.pressing,
+          (v) => _instructions = _instructions.copyWith(pressing: v),
+        ),
+        _slider(
+          l.tacticsInstrTempo,
+          l.tacticsInstrPatient,
+          l.tacticsInstrFast,
+          _instructions.tempo,
+          (v) => _instructions = _instructions.copyWith(tempo: v),
+        ),
+        _slider(
+          l.tacticsInstrWidth,
+          l.tacticsInstrNarrow,
+          l.tacticsInstrWide,
+          _instructions.width,
+          (v) => _instructions = _instructions.copyWith(width: v),
+        ),
+        _slider(
+          l.tacticsInstrDefLine,
+          l.tacticsInstrDeep,
+          l.tacticsInstrHigh,
+          _instructions.defensiveLine,
+          (v) => _instructions = _instructions.copyWith(defensiveLine: v),
+        ),
+        _slider(
+          l.tacticsInstrDirectness,
+          l.tacticsInstrPossession,
+          l.tacticsInstrDirect,
+          _instructions.directness,
+          (v) => _instructions = _instructions.copyWith(directness: v),
+        ),
+        const SizedBox(height: AppSpacing.lg),
+        // Set-piece takers, live. The pair was fixed at kick-off and could not
+        // be touched again, so a manager whose penalty taker had just been
+        // substituted (or had just put one over the bar) had no way to hand the
+        // ball to anyone else. Only the eleven ON THE PITCH are offered: a
+        // designated taker sitting on the bench is ignored by the engine
+        // anyway, and offering him would read as a change that did nothing.
+        Text(l.tacticsSetPieceTakers, style: AppTypography.labelMedium),
+        const SizedBox(height: 2),
+        Text(
+          l.tacticsSetPieceBlurb,
+          style: AppTypography.labelSmall.copyWith(
+            color: AppColors.onSurfaceVariant,
+          ),
+        ),
+        const SizedBox(height: AppSpacing.sm),
+        AppCard(
+          child: Column(
+            children: [
+              // Who steps up as things stand. The engine has always had an
+              // answer; only the screen was blank.
+              SetPieceTakerSummary(
+                penaltyName: _byId[penaltyId]?.name,
+                penaltyIsAuto: live.penalty == null,
+                deadBallName: _byId[deadBallId]?.name,
+                deadBallIsAuto: live.deadBall == null,
+                // One tap takes the two men already named above and makes them
+                // the manager's own. They are the same names either way; what
+                // changes is that they are now a decision, and they stop
+                // drifting with the eleven as it is picked apart by
+                // substitutions.
+                onQuickPick: () => setState(() {
+                  _takers = (penalty: penaltyId, deadBall: deadBallId);
+                }),
+              ),
+              const Divider(height: AppSpacing.lg),
+              for (final p in _onPitchPlayers)
+                _TakerRow(
+                  player: p,
+                  isPenaltyTaker: live.penalty == p.id,
+                  isDeadBallTaker: live.deadBall == p.id,
+                  isAutoPenalty: live.penalty == null && penaltyId == p.id,
+                  isAutoDeadBall: live.deadBall == null && deadBallId == p.id,
+                  onTogglePenalty: () => setState(() {
+                    _takers = (
+                      penalty: live.penalty == p.id ? null : p.id,
+                      deadBall: live.deadBall,
+                    );
+                  }),
+                  onToggleDeadBall: () => setState(() {
+                    _takers = (
+                      penalty: live.penalty,
+                      deadBall: live.deadBall == p.id ? null : p.id,
+                    );
+                  }),
+                ),
+            ],
+          ),
+        ),
+        const SizedBox(height: AppSpacing.xl),
+      ],
+    );
+  }
+
+  Widget _slider(
+    String label,
+    String low,
+    String high,
+    int value,
+    ValueChanged<int> apply,
+  ) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Text(label, style: AppTypography.bodyMedium),
+            const Spacer(),
+            Text('$value', style: AppTypography.labelMedium),
+          ],
+        ),
+        Slider(
+          value: value.toDouble(),
+          max: 100,
+          divisions: 20,
+          onChanged: (v) => setState(() => apply(v.round())),
+        ),
+        Row(
+          children: [
+            Text(
+              low,
+              style: AppTypography.labelSmall.copyWith(
+                color: AppColors.onSurfaceVariant,
+              ),
+            ),
+            const Spacer(),
+            Text(
+              high,
+              style: AppTypography.labelSmall.copyWith(
+                color: AppColors.onSurfaceVariant,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: AppSpacing.sm),
+      ],
+    );
+  }
+
+  /// A cross-line drag that reshapes: refit the current players to [next], then
+  /// nudge the dragged player toward the target slot so the intent is kept.
+  void _reshapeKeeping(Formation next, int a, int b) {
+    final draggedId = _lineup[a];
+    _setFormation(next);
+    if (draggedId != null) {
+      final slot = _lineup.indexOf(draggedId);
+      // If the player didn't land near the target line, place them at b.
+      if (slot != -1 && slot != b) _setSlot(b, draggedId);
+    }
+  }
+
+  Future<void> _pickPlayer(int slot) async {
+    final position = _formation.positions[slot];
+    final isKeeperSlot = position.category == PositionCategory.goalkeeper;
+    // A goalkeeping slot is keeper-only; any other slot can be filled by any
+    // outfield player (with a heavy out-of-position penalty, shown below).
+    final candidates =
+        _eligible
+            .where(
+              (p) => isKeeperSlot
+                  ? p.position.category == PositionCategory.goalkeeper
+                  : p.position.category != PositionCategory.goalkeeper,
+            )
+            .toList()
+          ..sort(PositionFit.bySlotFit(position));
+    final onPitch = _onPitch;
+    final l = AppLocalizations.of(context);
+
+    final picked = await showModalBottomSheet<int>(
+      context: context,
+      backgroundColor: AppColors.surfaceContainer,
+      builder: (_) => ListView(
+        padding: const EdgeInsets.all(AppSpacing.md),
+        children: [
+          Text(
+            l.tacticsPickRole(position.roleName.toUpperCase()),
+            style: AppTypography.labelMedium.copyWith(color: AppColors.primary),
+          ),
+          const SizedBox(height: AppSpacing.sm),
+          for (final p in candidates)
+            () {
+              final eff = PositionFit.effectiveOverall(p, position);
+              final penalised = eff < p.overall;
+              // The same standing the squad list shows. This is the list the
+              // manager actually picks from, and it offered a man already
+              // taken off exactly as it offered a fit substitute.
+              final standing = _standing(p);
+              return ListTile(
+                dense: true,
+                enabled: !standing.blocked,
+                leading: TacticalChip(p.position.label),
+                title: Text(
+                  p.name,
+                  style: AppTypography.bodyMedium.copyWith(
+                    color: onPitch.contains(p.id) || standing.blocked
+                        ? AppColors.onSurfaceVariant
+                        : null,
+                  ),
+                ),
+                // Age, and only age. The row ALREADY says he is out of
+                // position twice over: the leading chip names the position he
+                // actually plays, and the trailing rating is docked and amber
+                // with his real overall in brackets behind it. Saying it a
+                // third time in amber words made the row shout, and the amber
+                // that matters — the number the match is decided on — stopped
+                // standing out for being one of three.
+                //
+                // What DOES belong beside the age is the one thing the list
+                // never said: whether he may come on at all.
+                subtitle: Text(
+                  standing.note == null
+                      ? l.tacticsAgeOnly(p.age)
+                      : '${l.tacticsAgeOnly(p.age)} · ${standing.note}',
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: AppTypography.labelSmall.copyWith(
+                    color: standing.note == null
+                        ? AppColors.onSurfaceVariant
+                        : standing.color,
+                  ),
+                ),
+                trailing: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    if (onPitch.contains(p.id)) ...[
+                      TacticalChip(l.tacticsOn),
+                      const SizedBox(width: AppSpacing.sm),
+                    ],
+                    // The rating in THIS slot leads — the number that decides
+                    // the match — in amber when it is a docked one, with the
+                    // player's own overall behind it for the comparison.
+                    Text(
+                      '$eff',
+                      style: AppTypography.labelMedium.copyWith(
+                        color: penalised ? AppColors.warning : null,
+                      ),
+                    ),
+                    if (penalised)
+                      Text(
+                        ' (${p.overall})',
+                        style: AppTypography.labelSmall.copyWith(
+                          color: AppColors.onSurfaceVariant,
+                        ),
+                      ),
+                  ],
+                ),
+                onTap: standing.blocked
+                    ? null
+                    : () => Navigator.of(context).pop(p.id),
+              );
+            }(),
+        ],
+      ),
+    );
+    if (picked != null) _setSlot(slot, picked);
+  }
+}
+
+/// One player on the pitch, with the two set-piece badges beside him. The same
+/// controls as the tactics screen before kick-off, minus the role picker: a
+/// role is a brief you give a player, not a call you make at 70 minutes.
+class _TakerRow extends StatelessWidget {
+  const _TakerRow({
+    required this.player,
+    required this.isPenaltyTaker,
+    required this.isDeadBallTaker,
+    required this.isAutoPenalty,
+    required this.isAutoDeadBall,
+    required this.onTogglePenalty,
+    required this.onToggleDeadBall,
+  });
+
+  final Player player;
+  final bool isPenaltyTaker;
+  final bool isDeadBallTaker;
+
+  /// Nobody has been named and this is the man the engine would pick.
+  final bool isAutoPenalty;
+  final bool isAutoDeadBall;
+  final VoidCallback onTogglePenalty;
+  final VoidCallback onToggleDeadBall;
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: Row(
+        children: [
+          SizedBox(width: 36, child: TacticalChip(player.position.label)),
+          const SizedBox(width: AppSpacing.sm),
+          Expanded(
+            // The name of the man who takes the penalty is the whole point of
+            // this row, and a Text with an ellipsis handed the manager
+            // "Vondrackovs..." at 360 points. [WholeText] gives up the
+            // forename before it gives up anything else, and its size before
+            // it gives up a letter.
+            child: WholeText(
+              player.name,
+              maxLines: 1,
+              shortText: initialledName(player.name),
+              style: AppTypography.bodyMedium,
+            ),
+          ),
+          // Technical ability, the quality that decides a penalty or a free
+          // kick, so the choice is made on a number rather than a hunch.
+          Text(
+            '${player.attributes.technical}',
+            style: AppTypography.labelMedium.copyWith(
+              color: AppColors.ratingColor(player.attributes.technical / 10),
+              fontWeight: FontWeight.w800,
+            ),
+          ),
+          const SizedBox(width: AppSpacing.md),
+          SetPieceBadge(
+            icon: Icons.sports_soccer,
+            active: isPenaltyTaker,
+            auto: isAutoPenalty,
+            tooltip: l.tacticsPenalties,
+            onTap: onTogglePenalty,
+          ),
+          const SizedBox(width: 6),
+          SetPieceBadge(
+            icon: Icons.flag_rounded,
+            active: isDeadBallTaker,
+            auto: isAutoDeadBall,
+            tooltip: l.tacticsCornersFreeKicks,
+            onTap: onToggleDeadBall,
+          ),
+        ],
+      ),
+    );
+  }
+}

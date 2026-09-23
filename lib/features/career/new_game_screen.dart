@@ -5,6 +5,7 @@ import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/features/career/career_providers.dart';
+import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
 
@@ -31,12 +32,15 @@ class _NewGameScreenState extends ConsumerState<NewGameScreen> {
 
   Future<void> _start() async {
     setState(() => _creating = true);
-    final result = await ref.read(careerServiceProvider).create(
+    final result = await ref
+        .read(careerServiceProvider)
+        .create(
           nationId: widget.nationId,
           managerName: _controller.text,
         );
     if (!mounted) return;
     setState(() => _creating = false);
+    final l = AppLocalizations.of(context);
 
     result.fold(
       (career) => context.go('${Routes.hub}?careerId=${career.id}'),
@@ -47,7 +51,7 @@ class _NewGameScreenState extends ConsumerState<NewGameScreen> {
             SnackBar(
               content: Text(failure.message),
               action: SnackBarAction(
-                label: 'Manage saves',
+                label: l.careerManageSaves,
                 onPressed: () => context.go(Routes.saves),
               ),
             ),
@@ -58,6 +62,7 @@ class _NewGameScreenState extends ConsumerState<NewGameScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
     final nationAsync = ref.watch(nationByIdProvider(widget.nationId));
 
     return Scaffold(
@@ -67,7 +72,7 @@ class _NewGameScreenState extends ConsumerState<NewGameScreen> {
           onPressed: () => context.go(Routes.nations),
         ),
         title: Text(
-          'NEW GAME',
+          l.careerNewGameTitle,
           style: AppTypography.labelMedium.copyWith(color: AppColors.primary),
         ),
         centerTitle: true,
@@ -77,55 +82,99 @@ class _NewGameScreenState extends ConsumerState<NewGameScreen> {
           padding: const EdgeInsets.all(AppSpacing.marginMobile),
           child: nationAsync.when(
             loading: () => const Center(child: CircularProgressIndicator()),
-            error: (e, _) => Center(child: Text('Could not load nation.\n$e')),
+            error: (e, _) =>
+                Center(child: Text(l.careerCouldNotLoadNation('$e'))),
             data: (nation) {
               if (nation == null) {
-                return const Center(child: Text('Nation not found.'));
+                return Center(child: Text(l.careerNationNotFound));
               }
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  const SizedBox(height: AppSpacing.lg),
-                  Center(child: FlagDisc(nation.code, size: 96)),
-                  const SizedBox(height: AppSpacing.md),
-                  Center(
-                    child: Text(
-                      nation.name,
-                      style: AppTypography.headlineMedium,
+              // Scrolls (and keeps the Spacer layout via IntrinsicHeight) so
+              // the on-screen keyboard can't overflow the fixed content.
+              return LayoutBuilder(
+                builder: (context, constraints) => SingleChildScrollView(
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(
+                      minHeight: constraints.maxHeight,
+                    ),
+                    child: IntrinsicHeight(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          const SizedBox(height: AppSpacing.lg),
+                          Center(child: FlagDisc(nation.code, size: 96)),
+                          const SizedBox(height: AppSpacing.md),
+                          Center(
+                            child: Text(
+                              nation.name,
+                              style: AppTypography.headlineMedium,
+                            ),
+                          ),
+                          Center(
+                            child: Text(
+                              l.careerWorldRankNum(nation.ranking),
+                              style: AppTypography.labelMedium.copyWith(
+                                color: AppColors.onSurfaceVariant,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: AppSpacing.xl),
+                          AppTextField(
+                            label: l.careerManagerName,
+                            hint: l.careerManagerNameHint,
+                            controller: _controller,
+                            autofocus: true,
+                            textInputAction: TextInputAction.done,
+                            onSubmitted: (_) => _start(),
+                          ),
+                          const SizedBox(height: AppSpacing.md),
+                          Text(
+                            l.careerBeginsBlurb,
+                            style: AppTypography.bodySmall.copyWith(
+                              color: AppColors.onSurfaceVariant,
+                            ),
+                          ),
+                          const Spacer(),
+                          // What the manager is about to get for nothing, and
+                          // what the one payment is for. Said HERE, before the
+                          // save exists, rather than only at the wall four
+                          // years later: a player who finds out what is paid
+                          // for at the moment he is asked to pay reads it as a
+                          // trap, even when the free part was the whole game.
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Padding(
+                                padding: EdgeInsets.only(top: 1),
+                                child: Icon(
+                                  Icons.info_outline_rounded,
+                                  size: 13,
+                                  color: AppColors.onSurfaceVariant,
+                                ),
+                              ),
+                              const SizedBox(width: AppSpacing.xs),
+                              Expanded(
+                                child: Text(
+                                  l.careerFreeCycleNote,
+                                  style: AppTypography.labelSmall.copyWith(
+                                    color: AppColors.onSurfaceVariant,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: AppSpacing.md),
+                          PrimaryButton(
+                            label: l.careerStartCareer,
+                            icon: Icons.play_arrow_rounded,
+                            isLoading: _creating,
+                            onPressed: _creating ? null : _start,
+                          ),
+                          const SizedBox(height: AppSpacing.md),
+                        ],
+                      ),
                     ),
                   ),
-                  Center(
-                    child: Text(
-                      'WORLD RANK #${nation.ranking}',
-                      style: AppTypography.labelMedium
-                          .copyWith(color: AppColors.onSurfaceVariant),
-                    ),
-                  ),
-                  const SizedBox(height: AppSpacing.xl),
-                  AppTextField(
-                    label: 'Manager name',
-                    hint: 'e.g. Alex Ferguson',
-                    controller: _controller,
-                    autofocus: true,
-                    textInputAction: TextInputAction.done,
-                    onSubmitted: (_) => _start(),
-                  ),
-                  const SizedBox(height: AppSpacing.md),
-                  Text(
-                    'Your career begins in September 2026 — the road to the '
-                    '2030 World Cup.',
-                    style: AppTypography.bodySmall
-                        .copyWith(color: AppColors.onSurfaceVariant),
-                  ),
-                  const Spacer(),
-                  PrimaryButton(
-                    label: 'Start Career',
-                    icon: Icons.play_arrow_rounded,
-                    isLoading: _creating,
-                    onPressed: _creating ? null : _start,
-                  ),
-                  const SizedBox(height: AppSpacing.md),
-                ],
+                ),
               );
             },
           ),

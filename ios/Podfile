@@ -1,8 +1,20 @@
-# Uncomment this line to define a global platform for your project
-# platform :ios, '13.0'
+# Apple requires uploads to target iOS 15 or later from Spring 2027. Pinned
+# here as well as in the Xcode project so CocoaPods stops guessing a floor and
+# builds the pods against the same minimum the app does. iOS 15 runs on every
+# device iOS 13 did (iPhone 6s / SE 1st gen and later), so this drops no hardware.
+platform :ios, '15.0'
 
 # CocoaPods analytics sends network stats synchronously affecting flutter build latency.
 ENV['COCOAPODS_DISABLE_STATS'] = 'true'
+
+# file_picker is here for one thing only: picking a save file back off the
+# device through the document picker. Compiling its media and audio pickers in
+# would drag DKImagePickerController (and SDWebImage, SwiftyGif) along, link
+# Photos and AVFoundation into the binary and make Apple demand photo-library
+# purpose strings for a capability this app does not have. Both are switched
+# off; the document picker, which is what we actually call, stays.
+Pod::PICKER_MEDIA = false
+Pod::PICKER_AUDIO = false
 
 project 'Runner', {
   'Debug' => :debug,
@@ -39,5 +51,20 @@ end
 post_install do |installer|
   installer.pods_project.targets.each do |target|
     flutter_additional_ios_build_settings(target)
+
+    target.build_configurations.each do |config|
+      # Keep the pods at the same floor the app targets; podhelper otherwise
+      # leaves some of them on the podspec's own, lower, minimum.
+      config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '15.0'
+
+      # Release archives must carry a dSYM per pod framework or crashes inside
+      # them cannot be symbolicated. This is the default, but it is cheap to
+      # state it rather than inherit it. It does NOT cover sqlite3.framework or
+      # objective_c.framework: those are Dart build-hook native assets, not
+      # pods, and ios/scripts/native_asset_dsyms.sh handles them instead.
+      if config.name == 'Release'
+        config.build_settings['DEBUG_INFORMATION_FORMAT'] = 'dwarf-with-dsym'
+      end
+    end
   end
 end

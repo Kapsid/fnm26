@@ -1,5 +1,8 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fnm/core/util/competition_label.dart';
 import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
@@ -7,15 +10,16 @@ import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/entities/player.dart';
-import 'package:fnm/domain/services/entitlement/entitlement.dart';
 import 'package:fnm/features/nations/nation_select_providers.dart';
+import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
 
 /// Country selection — pick the national team to manage.
 ///
-/// Free-demo nations are selectable; the rest are gated behind the premium
-/// unlock (a placeholder until the paywall lands in M7).
+/// Every nation is selectable. What the free tier holds back is the second
+/// four-year cycle, not the list: a padlocked nation list reads as a demo,
+/// which is exactly what this game is not selling.
 class NationSelectScreen extends ConsumerWidget {
   const NationSelectScreen({super.key});
 
@@ -25,17 +29,18 @@ class NationSelectScreen extends ConsumerWidget {
     final stars = ref.watch(starPlayersProvider).valueOrNull ?? const {};
     final selectedConf = ref.watch(selectedConfederationProvider);
     final query = ref.watch(nationSearchProvider).trim().toLowerCase();
-    final premium = ref.watch(premiumUnlockedProvider);
+    final l = AppLocalizations.of(context);
 
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
         leading: IconButton(
-          icon: const Icon(Icons.menu, color: AppColors.primary),
-          onPressed: () {},
+          icon: const Icon(Icons.arrow_back, color: AppColors.primary),
+          onPressed: () =>
+              context.canPop() ? context.pop() : context.go(Routes.home),
         ),
         title: Text(
-          'SELECT NATIONAL TEAM',
+          l.nationsSelectTitle,
           style: AppTypography.labelMedium.copyWith(color: AppColors.primary),
         ),
         actions: [
@@ -52,6 +57,13 @@ class NationSelectScreen extends ConsumerWidget {
             query: query,
             onSearch: (v) => ref.read(nationSearchProvider.notifier).state = v,
           ),
+          // Two ways into a save that are not "scroll to the country you were
+          // always going to pick": let the draw choose, or take whatever job an
+          // out-of-work manager can get.
+          _StartModes(
+            onRandom: () => _startRandom(context, nationsAsync.valueOrNull),
+            onBottom: () => context.go(Routes.startFromBottom),
+          ),
           _ConfederationTabs(
             selected: selectedConf,
             onSelect: (c) =>
@@ -62,21 +74,24 @@ class NationSelectScreen extends ConsumerWidget {
               loading: () => const Center(child: CircularProgressIndicator()),
               error: (e, _) => Center(
                 child: Text(
-                  'Could not load nations.\n$e',
+                  l.nationsCouldNotLoadNations(e.toString()),
                   textAlign: TextAlign.center,
                 ),
               ),
               data: (nations) {
+                // With a search query, look across every confederation (so a
+                // nation is findable from any tab); otherwise show the selected
+                // confederation.
                 final filtered = nations
-                    .where((n) => n.confederation == selectedConf)
                     .where(
-                      (n) =>
-                          query.isEmpty || n.name.toLowerCase().contains(query),
+                      (n) => query.isEmpty
+                          ? n.confederation == selectedConf
+                          : n.name.toLowerCase().contains(query),
                     )
                     .toList();
 
                 if (filtered.isEmpty) {
-                  return const Center(child: Text('No nations match.'));
+                  return Center(child: Text(l.nationsNoMatch));
                 }
 
                 return ListView.separated(
@@ -91,16 +106,12 @@ class NationSelectScreen extends ConsumerWidget {
                       const SizedBox(height: AppSpacing.sm + 4),
                   itemBuilder: (context, i) {
                     final nation = filtered[i];
-                    final selectable = nationSelectable(
-                      nation,
-                      premiumUnlocked: premium,
-                    );
                     return _NationCard(
                       nation: nation,
                       star: stars[nation.id],
-                      locked: !selectable,
-                      onSelect: () =>
-                          _onSelect(context, nation, selectable: selectable),
+                      onSelect: () => context.go(
+                        '${Routes.newGame}?nationId=${nation.id}',
+                      ),
                     );
                   },
                 );
@@ -112,22 +123,13 @@ class NationSelectScreen extends ConsumerWidget {
     );
   }
 
-  void _onSelect(
-    BuildContext context,
-    Nation nation, {
-    required bool selectable,
-  }) {
-    if (selectable) {
-      context.go('${Routes.newGame}?nationId=${nation.id}');
-    } else {
-      ScaffoldMessenger.of(context)
-        ..hideCurrentSnackBar()
-        ..showSnackBar(
-          const SnackBar(
-            content: Text('Premium nation — unlock store coming soon'),
-          ),
-        );
-    }
+  /// Picks a nation at random from everything this player may manage and goes
+  /// straight to naming the manager.
+  void _startRandom(BuildContext context, List<Nation>? nations) {
+    final pool = nations ?? const <Nation>[];
+    if (pool.isEmpty) return;
+    final pick = pool[Random().nextInt(pool.length)];
+    context.go('${Routes.newGame}?nationId=${pick.id}');
   }
 }
 
@@ -139,6 +141,7 @@ class _Header extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
     return Padding(
       padding: const EdgeInsets.fromLTRB(
         AppSpacing.marginMobile,
@@ -150,12 +153,12 @@ class _Header extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'NATIONAL LEVEL',
+            l.nationsNationalLevel,
             style: AppTypography.labelMedium.copyWith(color: AppColors.primary),
           ),
           const SizedBox(height: AppSpacing.xs),
-          const Text(
-            'Select National Team',
+          Text(
+            l.nationsSelectHeading,
             style: AppTypography.headlineLargeMobile,
           ),
           const SizedBox(height: AppSpacing.md),
@@ -164,9 +167,9 @@ class _Header extends StatelessWidget {
             style: AppTypography.bodyMedium.copyWith(
               color: AppColors.onSurface,
             ),
-            decoration: const InputDecoration(
-              hintText: 'Search country…',
-              prefixIcon: Icon(Icons.search, color: AppColors.outline),
+            decoration: InputDecoration(
+              hintText: l.nationsSearchHint,
+              prefixIcon: const Icon(Icons.search, color: AppColors.outline),
             ),
           ),
         ],
@@ -183,6 +186,7 @@ class _ConfederationTabs extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
     return SizedBox(
       height: 48,
       child: ListView.separated(
@@ -210,7 +214,7 @@ class _ConfederationTabs extends StatelessWidget {
                 ),
               ),
               child: Text(
-                conf.label.toUpperCase(),
+                confederationLabel(l, conf).toUpperCase(),
                 style: AppTypography.labelSmall.copyWith(
                   color: active
                       ? AppColors.onSecondaryContainer
@@ -225,21 +229,91 @@ class _ConfederationTabs extends StatelessWidget {
   }
 }
 
+/// The two "don't pick for yourself" ways to start a career, as a pair of
+/// buttons above the country list.
+class _StartModes extends StatelessWidget {
+  const _StartModes({required this.onRandom, required this.onBottom});
+
+  final VoidCallback onRandom;
+  final VoidCallback onBottom;
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(
+        AppSpacing.marginMobile,
+        0,
+        AppSpacing.marginMobile,
+        AppSpacing.sm,
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: _ModeButton(
+              icon: Icons.casino_outlined,
+              label: l.nationsRandomTeam,
+              onTap: onRandom,
+            ),
+          ),
+          const SizedBox(width: AppSpacing.sm),
+          Expanded(
+            child: _ModeButton(
+              icon: Icons.trending_down_rounded,
+              label: l.nationsFromTheBottom,
+              onTap: onBottom,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _ModeButton extends StatelessWidget {
+  const _ModeButton({
+    required this.icon,
+    required this.label,
+    required this.onTap,
+  });
+
+  final IconData icon;
+  final String label;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) => OutlinedButton.icon(
+    onPressed: onTap,
+    icon: Icon(icon, size: 16),
+    label: Text(
+      label,
+      maxLines: 1,
+      overflow: TextOverflow.ellipsis,
+      style: AppTypography.labelSmall,
+    ),
+    style: OutlinedButton.styleFrom(
+      foregroundColor: AppColors.primary,
+      side: const BorderSide(color: AppColors.outlineVariant),
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm),
+      minimumSize: const Size.fromHeight(40),
+    ),
+  );
+}
+
 class _NationCard extends StatelessWidget {
   const _NationCard({
     required this.nation,
     required this.star,
-    required this.locked,
     required this.onSelect,
   });
 
   final Nation nation;
   final Player? star;
-  final bool locked;
   final VoidCallback onSelect;
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
     return Container(
       decoration: const BoxDecoration(
         borderRadius: AppRadii.mdAll,
@@ -272,22 +346,11 @@ class _NationCard extends StatelessWidget {
               ),
             ),
           ),
-          // Left "active" accent bar for free-demo nations.
-          if (nation.isFreeDemo)
-            const Positioned(
-              left: 0,
-              top: 0,
-              bottom: 0,
-              child: SizedBox(
-                width: 4,
-                child: ColoredBox(color: AppColors.primary),
-              ),
-            ),
           Padding(
             padding: const EdgeInsets.all(AppSpacing.sm + 4),
             child: Row(
               children: [
-                FlagDisc(nation.code, size: 60, highlighted: nation.isFreeDemo),
+                FlagDisc(nation.code, size: 60),
                 const SizedBox(width: AppSpacing.sm + 4),
                 Expanded(
                   child: Column(
@@ -307,7 +370,7 @@ class _NationCard extends StatelessWidget {
                             color: AppColors.outline,
                           ),
                           children: [
-                            const TextSpan(text: 'RANK '),
+                            TextSpan(text: l.nationsRank),
                             TextSpan(
                               text: '#${nation.ranking}',
                               style: AppTypography.labelSmall.copyWith(
@@ -318,23 +381,11 @@ class _NationCard extends StatelessWidget {
                           ],
                         ),
                       ),
-                      if (star != null)
-                        Padding(
-                          padding: const EdgeInsets.only(top: 2),
-                          child: Text(
-                            'Star: ${star!.name}',
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: AppTypography.bodySmall.copyWith(
-                              color: AppColors.onSurfaceVariant,
-                            ),
-                          ),
-                        ),
                     ],
                   ),
                 ),
                 const SizedBox(width: AppSpacing.sm),
-                _SelectButton(locked: locked, onTap: onSelect),
+                _SelectButton(onTap: onSelect),
               ],
             ),
           ),
@@ -345,26 +396,13 @@ class _NationCard extends StatelessWidget {
 }
 
 class _SelectButton extends StatelessWidget {
-  const _SelectButton({required this.locked, required this.onTap});
+  const _SelectButton({required this.onTap});
 
-  final bool locked;
   final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
-    if (locked) {
-      return OutlinedButton.icon(
-        onPressed: onTap,
-        style: OutlinedButton.styleFrom(
-          foregroundColor: AppColors.onSurfaceVariant,
-          side: const BorderSide(color: AppColors.outlineVariant),
-          shape: const RoundedRectangleBorder(borderRadius: AppRadii.baseAll),
-        ),
-        icon: const Icon(Icons.lock, size: 16),
-        label: const Text('PREMIUM', style: AppTypography.labelSmall),
-      );
-    }
-
+    final l = AppLocalizations.of(context);
     return Material(
       color: Colors.transparent,
       borderRadius: AppRadii.baseAll,
@@ -389,7 +427,7 @@ class _SelectButton extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                'SELECT',
+                l.nationsSelect,
                 style: AppTypography.labelSmall.copyWith(
                   color: AppColors.onPrimary,
                 ),
@@ -412,6 +450,7 @@ class _BottomNav extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
     return Container(
       decoration: const BoxDecoration(
         color: AppColors.surfaceContainer,
@@ -426,16 +465,19 @@ class _BottomNav extends StatelessWidget {
             children: [
               _NavItem(
                 icon: Icons.sports_soccer,
-                label: 'Career',
+                label: l.nationsNavCareer,
                 onTap: () => context.go(Routes.home),
               ),
-              const _NavItem(icon: Icons.dashboard_customize, label: 'Tactics'),
-              const _NavItem(
+              _NavItem(
+                icon: Icons.dashboard_customize,
+                label: l.nationsNavTactics,
+              ),
+              _NavItem(
                 icon: Icons.public,
-                label: 'Nations',
+                label: l.nationsNavNations,
                 active: true,
               ),
-              const _NavItem(icon: Icons.settings, label: 'Settings'),
+              _NavItem(icon: Icons.settings, label: l.nationsNavSettings),
             ],
           ),
         ),

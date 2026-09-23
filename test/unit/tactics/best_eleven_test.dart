@@ -8,19 +8,84 @@ import '../../helpers/fixtures.dart';
 void main() {
   // A pool covering every category, ids encode their tier.
   final pool = [
-    player(id: 1, nationId: 1, position: PlayerPosition.gk, attributes: flatAttributes(85)),
-    player(id: 2, nationId: 1, position: PlayerPosition.gk, attributes: flatAttributes(70)),
-    player(id: 3, nationId: 1, position: PlayerPosition.cb, attributes: flatAttributes(84)),
-    player(id: 4, nationId: 1, position: PlayerPosition.cb, attributes: flatAttributes(80)),
-    player(id: 5, nationId: 1, position: PlayerPosition.lb, attributes: flatAttributes(78)),
-    player(id: 6, nationId: 1, position: PlayerPosition.rb, attributes: flatAttributes(77)),
-    player(id: 7, nationId: 1, position: PlayerPosition.dm, attributes: flatAttributes(82)),
-    player(id: 8, nationId: 1, position: PlayerPosition.cm, attributes: flatAttributes(83)),
-    player(id: 9, nationId: 1, position: PlayerPosition.cm, attributes: flatAttributes(79)),
-    player(id: 10, nationId: 1, position: PlayerPosition.lw, attributes: flatAttributes(86)),
-    player(id: 11, nationId: 1, position: PlayerPosition.rw, attributes: flatAttributes(81)),
-    player(id: 12, nationId: 1, position: PlayerPosition.st, attributes: flatAttributes(88)),
-    player(id: 13, nationId: 1, position: PlayerPosition.st, attributes: flatAttributes(75)),
+    player(
+      id: 1,
+      nationId: 1,
+      position: PlayerPosition.gk,
+      attributes: flatAttributes(85),
+    ),
+    player(
+      id: 2,
+      nationId: 1,
+      position: PlayerPosition.gk,
+      attributes: flatAttributes(70),
+    ),
+    player(
+      id: 3,
+      nationId: 1,
+      position: PlayerPosition.cb,
+      attributes: flatAttributes(84),
+    ),
+    player(
+      id: 4,
+      nationId: 1,
+      position: PlayerPosition.cb,
+      attributes: flatAttributes(80),
+    ),
+    player(
+      id: 5,
+      nationId: 1,
+      position: PlayerPosition.lb,
+      attributes: flatAttributes(78),
+    ),
+    player(
+      id: 6,
+      nationId: 1,
+      position: PlayerPosition.rb,
+      attributes: flatAttributes(77),
+    ),
+    player(
+      id: 7,
+      nationId: 1,
+      position: PlayerPosition.dm,
+      attributes: flatAttributes(82),
+    ),
+    player(
+      id: 8,
+      nationId: 1,
+      position: PlayerPosition.cm,
+      attributes: flatAttributes(83),
+    ),
+    player(
+      id: 9,
+      nationId: 1,
+      position: PlayerPosition.cm,
+      attributes: flatAttributes(79),
+    ),
+    player(
+      id: 10,
+      nationId: 1,
+      position: PlayerPosition.lw,
+      attributes: flatAttributes(86),
+    ),
+    player(
+      id: 11,
+      nationId: 1,
+      position: PlayerPosition.rw,
+      attributes: flatAttributes(81),
+    ),
+    player(
+      id: 12,
+      nationId: 1,
+      position: PlayerPosition.st,
+      attributes: flatAttributes(88),
+    ),
+    player(
+      id: 13,
+      nationId: 1,
+      position: PlayerPosition.st,
+      attributes: flatAttributes(75),
+    ),
   ];
 
   test('fills all 11 slots with no player used twice', () {

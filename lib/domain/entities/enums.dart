@@ -43,21 +43,31 @@ enum CompetitionKind {
   /// Nations League — a competitive mini-group played between tournaments.
   nationsLeague,
 
-  /// A continental championship the player contests (knockout bracket).
+  /// A confederation's continental championship qualifying (group stage).
+  continentalQualifying,
+
+  /// A continental championship the player contests (group stage + knockout).
   continentalFinals,
+
+  /// The Finalissima — a one-off match between two continental champions.
+  finalissima,
+
+  /// The intercontinental play-off: a six-team knockout for the last two World
+  /// Cup places, contested by the best qualifying also-rans.
+  worldCupPlayoff,
 }
 
 /// Display helpers for [Confederation].
 extension ConfederationX on Confederation {
   /// Human-readable region name (e.g. `South America`).
   String get label => switch (this) {
-        Confederation.europe => 'Europe',
-        Confederation.southAmerica => 'South America',
-        Confederation.northAmerica => 'North America',
-        Confederation.africa => 'Africa',
-        Confederation.asia => 'Asia',
-        Confederation.oceania => 'Oceania',
-      };
+    Confederation.europe => 'Europe',
+    Confederation.southAmerica => 'South America',
+    Confederation.northAmerica => 'North America',
+    Confederation.africa => 'Africa',
+    Confederation.asia => 'Asia',
+    Confederation.oceania => 'Oceania',
+  };
 }
 
 /// On-pitch playing positions, ordered roughly back-to-front.
@@ -118,39 +128,106 @@ enum PositionCategory {
 extension PlayerPositionX on PlayerPosition {
   /// The broad grouping this position belongs to.
   PositionCategory get category => switch (this) {
-        PlayerPosition.gk => PositionCategory.goalkeeper,
-        PlayerPosition.lb ||
-        PlayerPosition.cb ||
-        PlayerPosition.rb =>
-          PositionCategory.defender,
-        PlayerPosition.dm ||
-        PlayerPosition.cm ||
-        PlayerPosition.am ||
-        PlayerPosition.lm ||
-        PlayerPosition.rm =>
-          PositionCategory.midfielder,
-        PlayerPosition.lw ||
-        PlayerPosition.rw ||
-        PlayerPosition.st =>
-          PositionCategory.forward,
-      };
+    PlayerPosition.gk => PositionCategory.goalkeeper,
+    PlayerPosition.lb ||
+    PlayerPosition.cb ||
+    PlayerPosition.rb => PositionCategory.defender,
+    PlayerPosition.dm ||
+    PlayerPosition.cm ||
+    PlayerPosition.am ||
+    PlayerPosition.lm ||
+    PlayerPosition.rm => PositionCategory.midfielder,
+    PlayerPosition.lw ||
+    PlayerPosition.rw ||
+    PlayerPosition.st => PositionCategory.forward,
+  };
 
   /// Short uppercase label for UI (e.g. `GK`, `ST`).
   String get label => name.toUpperCase();
 
   /// Full descriptive role name (e.g. `Defensive Mid`).
   String get roleName => switch (this) {
-        PlayerPosition.gk => 'Goalkeeper',
-        PlayerPosition.lb => 'Left Back',
-        PlayerPosition.cb => 'Centre Back',
-        PlayerPosition.rb => 'Right Back',
-        PlayerPosition.dm => 'Defensive Mid',
-        PlayerPosition.cm => 'Central Mid',
-        PlayerPosition.am => 'Attacking Mid',
-        PlayerPosition.lm => 'Left Mid',
-        PlayerPosition.rm => 'Right Mid',
-        PlayerPosition.lw => 'Left Wing',
-        PlayerPosition.rw => 'Right Wing',
-        PlayerPosition.st => 'Striker',
-      };
+    PlayerPosition.gk => 'Goalkeeper',
+    PlayerPosition.lb => 'Left Back',
+    PlayerPosition.cb => 'Centre Back',
+    PlayerPosition.rb => 'Right Back',
+    PlayerPosition.dm => 'Defensive Mid',
+    PlayerPosition.cm => 'Central Mid',
+    PlayerPosition.am => 'Attacking Mid',
+    PlayerPosition.lm => 'Left Mid',
+    PlayerPosition.rm => 'Right Mid',
+    PlayerPosition.lw => 'Left Wing',
+    PlayerPosition.rw => 'Right Wing',
+    PlayerPosition.st => 'Striker',
+  };
+}
+
+/// A nation's youth levels, strict under-N: a player is in [YouthLevel.u17]
+/// while he is *under* seventeen, so "rarely cap a sub-17" reads directly as
+/// "rarely cap from U-17".
+///
+/// Not persisted — a player's level is a function of his age, recomputed
+/// wherever it is needed.
+enum YouthLevel {
+  /// 11–12.
+  u13(11, 12),
+
+  /// 13–14.
+  u15(13, 14),
+
+  /// 15–16.
+  u17(15, 16),
+
+  /// 17–18.
+  u19(17, 18),
+
+  /// 19–20.
+  u21(19, 20)
+  ;
+
+  const YouthLevel(this.minAge, this.maxAge);
+
+  /// The youngest and oldest age in this band, inclusive.
+  final int minAge;
+  final int maxAge;
+
+  /// Whether players at this level appear in the senior call-up list. Under-15s
+  /// are watched, not picked.
+  bool get callable => minAge >= 15;
+
+  /// Display label, e.g. `U-17`.
+  String get label => 'U-${maxAge + 1}';
+
+  /// The level [age] belongs to, or null once a player is 21 (and so simply a
+  /// senior) or younger than the intake age.
+  static YouthLevel? forAge(int age) {
+    for (final level in values) {
+      if (age >= level.minAge && age <= level.maxAge) return level;
+    }
+    return null;
+  }
+}
+
+/// An individual trophy a player can win.
+///
+/// Stored by name, so reordering these members never rewrites a save's
+/// history — the same discipline every other persisted enum here follows.
+enum AwardKind {
+  /// Best player of a finals tournament.
+  goldenBall,
+
+  /// Top scorer of a finals tournament.
+  goldenBoot,
+
+  /// Best goalkeeper of a finals tournament.
+  goldenGlove,
+
+  /// Named in a finals tournament's best XI.
+  teamOfTournament,
+
+  /// The world's best player over a calendar year.
+  playerOfYear,
+
+  /// The world's best under-21 over a calendar year.
+  youngPlayerOfYear,
 }
