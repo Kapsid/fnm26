@@ -20,31 +20,19 @@
   <header class="hero">
     <img src="logo.png" alt="Football Nations Manager">
     <h1 class="chrome">Football<br>Nations<br>Manager</h1>
-    <p class="sub">Offline &middot; iPhone &amp; Android</p>
     <p class="claim">Take a nation. Lead it to Olympus.</p>
-    <div class="row">
-      <a class="btn primary" href="APPSTORE_URL" aria-disabled="true">
-        <span>App Store<small>Coming soon</small></span>
+    <div class="stores">
+      <a href="APPSTORE_URL" aria-disabled="true" aria-label="Download on the App Store">
+        <img class="b-apple" src="badge-appstore.svg" alt="Download on the App Store">
       </a>
-      <a class="btn" href="GOOGLEPLAY_URL" aria-disabled="true">
-        <span>Google Play<small>Coming soon</small></span>
+      <a href="GOOGLEPLAY_URL" aria-disabled="true" aria-label="Get it on Google Play">
+        <img class="b-google" src="badge-googleplay.png" alt="Get it on Google Play">
       </a>
-    </div>
-    <div class="row" style="margin-top:26px">
-      <span class="pill">No account</span>
-      <span class="pill">No ads</span>
-      <span class="pill">No network</span>
-      <span class="pill">English &amp; Čeština</span>
     </div>
   </header>
 
   <section id="what">
-    <p class="eyebrow">What it is</p>
-    <h2 class="chrome">A whole football world, on your phone</h2>
-    <p class="lede">You get one nation and everything that comes with it. The
-    rest of the world plays on whether you are watching or not.</p>
-
-    <div class="features" style="margin-top:34px">
+    <div class="features">
       <div class="feature">
         <span class="n">01</span>
         <h3>Plays offline</h3>
@@ -74,7 +62,6 @@
   </section>
 
   <section id="look" hidden>
-    <p class="eyebrow">A look at it</p>
     <h2 class="chrome">Screens</h2>
     <div class="carousel">
       <div class="track" id="track">
@@ -93,33 +80,19 @@
 
   <section id="about">
     <div class="split">
+      <figure class="portrait">
+        <img id="me" src="me.jpg" alt="Martin Urbanczyk">
+      </figure>
       <div>
-        <p class="eyebrow">Who made it</p>
         <h2 class="chrome">About me</h2>
-        <p class="lede">A paragraph about you goes here: who you are, what you do when you are not building this, and how long FNM has been going.</p>
-        <p class="lede">A second one, if you want it: why an offline management game, and what you are aiming at next.</p>
-        <div class="row" style="justify-content:flex-start;margin-top:22px">
+        <p class="lede">A paragraph about you goes here: who you are, what you
+        do when you are not building this, and how long FNM has been going.</p>
+        <p class="lede">A second one, if you want it: why an offline management
+        game, and what you are aiming at next.</p>
+        <div class="row" style="justify-content:flex-start;margin-top:24px">
           <a class="btn" href="LINKEDIN_URL">LinkedIn</a>
+          <a class="btn" href="mailto:info@footballnationsmanager.com">Email</a>
         </div>
-      </div>
-
-      <div class="panel">
-        <p class="eyebrow">Get in touch</p>
-        <h3 style="margin-bottom:16px">Say hello</h3>
-        <form id="contact">
-          <label><span>Your name</span>
-            <input type="text" name="name" required autocomplete="name">
-          </label>
-          <label><span>Your email</span>
-            <input type="email" name="email" required autocomplete="email">
-          </label>
-          <label><span>Message</span>
-            <textarea name="message" required></textarea>
-          </label>
-          <button class="send" type="submit">Send</button>
-          <p class="note">Opens your mail app with the message ready to send to
-          info@footballnationsmanager.com.</p>
-        </form>
       </div>
     </div>
   </section>
@@ -139,45 +112,36 @@
 </div>
 
 <script>
-// The carousel shows itself only once a shot actually loads. Five broken
-// images would be worse than no section at all, and there are none yet.
+// The carousel and the portrait both show themselves only once their image
+// actually loads. Neither exists yet, and a broken-image icon is worse than
+// an absent section.
 (function () {
   var section = document.getElementById('look');
   var track = document.getElementById('track');
-  if (!section || !track) return;
-  var imgs = Array.prototype.slice.call(track.querySelectorAll('img'));
-  var left = imgs.length;
-  imgs.forEach(function (img) {
-    img.addEventListener('load', function () { section.hidden = false; });
-    img.addEventListener('error', function () {
-      img.remove();
-      if (--left === 0) section.hidden = true;
+  if (section && track) {
+    var imgs = Array.prototype.slice.call(track.querySelectorAll('img'));
+    var left = imgs.length;
+    imgs.forEach(function (img) {
+      img.addEventListener('load', function () { section.hidden = false; });
+      img.addEventListener('error', function () {
+        img.remove();
+        if (--left === 0) section.hidden = true;
+      });
     });
-  });
-  document.querySelectorAll('.arrows button').forEach(function (b) {
-    b.addEventListener('click', function () {
-      var first = track.querySelector('img');
-      var step = first ? first.getBoundingClientRect().width + 16 : 240;
-      track.scrollBy({ left: step * Number(b.dataset.dir), behavior: 'smooth' });
+    document.querySelectorAll('.arrows button').forEach(function (b) {
+      b.addEventListener('click', function () {
+        var first = track.querySelector('img');
+        var step = first ? first.getBoundingClientRect().width + 16 : 240;
+        track.scrollBy({ left: step * Number(b.dataset.dir), behavior: 'smooth' });
+      });
     });
-  });
-})();
-
-// The contact form has no server behind it, and this site deliberately has no
-// third party either. So it composes the mail and hands it to the visitor's
-// own mail app, which is the honest MVP: nothing is posted anywhere, and the
-// address is the real one.
-(function () {
-  var form = document.getElementById('contact');
-  if (!form) return;
-  form.addEventListener('submit', function (e) {
-    e.preventDefault();
-    var d = new FormData(form);
-    var body = 'From: ' + d.get('name') + ' <' + d.get('email') + '>\n\n' + d.get('message');
-    window.location.href = 'mailto:info@footballnationsmanager.com'
-      + '?subject=' + encodeURIComponent('FNM — message from ' + d.get('name'))
-      + '&body=' + encodeURIComponent(body);
-  });
+  }
+  var me = document.getElementById('me');
+  if (me) {
+    me.addEventListener('error', function () {
+      me.closest('.portrait').remove();
+    });
+  }
 })();
 </script>
 </body>

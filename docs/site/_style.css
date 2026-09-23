@@ -67,16 +67,6 @@ body::before {
 
 /* ---------- type ---------- */
 
-.eyebrow {
-  font-family: 'JetBrains Mono', ui-monospace, monospace;
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: .22em;
-  text-transform: uppercase;
-  color: var(--muted);
-  margin: 0 0 14px;
-}
-
 /* The chrome ramp off the logo: bright shoulder, dark waist, bright again.
    Painted through the glyphs, which is what makes a heading read as polished
    rather than merely light grey. */
@@ -277,3 +267,34 @@ footer nav { display: flex; gap: 18px; flex-wrap: wrap; }
 .doc h2 { font-size: 19px; margin: 34px 0 8px; color: var(--steel); font-weight: 700; }
 .doc ul { padding-left: 20px; color: var(--text); }
 .doc .updated { color: var(--muted); font-size: 13px; font-family: 'JetBrains Mono', ui-monospace, monospace; }
+
+/* ---------- store badges ---------- */
+
+.stores {
+  display: flex; gap: 14px; justify-content: center; align-items: center;
+  flex-wrap: wrap; margin-top: 30px;
+}
+.stores a { display: inline-flex; transition: opacity .18s, transform .18s; }
+.stores a:hover { transform: translateY(-1px); }
+.stores a[aria-disabled='true'] { opacity: .55; pointer-events: none; }
+/* Both are official artwork and neither may be redrawn, so they are only
+   scaled. Apple's badge is tight to its edges; Google's carries its own clear
+   space, which is why the two heights differ to look the same size. */
+.b-apple  { height: 54px; width: auto; display: block; }
+.b-google { height: 72px; width: auto; display: block; }
+
+/* ---------- portrait ---------- */
+
+.portrait { margin: 0; }
+.portrait img {
+  width: 100%;
+  max-width: 340px;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  border-radius: 16px;
+  border: 1px solid var(--line-bright);
+  display: block;
+}
+@media (max-width: 779px) {
+  .portrait img { max-width: 240px; }
+}
