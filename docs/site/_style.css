@@ -93,13 +93,18 @@ section:first-of-type { border-top: 0; }
 
 /* ---------- hero ---------- */
 
-.hero { text-align: center; padding: clamp(36px, 8vw, 72px) 0 clamp(44px, 8vw, 80px); }
-.hero img { width: min(300px, 62vw); height: auto; filter: drop-shadow(0 18px 40px rgba(0,0,0,.6)); }
+.hero { text-align: center; padding: clamp(26px, 5vw, 44px) 0 clamp(32px, 5vw, 52px); }
+.hero img { width: min(210px, 46vw); height: auto; filter: drop-shadow(0 18px 40px rgba(0,0,0,.6)); }
+/* One line, always. The wordmark is 24 characters, so the size is driven off
+   the viewport and the whole thing is allowed to get small on a narrow phone
+   rather than wrap into three decks and push everything below the fold. */
 .hero h1 {
-  font-size: clamp(38px, 10.5vw, 88px);
+  font-size: clamp(18px, 5.4vw, 52px);
   font-weight: 900;
-  margin: 18px 0 6px;
+  margin: 14px 0 4px;
   text-transform: uppercase;
+  white-space: nowrap;
+  letter-spacing: -0.015em;
 }
 .hero .sub {
   font-family: 'JetBrains Mono', ui-monospace, monospace;
@@ -110,10 +115,10 @@ section:first-of-type { border-top: 0; }
   margin: 0 0 26px;
 }
 .hero .claim {
-  font-size: clamp(20px, 4.2vw, 30px);
+  font-size: clamp(18px, 3.4vw, 26px);
   font-weight: 600;
   max-width: 22ch;
-  margin: 0 auto 30px;
+  margin: 0 auto 24px;
   color: var(--text);
 }
 
@@ -189,13 +194,43 @@ section:first-of-type { border-top: 0; }
   scrollbar-width: none;
 }
 .track::-webkit-scrollbar { display: none; }
-.track img {
+.slide {
   flex: 0 0 auto;
-  width: clamp(190px, 46vw, 250px);
+  margin: 0;
+  width: clamp(180px, 44vw, 236px);
+  scroll-snap-align: center;
+}
+.slide img {
+  width: 100%;
+  display: block;
+  /* Phone-shaped whatever arrives, so a slide holds its place before the
+     image decodes and the row does not jump as the shots load in. */
+  aspect-ratio: 9 / 19.5;
+  object-fit: cover;
   border-radius: 18px;
   border: 1px solid var(--line-bright);
-  scroll-snap-align: center;
   background: var(--panel);
+}
+.slide figcaption {
+  font-size: 13px;
+  color: var(--muted);
+  text-align: center;
+  margin-top: 10px;
+}
+
+/* A slide still waiting for its screenshot keeps a phone-shaped frame, so the
+   carousel reads as a carousel while it is being filled. The dashes say the
+   emptiness is deliberate rather than broken. */
+.slide.empty::before {
+  content: '';
+  display: block;
+  aspect-ratio: 9 / 19.5;
+  border-radius: 18px;
+  border: 1px dashed var(--line-bright);
+  background:
+    repeating-linear-gradient(135deg,
+      rgba(255,255,255,.015) 0 10px, transparent 10px 20px),
+    var(--panel);
 }
 .arrows { display: flex; gap: 10px; justify-content: flex-end; margin-top: 4px; }
 .arrows button {
@@ -272,7 +307,7 @@ footer nav { display: flex; gap: 18px; flex-wrap: wrap; }
 
 .stores {
   display: flex; gap: 14px; justify-content: center; align-items: center;
-  flex-wrap: wrap; margin-top: 30px;
+  flex-wrap: wrap; margin-top: 22px;
 }
 .stores a { display: inline-flex; transition: opacity .18s, transform .18s; }
 .stores a:hover { transform: translateY(-1px); }

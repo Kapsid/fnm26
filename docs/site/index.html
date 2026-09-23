@@ -19,7 +19,7 @@
 
   <header class="hero">
     <img src="logo.png" alt="Football Nations Manager">
-    <h1 class="chrome">Football<br>Nations<br>Manager</h1>
+    <h1 class="chrome">Football Nations Manager</h1>
     <p class="claim">Take a nation. Lead it to Olympus.</p>
     <div class="stores">
       <a href="APPSTORE_URL" aria-disabled="true" aria-label="Download on the App Store">
@@ -61,15 +61,30 @@
     </div>
   </section>
 
-  <section id="look" hidden>
+  <section id="look">
     <h2 class="chrome">Screens</h2>
     <div class="carousel">
       <div class="track" id="track">
-        <img src="shots/shot-1.jpg" alt="">
-        <img src="shots/shot-2.jpg" alt="">
-        <img src="shots/shot-3.jpg" alt="">
-        <img src="shots/shot-4.jpg" alt="">
-        <img src="shots/shot-5.jpg" alt="">
+        <figure class="slide">
+          <img src="shots/shot-1.jpg" alt="Match">
+          <figcaption>Match</figcaption>
+        </figure>
+        <figure class="slide">
+          <img src="shots/shot-2.jpg" alt="Tactics">
+          <figcaption>Tactics</figcaption>
+        </figure>
+        <figure class="slide">
+          <img src="shots/shot-3.jpg" alt="Squad">
+          <figcaption>Squad</figcaption>
+        </figure>
+        <figure class="slide">
+          <img src="shots/shot-4.jpg" alt="Draw">
+          <figcaption>Draw</figcaption>
+        </figure>
+        <figure class="slide">
+          <img src="shots/shot-5.jpg" alt="Ranking">
+          <figcaption>Ranking</figcaption>
+        </figure>
       </div>
       <div class="arrows">
         <button type="button" data-dir="-1" aria-label="Previous">&#8249;</button>
@@ -116,21 +131,20 @@
 // actually loads. Neither exists yet, and a broken-image icon is worse than
 // an absent section.
 (function () {
-  var section = document.getElementById('look');
   var track = document.getElementById('track');
-  if (section && track) {
-    var imgs = Array.prototype.slice.call(track.querySelectorAll('img'));
-    var left = imgs.length;
-    imgs.forEach(function (img) {
-      img.addEventListener('load', function () { section.hidden = false; });
+  if (track) {
+    // A slide whose screenshot is not there yet keeps its frame and its
+    // caption. The carousel is part of the design and should be visible while
+    // it is being filled, rather than vanishing until the last shot arrives.
+    track.querySelectorAll('img').forEach(function (img) {
       img.addEventListener('error', function () {
+        img.closest('.slide').classList.add('empty');
         img.remove();
-        if (--left === 0) section.hidden = true;
       });
     });
     document.querySelectorAll('.arrows button').forEach(function (b) {
       b.addEventListener('click', function () {
-        var first = track.querySelector('img');
+        var first = track.querySelector('.slide');
         var step = first ? first.getBoundingClientRect().width + 16 : 240;
         track.scrollBy({ left: step * Number(b.dataset.dir), behavior: 'smooth' });
       });
