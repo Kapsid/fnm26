@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:fnm/features/settings/backup_restore_prompt.dart';
 import 'package:fnm/features/settings/save_backup_providers.dart';
 import 'package:fnm/data/db/save_backup.dart';
 import 'package:fnm/core/diagnostics/app_log.dart';
@@ -310,25 +311,9 @@ class _BackupCardState extends ConsumerState<_BackupCard> {
 
     // Asked BEFORE anything is touched, and worded as what it actually does:
     // this replaces every save on the phone, not just the one you were on.
-    final confirmed = await showDialog<bool>(
-      context: context,
-      builder: (dialogContext) => AlertDialog(
-        backgroundColor: AppColors.surfaceContainer,
-        title: Text(l.backupRestoreWarnTitle),
-        content: Text(l.backupRestoreWarnBody),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(dialogContext).pop(false),
-            child: Text(l.backupCancel),
-          ),
-          TextButton(
-            onPressed: () => Navigator.of(dialogContext).pop(true),
-            child: Text(l.backupRestoreConfirm),
-          ),
-        ],
-      ),
-    );
-    if (confirmed != true || !mounted) return;
+    // Shared with the saves screen's import, so the two cannot drift into
+    // asking different questions before the same irreversible thing.
+    if (!await BackupRestorePrompt.confirm(context) || !mounted) return;
 
     setState(() => _busy = true);
     final refusal = await ref.read(saveBackupServiceProvider).restore(path);
@@ -336,12 +321,7 @@ class _BackupCardState extends ConsumerState<_BackupCard> {
     // gone; only a refusal has anyone left to tell.
     if (refusal != null && mounted) {
       setState(() => _busy = false);
-      _say(switch (refusal) {
-        BackupRejection.unreadable => l.backupRejectedUnreadable,
-        BackupRejection.notAFnmSave => l.backupRejectedNotFnm,
-        BackupRejection.fromANewerBuild => l.backupRejectedNewer,
-        BackupRejection.tooOldToMigrate => l.backupRejectedTooOld,
-      });
+      _say(BackupRestorePrompt.reason(l, refusal));
     }
   }
 

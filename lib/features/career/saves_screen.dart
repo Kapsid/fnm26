@@ -5,6 +5,7 @@ import 'package:fnm/core/util/app_date.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:fnm/features/career/career_transfer_providers.dart';
 import 'package:fnm/data/db/career_bundle.dart';
+import 'package:fnm/data/db/save_backup.dart';
 import 'package:fnm/core/diagnostics/app_log.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -18,6 +19,7 @@ import 'package:fnm/domain/services/entitlement/entitlement.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/nations/nation_select_providers.dart';
 import 'package:fnm/features/paywall/paywall_sheet.dart';
+import 'package:fnm/features/settings/backup_restore_prompt.dart';
 import 'package:fnm/features/settings/save_backup_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
@@ -318,6 +320,18 @@ Future<void> _shareCareer(
 }
 
 /// Adds a career from a file as a NEW save. Nothing already saved is touched.
+/// Takes in a file the manager picked, whichever of the two exports made it.
+///
+/// This screen offers both: a single career off a tile, and every save at once
+/// from the button below. They are different formats — a career is gzipped
+/// JSON, a backup is the whole SQLite database — and import used to accept
+/// only the first. A manager who backed up all his saves and then pressed the
+/// button directly underneath was told his own backup was "not an FNM career",
+/// which is true, useless, and entirely our doing.
+///
+/// So the file decides. A career bundle is imported alongside the saves
+/// already here; a whole-database backup goes to the shared restore prompt,
+/// which asks first, because that one REPLACES everything.
 Future<void> _importCareer(BuildContext context, WidgetRef ref) async {
   final l = AppLocalizations.of(context);
   final picked = await FilePicker.pickFiles();
@@ -325,10 +339,42 @@ Future<void> _importCareer(BuildContext context, WidgetRef ref) async {
   if (path == null || !context.mounted) return;
   final messenger = ScaffoldMessenger.of(context);
   final refusal = await ref.read(careerTransferServiceProvider).import(path);
+  if (refusal == null) {
+    messenger.showSnackBar(SnackBar(content: Text(l.careerImported)));
+    return;
+  }
+  // Not a career. Before calling it rubbish, ask whether it is the OTHER
+  // thing this screen writes.
+  if (refusal == BundleRejection.unreadable) {
+    final asBackup = SaveBackup.inspect(path);
+    if (asBackup.rejection == null && context.mounted) {
+      final refused = await BackupRestorePrompt.confirmAndRestore(
+        context,
+        ref,
+        path,
+      );
+      // A successful restore tears the app down and rebuilds it, so there is
+      // usually nobody left here to tell.
+      if (refused != null && context.mounted) {
+        messenger.showSnackBar(
+          SnackBar(content: Text(BackupRestorePrompt.reason(l, refused))),
+        );
+      }
+      return;
+    }
+    // A backup this build genuinely cannot take says so in its own words,
+    // rather than hiding behind "not a career".
+    if (asBackup.rejection case final r?
+        when r != BackupRejection.notAFnmSave) {
+      messenger.showSnackBar(
+        SnackBar(content: Text(BackupRestorePrompt.reason(l, r))),
+      );
+      return;
+    }
+  }
   messenger.showSnackBar(
     SnackBar(
       content: Text(switch (refusal) {
-        null => l.careerImported,
         BundleRejection.unreadable => l.careerImportFailedUnreadable,
         BundleRejection.fromANewerBuild => l.careerImportFailedNewer,
       }),
