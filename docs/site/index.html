@@ -3,122 +3,180 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>FNM — offline international football management</title>
-<meta name="description" content="Take a national team through qualifying, a continental championship and the World Championship. Offline, no accounts, no ads.">
-<meta property="og:title" content="FNM">
-<meta property="og:description" content="Offline international football management. Endless four-year cycles, every nation in the world.">
+<title>Football Nations Manager — take a nation to Olympus</title>
+<meta name="description" content="Offline international football management. Take a nation, every country in the world, endless four-year cycles, transfers across borders. iPhone and Android.">
+<meta property="og:title" content="Football Nations Manager">
+<meta property="og:description" content="Take a nation. Lead it to Olympus. Offline international football management.">
 <meta property="og:image" content="icon.png">
 <link rel="icon" href="icon.png">
 <link rel="apple-touch-icon" href="icon.png">
+<link rel="preload" as="font" type="font/woff2" href="HankenGrotesk.woff2" crossorigin>
 <link rel="stylesheet" href="_style.css">
 </head>
 <body>
+
 <div class="wrap">
 
-<header class="hero">
-  <img class="logo" src="logo.png" alt="FNM">
-  <h1>FNM</h1>
-  <p class="tag">Take a national team through qualifying, a continental
-  championship and the World Championship. Then do it again.</p>
-  <div class="badges">
-    <span class="pill">iPhone</span>
-    <span class="pill">Works offline</span>
-    <span class="pill">English &amp; Čeština</span>
-  </div>
-</header>
+  <header class="hero">
+    <img src="logo.png" alt="Football Nations Manager">
+    <h1 class="chrome">Football<br>Nations<br>Manager</h1>
+    <p class="sub">Offline &middot; iPhone &amp; Android</p>
+    <p class="claim">Take a nation. Lead it to Olympus.</p>
+    <div class="row">
+      <a class="btn primary" href="APPSTORE_URL" aria-disabled="true">
+        <span>App Store<small>Coming soon</small></span>
+      </a>
+      <a class="btn" href="GOOGLEPLAY_URL" aria-disabled="true">
+        <span>Google Play<small>Coming soon</small></span>
+      </a>
+    </div>
+    <div class="row" style="margin-top:26px">
+      <span class="pill">No account</span>
+      <span class="pill">No ads</span>
+      <span class="pill">No network</span>
+      <span class="pill">English &amp; Čeština</span>
+    </div>
+  </header>
 
-<div class="card">
-  <p><strong>No accounts. No ads. No subscription. No network.</strong>
-  The whole football world is simulated on your phone, and it stays there.</p>
+  <section id="what">
+    <p class="eyebrow">What it is</p>
+    <h2 class="chrome">A whole football world, on your phone</h2>
+    <p class="lede">You get one nation and everything that comes with it. The
+    rest of the world plays on whether you are watching or not.</p>
+
+    <div class="features" style="margin-top:34px">
+      <div class="feature">
+        <span class="n">01</span>
+        <h3>Plays offline</h3>
+        <p>Every match, every draw, every transfer window is simulated on the
+        device. No account, no server, no signal needed. On a plane, on the
+        metro, anywhere.</p>
+      </div>
+      <div class="feature">
+        <span class="n">02</span>
+        <h3>Every country in the world</h3>
+        <p>Pick a giant or pick somebody nobody fancies. All of them are there
+        from the first day, and none of them is locked behind a purchase.</p>
+      </div>
+      <div class="feature">
+        <span class="n">03</span>
+        <h3>Endless cycles</h3>
+        <p>Qualifying, your continental championship, the World Championship,
+        then it starts again. Careers run for decades, not for one tournament.</p>
+      </div>
+      <div class="feature">
+        <span class="n">04</span>
+        <h3>Transfers across borders</h3>
+        <p>Your players move between leagues and countries every summer, step
+        up, drop down, and you read about it the same way everyone else does.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="look" hidden>
+    <p class="eyebrow">A look at it</p>
+    <h2 class="chrome">Screens</h2>
+    <div class="carousel">
+      <div class="track" id="track">
+        <img src="shots/shot-1.jpg" alt="">
+        <img src="shots/shot-2.jpg" alt="">
+        <img src="shots/shot-3.jpg" alt="">
+        <img src="shots/shot-4.jpg" alt="">
+        <img src="shots/shot-5.jpg" alt="">
+      </div>
+      <div class="arrows">
+        <button type="button" data-dir="-1" aria-label="Previous">&#8249;</button>
+        <button type="button" data-dir="1" aria-label="Next">&#8250;</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="about">
+    <div class="split">
+      <div>
+        <p class="eyebrow">Who made it</p>
+        <h2 class="chrome">About me</h2>
+        <p class="lede">A paragraph about you goes here: who you are, what you do when you are not building this, and how long FNM has been going.</p>
+        <p class="lede">A second one, if you want it: why an offline management game, and what you are aiming at next.</p>
+        <div class="row" style="justify-content:flex-start;margin-top:22px">
+          <a class="btn" href="LINKEDIN_URL">LinkedIn</a>
+        </div>
+      </div>
+
+      <div class="panel">
+        <p class="eyebrow">Get in touch</p>
+        <h3 style="margin-bottom:16px">Say hello</h3>
+        <form id="contact">
+          <label><span>Your name</span>
+            <input type="text" name="name" required autocomplete="name">
+          </label>
+          <label><span>Your email</span>
+            <input type="email" name="email" required autocomplete="email">
+          </label>
+          <label><span>Message</span>
+            <textarea name="message" required></textarea>
+          </label>
+          <button class="send" type="submit">Send</button>
+          <p class="note">Opens your mail app with the message ready to send to
+          info@footballnationsmanager.com.</p>
+        </form>
+      </div>
+    </div>
+  </section>
+
 </div>
 
-<h2>What you get</h2>
-<div class="grid">
-  <div class="card">
-    <h3>Every nation</h3>
-    <p>Pick any country in the world, from the giants to the ones nobody
-    fancies. The rest of the world plays on without you.</p>
-  </div>
-  <div class="card">
-    <h3>Players with careers</h3>
-    <p>A full pool that ages, develops, peaks and retires, with a youth
-    pyramid running from the under-13s up to the seniors.</p>
-  </div>
-  <div class="card">
-    <h3>The whole cycle</h3>
-    <p>Qualifying, your continental championship, the World Championship,
-    friendlies, draws and base camps.</p>
-  </div>
-  <div class="card">
-    <h3>Life around the team</h3>
-    <p>Transfers, injuries, suspensions, the press, player grievances and a
-    board with expectations you can miss.</p>
-  </div>
-  <div class="card">
-    <h3>Matches you can steer</h3>
-    <p>Tactics, roles, set-piece takers, team talks, substitutions and
-    penalty shootouts you take yourself.</p>
-  </div>
-  <div class="card">
-    <h3>A record that lasts</h3>
-    <p>All-time scorers, most-capped, honours, rivalries, achievements and
-    a manager history that outlives any one job.</p>
-  </div>
-</div>
-
-<section id="shots" hidden>
-  <h2>A look at it</h2>
-  <div class="shots">
-    <img src="shots/shot-1.jpg" alt="">
-    <img src="shots/shot-2.jpg" alt="">
-    <img src="shots/shot-3.jpg" alt="">
-    <img src="shots/shot-4.jpg" alt="">
-    <img src="shots/shot-5.jpg" alt="">
-  </div>
-</section>
-
-<h2>Free, and Unlimited</h2>
-<div class="tiers">
-  <div class="card">
-    <p class="price">Free</p>
-    <ul>
-      <li>One complete four-year cycle</li>
-      <li>Two save slots</li>
-      <li>Every nation in the world</li>
-      <li>Nothing held back</li>
-    </ul>
-  </div>
-  <div class="card">
-    <p class="price">Unlimited</p>
-    <ul>
-      <li>Every cycle from there on</li>
-      <li>As many saves as you want</li>
-      <li>One payment, once, no subscription</li>
-      <li>Every future update included</li>
-    </ul>
-  </div>
-</div>
-
-<footer>
-  FNM &middot; <a href="privacy.html">Privacy</a> &middot;
-  <a href="support.html">Support</a>
-</footer>
-
+<div class="wrap">
+  <footer>
+    <span>&copy; 2026 Football Nations Manager</span>
+    <nav>
+      <a href="LINKEDIN_URL">LinkedIn</a>
+      <a href="mailto:info@footballnationsmanager.com">info@footballnationsmanager.com</a>
+      <a href="privacy.html">Privacy</a>
+      <a href="support.html">Support</a>
+    </nav>
+  </footer>
 </div>
 
 <script>
-// The gallery shows itself only once there are shots to show. Until then a
-// row of broken-image icons would be worse than no section at all.
+// The carousel shows itself only once a shot actually loads. Five broken
+// images would be worse than no section at all, and there are none yet.
 (function () {
-  var section = document.getElementById('shots');
-  var imgs = section.querySelectorAll('img');
-  var alive = imgs.length;
+  var section = document.getElementById('look');
+  var track = document.getElementById('track');
+  if (!section || !track) return;
+  var imgs = Array.prototype.slice.call(track.querySelectorAll('img'));
+  var left = imgs.length;
   imgs.forEach(function (img) {
+    img.addEventListener('load', function () { section.hidden = false; });
     img.addEventListener('error', function () {
       img.remove();
-      if (--alive === 0) section.hidden = true;
+      if (--left === 0) section.hidden = true;
     });
-    img.addEventListener('load', function () { section.hidden = false; });
+  });
+  document.querySelectorAll('.arrows button').forEach(function (b) {
+    b.addEventListener('click', function () {
+      var first = track.querySelector('img');
+      var step = first ? first.getBoundingClientRect().width + 16 : 240;
+      track.scrollBy({ left: step * Number(b.dataset.dir), behavior: 'smooth' });
+    });
+  });
+})();
+
+// The contact form has no server behind it, and this site deliberately has no
+// third party either. So it composes the mail and hands it to the visitor's
+// own mail app, which is the honest MVP: nothing is posted anywhere, and the
+// address is the real one.
+(function () {
+  var form = document.getElementById('contact');
+  if (!form) return;
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var d = new FormData(form);
+    var body = 'From: ' + d.get('name') + ' <' + d.get('email') + '>\n\n' + d.get('message');
+    window.location.href = 'mailto:info@footballnationsmanager.com'
+      + '?subject=' + encodeURIComponent('FNM — message from ' + d.get('name'))
+      + '&body=' + encodeURIComponent(body);
   });
 })();
 </script>

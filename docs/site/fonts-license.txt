@@ -1,0 +1,11 @@
+The two fonts served from this site are the same two the app uses, and both
+are licensed under the SIL Open Font License 1.1, which permits self-hosting
+and redistribution.
+
+  Hanken Grotesk  — Copyright (c) Hanken Design Co.
+  JetBrains Mono  — Copyright (c) JetBrains s.r.o.
+
+Full licence text: https://openfontlicense.org
+
+They are served from this origin rather than from Google Fonts on purpose.
+The app makes no network requests, and neither should the page describing it.
