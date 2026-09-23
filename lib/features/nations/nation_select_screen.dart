@@ -20,6 +20,13 @@ import 'package:go_router/go_router.dart';
 /// Every nation is selectable. What the free tier holds back is the second
 /// four-year cycle, not the list: a padlocked nation list reads as a demo,
 /// which is exactly what this game is not selling.
+///
+/// NO BOTTOM BAR, deliberately. This screen used to carry its own four-item
+/// copy of one, and three of the four items had no handler at all: tactics,
+/// nations and settings were painted, tappable and dead, because none of them
+/// means anything before a nation is chosen. The real [AppBottomNav] needs a
+/// careerId, and there is no career yet. A bar that cannot go anywhere is
+/// worse than no bar, so until the save exists there is none.
 class NationSelectScreen extends ConsumerWidget {
   const NationSelectScreen({super.key});
 
@@ -43,14 +50,7 @@ class NationSelectScreen extends ConsumerWidget {
           l.nationsSelectTitle,
           style: AppTypography.labelMedium.copyWith(color: AppColors.primary),
         ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.account_circle, color: AppColors.primary),
-            onPressed: () {},
-          ),
-        ],
       ),
-      bottomNavigationBar: const _BottomNav(),
       body: Column(
         children: [
           _Header(
@@ -439,93 +439,6 @@ class _SelectButton extends StatelessWidget {
               ),
             ],
           ),
-        ),
-      ),
-    );
-  }
-}
-
-class _BottomNav extends StatelessWidget {
-  const _BottomNav();
-
-  @override
-  Widget build(BuildContext context) {
-    final l = AppLocalizations.of(context);
-    return Container(
-      decoration: const BoxDecoration(
-        color: AppColors.surfaceContainer,
-        border: Border(top: BorderSide(color: AppColors.outlineVariant)),
-      ),
-      child: SafeArea(
-        top: false,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: AppSpacing.xs),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              _NavItem(
-                icon: Icons.sports_soccer,
-                label: l.nationsNavCareer,
-                onTap: () => context.go(Routes.home),
-              ),
-              _NavItem(
-                icon: Icons.dashboard_customize,
-                label: l.nationsNavTactics,
-              ),
-              _NavItem(
-                icon: Icons.public,
-                label: l.nationsNavNations,
-                active: true,
-              ),
-              _NavItem(icon: Icons.settings, label: l.nationsNavSettings),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _NavItem extends StatelessWidget {
-  const _NavItem({
-    required this.icon,
-    required this.label,
-    this.active = false,
-    this.onTap,
-  });
-
-  final IconData icon;
-  final String label;
-  final bool active;
-  final VoidCallback? onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final color = active
-        ? AppColors.onSecondaryContainer
-        : AppColors.onSurfaceVariant;
-    return InkWell(
-      onTap: onTap,
-      borderRadius: AppRadii.xlAll,
-      child: Container(
-        padding: const EdgeInsets.symmetric(
-          horizontal: AppSpacing.md,
-          vertical: AppSpacing.xs,
-        ),
-        decoration: BoxDecoration(
-          color: active ? AppColors.secondaryContainer : Colors.transparent,
-          borderRadius: AppRadii.xlAll,
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(icon, color: color, size: 24),
-            const SizedBox(height: 2),
-            Text(
-              label,
-              style: AppTypography.labelSmall.copyWith(color: color),
-            ),
-          ],
         ),
       ),
     );

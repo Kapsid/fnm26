@@ -878,10 +878,6 @@ nationsSearchHint,Search box hint in the nation picker.,,Search country…,Hleda
 nationsRank,Label prefix before a nation's rank number.,,RANK ,POŘADÍ 
 nationsPremium,Badge marking a premium-only nation.,,PREMIUM,PRÉMIUM
 nationsSelect,Button that selects the nation.,,SELECT,VYBRAT
-nationsNavCareer,Bottom-nav label: career.,,Career,Kariéra
-nationsNavTactics,Bottom-nav label: tactics.,,Tactics,Taktika
-nationsNavNations,Bottom-nav label: nations.,,Nations,Reprezentace
-nationsNavSettings,Bottom-nav label: settings.,,Settings,Nastavení
 statsTeamRecords,App-bar title on the team records screen.,,TEAM RECORDS,REKORDY TÝMU
 statsRecordBook,Nav card: record book.,,Record book,Kniha rekordů
 statsCouldNotLoadStats,Error state when the stats fail to load.,{error},Could not load stats.\n{error},Statistiky se nepodařilo načíst.\n{error}

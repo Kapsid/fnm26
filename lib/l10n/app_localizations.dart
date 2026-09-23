@@ -5388,30 +5388,6 @@ abstract class AppLocalizations {
   /// **'SELECT'**
   String get nationsSelect;
 
-  /// Bottom-nav label: career.
-  ///
-  /// In en, this message translates to:
-  /// **'Career'**
-  String get nationsNavCareer;
-
-  /// Bottom-nav label: tactics.
-  ///
-  /// In en, this message translates to:
-  /// **'Tactics'**
-  String get nationsNavTactics;
-
-  /// Bottom-nav label: nations.
-  ///
-  /// In en, this message translates to:
-  /// **'Nations'**
-  String get nationsNavNations;
-
-  /// Bottom-nav label: settings.
-  ///
-  /// In en, this message translates to:
-  /// **'Settings'**
-  String get nationsNavSettings;
-
   /// App-bar title on the team records screen.
   ///
   /// In en, this message translates to:

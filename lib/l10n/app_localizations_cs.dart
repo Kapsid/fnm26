@@ -3184,18 +3184,6 @@ class AppLocalizationsCs extends AppLocalizations {
   String get nationsSelect => 'VYBRAT';
 
   @override
-  String get nationsNavCareer => 'Kariéra';
-
-  @override
-  String get nationsNavTactics => 'Taktika';
-
-  @override
-  String get nationsNavNations => 'Reprezentace';
-
-  @override
-  String get nationsNavSettings => 'Nastavení';
-
-  @override
   String get statsTeamRecords => 'REKORDY TÝMU';
 
   @override

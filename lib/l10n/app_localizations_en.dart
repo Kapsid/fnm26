@@ -3160,18 +3160,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get nationsSelect => 'SELECT';
 
   @override
-  String get nationsNavCareer => 'Career';
-
-  @override
-  String get nationsNavTactics => 'Tactics';
-
-  @override
-  String get nationsNavNations => 'Nations';
-
-  @override
-  String get nationsNavSettings => 'Settings';
-
-  @override
   String get statsTeamRecords => 'TEAM RECORDS';
 
   @override

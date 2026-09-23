@@ -4329,22 +4329,6 @@
   "@nationsSelect": {
     "description": "Button that selects the nation."
   },
-  "nationsNavCareer": "Career",
-  "@nationsNavCareer": {
-    "description": "Bottom-nav label: career."
-  },
-  "nationsNavTactics": "Tactics",
-  "@nationsNavTactics": {
-    "description": "Bottom-nav label: tactics."
-  },
-  "nationsNavNations": "Nations",
-  "@nationsNavNations": {
-    "description": "Bottom-nav label: nations."
-  },
-  "nationsNavSettings": "Settings",
-  "@nationsNavSettings": {
-    "description": "Bottom-nav label: settings."
-  },
   "statsTeamRecords": "TEAM RECORDS",
   "@statsTeamRecords": {
     "description": "App-bar title on the team records screen."
