@@ -24,7 +24,7 @@ library;
 /// then passes no skip callback at all and nothing else changes. The shootout
 /// taker sheet is asked by the clock either way, so turning the aid off cannot
 /// leave a manager un-asked.
-const bool kShowSkipMatch = true;
+const bool kShowSkipMatch = false;
 
 /// Whether the paywall prints the reason the store gave, under the
 /// "Store unavailable" note.
