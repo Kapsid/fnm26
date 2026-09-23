@@ -11193,6 +11193,18 @@
   "@tourThirdsUneven": {
     "description": "Best-third-placed table: why some results are dropped."
   },
+  "careerExportSave": "Export this save",
+  "@careerExportSave": {
+    "description": "Labelled action on a save tile: writes this one career to a file and hands it to the share sheet."
+  },
+  "careerBackupAll": "BACK UP ALL SAVES",
+  "@careerBackupAll": {
+    "description": "Button on the saves screen that exports every save at once, as one file."
+  },
+  "careerBackupAllFailed": "Could not write the backup.",
+  "@careerBackupAllFailed": {
+    "description": "Shown when exporting every save at once fails."
+  },
   "backupTitle": "SAVES",
   "@backupTitle": {
     "description": "Settings: heading for the backup section."

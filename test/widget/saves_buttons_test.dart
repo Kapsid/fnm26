@@ -169,6 +169,25 @@ void main() {
           },
         );
 
+        // The two file controls. Czech runs the whole-DB one to
+        // "ZALOHOVAT VSECHNY HRY", which is the longest label on the screen.
+        for (final label in ['backup-all', 'export-save'])
+          testWidgets(
+            'the $label label fits at ${width.toInt()}px',
+            (tester) async {
+              await pumpTextButton(
+                tester,
+                locale,
+                width,
+                (l) => label == 'backup-all'
+                    ? l.careerBackupAll
+                    : l.careerExportSave,
+              );
+              expect(tester.takeException(), isNull);
+              expectNothingCut(tester);
+            },
+          );
+
         testWidgets(
           'the over-limit reassurance fits at ${width.toInt()}px',
           (tester) async {

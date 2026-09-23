@@ -7637,6 +7637,15 @@ class AppLocalizationsCs extends AppLocalizations {
       'Skupiny nejsou stejně velké, takže výsledky proti poslednímu týmu větších skupin se nezapočítávají a všechny týmy se hodnotí podle stejného počtu zápasů.';
 
   @override
+  String get careerExportSave => 'Exportovat tuto hru';
+
+  @override
+  String get careerBackupAll => 'ZÁLOHOVAT VŠECHNY HRY';
+
+  @override
+  String get careerBackupAllFailed => 'Zálohu se nepodařilo vytvořit.';
+
+  @override
   String get backupTitle => 'ULOŽENÉ HRY';
 
   @override

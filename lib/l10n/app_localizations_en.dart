@@ -7625,6 +7625,15 @@ class AppLocalizationsEn extends AppLocalizations {
       'Groups are uneven, so results against each big group\'s bottom side are dropped and every team is judged over the same games.';
 
   @override
+  String get careerExportSave => 'Export this save';
+
+  @override
+  String get careerBackupAll => 'BACK UP ALL SAVES';
+
+  @override
+  String get careerBackupAllFailed => 'Could not write the backup.';
+
+  @override
   String get backupTitle => 'SAVES';
 
   @override

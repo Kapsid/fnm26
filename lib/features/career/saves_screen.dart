@@ -18,6 +18,7 @@ import 'package:fnm/domain/services/entitlement/entitlement.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/nations/nation_select_providers.dart';
 import 'package:fnm/features/paywall/paywall_sheet.dart';
+import 'package:fnm/features/settings/save_backup_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
@@ -179,6 +180,19 @@ class SavesScreen extends ConsumerWidget {
                           ),
                           label: Text(l.careerImport),
                         ),
+                      // Every save at once, which is the backup that actually
+                      // answers a lost phone. Exporting one career at a time
+                      // from the tiles covers the save you remembered; this
+                      // covers the ones you did not.
+                      if (saves.isNotEmpty)
+                        TextButton.icon(
+                          onPressed: () => _backupAll(context, ref),
+                          icon: const Icon(
+                            Icons.backup_outlined,
+                            size: 18,
+                          ),
+                          label: Text(l.careerBackupAll),
+                        ),
                     ],
                   ),
                 ),
@@ -267,6 +281,24 @@ String agoShort(DateTime at, {DateTime? now}) {
 }
 
 /// Writes one career to a file and hands it to the share sheet.
+/// Writes EVERY save to one file and hands it to the share sheet.
+///
+/// The same export the settings screen offers, on the screen where a manager
+/// is actually looking at what he would lose.
+Future<void> _backupAll(BuildContext context, WidgetRef ref) async {
+  final l = AppLocalizations.of(context);
+  final messenger = ScaffoldMessenger.of(context);
+  try {
+    final file = await ref.read(saveBackupServiceProvider).export();
+    await SharePlus.instance.share(
+      ShareParams(files: [XFile(file.path)], subject: l.backupExportSubject),
+    );
+  } on Object catch (e, stack) {
+    AppLog.error('saves-backup-all', e, stack);
+    messenger.showSnackBar(SnackBar(content: Text(l.careerBackupAllFailed)));
+  }
+}
+
 Future<void> _shareCareer(
   BuildContext context,
   WidgetRef ref,
@@ -411,15 +443,37 @@ class SaveTile extends StatelessWidget {
                     ],
                   ),
                 ],
+                // What the share icon used to be, in words. The icon said
+                // nothing to anybody who had not already guessed it, and this
+                // is the control that gets a career off the phone.
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: TextButton.icon(
+                    style: TextButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: AppSpacing.xs,
+                      ),
+                      visualDensity: VisualDensity.compact,
+                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    ),
+                    onPressed: onShare,
+                    icon: const Icon(Icons.ios_share_rounded, size: 16),
+                    label: Text(
+                      l.careerExportSave,
+                      style: AppTypography.labelSmall.copyWith(
+                        color: AppColors.primary,
+                      ),
+                    ),
+                  ),
+                ),
               ],
             ),
           ),
+          // Export lives under the meta lines as a LABELLED row, so the
+          // delete bin is the only icon left here. An icon and a button doing
+          // the same thing in one card is a question, not a shortcut.
           IconButton(
-            tooltip: l.careerShare,
-            icon: const Icon(Icons.ios_share_rounded, color: AppColors.outline),
-            onPressed: onShare,
-          ),
-          IconButton(
+            tooltip: l.careerDelete,
             icon: const Icon(Icons.delete_outline, color: AppColors.outline),
             onPressed: onDelete,
           ),

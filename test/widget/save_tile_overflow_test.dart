@@ -9,10 +9,14 @@ import 'package:fnm/l10n/app_localizations.dart';
 
 import '../helpers/expect_whole.dart';
 
-/// A save row carries three buttons on its right — share, delete, and the
-/// chevron into the save — and the text beside them ran straight underneath.
-/// "Cesta na MS 2030" sat in a Row with nothing constraining it, so it spilled
-/// out of the column it belonged to and collided with the controls.
+/// A save row carries its controls on the right and its text on the left, and
+/// the text used to run straight underneath them: "Cesta na MS 2030" sat in a
+/// Row with nothing constraining it, so it spilled out of the column it
+/// belonged to and collided with the buttons.
+///
+/// Export has since moved out of that trailing group and into the column as a
+/// LABELLED row, so the bin is the leftmost control now. Its label is ordinary
+/// column text and is held to the same line as everything else there.
 void main() {
   final save = Career(
     id: 1,
@@ -89,10 +93,10 @@ void main() {
     ) async {
       await pumpTile(tester, locale);
 
-      // The share button is the leftmost control; every scrap of text has to
+      // The delete bin is the leftmost control; every scrap of text has to
       // finish before it starts, or it is painting underneath one.
       final controlsStart = tester
-          .getTopLeft(find.byIcon(Icons.ios_share_rounded))
+          .getTopLeft(find.byIcon(Icons.delete_outline))
           .dx;
       for (final element in find.byType(Text).evaluate()) {
         final text = element.widget as Text;

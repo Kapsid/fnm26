@@ -12003,6 +12003,24 @@ abstract class AppLocalizations {
   /// **'Groups are uneven, so results against each big group\'s bottom side are dropped and every team is judged over the same games.'**
   String get tourThirdsUneven;
 
+  /// Labelled action on a save tile: writes this one career to a file and hands it to the share sheet.
+  ///
+  /// In en, this message translates to:
+  /// **'Export this save'**
+  String get careerExportSave;
+
+  /// Button on the saves screen that exports every save at once, as one file.
+  ///
+  /// In en, this message translates to:
+  /// **'BACK UP ALL SAVES'**
+  String get careerBackupAll;
+
+  /// Shown when exporting every save at once fails.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not write the backup.'**
+  String get careerBackupAllFailed;
+
   /// Settings: heading for the backup section.
   ///
   /// In en, this message translates to:
