@@ -1304,11 +1304,77 @@ abstract class AppLocalizations {
   /// **'{age}y'**
   String squadAgeShort(int age);
 
-  /// Heading above the substitutes list, with the count.
+  /// Heading above the list of players currently in the XI, with how many of the eleven are actually out there.
   ///
   /// In en, this message translates to:
-  /// **'SUBSTITUTES · {count}'**
-  String tacticsSubstitutesCount(int count);
+  /// **'ON THE PITCH · {count}/{max}'**
+  String tacticsSectionOnPitch(int count, int max);
+
+  /// Heading above the substitutes who may still be brought on, with the count.
+  ///
+  /// In en, this message translates to:
+  /// **'AVAILABLE · {count}'**
+  String tacticsSectionAvailable(int count);
+
+  /// Heading above the players who may not be brought on: already used, sent off, or with no changes left.
+  ///
+  /// In en, this message translates to:
+  /// **'UNAVAILABLE · {count}'**
+  String tacticsSectionUnavailable(int count);
+
+  /// Shown under the unavailable heading when nobody has been used or sent off yet.
+  ///
+  /// In en, this message translates to:
+  /// **'Nobody yet.'**
+  String get tacticsNobodyUnavailable;
+
+  /// Marker under a player on the pitch who was in the starting eleven.
+  ///
+  /// In en, this message translates to:
+  /// **'Started'**
+  String get tacticsRowStarted;
+
+  /// Marker under a player on the pitch who came on as a substitute, with the minute.
+  ///
+  /// In en, this message translates to:
+  /// **'On at {minute}\''**
+  String tacticsRowCameOn(int minute);
+
+  /// Marker under a player on the pitch who came on as a substitute, when the minute he came on is not known.
+  ///
+  /// In en, this message translates to:
+  /// **'Came on'**
+  String get tacticsRowSubstitute;
+
+  /// Marker under a player who has been taken off, with the minute.
+  ///
+  /// In en, this message translates to:
+  /// **'Off at {minute}\''**
+  String tacticsRowWentOff(int minute);
+
+  /// Caption over a player's remaining-energy percentage, so the bare number is not unexplained.
+  ///
+  /// In en, this message translates to:
+  /// **'ENERGY'**
+  String get tacticsEnergyLabel;
+
+  /// Prompt shown once the manager has tapped a player on the pitch to take off.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap a replacement for {name}, or tap him again to cancel.'**
+  String tacticsPickReplacementFor(String name);
+
+  /// Refusal shown when the manager tries to put somebody into the hole a sending-off left.
+  ///
+  /// In en, this message translates to:
+  /// **'A red card cost you this place. It cannot be filled.'**
+  String get tacticsSlotLostToRedCard;
+
+  /// Badge on the empty spot a sent-off player left on the pitch.
+  ///
+  /// In en, this message translates to:
+  /// **'SENT OFF'**
+  String get tacticsSentOffShort;
 
   /// How many substitutions have been used out of the maximum.
   ///
@@ -1316,10 +1382,10 @@ abstract class AppLocalizations {
   /// **'SUBS · {used}/{max}'**
   String tacticsSubsUsed(int used, int max);
 
-  /// Hint above the bench in the in-match editor.
+  /// Hint above the bench in the in-match editor, naming both ways of making a change.
   ///
   /// In en, this message translates to:
-  /// **'Drag a sub onto a player to bring them on.'**
+  /// **'Tap a man on the pitch to take him off, or hold and drag a sub onto him.'**
   String get tacticsDragSubOn;
 
   /// Shown when the bench is empty.
@@ -12998,6 +13064,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Injured'**
   String get tacticsSubInjured;
+
+  /// Marker under a squad row for a player sent off in this match.
+  ///
+  /// In en, this message translates to:
+  /// **'Sent off'**
+  String get tacticsSubSentOffMark;
 
   /// Marker under a squad row when the side has spent every change it has.
   ///

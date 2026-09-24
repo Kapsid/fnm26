@@ -1142,15 +1142,93 @@
       }
     }
   },
-  "tacticsSubstitutesCount": "SUBSTITUTES · {count}",
-  "@tacticsSubstitutesCount": {
-    "description": "Heading above the substitutes list, with the count.",
+  "tacticsSectionOnPitch": "ON THE PITCH · {count}/{max}",
+  "@tacticsSectionOnPitch": {
+    "description": "Heading above the list of players currently in the XI, with how many of the eleven are actually out there.",
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "example": "10"
+      },
+      "max": {
+        "type": "int",
+        "example": "11"
+      }
+    }
+  },
+  "tacticsSectionAvailable": "AVAILABLE · {count}",
+  "@tacticsSectionAvailable": {
+    "description": "Heading above the substitutes who may still be brought on, with the count.",
     "placeholders": {
       "count": {
         "type": "int",
         "example": "7"
       }
     }
+  },
+  "tacticsSectionUnavailable": "UNAVAILABLE · {count}",
+  "@tacticsSectionUnavailable": {
+    "description": "Heading above the players who may not be brought on: already used, sent off, or with no changes left.",
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "example": "3"
+      }
+    }
+  },
+  "tacticsNobodyUnavailable": "Nobody yet.",
+  "@tacticsNobodyUnavailable": {
+    "description": "Shown under the unavailable heading when nobody has been used or sent off yet."
+  },
+  "tacticsRowStarted": "Started",
+  "@tacticsRowStarted": {
+    "description": "Marker under a player on the pitch who was in the starting eleven."
+  },
+  "tacticsRowCameOn": "On at {minute}'",
+  "@tacticsRowCameOn": {
+    "description": "Marker under a player on the pitch who came on as a substitute, with the minute.",
+    "placeholders": {
+      "minute": {
+        "type": "int",
+        "example": "62"
+      }
+    }
+  },
+  "tacticsRowSubstitute": "Came on",
+  "@tacticsRowSubstitute": {
+    "description": "Marker under a player on the pitch who came on as a substitute, when the minute he came on is not known."
+  },
+  "tacticsRowWentOff": "Off at {minute}'",
+  "@tacticsRowWentOff": {
+    "description": "Marker under a player who has been taken off, with the minute.",
+    "placeholders": {
+      "minute": {
+        "type": "int",
+        "example": "62"
+      }
+    }
+  },
+  "tacticsEnergyLabel": "ENERGY",
+  "@tacticsEnergyLabel": {
+    "description": "Caption over a player's remaining-energy percentage, so the bare number is not unexplained."
+  },
+  "tacticsPickReplacementFor": "Tap a replacement for {name}, or tap him again to cancel.",
+  "@tacticsPickReplacementFor": {
+    "description": "Prompt shown once the manager has tapped a player on the pitch to take off.",
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "example": "Vondracek"
+      }
+    }
+  },
+  "tacticsSlotLostToRedCard": "A red card cost you this place. It cannot be filled.",
+  "@tacticsSlotLostToRedCard": {
+    "description": "Refusal shown when the manager tries to put somebody into the hole a sending-off left."
+  },
+  "tacticsSentOffShort": "SENT OFF",
+  "@tacticsSentOffShort": {
+    "description": "Badge on the empty spot a sent-off player left on the pitch."
   },
   "tacticsSubsUsed": "SUBS · {used}/{max}",
   "@tacticsSubsUsed": {
@@ -1166,9 +1244,9 @@
       }
     }
   },
-  "tacticsDragSubOn": "Drag a sub onto a player to bring them on.",
+  "tacticsDragSubOn": "Tap a man on the pitch to take him off, or hold and drag a sub onto him.",
   "@tacticsDragSubOn": {
-    "description": "Hint above the bench in the in-match editor."
+    "description": "Hint above the bench in the in-match editor, naming both ways of making a change."
   },
   "tacticsNoSubs": "No substitutes available.",
   "@tacticsNoSubs": {
@@ -12037,6 +12115,10 @@
   "tacticsSubInjured": "Injured",
   "@tacticsSubInjured": {
     "description": "Marker under a squad row for a player hurt in this match."
+  },
+  "tacticsSubSentOffMark": "Sent off",
+  "@tacticsSubSentOffMark": {
+    "description": "Marker under a squad row for a player sent off in this match."
   },
   "tacticsSubNoneLeft": "No changes left",
   "@tacticsSubNoneLeft": {

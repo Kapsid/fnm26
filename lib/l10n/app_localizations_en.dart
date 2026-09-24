@@ -714,9 +714,53 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String tacticsSubstitutesCount(int count) {
-    return 'SUBSTITUTES · $count';
+  String tacticsSectionOnPitch(int count, int max) {
+    return 'ON THE PITCH · $count/$max';
   }
+
+  @override
+  String tacticsSectionAvailable(int count) {
+    return 'AVAILABLE · $count';
+  }
+
+  @override
+  String tacticsSectionUnavailable(int count) {
+    return 'UNAVAILABLE · $count';
+  }
+
+  @override
+  String get tacticsNobodyUnavailable => 'Nobody yet.';
+
+  @override
+  String get tacticsRowStarted => 'Started';
+
+  @override
+  String tacticsRowCameOn(int minute) {
+    return 'On at $minute\'';
+  }
+
+  @override
+  String get tacticsRowSubstitute => 'Came on';
+
+  @override
+  String tacticsRowWentOff(int minute) {
+    return 'Off at $minute\'';
+  }
+
+  @override
+  String get tacticsEnergyLabel => 'ENERGY';
+
+  @override
+  String tacticsPickReplacementFor(String name) {
+    return 'Tap a replacement for $name, or tap him again to cancel.';
+  }
+
+  @override
+  String get tacticsSlotLostToRedCard =>
+      'A red card cost you this place. It cannot be filled.';
+
+  @override
+  String get tacticsSentOffShort => 'SENT OFF';
 
   @override
   String tacticsSubsUsed(int used, int max) {
@@ -724,7 +768,8 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get tacticsDragSubOn => 'Drag a sub onto a player to bring them on.';
+  String get tacticsDragSubOn =>
+      'Tap a man on the pitch to take him off, or hold and drag a sub onto him.';
 
   @override
   String get tacticsNoSubs => 'No substitutes available.';
@@ -8252,6 +8297,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get tacticsSubInjured => 'Injured';
+
+  @override
+  String get tacticsSubSentOffMark => 'Sent off';
 
   @override
   String get tacticsSubNoneLeft => 'No changes left';

@@ -713,9 +713,53 @@ class AppLocalizationsCs extends AppLocalizations {
   }
 
   @override
-  String tacticsSubstitutesCount(int count) {
-    return 'NÁHRADNÍCI · $count';
+  String tacticsSectionOnPitch(int count, int max) {
+    return 'NA HŘIŠTI · $count/$max';
   }
+
+  @override
+  String tacticsSectionAvailable(int count) {
+    return 'K DISPOZICI · $count';
+  }
+
+  @override
+  String tacticsSectionUnavailable(int count) {
+    return 'NEDOSTUPNÍ · $count';
+  }
+
+  @override
+  String get tacticsNobodyUnavailable => 'Zatím nikdo.';
+
+  @override
+  String get tacticsRowStarted => 'Od začátku';
+
+  @override
+  String tacticsRowCameOn(int minute) {
+    return 'Na hřišti od $minute\'';
+  }
+
+  @override
+  String get tacticsRowSubstitute => 'Střídal';
+
+  @override
+  String tacticsRowWentOff(int minute) {
+    return 'Střídán v $minute\'';
+  }
+
+  @override
+  String get tacticsEnergyLabel => 'KONDICE';
+
+  @override
+  String tacticsPickReplacementFor(String name) {
+    return 'Klepněte na náhradu za hráče $name, nebo volbu zrušte dalším klepnutím na něj.';
+  }
+
+  @override
+  String get tacticsSlotLostToRedCard =>
+      'Za červenou kartu jste přišli o toto místo. Nelze ho obsadit.';
+
+  @override
+  String get tacticsSentOffShort => 'VYLOUČEN';
 
   @override
   String tacticsSubsUsed(int used, int max) {
@@ -724,7 +768,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get tacticsDragSubOn =>
-      'Přetáhněte náhradníka na hráče a pošlete ho na hřiště.';
+      'Klepnutím na hráče na hřišti ho pošlete ven, nebo podržte náhradníka a přetáhněte ho na něj.';
 
   @override
   String get tacticsNoSubs => 'Žádní náhradníci k dispozici.';
@@ -8261,6 +8305,9 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get tacticsSubInjured => 'Zraněný';
+
+  @override
+  String get tacticsSubSentOffMark => 'Vyloučen';
 
   @override
   String get tacticsSubNoneLeft => 'Došla střídání';

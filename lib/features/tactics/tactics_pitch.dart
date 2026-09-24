@@ -541,6 +541,7 @@ class TacticsPitch extends StatelessWidget {
     this.onMoveToSpace,
     this.absentIds = const {},
     this.injuredIds = const {},
+    this.deadSlots = const {},
     this.energyByPlayer = const {},
     this.teamColors,
     super.key,
@@ -571,6 +572,14 @@ class TacticsPitch extends StatelessWidget {
   /// The subset of [absentIds] who are INJURED (shown orange); the rest are
   /// suspended (shown red).
   final Set<int> injuredIds;
+
+  /// Slots a sending-off has taken out of the shape. They are drawn as holes
+  /// the side has to live with rather than as empty positions to fill, and
+  /// they answer no gesture: no tap, no drop, no drag from another slot.
+  ///
+  /// An empty slot means "put somebody here" everywhere else on this pitch,
+  /// which is exactly how a red card came to cost nothing — see [deadSlots].
+  final Set<int> deadSlots;
   final ValueChanged<int> onTapSlot;
   final void Function(int slotA, int slotB) onSwap;
   final void Function(int slot, int playerId) onBenchIn;
@@ -731,6 +740,7 @@ class TacticsPitch extends StatelessWidget {
                         metrics: m,
                         absent: absentIds.contains(lineup[slot]),
                         injured: injuredIds.contains(lineup[slot]),
+                        dead: deadSlots.contains(slot),
                         energy: energyByPlayer[lineup[slot]],
                         teamColors: teamColors,
                         onTap: () => onTapSlot(slot),
@@ -814,6 +824,7 @@ class _PlayerNode extends StatelessWidget {
     this.teamColors,
     this.absent = false,
     this.injured = false,
+    this.dead = false,
     this.energy,
   });
 
@@ -842,6 +853,11 @@ class _PlayerNode extends StatelessWidget {
 
   /// Whether the absence is an injury (orange) rather than a suspension (red).
   final bool injured;
+
+  /// Whether this slot is the hole a sending-off left. It is empty like an
+  /// unfilled slot and means the opposite of one, so it is drawn as a red
+  /// barred spot rather than as the "+" that invites a player into it.
+  final bool dead;
   final VoidCallback onTap;
   final void Function(int slotA, int slotB) onSwap;
   final void Function(int slot, int playerId) onBenchIn;
@@ -850,7 +866,12 @@ class _PlayerNode extends StatelessWidget {
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
     return DragTarget<Object>(
+      // A dead slot takes nothing: not a substitute off the bench, and not a
+      // team-mate dragged across into the space. Refusing it here is what
+      // stops the drop highlighting as if it would work; the editor refuses
+      // it again over the rules, which is where the answer actually lives.
       onWillAcceptWithDetails: (details) {
+        if (dead) return false;
         final data = details.data;
         if (data is _SlotDrag) return data.slot != slot;
         return data is _BenchDrag;
@@ -911,7 +932,11 @@ class _PlayerNode extends StatelessWidget {
     // An absent player overrides the fit cue entirely — nothing about the slot
     // matters until he is replaced. Injury shows orange, suspension red.
     final absentColor = injured ? AppColors.warning : AppColors.error;
-    final fit = absent ? absentColor : _fitColor;
+    final fit = dead
+        ? AppColors.error
+        : absent
+        ? absentColor
+        : _fitColor;
     final borderColor = highlighted ? AppColors.primary : fit;
     // The rating as it actually counts in this slot — docked when the player is
     // out of position, so the manager sees the real number before committing.
@@ -1011,12 +1036,16 @@ class _PlayerNode extends StatelessWidget {
                 // it is the docked figure, and the amber bubble around it says
                 // why — so the number on the pitch is always the number the
                 // match engine will use.
+                // A dead slot shows neither: a rating of "+" is the invitation
+                // to fill it, and there is nobody to name.
                 rating: p == null ? '+' : '${effective!}',
                 name: p == null ? null : (name ?? surnameOf(p.name)),
-                icon: absent
+                icon: dead
+                    ? Icons.block_rounded
+                    : absent
                     ? (injured ? Icons.personal_injury : Icons.gavel_rounded)
                     : null,
-                iconColor: absentColor,
+                iconColor: dead ? AppColors.error : absentColor,
                 textColor: nameColor,
                 bold: penalised,
               ),
@@ -1033,9 +1062,20 @@ class _PlayerNode extends StatelessWidget {
                 maxWidth: metrics.node,
               ),
             ),
-            // The bottom of the rim says whatever is urgent: that he cannot
-            // play, or — during a match — how much he has left.
-            if (absent)
+            // The bottom of the rim says whatever is urgent: that the place
+            // is gone, that he cannot play, or — during a match — how much he
+            // has left.
+            if (dead)
+              Positioned(
+                bottom: 0,
+                child: _RimBadge(
+                  label: l.tacticsSentOffShort,
+                  color: AppColors.error,
+                  background: AppColors.error.withValues(alpha: 0.18),
+                  maxWidth: metrics.node,
+                ),
+              )
+            else if (absent)
               Positioned(
                 bottom: 0,
                 child: _RimBadge(
@@ -1410,6 +1450,7 @@ class SubDragRow extends StatelessWidget {
     this.trailing,
     this.note,
     this.noteColor,
+    this.onTap,
     this.enabled = true,
     super.key,
   });
@@ -1429,6 +1470,14 @@ class SubDragRow extends StatelessWidget {
   /// or merely a warning about a fit player.
   final Color? noteColor;
 
+  /// Brings him on with one tap, once the manager has said who is coming off.
+  /// Null leaves the row drag-only.
+  ///
+  /// The drag is kept exactly as it was — "drag mi nefunguje, nescrolluje sa
+  /// to alebo som to nepochopil" is a report about discoverability, not about
+  /// the gesture, and a manager who has found the drag should not lose it.
+  final VoidCallback? onTap;
+
   /// Whether he may be brought on at all. A row that cannot answers no
   /// gesture: dragging a man the rules forbid is a wasted attempt.
   final bool enabled;
@@ -1440,6 +1489,7 @@ class SubDragRow extends StatelessWidget {
       leading: SizedBox(width: 40, child: TacticalChip(player.position.label)),
       // Position is already shown by the leading chip — no role subtitle.
       title: Text(player.name, style: AppTypography.bodyMedium),
+      onTap: onTap,
       subtitle: note == null
           ? null
           : Text(

@@ -51,6 +51,8 @@ Future<InMatchTacticsResult?> showInMatchTactics(
   Set<int> injuredIds = const {},
   Set<int> sentOffIds = const {},
   Map<int, int> energyByPlayer = const {},
+  Map<int, int> cameOnAt = const {},
+  Map<int, int> wentOffAt = const {},
   List<Color>? teamColors,
 }) {
   return Navigator.of(context).push<InMatchTacticsResult>(
@@ -68,6 +70,8 @@ Future<InMatchTacticsResult?> showInMatchTactics(
         injuredIds: injuredIds,
         sentOffIds: sentOffIds,
         energyByPlayer: energyByPlayer,
+        cameOnAt: cameOnAt,
+        wentOffAt: wentOffAt,
         teamColors: teamColors,
       ),
     ),
@@ -87,6 +91,8 @@ class _InMatchTacticsEditor extends StatefulWidget {
     this.injuredIds = const {},
     this.sentOffIds = const {},
     this.energyByPlayer = const {},
+    this.cameOnAt = const {},
+    this.wentOffAt = const {},
     this.teamColors,
   });
 
@@ -114,6 +120,17 @@ class _InMatchTacticsEditor extends StatefulWidget {
   /// used to sit in the squad list unmarked and could be subbed on again.
   final Set<int> sentOffIds;
 
+  /// The minute each man already on the pitch came on, for those who were not
+  /// in the starting eleven, and the minute each man already taken off went
+  /// off. Both are read off the changes the manager has made earlier in this
+  /// match; a player missing from either simply has his minute left unsaid.
+  ///
+  /// Only the caller can know them. This sheet sees one moment of the match,
+  /// so on its own it could say no more than "he is not a starter", which is
+  /// the half of the answer the manager already had.
+  final Map<int, int> cameOnAt;
+  final Map<int, int> wentOffAt;
+
   /// The manager's kit colours, filling the player discs on the pitch.
   final List<Color>? teamColors;
 
@@ -139,6 +156,45 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
       .toList();
 
   late final Map<int, Player> _byId = {for (final p in widget.pool) p.id: p};
+
+  /// Who was on the pitch, and who had already been taken off, when this sheet
+  /// opened. Both are pinned at open so a minute can be told apart from a
+  /// missing one: a change made HERE happened at [_InMatchTacticsEditor.minute]
+  /// and can say so, while a change made earlier in the match happened at a
+  /// minute only the caller knows.
+  late final Set<int> _onPitchAtOpen = widget.lineup.whereType<int>().toSet();
+  late final Set<int> _withdrawnAtOpen = widget.startingIds
+      .where((id) => !_onPitchAtOpen.contains(id))
+      .toSet();
+
+  /// The man the manager has tapped to come off, while he chooses who replaces
+  /// him. Tapping him again puts the idea back.
+  ///
+  /// Drag-and-drop was the only way to make a change, and it is the least
+  /// discoverable gesture on a phone: "drag mi nefunguje" was reported as a
+  /// broken feature. Tapping is the addition; the drag is untouched.
+  int? _comingOff;
+
+  /// The slots a sending-off has taken out of the shape — see [deadSlots].
+  /// Derived, never remembered, so a change of formation moves the hole with
+  /// the rest of the side instead of leaving it pointing at somebody.
+  Set<int> get _dead =>
+      deadSlots(lineup: _lineup, sentOffCount: widget.sentOffIds.length);
+
+  /// The man the manager is taking off, if he is still on the pitch. A change
+  /// (or an undo) may have moved him since he was tapped.
+  Player? get _comingOffPlayer {
+    final id = _comingOff;
+    if (id == null || !_onPitch.contains(id)) return null;
+    return _byId[id];
+  }
+
+  /// Refuses a change the rules do not allow, saying which rule refused it.
+  void _refuse(String message) {
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(message)));
+  }
 
   /// Ids currently on the pitch.
   Set<int> get _onPitch => _lineup.whereType<int>().toSet();
@@ -175,8 +231,16 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
   /// Starters already taken off. They cannot come back on: football has no
   /// re-entry. Seeded from the XI the sheet opened with, so a manager reopening
   /// the editor later in the match still cannot undo an earlier change.
+  ///
+  /// A man sent off is NOT in here. He is off the pitch and he is a starter,
+  /// so he fell into this set by arithmetic — and since the rules ask about
+  /// withdrawal before they ask about a red card, the squad list told the
+  /// manager he had "already been taken off". He was not taken off; he was
+  /// sent off, which is a different thing with a different consequence.
   late Set<int> _withdrawn = widget.startingIds
-      .where((id) => !_onPitch.contains(id))
+      .where(
+        (id) => !_onPitch.contains(id) && !widget.sentOffIds.contains(id),
+      )
       .toSet();
 
   /// The states the XI has passed through in THIS sheet, newest last, so a
@@ -206,6 +270,10 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
       final previous = _undo.removeLast();
       _lineup = previous.lineup;
       _withdrawn = previous.withdrawn;
+      // Not snapshotted, because it is not part of the XI: it is a half-made
+      // gesture, and the half-made gesture the manager has just undone is
+      // certainly not the one he still means.
+      _comingOff = null;
     });
   }
 
@@ -222,6 +290,7 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
     // on is a substitution, and has to cost one.
     setState(() {
       _formation = f;
+      _comingOff = null;
       // Short by however many have walked: bestEleven leaves those slots null.
       _lineup = bestEleven(f, reshapePool(_eligible, _onPitch));
       // A reshape re-derives the whole XI against a different set of slots, so
@@ -234,8 +303,16 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
 
   void _swap(int a, int b) {
     if (a == b) return;
+    // Moving sideways into the hole a red card left would put eleven men back
+    // on the pitch in all but name — the side would simply be playing a
+    // different shape with a full complement. The place is gone, not vacant.
+    if (_dead.contains(a) || _dead.contains(b)) {
+      _refuse(AppLocalizations.of(context).tacticsSlotLostToRedCard);
+      return;
+    }
     setState(() {
       _pushUndo();
+      _comingOff = null;
       final l = [..._lineup];
       final tmp = l[a];
       l[a] = l[b];
@@ -252,6 +329,15 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
   /// rules — the snackbar on [_apply] used to be the only thing standing in
   /// the way, which let the board reach a state football does not allow.
   void _setSlot(int slot, int playerId) {
+    // The place a sending-off took is refused before anything is asked about
+    // the player: it is not that this man may not come on, it is that nobody
+    // may. The slot was merely VACATED before, and an empty slot reads as
+    // "put somebody here" — so the bench filled it, no substitution was spent,
+    // and the side carried on with eleven.
+    if (_dead.contains(slot)) {
+      _refuse(AppLocalizations.of(context).tacticsSlotLostToRedCard);
+      return;
+    }
     final refusal = refusalToBringOn(
       startingIds: widget.startingIds,
       onPitch: _onPitch,
@@ -279,6 +365,7 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
     }
     setState(() {
       _pushUndo();
+      _comingOff = null;
       final l = [..._lineup];
       final existing = l.indexOf(playerId);
       if (existing != -1) {
@@ -317,9 +404,40 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
     final onPitch = _onPitch;
-    // A sent-off player is not a substitute — he's out of the game.
-    final subs = _eligible.where((p) => !onPitch.contains(p.id)).toList()
+    // Everyone NOT on the pitch, sent off included. The sent off were left out
+    // of this list because they are not substitutes, which is true and which
+    // is also why the list could not answer the question the manager was
+    // actually asking it: who have I already used.
+    final offPitch = widget.pool.where((p) => !onPitch.contains(p.id)).toList()
       ..sort((a, b) => b.overall.compareTo(a.overall));
+    final available = [
+      for (final p in offPitch)
+        if (!_standing(p).blocked) p,
+    ];
+    final unavailable = [
+      for (final p in offPitch)
+        if (_standing(p).blocked) p,
+    ];
+    // With a man picked to come off, AVAILABLE answers a narrower question:
+    // who can take HIS place. A goalkeeping slot is keeper-only and every
+    // other slot is outfield-only — the same rule the slot picker has always
+    // applied — and what is left is ordered by who suits the position rather
+    // than by who is best in the abstract.
+    final coming = _comingOffPlayer;
+    if (coming != null) {
+      final slot = _lineup.indexOf(coming.id);
+      if (slot != -1) {
+        final position = _formation.positions[slot];
+        final keeperSlot = position.category == PositionCategory.goalkeeper;
+        available
+          ..removeWhere(
+            (p) =>
+                (p.position.category == PositionCategory.goalkeeper) !=
+                keeperSlot,
+          )
+          ..sort(PositionFit.bySlotFit(position));
+      }
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -377,7 +495,12 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
             Expanded(
               child: TabBarView(
                 children: [
-                  _lineupTab(subs),
+                  _lineupTab(
+                    onPitch: _onPitchPlayers,
+                    available: available,
+                    unavailable: unavailable,
+                    comingOff: coming,
+                  ),
                   _tacticsTab(),
                 ],
               ),
@@ -388,10 +511,26 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
     );
   }
 
-  /// The pitch and the bench: pick a slot or drag a substitute on. An injured
-  /// player is flagged directly on the pitch (orange, "INJURED — REPLACE"), so
-  /// no banner is needed above the squad.
-  Widget _lineupTab(List<Player> subs) {
+  /// The pitch, and under it the three lists the manager actually reads.
+  ///
+  /// It used to be ONE list: everybody not on the pitch, best first, with the
+  /// men who could not come on greyed out among the ones who could. The
+  /// manager's words were "celkovo to nabizeni hracov na striedanie mi prislo
+  /// celkom neprehladne. vlastne z toho neviem kto hra od zaciatku" — it
+  /// offers everyone, and it never says who is playing. Who was on the pitch
+  /// appeared nowhere but as eleven discs above, and a greyed row sitting
+  /// between two live ones reads as part of the same offer.
+  ///
+  /// So the same men are dealt into three named piles, in the order the
+  /// questions get asked: who is out there, who can I bring on, and who have I
+  /// already used. The third is always drawn, never folded away — answering
+  /// that last question is the whole reason it exists.
+  Widget _lineupTab({
+    required List<Player> onPitch,
+    required List<Player> available,
+    required List<Player> unavailable,
+    required Player? comingOff,
+  }) {
     final l = AppLocalizations.of(context);
     return ListView(
       children: [
@@ -412,6 +551,9 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
             // orange "INJURED — REPLACE" flag, exactly like a pre-match injury.
             absentIds: widget.injuredIds,
             injuredIds: widget.injuredIds,
+            // The holes a red card left, drawn as holes rather than as spaces
+            // waiting to be filled.
+            deadSlots: _dead,
             onTapSlot: _pickPlayer,
             onSwap: (a, b) {
               switch (resolveDrag(_formation, a, b)) {
@@ -443,39 +585,16 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // The LABEL gives way, and only the label. At 360px this row
-              // overflowed by 40 in ENGLISH, before Czech was even asked, so
-              // something has to yield — but the count of changes left is the
-              // number a manager must not lose sight of, so it is never the
-              // thing that yields. Flexing both halves is the trap: two
-              // Flexibles either side of a Spacer share the width three ways,
-              // which caps each at a third of the row and cuts the counter to
-              // "SUBS · ..." on every phone in both languages.
-              Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      l.tacticsSubstitutesCount(subs.length),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: AppTypography.labelMedium,
-                    ),
-                  ),
-                  const SizedBox(width: AppSpacing.sm),
-                  Text(
-                    l.tacticsSubsUsed(_subsUsed, widget.maxSubs),
-                    maxLines: 1,
-                    style: AppTypography.labelMedium.copyWith(
-                      color: _overLimit ? AppColors.error : AppColors.primary,
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: AppSpacing.xs),
+              // Both gestures are named, tap first. The drag was the only one
+              // there was, and it is the least discoverable thing on a phone.
               Text(
-                l.tacticsDragSubOn,
+                comingOff == null
+                    ? l.tacticsDragSubOn
+                    : l.tacticsPickReplacementFor(comingOff.name),
                 style: AppTypography.labelSmall.copyWith(
-                  color: AppColors.onSurfaceVariant,
+                  color: comingOff == null
+                      ? AppColors.onSurfaceVariant
+                      : AppColors.primary,
                 ),
               ),
               // Only while there is something to take back, and only ever what
@@ -511,8 +630,9 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
                     ),
                   ),
                 ),
-              // Say plainly that the side is short — the vacated slot on the
-              // pitch is otherwise easy to read as an empty position to fill.
+              // Say plainly that the side is short. The pitch says it too now,
+              // on the barred spot itself, but this is the line that names the
+              // man it happened to.
               if (widget.sentOffIds.isNotEmpty) ...[
                 const SizedBox(height: AppSpacing.sm),
                 Row(
@@ -539,30 +659,102 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
                   ],
                 ),
               ],
-              const SizedBox(height: AppSpacing.sm),
+              // 1. WHO IS PLAYING. The count carries the sending-off: ten of
+              // eleven, said in the heading rather than left to be counted off
+              // the discs above.
+              _sectionHeader(
+                l.tacticsSectionOnPitch(onPitch.length, _lineup.length),
+              ),
               AppCard(
                 padding: EdgeInsets.zero,
                 child: Column(
                   children: [
-                    if (subs.isEmpty)
-                      Padding(
-                        padding: const EdgeInsets.all(AppSpacing.md),
-                        child: Text(
-                          l.tacticsNoSubs,
-                          style: AppTypography.bodyMedium,
+                    for (final p in onPitch)
+                      _OnPitchRow(
+                        player: p,
+                        detail: _pitchDetail(l, p.id),
+                        energy: widget.energyByPlayer[p.id],
+                        selected: comingOff?.id == p.id,
+                        onTap: () => setState(
+                          () => _comingOff = _comingOff == p.id ? null : p.id,
                         ),
                       ),
-                    for (final p in subs)
-                      () {
-                        final standing = _standing(p);
-                        return SubDragRow(
-                          player: p,
-                          trailing: _energyTrailing(p.id),
-                          note: standing.note,
-                          noteColor: standing.color,
-                          enabled: !standing.blocked,
-                        );
-                      }(),
+                  ],
+                ),
+              ),
+              // 2. WHO MAY COME ON, with the changes left beside the heading:
+              // the number a manager must not lose sight of.
+              _sectionHeader(
+                l.tacticsSectionAvailable(available.length),
+                trailing: Text(
+                  l.tacticsSubsUsed(_subsUsed, widget.maxSubs),
+                  maxLines: 1,
+                  style: AppTypography.labelMedium.copyWith(
+                    color: _overLimit ? AppColors.error : AppColors.primary,
+                  ),
+                ),
+              ),
+              AppCard(
+                padding: EdgeInsets.zero,
+                child: Column(
+                  children: [
+                    if (available.isEmpty)
+                      _emptyNote(l.tacticsNoSubs)
+                    else
+                      for (final p in available)
+                        () {
+                          final standing = _standing(p);
+                          return SubDragRow(
+                            player: p,
+                            trailing: _energyTrailing(p.id),
+                            note: standing.note,
+                            noteColor: standing.color,
+                            // Tapping completes a change the manager began by
+                            // tapping the man he wants off. With nobody chosen
+                            // there is nothing for a tap to mean, so the row
+                            // does not pretend to answer one.
+                            onTap: comingOff == null
+                                ? null
+                                : () => _replace(comingOff.id, p.id),
+                          );
+                        }(),
+                  ],
+                ),
+              ),
+              // 3. WHO IS SPENT. Always drawn, always greyed: this is the pile
+              // that answers "who have I already used", and a pile you have to
+              // open to see answers nothing.
+              _sectionHeader(
+                l.tacticsSectionUnavailable(unavailable.length),
+                muted: true,
+              ),
+              AppCard(
+                padding: EdgeInsets.zero,
+                child: Column(
+                  children: [
+                    if (unavailable.isEmpty)
+                      _emptyNote(l.tacticsNobodyUnavailable)
+                    else
+                      for (final p in unavailable)
+                        () {
+                          final standing = _standing(p);
+                          final off = _wentOffAt(p.id);
+                          return SubDragRow(
+                            player: p,
+                            trailing: _energyTrailing(p.id),
+                            // The minute REPLACES the marker where it is known:
+                            // "off at 62'" already says he is off, and "Already
+                            // off · Off at 62'" says it twice.
+                            note:
+                                standing.refusal ==
+                                        SubRefusal.alreadyWithdrawn &&
+                                    off != null
+                                ? l.tacticsRowWentOff(off)
+                                : standing.note,
+                            noteColor: standing.color,
+                            enabled: false,
+                          );
+                        }(),
                   ],
                 ),
               ),
@@ -574,6 +766,80 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
     );
   }
 
+  /// The band over one of the three lists: what it is, and whatever figure
+  /// belongs beside it.
+  ///
+  /// The LABEL gives way, and only the label. At 360px the old version of this
+  /// row overflowed by 40 in ENGLISH, before Czech was even asked, so something
+  /// has to yield — but the count of changes left is never the thing that
+  /// yields. Flexing both halves is the trap: two Flexibles either side of a
+  /// Spacer share the width three ways, which caps each at a third of the row
+  /// and cuts the counter to "SUBS · ..." on every phone in both languages.
+  Widget _sectionHeader(String label, {Widget? trailing, bool muted = false}) =>
+      Padding(
+        padding: const EdgeInsets.only(
+          top: AppSpacing.md,
+          bottom: AppSpacing.xs,
+        ),
+        child: Row(
+          children: [
+            Expanded(
+              child: Text(
+                label,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: AppTypography.labelMedium.copyWith(
+                  color: muted ? AppColors.onSurfaceVariant : AppColors.primary,
+                ),
+              ),
+            ),
+            if (trailing != null) ...[
+              const SizedBox(width: AppSpacing.sm),
+              trailing,
+            ],
+          ],
+        ),
+      );
+
+  /// What a list says when it has nothing in it.
+  Widget _emptyNote(String text) => Padding(
+    padding: const EdgeInsets.all(AppSpacing.md),
+    child: Text(
+      text,
+      style: AppTypography.bodyMedium.copyWith(
+        color: AppColors.onSurfaceVariant,
+      ),
+    ),
+  );
+
+  /// Completes a tapped change: [inId] takes the place [outId] is standing in.
+  ///
+  /// [_setSlot] answers for it, exactly as the drop target does, so a tap can
+  /// never make a change a drag would have been refused.
+  void _replace(int outId, int inId) {
+    final slot = _lineup.indexOf(outId);
+    if (slot == -1) return;
+    _setSlot(slot, inId);
+  }
+
+  /// What a row in ON THE PITCH says about how its man got there: he started,
+  /// or he came on, and at what minute.
+  String _pitchDetail(AppLocalizations l, int id) {
+    if (widget.startingIds.contains(id)) return l.tacticsRowStarted;
+    final at =
+        widget.cameOnAt[id] ??
+        // Brought on in THIS sheet, so the minute is the one on the clock.
+        (_onPitchAtOpen.contains(id) ? null : widget.minute);
+    return at == null ? l.tacticsRowSubstitute : l.tacticsRowCameOn(at);
+  }
+
+  /// The minute [id] was taken off, or null when nobody can say.
+  int? _wentOffAt(int id) =>
+      widget.wentOffAt[id] ??
+      (_withdrawn.contains(id) && !_withdrawnAtOpen.contains(id)
+          ? widget.minute
+          : null);
+
   /// What a squad list has to say about [p] BEFORE the manager picks him, and
   /// whether he may be picked at all.
   ///
@@ -581,7 +847,9 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
   /// restated: the lists used to show every player identically, so a manager
   /// learned that a man was already off, or that his changes were spent, only
   /// by being refused after he had chosen.
-  ({String? note, Color color, bool blocked}) _standing(Player p) {
+  ({String? note, Color color, bool blocked, SubRefusal refusal}) _standing(
+    Player p,
+  ) {
     final l = AppLocalizations.of(context);
     final refusal = refusalToBringOn(
       startingIds: widget.startingIds,
@@ -596,16 +864,24 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
         note: l.tacticsSubOffAlready,
         color: AppColors.error,
         blocked: true,
+        refusal: refusal,
       ),
+      // The MARKER, not the sentence. The full "… has been sent off and takes
+      // no further part" belongs in the snackbar that refuses a gesture; in a
+      // row it is a line of its own that no list column is wide enough for,
+      // and it only started appearing in a list when the sent off were finally
+      // shown in one.
       SubRefusal.sentOff => (
-        note: l.tacticsSubSentOff(p.name),
+        note: l.tacticsSubSentOffMark,
         color: AppColors.error,
         blocked: true,
+        refusal: refusal,
       ),
       SubRefusal.noSubsLeft => (
         note: l.tacticsSubNoneLeft,
         color: AppColors.error,
         blocked: true,
+        refusal: refusal,
       ),
       // A knock does not stop a man playing: it is the manager's call whether
       // to risk him, so it is said in amber and he stays pickable.
@@ -613,25 +889,17 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
         note: widget.injuredIds.contains(p.id) ? l.tacticsSubInjured : null,
         color: AppColors.warning,
         blocked: false,
+        refusal: refusal,
       ),
     };
   }
 
-  /// A small energy gauge for a bench row, or null when energy isn't tracked
+  /// A small energy gauge for a squad row, or null when energy isn't tracked
   /// (pre-match) or this player has no recorded energy yet.
   Widget? _energyTrailing(int id) {
     final e = widget.energyByPlayer[id];
     if (e == null) return null;
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Icon(Icons.bolt, size: 14, color: energyColor(e)),
-        Text(
-          '$e%',
-          style: AppTypography.labelMedium.copyWith(color: energyColor(e)),
-        ),
-      ],
-    );
+    return _EnergyGauge(e);
   }
 
   /// Formation and the tactical instruction sliders.
@@ -826,6 +1094,10 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
   }
 
   Future<void> _pickPlayer(int slot) async {
+    if (_dead.contains(slot)) {
+      _refuse(AppLocalizations.of(context).tacticsSlotLostToRedCard);
+      return;
+    }
     final position = _formation.positions[slot];
     final isKeeperSlot = position.category == PositionCategory.goalkeeper;
     // A goalkeeping slot is keeper-only; any other slot can be filled by any
@@ -929,6 +1201,140 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
       ),
     );
     if (picked != null) _setSlot(slot, picked);
+  }
+}
+
+/// One of the eleven, in the list under the pitch.
+///
+/// Not a [SubDragRow]: the questions are different ones. A bench row asks
+/// "may he come on, and what is wrong with him"; this one answers "is he a
+/// starter or did he come on, and when" — the half of the team sheet that was
+/// nowhere on this screen at all, because who was playing appeared only as
+/// eleven discs on the pitch above.
+class _OnPitchRow extends StatelessWidget {
+  const _OnPitchRow({
+    required this.player,
+    required this.detail,
+    required this.energy,
+    required this.selected,
+    required this.onTap,
+  });
+
+  final Player player;
+
+  /// How he got here: "Started", or the minute he came on.
+  final String detail;
+
+  /// His remaining energy, or null when energy is not being tracked.
+  final int? energy;
+
+  /// Whether the manager has tapped him to come off and is now choosing who
+  /// replaces him.
+  final bool selected;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) => Material(
+    // Its own, and transparent: an [AppCard] that is not itself tappable is a
+    // plain DecoratedBox, so the nearest Material is the Scaffold's — and a
+    // ripple painted down there comes out UNDER the card and is never seen.
+    type: MaterialType.transparency,
+    child: InkWell(
+      onTap: onTap,
+      child: Ink(
+        decoration: BoxDecoration(
+          color: selected ? AppColors.surfaceContainerHighest : null,
+          // The same active bar a selected data-list row wears everywhere
+          // else, so "this is the man I am taking off" needs no explaining.
+          border: Border(
+            left: BorderSide(
+              color: selected ? AppColors.activeBar : Colors.transparent,
+              width: 3,
+            ),
+          ),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppSpacing.md,
+            vertical: AppSpacing.sm,
+          ),
+          child: Row(
+            children: [
+              SizedBox(width: 40, child: TacticalChip(player.position.label)),
+              const SizedBox(width: AppSpacing.sm),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Never cut: a name that ends in an ellipsis is not a name,
+                    // and this list is read to find a man by his.
+                    WholeText(
+                      player.name,
+                      maxLines: 1,
+                      shortText: initialledName(player.name),
+                      style: AppTypography.bodyMedium,
+                    ),
+                    Text(
+                      detail,
+                      style: AppTypography.labelSmall.copyWith(
+                        color: AppColors.onSurfaceVariant,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              if (energy != null) ...[
+                const SizedBox(width: AppSpacing.sm),
+                _EnergyGauge(energy!),
+              ],
+            ],
+          ),
+        ),
+      ),
+    ),
+  );
+}
+
+/// What a player has left, with the word ENERGY over it.
+///
+/// The number used to stand on its own — "mam len tie percenta", the manager
+/// said: he had only the percentages, and nothing saying what they were of.
+class _EnergyGauge extends StatelessWidget {
+  const _EnergyGauge(this.energy);
+
+  final int energy;
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    final color = energyColor(energy);
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: [
+        Text(
+          l.tacticsEnergyLabel,
+          maxLines: 1,
+          style: AppTypography.labelSmall.copyWith(
+            // Small on purpose: it is a caption on a number, and the number is
+            // what a manager is reading. A full-size word here would take the
+            // width off the name beside it on a 320px phone.
+            fontSize: 9,
+            color: AppColors.onSurfaceVariant,
+          ),
+        ),
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(Icons.bolt, size: 14, color: color),
+            Text(
+              '$energy%',
+              style: AppTypography.labelMedium.copyWith(color: color),
+            ),
+          ],
+        ),
+      ],
+    );
   }
 }
 

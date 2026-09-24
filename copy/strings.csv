@@ -200,9 +200,20 @@ squadStatSize,Squad overview tile: number of players available.,,Squad,Kádr
 squadStatUnavailable,Squad overview tile: players injured or suspended.,,Out,Mimo hru
 squadDepthTitle,Heading above the per-line squad depth chips.,,DEPTH BY LINE,ŠÍŘE KÁDRU PO ŘADÁCH
 squadAgeShort,Compact age label on a squad row.,{age},{age}y,{age} let
-tacticsSubstitutesCount,"Heading above the substitutes list, with the count.",{count},SUBSTITUTES · {count},NÁHRADNÍCI · {count}
+tacticsSectionOnPitch,"Heading above the list of players currently in the XI, with how many of the eleven are actually out there.",{count} {max},ON THE PITCH · {count}/{max},NA HŘIŠTI · {count}/{max}
+tacticsSectionAvailable,"Heading above the substitutes who may still be brought on, with the count.",{count},AVAILABLE · {count},K DISPOZICI · {count}
+tacticsSectionUnavailable,"Heading above the players who may not be brought on: already used, sent off, or with no changes left.",{count},UNAVAILABLE · {count},NEDOSTUPNÍ · {count}
+tacticsNobodyUnavailable,Shown under the unavailable heading when nobody has been used or sent off yet.,,Nobody yet.,Zatím nikdo.
+tacticsRowStarted,Marker under a player on the pitch who was in the starting eleven.,,Started,Od začátku
+tacticsRowCameOn,"Marker under a player on the pitch who came on as a substitute, with the minute.",{minute},On at {minute}',Na hřišti od {minute}'
+tacticsRowSubstitute,"Marker under a player on the pitch who came on as a substitute, when the minute he came on is not known.",,Came on,Střídal
+tacticsRowWentOff,"Marker under a player who has been taken off, with the minute.",{minute},Off at {minute}',Střídán v {minute}'
+tacticsEnergyLabel,"Caption over a player's remaining-energy percentage, so the bare number is not unexplained.",,ENERGY,KONDICE
+tacticsPickReplacementFor,Prompt shown once the manager has tapped a player on the pitch to take off.,{name},"Tap a replacement for {name}, or tap him again to cancel.","Klepněte na náhradu za hráče {name}, nebo volbu zrušte dalším klepnutím na něj."
+tacticsSlotLostToRedCard,Refusal shown when the manager tries to put somebody into the hole a sending-off left.,,A red card cost you this place. It cannot be filled.,Za červenou kartu jste přišli o toto místo. Nelze ho obsadit.
+tacticsSentOffShort,Badge on the empty spot a sent-off player left on the pitch.,,SENT OFF,VYLOUČEN
 tacticsSubsUsed,How many substitutions have been used out of the maximum.,{used} {max},SUBS · {used}/{max},STŘÍDÁNÍ · {used}/{max}
-tacticsDragSubOn,Hint above the bench in the in-match editor.,,Drag a sub onto a player to bring them on.,Přetáhněte náhradníka na hráče a pošlete ho na hřiště.
+tacticsDragSubOn,"Hint above the bench in the in-match editor, naming both ways of making a change.",,"Tap a man on the pitch to take him off, or hold and drag a sub onto him.","Klepnutím na hráče na hřišti ho pošlete ven, nebo podržte náhradníka a přetáhněte ho na něj."
 tacticsNoSubs,Shown when the bench is empty.,,No substitutes available.,Žádní náhradníci k dispozici.
 tacticsChooseShape,Heading of the formation picker sheet.,,CHOOSE A SHAPE,VYBERTE ROZESTAVENÍ
 tacticsFormation,Heading above the formation selector.,,FORMATION,ROZESTAVENÍ
@@ -2139,6 +2150,7 @@ pressAskCrisis7,Press conference line.,,What do you say to people who think this
 pressAskCrisis8,Press conference line.,,Give us one reason to believe this turns around.,"Dejte nám jeden důvod věřit, že se to otočí."
 tacticsSubOffAlready,Marker under a squad row for a player who has already been taken off this match.,,Already off,Už vystřídán
 tacticsSubInjured,Marker under a squad row for a player hurt in this match.,,Injured,Zraněný
+tacticsSubSentOffMark,Marker under a squad row for a player sent off in this match.,,Sent off,Vyloučen
 tacticsSubNoneLeft,Marker under a squad row when the side has spent every change it has.,,No changes left,Došla střídání
 tacticsUndoLastChange,Button in the in-match lineup tab that takes back the last change made in this sheet.,,Undo last change,Vrátit změnu
 matchStrengthTitle,"Heading over the pre-match panel listing what is helping or hurting the manager's side, in rating points.",,WHAT IS MOVING THE SIDE,CO OVLIVŇUJE TÝM

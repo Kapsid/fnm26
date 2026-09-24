@@ -996,6 +996,41 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
     return n;
   }
 
+  /// When each man came on and when each went off, read back off the changes
+  /// the manager has already made in this match.
+  ///
+  /// The tactics sheet sees one moment of the game, so on its own it could say
+  /// no more about a substitute than "he is not a starter" — which is the half
+  /// of the answer the manager already had. Walking the changes in order gives
+  /// it the other half: the minute.
+  ({Map<int, int> on, Map<int, int> off}) _subMinutes(MatchPreview preview) {
+    final on = <int, int>{};
+    final off = <int, int>{};
+    var current = _playerTeam(preview).xi.map((p) => p.id).toSet();
+    for (final c in _changes) {
+      if (c.teamNationId != preview.playerNationId) continue;
+      final next = c.xi.map((p) => p.id).toSet();
+      for (final id in next.difference(current)) {
+        on[id] = c.minute;
+      }
+      for (final id in current.difference(next)) {
+        off[id] = c.minute;
+      }
+      current = next;
+    }
+    // A man sent off did not go off at the minute the manager next opened this
+    // sheet; he went off when the referee sent him. Read from the events, the
+    // same place [_sentOffIds] reads, so the two always agree.
+    for (final e in _result?.events ?? const <MatchEvent>[]) {
+      if (e.type == MatchEventType.redCard &&
+          e.teamNationId == _playerNationId &&
+          e.minute <= _minute) {
+        off[e.playerId] = e.minute;
+      }
+    }
+    return (on: on, off: off);
+  }
+
   /// Opens the full in-match tactics editor and, if the manager confirms,
   /// records the change and re-simulates the rest of the match with it applied.
   Future<void> _openTactics(MatchPreview preview) async {
@@ -1004,6 +1039,7 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
     final team = _playerTeam(preview);
     // So the manager can see who's tiring when choosing a substitution.
     final energyNow = _liveEnergy(_result ?? preview.result);
+    final minutes = _subMinutes(preview);
     final result = await showInMatchTactics(
       context,
       minute: _minute.clamp(1, 90),
@@ -1020,6 +1056,10 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
       injuredIds: _injuredIds,
       sentOffIds: _sentOffIds(),
       energyByPlayer: energyNow,
+      // So the squad list can say who started and who came on when, rather
+      // than leaving the manager to work it out from the discs on the pitch.
+      cameOnAt: minutes.on,
+      wentOffAt: minutes.off,
       // Your kit on your players' discs — the same identity the pre-match
       // tactics pitch shows, rather than a neutral grey mid-game.
       teamColors: () {
