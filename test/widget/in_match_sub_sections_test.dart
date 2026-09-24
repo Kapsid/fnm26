@@ -117,8 +117,7 @@ void main() {
     // By the localised label, not by the English one: in Czech the chip reads
     // "NA HRISTI" and an English finder simply finds nothing, which surfaces
     // as a bare "No element" a long way from the cause.
-    final stem = l.tacticsSectionOnPitch(0, 0).split('\u00b7').first.trim();
-    final chip = find.textContaining(stem);
+    final chip = find.text(l.tacticsTabOnPitch);
     await tester.ensureVisible(chip.first);
     await tester.pumpAndSettle();
     await tester.tap(chip.first);
@@ -156,9 +155,9 @@ void main() {
       lineup: [1, 2, 12, 4, 5, 6, 7, 8, 9, 10, 11],
     );
 
-    expect(find.text(l.tacticsSectionOnPitch(11, 11)), findsOneWidget);
+    expect(find.text('11/11'), findsOneWidget);
     // Four of the five substitutes are left; Starter3 cannot come back.
-    expect(find.text(l.tacticsSectionAvailable(4)), findsOneWidget);
+    expect(find.text('4'), findsWidgets);
     // There is no third pile. A man already taken off leaves the sheet
     // rather than sitting greyed at the bottom of it.
     expect(find.text('Starter3'), findsNothing);
@@ -263,7 +262,7 @@ void main() {
     // Nobody left to bring on, and nobody listed as a might-have-been: with
     // the changes spent the candidates tab is empty and says so, rather than
     // showing five greyed men who cannot be used.
-    expect(find.text(l.tacticsSectionAvailable(0)), findsOneWidget);
+    expect(find.text('0'), findsWidgets);
     expect(find.text(l.tacticsNoSubs), findsOneWidget);
     expect(find.text('Bench16'), findsNothing);
   });
@@ -276,21 +275,21 @@ void main() {
     // never asked, which a tap makes far easier to trip over.
     final l = await openSheet(tester);
 
-    expect(find.text(l.tacticsSectionAvailable(5)), findsOneWidget);
+    expect(find.text('5'), findsWidgets);
 
     // An outfield place: the reserve keeper is not one of the answers.
     // Choosing a man to come off moves the sheet to the candidates by itself,
     // which is why each trip back to the eleven asks for the tab again.
     await showPitchTab(tester, l);
     await tapRow(tester, 'Starter11');
-    expect(find.text(l.tacticsSectionAvailable(4)), findsOneWidget);
+    expect(find.text('4'), findsWidgets);
     expect(find.text('Bench16'), findsNothing);
 
     // The keeper's place: only the reserve keeper is.
     await showPitchTab(tester, l);
     await tapRow(tester, 'Starter11');
     await tapRow(tester, 'Starter1');
-    expect(find.text(l.tacticsSectionAvailable(1)), findsOneWidget);
+    expect(find.text('1'), findsWidgets);
     expect(find.text('Bench16'), findsOneWidget);
     expect(find.text('Bench12'), findsNothing);
   });
@@ -298,7 +297,7 @@ void main() {
   for (final width in <double>[320, 360, 400]) {
     for (final locale in const [Locale('en'), Locale('cs')]) {
       testWidgets(
-        'the two tabs fit ${width.toInt()}px in ${locale.languageCode}',
+        'the three tabs fit ${width.toInt()}px in ${locale.languageCode}',
         (tester) async {
           final l = await openSheet(
             tester,
@@ -319,20 +318,21 @@ void main() {
           // proved off the unavailable heading, and that heading is gone.
           expectLocale(
             tester,
-            find.text(l.tacticsSectionAvailable(4)),
+            find.text(l.tacticsTabSuitable),
             locale.languageCode,
           );
           expect(tester.takeException(), isNull);
           expectNothingCut(tester);
 
-          expectWhole(
-            find.text(l.tacticsSectionOnPitch(10, 11)),
-            'the on-pitch heading',
-          );
-          expectWhole(
-            find.text(l.tacticsSectionAvailable(4)),
-            'the available heading',
-          );
+          // Tab WORDS are allowed to shrink in their third of the row, so
+          // they are measured for legibility rather than for not being cut.
+          for (final tab in [
+            l.tacticsTabSuitable,
+            l.tacticsTabOnPitch,
+            l.tacticsTabUnavailable,
+          ]) {
+            expectLegible(tester, find.text(tab), 'the "$tab" tab');
+          }
           expectWhole(
             find.text(l.tacticsSubsUsed(1, 5)),
             'the count of changes left',

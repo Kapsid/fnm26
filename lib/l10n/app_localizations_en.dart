@@ -726,6 +726,32 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get tacticsTabSuitable => 'SUITABLE';
+
+  @override
+  String get tacticsTabOnPitch => 'ON THE PITCH';
+
+  @override
+  String get tacticsTabUnavailable => 'UNAVAILABLE';
+
+  @override
+  String tacticsSectionSuitable(int count) {
+    return 'SUITABLE · $count';
+  }
+
+  @override
+  String tacticsSectionUnavailable(int count) {
+    return 'UNAVAILABLE · $count';
+  }
+
+  @override
+  String get tacticsNobodyUnavailable => 'Nobody yet.';
+
+  @override
+  String get tacticsNobodySuits =>
+      'Nobody on the bench naturally suits this place, so here is everybody.';
+
+  @override
   String tacticsSectionOnPitch(int count, int max) {
     return 'ON THE PITCH · $count/$max';
   }

@@ -1158,6 +1158,30 @@
       }
     }
   },
+  "tacticsTabSuitable": "SUITABLE",
+  "@tacticsTabSuitable": {"description": "Substitution tab label, count shown under it."},
+  "tacticsTabOnPitch": "ON THE PITCH",
+  "@tacticsTabOnPitch": {"description": "Substitution tab label, count shown under it."},
+  "tacticsTabUnavailable": "UNAVAILABLE",
+  "@tacticsTabUnavailable": {"description": "Substitution tab label, count shown under it."},
+  "tacticsSectionSuitable": "SUITABLE · {count}",
+  "@tacticsSectionSuitable": {
+    "description": "Substitution tab: bench players who naturally suit the place being filled.",
+    "placeholders": {"count": {"type": "int"}}
+  },
+  "tacticsSectionUnavailable": "UNAVAILABLE · {count}",
+  "@tacticsSectionUnavailable": {
+    "description": "Substitution tab: men who cannot come on.",
+    "placeholders": {"count": {"type": "int"}}
+  },
+  "tacticsNobodyUnavailable": "Nobody yet.",
+  "@tacticsNobodyUnavailable": {
+    "description": "Shown in the unavailable tab when nobody has been used yet."
+  },
+  "tacticsNobodySuits": "Nobody on the bench naturally suits this place, so here is everybody.",
+  "@tacticsNobodySuits": {
+    "description": "Shown when the suitable tab has nobody in it and falls back to the whole bench."
+  },
   "tacticsSectionOnPitch": "ON THE PITCH · {count}/{max}",
   "@tacticsSectionOnPitch": {
     "description": "Heading above the list of players currently in the XI, with how many of the eleven are actually out there.",

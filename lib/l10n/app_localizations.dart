@@ -1328,6 +1328,48 @@ abstract class AppLocalizations {
   /// **'{age}y'**
   String squadAgeShort(int age);
 
+  /// Substitution tab label, count shown under it.
+  ///
+  /// In en, this message translates to:
+  /// **'SUITABLE'**
+  String get tacticsTabSuitable;
+
+  /// Substitution tab label, count shown under it.
+  ///
+  /// In en, this message translates to:
+  /// **'ON THE PITCH'**
+  String get tacticsTabOnPitch;
+
+  /// Substitution tab label, count shown under it.
+  ///
+  /// In en, this message translates to:
+  /// **'UNAVAILABLE'**
+  String get tacticsTabUnavailable;
+
+  /// Substitution tab: bench players who naturally suit the place being filled.
+  ///
+  /// In en, this message translates to:
+  /// **'SUITABLE · {count}'**
+  String tacticsSectionSuitable(int count);
+
+  /// Heading above the players who may not be brought on: already used, sent off, or with no changes left.
+  ///
+  /// In en, this message translates to:
+  /// **'UNAVAILABLE · {count}'**
+  String tacticsSectionUnavailable(int count);
+
+  /// Shown in the unavailable tab when nobody has been used yet.
+  ///
+  /// In en, this message translates to:
+  /// **'Nobody yet.'**
+  String get tacticsNobodyUnavailable;
+
+  /// Shown when the suitable tab has nobody in it and falls back to the whole bench.
+  ///
+  /// In en, this message translates to:
+  /// **'Nobody on the bench naturally suits this place, so here is everybody.'**
+  String get tacticsNobodySuits;
+
   /// Heading above the list of players currently in the XI, with how many of the eleven are actually out there.
   ///
   /// In en, this message translates to:

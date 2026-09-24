@@ -332,11 +332,12 @@ void main() {
           // used to be proved off "already off", which lived in the spent
           // pile; that pile is gone, and a language check anchored to a
           // deleted section fails for the wrong reason.
+          // Proved off a tab word, which is always on screen. It used to be
+          // proved off the available heading, and that heading became a tab
+          // label with its count on a line of its own.
           expect(
-            find.textContaining(
-              l.tacticsSectionAvailable(0).split('\u00b7').first.trim(),
-            ),
-            findsWidgets,
+            find.text(l.tacticsTabSuitable),
+            findsOneWidget,
             reason: 'the sheet did not render in ${locale.languageCode}',
           );
 
@@ -390,20 +391,17 @@ void main() {
     // it. That is the assertion. Before this the picker had none of its own
     // and every heading was found exactly once, which is what the old flat
     // list looked like from here.
-    for (final heading in ['ON THE PITCH', 'AVAILABLE']) {
+    // The picker carries the same three groups the squad list has as tabs.
+    // It used to be one flat run, and keeping the two surfaces apart is what
+    // made substituting from the pitch look older than substituting from the
+    // list.
+    for (final heading in ['ON THE PITCH', 'AVAILABLE', 'UNAVAILABLE']) {
       expect(
         find.textContaining(heading),
-        findsAtLeastNWidgets(2),
+        findsWidgets,
         reason: '"$heading" is missing from the slot picker',
       );
     }
-    // The spent pile is gone from BOTH lists, not just the one under the
-    // pitch. A manager who has used somebody simply stops being offered him.
-    expect(
-      find.textContaining('UNAVAILABLE'),
-      findsNothing,
-      reason: 'the spent pile was dropped on purpose',
-    );
     expect(tester.takeException(), isNull);
     expectNothingCut(tester);
   });

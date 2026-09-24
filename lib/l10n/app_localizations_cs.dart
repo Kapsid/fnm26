@@ -725,6 +725,32 @@ class AppLocalizationsCs extends AppLocalizations {
   }
 
   @override
+  String get tacticsTabSuitable => 'VHODNÍ';
+
+  @override
+  String get tacticsTabOnPitch => 'NA HŘIŠTI';
+
+  @override
+  String get tacticsTabUnavailable => 'NEDOSTUPNÍ';
+
+  @override
+  String tacticsSectionSuitable(int count) {
+    return 'VHODNÍ · $count';
+  }
+
+  @override
+  String tacticsSectionUnavailable(int count) {
+    return 'NEDOSTUPNÍ · $count';
+  }
+
+  @override
+  String get tacticsNobodyUnavailable => 'Zatím nikdo.';
+
+  @override
+  String get tacticsNobodySuits =>
+      'Na tuto pozici se přirozeně nehodí nikdo z lavičky, takže jsou tu všichni.';
+
+  @override
   String tacticsSectionOnPitch(int count, int max) {
     return 'NA HŘIŠTI · $count/$max';
   }

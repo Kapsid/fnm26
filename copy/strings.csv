@@ -204,6 +204,13 @@ squadStatSize,Squad overview tile: number of players available.,,Squad,Kádr
 squadStatUnavailable,Squad overview tile: players injured or suspended.,,Out,Mimo hru
 squadDepthTitle,Heading above the per-line squad depth chips.,,DEPTH BY LINE,ŠÍŘE KÁDRU PO ŘADÁCH
 squadAgeShort,Compact age label on a squad row.,{age},{age}y,{age} let
+tacticsTabSuitable,"Substitution tab label, count shown under it.",,SUITABLE,VHODNÍ
+tacticsTabOnPitch,"Substitution tab label, count shown under it.",,ON THE PITCH,NA HŘIŠTI
+tacticsTabUnavailable,"Substitution tab label, count shown under it.",,UNAVAILABLE,NEDOSTUPNÍ
+tacticsSectionSuitable,Substitution tab: bench players who naturally suit the place being filled.,{count},SUITABLE · {count},VHODNÍ · {count}
+tacticsSectionUnavailable,"Heading above the players who may not be brought on: already used, sent off, or with no changes left.",{count},UNAVAILABLE · {count},NEDOSTUPNÍ · {count}
+tacticsNobodyUnavailable,Shown in the unavailable tab when nobody has been used yet.,,Nobody yet.,Zatím nikdo.
+tacticsNobodySuits,Shown when the suitable tab has nobody in it and falls back to the whole bench.,,"Nobody on the bench naturally suits this place, so here is everybody.","Na tuto pozici se přirozeně nehodí nikdo z lavičky, takže jsou tu všichni."
 tacticsSectionOnPitch,"Heading above the list of players currently in the XI, with how many of the eleven are actually out there.",{count} {max},ON THE PITCH · {count}/{max},NA HŘIŠTI · {count}/{max}
 tacticsSectionAvailable,"Heading above the substitutes who may still be brought on, with the count.",{count},AVAILABLE · {count},K DISPOZICI · {count}
 tacticsRowStarted,Marker under a player on the pitch who was in the starting eleven.,,Started,Od začátku

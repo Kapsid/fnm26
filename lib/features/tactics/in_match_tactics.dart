@@ -198,6 +198,44 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
     ).showSnackBar(SnackBar(content: Text(message)));
   }
 
+  /// The place the man coming off was filling, or null when nobody is chosen.
+  PlayerPosition? get _placeToFill {
+    final id = _comingOff;
+    if (id == null) return null;
+    final slot = _lineup.indexOf(id);
+    return slot == -1 ? null : _formation.positions[slot];
+  }
+
+  /// Whether the bench holds nobody who naturally fills [_placeToFill].
+  ///
+  /// Drives the fallback: an empty shortlist is a dead end for a manager who
+  /// is a man short, so when nothing fits, everything is offered instead and
+  /// the sheet says why.
+  bool _noNaturalFit = false;
+
+  /// Who should be offered for the place being filled.
+  ///
+  /// With nobody chosen to come off there is no place, so "suitable" cannot
+  /// mean anything narrower than "may come on". With a place, it is fitRank:
+  /// the same position, or at least the same line, ordered by the rating they
+  /// would actually play it at.
+  List<Player> _suitable(List<Player> available) {
+    final place = _placeToFill;
+    if (place == null) {
+      _noNaturalFit = false;
+      return available;
+    }
+    final fits = [
+      for (final p in available)
+        if (PositionFit.fitRank(p, place) >= 1) p,
+    ]..sort(PositionFit.bySlotFit(place));
+    _noNaturalFit = fits.isEmpty && available.isNotEmpty;
+    if (_noNaturalFit) {
+      return [...available]..sort(PositionFit.bySlotFit(place));
+    }
+    return fits;
+  }
+
   /// Ids currently on the pitch.
   Set<int> get _onPitch => _lineup.whereType<int>().toSet();
 
@@ -241,9 +279,11 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
   /// sent off, which is a different thing with a different consequence.
   /// Which half of the squad the sheet is showing.
   ///
-  /// Opens on the candidates: the manager came here to change something, and
-  /// who is already playing is visible on the pitch above either way.
-  _SquadTab _tab = _SquadTab.candidates;
+  /// Opens on the men who could come on, and once somebody has been chosen
+  /// to come off, on the ones who actually suit his place. The manager came
+  /// here to change something; who is already playing is on the pitch above
+  /// either way.
+  _SquadTab _tab = _SquadTab.suitable;
 
   late Set<int> _withdrawn = widget.startingIds
       .where(
@@ -422,6 +462,10 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
       for (final p in offPitch)
         if (!_standing(p).blocked) p,
     ];
+    final unavailable = [
+      for (final p in offPitch)
+        if (_standing(p).blocked) p,
+    ];
     // With a man picked to come off, AVAILABLE answers a narrower question:
     // who can take HIS place. A goalkeeping slot is keeper-only and every
     // other slot is outfield-only — the same rule the slot picker has always
@@ -502,6 +546,7 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
                   _lineupTab(
                     onPitch: _onPitchPlayers,
                     available: available,
+                    unavailable: unavailable,
                     comingOff: coming,
                   ),
                   _tacticsTab(),
@@ -531,8 +576,12 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
   Widget _lineupTab({
     required List<Player> onPitch,
     required List<Player> available,
+    required List<Player> unavailable,
     required Player? comingOff,
   }) {
+    // Computed here rather than in build(): it depends on who has been chosen
+    // to come off, which this sheet owns.
+    final suitable = _suitable(available);
     final l = AppLocalizations.of(context);
     return ListView(
       children: [
@@ -665,20 +714,23 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
               //
               // Stacked, the pitch and three lists made one long scroll and a
               // manager reported losing part of it off the bottom. Two tabs
-              // are two short lists, and the sheet stops being a column you
-              // have to remember your place in.
+              // are three short lists, and the sheet stops being a column
+              // you have to remember your place in.
               //
-              // The spent pile is GONE rather than moved into a tab. It was
-              // there to answer "who have I already used" and the manager
-              // decided he does not need the answer badly enough to pay a
-              // third list for it; a withdrawn man simply leaves the sheet.
+              // SUITABLE leads because it is the answer to the question the
+              // manager is actually asking. Once he has named the man coming
+              // off it shows only the bench players who naturally fill that
+              // place, which is fitRank: the same position, or at least the
+              // same line. Before he has named anybody it cannot know what
+              // "suits" means, so it is everybody who may come on.
               _SquadTabs(
-                onPitch: _tab == _SquadTab.onPitch,
-                onPitchLabel: l.tacticsSectionOnPitch(
-                  onPitch.length,
-                  _lineup.length,
-                ),
-                candidatesLabel: l.tacticsSectionAvailable(available.length),
+                tab: _tab,
+                suitableLabel: l.tacticsTabSuitable,
+                onPitchLabel: l.tacticsTabOnPitch,
+                unavailableLabel: l.tacticsTabUnavailable,
+                suitableCount: '${suitable.length}',
+                onPitchCount: '${onPitch.length}/${_lineup.length}',
+                unavailableCount: '${unavailable.length}',
                 trailing: Text(
                   l.tacticsSubsUsed(_subsUsed, widget.maxSubs),
                   maxLines: 1,
@@ -689,6 +741,20 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
                 onSelected: (t) => setState(() => _tab = t),
               ),
               const SizedBox(height: AppSpacing.sm),
+              // Nobody on the bench belongs in this place. Rather than an
+              // empty tab and a dead end, the whole bench is offered with a
+              // line saying why it is not a shortlist: a manager a man short
+              // has to be able to put SOMEBODY there.
+              if (_tab == _SquadTab.suitable && _noNaturalFit)
+                Padding(
+                  padding: const EdgeInsets.only(bottom: AppSpacing.xs),
+                  child: Text(
+                    l.tacticsNobodySuits,
+                    style: AppTypography.labelSmall.copyWith(
+                      color: AppColors.onSurfaceVariant,
+                    ),
+                  ),
+                ),
               AppCard(
                 padding: EdgeInsets.zero,
                 child: Column(
@@ -707,13 +773,25 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
                           onTap: () => setState(() {
                             final same = _comingOff == p.id;
                             _comingOff = same ? null : p.id;
-                            if (!same) _tab = _SquadTab.candidates;
+                            if (!same) _tab = _SquadTab.suitable;
                           }),
                         )
-                    else if (available.isEmpty)
+                    else if (_tab == _SquadTab.unavailable)
+                      if (unavailable.isEmpty)
+                        _emptyNote(l.tacticsNobodyUnavailable)
+                      else
+                        for (final p in unavailable)
+                          SubDragRow(
+                            player: p,
+                            trailing: _energyTrailing(p.id),
+                            note: _standing(p).note,
+                            noteColor: _standing(p).color,
+                            enabled: false,
+                          )
+                    else if (suitable.isEmpty)
                       _emptyNote(l.tacticsNoSubs)
                     else
-                      for (final p in available)
+                      for (final p in suitable)
                         () {
                           final standing = _standing(p);
                           return SubDragRow(
@@ -1065,6 +1143,10 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
       for (final p in candidates)
         if (!onPitch.contains(p.id) && !_standing(p).blocked) p,
     ];
+    final blockedHere = [
+      for (final p in candidates)
+        if (!onPitch.contains(p.id) && _standing(p).blocked) p,
+    ];
 
     Widget head(String text) => Padding(
       padding: const EdgeInsets.only(
@@ -1107,6 +1189,14 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
           head(l.tacticsSectionAvailable(availableHere.length)),
           if (availableHere.isEmpty) emptyNote(l.tacticsNoSubs),
           for (final p in availableHere) _pickerRow(p, position, onPitch, l),
+          // Back, with the tab it belongs to. This sheet and the squad list
+          // under the pitch answer the same question about the same men, and
+          // one of them dropping the spent pile while the other kept it is
+          // how substituting from the pitch came to look different from
+          // substituting from the list in the first place.
+          head(l.tacticsSectionUnavailable(blockedHere.length)),
+          if (blockedHere.isEmpty) emptyNote(l.tacticsNobodyUnavailable),
+          for (final p in blockedHere) _pickerRow(p, position, onPitch, l),
         ],
       ),
     );
@@ -1191,7 +1281,7 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
 }
 
 /// Which half of the squad the sheet is showing.
-enum _SquadTab { candidates, onPitch }
+enum _SquadTab { suitable, onPitch, unavailable }
 
 /// The two-way switch over the squad list, with the changes left beside it.
 ///
@@ -1200,16 +1290,24 @@ enum _SquadTab { candidates, onPitch }
 /// with its own private scrollbar inside a page that already scrolls.
 class _SquadTabs extends StatelessWidget {
   const _SquadTabs({
-    required this.onPitch,
+    required this.tab,
+    required this.suitableLabel,
     required this.onPitchLabel,
-    required this.candidatesLabel,
+    required this.unavailableLabel,
+    required this.suitableCount,
+    required this.onPitchCount,
+    required this.unavailableCount,
     required this.trailing,
     required this.onSelected,
   });
 
-  final bool onPitch;
+  final _SquadTab tab;
+  final String suitableLabel;
   final String onPitchLabel;
-  final String candidatesLabel;
+  final String unavailableLabel;
+  final String suitableCount;
+  final String onPitchCount;
+  final String unavailableCount;
   final Widget trailing;
   final ValueChanged<_SquadTab> onSelected;
 
@@ -1230,24 +1328,36 @@ class _SquadTabs extends StatelessWidget {
         // is what "no tabs, overflowing" looked like.
         Align(alignment: Alignment.centerRight, child: trailing),
         const SizedBox(height: AppSpacing.xs),
-        // Half the row each, and a label too long for its half SHRINKS rather
-        // than being clipped or scrolled out of reach. Both tabs are always
-        // wholly on screen, which is the one thing a tab strip has to do.
+        // A third of the row each, and a label too long for its third SHRINKS
+        // rather than being clipped or scrolled out of reach. All three tabs
+        // are always wholly on screen, which is the one thing a tab strip has
+        // to do.
         Row(
           children: [
             Expanded(
               child: _Chip(
-                label: candidatesLabel,
-                selected: !onPitch,
-                onTap: () => onSelected(_SquadTab.candidates),
+                label: suitableLabel,
+                count: suitableCount,
+                selected: tab == _SquadTab.suitable,
+                onTap: () => onSelected(_SquadTab.suitable),
               ),
             ),
             const SizedBox(width: AppSpacing.xs),
             Expanded(
               child: _Chip(
                 label: onPitchLabel,
-                selected: onPitch,
+                count: onPitchCount,
+                selected: tab == _SquadTab.onPitch,
                 onTap: () => onSelected(_SquadTab.onPitch),
+              ),
+            ),
+            const SizedBox(width: AppSpacing.xs),
+            Expanded(
+              child: _Chip(
+                label: unavailableLabel,
+                count: unavailableCount,
+                selected: tab == _SquadTab.unavailable,
+                onTap: () => onSelected(_SquadTab.unavailable),
               ),
             ),
           ],
@@ -1260,11 +1370,20 @@ class _SquadTabs extends StatelessWidget {
 class _Chip extends StatelessWidget {
   const _Chip({
     required this.label,
+    required this.count,
     required this.selected,
     required this.onTap,
   });
 
   final String label;
+
+  /// Printed UNDER the label rather than after it.
+  ///
+  /// On one line, "ON THE PITCH · 11/11" wants 156 points and a third of a
+  /// 320pt row gives it 75, so it scaled to under half size and could not be
+  /// read. The word alone wants about a hundred, which is a shrink a phone
+  /// can carry, and the number loses nothing by sitting beneath it.
+  final String count;
   final bool selected;
   final VoidCallback onTap;
 
@@ -1289,16 +1408,35 @@ class _Chip extends StatelessWidget {
       // to shrink instead. WholeText is the app's own way of saying that, and
       // expectLegible is the guard built for it, where a plain Text would
       // simply clip and didExceedMaxLines would be the only sign.
-      child: WholeText(
-        label,
-        maxLines: 1,
-        textAlign: TextAlign.center,
-        style: AppTypography.labelSmall.copyWith(
-          color: selected
-              ? AppColors.onSecondaryContainer
-              : AppColors.onSurfaceVariant,
-          fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
-        ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          // WholeText, not a plain Text. A tab label is never allowed to be
+          // cut; too long for its third, it shrinks. expectLegible is the
+          // guard built for that, where didExceedMaxLines would report a
+          // scaled label as a cut one.
+          WholeText(
+            label,
+            maxLines: 1,
+            textAlign: TextAlign.center,
+            style: AppTypography.labelSmall.copyWith(
+              color: selected
+                  ? AppColors.onSecondaryContainer
+                  : AppColors.onSurfaceVariant,
+              fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
+            ),
+          ),
+          Text(
+            count,
+            maxLines: 1,
+            style: AppTypography.labelSmall.copyWith(
+              fontSize: 11,
+              color: selected
+                  ? AppColors.onSecondaryContainer
+                  : AppColors.onSurfaceVariant,
+            ),
+          ),
+        ],
       ),
     ),
   );

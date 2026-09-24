@@ -125,7 +125,7 @@ void main() {
       reason: 'the empty spot must say why it is empty, on the pitch itself',
     );
     expect(
-      find.text(l.tacticsSectionOnPitch(10, 11)),
+      find.text('10/11'),
       findsOneWidget,
       reason: 'the side is playing with ten',
     );
@@ -157,7 +157,7 @@ void main() {
     await dragOnto(tester, find.text('Bench12'), disc(10));
 
     expect(
-      find.text(l.tacticsSectionOnPitch(10, 11)),
+      find.text('10/11'),
       findsOneWidget,
       reason: 'the bench filled the hole and the side was eleven again',
     );
@@ -174,7 +174,7 @@ void main() {
 
     await dragOnto(tester, disc(9), disc(10));
 
-    expect(find.text(l.tacticsSectionOnPitch(10, 11)), findsOneWidget);
+    expect(find.text('10/11'), findsOneWidget);
     expect(find.text(l.tacticsSentOffShort), findsOneWidget);
     expect(
       find.byWidgetPredicate(
@@ -190,13 +190,13 @@ void main() {
     final l = await openSheet(tester, sentOffIds: {10, 11});
 
     expect(find.text(l.tacticsSentOffShort), findsNWidgets(2));
-    expect(find.text(l.tacticsSectionOnPitch(9, 11)), findsOneWidget);
+    expect(find.text('9/11'), findsOneWidget);
 
     // And neither of them takes a substitute.
     await dragOnto(tester, find.text('Bench12'), disc(10));
     await dragOnto(tester, find.text('Bench12'), disc(9));
 
-    expect(find.text(l.tacticsSectionOnPitch(9, 11)), findsOneWidget);
+    expect(find.text('9/11'), findsOneWidget);
     expect(find.text(l.tacticsSubsUsed(0, 5)), findsOneWidget);
   });
 
@@ -247,7 +247,7 @@ void main() {
           expect(tester.takeException(), isNull);
           expectNothingCut(tester);
           expectWhole(
-            find.text(l.tacticsSectionOnPitch(10, 11)),
+            find.text('10/11'),
             'the on-pitch count',
           );
           expectWhole(
