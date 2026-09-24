@@ -9,6 +9,7 @@ import 'package:fnm/domain/services/squad/absence_outlook.dart';
 import 'package:fnm/features/player/player_detail_screen.dart'
     show PlayerTraitGlyphs;
 import 'package:fnm/features/squad/captain_providers.dart';
+import 'package:fnm/features/tactics/squad_legend_sheet.dart';
 import 'package:fnm/features/tactics/absence_providers.dart';
 import 'package:fnm/features/tactics/nation_squad_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
@@ -149,11 +150,39 @@ class _NationSquadTabState extends ConsumerState<NationSquadTab> {
               ),
             ),
             const SizedBox(height: AppSpacing.xs),
-            Text(
-              l.squadShowingOf(rows.length, data.size),
-              style: AppTypography.labelSmall.copyWith(
-                color: AppColors.onSurfaceVariant,
-              ),
+            // The count, and beside it the key to the marks on every row.
+            // A tester could read the arrows, guessed the flame and could not
+            // work out the star, the tick or the rest; a dense list is fine
+            // as long as there is somewhere to look them up.
+            Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    l.squadShowingOf(rows.length, data.size),
+                    style: AppTypography.labelSmall.copyWith(
+                      color: AppColors.onSurfaceVariant,
+                    ),
+                  ),
+                ),
+                TextButton.icon(
+                  onPressed: () => showSquadLegend(context),
+                  style: TextButton.styleFrom(
+                    visualDensity: VisualDensity.compact,
+                    foregroundColor: AppColors.primary,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: AppSpacing.xs,
+                    ),
+                  ),
+                  icon: const Icon(Icons.help_outline_rounded, size: 15),
+                  label: Text(
+                    l.squadLegendTitle,
+                    maxLines: 1,
+                    style: AppTypography.labelSmall.copyWith(
+                      color: AppColors.primary,
+                    ),
+                  ),
+                ),
+              ],
             ),
             const SizedBox(height: AppSpacing.xs),
             if (rows.isEmpty)

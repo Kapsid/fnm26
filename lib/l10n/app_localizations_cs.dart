@@ -264,6 +264,9 @@ class AppLocalizationsCs extends AppLocalizations {
   String get settingsLanguageCzech => 'Čeština';
 
   @override
+  String get matchPreviewAllMeetings => 'Všechna utkání';
+
+  @override
   String get recordsMeetings => 'ZÁPASY';
 
   @override
@@ -5714,6 +5717,30 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get squadSortName => 'Jméno';
+
+  @override
+  String get squadLegendTitle => 'Co znamenají značky';
+
+  @override
+  String get squadLegendStarting => 'V základní sestavě';
+
+  @override
+  String get squadLegendCalledUp => 'V nominaci, na lavičce';
+
+  @override
+  String get squadLegendRatingUp => 'Rating letos roste';
+
+  @override
+  String get squadLegendRatingDown => 'Rating letos klesá';
+
+  @override
+  String get squadLegendInjured => 'Zraněný, nemůže hrát';
+
+  @override
+  String get squadLegendSuspended => 'Trest, nemůže hrát';
+
+  @override
+  String get squadLegendTraits => 'ZNÁMÝ PRO';
 
   @override
   String squadShowingOf(int shown, int total) {

@@ -264,6 +264,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settingsLanguageCzech => 'Čeština';
 
   @override
+  String get matchPreviewAllMeetings => 'All meetings';
+
+  @override
   String get recordsMeetings => 'MEETINGS';
 
   @override
@@ -5685,6 +5688,30 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get squadSortName => 'Name';
+
+  @override
+  String get squadLegendTitle => 'What the marks mean';
+
+  @override
+  String get squadLegendStarting => 'In your starting eleven';
+
+  @override
+  String get squadLegendCalledUp => 'Called up, on the bench';
+
+  @override
+  String get squadLegendRatingUp => 'Rating rising this year';
+
+  @override
+  String get squadLegendRatingDown => 'Rating falling this year';
+
+  @override
+  String get squadLegendInjured => 'Injured, unavailable';
+
+  @override
+  String get squadLegendSuspended => 'Suspended, unavailable';
+
+  @override
+  String get squadLegendTraits => 'KNOWN FOR';
 
   @override
   String squadShowingOf(int shown, int total) {

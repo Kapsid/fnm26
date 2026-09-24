@@ -560,6 +560,12 @@ abstract class AppLocalizations {
   /// **'Čeština'**
   String get settingsLanguageCzech;
 
+  /// Match preview: opens the list of every past meeting with this opponent. Sentence case on purpose, so it reads as something to tap rather than as a heading.
+  ///
+  /// In en, this message translates to:
+  /// **'All meetings'**
+  String get matchPreviewAllMeetings;
+
   /// App-bar title on the head-to-head meetings list.
   ///
   /// In en, this message translates to:
@@ -9203,6 +9209,54 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Name'**
   String get squadSortName;
+
+  /// Title of the squad list legend sheet.
+  ///
+  /// In en, this message translates to:
+  /// **'What the marks mean'**
+  String get squadLegendTitle;
+
+  /// Legend: the star before a name.
+  ///
+  /// In en, this message translates to:
+  /// **'In your starting eleven'**
+  String get squadLegendStarting;
+
+  /// Legend: the tick before a name.
+  ///
+  /// In en, this message translates to:
+  /// **'Called up, on the bench'**
+  String get squadLegendCalledUp;
+
+  /// Legend: the green arrow.
+  ///
+  /// In en, this message translates to:
+  /// **'Rating rising this year'**
+  String get squadLegendRatingUp;
+
+  /// Legend: the red arrow.
+  ///
+  /// In en, this message translates to:
+  /// **'Rating falling this year'**
+  String get squadLegendRatingDown;
+
+  /// Legend: the injury icon.
+  ///
+  /// In en, this message translates to:
+  /// **'Injured, unavailable'**
+  String get squadLegendInjured;
+
+  /// Legend: the suspension icon.
+  ///
+  /// In en, this message translates to:
+  /// **'Suspended, unavailable'**
+  String get squadLegendSuspended;
+
+  /// Legend: heading above the player traits.
+  ///
+  /// In en, this message translates to:
+  /// **'KNOWN FOR'**
+  String get squadLegendTraits;
 
   /// Count of the filtered squad list.
   ///

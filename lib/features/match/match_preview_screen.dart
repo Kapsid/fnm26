@@ -472,18 +472,35 @@ class _H2HBody extends ConsumerWidget {
                 if (h.played > 0)
                   // The card is no longer tappable as a whole (its tabs are),
                   // so the way through to every past meeting is explicit.
-                  TextButton(
+                  //
+                  // It did not LOOK explicit. This was the app bar's own
+                  // "MEETINGS" in a bare TextButton, so a heading's word in a
+                  // heading's case with no icon and no border, sitting under
+                  // two outlined tabs that did look like controls. A tester
+                  // reported it as not looking like a button, which it did
+                  // not. Sentence case and a chevron, in the accent colour
+                  // everything else tappable uses.
+                  TextButton.icon(
                     onPressed: () => context.push(
                       '${Routes.h2hMeetings}?careerId=$careerId'
                       '&a=$myNationId&b=$oppNationId',
                     ),
                     style: TextButton.styleFrom(
                       visualDensity: VisualDensity.compact,
+                      foregroundColor: AppColors.primary,
                       padding: const EdgeInsets.symmetric(
                         horizontal: AppSpacing.sm,
                       ),
                     ),
-                    child: Text(l.recordsMeetings),
+                    iconAlignment: IconAlignment.end,
+                    icon: const Icon(Icons.chevron_right_rounded, size: 18),
+                    label: Text(
+                      l.matchPreviewAllMeetings,
+                      maxLines: 1,
+                      style: AppTypography.labelMedium.copyWith(
+                        color: AppColors.primary,
+                      ),
+                    ),
                   ),
               ],
             ),

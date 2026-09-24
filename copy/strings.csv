@@ -76,6 +76,7 @@ settingsLanguageBlurb,Language selector description.,,"Choose the app language, 
 settingsLanguageSystem,Language option: follow the device language.,,System,Systém
 settingsLanguageEnglish,Language option: English.,,English,Angličtina
 settingsLanguageCzech,Language option: Czech (in Czech).,,Čeština,Čeština
+matchPreviewAllMeetings,"Match preview: opens the list of every past meeting with this opponent. Sentence case on purpose, so it reads as something to tap rather than as a heading.",,All meetings,Všechna utkání
 recordsMeetings,App-bar title on the head-to-head meetings list.,,MEETINGS,ZÁPASY
 recordsLegends,Legends screen title / banner.,,LEGENDS,LEGENDY
 recordsAllTimeXi,Heading over the all-time best eleven.,,ALL-TIME XI,JEDENÁCTKA HISTORIE
@@ -1514,6 +1515,14 @@ squadSortCaps,Squad sort: by international appearances.,,Caps,Starty
 squadSortGoals,Squad sort: by international goals.,,Goals,Góly
 squadSortAge,Squad sort: youngest first.,,Age,Věk
 squadSortName,Squad sort: alphabetical.,,Name,Jméno
+squadLegendTitle,Title of the squad list legend sheet.,,What the marks mean,Co znamenají značky
+squadLegendStarting,Legend: the star before a name.,,In your starting eleven,V základní sestavě
+squadLegendCalledUp,Legend: the tick before a name.,,"Called up, on the bench","V nominaci, na lavičce"
+squadLegendRatingUp,Legend: the green arrow.,,Rating rising this year,Rating letos roste
+squadLegendRatingDown,Legend: the red arrow.,,Rating falling this year,Rating letos klesá
+squadLegendInjured,Legend: the injury icon.,,"Injured, unavailable","Zraněný, nemůže hrát"
+squadLegendSuspended,Legend: the suspension icon.,,"Suspended, unavailable","Trest, nemůže hrát"
+squadLegendTraits,Legend: heading above the player traits.,,KNOWN FOR,ZNÁMÝ PRO
 squadShowingOf,Count of the filtered squad list.,{shown} {total},Showing {shown} of {total} players,Zobrazeno {shown} z {total} hráčů
 squadNobodyMatches,Empty state for the filtered squad list.,,Nobody in the pool matches those filters.,Danému filtru neodpovídá nikdo.
 squadStatPool,Squad stat: how many players are eligible.,,Pool,Kádr

@@ -361,6 +361,10 @@
   "@settingsLanguageCzech": {
     "description": "Language option: Czech (in Czech)."
   },
+  "matchPreviewAllMeetings": "All meetings",
+  "@matchPreviewAllMeetings": {
+    "description": "Match preview: opens the list of every past meeting with this opponent. Sentence case on purpose, so it reads as something to tap rather than as a heading."
+  },
   "recordsMeetings": "MEETINGS",
   "@recordsMeetings": {
     "description": "App-bar title on the head-to-head meetings list."
@@ -8339,6 +8343,22 @@
   "@squadSortName": {
     "description": "Squad sort: alphabetical."
   },
+  "squadLegendTitle": "What the marks mean",
+  "@squadLegendTitle": {"description": "Title of the squad list legend sheet."},
+  "squadLegendStarting": "In your starting eleven",
+  "@squadLegendStarting": {"description": "Legend: the star before a name."},
+  "squadLegendCalledUp": "Called up, on the bench",
+  "@squadLegendCalledUp": {"description": "Legend: the tick before a name."},
+  "squadLegendRatingUp": "Rating rising this year",
+  "@squadLegendRatingUp": {"description": "Legend: the green arrow."},
+  "squadLegendRatingDown": "Rating falling this year",
+  "@squadLegendRatingDown": {"description": "Legend: the red arrow."},
+  "squadLegendInjured": "Injured, unavailable",
+  "@squadLegendInjured": {"description": "Legend: the injury icon."},
+  "squadLegendSuspended": "Suspended, unavailable",
+  "@squadLegendSuspended": {"description": "Legend: the suspension icon."},
+  "squadLegendTraits": "KNOWN FOR",
+  "@squadLegendTraits": {"description": "Legend: heading above the player traits."},
   "squadShowingOf": "Showing {shown} of {total} players",
   "@squadShowingOf": {
     "description": "Count of the filtered squad list.",

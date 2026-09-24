@@ -989,6 +989,15 @@ class _TraitRow extends StatelessWidget {
 /// the text baseline and pull the whole screen away from the app's flat,
 /// monochrome look. A Material glyph tints with the trait's own colour and
 /// lines up with every other icon in the app.
+/// Public so the squad list's legend can name the same glyphs it prints
+/// without keeping a second copy of the mapping. A tester could read the form
+/// arrows and guess the flame, and could not work out the rest, which is a
+/// legend's job rather than a reason to change the icons.
+(IconData, String, String, bool) describeTrait(
+  AppLocalizations l,
+  PlayerTrait t,
+) => _describe(l, t);
+
 (IconData, String, String, bool) _describe(
   AppLocalizations l,
   PlayerTrait t,
