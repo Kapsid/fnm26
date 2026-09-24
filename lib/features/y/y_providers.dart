@@ -1,7 +1,11 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/nation.dart';
+import 'package:fnm/domain/repositories/competition_repository.dart';
 import 'package:fnm/domain/services/competition/rounds.dart';
+import 'package:fnm/domain/services/match/match_engine.dart';
+import 'package:fnm/domain/services/press/expectation.dart';
+import 'package:fnm/domain/services/press/press.dart';
 import 'package:fnm/domain/services/press/public_mood.dart';
 import 'package:fnm/domain/services/press/y_feed.dart';
 import 'package:fnm/domain/services/press/y_tournaments.dart';
@@ -101,12 +105,23 @@ final AutoDisposeFutureProviderFamily<YTimeline, int> yFeedProvider =
       final playerRepo = ref.watch(playerRepositoryProvider);
       final aging = CareerService.agingYears(career);
 
+      // What happened on the pitch, match by match: the sendings-off the
+      // press room can also see. Each belongs to the date it happened on, not
+      // to today, so it is read inside the walk below rather than hung on the
+      // newest result the way an injury is.
+      final incidents = await comp.incidentsByFixture(
+        careerId,
+        career.nationId,
+      );
+
       // Oldest first, so a streak counts the matches BEFORE it.
       final chronological = judged.reversed.toList();
       final meetings = <String, int>{};
       var wins = 0;
       var losses = 0;
       final contexts = <YContext>[];
+      final incidentPosts = <YPost>[];
+      final standingsSoFar = <ResultStanding>[];
       for (final j in chronological) {
         final won = j.scored > j.conceded;
         final lost = j.scored < j.conceded;
@@ -138,17 +153,49 @@ final AutoDisposeFutureProviderFamily<YTimeline, int> yFeedProvider =
           }
         }
 
+        final match = (
+          opponent: j.opponent,
+          nationRank: j.nationRank,
+          opponentRank: j.opponentRank,
+          scored: j.scored,
+          conceded: j.conceded,
+          date: j.date,
+          key: j.key,
+          competitive: j.competitive,
+        );
+
+        // One of ours walked. The cast reads it through the stance it held on
+        // the day, exactly as it reads a result — see [YFeed.forIncident].
+        final standing = YFeed.standingOf(match);
+        for (final i in incidents[fixtureId] ?? const <MatchIncident>[]) {
+          if (i.type != MatchEventType.redCard) continue;
+          final p = await playerRepo.byId(
+            i.playerId,
+            agingYears: aging,
+            saveSeed: career.rngSeed,
+          );
+          if (p == null) continue;
+          incidentPosts.addAll(
+            YFeed.forIncident(
+              incident: PressSubjectIncident(
+                type: i.type,
+                minute: i.minute,
+                playerId: i.playerId,
+                name: p.name,
+              ),
+              date: j.date,
+              key: 'red:${j.key}:${i.playerId}',
+              nation: nation,
+              seed: career.rngSeed,
+              standing: standing,
+              history: [...standingsSoFar],
+            ),
+          );
+        }
+        standingsSoFar.add(standing);
+
         contexts.add((
-          match: (
-            opponent: j.opponent,
-            nationRank: j.nationRank,
-            opponentRank: j.opponentRank,
-            scored: j.scored,
-            conceded: j.conceded,
-            date: j.date,
-            key: j.key,
-            competitive: j.competitive,
-          ),
+          match: match,
           scorerName: scorerName,
           scorerGoals: scorerGoals,
           winStreak: wins,
@@ -197,7 +244,7 @@ final AutoDisposeFutureProviderFamily<YTimeline, int> yFeedProvider =
         contexts,
         nation: nation,
         seed: career.rngSeed,
-      );
+      )..addAll(incidentPosts);
       // The one post drawn from a match that has NOT been played. Every other
       // shape on the feed reacts to a result, so the biggest game of a cycle
       // used to arrive in silence and the reaction to it landed before any

@@ -134,6 +134,37 @@ void expectLocale(WidgetTester tester, Finder inside, String languageCode) {
   );
 }
 
+/// Asserts that no paragraph [finder] matches had to BREAK A WORD to fit.
+///
+/// The gap [expectNothingCut] leaves: a paragraph that is allowed to wrap can
+/// never exceed its line count, so it passes every ellipsis guard — and then
+/// Flutter, handed a single word wider than the line, breaks it wherever the
+/// edge falls. A question carrying a surname like Randriamampionona at 320px
+/// is exactly that case, and it reads as a rendering fault rather than as long
+/// copy.
+///
+/// A paragraph's MINIMUM intrinsic width is the width of its longest
+/// unbreakable run, so anything wider than the space it was given was broken.
+/// Takes a finder rather than sweeping the screen, because the fallback face
+/// the test renders in is about forty per cent wider than the app's own: a
+/// whole-screen sweep at 320px fails on ALL-CAPS headings that fit perfectly
+/// well on a phone, and a guard that cries wolf is turned off.
+void expectNoBrokenWord(Finder finder, String what) {
+  final elements = finder.evaluate();
+  expect(elements, isNotEmpty, reason: '$what is not on screen at all');
+  for (final element in elements) {
+    final paragraph = element.renderObject! as RenderParagraph;
+    final longestWord = paragraph.getMinIntrinsicWidth(double.infinity);
+    expect(
+      longestWord,
+      lessThanOrEqualTo(paragraph.size.width + 0.5),
+      reason:
+          '$what is broken across lines mid-word: its longest word wants '
+          '${longestWord}px in a ${paragraph.size.width}px column',
+    );
+  }
+}
+
 /// Asserts that every paragraph [finder] matches is drawn on ONE line.
 ///
 /// The failure this catches is not an overflow and not an ellipsis: Flutter

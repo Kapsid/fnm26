@@ -899,6 +899,12 @@ class SeasonService {
       awayXg: detail.awayXg,
     );
 
+    await _comp.recordIncidents(
+      f.careerId,
+      f.id,
+      _incidentsOf(f, detail.events),
+    );
+
     // Both sides' cards and knocks, through the same rules the manager's own
     // squad lives under — so a rival really can lose its striker to a ban.
     for (final nationId in [f.homeNationId, f.awayNationId]) {
@@ -1298,9 +1304,7 @@ class SeasonService {
       //    `next` is the player's earliest unplayed fixture, so a finals
       //    fixture strictly before it is never one of theirs.
       final finalsRoundBeforeOwn =
-          finalsDate != null &&
-          nextIsFinals &&
-          finalsDate.isBefore(next.date);
+          finalsDate != null && nextIsFinals && finalsDate.isBefore(next.date);
       if (finalsDate != null &&
           (finalsRoundBeforeOwn ||
               (!nextIsFinals &&
@@ -1571,6 +1575,14 @@ class SeasonService {
             minute: e.minute,
           ),
     ]);
+
+    // …and everything else the engine reported that outlives the ninety
+    // minutes: the sendings-off and the knocks, with their minutes.
+    await _comp.recordIncidents(
+      careerId,
+      fixture.id,
+      _incidentsOf(fixture, result.events),
+    );
 
     // Update the squad's suspensions and injuries from this match's cards and
     // knocks (players who sat this one out have now served a game). Scoped to
@@ -1966,3 +1978,25 @@ class SeasonService {
 final Provider<SeasonService> seasonServiceProvider = Provider(
   SeasonService.new,
 );
+
+/// The engine events worth keeping: who was sent off and who was hurt, with
+/// the minute.
+///
+/// A match reports five kinds of event and the save used to keep one of them
+/// (the goals). The cards and the knocks were read once — for the ban, for the
+/// injury list — and then discarded, so nothing a fortnight later knew that a
+/// side had played half an hour with ten men. The press and the feed ask about
+/// exactly that.
+List<IncidentRecord> _incidentsOf(Fixture f, List<MatchEvent> events) => [
+  for (final e in events)
+    if (e.type == MatchEventType.redCard || e.type == MatchEventType.injury)
+      (
+        careerId: f.careerId,
+        fixtureId: f.id,
+        nationId: e.teamNationId,
+        playerId: e.playerId,
+        minute: e.minute,
+        type: e.type,
+        secondYellow: e.secondYellow,
+      ),
+];

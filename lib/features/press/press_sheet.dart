@@ -110,162 +110,10 @@ class _PressSheetState extends ConsumerState<PressSheet> {
     return _openingPrompt(l);
   }
 
-  String _openingPrompt(AppLocalizations l) {
-    final who = widget.opponentName ?? l.pressTheOpposition;
-    final options = switch (widget.question.topic) {
-      PressTopic.overachieving => [
-        l.pressAskAbove,
-        l.pressAskAbove2,
-        l.pressAskAbove3,
-        l.pressAskAbove4,
-        l.pressAskAbove5,
-        l.pressAskAbove6,
-        l.pressAskAbove7,
-        l.pressAskAbove8,
-      ],
-      PressTopic.luckyWin => [
-        l.pressAskFlattered,
-        l.pressAskFlattered2,
-        l.pressAskFlattered3,
-        l.pressAskFlattered4,
-        l.pressAskFlattered5,
-        l.pressAskFlattered6,
-        l.pressAskFlattered7,
-        l.pressAskFlattered8,
-      ],
-      PressTopic.crisis => [
-        l.pressAskCrisis,
-        l.pressAskCrisis2,
-        l.pressAskCrisis3,
-        l.pressAskCrisis4,
-        l.pressAskCrisis5,
-        l.pressAskCrisis6,
-        l.pressAskCrisis7,
-        l.pressAskCrisis8,
-      ],
-      PressTopic.heavyDefeat => [
-        l.pressAskHeavyDefeat(who),
-        l.pressAskHeavyDefeat2(who),
-        l.pressAskHeavyDefeat3(who),
-        l.pressAskHeavyDefeat4(who),
-        l.pressAskHeavyDefeat5(who),
-        l.pressAskHeavyDefeat6(who),
-        l.pressAskHeavyDefeat7(who),
-        l.pressAskHeavyDefeat8(who),
-      ],
-      PressTopic.elimination => [
-        l.pressAskElimination(who),
-        l.pressAskElimination2(who),
-        l.pressAskElimination3(who),
-        l.pressAskElimination4(who),
-        l.pressAskElimination5(who),
-        l.pressAskElimination6(who),
-        l.pressAskElimination7(who),
-        l.pressAskElimination8(who),
-      ],
-      PressTopic.underPressure => [
-        l.pressAskUnderPressure,
-        l.pressAskUnderPressure2,
-        l.pressAskUnderPressure3,
-        l.pressAskUnderPressure4,
-        l.pressAskUnderPressure5,
-        l.pressAskUnderPressure6,
-        l.pressAskUnderPressure7,
-        l.pressAskUnderPressure8,
-      ],
-      PressTopic.tournamentPreview => [
-        l.pressAskPreview,
-        l.pressAskPreview2,
-        l.pressAskPreview3,
-        l.pressAskPreview4,
-        l.pressAskPreview5,
-        l.pressAskPreview6,
-        l.pressAskPreview7,
-        l.pressAskPreview8,
-      ],
-      PressTopic.tournamentOpening => [
-        l.pressAskOpening(who),
-        l.pressAskOpening2(who),
-        l.pressAskOpening3(who),
-        l.pressAskOpening4(who),
-        l.pressAskOpening5(who),
-        l.pressAskOpening6(who),
-        l.pressAskOpening7(who),
-        l.pressAskOpening8(who),
-      ],
-      PressTopic.triumph => [
-        l.pressAskTriumph,
-        l.pressAskTriumph2,
-        l.pressAskTriumph3,
-        l.pressAskTriumph4,
-        l.pressAskTriumph5,
-        l.pressAskTriumph6,
-        l.pressAskTriumph7,
-        l.pressAskTriumph8,
-      ],
-      PressTopic.bigWin => [
-        l.pressAskBigWin(who),
-        l.pressAskBigWin2(who),
-        l.pressAskBigWin3(who),
-        l.pressAskBigWin4(who),
-        l.pressAskBigWin5(who),
-        l.pressAskBigWin6(who),
-        l.pressAskBigWin7(who),
-        l.pressAskBigWin8(who),
-      ],
-      PressTopic.qualified => [
-        l.pressAskQualified,
-        l.pressAskQualified2,
-        l.pressAskQualified3,
-        l.pressAskQualified4,
-        l.pressAskQualified5,
-        l.pressAskQualified6,
-        l.pressAskQualified7,
-        l.pressAskQualified8,
-      ],
-      PressTopic.missedOut => [
-        l.pressAskMissedOut,
-        l.pressAskMissedOut2,
-        l.pressAskMissedOut3,
-        l.pressAskMissedOut4,
-        l.pressAskMissedOut5,
-        l.pressAskMissedOut6,
-        l.pressAskMissedOut7,
-        l.pressAskMissedOut8,
-      ],
-      PressTopic.unbeatenRun => [
-        l.pressAskUnbeaten,
-        l.pressAskUnbeaten2,
-        l.pressAskUnbeaten3,
-        l.pressAskUnbeaten4,
-        l.pressAskUnbeaten5,
-        l.pressAskUnbeaten6,
-        l.pressAskUnbeaten7,
-        l.pressAskUnbeaten8,
-      ],
-      PressTopic.newJob => [
-        l.pressAskNewJob,
-        l.pressAskNewJob2,
-        l.pressAskNewJob3,
-        l.pressAskNewJob4,
-        l.pressAskNewJob5,
-        l.pressAskNewJob6,
-        l.pressAskNewJob7,
-        l.pressAskNewJob8,
-      ],
-      PressTopic.rankingPeak => [
-        l.pressAskRankingPeak,
-        l.pressAskRankingPeak2,
-        l.pressAskRankingPeak3,
-        l.pressAskRankingPeak4,
-        l.pressAskRankingPeak5,
-        l.pressAskRankingPeak6,
-        l.pressAskRankingPeak7,
-        l.pressAskRankingPeak8,
-      ],
-    };
-    return pickVariant(options, _seed);
-  }
+  String _openingPrompt(AppLocalizations l) => pickVariant(
+    pressAskWordings(l, widget.question, opponentName: widget.opponentName),
+    _seed,
+  );
 
   static List<String> _probeWordings(AppLocalizations l, PressProbe probe) =>
       switch (probe) {
@@ -726,4 +574,221 @@ class _Swing extends StatelessWidget {
       ],
     );
   }
+}
+
+/// Every wording the OPENING question of [question] can take, in [l]'s
+/// language.
+///
+/// Public, and a pure function of the question, because a topic that reaches a
+/// screen with nothing to say is the one failure a press conference cannot
+/// survive — a guard test walks every [PressTopic] through this in both
+/// languages. The follow-ups are keyed by [PressProbe] and shared by every
+/// topic; only this is per-topic.
+List<String> pressAskWordings(
+  AppLocalizations l,
+  PressQuestion question, {
+  String? opponentName,
+}) {
+  final who = opponentName ?? l.pressTheOpposition;
+  // The man an incident happened to, and when. A question that names nobody
+  // is the generality all of this exists to end, so the selector never offers
+  // one — but a sheet must still put words on the screen if it ever did.
+  final subject = question.subject;
+  final player = switch (subject) {
+    PressSubjectIncident(:final name?) => name,
+    PressSubjectPlayer(:final name) => name,
+    _ => l.pressThePlayer,
+  };
+  final minute = switch (subject) {
+    PressSubjectIncident(:final minute) => '$minute',
+    _ => '',
+  };
+  final ours = subject is PressSubjectIncident && subject.ours;
+  return switch (question.topic) {
+    PressTopic.overachieving => [
+      l.pressAskAbove,
+      l.pressAskAbove2,
+      l.pressAskAbove3,
+      l.pressAskAbove4,
+      l.pressAskAbove5,
+      l.pressAskAbove6,
+      l.pressAskAbove7,
+      l.pressAskAbove8,
+    ],
+    PressTopic.luckyWin => [
+      l.pressAskFlattered,
+      l.pressAskFlattered2,
+      l.pressAskFlattered3,
+      l.pressAskFlattered4,
+      l.pressAskFlattered5,
+      l.pressAskFlattered6,
+      l.pressAskFlattered7,
+      l.pressAskFlattered8,
+    ],
+    PressTopic.crisis => [
+      l.pressAskCrisis,
+      l.pressAskCrisis2,
+      l.pressAskCrisis3,
+      l.pressAskCrisis4,
+      l.pressAskCrisis5,
+      l.pressAskCrisis6,
+      l.pressAskCrisis7,
+      l.pressAskCrisis8,
+    ],
+    PressTopic.heavyDefeat => [
+      l.pressAskHeavyDefeat(who),
+      l.pressAskHeavyDefeat2(who),
+      l.pressAskHeavyDefeat3(who),
+      l.pressAskHeavyDefeat4(who),
+      l.pressAskHeavyDefeat5(who),
+      l.pressAskHeavyDefeat6(who),
+      l.pressAskHeavyDefeat7(who),
+      l.pressAskHeavyDefeat8(who),
+    ],
+    PressTopic.elimination => [
+      l.pressAskElimination(who),
+      l.pressAskElimination2(who),
+      l.pressAskElimination3(who),
+      l.pressAskElimination4(who),
+      l.pressAskElimination5(who),
+      l.pressAskElimination6(who),
+      l.pressAskElimination7(who),
+      l.pressAskElimination8(who),
+    ],
+    PressTopic.underPressure => [
+      l.pressAskUnderPressure,
+      l.pressAskUnderPressure2,
+      l.pressAskUnderPressure3,
+      l.pressAskUnderPressure4,
+      l.pressAskUnderPressure5,
+      l.pressAskUnderPressure6,
+      l.pressAskUnderPressure7,
+      l.pressAskUnderPressure8,
+    ],
+    PressTopic.tournamentPreview => [
+      l.pressAskPreview,
+      l.pressAskPreview2,
+      l.pressAskPreview3,
+      l.pressAskPreview4,
+      l.pressAskPreview5,
+      l.pressAskPreview6,
+      l.pressAskPreview7,
+      l.pressAskPreview8,
+    ],
+    PressTopic.tournamentOpening => [
+      l.pressAskOpening(who),
+      l.pressAskOpening2(who),
+      l.pressAskOpening3(who),
+      l.pressAskOpening4(who),
+      l.pressAskOpening5(who),
+      l.pressAskOpening6(who),
+      l.pressAskOpening7(who),
+      l.pressAskOpening8(who),
+    ],
+    PressTopic.triumph => [
+      l.pressAskTriumph,
+      l.pressAskTriumph2,
+      l.pressAskTriumph3,
+      l.pressAskTriumph4,
+      l.pressAskTriumph5,
+      l.pressAskTriumph6,
+      l.pressAskTriumph7,
+      l.pressAskTriumph8,
+    ],
+    PressTopic.bigWin => [
+      l.pressAskBigWin(who),
+      l.pressAskBigWin2(who),
+      l.pressAskBigWin3(who),
+      l.pressAskBigWin4(who),
+      l.pressAskBigWin5(who),
+      l.pressAskBigWin6(who),
+      l.pressAskBigWin7(who),
+      l.pressAskBigWin8(who),
+    ],
+    PressTopic.qualified => [
+      l.pressAskQualified,
+      l.pressAskQualified2,
+      l.pressAskQualified3,
+      l.pressAskQualified4,
+      l.pressAskQualified5,
+      l.pressAskQualified6,
+      l.pressAskQualified7,
+      l.pressAskQualified8,
+    ],
+    PressTopic.missedOut => [
+      l.pressAskMissedOut,
+      l.pressAskMissedOut2,
+      l.pressAskMissedOut3,
+      l.pressAskMissedOut4,
+      l.pressAskMissedOut5,
+      l.pressAskMissedOut6,
+      l.pressAskMissedOut7,
+      l.pressAskMissedOut8,
+    ],
+    PressTopic.unbeatenRun => [
+      l.pressAskUnbeaten,
+      l.pressAskUnbeaten2,
+      l.pressAskUnbeaten3,
+      l.pressAskUnbeaten4,
+      l.pressAskUnbeaten5,
+      l.pressAskUnbeaten6,
+      l.pressAskUnbeaten7,
+      l.pressAskUnbeaten8,
+    ],
+    PressTopic.newJob => [
+      l.pressAskNewJob,
+      l.pressAskNewJob2,
+      l.pressAskNewJob3,
+      l.pressAskNewJob4,
+      l.pressAskNewJob5,
+      l.pressAskNewJob6,
+      l.pressAskNewJob7,
+      l.pressAskNewJob8,
+    ],
+    PressTopic.rankingPeak => [
+      l.pressAskRankingPeak,
+      l.pressAskRankingPeak2,
+      l.pressAskRankingPeak3,
+      l.pressAskRankingPeak4,
+      l.pressAskRankingPeak5,
+      l.pressAskRankingPeak6,
+      l.pressAskRankingPeak7,
+      l.pressAskRankingPeak8,
+    ],
+    PressTopic.sendingOff => [
+      l.pressAskSendingOff1(player, minute),
+      l.pressAskSendingOff2(player, minute),
+      l.pressAskSendingOff3(player, minute),
+      l.pressAskSendingOff4(player, minute),
+    ],
+    PressTopic.injuryBlow => [
+      l.pressAskInjuryBlow1(player),
+      l.pressAskInjuryBlow2(player),
+      l.pressAskInjuryBlow3(player),
+      l.pressAskInjuryBlow4(player),
+    ],
+    PressTopic.shootoutFate => [
+      l.pressAskShootout1(who),
+      l.pressAskShootout2(who),
+      l.pressAskShootout3(who),
+      l.pressAskShootout4(who),
+    ],
+    // The one topic whose copy comes in two sets: a goal that WON it late
+    // and a goal that lost it late are not the same question, and the
+    // subject is what says which happened.
+    PressTopic.lateDrama =>
+      ours
+          ? [
+              l.pressAskLateWinner1(player, minute),
+              l.pressAskLateWinner2(player, minute),
+              l.pressAskLateWinner3(player, minute),
+              l.pressAskLateWinner4(player, minute),
+            ]
+          : [
+              l.pressAskLateLoss1(player, minute),
+              l.pressAskLateLoss2(player, minute),
+              l.pressAskLateLoss3(player, minute),
+              l.pressAskLateLoss4(player, minute),
+            ],
+  };
 }

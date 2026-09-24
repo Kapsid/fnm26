@@ -4,6 +4,7 @@ import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/entities/group_standing.dart';
 import 'package:fnm/domain/services/competition/finals.dart';
 import 'package:fnm/domain/services/competition/schedule_generator.dart';
+import 'package:fnm/domain/services/match/match_engine.dart';
 
 /// A qualifying group's table for display.
 typedef GroupTable = ({
@@ -93,6 +94,29 @@ typedef GoalRecord = ({
 
 /// A top-scorer tally.
 typedef ScorerTally = ({int playerId, int nationId, int goals});
+
+/// One thing that happened in a match which was not a goal, ready to persist.
+///
+/// Only a sending-off and a knock are written today — see the `MatchIncidents`
+/// table for why the [type] is nonetheless the engine's full event type.
+typedef IncidentRecord = ({
+  int careerId,
+  int fixtureId,
+  int nationId,
+  int playerId,
+  int minute,
+  MatchEventType type,
+  bool secondYellow,
+});
+
+/// The same thing, read back: who, when, and what.
+typedef MatchIncident = ({
+  int playerId,
+  int nationId,
+  int minute,
+  MatchEventType type,
+  bool secondYellow,
+});
 
 /// The head-to-head record between two nations across a save: from nation A's
 /// point of view (its wins, the draws, its losses, and both sides' goals).
@@ -468,8 +492,30 @@ abstract interface class CompetitionRepository {
   /// This is what makes a scoreline a story rather than a number: it is the
   /// only way to know a side came from behind, since a fixture row records how
   /// a match ENDED and nothing about how it got there.
-  Future<Map<int, List<({int nationId, int minute})>>> goalTimeline(
+  /// Pass [fixtureId] to read ONE match's goals rather than the save's — a
+  /// caller asking how a single afternoon unfolded should not be handed every
+  /// goal a twenty-year career ever scored.
+  Future<Map<int, List<({int nationId, int playerId, int minute})>>>
+  goalTimeline(int careerId, {int? fixtureId});
+
+  /// Persists a match's sendings-off and knocks (both sides). Called once per
+  /// played match; re-recording the same fixture replaces its incidents.
+  Future<void> recordIncidents(
     int careerId,
+    int fixtureId,
+    List<IncidentRecord> incidents,
+  );
+
+  /// What happened to one nation's players, match by match: fixture id → the
+  /// incidents in it, earliest minute first.
+  ///
+  /// The counterpart to [scorersByFixture]. A scoreline says a side lost; this
+  /// is what says it lost a man in the thirty-fourth minute, which is the
+  /// difference between a question about the result and a question about the
+  /// match.
+  Future<Map<int, List<MatchIncident>>> incidentsByFixture(
+    int careerId,
+    int nationId,
   );
 
   /// Who scored, match by match, for one nation: fixture id → that fixture's

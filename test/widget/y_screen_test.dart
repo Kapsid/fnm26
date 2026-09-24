@@ -33,9 +33,12 @@ void main() {
       // A reply is worded by mood, and has more wordings than a report — so it
       // is walked over its own moods rather than over the template variants.
       final moods = t == YTemplate.reaction ? YMood.values : const [null];
+      // Every variant the template actually HAS, not the floor: a deep
+      // template's later wordings are reached by the tone bands, and walking
+      // only the first four left two thirds of them untested.
       final spread = t == YTemplate.reaction
           ? YFeed.reactionVariantCount
-          : YFeed.variantCount;
+          : YFeed.variantsFor(t);
       for (final mood in moods) {
         for (var v = 0; v < spread; v++) {
           final body = yPostBody(

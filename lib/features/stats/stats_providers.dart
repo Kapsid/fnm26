@@ -98,7 +98,7 @@ careerStatsProvider = FutureProvider.autoDispose.family<CareerStatsSnapshot, int
 /// and safe for anything whose timeline was never captured: a comeback is
 /// claimed only when the evidence for it exists.
 bool _everTrailed(
-  List<({int nationId, int minute})>? timeline, {
+  List<({int nationId, int playerId, int minute})>? timeline, {
   required int mineId,
 }) {
   if (timeline == null || timeline.isEmpty) return false;

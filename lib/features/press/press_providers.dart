@@ -6,6 +6,7 @@ import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/services/competition/finals_participation.dart';
 import 'package:fnm/domain/services/competition/kickoff_keys.dart';
 import 'package:fnm/domain/services/competition/rounds.dart';
+import 'package:fnm/domain/services/match/match_engine.dart';
 import 'package:fnm/domain/services/press/expectation.dart';
 import 'package:fnm/domain/services/press/press.dart';
 import 'package:fnm/features/achievements/achievement_providers.dart';
@@ -143,11 +144,13 @@ pressQuestionProvider = FutureProvider.autoDispose.family<PressQuestion?, int>((
     String key,
     PressTopic topic, {
     int? subjectNationId,
+    PressSubject subject = const PressSubjectTeam(),
   }) => asked.contains(key)
       ? null
       : (
           key: key,
           topic: topic,
+          subject: subject,
           subjectNationId: subjectNationId,
           options: Press.optionsFor(
             topic,
@@ -327,6 +330,158 @@ pressQuestionProvider = FutureProvider.autoDispose.family<PressQuestion?, int>((
     }
   }
 
+  // ---------------------------------------------------------------------
+  // What happened on the PITCH.
+  //
+  // Everything above reads a scoreline, which is why every conference was the
+  // same conference with a different number in it. These four read the match
+  // itself — a man sent off, a man hurt, twelve yards, the last ten minutes —
+  // and each carries a [PressSubjectIncident] or a [PressSubjectOpponent], so
+  // the room leads with the thing that just happened rather than with the
+  // generic question about the run of form (see [Press.precedenceOf]).
+  final lastMatch = competitive.firstOrNull;
+  if (lastMatch != null && playedSince(lastMatch) == 0) {
+    final playerRepo = ref.watch(playerRepositoryProvider);
+    final aging = CareerService.agingYears(career);
+    Future<String?> nameOf(int playerId) async => (await playerRepo.byId(
+      playerId,
+      agingYears: aging,
+      saveSeed: career.rngSeed,
+    ))?.name;
+
+    final incidents =
+        (await comp.incidentsByFixture(
+          careerId,
+          career.nationId,
+        ))[lastMatch.id] ??
+        const [];
+
+    // A man walked. The press want his name, the minute, and whether it was
+    // the manager who left him on a booking.
+    final red = incidents
+        .where((i) => i.type == MatchEventType.redCard)
+        .firstOrNull;
+    if (red != null) {
+      final name = await nameOf(red.playerId);
+      // No name, no question: "one of your players was sent off" is exactly
+      // the generality this is here to end.
+      if (name != null) {
+        add(
+          q(
+            'red:${lastMatch.id}:${red.playerId}',
+            PressTopic.sendingOff,
+            subjectNationId: _opponent(lastMatch, career.nationId),
+            subject: PressSubjectIncident(
+              type: MatchEventType.redCard,
+              minute: red.minute,
+              playerId: red.playerId,
+              name: name,
+            ),
+          ),
+        );
+      }
+    }
+
+    // A knock. It is a question about a REGULAR — nobody asks about a
+    // substitute's ankle — and the bar drops when a tournament is close, which
+    // is when a squad player's fitness becomes everybody's business.
+    final hurt = incidents
+        .where((i) => i.type == MatchEventType.injury)
+        .firstOrNull;
+    if (hurt != null) {
+      final caps = {
+        for (final a in await comp.nationTopAppearances(
+          careerId,
+          career.nationId,
+          limit: _capsRead,
+        ))
+          a.playerId: a.games,
+      };
+      final finalsSoon = fixtures.any(
+        (f) =>
+            !f.hasResult &&
+            FinalsRounds.familyOf(f.round) != null &&
+            f.date.isAfter(now) &&
+            f.date.difference(now).inDays <= _tournamentSoonDays,
+      );
+      final games = caps[hurt.playerId] ?? 0;
+      if (games >= (finalsSoon ? _squadMemberCaps : _regularCaps)) {
+        final name = await nameOf(hurt.playerId);
+        if (name != null) {
+          add(
+            q(
+              'knock:${lastMatch.id}:${hurt.playerId}',
+              PressTopic.injuryBlow,
+              subject: PressSubjectIncident(
+                type: MatchEventType.injury,
+                minute: hurt.minute,
+                playerId: hurt.playerId,
+                name: name,
+              ),
+            ),
+          );
+        }
+      }
+    }
+
+    // A goal in the last ten minutes that turned the afternoon over, for or
+    // against. Read from the goal timeline, which is the only record of how a
+    // result got to where it finished.
+    final goals =
+        (await comp.goalTimeline(
+          careerId,
+          fixtureId: lastMatch.id,
+        ))[lastMatch.id] ??
+        const [];
+    final mine = _mine(lastMatch, career.nationId);
+    final finalOutcome = mine.forGoals.compareTo(mine.against);
+    for (final g in goals.reversed) {
+      if (g.minute < _lateFrom) continue;
+      var before = 0;
+      for (final earlier in goals) {
+        if (earlier.minute >= g.minute) continue;
+        before += earlier.nationId == career.nationId ? 1 : -1;
+      }
+      if (before.compareTo(0) == finalOutcome) continue; // it changed nothing
+      final name = await nameOf(g.playerId);
+      if (name == null) break;
+      add(
+        q(
+          'late:${lastMatch.id}:${g.minute}',
+          PressTopic.lateDrama,
+          subjectNationId: _opponent(lastMatch, career.nationId),
+          subject: PressSubjectIncident(
+            type: MatchEventType.goal,
+            minute: g.minute,
+            playerId: g.playerId,
+            name: name,
+            ours: g.nationId == career.nationId,
+          ),
+        ),
+      );
+      break;
+    }
+  }
+
+  // Twelve yards. A tie of the nation's own, settled on penalties — the one
+  // ending nobody has a tactical answer for, which is why it is asked about
+  // whether it was won or lost.
+  for (final f in news) {
+    if (!f.wentToShootout) continue;
+    if (!Rounds.isKnockout(f.round)) continue;
+    if (!contestsTournamentOf(f.round)) continue;
+    final opponent = _opponent(f, career.nationId);
+    add(
+      q(
+        'shootout:${f.id}',
+        PressTopic.shootoutFate,
+        subjectNationId: opponent,
+        subject: PressSubjectOpponent(opponent),
+      ),
+    );
+    break;
+  }
+
   // The first days in a job, before a ball has been kicked for this nation.
   if (played.isEmpty) {
     add(
@@ -466,6 +621,23 @@ const int _crisisBoard = 40;
 /// A new world-ranking high is only news near the top of the table.
 const int _peakRankCeiling = 20;
 
+/// From which minute a goal counts as late.
+const int _lateFrom = 80;
+
+/// How many caps make a man a regular, and so his knock a story.
+const int _regularCaps = 5;
+
+/// …and how many make him a squad member, which is enough when a tournament is
+/// weeks away and the country is counting who is fit.
+const int _squadMemberCaps = 1;
+
+/// How close a finals has to be for a squad player's fitness to be news.
+const int _tournamentSoonDays = 45;
+
+/// How far down the appearance list to read when asking whether a man is a
+/// regular. Comfortably more than a squad.
+const int _capsRead = 60;
+
 /// Everything the manager has said THIS cycle, as a single nudge to the
 /// dressing room and to the board. Older cycles are forgotten.
 final AutoDisposeFutureProviderFamily<PressEffect, int> pressEffectProvider =
@@ -604,7 +776,6 @@ final AutoDisposeFutureProviderFamily<PressMood, int> pressMoodProvider =
 
 final Provider<PressService> pressServiceProvider = Provider(PressService.new);
 
-
 /// Which opening-ceremony key gates the conference for a tournament whose group
 /// round is [round].
 String _kickoffKindFor(String round) =>
@@ -633,9 +804,7 @@ String _kickoffKindFor(String round) =>
     ]..sort((a, b) => a.date.compareTo(b.date));
     if (mine.isEmpty) continue;
     if (mine.any((f) => f.hasResult)) continue; // already under way
-    final group = rounds == FinalsRounds.worldChampionship
-        ? 'GROUP'
-        : 'CGROUP';
+    final group = rounds == FinalsRounds.worldChampionship ? 'GROUP' : 'CGROUP';
     final opener = mine.first;
     final key = 'opening:$group:${opener.date.year}';
     if (asked.contains(key)) continue;
@@ -643,6 +812,7 @@ String _kickoffKindFor(String round) =>
       question: (
         key: key,
         topic: PressTopic.tournamentOpening,
+        subject: const PressSubjectTeam(),
         subjectNationId: opener.homeNationId == nationId
             ? opener.awayNationId
             : opener.homeNationId,

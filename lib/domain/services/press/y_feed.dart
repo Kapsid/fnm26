@@ -1,5 +1,7 @@
 import 'package:fnm/core/util/text_variety.dart';
+import 'package:fnm/domain/services/match/match_engine.dart';
 import 'package:fnm/domain/services/press/expectation.dart';
+import 'package:fnm/domain/services/press/press.dart';
 import 'package:fnm/domain/services/press/persona.dart';
 import 'package:fnm/domain/services/competition/rounds.dart';
 
@@ -94,6 +96,13 @@ enum YTemplate {
 
   /// Somebody important limping off.
   injuryBlow,
+
+  /// One of ours walking, and the minute he did it.
+  ///
+  /// The first template drawn from something that happened ON THE PITCH
+  /// rather than from a scoreline: the feed could see that a match was lost
+  /// and never that it was lost a man short.
+  sentOff,
 
   /// The board's patience, in public.
   boardPressure,
@@ -273,6 +282,7 @@ abstract final class YFeed {
     YTemplate.lossStreak ||
     YTemplate.rivalry ||
     YTemplate.injuryBlow ||
+    YTemplate.sentOff ||
     YTemplate.boardPressure => midVariantCount,
     _ => variantCount,
   };
@@ -768,6 +778,69 @@ abstract final class YFeed {
     ];
   }
 
+  /// What the country says about one thing that happened on the pitch.
+  ///
+  /// It takes the SAME [PressSubjectIncident] the press room does, so the
+  /// question a reporter puts to the manager and the post a supporter writes
+  /// are two readings of one event rather than two systems that happen to
+  /// agree. Only a sending-off of one of ours is worth a post today: a knock
+  /// already has [YTemplate.injuryBlow] behind it, and a goal has the match
+  /// report.
+  ///
+  /// [standing] and [history] are what make the cast read differently about
+  /// the same red card — a loyalist reaches for the generous third of the
+  /// wordings and a cynic for the sour one, exactly as they do about a
+  /// result. Nothing here is a second persona system; see [YCast].
+  static List<YPost> forIncident({
+    required PressSubjectIncident incident,
+    required DateTime date,
+    required String key,
+    required String nation,
+    required int seed,
+    ResultStanding standing = ResultStanding.par,
+    List<ResultStanding> history = const [],
+  }) {
+    if (incident.type != MatchEventType.redCard || !incident.ours) {
+      return const [];
+    }
+    final name = incident.name;
+    // A post that cannot name him would be the generality the feed already
+    // had too much of.
+    if (name == null) return const [];
+    final args = [name, '${incident.minute}'];
+    final posts = [
+      for (final voice in const [YVoice.fan, YVoice.expro])
+        () {
+          final persona = personaFor(voice, nation, seed, key);
+          return _post(
+            voice: voice,
+            template: YTemplate.sentOff,
+            args: args,
+            date: date,
+            key: key,
+            nation: nation,
+            seed: seed,
+            tone: YCast.toneFor(
+              persona,
+              standing,
+              YCast.stance(persona, history),
+            ),
+          );
+        }(),
+    ];
+    return [
+      ...posts,
+      ...repliesTo(
+        posts.first,
+        mood: YMood.fury,
+        nation: nation,
+        seed: seed,
+        standing: standing,
+        history: history,
+      ),
+    ];
+  }
+
   /// The things that happen to a nation a handful of times a cycle, as opposed
   /// to the running commentary on its results.
   ///
@@ -991,6 +1064,9 @@ abstract final class YFeed {
     YTemplate.eliminated ||
     YTemplate.injuryBlow ||
     YTemplate.boardPressure => YMood.despair,
+    // A knock is bad luck and a red card is somebody's fault, which is the
+    // difference between the room despairing and the room turning on him.
+    YTemplate.sentOff => YMood.fury,
     YTemplate.winStreak || YTemplate.toldYouSo => YMood.smugness,
     // A repeat is read by what it repeats: being done over by the same side
     // again is fury, and a familiar bad afternoon is weariness.

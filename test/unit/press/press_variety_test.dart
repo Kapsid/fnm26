@@ -8,6 +8,7 @@ void main() {
   PressQuestion q(String key, PressTopic topic) => (
     key: key,
     topic: topic,
+    subject: const PressSubjectTeam(),
     subjectNationId: null,
     options: Press.optionsFor(topic),
   );

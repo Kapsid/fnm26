@@ -6178,6 +6178,102 @@
       }
     }
   },
+  "ySentOff0": "Red for {name} on {minute} minutes and the whole country turns on him. He has given us more than most. Leave it.",
+  "@ySentOff0": {
+    "description": "Y post about a sending-off, warm.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "minute": {
+        "type": "String"
+      }
+    }
+  },
+  "ySentOff1": "{name} off after {minute} minutes. Harsh. Ten men and we still had a go, which tells you something.",
+  "@ySentOff1": {
+    "description": "Y post about a sending-off, warm.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "minute": {
+        "type": "String"
+      }
+    }
+  },
+  "ySentOff2": "{name}, {minute} minutes, red card. Ten men from there.",
+  "@ySentOff2": {
+    "description": "Y post about a sending-off, flat.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "minute": {
+        "type": "String"
+      }
+    }
+  },
+  "ySentOff3": "Sending off: {name} on {minute}. Not the first match to turn on one decision.",
+  "@ySentOff3": {
+    "description": "Y post about a sending-off, flat.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "minute": {
+        "type": "String"
+      }
+    }
+  },
+  "ySentOff4": "Brilliant. {name} walks on {minute} minutes and we are down to ten. Again.",
+  "@ySentOff4": {
+    "description": "Y post about a sending-off, sour.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "minute": {
+        "type": "String"
+      }
+    }
+  },
+  "ySentOff5": "{name} sent off after {minute} minutes. Who exactly is coaching discipline around here?",
+  "@ySentOff5": {
+    "description": "Y post about a sending-off, sour.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "minute": {
+        "type": "String"
+      }
+    }
+  },
+  "ySentOff6": "{minute} minutes. That is how long {name} could keep his head. Professional football.",
+  "@ySentOff6": {
+    "description": "Y post about a sending-off, sour.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "minute": {
+        "type": "String"
+      }
+    }
+  },
+  "ySentOff7": "A red for {name} on {minute} minutes, and I am supposed to believe this is progress.",
+  "@ySentOff7": {
+    "description": "Y post about a sending-off, sour.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "minute": {
+        "type": "String"
+      }
+    }
+  },
   "yBoardPressure0": "The board have gone very quiet. That is never a good sign.",
   "@yBoardPressure0": {
     "description": "Y post about the board losing patience. Variant 0."
@@ -12107,6 +12203,226 @@
   "pressAskCrisis8": "Give us one reason to believe this turns around.",
   "@pressAskCrisis8": {
     "description": "Press conference line."
+  },
+  "pressAskSendingOff1": "{player} was sent off after {minute} minutes and you finished with ten. His mistake, or yours for leaving him on?",
+  "@pressAskSendingOff1": {
+    "description": "Press question after one of your players is sent off.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      },
+      "minute": {
+        "type": "String"
+      }
+    }
+  },
+  "pressAskSendingOff2": "{player} walked on {minute} minutes. A rush of blood, or a side that had lost its discipline?",
+  "@pressAskSendingOff2": {
+    "description": "Press question after a sending-off.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      },
+      "minute": {
+        "type": "String"
+      }
+    }
+  },
+  "pressAskSendingOff3": "Ten men from {minute} minutes, with {player} watching from the tunnel. How much did that decide?",
+  "@pressAskSendingOff3": {
+    "description": "Press question after a sending-off.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      },
+      "minute": {
+        "type": "String"
+      }
+    }
+  },
+  "pressAskSendingOff4": "{player} left you a man short with {minute} minutes on the clock. Do you defend him in public?",
+  "@pressAskSendingOff4": {
+    "description": "Press question after a sending-off.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      },
+      "minute": {
+        "type": "String"
+      }
+    }
+  },
+  "pressAskInjuryBlow1": "{player} limped off, and nobody knows for how long. How big a hole is that?",
+  "@pressAskInjuryBlow1": {
+    "description": "Press question after a regular picks up an injury.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pressAskInjuryBlow2": "{player} is out. Is this squad deep enough to cover him?",
+  "@pressAskInjuryBlow2": {
+    "description": "Press question after a regular picks up an injury.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pressAskInjuryBlow3": "{player} came off injured and the timing could hardly be worse. What does that do to your plans?",
+  "@pressAskInjuryBlow3": {
+    "description": "Press question after a regular picks up an injury.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pressAskInjuryBlow4": "Without {player}, who steps in? Or would you rather not answer that yet?",
+  "@pressAskInjuryBlow4": {
+    "description": "Press question after a regular picks up an injury.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pressAskShootout1": "It came down to penalties against {opponent}. Is a shoot-out a lottery, or something a side can be ready for?",
+  "@pressAskShootout1": {
+    "description": "Press question after a knockout tie settled on penalties.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      }
+    }
+  },
+  "pressAskShootout2": "Twelve yards settled it against {opponent}. Do you practise them, or have you accepted that nobody can?",
+  "@pressAskShootout2": {
+    "description": "Press question after a shoot-out.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      }
+    }
+  },
+  "pressAskShootout3": "Penalties against {opponent}, and a whole campaign turning on five kicks. Is that any way to settle a tie?",
+  "@pressAskShootout3": {
+    "description": "Press question after a shoot-out.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      }
+    }
+  },
+  "pressAskShootout4": "The shoot-out against {opponent}: the order of takers was yours. Would you write it the same way again?",
+  "@pressAskShootout4": {
+    "description": "Press question after a shoot-out.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      }
+    }
+  },
+  "pressAskLateWinner1": "{player} settled it on {minute} minutes. Is a side that leaves it that late brave, or lucky?",
+  "@pressAskLateWinner1": {
+    "description": "Press question after a late goal that won the match.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      },
+      "minute": {
+        "type": "String"
+      }
+    }
+  },
+  "pressAskLateWinner2": "{minute} minutes gone and {player} turns the whole thing over. What do you take from cutting it that fine?",
+  "@pressAskLateWinner2": {
+    "description": "Press question after a late winning goal.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      },
+      "minute": {
+        "type": "String"
+      }
+    }
+  },
+  "pressAskLateWinner3": "You were not winning that until {player} scored on {minute} minutes. What changed?",
+  "@pressAskLateWinner3": {
+    "description": "Press question after a late winning goal.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      },
+      "minute": {
+        "type": "String"
+      }
+    }
+  },
+  "pressAskLateWinner4": "{player} found it with {minute} minutes on the clock. Character, or a side that had left itself no choice?",
+  "@pressAskLateWinner4": {
+    "description": "Press question after a late winning goal.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      },
+      "minute": {
+        "type": "String"
+      }
+    }
+  },
+  "pressAskLateLoss1": "{player} scored on {minute} minutes and took it away from you. How does a side lose a match that late?",
+  "@pressAskLateLoss1": {
+    "description": "Press question after a late goal conceded that cost the result.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      },
+      "minute": {
+        "type": "String"
+      }
+    }
+  },
+  "pressAskLateLoss2": "You held out until {minute} minutes, and then {player}. Was that legs, or concentration?",
+  "@pressAskLateLoss2": {
+    "description": "Press question after a late goal conceded.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      },
+      "minute": {
+        "type": "String"
+      }
+    }
+  },
+  "pressAskLateLoss3": "{minute} minutes, and {player} punishes you. Is that on the players, or on how you set up to see it out?",
+  "@pressAskLateLoss3": {
+    "description": "Press question after a late goal conceded.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      },
+      "minute": {
+        "type": "String"
+      }
+    }
+  },
+  "pressAskLateLoss4": "{player} got it with {minute} minutes gone and your afternoon went with it. What do you say to them in there?",
+  "@pressAskLateLoss4": {
+    "description": "Press question after a late goal conceded.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      },
+      "minute": {
+        "type": "String"
+      }
+    }
+  },
+  "pressThePlayer": "the player",
+  "@pressThePlayer": {
+    "description": "Stand-in for a player's name in a press question, on the rare save where the man behind an incident can no longer be named."
   },
   "tacticsSubOffAlready": "Already off",
   "@tacticsSubOffAlready": {

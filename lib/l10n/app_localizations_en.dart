@@ -4086,6 +4086,46 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String ySentOff0(String name, String minute) {
+    return 'Red for $name on $minute minutes and the whole country turns on him. He has given us more than most. Leave it.';
+  }
+
+  @override
+  String ySentOff1(String name, String minute) {
+    return '$name off after $minute minutes. Harsh. Ten men and we still had a go, which tells you something.';
+  }
+
+  @override
+  String ySentOff2(String name, String minute) {
+    return '$name, $minute minutes, red card. Ten men from there.';
+  }
+
+  @override
+  String ySentOff3(String name, String minute) {
+    return 'Sending off: $name on $minute. Not the first match to turn on one decision.';
+  }
+
+  @override
+  String ySentOff4(String name, String minute) {
+    return 'Brilliant. $name walks on $minute minutes and we are down to ten. Again.';
+  }
+
+  @override
+  String ySentOff5(String name, String minute) {
+    return '$name sent off after $minute minutes. Who exactly is coaching discipline around here?';
+  }
+
+  @override
+  String ySentOff6(String name, String minute) {
+    return '$minute minutes. That is how long $name could keep his head. Professional football.';
+  }
+
+  @override
+  String ySentOff7(String name, String minute) {
+    return 'A red for $name on $minute minutes, and I am supposed to believe this is progress.';
+  }
+
+  @override
   String get yBoardPressure0 =>
       'The board have gone very quiet. That is never a good sign.';
 
@@ -8291,6 +8331,109 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get pressAskCrisis8 =>
       'Give us one reason to believe this turns around.';
+
+  @override
+  String pressAskSendingOff1(String player, String minute) {
+    return '$player was sent off after $minute minutes and you finished with ten. His mistake, or yours for leaving him on?';
+  }
+
+  @override
+  String pressAskSendingOff2(String player, String minute) {
+    return '$player walked on $minute minutes. A rush of blood, or a side that had lost its discipline?';
+  }
+
+  @override
+  String pressAskSendingOff3(String player, String minute) {
+    return 'Ten men from $minute minutes, with $player watching from the tunnel. How much did that decide?';
+  }
+
+  @override
+  String pressAskSendingOff4(String player, String minute) {
+    return '$player left you a man short with $minute minutes on the clock. Do you defend him in public?';
+  }
+
+  @override
+  String pressAskInjuryBlow1(String player) {
+    return '$player limped off, and nobody knows for how long. How big a hole is that?';
+  }
+
+  @override
+  String pressAskInjuryBlow2(String player) {
+    return '$player is out. Is this squad deep enough to cover him?';
+  }
+
+  @override
+  String pressAskInjuryBlow3(String player) {
+    return '$player came off injured and the timing could hardly be worse. What does that do to your plans?';
+  }
+
+  @override
+  String pressAskInjuryBlow4(String player) {
+    return 'Without $player, who steps in? Or would you rather not answer that yet?';
+  }
+
+  @override
+  String pressAskShootout1(String opponent) {
+    return 'It came down to penalties against $opponent. Is a shoot-out a lottery, or something a side can be ready for?';
+  }
+
+  @override
+  String pressAskShootout2(String opponent) {
+    return 'Twelve yards settled it against $opponent. Do you practise them, or have you accepted that nobody can?';
+  }
+
+  @override
+  String pressAskShootout3(String opponent) {
+    return 'Penalties against $opponent, and a whole campaign turning on five kicks. Is that any way to settle a tie?';
+  }
+
+  @override
+  String pressAskShootout4(String opponent) {
+    return 'The shoot-out against $opponent: the order of takers was yours. Would you write it the same way again?';
+  }
+
+  @override
+  String pressAskLateWinner1(String player, String minute) {
+    return '$player settled it on $minute minutes. Is a side that leaves it that late brave, or lucky?';
+  }
+
+  @override
+  String pressAskLateWinner2(String player, String minute) {
+    return '$minute minutes gone and $player turns the whole thing over. What do you take from cutting it that fine?';
+  }
+
+  @override
+  String pressAskLateWinner3(String player, String minute) {
+    return 'You were not winning that until $player scored on $minute minutes. What changed?';
+  }
+
+  @override
+  String pressAskLateWinner4(String player, String minute) {
+    return '$player found it with $minute minutes on the clock. Character, or a side that had left itself no choice?';
+  }
+
+  @override
+  String pressAskLateLoss1(String player, String minute) {
+    return '$player scored on $minute minutes and took it away from you. How does a side lose a match that late?';
+  }
+
+  @override
+  String pressAskLateLoss2(String player, String minute) {
+    return 'You held out until $minute minutes, and then $player. Was that legs, or concentration?';
+  }
+
+  @override
+  String pressAskLateLoss3(String player, String minute) {
+    return '$minute minutes, and $player punishes you. Is that on the players, or on how you set up to see it out?';
+  }
+
+  @override
+  String pressAskLateLoss4(String player, String minute) {
+    return '$player got it with $minute minutes gone and your afternoon went with it. What do you say to them in there?';
+  }
+
+  @override
+  String get pressThePlayer => 'the player';
 
   @override
   String get tacticsSubOffAlready => 'Already off';

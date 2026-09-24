@@ -14,6 +14,7 @@ import 'package:fnm/domain/entities/formation.dart';
 import 'package:fnm/domain/entities/tactics.dart';
 import 'package:fnm/domain/services/manager/manager_skills.dart';
 import 'package:fnm/domain/services/manager/staff.dart';
+import 'package:fnm/domain/services/match/match_engine.dart';
 
 part 'app_database.g.dart';
 
@@ -41,6 +42,7 @@ const int _newgenIdBase = 1000000000;
     CallUpDrafts,
     TrainingCampChoices,
     GoalEvents,
+    MatchIncidents,
     Honours,
     DrawsWatched,
     PlayerAbsences,
@@ -80,7 +82,7 @@ class AppDatabase extends _$AppDatabase {
   /// full set of upgrade paths from it — see `schema_migration_test.dart`.
   /// A hand-written list of paths is a step somebody forgets on the bump that
   /// matters.
-  static const int currentSchemaVersion = 46;
+  static const int currentSchemaVersion = 47;
 
   @override
   int get schemaVersion => currentSchemaVersion;
@@ -249,6 +251,15 @@ class AppDatabase extends _$AppDatabase {
         // reads back as its single stored [hostId], which is what it was.
         from45To46: (m, schema) async {
           await m.addColumn(schema.honours, schema.honours.hostIds);
+        },
+        // 46 → 47 keeps the sendings-off and the knocks, with their minutes,
+        // instead of reading them once for the ban and throwing them away.
+        // A new table and nothing else moves: an upgraded save has no
+        // incidents on record, so the press and the feed simply have nothing
+        // to say about the matches played before this and start noticing from
+        // the next one.
+        from46To47: (m, schema) async {
+          await m.createTable(schema.matchIncidents);
         },
       )(m, from, to);
     },

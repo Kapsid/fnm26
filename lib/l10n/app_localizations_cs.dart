@@ -4107,6 +4107,46 @@ class AppLocalizationsCs extends AppLocalizations {
   }
 
   @override
+  String ySentOff0(String name, String minute) {
+    return '$name dostal červenou v $minute. minutě a celá země se na něj sesypala. Odehrál pro ten dres víc než většina ostatních. Nechte ho být.';
+  }
+
+  @override
+  String ySentOff1(String name, String minute) {
+    return '$name šel v $minute. minutě ze hřiště. Přísné. V deseti jsme se pořád rvali, to o tom týmu něco říká.';
+  }
+
+  @override
+  String ySentOff2(String name, String minute) {
+    return '$name, $minute. minuta, červená karta. Odtud v deseti.';
+  }
+
+  @override
+  String ySentOff3(String name, String minute) {
+    return 'Vyloučení: $name v $minute. minutě. Není to první zápas, který otočí jedno rozhodnutí.';
+  }
+
+  @override
+  String ySentOff4(String name, String minute) {
+    return 'Skvělé. $name jde v $minute. minutě ze hřiště a hrajeme v deseti. Zase.';
+  }
+
+  @override
+  String ySentOff5(String name, String minute) {
+    return '$name vyloučen po $minute. minutě. Kdo tady vlastně učí hráče disciplíně?';
+  }
+
+  @override
+  String ySentOff6(String name, String minute) {
+    return 'Do $minute. minuty $name udržel nervy. Profesionální fotbal.';
+  }
+
+  @override
+  String ySentOff7(String name, String minute) {
+    return '$name dostal v $minute. minutě červenou a já mám věřit, že je to pokrok.';
+  }
+
+  @override
   String get yBoardPressure0 =>
       'Vedení podezřele ztichlo. To nikdy nevěstí nic dobrého.';
 
@@ -8299,6 +8339,109 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get pressAskCrisis8 => 'Dejte nám jeden důvod věřit, že se to otočí.';
+
+  @override
+  String pressAskSendingOff1(String player, String minute) {
+    return '$player šel v $minute. minutě ze hřiště a dohrávali jste v deseti. Jeho chyba, nebo vaše, že jste ho tam nechal?';
+  }
+
+  @override
+  String pressAskSendingOff2(String player, String minute) {
+    return '$player dostal červenou v $minute. minutě. Byla to chvilka nervů, nebo tým, který ztratil disciplínu?';
+  }
+
+  @override
+  String pressAskSendingOff3(String player, String minute) {
+    return 'Od $minute. minuty jste hráli v deseti a $player se díval z tunelu. Jak moc to rozhodlo?';
+  }
+
+  @override
+  String pressAskSendingOff4(String player, String minute) {
+    return '$player vás v $minute. minutě nechal v deseti. Budete ho hájit na veřejnosti?';
+  }
+
+  @override
+  String pressAskInjuryBlow1(String player) {
+    return '$player odkulhal ze hřiště a nikdo neví, na jak dlouho. Jak velká je to díra?';
+  }
+
+  @override
+  String pressAskInjuryBlow2(String player) {
+    return '$player vypadl ze sestavy. Je kádr dost široký, aby ho nahradil?';
+  }
+
+  @override
+  String pressAskInjuryBlow3(String player) {
+    return '$player odstoupil zraněný a horší načasování si představit nelze. Co to dělá s vašimi plány?';
+  }
+
+  @override
+  String pressAskInjuryBlow4(String player) {
+    return '$player bude chybět. Kdo ho zastoupí, nebo na to teď raději neodpovíte?';
+  }
+
+  @override
+  String pressAskShootout1(String opponent) {
+    return 'Se soupeřem $opponent rozhodoval až penaltový rozstřel. Je to loterie, nebo se na to dá připravit?';
+  }
+
+  @override
+  String pressAskShootout2(String opponent) {
+    return 'Se soupeřem $opponent rozhodlo jedenáct metrů. Trénujete penalty, nebo jste smířený s tím, že to nejde?';
+  }
+
+  @override
+  String pressAskShootout3(String opponent) {
+    return 'Penalty se soupeřem $opponent a celý cyklus visí na pěti kopech. Je tohle způsob, jak rozhodnout zápas?';
+  }
+
+  @override
+  String pressAskShootout4(String opponent) {
+    return 'Rozstřel se soupeřem $opponent: pořadí střelců bylo vaše. Napsal byste ho znovu stejně?';
+  }
+
+  @override
+  String pressAskLateWinner1(String player, String minute) {
+    return '$player to rozhodl v $minute. minutě. Je tým, který to nechá takhle na konec, odvážný, nebo měl štěstí?';
+  }
+
+  @override
+  String pressAskLateWinner2(String player, String minute) {
+    return '$minute. minuta a $player otočil celý zápas. Co si berete z toho, když to necháte takhle na hraně?';
+  }
+
+  @override
+  String pressAskLateWinner3(String player, String minute) {
+    return 'Do $minute. minuty jste nevyhrávali, pak se prosadil $player. Co se změnilo?';
+  }
+
+  @override
+  String pressAskLateWinner4(String player, String minute) {
+    return '$player se trefil v $minute. minutě. Charakter, nebo tým, kterému už nic jiného nezbývalo?';
+  }
+
+  @override
+  String pressAskLateLoss1(String player, String minute) {
+    return '$player se trefil v $minute. minutě a sebral vám to. Jak může tým ztratit zápas takhle pozdě?';
+  }
+
+  @override
+  String pressAskLateLoss2(String player, String minute) {
+    return 'Drželi jste to do $minute. minuty, a pak přišel $player. Byly to nohy, nebo hlava?';
+  }
+
+  @override
+  String pressAskLateLoss3(String player, String minute) {
+    return '$minute. minuta a $player vás potrestal. Je to na hráčích, nebo na tom, jak jste zápas dohrávali?';
+  }
+
+  @override
+  String pressAskLateLoss4(String player, String minute) {
+    return '$player rozhodl v $minute. minutě a bylo po odpoledni. Co jim teď řeknete v kabině?';
+  }
+
+  @override
+  String get pressThePlayer => 'hráč';
 
   @override
   String get tacticsSubOffAlready => 'Už vystřídán';

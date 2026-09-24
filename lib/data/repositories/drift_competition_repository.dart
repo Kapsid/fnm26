@@ -1287,17 +1287,82 @@ class DriftCompetitionRepository implements CompetitionRepository {
   }
 
   @override
-  Future<Map<int, List<({int nationId, int minute})>>> goalTimeline(
-    int careerId,
-  ) async {
+  Future<Map<int, List<({int nationId, int playerId, int minute})>>>
+  goalTimeline(int careerId, {int? fixtureId}) async {
     final rows =
         await (_db.select(_db.goalEvents)
-              ..where((t) => t.careerId.equals(careerId))
+              ..where(
+                (t) =>
+                    t.careerId.equals(careerId) &
+                    (fixtureId == null
+                        ? const Constant(true)
+                        : t.fixtureId.equals(fixtureId)),
+              )
               ..orderBy([(t) => OrderingTerm(expression: t.minute)]))
             .get();
-    final out = <int, List<({int nationId, int minute})>>{};
+    final out = <int, List<({int nationId, int playerId, int minute})>>{};
     for (final r in rows) {
-      (out[r.fixtureId] ??= []).add((nationId: r.nationId, minute: r.minute));
+      (out[r.fixtureId] ??= []).add((
+        nationId: r.nationId,
+        playerId: r.playerId,
+        minute: r.minute,
+      ));
+    }
+    return out;
+  }
+
+  @override
+  Future<void> recordIncidents(
+    int careerId,
+    int fixtureId,
+    List<IncidentRecord> incidents,
+  ) async {
+    // Replaced rather than appended: a fixture can be re-recorded (the manager
+    // replays a match he has just watched), and appending would have a player
+    // sent off twice in the same game.
+    await (_db.delete(_db.matchIncidents)..where(
+          (t) => t.careerId.equals(careerId) & t.fixtureId.equals(fixtureId),
+        ))
+        .go();
+    if (incidents.isEmpty) return;
+    await _db.batch((b) {
+      b.insertAll(_db.matchIncidents, [
+        for (final i in incidents)
+          MatchIncidentsCompanion.insert(
+            careerId: i.careerId,
+            fixtureId: i.fixtureId,
+            nationId: i.nationId,
+            playerId: i.playerId,
+            minute: i.minute,
+            type: i.type,
+            secondYellow: Value(i.secondYellow),
+          ),
+      ]);
+    });
+  }
+
+  @override
+  Future<Map<int, List<MatchIncident>>> incidentsByFixture(
+    int careerId,
+    int nationId,
+  ) async {
+    final rows =
+        await (_db.select(_db.matchIncidents)
+              ..where(
+                (t) =>
+                    t.careerId.equals(careerId) & t.nationId.equals(nationId),
+              )
+              ..orderBy([(t) => OrderingTerm(expression: t.minute)]))
+            .get();
+    final out = <int, List<MatchIncident>>{};
+    for (final r in rows) {
+      (out[r.fixtureId] ??= []).add((
+        playerId: r.playerId,
+        nationId: r.nationId,
+        minute: r.minute,
+        type: r.type,
+        secondYellow: r.secondYellow,
+      ));
     }
     return out;
   }

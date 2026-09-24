@@ -4,6 +4,7 @@ import 'package:fnm/domain/entities/formation.dart';
 import 'package:fnm/domain/entities/tactics.dart';
 import 'package:fnm/domain/services/manager/manager_skills.dart';
 import 'package:fnm/domain/services/manager/staff.dart';
+import 'package:fnm/domain/services/match/match_engine.dart';
 
 /// Drift table definitions for the local SQLite database.
 ///
@@ -138,8 +139,6 @@ class Careers extends Table {
   /// as one who had nearly been sacked. This one number is what a reputation
   /// is made of; see `BoardSatisfaction.carryOver`.
   IntColumn get lastCycleBoard => integer().nullable()();
-
-
 }
 
 /// A nation's Nations Cup league (0 = League A, 1 = League B, …) within its
@@ -635,6 +634,41 @@ class GoalEvents extends Table {
   IntColumn get nationId => integer()();
   IntColumn get playerId => integer()();
   IntColumn get minute => integer()();
+}
+
+/// A thing that happened in a match which was not a goal: a man sent off, a
+/// man hurt. Written for both sides of every match the save simulates.
+///
+/// Goals have had a table since the first build because a top-scorer chart
+/// needs them. Everything else the engine reported was read once — for the
+/// ban, for the knock — and then thrown away, so a fortnight later nothing in
+/// the save knew that a side had finished a match with ten men, and neither
+/// the press nor the feed could ask about it. The minute is the whole point:
+/// "sent off" is a fact, "sent off in the thirty-fourth" is a story.
+///
+/// [type] is a [MatchEventType] by name. Only [MatchEventType.redCard] and
+/// [MatchEventType.injury] are written today; the column is the full enum so
+/// that keeping a booking or a substitution later is a decision rather than a
+/// migration.
+@DataClassName('MatchIncidentRow')
+class MatchIncidents extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  IntColumn get careerId =>
+      integer().references(Careers, #id, onDelete: KeyAction.cascade)();
+  IntColumn get fixtureId => integer().references(Fixtures, #id)();
+
+  /// The side the player was representing, so a nation's own incidents can be
+  /// read without joining the fixture.
+  IntColumn get nationId => integer()();
+  IntColumn get playerId => integer()();
+  IntColumn get minute => integer()();
+  TextColumn get type => textEnum<MatchEventType>()();
+
+  /// For a sending-off, whether it was a second booking rather than a straight
+  /// red. Recorded but not yet asked about: the difference between a rush of
+  /// blood and a disgrace is a sharper question than either, and keeping the
+  /// flag now means writing that copy later rather than migrating for it.
+  BoolColumn get secondYellow => boolean().withDefault(const Constant(false))();
 }
 
 /// A completed tournament's roll of honour (World Cup winners history).

@@ -6600,6 +6600,54 @@ abstract class AppLocalizations {
   /// **'Lost {name}, and there is nobody behind him. That is the real problem.'**
   String yInjuryBlow7(String name);
 
+  /// Y post about a sending-off, warm.
+  ///
+  /// In en, this message translates to:
+  /// **'Red for {name} on {minute} minutes and the whole country turns on him. He has given us more than most. Leave it.'**
+  String ySentOff0(String name, String minute);
+
+  /// Y post about a sending-off, warm.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} off after {minute} minutes. Harsh. Ten men and we still had a go, which tells you something.'**
+  String ySentOff1(String name, String minute);
+
+  /// Y post about a sending-off, flat.
+  ///
+  /// In en, this message translates to:
+  /// **'{name}, {minute} minutes, red card. Ten men from there.'**
+  String ySentOff2(String name, String minute);
+
+  /// Y post about a sending-off, flat.
+  ///
+  /// In en, this message translates to:
+  /// **'Sending off: {name} on {minute}. Not the first match to turn on one decision.'**
+  String ySentOff3(String name, String minute);
+
+  /// Y post about a sending-off, sour.
+  ///
+  /// In en, this message translates to:
+  /// **'Brilliant. {name} walks on {minute} minutes and we are down to ten. Again.'**
+  String ySentOff4(String name, String minute);
+
+  /// Y post about a sending-off, sour.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} sent off after {minute} minutes. Who exactly is coaching discipline around here?'**
+  String ySentOff5(String name, String minute);
+
+  /// Y post about a sending-off, sour.
+  ///
+  /// In en, this message translates to:
+  /// **'{minute} minutes. That is how long {name} could keep his head. Professional football.'**
+  String ySentOff6(String name, String minute);
+
+  /// Y post about a sending-off, sour.
+  ///
+  /// In en, this message translates to:
+  /// **'A red for {name} on {minute} minutes, and I am supposed to believe this is progress.'**
+  String ySentOff7(String name, String minute);
+
   /// Y post about the board losing patience. Variant 0.
   ///
   /// In en, this message translates to:
@@ -13052,6 +13100,132 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Give us one reason to believe this turns around.'**
   String get pressAskCrisis8;
+
+  /// Press question after one of your players is sent off.
+  ///
+  /// In en, this message translates to:
+  /// **'{player} was sent off after {minute} minutes and you finished with ten. His mistake, or yours for leaving him on?'**
+  String pressAskSendingOff1(String player, String minute);
+
+  /// Press question after a sending-off.
+  ///
+  /// In en, this message translates to:
+  /// **'{player} walked on {minute} minutes. A rush of blood, or a side that had lost its discipline?'**
+  String pressAskSendingOff2(String player, String minute);
+
+  /// Press question after a sending-off.
+  ///
+  /// In en, this message translates to:
+  /// **'Ten men from {minute} minutes, with {player} watching from the tunnel. How much did that decide?'**
+  String pressAskSendingOff3(String player, String minute);
+
+  /// Press question after a sending-off.
+  ///
+  /// In en, this message translates to:
+  /// **'{player} left you a man short with {minute} minutes on the clock. Do you defend him in public?'**
+  String pressAskSendingOff4(String player, String minute);
+
+  /// Press question after a regular picks up an injury.
+  ///
+  /// In en, this message translates to:
+  /// **'{player} limped off, and nobody knows for how long. How big a hole is that?'**
+  String pressAskInjuryBlow1(String player);
+
+  /// Press question after a regular picks up an injury.
+  ///
+  /// In en, this message translates to:
+  /// **'{player} is out. Is this squad deep enough to cover him?'**
+  String pressAskInjuryBlow2(String player);
+
+  /// Press question after a regular picks up an injury.
+  ///
+  /// In en, this message translates to:
+  /// **'{player} came off injured and the timing could hardly be worse. What does that do to your plans?'**
+  String pressAskInjuryBlow3(String player);
+
+  /// Press question after a regular picks up an injury.
+  ///
+  /// In en, this message translates to:
+  /// **'Without {player}, who steps in? Or would you rather not answer that yet?'**
+  String pressAskInjuryBlow4(String player);
+
+  /// Press question after a knockout tie settled on penalties.
+  ///
+  /// In en, this message translates to:
+  /// **'It came down to penalties against {opponent}. Is a shoot-out a lottery, or something a side can be ready for?'**
+  String pressAskShootout1(String opponent);
+
+  /// Press question after a shoot-out.
+  ///
+  /// In en, this message translates to:
+  /// **'Twelve yards settled it against {opponent}. Do you practise them, or have you accepted that nobody can?'**
+  String pressAskShootout2(String opponent);
+
+  /// Press question after a shoot-out.
+  ///
+  /// In en, this message translates to:
+  /// **'Penalties against {opponent}, and a whole campaign turning on five kicks. Is that any way to settle a tie?'**
+  String pressAskShootout3(String opponent);
+
+  /// Press question after a shoot-out.
+  ///
+  /// In en, this message translates to:
+  /// **'The shoot-out against {opponent}: the order of takers was yours. Would you write it the same way again?'**
+  String pressAskShootout4(String opponent);
+
+  /// Press question after a late goal that won the match.
+  ///
+  /// In en, this message translates to:
+  /// **'{player} settled it on {minute} minutes. Is a side that leaves it that late brave, or lucky?'**
+  String pressAskLateWinner1(String player, String minute);
+
+  /// Press question after a late winning goal.
+  ///
+  /// In en, this message translates to:
+  /// **'{minute} minutes gone and {player} turns the whole thing over. What do you take from cutting it that fine?'**
+  String pressAskLateWinner2(String player, String minute);
+
+  /// Press question after a late winning goal.
+  ///
+  /// In en, this message translates to:
+  /// **'You were not winning that until {player} scored on {minute} minutes. What changed?'**
+  String pressAskLateWinner3(String player, String minute);
+
+  /// Press question after a late winning goal.
+  ///
+  /// In en, this message translates to:
+  /// **'{player} found it with {minute} minutes on the clock. Character, or a side that had left itself no choice?'**
+  String pressAskLateWinner4(String player, String minute);
+
+  /// Press question after a late goal conceded that cost the result.
+  ///
+  /// In en, this message translates to:
+  /// **'{player} scored on {minute} minutes and took it away from you. How does a side lose a match that late?'**
+  String pressAskLateLoss1(String player, String minute);
+
+  /// Press question after a late goal conceded.
+  ///
+  /// In en, this message translates to:
+  /// **'You held out until {minute} minutes, and then {player}. Was that legs, or concentration?'**
+  String pressAskLateLoss2(String player, String minute);
+
+  /// Press question after a late goal conceded.
+  ///
+  /// In en, this message translates to:
+  /// **'{minute} minutes, and {player} punishes you. Is that on the players, or on how you set up to see it out?'**
+  String pressAskLateLoss3(String player, String minute);
+
+  /// Press question after a late goal conceded.
+  ///
+  /// In en, this message translates to:
+  /// **'{player} got it with {minute} minutes gone and your afternoon went with it. What do you say to them in there?'**
+  String pressAskLateLoss4(String player, String minute);
+
+  /// Stand-in for a player's name in a press question, on the rare save where the man behind an incident can no longer be named.
+  ///
+  /// In en, this message translates to:
+  /// **'the player'**
+  String get pressThePlayer;
 
   /// Marker under a squad row for a player who has already been taken off this match.
   ///
