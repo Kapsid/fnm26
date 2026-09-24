@@ -609,21 +609,25 @@ pressQuestionProvider = FutureProvider.autoDispose.family<PressQuestion?, int>((
   // and a first cap once ever.
   if (hasManaged) {
     for (final s in await ref.watch(squadStoriesProvider(careerId).future)) {
-      final key = switch (s.topic) {
+      // The prefix comes from [Press.keyPrefixOf] rather than from a literal:
+      // it is what [Press.topicOfKey] reads back to know what the room has
+      // recently covered, and a literal here would drift away from it in
+      // silence the first time a prefix was renamed.
+      final about = switch (s.topic) {
+        // Once per run of games without a goal, not once per game.
         PressTopic.strikerDrought =>
-          'drought:${s.playerId}:${s.count ~/ SquadStories.droughtGames}',
-        PressTopic.youngsterBreakthrough =>
-          'young:${s.playerId}:${played.first.id}',
-        PressTopic.droppedStar =>
-          'dropped:${s.playerId}:${career.cyclePointer}',
-        PressTopic.captaincyQuestion =>
-          'armband:${s.playerId}:${career.cyclePointer}',
-        PressTopic.veteranEnd => 'veteran:${s.playerId}',
-        _ => 'debut:${s.playerId}',
+          '${s.playerId}:${s.count ~/ SquadStories.droughtGames}',
+        // One afternoon, and only that afternoon.
+        PressTopic.youngsterBreakthrough => '${s.playerId}:${played.first.id}',
+        // A selection is a standing decision: once a cycle each.
+        PressTopic.droppedStar ||
+        PressTopic.captaincyQuestion => '${s.playerId}:${career.cyclePointer}',
+        // A career ends once and a first cap is won once.
+        _ => '${s.playerId}',
       };
       add(
         q(
-          key,
+          '${Press.keyPrefixOf(s.topic)}:$about',
           s.topic,
           subject: PressSubjectPlayer(
             playerId: s.playerId,
@@ -800,6 +804,12 @@ class PressService {
   /// Everything a conference touched, once the manager has left the room.
   void refresh() => _ref
     ..invalidate(pressQuestionProvider)
+    // The stories behind the squad and opponent questions read the save
+    // imperatively, so nothing tells them a conference has happened. Left
+    // out, the room would come back to a list assembled before the manager
+    // opened his mouth — see the questions built from them above.
+    ..invalidate(squadStoriesProvider)
+    ..invalidate(opponentStoriesProvider)
     ..invalidate(pressEffectProvider)
     ..invalidate(pressToneHistoryProvider);
 }

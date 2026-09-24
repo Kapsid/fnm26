@@ -198,7 +198,7 @@ opponentStoriesProvider = FutureProvider.autoDispose
 
 /// How long a tournament exit is still worth avenging. One cycle: beyond that
 /// the side that beat you is a different side and so is yours.
-const int revengeDays = 365 * 4;
+const int _revengeDays = 365 * 4;
 
 /// Who put this nation out of the last tournament it went out of, if that was
 /// recently enough to still be the story.
@@ -218,7 +218,7 @@ int? _lastEliminator(
           Rounds.isKnockout(f.round) &&
           !(f.round?.endsWith('3RD') ?? false) &&
           FinalsRounds.familyOf(f.round) != null &&
-          before.difference(f.date).inDays <= revengeDays)
+          before.difference(f.date).inDays <= _revengeDays)
         f,
   ]..sort((a, b) => b.date.compareTo(a.date));
   for (final f in out) {
