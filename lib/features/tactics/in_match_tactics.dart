@@ -1114,9 +1114,57 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
     final onPitch = _onPitch;
     final l = AppLocalizations.of(context);
 
+    // Split the way the bench below the pitch is split, and for the reason it
+    // was split: this sheet offered a man already taken off exactly as it
+    // offered a fit substitute, and a manager reported it as "offering
+    // everyone". The bench list was given sections and this was not, which
+    // left the GRAPHICAL route to a substitution, the one most people take,
+    // still reading like the old flat list.
+    //
+    // Inside each section the order stays PositionFit: this sheet is about
+    // one slot, so who suits that slot is the question, and rating order
+    // would answer a different one.
+    final onPitchHere = [
+      for (final p in candidates)
+        if (onPitch.contains(p.id)) p,
+    ];
+    final availableHere = [
+      for (final p in candidates)
+        if (!onPitch.contains(p.id) && !_standing(p).blocked) p,
+    ];
+    final blockedHere = [
+      for (final p in candidates)
+        if (!onPitch.contains(p.id) && _standing(p).blocked) p,
+    ];
+
+    Widget head(String text) => Padding(
+      padding: const EdgeInsets.only(
+        top: AppSpacing.md,
+        bottom: AppSpacing.xs,
+      ),
+      child: Text(
+        text,
+        style: AppTypography.labelSmall.copyWith(
+          color: AppColors.onSurfaceVariant,
+          fontWeight: FontWeight.w700,
+        ),
+      ),
+    );
+
+    Widget emptyNote(String text) => Padding(
+      padding: const EdgeInsets.symmetric(vertical: AppSpacing.sm),
+      child: Text(
+        text,
+        style: AppTypography.bodySmall.copyWith(
+          color: AppColors.onSurfaceVariant,
+        ),
+      ),
+    );
+
     final picked = await showModalBottomSheet<int>(
       context: context,
       backgroundColor: AppColors.surfaceContainer,
+      isScrollControlled: true,
       builder: (_) => ListView(
         padding: const EdgeInsets.all(AppSpacing.md),
         children: [
@@ -1124,84 +1172,98 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
             l.tacticsPickRole(position.roleName.toUpperCase()),
             style: AppTypography.labelMedium.copyWith(color: AppColors.primary),
           ),
-          const SizedBox(height: AppSpacing.sm),
-          for (final p in candidates)
-            () {
-              final eff = PositionFit.effectiveOverall(p, position);
-              final penalised = eff < p.overall;
-              // The same standing the squad list shows. This is the list the
-              // manager actually picks from, and it offered a man already
-              // taken off exactly as it offered a fit substitute.
-              final standing = _standing(p);
-              return ListTile(
-                dense: true,
-                enabled: !standing.blocked,
-                leading: TacticalChip(p.position.label),
-                title: Text(
-                  p.name,
-                  style: AppTypography.bodyMedium.copyWith(
-                    color: onPitch.contains(p.id) || standing.blocked
-                        ? AppColors.onSurfaceVariant
-                        : null,
-                  ),
-                ),
-                // Age, and only age. The row ALREADY says he is out of
-                // position twice over: the leading chip names the position he
-                // actually plays, and the trailing rating is docked and amber
-                // with his real overall in brackets behind it. Saying it a
-                // third time in amber words made the row shout, and the amber
-                // that matters — the number the match is decided on — stopped
-                // standing out for being one of three.
-                //
-                // What DOES belong beside the age is the one thing the list
-                // never said: whether he may come on at all.
-                subtitle: Text(
-                  standing.note == null
-                      ? l.tacticsAgeOnly(p.age)
-                      : '${l.tacticsAgeOnly(p.age)} · ${standing.note}',
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: AppTypography.labelSmall.copyWith(
-                    color: standing.note == null
-                        ? AppColors.onSurfaceVariant
-                        : standing.color,
-                  ),
-                ),
-                trailing: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    if (onPitch.contains(p.id)) ...[
-                      TacticalChip(l.tacticsOn),
-                      const SizedBox(width: AppSpacing.sm),
-                    ],
-                    // The rating in THIS slot leads — the number that decides
-                    // the match — in amber when it is a docked one, with the
-                    // player's own overall behind it for the comparison.
-                    Text(
-                      '$eff',
-                      style: AppTypography.labelMedium.copyWith(
-                        color: penalised ? AppColors.warning : null,
-                      ),
-                    ),
-                    if (penalised)
-                      Text(
-                        ' (${p.overall})',
-                        style: AppTypography.labelSmall.copyWith(
-                          color: AppColors.onSurfaceVariant,
-                        ),
-                      ),
-                  ],
-                ),
-                onTap: standing.blocked
-                    ? null
-                    : () => Navigator.of(context).pop(p.id),
-              );
-            }(),
+          if (onPitchHere.isNotEmpty)
+            head(l.tacticsSectionOnPitch(onPitch.length, _lineup.length)),
+          for (final p in onPitchHere) _pickerRow(p, position, onPitch, l),
+          head(l.tacticsSectionAvailable(availableHere.length)),
+          if (availableHere.isEmpty) emptyNote(l.tacticsNoSubs),
+          for (final p in availableHere) _pickerRow(p, position, onPitch, l),
+          // Always drawn, always greyed. The question this answers is "who
+          // have I already used", and hiding them takes the answer away.
+          head(l.tacticsSectionUnavailable(blockedHere.length)),
+          if (blockedHere.isEmpty) emptyNote(l.tacticsNobodyUnavailable),
+          for (final p in blockedHere) _pickerRow(p, position, onPitch, l),
         ],
       ),
     );
-    if (picked != null) _setSlot(slot, picked);
+    if (picked != null && mounted) _setSlot(slot, picked);
   }
+
+  /// One candidate's row in the slot picker.
+  Widget _pickerRow(
+    Player p,
+    PlayerPosition position,
+    Set<int> onPitch,
+    AppLocalizations l,
+  ) => () {
+    final eff = PositionFit.effectiveOverall(p, position);
+    final penalised = eff < p.overall;
+    // The same standing the squad list shows. This is the list the
+    // manager actually picks from, and it offered a man already
+    // taken off exactly as it offered a fit substitute.
+    final standing = _standing(p);
+    return ListTile(
+      dense: true,
+      enabled: !standing.blocked,
+      leading: TacticalChip(p.position.label),
+      title: Text(
+        p.name,
+        style: AppTypography.bodyMedium.copyWith(
+          color: onPitch.contains(p.id) || standing.blocked
+              ? AppColors.onSurfaceVariant
+              : null,
+        ),
+      ),
+      // Age, and only age. The row ALREADY says he is out of
+      // position twice over: the leading chip names the position he
+      // actually plays, and the trailing rating is docked and amber
+      // with his real overall in brackets behind it. Saying it a
+      // third time in amber words made the row shout, and the amber
+      // that matters — the number the match is decided on — stopped
+      // standing out for being one of three.
+      //
+      // What DOES belong beside the age is the one thing the list
+      // never said: whether he may come on at all.
+      subtitle: Text(
+        standing.note == null
+            ? l.tacticsAgeOnly(p.age)
+            : '${l.tacticsAgeOnly(p.age)} · ${standing.note}',
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+        style: AppTypography.labelSmall.copyWith(
+          color: standing.note == null
+              ? AppColors.onSurfaceVariant
+              : standing.color,
+        ),
+      ),
+      trailing: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          if (onPitch.contains(p.id)) ...[
+            TacticalChip(l.tacticsOn),
+            const SizedBox(width: AppSpacing.sm),
+          ],
+          // The rating in THIS slot leads — the number that decides
+          // the match — in amber when it is a docked one, with the
+          // player's own overall behind it for the comparison.
+          Text(
+            '$eff',
+            style: AppTypography.labelMedium.copyWith(
+              color: penalised ? AppColors.warning : null,
+            ),
+          ),
+          if (penalised)
+            Text(
+              ' (${p.overall})',
+              style: AppTypography.labelSmall.copyWith(
+                color: AppColors.onSurfaceVariant,
+              ),
+            ),
+        ],
+      ),
+      onTap: standing.blocked ? null : () => Navigator.of(context).pop(p.id),
+    );
+  }();
 }
 
 /// One of the eleven, in the list under the pitch.

@@ -343,4 +343,36 @@ void main() {
       );
     }
   }
+
+  // The GRAPHICAL route to a substitution, which is the one most managers
+  // take: tap a man on the pitch and pick his replacement. The bench list
+  // below the pitch was given sections; this sheet was not, so it went on
+  // offering a man already taken off exactly as it offered a fit substitute
+  // and a manager reported that it still looked old. It did.
+  testWidgets('the slot picker is sectioned, not one flat list', (
+    tester,
+  ) async {
+    await openSheet(tester);
+    final l = await AppLocalizations.delegate.load(const Locale('en'));
+
+    // Take somebody off first, so there is a man who cannot come back on and
+    // the unavailable section has something in it to prove.
+    await substitute(tester, 'Starter11', 'Bench12');
+    await openPicker(tester, 'Starter10');
+
+    // TWICE each: once in the bench list underneath, once in the picker over
+    // it. That is the assertion. Before this the picker had none of its own
+    // and every heading was found exactly once, which is what the old flat
+    // list looked like from here.
+    for (final heading in ['ON THE PITCH', 'AVAILABLE', 'UNAVAILABLE']) {
+      expect(
+        find.textContaining(heading),
+        findsAtLeastNWidgets(2),
+        reason: '"$heading" is missing from the slot picker',
+      );
+    }
+    expect(tester.takeException(), isNull);
+    expectNothingCut(tester);
+    expect(l.tacticsSectionUnavailable(1), contains('1'));
+  });
 }
