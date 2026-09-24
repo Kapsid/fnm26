@@ -12741,10 +12741,16 @@ abstract class AppLocalizations {
   /// **'{opponent} next, and everything else can wait. What a week to be alive.'**
   String yFinalLooms3(String opponent);
 
+  /// Dismisses the pre-match set-piece warning for good: the manager is content to let the engine pick the takers.
+  ///
+  /// In en, this message translates to:
+  /// **'Leave the takers to the coach'**
+  String get matchSetupLeaveToCoach;
+
   /// Friendlies: why these opponents are suggested first.
   ///
   /// In en, this message translates to:
-  /// **'Marked below: sides who play like {rivals}, who you have drawn.'**
+  /// **'Marked below: sides who play like {rivals}, the teams you meet in your groups this cycle.'**
   String friendliesLikeYourGroup(String rivals);
 
   /// Inbox: the window's transfers, as one report.

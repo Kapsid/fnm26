@@ -8091,8 +8091,11 @@ class AppLocalizationsCs extends AppLocalizations {
   }
 
   @override
+  String get matchSetupLeaveToCoach => 'Nechat vykonavatele na trenérovi';
+
+  @override
   String friendliesLikeYourGroup(String rivals) {
-    return 'Označené jsou týmy podobné soupeřům ze skupiny: $rivals.';
+    return 'Označené jsou týmy podobné soupeřům, kteří vás v tomto cyklu čekají ve skupinách: $rivals.';
   }
 
   @override

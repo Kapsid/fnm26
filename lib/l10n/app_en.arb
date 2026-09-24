@@ -11844,7 +11844,11 @@
       }
     }
   },
-  "friendliesLikeYourGroup": "Marked below: sides who play like {rivals}, who you have drawn.",
+  "matchSetupLeaveToCoach": "Leave the takers to the coach",
+  "@matchSetupLeaveToCoach": {
+    "description": "Dismisses the pre-match set-piece warning for good: the manager is content to let the engine pick the takers."
+  },
+  "friendliesLikeYourGroup": "Marked below: sides who play like {rivals}, the teams you meet in your groups this cycle.",
   "@friendliesLikeYourGroup": {
     "description": "Friendlies: why these opponents are suggested first.",
     "placeholders": {

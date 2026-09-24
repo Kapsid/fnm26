@@ -8079,8 +8079,11 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get matchSetupLeaveToCoach => 'Leave the takers to the coach';
+
+  @override
   String friendliesLikeYourGroup(String rivals) {
-    return 'Marked below: sides who play like $rivals, who you have drawn.';
+    return 'Marked below: sides who play like $rivals, the teams you meet in your groups this cycle.';
   }
 
   @override

@@ -11,6 +11,31 @@ typedef SetPieceTakers = ({int? penalty, int? deadBall});
 /// Prefs key — outside the save database (no schema bump), scoped per career.
 String _takersKey(int careerId) => 'set_piece_takers_v1:$careerId';
 
+/// Prefs key for "I am happy with the coach picking".
+///
+/// Its own key rather than a third field in the stored pair: [SetPieceTakers]
+/// is read in four places and none of them wants to know about this.
+String _autoKey(int careerId) => 'set_piece_auto_v1:$careerId';
+
+/// Whether the manager has said he is content to leave the takers automatic.
+///
+/// The pre-match strip warned on every single match until somebody was named,
+/// which a tester reported as being asked to change his takers after almost
+/// every game with an unchanged side. Leaving the choice to the coach is a
+/// legitimate way to play and the code already said so in a comment; it simply
+/// had no way to hear it said back. This is that way.
+Future<bool> _loadAuto(int careerId) async {
+  try {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getBool(_autoKey(careerId)) ?? false;
+  } on Object {
+    // Unreadable preferences are not an acknowledgement. Warning a manager
+    // who had waved this away is a small annoyance; silencing one who never
+    // did is the bug this whole thing is fixing.
+    return false;
+  }
+}
+
 /// Reads a save's stored pair, outside any provider.
 ///
 /// Top level rather than a method on the store because the provider below must
@@ -59,6 +84,17 @@ class SetPieceTakersStore {
     _ref.invalidate(setPieceTakersProvider(careerId));
   }
 
+  /// Records that the manager is content to let the coach pick.
+  ///
+  /// Naming anybody afterwards is a change of mind, and the warning goes back
+  /// to judging the named man — see [setPieceAutoAcceptedProvider] for why the
+  /// acknowledgement only holds while nobody is named.
+  Future<void> acceptAuto(int careerId) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(_autoKey(careerId), true);
+    _ref.invalidate(setPieceAutoAcceptedProvider(careerId));
+  }
+
   /// Names BOTH takers at once — the quick pick.
   ///
   /// Not two calls to [set]: each of those re-reads the stored pair to keep the
@@ -88,4 +124,15 @@ setPieceTakersProvider = FutureProvider.autoDispose.family<SetPieceTakers, int>(
   // Reads the prefs directly, not through [setPieceTakersStoreProvider]: see
   // [_loadTakers] for why this provider must not depend on the store.
   (ref, careerId) => _loadTakers(careerId),
+);
+
+/// Whether the manager has accepted automatic takers for this save.
+///
+/// Read alongside the stored pair rather than instead of it. The
+/// acknowledgement means "nobody named is fine", so it holds only while
+/// nobody IS named: a manager who later picks a penalty taker and then loses
+/// him to a ban must be told, and an old acknowledgement must not swallow it.
+final AutoDisposeFutureProviderFamily<bool, int>
+setPieceAutoAcceptedProvider = FutureProvider.autoDispose.family<bool, int>(
+  (ref, careerId) => _loadAuto(careerId),
 );

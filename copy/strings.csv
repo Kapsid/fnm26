@@ -2096,7 +2096,8 @@ yFinalLooms0,Y feed: anticipation before a final.,{opponent},"It's {opponent} fo
 yFinalLooms1,Y feed: anticipation before a final.,{opponent},Confirmed: {opponent} stand between us and it. Four years for this.,Potvrzeno: mezi námi a tím stojí {opponent}. Čtyři roky kvůli tomuhle.
 yFinalLooms2,Y feed: anticipation before a final.,{opponent},Right. {opponent}. Nobody sleeps until this is over.,"Tak jo. {opponent}. Dokud tohle neskončí, nikdo nespí."
 yFinalLooms3,Y feed: anticipation before a final.,{opponent},"{opponent} next, and everything else can wait. What a week to be alive.",Další je {opponent} a všechno ostatní počká. To je týden.
-friendliesLikeYourGroup,Friendlies: why these opponents are suggested first.,{rivals},"Marked below: sides who play like {rivals}, who you have drawn.",Označené jsou týmy podobné soupeřům ze skupiny: {rivals}.
+matchSetupLeaveToCoach,Dismisses the pre-match set-piece warning for good: the manager is content to let the engine pick the takers.,,Leave the takers to the coach,Nechat vykonavatele na trenérovi
+friendliesLikeYourGroup,Friendlies: why these opponents are suggested first.,{rivals},"Marked below: sides who play like {rivals}, the teams you meet in your groups this cycle.","Označené jsou týmy podobné soupeřům, kteří vás v tomto cyklu čekají ve skupinách: {rivals}."
 newsTransferWindowTitle,"Inbox: the window's transfers, as one report.",{year},Transfer window · {year},Přestupní okno · {year}
 careerLastAgo,"Saves list: how long since this save was opened, in one short unit.",{when},Last {when} ago,Naposledy před {when}
 settingsFreeScopeTitle,Settings: what the free game covers.,,One free four-year cycle,Jeden čtyřletý cyklus zdarma
