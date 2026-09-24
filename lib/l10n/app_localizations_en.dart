@@ -736,14 +736,6 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String tacticsSectionUnavailable(int count) {
-    return 'UNAVAILABLE · $count';
-  }
-
-  @override
-  String get tacticsNobodyUnavailable => 'Nobody yet.';
-
-  @override
   String get tacticsRowStarted => 'Started';
 
   @override
@@ -753,11 +745,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get tacticsRowSubstitute => 'Came on';
-
-  @override
-  String tacticsRowWentOff(int minute) {
-    return 'Off at $minute\'';
-  }
 
   @override
   String get tacticsEnergyLabel => 'ENERGY';
@@ -1061,11 +1048,6 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get tacticsHoldDragSub =>
       'Hold a sub, then drag them onto a player to bring them on.';
-
-  @override
-  String tacticsUnavailableCount(int count) {
-    return 'UNAVAILABLE · $count';
-  }
 
   @override
   String get hubContinue => 'Continue';

@@ -108,20 +108,46 @@ void main() {
     return AppLocalizations.delegate.load(locale);
   }
 
+  /// Switches the sheet to the ON THE PITCH half. It opens on the candidates,
+  /// because that is what a manager came here to change.
+  Future<void> showPitchTab(WidgetTester tester, AppLocalizations l) async {
+    // By the localised label, not by the English one: in Czech the chip reads
+    // "NA HRISTI" and an English finder simply finds nothing, which surfaces
+    // as a bare "No element" a long way from the cause.
+    final stem = l.tacticsSectionOnPitch(0, 0).split('\u00b7').first.trim();
+    final chip = find.textContaining(stem);
+    await tester.ensureVisible(chip.first);
+    await tester.pumpAndSettle();
+    await tester.tap(chip.first);
+    await tester.pumpAndSettle();
+  }
+
   /// Taps a row by the name printed on it, scrolling it into view first.
   Future<void> tapRow(WidgetTester tester, String name) async {
-    final row = find.text(name);
+    // The sheet is a lazy ListView, so a row below the fold is not merely
+    // off screen, it has not been BUILT and no finder can see it. Scroll
+    // until it exists, then tap. `.first` because a name can be on screen
+    // twice, once on its pitch disc and once on its row.
+    if (find.text(name).evaluate().isEmpty) {
+      await tester.scrollUntilVisible(
+        find.text(name).first,
+        120,
+        scrollable: find.byType(Scrollable).first,
+      );
+      await tester.pumpAndSettle();
+    }
+    final row = find.text(name).first;
     await tester.ensureVisible(row);
     await tester.pumpAndSettle();
     await tester.tap(row);
     await tester.pumpAndSettle();
   }
 
-  testWidgets('the same men are dealt into three named sections', (
+  testWidgets('the squad is two tabs, and a used man is in neither', (
     tester,
   ) async {
-    // Bench12 came on for Starter3 before this sheet opened, so there is one
-    // man in each of the three states at once.
+    // Bench12 came on for Starter3 before this sheet opened, so there is a
+    // man in each state at once, including one who is spent.
     final l = await openSheet(
       tester,
       lineup: [1, 2, 12, 4, 5, 6, 7, 8, 9, 10, 11],
@@ -130,22 +156,13 @@ void main() {
     expect(find.text(l.tacticsSectionOnPitch(11, 11)), findsOneWidget);
     // Four of the five substitutes are left; Starter3 cannot come back.
     expect(find.text(l.tacticsSectionAvailable(4)), findsOneWidget);
-    expect(find.text(l.tacticsSectionUnavailable(1)), findsOneWidget);
-    // The count of changes left still sits beside a heading.
+    // There is no third pile. A man already taken off leaves the sheet
+    // rather than sitting greyed at the bottom of it.
+    expect(find.text('Starter3'), findsNothing);
+    // The count of changes left sits beside the tabs.
     expect(find.text(l.tacticsSubsUsed(1, 5)), findsOneWidget);
     expect(tester.takeException(), isNull);
     expectNothingCut(tester);
-  });
-
-  testWidgets('the unavailable section is drawn even with nobody in it', (
-    tester,
-  ) async {
-    // Never collapsed and never hidden: this is the pile that answers "who
-    // have I already used", and a pile you have to open answers nothing.
-    final l = await openSheet(tester);
-
-    expect(find.text(l.tacticsSectionUnavailable(0)), findsOneWidget);
-    expect(find.text(l.tacticsNobodyUnavailable), findsOneWidget);
   });
 
   testWidgets('every man on the pitch says whether he started or came on', (
@@ -157,27 +174,13 @@ void main() {
       cameOnAt: {12: 55},
     );
 
+    await showPitchTab(tester, l);
     expect(find.text(l.tacticsRowStarted), findsNWidgets(10));
     expect(
       find.text(l.tacticsRowCameOn(55)),
       findsOneWidget,
       reason: 'a substitute must say at what minute he came on',
     );
-  });
-
-  testWidgets('a man already taken off carries the minute he went off', (
-    tester,
-  ) async {
-    final l = await openSheet(
-      tester,
-      lineup: [1, 2, 12, 4, 5, 6, 7, 8, 9, 10, 11],
-      wentOffAt: {3: 55},
-    );
-
-    expect(find.text(l.tacticsRowWentOff(55)), findsOneWidget);
-    // The minute replaces the generic marker rather than joining it: "Already
-    // off · Off at 55'" says the same thing twice.
-    expect(find.text(l.tacticsSubOffAlready), findsNothing);
   });
 
   testWidgets('the energy percentage is no longer a bare number', (
@@ -198,6 +201,7 @@ void main() {
     final l = await openSheet(tester);
 
     expect(find.text(l.tacticsSubsUsed(0, 5)), findsOneWidget);
+    await showPitchTab(tester, l);
     await tapRow(tester, 'Starter11');
 
     // The sheet now says what the next tap will do.
@@ -216,8 +220,9 @@ void main() {
       ),
       findsOneWidget,
     );
-    // And the man who came off is in the pile he belongs in now.
-    expect(find.text(l.tacticsRowWentOff(70)), findsOneWidget);
+    // He is not in a pile: there is no pile. A man taken off leaves the
+    // sheet, which is the whole of what the third section used to say.
+    expect(find.text('Starter11'), findsNothing);
     // The prompt is gone with the change it asked for.
     expect(find.text(l.tacticsDragSubOn), findsOneWidget);
     expect(tester.takeException(), isNull);
@@ -227,10 +232,14 @@ void main() {
     tester,
   ) async {
     final l = await openSheet(tester);
+    await showPitchTab(tester, l);
 
     await tapRow(tester, 'Starter11');
     expect(find.text(l.tacticsPickReplacementFor('Starter11')), findsOneWidget);
 
+    // Choosing him moved the sheet to the candidates, so taking the idea
+    // back means going to find him again.
+    await showPitchTab(tester, l);
     await tapRow(tester, 'Starter11');
     expect(find.text(l.tacticsPickReplacementFor('Starter11')), findsNothing);
     expect(find.text(l.tacticsDragSubOn), findsOneWidget);
@@ -248,10 +257,12 @@ void main() {
       maxSubs: 3,
     );
 
+    // Nobody left to bring on, and nobody listed as a might-have-been: with
+    // the changes spent the candidates tab is empty and says so, rather than
+    // showing five greyed men who cannot be used.
     expect(find.text(l.tacticsSectionAvailable(0)), findsOneWidget);
     expect(find.text(l.tacticsNoSubs), findsOneWidget);
-    expect(find.text(l.tacticsSectionUnavailable(5)), findsOneWidget);
-    expect(find.text(l.tacticsSubNoneLeft), findsWidgets);
+    expect(find.text('Bench16'), findsNothing);
   });
 
   testWidgets('picking a man narrows the bench to who can take his place', (
@@ -265,11 +276,15 @@ void main() {
     expect(find.text(l.tacticsSectionAvailable(5)), findsOneWidget);
 
     // An outfield place: the reserve keeper is not one of the answers.
+    // Choosing a man to come off moves the sheet to the candidates by itself,
+    // which is why each trip back to the eleven asks for the tab again.
+    await showPitchTab(tester, l);
     await tapRow(tester, 'Starter11');
     expect(find.text(l.tacticsSectionAvailable(4)), findsOneWidget);
     expect(find.text('Bench16'), findsNothing);
 
     // The keeper's place: only the reserve keeper is.
+    await showPitchTab(tester, l);
     await tapRow(tester, 'Starter11');
     await tapRow(tester, 'Starter1');
     expect(find.text(l.tacticsSectionAvailable(1)), findsOneWidget);
@@ -280,7 +295,7 @@ void main() {
   for (final width in <double>[320, 360, 400]) {
     for (final locale in const [Locale('en'), Locale('cs')]) {
       testWidgets(
-        'the three sections fit ${width.toInt()}px in ${locale.languageCode}',
+        'the two tabs fit ${width.toInt()}px in ${locale.languageCode}',
         (tester) async {
           final l = await openSheet(
             tester,
@@ -297,9 +312,11 @@ void main() {
 
           // The sheet really is in this language. It is a pushed route, so an
           // override around the launcher would never have reached it.
+          // Proved off a tab, which is always on screen. It used to be
+          // proved off the unavailable heading, and that heading is gone.
           expectLocale(
             tester,
-            find.text(l.tacticsSectionUnavailable(2)),
+            find.text(l.tacticsSectionAvailable(4)),
             locale.languageCode,
           );
           expect(tester.takeException(), isNull);
@@ -314,23 +331,26 @@ void main() {
             'the available heading',
           );
           expectWhole(
-            find.text(l.tacticsSectionUnavailable(2)),
-            'the unavailable heading',
-          );
-          expectWhole(
             find.text(l.tacticsSubsUsed(1, 5)),
             'the count of changes left',
           );
-          expectWhole(find.text(l.tacticsRowStarted), 'the starter marker');
-          expectWhole(find.text(l.tacticsRowCameOn(55)), 'the came-on minute');
-          expectWhole(
-            find.text(l.tacticsRowWentOff(55)),
-            'the went-off minute',
-          );
           expectWhole(find.text(l.tacticsEnergyLabel), 'the energy caption');
           expectWhole(find.text('100%'), 'an energy reading');
+
+          // The other half. Its rows are only measurable once it is open,
+          // which is the point of the tabs: half the sheet at a time.
+          await showPitchTab(tester, l);
+          expect(tester.takeException(), isNull);
+          expectNothingCut(tester);
+          expectWhole(find.text(l.tacticsRowStarted), 'the starter marker');
+          expectWhole(find.text(l.tacticsRowCameOn(55)), 'the came-on minute');
           // A name on an on-pitch row is scaled rather than cut, so ask how
           // far it had to shrink instead of whether it overflowed.
+          expect(
+            find.text('Starter10'),
+            findsWidgets,
+            reason: 'the on-pitch list is built',
+          );
           expectLegible(
             tester,
             find.text('Starter10'),

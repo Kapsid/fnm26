@@ -9,7 +9,6 @@ import 'package:fnm/features/onboarding/tour_providers.dart';
 import 'package:fnm/features/onboarding/tour_steps.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
-import 'package:go_router/go_router.dart';
 
 /// The guided tour, drawn over whatever screen it has navigated to.
 ///

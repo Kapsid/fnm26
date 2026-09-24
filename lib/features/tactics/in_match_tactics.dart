@@ -157,15 +157,17 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
 
   late final Map<int, Player> _byId = {for (final p in widget.pool) p.id: p};
 
-  /// Who was on the pitch, and who had already been taken off, when this sheet
-  /// opened. Both are pinned at open so a minute can be told apart from a
-  /// missing one: a change made HERE happened at [_InMatchTacticsEditor.minute]
-  /// and can say so, while a change made earlier in the match happened at a
-  /// minute only the caller knows.
+  /// Who was on the pitch when this sheet opened.
+  ///
+  /// Pinned at open so a minute can be told apart from a missing one: a change
+  /// made HERE happened at [_InMatchTacticsEditor.minute] and can say so,
+  /// while a change made earlier in the match happened at a minute only the
+  /// caller knows.
+  ///
+  /// The mirror of this, who had ALREADY been taken off, went with the spent
+  /// pile: nothing prints a withdrawal minute any more, because nothing prints
+  /// the withdrawn.
   late final Set<int> _onPitchAtOpen = widget.lineup.whereType<int>().toSet();
-  late final Set<int> _withdrawnAtOpen = widget.startingIds
-      .where((id) => !_onPitchAtOpen.contains(id))
-      .toSet();
 
   /// The man the manager has tapped to come off, while he chooses who replaces
   /// him. Tapping him again puts the idea back.
@@ -237,6 +239,12 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
   /// withdrawal before they ask about a red card, the squad list told the
   /// manager he had "already been taken off". He was not taken off; he was
   /// sent off, which is a different thing with a different consequence.
+  /// Which half of the squad the sheet is showing.
+  ///
+  /// Opens on the candidates: the manager came here to change something, and
+  /// who is already playing is visible on the pitch above either way.
+  _SquadTab _tab = _SquadTab.candidates;
+
   late Set<int> _withdrawn = widget.startingIds
       .where(
         (id) => !_onPitch.contains(id) && !widget.sentOffIds.contains(id),
@@ -414,10 +422,6 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
       for (final p in offPitch)
         if (!_standing(p).blocked) p,
     ];
-    final unavailable = [
-      for (final p in offPitch)
-        if (_standing(p).blocked) p,
-    ];
     // With a man picked to come off, AVAILABLE answers a narrower question:
     // who can take HIS place. A goalkeeping slot is keeper-only and every
     // other slot is outfield-only — the same rule the slot picker has always
@@ -498,7 +502,6 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
                   _lineupTab(
                     onPitch: _onPitchPlayers,
                     available: available,
-                    unavailable: unavailable,
                     comingOff: coming,
                   ),
                   _tacticsTab(),
@@ -528,7 +531,6 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
   Widget _lineupTab({
     required List<Player> onPitch,
     required List<Player> available,
-    required List<Player> unavailable,
     required Player? comingOff,
   }) {
     final l = AppLocalizations.of(context);
@@ -659,33 +661,24 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
                   ],
                 ),
               ],
-              // 1. WHO IS PLAYING. The count carries the sending-off: ten of
-              // eleven, said in the heading rather than left to be counted off
-              // the discs above.
-              _sectionHeader(
-                l.tacticsSectionOnPitch(onPitch.length, _lineup.length),
-              ),
-              AppCard(
-                padding: EdgeInsets.zero,
-                child: Column(
-                  children: [
-                    for (final p in onPitch)
-                      _OnPitchRow(
-                        player: p,
-                        detail: _pitchDetail(l, p.id),
-                        energy: widget.energyByPlayer[p.id],
-                        selected: comingOff?.id == p.id,
-                        onTap: () => setState(
-                          () => _comingOff = _comingOff == p.id ? null : p.id,
-                        ),
-                      ),
-                  ],
+              // TWO TABS, not three stacked sections.
+              //
+              // Stacked, the pitch and three lists made one long scroll and a
+              // manager reported losing part of it off the bottom. Two tabs
+              // are two short lists, and the sheet stops being a column you
+              // have to remember your place in.
+              //
+              // The spent pile is GONE rather than moved into a tab. It was
+              // there to answer "who have I already used" and the manager
+              // decided he does not need the answer badly enough to pay a
+              // third list for it; a withdrawn man simply leaves the sheet.
+              _SquadTabs(
+                onPitch: _tab == _SquadTab.onPitch,
+                onPitchLabel: l.tacticsSectionOnPitch(
+                  onPitch.length,
+                  _lineup.length,
                 ),
-              ),
-              // 2. WHO MAY COME ON, with the changes left beside the heading:
-              // the number a manager must not lose sight of.
-              _sectionHeader(
-                l.tacticsSectionAvailable(available.length),
+                candidatesLabel: l.tacticsSectionAvailable(available.length),
                 trailing: Text(
                   l.tacticsSubsUsed(_subsUsed, widget.maxSubs),
                   maxLines: 1,
@@ -693,12 +686,31 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
                     color: _overLimit ? AppColors.error : AppColors.primary,
                   ),
                 ),
+                onSelected: (t) => setState(() => _tab = t),
               ),
+              const SizedBox(height: AppSpacing.sm),
               AppCard(
                 padding: EdgeInsets.zero,
                 child: Column(
                   children: [
-                    if (available.isEmpty)
+                    if (_tab == _SquadTab.onPitch)
+                      for (final p in onPitch)
+                        _OnPitchRow(
+                          player: p,
+                          detail: _pitchDetail(l, p.id),
+                          energy: widget.energyByPlayer[p.id],
+                          selected: comingOff?.id == p.id,
+                          // Picking a man to come off moves the sheet to the
+                          // men who could replace him. Otherwise choosing him
+                          // and then hunting for the other tab is two thirds
+                          // of the work of a substitution.
+                          onTap: () => setState(() {
+                            final same = _comingOff == p.id;
+                            _comingOff = same ? null : p.id;
+                            if (!same) _tab = _SquadTab.candidates;
+                          }),
+                        )
+                    else if (available.isEmpty)
                       _emptyNote(l.tacticsNoSubs)
                     else
                       for (final p in available)
@@ -721,43 +733,6 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
                   ],
                 ),
               ),
-              // 3. WHO IS SPENT. Always drawn, always greyed: this is the pile
-              // that answers "who have I already used", and a pile you have to
-              // open to see answers nothing.
-              _sectionHeader(
-                l.tacticsSectionUnavailable(unavailable.length),
-                muted: true,
-              ),
-              AppCard(
-                padding: EdgeInsets.zero,
-                child: Column(
-                  children: [
-                    if (unavailable.isEmpty)
-                      _emptyNote(l.tacticsNobodyUnavailable)
-                    else
-                      for (final p in unavailable)
-                        () {
-                          final standing = _standing(p);
-                          final off = _wentOffAt(p.id);
-                          return SubDragRow(
-                            player: p,
-                            trailing: _energyTrailing(p.id),
-                            // The minute REPLACES the marker where it is known:
-                            // "off at 62'" already says he is off, and "Already
-                            // off · Off at 62'" says it twice.
-                            note:
-                                standing.refusal ==
-                                        SubRefusal.alreadyWithdrawn &&
-                                    off != null
-                                ? l.tacticsRowWentOff(off)
-                                : standing.note,
-                            noteColor: standing.color,
-                            enabled: false,
-                          );
-                        }(),
-                  ],
-                ),
-              ),
               const SizedBox(height: AppSpacing.xl),
             ],
           ),
@@ -765,41 +740,6 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
       ],
     );
   }
-
-  /// The band over one of the three lists: what it is, and whatever figure
-  /// belongs beside it.
-  ///
-  /// The LABEL gives way, and only the label. At 360px the old version of this
-  /// row overflowed by 40 in ENGLISH, before Czech was even asked, so something
-  /// has to yield — but the count of changes left is never the thing that
-  /// yields. Flexing both halves is the trap: two Flexibles either side of a
-  /// Spacer share the width three ways, which caps each at a third of the row
-  /// and cuts the counter to "SUBS · ..." on every phone in both languages.
-  Widget _sectionHeader(String label, {Widget? trailing, bool muted = false}) =>
-      Padding(
-        padding: const EdgeInsets.only(
-          top: AppSpacing.md,
-          bottom: AppSpacing.xs,
-        ),
-        child: Row(
-          children: [
-            Expanded(
-              child: Text(
-                label,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: AppTypography.labelMedium.copyWith(
-                  color: muted ? AppColors.onSurfaceVariant : AppColors.primary,
-                ),
-              ),
-            ),
-            if (trailing != null) ...[
-              const SizedBox(width: AppSpacing.sm),
-              trailing,
-            ],
-          ],
-        ),
-      );
 
   /// What a list says when it has nothing in it.
   Widget _emptyNote(String text) => Padding(
@@ -832,13 +772,6 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
         (_onPitchAtOpen.contains(id) ? null : widget.minute);
     return at == null ? l.tacticsRowSubstitute : l.tacticsRowCameOn(at);
   }
-
-  /// The minute [id] was taken off, or null when nobody can say.
-  int? _wentOffAt(int id) =>
-      widget.wentOffAt[id] ??
-      (_withdrawn.contains(id) && !_withdrawnAtOpen.contains(id)
-          ? widget.minute
-          : null);
 
   /// What a squad list has to say about [p] BEFORE the manager picks him, and
   /// whether he may be picked at all.
@@ -1132,10 +1065,6 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
       for (final p in candidates)
         if (!onPitch.contains(p.id) && !_standing(p).blocked) p,
     ];
-    final blockedHere = [
-      for (final p in candidates)
-        if (!onPitch.contains(p.id) && _standing(p).blocked) p,
-    ];
 
     Widget head(String text) => Padding(
       padding: const EdgeInsets.only(
@@ -1178,11 +1107,6 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
           head(l.tacticsSectionAvailable(availableHere.length)),
           if (availableHere.isEmpty) emptyNote(l.tacticsNoSubs),
           for (final p in availableHere) _pickerRow(p, position, onPitch, l),
-          // Always drawn, always greyed. The question this answers is "who
-          // have I already used", and hiding them takes the answer away.
-          head(l.tacticsSectionUnavailable(blockedHere.length)),
-          if (blockedHere.isEmpty) emptyNote(l.tacticsNobodyUnavailable),
-          for (final p in blockedHere) _pickerRow(p, position, onPitch, l),
         ],
       ),
     );
@@ -1264,6 +1188,102 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
       onTap: standing.blocked ? null : () => Navigator.of(context).pop(p.id),
     );
   }();
+}
+
+/// Which half of the squad the sheet is showing.
+enum _SquadTab { candidates, onPitch }
+
+/// The two-way switch over the squad list, with the changes left beside it.
+///
+/// Chips rather than a TabBar: a TabBarView inside the scrolling sheet needs
+/// a bounded height of its own, and giving it one is what makes a list end up
+/// with its own private scrollbar inside a page that already scrolls.
+class _SquadTabs extends StatelessWidget {
+  const _SquadTabs({
+    required this.onPitch,
+    required this.onPitchLabel,
+    required this.candidatesLabel,
+    required this.trailing,
+    required this.onSelected,
+  });
+
+  final bool onPitch;
+  final String onPitchLabel;
+  final String candidatesLabel;
+  final Widget trailing;
+  final ValueChanged<_SquadTab> onSelected;
+
+  @override
+  Widget build(BuildContext context) => Padding(
+    padding: const EdgeInsets.only(top: AppSpacing.md),
+    child: Row(
+      children: [
+        Flexible(
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: [
+                _Chip(
+                  label: candidatesLabel,
+                  selected: !onPitch,
+                  onTap: () => onSelected(_SquadTab.candidates),
+                ),
+                const SizedBox(width: AppSpacing.xs),
+                _Chip(
+                  label: onPitchLabel,
+                  selected: onPitch,
+                  onTap: () => onSelected(_SquadTab.onPitch),
+                ),
+              ],
+            ),
+          ),
+        ),
+        const SizedBox(width: AppSpacing.sm),
+        trailing,
+      ],
+    ),
+  );
+}
+
+class _Chip extends StatelessWidget {
+  const _Chip({
+    required this.label,
+    required this.selected,
+    required this.onTap,
+  });
+
+  final String label;
+  final bool selected;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) => InkWell(
+    onTap: onTap,
+    borderRadius: AppRadii.smAll,
+    child: Container(
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppSpacing.sm,
+        vertical: 6,
+      ),
+      decoration: BoxDecoration(
+        color: selected ? AppColors.secondaryContainer : null,
+        borderRadius: AppRadii.smAll,
+        border: Border.all(
+          color: selected ? AppColors.primary : AppColors.outlineVariant,
+        ),
+      ),
+      child: Text(
+        label,
+        maxLines: 1,
+        style: AppTypography.labelSmall.copyWith(
+          color: selected
+              ? AppColors.onSecondaryContainer
+              : AppColors.onSurfaceVariant,
+          fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
+        ),
+      ),
+    ),
+  );
 }
 
 /// One of the eleven, in the list under the pitch.

@@ -1182,7 +1182,6 @@
       }
     }
   },
-  "tacticsSectionUnavailable": "UNAVAILABLE · {count}",
   "@tacticsSectionUnavailable": {
     "description": "Heading above the players who may not be brought on: already used, sent off, or with no changes left.",
     "placeholders": {
@@ -1191,10 +1190,6 @@
         "example": "3"
       }
     }
-  },
-  "tacticsNobodyUnavailable": "Nobody yet.",
-  "@tacticsNobodyUnavailable": {
-    "description": "Shown under the unavailable heading when nobody has been used or sent off yet."
   },
   "tacticsRowStarted": "Started",
   "@tacticsRowStarted": {
@@ -1214,7 +1209,6 @@
   "@tacticsRowSubstitute": {
     "description": "Marker under a player on the pitch who came on as a substitute, when the minute he came on is not known."
   },
-  "tacticsRowWentOff": "Off at {minute}'",
   "@tacticsRowWentOff": {
     "description": "Marker under a player who has been taken off, with the minute.",
     "placeholders": {
@@ -1655,7 +1649,6 @@
   "@tacticsHoldDragSub": {
     "description": "Hint above the substitutes list on the squad tab."
   },
-  "tacticsUnavailableCount": "UNAVAILABLE · {count}",
   "@tacticsUnavailableCount": {
     "description": "Heading of the unavailable-players list, with the count.",
     "placeholders": {

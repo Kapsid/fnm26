@@ -1340,18 +1340,6 @@ abstract class AppLocalizations {
   /// **'AVAILABLE · {count}'**
   String tacticsSectionAvailable(int count);
 
-  /// Heading above the players who may not be brought on: already used, sent off, or with no changes left.
-  ///
-  /// In en, this message translates to:
-  /// **'UNAVAILABLE · {count}'**
-  String tacticsSectionUnavailable(int count);
-
-  /// Shown under the unavailable heading when nobody has been used or sent off yet.
-  ///
-  /// In en, this message translates to:
-  /// **'Nobody yet.'**
-  String get tacticsNobodyUnavailable;
-
   /// Marker under a player on the pitch who was in the starting eleven.
   ///
   /// In en, this message translates to:
@@ -1369,12 +1357,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Came on'**
   String get tacticsRowSubstitute;
-
-  /// Marker under a player who has been taken off, with the minute.
-  ///
-  /// In en, this message translates to:
-  /// **'Off at {minute}\''**
-  String tacticsRowWentOff(int minute);
 
   /// Caption over a player's remaining-energy percentage, so the bare number is not unexplained.
   ///
@@ -1897,12 +1879,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Hold a sub, then drag them onto a player to bring them on.'**
   String get tacticsHoldDragSub;
-
-  /// Heading of the unavailable-players list, with the count.
-  ///
-  /// In en, this message translates to:
-  /// **'UNAVAILABLE · {count}'**
-  String tacticsUnavailableCount(int count);
 
   /// Button to continue to the next screen.
   ///

@@ -69,7 +69,7 @@ void main() {
 
       final rects = [
         for (final e in slots.evaluate())
-          tester.getRect(find.byWidget(e.widget as Widget)),
+          tester.getRect(find.byWidget(e.widget)),
       ];
       final top = rects.map((r) => r.top).reduce((a, b) => a < b ? a : b);
       final firstRow = rects.where((r) => (r.top - top).abs() < 1).toList()

@@ -206,12 +206,9 @@ squadDepthTitle,Heading above the per-line squad depth chips.,,DEPTH BY LINE,Š�
 squadAgeShort,Compact age label on a squad row.,{age},{age}y,{age} let
 tacticsSectionOnPitch,"Heading above the list of players currently in the XI, with how many of the eleven are actually out there.",{count} {max},ON THE PITCH · {count}/{max},NA HŘIŠTI · {count}/{max}
 tacticsSectionAvailable,"Heading above the substitutes who may still be brought on, with the count.",{count},AVAILABLE · {count},K DISPOZICI · {count}
-tacticsSectionUnavailable,"Heading above the players who may not be brought on: already used, sent off, or with no changes left.",{count},UNAVAILABLE · {count},NEDOSTUPNÍ · {count}
-tacticsNobodyUnavailable,Shown under the unavailable heading when nobody has been used or sent off yet.,,Nobody yet.,Zatím nikdo.
 tacticsRowStarted,Marker under a player on the pitch who was in the starting eleven.,,Started,Od začátku
 tacticsRowCameOn,"Marker under a player on the pitch who came on as a substitute, with the minute.",{minute},On at {minute}',Na hřišti od {minute}'
 tacticsRowSubstitute,"Marker under a player on the pitch who came on as a substitute, when the minute he came on is not known.",,Came on,Střídal
-tacticsRowWentOff,"Marker under a player who has been taken off, with the minute.",{minute},Off at {minute}',Střídán v {minute}'
 tacticsEnergyLabel,"Caption over a player's remaining-energy percentage, so the bare number is not unexplained.",,ENERGY,KONDICE
 tacticsPickReplacementFor,Prompt shown once the manager has tapped a player on the pitch to take off.,{name},"Tap a replacement for {name}, or tap him again to cancel.","Klepněte na náhradu za hráče {name}, nebo volbu zrušte dalším klepnutím na něj."
 tacticsSlotLostToRedCard,Refusal shown when the manager tries to put somebody into the hole a sending-off left.,,A red card cost you this place. It cannot be filled.,Za červenou kartu jste přišli o toto místo. Nelze ho obsadit.
@@ -299,7 +296,6 @@ tacticsCancel,Dismiss the name-preset dialog.,,Cancel,Zrušit
 tacticsSave,Confirm the name-preset dialog.,,Save,Uložit
 tacticsTapToAssign,Shown when a player has no role assigned.,,Tap to assign,Klepnutím přiřadit
 tacticsHoldDragSub,Hint above the substitutes list on the squad tab.,,"Hold a sub, then drag them onto a player to bring them on.","Podržte náhradníka a přetáhněte ho na hráče, kterého chcete vystřídat."
-tacticsUnavailableCount,"Heading of the unavailable-players list, with the count.",{count},UNAVAILABLE · {count},NEDOSTUPNÍ · {count}
 hubContinue,Button to continue to the next screen.,,Continue,Pokračovat
 hubBrackets,Label/tab for the knockout brackets.,,Brackets,Pavouk
 hubCouldNotLoad,Generic load-error message on the hub.,{error},Could not load.\n{error},Nepodařilo se načíst.\n{error}

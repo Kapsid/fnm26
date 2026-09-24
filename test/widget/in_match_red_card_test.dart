@@ -197,17 +197,27 @@ void main() {
     expect(find.text(l.tacticsSubsUsed(0, 5)), findsOneWidget);
   });
 
-  testWidgets('the sent-off man is listed as sent off, not as taken off', (
+  testWidgets('the sent-off man is named as sent off, not as taken off', (
     tester,
   ) async {
     // He is off the pitch and he is a starter, which is how he used to end up
     // reported as "already taken off" — a different rule with a different
     // consequence, and the one that tells the manager whether the place can be
     // filled at all.
+    //
+    // He is no longer named in a LIST: the greyed pile of used men went when
+    // the squad became two tabs. He is named in the note under the pitch, and
+    // the hole he left is barred on the pitch itself, which are the two
+    // places that were always the point.
     final l = await openSheet(tester, sentOffIds: {11});
 
-    expect(find.text(l.tacticsSubSentOffMark), findsOneWidget);
+    expect(find.textContaining(l.tacticsSentOffShort), findsWidgets);
     expect(find.text(l.tacticsSubOffAlready), findsNothing);
+    expect(
+      find.text('Starter11'),
+      findsNothing,
+      reason: 'a sent-off man is not offered as a substitute',
+    );
     expectNothingCut(tester);
   });
 
@@ -237,7 +247,10 @@ void main() {
             find.text(l.tacticsSectionOnPitch(10, 11)),
             'the on-pitch count',
           );
-          expectWhole(find.text(l.tacticsSubSentOffMark), 'the sent-off mark');
+          expectWhole(
+            find.textContaining(l.tacticsSentOffShort).first,
+            'the sent-off note',
+          );
 
           // And the refusal itself, which is the longest of the new strings.
           await tester.tap(disc(10));

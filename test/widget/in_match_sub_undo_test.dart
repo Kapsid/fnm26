@@ -5,6 +5,7 @@ import 'package:fnm/core/theme/app_theme.dart';
 import 'package:fnm/domain/entities/formation.dart';
 import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/entities/tactics.dart';
+import 'package:fnm/domain/services/tactics/substitution_rules.dart';
 import 'package:fnm/features/tactics/in_match_tactics.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 
@@ -128,7 +129,7 @@ void main() {
     await tester.pumpAndSettle();
   }
 
-  testWidgets('a man already taken off is marked, and cannot be dragged on', (
+  testWidgets('a man already taken off is not offered at all', (
     tester,
   ) async {
     // Bench12 came on for Starter3 before this sheet opened.
@@ -136,18 +137,30 @@ void main() {
       tester,
       lineup: [1, 2, 12, 4, 5, 6, 7, 8, 9, 10, 11],
     );
-    final l = await AppLocalizations.delegate.load(const Locale('en'));
 
-    // Starter3 now sits in the squad list, and the list says why he is out.
-    expect(find.text(l.tacticsSubOffAlready), findsOneWidget);
-    final row = find.ancestor(
-      of: find.text('Starter3'),
-      matching: find.byType(IgnorePointer),
-    );
+    // He used to sit in a greyed pile with "already off" beside his name.
+    // The manager decided that pile was not worth a third list, so a
+    // withdrawn man simply leaves the sheet: not greyed, not listed.
     expect(
-      row,
-      findsWidgets,
-      reason: 'a man who cannot come on must not answer a drag',
+      find.text('Starter3'),
+      findsNothing,
+      reason: 'a man already taken off is no longer shown at all',
+    );
+
+    // The RULE has not moved with the row. It lives in refusalToBringOn and
+    // still refuses him, which is what stops a drag rather than the absence
+    // of a row: see the unit tests on substitution_rules.
+    expect(
+      canBringOn(
+        startingIds: {for (var i = 1; i <= 11; i++) i},
+        onPitch: {1, 2, 12, 4, 5, 6, 7, 8, 9, 10, 11},
+        sentOffIds: const {},
+        withdrawnIds: const {3},
+        maxSubs: 5,
+        playerId: 3,
+      ),
+      isFalse,
+      reason: 'he still cannot come back on',
     );
     expect(tester.takeException(), isNull);
     expectNothingCut(tester);
@@ -215,8 +228,10 @@ void main() {
     expect(find.text(l.tacticsSubsUsed(1, 5)), findsOneWidget);
     expect(onPitchName('BENCH12'), findsOneWidget);
     expect(onPitchName('STARTER3'), findsNothing);
-    // Football has no re-entry: he is still marked out of the game.
-    expect(find.text(l.tacticsSubOffAlready), findsOneWidget);
+    // Football has no re-entry, and undoing a LATER change does not give him
+    // back. He is not marked out of the game any more, he is simply not in
+    // the sheet: the greyed pile that used to carry that marker is gone.
+    expect(find.text('Starter3'), findsNothing);
     expect(tester.takeException(), isNull);
     expectNothingCut(tester);
   });
@@ -310,9 +325,15 @@ void main() {
 
           // The sheet really is in this language. It is a pushed route, so an
           // override around the launcher would never have reached it.
+          // Proved off the candidates tab, which is always on screen. It
+          // used to be proved off "already off", which lived in the spent
+          // pile; that pile is gone, and a language check anchored to a
+          // deleted section fails for the wrong reason.
           expect(
-            find.text(l.tacticsSubOffAlready),
-            findsOneWidget,
+            find.textContaining(
+              l.tacticsSectionAvailable(0).split('\u00b7').first.trim(),
+            ),
+            findsWidgets,
             reason: 'the sheet did not render in ${locale.languageCode}',
           );
 
@@ -321,11 +342,14 @@ void main() {
             'the count of changes left',
           );
           expectWhole(find.text(l.tacticsSubInjured), 'the injury marker');
-          expectWhole(
-            find.text(l.tacticsSubOffAlready),
-            'the already-off marker',
-          );
-          expectWhole(find.text('Starter3'), 'a squad row name');
+          // The already-off marker is gone with the pile it lived in. An
+          // injured man is still OFFERED, with a warning, so his marker stays;
+          // a withdrawn man is not offered at all any more, so there is no row
+          // left to carry one.
+          // A real candidate. Starter3 used to serve here, but in this
+          // lineup he is a starter who is no longer on the pitch, which is
+          // exactly the state that no longer appears in a list at all.
+          expectWhole(find.text('Bench14'), 'a squad row name');
 
           // Any change made HERE brings the undo row out. A swap of two men
           // already on the pitch does it without spending a substitution, and
@@ -353,7 +377,6 @@ void main() {
     tester,
   ) async {
     await openSheet(tester);
-    final l = await AppLocalizations.delegate.load(const Locale('en'));
 
     // Take somebody off first, so there is a man who cannot come back on and
     // the unavailable section has something in it to prove.
@@ -364,15 +387,21 @@ void main() {
     // it. That is the assertion. Before this the picker had none of its own
     // and every heading was found exactly once, which is what the old flat
     // list looked like from here.
-    for (final heading in ['ON THE PITCH', 'AVAILABLE', 'UNAVAILABLE']) {
+    for (final heading in ['ON THE PITCH', 'AVAILABLE']) {
       expect(
         find.textContaining(heading),
         findsAtLeastNWidgets(2),
         reason: '"$heading" is missing from the slot picker',
       );
     }
+    // The spent pile is gone from BOTH lists, not just the one under the
+    // pitch. A manager who has used somebody simply stops being offered him.
+    expect(
+      find.textContaining('UNAVAILABLE'),
+      findsNothing,
+      reason: 'the spent pile was dropped on purpose',
+    );
     expect(tester.takeException(), isNull);
     expectNothingCut(tester);
-    expect(l.tacticsSectionUnavailable(1), contains('1'));
   });
 }

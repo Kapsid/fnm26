@@ -735,14 +735,6 @@ class AppLocalizationsCs extends AppLocalizations {
   }
 
   @override
-  String tacticsSectionUnavailable(int count) {
-    return 'NEDOSTUPNÍ · $count';
-  }
-
-  @override
-  String get tacticsNobodyUnavailable => 'Zatím nikdo.';
-
-  @override
   String get tacticsRowStarted => 'Od začátku';
 
   @override
@@ -752,11 +744,6 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get tacticsRowSubstitute => 'Střídal';
-
-  @override
-  String tacticsRowWentOff(int minute) {
-    return 'Střídán v $minute\'';
-  }
 
   @override
   String get tacticsEnergyLabel => 'KONDICE';
@@ -1062,11 +1049,6 @@ class AppLocalizationsCs extends AppLocalizations {
   @override
   String get tacticsHoldDragSub =>
       'Podržte náhradníka a přetáhněte ho na hráče, kterého chcete vystřídat.';
-
-  @override
-  String tacticsUnavailableCount(int count) {
-    return 'NEDOSTUPNÍ · $count';
-  }
 
   @override
   String get hubContinue => 'Pokračovat';
