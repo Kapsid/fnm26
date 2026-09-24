@@ -58,10 +58,13 @@ void main() {
     double height = 2600,
     Locale locale = const Locale('en'),
   }) async {
-    tester.view
-      ..physicalSize = Size(width, height)
-      ..devicePixelRatio = 1.0;
-    addTearDown(tester.view.reset);
+    // setSurfaceSize, not tester.view.physicalSize. The editor is a PUSHED
+    // ROUTE, and a probe showed its layout coming out identical at 320 and at
+    // 430 with physicalSize set: these width cases were not constraining the
+    // sheet at all, which is how a tab strip that painted its counter over
+    // its second tab passed them. The surface size does reach it.
+    await tester.binding.setSurfaceSize(Size(width, height));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
     await tester.pumpWidget(
       ProviderScope(
         child: MaterialApp(

@@ -1216,30 +1216,42 @@ class _SquadTabs extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Padding(
     padding: const EdgeInsets.only(top: AppSpacing.md),
-    child: Row(
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Flexible(
-          child: SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              children: [
-                _Chip(
-                  label: candidatesLabel,
-                  selected: !onPitch,
-                  onTap: () => onSelected(_SquadTab.candidates),
-                ),
-                const SizedBox(width: AppSpacing.xs),
-                _Chip(
-                  label: onPitchLabel,
-                  selected: onPitch,
-                  onTap: () => onSelected(_SquadTab.onPitch),
-                ),
-              ],
+        // The count of changes left gets its own line.
+        //
+        // It used to sit at the end of the tab row, unconstrained, while the
+        // chips were merely Flexible. So it took the width it wanted, the
+        // chips were left too little, and the scrolling strip painted the
+        // second tab straight under the counter: at 320 the English counter
+        // ran 213 to 304 and the ON THE PITCH chip 148 to 304, on top of each
+        // other. On a 393-wide phone the second tab was simply cut off. That
+        // is what "no tabs, overflowing" looked like.
+        Align(alignment: Alignment.centerRight, child: trailing),
+        const SizedBox(height: AppSpacing.xs),
+        // Half the row each, and a label too long for its half SHRINKS rather
+        // than being clipped or scrolled out of reach. Both tabs are always
+        // wholly on screen, which is the one thing a tab strip has to do.
+        Row(
+          children: [
+            Expanded(
+              child: _Chip(
+                label: candidatesLabel,
+                selected: !onPitch,
+                onTap: () => onSelected(_SquadTab.candidates),
+              ),
             ),
-          ),
+            const SizedBox(width: AppSpacing.xs),
+            Expanded(
+              child: _Chip(
+                label: onPitchLabel,
+                selected: onPitch,
+                onTap: () => onSelected(_SquadTab.onPitch),
+              ),
+            ),
+          ],
         ),
-        const SizedBox(width: AppSpacing.sm),
-        trailing,
       ],
     ),
   );
@@ -1272,9 +1284,15 @@ class _Chip extends StatelessWidget {
           color: selected ? AppColors.primary : AppColors.outlineVariant,
         ),
       ),
-      child: Text(
+      // WholeText, not a plain Text. A tab label is never allowed to be cut,
+      // and "ON THE PITCH · 11/11" does not fit half of a 320pt row: it has
+      // to shrink instead. WholeText is the app's own way of saying that, and
+      // expectLegible is the guard built for it, where a plain Text would
+      // simply clip and didExceedMaxLines would be the only sign.
+      child: WholeText(
         label,
         maxLines: 1,
+        textAlign: TextAlign.center,
         style: AppTypography.labelSmall.copyWith(
           color: selected
               ? AppColors.onSecondaryContainer
