@@ -236,6 +236,49 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
     return fits;
   }
 
+  /// Everyone eligible who does NOT naturally fill the place being filled.
+  ///
+  /// They used to be invisible: the shortlist keeps fitRank 1 and 2, so a
+  /// winger offered as an emergency striker simply was not in the sheet. The
+  /// rating he would actually play it at is the thing a manager wants to
+  /// weigh, so they get a tab of their own and that number with them.
+  ///
+  /// Empty before anybody has been chosen to come off, because without a
+  /// place there is no such thing as the wrong one.
+  List<Player> _otherPlaces(List<Player> available) {
+    final place = _placeToFill;
+    if (place == null) return const [];
+    return [
+      for (final p in available)
+        if (PositionFit.fitRank(p, place) == 0) p,
+    ]..sort(PositionFit.bySlotFit(place));
+  }
+
+  /// The rating [p] would play the place being filled at, against his own.
+  Widget? _fitTrailing(Player p) {
+    final place = _placeToFill;
+    if (place == null) return _energyTrailing(p.id);
+    final eff = PositionFit.effectiveOverall(p, place);
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text(
+          '$eff',
+          style: AppTypography.labelMedium.copyWith(
+            color: eff < p.overall ? AppColors.warning : null,
+          ),
+        ),
+        if (eff < p.overall)
+          Text(
+            ' (${p.overall})',
+            style: AppTypography.labelSmall.copyWith(
+              color: AppColors.onSurfaceVariant,
+            ),
+          ),
+      ],
+    );
+  }
+
   /// Ids currently on the pitch.
   Set<int> get _onPitch => _lineup.whereType<int>().toSet();
 
@@ -582,6 +625,7 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
     // Computed here rather than in build(): it depends on who has been chosen
     // to come off, which this sheet owns.
     final suitable = _suitable(available);
+    final other = _otherPlaces(available);
     final l = AppLocalizations.of(context);
     return ListView(
       children: [
@@ -727,10 +771,10 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
                 tab: _tab,
                 suitableLabel: l.tacticsTabSuitable,
                 onPitchLabel: l.tacticsTabOnPitch,
-                unavailableLabel: l.tacticsTabUnavailable,
+                otherLabel: l.tacticsTabOtherPositions,
                 suitableCount: '${suitable.length}',
                 onPitchCount: '${onPitch.length}/${_lineup.length}',
-                unavailableCount: '${unavailable.length}',
+                otherCount: '${other.length}',
                 trailing: Text(
                   l.tacticsSubsUsed(_subsUsed, widget.maxSubs),
                   maxLines: 1,
@@ -776,17 +820,23 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
                             if (!same) _tab = _SquadTab.suitable;
                           }),
                         )
-                    else if (_tab == _SquadTab.unavailable)
-                      if (unavailable.isEmpty)
-                        _emptyNote(l.tacticsNobodyUnavailable)
+                    else if (_tab == _SquadTab.other)
+                      // Out of position here, and the number that says what
+                      // that costs. Before anybody is chosen to come off
+                      // there is no place to be out of, so the tab explains
+                      // itself rather than sitting empty.
+                      if (comingOff == null)
+                        _emptyNote(l.tacticsPickSomebodyFirst)
+                      else if (other.isEmpty)
+                        _emptyNote(l.tacticsNobodyElse)
                       else
-                        for (final p in unavailable)
+                        for (final p in other)
                           SubDragRow(
                             player: p,
-                            trailing: _energyTrailing(p.id),
-                            note: _standing(p).note,
-                            noteColor: _standing(p).color,
-                            enabled: false,
+                            trailing: _fitTrailing(p),
+                            note: l.tacticsOutOfPositionNote,
+                            noteColor: AppColors.warning,
+                            onTap: () => _replace(comingOff.id, p.id),
                           )
                     else if (suitable.isEmpty)
                       _emptyNote(l.tacticsNoSubs)
@@ -1145,9 +1195,16 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
       for (final p in candidates)
         if (!onPitch.contains(p.id) && !_standing(p).blocked) p,
     ];
-    final blockedHere = [
+    // Eligible, but not for THIS place. They were invisible before: the
+    // shortlist keeps fitRank 1 and 2, so a winger offered as an emergency
+    // striker was simply not in the sheet. The rating he would play it at is
+    // exactly what a manager weighs, and the rows here already carry it.
+    final otherHere = [
       for (final p in candidates)
-        if (!onPitch.contains(p.id) && _standing(p).blocked) p,
+        if (!onPitch.contains(p.id) &&
+            !_standing(p).blocked &&
+            PositionFit.fitRank(p, position) == 0)
+          p,
     ];
     final onPitchHere = [
       for (final p in candidates)
@@ -1165,7 +1222,7 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
         title: l.tacticsPickRole(position.roleName.toUpperCase()),
         suitable: noFit ? availableHere : suitableHere,
         onPitch: onPitchHere,
-        unavailable: blockedHere,
+        other: otherHere,
         onPitchCount: '${onPitch.length}/${_lineup.length}',
         noFitNote: noFit ? l.tacticsNobodySuits : null,
         row: (p) => _pickerRow(p, position, onPitch, l),
@@ -1252,7 +1309,7 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
 }
 
 /// Which half of the squad the sheet is showing.
-enum _SquadTab { suitable, onPitch, unavailable }
+enum _SquadTab { suitable, other, onPitch }
 
 /// The two-way switch over the squad list, with the changes left beside it.
 ///
@@ -1269,7 +1326,7 @@ class _SlotPickerSheet extends StatefulWidget {
     required this.title,
     required this.suitable,
     required this.onPitch,
-    required this.unavailable,
+    required this.other,
     required this.onPitchCount,
     required this.noFitNote,
     required this.row,
@@ -1278,7 +1335,7 @@ class _SlotPickerSheet extends StatefulWidget {
   final String title;
   final List<Player> suitable;
   final List<Player> onPitch;
-  final List<Player> unavailable;
+  final List<Player> other;
   final String onPitchCount;
 
   /// Set when nothing naturally fits and [suitable] is the whole bench.
@@ -1299,7 +1356,7 @@ class _SlotPickerSheetState extends State<_SlotPickerSheet> {
     final shown = switch (_tab) {
       _SquadTab.suitable => widget.suitable,
       _SquadTab.onPitch => widget.onPitch,
-      _SquadTab.unavailable => widget.unavailable,
+      _SquadTab.other => widget.other,
     };
     return SafeArea(
       top: false,
@@ -1319,10 +1376,10 @@ class _SlotPickerSheetState extends State<_SlotPickerSheet> {
               tab: _tab,
               suitableLabel: l.tacticsTabSuitable,
               onPitchLabel: l.tacticsTabOnPitch,
-              unavailableLabel: l.tacticsTabUnavailable,
+              otherLabel: l.tacticsTabOtherPositions,
               suitableCount: '${widget.suitable.length}',
               onPitchCount: widget.onPitchCount,
-              unavailableCount: '${widget.unavailable.length}',
+              otherCount: '${widget.other.length}',
               trailing: const SizedBox.shrink(),
               onSelected: (t) => setState(() => _tab = t),
             ),
@@ -1344,8 +1401,8 @@ class _SlotPickerSheetState extends State<_SlotPickerSheet> {
                         vertical: AppSpacing.md,
                       ),
                       child: Text(
-                        _tab == _SquadTab.unavailable
-                            ? l.tacticsNobodyUnavailable
+                        _tab == _SquadTab.other
+                            ? l.tacticsNobodyElse
                             : l.tacticsNoSubs,
                         style: AppTypography.bodySmall.copyWith(
                           color: AppColors.onSurfaceVariant,
@@ -1369,10 +1426,10 @@ class _SquadTabs extends StatelessWidget {
     required this.tab,
     required this.suitableLabel,
     required this.onPitchLabel,
-    required this.unavailableLabel,
+    required this.otherLabel,
     required this.suitableCount,
     required this.onPitchCount,
-    required this.unavailableCount,
+    required this.otherCount,
     required this.trailing,
     required this.onSelected,
   });
@@ -1380,10 +1437,10 @@ class _SquadTabs extends StatelessWidget {
   final _SquadTab tab;
   final String suitableLabel;
   final String onPitchLabel;
-  final String unavailableLabel;
+  final String otherLabel;
   final String suitableCount;
   final String onPitchCount;
-  final String unavailableCount;
+  final String otherCount;
   final Widget trailing;
   final ValueChanged<_SquadTab> onSelected;
 
@@ -1430,10 +1487,10 @@ class _SquadTabs extends StatelessWidget {
             const SizedBox(width: AppSpacing.xs),
             Expanded(
               child: _Chip(
-                label: unavailableLabel,
-                count: unavailableCount,
-                selected: tab == _SquadTab.unavailable,
-                onTap: () => onSelected(_SquadTab.unavailable),
+                label: otherLabel,
+                count: otherCount,
+                selected: tab == _SquadTab.other,
+                onTap: () => onSelected(_SquadTab.other),
               ),
             ),
           ],

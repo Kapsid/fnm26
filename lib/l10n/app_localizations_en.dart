@@ -726,26 +726,28 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get tacticsTabOtherPositions => 'OTHER PLACES';
+
+  @override
+  String get tacticsOutOfPositionNote => 'Out of position here';
+
+  @override
+  String get tacticsNobodyElse => 'Nobody else to try here.';
+
+  @override
+  String get tacticsPickSomebodyFirst =>
+      'Choose who comes off and the rest of the bench appears here, with what they would play this place at.';
+
+  @override
   String get tacticsTabSuitable => 'SUITABLE';
 
   @override
   String get tacticsTabOnPitch => 'ON THE PITCH';
 
   @override
-  String get tacticsTabUnavailable => 'UNAVAILABLE';
-
-  @override
   String tacticsSectionSuitable(int count) {
     return 'SUITABLE · $count';
   }
-
-  @override
-  String tacticsSectionUnavailable(int count) {
-    return 'UNAVAILABLE · $count';
-  }
-
-  @override
-  String get tacticsNobodyUnavailable => 'Nobody yet.';
 
   @override
   String get tacticsNobodySuits =>

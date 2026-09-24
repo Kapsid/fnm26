@@ -1328,6 +1328,30 @@ abstract class AppLocalizations {
   /// **'{age}y'**
   String squadAgeShort(int age);
 
+  /// Substitution tab: men who would be playing out of position here, with the rating they would play it at.
+  ///
+  /// In en, this message translates to:
+  /// **'OTHER PLACES'**
+  String get tacticsTabOtherPositions;
+
+  /// Row note under a man who does not naturally play this place.
+  ///
+  /// In en, this message translates to:
+  /// **'Out of position here'**
+  String get tacticsOutOfPositionNote;
+
+  /// Shown when there is nobody out of position left to offer.
+  ///
+  /// In en, this message translates to:
+  /// **'Nobody else to try here.'**
+  String get tacticsNobodyElse;
+
+  /// Shown in the other-places tab before anybody has been chosen to come off.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose who comes off and the rest of the bench appears here, with what they would play this place at.'**
+  String get tacticsPickSomebodyFirst;
+
   /// Substitution tab label, count shown under it.
   ///
   /// In en, this message translates to:
@@ -1340,29 +1364,11 @@ abstract class AppLocalizations {
   /// **'ON THE PITCH'**
   String get tacticsTabOnPitch;
 
-  /// Substitution tab label, count shown under it.
-  ///
-  /// In en, this message translates to:
-  /// **'UNAVAILABLE'**
-  String get tacticsTabUnavailable;
-
   /// Substitution tab: bench players who naturally suit the place being filled.
   ///
   /// In en, this message translates to:
   /// **'SUITABLE · {count}'**
   String tacticsSectionSuitable(int count);
-
-  /// Heading above the players who may not be brought on: already used, sent off, or with no changes left.
-  ///
-  /// In en, this message translates to:
-  /// **'UNAVAILABLE · {count}'**
-  String tacticsSectionUnavailable(int count);
-
-  /// Shown in the unavailable tab when nobody has been used yet.
-  ///
-  /// In en, this message translates to:
-  /// **'Nobody yet.'**
-  String get tacticsNobodyUnavailable;
 
   /// Shown when the suitable tab has nobody in it and falls back to the whole bench.
   ///

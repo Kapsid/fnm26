@@ -725,26 +725,28 @@ class AppLocalizationsCs extends AppLocalizations {
   }
 
   @override
+  String get tacticsTabOtherPositions => 'JINÉ POSTY';
+
+  @override
+  String get tacticsOutOfPositionNote => 'Mimo svou pozici';
+
+  @override
+  String get tacticsNobodyElse => 'Nikdo další, koho tu zkusit.';
+
+  @override
+  String get tacticsPickSomebodyFirst =>
+      'Vyberte, kdo jde dolů, a objeví se tu zbytek lavičky i s ratingem, na kterém by tuhle pozici hráli.';
+
+  @override
   String get tacticsTabSuitable => 'VHODNÍ';
 
   @override
   String get tacticsTabOnPitch => 'NA HŘIŠTI';
 
   @override
-  String get tacticsTabUnavailable => 'NEDOSTUPNÍ';
-
-  @override
   String tacticsSectionSuitable(int count) {
     return 'VHODNÍ · $count';
   }
-
-  @override
-  String tacticsSectionUnavailable(int count) {
-    return 'NEDOSTUPNÍ · $count';
-  }
-
-  @override
-  String get tacticsNobodyUnavailable => 'Zatím nikdo.';
 
   @override
   String get tacticsNobodySuits =>

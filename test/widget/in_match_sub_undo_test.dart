@@ -132,7 +132,7 @@ void main() {
       tester.element(find.byType(Scaffold).last),
     );
     if (find.text(benchName).evaluate().isEmpty) {
-      for (final tab in [l.tacticsTabOnPitch, l.tacticsTabUnavailable]) {
+      for (final tab in [l.tacticsTabOnPitch, l.tacticsTabOtherPositions]) {
         final chip = find.text(tab);
         if (chip.evaluate().isEmpty) continue;
         await tester.tap(chip.last);
@@ -421,7 +421,7 @@ void main() {
     for (final tab in [
       l.tacticsTabSuitable,
       l.tacticsTabOnPitch,
-      l.tacticsTabUnavailable,
+      l.tacticsTabOtherPositions,
     ]) {
       expect(
         find.text(tab),

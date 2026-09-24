@@ -329,7 +329,7 @@ void main() {
           for (final tab in [
             l.tacticsTabSuitable,
             l.tacticsTabOnPitch,
-            l.tacticsTabUnavailable,
+            l.tacticsTabOtherPositions,
           ]) {
             expectLegible(tester, find.text(tab), 'the "$tab" tab');
           }
