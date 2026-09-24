@@ -254,21 +254,33 @@ class _TrophyCabinet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Wrap(
-      spacing: AppSpacing.md,
-      runSpacing: AppSpacing.md,
-      children: [
-        for (final t in Trophies.cabinet)
-          _TrophySlot(
-            asset: t.asset,
-            // The cabinet holds the competitions' canonical stored names, so
-            // they go through the same translator every other competition
-            // name does. Printed raw, this was the one shelf in the game
-            // still labelled in English.
-            label: competitionLabel(AppLocalizations.of(context), t.label),
-            count: counts[t.key] ?? 0,
-          ),
-      ],
+    // Centred in the card, so the leftover width is split between both sides.
+    //
+    // A tester reported the gap to the right of the trophies as much bigger
+    // than the one to the left, and it was: sixteen points against eighty on
+    // a 430-wide phone. The Wrap SHRINKS TO ITS CHILDREN, so it had no spare
+    // width of its own to distribute and sat against the card's left padding
+    // with the whole remainder behind it. WrapAlignment does nothing here for
+    // the same reason, which is worth saying out loud because it is the
+    // obvious fix and it is the wrong one.
+    return Center(
+      child: Wrap(
+        alignment: WrapAlignment.center,
+        spacing: AppSpacing.md,
+        runSpacing: AppSpacing.md,
+        children: [
+          for (final t in Trophies.cabinet)
+            _TrophySlot(
+              asset: t.asset,
+              // The cabinet holds the competitions' canonical stored names, so
+              // they go through the same translator every other competition
+              // name does. Printed raw, this was the one shelf in the game
+              // still labelled in English.
+              label: competitionLabel(AppLocalizations.of(context), t.label),
+              count: counts[t.key] ?? 0,
+            ),
+        ],
+      ),
     );
   }
 }
