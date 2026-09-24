@@ -135,7 +135,11 @@ Future<void> pumpStats(
       ),
     ),
   );
-  await tester.pump();
+  // Settled, not merely pumped. The tallies flip and the bars slide when a
+  // figure changes, so a single pump catches the switcher mid-transition with
+  // the old number and the new one both on screen, and the bar reads five
+  // Texts instead of three.
+  await tester.pumpAndSettle();
 }
 
 /// The two figures on the stat bar headed [label], or null when the panel is

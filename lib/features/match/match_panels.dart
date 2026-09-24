@@ -415,25 +415,75 @@ class _XgBar extends StatelessWidget {
             ],
           ),
           const SizedBox(height: AppSpacing.xs),
+          // The split SLIDES. These bars move while the match is being
+          // played, and a bar that jumps from one share to another reads as a
+          // redraw rather than as something happening on the pitch. Same
+          // duration and curve as the possession bar further down this file,
+          // so two bars on one screen do not move at different speeds.
           ClipRRect(
             borderRadius: AppRadii.smAll,
-            child: Row(
-              children: [
-                Expanded(
-                  flex: (home / total * 1000).round().clamp(1, 1000),
-                  child: Container(height: 6, color: AppColors.primary),
-                ),
-                Expanded(
-                  flex: (away / total * 1000).round().clamp(1, 1000),
-                  child: Container(height: 6, color: AppColors.outlineVariant),
-                ),
-              ],
+            child: TweenAnimationBuilder<double>(
+              tween: Tween(end: home / total),
+              duration: _barDuration,
+              curve: _barCurve,
+              builder: (context, share, _) => Row(
+                children: [
+                  Expanded(
+                    flex: (share * 1000).round().clamp(1, 1000),
+                    child: Container(height: 6, color: AppColors.primary),
+                  ),
+                  Expanded(
+                    flex: ((1 - share) * 1000).round().clamp(1, 1000),
+                    child: Container(
+                      height: 6,
+                      color: AppColors.outlineVariant,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ],
       ),
     );
   }
+}
+
+/// How a live stat bar moves. Matched to the possession bar's own constants
+/// further down, so nothing on the screen animates at two different speeds.
+const Duration _barDuration = Duration(milliseconds: 450);
+const Curve _barCurve = Curves.easeOutCubic;
+
+/// One side's number, which FLIPS when it changes rather than counting.
+///
+/// Counting would print values that never happened: a shot count easing from
+/// four to five passes through four-point-something, and there is no such
+/// thing. So the old number leaves and the new one arrives, which says a
+/// thing has changed without inventing a number in between.
+class _Tally extends StatelessWidget {
+  const _Tally({required this.value, required this.suffix});
+
+  final int value;
+  final String suffix;
+
+  @override
+  Widget build(BuildContext context) => AnimatedSwitcher(
+    duration: const Duration(milliseconds: 220),
+    transitionBuilder: (child, animation) => FadeTransition(
+      opacity: animation,
+      child: SizeTransition(
+        sizeFactor: animation,
+        axis: Axis.vertical,
+        axisAlignment: -1,
+        child: child,
+      ),
+    ),
+    child: Text(
+      '$value$suffix',
+      key: ValueKey(value),
+      style: AppTypography.labelMedium,
+    ),
+  );
 }
 
 class _StatBar extends StatelessWidget {
@@ -458,7 +508,7 @@ class _StatBar extends StatelessWidget {
         children: [
           Row(
             children: [
-              Text('$home$suffix', style: AppTypography.labelMedium),
+              _Tally(value: home, suffix: suffix),
               // The label takes the room the two numbers leave, rather than
               // whatever width it wants: a long one (ZLUTE KARTY) used to push
               // a spaceBetween row past the screen and overflow it.
@@ -478,7 +528,7 @@ class _StatBar extends StatelessWidget {
                   ),
                 ),
               ),
-              Text('$away$suffix', style: AppTypography.labelMedium),
+              _Tally(value: away, suffix: suffix),
             ],
           ),
           const SizedBox(height: AppSpacing.xs),
