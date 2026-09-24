@@ -708,6 +708,19 @@ abstract interface class CompetitionRepository {
   /// A player's aggregated career record, or null if they've never featured.
   Future<PlayerCareerStats?> playerCareerStats(int careerId, int playerId);
 
+  /// Who played in ONE match, and how each of them was marked.
+  ///
+  /// The per-fixture read of the rating table. Every other read of it is keyed
+  /// by player, by nation or by competition, so nothing could answer the one
+  /// question a press room asks after a game — who was out there on Saturday,
+  /// and which of them had the afternoon of his life. That is what a first cap
+  /// and a breakthrough are both read from, and neither could be seen without
+  /// it.
+  ///
+  /// The rows have been written for every match in the world since the world
+  /// gained a box score; this adds no column and no table, only the query.
+  Future<List<PlayerMatchLine>> ratingsForFixture(int careerId, int fixtureId);
+
   /// Recent match ratings (with their dates) for every player of [nationId],
   /// newest first and capped per player — the raw input for form and fatigue.
   Future<Map<int, List<({DateTime date, double rating})>>>

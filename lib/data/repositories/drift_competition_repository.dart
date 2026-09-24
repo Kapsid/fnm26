@@ -2241,6 +2241,33 @@ class DriftCompetitionRepository implements CompetitionRepository {
   }
 
   @override
+  Future<List<PlayerMatchLine>> ratingsForFixture(
+    int careerId,
+    int fixtureId,
+  ) async {
+    final rows =
+        await (_db.select(_db.playerRatings)..where(
+              (t) =>
+                  t.careerId.equals(careerId) & t.fixtureId.equals(fixtureId),
+            ))
+            .get();
+    return [
+      for (final r in rows)
+        (
+          playerId: r.playerId,
+          nationId: r.nationId,
+          rating: r.rating,
+          goals: r.goals,
+          assists: r.assists,
+          cleanSheet: r.cleanSheet,
+          motm: r.motm,
+          yellows: r.yellows,
+          reds: r.reds,
+        ),
+    ];
+  }
+
+  @override
   Future<List<PlayerMatchStat>> playerMatchHistory(
     int careerId,
     int playerId, {

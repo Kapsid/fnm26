@@ -45,6 +45,27 @@ void main() {
         ours: ours,
       ),
       PressTopic.shootoutFate => const PressSubjectOpponent(1),
+      // The squad questions: every one of them names the man AND the number,
+      // so the guard has to ask for the copy with both in hand.
+      PressTopic.strikerDrought ||
+      PressTopic.youngsterBreakthrough ||
+      PressTopic.droppedStar ||
+      PressTopic.captaincyQuestion ||
+      PressTopic.veteranEnd ||
+      PressTopic.debutant => const PressSubjectPlayer(
+        playerId: 1,
+        name: 'Nomenjanahary Randriamampionona',
+        count: 34,
+      ),
+      // …and the opponent ones name the nation and the number. `ours` doubles
+      // as the run's direction, so both sets of head-to-head copy are walked.
+      PressTopic.rivalryNext ||
+      PressTopic.headToHeadRun ||
+      PressTopic.revengeMatch => PressSubjectOpponent(
+        1,
+        count: 7,
+        favourable: ours,
+      ),
       _ => const PressSubjectTeam(),
     },
     subjectNationId: 1,
@@ -88,29 +109,31 @@ void main() {
       final en = await AppLocalizations.delegate.load(const Locale('en'));
       final cs = await AppLocalizations.delegate.load(const Locale('cs'));
       for (final topic in PressTopic.values) {
-        final inEnglish = pressAskWordings(
-          en,
-          question(topic),
-          opponentName: 'Brazil',
-        );
-        final inCzech = pressAskWordings(
-          cs,
-          question(topic),
-          opponentName: 'Brazil',
-        );
-        expect(
-          inCzech.length,
-          inEnglish.length,
-          reason: '${topic.name} has a different number of wordings',
-        );
-        for (var i = 0; i < inCzech.length; i++) {
-          expect(
-            inCzech[i],
-            isNot(inEnglish[i]),
-            reason:
-                '${topic.name} wording $i is untranslated: a Czech save '
-                'would show the English sentence',
+        for (final ours in const [true, false]) {
+          final inEnglish = pressAskWordings(
+            en,
+            question(topic, ours: ours),
+            opponentName: 'Brazil',
           );
+          final inCzech = pressAskWordings(
+            cs,
+            question(topic, ours: ours),
+            opponentName: 'Brazil',
+          );
+          expect(
+            inCzech.length,
+            inEnglish.length,
+            reason: '${topic.name} has a different number of wordings',
+          );
+          for (var i = 0; i < inCzech.length; i++) {
+            expect(
+              inCzech[i],
+              isNot(inEnglish[i]),
+              reason:
+                  '${topic.name} wording $i is untranslated: a Czech save '
+                  'would show the English sentence',
+            );
+          }
         }
       }
     });
@@ -177,6 +200,18 @@ void main() {
           PressTopic.injuryBlow,
           PressTopic.shootoutFate,
           PressTopic.lateDrama,
+          // Batch 2's nine. Every one of them puts a NAME inside a sentence,
+          // which is the case a 320px column is worst at: the longest surname
+          // the generator can produce is wider than the line it is given.
+          PressTopic.strikerDrought,
+          PressTopic.youngsterBreakthrough,
+          PressTopic.droppedStar,
+          PressTopic.captaincyQuestion,
+          PressTopic.veteranEnd,
+          PressTopic.debutant,
+          PressTopic.rivalryNext,
+          PressTopic.headToHeadRun,
+          PressTopic.revengeMatch,
         ]) {
           testWidgets(
             '${topic.name} at ${width.toInt()}px in $locale',
@@ -199,6 +234,24 @@ void main() {
         }
       }
     }
+
+    testWidgets('a winless head-to-head run reads at 320px in cs', (
+      tester,
+    ) async {
+      // The other half of the one topic with two sets of copy.
+      await pump(
+        tester,
+        question(PressTopic.headToHeadRun, ours: false),
+        width: 320,
+        locale: 'cs',
+      );
+      expectNothingCut(tester, 'the winless-run conference');
+      await expectQuestionUnbroken(
+        tester,
+        question(PressTopic.headToHeadRun, ours: false),
+        'cs',
+      );
+    });
 
     testWidgets('a late goal conceded reads at 320px in cs', (tester) async {
       await pump(

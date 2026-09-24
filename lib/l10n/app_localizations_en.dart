@@ -8470,4 +8470,294 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get strengthFactorStaff => 'Staff room';
+
+  @override
+  String pressAskDrought1(String player, String count) {
+    return '$player has gone $count games without a goal. Is he still your number nine?';
+  }
+
+  @override
+  String pressAskDrought2(String player, String count) {
+    return '$count matches, no goals for $player. How long do you keep picking him?';
+  }
+
+  @override
+  String pressAskDrought3(String player, String count) {
+    return 'Your first-choice forward has not scored in $count. Is $player carrying something, or is it in his head?';
+  }
+
+  @override
+  String pressAskDrought4(String player, String count) {
+    return '$player is $count games into a drought. Do you take him out of the firing line?';
+  }
+
+  @override
+  String pressAskBreakthrough1(String player, String count) {
+    return '$player is $count and he was the best man on the pitch. Is he in the side to stay?';
+  }
+
+  @override
+  String pressAskBreakthrough2(String player, String count) {
+    return 'At $count, $player played like somebody who has been there for years. How much do you ask of him now?';
+  }
+
+  @override
+  String pressAskBreakthrough3(String player, String count) {
+    return 'Everyone left talking about $player, $count years old. Is that a warning about the rest of them?';
+  }
+
+  @override
+  String pressAskBreakthrough4(String player, String count) {
+    return '$player is $count. Do you protect him now, or do you build round him?';
+  }
+
+  @override
+  String pressAskDropped1(String player, String count) {
+    return '$player is rated $count and he is not in your side. Explain that one.';
+  }
+
+  @override
+  String pressAskDropped2(String player, String count) {
+    return 'A player rated $count is sitting on your bench. What has $player done wrong?';
+  }
+
+  @override
+  String pressAskDropped3(String player, String count) {
+    return 'You left $player out. He is rated $count. Is that form, or is it something else?';
+  }
+
+  @override
+  String pressAskDropped4(String player, String count) {
+    return '$player, rated $count, watching from the bench. Is he in your plans at all?';
+  }
+
+  @override
+  String pressAskArmband1(String player, String count) {
+    return '$player has $count caps and he has not played like your captain for weeks. Is the armband right on him?';
+  }
+
+  @override
+  String pressAskArmband2(String player, String count) {
+    return 'Your captain has lost his form. $count caps buys a lot of patience. How much is left?';
+  }
+
+  @override
+  String pressAskArmband3(String player, String count) {
+    return '$player is carrying the armband and not much else. $count caps says he has earned time. Has he?';
+  }
+
+  @override
+  String pressAskArmband4(String player, String count) {
+    return '$count caps, and a captain out of form. Do you pick $player because he is the captain?';
+  }
+
+  @override
+  String pressAskVeteran1(String player, String count) {
+    return '$player is $count now, and it shows. Is this his last campaign?';
+  }
+
+  @override
+  String pressAskVeteran2(String player, String count) {
+    return 'At $count, $player is not the player he was. Do you tell him, or does he tell you?';
+  }
+
+  @override
+  String pressAskVeteran3(String player, String count) {
+    return '$count years old and a step slower. Where does $player fit from here?';
+  }
+
+  @override
+  String pressAskVeteran4(String player, String count) {
+    return 'Is $player, at $count, still picked for what he does or for what he did?';
+  }
+
+  @override
+  String pressAskDebut1(String player, String count) {
+    return '$player won his first cap at $count. What did you see in him?';
+  }
+
+  @override
+  String pressAskDebut2(String player, String count) {
+    return 'A debut for $player, aged $count. Is that a look, or is he in?';
+  }
+
+  @override
+  String pressAskDebut3(String player, String count) {
+    return '$player is $count and he has a cap now. How ready is he?';
+  }
+
+  @override
+  String pressAskDebut4(String player, String count) {
+    return 'You handed $player a first cap at $count. What do you want from him next?';
+  }
+
+  @override
+  String pressAskRivalNext1(String opponent, String count) {
+    return '$opponent next, and you have met them $count times already. Does this one mean more?';
+  }
+
+  @override
+  String pressAskRivalNext2(String opponent, String count) {
+    return 'You have played $opponent $count times now. What does that do to a week like this?';
+  }
+
+  @override
+  String pressAskRivalNext3(String opponent, String count) {
+    return '$count meetings with $opponent, and here they are again. How do you keep it a football match?';
+  }
+
+  @override
+  String pressAskRivalNext4(String opponent, String count) {
+    return 'It is $opponent again, and that makes $count meetings. Is there anything left to learn about them?';
+  }
+
+  @override
+  String pressAskRunGood1(String opponent, String count) {
+    return '$count against $opponent without defeat. Does a record like that travel?';
+  }
+
+  @override
+  String pressAskRunGood2(String opponent, String count) {
+    return 'You have not lost to $opponent in $count. Is that in their heads or in yours?';
+  }
+
+  @override
+  String pressAskRunGood3(String opponent, String count) {
+    return '$count unbeaten against $opponent. How much is that worth on the day?';
+  }
+
+  @override
+  String pressAskRunGood4(String opponent, String count) {
+    return '$opponent have not beaten you in $count. Do you say that out loud to your players?';
+  }
+
+  @override
+  String pressAskRunBad1(String opponent, String count) {
+    return '$count against $opponent without a win. What is it about them?';
+  }
+
+  @override
+  String pressAskRunBad2(String opponent, String count) {
+    return 'You have not beaten $opponent in $count. Is that a mental thing?';
+  }
+
+  @override
+  String pressAskRunBad3(String opponent, String count) {
+    return '$count meetings with $opponent and no win. What changes this time?';
+  }
+
+  @override
+  String pressAskRunBad4(String opponent, String count) {
+    return '$opponent keep beating you: $count without a win. Whose problem is that?';
+  }
+
+  @override
+  String pressAskRevenge1(String opponent) {
+    return '$opponent put you out last time. Is this about revenge?';
+  }
+
+  @override
+  String pressAskRevenge2(String opponent) {
+    return 'The side that ended your tournament is back. What do you owe $opponent?';
+  }
+
+  @override
+  String pressAskRevenge3(String opponent) {
+    return '$opponent again, after what they did to you. Has anything changed since?';
+  }
+
+  @override
+  String pressAskRevenge4(String opponent) {
+    return 'Last time $opponent sent you home. Do your players need reminding?';
+  }
+
+  @override
+  String yDebut0(String name) {
+    return '$name gets his first cap. Remember the name.';
+  }
+
+  @override
+  String yDebut1(String name) {
+    return 'A debut for $name. You can see it in him, can you not?';
+  }
+
+  @override
+  String yDebut2(String name) {
+    return '$name, first cap. Let us see what he does with it.';
+  }
+
+  @override
+  String yDebut3(String name) {
+    return 'Debut for $name. The squad needed fresh legs somewhere.';
+  }
+
+  @override
+  String yDebut4(String name) {
+    return '$name handed a cap. We have handed out a lot of those lately.';
+  }
+
+  @override
+  String yDebut5(String name) {
+    return 'A debut for $name. Another one we will have forgotten by spring.';
+  }
+
+  @override
+  String yDrought0(String name, String count) {
+    return '$name has gone $count without scoring and is doing everything else on the pitch.';
+  }
+
+  @override
+  String yDrought1(String name, String count) {
+    return '$count games without a goal for $name. They come in threes, always have.';
+  }
+
+  @override
+  String yDrought2(String name, String count) {
+    return '$name: $count games, no goals.';
+  }
+
+  @override
+  String yDrought3(String name, String count) {
+    return '$count without a goal for $name. Worth keeping an eye on.';
+  }
+
+  @override
+  String yDrought4(String name, String count) {
+    return '$count games. No goals. $name could not hit a barn door.';
+  }
+
+  @override
+  String yDrought5(String name, String count) {
+    return '$name has not scored in $count. Play literally anybody else.';
+  }
+
+  @override
+  String yRivalryLooms0(String opponent, String count) {
+    return '$opponent next. $count meetings and it still means everything.';
+  }
+
+  @override
+  String yRivalryLooms1(String opponent, String count) {
+    return '$count times against $opponent now. Bring it on.';
+  }
+
+  @override
+  String yRivalryLooms2(String opponent, String count) {
+    return '$opponent next. Played $count.';
+  }
+
+  @override
+  String yRivalryLooms3(String opponent, String count) {
+    return 'Meeting number $count with $opponent this week.';
+  }
+
+  @override
+  String yRivalryLooms4(String opponent, String count) {
+    return '$opponent again. $count of these and we have learned nothing.';
+  }
+
+  @override
+  String yRivalryLooms5(String opponent, String count) {
+    return '$count games against $opponent and they still beat us. Wonderful.';
+  }
 }

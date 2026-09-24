@@ -62,19 +62,42 @@ final class PressSubjectTeam extends PressSubject {
 }
 
 /// A named man: a selection, a drought, a first cap.
+///
+/// [count] is the FIGURE the question names — the caps without a goal, the
+/// age, the rating he is carrying. A question that says "your forward has not
+/// scored for a while" has not moved at all; the number is half of what makes
+/// it a real question, so it travels with the man rather than being looked up
+/// again by whatever is putting words on a screen.
 final class PressSubjectPlayer extends PressSubject {
-  const PressSubjectPlayer({required this.playerId, required this.name});
+  const PressSubjectPlayer({
+    required this.playerId,
+    required this.name,
+    this.count = 0,
+  });
 
   final int playerId;
   final String name;
+  final int count;
 }
 
 /// The other side, when the question is about THEM rather than about the
 /// afternoon.
+///
+/// [count] is the figure that makes it a question — meetings, or the length of
+/// a run — and [favourable] says which way that run reads, because "five
+/// without defeat against them" and "five without a win against them" are the
+/// same number and opposite questions. It is the same distinction
+/// [PressSubjectIncident.ours] draws for a late goal.
 final class PressSubjectOpponent extends PressSubject {
-  const PressSubjectOpponent(this.nationId);
+  const PressSubjectOpponent(
+    this.nationId, {
+    this.count = 0,
+    this.favourable = true,
+  });
 
   final int nationId;
+  final int count;
+  final bool favourable;
 }
 
 /// One thing that happened on the pitch, with the minute it happened in.
@@ -90,6 +113,7 @@ final class PressSubjectIncident extends PressSubject {
     this.playerId,
     this.name,
     this.ours = true,
+    this.fromLastMatch = true,
   });
 
   final MatchEventType type;
@@ -97,6 +121,14 @@ final class PressSubjectIncident extends PressSubject {
   final int? playerId;
   final String? name;
   final bool ours;
+
+  /// Whether it happened in the match the country is still talking about.
+  ///
+  /// An incident leads a conference because it is the last thing that
+  /// happened — see [Press.precedenceOf]. Once another match has been played
+  /// it is no longer that, and a red card from a fortnight ago has no business
+  /// pushing ahead of the man who won his first cap on Saturday.
+  final bool fromLastMatch;
 }
 
 /// One question, asked once.
@@ -269,6 +301,41 @@ enum PressTopic {
 
   /// A goal in the last ten minutes that changed the result, for or against.
   lateDrama,
+
+  // The six below read the SQUAD: who is in it, who is out of it, who is
+  // wearing the armband and who is finishing. Every one of them names a man —
+  // see [PressSubjectPlayer] — because a conference that says "your forward"
+  // instead of his name has not moved at all.
+
+  /// The first-choice forward, and how long it is since he scored.
+  strikerDrought,
+
+  /// A young man who has just had the game of his life.
+  youngsterBreakthrough,
+
+  /// One of the best players in the country, watching from the bench.
+  droppedStar,
+
+  /// The captain, and whether he is still playing like one.
+  captaincyQuestion,
+
+  /// A thirty-four-year-old regular whose level is going.
+  veteranEnd,
+
+  /// A first cap.
+  debutant,
+
+  // …and the three below read the NEXT match rather than the last one. They
+  // carry a [PressSubjectOpponent] and name the nation and the number.
+
+  /// The next match is against the side this nation has met most often.
+  rivalryNext,
+
+  /// A long run against the next opponent, without defeat or without a win.
+  headToHeadRun,
+
+  /// The next opponent is the side that put this nation out last time.
+  revengeMatch,
 }
 
 abstract final class Press {
@@ -335,6 +402,15 @@ abstract final class Press {
     PressTopic.injuryBlow => 'knock',
     PressTopic.shootoutFate => 'shootout',
     PressTopic.lateDrama => 'late',
+    PressTopic.strikerDrought => 'drought',
+    PressTopic.youngsterBreakthrough => 'young',
+    PressTopic.droppedStar => 'dropped',
+    PressTopic.captaincyQuestion => 'armband',
+    PressTopic.veteranEnd => 'veteran',
+    PressTopic.debutant => 'debut',
+    PressTopic.rivalryNext => 'rivalnext',
+    PressTopic.headToHeadRun => 'h2hrun',
+    PressTopic.revengeMatch => 'revenge',
   };
 
   /// The topic a stored question key belongs to, or null if it is not a press
@@ -411,11 +487,16 @@ abstract final class Press {
   /// way round — which is what "press is too general" meant. The order is
   /// stated once, here, so the topics batch 2 adds take their place in it by
   /// carrying a subject rather than by editing a selector.
+  /// Batch 2 filled the two middle rungs (a named man, the next opponent) and
+  /// added the qualifier the spec always carried: an incident leads because it
+  /// is the LAST thing that happened, so one that has been overtaken by
+  /// another match drops to the bottom alongside the generic team question
+  /// rather than holding the front of the room on seniority.
   static int precedenceOf(PressSubject subject) => switch (subject) {
-    PressSubjectIncident() => 0,
+    PressSubjectIncident(:final fromLastMatch) when fromLastMatch => 0,
     PressSubjectPlayer() => 1,
     PressSubjectOpponent() => 2,
-    PressSubjectTeam() => 3,
+    PressSubjectIncident() || PressSubjectTeam() => 3,
   };
 
   /// The candidates the room would actually lead with: everything sharing the
@@ -712,6 +793,69 @@ abstract final class Press {
       PressTone.demandMore,
       PressTone.playItDown,
     ],
+    // A forward who cannot score. Back him, say out loud that it has to stop,
+    // or refuse to make him the story.
+    PressTopic.strikerDrought => const [
+      PressTone.backThePlayers,
+      PressTone.demandMore,
+      PressTone.playItDown,
+    ],
+    // A boy who has just played the game of his life. The trap is the one the
+    // room is inviting: talk him up now and he carries it.
+    PressTopic.youngsterBreakthrough => const [
+      PressTone.backThePlayers,
+      PressTone.raiseTheBar,
+      PressTone.playItDown,
+    ],
+    // Why is he not playing? Defend him, defend the decision, or own it.
+    PressTopic.droppedStar => const [
+      PressTone.backThePlayers,
+      PressTone.demandMore,
+      PressTone.takeTheBlame,
+      PressTone.playItDown,
+    ],
+    // The armband. Backing him is the whole point of having given it to him,
+    // and demanding more of a captain in public is a decision with a cost.
+    PressTopic.captaincyQuestion => const [
+      PressTone.backThePlayers,
+      PressTone.demandMore,
+      PressTone.playItDown,
+    ],
+    // A career ending. Nobody is to blame for thirty-four, so there is nothing
+    // to take the blame for.
+    PressTopic.veteranEnd => const [
+      PressTone.backThePlayers,
+      PressTone.demandMore,
+      PressTone.playItDown,
+    ],
+    // A first cap: back him, or say what you expect of him now.
+    PressTopic.debutant => const [
+      PressTone.backThePlayers,
+      PressTone.raiseTheBar,
+      PressTone.playItDown,
+    ],
+    // The neighbours. Every stance but taking the blame is available: nothing
+    // has happened yet to take the blame for.
+    PressTopic.rivalryNext => const [
+      PressTone.backThePlayers,
+      PressTone.raiseTheBar,
+      PressTone.demandMore,
+      PressTone.playItDown,
+    ],
+    PressTopic.headToHeadRun => const [
+      PressTone.backThePlayers,
+      PressTone.raiseTheBar,
+      PressTone.demandMore,
+      PressTone.playItDown,
+    ],
+    // The side that put you out. Own what happened last time, promise it will
+    // be different, or refuse the premise.
+    PressTopic.revengeMatch => const [
+      PressTone.takeTheBlame,
+      PressTone.raiseTheBar,
+      PressTone.demandMore,
+      PressTone.playItDown,
+    ],
   };
 
   /// The longest a conference can run to, for the sizes the UI has to reserve.
@@ -746,6 +890,18 @@ abstract final class Press {
     PressTopic.injuryBlow ||
     PressTopic.shootoutFate ||
     PressTopic.lateDrama => 2,
+    // A man, or the side you are about to play. Two questions each: the thing
+    // itself, and what the manager intends to do about it. A selection row is
+    // not a post-mortem and does not need an afternoon.
+    PressTopic.strikerDrought ||
+    PressTopic.youngsterBreakthrough ||
+    PressTopic.droppedStar ||
+    PressTopic.captaincyQuestion ||
+    PressTopic.veteranEnd ||
+    PressTopic.debutant ||
+    PressTopic.rivalryNext ||
+    PressTopic.headToHeadRun ||
+    PressTopic.revengeMatch => 2,
     PressTopic.rankingPeak || PressTopic.luckyWin => 1,
   };
 

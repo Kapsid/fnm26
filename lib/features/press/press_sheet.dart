@@ -604,6 +604,15 @@ List<String> pressAskWordings(
     _ => '',
   };
   final ours = subject is PressSubjectIncident && subject.ours;
+  // The FIGURE a subject-bearing question names: the games without a goal, the
+  // age, the meetings. A question that has the man's name and not his number
+  // is half a question.
+  final count = switch (subject) {
+    PressSubjectPlayer(:final count) => '$count',
+    PressSubjectOpponent(:final count) => '$count',
+    _ => '',
+  };
+  final favourable = subject is! PressSubjectOpponent || subject.favourable;
   return switch (question.topic) {
     PressTopic.overachieving => [
       l.pressAskAbove,
@@ -790,5 +799,73 @@ List<String> pressAskWordings(
               l.pressAskLateLoss3(player, minute),
               l.pressAskLateLoss4(player, minute),
             ],
+    // The squad. Every one of these names the man AND the number, which is
+    // the whole difference between "your forward" and a question.
+    PressTopic.strikerDrought => [
+      l.pressAskDrought1(player, count),
+      l.pressAskDrought2(player, count),
+      l.pressAskDrought3(player, count),
+      l.pressAskDrought4(player, count),
+    ],
+    PressTopic.youngsterBreakthrough => [
+      l.pressAskBreakthrough1(player, count),
+      l.pressAskBreakthrough2(player, count),
+      l.pressAskBreakthrough3(player, count),
+      l.pressAskBreakthrough4(player, count),
+    ],
+    PressTopic.droppedStar => [
+      l.pressAskDropped1(player, count),
+      l.pressAskDropped2(player, count),
+      l.pressAskDropped3(player, count),
+      l.pressAskDropped4(player, count),
+    ],
+    PressTopic.captaincyQuestion => [
+      l.pressAskArmband1(player, count),
+      l.pressAskArmband2(player, count),
+      l.pressAskArmband3(player, count),
+      l.pressAskArmband4(player, count),
+    ],
+    PressTopic.veteranEnd => [
+      l.pressAskVeteran1(player, count),
+      l.pressAskVeteran2(player, count),
+      l.pressAskVeteran3(player, count),
+      l.pressAskVeteran4(player, count),
+    ],
+    PressTopic.debutant => [
+      l.pressAskDebut1(player, count),
+      l.pressAskDebut2(player, count),
+      l.pressAskDebut3(player, count),
+      l.pressAskDebut4(player, count),
+    ],
+    // …and the side you are about to play.
+    PressTopic.rivalryNext => [
+      l.pressAskRivalNext1(who, count),
+      l.pressAskRivalNext2(who, count),
+      l.pressAskRivalNext3(who, count),
+      l.pressAskRivalNext4(who, count),
+    ],
+    // The second topic whose copy comes in two sets: five without defeat and
+    // five without a win are the same number and opposite questions, and
+    // [PressSubjectOpponent.favourable] is what says which.
+    PressTopic.headToHeadRun =>
+      favourable
+          ? [
+              l.pressAskRunGood1(who, count),
+              l.pressAskRunGood2(who, count),
+              l.pressAskRunGood3(who, count),
+              l.pressAskRunGood4(who, count),
+            ]
+          : [
+              l.pressAskRunBad1(who, count),
+              l.pressAskRunBad2(who, count),
+              l.pressAskRunBad3(who, count),
+              l.pressAskRunBad4(who, count),
+            ],
+    PressTopic.revengeMatch => [
+      l.pressAskRevenge1(who),
+      l.pressAskRevenge2(who),
+      l.pressAskRevenge3(who),
+      l.pressAskRevenge4(who),
+    ],
   };
 }

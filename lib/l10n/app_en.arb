@@ -12471,5 +12471,671 @@
   "strengthFactorStaff": "Staff room",
   "@strengthFactorStaff": {
     "description": "Pre-match strength line: what the hired staff are worth to this match."
+  },
+  "pressAskDrought1": "{player} has gone {count} games without a goal. Is he still your number nine?",
+  "@pressAskDrought1": {
+    "description": "Press question about a first-choice forward who has stopped scoring.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      },
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "pressAskDrought2": "{count} matches, no goals for {player}. How long do you keep picking him?",
+  "@pressAskDrought2": {
+    "description": "Press question about a first-choice forward who has stopped scoring.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      },
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "pressAskDrought3": "Your first-choice forward has not scored in {count}. Is {player} carrying something, or is it in his head?",
+  "@pressAskDrought3": {
+    "description": "Press question about a first-choice forward who has stopped scoring.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      },
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "pressAskDrought4": "{player} is {count} games into a drought. Do you take him out of the firing line?",
+  "@pressAskDrought4": {
+    "description": "Press question about a first-choice forward who has stopped scoring.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      },
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "pressAskBreakthrough1": "{player} is {count} and he was the best man on the pitch. Is he in the side to stay?",
+  "@pressAskBreakthrough1": {
+    "description": "Press question about a young player who has just had an outstanding match.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      },
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "pressAskBreakthrough2": "At {count}, {player} played like somebody who has been there for years. How much do you ask of him now?",
+  "@pressAskBreakthrough2": {
+    "description": "Press question about a young player who has just had an outstanding match.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      },
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "pressAskBreakthrough3": "Everyone left talking about {player}, {count} years old. Is that a warning about the rest of them?",
+  "@pressAskBreakthrough3": {
+    "description": "Press question about a young player who has just had an outstanding match.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      },
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "pressAskBreakthrough4": "{player} is {count}. Do you protect him now, or do you build round him?",
+  "@pressAskBreakthrough4": {
+    "description": "Press question about a young player who has just had an outstanding match.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      },
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "pressAskDropped1": "{player} is rated {count} and he is not in your side. Explain that one.",
+  "@pressAskDropped1": {
+    "description": "Press question about a highly rated player left out of the starting eleven.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      },
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "pressAskDropped2": "A player rated {count} is sitting on your bench. What has {player} done wrong?",
+  "@pressAskDropped2": {
+    "description": "Press question about a highly rated player left out of the starting eleven.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      },
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "pressAskDropped3": "You left {player} out. He is rated {count}. Is that form, or is it something else?",
+  "@pressAskDropped3": {
+    "description": "Press question about a highly rated player left out of the starting eleven.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      },
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "pressAskDropped4": "{player}, rated {count}, watching from the bench. Is he in your plans at all?",
+  "@pressAskDropped4": {
+    "description": "Press question about a highly rated player left out of the starting eleven.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      },
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "pressAskArmband1": "{player} has {count} caps and he has not played like your captain for weeks. Is the armband right on him?",
+  "@pressAskArmband1": {
+    "description": "Press question about a captain whose form has gone.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      },
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "pressAskArmband2": "Your captain has lost his form. {count} caps buys a lot of patience. How much is left?",
+  "@pressAskArmband2": {
+    "description": "Press question about a captain whose form has gone.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      },
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "pressAskArmband3": "{player} is carrying the armband and not much else. {count} caps says he has earned time. Has he?",
+  "@pressAskArmband3": {
+    "description": "Press question about a captain whose form has gone.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      },
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "pressAskArmband4": "{count} caps, and a captain out of form. Do you pick {player} because he is the captain?",
+  "@pressAskArmband4": {
+    "description": "Press question about a captain whose form has gone.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      },
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "pressAskVeteran1": "{player} is {count} now, and it shows. Is this his last campaign?",
+  "@pressAskVeteran1": {
+    "description": "Press question about a veteran regular whose level is dropping.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      },
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "pressAskVeteran2": "At {count}, {player} is not the player he was. Do you tell him, or does he tell you?",
+  "@pressAskVeteran2": {
+    "description": "Press question about a veteran regular whose level is dropping.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      },
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "pressAskVeteran3": "{count} years old and a step slower. Where does {player} fit from here?",
+  "@pressAskVeteran3": {
+    "description": "Press question about a veteran regular whose level is dropping.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      },
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "pressAskVeteran4": "Is {player}, at {count}, still picked for what he does or for what he did?",
+  "@pressAskVeteran4": {
+    "description": "Press question about a veteran regular whose level is dropping.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      },
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "pressAskDebut1": "{player} won his first cap at {count}. What did you see in him?",
+  "@pressAskDebut1": {
+    "description": "Press question after a player wins his first cap.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      },
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "pressAskDebut2": "A debut for {player}, aged {count}. Is that a look, or is he in?",
+  "@pressAskDebut2": {
+    "description": "Press question after a player wins his first cap.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      },
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "pressAskDebut3": "{player} is {count} and he has a cap now. How ready is he?",
+  "@pressAskDebut3": {
+    "description": "Press question after a player wins his first cap.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      },
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "pressAskDebut4": "You handed {player} a first cap at {count}. What do you want from him next?",
+  "@pressAskDebut4": {
+    "description": "Press question after a player wins his first cap.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      },
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "pressAskRivalNext1": "{opponent} next, and you have met them {count} times already. Does this one mean more?",
+  "@pressAskRivalNext1": {
+    "description": "Press question before a match against the most-played opponent.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      },
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "pressAskRivalNext2": "You have played {opponent} {count} times now. What does that do to a week like this?",
+  "@pressAskRivalNext2": {
+    "description": "Press question before a match against the most-played opponent.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      },
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "pressAskRivalNext3": "{count} meetings with {opponent}, and here they are again. How do you keep it a football match?",
+  "@pressAskRivalNext3": {
+    "description": "Press question before a match against the most-played opponent.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      },
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "pressAskRivalNext4": "It is {opponent} again, and that makes {count} meetings. Is there anything left to learn about them?",
+  "@pressAskRivalNext4": {
+    "description": "Press question before a match against the most-played opponent.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      },
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "pressAskRunGood1": "{count} against {opponent} without defeat. Does a record like that travel?",
+  "@pressAskRunGood1": {
+    "description": "Press question before facing an opponent this nation is unbeaten against.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      },
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "pressAskRunGood2": "You have not lost to {opponent} in {count}. Is that in their heads or in yours?",
+  "@pressAskRunGood2": {
+    "description": "Press question before facing an opponent this nation is unbeaten against.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      },
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "pressAskRunGood3": "{count} unbeaten against {opponent}. How much is that worth on the day?",
+  "@pressAskRunGood3": {
+    "description": "Press question before facing an opponent this nation is unbeaten against.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      },
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "pressAskRunGood4": "{opponent} have not beaten you in {count}. Do you say that out loud to your players?",
+  "@pressAskRunGood4": {
+    "description": "Press question before facing an opponent this nation is unbeaten against.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      },
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "pressAskRunBad1": "{count} against {opponent} without a win. What is it about them?",
+  "@pressAskRunBad1": {
+    "description": "Press question before facing an opponent this nation has not beaten in a long time.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      },
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "pressAskRunBad2": "You have not beaten {opponent} in {count}. Is that a mental thing?",
+  "@pressAskRunBad2": {
+    "description": "Press question before facing an opponent this nation has not beaten in a long time.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      },
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "pressAskRunBad3": "{count} meetings with {opponent} and no win. What changes this time?",
+  "@pressAskRunBad3": {
+    "description": "Press question before facing an opponent this nation has not beaten in a long time.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      },
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "pressAskRunBad4": "{opponent} keep beating you: {count} without a win. Whose problem is that?",
+  "@pressAskRunBad4": {
+    "description": "Press question before facing an opponent this nation has not beaten in a long time.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      },
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "pressAskRevenge1": "{opponent} put you out last time. Is this about revenge?",
+  "@pressAskRevenge1": {
+    "description": "Press question before facing the side that knocked this nation out of the last tournament.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      }
+    }
+  },
+  "pressAskRevenge2": "The side that ended your tournament is back. What do you owe {opponent}?",
+  "@pressAskRevenge2": {
+    "description": "Press question before facing the side that knocked this nation out of the last tournament.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      }
+    }
+  },
+  "pressAskRevenge3": "{opponent} again, after what they did to you. Has anything changed since?",
+  "@pressAskRevenge3": {
+    "description": "Press question before facing the side that knocked this nation out of the last tournament.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      }
+    }
+  },
+  "pressAskRevenge4": "Last time {opponent} sent you home. Do your players need reminding?",
+  "@pressAskRevenge4": {
+    "description": "Press question before facing the side that knocked this nation out of the last tournament.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      }
+    }
+  },
+  "yDebut0": "{name} gets his first cap. Remember the name.",
+  "@yDebut0": {
+    "description": "Y feed post about a player winning his first cap.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "yDebut1": "A debut for {name}. You can see it in him, can you not?",
+  "@yDebut1": {
+    "description": "Y feed post about a player winning his first cap.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "yDebut2": "{name}, first cap. Let us see what he does with it.",
+  "@yDebut2": {
+    "description": "Y feed post about a player winning his first cap.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "yDebut3": "Debut for {name}. The squad needed fresh legs somewhere.",
+  "@yDebut3": {
+    "description": "Y feed post about a player winning his first cap.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "yDebut4": "{name} handed a cap. We have handed out a lot of those lately.",
+  "@yDebut4": {
+    "description": "Y feed post about a player winning his first cap.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "yDebut5": "A debut for {name}. Another one we will have forgotten by spring.",
+  "@yDebut5": {
+    "description": "Y feed post about a player winning his first cap.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "yDrought0": "{name} has gone {count} without scoring and is doing everything else on the pitch.",
+  "@yDrought0": {
+    "description": "Y feed post about a forward who has gone a long run without scoring.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "yDrought1": "{count} games without a goal for {name}. They come in threes, always have.",
+  "@yDrought1": {
+    "description": "Y feed post about a forward who has gone a long run without scoring.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "yDrought2": "{name}: {count} games, no goals.",
+  "@yDrought2": {
+    "description": "Y feed post about a forward who has gone a long run without scoring.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "yDrought3": "{count} without a goal for {name}. Worth keeping an eye on.",
+  "@yDrought3": {
+    "description": "Y feed post about a forward who has gone a long run without scoring.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "yDrought4": "{count} games. No goals. {name} could not hit a barn door.",
+  "@yDrought4": {
+    "description": "Y feed post about a forward who has gone a long run without scoring.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "yDrought5": "{name} has not scored in {count}. Play literally anybody else.",
+  "@yDrought5": {
+    "description": "Y feed post about a forward who has gone a long run without scoring.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "yRivalryLooms0": "{opponent} next. {count} meetings and it still means everything.",
+  "@yRivalryLooms0": {
+    "description": "Y feed post before a match against the most-played opponent.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      },
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "yRivalryLooms1": "{count} times against {opponent} now. Bring it on.",
+  "@yRivalryLooms1": {
+    "description": "Y feed post before a match against the most-played opponent.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      },
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "yRivalryLooms2": "{opponent} next. Played {count}.",
+  "@yRivalryLooms2": {
+    "description": "Y feed post before a match against the most-played opponent.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      },
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "yRivalryLooms3": "Meeting number {count} with {opponent} this week.",
+  "@yRivalryLooms3": {
+    "description": "Y feed post before a match against the most-played opponent.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      },
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "yRivalryLooms4": "{opponent} again. {count} of these and we have learned nothing.",
+  "@yRivalryLooms4": {
+    "description": "Y feed post before a match against the most-played opponent.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      },
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "yRivalryLooms5": "{count} games against {opponent} and they still beat us. Wonderful.",
+  "@yRivalryLooms5": {
+    "description": "Y feed post before a match against the most-played opponent.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      },
+      "count": {
+        "type": "String"
+      }
+    }
   }
 }

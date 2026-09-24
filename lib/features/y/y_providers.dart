@@ -13,6 +13,7 @@ import 'package:fnm/features/ranking/world_ranking_providers.dart';
 import 'package:fnm/domain/services/achievements/board_satisfaction.dart';
 import 'package:fnm/features/achievements/achievement_providers.dart';
 import 'package:fnm/features/career/career_providers.dart';
+import 'package:fnm/features/press/story_providers.dart';
 import 'package:fnm/features/squad/grievance_providers.dart';
 
 /// The manager's played matches, newest first, with both sides' world
@@ -305,6 +306,61 @@ final AutoDisposeFutureProviderFamily<YTimeline, int> yFeedProvider =
             key: g.key,
             nation: nation,
             seed: career.rngSeed,
+          ),
+        );
+      }
+
+      // WHO is in the squad, and who they are playing next. The same two
+      // readings the conference is built on — see [squadStoriesProvider] —
+      // so the room and the country are talking about one week rather than
+      // two. Dated today, like a grievance: a selection is a thing that is
+      // true now, not a thing that happened on an afternoon.
+      final mood = standingsSoFar.isEmpty
+          ? ResultStanding.par
+          : standingsSoFar.last;
+      for (final s in await ref.watch(squadStoriesProvider(careerId).future)) {
+        posts.addAll(
+          YFeed.forPlayer(
+            topic: s.topic,
+            subject: PressSubjectPlayer(
+              playerId: s.playerId,
+              name: s.name,
+              count: s.count,
+            ),
+            date: career.inGameDate,
+            // ':' and never '|': the detail view groups a conversation by the
+            // part before the FIRST pipe.
+            key: '${s.topic.name}:${s.playerId}:${s.count}',
+            nation: nation,
+            seed: career.rngSeed,
+            standing: mood,
+            history: standingsSoFar,
+          ),
+        );
+      }
+      for (final s in await ref.watch(
+        opponentStoriesProvider(careerId).future,
+      )) {
+        final them = nations
+            .where((n) => n.id == s.nationId)
+            .map((n) => n.name)
+            .firstOrNull;
+        if (them == null) continue;
+        posts.addAll(
+          YFeed.forOpponent(
+            topic: s.topic,
+            subject: PressSubjectOpponent(
+              s.nationId,
+              count: s.count,
+              favourable: s.favourable,
+            ),
+            opponent: them,
+            date: career.inGameDate,
+            key: '${s.topic.name}:${s.nationId}:${s.count}',
+            nation: nation,
+            seed: career.rngSeed,
+            standing: mood,
+            history: standingsSoFar,
           ),
         );
       }

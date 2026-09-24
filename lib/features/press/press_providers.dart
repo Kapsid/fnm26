@@ -9,9 +9,11 @@ import 'package:fnm/domain/services/competition/rounds.dart';
 import 'package:fnm/domain/services/match/match_engine.dart';
 import 'package:fnm/domain/services/press/expectation.dart';
 import 'package:fnm/domain/services/press/press.dart';
+import 'package:fnm/domain/services/press/squad_stories.dart';
 import 'package:fnm/features/achievements/achievement_providers.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/hub/objective_providers.dart';
+import 'package:fnm/features/press/story_providers.dart';
 import 'package:fnm/features/ranking/world_ranking_providers.dart';
 import 'package:fnm/features/tactics/condition_providers.dart';
 
@@ -340,6 +342,11 @@ pressQuestionProvider = FutureProvider.autoDispose.family<PressQuestion?, int>((
   // the room leads with the thing that just happened rather than with the
   // generic question about the run of form (see [Press.precedenceOf]).
   final lastMatch = competitive.firstOrNull;
+  // Whether that competitive match is also the last match FULL STOP. A
+  // friendly played since does not bury a red card, but it does mean the card
+  // is no longer the last thing that happened — which is the difference
+  // between leading a conference and filling one (see [Press.precedenceOf]).
+  final isNewest = lastMatch != null && played.firstOrNull?.id == lastMatch.id;
   if (lastMatch != null && playedSince(lastMatch) == 0) {
     final playerRepo = ref.watch(playerRepositoryProvider);
     final aging = CareerService.agingYears(career);
@@ -376,6 +383,7 @@ pressQuestionProvider = FutureProvider.autoDispose.family<PressQuestion?, int>((
               minute: red.minute,
               playerId: red.playerId,
               name: name,
+              fromLastMatch: isNewest,
             ),
           ),
         );
@@ -417,6 +425,7 @@ pressQuestionProvider = FutureProvider.autoDispose.family<PressQuestion?, int>((
                 minute: hurt.minute,
                 playerId: hurt.playerId,
                 name: name,
+                fromLastMatch: isNewest,
               ),
             ),
           );
@@ -456,6 +465,7 @@ pressQuestionProvider = FutureProvider.autoDispose.family<PressQuestion?, int>((
             playerId: g.playerId,
             name: name,
             ours: g.nationId == career.nationId,
+            fromLastMatch: isNewest,
           ),
         ),
       );
@@ -582,6 +592,73 @@ pressQuestionProvider = FutureProvider.autoDispose.family<PressQuestion?, int>((
         subjectNationId: _opponent(opener, career.nationId),
       ),
     );
+  }
+
+  // ---------------------------------------------------------------------
+  // WHO is playing, and who they are playing next.
+  //
+  // The questions above read a scoreline or a match; these read the squad and
+  // the fixture list, which is the half of a press room that had never
+  // existed. Every one of them names a man or a nation and the number that
+  // makes it a question — see [SquadStories] and [OpponentStories] for the
+  // rules, which are pure and tested on their own.
+  //
+  // A story's key is what stops the room asking twice. It is cut so that the
+  // same situation is one question: a drought is asked about once per run of
+  // [SquadStories.droughtGames], a selection once per cycle, a career ending
+  // and a first cap once ever.
+  if (hasManaged) {
+    for (final s in await ref.watch(squadStoriesProvider(careerId).future)) {
+      final key = switch (s.topic) {
+        PressTopic.strikerDrought =>
+          'drought:${s.playerId}:${s.count ~/ SquadStories.droughtGames}',
+        PressTopic.youngsterBreakthrough =>
+          'young:${s.playerId}:${played.first.id}',
+        PressTopic.droppedStar =>
+          'dropped:${s.playerId}:${career.cyclePointer}',
+        PressTopic.captaincyQuestion =>
+          'armband:${s.playerId}:${career.cyclePointer}',
+        PressTopic.veteranEnd => 'veteran:${s.playerId}',
+        _ => 'debut:${s.playerId}',
+      };
+      add(
+        q(
+          key,
+          s.topic,
+          subject: PressSubjectPlayer(
+            playerId: s.playerId,
+            name: s.name,
+            count: s.count,
+          ),
+        ),
+      );
+    }
+
+    // …and the side on the other side of the next match. Keyed on that
+    // fixture, because the question is about THAT match and stops being
+    // askable the moment it is played.
+    final nextUp = [
+      for (final f in fixtures)
+        if (!f.hasResult) f,
+    ]..sort((a, b) => a.date.compareTo(b.date));
+    if (nextUp.firstOrNull case final next?) {
+      for (final s in await ref.watch(
+        opponentStoriesProvider(careerId).future,
+      )) {
+        add(
+          q(
+            '${Press.keyPrefixOf(s.topic)}:${next.id}',
+            s.topic,
+            subjectNationId: s.nationId,
+            subject: PressSubjectOpponent(
+              s.nationId,
+              count: s.count,
+              favourable: s.favourable,
+            ),
+          ),
+        );
+      }
+    }
   }
 
   // What the press have just been asking about, newest first. A topic they

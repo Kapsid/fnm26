@@ -13298,6 +13298,354 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Staff room'**
   String get strengthFactorStaff;
+
+  /// Press question about a first-choice forward who has stopped scoring.
+  ///
+  /// In en, this message translates to:
+  /// **'{player} has gone {count} games without a goal. Is he still your number nine?'**
+  String pressAskDrought1(String player, String count);
+
+  /// Press question about a first-choice forward who has stopped scoring.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} matches, no goals for {player}. How long do you keep picking him?'**
+  String pressAskDrought2(String player, String count);
+
+  /// Press question about a first-choice forward who has stopped scoring.
+  ///
+  /// In en, this message translates to:
+  /// **'Your first-choice forward has not scored in {count}. Is {player} carrying something, or is it in his head?'**
+  String pressAskDrought3(String player, String count);
+
+  /// Press question about a first-choice forward who has stopped scoring.
+  ///
+  /// In en, this message translates to:
+  /// **'{player} is {count} games into a drought. Do you take him out of the firing line?'**
+  String pressAskDrought4(String player, String count);
+
+  /// Press question about a young player who has just had an outstanding match.
+  ///
+  /// In en, this message translates to:
+  /// **'{player} is {count} and he was the best man on the pitch. Is he in the side to stay?'**
+  String pressAskBreakthrough1(String player, String count);
+
+  /// Press question about a young player who has just had an outstanding match.
+  ///
+  /// In en, this message translates to:
+  /// **'At {count}, {player} played like somebody who has been there for years. How much do you ask of him now?'**
+  String pressAskBreakthrough2(String player, String count);
+
+  /// Press question about a young player who has just had an outstanding match.
+  ///
+  /// In en, this message translates to:
+  /// **'Everyone left talking about {player}, {count} years old. Is that a warning about the rest of them?'**
+  String pressAskBreakthrough3(String player, String count);
+
+  /// Press question about a young player who has just had an outstanding match.
+  ///
+  /// In en, this message translates to:
+  /// **'{player} is {count}. Do you protect him now, or do you build round him?'**
+  String pressAskBreakthrough4(String player, String count);
+
+  /// Press question about a highly rated player left out of the starting eleven.
+  ///
+  /// In en, this message translates to:
+  /// **'{player} is rated {count} and he is not in your side. Explain that one.'**
+  String pressAskDropped1(String player, String count);
+
+  /// Press question about a highly rated player left out of the starting eleven.
+  ///
+  /// In en, this message translates to:
+  /// **'A player rated {count} is sitting on your bench. What has {player} done wrong?'**
+  String pressAskDropped2(String player, String count);
+
+  /// Press question about a highly rated player left out of the starting eleven.
+  ///
+  /// In en, this message translates to:
+  /// **'You left {player} out. He is rated {count}. Is that form, or is it something else?'**
+  String pressAskDropped3(String player, String count);
+
+  /// Press question about a highly rated player left out of the starting eleven.
+  ///
+  /// In en, this message translates to:
+  /// **'{player}, rated {count}, watching from the bench. Is he in your plans at all?'**
+  String pressAskDropped4(String player, String count);
+
+  /// Press question about a captain whose form has gone.
+  ///
+  /// In en, this message translates to:
+  /// **'{player} has {count} caps and he has not played like your captain for weeks. Is the armband right on him?'**
+  String pressAskArmband1(String player, String count);
+
+  /// Press question about a captain whose form has gone.
+  ///
+  /// In en, this message translates to:
+  /// **'Your captain has lost his form. {count} caps buys a lot of patience. How much is left?'**
+  String pressAskArmband2(String player, String count);
+
+  /// Press question about a captain whose form has gone.
+  ///
+  /// In en, this message translates to:
+  /// **'{player} is carrying the armband and not much else. {count} caps says he has earned time. Has he?'**
+  String pressAskArmband3(String player, String count);
+
+  /// Press question about a captain whose form has gone.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} caps, and a captain out of form. Do you pick {player} because he is the captain?'**
+  String pressAskArmband4(String player, String count);
+
+  /// Press question about a veteran regular whose level is dropping.
+  ///
+  /// In en, this message translates to:
+  /// **'{player} is {count} now, and it shows. Is this his last campaign?'**
+  String pressAskVeteran1(String player, String count);
+
+  /// Press question about a veteran regular whose level is dropping.
+  ///
+  /// In en, this message translates to:
+  /// **'At {count}, {player} is not the player he was. Do you tell him, or does he tell you?'**
+  String pressAskVeteran2(String player, String count);
+
+  /// Press question about a veteran regular whose level is dropping.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} years old and a step slower. Where does {player} fit from here?'**
+  String pressAskVeteran3(String player, String count);
+
+  /// Press question about a veteran regular whose level is dropping.
+  ///
+  /// In en, this message translates to:
+  /// **'Is {player}, at {count}, still picked for what he does or for what he did?'**
+  String pressAskVeteran4(String player, String count);
+
+  /// Press question after a player wins his first cap.
+  ///
+  /// In en, this message translates to:
+  /// **'{player} won his first cap at {count}. What did you see in him?'**
+  String pressAskDebut1(String player, String count);
+
+  /// Press question after a player wins his first cap.
+  ///
+  /// In en, this message translates to:
+  /// **'A debut for {player}, aged {count}. Is that a look, or is he in?'**
+  String pressAskDebut2(String player, String count);
+
+  /// Press question after a player wins his first cap.
+  ///
+  /// In en, this message translates to:
+  /// **'{player} is {count} and he has a cap now. How ready is he?'**
+  String pressAskDebut3(String player, String count);
+
+  /// Press question after a player wins his first cap.
+  ///
+  /// In en, this message translates to:
+  /// **'You handed {player} a first cap at {count}. What do you want from him next?'**
+  String pressAskDebut4(String player, String count);
+
+  /// Press question before a match against the most-played opponent.
+  ///
+  /// In en, this message translates to:
+  /// **'{opponent} next, and you have met them {count} times already. Does this one mean more?'**
+  String pressAskRivalNext1(String opponent, String count);
+
+  /// Press question before a match against the most-played opponent.
+  ///
+  /// In en, this message translates to:
+  /// **'You have played {opponent} {count} times now. What does that do to a week like this?'**
+  String pressAskRivalNext2(String opponent, String count);
+
+  /// Press question before a match against the most-played opponent.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} meetings with {opponent}, and here they are again. How do you keep it a football match?'**
+  String pressAskRivalNext3(String opponent, String count);
+
+  /// Press question before a match against the most-played opponent.
+  ///
+  /// In en, this message translates to:
+  /// **'It is {opponent} again, and that makes {count} meetings. Is there anything left to learn about them?'**
+  String pressAskRivalNext4(String opponent, String count);
+
+  /// Press question before facing an opponent this nation is unbeaten against.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} against {opponent} without defeat. Does a record like that travel?'**
+  String pressAskRunGood1(String opponent, String count);
+
+  /// Press question before facing an opponent this nation is unbeaten against.
+  ///
+  /// In en, this message translates to:
+  /// **'You have not lost to {opponent} in {count}. Is that in their heads or in yours?'**
+  String pressAskRunGood2(String opponent, String count);
+
+  /// Press question before facing an opponent this nation is unbeaten against.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} unbeaten against {opponent}. How much is that worth on the day?'**
+  String pressAskRunGood3(String opponent, String count);
+
+  /// Press question before facing an opponent this nation is unbeaten against.
+  ///
+  /// In en, this message translates to:
+  /// **'{opponent} have not beaten you in {count}. Do you say that out loud to your players?'**
+  String pressAskRunGood4(String opponent, String count);
+
+  /// Press question before facing an opponent this nation has not beaten in a long time.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} against {opponent} without a win. What is it about them?'**
+  String pressAskRunBad1(String opponent, String count);
+
+  /// Press question before facing an opponent this nation has not beaten in a long time.
+  ///
+  /// In en, this message translates to:
+  /// **'You have not beaten {opponent} in {count}. Is that a mental thing?'**
+  String pressAskRunBad2(String opponent, String count);
+
+  /// Press question before facing an opponent this nation has not beaten in a long time.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} meetings with {opponent} and no win. What changes this time?'**
+  String pressAskRunBad3(String opponent, String count);
+
+  /// Press question before facing an opponent this nation has not beaten in a long time.
+  ///
+  /// In en, this message translates to:
+  /// **'{opponent} keep beating you: {count} without a win. Whose problem is that?'**
+  String pressAskRunBad4(String opponent, String count);
+
+  /// Press question before facing the side that knocked this nation out of the last tournament.
+  ///
+  /// In en, this message translates to:
+  /// **'{opponent} put you out last time. Is this about revenge?'**
+  String pressAskRevenge1(String opponent);
+
+  /// Press question before facing the side that knocked this nation out of the last tournament.
+  ///
+  /// In en, this message translates to:
+  /// **'The side that ended your tournament is back. What do you owe {opponent}?'**
+  String pressAskRevenge2(String opponent);
+
+  /// Press question before facing the side that knocked this nation out of the last tournament.
+  ///
+  /// In en, this message translates to:
+  /// **'{opponent} again, after what they did to you. Has anything changed since?'**
+  String pressAskRevenge3(String opponent);
+
+  /// Press question before facing the side that knocked this nation out of the last tournament.
+  ///
+  /// In en, this message translates to:
+  /// **'Last time {opponent} sent you home. Do your players need reminding?'**
+  String pressAskRevenge4(String opponent);
+
+  /// Y feed post about a player winning his first cap.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} gets his first cap. Remember the name.'**
+  String yDebut0(String name);
+
+  /// Y feed post about a player winning his first cap.
+  ///
+  /// In en, this message translates to:
+  /// **'A debut for {name}. You can see it in him, can you not?'**
+  String yDebut1(String name);
+
+  /// Y feed post about a player winning his first cap.
+  ///
+  /// In en, this message translates to:
+  /// **'{name}, first cap. Let us see what he does with it.'**
+  String yDebut2(String name);
+
+  /// Y feed post about a player winning his first cap.
+  ///
+  /// In en, this message translates to:
+  /// **'Debut for {name}. The squad needed fresh legs somewhere.'**
+  String yDebut3(String name);
+
+  /// Y feed post about a player winning his first cap.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} handed a cap. We have handed out a lot of those lately.'**
+  String yDebut4(String name);
+
+  /// Y feed post about a player winning his first cap.
+  ///
+  /// In en, this message translates to:
+  /// **'A debut for {name}. Another one we will have forgotten by spring.'**
+  String yDebut5(String name);
+
+  /// Y feed post about a forward who has gone a long run without scoring.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} has gone {count} without scoring and is doing everything else on the pitch.'**
+  String yDrought0(String name, String count);
+
+  /// Y feed post about a forward who has gone a long run without scoring.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} games without a goal for {name}. They come in threes, always have.'**
+  String yDrought1(String name, String count);
+
+  /// Y feed post about a forward who has gone a long run without scoring.
+  ///
+  /// In en, this message translates to:
+  /// **'{name}: {count} games, no goals.'**
+  String yDrought2(String name, String count);
+
+  /// Y feed post about a forward who has gone a long run without scoring.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} without a goal for {name}. Worth keeping an eye on.'**
+  String yDrought3(String name, String count);
+
+  /// Y feed post about a forward who has gone a long run without scoring.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} games. No goals. {name} could not hit a barn door.'**
+  String yDrought4(String name, String count);
+
+  /// Y feed post about a forward who has gone a long run without scoring.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} has not scored in {count}. Play literally anybody else.'**
+  String yDrought5(String name, String count);
+
+  /// Y feed post before a match against the most-played opponent.
+  ///
+  /// In en, this message translates to:
+  /// **'{opponent} next. {count} meetings and it still means everything.'**
+  String yRivalryLooms0(String opponent, String count);
+
+  /// Y feed post before a match against the most-played opponent.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} times against {opponent} now. Bring it on.'**
+  String yRivalryLooms1(String opponent, String count);
+
+  /// Y feed post before a match against the most-played opponent.
+  ///
+  /// In en, this message translates to:
+  /// **'{opponent} next. Played {count}.'**
+  String yRivalryLooms2(String opponent, String count);
+
+  /// Y feed post before a match against the most-played opponent.
+  ///
+  /// In en, this message translates to:
+  /// **'Meeting number {count} with {opponent} this week.'**
+  String yRivalryLooms3(String opponent, String count);
+
+  /// Y feed post before a match against the most-played opponent.
+  ///
+  /// In en, this message translates to:
+  /// **'{opponent} again. {count} of these and we have learned nothing.'**
+  String yRivalryLooms4(String opponent, String count);
+
+  /// Y feed post before a match against the most-played opponent.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} games against {opponent} and they still beat us. Wonderful.'**
+  String yRivalryLooms5(String opponent, String count);
 }
 
 class _AppLocalizationsDelegate

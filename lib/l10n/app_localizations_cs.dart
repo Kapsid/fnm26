@@ -8478,4 +8478,294 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get strengthFactorStaff => 'Realizační tým';
+
+  @override
+  String pressAskDrought1(String player, String count) {
+    return '$player nedal gól už $count zápasů. Je pořád vaší jedničkou v útoku?';
+  }
+
+  @override
+  String pressAskDrought2(String player, String count) {
+    return '$count zápasů a od hráče $player ani gól. Jak dlouho ho budete nasazovat?';
+  }
+
+  @override
+  String pressAskDrought3(String player, String count) {
+    return 'Vaše útočná jednička nedala gól $count zápasů. Nese si $player zranění, nebo to má v hlavě?';
+  }
+
+  @override
+  String pressAskDrought4(String player, String count) {
+    return '$player je $count zápasů bez gólu. Stáhnete ho z palebné linie?';
+  }
+
+  @override
+  String pressAskBreakthrough1(String player, String count) {
+    return '$player má $count let a byl nejlepší na hřišti. Zůstává v sestavě natrvalo?';
+  }
+
+  @override
+  String pressAskBreakthrough2(String player, String count) {
+    return 'V $count letech hrál $player jako matador. Kolik od něj teď budete chtít?';
+  }
+
+  @override
+  String pressAskBreakthrough3(String player, String count) {
+    return 'Všichni odcházeli a mluvili o hráči $player, kterému je $count. Není to varování pro zbytek kádru?';
+  }
+
+  @override
+  String pressAskBreakthrough4(String player, String count) {
+    return '$player má $count let. Budete ho chránit, nebo kolem něj postavíte tým?';
+  }
+
+  @override
+  String pressAskDropped1(String player, String count) {
+    return '$player má rating $count a v sestavě není. Vysvětlete nám to.';
+  }
+
+  @override
+  String pressAskDropped2(String player, String count) {
+    return 'Hráč s ratingem $count vám sedí na lavičce. Co $player provedl?';
+  }
+
+  @override
+  String pressAskDropped3(String player, String count) {
+    return 'Nechal jste hráče $player mimo sestavu. Má rating $count. Je to formou, nebo je za tím něco jiného?';
+  }
+
+  @override
+  String pressAskDropped4(String player, String count) {
+    return '$player s ratingem $count se dívá z lavičky. Počítáte s ním vůbec?';
+  }
+
+  @override
+  String pressAskArmband1(String player, String count) {
+    return '$player má $count startů a už týdny nehraje jako kapitán. Sedí mu ta páska?';
+  }
+
+  @override
+  String pressAskArmband2(String player, String count) {
+    return 'Kapitán ztratil formu. $count startů si zaslouží trpělivost. Kolik jí ještě zbývá?';
+  }
+
+  @override
+  String pressAskArmband3(String player, String count) {
+    return '$player nosí pásku a moc dalšího nepřidává. $count startů říká, že si čas zaslouží. Zaslouží?';
+  }
+
+  @override
+  String pressAskArmband4(String player, String count) {
+    return '$count startů a kapitán bez formy. Nasazujete hráče $player proto, že je kapitán?';
+  }
+
+  @override
+  String pressAskVeteran1(String player, String count) {
+    return '$player má $count let a je to vidět. Je tohle jeho poslední kvalifikace?';
+  }
+
+  @override
+  String pressAskVeteran2(String player, String count) {
+    return 'V $count letech už $player není, co býval. Řeknete mu to vy, nebo on vám?';
+  }
+
+  @override
+  String pressAskVeteran3(String player, String count) {
+    return '$count let a o krok pomalejší. Kde $player od teď zapadá?';
+  }
+
+  @override
+  String pressAskVeteran4(String player, String count) {
+    return 'Nasazujete hráče $player v $count letech za to, co předvádí, nebo za to, co předváděl?';
+  }
+
+  @override
+  String pressAskDebut1(String player, String count) {
+    return '$player si v $count letech připsal první start. Co jste v něm viděl?';
+  }
+
+  @override
+  String pressAskDebut2(String player, String count) {
+    return 'Debut pro hráče $player, je mu $count. Bylo to jen oťukání, nebo v tom kádru zůstane?';
+  }
+
+  @override
+  String pressAskDebut3(String player, String count) {
+    return '$player má $count let a už i start za národní tým. Jak je připravený?';
+  }
+
+  @override
+  String pressAskDebut4(String player, String count) {
+    return 'Dal jste hráči $player v $count letech první start. Co od něj chcete dál?';
+  }
+
+  @override
+  String pressAskRivalNext1(String opponent, String count) {
+    return 'Dalším soupeřem je $opponent a už jste se potkali ${count}krát. Znamená tenhle zápas víc?';
+  }
+
+  @override
+  String pressAskRivalNext2(String opponent, String count) {
+    return 'Se soupeřem $opponent jste hráli už ${count}krát. Co to udělá s takovým týdnem?';
+  }
+
+  @override
+  String pressAskRivalNext3(String opponent, String count) {
+    return '$count vzájemných zápasů se soupeřem $opponent a je tu další. Jak z toho udržíte obyčejný fotbal?';
+  }
+
+  @override
+  String pressAskRivalNext4(String opponent, String count) {
+    return 'Zase $opponent, a to je $count vzájemných zápasů. Dá se o nich ještě něco zjistit?';
+  }
+
+  @override
+  String pressAskRunGood1(String opponent, String count) {
+    return '$count zápasů se soupeřem $opponent bez porážky. Dá se taková bilance vzít s sebou?';
+  }
+
+  @override
+  String pressAskRunGood2(String opponent, String count) {
+    return 'Se soupeřem $opponent jste $count zápasů neprohráli. Mají to v hlavě oni, nebo vy?';
+  }
+
+  @override
+  String pressAskRunGood3(String opponent, String count) {
+    return '$count zápasů bez porážky se soupeřem $opponent. Jakou to má cenu v den zápasu?';
+  }
+
+  @override
+  String pressAskRunGood4(String opponent, String count) {
+    return '$opponent vás $count zápasů neporazil. Říkáte to hráčům nahlas?';
+  }
+
+  @override
+  String pressAskRunBad1(String opponent, String count) {
+    return '$count zápasů se soupeřem $opponent bez výhry. Čím to u nich je?';
+  }
+
+  @override
+  String pressAskRunBad2(String opponent, String count) {
+    return 'Soupeře $opponent jste $count zápasů neporazili. Je to o hlavě?';
+  }
+
+  @override
+  String pressAskRunBad3(String opponent, String count) {
+    return '$count vzájemných zápasů se soupeřem $opponent a ani jedna výhra. Co bude tentokrát jinak?';
+  }
+
+  @override
+  String pressAskRunBad4(String opponent, String count) {
+    return '$opponent vás pořád poráží, $count zápasů bez výhry. Čí je to problém?';
+  }
+
+  @override
+  String pressAskRevenge1(String opponent) {
+    return '$opponent vás naposledy vyřadil. Jde teď o odvetu?';
+  }
+
+  @override
+  String pressAskRevenge2(String opponent) {
+    return 'Tým, který ukončil váš turnaj, je zpátky. Co soupeři $opponent dlužíte?';
+  }
+
+  @override
+  String pressAskRevenge3(String opponent) {
+    return 'Znovu $opponent, po tom, co vám provedl. Změnilo se od té doby něco?';
+  }
+
+  @override
+  String pressAskRevenge4(String opponent) {
+    return 'Naposledy vás $opponent poslal domů. Musíte to hráčům připomínat?';
+  }
+
+  @override
+  String yDebut0(String name) {
+    return '$name má první start za národní tým. Zapamatujte si to jméno.';
+  }
+
+  @override
+  String yDebut1(String name) {
+    return 'Debut pro hráče $name. Je to na něm vidět, ne?';
+  }
+
+  @override
+  String yDebut2(String name) {
+    return '$name, první start. Uvidíme, co s tím udělá.';
+  }
+
+  @override
+  String yDebut3(String name) {
+    return 'Debut pro hráče $name. Kádr někde potřeboval čerstvé nohy.';
+  }
+
+  @override
+  String yDebut4(String name) {
+    return '$name dostal start. Těch jsme v poslední době rozdali hodně.';
+  }
+
+  @override
+  String yDebut5(String name) {
+    return 'Debut pro hráče $name. Další, na kterého do jara zapomeneme.';
+  }
+
+  @override
+  String yDrought0(String name, String count) {
+    return '$name nedal gól $count zápasů, ale všechno ostatní na hřišti odvádí.';
+  }
+
+  @override
+  String yDrought1(String name, String count) {
+    return '$count zápasů bez gólu pro hráče $name. Přijdou naráz, vždycky to tak bylo.';
+  }
+
+  @override
+  String yDrought2(String name, String count) {
+    return '$name: $count zápasů, žádný gól.';
+  }
+
+  @override
+  String yDrought3(String name, String count) {
+    return '$count zápasů bez gólu pro hráče $name. Stojí za to to sledovat.';
+  }
+
+  @override
+  String yDrought4(String name, String count) {
+    return '$count zápasů. Ani gól. $name by netrefil ani vrata od stodoly.';
+  }
+
+  @override
+  String yDrought5(String name, String count) {
+    return '$name nedal gól $count zápasů. Postavte tam klidně kohokoliv jiného.';
+  }
+
+  @override
+  String yRivalryLooms0(String opponent, String count) {
+    return 'Příště $opponent. $count vzájemných zápasů a pořád je to všechno.';
+  }
+
+  @override
+  String yRivalryLooms1(String opponent, String count) {
+    return 'Už $count zápasů proti soupeři $opponent. Ať to začne.';
+  }
+
+  @override
+  String yRivalryLooms2(String opponent, String count) {
+    return 'Příště $opponent. Odehráno $count.';
+  }
+
+  @override
+  String yRivalryLooms3(String opponent, String count) {
+    return 'Tenhle týden $count. vzájemný zápas se soupeřem $opponent.';
+  }
+
+  @override
+  String yRivalryLooms4(String opponent, String count) {
+    return 'Zase $opponent. $count takových zápasů a nenaučili jsme se nic.';
+  }
+
+  @override
+  String yRivalryLooms5(String opponent, String count) {
+    return '$count zápasů proti soupeři $opponent a pořád nás poráží. Nádhera.';
+  }
 }
