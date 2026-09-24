@@ -122,6 +122,24 @@ void main() {
     String benchName,
   ) async {
     await openPicker(tester, starterName);
+    // The picker opens on the SHORTLIST, so the man wanted may be under one
+    // of the other tabs. Look on each in turn rather than assuming the first.
+    //
+    // The strings come from the TREE, not from a hard-coded English load: the
+    // sheet renders in whichever language the case is running, and an English
+    // finder simply finds nothing in the Czech one.
+    final l = AppLocalizations.of(
+      tester.element(find.byType(Scaffold).last),
+    );
+    if (find.text(benchName).evaluate().isEmpty) {
+      for (final tab in [l.tacticsTabOnPitch, l.tacticsTabUnavailable]) {
+        final chip = find.text(tab);
+        if (chip.evaluate().isEmpty) continue;
+        await tester.tap(chip.last);
+        await tester.pumpAndSettle();
+        if (find.text(benchName).evaluate().isNotEmpty) break;
+      }
+    }
     // The squad list behind the modal sheet carries the same name; the sheet
     // was pushed later, so it is the last match in the tree.
     final target = find.text(benchName).last;
@@ -269,6 +287,10 @@ void main() {
 
     // And the man handed back is a man the manager can still move.
     await openPicker(tester, 'Bench12');
+    // He is ON THE PITCH now, and the picker opens on the shortlist, so his
+    // row is under the tab that holds the eleven.
+    await tester.tap(find.text(l.tacticsTabOnPitch).last);
+    await tester.pumpAndSettle();
     final tile = find.widgetWithText(ListTile, 'Bench12');
     expect(tile, findsOneWidget);
     expect(
@@ -391,17 +413,29 @@ void main() {
     // it. That is the assertion. Before this the picker had none of its own
     // and every heading was found exactly once, which is what the old flat
     // list looked like from here.
-    // The picker carries the same three groups the squad list has as tabs.
-    // It used to be one flat run, and keeping the two surfaces apart is what
-    // made substituting from the pitch look older than substituting from the
-    // list.
-    for (final heading in ['ON THE PITCH', 'AVAILABLE', 'UNAVAILABLE']) {
+    // The picker carries the same three TABS the squad list does. It used to
+    // open every group at once in one modal, which is what a manager saw
+    // during a live match and reported as having no tabs: this is the route
+    // he takes, and it was the one route the tabs had never reached.
+    final l = await AppLocalizations.delegate.load(const Locale('en'));
+    for (final tab in [
+      l.tacticsTabSuitable,
+      l.tacticsTabOnPitch,
+      l.tacticsTabUnavailable,
+    ]) {
       expect(
-        find.textContaining(heading),
-        findsWidgets,
-        reason: '"$heading" is missing from the slot picker',
+        find.text(tab),
+        findsAtLeastNWidgets(2),
+        reason: '"$tab" is missing from the slot picker',
       );
     }
+
+    // Only one group is shown at a time. That is the difference between tabs
+    // and the stack of sections this replaced.
+    final suitable = find.text(l.tacticsTabSuitable);
+    await tester.tap(suitable.last);
+    await tester.pumpAndSettle();
+    expect(tester.takeException(), isNull);
     expect(tester.takeException(), isNull);
     expectNothingCut(tester);
   });

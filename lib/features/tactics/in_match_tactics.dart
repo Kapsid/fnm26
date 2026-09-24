@@ -1125,19 +1125,21 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
     final onPitch = _onPitch;
     final l = AppLocalizations.of(context);
 
-    // Split the way the bench below the pitch is split, and for the reason it
-    // was split: this sheet offered a man already taken off exactly as it
-    // offered a fit substitute, and a manager reported it as "offering
-    // everyone". The bench list was given sections and this was not, which
-    // left the GRAPHICAL route to a substitution, the one most people take,
-    // still reading like the old flat list.
+    // TABS, the same three the squad list under the pitch carries, and for
+    // the same reason. This sheet used to open every group at once in one
+    // modal, which a manager reported as seeing no tabs during a live match:
+    // the graphical route to a substitution, the one most people take, was
+    // the one route the tabs had never reached.
     //
-    // Inside each section the order stays PositionFit: this sheet is about
-    // one slot, so who suits that slot is the question, and rating order
-    // would answer a different one.
-    final onPitchHere = [
+    // SUITABLE means more here than in the list, because the place is always
+    // known: this sheet is opened by tapping a slot. So the shortlist is the
+    // men who naturally fill THAT place, and it is what opens.
+    final suitableHere = [
       for (final p in candidates)
-        if (onPitch.contains(p.id)) p,
+        if (!onPitch.contains(p.id) &&
+            !_standing(p).blocked &&
+            PositionFit.fitRank(p, position) >= 1)
+          p,
     ];
     final availableHere = [
       for (final p in candidates)
@@ -1147,57 +1149,26 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
       for (final p in candidates)
         if (!onPitch.contains(p.id) && _standing(p).blocked) p,
     ];
-
-    Widget head(String text) => Padding(
-      padding: const EdgeInsets.only(
-        top: AppSpacing.md,
-        bottom: AppSpacing.xs,
-      ),
-      child: Text(
-        text,
-        style: AppTypography.labelSmall.copyWith(
-          color: AppColors.onSurfaceVariant,
-          fontWeight: FontWeight.w700,
-        ),
-      ),
-    );
-
-    Widget emptyNote(String text) => Padding(
-      padding: const EdgeInsets.symmetric(vertical: AppSpacing.sm),
-      child: Text(
-        text,
-        style: AppTypography.bodySmall.copyWith(
-          color: AppColors.onSurfaceVariant,
-        ),
-      ),
-    );
+    final onPitchHere = [
+      for (final p in candidates)
+        if (onPitch.contains(p.id)) p,
+    ];
+    // Nobody naturally fits, so the shortlist becomes the whole bench with a
+    // line saying why. A manager a man short has to be able to field SOMEBODY.
+    final noFit = suitableHere.isEmpty && availableHere.isNotEmpty;
 
     final picked = await showModalBottomSheet<int>(
       context: context,
       backgroundColor: AppColors.surfaceContainer,
       isScrollControlled: true,
-      builder: (_) => ListView(
-        padding: const EdgeInsets.all(AppSpacing.md),
-        children: [
-          Text(
-            l.tacticsPickRole(position.roleName.toUpperCase()),
-            style: AppTypography.labelMedium.copyWith(color: AppColors.primary),
-          ),
-          if (onPitchHere.isNotEmpty)
-            head(l.tacticsSectionOnPitch(onPitch.length, _lineup.length)),
-          for (final p in onPitchHere) _pickerRow(p, position, onPitch, l),
-          head(l.tacticsSectionAvailable(availableHere.length)),
-          if (availableHere.isEmpty) emptyNote(l.tacticsNoSubs),
-          for (final p in availableHere) _pickerRow(p, position, onPitch, l),
-          // Back, with the tab it belongs to. This sheet and the squad list
-          // under the pitch answer the same question about the same men, and
-          // one of them dropping the spent pile while the other kept it is
-          // how substituting from the pitch came to look different from
-          // substituting from the list in the first place.
-          head(l.tacticsSectionUnavailable(blockedHere.length)),
-          if (blockedHere.isEmpty) emptyNote(l.tacticsNobodyUnavailable),
-          for (final p in blockedHere) _pickerRow(p, position, onPitch, l),
-        ],
+      builder: (_) => _SlotPickerSheet(
+        title: l.tacticsPickRole(position.roleName.toUpperCase()),
+        suitable: noFit ? availableHere : suitableHere,
+        onPitch: onPitchHere,
+        unavailable: blockedHere,
+        onPitchCount: '${onPitch.length}/${_lineup.length}',
+        noFitNote: noFit ? l.tacticsNobodySuits : null,
+        row: (p) => _pickerRow(p, position, onPitch, l),
       ),
     );
     if (picked != null && mounted) _setSlot(slot, picked);
@@ -1288,6 +1259,111 @@ enum _SquadTab { suitable, onPitch, unavailable }
 /// Chips rather than a TabBar: a TabBarView inside the scrolling sheet needs
 /// a bounded height of its own, and giving it one is what makes a list end up
 /// with its own private scrollbar inside a page that already scrolls.
+/// The slot picker, with the same three tabs the squad list carries.
+///
+/// A modal that opened every group at once is what a manager saw during a
+/// live match and reported as having no tabs: this is the route he takes, and
+/// it was the one route the tabs had never reached.
+class _SlotPickerSheet extends StatefulWidget {
+  const _SlotPickerSheet({
+    required this.title,
+    required this.suitable,
+    required this.onPitch,
+    required this.unavailable,
+    required this.onPitchCount,
+    required this.noFitNote,
+    required this.row,
+  });
+
+  final String title;
+  final List<Player> suitable;
+  final List<Player> onPitch;
+  final List<Player> unavailable;
+  final String onPitchCount;
+
+  /// Set when nothing naturally fits and [suitable] is the whole bench.
+  final String? noFitNote;
+
+  final Widget Function(Player) row;
+
+  @override
+  State<_SlotPickerSheet> createState() => _SlotPickerSheetState();
+}
+
+class _SlotPickerSheetState extends State<_SlotPickerSheet> {
+  _SquadTab _tab = _SquadTab.suitable;
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    final shown = switch (_tab) {
+      _SquadTab.suitable => widget.suitable,
+      _SquadTab.onPitch => widget.onPitch,
+      _SquadTab.unavailable => widget.unavailable,
+    };
+    return SafeArea(
+      top: false,
+      child: Padding(
+        padding: const EdgeInsets.all(AppSpacing.md),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Text(
+              widget.title,
+              style: AppTypography.labelMedium.copyWith(
+                color: AppColors.primary,
+              ),
+            ),
+            _SquadTabs(
+              tab: _tab,
+              suitableLabel: l.tacticsTabSuitable,
+              onPitchLabel: l.tacticsTabOnPitch,
+              unavailableLabel: l.tacticsTabUnavailable,
+              suitableCount: '${widget.suitable.length}',
+              onPitchCount: widget.onPitchCount,
+              unavailableCount: '${widget.unavailable.length}',
+              trailing: const SizedBox.shrink(),
+              onSelected: (t) => setState(() => _tab = t),
+            ),
+            const SizedBox(height: AppSpacing.sm),
+            if (_tab == _SquadTab.suitable && widget.noFitNote != null)
+              Padding(
+                padding: const EdgeInsets.only(bottom: AppSpacing.xs),
+                child: Text(
+                  widget.noFitNote!,
+                  style: AppTypography.labelSmall.copyWith(
+                    color: AppColors.onSurfaceVariant,
+                  ),
+                ),
+              ),
+            Flexible(
+              child: shown.isEmpty
+                  ? Padding(
+                      padding: const EdgeInsets.symmetric(
+                        vertical: AppSpacing.md,
+                      ),
+                      child: Text(
+                        _tab == _SquadTab.unavailable
+                            ? l.tacticsNobodyUnavailable
+                            : l.tacticsNoSubs,
+                        style: AppTypography.bodySmall.copyWith(
+                          color: AppColors.onSurfaceVariant,
+                        ),
+                      ),
+                    )
+                  : ListView(
+                      shrinkWrap: true,
+                      children: [for (final p in shown) widget.row(p)],
+                    ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 class _SquadTabs extends StatelessWidget {
   const _SquadTabs({
     required this.tab,
