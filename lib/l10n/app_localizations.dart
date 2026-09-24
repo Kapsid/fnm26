@@ -236,6 +236,24 @@ abstract class AppLocalizations {
   /// **'Shots'**
   String get matchStatShots;
 
+  /// Match stat bar label: goals.
+  ///
+  /// In en, this message translates to:
+  /// **'Goals'**
+  String get matchStatGoals;
+
+  /// Match stat bar label: yellow cards.
+  ///
+  /// In en, this message translates to:
+  /// **'Yellows'**
+  String get matchStatYellowCards;
+
+  /// Match stat bar label: red cards.
+  ///
+  /// In en, this message translates to:
+  /// **'Reds'**
+  String get matchStatRedCards;
+
   /// Label on the live momentum bar.
   ///
   /// In en, this message translates to:
@@ -11229,10 +11247,10 @@ abstract class AppLocalizations {
   /// **'MATCH'**
   String get matchTopBarTitle;
 
-  /// Live match: stats tab before full time.
+  /// Live match stats tab: which figures cannot be given until full time.
   ///
   /// In en, this message translates to:
-  /// **'Stats available at full time.'**
+  /// **'Possession, player ratings and the man of the match are settled at the final whistle.'**
   String get matchStatsAtFullTime;
 
   /// Live match: player-ratings heading.

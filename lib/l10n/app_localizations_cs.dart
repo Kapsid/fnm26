@@ -86,6 +86,15 @@ class AppLocalizationsCs extends AppLocalizations {
   String get matchStatShots => 'Střely';
 
   @override
+  String get matchStatGoals => 'Góly';
+
+  @override
+  String get matchStatYellowCards => 'Žluté';
+
+  @override
+  String get matchStatRedCards => 'Červené';
+
+  @override
   String get matchMomentum => 'MOMENTUM';
 
   @override
@@ -7210,7 +7219,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get matchStatsAtFullTime =>
-      'Statistiky budou k dispozici po konci zápasu.';
+      'Držení míče, známky hráčů a hráč zápasu budou známy až po závěrečném hvizdu.';
 
   @override
   String get matchPlayerRatings => 'ZNÁMKY HRÁČŮ';

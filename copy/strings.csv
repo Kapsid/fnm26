@@ -22,6 +22,9 @@ matchDossierKeyMen,Label above the opponent's danger men.,,KEY MEN,KLÍČOVÍ HR
 matchCouldNotContinue,Snackbar when advancing past the match fails.,{error},Could not continue: {error},Nelze pokračovat: {error}
 matchSkipToFullTime,Tooltip on the button that fast-forwards to the final whistle.,,Skip to full time,Přeskočit do konce
 matchStatShots,Match stat bar label: shots.,,Shots,Střely
+matchStatGoals,Match stat bar label: goals.,,Goals,Góly
+matchStatYellowCards,Match stat bar label: yellow cards.,,Yellows,Žluté
+matchStatRedCards,Match stat bar label: red cards.,,Reds,Červené
 matchMomentum,Label on the live momentum bar.,,MOMENTUM,MOMENTUM
 matchSwingAtk,Abbreviation for the attack swing from a team talk.,,ATK,ÚT
 matchSwingDef,Abbreviation for the defensive swing from a team talk.,,DEF,OBR
@@ -1844,7 +1847,7 @@ newsPotyTitle,Inbox: the year's player award.,{year},World Player of the Year {y
 newsPotyBody,"Inbox: the year's player award, body.",{name},{name} is the best player in the world this year.,{name} je letos nejlepším hráčem světa.
 newsPotyYoungSuffix,Inbox: appended when a different player takes the young-player award.,{name}, {name} takes the young player's award., Cenu pro nejlepšího mladého hráče bere {name}.
 matchTopBarTitle,Live-match screen top bar.,,MATCH,ZÁPAS
-matchStatsAtFullTime,Live match: stats tab before full time.,,Stats available at full time.,Statistiky budou k dispozici po konci zápasu.
+matchStatsAtFullTime,Live match stats tab: which figures cannot be given until full time.,,"Possession, player ratings and the man of the match are settled at the final whistle.","Držení míče, známky hráčů a hráč zápasu budou známy až po závěrečném hvizdu."
 matchPlayerRatings,Live match: player-ratings heading.,,PLAYER RATINGS,ZNÁMKY HRÁČŮ
 matchSubstitutions,Live match: substitutions heading.,,SUBSTITUTIONS,STŘÍDÁNÍ
 matchSubstitutes,Live match: bench heading.,,SUBSTITUTES,NÁHRADNÍCI

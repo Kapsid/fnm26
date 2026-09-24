@@ -1382,20 +1382,24 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
                                 live: !ft,
                                 homeId: homeId,
                               ),
-                              if (ft)
-                                _Stats(
-                                  result: r,
-                                  homeCode: code(homeId),
-                                  awayCode: code(awayId),
-                                  homeNationId: homeId,
-                                  ground: preview.ground,
-                                  neutral: preview.neutralVenue,
-                                  groundCode: code(
-                                    preview.ground.groundNationId,
-                                  ),
-                                )
-                              else
-                                const _StatsLocked(),
+                              MatchStatsPanel(
+                                result: r,
+                                homeCode: code(homeId),
+                                awayCode: code(awayId),
+                                homeNationId: homeId,
+                                ground: preview.ground,
+                                neutral: preview.neutralVenue,
+                                groundCode: code(
+                                  preview.ground.groundNationId,
+                                ),
+                                // Read as of the clock, exactly like the
+                                // timeline beside it, so the box score moves
+                                // through the match instead of arriving whole
+                                // at the whistle.
+                                minute: _minute,
+                                fullTime: ft,
+                                events: timelineEvents,
+                              ),
                               _Lineups(
                                 home: preview.playerIsHome
                                     ? _currentXi(preview)

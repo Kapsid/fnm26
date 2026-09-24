@@ -86,6 +86,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get matchStatShots => 'Shots';
 
   @override
+  String get matchStatGoals => 'Goals';
+
+  @override
+  String get matchStatYellowCards => 'Yellows';
+
+  @override
+  String get matchStatRedCards => 'Reds';
+
+  @override
   String get matchMomentum => 'MOMENTUM';
 
   @override
@@ -7182,7 +7191,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get matchTopBarTitle => 'MATCH';
 
   @override
-  String get matchStatsAtFullTime => 'Stats available at full time.';
+  String get matchStatsAtFullTime =>
+      'Possession, player ratings and the man of the match are settled at the final whistle.';
 
   @override
   String get matchPlayerRatings => 'PLAYER RATINGS';

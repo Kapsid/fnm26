@@ -112,6 +112,18 @@
   "@matchStatShots": {
     "description": "Match stat bar label: shots."
   },
+  "matchStatGoals": "Goals",
+  "@matchStatGoals": {
+    "description": "Match stat bar label: goals."
+  },
+  "matchStatYellowCards": "Yellows",
+  "@matchStatYellowCards": {
+    "description": "Match stat bar label: yellow cards."
+  },
+  "matchStatRedCards": "Reds",
+  "@matchStatRedCards": {
+    "description": "Match stat bar label: red cards."
+  },
   "matchMomentum": "MOMENTUM",
   "@matchMomentum": {
     "description": "Label on the live momentum bar."
@@ -10694,9 +10706,9 @@
   "@matchTopBarTitle": {
     "description": "Live-match screen top bar."
   },
-  "matchStatsAtFullTime": "Stats available at full time.",
+  "matchStatsAtFullTime": "Possession, player ratings and the man of the match are settled at the final whistle.",
   "@matchStatsAtFullTime": {
-    "description": "Live match: stats tab before full time."
+    "description": "Live match stats tab: which figures cannot be given until full time."
   },
   "matchPlayerRatings": "PLAYER RATINGS",
   "@matchPlayerRatings": {
