@@ -51,6 +51,55 @@ void main() {
     expect(continued, isTrue);
   });
 
+  // A draw whose groups are not all the same size. The card used to be given
+  // the POT count, which is the biggest group, so a group of two carried a
+  // third ball that never filled and was still sitting there after the draw
+  // had finished.
+  testWidgets('a smaller group keeps no empty ball once the draw is done', (
+    tester,
+  ) async {
+    final nations = {
+      for (var i = 1; i <= 5; i++) i: nation(id: i, name: 'Nation$i'),
+    };
+
+    await tester.pumpApp(
+      Scaffold(
+        body: DrawCeremony(
+          groups: const [
+            (name: 'A', nationIds: [1, 2, 3]),
+            (name: 'B', nationIds: [4, 5]),
+          ],
+          nations: nations,
+          potCount: 3,
+          onContinue: () {},
+        ),
+      ),
+    );
+    await tester.pump();
+
+    await tester.tap(find.text('Skip'));
+    await tester.pumpAndSettle();
+
+    // An empty slot is a bordered circle with NOTHING in it. A drawn nation is
+    // a FlagDisc, whose circle wraps a ClipOval, so the two never collide.
+    final emptyBalls = find.byWidgetPredicate(
+      (w) =>
+          w is Container &&
+          w.child == null &&
+          w.decoration is BoxDecoration &&
+          (w.decoration! as BoxDecoration).shape == BoxShape.circle,
+    );
+    expect(
+      emptyBalls,
+      findsNothing,
+      reason: 'the draw is over, so every ball has a nation in it',
+    );
+
+    for (var i = 1; i <= 5; i++) {
+      expect(find.text('Nation$i'), findsOneWidget);
+    }
+  });
+
   testWidgets('the manager can pause and draw team by team by tapping', (
     tester,
   ) async {

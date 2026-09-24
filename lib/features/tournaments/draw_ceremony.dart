@@ -255,7 +255,14 @@ class _DrawCeremonyState extends State<DrawCeremony> {
                 for (var gi = 0; gi < widget.groups.length; gi++)
                   _GroupCard(
                     title: l.tourSharedGroupName(widget.groups[gi].name),
-                    slots: _pots,
+                    // This group's OWN size, not the pot count. The pot count
+                    // is the biggest group, and handing it to every card gave
+                    // a group of three a fourth, permanently empty ball that
+                    // stayed there after the draw had finished. Slots say how
+                    // many nations this group will hold; pots say how the
+                    // reveal is paced. They are only the same number when
+                    // every group is the same size.
+                    slots: widget.groups[gi].nationIds.length,
                     revealed: revealedByGroup[gi] ?? const [],
                     justAdded: !done && last != null && last.groupIndex == gi
                         ? last.nationId
