@@ -732,18 +732,36 @@ class _CoverageBanner extends StatelessWidget {
             // ordinal ("30. lis"), and a seventh monospace character does not
             // fit in 52 points. It wrapped rather than overflowed, which is
             // the quiet kind of cut no exception reports.
+            //
+            // Home or away goes UNDER the date rather than beside it. It used
+            // to be "v " and "@ ", a convention off American score lines that
+            // a tester could not read, and which was never translated, so in
+            // Czech the away marker was the preposition "v". The word that
+            // replaces it is five times as wide, and put in the row it pushed
+            // the competition line into an ellipsis. Here it costs no width at
+            // all, and the name beside it gets back the ten points the old
+            // symbol was taking.
             width: 58,
-            child: Text(
-              AppDate.dayMonth(context, f.date),
-              style: AppTypography.labelSmall.copyWith(
-                color: AppColors.onSurfaceVariant,
-              ),
-            ),
-          ),
-          Text(
-            home ? 'v ' : '@ ',
-            style: AppTypography.labelSmall.copyWith(
-              color: AppColors.onSurfaceVariant,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  AppDate.dayMonth(context, f.date),
+                  style: AppTypography.labelSmall.copyWith(
+                    color: AppColors.onSurfaceVariant,
+                  ),
+                ),
+                Text(
+                  home ? l.callUpHome : l.callUpAway,
+                  maxLines: 1,
+                  style: AppTypography.labelSmall.copyWith(
+                    color: AppColors.onSurfaceVariant,
+                    fontSize: 10,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ],
             ),
           ),
           FlagDisc(opp?.code ?? '??', size: 16),

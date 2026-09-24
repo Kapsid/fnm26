@@ -312,6 +312,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get recordsYourRecord => 'YOUR RECORD';
 
   @override
+  String get callUpHome => 'HOME';
+
+  @override
+  String get callUpAway => 'AWAY';
+
+  @override
   String get recordsHome => 'HOME';
 
   @override

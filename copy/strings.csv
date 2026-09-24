@@ -92,6 +92,8 @@ recordsMostCaps,Leaderboard heading (nation most caps).,,MOST CAPS,NEJVÍCE STAR
 recordsTopScorers,Leaderboard heading.,,TOP SCORERS,NEJLEPŠÍ STŘELCI
 recordsMostAssists,Leaderboard heading.,,MOST ASSISTS,NEJVÍCE ASISTENCÍ
 recordsYourRecord,Heading over the manager's head-to-head ledger.,,YOUR RECORD,VAŠE BILANCE
+callUpHome,Marks a fixture in the call-up window as played at home.,,HOME,DOMA
+callUpAway,Marks a fixture in the call-up window as played away.,,AWAY,VENKU
 recordsHome,Label over the home nation slot in head-to-head.,,HOME,DOMA
 recordsAway,Label over the away nation slot in head-to-head.,,AWAY,VENKU
 recordsActive,Badge every all-time chart puts on a player who is still playing.,,ACTIVE,AKTIVNÍ

@@ -312,6 +312,12 @@ class AppLocalizationsCs extends AppLocalizations {
   String get recordsYourRecord => 'VAŠE BILANCE';
 
   @override
+  String get callUpHome => 'DOMA';
+
+  @override
+  String get callUpAway => 'VENKU';
+
+  @override
   String get recordsHome => 'DOMA';
 
   @override

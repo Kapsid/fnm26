@@ -656,6 +656,18 @@ abstract class AppLocalizations {
   /// **'YOUR RECORD'**
   String get recordsYourRecord;
 
+  /// Marks a fixture in the call-up window as played at home.
+  ///
+  /// In en, this message translates to:
+  /// **'HOME'**
+  String get callUpHome;
+
+  /// Marks a fixture in the call-up window as played away.
+  ///
+  /// In en, this message translates to:
+  /// **'AWAY'**
+  String get callUpAway;
+
   /// Label over the home nation slot in head-to-head.
   ///
   /// In en, this message translates to:

@@ -425,6 +425,14 @@
   "@recordsYourRecord": {
     "description": "Heading over the manager's head-to-head ledger."
   },
+  "callUpHome": "HOME",
+  "@callUpHome": {
+    "description": "Marks a fixture in the call-up window as played at home."
+  },
+  "callUpAway": "AWAY",
+  "@callUpAway": {
+    "description": "Marks a fixture in the call-up window as played away."
+  },
   "recordsHome": "HOME",
   "@recordsHome": {
     "description": "Label over the home nation slot in head-to-head."
