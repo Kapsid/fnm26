@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/core/theme/app_theme.dart';
-import 'package:fnm/domain/entities/enums.dart';
+import 'package:fnm/core/util/squad_label.dart';
 import 'package:fnm/domain/entities/formation.dart';
 import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/entities/tactics.dart';
@@ -143,7 +143,9 @@ void main() {
 
     expect(
       find.text(
-        l.tacticsPickRole(formation.positions[10].roleName.toUpperCase()),
+        l.tacticsPickRole(
+          positionName(l, formation.positions[10]).toUpperCase(),
+        ),
       ),
       findsNothing,
       reason: 'the slot picker must not open on a place the side has lost',

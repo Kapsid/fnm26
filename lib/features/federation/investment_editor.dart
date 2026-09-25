@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
+import 'package:fnm/core/util/federation_label.dart';
 import 'package:fnm/domain/repositories/career_repository.dart';
 import 'package:fnm/domain/services/federation/federation_finance.dart';
 import 'package:fnm/features/federation/department_effect.dart';
@@ -123,6 +124,7 @@ class _InvestmentEditorState extends State<InvestmentEditor> {
   }
 
   Widget _slider(Department dept, int value, {bool enabled = true}) {
+    final l = AppLocalizations.of(context);
     // A FIXED scale per slider (the department cap, or the whole balance if
     // smaller) so moving one slider never shifts the others' thumbs — the
     // total is instead enforced by clamping on change in [_set].
@@ -138,7 +140,10 @@ class _InvestmentEditorState extends State<InvestmentEditor> {
           Row(
             children: [
               Expanded(
-                child: Text(dept.label, style: AppTypography.bodyMedium),
+                child: Text(
+                  departmentLabel(l, dept),
+                  style: AppTypography.bodyMedium,
+                ),
               ),
               Text(
                 formatEuros(value),
@@ -161,7 +166,7 @@ class _InvestmentEditorState extends State<InvestmentEditor> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  dept.blurb,
+                  departmentBlurb(l, dept),
                   style: AppTypography.labelSmall.copyWith(
                     color: AppColors.onSurfaceVariant,
                   ),
@@ -208,7 +213,11 @@ class _InvestmentEditorState extends State<InvestmentEditor> {
 /// reads as a bug whatever the arithmetic behind it, and the screen refuses to
 /// confirm until the balance is spent, so it could also strand the manager on
 /// the one screen he is forced to finish.
-int clampDepartment({required double raw, required int room, required int step}) {
+int clampDepartment({
+  required double raw,
+  required int room,
+  required int step,
+}) {
   if (room <= 0) return 0;
   final rounded = raw ~/ step * step;
   return rounded >= room ? room : rounded.clamp(0, room);

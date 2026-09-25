@@ -13192,5 +13192,116 @@
         "type": "String"
       }
     }
+  },
+  "positionGoalkeeper": "Goalkeeper",
+  "@positionGoalkeeper": {
+    "description": "A playing position, written out in full."
+  },
+  "positionLeftBack": "Left Back",
+  "positionCentreBack": "Centre Back",
+  "positionRightBack": "Right Back",
+  "positionDefensiveMid": "Defensive Mid",
+  "positionCentralMid": "Central Mid",
+  "positionAttackingMid": "Attacking Mid",
+  "positionLeftMid": "Left Mid",
+  "positionRightMid": "Right Mid",
+  "positionLeftWing": "Left Wing",
+  "positionRightWing": "Right Wing",
+  "positionStriker": "Striker",
+  "roleNone": "No role",
+  "@roleNone": {
+    "description": "A tactical role a player can be given."
+  },
+  "roleTargetMan": "Target man",
+  "rolePoacher": "Poacher",
+  "rolePlaymaker": "Playmaker",
+  "roleBallWinner": "Ball winner",
+  "roleInvertedWinger": "Inverted winger",
+  "roleBallPlayingDefender": "Ball-playing defender",
+  "roleNoneBlurb": "Plays their natural game.",
+  "@roleNoneBlurb": {
+    "description": "What a tactical role does, one line, in the role picker."
+  },
+  "roleTargetManBlurb": "Wins headers, lays it off. Assists and set pieces.",
+  "rolePoacherBlurb": "Lurks in the box. Many more goals.",
+  "rolePlaymakerBlurb": "Creates chances. Far more assists.",
+  "roleBallWinnerBlurb": "Breaks up play rather than finishing it.",
+  "roleInvertedWingerBlurb": "Cuts inside to shoot. More goals.",
+  "roleBallPlayingDefenderBlurb": "Starts moves from the back.",
+  "federationDeptYouth": "Youth Academy",
+  "@federationDeptYouth": {
+    "description": "A federation department the manager invests in."
+  },
+  "federationDeptCommercial": "Commercial / PR",
+  "federationDeptMedical": "Medical & Sports Science",
+  "federationDeptNaturalisation": "Naturalisation Office",
+  "federationDeptBoardRelations": "Board Relations",
+  "federationDeptYouthBlurb": "Better academy prospects debut for your nation next cycle.",
+  "@federationDeptYouthBlurb": {
+    "description": "What a federation department buys."
+  },
+  "federationDeptCommercialBlurb": "Sponsorship brings extra income at the end of the cycle.",
+  "federationDeptMedicalBlurb": "Fewer injuries. Your squad stays available all cycle.",
+  "federationDeptNaturalisationBlurb": "More foreign players offer to switch to your nation.",
+  "federationDeptBoardRelationsBlurb": "The board judges your results more patiently.",
+  "federationBuildingAcademy": "Academy",
+  "@federationBuildingAcademy": {
+    "description": "The building a federation department is housed in, in the development section."
+  },
+  "federationBuildingCommercial": "Commercial HQ",
+  "federationBuildingMedical": "Medical Centre",
+  "federationBuildingScouting": "Scouting Office",
+  "federationBuildingBoardroom": "Boardroom",
+  "moraleBuoyant": "Buoyant",
+  "@moraleBuoyant": {
+    "description": "The squad’s morale, as a word, on the hub badge."
+  },
+  "moralePositive": "Positive",
+  "moraleSettled": "Settled",
+  "moraleUneasy": "Uneasy",
+  "moraleRockBottom": "Rock bottom",
+  "matchTabTimeline": "TIMELINE",
+  "@matchTabTimeline": {
+    "description": "Live match: the tab strip above the match detail."
+  },
+  "matchTabStats": "STATS",
+  "matchTabLineups": "LINEUPS",
+  "matchPenalty": "PENALTY",
+  "@matchPenalty": {
+    "description": "Live match: the goal flash, when the goal was a penalty."
+  },
+  "matchStateLevel": "It’s all square",
+  "@matchStateLevel": {
+    "description": "Half-time interval: the scoreline read back, when it is level."
+  },
+  "matchStateLead": "{count, plural, =1{You lead by a goal} other{You lead by {count} goals}}",
+  "@matchStateLead": {
+    "description": "Half-time interval: the scoreline read back, when the manager is ahead.",
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "example": "3"
+      }
+    }
+  },
+  "matchStateTrail": "{count, plural, =1{You trail by a goal} other{You trail by {count} goals}}",
+  "@matchStateTrail": {
+    "description": "Half-time interval: the scoreline read back, when the manager is behind.",
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "example": "3"
+      }
+    }
+  },
+  "matchPossessionShare": "{possession}% possession",
+  "@matchPossessionShare": {
+    "description": "Half-time interval: the manager’s share of the ball, after the scoreline.",
+    "placeholders": {
+      "possession": {
+        "type": "int",
+        "example": "60"
+      }
+    }
   }
 }

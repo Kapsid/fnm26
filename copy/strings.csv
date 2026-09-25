@@ -505,7 +505,7 @@ careerStatDrawn,Stat label: drawn.,,Drawn,Remízy
 careerStatLost,Stat label: lost.,,Lost,Prohry
 careerGoalsWinRate,Goals and win-rate summary line.,{goalsFor} {goalsAgainst} {gd} {winRate},Goals {goalsFor}–{goalsAgainst}  ({gd})  ·  Win rate {winRate}%,Góly {goalsFor}–{goalsAgainst}  ({gd})  ·  Úspěšnost {winRate}%
 careerRecordResults,Heading of the record-results panel.,,RECORD RESULTS,REKORDNÍ VÝSLEDKY
-careerBestWin,Label for the best win.,,Best win,Nejlepší výhra
+careerBestWin,Label for the best win.,,Best win,Nejvyšší výhra
 careerWorstDefeat,Label for the worst defeat.,,Worst defeat,Nejhorší porážka
 careerVsOpponentDate,Opponent and date line for a record result.,{opponent} {date},v {opponent} · {date},proti {opponent} · {date}
 careerCycleRecordLine,Per-cycle W/D/L and goals record line.,{won} {drawn} {lost} {goalsFor} {goalsAgainst} {gd},{won}W {drawn}D {lost}L  ·  GF {goalsFor} GA {goalsAgainst} ({gd}),{won}V {drawn}R {lost}P  ·  VG {goalsFor} OG {goalsAgainst} ({gd})
@@ -1668,19 +1668,19 @@ confNorthAmerica,Continent name (North & Central America and the Caribbean).,,No
 confAfrica,Continent name.,,Africa,Afrika
 confAsia,Continent name.,,Asia,Asie
 confOceania,Continent name.,,Oceania,Oceánie
-compWorldCup,Competition name shown to the manager. The stored name stays English.,,World Championship,Mistrovství světa
-compWorldCupFinals,Competition name: the World Championship finals tournament.,,World Championship Finals,Finálový turnaj MS
-compWorldCupQualifying,"Competition name: World Championship qualifying, region unspecified.",,World Championship Qualifying,Kvalifikace MS
+compWorldCup,Competition name shown to the manager. The stored name stays English.,,World Championship,Světový šampionát
+compWorldCupFinals,Competition name: the World Championship finals tournament.,,World Championship Finals,Finálový turnaj šampionátu
+compWorldCupQualifying,"Competition name: World Championship qualifying, region unspecified.",,World Championship Qualifying,Kvalifikace: Světový šampionát
 compQualifiers,Competition name: one continent's World Championship qualifying campaign.,{region},{region} Qualifiers,Kvalifikace: {region}
 compFriendlies,Competition name for the friendly-match container.,,Friendlies,Přátelská utkání
 compNationsCup,Competition name.,,Nations Cup,Pohár národů
 compContinentalClash,Competition name: the champions-of-champions one-off.,,Continental Clash,Souboj kontinentů
 compIntercontinentalPlayoff,Competition name.,,Intercontinental Play-off,Mezikontinentální baráž
 compContinentalChampionship,Generic name for a continental cup when the confederation is not known.,,Continental Championship,Kontinentální šampionát
-compEuropeanChampionship,Continental cup name.,,European Championship,Mistrovství Evropy
+compEuropeanChampionship,Continental cup name.,,European Championship,Evropský šampionát
 compSouthAmericaCup,Continental cup name.,,South America Cup,Pohár Jižní Ameriky
-compAfricanChampionship,Continental cup name.,,African Championship,Mistrovství Afriky
-compAsianChampionship,Continental cup name.,,Asian Championship,Mistrovství Asie
+compAfricanChampionship,Continental cup name.,,African Championship,Africký šampionát
+compAsianChampionship,Continental cup name.,,Asian Championship,Asijský šampionát
 compNorthAmericaCup,Continental cup name.,,North America Cup,Pohár Severní Ameriky
 compOceaniaCup,Continental cup name.,,Oceania Cup,Pohár Oceánie
 msgANation,Inbox fallback when a nation cannot be named.,,A nation,Národní tým
@@ -2264,3 +2264,57 @@ yRivalryLooms2,Y feed post before a match against the most-played opponent.,{opp
 yRivalryLooms3,Y feed post before a match against the most-played opponent.,{count} {opponent},Meeting number {count} with {opponent} this week.,Tenhle týden {count}. vzájemný zápas se soupeřem {opponent}.
 yRivalryLooms4,Y feed post before a match against the most-played opponent.,{opponent} {count},{opponent} again. {count} of these and we have learned nothing.,Zase {opponent}. {count} takových zápasů a nenaučili jsme se nic.
 yRivalryLooms5,Y feed post before a match against the most-played opponent.,{count} {opponent},{count} games against {opponent} and they still beat us. Wonderful.,{count} zápasů proti soupeři {opponent} a pořád nás poráží. Nádhera.
+positionGoalkeeper,"A playing position, written out in full.",,Goalkeeper,Brankář
+positionLeftBack,,,Left Back,Levý obránce
+positionCentreBack,,,Centre Back,Střední obránce
+positionRightBack,,,Right Back,Pravý obránce
+positionDefensiveMid,,,Defensive Mid,Defenzivní záložník
+positionCentralMid,,,Central Mid,Střední záložník
+positionAttackingMid,,,Attacking Mid,Ofenzivní záložník
+positionLeftMid,,,Left Mid,Levý záložník
+positionRightMid,,,Right Mid,Pravý záložník
+positionLeftWing,,,Left Wing,Levé křídlo
+positionRightWing,,,Right Wing,Pravé křídlo
+positionStriker,,,Striker,Útočník
+roleNone,A tactical role a player can be given.,,No role,Bez role
+roleTargetMan,,,Target man,Hrotový útočník
+rolePoacher,,,Poacher,Lovec gólů
+rolePlaymaker,,,Playmaker,Tvůrce hry
+roleBallWinner,,,Ball winner,Ničitel
+roleInvertedWinger,,,Inverted winger,Obrácený křídelník
+roleBallPlayingDefender,,,Ball-playing defender,Rozehrávající obránce
+roleNoneBlurb,"What a tactical role does, one line, in the role picker.",,Plays their natural game.,Hraje svou přirozenou hru.
+roleTargetManBlurb,,,"Wins headers, lays it off. Assists and set pieces.",Vyhrává hlavičkové duely a nahrává. Asistence a standardky.
+rolePoacherBlurb,,,Lurks in the box. Many more goals.,Číhá ve vápně. Výrazně víc gólů.
+rolePlaymakerBlurb,,,Creates chances. Far more assists.,Vytváří šance. Výrazně víc asistencí.
+roleBallWinnerBlurb,,,Breaks up play rather than finishing it.,"Rozbíjí hru soupeře, místo aby zakončoval."
+roleInvertedWingerBlurb,,,Cuts inside to shoot. More goals.,Zatahuje do středu a střílí. Víc gólů.
+roleBallPlayingDefenderBlurb,,,Starts moves from the back.,Rozehrává akce od zadních řad.
+federationDeptYouth,A federation department the manager invests in.,,Youth Academy,Mládežnická akademie
+federationDeptCommercial,,,Commercial / PR,Marketing a PR
+federationDeptMedical,,,Medical & Sports Science,Lékařský a vědecký úsek
+federationDeptNaturalisation,,,Naturalisation Office,Naturalizační odbor
+federationDeptBoardRelations,,,Board Relations,Vztahy s vedením
+federationDeptYouthBlurb,What a federation department buys.,,Better academy prospects debut for your nation next cycle.,V dalším cyklu budou z akademie přicházet lepší talenty.
+federationDeptCommercialBlurb,,,Sponsorship brings extra income at the end of the cycle.,Sponzoři přinesou na konci cyklu další příjmy.
+federationDeptMedicalBlurb,,,Fewer injuries. Your squad stays available all cycle.,Méně zranění. Kádr zůstane k dispozici celý cyklus.
+federationDeptNaturalisationBlurb,,,More foreign players offer to switch to your nation.,Víc hráčů ze zahraničí nabídne přestup pod vaši vlajku.
+federationDeptBoardRelationsBlurb,,,The board judges your results more patiently.,Vedení hodnotí vaše výsledky trpělivěji.
+federationBuildingAcademy,"The building a federation department is housed in, in the development section.",,Academy,Akademie
+federationBuildingCommercial,,,Commercial HQ,Marketingové centrum
+federationBuildingMedical,,,Medical Centre,Lékařské centrum
+federationBuildingScouting,,,Scouting Office,Skautské oddělení
+federationBuildingBoardroom,,,Boardroom,Zasedací sál
+moraleBuoyant,"The squad’s morale, as a word, on the hub badge.",,Buoyant,Výborná
+moralePositive,,,Positive,Dobrá
+moraleSettled,,,Settled,Vyrovnaná
+moraleUneasy,,,Uneasy,Nejistá
+moraleRockBottom,,,Rock bottom,Na dně
+matchTabTimeline,Live match: the tab strip above the match detail.,,TIMELINE,PRŮBĚH
+matchTabStats,,,STATS,STATISTIKY
+matchTabLineups,,,LINEUPS,SESTAVY
+matchPenalty,"Live match: the goal flash, when the goal was a penalty.",,PENALTY,PENALTA
+matchStateLevel,"Half-time interval: the scoreline read back, when it is level.",,It’s all square,Je to vyrovnané
+matchStateLead,"Half-time interval: the scoreline read back, when the manager is ahead.","PLURAL — keep the {count, plural, …} skeleton exactly; translate only the words inside the branches","{count, plural, =1{You lead by a goal} other{You lead by {count} goals}}","{count, plural, =1{Vedete o gól} few{Vedete o {count} góly} other{Vedete o {count} gólů}}"
+matchStateTrail,"Half-time interval: the scoreline read back, when the manager is behind.","PLURAL — keep the {count, plural, …} skeleton exactly; translate only the words inside the branches","{count, plural, =1{You trail by a goal} other{You trail by {count} goals}}","{count, plural, =1{Prohráváte o gól} few{Prohráváte o {count} góly} other{Prohráváte o {count} gólů}}"
+matchPossessionShare,"Half-time interval: the manager’s share of the ball, after the scoreline.",{possession},{possession}% possession,{possession} % držení míče

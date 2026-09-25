@@ -1823,7 +1823,7 @@ class AppLocalizationsCs extends AppLocalizations {
   String get careerRecordResults => 'REKORDNÍ VÝSLEDKY';
 
   @override
-  String get careerBestWin => 'Nejlepší výhra';
+  String get careerBestWin => 'Nejvyšší výhra';
 
   @override
   String get careerWorstDefeat => 'Nejhorší porážka';
@@ -6311,13 +6311,13 @@ class AppLocalizationsCs extends AppLocalizations {
   String get confOceania => 'Oceánie';
 
   @override
-  String get compWorldCup => 'Mistrovství světa';
+  String get compWorldCup => 'Světový šampionát';
 
   @override
-  String get compWorldCupFinals => 'Finálový turnaj MS';
+  String get compWorldCupFinals => 'Finálový turnaj šampionátu';
 
   @override
-  String get compWorldCupQualifying => 'Kvalifikace MS';
+  String get compWorldCupQualifying => 'Kvalifikace: Světový šampionát';
 
   @override
   String compQualifiers(String region) {
@@ -6340,16 +6340,16 @@ class AppLocalizationsCs extends AppLocalizations {
   String get compContinentalChampionship => 'Kontinentální šampionát';
 
   @override
-  String get compEuropeanChampionship => 'Mistrovství Evropy';
+  String get compEuropeanChampionship => 'Evropský šampionát';
 
   @override
   String get compSouthAmericaCup => 'Pohár Jižní Ameriky';
 
   @override
-  String get compAfricanChampionship => 'Mistrovství Afriky';
+  String get compAfricanChampionship => 'Africký šampionát';
 
   @override
-  String get compAsianChampionship => 'Mistrovství Asie';
+  String get compAsianChampionship => 'Asijský šampionát';
 
   @override
   String get compNorthAmericaCup => 'Pohár Severní Ameriky';
@@ -8817,5 +8817,195 @@ class AppLocalizationsCs extends AppLocalizations {
   @override
   String yRivalryLooms5(String opponent, String count) {
     return '$count zápasů proti soupeři $opponent a pořád nás poráží. Nádhera.';
+  }
+
+  @override
+  String get positionGoalkeeper => 'Brankář';
+
+  @override
+  String get positionLeftBack => 'Levý obránce';
+
+  @override
+  String get positionCentreBack => 'Střední obránce';
+
+  @override
+  String get positionRightBack => 'Pravý obránce';
+
+  @override
+  String get positionDefensiveMid => 'Defenzivní záložník';
+
+  @override
+  String get positionCentralMid => 'Střední záložník';
+
+  @override
+  String get positionAttackingMid => 'Ofenzivní záložník';
+
+  @override
+  String get positionLeftMid => 'Levý záložník';
+
+  @override
+  String get positionRightMid => 'Pravý záložník';
+
+  @override
+  String get positionLeftWing => 'Levé křídlo';
+
+  @override
+  String get positionRightWing => 'Pravé křídlo';
+
+  @override
+  String get positionStriker => 'Útočník';
+
+  @override
+  String get roleNone => 'Bez role';
+
+  @override
+  String get roleTargetMan => 'Hrotový útočník';
+
+  @override
+  String get rolePoacher => 'Lovec gólů';
+
+  @override
+  String get rolePlaymaker => 'Tvůrce hry';
+
+  @override
+  String get roleBallWinner => 'Ničitel';
+
+  @override
+  String get roleInvertedWinger => 'Obrácený křídelník';
+
+  @override
+  String get roleBallPlayingDefender => 'Rozehrávající obránce';
+
+  @override
+  String get roleNoneBlurb => 'Hraje svou přirozenou hru.';
+
+  @override
+  String get roleTargetManBlurb =>
+      'Vyhrává hlavičkové duely a nahrává. Asistence a standardky.';
+
+  @override
+  String get rolePoacherBlurb => 'Číhá ve vápně. Výrazně víc gólů.';
+
+  @override
+  String get rolePlaymakerBlurb => 'Vytváří šance. Výrazně víc asistencí.';
+
+  @override
+  String get roleBallWinnerBlurb =>
+      'Rozbíjí hru soupeře, místo aby zakončoval.';
+
+  @override
+  String get roleInvertedWingerBlurb =>
+      'Zatahuje do středu a střílí. Víc gólů.';
+
+  @override
+  String get roleBallPlayingDefenderBlurb => 'Rozehrává akce od zadních řad.';
+
+  @override
+  String get federationDeptYouth => 'Mládežnická akademie';
+
+  @override
+  String get federationDeptCommercial => 'Marketing a PR';
+
+  @override
+  String get federationDeptMedical => 'Lékařský a vědecký úsek';
+
+  @override
+  String get federationDeptNaturalisation => 'Naturalizační odbor';
+
+  @override
+  String get federationDeptBoardRelations => 'Vztahy s vedením';
+
+  @override
+  String get federationDeptYouthBlurb =>
+      'V dalším cyklu budou z akademie přicházet lepší talenty.';
+
+  @override
+  String get federationDeptCommercialBlurb =>
+      'Sponzoři přinesou na konci cyklu další příjmy.';
+
+  @override
+  String get federationDeptMedicalBlurb =>
+      'Méně zranění. Kádr zůstane k dispozici celý cyklus.';
+
+  @override
+  String get federationDeptNaturalisationBlurb =>
+      'Víc hráčů ze zahraničí nabídne přestup pod vaši vlajku.';
+
+  @override
+  String get federationDeptBoardRelationsBlurb =>
+      'Vedení hodnotí vaše výsledky trpělivěji.';
+
+  @override
+  String get federationBuildingAcademy => 'Akademie';
+
+  @override
+  String get federationBuildingCommercial => 'Marketingové centrum';
+
+  @override
+  String get federationBuildingMedical => 'Lékařské centrum';
+
+  @override
+  String get federationBuildingScouting => 'Skautské oddělení';
+
+  @override
+  String get federationBuildingBoardroom => 'Zasedací sál';
+
+  @override
+  String get moraleBuoyant => 'Výborná';
+
+  @override
+  String get moralePositive => 'Dobrá';
+
+  @override
+  String get moraleSettled => 'Vyrovnaná';
+
+  @override
+  String get moraleUneasy => 'Nejistá';
+
+  @override
+  String get moraleRockBottom => 'Na dně';
+
+  @override
+  String get matchTabTimeline => 'PRŮBĚH';
+
+  @override
+  String get matchTabStats => 'STATISTIKY';
+
+  @override
+  String get matchTabLineups => 'SESTAVY';
+
+  @override
+  String get matchPenalty => 'PENALTA';
+
+  @override
+  String get matchStateLevel => 'Je to vyrovnané';
+
+  @override
+  String matchStateLead(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Vedete o $count gólů',
+      few: 'Vedete o $count góly',
+      one: 'Vedete o gól',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String matchStateTrail(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Prohráváte o $count gólů',
+      few: 'Prohráváte o $count góly',
+      one: 'Prohráváte o gól',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String matchPossessionShare(int possession) {
+    return '$possession % držení míče';
   }
 }

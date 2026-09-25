@@ -4,6 +4,7 @@ import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
+import 'package:fnm/core/util/federation_label.dart';
 import 'package:fnm/domain/repositories/career_repository.dart';
 import 'package:fnm/domain/services/federation/federation_finance.dart';
 import 'package:fnm/features/federation/federation_service.dart';
@@ -282,7 +283,10 @@ class _LockedInvestment extends StatelessWidget {
               child: Row(
                 children: [
                   Expanded(
-                    child: Text(d.label, style: AppTypography.bodyMedium),
+                    child: Text(
+                      departmentLabel(l, d),
+                      style: AppTypography.bodyMedium,
+                    ),
                   ),
                   Text(
                     formatEuros(switch (d) {
@@ -322,6 +326,7 @@ class _BuildingsCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l = AppLocalizations.of(context);
     final async = ref.watch(federationBuildingsProvider(careerId));
     return async.when(
       loading: () => const AppCard(
@@ -346,8 +351,8 @@ class _BuildingsCard extends ConsumerWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            '${FederationBuildings.nameFor(b.department)}'
-                            '  ·  ${b.department.label}',
+                            '${departmentBuildingName(l, b.department)}'
+                            '  ·  ${departmentLabel(l, b.department)}',
                             style: AppTypography.bodyMedium,
                           ),
                           const SizedBox(height: 4),

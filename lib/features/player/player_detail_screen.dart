@@ -7,6 +7,7 @@ import 'package:fnm/core/util/competition_label.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
+import 'package:fnm/core/util/squad_label.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/nation.dart';
@@ -325,7 +326,7 @@ class PlayerDetailScreen extends ConsumerWidget {
                         ),
                       ),
                     ),
-                    _fact(l.playerPosition, p.position.roleName),
+                    _fact(l.playerPosition, positionName(l, p.position)),
                     _fact(l.playerAge, '${p.age}'),
                     // A coarse scouted ceiling for prospects — deliberately
                     // fuzzy (5 buckets), so developing youth stays a gamble.

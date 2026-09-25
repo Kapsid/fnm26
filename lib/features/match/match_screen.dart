@@ -1364,16 +1364,7 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
                                 ? const []
                                 : _takerNames(preview),
                           ),
-                        const TabBar(
-                          labelColor: AppColors.onSurface,
-                          unselectedLabelColor: AppColors.onSurfaceVariant,
-                          indicatorColor: AppColors.primary,
-                          tabs: [
-                            Tab(text: 'TIMELINE'),
-                            Tab(text: 'STATS'),
-                            Tab(text: 'LINEUPS'),
-                          ],
-                        ),
+                        const MatchDetailTabs(),
                         Expanded(
                           child: TabBarView(
                             children: [
@@ -1452,7 +1443,7 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
                     // Half-time interval — play only resumes on Continue (the
                     // manager may reshape the side first).
                     if (_atHalfTime)
-                      _HalfTimePrompt(
+                      HalfTimePrompt(
                         heading: l.matchHalfTime,
                         homeCode: code(homeId),
                         awayCode: code(awayId),
@@ -1475,7 +1466,7 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
                     // The two extra-time intervals of a level knockout: the
                     // huddle before the first period, and the turnaround at 105'.
                     if (_atExtraTimeStart || _atExtraTimeHalf)
-                      _HalfTimePrompt(
+                      HalfTimePrompt(
                         heading: _atExtraTimeStart
                             ? l.matchExtraTimeAhead
                             : l.matchExtraTimeHalf,

@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fnm/core/util/competition_label.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/fixture.dart';
@@ -294,7 +295,7 @@ cycleObjectivesProvider = FutureProvider.autoDispose
             competition: switch (o.competition) {
               _worldCupName => l.objectiveWorldCup,
               _nationsCupName => l.careerNationsCupLabel,
-              final name => name,
+              final name => competitionLabel(l, name),
             },
             label: _labelFor(l, o.tier, o.target),
             target: o.target,

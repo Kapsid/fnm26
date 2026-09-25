@@ -94,12 +94,7 @@ class ChallengeStats {
 enum ChallengeTier { bronze, silver, gold, legendary }
 
 extension ChallengeTierX on ChallengeTier {
-  String get label => switch (this) {
-    ChallengeTier.bronze => 'Bronze',
-    ChallengeTier.silver => 'Silver',
-    ChallengeTier.gold => 'Gold',
-    ChallengeTier.legendary => 'Legendary',
-  };
+  // The tier's name is a DISPLAY string: `challengeTierLabel(l, t)`.
 
   /// Sort/rank order (bronze first).
   int get rank => index;

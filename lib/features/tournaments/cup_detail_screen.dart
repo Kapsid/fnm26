@@ -340,8 +340,8 @@ class _QualifyingState extends State<_Qualifying> {
                         value: c,
                         child: Text(
                           c == widget.playerConfederation
-                              ? l.tourCupRegionYours(c.label)
-                              : c.label,
+                              ? l.tourCupRegionYours(confederationLabel(l, c))
+                              : confederationLabel(l, c),
                         ),
                       ),
                   ],

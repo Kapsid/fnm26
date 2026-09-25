@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/core/diagnostics/app_log.dart';
 import 'package:fnm/core/util/app_date.dart';
+import 'package:fnm/core/util/competition_label.dart';
+import 'package:fnm/core/util/squad_label.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/theme/app_colors.dart';
@@ -14,7 +16,6 @@ import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/entities/group_standing.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
-import 'package:fnm/domain/services/squad/condition.dart';
 import 'package:fnm/features/achievements/achievement_providers.dart';
 import 'package:fnm/features/tournaments/wc_host_theme.dart';
 import 'package:fnm/features/federation/federation_service.dart';
@@ -943,7 +944,7 @@ class _SquadStatus extends StatelessWidget {
               ),
               const Spacer(),
               Text(
-                Condition.moraleLabel(morale),
+                moraleLabel(l, morale),
                 style: AppTypography.labelMedium.copyWith(color: _moraleColor),
               ),
             ],
@@ -993,7 +994,7 @@ class _GroupPlaceholder extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  competition.toUpperCase(),
+                  competitionLabel(l, competition).toUpperCase(),
                   style: AppTypography.labelSmall.copyWith(
                     color: AppColors.primary,
                   ),
@@ -1054,7 +1055,7 @@ class _GroupTable extends StatelessWidget {
             children: [
               Expanded(
                 child: Text(
-                  group.competition.toUpperCase(),
+                  competitionLabel(l, group.competition).toUpperCase(),
                   style: AppTypography.labelSmall.copyWith(
                     color: AppColors.primary,
                   ),

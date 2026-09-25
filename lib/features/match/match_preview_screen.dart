@@ -6,12 +6,12 @@ import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/core/util/app_date.dart';
 import 'package:fnm/core/util/match_stage.dart';
+import 'package:fnm/core/util/squad_label.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/formation.dart';
 import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/services/match/strength_factors.dart';
 import 'package:fnm/domain/services/rating/overall_rating.dart';
-import 'package:fnm/domain/services/squad/condition.dart';
 import 'package:fnm/domain/services/tactics/position_fit.dart';
 import 'package:fnm/features/match/ground_card.dart';
 import 'package:fnm/features/match/match_providers.dart';
@@ -587,7 +587,7 @@ class _DossierBody extends ConsumerWidget {
             const Spacer(),
             if (form != null)
               Text(
-                Condition.moraleLabel(form.morale),
+                moraleLabel(l, form.morale),
                 style: AppTypography.labelSmall.copyWith(
                   color: form.morale >= 60
                       ? AppColors.positive

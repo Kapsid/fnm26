@@ -1052,7 +1052,8 @@ class _GoalFlash extends StatelessWidget {
                   Text(event.playerName, style: AppTypography.titleMedium),
                   Text(
                     event.penalty
-                        ? 'PENALTY · ${_eventClock(event)}'
+                        ? '${AppLocalizations.of(context).matchPenalty} · '
+                              '${_eventClock(event)}'
                         : _eventClock(event),
                     style: AppTypography.labelSmall.copyWith(
                       color: AppColors.onSurfaceVariant,
@@ -1178,11 +1179,50 @@ class _ShootoutStrip extends StatelessWidget {
   );
 }
 
+/// The tab strip above the live match detail.
+///
+/// Its own widget, and PUBLIC, so a width test can pump the real strip rather
+/// than a reconstruction of it: the three labels are fixed copy sharing a
+/// phone's width between them, and Czech's are half again as long as English's
+/// ("STATISTIKY" against "STATS").
+///
+/// [WholeText] rather than `Tab(text:)`, for the reason the substitution strip
+/// uses it too: a tab that is cut, or broken into STATIS / TIKY, is not a tab.
+/// A label too long for its third of a 320-wide phone scales down instead, and
+/// [expectLegible] is the guard built for that.
+class MatchDetailTabs extends StatelessWidget {
+  const MatchDetailTabs({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    return TabBar(
+      labelColor: AppColors.onSurface,
+      unselectedLabelColor: AppColors.onSurfaceVariant,
+      indicatorColor: AppColors.primary,
+      tabs: [
+        for (final label in [
+          l.matchTabTimeline,
+          l.matchTabStats,
+          l.matchTabLineups,
+        ])
+          Tab(
+            child: WholeText(label, maxLines: 1, textAlign: TextAlign.center),
+          ),
+      ],
+    );
+  }
+}
+
 /// The half-time interval overlay: the score, a read of the first half, and the
 /// team talk — each tone shown with what it does and a recommendation for the
 /// current game state. The manager can reshape the side (Tactics) too.
-class _HalfTimePrompt extends StatelessWidget {
-  const _HalfTimePrompt({
+///
+/// PUBLIC for the same reason as [MatchDetailTabs]: the scoreline read back
+/// ("You lead by 3 goals · 60% possession") is copy a width test measures.
+class HalfTimePrompt extends StatelessWidget {
+  const HalfTimePrompt({
+    super.key,
     required this.heading,
     required this.homeCode,
     required this.awayCode,
@@ -1223,10 +1263,10 @@ class _HalfTimePrompt extends StatelessWidget {
     final l10n = AppLocalizations.of(context);
     final diff = playerIsHome ? homeScore - awayScore : awayScore - homeScore;
     final state = diff > 0
-        ? 'You lead by ${diff == 1 ? 'a goal' : '$diff goals'}'
+        ? l10n.matchStateLead(diff)
         : diff < 0
-        ? 'You trail by ${-diff == 1 ? 'a goal' : '${-diff} goals'}'
-        : 'It\'s all square';
+        ? l10n.matchStateTrail(-diff)
+        : l10n.matchStateLevel;
     final stateColor = diff > 0
         ? AppColors.positive
         : diff < 0
@@ -1271,7 +1311,7 @@ class _HalfTimePrompt extends StatelessWidget {
                   ),
                   const SizedBox(height: AppSpacing.xs),
                   Text(
-                    '$state · $possession% possession',
+                    '$state · ${l10n.matchPossessionShare(possession)}',
                     style: AppTypography.bodySmall.copyWith(color: stateColor),
                   ),
                   const SizedBox(height: AppSpacing.md),

@@ -8812,4 +8812,190 @@ class AppLocalizationsEn extends AppLocalizations {
   String yRivalryLooms5(String opponent, String count) {
     return '$count games against $opponent and they still beat us. Wonderful.';
   }
+
+  @override
+  String get positionGoalkeeper => 'Goalkeeper';
+
+  @override
+  String get positionLeftBack => 'Left Back';
+
+  @override
+  String get positionCentreBack => 'Centre Back';
+
+  @override
+  String get positionRightBack => 'Right Back';
+
+  @override
+  String get positionDefensiveMid => 'Defensive Mid';
+
+  @override
+  String get positionCentralMid => 'Central Mid';
+
+  @override
+  String get positionAttackingMid => 'Attacking Mid';
+
+  @override
+  String get positionLeftMid => 'Left Mid';
+
+  @override
+  String get positionRightMid => 'Right Mid';
+
+  @override
+  String get positionLeftWing => 'Left Wing';
+
+  @override
+  String get positionRightWing => 'Right Wing';
+
+  @override
+  String get positionStriker => 'Striker';
+
+  @override
+  String get roleNone => 'No role';
+
+  @override
+  String get roleTargetMan => 'Target man';
+
+  @override
+  String get rolePoacher => 'Poacher';
+
+  @override
+  String get rolePlaymaker => 'Playmaker';
+
+  @override
+  String get roleBallWinner => 'Ball winner';
+
+  @override
+  String get roleInvertedWinger => 'Inverted winger';
+
+  @override
+  String get roleBallPlayingDefender => 'Ball-playing defender';
+
+  @override
+  String get roleNoneBlurb => 'Plays their natural game.';
+
+  @override
+  String get roleTargetManBlurb =>
+      'Wins headers, lays it off. Assists and set pieces.';
+
+  @override
+  String get rolePoacherBlurb => 'Lurks in the box. Many more goals.';
+
+  @override
+  String get rolePlaymakerBlurb => 'Creates chances. Far more assists.';
+
+  @override
+  String get roleBallWinnerBlurb => 'Breaks up play rather than finishing it.';
+
+  @override
+  String get roleInvertedWingerBlurb => 'Cuts inside to shoot. More goals.';
+
+  @override
+  String get roleBallPlayingDefenderBlurb => 'Starts moves from the back.';
+
+  @override
+  String get federationDeptYouth => 'Youth Academy';
+
+  @override
+  String get federationDeptCommercial => 'Commercial / PR';
+
+  @override
+  String get federationDeptMedical => 'Medical & Sports Science';
+
+  @override
+  String get federationDeptNaturalisation => 'Naturalisation Office';
+
+  @override
+  String get federationDeptBoardRelations => 'Board Relations';
+
+  @override
+  String get federationDeptYouthBlurb =>
+      'Better academy prospects debut for your nation next cycle.';
+
+  @override
+  String get federationDeptCommercialBlurb =>
+      'Sponsorship brings extra income at the end of the cycle.';
+
+  @override
+  String get federationDeptMedicalBlurb =>
+      'Fewer injuries. Your squad stays available all cycle.';
+
+  @override
+  String get federationDeptNaturalisationBlurb =>
+      'More foreign players offer to switch to your nation.';
+
+  @override
+  String get federationDeptBoardRelationsBlurb =>
+      'The board judges your results more patiently.';
+
+  @override
+  String get federationBuildingAcademy => 'Academy';
+
+  @override
+  String get federationBuildingCommercial => 'Commercial HQ';
+
+  @override
+  String get federationBuildingMedical => 'Medical Centre';
+
+  @override
+  String get federationBuildingScouting => 'Scouting Office';
+
+  @override
+  String get federationBuildingBoardroom => 'Boardroom';
+
+  @override
+  String get moraleBuoyant => 'Buoyant';
+
+  @override
+  String get moralePositive => 'Positive';
+
+  @override
+  String get moraleSettled => 'Settled';
+
+  @override
+  String get moraleUneasy => 'Uneasy';
+
+  @override
+  String get moraleRockBottom => 'Rock bottom';
+
+  @override
+  String get matchTabTimeline => 'TIMELINE';
+
+  @override
+  String get matchTabStats => 'STATS';
+
+  @override
+  String get matchTabLineups => 'LINEUPS';
+
+  @override
+  String get matchPenalty => 'PENALTY';
+
+  @override
+  String get matchStateLevel => 'It’s all square';
+
+  @override
+  String matchStateLead(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'You lead by $count goals',
+      one: 'You lead by a goal',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String matchStateTrail(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'You trail by $count goals',
+      one: 'You trail by a goal',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String matchPossessionShare(int possession) {
+    return '$possession% possession';
+  }
 }

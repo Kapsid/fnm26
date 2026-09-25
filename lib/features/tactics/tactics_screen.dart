@@ -8,6 +8,7 @@ import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/core/theme/kit_colors.dart';
+import 'package:fnm/core/util/squad_label.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/formation.dart';
 import 'package:fnm/domain/entities/tactic_preset.dart';
@@ -585,9 +586,12 @@ class TacticsScreen extends ConsumerWidget {
                     children: [
                       for (final r in options)
                         ListTile(
-                          title: Text(r.label, style: AppTypography.bodyMedium),
+                          title: Text(
+                            playerRoleLabel(l, r),
+                            style: AppTypography.bodyMedium,
+                          ),
                           subtitle: Text(
-                            r.blurb,
+                            playerRoleBlurb(l, r),
                             style: AppTypography.labelSmall.copyWith(
                               color: AppColors.onSurfaceVariant,
                             ),
@@ -643,7 +647,7 @@ class TacticsScreen extends ConsumerWidget {
         padding: const EdgeInsets.all(AppSpacing.md),
         children: [
           Text(
-            l.tacticsPickRole(position.roleName.toUpperCase()),
+            l.tacticsPickRole(positionName(l, position).toUpperCase()),
             style: AppTypography.labelMedium.copyWith(color: AppColors.primary),
           ),
           const SizedBox(height: AppSpacing.sm),
@@ -1388,7 +1392,9 @@ class _PlayerTacticRow extends StatelessWidget {
                             style: AppTypography.bodyMedium,
                           ),
                           Text(
-                            assigned ? role.label : l.tacticsTapToAssign,
+                            assigned
+                                ? playerRoleLabel(l, role)
+                                : l.tacticsTapToAssign,
                             style: AppTypography.labelSmall.copyWith(
                               color: assigned
                                   ? AppColors.primary

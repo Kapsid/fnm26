@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
+import 'package:fnm/core/util/squad_label.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/formation.dart';
 import 'package:fnm/domain/entities/player.dart';
@@ -1219,7 +1220,7 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
       backgroundColor: AppColors.surfaceContainer,
       isScrollControlled: true,
       builder: (_) => _SlotPickerSheet(
-        title: l.tacticsPickRole(position.roleName.toUpperCase()),
+        title: l.tacticsPickRole(positionName(l, position).toUpperCase()),
         suitable: noFit ? availableHere : suitableHere,
         onPitch: onPitchHere,
         other: otherHere,

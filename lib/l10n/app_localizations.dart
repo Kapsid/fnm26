@@ -13748,6 +13748,330 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{count} games against {opponent} and they still beat us. Wonderful.'**
   String yRivalryLooms5(String opponent, String count);
+
+  /// A playing position, written out in full.
+  ///
+  /// In en, this message translates to:
+  /// **'Goalkeeper'**
+  String get positionGoalkeeper;
+
+  /// No description provided for @positionLeftBack.
+  ///
+  /// In en, this message translates to:
+  /// **'Left Back'**
+  String get positionLeftBack;
+
+  /// No description provided for @positionCentreBack.
+  ///
+  /// In en, this message translates to:
+  /// **'Centre Back'**
+  String get positionCentreBack;
+
+  /// No description provided for @positionRightBack.
+  ///
+  /// In en, this message translates to:
+  /// **'Right Back'**
+  String get positionRightBack;
+
+  /// No description provided for @positionDefensiveMid.
+  ///
+  /// In en, this message translates to:
+  /// **'Defensive Mid'**
+  String get positionDefensiveMid;
+
+  /// No description provided for @positionCentralMid.
+  ///
+  /// In en, this message translates to:
+  /// **'Central Mid'**
+  String get positionCentralMid;
+
+  /// No description provided for @positionAttackingMid.
+  ///
+  /// In en, this message translates to:
+  /// **'Attacking Mid'**
+  String get positionAttackingMid;
+
+  /// No description provided for @positionLeftMid.
+  ///
+  /// In en, this message translates to:
+  /// **'Left Mid'**
+  String get positionLeftMid;
+
+  /// No description provided for @positionRightMid.
+  ///
+  /// In en, this message translates to:
+  /// **'Right Mid'**
+  String get positionRightMid;
+
+  /// No description provided for @positionLeftWing.
+  ///
+  /// In en, this message translates to:
+  /// **'Left Wing'**
+  String get positionLeftWing;
+
+  /// No description provided for @positionRightWing.
+  ///
+  /// In en, this message translates to:
+  /// **'Right Wing'**
+  String get positionRightWing;
+
+  /// No description provided for @positionStriker.
+  ///
+  /// In en, this message translates to:
+  /// **'Striker'**
+  String get positionStriker;
+
+  /// A tactical role a player can be given.
+  ///
+  /// In en, this message translates to:
+  /// **'No role'**
+  String get roleNone;
+
+  /// No description provided for @roleTargetMan.
+  ///
+  /// In en, this message translates to:
+  /// **'Target man'**
+  String get roleTargetMan;
+
+  /// No description provided for @rolePoacher.
+  ///
+  /// In en, this message translates to:
+  /// **'Poacher'**
+  String get rolePoacher;
+
+  /// No description provided for @rolePlaymaker.
+  ///
+  /// In en, this message translates to:
+  /// **'Playmaker'**
+  String get rolePlaymaker;
+
+  /// No description provided for @roleBallWinner.
+  ///
+  /// In en, this message translates to:
+  /// **'Ball winner'**
+  String get roleBallWinner;
+
+  /// No description provided for @roleInvertedWinger.
+  ///
+  /// In en, this message translates to:
+  /// **'Inverted winger'**
+  String get roleInvertedWinger;
+
+  /// No description provided for @roleBallPlayingDefender.
+  ///
+  /// In en, this message translates to:
+  /// **'Ball-playing defender'**
+  String get roleBallPlayingDefender;
+
+  /// What a tactical role does, one line, in the role picker.
+  ///
+  /// In en, this message translates to:
+  /// **'Plays their natural game.'**
+  String get roleNoneBlurb;
+
+  /// No description provided for @roleTargetManBlurb.
+  ///
+  /// In en, this message translates to:
+  /// **'Wins headers, lays it off. Assists and set pieces.'**
+  String get roleTargetManBlurb;
+
+  /// No description provided for @rolePoacherBlurb.
+  ///
+  /// In en, this message translates to:
+  /// **'Lurks in the box. Many more goals.'**
+  String get rolePoacherBlurb;
+
+  /// No description provided for @rolePlaymakerBlurb.
+  ///
+  /// In en, this message translates to:
+  /// **'Creates chances. Far more assists.'**
+  String get rolePlaymakerBlurb;
+
+  /// No description provided for @roleBallWinnerBlurb.
+  ///
+  /// In en, this message translates to:
+  /// **'Breaks up play rather than finishing it.'**
+  String get roleBallWinnerBlurb;
+
+  /// No description provided for @roleInvertedWingerBlurb.
+  ///
+  /// In en, this message translates to:
+  /// **'Cuts inside to shoot. More goals.'**
+  String get roleInvertedWingerBlurb;
+
+  /// No description provided for @roleBallPlayingDefenderBlurb.
+  ///
+  /// In en, this message translates to:
+  /// **'Starts moves from the back.'**
+  String get roleBallPlayingDefenderBlurb;
+
+  /// A federation department the manager invests in.
+  ///
+  /// In en, this message translates to:
+  /// **'Youth Academy'**
+  String get federationDeptYouth;
+
+  /// No description provided for @federationDeptCommercial.
+  ///
+  /// In en, this message translates to:
+  /// **'Commercial / PR'**
+  String get federationDeptCommercial;
+
+  /// No description provided for @federationDeptMedical.
+  ///
+  /// In en, this message translates to:
+  /// **'Medical & Sports Science'**
+  String get federationDeptMedical;
+
+  /// No description provided for @federationDeptNaturalisation.
+  ///
+  /// In en, this message translates to:
+  /// **'Naturalisation Office'**
+  String get federationDeptNaturalisation;
+
+  /// No description provided for @federationDeptBoardRelations.
+  ///
+  /// In en, this message translates to:
+  /// **'Board Relations'**
+  String get federationDeptBoardRelations;
+
+  /// What a federation department buys.
+  ///
+  /// In en, this message translates to:
+  /// **'Better academy prospects debut for your nation next cycle.'**
+  String get federationDeptYouthBlurb;
+
+  /// No description provided for @federationDeptCommercialBlurb.
+  ///
+  /// In en, this message translates to:
+  /// **'Sponsorship brings extra income at the end of the cycle.'**
+  String get federationDeptCommercialBlurb;
+
+  /// No description provided for @federationDeptMedicalBlurb.
+  ///
+  /// In en, this message translates to:
+  /// **'Fewer injuries. Your squad stays available all cycle.'**
+  String get federationDeptMedicalBlurb;
+
+  /// No description provided for @federationDeptNaturalisationBlurb.
+  ///
+  /// In en, this message translates to:
+  /// **'More foreign players offer to switch to your nation.'**
+  String get federationDeptNaturalisationBlurb;
+
+  /// No description provided for @federationDeptBoardRelationsBlurb.
+  ///
+  /// In en, this message translates to:
+  /// **'The board judges your results more patiently.'**
+  String get federationDeptBoardRelationsBlurb;
+
+  /// The building a federation department is housed in, in the development section.
+  ///
+  /// In en, this message translates to:
+  /// **'Academy'**
+  String get federationBuildingAcademy;
+
+  /// No description provided for @federationBuildingCommercial.
+  ///
+  /// In en, this message translates to:
+  /// **'Commercial HQ'**
+  String get federationBuildingCommercial;
+
+  /// No description provided for @federationBuildingMedical.
+  ///
+  /// In en, this message translates to:
+  /// **'Medical Centre'**
+  String get federationBuildingMedical;
+
+  /// No description provided for @federationBuildingScouting.
+  ///
+  /// In en, this message translates to:
+  /// **'Scouting Office'**
+  String get federationBuildingScouting;
+
+  /// No description provided for @federationBuildingBoardroom.
+  ///
+  /// In en, this message translates to:
+  /// **'Boardroom'**
+  String get federationBuildingBoardroom;
+
+  /// The squad’s morale, as a word, on the hub badge.
+  ///
+  /// In en, this message translates to:
+  /// **'Buoyant'**
+  String get moraleBuoyant;
+
+  /// No description provided for @moralePositive.
+  ///
+  /// In en, this message translates to:
+  /// **'Positive'**
+  String get moralePositive;
+
+  /// No description provided for @moraleSettled.
+  ///
+  /// In en, this message translates to:
+  /// **'Settled'**
+  String get moraleSettled;
+
+  /// No description provided for @moraleUneasy.
+  ///
+  /// In en, this message translates to:
+  /// **'Uneasy'**
+  String get moraleUneasy;
+
+  /// No description provided for @moraleRockBottom.
+  ///
+  /// In en, this message translates to:
+  /// **'Rock bottom'**
+  String get moraleRockBottom;
+
+  /// Live match: the tab strip above the match detail.
+  ///
+  /// In en, this message translates to:
+  /// **'TIMELINE'**
+  String get matchTabTimeline;
+
+  /// No description provided for @matchTabStats.
+  ///
+  /// In en, this message translates to:
+  /// **'STATS'**
+  String get matchTabStats;
+
+  /// No description provided for @matchTabLineups.
+  ///
+  /// In en, this message translates to:
+  /// **'LINEUPS'**
+  String get matchTabLineups;
+
+  /// Live match: the goal flash, when the goal was a penalty.
+  ///
+  /// In en, this message translates to:
+  /// **'PENALTY'**
+  String get matchPenalty;
+
+  /// Half-time interval: the scoreline read back, when it is level.
+  ///
+  /// In en, this message translates to:
+  /// **'It’s all square'**
+  String get matchStateLevel;
+
+  /// Half-time interval: the scoreline read back, when the manager is ahead.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{You lead by a goal} other{You lead by {count} goals}}'**
+  String matchStateLead(int count);
+
+  /// Half-time interval: the scoreline read back, when the manager is behind.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{You trail by a goal} other{You trail by {count} goals}}'**
+  String matchStateTrail(int count);
+
+  /// Half-time interval: the manager’s share of the ball, after the scoreline.
+  ///
+  /// In en, this message translates to:
+  /// **'{possession}% possession'**
+  String matchPossessionShare(int possession);
 }
 
 class _AppLocalizationsDelegate

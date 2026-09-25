@@ -75,4 +75,13 @@ Map<String, String> _byEnglishName(AppLocalizations l) => {
   'Continental Championship': l.compContinentalChampionship,
   for (final e in ContinentalCups.byConfederation.entries)
     e.value.name: continentalCupLabel(l, e.key),
+  // "European Championship Qualifiers" — the continental cup's own qualifying
+  // campaign, named after the cup rather than after the continent, so the
+  // ' Qualifiers' branch above (which expects a CONTINENT before it) read it
+  // back untranslated. This was the "European Championship Qualifiers" a Czech
+  // manager saw on his hub.
+  for (final e in ContinentalCups.byConfederation.entries)
+    '${e.value.name}$_qualifiersSuffix': l.compQualifiers(
+      continentalCupLabel(l, e.key),
+    ),
 };

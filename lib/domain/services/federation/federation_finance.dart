@@ -8,29 +8,9 @@ typedef IncomeBreakdown = ({int grant, int prize, int commercial});
 /// The federation departments the manager invests in each cycle.
 enum Department { youth, commercial, medical, naturalization, boardRelations }
 
-extension DepartmentX on Department {
-  String get label => switch (this) {
-    Department.youth => 'Youth Academy',
-    Department.commercial => 'Commercial / PR',
-    Department.medical => 'Medical & Sports Science',
-    Department.naturalization => 'Naturalisation Office',
-    Department.boardRelations => 'Board Relations',
-  };
-
-  /// A one-line description of what the department buys, for the invest UI.
-  String get blurb => switch (this) {
-    Department.youth =>
-      'Better academy prospects debut for your nation next cycle.',
-    Department.commercial =>
-      'Sponsorship brings extra income at the end of the cycle.',
-    Department.medical =>
-      'Fewer injuries. Your squad stays available all cycle.',
-    Department.naturalization =>
-      'More foreign players offer to switch to your nation.',
-    Department.boardRelations =>
-      'The board judges your results more patiently.',
-  };
-}
+// A department's name, its blurb and its building's name are DISPLAY strings
+// and live with the copy: `departmentLabel(l, d)`, `departmentBlurb(l, d)` and
+// `departmentBuildingName(l, d)` in core/util/federation_label.dart.
 
 /// The federation economy model: how much a save starts with, what it earns
 /// each cycle, and what each department investment buys. Pure and centralised
@@ -333,13 +313,4 @@ abstract final class FederationBuildings {
     if (levelFor(cumulativeEuros) >= maxLevel) return 1;
     return (cumulativeEuros % eurosPerLevel) / eurosPerLevel;
   }
-
-  /// A short display name for a department's building.
-  static String nameFor(Department d) => switch (d) {
-    Department.youth => 'Academy',
-    Department.commercial => 'Commercial HQ',
-    Department.medical => 'Medical Centre',
-    Department.naturalization => 'Scouting Office',
-    Department.boardRelations => 'Boardroom',
-  };
 }

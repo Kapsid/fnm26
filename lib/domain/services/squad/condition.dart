@@ -146,14 +146,6 @@ abstract final class Condition {
   static int moraleDelta(int moraleValue) =>
       ((moraleValue - 50) / 50 * 3).clamp(-3.0, 3.0).round();
 
-  /// A short label for a morale value, for the hub badge.
-  static String moraleLabel(int m) => m >= 78
-      ? 'Buoyant'
-      : m >= 60
-      ? 'Positive'
-      : m >= 42
-      ? 'Settled'
-      : m >= 25
-      ? 'Uneasy'
-      : 'Rock bottom';
+  // The word for a morale value is a DISPLAY string and lives with the copy:
+  // `moraleLabel(l, morale)` in core/util/squad_label.dart.
 }
