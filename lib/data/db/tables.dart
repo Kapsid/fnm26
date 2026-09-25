@@ -569,6 +569,13 @@ class Messages extends Table {
   TextColumn get title => text()();
   TextColumn get body => text()();
 
+  /// What the message MEANS, as JSON: which string names its title and body,
+  /// and the arguments they take (see `MsgText`). Null on every message filed
+  /// before this column existed — those keep the words they were written in,
+  /// which is all a save from before this has. Everything since is rendered in
+  /// the language the manager is reading in, whatever language it happened in.
+  TextColumn get spec => text().nullable()();
+
   /// The in-game year the message belongs to, for ordering.
   IntColumn get year => integer()();
   BoolColumn get read => boolean().withDefault(const Constant(false))();

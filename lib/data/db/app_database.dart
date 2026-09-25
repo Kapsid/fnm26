@@ -82,7 +82,7 @@ class AppDatabase extends _$AppDatabase {
   /// full set of upgrade paths from it — see `schema_migration_test.dart`.
   /// A hand-written list of paths is a step somebody forgets on the bump that
   /// matters.
-  static const int currentSchemaVersion = 47;
+  static const int currentSchemaVersion = 48;
 
   @override
   int get schemaVersion => currentSchemaVersion;
@@ -260,6 +260,16 @@ class AppDatabase extends _$AppDatabase {
         // the next one.
         from46To47: (m, schema) async {
           await m.createTable(schema.matchIncidents);
+        },
+        // 47 → 48 stores what a message MEANS beside the words it was written
+        // in: the string that names it and the arguments it takes, so the inbox
+        // is rendered in the language the manager is reading in rather than the
+        // one the news happened in. Additive and nullable, and the rendered
+        // title/body columns stay exactly as they were — a message filed before
+        // this has no spec and reads back as the sentence it was filed as,
+        // which is the honest thing for an archive with nothing else in it.
+        from47To48: (m, schema) async {
+          await m.addColumn(schema.messages, schema.messages.spec);
         },
       )(m, from, to);
     },

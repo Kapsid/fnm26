@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/core/rng/seeded_rng.dart';
-import 'package:fnm/core/util/competition_label.dart';
+import 'package:fnm/core/util/message_text.dart';
 import 'package:fnm/core/util/text_variety.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/career.dart';
@@ -50,7 +50,6 @@ import 'package:fnm/features/tactics/absence_providers.dart';
 import 'package:fnm/features/tactics/nation_squad_providers.dart';
 import 'package:fnm/features/tactics/tactics_providers.dart';
 import 'package:fnm/features/settings/settings_providers.dart';
-import 'package:fnm/features/hub/round_popup.dart' show stageLabelFor;
 import 'package:fnm/features/tournaments/playoff_paths.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/domain/services/club/clubs.dart';
@@ -1624,28 +1623,33 @@ class SeasonService {
       if (e.teamNationId != career.nationId) continue;
       if (e.type == MatchEventType.redCard && competitive) {
         final ban = after[e.playerId]?.banMatches ?? 1;
-        final l = _l;
-        final how = e.secondYellow
-            ? l.hubBanHowSecondYellow
-            : ban >= 3
-            ? l.hubBanHowViolent
-            : l.hubBanHowRed;
-        await _comp.addMessage(
+        // How he went is a phrase inside the sentence, so it is stored as one
+        // rather than as words: see `core/util/message_text.dart`.
+        final how = MsgText(
+          e.secondYellow
+              ? MsgKey.hubBanHowSecondYellow
+              : ban >= 3
+              ? MsgKey.hubBanHowViolent
+              : MsgKey.hubBanHowRed,
+        );
+        await _comp.addTextMessage(
+          l: _l,
           careerId: careerId,
           dedupKey: 'ban:${fixture.id}:${e.playerId}',
           category: 'discipline',
-          title: l.hubBanTitle(e.playerName),
-          body: l.hubBanBody(e.playerName, how, ban),
+          title: MsgText(MsgKey.hubBanTitle, [e.playerName]),
+          body: MsgText(MsgKey.hubBanBody, [e.playerName, how, ban]),
           year: discYear,
         );
       } else if (e.type == MatchEventType.injury) {
         final out = after[e.playerId]?.injuryMatches ?? 1;
-        await _comp.addMessage(
+        await _comp.addTextMessage(
+          l: _l,
           careerId: careerId,
           dedupKey: 'inj:${fixture.id}:${e.playerId}',
           category: 'injury',
-          title: _l.hubInjuryTitle(e.playerName),
-          body: _l.hubInjuryBody(e.playerName, out),
+          title: MsgText(MsgKey.hubInjuryTitle, [e.playerName]),
+          body: MsgText(MsgKey.hubInjuryBody, [e.playerName, out]),
           year: discYear,
         );
       }
@@ -1803,12 +1807,15 @@ class SeasonService {
     final nations = await _nationsById();
     final l = _l;
     final conf = nations[me]?.confederation;
+    // The cup by its CANONICAL STORED name, which is what a message carries:
+    // the words are made when the manager reads it.
     final contName = conf == null
-        ? l.compContinentalChampionship
-        : continentalCupLabel(l, conf);
-    final ({String name, CompetitionKind kind})? cup = switch (round) {
+        ? 'Continental Championship'
+        : ContinentalCups.byConfederation[conf]?.name ??
+              'Continental Championship';
+    final cup = switch (round) {
       'GROUP' || 'R32' || 'R16' || 'QF' || 'SF' || '3RD' || 'FINAL' => (
-        name: l.compWorldCup,
+        name: 'World Championship',
         kind: CompetitionKind.worldCupFinals,
       ),
       'CGROUP' || 'CR16' || 'CQF' || 'CSF' || 'CFINAL' => (
@@ -1829,41 +1836,45 @@ class SeasonService {
       final core = round!.startsWith('C') ? round.substring(1) : round;
       if (core == 'FINAL') {
         final s = varietySeed('runnerup:${fixture.id}');
-        await _comp.addMessage(
+        final cupName = MsgComp(cup.name);
+        await _comp.addTextMessage(
+          l: l,
           careerId: careerId,
           dedupKey: 'runnerup:${fixture.id}',
           category: 'eliminated',
           title: pickVariant([
-            l.hubRunnerUpTitle1,
-            l.hubRunnerUpTitle2,
-            l.hubRunnerUpTitle3,
+            const MsgText(MsgKey.hubRunnerUpTitle1),
+            const MsgText(MsgKey.hubRunnerUpTitle2),
+            const MsgText(MsgKey.hubRunnerUpTitle3),
           ], s),
           body: pickVariant([
-            l.hubRunnerUpBody1(cup.name, oppName),
-            l.hubRunnerUpBody2(oppName, cup.name),
-            l.hubRunnerUpBody3(cup.name, oppName),
+            MsgText(MsgKey.hubRunnerUpBody1, [cupName, oppName]),
+            MsgText(MsgKey.hubRunnerUpBody2, [oppName, cupName]),
+            MsgText(MsgKey.hubRunnerUpBody3, [cupName, oppName]),
           ], s),
           year: year,
         );
       } else {
         final s = varietySeed('out:${fixture.id}');
-        await _comp.addMessage(
+        final cupName = MsgComp(cup.name);
+        // The stage as a key, lower-cased where the copy reads it into the
+        // middle of a sentence — the round is stored, the words are not.
+        final stage = MsgLower(MsgText(stageMsgKey(core)));
+        await _comp.addTextMessage(
+          l: l,
           careerId: careerId,
           dedupKey: 'out:${fixture.id}',
           category: 'eliminated',
           title: pickVariant([
-            l.hubKnockedOutTitle1,
-            l.hubKnockedOutTitle2,
-            l.hubKnockedOutTitle3,
+            const MsgText(MsgKey.hubKnockedOutTitle1),
+            const MsgText(MsgKey.hubKnockedOutTitle2),
+            const MsgText(MsgKey.hubKnockedOutTitle3),
           ], s),
-          body: () {
-            final stage = stageLabelFor(l, core).toLowerCase();
-            return pickVariant([
-              l.hubKnockedOutBody1(cup.name, oppName, stage),
-              l.hubKnockedOutBody2(oppName, cup.name, stage),
-              l.hubKnockedOutBody3(cup.name, stage, oppName),
-            ], s);
-          }(),
+          body: pickVariant([
+            MsgText(MsgKey.hubKnockedOutBody1, [cupName, oppName, stage]),
+            MsgText(MsgKey.hubKnockedOutBody2, [oppName, cupName, stage]),
+            MsgText(MsgKey.hubKnockedOutBody3, [cupName, stage, oppName]),
+          ], s),
           year: year,
         );
       }
@@ -1883,19 +1894,21 @@ class SeasonService {
       );
       if (!inKnockout) {
         final s = varietySeed('groupout:${cup.kind.name}:$year');
-        await _comp.addMessage(
+        final cupName = MsgComp(cup.name);
+        await _comp.addTextMessage(
+          l: l,
           careerId: careerId,
           dedupKey: 'groupout:${cup.kind.name}:$year',
           category: 'eliminated',
           title: pickVariant([
-            l.hubGroupExitTitle1,
-            l.hubGroupExitTitle2,
-            l.hubGroupExitTitle3,
+            const MsgText(MsgKey.hubGroupExitTitle1),
+            const MsgText(MsgKey.hubGroupExitTitle2),
+            const MsgText(MsgKey.hubGroupExitTitle3),
           ], s),
           body: pickVariant([
-            l.hubGroupExitBody1(cup.name),
-            l.hubGroupExitBody2(cup.name),
-            l.hubGroupExitBody3(cup.name),
+            MsgText(MsgKey.hubGroupExitBody1, [cupName]),
+            MsgText(MsgKey.hubGroupExitBody2, [cupName]),
+            MsgText(MsgKey.hubGroupExitBody3, [cupName]),
           ], s),
           year: year,
         );
@@ -1931,8 +1944,8 @@ class SeasonService {
   Future<void> startNextCycle(
     int careerId, {
     int? switchToNationId,
-    String? boardTitle,
-    String? boardBody,
+    MsgPart? boardTitle,
+    MsgPart? boardBody,
     FederationInvestment? nextInvestment,
   }) => _exclusive(
     () => _startNextCycle(

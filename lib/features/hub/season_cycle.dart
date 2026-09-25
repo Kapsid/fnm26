@@ -64,22 +64,31 @@ extension SeasonCycle on SeasonService {
     final objectives = await _ref.read(
       cycleObjectiveOutcomesProvider(careerId).future,
     );
-    final l = _l;
     for (final o in objectives) {
       if (!o.decided) continue;
-      final demand = objectiveDemandText(l, o.tier, o.target);
-      final finish = objectiveFinishText(l, o.tier, o.actual);
-      final comp = competitionLabel(l, o.competition);
-      await _comp.addMessage(
+      // The brief, the finish and the competition are all stored as MEANING:
+      // the board's verdict is a message the manager may not open for months,
+      // and by then he may be reading in another language.
+      final demand = MsgText(objectiveDemandKey(o.tier, o.target));
+      final finish = MsgText(objectiveFinishKey(o.tier, o.actual));
+      final comp = MsgComp(o.competition);
+      await _comp.addTextMessage(
+        l: _l,
         careerId: careerId,
         dedupKey: 'objective:${career.cyclePointer}:${o.tier.name}',
         category: 'board',
-        title: o.met
-            ? l.boardObjectiveMetTitle(comp)
-            : l.boardObjectiveMissedTitle(comp),
-        body: o.met
-            ? l.boardObjectiveMetBody(comp, demand, finish)
-            : l.boardObjectiveMissedBody(comp, demand, finish),
+        title: MsgText(
+          o.met
+              ? MsgKey.boardObjectiveMetTitle
+              : MsgKey.boardObjectiveMissedTitle,
+          [comp],
+        ),
+        body: MsgText(
+          o.met
+              ? MsgKey.boardObjectiveMetBody
+              : MsgKey.boardObjectiveMissedBody,
+          [comp, demand, finish],
+        ),
         year: career.inGameDate.year,
       );
     }
@@ -729,12 +738,14 @@ extension SeasonCycle on SeasonService {
     // not need telling they missed out on a cup they were never in.
     if (isManagers && !field.contains(career.nationId)) {
       final year = wcYear - 2;
-      await _comp.addMessage(
+      final cupName = MsgComp(cont.name);
+      await _comp.addTextMessage(
+        l: _l,
         careerId: careerId,
         dedupKey: 'contmiss:$year',
         category: 'eliminated',
-        title: _l.newsContMissTitle(continentalCupLabel(_l, conf)),
-        body: _l.newsContMissBody(continentalCupLabel(_l, conf)),
+        title: MsgText(MsgKey.newsContMissTitle, [cupName]),
+        body: MsgText(MsgKey.newsContMissBody, [cupName]),
         year: year - 1,
       );
     }

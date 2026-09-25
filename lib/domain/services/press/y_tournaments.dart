@@ -103,8 +103,19 @@ abstract final class YTournaments {
       // And the one that has not started yet. Dated at its first match rather
       // than invented: the feed sorts by date, and a post about a tournament
       // must not land before the results it is anticipating.
+      //
+      // Never the NATIONS CUP. Its fixtures are written for the whole cycle at
+      // once and played off in the background, so "it is nearly here" was true
+      // of a tournament months away, said every time the feed was read, and
+      // parked at the bottom of it — a landmark holds its reserved place until
+      // the nation finally plays one of those matches. The manager asked for
+      // these gone rather than fixed. Every other tournament is drawn shortly
+      // before it is played, so its anticipation is honest and stays.
       final firstUnplayed = list.where((f) => !f.hasResult).firstOrNull;
-      if (firstUnplayed != null && played.isEmpty && isFinals(list)) {
+      if (firstUnplayed != null &&
+          played.isEmpty &&
+          isFinals(list) &&
+          familyOf(list) != nationsCupFamily) {
         milestones.add((
           template: YTemplate.tournamentSoon,
           args: [competition],
@@ -178,10 +189,13 @@ abstract final class YTournaments {
   static bool isQualifying(List<Fixture> list) =>
       !isFinals(list) && list.any((f) => f.round != Rounds.friendly);
 
+  /// What [familyOf] answers for the Nations Cup.
+  static const String nationsCupFamily = 'N';
+
   /// Which competition a set of fixtures belongs to: 'C' for the continental
-  /// cup and its qualifiers, 'N' for the Nations Cup, '' for the World
-  /// Championship and its qualifiers (which carry the bare round codes, or
-  /// none at all).
+  /// cup and its qualifiers, [nationsCupFamily] for the Nations Cup, '' for the
+  /// World Championship and its qualifiers (which carry the bare round codes,
+  /// or none at all).
   ///
   /// This is what stops a European qualifying campaign being credited with a
   /// place at the NATIONS CUP, which runs alongside it: without a family the
@@ -192,7 +206,7 @@ abstract final class YTournaments {
       final round = f.round;
       if (round == null || round == Rounds.friendly) continue;
       if (round.startsWith('C')) return 'C';
-      if (round.startsWith('N')) return 'N';
+      if (round.startsWith('N')) return nationsCupFamily;
       return '';
     }
     // Nothing but uncoded fixtures: World Championship qualifying carries no

@@ -6,6 +6,7 @@ import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
+import 'package:fnm/core/util/message_text.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
 import 'package:fnm/features/messages/message_providers.dart';
@@ -115,7 +116,7 @@ class _MessageCard extends StatelessWidget {
             const SizedBox(width: AppSpacing.md),
             Expanded(
               child: Text(
-                message.title,
+                readMessage(AppLocalizations.of(context), message).title,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: AppTypography.titleMedium.copyWith(

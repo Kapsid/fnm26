@@ -13303,5 +13303,131 @@
         "example": "60"
       }
     }
+  },
+  "boardVerdictSackedTitle": "The board has dismissed you",
+  "@boardVerdictSackedTitle": {
+    "description": "Board verdict headline: the manager has been dismissed."
+  },
+  "boardVerdictSackedBody": "A dismal cycle (rating {rating}%). Your reign ends here. Only lesser nations will take a chance on you now.",
+  "@boardVerdictSackedBody": {
+    "description": "Board verdict detail: dismissed.",
+    "placeholders": {
+      "rating": {
+        "type": "int",
+        "example": "18"
+      }
+    }
+  },
+  "boardVerdictDelightedTitle": "The board is delighted",
+  "@boardVerdictDelightedTitle": {
+    "description": "Board verdict headline: an outstanding cycle."
+  },
+  "boardVerdictDelightedBody": "An outstanding cycle (rating {rating}%) after {best}. Bigger nations are interested, or you can stay and build.",
+  "@boardVerdictDelightedBody": {
+    "description": "Board verdict detail: an outstanding cycle. {best} names the cycle's best run.",
+    "placeholders": {
+      "rating": {
+        "type": "int",
+        "example": "88"
+      },
+      "best": {
+        "type": "String",
+        "example": "the World Championship: Champions"
+      }
+    }
+  },
+  "boardVerdictSolidTitle": "A solid cycle",
+  "@boardVerdictSolidTitle": {
+    "description": "Board verdict headline: a solid cycle."
+  },
+  "boardVerdictSolidBody": "The board is content (rating {rating}%). A few nations of similar standing would take you, but there is no pressure to move.",
+  "@boardVerdictSolidBody": {
+    "description": "Board verdict detail: a solid cycle.",
+    "placeholders": {
+      "rating": {
+        "type": "int",
+        "example": "62"
+      }
+    }
+  },
+  "boardVerdictExpectedMoreTitle": "The board expected more",
+  "@boardVerdictExpectedMoreTitle": {
+    "description": "Board verdict headline: a disappointing cycle."
+  },
+  "boardVerdictExpectedMoreBody": "A disappointing cycle (rating {rating}%). You keep your job, but any offers are a step down.",
+  "@boardVerdictExpectedMoreBody": {
+    "description": "Board verdict detail: a disappointing cycle.",
+    "placeholders": {
+      "rating": {
+        "type": "int",
+        "example": "41"
+      }
+    }
+  },
+  "boardVerdictPressureTitle": "You are under real pressure",
+  "@boardVerdictPressureTitle": {
+    "description": "Board verdict headline: a poor cycle, survived."
+  },
+  "boardVerdictPressureBody": "A poor cycle (rating {rating}%). You survive, but only weaker nations are interested if you fancy a fresh start.",
+  "@boardVerdictPressureBody": {
+    "description": "Board verdict detail: a poor cycle, survived.",
+    "placeholders": {
+      "rating": {
+        "type": "int",
+        "example": "22"
+      }
+    }
+  },
+  "boardVerdictHeroTitle": "The nation stands by you",
+  "@boardVerdictHeroTitle": {
+    "description": "Board verdict headline: a national hero the board will not sack, whatever the cycle."
+  },
+  "boardVerdictHeroNote": " {nation} adore you, a national hero after {cycles, plural, one{1 cycle} other{{cycles} cycles}}; your job is safe for as long as you want it.",
+  "@boardVerdictHeroNote": {
+    "description": "Board verdict: the sentence added for a national hero. It follows the verdict detail, so it opens with a space.",
+    "placeholders": {
+      "nation": {
+        "type": "String",
+        "example": "Czechia"
+      },
+      "cycles": {
+        "type": "int",
+        "example": "3"
+      }
+    }
+  },
+  "boardVerdictTheNation": "The nation",
+  "@boardVerdictTheNation": {
+    "description": "Board verdict: stands in for the nation's name when it cannot be read."
+  },
+  "boardVerdictBestQuiet": "a quiet cycle",
+  "@boardVerdictBestQuiet": {
+    "description": "Board verdict: the cycle's best run, when there is nothing to name."
+  },
+  "boardVerdictBestCycle": "the cycle",
+  "@boardVerdictBestCycle": {
+    "description": "Board verdict: the cycle's best run, when the World Championship is not part of it."
+  },
+  "boardVerdictBestWorld": "the World Championship: {placement}",
+  "@boardVerdictBestWorld": {
+    "description": "Board verdict: the cycle's best run, named after how far the nation went at the World Championship.",
+    "placeholders": {
+      "placement": {
+        "type": "String",
+        "example": "Semi-finals"
+      }
+    }
+  },
+  "finishThirdPlace": "Third place",
+  "@finishThirdPlace": {
+    "description": "A tournament finish: third."
+  },
+  "finishFourthPlace": "Fourth place",
+  "@finishFourthPlace": {
+    "description": "A tournament finish: fourth."
+  },
+  "finishDidNotQualify": "Did not qualify",
+  "@finishDidNotQualify": {
+    "description": "A tournament finish: never reached the finals."
   }
 }

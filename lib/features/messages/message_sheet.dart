@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
+import 'package:fnm/core/util/message_text.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
 import 'package:fnm/features/messages/poty_card.dart';
 import 'package:fnm/features/messages/squad_dev_report.dart';
 import 'package:fnm/features/messages/transfer_report.dart';
+import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 
 /// The icon and colour a message category is shown with. Shared so a message
@@ -57,6 +59,9 @@ class MessageSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final style = messageStyle(message.category);
+    // The words, in the language being read RIGHT NOW — not the one the news
+    // happened in. See [readMessage].
+    final words = readMessage(AppLocalizations.of(context), message);
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.fromLTRB(
@@ -75,7 +80,7 @@ class MessageSheet extends StatelessWidget {
                 const SizedBox(width: AppSpacing.sm),
                 Expanded(
                   child: Text(
-                    message.title,
+                    words.title,
                     style: AppTypography.headlineMedium,
                   ),
                 ),
@@ -91,8 +96,11 @@ class MessageSheet extends StatelessWidget {
             // The yearly squad report is a table, not a paragraph — a run of
             // "A 78→82, B 74→76, …" was unreadable once more than a couple of
             // players moved. Anything else is plain text.
-            if (decodeSquadDevReport(message.body) case final report?) ...[
-              if (report.note case final note?) ...[
+            if (decodeSquadDevReport(words.body) case final report?) ...[
+              // The note stored as MEANING wins over the one written into the
+              // report itself: a report filed before the inbox stored meaning
+              // has only the latter, and it is in the language of the day.
+              if (words.note ?? report.note case final note?) ...[
                 Text(
                   note,
                   style: AppTypography.bodySmall.copyWith(
@@ -102,16 +110,15 @@ class MessageSheet extends StatelessWidget {
                 const SizedBox(height: AppSpacing.sm),
               ],
               SquadDevTable(rows: report.rows),
-            ] else if (decodeTransferReport(message.body)
-                case final moves?) ...[
+            ] else if (decodeTransferReport(words.body) case final moves?) ...[
               TransferTable(rows: moves),
-            ] else if (decodePotyReport(message.body) case final winners?) ...[
+            ] else if (decodePotyReport(words.body) case final winners?) ...[
               // The year's individual awards are a card each, not a sentence:
               // a name on its own says nothing about the season that earned
               // it. See [PotyCard].
               PotyCard(rows: winners),
             ] else
-              Text(message.body, style: AppTypography.bodyMedium),
+              Text(words.body, style: AppTypography.bodyMedium),
             if (action != null) ...[
               const SizedBox(height: AppSpacing.lg),
               PrimaryButton(

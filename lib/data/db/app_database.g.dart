@@ -6609,8 +6609,9 @@ class MatchIncidentRow extends DataClass
   final MatchEventType type;
 
   /// For a sending-off, whether it was a second booking rather than a straight
-  /// red — the difference between a rush of blood and a disgrace, and the
-  /// press ask about them differently.
+  /// red. Recorded but not yet asked about: the difference between a rush of
+  /// blood and a disgrace is a sharper question than either, and keeping the
+  /// flag now means writing that copy later rather than migrating for it.
   final bool secondYellow;
   const MatchIncidentRow({
     required this.id,
@@ -10506,6 +10507,15 @@ class $MessagesTable extends Messages
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _specMeta = const VerificationMeta('spec');
+  @override
+  late final GeneratedColumn<String> spec = GeneratedColumn<String>(
+    'spec',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   static const VerificationMeta _yearMeta = const VerificationMeta('year');
   @override
   late final GeneratedColumn<int> year = GeneratedColumn<int>(
@@ -10536,6 +10546,7 @@ class $MessagesTable extends Messages
     category,
     title,
     body,
+    spec,
     year,
     read,
   ];
@@ -10594,6 +10605,12 @@ class $MessagesTable extends Messages
     } else if (isInserting) {
       context.missing(_bodyMeta);
     }
+    if (data.containsKey('spec')) {
+      context.handle(
+        _specMeta,
+        spec.isAcceptableOrUnknown(data['spec']!, _specMeta),
+      );
+    }
     if (data.containsKey('year')) {
       context.handle(
         _yearMeta,
@@ -10645,6 +10662,10 @@ class $MessagesTable extends Messages
         DriftSqlType.string,
         data['${effectivePrefix}body'],
       )!,
+      spec: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}spec'],
+      ),
       year: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}year'],
@@ -10670,6 +10691,13 @@ class MessageRow extends DataClass implements Insertable<MessageRow> {
   final String title;
   final String body;
 
+  /// What the message MEANS, as JSON: which string names its title and body,
+  /// and the arguments they take (see `MsgText`). Null on every message filed
+  /// before this column existed — those keep the words they were written in,
+  /// which is all a save from before this has. Everything since is rendered in
+  /// the language the manager is reading in, whatever language it happened in.
+  final String? spec;
+
   /// The in-game year the message belongs to, for ordering.
   final int year;
   final bool read;
@@ -10680,6 +10708,7 @@ class MessageRow extends DataClass implements Insertable<MessageRow> {
     required this.category,
     required this.title,
     required this.body,
+    this.spec,
     required this.year,
     required this.read,
   });
@@ -10692,6 +10721,9 @@ class MessageRow extends DataClass implements Insertable<MessageRow> {
     map['category'] = Variable<String>(category);
     map['title'] = Variable<String>(title);
     map['body'] = Variable<String>(body);
+    if (!nullToAbsent || spec != null) {
+      map['spec'] = Variable<String>(spec);
+    }
     map['year'] = Variable<int>(year);
     map['read'] = Variable<bool>(read);
     return map;
@@ -10705,6 +10737,7 @@ class MessageRow extends DataClass implements Insertable<MessageRow> {
       category: Value(category),
       title: Value(title),
       body: Value(body),
+      spec: spec == null && nullToAbsent ? const Value.absent() : Value(spec),
       year: Value(year),
       read: Value(read),
     );
@@ -10722,6 +10755,7 @@ class MessageRow extends DataClass implements Insertable<MessageRow> {
       category: serializer.fromJson<String>(json['category']),
       title: serializer.fromJson<String>(json['title']),
       body: serializer.fromJson<String>(json['body']),
+      spec: serializer.fromJson<String?>(json['spec']),
       year: serializer.fromJson<int>(json['year']),
       read: serializer.fromJson<bool>(json['read']),
     );
@@ -10736,6 +10770,7 @@ class MessageRow extends DataClass implements Insertable<MessageRow> {
       'category': serializer.toJson<String>(category),
       'title': serializer.toJson<String>(title),
       'body': serializer.toJson<String>(body),
+      'spec': serializer.toJson<String?>(spec),
       'year': serializer.toJson<int>(year),
       'read': serializer.toJson<bool>(read),
     };
@@ -10748,6 +10783,7 @@ class MessageRow extends DataClass implements Insertable<MessageRow> {
     String? category,
     String? title,
     String? body,
+    Value<String?> spec = const Value.absent(),
     int? year,
     bool? read,
   }) => MessageRow(
@@ -10757,6 +10793,7 @@ class MessageRow extends DataClass implements Insertable<MessageRow> {
     category: category ?? this.category,
     title: title ?? this.title,
     body: body ?? this.body,
+    spec: spec.present ? spec.value : this.spec,
     year: year ?? this.year,
     read: read ?? this.read,
   );
@@ -10768,6 +10805,7 @@ class MessageRow extends DataClass implements Insertable<MessageRow> {
       category: data.category.present ? data.category.value : this.category,
       title: data.title.present ? data.title.value : this.title,
       body: data.body.present ? data.body.value : this.body,
+      spec: data.spec.present ? data.spec.value : this.spec,
       year: data.year.present ? data.year.value : this.year,
       read: data.read.present ? data.read.value : this.read,
     );
@@ -10782,6 +10820,7 @@ class MessageRow extends DataClass implements Insertable<MessageRow> {
           ..write('category: $category, ')
           ..write('title: $title, ')
           ..write('body: $body, ')
+          ..write('spec: $spec, ')
           ..write('year: $year, ')
           ..write('read: $read')
           ..write(')'))
@@ -10789,8 +10828,17 @@ class MessageRow extends DataClass implements Insertable<MessageRow> {
   }
 
   @override
-  int get hashCode =>
-      Object.hash(id, careerId, dedupKey, category, title, body, year, read);
+  int get hashCode => Object.hash(
+    id,
+    careerId,
+    dedupKey,
+    category,
+    title,
+    body,
+    spec,
+    year,
+    read,
+  );
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -10801,6 +10849,7 @@ class MessageRow extends DataClass implements Insertable<MessageRow> {
           other.category == this.category &&
           other.title == this.title &&
           other.body == this.body &&
+          other.spec == this.spec &&
           other.year == this.year &&
           other.read == this.read);
 }
@@ -10812,6 +10861,7 @@ class MessagesCompanion extends UpdateCompanion<MessageRow> {
   final Value<String> category;
   final Value<String> title;
   final Value<String> body;
+  final Value<String?> spec;
   final Value<int> year;
   final Value<bool> read;
   const MessagesCompanion({
@@ -10821,6 +10871,7 @@ class MessagesCompanion extends UpdateCompanion<MessageRow> {
     this.category = const Value.absent(),
     this.title = const Value.absent(),
     this.body = const Value.absent(),
+    this.spec = const Value.absent(),
     this.year = const Value.absent(),
     this.read = const Value.absent(),
   });
@@ -10831,6 +10882,7 @@ class MessagesCompanion extends UpdateCompanion<MessageRow> {
     required String category,
     required String title,
     required String body,
+    this.spec = const Value.absent(),
     required int year,
     this.read = const Value.absent(),
   }) : careerId = Value(careerId),
@@ -10846,6 +10898,7 @@ class MessagesCompanion extends UpdateCompanion<MessageRow> {
     Expression<String>? category,
     Expression<String>? title,
     Expression<String>? body,
+    Expression<String>? spec,
     Expression<int>? year,
     Expression<bool>? read,
   }) {
@@ -10856,6 +10909,7 @@ class MessagesCompanion extends UpdateCompanion<MessageRow> {
       if (category != null) 'category': category,
       if (title != null) 'title': title,
       if (body != null) 'body': body,
+      if (spec != null) 'spec': spec,
       if (year != null) 'year': year,
       if (read != null) 'read': read,
     });
@@ -10868,6 +10922,7 @@ class MessagesCompanion extends UpdateCompanion<MessageRow> {
     Value<String>? category,
     Value<String>? title,
     Value<String>? body,
+    Value<String?>? spec,
     Value<int>? year,
     Value<bool>? read,
   }) {
@@ -10878,6 +10933,7 @@ class MessagesCompanion extends UpdateCompanion<MessageRow> {
       category: category ?? this.category,
       title: title ?? this.title,
       body: body ?? this.body,
+      spec: spec ?? this.spec,
       year: year ?? this.year,
       read: read ?? this.read,
     );
@@ -10904,6 +10960,9 @@ class MessagesCompanion extends UpdateCompanion<MessageRow> {
     if (body.present) {
       map['body'] = Variable<String>(body.value);
     }
+    if (spec.present) {
+      map['spec'] = Variable<String>(spec.value);
+    }
     if (year.present) {
       map['year'] = Variable<int>(year.value);
     }
@@ -10922,6 +10981,7 @@ class MessagesCompanion extends UpdateCompanion<MessageRow> {
           ..write('category: $category, ')
           ..write('title: $title, ')
           ..write('body: $body, ')
+          ..write('spec: $spec, ')
           ..write('year: $year, ')
           ..write('read: $read')
           ..write(')'))
@@ -27285,6 +27345,7 @@ typedef $$MessagesTableCreateCompanionBuilder =
       required String category,
       required String title,
       required String body,
+      Value<String?> spec,
       required int year,
       Value<bool> read,
     });
@@ -27296,6 +27357,7 @@ typedef $$MessagesTableUpdateCompanionBuilder =
       Value<String> category,
       Value<String> title,
       Value<String> body,
+      Value<String?> spec,
       Value<int> year,
       Value<bool> read,
     });
@@ -27353,6 +27415,11 @@ class $$MessagesTableFilterComposer
 
   ColumnFilters<String> get body => $composableBuilder(
     column: $table.body,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get spec => $composableBuilder(
+    column: $table.spec,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -27424,6 +27491,11 @@ class $$MessagesTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get spec => $composableBuilder(
+    column: $table.spec,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<int> get year => $composableBuilder(
     column: $table.year,
     builder: (column) => ColumnOrderings(column),
@@ -27481,6 +27553,9 @@ class $$MessagesTableAnnotationComposer
 
   GeneratedColumn<String> get body =>
       $composableBuilder(column: $table.body, builder: (column) => column);
+
+  GeneratedColumn<String> get spec =>
+      $composableBuilder(column: $table.spec, builder: (column) => column);
 
   GeneratedColumn<int> get year =>
       $composableBuilder(column: $table.year, builder: (column) => column);
@@ -27546,6 +27621,7 @@ class $$MessagesTableTableManager
                 Value<String> category = const Value.absent(),
                 Value<String> title = const Value.absent(),
                 Value<String> body = const Value.absent(),
+                Value<String?> spec = const Value.absent(),
                 Value<int> year = const Value.absent(),
                 Value<bool> read = const Value.absent(),
               }) => MessagesCompanion(
@@ -27555,6 +27631,7 @@ class $$MessagesTableTableManager
                 category: category,
                 title: title,
                 body: body,
+                spec: spec,
                 year: year,
                 read: read,
               ),
@@ -27566,6 +27643,7 @@ class $$MessagesTableTableManager
                 required String category,
                 required String title,
                 required String body,
+                Value<String?> spec = const Value.absent(),
                 required int year,
                 Value<bool> read = const Value.absent(),
               }) => MessagesCompanion.insert(
@@ -27575,6 +27653,7 @@ class $$MessagesTableTableManager
                 category: category,
                 title: title,
                 body: body,
+                spec: spec,
                 year: year,
                 read: read,
               ),

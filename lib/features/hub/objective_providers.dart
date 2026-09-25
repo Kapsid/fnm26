@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/core/util/competition_label.dart';
+import 'package:fnm/core/util/message_text.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/fixture.dart';
@@ -81,6 +82,60 @@ String objectiveDemandText(
   TournamentTier tier,
   int target,
 ) => _labelFor(l, tier, target);
+
+/// The same demand WITHOUT the words: which string it is, so the board's
+/// verdict can be stored as meaning and read in the manager's language
+/// whenever he opens it.
+MsgKey objectiveDemandKey(TournamentTier tier, int target) {
+  if (tier == TournamentTier.nationsCup) {
+    return switch (target) {
+      7 => MsgKey.objectiveNcWinIt,
+      6 => MsgKey.objectiveNcReachFinal,
+      5 => MsgKey.objectiveNcFinalsFour,
+      4 => MsgKey.objectiveNcWinGroup,
+      3 => MsgKey.objectiveNcTopHalf,
+      _ => MsgKey.objectiveNcSurvive,
+    };
+  }
+  return switch (target) {
+    7 => MsgKey.objectiveWinTournament,
+    6 => MsgKey.objectiveReachFinal,
+    5 => MsgKey.objectiveReachSemis,
+    4 => MsgKey.objectiveReachQuarters,
+    3 => MsgKey.objectiveReachKnockouts,
+    2 => MsgKey.objectiveQualifyGeneric,
+    _ => MsgKey.objectiveQualifyingTopHalf,
+  };
+}
+
+/// A finish ordinal as a key, for the same reason as [objectiveDemandKey].
+MsgKey objectiveFinishKey(TournamentTier tier, int ordinal) {
+  if (tier == TournamentTier.nationsCup) {
+    return switch (ordinal) {
+      7 => MsgKey.finishNcChampions,
+      6 => MsgKey.finishRunnersUp,
+      5 => MsgKey.finishNcFinalsFour,
+      4 => MsgKey.finishNcGroupWinners,
+      3 => MsgKey.finishNcTopHalf,
+      2 => MsgKey.finishNcStayedUp,
+      _ => MsgKey.finishNcBottom,
+    };
+  }
+  return switch (ordinal) {
+    7 => MsgKey.finishChampions,
+    6 => MsgKey.finishRunnersUp,
+    5 => MsgKey.finishSemiFinals,
+    4 => MsgKey.finishQuarterFinals,
+    3 => MsgKey.finishRoundOf16,
+    2 => MsgKey.finishGroupStage,
+    // Both bottom rungs describe the QUALIFYING campaign, because that is what
+    // a side that never reached the tournament actually played. A flat "did not
+    // qualify" here read as a contradiction next to a met verdict, and told a
+    // manager whose brief was the campaign itself nothing about how it went.
+    1 => MsgKey.finishQualifyingTopHalf,
+    _ => MsgKey.finishQualifyingBottomHalf,
+  };
+}
 
 /// A finish ordinal, worded for the manager.
 String objectiveFinishText(
@@ -571,27 +626,8 @@ Future<int> _qualifyingOrdinal({
 /// The board's demand, worded generically — the competition it applies to is
 /// named alongside it, since a cycle now carries a continental objective as
 /// well as a World Cup one.
-String _labelFor(AppLocalizations l, TournamentTier tier, int target) {
-  if (tier == TournamentTier.nationsCup) {
-    return switch (target) {
-      7 => l.objectiveNcWinIt,
-      6 => l.objectiveNcReachFinal,
-      5 => l.objectiveNcFinalsFour,
-      4 => l.objectiveNcWinGroup,
-      3 => l.objectiveNcTopHalf,
-      _ => l.objectiveNcSurvive,
-    };
-  }
-  return switch (target) {
-    7 => l.objectiveWinTournament,
-    6 => l.objectiveReachFinal,
-    5 => l.objectiveReachSemis,
-    4 => l.objectiveReachQuarters,
-    3 => l.objectiveReachKnockouts,
-    2 => l.objectiveQualifyGeneric,
-    _ => l.objectiveQualifyingTopHalf,
-  };
-}
+String _labelFor(AppLocalizations l, TournamentTier tier, int target) =>
+    renderMsgKey(l, MsgText(objectiveDemandKey(tier, target)));
 
 /// [nationId]'s deepest finish this cycle as an ordinal (0 = did not qualify,
 /// 2 = group stage … 7 = champions). [prefix] selects the competition's rounds
@@ -636,30 +672,5 @@ int _finishOrdinal(
   return best;
 }
 
-String _resultLabel(AppLocalizations l, TournamentTier tier, int ordinal) {
-  if (tier == TournamentTier.nationsCup) {
-    return switch (ordinal) {
-      7 => l.finishNcChampions,
-      6 => l.finishRunnersUp,
-      5 => l.finishNcFinalsFour,
-      4 => l.finishNcGroupWinners,
-      3 => l.finishNcTopHalf,
-      2 => l.finishNcStayedUp,
-      _ => l.finishNcBottom,
-    };
-  }
-  return switch (ordinal) {
-    7 => l.finishChampions,
-    6 => l.finishRunnersUp,
-    5 => l.finishSemiFinals,
-    4 => l.finishQuarterFinals,
-    3 => l.finishRoundOf16,
-    2 => l.finishGroupStage,
-    // Both bottom rungs describe the QUALIFYING campaign, because that is what
-    // a side that never reached the tournament actually played. A flat "did not
-    // qualify" here read as a contradiction next to a met verdict, and told a
-    // manager whose brief was the campaign itself nothing about how it went.
-    1 => l.finishQualifyingTopHalf,
-    _ => l.finishQualifyingBottomHalf,
-  };
-}
+String _resultLabel(AppLocalizations l, TournamentTier tier, int ordinal) =>
+    renderMsgKey(l, MsgText(objectiveFinishKey(tier, ordinal)));

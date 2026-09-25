@@ -9008,4 +9008,82 @@ class AppLocalizationsCs extends AppLocalizations {
   String matchPossessionShare(int possession) {
     return '$possession % držení míče';
   }
+
+  @override
+  String get boardVerdictSackedTitle => 'Vedení vás odvolalo';
+
+  @override
+  String boardVerdictSackedBody(int rating) {
+    return 'Zoufalý cyklus (hodnocení $rating %). Vaše vláda tady končí. Šanci vám teď dají jen slabší země.';
+  }
+
+  @override
+  String get boardVerdictDelightedTitle => 'Vedení je nadšené';
+
+  @override
+  String boardVerdictDelightedBody(int rating, String best) {
+    return 'Vynikající cyklus (hodnocení $rating %) a k tomu $best. Zájem mají větší země, nebo můžete zůstat a stavět dál.';
+  }
+
+  @override
+  String get boardVerdictSolidTitle => 'Solidní cyklus';
+
+  @override
+  String boardVerdictSolidBody(int rating) {
+    return 'Vedení je spokojené (hodnocení $rating %). Vzaly by vás země podobné velikosti, ale nikdo vás nikam netlačí.';
+  }
+
+  @override
+  String get boardVerdictExpectedMoreTitle => 'Vedení čekalo víc';
+
+  @override
+  String boardVerdictExpectedMoreBody(int rating) {
+    return 'Zklamání (hodnocení $rating %). Místo si držíte, ale nabídky jsou jen o stupeň níž.';
+  }
+
+  @override
+  String get boardVerdictPressureTitle => 'Jste pod skutečným tlakem';
+
+  @override
+  String boardVerdictPressureBody(int rating) {
+    return 'Slabý cyklus (hodnocení $rating %). Přežíváte, ale pokud chcete začít jinde, zájem mají jen slabší země.';
+  }
+
+  @override
+  String get boardVerdictHeroTitle => 'Národ stojí za vámi';
+
+  @override
+  String boardVerdictHeroNote(String nation, int cycles) {
+    String _temp0 = intl.Intl.pluralLogic(
+      cycles,
+      locale: localeName,
+      other: '$cycles cyklech',
+      few: '$cycles cyklech',
+      one: '1 cyklu',
+    );
+    return ' $nation vás zbožňuje, po $_temp0 jste národní hrdina a místo máte tak dlouho, jak budete chtít.';
+  }
+
+  @override
+  String get boardVerdictTheNation => 'Národ';
+
+  @override
+  String get boardVerdictBestQuiet => 'tichý cyklus';
+
+  @override
+  String get boardVerdictBestCycle => 'tenhle cyklus';
+
+  @override
+  String boardVerdictBestWorld(String placement) {
+    return 'mistrovství světa: $placement';
+  }
+
+  @override
+  String get finishThirdPlace => 'Třetí místo';
+
+  @override
+  String get finishFourthPlace => 'Čtvrté místo';
+
+  @override
+  String get finishDidNotQualify => 'Neprošli kvalifikací';
 }

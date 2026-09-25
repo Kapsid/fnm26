@@ -8998,4 +8998,81 @@ class AppLocalizationsEn extends AppLocalizations {
   String matchPossessionShare(int possession) {
     return '$possession% possession';
   }
+
+  @override
+  String get boardVerdictSackedTitle => 'The board has dismissed you';
+
+  @override
+  String boardVerdictSackedBody(int rating) {
+    return 'A dismal cycle (rating $rating%). Your reign ends here. Only lesser nations will take a chance on you now.';
+  }
+
+  @override
+  String get boardVerdictDelightedTitle => 'The board is delighted';
+
+  @override
+  String boardVerdictDelightedBody(int rating, String best) {
+    return 'An outstanding cycle (rating $rating%) after $best. Bigger nations are interested, or you can stay and build.';
+  }
+
+  @override
+  String get boardVerdictSolidTitle => 'A solid cycle';
+
+  @override
+  String boardVerdictSolidBody(int rating) {
+    return 'The board is content (rating $rating%). A few nations of similar standing would take you, but there is no pressure to move.';
+  }
+
+  @override
+  String get boardVerdictExpectedMoreTitle => 'The board expected more';
+
+  @override
+  String boardVerdictExpectedMoreBody(int rating) {
+    return 'A disappointing cycle (rating $rating%). You keep your job, but any offers are a step down.';
+  }
+
+  @override
+  String get boardVerdictPressureTitle => 'You are under real pressure';
+
+  @override
+  String boardVerdictPressureBody(int rating) {
+    return 'A poor cycle (rating $rating%). You survive, but only weaker nations are interested if you fancy a fresh start.';
+  }
+
+  @override
+  String get boardVerdictHeroTitle => 'The nation stands by you';
+
+  @override
+  String boardVerdictHeroNote(String nation, int cycles) {
+    String _temp0 = intl.Intl.pluralLogic(
+      cycles,
+      locale: localeName,
+      other: '$cycles cycles',
+      one: '1 cycle',
+    );
+    return ' $nation adore you, a national hero after $_temp0; your job is safe for as long as you want it.';
+  }
+
+  @override
+  String get boardVerdictTheNation => 'The nation';
+
+  @override
+  String get boardVerdictBestQuiet => 'a quiet cycle';
+
+  @override
+  String get boardVerdictBestCycle => 'the cycle';
+
+  @override
+  String boardVerdictBestWorld(String placement) {
+    return 'the World Championship: $placement';
+  }
+
+  @override
+  String get finishThirdPlace => 'Third place';
+
+  @override
+  String get finishFourthPlace => 'Fourth place';
+
+  @override
+  String get finishDidNotQualify => 'Did not qualify';
 }

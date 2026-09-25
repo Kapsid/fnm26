@@ -2598,6 +2598,7 @@ class DriftCompetitionRepository implements CompetitionRepository {
     required String title,
     required String body,
     required int year,
+    String? spec,
   }) async {
     await _db
         .into(_db.messages)
@@ -2609,6 +2610,7 @@ class DriftCompetitionRepository implements CompetitionRepository {
             title: title,
             body: body,
             year: year,
+            spec: Value(spec),
           ),
           mode: InsertMode.insertOrIgnore,
         );
@@ -2630,6 +2632,7 @@ class DriftCompetitionRepository implements CompetitionRepository {
           category: r.category,
           title: r.title,
           body: r.body,
+          spec: r.spec,
           year: r.year,
           read: r.read,
         ),

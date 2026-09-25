@@ -14,5 +14,9 @@ int varietySeed(String s) {
 }
 
 /// Picks one phrasing from [options] deterministically from [seed].
-String pickVariant(List<String> options, int seed) =>
-    options[seed % options.length];
+///
+/// Generic, because a phrasing is not always a String any more: a message
+/// stored as MEANING picks between `MsgText`s (see `core/util/message_text.dart`)
+/// and must pick the same one for the same event, whatever language it is later
+/// read in.
+T pickVariant<T>(List<T> options, int seed) => options[seed % options.length];

@@ -8,6 +8,7 @@ import '../../generated_migrations/schema_v38.dart' as v38;
 import '../../generated_migrations/schema_v40.dart' as v40;
 import '../../generated_migrations/schema_v41.dart' as v41;
 import '../../generated_migrations/schema_v45.dart' as v45;
+import '../../generated_migrations/schema_v47.dart' as v47;
 
 /// Guards the promise that a save survives a schema bump.
 ///
@@ -206,6 +207,38 @@ void main() {
         .getSingle();
     expect(row.read<int>('host_id'), 9);
     expect(row.readNullable<String>('host_ids'), isNull);
+  });
+
+  test('v48 keeps an old message and leaves it without a spec', () async {
+    // 47 → 48 stores what a message means beside the words it was written in.
+    // Additive and nullable: a message filed before it has no spec, and the
+    // inbox reads it back as the sentence it was filed as — in the language it
+    // happened in, which is all a save from before this carries.
+    final schema = await verifier.schemaAt(47);
+    final old = v47.DatabaseAtV47(schema.newConnection());
+    await old.customStatement(
+      'INSERT INTO careers (id, nation_id, manager_name, created_at, '
+      'in_game_date, rng_seed, cycle_pointer, budget) '
+      'VALUES (1, 1, ?, 0, 0, 7, 0, 0)',
+      ['Archivist'],
+    );
+    await old.customStatement(
+      'INSERT INTO messages (career_id, dedup_key, category, title, body, '
+      'year) VALUES (1, ?, ?, ?, ?, 2030)',
+      ['rankrel:2030', 'ranking', 'World ranking: #7', 'You hold seventh.'],
+    );
+    await old.close();
+
+    final db = AppDatabase.forTesting(schema.newConnection());
+    addTearDown(db.close);
+    await verifier.migrateAndValidate(db, 48);
+
+    final row = await db
+        .customSelect('SELECT title, body, spec FROM messages')
+        .getSingle();
+    expect(row.read<String>('title'), 'World ranking: #7');
+    expect(row.read<String>('body'), 'You hold seventh.');
+    expect(row.readNullable<String>('spec'), isNull);
   });
 
   for (final MapEntry(key: from, value: to) in upgrades.entries) {

@@ -10,8 +10,8 @@ extension SeasonRollover on SeasonService {
   Future<void> _startNextCycle(
     int careerId, {
     int? switchToNationId,
-    String? boardTitle,
-    String? boardBody,
+    MsgPart? boardTitle,
+    MsgPart? boardBody,
     FederationInvestment? nextInvestment,
   }) async {
     final career = await _careers.byId(careerId);
@@ -111,12 +111,13 @@ extension SeasonRollover on SeasonService {
       await _ref.read(tacticFamiliarityRepositoryProvider).reset(careerId);
     }
     if (boardTitle != null) {
-      await _comp.addMessage(
+      await _comp.addTextMessage(
+        l: _l,
         careerId: careerId,
         dedupKey: 'board:${career.cyclePointer}',
         category: 'board',
         title: boardTitle,
-        body: boardBody ?? '',
+        body: boardBody,
         year: SeasonService.finalsYear(career.cyclePointer),
       );
     }
@@ -260,12 +261,13 @@ extension SeasonRollover on SeasonService {
             );
           }(),
       ];
-      await _comp.addMessage(
+      await _comp.addTextMessage(
+        l: _l,
         careerId: careerId,
         dedupKey: 'transfers:$year',
         category: 'transfer',
-        title: _l.newsTransferWindowTitle(year),
-        body: encodeTransferReport(rows),
+        title: MsgText(MsgKey.newsTransferWindowTitle, [year]),
+        rawBody: encodeTransferReport(rows),
         year: year,
       );
     }
@@ -283,30 +285,39 @@ extension SeasonRollover on SeasonService {
             agingYears: CareerService.agingYears(career),
             saveSeed: career.rngSeed,
           );
-      return p?.name ?? _l.newsARecordBreaker;
+      return p?.name ??
+          renderMsgKey(_l, const MsgText(MsgKey.newsARecordBreaker));
     }
 
     final scorers = await _comp.allTimeTopScorers(careerId, limit: 1);
     if (scorers.isNotEmpty && scorers.first.goals >= 30) {
       final s = scorers.first;
-      await _comp.addMessage(
+      await _comp.addTextMessage(
+        l: _l,
         careerId: careerId,
         dedupKey: 'record:scorer:${s.playerId}',
         category: 'record',
-        title: _l.newsRecordScorerTitle,
-        body: _l.newsRecordScorerBody(await nameOf(s.playerId), s.goals),
+        title: const MsgText(MsgKey.newsRecordScorerTitle),
+        body: MsgText(MsgKey.newsRecordScorerBody, [
+          await nameOf(s.playerId),
+          s.goals,
+        ]),
         year: year,
       );
     }
     final caps = await _comp.allTimeTopAppearances(careerId, limit: 1);
     if (caps.isNotEmpty && caps.first.games >= 70) {
       final c = caps.first;
-      await _comp.addMessage(
+      await _comp.addTextMessage(
+        l: _l,
         careerId: careerId,
         dedupKey: 'record:caps:${c.playerId}',
         category: 'record',
-        title: _l.newsRecordCapsTitle,
-        body: _l.newsRecordCapsBody(await nameOf(c.playerId), c.games),
+        title: const MsgText(MsgKey.newsRecordCapsTitle),
+        body: MsgText(MsgKey.newsRecordCapsBody, [
+          await nameOf(c.playerId),
+          c.games,
+        ]),
         year: year,
       );
     }
@@ -507,9 +518,12 @@ extension SeasonRollover on SeasonService {
       if (candidates.isEmpty) continue;
       final pick = candidates[rng.nextInt(candidates.length)];
       taken.add(pick.id);
-      final l = _l;
-      final from = nations[pick.nationId]?.name ?? l.newsTheirNation;
-      final to = nations[nationId]?.name ?? l.newsYourNation;
+      // A nation with no name falls back to a PHRASE, which is a piece of the
+      // message like any other rather than words fixed at writing time.
+      final from =
+          nations[pick.nationId]?.name ?? const MsgText(MsgKey.newsTheirNation);
+      final to =
+          nations[nationId]?.name ?? const MsgText(MsgKey.newsYourNation);
 
       await _careers.addNaturalizationOffer(
         careerId: careerId,
@@ -517,30 +531,24 @@ extension SeasonRollover on SeasonService {
         sourceNationId: pick.nationId,
         cycle: nextCycle,
       );
-      await _comp.addMessage(
+      final star = pick.overall >= 85;
+      await _comp.addTextMessage(
+        l: _l,
         careerId: careerId,
         dedupKey: 'natz:$nextCycle:${pick.id}',
         category: 'naturalize',
-        title: pick.overall >= 85
-            ? l.newsNatzStarTitle(pick.name, to)
-            : l.newsNatzTitle(pick.name, to),
-        body: pick.overall >= 85
-            ? l.newsNatzBodyStar(
-                pick.name,
-                pick.position.label,
-                from,
-                to,
-                pick.age,
-                pick.overall,
-              )
-            : l.newsNatzBody(
-                pick.name,
-                pick.position.label,
-                from,
-                to,
-                pick.age,
-                pick.overall,
-              ),
+        title: MsgText(
+          star ? MsgKey.newsNatzStarTitle : MsgKey.newsNatzTitle,
+          [pick.name, to],
+        ),
+        body: MsgText(star ? MsgKey.newsNatzBodyStar : MsgKey.newsNatzBody, [
+          pick.name,
+          pick.position.label,
+          from,
+          to,
+          pick.age,
+          pick.overall,
+        ]),
         year: SeasonService.finalsYear(nextCycle),
       );
     }

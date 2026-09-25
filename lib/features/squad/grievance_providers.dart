@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fnm/core/util/message_text.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/services/squad/grievances.dart';
 import 'package:fnm/features/career/career_providers.dart';
@@ -221,12 +222,13 @@ class GrievanceService {
       )) {
         continue;
       }
-      await comp.addMessage(
+      await comp.addTextMessage(
+        l: l,
         careerId: careerId,
         dedupKey: '$walkoutKeyPrefix${g.playerId}',
         category: 'retirement',
-        title: l.newsWalkoutTitle(g.playerName),
-        body: l.newsWalkoutBody(g.playerName, g.age, g.caps),
+        title: MsgText(MsgKey.newsWalkoutTitle, [g.playerName]),
+        body: MsgText(MsgKey.newsWalkoutBody, [g.playerName, g.age, g.caps]),
         year: career.inGameDate.year,
       );
     }

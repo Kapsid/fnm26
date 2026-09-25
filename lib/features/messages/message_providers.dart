@@ -1,11 +1,12 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:fnm/core/util/competition_label.dart';
+import 'package:fnm/core/util/message_text.dart';
 import 'package:fnm/core/util/text_variety.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
 import 'package:fnm/domain/services/achievements/achievements.dart';
+import 'package:fnm/domain/services/competition/continental_cups.dart';
 import 'package:fnm/domain/services/competition/hosts.dart';
 import 'package:fnm/domain/services/player/prospects.dart';
 import 'package:fnm/features/career/career_providers.dart';
@@ -32,6 +33,11 @@ import 'package:fnm/features/tournaments/host_draw_providers.dart';
 const int kRankJumpPlaces = 5;
 
 /// A message to be added to the inbox if not already present.
+///
+/// The title and body are the message's MEANING, not its words: they are
+/// rendered when the manager reads them, in whatever language he is reading in.
+/// [rawBody] is the exception — a body that is an encoded report rather than a
+/// sentence, stored as it comes, with [note] carrying the line above it.
 class _Draft {
   const _Draft(
     this.key,
@@ -39,12 +45,16 @@ class _Draft {
     this.title,
     this.body,
     this.year,
-    this.phase,
-  );
+    this.phase, {
+    this.rawBody,
+    this.note,
+  });
   final String key;
   final String category;
-  final String title;
-  final String body;
+  final MsgPart title;
+  final MsgPart? body;
+  final String? rawBody;
+  final MsgPart? note;
   final int year;
 
   /// Orders messages within a year: 0 cycle-start, 1 draw, 2 qualify, 3 result.
@@ -64,19 +74,24 @@ class MessageService {
     final career = await _ref.read(careerRepositoryProvider).byId(careerId);
     if (career == null) return;
     final comp = _ref.read(competitionRepositoryProvider);
-    // The news is WRITTEN in the manager's language and then stored, so a save
-    // started in Czech reads as Czech from the first message. Items filed
-    // before a language change keep the words they were filed in, which is the
-    // honest thing for a dated archive to do.
+    // The news is STORED AS MEANING and written when it is read, so the inbox
+    // is in the manager's language whatever language the news happened in — see
+    // `core/util/message_text.dart`. This reading of the strings is only for the
+    // rendered columns that travel alongside the meaning.
     final l = _ref.read(appLocalizationsProvider);
     final nations = {
       for (final n in await _ref.read(nationRepositoryProvider).all()) n.id: n,
     };
     String nameOf(int id) => nations[id]?.name ?? l.msgANation;
     final conf = nations[career.nationId]?.confederation;
-    final contName = conf == null
-        ? l.compContinentalChampionship
-        : continentalCupLabel(l, conf);
+    // The continental cup by its CANONICAL STORED name, written for whoever
+    // reads it — the same journey a competition name makes everywhere else.
+    final contComp = MsgComp(
+      conf == null
+          ? 'Continental Championship'
+          : ContinentalCups.byConfederation[conf]?.name ??
+                'Continental Championship',
+    );
     final cycle = career.cyclePointer;
     final wcYear = CareerService.worldCupYear(cycle);
     final existing = await comp.messageKeys(careerId);
@@ -115,16 +130,16 @@ class MessageService {
         'cycle:$cycle',
         'cycle',
         pickVariant([
-          l.msgCycleTitle1,
-          l.msgCycleTitle2(wcYear),
-          l.msgCycleTitle3,
-          l.msgCycleTitle4,
+          const MsgText(MsgKey.msgCycleTitle1),
+          MsgText(MsgKey.msgCycleTitle2, [wcYear]),
+          const MsgText(MsgKey.msgCycleTitle3),
+          const MsgText(MsgKey.msgCycleTitle4),
         ], cycleSeed),
         pickVariant([
-          l.msgCycleBody1(wcYear),
-          l.msgCycleBody2(wcYear),
-          l.msgCycleBody3(wcYear),
-          l.msgCycleBody4(wcYear),
+          MsgText(MsgKey.msgCycleBody1, [wcYear]),
+          MsgText(MsgKey.msgCycleBody2, [wcYear]),
+          MsgText(MsgKey.msgCycleBody3, [wcYear]),
+          MsgText(MsgKey.msgCycleBody4, [wcYear]),
         ], cycleSeed),
         cycleStartYear,
         0,
@@ -132,41 +147,41 @@ class MessageService {
     ];
 
     // Draws made this cycle, each dated to when it takes place.
-    final drawSpecs = <(String, String, String, int)>[
+    final drawSpecs = <(String, MsgPart, MsgPart, int)>[
       (
         continentalHostDrawKind,
-        l.msgContHostTitle(contName, contHostName),
-        l.msgContHostBody(contHostName, contName),
+        MsgText(MsgKey.msgContHostTitle, [contComp, contHostName]),
+        MsgText(MsgKey.msgContHostBody, [contHostName, contComp]),
         cycleStartYear,
       ),
       (
         continentalQualDrawKind,
-        l.msgContQualDrawTitle(contName),
-        l.msgContQualDrawBody(contName),
+        MsgText(MsgKey.msgContQualDrawTitle, [contComp]),
+        MsgText(MsgKey.msgContQualDrawBody, [contComp]),
         cycleStartYear,
       ),
       (
         worldCupHostDrawKind,
-        l.msgWcHostTitle(wcHostName, wcYear),
-        l.msgWcHostBody(wcHostName, wcYear),
+        MsgText(MsgKey.msgWcHostTitle, [wcHostName, wcYear]),
+        MsgText(MsgKey.msgWcHostBody, [wcHostName, wcYear]),
         contYear,
       ),
       (
         worldCupQualDrawKind,
-        l.msgWcQualDrawTitle,
-        l.msgWcQualDrawBody,
+        const MsgText(MsgKey.msgWcQualDrawTitle),
+        const MsgText(MsgKey.msgWcQualDrawBody),
         contYear,
       ),
       (
         continentalFinalsDrawKind,
-        l.msgContFinalsDrawTitle(contName),
-        l.msgContFinalsDrawBody(contName),
+        MsgText(MsgKey.msgContFinalsDrawTitle, [contComp]),
+        MsgText(MsgKey.msgContFinalsDrawBody, [contComp]),
         contYear,
       ),
       (
         worldCupDrawKind,
-        l.msgWcFinalsDrawTitle,
-        l.msgWcFinalsDrawBody(wcYear),
+        const MsgText(MsgKey.msgWcFinalsDrawTitle),
+        MsgText(MsgKey.msgWcFinalsDrawBody, [wcYear]),
         wcYear,
       ),
     ];
@@ -189,16 +204,16 @@ class MessageService {
           'qual:wc:$y',
           'qualify',
           pickVariant([
-            l.msgQualWcTitle1,
-            l.msgQualWcTitle2,
-            l.msgQualWcTitle3,
-            l.msgQualWcTitle4,
+            const MsgText(MsgKey.msgQualWcTitle1),
+            const MsgText(MsgKey.msgQualWcTitle2),
+            const MsgText(MsgKey.msgQualWcTitle3),
+            const MsgText(MsgKey.msgQualWcTitle4),
           ], qs),
           pickVariant([
-            l.msgQualWcBody1(y),
-            l.msgQualWcBody2(y),
-            l.msgQualWcBody3(y),
-            l.msgQualWcBody4(y),
+            MsgText(MsgKey.msgQualWcBody1, [y]),
+            MsgText(MsgKey.msgQualWcBody2, [y]),
+            MsgText(MsgKey.msgQualWcBody3, [y]),
+            MsgText(MsgKey.msgQualWcBody4, [y]),
           ], qs),
           y - 2,
           2,
@@ -215,14 +230,14 @@ class MessageService {
           'qual:cont:$y',
           'qualify',
           pickVariant([
-            l.msgQualContTitle1(contName),
-            l.msgQualContTitle2(contName),
-            l.msgQualContTitle3(contName),
+            MsgText(MsgKey.msgQualContTitle1, [contComp]),
+            MsgText(MsgKey.msgQualContTitle2, [contComp]),
+            MsgText(MsgKey.msgQualContTitle3, [contComp]),
           ], qcs),
           pickVariant([
-            l.msgQualContBody1(contName),
-            l.msgQualContBody2(contName),
-            l.msgQualContBody3(contName),
+            MsgText(MsgKey.msgQualContBody1, [contComp]),
+            MsgText(MsgKey.msgQualContBody2, [contComp]),
+            MsgText(MsgKey.msgQualContBody3, [contComp]),
           ], qcs),
           y - 1,
           2,
@@ -240,17 +255,19 @@ class MessageService {
     final honours = await comp.honours(careerId);
     for (final h in honours) {
       if (!CareerService.isOwnHonourYear(h.year)) continue;
-      final display = competitionLabel(l, h.competition);
+      final display = MsgComp(h.competition);
       final mine = h.championId == career.nationId;
 
-      final scored = h.finalHomeScore != null && h.finalAwayScore != null;
-      // A level final was settled on penalties (the champion is stored first).
-      final pens = scored && h.finalHomeScore == h.finalAwayScore;
-      final result = !scored
+      final homeScore = h.finalHomeScore;
+      final awayScore = h.finalAwayScore;
+      // Read into the body as an argument, and empty when the final's score was
+      // never recorded — the copy is written to close cleanly without it. A
+      // level final was settled on penalties (the champion is stored first).
+      final result = homeScore == null || awayScore == null
           ? ''
-          : pens
-          ? l.msgFinalPensSuffix(h.finalHomeScore!, h.finalAwayScore!)
-          : l.msgFinalScoreSuffix(h.finalHomeScore!, h.finalAwayScore!);
+          : homeScore == awayScore
+          ? MsgText(MsgKey.msgFinalPensSuffix, [homeScore, awayScore])
+          : MsgText(MsgKey.msgFinalScoreSuffix, [homeScore, awayScore]);
 
       final chSeed = varietySeed(
         'champ:${h.competition}:${h.year}:${career.rngSeed}',
@@ -258,36 +275,51 @@ class MessageService {
       final loser = nameOf(h.runnerUpId);
       final champTitle = mine
           ? pickVariant([
-              l.msgChampTitleMine1(display),
-              l.msgChampTitleMine2(display),
-              l.msgChampTitleMine3(display),
+              MsgText(MsgKey.msgChampTitleMine1, [display]),
+              MsgText(MsgKey.msgChampTitleMine2, [display]),
+              MsgText(MsgKey.msgChampTitleMine3, [display]),
             ], chSeed)
           : pickVariant([
-              l.msgChampTitleOther1(display),
-              l.msgChampTitleOther2(display),
-              l.msgChampTitleOther3(display),
+              MsgText(MsgKey.msgChampTitleOther1, [display]),
+              MsgText(MsgKey.msgChampTitleOther2, [display]),
+              MsgText(MsgKey.msgChampTitleOther3, [display]),
             ], chSeed);
       final champBody = mine
           ? pickVariant([
-              l.msgChampBodyMine1(display, loser, result, h.year),
-              l.msgChampBodyMine2(display, loser, result, h.year),
-              l.msgChampBodyMine3(display, loser, result, h.year),
+              MsgText(MsgKey.msgChampBodyMine1, [
+                display,
+                loser,
+                result,
+                h.year,
+              ]),
+              MsgText(MsgKey.msgChampBodyMine2, [
+                display,
+                loser,
+                result,
+                h.year,
+              ]),
+              MsgText(MsgKey.msgChampBodyMine3, [
+                display,
+                loser,
+                result,
+                h.year,
+              ]),
             ], chSeed)
           : pickVariant([
-              l.msgChampBodyOther1(
+              MsgText(MsgKey.msgChampBodyOther1, [
                 nameOf(h.championId),
                 display,
                 loser,
                 result,
                 h.year,
-              ),
-              l.msgChampBodyOther2(
+              ]),
+              MsgText(MsgKey.msgChampBodyOther2, [
                 nameOf(h.championId),
                 display,
                 loser,
                 result,
                 h.year,
-              ),
+              ]),
             ], chSeed);
       drafts.add(
         _Draft(
@@ -339,18 +371,11 @@ class MessageService {
             _Draft(
               'wpoty:$cycle',
               'award',
-              l.msgWpotyTitle,
-              mine
-                  ? l.msgWpotyBodyMine(
-                      best.name,
-                      nameOf(best.nationId),
-                      wcYear,
-                    )
-                  : l.msgWpotyBodyOther(
-                      best.name,
-                      nameOf(best.nationId),
-                      wcYear,
-                    ),
+              const MsgText(MsgKey.msgWpotyTitle),
+              MsgText(
+                mine ? MsgKey.msgWpotyBodyMine : MsgKey.msgWpotyBodyOther,
+                [best.name, nameOf(best.nationId), wcYear],
+              ),
               wcYear,
               4,
             ),
@@ -389,20 +414,11 @@ class MessageService {
             _Draft(
               'ypot:$cycle',
               'award',
-              l.msgYpotTitle,
-              mine
-                  ? l.msgYpotBodyMine(
-                      young.name,
-                      nameOf(young.nationId),
-                      young.age,
-                      wcYear,
-                    )
-                  : l.msgYpotBodyOther(
-                      young.name,
-                      nameOf(young.nationId),
-                      young.age,
-                      wcYear,
-                    ),
+              const MsgText(MsgKey.msgYpotTitle),
+              MsgText(
+                mine ? MsgKey.msgYpotBodyMine : MsgKey.msgYpotBodyOther,
+                [young.name, nameOf(young.nationId), young.age, wcYear],
+              ),
               wcYear,
               4,
             ),
@@ -443,37 +459,37 @@ class MessageService {
         'rank:${release.publishedOn.toIso8601String()}:'
         '${career.rngSeed}',
       );
-      final String movement;
+      final MsgText movement;
       if (was == null || was == rank) {
         movement = pickVariant([
-          l.msgRankHold1(rank),
-          l.msgRankHold2(rank),
-          l.msgRankHold3(rank),
+          MsgText(MsgKey.msgRankHold1, [rank]),
+          MsgText(MsgKey.msgRankHold2, [rank]),
+          MsgText(MsgKey.msgRankHold3, [rank]),
         ], rSeed);
       } else {
         final move = was - rank; // positive = climbed
         movement = move > 0
             ? pickVariant([
-                l.msgRankUp1(move, rank),
-                l.msgRankUp2(move, rank),
-                l.msgRankUp3(move, rank),
+                MsgText(MsgKey.msgRankUp1, [move, rank]),
+                MsgText(MsgKey.msgRankUp2, [move, rank]),
+                MsgText(MsgKey.msgRankUp3, [move, rank]),
               ], rSeed)
             : pickVariant([
-                l.msgRankDown1(-move, rank),
-                l.msgRankDown2(-move, rank),
-                l.msgRankDown3(-move, rank),
+                MsgText(MsgKey.msgRankDown1, [-move, rank]),
+                MsgText(MsgKey.msgRankDown2, [-move, rank]),
+                MsgText(MsgKey.msgRankDown3, [-move, rank]),
               ], rSeed);
       }
       final lead = release.leaderNationId == release.nationId
-          ? l.msgRankLeadYou
-          : l.msgRankLeadOther(leader);
+          ? const MsgText(MsgKey.msgRankLeadYou)
+          : MsgText(MsgKey.msgRankLeadOther, [leader]);
 
       drafts.add(
         _Draft(
           'rankrel:${release.publishedOn.toIso8601String()}',
           'ranking',
-          l.msgRankTitle(rank),
-          l.msgRankBody(lead, movement),
+          MsgText(MsgKey.msgRankTitle, [rank]),
+          MsgText(MsgKey.msgRankBody, [lead, movement]),
           release.publishedOn.year,
           0,
         ),
@@ -513,16 +529,31 @@ class MessageService {
 
       final move = from - to; // positive = climbed
       if (move.abs() < kRankJumpPlaces) continue;
-      final tournament = competitionLabel(l, h.competition);
+      final tournament = MsgComp(h.competition);
       final who = nameOf(movedNation);
       drafts.add(
         _Draft(
           'rankjump:$tournamentCycle',
           'ranking',
-          move > 0 ? l.msgRankJumpTitleUp(to) : l.msgRankJumpTitleDown(to),
+          MsgText(
+            move > 0 ? MsgKey.msgRankJumpTitleUp : MsgKey.msgRankJumpTitleDown,
+            [to],
+          ),
           move > 0
-              ? l.msgRankJumpBodyUp(tournament, who, from, to, move)
-              : l.msgRankJumpBodyDown(tournament, who, from, to, -move),
+              ? MsgText(MsgKey.msgRankJumpBodyUp, [
+                  tournament,
+                  who,
+                  from,
+                  to,
+                  move,
+                ])
+              : MsgText(MsgKey.msgRankJumpBodyDown, [
+                  tournament,
+                  who,
+                  from,
+                  to,
+                  -move,
+                ]),
           h.year,
           3,
         ),
@@ -563,8 +594,8 @@ class MessageService {
           _Draft(
             key,
             'milestone',
-            l.msgCapsTitle(name, t),
-            l.msgCapsBody(name, t),
+            MsgText(MsgKey.msgCapsTitle, [name, t]),
+            MsgText(MsgKey.msgCapsBody, [name, t]),
             milestoneYear,
             5,
           ),
@@ -586,8 +617,8 @@ class MessageService {
           _Draft(
             key,
             'milestone',
-            l.msgGoalsTitle(name, t),
-            l.msgGoalsBody(name, t),
+            MsgText(MsgKey.msgGoalsTitle, [name, t]),
+            MsgText(MsgKey.msgGoalsBody, [name, t]),
             milestoneYear,
             5,
           ),
@@ -662,10 +693,11 @@ class MessageService {
           _Draft(
             'aging:$y',
             'aging',
-            l.msgDevTitle(reportYear),
-            _developmentReport(before, after, calledUp),
+            MsgText(MsgKey.msgDevTitle, [reportYear]),
+            null,
             reportYear,
             4,
+            rawBody: _developmentReport(before, after, calledUp),
           ),
         );
         // These are the boys who have come THROUGH the pyramid and are old
@@ -679,10 +711,12 @@ class MessageService {
             _Draft(
               'newcomers:$y',
               'aging',
-              l.msgThroughTitle(reportYear),
-              newcomers,
+              MsgText(MsgKey.msgThroughTitle, [reportYear]),
+              null,
               reportYear,
               4,
+              rawBody: newcomers,
+              note: const MsgText(MsgKey.msgThroughNote),
             ),
           );
         }
@@ -698,28 +732,33 @@ class MessageService {
           careerStartsByPlayer: careerDev,
         );
         final intake = intakeRows(pyramid);
+        // Which of the two causes brought a better crop through, as a KEY: the
+        // note above the table is stored as meaning like the rest of the
+        // message, so it is written in the language it is read in.
+        final intakeCycle = PlayerLifecycle.cycleOfIntake(y);
+        final standing = standingBonus[intakeCycle] ?? 0;
+        final noteKey = intakeNoteKey(
+          // The stored total carries both; the academy's own share is what is
+          // left once the standing is taken back out.
+          academyBonus: (academyBonus[intakeCycle] ?? 0) - standing,
+          standingBonus: standing,
+        );
         if (intake.isNotEmpty) {
           drafts.add(
             _Draft(
               'intake:$y',
               'youth',
-              l.msgIntakeTitle(reportYear),
-              encodeSquadDevReport(
-                intake,
-                note: () {
-                  final cycle = PlayerLifecycle.cycleOfIntake(y);
-                  final standing = standingBonus[cycle] ?? 0;
-                  return intakeNote(
-                    l,
-                    // The stored total carries both; the academy's own share
-                    // is what is left once the standing is taken back out.
-                    academyBonus: (academyBonus[cycle] ?? 0) - standing,
-                    standingBonus: standing,
-                  );
-                }(),
-              ),
+              MsgText(MsgKey.msgIntakeTitle, [reportYear]),
+              null,
               reportYear,
               4,
+              rawBody: encodeSquadDevReport(
+                intake,
+                note: noteKey == null
+                    ? null
+                    : renderMsgKey(l, MsgText(noteKey)),
+              ),
+              note: noteKey == null ? null : MsgText(noteKey),
             ),
           );
         }
@@ -761,21 +800,32 @@ class MessageService {
               ..invalidate(careerByIdProvider);
           }
           if ((notable || wasCaptain) && !existing.contains('retire:${p.id}')) {
-            final tally = [
-              if (pc > 0) l.msgTallyCaps(pc),
-              if (pg > 0) l.msgTallyGoals(pg),
-            ].join(', ');
+            // His record, as pieces rather than as a sentence: a tally is two
+            // plurals with a comma between them, and both of them count
+            // differently in Czech.
+            final tally = MsgJoin([
+              if (pc > 0) MsgText(MsgKey.msgTallyCaps, [pc]),
+              if (pg > 0) MsgText(MsgKey.msgTallyGoals, [pg]),
+            ], separator: ', ');
+            final farewell = tally.parts.isEmpty
+                ? MsgText(MsgKey.msgRetireBody, [p.name, p.age])
+                : MsgText(MsgKey.msgRetireBodyWith, [p.name, tally, p.age]);
             drafts.add(
               _Draft(
                 'retire:${p.id}',
                 'retirement',
+                MsgText(
+                  wasCaptain
+                      ? MsgKey.msgRetireCaptainTitle
+                      : MsgKey.msgRetireTitle,
+                  [p.name],
+                ),
                 wasCaptain
-                    ? l.msgRetireCaptainTitle(p.name)
-                    : l.msgRetireTitle(p.name),
-                (tally.isEmpty
-                        ? l.msgRetireBody(p.name, p.age)
-                        : l.msgRetireBodyWith(p.name, tally, p.age)) +
-                    (wasCaptain ? l.msgArmbandVacant : ''),
+                    ? MsgJoin([
+                        farewell,
+                        const MsgText(MsgKey.msgArmbandVacant),
+                      ])
+                    : farewell,
                 reportYear,
                 4,
               ),
@@ -788,8 +838,8 @@ class MessageService {
               _Draft(
                 'hof:${p.id}',
                 'halloffame',
-                l.msgHofTitle(p.name),
-                l.msgHofBody(p.name, pc, pg),
+                MsgText(MsgKey.msgHofTitle, [p.name]),
+                MsgText(MsgKey.msgHofBody, [p.name, pc, pg]),
                 reportYear,
                 4,
               ),
@@ -802,12 +852,15 @@ class MessageService {
     drafts.sort((a, b) => a.sort.compareTo(b.sort));
     for (final d in drafts) {
       if (existing.contains(d.key)) continue;
-      await comp.addMessage(
+      await comp.addTextMessage(
+        l: l,
         careerId: careerId,
         dedupKey: d.key,
         category: d.category,
         title: d.title,
         body: d.body,
+        rawBody: d.rawBody,
+        note: d.note,
         year: d.year,
       );
     }

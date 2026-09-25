@@ -14072,6 +14072,120 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{possession}% possession'**
   String matchPossessionShare(int possession);
+
+  /// Board verdict headline: the manager has been dismissed.
+  ///
+  /// In en, this message translates to:
+  /// **'The board has dismissed you'**
+  String get boardVerdictSackedTitle;
+
+  /// Board verdict detail: dismissed.
+  ///
+  /// In en, this message translates to:
+  /// **'A dismal cycle (rating {rating}%). Your reign ends here. Only lesser nations will take a chance on you now.'**
+  String boardVerdictSackedBody(int rating);
+
+  /// Board verdict headline: an outstanding cycle.
+  ///
+  /// In en, this message translates to:
+  /// **'The board is delighted'**
+  String get boardVerdictDelightedTitle;
+
+  /// Board verdict detail: an outstanding cycle. {best} names the cycle's best run.
+  ///
+  /// In en, this message translates to:
+  /// **'An outstanding cycle (rating {rating}%) after {best}. Bigger nations are interested, or you can stay and build.'**
+  String boardVerdictDelightedBody(int rating, String best);
+
+  /// Board verdict headline: a solid cycle.
+  ///
+  /// In en, this message translates to:
+  /// **'A solid cycle'**
+  String get boardVerdictSolidTitle;
+
+  /// Board verdict detail: a solid cycle.
+  ///
+  /// In en, this message translates to:
+  /// **'The board is content (rating {rating}%). A few nations of similar standing would take you, but there is no pressure to move.'**
+  String boardVerdictSolidBody(int rating);
+
+  /// Board verdict headline: a disappointing cycle.
+  ///
+  /// In en, this message translates to:
+  /// **'The board expected more'**
+  String get boardVerdictExpectedMoreTitle;
+
+  /// Board verdict detail: a disappointing cycle.
+  ///
+  /// In en, this message translates to:
+  /// **'A disappointing cycle (rating {rating}%). You keep your job, but any offers are a step down.'**
+  String boardVerdictExpectedMoreBody(int rating);
+
+  /// Board verdict headline: a poor cycle, survived.
+  ///
+  /// In en, this message translates to:
+  /// **'You are under real pressure'**
+  String get boardVerdictPressureTitle;
+
+  /// Board verdict detail: a poor cycle, survived.
+  ///
+  /// In en, this message translates to:
+  /// **'A poor cycle (rating {rating}%). You survive, but only weaker nations are interested if you fancy a fresh start.'**
+  String boardVerdictPressureBody(int rating);
+
+  /// Board verdict headline: a national hero the board will not sack, whatever the cycle.
+  ///
+  /// In en, this message translates to:
+  /// **'The nation stands by you'**
+  String get boardVerdictHeroTitle;
+
+  /// Board verdict: the sentence added for a national hero. It follows the verdict detail, so it opens with a space.
+  ///
+  /// In en, this message translates to:
+  /// **' {nation} adore you, a national hero after {cycles, plural, one{1 cycle} other{{cycles} cycles}}; your job is safe for as long as you want it.'**
+  String boardVerdictHeroNote(String nation, int cycles);
+
+  /// Board verdict: stands in for the nation's name when it cannot be read.
+  ///
+  /// In en, this message translates to:
+  /// **'The nation'**
+  String get boardVerdictTheNation;
+
+  /// Board verdict: the cycle's best run, when there is nothing to name.
+  ///
+  /// In en, this message translates to:
+  /// **'a quiet cycle'**
+  String get boardVerdictBestQuiet;
+
+  /// Board verdict: the cycle's best run, when the World Championship is not part of it.
+  ///
+  /// In en, this message translates to:
+  /// **'the cycle'**
+  String get boardVerdictBestCycle;
+
+  /// Board verdict: the cycle's best run, named after how far the nation went at the World Championship.
+  ///
+  /// In en, this message translates to:
+  /// **'the World Championship: {placement}'**
+  String boardVerdictBestWorld(String placement);
+
+  /// A tournament finish: third.
+  ///
+  /// In en, this message translates to:
+  /// **'Third place'**
+  String get finishThirdPlace;
+
+  /// A tournament finish: fourth.
+  ///
+  /// In en, this message translates to:
+  /// **'Fourth place'**
+  String get finishFourthPlace;
+
+  /// A tournament finish: never reached the finals.
+  ///
+  /// In en, this message translates to:
+  /// **'Did not qualify'**
+  String get finishDidNotQualify;
 }
 
 class _AppLocalizationsDelegate

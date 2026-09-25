@@ -6,6 +6,7 @@ import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
+import 'package:fnm/core/util/message_text.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/features/federation/naturalization_providers.dart';
 import 'package:fnm/features/tactics/tactics_providers.dart';
@@ -50,15 +51,18 @@ class _NaturalizationScreenState extends ConsumerState<NaturalizationScreen> {
         ..invalidate(naturalizedCountProvider(widget.careerId));
       await ref
           .read(competitionRepositoryProvider)
-          .addMessage(
+          .addTextMessage(
+            l: l,
             careerId: widget.careerId,
             dedupKey: 'natzdone:${offer.player.id}',
             category: 'naturalize',
-            title: l.federationNaturalisedTitle(offer.player.name),
-            body: l.federationNaturalisedBody(
+            title: MsgText(MsgKey.federationNaturalisedTitle, [
+              offer.player.name,
+            ]),
+            body: MsgText(MsgKey.federationNaturalisedBody, [
               offer.player.name,
               offer.playerNation.name,
-            ),
+            ]),
             year: career?.inGameDate.year ?? 2026,
           );
     }

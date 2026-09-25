@@ -176,11 +176,18 @@ typedef PlayerCareerStats = ({
 });
 
 /// One inbox message.
+///
+/// [title] and [body] are the words the message was written in. [spec] is what
+/// it MEANS — the strings that name it and their arguments, as JSON — and is
+/// what the display layer renders when it is there; see
+/// `core/util/message_text.dart`. Null on every message filed before the inbox
+/// stored meaning, which therefore reads in the language it happened in.
 typedef MessageItem = ({
   int id,
   String category,
   String title,
   String body,
+  String? spec,
   int year,
   bool read,
 });
@@ -810,6 +817,10 @@ abstract interface class CompetitionRepository {
   Future<Set<String>> messageKeys(int careerId);
 
   /// Appends a message to the inbox (ignored if [dedupKey] already exists).
+  ///
+  /// [title] and [body] are the words as they read when the message is filed;
+  /// [spec] is what it means, and is what the manager actually reads when he
+  /// opens it. Callers go through `addTextMessage`, which writes both.
   Future<void> addMessage({
     required int careerId,
     required String dedupKey,
@@ -817,6 +828,7 @@ abstract interface class CompetitionRepository {
     required String title,
     required String body,
     required int year,
+    String? spec,
   });
 
   /// The inbox, newest first.
