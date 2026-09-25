@@ -8013,6 +8013,46 @@
   "@u21CallUps": {
     "description": "Button from the watchlist to the squad-selection screen."
   },
+  "youthWatching": "Watching",
+  "@youthWatching": {
+    "description": "Youth screen tab holding the boys the manager has marked."
+  },
+  "youthWatchEmpty": "Nobody marked yet. Mark a boy on any level and he turns up here, with what he has become since.",
+  "@youthWatchEmpty": {
+    "description": "Shown on the youth watchlist tab when nothing is marked."
+  },
+  "youthWatchMark": "Follow this boy",
+  "@youthWatchMark": {
+    "description": "Tooltip on the bookmark that adds a young player to the watchlist."
+  },
+  "youthWatchUnmark": "Stop following him",
+  "@youthWatchUnmark": {
+    "description": "Tooltip on the bookmark that removes a young player from the watchlist."
+  },
+  "youthWatchMarked": "Marked at {rating}, aged {age}",
+  "@youthWatchMarked": {
+    "description": "What a watched boy was when the manager marked him.",
+    "placeholders": {
+      "rating": {
+        "type": "int"
+      },
+      "age": {
+        "type": "int"
+      }
+    }
+  },
+  "youthWatchSenior": "Through to the senior pool",
+  "@youthWatchSenior": {
+    "description": "Status of a watched boy who has aged out of the pyramid."
+  },
+  "youthWatchReleased": "Released by the academy",
+  "@youthWatchReleased": {
+    "description": "Status of a watched boy the academy let go."
+  },
+  "youthWatchGone": "No longer in the pyramid",
+  "@youthWatchGone": {
+    "description": "Status of a watched boy who can no longer be found at all."
+  },
   "tacticsYouth": "Under-21s",
   "@tacticsYouth": {
     "description": "Tooltip on the squad screen's youth-watchlist action."
@@ -10718,6 +10758,66 @@
     "placeholders": {
       "name": {
         "type": "String"
+      }
+    }
+  },
+  "newsWatchTitle": "The boys you are watching, {year}",
+  "@newsWatchTitle": {
+    "description": "Inbox: the year's report on the manager's youth watchlist.",
+    "placeholders": {
+      "year": {
+        "type": "int"
+      }
+    }
+  },
+  "newsWatchJump": "{name} has kicked on to {rating}, {gain, plural, one{a point} other{{gain} points}} up on last year.",
+  "@newsWatchJump": {
+    "description": "Inbox line: a watched boy who improved well beyond his age curve.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "rating": {
+        "type": "int"
+      },
+      "gain": {
+        "type": "int"
+      }
+    }
+  },
+  "newsWatchBand": "{name} moves up to the {band}s.",
+  "@newsWatchBand": {
+    "description": "Inbox line: a watched boy reaching the next youth age band.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "band": {
+        "type": "String"
+      }
+    }
+  },
+  "newsWatchDebutTitle": "{name} makes his debut",
+  "@newsWatchDebutTitle": {
+    "description": "Inbox: a watched boy has won his first senior cap.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "newsWatchDebutBody": "{name} has won his first cap at {age}, rated {rating}. One of the boys you are watching.",
+  "@newsWatchDebutBody": {
+    "description": "Inbox body for a watched boy's first senior cap.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "age": {
+        "type": "int"
+      },
+      "rating": {
+        "type": "int"
       }
     }
   },

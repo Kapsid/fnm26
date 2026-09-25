@@ -5427,6 +5427,33 @@ class AppLocalizationsEn extends AppLocalizations {
   String get u21CallUps => 'Go to call-ups';
 
   @override
+  String get youthWatching => 'Watching';
+
+  @override
+  String get youthWatchEmpty =>
+      'Nobody marked yet. Mark a boy on any level and he turns up here, with what he has become since.';
+
+  @override
+  String get youthWatchMark => 'Follow this boy';
+
+  @override
+  String get youthWatchUnmark => 'Stop following him';
+
+  @override
+  String youthWatchMarked(int rating, int age) {
+    return 'Marked at $rating, aged $age';
+  }
+
+  @override
+  String get youthWatchSenior => 'Through to the senior pool';
+
+  @override
+  String get youthWatchReleased => 'Released by the academy';
+
+  @override
+  String get youthWatchGone => 'No longer in the pyramid';
+
+  @override
   String get tacticsYouth => 'Under-21s';
 
   @override
@@ -7197,6 +7224,37 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String newsPotyYoungSuffix(String name) {
     return ' $name takes the young player\'s award.';
+  }
+
+  @override
+  String newsWatchTitle(int year) {
+    return 'The boys you are watching, $year';
+  }
+
+  @override
+  String newsWatchJump(String name, int rating, int gain) {
+    String _temp0 = intl.Intl.pluralLogic(
+      gain,
+      locale: localeName,
+      other: '$gain points',
+      one: 'a point',
+    );
+    return '$name has kicked on to $rating, $_temp0 up on last year.';
+  }
+
+  @override
+  String newsWatchBand(String name, String band) {
+    return '$name moves up to the ${band}s.';
+  }
+
+  @override
+  String newsWatchDebutTitle(String name) {
+    return '$name makes his debut';
+  }
+
+  @override
+  String newsWatchDebutBody(String name, int age, int rating) {
+    return '$name has won his first cap at $age, rated $rating. One of the boys you are watching.';
   }
 
   @override

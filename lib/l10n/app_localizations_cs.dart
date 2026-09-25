@@ -5459,6 +5459,33 @@ class AppLocalizationsCs extends AppLocalizations {
   String get u21CallUps => 'Na nominaci';
 
   @override
+  String get youthWatching => 'Sledovaní';
+
+  @override
+  String get youthWatchEmpty =>
+      'Zatím nikdo. Označte kluka na kterékoli úrovni a objeví se tady, i s tím, co z něj od té doby vyrostlo.';
+
+  @override
+  String get youthWatchMark => 'Začít sledovat';
+
+  @override
+  String get youthWatchUnmark => 'Přestat sledovat';
+
+  @override
+  String youthWatchMarked(int rating, int age) {
+    return 'Označen na $rating ve věku $age';
+  }
+
+  @override
+  String get youthWatchSenior => 'Prošel do A-kádru';
+
+  @override
+  String get youthWatchReleased => 'Akademie ho uvolnila';
+
+  @override
+  String get youthWatchGone => 'Už není v akademii';
+
+  @override
   String get tacticsYouth => 'Do 21 let';
 
   @override
@@ -7223,6 +7250,38 @@ class AppLocalizationsCs extends AppLocalizations {
   @override
   String newsPotyYoungSuffix(String name) {
     return ' Cenu pro nejlepšího mladého hráče bere $name.';
+  }
+
+  @override
+  String newsWatchTitle(int year) {
+    return 'Kluci, které sledujete, $year';
+  }
+
+  @override
+  String newsWatchJump(String name, int rating, int gain) {
+    String _temp0 = intl.Intl.pluralLogic(
+      gain,
+      locale: localeName,
+      other: 'o $gain bodů',
+      few: 'o $gain body',
+      one: 'o bod',
+    );
+    return '$name se posunul na $rating, $_temp0 výš než loni.';
+  }
+
+  @override
+  String newsWatchBand(String name, String band) {
+    return '$name postupuje do kategorie $band.';
+  }
+
+  @override
+  String newsWatchDebutTitle(String name) {
+    return '$name debutoval';
+  }
+
+  @override
+  String newsWatchDebutBody(String name, int age, int rating) {
+    return '$name si v $age letech připsal první start v reprezentaci, rating $rating. Jeden z kluků, které sledujete.';
   }
 
   @override

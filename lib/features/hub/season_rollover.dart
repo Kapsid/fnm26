@@ -378,6 +378,13 @@ extension SeasonRollover on SeasonService {
     // save) until the manager curates it.
     await _ref.read(squadRepositoryProvider).clearCallUps(careerId);
 
+    // Nor does the youth watchlist travel. The boys he bookmarked are the old
+    // academy's, player ids are partitioned per nation, and not one of them is
+    // in the new nation's pyramid: left in place, every name on his shortlist
+    // would read as released or gone.
+    await clearYouthMarks(careerId);
+    _ref.invalidate(youthMarksProvider(careerId));
+
     // Rebuild the XI from the new nation's players; saveTactic replaces the
     // stored lineup slots, which still named the old squad.
     final players = await _ref

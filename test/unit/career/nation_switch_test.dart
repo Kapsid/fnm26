@@ -13,7 +13,9 @@ import 'package:fnm/domain/services/entitlement/entitlement.dart';
 import 'package:fnm/domain/services/manager/staff.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/hub/hub_providers.dart';
+import 'package:fnm/features/squad/youth_watch_providers.dart';
 import 'package:fnm/features/tactics/tactics_providers.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../helpers/test_database.dart';
 
@@ -27,6 +29,7 @@ void main() {
   test(
     'switching nation gives the manager the new nation\'s squad',
     () async {
+      SharedPreferences.setMockInitialValues({});
       final db = createTestDatabase();
       final nations =
           (jsonDecode(
@@ -106,7 +109,9 @@ void main() {
           saveSeed: career.rngSeed,
           cycle: career.cyclePointer,
           role: role,
-          namePool: const {'gb': ['A Name']},
+          namePool: const {
+            'gb': ['A Name'],
+          },
         ).first;
         await careerRepo.setStaff(career.id, role, hire.id);
       }
@@ -114,6 +119,20 @@ void main() {
         (await careerRepo.byId(career.id))!.staffAssistantId,
         isNotNull,
         reason: 'the assistant must actually be in the job before the move',
+      );
+
+      // He also bookmarks a boy in the old academy. The youth pyramid is
+      // derived per nation, so a mark left behind names a player the new
+      // nation's pyramid has never heard of.
+      final oldBoy = (await playerRepo.youthByNation(
+        from.id,
+        saveSeed: career.rngSeed,
+      )).first;
+      await container.read(youthWatchStoreProvider).mark(career.id, oldBoy, 0);
+      expect(
+        await loadYouthMarks(career.id),
+        hasLength(1),
+        reason: 'the boy must really be on the list before the move',
       );
 
       // Play out the cycle so the next one can begin.
@@ -187,6 +206,15 @@ void main() {
       expect(moved.staffAssistant, StaffTier.none);
       expect(moved.staffScout, StaffTier.none);
       expect(moved.staffFitnessCoach, StaffTier.none);
+
+      // The watchlist goes the same way as the armband and the staff room: the
+      // boys on it are the old academy's, and none of them is in the new
+      // nation's pyramid.
+      expect(
+        await loadYouthMarks(career.id),
+        isEmpty,
+        reason: 'a watchlist of another nation\'s boys must not survive a move',
+      );
 
       // And the manager must be able to field a team.
       final tactic = await container.read(tacticDataProvider(career.id).future);

@@ -175,7 +175,8 @@ abstract final class Routes {
   /// The board's objectives for the cycle. Expects `?careerId=`.
   static const boardObjectives = '/board-objectives';
 
-  /// The under-21 watchlist. Expects `?careerId=`.
+  /// The youth pyramid, U-13 to U-21, and the manager's own shortlist of the
+  /// boys he is following. Expects `?careerId=`.
   static const youth = '/youth';
 
   /// The social feed.

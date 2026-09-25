@@ -8760,6 +8760,54 @@ abstract class AppLocalizations {
   /// **'Go to call-ups'**
   String get u21CallUps;
 
+  /// Youth screen tab holding the boys the manager has marked.
+  ///
+  /// In en, this message translates to:
+  /// **'Watching'**
+  String get youthWatching;
+
+  /// Shown on the youth watchlist tab when nothing is marked.
+  ///
+  /// In en, this message translates to:
+  /// **'Nobody marked yet. Mark a boy on any level and he turns up here, with what he has become since.'**
+  String get youthWatchEmpty;
+
+  /// Tooltip on the bookmark that adds a young player to the watchlist.
+  ///
+  /// In en, this message translates to:
+  /// **'Follow this boy'**
+  String get youthWatchMark;
+
+  /// Tooltip on the bookmark that removes a young player from the watchlist.
+  ///
+  /// In en, this message translates to:
+  /// **'Stop following him'**
+  String get youthWatchUnmark;
+
+  /// What a watched boy was when the manager marked him.
+  ///
+  /// In en, this message translates to:
+  /// **'Marked at {rating}, aged {age}'**
+  String youthWatchMarked(int rating, int age);
+
+  /// Status of a watched boy who has aged out of the pyramid.
+  ///
+  /// In en, this message translates to:
+  /// **'Through to the senior pool'**
+  String get youthWatchSenior;
+
+  /// Status of a watched boy the academy let go.
+  ///
+  /// In en, this message translates to:
+  /// **'Released by the academy'**
+  String get youthWatchReleased;
+
+  /// Status of a watched boy who can no longer be found at all.
+  ///
+  /// In en, this message translates to:
+  /// **'No longer in the pyramid'**
+  String get youthWatchGone;
+
   /// Tooltip on the squad screen's youth-watchlist action.
   ///
   /// In en, this message translates to:
@@ -11264,6 +11312,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **' {name} takes the young player\'s award.'**
   String newsPotyYoungSuffix(String name);
+
+  /// Inbox: the year's report on the manager's youth watchlist.
+  ///
+  /// In en, this message translates to:
+  /// **'The boys you are watching, {year}'**
+  String newsWatchTitle(int year);
+
+  /// Inbox line: a watched boy who improved well beyond his age curve.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} has kicked on to {rating}, {gain, plural, one{a point} other{{gain} points}} up on last year.'**
+  String newsWatchJump(String name, int rating, int gain);
+
+  /// Inbox line: a watched boy reaching the next youth age band.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} moves up to the {band}s.'**
+  String newsWatchBand(String name, String band);
+
+  /// Inbox: a watched boy has won his first senior cap.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} makes his debut'**
+  String newsWatchDebutTitle(String name);
+
+  /// Inbox body for a watched boy's first senior cap.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} has won his first cap at {age}, rated {rating}. One of the boys you are watching.'**
+  String newsWatchDebutBody(String name, int age, int rating);
 
   /// Live-match screen top bar.
   ///

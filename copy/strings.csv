@@ -1440,6 +1440,14 @@ u21Breakout,Tag on a young player who has improved sharply.,{gain},+{gain} THIS 
 u21AgeCaps,Age and international caps of a prospect.,{age} {caps},Age {age} · {caps} caps,Věk {age} · {caps} startů
 u21AgeUncapped,Age of a prospect who has never played.,{age},Age {age} · uncapped,Věk {age} · bez startu
 u21CallUps,Button from the watchlist to the squad-selection screen.,,Go to call-ups,Na nominaci
+youthWatching,Youth screen tab holding the boys the manager has marked.,,Watching,Sledovaní
+youthWatchEmpty,Shown on the youth watchlist tab when nothing is marked.,,"Nobody marked yet. Mark a boy on any level and he turns up here, with what he has become since.","Zatím nikdo. Označte kluka na kterékoli úrovni a objeví se tady, i s tím, co z něj od té doby vyrostlo."
+youthWatchMark,Tooltip on the bookmark that adds a young player to the watchlist.,,Follow this boy,Začít sledovat
+youthWatchUnmark,Tooltip on the bookmark that removes a young player from the watchlist.,,Stop following him,Přestat sledovat
+youthWatchMarked,What a watched boy was when the manager marked him.,{rating} {age},"Marked at {rating}, aged {age}",Označen na {rating} ve věku {age}
+youthWatchSenior,Status of a watched boy who has aged out of the pyramid.,,Through to the senior pool,Prošel do A-kádru
+youthWatchReleased,Status of a watched boy the academy let go.,,Released by the academy,Akademie ho uvolnila
+youthWatchGone,Status of a watched boy who can no longer be found at all.,,No longer in the pyramid,Už není v akademii
 tacticsYouth,Tooltip on the squad screen's youth-watchlist action.,,Under-21s,Do 21 let
 pressTitle,Title of the press-question sheet.,,Press conference,Tisková konference
 pressCardTitle,Hub card inviting the manager to answer a press question.,,The press are waiting,Čekají novináři
@@ -1850,6 +1858,11 @@ potyRatingValue,Award card: the winner's mean match mark over the year.,{value},
 newsPotyTitle,Inbox: the year's player award.,{year},World Player of the Year {year},Světový hráč roku {year}
 newsPotyBody,"Inbox: the year's player award, body.",{name},{name} is the best player in the world this year.,{name} je letos nejlepším hráčem světa.
 newsPotyYoungSuffix,Inbox: appended when a different player takes the young-player award.,{name}, {name} takes the young player's award., Cenu pro nejlepšího mladého hráče bere {name}.
+newsWatchTitle,Inbox: the year's report on the manager's youth watchlist.,{year},"The boys you are watching, {year}","Kluci, které sledujete, {year}"
+newsWatchJump,Inbox line: a watched boy who improved well beyond his age curve.,"PLURAL — keep the {count, plural, …} skeleton exactly; translate only the words inside the branches","{name} has kicked on to {rating}, {gain, plural, one{a point} other{{gain} points}} up on last year.","{name} se posunul na {rating}, {gain, plural, one{o bod} few{o {gain} body} other{o {gain} bodů}} výš než loni."
+newsWatchBand,Inbox line: a watched boy reaching the next youth age band.,{name} {band},{name} moves up to the {band}s.,{name} postupuje do kategorie {band}.
+newsWatchDebutTitle,Inbox: a watched boy has won his first senior cap.,{name},{name} makes his debut,{name} debutoval
+newsWatchDebutBody,Inbox body for a watched boy's first senior cap.,{name} {age} {rating},"{name} has won his first cap at {age}, rated {rating}. One of the boys you are watching.","{name} si v {age} letech připsal první start v reprezentaci, rating {rating}. Jeden z kluků, které sledujete."
 matchTopBarTitle,Live-match screen top bar.,,MATCH,ZÁPAS
 matchStatsAtFullTime,Live match stats tab: which figures cannot be given until full time.,,"Possession, player ratings and the man of the match are settled at the final whistle.","Držení míče, známky hráčů a hráč zápasu budou známy až po závěrečném hvizdu."
 matchPlayerRatings,Live match: player-ratings heading.,,PLAYER RATINGS,ZNÁMKY HRÁČŮ

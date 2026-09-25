@@ -46,6 +46,7 @@ import 'package:fnm/features/hub/objective_providers.dart';
 import 'package:fnm/features/match/match_providers.dart';
 import 'package:fnm/features/ranking/world_ranking_providers.dart';
 import 'package:fnm/features/squad/training_camp_providers.dart';
+import 'package:fnm/features/squad/youth_watch_providers.dart';
 import 'package:fnm/features/tactics/absence_providers.dart';
 import 'package:fnm/features/tactics/nation_squad_providers.dart';
 import 'package:fnm/features/tactics/tactics_providers.dart';

@@ -16,6 +16,8 @@ import 'package:fnm/domain/services/player/player_lifecycle.dart';
 import 'package:fnm/features/federation/federation_providers.dart';
 import 'package:fnm/features/messages/intake_report.dart';
 import 'package:fnm/features/messages/squad_dev_report.dart';
+import 'package:fnm/features/messages/watch_news.dart';
+import 'package:fnm/features/squad/youth_watch_providers.dart';
 import 'package:fnm/features/ranking/world_ranking_providers.dart';
 import 'package:fnm/features/tournaments/finals_draw_providers.dart';
 import 'package:fnm/features/settings/settings_providers.dart';
@@ -845,6 +847,89 @@ class MessageService {
               ),
             );
           }
+        }
+      }
+    }
+
+    // The boys the manager has BOOKMARKED on the youth screen. Nothing at all
+    // happens for a save with an empty watchlist, which is most of them: the
+    // pyramid is a derived pool and building it is not free.
+    final marks = await loadYouthMarks(careerId);
+    if (marks.isNotEmpty) {
+      final academy = await _ref.read(
+        youthBonusByCycleProvider(careerId).future,
+      );
+      final devBonus = await _ref.read(careerDevBonusProvider(careerId).future);
+      final youthByYear = <int, Map<int, Player>>{};
+      Future<Map<int, Player>> youthAt(int y) async {
+        final cached = youthByYear[y];
+        if (cached != null) return cached;
+        final pool = await playerRepo.youthByNation(
+          career.nationId,
+          agingYears: y,
+          saveSeed: career.rngSeed,
+          youthBonusByCycle: academy,
+          careerStartsByPlayer: devBonus,
+        );
+        return youthByYear[y] = {for (final p in pool) p.id: p};
+      }
+
+      // One digest a year, and only for years that passed while the boy was
+      // already marked: bookmarking a fifteen-year-old today must not backfill
+      // four reports about the seasons nobody was watching him.
+      for (var y = 1; y <= currentYears; y++) {
+        final key = 'watch:$y';
+        if (existing.contains(key)) continue;
+        final watched = {
+          for (final m in marks)
+            if (m.year < y) m.playerId,
+        };
+        if (watched.isEmpty) continue;
+        final reportYear = CareerService.cycleStart.year + y;
+        final digest = watchlistDigest(
+          marked: watched,
+          now: await youthAt(y),
+          before: await youthAt(y - 1),
+          year: reportYear,
+        );
+        if (digest == null) continue;
+        drafts.add(
+          _Draft(key, 'youth', digest.title, digest.body, reportYear, 4),
+        );
+      }
+
+      // A debut is not a rollover event, so it is judged against the WHOLE
+      // appearance list rather than the top-sixty leaderboard above: a boy's
+      // first cap is one game, and one game does not reach a leaderboard.
+      // Skipped entirely once every marked boy has his, which is the steady
+      // state — the inbox syncs on every read and this is a pool build.
+      final undebuted = {
+        for (final m in marks)
+          if (!existing.contains('watch:debut:${m.playerId}')) m.playerId,
+      };
+      if (undebuted.isNotEmpty) {
+        final appearances = await comp.nationTopAppearances(
+          careerId,
+          career.nationId,
+          limit: 500,
+        );
+        for (final debut in watchlistDebuts(
+          marked: undebuted,
+          pool: await youthAt(currentYears),
+          capsByPlayer: {for (final a in appearances) a.playerId: a.games},
+        )) {
+          drafts.add(
+            _Draft(
+              'watch:debut:${debut.playerId}',
+              // A milestone rather than 'youth', which is held back while a
+              // tournament is being played: he won the cap IN the tournament.
+              'milestone',
+              debut.title,
+              debut.body,
+              career.inGameDate.year,
+              5,
+            ),
+          );
         }
       }
     }
