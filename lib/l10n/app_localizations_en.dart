@@ -2922,17 +2922,19 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get paywallBenefitCarryOn =>
-      'Your save carries on exactly where it stopped';
+      'This save carries on exactly where it stopped, with every cap, record and rivalry intact.';
 
   @override
-  String get paywallBenefitOffline => 'No subscription, no ads, no account';
+  String get paywallBenefitOffline =>
+      'No subscription, no ads, no account, no network. One payment, and it is yours forever.';
 
   @override
-  String get paywallBenefitSaves => 'As many saves as you want, not two';
+  String get paywallBenefitSaves =>
+      'As many saves as you want. Run a favourite and a minnow at once, and find out how differently the same game reads.';
 
   @override
   String get paywallBenefitEndless =>
-      'Every cycle from here on, all the way to 2600';
+      'Every cycle from here on. Pick a seventeen-year-old today and learn in 2034 whether you saw it.';
 
   @override
   String get paywallUnlocked => 'Unlimited is unlocked. Enjoy!';
@@ -2963,7 +2965,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get gateLead =>
-      'Four years, and nothing was held back. Carry this save on for one payment.';
+      'Four years is one cycle. It is not long enough to find out whether you were right.';
 
   @override
   String get gatePriceLead => 'One payment, forever';

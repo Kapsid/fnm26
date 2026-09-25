@@ -2943,18 +2943,19 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get paywallBenefitCarryOn =>
-      'Vaše uložená hra pokračuje přesně tam, kde skončila';
+      'Tahle hra pokračuje přesně tam, kde skončila, se všemi starty, rekordy i rivalitami.';
 
   @override
   String get paywallBenefitOffline =>
-      'Žádné předplatné, žádné reklamy, žádný účet';
+      'Žádné předplatné, žádné reklamy, žádný účet, žádná síť. Jedna platba a je vaše navždy.';
 
   @override
-  String get paywallBenefitSaves => 'Tolik uložení, kolik chcete, ne dvě';
+  String get paywallBenefitSaves =>
+      'Tolik uložených her, kolik chcete. Veďte favorita i outsidera zároveň a zjistěte, jak jinak se ta samá hra čte.';
 
   @override
   String get paywallBenefitEndless =>
-      'Každý další cyklus, klidně až do roku 2600';
+      'Každý další cyklus. Nasaďte dnes sedmnáctiletého a v roce 2034 se dozvíte, jestli jste to viděl dobře.';
 
   @override
   String get paywallUnlocked => 'Neomezené FNM je odemčené. Užijte si ho!';
@@ -2985,7 +2986,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get gateLead =>
-      'Čtyři roky a nic vám nebylo zatajeno. Pokračujte v této hře za jednu platbu.';
+      'Čtyři roky jsou jeden cyklus. To není dost dlouho na to, abyste zjistil, jestli jste měl pravdu.';
 
   @override
   String get gatePriceLead => 'Jedna platba, navždy';

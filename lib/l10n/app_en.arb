@@ -3994,19 +3994,19 @@
   "@paywallOneTimeUnlock": {
     "description": "Paywall subtitle clarifying it is a one-off purchase."
   },
-  "paywallBenefitCarryOn": "Your save carries on exactly where it stopped",
+  "paywallBenefitCarryOn": "This save carries on exactly where it stopped, with every cap, record and rivalry intact.",
   "@paywallBenefitCarryOn": {
     "description": "Paywall benefit line: the existing career continues."
   },
-  "paywallBenefitOffline": "No subscription, no ads, no account",
+  "paywallBenefitOffline": "No subscription, no ads, no account, no network. One payment, and it is yours forever.",
   "@paywallBenefitOffline": {
     "description": "Paywall benefit line: one payment and nothing collected."
   },
-  "paywallBenefitSaves": "As many saves as you want, not two",
+  "paywallBenefitSaves": "As many saves as you want. Run a favourite and a minnow at once, and find out how differently the same game reads.",
   "@paywallBenefitSaves": {
     "description": "Paywall benefit line: the save-slot limit goes away."
   },
-  "paywallBenefitEndless": "Every cycle from here on, all the way to 2600",
+  "paywallBenefitEndless": "Every cycle from here on. Pick a seventeen-year-old today and learn in 2034 whether you saw it.",
   "@paywallBenefitEndless": {
     "description": "Paywall benefit line."
   },
@@ -4048,7 +4048,7 @@
   "@gateTitle": {
     "description": "Heading on the full-page wall at the end of the free cycle."
   },
-  "gateLead": "Four years, and nothing was held back. Carry this save on for one payment.",
+  "gateLead": "Four years is one cycle. It is not long enough to find out whether you were right.",
   "@gateLead": {
     "description": "Lead paragraph on the end-of-cycle wall."
   },

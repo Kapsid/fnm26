@@ -812,10 +812,10 @@ achievementsThisSave,Section heading for this save's procedural challenges.,,THI
 achievementsBrutalBadge,Badge marking an especially hard challenge.,,BRUTAL,BRUTÁLNÍ
 paywallGoPro,Paywall heading inviting the player to upgrade to Unlimited.,,GO UNLIMITED,NEOMEZENÉ FNM
 paywallOneTimeUnlock,Paywall subtitle clarifying it is a one-off purchase.,,One-time unlock. No subscription.,Jednorázové odemčení. Žádné předplatné.
-paywallBenefitCarryOn,Paywall benefit line: the existing career continues.,,Your save carries on exactly where it stopped,"Vaše uložená hra pokračuje přesně tam, kde skončila"
-paywallBenefitOffline,Paywall benefit line: one payment and nothing collected.,,"No subscription, no ads, no account","Žádné předplatné, žádné reklamy, žádný účet"
-paywallBenefitSaves,Paywall benefit line: the save-slot limit goes away.,,"As many saves as you want, not two","Tolik uložení, kolik chcete, ne dvě"
-paywallBenefitEndless,Paywall benefit line.,,"Every cycle from here on, all the way to 2600","Každý další cyklus, klidně až do roku 2600"
+paywallBenefitCarryOn,Paywall benefit line: the existing career continues.,,"This save carries on exactly where it stopped, with every cap, record and rivalry intact.","Tahle hra pokračuje přesně tam, kde skončila, se všemi starty, rekordy i rivalitami."
+paywallBenefitOffline,Paywall benefit line: one payment and nothing collected.,,"No subscription, no ads, no account, no network. One payment, and it is yours forever.","Žádné předplatné, žádné reklamy, žádný účet, žádná síť. Jedna platba a je vaše navždy."
+paywallBenefitSaves,Paywall benefit line: the save-slot limit goes away.,,"As many saves as you want. Run a favourite and a minnow at once, and find out how differently the same game reads.","Tolik uložených her, kolik chcete. Veďte favorita i outsidera zároveň a zjistěte, jak jinak se ta samá hra čte."
+paywallBenefitEndless,Paywall benefit line.,,Every cycle from here on. Pick a seventeen-year-old today and learn in 2034 whether you saw it.,"Každý další cyklus. Nasaďte dnes sedmnáctiletého a v roce 2034 se dozvíte, jestli jste to viděl dobře."
 paywallUnlocked,Shown on the paywall once premium is already unlocked.,,Unlimited is unlocked. Enjoy!,Neomezené FNM je odemčené. Užijte si ho!
 paywallContactingStore,Buy-button label while the purchase flow is in progress.,,Contacting the store…,Kontaktuji obchod…
 paywallUnlockProPriced,Buy-button label with the store's localised price.,{price},Unlock Unlimited · {price},Odemknout neomezené FNM · {price}
@@ -824,7 +824,7 @@ paywallStoreUnavailable,Buy-button label when the store has no listing to sell.,
 paywallStoreUnavailableNote,Explains a disabled buy button when the store cannot be reached.,,The price could not be loaded. Check your connection and try again.,Cenu se nepodařilo načíst. Zkontrolujte připojení a zkuste to znovu.
 paywallTryAgain,Button that re-asks the store for the price.,,Try again,Zkusit znovu
 gateTitle,Heading on the full-page wall at the end of the free cycle.,,YOUR FIRST CYCLE IS OVER,PRVNÍ CYKLUS KONČÍ
-gateLead,Lead paragraph on the end-of-cycle wall.,,"Four years, and nothing was held back. Carry this save on for one payment.",Čtyři roky a nic vám nebylo zatajeno. Pokračujte v této hře za jednu platbu.
+gateLead,Lead paragraph on the end-of-cycle wall.,,Four years is one cycle. It is not long enough to find out whether you were right.,"Čtyři roky jsou jeden cyklus. To není dost dlouho na to, abyste zjistil, jestli jste měl pravdu."
 gatePriceLead,Label above the store price on the end-of-cycle wall.,,"One payment, forever","Jedna platba, navždy"
 gateBuy,Buy button on the end-of-cycle wall.,,BUY AND CONTINUE,KOUPIT A POKRAČOVAT
 gateExit,Button that leaves the end-of-cycle wall without buying.,,EXIT,ODEJÍT

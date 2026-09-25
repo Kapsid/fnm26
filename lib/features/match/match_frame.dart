@@ -99,6 +99,17 @@ class _Header extends StatelessWidget {
             const SizedBox(height: AppSpacing.sm),
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
+              // Centred, and the scoreline takes a third like the two sides.
+              //
+              // It was Flexible, which is LOOSE: it took less than its third
+              // and the leftover collected at the END of the row, so the whole
+              // block sat left and the right of the card carried a bigger gap
+              // than the left. Measured off a screenshot at 393pt: 100 points
+              // of gap on the left against 145 on the right, with the score
+              // about 20 left of the card's centre. Expanded is tight, so the
+              // row is exactly filled and each third is centred in itself;
+              // the centre alignment is belt and braces for any rounding.
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Expanded(
                   child: _Side(
@@ -107,10 +118,10 @@ class _Header extends StatelessWidget {
                     overall: homeOverall,
                   ),
                 ),
-                // The scoreline is allowed to shrink rather than shove the two
-                // sides out of the card: a long name next to a 4:3 used to run
-                // the row off the edge of a narrow screen.
-                Flexible(
+                // The scoreline still shrinks rather than shove the two sides
+                // out of the card: a long name next to a 4:3 used to run the
+                // row off the edge of a narrow screen.
+                Expanded(
                   child: Padding(
                     padding: const EdgeInsets.symmetric(
                       horizontal: AppSpacing.sm,

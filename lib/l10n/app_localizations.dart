@@ -4991,25 +4991,25 @@ abstract class AppLocalizations {
   /// Paywall benefit line: the existing career continues.
   ///
   /// In en, this message translates to:
-  /// **'Your save carries on exactly where it stopped'**
+  /// **'This save carries on exactly where it stopped, with every cap, record and rivalry intact.'**
   String get paywallBenefitCarryOn;
 
   /// Paywall benefit line: one payment and nothing collected.
   ///
   /// In en, this message translates to:
-  /// **'No subscription, no ads, no account'**
+  /// **'No subscription, no ads, no account, no network. One payment, and it is yours forever.'**
   String get paywallBenefitOffline;
 
   /// Paywall benefit line: the save-slot limit goes away.
   ///
   /// In en, this message translates to:
-  /// **'As many saves as you want, not two'**
+  /// **'As many saves as you want. Run a favourite and a minnow at once, and find out how differently the same game reads.'**
   String get paywallBenefitSaves;
 
   /// Paywall benefit line.
   ///
   /// In en, this message translates to:
-  /// **'Every cycle from here on, all the way to 2600'**
+  /// **'Every cycle from here on. Pick a seventeen-year-old today and learn in 2034 whether you saw it.'**
   String get paywallBenefitEndless;
 
   /// Shown on the paywall once premium is already unlocked.
@@ -5063,7 +5063,7 @@ abstract class AppLocalizations {
   /// Lead paragraph on the end-of-cycle wall.
   ///
   /// In en, this message translates to:
-  /// **'Four years, and nothing was held back. Carry this save on for one payment.'**
+  /// **'Four years is one cycle. It is not long enough to find out whether you were right.'**
   String get gateLead;
 
   /// Label above the store price on the end-of-cycle wall.
