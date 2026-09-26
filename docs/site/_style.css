@@ -74,7 +74,7 @@ body::before {
 }
 
 h1, h2, h3 { letter-spacing: -0.02em; line-height: 1.08; margin: 0; }
-h2 { font-size: clamp(27px, 5vw, 38px); font-weight: 800; margin-bottom: 10px; }
+h2 { font-size: clamp(27px, 5vw, 38px); font-weight: 800; margin-bottom: 8px; }
 h3 { font-size: 18px; font-weight: 700; letter-spacing: -0.01em; }
 
 p { margin: 0 0 14px; }
@@ -82,12 +82,12 @@ p { margin: 0 0 14px; }
 a { color: var(--steel); text-decoration-color: var(--line-bright); }
 a:hover { text-decoration-color: currentColor; }
 
-section { padding: clamp(56px, 9vw, 96px) 0; border-top: 1px solid var(--line); }
+section { padding: clamp(38px, 5.5vw, 64px) 0; border-top: 1px solid var(--line); }
 section:first-of-type { border-top: 0; }
 
 /* ---------- hero ---------- */
 
-.hero { text-align: center; padding: clamp(26px, 5vw, 44px) 0 clamp(32px, 5vw, 52px); }
+.hero { text-align: center; padding: clamp(18px, 3vw, 30px) 0 clamp(22px, 3.4vw, 36px); }
 .hero img { width: min(210px, 46vw); height: auto; filter: drop-shadow(0 18px 40px rgba(0,0,0,.6)); }
 /* One line, always. The wordmark is 24 characters, so the size is driven off
    the viewport and the whole thing is allowed to get small on a narrow phone
@@ -95,16 +95,19 @@ section:first-of-type { border-top: 0; }
 .hero h1 {
   font-size: clamp(18px, 5.4vw, 52px);
   font-weight: 900;
-  margin: 14px 0 4px;
+  margin: 10px 0 2px;
   text-transform: uppercase;
   white-space: nowrap;
   letter-spacing: -0.015em;
 }
 .hero .claim {
-  font-size: clamp(18px, 3.4vw, 26px);
+  /* One line, like the wordmark above it. No min in the clamp on purpose:
+     the Czech line is nine characters longer than the English one, and a
+     floor would make it the one that wraps. */
+  font-size: min(3.4vw, 30px);
   font-weight: 600;
-  max-width: 22ch;
-  margin: 0 auto 24px;
+  white-space: nowrap;
+  margin: 0 auto 18px;
   color: var(--text);
 }
 
@@ -140,7 +143,7 @@ section:first-of-type { border-top: 0; }
 
 /* ---------- carousel ---------- */
 
-.carousel { position: relative; margin-top: 26px; }
+.carousel { position: relative; margin-top: 18px; }
 .track {
   display: flex; gap: 16px;
   overflow-x: auto;
@@ -198,7 +201,11 @@ section:first-of-type { border-top: 0; }
       rgba(255,255,255,.015) 0 10px, transparent 10px 20px),
     var(--panel);
 }
-.arrows { display: flex; gap: 10px; justify-content: flex-end; margin-top: 4px; }
+/* Right-aligned on a desktop, where they sit under the last slide; centred
+   on a phone, where a single slide fills the width and an arrow hanging off
+   one edge reads as misplaced. */
+.arrows { display: flex; gap: 10px; justify-content: flex-end; margin-top: 10px; }
+@media (max-width: 700px) { .arrows { justify-content: center; } }
 .arrows button {
   width: 42px; height: 42px; border-radius: 50%;
   border: 1px solid var(--line-bright);
@@ -243,16 +250,20 @@ footer nav { display: flex; gap: 18px; flex-wrap: wrap; }
 
 .stores {
   display: flex; gap: 14px; justify-content: center; align-items: center;
-  flex-wrap: wrap; margin-top: 22px;
+  flex-wrap: wrap; margin-top: 16px;
 }
 .stores a { display: inline-flex; transition: opacity .18s, transform .18s; }
 .stores a:hover { transform: translateY(-1px); }
 .stores a[aria-disabled='true'] { opacity: .55; pointer-events: none; }
 /* Both are official artwork and neither may be redrawn, so they are only
-   scaled. Apple's badge is tight to its edges; Google's carries its own clear
-   space, which is why the two heights differ to look the same size. */
-.b-apple  { height: 54px; width: auto; display: block; }
-.b-google { height: 72px; width: auto; display: block; }
+   scaled, and both now to the SAME height, which is what each vendor's
+   guidelines ask for. That works because Google's asset has had its built-in
+   clear space trimmed off the file; with it still in, an equal height drew a
+   visibly smaller button. The widths still differ a little, because "GET IT
+   ON Google Play" is simply a longer phrase than "Download on the App
+   Store". */
+.b-apple  { height: 52px; width: auto; display: block; }
+.b-google { height: 52px; width: auto; display: block; }
 
 /* ---------- portrait ---------- */
 
