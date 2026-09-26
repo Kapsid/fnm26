@@ -9133,4 +9133,182 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get finishDidNotQualify => 'Did not qualify';
+
+  @override
+  String get careerRepIconic => 'Iconic';
+
+  @override
+  String get careerRepRenowned => 'Renowned';
+
+  @override
+  String get careerRepEstablished => 'Established';
+
+  @override
+  String get careerRepRising => 'Up-and-coming';
+
+  @override
+  String get careerRepUnproven => 'Unproven';
+
+  @override
+  String get hubOfferStepUp => 'Step up';
+
+  @override
+  String get hubOfferLateral => 'Lateral move';
+
+  @override
+  String get hubOfferRebuild => 'A rebuild';
+
+  @override
+  String careerNationsCupWon(String league) {
+    return 'League $league · Champions';
+  }
+
+  @override
+  String careerNationsCupRunnerUp(String league) {
+    return 'League $league · Runners-up';
+  }
+
+  @override
+  String careerNationsCupSemi(String league) {
+    return 'League $league · Semi-finalist';
+  }
+
+  @override
+  String careerNationsCupPlaced(String league, int position) {
+    return 'League $league · #$position';
+  }
+
+  @override
+  String tourRunInto(String round) {
+    return 'Into the $round';
+  }
+
+  @override
+  String get tourRunIntoThirdPlace => 'Into the third-place play-off';
+
+  @override
+  String tourRunThrough(String round) {
+    return 'Through from the $round';
+  }
+
+  @override
+  String tourRunOut(String round) {
+    return 'Knocked out in the $round';
+  }
+
+  @override
+  String get tourRunInGroup => 'Contesting the group stage';
+
+  @override
+  String get tourRunGroupOut => 'Eliminated in the group stage';
+
+  @override
+  String resultsCycleTitle(int year, String nation) {
+    return '$year cycle · $nation';
+  }
+
+  @override
+  String resultsCycleRecord(int played, int won, int drawn, int lost) {
+    return '$played played  ·  ${won}W ${drawn}D ${lost}L';
+  }
+
+  @override
+  String resultsCycleFinish(String finish) {
+    return 'World Championship: $finish';
+  }
+
+  @override
+  String get resultsCycleUnderway => 'Still being played';
+
+  @override
+  String get pressAskComeback1 =>
+      'Two goals down at the break, and you came out and turned it round. What changed?';
+
+  @override
+  String get pressAskComeback2 =>
+      'You were second best for forty-five minutes and the better side for the rest. Which half was the real one?';
+
+  @override
+  String get pressAskComeback3 =>
+      'Nobody in this room would have given you anything at half time. What did you say to them?';
+
+  @override
+  String get pressAskComeback4 =>
+      'Two behind, and you still got something out of the afternoon. Is that character, or is it a warning?';
+
+  @override
+  String get pressAskCollapse1 =>
+      'Two goals up at half time, and you came away with nothing like it. Where did it go?';
+
+  @override
+  String get pressAskCollapse2 =>
+      'You had that match won by the break. Explain the second half.';
+
+  @override
+  String get pressAskCollapse3 =>
+      'A two-goal lead is supposed to be the safe one. Was yours ever safe?';
+
+  @override
+  String get pressAskCollapse4 =>
+      'Forty-five minutes of control, and then that. Whose second half was it?';
+
+  @override
+  String yTurnedItRound0(String opponent) {
+    return 'Two down to $opponent at the break and they got every bit of it back. That is a team.';
+  }
+
+  @override
+  String yTurnedItRound1(String opponent) {
+    return 'Two behind against $opponent and by the end it did not matter. Not many sides do that.';
+  }
+
+  @override
+  String yTurnedItRound2(String opponent) {
+    return 'Half time: two goals down to $opponent. Full time: not. The second half was a different match.';
+  }
+
+  @override
+  String yTurnedItRound3(String opponent) {
+    return 'Came from two down against $opponent. Whatever was said at the break, say it every week.';
+  }
+
+  @override
+  String yTurnedItRound4(String opponent) {
+    return 'Fine, we got it back against $opponent. Now somebody explain the first forty-five minutes.';
+  }
+
+  @override
+  String yTurnedItRound5(String opponent) {
+    return 'Two down to $opponent and we are supposed to be delighted. Fix the first half.';
+  }
+
+  @override
+  String yThrewItAway0(String opponent) {
+    return 'Two up on $opponent at the break and it slipped away. It happens to better sides.';
+  }
+
+  @override
+  String yThrewItAway1(String opponent) {
+    return 'Two goals in front of $opponent and it got away. Long cycle ahead, plenty of time.';
+  }
+
+  @override
+  String yThrewItAway2(String opponent) {
+    return 'Half time: two goals up on $opponent. Full time: nothing like it.';
+  }
+
+  @override
+  String yThrewItAway3(String opponent) {
+    return 'A two-goal lead against $opponent, gone inside forty-five minutes.';
+  }
+
+  @override
+  String yThrewItAway4(String opponent) {
+    return 'Two up and we lost it. To $opponent. Somebody answers for that.';
+  }
+
+  @override
+  String yThrewItAway5(String opponent) {
+    return 'Two goals in front against $opponent and we managed this. Every single time.';
+  }
 }

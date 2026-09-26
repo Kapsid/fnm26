@@ -2,8 +2,18 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/entities/nation.dart';
+import 'package:fnm/domain/services/competition/cycle_finish.dart';
 import 'package:fnm/domain/services/competition/trophies.dart';
 import 'package:fnm/features/career/career_providers.dart';
+
+/// A nation's Nations Cup cycle: which league it played in, where it came in
+/// its group, and the Finals Four round it reached (null for a league that
+/// plays none, which is every league but A).
+typedef NationsCupCycle = ({
+  String league,
+  int position,
+  NationsCupFinish? finals,
+});
 
 /// One cycle of the manager's career: the nation led, the win/loss balance, and
 /// how each tournament ended.
@@ -20,7 +30,7 @@ class ManagerCycle {
     required this.goalsAgainst,
     required this.worldCup,
     required this.continental,
-    this.nationsCup = '',
+    this.nationsCup,
   });
 
   final int cycle;
@@ -35,17 +45,19 @@ class ManagerCycle {
   final int goalsFor;
   final int goalsAgainst;
 
-  /// Placement strings, e.g. 'Champions', 'Semi-finals', 'Did not qualify'.
-  final String worldCup;
-  final String continental;
+  /// How far the nation went, as meaning rather than as words — the screen
+  /// writes them through `cycleFinishLabel`.
+  final CycleFinish worldCup;
+  final CycleFinish continental;
 
-  /// The Nations Cup finish, e.g. 'League B · 2nd' or 'League A · Runners-up'.
-  /// Empty when the manager didn't play a Nations Cup that cycle.
-  final String nationsCup;
+  /// The Nations Cup cycle: the league played, where it finished in its group
+  /// and the Finals Four it reached. Null when the manager didn't play a
+  /// Nations Cup that cycle.
+  final NationsCupCycle? nationsCup;
 
   int get goalDifference => goalsFor - goalsAgainst;
-  bool get wonWorldCup => worldCup == 'Champions';
-  bool get wonContinental => continental == 'Champions';
+  bool get wonWorldCup => worldCup == CycleFinish.champions;
+  bool get wonContinental => continental == CycleFinish.champions;
 }
 
 /// A single notable result in the manager's career — the nation they led, the
@@ -116,8 +128,6 @@ class ManagerHistory {
   int get winRate => played == 0 ? 0 : (won * 100 / played).round();
 }
 
-const _wcRounds = ['GROUP', 'R32', 'R16', 'QF', 'SF', '3RD', 'FINAL'];
-
 final AutoDisposeFutureProviderFamily<ManagerHistory?, int>
 managerHistoryProvider = FutureProvider.autoDispose.family<ManagerHistory?, int>(
   (
@@ -143,13 +153,15 @@ managerHistoryProvider = FutureProvider.autoDispose.family<ManagerHistory?, int>
         );
 
     // Nations Cup finishes per nation, indexed by cycle (cached like fixtures).
-    final ncByNation = <int, Map<int, String>>{};
-    Future<Map<int, String>> ncFor(int nationId) async =>
+    final ncByNation = <int, Map<int, NationsCupCycle>>{};
+    Future<Map<int, NationsCupCycle>> ncFor(int nationId) async =>
         ncByNation[nationId] ??= {
           for (final e in await comp.nationsCupFinishes(careerId, nationId))
-            e.cycle: e.finals != null
-                ? 'League ${e.league} · ${e.finals}'
-                : 'League ${e.league} · ${_ordinal(e.position)}',
+            e.cycle: (
+              league: e.league,
+              position: e.position,
+              finals: e.finals,
+            ),
         };
 
     ManagerResult? biggestWin;
@@ -226,9 +238,9 @@ managerHistoryProvider = FutureProvider.autoDispose.family<ManagerHistory?, int>
           lost: lost,
           goalsFor: gf,
           goalsAgainst: ga,
-          worldCup: _placement(inCycle, nationId, continental: false),
-          continental: _placement(inCycle, nationId, continental: true),
-          nationsCup: (await ncFor(nationId))[c] ?? '',
+          worldCup: cycleFinishOf(inCycle, nationId, continental: false),
+          continental: cycleFinishOf(inCycle, nationId, continental: true),
+          nationsCup: (await ncFor(nationId))[c],
         ),
       );
     }
@@ -286,59 +298,3 @@ managerHistoryProvider = FutureProvider.autoDispose.family<ManagerHistory?, int>
     );
   },
 );
-
-String _ordinal(int n) => switch (n) {
-  1 => '1st',
-  2 => '2nd',
-  3 => '3rd',
-  _ => '${n}th',
-};
-
-/// The nation's finish in a competition this cycle, from its finals fixtures.
-String _placement(
-  List<Fixture> fixtures,
-  int nationId, {
-  required bool continental,
-}) {
-  final rounds = fixtures.where((f) {
-    final r = f.round;
-    if (r == null) return false;
-    final isC = r.startsWith('C');
-    if (isC != continental) return false;
-    final core = isC ? r.substring(1) : r;
-    return _wcRounds.contains(core);
-  }).toList();
-  if (rounds.isEmpty) return 'Did not qualify';
-
-  var deepest = -1;
-  Fixture? finalTie;
-  Fixture? thirdTie;
-  for (final f in rounds) {
-    final r = f.round!;
-    final core = r.startsWith('C') ? r.substring(1) : r;
-    final idx = _wcRounds.indexOf(core);
-    if (idx > deepest) deepest = idx;
-    if (core == 'FINAL') finalTie = f;
-    if (core == '3RD') thirdTie = f;
-  }
-
-  bool wonAt(Fixture? f) {
-    if (f == null || !f.hasResult) return false;
-    final home = f.homeNationId == nationId;
-    final my = home ? f.homeScore! : f.awayScore!;
-    final other = home ? f.awayScore! : f.homeScore!;
-    return my >= other; // ties (pens) list the winner as home
-  }
-
-  return switch (_wcRounds[deepest]) {
-    'FINAL' => wonAt(finalTie) ? 'Champions' : 'Runners-up',
-    '3RD' => wonAt(thirdTie) ? 'Third place' : 'Fourth place',
-    // Continental cups have no third-place match — both beaten semi-finalists
-    // share the bronze, so a lost semi there is a third-place finish.
-    'SF' => continental ? 'Third place' : 'Semi-finals',
-    'QF' => 'Quarter-finals',
-    'R16' => 'Round of 16',
-    'R32' => 'Round of 32',
-    _ => 'Group stage',
-  };
-}

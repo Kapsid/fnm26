@@ -13529,5 +13529,298 @@
   "finishDidNotQualify": "Did not qualify",
   "@finishDidNotQualify": {
     "description": "A tournament finish: never reached the finals."
+  },
+  "careerRepIconic": "Iconic",
+  "@careerRepIconic": {
+    "description": "A manager's career-long standing, top band."
+  },
+  "careerRepRenowned": "Renowned",
+  "@careerRepRenowned": {
+    "description": "A manager's career-long standing, second band."
+  },
+  "careerRepEstablished": "Established",
+  "@careerRepEstablished": {
+    "description": "A manager's career-long standing, middle band."
+  },
+  "careerRepRising": "Up-and-coming",
+  "@careerRepRising": {
+    "description": "A manager's career-long standing, fourth band."
+  },
+  "careerRepUnproven": "Unproven",
+  "@careerRepUnproven": {
+    "description": "A manager's career-long standing, bottom band."
+  },
+  "hubOfferStepUp": "Step up",
+  "@hubOfferStepUp": {
+    "description": "Job offer tier: a stronger nation than the one being left."
+  },
+  "hubOfferLateral": "Lateral move",
+  "@hubOfferLateral": {
+    "description": "Job offer tier: a nation of about the same standing."
+  },
+  "hubOfferRebuild": "A rebuild",
+  "@hubOfferRebuild": {
+    "description": "Job offer tier: a weaker nation, taken on to build it up."
+  },
+  "careerNationsCupWon": "League {league} · Champions",
+  "@careerNationsCupWon": {
+    "description": "Career history: won the Nations Cup Finals Four from this league.",
+    "placeholders": {
+      "league": {
+        "type": "String"
+      }
+    }
+  },
+  "careerNationsCupRunnerUp": "League {league} · Runners-up",
+  "@careerNationsCupRunnerUp": {
+    "description": "Career history: lost the Nations Cup final from this league.",
+    "placeholders": {
+      "league": {
+        "type": "String"
+      }
+    }
+  },
+  "careerNationsCupSemi": "League {league} · Semi-finalist",
+  "@careerNationsCupSemi": {
+    "description": "Career history: reached the Nations Cup Finals Four from this league.",
+    "placeholders": {
+      "league": {
+        "type": "String"
+      }
+    }
+  },
+  "careerNationsCupPlaced": "League {league} · #{position}",
+  "@careerNationsCupPlaced": {
+    "description": "Career history: where the nation came in its Nations Cup league group.",
+    "placeholders": {
+      "league": {
+        "type": "String"
+      },
+      "position": {
+        "type": "int"
+      }
+    }
+  },
+  "tourRunInto": "Into the {round}",
+  "@tourRunInto": {
+    "description": "Above a bracket: the nation has a tie to come in this round.",
+    "placeholders": {
+      "round": {
+        "type": "String"
+      }
+    }
+  },
+  "tourRunIntoThirdPlace": "Into the third-place play-off",
+  "@tourRunIntoThirdPlace": {
+    "description": "Above a bracket: the nation plays the bronze match next."
+  },
+  "tourRunThrough": "Through from the {round}",
+  "@tourRunThrough": {
+    "description": "Above a bracket: the nation won its tie in this round.",
+    "placeholders": {
+      "round": {
+        "type": "String"
+      }
+    }
+  },
+  "tourRunOut": "Knocked out in the {round}",
+  "@tourRunOut": {
+    "description": "Above a bracket: the nation lost its tie in this round.",
+    "placeholders": {
+      "round": {
+        "type": "String"
+      }
+    }
+  },
+  "tourRunInGroup": "Contesting the group stage",
+  "@tourRunInGroup": {
+    "description": "Above a bracket: the nation is still in the group stage."
+  },
+  "tourRunGroupOut": "Eliminated in the group stage",
+  "@tourRunGroupOut": {
+    "description": "Above a bracket: the nation went out in the group stage."
+  },
+  "resultsCycleTitle": "{year} cycle · {nation}",
+  "@resultsCycleTitle": {
+    "description": "Header of one folded cycle on the my-matches list: the cycle it closes and the nation led through it.",
+    "placeholders": {
+      "year": {
+        "type": "int"
+      },
+      "nation": {
+        "type": "String"
+      }
+    }
+  },
+  "resultsCycleRecord": "{played} played  ·  {won}W {drawn}D {lost}L",
+  "@resultsCycleRecord": {
+    "description": "Header of one folded cycle: matches played, and the win/draw/loss balance.",
+    "placeholders": {
+      "played": {
+        "type": "int"
+      },
+      "won": {
+        "type": "int"
+      },
+      "drawn": {
+        "type": "int"
+      },
+      "lost": {
+        "type": "int"
+      }
+    }
+  },
+  "resultsCycleFinish": "World Championship: {finish}",
+  "@resultsCycleFinish": {
+    "description": "Header of one folded cycle: what the cycle ended in, named after the World Championship that closes it.",
+    "placeholders": {
+      "finish": {
+        "type": "String"
+      }
+    }
+  },
+  "resultsCycleUnderway": "Still being played",
+  "@resultsCycleUnderway": {
+    "description": "Header of the cycle the manager is living through, which has not ended in anything yet."
+  },
+  "pressAskComeback1": "Two goals down at the break, and you came out and turned it round. What changed?",
+  "@pressAskComeback1": {
+    "description": "Press question after a two-goal half-time deficit was turned round, wording 1. CZECH DIFFERS ON PURPOSE. The Czech wording is built on \"Csaplarova past\", a Czech in-joke about a side two goals down at half time being exactly where it wants to be. An English reader has no idea what that is, so the English here is ordinary press-room English with no trace of the joke. This is the one place in the app where the two languages deliberately say different things."
+  },
+  "pressAskComeback2": "You were second best for forty-five minutes and the better side for the rest. Which half was the real one?",
+  "@pressAskComeback2": {
+    "description": "Press question after a two-goal half-time deficit was turned round, wording 2. CZECH DIFFERS ON PURPOSE. The Czech wording is built on \"Csaplarova past\", a Czech in-joke about a side two goals down at half time being exactly where it wants to be. An English reader has no idea what that is, so the English here is ordinary press-room English with no trace of the joke. This is the one place in the app where the two languages deliberately say different things."
+  },
+  "pressAskComeback3": "Nobody in this room would have given you anything at half time. What did you say to them?",
+  "@pressAskComeback3": {
+    "description": "Press question after a two-goal half-time deficit was turned round, wording 3. CZECH DIFFERS ON PURPOSE. The Czech wording is built on \"Csaplarova past\", a Czech in-joke about a side two goals down at half time being exactly where it wants to be. An English reader has no idea what that is, so the English here is ordinary press-room English with no trace of the joke. This is the one place in the app where the two languages deliberately say different things."
+  },
+  "pressAskComeback4": "Two behind, and you still got something out of the afternoon. Is that character, or is it a warning?",
+  "@pressAskComeback4": {
+    "description": "Press question after a two-goal half-time deficit was turned round, wording 4. CZECH DIFFERS ON PURPOSE. The Czech wording is built on \"Csaplarova past\", a Czech in-joke about a side two goals down at half time being exactly where it wants to be. An English reader has no idea what that is, so the English here is ordinary press-room English with no trace of the joke. This is the one place in the app where the two languages deliberately say different things."
+  },
+  "pressAskCollapse1": "Two goals up at half time, and you came away with nothing like it. Where did it go?",
+  "@pressAskCollapse1": {
+    "description": "Press question after a two-goal half-time lead was thrown away, wording 1. CZECH DIFFERS ON PURPOSE. The Czech wording is built on \"Csaplarova past\", a Czech in-joke about a side two goals down at half time being exactly where it wants to be. An English reader has no idea what that is, so the English here is ordinary press-room English with no trace of the joke. This is the one place in the app where the two languages deliberately say different things."
+  },
+  "pressAskCollapse2": "You had that match won by the break. Explain the second half.",
+  "@pressAskCollapse2": {
+    "description": "Press question after a two-goal half-time lead was thrown away, wording 2. CZECH DIFFERS ON PURPOSE. The Czech wording is built on \"Csaplarova past\", a Czech in-joke about a side two goals down at half time being exactly where it wants to be. An English reader has no idea what that is, so the English here is ordinary press-room English with no trace of the joke. This is the one place in the app where the two languages deliberately say different things."
+  },
+  "pressAskCollapse3": "A two-goal lead is supposed to be the safe one. Was yours ever safe?",
+  "@pressAskCollapse3": {
+    "description": "Press question after a two-goal half-time lead was thrown away, wording 3. CZECH DIFFERS ON PURPOSE. The Czech wording is built on \"Csaplarova past\", a Czech in-joke about a side two goals down at half time being exactly where it wants to be. An English reader has no idea what that is, so the English here is ordinary press-room English with no trace of the joke. This is the one place in the app where the two languages deliberately say different things."
+  },
+  "pressAskCollapse4": "Forty-five minutes of control, and then that. Whose second half was it?",
+  "@pressAskCollapse4": {
+    "description": "Press question after a two-goal half-time lead was thrown away, wording 4. CZECH DIFFERS ON PURPOSE. The Czech wording is built on \"Csaplarova past\", a Czech in-joke about a side two goals down at half time being exactly where it wants to be. An English reader has no idea what that is, so the English here is ordinary press-room English with no trace of the joke. This is the one place in the app where the two languages deliberately say different things."
+  },
+  "yTurnedItRound0": "Two down to {opponent} at the break and they got every bit of it back. That is a team.",
+  "@yTurnedItRound0": {
+    "description": "Y post: the side came from two goals down at half time, wording 0 (tone order: generous, neutral, sour). CZECH DIFFERS ON PURPOSE: it is built on \"Csaplarova past\", a Czech in-joke about a side two goals down at half time being exactly where it wants to be. The English says the same thing about the same match with no trace of the joke, because an English reader has never heard of it. The two Y templates and the two press questions on this afternoon are the only place in the app where the languages deliberately differ.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      }
+    }
+  },
+  "yTurnedItRound1": "Two behind against {opponent} and by the end it did not matter. Not many sides do that.",
+  "@yTurnedItRound1": {
+    "description": "Y post: the side came from two goals down at half time, wording 1 (tone order: generous, neutral, sour). CZECH DIFFERS ON PURPOSE: it is built on \"Csaplarova past\", a Czech in-joke about a side two goals down at half time being exactly where it wants to be. The English says the same thing about the same match with no trace of the joke, because an English reader has never heard of it. The two Y templates and the two press questions on this afternoon are the only place in the app where the languages deliberately differ.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      }
+    }
+  },
+  "yTurnedItRound2": "Half time: two goals down to {opponent}. Full time: not. The second half was a different match.",
+  "@yTurnedItRound2": {
+    "description": "Y post: the side came from two goals down at half time, wording 2 (tone order: generous, neutral, sour). CZECH DIFFERS ON PURPOSE: it is built on \"Csaplarova past\", a Czech in-joke about a side two goals down at half time being exactly where it wants to be. The English says the same thing about the same match with no trace of the joke, because an English reader has never heard of it. The two Y templates and the two press questions on this afternoon are the only place in the app where the languages deliberately differ.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      }
+    }
+  },
+  "yTurnedItRound3": "Came from two down against {opponent}. Whatever was said at the break, say it every week.",
+  "@yTurnedItRound3": {
+    "description": "Y post: the side came from two goals down at half time, wording 3 (tone order: generous, neutral, sour). CZECH DIFFERS ON PURPOSE: it is built on \"Csaplarova past\", a Czech in-joke about a side two goals down at half time being exactly where it wants to be. The English says the same thing about the same match with no trace of the joke, because an English reader has never heard of it. The two Y templates and the two press questions on this afternoon are the only place in the app where the languages deliberately differ.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      }
+    }
+  },
+  "yTurnedItRound4": "Fine, we got it back against {opponent}. Now somebody explain the first forty-five minutes.",
+  "@yTurnedItRound4": {
+    "description": "Y post: the side came from two goals down at half time, wording 4 (tone order: generous, neutral, sour). CZECH DIFFERS ON PURPOSE: it is built on \"Csaplarova past\", a Czech in-joke about a side two goals down at half time being exactly where it wants to be. The English says the same thing about the same match with no trace of the joke, because an English reader has never heard of it. The two Y templates and the two press questions on this afternoon are the only place in the app where the languages deliberately differ.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      }
+    }
+  },
+  "yTurnedItRound5": "Two down to {opponent} and we are supposed to be delighted. Fix the first half.",
+  "@yTurnedItRound5": {
+    "description": "Y post: the side came from two goals down at half time, wording 5 (tone order: generous, neutral, sour). CZECH DIFFERS ON PURPOSE: it is built on \"Csaplarova past\", a Czech in-joke about a side two goals down at half time being exactly where it wants to be. The English says the same thing about the same match with no trace of the joke, because an English reader has never heard of it. The two Y templates and the two press questions on this afternoon are the only place in the app where the languages deliberately differ.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      }
+    }
+  },
+  "yThrewItAway0": "Two up on {opponent} at the break and it slipped away. It happens to better sides.",
+  "@yThrewItAway0": {
+    "description": "Y post: the side threw away a two-goal half-time lead, wording 0 (tone order: generous, neutral, sour). CZECH DIFFERS ON PURPOSE: it is built on \"Csaplarova past\", a Czech in-joke about a side two goals down at half time being exactly where it wants to be. The English says the same thing about the same match with no trace of the joke, because an English reader has never heard of it. The two Y templates and the two press questions on this afternoon are the only place in the app where the languages deliberately differ.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      }
+    }
+  },
+  "yThrewItAway1": "Two goals in front of {opponent} and it got away. Long cycle ahead, plenty of time.",
+  "@yThrewItAway1": {
+    "description": "Y post: the side threw away a two-goal half-time lead, wording 1 (tone order: generous, neutral, sour). CZECH DIFFERS ON PURPOSE: it is built on \"Csaplarova past\", a Czech in-joke about a side two goals down at half time being exactly where it wants to be. The English says the same thing about the same match with no trace of the joke, because an English reader has never heard of it. The two Y templates and the two press questions on this afternoon are the only place in the app where the languages deliberately differ.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      }
+    }
+  },
+  "yThrewItAway2": "Half time: two goals up on {opponent}. Full time: nothing like it.",
+  "@yThrewItAway2": {
+    "description": "Y post: the side threw away a two-goal half-time lead, wording 2 (tone order: generous, neutral, sour). CZECH DIFFERS ON PURPOSE: it is built on \"Csaplarova past\", a Czech in-joke about a side two goals down at half time being exactly where it wants to be. The English says the same thing about the same match with no trace of the joke, because an English reader has never heard of it. The two Y templates and the two press questions on this afternoon are the only place in the app where the languages deliberately differ.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      }
+    }
+  },
+  "yThrewItAway3": "A two-goal lead against {opponent}, gone inside forty-five minutes.",
+  "@yThrewItAway3": {
+    "description": "Y post: the side threw away a two-goal half-time lead, wording 3 (tone order: generous, neutral, sour). CZECH DIFFERS ON PURPOSE: it is built on \"Csaplarova past\", a Czech in-joke about a side two goals down at half time being exactly where it wants to be. The English says the same thing about the same match with no trace of the joke, because an English reader has never heard of it. The two Y templates and the two press questions on this afternoon are the only place in the app where the languages deliberately differ.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      }
+    }
+  },
+  "yThrewItAway4": "Two up and we lost it. To {opponent}. Somebody answers for that.",
+  "@yThrewItAway4": {
+    "description": "Y post: the side threw away a two-goal half-time lead, wording 4 (tone order: generous, neutral, sour). CZECH DIFFERS ON PURPOSE: it is built on \"Csaplarova past\", a Czech in-joke about a side two goals down at half time being exactly where it wants to be. The English says the same thing about the same match with no trace of the joke, because an English reader has never heard of it. The two Y templates and the two press questions on this afternoon are the only place in the app where the languages deliberately differ.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      }
+    }
+  },
+  "yThrewItAway5": "Two goals in front against {opponent} and we managed this. Every single time.",
+  "@yThrewItAway5": {
+    "description": "Y post: the side threw away a two-goal half-time lead, wording 5 (tone order: generous, neutral, sour). CZECH DIFFERS ON PURPOSE: it is built on \"Csaplarova past\", a Czech in-joke about a side two goals down at half time being exactly where it wants to be. The English says the same thing about the same match with no trace of the joke, because an English reader has never heard of it. The two Y templates and the two press questions on this afternoon are the only place in the app where the languages deliberately differ.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      }
+    }
   }
 }

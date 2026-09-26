@@ -6,6 +6,7 @@ import 'package:fnm/domain/services/awards/awards.dart';
 import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/entities/group_standing.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
+import 'package:fnm/domain/services/competition/cycle_finish.dart';
 import 'package:fnm/domain/services/competition/finals.dart';
 import 'package:fnm/domain/services/competition/rounds.dart';
 import 'package:fnm/domain/services/competition/schedule_generator.dart';
@@ -2042,7 +2043,7 @@ class DriftCompetitionRepository implements CompetitionRepository {
         String league,
         int position,
         int groupSize,
-        String? finals,
+        NationsCupFinish? finals,
       })
     >
   >
@@ -2061,7 +2062,7 @@ class DriftCompetitionRepository implements CompetitionRepository {
             String league,
             int position,
             int groupSize,
-            String? finals,
+            NationsCupFinish? finals,
           })
         >[];
     for (final comp in comps) {
@@ -2104,7 +2105,7 @@ class DriftCompetitionRepository implements CompetitionRepository {
                         t.awayNationId.equals(nationId)),
               ))
               .get();
-      String? finals;
+      NationsCupFinish? finals;
       if (ko.isNotEmpty) {
         final theFinal = ko
             .where((f) => f.round == 'NFINAL' && f.played)
@@ -2113,9 +2114,11 @@ class DriftCompetitionRepository implements CompetitionRepository {
           final home = theFinal.homeNationId == nationId;
           final my = home ? theFinal.homeScore! : theFinal.awayScore!;
           final other = home ? theFinal.awayScore! : theFinal.homeScore!;
-          finals = my >= other ? 'Champions' : 'Runners-up';
+          finals = my >= other
+              ? NationsCupFinish.champions
+              : NationsCupFinish.runnersUp;
         } else {
-          finals = 'Semi-finalist';
+          finals = NationsCupFinish.semiFinalist;
         }
       }
 

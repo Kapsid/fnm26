@@ -212,6 +212,11 @@ void main() {
           PressTopic.rivalryNext,
           PressTopic.headToHeadRun,
           PressTopic.revengeMatch,
+          // Batch D2's two. Their Czech is not a translation of their English
+          // (see the copy), so the two languages are measured as two
+          // independent paragraphs rather than one measured twice.
+          PressTopic.halfTimeComeback,
+          PressTopic.halfTimeCollapse,
         ]) {
           testWidgets(
             '${topic.name} at ${width.toInt()}px in $locale',

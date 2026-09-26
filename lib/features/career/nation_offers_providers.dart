@@ -6,6 +6,7 @@ import 'package:fnm/domain/entities/career.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
 import 'package:fnm/domain/services/federation/federation_finance.dart';
+import 'package:fnm/domain/services/manager/job_market.dart';
 import 'package:fnm/features/achievements/achievement_providers.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/career/career_summary_providers.dart';
@@ -25,8 +26,9 @@ class NationOffer {
   /// The nation's world position (1 = strongest).
   final int position;
 
-  /// 'Step up' / 'Lateral move' / 'A rebuild' — relative to the current job.
-  final String tier;
+  /// What taking it would mean, relative to the current job. The words are the
+  /// copy's (see `offerTierLabel`); this is the judgement.
+  final OfferTier tier;
 }
 
 /// The board's end-of-cycle verdict and the job market it opens up.
@@ -71,15 +73,6 @@ class RolloverVerdict {
 
   /// Consecutive cycles served at the current nation.
   final int cyclesAtNation;
-
-  /// A short label for the reputation tier, for the UI.
-  String get reputationLabel => switch (reputation) {
-    >= 85 => 'Iconic',
-    >= 70 => 'Renowned',
-    >= 50 => 'Established',
-    >= 30 => 'Up-and-coming',
-    _ => 'Unproven',
-  };
 }
 
 /// Evaluates the manager's just-finished cycle and produces the board verdict
@@ -191,12 +184,13 @@ rolloverVerdictProvider = FutureProvider.autoDispose.family<RolloverVerdict?, in
     }
     if (pick == null) continue;
     used.add(pick.id);
-    final tier = pos < currentPos * 0.85
-        ? 'Step up'
-        : pos > currentPos * 1.2
-        ? 'A rebuild'
-        : 'Lateral move';
-    offers.add(NationOffer(nation: pick, position: pos, tier: tier));
+    offers.add(
+      NationOffer(
+        nation: pick,
+        position: pos,
+        tier: offerTierFor(offered: pos, current: currentPos),
+      ),
+    );
   }
   offers.sort((a, b) => a.position.compareTo(b.position));
 

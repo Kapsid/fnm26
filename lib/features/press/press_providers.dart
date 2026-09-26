@@ -8,6 +8,7 @@ import 'package:fnm/domain/services/competition/kickoff_keys.dart';
 import 'package:fnm/domain/services/competition/rounds.dart';
 import 'package:fnm/domain/services/match/match_engine.dart';
 import 'package:fnm/domain/services/press/expectation.dart';
+import 'package:fnm/domain/services/press/half_time_swing.dart';
 import 'package:fnm/domain/services/press/press.dart';
 import 'package:fnm/domain/services/press/squad_stories.dart';
 import 'package:fnm/features/achievements/achievement_providers.dart';
@@ -470,6 +471,29 @@ pressQuestionProvider = FutureProvider.autoDispose.family<PressQuestion?, int>((
         ),
       );
       break;
+    }
+
+    // Two goals one way at the break and the other way at the end. The one
+    // story a scoreline cannot tell on its own, which is why it needs the goal
+    // timeline: the fixture row knows only how the afternoon finished.
+    final swing = halfTimeSwingOf(
+      goals: goals,
+      nationId: career.nationId,
+      scored: mine.forGoals,
+      conceded: mine.against,
+    );
+    if (swing != null) {
+      final topic = swing == HalfTimeSwing.comeback
+          ? PressTopic.halfTimeComeback
+          : PressTopic.halfTimeCollapse;
+      add(
+        q(
+          '${Press.keyPrefixOf(topic)}:${lastMatch.id}',
+          topic,
+          subjectNationId: _opponent(lastMatch, career.nationId),
+          subject: PressSubjectMatch(fromLastMatch: isNewest),
+        ),
+      );
     }
   }
 

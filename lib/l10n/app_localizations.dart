@@ -14264,6 +14264,258 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Did not qualify'**
   String get finishDidNotQualify;
+
+  /// A manager's career-long standing, top band.
+  ///
+  /// In en, this message translates to:
+  /// **'Iconic'**
+  String get careerRepIconic;
+
+  /// A manager's career-long standing, second band.
+  ///
+  /// In en, this message translates to:
+  /// **'Renowned'**
+  String get careerRepRenowned;
+
+  /// A manager's career-long standing, middle band.
+  ///
+  /// In en, this message translates to:
+  /// **'Established'**
+  String get careerRepEstablished;
+
+  /// A manager's career-long standing, fourth band.
+  ///
+  /// In en, this message translates to:
+  /// **'Up-and-coming'**
+  String get careerRepRising;
+
+  /// A manager's career-long standing, bottom band.
+  ///
+  /// In en, this message translates to:
+  /// **'Unproven'**
+  String get careerRepUnproven;
+
+  /// Job offer tier: a stronger nation than the one being left.
+  ///
+  /// In en, this message translates to:
+  /// **'Step up'**
+  String get hubOfferStepUp;
+
+  /// Job offer tier: a nation of about the same standing.
+  ///
+  /// In en, this message translates to:
+  /// **'Lateral move'**
+  String get hubOfferLateral;
+
+  /// Job offer tier: a weaker nation, taken on to build it up.
+  ///
+  /// In en, this message translates to:
+  /// **'A rebuild'**
+  String get hubOfferRebuild;
+
+  /// Career history: won the Nations Cup Finals Four from this league.
+  ///
+  /// In en, this message translates to:
+  /// **'League {league} · Champions'**
+  String careerNationsCupWon(String league);
+
+  /// Career history: lost the Nations Cup final from this league.
+  ///
+  /// In en, this message translates to:
+  /// **'League {league} · Runners-up'**
+  String careerNationsCupRunnerUp(String league);
+
+  /// Career history: reached the Nations Cup Finals Four from this league.
+  ///
+  /// In en, this message translates to:
+  /// **'League {league} · Semi-finalist'**
+  String careerNationsCupSemi(String league);
+
+  /// Career history: where the nation came in its Nations Cup league group.
+  ///
+  /// In en, this message translates to:
+  /// **'League {league} · #{position}'**
+  String careerNationsCupPlaced(String league, int position);
+
+  /// Above a bracket: the nation has a tie to come in this round.
+  ///
+  /// In en, this message translates to:
+  /// **'Into the {round}'**
+  String tourRunInto(String round);
+
+  /// Above a bracket: the nation plays the bronze match next.
+  ///
+  /// In en, this message translates to:
+  /// **'Into the third-place play-off'**
+  String get tourRunIntoThirdPlace;
+
+  /// Above a bracket: the nation won its tie in this round.
+  ///
+  /// In en, this message translates to:
+  /// **'Through from the {round}'**
+  String tourRunThrough(String round);
+
+  /// Above a bracket: the nation lost its tie in this round.
+  ///
+  /// In en, this message translates to:
+  /// **'Knocked out in the {round}'**
+  String tourRunOut(String round);
+
+  /// Above a bracket: the nation is still in the group stage.
+  ///
+  /// In en, this message translates to:
+  /// **'Contesting the group stage'**
+  String get tourRunInGroup;
+
+  /// Above a bracket: the nation went out in the group stage.
+  ///
+  /// In en, this message translates to:
+  /// **'Eliminated in the group stage'**
+  String get tourRunGroupOut;
+
+  /// Header of one folded cycle on the my-matches list: the cycle it closes and the nation led through it.
+  ///
+  /// In en, this message translates to:
+  /// **'{year} cycle · {nation}'**
+  String resultsCycleTitle(int year, String nation);
+
+  /// Header of one folded cycle: matches played, and the win/draw/loss balance.
+  ///
+  /// In en, this message translates to:
+  /// **'{played} played  ·  {won}W {drawn}D {lost}L'**
+  String resultsCycleRecord(int played, int won, int drawn, int lost);
+
+  /// Header of one folded cycle: what the cycle ended in, named after the World Championship that closes it.
+  ///
+  /// In en, this message translates to:
+  /// **'World Championship: {finish}'**
+  String resultsCycleFinish(String finish);
+
+  /// Header of the cycle the manager is living through, which has not ended in anything yet.
+  ///
+  /// In en, this message translates to:
+  /// **'Still being played'**
+  String get resultsCycleUnderway;
+
+  /// Press question after a two-goal half-time deficit was turned round, wording 1. CZECH DIFFERS ON PURPOSE. The Czech wording is built on "Csaplarova past", a Czech in-joke about a side two goals down at half time being exactly where it wants to be. An English reader has no idea what that is, so the English here is ordinary press-room English with no trace of the joke. This is the one place in the app where the two languages deliberately say different things.
+  ///
+  /// In en, this message translates to:
+  /// **'Two goals down at the break, and you came out and turned it round. What changed?'**
+  String get pressAskComeback1;
+
+  /// Press question after a two-goal half-time deficit was turned round, wording 2. CZECH DIFFERS ON PURPOSE. The Czech wording is built on "Csaplarova past", a Czech in-joke about a side two goals down at half time being exactly where it wants to be. An English reader has no idea what that is, so the English here is ordinary press-room English with no trace of the joke. This is the one place in the app where the two languages deliberately say different things.
+  ///
+  /// In en, this message translates to:
+  /// **'You were second best for forty-five minutes and the better side for the rest. Which half was the real one?'**
+  String get pressAskComeback2;
+
+  /// Press question after a two-goal half-time deficit was turned round, wording 3. CZECH DIFFERS ON PURPOSE. The Czech wording is built on "Csaplarova past", a Czech in-joke about a side two goals down at half time being exactly where it wants to be. An English reader has no idea what that is, so the English here is ordinary press-room English with no trace of the joke. This is the one place in the app where the two languages deliberately say different things.
+  ///
+  /// In en, this message translates to:
+  /// **'Nobody in this room would have given you anything at half time. What did you say to them?'**
+  String get pressAskComeback3;
+
+  /// Press question after a two-goal half-time deficit was turned round, wording 4. CZECH DIFFERS ON PURPOSE. The Czech wording is built on "Csaplarova past", a Czech in-joke about a side two goals down at half time being exactly where it wants to be. An English reader has no idea what that is, so the English here is ordinary press-room English with no trace of the joke. This is the one place in the app where the two languages deliberately say different things.
+  ///
+  /// In en, this message translates to:
+  /// **'Two behind, and you still got something out of the afternoon. Is that character, or is it a warning?'**
+  String get pressAskComeback4;
+
+  /// Press question after a two-goal half-time lead was thrown away, wording 1. CZECH DIFFERS ON PURPOSE. The Czech wording is built on "Csaplarova past", a Czech in-joke about a side two goals down at half time being exactly where it wants to be. An English reader has no idea what that is, so the English here is ordinary press-room English with no trace of the joke. This is the one place in the app where the two languages deliberately say different things.
+  ///
+  /// In en, this message translates to:
+  /// **'Two goals up at half time, and you came away with nothing like it. Where did it go?'**
+  String get pressAskCollapse1;
+
+  /// Press question after a two-goal half-time lead was thrown away, wording 2. CZECH DIFFERS ON PURPOSE. The Czech wording is built on "Csaplarova past", a Czech in-joke about a side two goals down at half time being exactly where it wants to be. An English reader has no idea what that is, so the English here is ordinary press-room English with no trace of the joke. This is the one place in the app where the two languages deliberately say different things.
+  ///
+  /// In en, this message translates to:
+  /// **'You had that match won by the break. Explain the second half.'**
+  String get pressAskCollapse2;
+
+  /// Press question after a two-goal half-time lead was thrown away, wording 3. CZECH DIFFERS ON PURPOSE. The Czech wording is built on "Csaplarova past", a Czech in-joke about a side two goals down at half time being exactly where it wants to be. An English reader has no idea what that is, so the English here is ordinary press-room English with no trace of the joke. This is the one place in the app where the two languages deliberately say different things.
+  ///
+  /// In en, this message translates to:
+  /// **'A two-goal lead is supposed to be the safe one. Was yours ever safe?'**
+  String get pressAskCollapse3;
+
+  /// Press question after a two-goal half-time lead was thrown away, wording 4. CZECH DIFFERS ON PURPOSE. The Czech wording is built on "Csaplarova past", a Czech in-joke about a side two goals down at half time being exactly where it wants to be. An English reader has no idea what that is, so the English here is ordinary press-room English with no trace of the joke. This is the one place in the app where the two languages deliberately say different things.
+  ///
+  /// In en, this message translates to:
+  /// **'Forty-five minutes of control, and then that. Whose second half was it?'**
+  String get pressAskCollapse4;
+
+  /// Y post: the side came from two goals down at half time, wording 0 (tone order: generous, neutral, sour). CZECH DIFFERS ON PURPOSE: it is built on "Csaplarova past", a Czech in-joke about a side two goals down at half time being exactly where it wants to be. The English says the same thing about the same match with no trace of the joke, because an English reader has never heard of it. The two Y templates and the two press questions on this afternoon are the only place in the app where the languages deliberately differ.
+  ///
+  /// In en, this message translates to:
+  /// **'Two down to {opponent} at the break and they got every bit of it back. That is a team.'**
+  String yTurnedItRound0(String opponent);
+
+  /// Y post: the side came from two goals down at half time, wording 1 (tone order: generous, neutral, sour). CZECH DIFFERS ON PURPOSE: it is built on "Csaplarova past", a Czech in-joke about a side two goals down at half time being exactly where it wants to be. The English says the same thing about the same match with no trace of the joke, because an English reader has never heard of it. The two Y templates and the two press questions on this afternoon are the only place in the app where the languages deliberately differ.
+  ///
+  /// In en, this message translates to:
+  /// **'Two behind against {opponent} and by the end it did not matter. Not many sides do that.'**
+  String yTurnedItRound1(String opponent);
+
+  /// Y post: the side came from two goals down at half time, wording 2 (tone order: generous, neutral, sour). CZECH DIFFERS ON PURPOSE: it is built on "Csaplarova past", a Czech in-joke about a side two goals down at half time being exactly where it wants to be. The English says the same thing about the same match with no trace of the joke, because an English reader has never heard of it. The two Y templates and the two press questions on this afternoon are the only place in the app where the languages deliberately differ.
+  ///
+  /// In en, this message translates to:
+  /// **'Half time: two goals down to {opponent}. Full time: not. The second half was a different match.'**
+  String yTurnedItRound2(String opponent);
+
+  /// Y post: the side came from two goals down at half time, wording 3 (tone order: generous, neutral, sour). CZECH DIFFERS ON PURPOSE: it is built on "Csaplarova past", a Czech in-joke about a side two goals down at half time being exactly where it wants to be. The English says the same thing about the same match with no trace of the joke, because an English reader has never heard of it. The two Y templates and the two press questions on this afternoon are the only place in the app where the languages deliberately differ.
+  ///
+  /// In en, this message translates to:
+  /// **'Came from two down against {opponent}. Whatever was said at the break, say it every week.'**
+  String yTurnedItRound3(String opponent);
+
+  /// Y post: the side came from two goals down at half time, wording 4 (tone order: generous, neutral, sour). CZECH DIFFERS ON PURPOSE: it is built on "Csaplarova past", a Czech in-joke about a side two goals down at half time being exactly where it wants to be. The English says the same thing about the same match with no trace of the joke, because an English reader has never heard of it. The two Y templates and the two press questions on this afternoon are the only place in the app where the languages deliberately differ.
+  ///
+  /// In en, this message translates to:
+  /// **'Fine, we got it back against {opponent}. Now somebody explain the first forty-five minutes.'**
+  String yTurnedItRound4(String opponent);
+
+  /// Y post: the side came from two goals down at half time, wording 5 (tone order: generous, neutral, sour). CZECH DIFFERS ON PURPOSE: it is built on "Csaplarova past", a Czech in-joke about a side two goals down at half time being exactly where it wants to be. The English says the same thing about the same match with no trace of the joke, because an English reader has never heard of it. The two Y templates and the two press questions on this afternoon are the only place in the app where the languages deliberately differ.
+  ///
+  /// In en, this message translates to:
+  /// **'Two down to {opponent} and we are supposed to be delighted. Fix the first half.'**
+  String yTurnedItRound5(String opponent);
+
+  /// Y post: the side threw away a two-goal half-time lead, wording 0 (tone order: generous, neutral, sour). CZECH DIFFERS ON PURPOSE: it is built on "Csaplarova past", a Czech in-joke about a side two goals down at half time being exactly where it wants to be. The English says the same thing about the same match with no trace of the joke, because an English reader has never heard of it. The two Y templates and the two press questions on this afternoon are the only place in the app where the languages deliberately differ.
+  ///
+  /// In en, this message translates to:
+  /// **'Two up on {opponent} at the break and it slipped away. It happens to better sides.'**
+  String yThrewItAway0(String opponent);
+
+  /// Y post: the side threw away a two-goal half-time lead, wording 1 (tone order: generous, neutral, sour). CZECH DIFFERS ON PURPOSE: it is built on "Csaplarova past", a Czech in-joke about a side two goals down at half time being exactly where it wants to be. The English says the same thing about the same match with no trace of the joke, because an English reader has never heard of it. The two Y templates and the two press questions on this afternoon are the only place in the app where the languages deliberately differ.
+  ///
+  /// In en, this message translates to:
+  /// **'Two goals in front of {opponent} and it got away. Long cycle ahead, plenty of time.'**
+  String yThrewItAway1(String opponent);
+
+  /// Y post: the side threw away a two-goal half-time lead, wording 2 (tone order: generous, neutral, sour). CZECH DIFFERS ON PURPOSE: it is built on "Csaplarova past", a Czech in-joke about a side two goals down at half time being exactly where it wants to be. The English says the same thing about the same match with no trace of the joke, because an English reader has never heard of it. The two Y templates and the two press questions on this afternoon are the only place in the app where the languages deliberately differ.
+  ///
+  /// In en, this message translates to:
+  /// **'Half time: two goals up on {opponent}. Full time: nothing like it.'**
+  String yThrewItAway2(String opponent);
+
+  /// Y post: the side threw away a two-goal half-time lead, wording 3 (tone order: generous, neutral, sour). CZECH DIFFERS ON PURPOSE: it is built on "Csaplarova past", a Czech in-joke about a side two goals down at half time being exactly where it wants to be. The English says the same thing about the same match with no trace of the joke, because an English reader has never heard of it. The two Y templates and the two press questions on this afternoon are the only place in the app where the languages deliberately differ.
+  ///
+  /// In en, this message translates to:
+  /// **'A two-goal lead against {opponent}, gone inside forty-five minutes.'**
+  String yThrewItAway3(String opponent);
+
+  /// Y post: the side threw away a two-goal half-time lead, wording 4 (tone order: generous, neutral, sour). CZECH DIFFERS ON PURPOSE: it is built on "Csaplarova past", a Czech in-joke about a side two goals down at half time being exactly where it wants to be. The English says the same thing about the same match with no trace of the joke, because an English reader has never heard of it. The two Y templates and the two press questions on this afternoon are the only place in the app where the languages deliberately differ.
+  ///
+  /// In en, this message translates to:
+  /// **'Two up and we lost it. To {opponent}. Somebody answers for that.'**
+  String yThrewItAway4(String opponent);
+
+  /// Y post: the side threw away a two-goal half-time lead, wording 5 (tone order: generous, neutral, sour). CZECH DIFFERS ON PURPOSE: it is built on "Csaplarova past", a Czech in-joke about a side two goals down at half time being exactly where it wants to be. The English says the same thing about the same match with no trace of the joke, because an English reader has never heard of it. The two Y templates and the two press questions on this afternoon are the only place in the app where the languages deliberately differ.
+  ///
+  /// In en, this message translates to:
+  /// **'Two goals in front against {opponent} and we managed this. Every single time.'**
+  String yThrewItAway5(String opponent);
 }
 
 class _AppLocalizationsDelegate

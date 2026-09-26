@@ -181,6 +181,21 @@ String yPostBody(AppLocalizations l, YPost p) {
     (YTemplate.sentOff, 5) => l.ySentOff5(a0, a1),
     (YTemplate.sentOff, 6) => l.ySentOff6(a0, a1),
     (YTemplate.sentOff, 7) => l.ySentOff7(a0, a1),
+    // The two whose Czech is not a translation of its English: see the copy's
+    // own note. Nothing here knows that; it asks for wording n and prints what
+    // the language hands back.
+    (YTemplate.turnedItRound, 0) => l.yTurnedItRound0(a0),
+    (YTemplate.turnedItRound, 1) => l.yTurnedItRound1(a0),
+    (YTemplate.turnedItRound, 2) => l.yTurnedItRound2(a0),
+    (YTemplate.turnedItRound, 3) => l.yTurnedItRound3(a0),
+    (YTemplate.turnedItRound, 4) => l.yTurnedItRound4(a0),
+    (YTemplate.turnedItRound, 5) => l.yTurnedItRound5(a0),
+    (YTemplate.threwItAway, 0) => l.yThrewItAway0(a0),
+    (YTemplate.threwItAway, 1) => l.yThrewItAway1(a0),
+    (YTemplate.threwItAway, 2) => l.yThrewItAway2(a0),
+    (YTemplate.threwItAway, 3) => l.yThrewItAway3(a0),
+    (YTemplate.threwItAway, 4) => l.yThrewItAway4(a0),
+    (YTemplate.threwItAway, 5) => l.yThrewItAway5(a0),
     (YTemplate.boardPressure, 0) => l.yBoardPressure0,
     (YTemplate.boardPressure, 1) => l.yBoardPressure1,
     (YTemplate.boardPressure, 2) => l.yBoardPressure2,

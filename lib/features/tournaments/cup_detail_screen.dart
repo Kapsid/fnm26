@@ -173,6 +173,7 @@ class CupDetailScreen extends ConsumerWidget {
                           championLabel: l.tourCupWorldChampions,
                           playerNationId: data.playerNationId,
                           runSummary: playerRunSummary(
+                            l,
                             playerNationId: data.playerNationId,
                             champion: data.champion,
                             knockout: data.knockout,

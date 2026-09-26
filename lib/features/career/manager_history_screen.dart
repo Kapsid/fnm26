@@ -5,7 +5,9 @@ import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/core/util/app_date.dart';
+import 'package:fnm/core/util/career_label.dart';
 import 'package:fnm/core/util/competition_label.dart';
+import 'package:fnm/domain/services/competition/cycle_finish.dart';
 import 'package:fnm/domain/services/competition/trophies.dart';
 import 'package:fnm/features/career/manager_history_providers.dart';
 import 'package:fnm/features/stats/stats_providers.dart';
@@ -435,22 +437,30 @@ class _CycleCard extends StatelessWidget {
                 Expanded(
                   child: _Finish(
                     label: l.careerWorldCupLabel,
-                    placement: c.worldCup,
+                    placement: cycleFinishLabel(l, c.worldCup),
+                    gold: c.worldCup == CycleFinish.champions,
                   ),
                 ),
                 Expanded(
                   child: _Finish(
                     label: l.careerContinentalLabel,
-                    placement: c.continental,
+                    placement: cycleFinishLabel(l, c.continental),
+                    gold: c.continental == CycleFinish.champions,
                   ),
                 ),
               ],
             ),
-            if (c.nationsCup.isNotEmpty) ...[
+            if (c.nationsCup case final nc?) ...[
               const SizedBox(height: AppSpacing.xs),
               _Finish(
                 label: l.careerNationsCupLabel,
-                placement: c.nationsCup,
+                placement: nationsCupFinishLabel(
+                  l,
+                  league: nc.league,
+                  position: nc.position,
+                  finals: nc.finals,
+                ),
+                gold: nc.finals == NationsCupFinish.champions,
               ),
             ],
           ],
@@ -461,14 +471,22 @@ class _CycleCard extends StatelessWidget {
 }
 
 class _Finish extends StatelessWidget {
-  const _Finish({required this.label, required this.placement});
+  const _Finish({
+    required this.label,
+    required this.placement,
+    required this.gold,
+  });
 
   final String label;
   final String placement;
 
+  /// Whether this finish was the trophy. Passed in rather than read back off
+  /// [placement]: the words are translated now, and `== 'Champions'` was only
+  /// ever true in English.
+  final bool gold;
+
   @override
   Widget build(BuildContext context) {
-    final gold = placement == 'Champions';
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [

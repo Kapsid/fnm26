@@ -139,7 +139,7 @@ class AppLocalizationsCs extends AppLocalizations {
   String get matchTacticsLabel => 'TAKTIKA';
 
   @override
-  String get teamOverallOverTime => 'VÝVOJ CELKOVÉHO HODNOCENÍ';
+  String get teamOverallOverTime => 'VÝVOJ HODNOCENÍ TÝMU';
 
   @override
   String get teamOverall => 'Celkově';
@@ -9145,4 +9145,182 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get finishDidNotQualify => 'Neprošli kvalifikací';
+
+  @override
+  String get careerRepIconic => 'Legenda';
+
+  @override
+  String get careerRepRenowned => 'Zvučné jméno';
+
+  @override
+  String get careerRepEstablished => 'Zavedený kouč';
+
+  @override
+  String get careerRepRising => 'Nadějný kouč';
+
+  @override
+  String get careerRepUnproven => 'Neokoukaný';
+
+  @override
+  String get hubOfferStepUp => 'Krok vzhůru';
+
+  @override
+  String get hubOfferLateral => 'Srovnatelná nabídka';
+
+  @override
+  String get hubOfferRebuild => 'Práce od základů';
+
+  @override
+  String careerNationsCupWon(String league) {
+    return 'Liga $league · vítězové';
+  }
+
+  @override
+  String careerNationsCupRunnerUp(String league) {
+    return 'Liga $league · finalisté';
+  }
+
+  @override
+  String careerNationsCupSemi(String league) {
+    return 'Liga $league · semifinále';
+  }
+
+  @override
+  String careerNationsCupPlaced(String league, int position) {
+    return 'Liga $league · $position. místo';
+  }
+
+  @override
+  String tourRunInto(String round) {
+    return 'Postup do $round';
+  }
+
+  @override
+  String get tourRunIntoThirdPlace => 'Postup do boje o třetí místo';
+
+  @override
+  String tourRunThrough(String round) {
+    return 'Postup přes $round';
+  }
+
+  @override
+  String tourRunOut(String round) {
+    return 'Vyřazeni po $round';
+  }
+
+  @override
+  String get tourRunInGroup => 'Hrají skupinu';
+
+  @override
+  String get tourRunGroupOut => 'Vyřazeni ve skupině';
+
+  @override
+  String resultsCycleTitle(int year, String nation) {
+    return 'Cyklus $year · $nation';
+  }
+
+  @override
+  String resultsCycleRecord(int played, int won, int drawn, int lost) {
+    return '$played zápasů  ·  ${won}V ${drawn}R ${lost}P';
+  }
+
+  @override
+  String resultsCycleFinish(String finish) {
+    return 'Mistrovství světa: $finish';
+  }
+
+  @override
+  String get resultsCycleUnderway => 'Ještě se hraje';
+
+  @override
+  String get pressAskComeback1 =>
+      'Csaplárova past sklapla. Byli jste v poločase o dvě branky vzadu přesně tam, kde jste být chtěli?';
+
+  @override
+  String get pressAskComeback2 =>
+      'O dvě branky zpět v poločase a nakonec z toho něco bylo. Csaplárova past, nebo prostě štěstí?';
+
+  @override
+  String get pressAskComeback3 =>
+      'Klasická Csaplárova past: dvě branky soupeři, druhá půle vaše. Kolik z toho byl plán?';
+
+  @override
+  String get pressAskComeback4 =>
+      'V poločase jste prohrávali o dvě a body jsou doma. Učíte mužstvo Csaplárovu past schválně?';
+
+  @override
+  String get pressAskCollapse1 =>
+      'Do Csaplárovy pasti jste tentokrát spadli sami. Vedli jste o dvě a je z toho tohle.';
+
+  @override
+  String get pressAskCollapse2 =>
+      'Dvě branky k dobru v poločase a nakonec nic. Csaplárova past v obráceném gardu?';
+
+  @override
+  String get pressAskCollapse3 =>
+      'O dvou brankách se říká, že je to nejhorší vedení. Dnes Csaplárova past fungovala proti vám. Co se stalo po pauze?';
+
+  @override
+  String get pressAskCollapse4 =>
+      'V poločase bylo rozhodnuto, po devadesáti minutách taky, jen naopak. Csaplárova past se vymstila. Kdo může za druhou půli?';
+
+  @override
+  String yTurnedItRound0(String opponent) {
+    return 'Csaplárova past v přímém přenosu. Dvě branky pro $opponent a pak už byla druhá půle jen naše. Tomu se říká mužstvo.';
+  }
+
+  @override
+  String yTurnedItRound1(String opponent) {
+    return 'O dvě zpět proti týmu $opponent a nakonec z toho něco bylo. Csaplárovu past umí nastavit jen někdo.';
+  }
+
+  @override
+  String yTurnedItRound2(String opponent) {
+    return 'Poločas: o dvě prohráváme s $opponent. Konec: ne. Učebnicová Csaplárova past.';
+  }
+
+  @override
+  String yTurnedItRound3(String opponent) {
+    return 'Klasická Csaplárova past proti týmu $opponent. Co padlo v šatně, ať padne každý týden.';
+  }
+
+  @override
+  String yTurnedItRound4(String opponent) {
+    return 'Dobře, s $opponent jsme to otočili. Csaplárova past je hezká věc, ale prvních pětačtyřicet minut ať někdo vysvětlí.';
+  }
+
+  @override
+  String yTurnedItRound5(String opponent) {
+    return 'Dvě branky k dobru pro $opponent a my máme být nadšení. Csaplárovu past se hrát každý týden nedá.';
+  }
+
+  @override
+  String yThrewItAway0(String opponent) {
+    return 'Do Csaplárovy pasti jsme si dnes vlezli sami. Dvě branky k dobru proti týmu $opponent a je z toho tohle. Stává se i lepším.';
+  }
+
+  @override
+  String yThrewItAway1(String opponent) {
+    return 'Vedli jsme o dvě a nic z toho. Csaplárovu past umí nastavit i $opponent.';
+  }
+
+  @override
+  String yThrewItAway2(String opponent) {
+    return 'Poločas: o dvě vedeme nad $opponent. Konec: nic z toho. Csaplárova past v obráceném gardu.';
+  }
+
+  @override
+  String yThrewItAway3(String opponent) {
+    return 'Dvě branky proti týmu $opponent pryč za pětačtyřicet minut. Csaplárova past, jen z druhé strany.';
+  }
+
+  @override
+  String yThrewItAway4(String opponent) {
+    return 'Csaplárova past pro pokročilé: nastavíš ji a spadneš do ní sám. Dvě branky proti týmu $opponent a nakonec nic.';
+  }
+
+  @override
+  String yThrewItAway5(String opponent) {
+    return 'O dvě jsme vedli. S $opponent. Csaplárovu past jsme nastavili soupeři a spadli do ní sami.';
+  }
 }

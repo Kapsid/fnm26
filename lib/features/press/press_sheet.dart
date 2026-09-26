@@ -799,6 +799,26 @@ List<String> pressAskWordings(
               l.pressAskLateLoss3(player, minute),
               l.pressAskLateLoss4(player, minute),
             ],
+    // The two whose Czech does not translate their English. "Csaplarova past"
+    // is a Czech in-joke about a side two goals down at half time being
+    // exactly where it wants to be; it has no English reader, and a
+    // translated in-joke is just a confusing sentence. So the Czech wordings
+    // below carry the joke and the English ones are ordinary press-room
+    // English about the same afternoon. It is the one place in the app where
+    // the two languages deliberately say different things, and the copy says
+    // so in each string's description.
+    PressTopic.halfTimeComeback => [
+      l.pressAskComeback1,
+      l.pressAskComeback2,
+      l.pressAskComeback3,
+      l.pressAskComeback4,
+    ],
+    PressTopic.halfTimeCollapse => [
+      l.pressAskCollapse1,
+      l.pressAskCollapse2,
+      l.pressAskCollapse3,
+      l.pressAskCollapse4,
+    ],
     // The squad. Every one of these names the man AND the number, which is
     // the whole difference between "your forward" and a question.
     PressTopic.strikerDrought => [

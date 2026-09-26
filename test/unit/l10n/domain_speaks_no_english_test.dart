@@ -24,32 +24,20 @@ import 'package:flutter_test/flutter_test.dart';
 /// `lib/l10n/` instead.
 void main() {
   test('nothing in lib/domain returns a display string in English', () {
-    final offenders = <String>[];
-    for (final file in _domainFiles()) {
-      final path = file.path;
-      final lines = file.readAsLinesSync();
-      for (var i = 0; i < lines.length; i++) {
-        final line = lines[i];
-        // Comments explain the code in English and always will.
-        if (line.trimLeft().startsWith('//')) continue;
-        for (final m in _displayLiteral.allMatches(line)) {
-          final literal = m.group(2)!;
-          if (_allowed[path]?.any(literal.startsWith) ?? false) continue;
-          offenders.add('$path:${i + 1}  \'$literal\'');
-        }
-      }
-    }
-    expect(
-      offenders,
-      isEmpty,
-      reason:
-          'these read like words the manager sees, written in the one layer '
-          'that cannot translate them:\n  ${offenders.join('\n  ')}\n'
-          'Put the words in lib/l10n/app_en.arb and app_cs.arb and translate '
-          'at the display edge (see lib/core/util/squad_label.dart), or — if '
-          'the string is a CANONICAL value that is stored or compared — add it '
-          'to _allowed in this test with the reason.',
-    );
+    _expectNoEnglish(_dartFiles('lib/domain'));
+  });
+
+  /// The same sweep over the layer the first one could not see.
+  ///
+  /// `lib/domain` was cleared and four English phrases carried on being
+  /// printed, because they were decided in `lib/features` instead: "Iconic" on
+  /// the rollover badge, "Step up" on a job offer, "Semi-finals" and "Did not
+  /// qualify" on the career history, and "Knocked out in the Quarter-finals"
+  /// over a bracket. A provider is no more able to reach [AppLocalizations]
+  /// than an entity is, so the rule and the fix are the same: the words live
+  /// in `lib/l10n` and a translator at the display edge writes them.
+  test('nor does anything in lib/features', () {
+    _expectNoEnglish(_dartFiles('lib/features'));
   });
 
   test('the enums a manager reads carry no label getter at all', () {
@@ -119,7 +107,7 @@ const Map<String, Set<String>> _allowed = {
   'lib/domain/services/competition/group_advancement.dart': {'Only '},
 };
 
-Iterable<File> _domainFiles() => Directory('lib/domain')
+Iterable<File> _dartFiles(String dir) => Directory(dir)
     .listSync(recursive: true)
     .whereType<File>()
     .where((f) => f.path.endsWith('.dart'))
@@ -127,3 +115,36 @@ Iterable<File> _domainFiles() => Directory('lib/domain')
     // name) and is not hand-edited.
     .where((f) => !f.path.endsWith('.freezed.dart'))
     .where((f) => !f.path.endsWith('.g.dart'));
+
+/// Fails naming every file and line that hands back English, so one run tells
+/// you the whole list rather than the first of it.
+void _expectNoEnglish(Iterable<File> files) {
+  final offences = <String>[];
+  for (final file in files) {
+    final path = file.path;
+    final allowed = _allowed[path] ?? const <String>{};
+    final lines = file.readAsLinesSync();
+    for (var i = 0; i < lines.length; i++) {
+      final line = lines[i];
+      // A line that already names a translator is the FIX, not the fault:
+      // `=> l.somethingLabel` never matches, but a doc comment quoting an old
+      // getter would, so comments are skipped.
+      if (line.trimLeft().startsWith('//')) continue;
+      for (final m in _displayLiteral.allMatches(line)) {
+        final literal = m.group(2)!;
+        if (allowed.any(literal.startsWith)) continue;
+        offences.add('$path:${i + 1}  "$literal"');
+      }
+    }
+  }
+  expect(
+    offences,
+    isEmpty,
+    reason:
+        'these hand back English the manager can read, and nothing under '
+        'lib/ can translate it:\n  ${offences.join('\n  ')}\n'
+        'Move the words to lib/l10n and print them through a translator at '
+        'the display edge. If the value is CANONICAL (stored in a save or '
+        'compared in logic) add it to _allowed with the reason.',
+  );
+}

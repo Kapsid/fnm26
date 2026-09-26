@@ -35,18 +35,27 @@ class AppCard extends StatelessWidget {
 
     final content = Padding(padding: padding, child: child);
 
-    if (onTap == null) {
-      return DecoratedBox(decoration: decoration, child: content);
-    }
-
+    // A Material either way, even when the card does not answer a tap.
+    //
+    // Without one, a plain card was a bare DecoratedBox, and any ListTile
+    // inside it asserted in debug: a ListTile paints its background and its
+    // ink on the nearest Material ANCESTOR, so a DecoratedBox between the two
+    // hides both. The call-up list is a page of ListTiles inside cards and
+    // every one of its tests was throwing that assertion.
+    //
+    // The decoration goes through Ink rather than DecoratedBox so the Material
+    // paints it, which is what keeps the splash on top of the fill instead of
+    // under it.
     return Material(
       color: Colors.transparent,
       borderRadius: AppRadii.baseAll,
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: AppRadii.baseAll,
-        child: Ink(decoration: decoration, child: content),
-      ),
+      child: onTap == null
+          ? Ink(decoration: decoration, child: content)
+          : InkWell(
+              onTap: onTap,
+              borderRadius: AppRadii.baseAll,
+              child: Ink(decoration: decoration, child: content),
+            ),
     );
   }
 }

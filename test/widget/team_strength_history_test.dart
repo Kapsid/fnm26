@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/nation.dart';
+import 'package:fnm/domain/services/competition/cycle_finish.dart';
 import 'package:fnm/features/career/manager_history_providers.dart';
 import 'package:fnm/features/career/manager_history_screen.dart';
 import 'package:fnm/features/stats/stats_providers.dart';
@@ -43,8 +44,8 @@ void main() {
     lost: 2,
     goalsFor: 20,
     goalsAgainst: 10,
-    worldCup: 'Semi-finals',
-    continental: 'Quarter-finals',
+    worldCup: CycleFinish.semiFinals,
+    continental: CycleFinish.quarterFinals,
   );
 
   Future<void> pumpCareer(

@@ -6,6 +6,7 @@ import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
+import 'package:fnm/core/util/career_label.dart';
 import 'package:fnm/core/util/message_text.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/nation.dart';
@@ -305,7 +306,10 @@ class _CycleRolloverScreenState extends ConsumerState<CycleRolloverScreen> {
                     for (final o in v.offers)
                       _OfferTile(
                         nation: o.nation,
-                        subtitle: l.hubOfferSubtitle(o.tier, o.position),
+                        subtitle: l.hubOfferSubtitle(
+                          offerTierLabel(l, o.tier),
+                          o.position,
+                        ),
                         selected: _selected == o.nation.id,
                         onTap: () => setState(() => _selected = o.nation.id),
                       ),
@@ -634,7 +638,10 @@ class _VerdictCard extends StatelessWidget {
               ),
               const SizedBox(width: AppSpacing.xs),
               Text(
-                l.hubReputation(verdict.reputationLabel, verdict.reputation),
+                l.hubReputation(
+                  reputationLabel(l, verdict.reputation),
+                  verdict.reputation,
+                ),
                 style: AppTypography.labelSmall.copyWith(
                   color: AppColors.onSurfaceVariant,
                 ),

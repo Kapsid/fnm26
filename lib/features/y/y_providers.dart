@@ -5,6 +5,7 @@ import 'package:fnm/domain/repositories/competition_repository.dart';
 import 'package:fnm/domain/services/competition/rounds.dart';
 import 'package:fnm/domain/services/match/match_engine.dart';
 import 'package:fnm/domain/services/press/expectation.dart';
+import 'package:fnm/domain/services/press/half_time_swing.dart';
 import 'package:fnm/domain/services/press/press.dart';
 import 'package:fnm/domain/services/press/public_mood.dart';
 import 'package:fnm/domain/services/press/y_feed.dart';
@@ -115,6 +116,12 @@ final AutoDisposeFutureProviderFamily<YTimeline, int> yFeedProvider =
         career.nationId,
       );
 
+      // And how each of those results GOT to its scoreline. The fixture row
+      // keeps only the end of the story, so without the goal minutes the feed
+      // cannot tell a comfortable win from a match that was two down at the
+      // break — which is the one afternoon the country talks about for years.
+      final timeline = await comp.goalTimeline(careerId);
+
       // Oldest first, so a streak counts the matches BEFORE it.
       final chronological = judged.reversed.toList();
       final meetings = <String, int>{};
@@ -186,6 +193,31 @@ final AutoDisposeFutureProviderFamily<YTimeline, int> yFeedProvider =
               ),
               date: j.date,
               key: 'red:${j.key}:${i.playerId}',
+              nation: nation,
+              seed: career.rngSeed,
+              standing: standing,
+              history: [...standingsSoFar],
+            ),
+          );
+        }
+        // An afternoon the second half turned over, either way. Competitive
+        // only, like the press room's version: a warm-up that swings two goals
+        // is not evidence and the country does not treat it as any.
+        final swing = fixtureId == null || !j.competitive
+            ? null
+            : halfTimeSwingOf(
+                goals: timeline[fixtureId] ?? const [],
+                nationId: career.nationId,
+                scored: j.scored,
+                conceded: j.conceded,
+              );
+        if (swing != null) {
+          incidentPosts.addAll(
+            YFeed.forSwing(
+              swing: swing,
+              opponent: j.opponent,
+              date: j.date,
+              key: 'swing:${j.key}',
               nation: nation,
               seed: career.rngSeed,
               standing: standing,

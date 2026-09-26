@@ -243,6 +243,7 @@ class ContinentalDetailScreen extends ConsumerWidget {
                     runSummary: !data.isPlayerRegion
                         ? null
                         : playerRunSummary(
+                            l,
                             playerNationId: data.playerNationId,
                             champion: data.champion,
                             knockout: data.knockout,

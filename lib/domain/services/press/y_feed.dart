@@ -1,6 +1,7 @@
 import 'package:fnm/core/util/text_variety.dart';
 import 'package:fnm/domain/services/match/match_engine.dart';
 import 'package:fnm/domain/services/press/expectation.dart';
+import 'package:fnm/domain/services/press/half_time_swing.dart';
 import 'package:fnm/domain/services/press/press.dart';
 import 'package:fnm/domain/services/press/persona.dart';
 import 'package:fnm/domain/services/competition/rounds.dart';
@@ -103,6 +104,16 @@ enum YTemplate {
   /// rather than from a scoreline: the feed could see that a match was lost
   /// and never that it was lost a man short.
   sentOff,
+
+  /// Two goals down at half time, and it finished level or won.
+  ///
+  /// The pair below read the match the way [sentOff] does rather than the
+  /// scoreline, and they are the one pair whose Czech does not translate its
+  /// English: see the copy, which says why.
+  turnedItRound,
+
+  /// Two goals up at half time, and it finished level or lost.
+  threwItAway,
 
   /// The board's patience, in public.
   boardPressure,
@@ -308,7 +319,12 @@ abstract final class YFeed {
     YTemplate.boardPressure => midVariantCount,
     YTemplate.debut ||
     YTemplate.drought ||
-    YTemplate.rivalryLooms => subjectVariantCount,
+    YTemplate.rivalryLooms ||
+    // Six rather than four for the same reason the squad templates take six:
+    // the bands cut a total into thirds, and a joke a loyalist tells and a
+    // joke a cynic tells need a pair apiece to choose between.
+    YTemplate.turnedItRound ||
+    YTemplate.threwItAway => subjectVariantCount,
     _ => variantCount,
   };
 
@@ -988,6 +1004,66 @@ abstract final class YFeed {
     ];
   }
 
+  /// What the country says about an afternoon the second half turned over.
+  ///
+  /// It reads the same [halfTimeSwingOf] the press room does, so the question a
+  /// reporter puts to the manager and the posts under it are two readings of
+  /// one match rather than two systems that happen to agree.
+  ///
+  /// The wordings are where this one is unusual: in Czech they are built on a
+  /// local in-joke and in English they are not, deliberately. The DOMAIN knows
+  /// nothing about that — it decides that there is a post and which band of
+  /// wordings the author reaches for, exactly as it does for a red card.
+  static List<YPost> forSwing({
+    required HalfTimeSwing swing,
+    required String opponent,
+    required DateTime date,
+    required String key,
+    required String nation,
+    required int seed,
+    ResultStanding standing = ResultStanding.par,
+    List<ResultStanding> history = const [],
+  }) {
+    final template = swing == HalfTimeSwing.comeback
+        ? YTemplate.turnedItRound
+        : YTemplate.threwItAway;
+    final posts = [
+      // The same two accounts a red card draws: one of our own, and the former
+      // international with a column. The supporters' pool holds no loyalist and
+      // the ex-pros' holds both a loyalist and a cynic, which is what lets one
+      // afternoon read two ways.
+      for (final voice in const [YVoice.fan, YVoice.expro])
+        () {
+          final persona = personaFor(voice, nation, seed, key);
+          return _post(
+            voice: voice,
+            template: template,
+            args: [opponent],
+            date: date,
+            key: key,
+            nation: nation,
+            seed: seed,
+            tone: YCast.toneFor(
+              persona,
+              standing,
+              YCast.stance(persona, history),
+            ),
+          );
+        }(),
+    ];
+    return [
+      ...posts,
+      ...repliesTo(
+        posts.first,
+        mood: moodOf(template),
+        nation: nation,
+        seed: seed,
+        standing: standing,
+        history: history,
+      ),
+    ];
+  }
+
   /// The things that happen to a nation a handful of times a cycle, as opposed
   /// to the running commentary on its results.
   ///
@@ -1214,6 +1290,10 @@ abstract final class YFeed {
     // A knock is bad luck and a red card is somebody's fault, which is the
     // difference between the room despairing and the room turning on him.
     YTemplate.sentOff => YMood.fury,
+    // Coming from two down is the best afternoon there is short of a trophy;
+    // losing from two up is the one the room does not forgive.
+    YTemplate.turnedItRound => YMood.elation,
+    YTemplate.threwItAway => YMood.fury,
     YTemplate.winStreak || YTemplate.toldYouSo => YMood.smugness,
     // A boy handed a shirt is the one bit of good news that is not a result,
     // and a forward who cannot score is the one bit of bad news that is not

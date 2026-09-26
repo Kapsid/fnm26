@@ -131,6 +131,23 @@ final class PressSubjectIncident extends PressSubject {
   final bool fromLastMatch;
 }
 
+/// The MATCH, when what is being asked about happened over ninety minutes
+/// rather than in one of them or to one man.
+///
+/// A two-goal half-time lead thrown away is the thing that just happened on the
+/// pitch as surely as a sending-off is, and belongs at the front of the room for
+/// the same reason (see [Press.precedenceOf]) — but it happened to nobody in
+/// particular, so it cannot be a [PressSubjectIncident] and must not be filed
+/// as the generic team question either.
+final class PressSubjectMatch extends PressSubject {
+  const PressSubjectMatch({this.fromLastMatch = true});
+
+  /// Whether it was the match the country is still talking about. Same reading
+  /// as [PressSubjectIncident.fromLastMatch]: once another has been played, the
+  /// afternoon is no longer the last thing that happened.
+  final bool fromLastMatch;
+}
+
 /// One question, asked once.
 typedef PressQuestion = ({
   /// Stable and unique — a question with this key is never asked again.
@@ -302,6 +319,15 @@ enum PressTopic {
   /// A goal in the last ten minutes that changed the result, for or against.
   lateDrama,
 
+  /// Two goals down at half time, and it finished level or won.
+  ///
+  /// The two below are the only place in the app where the two languages say
+  /// deliberately different things — see the copy.
+  halfTimeComeback,
+
+  /// Two goals up at half time, and it finished level or lost.
+  halfTimeCollapse,
+
   // The six below read the SQUAD: who is in it, who is out of it, who is
   // wearing the armband and who is finishing. Every one of them names a man —
   // see [PressSubjectPlayer] — because a conference that says "your forward"
@@ -402,6 +428,8 @@ abstract final class Press {
     PressTopic.injuryBlow => 'knock',
     PressTopic.shootoutFate => 'shootout',
     PressTopic.lateDrama => 'late',
+    PressTopic.halfTimeComeback => 'turnaround',
+    PressTopic.halfTimeCollapse => 'thrownaway',
     PressTopic.strikerDrought => 'drought',
     PressTopic.youngsterBreakthrough => 'young',
     PressTopic.droppedStar => 'dropped',
@@ -494,9 +522,10 @@ abstract final class Press {
   /// rather than holding the front of the room on seniority.
   static int precedenceOf(PressSubject subject) => switch (subject) {
     PressSubjectIncident(:final fromLastMatch) when fromLastMatch => 0,
+    PressSubjectMatch(:final fromLastMatch) when fromLastMatch => 0,
     PressSubjectPlayer() => 1,
     PressSubjectOpponent() => 2,
-    PressSubjectIncident() || PressSubjectTeam() => 3,
+    PressSubjectIncident() || PressSubjectMatch() || PressSubjectTeam() => 3,
   };
 
   /// The candidates the room would actually lead with: everything sharing the
@@ -793,6 +822,21 @@ abstract final class Press {
       PressTone.demandMore,
       PressTone.playItDown,
     ],
+    // Two down and it was turned round: the room wants to know whether that is
+    // character or whether the first half is the problem.
+    PressTopic.halfTimeComeback => const [
+      PressTone.backThePlayers,
+      PressTone.raiseTheBar,
+      PressTone.demandMore,
+      PressTone.playItDown,
+    ],
+    // Two up and it was thrown away. Nobody is being talked up here.
+    PressTopic.halfTimeCollapse => const [
+      PressTone.takeTheBlame,
+      PressTone.backThePlayers,
+      PressTone.demandMore,
+      PressTone.playItDown,
+    ],
     // A forward who cannot score. Back him, say out loud that it has to stop,
     // or refuse to make him the story.
     PressTopic.strikerDrought => const [
@@ -889,7 +933,10 @@ abstract final class Press {
     PressTopic.overachieving ||
     PressTopic.injuryBlow ||
     PressTopic.shootoutFate ||
-    PressTopic.lateDrama => 2,
+    PressTopic.lateDrama ||
+    // A turnaround either way: what happened, and what it says about the side.
+    PressTopic.halfTimeComeback ||
+    PressTopic.halfTimeCollapse => 2,
     // A man, or the side you are about to play. Two questions each: the thing
     // itself, and what the manager intends to do about it. A selection row is
     // not a post-mortem and does not need an afternoon.
