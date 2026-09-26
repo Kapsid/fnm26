@@ -275,7 +275,7 @@ abstract class AppLocalizations {
   /// Opening-ceremony banner heading with the edition year.
   ///
   /// In en, this message translates to:
-  /// **'WORLD CUP {year}'**
+  /// **'WORLD CHAMPIONSHIP {year}'**
   String ceremonyWorldCupYear(int year);
 
   /// Opening-ceremony tagline.
@@ -638,10 +638,10 @@ abstract class AppLocalizations {
   /// **'MOST CAPPED'**
   String get recordsMostCapped;
 
-  /// Leaderboard heading.
+  /// Leaderboard heading: most starts in the World Championship finals. The competition carries that name everywhere the manager can read it, and never the trademarked one.
   ///
   /// In en, this message translates to:
-  /// **'MOST WORLD CUP STARTS'**
+  /// **'MOST WORLD CHAMPIONSHIP STARTS'**
   String get recordsMostWcStarts;
 
   /// Leaderboard heading.
@@ -11277,10 +11277,10 @@ abstract class AppLocalizations {
   /// **'LEAGUE {letter}'**
   String tourStatusLeague(String letter);
 
-  /// Draw-ceremony heading.
+  /// Draw-ceremony heading for World Championship qualifying. Says "world" rather than the full competition name because the full one does not fit the heading on a narrow phone, and the screen the manager is already on supplies the rest. Matches tourContWorldQualifyingDraw, the heading above it.
   ///
   /// In en, this message translates to:
-  /// **'WORLD CUP QUALIFYING DRAW'**
+  /// **'WORLD QUALIFYING DRAW'**
   String get tourDrawWcQualifying;
 
   /// Draw-ceremony heading.
@@ -11289,10 +11289,10 @@ abstract class AppLocalizations {
   /// **'{cup} QUALIFYING DRAW'**
   String tourDrawContQualifying(String cup);
 
-  /// Host-draw ceremony heading.
+  /// Host-draw ceremony heading. Printed with the year after it, and allowed to wrap onto a second line as the continental heading beside it already does.
   ///
   /// In en, this message translates to:
-  /// **'WORLD CUP HOST'**
+  /// **'WORLD CHAMPIONSHIP HOST'**
   String get tourDrawWcHost;
 
   /// Host-draw ceremony heading.

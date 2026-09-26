@@ -136,7 +136,7 @@
   "@matchSwingDef": {
     "description": "Abbreviation for the defensive swing from a team talk."
   },
-  "ceremonyWorldCupYear": "WORLD CUP {year}",
+  "ceremonyWorldCupYear": "WORLD CHAMPIONSHIP {year}",
   "@ceremonyWorldCupYear": {
     "description": "Opening-ceremony banner heading with the edition year.",
     "placeholders": {
@@ -413,9 +413,9 @@
   "@recordsMostCapped": {
     "description": "Leaderboard heading (global most caps)."
   },
-  "recordsMostWcStarts": "MOST WORLD CUP STARTS",
+  "recordsMostWcStarts": "MOST WORLD CHAMPIONSHIP STARTS",
   "@recordsMostWcStarts": {
-    "description": "Leaderboard heading."
+    "description": "Leaderboard heading: most starts in the World Championship finals. The competition carries that name everywhere the manager can read it, and never the trademarked one."
   },
   "recordsMostTournaments": "MOST TOURNAMENTS ATTENDED",
   "@recordsMostTournaments": {
@@ -10677,9 +10677,9 @@
       }
     }
   },
-  "tourDrawWcQualifying": "WORLD CUP QUALIFYING DRAW",
+  "tourDrawWcQualifying": "WORLD QUALIFYING DRAW",
   "@tourDrawWcQualifying": {
-    "description": "Draw-ceremony heading."
+    "description": "Draw-ceremony heading for World Championship qualifying. Says \"world\" rather than the full competition name because the full one does not fit the heading on a narrow phone, and the screen the manager is already on supplies the rest. Matches tourContWorldQualifyingDraw, the heading above it."
   },
   "tourDrawContQualifying": "{cup} QUALIFYING DRAW",
   "@tourDrawContQualifying": {
@@ -10691,9 +10691,9 @@
       }
     }
   },
-  "tourDrawWcHost": "WORLD CUP HOST",
+  "tourDrawWcHost": "WORLD CHAMPIONSHIP HOST",
   "@tourDrawWcHost": {
-    "description": "Host-draw ceremony heading."
+    "description": "Host-draw ceremony heading. Printed with the year after it, and allowed to wrap onto a second line as the continental heading beside it already does."
   },
   "tourDrawContHost": "{cup} HOST",
   "@tourDrawContHost": {

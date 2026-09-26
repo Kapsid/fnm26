@@ -105,7 +105,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String ceremonyWorldCupYear(int year) {
-    return 'WORLD CUP $year';
+    return 'WORLD CHAMPIONSHIP $year';
   }
 
   @override
@@ -303,7 +303,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get recordsMostCapped => 'MOST CAPPED';
 
   @override
-  String get recordsMostWcStarts => 'MOST WORLD CUP STARTS';
+  String get recordsMostWcStarts => 'MOST WORLD CHAMPIONSHIP STARTS';
 
   @override
   String get recordsMostTournaments => 'MOST TOURNAMENTS ATTENDED';
@@ -7181,7 +7181,7 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get tourDrawWcQualifying => 'WORLD CUP QUALIFYING DRAW';
+  String get tourDrawWcQualifying => 'WORLD QUALIFYING DRAW';
 
   @override
   String tourDrawContQualifying(String cup) {
@@ -7189,7 +7189,7 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get tourDrawWcHost => 'WORLD CUP HOST';
+  String get tourDrawWcHost => 'WORLD CHAMPIONSHIP HOST';
 
   @override
   String tourDrawContHost(String cup) {

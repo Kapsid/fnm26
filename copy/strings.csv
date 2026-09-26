@@ -28,7 +28,7 @@ matchStatRedCards,Match stat bar label: red cards.,,Reds,Červené
 matchMomentum,Label on the live momentum bar.,,MOMENTUM,MOMENTUM
 matchSwingAtk,Abbreviation for the attack swing from a team talk.,,ATK,ÚT
 matchSwingDef,Abbreviation for the defensive swing from a team talk.,,DEF,OBR
-ceremonyWorldCupYear,Opening-ceremony banner heading with the edition year.,{year},WORLD CUP {year},MISTROVSTVÍ SVĚTA {year}
+ceremonyWorldCupYear,Opening-ceremony banner heading with the edition year.,{year},WORLD CHAMPIONSHIP {year},MISTROVSTVÍ SVĚTA {year}
 ceremonyFinalsAreHere,Opening-ceremony tagline.,,THE FINALS ARE HERE,FINÁLOVÝ TURNAJ ZAČÍNÁ
 ceremonyHostedBy,Opening-ceremony host line.,{hosts},HOSTED BY  {hosts},POŘÁDÁ  {hosts}
 ceremonyHostTbc,Shown when the host isn't known yet.,,HOST TO BE CONFIRMED,POŘADATEL BUDE POTVRZEN
@@ -89,7 +89,7 @@ recordsHallOfFame,Heading over the hall-of-fame list.,,HALL OF FAME,SÍŇ SLÁVY
 recordsAllTimeWorld,Title of the global all-time records screen / nav card.,,ALL-TIME WORLD,SVĚTOVÉ REKORDY
 recordsAllTimeTopScorers,Leaderboard heading.,,ALL-TIME TOP SCORERS,NEJLEPŠÍ STŘELCI HISTORIE
 recordsMostCapped,Leaderboard heading (global most caps).,,MOST CAPPED,NEJVÍCE STARTŮ
-recordsMostWcStarts,Leaderboard heading.,,MOST WORLD CUP STARTS,NEJVÍCE STARTŮ NA MS
+recordsMostWcStarts,"Leaderboard heading: most starts in the World Championship finals. The competition carries that name everywhere the manager can read it, and never the trademarked one.",,MOST WORLD CHAMPIONSHIP STARTS,NEJVÍCE STARTŮ NA MS
 recordsMostTournaments,Leaderboard heading.,,MOST TOURNAMENTS ATTENDED,NEJVÍCE ODEHRANÝCH TURNAJŮ
 recordsRecordBook,Record book screen title.,,RECORD BOOK,KNIHA REKORDŮ
 recordsHeadToHead,Head-to-head screen title / nav card.,,HEAD TO HEAD,VZÁJEMNÉ ZÁPASY
@@ -1686,9 +1686,9 @@ confNorthAmerica,Continent name (North & Central America and the Caribbean).,,No
 confAfrica,Continent name.,,Africa,Afrika
 confAsia,Continent name.,,Asia,Asie
 confOceania,Continent name.,,Oceania,Oceánie
-compWorldCup,Competition name shown to the manager. The stored name stays English.,,World Championship,Světový šampionát
+compWorldCup,Competition name shown to the manager. The stored name stays English.,,World Championship,Mistrovství světa
 compWorldCupFinals,Competition name: the World Championship finals tournament.,,World Championship Finals,Finálový turnaj šampionátu
-compWorldCupQualifying,"Competition name: World Championship qualifying, region unspecified.",,World Championship Qualifying,Kvalifikace: Světový šampionát
+compWorldCupQualifying,"Competition name: World Championship qualifying, region unspecified.",,World Championship Qualifying,Kvalifikace: Mistrovství světa
 compQualifiers,Competition name: one continent's World Championship qualifying campaign.,{region},{region} Qualifiers,Kvalifikace: {region}
 compFriendlies,Competition name for the friendly-match container.,,Friendlies,Přátelská utkání
 compNationsCup,Competition name.,,Nations Cup,Pohár národů
@@ -1852,9 +1852,9 @@ tourStatusInProgress,Tournament tile status.,,IN PROGRESS,PROBÍHÁ
 tourStatusComingSoon,Tournament tile status.,,COMING SOON,BRZY
 tourStatusDecided,Tournament tile status.,,DECIDED,ROZHODNUTO
 tourStatusLeague,Tournament tile status: which Nations Cup league the manager is in.,{letter},LEAGUE {letter},LIGA {letter}
-tourDrawWcQualifying,Draw-ceremony heading.,,WORLD CUP QUALIFYING DRAW,LOS KVALIFIKACE MS
+tourDrawWcQualifying,"Draw-ceremony heading for World Championship qualifying. Says ""world"" rather than the full competition name because the full one does not fit the heading on a narrow phone, and the screen the manager is already on supplies the rest. Matches tourContWorldQualifyingDraw, the heading above it.",,WORLD QUALIFYING DRAW,LOS KVALIFIKACE MS
 tourDrawContQualifying,Draw-ceremony heading.,{cup},{cup} QUALIFYING DRAW,LOS KVALIFIKACE: {cup}
-tourDrawWcHost,Host-draw ceremony heading.,,WORLD CUP HOST,POŘADATEL MS
+tourDrawWcHost,"Host-draw ceremony heading. Printed with the year after it, and allowed to wrap onto a second line as the continental heading beside it already does.",,WORLD CHAMPIONSHIP HOST,POŘADATEL MS
 tourDrawContHost,Host-draw ceremony heading.,{cup},{cup} HOST,POŘADATEL: {cup}
 tourKickoffContinentalCup,Fallback tournament name on the opening-ceremony screen.,,CONTINENTAL CUP,KONTINENTÁLNÍ POHÁR
 tourHostCompetitionYear,Host banner: the competition and its year.,{competition} {year},{competition} {year},{competition} {year}
