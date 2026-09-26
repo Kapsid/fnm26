@@ -10696,6 +10696,18 @@
     "description": "Host-draw ceremony heading. Printed with the year after it, and allowed to wrap onto a second line as the continental heading beside it already does."
   },
   "tourDrawContHost": "{cup} HOST",
+  "tourDrawHostsReveal": "And the hosts will be…",
+  "@tourDrawHostsReveal": {
+    "description": "Host-draw ceremony line, more than one host."
+  },
+  "tourDrawHostReveal": "And the host will be…",
+  "@tourDrawHostReveal": {
+    "description": "Host-draw ceremony line, a single host."
+  },
+  "tourDrawHostCandidates": "The candidates in the running:",
+  "@tourDrawHostCandidates": {
+    "description": "Host-draw ceremony line, before the reveal."
+  },
   "@tourDrawContHost": {
     "description": "Host-draw ceremony heading.",
     "placeholders": {

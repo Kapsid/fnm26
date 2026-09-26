@@ -1856,6 +1856,9 @@ tourDrawWcQualifying,"Draw-ceremony heading for World Championship qualifying. S
 tourDrawContQualifying,Draw-ceremony heading.,{cup},{cup} QUALIFYING DRAW,LOS KVALIFIKACE: {cup}
 tourDrawWcHost,"Host-draw ceremony heading. Printed with the year after it, and allowed to wrap onto a second line as the continental heading beside it already does.",,WORLD CHAMPIONSHIP HOST,POŘADATEL MS
 tourDrawContHost,Host-draw ceremony heading.,{cup},{cup} HOST,POŘADATEL: {cup}
+tourDrawHostsReveal,"Host-draw ceremony line, more than one host.",,And the hosts will be…,A pořadateli budou…
+tourDrawHostReveal,"Host-draw ceremony line, a single host.",,And the host will be…,A pořadatelem bude…
+tourDrawHostCandidates,"Host-draw ceremony line, before the reveal.",,The candidates in the running:,Kandidáti ve hře:
 tourKickoffContinentalCup,Fallback tournament name on the opening-ceremony screen.,,CONTINENTAL CUP,KONTINENTÁLNÍ POHÁR
 tourHostCompetitionYear,Host banner: the competition and its year.,{competition} {year},{competition} {year},{competition} {year}
 newsContMissTitle,Inbox: failed to qualify for the continental cup.,{cup},{cup} missed,{cup} bez nás

@@ -7222,6 +7222,15 @@ class AppLocalizationsCs extends AppLocalizations {
   }
 
   @override
+  String get tourDrawHostsReveal => 'A pořadateli budou…';
+
+  @override
+  String get tourDrawHostReveal => 'A pořadatelem bude…';
+
+  @override
+  String get tourDrawHostCandidates => 'Kandidáti ve hře:';
+
+  @override
   String get tourKickoffContinentalCup => 'KONTINENTÁLNÍ POHÁR';
 
   @override

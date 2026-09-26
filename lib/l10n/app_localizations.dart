@@ -11301,6 +11301,24 @@ abstract class AppLocalizations {
   /// **'{cup} HOST'**
   String tourDrawContHost(String cup);
 
+  /// Host-draw ceremony line, more than one host.
+  ///
+  /// In en, this message translates to:
+  /// **'And the hosts will be…'**
+  String get tourDrawHostsReveal;
+
+  /// Host-draw ceremony line, a single host.
+  ///
+  /// In en, this message translates to:
+  /// **'And the host will be…'**
+  String get tourDrawHostReveal;
+
+  /// Host-draw ceremony line, before the reveal.
+  ///
+  /// In en, this message translates to:
+  /// **'The candidates in the running:'**
+  String get tourDrawHostCandidates;
+
   /// Fallback tournament name on the opening-ceremony screen.
   ///
   /// In en, this message translates to:

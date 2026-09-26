@@ -7197,6 +7197,15 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get tourDrawHostsReveal => 'And the hosts will be…';
+
+  @override
+  String get tourDrawHostReveal => 'And the host will be…';
+
+  @override
+  String get tourDrawHostCandidates => 'The candidates in the running:';
+
+  @override
   String get tourKickoffContinentalCup => 'CONTINENTAL CUP';
 
   @override
