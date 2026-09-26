@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Every page is listed once per language, and each entry names BOTH
+     language versions plus x-default, which is what tells a search engine
+     the two are the same page rather than duplicates of each other. -->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+
+  <url>
+    <loc>https://footballnationsmanager.com/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://footballnationsmanager.com/"/>
+    <xhtml:link rel="alternate" hreflang="cs" href="https://footballnationsmanager.com/cs/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://footballnationsmanager.com/"/>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://footballnationsmanager.com/cs/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://footballnationsmanager.com/"/>
+    <xhtml:link rel="alternate" hreflang="cs" href="https://footballnationsmanager.com/cs/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://footballnationsmanager.com/"/>
+    <priority>1.0</priority>
+  </url>
+
+  <url>
+    <loc>https://footballnationsmanager.com/support.html</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://footballnationsmanager.com/support.html"/>
+    <xhtml:link rel="alternate" hreflang="cs" href="https://footballnationsmanager.com/cs/support.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://footballnationsmanager.com/support.html"/>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://footballnationsmanager.com/cs/support.html</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://footballnationsmanager.com/support.html"/>
+    <xhtml:link rel="alternate" hreflang="cs" href="https://footballnationsmanager.com/cs/support.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://footballnationsmanager.com/support.html"/>
+    <priority>0.6</priority>
+  </url>
+
+  <url>
+    <loc>https://footballnationsmanager.com/privacy.html</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://footballnationsmanager.com/privacy.html"/>
+    <xhtml:link rel="alternate" hreflang="cs" href="https://footballnationsmanager.com/cs/privacy.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://footballnationsmanager.com/privacy.html"/>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://footballnationsmanager.com/cs/privacy.html</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://footballnationsmanager.com/privacy.html"/>
+    <xhtml:link rel="alternate" hreflang="cs" href="https://footballnationsmanager.com/cs/privacy.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://footballnationsmanager.com/privacy.html"/>
+    <priority>0.3</priority>
+  </url>
+
+</urlset>

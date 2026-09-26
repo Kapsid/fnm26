@@ -1,0 +1,8 @@
+# Football Nations Manager
+User-agent: *
+Allow: /
+
+# The error page is noindex in its own head; this keeps crawlers off it too.
+Disallow: /404.html
+
+Sitemap: https://footballnationsmanager.com/sitemap.xml

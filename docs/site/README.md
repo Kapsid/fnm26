@@ -84,6 +84,23 @@ then. The Google badge has had its built-in clear space trimmed off, so both
 badges are set to the same height and genuinely match; do not replace that
 file with a fresh download without trimming it again.
 
+### Search and sharing
+
+`robots.txt`, `sitemap.xml` and a `SoftwareApplication` block of JSON-LD on
+both home pages. The sitemap lists each page once per language and names both
+alternates plus `x-default`, which is what tells a search engine the two are
+one page in two languages and not duplicates.
+
+`og-image.jpg` and `og-image-cs.jpg` are the 1200x630 share cards. They exist
+because `og:image` used to point at `icon.png`, which is 180x180, while
+`twitter:card` asked for `summary_large_image`: every share of the site was
+being dropped or shrunk to a thumbnail. Regenerate them if the claim line
+changes; they are composed from `logo.png` and the app's own TTF.
+
+The JSON-LD deliberately carries NO `offers` block. The price is not stated
+on the page, and structured data that claims something the page does not show
+is treated as a mismatch.
+
 Two things to keep in mind whenever you edit:
 
 - **Bump `?v=` on the stylesheet link** in all seven pages. `.htaccess` tells

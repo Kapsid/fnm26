@@ -50,9 +50,12 @@ pictures are first. Captions live in `index.html` and `cs/index.html`.
 5. The group draw, "The draw" / "Los"
 6. A player's detail, "Your players" / "Hráči"
 
-The shots are in ENGLISH on both language trees. Shooting a Czech set is a
-nice-to-have, not a requirement; if you do, they go in a `cs/shots/` of their
-own and `cs/index.html` points at that instead.
+There is now a CZECH set too, in `cs/shots/`, made the same way and referenced
+by `cs/index.html` as `shots/...` (relative to itself, not `../shots/`). The
+two sets are NOT the same six: the Czech source had no draw ceremony shot, so
+its fifth and sixth slides are the player detail and the youth pyramid, and
+the English fifth slide is the draw. If a Czech draw shot turns up, it can go
+back in step.
 
 Deliberately left out of the carousel: the manager skills, the federation
 budget, the challenges and the board objectives. Every one of those was shot
