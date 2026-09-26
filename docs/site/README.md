@@ -82,9 +82,6 @@ The URLs are shared by both trees; the prose is per language:
   write each in its own language.
 - `me.jpg` a portrait, roughly 4:5, at the root. Missing, the portrait removes
   itself on both pages.
-- `shots/shot-1.jpg` … `shot-5.jpg` phone screenshots, 9:19.5, at the root.
-  Missing, each slide keeps a dashed frame, so the carousel still reads as a
-  carousel while it is being filled.
 
 Nothing in that list breaks the page by being absent; see the script at the
 bottom of `index.html`, which `cs/index.html` carries too.

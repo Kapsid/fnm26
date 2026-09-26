@@ -158,9 +158,10 @@ section:first-of-type { border-top: 0; }
 .slide img {
   width: 100%;
   display: block;
-  /* Phone-shaped whatever arrives, so a slide holds its place before the
-     image decodes and the row does not jump as the shots load in. */
-  aspect-ratio: 9 / 19.5;
+  /* The shots' own ratio, so nothing is cropped and a slide holds its place
+     before the image decodes: the row does not jump as the shots load in.
+     Change this only with the shots; see shots/README.md. */
+  aspect-ratio: 500 / 1010;
   object-fit: cover;
   border-radius: 18px;
   border: 1px solid var(--line-bright);
@@ -179,7 +180,7 @@ section:first-of-type { border-top: 0; }
 .slide.empty::before {
   content: '';
   display: block;
-  aspect-ratio: 9 / 19.5;
+  aspect-ratio: 500 / 1010;
   border-radius: 18px;
   border: 1px dashed var(--line-bright);
   background:
@@ -301,3 +302,75 @@ footer nav { display: flex; gap: 18px; flex-wrap: wrap; }
 /* The inner pages already carry their own top padding, so the switcher sits
    inside that rather than adding to it. */
 .doc > .lang { padding-top: 0; margin-bottom: 22px; }
+
+
+/* ---------- lightbox ---------- */
+
+/* A slide is a button, so it is reachable by keyboard and announces itself.
+   It must not look like one: the frame IS the picture. */
+.shot {
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: zoom-in;
+  border-radius: 18px;
+}
+.shot:focus-visible { outline: 2px solid var(--steel); outline-offset: 3px; }
+
+#lb[hidden] { display: none; }
+
+#lb {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: max(16px, env(safe-area-inset-top, 0px)) 16px
+           max(16px, env(safe-area-inset-bottom, 0px));
+  background: rgba(8, 9, 11, .92);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+}
+#lb img {
+  max-width: min(100%, 460px);
+  max-height: 100%;
+  width: auto;
+  border-radius: 14px;
+  border: 1px solid var(--line-bright);
+  box-shadow: 0 30px 80px rgba(0, 0, 0, .7);
+}
+/* The controls sit on the backdrop, not on the picture, so they never cover
+   the thing you opened the lightbox to see. */
+#lb button {
+  position: absolute;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  border: 1px solid var(--line-bright);
+  background: linear-gradient(180deg, #2a2f36, #1a1e23);
+  color: var(--text);
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+}
+#lb button:hover { border-color: rgba(228, 230, 233, .42); }
+#lb .x { top: max(14px, env(safe-area-inset-top, 0px)); right: 14px; }
+#lb .p { left: 14px; top: 50%; transform: translateY(-50%); }
+#lb .n { right: 14px; top: 50%; transform: translateY(-50%); }
+#lb .cap {
+  position: absolute;
+  bottom: max(14px, env(safe-area-inset-bottom, 0px));
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-size: 13px;
+  color: var(--muted);
+}
+/* Narrow phones have no room for side arrows beside the picture, and swiping
+   the carousel is the gesture people reach for there anyway. */
+@media (max-width: 560px) {
+  #lb .p, #lb .n { display: none; }
+}

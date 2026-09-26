@@ -75,24 +75,64 @@
     <div class="carousel">
       <div class="track" id="track">
         <figure class="slide">
-          <img src="shots/shot-1.jpg" alt="Match">
-          <figcaption>Match</figcaption>
+          <button type="button" class="shot"
+                  data-full="shots/shot-1-full.jpg"
+                  data-cap="Every nation"
+                  aria-label="Open Every nation full size">
+            <img src="shots/shot-1.jpg" alt="Every nation" loading="lazy"
+                 width="500" height="1010">
+          </button>
+          <figcaption>Every nation</figcaption>
         </figure>
         <figure class="slide">
-          <img src="shots/shot-2.jpg" alt="Tactics">
-          <figcaption>Tactics</figcaption>
+          <button type="button" class="shot"
+                  data-full="shots/shot-2-full.jpg"
+                  data-cap="Your lineup"
+                  aria-label="Open Your lineup full size">
+            <img src="shots/shot-2.jpg" alt="Your lineup" loading="lazy"
+                 width="500" height="1010">
+          </button>
+          <figcaption>Your lineup</figcaption>
         </figure>
         <figure class="slide">
-          <img src="shots/shot-3.jpg" alt="Squad">
-          <figcaption>Squad</figcaption>
+          <button type="button" class="shot"
+                  data-full="shots/shot-3-full.jpg"
+                  data-cap="Match day"
+                  aria-label="Open Match day full size">
+            <img src="shots/shot-3.jpg" alt="Match day" loading="lazy"
+                 width="500" height="1010">
+          </button>
+          <figcaption>Match day</figcaption>
         </figure>
         <figure class="slide">
-          <img src="shots/shot-4.jpg" alt="Draw">
-          <figcaption>Draw</figcaption>
+          <button type="button" class="shot"
+                  data-full="shots/shot-4-full.jpg"
+                  data-cap="Half time"
+                  aria-label="Open Half time full size">
+            <img src="shots/shot-4.jpg" alt="Half time" loading="lazy"
+                 width="500" height="1010">
+          </button>
+          <figcaption>Half time</figcaption>
         </figure>
         <figure class="slide">
-          <img src="shots/shot-5.jpg" alt="Ranking">
-          <figcaption>Ranking</figcaption>
+          <button type="button" class="shot"
+                  data-full="shots/shot-5-full.jpg"
+                  data-cap="The draw"
+                  aria-label="Open The draw full size">
+            <img src="shots/shot-5.jpg" alt="The draw" loading="lazy"
+                 width="500" height="1010">
+          </button>
+          <figcaption>The draw</figcaption>
+        </figure>
+        <figure class="slide">
+          <button type="button" class="shot"
+                  data-full="shots/shot-6-full.jpg"
+                  data-cap="Your players"
+                  aria-label="Open Your players full size">
+            <img src="shots/shot-6.jpg" alt="Your players" loading="lazy"
+                 width="500" height="1010">
+          </button>
+          <figcaption>Your players</figcaption>
         </figure>
       </div>
       <div class="arrows">
@@ -159,6 +199,54 @@
       });
     });
   }
+
+  // The lightbox. The full-size file is only fetched when a slide is opened,
+  // so the page still loads six small shots and nothing else.
+  var lb = document.getElementById('lb');
+  if (lb) {
+    var shots = [].slice.call(document.querySelectorAll('.shot'));
+    var big = lb.querySelector('img');
+    var cap = lb.querySelector('.cap');
+    var at = -1;
+    var opener = null;
+
+    function show(i) {
+      at = (i + shots.length) % shots.length;
+      var s = shots[at];
+      big.src = s.dataset.full;
+      big.alt = s.dataset.cap;
+      cap.textContent = s.dataset.cap;
+    }
+    function open(i, from) {
+      opener = from;
+      show(i);
+      lb.hidden = false;
+      document.body.style.overflow = 'hidden';
+      lb.querySelector('.x').focus();
+    }
+    function close() {
+      lb.hidden = true;
+      document.body.style.overflow = '';
+      // Put the caller back where they were, rather than at the top of the
+      // document, which is where focus lands otherwise.
+      if (opener) { opener.focus(); opener = null; }
+    }
+
+    shots.forEach(function (s, i) {
+      s.addEventListener('click', function () { open(i, s); });
+    });
+    lb.querySelector('.x').addEventListener('click', close);
+    lb.querySelector('.p').addEventListener('click', function () { show(at - 1); });
+    lb.querySelector('.n').addEventListener('click', function () { show(at + 1); });
+    // Only the backdrop closes; a click on the picture or a control must not.
+    lb.addEventListener('click', function (e) { if (e.target === lb) close(); });
+    document.addEventListener('keydown', function (e) {
+      if (lb.hidden) return;
+      if (e.key === 'Escape') close();
+      else if (e.key === 'ArrowLeft') show(at - 1);
+      else if (e.key === 'ArrowRight') show(at + 1);
+    });
+  }
   var me = document.getElementById('me');
   if (me) {
     me.addEventListener('error', function () {
@@ -167,5 +255,12 @@
   }
 })();
 </script>
+<div id="lb" hidden role="dialog" aria-modal="true" aria-label="Screenshot">
+  <img alt="">
+  <button type="button" class="x" aria-label="Close">&#10005;</button>
+  <button type="button" class="p" aria-label="Previous">&#8249;</button>
+  <button type="button" class="n" aria-label="Next">&#8250;</button>
+  <div class="cap"></div>
+</div>
 </body>
 </html>
