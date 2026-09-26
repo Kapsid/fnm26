@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:fnm/core/config/testing_flags.dart';
 import 'package:fnm/core/theme/app_theme.dart';
 import 'package:fnm/domain/services/entitlement/entitlement.dart';
 import 'package:fnm/domain/services/entitlement/entitlement_service.dart';
@@ -123,11 +124,22 @@ void main() {
   // cannot buy anything the only way to tell them apart is to be told which.
   // The line is a testing aid behind kShowStoreDiagnostics; these two hold it
   // to naming the right one.
+  // The two below are written against [kShowStoreDiagnostics] rather than
+  // against one setting of it. The diagnostic is a bench aid that ships off,
+  // so a test that demands the line would fail every release build, and a
+  // test that demands its absence would fail the moment somebody switches the
+  // aid on to debug a store. Both readings are asserted, so whichever way the
+  // flag sits, the pair still says what the paywall must do.
   testWidgets('a device with no store says so', (tester) async {
     await pumpGate(tester, storeAvailable: false);
 
+    // The manager's half is unconditional.
     expect(find.text('Store unavailable'), findsOneWidget);
-    expect(find.textContaining('No store on this device'), findsOneWidget);
+    expect(
+      find.textContaining('No store on this device'),
+      kShowStoreDiagnostics ? findsOneWidget : findsNothing,
+    );
+    // The product id is never shown for this failure, either way.
     expect(find.textContaining(kPremiumProductId), findsNothing);
   });
 
@@ -137,7 +149,10 @@ void main() {
     await pumpGate(tester, storeAvailable: true);
 
     expect(find.text('Store unavailable'), findsOneWidget);
-    expect(find.textContaining(kPremiumProductId), findsOneWidget);
+    expect(
+      find.textContaining(kPremiumProductId),
+      kShowStoreDiagnostics ? findsOneWidget : findsNothing,
+    );
     expect(find.textContaining('No store on this device'), findsNothing);
   });
 
