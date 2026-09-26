@@ -3,18 +3,29 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Not found — Football Nations Manager</title>
-<link rel="icon" href="icon.png">
-<link rel="stylesheet" href="_style.css">
+<title>Not found · Football Nations Manager</title>
+<meta name="robots" content="noindex">
+<!-- One error page serves both languages, so it has no counterpart to point
+     at and nothing to canonicalise: a second one would need a second
+     ErrorDocument in a cs/.htaccess, which is a dotfile in a subfolder on an
+     FTP host. Every path below is root-relative on purpose, because Apache
+     serves this file at whatever URL was missed and a relative href would
+     resolve against that URL instead of the site root. -->
+<link rel="icon" href="/icon.png">
+<link rel="stylesheet" href="/_style.css">
 </head>
 <body>
 <div class="wrap doc">
   <h1 class="chrome">Not found</h1>
   <p class="lede">That page is not here. It may have moved, or the link may
   have a typo in it.</p>
+  <p class="lede" lang="cs">Tahle stránka tu není. Mohla se přesunout, nebo je
+  v odkazu překlep.</p>
   <div class="row" style="justify-content:flex-start;margin-top:24px">
-    <a class="btn" href="index.html">Home</a>
-    <a class="btn" href="support.html">Support</a>
+    <a class="btn" href="/index.html">Home</a>
+    <a class="btn" href="/support.html">Support</a>
+    <a class="btn" href="/cs/" lang="cs" hreflang="cs">Domů</a>
+    <a class="btn" href="/cs/support.html" lang="cs" hreflang="cs">Podpora</a>
   </div>
 </div>
 </body>

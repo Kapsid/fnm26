@@ -1,4 +1,4 @@
-/* FNM — metal on charcoal. The app's own typeface, self-hosted, so the site
+/* FNM, metal on charcoal. The app's own typeface, self-hosted, so the site
    fetches nothing from anywhere. SIL OFL; see fonts-license.txt. */
 
 @font-face {
@@ -258,3 +258,46 @@ footer nav { display: flex; gap: 18px; flex-wrap: wrap; }
 @media (max-width: 779px) {
   .portrait img { max-width: 240px; }
 }
+
+/* ---------- language switcher ---------- */
+
+/* Two segments milled from one piece: the same steel gradient and hairline
+   as the buttons, joined by a shared border so it reads as one control
+   rather than two links that happen to sit together. It is the first thing
+   on every page and the smallest, which is the right order of importance. */
+.lang {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 16px;
+  margin-bottom: 4px;
+}
+.lang a,
+.lang span {
+  padding: 5px 12px;
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: .07em;
+  line-height: 1.5;
+  border: 1px solid var(--line-bright);
+  background: linear-gradient(180deg, #2a2f36, #1a1e23);
+  color: var(--muted);
+  text-decoration: none;
+  transition: border-color .18s, color .18s;
+}
+.lang > :first-child { border-radius: 8px 0 0 8px; }
+.lang > :last-child { border-radius: 0 8px 8px 0; }
+.lang > * + * { margin-left: -1px; }
+.lang a:hover { color: var(--text); border-color: rgba(228,230,233,.42); }
+/* The page you are on is not a link, and is lit rather than merely bold, so
+   the pair still reads at a glance on a phone. */
+.lang [aria-current] {
+  color: var(--text);
+  background: linear-gradient(180deg, #3a4048, #24292f);
+  border-color: rgba(228,230,233,.30);
+  position: relative;
+  z-index: 1;
+}
+
+/* The inner pages already carry their own top padding, so the switcher sits
+   inside that rather than adding to it. */
+.doc > .lang { padding-top: 0; margin-bottom: 22px; }
