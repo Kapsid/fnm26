@@ -251,7 +251,50 @@ footer nav { display: flex; gap: 18px; flex-wrap: wrap; }
 .doc ul { padding-left: 20px; color: var(--text); }
 .doc .updated { color: var(--muted); font-size: 14px; }
 
-/* ---------- store badges ---------- */
+/* ---------- coming soon ---------- */
+
+.soon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+/* Stamped metal: a bevel from the light above, a dark seat below, and a
+   hairline of light along the top edge where a pressed plate always catches
+   it. */
+.plate {
+  display: inline-block;
+  padding: 13px 26px;
+  border-radius: 12px;
+  border: 1px solid rgba(228, 230, 233, .22);
+  background:
+    repeating-linear-gradient(90deg,
+      rgba(255,255,255,.02) 0 1px, transparent 1px 3px),
+    linear-gradient(176deg, #3a4048 0%, #22262c 46%, #191d22 54%, #2b3037 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, .22),
+    inset 0 -1px 0 rgba(0, 0, 0, .55),
+    0 12px 26px rgba(0, 0, 0, .5);
+  font-size: clamp(15px, 1.7vw, 20px);
+  font-weight: 800;
+  letter-spacing: .10em;
+  text-transform: uppercase;
+  /* Engraved rather than chrome: the .chrome ramp needs background-clip:text,
+     which would clip the plate's own metal away with it. A dark shadow under
+     light glyphs reads as stamped and leaves the plate intact. */
+  color: var(--text);
+  text-shadow: 0 1px 0 rgba(0, 0, 0, .65);
+}
+.soon-sub {
+  font-size: 13px;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* ---------- store badges (unused until the app ships; see README) ---------- */
 
 .stores {
   display: flex; gap: 14px; justify-content: center; align-items: center;
@@ -272,14 +315,24 @@ footer nav { display: flex; gap: 18px; flex-wrap: wrap; }
 
 /* ---------- portrait ---------- */
 
-.portrait { margin: 0; }
-.portrait img {
+/* The same bezel the shots wear, so the two framed things on the page are
+   framed the same way. */
+.portrait {
+  margin: 0;
   width: 100%;
   max-width: 340px;
-  aspect-ratio: 4 / 5;
-  object-fit: cover;
-  border-radius: 16px;
+  padding: 9px;
   border: 1px solid var(--line-bright);
+  border-radius: 26px;
+  background: linear-gradient(168deg, #30353c, #15181c 60%);
+  box-shadow: 0 20px 44px rgba(0, 0, 0, .55);
+}
+.portrait img {
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  height: auto;
+  object-fit: cover;
+  border-radius: 18px;
   display: block;
 }
 @media (max-width: 779px) {

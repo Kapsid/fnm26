@@ -68,20 +68,27 @@ Two things that go wrong with FTP in particular:
   the authority for every other name the site uses, too. A site that calls a
   thing one name and the app another reads as two products.
 
-## Still to fill in
+## When the app ships
 
-The page ships with placeholders, each one deliberate so it is easy to grep.
-The URLs are shared by both trees; the prose is per language:
+Nothing on the page is a placeholder any more. One thing is WAITING, and it
+is the launch:
 
-- `APPSTORE_URL` and `GOOGLEPLAY_URL` in `index.html` and `cs/index.html` the
-  store links. Until they are real the badges are greyed out and unclickable,
-  which is on purpose.
-- The two About paragraphs in `index.html`, marked as placeholder text, **and
-  the Czech pair in `cs/index.html`**, which is placeholder in the same way.
-  Four paragraphs in total, and the Czech is not a translation of the English:
-  write each in its own language.
-- `me.jpg` a portrait, roughly 4:5, at the root. Missing, the portrait removes
-  itself on both pages.
+The hero carries a stamped plate, "Coming in October" / "Vychází v říjnu",
+where the store badges used to be, because a dead App Store link looks worse
+than an honest date. On release day, in BOTH `index.html` and
+`cs/index.html`, swap the `<div class="soon">` block back for the badge
+markup and fill in the two URLs. The artwork is still here,
+`badge-appstore.svg` and `badge-googleplay.png`, and so are the `.stores`,
+`.b-apple` and `.b-google` rules in `_style.css`, all of them unused until
+then. The Google badge has had its built-in clear space trimmed off, so both
+badges are set to the same height and genuinely match; do not replace that
+file with a fresh download without trimming it again.
 
-Nothing in that list breaks the page by being absent; see the script at the
-bottom of `index.html`, which `cs/index.html` carries too.
+Two things to keep in mind whenever you edit:
+
+- **Bump `?v=` on the stylesheet link** in all seven pages. `.htaccess` tells
+  browsers to hold CSS for an hour, and without the bump that hour is exactly
+  how long your change stays invisible. It is at `?v=7` now.
+- **The two language trees move together.** A new page needs both halves, two
+  hreflang lines and a switcher target, and nothing here will catch a
+  half-done pair.
