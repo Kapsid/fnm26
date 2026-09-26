@@ -6368,13 +6368,13 @@ class AppLocalizationsCs extends AppLocalizations {
   String get confOceania => 'Oceánie';
 
   @override
-  String get compWorldCup => 'Světový šampionát';
+  String get compWorldCup => 'Mistrovství světa';
 
   @override
   String get compWorldCupFinals => 'Finálový turnaj šampionátu';
 
   @override
-  String get compWorldCupQualifying => 'Kvalifikace: Světový šampionát';
+  String get compWorldCupQualifying => 'Kvalifikace: Mistrovství světa';
 
   @override
   String compQualifiers(String region) {

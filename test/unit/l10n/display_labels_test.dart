@@ -118,7 +118,7 @@ void main() {
 
     test('the two big competitions read as the manager asked', () {
       final cs = locales['cs']!;
-      expect(competitionLabel(cs, 'World Championship'), 'Světový šampionát');
+      expect(competitionLabel(cs, 'World Championship'), 'Mistrovství světa');
       expect(
         competitionLabel(cs, 'Continental Championship'),
         'Kontinentální šampionát',

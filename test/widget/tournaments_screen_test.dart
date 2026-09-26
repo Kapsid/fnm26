@@ -114,7 +114,7 @@ void main() {
 
       expect(find.text('Evropský šampionát'), findsOneWidget);
       expect(find.text('European Championship'), findsNothing);
-      expect(find.text('Světový šampionát'), findsOneWidget);
+      expect(find.text('Mistrovství světa'), findsOneWidget);
       // The zone strap under the tile is copy too, not a constant.
       expect(find.text('EVROPA'), findsOneWidget);
       expect(find.text('SVĚT'), findsOneWidget);
