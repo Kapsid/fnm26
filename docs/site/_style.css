@@ -54,7 +54,7 @@ body::before {
 .wrap {
   position: relative;
   z-index: 1;
-  max-width: 1040px;
+  max-width: 1240px;
   margin: 0 auto;
   padding: 0 var(--pad);
 }
@@ -152,7 +152,10 @@ section:first-of-type { border-top: 0; }
 .slide {
   flex: 0 0 auto;
   margin: 0;
-  width: clamp(180px, 44vw, 236px);
+  /* Big enough to READ. At 236px these were unreadable thumbnails, which is
+     worse than showing fewer: the point of the carousel is that somebody can
+     see what the game looks like without opening anything. */
+  width: clamp(250px, 66vw, 340px);
   scroll-snap-align: center;
 }
 .slide img {
@@ -162,13 +165,19 @@ section:first-of-type { border-top: 0; }
      before the image decodes: the row does not jump as the shots load in.
      Change this only with the shots; see shots/README.md. */
   aspect-ratio: 500 / 1010;
+  /* Required, and not decoration: the width/height ATTRIBUTES on the img are
+     presentational hints, so height="1010" lands as a real used height and
+     aspect-ratio is then ignored. That made the box 320x1010 instead of
+     320x646 and object-fit cut the difference off the SIDES, which is where
+     this app puts its numbers. The attributes stay, because they are what
+     lets the browser reserve the space before the file arrives. */
+  height: auto;
   object-fit: cover;
-  border-radius: 18px;
-  border: 1px solid var(--line-bright);
+  border-radius: 22px;
   background: var(--panel);
 }
 .slide figcaption {
-  font-size: 13px;
+  font-size: 14px;
   color: var(--muted);
   text-align: center;
   margin-top: 10px;
@@ -181,7 +190,7 @@ section:first-of-type { border-top: 0; }
   content: '';
   display: block;
   aspect-ratio: 500 / 1010;
-  border-radius: 18px;
+  border-radius: 30px;
   border: 1px dashed var(--line-bright);
   background:
     repeating-linear-gradient(135deg,
@@ -307,17 +316,45 @@ footer nav { display: flex; gap: 18px; flex-wrap: wrap; }
 /* ---------- lightbox ---------- */
 
 /* A slide is a button, so it is reachable by keyboard and announces itself.
-   It must not look like one: the frame IS the picture. */
+   It is dressed as a HANDSET: the bezel is what tells a visitor at a glance
+   that they are looking at a phone screen rather than a cropped picture, and
+   it is what makes a shot this size read as deliberate. */
 .shot {
+  position: relative;
   display: block;
   width: 100%;
-  padding: 0;
-  border: 0;
-  background: none;
+  padding: 9px;
+  border: 1px solid var(--line-bright);
+  border-radius: 32px;
+  background: linear-gradient(168deg, #30353c, #15181c 60%);
+  box-shadow: 0 20px 44px rgba(0, 0, 0, .55);
   cursor: zoom-in;
-  border-radius: 18px;
+  transition: transform .18s, border-color .18s;
 }
-.shot:focus-visible { outline: 2px solid var(--steel); outline-offset: 3px; }
+.shot:hover { transform: translateY(-3px); border-color: rgba(228, 230, 233, .42); }
+.shot:focus-visible { outline: 2px solid var(--steel); outline-offset: 4px; }
+
+/* The affordance. Without it the shots read as pictures and nobody learns
+   they open, so the badge is always there rather than on hover only, which
+   a touch screen never delivers. */
+.shot::after {
+  content: '\2922';
+  position: absolute;
+  right: 18px;
+  bottom: 18px;
+  width: 30px;
+  height: 30px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: rgba(14, 16, 18, .78);
+  border: 1px solid var(--line-bright);
+  color: var(--text);
+  font-size: 14px;
+  line-height: 1;
+  -webkit-backdrop-filter: blur(3px);
+  backdrop-filter: blur(3px);
+}
 
 #lb[hidden] { display: none; }
 
@@ -328,8 +365,10 @@ footer nav { display: flex; gap: 18px; flex-wrap: wrap; }
   display: flex;
   align-items: center;
   justify-content: center;
+  /* The bottom band is the caption's, so the picture stops short of it
+     instead of being written over. */
   padding: max(16px, env(safe-area-inset-top, 0px)) 16px
-           max(16px, env(safe-area-inset-bottom, 0px));
+           calc(44px + env(safe-area-inset-bottom, 0px));
   background: rgba(8, 9, 11, .92);
   -webkit-backdrop-filter: blur(6px);
   backdrop-filter: blur(6px);
