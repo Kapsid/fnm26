@@ -74,12 +74,37 @@ void main() {
   });
 }
 
-/// An arrow or a `return` handing back a literal that starts like an English
-/// sentence or name — the shape every label getter in this repo had.
+/// The few SINGLE-word all-caps literals that are display rather than data.
 ///
-/// Keyed on the OPENING of the literal rather than its whole content, so
+/// Named one at a time on purpose. `lib/features` holds 167 single-word
+/// all-caps literals and nearly all of them are canonical round codes —
+/// `GROUP`, `FINAL`, `CGROUP`, `NGROUP`, `FRIENDLY` — that are compared in
+/// logic and never printed. Sweeping the shape would bury the real ones; this
+/// list is the opt-in for a word that turned out to be a plate after all.
+const List<String> _displayCapsWords = ['PENALTIES', 'MASCOT', 'DRAWING…'];
+
+/// The two shapes a hard-coded display string takes in this repo.
+///
+/// The first is an arrow or a `return` handing back a literal that starts like
+/// an English sentence or name — the shape every label getter had. Keyed on
+/// the OPENING of the literal rather than its whole content, so
 /// `=> 'Top $n advance'` is caught as surely as `=> 'Striker'`.
-final RegExp _displayLiteral = RegExp(r"(=>|return)\s+'([A-Z][a-z][^']*)'");
+///
+/// The second is a multi-word ALL-CAPS phrase ANYWHERE on the line, with no
+/// `=>` or `return` in front of it. Caps is how this app writes a plate, a
+/// banner or an app-bar title, and none of those is returned from a getter:
+/// they sit inline in a `Text(...)` or in the ternary that chooses between
+/// two of them. The first shape could not see them for two reasons at once —
+/// no arrow, and `[A-Z][a-z]` cannot begin on a capital followed by another
+/// capital — which is how a Czech manager kept reading "FULL TIME",
+/// "GOLDEN BOOT", "DRAW COMPLETE" and "SEEDING POTS" through four batches of
+/// this sweep.
+final RegExp _displayLiteral = RegExp(
+  r"(?:=>|return)\s+'([A-Z][a-z][^']*)'"
+  r"|'((?:[A-Z0-9]{2,}(?:[ ·]+[A-Z0-9]{2,})+"
+  '|${_displayCapsWords.join('|')}'
+  r")[^']*)'",
+);
 
 /// Canonical strings: stored in saves or compared in logic, so they are
 /// identifiers that happen to be spelled in English, not copy.
@@ -105,6 +130,11 @@ const Map<String, Set<String>> _allowed = {
   // the copy. Left in English rather than translated for a caller that does
   // not exist.
   'lib/domain/services/competition/group_advancement.dart': {'Only '},
+  // A typography specimen on the developer-only style gallery, which is the
+  // one screen whose job IS to show the type at its worst. It is not routed
+  // to from the app and no manager can reach it, so the caps string is the
+  // sample, not copy.
+  'lib/features/dev/style_gallery_screen.dart': {'LABEL · MONO'},
 };
 
 Iterable<File> _dartFiles(String dir) => Directory(dir)
@@ -131,7 +161,9 @@ void _expectNoEnglish(Iterable<File> files) {
       // getter would, so comments are skipped.
       if (line.trimLeft().startsWith('//')) continue;
       for (final m in _displayLiteral.allMatches(line)) {
-        final literal = m.group(2)!;
+        // Whichever of the two shapes matched: the arrow/`return` one fills
+        // group 1, the all-caps one group 2.
+        final literal = m.group(1) ?? m.group(2)!;
         if (allowed.any(literal.startsWith)) continue;
         offences.add('$path:${i + 1}  "$literal"');
       }

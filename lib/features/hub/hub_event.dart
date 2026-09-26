@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/core/routing/app_router.dart';
+import 'package:fnm/core/util/nation_label.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
@@ -180,6 +181,9 @@ nextEventProvider = FutureProvider.autoDispose.family<HubEvent, int>((
   final comp = ref.watch(competitionRepositoryProvider);
   final cycle = hub.career.cyclePointer;
   String opp(int id) => hub.nations[id]?.name ?? l.hubUnknown;
+  // The opponent as it reads AFTER "proti", which in Czech is the dative and
+  // not the name the rest of the hub prints.
+  String oppAgainst(int id) => nationAgainst(l, hub.nations[id], l.hubUnknown);
 
   // Whether the manager is contesting each finals tournament themselves — they
   // have an unplayed fixture in one of its rounds. This decides whether an
@@ -458,9 +462,7 @@ nextEventProvider = FutureProvider.autoDispose.family<HubEvent, int>((
   // fixture of its tournament — which is the only reason it never showed this.
   // Mirrors the same guard in [SeasonService._advance].
   final finalsRoundBeforeOwn =
-      finalsDate != null &&
-      nextIsFinalsMatch &&
-      finalsDate.isBefore(next.date);
+      finalsDate != null && nextIsFinalsMatch && finalsDate.isBefore(next.date);
   if (finalsDate != null &&
       (finalsRoundBeforeOwn ||
           (!nextIsFinalsMatch &&
@@ -810,7 +812,7 @@ nextEventProvider = FutureProvider.autoDispose.family<HubEvent, int>((
         : next.homeNationId;
     return HubEvent(
       kind: HubEventKind.match,
-      label: l.hubEventPlayOpponent(opp(oppId)),
+      label: l.hubEventPlayOpponent(oppAgainst(oppId)),
       icon: Icons.play_arrow_rounded,
       route: '${Routes.matchPreview}?careerId=$careerId',
     );

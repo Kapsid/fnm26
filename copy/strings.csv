@@ -1258,6 +1258,9 @@ tourContGroupDropdown,Group option in a dropdown.,{name},Group {name},Skupina {n
 tourContMatches,Heading above a matches list.,,MATCHES,ZÁPASY
 tourContNoGroupsDrawn,Empty state when no groups are drawn.,,No groups drawn yet.,Zatím nebyly vylosovány žádné skupiny.
 tourContQualifyingDraw,Qualifying draw screen title.,,QUALIFYING DRAW,LOS KVALIFIKACE
+tourContWorldQualifyingDraw,"Qualifying draw screen title for the World Championship, as against a continental cup's own qualifying.",,WORLD QUALIFYING DRAW,LOS SVĚTOVÉ KVALIFIKACE
+tourContFinalsDraw,Finals draw screen title while the draw is being made.,,FINALS DRAW,LOS FINÁLOVÉHO TURNAJE
+tourContSeedingPots,"Finals draw screen title before the draw, when the pots are on show.",,SEEDING POTS,NASAZOVACÍ KOŠE
 tourContGroupDraw,Group draw screen title.,,GROUP DRAW,LOS SKUPIN
 tourContCouldNotLoadDraw,Error state when the draw fails to load.,{error},Could not load draw.\n{error},Nepodařilo se načíst los.\n{error}
 tourContDrawNotReady,Shown when the draw is not ready.,,The draw is not ready yet.,Los zatím není připraven.
@@ -1318,9 +1321,10 @@ tourCupBestRunnersUp,World Championship detail: tourCupBestRunnersUp,,Best runne
 tourCupCompWorld,World Championship detail: tourCupCompWorld,,World Championship,Mistrovství světa
 tourCupCompEurope,World Championship detail: tourCupCompEurope,,European Championship,Mistrovství Evropy
 tourCupCompSAmerica,World Championship detail: tourCupCompSAmerica,,South America Cup,Pohár Jižní Ameriky
-tourCupDestFinals,World Championship detail: tourCupDestFinals,,the finals,finálový turnaj
-tourCupDestFinalsPlayoff,World Championship detail: tourCupDestFinalsPlayoff,,the finals play-off,finálovou baráž
-tourCupDestIntercontPlayoff,World Championship detail: tourCupDestIntercontPlayoff,,the intercontinental play-off,mezikontinentální baráž
+tourCupDestKnockouts,"Where a cross-group ladder's qualifiers advance to, inside ""Top {count} advance to …"". Czech needs the genitive here, as all four of these do.",,the knockouts,vyřazovací části
+tourCupDestFinals,World Championship detail: tourCupDestFinals,,the finals,finálového turnaje
+tourCupDestFinalsPlayoff,World Championship detail: tourCupDestFinalsPlayoff,,the finals play-off,finálové baráže
+tourCupDestIntercontPlayoff,World Championship detail: tourCupDestIntercontPlayoff,,the intercontinental play-off,mezikontinentální baráže
 tourCupFinalsDrawnAfterQual,World Championship detail: tourCupFinalsDrawnAfterQual,,The finals are drawn once qualifying ends.,Finálový turnaj se losuje po skončení kvalifikace.
 tourCupFinalsDrawSoon,World Championship detail: tourCupFinalsDrawSoon,,Groups to be drawn. Watch the World Championship draw from the hub to reveal them.,Skupiny budou vylosovány. Sledujte los MS z rozcestníku.
 tourCupGroupName,World Championship detail: tourCupGroupName,{name},Group {name},Skupina {name}
@@ -1469,6 +1473,10 @@ pressAnswerPlayDown,Press answer: say nothing.,,We take it one game at a time. N
 matchNeutralGround,Tag on the ground card when a tie is played on neutral territory.,,NEUTRAL,NEUTRÁLNÍ
 matchExtraTimeAhead,Heading of the interval before extra time begins.,,EXTRA TIME,PRODLOUŽENÍ
 matchExtraTimeHalf,Heading of the interval midway through extra time.,,EXTRA TIME · HALF TIME,PRODLOUŽENÍ · POLOČAS
+matchClockFullTime,The clock plate once the match is over.,,FULL TIME,KONEC
+matchClockAfterExtraTime,The clock plate when a knockout was settled in extra time.,,AFTER EXTRA TIME,PO PRODLOUŽENÍ
+matchClockPenalties,The clock plate while the shootout is being taken.,,PENALTIES,PENALTY
+matchClockFullTimePenalties,The clock plate when a tie was settled on penalties. Keep it short: the plate sits between the two crests and grows to fit.,,FULL TIME · PENALTIES,KONEC · PENALTY
 hubEventPressConference,Timeline action: the opening press conference of a tournament.,,Face the press,Předstoupit před novínáře
 hubEventPressConferenceSub,Subtitle of the opening press conference action.,,The world’s media want a word before your first match,Světová média chtějí slovo před prvním zápasem
 pressAskOpening,Press question at a tournament's opening conference.,{opponent},The tournament is open and you start against {opponent}. What are you telling the country?,Turnaj je zahájen a začínáte proti {opponent}. Co vzkazujete zemi?
@@ -1887,6 +1895,15 @@ tourFinalsDrawBlurb,Finals-draw screen blurb.,,Seeded by world ranking. Spot you
 tourWorldRanking,Tournaments screen: link to the world ranking.,,World Ranking,Světový žebříček
 tourYourCompetitions,Tournaments screen section heading.,,YOUR COMPETITIONS,VAŠE SOUTĚŽE
 tourOtherContinents,Tournaments screen section heading.,,OTHER CONTINENTS,OSTATNÍ KONTINENTY
+tourZoneGlobal,Zone strap under a competition tile: the whole world. Keep these zone straps SHORT — a tile is half the screen wide.,,GLOBAL,SVĚT
+tourZoneEurope,Zone strap under a competition tile.,,EUROPE,EVROPA
+tourZoneSouthAmerica,"Zone strap under a competition tile, abbreviated to fit.",,S. AMERICA,J. AMERIKA
+tourZoneNorthAmerica,"Zone strap under a competition tile, abbreviated to fit.",,N. AMERICA,S. AMERIKA
+tourZoneAfrica,Zone strap under a competition tile.,,AFRICA,AFRIKA
+tourZoneAsia,Zone strap under a competition tile.,,ASIA,ASIE
+tourZoneOceania,Zone strap under a competition tile.,,OCEANIA,OCEÁNIE
+tourZoneIntercontinental,Zone strap under the Continental Clash tile.,,INTERCONTINENTAL,MEZI KONTINENTY
+tourZoneLeague,Zone strap under the Nations Cup tile: which league the nation is in.,{league},LEAGUE {league},LIGA {league}
 tourHostedBy,Opening-ceremony screen: the host nations.,{hosts},HOSTED BY  {hosts},POŘÁDÁ  {hosts}
 tourThirdsAdvance,Best-third-placed table: how many go through and where.,{count} {destination},Top {count} advance to {destination},Nejlepších {count} postupuje do {destination}
 newsWalkoutTitle,Inbox: a player retires internationally after being ignored.,{name},{name} walks away,{name} končí v reprezentaci

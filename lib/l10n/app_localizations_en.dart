@@ -4762,6 +4762,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get tourContQualifyingDraw => 'QUALIFYING DRAW';
 
   @override
+  String get tourContWorldQualifyingDraw => 'WORLD QUALIFYING DRAW';
+
+  @override
+  String get tourContFinalsDraw => 'FINALS DRAW';
+
+  @override
+  String get tourContSeedingPots => 'SEEDING POTS';
+
+  @override
   String get tourContGroupDraw => 'GROUP DRAW';
 
   @override
@@ -4967,6 +4976,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get tourCupCompSAmerica => 'South America Cup';
+
+  @override
+  String get tourCupDestKnockouts => 'the knockouts';
 
   @override
   String get tourCupDestFinals => 'the finals';
@@ -5528,6 +5540,18 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get matchExtraTimeHalf => 'EXTRA TIME · HALF TIME';
+
+  @override
+  String get matchClockFullTime => 'FULL TIME';
+
+  @override
+  String get matchClockAfterExtraTime => 'AFTER EXTRA TIME';
+
+  @override
+  String get matchClockPenalties => 'PENALTIES';
+
+  @override
+  String get matchClockFullTimePenalties => 'FULL TIME · PENALTIES';
 
   @override
   String get hubEventPressConference => 'Face the press';
@@ -7340,6 +7364,35 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get tourOtherContinents => 'OTHER CONTINENTS';
+
+  @override
+  String get tourZoneGlobal => 'GLOBAL';
+
+  @override
+  String get tourZoneEurope => 'EUROPE';
+
+  @override
+  String get tourZoneSouthAmerica => 'S. AMERICA';
+
+  @override
+  String get tourZoneNorthAmerica => 'N. AMERICA';
+
+  @override
+  String get tourZoneAfrica => 'AFRICA';
+
+  @override
+  String get tourZoneAsia => 'ASIA';
+
+  @override
+  String get tourZoneOceania => 'OCEANIA';
+
+  @override
+  String get tourZoneIntercontinental => 'INTERCONTINENTAL';
+
+  @override
+  String tourZoneLeague(String league) {
+    return 'LEAGUE $league';
+  }
 
   @override
   String tourHostedBy(String hosts) {

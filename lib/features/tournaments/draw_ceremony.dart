@@ -20,8 +20,7 @@ typedef _Step = ({int groupIndex, int nationId, int pot});
 enum _DrawGrain {
   ball('Ball'),
   pot('Pot'),
-  all('All')
-  ;
+  all('All');
 
   const _DrawGrain(this.label);
   final String label;
@@ -572,7 +571,9 @@ class _Stage extends StatelessWidget {
             ? Center(
                 key: const ValueKey('done'),
                 child: Text(
-                  done ? 'DRAW COMPLETE' : 'DRAWING…',
+                  done
+                      ? AppLocalizations.of(context).tourSharedDrawComplete
+                      : AppLocalizations.of(context).tourSharedDrawing,
                   style: AppTypography.labelMedium.copyWith(
                     color: AppColors.primary,
                   ),

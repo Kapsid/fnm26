@@ -43,6 +43,7 @@ class VenuesCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (hosts.isEmpty) return const SizedBox.shrink();
+    final l = AppLocalizations.of(context);
     final joint = hosts.length > 1;
 
     return AppCard(
@@ -61,7 +62,9 @@ class VenuesCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      joint ? 'CO-HOSTS' : 'HOST',
+                      joint
+                          ? l.tourSharedCoHostsHeading
+                          : l.tourSharedHostHeading,
                       style: AppTypography.labelSmall.copyWith(
                         color: AppColors.primary,
                       ),
@@ -82,7 +85,7 @@ class VenuesCard extends StatelessWidget {
           ),
           const Divider(height: AppSpacing.md),
           Text(
-            AppLocalizations.of(context).tourVenues,
+            l.tourVenues,
             style: AppTypography.labelSmall.copyWith(color: AppColors.primary),
           ),
           const SizedBox(height: AppSpacing.xs),
@@ -108,9 +111,13 @@ class VenuesCard extends StatelessWidget {
           if (mascot != null || ball != null) ...[
             const Divider(height: AppSpacing.md),
             if (mascot != null)
-              _identityRow(Icons.emoji_emotions_outlined, 'MASCOT', mascot!),
+              _identityRow(
+                Icons.emoji_emotions_outlined,
+                l.tourSharedMascot,
+                mascot!,
+              ),
             if (ball != null)
-              _identityRow(Icons.sports_soccer, 'MATCH BALL', ball!),
+              _identityRow(Icons.sports_soccer, l.tourSharedMatchBall, ball!),
           ],
         ],
       ),

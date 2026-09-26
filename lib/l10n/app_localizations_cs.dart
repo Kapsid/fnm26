@@ -4794,6 +4794,15 @@ class AppLocalizationsCs extends AppLocalizations {
   String get tourContQualifyingDraw => 'LOS KVALIFIKACE';
 
   @override
+  String get tourContWorldQualifyingDraw => 'LOS SVĚTOVÉ KVALIFIKACE';
+
+  @override
+  String get tourContFinalsDraw => 'LOS FINÁLOVÉHO TURNAJE';
+
+  @override
+  String get tourContSeedingPots => 'NASAZOVACÍ KOŠE';
+
+  @override
   String get tourContGroupDraw => 'LOS SKUPIN';
 
   @override
@@ -5003,13 +5012,16 @@ class AppLocalizationsCs extends AppLocalizations {
   String get tourCupCompSAmerica => 'Pohár Jižní Ameriky';
 
   @override
-  String get tourCupDestFinals => 'finálový turnaj';
+  String get tourCupDestKnockouts => 'vyřazovací části';
 
   @override
-  String get tourCupDestFinalsPlayoff => 'finálovou baráž';
+  String get tourCupDestFinals => 'finálového turnaje';
 
   @override
-  String get tourCupDestIntercontPlayoff => 'mezikontinentální baráž';
+  String get tourCupDestFinalsPlayoff => 'finálové baráže';
+
+  @override
+  String get tourCupDestIntercontPlayoff => 'mezikontinentální baráže';
 
   @override
   String get tourCupFinalsDrawnAfterQual =>
@@ -5558,6 +5570,18 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get matchExtraTimeHalf => 'PRODLOUŽENÍ · POLOČAS';
+
+  @override
+  String get matchClockFullTime => 'KONEC';
+
+  @override
+  String get matchClockAfterExtraTime => 'PO PRODLOUŽENÍ';
+
+  @override
+  String get matchClockPenalties => 'PENALTY';
+
+  @override
+  String get matchClockFullTimePenalties => 'KONEC · PENALTY';
 
   @override
   String get hubEventPressConference => 'Předstoupit před novínáře';
@@ -7367,6 +7391,35 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get tourOtherContinents => 'OSTATNÍ KONTINENTY';
+
+  @override
+  String get tourZoneGlobal => 'SVĚT';
+
+  @override
+  String get tourZoneEurope => 'EVROPA';
+
+  @override
+  String get tourZoneSouthAmerica => 'J. AMERIKA';
+
+  @override
+  String get tourZoneNorthAmerica => 'S. AMERIKA';
+
+  @override
+  String get tourZoneAfrica => 'AFRIKA';
+
+  @override
+  String get tourZoneAsia => 'ASIE';
+
+  @override
+  String get tourZoneOceania => 'OCEÁNIE';
+
+  @override
+  String get tourZoneIntercontinental => 'MEZI KONTINENTY';
+
+  @override
+  String tourZoneLeague(String league) {
+    return 'LIGA $league';
+  }
 
   @override
   String tourHostedBy(String hosts) {

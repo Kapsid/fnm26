@@ -42,8 +42,8 @@ class TournamentAwardsTab extends StatelessWidget {
       children: [
         if (goldenBall != null)
           _AwardHero(
-            award: 'GOLDEN BALL',
-            sub: 'Player of the Tournament',
+            award: l.tourSharedGoldenBall,
+            sub: l.tourSharedPlayerOfTournament,
             icon: Icons.emoji_events_rounded,
             playerName: goldenBall.name,
             nationName: name(goldenBall.nationId),
@@ -51,10 +51,8 @@ class TournamentAwardsTab extends StatelessWidget {
           ),
         if (goldenBoot != null)
           _AwardHero(
-            award: 'GOLDEN BOOT',
-            sub:
-                '${goldenBoot.goals} '
-                '${goldenBoot.goals == 1 ? 'goal' : 'goals'}',
+            award: l.tourSharedGoldenBoot,
+            sub: l.tourSharedGoalsCount(goldenBoot.goals),
             icon: Icons.sports_soccer_rounded,
             playerName: goldenBoot.name,
             nationName: name(goldenBoot.nationId),

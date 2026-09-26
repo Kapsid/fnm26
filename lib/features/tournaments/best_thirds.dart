@@ -45,8 +45,8 @@ class BestThirdsCard extends StatelessWidget {
     required this.playerNationId,
     required this.code,
     required this.name,
-    this.destination = 'the knockouts',
-    this.title = 'BEST THIRD-PLACED',
+    this.destination,
+    this.title,
     this.adjustedForGroupSize = false,
     super.key,
   });
@@ -58,12 +58,15 @@ class BestThirdsCard extends StatelessWidget {
   final String Function(int) code;
   final String Function(int) name;
 
-  /// Where the qualifying thirds advance to — 'the knockouts' for a finals
-  /// group stage, 'the finals' for a qualifying group stage.
-  final String destination;
+  /// Where the qualifying thirds advance to, already written for the manager
+  /// and in whatever case the sentence around it wants — the knockouts for a
+  /// finals group stage, the finals for a qualifying one. Null takes the
+  /// knockouts, which is the common case.
+  final String? destination;
 
-  /// The card heading — override for a runners-up ladder.
-  final String title;
+  /// The card heading — override for a runners-up ladder. Null names the
+  /// third-placed ladder, which is what most of them are.
+  final String? title;
 
   /// Whether the groups behind this ladder are of different sizes, so the
   /// totals shown are the reduced ones the comparison actually uses. Says so on
@@ -72,25 +75,27 @@ class BestThirdsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
     return AppCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            title,
+            title ?? contentionLadderTitle(l, 3),
             style: AppTypography.labelSmall.copyWith(color: AppColors.primary),
           ),
           Text(
-            AppLocalizations.of(
-              context,
-            ).tourThirdsAdvance(qualifyCount, destination),
+            l.tourThirdsAdvance(
+              qualifyCount,
+              destination ?? l.tourCupDestKnockouts,
+            ),
             style: AppTypography.labelSmall.copyWith(
               color: AppColors.onSurfaceVariant,
             ),
           ),
           if (adjustedForGroupSize)
             Text(
-              AppLocalizations.of(context).tourThirdsUneven,
+              l.tourThirdsUneven,
               style: AppTypography.labelSmall.copyWith(
                 color: AppColors.warning,
               ),

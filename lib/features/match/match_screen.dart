@@ -1309,12 +1309,12 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
                           awayScore: awayScore,
                           clock: ft
                               ? (decidedByShootout
-                                    ? 'FULL TIME · PENALTIES'
+                                    ? l.matchClockFullTimePenalties
                                     : knockout != null
-                                    ? 'AFTER EXTRA TIME'
-                                    : 'FULL TIME')
+                                    ? l.matchClockAfterExtraTime
+                                    : l.matchClockFullTime)
                               : showingShootout
-                              ? 'PENALTIES'
+                              ? l.matchClockPenalties
                               : inExtraTime
                               // No trailing apostrophe: it adds right-side
                               // width that pushes the digits left of the

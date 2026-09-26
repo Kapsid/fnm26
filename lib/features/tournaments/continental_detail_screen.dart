@@ -174,7 +174,7 @@ class ContinentalDetailScreen extends ConsumerWidget {
                 contentionQualify: adv.contentionQualify,
                 // The contested places lead to the finals here, not to a
                 // knockout round.
-                contentionDestination: 'the finals',
+                contentionDestination: l.tourCupDestFinals,
                 code: code,
                 name: name,
               );
@@ -318,7 +318,7 @@ class _Groups extends StatelessWidget {
     required this.code,
     required this.name,
     this.contentionQualify = 0,
-    this.contentionDestination = 'the knockouts',
+    this.contentionDestination,
   });
 
   final List<FinalsGroupTable> groups;
@@ -336,8 +336,10 @@ class _Groups extends StatelessWidget {
   /// advance" list rather than left to be guessed at.
   final int contentionQualify;
 
-  /// Where the contested places lead ('the finals' in qualifying).
-  final String contentionDestination;
+  /// Where the contested places lead, written for the manager and in the case
+  /// the ladder's sentence wants. Null takes the knockouts, which is where a
+  /// finals group stage leads.
+  final String? contentionDestination;
 
   final String Function(int) code;
   final String Function(int) name;

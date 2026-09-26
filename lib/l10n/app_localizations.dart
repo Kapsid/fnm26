@@ -7668,6 +7668,24 @@ abstract class AppLocalizations {
   /// **'QUALIFYING DRAW'**
   String get tourContQualifyingDraw;
 
+  /// Qualifying draw screen title for the World Championship, as against a continental cup's own qualifying.
+  ///
+  /// In en, this message translates to:
+  /// **'WORLD QUALIFYING DRAW'**
+  String get tourContWorldQualifyingDraw;
+
+  /// Finals draw screen title while the draw is being made.
+  ///
+  /// In en, this message translates to:
+  /// **'FINALS DRAW'**
+  String get tourContFinalsDraw;
+
+  /// Finals draw screen title before the draw, when the pots are on show.
+  ///
+  /// In en, this message translates to:
+  /// **'SEEDING POTS'**
+  String get tourContSeedingPots;
+
   /// Group draw screen title.
   ///
   /// In en, this message translates to:
@@ -8027,6 +8045,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'South America Cup'**
   String get tourCupCompSAmerica;
+
+  /// Where a cross-group ladder's qualifiers advance to, inside "Top {count} advance to …". Czech needs the genitive here, as all four of these do.
+  ///
+  /// In en, this message translates to:
+  /// **'the knockouts'**
+  String get tourCupDestKnockouts;
 
   /// World Championship detail: tourCupDestFinals
   ///
@@ -8933,6 +8957,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'EXTRA TIME · HALF TIME'**
   String get matchExtraTimeHalf;
+
+  /// The clock plate once the match is over.
+  ///
+  /// In en, this message translates to:
+  /// **'FULL TIME'**
+  String get matchClockFullTime;
+
+  /// The clock plate when a knockout was settled in extra time.
+  ///
+  /// In en, this message translates to:
+  /// **'AFTER EXTRA TIME'**
+  String get matchClockAfterExtraTime;
+
+  /// The clock plate while the shootout is being taken.
+  ///
+  /// In en, this message translates to:
+  /// **'PENALTIES'**
+  String get matchClockPenalties;
+
+  /// The clock plate when a tie was settled on penalties. Keep it short: the plate sits between the two crests and grows to fit.
+  ///
+  /// In en, this message translates to:
+  /// **'FULL TIME · PENALTIES'**
+  String get matchClockFullTimePenalties;
 
   /// Timeline action: the opening press conference of a tournament.
   ///
@@ -11486,6 +11534,60 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'OTHER CONTINENTS'**
   String get tourOtherContinents;
+
+  /// Zone strap under a competition tile: the whole world. Keep these zone straps SHORT — a tile is half the screen wide.
+  ///
+  /// In en, this message translates to:
+  /// **'GLOBAL'**
+  String get tourZoneGlobal;
+
+  /// Zone strap under a competition tile.
+  ///
+  /// In en, this message translates to:
+  /// **'EUROPE'**
+  String get tourZoneEurope;
+
+  /// Zone strap under a competition tile, abbreviated to fit.
+  ///
+  /// In en, this message translates to:
+  /// **'S. AMERICA'**
+  String get tourZoneSouthAmerica;
+
+  /// Zone strap under a competition tile, abbreviated to fit.
+  ///
+  /// In en, this message translates to:
+  /// **'N. AMERICA'**
+  String get tourZoneNorthAmerica;
+
+  /// Zone strap under a competition tile.
+  ///
+  /// In en, this message translates to:
+  /// **'AFRICA'**
+  String get tourZoneAfrica;
+
+  /// Zone strap under a competition tile.
+  ///
+  /// In en, this message translates to:
+  /// **'ASIA'**
+  String get tourZoneAsia;
+
+  /// Zone strap under a competition tile.
+  ///
+  /// In en, this message translates to:
+  /// **'OCEANIA'**
+  String get tourZoneOceania;
+
+  /// Zone strap under the Continental Clash tile.
+  ///
+  /// In en, this message translates to:
+  /// **'INTERCONTINENTAL'**
+  String get tourZoneIntercontinental;
+
+  /// Zone strap under the Nations Cup tile: which league the nation is in.
+  ///
+  /// In en, this message translates to:
+  /// **'LEAGUE {league}'**
+  String tourZoneLeague(String league);
 
   /// Opening-ceremony screen: the host nations.
   ///

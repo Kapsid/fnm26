@@ -7101,6 +7101,18 @@
   "@tourContQualifyingDraw": {
     "description": "Qualifying draw screen title."
   },
+  "tourContWorldQualifyingDraw": "WORLD QUALIFYING DRAW",
+  "@tourContWorldQualifyingDraw": {
+    "description": "Qualifying draw screen title for the World Championship, as against a continental cup's own qualifying."
+  },
+  "tourContFinalsDraw": "FINALS DRAW",
+  "@tourContFinalsDraw": {
+    "description": "Finals draw screen title while the draw is being made."
+  },
+  "tourContSeedingPots": "SEEDING POTS",
+  "@tourContSeedingPots": {
+    "description": "Finals draw screen title before the draw, when the pots are on show."
+  },
   "tourContGroupDraw": "GROUP DRAW",
   "@tourContGroupDraw": {
     "description": "Group draw screen title."
@@ -7385,6 +7397,10 @@
   "tourCupCompSAmerica": "South America Cup",
   "@tourCupCompSAmerica": {
     "description": "World Championship detail: tourCupCompSAmerica"
+  },
+  "tourCupDestKnockouts": "the knockouts",
+  "@tourCupDestKnockouts": {
+    "description": "Where a cross-group ladder's qualifiers advance to, inside \"Top {count} advance to …\". Czech needs the genitive here, as all four of these do."
   },
   "tourCupDestFinals": "the finals",
   "@tourCupDestFinals": {
@@ -8146,6 +8162,22 @@
   "matchExtraTimeHalf": "EXTRA TIME · HALF TIME",
   "@matchExtraTimeHalf": {
     "description": "Heading of the interval midway through extra time."
+  },
+  "matchClockFullTime": "FULL TIME",
+  "@matchClockFullTime": {
+    "description": "The clock plate once the match is over."
+  },
+  "matchClockAfterExtraTime": "AFTER EXTRA TIME",
+  "@matchClockAfterExtraTime": {
+    "description": "The clock plate when a knockout was settled in extra time."
+  },
+  "matchClockPenalties": "PENALTIES",
+  "@matchClockPenalties": {
+    "description": "The clock plate while the shootout is being taken."
+  },
+  "matchClockFullTimePenalties": "FULL TIME · PENALTIES",
+  "@matchClockFullTimePenalties": {
+    "description": "The clock plate when a tie was settled on penalties. Keep it short: the plate sits between the two crests and grows to fit."
   },
   "hubEventPressConference": "Face the press",
   "@hubEventPressConference": {
@@ -10944,6 +10976,48 @@
   "tourOtherContinents": "OTHER CONTINENTS",
   "@tourOtherContinents": {
     "description": "Tournaments screen section heading."
+  },
+  "tourZoneGlobal": "GLOBAL",
+  "@tourZoneGlobal": {
+    "description": "Zone strap under a competition tile: the whole world. Keep these zone straps SHORT — a tile is half the screen wide."
+  },
+  "tourZoneEurope": "EUROPE",
+  "@tourZoneEurope": {
+    "description": "Zone strap under a competition tile."
+  },
+  "tourZoneSouthAmerica": "S. AMERICA",
+  "@tourZoneSouthAmerica": {
+    "description": "Zone strap under a competition tile, abbreviated to fit."
+  },
+  "tourZoneNorthAmerica": "N. AMERICA",
+  "@tourZoneNorthAmerica": {
+    "description": "Zone strap under a competition tile, abbreviated to fit."
+  },
+  "tourZoneAfrica": "AFRICA",
+  "@tourZoneAfrica": {
+    "description": "Zone strap under a competition tile."
+  },
+  "tourZoneAsia": "ASIA",
+  "@tourZoneAsia": {
+    "description": "Zone strap under a competition tile."
+  },
+  "tourZoneOceania": "OCEANIA",
+  "@tourZoneOceania": {
+    "description": "Zone strap under a competition tile."
+  },
+  "tourZoneIntercontinental": "INTERCONTINENTAL",
+  "@tourZoneIntercontinental": {
+    "description": "Zone strap under the Continental Clash tile."
+  },
+  "tourZoneLeague": "LEAGUE {league}",
+  "@tourZoneLeague": {
+    "description": "Zone strap under the Nations Cup tile: which league the nation is in.",
+    "placeholders": {
+      "league": {
+        "type": "String",
+        "example": "A"
+      }
+    }
   },
   "tourHostedBy": "HOSTED BY  {hosts}",
   "@tourHostedBy": {

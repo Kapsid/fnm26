@@ -5,6 +5,7 @@ import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
+import 'package:fnm/core/util/competition_label.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/services/competition/trophies.dart';
 import 'package:fnm/features/tournaments/tournaments_providers.dart';
@@ -12,21 +13,29 @@ import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
 
-/// A championship tile's static presentation (name/region/icon/blurb). Its
-/// status and whether it's playable come from [tournamentsOverviewProvider].
+/// A championship tile's static presentation (name/zone/icon).
+///
+/// [name] is the CANONICAL English competition name, the one a save stores and
+/// [Trophies.forCompetitionName] is keyed on — never printed as it stands.
+/// [competitionLabel] writes it for the manager on the tile. [zone] is the
+/// strap under it, which is pure presentation and so is an l10n key from the
+/// start. Status and whether the tile is playable come from
+/// [tournamentsOverviewProvider].
 class _Championship {
   const _Championship({
     required this.name,
-    required this.region,
+    required this.zone,
     required this.icon,
-    required this.description,
     this.confederation,
   });
 
   final String name;
-  final String region;
+
+  /// Reads the zone strap out of the copy: "GLOBAL", "S. AMERICA", … It takes
+  /// the localisations rather than holding a string because the list of tiles
+  /// below is const, built long before there is a context to read them with.
+  final String Function(AppLocalizations) zone;
   final IconData icon;
-  final String description;
 
   /// The confederation this championship belongs to, or null for the global
   /// World Championship.
@@ -36,53 +45,57 @@ class _Championship {
 const _championships = <_Championship>[
   _Championship(
     name: 'World Championship',
-    region: 'GLOBAL',
+    zone: _zoneGlobal,
     icon: Icons.emoji_events,
-    description: 'The world championship.',
   ),
   _Championship(
     name: 'European Championship',
-    region: 'EUROPE',
+    zone: _zoneEurope,
     icon: Icons.workspace_premium,
-    description: "Europe's championship.",
     confederation: Confederation.europe,
   ),
   _Championship(
     name: 'South America Cup',
-    region: 'S. AMERICA',
+    zone: _zoneSouthAmerica,
     icon: Icons.flare,
-    description: "South America's championship.",
     confederation: Confederation.southAmerica,
   ),
   _Championship(
     name: 'African Championship',
-    region: 'AFRICA',
+    zone: _zoneAfrica,
     icon: Icons.diamond,
-    description: "Africa's championship.",
     confederation: Confederation.africa,
   ),
   _Championship(
     name: 'Asian Championship',
-    region: 'ASIA',
+    zone: _zoneAsia,
     icon: Icons.explore,
-    description: "Asia's championship.",
     confederation: Confederation.asia,
   ),
   _Championship(
     name: 'North America Cup',
-    region: 'N. AMERICA',
+    zone: _zoneNorthAmerica,
     icon: Icons.public,
-    description: 'The championship of North & Central America.',
     confederation: Confederation.northAmerica,
   ),
   _Championship(
     name: 'Oceania Cup',
-    region: 'OCEANIA',
+    zone: _zoneOceania,
     icon: Icons.sailing,
-    description: "Oceania's championship.",
     confederation: Confederation.oceania,
   ),
 ];
+
+// Top-level functions rather than closures: the list above is `const`, and a
+// closure is not.
+String _zoneGlobal(AppLocalizations l) => l.tourZoneGlobal;
+String _zoneEurope(AppLocalizations l) => l.tourZoneEurope;
+String _zoneSouthAmerica(AppLocalizations l) => l.tourZoneSouthAmerica;
+String _zoneNorthAmerica(AppLocalizations l) => l.tourZoneNorthAmerica;
+String _zoneAfrica(AppLocalizations l) => l.tourZoneAfrica;
+String _zoneAsia(AppLocalizations l) => l.tourZoneAsia;
+String _zoneOceania(AppLocalizations l) => l.tourZoneOceania;
+String _zoneIntercontinental(AppLocalizations l) => l.tourZoneIntercontinental;
 
 /// Tournaments overview (the "Trophy" destination). Lists every championship
 /// with its live status; the World Championship and each continental cup open
@@ -185,11 +198,10 @@ class TournamentsScreen extends ConsumerWidget {
                   _ChampionshipTile(
                     championship: _Championship(
                       name: 'Nations Cup',
-                      region: 'LEAGUE ${overview!.nationsCupLeague}',
+                      zone: (l) => l.tourZoneLeague(overview!.nationsCupLeague),
                       icon: Icons.military_tech,
-                      description: 'Your league, with promotion and relegation.',
                     ),
-                    status: overview.nationsCup,
+                    status: overview!.nationsCup,
                     championName:
                         overview.nations[overview.nationsCup!.championId]?.name,
                     onView: () =>
@@ -247,9 +259,8 @@ class TournamentsScreen extends ConsumerWidget {
     return _ChampionshipTile(
       championship: const _Championship(
         name: 'Continental Clash',
-        region: 'INTERCONTINENTAL',
+        zone: _zoneIntercontinental,
         icon: Icons.flash_on,
-        description: 'Champions of two continents, one match.',
       ),
       status: overview.continentalClash,
       championName:
@@ -383,14 +394,14 @@ class _ChampionshipTile extends StatelessWidget {
           }(),
           const Spacer(),
           Text(
-            c.name,
+            competitionLabel(l, c.name),
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
             style: AppTypography.labelLarge,
           ),
           const SizedBox(height: 2),
           Text(
-            c.region,
+            c.zone(l),
             style: AppTypography.labelSmall.copyWith(
               color: AppColors.onSurfaceVariant,
             ),
