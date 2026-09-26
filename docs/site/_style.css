@@ -146,6 +146,16 @@ section:first-of-type { border-top: 0; }
 .feature h3 { margin-bottom: 7px; }
 .feature p { color: var(--muted); font-size: 15.5px; margin: 0; }
 
+/* Sits directly under the grid, which puts it right below the payment cell.
+   Centred and quiet: it is reassurance, not another claim. */
+.tryline {
+  margin: 18px auto 0;
+  max-width: 62ch;
+  text-align: center;
+  font-size: 15.5px;
+  color: var(--muted);
+}
+
 /* ---------- carousel ---------- */
 
 .carousel { position: relative; margin-top: 18px; }
