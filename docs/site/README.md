@@ -76,8 +76,6 @@ The URLs are shared by both trees; the prose is per language:
 - `APPSTORE_URL` and `GOOGLEPLAY_URL` in `index.html` and `cs/index.html` the
   store links. Until they are real the badges are greyed out and unclickable,
   which is on purpose.
-- `LINKEDIN_URL` in `index.html` and `cs/index.html`, twice in each: the About
-  button and the footer.
 - The two About paragraphs in `index.html`, marked as placeholder text, **and
   the Czech pair in `cs/index.html`**, which is placeholder in the same way.
   Four paragraphs in total, and the Czech is not a translation of the English:
