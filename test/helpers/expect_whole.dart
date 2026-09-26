@@ -18,11 +18,15 @@ import 'package:flutter_test/flutter_test.dart';
 /// * [expectLegible] — for a `WholeText`, which no ellipsis guard can fail
 ///   because it scales itself down instead. Asks how far it had to shrink.
 ///
-/// A caveat that applies to all of them: a widget test renders in Flutter's
-/// fallback face, which draws every glyph a full em wide, where the app's own
-/// faces are nearer six tenths of that. Every measurement here is therefore
-/// PESSIMISTIC by roughly forty per cent. A clear failure is real; a marginal
-/// one may not be.
+/// These measure what the phone will show. `test/flutter_test_config.dart`
+/// loads the app's OWN typefaces before any test runs, so a marginal failure
+/// here is a marginal failure on the device and is worth acting on.
+///
+/// It was not always so. Until that config existed, a widget test rendered in
+/// Flutter's fallback face, which draws every glyph a full em wide where
+/// Hanken Grotesk is nearer six tenths, and every measurement was about forty
+/// per cent pessimistic. Thresholds written in that era were scaled for it;
+/// if you meet one that still is, it is too lenient by that same margin.
 
 /// Asserts that every paragraph [finder] matches is rendered WHOLE.
 ///
@@ -84,17 +88,20 @@ double shrinkOf(WidgetTester tester, Finder finder) {
 /// Asserts a `WholeText` is still readable: it did not have to scale below
 /// [min] to fit.
 ///
-/// Converting to what the manager sees: the test font is about an em per
-/// glyph against the app's six tenths, so the scale on a real device is
-/// roughly `shrink / 0.6`, capped at 1.0. A default [min] of 0.36 therefore
-/// stands for "not below about sixty per cent on a phone", which is the point
-/// at which a name in a list stops being worth printing and the caller should
-/// offer a `shortText` instead.
+/// The measured scale IS the scale on the phone, because the real faces are
+/// loaded. [min] defaults to 0.6: the point at which a name in a list stops
+/// being worth printing and the caller should offer a `shortText` instead.
+///
+/// It read 0.36 until 2026-09-26, which was the same threshold expressed in
+/// the fallback face's units (`0.6 * 0.6`) and left over from before
+/// `flutter_test_config.dart` loaded the real fonts. Against real metrics it
+/// waved through anything above 36 per cent. Tightening it to 0.6 failed
+/// nothing, so no screen was relying on the slack.
 void expectLegible(
   WidgetTester tester,
   Finder finder,
   String what, {
-  double min = 0.36,
+  double min = 0.6,
 }) {
   final shrink = shrinkOf(tester, finder);
   expect(
@@ -145,10 +152,9 @@ void expectLocale(WidgetTester tester, Finder inside, String languageCode) {
 ///
 /// A paragraph's MINIMUM intrinsic width is the width of its longest
 /// unbreakable run, so anything wider than the space it was given was broken.
-/// Takes a finder rather than sweeping the screen, because the fallback face
-/// the test renders in is about forty per cent wider than the app's own: a
-/// whole-screen sweep at 320px fails on ALL-CAPS headings that fit perfectly
-/// well on a phone, and a guard that cries wolf is turned off.
+/// Takes a finder rather than sweeping the screen: a whole-screen sweep at
+/// 320px turns up headings that are meant to wrap, and a guard that cries
+/// wolf is turned off. Name the paragraph whose wrapping you care about.
 void expectNoBrokenWord(Finder finder, String what) {
   final elements = finder.evaluate();
   expect(elements, isNotEmpty, reason: '$what is not on screen at all');
