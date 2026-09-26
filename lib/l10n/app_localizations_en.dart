@@ -223,6 +223,12 @@ class AppLocalizationsEn extends AppLocalizations {
       'Errors recorded on this device. Nothing is sent anywhere.';
 
   @override
+  String get settingsContactTitle => 'Contact';
+
+  @override
+  String get settingsContactCopied => 'Address copied.';
+
+  @override
   String get diagnosticsEmpty => 'No errors recorded. That\'s the idea.';
 
   @override

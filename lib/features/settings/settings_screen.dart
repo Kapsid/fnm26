@@ -1,9 +1,11 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:fnm/features/settings/backup_restore_prompt.dart';
 import 'package:fnm/features/settings/save_backup_providers.dart';
+import 'package:fnm/core/config/contact.dart';
 import 'package:fnm/core/diagnostics/app_log.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -259,8 +261,51 @@ class SettingsScreen extends ConsumerWidget {
             ),
           ),
           const SizedBox(height: AppSpacing.md),
+          const _ContactCard(),
+          const SizedBox(height: AppSpacing.md),
           const _BackupCard(),
         ],
+      ),
+    );
+  }
+}
+
+/// Reaching the person who made the game.
+///
+/// Tapping COPIES the address rather than opening a mail app. The app carries
+/// no url_launcher, and it is the better behaviour anyway: a phone with no
+/// mail account configured swallows a `mailto:` and leaves the manager
+/// looking at nothing, while the clipboard always works and the address is
+/// what they actually need.
+class _ContactCard extends StatelessWidget {
+  const _ContactCard();
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    return AppCard(
+      padding: EdgeInsets.zero,
+      child: ListTile(
+        onTap: () async {
+          await Clipboard.setData(const ClipboardData(text: kContactEmail));
+          if (!context.mounted) return;
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(l.settingsContactCopied)));
+        },
+        leading: const Icon(Icons.alternate_email, color: AppColors.primary),
+        title: Text(l.settingsContactTitle, style: AppTypography.bodyMedium),
+        subtitle: Text(
+          kContactEmail,
+          style: AppTypography.labelSmall.copyWith(
+            color: AppColors.onSurfaceVariant,
+          ),
+        ),
+        trailing: const Icon(
+          Icons.copy_rounded,
+          size: 18,
+          color: AppColors.primary,
+        ),
       ),
     );
   }

@@ -482,6 +482,18 @@ abstract class AppLocalizations {
   /// **'Errors recorded on this device. Nothing is sent anywhere.'**
   String get settingsDiagnosticsBlurb;
 
+  /// Settings row that copies the support email address.
+  ///
+  /// In en, this message translates to:
+  /// **'Contact'**
+  String get settingsContactTitle;
+
+  /// Snackbar shown after the address is copied.
+  ///
+  /// In en, this message translates to:
+  /// **'Address copied.'**
+  String get settingsContactCopied;
+
   /// Placeholder when the error log is empty.
   ///
   /// In en, this message translates to:

@@ -64,6 +64,8 @@
   "hubCouldNotAdvance": "Svět se nepodařilo posunout: {error}",
   "settingsDiagnosticsTitle": "Diagnostika",
   "settingsDiagnosticsBlurb": "Chyby zaznamenané v tomto zařízení. Nikam se neodesílají.",
+  "settingsContactTitle": "Kontakt",
+  "settingsContactCopied": "Adresa zkopírována.",
   "diagnosticsEmpty": "Žádné chyby. Přesně tak to má být.",
   "diagnosticsCopy": "Kopírovat",
   "diagnosticsCopied": "Záznam zkopírován do schránky.",

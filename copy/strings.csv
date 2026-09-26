@@ -63,6 +63,8 @@ commonCrashBox,Shown in place of a widget subtree that failed to build.,,Somethi
 hubCouldNotAdvance,Snackbar when a hub action that simulates the world fails.,{error},Could not advance the world: {error},Svět se nepodařilo posunout: {error}
 settingsDiagnosticsTitle,Settings row opening the on-device error log.,,Diagnostics,Diagnostika
 settingsDiagnosticsBlurb,Explains what the diagnostics log is and that it stays local.,,Errors recorded on this device. Nothing is sent anywhere.,Chyby zaznamenané v tomto zařízení. Nikam se neodesílají.
+settingsContactTitle,Settings row that copies the support email address.,,Contact,Kontakt
+settingsContactCopied,Snackbar shown after the address is copied.,,Address copied.,Adresa zkopírována.
 diagnosticsEmpty,Placeholder when the error log is empty.,,No errors recorded. That's the idea.,Žádné chyby. Přesně tak to má být.
 diagnosticsCopy,Button copying the whole error log to the clipboard.,,Copy,Kopírovat
 diagnosticsCopied,Confirmation that the log was copied.,,Log copied to the clipboard.,Záznam zkopírován do schránky.

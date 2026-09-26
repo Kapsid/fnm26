@@ -306,6 +306,14 @@
     "description": "Settings row opening the on-device error log."
   },
   "settingsDiagnosticsBlurb": "Errors recorded on this device. Nothing is sent anywhere.",
+  "settingsContactTitle": "Contact",
+  "@settingsContactTitle": {
+    "description": "Settings row that copies the support email address."
+  },
+  "settingsContactCopied": "Address copied.",
+  "@settingsContactCopied": {
+    "description": "Snackbar shown after the address is copied."
+  },
   "@settingsDiagnosticsBlurb": {
     "description": "Explains what the diagnostics log is and that it stays local."
   },

@@ -223,6 +223,12 @@ class AppLocalizationsCs extends AppLocalizations {
       'Chyby zaznamenané v tomto zařízení. Nikam se neodesílají.';
 
   @override
+  String get settingsContactTitle => 'Kontakt';
+
+  @override
+  String get settingsContactCopied => 'Adresa zkopírována.';
+
+  @override
   String get diagnosticsEmpty => 'Žádné chyby. Přesně tak to má být.';
 
   @override

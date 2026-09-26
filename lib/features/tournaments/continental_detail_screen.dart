@@ -4,6 +4,7 @@ import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
+import 'package:fnm/core/util/competition_label.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/entities/group_standing.dart';
@@ -15,8 +16,8 @@ import 'package:fnm/domain/services/competition/group_advancement.dart';
 import 'package:fnm/domain/services/competition/trophies.dart';
 import 'package:fnm/features/tournaments/best_thirds.dart';
 import 'package:fnm/features/tournaments/continental_detail_providers.dart';
-import 'package:fnm/features/tournaments/tournament_bracket.dart';
 import 'package:fnm/features/tournaments/tournament_awards.dart';
+import 'package:fnm/features/tournaments/tournament_bracket.dart';
 import 'package:fnm/features/tournaments/tournament_history.dart';
 import 'package:fnm/features/tournaments/tournament_holders_row.dart';
 import 'package:fnm/features/tournaments/tournament_stats.dart';
@@ -107,7 +108,9 @@ class ContinentalDetailScreen extends ConsumerWidget {
           ),
           title: Text(
             dataAsync.maybeWhen(
-              data: (d) => d?.name.toUpperCase() ?? l.tourContChampionship,
+              data: (d) => d == null
+                  ? l.tourContChampionship
+                  : competitionLabel(l, d.name).toUpperCase(),
               orElse: () => l.tourContChampionship,
             ),
             style: AppTypography.labelMedium.copyWith(color: AppColors.primary),
@@ -151,7 +154,9 @@ class ContinentalDetailScreen extends ConsumerWidget {
                 return TournamentSoon(
                   message: data.isPlayerRegion
                       ? l.tourContQualSeeded
-                      : l.tourContBackgroundRegion(data.name),
+                      : l.tourContBackgroundRegion(
+                          competitionLabel(l, data.name),
+                        ),
                 );
               }
               if (!data.qualDrawWatched) {
@@ -226,7 +231,9 @@ class ContinentalDetailScreen extends ConsumerWidget {
                   TournamentSoon(
                     message: data.isPlayerRegion
                         ? l.tourContFinalsDrawAfterQual
-                        : l.tourContBackgroundRegion(data.name),
+                        : l.tourContBackgroundRegion(
+                            competitionLabel(l, data.name),
+                          ),
                   ),
                 if (data.knockout.isNotEmpty)
                   TournamentBracket(
@@ -235,7 +242,7 @@ class ContinentalDetailScreen extends ConsumerWidget {
                     ladder: _ladder,
                     champion: data.champion,
                     championLabel: l.tourContChampionsHeading(
-                      data.name.toUpperCase(),
+                      competitionLabel(l, data.name).toUpperCase(),
                     ),
                     playerNationId: data.playerNationId,
                     // Only the manager's own confederation is played out, so a
@@ -248,7 +255,9 @@ class ContinentalDetailScreen extends ConsumerWidget {
                             champion: data.champion,
                             knockout: data.knockout,
                             groups: data.groups,
-                            championTitle: l.tourContWinnersTitle(data.name),
+                            championTitle: l.tourContWinnersTitle(
+                              competitionLabel(l, data.name),
+                            ),
                           ),
                     groupSeeds: groupSeedsOf(data.groups),
                     code: code,
@@ -258,7 +267,9 @@ class ContinentalDetailScreen extends ConsumerWidget {
                   TournamentSoon(
                     message: data.isPlayerRegion
                         ? l.tourContContestedBeforeWc
-                        : l.tourContBackgroundRegion(data.name),
+                        : l.tourContBackgroundRegion(
+                            competitionLabel(l, data.name),
+                          ),
                   ),
                 TournamentAwardsTab(
                   team: data.teamOfTournament,
