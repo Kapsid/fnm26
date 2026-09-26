@@ -78,7 +78,7 @@ h2 { font-size: clamp(27px, 5vw, 38px); font-weight: 800; margin-bottom: 8px; }
 h3 { font-size: 18px; font-weight: 700; letter-spacing: -0.01em; }
 
 p { margin: 0 0 14px; }
-.lede { color: var(--muted); font-size: clamp(17px, 2.3vw, 19px); max-width: 60ch; }
+.lede { color: var(--muted); font-size: clamp(17px, 2.3vw, 19px); max-width: 72ch; }
 a { color: var(--steel); text-decoration-color: var(--line-bright); }
 a:hover { text-decoration-color: currentColor; }
 
@@ -221,8 +221,13 @@ section:first-of-type { border-top: 0; }
 
 /* ---------- about + contact ---------- */
 
-.split { display: grid; gap: clamp(26px, 4vw, 48px); }
-@media (min-width: 780px) { .split { grid-template-columns: 1fr 1fr; } }
+/* The portrait column is sized to the portrait, not to half the page. As
+   1fr 1fr the photo capped at 340px left the rest of its half empty, so the
+   text started a long way from it with nothing in between. */
+.split { display: grid; gap: clamp(24px, 3vw, 40px); }
+@media (min-width: 780px) {
+  .split { grid-template-columns: minmax(0, 340px) 1fr; align-items: start; }
+}
 
 .panel {
   background: var(--panel);
