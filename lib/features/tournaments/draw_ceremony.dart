@@ -463,16 +463,26 @@ class _Pot extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text(
-            AppLocalizations.of(context).tourPot(index + 1),
-            style:
-                (active ? AppTypography.labelMedium : AppTypography.labelSmall)
-                    .copyWith(
-                      color: active
-                          ? AppColors.primary
-                          : AppColors.onSurfaceVariant,
-                      fontWeight: active ? FontWeight.w800 : FontWeight.w600,
-                    ),
+          // The same size whether it is the pot being drawn or not, and always
+          // one line. The active pot used to step up to labelMedium, and in a
+          // column a quarter (or a sixth) of the phone wide, with the system
+          // font enlarged, "KOŠ 1" no longer fit and broke into "KOŠ" over
+          // "1" the moment its pot came up, so the row jumped as the draw
+          // moved along. The active pot already says so with its border, its
+          // fill, its colour and its bigger flags; the weight is enough here.
+          // scaleDown only ever shrinks, and only when the column is too
+          // narrow.
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text(
+              AppLocalizations.of(context).tourPot(index + 1),
+              maxLines: 1,
+              softWrap: false,
+              style: AppTypography.labelSmall.copyWith(
+                color: active ? AppColors.primary : AppColors.onSurfaceVariant,
+                fontWeight: active ? FontWeight.w800 : FontWeight.w600,
+              ),
+            ),
           ),
           const SizedBox(height: 4),
           // The flags of the nations still waiting in this pot. The manager's

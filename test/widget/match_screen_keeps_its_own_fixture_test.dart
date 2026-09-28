@@ -14,6 +14,7 @@ import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/services/entitlement/entitlement.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/hub/hub_providers.dart';
+import 'package:fnm/features/match/match_screen.dart';
 import 'package:fnm/features/match/match_providers.dart';
 import 'package:fnm/features/tactics/set_piece_takers_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
@@ -103,13 +104,22 @@ void main() {
     );
     await tester.pump();
 
-    /// The scoreline on the match header, as "h : a".
+    /// The scoreline on the match header, as "h : a". The scoreboard sets it
+    /// as three pieces (so the colon sits on the centre line); join them.
     String scoreOnScreen() {
-      for (final e in find.byType(Text).evaluate()) {
-        final t = (e.widget as Text).data;
-        if (t != null && RegExp(r'^\d+ : \d+$').hasMatch(t)) return t;
-      }
-      return '(none)';
+      final pieces = [
+        for (final e in find
+            .descendant(
+              of: find.byType(MatchScoreboard),
+              matching: find.byType(Text),
+            )
+            .evaluate())
+          (e.widget as Text).data ?? '',
+      ];
+      final at = pieces.indexOf(' : ');
+      if (at < 1 || at + 1 >= pieces.length) return '(none)';
+      final line = '${pieces[at - 1]} : ${pieces[at + 1]}';
+      return RegExp(r'^\d+ : \d+$').hasMatch(line) ? line : '(none)';
     }
 
     /// The two nation codes either side of that scoreline.

@@ -126,6 +126,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get matchContinue => 'Continue';
 
   @override
+  String get matchContinuing => 'Continuing…';
+
+  @override
   String matchTacticsWithSubs(int used, int max) {
     return 'Tactics · $used/$max subs';
   }
@@ -8032,7 +8035,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get managerRoleScoutBlurb =>
-      'Watches the world\'s teenagers. Nothing he reports reaches your squad yet.';
+      'Reads your prospects and your next opponent: truer star ratings, and an edge on matchday.';
 
   @override
   String get managerRoleFitness => 'Fitness Coach';
@@ -8058,6 +8061,42 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String staffHiringYouth(int minPoints, int maxPoints) {
     return 'and youngsters +$minPoints to +$maxPoints overall';
+  }
+
+  @override
+  String staffEffectScoutRead(int percent) {
+    return 'Reads $percent% of prospects exactly';
+  }
+
+  @override
+  String staffEffectScoutCaps(int caps) {
+    String _temp0 = intl.Intl.pluralLogic(
+      caps,
+      locale: localeName,
+      other: 'Potential known after $caps caps',
+      one: 'Potential known after 1 cap',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String staffEffectScoutDossier(int points) {
+    return '+$points rating from opponent dossiers';
+  }
+
+  @override
+  String staffHiringScoutRead(int min, int max) {
+    return 'Hiring one: $min% to $max% of reads exact';
+  }
+
+  @override
+  String staffHiringScoutCaps(int minCaps, int maxCaps) {
+    return 'and potential known $minCaps to $maxCaps caps sooner';
+  }
+
+  @override
+  String staffHiringScoutDossier(int minPoints, int maxPoints) {
+    return 'and +$minPoints to +$maxPoints rating every match';
   }
 
   @override
@@ -8648,6 +8687,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get strengthFactorStaff => 'Staff room';
+
+  @override
+  String get strengthFactorDossier => 'Scout\'s dossier';
 
   @override
   String pressAskDrought1(String player, String count) {

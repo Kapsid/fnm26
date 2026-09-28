@@ -50,6 +50,10 @@ class MatchPreviewScreen extends ConsumerWidget {
 
   final int careerId;
 
+  /// Height of both buttons in the bottom bar, the outlined button's own
+  /// minimum, so Kick-off and Tactics read as a matched pair.
+  static const double _barButtonHeight = 48;
+
   Future<void> _openTactics(BuildContext context, WidgetRef ref) async {
     // Push (don't replace) so returning lands back on the preview, then refresh
     // it to pick up the new lineup.
@@ -228,13 +232,23 @@ class MatchPreviewScreen extends ConsumerWidget {
         top: false,
         child: Padding(
           padding: const EdgeInsets.all(AppSpacing.marginMobile),
+          // Two equal halves, one height.
+          //
+          // Kick-off used to take two thirds of the bar at the primary
+          // button's full 52, which left Tactics a third: on a 412-wide phone
+          // with the system font turned up, the outlined button's own 24-a-side
+          // padding and its icon ate most of that and "Taktika" broke over two
+          // lines inside a button built for one. Kick-off is a short word in
+          // both languages and scales itself down if it ever is not, so it
+          // gives up the width and the extra height; Tactics gets half the bar,
+          // tighter padding, and a label that shrinks rather than wraps.
           child: Row(
             children: [
               Expanded(
-                flex: 2,
                 child: PrimaryButton(
                   label: l10n.matchKickOff,
                   icon: Icons.sports_soccer,
+                  height: _barButtonHeight,
                   onPressed: () =>
                       context.go('${Routes.match}?careerId=$careerId'),
                 ),
@@ -244,9 +258,19 @@ class MatchPreviewScreen extends ConsumerWidget {
                 child: OutlinedButton.icon(
                   onPressed: () => _openTactics(context, ref),
                   icon: const Icon(Icons.tune, size: 18),
-                  label: Text(l10n.matchTactics),
+                  label: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Text(
+                      l10n.matchTactics,
+                      maxLines: 1,
+                      softWrap: false,
+                    ),
+                  ),
                   style: OutlinedButton.styleFrom(
-                    minimumSize: const Size.fromHeight(48),
+                    minimumSize: const Size.fromHeight(_barButtonHeight),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: AppSpacing.md,
+                    ),
                     foregroundColor: AppColors.primary,
                     side: const BorderSide(color: AppColors.outlineVariant),
                   ),

@@ -66,6 +66,7 @@ youthPyramidProvider = FutureProvider.autoDispose.family<YouthPyramid, int>((
       atLevel,
       previousPool: before,
       capsByPlayer: caps,
+      scout: career.staffScout,
     );
   }
 
@@ -198,16 +199,19 @@ youthShortlistProvider = FutureProvider.autoDispose
         final senior = seniors[m.playerId];
         if (senior != null) {
           final caps = capsById[m.playerId] ?? 0;
-          final certain = caps >= Prospects.capsToKnow;
+          final read = Prospects.read(
+            senior.id,
+            age: senior.age,
+            caps: caps,
+            scout: career.staffScout,
+          );
           out.add((
             mark: m,
             status: WatchedStatus.senior,
             player: senior,
             caps: caps,
-            stars: certain
-                ? Prospects.trueStars(senior.id, age: senior.age)
-                : Prospects.scoutedStars(senior.id, age: senior.age),
-            certain: certain,
+            stars: read.stars,
+            certain: read.certain,
           ));
           continue;
         }

@@ -15,7 +15,8 @@ import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/services/club/club_form.dart';
 import 'package:fnm/features/tactics/call_up_screen.dart'
     show clubStandingLabel;
-import 'package:fnm/domain/services/player/player_lifecycle.dart';
+import 'package:fnm/domain/services/manager/staff.dart';
+import 'package:fnm/domain/services/player/prospects.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
 import 'package:fnm/features/awards/award_providers.dart';
 import 'package:fnm/features/career/career_providers.dart';
@@ -42,6 +43,10 @@ typedef _PlayerView = ({
   /// read for — the same player is a first-choice one season and a squad man
   /// the next.
   DateTime asOf,
+
+  /// Who is reading young players' ceilings for this save, so the potential
+  /// shown here is the same read the youth screens give.
+  StaffTier scout,
 });
 typedef _PlayerArg = ({int careerId, int playerId});
 
@@ -102,6 +107,7 @@ _playerDetailProvider = FutureProvider.autoDispose
       return (
         saveSeed: career?.rngSeed ?? 0,
         asOf: career?.inGameDate ?? CareerService.cycleStart,
+        scout: career?.staffScout ?? StaffTier.none,
         player: player,
         nation: nation,
         goals: goals,
@@ -328,10 +334,19 @@ class PlayerDetailScreen extends ConsumerWidget {
                     ),
                     _fact(l.playerPosition, positionName(l, p.position)),
                     _fact(l.playerAge, '${p.age}'),
-                    // A coarse scouted ceiling for prospects — deliberately
-                    // fuzzy (5 buckets), so developing youth stays a gamble.
+                    // The scouted ceiling for prospects: the same read the
+                    // youth screens give (the estimate until he has played
+                    // enough to be known), so developing youth stays a gamble
+                    // and a better scout narrows it.
                     if (p.age <= 21)
-                      _fact(l.playerPotential, _potentialStars(p.id)),
+                      _fact(
+                        l.playerPotential,
+                        _potentialStars(
+                          p,
+                          caps: view.stats?.caps ?? 0,
+                          scout: view.scout,
+                        ),
+                      ),
                     _fact(l.playerValue, money(p.value)),
                   ],
                 ),
@@ -794,17 +809,17 @@ class _HistoryRow extends StatelessWidget {
 /// A coarse 5-star rendering of a prospect's hidden development ceiling. Bucketed
 /// (not the raw multiplier) so it hints at potential without giving the exact
 /// number away — developing youth stays a judgement call.
-String _potentialStars(int id) {
-  final pot = PlayerLifecycle.developmentPotential(id);
-  final filled = pot < 0.7
-      ? 1
-      : pot < 0.95
-      ? 2
-      : pot < 1.2
-      ? 3
-      : pot < 1.45
-      ? 4
-      : 5;
+String _potentialStars(
+  Player p, {
+  required int caps,
+  required StaffTier scout,
+}) {
+  final filled = Prospects.read(
+    p.id,
+    age: p.age,
+    caps: caps,
+    scout: scout,
+  ).stars;
   return '★' * filled + '☆' * (5 - filled);
 }
 

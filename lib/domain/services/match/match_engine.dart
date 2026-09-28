@@ -23,6 +23,7 @@ class MatchTeam {
     this.deadBallTakerId,
     this.conditionByPlayer = const {},
     this.traitsByPlayer = const {},
+    this.ratingBonus = 0,
   });
 
   final int nationId;
@@ -39,6 +40,13 @@ class MatchTeam {
   /// ratings depending on where you looked. The displayed rating is always the
   /// player's real overall; condition is what the engine quietly does with it.
   final Map<int, int> conditionByPlayer;
+
+  /// A side-wide shift, in rating points, on every man the side fields
+  /// (substitutes included), applied on the same seam as [conditionByPlayer].
+  ///
+  /// This is the scout's opponent dossier (`Staff.dossierBonus`): the
+  /// manager's side only, zero for everybody else.
+  final int ratingBonus;
 
   /// Each player's traits (player id → traits), from [PlayerTraits]. Traits are
   /// what make a squad memorable: a hothead collects cards, an iron man barely
@@ -1775,7 +1783,7 @@ class MatchEngine {
       // with; the player's displayed overall never moves. Traits shift it too:
       // a big-game player is worth more on the biggest night, and a leader
       // lifts everyone ELSE around them.
-      var shift = t.team.conditionByPlayer[p.id] ?? 0;
+      var shift = (t.team.conditionByPlayer[p.id] ?? 0) + t.team.ratingBonus;
       if (t.bigMatch && t.team.hasTrait(p.id, PlayerTrait.bigGame)) {
         shift += PlayerTraits.bigGameBonus;
       }

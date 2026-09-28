@@ -126,6 +126,9 @@ class AppLocalizationsCs extends AppLocalizations {
   String get matchContinue => 'Pokračovat';
 
   @override
+  String get matchContinuing => 'Ukládám…';
+
+  @override
   String matchTacticsWithSubs(int used, int max) {
     return 'Taktika · $used/$max střídání';
   }
@@ -8043,7 +8046,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get managerRoleScoutBlurb =>
-      'Sleduje mladé hráče po celém světě. Jeho zprávy se k týmu zatím nedostanou.';
+      'Hodnotí vaše talenty i příštího soupeře: přesnější hvězdičky a výhoda v den zápasu.';
 
   @override
   String get managerRoleFitness => 'Kondiční trenér';
@@ -8069,6 +8072,43 @@ class AppLocalizationsCs extends AppLocalizations {
   @override
   String staffHiringYouth(int minPoints, int maxPoints) {
     return 'a mladíci +$minPoints až +$maxPoints na celkovém';
+  }
+
+  @override
+  String staffEffectScoutRead(int percent) {
+    return 'Přesně odhadne $percent % talentů';
+  }
+
+  @override
+  String staffEffectScoutCaps(int caps) {
+    String _temp0 = intl.Intl.pluralLogic(
+      caps,
+      locale: localeName,
+      other: 'Potenciál jasný po $caps startech',
+      few: 'Potenciál jasný po $caps startech',
+      one: 'Potenciál jasný po 1 startu',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String staffEffectScoutDossier(int points) {
+    return '+$points k síle díky rozboru soupeře';
+  }
+
+  @override
+  String staffHiringScoutRead(int min, int max) {
+    return 'Po najmutí: přesně odhadne $min až $max % talentů';
+  }
+
+  @override
+  String staffHiringScoutCaps(int minCaps, int maxCaps) {
+    return 'a potenciál jasný o $minCaps až $maxCaps starty dřív';
+  }
+
+  @override
+  String staffHiringScoutDossier(int minPoints, int maxPoints) {
+    return 'a +$minPoints až +$maxPoints k síle v každém zápase';
   }
 
   @override
@@ -8655,6 +8695,9 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get strengthFactorStaff => 'Realizační tým';
+
+  @override
+  String get strengthFactorDossier => 'Rozbor soupeře';
 
   @override
   String pressAskDrought1(String player, String count) {

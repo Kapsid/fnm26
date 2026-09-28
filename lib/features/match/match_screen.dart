@@ -1287,7 +1287,7 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
                     Column(
                       children: [
                         const _TopBar(),
-                        _Header(
+                        MatchScoreboard(
                           homeCode: code(homeId),
                           awayCode: code(awayId),
                           homeName: name(homeId),
@@ -1515,7 +1515,9 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
                 ? Padding(
                     padding: const EdgeInsets.all(AppSpacing.marginMobile),
                     child: PrimaryButton(
-                      label: _committing ? 'Continuing…' : 'Continue',
+                      label: _committing
+                          ? AppLocalizations.of(context).matchContinuing
+                          : AppLocalizations.of(context).matchContinue,
                       icon: Icons.check_rounded,
                       onPressed: _committing
                           ? null

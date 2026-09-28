@@ -1,6 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/player.dart';
+import 'package:fnm/domain/services/manager/staff.dart';
 import 'package:fnm/domain/services/player/prospects.dart';
 
 import '../../helpers/fixtures.dart';
@@ -144,6 +145,125 @@ void main() {
         Prospects.scoutedStars(77, age: 15),
         Prospects.scoutedStars(77, age: 15),
       );
+    });
+  });
+
+  group('what a scout adds to the read', () {
+    // The read as it was before the scout did anything, copied here verbatim
+    // so a save with nobody in the job is held to it exactly.
+    int oldScoutedStars(int playerId, {int age = 20}) {
+      int mix(int x) {
+        var h = x & 0x7fffffff;
+        h = (h ^ (h >> 16)) * 0x45d9f3b & 0x7fffffff;
+        h = (h ^ (h >> 16)) * 0x45d9f3b & 0x7fffffff;
+        return (h ^ (h >> 16)) & 0x7fffffff;
+      }
+
+      final spread = age >= YouthLevel.u19.minAge ? 1 : 2;
+      final wobble = (mix(playerId ^ 0x5CADE) % (spread * 2 + 1)) - spread;
+      return (Prospects.trueStars(playerId, age: age) + wobble).clamp(1, 5);
+    }
+
+    test('nobody in the job reads exactly as the game always did', () {
+      for (var id = 0; id < 3000; id++) {
+        for (final age in [11, 14, 16, 17, 19, 20]) {
+          expect(
+            Prospects.scoutedStars(id, age: age, scout: StaffTier.none),
+            oldScoutedStars(id, age: age),
+            reason: 'player $id at $age',
+          );
+          expect(
+            Prospects.scoutedStars(id, age: age),
+            oldScoutedStars(id, age: age),
+          );
+        }
+      }
+    });
+
+    test('nobody in the job still needs three caps', () {
+      expect(Prospects.capsToKnow, 3);
+      expect(Prospects.capsToKnowWith(StaffTier.none), 3);
+      expect(
+        Prospects.watchlist(
+          [kid(11)],
+          capsByPlayer: {11: 2},
+        ).single.certain,
+        isFalse,
+      );
+    });
+
+    test('a better scout knows sooner', () {
+      expect(Prospects.capsToKnowWith(StaffTier.basic), 2);
+      expect(Prospects.capsToKnowWith(StaffTier.good), 2);
+      expect(Prospects.capsToKnowWith(StaffTier.elite), 1);
+      final elite = Prospects.watchlist(
+        [kid(11)],
+        capsByPlayer: {11: 1},
+        scout: StaffTier.elite,
+      ).single;
+      expect(elite.certain, isTrue);
+      expect(elite.stars, Prospects.trueStars(11));
+    });
+
+    test('a hired scout is never more than a star out, even on a boy', () {
+      for (final tier in [StaffTier.basic, StaffTier.good, StaffTier.elite]) {
+        for (var id = 1; id < 3000; id++) {
+          for (final age in [12, 16, 19]) {
+            final gap =
+                (Prospects.scoutedStars(id, age: age, scout: tier) -
+                        Prospects.trueStars(id, age: age))
+                    .abs();
+            expect(gap, lessThanOrEqualTo(1), reason: '$tier, $id at $age');
+          }
+        }
+      }
+    });
+
+    double exactShare(StaffTier tier, int age) {
+      var exact = 0;
+      const n = 4000;
+      for (var id = 0; id < n; id++) {
+        if (Prospects.scoutedStars(id, age: age, scout: tier) ==
+            Prospects.trueStars(id, age: age)) {
+          exact++;
+        }
+      }
+      return exact / n;
+    }
+
+    test('each tier reads more of them exactly, elite nearly all', () {
+      for (final age in [14, 19]) {
+        final shares = [
+          for (final tier in StaffTier.values) exactShare(tier, age),
+        ];
+        for (var i = 1; i < shares.length; i++) {
+          expect(shares[i], greaterThan(shares[i - 1]), reason: 'age $age');
+        }
+        expect(shares.last, greaterThan(0.88), reason: 'age $age');
+      }
+    });
+
+    test('a player a good scout reads right, an elite one does too', () {
+      for (var id = 0; id < 3000; id++) {
+        final truth = Prospects.trueStars(id, age: 19);
+        if (Prospects.scoutedStars(id, age: 19, scout: StaffTier.good) ==
+            truth) {
+          expect(
+            Prospects.scoutedStars(id, age: 19, scout: StaffTier.elite),
+            truth,
+            reason: 'player $id',
+          );
+        }
+      }
+    });
+
+    test('the read is hashed, not rolled: the same on every screen', () {
+      for (final tier in StaffTier.values) {
+        expect(
+          Prospects.scoutedStars(77, age: 15, scout: tier),
+          Prospects.scoutedStars(77, age: 15, scout: tier),
+        );
+      }
     });
   });
 }

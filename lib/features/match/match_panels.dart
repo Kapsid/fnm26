@@ -1272,101 +1272,147 @@ class HalfTimePrompt extends StatelessWidget {
         : diff < 0
         ? AppColors.error
         : AppColors.onSurface;
+    // The card is laid out so Continue is ALWAYS on screen.
+    //
+    // It used to be one scroll view around the whole card, with Continue at
+    // the bottom of it. On a phone with the system font turned up, three talk
+    // options whose blurbs wrap to two or three lines each ran the card past
+    // the bottom of the screen, and the one action every interval ends with
+    // was below the fold: the manager had to go looking for the way back to
+    // his match. Now the header and the two buttons are fixed, only the talk
+    // options scroll, and they take whatever height is left between them.
+    // The type and the padding are a step smaller too, so on most phones
+    // nothing scrolls at all.
     return Positioned.fill(
       child: ColoredBox(
         color: Colors.black54,
         child: Center(
-          child: SingleChildScrollView(
-            child: Container(
-              margin: const EdgeInsets.all(AppSpacing.lg),
-              padding: const EdgeInsets.all(AppSpacing.lg),
-              constraints: const BoxConstraints(maxWidth: 420),
-              decoration: BoxDecoration(
-                color: AppColors.surfaceContainerHigh,
-                borderRadius: AppRadii.lgAll,
-                border: Border.all(color: AppColors.primary, width: 2),
-              ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    heading,
-                    style: AppTypography.labelMedium.copyWith(
-                      color: AppColors.primary,
-                    ),
+          child: Container(
+            margin: const EdgeInsets.all(AppSpacing.md),
+            padding: const EdgeInsets.all(AppSpacing.md),
+            constraints: const BoxConstraints(maxWidth: 420),
+            decoration: BoxDecoration(
+              color: AppColors.surfaceContainerHigh,
+              borderRadius: AppRadii.lgAll,
+              border: Border.all(color: AppColors.primary, width: 2),
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  heading,
+                  textAlign: TextAlign.center,
+                  style: AppTypography.labelMedium.copyWith(
+                    color: AppColors.primary,
+                    // No tracking: its trailing gap pushes a centred caps
+                    // heading ("PRODLOUŽENÍ · POLOČAS") off the middle.
+                    letterSpacing: 0,
                   ),
-                  const SizedBox(height: AppSpacing.sm),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      FlagDisc(homeCode, size: 28),
-                      const SizedBox(width: AppSpacing.sm),
-                      Text(
-                        '$homeScore – $awayScore',
-                        style: AppTypography.headlineMedium,
-                      ),
-                      const SizedBox(width: AppSpacing.sm),
-                      FlagDisc(awayCode, size: 28),
-                    ],
-                  ),
-                  const SizedBox(height: AppSpacing.xs),
-                  Text(
-                    '$state · ${l10n.matchPossessionShare(possession)}',
-                    style: AppTypography.bodySmall.copyWith(color: stateColor),
-                  ),
-                  const SizedBox(height: AppSpacing.md),
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      l10n.teamTalkHeading,
-                      style: AppTypography.labelSmall.copyWith(
-                        color: AppColors.onSurfaceVariant,
+                ),
+                const SizedBox(height: AppSpacing.xs),
+                // Centred on the dash, not as a block: each side takes an
+                // equal half, so the dash sits on the card's centre line
+                // whatever the two numbers are.
+                Row(
+                  children: [
+                    Expanded(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          FlagDisc(homeCode, size: 24),
+                          const SizedBox(width: AppSpacing.sm),
+                          Text('$homeScore', style: _scoreStyle),
+                        ],
                       ),
                     ),
-                  ),
-                  const SizedBox(height: AppSpacing.xs),
-                  for (final tone in options)
-                    _TalkOption(
-                      label: teamTalkLabel(l10n, tone),
-                      blurb: teamTalkBlurb(l10n, tone),
-                      effect: tone.effect,
-                      selected: selectedTalk == tone,
-                      onTap: () => onTalk(tone),
+                    Text(' – ', style: _scoreStyle),
+                    Expanded(
+                      child: Row(
+                        children: [
+                          Text('$awayScore', style: _scoreStyle),
+                          const SizedBox(width: AppSpacing.sm),
+                          FlagDisc(awayCode, size: 24),
+                        ],
+                      ),
                     ),
-                  const SizedBox(height: AppSpacing.md),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: OutlinedButton.icon(
-                          onPressed: onTactics,
-                          icon: const Icon(Icons.tune, size: 18),
-                          label: Text(
-                            l10n.matchTacticsWithSubs(subsUsed, kMaxSubs),
+                  ],
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  '$state · ${l10n.matchPossessionShare(possession)}',
+                  textAlign: TextAlign.center,
+                  style: AppTypography.bodySmall.copyWith(color: stateColor),
+                ),
+                const SizedBox(height: AppSpacing.sm),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    l10n.teamTalkHeading,
+                    style: AppTypography.labelSmall.copyWith(
+                      color: AppColors.onSurfaceVariant,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: AppSpacing.xs),
+                // The only part that scrolls, and only when it must.
+                Flexible(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        for (final tone in options)
+                          _TalkOption(
+                            label: teamTalkLabel(l10n, tone),
+                            blurb: teamTalkBlurb(l10n, tone),
+                            effect: tone.effect,
+                            selected: selectedTalk == tone,
+                            onTap: () => onTalk(tone),
                           ),
-                          style: OutlinedButton.styleFrom(
-                            foregroundColor: AppColors.primary,
-                            side: const BorderSide(
-                              color: AppColors.outlineVariant,
-                            ),
-                          ),
-                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(height: AppSpacing.sm),
+                SizedBox(
+                  width: double.infinity,
+                  child: OutlinedButton.icon(
+                    onPressed: onTactics,
+                    icon: const Icon(Icons.tune, size: 18),
+                    label: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Text(
+                        l10n.matchTacticsWithSubs(subsUsed, kMaxSubs),
+                        maxLines: 1,
+                        softWrap: false,
                       ),
-                    ],
+                    ),
+                    style: OutlinedButton.styleFrom(
+                      foregroundColor: AppColors.primary,
+                      side: const BorderSide(color: AppColors.outlineVariant),
+                    ),
                   ),
-                  const SizedBox(height: AppSpacing.sm),
-                  PrimaryButton(
-                    label: l10n.matchContinue,
-                    icon: Icons.play_arrow_rounded,
-                    onPressed: onContinue,
-                  ),
-                ],
-              ),
+                ),
+                const SizedBox(height: AppSpacing.sm),
+                PrimaryButton(
+                  label: l10n.matchContinue,
+                  icon: Icons.play_arrow_rounded,
+                  height: 48,
+                  onPressed: onContinue,
+                ),
+              ],
             ),
           ),
         ),
       ),
     );
   }
+
+  /// The interval scoreline: a step down from the headline size it was, which
+  /// is room the talk options need more than the score does.
+  static final TextStyle _scoreStyle = AppTypography.titleMedium.copyWith(
+    fontWeight: FontWeight.w700,
+    fontFeatures: const [FontFeature.tabularFigures()],
+  );
 }
 
 /// One team-talk option in the half-time card: its label, what it asks for, and
@@ -1392,7 +1438,7 @@ class _TalkOption extends StatelessWidget {
     final l = AppLocalizations.of(context);
     final (atk, def) = effect;
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 3),
+      padding: const EdgeInsets.symmetric(vertical: 2),
       child: Material(
         color: selected
             ? AppColors.primary.withValues(alpha: 0.16)
@@ -1402,9 +1448,12 @@ class _TalkOption extends StatelessWidget {
           onTap: onTap,
           borderRadius: AppRadii.baseAll,
           child: Container(
+            // Tighter than a list row: three of these sit between the score
+            // and Continue, and every point of padding here is a point of
+            // talk the manager has to scroll past on a small phone.
             padding: const EdgeInsets.symmetric(
-              horizontal: AppSpacing.md,
-              vertical: AppSpacing.sm,
+              horizontal: AppSpacing.sm + AppSpacing.xs,
+              vertical: 6,
             ),
             decoration: BoxDecoration(
               borderRadius: AppRadii.baseAll,
@@ -1428,7 +1477,16 @@ class _TalkOption extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(label, style: AppTypography.bodyMedium),
+                      // The body-small face rather than body-medium: the
+                      // option's name is a word or two and reads fine a size
+                      // down, set bold so it still leads its blurb.
+                      Text(
+                        label,
+                        style: AppTypography.bodySmall.copyWith(
+                          color: AppColors.onSurface,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
                       Text(
                         blurb,
                         style: AppTypography.labelSmall.copyWith(

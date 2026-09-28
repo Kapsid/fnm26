@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/features/tournaments/draw_ceremony.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
@@ -148,4 +149,66 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('Continue'), findsOneWidget);
   });
+
+  // Reported from an Android playtest in Czech, system font enlarged: the pot
+  // being drawn stepped up a size and "KOŠ 1" broke onto two lines. Six pots
+  // is the narrowest a real draw makes the columns.
+  for (final width in [360.0, 412.0]) {
+    testWidgets('pot labels stay one line and one size at $width, cs, x1.3', (
+      tester,
+    ) async {
+      tester.view.physicalSize = Size(width, 900);
+      tester.view.devicePixelRatio = 1.0;
+      addTearDown(tester.view.reset);
+      final nations = {
+        for (var i = 1; i <= 24; i++) i: nation(id: i, name: 'Nation $i'),
+      };
+
+      await tester.pumpApp(
+        Builder(
+          builder: (context) => MediaQuery(
+            data: MediaQuery.of(
+              context,
+            ).copyWith(textScaler: const TextScaler.linear(1.3)),
+            child: Scaffold(
+              body: DrawCeremony(
+                groups: [
+                  for (var g = 0; g < 4; g++)
+                    (
+                      name: String.fromCharCode(65 + g),
+                      nationIds: [for (var p = 1; p <= 6; p++) g * 6 + p],
+                    ),
+                ],
+                nations: nations,
+                potCount: 6,
+                onContinue: () {},
+              ),
+            ),
+          ),
+        ),
+        locale: const Locale('cs'),
+      );
+      await tester.pump();
+      // Hold it mid-draw, with one pot active and the rest waiting.
+      await tester.tap(find.text('Pozastavit'));
+      await tester.pump();
+
+      expect(tester.takeException(), isNull);
+      final heights = <double>{};
+      for (var pot = 1; pot <= 6; pot++) {
+        final label = find.text('KOŠ $pot');
+        expect(label, findsOneWidget);
+        final paragraph = tester.renderObject<RenderParagraph>(label);
+        expect(paragraph.didExceedMaxLines, isFalse, reason: 'KOŠ $pot');
+        // labelSmall is 16 high; x1.3, one line.
+        expect(
+          paragraph.size.height,
+          lessThanOrEqualTo(16 * 1.3 + 0.5),
+          reason: 'KOŠ $pot wrapped',
+        );
+        heights.add(paragraph.size.height);
+      }
+      expect(heights, hasLength(1), reason: 'the active pot is no bigger');
+    });
+  }
 }

@@ -259,6 +259,8 @@ matchPreviewProvider = FutureProvider.autoDispose.family<MatchPreview?, int>((
     formation: playerFormation,
     roles: roles,
     conditionByPlayer: conditionDeltas,
+    // The scout's dossier on this opponent: his side only, the AI's never.
+    ratingBonus: Staff.dossierBonus(career.staffScout),
     traitsByPlayer: traitsOf(fullPool),
     penaltyTakerId: takers.penalty,
     deadBallTakerId: takers.deadBall,

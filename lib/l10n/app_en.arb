@@ -170,7 +170,11 @@
   },
   "matchContinue": "Continue",
   "@matchContinue": {
-    "description": "Button that resumes play from the interval."
+    "description": "Button that resumes play from the interval, and the full-time button that leaves the match."
+  },
+  "matchContinuing": "Continuing…",
+  "@matchContinuing": {
+    "description": "The full-time Continue button while the result is being saved."
   },
   "matchTacticsWithSubs": "Tactics · {used}/{max} subs",
   "@matchTacticsWithSubs": {
@@ -11786,7 +11790,7 @@
   "@managerRoleScout": {
     "description": "Staff role."
   },
-  "managerRoleScoutBlurb": "Watches the world's teenagers. Nothing he reports reaches your squad yet.",
+  "managerRoleScoutBlurb": "Reads your prospects and your next opponent: truer star ratings, and an edge on matchday.",
   "@managerRoleScoutBlurb": {
     "description": "Staff role effect."
   },
@@ -11831,6 +11835,69 @@
   "staffHiringYouth": "and youngsters +{minPoints} to +{maxPoints} overall",
   "@staffHiringYouth": {
     "description": "Second line of what filling the vacant assistant job would be worth.",
+    "placeholders": {
+      "minPoints": {
+        "type": "int"
+      },
+      "maxPoints": {
+        "type": "int"
+      }
+    }
+  },
+  "staffEffectScoutRead": "Reads {percent}% of prospects exactly",
+  "@staffEffectScoutRead": {
+    "description": "What the scout in the job is doing: the share of unproven prospects whose star rating he gets exactly right.",
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "staffEffectScoutCaps": "{caps, plural, =1{Potential known after 1 cap} other{Potential known after {caps} caps}}",
+  "@staffEffectScoutCaps": {
+    "description": "What the scout in the job is doing: how many caps before a prospect's potential is known for sure.",
+    "placeholders": {
+      "caps": {
+        "type": "int"
+      }
+    }
+  },
+  "staffEffectScoutDossier": "+{points} rating from opponent dossiers",
+  "@staffEffectScoutDossier": {
+    "description": "What the scout in the job is doing: the rating points his pre-match report on each opponent adds to the side.",
+    "placeholders": {
+      "points": {
+        "type": "int"
+      }
+    }
+  },
+  "staffHiringScoutRead": "Hiring one: {min}% to {max}% of reads exact",
+  "@staffHiringScoutRead": {
+    "description": "What filling the vacant scout job would be worth: share of prospect star ratings read exactly.",
+    "placeholders": {
+      "min": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "staffHiringScoutCaps": "and potential known {minCaps} to {maxCaps} caps sooner",
+  "@staffHiringScoutCaps": {
+    "description": "Second line of what filling the vacant scout job would be worth.",
+    "placeholders": {
+      "minCaps": {
+        "type": "int"
+      },
+      "maxCaps": {
+        "type": "int"
+      }
+    }
+  },
+  "staffHiringScoutDossier": "and +{minPoints} to +{maxPoints} rating every match",
+  "@staffHiringScoutDossier": {
+    "description": "Third line of what filling the vacant scout job would be worth: the opponent dossier.",
     "placeholders": {
       "minPoints": {
         "type": "int"
@@ -12720,6 +12787,10 @@
   "strengthFactorStaff": "Staff room",
   "@strengthFactorStaff": {
     "description": "Pre-match strength line: what the hired staff are worth to this match."
+  },
+  "strengthFactorDossier": "Scout's dossier",
+  "@strengthFactorDossier": {
+    "description": "Pre-match strength line: what the scout's report on this opponent is worth."
   },
   "pressAskDrought1": "{player} has gone {count} games without a goal. Is he still your number nine?",
   "@pressAskDrought1": {

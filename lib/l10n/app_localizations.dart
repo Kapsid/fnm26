@@ -302,11 +302,17 @@ abstract class AppLocalizations {
   /// **'HALF TIME'**
   String get matchHalfTime;
 
-  /// Button that resumes play from the interval.
+  /// Button that resumes play from the interval, and the full-time button that leaves the match.
   ///
   /// In en, this message translates to:
   /// **'Continue'**
   String get matchContinue;
+
+  /// The full-time Continue button while the result is being saved.
+  ///
+  /// In en, this message translates to:
+  /// **'Continuing…'**
+  String get matchContinuing;
 
   /// Tactics button on the interval overlay, with subs used.
   ///
@@ -12672,7 +12678,7 @@ abstract class AppLocalizations {
   /// Staff role effect.
   ///
   /// In en, this message translates to:
-  /// **'Watches the world\'s teenagers. Nothing he reports reaches your squad yet.'**
+  /// **'Reads your prospects and your next opponent: truer star ratings, and an edge on matchday.'**
   String get managerRoleScoutBlurb;
 
   /// Staff role.
@@ -12710,6 +12716,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'and youngsters +{minPoints} to +{maxPoints} overall'**
   String staffHiringYouth(int minPoints, int maxPoints);
+
+  /// What the scout in the job is doing: the share of unproven prospects whose star rating he gets exactly right.
+  ///
+  /// In en, this message translates to:
+  /// **'Reads {percent}% of prospects exactly'**
+  String staffEffectScoutRead(int percent);
+
+  /// What the scout in the job is doing: how many caps before a prospect's potential is known for sure.
+  ///
+  /// In en, this message translates to:
+  /// **'{caps, plural, =1{Potential known after 1 cap} other{Potential known after {caps} caps}}'**
+  String staffEffectScoutCaps(int caps);
+
+  /// What the scout in the job is doing: the rating points his pre-match report on each opponent adds to the side.
+  ///
+  /// In en, this message translates to:
+  /// **'+{points} rating from opponent dossiers'**
+  String staffEffectScoutDossier(int points);
+
+  /// What filling the vacant scout job would be worth: share of prospect star ratings read exactly.
+  ///
+  /// In en, this message translates to:
+  /// **'Hiring one: {min}% to {max}% of reads exact'**
+  String staffHiringScoutRead(int min, int max);
+
+  /// Second line of what filling the vacant scout job would be worth.
+  ///
+  /// In en, this message translates to:
+  /// **'and potential known {minCaps} to {maxCaps} caps sooner'**
+  String staffHiringScoutCaps(int minCaps, int maxCaps);
+
+  /// Third line of what filling the vacant scout job would be worth: the opponent dossier.
+  ///
+  /// In en, this message translates to:
+  /// **'and +{minPoints} to +{maxPoints} rating every match'**
+  String staffHiringScoutDossier(int minPoints, int maxPoints);
 
   /// Shown against a staff role that is wired to nothing in the game.
   ///
@@ -13610,6 +13652,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Staff room'**
   String get strengthFactorStaff;
+
+  /// Pre-match strength line: what the scout's report on this opponent is worth.
+  ///
+  /// In en, this message translates to:
+  /// **'Scout\'s dossier'**
+  String get strengthFactorDossier;
 
   /// Press question about a first-choice forward who has stopped scoring.
   ///

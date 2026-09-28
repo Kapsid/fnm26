@@ -55,18 +55,59 @@ class _HubScreenState extends ConsumerState<HubScreen> {
   /// often, and each rebuild would otherwise stack another popup.
   bool _popping = false;
 
-  /// Guards the offer against firing twice while its popup is opening.
+  /// True from the moment the offer is scheduled until it has been answered
+  /// (or deferred because something else was on screen).
+  ///
+  /// Cleared in [_offerTour]'s `finally`, so a deferred offer is retried on
+  /// the next rebuild instead of being lost for the rest of the session.
   bool _offeringTour = false;
+
+  /// Whether unread news must wait because of the walk through.
+  ///
+  /// News and the tour used to race on a new save's first hub frame: both are
+  /// post-frame callbacks, and the news one spends a few awaits syncing before
+  /// it shows anything, so the offer won the guard check and the news popup
+  /// then landed on top of it (or under it, whichever lost). Accept the tour
+  /// with news still up and it got worse: the tour's overlay sits above the
+  /// Navigator, so the news dialog stayed UNDER the scrim, covering the
+  /// control being lit and untappable behind the AbsorbPointer, and the
+  /// tour's first `go` to another screen tore it down (a dialog is a pageless
+  /// route on the hub page), after which the batch was marked read unseen.
+  ///
+  /// So news waits while the offer is pending or open, and for as long as the
+  /// tour runs. It stays unread meanwhile, and pops once the offer is declined
+  /// (see [_offerTour]) or the tour ends (the hub watches [tourStepProvider],
+  /// and finishing or skipping lands back on the hub anyway).
+  bool get _tourHoldsNews =>
+      _offeringTour ||
+      !ref.read(tourOfferedProvider) ||
+      ref.read(tourStepProvider) != null;
 
   /// Asks, once ever, whether the manager wants showing around.
   ///
   /// Recorded whatever the answer is: "no thanks" is an answer, and asking it
   /// again would make an offer into a nag. Settings is the way back in.
   Future<void> _offerTour() async {
-    if (!mounted || appPopupBusy) return;
+    var started = false;
+    try {
+      // Something else is up (an action's own popup, or news that got in
+      // before the stored flag had loaded). Not recorded as offered, so the
+      // next rebuild, which that popup's own invalidations bring, asks again.
+      if (!mounted || appPopupBusy) return;
+      started = await _askTour();
+    } finally {
+      _offeringTour = false;
+      // Declined (or never asked): the news that waited for the answer goes
+      // now. Accepted: it keeps waiting for the tour to end.
+      if (mounted && !started) unawaited(_popMessages());
+    }
+  }
+
+  /// Puts the question; true when the tour was started.
+  Future<bool> _askTour() async {
     final l = AppLocalizations.of(context);
     await markTourOffered(ref);
-    if (!mounted) return;
+    if (!mounted) return false;
     final wants = await showAppPopup<bool>(
       context: context,
       builder: (popupContext) => Padding(
@@ -102,8 +143,9 @@ class _HubScreenState extends ConsumerState<HubScreen> {
         ),
       ),
     );
-    if (!mounted) return;
-    if (wants ?? false) startTour(ref, careerId);
+    if (!mounted || !(wants ?? false)) return false;
+    startTour(ref, careerId);
+    return true;
   }
 
   int get careerId => widget.careerId;
@@ -115,12 +157,17 @@ class _HubScreenState extends ConsumerState<HubScreen> {
     // Wait if an action is already showing its own popup: stepping a final
     // fires the champion news and the final's result together, and racing them
     // buries one behind the other. That path pops the news itself when done.
-    if (_popping || appPopupBusy) return;
+    // And while the walk through is being offered or is running: see
+    // [_tourHoldsNews].
+    if (_popping || appPopupBusy || !mounted || _tourHoldsNews) return;
     _popping = true;
     try {
       if (mounted) await showUnreadMessagePopups(context, ref, careerId);
     } finally {
       _popping = false;
+      // An offer that arrived while this was on screen deferred itself; give
+      // it the rebuild it retries on, now the screen is clear.
+      if (mounted && !ref.read(tourOfferedProvider)) setState(() {});
     }
   }
 
@@ -137,6 +184,10 @@ class _HubScreenState extends ConsumerState<HubScreen> {
     final unread = ref.watch(unreadMessagesProvider(careerId)).valueOrNull ?? 0;
     // What the world has said since the manager last looked.
     final yUnread = ref.watch(yUnreadCountProvider(careerId)).valueOrNull ?? 0;
+
+    // Watched so the hub rebuilds when the tour ends, which is what lets the
+    // news it held back through [_tourHoldsNews] pop.
+    ref.watch(tourStepProvider);
 
     // Surface news the moment it lands, rather than leaving it to be found.
     if (unread > 0 && !_popping) {
@@ -157,9 +208,20 @@ class _HubScreenState extends ConsumerState<HubScreen> {
           icon: const Icon(Icons.arrow_back, color: AppColors.primary),
           onPressed: () => context.go(Routes.home),
         ),
-        title: Text(
-          l.hubNationalHub,
-          style: AppTypography.labelMedium.copyWith(color: AppColors.primary),
+        // One line, shrunk to fit rather than wrapped. The title shares the bar
+        // with a back button and four actions, which leaves it roughly 160dp
+        // on a 412dp phone; "NÁRODNÍ CENTRÁLA" in the tracked mono face needs
+        // more than that once the system font is enlarged, and a wrapped title
+        // spills out of the toolbar's height. A title is a label, not reading
+        // matter, so a few percent smaller beats two lines.
+        title: FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Text(
+            l.hubNationalHub,
+            maxLines: 1,
+            softWrap: false,
+            style: AppTypography.labelMedium.copyWith(color: AppColors.primary),
+          ),
         ),
         centerTitle: true,
         actions: [

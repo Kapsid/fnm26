@@ -30,8 +30,16 @@ class _TopBar extends StatelessWidget {
   }
 }
 
-class _Header extends StatelessWidget {
-  const _Header({
+/// The scoreboard at the top of the live match: the clock plate, and the two
+/// sides either side of the scoreline.
+///
+/// Public only so a widget test can pump it and measure that the score and the
+/// clock sit on the screen's centre line whatever the two names are; nothing
+/// outside the match screen builds it.
+@visibleForTesting
+class MatchScoreboard extends StatelessWidget {
+  const MatchScoreboard({
+    super.key,
     required this.homeCode,
     required this.awayCode,
     required this.homeName,
@@ -81,17 +89,31 @@ class _Header extends StatelessWidget {
                 // Monospace tabular figures give the even, broadcast look with
                 // no letter-spacing — the latter adds a trailing gap after the
                 // last digit that pushes the time off-centre in the plate.
-                child: Text(
-                  clock,
-                  textAlign: TextAlign.center,
-                  style: AppTypography.labelMedium.copyWith(
-                    fontFamily: AppFonts.mono,
-                    fontSize: 15,
-                    fontWeight: FontWeight.w700,
-                    fontFeatures: const [FontFeature.tabularFigures()],
-                    color: live
-                        ? AppColors.onSurface
-                        : AppColors.onSurfaceVariant,
+                //
+                // Which is why the spacing is zeroed HERE: labelMedium carries
+                // 0.7 of its own, and copyWith keeps whatever it is not told to
+                // replace, so the plate the comment above describes was still
+                // tracked, and every label in it ("PO PRODLOUŽENÍ" as much as
+                // "45") sat a hair left of the centre line. One line, capped
+                // and scaled down, so a long label can never wrap the plate
+                // into two lines of a different width either.
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text(
+                    clock,
+                    textAlign: TextAlign.center,
+                    maxLines: 1,
+                    softWrap: false,
+                    style: AppTypography.labelMedium.copyWith(
+                      fontFamily: AppFonts.mono,
+                      letterSpacing: 0,
+                      fontSize: 15,
+                      fontWeight: FontWeight.w700,
+                      fontFeatures: const [FontFeature.tabularFigures()],
+                      color: live
+                          ? AppColors.onSurface
+                          : AppColors.onSurfaceVariant,
+                    ),
                   ),
                 ),
               ),
@@ -121,17 +143,36 @@ class _Header extends StatelessWidget {
                 // The scoreline still shrinks rather than shove the two sides
                 // out of the card: a long name next to a 4:3 used to run the
                 // row off the edge of a narrow screen.
+                //
+                // And it is three pieces, not one string, so the COLON is what
+                // sits on the centre line. "1 : 0" set as one run was centred
+                // as a block, and the sans digits are not one width: a narrow
+                // 1 against a round 0 put the colon a few points off the middle
+                // of the card, a different few for every score, which is what
+                // still read as off-centre after the thirds were made equal.
+                // Each number now fills a half of its own, pinned against the
+                // colon, and scales down inside that half if it must.
                 Expanded(
                   child: Padding(
                     padding: const EdgeInsets.symmetric(
                       horizontal: AppSpacing.sm,
                     ),
-                    child: FittedBox(
-                      child: Text(
-                        '$homeScore : $awayScore',
-                        maxLines: 1,
-                        style: AppTypography.displayLarge,
-                      ),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: _ScoreFigure(
+                            '$homeScore',
+                            alignment: Alignment.centerRight,
+                          ),
+                        ),
+                        const _ScoreFigure(' : '),
+                        Expanded(
+                          child: _ScoreFigure(
+                            '$awayScore',
+                            alignment: Alignment.centerLeft,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
@@ -370,6 +411,36 @@ class _PillButton extends StatelessWidget {
     final tip = tooltip;
     if (tip != null) button = Tooltip(message: tip, child: button);
     return expand ? Expanded(child: button) : button;
+  }
+}
+
+/// One piece of the live scoreline: a number, or the colon between them.
+///
+/// Set in the display face with tabular figures and no tracking, so a digit's
+/// width does not depend on which digit it is, and scaled down (never wrapped)
+/// inside whatever width it is given. [alignment] pins a number against the
+/// colon, which is what keeps the colon on the card's centre line.
+class _ScoreFigure extends StatelessWidget {
+  const _ScoreFigure(this.text, {this.alignment = Alignment.center});
+
+  final String text;
+  final AlignmentGeometry alignment;
+
+  @override
+  Widget build(BuildContext context) {
+    return FittedBox(
+      fit: BoxFit.scaleDown,
+      alignment: alignment,
+      child: Text(
+        text,
+        maxLines: 1,
+        softWrap: false,
+        style: AppTypography.displayLarge.copyWith(
+          letterSpacing: 0,
+          fontFeatures: const [FontFeature.tabularFigures()],
+        ),
+      ),
+    );
   }
 }
 

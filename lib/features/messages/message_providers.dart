@@ -8,6 +8,7 @@ import 'package:fnm/domain/repositories/competition_repository.dart';
 import 'package:fnm/domain/services/achievements/achievements.dart';
 import 'package:fnm/domain/services/competition/continental_cups.dart';
 import 'package:fnm/domain/services/competition/hosts.dart';
+import 'package:fnm/domain/services/manager/staff.dart';
 import 'package:fnm/domain/services/player/prospects.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/squad/captain_providers.dart';
@@ -707,7 +708,12 @@ class MessageService {
         // used to be ("New faces", rows tagged "new", scout stars beside
         // them), it read as though the academy took an intake twice a year,
         // once at eleven and again at seventeen. Same news, said properly.
-        final newcomers = _newcomerReport(before, after, l.msgThroughNote);
+        final newcomers = _newcomerReport(
+          before,
+          after,
+          l.msgThroughNote,
+          scout: career.staffScout,
+        );
         if (newcomers != null) {
           drafts.add(
             _Draft(
@@ -733,7 +739,7 @@ class MessageService {
           youthBonusByCycle: academyBonus,
           careerStartsByPlayer: careerDev,
         );
-        final intake = intakeRows(pyramid);
+        final intake = intakeRows(pyramid, scout: career.staffScout);
         // Which of the two causes brought a better crop through, as a KEY: the
         // note above the table is stored as meaning like the rest of the
         // message, so it is written in the language it is read in.
@@ -1031,8 +1037,9 @@ String _developmentReport(
 String? _newcomerReport(
   Map<int, Player> before,
   Map<int, Player> after,
-  String note,
-) {
+  String note, {
+  StaffTier scout = StaffTier.none,
+}) {
   final rows = <SquadDevRow>[
     for (final e in after.entries)
       if (!before.containsKey(e.key))
@@ -1044,7 +1051,11 @@ String? _newcomerReport(
           status: SquadDevStatus.arrived,
           // Unproven, so this is the scout's read, not the truth — the same
           // estimate the under-21 watchlist shows, and it can be a star out.
-          stars: Prospects.scoutedStars(e.value.id, age: e.value.age),
+          stars: Prospects.scoutedStars(
+            e.value.id,
+            age: e.value.age,
+            scout: scout,
+          ),
           wonderkid:
               e.value.age <= 21 &&
               Prospects.trueStars(e.value.id, age: e.value.age) >= 5,

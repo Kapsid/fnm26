@@ -33,7 +33,8 @@ ceremonyFinalsAreHere,Opening-ceremony tagline.,,THE FINALS ARE HERE,FINÁLOVÝ 
 ceremonyHostedBy,Opening-ceremony host line.,{hosts},HOSTED BY  {hosts},POŘÁDÁ  {hosts}
 ceremonyHostTbc,Shown when the host isn't known yet.,,HOST TO BE CONFIRMED,POŘADATEL BUDE POTVRZEN
 matchHalfTime,Heading on the half-time interval overlay.,,HALF TIME,POLOČAS
-matchContinue,Button that resumes play from the interval.,,Continue,Pokračovat
+matchContinue,"Button that resumes play from the interval, and the full-time button that leaves the match.",,Continue,Pokračovat
+matchContinuing,The full-time Continue button while the result is being saved.,,Continuing…,Ukládám…
 matchTacticsWithSubs,"Tactics button on the interval overlay, with subs used.",{used} {max},Tactics · {used}/{max} subs,Taktika · {used}/{max} střídání
 matchTiredCount,Live match control bar tactics pill label when players are out of energy; the substitution count is shown separately so it is never clipped.,{count},TIRED ×{count},ÚNAVA ×{count}
 matchTacticsLabel,Live match control bar tactics pill label when no players are tired.,,TACTICS,TAKTIKA
@@ -2084,13 +2085,19 @@ managerStaffWages,Manager screen: the standing staff cost.,{amount},Wages: {amou
 managerRoleAssistant,Staff role.,,Assistant Manager,Asistent trenéra
 managerRoleAssistantBlurb,Staff role effect.,,"Runs the training: fewer injuries, and better youngsters coming through.",Vede tréninky: méně zranění a lepší mladí hráči.
 managerRoleScout,Staff role.,,Chief Scout,Hlavní skaut
-managerRoleScoutBlurb,Staff role effect.,,Watches the world's teenagers. Nothing he reports reaches your squad yet.,Sleduje mladé hráče po celém světě. Jeho zprávy se k týmu zatím nedostanou.
+managerRoleScoutBlurb,Staff role effect.,,"Reads your prospects and your next opponent: truer star ratings, and an edge on matchday.",Hodnotí vaše talenty i příštího soupeře: přesnější hvězdičky a výhoda v den zápasu.
 managerRoleFitness,Staff role.,,Fitness Coach,Kondiční trenér
 managerRoleFitnessBlurb,Staff role effect.,,Keeps them on the pitch.,Udrží hráče na hřišti.
 staffEffectInjury,"What the fitness coach in the job is doing, in injury rate.",{percent},{percent}% fewer injuries,O {percent} % méně zranění
 staffEffectYouth,What the assistant's hours with the youngest players are worth on the next intake.,{points},Youngsters +{points} overall,Mladíci +{points} na celkovém
 staffHiringInjury,What filling the vacant fitness coach job would be worth.,{min} {max},Hiring one: {min}% to {max}% fewer injuries,Po najmutí: o {min} až {max} % méně zranění
 staffHiringYouth,Second line of what filling the vacant assistant job would be worth.,{minPoints} {maxPoints},and youngsters +{minPoints} to +{maxPoints} overall,a mladíci +{minPoints} až +{maxPoints} na celkovém
+staffEffectScoutRead,What the scout in the job is doing: the share of unproven prospects whose star rating he gets exactly right.,{percent},Reads {percent}% of prospects exactly,Přesně odhadne {percent} % talentů
+staffEffectScoutCaps,What the scout in the job is doing: how many caps before a prospect's potential is known for sure.,"PLURAL — keep the {count, plural, …} skeleton exactly; translate only the words inside the branches","{caps, plural, =1{Potential known after 1 cap} other{Potential known after {caps} caps}}","{caps, plural, =1{Potenciál jasný po 1 startu} few{Potenciál jasný po {caps} startech} other{Potenciál jasný po {caps} startech}}"
+staffEffectScoutDossier,What the scout in the job is doing: the rating points his pre-match report on each opponent adds to the side.,{points},+{points} rating from opponent dossiers,+{points} k síle díky rozboru soupeře
+staffHiringScoutRead,What filling the vacant scout job would be worth: share of prospect star ratings read exactly.,{min} {max},Hiring one: {min}% to {max}% of reads exact,Po najmutí: přesně odhadne {min} až {max} % talentů
+staffHiringScoutCaps,Second line of what filling the vacant scout job would be worth.,{minCaps} {maxCaps},and potential known {minCaps} to {maxCaps} caps sooner,a potenciál jasný o {minCaps} až {maxCaps} starty dřív
+staffHiringScoutDossier,Third line of what filling the vacant scout job would be worth: the opponent dossier.,{minPoints} {maxPoints},and +{minPoints} to +{maxPoints} rating every match,a +{minPoints} až +{maxPoints} k síle v každém zápase
 staffEffectNone,Shown against a staff role that is wired to nothing in the game.,,No effect on your squad yet,Na tým zatím nemá žádný vliv
 staffVacant,Shown against a staff role with nobody hired.,,Nobody in the job,Místo je neobsazené
 staffLeaveVacant,Option in the staff picker that hires nobody.,,Leave the job empty,Nechat místo neobsazené
@@ -2241,6 +2248,7 @@ strengthFactorClubForm,"Pre-match strength line: where the squad stands at their
 strengthFactorMorale,Pre-match strength line: squad morale.,,Dressing room,Nálada v kabině
 strengthFactorCaptain,Pre-match strength line: what the armband is worth.,,Captain,Kapitán
 strengthFactorStaff,Pre-match strength line: what the hired staff are worth to this match.,,Staff room,Realizační tým
+strengthFactorDossier,Pre-match strength line: what the scout's report on this opponent is worth.,,Scout's dossier,Rozbor soupeře
 pressAskDrought1,Press question about a first-choice forward who has stopped scoring.,{player} {count},{player} has gone {count} games without a goal. Is he still your number nine?,{player} nedal gól už {count} zápasů. Je pořád vaší jedničkou v útoku?
 pressAskDrought2,Press question about a first-choice forward who has stopped scoring.,{count} {player},"{count} matches, no goals for {player}. How long do you keep picking him?",{count} zápasů a od hráče {player} ani gól. Jak dlouho ho budete nasazovat?
 pressAskDrought3,Press question about a first-choice forward who has stopped scoring.,{count} {player},"Your first-choice forward has not scored in {count}. Is {player} carrying something, or is it in his head?","Vaše útočná jednička nedala gól {count} zápasů. Nese si {player} zranění, nebo to má v hlavě?"

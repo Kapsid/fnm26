@@ -12,6 +12,7 @@ class PrimaryButton extends StatelessWidget {
     required this.onPressed,
     this.icon,
     this.isLoading = false,
+    this.height = AppSpacing.minHitArea + 8,
     super.key,
   });
 
@@ -26,6 +27,11 @@ class PrimaryButton extends StatelessWidget {
 
   /// When `true`, shows a spinner and disables interaction.
   final bool isLoading;
+
+  /// The button's height. The default is the full call-to-action size; a bar
+  /// that pairs this with a standard 48 outlined button passes 48, so the two
+  /// sit level instead of the primary one standing a head taller.
+  final double height;
 
   @override
   Widget build(BuildContext context) {
@@ -68,7 +74,7 @@ class PrimaryButton extends StatelessWidget {
           onTap: enabled ? onPressed : null,
           borderRadius: AppRadii.mdAll,
           child: Ink(
-            height: AppSpacing.minHitArea + 8,
+            height: height,
             decoration: BoxDecoration(
               borderRadius: AppRadii.mdAll,
               border: Border.all(color: AppColors.primaryFixed),

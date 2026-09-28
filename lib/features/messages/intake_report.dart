@@ -1,6 +1,7 @@
 import 'package:fnm/core/util/message_text.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/player.dart';
+import 'package:fnm/domain/services/manager/staff.dart';
 import 'package:fnm/domain/services/player/player_lifecycle.dart';
 import 'package:fnm/domain/services/player/prospects.dart';
 import 'package:fnm/features/messages/squad_dev_report.dart';
@@ -15,7 +16,11 @@ import 'package:fnm/features/messages/squad_dev_report.dart';
 /// deliberately vague sub-17 one: two stars wide either way, and never settled
 /// until he has actually played. What the manager is being told is what the
 /// coaches think — which is the only thing anybody could honestly tell him.
-List<SquadDevRow> intakeRows(List<Player> pyramid) => [
+/// A hired [scout] narrows that read (see [Prospects.scoutedStars]).
+List<SquadDevRow> intakeRows(
+  List<Player> pyramid, {
+  StaffTier scout = StaffTier.none,
+}) => [
   for (final p in pyramid)
     if (p.age == PlayerLifecycle.intakeAge)
       SquadDevRow(
@@ -24,7 +29,7 @@ List<SquadDevRow> intakeRows(List<Player> pyramid) => [
         position: p.position.label,
         rating: p.overall,
         status: SquadDevStatus.arrived,
-        stars: Prospects.scoutedStars(p.id, age: p.age),
+        stars: Prospects.scoutedStars(p.id, age: p.age, scout: scout),
         // From his real ceiling, not from the stars beside it: the stars are
         // what the coaches think, and at eleven what they think is two stars
         // wide. The badge is the game telling the truth, which it can only

@@ -257,6 +257,10 @@ typedef _ManagerSetup = ({
   Tactic? tactic,
   double familiarity,
   double predictability,
+
+  /// Who is reading the opposition for him: his dossier is worth
+  /// `Staff.dossierBonus` on the day, watched or skipped.
+  StaffTier scout,
 });
 
 /// Drives the whole-world simulation: quick-sims due matches, advances the
@@ -403,6 +407,7 @@ class SeasonService {
       tactic: tactic,
       familiarity: shape?.familiarity ?? 0,
       predictability: shape?.predictability ?? 0,
+      scout: career.staffScout,
     );
     _managerSetupCareer = careerId;
     return _managerSetup;
@@ -954,6 +959,9 @@ class SeasonService {
   ///    the stored figure, so a side the world has worked out gives the same
   ///    part of it back whether or not he watched.
   ///
+  /// And one flat lift: the scout's opponent dossier, [Staff.dossierBonus],
+  /// already in rating points.
+  ///
   /// The result is deliberately NOT re-clamped to the 40–92 ranking scale that
   /// [_squadStrength] ends on: that scale describes a nation, and this is what
   /// his side is worth on the day.
@@ -964,11 +972,15 @@ class SeasonService {
   ) async {
     final setup = await _ensureManagerSetup(careerId);
     if (setup == null || setup.nationId != nationId) return strength;
+    // The scout's dossier is a flat rating lift, the same points the live
+    // engine adds to each fielded man (`MatchTeam.ratingBonus`), so it goes in
+    // beside the plan, before the chemistry multiplies the side.
     final plan =
         strength +
         MatchEngine.planRatingDelta(
           setup.tactic?.instructions ?? const TacticalInstructions(),
-        );
+        ) +
+        Staff.dossierBonus(setup.scout);
     return (plan *
             TeamChemistry.factor(setup.familiarity, setup.predictability))
         .round();

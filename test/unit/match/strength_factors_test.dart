@@ -42,7 +42,10 @@ void main() {
         staff: const {},
       );
       expect(factors.first.kind, StrengthFactorKind.fatigue);
-      expect(factors.map((f) => f.kind), contains(StrengthFactorKind.familiarity));
+      expect(
+        factors.map((f) => f.kind),
+        contains(StrengthFactorKind.familiarity),
+      );
       expect(factors.every((f) => f.delta != 0), isTrue);
     });
 
@@ -120,7 +123,10 @@ void main() {
         familiarity: 0,
         conditionByPlayer: {
           // −4 in all: +1 for playing every week at his club, −5 of legs.
-          1: aCondition(overallDelta: -4, clubStanding: ClubStanding.firstChoice),
+          1: aCondition(
+            overallDelta: -4,
+            clubStanding: ClubStanding.firstChoice,
+          ),
         },
         morale: 50,
         hasCaptain: false,
@@ -197,7 +203,8 @@ void main() {
         greaterThan(0),
       );
       expect(deltaOf(withStaff(const {}), StrengthFactorKind.staff), isNull);
-      // The scout does nothing for today's eleven.
+      // The scout keeps nobody on the pitch, so he is not in the staff line;
+      // his dossier is its own line.
       expect(
         deltaOf(
           withStaff(const {StaffRole.scout: StaffTier.elite}),
@@ -207,13 +214,41 @@ void main() {
       );
     });
 
+    test('the scout\'s dossier is its own line, priced off the engine', () {
+      List<StrengthFactor> withScout(StaffTier tier) => StrengthFactors.of(
+        familiarity: 0,
+        conditionByPlayer: const {},
+        morale: 50,
+        hasCaptain: false,
+        staff: {StaffRole.scout: tier},
+      );
+      expect(
+        deltaOf(withScout(StaffTier.none), StrengthFactorKind.dossier),
+        isNull,
+      );
+      for (final tier in [StaffTier.basic, StaffTier.good, StaffTier.elite]) {
+        expect(
+          deltaOf(withScout(tier), StrengthFactorKind.dossier),
+          Staff.dossierBonus(tier),
+          reason: '$tier',
+        );
+      }
+      expect(
+        deltaOf(withScout(StaffTier.elite), StrengthFactorKind.dossier),
+        3,
+      );
+    });
+
     test('everything at once reads biggest absolute first', () {
       final factors = StrengthFactors.of(
         familiarity: 1,
         conditionByPlayer: {
           1: aCondition(overallDelta: -9),
           2: aCondition(overallDelta: -9, clubStanding: ClubStanding.fringe),
-          3: aCondition(overallDelta: 3, clubStanding: ClubStanding.firstChoice),
+          3: aCondition(
+            overallDelta: 3,
+            clubStanding: ClubStanding.firstChoice,
+          ),
         },
         morale: 20,
         hasCaptain: true,

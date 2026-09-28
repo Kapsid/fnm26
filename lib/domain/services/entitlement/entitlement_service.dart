@@ -32,20 +32,20 @@ enum PurchaseFlowState { idle, loading, pending, error }
 /// so the game never needs the network just to launch. `restorePurchases()`
 /// re-asks the store, which is what heals a reinstall or a new device.
 ///
-/// On iOS the cached boolean is no longer the source of truth. StoreKit 2's
-/// verified transactions are, and they read locally: [init] asks the OS what
-/// this Apple ID owns before it trusts anything on disk. That also fixes the
-/// honest player's side of it, because a reinstall or a second device is
-/// entitled without anyone having to find the Restore button. The cache stays
-/// as the fallback for when the store cannot answer, and for Android, whose
-/// own verification is not built yet.
+/// The cached boolean is not the source of truth. The store is: StoreKit 2's
+/// verified transactions on iOS, Play Billing's owned purchases on Android,
+/// both read locally. [init] asks the OS what this account owns before it
+/// trusts anything on disk. That also fixes the honest player's side of it,
+/// because a reinstall or a second device is entitled without anyone having
+/// to find the Restore button. The cache stays as the fallback for when the
+/// store cannot answer.
 class EntitlementService {
   EntitlementService(
     this._ref, {
     InAppPurchase? iap,
     StoreEntitlementReader? storeEntitlements,
   }) : _iap = iap ?? InAppPurchase.instance,
-       _storeEntitlements = storeEntitlements ?? readAppleEntitlements;
+       _storeEntitlements = storeEntitlements ?? readStoreEntitlements;
 
   final Ref _ref;
   final InAppPurchase _iap;
@@ -76,7 +76,7 @@ class EntitlementService {
       // is the one thing that can decline a boolean somebody wrote himself.
       if (owned.contains(kPremiumProductId)) await _grant();
     } else if (cached) {
-      // Simulator, StoreKit missing, a wedged channel, Android. Grant, and
+      // Simulator, no store, no account, a wedged channel. Grant, and
       // leave the cache alone so the next launch can try the store again.
       _ref.read(premiumUnlockedProvider.notifier).state = true;
     }
@@ -88,7 +88,7 @@ class EntitlementService {
     }
   }
 
-  /// The products the OS says this account owns, or null when it would not
+  /// The products the store says this account owns, or null when it would not
   /// say. Never throws: an entitlement read that blows up is an unanswered
   /// question, not a denial.
   Future<Set<String>?> _storeOwnedProducts() async {
