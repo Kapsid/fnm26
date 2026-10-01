@@ -58,52 +58,61 @@ void main() {
       final incomplete = <int>[];
       for (final seed in [1, 7, 2026, 8080]) {
         final run = await _drive(seed);
-        final calls = await run.container
-            .read(careerRepositoryProvider)
-            .conferences(run.careerId);
-        final perCycle = <int, int>{
-          for (var i = 0; i < run.cyclesDone; i++) i: 0,
-        };
-        for (final x in calls) {
-          perCycle[x.cycle] = (perCycle[x.cycle] ?? 0) + 1;
-        }
-        if (run.cyclesDone < _cycles) incomplete.add(seed);
-        for (var i = 0; i < run.cyclesDone; i++) {
-          total += perCycle[i]!;
-          completed++;
-        }
-        // Nothing answers press here, so no statement exists and no job
-        // verdict can occur.
-        expect(
-          calls.any((x) => x.reason == ConferenceReason.jobVerdict),
-          isFalse,
-        );
-        expect(
-          perCycle.values.every((n) => n <= ConferenceTrigger.maxPerCycle),
-          isTrue,
-          reason: '$perCycle',
-        );
-        final first =
-            (await run.comp.fixturesForNation(
-                  run.careerId,
-                  run.nationId,
-                ))
-                .where((f) => f.hasResult && f.round != Rounds.friendly)
-                .map((f) => f.date)
-                .reduce((a, b) => a.isBefore(b) ? a : b);
-        expect(calls.every((x) => !x.triggeredOn.isBefore(first)), isTrue);
-        for (var i = 1; i < calls.length; i++) {
+        try {
+          final calls = await run.container
+              .read(careerRepositoryProvider)
+              .conferences(run.careerId);
+          final perCycle = <int, int>{
+            for (var i = 0; i < run.cyclesDone; i++) i: 0,
+          };
+          for (final x in calls) {
+            perCycle[x.cycle] = (perCycle[x.cycle] ?? 0) + 1;
+          }
+          if (run.cyclesDone < _cycles) incomplete.add(seed);
+          for (var i = 0; i < run.cyclesDone; i++) {
+            expect(
+              perCycle[i],
+              greaterThanOrEqualTo(1),
+              reason: 'seed $seed: cycle $i had no conference: $perCycle',
+            );
+            total += perCycle[i]!;
+            completed++;
+          }
+          // Nothing answers press here, so no statement exists and no job
+          // verdict can occur.
           expect(
-            calls[i].triggeredOn.difference(calls[i - 1].triggeredOn).inDays,
-            greaterThanOrEqualTo(ConferenceTrigger.quietDays),
-            reason: 'seed $seed: $perCycle',
+            calls.any((x) => x.reason == ConferenceReason.jobVerdict),
+            isFalse,
           );
+          expect(
+            perCycle.values.every((n) => n <= ConferenceTrigger.maxPerCycle),
+            isTrue,
+            reason: '$perCycle',
+          );
+          final first =
+              (await run.comp.fixturesForNation(
+                    run.careerId,
+                    run.nationId,
+                  ))
+                  .where((f) => f.hasResult && f.round != Rounds.friendly)
+                  .map((f) => f.date)
+                  .reduce((a, b) => a.isBefore(b) ? a : b);
+          expect(calls.every((x) => !x.triggeredOn.isBefore(first)), isTrue);
+          for (var i = 1; i < calls.length; i++) {
+            expect(
+              calls[i].triggeredOn.difference(calls[i - 1].triggeredOn).inDays,
+              greaterThanOrEqualTo(ConferenceTrigger.quietDays),
+              reason: 'seed $seed: $perCycle',
+            );
+          }
+          // ignore: avoid_print
+          print(
+            'seed $seed (cycles done ${run.cyclesDone}) '
+            'conferences per cycle: $perCycle',
+          );
+        } finally {
+          await run.close();
         }
-        // ignore: avoid_print
-        print(
-          'seed $seed (cycles done ${run.cyclesDone}) '
-          'conferences per cycle: $perCycle',
-        );
       }
       expect(
         incomplete,
@@ -126,6 +135,7 @@ Future<
     int careerId,
     int nationId,
     int cyclesDone,
+    Future<void> Function() close,
   })
 >
 _drive(int seed) async {
@@ -144,8 +154,11 @@ _drive(int seed) async {
       ),
     ],
   );
-  addTearDown(container.dispose);
-  addTearDown(db.close);
+  // Closed by the caller after each seed, so only one database is ever open.
+  Future<void> close() async {
+    container.dispose();
+    await db.close();
+  }
 
   await container.read(seedLoaderProvider).ensureSeeded();
   final hosts = WorldCupHosts.hostsFor(
@@ -171,6 +184,7 @@ _drive(int seed) async {
     int careerId,
     int nationId,
     int cyclesDone,
+    Future<void> Function() close,
   })
   result() => (
     container: container,
@@ -178,6 +192,7 @@ _drive(int seed) async {
     careerId: career.id,
     nationId: player.id,
     cyclesDone: done,
+    close: close,
   );
 
   for (var i = 0; i < 4000; i++) {
