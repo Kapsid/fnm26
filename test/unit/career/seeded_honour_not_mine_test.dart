@@ -9,12 +9,10 @@ import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/services/competition/real_history.dart';
 import 'package:fnm/domain/services/entitlement/entitlement.dart';
-import 'package:fnm/domain/services/press/press.dart';
 import 'package:fnm/features/achievements/achievement_providers.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/career/career_summary_providers.dart';
 import 'package:fnm/features/manager/manager_providers.dart';
-import 'package:fnm/features/press/press_providers.dart';
 
 import '../../helpers/test_database.dart';
 
@@ -115,16 +113,6 @@ void main() {
         view!.pointsEarned,
         0,
         reason: 'a seeded title paid out manager skill points',
-      );
-
-      // And the press room does not congratulate him on it.
-      final question = await container.read(
-        pressQuestionProvider(career.id).future,
-      );
-      expect(
-        question?.topic,
-        isNot(PressTopic.triumph),
-        reason: 'the manager was asked about a triumph that predates his job',
       );
     },
     timeout: const Timeout(Duration(minutes: 3)),

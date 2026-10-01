@@ -1,29 +1,8 @@
 import 'package:fnm/domain/services/match/match_engine.dart';
-import 'package:fnm/domain/services/press/expectation.dart';
 
-/// The tone a manager takes with the press. Each is a real trade: the dressing
-/// room and the boardroom want different things said, and no answer pleases
-/// both.
-enum PressTone {
-  /// Back the players publicly. They love it; the board hears excuses.
-  backThePlayers,
-
-  /// Take it on your own shoulders. Steadies everyone, costs a little standing.
-  takeTheBlame,
-
-  /// Demand more, out loud. The board likes the steel; the squad does not.
-  demandMore,
-
-  /// Talk the target up. The board is delighted, the players feel the weight.
-  raiseTheBar,
-
-  /// Say as little as possible. Nobody is moved either way — always available,
-  /// and the honest choice when a question has no good answer.
-  playItDown,
-}
-
-/// What a tone does to the dressing room and to the board, in points on their
-/// 0–100 scales. Deliberately small: a press answer is a nudge, not a result.
+/// What an answer does to the dressing room and to the board, in points on
+/// their 0–100 scales. Deliberately small: a press answer is a nudge, not a
+/// result.
 typedef PressEffect = ({int morale, int board});
 
 /// How a whole conference read once it was over — the line the back pages take
@@ -41,131 +20,6 @@ enum PressVerdict {
   /// Nothing was said at all, which is its own kind of story.
   flat,
 }
-
-/// WHO or WHAT a question is about, as opposed to which situation prompted it.
-///
-/// Every topic the press had could read the scoreboard and nothing else: a
-/// conference was the same conference with a different number in it, because
-/// the only thing a reporter could see was the result. A subject is what lets
-/// a question name a man, a minute or an opponent — and copy for a
-/// subject-bearing topic therefore takes ARGUMENTS, which is the whole
-/// difference between "how do you respond to the criticism" and "Hayes walked
-/// in the thirty-fourth and you finished with ten".
-sealed class PressSubject {
-  const PressSubject();
-}
-
-/// The side, which is what every question used to be about and what most of
-/// them still are.
-final class PressSubjectTeam extends PressSubject {
-  const PressSubjectTeam();
-}
-
-/// A named man: a selection, a drought, a first cap.
-///
-/// [count] is the FIGURE the question names — the caps without a goal, the
-/// age, the rating he is carrying. A question that says "your forward has not
-/// scored for a while" has not moved at all; the number is half of what makes
-/// it a real question, so it travels with the man rather than being looked up
-/// again by whatever is putting words on a screen.
-final class PressSubjectPlayer extends PressSubject {
-  const PressSubjectPlayer({
-    required this.playerId,
-    required this.name,
-    this.count = 0,
-  });
-
-  final int playerId;
-  final String name;
-  final int count;
-}
-
-/// The other side, when the question is about THEM rather than about the
-/// afternoon.
-///
-/// [count] is the figure that makes it a question — meetings, or the length of
-/// a run — and [favourable] says which way that run reads, because "five
-/// without defeat against them" and "five without a win against them" are the
-/// same number and opposite questions. It is the same distinction
-/// [PressSubjectIncident.ours] draws for a late goal.
-final class PressSubjectOpponent extends PressSubject {
-  const PressSubjectOpponent(
-    this.nationId, {
-    this.count = 0,
-    this.favourable = true,
-  });
-
-  final int nationId;
-  final int count;
-  final bool favourable;
-}
-
-/// One thing that happened on the pitch, with the minute it happened in.
-///
-/// [name] is the player it happened to, already resolved — the sheet is a
-/// widget and must not be reaching into a repository to find out who number
-/// eight was. [ours] says whose man he is, which is the difference between a
-/// late winner and a late equaliser conceded.
-final class PressSubjectIncident extends PressSubject {
-  const PressSubjectIncident({
-    required this.type,
-    required this.minute,
-    this.playerId,
-    this.name,
-    this.ours = true,
-    this.fromLastMatch = true,
-  });
-
-  final MatchEventType type;
-  final int minute;
-  final int? playerId;
-  final String? name;
-  final bool ours;
-
-  /// Whether it happened in the match the country is still talking about.
-  ///
-  /// An incident leads a conference because it is the last thing that
-  /// happened — see [Press.precedenceOf]. Once another match has been played
-  /// it is no longer that, and a red card from a fortnight ago has no business
-  /// pushing ahead of the man who won his first cap on Saturday.
-  final bool fromLastMatch;
-}
-
-/// The MATCH, when what is being asked about happened over ninety minutes
-/// rather than in one of them or to one man.
-///
-/// A two-goal half-time lead thrown away is the thing that just happened on the
-/// pitch as surely as a sending-off is, and belongs at the front of the room for
-/// the same reason (see [Press.precedenceOf]) — but it happened to nobody in
-/// particular, so it cannot be a [PressSubjectIncident] and must not be filed
-/// as the generic team question either.
-final class PressSubjectMatch extends PressSubject {
-  const PressSubjectMatch({this.fromLastMatch = true});
-
-  /// Whether it was the match the country is still talking about. Same reading
-  /// as [PressSubjectIncident.fromLastMatch]: once another has been played, the
-  /// afternoon is no longer the last thing that happened.
-  final bool fromLastMatch;
-}
-
-/// One question, asked once.
-typedef PressQuestion = ({
-  /// Stable and unique — a question with this key is never asked again.
-  String key,
-
-  /// Which situation prompted it, for the wording.
-  PressTopic topic,
-
-  /// Who or what it is about. [PressSubjectTeam] for every question that only
-  /// reads the scoreboard, which is most of them.
-  PressSubject subject,
-
-  /// The other nation involved, when the question is about a specific match.
-  int? subjectNationId,
-
-  /// The tones on offer, in the order they are shown.
-  List<PressTone> options,
-});
 
 /// The kind of reporter asking, which decides what they push on when they get
 /// their turn.
@@ -198,141 +52,13 @@ enum PressAngle {
 /// language — they are proper nouns, like the club names.
 typedef PressReporter = ({String name, String outlet, PressAngle angle});
 
-/// What a follow-up presses on.
+/// Which story about a named man, or about the next opponent, is live.
 ///
-/// The first five are answers to a STANCE — they are what a room says back
-/// when a manager has just committed to one — and the last three are a
-/// reporter's own hobby-horse, used for the question that closes a conference.
-enum PressProbe {
-  /// You backed them. So is nobody responsible?
-  accountability,
-
-  /// You took it on yourself. Is your own job safe?
-  yourFuture,
-
-  /// You demanded more, in public. Have you lost them?
-  dressingRoom,
-
-  /// You talked the target up. Is that not a hostage to fortune?
-  expectation,
-
-  /// You said nothing at all. Say something.
-  substance,
-
-  /// Why does that team keep getting picked?
-  selection,
-
-  /// What do you say to the people who travel?
-  theFans,
-
-  /// Where is this actually going?
-  bigPicture,
-}
-
-/// One exchange in a conference: who asked, what about, and what may be said
-/// back. [probe] is null for the opening question, which is about the STORY —
-/// every later one is a reaction to what the manager has just said.
-typedef PressExchange = ({
-  String key,
-  PressReporter reporter,
-  PressTopic topic,
-  PressSubject subject,
-  PressProbe? probe,
-  int? subjectNationId,
-  List<PressTone> options,
-
-  /// How hard this answer lands, as a fraction of a full stance. The opening
-  /// question is the one that carries; a follow-up is a nudge on a nudge.
-  bool halfWeight,
-});
-
-/// What the press want to talk about. The wording lives in the UI layer (it is
-/// localised); the domain only decides that there is a question and what the
-/// answers cost.
+/// This is what is left of the old question-picking press room: the squad and
+/// opponent readings ([SquadStories], [OpponentStories]) still describe the
+/// stories the country is talking about, and the Y feed turns them into posts.
+/// A conference is no longer built from a topic; see `conference.dart`.
 enum PressTopic {
-  /// After a heavy defeat.
-  heavyDefeat,
-
-  /// After a run of poor results, with the board watching.
-  underPressure,
-
-  /// Before a tournament starts.
-  tournamentPreview,
-
-  /// The tournament has been opened — the manager faces the world's press on
-  /// the eve of their first match. Unlike every other topic this one is not
-  /// optional: it is asked once per tournament the nation is contesting, as a
-  /// step in the timeline rather than a card that may be ignored.
-  tournamentOpening,
-
-  /// After winning a trophy.
-  triumph,
-
-  /// After going out of a tournament.
-  elimination,
-
-  /// After putting a side to the sword — the mirror of [heavyDefeat], and the
-  /// question a manager gets asked when everything went right.
-  bigWin,
-
-  /// A place at the finals has been booked.
-  qualified,
-
-  /// The qualifying campaign ended without a place.
-  missedOut,
-
-  /// A long run without defeat, with everyone asking how long it can last.
-  unbeatenRun,
-
-  /// The first days in the job, before a ball has been kicked.
-  newJob,
-
-  /// The nation has climbed to a world ranking it has never held before.
-  rankingPeak,
-
-  /// A run of results better than this side has any business producing. The
-  /// question everybody asks a side punching above its weight: is it real?
-  overachieving,
-
-  /// Won, and did not convince. A side that keeps scraping past opponents it
-  /// ought to be beating properly gets asked about it.
-  luckyWin,
-
-  /// The results are bad, the board is unhappy, and both at once is a
-  /// different question from either alone.
-  crisis,
-
-  // The four below read the MATCH rather than the result: they are the first
-  // questions in the game that know something happened on the pitch. See
-  // [PressSubjectIncident].
-
-  /// One of yours walked. Names the man and the minute.
-  sendingOff,
-
-  /// A regular limped off, which is a different question in the week before a
-  /// tournament than it is in November.
-  injuryBlow,
-
-  /// A knockout tie settled from twelve yards, won or lost.
-  shootoutFate,
-
-  /// A goal in the last ten minutes that changed the result, for or against.
-  lateDrama,
-
-  /// Two goals down at half time, and it finished level or won.
-  ///
-  /// The two below are the only place in the app where the two languages say
-  /// deliberately different things — see the copy.
-  halfTimeComeback,
-
-  /// Two goals up at half time, and it finished level or lost.
-  halfTimeCollapse,
-
-  // The six below read the SQUAD: who is in it, who is out of it, who is
-  // wearing the armband and who is finishing. Every one of them names a man —
-  // see [PressSubjectPlayer] — because a conference that says "your forward"
-  // instead of his name has not moved at all.
-
   /// The first-choice forward, and how long it is since he scored.
   strikerDrought,
 
@@ -351,9 +77,6 @@ enum PressTopic {
   /// A first cap.
   debutant,
 
-  // …and the three below read the NEXT match rather than the last one. They
-  // carry a [PressSubjectOpponent] and name the nation and the number.
-
   /// The next match is against the side this nation has met most often.
   rivalryNext,
 
@@ -364,226 +87,82 @@ enum PressTopic {
   revengeMatch,
 }
 
+/// WHO or WHAT a story is about. Copy for a subject-bearing story takes
+/// ARGUMENTS: it names a man, a minute or an opponent.
+sealed class PressSubject {
+  const PressSubject();
+}
+
+/// A named man: a selection, a drought, a first cap.
+///
+/// [count] is the FIGURE the story names: the caps without a goal, the age,
+/// the rating he is carrying.
+final class PressSubjectPlayer extends PressSubject {
+  const PressSubjectPlayer({
+    required this.playerId,
+    required this.name,
+    this.count = 0,
+  });
+
+  final int playerId;
+  final String name;
+  final int count;
+}
+
+/// The other side, when the story is about THEM rather than about the
+/// afternoon.
+///
+/// [count] is the figure that makes it a story, meetings or the length of a
+/// run, and [favourable] says which way that run reads, because "five without
+/// defeat against them" and "five without a win against them" are the same
+/// number and opposite stories.
+final class PressSubjectOpponent extends PressSubject {
+  const PressSubjectOpponent(
+    this.nationId, {
+    this.count = 0,
+    this.favourable = true,
+  });
+
+  final int nationId;
+  final int count;
+  final bool favourable;
+}
+
+/// One thing that happened on the pitch, with the minute it happened in.
+///
+/// [name] is the player it happened to, already resolved, so a widget need
+/// not reach into a repository to find out who number eight was. [ours] says
+/// whose man he is, which is the difference between a late winner and a late
+/// equaliser conceded.
+final class PressSubjectIncident extends PressSubject {
+  const PressSubjectIncident({
+    required this.type,
+    required this.minute,
+    this.playerId,
+    this.name,
+    this.ours = true,
+    this.fromLastMatch = true,
+  });
+
+  final MatchEventType type;
+  final int minute;
+  final int? playerId;
+  final String? name;
+  final bool ours;
+
+  /// Whether it happened in the match the country is still talking about.
+  final bool fromLastMatch;
+}
+
 abstract final class Press {
-  /// How long a question stays askable. Press conferences are about something
-  /// that just happened — an unanswered question about a match six weeks ago
-  /// is stale, so it is dropped rather than queued.
-  ///
-  /// Cut from 45 days to 30 once the conference became a blocking event. At 45
-  /// a manager could be asked about a hammering from a month and a half ago,
-  /// which was the reported "I can answer older things". It cannot go below
-  /// [quietDays] — a window shorter than the silence after an answer means
-  /// every story goes stale inside the gap and the press never speak again —
-  /// so the forcing does most of the work and this does the rest.
-  static const int askWindowDays = 30;
-
-  /// How many COMPETITIVE matches may be played after a result before it stops
-  /// being news, whatever [askWindowDays] still allows.
-  ///
-  /// The calendar is a poor judge of what a press room is still interested in.
-  /// A manager who has played twice since being beaten is not asked about that
-  /// defeat again: the football played since IS the answer, and the room has
-  /// two newer matches to ask about. Thirty days can hold three competitive
-  /// fixtures in a qualifying window and barely one in a quiet summer, so the
-  /// day window stays as the outer bound and this decides inside it.
-  ///
-  /// Friendlies do not count. A warm-up does not bury a tournament exit, which
-  /// is why this reads the same competitive list the run-of-form questions do.
-  static const int askWindowMatches = 2;
-
-  /// The minimum gap between questions, so the press are an occasional presence
-  /// rather than a chore after every match.
-  static const int quietDays = 30;
-
-  /// How many of the live stories are in the draw when the press pick their
-  /// question. Taking the single biggest one every time made the conference
-  /// predictable — the same handful of situations in the same order — so the
-  /// question is drawn from the top few, and a good week can be asked about
-  /// instead of last month's defeat.
-  static const int storyPool = 4;
-
-  /// The prefix a topic's question key carries.
-  ///
-  /// The key is what gets stored when a question is answered, so it is also
-  /// the only record of what the press have already asked about. Naming the
-  /// mapping here — rather than leaving it implicit in a dozen string literals
-  /// — is what lets [pick] avoid asking the same thing twice in a row.
-  static String keyPrefixOf(PressTopic topic) => switch (topic) {
-    PressTopic.heavyDefeat => 'defeat',
-    PressTopic.underPressure => 'pressure',
-    PressTopic.tournamentPreview => 'preview',
-    PressTopic.tournamentOpening => 'opening',
-    PressTopic.triumph => 'triumph',
-    PressTopic.elimination => 'exit',
-    PressTopic.bigWin => 'rout',
-    PressTopic.qualified => 'qualified',
-    PressTopic.missedOut => 'missed',
-    PressTopic.unbeatenRun => 'unbeaten',
-    PressTopic.newJob => 'newjob',
-    PressTopic.rankingPeak => 'peak',
-    PressTopic.overachieving => 'above',
-    PressTopic.luckyWin => 'flattered',
-    PressTopic.crisis => 'crisis',
-    PressTopic.sendingOff => 'red',
-    PressTopic.injuryBlow => 'knock',
-    PressTopic.shootoutFate => 'shootout',
-    PressTopic.lateDrama => 'late',
-    PressTopic.halfTimeComeback => 'turnaround',
-    PressTopic.halfTimeCollapse => 'thrownaway',
-    PressTopic.strikerDrought => 'drought',
-    PressTopic.youngsterBreakthrough => 'young',
-    PressTopic.droppedStar => 'dropped',
-    PressTopic.captaincyQuestion => 'armband',
-    PressTopic.veteranEnd => 'veteran',
-    PressTopic.debutant => 'debut',
-    PressTopic.rivalryNext => 'rivalnext',
-    PressTopic.headToHeadRun => 'h2hrun',
-    PressTopic.revengeMatch => 'revenge',
-  };
-
-  /// The topic a stored question key belongs to, or null if it is not a press
-  /// question at all (a grievance is stored in the same table).
-  static PressTopic? topicOfKey(String key) {
-    final prefix = key.split(':').first;
-    for (final topic in PressTopic.values) {
-      if (keyPrefixOf(topic) == prefix) return topic;
-    }
-    return null;
-  }
-
-  /// Which topics a live story SHUTS UP.
-  ///
-  /// Stories are gathered independently — each rule reads the fixtures it
-  /// cares about and knows nothing about the others — so two of them could
-  /// describe the same fortnight in opposite terms. A manager who finished
-  /// second in his group with two draws had both "you are through" and "three
-  /// games without a win, when do you resign" live at once, and the room asked
-  /// whichever the draw landed on. That is not a hard question, it is a
-  /// conference that has not read its own notes.
-  ///
-  /// So precedence is stated HERE, as data, rather than as conditions at the
-  /// dozen places a story is added: a topic that is louder than another
-  /// silences it for as long as both are live. Adding a topic means adding a
-  /// row, not auditing the selector.
-  ///
-  /// It is deliberately not a general priority order. Only real
-  /// contradictions belong in it — a place booked against a resignation
-  /// question, a trophy against a crisis, a rout against "you rode your luck".
-  /// Two stories that merely differ are two stories, and the room may lead
-  /// with either.
-  static const Map<PressTopic, Set<PressTopic>> silences = {
-    // Through. Nobody in that room is asking about the sack, and a campaign
-    // that ended with a place cannot also have come up short.
-    PressTopic.qualified: {
-      PressTopic.underPressure,
-      PressTopic.crisis,
-      PressTopic.missedOut,
-    },
-    // Champions. Whatever the run of form said last month, it does not say it
-    // today.
-    PressTopic.triumph: {
-      PressTopic.underPressure,
-      PressTopic.crisis,
-      PressTopic.luckyWin,
-    },
-    // A side that has just put three past somebody is not being asked how it
-    // keeps scraping through.
-    PressTopic.bigWin: {PressTopic.luckyWin},
-  };
-
-  /// [candidates] with every story a louder one silences taken out.
-  ///
-  /// The muted set is read from the topics that are LIVE, in one pass: a
-  /// silenced story does not go on to silence anything itself, because it is
-  /// not being asked.
-  static List<PressQuestion> unsilenced(List<PressQuestion> candidates) {
-    final muted = <PressTopic>{
-      for (final c in candidates) ...?silences[c.topic],
-    };
-    if (muted.isEmpty) return candidates;
-    return [
-      for (final c in candidates)
-        if (!muted.contains(c.topic)) c,
-    ];
-  }
-
-  /// How far up the card a subject goes when more stories qualify than there
-  /// are slots.
-  ///
-  /// A conference should lead with the thing that just happened on the pitch
-  /// and keep the generic team question as the filler, rather than the other
-  /// way round — which is what "press is too general" meant. The order is
-  /// stated once, here, so the topics batch 2 adds take their place in it by
-  /// carrying a subject rather than by editing a selector.
-  /// Batch 2 filled the two middle rungs (a named man, the next opponent) and
-  /// added the qualifier the spec always carried: an incident leads because it
-  /// is the LAST thing that happened, so one that has been overtaken by
-  /// another match drops to the bottom alongside the generic team question
-  /// rather than holding the front of the room on seniority.
-  static int precedenceOf(PressSubject subject) => switch (subject) {
-    PressSubjectIncident(:final fromLastMatch) when fromLastMatch => 0,
-    PressSubjectMatch(:final fromLastMatch) when fromLastMatch => 0,
-    PressSubjectPlayer() => 1,
-    PressSubjectOpponent() => 2,
-    PressSubjectIncident() || PressSubjectMatch() || PressSubjectTeam() => 3,
-  };
-
-  /// The candidates the room would actually lead with: everything sharing the
-  /// most specific subject present, in the order it arrived.
-  ///
-  /// A band rather than a sort, because the draw below still has to have
-  /// something to draw from. With an incident live the conference opens on the
-  /// incident; the generic team question is what fills a week when nothing
-  /// happened, which is the right way round and was the wrong way round.
-  static List<PressQuestion> leadingSubjects(List<PressQuestion> candidates) {
-    if (candidates.isEmpty) return candidates;
-    final best = candidates
-        .map((c) => precedenceOf(c.subject))
-        .reduce((a, b) => a < b ? a : b);
-    return [
-      for (final c in candidates)
-        if (precedenceOf(c.subject) == best) c,
-    ];
-  }
-
-  /// Which of the live stories the press actually lead with.
-  ///
-  /// [input] arrives biggest-first. A topic the manager has just been
-  /// asked about is pushed to the back rather than dropped: the press repeat
-  /// themselves when nothing else has happened, but they do not open with the
-  /// same question twice running while there is anything else to ask.
-  static PressQuestion? pick(
-    List<PressQuestion> input, {
-    Set<PressTopic> recentTopics = const {},
-    required int seed,
-  }) {
-    // Contradictions go first, before anything else is weighed: a story that
-    // has been silenced is not a fallback either, and must not come back when
-    // the freshness rule below finds nothing else to ask.
-    final candidates = unsilenced(input);
-    if (candidates.isEmpty) return null;
-    final fresh = [
-      for (final c in candidates)
-        if (!recentTopics.contains(c.topic)) c,
-    ];
-    final pool = leadingSubjects(
-      fresh.isEmpty ? candidates : fresh,
-    ).take(storyPool).toList();
-    return pool[seed % pool.length];
-  }
-
   /// How strongly a swing of [value] reads, as one, two or three arrows.
   ///
-  /// The sheet used to print the raw number — "Squad 6" — which is a figure on
-  /// a hidden 0–100 scale that the manager has never been shown and cannot
-  /// place. Six of what? Arrows say the only thing the number was ever meant
-  /// to say: whether this answer moves the room a little, a fair amount, or a
-  /// great deal.
-  ///
-  /// The bands hold for a single answer and for a whole conference alike. One
-  /// stance is worth at most six (see [effectOf]) and a follow-up half that,
-  /// so a single answer spans the full range; a conference of four can total
-  /// far more, and everything beyond a great deal is still a great deal.
+  /// The sheet used to print the raw number, which is a figure on a hidden
+  /// 0-100 scale the manager has never been shown. Arrows say the only thing
+  /// the number was ever meant to say: whether an answer moves the room a
+  /// little, a fair amount, or a great deal. The bands hold for a single
+  /// answer and for a whole conference alike; everything beyond a great deal is
+  /// still a great deal.
   static int arrowsFor(int value) {
     final size = value.abs();
     if (size == 0) return 0;
@@ -591,372 +170,6 @@ abstract final class Press {
     if (size <= 5) return 2;
     return 3;
   }
-
-  /// What each tone does, before the situation is taken into account.
-  static PressEffect effectOf(PressTone tone) => switch (tone) {
-    PressTone.backThePlayers => (morale: 6, board: -3),
-    PressTone.takeTheBlame => (morale: 4, board: -1),
-    PressTone.demandMore => (morale: -5, board: 4),
-    PressTone.raiseTheBar => (morale: -3, board: 6),
-    PressTone.playItDown => (morale: 0, board: 0),
-  };
-
-  /// What a tone does GIVEN what has just happened and who is listening.
-  ///
-  /// The flat table above says backing the players is always worth the same
-  /// six, whether they have just been humiliated by a minnow or have just held
-  /// the world champions. That is the same failure the feed had: an answer
-  /// with no idea what it is an answer to.
-  ///
-  /// Two adjustments, both small, because a press answer is a nudge and should
-  /// stay one:
-  ///
-  /// * **The result.** Defending a side that has just disgraced itself costs
-  ///   the board more and earns the dressing room less — everyone can hear
-  ///   that it is a defence. After a creditable afternoon the same words are
-  ///   simply agreement, and cost almost nothing.
-  /// * **The room.** Demanding more from a squad already on the floor lands
-  ///   harder than demanding it from a happy one, so morale damage grows as
-  ///   morale falls. Praise works the other way: a confident squad has less
-  ///   left to gain.
-  static PressEffect effectInContext(
-    PressTone tone, {
-    ResultStanding? standing,
-    int squadMorale = 50,
-    int boardMood = 50,
-  }) {
-    final base = effectOf(tone);
-    if (base.morale == 0 && base.board == 0) return base;
-    // −2 (humiliating) … +2 (heroic), 0 when there is no result in view.
-    final read = standing == null ? 0 : Expectation.weight(standing);
-    var morale = base.morale.toDouble();
-    var board = base.board.toDouble();
-
-    if (base.morale > 0) {
-      // Backing them is worth most when they are low and least when they are
-      // already flying, and worth less the more indefensible the result.
-      morale *= 1 + (50 - squadMorale) / 200 + read * _resultSway;
-      // The standing SCALES the cost rather than shifting it. Adding to it
-      // pushed the board term past zero after a good result, so taking the
-      // blame for a triumph both lifted the dressing room and pleased the
-      // board — the one thing no answer in this game is allowed to do.
-      board *= 1 - read * _resultSway * 2;
-    } else {
-      // Criticism bites a fragile dressing room harder.
-      morale *= 1 + (50 - squadMorale) / 150;
-      // And a board that is already unhappy takes more convincing.
-      board *= 1 + (50 - boardMood) / 250;
-    }
-
-    return (
-      morale: morale.round().clamp(-_effectCap, _effectCap),
-      board: board.round().clamp(-_effectCap, _effectCap),
-    );
-  }
-
-  /// How much the afternoon's standing sways the two scales.
-  static const double _resultSway = 0.12;
-
-  /// Nothing said in a press conference moves either scale further than this.
-  /// The bands in [arrowsFor] are written against it.
-  static const int _effectCap = 9;
-
-  /// The answers offered for a topic. Every question keeps [PressTone.playItDown]
-  /// as a way out, so a manager is never forced into a stance.
-  /// What the manager can say to a question on [topic], given who he is.
-  ///
-  /// [target] is the height of the board's stated objective on the 2 (be
-  /// there) … 7 (win it) scale, and [worldRank] is where the nation actually
-  /// stands. Both are needed because a tone is only an option if it is a thing
-  /// this manager could plausibly say: a side told to qualify, ranked
-  /// sixtieth, being offered "we are here to win this" made the conference
-  /// read as generic — the same four answers whoever you were, one of them
-  /// absurd. [PressTone.playItDown] survives every filter, because saying as
-  /// little as possible is always available to anybody.
-  static List<PressTone> optionsFor(
-    PressTopic topic, {
-    int target = 7,
-    int? worldRank,
-  }) {
-    final tones = _tonesFor(topic);
-    // Talking the target up belongs to a side with something to talk up. An
-    // UNKNOWN ranking is not evidence against him — a save before its first
-    // release has no position yet, and a manager should not be silenced by the
-    // game not having got round to ranking him.
-    final canRaise =
-        target > qualifyTarget &&
-        (worldRank == null || worldRank <= raiseRankBar);
-    if (canRaise) return tones;
-    final filtered = [
-      for (final t in tones)
-        if (t != PressTone.raiseTheBar) t,
-    ];
-    return filtered.isEmpty ? const [PressTone.playItDown] : filtered;
-  }
-
-  /// The objective height that means "just be there".
-  static const int qualifyTarget = 2;
-
-  /// The world ranking beyond which talking a target up is not a stance, it is
-  /// a punchline.
-  static const int raiseRankBar = 40;
-
-  static List<PressTone> _tonesFor(PressTopic topic) => switch (topic) {
-    PressTopic.heavyDefeat => const [
-      PressTone.backThePlayers,
-      PressTone.takeTheBlame,
-      PressTone.demandMore,
-      PressTone.playItDown,
-    ],
-    PressTopic.underPressure => const [
-      PressTone.takeTheBlame,
-      PressTone.demandMore,
-      PressTone.raiseTheBar,
-      PressTone.playItDown,
-    ],
-    PressTopic.tournamentPreview => const [
-      PressTone.raiseTheBar,
-      PressTone.backThePlayers,
-      PressTone.playItDown,
-    ],
-    PressTopic.tournamentOpening => const [
-      PressTone.raiseTheBar,
-      PressTone.backThePlayers,
-      PressTone.demandMore,
-      PressTone.playItDown,
-    ],
-    PressTopic.triumph => const [
-      PressTone.backThePlayers,
-      PressTone.raiseTheBar,
-      PressTone.playItDown,
-    ],
-    PressTopic.elimination => const [
-      PressTone.takeTheBlame,
-      PressTone.backThePlayers,
-      PressTone.demandMore,
-      PressTone.playItDown,
-    ],
-    // A night that went well is an invitation to talk the side up — or to
-    // refuse to get carried away, which is its own kind of answer.
-    PressTopic.bigWin => const [
-      PressTone.backThePlayers,
-      PressTone.raiseTheBar,
-      PressTone.demandMore,
-      PressTone.playItDown,
-    ],
-    PressTopic.qualified => const [
-      PressTone.backThePlayers,
-      PressTone.raiseTheBar,
-      PressTone.demandMore,
-      PressTone.playItDown,
-    ],
-    PressTopic.missedOut => const [
-      PressTone.takeTheBlame,
-      PressTone.backThePlayers,
-      PressTone.demandMore,
-      PressTone.playItDown,
-    ],
-    PressTopic.unbeatenRun => const [
-      PressTone.backThePlayers,
-      PressTone.raiseTheBar,
-      PressTone.playItDown,
-    ],
-    PressTopic.newJob => const [
-      PressTone.raiseTheBar,
-      PressTone.backThePlayers,
-      PressTone.demandMore,
-      PressTone.playItDown,
-    ],
-    PressTopic.rankingPeak => const [
-      PressTone.backThePlayers,
-      PressTone.raiseTheBar,
-      PressTone.playItDown,
-    ],
-    // Punching above your weight: you can credit them, raise the bar and
-    // invite the fall, or refuse to get carried away.
-    PressTopic.overachieving => const [
-      PressTone.backThePlayers,
-      PressTone.raiseTheBar,
-      PressTone.playItDown,
-    ],
-    // Winning without convincing. Defending it, demanding better, or saying
-    // a win is a win.
-    PressTopic.luckyWin => const [
-      PressTone.backThePlayers,
-      PressTone.demandMore,
-      PressTone.playItDown,
-    ],
-    // Bad results AND an unhappy board. Every stance is available because
-    // every stance is a real option when it has got this far.
-    PressTopic.crisis => const [
-      PressTone.backThePlayers,
-      PressTone.takeTheBlame,
-      PressTone.demandMore,
-      PressTone.playItDown,
-    ],
-    // A man sent off: defend him, take it on yourself for leaving him on, or
-    // say out loud that it was indefensible.
-    PressTopic.sendingOff => const [
-      PressTone.backThePlayers,
-      PressTone.takeTheBlame,
-      PressTone.demandMore,
-      PressTone.playItDown,
-    ],
-    // A man hurt. Nobody is to blame for a knock, so there is nothing to take
-    // the blame for — either the squad is deep enough or it is not.
-    PressTopic.injuryBlow => const [
-      PressTone.backThePlayers,
-      PressTone.raiseTheBar,
-      PressTone.playItDown,
-    ],
-    // Twelve yards. Defend them, own the preparation, or refuse the premise.
-    PressTopic.shootoutFate => const [
-      PressTone.backThePlayers,
-      PressTone.takeTheBlame,
-      PressTone.playItDown,
-    ],
-    // The last ten minutes: credit them, demand a side that sees it out, or
-    // call it football.
-    PressTopic.lateDrama => const [
-      PressTone.backThePlayers,
-      PressTone.demandMore,
-      PressTone.playItDown,
-    ],
-    // Two down and it was turned round: the room wants to know whether that is
-    // character or whether the first half is the problem.
-    PressTopic.halfTimeComeback => const [
-      PressTone.backThePlayers,
-      PressTone.raiseTheBar,
-      PressTone.demandMore,
-      PressTone.playItDown,
-    ],
-    // Two up and it was thrown away. Nobody is being talked up here.
-    PressTopic.halfTimeCollapse => const [
-      PressTone.takeTheBlame,
-      PressTone.backThePlayers,
-      PressTone.demandMore,
-      PressTone.playItDown,
-    ],
-    // A forward who cannot score. Back him, say out loud that it has to stop,
-    // or refuse to make him the story.
-    PressTopic.strikerDrought => const [
-      PressTone.backThePlayers,
-      PressTone.demandMore,
-      PressTone.playItDown,
-    ],
-    // A boy who has just played the game of his life. The trap is the one the
-    // room is inviting: talk him up now and he carries it.
-    PressTopic.youngsterBreakthrough => const [
-      PressTone.backThePlayers,
-      PressTone.raiseTheBar,
-      PressTone.playItDown,
-    ],
-    // Why is he not playing? Defend him, defend the decision, or own it.
-    PressTopic.droppedStar => const [
-      PressTone.backThePlayers,
-      PressTone.demandMore,
-      PressTone.takeTheBlame,
-      PressTone.playItDown,
-    ],
-    // The armband. Backing him is the whole point of having given it to him,
-    // and demanding more of a captain in public is a decision with a cost.
-    PressTopic.captaincyQuestion => const [
-      PressTone.backThePlayers,
-      PressTone.demandMore,
-      PressTone.playItDown,
-    ],
-    // A career ending. Nobody is to blame for thirty-four, so there is nothing
-    // to take the blame for.
-    PressTopic.veteranEnd => const [
-      PressTone.backThePlayers,
-      PressTone.demandMore,
-      PressTone.playItDown,
-    ],
-    // A first cap: back him, or say what you expect of him now.
-    PressTopic.debutant => const [
-      PressTone.backThePlayers,
-      PressTone.raiseTheBar,
-      PressTone.playItDown,
-    ],
-    // The neighbours. Every stance but taking the blame is available: nothing
-    // has happened yet to take the blame for.
-    PressTopic.rivalryNext => const [
-      PressTone.backThePlayers,
-      PressTone.raiseTheBar,
-      PressTone.demandMore,
-      PressTone.playItDown,
-    ],
-    PressTopic.headToHeadRun => const [
-      PressTone.backThePlayers,
-      PressTone.raiseTheBar,
-      PressTone.demandMore,
-      PressTone.playItDown,
-    ],
-    // The side that put you out. Own what happened last time, promise it will
-    // be different, or refuse the premise.
-    PressTopic.revengeMatch => const [
-      PressTone.takeTheBlame,
-      PressTone.raiseTheBar,
-      PressTone.demandMore,
-      PressTone.playItDown,
-    ],
-  };
-
-  /// The longest a conference can run to, for the sizes the UI has to reserve.
-  static const int maxConferenceLength = 2;
-
-  /// How many questions a conference runs to, by what it is ABOUT.
-  ///
-  /// It used to be three, always, which is what made it read as a form to fill
-  /// in rather than a room: a World Cup final and a ranking milestone drew the
-  /// same three questions. A triumph or an exit is a long afternoon; a nation
-  /// climbing a place or two is a question and a thank-you.
-  ///
-  /// Capped at [maxConferenceLength]: past two, a conference was a queue of
-  /// questions standing between the manager and his next match.
-  static int lengthFor(PressTopic topic) =>
-      _naturalLengthFor(topic).clamp(1, maxConferenceLength);
-
-  static int _naturalLengthFor(PressTopic topic) => switch (topic) {
-    // The whole cycle in one room.
-    PressTopic.triumph ||
-    PressTopic.elimination ||
-    PressTopic.tournamentPreview ||
-    PressTopic.tournamentOpening => 4,
-    // Something happened and it needs explaining.
-    PressTopic.heavyDefeat ||
-    PressTopic.underPressure ||
-    PressTopic.missedOut ||
-    PressTopic.qualified ||
-    PressTopic.crisis ||
-    PressTopic.newJob => 3,
-    // A man sent off is the long one of the four: it is about him, about the
-    // decision to leave him on, and about what it cost.
-    PressTopic.sendingOff => 3,
-    // Worth a word, not an afternoon.
-    PressTopic.bigWin ||
-    PressTopic.unbeatenRun ||
-    PressTopic.overachieving ||
-    PressTopic.injuryBlow ||
-    PressTopic.shootoutFate ||
-    PressTopic.lateDrama ||
-    // A turnaround either way: what happened, and what it says about the side.
-    PressTopic.halfTimeComeback ||
-    PressTopic.halfTimeCollapse => 2,
-    // A man, or the side you are about to play. Two questions each: the thing
-    // itself, and what the manager intends to do about it. A selection row is
-    // not a post-mortem and does not need an afternoon.
-    PressTopic.strikerDrought ||
-    PressTopic.youngsterBreakthrough ||
-    PressTopic.droppedStar ||
-    PressTopic.captaincyQuestion ||
-    PressTopic.veteranEnd ||
-    PressTopic.debutant ||
-    PressTopic.rivalryNext ||
-    PressTopic.headToHeadRun ||
-    PressTopic.revengeMatch => 2,
-    PressTopic.rankingPeak || PressTopic.luckyWin => 1,
-  };
 
   /// The reporters who cover this nation, drawn from the pool by [seed] so a
   /// manager sees the same faces across a career and a different set at his
@@ -982,133 +195,6 @@ abstract final class Press {
       i += stride;
     }
     return out;
-  }
-
-  /// What the room comes back with after a manager has taken [tone].
-  static PressProbe probeAfter(PressTone tone) => switch (tone) {
-    PressTone.backThePlayers => PressProbe.accountability,
-    PressTone.takeTheBlame => PressProbe.yourFuture,
-    PressTone.demandMore => PressProbe.dressingRoom,
-    PressTone.raiseTheBar => PressProbe.expectation,
-    PressTone.playItDown => PressProbe.substance,
-  };
-
-  /// The question a reporter of this [angle] likes to finish on.
-  static PressProbe closingProbe(PressAngle angle) => switch (angle) {
-    PressAngle.tabloid => PressProbe.yourFuture,
-    PressAngle.broadsheet => PressProbe.substance,
-    PressAngle.analyst => PressProbe.selection,
-    PressAngle.local => PressProbe.theFans,
-    PressAngle.foreign => PressProbe.bigPicture,
-  };
-
-  /// The answers offered to a follow-up. Narrower than an opening question's:
-  /// a comeback is pointed, and only some stances are an answer to it — but
-  /// [PressTone.playItDown] is always there, as everywhere else.
-  static List<PressTone> optionsForProbe(PressProbe probe) => switch (probe) {
-    PressProbe.accountability => const [
-      PressTone.takeTheBlame,
-      PressTone.demandMore,
-      PressTone.playItDown,
-    ],
-    PressProbe.yourFuture => const [
-      PressTone.raiseTheBar,
-      PressTone.takeTheBlame,
-      PressTone.playItDown,
-    ],
-    PressProbe.dressingRoom => const [
-      PressTone.backThePlayers,
-      PressTone.demandMore,
-      PressTone.playItDown,
-    ],
-    PressProbe.expectation => const [
-      PressTone.raiseTheBar,
-      PressTone.takeTheBlame,
-      PressTone.playItDown,
-    ],
-    PressProbe.substance => const [
-      PressTone.raiseTheBar,
-      PressTone.backThePlayers,
-      PressTone.demandMore,
-      PressTone.playItDown,
-    ],
-    PressProbe.selection => const [
-      PressTone.backThePlayers,
-      PressTone.demandMore,
-      PressTone.playItDown,
-    ],
-    PressProbe.theFans => const [
-      PressTone.backThePlayers,
-      PressTone.raiseTheBar,
-      PressTone.playItDown,
-    ],
-    PressProbe.bigPicture => const [
-      PressTone.raiseTheBar,
-      PressTone.takeTheBlame,
-      PressTone.playItDown,
-    ],
-  };
-
-  /// The opening exchange of a conference about [question].
-  static PressExchange openingExchange(
-    PressQuestion question,
-    PressReporter reporter,
-  ) => (
-    key: question.key,
-    reporter: reporter,
-    topic: question.topic,
-    subject: question.subject,
-    probe: null,
-    subjectNationId: question.subjectNationId,
-    options: question.options,
-    halfWeight: false,
-  );
-
-  /// The exchange that follows [previous] once the manager has answered it
-  /// with [tone]. [index] is its position in the conference (1 = the first
-  /// follow-up), which is what keeps its stored key unique.
-  static PressExchange followUp(
-    PressQuestion question,
-    PressReporter reporter,
-    PressTone tone, {
-    required int index,
-  }) {
-    // The last question of the conference belongs to whoever is asking it —
-    // that is the one place a reporter gets to ride their own hobby-horse
-    // rather than react to the manager.
-    final probe = index >= lengthFor(question.topic) - 1
-        ? closingProbe(reporter.angle)
-        : probeAfter(tone);
-    return (
-      key: '${question.key}#$index',
-      reporter: reporter,
-      topic: question.topic,
-      subject: question.subject,
-      probe: probe,
-      subjectNationId: question.subjectNationId,
-      options: optionsForProbe(probe),
-      halfWeight: true,
-    );
-  }
-
-  /// What an answer to [exchange] costs, in the same points as [effectOf]. A
-  /// follow-up is worth half a stance, rounded toward zero, so a whole
-  /// conference is a strong statement rather than three of them.
-  static PressEffect effectOfExchange(
-    PressExchange exchange,
-    PressTone tone, {
-    ResultStanding? standing,
-    int squadMorale = 50,
-    int boardMood = 50,
-  }) {
-    final full = effectInContext(
-      tone,
-      standing: standing,
-      squadMorale: squadMorale,
-      boardMood: boardMood,
-    );
-    if (!exchange.halfWeight) return full;
-    return (morale: full.morale ~/ 2, board: full.board ~/ 2);
   }
 
   /// How a conference LANDED, as a single verdict on everything said in it:

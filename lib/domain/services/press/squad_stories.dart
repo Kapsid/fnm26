@@ -107,8 +107,7 @@ abstract final class SquadStories {
   /// …and how many caps he needs for that career mark to mean anything.
   static const int captainCaps = 10;
 
-  /// Every story the squad is telling, in no particular order — the press
-  /// selector does the ordering (see [Press.leadingSubjects]).
+  /// Every story the squad is telling, in no particular order.
   static List<SquadStory> read(List<SquadMan> squad) {
     final out = <SquadStory>[];
     void add(SquadStory? story) {

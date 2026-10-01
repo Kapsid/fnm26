@@ -10,7 +10,7 @@ import 'package:flutter_test/flutter_test.dart';
 /// egg on the two afternoons a half-time score turns over, and it is CZECH
 /// ONLY, on purpose. An English reader has never heard of it, so a translated
 /// in-joke would be a confusing sentence rather than a joke, and the English
-/// wordings for those events are ordinary press-room and supporter English
+/// wordings for those events are ordinary supporter English
 /// about the same match.
 ///
 /// That makes it the one place in the app where the two languages deliberately
@@ -33,7 +33,7 @@ void main() {
   };
 
   /// Every key whose Czech carries the joke: the two Y templates, six wordings
-  /// apiece, and the two press questions, four apiece.
+  /// apiece.
   const joke = [
     'yTurnedItRound0',
     'yTurnedItRound1',
@@ -47,14 +47,6 @@ void main() {
     'yThrewItAway3',
     'yThrewItAway4',
     'yThrewItAway5',
-    'pressAskComeback1',
-    'pressAskComeback2',
-    'pressAskComeback3',
-    'pressAskComeback4',
-    'pressAskCollapse1',
-    'pressAskCollapse2',
-    'pressAskCollapse3',
-    'pressAskCollapse4',
   ];
 
   test('the Czech tells the joke, in every wording of it', () {

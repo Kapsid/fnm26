@@ -13,12 +13,9 @@ import 'package:fnm/features/tactics/tactics_providers.dart';
 /// What the SQUAD is asking of the manager right now, and what the NEXT match
 /// is.
 ///
-/// Two providers, one job: the press room and the feed are two readings of the
-/// same week and must not be able to disagree about it. Batch 1's incidents
-/// were read twice — once by the conference, once by the feed — because the
-/// rule was "was anybody sent off", which is too small to go wrong. A drought,
-/// a dropped star and a head-to-head run are not, so the reading happens once
-/// and both callers watch it.
+/// Two providers, one job: the Y feed reads the squad and the next opponent
+/// once, here, so a drought, a dropped star or a head-to-head run is judged
+/// from one definition.
 ///
 /// The rules themselves are pure and live in [SquadStories] / [OpponentStories];
 /// everything here is the gathering.
@@ -203,8 +200,8 @@ const int _revengeDays = 365 * 4;
 /// Who put this nation out of the last tournament it went out of, if that was
 /// recently enough to still be the story.
 ///
-/// A knockout defeat in a finals round ends a run there and then — the same
-/// reading [PressTopic.elimination] takes of the same fixture list. The
+/// A knockout defeat in a finals round ends a run there and then — the
+/// usual reading of a finals fixture list. The
 /// third-place match is not one of those: losing it is a disappointment, not
 /// an elimination, because the side was already out when it kicked off.
 int? _lastEliminator(

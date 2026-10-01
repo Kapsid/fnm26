@@ -1,32 +1,14 @@
-import 'dart:convert';
-import 'dart:io';
-
-import 'package:drift/drift.dart' hide isNotNull, isNull;
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:fnm/data/data_providers.dart';
-import 'package:fnm/data/db/app_database.dart';
-import 'package:fnm/data/seed/seed_source.dart';
-import 'package:fnm/domain/entities/enums.dart';
-import 'package:fnm/domain/entities/nation.dart';
-import 'package:fnm/domain/entities/player.dart';
-import 'package:fnm/domain/services/entitlement/entitlement.dart';
 import 'package:fnm/domain/services/press/half_time_swing.dart';
 import 'package:fnm/domain/services/press/persona.dart';
-import 'package:fnm/domain/services/press/press.dart';
 import 'package:fnm/domain/services/press/y_feed.dart';
-import 'package:fnm/features/career/career_providers.dart';
-import 'package:fnm/features/press/press_providers.dart';
-
-import '../../helpers/test_database.dart';
 
 /// The afternoon the second half turned over.
 ///
 /// Two goals down at the break and it finished level or won; two goals up at
 /// the break and it finished level or lost. A fixture row cannot tell either
 /// story — it keeps the final score and nothing about the road to it — so both
-/// are read off the goal timeline, by one definition that the press room and
-/// the feed share.
+/// are read off the goal timeline, by one definition that the feed shares.
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
@@ -207,150 +189,6 @@ void main() {
         YFeed.variantsFor(YTemplate.threwItAway),
         YFeed.subjectVariantCount,
       );
-    });
-  });
-
-  group('the press room', () {
-    late List<Nation> nations;
-    late List<Player> players;
-
-    setUpAll(() {
-      nations =
-          (jsonDecode(File('assets/data/nations.json').readAsStringSync())
-                  as List<dynamic>)
-              .map((e) => Nation.fromJson(e as Map<String, Object?>))
-              .toList();
-      players =
-          (jsonDecode(File('assets/data/players.json').readAsStringSync())
-                  as List<dynamic>)
-              .map((e) => Player.fromJson(e as Map<String, Object?>))
-              .toList();
-    });
-
-    /// The question the press are holding after one match that finished
-    /// [scored]–[conceded] with [goals] in it (minutes, and whose they were).
-    Future<PressQuestion?> after(
-      List<({int minute, bool ours})> goals, {
-      required int scored,
-      required int conceded,
-    }) async {
-      final db = createTestDatabase();
-      addTearDown(db.close);
-      final container = ProviderContainer(
-        overrides: [
-          appDatabaseProvider.overrideWithValue(db),
-          premiumUnlockedProvider.overrideWith((ref) => true),
-          seedSourceProvider.overrideWithValue(
-            InMemorySeedSource(nationList: nations, playerList: players),
-          ),
-        ],
-      );
-      addTearDown(container.dispose);
-      await container.read(seedLoaderProvider).ensureSeeded();
-      final me = nations.firstWhere((n) => n.code == 'NZL').id;
-      final career =
-          (await container
-                  .read(careerServiceProvider)
-                  .create(nationId: me, managerName: 'M'))
-              .valueOrNull!;
-      final opponent = nations.firstWhere((n) => n.id != me);
-      final competition = await db
-          .into(db.competitions)
-          .insert(
-            CompetitionsCompanion.insert(
-              careerId: career.id,
-              name: 'World Championship Qualifying',
-              kind: const Value(CompetitionKind.worldCupQualifying),
-              confederation: Confederation.oceania,
-              cycle: const Value(0),
-            ),
-          );
-      final fixture = await db
-          .into(db.fixtures)
-          .insert(
-            FixturesCompanion.insert(
-              careerId: career.id,
-              competitionId: competition,
-              matchday: 1,
-              date: career.inGameDate.subtract(const Duration(days: 4)),
-              homeNationId: me,
-              awayNationId: opponent.id,
-              homeScore: Value(scored),
-              awayScore: Value(conceded),
-              played: const Value(true),
-            ),
-          );
-      final mine = players.firstWhere((p) => p.nationId == me).id;
-      final theirs = players.firstWhere((p) => p.nationId == opponent.id).id;
-      await container.read(competitionRepositoryProvider).recordGoals([
-        for (final g in goals)
-          (
-            careerId: career.id,
-            competitionId: competition,
-            fixtureId: fixture,
-            nationId: g.ours ? me : opponent.id,
-            playerId: g.ours ? mine : theirs,
-            minute: g.minute,
-          ),
-      ]);
-      return container.read(pressQuestionProvider(career.id).future);
-    }
-
-    test('two down at the break and rescued is asked about', () async {
-      final q = await after(
-        const [
-          (minute: 12, ours: false),
-          (minute: 33, ours: false),
-          (minute: 55, ours: true),
-          (minute: 70, ours: true),
-        ],
-        scored: 2,
-        conceded: 2,
-      );
-      expect(q?.topic, PressTopic.halfTimeComeback);
-      expect(
-        q?.subject,
-        isA<PressSubjectMatch>(),
-        reason: 'it happened over ninety minutes, not to one man',
-      );
-      expect(
-        Press.precedenceOf(q!.subject),
-        0,
-        reason: 'it is the thing that just happened, so the room leads with it',
-      );
-    });
-
-    test('two up at the break and thrown away is asked about', () async {
-      final q = await after(
-        const [
-          (minute: 12, ours: true),
-          (minute: 33, ours: true),
-          (minute: 55, ours: false),
-          (minute: 70, ours: false),
-        ],
-        scored: 2,
-        conceded: 2,
-      );
-      expect(q?.topic, PressTopic.halfTimeCollapse);
-    });
-
-    test('an ordinary afternoon draws neither question', () async {
-      final q = await after(
-        const [
-          (minute: 12, ours: false),
-          (minute: 55, ours: true),
-        ],
-        scored: 1,
-        conceded: 1,
-      );
-      expect(
-        q?.topic,
-        isNot(PressTopic.halfTimeComeback),
-        reason:
-            'one goal behind at the break is not a position to come back '
-            'from',
-      );
-      expect(q?.topic, isNot(PressTopic.halfTimeCollapse));
     });
   });
 }

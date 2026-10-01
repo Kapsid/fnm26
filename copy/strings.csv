@@ -1456,23 +1456,9 @@ youthWatchSenior,Status of a watched boy who has aged out of the pyramid.,,Throu
 youthWatchReleased,Status of a watched boy the academy let go.,,Released by the academy,Akademie ho uvolnila
 youthWatchGone,Status of a watched boy who can no longer be found at all.,,No longer in the pyramid,Už není v akademii
 tacticsYouth,Tooltip on the squad screen's youth-watchlist action.,,Under-21s,Do 21 let
-pressTitle,Title of the press-question sheet.,,Press conference,Tisková konference
-pressCardTitle,Hub card inviting the manager to answer a press question.,,The press are waiting,Čekají novináři
-pressCardSub,Hub card subtitle.,,One question. What you say moves the dressing room and the board.,"Jedna otázka. Co řeknete, pocítí kabina i vedení."
-pressTheOpposition,Fallback when the opponent is unknown.,,the opposition,soupeř
 pressSquad,Label on the dressing-room swing of a press answer.,,Squad,Kabina
 pressBoard,Label on the board swing of a press answer.,,Board,Vedení
 pressNoEffect,Shown on an answer that moves nothing.,,Nobody reads much into it,Nikdo v tom nic nehledá
-pressAskHeavyDefeat,Press question after a heavy defeat.,{opponent},That was a chastening night against {opponent}. What went wrong?,Se soupeřem {opponent} to byl výprask. Co se stalo?
-pressAskElimination,Press question after a knockout exit.,{opponent},"Beaten by {opponent}, and the tournament is over. How do you explain it?",Porážka se soupeřem {opponent} a konec turnaje. Jak to vysvětlíte?
-pressAskUnderPressure,Press question during a bad run.,,"Three games without a win, and the board are watching. Are you still the right man?",Tři zápasy bez výhry a vedení se dívá. Jste pořád ten pravý?
-pressAskPreview,Press question before a finals.,,The tournament starts here. How far does this squad go?,Turnaj začíná. Jak daleko tenhle tým dojde?
-pressAskTriumph,Press question after winning a trophy.,,"Champions. Where does this rank, and what comes next?",Mistři. Kam to řadíte a co bude dál?
-pressAnswerBackPlayers,Press answer: back the squad.,,These players gave me everything. I would not swap a single one of them.,Tihle hráči mi dali všechno. Nevyměnil bych ani jednoho.
-pressAnswerTakeBlame,Press answer: take the blame.,,That one is on me. I picked the side and I set them up.,Tohle jde za mnou. Sestavu jsem vybral já.
-pressAnswerDemandMore,Press answer: demand more.,,Not good enough. Some of them have to look at themselves.,Málo. Někteří se musí podívat do zrcadla.
-pressAnswerRaiseBar,Press answer: raise the target.,,We are here to win it. Anything less is a failure.,Jsme tu pro vítězství. Cokoli jiného je selhání.
-pressAnswerPlayDown,Press answer: say nothing.,,We take it one game at a time. Nothing more to add.,Jdeme zápas od zápasu. Víc k tomu neřeknu.
 matchNeutralGround,Tag on the ground card when a tie is played on neutral territory.,,NEUTRAL,NEUTRÁLNÍ
 matchExtraTimeAhead,Heading of the interval before extra time begins.,,EXTRA TIME,PRODLOUŽENÍ
 matchExtraTimeHalf,Heading of the interval midway through extra time.,,EXTRA TIME · HALF TIME,PRODLOUŽENÍ · POLOČAS
@@ -1482,7 +1468,6 @@ matchClockPenalties,The clock plate while the shootout is being taken.,,PENALTIE
 matchClockFullTimePenalties,The clock plate when a tie was settled on penalties. Keep it short: the plate sits between the two crests and grows to fit.,,FULL TIME · PENALTIES,KONEC · PENALTY
 hubEventPressConference,Timeline action: the opening press conference of a tournament.,,Face the press,Předstoupit před novínáře
 hubEventPressConferenceSub,Subtitle of the opening press conference action.,,The world’s media want a word before your first match,Světová média chtějí slovo před prvním zápasem
-pressAskOpening,Press question at a tournament's opening conference.,{opponent},The tournament is open and you start against {opponent}. What are you telling the country?,Turnaj je zahájen a začínáte proti {opponent}. Co vzkazujete zemi?
 squadDevWonderkid,Tag on a newly emerged player the scouts rate very highly.,,WONDERKID,TALENT
 tacticsPlaystyle,Heading for the general playing style selector.,,Playing style,Herní styl
 tacticsPlaystyleBlurb,Blurb under the playing style selector.,,Pick how the side plays; the dials below fine-tune it.,"Vyberte, jak tým hraje; posuvníky níže styl doladí."
@@ -1560,123 +1545,8 @@ squadGoalsValue,Leading scorer and their tally.,{name} {goals},{name} · {goals}
 squadAgeClub,A squad row's age and club line.,{age} {club},{age} · {club},{age} · {club}
 squadCapsShort,Column heading: international appearances.,,Caps,Star
 squadGoalsShort,Column heading: international goals.,,Gls,Gól
-pressAskHeavyDefeat2,Press conference line.,{opponent},Four goals conceded against {opponent}. Where does a night like that leave you?,Čtyři inkasované se soupeřem {opponent}. Kde vás takový večer nechává?
-pressAskHeavyDefeat3,Press conference line.,{opponent},{opponent} took you apart. Is this squad good enough?,{opponent} vás rozebral. Je tenhle tým dost dobrý?
-pressAskElimination2,Press conference line.,{opponent},"{opponent} end it. Four years of work, gone in ninety minutes. Talk us through it.",{opponent} to ukončil. Čtyři roky práce pryč za devadesát minut. Vysvětlete nám to.
-pressAskElimination3,Press conference line.,{opponent},Out to {opponent}. Was that as far as this team was ever going?,Konec se soupeřem {opponent}. Bylo tohle maximum tohohle týmu?
-pressAskUnderPressure2,Press conference line.,,The results have dried up and your name is in every column. Worried?,Výsledky nejsou a vaše jméno je ve všech sloupcích. Máte obavy?
-pressAskUnderPressure3,Press conference line.,,"No wins, no goals, no answers. What do you say to the supporters?","Žádné výhry, žádné góly, žádné odpovědi. Co vzkážete fanouškům?"
-pressAskPreview2,Press conference line.,,Everyone wants a prediction. Give us yours.,Všichni chtějí tip. Dejte nám ten svůj.
-pressAskPreview3,Press conference line.,,"Realistically: group stage, quarters, or more than that?","Realisticky: skupina, čtvrtfinále, nebo víc?"
-pressAskOpening2,Press conference line.,{opponent},The whole country is watching and {opponent} are first up. Your message?,Sleduje vás celá země a prvním soupeřem je {opponent}. Co vzkazujete?
-pressAskOpening3,Press conference line.,{opponent},It starts against {opponent}. How do you want this side to be remembered?,"Začíná se proti {opponent}. Jak si přejete, aby si tenhle tým zapamatovali?"
-pressAskTriumph2,Press conference line.,,"You've won it. Does it feel like the end of something, or the start?","Máte to. Je to konec něčeho, nebo začátek?"
-pressAskTriumph3,Press conference line.,,Champions at last. Who does this one belong to?,Konečně mistři. Komu tenhle titul patří?
-pressAskBigWin,Press conference line.,{opponent},Three clear against {opponent}. Is this side finally clicking?,O tři čisté se soupeřem {opponent}. Začíná to tomuhle týmu konečně sedat?
-pressAskBigWin2,Press conference line.,{opponent},You took {opponent} apart. How good was that?,Rozebrali jste {opponent}. Jak dobré to bylo?
-pressAskBigWin3,Press conference line.,{opponent},A statement result against {opponent}. Should the rest of them be worried?,"Výsledek jako vzkaz soupeřům, {opponent} to odnesl. Mají se ostatní bát?"
-pressAskQualified,Press conference line.,,You're through. What does qualifying mean to this group?,Jste tam. Co postup pro tuhle partu znamená?
-pressAskQualified2,Press conference line.,,"The place is booked. Job done, or is the job just starting?","Místo je zajištěné. Hotovo, nebo práce teprve začíná?"
-pressAskQualified3,Press conference line.,,Qualification secured. Now what is this squad actually capable of?,Postup je doma. Na co tenhle tým doopravdy má?
-pressAskMissedOut,Press conference line.,,No tournament this time. How did it come to this?,Tentokrát bez turnaje. Jak k tomu došlo?
-pressAskMissedOut3,Press conference line.,,Watching it on television. What do you say to a country that expected better?,"Budete se dívat v televizi. Co řeknete zemi, která čekala víc?"
-pressAskMissedOut2,Press conference line.,,The campaign is over and you're not in it. Who is accountable?,Kvalifikace skončila a vy u toho nejste. Kdo za to nese odpovědnost?
-pressAskUnbeaten,Press conference line.,,Unbeaten for months now. How long can this go on?,Měsíce bez porážky. Jak dlouho to může vydržet?
-pressAskUnbeaten2,Press conference line.,,Nobody has laid a glove on you all season. What's behind the run?,Celou sezonu na vás nikdo nevyzrál. Čím to je?
-pressAskUnbeaten3,Press conference line.,,The run keeps going. Is this the best side you've had?,"Série pokračuje. Je tohle nejlepší tým, jaký jste měl?"
-pressAskNewJob,Press conference line.,,Day one. What are you promising this country?,První den. Co téhle zemi slibujete?
-pressAskNewJob2,Press conference line.,,"New job, new squad. What changes first?","Nová práce, nový kádr. Co se změní jako první?"
-pressAskNewJob3,Press conference line.,,"You've taken the job. Why this one, and why now?",Vzal jste to. Proč zrovna tady a proč teď?
-pressAskRankingPeak,Press conference line.,,A record world ranking. Does the table flatter this team?,Rekordní postavení v žebříčku. Nelichotí tabulka tomuhle týmu?
-pressAskRankingPeak2,Press conference line.,,Never been ranked this high. Is this side genuinely among the best?,Nikdy jste nebyli výš. Patří tenhle tým opravdu ke špičce?
-pressAskRankingPeak3,Press conference line.,,Top of the pile on paper. Does that put a target on your back?,Na papíře nejvýš. Máte tím pádem terč na zádech?
-pressAnswerBackPlayers2,Press conference line.,,Nobody works harder than this group. I'll defend them all day.,Nikdo nemaká víc než tahle parta. Budu je bránit pořád.
-pressAnswerBackPlayers3,Press conference line.,,You won't hear a word against my players from this seat.,Ode mě na svoje hráče křivé slovo neuslyšíte.
-pressAnswerTakeBlame2,Press conference line.,,"Judge me, not them. It's my team and my responsibility.","Suďte mě, ne je. Je to můj tým a moje zodpovědnost."
-pressAnswerTakeBlame3,Press conference line.,,"If you want somebody to blame, I'm sitting right here.","Jestli hledáte viníka, sedí přímo tady."
-pressAnswerDemandMore2,Press conference line.,,Standards slipped. Some of them know exactly what I mean.,"Laťka klesla. Někteří přesně vědí, koho myslím."
-pressAnswerDemandMore3,Press conference line.,,"Effort isn't enough at this level. I want more, and I've told them so.",Na téhle úrovni nestačí snaha. Chci víc a řekl jsem jim to.
-pressAnswerRaiseBar2,Press conference line.,,No hiding from it. We expect to lift the trophy.,"Nebudu to obcházet. Čekáme, že zvedneme trofej."
-pressAnswerRaiseBar3,Press conference line.,,Second place is not what this country sent us here for.,"Druhé místo není to, kvůli čemu nás sem tahle země poslala."
-pressAnswerPlayDown2,Press conference line.,,I'm not going to make headlines for you today.,Titulek vám dneska nedám.
-pressAnswerPlayDown3,Press conference line.,,Next game. That's all I'm thinking about.,Další zápas. Na nic jiného nemyslím.
 recordsRecordBookSubtitle,Records/legacy label.,,"Caps, goals and the team's headline records","Starty, góly a klubové rekordy týmu"
 statsLegacy,Records/legacy label.,,LEGACY,ODKAZ
-pressAskHeavyDefeat4,Press conference line.,{opponent},That was hard to watch. Did {opponent} simply want it more?,Bolelo to sledovat. Chtěl {opponent} prostě víc?
-pressAskHeavyDefeat5,Press conference line.,{opponent},You were second to everything against {opponent}. Fitness or attitude?,"Se soupeřem {opponent} jste byli všude druzí. Kondice, nebo přístup?"
-pressAskHeavyDefeat6,Press conference line.,{opponent},{opponent} scored at will. Who is responsible for that defence?,"{opponent} dával, kdy chtěl. Kdo nese odpovědnost za tu obranu?"
-pressAskHeavyDefeat7,Press conference line.,{opponent},A result like that against {opponent} follows a manager around. How do you come back from it?,Takový výsledek se soupeřem {opponent} se za trenérem táhne. Jak se z toho vrací?
-pressAskHeavyDefeat8,Press conference line.,{opponent},You were booed off after {opponent}. Do you blame them?,Po zápase se soupeřem {opponent} vás vypískali. Divíte se jim?
-pressAskElimination4,Press conference line.,{opponent},{opponent} knocked you out. When did you know it had gone?,"{opponent} vás vyřadil. Kdy jste věděl, že je to pryč?"
-pressAskElimination5,Press conference line.,{opponent},"Another tournament, another early flight home, and {opponent} did it. Why?","Další turnaj, další brzký let domů, a postaral se o to {opponent}. Proč?"
-pressAskElimination6,Press conference line.,{opponent},Out to {opponent}. Is this squad short of quality or short of nerve?,"Konec se soupeřem {opponent}. Chybí týmu kvalita, nebo nervy?"
-pressAskElimination7,Press conference line.,{opponent},{opponent} are through and you are not. What do you say in that dressing room?,"{opponent} jde dál, vy ne. Co se říká v takové kabině?"
-pressAskElimination8,Press conference line.,{opponent},Beaten by {opponent} when it mattered. Does that define your time here?,"Porážka se soupeřem {opponent} ve chvíli, kdy šlo o všechno. Definuje to vaše působení?"
-pressAskUnderPressure4,Press conference line.,,The bookmakers have you favourite to go. Does that reach you?,Sázkaři vás vidí jako prvního na odchod. Dostane se to k vám?
-pressAskUnderPressure5,Press conference line.,,Your predecessor was sacked on a run like this. What makes you different?,Váš předchůdce po podobné sérii skončil. Čím jste jiný?
-pressAskUnderPressure6,Press conference line.,,The board have said nothing publicly. Is silence support?,Vedení veřejně mlčí. Je mlčení podpora?
-pressAskUnderPressure7,Press conference line.,,Every phone-in wants a new manager. Have you lost the country?,Každá debata volá po novém trenérovi. Ztratil jste zemi?
-pressAskUnderPressure8,Press conference line.,,How many more games do you think you have?,"Kolik zápasů si myslíte, že ještě máte?"
-pressAskPreview4,Press conference line.,,"Who is the team to beat, and are you in that conversation?",Kdo je favorit a patříte do té debaty?
-pressAskPreview5,Press conference line.,,Nobody outside this room fancies you. Does that suit you?,Mimo tuhle místnost vám nikdo nevěří. Vyhovuje vám to?
-pressAskPreview6,Press conference line.,,"What would make this a successful tournament, honestly?","Co by z tohohle turnaje udělalo úspěch, upřímně?"
-pressAskPreview7,Press conference line.,,Your group looks kind. Is anything less than qualification unacceptable?,Skupina vypadá schůdně. Je cokoli míň než postup selhání?
-pressAskPreview8,Press conference line.,,This is the youngest squad you have taken to a finals. Gamble or plan?,"Je to nejmladší kádr, s jakým jste na turnaj jel. Risk, nebo plán?"
-pressAskOpening4,Press conference line.,{opponent},"First game, {opponent}, and everyone is nervous. How do you settle a side?","První zápas, {opponent}, a nervózní jsou všichni. Jak se tým uklidňuje?"
-pressAskOpening5,Press conference line.,{opponent},You have waited two years for this. Does the plan change now {opponent} are in front of you?,"Čekal jste na tohle dva roky. Mění se plán, když před vámi stojí {opponent}?"
-pressAskOpening6,Press conference line.,{opponent},{opponent} to open. Win it and the whole tournament looks different. Do you tell them that?,Na úvod {opponent}. Výhra a celý turnaj vypadá jinak. Říkáte jim to?
-pressAskOpening7,Press conference line.,{opponent},The country has stopped for this. Is {opponent} a good draw or a bad one?,"Země se kvůli tomu zastavila. Je {opponent} dobrý, nebo špatný los?"
-pressAskOpening8,Press conference line.,{opponent},Opening night against {opponent}. What is the one thing you cannot allow?,Zahajovací večer proti {opponent}. Co si nesmíte dovolit?
-pressAskTriumph4,Press conference line.,,You have made history. Has it landed yet?,Napsal jste historii. Došlo vám to už?
-pressAskTriumph5,Press conference line.,,The trophy is in the room. Who did you think of first?,Trofej je v místnosti. Na koho jste pomyslel první?
-pressAskTriumph6,Press conference line.,,A generation will remember this side. What should they remember about it?,Na tenhle tým bude vzpomínat celá generace. Co si má pamatovat?
-pressAskTriumph7,Press conference line.,,You were written off in this very room. Enjoying the moment?,V téhle místnosti vás odepsali. Užíváte si to?
-pressAskTriumph8,Press conference line.,,"Is this the peak, or can this team win more?","Je tohle vrchol, nebo může tenhle tým vyhrát víc?"
-pressAskBigWin4,Press conference line.,{opponent},{opponent} had no answer to that. The plan or the players?,"{opponent} na to neměl odpověď. Plán, nebo hráči?"
-pressAskBigWin5,Press conference line.,{opponent},"The best performance of your reign, and against {opponent}?","Nejlepší výkon vaší éry, a proti soupeři {opponent}?"
-pressAskBigWin6,Press conference line.,{opponent},You could have had more against {opponent}. Do you ask for ruthlessness or take the win?,"Se soupeřem {opponent} to mohlo být vyšší. Chcete důslednost, nebo berete výhru?"
-pressAskBigWin7,Press conference line.,{opponent},A scoreline like that against {opponent} raises expectations. Comfortable with that?,Takový výsledek se soupeřem {opponent} zvedá očekávání. Je vám to příjemné?
-pressAskBigWin8,Press conference line.,{opponent},{opponent} never laid a glove on you. Is this side finally what you wanted?,"{opponent} se vás ani nedotkl. Je tenhle tým konečně takový, jaký jste chtěl?"
-pressAskQualified4,Press conference line.,,Job done. Was it ever in doubt?,Splněno. Byly vůbec pochybnosti?
-pressAskQualified5,Press conference line.,,You are through. Does the campaign tell you how far you can go?,"Jste tam. Říká vám kvalifikace, jak daleko můžete dojít?"
-pressAskQualified6,Press conference line.,,A place at the finals: relief or satisfaction?,"Místo na turnaji: úleva, nebo zadostiučinění?"
-pressAskQualified7,Press conference line.,,You qualified with games to spare. What are the rest of them for?,Postoupili jste s předstihem. K čemu jsou ty zbývající zápasy?
-pressAskQualified8,Press conference line.,,Now the hard part. Is this squad ready for a tournament?,Teď přijde to těžší. Je tenhle kádr na turnaj připravený?
-pressAskMissedOut4,Press conference line.,,No tournament this time. A squad problem or a coaching one?,"Tentokrát bez turnaje. Problém kádru, nebo trenéra?"
-pressAskMissedOut5,Press conference line.,,Two years of work and nothing to show. Do you still believe in this group?,Dva roky práce a nic. Věříte téhle partě pořád?
-pressAskMissedOut6,Press conference line.,,The country will not see its team at a finals. What do you owe them?,Země svůj tým na turnaji neuvidí. Co jí dlužíte?
-pressAskMissedOut7,Press conference line.,,Was there one night that cost you?,"Byl jeden večer, který to stál?"
-pressAskMissedOut8,Press conference line.,,Do you expect to still be in this job next season?,"Čekáte, že tuhle práci budete mít i příští sezonu?"
-pressAskUnbeaten4,Press conference line.,,Nobody has beaten you in a year. Are you thinking about records?,Rok vás nikdo neporazil. Myslíte na rekordy?
-pressAskUnbeaten5,Press conference line.,,The run is the story now. Is it a burden yet?,Ta série je teď hlavní téma. Je už přítěží?
-pressAskUnbeaten6,Press conference line.,,Sides set up not to lose to you. Does that make it harder?,"Soupeři se staví tak, aby s vámi neprohráli. Je to těžší?"
-pressAskUnbeaten7,Press conference line.,,"When it ends, and it will, how do you want it to end?","Až to skončí, a ono skončí, jak byste chtěl, aby to skončilo?"
-pressAskUnbeaten8,Press conference line.,,"Unbeaten, but how many of those were convincing?","Neporaženi, ale kolik z toho bylo přesvědčivých?"
-pressAskNewJob4,Press conference line.,,You inherit a squad in transition. Where do you start?,Přebíráte kádr v přestavbě. Kde začnete?
-pressAskNewJob5,Press conference line.,,What does this team look like in two years?,Jak bude tenhle tým vypadat za dva roky?
-pressAskNewJob6,Press conference line.,,You turned down other offers for this one. Why?,Kvůli téhle nabídce jste jiné odmítl. Proč?
-pressAskNewJob7,Press conference line.,,Some of these players were not picked by you. Does anyone start with a clean slate?,Některé hráče jste nevybíral vy. Začíná někdo s čistým štítem?
-pressAskNewJob8,Press conference line.,,What has this country been getting wrong?,Co tahle země dělá špatně?
-pressAskRankingPeak4,Press conference line.,,Top of the pile on paper. Does a ranking mean anything to you?,Na papíře nejvýš. Znamená pro vás žebříček něco?
-pressAskRankingPeak5,Press conference line.,,The highest this nation has ever been. Whose achievement is that?,Nejvýš v historii téhle země. Čí je to zásluha?
-pressAskRankingPeak6,Press conference line.,,You are ranked above sides with far more history. Fair?,Jste nad týmy s mnohem větší historií. Spravedlivé?
-pressAskRankingPeak7,Press conference line.,,The numbers say you are among the best. Do the trophies?,"Čísla říkají, že patříte ke špičce. Říkají to i trofeje?"
-pressAskRankingPeak8,Press conference line.,,A record ranking and no trophy yet. Does that sit uneasily?,Rekordní postavení a zatím žádná trofej. Nesedí vám to?
-pressAnswerBackPlayers4,Press conference line.,,I'll take the questions. They'll take the credit. That's how it works here.,Otázky vezmu já. Zásluhy oni. Tak se to tady dělá.
-pressAnswerBackPlayers5,Press conference line.,,This group has never let me down. Not once.,Tahle parta mě nikdy nezklamala. Ani jednou.
-pressAnswerBackPlayers6,Press conference line.,,They're hurting more than anyone. I'm not adding to it.,Bolí je to víc než kohokoli jiného. Nebudu přisazovat.
-pressAnswerTakeBlame4,Press conference line.,,That's on the staff and it's on me. Nobody else.,Je to na realizačním týmu a na mně. Na nikom jiném.
-pressAnswerTakeBlame5,Press conference line.,,"I picked it, I set it up, I got it wrong.","Já to vybral, já to postavil, já to zkazil."
-pressAnswerTakeBlame6,Press conference line.,,Point it at me. That's what I'm paid for.,Ukazujte na mě. Za to jsem placený.
-pressAnswerDemandMore4,Press conference line.,,Some of them are a long way short of what this shirt asks.,"Někteří jsou hodně daleko od toho, co tenhle dres vyžaduje."
-pressAnswerDemandMore5,Press conference line.,,I've told them privately and I'll say it here: it isn't good enough.,Řekl jsem jim to v kabině a řeknu to i tady: nestačí to.
-pressAnswerDemandMore6,Press conference line.,,Places are open. Everyone in that dressing room knows it.,Místa jsou otevřená. V kabině to vědí všichni.
-pressAnswerRaiseBar4,Press conference line.,,We came here to win it. I'm not going to pretend otherwise.,Přijeli jsme vyhrát. Nebudu předstírat opak.
-pressAnswerRaiseBar5,Press conference line.,,Anything but the trophy and we'll have wasted this.,Cokoli jiného než trofej a bude to promarněné.
-pressAnswerRaiseBar6,Press conference line.,,I'd rather be judged on winning than praised for trying.,"Radši ať mě soudí za vítězství, než chválí za snahu."
-pressAnswerPlayDown4,Press conference line.,,I'll keep my thoughts in the dressing room.,Svoje myšlenky si nechám do kabiny.
-pressAnswerPlayDown5,Press conference line.,,You've seen the game. Your read is as good as mine.,Zápas jste viděli. Váš názor je stejně dobrý jako můj.
-pressAnswerPlayDown6,Press conference line.,,Nothing I say tonight changes the result.,"Nic, co dneska řeknu, výsledek nezmění."
 tacticsSubAlreadyOff,Snackbar when the manager tries to re-use a substituted player.,{name},{name} has already been taken off and cannot come back on.,{name} už byl vystřídán a zpátky na hřiště nemůže.
 tacticsSubSentOff,Snackbar when the manager tries to bring on a sent-off player.,{name},{name} has been sent off and takes no further part.,{name} byl vyloučen a do hry už nezasáhne.
 tacticsInjuredShort,Pitch-node flag under an injured player's disc. Kept to one word so it fits inside the node's width.,,INJURED,ZRANĚN
@@ -1914,43 +1784,6 @@ tourHostedBy,Opening-ceremony screen: the host nations.,{hosts},HOSTED BY  {host
 tourThirdsAdvance,Best-third-placed table: how many go through and where.,{count} {destination},Top {count} advance to {destination},Nejlepších {count} postupuje do {destination}
 newsWalkoutTitle,Inbox: a player retires internationally after being ignored.,{name},{name} walks away,{name} končí v reprezentaci
 newsWalkoutBody,Inbox: walkout body.,{name} {age} {caps},"{name} has retired from international football at {age}, with {caps} caps. He asked to be told where he stood and was not, and he is not waiting any longer.","{name} ukončil reprezentační kariéru ve {age} letech s {caps} starty. Chtěl vědět, na čem je, odpovědi se nedočkal, a déle už nečekal."
-pressProbeAccountability1,Press conference: a Accountability follow-up question.,,You've backed them again. Is nobody in that dressing room accountable?,Znovu se zastáváte hráčů. Nenese v té kabině nikdo odpovědnost?
-pressProbeAccountability2,Press conference: a Accountability follow-up question.,,That's the players defended. Who actually answers for a night like that?,Hráče jste obhájil. Kdo se tedy za takový večer zodpovídá?
-pressProbeAccountability3,Press conference: a Accountability follow-up question.,,Loyalty is easy from up there. Does anyone pay a price?,Loajalita se hlásá snadno. Ponese to někdo?
-pressProbeAccountability4,Press conference: a Accountability follow-up question.,,"If it's never the players, we're left with one name. Yours.","Když to nikdy nejsou hráči, zbývá jediné jméno. To vaše."
-pressProbeYourFuture1,Press conference: a YourFuture follow-up question.,,You've taken it on yourself. Should we be asking about your future?,Berete to na sebe. Máme se ptát na vaši budoucnost?
-pressProbeYourFuture2,Press conference: a YourFuture follow-up question.,,Falling on your sword is noble. Is the job still yours?,Padnout na meč je ušlechtilé. Je to místo pořád vaše?
-pressProbeYourFuture3,Press conference: a YourFuture follow-up question.,,You keep saying it's you. At what point is that a resignation?,"Pořád opakujete, že je to na vás. Odkdy je to rezignace?"
-pressProbeYourFuture4,Press conference: a YourFuture follow-up question.,,The board are listening too. Are you sure you want that on record?,Poslouchá i vedení. Určitě to chcete mít v záznamu?
-pressProbeDressingRoom1,Press conference: a DressingRoom follow-up question.,,Strong words in public. Have you lost that dressing room?,Ostrá slova na veřejnosti. Neztratil jste kabinu?
-pressProbeDressingRoom2,Press conference: a DressingRoom follow-up question.,,You've just told the country they're not good enough. How does that help?,"Právě jste zemi řekl, že na to nemají. Jak jim to pomůže?"
-pressProbeDressingRoom3,Press conference: a DressingRoom follow-up question.,,Demanding it here rather than in there. Is that leadership?,Žádat to tady místo v kabině. Je tohle vedení mužstva?
-pressProbeDressingRoom4,Press conference: a DressingRoom follow-up question.,,Players read this too. What do they hear tomorrow morning?,Hráči to čtou taky. Co uslyší zítra ráno?
-pressProbeExpectation1,Press conference: a Expectation follow-up question.,,You've raised the bar in public. Is that not a hostage to fortune?,Nahlas jste zvedl laťku. Není to sázka na štěstí?
-pressProbeExpectation2,Press conference: a Expectation follow-up question.,,Big promise. What happens the day you don't deliver it?,"Velký slib. Co se stane v den, kdy ho nesplníte?"
-pressProbeExpectation3,Press conference: a Expectation follow-up question.,,Every manager before you said the same and packed a bag. Why are you different?,Každý trenér před vámi říkal totéž a pak si sbalil. Proč jste jiný?
-pressProbeExpectation4,Press conference: a Expectation follow-up question.,,You've set the target. Will you resign if you miss it?,"Cíl jste si stanovil sám. Odejdete, když ho nesplníte?"
-pressProbeSubstance1,Press conference: a Substance follow-up question.,,"With respect, that's not an answer. Give us something.","S dovolením, tohle není odpověď. Řekněte nám něco."
-pressProbeSubstance2,Press conference: a Substance follow-up question.,,The country wants to hear from you. Anything at all?,Země chce slyšet vás. Aspoň něco?
-pressProbeSubstance3,Press conference: a Substance follow-up question.,,You can keep saying nothing. We'll keep printing it.,Můžete dál mlčet. My to budeme dál otiskovat.
-pressProbeSubstance4,Press conference: a Substance follow-up question.,,One straight sentence. What do you actually think?,Jednu jasnou větu. Co si o tom doopravdy myslíte?
-pressProbeSelection1,Press conference: a Selection follow-up question.,,"Same names, same shape, same result. Why does that team keep getting picked?","Stejná jména, stejné rozestavení, stejný výsledek. Proč pořád nasazujete tuhle sestavu?"
-pressProbeSelection2,Press conference: a Selection follow-up question.,,There are players in form watching this on television. Explain the selection.,Hráči ve formě to sledují v televizi. Vysvětlete tu nominaci.
-pressProbeSelection3,Press conference: a Selection follow-up question.,,"Is the XI picked on merit, or on reputation?","Vybíráte jedenáctku podle formy, nebo podle jména?"
-pressProbeSelection4,Press conference: a Selection follow-up question.,,"Tactically, we all saw the problem. Did you?",Takticky jsme ten problém viděli všichni. Vy taky?
-pressProbeTheFans1,Press conference: a TheFans follow-up question.,,Thousands travelled for that. What do you say to them tonight?,Tisíce lidí kvůli tomu cestovaly. Co jim dnes večer řeknete?
-pressProbeTheFans2,Press conference: a TheFans follow-up question.,,The supporters have stuck with this team for years. What are you giving them?,Fanoušci u tohohle týmu vydrželi roky. Co jim dáváte vy?
-pressProbeTheFans3,Press conference: a TheFans follow-up question.,,They sing your name or they don't. Which is it going to be?,"Buď vaše jméno skandují, nebo ne. Jak to bude?"
-pressProbeTheFans4,Press conference: a TheFans follow-up question.,,Message to the people back home. Go on.,Vzkaz pro lidi doma. Prosím.
-pressProbeBigPicture1,Press conference: a BigPicture follow-up question.,,Step back for me. Where is this nation actually going?,Zkusme odstup. Kam tahle reprezentace vlastně směřuje?
-pressProbeBigPicture2,Press conference: a BigPicture follow-up question.,,"From the outside, nothing has changed here in years. Has it?",Zvenčí se tu roky nic nezměnilo. Nebo ano?
-pressProbeBigPicture3,Press conference: a BigPicture follow-up question.,,"In four years' time, what does this side look like?",Jak bude tenhle tým vypadat za čtyři roky?
-pressProbeBigPicture4,Press conference: a BigPicture follow-up question.,,"Is this a project, or is it just the next match?","Je tohle projekt, nebo jen další zápas?"
-pressNeedleBackPlayers,Press conference: a reporter's aside when the manager keeps taking the same stance.,,You always back them. We've heard it.,Vždycky se jich zastáváte. Slyšeli jsme to už mockrát.
-pressNeedleTakeBlame,Press conference: a reporter's aside when the manager keeps taking the same stance.,,"It's always your fault, apparently.",Podle vás je to prý vždycky vaše chyba.
-pressNeedleDemandMore,Press conference: a reporter's aside when the manager keeps taking the same stance.,,More demands. Again.,Zase další požadavky.
-pressNeedleRaiseBar,Press conference: a reporter's aside when the manager keeps taking the same stance.,,Another promise for the file.,Další slib do archivu.
-pressNeedlePlayDown,Press conference: a reporter's aside when the manager keeps taking the same stance.,,You never give us anything.,Nikdy nám nic neřeknete.
 pressHeadlineWent1,Press conference: the morning's headline after a conference that went went.,,A manager in charge of the room,"Trenér, který má situaci pevně v rukou"
 pressHeadlineWent2,Press conference: the morning's headline after a conference that went went.,,They came for a row and got a leader,"Přišli si pro hádku, odešli s vůdcem"
 pressHeadlineWent3,Press conference: the morning's headline after a conference that went went.,,"Straight answers, and they landed","Jasné odpovědi, a sedly"
@@ -2191,51 +2024,6 @@ yToldYouSo2,"Y post: toldYouSo, variant 2.",,The people telling me to enjoy it l
 yToldYouSo3,"Y post: toldYouSo, variant 3.",,I take no pleasure in this. Very little pleasure. Some.,Nemám z toho radost. Skoro žádnou. Trochu.
 yToldYouSo4,"Y post: toldYouSo, variant 4.",,"It was never as good as they told you, and this is the proof.","Nikdy to nebylo tak dobré, jak vám tvrdili, a tohle je důkaz."
 yToldYouSo5,"Y post: toldYouSo, variant 5.",,"Every time. We are told it is different, and every time it is not.","Pokaždé. Tvrdí nám, že teď je to jiné, a pokaždé není."
-pressAskAbove,Press conference line.,,"Nobody expected this side to be where it is. Is it real, or is it a good few months?","Nikdo nečekal, že tenhle tým bude tam, kde je. Je to skutečné, nebo jen pár dobrých měsíců?"
-pressAskAbove2,Press conference line.,,You are getting results against sides ranked well above you. How?,"Sbíráte body proti týmům, které jsou v žebříčku vysoko nad vámi. Jak?"
-pressAskAbove3,Press conference line.,,Every neutral has you overachieving. Does that description annoy you?,Podle všech neutrálních hrajete nad své možnosti. Vadí vám to označení?
-pressAskAbove4,Press conference line.,,This squad is punching above its weight. What happens when it stops?,"Tenhle kádr hraje nad poměry. Co se stane, až to přestane?"
-pressAskAbove5,Press conference line.,,You keep beating teams you have no business beating. What have you found?,"Porážíte týmy, na které nemáte. Co jste našli?"
-pressAskAbove6,Press conference line.,,People are starting to take this seriously. Are you?,Lidé to začínají brát vážně. Berete to vážně i vy?
-pressAskAbove7,Press conference line.,,"Is this side better than the ranking says, or are you catching people out?","Je ten tým lepší, než říká žebříček, nebo soupeře jen zaskočíte?"
-pressAskAbove8,Press conference line.,,How long can a group like this keep this up?,Jak dlouho tohle taková parta udrží?
-pressAskFlattered,Press conference line.,,You are winning without convincing anybody. Does that worry you?,"Vyhráváte, ale nikoho nepřesvědčujete. Znepokojuje vás to?"
-pressAskFlattered2,Press conference line.,,Another narrow one against a side you should be beating comfortably. Why is it so hard?,"Zase těsně proti týmu, který byste měli přejet. Proč je to tak těžké?"
-pressAskFlattered3,Press conference line.,,"Three points, and not much else. Is that enough for you?",Tři body a moc dalšího ne. Stačí vám to?
-pressAskFlattered4,Press conference line.,,You got away with that. Would you agree?,Prošlo vám to. Souhlasíte?
-pressAskFlattered5,Press conference line.,,The results are there and the performances are not. Which one are you judging yourself on?,"Výsledky jsou, výkony ne. Podle čeho se hodnotíte vy?"
-pressAskFlattered6,Press conference line.,,Sides that ride their luck this often usually run out of it. Are you worried?,"Týmům, které takhle často spoléhají na štěstí, obvykle dojde. Máte obavy?"
-pressAskFlattered7,Press conference line.,,That was hard work for what it was. What is missing?,"Na to, o co šlo, to byla dřina. Co chybí?"
-pressAskFlattered8,Press conference line.,,"Do you care how you win, or only that you win?","Záleží vám na tom, jak vyhrajete, nebo jen že vyhrajete?"
-pressAskCrisis,Press conference line.,,Bad results and a board that has stopped defending you. How bad is it?,"Špatné výsledky a vedení, které vás přestalo bránit. Jak zlé to je?"
-pressAskCrisis2,Press conference line.,,Nobody upstairs will say your name. Do you still have their backing?,Nahoře nikdo nevysloví vaše jméno. Máte pořád jejich podporu?
-pressAskCrisis3,Press conference line.,,The results are poor and the silence from above is loud. What now?,Výsledky jsou slabé a ticho shora je hlasité. Co teď?
-pressAskCrisis4,Press conference line.,,This has gone past a bad run. Do you accept that?,Tohle už není jen špatná série. Připouštíte to?
-pressAskCrisis5,Press conference line.,,You are losing the room and the boardroom at the same time. Which worries you more?,Ztrácíte kabinu i kanceláře najednou. Co vás trápí víc?
-pressAskCrisis6,Press conference line.,,Is there a point at which you would walk?,"Existuje bod, kdy byste sám odešel?"
-pressAskCrisis7,Press conference line.,,What do you say to people who think this has run its course?,"Co řeknete lidem, podle kterých je tohle u konce?"
-pressAskCrisis8,Press conference line.,,Give us one reason to believe this turns around.,"Dejte nám jeden důvod věřit, že se to otočí."
-pressAskSendingOff1,Press question after one of your players is sent off.,{player} {minute},"{player} was sent off after {minute} minutes and you finished with ten. His mistake, or yours for leaving him on?","{player} šel v {minute}. minutě ze hřiště a dohrávali jste v deseti. Jeho chyba, nebo vaše, že jste ho tam nechal?"
-pressAskSendingOff2,Press question after a sending-off.,{player} {minute},"{player} walked on {minute} minutes. A rush of blood, or a side that had lost its discipline?","{player} dostal červenou v {minute}. minutě. Byla to chvilka nervů, nebo tým, který ztratil disciplínu?"
-pressAskSendingOff3,Press question after a sending-off.,{minute} {player},"Ten men from {minute} minutes, with {player} watching from the tunnel. How much did that decide?",Od {minute}. minuty jste hráli v deseti a {player} se díval z tunelu. Jak moc to rozhodlo?
-pressAskSendingOff4,Press question after a sending-off.,{player} {minute},{player} left you a man short with {minute} minutes on the clock. Do you defend him in public?,{player} vás v {minute}. minutě nechal v deseti. Budete ho hájit na veřejnosti?
-pressAskInjuryBlow1,Press question after a regular picks up an injury.,{player},"{player} limped off, and nobody knows for how long. How big a hole is that?","{player} odkulhal ze hřiště a nikdo neví, na jak dlouho. Jak velká je to díra?"
-pressAskInjuryBlow2,Press question after a regular picks up an injury.,{player},{player} is out. Is this squad deep enough to cover him?,"{player} vypadl ze sestavy. Je kádr dost široký, aby ho nahradil?"
-pressAskInjuryBlow3,Press question after a regular picks up an injury.,{player},{player} came off injured and the timing could hardly be worse. What does that do to your plans?,{player} odstoupil zraněný a horší načasování si představit nelze. Co to dělá s vašimi plány?
-pressAskInjuryBlow4,Press question after a regular picks up an injury.,{player},"Without {player}, who steps in? Or would you rather not answer that yet?","{player} bude chybět. Kdo ho zastoupí, nebo na to teď raději neodpovíte?"
-pressAskShootout1,Press question after a knockout tie settled on penalties.,{opponent},"It came down to penalties against {opponent}. Is a shoot-out a lottery, or something a side can be ready for?","Se soupeřem {opponent} rozhodoval až penaltový rozstřel. Je to loterie, nebo se na to dá připravit?"
-pressAskShootout2,Press question after a shoot-out.,{opponent},"Twelve yards settled it against {opponent}. Do you practise them, or have you accepted that nobody can?","Se soupeřem {opponent} rozhodlo jedenáct metrů. Trénujete penalty, nebo jste smířený s tím, že to nejde?"
-pressAskShootout3,Press question after a shoot-out.,{opponent},"Penalties against {opponent}, and a whole campaign turning on five kicks. Is that any way to settle a tie?","Penalty se soupeřem {opponent} a celý cyklus visí na pěti kopech. Je tohle způsob, jak rozhodnout zápas?"
-pressAskShootout4,Press question after a shoot-out.,{opponent},The shoot-out against {opponent}: the order of takers was yours. Would you write it the same way again?,Rozstřel se soupeřem {opponent}: pořadí střelců bylo vaše. Napsal byste ho znovu stejně?
-pressAskLateWinner1,Press question after a late goal that won the match.,{player} {minute},"{player} settled it on {minute} minutes. Is a side that leaves it that late brave, or lucky?","{player} to rozhodl v {minute}. minutě. Je tým, který to nechá takhle na konec, odvážný, nebo měl štěstí?"
-pressAskLateWinner2,Press question after a late winning goal.,{minute} {player},{minute} minutes gone and {player} turns the whole thing over. What do you take from cutting it that fine?,"{minute}. minuta a {player} otočil celý zápas. Co si berete z toho, když to necháte takhle na hraně?"
-pressAskLateWinner3,Press question after a late winning goal.,{player} {minute},You were not winning that until {player} scored on {minute} minutes. What changed?,"Do {minute}. minuty jste nevyhrávali, pak se prosadil {player}. Co se změnilo?"
-pressAskLateWinner4,Press question after a late winning goal.,{player} {minute},"{player} found it with {minute} minutes on the clock. Character, or a side that had left itself no choice?","{player} se trefil v {minute}. minutě. Charakter, nebo tým, kterému už nic jiného nezbývalo?"
-pressAskLateLoss1,Press question after a late goal conceded that cost the result.,{player} {minute},{player} scored on {minute} minutes and took it away from you. How does a side lose a match that late?,{player} se trefil v {minute}. minutě a sebral vám to. Jak může tým ztratit zápas takhle pozdě?
-pressAskLateLoss2,Press question after a late goal conceded.,{minute} {player},"You held out until {minute} minutes, and then {player}. Was that legs, or concentration?","Drželi jste to do {minute}. minuty, a pak přišel {player}. Byly to nohy, nebo hlava?"
-pressAskLateLoss3,Press question after a late goal conceded.,{minute} {player},"{minute} minutes, and {player} punishes you. Is that on the players, or on how you set up to see it out?","{minute}. minuta a {player} vás potrestal. Je to na hráčích, nebo na tom, jak jste zápas dohrávali?"
-pressAskLateLoss4,Press question after a late goal conceded.,{player} {minute},{player} got it with {minute} minutes gone and your afternoon went with it. What do you say to them in there?,{player} rozhodl v {minute}. minutě a bylo po odpoledni. Co jim teď řeknete v kabině?
-pressThePlayer,"Stand-in for a player's name in a press question, on the rare save where the man behind an incident can no longer be named.",,the player,hráč
 tacticsSubOffAlready,Marker under a squad row for a player who has already been taken off this match.,,Already off,Už vystřídán
 tacticsSubInjured,Marker under a squad row for a player hurt in this match.,,Injured,Zraněný
 tacticsSubSentOffMark,Marker under a squad row for a player sent off in this match.,,Sent off,Vyloučen
@@ -2249,46 +2037,6 @@ strengthFactorMorale,Pre-match strength line: squad morale.,,Dressing room,Nála
 strengthFactorCaptain,Pre-match strength line: what the armband is worth.,,Captain,Kapitán
 strengthFactorStaff,Pre-match strength line: what the hired staff are worth to this match.,,Staff room,Realizační tým
 strengthFactorDossier,Pre-match strength line: what the scout's report on this opponent is worth.,,Scout's dossier,Rozbor soupeře
-pressAskDrought1,Press question about a first-choice forward who has stopped scoring.,{player} {count},{player} has gone {count} games without a goal. Is he still your number nine?,{player} nedal gól už {count} zápasů. Je pořád vaší jedničkou v útoku?
-pressAskDrought2,Press question about a first-choice forward who has stopped scoring.,{count} {player},"{count} matches, no goals for {player}. How long do you keep picking him?",{count} zápasů a od hráče {player} ani gól. Jak dlouho ho budete nasazovat?
-pressAskDrought3,Press question about a first-choice forward who has stopped scoring.,{count} {player},"Your first-choice forward has not scored in {count}. Is {player} carrying something, or is it in his head?","Vaše útočná jednička nedala gól {count} zápasů. Nese si {player} zranění, nebo to má v hlavě?"
-pressAskDrought4,Press question about a first-choice forward who has stopped scoring.,{player} {count},{player} is {count} games into a drought. Do you take him out of the firing line?,{player} je {count} zápasů bez gólu. Stáhnete ho z palebné linie?
-pressAskBreakthrough1,Press question about a young player who has just had an outstanding match.,{player} {count},{player} is {count} and he was the best man on the pitch. Is he in the side to stay?,{player} má {count} let a byl nejlepší na hřišti. Zůstává v sestavě natrvalo?
-pressAskBreakthrough2,Press question about a young player who has just had an outstanding match.,{count} {player},"At {count}, {player} played like somebody who has been there for years. How much do you ask of him now?",V {count} letech hrál {player} jako matador. Kolik od něj teď budete chtít?
-pressAskBreakthrough3,Press question about a young player who has just had an outstanding match.,{player} {count},"Everyone left talking about {player}, {count} years old. Is that a warning about the rest of them?","Všichni odcházeli a mluvili o hráči {player}, kterému je {count}. Není to varování pro zbytek kádru?"
-pressAskBreakthrough4,Press question about a young player who has just had an outstanding match.,{player} {count},"{player} is {count}. Do you protect him now, or do you build round him?","{player} má {count} let. Budete ho chránit, nebo kolem něj postavíte tým?"
-pressAskDropped1,Press question about a highly rated player left out of the starting eleven.,{player} {count},{player} is rated {count} and he is not in your side. Explain that one.,{player} má rating {count} a v sestavě není. Vysvětlete nám to.
-pressAskDropped2,Press question about a highly rated player left out of the starting eleven.,{count} {player},A player rated {count} is sitting on your bench. What has {player} done wrong?,Hráč s ratingem {count} vám sedí na lavičce. Co {player} provedl?
-pressAskDropped3,Press question about a highly rated player left out of the starting eleven.,{player} {count},"You left {player} out. He is rated {count}. Is that form, or is it something else?","Nechal jste hráče {player} mimo sestavu. Má rating {count}. Je to formou, nebo je za tím něco jiného?"
-pressAskDropped4,Press question about a highly rated player left out of the starting eleven.,{player} {count},"{player}, rated {count}, watching from the bench. Is he in your plans at all?",{player} s ratingem {count} se dívá z lavičky. Počítáte s ním vůbec?
-pressAskArmband1,Press question about a captain whose form has gone.,{player} {count},{player} has {count} caps and he has not played like your captain for weeks. Is the armband right on him?,{player} má {count} startů a už týdny nehraje jako kapitán. Sedí mu ta páska?
-pressAskArmband2,Press question about a captain whose form has gone.,{count},Your captain has lost his form. {count} caps buys a lot of patience. How much is left?,Kapitán ztratil formu. {count} startů si zaslouží trpělivost. Kolik jí ještě zbývá?
-pressAskArmband3,Press question about a captain whose form has gone.,{player} {count},{player} is carrying the armband and not much else. {count} caps says he has earned time. Has he?,"{player} nosí pásku a moc dalšího nepřidává. {count} startů říká, že si čas zaslouží. Zaslouží?"
-pressAskArmband4,Press question about a captain whose form has gone.,{count} {player},"{count} caps, and a captain out of form. Do you pick {player} because he is the captain?","{count} startů a kapitán bez formy. Nasazujete hráče {player} proto, že je kapitán?"
-pressAskVeteran1,Press question about a veteran regular whose level is dropping.,{player} {count},"{player} is {count} now, and it shows. Is this his last campaign?",{player} má {count} let a je to vidět. Je tohle jeho poslední kvalifikace?
-pressAskVeteran2,Press question about a veteran regular whose level is dropping.,{count} {player},"At {count}, {player} is not the player he was. Do you tell him, or does he tell you?","V {count} letech už {player} není, co býval. Řeknete mu to vy, nebo on vám?"
-pressAskVeteran3,Press question about a veteran regular whose level is dropping.,{count} {player},{count} years old and a step slower. Where does {player} fit from here?,{count} let a o krok pomalejší. Kde {player} od teď zapadá?
-pressAskVeteran4,Press question about a veteran regular whose level is dropping.,{player} {count},"Is {player}, at {count}, still picked for what he does or for what he did?","Nasazujete hráče {player} v {count} letech za to, co předvádí, nebo za to, co předváděl?"
-pressAskDebut1,Press question after a player wins his first cap.,{player} {count},{player} won his first cap at {count}. What did you see in him?,{player} si v {count} letech připsal první start. Co jste v něm viděl?
-pressAskDebut2,Press question after a player wins his first cap.,{player} {count},"A debut for {player}, aged {count}. Is that a look, or is he in?","Debut pro hráče {player}, je mu {count}. Bylo to jen oťukání, nebo v tom kádru zůstane?"
-pressAskDebut3,Press question after a player wins his first cap.,{player} {count},{player} is {count} and he has a cap now. How ready is he?,{player} má {count} let a už i start za národní tým. Jak je připravený?
-pressAskDebut4,Press question after a player wins his first cap.,{player} {count},You handed {player} a first cap at {count}. What do you want from him next?,Dal jste hráči {player} v {count} letech první start. Co od něj chcete dál?
-pressAskRivalNext1,Press question before a match against the most-played opponent.,{opponent} {count},"{opponent} next, and you have met them {count} times already. Does this one mean more?",Dalším soupeřem je {opponent} a už jste se potkali {count}krát. Znamená tenhle zápas víc?
-pressAskRivalNext2,Press question before a match against the most-played opponent.,{opponent} {count},You have played {opponent} {count} times now. What does that do to a week like this?,Se soupeřem {opponent} jste hráli už {count}krát. Co to udělá s takovým týdnem?
-pressAskRivalNext3,Press question before a match against the most-played opponent.,{count} {opponent},"{count} meetings with {opponent}, and here they are again. How do you keep it a football match?",{count} vzájemných zápasů se soupeřem {opponent} a je tu další. Jak z toho udržíte obyčejný fotbal?
-pressAskRivalNext4,Press question before a match against the most-played opponent.,{opponent} {count},"It is {opponent} again, and that makes {count} meetings. Is there anything left to learn about them?","Zase {opponent}, a to je {count} vzájemných zápasů. Dá se o nich ještě něco zjistit?"
-pressAskRunGood1,Press question before facing an opponent this nation is unbeaten against.,{count} {opponent},{count} against {opponent} without defeat. Does a record like that travel?,{count} zápasů se soupeřem {opponent} bez porážky. Dá se taková bilance vzít s sebou?
-pressAskRunGood2,Press question before facing an opponent this nation is unbeaten against.,{opponent} {count},You have not lost to {opponent} in {count}. Is that in their heads or in yours?,"Se soupeřem {opponent} jste {count} zápasů neprohráli. Mají to v hlavě oni, nebo vy?"
-pressAskRunGood3,Press question before facing an opponent this nation is unbeaten against.,{count} {opponent},{count} unbeaten against {opponent}. How much is that worth on the day?,{count} zápasů bez porážky se soupeřem {opponent}. Jakou to má cenu v den zápasu?
-pressAskRunGood4,Press question before facing an opponent this nation is unbeaten against.,{opponent} {count},{opponent} have not beaten you in {count}. Do you say that out loud to your players?,{opponent} vás {count} zápasů neporazil. Říkáte to hráčům nahlas?
-pressAskRunBad1,Press question before facing an opponent this nation has not beaten in a long time.,{count} {opponent},{count} against {opponent} without a win. What is it about them?,{count} zápasů se soupeřem {opponent} bez výhry. Čím to u nich je?
-pressAskRunBad2,Press question before facing an opponent this nation has not beaten in a long time.,{opponent} {count},You have not beaten {opponent} in {count}. Is that a mental thing?,Soupeře {opponent} jste {count} zápasů neporazili. Je to o hlavě?
-pressAskRunBad3,Press question before facing an opponent this nation has not beaten in a long time.,{count} {opponent},{count} meetings with {opponent} and no win. What changes this time?,{count} vzájemných zápasů se soupeřem {opponent} a ani jedna výhra. Co bude tentokrát jinak?
-pressAskRunBad4,Press question before facing an opponent this nation has not beaten in a long time.,{opponent} {count},{opponent} keep beating you: {count} without a win. Whose problem is that?,"{opponent} vás pořád poráží, {count} zápasů bez výhry. Čí je to problém?"
-pressAskRevenge1,Press question before facing the side that knocked this nation out of the last tournament.,{opponent},{opponent} put you out last time. Is this about revenge?,{opponent} vás naposledy vyřadil. Jde teď o odvetu?
-pressAskRevenge2,Press question before facing the side that knocked this nation out of the last tournament.,{opponent},The side that ended your tournament is back. What do you owe {opponent}?,"Tým, který ukončil váš turnaj, je zpátky. Co soupeři {opponent} dlužíte?"
-pressAskRevenge3,Press question before facing the side that knocked this nation out of the last tournament.,{opponent},"{opponent} again, after what they did to you. Has anything changed since?","Znovu {opponent}, po tom, co vám provedl. Změnilo se od té doby něco?"
-pressAskRevenge4,Press question before facing the side that knocked this nation out of the last tournament.,{opponent},Last time {opponent} sent you home. Do your players need reminding?,Naposledy vás {opponent} poslal domů. Musíte to hráčům připomínat?
 yDebut0,Y feed post about a player winning his first cap.,{name},{name} gets his first cap. Remember the name.,{name} má první start za národní tým. Zapamatujte si to jméno.
 yDebut1,Y feed post about a player winning his first cap.,{name},"A debut for {name}. You can see it in him, can you not?","Debut pro hráče {name}. Je to na něm vidět, ne?"
 yDebut2,Y feed post about a player winning his first cap.,{name},"{name}, first cap. Let us see what he does with it.","{name}, první start. Uvidíme, co s tím udělá."
@@ -2402,14 +2150,6 @@ resultsCycleTitle,Header of one folded cycle on the my-matches list: the cycle i
 resultsCycleRecord,"Header of one folded cycle: matches played, and the win/draw/loss balance.",{played} {won} {drawn} {lost},{played} played  ·  {won}W {drawn}D {lost}L,{played} zápasů  ·  {won}V {drawn}R {lost}P
 resultsCycleFinish,"Header of one folded cycle: what the cycle ended in, named after the World Championship that closes it.",{finish},World Championship: {finish},Mistrovství světa: {finish}
 resultsCycleUnderway,"Header of the cycle the manager is living through, which has not ended in anything yet.",,Still being played,Ještě se hraje
-pressAskComeback1,"Press question after a two-goal half-time deficit was turned round, wording 1. CZECH DIFFERS ON PURPOSE. The Czech wording is built on ""Csaplarova past"", a Czech in-joke about a side two goals down at half time being exactly where it wants to be. An English reader has no idea what that is, so the English here is ordinary press-room English with no trace of the joke. This is the one place in the app where the two languages deliberately say different things.",,"Two goals down at the break, and you came out and turned it round. What changed?","Csaplárova past sklapla. Byli jste v poločase o dvě branky vzadu přesně tam, kde jste být chtěli?"
-pressAskComeback2,"Press question after a two-goal half-time deficit was turned round, wording 2. CZECH DIFFERS ON PURPOSE. The Czech wording is built on ""Csaplarova past"", a Czech in-joke about a side two goals down at half time being exactly where it wants to be. An English reader has no idea what that is, so the English here is ordinary press-room English with no trace of the joke. This is the one place in the app where the two languages deliberately say different things.",,You were second best for forty-five minutes and the better side for the rest. Which half was the real one?,"O dvě branky zpět v poločase a nakonec z toho něco bylo. Csaplárova past, nebo prostě štěstí?"
-pressAskComeback3,"Press question after a two-goal half-time deficit was turned round, wording 3. CZECH DIFFERS ON PURPOSE. The Czech wording is built on ""Csaplarova past"", a Czech in-joke about a side two goals down at half time being exactly where it wants to be. An English reader has no idea what that is, so the English here is ordinary press-room English with no trace of the joke. This is the one place in the app where the two languages deliberately say different things.",,Nobody in this room would have given you anything at half time. What did you say to them?,"Klasická Csaplárova past: dvě branky soupeři, druhá půle vaše. Kolik z toho byl plán?"
-pressAskComeback4,"Press question after a two-goal half-time deficit was turned round, wording 4. CZECH DIFFERS ON PURPOSE. The Czech wording is built on ""Csaplarova past"", a Czech in-joke about a side two goals down at half time being exactly where it wants to be. An English reader has no idea what that is, so the English here is ordinary press-room English with no trace of the joke. This is the one place in the app where the two languages deliberately say different things.",,"Two behind, and you still got something out of the afternoon. Is that character, or is it a warning?",V poločase jste prohrávali o dvě a body jsou doma. Učíte mužstvo Csaplárovu past schválně?
-pressAskCollapse1,"Press question after a two-goal half-time lead was thrown away, wording 1. CZECH DIFFERS ON PURPOSE. The Czech wording is built on ""Csaplarova past"", a Czech in-joke about a side two goals down at half time being exactly where it wants to be. An English reader has no idea what that is, so the English here is ordinary press-room English with no trace of the joke. This is the one place in the app where the two languages deliberately say different things.",,"Two goals up at half time, and you came away with nothing like it. Where did it go?",Do Csaplárovy pasti jste tentokrát spadli sami. Vedli jste o dvě a je z toho tohle.
-pressAskCollapse2,"Press question after a two-goal half-time lead was thrown away, wording 2. CZECH DIFFERS ON PURPOSE. The Czech wording is built on ""Csaplarova past"", a Czech in-joke about a side two goals down at half time being exactly where it wants to be. An English reader has no idea what that is, so the English here is ordinary press-room English with no trace of the joke. This is the one place in the app where the two languages deliberately say different things.",,You had that match won by the break. Explain the second half.,Dvě branky k dobru v poločase a nakonec nic. Csaplárova past v obráceném gardu?
-pressAskCollapse3,"Press question after a two-goal half-time lead was thrown away, wording 3. CZECH DIFFERS ON PURPOSE. The Czech wording is built on ""Csaplarova past"", a Czech in-joke about a side two goals down at half time being exactly where it wants to be. An English reader has no idea what that is, so the English here is ordinary press-room English with no trace of the joke. This is the one place in the app where the two languages deliberately say different things.",,A two-goal lead is supposed to be the safe one. Was yours ever safe?,"O dvou brankách se říká, že je to nejhorší vedení. Dnes Csaplárova past fungovala proti vám. Co se stalo po pauze?"
-pressAskCollapse4,"Press question after a two-goal half-time lead was thrown away, wording 4. CZECH DIFFERS ON PURPOSE. The Czech wording is built on ""Csaplarova past"", a Czech in-joke about a side two goals down at half time being exactly where it wants to be. An English reader has no idea what that is, so the English here is ordinary press-room English with no trace of the joke. This is the one place in the app where the two languages deliberately say different things.",,"Forty-five minutes of control, and then that. Whose second half was it?","V poločase bylo rozhodnuto, po devadesáti minutách taky, jen naopak. Csaplárova past se vymstila. Kdo může za druhou půli?"
 yTurnedItRound0,"Y post: the side came from two goals down at half time, wording 0 (tone order: generous, neutral, sour). CZECH DIFFERS ON PURPOSE: it is built on ""Csaplarova past"", a Czech in-joke about a side two goals down at half time being exactly where it wants to be. The English says the same thing about the same match with no trace of the joke, because an English reader has never heard of it. The two Y templates and the two press questions on this afternoon are the only place in the app where the languages deliberately differ.",{opponent},Two down to {opponent} at the break and they got every bit of it back. That is a team.,Csaplárova past v přímém přenosu. Dvě branky pro {opponent} a pak už byla druhá půle jen naše. Tomu se říká mužstvo.
 yTurnedItRound1,"Y post: the side came from two goals down at half time, wording 1 (tone order: generous, neutral, sour). CZECH DIFFERS ON PURPOSE: it is built on ""Csaplarova past"", a Czech in-joke about a side two goals down at half time being exactly where it wants to be. The English says the same thing about the same match with no trace of the joke, because an English reader has never heard of it. The two Y templates and the two press questions on this afternoon are the only place in the app where the languages deliberately differ.",{opponent},Two behind against {opponent} and by the end it did not matter. Not many sides do that.,O dvě zpět proti týmu {opponent} a nakonec z toho něco bylo. Csaplárovu past umí nastavit jen někdo.
 yTurnedItRound2,"Y post: the side came from two goals down at half time, wording 2 (tone order: generous, neutral, sour). CZECH DIFFERS ON PURPOSE: it is built on ""Csaplarova past"", a Czech in-joke about a side two goals down at half time being exactly where it wants to be. The English says the same thing about the same match with no trace of the joke, because an English reader has never heard of it. The two Y templates and the two press questions on this afternoon are the only place in the app where the languages deliberately differ.",{opponent},Half time: two goals down to {opponent}. Full time: not. The second half was a different match.,Poločas: o dvě prohráváme s {opponent}. Konec: ne. Učebnicová Csaplárova past.
