@@ -6,9 +6,10 @@ import 'package:fnm/domain/services/press/press.dart';
 /// board had asked only that it turn up. These are what stops that.
 void main() {
   group('how long a conference runs', () {
-    test('a triumph or an exit is a long afternoon', () {
-      expect(Press.lengthFor(PressTopic.triumph), 4);
-      expect(Press.lengthFor(PressTopic.elimination), 4);
+    test('no conference runs past two questions', () {
+      expect(Press.maxConferenceLength, 2);
+      expect(Press.lengthFor(PressTopic.triumph), 2);
+      expect(Press.lengthFor(PressTopic.elimination), 2);
     });
 
     test('a ranking milestone is a question and a thank-you', () {

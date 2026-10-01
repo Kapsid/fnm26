@@ -387,6 +387,20 @@ abstract interface class CompetitionRepository {
     Confederation? playerConfederation,
   });
 
+  /// The latest PLAYED finals fixture [nationId] took no part in, among the
+  /// tournaments a manager steps through from the stands: the World
+  /// Championship, his own region's continental finals ([confederation]) and
+  /// the Nations Cup Finals Four. Null when none has been played.
+  ///
+  /// The press read it as a line in time: a match of his that falls before it
+  /// has had somebody else's tournament played over the top of it, and is no
+  /// longer anything the room would ask about.
+  Future<DateTime?> latestPlayedWatchedFinalsDate(
+    int careerId,
+    int nationId, {
+    Confederation? confederation,
+  });
+
   /// The earliest unplayed Nations Cup Finals Four (NSF/NFINAL) fixture date, or
   /// null when none is pending — so the hub can step the Finals Four day by day
   /// even when the player's nation isn't in it.

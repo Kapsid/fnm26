@@ -1429,6 +1429,8 @@ class SeasonService {
       ..invalidate(cycleObjectivesProvider)
       ..invalidate(satisfactionProvider)
       ..invalidate(pressEffectProvider)
+      ..invalidate(pendingConferenceProvider)
+      ..invalidate(pressStatementsProvider)
       ..invalidate(squadConditionProvider);
   }
 
@@ -1804,6 +1806,8 @@ class SeasonService {
       ..invalidate(cycleObjectivesProvider)
       ..invalidate(satisfactionProvider)
       ..invalidate(pressEffectProvider)
+      ..invalidate(pendingConferenceProvider)
+      ..invalidate(pressStatementsProvider)
       ..invalidate(squadConditionProvider)
       // "The player's NEXT fixture" is now a different fixture: the one this
       // provider is holding has just been played, and the result it carries is

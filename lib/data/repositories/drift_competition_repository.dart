@@ -6,6 +6,7 @@ import 'package:fnm/domain/services/awards/awards.dart';
 import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/entities/group_standing.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
+import 'package:fnm/domain/services/competition/finals_participation.dart';
 import 'package:fnm/domain/services/competition/cycle_finish.dart';
 import 'package:fnm/domain/services/competition/finals.dart';
 import 'package:fnm/domain/services/competition/rounds.dart';
@@ -836,6 +837,45 @@ class DriftCompetitionRepository implements CompetitionRepository {
                     t.competitionId.isIn(ids),
               )
               ..orderBy([(t) => OrderingTerm(expression: t.date)])
+              ..limit(1))
+            .getSingleOrNull();
+    return row?.date;
+  }
+
+  @override
+  Future<DateTime?> latestPlayedWatchedFinalsDate(
+    int careerId,
+    int nationId, {
+    Confederation? confederation,
+  }) async {
+    final comps =
+        await (_db.select(_db.competitions)..where(
+              (t) =>
+                  t.careerId.equals(careerId) &
+                  (t.kind.equalsValue(CompetitionKind.worldCupFinals) |
+                      t.kind.equalsValue(CompetitionKind.nationsLeague) |
+                      (t.kind.equalsValue(CompetitionKind.continentalFinals) &
+                          (confederation == null
+                              ? const Constant(true)
+                              : t.confederation.equalsValue(confederation)))),
+            ))
+            .get();
+    if (comps.isEmpty) return null;
+    final row =
+        await (_db.select(_db.fixtures)
+              ..where(
+                (t) =>
+                    t.careerId.equals(careerId) &
+                    t.played.equals(true) &
+                    t.competitionId.isIn(comps.map((c) => c.id).toList()) &
+                    t.round.isIn(FinalsRounds.all.toList()) &
+                    t.homeNationId.equals(nationId).not() &
+                    t.awayNationId.equals(nationId).not(),
+              )
+              ..orderBy([
+                (t) =>
+                    OrderingTerm(expression: t.date, mode: OrderingMode.desc),
+              ])
               ..limit(1))
             .getSingleOrNull();
     return row?.date;

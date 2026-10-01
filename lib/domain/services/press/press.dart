@@ -903,7 +903,7 @@ abstract final class Press {
   };
 
   /// The longest a conference can run to, for the sizes the UI has to reserve.
-  static const int maxConferenceLength = 4;
+  static const int maxConferenceLength = 2;
 
   /// How many questions a conference runs to, by what it is ABOUT.
   ///
@@ -911,7 +911,13 @@ abstract final class Press {
   /// in rather than a room: a World Cup final and a ranking milestone drew the
   /// same three questions. A triumph or an exit is a long afternoon; a nation
   /// climbing a place or two is a question and a thank-you.
-  static int lengthFor(PressTopic topic) => switch (topic) {
+  ///
+  /// Capped at [maxConferenceLength]: past two, a conference was a queue of
+  /// questions standing between the manager and his next match.
+  static int lengthFor(PressTopic topic) =>
+      _naturalLengthFor(topic).clamp(1, maxConferenceLength);
+
+  static int _naturalLengthFor(PressTopic topic) => switch (topic) {
     // The whole cycle in one room.
     PressTopic.triumph ||
     PressTopic.elimination ||
@@ -1160,5 +1166,18 @@ abstract final class Press {
       board += a.board;
     }
     return (morale: morale.clamp(-12, 12), board: board.clamp(-10, 10));
+  }
+
+  /// This cycle's press, plus half of last cycle's: what was said lingers
+  /// rather than vanishing at the turn of the cycle. Capped like [totalOf].
+  static PressEffect carryOver(
+    Iterable<PressEffect> current,
+    Iterable<PressEffect> previous,
+  ) {
+    final prev = totalOf(previous);
+    return totalOf([
+      ...current,
+      (morale: prev.morale ~/ 2, board: prev.board ~/ 2),
+    ]);
   }
 }
