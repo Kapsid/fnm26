@@ -44,6 +44,9 @@ import 'package:fnm/features/hub/draw_reveal.dart';
 import 'package:fnm/features/achievements/achievement_providers.dart';
 import 'package:fnm/features/hub/objective_providers.dart';
 import 'package:fnm/features/match/match_providers.dart';
+import 'package:fnm/features/press/press_desk.dart';
+import 'package:fnm/features/press/press_providers.dart';
+import 'package:fnm/features/tactics/condition_providers.dart';
 import 'package:fnm/features/ranking/world_ranking_providers.dart';
 import 'package:fnm/features/squad/training_camp_providers.dart';
 import 'package:fnm/features/squad/youth_watch_providers.dart';
@@ -1406,6 +1409,9 @@ class SeasonService {
     // The board's verdict on any objective this run has just settled, so it
     // lands with the result rather than at the end of the cycle.
     await _gradeObjectivesIfDecided(careerId);
+    // The press: judge what he said and decide whether the room is called,
+    // now that his result is in (both ways a match of his is committed).
+    await _ref.read(pressDeskProvider).afterMatches(careerId);
     await _flushRank(careerId);
     await _flushAbsences(careerId);
     // The ranking screen's data is auto-disposed but can be kept alive by a
@@ -1421,7 +1427,9 @@ class SeasonService {
       // verdict it computed before the tournament was played.
       ..invalidate(cycleObjectiveOutcomesProvider)
       ..invalidate(cycleObjectivesProvider)
-      ..invalidate(satisfactionProvider);
+      ..invalidate(satisfactionProvider)
+      ..invalidate(pressEffectProvider)
+      ..invalidate(squadConditionProvider);
   }
 
   /// Fast-forwards straight to the World Cup champion — the "skip to the final"
@@ -1776,6 +1784,9 @@ class SeasonService {
     // The board's verdict on any objective this run has just settled, so it
     // lands with the result rather than at the end of the cycle.
     await _gradeObjectivesIfDecided(careerId);
+    // The press: judge what he said and decide whether the room is called,
+    // now that his result is in (both ways a match of his is committed).
+    await _ref.read(pressDeskProvider).afterMatches(careerId);
     await _flushRank(careerId);
     await _flushAbsences(careerId);
     // The ranking screen's data is auto-disposed but can be kept alive by a
@@ -1792,6 +1803,8 @@ class SeasonService {
       ..invalidate(cycleObjectiveOutcomesProvider)
       ..invalidate(cycleObjectivesProvider)
       ..invalidate(satisfactionProvider)
+      ..invalidate(pressEffectProvider)
+      ..invalidate(squadConditionProvider)
       // "The player's NEXT fixture" is now a different fixture: the one this
       // provider is holding has just been played, and the result it carries is
       // the score the manager is still looking at. Anything that keeps it open
