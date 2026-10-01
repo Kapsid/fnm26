@@ -36,7 +36,12 @@ String beatQuestion(
   required int seed,
 }) {
   final tone = _toneOf(Credibility.band(c.credibility));
-  final player = playerName ?? '';
+  final names =
+      beat.kind == BeatKind.standout ||
+      beat.kind == BeatKind.struggler ||
+      (beat.kind == BeatKind.throwback &&
+          _namesPlayer(c.facts.throwback!.kind));
+  final player = names ? _named(playerName) : playerName ?? '';
   return switch (beat.kind) {
     BeatKind.moment => _pick(
       _moment(l, c.facts.reason, tone, opponentName),
@@ -64,7 +69,9 @@ String answerLabel(
   required String? playerName,
   required int seed,
 }) {
-  final player = playerName ?? '';
+  final player = _namesPlayer(ConferenceBuilder.statementOf(a))
+      ? _named(playerName)
+      : playerName ?? '';
   final variants = switch (a) {
     AnswerKind.creditPlayers => [
       l.pressReplyCreditPlayers1,
@@ -143,7 +150,9 @@ String? onRecordLine(
   AnswerKind a, {
   required String? playerName,
 }) {
-  final player = playerName ?? '';
+  final player = _namesPlayer(ConferenceBuilder.statementOf(a))
+      ? _named(playerName)
+      : playerName ?? '';
   return switch (ConferenceBuilder.statementOf(a)) {
     StatementKind.winNext => l.pressOnRecordWinNext,
     StatementKind.jobOnTheLine => l.pressOnRecordJob,
@@ -174,6 +183,19 @@ List<(ConferenceReason?, BeatKind, String)> allQuestionVariants(
         for (final tone in _Tone.values)
           (null, BeatKind.throwback, _throwback(l, kind, kept, tone, player)),
   ];
+}
+
+/// Whether a statement of [kind] (or the answer that makes one) is about a
+/// named player.
+bool _namesPlayer(StatementKind? kind) =>
+    kind == StatementKind.backPlayer || kind == StatementKind.blamePlayer;
+
+/// A line that names a player must be handed his name: a blank in its place
+/// is a lookup that went wrong upstream (a player of another nation, say), so
+/// it fails loudly in debug and degrades to an empty name in release.
+String _named(String? playerName) {
+  assert(playerName != null, 'a line that names a player was given no name');
+  return playerName ?? '';
 }
 
 bool _kept(StatementStatus s) => switch (s) {

@@ -4,6 +4,7 @@ import 'package:fnm/domain/repositories/career_repository.dart';
 import 'package:fnm/domain/services/press/conference.dart';
 import 'package:fnm/domain/services/press/press.dart';
 import 'package:fnm/domain/services/press/statement.dart';
+import 'package:fnm/features/press/press_desk.dart';
 import 'package:fnm/features/tactics/condition_providers.dart';
 
 bool _counts(PressAnswerRow a) => !a.questionKey.startsWith('grv:');
@@ -74,9 +75,25 @@ pendingConferenceProvider = FutureProvider.autoDispose
       final career = await repo.byId(careerId);
       if (career == null) return null;
       final calls = await repo.conferences(careerId);
-      final pending = calls.where((c) => c.status == ConferenceStatus.pending);
+      // Offered on the desk's own terms: a row it would retire as stale (an
+      // earlier cycle, or news gone cold) is never put to the manager, even
+      // before the next advance gets round to retiring it.
+      final pending = calls.where(
+        (c) =>
+            c.status == ConferenceStatus.pending &&
+            c.cycle == career.cyclePointer &&
+            career.inGameDate.difference(c.triggeredOn).inDays <=
+                PressDesk.staleDays,
+      );
       if (pending.isEmpty) return null;
       final row = pending.last;
+      // The last conference he actually faced before this one; only what was
+      // judged since then is fresh enough to throw back.
+      final previous = calls
+          .where(
+            (c) => c.id < row.id && c.status == ConferenceStatus.held,
+          )
+          .lastOrNull;
       final fixture = (await comp.fixturesForNation(
         careerId,
         career.nationId,
@@ -93,18 +110,30 @@ pendingConferenceProvider = FutureProvider.autoDispose
         for (final s in statements)
           if (s.status == StatementStatus.open) s,
       ];
-      final due = [
-        for (final s in statements)
-          if ((s.status == StatementStatus.kept ||
-                  s.status == StatementStatus.broken) &&
-              !s.thrownBack &&
-              // The opening of a job-verdict conference IS that broken
-              // promise; asking it again as a throwback would be the same
-              // question twice.
-              !(row.reason == ConferenceReason.jobVerdict &&
-                  s.kind == StatementKind.jobOnTheLine))
-            s,
-      ];
+      // His newest judged statement for the nation he leads now, since the
+      // last conference he faced (or this cycle, if none). Anything older, or
+      // said for another job, is simply never thrown back.
+      final due =
+          [
+            for (final s in statements)
+              if ((s.status == StatementStatus.kept ||
+                      s.status == StatementStatus.broken) &&
+                  !s.thrownBack &&
+                  s.nationId == career.nationId &&
+                  s.judgedOn != null &&
+                  (previous == null
+                      ? s.cycle == career.cyclePointer
+                      : s.judgedOn!.isAfter(previous.triggeredOn)) &&
+                  // The opening of a job-verdict conference IS that broken
+                  // promise; asking it again as a throwback would be the same
+                  // question twice.
+                  !(row.reason == ConferenceReason.jobVerdict &&
+                      s.kind == StatementKind.jobOnTheLine))
+                s,
+          ]..sort((a, b) {
+            final byDate = a.judgedOn!.compareTo(b.judgedOn!);
+            return byDate != 0 ? byDate : a.id.compareTo(b.id);
+          });
       return (
         row: row,
         facts: (
@@ -117,7 +146,7 @@ pendingConferenceProvider = FutureProvider.autoDispose
             for (final s in open)
               if (s.playerId != null) s.playerId!,
           },
-          throwback: due.isEmpty ? null : due.first,
+          throwback: due.isEmpty ? null : due.last,
         ),
         credibility: await ref.watch(credibilityProvider(careerId).future),
         opponentNationId: fixture.homeNationId == career.nationId

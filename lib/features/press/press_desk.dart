@@ -6,6 +6,7 @@ import 'package:fnm/domain/services/press/conference.dart';
 import 'package:fnm/domain/services/press/expectation.dart';
 import 'package:fnm/domain/services/press/statement.dart';
 import 'package:fnm/features/achievements/achievement_providers.dart';
+import 'package:fnm/features/hub/objective_providers.dart';
 import 'package:fnm/features/press/press_providers.dart';
 import 'package:fnm/features/ranking/world_ranking_providers.dart';
 
@@ -100,14 +101,27 @@ class PressDesk {
       }
     }
 
-    // 3. Call the room, at most once per match.
-    if (competitive.isEmpty) return;
-    final latest = competitive.last;
+    // 3. Call the room, at most once per match. Only this cycle's matches of
+    // the nation he leads now are news: the all-time list would offer last
+    // cycle's final game (or, after a move, his new nation's games before he
+    // took over) to a ceiling the rollover has just reset.
+    final cycleAll = await comp.cycleFixturesForNation(
+      careerId,
+      career.nationId,
+    );
+    final recent = [
+      for (final f in cycleAll)
+        if (f.hasResult && f.round != Rounds.friendly) f,
+    ]..sort((a, b) => a.date.compareTo(b.date));
+    if (recent.isEmpty) return;
+    final latest = recent.last;
     if (calls.any((c) => c.fixtureId == latest.id)) return;
+    // A match is called now or never: the desk would skip it as stale anyway.
+    if (now.difference(latest.date).inDays > staleDays) return;
     final ranking = await _ref.read(worldRankingProvider(careerId).future);
     int rankOf(int id) => ranking?.position[id] ?? 100;
     final played = [
-      for (final f in competitive)
+      for (final f in recent)
         (
           fixtureId: f.id,
           date: f.date,
@@ -117,7 +131,7 @@ class PressDesk {
           // The group's last game for him: nothing of his left to play in it.
           lastGroupMatch:
               f.groupId != null &&
-              !all.any(
+              !cycleAll.any(
                 (o) =>
                     o.competitionId == f.competitionId &&
                     o.groupId == f.groupId &&
@@ -135,7 +149,15 @@ class PressDesk {
           ),
         ),
     ];
-    _ref.invalidate(pressEffectProvider(careerId));
+    // The board's mood is derived from objectives and form the match just
+    // changed, through providers that do not notice a write; a live hub keeps
+    // them alive, so refresh them by hand (as SeasonService does) or the
+    // crisis check reads the board as it stood before the match.
+    _ref
+      ..invalidate(cycleObjectiveOutcomesProvider(careerId))
+      ..invalidate(cycleObjectivesProvider(careerId))
+      ..invalidate(pressEffectProvider(careerId))
+      ..invalidate(satisfactionProvider(careerId));
     final board = await _ref.read(satisfactionProvider(careerId).future);
     final thisCycle = [
       for (final c in calls)
