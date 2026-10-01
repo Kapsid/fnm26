@@ -131,6 +131,9 @@ final AutoDisposeFutureProviderFamily<YTimeline, int> yFeedProvider =
       final contexts = <YContext>[];
       final incidentPosts = <YPost>[];
       final standingsSoFar = <ResultStanding>[];
+      // The same run with its dates, so a post dated before the newest result
+      // can be toned by what was known on its own day.
+      final datedStandings = <({DateTime date, ResultStanding standing})>[];
       for (final j in chronological) {
         final won = j.scored > j.conceded;
         final lost = j.scored < j.conceded;
@@ -227,6 +230,7 @@ final AutoDisposeFutureProviderFamily<YTimeline, int> yFeedProvider =
           );
         }
         standingsSoFar.add(standing);
+        datedStandings.add((date: j.date, standing: standing));
 
         contexts.add((
           match: match,
@@ -403,14 +407,20 @@ final AutoDisposeFutureProviderFamily<YTimeline, int> yFeedProvider =
       for (final s in await ref.watch(
         pressStatementsProvider(careerId).future,
       )) {
+        // A statement from a previous job is not posted under the new nation.
         if (s.nationId != career.nationId) continue;
+        final judgedOn = s.judgedOn;
+        if (judgedOn == null) continue;
+        // Toned by the run as it stood the day it was judged, never by today's:
+        // an older post says now what it said then.
+        final then = YFeed.standingsAsOf(datedStandings, judgedOn);
         posts.addAll(
           YFeed.forStatement(
             s: s,
             nation: nation,
             seed: career.rngSeed,
-            standing: mood,
-            history: standingsSoFar,
+            standing: then.isEmpty ? ResultStanding.par : then.last,
+            history: then,
           ),
         );
       }

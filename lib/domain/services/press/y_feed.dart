@@ -834,6 +834,20 @@ abstract final class YFeed {
     ];
   }
 
+  /// The results as they stood on [when]: every standing dated on or before
+  /// it, oldest first, ignoring anything that came after.
+  ///
+  /// A post derived from the save is rebuilt on every open, so whatever it is
+  /// toned by has to be what was known on ITS day. Hand it today's run and a
+  /// statement judged months ago re-words itself after every later result.
+  static List<ResultStanding> standingsAsOf(
+    List<({DateTime date, ResultStanding standing})> dated,
+    DateTime when,
+  ) => [
+    for (final d in dated)
+      if (!d.date.isAfter(when)) d.standing,
+  ];
+
   /// What the country says once something the manager put on the record has
   /// been judged: it came true, or it did not.
   ///

@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:fnm/domain/services/press/expectation.dart';
 import 'package:fnm/domain/services/press/statement.dart';
 import 'package:fnm/domain/services/press/y_feed.dart';
 
@@ -94,5 +95,57 @@ void main() {
       YFeed.variantsFor(YTemplate.statementBroken),
       YFeed.subjectVariantCount,
     );
+  });
+
+  group('an older post says now what it said then', () {
+    final judged = _s(5, StatementStatus.kept);
+    final before = [
+      for (var i = 0; i < 6; i++)
+        (
+          date: DateTime(2027, 1, 1 + i * 10),
+          standing: i.isEven ? ResultStanding.creditable : ResultStanding.par,
+        ),
+    ];
+    // A run of humiliations AFTER the statement was judged.
+    final after = [
+      ...before,
+      for (var i = 0; i < 8; i++)
+        (
+          date: DateTime(2027, 4, 1 + i * 3),
+          standing: ResultStanding.humiliating,
+        ),
+    ];
+
+    test('the slice stops at the day it was judged', () {
+      final then = YFeed.standingsAsOf(after, judged.judgedOn!);
+      expect(then, [for (final d in before) d.standing]);
+      // On the day itself counts.
+      expect(
+        YFeed.standingsAsOf([
+          (date: judged.judgedOn!, standing: ResultStanding.par),
+        ], judged.judgedOn!),
+        [ResultStanding.par],
+      );
+    });
+
+    test('later results do not re-word it', () {
+      List<String> build(
+        List<({DateTime date, ResultStanding standing})> dated,
+      ) {
+        final then = YFeed.standingsAsOf(dated, judged.judgedOn!);
+        return [
+          for (final p in YFeed.forStatement(
+            s: judged,
+            nation: 'Czechia',
+            seed: 42,
+            standing: then.isEmpty ? ResultStanding.par : then.last,
+            history: then,
+          ))
+            '${p.key} ${p.handle} ${p.template} ${p.variant} ${p.mood}',
+        ];
+      }
+
+      expect(build(after), build(before));
+    });
   });
 }
