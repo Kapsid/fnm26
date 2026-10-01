@@ -221,3 +221,39 @@ user-facing copy. "World Championship", never "World Cup", in EN. Re-export
 
 Tournament-milestone conferences, a visible credibility meter, style/approach
 claims ("we'll keep attacking"), recurring storylines across cycles.
+
+## Amendments after the code survey (2026-10-01)
+
+These override the sections above where they differ.
+
+1. **Two commit paths.** Most of the manager's matches are committed by
+   `SeasonService.advance`'s quick-sim, not `_playPlayerMatch`. Judging and
+   triggering live in one idempotent step, `PressDesk.afterMatches(careerId)`,
+   called from BOTH, beside `_gradeObjectivesIfDecided`. It judges every open
+   statement whose window has completed and evaluates the trigger for the
+   manager's latest played competitive fixture.
+2. **Conferences are stored.** New table `press_conferences` (id, careerId,
+   cycle, reason, fixtureId, triggeredOn, status `pending|held|skipped`). The
+   trigger writes a `pending` row; the hub's forced press event and the sheet
+   read it; answering marks it `held`. A new trigger, or 14 in-game days
+   passing, marks an unheld one `skipped`. Quiet period and the per-cycle
+   ceiling count rows, held or not, so the cadence does not depend on whether
+   the manager opened the sheet.
+3. **"Matters" for a big result** is: a knockout tie (`Rounds.isKnockout`), the
+   last matchday of its group or qualifying group, or a result that starts or
+   ends a run of 3+ competitive wins or winless games.
+4. **Crisis board threshold** is satisfaction below 40 (the existing
+   `_crisisBoard`), named as `ConferenceTrigger.crisisBoardBelow`.
+5. **Result promises are `winNext` only** in this build. `outOfGroup` and
+   `reachRound` are out of scope (they need tournament-outcome judging).
+6. **No per-player morale exists.** "His morale" is a per-player condition term
+   added to `Condition.of` (`statementDelta`): an open `blamePlayer` statement
+   is −2 on that player's match rating shift; a `backPlayer` statement kept in
+   the last 90 in-game days is +1. Squad morale moves through the press totals
+   as before.
+7. **Grievances are disabled** (`Grievances.enabled = false`). No table move:
+   every press read filters out `grv:` keys, so old rows stop touching the
+   press clock and totals.
+8. **Judged-statement effects** are recorded as `press_answers` rows keyed
+   `stmt:<id>`, so the existing totals pipeline carries them without a second
+   path.
