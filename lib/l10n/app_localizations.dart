@@ -15464,6 +15464,78 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'On the record: {player} let you down.'**
   String pressOnRecordBlame(String player);
+
+  /// Y feed post: something the manager said on the record at a press conference came true (a promised win, a job staked on the next games, a player backed or blamed in public), wording 0 (tone order: generous, neutral, sour). {nation} is the manager's country.
+  ///
+  /// In en, this message translates to:
+  /// **'He said it, and it happened. {nation} has a manager who means what he says.'**
+  String yStatementKept0(String nation);
+
+  /// Y feed post: something the manager said on the record at a press conference came true (a promised win, a job staked on the next games, a player backed or blamed in public), wording 1 (tone order: generous, neutral, sour). {nation} is the manager's country.
+  ///
+  /// In en, this message translates to:
+  /// **'Said it out loud, then went and did it. That is the man {nation} needed.'**
+  String yStatementKept1(String nation);
+
+  /// Y feed post: something the manager said on the record at a press conference came true (a promised win, a job staked on the next games, a player backed or blamed in public), wording 2 (tone order: generous, neutral, sour). {nation} is the manager's country.
+  ///
+  /// In en, this message translates to:
+  /// **'{nation}: he called it, and it came true. Fair enough.'**
+  String yStatementKept2(String nation);
+
+  /// Y feed post: something the manager said on the record at a press conference came true (a promised win, a job staked on the next games, a player backed or blamed in public), wording 3 (tone order: generous, neutral, sour). {nation} is the manager's country.
+  ///
+  /// In en, this message translates to:
+  /// **'He put it on the record and it held. One for him. {nation} moves on.'**
+  String yStatementKept3(String nation);
+
+  /// Y feed post: something the manager said on the record at a press conference came true (a promised win, a job staked on the next games, a player backed or blamed in public), wording 4 (tone order: generous, neutral, sour). {nation} is the manager's country.
+  ///
+  /// In en, this message translates to:
+  /// **'He got one right. {nation}, do not get used to it.'**
+  String yStatementKept4(String nation);
+
+  /// Y feed post: something the manager said on the record at a press conference came true (a promised win, a job staked on the next games, a player backed or blamed in public), wording 5 (tone order: generous, neutral, sour). {nation} is the manager's country.
+  ///
+  /// In en, this message translates to:
+  /// **'Even a stopped clock is right twice a day. {nation} got lucky this time.'**
+  String yStatementKept5(String nation);
+
+  /// Y feed post: something the manager said on the record at a press conference did not come true (a promised win, a job staked on the next games, a player backed or blamed in public), wording 0 (tone order: generous, neutral, sour). {nation} is the manager's country.
+  ///
+  /// In en, this message translates to:
+  /// **'He said it and it did not come off. Still with him. {nation} goes again.'**
+  String yStatementBroken0(String nation);
+
+  /// Y feed post: something the manager said on the record at a press conference did not come true (a promised win, a job staked on the next games, a player backed or blamed in public), wording 1 (tone order: generous, neutral, sour). {nation} is the manager's country.
+  ///
+  /// In en, this message translates to:
+  /// **'{nation}: he promised more than we got, but I would rather a manager who backs himself.'**
+  String yStatementBroken1(String nation);
+
+  /// Y feed post: something the manager said on the record at a press conference did not come true (a promised win, a job staked on the next games, a player backed or blamed in public), wording 2 (tone order: generous, neutral, sour). {nation} is the manager's country.
+  ///
+  /// In en, this message translates to:
+  /// **'{nation}: he said it on the record and it did not happen. People will remember.'**
+  String yStatementBroken2(String nation);
+
+  /// Y feed post: something the manager said on the record at a press conference did not come true (a promised win, a job staked on the next games, a player backed or blamed in public), wording 3 (tone order: generous, neutral, sour). {nation} is the manager's country.
+  ///
+  /// In en, this message translates to:
+  /// **'Big words, nothing behind them. {nation}: next time, say less.'**
+  String yStatementBroken3(String nation);
+
+  /// Y feed post: something the manager said on the record at a press conference did not come true (a promised win, a job staked on the next games, a player backed or blamed in public), wording 4 (tone order: generous, neutral, sour). {nation} is the manager's country.
+  ///
+  /// In en, this message translates to:
+  /// **'He stood there and told us. Then this. {nation} deserves better than talk.'**
+  String yStatementBroken4(String nation);
+
+  /// Y feed post: something the manager said on the record at a press conference did not come true (a promised win, a job staked on the next games, a player backed or blamed in public), wording 5 (tone order: generous, neutral, sour). {nation} is the manager's country.
+  ///
+  /// In en, this message translates to:
+  /// **'His word is worth nothing now. Write it down, {nation}.'**
+  String yStatementBroken5(String nation);
 }
 
 class _AppLocalizationsDelegate

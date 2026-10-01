@@ -2550,5 +2550,17 @@
   "pressOnRecordWinNext": "Řečeno do záznamu: další zápas vyhrajete.",
   "pressOnRecordJob": "Řečeno do záznamu: necháte se soudit podle dalších tří zápasů.",
   "pressOnRecordBack": "Řečeno do záznamu: stojíte za hráčem {player}.",
-  "pressOnRecordBlame": "Řečeno do záznamu: {player} vás zklamal."
+  "pressOnRecordBlame": "Řečeno do záznamu: {player} vás zklamal.",
+  "yStatementKept0": "{nation}: řekl to a tým to splnil. Tomuhle trenérovi věřím.",
+  "yStatementKept1": "Řekl to nahlas a pak to dotáhl. Přesně takového trenéra {nation} potřebuje.",
+  "yStatementKept2": "{nation}: slíbil to a vyšlo to. Uznávám.",
+  "yStatementKept3": "Řekl to do záznamu a platilo to. Bod pro něj. {nation} jede dál.",
+  "yStatementKept4": "Jednou se trefil. {nation}: nezvykejte si.",
+  "yStatementKept5": "I slepé kuře najde zrno. {nation}: tentokrát to vyšlo, příště uvidíme.",
+  "yStatementBroken0": "Řekl to a nevyšlo to. Pořád za ním stojím. {nation} to zvedne.",
+  "yStatementBroken1": "{nation}: slíbil víc, než přišlo, ale radši trenér, co si věří, než ten, co mlčí.",
+  "yStatementBroken2": "{nation}: řekl to veřejně a nestalo se to. To se nezapomíná.",
+  "yStatementBroken3": "Velká slova, nic za nimi. {nation}: příště míň mluvit.",
+  "yStatementBroken4": "Stál tam a sliboval. A pak tohle. {nation} si zaslouží víc než řeči.",
+  "yStatementBroken5": "Jeho slovo už nemá žádnou cenu. {nation}: zapište si to."
 }

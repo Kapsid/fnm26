@@ -9983,4 +9983,64 @@ class AppLocalizationsEn extends AppLocalizations {
   String pressOnRecordBlame(String player) {
     return 'On the record: $player let you down.';
   }
+
+  @override
+  String yStatementKept0(String nation) {
+    return 'He said it, and it happened. $nation has a manager who means what he says.';
+  }
+
+  @override
+  String yStatementKept1(String nation) {
+    return 'Said it out loud, then went and did it. That is the man $nation needed.';
+  }
+
+  @override
+  String yStatementKept2(String nation) {
+    return '$nation: he called it, and it came true. Fair enough.';
+  }
+
+  @override
+  String yStatementKept3(String nation) {
+    return 'He put it on the record and it held. One for him. $nation moves on.';
+  }
+
+  @override
+  String yStatementKept4(String nation) {
+    return 'He got one right. $nation, do not get used to it.';
+  }
+
+  @override
+  String yStatementKept5(String nation) {
+    return 'Even a stopped clock is right twice a day. $nation got lucky this time.';
+  }
+
+  @override
+  String yStatementBroken0(String nation) {
+    return 'He said it and it did not come off. Still with him. $nation goes again.';
+  }
+
+  @override
+  String yStatementBroken1(String nation) {
+    return '$nation: he promised more than we got, but I would rather a manager who backs himself.';
+  }
+
+  @override
+  String yStatementBroken2(String nation) {
+    return '$nation: he said it on the record and it did not happen. People will remember.';
+  }
+
+  @override
+  String yStatementBroken3(String nation) {
+    return 'Big words, nothing behind them. $nation: next time, say less.';
+  }
+
+  @override
+  String yStatementBroken4(String nation) {
+    return 'He stood there and told us. Then this. $nation deserves better than talk.';
+  }
+
+  @override
+  String yStatementBroken5(String nation) {
+    return 'His word is worth nothing now. Write it down, $nation.';
+  }
 }

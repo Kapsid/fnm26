@@ -9993,4 +9993,64 @@ class AppLocalizationsCs extends AppLocalizations {
   String pressOnRecordBlame(String player) {
     return 'Řečeno do záznamu: $player vás zklamal.';
   }
+
+  @override
+  String yStatementKept0(String nation) {
+    return '$nation: řekl to a tým to splnil. Tomuhle trenérovi věřím.';
+  }
+
+  @override
+  String yStatementKept1(String nation) {
+    return 'Řekl to nahlas a pak to dotáhl. Přesně takového trenéra $nation potřebuje.';
+  }
+
+  @override
+  String yStatementKept2(String nation) {
+    return '$nation: slíbil to a vyšlo to. Uznávám.';
+  }
+
+  @override
+  String yStatementKept3(String nation) {
+    return 'Řekl to do záznamu a platilo to. Bod pro něj. $nation jede dál.';
+  }
+
+  @override
+  String yStatementKept4(String nation) {
+    return 'Jednou se trefil. $nation: nezvykejte si.';
+  }
+
+  @override
+  String yStatementKept5(String nation) {
+    return 'I slepé kuře najde zrno. $nation: tentokrát to vyšlo, příště uvidíme.';
+  }
+
+  @override
+  String yStatementBroken0(String nation) {
+    return 'Řekl to a nevyšlo to. Pořád za ním stojím. $nation to zvedne.';
+  }
+
+  @override
+  String yStatementBroken1(String nation) {
+    return '$nation: slíbil víc, než přišlo, ale radši trenér, co si věří, než ten, co mlčí.';
+  }
+
+  @override
+  String yStatementBroken2(String nation) {
+    return '$nation: řekl to veřejně a nestalo se to. To se nezapomíná.';
+  }
+
+  @override
+  String yStatementBroken3(String nation) {
+    return 'Velká slova, nic za nimi. $nation: příště míň mluvit.';
+  }
+
+  @override
+  String yStatementBroken4(String nation) {
+    return 'Stál tam a sliboval. A pak tohle. $nation si zaslouží víc než řeči.';
+  }
+
+  @override
+  String yStatementBroken5(String nation) {
+    return 'Jeho slovo už nemá žádnou cenu. $nation: zapište si to.';
+  }
 }

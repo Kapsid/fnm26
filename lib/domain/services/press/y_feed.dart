@@ -4,6 +4,7 @@ import 'package:fnm/domain/services/press/expectation.dart';
 import 'package:fnm/domain/services/press/half_time_swing.dart';
 import 'package:fnm/domain/services/press/press.dart';
 import 'package:fnm/domain/services/press/persona.dart';
+import 'package:fnm/domain/services/press/statement.dart';
 import 'package:fnm/domain/services/competition/rounds.dart';
 
 /// Who is talking on Y.
@@ -149,6 +150,16 @@ enum YTemplate {
 
   /// The neighbours, next week.
   rivalryLooms,
+
+  /// Something the manager said on the record, and it came true.
+  ///
+  /// Generic over every [StatementKind] on purpose: the wording names the
+  /// nation and nothing else, so one set of lines serves a promised win, a job
+  /// staked on three games and a player backed or blamed in public.
+  statementKept,
+
+  /// Something the manager said on the record, and it did not.
+  statementBroken,
 
   /// A reply under somebody else's post. Its words come from a [YMood], not
   /// from what happened — see [YMood].
@@ -324,7 +335,11 @@ abstract final class YFeed {
     // the bands cut a total into thirds, and a joke a loyalist tells and a
     // joke a cynic tells need a pair apiece to choose between.
     YTemplate.turnedItRound ||
-    YTemplate.threwItAway => subjectVariantCount,
+    YTemplate.threwItAway ||
+    // And for a statement judged: the loyalist who always believed him and
+    // the cynic who never did both need a pair of their own.
+    YTemplate.statementKept ||
+    YTemplate.statementBroken => subjectVariantCount,
     _ => variantCount,
   };
 
@@ -819,6 +834,53 @@ abstract final class YFeed {
     ];
   }
 
+  /// What the country says once something the manager put on the record has
+  /// been judged: it came true, or it did not.
+  ///
+  /// Nothing for a statement still [StatementStatus.open] (there is nothing
+  /// to say yet) or [StatementStatus.lapsed] (the window closed on a job he no
+  /// longer holds, and the country has moved on with him). Keyed by the
+  /// statement's id and dated the day it was judged, so it lands in the feed
+  /// next to the match that decided it and reads the same on every rebuild.
+  static List<YPost> forStatement({
+    required PressStatement s,
+    required String nation,
+    required int seed,
+    ResultStanding standing = ResultStanding.par,
+    List<ResultStanding> history = const [],
+  }) {
+    final judgedOn = s.judgedOn;
+    final template = switch (s.status) {
+      StatementStatus.kept => YTemplate.statementKept,
+      StatementStatus.broken => YTemplate.statementBroken,
+      StatementStatus.open || StatementStatus.lapsed => null,
+    };
+    if (template == null || judgedOn == null) return const [];
+    final key = 'stmt:${s.id}';
+    final persona = personaFor(YVoice.fan, nation, seed, key);
+    final post = _post(
+      voice: YVoice.fan,
+      template: template,
+      args: [nation],
+      date: judgedOn,
+      key: key,
+      nation: nation,
+      seed: seed,
+      tone: YCast.toneFor(persona, standing, YCast.stance(persona, history)),
+    );
+    return [
+      post,
+      ...repliesTo(
+        post,
+        mood: moodOf(template),
+        nation: nation,
+        seed: seed,
+        standing: standing,
+        history: history,
+      ),
+    ];
+  }
+
   /// What the country says about one thing that happened on the pitch.
   ///
   /// It takes the SAME [PressSubjectIncident] the press room does, so the
@@ -1302,6 +1364,10 @@ abstract final class YFeed {
     YTemplate.debut => YMood.elation,
     YTemplate.drought => YMood.fury,
     YTemplate.rivalryLooms => YMood.relief,
+    // He said it on the record. Delivering it is a good day; failing to is
+    // the room turning on him, like a grievance aired in public.
+    YTemplate.statementKept => YMood.elation,
+    YTemplate.statementBroken => YMood.fury,
     // A repeat is read by what it repeats: being done over by the same side
     // again is fury, and a familiar bad afternoon is weariness.
     YTemplate.againstThemAgain => YMood.fury,

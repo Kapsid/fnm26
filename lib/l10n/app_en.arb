@@ -14789,5 +14789,113 @@
         "type": "String"
       }
     }
+  },
+  "yStatementKept0": "He said it, and it happened. {nation} has a manager who means what he says.",
+  "@yStatementKept0": {
+    "description": "Y feed post: something the manager said on the record at a press conference came true (a promised win, a job staked on the next games, a player backed or blamed in public), wording 0 (tone order: generous, neutral, sour). {nation} is the manager's country.",
+    "placeholders": {
+      "nation": {
+        "type": "String"
+      }
+    }
+  },
+  "yStatementKept1": "Said it out loud, then went and did it. That is the man {nation} needed.",
+  "@yStatementKept1": {
+    "description": "Y feed post: something the manager said on the record at a press conference came true (a promised win, a job staked on the next games, a player backed or blamed in public), wording 1 (tone order: generous, neutral, sour). {nation} is the manager's country.",
+    "placeholders": {
+      "nation": {
+        "type": "String"
+      }
+    }
+  },
+  "yStatementKept2": "{nation}: he called it, and it came true. Fair enough.",
+  "@yStatementKept2": {
+    "description": "Y feed post: something the manager said on the record at a press conference came true (a promised win, a job staked on the next games, a player backed or blamed in public), wording 2 (tone order: generous, neutral, sour). {nation} is the manager's country.",
+    "placeholders": {
+      "nation": {
+        "type": "String"
+      }
+    }
+  },
+  "yStatementKept3": "He put it on the record and it held. One for him. {nation} moves on.",
+  "@yStatementKept3": {
+    "description": "Y feed post: something the manager said on the record at a press conference came true (a promised win, a job staked on the next games, a player backed or blamed in public), wording 3 (tone order: generous, neutral, sour). {nation} is the manager's country.",
+    "placeholders": {
+      "nation": {
+        "type": "String"
+      }
+    }
+  },
+  "yStatementKept4": "He got one right. {nation}, do not get used to it.",
+  "@yStatementKept4": {
+    "description": "Y feed post: something the manager said on the record at a press conference came true (a promised win, a job staked on the next games, a player backed or blamed in public), wording 4 (tone order: generous, neutral, sour). {nation} is the manager's country.",
+    "placeholders": {
+      "nation": {
+        "type": "String"
+      }
+    }
+  },
+  "yStatementKept5": "Even a stopped clock is right twice a day. {nation} got lucky this time.",
+  "@yStatementKept5": {
+    "description": "Y feed post: something the manager said on the record at a press conference came true (a promised win, a job staked on the next games, a player backed or blamed in public), wording 5 (tone order: generous, neutral, sour). {nation} is the manager's country.",
+    "placeholders": {
+      "nation": {
+        "type": "String"
+      }
+    }
+  },
+  "yStatementBroken0": "He said it and it did not come off. Still with him. {nation} goes again.",
+  "@yStatementBroken0": {
+    "description": "Y feed post: something the manager said on the record at a press conference did not come true (a promised win, a job staked on the next games, a player backed or blamed in public), wording 0 (tone order: generous, neutral, sour). {nation} is the manager's country.",
+    "placeholders": {
+      "nation": {
+        "type": "String"
+      }
+    }
+  },
+  "yStatementBroken1": "{nation}: he promised more than we got, but I would rather a manager who backs himself.",
+  "@yStatementBroken1": {
+    "description": "Y feed post: something the manager said on the record at a press conference did not come true (a promised win, a job staked on the next games, a player backed or blamed in public), wording 1 (tone order: generous, neutral, sour). {nation} is the manager's country.",
+    "placeholders": {
+      "nation": {
+        "type": "String"
+      }
+    }
+  },
+  "yStatementBroken2": "{nation}: he said it on the record and it did not happen. People will remember.",
+  "@yStatementBroken2": {
+    "description": "Y feed post: something the manager said on the record at a press conference did not come true (a promised win, a job staked on the next games, a player backed or blamed in public), wording 2 (tone order: generous, neutral, sour). {nation} is the manager's country.",
+    "placeholders": {
+      "nation": {
+        "type": "String"
+      }
+    }
+  },
+  "yStatementBroken3": "Big words, nothing behind them. {nation}: next time, say less.",
+  "@yStatementBroken3": {
+    "description": "Y feed post: something the manager said on the record at a press conference did not come true (a promised win, a job staked on the next games, a player backed or blamed in public), wording 3 (tone order: generous, neutral, sour). {nation} is the manager's country.",
+    "placeholders": {
+      "nation": {
+        "type": "String"
+      }
+    }
+  },
+  "yStatementBroken4": "He stood there and told us. Then this. {nation} deserves better than talk.",
+  "@yStatementBroken4": {
+    "description": "Y feed post: something the manager said on the record at a press conference did not come true (a promised win, a job staked on the next games, a player backed or blamed in public), wording 4 (tone order: generous, neutral, sour). {nation} is the manager's country.",
+    "placeholders": {
+      "nation": {
+        "type": "String"
+      }
+    }
+  },
+  "yStatementBroken5": "His word is worth nothing now. Write it down, {nation}.",
+  "@yStatementBroken5": {
+    "description": "Y feed post: something the manager said on the record at a press conference did not come true (a promised win, a job staked on the next games, a player backed or blamed in public), wording 5 (tone order: generous, neutral, sour). {nation} is the manager's country.",
+    "placeholders": {
+      "nation": {
+        "type": "String"
+      }
+    }
   }
 }

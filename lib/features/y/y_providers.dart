@@ -14,6 +14,7 @@ import 'package:fnm/features/ranking/world_ranking_providers.dart';
 import 'package:fnm/domain/services/achievements/board_satisfaction.dart';
 import 'package:fnm/features/achievements/achievement_providers.dart';
 import 'package:fnm/features/career/career_providers.dart';
+import 'package:fnm/features/press/press_providers.dart';
 import 'package:fnm/features/press/story_providers.dart';
 import 'package:fnm/features/squad/grievance_providers.dart';
 
@@ -389,6 +390,23 @@ final AutoDisposeFutureProviderFamily<YTimeline, int> yFeedProvider =
             opponent: them,
             date: career.inGameDate,
             key: '${s.topic.name}:${s.nationId}:${s.count}',
+            nation: nation,
+            seed: career.rngSeed,
+            standing: mood,
+            history: standingsSoFar,
+          ),
+        );
+      }
+
+      // And what he said on the record, once it has been judged. Dated the
+      // day it was settled, so it sits next to the match that decided it.
+      for (final s in await ref.watch(
+        pressStatementsProvider(careerId).future,
+      )) {
+        if (s.nationId != career.nationId) continue;
+        posts.addAll(
+          YFeed.forStatement(
+            s: s,
             nation: nation,
             seed: career.rngSeed,
             standing: mood,
