@@ -11608,7 +11608,7 @@
   "@tourThirdsUneven": {
     "description": "Best-third-placed table: why some results are dropped."
   },
-  "careerExportSave": "Export this save",
+  "careerExportSave": "Back up this save",
   "@careerExportSave": {
     "description": "Labelled action on a save tile: writes this one career to a file and hands it to the share sheet."
   },
@@ -13984,6 +13984,808 @@
     "description": "Y post: the side threw away a two-goal half-time lead, wording 5 (tone order: generous, neutral, sour). CZECH DIFFERS ON PURPOSE: it is built on \"Csaplarova past\", a Czech in-joke about a side two goals down at half time being exactly where it wants to be. The English says the same thing about the same match with no trace of the joke, because an English reader has never heard of it. The two Y templates and the two press questions on this afternoon are the only place in the app where the languages deliberately differ.",
     "placeholders": {
       "opponent": {
+        "type": "String"
+      }
+    }
+  },
+  "cycleBackupDone": "Career backed up to the FNM folder on this phone. Uninstalling the app removes it: to keep a copy elsewhere, use Back up this save on the saves screen.",
+  "@cycleBackupDone": {
+    "description": "Snackbar after the automatic end-of-cycle career backup."
+  },
+  "cycleBackupFailed": "Could not back up the career this time.",
+  "@cycleBackupFailed": {
+    "description": "Snackbar when the automatic end-of-cycle backup fails."
+  },
+  "pressMomentBigWinWarm1": "A night to remember against {opponent}. How proud are you of this group?",
+  "@pressMomentBigWinWarm1": {
+    "description": "Press conference: opening question after a heroic win, warm reporter. {opponent} is the nation just played.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      }
+    }
+  },
+  "pressMomentBigWinWarm2": "{opponent} could not live with you. Is this the side you always believed you had?",
+  "@pressMomentBigWinWarm2": {
+    "description": "Press conference: opening question after a heroic win, warm reporter. {opponent} is the nation just played.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      }
+    }
+  },
+  "pressMomentBigWinNeutral1": "A big win over {opponent}. What made the difference tonight?",
+  "@pressMomentBigWinNeutral1": {
+    "description": "Press conference: opening question after a heroic win, neutral reporter. {opponent} is the nation just played.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      }
+    }
+  },
+  "pressMomentBigWinNeutral2": "{opponent} beaten, and comfortably. Where did you win it?",
+  "@pressMomentBigWinNeutral2": {
+    "description": "Press conference: opening question after a heroic win, neutral reporter. {opponent} is the nation just played.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      }
+    }
+  },
+  "pressMomentBigWinHostile1": "A good win over {opponent}. One good night: why should anyone believe it will last?",
+  "@pressMomentBigWinHostile1": {
+    "description": "Press conference: opening question after a heroic win, hostile reporter. {opponent} is the nation just played.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      }
+    }
+  },
+  "pressMomentBigWinHostile2": "A fine result against {opponent}. Was that your plan, or did the players work it out themselves?",
+  "@pressMomentBigWinHostile2": {
+    "description": "Press conference: opening question after a heroic win, hostile reporter. {opponent} is the nation just played.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      }
+    }
+  },
+  "pressMomentBigLossWarm1": "A hard night against {opponent}. What do you say to the players after one like that?",
+  "@pressMomentBigLossWarm1": {
+    "description": "Press conference: opening question after a humiliating loss, warm reporter. {opponent} is the nation just played.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      }
+    }
+  },
+  "pressMomentBigLossWarm2": "Nobody saw that coming against {opponent}. Was it just one of those nights?",
+  "@pressMomentBigLossWarm2": {
+    "description": "Press conference: opening question after a humiliating loss, warm reporter. {opponent} is the nation just played.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      }
+    }
+  },
+  "pressMomentBigLossNeutral1": "That was a chastening night against {opponent}. What went wrong?",
+  "@pressMomentBigLossNeutral1": {
+    "description": "Press conference: opening question after a humiliating loss, neutral reporter. {opponent} is the nation just played.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      }
+    }
+  },
+  "pressMomentBigLossNeutral2": "{opponent} took you apart. Is this squad good enough?",
+  "@pressMomentBigLossNeutral2": {
+    "description": "Press conference: opening question after a humiliating loss, neutral reporter. {opponent} is the nation just played.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      }
+    }
+  },
+  "pressMomentBigLossHostile1": "You were second to everything against {opponent}. How did you let it get that bad?",
+  "@pressMomentBigLossHostile1": {
+    "description": "Press conference: opening question after a humiliating loss, hostile reporter. {opponent} is the nation just played.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      }
+    }
+  },
+  "pressMomentBigLossHostile2": "{opponent} scored at will. Where was the plan tonight?",
+  "@pressMomentBigLossHostile2": {
+    "description": "Press conference: opening question after a humiliating loss, hostile reporter. {opponent} is the nation just played.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      }
+    }
+  },
+  "pressMomentCrisisWarm1": "Another one gets away, this time against {opponent}. How do you turn this run around?",
+  "@pressMomentCrisisWarm1": {
+    "description": "Press conference: opening question in a crisis (may mention his job), warm reporter. {opponent} is the nation just played.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      }
+    }
+  },
+  "pressMomentCrisisWarm2": "The results have dried up, and {opponent} made it worse. Do you still believe in this group?",
+  "@pressMomentCrisisWarm2": {
+    "description": "Press conference: opening question in a crisis (may mention his job), warm reporter. {opponent} is the nation just played.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      }
+    }
+  },
+  "pressMomentCrisisNeutral1": "No win again, now against {opponent}, and the board are watching. Is your job safe?",
+  "@pressMomentCrisisNeutral1": {
+    "description": "Press conference: opening question in a crisis (may mention his job), neutral reporter. {opponent} is the nation just played.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      }
+    }
+  },
+  "pressMomentCrisisNeutral2": "After {opponent}, the run is getting long. Are you worried about your future?",
+  "@pressMomentCrisisNeutral2": {
+    "description": "Press conference: opening question in a crisis (may mention his job), neutral reporter. {opponent} is the nation just played.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      }
+    }
+  },
+  "pressMomentCrisisHostile1": "{opponent} now as well. Your predecessor was sacked on a run like this. Why should you survive it?",
+  "@pressMomentCrisisHostile1": {
+    "description": "Press conference: opening question in a crisis (may mention his job), hostile reporter. {opponent} is the nation just played.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      }
+    }
+  },
+  "pressMomentCrisisHostile2": "After another night like {opponent}, every phone-in wants you out. Would you step down if the board asked?",
+  "@pressMomentCrisisHostile2": {
+    "description": "Press conference: opening question in a crisis (may mention his job), hostile reporter. {opponent} is the nation just played.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      }
+    }
+  },
+  "pressMomentJobVerdictWarm1": "You put your job on the line, and after {opponent} it has not gone your way. How are you holding up?",
+  "@pressMomentJobVerdictWarm1": {
+    "description": "Press conference: opening question after his 'judge me on the next three' promise failed (may mention his job), warm reporter. {opponent} is the nation just played.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      }
+    }
+  },
+  "pressMomentJobVerdictWarm2": "The three matches are done, the last against {opponent}. You set the test yourself. What do you make of the verdict?",
+  "@pressMomentJobVerdictWarm2": {
+    "description": "Press conference: opening question after his 'judge me on the next three' promise failed (may mention his job), warm reporter. {opponent} is the nation just played.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      }
+    }
+  },
+  "pressMomentJobVerdictNeutral1": "You told us to judge you on the next three. After {opponent}, we have. Is your job still yours?",
+  "@pressMomentJobVerdictNeutral1": {
+    "description": "Press conference: opening question after his 'judge me on the next three' promise failed (may mention his job), neutral reporter. {opponent} is the nation just played.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      }
+    }
+  },
+  "pressMomentJobVerdictNeutral2": "Three matches, the last against {opponent}, and not what you promised. Have you spoken to the board about your future?",
+  "@pressMomentJobVerdictNeutral2": {
+    "description": "Press conference: opening question after his 'judge me on the next three' promise failed (may mention his job), neutral reporter. {opponent} is the nation just played.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      }
+    }
+  },
+  "pressMomentJobVerdictHostile1": "You set the test yourself and failed it against {opponent}. Are you going to resign?",
+  "@pressMomentJobVerdictHostile1": {
+    "description": "Press conference: opening question after his 'judge me on the next three' promise failed (may mention his job), hostile reporter. {opponent} is the nation just played.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      }
+    }
+  },
+  "pressMomentJobVerdictHostile2": "Your words, not ours: judge me on the next three. After {opponent}, why are you still sitting there?",
+  "@pressMomentJobVerdictHostile2": {
+    "description": "Press conference: opening question after his 'judge me on the next three' promise failed (may mention his job), hostile reporter. {opponent} is the nation just played.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      }
+    }
+  },
+  "pressBeatWhoToBlameWarm1": "You want more from them. Anyone in particular?",
+  "@pressBeatWhoToBlameWarm1": {
+    "description": "Press conference: after he demanded more, asking who he means, warm reporter."
+  },
+  "pressBeatWhoToBlameWarm2": "You have set the bar high. Who has to step up first?",
+  "@pressBeatWhoToBlameWarm2": {
+    "description": "Press conference: after he demanded more, asking who he means, warm reporter."
+  },
+  "pressBeatWhoToBlameNeutral1": "You say some of them have to look at themselves. Who do you mean?",
+  "@pressBeatWhoToBlameNeutral1": {
+    "description": "Press conference: after he demanded more, asking who he means, neutral reporter."
+  },
+  "pressBeatWhoToBlameNeutral2": "Not good enough, you say. Who are you talking about?",
+  "@pressBeatWhoToBlameNeutral2": {
+    "description": "Press conference: after he demanded more, asking who he means, neutral reporter."
+  },
+  "pressBeatWhoToBlameHostile1": "You keep it vague. Will you name names, or does it come back to you?",
+  "@pressBeatWhoToBlameHostile1": {
+    "description": "Press conference: after he demanded more, asking who he means, hostile reporter."
+  },
+  "pressBeatWhoToBlameHostile2": "Every week it is somebody else's fault. Whose is it this time?",
+  "@pressBeatWhoToBlameHostile2": {
+    "description": "Press conference: after he demanded more, asking who he means, hostile reporter."
+  },
+  "pressBeatIfYouDontWarm1": "Brave words. And if the next one does not go your way?",
+  "@pressBeatIfYouDontWarm1": {
+    "description": "Press conference: after he promised to win the next match, asking what happens if he does not (never mention his job), warm reporter."
+  },
+  "pressBeatIfYouDontWarm2": "The country will hold you to that. What if it does not come off?",
+  "@pressBeatIfYouDontWarm2": {
+    "description": "Press conference: after he promised to win the next match, asking what happens if he does not (never mention his job), warm reporter."
+  },
+  "pressBeatIfYouDontNeutral1": "And if you don't win it? What then?",
+  "@pressBeatIfYouDontNeutral1": {
+    "description": "Press conference: after he promised to win the next match, asking what happens if he does not (never mention his job), neutral reporter."
+  },
+  "pressBeatIfYouDontNeutral2": "You've said it now. What happens if you're wrong?",
+  "@pressBeatIfYouDontNeutral2": {
+    "description": "Press conference: after he promised to win the next match, asking what happens if he does not (never mention his job), neutral reporter."
+  },
+  "pressBeatIfYouDontHostile1": "We have heard promises in this room before. What do you owe the supporters if this one breaks too?",
+  "@pressBeatIfYouDontHostile1": {
+    "description": "Press conference: after he promised to win the next match, asking what happens if he does not (never mention his job), hostile reporter."
+  },
+  "pressBeatIfYouDontHostile2": "And when it doesn't happen, what will the excuse be?",
+  "@pressBeatIfYouDontHostile2": {
+    "description": "Press conference: after he promised to win the next match, asking what happens if he does not (never mention his job), hostile reporter."
+  },
+  "pressBeatFollowUpWarm1": "One more, if you have it in you. What does this group still need to work on?",
+  "@pressBeatFollowUpWarm1": {
+    "description": "Press conference: a follow-up question pressing for more, warm reporter."
+  },
+  "pressBeatFollowUpWarm2": "When the dust settles, what do you take from tonight into the next match?",
+  "@pressBeatFollowUpWarm2": {
+    "description": "Press conference: a follow-up question pressing for more, warm reporter."
+  },
+  "pressBeatFollowUpNeutral1": "Let's go a little deeper. What has to improve before the next match?",
+  "@pressBeatFollowUpNeutral1": {
+    "description": "Press conference: a follow-up question pressing for more, neutral reporter."
+  },
+  "pressBeatFollowUpNeutral2": "Looking past the scoreline: is this squad where you want it?",
+  "@pressBeatFollowUpNeutral2": {
+    "description": "Press conference: a follow-up question pressing for more, neutral reporter."
+  },
+  "pressBeatFollowUpHostile1": "Plenty of words, not much said. What actually changes from here?",
+  "@pressBeatFollowUpHostile1": {
+    "description": "Press conference: a follow-up question pressing for more, hostile reporter."
+  },
+  "pressBeatFollowUpHostile2": "The supporters want a straight answer. Is this team good enough, yes or no?",
+  "@pressBeatFollowUpHostile2": {
+    "description": "Press conference: a follow-up question pressing for more, hostile reporter."
+  },
+  "pressBeatStandoutWarm1": "{player} was outstanding tonight. How far can he go?",
+  "@pressBeatStandoutWarm1": {
+    "description": "Press conference: question about the standout player of a big win, warm reporter. {player} is the player.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pressBeatStandoutWarm2": "{player} is in every headline tonight. Did you see that coming?",
+  "@pressBeatStandoutWarm2": {
+    "description": "Press conference: question about the standout player of a big win, warm reporter. {player} is the player.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pressBeatStandoutNeutral1": "{player} stood out. What did you ask of him tonight?",
+  "@pressBeatStandoutNeutral1": {
+    "description": "Press conference: question about the standout player of a big win, neutral reporter. {player} is the player.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pressBeatStandoutNeutral2": "Was {player} the difference tonight?",
+  "@pressBeatStandoutNeutral2": {
+    "description": "Press conference: question about the standout player of a big win, neutral reporter. {player} is the player.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pressBeatStandoutHostile1": "Without {player} that is a different story. Is this a team, or one player?",
+  "@pressBeatStandoutHostile1": {
+    "description": "Press conference: question about the standout player of a big win, hostile reporter. {player} is the player.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pressBeatStandoutHostile2": "{player} was brilliant. Your doing, or his?",
+  "@pressBeatStandoutHostile2": {
+    "description": "Press conference: question about the standout player of a big win, hostile reporter. {player} is the player.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pressBeatStrugglerWarm1": "{player} had a hard night. Is he carrying a knock?",
+  "@pressBeatStrugglerWarm1": {
+    "description": "Press conference: question about the player who struggled, warm reporter. {player} is the player.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pressBeatStrugglerWarm2": "{player} did not have his night. Will you put an arm round him?",
+  "@pressBeatStrugglerWarm2": {
+    "description": "Press conference: question about the player who struggled, warm reporter. {player} is the player.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pressBeatStrugglerNeutral1": "{player} struggled tonight. Does he keep his place?",
+  "@pressBeatStrugglerNeutral1": {
+    "description": "Press conference: question about the player who struggled, neutral reporter. {player} is the player.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pressBeatStrugglerNeutral2": "{player} looked off the pace. What did you make of his game?",
+  "@pressBeatStrugglerNeutral2": {
+    "description": "Press conference: question about the player who struggled, neutral reporter. {player} is the player.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pressBeatStrugglerHostile1": "{player} was a passenger again. Why do you keep picking him?",
+  "@pressBeatStrugglerHostile1": {
+    "description": "Press conference: question about the player who struggled, hostile reporter. {player} is the player.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pressBeatStrugglerHostile2": "Everyone could see {player} was not at it. Everyone except the bench?",
+  "@pressBeatStrugglerHostile2": {
+    "description": "Press conference: question about the player who struggled, hostile reporter. {player} is the player.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pressThrowbackWinNextKeptWarm": "You said you would win the next one, and you did. Does it feel good to be right?",
+  "@pressThrowbackWinNextKeptWarm": {
+    "description": "Press conference: throwback to his promise to win the next match, which came true; warm reporter."
+  },
+  "pressThrowbackWinNextKeptNeutral": "You promised a win in the next match and delivered it. Confidence, or bravado?",
+  "@pressThrowbackWinNextKeptNeutral": {
+    "description": "Press conference: throwback to his promise to win the next match, which came true; neutral reporter."
+  },
+  "pressThrowbackWinNextKeptHostile": "You said you would win the next one, and you did. Luck, or are we meant to start listening?",
+  "@pressThrowbackWinNextKeptHostile": {
+    "description": "Press conference: throwback to his promise to win the next match, which came true; hostile reporter."
+  },
+  "pressThrowbackWinNextBrokenWarm": "You told us you would win that one. It did not happen. What went wrong?",
+  "@pressThrowbackWinNextBrokenWarm": {
+    "description": "Press conference: throwback to his promise to win the next match, which failed; warm reporter."
+  },
+  "pressThrowbackWinNextBrokenNeutral": "You said you'd win the next one. You didn't. Why should we believe the next promise?",
+  "@pressThrowbackWinNextBrokenNeutral": {
+    "description": "Press conference: throwback to his promise to win the next match, which failed; neutral reporter."
+  },
+  "pressThrowbackWinNextBrokenHostile": "You said you'd win the next one. You didn't. Do your words still mean anything in this room?",
+  "@pressThrowbackWinNextBrokenHostile": {
+    "description": "Press conference: throwback to his promise to win the next match, which failed; hostile reporter."
+  },
+  "pressThrowbackJobKeptWarm": "You asked to be judged on three matches, and you passed. Vindicated?",
+  "@pressThrowbackJobKeptWarm": {
+    "description": "Press conference: throwback to his 'judge me on the next three' promise, which came true; warm reporter."
+  },
+  "pressThrowbackJobKeptNeutral": "Judge me on the next three, you said. We did, and the results came. What did that test teach you?",
+  "@pressThrowbackJobKeptNeutral": {
+    "description": "Press conference: throwback to his 'judge me on the next three' promise, which came true; neutral reporter."
+  },
+  "pressThrowbackJobKeptHostile": "You gave yourself three matches and got through them. Was the test ever that hard?",
+  "@pressThrowbackJobKeptHostile": {
+    "description": "Press conference: throwback to his 'judge me on the next three' promise, which came true; hostile reporter."
+  },
+  "pressThrowbackJobBrokenWarm": "You asked to be judged on three matches. They did not go your way. What have you learned?",
+  "@pressThrowbackJobBrokenWarm": {
+    "description": "Press conference: throwback to his 'judge me on the next three' promise, which failed; warm reporter."
+  },
+  "pressThrowbackJobBrokenNeutral": "You said judge me on the next three. The three are gone, and so is the benefit of the doubt. What now?",
+  "@pressThrowbackJobBrokenNeutral": {
+    "description": "Press conference: throwback to his 'judge me on the next three' promise, which failed; neutral reporter."
+  },
+  "pressThrowbackJobBrokenHostile": "You set the test and failed it. Why should anyone take your word now?",
+  "@pressThrowbackJobBrokenHostile": {
+    "description": "Press conference: throwback to his 'judge me on the next three' promise, which failed; hostile reporter."
+  },
+  "pressThrowbackBackKeptWarm": "You backed {player} when others would not. He delivered. Some of the credit yours?",
+  "@pressThrowbackBackKeptWarm": {
+    "description": "Press conference: throwback to his backing of {player}, which came true; warm reporter.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pressThrowbackBackKeptNeutral": "You backed {player}. He delivered. Faith, or knowledge?",
+  "@pressThrowbackBackKeptNeutral": {
+    "description": "Press conference: throwback to his backing of {player}, which came true; neutral reporter.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pressThrowbackBackKeptHostile": "You backed {player}, and for once it paid off. Will you be that sure next time?",
+  "@pressThrowbackBackKeptHostile": {
+    "description": "Press conference: throwback to his backing of {player}, which came true; hostile reporter.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pressThrowbackBackBrokenWarm": "You stood by {player}, and it has not worked out. Do you still believe in him?",
+  "@pressThrowbackBackBrokenWarm": {
+    "description": "Press conference: throwback to his backing of {player}, which failed; warm reporter.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pressThrowbackBackBrokenNeutral": "You backed {player}. He has not repaid it. Was that a mistake?",
+  "@pressThrowbackBackBrokenNeutral": {
+    "description": "Press conference: throwback to his backing of {player}, which failed; neutral reporter.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pressThrowbackBackBrokenHostile": "Your judgement or your loyalty: which one failed with {player}?",
+  "@pressThrowbackBackBrokenHostile": {
+    "description": "Press conference: throwback to his backing of {player}, which failed; hostile reporter.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pressThrowbackBlameKeptWarm": "You were hard on {player}, and the matches since have proved you right. Any satisfaction in that?",
+  "@pressThrowbackBlameKeptWarm": {
+    "description": "Press conference: throwback to his public criticism of {player}, which was proved right (the player stayed poor); warm reporter.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pressThrowbackBlameKeptNeutral": "You called {player} out, and he has not answered. Is there a way back for him?",
+  "@pressThrowbackBlameKeptNeutral": {
+    "description": "Press conference: throwback to his public criticism of {player}, which was proved right (the player stayed poor); neutral reporter.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pressThrowbackBlameKeptHostile": "You hung {player} out to dry and he has not recovered. Did you break him?",
+  "@pressThrowbackBlameKeptHostile": {
+    "description": "Press conference: throwback to his public criticism of {player}, which was proved right (the player stayed poor); hostile reporter.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pressThrowbackBlameBrokenWarm": "You called {player} out, and he answered you on the pitch. Was that the idea all along?",
+  "@pressThrowbackBlameBrokenWarm": {
+    "description": "Press conference: throwback to his public criticism of {player}, which was proved wrong (the player responded); warm reporter.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pressThrowbackBlameBrokenNeutral": "You blamed {player}, and since then he has been one of your best. Do you owe him an apology?",
+  "@pressThrowbackBlameBrokenNeutral": {
+    "description": "Press conference: throwback to his public criticism of {player}, which was proved wrong (the player responded); neutral reporter.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pressThrowbackBlameBrokenHostile": "You threw {player} under the bus, and he has been your best player since. Will you apologise?",
+  "@pressThrowbackBlameBrokenHostile": {
+    "description": "Press conference: throwback to his public criticism of {player}, which was proved wrong (the player responded); hostile reporter.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pressReplyCreditPlayers1": "These players gave me everything. I would not swap a single one of them.",
+  "@pressReplyCreditPlayers1": {
+    "description": "Press conference: the manager's answer (CreditPlayers), variant 1."
+  },
+  "pressReplyCreditPlayers2": "Nobody works harder than this group. I'll defend them all day.",
+  "@pressReplyCreditPlayers2": {
+    "description": "Press conference: the manager's answer (CreditPlayers), variant 2."
+  },
+  "pressReplyCreditPlayers3": "You won't hear a word against my players from this seat.",
+  "@pressReplyCreditPlayers3": {
+    "description": "Press conference: the manager's answer (CreditPlayers), variant 3."
+  },
+  "pressReplyCreditPlayers4": "The players deserve the credit, not me. Write about them.",
+  "@pressReplyCreditPlayers4": {
+    "description": "Press conference: the manager's answer (CreditPlayers), variant 4."
+  },
+  "pressReplyTakeResponsibility1": "That one is on me. I picked the side and I set them up.",
+  "@pressReplyTakeResponsibility1": {
+    "description": "Press conference: the manager's answer (TakeResponsibility), variant 1."
+  },
+  "pressReplyTakeResponsibility2": "Judge me, not them. It's my team and my responsibility.",
+  "@pressReplyTakeResponsibility2": {
+    "description": "Press conference: the manager's answer (TakeResponsibility), variant 2."
+  },
+  "pressReplyTakeResponsibility3": "If you want somebody to blame, I'm sitting right here.",
+  "@pressReplyTakeResponsibility3": {
+    "description": "Press conference: the manager's answer (TakeResponsibility), variant 3."
+  },
+  "pressReplyTakeResponsibility4": "The responsibility is mine. Leave the players out of it.",
+  "@pressReplyTakeResponsibility4": {
+    "description": "Press conference: the manager's answer (TakeResponsibility), variant 4."
+  },
+  "pressReplyDemandMore1": "I want more. Some of them know exactly what I mean.",
+  "@pressReplyDemandMore1": {
+    "description": "Press conference: the manager's answer (DemandMore), variant 1."
+  },
+  "pressReplyDemandMore2": "Effort isn't enough at this level. I want more, and I've told them so.",
+  "@pressReplyDemandMore2": {
+    "description": "Press conference: the manager's answer (DemandMore), variant 2."
+  },
+  "pressReplyDemandMore3": "I expect more from every one of them, starting tomorrow.",
+  "@pressReplyDemandMore3": {
+    "description": "Press conference: the manager's answer (DemandMore), variant 3."
+  },
+  "pressReplyDemandMore4": "Some of them have to look at themselves. I'm not satisfied.",
+  "@pressReplyDemandMore4": {
+    "description": "Press conference: the manager's answer (DemandMore), variant 4."
+  },
+  "pressReplyPromiseWinNext1": "We will win the next one. You can write that down.",
+  "@pressReplyPromiseWinNext1": {
+    "description": "Press conference: the manager's answer (PromiseWinNext), variant 1."
+  },
+  "pressReplyPromiseWinNext2": "Mark my words: we win the next match.",
+  "@pressReplyPromiseWinNext2": {
+    "description": "Press conference: the manager's answer (PromiseWinNext), variant 2."
+  },
+  "pressReplyPromiseWinNext3": "Next game, we win. I'm saying it here so you can hold me to it.",
+  "@pressReplyPromiseWinNext3": {
+    "description": "Press conference: the manager's answer (PromiseWinNext), variant 3."
+  },
+  "pressReplyPromiseWinNext4": "I'm sure of this team. We win the next match.",
+  "@pressReplyPromiseWinNext4": {
+    "description": "Press conference: the manager's answer (PromiseWinNext), variant 4."
+  },
+  "pressReplyJobOnTheLine1": "Judge me on the next three matches. That's fair.",
+  "@pressReplyJobOnTheLine1": {
+    "description": "Press conference: the manager's answer (JobOnTheLine), variant 1."
+  },
+  "pressReplyJobOnTheLine2": "Give me three games. If it isn't right by then, judge me on it.",
+  "@pressReplyJobOnTheLine2": {
+    "description": "Press conference: the manager's answer (JobOnTheLine), variant 2."
+  },
+  "pressReplyJobOnTheLine3": "The next three will show whether I'm the right man. Hold me to that.",
+  "@pressReplyJobOnTheLine3": {
+    "description": "Press conference: the manager's answer (JobOnTheLine), variant 3."
+  },
+  "pressReplyJobOnTheLine4": "Three matches. Then write whatever you like about me.",
+  "@pressReplyJobOnTheLine4": {
+    "description": "Press conference: the manager's answer (JobOnTheLine), variant 4."
+  },
+  "pressReplyDeflect1": "We take it one game at a time. Nothing more to add.",
+  "@pressReplyDeflect1": {
+    "description": "Press conference: the manager's answer (Deflect), variant 1."
+  },
+  "pressReplyDeflect2": "I'm not going to make headlines for you today.",
+  "@pressReplyDeflect2": {
+    "description": "Press conference: the manager's answer (Deflect), variant 2."
+  },
+  "pressReplyDeflect3": "Next game. That's all I'm thinking about.",
+  "@pressReplyDeflect3": {
+    "description": "Press conference: the manager's answer (Deflect), variant 3."
+  },
+  "pressReplyDeflect4": "What I think stays in the dressing room.",
+  "@pressReplyDeflect4": {
+    "description": "Press conference: the manager's answer (Deflect), variant 4."
+  },
+  "pressReplyTakeCredit1": "I said it because I believed it, and I was right.",
+  "@pressReplyTakeCredit1": {
+    "description": "Press conference: the manager's answer (TakeCredit), variant 1."
+  },
+  "pressReplyTakeCredit2": "I read it correctly. That's what I'm here for.",
+  "@pressReplyTakeCredit2": {
+    "description": "Press conference: the manager's answer (TakeCredit), variant 2."
+  },
+  "pressReplyTakeCredit3": "Call it judgement. I knew what I was saying.",
+  "@pressReplyTakeCredit3": {
+    "description": "Press conference: the manager's answer (TakeCredit), variant 3."
+  },
+  "pressReplyTakeCredit4": "I made the call and it came off. I'll take that.",
+  "@pressReplyTakeCredit4": {
+    "description": "Press conference: the manager's answer (TakeCredit), variant 4."
+  },
+  "pressReplyStandByIt1": "I said what I believed. I stand by it.",
+  "@pressReplyStandByIt1": {
+    "description": "Press conference: the manager's answer (StandByIt), variant 1."
+  },
+  "pressReplyStandByIt2": "I don't take back a word of it.",
+  "@pressReplyStandByIt2": {
+    "description": "Press conference: the manager's answer (StandByIt), variant 2."
+  },
+  "pressReplyStandByIt3": "Same answer as then. I meant it, and I still do.",
+  "@pressReplyStandByIt3": {
+    "description": "Press conference: the manager's answer (StandByIt), variant 3."
+  },
+  "pressReplyStandByIt4": "I'd say it again tomorrow.",
+  "@pressReplyStandByIt4": {
+    "description": "Press conference: the manager's answer (StandByIt), variant 4."
+  },
+  "pressReplyAdmitMistake1": "I got that one wrong. I'll own it.",
+  "@pressReplyAdmitMistake1": {
+    "description": "Press conference: the manager's answer (AdmitMistake), variant 1."
+  },
+  "pressReplyAdmitMistake2": "Fair enough, I misjudged it. I'll learn from it.",
+  "@pressReplyAdmitMistake2": {
+    "description": "Press conference: the manager's answer (AdmitMistake), variant 2."
+  },
+  "pressReplyAdmitMistake3": "I was wrong, and I can say so.",
+  "@pressReplyAdmitMistake3": {
+    "description": "Press conference: the manager's answer (AdmitMistake), variant 3."
+  },
+  "pressReplyAdmitMistake4": "That call didn't work, and it was mine.",
+  "@pressReplyAdmitMistake4": {
+    "description": "Press conference: the manager's answer (AdmitMistake), variant 4."
+  },
+  "pressReplyBackPlayer1": "{player} has my full backing. He'll come good.",
+  "@pressReplyBackPlayer1": {
+    "description": "Press conference: the manager's answer (BackPlayer), variant 1. {player} is the player.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pressReplyBackPlayer2": "I believe in {player}, and he'll show you why.",
+  "@pressReplyBackPlayer2": {
+    "description": "Press conference: the manager's answer (BackPlayer), variant 2. {player} is the player.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pressReplyBackPlayer3": "You won't hear a word against {player} from me. He'll deliver.",
+  "@pressReplyBackPlayer3": {
+    "description": "Press conference: the manager's answer (BackPlayer), variant 3. {player} is the player.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pressReplyBackPlayer4": "{player} stays in my plans. Watch what he does next.",
+  "@pressReplyBackPlayer4": {
+    "description": "Press conference: the manager's answer (BackPlayer), variant 4. {player} is the player.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pressReplyBlamePlayer1": "{player} let us down tonight, and he knows it.",
+  "@pressReplyBlamePlayer1": {
+    "description": "Press conference: the manager's answer (BlamePlayer), variant 1. {player} is the player.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pressReplyBlamePlayer2": "I expected far more from {player}. He has to answer that.",
+  "@pressReplyBlamePlayer2": {
+    "description": "Press conference: the manager's answer (BlamePlayer), variant 2. {player} is the player.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pressReplyBlamePlayer3": "{player} wasn't at the level. I'll say that publicly.",
+  "@pressReplyBlamePlayer3": {
+    "description": "Press conference: the manager's answer (BlamePlayer), variant 3. {player} is the player.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pressReplyBlamePlayer4": "That wasn't good enough from {player}, and he'll hear it from me.",
+  "@pressReplyBlamePlayer4": {
+    "description": "Press conference: the manager's answer (BlamePlayer), variant 4. {player} is the player.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pressOnRecordWinNext": "On the record: you will win the next match.",
+  "@pressOnRecordWinNext": {
+    "description": "Press conference: note that the answer is on the record and will be judged."
+  },
+  "pressOnRecordJob": "On the record: judge you on the next three.",
+  "@pressOnRecordJob": {
+    "description": "Press conference: note that the answer is on the record and will be judged."
+  },
+  "pressOnRecordBack": "On the record: backing {player}.",
+  "@pressOnRecordBack": {
+    "description": "Press conference: note that the answer is on the record and will be judged. {player} is the player.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pressOnRecordBlame": "On the record: {player} let you down.",
+  "@pressOnRecordBlame": {
+    "description": "Press conference: note that the answer is on the record and will be judged. {player} is the player.",
+    "placeholders": {
+      "player": {
         "type": "String"
       }
     }

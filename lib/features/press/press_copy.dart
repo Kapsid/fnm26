@@ -1,0 +1,370 @@
+import 'package:fnm/domain/services/press/conference.dart';
+import 'package:fnm/domain/services/press/statement.dart';
+import 'package:fnm/features/press/press_providers.dart';
+import 'package:fnm/l10n/app_localizations.dart';
+
+/// The words of a press conference: what the reporter asks, what the manager
+/// can answer, and the line that tells him an answer went on the record.
+///
+/// Every mapping is an exhaustive `switch`, so a new [BeatKind],
+/// [AnswerKind], [ConferenceReason] or [StatementKind] fails to compile here
+/// until it has copy, rather than reaching a player mute.
+
+T _pick<T>(List<T> list, int seed) => list[seed.abs() % list.length];
+
+/// The reporter's attitude to the MANAGER, read off his credibility: a room
+/// that has stopped believing him is hostile even after a win.
+enum _Tone { warm, neutral, hostile }
+
+_Tone _toneOf(CredibilityBand band) => switch (band) {
+  CredibilityBand.low => _Tone.hostile,
+  CredibilityBand.mid => _Tone.neutral,
+  CredibilityBand.high => _Tone.warm,
+};
+
+/// The question [beat] is asked with, in the room's tone for [c].
+///
+/// [playerName] fills the questions that name a player (the standout, the
+/// struggler, and a throwback to a statement about him); [opponentName] fills
+/// the opening question. [seed] picks between the two wordings of each.
+String beatQuestion(
+  AppLocalizations l,
+  Beat beat,
+  PendingConference c, {
+  required String? playerName,
+  required String opponentName,
+  required int seed,
+}) {
+  final tone = _toneOf(Credibility.band(c.credibility));
+  final player = playerName ?? '';
+  return switch (beat.kind) {
+    BeatKind.moment => _pick(
+      _moment(l, c.facts.reason, tone, opponentName),
+      seed,
+    ),
+    BeatKind.whoToBlame ||
+    BeatKind.ifYouDont ||
+    BeatKind.followUp ||
+    BeatKind.standout ||
+    BeatKind.struggler => _pick(_beat(l, beat.kind, tone, player), seed),
+    BeatKind.throwback => _throwback(
+      l,
+      c.facts.throwback!.kind,
+      _kept(c.facts.throwback!.status),
+      tone,
+      player,
+    ),
+  };
+}
+
+/// What the manager says when he picks [a]: one of four wordings by [seed].
+String answerLabel(
+  AppLocalizations l,
+  AnswerKind a, {
+  required String? playerName,
+  required int seed,
+}) {
+  final player = playerName ?? '';
+  final variants = switch (a) {
+    AnswerKind.creditPlayers => [
+      l.pressReplyCreditPlayers1,
+      l.pressReplyCreditPlayers2,
+      l.pressReplyCreditPlayers3,
+      l.pressReplyCreditPlayers4,
+    ],
+    AnswerKind.takeResponsibility => [
+      l.pressReplyTakeResponsibility1,
+      l.pressReplyTakeResponsibility2,
+      l.pressReplyTakeResponsibility3,
+      l.pressReplyTakeResponsibility4,
+    ],
+    AnswerKind.demandMore => [
+      l.pressReplyDemandMore1,
+      l.pressReplyDemandMore2,
+      l.pressReplyDemandMore3,
+      l.pressReplyDemandMore4,
+    ],
+    AnswerKind.promiseWinNext => [
+      l.pressReplyPromiseWinNext1,
+      l.pressReplyPromiseWinNext2,
+      l.pressReplyPromiseWinNext3,
+      l.pressReplyPromiseWinNext4,
+    ],
+    AnswerKind.jobOnTheLine => [
+      l.pressReplyJobOnTheLine1,
+      l.pressReplyJobOnTheLine2,
+      l.pressReplyJobOnTheLine3,
+      l.pressReplyJobOnTheLine4,
+    ],
+    AnswerKind.backPlayer => [
+      l.pressReplyBackPlayer1(player),
+      l.pressReplyBackPlayer2(player),
+      l.pressReplyBackPlayer3(player),
+      l.pressReplyBackPlayer4(player),
+    ],
+    AnswerKind.blamePlayer => [
+      l.pressReplyBlamePlayer1(player),
+      l.pressReplyBlamePlayer2(player),
+      l.pressReplyBlamePlayer3(player),
+      l.pressReplyBlamePlayer4(player),
+    ],
+    AnswerKind.deflect => [
+      l.pressReplyDeflect1,
+      l.pressReplyDeflect2,
+      l.pressReplyDeflect3,
+      l.pressReplyDeflect4,
+    ],
+    AnswerKind.takeCredit => [
+      l.pressReplyTakeCredit1,
+      l.pressReplyTakeCredit2,
+      l.pressReplyTakeCredit3,
+      l.pressReplyTakeCredit4,
+    ],
+    AnswerKind.standByIt => [
+      l.pressReplyStandByIt1,
+      l.pressReplyStandByIt2,
+      l.pressReplyStandByIt3,
+      l.pressReplyStandByIt4,
+    ],
+    AnswerKind.admitMistake => [
+      l.pressReplyAdmitMistake1,
+      l.pressReplyAdmitMistake2,
+      l.pressReplyAdmitMistake3,
+      l.pressReplyAdmitMistake4,
+    ],
+  };
+  return _pick(variants, seed);
+}
+
+/// The note under an answer that goes on the record, or null for an answer
+/// nobody will hold against him.
+String? onRecordLine(
+  AppLocalizations l,
+  AnswerKind a, {
+  required String? playerName,
+}) {
+  final player = playerName ?? '';
+  return switch (ConferenceBuilder.statementOf(a)) {
+    StatementKind.winNext => l.pressOnRecordWinNext,
+    StatementKind.jobOnTheLine => l.pressOnRecordJob,
+    StatementKind.backPlayer => l.pressOnRecordBack(player),
+    StatementKind.blamePlayer => l.pressOnRecordBlame(player),
+    null => null,
+  };
+}
+
+/// Every question wording there is, with the reason it belongs to (moments
+/// only) and its beat kind, filled with sample names. For the copy guards.
+List<(ConferenceReason?, BeatKind, String)> allQuestionVariants(
+  AppLocalizations l,
+) {
+  const player = 'Novák';
+  const opponent = 'Brazil';
+  return [
+    for (final reason in ConferenceReason.values)
+      for (final tone in _Tone.values)
+        for (final text in _moment(l, reason, tone, opponent))
+          (reason, BeatKind.moment, text),
+    for (final kind in BeatKind.values)
+      if (kind != BeatKind.moment && kind != BeatKind.throwback)
+        for (final tone in _Tone.values)
+          for (final text in _beat(l, kind, tone, player)) (null, kind, text),
+    for (final kind in StatementKind.values)
+      for (final kept in const [true, false])
+        for (final tone in _Tone.values)
+          (null, BeatKind.throwback, _throwback(l, kind, kept, tone, player)),
+  ];
+}
+
+bool _kept(StatementStatus s) => switch (s) {
+  StatementStatus.kept => true,
+  StatementStatus.broken ||
+  StatementStatus.open ||
+  StatementStatus.lapsed => false,
+};
+
+List<String> _moment(
+  AppLocalizations l,
+  ConferenceReason reason,
+  _Tone tone,
+  String opponent,
+) => switch ((reason, tone)) {
+  (ConferenceReason.bigWin, _Tone.warm) => [
+    l.pressMomentBigWinWarm1(opponent),
+    l.pressMomentBigWinWarm2(opponent),
+  ],
+  (ConferenceReason.bigWin, _Tone.neutral) => [
+    l.pressMomentBigWinNeutral1(opponent),
+    l.pressMomentBigWinNeutral2(opponent),
+  ],
+  (ConferenceReason.bigWin, _Tone.hostile) => [
+    l.pressMomentBigWinHostile1(opponent),
+    l.pressMomentBigWinHostile2(opponent),
+  ],
+  (ConferenceReason.bigLoss, _Tone.warm) => [
+    l.pressMomentBigLossWarm1(opponent),
+    l.pressMomentBigLossWarm2(opponent),
+  ],
+  (ConferenceReason.bigLoss, _Tone.neutral) => [
+    l.pressMomentBigLossNeutral1(opponent),
+    l.pressMomentBigLossNeutral2(opponent),
+  ],
+  (ConferenceReason.bigLoss, _Tone.hostile) => [
+    l.pressMomentBigLossHostile1(opponent),
+    l.pressMomentBigLossHostile2(opponent),
+  ],
+  (ConferenceReason.crisis, _Tone.warm) => [
+    l.pressMomentCrisisWarm1(opponent),
+    l.pressMomentCrisisWarm2(opponent),
+  ],
+  (ConferenceReason.crisis, _Tone.neutral) => [
+    l.pressMomentCrisisNeutral1(opponent),
+    l.pressMomentCrisisNeutral2(opponent),
+  ],
+  (ConferenceReason.crisis, _Tone.hostile) => [
+    l.pressMomentCrisisHostile1(opponent),
+    l.pressMomentCrisisHostile2(opponent),
+  ],
+  (ConferenceReason.jobVerdict, _Tone.warm) => [
+    l.pressMomentJobVerdictWarm1(opponent),
+    l.pressMomentJobVerdictWarm2(opponent),
+  ],
+  (ConferenceReason.jobVerdict, _Tone.neutral) => [
+    l.pressMomentJobVerdictNeutral1(opponent),
+    l.pressMomentJobVerdictNeutral2(opponent),
+  ],
+  (ConferenceReason.jobVerdict, _Tone.hostile) => [
+    l.pressMomentJobVerdictHostile1(opponent),
+    l.pressMomentJobVerdictHostile2(opponent),
+  ],
+};
+
+/// The reaction and player questions. [BeatKind.moment] and
+/// [BeatKind.throwback] have copy of their own and land here empty.
+List<String> _beat(
+  AppLocalizations l,
+  BeatKind kind,
+  _Tone tone,
+  String player,
+) => switch ((kind, tone)) {
+  (BeatKind.whoToBlame, _Tone.warm) => [
+    l.pressBeatWhoToBlameWarm1,
+    l.pressBeatWhoToBlameWarm2,
+  ],
+  (BeatKind.whoToBlame, _Tone.neutral) => [
+    l.pressBeatWhoToBlameNeutral1,
+    l.pressBeatWhoToBlameNeutral2,
+  ],
+  (BeatKind.whoToBlame, _Tone.hostile) => [
+    l.pressBeatWhoToBlameHostile1,
+    l.pressBeatWhoToBlameHostile2,
+  ],
+  (BeatKind.ifYouDont, _Tone.warm) => [
+    l.pressBeatIfYouDontWarm1,
+    l.pressBeatIfYouDontWarm2,
+  ],
+  (BeatKind.ifYouDont, _Tone.neutral) => [
+    l.pressBeatIfYouDontNeutral1,
+    l.pressBeatIfYouDontNeutral2,
+  ],
+  (BeatKind.ifYouDont, _Tone.hostile) => [
+    l.pressBeatIfYouDontHostile1,
+    l.pressBeatIfYouDontHostile2,
+  ],
+  (BeatKind.followUp, _Tone.warm) => [
+    l.pressBeatFollowUpWarm1,
+    l.pressBeatFollowUpWarm2,
+  ],
+  (BeatKind.followUp, _Tone.neutral) => [
+    l.pressBeatFollowUpNeutral1,
+    l.pressBeatFollowUpNeutral2,
+  ],
+  (BeatKind.followUp, _Tone.hostile) => [
+    l.pressBeatFollowUpHostile1,
+    l.pressBeatFollowUpHostile2,
+  ],
+  (BeatKind.standout, _Tone.warm) => [
+    l.pressBeatStandoutWarm1(player),
+    l.pressBeatStandoutWarm2(player),
+  ],
+  (BeatKind.standout, _Tone.neutral) => [
+    l.pressBeatStandoutNeutral1(player),
+    l.pressBeatStandoutNeutral2(player),
+  ],
+  (BeatKind.standout, _Tone.hostile) => [
+    l.pressBeatStandoutHostile1(player),
+    l.pressBeatStandoutHostile2(player),
+  ],
+  (BeatKind.struggler, _Tone.warm) => [
+    l.pressBeatStrugglerWarm1(player),
+    l.pressBeatStrugglerWarm2(player),
+  ],
+  (BeatKind.struggler, _Tone.neutral) => [
+    l.pressBeatStrugglerNeutral1(player),
+    l.pressBeatStrugglerNeutral2(player),
+  ],
+  (BeatKind.struggler, _Tone.hostile) => [
+    l.pressBeatStrugglerHostile1(player),
+    l.pressBeatStrugglerHostile2(player),
+  ],
+  (BeatKind.moment, _) || (BeatKind.throwback, _) => const [],
+};
+
+/// The question that confronts him with a statement the results have judged.
+/// For [StatementKind.blamePlayer], kept means the player stayed poor (he was
+/// right); broken means the player answered him.
+String _throwback(
+  AppLocalizations l,
+  StatementKind kind,
+  bool kept,
+  _Tone tone,
+  String player,
+) => switch ((kind, kept, tone)) {
+  (StatementKind.winNext, true, _Tone.warm) => l.pressThrowbackWinNextKeptWarm,
+  (StatementKind.winNext, true, _Tone.neutral) =>
+    l.pressThrowbackWinNextKeptNeutral,
+  (StatementKind.winNext, true, _Tone.hostile) =>
+    l.pressThrowbackWinNextKeptHostile,
+  (StatementKind.winNext, false, _Tone.warm) =>
+    l.pressThrowbackWinNextBrokenWarm,
+  (StatementKind.winNext, false, _Tone.neutral) =>
+    l.pressThrowbackWinNextBrokenNeutral,
+  (StatementKind.winNext, false, _Tone.hostile) =>
+    l.pressThrowbackWinNextBrokenHostile,
+  (StatementKind.jobOnTheLine, true, _Tone.warm) => l.pressThrowbackJobKeptWarm,
+  (StatementKind.jobOnTheLine, true, _Tone.neutral) =>
+    l.pressThrowbackJobKeptNeutral,
+  (StatementKind.jobOnTheLine, true, _Tone.hostile) =>
+    l.pressThrowbackJobKeptHostile,
+  (StatementKind.jobOnTheLine, false, _Tone.warm) =>
+    l.pressThrowbackJobBrokenWarm,
+  (StatementKind.jobOnTheLine, false, _Tone.neutral) =>
+    l.pressThrowbackJobBrokenNeutral,
+  (StatementKind.jobOnTheLine, false, _Tone.hostile) =>
+    l.pressThrowbackJobBrokenHostile,
+  (StatementKind.backPlayer, true, _Tone.warm) => l.pressThrowbackBackKeptWarm(
+    player,
+  ),
+  (StatementKind.backPlayer, true, _Tone.neutral) =>
+    l.pressThrowbackBackKeptNeutral(player),
+  (StatementKind.backPlayer, true, _Tone.hostile) =>
+    l.pressThrowbackBackKeptHostile(player),
+  (StatementKind.backPlayer, false, _Tone.warm) =>
+    l.pressThrowbackBackBrokenWarm(player),
+  (StatementKind.backPlayer, false, _Tone.neutral) =>
+    l.pressThrowbackBackBrokenNeutral(player),
+  (StatementKind.backPlayer, false, _Tone.hostile) =>
+    l.pressThrowbackBackBrokenHostile(player),
+  (StatementKind.blamePlayer, true, _Tone.warm) =>
+    l.pressThrowbackBlameKeptWarm(player),
+  (StatementKind.blamePlayer, true, _Tone.neutral) =>
+    l.pressThrowbackBlameKeptNeutral(player),
+  (StatementKind.blamePlayer, true, _Tone.hostile) =>
+    l.pressThrowbackBlameKeptHostile(player),
+  (StatementKind.blamePlayer, false, _Tone.warm) =>
+    l.pressThrowbackBlameBrokenWarm(player),
+  (StatementKind.blamePlayer, false, _Tone.neutral) =>
+    l.pressThrowbackBlameBrokenNeutral(player),
+  (StatementKind.blamePlayer, false, _Tone.hostile) =>
+    l.pressThrowbackBlameBrokenHostile(player),
+};

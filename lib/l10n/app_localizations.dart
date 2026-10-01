@@ -12420,7 +12420,7 @@ abstract class AppLocalizations {
   /// Labelled action on a save tile: writes this one career to a file and hands it to the share sheet.
   ///
   /// In en, this message translates to:
-  /// **'Export this save'**
+  /// **'Back up this save'**
   String get careerExportSave;
 
   /// Button on the saves screen that exports every save at once, as one file.
@@ -14696,6 +14696,774 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Two goals in front against {opponent} and we managed this. Every single time.'**
   String yThrewItAway5(String opponent);
+
+  /// Snackbar after the automatic end-of-cycle career backup.
+  ///
+  /// In en, this message translates to:
+  /// **'Career backed up to the FNM folder on this phone. Uninstalling the app removes it: to keep a copy elsewhere, use Back up this save on the saves screen.'**
+  String get cycleBackupDone;
+
+  /// Snackbar when the automatic end-of-cycle backup fails.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not back up the career this time.'**
+  String get cycleBackupFailed;
+
+  /// Press conference: opening question after a heroic win, warm reporter. {opponent} is the nation just played.
+  ///
+  /// In en, this message translates to:
+  /// **'A night to remember against {opponent}. How proud are you of this group?'**
+  String pressMomentBigWinWarm1(String opponent);
+
+  /// Press conference: opening question after a heroic win, warm reporter. {opponent} is the nation just played.
+  ///
+  /// In en, this message translates to:
+  /// **'{opponent} could not live with you. Is this the side you always believed you had?'**
+  String pressMomentBigWinWarm2(String opponent);
+
+  /// Press conference: opening question after a heroic win, neutral reporter. {opponent} is the nation just played.
+  ///
+  /// In en, this message translates to:
+  /// **'A big win over {opponent}. What made the difference tonight?'**
+  String pressMomentBigWinNeutral1(String opponent);
+
+  /// Press conference: opening question after a heroic win, neutral reporter. {opponent} is the nation just played.
+  ///
+  /// In en, this message translates to:
+  /// **'{opponent} beaten, and comfortably. Where did you win it?'**
+  String pressMomentBigWinNeutral2(String opponent);
+
+  /// Press conference: opening question after a heroic win, hostile reporter. {opponent} is the nation just played.
+  ///
+  /// In en, this message translates to:
+  /// **'A good win over {opponent}. One good night: why should anyone believe it will last?'**
+  String pressMomentBigWinHostile1(String opponent);
+
+  /// Press conference: opening question after a heroic win, hostile reporter. {opponent} is the nation just played.
+  ///
+  /// In en, this message translates to:
+  /// **'A fine result against {opponent}. Was that your plan, or did the players work it out themselves?'**
+  String pressMomentBigWinHostile2(String opponent);
+
+  /// Press conference: opening question after a humiliating loss, warm reporter. {opponent} is the nation just played.
+  ///
+  /// In en, this message translates to:
+  /// **'A hard night against {opponent}. What do you say to the players after one like that?'**
+  String pressMomentBigLossWarm1(String opponent);
+
+  /// Press conference: opening question after a humiliating loss, warm reporter. {opponent} is the nation just played.
+  ///
+  /// In en, this message translates to:
+  /// **'Nobody saw that coming against {opponent}. Was it just one of those nights?'**
+  String pressMomentBigLossWarm2(String opponent);
+
+  /// Press conference: opening question after a humiliating loss, neutral reporter. {opponent} is the nation just played.
+  ///
+  /// In en, this message translates to:
+  /// **'That was a chastening night against {opponent}. What went wrong?'**
+  String pressMomentBigLossNeutral1(String opponent);
+
+  /// Press conference: opening question after a humiliating loss, neutral reporter. {opponent} is the nation just played.
+  ///
+  /// In en, this message translates to:
+  /// **'{opponent} took you apart. Is this squad good enough?'**
+  String pressMomentBigLossNeutral2(String opponent);
+
+  /// Press conference: opening question after a humiliating loss, hostile reporter. {opponent} is the nation just played.
+  ///
+  /// In en, this message translates to:
+  /// **'You were second to everything against {opponent}. How did you let it get that bad?'**
+  String pressMomentBigLossHostile1(String opponent);
+
+  /// Press conference: opening question after a humiliating loss, hostile reporter. {opponent} is the nation just played.
+  ///
+  /// In en, this message translates to:
+  /// **'{opponent} scored at will. Where was the plan tonight?'**
+  String pressMomentBigLossHostile2(String opponent);
+
+  /// Press conference: opening question in a crisis (may mention his job), warm reporter. {opponent} is the nation just played.
+  ///
+  /// In en, this message translates to:
+  /// **'Another one gets away, this time against {opponent}. How do you turn this run around?'**
+  String pressMomentCrisisWarm1(String opponent);
+
+  /// Press conference: opening question in a crisis (may mention his job), warm reporter. {opponent} is the nation just played.
+  ///
+  /// In en, this message translates to:
+  /// **'The results have dried up, and {opponent} made it worse. Do you still believe in this group?'**
+  String pressMomentCrisisWarm2(String opponent);
+
+  /// Press conference: opening question in a crisis (may mention his job), neutral reporter. {opponent} is the nation just played.
+  ///
+  /// In en, this message translates to:
+  /// **'No win again, now against {opponent}, and the board are watching. Is your job safe?'**
+  String pressMomentCrisisNeutral1(String opponent);
+
+  /// Press conference: opening question in a crisis (may mention his job), neutral reporter. {opponent} is the nation just played.
+  ///
+  /// In en, this message translates to:
+  /// **'After {opponent}, the run is getting long. Are you worried about your future?'**
+  String pressMomentCrisisNeutral2(String opponent);
+
+  /// Press conference: opening question in a crisis (may mention his job), hostile reporter. {opponent} is the nation just played.
+  ///
+  /// In en, this message translates to:
+  /// **'{opponent} now as well. Your predecessor was sacked on a run like this. Why should you survive it?'**
+  String pressMomentCrisisHostile1(String opponent);
+
+  /// Press conference: opening question in a crisis (may mention his job), hostile reporter. {opponent} is the nation just played.
+  ///
+  /// In en, this message translates to:
+  /// **'After another night like {opponent}, every phone-in wants you out. Would you step down if the board asked?'**
+  String pressMomentCrisisHostile2(String opponent);
+
+  /// Press conference: opening question after his 'judge me on the next three' promise failed (may mention his job), warm reporter. {opponent} is the nation just played.
+  ///
+  /// In en, this message translates to:
+  /// **'You put your job on the line, and after {opponent} it has not gone your way. How are you holding up?'**
+  String pressMomentJobVerdictWarm1(String opponent);
+
+  /// Press conference: opening question after his 'judge me on the next three' promise failed (may mention his job), warm reporter. {opponent} is the nation just played.
+  ///
+  /// In en, this message translates to:
+  /// **'The three matches are done, the last against {opponent}. You set the test yourself. What do you make of the verdict?'**
+  String pressMomentJobVerdictWarm2(String opponent);
+
+  /// Press conference: opening question after his 'judge me on the next three' promise failed (may mention his job), neutral reporter. {opponent} is the nation just played.
+  ///
+  /// In en, this message translates to:
+  /// **'You told us to judge you on the next three. After {opponent}, we have. Is your job still yours?'**
+  String pressMomentJobVerdictNeutral1(String opponent);
+
+  /// Press conference: opening question after his 'judge me on the next three' promise failed (may mention his job), neutral reporter. {opponent} is the nation just played.
+  ///
+  /// In en, this message translates to:
+  /// **'Three matches, the last against {opponent}, and not what you promised. Have you spoken to the board about your future?'**
+  String pressMomentJobVerdictNeutral2(String opponent);
+
+  /// Press conference: opening question after his 'judge me on the next three' promise failed (may mention his job), hostile reporter. {opponent} is the nation just played.
+  ///
+  /// In en, this message translates to:
+  /// **'You set the test yourself and failed it against {opponent}. Are you going to resign?'**
+  String pressMomentJobVerdictHostile1(String opponent);
+
+  /// Press conference: opening question after his 'judge me on the next three' promise failed (may mention his job), hostile reporter. {opponent} is the nation just played.
+  ///
+  /// In en, this message translates to:
+  /// **'Your words, not ours: judge me on the next three. After {opponent}, why are you still sitting there?'**
+  String pressMomentJobVerdictHostile2(String opponent);
+
+  /// Press conference: after he demanded more, asking who he means, warm reporter.
+  ///
+  /// In en, this message translates to:
+  /// **'You want more from them. Anyone in particular?'**
+  String get pressBeatWhoToBlameWarm1;
+
+  /// Press conference: after he demanded more, asking who he means, warm reporter.
+  ///
+  /// In en, this message translates to:
+  /// **'You have set the bar high. Who has to step up first?'**
+  String get pressBeatWhoToBlameWarm2;
+
+  /// Press conference: after he demanded more, asking who he means, neutral reporter.
+  ///
+  /// In en, this message translates to:
+  /// **'You say some of them have to look at themselves. Who do you mean?'**
+  String get pressBeatWhoToBlameNeutral1;
+
+  /// Press conference: after he demanded more, asking who he means, neutral reporter.
+  ///
+  /// In en, this message translates to:
+  /// **'Not good enough, you say. Who are you talking about?'**
+  String get pressBeatWhoToBlameNeutral2;
+
+  /// Press conference: after he demanded more, asking who he means, hostile reporter.
+  ///
+  /// In en, this message translates to:
+  /// **'You keep it vague. Will you name names, or does it come back to you?'**
+  String get pressBeatWhoToBlameHostile1;
+
+  /// Press conference: after he demanded more, asking who he means, hostile reporter.
+  ///
+  /// In en, this message translates to:
+  /// **'Every week it is somebody else\'s fault. Whose is it this time?'**
+  String get pressBeatWhoToBlameHostile2;
+
+  /// Press conference: after he promised to win the next match, asking what happens if he does not (never mention his job), warm reporter.
+  ///
+  /// In en, this message translates to:
+  /// **'Brave words. And if the next one does not go your way?'**
+  String get pressBeatIfYouDontWarm1;
+
+  /// Press conference: after he promised to win the next match, asking what happens if he does not (never mention his job), warm reporter.
+  ///
+  /// In en, this message translates to:
+  /// **'The country will hold you to that. What if it does not come off?'**
+  String get pressBeatIfYouDontWarm2;
+
+  /// Press conference: after he promised to win the next match, asking what happens if he does not (never mention his job), neutral reporter.
+  ///
+  /// In en, this message translates to:
+  /// **'And if you don\'t win it? What then?'**
+  String get pressBeatIfYouDontNeutral1;
+
+  /// Press conference: after he promised to win the next match, asking what happens if he does not (never mention his job), neutral reporter.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'ve said it now. What happens if you\'re wrong?'**
+  String get pressBeatIfYouDontNeutral2;
+
+  /// Press conference: after he promised to win the next match, asking what happens if he does not (never mention his job), hostile reporter.
+  ///
+  /// In en, this message translates to:
+  /// **'We have heard promises in this room before. What do you owe the supporters if this one breaks too?'**
+  String get pressBeatIfYouDontHostile1;
+
+  /// Press conference: after he promised to win the next match, asking what happens if he does not (never mention his job), hostile reporter.
+  ///
+  /// In en, this message translates to:
+  /// **'And when it doesn\'t happen, what will the excuse be?'**
+  String get pressBeatIfYouDontHostile2;
+
+  /// Press conference: a follow-up question pressing for more, warm reporter.
+  ///
+  /// In en, this message translates to:
+  /// **'One more, if you have it in you. What does this group still need to work on?'**
+  String get pressBeatFollowUpWarm1;
+
+  /// Press conference: a follow-up question pressing for more, warm reporter.
+  ///
+  /// In en, this message translates to:
+  /// **'When the dust settles, what do you take from tonight into the next match?'**
+  String get pressBeatFollowUpWarm2;
+
+  /// Press conference: a follow-up question pressing for more, neutral reporter.
+  ///
+  /// In en, this message translates to:
+  /// **'Let\'s go a little deeper. What has to improve before the next match?'**
+  String get pressBeatFollowUpNeutral1;
+
+  /// Press conference: a follow-up question pressing for more, neutral reporter.
+  ///
+  /// In en, this message translates to:
+  /// **'Looking past the scoreline: is this squad where you want it?'**
+  String get pressBeatFollowUpNeutral2;
+
+  /// Press conference: a follow-up question pressing for more, hostile reporter.
+  ///
+  /// In en, this message translates to:
+  /// **'Plenty of words, not much said. What actually changes from here?'**
+  String get pressBeatFollowUpHostile1;
+
+  /// Press conference: a follow-up question pressing for more, hostile reporter.
+  ///
+  /// In en, this message translates to:
+  /// **'The supporters want a straight answer. Is this team good enough, yes or no?'**
+  String get pressBeatFollowUpHostile2;
+
+  /// Press conference: question about the standout player of a big win, warm reporter. {player} is the player.
+  ///
+  /// In en, this message translates to:
+  /// **'{player} was outstanding tonight. How far can he go?'**
+  String pressBeatStandoutWarm1(String player);
+
+  /// Press conference: question about the standout player of a big win, warm reporter. {player} is the player.
+  ///
+  /// In en, this message translates to:
+  /// **'{player} is in every headline tonight. Did you see that coming?'**
+  String pressBeatStandoutWarm2(String player);
+
+  /// Press conference: question about the standout player of a big win, neutral reporter. {player} is the player.
+  ///
+  /// In en, this message translates to:
+  /// **'{player} stood out. What did you ask of him tonight?'**
+  String pressBeatStandoutNeutral1(String player);
+
+  /// Press conference: question about the standout player of a big win, neutral reporter. {player} is the player.
+  ///
+  /// In en, this message translates to:
+  /// **'Was {player} the difference tonight?'**
+  String pressBeatStandoutNeutral2(String player);
+
+  /// Press conference: question about the standout player of a big win, hostile reporter. {player} is the player.
+  ///
+  /// In en, this message translates to:
+  /// **'Without {player} that is a different story. Is this a team, or one player?'**
+  String pressBeatStandoutHostile1(String player);
+
+  /// Press conference: question about the standout player of a big win, hostile reporter. {player} is the player.
+  ///
+  /// In en, this message translates to:
+  /// **'{player} was brilliant. Your doing, or his?'**
+  String pressBeatStandoutHostile2(String player);
+
+  /// Press conference: question about the player who struggled, warm reporter. {player} is the player.
+  ///
+  /// In en, this message translates to:
+  /// **'{player} had a hard night. Is he carrying a knock?'**
+  String pressBeatStrugglerWarm1(String player);
+
+  /// Press conference: question about the player who struggled, warm reporter. {player} is the player.
+  ///
+  /// In en, this message translates to:
+  /// **'{player} did not have his night. Will you put an arm round him?'**
+  String pressBeatStrugglerWarm2(String player);
+
+  /// Press conference: question about the player who struggled, neutral reporter. {player} is the player.
+  ///
+  /// In en, this message translates to:
+  /// **'{player} struggled tonight. Does he keep his place?'**
+  String pressBeatStrugglerNeutral1(String player);
+
+  /// Press conference: question about the player who struggled, neutral reporter. {player} is the player.
+  ///
+  /// In en, this message translates to:
+  /// **'{player} looked off the pace. What did you make of his game?'**
+  String pressBeatStrugglerNeutral2(String player);
+
+  /// Press conference: question about the player who struggled, hostile reporter. {player} is the player.
+  ///
+  /// In en, this message translates to:
+  /// **'{player} was a passenger again. Why do you keep picking him?'**
+  String pressBeatStrugglerHostile1(String player);
+
+  /// Press conference: question about the player who struggled, hostile reporter. {player} is the player.
+  ///
+  /// In en, this message translates to:
+  /// **'Everyone could see {player} was not at it. Everyone except the bench?'**
+  String pressBeatStrugglerHostile2(String player);
+
+  /// Press conference: throwback to his promise to win the next match, which came true; warm reporter.
+  ///
+  /// In en, this message translates to:
+  /// **'You said you would win the next one, and you did. Does it feel good to be right?'**
+  String get pressThrowbackWinNextKeptWarm;
+
+  /// Press conference: throwback to his promise to win the next match, which came true; neutral reporter.
+  ///
+  /// In en, this message translates to:
+  /// **'You promised a win in the next match and delivered it. Confidence, or bravado?'**
+  String get pressThrowbackWinNextKeptNeutral;
+
+  /// Press conference: throwback to his promise to win the next match, which came true; hostile reporter.
+  ///
+  /// In en, this message translates to:
+  /// **'You said you would win the next one, and you did. Luck, or are we meant to start listening?'**
+  String get pressThrowbackWinNextKeptHostile;
+
+  /// Press conference: throwback to his promise to win the next match, which failed; warm reporter.
+  ///
+  /// In en, this message translates to:
+  /// **'You told us you would win that one. It did not happen. What went wrong?'**
+  String get pressThrowbackWinNextBrokenWarm;
+
+  /// Press conference: throwback to his promise to win the next match, which failed; neutral reporter.
+  ///
+  /// In en, this message translates to:
+  /// **'You said you\'d win the next one. You didn\'t. Why should we believe the next promise?'**
+  String get pressThrowbackWinNextBrokenNeutral;
+
+  /// Press conference: throwback to his promise to win the next match, which failed; hostile reporter.
+  ///
+  /// In en, this message translates to:
+  /// **'You said you\'d win the next one. You didn\'t. Do your words still mean anything in this room?'**
+  String get pressThrowbackWinNextBrokenHostile;
+
+  /// Press conference: throwback to his 'judge me on the next three' promise, which came true; warm reporter.
+  ///
+  /// In en, this message translates to:
+  /// **'You asked to be judged on three matches, and you passed. Vindicated?'**
+  String get pressThrowbackJobKeptWarm;
+
+  /// Press conference: throwback to his 'judge me on the next three' promise, which came true; neutral reporter.
+  ///
+  /// In en, this message translates to:
+  /// **'Judge me on the next three, you said. We did, and the results came. What did that test teach you?'**
+  String get pressThrowbackJobKeptNeutral;
+
+  /// Press conference: throwback to his 'judge me on the next three' promise, which came true; hostile reporter.
+  ///
+  /// In en, this message translates to:
+  /// **'You gave yourself three matches and got through them. Was the test ever that hard?'**
+  String get pressThrowbackJobKeptHostile;
+
+  /// Press conference: throwback to his 'judge me on the next three' promise, which failed; warm reporter.
+  ///
+  /// In en, this message translates to:
+  /// **'You asked to be judged on three matches. They did not go your way. What have you learned?'**
+  String get pressThrowbackJobBrokenWarm;
+
+  /// Press conference: throwback to his 'judge me on the next three' promise, which failed; neutral reporter.
+  ///
+  /// In en, this message translates to:
+  /// **'You said judge me on the next three. The three are gone, and so is the benefit of the doubt. What now?'**
+  String get pressThrowbackJobBrokenNeutral;
+
+  /// Press conference: throwback to his 'judge me on the next three' promise, which failed; hostile reporter.
+  ///
+  /// In en, this message translates to:
+  /// **'You set the test and failed it. Why should anyone take your word now?'**
+  String get pressThrowbackJobBrokenHostile;
+
+  /// Press conference: throwback to his backing of {player}, which came true; warm reporter.
+  ///
+  /// In en, this message translates to:
+  /// **'You backed {player} when others would not. He delivered. Some of the credit yours?'**
+  String pressThrowbackBackKeptWarm(String player);
+
+  /// Press conference: throwback to his backing of {player}, which came true; neutral reporter.
+  ///
+  /// In en, this message translates to:
+  /// **'You backed {player}. He delivered. Faith, or knowledge?'**
+  String pressThrowbackBackKeptNeutral(String player);
+
+  /// Press conference: throwback to his backing of {player}, which came true; hostile reporter.
+  ///
+  /// In en, this message translates to:
+  /// **'You backed {player}, and for once it paid off. Will you be that sure next time?'**
+  String pressThrowbackBackKeptHostile(String player);
+
+  /// Press conference: throwback to his backing of {player}, which failed; warm reporter.
+  ///
+  /// In en, this message translates to:
+  /// **'You stood by {player}, and it has not worked out. Do you still believe in him?'**
+  String pressThrowbackBackBrokenWarm(String player);
+
+  /// Press conference: throwback to his backing of {player}, which failed; neutral reporter.
+  ///
+  /// In en, this message translates to:
+  /// **'You backed {player}. He has not repaid it. Was that a mistake?'**
+  String pressThrowbackBackBrokenNeutral(String player);
+
+  /// Press conference: throwback to his backing of {player}, which failed; hostile reporter.
+  ///
+  /// In en, this message translates to:
+  /// **'Your judgement or your loyalty: which one failed with {player}?'**
+  String pressThrowbackBackBrokenHostile(String player);
+
+  /// Press conference: throwback to his public criticism of {player}, which was proved right (the player stayed poor); warm reporter.
+  ///
+  /// In en, this message translates to:
+  /// **'You were hard on {player}, and the matches since have proved you right. Any satisfaction in that?'**
+  String pressThrowbackBlameKeptWarm(String player);
+
+  /// Press conference: throwback to his public criticism of {player}, which was proved right (the player stayed poor); neutral reporter.
+  ///
+  /// In en, this message translates to:
+  /// **'You called {player} out, and he has not answered. Is there a way back for him?'**
+  String pressThrowbackBlameKeptNeutral(String player);
+
+  /// Press conference: throwback to his public criticism of {player}, which was proved right (the player stayed poor); hostile reporter.
+  ///
+  /// In en, this message translates to:
+  /// **'You hung {player} out to dry and he has not recovered. Did you break him?'**
+  String pressThrowbackBlameKeptHostile(String player);
+
+  /// Press conference: throwback to his public criticism of {player}, which was proved wrong (the player responded); warm reporter.
+  ///
+  /// In en, this message translates to:
+  /// **'You called {player} out, and he answered you on the pitch. Was that the idea all along?'**
+  String pressThrowbackBlameBrokenWarm(String player);
+
+  /// Press conference: throwback to his public criticism of {player}, which was proved wrong (the player responded); neutral reporter.
+  ///
+  /// In en, this message translates to:
+  /// **'You blamed {player}, and since then he has been one of your best. Do you owe him an apology?'**
+  String pressThrowbackBlameBrokenNeutral(String player);
+
+  /// Press conference: throwback to his public criticism of {player}, which was proved wrong (the player responded); hostile reporter.
+  ///
+  /// In en, this message translates to:
+  /// **'You threw {player} under the bus, and he has been your best player since. Will you apologise?'**
+  String pressThrowbackBlameBrokenHostile(String player);
+
+  /// Press conference: the manager's answer (CreditPlayers), variant 1.
+  ///
+  /// In en, this message translates to:
+  /// **'These players gave me everything. I would not swap a single one of them.'**
+  String get pressReplyCreditPlayers1;
+
+  /// Press conference: the manager's answer (CreditPlayers), variant 2.
+  ///
+  /// In en, this message translates to:
+  /// **'Nobody works harder than this group. I\'ll defend them all day.'**
+  String get pressReplyCreditPlayers2;
+
+  /// Press conference: the manager's answer (CreditPlayers), variant 3.
+  ///
+  /// In en, this message translates to:
+  /// **'You won\'t hear a word against my players from this seat.'**
+  String get pressReplyCreditPlayers3;
+
+  /// Press conference: the manager's answer (CreditPlayers), variant 4.
+  ///
+  /// In en, this message translates to:
+  /// **'The players deserve the credit, not me. Write about them.'**
+  String get pressReplyCreditPlayers4;
+
+  /// Press conference: the manager's answer (TakeResponsibility), variant 1.
+  ///
+  /// In en, this message translates to:
+  /// **'That one is on me. I picked the side and I set them up.'**
+  String get pressReplyTakeResponsibility1;
+
+  /// Press conference: the manager's answer (TakeResponsibility), variant 2.
+  ///
+  /// In en, this message translates to:
+  /// **'Judge me, not them. It\'s my team and my responsibility.'**
+  String get pressReplyTakeResponsibility2;
+
+  /// Press conference: the manager's answer (TakeResponsibility), variant 3.
+  ///
+  /// In en, this message translates to:
+  /// **'If you want somebody to blame, I\'m sitting right here.'**
+  String get pressReplyTakeResponsibility3;
+
+  /// Press conference: the manager's answer (TakeResponsibility), variant 4.
+  ///
+  /// In en, this message translates to:
+  /// **'The responsibility is mine. Leave the players out of it.'**
+  String get pressReplyTakeResponsibility4;
+
+  /// Press conference: the manager's answer (DemandMore), variant 1.
+  ///
+  /// In en, this message translates to:
+  /// **'I want more. Some of them know exactly what I mean.'**
+  String get pressReplyDemandMore1;
+
+  /// Press conference: the manager's answer (DemandMore), variant 2.
+  ///
+  /// In en, this message translates to:
+  /// **'Effort isn\'t enough at this level. I want more, and I\'ve told them so.'**
+  String get pressReplyDemandMore2;
+
+  /// Press conference: the manager's answer (DemandMore), variant 3.
+  ///
+  /// In en, this message translates to:
+  /// **'I expect more from every one of them, starting tomorrow.'**
+  String get pressReplyDemandMore3;
+
+  /// Press conference: the manager's answer (DemandMore), variant 4.
+  ///
+  /// In en, this message translates to:
+  /// **'Some of them have to look at themselves. I\'m not satisfied.'**
+  String get pressReplyDemandMore4;
+
+  /// Press conference: the manager's answer (PromiseWinNext), variant 1.
+  ///
+  /// In en, this message translates to:
+  /// **'We will win the next one. You can write that down.'**
+  String get pressReplyPromiseWinNext1;
+
+  /// Press conference: the manager's answer (PromiseWinNext), variant 2.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark my words: we win the next match.'**
+  String get pressReplyPromiseWinNext2;
+
+  /// Press conference: the manager's answer (PromiseWinNext), variant 3.
+  ///
+  /// In en, this message translates to:
+  /// **'Next game, we win. I\'m saying it here so you can hold me to it.'**
+  String get pressReplyPromiseWinNext3;
+
+  /// Press conference: the manager's answer (PromiseWinNext), variant 4.
+  ///
+  /// In en, this message translates to:
+  /// **'I\'m sure of this team. We win the next match.'**
+  String get pressReplyPromiseWinNext4;
+
+  /// Press conference: the manager's answer (JobOnTheLine), variant 1.
+  ///
+  /// In en, this message translates to:
+  /// **'Judge me on the next three matches. That\'s fair.'**
+  String get pressReplyJobOnTheLine1;
+
+  /// Press conference: the manager's answer (JobOnTheLine), variant 2.
+  ///
+  /// In en, this message translates to:
+  /// **'Give me three games. If it isn\'t right by then, judge me on it.'**
+  String get pressReplyJobOnTheLine2;
+
+  /// Press conference: the manager's answer (JobOnTheLine), variant 3.
+  ///
+  /// In en, this message translates to:
+  /// **'The next three will show whether I\'m the right man. Hold me to that.'**
+  String get pressReplyJobOnTheLine3;
+
+  /// Press conference: the manager's answer (JobOnTheLine), variant 4.
+  ///
+  /// In en, this message translates to:
+  /// **'Three matches. Then write whatever you like about me.'**
+  String get pressReplyJobOnTheLine4;
+
+  /// Press conference: the manager's answer (Deflect), variant 1.
+  ///
+  /// In en, this message translates to:
+  /// **'We take it one game at a time. Nothing more to add.'**
+  String get pressReplyDeflect1;
+
+  /// Press conference: the manager's answer (Deflect), variant 2.
+  ///
+  /// In en, this message translates to:
+  /// **'I\'m not going to make headlines for you today.'**
+  String get pressReplyDeflect2;
+
+  /// Press conference: the manager's answer (Deflect), variant 3.
+  ///
+  /// In en, this message translates to:
+  /// **'Next game. That\'s all I\'m thinking about.'**
+  String get pressReplyDeflect3;
+
+  /// Press conference: the manager's answer (Deflect), variant 4.
+  ///
+  /// In en, this message translates to:
+  /// **'What I think stays in the dressing room.'**
+  String get pressReplyDeflect4;
+
+  /// Press conference: the manager's answer (TakeCredit), variant 1.
+  ///
+  /// In en, this message translates to:
+  /// **'I said it because I believed it, and I was right.'**
+  String get pressReplyTakeCredit1;
+
+  /// Press conference: the manager's answer (TakeCredit), variant 2.
+  ///
+  /// In en, this message translates to:
+  /// **'I read it correctly. That\'s what I\'m here for.'**
+  String get pressReplyTakeCredit2;
+
+  /// Press conference: the manager's answer (TakeCredit), variant 3.
+  ///
+  /// In en, this message translates to:
+  /// **'Call it judgement. I knew what I was saying.'**
+  String get pressReplyTakeCredit3;
+
+  /// Press conference: the manager's answer (TakeCredit), variant 4.
+  ///
+  /// In en, this message translates to:
+  /// **'I made the call and it came off. I\'ll take that.'**
+  String get pressReplyTakeCredit4;
+
+  /// Press conference: the manager's answer (StandByIt), variant 1.
+  ///
+  /// In en, this message translates to:
+  /// **'I said what I believed. I stand by it.'**
+  String get pressReplyStandByIt1;
+
+  /// Press conference: the manager's answer (StandByIt), variant 2.
+  ///
+  /// In en, this message translates to:
+  /// **'I don\'t take back a word of it.'**
+  String get pressReplyStandByIt2;
+
+  /// Press conference: the manager's answer (StandByIt), variant 3.
+  ///
+  /// In en, this message translates to:
+  /// **'Same answer as then. I meant it, and I still do.'**
+  String get pressReplyStandByIt3;
+
+  /// Press conference: the manager's answer (StandByIt), variant 4.
+  ///
+  /// In en, this message translates to:
+  /// **'I\'d say it again tomorrow.'**
+  String get pressReplyStandByIt4;
+
+  /// Press conference: the manager's answer (AdmitMistake), variant 1.
+  ///
+  /// In en, this message translates to:
+  /// **'I got that one wrong. I\'ll own it.'**
+  String get pressReplyAdmitMistake1;
+
+  /// Press conference: the manager's answer (AdmitMistake), variant 2.
+  ///
+  /// In en, this message translates to:
+  /// **'Fair enough, I misjudged it. I\'ll learn from it.'**
+  String get pressReplyAdmitMistake2;
+
+  /// Press conference: the manager's answer (AdmitMistake), variant 3.
+  ///
+  /// In en, this message translates to:
+  /// **'I was wrong, and I can say so.'**
+  String get pressReplyAdmitMistake3;
+
+  /// Press conference: the manager's answer (AdmitMistake), variant 4.
+  ///
+  /// In en, this message translates to:
+  /// **'That call didn\'t work, and it was mine.'**
+  String get pressReplyAdmitMistake4;
+
+  /// Press conference: the manager's answer (BackPlayer), variant 1. {player} is the player.
+  ///
+  /// In en, this message translates to:
+  /// **'{player} has my full backing. He\'ll come good.'**
+  String pressReplyBackPlayer1(String player);
+
+  /// Press conference: the manager's answer (BackPlayer), variant 2. {player} is the player.
+  ///
+  /// In en, this message translates to:
+  /// **'I believe in {player}, and he\'ll show you why.'**
+  String pressReplyBackPlayer2(String player);
+
+  /// Press conference: the manager's answer (BackPlayer), variant 3. {player} is the player.
+  ///
+  /// In en, this message translates to:
+  /// **'You won\'t hear a word against {player} from me. He\'ll deliver.'**
+  String pressReplyBackPlayer3(String player);
+
+  /// Press conference: the manager's answer (BackPlayer), variant 4. {player} is the player.
+  ///
+  /// In en, this message translates to:
+  /// **'{player} stays in my plans. Watch what he does next.'**
+  String pressReplyBackPlayer4(String player);
+
+  /// Press conference: the manager's answer (BlamePlayer), variant 1. {player} is the player.
+  ///
+  /// In en, this message translates to:
+  /// **'{player} let us down tonight, and he knows it.'**
+  String pressReplyBlamePlayer1(String player);
+
+  /// Press conference: the manager's answer (BlamePlayer), variant 2. {player} is the player.
+  ///
+  /// In en, this message translates to:
+  /// **'I expected far more from {player}. He has to answer that.'**
+  String pressReplyBlamePlayer2(String player);
+
+  /// Press conference: the manager's answer (BlamePlayer), variant 3. {player} is the player.
+  ///
+  /// In en, this message translates to:
+  /// **'{player} wasn\'t at the level. I\'ll say that publicly.'**
+  String pressReplyBlamePlayer3(String player);
+
+  /// Press conference: the manager's answer (BlamePlayer), variant 4. {player} is the player.
+  ///
+  /// In en, this message translates to:
+  /// **'That wasn\'t good enough from {player}, and he\'ll hear it from me.'**
+  String pressReplyBlamePlayer4(String player);
+
+  /// Press conference: note that the answer is on the record and will be judged.
+  ///
+  /// In en, this message translates to:
+  /// **'On the record: you will win the next match.'**
+  String get pressOnRecordWinNext;
+
+  /// Press conference: note that the answer is on the record and will be judged.
+  ///
+  /// In en, this message translates to:
+  /// **'On the record: judge you on the next three.'**
+  String get pressOnRecordJob;
+
+  /// Press conference: note that the answer is on the record and will be judged. {player} is the player.
+  ///
+  /// In en, this message translates to:
+  /// **'On the record: backing {player}.'**
+  String pressOnRecordBack(String player);
+
+  /// Press conference: note that the answer is on the record and will be judged. {player} is the player.
+  ///
+  /// In en, this message translates to:
+  /// **'On the record: {player} let you down.'**
+  String pressOnRecordBlame(String player);
 }
 
 class _AppLocalizationsDelegate

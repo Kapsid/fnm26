@@ -7892,7 +7892,7 @@ class AppLocalizationsCs extends AppLocalizations {
       'Skupiny nejsou stejně velké, takže výsledky proti poslednímu týmu větších skupin se nezapočítávají a všechny týmy se hodnotí podle stejného počtu zápasů.';
 
   @override
-  String get careerExportSave => 'Exportovat tuto hru';
+  String get careerExportSave => 'Zálohovat tuto hru';
 
   @override
   String get careerBackupAll => 'ZÁLOHOVAT VŠECHNY HRY';
@@ -9433,5 +9433,564 @@ class AppLocalizationsCs extends AppLocalizations {
   @override
   String yThrewItAway5(String opponent) {
     return 'O dvě jsme vedli. S $opponent. Csaplárovu past jsme nastavili soupeři a spadli do ní sami.';
+  }
+
+  @override
+  String get cycleBackupDone =>
+      'Kariéra je zálohovaná ve složce FNM v tomto telefonu. Odinstalováním aplikace se smaže: kopii jinam uložíte přes Zálohovat tuto hru v seznamu uložených her.';
+
+  @override
+  String get cycleBackupFailed => 'Kariéru se tentokrát nepodařilo zálohovat.';
+
+  @override
+  String pressMomentBigWinWarm1(String opponent) {
+    return 'Večer na zapamatování proti soupeři $opponent. Jak moc jste na tuhle partu hrdý?';
+  }
+
+  @override
+  String pressMomentBigWinWarm2(String opponent) {
+    return 'Soupeř $opponent na vás vůbec nestačil. Je tohle ten tým, ve který jste vždycky věřil?';
+  }
+
+  @override
+  String pressMomentBigWinNeutral1(String opponent) {
+    return 'Velká výhra nad soupeřem $opponent. Co dnes rozhodlo?';
+  }
+
+  @override
+  String pressMomentBigWinNeutral2(String opponent) {
+    return 'Soupeř $opponent poražen, a s přehledem. Kde jste ten zápas vyhráli?';
+  }
+
+  @override
+  String pressMomentBigWinHostile1(String opponent) {
+    return 'Pěkná výhra nad soupeřem $opponent. Jeden dobrý večer: proč by měl někdo věřit, že to vydrží?';
+  }
+
+  @override
+  String pressMomentBigWinHostile2(String opponent) {
+    return 'Povedený výsledek proti soupeři $opponent. Byl to váš plán, nebo si na to hráči přišli sami?';
+  }
+
+  @override
+  String pressMomentBigLossWarm1(String opponent) {
+    return 'Těžký večer proti soupeři $opponent. Co hráčům po takovém zápase řeknete?';
+  }
+
+  @override
+  String pressMomentBigLossWarm2(String opponent) {
+    return 'Tohle proti soupeři $opponent nikdo nečekal. Byl to jen jeden z těch večerů?';
+  }
+
+  @override
+  String pressMomentBigLossNeutral1(String opponent) {
+    return 'Se soupeřem $opponent to byl výprask. Co se stalo?';
+  }
+
+  @override
+  String pressMomentBigLossNeutral2(String opponent) {
+    return 'Soupeř $opponent vás rozebral. Je tenhle tým dost dobrý?';
+  }
+
+  @override
+  String pressMomentBigLossHostile1(String opponent) {
+    return 'Se soupeřem $opponent jste byli ve všem druzí. Jak jste to mohl nechat zajít tak daleko?';
+  }
+
+  @override
+  String pressMomentBigLossHostile2(String opponent) {
+    return 'Soupeř $opponent dával góly, kdy chtěl. Kde byl dnes váš plán?';
+  }
+
+  @override
+  String pressMomentCrisisWarm1(String opponent) {
+    return 'Další zápas bez výhry, tentokrát proti soupeři $opponent. Jak tu sérii otočíte?';
+  }
+
+  @override
+  String pressMomentCrisisWarm2(String opponent) {
+    return 'Výsledky nejdou a soupeř $opponent to jen zhoršil. Věříte téhle partě pořád?';
+  }
+
+  @override
+  String pressMomentCrisisNeutral1(String opponent) {
+    return 'Zase bez výhry, teď proti soupeři $opponent, a vedení se dívá. Je vaše místo v bezpečí?';
+  }
+
+  @override
+  String pressMomentCrisisNeutral2(String opponent) {
+    return 'Po zápase se soupeřem $opponent se ta série natahuje. Bojíte se o svou budoucnost?';
+  }
+
+  @override
+  String pressMomentCrisisHostile1(String opponent) {
+    return 'Teď i soupeř $opponent. Váš předchůdce po podobné sérii dostal padáka. Proč byste to měl přežít vy?';
+  }
+
+  @override
+  String pressMomentCrisisHostile2(String opponent) {
+    return 'Po dalším večeru, jako byl ten se soupeřem $opponent, vás chce každá debata pryč. Odstoupil byste, kdyby o to vedení požádalo?';
+  }
+
+  @override
+  String pressMomentJobVerdictWarm1(String opponent) {
+    return 'Dal jste v sázku své místo a po zápase se soupeřem $opponent to nevyšlo. Jak to nesete?';
+  }
+
+  @override
+  String pressMomentJobVerdictWarm2(String opponent) {
+    return 'Tři zápasy jsou za vámi, poslední proti soupeři $opponent. Zkoušku jste si dal sám. Jak ten verdikt čtete?';
+  }
+
+  @override
+  String pressMomentJobVerdictNeutral1(String opponent) {
+    return 'Řekl jste, ať vás soudíme podle dalších tří zápasů. Po zápase se soupeřem $opponent jsme to udělali. Máte své místo ještě jisté?';
+  }
+
+  @override
+  String pressMomentJobVerdictNeutral2(String opponent) {
+    return 'Tři zápasy, poslední proti soupeři $opponent, a ne to, co jste sliboval. Mluvil jste s vedením o své budoucnosti?';
+  }
+
+  @override
+  String pressMomentJobVerdictHostile1(String opponent) {
+    return 'Zkoušku jste si dal sám a proti soupeři $opponent jste ji neudělal. Odstoupíte?';
+  }
+
+  @override
+  String pressMomentJobVerdictHostile2(String opponent) {
+    return 'Vaše slova, ne naše: suďte mě podle dalších tří. Po zápase se soupeřem $opponent se ptáme: proč tu ještě sedíte?';
+  }
+
+  @override
+  String get pressBeatWhoToBlameWarm1 =>
+      'Chcete od nich víc. Myslíte někoho konkrétního?';
+
+  @override
+  String get pressBeatWhoToBlameWarm2 =>
+      'Laťku jste nasadil vysoko. Kdo musí přidat jako první?';
+
+  @override
+  String get pressBeatWhoToBlameNeutral1 =>
+      'Říkáte, že se někteří musí podívat do zrcadla. Koho myslíte?';
+
+  @override
+  String get pressBeatWhoToBlameNeutral2 =>
+      'Říkáte, že to nestačí. O kom mluvíte?';
+
+  @override
+  String get pressBeatWhoToBlameHostile1 =>
+      'Mluvíte obecně. Řeknete jména, nebo to padá na vás?';
+
+  @override
+  String get pressBeatWhoToBlameHostile2 =>
+      'Každý týden je to vina někoho jiného. Čí je tentokrát?';
+
+  @override
+  String get pressBeatIfYouDontWarm1 =>
+      'Odvážná slova. A když ten další zápas nevyjde?';
+
+  @override
+  String get pressBeatIfYouDontWarm2 =>
+      'Země vás za slovo vezme. Co když to nevyjde?';
+
+  @override
+  String get pressBeatIfYouDontNeutral1 => 'A když to nevyhrajete? Co pak?';
+
+  @override
+  String get pressBeatIfYouDontNeutral2 =>
+      'Teď už jste to řekl. Co se stane, když se spletete?';
+
+  @override
+  String get pressBeatIfYouDontHostile1 =>
+      'Sliby jsme v téhle místnosti už slyšeli. Co dlužíte fanouškům, jestli nevyjde ani tenhle?';
+
+  @override
+  String get pressBeatIfYouDontHostile2 =>
+      'A až to nevyjde, jaká bude výmluva?';
+
+  @override
+  String get pressBeatFollowUpWarm1 =>
+      'Ještě jedna, jestli můžete. Na čem musí tahle parta ještě zapracovat?';
+
+  @override
+  String get pressBeatFollowUpWarm2 =>
+      'Až opadnou emoce: co si z dneška berete do dalšího zápasu?';
+
+  @override
+  String get pressBeatFollowUpNeutral1 =>
+      'Pojďme trochu hlouběji. Co se musí zlepšit do dalšího zápasu?';
+
+  @override
+  String get pressBeatFollowUpNeutral2 =>
+      'Mimo výsledek: je tenhle kádr tam, kde ho chcete mít?';
+
+  @override
+  String get pressBeatFollowUpHostile1 =>
+      'Spousta slov, málo obsahu. Co se od teď doopravdy změní?';
+
+  @override
+  String get pressBeatFollowUpHostile2 =>
+      'Fanoušci chtějí přímou odpověď. Je tenhle tým dost dobrý, ano, nebo ne?';
+
+  @override
+  String pressBeatStandoutWarm1(String player) {
+    return '$player byl dnes vynikající. Kam až to může dotáhnout?';
+  }
+
+  @override
+  String pressBeatStandoutWarm2(String player) {
+    return '$player je dnes v každém titulku. Čekal jste to od něj?';
+  }
+
+  @override
+  String pressBeatStandoutNeutral1(String player) {
+    return '$player vyčníval. Co jste po něm dnes chtěl?';
+  }
+
+  @override
+  String pressBeatStandoutNeutral2(String player) {
+    return 'Rozhodl dnes zápas $player?';
+  }
+
+  @override
+  String pressBeatStandoutHostile1(String player) {
+    return 'Bez hráče $player by to byl jiný příběh. Je tohle tým, nebo jeden hráč?';
+  }
+
+  @override
+  String pressBeatStandoutHostile2(String player) {
+    return '$player byl skvělý. Vaše zásluha, nebo jeho?';
+  }
+
+  @override
+  String pressBeatStrugglerWarm1(String player) {
+    return '$player měl těžký večer. Netrápí ho nějaké zranění?';
+  }
+
+  @override
+  String pressBeatStrugglerWarm2(String player) {
+    return '$player dnes neměl svůj den. Podržíte ho?';
+  }
+
+  @override
+  String pressBeatStrugglerNeutral1(String player) {
+    return '$player se dnes trápil. Udrží si místo v sestavě?';
+  }
+
+  @override
+  String pressBeatStrugglerNeutral2(String player) {
+    return '$player nestačil tempu. Jak jste viděl jeho výkon?';
+  }
+
+  @override
+  String pressBeatStrugglerHostile1(String player) {
+    return '$player byl zase jen pasažér. Proč ho pořád stavíte?';
+  }
+
+  @override
+  String pressBeatStrugglerHostile2(String player) {
+    return 'Všichni viděli, že $player nebyl ve hře. Všichni kromě lavičky?';
+  }
+
+  @override
+  String get pressThrowbackWinNextKeptWarm =>
+      'Řekl jste, že další zápas vyhrajete, a vyhráli jste. Je příjemné mít pravdu?';
+
+  @override
+  String get pressThrowbackWinNextKeptNeutral =>
+      'Slíbil jste výhru v dalším zápase a splnil jste to. Sebevědomí, nebo chvástání?';
+
+  @override
+  String get pressThrowbackWinNextKeptHostile =>
+      'Řekl jste, že další zápas vyhrajete, a vyšlo to. Štěstí, nebo vás máme začít poslouchat?';
+
+  @override
+  String get pressThrowbackWinNextBrokenWarm =>
+      'Říkal jste, že ten zápas vyhrajete. Nevyšlo to. Co se pokazilo?';
+
+  @override
+  String get pressThrowbackWinNextBrokenNeutral =>
+      'Řekl jste, že další zápas vyhrajete. Nevyhráli jste. Proč bychom měli věřit dalšímu slibu?';
+
+  @override
+  String get pressThrowbackWinNextBrokenHostile =>
+      'Řekl jste, že další zápas vyhrajete. Nevyhráli jste. Znamenají vaše slova v téhle místnosti ještě něco?';
+
+  @override
+  String get pressThrowbackJobKeptWarm =>
+      'Chtěl jste, ať vás soudíme podle tří zápasů, a obstál jste. Cítíte zadostiučinění?';
+
+  @override
+  String get pressThrowbackJobKeptNeutral =>
+      'Suďte mě podle dalších tří, řekl jste. Soudili jsme a výsledky přišly. Co vám ta zkouška dala?';
+
+  @override
+  String get pressThrowbackJobKeptHostile =>
+      'Dal jste si tři zápasy a prošel jste. Byla ta zkouška vůbec těžká?';
+
+  @override
+  String get pressThrowbackJobBrokenWarm =>
+      'Chtěl jste, ať vás soudíme podle tří zápasů. Nevyšly. Co jste se naučil?';
+
+  @override
+  String get pressThrowbackJobBrokenNeutral =>
+      'Řekl jste: suďte mě podle dalších tří. Ty tři jsou pryč a s nimi i shovívavost. Co teď?';
+
+  @override
+  String get pressThrowbackJobBrokenHostile =>
+      'Zkoušku jste si dal sám a neudělal jste ji. Proč by vám teď měl kdokoli věřit?';
+
+  @override
+  String pressThrowbackBackKeptWarm(String player) {
+    return 'Postavil jste se za hráče $player, když jiní ne. Splatil vám to. Je to i vaše zásluha?';
+  }
+
+  @override
+  String pressThrowbackBackKeptNeutral(String player) {
+    return 'Za hráče $player jste se postavil. Splatil vám to. Víra, nebo znalost?';
+  }
+
+  @override
+  String pressThrowbackBackKeptHostile(String player) {
+    return 'Vsadil jste na hráče $player a pro jednou to vyšlo. Budete si příště stejně jistý?';
+  }
+
+  @override
+  String pressThrowbackBackBrokenWarm(String player) {
+    return 'Stál jste za hráčem $player a nevyšlo to. Věříte mu pořád?';
+  }
+
+  @override
+  String pressThrowbackBackBrokenNeutral(String player) {
+    return 'Postavil jste se za hráče $player. Nesplatil vám to. Byla to chyba?';
+  }
+
+  @override
+  String pressThrowbackBackBrokenHostile(String player) {
+    return 'Úsudek, nebo věrnost: co z toho u hráče $player selhalo?';
+  }
+
+  @override
+  String pressThrowbackBlameKeptWarm(String player) {
+    return 'Na hráče $player jste byl tvrdý a zápasy od té doby vám daly za pravdu. Těší vás to?';
+  }
+
+  @override
+  String pressThrowbackBlameKeptNeutral(String player) {
+    return 'Hráče $player jste veřejně zkritizoval a on neodpověděl. Má ještě cestu zpátky?';
+  }
+
+  @override
+  String pressThrowbackBlameKeptHostile(String player) {
+    return 'Hráče $player jste veřejně potopil a od té doby se nezvedl. Zlomil jste ho?';
+  }
+
+  @override
+  String pressThrowbackBlameBrokenWarm(String player) {
+    return 'Hráče $player jste zkritizoval a on vám odpověděl na hřišti. Byl to od začátku záměr?';
+  }
+
+  @override
+  String pressThrowbackBlameBrokenNeutral(String player) {
+    return 'Hodil jste to na hráče $player a od té doby patří k vašim nejlepším. Dlužíte mu omluvu?';
+  }
+
+  @override
+  String pressThrowbackBlameBrokenHostile(String player) {
+    return 'Hodil jste hráče $player přes palubu a od té doby je vaším nejlepším mužem na hřišti. Omluvíte se mu?';
+  }
+
+  @override
+  String get pressReplyCreditPlayers1 =>
+      'Tihle hráči mi dali všechno. Nevyměnil bych ani jednoho.';
+
+  @override
+  String get pressReplyCreditPlayers2 =>
+      'Nikdo nemaká víc než tahle parta. Budu je bránit pořád.';
+
+  @override
+  String get pressReplyCreditPlayers3 =>
+      'Ode mě na svoje hráče křivé slovo neuslyšíte.';
+
+  @override
+  String get pressReplyCreditPlayers4 =>
+      'Zásluhy patří hráčům, ne mně. Pište o nich.';
+
+  @override
+  String get pressReplyTakeResponsibility1 =>
+      'Tohle jde za mnou. Sestavu jsem vybral já.';
+
+  @override
+  String get pressReplyTakeResponsibility2 =>
+      'Suďte mě, ne je. Je to můj tým a moje zodpovědnost.';
+
+  @override
+  String get pressReplyTakeResponsibility3 =>
+      'Jestli hledáte viníka, sedí přímo tady.';
+
+  @override
+  String get pressReplyTakeResponsibility4 =>
+      'Zodpovědnost je moje. Hráče z toho vynechte.';
+
+  @override
+  String get pressReplyDemandMore1 =>
+      'Chci víc. Někteří přesně vědí, koho myslím.';
+
+  @override
+  String get pressReplyDemandMore2 =>
+      'Na téhle úrovni nestačí snaha. Chci víc a řekl jsem jim to.';
+
+  @override
+  String get pressReplyDemandMore3 =>
+      'Od každého z nich čekám víc, a to od zítřka.';
+
+  @override
+  String get pressReplyDemandMore4 =>
+      'Někteří se musí podívat do zrcadla. Spokojený nejsem.';
+
+  @override
+  String get pressReplyPromiseWinNext1 =>
+      'Další zápas vyhrajeme. Klidně si to napište.';
+
+  @override
+  String get pressReplyPromiseWinNext2 =>
+      'Pamatujte si to: příští zápas vyhrajeme.';
+
+  @override
+  String get pressReplyPromiseWinNext3 =>
+      'Příště vyhrajeme. Říkám to tady, abyste mě mohli chytit za slovo.';
+
+  @override
+  String get pressReplyPromiseWinNext4 =>
+      'Tomuhle týmu věřím. Další zápas vyhrajeme.';
+
+  @override
+  String get pressReplyJobOnTheLine1 =>
+      'Suďte mě podle dalších tří zápasů. To je fér.';
+
+  @override
+  String get pressReplyJobOnTheLine2 =>
+      'Dejte mi tři zápasy. Jestli to do té doby nebude ono, suďte mě.';
+
+  @override
+  String get pressReplyJobOnTheLine3 =>
+      'Další tři zápasy ukážou, jestli jsem ten pravý. Držte mě za slovo.';
+
+  @override
+  String get pressReplyJobOnTheLine4 =>
+      'Tři zápasy. Pak si o mně pište, co chcete.';
+
+  @override
+  String get pressReplyDeflect1 => 'Jdeme zápas od zápasu. Víc k tomu neřeknu.';
+
+  @override
+  String get pressReplyDeflect2 => 'Titulek vám dneska nedám.';
+
+  @override
+  String get pressReplyDeflect3 => 'Další zápas. Na nic jiného nemyslím.';
+
+  @override
+  String get pressReplyDeflect4 => 'Co si myslím, si nechám pro kabinu.';
+
+  @override
+  String get pressReplyTakeCredit1 =>
+      'Řekl jsem to, protože jsem tomu věřil, a měl jsem pravdu.';
+
+  @override
+  String get pressReplyTakeCredit2 =>
+      'Odhadl jsem to správně. Od toho tu jsem.';
+
+  @override
+  String get pressReplyTakeCredit3 =>
+      'Říkejte tomu úsudek. Věděl jsem, co říkám.';
+
+  @override
+  String get pressReplyTakeCredit4 =>
+      'Rozhodl jsem se a vyšlo to. To si vezmu.';
+
+  @override
+  String get pressReplyStandByIt1 => 'Řekl jsem, čemu věřím. Stojím si za tím.';
+
+  @override
+  String get pressReplyStandByIt2 => 'Neberu zpátky ani slovo.';
+
+  @override
+  String get pressReplyStandByIt3 =>
+      'Stejná odpověď jako tehdy. Myslel jsem to vážně a pořád myslím.';
+
+  @override
+  String get pressReplyStandByIt4 => 'Řekl bych to znovu i zítra.';
+
+  @override
+  String get pressReplyAdmitMistake1 =>
+      'Tohle jsem odhadl špatně. Beru to na sebe.';
+
+  @override
+  String get pressReplyAdmitMistake2 =>
+      'Dobře, spletl jsem se. Poučím se z toho.';
+
+  @override
+  String get pressReplyAdmitMistake3 => 'Mýlil jsem se a umím to přiznat.';
+
+  @override
+  String get pressReplyAdmitMistake4 => 'Tohle rozhodnutí nevyšlo a bylo moje.';
+
+  @override
+  String pressReplyBackPlayer1(String player) {
+    return '$player má moji plnou podporu. Ještě se ukáže.';
+  }
+
+  @override
+  String pressReplyBackPlayer2(String player) {
+    return '$player má moji důvěru a ukáže vám proč.';
+  }
+
+  @override
+  String pressReplyBackPlayer3(String player) {
+    return 'Na hráče $player ode mě křivé slovo neuslyšíte. Ještě to ukáže.';
+  }
+
+  @override
+  String pressReplyBackPlayer4(String player) {
+    return '$player zůstává v mých plánech. Sledujte, co předvede.';
+  }
+
+  @override
+  String pressReplyBlamePlayer1(String player) {
+    return '$player nás dnes zklamal a ví to.';
+  }
+
+  @override
+  String pressReplyBlamePlayer2(String player) {
+    return 'Od hráče $player jsem čekal mnohem víc. Musí na to odpovědět.';
+  }
+
+  @override
+  String pressReplyBlamePlayer3(String player) {
+    return '$player nebyl na úrovni. Říkám to veřejně.';
+  }
+
+  @override
+  String pressReplyBlamePlayer4(String player) {
+    return 'Tohle od hráče $player nestačilo a ode mě to uslyší.';
+  }
+
+  @override
+  String get pressOnRecordWinNext =>
+      'Řečeno do záznamu: další zápas vyhrajete.';
+
+  @override
+  String get pressOnRecordJob =>
+      'Řečeno do záznamu: necháte se soudit podle dalších tří zápasů.';
+
+  @override
+  String pressOnRecordBack(String player) {
+    return 'Řečeno do záznamu: stojíte za hráčem $player.';
+  }
+
+  @override
+  String pressOnRecordBlame(String player) {
+    return 'Řečeno do záznamu: $player vás zklamal.';
   }
 }

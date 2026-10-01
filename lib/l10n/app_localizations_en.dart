@@ -7882,7 +7882,7 @@ class AppLocalizationsEn extends AppLocalizations {
       'Groups are uneven, so results against each big group\'s bottom side are dropped and every team is judged over the same games.';
 
   @override
-  String get careerExportSave => 'Export this save';
+  String get careerExportSave => 'Back up this save';
 
   @override
   String get careerBackupAll => 'BACK UP ALL SAVES';
@@ -9420,5 +9420,567 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String yThrewItAway5(String opponent) {
     return 'Two goals in front against $opponent and we managed this. Every single time.';
+  }
+
+  @override
+  String get cycleBackupDone =>
+      'Career backed up to the FNM folder on this phone. Uninstalling the app removes it: to keep a copy elsewhere, use Back up this save on the saves screen.';
+
+  @override
+  String get cycleBackupFailed => 'Could not back up the career this time.';
+
+  @override
+  String pressMomentBigWinWarm1(String opponent) {
+    return 'A night to remember against $opponent. How proud are you of this group?';
+  }
+
+  @override
+  String pressMomentBigWinWarm2(String opponent) {
+    return '$opponent could not live with you. Is this the side you always believed you had?';
+  }
+
+  @override
+  String pressMomentBigWinNeutral1(String opponent) {
+    return 'A big win over $opponent. What made the difference tonight?';
+  }
+
+  @override
+  String pressMomentBigWinNeutral2(String opponent) {
+    return '$opponent beaten, and comfortably. Where did you win it?';
+  }
+
+  @override
+  String pressMomentBigWinHostile1(String opponent) {
+    return 'A good win over $opponent. One good night: why should anyone believe it will last?';
+  }
+
+  @override
+  String pressMomentBigWinHostile2(String opponent) {
+    return 'A fine result against $opponent. Was that your plan, or did the players work it out themselves?';
+  }
+
+  @override
+  String pressMomentBigLossWarm1(String opponent) {
+    return 'A hard night against $opponent. What do you say to the players after one like that?';
+  }
+
+  @override
+  String pressMomentBigLossWarm2(String opponent) {
+    return 'Nobody saw that coming against $opponent. Was it just one of those nights?';
+  }
+
+  @override
+  String pressMomentBigLossNeutral1(String opponent) {
+    return 'That was a chastening night against $opponent. What went wrong?';
+  }
+
+  @override
+  String pressMomentBigLossNeutral2(String opponent) {
+    return '$opponent took you apart. Is this squad good enough?';
+  }
+
+  @override
+  String pressMomentBigLossHostile1(String opponent) {
+    return 'You were second to everything against $opponent. How did you let it get that bad?';
+  }
+
+  @override
+  String pressMomentBigLossHostile2(String opponent) {
+    return '$opponent scored at will. Where was the plan tonight?';
+  }
+
+  @override
+  String pressMomentCrisisWarm1(String opponent) {
+    return 'Another one gets away, this time against $opponent. How do you turn this run around?';
+  }
+
+  @override
+  String pressMomentCrisisWarm2(String opponent) {
+    return 'The results have dried up, and $opponent made it worse. Do you still believe in this group?';
+  }
+
+  @override
+  String pressMomentCrisisNeutral1(String opponent) {
+    return 'No win again, now against $opponent, and the board are watching. Is your job safe?';
+  }
+
+  @override
+  String pressMomentCrisisNeutral2(String opponent) {
+    return 'After $opponent, the run is getting long. Are you worried about your future?';
+  }
+
+  @override
+  String pressMomentCrisisHostile1(String opponent) {
+    return '$opponent now as well. Your predecessor was sacked on a run like this. Why should you survive it?';
+  }
+
+  @override
+  String pressMomentCrisisHostile2(String opponent) {
+    return 'After another night like $opponent, every phone-in wants you out. Would you step down if the board asked?';
+  }
+
+  @override
+  String pressMomentJobVerdictWarm1(String opponent) {
+    return 'You put your job on the line, and after $opponent it has not gone your way. How are you holding up?';
+  }
+
+  @override
+  String pressMomentJobVerdictWarm2(String opponent) {
+    return 'The three matches are done, the last against $opponent. You set the test yourself. What do you make of the verdict?';
+  }
+
+  @override
+  String pressMomentJobVerdictNeutral1(String opponent) {
+    return 'You told us to judge you on the next three. After $opponent, we have. Is your job still yours?';
+  }
+
+  @override
+  String pressMomentJobVerdictNeutral2(String opponent) {
+    return 'Three matches, the last against $opponent, and not what you promised. Have you spoken to the board about your future?';
+  }
+
+  @override
+  String pressMomentJobVerdictHostile1(String opponent) {
+    return 'You set the test yourself and failed it against $opponent. Are you going to resign?';
+  }
+
+  @override
+  String pressMomentJobVerdictHostile2(String opponent) {
+    return 'Your words, not ours: judge me on the next three. After $opponent, why are you still sitting there?';
+  }
+
+  @override
+  String get pressBeatWhoToBlameWarm1 =>
+      'You want more from them. Anyone in particular?';
+
+  @override
+  String get pressBeatWhoToBlameWarm2 =>
+      'You have set the bar high. Who has to step up first?';
+
+  @override
+  String get pressBeatWhoToBlameNeutral1 =>
+      'You say some of them have to look at themselves. Who do you mean?';
+
+  @override
+  String get pressBeatWhoToBlameNeutral2 =>
+      'Not good enough, you say. Who are you talking about?';
+
+  @override
+  String get pressBeatWhoToBlameHostile1 =>
+      'You keep it vague. Will you name names, or does it come back to you?';
+
+  @override
+  String get pressBeatWhoToBlameHostile2 =>
+      'Every week it is somebody else\'s fault. Whose is it this time?';
+
+  @override
+  String get pressBeatIfYouDontWarm1 =>
+      'Brave words. And if the next one does not go your way?';
+
+  @override
+  String get pressBeatIfYouDontWarm2 =>
+      'The country will hold you to that. What if it does not come off?';
+
+  @override
+  String get pressBeatIfYouDontNeutral1 =>
+      'And if you don\'t win it? What then?';
+
+  @override
+  String get pressBeatIfYouDontNeutral2 =>
+      'You\'ve said it now. What happens if you\'re wrong?';
+
+  @override
+  String get pressBeatIfYouDontHostile1 =>
+      'We have heard promises in this room before. What do you owe the supporters if this one breaks too?';
+
+  @override
+  String get pressBeatIfYouDontHostile2 =>
+      'And when it doesn\'t happen, what will the excuse be?';
+
+  @override
+  String get pressBeatFollowUpWarm1 =>
+      'One more, if you have it in you. What does this group still need to work on?';
+
+  @override
+  String get pressBeatFollowUpWarm2 =>
+      'When the dust settles, what do you take from tonight into the next match?';
+
+  @override
+  String get pressBeatFollowUpNeutral1 =>
+      'Let\'s go a little deeper. What has to improve before the next match?';
+
+  @override
+  String get pressBeatFollowUpNeutral2 =>
+      'Looking past the scoreline: is this squad where you want it?';
+
+  @override
+  String get pressBeatFollowUpHostile1 =>
+      'Plenty of words, not much said. What actually changes from here?';
+
+  @override
+  String get pressBeatFollowUpHostile2 =>
+      'The supporters want a straight answer. Is this team good enough, yes or no?';
+
+  @override
+  String pressBeatStandoutWarm1(String player) {
+    return '$player was outstanding tonight. How far can he go?';
+  }
+
+  @override
+  String pressBeatStandoutWarm2(String player) {
+    return '$player is in every headline tonight. Did you see that coming?';
+  }
+
+  @override
+  String pressBeatStandoutNeutral1(String player) {
+    return '$player stood out. What did you ask of him tonight?';
+  }
+
+  @override
+  String pressBeatStandoutNeutral2(String player) {
+    return 'Was $player the difference tonight?';
+  }
+
+  @override
+  String pressBeatStandoutHostile1(String player) {
+    return 'Without $player that is a different story. Is this a team, or one player?';
+  }
+
+  @override
+  String pressBeatStandoutHostile2(String player) {
+    return '$player was brilliant. Your doing, or his?';
+  }
+
+  @override
+  String pressBeatStrugglerWarm1(String player) {
+    return '$player had a hard night. Is he carrying a knock?';
+  }
+
+  @override
+  String pressBeatStrugglerWarm2(String player) {
+    return '$player did not have his night. Will you put an arm round him?';
+  }
+
+  @override
+  String pressBeatStrugglerNeutral1(String player) {
+    return '$player struggled tonight. Does he keep his place?';
+  }
+
+  @override
+  String pressBeatStrugglerNeutral2(String player) {
+    return '$player looked off the pace. What did you make of his game?';
+  }
+
+  @override
+  String pressBeatStrugglerHostile1(String player) {
+    return '$player was a passenger again. Why do you keep picking him?';
+  }
+
+  @override
+  String pressBeatStrugglerHostile2(String player) {
+    return 'Everyone could see $player was not at it. Everyone except the bench?';
+  }
+
+  @override
+  String get pressThrowbackWinNextKeptWarm =>
+      'You said you would win the next one, and you did. Does it feel good to be right?';
+
+  @override
+  String get pressThrowbackWinNextKeptNeutral =>
+      'You promised a win in the next match and delivered it. Confidence, or bravado?';
+
+  @override
+  String get pressThrowbackWinNextKeptHostile =>
+      'You said you would win the next one, and you did. Luck, or are we meant to start listening?';
+
+  @override
+  String get pressThrowbackWinNextBrokenWarm =>
+      'You told us you would win that one. It did not happen. What went wrong?';
+
+  @override
+  String get pressThrowbackWinNextBrokenNeutral =>
+      'You said you\'d win the next one. You didn\'t. Why should we believe the next promise?';
+
+  @override
+  String get pressThrowbackWinNextBrokenHostile =>
+      'You said you\'d win the next one. You didn\'t. Do your words still mean anything in this room?';
+
+  @override
+  String get pressThrowbackJobKeptWarm =>
+      'You asked to be judged on three matches, and you passed. Vindicated?';
+
+  @override
+  String get pressThrowbackJobKeptNeutral =>
+      'Judge me on the next three, you said. We did, and the results came. What did that test teach you?';
+
+  @override
+  String get pressThrowbackJobKeptHostile =>
+      'You gave yourself three matches and got through them. Was the test ever that hard?';
+
+  @override
+  String get pressThrowbackJobBrokenWarm =>
+      'You asked to be judged on three matches. They did not go your way. What have you learned?';
+
+  @override
+  String get pressThrowbackJobBrokenNeutral =>
+      'You said judge me on the next three. The three are gone, and so is the benefit of the doubt. What now?';
+
+  @override
+  String get pressThrowbackJobBrokenHostile =>
+      'You set the test and failed it. Why should anyone take your word now?';
+
+  @override
+  String pressThrowbackBackKeptWarm(String player) {
+    return 'You backed $player when others would not. He delivered. Some of the credit yours?';
+  }
+
+  @override
+  String pressThrowbackBackKeptNeutral(String player) {
+    return 'You backed $player. He delivered. Faith, or knowledge?';
+  }
+
+  @override
+  String pressThrowbackBackKeptHostile(String player) {
+    return 'You backed $player, and for once it paid off. Will you be that sure next time?';
+  }
+
+  @override
+  String pressThrowbackBackBrokenWarm(String player) {
+    return 'You stood by $player, and it has not worked out. Do you still believe in him?';
+  }
+
+  @override
+  String pressThrowbackBackBrokenNeutral(String player) {
+    return 'You backed $player. He has not repaid it. Was that a mistake?';
+  }
+
+  @override
+  String pressThrowbackBackBrokenHostile(String player) {
+    return 'Your judgement or your loyalty: which one failed with $player?';
+  }
+
+  @override
+  String pressThrowbackBlameKeptWarm(String player) {
+    return 'You were hard on $player, and the matches since have proved you right. Any satisfaction in that?';
+  }
+
+  @override
+  String pressThrowbackBlameKeptNeutral(String player) {
+    return 'You called $player out, and he has not answered. Is there a way back for him?';
+  }
+
+  @override
+  String pressThrowbackBlameKeptHostile(String player) {
+    return 'You hung $player out to dry and he has not recovered. Did you break him?';
+  }
+
+  @override
+  String pressThrowbackBlameBrokenWarm(String player) {
+    return 'You called $player out, and he answered you on the pitch. Was that the idea all along?';
+  }
+
+  @override
+  String pressThrowbackBlameBrokenNeutral(String player) {
+    return 'You blamed $player, and since then he has been one of your best. Do you owe him an apology?';
+  }
+
+  @override
+  String pressThrowbackBlameBrokenHostile(String player) {
+    return 'You threw $player under the bus, and he has been your best player since. Will you apologise?';
+  }
+
+  @override
+  String get pressReplyCreditPlayers1 =>
+      'These players gave me everything. I would not swap a single one of them.';
+
+  @override
+  String get pressReplyCreditPlayers2 =>
+      'Nobody works harder than this group. I\'ll defend them all day.';
+
+  @override
+  String get pressReplyCreditPlayers3 =>
+      'You won\'t hear a word against my players from this seat.';
+
+  @override
+  String get pressReplyCreditPlayers4 =>
+      'The players deserve the credit, not me. Write about them.';
+
+  @override
+  String get pressReplyTakeResponsibility1 =>
+      'That one is on me. I picked the side and I set them up.';
+
+  @override
+  String get pressReplyTakeResponsibility2 =>
+      'Judge me, not them. It\'s my team and my responsibility.';
+
+  @override
+  String get pressReplyTakeResponsibility3 =>
+      'If you want somebody to blame, I\'m sitting right here.';
+
+  @override
+  String get pressReplyTakeResponsibility4 =>
+      'The responsibility is mine. Leave the players out of it.';
+
+  @override
+  String get pressReplyDemandMore1 =>
+      'I want more. Some of them know exactly what I mean.';
+
+  @override
+  String get pressReplyDemandMore2 =>
+      'Effort isn\'t enough at this level. I want more, and I\'ve told them so.';
+
+  @override
+  String get pressReplyDemandMore3 =>
+      'I expect more from every one of them, starting tomorrow.';
+
+  @override
+  String get pressReplyDemandMore4 =>
+      'Some of them have to look at themselves. I\'m not satisfied.';
+
+  @override
+  String get pressReplyPromiseWinNext1 =>
+      'We will win the next one. You can write that down.';
+
+  @override
+  String get pressReplyPromiseWinNext2 =>
+      'Mark my words: we win the next match.';
+
+  @override
+  String get pressReplyPromiseWinNext3 =>
+      'Next game, we win. I\'m saying it here so you can hold me to it.';
+
+  @override
+  String get pressReplyPromiseWinNext4 =>
+      'I\'m sure of this team. We win the next match.';
+
+  @override
+  String get pressReplyJobOnTheLine1 =>
+      'Judge me on the next three matches. That\'s fair.';
+
+  @override
+  String get pressReplyJobOnTheLine2 =>
+      'Give me three games. If it isn\'t right by then, judge me on it.';
+
+  @override
+  String get pressReplyJobOnTheLine3 =>
+      'The next three will show whether I\'m the right man. Hold me to that.';
+
+  @override
+  String get pressReplyJobOnTheLine4 =>
+      'Three matches. Then write whatever you like about me.';
+
+  @override
+  String get pressReplyDeflect1 =>
+      'We take it one game at a time. Nothing more to add.';
+
+  @override
+  String get pressReplyDeflect2 =>
+      'I\'m not going to make headlines for you today.';
+
+  @override
+  String get pressReplyDeflect3 =>
+      'Next game. That\'s all I\'m thinking about.';
+
+  @override
+  String get pressReplyDeflect4 => 'What I think stays in the dressing room.';
+
+  @override
+  String get pressReplyTakeCredit1 =>
+      'I said it because I believed it, and I was right.';
+
+  @override
+  String get pressReplyTakeCredit2 =>
+      'I read it correctly. That\'s what I\'m here for.';
+
+  @override
+  String get pressReplyTakeCredit3 =>
+      'Call it judgement. I knew what I was saying.';
+
+  @override
+  String get pressReplyTakeCredit4 =>
+      'I made the call and it came off. I\'ll take that.';
+
+  @override
+  String get pressReplyStandByIt1 => 'I said what I believed. I stand by it.';
+
+  @override
+  String get pressReplyStandByIt2 => 'I don\'t take back a word of it.';
+
+  @override
+  String get pressReplyStandByIt3 =>
+      'Same answer as then. I meant it, and I still do.';
+
+  @override
+  String get pressReplyStandByIt4 => 'I\'d say it again tomorrow.';
+
+  @override
+  String get pressReplyAdmitMistake1 => 'I got that one wrong. I\'ll own it.';
+
+  @override
+  String get pressReplyAdmitMistake2 =>
+      'Fair enough, I misjudged it. I\'ll learn from it.';
+
+  @override
+  String get pressReplyAdmitMistake3 => 'I was wrong, and I can say so.';
+
+  @override
+  String get pressReplyAdmitMistake4 =>
+      'That call didn\'t work, and it was mine.';
+
+  @override
+  String pressReplyBackPlayer1(String player) {
+    return '$player has my full backing. He\'ll come good.';
+  }
+
+  @override
+  String pressReplyBackPlayer2(String player) {
+    return 'I believe in $player, and he\'ll show you why.';
+  }
+
+  @override
+  String pressReplyBackPlayer3(String player) {
+    return 'You won\'t hear a word against $player from me. He\'ll deliver.';
+  }
+
+  @override
+  String pressReplyBackPlayer4(String player) {
+    return '$player stays in my plans. Watch what he does next.';
+  }
+
+  @override
+  String pressReplyBlamePlayer1(String player) {
+    return '$player let us down tonight, and he knows it.';
+  }
+
+  @override
+  String pressReplyBlamePlayer2(String player) {
+    return 'I expected far more from $player. He has to answer that.';
+  }
+
+  @override
+  String pressReplyBlamePlayer3(String player) {
+    return '$player wasn\'t at the level. I\'ll say that publicly.';
+  }
+
+  @override
+  String pressReplyBlamePlayer4(String player) {
+    return 'That wasn\'t good enough from $player, and he\'ll hear it from me.';
+  }
+
+  @override
+  String get pressOnRecordWinNext =>
+      'On the record: you will win the next match.';
+
+  @override
+  String get pressOnRecordJob => 'On the record: judge you on the next three.';
+
+  @override
+  String pressOnRecordBack(String player) {
+    return 'On the record: backing $player.';
+  }
+
+  @override
+  String pressOnRecordBlame(String player) {
+    return 'On the record: $player let you down.';
   }
 }
