@@ -59,7 +59,7 @@ abstract final class StatementJudge {
     if (s.status != StatementStatus.open) return null;
     const lapsed = (status: StatementStatus.lapsed, effect: none);
     if (s.nationId != currentNationId) return lapsed;
-    final cycleOver = s.cycle < currentCycle;
+    if (s.cycle < currentCycle) return lapsed;
     switch (s.kind) {
       case StatementKind.winNext:
       case StatementKind.jobOnTheLine:
@@ -68,7 +68,7 @@ abstract final class StatementJudge {
             if (x.date.isAfter(s.madeOn)) x,
         ]..sort((a, b) => a.date.compareTo(b.date));
         final need = s.kind == StatementKind.winNext ? 1 : jobWindow;
-        if (after.length < need) return cycleOver ? lapsed : null;
+        if (after.length < need) return null;
         final wins = after
             .take(need)
             .where((x) => x.scored > x.conceded)
@@ -87,14 +87,12 @@ abstract final class StatementJudge {
           for (final x in appearances)
             if (x.date.isAfter(s.madeOn)) x,
         ]..sort((a, b) => a.date.compareTo(b.date));
-        if (after.length < playerWindow) return cycleOver ? lapsed : null;
-        final mean =
-            after
-                .take(playerWindow)
-                .map((x) => x.rating)
-                .reduce((a, b) => a + b) /
-            playerWindow;
-        final cameGood = mean >= playerBar;
+        if (after.length < playerWindow) return null;
+        final sum = after
+            .take(playerWindow)
+            .map((x) => x.rating)
+            .reduce((a, b) => a + b);
+        final cameGood = sum >= playerBar * playerWindow - 1e-9;
         if (s.kind == StatementKind.backPlayer) {
           return cameGood
               ? (status: StatementStatus.kept, effect: backKept)

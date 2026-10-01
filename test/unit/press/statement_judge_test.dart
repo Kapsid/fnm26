@@ -134,6 +134,13 @@ void main() {
       expect(v.status, StatementStatus.broken);
       expect(v.effect, StatementJudge.none);
     });
+    test('boundary: three 6.8 ratings stays kept despite floating point', () {
+      final v = judge(
+        st(StatementKind.backPlayer, playerId: 5),
+        apps: [a(1, 6.8), a(2, 6.8), a(3, 6.8)],
+      )!;
+      expect(v.status, StatementStatus.kept);
+    });
   });
 
   group('lapsing', () {
@@ -163,6 +170,30 @@ void main() {
         isNull,
       );
     });
+    test(
+      'winNext made in cycle 0 lapses when judged in cycle 1, even with a win',
+      () {
+        final v = judge(
+          st(StatementKind.winNext, cycle: 0),
+          matches: [m(3, 2, 1)],
+          cycle: 1,
+        )!;
+        expect(v.status, StatementStatus.lapsed);
+        expect(v.effect, StatementJudge.none);
+      },
+    );
+    test(
+      'backPlayer made in cycle 0 lapses when judged in cycle 1, even with great appearances',
+      () {
+        final v = judge(
+          st(StatementKind.backPlayer, playerId: 5, cycle: 0),
+          apps: [a(1, 9.0), a(2, 9.0), a(3, 9.0)],
+          cycle: 1,
+        )!;
+        expect(v.status, StatementStatus.lapsed);
+        expect(v.effect, StatementJudge.none);
+      },
+    );
   });
 
   group('credibility', () {
