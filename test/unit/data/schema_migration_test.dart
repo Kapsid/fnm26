@@ -241,6 +241,38 @@ void main() {
     expect(row.readNullable<String>('spec'), isNull);
   });
 
+  test('v49 adds the press tables to a populated v48 save', () async {
+    // 48 → 49 adds the statements and conferences the press overhaul keeps.
+    // Purely additive: the old answers stay, the new tables start empty.
+    final schema = await verifier.schemaAt(48);
+    final old = schema.newConnection();
+    final raw = AppDatabase.forTesting(old);
+    await raw.customStatement(
+      'INSERT INTO careers (id, nation_id, manager_name, created_at, '
+      'in_game_date, rng_seed, cycle_pointer, budget) '
+      'VALUES (1, 1, ?, 0, 0, 7, 0, 0)',
+      ['Archivist'],
+    );
+    await raw.customStatement(
+      'INSERT INTO press_answers (career_id, cycle, question_key, tone, '
+      'morale_delta, board_delta, answered_at) '
+      'VALUES (1, 0, ?, ?, 1, 0, 0)',
+      ['q1', 'calm'],
+    );
+    await raw.close();
+
+    final db = AppDatabase.forTesting(schema.newConnection());
+    addTearDown(db.close);
+    await verifier.migrateAndValidate(db, 49);
+
+    Future<int> count(String table) async =>
+        (await db.customSelect('SELECT COUNT(*) AS n FROM $table').getSingle())
+            .read<int>('n');
+    expect(await count('press_answers'), 1);
+    expect(await count('press_statements'), 0);
+    expect(await count('press_conferences'), 0);
+  });
+
   for (final MapEntry(key: from, value: to) in upgrades.entries) {
     test('a save migrates from v$from to v$to with its data intact', () async {
       final connection = await verifier.startAt(from);

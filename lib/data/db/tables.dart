@@ -770,6 +770,54 @@ class PressAnswers extends Table {
   DateTimeColumn get answeredAt => dateTime()();
 }
 
+/// What the manager put on the record at a press conference, to be judged by
+/// what happens next. See `StatementJudge`.
+///
+/// The row class is renamed so it does not collide with the domain
+/// `PressStatement` the repository hands out.
+@DataClassName('PressStatementData')
+class PressStatements extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  IntColumn get careerId =>
+      integer().references(Careers, #id, onDelete: KeyAction.cascade)();
+  IntColumn get cycle => integer()();
+
+  /// The nation he managed when he said it: a statement about a squad he has
+  /// since left lapses rather than being judged against another team.
+  IntColumn get nationId => integer()();
+
+  /// A `StatementKind` name.
+  TextColumn get kind => text()();
+  IntColumn get playerId => integer().nullable()();
+
+  /// The date of the match the conference was about; its window opens after.
+  DateTimeColumn get madeOn => dateTime()();
+  IntColumn get madeAfterFixtureId => integer()();
+
+  /// A `StatementStatus` name.
+  TextColumn get status => text().withDefault(const Constant('open'))();
+  DateTimeColumn get judgedOn => dateTime().nullable()();
+  BoolColumn get thrownBack => boolean().withDefault(const Constant(false))();
+}
+
+/// A press conference the season has called. Stored when it is triggered, so
+/// the quiet period and the per-cycle ceiling count conferences whether or
+/// not the manager opened them.
+class PressConferences extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  IntColumn get careerId =>
+      integer().references(Careers, #id, onDelete: KeyAction.cascade)();
+  IntColumn get cycle => integer()();
+
+  /// A `ConferenceReason` name.
+  TextColumn get reason => text()();
+  IntColumn get fixtureId => integer()();
+  DateTimeColumn get triggeredOn => dateTime()();
+
+  /// A `ConferenceStatus` name.
+  TextColumn get status => text().withDefault(const Constant('pending'))();
+}
+
 /// The individual trophies a player has won.
 ///
 /// Stored rather than derived: the awards used to be computed inside the

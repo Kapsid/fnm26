@@ -61,6 +61,8 @@ const int _newgenIdBase = 1000000000;
     NaturalizedPlayers,
     TacticFamiliarities,
     PressAnswers,
+    PressStatements,
+    PressConferences,
     PlayerHonours,
   ],
 )
@@ -82,7 +84,7 @@ class AppDatabase extends _$AppDatabase {
   /// full set of upgrade paths from it — see `schema_migration_test.dart`.
   /// A hand-written list of paths is a step somebody forgets on the bump that
   /// matters.
-  static const int currentSchemaVersion = 48;
+  static const int currentSchemaVersion = 49;
 
   @override
   int get schemaVersion => currentSchemaVersion;
@@ -270,6 +272,10 @@ class AppDatabase extends _$AppDatabase {
         // which is the honest thing for an archive with nothing else in it.
         from47To48: (m, schema) async {
           await m.addColumn(schema.messages, schema.messages.spec);
+        },
+        from48To49: (m, schema) async {
+          await m.createTable(schema.pressStatements);
+          await m.createTable(schema.pressConferences);
         },
       )(m, from, to);
     },
