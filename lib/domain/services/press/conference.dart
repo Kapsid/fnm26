@@ -85,7 +85,13 @@ abstract final class ConferenceTrigger {
   }) {
     if (played.isEmpty) return null;
     if (jobJustBroken) return ConferenceReason.jobVerdict;
-    final ms = [...played]..sort((a, b) => a.date.compareTo(b.date));
+    final ms = [...played]
+      ..sort((a, b) {
+        final dateCompare = a.date.compareTo(b.date);
+        return dateCompare != 0
+            ? dateCompare
+            : a.fixtureId.compareTo(b.fixtureId);
+      });
     final latest = ms.last;
     if (lastConference != null &&
         latest.date.difference(lastConference).inDays < quietDays) {

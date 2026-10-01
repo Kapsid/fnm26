@@ -104,4 +104,127 @@ void main() {
     expect(reason(played, count: 6), isNull);
     expect(reason(played, count: 6, job: true), ConferenceReason.jobVerdict);
   });
+
+  test('startsRun: two wins then a heroic win (run of 3) is a big win', () {
+    expect(
+      reason([
+        om(1, 1, 0),
+        om(2, 2, 1),
+        om(10, 2, 0, standing: ResultStanding.heroic),
+      ]),
+      ConferenceReason.bigWin,
+    );
+  });
+
+  test('startsRun: heroic win after only one prior win (run of 2) is not', () {
+    expect(
+      reason([
+        om(1, 1, 0),
+        om(10, 2, 0, standing: ResultStanding.heroic),
+      ]),
+      isNull,
+    );
+  });
+
+  test('endsRun: three wins then humiliating loss is a big loss', () {
+    expect(
+      reason([
+        om(1, 1, 0),
+        om(2, 2, 1),
+        om(3, 1, 0),
+        om(10, 0, 2, standing: ResultStanding.humiliating),
+      ]),
+      ConferenceReason.bigLoss,
+    );
+  });
+
+  test(
+    'endsRun negative: two winless then heroic win (prior run < 3) is not',
+    () {
+      expect(
+        reason([
+          om(1, 0, 1),
+          om(2, 0, 0),
+          om(10, 2, 0, standing: ResultStanding.heroic),
+        ]),
+        isNull,
+      );
+    },
+  );
+
+  test(
+    'unsorted input: ends winless run scenario shuffled gives same result',
+    () {
+      final ordered = [
+        om(1, 0, 1),
+        om(2, 0, 0),
+        om(3, 0, 2),
+        om(10, 3, 0, standing: ResultStanding.heroic),
+      ];
+      final shuffled = [
+        om(10, 3, 0, standing: ResultStanding.heroic),
+        om(1, 0, 1),
+        om(3, 0, 2),
+        om(2, 0, 0),
+      ];
+      expect(reason(ordered), ConferenceReason.bigWin);
+      expect(reason(shuffled), ConferenceReason.bigWin);
+    },
+  );
+
+  test('quiet boundary: 44 days after lastConference is not enough', () {
+    final played = [om(10, 0, 1), om(20, 0, 0), om(30, 0, 2)];
+    final last = DateTime.utc(2030, 1, 1).add(const Duration(days: 30 - 44));
+    expect(reason(played, last: last), isNull);
+  });
+
+  test('quiet boundary: 45 days after lastConference breaks silence', () {
+    final played = [om(10, 0, 1), om(20, 0, 0), om(30, 0, 2)];
+    final last = DateTime.utc(2030, 1, 1).add(const Duration(days: 30 - 45));
+    expect(reason(played, last: last), ConferenceReason.crisis);
+  });
+
+  test('ceiling boundary: 5 conferences with crisis sequence → crisis', () {
+    final played = [om(1, 0, 1), om(2, 0, 0), om(3, 0, 2)];
+    expect(reason(played, count: 5), ConferenceReason.crisis);
+  });
+
+  test('board boundary: board 40 after a loss is not a crisis', () {
+    expect(reason([om(1, 0, 1)], board: 40), isNull);
+  });
+
+  test('same date, higher fixtureId is latest (deterministic sort)', () {
+    final date = DateTime.utc(2030, 1, 1);
+    final m1 = (
+      fixtureId: 1,
+      date: date,
+      scored: 1,
+      conceded: 0,
+      knockout: false,
+      lastGroupMatch: false,
+      standing: ResultStanding.par,
+    );
+    final m2 = (
+      fixtureId: 2,
+      date: date,
+      scored: 1,
+      conceded: 0,
+      knockout: false,
+      lastGroupMatch: false,
+      standing: ResultStanding.par,
+    );
+    final m3 = (
+      fixtureId: 3,
+      date: date,
+      scored: 2,
+      conceded: 0,
+      knockout: true,
+      lastGroupMatch: false,
+      standing: ResultStanding.heroic,
+    );
+    // All orderings should sort to [m1, m2, m3] and recognize m3 as latest
+    expect(reason([m3, m1, m2]), ConferenceReason.bigWin);
+    expect(reason([m1, m3, m2]), ConferenceReason.bigWin);
+    expect(reason([m1, m2, m3]), ConferenceReason.bigWin);
+  });
 }

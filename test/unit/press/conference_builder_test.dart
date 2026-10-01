@@ -38,6 +38,47 @@ void main() {
     }
   });
 
+  test(
+    'jobOnTheLine appears only in reaction to promiseWinNext for big results',
+    () {
+      for (final r in [ConferenceReason.bigWin, ConferenceReason.bigLoss]) {
+        final f = facts(r);
+        final opening = ConferenceBuilder.opening(f);
+
+        // jobOnTheLine must not be in opening for big results
+        expect(
+          opening.answers,
+          isNot(contains(AnswerKind.jobOnTheLine)),
+          reason: 'opening for $r',
+        );
+
+        // walk every reaction
+        for (final answer in opening.answers) {
+          final reaction = ConferenceBuilder.reaction(f, answer);
+
+          if (answer == AnswerKind.promiseWinNext) {
+            // only promiseWinNext reaction may have jobOnTheLine
+            // (and only if no open job)
+            if (!f.hasOpenJob) {
+              expect(
+                reaction.answers,
+                contains(AnswerKind.jobOnTheLine),
+                reason: '$r + promiseWinNext',
+              );
+            }
+          } else {
+            // all other reactions must not have jobOnTheLine
+            expect(
+              reaction.answers,
+              isNot(contains(AnswerKind.jobOnTheLine)),
+              reason: '$r + $answer',
+            );
+          }
+        }
+      }
+    },
+  );
+
   test('no free answer: every opening has something that costs', () {
     for (final r in ConferenceReason.values) {
       final answers = ConferenceBuilder.opening(facts(r)).answers;
