@@ -92,15 +92,15 @@ abstract final class Condition {
     double travelFatigue = 1,
     int campBonus = 0,
     int clubDelta = 0,
+    int statementDelta = 0,
     ClubStanding? clubStanding,
   }) {
     final f = form(recentRatings);
     final t = fatigue(appearanceDates, asOf);
     final tired = (t.delta * travelFatigue).round();
-    final net = (f.delta + tired + moraleDelta + campBonus + clubDelta).clamp(
-      -9,
-      6,
-    );
+    final net =
+        (f.delta + tired + moraleDelta + campBonus + clubDelta + statementDelta)
+            .clamp(-9, 6);
     return (
       form: f.state,
       formRating: f.avg,
