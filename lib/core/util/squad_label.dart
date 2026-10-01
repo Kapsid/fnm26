@@ -64,3 +64,21 @@ String moraleLabel(AppLocalizations l, int morale) => morale >= 78
     : morale >= 25
     ? l.moraleUneasy
     : l.moraleRockBottom;
+
+/// The heading of the player picker for a [p] slot ("PICK STRIKER"). Its own
+/// string per position rather than "PICK {role}": Czech puts the position in
+/// the accusative ("VYBERTE ÚTOČNÍKA"), which a plugged-in name cannot do.
+String pickPositionTitle(AppLocalizations l, PlayerPosition p) => switch (p) {
+  PlayerPosition.gk => l.tacticsPickGoalkeeper,
+  PlayerPosition.lb => l.tacticsPickLeftBack,
+  PlayerPosition.cb => l.tacticsPickCentreBack,
+  PlayerPosition.rb => l.tacticsPickRightBack,
+  PlayerPosition.dm => l.tacticsPickDefensiveMid,
+  PlayerPosition.cm => l.tacticsPickCentralMid,
+  PlayerPosition.am => l.tacticsPickAttackingMid,
+  PlayerPosition.lm => l.tacticsPickLeftMid,
+  PlayerPosition.rm => l.tacticsPickRightMid,
+  PlayerPosition.lw => l.tacticsPickLeftWing,
+  PlayerPosition.rw => l.tacticsPickRightWing,
+  PlayerPosition.st => l.tacticsPickStriker,
+};

@@ -896,9 +896,40 @@ class AppLocalizationsEn extends AppLocalizations {
   String get tacticsInstrDirect => 'Direct';
 
   @override
-  String tacticsPickRole(String role) {
-    return 'PICK $role';
-  }
+  String get tacticsPickGoalkeeper => 'PICK GOALKEEPER';
+
+  @override
+  String get tacticsPickLeftBack => 'PICK LEFT BACK';
+
+  @override
+  String get tacticsPickCentreBack => 'PICK CENTRE BACK';
+
+  @override
+  String get tacticsPickRightBack => 'PICK RIGHT BACK';
+
+  @override
+  String get tacticsPickDefensiveMid => 'PICK DEFENSIVE MID';
+
+  @override
+  String get tacticsPickCentralMid => 'PICK CENTRAL MID';
+
+  @override
+  String get tacticsPickAttackingMid => 'PICK ATTACKING MID';
+
+  @override
+  String get tacticsPickLeftMid => 'PICK LEFT MID';
+
+  @override
+  String get tacticsPickRightMid => 'PICK RIGHT MID';
+
+  @override
+  String get tacticsPickLeftWing => 'PICK LEFT WING';
+
+  @override
+  String get tacticsPickRightWing => 'PICK RIGHT WING';
+
+  @override
+  String get tacticsPickStriker => 'PICK STRIKER';
 
   @override
   String tacticsRoleOutOfPosition(String role) {

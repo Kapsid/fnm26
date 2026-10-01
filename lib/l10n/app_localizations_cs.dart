@@ -895,9 +895,40 @@ class AppLocalizationsCs extends AppLocalizations {
   String get tacticsInstrDirect => 'Přímá hra';
 
   @override
-  String tacticsPickRole(String role) {
-    return 'VYBERTE $role';
-  }
+  String get tacticsPickGoalkeeper => 'VYBERTE BRANKÁŘE';
+
+  @override
+  String get tacticsPickLeftBack => 'VYBERTE LEVÉHO OBRÁNCE';
+
+  @override
+  String get tacticsPickCentreBack => 'VYBERTE STŘEDNÍHO OBRÁNCE';
+
+  @override
+  String get tacticsPickRightBack => 'VYBERTE PRAVÉHO OBRÁNCE';
+
+  @override
+  String get tacticsPickDefensiveMid => 'VYBERTE DEFENZIVNÍHO ZÁLOŽNÍKA';
+
+  @override
+  String get tacticsPickCentralMid => 'VYBERTE STŘEDNÍHO ZÁLOŽNÍKA';
+
+  @override
+  String get tacticsPickAttackingMid => 'VYBERTE OFENZIVNÍHO ZÁLOŽNÍKA';
+
+  @override
+  String get tacticsPickLeftMid => 'VYBERTE LEVÉHO ZÁLOŽNÍKA';
+
+  @override
+  String get tacticsPickRightMid => 'VYBERTE PRAVÉHO ZÁLOŽNÍKA';
+
+  @override
+  String get tacticsPickLeftWing => 'VYBERTE LEVÉ KŘÍDLO';
+
+  @override
+  String get tacticsPickRightWing => 'VYBERTE PRAVÉ KŘÍDLO';
+
+  @override
+  String get tacticsPickStriker => 'VYBERTE ÚTOČNÍKA';
 
   @override
   String tacticsRoleOutOfPosition(String role) {

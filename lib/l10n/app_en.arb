@@ -1412,15 +1412,53 @@
   "@tacticsInstrDirect": {
     "description": "High end of the directness slider."
   },
-  "tacticsPickRole": "PICK {role}",
-  "@tacticsPickRole": {
-    "description": "Heading of the player-picker sheet for a given slot's role.",
-    "placeholders": {
-      "role": {
-        "type": "String",
-        "example": "STRIKER"
-      }
-    }
+  "tacticsPickGoalkeeper": "PICK GOALKEEPER",
+  "@tacticsPickGoalkeeper": {
+    "description": "Heading of the player-picker sheet for a goalkeeper slot. Czech needs its own accusative form, so each position has its own heading."
+  },
+  "tacticsPickLeftBack": "PICK LEFT BACK",
+  "@tacticsPickLeftBack": {
+    "description": "Heading of the player-picker sheet for a left back slot. Czech needs its own accusative form, so each position has its own heading."
+  },
+  "tacticsPickCentreBack": "PICK CENTRE BACK",
+  "@tacticsPickCentreBack": {
+    "description": "Heading of the player-picker sheet for a centre back slot. Czech needs its own accusative form, so each position has its own heading."
+  },
+  "tacticsPickRightBack": "PICK RIGHT BACK",
+  "@tacticsPickRightBack": {
+    "description": "Heading of the player-picker sheet for a right back slot. Czech needs its own accusative form, so each position has its own heading."
+  },
+  "tacticsPickDefensiveMid": "PICK DEFENSIVE MID",
+  "@tacticsPickDefensiveMid": {
+    "description": "Heading of the player-picker sheet for a defensive mid slot. Czech needs its own accusative form, so each position has its own heading."
+  },
+  "tacticsPickCentralMid": "PICK CENTRAL MID",
+  "@tacticsPickCentralMid": {
+    "description": "Heading of the player-picker sheet for a central mid slot. Czech needs its own accusative form, so each position has its own heading."
+  },
+  "tacticsPickAttackingMid": "PICK ATTACKING MID",
+  "@tacticsPickAttackingMid": {
+    "description": "Heading of the player-picker sheet for a attacking mid slot. Czech needs its own accusative form, so each position has its own heading."
+  },
+  "tacticsPickLeftMid": "PICK LEFT MID",
+  "@tacticsPickLeftMid": {
+    "description": "Heading of the player-picker sheet for a left mid slot. Czech needs its own accusative form, so each position has its own heading."
+  },
+  "tacticsPickRightMid": "PICK RIGHT MID",
+  "@tacticsPickRightMid": {
+    "description": "Heading of the player-picker sheet for a right mid slot. Czech needs its own accusative form, so each position has its own heading."
+  },
+  "tacticsPickLeftWing": "PICK LEFT WING",
+  "@tacticsPickLeftWing": {
+    "description": "Heading of the player-picker sheet for a left wing slot. Czech needs its own accusative form, so each position has its own heading."
+  },
+  "tacticsPickRightWing": "PICK RIGHT WING",
+  "@tacticsPickRightWing": {
+    "description": "Heading of the player-picker sheet for a right wing slot. Czech needs its own accusative form, so each position has its own heading."
+  },
+  "tacticsPickStriker": "PICK STRIKER",
+  "@tacticsPickStriker": {
+    "description": "Heading of the player-picker sheet for a striker slot. Czech needs its own accusative form, so each position has its own heading."
   },
   "tacticsRoleOutOfPosition": "{role} · out of position",
   "@tacticsRoleOutOfPosition": {

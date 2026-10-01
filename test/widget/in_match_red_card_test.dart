@@ -143,9 +143,7 @@ void main() {
 
     expect(
       find.text(
-        l.tacticsPickRole(
-          positionName(l, formation.positions[10]).toUpperCase(),
-        ),
+        pickPositionTitle(l, formation.positions[10]),
       ),
       findsNothing,
       reason: 'the slot picker must not open on a place the side has lost',

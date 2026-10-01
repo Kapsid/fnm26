@@ -255,7 +255,18 @@ tacticsInstrHigh,High end of the defensive-line slider.,,High,Vysoká
 tacticsInstrDirectness,Instruction slider: directness.,,Directness,Přímočarost
 tacticsInstrPossession,Low end of the directness slider.,,Possession,Držení míče
 tacticsInstrDirect,High end of the directness slider.,,Direct,Přímá hra
-tacticsPickRole,Heading of the player-picker sheet for a given slot's role.,{role},PICK {role},VYBERTE {role}
+tacticsPickGoalkeeper,"Heading of the player-picker sheet for a goalkeeper slot. Czech needs its own accusative form, so each position has its own heading.",,PICK GOALKEEPER,VYBERTE BRANKÁŘE
+tacticsPickLeftBack,"Heading of the player-picker sheet for a left back slot. Czech needs its own accusative form, so each position has its own heading.",,PICK LEFT BACK,VYBERTE LEVÉHO OBRÁNCE
+tacticsPickCentreBack,"Heading of the player-picker sheet for a centre back slot. Czech needs its own accusative form, so each position has its own heading.",,PICK CENTRE BACK,VYBERTE STŘEDNÍHO OBRÁNCE
+tacticsPickRightBack,"Heading of the player-picker sheet for a right back slot. Czech needs its own accusative form, so each position has its own heading.",,PICK RIGHT BACK,VYBERTE PRAVÉHO OBRÁNCE
+tacticsPickDefensiveMid,"Heading of the player-picker sheet for a defensive mid slot. Czech needs its own accusative form, so each position has its own heading.",,PICK DEFENSIVE MID,VYBERTE DEFENZIVNÍHO ZÁLOŽNÍKA
+tacticsPickCentralMid,"Heading of the player-picker sheet for a central mid slot. Czech needs its own accusative form, so each position has its own heading.",,PICK CENTRAL MID,VYBERTE STŘEDNÍHO ZÁLOŽNÍKA
+tacticsPickAttackingMid,"Heading of the player-picker sheet for a attacking mid slot. Czech needs its own accusative form, so each position has its own heading.",,PICK ATTACKING MID,VYBERTE OFENZIVNÍHO ZÁLOŽNÍKA
+tacticsPickLeftMid,"Heading of the player-picker sheet for a left mid slot. Czech needs its own accusative form, so each position has its own heading.",,PICK LEFT MID,VYBERTE LEVÉHO ZÁLOŽNÍKA
+tacticsPickRightMid,"Heading of the player-picker sheet for a right mid slot. Czech needs its own accusative form, so each position has its own heading.",,PICK RIGHT MID,VYBERTE PRAVÉHO ZÁLOŽNÍKA
+tacticsPickLeftWing,"Heading of the player-picker sheet for a left wing slot. Czech needs its own accusative form, so each position has its own heading.",,PICK LEFT WING,VYBERTE LEVÉ KŘÍDLO
+tacticsPickRightWing,"Heading of the player-picker sheet for a right wing slot. Czech needs its own accusative form, so each position has its own heading.",,PICK RIGHT WING,VYBERTE PRAVÉ KŘÍDLO
+tacticsPickStriker,"Heading of the player-picker sheet for a striker slot. Czech needs its own accusative form, so each position has its own heading.",,PICK STRIKER,VYBERTE ÚTOČNÍKA
 tacticsRoleOutOfPosition,Subtitle noting a player is playing out of position.,{role},{role} · out of position,{role} · mimo pozici
 tacticsAgeOnly,"A player's age alone, where his position is already shown as a chip beside it.",{age},Age {age},Věk {age}
 tacticsRoleAge,A player's natural role and age.,{role} {age},{role} · Age {age},{role} · Věk {age}

@@ -647,7 +647,7 @@ class TacticsScreen extends ConsumerWidget {
         padding: const EdgeInsets.all(AppSpacing.md),
         children: [
           Text(
-            l.tacticsPickRole(positionName(l, position).toUpperCase()),
+            pickPositionTitle(l, position),
             style: AppTypography.labelMedium.copyWith(color: AppColors.primary),
           ),
           const SizedBox(height: AppSpacing.sm),

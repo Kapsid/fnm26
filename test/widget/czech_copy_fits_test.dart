@@ -180,17 +180,17 @@ void main() {
   group('a position written out in full', () {
     for (final locale in _locales) {
       testWidgets('fits the role picker heading in $locale', (tester) async {
-        // The longest of them, uppercased, is what the role picker's heading
-        // carries: `l.tacticsPickRole(positionName(l, p).toUpperCase())`.
+        // The longest of them is what the role picker's heading carries:
+        // `pickPositionTitle(l, p)`, one heading per position.
         await _pump(
           tester,
           Builder(
             builder: (context) {
               final l = AppLocalizations.of(context);
               final longest = PlayerPosition.values
-                  .map((p) => positionName(l, p))
+                  .map((p) => pickPositionTitle(l, p))
                   .reduce((a, b) => a.length >= b.length ? a : b);
-              return Text(l.tacticsPickRole(longest.toUpperCase()));
+              return Text(longest);
             },
           ),
           width: 320,

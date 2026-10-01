@@ -1220,7 +1220,7 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
       backgroundColor: AppColors.surfaceContainer,
       isScrollControlled: true,
       builder: (_) => _SlotPickerSheet(
-        title: l.tacticsPickRole(positionName(l, position).toUpperCase()),
+        title: pickPositionTitle(l, position),
         suitable: noFit ? availableHere : suitableHere,
         onPitch: onPitchHere,
         other: otherHere,

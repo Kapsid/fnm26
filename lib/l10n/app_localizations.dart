@@ -1634,11 +1634,77 @@ abstract class AppLocalizations {
   /// **'Direct'**
   String get tacticsInstrDirect;
 
-  /// Heading of the player-picker sheet for a given slot's role.
+  /// Heading of the player-picker sheet for a goalkeeper slot. Czech needs its own accusative form, so each position has its own heading.
   ///
   /// In en, this message translates to:
-  /// **'PICK {role}'**
-  String tacticsPickRole(String role);
+  /// **'PICK GOALKEEPER'**
+  String get tacticsPickGoalkeeper;
+
+  /// Heading of the player-picker sheet for a left back slot. Czech needs its own accusative form, so each position has its own heading.
+  ///
+  /// In en, this message translates to:
+  /// **'PICK LEFT BACK'**
+  String get tacticsPickLeftBack;
+
+  /// Heading of the player-picker sheet for a centre back slot. Czech needs its own accusative form, so each position has its own heading.
+  ///
+  /// In en, this message translates to:
+  /// **'PICK CENTRE BACK'**
+  String get tacticsPickCentreBack;
+
+  /// Heading of the player-picker sheet for a right back slot. Czech needs its own accusative form, so each position has its own heading.
+  ///
+  /// In en, this message translates to:
+  /// **'PICK RIGHT BACK'**
+  String get tacticsPickRightBack;
+
+  /// Heading of the player-picker sheet for a defensive mid slot. Czech needs its own accusative form, so each position has its own heading.
+  ///
+  /// In en, this message translates to:
+  /// **'PICK DEFENSIVE MID'**
+  String get tacticsPickDefensiveMid;
+
+  /// Heading of the player-picker sheet for a central mid slot. Czech needs its own accusative form, so each position has its own heading.
+  ///
+  /// In en, this message translates to:
+  /// **'PICK CENTRAL MID'**
+  String get tacticsPickCentralMid;
+
+  /// Heading of the player-picker sheet for a attacking mid slot. Czech needs its own accusative form, so each position has its own heading.
+  ///
+  /// In en, this message translates to:
+  /// **'PICK ATTACKING MID'**
+  String get tacticsPickAttackingMid;
+
+  /// Heading of the player-picker sheet for a left mid slot. Czech needs its own accusative form, so each position has its own heading.
+  ///
+  /// In en, this message translates to:
+  /// **'PICK LEFT MID'**
+  String get tacticsPickLeftMid;
+
+  /// Heading of the player-picker sheet for a right mid slot. Czech needs its own accusative form, so each position has its own heading.
+  ///
+  /// In en, this message translates to:
+  /// **'PICK RIGHT MID'**
+  String get tacticsPickRightMid;
+
+  /// Heading of the player-picker sheet for a left wing slot. Czech needs its own accusative form, so each position has its own heading.
+  ///
+  /// In en, this message translates to:
+  /// **'PICK LEFT WING'**
+  String get tacticsPickLeftWing;
+
+  /// Heading of the player-picker sheet for a right wing slot. Czech needs its own accusative form, so each position has its own heading.
+  ///
+  /// In en, this message translates to:
+  /// **'PICK RIGHT WING'**
+  String get tacticsPickRightWing;
+
+  /// Heading of the player-picker sheet for a striker slot. Czech needs its own accusative form, so each position has its own heading.
+  ///
+  /// In en, this message translates to:
+  /// **'PICK STRIKER'**
+  String get tacticsPickStriker;
 
   /// Subtitle noting a player is playing out of position.
   ///
