@@ -43,4 +43,20 @@ void main() {
     expect(MatchStage.category(l, 'NGROUP'), MatchStage.category(l, 'NFINAL'));
     expect(MatchStage.category(l, 'CGROUP'), MatchStage.category(l, 'CFINAL'));
   });
+
+  test('a group game is just the competition, no stage', () {
+    for (final round in ['GROUP', 'CGROUP', 'NGROUP']) {
+      final f = Fixture(
+        id: 1,
+        careerId: 1,
+        competitionId: 1,
+        matchday: 2,
+        date: DateTime(2030, 6),
+        homeNationId: 1,
+        awayNationId: 2,
+        round: round,
+      );
+      expect(MatchStage.label(l, f), MatchStage.category(l, round).toUpperCase());
+    }
+  });
 }
