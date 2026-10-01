@@ -682,6 +682,8 @@ class _EventButtonState extends ConsumerState<_EventButton> {
               context: context,
               backgroundColor: AppColors.surfaceContainer,
               isScrollControlled: true,
+              isDismissible: false,
+              enableDrag: false,
               builder: (_) => PressSheet(
                 careerId: careerId,
                 conference: conference,

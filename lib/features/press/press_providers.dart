@@ -892,11 +892,19 @@ class ConferenceService {
   ) async {
     final repo = _ref.read(careerRepositoryProvider);
     final career = (await repo.byId(careerId))!;
+    // Idempotent: a beat already answered (the sheet was reopened) records
+    // nothing a second time.
+    final key = 'conf:${c.row.id}:$beatIndex';
+    for (final row in await repo.pressAnswers(careerId)) {
+      if (row.questionKey == key) {
+        return (morale: row.moraleDelta, board: row.boardDelta);
+      }
+    }
     final effect = ConferenceBuilder.effectOf(a, c.credibility);
     await repo.recordPressAnswer(
       careerId: careerId,
       cycle: career.cyclePointer,
-      questionKey: 'conf:${c.row.id}:$beatIndex',
+      questionKey: key,
       tone: a.name,
       moraleDelta: effect.morale,
       boardDelta: effect.board,

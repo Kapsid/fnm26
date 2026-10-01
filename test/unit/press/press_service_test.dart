@@ -155,6 +155,25 @@ void main() {
     );
   });
 
+  test('answering the same beat twice records it once', () async {
+    await playedWithConference();
+    final c = await pending();
+    const beat = (
+      kind: BeatKind.moment,
+      answers: [AnswerKind.promiseWinNext],
+      playerId: null,
+    );
+    final svc = container.read(conferenceServiceProvider);
+    final first = await svc.answer(careerId, c, 0, beat, AnswerKind.promiseWinNext);
+    final second = await svc.answer(careerId, c, 0, beat, AnswerKind.promiseWinNext);
+    expect(second, first);
+    expect(
+      (await repo.pressAnswers(careerId)).where((r) => r.questionKey.startsWith('conf:')),
+      hasLength(1),
+    );
+    expect(await repo.statements(careerId), hasLength(1));
+  });
+
   test('finish marks the conference held', () async {
     final (_, id) = await playedWithConference();
     await container.read(conferenceServiceProvider).finish(careerId, id);

@@ -50,6 +50,8 @@ class _PressSheetState extends ConsumerState<PressSheet> {
   final List<AnswerKind> _said = [];
   PressEffect _total = (morale: 0, board: 0);
   bool _busy = false;
+  bool _leaving = false;
+  bool _finished = false;
 
   bool get _over => _said.length >= _length;
   Beat get _beat => _beats.last;
@@ -83,11 +85,14 @@ class _PressSheetState extends ConsumerState<PressSheet> {
   }
 
   Future<void> _leave() async {
+    if (_leaving) return;
+    _leaving = true;
     final navigator = Navigator.of(context);
     await ref
         .read(conferenceServiceProvider)
         .finish(widget.careerId, _c.row.id);
     if (!mounted) return;
+    setState(() => _finished = true);
     navigator.pop();
   }
 
@@ -123,7 +128,9 @@ class _PressSheetState extends ConsumerState<PressSheet> {
     final index = _said.length;
     final beat = _beat;
     final playerName = _nameOf(beat);
-    return SafeArea(
+    return PopScope(
+      canPop: _finished,
+      child: SafeArea(
       child: ConstrainedBox(
         constraints: BoxConstraints(
           maxHeight: MediaQuery.of(context).size.height * 0.85,
@@ -208,6 +215,7 @@ class _PressSheetState extends ConsumerState<PressSheet> {
             ],
           ),
         ),
+      ),
       ),
     );
   }

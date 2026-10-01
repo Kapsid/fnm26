@@ -77,15 +77,28 @@ void main() {
     addTearDown(() => tester.binding.setSurfaceSize(null));
     await tester.pumpApp(
       Scaffold(
-        body: PressSheet(
-          careerId: 1,
-          conference: conference,
-          playerNames: const {7: 'Dvořák', 8: 'Novák', 9: 'Svoboda'},
-          opponentName: 'Brazil',
+        body: Builder(
+          builder: (context) => TextButton(
+            onPressed: () => Navigator.of(context).push(
+              MaterialPageRoute<void>(
+                builder: (_) => Scaffold(
+                  body: PressSheet(
+                    careerId: 1,
+                    conference: conference,
+                    playerNames: const {7: 'Dvořák', 8: 'Novák', 9: 'Svoboda'},
+                    opponentName: 'Brazil',
+                  ),
+                ),
+              ),
+            ),
+            child: const Text('HOST'),
+          ),
         ),
       ),
       overrides: [conferenceServiceProvider.overrideWithValue(fake)],
     );
+    await tester.tap(find.text('HOST'));
+    await tester.pumpAndSettle();
     expect(find.text(l.pressQuestionOf(1, 3)), findsOneWidget);
 
     // The first demandMore answer on the opening beat.
@@ -117,7 +130,11 @@ void main() {
 
     expect(find.text(l.pressTomorrowsHeadline), findsOneWidget);
     await tester.tap(find.text(l.pressLeaveRoom));
+    await tester.tap(find.text(l.pressLeaveRoom), warnIfMissed: false);
     await tester.pumpAndSettle();
     expect(fake.finished, [42]);
+    // Only the sheet popped: the route under it is still there.
+    expect(find.text('HOST'), findsOneWidget);
+    expect(find.byType(PressSheet), findsNothing);
   });
 }
