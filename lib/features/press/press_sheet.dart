@@ -4,238 +4,91 @@ import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/core/util/text_variety.dart';
+import 'package:fnm/domain/services/press/conference.dart';
 import 'package:fnm/domain/services/press/press.dart';
+import 'package:fnm/features/press/press_copy.dart';
 import 'package:fnm/features/press/press_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 
-/// The press conference: a room of named reporters, three questions, and a
-/// back page written from what was said.
+/// The press conference: a room of named reporters, two or three questions,
+/// and a back page written from what was said.
 ///
-/// It used to be ONE anonymous question with a stance to pick, which read as a
-/// form rather than a room: nobody ever came back at an answer, so a manager
-/// could back his players in every conference of a twenty-year career and
-/// never once be asked what that was supposed to mean. Now the opening
-/// question is about the story, the second is a reporter reacting to the
-/// stance just taken, and the third is whoever is asking riding their own
-/// hobby-horse — and the morning's headline is the sum of all three.
+/// The opening question is about the story the season called the room for;
+/// the second reacts to the answer just given (and may name a player); the
+/// third, when there is one, throws an old statement back at him.
 class PressSheet extends ConsumerStatefulWidget {
   const PressSheet({
     required this.careerId,
-    required this.question,
+    required this.conference,
+    required this.playerNames,
     required this.opponentName,
     super.key,
   });
 
   final int careerId;
-  final PressQuestion question;
+  final PendingConference conference;
 
-  /// The other nation, when the question is about a specific match.
-  final String? opponentName;
+  /// Player id to name, for the ids the conference can mention.
+  final Map<int, String> playerNames;
+  final String opponentName;
 
   @override
   ConsumerState<PressSheet> createState() => _PressSheetState();
 }
 
 class _PressSheetState extends ConsumerState<PressSheet> {
-  /// The seed every wording on this sheet is drawn from: the question's own
-  /// key, so a given conference always reads the same but two conferences on
-  /// the same topic are put differently.
-  late final int _seed = varietySeed('pressq:${widget.question.key}');
+  PendingConference get _c => widget.conference;
 
-  /// Who is in the room, in the order they get the microphone. Drawn from the
-  /// question's key rather than at random so reopening the sheet is the same
-  /// conference, not a new one.
-  late final int _length = Press.lengthFor(widget.question.topic);
+  late final int _seed = varietySeed('conf:${_c.row.id}');
+  late final List<PressReporter> _room = Press.roomFor(_seed);
+  late final Beat? _throwback = ConferenceBuilder.throwback(_c.facts);
 
-  late final List<PressReporter> _room = Press.roomFor(
-    _seed,
-  ).take(_length).toList();
+  /// Fixed up front: two questions, or three when an old statement is due.
+  late final int _length = _throwback == null ? 2 : 3;
 
-  /// The exchanges asked so far, and what was said to each. The list grows as
-  /// the manager answers: a follow-up cannot exist until there is a stance for
-  /// it to react to.
-  late final List<PressExchange> _asked = [
-    Press.openingExchange(widget.question, _room.first),
-  ];
-  final List<PressTone> _said = [];
-
-  /// Everything this conference has cost so far.
+  late final List<Beat> _beats = [ConferenceBuilder.opening(_c.facts)];
+  final List<AnswerKind> _said = [];
   PressEffect _total = (morale: 0, board: 0);
+  bool _busy = false;
 
   bool get _over => _said.length >= _length;
-  PressExchange get _current => _asked.last;
+  Beat get _beat => _beats.last;
 
-  Future<void> _answer(PressTone tone) async {
-    final effect = await ref
-        .read(pressServiceProvider)
-        .answerExchange(widget.careerId, _current, tone);
-    if (!mounted) return;
-    setState(() {
-      _said.add(tone);
-      if (effect != null) {
+  String? _nameOf(Beat beat) =>
+      beat.playerId == null ? null : widget.playerNames[beat.playerId];
+
+  Future<void> _answer(AnswerKind a) async {
+    if (_busy) return;
+    _busy = true;
+    try {
+      final effect = await ref
+          .read(conferenceServiceProvider)
+          .answer(widget.careerId, _c, _said.length, _beat, a);
+      if (!mounted) return;
+      setState(() {
+        _said.add(a);
         _total = (
           morale: _total.morale + effect.morale,
           board: _total.board + effect.board,
         );
-      }
-      if (!_over) {
-        _asked.add(
-          Press.followUp(
-            widget.question,
-            _room[_said.length],
-            tone,
-            index: _said.length,
-          ),
-        );
-      }
-    });
-  }
-
-  void _leave() {
-    ref.read(pressServiceProvider).refresh();
-    Navigator.of(context).pop();
-  }
-
-  /// The question in front of the manager right now.
-  String _prompt(AppLocalizations l) {
-    final exchange = _current;
-    // A follow-up is keyed by what it presses on; only the OPENING question is
-    // about the situation, and it keeps the wordings it always had.
-    if (exchange.probe case final probe?) {
-      return pickVariant(
-        _probeWordings(l, probe),
-        _seed + probe.index * 13 + _said.length,
-      );
+        if (_said.length == 1) {
+          _beats.add(ConferenceBuilder.reaction(_c.facts, a));
+        } else if (_said.length == 2 && _throwback != null) {
+          _beats.add(_throwback);
+        }
+      });
+    } finally {
+      _busy = false;
     }
-    return _openingPrompt(l);
   }
 
-  String _openingPrompt(AppLocalizations l) => pickVariant(
-    pressAskWordings(l, widget.question, opponentName: widget.opponentName),
-    _seed,
-  );
-
-  static List<String> _probeWordings(AppLocalizations l, PressProbe probe) =>
-      switch (probe) {
-        PressProbe.accountability => [
-          l.pressProbeAccountability1,
-          l.pressProbeAccountability2,
-          l.pressProbeAccountability3,
-          l.pressProbeAccountability4,
-        ],
-        PressProbe.yourFuture => [
-          l.pressProbeYourFuture1,
-          l.pressProbeYourFuture2,
-          l.pressProbeYourFuture3,
-          l.pressProbeYourFuture4,
-        ],
-        PressProbe.dressingRoom => [
-          l.pressProbeDressingRoom1,
-          l.pressProbeDressingRoom2,
-          l.pressProbeDressingRoom3,
-          l.pressProbeDressingRoom4,
-        ],
-        PressProbe.expectation => [
-          l.pressProbeExpectation1,
-          l.pressProbeExpectation2,
-          l.pressProbeExpectation3,
-          l.pressProbeExpectation4,
-        ],
-        PressProbe.substance => [
-          l.pressProbeSubstance1,
-          l.pressProbeSubstance2,
-          l.pressProbeSubstance3,
-          l.pressProbeSubstance4,
-        ],
-        PressProbe.selection => [
-          l.pressProbeSelection1,
-          l.pressProbeSelection2,
-          l.pressProbeSelection3,
-          l.pressProbeSelection4,
-        ],
-        PressProbe.theFans => [
-          l.pressProbeTheFans1,
-          l.pressProbeTheFans2,
-          l.pressProbeTheFans3,
-          l.pressProbeTheFans4,
-        ],
-        PressProbe.bigPicture => [
-          l.pressProbeBigPicture1,
-          l.pressProbeBigPicture2,
-          l.pressProbeBigPicture3,
-          l.pressProbeBigPicture4,
-        ],
-      };
-
-  /// The stances are phrased six ways — the same answer, said differently — so
-  /// a manager who always backs the players isn't reading one stock line for a
-  /// whole career.
-  String _answerText(AppLocalizations l, PressTone tone) {
-    final options = switch (tone) {
-      PressTone.backThePlayers => [
-        l.pressAnswerBackPlayers,
-        l.pressAnswerBackPlayers2,
-        l.pressAnswerBackPlayers3,
-        l.pressAnswerBackPlayers4,
-        l.pressAnswerBackPlayers5,
-        l.pressAnswerBackPlayers6,
-      ],
-      PressTone.takeTheBlame => [
-        l.pressAnswerTakeBlame,
-        l.pressAnswerTakeBlame2,
-        l.pressAnswerTakeBlame3,
-        l.pressAnswerTakeBlame4,
-        l.pressAnswerTakeBlame5,
-        l.pressAnswerTakeBlame6,
-      ],
-      PressTone.demandMore => [
-        l.pressAnswerDemandMore,
-        l.pressAnswerDemandMore2,
-        l.pressAnswerDemandMore3,
-        l.pressAnswerDemandMore4,
-        l.pressAnswerDemandMore5,
-        l.pressAnswerDemandMore6,
-      ],
-      PressTone.raiseTheBar => [
-        l.pressAnswerRaiseBar,
-        l.pressAnswerRaiseBar2,
-        l.pressAnswerRaiseBar3,
-        l.pressAnswerRaiseBar4,
-        l.pressAnswerRaiseBar5,
-        l.pressAnswerRaiseBar6,
-      ],
-      PressTone.playItDown => [
-        l.pressAnswerPlayDown,
-        l.pressAnswerPlayDown2,
-        l.pressAnswerPlayDown3,
-        l.pressAnswerPlayDown4,
-        l.pressAnswerPlayDown5,
-        l.pressAnswerPlayDown6,
-      ],
-    };
-    // Offset per tone and per question so one sheet doesn't read as three
-    // variants of the same sentence structure.
-    return pickVariant(
-      options,
-      _seed + tone.index * 7 + _asked.length * 3,
-    );
-  }
-
-  /// The line a reporter throws in when the manager keeps saying the same
-  /// thing. Null when they have nothing to needle him about yet.
-  String? _needle(AppLocalizations l, Map<PressTone, int> habits) {
-    if (_current.probe == null)
-      return null; // the opening question is asked straight
-    final tone = _said.isEmpty ? null : _said.last;
-    if (tone == null) return null;
-    if ((habits[tone] ?? 0) < pressNeedleThreshold) return null;
-    return switch (tone) {
-      PressTone.backThePlayers => l.pressNeedleBackPlayers,
-      PressTone.takeTheBlame => l.pressNeedleTakeBlame,
-      PressTone.demandMore => l.pressNeedleDemandMore,
-      PressTone.raiseTheBar => l.pressNeedleRaiseBar,
-      PressTone.playItDown => l.pressNeedlePlayDown,
-    };
+  Future<void> _leave() async {
+    final navigator = Navigator.of(context);
+    await ref
+        .read(conferenceServiceProvider)
+        .finish(widget.careerId, _c.row.id);
+    if (!mounted) return;
+    navigator.pop();
   }
 
   String _headline(AppLocalizations l) {
@@ -267,12 +120,9 @@ class _PressSheetState extends ConsumerState<PressSheet> {
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
-    // What the room already knows: the last result as the country read it,
-    // and how the dressing room and the board are sitting.
-    final mood = ref.watch(pressMoodProvider(widget.careerId)).valueOrNull;
-    final habits =
-        ref.watch(pressToneHistoryProvider(widget.careerId)).valueOrNull ??
-        const <PressTone, int>{};
+    final index = _said.length;
+    final beat = _beat;
+    final playerName = _nameOf(beat);
     return SafeArea(
       child: ConstrainedBox(
         constraints: BoxConstraints(
@@ -298,10 +148,7 @@ class _PressSheetState extends ConsumerState<PressSheet> {
                     ),
                   ),
                   Text(
-                    l.pressQuestionOf(
-                      (_said.length + 1).clamp(1, _length),
-                      _length,
-                    ),
+                    l.pressQuestionOf((index + 1).clamp(1, _length), _length),
                     style: AppTypography.labelSmall.copyWith(
                       color: AppColors.onSurfaceVariant,
                     ),
@@ -320,29 +167,38 @@ class _PressSheetState extends ConsumerState<PressSheet> {
                       : Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            _Byline(
-                              reporter: _current.reporter,
-                              aside: _needle(l, habits),
-                            ),
+                            _Byline(reporter: _room[index % _room.length]),
                             const SizedBox(height: AppSpacing.sm),
-                            Text(_prompt(l), style: AppTypography.bodyMedium),
+                            Text(
+                              beatQuestion(
+                                l,
+                                beat,
+                                _c,
+                                playerName: playerName,
+                                opponentName: widget.opponentName,
+                                seed: _seed + index,
+                              ),
+                              style: AppTypography.bodyMedium,
+                            ),
                             const SizedBox(height: AppSpacing.lg),
-                            for (final tone in _current.options)
+                            for (final a in beat.answers)
                               AnswerTile(
-                                label: _answerText(l, tone),
-                                // The SAME reading the service will apply when
-                                // the answer is recorded. Shown from the flat
-                                // table and applied from the contextual one,
-                                // the arrows on the sheet would be a promise
-                                // the save does not keep.
-                                effect: Press.effectOfExchange(
-                                  _current,
-                                  tone,
-                                  standing: mood?.standing,
-                                  squadMorale: mood?.squadMorale ?? 50,
-                                  boardMood: mood?.boardMood ?? 50,
+                                label: answerLabel(
+                                  l,
+                                  a,
+                                  playerName: playerName,
+                                  seed: _seed + a.index * 7 + index * 3,
                                 ),
-                                onTap: () => _answer(tone),
+                                effect: ConferenceBuilder.effectOf(
+                                  a,
+                                  _c.credibility,
+                                ),
+                                note: onRecordLine(
+                                  l,
+                                  a,
+                                  playerName: playerName,
+                                ),
+                                onTap: () => _answer(a),
                               ),
                           ],
                         ),
@@ -360,13 +216,9 @@ class _PressSheetState extends ConsumerState<PressSheet> {
 /// Who is asking: a name, an outlet, and a colour for the kind of question
 /// they are about to put. The manager learns to brace for some of them.
 class _Byline extends StatelessWidget {
-  const _Byline({required this.reporter, this.aside});
+  const _Byline({required this.reporter});
 
   final PressReporter reporter;
-
-  /// The reporter's needle, when the manager has been saying the same thing
-  /// for years and somebody in the room has finally said so.
-  final String? aside;
 
   @override
   Widget build(BuildContext context) {
@@ -403,16 +255,6 @@ class _Byline extends StatelessWidget {
             ),
           ],
         ),
-        if (aside case final line?) ...[
-          const SizedBox(height: AppSpacing.xs),
-          Text(
-            line,
-            style: AppTypography.labelSmall.copyWith(
-              color: AppColors.onSurfaceVariant,
-              fontStyle: FontStyle.italic,
-            ),
-          ),
-        ],
       ],
     );
   }
@@ -426,11 +268,15 @@ class AnswerTile extends StatelessWidget {
     required this.label,
     required this.effect,
     required this.onTap,
+    this.note,
     super.key,
   });
 
   final String label;
   final PressEffect effect;
+
+  /// What putting this on the record means ("On the record: ..."), if it does.
+  final String? note;
   final VoidCallback onTap;
 
   @override
@@ -465,6 +311,15 @@ class AnswerTile extends StatelessWidget {
                       ),
                   ],
                 ),
+                if (note case final line?) ...[
+                  const SizedBox(height: AppSpacing.xs),
+                  Text(
+                    line,
+                    style: AppTypography.labelSmall.copyWith(
+                      color: AppColors.primary,
+                    ),
+                  ),
+                ],
               ],
             ),
           ),
@@ -574,318 +429,4 @@ class _Swing extends StatelessWidget {
       ],
     );
   }
-}
-
-/// Every wording the OPENING question of [question] can take, in [l]'s
-/// language.
-///
-/// Public, and a pure function of the question, because a topic that reaches a
-/// screen with nothing to say is the one failure a press conference cannot
-/// survive — a guard test walks every [PressTopic] through this in both
-/// languages. The follow-ups are keyed by [PressProbe] and shared by every
-/// topic; only this is per-topic.
-List<String> pressAskWordings(
-  AppLocalizations l,
-  PressQuestion question, {
-  String? opponentName,
-}) {
-  final who = opponentName ?? l.pressTheOpposition;
-  // The man an incident happened to, and when. A question that names nobody
-  // is the generality all of this exists to end, so the selector never offers
-  // one — but a sheet must still put words on the screen if it ever did.
-  final subject = question.subject;
-  final player = switch (subject) {
-    PressSubjectIncident(:final name?) => name,
-    PressSubjectPlayer(:final name) => name,
-    _ => l.pressThePlayer,
-  };
-  final minute = switch (subject) {
-    PressSubjectIncident(:final minute) => '$minute',
-    _ => '',
-  };
-  final ours = subject is PressSubjectIncident && subject.ours;
-  // The FIGURE a subject-bearing question names: the games without a goal, the
-  // age, the meetings. A question that has the man's name and not his number
-  // is half a question.
-  final count = switch (subject) {
-    PressSubjectPlayer(:final count) => '$count',
-    PressSubjectOpponent(:final count) => '$count',
-    _ => '',
-  };
-  final favourable = subject is! PressSubjectOpponent || subject.favourable;
-  return switch (question.topic) {
-    PressTopic.overachieving => [
-      l.pressAskAbove,
-      l.pressAskAbove2,
-      l.pressAskAbove3,
-      l.pressAskAbove4,
-      l.pressAskAbove5,
-      l.pressAskAbove6,
-      l.pressAskAbove7,
-      l.pressAskAbove8,
-    ],
-    PressTopic.luckyWin => [
-      l.pressAskFlattered,
-      l.pressAskFlattered2,
-      l.pressAskFlattered3,
-      l.pressAskFlattered4,
-      l.pressAskFlattered5,
-      l.pressAskFlattered6,
-      l.pressAskFlattered7,
-      l.pressAskFlattered8,
-    ],
-    PressTopic.crisis => [
-      l.pressAskCrisis,
-      l.pressAskCrisis2,
-      l.pressAskCrisis3,
-      l.pressAskCrisis4,
-      l.pressAskCrisis5,
-      l.pressAskCrisis6,
-      l.pressAskCrisis7,
-      l.pressAskCrisis8,
-    ],
-    PressTopic.heavyDefeat => [
-      l.pressAskHeavyDefeat(who),
-      l.pressAskHeavyDefeat2(who),
-      l.pressAskHeavyDefeat3(who),
-      l.pressAskHeavyDefeat4(who),
-      l.pressAskHeavyDefeat5(who),
-      l.pressAskHeavyDefeat6(who),
-      l.pressAskHeavyDefeat7(who),
-      l.pressAskHeavyDefeat8(who),
-    ],
-    PressTopic.elimination => [
-      l.pressAskElimination(who),
-      l.pressAskElimination2(who),
-      l.pressAskElimination3(who),
-      l.pressAskElimination4(who),
-      l.pressAskElimination5(who),
-      l.pressAskElimination6(who),
-      l.pressAskElimination7(who),
-      l.pressAskElimination8(who),
-    ],
-    PressTopic.underPressure => [
-      l.pressAskUnderPressure,
-      l.pressAskUnderPressure2,
-      l.pressAskUnderPressure3,
-      l.pressAskUnderPressure4,
-      l.pressAskUnderPressure5,
-      l.pressAskUnderPressure6,
-      l.pressAskUnderPressure7,
-      l.pressAskUnderPressure8,
-    ],
-    PressTopic.tournamentPreview => [
-      l.pressAskPreview,
-      l.pressAskPreview2,
-      l.pressAskPreview3,
-      l.pressAskPreview4,
-      l.pressAskPreview5,
-      l.pressAskPreview6,
-      l.pressAskPreview7,
-      l.pressAskPreview8,
-    ],
-    PressTopic.tournamentOpening => [
-      l.pressAskOpening(who),
-      l.pressAskOpening2(who),
-      l.pressAskOpening3(who),
-      l.pressAskOpening4(who),
-      l.pressAskOpening5(who),
-      l.pressAskOpening6(who),
-      l.pressAskOpening7(who),
-      l.pressAskOpening8(who),
-    ],
-    PressTopic.triumph => [
-      l.pressAskTriumph,
-      l.pressAskTriumph2,
-      l.pressAskTriumph3,
-      l.pressAskTriumph4,
-      l.pressAskTriumph5,
-      l.pressAskTriumph6,
-      l.pressAskTriumph7,
-      l.pressAskTriumph8,
-    ],
-    PressTopic.bigWin => [
-      l.pressAskBigWin(who),
-      l.pressAskBigWin2(who),
-      l.pressAskBigWin3(who),
-      l.pressAskBigWin4(who),
-      l.pressAskBigWin5(who),
-      l.pressAskBigWin6(who),
-      l.pressAskBigWin7(who),
-      l.pressAskBigWin8(who),
-    ],
-    PressTopic.qualified => [
-      l.pressAskQualified,
-      l.pressAskQualified2,
-      l.pressAskQualified3,
-      l.pressAskQualified4,
-      l.pressAskQualified5,
-      l.pressAskQualified6,
-      l.pressAskQualified7,
-      l.pressAskQualified8,
-    ],
-    PressTopic.missedOut => [
-      l.pressAskMissedOut,
-      l.pressAskMissedOut2,
-      l.pressAskMissedOut3,
-      l.pressAskMissedOut4,
-      l.pressAskMissedOut5,
-      l.pressAskMissedOut6,
-      l.pressAskMissedOut7,
-      l.pressAskMissedOut8,
-    ],
-    PressTopic.unbeatenRun => [
-      l.pressAskUnbeaten,
-      l.pressAskUnbeaten2,
-      l.pressAskUnbeaten3,
-      l.pressAskUnbeaten4,
-      l.pressAskUnbeaten5,
-      l.pressAskUnbeaten6,
-      l.pressAskUnbeaten7,
-      l.pressAskUnbeaten8,
-    ],
-    PressTopic.newJob => [
-      l.pressAskNewJob,
-      l.pressAskNewJob2,
-      l.pressAskNewJob3,
-      l.pressAskNewJob4,
-      l.pressAskNewJob5,
-      l.pressAskNewJob6,
-      l.pressAskNewJob7,
-      l.pressAskNewJob8,
-    ],
-    PressTopic.rankingPeak => [
-      l.pressAskRankingPeak,
-      l.pressAskRankingPeak2,
-      l.pressAskRankingPeak3,
-      l.pressAskRankingPeak4,
-      l.pressAskRankingPeak5,
-      l.pressAskRankingPeak6,
-      l.pressAskRankingPeak7,
-      l.pressAskRankingPeak8,
-    ],
-    PressTopic.sendingOff => [
-      l.pressAskSendingOff1(player, minute),
-      l.pressAskSendingOff2(player, minute),
-      l.pressAskSendingOff3(player, minute),
-      l.pressAskSendingOff4(player, minute),
-    ],
-    PressTopic.injuryBlow => [
-      l.pressAskInjuryBlow1(player),
-      l.pressAskInjuryBlow2(player),
-      l.pressAskInjuryBlow3(player),
-      l.pressAskInjuryBlow4(player),
-    ],
-    PressTopic.shootoutFate => [
-      l.pressAskShootout1(who),
-      l.pressAskShootout2(who),
-      l.pressAskShootout3(who),
-      l.pressAskShootout4(who),
-    ],
-    // The one topic whose copy comes in two sets: a goal that WON it late
-    // and a goal that lost it late are not the same question, and the
-    // subject is what says which happened.
-    PressTopic.lateDrama =>
-      ours
-          ? [
-              l.pressAskLateWinner1(player, minute),
-              l.pressAskLateWinner2(player, minute),
-              l.pressAskLateWinner3(player, minute),
-              l.pressAskLateWinner4(player, minute),
-            ]
-          : [
-              l.pressAskLateLoss1(player, minute),
-              l.pressAskLateLoss2(player, minute),
-              l.pressAskLateLoss3(player, minute),
-              l.pressAskLateLoss4(player, minute),
-            ],
-    // The two whose Czech does not translate their English. "Csaplarova past"
-    // is a Czech in-joke about a side two goals down at half time being
-    // exactly where it wants to be; it has no English reader, and a
-    // translated in-joke is just a confusing sentence. So the Czech wordings
-    // below carry the joke and the English ones are ordinary press-room
-    // English about the same afternoon. It is the one place in the app where
-    // the two languages deliberately say different things, and the copy says
-    // so in each string's description.
-    PressTopic.halfTimeComeback => [
-      l.pressAskComeback1,
-      l.pressAskComeback2,
-      l.pressAskComeback3,
-      l.pressAskComeback4,
-    ],
-    PressTopic.halfTimeCollapse => [
-      l.pressAskCollapse1,
-      l.pressAskCollapse2,
-      l.pressAskCollapse3,
-      l.pressAskCollapse4,
-    ],
-    // The squad. Every one of these names the man AND the number, which is
-    // the whole difference between "your forward" and a question.
-    PressTopic.strikerDrought => [
-      l.pressAskDrought1(player, count),
-      l.pressAskDrought2(player, count),
-      l.pressAskDrought3(player, count),
-      l.pressAskDrought4(player, count),
-    ],
-    PressTopic.youngsterBreakthrough => [
-      l.pressAskBreakthrough1(player, count),
-      l.pressAskBreakthrough2(player, count),
-      l.pressAskBreakthrough3(player, count),
-      l.pressAskBreakthrough4(player, count),
-    ],
-    PressTopic.droppedStar => [
-      l.pressAskDropped1(player, count),
-      l.pressAskDropped2(player, count),
-      l.pressAskDropped3(player, count),
-      l.pressAskDropped4(player, count),
-    ],
-    PressTopic.captaincyQuestion => [
-      l.pressAskArmband1(player, count),
-      l.pressAskArmband2(player, count),
-      l.pressAskArmband3(player, count),
-      l.pressAskArmband4(player, count),
-    ],
-    PressTopic.veteranEnd => [
-      l.pressAskVeteran1(player, count),
-      l.pressAskVeteran2(player, count),
-      l.pressAskVeteran3(player, count),
-      l.pressAskVeteran4(player, count),
-    ],
-    PressTopic.debutant => [
-      l.pressAskDebut1(player, count),
-      l.pressAskDebut2(player, count),
-      l.pressAskDebut3(player, count),
-      l.pressAskDebut4(player, count),
-    ],
-    // …and the side you are about to play.
-    PressTopic.rivalryNext => [
-      l.pressAskRivalNext1(who, count),
-      l.pressAskRivalNext2(who, count),
-      l.pressAskRivalNext3(who, count),
-      l.pressAskRivalNext4(who, count),
-    ],
-    // The second topic whose copy comes in two sets: five without defeat and
-    // five without a win are the same number and opposite questions, and
-    // [PressSubjectOpponent.favourable] is what says which.
-    PressTopic.headToHeadRun =>
-      favourable
-          ? [
-              l.pressAskRunGood1(who, count),
-              l.pressAskRunGood2(who, count),
-              l.pressAskRunGood3(who, count),
-              l.pressAskRunGood4(who, count),
-            ]
-          : [
-              l.pressAskRunBad1(who, count),
-              l.pressAskRunBad2(who, count),
-              l.pressAskRunBad3(who, count),
-              l.pressAskRunBad4(who, count),
-            ],
-    PressTopic.revengeMatch => [
-      l.pressAskRevenge1(who),
-      l.pressAskRevenge2(who),
-      l.pressAskRevenge3(who),
-      l.pressAskRevenge4(who),
-    ],
-  };
 }

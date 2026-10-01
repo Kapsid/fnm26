@@ -168,6 +168,60 @@ void main() {
     );
   });
 
+  group('job-verdict conference', () {
+    Future<(int, int)> verdictWithBrokenJob() async {
+      final all = await comp.fixturesForNation(careerId, career.nationId);
+      final f =
+          (all.where((f) => !f.hasResult).toList()
+                ..sort((a, b) => a.date.compareTo(b.date)))
+              .first;
+      final home = f.homeNationId == career.nationId;
+      await comp.recordResult(
+        fixtureId: f.id,
+        homeScore: home ? 0 : 3,
+        awayScore: home ? 3 : 0,
+      );
+      final sid = await repo.recordStatement(
+        careerId: careerId,
+        cycle: career.cyclePointer,
+        nationId: career.nationId,
+        kind: StatementKind.jobOnTheLine,
+        madeOn: f.date.subtract(const Duration(days: 30)),
+        madeAfterFixtureId: f.id,
+      );
+      await repo.judgeStatement(
+        sid,
+        status: StatementStatus.broken,
+        judgedOn: f.date,
+      );
+      final id = await repo.recordConference(
+        careerId: careerId,
+        cycle: career.cyclePointer,
+        reason: ConferenceReason.jobVerdict,
+        fixtureId: f.id,
+        triggeredOn: f.date,
+      );
+      container.invalidate(pressStatementsProvider(careerId));
+      return (sid, id);
+    }
+
+    test('never throws the broken job promise back at the verdict', () async {
+      await verdictWithBrokenJob();
+      expect((await pending()).facts.throwback, isNull);
+    });
+
+    test('finishing it spends the broken job promise for good', () async {
+      final (sid, id) = await verdictWithBrokenJob();
+      await container.read(conferenceServiceProvider).finish(careerId, id);
+      expect(
+        (await repo.statements(
+          careerId,
+        )).firstWhere((s) => s.id == sid).thrownBack,
+        isTrue,
+      );
+    });
+  });
+
   test('a grv: row does not change the press effect', () async {
     final before = await container.read(pressEffectProvider(careerId).future);
     await repo.recordPressAnswer(

@@ -426,6 +426,32 @@ nextEventProvider = FutureProvider.autoDispose.family<HubEvent, int>((
     );
   }
 
+  // The press come to HIS match before he goes and sits in the stands. The
+  // conference further down waits out a tournament he is only watching, and
+  // until now that was the only place it sat, so a result was taken to the
+  // room only after somebody else's cup had been played over the top of it.
+  // Once a round of that tournament HAS been played since his last match he
+  // is watching it, and the press wait below as before.
+  final lastOwnMatch = hub.fixtures
+      .where((f) => f.hasResult)
+      .map((f) => f.date)
+      .fold<DateTime?>(null, (a, b) => a == null || b.isAfter(a) ? b : a);
+  final watchedLine = await comp.latestPlayedWatchedFinalsDate(
+    careerId,
+    hub.career.nationId,
+    confederation: playerConf,
+  );
+  if (lastOwnMatch != null &&
+      (watchedLine == null || !lastOwnMatch.isBefore(watchedLine)) &&
+      await ref.watch(pendingConferenceProvider(careerId).future) != null) {
+    return HubEvent(
+      kind: HubEventKind.press,
+      label: l.hubEventPressConference,
+      icon: Icons.mic_rounded,
+      subtitle: l.hubEventPressConferenceSub,
+    );
+  }
+
   final next = hub.next;
 
   // 2c. A main finals tournament (World Cup or continental) is under way and
@@ -529,8 +555,10 @@ nextEventProvider = FutureProvider.autoDispose.family<HubEvent, int>((
   // somebody else's final, held by a manager who was not there. His own
   // fixtures are what the room turns up for, so the questions wait until the
   // tournament he is only watching has been played out.
-  final pressQuestion = await ref.watch(pressQuestionProvider(careerId).future);
-  if (pressQuestion != null) {
+  final pendingPress = await ref.watch(
+    pendingConferenceProvider(careerId).future,
+  );
+  if (pendingPress != null) {
     return HubEvent(
       kind: HubEventKind.press,
       label: l.hubEventPressConference,

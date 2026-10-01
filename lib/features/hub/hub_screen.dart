@@ -14,9 +14,9 @@ import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/core/util/match_stage.dart';
 import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/entities/group_standing.dart';
-import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
 import 'package:fnm/features/achievements/achievement_providers.dart';
+import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/tournaments/wc_host_theme.dart';
 import 'package:fnm/features/federation/federation_service.dart';
 import 'package:fnm/features/federation/investment_editor.dart';
@@ -653,26 +653,45 @@ class _EventButtonState extends ConsumerState<_EventButton> {
       case HubEventKind.press:
         // The press conference has no screen of its own — it is the same sheet
         // the optional press card opens, just reached as a forced step.
-        final question = ref.read(pressQuestionProvider(careerId)).valueOrNull;
-        if (question == null) return;
-        final nations =
-            ref.read(hubDataProvider(careerId)).valueOrNull?.nations ??
-            const <int, Nation>{};
-        unawaited(
-          showModalBottomSheet<void>(
-            context: context,
-            backgroundColor: AppColors.surfaceContainer,
-            isScrollControlled: true,
-            builder: (_) => PressSheet(
-              careerId: careerId,
-              question: question,
-              opponentName: switch (question.subjectNationId) {
-                final id? => nations[id]?.name,
-                _ => null,
-              },
+        final conference = ref
+            .read(pendingConferenceProvider(careerId))
+            .valueOrNull;
+        final hub = ref.read(hubDataProvider(careerId)).valueOrNull;
+        if (conference == null || hub == null) return;
+        unawaited(() async {
+          final ids = {
+            conference.facts.bestPlayerId,
+            conference.facts.worstPlayerId,
+            conference.facts.throwback?.playerId,
+          }.whereType<int>().toSet();
+          final pool = await ref
+              .read(playerRepositoryProvider)
+              .byNation(
+                hub.career.nationId,
+                agingYears: CareerService.agingYears(hub.career),
+                saveSeed: hub.career.rngSeed,
+                minAge: 15,
+              );
+          final names = {
+            for (final p in pool)
+              if (ids.contains(p.id)) p.id: p.name,
+          };
+          if (!context.mounted) return;
+          unawaited(
+            showModalBottomSheet<void>(
+              context: context,
+              backgroundColor: AppColors.surfaceContainer,
+              isScrollControlled: true,
+              builder: (_) => PressSheet(
+                careerId: careerId,
+                conference: conference,
+                playerNames: names,
+                opponentName:
+                    hub.nations[conference.opponentNationId]?.name ?? '',
+              ),
             ),
-          ),
-        );
+          );
+        }());
       case HubEventKind.managerSkills:
         // Marked seen as it is TAKEN, not when the points are spent: a manager
         // who looks at his skills and decides to bank them has answered the
@@ -731,29 +750,26 @@ class _NextMatch extends StatelessWidget {
     return AppCard(
       child: Column(
         children: [
-          Row(
-            children: [
-              Text(l.hubNextMatch, style: AppTypography.labelMedium),
-              const Spacer(),
-              Flexible(
-                // "World Cup qualifying · Matchday 6" is longer than the room
-                // left beside the heading, and a stage that ends in "…" tells
-                // the manager nothing about which match this is. The compact
-                // form writes the qualifying campaigns with a Q, which is the
-                // difference between a banner you can read here and one that
-                // has been scaled down to a grey smear.
-                child: WholeText(
-                  MatchStage.labelCompact(l, f),
-                  maxLines: 1,
-                  textAlign: TextAlign.end,
-                  style: AppTypography.labelSmall.copyWith(
-                    color: f.round == null
-                        ? AppColors.onSurfaceVariant
-                        : AppColors.primary,
-                  ),
-                ),
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Text(l.hubNextMatch, style: AppTypography.labelMedium),
+          ),
+          const SizedBox(height: AppSpacing.xs),
+          // On its own full-width line, at the heading's size. Squeezed into
+          // the room beside the heading it was shrunk to fit, and players read
+          // which match this is from it: a qualifier or a semi-final.
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Text(
+              MatchStage.label(l, f),
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              style: AppTypography.labelMedium.copyWith(
+                color: f.round == null
+                    ? AppColors.onSurfaceVariant
+                    : AppColors.primary,
               ),
-            ],
+            ),
           ),
           const SizedBox(height: AppSpacing.sm),
           Row(
@@ -1025,10 +1041,22 @@ class _SquadStatus extends StatelessWidget {
             ),
           ),
           const SizedBox(height: AppSpacing.sm),
-          PrimaryButton(
-            label: l.hubManageTeam,
-            icon: Icons.groups,
+          // Outlined, like Tactics on the match preview: the event button is
+          // the one call to action on the hub, and a second silver slab here
+          // competed with it.
+          OutlinedButton.icon(
             onPressed: onManage,
+            icon: const Icon(Icons.groups, size: 18),
+            label: FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Text(l.hubManageTeam, maxLines: 1, softWrap: false),
+            ),
+            style: OutlinedButton.styleFrom(
+              minimumSize: const Size.fromHeight(AppSpacing.minHitArea),
+              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
+              foregroundColor: AppColors.primary,
+              side: const BorderSide(color: AppColors.outlineVariant),
+            ),
           ),
         ],
       ),

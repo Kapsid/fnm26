@@ -849,7 +849,12 @@ pendingConferenceProvider = FutureProvider.autoDispose
         for (final s in statements)
           if ((s.status == StatementStatus.kept ||
                   s.status == StatementStatus.broken) &&
-              !s.thrownBack)
+              !s.thrownBack &&
+              // The opening of a job-verdict conference IS that broken
+              // promise; asking it again as a throwback would be the same
+              // question twice.
+              !(row.reason == ConferenceReason.jobVerdict &&
+                  s.kind == StatementKind.jobOnTheLine))
             s,
       ];
       return (
@@ -920,9 +925,23 @@ class ConferenceService {
   }
 
   Future<void> finish(int careerId, int conferenceId) async {
-    await _ref
-        .read(careerRepositoryProvider)
-        .setConferenceStatus(conferenceId, ConferenceStatus.held);
+    final repo = _ref.read(careerRepositoryProvider);
+    final held = (await repo.conferences(
+      careerId,
+    )).where((c) => c.id == conferenceId).firstOrNull;
+    // A job-verdict conference opens on the broken job promise itself, so it
+    // is spent: no later conference may throw it back a second time.
+    if (held?.reason == ConferenceReason.jobVerdict) {
+      for (final s in await repo.statements(careerId)) {
+        if (s.kind == StatementKind.jobOnTheLine &&
+            (s.status == StatementStatus.broken ||
+                s.status == StatementStatus.kept) &&
+            !s.thrownBack) {
+          await repo.markThrownBack(s.id);
+        }
+      }
+    }
+    await repo.setConferenceStatus(conferenceId, ConferenceStatus.held);
     _ref
       ..invalidate(pendingConferenceProvider(careerId))
       ..invalidate(pressStatementsProvider(careerId))
