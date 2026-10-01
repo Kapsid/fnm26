@@ -164,11 +164,25 @@ void main() {
       playerId: null,
     );
     final svc = container.read(conferenceServiceProvider);
-    final first = await svc.answer(careerId, c, 0, beat, AnswerKind.promiseWinNext);
-    final second = await svc.answer(careerId, c, 0, beat, AnswerKind.promiseWinNext);
+    final first = await svc.answer(
+      careerId,
+      c,
+      0,
+      beat,
+      AnswerKind.promiseWinNext,
+    );
+    final second = await svc.answer(
+      careerId,
+      c,
+      0,
+      beat,
+      AnswerKind.promiseWinNext,
+    );
     expect(second, first);
     expect(
-      (await repo.pressAnswers(careerId)).where((r) => r.questionKey.startsWith('conf:')),
+      (await repo.pressAnswers(
+        careerId,
+      )).where((r) => r.questionKey.startsWith('conf:')),
       hasLength(1),
     );
     expect(await repo.statements(careerId), hasLength(1));

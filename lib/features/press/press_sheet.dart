@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fnm/core/diagnostics/app_log.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
@@ -88,9 +89,16 @@ class _PressSheetState extends ConsumerState<PressSheet> {
     if (_leaving) return;
     _leaving = true;
     final navigator = Navigator.of(context);
-    await ref
-        .read(conferenceServiceProvider)
-        .finish(widget.careerId, _c.row.id);
+    try {
+      await ref
+          .read(conferenceServiceProvider)
+          .finish(widget.careerId, _c.row.id);
+    } on Object catch (e, st) {
+      // Never trap him here: the conference stays pending and comes back, and
+      // its answers are idempotent.
+      AppLog.error('press-finish', e, st);
+    }
+    _leaving = false;
     if (!mounted) return;
     setState(() => _finished = true);
     navigator.pop();
@@ -131,91 +139,91 @@ class _PressSheetState extends ConsumerState<PressSheet> {
     return PopScope(
       canPop: _finished,
       child: SafeArea(
-      child: ConstrainedBox(
-        constraints: BoxConstraints(
-          maxHeight: MediaQuery.of(context).size.height * 0.85,
-        ),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: AppSpacing.marginMobile,
+        child: ConstrainedBox(
+          constraints: BoxConstraints(
+            maxHeight: MediaQuery.of(context).size.height * 0.85,
           ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(height: AppSpacing.md),
-              Row(
-                children: [
-                  const Icon(Icons.mic_rounded, color: AppColors.primary),
-                  const SizedBox(width: AppSpacing.sm),
-                  Expanded(
-                    child: Text(
-                      l.pressConferenceTitle,
-                      style: AppTypography.headlineMedium,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppSpacing.marginMobile,
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: AppSpacing.md),
+                Row(
+                  children: [
+                    const Icon(Icons.mic_rounded, color: AppColors.primary),
+                    const SizedBox(width: AppSpacing.sm),
+                    Expanded(
+                      child: Text(
+                        l.pressConferenceTitle,
+                        style: AppTypography.headlineMedium,
+                      ),
                     ),
-                  ),
-                  Text(
-                    l.pressQuestionOf((index + 1).clamp(1, _length), _length),
-                    style: AppTypography.labelSmall.copyWith(
-                      color: AppColors.onSurfaceVariant,
+                    Text(
+                      l.pressQuestionOf((index + 1).clamp(1, _length), _length),
+                      style: AppTypography.labelSmall.copyWith(
+                        color: AppColors.onSurfaceVariant,
+                      ),
                     ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: AppSpacing.md),
-              Flexible(
-                child: SingleChildScrollView(
-                  child: _over
-                      ? _Verdict(
-                          headline: _headline(l),
-                          total: _total,
-                          onLeave: _leave,
-                        )
-                      : Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            _Byline(reporter: _room[index % _room.length]),
-                            const SizedBox(height: AppSpacing.sm),
-                            Text(
-                              beatQuestion(
-                                l,
-                                beat,
-                                _c,
-                                playerName: playerName,
-                                opponentName: widget.opponentName,
-                                seed: _seed + index,
-                              ),
-                              style: AppTypography.bodyMedium,
-                            ),
-                            const SizedBox(height: AppSpacing.lg),
-                            for (final a in beat.answers)
-                              AnswerTile(
-                                label: answerLabel(
-                                  l,
-                                  a,
-                                  playerName: playerName,
-                                  seed: _seed + a.index * 7 + index * 3,
-                                ),
-                                effect: ConferenceBuilder.effectOf(
-                                  a,
-                                  _c.credibility,
-                                ),
-                                note: onRecordLine(
-                                  l,
-                                  a,
-                                  playerName: playerName,
-                                ),
-                                onTap: () => _answer(a),
-                              ),
-                          ],
-                        ),
+                  ],
                 ),
-              ),
-              const SizedBox(height: AppSpacing.md),
-            ],
+                const SizedBox(height: AppSpacing.md),
+                Flexible(
+                  child: SingleChildScrollView(
+                    child: _over
+                        ? _Verdict(
+                            headline: _headline(l),
+                            total: _total,
+                            onLeave: _leave,
+                          )
+                        : Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              _Byline(reporter: _room[index % _room.length]),
+                              const SizedBox(height: AppSpacing.sm),
+                              Text(
+                                beatQuestion(
+                                  l,
+                                  beat,
+                                  _c,
+                                  playerName: playerName,
+                                  opponentName: widget.opponentName,
+                                  seed: _seed + index,
+                                ),
+                                style: AppTypography.bodyMedium,
+                              ),
+                              const SizedBox(height: AppSpacing.lg),
+                              for (final a in beat.answers)
+                                AnswerTile(
+                                  label: answerLabel(
+                                    l,
+                                    a,
+                                    playerName: playerName,
+                                    seed: _seed + a.index * 7 + index * 3,
+                                  ),
+                                  effect: ConferenceBuilder.effectOf(
+                                    a,
+                                    _c.credibility,
+                                  ),
+                                  note: onRecordLine(
+                                    l,
+                                    a,
+                                    playerName: playerName,
+                                  ),
+                                  onTap: () => _answer(a),
+                                ),
+                            ],
+                          ),
+                  ),
+                ),
+                const SizedBox(height: AppSpacing.md),
+              ],
+            ),
           ),
         ),
-      ),
       ),
     );
   }

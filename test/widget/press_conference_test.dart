@@ -10,6 +10,8 @@ import 'package:fnm/l10n/app_localizations_en.dart';
 import '../helpers/pump_app.dart';
 
 class _FakeService implements ConferenceService {
+  _FakeService({this.failFinish = false});
+  final bool failFinish;
   final answers = <(int, AnswerKind)>[];
   final finished = <int>[];
 
@@ -28,6 +30,7 @@ class _FakeService implements ConferenceService {
   @override
   Future<void> finish(int careerId, int conferenceId) async {
     finished.add(conferenceId);
+    if (failFinish) throw StateError('db gone');
   }
 }
 
@@ -69,10 +72,8 @@ void main() {
     opponentNationId: 2,
   );
 
-  testWidgets('three beats, the record line, the verdict and leaving', (
-    tester,
-  ) async {
-    final fake = _FakeService();
+  /// Pumps the sheet as a pushed route and answers all three beats.
+  Future<void> toVerdict(WidgetTester tester, _FakeService fake) async {
     await tester.binding.setSurfaceSize(const Size(500, 1400));
     addTearDown(() => tester.binding.setSurfaceSize(null));
     await tester.pumpApp(
@@ -129,11 +130,27 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text(l.pressTomorrowsHeadline), findsOneWidget);
+  }
+
+  testWidgets('three beats, the record line, the verdict and leaving', (
+    tester,
+  ) async {
+    final fake = _FakeService();
+    await toVerdict(tester, fake);
     await tester.tap(find.text(l.pressLeaveRoom));
     await tester.tap(find.text(l.pressLeaveRoom), warnIfMissed: false);
     await tester.pumpAndSettle();
     expect(fake.finished, [42]);
     // Only the sheet popped: the route under it is still there.
+    expect(find.text('HOST'), findsOneWidget);
+    expect(find.byType(PressSheet), findsNothing);
+  });
+
+  testWidgets('a finish that throws still lets him leave', (tester) async {
+    final fake = _FakeService(failFinish: true);
+    await toVerdict(tester, fake);
+    await tester.tap(find.text(l.pressLeaveRoom));
+    await tester.pumpAndSettle();
     expect(find.text('HOST'), findsOneWidget);
     expect(find.byType(PressSheet), findsNothing);
   });
