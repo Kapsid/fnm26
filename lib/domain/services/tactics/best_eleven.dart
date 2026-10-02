@@ -4,10 +4,18 @@ import 'package:fnm/domain/entities/player.dart';
 
 /// Picks the strongest starting XI for [formation] from a [pool] of players.
 ///
-/// For each slot (in order) it takes the best unused player whose position
-/// matches exactly; failing that, the best in the same positional category;
-/// failing that, the best player left. Returns slot→playerId (length 11), with
-/// `null` only if the pool is exhausted.
+/// Each slot (in order) takes the unused player who scores best for it: his
+/// overall, less a penalty for playing out of position. A natural fits free;
+/// another position in the same line (a centre-back at right-back) costs
+/// [sameLinePenalty]; another line costs [otherLinePenalty]; a keeper outfield
+/// or an outfielder in goal costs [keeperPenalty], so it only happens when no
+/// one else is left. Returns slot→playerId (length 11), with `null` only if
+/// the pool is exhausted.
+///
+/// It used to take ANY natural before anyone else, whatever his rating, so a
+/// side whose one right-back was a 32-rated boy started him over an 80-rated
+/// centre-back on the bench, and strong nations lost points of strength in
+/// about a third of their background matches.
 List<int?> bestEleven(Formation formation, List<Player> pool) {
   final available = [...pool]..sort((a, b) => b.overall.compareTo(a.overall));
   final used = <int>{};
@@ -15,10 +23,17 @@ List<int?> bestEleven(Formation formation, List<Player> pool) {
 
   for (var i = 0; i < 11; i++) {
     final wanted = formation.positions[i];
-    final pick =
-        _pickExact(wanted, available, used) ??
-        _pickCategory(wanted, available, used) ??
-        _pickAny(available, used);
+    Player? pick;
+    var best = double.negativeInfinity;
+    for (final p in available) {
+      if (used.contains(p.id)) continue;
+      final score = p.overall - _misfit(wanted, p.position);
+      // Sorted by overall, so a tie keeps the stronger man.
+      if (score > best) {
+        best = score;
+        pick = p;
+      }
+    }
     if (pick != null) {
       slots[i] = pick.id;
       used.add(pick.id);
@@ -27,35 +42,16 @@ List<int?> bestEleven(Formation formation, List<Player> pool) {
   return slots;
 }
 
-Player? _pickExact(
-  PlayerPosition position,
-  List<Player> sorted,
-  Set<int> used,
-) {
-  for (final p in sorted) {
-    if (!used.contains(p.id) && p.position == position) return p;
-  }
-  return null;
-}
+/// What playing a man away from his position costs, in rating points.
+const double sameLinePenalty = 4;
+const double otherLinePenalty = 15;
+const double keeperPenalty = 60;
 
-Player? _pickCategory(
-  PlayerPosition position,
-  List<Player> sorted,
-  Set<int> used,
-) {
-  for (final p in sorted) {
-    if (!used.contains(p.id) && p.position.category == position.category) {
-      return p;
-    }
-  }
-  return null;
-}
-
-Player? _pickAny(List<Player> sorted, Set<int> used) {
-  for (final p in sorted) {
-    if (!used.contains(p.id)) return p;
-  }
-  return null;
+double _misfit(PlayerPosition slot, PlayerPosition own) {
+  if (slot == own) return 0;
+  final keeperInvolved = slot == PlayerPosition.gk || own == PlayerPosition.gk;
+  if (keeperInvolved) return keeperPenalty;
+  return slot.category == own.category ? sameLinePenalty : otherLinePenalty;
 }
 
 /// Who a SHAPE CHANGE may draw on: exactly the players already on the pitch.
