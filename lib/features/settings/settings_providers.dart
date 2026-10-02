@@ -12,11 +12,17 @@ export 'package:fnm/core/config/ui_language.dart'
 /// Prefs key for the sound-and-haptics toggle.
 const String _kSoundHapticsKey = 'settings.soundHaptics';
 
-/// Prefs key for the chosen UI language ('en', 'cs', or absent = follow device).
+/// Prefs key for the chosen UI language ('en', 'cs', 'fr', 'it', 'pl', or absent = follow device).
 const String _kLocaleKey = 'settings.locale';
 
 /// The languages the app can be forced to, beyond following the device.
-const List<Locale> supportedAppLocales = [Locale('en'), Locale('cs')];
+const List<Locale> supportedAppLocales = [
+  Locale('en'),
+  Locale('cs'),
+  Locale('fr'),
+  Locale('it'),
+  Locale('pl'),
+];
 
 /// Whether match sound effects and haptics are on (default on). Read across the
 /// app; persisted to [SharedPreferences] so it survives relaunches. Loaded once

@@ -14,7 +14,12 @@ void main() {
       jsonDecode(File(path).readAsStringSync()) as Map<String, Object?>;
 
   final en = arb('lib/l10n/app_en.arb');
-  final cs = arb('lib/l10n/app_cs.arb');
+  // Every non-English language whose ARB exists.
+  final others = <String, Map<String, Object?>>{
+    for (final code in ['cs', 'fr', 'it', 'pl'])
+      if (File('lib/l10n/app_$code.arb').existsSync())
+        code: arb('lib/l10n/app_$code.arb'),
+  };
 
   Iterable<MapEntry<String, String>> strings(Map<String, Object?> m) sync* {
     for (final e in m.entries) {
@@ -27,7 +32,10 @@ void main() {
     // Commas and quotes are quoted properly, so a sentence may hold either.
     // A tab cannot be: the importer also accepts tab-separated files, and a
     // string containing one would split a row in a file exported that way.
-    for (final (name, file) in [('English', en), ('Czech', cs)]) {
+    for (final (name, file) in [
+      ('English', en),
+      ...others.entries.map((e) => (e.key, e.value)),
+    ]) {
       for (final e in strings(file)) {
         expect(
           e.value.contains('\t'),
@@ -40,7 +48,7 @@ void main() {
     }
   });
 
-  test('every Czech string carries the same placeholders as its English', () {
+  test('every translation carries the same placeholders as its English', () {
     // The importer refuses a translation that has lost a placeholder, because
     // a string with nowhere to put the value it is passed throws when the
     // screen it is on opens. This checks what is already committed.
@@ -49,27 +57,36 @@ void main() {
     };
     bool isPlural(String v) =>
         RegExp(r'\{\s*\w+\s*,\s*(plural|select)').hasMatch(v);
+    String? variable(String v) =>
+        RegExp(r'\{\s*(\w+)\s*,\s*(plural|select)').firstMatch(v)?.group(1);
 
-    for (final e in strings(en)) {
-      final translated = cs[e.key];
-      if (translated is! String || translated.trim().isEmpty) continue;
-      // A plural's braces are branch machinery, not placeholders, and Czech
-      // has more branches than English — so only the shape is comparable.
-      if (isPlural(e.value)) {
+    for (final lang in others.entries) {
+      for (final e in strings(en)) {
+        final translated = lang.value[e.key];
+        if (translated is! String || translated.trim().isEmpty) continue;
+        // A plural's braces are branch machinery, and languages differ in
+        // their branches (Polish has few and many) — so only the variable
+        // and the mandatory other{ branch are comparable.
+        if (isPlural(e.value)) {
+          expect(
+            isPlural(translated) &&
+                variable(translated) == variable(e.value) &&
+                RegExp(r'\bother\s*\{').hasMatch(translated),
+            isTrue,
+            reason:
+                '${lang.key} "${e.key}" has lost its {count, plural, …} '
+                'skeleton, variable or other{} branch',
+          );
+          continue;
+        }
         expect(
-          isPlural(translated),
-          isTrue,
-          reason: 'Czech "${e.key}" has lost its {count, plural, …} skeleton',
+          holders(translated),
+          holders(e.value),
+          reason:
+              '${lang.key} "${e.key}" does not use the same placeholders as '
+              'the English it translates',
         );
-        continue;
       }
-      expect(
-        holders(translated),
-        holders(e.value),
-        reason:
-            'Czech "${e.key}" does not use the same placeholders as the '
-            'English it translates',
-      );
     }
   });
 }

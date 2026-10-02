@@ -65,7 +65,7 @@ void main() {
   ) async {
     // One test on one language would pass on an accident of alphabetisation:
     // any of these sorting before "cs" would be read as a fix that is not one.
-    for (final code in ['fr', 'es', 'ja', 'ar', 'ab']) {
+    for (final code in ['pt', 'es', 'ja', 'ar', 'ab']) {
       final rendered = await render(tester, [Locale(code)]);
       expect(
         rendered.greeting,

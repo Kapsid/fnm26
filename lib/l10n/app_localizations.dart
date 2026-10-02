@@ -7,6 +7,9 @@ import 'package:intl/intl.dart' as intl;
 
 import 'app_localizations_cs.dart';
 import 'app_localizations_en.dart';
+import 'app_localizations_fr.dart';
+import 'app_localizations_it.dart';
+import 'app_localizations_pl.dart';
 
 // ignore_for_file: type=lint
 
@@ -96,6 +99,9 @@ abstract class AppLocalizations {
   static const List<Locale> supportedLocales = <Locale>[
     Locale('en'),
     Locale('cs'),
+    Locale('fr'),
+    Locale('it'),
+    Locale('pl'),
   ];
 
   /// App-bar title on the pre-match preview screen.
@@ -583,18 +589,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'System'**
   String get settingsLanguageSystem;
-
-  /// Language option: English.
-  ///
-  /// In en, this message translates to:
-  /// **'English'**
-  String get settingsLanguageEnglish;
-
-  /// Language option: Czech (in Czech).
-  ///
-  /// In en, this message translates to:
-  /// **'Čeština'**
-  String get settingsLanguageCzech;
 
   /// Match preview: opens the list of every past meeting with this opponent. Sentence case on purpose, so it reads as something to tap rather than as a heading.
   ///
@@ -10713,12 +10707,6 @@ abstract class AppLocalizations {
   /// **'{name} has won his first cap at {age}, rated {rating}. One of the boys you are watching.'**
   String newsWatchDebutBody(String name, int age, int rating);
 
-  /// Live-match screen top bar.
-  ///
-  /// In en, this message translates to:
-  /// **'MATCH'**
-  String get matchTopBarTitle;
-
   /// Live match stats tab: which figures cannot be given until full time.
   ///
   /// In en, this message translates to:
@@ -14055,7 +14043,7 @@ class _AppLocalizationsDelegate
 
   @override
   bool isSupported(Locale locale) =>
-      <String>['cs', 'en'].contains(locale.languageCode);
+      <String>['cs', 'en', 'fr', 'it', 'pl'].contains(locale.languageCode);
 
   @override
   bool shouldReload(_AppLocalizationsDelegate old) => false;
@@ -14068,6 +14056,12 @@ AppLocalizations lookupAppLocalizations(Locale locale) {
       return AppLocalizationsCs();
     case 'en':
       return AppLocalizationsEn();
+    case 'fr':
+      return AppLocalizationsFr();
+    case 'it':
+      return AppLocalizationsIt();
+    case 'pl':
+      return AppLocalizationsPl();
   }
 
   throw FlutterError(

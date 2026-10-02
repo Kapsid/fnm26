@@ -1,3 +1,7 @@
+import 'package:fnm/domain/services/nation/nation_names_fr.dart';
+import 'package:fnm/domain/services/nation/nation_names_it.dart';
+import 'package:fnm/domain/services/nation/nation_names_pl.dart';
+
 /// How a nation's name is WRITTEN, as opposed to what it is called in the seed
 /// data.
 ///
@@ -499,14 +503,19 @@ abstract final class NationNames {
   /// [seedName] for any nation this table has not been taught.
   static String display(String code, String seedName, String languageCode) {
     final key = code.toUpperCase();
-    if (languageCode == 'cs') {
-      return csByCode[key] ?? enByCode[key] ?? seedName;
-    }
-    return enByCode[key] ?? seedName;
+    final table = switch (languageCode) {
+      'cs' => csByCode,
+      'fr' => nationNamesFr,
+      'it' => nationNamesIt,
+      'pl' => nationNamesPl,
+      _ => null,
+    };
+    return table?[key] ?? enByCode[key] ?? seedName;
   }
 
   /// The name to show for [code] in [languageCode] where the sentence puts it
-  /// after "proti" — the dative in Czech, the plain name in English.
+  /// after "proti" — the dative in Czech, the plain name in every other
+  /// language.
   ///
   /// Falls back the same way [display] does, so a nation this table has not
   /// been taught reads as its nominative rather than as nothing.

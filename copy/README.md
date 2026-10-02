@@ -1,7 +1,7 @@
 # Editing the game's text
 
-`strings.csv` is every string in the game — 1915 of them — in one file.
-**Double-click it**: it opens in Numbers or Excel as a five-column
+`strings.csv` is every string in the game — in one file.
+**Double-click it**: it opens in Numbers or Excel as an eight-column
 spreadsheet. Change the words, save, hand it back.
 
 ## The loop
@@ -25,7 +25,7 @@ always safe to regenerate the file and start again.
 | `where` | a note saying where the string appears. Yours to read, not to edit. |
 | `placeholders` | which `{words}` this string must keep. Also just a note. |
 | `en` | the English. **Edit freely.** |
-| `cs` | the Czech. **Edit freely.** Leave it blank to keep what's there. |
+| `cs` `fr` `it` `pl` | Czech, French, Italian, Polish. **Edit freely.** Leave a cell blank to keep what's there. A language whose `lib/l10n/app_<code>.arb` does not exist is skipped on import. |
 
 ## The rules
 
@@ -40,9 +40,10 @@ is written**, so you can never end up half-translated:
 
 2. **Leave plural machinery alone.** A row flagged `PLURAL` looks like
    `{count, plural, =1{1 point} other{{count} points}}`. Translate the words
-   inside the braces; leave `{count, plural,` and the branch names
-   (`=1`, `one`, `few`, `other`) exactly as they are. Czech needs its own
-   branches and they are already there.
+   inside the braces; leave `{count, plural,` and the variable
+   exactly as they are, and keep an `other` branch. Each language uses its own
+   categories (Czech has `few`, Polish has `few` and `many`) and they are
+   already there.
 
 If a row is refused the importer names it, says which language, and says what
 went wrong. Fix that row and run it again.

@@ -276,12 +276,6 @@ class AppLocalizationsCs extends AppLocalizations {
   String get settingsLanguageSystem => 'Systém';
 
   @override
-  String get settingsLanguageEnglish => 'Angličtina';
-
-  @override
-  String get settingsLanguageCzech => 'Čeština';
-
-  @override
   String get matchPreviewAllMeetings => 'Všechna utkání';
 
   @override
@@ -6831,9 +6825,6 @@ class AppLocalizationsCs extends AppLocalizations {
   String newsWatchDebutBody(String name, int age, int rating) {
     return '$name si v $age letech připsal první start v reprezentaci, rating $rating. Jeden z kluků, které sledujete.';
   }
-
-  @override
-  String get matchTopBarTitle => 'ZÁPAS';
 
   @override
   String get matchStatsAtFullTime =>

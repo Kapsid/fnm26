@@ -377,14 +377,6 @@
   "@settingsLanguageSystem": {
     "description": "Language option: follow the device language."
   },
-  "settingsLanguageEnglish": "English",
-  "@settingsLanguageEnglish": {
-    "description": "Language option: English."
-  },
-  "settingsLanguageCzech": "Čeština",
-  "@settingsLanguageCzech": {
-    "description": "Language option: Czech (in Czech)."
-  },
   "matchPreviewAllMeetings": "All meetings",
   "@matchPreviewAllMeetings": {
     "description": "Match preview: opens the list of every past meeting with this opponent. Sentence case on purpose, so it reads as something to tap rather than as a heading."
@@ -10234,10 +10226,6 @@
         "type": "int"
       }
     }
-  },
-  "matchTopBarTitle": "MATCH",
-  "@matchTopBarTitle": {
-    "description": "Live-match screen top bar."
   },
   "matchStatsAtFullTime": "Possession, player ratings and the man of the match are settled at the final whistle.",
   "@matchStatsAtFullTime": {

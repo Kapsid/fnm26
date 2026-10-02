@@ -20,7 +20,7 @@ import '../helpers/fixtures.dart';
 /// who is gone from a DERIVED pyramid is still accounted for by name instead of
 /// silently disappearing, which is the failure the pool being derived invites.
 const _widths = [320.0, 360.0, 400.0];
-const _locales = ['en', 'cs'];
+const _locales = ['en', 'cs', 'fr', 'it', 'pl'];
 
 void main() {
   YouthMark mark({

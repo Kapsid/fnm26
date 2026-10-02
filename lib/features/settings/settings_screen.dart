@@ -23,6 +23,75 @@ import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
 
+/// Each language in its own tongue, never translated: a manager who has landed
+/// in a language he cannot read must still be able to find his own.
+const Map<String, String> _languageEndonyms = {
+  'en': 'English',
+  'cs': 'Čeština',
+  'fr': 'Français',
+  'it': 'Italiano',
+  'pl': 'Polski',
+};
+
+/// Opens the language picker: "System" plus one radio row per language.
+Future<void> _pickLanguage(
+  BuildContext context,
+  WidgetRef ref,
+  String current,
+) async {
+  final l = AppLocalizations.of(context);
+  final chosen = await showModalBottomSheet<String>(
+    context: context,
+    isScrollControlled: true,
+    builder: (ctx) => SafeArea(
+      child: SingleChildScrollView(
+        child: _LanguageOptions(
+          current: current,
+          options: [
+            ('system', l.settingsLanguageSystem),
+            for (final e in _languageEndonyms.entries) (e.key, e.value),
+          ],
+          onPick: (v) => Navigator.of(ctx).pop(v),
+        ),
+      ),
+    ),
+  );
+  if (chosen == null) return;
+  setLocale(ref, chosen == 'system' ? null : Locale(chosen));
+}
+
+/// Radio rows built from ListTiles, so the whole row is the tap target.
+class _LanguageOptions extends StatelessWidget {
+  const _LanguageOptions({
+    required this.current,
+    required this.options,
+    required this.onPick,
+  });
+
+  final String current;
+  final List<(String, String)> options;
+  final ValueChanged<String> onPick;
+
+  @override
+  Widget build(BuildContext context) => Column(
+    mainAxisSize: MainAxisSize.min,
+    children: [
+      for (final (code, label) in options)
+        ListTile(
+          key: Key('language-option-$code'),
+          leading: Icon(
+            code == current
+                ? Icons.radio_button_checked_rounded
+                : Icons.radio_button_unchecked_rounded,
+            color: AppColors.primary,
+          ),
+          title: Text(label, style: AppTypography.bodyMedium),
+          onTap: () => onPick(code),
+        ),
+    ],
+  );
+}
+
 /// App settings: the sound-and-haptics toggle for match cues and the UI
 /// language selector.
 class SettingsScreen extends ConsumerWidget {
@@ -62,7 +131,15 @@ class SettingsScreen extends ConsumerWidget {
         centerTitle: true,
       ),
       body: ListView(
-        padding: const EdgeInsets.all(AppSpacing.marginMobile),
+        // A ListView given its own padding drops the safe-area inset it would
+        // otherwise add, so on edge-to-edge Android the last card (Restore
+        // from file) sat under the system navigation bar. Add it back.
+        padding: EdgeInsets.fromLTRB(
+          AppSpacing.marginMobile,
+          AppSpacing.marginMobile,
+          AppSpacing.marginMobile,
+          AppSpacing.marginMobile + MediaQuery.viewPaddingOf(context).bottom,
+        ),
         children: [
           AppCard(
             padding: EdgeInsets.zero,
@@ -88,59 +165,41 @@ class SettingsScreen extends ConsumerWidget {
           ),
           const SizedBox(height: AppSpacing.md),
           AppCard(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    const Icon(
-                      Icons.translate_rounded,
+            padding: EdgeInsets.zero,
+            child: ListTile(
+              key: const Key('settings-language-tile'),
+              leading: const Icon(
+                Icons.translate_rounded,
+                color: AppColors.primary,
+              ),
+              title: Text(
+                l.settingsLanguageTitle,
+                style: AppTypography.bodyMedium,
+              ),
+              subtitle: Text(
+                l.settingsLanguageBlurb,
+                style: AppTypography.labelSmall.copyWith(
+                  color: AppColors.onSurfaceVariant,
+                ),
+              ),
+              trailing: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    current == 'system'
+                        ? l.settingsLanguageSystem
+                        : _languageEndonyms[current] ?? current,
+                    style: AppTypography.labelMedium.copyWith(
                       color: AppColors.primary,
                     ),
-                    const SizedBox(width: AppSpacing.md),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            l.settingsLanguageTitle,
-                            style: AppTypography.bodyMedium,
-                          ),
-                          Text(
-                            l.settingsLanguageBlurb,
-                            style: AppTypography.labelSmall.copyWith(
-                              color: AppColors.onSurfaceVariant,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: AppSpacing.md),
-                SegmentedButton<String>(
-                  showSelectedIcon: false,
-                  segments: [
-                    ButtonSegment(
-                      value: 'system',
-                      label: Text(l.settingsLanguageSystem),
-                    ),
-                    ButtonSegment(
-                      value: 'en',
-                      label: Text(l.settingsLanguageEnglish),
-                    ),
-                    ButtonSegment(
-                      value: 'cs',
-                      label: Text(l.settingsLanguageCzech),
-                    ),
-                  ],
-                  selected: {current},
-                  onSelectionChanged: (sel) => setLocale(
-                    ref,
-                    sel.first == 'system' ? null : Locale(sel.first),
                   ),
-                ),
-              ],
+                  const Icon(
+                    Icons.arrow_drop_down_rounded,
+                    color: AppColors.primary,
+                  ),
+                ],
+              ),
+              onTap: () => _pickLanguage(context, ref, current),
             ),
           ),
           const SizedBox(height: AppSpacing.md),
@@ -400,10 +459,17 @@ class _BackupCardState extends ConsumerState<_BackupCard> {
             onPressed: _busy ? null : _export,
           ),
           const SizedBox(height: AppSpacing.sm),
-          TextButton.icon(
+          // A full-width outlined button, not a text link: restoring is the
+          // other half of the card and was easy to miss at the foot of it.
+          OutlinedButton.icon(
             onPressed: _busy ? null : _restore,
             icon: const Icon(Icons.settings_backup_restore_rounded, size: 18),
             label: Text(l.backupRestore),
+            style: OutlinedButton.styleFrom(
+              foregroundColor: AppColors.primary,
+              side: const BorderSide(color: AppColors.outlineVariant),
+              minimumSize: const Size.fromHeight(48),
+            ),
           ),
         ],
       ),

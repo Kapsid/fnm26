@@ -276,12 +276,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settingsLanguageSystem => 'System';
 
   @override
-  String get settingsLanguageEnglish => 'English';
-
-  @override
-  String get settingsLanguageCzech => 'Čeština';
-
-  @override
   String get matchPreviewAllMeetings => 'All meetings';
 
   @override
@@ -6789,9 +6783,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String newsWatchDebutBody(String name, int age, int rating) {
     return '$name has won his first cap at $age, rated $rating. One of the boys you are watching.';
   }
-
-  @override
-  String get matchTopBarTitle => 'MATCH';
 
   @override
   String get matchStatsAtFullTime =>
