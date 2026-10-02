@@ -60,6 +60,7 @@ class WholeText extends StatelessWidget {
     this.maxLines = 2,
     this.textAlign,
     this.shortText,
+    this.shrinkBeforeShortening = _shrinkBeforeShortening,
     super.key,
   });
 
@@ -78,6 +79,11 @@ class WholeText extends StatelessWidget {
   /// than writing it shorter, so a caller that has a shorter form offers it
   /// here and the widget only scales once even that has run out of room.
   final String? shortText;
+
+  /// How far [text] may be scaled down before [shortText] takes over. 1.0
+  /// never shrinks the full text at all: it is either drawn at size or the
+  /// short form is.
+  final double shrinkBeforeShortening;
 
   /// How wide [text] wants to be on one unbroken line. Measured rather than
   /// guessed, so short names are left untouched.
@@ -134,7 +140,7 @@ class WholeText extends StatelessWidget {
           short != null &&
               short != text &&
               _lineWidth(text, resolved, context) >
-                  width / _shrinkBeforeShortening
+                  width / shrinkBeforeShortening
           ? short
           : text;
 

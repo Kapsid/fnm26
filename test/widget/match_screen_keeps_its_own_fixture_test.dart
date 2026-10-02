@@ -59,6 +59,7 @@ void main() {
       overrides: [
         appDatabaseProvider.overrideWithValue(db),
         premiumUnlockedProvider.overrideWith((ref) => true),
+        matchAttemptSaltProvider.overrideWithValue(() => 0),
         seedSourceProvider.overrideWithValue(
           InMemorySeedSource(nationList: nations, playerList: players),
         ),

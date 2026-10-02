@@ -6,25 +6,45 @@ part of 'match_screen.dart';
 /// A part rather than its own library so these stay private to the match
 /// screen — they are its furniture, not widgets anything else should build.
 class _TopBar extends StatelessWidget {
-  const _TopBar();
+  const _TopBar({required this.occasion});
+
+  /// What the match is for ("WORLD CUP FINALS · SEMI-FINAL", from
+  /// [MatchStage.label], as the hub's next-match card writes it).
+  final String occasion;
 
   @override
   Widget build(BuildContext context) {
+    // What is at stake, on a full-width plate of the clock's own silver, where
+    // the bar used to just say "MATCH": a quick game still says whether it is
+    // a qualifier or a semi-final, without taking room from the scoreboard.
+    //
+    // No way out of here: once the whistle has gone the only exit is Continue
+    // at full time, so the result is always committed rather than a
+    // half-played match being abandoned back to the hub.
     return Padding(
-      padding: const EdgeInsets.symmetric(
-        horizontal: AppSpacing.md,
-        vertical: AppSpacing.sm,
+      padding: const EdgeInsets.fromLTRB(
+        AppSpacing.marginMobile,
+        AppSpacing.sm,
+        AppSpacing.marginMobile,
+        0,
       ),
-      child: Row(
-        children: [
-          // No way out of here: once the whistle has gone the only exit is
-          // Continue at full time, so the result is always committed rather
-          // than a half-played match being abandoned back to the hub.
-          Text(
-            AppLocalizations.of(context).matchTopBarTitle,
-            style: AppTypography.labelMedium.copyWith(color: AppColors.primary),
-          ),
-        ],
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppSpacing.md,
+          vertical: 6,
+        ),
+        decoration: const BoxDecoration(
+          color: AppColors.surfaceContainerHighest,
+          borderRadius: AppRadii.baseAll,
+        ),
+        child: Text(
+          occasion,
+          textAlign: TextAlign.center,
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
+          style: AppTypography.labelMedium.copyWith(color: AppColors.primary),
+        ),
       ),
     );
   }
@@ -464,10 +484,15 @@ class _Side extends StatelessWidget {
       children: [
         FlagDisc(code, size: 56),
         const SizedBox(height: AppSpacing.xs),
-        Text(
+        // A name too long for its third is written as its code, at the same
+        // size, rather than cut off with an ellipsis or shrunk out of step
+        // with the name on the other side.
+        WholeText(
           label,
           maxLines: 1,
-          overflow: TextOverflow.ellipsis,
+          textAlign: TextAlign.center,
+          shortText: code,
+          shrinkBeforeShortening: 1,
           style: AppTypography.titleMedium,
         ),
         if (overall > 0)

@@ -48,6 +48,7 @@ void main() {
               // No fixture: the body shows its empty state, and the bar under
               // it, which is what this measures, is built all the same.
               matchPreviewProvider(1).overrideWith((ref) async => null),
+              matchAttemptSaltProvider.overrideWithValue(() => 0),
               wcHostThemeProvider(
                 1,
               ).overrideWith((ref) => Completer<WcHostTheme>().future),

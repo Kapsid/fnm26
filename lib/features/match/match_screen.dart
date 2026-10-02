@@ -10,6 +10,7 @@ import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/core/theme/kit_colors.dart';
+import 'package:fnm/core/util/match_stage.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/entities/formation.dart';
@@ -103,6 +104,14 @@ class MatchScreen extends ConsumerStatefulWidget {
 class _MatchScreenState extends ConsumerState<MatchScreen> {
   static const _speeds = [1, 2, 3];
   static const _engine = MatchEngine();
+
+  /// This attempt's salt on the fixture seed (see [matchAttemptSaltProvider]).
+  /// Held by the screen, not the preview, so a rebuilt preview can never swap
+  /// the dice under a match already in play.
+  late final int _attemptSalt = ref.read(matchAttemptSaltProvider)();
+
+  /// The seed this attempt plays from: the match itself and its extra time.
+  int _seed(MatchPreview preview) => preview.saveSeed ^ _attemptSalt;
 
   int _minute = 0;
   bool _playing = true;
@@ -718,7 +727,7 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
     return WorldCupFinals.decideKnockout(
       r.homeScore,
       r.awayScore,
-      SeededRng.forFixture(preview.saveSeed, preview.fixture.id ^ 0x7F),
+      SeededRng.forFixture(_seed(preview), preview.fixture.id ^ 0x7F),
       homeStrength: homeStrength,
       awayStrength: awayStrength,
       homeTakerSkill: preview.playerIsHome ? mySkill : oppSkill,
@@ -1086,7 +1095,7 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
   MatchResult _resim(MatchPreview preview) => _engine.play(
     home: preview.homeTeam,
     away: preview.awayTeam,
-    rng: SeededRng.forFixture(preview.saveSeed, preview.fixture.id),
+    rng: SeededRng.forFixture(_seed(preview), preview.fixture.id),
     subs: preview.opponentSubs,
     changes: _changes,
     talks: _talks,
@@ -1208,7 +1217,9 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
             if (preview == null) {
               return Center(child: Text(l.matchNoUpcoming));
             }
-            _result ??= preview.result;
+            // Played from this attempt's own seed. The preview's result is
+            // the bare fixture seed's match, so it only stands at salt 0.
+            _result ??= _attemptSalt == 0 ? preview.result : _resim(preview);
             _livePreview = preview;
             _ensureLiveSetup(preview);
             final r = _result!;
@@ -1286,7 +1297,9 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
                   children: [
                     Column(
                       children: [
-                        const _TopBar(),
+                        _TopBar(
+                          occasion: MatchStage.label(l, preview.fixture),
+                        ),
                         MatchScoreboard(
                           homeCode: code(homeId),
                           awayCode: code(awayId),
