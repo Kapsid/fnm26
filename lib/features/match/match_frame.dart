@@ -495,12 +495,18 @@ class _Side extends StatelessWidget {
           shrinkBeforeShortening: 1,
           style: AppTypography.titleMedium,
         ),
+        // Scaled down rather than cut: in a longer language the label could
+        // fill the side's third and clip the number, which is the point.
         if (overall > 0)
-          Text(
-            '${l.teamOverall} $overall',
-            maxLines: 1,
-            style: AppTypography.labelSmall.copyWith(
-              color: AppColors.onSurfaceVariant,
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text(
+              '${l.teamOverall} $overall',
+              maxLines: 1,
+              softWrap: false,
+              style: AppTypography.labelSmall.copyWith(
+                color: AppColors.onSurfaceVariant,
+              ),
             ),
           ),
       ],

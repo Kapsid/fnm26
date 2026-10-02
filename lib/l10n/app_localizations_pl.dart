@@ -145,7 +145,7 @@ class AppLocalizationsPl extends AppLocalizations {
   String get teamOverallOverTime => 'OCENA OGÓLNA NA PRZESTRZENI LAT';
 
   @override
-  String get teamOverall => 'Ocena ogólna';
+  String get teamOverall => 'Ogółem';
 
   @override
   String get teamTalkHeading => 'ODPRAWA';

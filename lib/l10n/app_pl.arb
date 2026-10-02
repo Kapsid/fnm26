@@ -40,7 +40,7 @@
   "matchTiredCount": "ZMĘCZENI ×{count}",
   "matchTacticsLabel": "TAKTYKA",
   "teamOverallOverTime": "OCENA OGÓLNA NA PRZESTRZENI LAT",
-  "teamOverall": "Ocena ogólna",
+  "teamOverall": "Ogółem",
   "teamTalkHeading": "ODPRAWA",
   "teamTalkPrompt": "Nadaj ton drugiej połowie.",
   "teamTalkCalmLabel": "Spokojnie",
