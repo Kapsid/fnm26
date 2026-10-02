@@ -1,4 +1,5 @@
 import 'package:fnm/domain/services/competition/cycle_finish.dart';
+import 'package:fnm/domain/services/competition/nations_cups.dart';
 import 'package:fnm/domain/services/manager/job_market.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 
@@ -29,8 +30,9 @@ String cycleFinishLabel(AppLocalizations l, CycleFinish f) => switch (f) {
   CycleFinish.didNotQualify => l.finishDidNotQualify,
 };
 
-/// A nation's Nations Cup cycle in one phrase: which league it played in, and
-/// either the Finals Four it reached or where it came in its group.
+/// A nation's Nations Cup cycle in one phrase: which league it played in (or,
+/// in the African cup, which zone), and either the finals round it reached or
+/// where it came in its group.
 ///
 /// One string rather than two, because Czech puts the league after the word for
 /// league and English does not, and a screen joining fragments with a middle
@@ -40,11 +42,34 @@ String nationsCupFinishLabel(
   required String league,
   required int position,
   NationsCupFinish? finals,
-}) => switch (finals) {
-  NationsCupFinish.champions => l.careerNationsCupWon(league),
-  NationsCupFinish.runnersUp => l.careerNationsCupRunnerUp(league),
-  NationsCupFinish.semiFinalist => l.careerNationsCupSemi(league),
-  null => l.careerNationsCupPlaced(league, position),
+  AfricaZone? zone,
+}) {
+  if (zone != null) {
+    final z = africaZoneLabel(l, zone);
+    return switch (finals) {
+      NationsCupFinish.champions => l.careerNationsCupZoneWon(z),
+      NationsCupFinish.runnersUp => l.careerNationsCupZoneRunnerUp(z),
+      NationsCupFinish.semiFinalist => l.careerNationsCupZoneSemi(z),
+      NationsCupFinish.quarterFinalist => l.careerNationsCupZoneQuarter(z),
+      null => l.careerNationsCupZonePlaced(z, position),
+    };
+  }
+  return switch (finals) {
+    NationsCupFinish.champions => l.careerNationsCupWon(league),
+    NationsCupFinish.runnersUp => l.careerNationsCupRunnerUp(league),
+    NationsCupFinish.semiFinalist => l.careerNationsCupSemi(league),
+    // A ladder cup has no quarter-final; its Finals Four opens at the semis.
+    NationsCupFinish.quarterFinalist ||
+    null => l.careerNationsCupPlaced(league, position),
+  };
+}
+
+/// One of the African Nations Cup's four zones, by name.
+String africaZoneLabel(AppLocalizations l, AfricaZone z) => switch (z) {
+  AfricaZone.north => l.ncZoneNorth,
+  AfricaZone.west => l.ncZoneWest,
+  AfricaZone.east => l.ncZoneEast,
+  AfricaZone.centralSouthern => l.ncZoneCentralSouthern,
 };
 
 /// What an offer between cycles would be, on the tile that carries it.

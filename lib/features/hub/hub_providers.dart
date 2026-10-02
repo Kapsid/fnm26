@@ -650,16 +650,30 @@ class SeasonService {
     )) {
       return true;
     }
-    // The Nations Cup the manager follows: his own confederation's, or
-    // Europe's when his has none. The other cups resolve in the background.
-    final mine = await _managerConfederation(careerId);
-    if (await _comp.hasLiveNationsCupFinals(
-      careerId,
-      confederation: mine == null ? null : NationsCups.followedBy(mine),
-    )) {
+    // The manager's own confederation's Nations Cup, if it runs one. The
+    // other cups resolve in the background.
+    final mine = NationsCups.ofManager(await _managerConfederation(careerId));
+    if (mine != null &&
+        await _comp.hasLiveNationsCupFinals(careerId, confederation: mine)) {
       return true;
     }
     return false;
+  }
+
+  /// The date of [conf]'s Nations Cup's last group matchday while any group
+  /// match of that cup is still unplayed, else null (groups done, or no cup).
+  Future<DateTime?> _lastUnplayedNationsCupGroupDate(
+    int careerId,
+    Confederation conf,
+  ) async {
+    final groups = await _comp.fixturesByRound(
+      careerId,
+      'NGROUP',
+      kind: CompetitionKind.nationsLeague,
+      confederation: conf,
+    );
+    if (groups.every((f) => f.hasResult)) return null;
+    return groups.map((f) => f.date).reduce((a, b) => a.isAfter(b) ? a : b);
   }
 
   /// World positions (1 = top) from the live points held in memory, tie-broken
@@ -1358,13 +1372,18 @@ class SeasonService {
       //     participant is detected from ANY unplayed finals fixture (not just
       //     their immediate next one), so a host whose pre-finals window is
       //     friendlies still plays their own tie instead of watching it. Only
-      //     the cup he follows is stepped; the others resolve in the
-      //     background like the other continents' championships.
-      final ncConf = await _managerConfederation(careerId);
-      final ncFinalsDate = await _comp.earliestUnplayedNationsCupFinalsDate(
-        careerId,
-        confederation: ncConf == null ? null : NationsCups.followedBy(ncConf),
+      //     his own confederation's cup is stepped (none for a confederation
+      //     that runs no cup); the others resolve in the background like the
+      //     other continents' championships.
+      final ncConf = NationsCups.ofManager(
+        await _managerConfederation(careerId),
       );
+      final ncFinalsDate = ncConf == null
+          ? null
+          : await _comp.earliestUnplayedNationsCupFinalsDate(
+              careerId,
+              confederation: ncConf,
+            );
       final nextIsNcFinals =
           next != null && FinalsRounds.nationsCup.contains(next.round);
       final playerInNcFinals = playerFixtures.any(
@@ -1382,6 +1401,36 @@ class SeasonService {
           excludeNationId: career.nationId,
         );
         break;
+      }
+
+      // 1c. The last matchday of the manager's own Nations Cup groups, when it
+      //     falls before his next fixture. A side with a bye on that matchday
+      //     (Africa's North zone plays groups of three) would otherwise jump
+      //     straight to its next fixture months away, the groups would finish
+      //     inside that one catch-up, and his cup's finals would be drawn from
+      //     a clock already in the spring. Stopping on the day the groups end
+      //     lets the progression draw the finals on their own dates (the
+      //     African Finals Eight in November) before the clock moves on.
+      if (ncConf != null && next != null) {
+        final groupEnd = await _lastUnplayedNationsCupGroupDate(
+          careerId,
+          ncConf,
+        );
+        if (groupEnd != null && groupEnd.isBefore(next.date)) {
+          // Never backwards: a stray unplayed group match already behind the
+          // clock is simply caught up today.
+          final stop = groupEnd.isBefore(career.inGameDate)
+              ? career.inGameDate
+              : groupEnd;
+          await _careers.updateInGameDate(careerId, stop);
+          await _catchUp(
+            careerId,
+            stop,
+            career.rngSeed,
+            excludeNationId: career.nationId,
+          );
+          break;
+        }
       }
 
       // 2. The player's next fixture (a finals match they contest, or their

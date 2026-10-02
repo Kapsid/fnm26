@@ -459,6 +459,7 @@ class _CycleCard extends StatelessWidget {
                   league: nc.league,
                   position: nc.position,
                   finals: nc.finals,
+                  zone: nc.zone,
                 ),
                 gold: nc.finals == NationsCupFinish.champions,
               ),

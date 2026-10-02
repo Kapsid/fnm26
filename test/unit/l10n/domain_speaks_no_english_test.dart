@@ -129,7 +129,12 @@ const Map<String, Set<String>> _allowed = {
   // its own unit test, and the group tables write their own zone captions from
   // the copy. Left in English rather than translated for a caller that does
   // not exist.
-  'lib/domain/services/competition/group_advancement.dart': {'Only '},
+  // The same for the African zone line; the screen writes its own from
+  // `tourContZoneAdvancement`.
+  'lib/domain/services/competition/group_advancement.dart': {
+    'Only ',
+    'Winner may ',
+  },
   // A typography specimen on the developer-only style gallery, which is the
   // one screen whose job IS to show the type at its worst. It is not routed
   // to from the app and no manager can reach it, so the caps string is the

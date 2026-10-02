@@ -69,8 +69,12 @@ extension SeasonCycle on SeasonService {
       // The brief, the finish and the competition are all stored as MEANING:
       // the board's verdict is a message the manager may not open for months,
       // and by then he may be reading in another language.
-      final demand = MsgText(objectiveDemandKey(o.tier, o.target));
-      final finish = MsgText(objectiveFinishKey(o.tier, o.actual));
+      final demand = MsgText(
+        objectiveDemandKey(o.tier, o.target, competition: o.competition),
+      );
+      final finish = MsgText(
+        objectiveFinishKey(o.tier, o.actual, competition: o.competition),
+      );
       final comp = MsgComp(o.competition);
       await _comp.addTextMessage(
         l: _l,

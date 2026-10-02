@@ -4,6 +4,7 @@ import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/services/achievements/challenges.dart';
 import 'package:fnm/domain/services/competition/continental_cups.dart';
+import 'package:fnm/domain/services/competition/nations_cups.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/stats/stats_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
@@ -152,7 +153,9 @@ challengesViewProvider = FutureProvider.autoDispose.family<List<ChallengeView>, 
     } else if (continentalNames.contains(h.competition)) {
       continentalTitles++;
       continentalCupsWon.add(h.competition);
-    } else if (h.competition == 'Nations Cup') {
+    } else if (NationsCups.isNationsCup(h.competition)) {
+      // Any confederation's cup; one honour row per title, so a single win
+      // counts once.
       nationsCupTitles++;
     } else if (h.competition == 'Continental Clash') {
       clashTitles++;

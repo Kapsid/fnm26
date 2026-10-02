@@ -14030,6 +14030,120 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'His word is worth nothing now. Write it down, {nation}.'**
   String yStatementBroken5(String nation);
+
+  /// African Nations Cup: the zone of the North African nations.
+  ///
+  /// In en, this message translates to:
+  /// **'North Zone'**
+  String get ncZoneNorth;
+
+  /// African Nations Cup: the zone of the West African nations.
+  ///
+  /// In en, this message translates to:
+  /// **'West Zone'**
+  String get ncZoneWest;
+
+  /// African Nations Cup: the zone of the East African nations.
+  ///
+  /// In en, this message translates to:
+  /// **'East Zone'**
+  String get ncZoneEast;
+
+  /// African Nations Cup: the zone of the Central and Southern African nations.
+  ///
+  /// In en, this message translates to:
+  /// **'Central and Southern Zone'**
+  String get ncZoneCentralSouthern;
+
+  /// Career history: won the African Nations Cup Finals Eight, from this zone.
+  ///
+  /// In en, this message translates to:
+  /// **'{zone} · Champions'**
+  String careerNationsCupZoneWon(String zone);
+
+  /// Career history: lost the African Nations Cup final, from this zone.
+  ///
+  /// In en, this message translates to:
+  /// **'{zone} · Runners-up'**
+  String careerNationsCupZoneRunnerUp(String zone);
+
+  /// Career history: lost an African Nations Cup semi-final, from this zone.
+  ///
+  /// In en, this message translates to:
+  /// **'{zone} · Semi-finalist'**
+  String careerNationsCupZoneSemi(String zone);
+
+  /// Career history: lost an African Nations Cup quarter-final (the first round of the Finals Eight), from this zone.
+  ///
+  /// In en, this message translates to:
+  /// **'{zone} · Quarter-finalist'**
+  String careerNationsCupZoneQuarter(String zone);
+
+  /// Career history: where the nation came in its African Nations Cup zone group.
+  ///
+  /// In en, this message translates to:
+  /// **'{zone} · #{position}'**
+  String careerNationsCupZonePlaced(String zone, int position);
+
+  /// African Nations Cup board objective: be one of the two best group winners of your zone and reach the Finals Eight.
+  ///
+  /// In en, this message translates to:
+  /// **'Reach the Finals Eight'**
+  String get objectiveNcFinalsEight;
+
+  /// African Nations Cup board objective: top your zone group (the African cup has no promotion).
+  ///
+  /// In en, this message translates to:
+  /// **'Win your group'**
+  String get objectiveNcZoneWinGroup;
+
+  /// African Nations Cup objective result: reached the Finals Eight.
+  ///
+  /// In en, this message translates to:
+  /// **'Finals Eight'**
+  String get finishNcFinalsEight;
+
+  /// African Nations Cup objective result: finished in the bottom half of the zone group, but not last.
+  ///
+  /// In en, this message translates to:
+  /// **'Bottom half of the group'**
+  String get finishNcBottomHalf;
+
+  /// Tab on the African Nations Cup screen: the four zones and their groups.
+  ///
+  /// In en, this message translates to:
+  /// **'ZONES'**
+  String get tourContTabZones;
+
+  /// Tab on the African Nations Cup screen: the knockout finals of eight teams.
+  ///
+  /// In en, this message translates to:
+  /// **'FINALS EIGHT'**
+  String get tourContTabFinalsEight;
+
+  /// Explains when the African Nations Cup Finals Eight is contested.
+  ///
+  /// In en, this message translates to:
+  /// **'The Finals Eight is contested by the two best group winners of each zone once the group stage is done.'**
+  String get tourContFinalsEightSoon;
+
+  /// Heading for the quarter-finals in the African Nations Cup Finals Eight bracket.
+  ///
+  /// In en, this message translates to:
+  /// **'QUARTER-FINALS'**
+  String get tourContQuarterFinals;
+
+  /// Africa Nations Cup group advancement line shown above the zone tables.
+  ///
+  /// In en, this message translates to:
+  /// **'Group winners may reach the Finals Eight: the two best in each zone go through. Nobody is relegated.'**
+  String get tourContZoneAdvancement;
+
+  /// Heading of the manager's own zone on the African Nations Cup screen.
+  ///
+  /// In en, this message translates to:
+  /// **'{zone} · YOUR ZONE'**
+  String tourContZoneHeadingYours(String zone);
 }
 
 class _AppLocalizationsDelegate

@@ -92,9 +92,11 @@ CycleFinish cycleFinishOf(
   };
 }
 
-/// How a nation's Nations Cup ended, for the leagues that play a Finals Four.
+/// How a nation's Nations Cup ended, for the sides that reached its finals: a
+/// ladder cup's Finals Four, or the African cup's Finals Eight (the only one
+/// with a quarter-final).
 ///
 /// Was a String in the repository ('Champions', 'Runners-up',
 /// 'Semi-finalist') — three English words written in `lib/data`, which the
 /// career history printed as they came. Same fix as [CycleFinish].
-enum NationsCupFinish { champions, runnersUp, semiFinalist }
+enum NationsCupFinish { champions, runnersUp, semiFinalist, quarterFinalist }

@@ -4,6 +4,7 @@ import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/entities/group_standing.dart';
 import 'package:fnm/domain/services/competition/cycle_finish.dart';
 import 'package:fnm/domain/services/competition/finals.dart';
+import 'package:fnm/domain/services/competition/nations_cups.dart';
 import 'package:fnm/domain/services/competition/schedule_generator.dart';
 import 'package:fnm/domain/services/match/match_engine.dart';
 
@@ -394,8 +395,9 @@ abstract interface class CompetitionRepository {
   /// The latest PLAYED finals fixture [nationId] took no part in, among the
   /// tournaments a manager steps through from the stands: the World
   /// Championship, his own region's continental finals ([confederation]) and
-  /// the finals of the Nations Cup he follows
-  /// (`NationsCups.followedBy` of [confederation]; every cup when null). Null
+  /// the finals of his own confederation's Nations Cup
+  /// (`NationsCups.ofManager` of [confederation]: none when it runs no cup;
+  /// every cup when null). Null
   /// when none has been played.
   ///
   /// The press read it as a line in time: a match of his that falls before it
@@ -690,14 +692,17 @@ abstract interface class CompetitionRepository {
   });
 
   /// The manager nation's Nations Cup finish in every edition it played: the
-  /// league it was in (A/B/…), its final group position (1 = top), the group
-  /// size, and its Finals Four result if it reached the last four. One entry per
-  /// cycle, for the career-history "which league, and how it ended".
+  /// league it was in (A/B/…, a ladder cup) or its [zone] (the African cup),
+  /// its final group position (1 = top), the group size, and how far it went
+  /// in the cup's finals (Finals Four or Finals Eight) if it reached them. One
+  /// entry per cycle, read from its own confederation's cup only, for the
+  /// career-history "which league, and how it ended".
   Future<
     List<
       ({
         int cycle,
         String league,
+        AfricaZone? zone,
         int position,
         int groupSize,
         NationsCupFinish? finals,

@@ -66,7 +66,10 @@ void main() {
     await db.close();
   });
 
-  Future<void> pumpScreen(WidgetTester tester) async {
+  Future<void> pumpScreen(
+    WidgetTester tester, {
+    Confederation? confederation,
+  }) async {
     tester.view.devicePixelRatio = 1;
     tester.view.physicalSize = const Size(500, 900);
     addTearDown(tester.view.reset);
@@ -77,7 +80,10 @@ void main() {
           theme: AppTheme.theme,
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
-          home: NationsCupScreen(careerId: careerId),
+          home: NationsCupScreen(
+            careerId: careerId,
+            confederation: confederation,
+          ),
         ),
       ),
     );
@@ -91,6 +97,22 @@ void main() {
     expect(find.text('FINALS FOUR'), findsOneWidget);
     expect(find.text('SCORERS'), findsOneWidget);
     expect(find.text('HISTORY'), findsOneWidget);
+  });
+
+  // Another confederation's cup, opened from the tournaments screen: the
+  // African one is played in zones with a Finals Eight, and as it is not the
+  // manager's own there is no draw ceremony to wait for before its groups
+  // show.
+  testWidgets('the African cup shows its zones and its Finals Eight', (
+    tester,
+  ) async {
+    await pumpScreen(tester, confederation: Confederation.africa);
+
+    expect(find.text('ZONES'), findsOneWidget);
+    expect(find.text('FINALS EIGHT'), findsOneWidget);
+    expect(find.text('LEAGUES'), findsNothing);
+    expect(find.textContaining('may reach the Finals Eight'), findsOneWidget);
+    expect(find.text('NORTH ZONE'), findsOneWidget);
   });
 
   testWidgets('history is reachable while the cup is running', (tester) async {

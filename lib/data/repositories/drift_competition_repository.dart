@@ -872,9 +872,11 @@ class DriftCompetitionRepository implements CompetitionRepository {
                       (t.kind.equalsValue(CompetitionKind.nationsLeague) &
                           (confederation == null
                               ? const Constant(true)
-                              : t.confederation.equalsValue(
-                                  NationsCups.followedBy(confederation),
-                                ))) |
+                              // His own cup only — none at all for a
+                              // confederation that runs no Nations Cup.
+                              : NationsCups.ofManager(confederation) == null
+                              ? const Constant(false)
+                              : t.confederation.equalsValue(confederation))) |
                       (t.kind.equalsValue(CompetitionKind.continentalFinals) &
                           (confederation == null
                               ? const Constant(true)
@@ -2105,6 +2107,7 @@ class DriftCompetitionRepository implements CompetitionRepository {
       ({
         int cycle,
         String league,
+        AfricaZone? zone,
         int position,
         int groupSize,
         NationsCupFinish? finals,
@@ -2112,11 +2115,21 @@ class DriftCompetitionRepository implements CompetitionRepository {
     >
   >
   nationsCupFinishes(int careerId, int nationId) async {
+    // Only the nation's own confederation's cup: every cycle now holds three
+    // Nations Cups of the same kind, and a nation only ever plays in its own.
+    final nation = await (_db.select(
+      _db.nations,
+    )..where((t) => t.id.equals(nationId))).getSingleOrNull();
+    if (nation == null) return const [];
+    final cup = NationsCups.forConfederation(nation.confederation);
+    if (cup == null) return const [];
+    final zones = cup.format == NationsCupFormat.zones;
     final comps =
         await (_db.select(_db.competitions)..where(
               (t) =>
                   t.careerId.equals(careerId) &
-                  t.kind.equalsValue(CompetitionKind.nationsLeague),
+                  t.kind.equalsValue(CompetitionKind.nationsLeague) &
+                  t.confederation.equalsValue(nation.confederation),
             ))
             .get();
     final out =
@@ -2124,6 +2137,7 @@ class DriftCompetitionRepository implements CompetitionRepository {
           ({
             int cycle,
             String league,
+            AfricaZone? zone,
             int position,
             int groupSize,
             NationsCupFinish? finals,
@@ -2159,12 +2173,13 @@ class DriftCompetitionRepository implements CompetitionRepository {
       final position = standings.indexWhere((s) => s.nationId == nationId) + 1;
       final league = myGroup.name.isEmpty ? 'A' : myGroup.name[0];
 
-      // Finals Four result (League A group winners only) from NSF/NFINAL.
+      // How far it went in the finals: a ladder cup's Finals Four (NSF,
+      // NFINAL) or the African Finals Eight, which opens with a quarter-final.
       final ko =
           await (_db.select(_db.fixtures)..where(
                 (t) =>
                     t.competitionId.equals(comp.id) &
-                    (t.round.equals('NSF') | t.round.equals('NFINAL')) &
+                    t.round.isIn(FinalsRounds.nationsCup.toList()) &
                     (t.homeNationId.equals(nationId) |
                         t.awayNationId.equals(nationId)),
               ))
@@ -2181,14 +2196,17 @@ class DriftCompetitionRepository implements CompetitionRepository {
           finals = my >= other
               ? NationsCupFinish.champions
               : NationsCupFinish.runnersUp;
-        } else {
+        } else if (ko.any((f) => f.round == 'NSF')) {
           finals = NationsCupFinish.semiFinalist;
+        } else {
+          finals = NationsCupFinish.quarterFinalist;
         }
       }
 
       out.add((
         cycle: comp.cycle,
         league: league,
+        zone: zones ? NationsCups.zoneOfGroupName(myGroup.name) : null,
         position: position < 1 ? members.length : position,
         groupSize: members.length,
         finals: finals,

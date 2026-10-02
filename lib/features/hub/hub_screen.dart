@@ -12,9 +12,11 @@ import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/core/util/match_stage.dart';
+import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/entities/group_standing.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
+import 'package:fnm/domain/services/competition/nations_cups.dart';
 import 'package:fnm/features/achievements/achievement_providers.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/tournaments/wc_host_theme.dart';
@@ -365,7 +367,10 @@ class _HubScreenState extends ConsumerState<HubScreen> {
                       final comp = hub.group!.competition;
                       final conf =
                           hub.nations[hub.career.nationId]?.confederation;
-                      if (comp.startsWith('Nations Cup')) {
+                      // Any of the three cups (Europe's, North America's,
+                      // Africa's) — his own, which the screen opens on.
+                      if (hub.group!.kind == CompetitionKind.nationsLeague ||
+                          NationsCups.isNationsCup(comp)) {
                         context.go(
                           '${Routes.nationsCup}?careerId=$careerId',
                         );

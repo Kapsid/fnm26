@@ -11,6 +11,7 @@ import 'package:fnm/domain/repositories/competition_repository.dart';
 import 'package:fnm/domain/services/competition/continental_cups.dart';
 import 'package:fnm/domain/services/competition/finals_participation.dart';
 import 'package:fnm/domain/services/competition/nations_cup.dart';
+import 'package:fnm/domain/services/competition/nations_cups.dart';
 import 'package:fnm/domain/services/competition/rounds.dart';
 import 'package:fnm/features/ranking/world_ranking_providers.dart';
 import 'package:fnm/features/settings/settings_providers.dart';
@@ -81,13 +82,31 @@ typedef ObjectiveOutcome = ({
 String objectiveDemandText(
   AppLocalizations l,
   TournamentTier tier,
-  int target,
-) => _labelFor(l, tier, target);
+  int target, {
+  String? competition,
+}) => _labelFor(l, tier, target, competition: competition);
 
 /// The same demand WITHOUT the words: which string it is, so the board's
 /// verdict can be stored as meaning and read in the manager's language
 /// whenever he opens it.
-MsgKey objectiveDemandKey(TournamentTier tier, int target) {
+///
+/// [competition] is the objective's stored competition name: the African
+/// Nations Cup is played in zones with a Finals Eight and no promotion, so its
+/// rungs are worded for that.
+MsgKey objectiveDemandKey(
+  TournamentTier tier,
+  int target, {
+  String? competition,
+}) {
+  if (tier == TournamentTier.nationsCup && _isZonesCup(competition)) {
+    return switch (target) {
+      7 => MsgKey.objectiveNcWinIt,
+      6 => MsgKey.objectiveNcReachFinal,
+      5 => MsgKey.objectiveNcFinalsEight,
+      4 => MsgKey.objectiveNcZoneWinGroup,
+      _ => MsgKey.objectiveNcTopHalf,
+    };
+  }
   if (tier == TournamentTier.nationsCup) {
     return switch (target) {
       7 => MsgKey.objectiveNcWinIt,
@@ -110,7 +129,22 @@ MsgKey objectiveDemandKey(TournamentTier tier, int target) {
 }
 
 /// A finish ordinal as a key, for the same reason as [objectiveDemandKey].
-MsgKey objectiveFinishKey(TournamentTier tier, int ordinal) {
+MsgKey objectiveFinishKey(
+  TournamentTier tier,
+  int ordinal, {
+  String? competition,
+}) {
+  if (tier == TournamentTier.nationsCup && _isZonesCup(competition)) {
+    return switch (ordinal) {
+      7 => MsgKey.finishNcChampions,
+      6 => MsgKey.finishRunnersUp,
+      5 => MsgKey.finishNcFinalsEight,
+      4 => MsgKey.finishNcGroupWinners,
+      3 => MsgKey.finishNcTopHalf,
+      2 => MsgKey.finishNcBottomHalf,
+      _ => MsgKey.finishNcBottom,
+    };
+  }
   if (tier == TournamentTier.nationsCup) {
     return switch (ordinal) {
       7 => MsgKey.finishNcChampions,
@@ -142,8 +176,18 @@ MsgKey objectiveFinishKey(TournamentTier tier, int ordinal) {
 String objectiveFinishText(
   AppLocalizations l,
   TournamentTier tier,
-  int ordinal,
-) => _resultLabel(l, tier, ordinal);
+  int ordinal, {
+  String? competition,
+}) => _resultLabel(l, tier, ordinal, competition: competition);
+
+/// Whether [competition] is a zones-format Nations Cup (Africa's).
+bool _isZonesCup(String? competition) =>
+    competition != null &&
+    NationsCups.confederations.any(
+      (c) =>
+          NationsCups.forConfederation(c)!.name == competition &&
+          NationsCups.forConfederation(c)!.format == NationsCupFormat.zones,
+    );
 
 /// Every board objective for [careerId]'s current cycle, graded but unworded —
 /// the CONTINENTAL championship first, then the Nations Cup (for the nations
@@ -245,45 +289,73 @@ cycleObjectiveOutcomesProvider = FutureProvider.autoDispose.family<List<Objectiv
   }
 
   // --- The Nations Cup -------------------------------------------------------
-  // Only the confederations that actually run one have a group to stand in, so
-  // this simply asks whether the nation is in this cycle's cup. It used to have
-  // no objective at all: the manager played a whole league campaign, went up or
-  // came down, and the board never once said what it had wanted from it.
-  final ncTables = await comp.tournamentGroupTables(
-    careerId,
-    CompetitionKind.nationsLeague,
-  );
+  // Only the confederations that actually run one have a group to stand in, and
+  // the board judges the cup of the manager's OWN confederation: all three cups
+  // live in the cycle as competitions of the same kind, so the lookup names it.
+  // It used to have no objective at all: the manager played a whole league
+  // campaign, went up or came down, and the board never once said what it had
+  // wanted from it.
+  final ncConf = NationsCups.ofManager(conf);
+  final ncCup = ncConf == null ? null : NationsCups.forConfederation(ncConf);
+  final ncTables = ncConf == null
+      ? const <FinalsGroupTable>[]
+      : await comp.tournamentGroupTables(
+          careerId,
+          CompetitionKind.nationsLeague,
+          confederation: ncConf,
+        );
   final myNcGroup = ncTables
       .where((t) => t.standings.any((s) => s.nationId == career.nationId))
       .firstOrNull;
-  if (conf != null && myNcGroup != null) {
-    final tiers = await ref
-        .watch(careerRepositoryProvider)
-        .nationsCupTiers(careerId);
-    final target = _nationsCupTarget(
-      tiers: tiers,
-      baseline: baseline,
-      nations: nations,
-      confederation: conf,
-      nationId: career.nationId,
-      groupName: myNcGroup.name,
-    );
+  if (ncConf != null && ncCup != null && myNcGroup != null) {
+    final zones = ncCup.format == NationsCupFormat.zones;
+    final int target;
+    if (zones) {
+      target = _zonesCupTarget(
+        baseline: baseline,
+        nations: nations,
+        nationId: career.nationId,
+      );
+    } else {
+      final tiers = await ref
+          .watch(careerRepositoryProvider)
+          .nationsCupTiers(careerId);
+      target = _nationsCupTarget(
+        tiers: tiers,
+        baseline: baseline,
+        nations: nations,
+        confederation: ncConf,
+        nationId: career.nationId,
+        groupName: myNcGroup.name,
+      );
+    }
     final actual = _nationsCupOrdinal(
       standings: myNcGroup.standings,
       fixtures: fixtures,
       nationId: career.nationId,
     );
     // Settled once the league campaign is played out — and, for a side that
-    // reached the Finals Four, once that has been played too.
+    // reached the finals, once those have been played too.
     final ncFixtures = [
       for (final f in fixtures)
         if (f.round == 'NGROUP' || FinalsRounds.nationsCup.contains(f.round)) f,
     ];
-    final decided =
-        ncFixtures.isNotEmpty && ncFixtures.every((f) => f.hasResult);
+    var decided = ncFixtures.isNotEmpty && ncFixtures.every((f) => f.hasResult);
+    // A zone group winner only learns whether he is one of his zone's best two
+    // once EVERY group of the cup is played — a side with a bye on the last
+    // matchday has finished before the others have.
+    if (decided && zones) {
+      final cupGroups = await comp.fixturesByRound(
+        careerId,
+        'NGROUP',
+        kind: CompetitionKind.nationsLeague,
+        confederation: ncConf,
+      );
+      decided = cupGroups.every((f) => f.hasResult);
+    }
     out.add((
       tier: TournamentTier.nationsCup,
-      competition: _nationsCupName,
+      competition: ncCup.name,
       target: target,
       decided: decided,
       met: decided && actual >= target,
@@ -330,8 +402,9 @@ cycleObjectiveOutcomesProvider = FutureProvider.autoDispose.family<List<Objectiv
 /// localisations to read. The UI substitutes `l.objectiveWorldCup` for it.
 const _worldCupName = 'World Cup';
 
-/// The Nations Cup's own name, as above.
-const _nationsCupName = 'Nations Cup';
+/// Europe's Nations Cup's own name, as above (the other cups are named by
+/// [competitionLabel]).
+const _nationsCupName = NationsCups.europe;
 
 /// Every board objective for the current cycle, worded for the screen.
 final AutoDisposeFutureProviderFamily<List<CycleObjective>, int>
@@ -353,12 +426,17 @@ cycleObjectivesProvider = FutureProvider.autoDispose
               _nationsCupName => l.careerNationsCupLabel,
               final name => competitionLabel(l, name),
             },
-            label: _labelFor(l, o.tier, o.target),
+            label: _labelFor(l, o.tier, o.target, competition: o.competition),
             target: o.target,
             decided: o.decided,
             met: o.met,
             actual: o.actual,
-            resultLabel: _resultLabel(l, o.tier, o.actual),
+            resultLabel: _resultLabel(
+              l,
+              o.tier,
+              o.actual,
+              competition: o.competition,
+            ),
           ),
       ];
     });
@@ -560,9 +638,41 @@ int _nationsCupTarget({
   return tier >= lowest ? 3 : 2; // stay up
 }
 
+/// What the board demands of an African Nations Cup campaign, by strength:
+/// the continent's leading sides are told to win it or reach the final, the
+/// best two of a zone (the two the Finals Eight takes from it) to reach the
+/// Finals Eight, a zone's group seeds to win their group, and everybody else
+/// to finish in the top half. There is no promotion to earn and no relegation
+/// to avoid.
+int _zonesCupTarget({
+  required Map<int, int> baseline,
+  required List<Nation> nations,
+  required int nationId,
+}) {
+  final me = nations.where((n) => n.id == nationId).firstOrNull;
+  final zone = me == null ? null : NationsCups.africaZoneByCode[me.code];
+  if (me == null || zone == null) return 3;
+  final continentRank = _rankWithin(baseline, nations, me.confederation, me.id);
+  if (continentRank <= 2) return 7; // win it
+  if (continentRank <= 4) return 6; // reach the final
+  int rankOf(Nation n) => baseline[n.id] ?? n.ranking;
+  final peers = [
+    for (final n in nations)
+      if (NationsCups.africaZoneByCode[n.code] == zone) n,
+  ]..sort((a, b) => rankOf(a).compareTo(rankOf(b)));
+  final idx = peers.indexWhere((n) => n.id == nationId);
+  if (idx < 0) return 3;
+  if (idx < 2) return 5; // one of the zone's best two: the Finals Eight
+  // The zone's group seeds: one per group (two groups in the North).
+  final groupsInZone = peers.length <= 6 ? 2 : 4;
+  if (idx < groupsInZone) return 4; // win your group
+  return 3; // top half
+}
+
 /// How the Nations Cup campaign actually went, on the ladder's own scale:
-/// 7 champions, 6 runners-up, 5 the Finals Four, 4 group winners, 3 top half,
-/// 2 clear of the bottom, 1 bottom of the group.
+/// 7 champions, 6 runners-up, 5 the finals (Finals Four, or Africa's Finals
+/// Eight), 4 group winners, 3 top half, 2 clear of the bottom, 1 bottom of the
+/// group.
 int _nationsCupOrdinal({
   required List<GroupStanding> standings,
   required List<Fixture> fixtures,
@@ -577,7 +687,9 @@ int _nationsCupOrdinal({
     final theirPens = isHome ? (f.awayPenalties ?? 0) : (f.homePenalties ?? 0);
     return mine > theirs || (mine == theirs && myPens > theirPens) ? 7 : 6;
   }
-  if (fixtures.any((f) => f.round == 'NSF')) return 5;
+  // Reached the finals: a ladder cup's Finals Four, or Africa's Finals Eight
+  // (which opens with a quarter-final).
+  if (fixtures.any((f) => f.round == 'NSF' || f.round == 'NQF')) return 5;
 
   final pos = standings.indexWhere((s) => s.nationId == nationId) + 1;
   if (pos <= 0) return 3;
@@ -627,8 +739,15 @@ Future<int> _qualifyingOrdinal({
 /// The board's demand, worded generically — the competition it applies to is
 /// named alongside it, since a cycle now carries a continental objective as
 /// well as a World Cup one.
-String _labelFor(AppLocalizations l, TournamentTier tier, int target) =>
-    renderMsgKey(l, MsgText(objectiveDemandKey(tier, target)));
+String _labelFor(
+  AppLocalizations l,
+  TournamentTier tier,
+  int target, {
+  String? competition,
+}) => renderMsgKey(
+  l,
+  MsgText(objectiveDemandKey(tier, target, competition: competition)),
+);
 
 /// [nationId]'s deepest finish this cycle as an ordinal (0 = did not qualify,
 /// 2 = group stage … 7 = champions). [prefix] selects the competition's rounds
@@ -673,5 +792,12 @@ int _finishOrdinal(
   return best;
 }
 
-String _resultLabel(AppLocalizations l, TournamentTier tier, int ordinal) =>
-    renderMsgKey(l, MsgText(objectiveFinishKey(tier, ordinal)));
+String _resultLabel(
+  AppLocalizations l,
+  TournamentTier tier,
+  int ordinal, {
+  String? competition,
+}) => renderMsgKey(
+  l,
+  MsgText(objectiveFinishKey(tier, ordinal, competition: competition)),
+);

@@ -5,6 +5,7 @@ import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/services/achievements/achievements.dart';
 import 'package:fnm/domain/services/achievements/board_satisfaction.dart';
+import 'package:fnm/domain/services/competition/nations_cups.dart';
 import 'package:fnm/features/y/y_providers.dart';
 import 'package:fnm/domain/services/competition/continental_cups.dart';
 import 'package:fnm/domain/services/competition/tournament_stars.dart';
@@ -182,7 +183,8 @@ satisfactionProvider = FutureProvider.autoDispose.family<int, int>((
     if (placing == null) continue;
     final tier = switch (h.competition) {
       'World Championship' => TournamentTier.world,
-      'Nations Cup' => TournamentTier.nationsCup,
+      final name when NationsCups.isNationsCup(name) =>
+        TournamentTier.nationsCup,
       'Continental Clash' => TournamentTier.clash,
       final name when name == continentalName => TournamentTier.continental,
       // Another confederation's cup can't be won by this nation, so anything

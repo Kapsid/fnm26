@@ -1,5 +1,6 @@
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/services/competition/continental_cups.dart';
+import 'package:fnm/domain/services/competition/nations_cups.dart';
 
 /// Maps competitions to their bundled trophy artwork (assets/trophies/*.png),
 /// so the World Cup, each continental championship, the Nations Cup and the
@@ -24,11 +25,11 @@ abstract final class Trophies {
 
   /// The trophy for a stored honour's competition name, or null if unknown.
   static String? forCompetitionName(String name) {
+    // Every confederation's Nations Cup lifts the same trophy.
+    if (NationsCups.isNationsCup(name)) return nationsCup;
     switch (name) {
       case 'World Championship':
         return worldCup;
-      case 'Nations Cup':
-        return nationsCup;
       case 'Continental Clash':
         return continentalClash;
     }
@@ -40,11 +41,11 @@ abstract final class Trophies {
 
   /// A stable key for a competition (for tallying the trophy cabinet).
   static String? keyForCompetitionName(String name) {
+    // One cabinet shelf for the Nations Cups, whichever confederation's.
+    if (NationsCups.isNationsCup(name)) return 'nationscup';
     switch (name) {
       case 'World Championship':
         return 'world';
-      case 'Nations Cup':
-        return 'nationscup';
       case 'Continental Clash':
         return 'continentalclash';
     }

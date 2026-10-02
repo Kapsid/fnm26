@@ -518,8 +518,9 @@ nextEventProvider = FutureProvider.autoDispose.family<HubEvent, int>((
     );
   }
 
-  // 2d. The Nations Cup Finals Four is under way and the player isn't in it —
-  //     surface it so its semis and final are watched, not skipped past. As with
+  // 2d. The manager's Nations Cup finals (a Finals Four, or Africa's Finals
+  //     Eight) are under way and the player isn't in them — surface them so
+  //     their rounds are watched, not skipped past. As with
   //     the World Cup guard above, a participant is detected from ANY unplayed
   //     Finals Four fixture, not just their immediate next one — otherwise a
   //     host (who fills the pre-finals window with friendlies) is wrongly routed
@@ -529,13 +530,19 @@ nextEventProvider = FutureProvider.autoDispose.family<HubEvent, int>((
   final playerInNcFinals = hub.fixtures.any(
     (f) => !f.hasResult && FinalsRounds.nationsCup.contains(f.round),
   );
-  // Only the cup he follows, as the stepping in `advance` does.
-  final ncConf = hub.nations[hub.career.nationId]?.confederation;
-  final ncFinalsDate = await comp.earliestUnplayedNationsCupFinalsDate(
-    careerId,
-    confederation: ncConf == null ? null : NationsCups.followedBy(ncConf),
+  // Only his own confederation's cup, as the stepping in `advance` does; a
+  // manager whose confederation runs none has no Nations Cup to watch.
+  final ncConf = NationsCups.ofManager(
+    hub.nations[hub.career.nationId]?.confederation,
   );
-  if (ncFinalsDate != null &&
+  final ncFinalsDate = ncConf == null
+      ? null
+      : await comp.earliestUnplayedNationsCupFinalsDate(
+          careerId,
+          confederation: ncConf,
+        );
+  if (ncConf != null &&
+      ncFinalsDate != null &&
       !nextIsNcFinals &&
       !playerInNcFinals &&
       (next == null || !ncFinalsDate.isAfter(next.date))) {
@@ -543,7 +550,7 @@ nextEventProvider = FutureProvider.autoDispose.family<HubEvent, int>((
       kind: HubEventKind.watchTournament,
       label: l.hubEventPlayNationsCupMatch,
       icon: Icons.fast_forward_rounded,
-      route: '${Routes.nationsCup}?careerId=$careerId',
+      route: '${Routes.nationsCup}?careerId=$careerId&conf=${ncConf.name}',
     );
   }
 

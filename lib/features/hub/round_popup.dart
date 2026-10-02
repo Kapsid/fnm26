@@ -9,6 +9,7 @@ import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/services/competition/continental_cups.dart';
+import 'package:fnm/domain/services/competition/nations_cups.dart';
 import 'package:fnm/features/hub/hub_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
@@ -85,6 +86,8 @@ latestRoundPopupProvider = FutureProvider.autoDispose.family<RoundPopup?, int>((
       : ContinentalCups.byConfederation[conf]?.name ??
             'Continental Championship';
 
+  final ncConf = NationsCups.ofManager(conf);
+
   // Every confederation's championship is a competition of the same kind, so
   // the continental source names the player's own: without it the popup could
   // report a round from a cup on the other side of the world under the name of
@@ -110,12 +113,20 @@ latestRoundPopupProvider = FutureProvider.autoDispose.family<RoundPopup?, int>((
           rounds: const ['CGROUP', 'CR16', 'CQF', 'CSF', 'C3RD', 'CFINAL'],
           confederation: conf,
         ),
-        (
-          kind: CompetitionKind.nationsLeague,
-          name: 'Nations Cup',
-          rounds: const ['NSF', 'NFINAL'],
-          confederation: null,
-        ),
+        // The manager's own confederation's Nations Cup, under its own name
+        // and with its own finals rounds (Africa's Finals Eight opens with a
+        // quarter-final); none for a confederation that runs no cup.
+        if (ncConf != null)
+          (
+            kind: CompetitionKind.nationsLeague,
+            name: NationsCups.forConfederation(ncConf)!.name,
+            rounds:
+                NationsCups.forConfederation(ncConf)!.format ==
+                    NationsCupFormat.zones
+                ? const ['NQF', 'NSF', 'NFINAL']
+                : const ['NSF', 'NFINAL'],
+            confederation: ncConf,
+          ),
       ];
 
   ({String name, Fixture fixture})? newest;

@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/services/competition/continental_cups.dart';
+import 'package:fnm/domain/services/competition/nations_cups.dart';
 import 'package:fnm/domain/services/player/player_lifecycle.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/federation/federation_providers.dart';
@@ -154,12 +155,15 @@ nationVitrineProvider = FutureProvider.autoDispose
       final titles = <TitleWon>[];
       // Global competitions any nation can win, shown alongside its own
       // confederation's continental cup.
-      const globalCups = {'Nations Cup', 'Continental Clash'};
+      // A Nations Cup is only ever contested by its own confederation, so
+      // any of the three on a nation's record is its own.
+      const globalCups = {'Continental Clash'};
       for (final h in honours) {
         final isWc = h.competition == 'World Championship';
         if (!isWc &&
             h.competition != ownCup &&
-            !globalCups.contains(h.competition)) {
+            !globalCups.contains(h.competition) &&
+            !NationsCups.isNationsCup(h.competition)) {
           continue; // a foreign confederation's cup — skip
         }
         final gold = h.championId == arg.nationId;

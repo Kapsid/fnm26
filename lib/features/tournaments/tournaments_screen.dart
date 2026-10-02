@@ -7,6 +7,7 @@ import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/core/util/competition_label.dart';
 import 'package:fnm/domain/entities/enums.dart';
+import 'package:fnm/domain/services/competition/nations_cups.dart';
 import 'package:fnm/domain/services/competition/trophies.dart';
 import 'package:fnm/features/tournaments/tournaments_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
@@ -195,17 +196,12 @@ class TournamentsScreen extends ConsumerWidget {
               _tileGrid([
                 for (final c in mine) _tile(context, overview, c),
                 if (overview?.nationsCup != null)
-                  _ChampionshipTile(
-                    championship: _Championship(
-                      name: 'Nations Cup',
-                      zone: (l) => l.tourZoneLeague(overview!.nationsCupLeague),
-                      icon: Icons.military_tech,
-                    ),
-                    status: overview!.nationsCup,
-                    championName:
-                        overview.nations[overview.nationsCup!.championId]?.name,
-                    onView: () =>
-                        context.go('${Routes.nationsCup}?careerId=$careerId'),
+                  _nationsCupTile(
+                    context,
+                    overview!,
+                    overview.nationsCupConfederation ?? Confederation.europe,
+                    overview.nationsCup!,
+                    mine: true,
                   ),
                 // The Continental Clash only sits among YOUR competitions when
                 // your nation is one of the two entrants; otherwise it drops to
@@ -224,6 +220,10 @@ class TournamentsScreen extends ConsumerWidget {
               const SizedBox(height: AppSpacing.sm),
               _tileGrid([
                 for (final c in others) _tile(context, overview, c),
+                // The other confederations' Nations Cups, to browse.
+                if (overview != null)
+                  for (final e in overview.otherNationsCups.entries)
+                    _nationsCupTile(context, overview, e.key, e.value),
                 if (overview?.continentalClash != null &&
                     !overview!.clashInvolvesPlayer)
                   _clashTile(context, overview),
@@ -252,6 +252,43 @@ class TournamentsScreen extends ConsumerWidget {
       onView: () => _open(context, c),
     );
   }
+
+  /// A Nations Cup tile: the manager's own (strapped with his league on a
+  /// ladder cup) or another confederation's, opening that cup's screen.
+  Widget _nationsCupTile(
+    BuildContext context,
+    TournamentsOverview overview,
+    Confederation conf,
+    TournamentStatus status, {
+    bool mine = false,
+  }) {
+    final cup = NationsCups.forConfederation(conf);
+    final ladder = cup?.format == NationsCupFormat.ladder;
+    return _ChampionshipTile(
+      championship: _Championship(
+        name: cup?.name ?? NationsCups.europe,
+        zone: (l) => mine && ladder
+            ? l.tourZoneLeague(overview.nationsCupLeague)
+            : _confederationZone(l, conf),
+        icon: Icons.military_tech,
+      ),
+      status: status,
+      championName: overview.nations[status.championId]?.name,
+      onView: () => context.go(
+        '${Routes.nationsCup}?careerId=$careerId&conf=${conf.name}',
+      ),
+    );
+  }
+
+  static String _confederationZone(AppLocalizations l, Confederation c) =>
+      switch (c) {
+        Confederation.europe => l.tourZoneEurope,
+        Confederation.southAmerica => l.tourZoneSouthAmerica,
+        Confederation.northAmerica => l.tourZoneNorthAmerica,
+        Confederation.africa => l.tourZoneAfrica,
+        Confederation.asia => l.tourZoneAsia,
+        Confederation.oceania => l.tourZoneOceania,
+      };
 
   /// The Continental Clash tile, placed either among your competitions or the
   /// other-competitions grid depending on whether you're an entrant.

@@ -5,6 +5,7 @@ import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/career.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
+import 'package:fnm/domain/services/competition/nations_cups.dart';
 import 'package:fnm/domain/services/federation/federation_finance.dart';
 import 'package:fnm/domain/services/manager/job_market.dart';
 import 'package:fnm/features/achievements/achievement_providers.dart';
@@ -241,7 +242,8 @@ int _reputation(Career career, Map<int, int> stints, List<Honour> honours) {
     switch (h.competition) {
       case 'World Championship':
         wc++;
-      case 'Nations Cup':
+      case final name when NationsCups.isNationsCup(name):
+        other++;
       case 'Continental Clash':
         other++;
       default:

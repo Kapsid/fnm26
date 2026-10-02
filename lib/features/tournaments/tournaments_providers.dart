@@ -6,6 +6,7 @@ import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
 import 'package:fnm/domain/services/competition/continental_cups.dart';
 import 'package:fnm/domain/services/competition/hosts.dart';
+import 'package:fnm/domain/services/competition/nations_cups.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/settings/settings_providers.dart';
 import 'package:fnm/features/tournaments/finals_draw_providers.dart';
@@ -53,6 +54,8 @@ class TournamentsOverview {
     required this.worldCupHostId,
     this.nationsCup,
     this.nationsCupLeague = 'A',
+    this.nationsCupConfederation,
+    this.otherNationsCups = const {},
     this.continentalClash,
     this.clashInvolvesPlayer = false,
   });
@@ -66,6 +69,14 @@ class TournamentsOverview {
   /// grid.
   final TournamentStatus? nationsCup;
   final String nationsCupLeague;
+
+  /// Whose cup [nationsCup] is: the manager's own confederation, or null when
+  /// his confederation runs none (then [nationsCup] is null too).
+  final Confederation? nationsCupConfederation;
+
+  /// Every OTHER confederation's Nations Cup, read-only, so the three cups are
+  /// listed for every manager whichever one (if any) is his.
+  final Map<Confederation, TournamentStatus> otherNationsCups;
   final TournamentStatus? continentalClash;
 
   /// Whether the manager's nation is one of the two Continental Clash entrants
@@ -260,21 +271,32 @@ tournamentsOverviewProvider = FutureProvider.autoDispose.family<TournamentsOverv
     seed: career.rngSeed,
   );
 
-  // Nations Cup: the manager's own league. It only becomes "live" once its
-  // group games actually start (after the continental finals) — before then
-  // it's upcoming ("after the Euro"), not in progress.
+  // Nations Cups: the manager's own (his league, or Africa's zones) among his
+  // competitions, every other confederation's read-only. Each only becomes
+  // "live" once its group games actually start (after the continental finals)
+  // — before then it's upcoming ("after the Euro"), not in progress.
   final ncTiers = await ref
       .watch(careerRepositoryProvider)
       .nationsCupTiers(
         careerId,
       );
   final ncLeague = String.fromCharCode(65 + (ncTiers[career.nationId] ?? 0));
+  final ncMine = NationsCups.ofManager(playerConf);
   TournamentStatus? nationsCup;
-  if (await comp.hasTournament(careerId, CompetitionKind.nationsLeague)) {
+  final otherNationsCups = <Confederation, TournamentStatus>{};
+  for (final conf in NationsCups.confederations) {
+    if (!await comp.hasTournament(
+      careerId,
+      CompetitionKind.nationsLeague,
+      confederation: conf,
+    )) {
+      continue;
+    }
     final ncGroupFx = await comp.fixturesByRound(
       careerId,
       'NGROUP',
       kind: CompetitionKind.nationsLeague,
+      confederation: conf,
     );
     final started = ncGroupFx.any((f) => f.hasResult);
     final champ = await _knockoutWinner(
@@ -282,10 +304,14 @@ tournamentsOverviewProvider = FutureProvider.autoDispose.family<TournamentsOverv
       careerId,
       'NFINAL',
       CompetitionKind.nationsLeague,
+      confederation: conf,
     );
+    final mine = conf == ncMine;
+    final ladder =
+        NationsCups.forConfederation(conf)?.format == NationsCupFormat.ladder;
     // Before this cycle's cup starts (it follows the Euro), browse past winners
     // — mirroring how the World Cup and continental tiles read out of season.
-    nationsCup = TournamentStatus(
+    final status = TournamentStatus(
       phase: champ != null
           ? TournamentPhase.decided
           : started
@@ -294,10 +320,17 @@ tournamentsOverviewProvider = FutureProvider.autoDispose.family<TournamentsOverv
       label: champ != null
           ? l.tourStatusChampions
           : started
-          ? l.tourStatusLeague(ncLeague)
+          ? (mine && ladder
+                ? l.tourStatusLeague(ncLeague)
+                : l.tourStatusInProgress)
           : l.tourSharedPastWinners,
       championId: champ,
     );
+    if (mine) {
+      nationsCup = status;
+    } else {
+      otherNationsCups[conf] = status;
+    }
   }
 
   // Continental Clash (Finalissima): the champions-of-champions one-off. The
@@ -343,6 +376,8 @@ tournamentsOverviewProvider = FutureProvider.autoDispose.family<TournamentsOverv
     worldCupHostId: worldCupHostId,
     nationsCup: nationsCup,
     nationsCupLeague: ncLeague,
+    nationsCupConfederation: nationsCup == null ? null : ncMine,
+    otherNationsCups: otherNationsCups,
     continentalClash: continentalClash,
     clashInvolvesPlayer: clashInvolvesPlayer,
   );
@@ -353,9 +388,15 @@ Future<int?> _knockoutWinner(
   CompetitionRepository comp,
   int careerId,
   String round,
-  CompetitionKind kind,
-) async {
-  final fx = await comp.fixturesByRound(careerId, round, kind: kind);
+  CompetitionKind kind, {
+  Confederation? confederation,
+}) async {
+  final fx = await comp.fixturesByRound(
+    careerId,
+    round,
+    kind: kind,
+    confederation: confederation,
+  );
   if (fx.isEmpty || !fx.first.hasResult) return null;
   final f = fx.first;
   return f.homeScore! >= f.awayScore! ? f.homeNationId : f.awayNationId;

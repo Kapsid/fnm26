@@ -85,7 +85,7 @@ class _NationsCupDrawScreenState extends ConsumerState<NationsCupDrawScreen> {
             ],
             nations: data.nations,
             highlightNationId: data.playerNationId,
-            potCount: 4,
+            potCount: data.potCount,
             onContinue: leave,
           );
         },

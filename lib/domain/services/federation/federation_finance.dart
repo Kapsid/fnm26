@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:fnm/domain/services/competition/nations_cups.dart';
 import 'package:fnm/domain/services/ranking/elo.dart';
 
 /// A cycle's earnings, split by source (all euros).
@@ -184,7 +185,9 @@ abstract final class FederationFinance {
   /// A one-off bonus for actually lifting a trophy, by competition name.
   static const Map<String, int> _titleBonus = {
     'World Championship': 20000000,
-    'Nations Cup': 4000000,
+    NationsCups.europe: 4000000,
+    NationsCups.northAmerica: 4000000,
+    NationsCups.africa: 4000000,
     'Continental Clash': 3000000,
   };
 

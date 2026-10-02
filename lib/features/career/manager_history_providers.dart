@@ -3,14 +3,16 @@ import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/services/competition/cycle_finish.dart';
+import 'package:fnm/domain/services/competition/nations_cups.dart';
 import 'package:fnm/domain/services/competition/trophies.dart';
 import 'package:fnm/features/career/career_providers.dart';
 
-/// A nation's Nations Cup cycle: which league it played in, where it came in
-/// its group, and the Finals Four round it reached (null for a league that
-/// plays none, which is every league but A).
+/// A nation's Nations Cup cycle: which league it played in (or, in the
+/// African cup, which [zone]), where it came in its group, and the finals round
+/// it reached (null for a side that never reached its cup's finals).
 typedef NationsCupCycle = ({
   String league,
+  AfricaZone? zone,
   int position,
   NationsCupFinish? finals,
 });
@@ -159,6 +161,7 @@ managerHistoryProvider = FutureProvider.autoDispose.family<ManagerHistory?, int>
           for (final e in await comp.nationsCupFinishes(careerId, nationId))
             e.cycle: (
               league: e.league,
+              zone: e.zone,
               position: e.position,
               finals: e.finals,
             ),
