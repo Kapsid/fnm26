@@ -148,6 +148,41 @@ void main() {
   );
 
   test(
+    "rollover repairs a stored CONCACAF League C the calendar never played",
+    () async {
+      final s = await setUp();
+      final careers = s.container.read(careerRepositoryProvider);
+      // A save seeded before the remainder fold: the three weakest CONCACAF
+      // nations stored as League C, though the calendar plays them in B.
+      final stale = {...await careers.nationsCupTiers(s.careerId)};
+      final na =
+          s.nations
+              .where((n) => n.confederation == Confederation.northAmerica)
+              .toList()
+            ..sort((a, b) => b.ranking.compareTo(a.ranking));
+      for (final n in na.take(3)) {
+        stale[n.id] = 2;
+      }
+      await careers.setNationsCupTiers(s.careerId, stale);
+
+      await runToChampion(s.container, s.careerId);
+      await s.container.read(seasonServiceProvider).startNextCycle(s.careerId);
+      final after = await careers.nationsCupTiers(s.careerId);
+      final confOf = {for (final n in s.nations) n.id: n.confederation};
+      expect(
+        NationsCup.lowestTier(
+          tiers: after,
+          confederation: Confederation.northAmerica,
+          confederationOf: (id) => confOf[id],
+        ),
+        1,
+      );
+      expect([for (final n in na) after[n.id]].where((t) => t == 1).length, 19);
+    },
+    timeout: const Timeout(Duration(minutes: 8)),
+  );
+
+  test(
     'an old save without the CONCACAF and African cups still rolls over',
     () async {
       final s = await setUp();

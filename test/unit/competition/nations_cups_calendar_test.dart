@@ -8,6 +8,7 @@ import 'package:fnm/data/seed/seed_source.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/entities/nation.dart';
+import 'package:fnm/domain/services/competition/nations_cup.dart';
 import 'package:fnm/domain/services/competition/nations_cups.dart';
 import 'package:fnm/domain/services/entitlement/entitlement.dart';
 import 'package:fnm/features/career/career_providers.dart';
@@ -153,6 +154,28 @@ void main() {
       expect(_ids(na, (g) => g.startsWith('A')).length, 16);
       expect(_ids(na, (g) => g.startsWith('B')).length, 19);
       expect(na.keys.any((g) => g.startsWith('C')), isFalse);
+      expect(
+        [
+          for (final g
+              in na.keys.where((g) => g.startsWith('B')).toList()..sort())
+            _ids({g: na[g]!}).length,
+        ],
+        [4, 4, 4, 4, 3],
+      );
+      // The stored ladder agrees with the calendar: CONCACAF's bottom league
+      // is B, so B has no relegation zone and there is no empty League C.
+      final stored = await w.container
+          .read(careerRepositoryProvider)
+          .nationsCupTiers(w.careerId);
+      final confOf = {for (final n in w.nations) n.id: n.confederation};
+      expect(
+        NationsCup.lowestTier(
+          tiers: stored,
+          confederation: Confederation.northAmerica,
+          confederationOf: (id) => confOf[id],
+        ),
+        1,
+      );
 
       final af = cups[NationsCups.africa]!;
       expect(af.keys.toSet(), {

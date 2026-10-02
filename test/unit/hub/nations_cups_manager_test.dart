@@ -193,6 +193,43 @@ void main() {
     });
   });
 
+  test("CONCACAF's weakest nation is drawn in League B, even on a save whose "
+      'stored ladder still says League C', () async {
+    final weakest = nations
+        .where((n) => n.confederation == Confederation.northAmerica)
+        .reduce((a, b) => a.ranking >= b.ranking ? a : b);
+    final s = await open(weakest.code);
+    final careers = s.c.read(careerRepositoryProvider);
+    final tiers = await careers.nationsCupTiers(s.careerId);
+    expect(tiers[weakest.id], 1, reason: 'seeded into League B');
+
+    // A save seeded before the remainder fold: the three weakest stored as
+    // a League C the calendar never had.
+    final stale = {...tiers};
+    final bottomThree =
+        nations
+            .where((n) => n.confederation == Confederation.northAmerica)
+            .toList()
+          ..sort((a, b) => b.ranking.compareTo(a.ranking));
+    for (final n in bottomThree.take(3)) {
+      stale[n.id] = 2;
+    }
+    await careers.setNationsCupTiers(s.careerId, stale);
+    s.c.invalidate(nationsCupDrawProvider);
+
+    final draw = await s.c.read(nationsCupDrawProvider(s.careerId).future);
+    expect(draw, isNotNull);
+    expect(draw!.leagueLetter, 'B');
+    expect(
+      draw.groups.where((g) => g.nationIds.contains(weakest.id)),
+      hasLength(1),
+    );
+    final overview = await s.c.read(
+      tournamentsOverviewProvider(s.careerId).future,
+    );
+    expect(overview!.nationsCupLeague, 'B');
+  });
+
   test(
     'a manager who moves Europe to CONCACAF follows CONCACAF\'s cup',
     () async {

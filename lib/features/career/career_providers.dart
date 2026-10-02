@@ -386,17 +386,14 @@ class CareerService {
         // for the whole ladder). Groups are named with a league prefix ('B2' =
         // League B, group 2) so each league's results can be read back at
         // rollover.
-        final byTier = <int, List<Nation>>{};
-        for (final n in members) {
-          (byTier[tiers[n.id] ?? 0] ??= []).add(n);
-        }
         // A league too small for a group stage joins the league above it (a
         // confederation of 35 would otherwise strand three nations).
-        final order = byTier.keys.toList()..sort();
-        for (var i = order.length - 1; i > 0; i--) {
-          if (byTier[order[i]]!.length < 4) {
-            byTier[order[i - 1]]!.addAll(byTier.remove(order[i])!);
-          }
+        final ladder = NationsCup.mergeRemainders({
+          for (final n in members) n.id: tiers[n.id] ?? 0,
+        }, (_) => confederation);
+        final byTier = <int, List<Nation>>{};
+        for (final n in members) {
+          (byTier[ladder[n.id]!] ??= []).add(n);
         }
         for (final tier in byTier.keys.toList()..sort()) {
           final league = byTier[tier]!;

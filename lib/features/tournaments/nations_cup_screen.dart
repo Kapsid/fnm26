@@ -80,9 +80,6 @@ _nationsCupProvider = FutureProvider.autoDispose.family<_NcView?, _NcKey>((
   final tiers = await ref
       .watch(careerRepositoryProvider)
       .nationsCupTiers(careerId);
-  final playerLeague = isMine
-      ? String.fromCharCode(65 + (tiers[career.nationId] ?? 0))
-      : 'A';
   // The group the manager's nation plays in (for "my group first").
   String? playerGroup;
   for (final g in groups) {
@@ -91,6 +88,14 @@ _nationsCupProvider = FutureProvider.autoDispose.family<_NcView?, _NcKey>((
       break;
     }
   }
+  // His league is the one his group is drawn in ('B3' -> 'B'); the stored
+  // ladder only stands in before the draw. A save seeded before CONCACAF's
+  // remainder was folded into League B stores its last three as League C.
+  final playerLeague = !isMine
+      ? 'A'
+      : (playerGroup != null && playerGroup.isNotEmpty)
+      ? playerGroup[0]
+      : NationsCup.leagueLetter(tiers[career.nationId] ?? 0);
   final honours = [
     for (final h in await comp.honours(careerId))
       if (h.competition == cup.name) h,

@@ -280,8 +280,22 @@ tournamentsOverviewProvider = FutureProvider.autoDispose.family<TournamentsOverv
       .nationsCupTiers(
         careerId,
       );
-  final ncLeague = String.fromCharCode(65 + (ncTiers[career.nationId] ?? 0));
   final ncMine = NationsCups.ofManager(playerConf);
+  // His league is the one his own group is drawn in ('B3' -> 'B'); the stored
+  // ladder only stands in before the draw (a save seeded before CONCACAF's
+  // remainder was folded into League B stores its last three as League C).
+  final ncOwnGroup = ncMine == null
+      ? null
+      : (await comp.tournamentGroupTables(
+              careerId,
+              CompetitionKind.nationsLeague,
+              confederation: ncMine,
+            ))
+            .where((t) => t.standings.any((s) => s.nationId == career.nationId))
+            .firstOrNull;
+  final ncLeague = (ncOwnGroup != null && ncOwnGroup.name.isNotEmpty)
+      ? ncOwnGroup.name[0]
+      : String.fromCharCode(65 + (ncTiers[career.nationId] ?? 0));
   TournamentStatus? nationsCup;
   final otherNationsCups = <Confederation, TournamentStatus>{};
   for (final conf in NationsCups.confederations) {

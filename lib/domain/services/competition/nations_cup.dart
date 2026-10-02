@@ -79,7 +79,45 @@ abstract final class NationsCup {
         tiers[sorted[i].id] = i ~/ leagueSize;
       }
     }
-    return tiers;
+    final confOf = {for (final n in nations) n.id: n.confederation};
+    return mergeRemainders(tiers, (id) => confOf[id]);
+  }
+
+  /// The smallest league that can hold a group stage.
+  static const int minLeague = 4;
+
+  /// Folds every league of fewer than [minLeague] nations into the league
+  /// above it, confederation by confederation, until none is left too small
+  /// (a lone top league stays whatever its size).
+  ///
+  /// Slicing a confederation into sixteens strands its remainder: CONCACAF's
+  /// 35 leave a League C of three, which the calendar can't play and so plays
+  /// inside League B. The stored ladder has to say the same, or the manager's
+  /// league, its relegation zone and its objective all point at a League C
+  /// that has no groups. Seeding, the calendar and rollover all go through
+  /// here so the three can never disagree.
+  static Map<int, int> mergeRemainders(
+    Map<int, int> tiers,
+    Confederation? Function(int nationId) confederationOf,
+  ) {
+    final byConf = <Confederation?, Map<int, List<int>>>{};
+    for (final e in tiers.entries) {
+      ((byConf[confederationOf(e.key)] ??= {})[e.value] ??= []).add(e.key);
+    }
+    final next = {...tiers};
+    for (final byTier in byConf.values) {
+      final order = byTier.keys.toList()..sort();
+      for (var i = order.length - 1; i > 0; i--) {
+        if (byTier[order[i]]!.length < minLeague) {
+          final folded = byTier.remove(order[i])!;
+          byTier[order[i - 1]]!.addAll(folded);
+          for (final id in folded) {
+            next[id] = order[i - 1];
+          }
+        }
+      }
+    }
+    return next;
   }
 
   /// Applies promotion/relegation to [tiers] from a finished cup's group

@@ -4,7 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/nation.dart';
-import 'package:fnm/domain/services/competition/nations_cup.dart';
 import 'package:fnm/domain/services/competition/nations_cups.dart';
 
 /// Watched-draw key for the Nations Cup group draw (one per cycle).
@@ -66,23 +65,15 @@ nationsCupDrawProvider = FutureProvider.autoDispose
       );
       if (tables.isEmpty) return null;
 
-      final String letter;
-      if (NationsCups.forConfederation(conf)!.format ==
-          NationsCupFormat.zones) {
-        // The zone his own group sits in ('W2' -> 'W').
-        final own = tables
-            .where(
-              (t) => t.standings.any((s) => s.nationId == career.nationId),
-            )
-            .firstOrNull;
-        if (own == null || own.name.isEmpty) return null;
-        letter = own.name[0];
-      } else {
-        final tiers = await ref
-            .watch(careerRepositoryProvider)
-            .nationsCupTiers(careerId);
-        letter = NationsCup.leagueLetter(tiers[career.nationId] ?? 0);
-      }
+      // The league (or zone) his own group sits in: 'B3' -> 'B', 'W2' -> 'W'.
+      // Read off the drawn group, never the stored ladder: a save seeded
+      // before CONCACAF's remainder was folded into League B stores its last
+      // three as a League C that has no groups at all.
+      final own = tables
+          .where((t) => t.standings.any((s) => s.nationId == career.nationId))
+          .firstOrNull;
+      if (own == null || own.name.isEmpty) return null;
+      final letter = own.name[0];
       int rank(int id) => nations[id]?.ranking ?? 9999;
 
       // Only the manager's own league (or zone), its groups in order.

@@ -115,6 +115,17 @@ extension SeasonRollover on SeasonService {
         ncTiers = NationsCup.promoteRelegate(tiers: ncTiers, groups: groups);
         moved = true;
       }
+      // Fold any league too small to play into the one above it, the way the
+      // calendar already plays it. Run every rollover, moved or not: a save
+      // seeded before the fold still stores CONCACAF's last three as a League
+      // C that has no groups, and this is where it is repaired.
+      final confOf = {
+        for (final n in await _ref.read(nationRepositoryProvider).all())
+          n.id: n.confederation,
+      };
+      final folded = NationsCup.mergeRemainders(ncTiers, (id) => confOf[id]);
+      if (folded.entries.any((e) => ncTiers[e.key] != e.value)) moved = true;
+      ncTiers = folded;
       if (moved) await _careers.setNationsCupTiers(careerId, ncTiers);
     }
 
