@@ -9160,28 +9160,26 @@ class AppLocalizationsPl extends AppLocalizations {
   String get compNorthAmericaNationsCup => 'Puchar Narodów Ameryki Północnej';
 
   @override
-  String get compAfricanNationsCup => 'Afrykański Puchar Narodów';
+  String get compAfricanNationsCup => 'Puchar Narodów';
 
   @override
   String get objectiveNcWinItNorthAmerica =>
       'Wygraj Puchar Narodów Ameryki Północnej';
 
   @override
-  String get objectiveNcWinItAfrica => 'Wygraj Afrykański Puchar Narodów';
+  String get objectiveNcWinItAfrica => 'Wygraj Puchar Narodów';
 
   @override
   String get objectiveNcReachFinalNorthAmerica =>
       'Dojdź do finału Pucharu Narodów Ameryki Północnej';
 
   @override
-  String get objectiveNcReachFinalAfrica =>
-      'Dojdź do finału Afrykańskiego Pucharu Narodów';
+  String get objectiveNcReachFinalAfrica => 'Dojdź do finału Pucharu Narodów';
 
   @override
   String get finishNcChampionsNorthAmerica =>
       'Zdobywcy Pucharu Narodów Ameryki Północnej';
 
   @override
-  String get finishNcChampionsAfrica =>
-      'Zdobywcy Afrykańskiego Pucharu Narodów';
+  String get finishNcChampionsAfrica => 'Zdobywcy Pucharu Narodów';
 }

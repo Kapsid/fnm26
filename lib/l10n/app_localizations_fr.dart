@@ -9096,15 +9096,14 @@ class AppLocalizationsFr extends AppLocalizations {
       'Coupe des Nations d’Amérique du Nord';
 
   @override
-  String get compAfricanNationsCup => 'Coupe des Nations d’Afrique';
+  String get compAfricanNationsCup => 'Coupe des Nations';
 
   @override
   String get objectiveNcWinItNorthAmerica =>
       'Remporter la Coupe des Nations d’Amérique du Nord';
 
   @override
-  String get objectiveNcWinItAfrica =>
-      'Remporter la Coupe des Nations d’Afrique';
+  String get objectiveNcWinItAfrica => 'Remporter la Coupe des Nations';
 
   @override
   String get objectiveNcReachFinalNorthAmerica =>
@@ -9112,13 +9111,12 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get objectiveNcReachFinalAfrica =>
-      'Atteindre la finale de la Coupe des Nations d’Afrique';
+      'Atteindre la finale de la Coupe des Nations';
 
   @override
   String get finishNcChampionsNorthAmerica =>
       'Vainqueurs de la Coupe des Nations d’Amérique du Nord';
 
   @override
-  String get finishNcChampionsAfrica =>
-      'Vainqueurs de la Coupe des Nations d’Afrique';
+  String get finishNcChampionsAfrica => 'Vainqueurs de la Coupe des Nations';
 }

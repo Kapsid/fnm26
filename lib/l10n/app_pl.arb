@@ -2331,11 +2331,11 @@
   "tourContZoneAdvancement": "Zwycięzcy grup mogą awansować do Finału Ośmiu: awans wywalczy dwóch najlepszych z każdej strefy. Nikt nie spada.",
   "tourContZoneHeadingYours": "{zone} ★",
   "compNorthAmericaNationsCup": "Puchar Narodów Ameryki Północnej",
-  "compAfricanNationsCup": "Afrykański Puchar Narodów",
+  "compAfricanNationsCup": "Puchar Narodów",
   "objectiveNcWinItNorthAmerica": "Wygraj Puchar Narodów Ameryki Północnej",
-  "objectiveNcWinItAfrica": "Wygraj Afrykański Puchar Narodów",
+  "objectiveNcWinItAfrica": "Wygraj Puchar Narodów",
   "objectiveNcReachFinalNorthAmerica": "Dojdź do finału Pucharu Narodów Ameryki Północnej",
-  "objectiveNcReachFinalAfrica": "Dojdź do finału Afrykańskiego Pucharu Narodów",
+  "objectiveNcReachFinalAfrica": "Dojdź do finału Pucharu Narodów",
   "finishNcChampionsNorthAmerica": "Zdobywcy Pucharu Narodów Ameryki Północnej",
-  "finishNcChampionsAfrica": "Zdobywcy Afrykańskiego Pucharu Narodów"
+  "finishNcChampionsAfrica": "Zdobywcy Pucharu Narodów"
 }

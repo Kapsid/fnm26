@@ -2331,11 +2331,11 @@
   "tourContZoneAdvancement": "Le vincitrici dei gironi possono arrivare alla Final Eight: passano le due migliori di ogni zona. Nessuna retrocessione.",
   "tourContZoneHeadingYours": "{zone} ★",
   "compNorthAmericaNationsCup": "Coppa delle Nazioni del Nord America",
-  "compAfricanNationsCup": "Coppa delle Nazioni d'Africa",
+  "compAfricanNationsCup": "Coppa delle Nazioni",
   "objectiveNcWinItNorthAmerica": "Vincere la Coppa delle Nazioni del Nord America",
-  "objectiveNcWinItAfrica": "Vincere la Coppa delle Nazioni d'Africa",
+  "objectiveNcWinItAfrica": "Vincere la Coppa delle Nazioni",
   "objectiveNcReachFinalNorthAmerica": "Arrivare in finale di Coppa delle Nazioni del Nord America",
-  "objectiveNcReachFinalAfrica": "Arrivare in finale di Coppa delle Nazioni d'Africa",
+  "objectiveNcReachFinalAfrica": "Arrivare in finale di Coppa delle Nazioni",
   "finishNcChampionsNorthAmerica": "Vincitori della Coppa delle Nazioni del Nord America",
-  "finishNcChampionsAfrica": "Vincitori della Coppa delle Nazioni d'Africa"
+  "finishNcChampionsAfrica": "Vincitori della Coppa delle Nazioni"
 }

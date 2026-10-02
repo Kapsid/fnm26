@@ -2331,11 +2331,11 @@
   "tourContZoneAdvancement": "Vítězové skupin mají šanci na finálovou osmičku: postupují dva nejlepší z každé zóny. Nikdo nesestupuje.",
   "tourContZoneHeadingYours": "{zone} ★",
   "compNorthAmericaNationsCup": "Pohár národů Severní Ameriky",
-  "compAfricanNationsCup": "Africký pohár národů",
+  "compAfricanNationsCup": "Pohár národů",
   "objectiveNcWinItNorthAmerica": "Vyhrát Pohár národů Severní Ameriky",
-  "objectiveNcWinItAfrica": "Vyhrát Africký pohár národů",
+  "objectiveNcWinItAfrica": "Vyhrát Pohár národů",
   "objectiveNcReachFinalNorthAmerica": "Postoupit do finále Poháru národů Severní Ameriky",
-  "objectiveNcReachFinalAfrica": "Postoupit do finále Afrického poháru národů",
+  "objectiveNcReachFinalAfrica": "Postoupit do finále Poháru národů",
   "finishNcChampionsNorthAmerica": "Vítězové Poháru národů Severní Ameriky",
-  "finishNcChampionsAfrica": "Vítězové Afrického poháru národů"
+  "finishNcChampionsAfrica": "Vítězové Poháru národů"
 }

@@ -9061,27 +9061,26 @@ class AppLocalizationsCs extends AppLocalizations {
   String get compNorthAmericaNationsCup => 'Pohár národů Severní Ameriky';
 
   @override
-  String get compAfricanNationsCup => 'Africký pohár národů';
+  String get compAfricanNationsCup => 'Pohár národů';
 
   @override
   String get objectiveNcWinItNorthAmerica =>
       'Vyhrát Pohár národů Severní Ameriky';
 
   @override
-  String get objectiveNcWinItAfrica => 'Vyhrát Africký pohár národů';
+  String get objectiveNcWinItAfrica => 'Vyhrát Pohár národů';
 
   @override
   String get objectiveNcReachFinalNorthAmerica =>
       'Postoupit do finále Poháru národů Severní Ameriky';
 
   @override
-  String get objectiveNcReachFinalAfrica =>
-      'Postoupit do finále Afrického poháru národů';
+  String get objectiveNcReachFinalAfrica => 'Postoupit do finále Poháru národů';
 
   @override
   String get finishNcChampionsNorthAmerica =>
       'Vítězové Poháru národů Severní Ameriky';
 
   @override
-  String get finishNcChampionsAfrica => 'Vítězové Afrického poháru národů';
+  String get finishNcChampionsAfrica => 'Vítězové Poháru národů';
 }

@@ -14154,7 +14154,7 @@ abstract class AppLocalizations {
   /// Nations Cup name: the African confederation's own Nations Cup, played in four zones.
   ///
   /// In en, this message translates to:
-  /// **'African Nations Cup'**
+  /// **'Nations Cup'**
   String get compAfricanNationsCup;
 
   /// North America Nations Cup board objective: win the competition.
@@ -14166,7 +14166,7 @@ abstract class AppLocalizations {
   /// African Nations Cup board objective: win the competition.
   ///
   /// In en, this message translates to:
-  /// **'Win the African Nations Cup'**
+  /// **'Win the Nations Cup'**
   String get objectiveNcWinItAfrica;
 
   /// North America Nations Cup board objective: reach the final.
@@ -14178,7 +14178,7 @@ abstract class AppLocalizations {
   /// African Nations Cup board objective: reach the final.
   ///
   /// In en, this message translates to:
-  /// **'Reach the African Nations Cup final'**
+  /// **'Reach the Nations Cup final'**
   String get objectiveNcReachFinalAfrica;
 
   /// North America Nations Cup objective result: won the competition.
@@ -14190,7 +14190,7 @@ abstract class AppLocalizations {
   /// African Nations Cup objective result: won the competition.
   ///
   /// In en, this message translates to:
-  /// **'African Nations Cup winners'**
+  /// **'Nations Cup winners'**
   String get finishNcChampionsAfrica;
 }
 

@@ -9031,27 +9031,26 @@ class AppLocalizationsEn extends AppLocalizations {
   String get compNorthAmericaNationsCup => 'North America Nations Cup';
 
   @override
-  String get compAfricanNationsCup => 'African Nations Cup';
+  String get compAfricanNationsCup => 'Nations Cup';
 
   @override
   String get objectiveNcWinItNorthAmerica =>
       'Win the North America Nations Cup';
 
   @override
-  String get objectiveNcWinItAfrica => 'Win the African Nations Cup';
+  String get objectiveNcWinItAfrica => 'Win the Nations Cup';
 
   @override
   String get objectiveNcReachFinalNorthAmerica =>
       'Reach the North America Nations Cup final';
 
   @override
-  String get objectiveNcReachFinalAfrica =>
-      'Reach the African Nations Cup final';
+  String get objectiveNcReachFinalAfrica => 'Reach the Nations Cup final';
 
   @override
   String get finishNcChampionsNorthAmerica =>
       'North America Nations Cup winners';
 
   @override
-  String get finishNcChampionsAfrica => 'African Nations Cup winners';
+  String get finishNcChampionsAfrica => 'Nations Cup winners';
 }

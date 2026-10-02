@@ -2331,11 +2331,11 @@
   "tourContZoneAdvancement": "Les vainqueurs de groupe peuvent atteindre le Final Eight : les deux meilleurs de chaque zone se qualifient. Personne n’est relégué.",
   "tourContZoneHeadingYours": "{zone} ★",
   "compNorthAmericaNationsCup": "Coupe des Nations d’Amérique du Nord",
-  "compAfricanNationsCup": "Coupe des Nations d’Afrique",
+  "compAfricanNationsCup": "Coupe des Nations",
   "objectiveNcWinItNorthAmerica": "Remporter la Coupe des Nations d’Amérique du Nord",
-  "objectiveNcWinItAfrica": "Remporter la Coupe des Nations d’Afrique",
+  "objectiveNcWinItAfrica": "Remporter la Coupe des Nations",
   "objectiveNcReachFinalNorthAmerica": "Atteindre la finale de la Coupe des Nations d’Amérique du Nord",
-  "objectiveNcReachFinalAfrica": "Atteindre la finale de la Coupe des Nations d’Afrique",
+  "objectiveNcReachFinalAfrica": "Atteindre la finale de la Coupe des Nations",
   "finishNcChampionsNorthAmerica": "Vainqueurs de la Coupe des Nations d’Amérique du Nord",
-  "finishNcChampionsAfrica": "Vainqueurs de la Coupe des Nations d’Afrique"
+  "finishNcChampionsAfrica": "Vainqueurs de la Coupe des Nations"
 }

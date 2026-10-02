@@ -24,9 +24,10 @@ void main() {
         'North America Nations Cup winners',
       ),
       NationsCups.africa: (
-        'Win the African Nations Cup',
-        'Reach the African Nations Cup final',
-        'African Nations Cup winners',
+        // Shown as the plain cup: the African-named form is the real AFCON.
+        'Win the Nations Cup',
+        'Reach the Nations Cup final',
+        'Nations Cup winners',
       ),
     };
     for (final e in expected.entries) {
