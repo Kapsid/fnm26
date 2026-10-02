@@ -770,8 +770,14 @@ class SeasonService {
         hs,
         as,
         SeededRng.forFixture(rngSeed, f.id ^ 0x7F),
-        homeStrength: homeStrength.toDouble(),
-        awayStrength: awayStrength.toDouble(),
+        // `decideKnockout` splits extra time and the shootout by the SHARE of
+        // the pair it is handed. Raw ratings (89 against 81) made that share
+        // 0.52, so every level knockout was a coin toss; the simulator's own
+        // knockout weight turns the same gap into the edge it shows in ninety
+        // minutes. Only the background path converts — the live match screen
+        // passes its own pair (team talks, named takers) and is unchanged.
+        homeStrength: RatingMatchSimulator.knockoutWeight(homeStrength),
+        awayStrength: RatingMatchSimulator.knockoutWeight(awayStrength),
       );
       aet = true;
       // The extra-time goals are attributed with 91'–120' minutes so they show
