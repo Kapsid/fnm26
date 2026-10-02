@@ -15,6 +15,7 @@ abstract final class MatchStage {
     null || 'CQ' => l.resultsStageQualifier,
     'FRIENDLY' => l.resultsStageFriendly,
     'NL' || 'NGROUP' => l.resultsStageGroupStage,
+    'NQF' => l.resultsStageQuarterFinal,
     'NSF' => l.resultsStageSemiFinal,
     'NFINAL' => l.resultsStageFinal,
     'FFINAL' => l.resultsStageContinentalClash,
@@ -74,12 +75,13 @@ abstract final class MatchStage {
       return l.resultsStageContinentalClash.toUpperCase();
     }
     if (round == null || round == 'CQ') {
-      final head = (compact
-              ? (round == null
-                    ? l.resultsCategoryWorldCupQualifyingShort
-                    : l.resultsCategoryContinentalQualifyingShort)
-              : category(l, round))
-          .toUpperCase();
+      final head =
+          (compact
+                  ? (round == null
+                        ? l.resultsCategoryWorldCupQualifyingShort
+                        : l.resultsCategoryContinentalQualifyingShort)
+                  : category(l, round))
+              .toUpperCase();
       return '$head · ${l.matchStageMatchday(f.matchday).toUpperCase()}';
     }
     // A group game is just the competition: "· GROUP STAGE" adds nothing the

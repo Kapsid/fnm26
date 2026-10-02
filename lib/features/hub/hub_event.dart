@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/domain/services/competition/nations_cups.dart';
+import 'package:fnm/core/util/competition_label.dart';
 import 'package:fnm/core/util/nation_label.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
 import 'package:fnm/domain/entities/fixture.dart';
-import 'package:fnm/domain/services/competition/continental_cups.dart';
 import 'package:fnm/domain/services/competition/finals_participation.dart';
 import 'package:fnm/domain/services/competition/hosts.dart';
 import 'package:fnm/domain/services/competition/kickoff_keys.dart';
@@ -506,8 +506,7 @@ nextEventProvider = FutureProvider.autoDispose.family<HubEvent, int>((
     final conf = hub.nations[hub.career.nationId]?.confederation;
     final cupName = conf == null
         ? l.hubEventContinentalFinalsFallback
-        : ContinentalCups.byConfederation[conf]?.name ??
-              l.hubEventContinentalFinalsFallback;
+        : continentalCupLabel(l, conf);
     return HubEvent(
       kind: HubEventKind.watchTournament,
       label: l.hubEventPlayCupMatch(cupName),
@@ -884,8 +883,7 @@ nextEventProvider = FutureProvider.autoDispose.family<HubEvent, int>((
     final conf = myConf;
     final cupName = conf == null
         ? l.hubEventContinentalFinalsFallback
-        : ContinentalCups.byConfederation[conf]?.name ??
-              l.hubEventContinentalFinalsFallback;
+        : continentalCupLabel(l, conf);
     return HubEvent(
       kind: HubEventKind.watchTournament,
       label: l.hubEventPlayCupMatch(cupName),

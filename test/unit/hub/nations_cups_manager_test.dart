@@ -15,6 +15,7 @@ import 'package:fnm/domain/services/competition/nations_cups.dart';
 import 'package:fnm/domain/services/entitlement/entitlement.dart';
 import 'package:fnm/features/achievements/challenge_providers.dart';
 import 'package:fnm/features/career/career_providers.dart';
+import 'package:fnm/features/career/manager_history_providers.dart';
 import 'package:fnm/features/federation/budget_setup_screen.dart';
 import 'package:fnm/features/hub/hub_event.dart';
 import 'package:fnm/features/hub/objective_providers.dart';
@@ -389,6 +390,11 @@ void main() {
     expect(finishes, hasLength(1));
     expect(finishes.single.finals, NationsCupFinish.quarterFinalist);
     expect(finishes.single.zone, AfricaZone.centralSouthern);
+
+    // His history names the cup he played in, not Europe's.
+    final history = await s.c.read(managerHistoryProvider(s.careerId).future);
+    final nc = history!.cycles.singleWhere((c) => c.cycle == 0).nationsCup!;
+    expect(nc.cup, NationsCups.africa);
   });
 }
 

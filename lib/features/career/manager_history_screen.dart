@@ -453,7 +453,7 @@ class _CycleCard extends StatelessWidget {
             if (c.nationsCup case final nc?) ...[
               const SizedBox(height: AppSpacing.xs),
               _Finish(
-                label: l.careerNationsCupLabel,
+                label: competitionLabel(l, nc.cup),
                 placement: nationsCupFinishLabel(
                   l,
                   league: nc.league,

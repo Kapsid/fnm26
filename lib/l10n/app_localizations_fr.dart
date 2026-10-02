@@ -9084,7 +9084,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get tourContZoneAdvancement =>
-      'Les vainqueurs de groupe peuvent atteindre le Final Eight: les deux meilleurs de chaque zone se qualifient. Personne n’est relégué.';
+      'Les vainqueurs de groupe peuvent atteindre le Final Eight : les deux meilleurs de chaque zone se qualifient. Personne n’est relégué.';
 
   @override
   String tourContZoneHeadingYours(String zone) {

@@ -39,15 +39,10 @@ abstract final class NationsCups {
     }
   }
 
-  /// The cup a manager from [c] follows: his own, or Europe's when his
-  /// confederation has none (the one cup every manager followed before).
-  static Confederation followedBy(Confederation c) =>
-      forConfederation(c) != null ? c : Confederation.europe;
-
   /// The confederation whose cup a manager from [c] plays in and is judged on,
-  /// or null when his confederation has none. Unlike [followedBy] there is no
-  /// fallback: an Asian manager's hub, board and draws carry no Nations Cup at
-  /// all, as before the other cups existed.
+  /// or null when his confederation has none. There is no fallback: an Asian
+  /// manager's hub, board and draws carry no Nations Cup at all, as before the
+  /// other cups existed.
   static Confederation? ofManager(Confederation? c) =>
       c != null && forConfederation(c) != null ? c : null;
 

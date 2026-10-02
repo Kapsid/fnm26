@@ -7,10 +7,12 @@ import 'package:fnm/domain/services/competition/nations_cups.dart';
 import 'package:fnm/domain/services/competition/trophies.dart';
 import 'package:fnm/features/career/career_providers.dart';
 
-/// A nation's Nations Cup cycle: which league it played in (or, in the
+/// A nation's Nations Cup cycle: which cup (`cup`, its stored name — the
+/// nation's own confederation's), which league it played in (or, in the
 /// African cup, which [zone]), where it came in its group, and the finals round
 /// it reached (null for a side that never reached its cup's finals).
 typedef NationsCupCycle = ({
+  String cup,
   String league,
   AfricaZone? zone,
   int position,
@@ -156,16 +158,24 @@ managerHistoryProvider = FutureProvider.autoDispose.family<ManagerHistory?, int>
 
     // Nations Cup finishes per nation, indexed by cycle (cached like fixtures).
     final ncByNation = <int, Map<int, NationsCupCycle>>{};
-    Future<Map<int, NationsCupCycle>> ncFor(int nationId) async =>
-        ncByNation[nationId] ??= {
-          for (final e in await comp.nationsCupFinishes(careerId, nationId))
-            e.cycle: (
-              league: e.league,
-              zone: e.zone,
-              position: e.position,
-              finals: e.finals,
-            ),
-        };
+    Future<Map<int, NationsCupCycle>> ncFor(int nationId) async {
+      // A nation only ever plays its own confederation's cup, which is the
+      // one `nationsCupFinishes` reads.
+      final conf = nations[nationId]?.confederation;
+      final cup = conf == null
+          ? NationsCups.europe
+          : NationsCups.forConfederation(conf)?.name ?? NationsCups.europe;
+      return ncByNation[nationId] ??= {
+        for (final e in await comp.nationsCupFinishes(careerId, nationId))
+          e.cycle: (
+            cup: cup,
+            league: e.league,
+            zone: e.zone,
+            position: e.position,
+            finals: e.finals,
+          ),
+      };
+    }
 
     ManagerResult? biggestWin;
     ManagerResult? biggestLoss;
