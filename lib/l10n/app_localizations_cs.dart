@@ -8987,73 +8987,101 @@ class AppLocalizationsCs extends AppLocalizations {
   }
 
   @override
-  String get ncZoneNorth => 'North Zone';
+  String get ncZoneNorth => 'Severní zóna';
 
   @override
-  String get ncZoneWest => 'West Zone';
+  String get ncZoneWest => 'Západní zóna';
 
   @override
-  String get ncZoneEast => 'East Zone';
+  String get ncZoneEast => 'Východní zóna';
 
   @override
-  String get ncZoneCentralSouthern => 'Central and Southern Zone';
+  String get ncZoneCentralSouthern => 'Střední a jižní zóna';
 
   @override
   String careerNationsCupZoneWon(String zone) {
-    return '$zone · Champions';
+    return '$zone · vítězové';
   }
 
   @override
   String careerNationsCupZoneRunnerUp(String zone) {
-    return '$zone · Runners-up';
+    return '$zone · finalisté';
   }
 
   @override
   String careerNationsCupZoneSemi(String zone) {
-    return '$zone · Semi-finalist';
+    return '$zone · semifinále';
   }
 
   @override
   String careerNationsCupZoneQuarter(String zone) {
-    return '$zone · Quarter-finalist';
+    return '$zone · čtvrtfinále';
   }
 
   @override
   String careerNationsCupZonePlaced(String zone, int position) {
-    return '$zone · #$position';
+    return '$zone · $position. místo';
   }
 
   @override
-  String get objectiveNcFinalsEight => 'Reach the Finals Eight';
+  String get objectiveNcFinalsEight => 'Postoupit do finálové osmičky';
 
   @override
-  String get objectiveNcZoneWinGroup => 'Win your group';
+  String get objectiveNcZoneWinGroup => 'Vyhrát skupinu';
 
   @override
-  String get finishNcFinalsEight => 'Finals Eight';
+  String get finishNcFinalsEight => 'Finálová osmička';
 
   @override
-  String get finishNcBottomHalf => 'Bottom half of the group';
+  String get finishNcBottomHalf => 'Dolní polovina skupiny';
 
   @override
-  String get tourContTabZones => 'ZONES';
+  String get tourContTabZones => 'ZÓNY';
 
   @override
-  String get tourContTabFinalsEight => 'FINALS EIGHT';
+  String get tourContTabFinalsEight => 'FINÁLOVÁ OSMIČKA';
 
   @override
   String get tourContFinalsEightSoon =>
-      'The Finals Eight is contested by the two best group winners of each zone once the group stage is done.';
+      'Finálovou osmičku hrají dva nejlepší vítězové skupin z každé zóny po skončení skupinové fáze.';
 
   @override
-  String get tourContQuarterFinals => 'QUARTER-FINALS';
+  String get tourContQuarterFinals => 'ČTVRTFINÁLE';
 
   @override
   String get tourContZoneAdvancement =>
-      'Group winners may reach the Finals Eight: the two best in each zone go through. Nobody is relegated.';
+      'Vítězové skupin mají šanci na finálovou osmičku: postupují dva nejlepší z každé zóny. Nikdo nesestupuje.';
 
   @override
   String tourContZoneHeadingYours(String zone) {
-    return '$zone · YOUR ZONE';
+    return '$zone ★';
   }
+
+  @override
+  String get compNorthAmericaNationsCup => 'Pohár národů Severní Ameriky';
+
+  @override
+  String get compAfricanNationsCup => 'Africký pohár národů';
+
+  @override
+  String get objectiveNcWinItNorthAmerica =>
+      'Vyhrát Pohár národů Severní Ameriky';
+
+  @override
+  String get objectiveNcWinItAfrica => 'Vyhrát Africký pohár národů';
+
+  @override
+  String get objectiveNcReachFinalNorthAmerica =>
+      'Postoupit do finále Poháru národů Severní Ameriky';
+
+  @override
+  String get objectiveNcReachFinalAfrica =>
+      'Postoupit do finále Afrického poháru národů';
+
+  @override
+  String get finishNcChampionsNorthAmerica =>
+      'Vítězové Poháru národů Severní Ameriky';
+
+  @override
+  String get finishNcChampionsAfrica => 'Vítězové Afrického poháru národů';
 }

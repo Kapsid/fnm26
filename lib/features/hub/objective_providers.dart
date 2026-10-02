@@ -100,8 +100,8 @@ MsgKey objectiveDemandKey(
 }) {
   if (tier == TournamentTier.nationsCup && _isZonesCup(competition)) {
     return switch (target) {
-      7 => MsgKey.objectiveNcWinIt,
-      6 => MsgKey.objectiveNcReachFinal,
+      7 => _ncWinIt(competition),
+      6 => _ncReachFinal(competition),
       5 => MsgKey.objectiveNcFinalsEight,
       4 => MsgKey.objectiveNcZoneWinGroup,
       _ => MsgKey.objectiveNcTopHalf,
@@ -109,8 +109,8 @@ MsgKey objectiveDemandKey(
   }
   if (tier == TournamentTier.nationsCup) {
     return switch (target) {
-      7 => MsgKey.objectiveNcWinIt,
-      6 => MsgKey.objectiveNcReachFinal,
+      7 => _ncWinIt(competition),
+      6 => _ncReachFinal(competition),
       5 => MsgKey.objectiveNcFinalsFour,
       4 => MsgKey.objectiveNcWinGroup,
       3 => MsgKey.objectiveNcTopHalf,
@@ -136,7 +136,7 @@ MsgKey objectiveFinishKey(
 }) {
   if (tier == TournamentTier.nationsCup && _isZonesCup(competition)) {
     return switch (ordinal) {
-      7 => MsgKey.finishNcChampions,
+      7 => _ncChampions(competition),
       6 => MsgKey.finishRunnersUp,
       5 => MsgKey.finishNcFinalsEight,
       4 => MsgKey.finishNcGroupWinners,
@@ -147,7 +147,7 @@ MsgKey objectiveFinishKey(
   }
   if (tier == TournamentTier.nationsCup) {
     return switch (ordinal) {
-      7 => MsgKey.finishNcChampions,
+      7 => _ncChampions(competition),
       6 => MsgKey.finishRunnersUp,
       5 => MsgKey.finishNcFinalsFour,
       4 => MsgKey.finishNcGroupWinners,
@@ -179,6 +179,26 @@ String objectiveFinishText(
   int ordinal, {
   String? competition,
 }) => _resultLabel(l, tier, ordinal, competition: competition);
+
+/// The rungs that name the cup say which one: a CONCACAF manager is told to
+/// win the North America Nations Cup, not Europe's.
+MsgKey _ncWinIt(String? competition) => switch (competition?.trim()) {
+  NationsCups.northAmerica => MsgKey.objectiveNcWinItNorthAmerica,
+  NationsCups.africa => MsgKey.objectiveNcWinItAfrica,
+  _ => MsgKey.objectiveNcWinIt,
+};
+
+MsgKey _ncReachFinal(String? competition) => switch (competition?.trim()) {
+  NationsCups.northAmerica => MsgKey.objectiveNcReachFinalNorthAmerica,
+  NationsCups.africa => MsgKey.objectiveNcReachFinalAfrica,
+  _ => MsgKey.objectiveNcReachFinal,
+};
+
+MsgKey _ncChampions(String? competition) => switch (competition?.trim()) {
+  NationsCups.northAmerica => MsgKey.finishNcChampionsNorthAmerica,
+  NationsCups.africa => MsgKey.finishNcChampionsAfrica,
+  _ => MsgKey.finishNcChampions,
+};
 
 /// Whether [competition] is a zones-format Nations Cup (Africa's).
 bool _isZonesCup(String? competition) =>

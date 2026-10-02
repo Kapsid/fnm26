@@ -9006,35 +9006,35 @@ class AppLocalizationsIt extends AppLocalizations {
   }
 
   @override
-  String get ncZoneNorth => 'North Zone';
+  String get ncZoneNorth => 'Zona Nord';
 
   @override
-  String get ncZoneWest => 'West Zone';
+  String get ncZoneWest => 'Zona Ovest';
 
   @override
-  String get ncZoneEast => 'East Zone';
+  String get ncZoneEast => 'Zona Est';
 
   @override
-  String get ncZoneCentralSouthern => 'Central and Southern Zone';
+  String get ncZoneCentralSouthern => 'Zona Centro-Sud';
 
   @override
   String careerNationsCupZoneWon(String zone) {
-    return '$zone · Champions';
+    return '$zone · Campioni';
   }
 
   @override
   String careerNationsCupZoneRunnerUp(String zone) {
-    return '$zone · Runners-up';
+    return '$zone · Secondi';
   }
 
   @override
   String careerNationsCupZoneSemi(String zone) {
-    return '$zone · Semi-finalist';
+    return '$zone · Semifinalisti';
   }
 
   @override
   String careerNationsCupZoneQuarter(String zone) {
-    return '$zone · Quarter-finalist';
+    return '$zone · Quartofinalisti';
   }
 
   @override
@@ -9043,36 +9043,67 @@ class AppLocalizationsIt extends AppLocalizations {
   }
 
   @override
-  String get objectiveNcFinalsEight => 'Reach the Finals Eight';
+  String get objectiveNcFinalsEight => 'Arrivare alla Final Eight';
 
   @override
-  String get objectiveNcZoneWinGroup => 'Win your group';
+  String get objectiveNcZoneWinGroup => 'Vincere il girone';
 
   @override
-  String get finishNcFinalsEight => 'Finals Eight';
+  String get finishNcFinalsEight => 'Final Eight';
 
   @override
-  String get finishNcBottomHalf => 'Bottom half of the group';
+  String get finishNcBottomHalf => 'Metà bassa del girone';
 
   @override
-  String get tourContTabZones => 'ZONES';
+  String get tourContTabZones => 'ZONE';
 
   @override
-  String get tourContTabFinalsEight => 'FINALS EIGHT';
+  String get tourContTabFinalsEight => 'FINAL EIGHT';
 
   @override
   String get tourContFinalsEightSoon =>
-      'The Finals Eight is contested by the two best group winners of each zone once the group stage is done.';
+      'La Final Eight se la giocano le due migliori vincitrici di girone di ogni zona, a fase a gironi conclusa.';
 
   @override
-  String get tourContQuarterFinals => 'QUARTER-FINALS';
+  String get tourContQuarterFinals => 'QUARTI DI FINALE';
 
   @override
   String get tourContZoneAdvancement =>
-      'Group winners may reach the Finals Eight: the two best in each zone go through. Nobody is relegated.';
+      'Le vincitrici dei gironi possono arrivare alla Final Eight: passano le due migliori di ogni zona. Nessuna retrocessione.';
 
   @override
   String tourContZoneHeadingYours(String zone) {
-    return '$zone · YOUR ZONE';
+    return '$zone ★';
   }
+
+  @override
+  String get compNorthAmericaNationsCup =>
+      'Coppa delle Nazioni del Nord America';
+
+  @override
+  String get compAfricanNationsCup => 'Coppa delle Nazioni d\'Africa';
+
+  @override
+  String get objectiveNcWinItNorthAmerica =>
+      'Vincere la Coppa delle Nazioni del Nord America';
+
+  @override
+  String get objectiveNcWinItAfrica =>
+      'Vincere la Coppa delle Nazioni d\'Africa';
+
+  @override
+  String get objectiveNcReachFinalNorthAmerica =>
+      'Arrivare in finale di Coppa delle Nazioni del Nord America';
+
+  @override
+  String get objectiveNcReachFinalAfrica =>
+      'Arrivare in finale di Coppa delle Nazioni d\'Africa';
+
+  @override
+  String get finishNcChampionsNorthAmerica =>
+      'Vincitori della Coppa delle Nazioni del Nord America';
+
+  @override
+  String get finishNcChampionsAfrica =>
+      'Vincitori della Coppa delle Nazioni d\'Africa';
 }

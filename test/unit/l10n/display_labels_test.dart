@@ -7,10 +7,14 @@ import 'package:fnm/core/util/squad_label.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/player_role.dart';
 import 'package:fnm/domain/services/competition/continental_cups.dart';
+import 'package:fnm/domain/services/competition/nations_cups.dart';
 import 'package:fnm/domain/services/federation/federation_finance.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/l10n/app_localizations_cs.dart';
 import 'package:fnm/l10n/app_localizations_en.dart';
+import 'package:fnm/l10n/app_localizations_fr.dart';
+import 'package:fnm/l10n/app_localizations_it.dart';
+import 'package:fnm/l10n/app_localizations_pl.dart';
 
 /// Every word the manager reads about a position, a role, his morale, his
 /// federation or a competition, in BOTH languages.
@@ -132,6 +136,30 @@ void main() {
     test('the career records say the HIGHEST win, not the best one', () {
       // "Nejlepší výhra" reads as "the nicest win"; a margin is the highest.
       expect(locales['cs']!.careerBestWin, 'Nejvyšší výhra');
+    });
+
+    test('every Nations Cup is named, and named apart, in all five', () {
+      final all = <AppLocalizations>[
+        ...locales.values,
+        AppLocalizationsFr(),
+        AppLocalizationsIt(),
+        AppLocalizationsPl(),
+      ];
+      for (final l in all) {
+        final names = [
+          for (final stored in NationsCups.allNames)
+            competitionLabel(l, stored),
+        ];
+        expect(names.toSet(), hasLength(NationsCups.allNames.length));
+        if (l is AppLocalizationsEn) continue;
+        for (final stored in NationsCups.allNames) {
+          expect(
+            competitionLabel(l, stored),
+            isNot(stored),
+            reason: '$stored is printed back untranslated in ${l.localeName}',
+          );
+        }
+      }
     });
 
     test('a name the table has never heard of survives unchanged', () {

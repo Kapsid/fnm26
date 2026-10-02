@@ -14139,11 +14139,59 @@ abstract class AppLocalizations {
   /// **'Group winners may reach the Finals Eight: the two best in each zone go through. Nobody is relegated.'**
   String get tourContZoneAdvancement;
 
-  /// Heading of the manager's own zone on the African Nations Cup screen.
+  /// Heading of the manager's own zone on the African Nations Cup screen; the star marks it as the manager's, as on the league chips. Kept short: the longest zone name fills a 320px phone on its own.
   ///
   /// In en, this message translates to:
-  /// **'{zone} · YOUR ZONE'**
+  /// **'{zone} ★'**
   String tourContZoneHeadingYours(String zone);
+
+  /// Nations Cup name: the CONCACAF confederation's own Nations Cup.
+  ///
+  /// In en, this message translates to:
+  /// **'North America Nations Cup'**
+  String get compNorthAmericaNationsCup;
+
+  /// Nations Cup name: the African confederation's own Nations Cup, played in four zones.
+  ///
+  /// In en, this message translates to:
+  /// **'African Nations Cup'**
+  String get compAfricanNationsCup;
+
+  /// North America Nations Cup board objective: win the competition.
+  ///
+  /// In en, this message translates to:
+  /// **'Win the North America Nations Cup'**
+  String get objectiveNcWinItNorthAmerica;
+
+  /// African Nations Cup board objective: win the competition.
+  ///
+  /// In en, this message translates to:
+  /// **'Win the African Nations Cup'**
+  String get objectiveNcWinItAfrica;
+
+  /// North America Nations Cup board objective: reach the final.
+  ///
+  /// In en, this message translates to:
+  /// **'Reach the North America Nations Cup final'**
+  String get objectiveNcReachFinalNorthAmerica;
+
+  /// African Nations Cup board objective: reach the final.
+  ///
+  /// In en, this message translates to:
+  /// **'Reach the African Nations Cup final'**
+  String get objectiveNcReachFinalAfrica;
+
+  /// North America Nations Cup objective result: won the competition.
+  ///
+  /// In en, this message translates to:
+  /// **'North America Nations Cup winners'**
+  String get finishNcChampionsNorthAmerica;
+
+  /// African Nations Cup objective result: won the competition.
+  ///
+  /// In en, this message translates to:
+  /// **'African Nations Cup winners'**
+  String get finishNcChampionsAfrica;
 }
 
 class _AppLocalizationsDelegate

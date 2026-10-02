@@ -431,7 +431,12 @@ class _ChampionshipTile extends StatelessWidget {
           }(),
           const Spacer(),
           Text(
-            competitionLabel(l, c.name),
+            // A Nations Cup tile says just that: the strap under it names the
+            // continent, and "Coupe des Nations d’Amérique du Nord" cannot
+            // fit two lines of a half-width tile in any language.
+            NationsCups.isNationsCup(c.name)
+                ? l.compNationsCup
+                : competitionLabel(l, c.name),
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
             style: AppTypography.labelLarge,

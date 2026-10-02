@@ -13380,13 +13380,45 @@
   "@tourContZoneAdvancement": {
     "description": "Africa Nations Cup group advancement line shown above the zone tables."
   },
-  "tourContZoneHeadingYours": "{zone} · YOUR ZONE",
+  "tourContZoneHeadingYours": "{zone} ★",
   "@tourContZoneHeadingYours": {
-    "description": "Heading of the manager's own zone on the African Nations Cup screen.",
+    "description": "Heading of the manager's own zone on the African Nations Cup screen; the star marks it as the manager's, as on the league chips. Kept short: the longest zone name fills a 320px phone on its own.",
     "placeholders": {
       "zone": {
         "type": "String"
       }
     }
+  },
+  "compNorthAmericaNationsCup": "North America Nations Cup",
+  "@compNorthAmericaNationsCup": {
+    "description": "Nations Cup name: the CONCACAF confederation's own Nations Cup."
+  },
+  "compAfricanNationsCup": "African Nations Cup",
+  "@compAfricanNationsCup": {
+    "description": "Nations Cup name: the African confederation's own Nations Cup, played in four zones."
+  },
+  "objectiveNcWinItNorthAmerica": "Win the North America Nations Cup",
+  "@objectiveNcWinItNorthAmerica": {
+    "description": "North America Nations Cup board objective: win the competition."
+  },
+  "objectiveNcWinItAfrica": "Win the African Nations Cup",
+  "@objectiveNcWinItAfrica": {
+    "description": "African Nations Cup board objective: win the competition."
+  },
+  "objectiveNcReachFinalNorthAmerica": "Reach the North America Nations Cup final",
+  "@objectiveNcReachFinalNorthAmerica": {
+    "description": "North America Nations Cup board objective: reach the final."
+  },
+  "objectiveNcReachFinalAfrica": "Reach the African Nations Cup final",
+  "@objectiveNcReachFinalAfrica": {
+    "description": "African Nations Cup board objective: reach the final."
+  },
+  "finishNcChampionsNorthAmerica": "North America Nations Cup winners",
+  "@finishNcChampionsNorthAmerica": {
+    "description": "North America Nations Cup objective result: won the competition."
+  },
+  "finishNcChampionsAfrica": "African Nations Cup winners",
+  "@finishNcChampionsAfrica": {
+    "description": "African Nations Cup objective result: won the competition."
   }
 }

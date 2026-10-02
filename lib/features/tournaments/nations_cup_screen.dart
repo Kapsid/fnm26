@@ -231,9 +231,12 @@ class _NationsCupScreenState extends ConsumerState<NationsCupScreen> {
                     '${Routes.tournaments}?careerId=${widget.careerId}',
                   ),
           ),
+          // The named cups ("COUPE DES NATIONS D’AMÉRIQUE DU NORD") are wider
+          // than a 320px app bar beside its back button: two lines, not "…".
           title: Text(
             title,
-            maxLines: 1,
+            maxLines: 2,
+            textAlign: TextAlign.center,
             overflow: TextOverflow.ellipsis,
             style: AppTypography.labelMedium.copyWith(color: AppColors.primary),
           ),
