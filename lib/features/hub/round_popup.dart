@@ -40,8 +40,9 @@ const _knockoutRounds = <String, ({int order, String label})>{
   'CSF': (order: 2, label: 'Semi-finals'),
   'C3RD': (order: 3, label: 'Third-place play-off'),
   'CFINAL': (order: 4, label: 'Final'),
-  'NSF': (order: 0, label: 'Semi-finals'),
-  'NFINAL': (order: 1, label: 'Final'),
+  'NQF': (order: 0, label: 'Quarter-finals'),
+  'NSF': (order: 1, label: 'Semi-finals'),
+  'NFINAL': (order: 2, label: 'Final'),
 };
 
 /// The localised name for a knockout [round] code (empty/unknown = group stage),
@@ -51,7 +52,7 @@ const _knockoutRounds = <String, ({int order, String label})>{
 String stageLabelFor(AppLocalizations l, String round) => switch (round) {
   'R32' => l.hubStageRoundOf32,
   'R16' || 'CR16' => l.finishRoundOf16,
-  'QF' || 'CQF' => l.finishQuarterFinals,
+  'QF' || 'CQF' || 'NQF' => l.finishQuarterFinals,
   'SF' || 'CSF' || 'NSF' => l.finishSemiFinals,
   '3RD' || 'C3RD' => l.hubStageThirdPlace,
   'FINAL' || 'CFINAL' || 'NFINAL' => l.hubFinal,

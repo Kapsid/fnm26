@@ -20,6 +20,7 @@ import 'package:fnm/domain/services/competition/finals_participation.dart';
 import 'package:fnm/domain/services/competition/group_advancement.dart';
 import 'package:fnm/domain/services/competition/hosts.dart';
 import 'package:fnm/domain/services/competition/nations_cup.dart';
+import 'package:fnm/domain/services/competition/nations_cups.dart';
 import 'package:fnm/domain/services/competition/qualification.dart';
 import 'package:fnm/domain/services/competition/rounds.dart';
 import 'package:fnm/domain/services/entitlement/entitlement.dart';
@@ -649,7 +650,15 @@ class SeasonService {
     )) {
       return true;
     }
-    if (await _comp.hasLiveNationsCupFinals(careerId)) return true;
+    // The Nations Cup the manager follows: his own confederation's, or
+    // Europe's when his has none. The other cups resolve in the background.
+    final mine = await _managerConfederation(careerId);
+    if (await _comp.hasLiveNationsCupFinals(
+      careerId,
+      confederation: mine == null ? null : NationsCups.followedBy(mine),
+    )) {
+      return true;
+    }
     return false;
   }
 
@@ -1343,19 +1352,23 @@ class SeasonService {
         break;
       }
 
-      // 1b. The Nations Cup Finals Four is under way and the player isn't in it
-      //     — step it one matchday at a time, like the main finals, so the
-      //     semis and final are watched rather than silently fast-forwarded. A
-      //     participant is detected from ANY unplayed NSF/NFINAL fixture (not
-      //     just their immediate next one), so a host whose pre-finals window is
-      //     friendlies still plays their own semi/final instead of watching it.
+      // 1b. The manager's Nations Cup finals are under way and the player
+      //     isn't in them — step them one matchday at a time, like the main
+      //     finals, so they are watched rather than silently fast-forwarded. A
+      //     participant is detected from ANY unplayed finals fixture (not just
+      //     their immediate next one), so a host whose pre-finals window is
+      //     friendlies still plays their own tie instead of watching it. Only
+      //     the cup he follows is stepped; the others resolve in the
+      //     background like the other continents' championships.
+      final ncConf = await _managerConfederation(careerId);
       final ncFinalsDate = await _comp.earliestUnplayedNationsCupFinalsDate(
         careerId,
+        confederation: ncConf == null ? null : NationsCups.followedBy(ncConf),
       );
       final nextIsNcFinals =
-          next != null && (next.round == 'NSF' || next.round == 'NFINAL');
+          next != null && FinalsRounds.nationsCup.contains(next.round);
       final playerInNcFinals = playerFixtures.any(
-        (f) => !f.hasResult && (f.round == 'NSF' || f.round == 'NFINAL'),
+        (f) => !f.hasResult && FinalsRounds.nationsCup.contains(f.round),
       );
       if (ncFinalsDate != null &&
           !nextIsNcFinals &&

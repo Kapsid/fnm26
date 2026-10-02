@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/core/routing/app_router.dart';
+import 'package:fnm/domain/services/competition/nations_cups.dart';
 import 'package:fnm/core/util/nation_label.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/enums.dart';
@@ -524,12 +525,15 @@ nextEventProvider = FutureProvider.autoDispose.family<HubEvent, int>((
   //     host (who fills the pre-finals window with friendlies) is wrongly routed
   //     to watch, and their own semi/final is auto-simmed and never played.
   final nextIsNcFinals =
-      next != null && (next.round == 'NSF' || next.round == 'NFINAL');
+      next != null && FinalsRounds.nationsCup.contains(next.round);
   final playerInNcFinals = hub.fixtures.any(
-    (f) => !f.hasResult && (f.round == 'NSF' || f.round == 'NFINAL'),
+    (f) => !f.hasResult && FinalsRounds.nationsCup.contains(f.round),
   );
+  // Only the cup he follows, as the stepping in `advance` does.
+  final ncConf = hub.nations[hub.career.nationId]?.confederation;
   final ncFinalsDate = await comp.earliestUnplayedNationsCupFinalsDate(
     careerId,
+    confederation: ncConf == null ? null : NationsCups.followedBy(ncConf),
   );
   if (ncFinalsDate != null &&
       !nextIsNcFinals &&

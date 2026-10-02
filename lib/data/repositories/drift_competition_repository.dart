@@ -9,6 +9,7 @@ import 'package:fnm/domain/repositories/competition_repository.dart';
 import 'package:fnm/domain/services/competition/finals_participation.dart';
 import 'package:fnm/domain/services/competition/cycle_finish.dart';
 import 'package:fnm/domain/services/competition/finals.dart';
+import 'package:fnm/domain/services/competition/nations_cups.dart';
 import 'package:fnm/domain/services/competition/rounds.dart';
 import 'package:fnm/domain/services/competition/schedule_generator.dart';
 
@@ -662,20 +663,35 @@ class DriftCompetitionRepository implements CompetitionRepository {
   }
 
   @override
-  Future<bool> hasLiveNationsCupFinals(int careerId) async {
-    final comp = await _tournamentComp(careerId, CompetitionKind.nationsLeague);
-    if (comp == null) return false;
-    final unplayed =
-        await (_db.select(_db.fixtures)
-              ..where(
-                (t) =>
-                    t.competitionId.equals(comp.id) &
-                    t.played.equals(false) &
-                    t.round.isIn(const ['NSF', 'NFINAL']),
-              )
-              ..limit(1))
-            .getSingleOrNull();
-    return unplayed != null;
+  Future<bool> hasLiveNationsCupFinals(
+    int careerId, {
+    Confederation? confederation,
+  }) async =>
+      (await earliestUnplayedNationsCupFinalsDate(
+        careerId,
+        confederation: confederation,
+      )) !=
+      null;
+
+  /// The current cycle's Nations Cup competitions — [confederation]'s alone
+  /// when given, every confederation's cup when null.
+  Future<List<int>> _nationsCupCompIds(
+    int careerId,
+    Confederation? confederation,
+  ) async {
+    final cycle = await _cycle(careerId);
+    final rows =
+        await (_db.select(_db.competitions)..where(
+              (t) =>
+                  t.careerId.equals(careerId) &
+                  t.cycle.equals(cycle) &
+                  t.kind.equalsValue(CompetitionKind.nationsLeague) &
+                  (confederation == null
+                      ? const Constant(true)
+                      : t.confederation.equalsValue(confederation)),
+            ))
+            .get();
+    return [for (final r in rows) r.id];
   }
 
   /// The current cycle's competition of [kind] — scoped to [confederation]
@@ -853,7 +869,12 @@ class DriftCompetitionRepository implements CompetitionRepository {
               (t) =>
                   t.careerId.equals(careerId) &
                   (t.kind.equalsValue(CompetitionKind.worldCupFinals) |
-                      t.kind.equalsValue(CompetitionKind.nationsLeague) |
+                      (t.kind.equalsValue(CompetitionKind.nationsLeague) &
+                          (confederation == null
+                              ? const Constant(true)
+                              : t.confederation.equalsValue(
+                                  NationsCups.followedBy(confederation),
+                                ))) |
                       (t.kind.equalsValue(CompetitionKind.continentalFinals) &
                           (confederation == null
                               ? const Constant(true)
@@ -882,16 +903,19 @@ class DriftCompetitionRepository implements CompetitionRepository {
   }
 
   @override
-  Future<DateTime?> earliestUnplayedNationsCupFinalsDate(int careerId) async {
-    final comp = await _tournamentComp(careerId, CompetitionKind.nationsLeague);
-    if (comp == null) return null;
+  Future<DateTime?> earliestUnplayedNationsCupFinalsDate(
+    int careerId, {
+    Confederation? confederation,
+  }) async {
+    final ids = await _nationsCupCompIds(careerId, confederation);
+    if (ids.isEmpty) return null;
     final row =
         await (_db.select(_db.fixtures)
               ..where(
                 (t) =>
-                    t.competitionId.equals(comp.id) &
+                    t.competitionId.isIn(ids) &
                     t.played.equals(false) &
-                    t.round.isIn(const ['NSF', 'NFINAL']),
+                    t.round.isIn(FinalsRounds.nationsCup.toList()),
               )
               ..orderBy([(t) => OrderingTerm(expression: t.date)])
               ..limit(1))

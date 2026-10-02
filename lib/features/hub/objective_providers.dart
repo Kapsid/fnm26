@@ -9,6 +9,7 @@ import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/services/achievements/board_satisfaction.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
 import 'package:fnm/domain/services/competition/continental_cups.dart';
+import 'package:fnm/domain/services/competition/finals_participation.dart';
 import 'package:fnm/domain/services/competition/nations_cup.dart';
 import 'package:fnm/domain/services/competition/rounds.dart';
 import 'package:fnm/features/ranking/world_ranking_providers.dart';
@@ -276,7 +277,7 @@ cycleObjectiveOutcomesProvider = FutureProvider.autoDispose.family<List<Objectiv
     // reached the Finals Four, once that has been played too.
     final ncFixtures = [
       for (final f in fixtures)
-        if (f.round == 'NGROUP' || f.round == 'NSF' || f.round == 'NFINAL') f,
+        if (f.round == 'NGROUP' || FinalsRounds.nationsCup.contains(f.round)) f,
     ];
     final decided =
         ncFixtures.isNotEmpty && ncFixtures.every((f) => f.hasResult);

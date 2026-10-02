@@ -79,8 +79,9 @@ abstract final class FinalsRounds {
     'CFINAL',
   };
 
-  /// The Nations Cup's Finals Four.
-  static const Set<String> nationsCup = {'NSF', 'NFINAL'};
+  /// A Nations Cup's finals: a ladder cup's Finals Four (`NSF`, `NFINAL`) or
+  /// the African cup's Finals Eight, which opens at the quarter-finals.
+  static const Set<String> nationsCup = {'NQF', 'NSF', 'NFINAL'};
 
   /// Every finals round of every tournament.
   static const Set<String> all = {

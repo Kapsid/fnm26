@@ -39,6 +39,11 @@ abstract final class NationsCups {
     }
   }
 
+  /// The cup a manager from [c] follows: his own, or Europe's when his
+  /// confederation has none (the one cup every manager followed before).
+  static Confederation followedBy(Confederation c) =>
+      forConfederation(c) != null ? c : Confederation.europe;
+
   static bool isNationsCup(String competitionName) =>
       allNames.contains(competitionName.trim());
 

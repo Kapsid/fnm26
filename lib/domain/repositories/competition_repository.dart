@@ -360,10 +360,14 @@ abstract interface class CompetitionRepository {
     Confederation? confederation,
   });
 
-  /// Whether the Nations Cup Finals Four (its knockout stage — semis or final)
-  /// is under way this cycle with an unplayed fixture. Lets the hub surface the
-  /// Finals Four as a watchable step even when the player's nation isn't in it.
-  Future<bool> hasLiveNationsCupFinals(int careerId);
+  /// Whether a Nations Cup's finals (its knockout stage) are under way this
+  /// cycle with an unplayed fixture. Lets the hub surface them as a watchable
+  /// step even when the player's nation isn't in them. Scoped to
+  /// [confederation]'s cup when given; null looks at every cup of the cycle.
+  Future<bool> hasLiveNationsCupFinals(
+    int careerId, {
+    Confederation? confederation,
+  });
 
   /// Whether the manager has already watched a given draw ([kind] is
   /// 'worldCupFinals' or a confederation name) for [cycle] — draws play once.
@@ -390,7 +394,9 @@ abstract interface class CompetitionRepository {
   /// The latest PLAYED finals fixture [nationId] took no part in, among the
   /// tournaments a manager steps through from the stands: the World
   /// Championship, his own region's continental finals ([confederation]) and
-  /// the Nations Cup Finals Four. Null when none has been played.
+  /// the finals of the Nations Cup he follows
+  /// (`NationsCups.followedBy` of [confederation]; every cup when null). Null
+  /// when none has been played.
   ///
   /// The press read it as a line in time: a match of his that falls before it
   /// has had somebody else's tournament played over the top of it, and is no
@@ -401,10 +407,14 @@ abstract interface class CompetitionRepository {
     Confederation? confederation,
   });
 
-  /// The earliest unplayed Nations Cup Finals Four (NSF/NFINAL) fixture date, or
-  /// null when none is pending — so the hub can step the Finals Four day by day
-  /// even when the player's nation isn't in it.
-  Future<DateTime?> earliestUnplayedNationsCupFinalsDate(int careerId);
+  /// The earliest unplayed Nations Cup finals (NQF/NSF/NFINAL) fixture date,
+  /// or null when none is pending — so the hub can step the finals day by day
+  /// even when the player's nation isn't in them. Scoped to [confederation]'s
+  /// cup when given; null looks at every cup of the cycle.
+  Future<DateTime?> earliestUnplayedNationsCupFinalsDate(
+    int careerId, {
+    Confederation? confederation,
+  });
 
   /// The earliest unplayed fixture date of the current cycle's tournament of
   /// [kind] (optionally the one for [confederation]), or null when none pends —
