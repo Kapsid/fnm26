@@ -82,26 +82,40 @@ extension SeasonRollover on SeasonService {
     }
     await _careers.setBudget(careerId, budget);
 
-    // Move the Nations Cup ladder on this cycle's cup — every league's group
-    // winners climb, bottom sides drop. Read the tables BEFORE advancing the
-    // cycle (they are scoped to the current, finishing cycle).
+    // Move each ladder-format Nations Cup — every league's group winners
+    // climb, bottom sides drop. Each confederation ladders on its own: its
+    // tables alone feed [NationsCup.promoteRelegate], so one confederation's
+    // result never moves another's nations (the African zones don't ladder).
+    // Read the tables BEFORE advancing the cycle (they are scoped to the
+    // current, finishing cycle). A save from before a confederation had a cup
+    // has no tables for it and is skipped.
     var ncTiers = await _careers.nationsCupTiers(careerId);
-    final ncTables = await _comp.tournamentGroupTables(
-      careerId,
-      CompetitionKind.nationsLeague,
-    );
-    if (ncTables.isNotEmpty && ncTiers.isNotEmpty) {
-      final groups = [
-        for (final t in ncTables)
-          if (t.standings.length >= 2)
-            (
-              tier: NationsCup.tierOfGroupName(t.name),
-              winner: t.standings.first,
-              bottom: t.standings.last,
-            ),
-      ];
-      ncTiers = NationsCup.promoteRelegate(tiers: ncTiers, groups: groups);
-      await _careers.setNationsCupTiers(careerId, ncTiers);
+    if (ncTiers.isNotEmpty) {
+      var moved = false;
+      for (final conf in NationsCups.confederations) {
+        if (NationsCups.forConfederation(conf)?.format !=
+            NationsCupFormat.ladder) {
+          continue;
+        }
+        final ncTables = await _comp.tournamentGroupTables(
+          careerId,
+          CompetitionKind.nationsLeague,
+          confederation: conf,
+        );
+        if (ncTables.isEmpty) continue;
+        final groups = [
+          for (final t in ncTables)
+            if (t.standings.length >= 2)
+              (
+                tier: NationsCup.tierOfGroupName(t.name),
+                winner: t.standings.first,
+                bottom: t.standings.last,
+              ),
+        ];
+        ncTiers = NationsCup.promoteRelegate(tiers: ncTiers, groups: groups);
+        moved = true;
+      }
+      if (moved) await _careers.setNationsCupTiers(careerId, ncTiers);
     }
 
     if (switchToNationId != null && switchToNationId != career.nationId) {
