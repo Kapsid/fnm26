@@ -272,6 +272,10 @@ class _SavesScreenState extends ConsumerState<SavesScreen> {
     );
     if (confirmed ?? false) {
       await ref.read(careerServiceProvider).delete(careerId);
+      // Its end-of-cycle copy goes with it: nothing else would ever clear it.
+      await ref
+          .read(careerTransferServiceProvider)
+          .removeAppFolderBackup(careerId);
     }
   }
 

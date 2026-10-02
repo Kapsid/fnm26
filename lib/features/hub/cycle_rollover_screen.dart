@@ -13,6 +13,7 @@ import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
 import 'package:fnm/domain/services/entitlement/entitlement.dart';
 import 'package:fnm/domain/services/federation/federation_finance.dart';
+import 'package:fnm/features/career/cycle_backup.dart';
 import 'package:fnm/features/career/nation_offers_providers.dart';
 import 'package:fnm/features/federation/federation_service.dart';
 import 'package:fnm/features/federation/investment_editor.dart';
@@ -117,6 +118,16 @@ class _CycleRolloverScreenState extends ConsumerState<CycleRolloverScreen> {
       ref
         ..invalidate(messageInboxProvider(widget.careerId))
         ..invalidate(unreadMessagesProvider(widget.careerId));
+      // Once a cycle, with the new one in the save: the moment a career is
+      // most worth keeping a copy of. The notice outlives this screen (the
+      // messenger is the app's), so it is read on the hub.
+      await CycleBackup.run(
+        ScaffoldMessenger.of(context),
+        AppLocalizations.of(context),
+        ref,
+        widget.careerId,
+      );
+      if (!mounted) return;
       context.go('${Routes.hub}?careerId=${widget.careerId}');
     } on Object catch (e) {
       if (!mounted) return;

@@ -39,7 +39,7 @@ void main() {
   );
 
   String _exportLabel(Locale locale) =>
-      locale.languageCode == 'en' ? 'Export this save' : 'Exportovat tuto hru';
+      locale.languageCode == 'en' ? 'Back up this save' : 'Zálohovat tuto hru';
 
   Future<void> pumpTile(
     WidgetTester tester,
