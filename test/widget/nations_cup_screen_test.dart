@@ -112,10 +112,27 @@ void main() {
     expect(find.text('KNOCKOUTS'), findsOneWidget);
     expect(find.text('LEAGUES'), findsNothing);
     expect(find.textContaining('the 2 best runners-up'), findsOneWidget);
-    // The race for the last two places is always on show.
+    expect(find.text('NORTH ZONE'), findsOneWidget);
+    // The race for the last two places is always on show, under the tables.
+    expect(find.text('BEST RUNNERS-UP'), findsNothing);
+    // Pinned once: the zone text it is found by scrolls out of the tree.
+    final zonesList = find.byWidget(
+      tester.widget<Scrollable>(
+        find
+            .ancestor(
+              of: find.text('NORTH ZONE'),
+              matching: find.byType(Scrollable),
+            )
+            .first,
+      ),
+    );
+    await tester.scrollUntilVisible(
+      find.text('BEST RUNNERS-UP'),
+      400,
+      scrollable: zonesList,
+    );
     expect(find.text('BEST RUNNERS-UP'), findsOneWidget);
     expect(find.text('Top 2 advance to the Round of 16'), findsOneWidget);
-    expect(find.text('NORTH ZONE'), findsOneWidget);
   });
 
   testWidgets('history is reachable while the cup is running', (tester) async {

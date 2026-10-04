@@ -429,8 +429,9 @@ class _NationsCupScreenState extends ConsumerState<NationsCupScreen> {
       for (final z in AfricaZone.values)
         if (z != myZone) z,
     ];
-    // The race for the last two Round of 16 places, always in view: every
-    // group's runner-up, ranked across all groups.
+    // The race for the last two Round of 16 places, always shown under the
+    // tables: every group's runner-up, ranked across all groups. The manager's
+    // own zone, and his group within it, come first.
     final standings = [
       for (final g in v.groups)
         if (NationsCups.zoneOfGroupName(g.name) != null) g.standings,
@@ -449,19 +450,6 @@ class _NationsCupScreenState extends ConsumerState<NationsCupScreen> {
           ),
         ),
         const SizedBox(height: AppSpacing.md),
-        if (runnersUp.isNotEmpty) ...[
-          BestThirdsCard(
-            thirds: runnersUp,
-            qualifyCount: NationsCups.runnersUpThrough,
-            playerNationId: v.playerNationId,
-            code: code,
-            name: name,
-            title: contentionLadderTitle(l, 2),
-            destination: l.tourCupDestRoundOf16,
-            adjustedForGroupSize: CrossGroup.isUneven(standings),
-          ),
-          const SizedBox(height: AppSpacing.md),
-        ],
         for (final zone in order) ...[
           Text(
             zone == myZone
@@ -496,6 +484,20 @@ class _NationsCupScreenState extends ConsumerState<NationsCupScreen> {
             const SizedBox(height: AppSpacing.md),
           ],
           const SizedBox(height: AppSpacing.sm),
+        ],
+        // Below every table, as in the other cups' group tabs.
+        if (runnersUp.isNotEmpty) ...[
+          BestThirdsCard(
+            thirds: runnersUp,
+            qualifyCount: NationsCups.runnersUpThrough,
+            playerNationId: v.playerNationId,
+            code: code,
+            name: name,
+            title: contentionLadderTitle(l, 2),
+            destination: l.tourCupDestRoundOf16,
+            adjustedForGroupSize: CrossGroup.isUneven(standings),
+          ),
+          const SizedBox(height: AppSpacing.xl),
         ],
       ],
     );
