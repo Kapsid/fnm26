@@ -7454,6 +7454,10 @@
   "@tourCupCompSAmerica": {
     "description": "World Championship detail: tourCupCompSAmerica"
   },
+  "tourCupDestRoundOf16": "the Round of 16",
+  "@tourCupDestRoundOf16": {
+    "description": "Destination in 'Top {count} advance to {destination}': the African Nations Cup Round of 16, for the best runners-up ladder."
+  },
   "tourCupDestKnockouts": "the knockouts",
   "@tourCupDestKnockouts": {
     "description": "Where a cross-group ladder's qualifiers advance to, inside \"Top {count} advance to …\". Czech needs the genitive here, as all four of these do."
@@ -10936,6 +10940,14 @@
   "@careerShareFailed": {
     "description": "Snackbar when a per-career export fails."
   },
+  "managerRename": "Change name",
+  "@managerRename": {
+    "description": "Manager screen: button and dialog title to rename the manager."
+  },
+  "managerRenameSave": "Save",
+  "@managerRenameSave": {
+    "description": "Manager screen rename dialog: confirm button."
+  },
   "managerTitle": "MANAGER",
   "@managerTitle": {
     "description": "Manager screen: app bar title."
@@ -13328,7 +13340,7 @@
   },
   "careerNationsCupZoneWon": "{zone} · Champions",
   "@careerNationsCupZoneWon": {
-    "description": "Career history: won the African Nations Cup Finals Eight, from this zone.",
+    "description": "Career history: won the African Nations Cup, from this zone.",
     "placeholders": {
       "zone": {
         "type": "String"
@@ -13353,9 +13365,18 @@
       }
     }
   },
+  "careerNationsCupZoneRoundOf16": "{zone} · Round of 16",
+  "@careerNationsCupZoneRoundOf16": {
+    "description": "Career history: lost in the African Nations Cup Round of 16, from this zone.",
+    "placeholders": {
+      "zone": {
+        "type": "String"
+      }
+    }
+  },
   "careerNationsCupZoneQuarter": "{zone} · Quarter-finalist",
   "@careerNationsCupZoneQuarter": {
-    "description": "Career history: lost an African Nations Cup quarter-final (the first round of the Finals Eight), from this zone.",
+    "description": "Career history: lost an African Nations Cup quarter-final, from this zone.",
     "placeholders": {
       "zone": {
         "type": "String"
@@ -13374,17 +13395,17 @@
       }
     }
   },
-  "objectiveNcFinalsEight": "Reach the Finals Eight",
+  "objectiveNcFinalsEight": "Reach the quarter-finals",
   "@objectiveNcFinalsEight": {
-    "description": "African Nations Cup board objective: be one of the two best group winners of your zone and reach the Finals Eight."
+    "description": "African Nations Cup board objective: reach the quarter-finals (the last eight of the knockouts)."
   },
   "objectiveNcZoneWinGroup": "Win your group",
   "@objectiveNcZoneWinGroup": {
     "description": "African Nations Cup board objective: top your zone group (the African cup has no promotion)."
   },
-  "finishNcFinalsEight": "Finals Eight",
+  "finishNcFinalsEight": "Quarter-finals",
   "@finishNcFinalsEight": {
-    "description": "African Nations Cup objective result: reached the Finals Eight."
+    "description": "African Nations Cup objective result: reached the quarter-finals."
   },
   "finishNcBottomHalf": "Bottom half of the group",
   "@finishNcBottomHalf": {
@@ -13394,19 +13415,19 @@
   "@tourContTabZones": {
     "description": "Tab on the African Nations Cup screen: the four zones and their groups."
   },
-  "tourContTabFinalsEight": "FINALS EIGHT",
+  "tourContTabFinalsEight": "KNOCKOUTS",
   "@tourContTabFinalsEight": {
-    "description": "Tab on the African Nations Cup screen: the knockout finals of eight teams."
+    "description": "Tab on the African Nations Cup screen: the knockout rounds (Round of 16 to the final)."
   },
-  "tourContFinalsEightSoon": "The Finals Eight is contested by the two best group winners of each zone once the group stage is done.",
+  "tourContFinalsEightSoon": "The knockouts start in November with a Round of 16: all 14 group winners and the 2 best runners-up.",
   "@tourContFinalsEightSoon": {
-    "description": "Explains when the African Nations Cup Finals Eight is contested."
+    "description": "Explains when and how the African Nations Cup knockouts are contested."
   },
   "tourContQuarterFinals": "QUARTER-FINALS",
   "@tourContQuarterFinals": {
-    "description": "Heading for the quarter-finals in the African Nations Cup Finals Eight bracket."
+    "description": "Heading for the quarter-finals in the African Nations Cup knockout bracket."
   },
-  "tourContZoneAdvancement": "Group winners may reach the Finals Eight: the two best in each zone go through. Nobody is relegated.",
+  "tourContZoneAdvancement": "Every group winner goes through to the Round of 16, joined by the 2 best runners-up. Nobody is relegated.",
   "@tourContZoneAdvancement": {
     "description": "Africa Nations Cup group advancement line shown above the zone tables."
   },

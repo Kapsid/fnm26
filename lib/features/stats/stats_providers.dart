@@ -10,7 +10,7 @@ import 'package:fnm/features/federation/federation_providers.dart';
 const _finalsRounds = {
   'GROUP', 'R32', 'R16', 'QF', 'SF', '3RD', 'FINAL', //
   'CGROUP', 'CR16', 'CQF', 'CSF', 'C3RD', 'CFINAL', //
-  'NGROUP', 'NQF', 'NSF', 'NFINAL',
+  'NGROUP', 'NR16', 'NQF', 'NSF', 'NFINAL',
 };
 
 /// The manager's whole-career [CareerStatsSnapshot], built from every match any

@@ -576,7 +576,7 @@ String _renderArg(AppLocalizations l, Object? arg) =>
 /// whatever language the manager comes back in.
 MsgKey stageMsgKey(String round) => switch (round) {
   'R32' => MsgKey.hubStageRoundOf32,
-  'R16' || 'CR16' => MsgKey.finishRoundOf16,
+  'R16' || 'CR16' || 'NR16' => MsgKey.finishRoundOf16,
   'QF' || 'CQF' || 'NQF' => MsgKey.finishQuarterFinals,
   'SF' || 'CSF' || 'NSF' => MsgKey.finishSemiFinals,
   '3RD' || 'C3RD' => MsgKey.hubStageThirdPlace,

@@ -5046,6 +5046,9 @@ class AppLocalizationsCs extends AppLocalizations {
   String get tourCupCompSAmerica => 'Pohár Jižní Ameriky';
 
   @override
+  String get tourCupDestRoundOf16 => 'osmifinále';
+
+  @override
   String get tourCupDestKnockouts => 'vyřazovací části';
 
   @override
@@ -7328,6 +7331,12 @@ class AppLocalizationsCs extends AppLocalizations {
   String get careerShareFailed => 'Kariéru se nepodařilo exportovat.';
 
   @override
+  String get managerRename => 'Změnit jméno';
+
+  @override
+  String get managerRenameSave => 'Uložit';
+
+  @override
   String get managerTitle => 'TRENÉR';
 
   @override
@@ -9014,6 +9023,11 @@ class AppLocalizationsCs extends AppLocalizations {
   }
 
   @override
+  String careerNationsCupZoneRoundOf16(String zone) {
+    return '$zone · osmifinále';
+  }
+
+  @override
   String careerNationsCupZoneQuarter(String zone) {
     return '$zone · čtvrtfinále';
   }
@@ -9024,13 +9038,13 @@ class AppLocalizationsCs extends AppLocalizations {
   }
 
   @override
-  String get objectiveNcFinalsEight => 'Postoupit do finálové osmičky';
+  String get objectiveNcFinalsEight => 'Postoupit do čtvrtfinále';
 
   @override
   String get objectiveNcZoneWinGroup => 'Vyhrát skupinu';
 
   @override
-  String get finishNcFinalsEight => 'Finálová osmička';
+  String get finishNcFinalsEight => 'Čtvrtfinále';
 
   @override
   String get finishNcBottomHalf => 'Dolní polovina skupiny';
@@ -9039,18 +9053,18 @@ class AppLocalizationsCs extends AppLocalizations {
   String get tourContTabZones => 'ZÓNY';
 
   @override
-  String get tourContTabFinalsEight => 'FINÁLOVÁ OSMIČKA';
+  String get tourContTabFinalsEight => 'VYŘAZOVACÍ FÁZE';
 
   @override
   String get tourContFinalsEightSoon =>
-      'Finálovou osmičku hrají dva nejlepší vítězové skupin z každé zóny po skončení skupinové fáze.';
+      'Vyřazovací fáze začíná v listopadu osmifinále: hraje všech 14 vítězů skupin a 2 nejlepší týmy z druhých míst.';
 
   @override
   String get tourContQuarterFinals => 'ČTVRTFINÁLE';
 
   @override
   String get tourContZoneAdvancement =>
-      'Vítězové skupin mají šanci na finálovou osmičku: postupují dva nejlepší z každé zóny. Nikdo nesestupuje.';
+      'Všichni vítězové skupin postupují do osmifinále, k nim 2 nejlepší týmy z druhých míst. Nikdo nesestupuje.';
 
   @override
   String tourContZoneHeadingYours(String zone) {

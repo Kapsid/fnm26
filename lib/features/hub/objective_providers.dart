@@ -91,7 +91,7 @@ String objectiveDemandText(
 /// whenever he opens it.
 ///
 /// [competition] is the objective's stored competition name: the African
-/// Nations Cup is played in zones with a Finals Eight and no promotion, so its
+/// Nations Cup is played in zones with a Round of 16 and no promotion, so its
 /// rungs are worded for that.
 MsgKey objectiveDemandKey(
   TournamentTier tier,
@@ -660,8 +660,7 @@ int _nationsCupTarget({
 
 /// What the board demands of an African Nations Cup campaign, by strength:
 /// the continent's leading sides are told to win it or reach the final, the
-/// best two of a zone (the two the Finals Eight takes from it) to reach the
-/// Finals Eight, a zone's group seeds to win their group, and everybody else
+/// best two of a zone to reach the quarter-finals, a zone's group seeds to win their group, and everybody else
 /// to finish in the top half. There is no promotion to earn and no relegation
 /// to avoid.
 int _zonesCupTarget({
@@ -682,7 +681,7 @@ int _zonesCupTarget({
   ]..sort((a, b) => rankOf(a).compareTo(rankOf(b)));
   final idx = peers.indexWhere((n) => n.id == nationId);
   if (idx < 0) return 3;
-  if (idx < 2) return 5; // one of the zone's best two: the Finals Eight
+  if (idx < 2) return 5; // one of the zone's best two: the quarter-finals
   // The zone's group seeds: one per group (two groups in the North).
   final groupsInZone = peers.length <= 6 ? 2 : 4;
   if (idx < groupsInZone) return 4; // win your group
@@ -690,8 +689,8 @@ int _zonesCupTarget({
 }
 
 /// How the Nations Cup campaign actually went, on the ladder's own scale:
-/// 7 champions, 6 runners-up, 5 the finals (Finals Four, or Africa's Finals
-/// Eight), 4 group winners, 3 top half, 2 clear of the bottom, 1 bottom of the
+/// 7 champions, 6 runners-up, 5 the finals (Finals Four, or Africa's
+/// quarter-finals), 4 group winners (or Africa's Round of 16), 3 top half, 2 clear of the bottom, 1 bottom of the
 /// group.
 int _nationsCupOrdinal({
   required List<GroupStanding> standings,
@@ -707,9 +706,11 @@ int _nationsCupOrdinal({
     final theirPens = isHome ? (f.awayPenalties ?? 0) : (f.homePenalties ?? 0);
     return mine > theirs || (mine == theirs && myPens > theirPens) ? 7 : 6;
   }
-  // Reached the finals: a ladder cup's Finals Four, or Africa's Finals Eight
-  // (which opens with a quarter-final).
+  // Reached the finals: a ladder cup's Finals Four, or Africa's last eight.
   if (fixtures.any((f) => f.round == 'NSF' || f.round == 'NQF')) return 5;
+  // Africa's Round of 16: as good as winning the group, which a runner-up
+  // through on the best-runners-up ladder did not quite do.
+  if (fixtures.any((f) => f.round == 'NR16')) return 4;
 
   final pos = standings.indexWhere((s) => s.nationId == nationId) + 1;
   if (pos <= 0) return 3;

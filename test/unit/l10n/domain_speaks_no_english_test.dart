@@ -133,7 +133,7 @@ const Map<String, Set<String>> _allowed = {
   // `tourContZoneAdvancement`.
   'lib/domain/services/competition/group_advancement.dart': {
     'Only ',
-    'Winner may ',
+    'Winner reaches ',
   },
   // A typography specimen on the developer-only style gallery, which is the
   // one screen whose job IS to show the type at its worst. It is not routed

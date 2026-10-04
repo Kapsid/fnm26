@@ -85,6 +85,7 @@ class _AllTimeRecordsScreenState extends ConsumerState<AllTimeRecordsScreen> {
                 unit: l.recordsUnitGoals,
                 leaders: scorers,
                 careerId: widget.careerId,
+                highlightNations: records.myNationIds,
               ),
               const SizedBox(height: AppSpacing.lg),
               _Board(
@@ -92,6 +93,7 @@ class _AllTimeRecordsScreenState extends ConsumerState<AllTimeRecordsScreen> {
                 unit: l.recordsUnitCaps,
                 leaders: caps,
                 careerId: widget.careerId,
+                highlightNations: records.myNationIds,
               ),
               const SizedBox(height: AppSpacing.lg),
               _Board(
@@ -99,6 +101,7 @@ class _AllTimeRecordsScreenState extends ConsumerState<AllTimeRecordsScreen> {
                 unit: l.recordsUnitStarts,
                 leaders: wcStarts,
                 careerId: widget.careerId,
+                highlightNations: records.myNationIds,
               ),
               const SizedBox(height: AppSpacing.lg),
               _Board(
@@ -106,6 +109,7 @@ class _AllTimeRecordsScreenState extends ConsumerState<AllTimeRecordsScreen> {
                 unit: l.recordsUnitCups,
                 leaders: cups,
                 careerId: widget.careerId,
+                highlightNations: records.myNationIds,
               ),
               const SizedBox(height: AppSpacing.md),
               Row(
@@ -168,12 +172,14 @@ class _Board extends StatelessWidget {
     required this.unit,
     required this.leaders,
     required this.careerId,
+    required this.highlightNations,
   });
 
   final String title;
   final String unit;
   final List<AllTimeLeader> leaders;
   final int careerId;
+  final Set<int> highlightNations;
 
   @override
   Widget build(BuildContext context) {
@@ -211,6 +217,9 @@ class _Board extends StatelessWidget {
                     flagCode: leaders[i].nationCode,
                     value: '${leaders[i].value} $unit',
                     trailing: leaders[i].active ? const ActiveBadge() : null,
+                    highlighted: highlightNations.contains(
+                      leaders[i].nationId,
+                    ),
                     onTap: () => context.push(
                       '${Routes.player}?careerId=$careerId'
                       '&playerId=${leaders[i].playerId}',

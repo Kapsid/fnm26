@@ -104,7 +104,7 @@ abstract final class Attendance {
       'SF' || 'CSF' || 'QF' || 'CQF' => 0.97,
       'R32' || 'R16' || 'CR16' => 0.93,
       'GROUP' || 'CGROUP' => 0.88,
-      'NFINAL' || 'NSF' || 'NQF' => 0.86,
+      'NFINAL' || 'NSF' || 'NQF' || 'NR16' => 0.86,
       'FRIENDLY' => 0.62,
       'NGROUP' => 0.76,
       _ => 0.8, // qualifying, home and away

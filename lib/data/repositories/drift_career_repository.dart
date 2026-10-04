@@ -79,6 +79,13 @@ class DriftCareerRepository implements CareerRepository {
   }
 
   @override
+  Future<void> renameManager(int id, String name) async {
+    await (_db.update(_db.careers)..where((t) => t.id.equals(id))).write(
+      CareersCompanion(managerName: Value(name)),
+    );
+  }
+
+  @override
   Future<void> advanceCycle(
     int id,
     int cyclePointer,

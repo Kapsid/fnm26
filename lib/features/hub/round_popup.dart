@@ -41,9 +41,10 @@ const _knockoutRounds = <String, ({int order, String label})>{
   'CSF': (order: 2, label: 'Semi-finals'),
   'C3RD': (order: 3, label: 'Third-place play-off'),
   'CFINAL': (order: 4, label: 'Final'),
-  'NQF': (order: 0, label: 'Quarter-finals'),
-  'NSF': (order: 1, label: 'Semi-finals'),
-  'NFINAL': (order: 2, label: 'Final'),
+  'NR16': (order: 0, label: 'Round of 16'),
+  'NQF': (order: 1, label: 'Quarter-finals'),
+  'NSF': (order: 2, label: 'Semi-finals'),
+  'NFINAL': (order: 3, label: 'Final'),
 };
 
 /// The localised name for a knockout [round] code (empty/unknown = group stage),
@@ -52,7 +53,7 @@ const _knockoutRounds = <String, ({int order, String label})>{
 /// the code to the viewer's language only when the popup is shown.
 String stageLabelFor(AppLocalizations l, String round) => switch (round) {
   'R32' => l.hubStageRoundOf32,
-  'R16' || 'CR16' => l.finishRoundOf16,
+  'R16' || 'CR16' || 'NR16' => l.finishRoundOf16,
   'QF' || 'CQF' || 'NQF' => l.finishQuarterFinals,
   'SF' || 'CSF' || 'NSF' => l.finishSemiFinals,
   '3RD' || 'C3RD' => l.hubStageThirdPlace,
@@ -114,8 +115,8 @@ latestRoundPopupProvider = FutureProvider.autoDispose.family<RoundPopup?, int>((
           confederation: conf,
         ),
         // The manager's own confederation's Nations Cup, under its own name
-        // and with its own finals rounds (Africa's Finals Eight opens with a
-        // quarter-final); none for a confederation that runs no cup.
+        // and with its own finals rounds (Africa's knockouts open with a
+        // Round of 16); none for a confederation that runs no cup.
         if (ncConf != null)
           (
             kind: CompetitionKind.nationsLeague,
@@ -123,7 +124,7 @@ latestRoundPopupProvider = FutureProvider.autoDispose.family<RoundPopup?, int>((
             rounds:
                 NationsCups.forConfederation(ncConf)!.format ==
                     NationsCupFormat.zones
-                ? const ['NQF', 'NSF', 'NFINAL']
+                ? const ['NR16', 'NQF', 'NSF', 'NFINAL']
                 : const ['NSF', 'NFINAL'],
             confederation: ncConf,
           ),

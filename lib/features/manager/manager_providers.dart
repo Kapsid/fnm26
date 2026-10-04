@@ -4,6 +4,7 @@ import 'package:fnm/domain/entities/career.dart';
 import 'package:fnm/domain/services/manager/manager_skills.dart';
 import 'package:fnm/domain/services/manager/staff.dart';
 import 'package:fnm/features/career/career_providers.dart';
+import 'package:fnm/features/hub/hub_providers.dart';
 import 'package:fnm/features/tactics/condition_providers.dart';
 
 /// Everything the manager's own page shows: what he is good at, what he has
@@ -92,6 +93,17 @@ class ManagerService {
     }
     await _ref.read(careerRepositoryProvider).raiseSkill(careerId, skill);
     _invalidate(careerId);
+    return true;
+  }
+
+  /// Renames the manager. A blank name is refused, as at the new-game screen
+  /// (which stands one in rather than save nothing).
+  Future<bool> rename(int careerId, String name) async {
+    final trimmed = name.trim();
+    if (trimmed.isEmpty) return false;
+    await _ref.read(careerRepositoryProvider).renameManager(careerId, trimmed);
+    _invalidate(careerId);
+    _ref.invalidate(hubDataProvider(careerId));
     return true;
   }
 

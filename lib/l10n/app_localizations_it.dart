@@ -5052,6 +5052,9 @@ class AppLocalizationsIt extends AppLocalizations {
   String get tourCupCompSAmerica => 'Coppa del Sud America';
 
   @override
+  String get tourCupDestRoundOf16 => 'gli ottavi di finale';
+
+  @override
   String get tourCupDestKnockouts => 'la fase a eliminazione diretta';
 
   @override
@@ -7349,6 +7352,12 @@ class AppLocalizationsIt extends AppLocalizations {
   String get careerShareFailed => 'Impossibile esportare quella carriera.';
 
   @override
+  String get managerRename => 'Cambia nome';
+
+  @override
+  String get managerRenameSave => 'Salva';
+
+  @override
   String get managerTitle => 'CT';
 
   @override
@@ -9033,6 +9042,11 @@ class AppLocalizationsIt extends AppLocalizations {
   }
 
   @override
+  String careerNationsCupZoneRoundOf16(String zone) {
+    return '$zone · Ottavi di finale';
+  }
+
+  @override
   String careerNationsCupZoneQuarter(String zone) {
     return '$zone · Quartofinalisti';
   }
@@ -9043,13 +9057,13 @@ class AppLocalizationsIt extends AppLocalizations {
   }
 
   @override
-  String get objectiveNcFinalsEight => 'Arrivare alla Final Eight';
+  String get objectiveNcFinalsEight => 'Arrivare ai quarti di finale';
 
   @override
   String get objectiveNcZoneWinGroup => 'Vincere il girone';
 
   @override
-  String get finishNcFinalsEight => 'Final Eight';
+  String get finishNcFinalsEight => 'Quarti di finale';
 
   @override
   String get finishNcBottomHalf => 'Metà bassa del girone';
@@ -9058,18 +9072,18 @@ class AppLocalizationsIt extends AppLocalizations {
   String get tourContTabZones => 'ZONE';
 
   @override
-  String get tourContTabFinalsEight => 'FINAL EIGHT';
+  String get tourContTabFinalsEight => 'FASE FINALE';
 
   @override
   String get tourContFinalsEightSoon =>
-      'La Final Eight se la giocano le due migliori vincitrici di girone di ogni zona, a fase a gironi conclusa.';
+      'La fase finale parte a novembre con gli ottavi di finale: tutte le 14 vincitrici dei gironi e le 2 migliori seconde.';
 
   @override
   String get tourContQuarterFinals => 'QUARTI DI FINALE';
 
   @override
   String get tourContZoneAdvancement =>
-      'Le vincitrici dei gironi possono arrivare alla Final Eight: passano le due migliori di ogni zona. Nessuna retrocessione.';
+      'Tutte le vincitrici dei gironi vanno agli ottavi di finale, insieme alle 2 migliori seconde. Nessuna retrocessione.';
 
   @override
   String tourContZoneHeadingYours(String zone) {

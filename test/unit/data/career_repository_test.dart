@@ -40,6 +40,20 @@ void main() {
     expect(career.cyclePointer, 0);
   });
 
+  test('renameManager() changes the name and nothing else', () async {
+    final career = await repo.create(
+      managerName: 'Alex',
+      nationId: 1,
+      rngSeed: 7,
+      startDate: DateTime(2026, 6, 1),
+    );
+    await repo.renameManager(career.id, 'Pavel');
+    final renamed = await repo.byId(career.id);
+    expect(renamed!.managerName, 'Pavel');
+    expect(renamed.nationId, 1);
+    expect(renamed.rngSeed, 7);
+  });
+
   test('all() lists saves most-recent first', () async {
     await repo.create(
       managerName: 'First',

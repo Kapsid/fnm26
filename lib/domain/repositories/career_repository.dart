@@ -58,6 +58,9 @@ abstract interface class CareerRepository {
   /// Advances (or sets) the in-game date of a save.
   Future<void> updateInGameDate(int id, DateTime date);
 
+  /// Renames the save's manager.
+  Future<void> renameManager(int id, String name);
+
   /// Advances the save to a new cycle, setting [cyclePointer] and [date].
   /// Moves the save into [cyclePointer], dated [date].
   ///

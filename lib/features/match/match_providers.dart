@@ -533,6 +533,7 @@ bool _isKnockout(String? round) {
     'CSF',
     'C3RD',
     'CFINAL',
+    'NR16',
     'NQF',
     'NSF',
     'NFINAL',

@@ -5012,6 +5012,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get tourCupCompSAmerica => 'South America Cup';
 
   @override
+  String get tourCupDestRoundOf16 => 'the Round of 16';
+
+  @override
   String get tourCupDestKnockouts => 'the knockouts';
 
   @override
@@ -7302,6 +7305,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get careerShareFailed => 'Could not export that career.';
 
   @override
+  String get managerRename => 'Change name';
+
+  @override
+  String get managerRenameSave => 'Save';
+
+  @override
   String get managerTitle => 'MANAGER';
 
   @override
@@ -8984,6 +8993,11 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String careerNationsCupZoneRoundOf16(String zone) {
+    return '$zone · Round of 16';
+  }
+
+  @override
   String careerNationsCupZoneQuarter(String zone) {
     return '$zone · Quarter-finalist';
   }
@@ -8994,13 +9008,13 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get objectiveNcFinalsEight => 'Reach the Finals Eight';
+  String get objectiveNcFinalsEight => 'Reach the quarter-finals';
 
   @override
   String get objectiveNcZoneWinGroup => 'Win your group';
 
   @override
-  String get finishNcFinalsEight => 'Finals Eight';
+  String get finishNcFinalsEight => 'Quarter-finals';
 
   @override
   String get finishNcBottomHalf => 'Bottom half of the group';
@@ -9009,18 +9023,18 @@ class AppLocalizationsEn extends AppLocalizations {
   String get tourContTabZones => 'ZONES';
 
   @override
-  String get tourContTabFinalsEight => 'FINALS EIGHT';
+  String get tourContTabFinalsEight => 'KNOCKOUTS';
 
   @override
   String get tourContFinalsEightSoon =>
-      'The Finals Eight is contested by the two best group winners of each zone once the group stage is done.';
+      'The knockouts start in November with a Round of 16: all 14 group winners and the 2 best runners-up.';
 
   @override
   String get tourContQuarterFinals => 'QUARTER-FINALS';
 
   @override
   String get tourContZoneAdvancement =>
-      'Group winners may reach the Finals Eight: the two best in each zone go through. Nobody is relegated.';
+      'Every group winner goes through to the Round of 16, joined by the 2 best runners-up. Nobody is relegated.';
 
   @override
   String tourContZoneHeadingYours(String zone) {

@@ -8124,6 +8124,12 @@ abstract class AppLocalizations {
   /// **'South America Cup'**
   String get tourCupCompSAmerica;
 
+  /// Destination in 'Top {count} advance to {destination}': the African Nations Cup Round of 16, for the best runners-up ladder.
+  ///
+  /// In en, this message translates to:
+  /// **'the Round of 16'**
+  String get tourCupDestRoundOf16;
+
   /// Where a cross-group ladder's qualifiers advance to, inside "Top {count} advance to …". Czech needs the genitive here, as all four of these do.
   ///
   /// In en, this message translates to:
@@ -11619,6 +11625,18 @@ abstract class AppLocalizations {
   /// **'Could not export that career.'**
   String get careerShareFailed;
 
+  /// Manager screen: button and dialog title to rename the manager.
+  ///
+  /// In en, this message translates to:
+  /// **'Change name'**
+  String get managerRename;
+
+  /// Manager screen rename dialog: confirm button.
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get managerRenameSave;
+
   /// Manager screen: app bar title.
   ///
   /// In en, this message translates to:
@@ -14055,7 +14073,7 @@ abstract class AppLocalizations {
   /// **'Central and Southern Zone'**
   String get ncZoneCentralSouthern;
 
-  /// Career history: won the African Nations Cup Finals Eight, from this zone.
+  /// Career history: won the African Nations Cup, from this zone.
   ///
   /// In en, this message translates to:
   /// **'{zone} · Champions'**
@@ -14073,7 +14091,13 @@ abstract class AppLocalizations {
   /// **'{zone} · Semi-finalist'**
   String careerNationsCupZoneSemi(String zone);
 
-  /// Career history: lost an African Nations Cup quarter-final (the first round of the Finals Eight), from this zone.
+  /// Career history: lost in the African Nations Cup Round of 16, from this zone.
+  ///
+  /// In en, this message translates to:
+  /// **'{zone} · Round of 16'**
+  String careerNationsCupZoneRoundOf16(String zone);
+
+  /// Career history: lost an African Nations Cup quarter-final, from this zone.
   ///
   /// In en, this message translates to:
   /// **'{zone} · Quarter-finalist'**
@@ -14085,10 +14109,10 @@ abstract class AppLocalizations {
   /// **'{zone} · #{position}'**
   String careerNationsCupZonePlaced(String zone, int position);
 
-  /// African Nations Cup board objective: be one of the two best group winners of your zone and reach the Finals Eight.
+  /// African Nations Cup board objective: reach the quarter-finals (the last eight of the knockouts).
   ///
   /// In en, this message translates to:
-  /// **'Reach the Finals Eight'**
+  /// **'Reach the quarter-finals'**
   String get objectiveNcFinalsEight;
 
   /// African Nations Cup board objective: top your zone group (the African cup has no promotion).
@@ -14097,10 +14121,10 @@ abstract class AppLocalizations {
   /// **'Win your group'**
   String get objectiveNcZoneWinGroup;
 
-  /// African Nations Cup objective result: reached the Finals Eight.
+  /// African Nations Cup objective result: reached the quarter-finals.
   ///
   /// In en, this message translates to:
-  /// **'Finals Eight'**
+  /// **'Quarter-finals'**
   String get finishNcFinalsEight;
 
   /// African Nations Cup objective result: finished in the bottom half of the zone group, but not last.
@@ -14115,19 +14139,19 @@ abstract class AppLocalizations {
   /// **'ZONES'**
   String get tourContTabZones;
 
-  /// Tab on the African Nations Cup screen: the knockout finals of eight teams.
+  /// Tab on the African Nations Cup screen: the knockout rounds (Round of 16 to the final).
   ///
   /// In en, this message translates to:
-  /// **'FINALS EIGHT'**
+  /// **'KNOCKOUTS'**
   String get tourContTabFinalsEight;
 
-  /// Explains when the African Nations Cup Finals Eight is contested.
+  /// Explains when and how the African Nations Cup knockouts are contested.
   ///
   /// In en, this message translates to:
-  /// **'The Finals Eight is contested by the two best group winners of each zone once the group stage is done.'**
+  /// **'The knockouts start in November with a Round of 16: all 14 group winners and the 2 best runners-up.'**
   String get tourContFinalsEightSoon;
 
-  /// Heading for the quarter-finals in the African Nations Cup Finals Eight bracket.
+  /// Heading for the quarter-finals in the African Nations Cup knockout bracket.
   ///
   /// In en, this message translates to:
   /// **'QUARTER-FINALS'**
@@ -14136,7 +14160,7 @@ abstract class AppLocalizations {
   /// Africa Nations Cup group advancement line shown above the zone tables.
   ///
   /// In en, this message translates to:
-  /// **'Group winners may reach the Finals Eight: the two best in each zone go through. Nobody is relegated.'**
+  /// **'Every group winner goes through to the Round of 16, joined by the 2 best runners-up. Nobody is relegated.'**
   String get tourContZoneAdvancement;
 
   /// Heading of the manager's own zone on the African Nations Cup screen; the star marks it as the manager's, as on the league chips. Kept short: the longest zone name fills a 320px phone on its own.

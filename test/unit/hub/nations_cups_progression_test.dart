@@ -122,16 +122,19 @@ void main() {
           );
         }
 
-        // Africa: Finals Eight from group winners, two per zone.
+        // Africa: a Round of 16 of every group winner and the two best
+        // runners-up, then the last eight.
         Future<List<Fixture>> africa(String r) => comp.fixturesByRound(
           career.id,
           r,
           kind: CompetitionKind.nationsLeague,
           confederation: Confederation.africa,
         );
+        final r16 = await africa('NR16');
         final qf = await africa('NQF');
         final sf = await africa('NSF');
         final fin = await africa('NFINAL');
+        expect(r16.length, 8);
         expect(qf.length, 4);
         expect(sf.length, 2);
         expect(fin.length, 1);
@@ -141,25 +144,33 @@ void main() {
           CompetitionKind.nationsLeague,
           confederation: Confederation.africa,
         );
+        expect(tables, hasLength(14));
         final groupWinners = {
           for (final t in tables) t.standings.first.nationId,
         };
-        final qfTeams = [
+        final r16Teams = {
+          for (final f in r16) ...[f.homeNationId, f.awayNationId],
+        };
+        expect(r16Teams, hasLength(16));
+        expect(r16Teams.containsAll(groupWinners), isTrue);
+        final field = NationsCups.knockoutField(
+          [for (final t in tables) t.standings],
+          (id) => byId[id]!.ranking,
+        );
+        // The two best runners-up, exactly as the screen ranks them.
+        final runnersUpIn = r16Teams.difference(groupWinners);
+        expect(runnersUpIn, {
+          for (final s in field.runnersUp.take(2)) s.nationId,
+        });
+        final qfTeams = {
           for (final f in qf) ...[f.homeNationId, f.awayNationId],
-        ];
-        expect(qfTeams.toSet().length, 8);
-        expect(groupWinners.containsAll(qfTeams), isTrue);
-        final perZone = <AfricaZone, int>{};
-        for (final id in qfTeams) {
-          final z = NationsCups.africaZoneByCode[byId[id]!.code]!;
-          perZone[z] = (perZone[z] ?? 0) + 1;
-        }
-        expect(perZone, {for (final z in AfricaZone.values) z: 2});
+        };
 
         // The same rule the progression uses to advance a tie.
         int winner(Fixture f) =>
             f.homeScore! >= f.awayScore! ? f.homeNationId : f.awayNationId;
 
+        expect(qfTeams, {for (final f in r16) winner(f)});
         final qfWinners = {for (final f in qf) winner(f)};
         final sfTeams = {
           for (final f in sf) ...[f.homeNationId, f.awayNationId],
@@ -171,18 +182,20 @@ void main() {
           (h) => h.competition == NationsCups.africa,
         );
         expect(africaHonour.championId, winner(fin.first));
-        // The Finals Eight keeps its November date. Only a tie the manager
+        // The knockouts keep their November dates. Only a tie the manager
         // plays may move later: a side with a bye on the last group matchday
         // is already past November when its group is settled, and its own
         // tie must still lie ahead of it.
         final groupEnd = (await africa(
           'NGROUP',
         )).map((f) => f.date).reduce((a, b) => a.isAfter(b) ? a : b);
-        if (qfTeams.contains(player.id)) {
-          expect(qf.first.date.isAfter(groupEnd), isTrue);
+        if (r16Teams.contains(player.id)) {
+          expect(r16.first.date.isAfter(groupEnd), isTrue);
         } else {
+          expect(r16.first.date, DateTime(year, 11, 9));
           expect(qf.first.date, DateTime(year, 11, 12));
         }
+        expect(qf.first.date.isAfter(r16.first.date), isTrue);
         expect(fin.first.date.isAfter(sf.first.date), isTrue);
         expect(sf.first.date.isAfter(qf.first.date), isTrue);
       },

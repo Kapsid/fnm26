@@ -40,7 +40,7 @@ void main() {
   test('the lower rungs keep their own format', () {
     expect(
       objectiveDemandText(l, tier, 5, competition: NationsCups.africa),
-      'Reach the Finals Eight',
+      'Reach the quarter-finals',
     );
     expect(
       objectiveDemandText(l, tier, 5, competition: NationsCups.northAmerica),

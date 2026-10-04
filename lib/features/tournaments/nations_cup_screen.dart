@@ -12,10 +12,12 @@ import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/entities/group_standing.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
+import 'package:fnm/domain/services/competition/cross_group.dart';
 import 'package:fnm/domain/services/competition/group_advancement.dart';
 import 'package:fnm/domain/services/competition/nations_cup.dart';
 import 'package:fnm/domain/services/competition/nations_cups.dart';
 import 'package:fnm/features/career/career_providers.dart';
+import 'package:fnm/features/tournaments/best_thirds.dart';
 import 'package:fnm/features/tournaments/nations_cup_draw_providers.dart';
 import 'package:fnm/features/tournaments/tournament_history.dart';
 import 'package:fnm/l10n/app_localizations.dart';
@@ -32,6 +34,7 @@ typedef _NcView = ({
   String playerLeague,
   String? playerGroup,
   List<FinalsGroupTable> groups,
+  List<Fixture> roundOf16,
   List<Fixture> quarters,
   List<Fixture> semis,
   List<Fixture> finalFx,
@@ -40,6 +43,10 @@ typedef _NcView = ({
   Map<int, String> playerNames,
   bool drawWatched,
   int playerNationId,
+
+  /// The nations the manager has led, current and past: their scorers are
+  /// highlighted.
+  Set<int> myNationIds,
   Map<int, Nation> nations,
 
   /// The lowest league in the cup's confederation — its bottom sides have
@@ -107,8 +114,9 @@ _nationsCupProvider = FutureProvider.autoDispose.family<_NcView?, _NcKey>((
     confederation: conf,
   );
   // The finals: a ladder cup's Finals Four (League A's group winners contest
-  // two semis then a final), or Africa's Finals Eight, which opens with
-  // quarter-finals.
+  // two semis then a final), or Africa's knockouts, which open with a Round
+  // of 16.
+  final roundOf16 = await round('NR16');
   final quarters = await round('NQF');
   final semis = await round('NSF');
   final finalFx = await round('NFINAL');
@@ -163,6 +171,7 @@ _nationsCupProvider = FutureProvider.autoDispose.family<_NcView?, _NcKey>((
     playerLeague: playerLeague,
     playerGroup: playerGroup,
     groups: groups,
+    roundOf16: roundOf16,
     quarters: quarters,
     semis: semis,
     finalFx: finalFx,
@@ -171,6 +180,10 @@ _nationsCupProvider = FutureProvider.autoDispose.family<_NcView?, _NcKey>((
     playerNames: playerNames,
     drawWatched: drawWatched,
     playerNationId: career.nationId,
+    myNationIds: {
+      career.nationId,
+      ...(await ref.watch(careerRepositoryProvider).stints(careerId)).values,
+    },
     nations: nations,
     maxTier: maxTier,
   );
@@ -178,7 +191,7 @@ _nationsCupProvider = FutureProvider.autoDispose.family<_NcView?, _NcKey>((
 
 /// A Nations Cup: the manager's league group standings by default (their own
 /// group first), with a selector to browse the other leagues — or, for the
-/// African cup, its four zones and the Finals Eight. [confederation] picks the
+/// African cup, its four zones and its knockouts. [confederation] picks the
 /// cup; null opens the manager's own.
 class NationsCupScreen extends ConsumerStatefulWidget {
   const NationsCupScreen({
@@ -199,7 +212,10 @@ class _NationsCupScreenState extends ConsumerState<NationsCupScreen> {
   static int _liveTab(_NcView? v) {
     if (v == null) return 0;
     // The finals are the business end — go there once they're drawn.
-    if (v.quarters.isNotEmpty || v.semis.isNotEmpty || v.finalFx.isNotEmpty) {
+    if (v.roundOf16.isNotEmpty ||
+        v.quarters.isNotEmpty ||
+        v.semis.isNotEmpty ||
+        v.finalFx.isNotEmpty) {
       return 1;
     }
     // Out of season there are no tables to show, so the honours are the point.
@@ -291,6 +307,7 @@ class _NationsCupScreenState extends ConsumerState<NationsCupScreen> {
                   playerNames: v.playerNames,
                   code: code,
                   emptyMessage: l.tourContNoNationsCupGoals,
+                  highlightNations: v.myNationIds,
                 ),
                 // Always reachable: the roll of honour used to be visible only
                 // out of season, so the cup's history vanished the moment it
@@ -412,6 +429,16 @@ class _NationsCupScreenState extends ConsumerState<NationsCupScreen> {
       for (final z in AfricaZone.values)
         if (z != myZone) z,
     ];
+    // The race for the last two Round of 16 places, always in view: every
+    // group's runner-up, ranked across all groups.
+    final standings = [
+      for (final g in v.groups)
+        if (NationsCups.zoneOfGroupName(g.name) != null) g.standings,
+    ];
+    final runnersUp = NationsCups.knockoutField(
+      standings,
+      (id) => v.nations[id]?.ranking ?? 1 << 20,
+    ).runnersUp;
     return ListView(
       padding: const EdgeInsets.all(AppSpacing.marginMobile),
       children: [
@@ -422,6 +449,19 @@ class _NationsCupScreenState extends ConsumerState<NationsCupScreen> {
           ),
         ),
         const SizedBox(height: AppSpacing.md),
+        if (runnersUp.isNotEmpty) ...[
+          BestThirdsCard(
+            thirds: runnersUp,
+            qualifyCount: NationsCups.runnersUpThrough,
+            playerNationId: v.playerNationId,
+            code: code,
+            name: name,
+            title: contentionLadderTitle(l, 2),
+            destination: l.tourCupDestRoundOf16,
+            adjustedForGroupSize: CrossGroup.isUneven(standings),
+          ),
+          const SizedBox(height: AppSpacing.md),
+        ],
         for (final zone in order) ...[
           Text(
             zone == myZone
@@ -462,7 +502,7 @@ class _NationsCupScreenState extends ConsumerState<NationsCupScreen> {
   }
 
   /// The finals: a ladder cup's Finals Four (League A's group winners contest
-  /// two semis and a final), or the African Finals Eight.
+  /// two semis and a final), or the African knockouts.
   Widget _finals(
     _NcView v,
     String Function(int) name,
@@ -470,7 +510,10 @@ class _NationsCupScreenState extends ConsumerState<NationsCupScreen> {
   ) {
     final l = AppLocalizations.of(context);
     final zones = v.format == NationsCupFormat.zones;
-    if (v.quarters.isEmpty && v.semis.isEmpty && v.finalFx.isEmpty) {
+    if (v.roundOf16.isEmpty &&
+        v.quarters.isEmpty &&
+        v.semis.isEmpty &&
+        v.finalFx.isEmpty) {
       return TournamentSoon(
         message: zones ? l.tourContFinalsEightSoon : l.tourContFinalsFourSoon,
       );
@@ -480,6 +523,7 @@ class _NationsCupScreenState extends ConsumerState<NationsCupScreen> {
       children: [
         _FinalsCard(
           title: zones ? l.tourContTabFinalsEight : l.tourContTabFinalsFour,
+          roundOf16: v.roundOf16,
           quarters: v.quarters,
           semis: v.semis,
           finalFx: v.finalFx,
@@ -613,7 +657,8 @@ class _GroupCard extends StatelessWidget {
   Widget _row(int pos, GroupStanding s, int total) {
     final isPlayer = s.nationId == playerNationId;
     // Winner (green) is promoted; the bottom side (red) relegated — or, in an
-    // African zone group, the winner (amber) may reach the Finals Eight. Shared
+    // African zone group, the winner (green) reaches the Round of 16 and the
+    // runner-up (amber) may follow. Shared
     // with the hub's group table so the two never disagree.
     final adv = GroupAdvancement.forGroup(
       kind: CompetitionKind.nationsLeague,
@@ -684,12 +729,13 @@ class _GroupCard extends StatelessWidget {
 }
 
 /// A Nations Cup's finals bracket — the Finals Four's two semi-finals and
-/// final, or the African Finals Eight's quarter-finals before them — with
+/// final, or the African Round of 16 and quarter-finals before them — with
 /// results once played, so the climax is visible whether or not the manager's
 /// nation reached it.
 class _FinalsCard extends StatelessWidget {
   const _FinalsCard({
     required this.title,
+    required this.roundOf16,
     required this.quarters,
     required this.semis,
     required this.finalFx,
@@ -699,6 +745,7 @@ class _FinalsCard extends StatelessWidget {
   });
 
   final String title;
+  final List<Fixture> roundOf16;
   final List<Fixture> quarters;
   final List<Fixture> semis;
   final List<Fixture> finalFx;
@@ -731,6 +778,12 @@ class _FinalsCard extends StatelessWidget {
               Text(title, style: AppTypography.labelMedium),
             ],
           ),
+          if (roundOf16.isNotEmpty) ...[
+            const SizedBox(height: AppSpacing.sm),
+            heading(l.resultsStageRoundOf16),
+            const SizedBox(height: AppSpacing.xs),
+            for (final f in roundOf16) _tie(f, l),
+          ],
           if (quarters.isNotEmpty) ...[
             const SizedBox(height: AppSpacing.sm),
             heading(l.tourContQuarterFinals),

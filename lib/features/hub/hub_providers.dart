@@ -984,10 +984,9 @@ class SeasonService {
   /// Two conversions, neither of them invented here:
   ///  * the plan, via [MatchEngine.planRatingDelta] — the engine's own slider
   ///    coefficients, read as the one number this simulator works in;
-  ///  * the drilling, via [TeamChemistry.factor] — a MULTIPLIER on a side's
-  ///    attack and defence, both of which are built from its players' ratings,
-  ///    so it multiplies a rating here too (the same reading `StrengthFactors`
-  ///    shows the manager). Predictability goes in with it: the engine passes
+  ///  * the drilling, via [TeamChemistry.factor] — a multiplier on a side's
+  ///    attack and defence in the engine, credited here as the flat rating
+  ///    lift it is measured to be worth there. Predictability goes in with it: the engine passes
   ///    the stored figure, so a side the world has worked out gives the same
   ///    part of it back whether or not he watched.
   ///
@@ -1013,10 +1012,17 @@ class SeasonService {
           setup.tactic?.instructions ?? const TacticalInstructions(),
         ) +
         Staff.dossierBonus(setup.scout);
-    return (plan *
-            TeamChemistry.factor(setup.familiarity, setup.predictability))
-        .round();
+    // Chemistry as a LIFT, not a multiplier on the whole rating: 80 x 1.04
+    // was +3.2 points here, about three times what the same chemistry wins a
+    // side when the match is played out, so skipping beat playing. 30 points
+    // per unit of factor is what the engine actually delivers (+1.2 at 1.04).
+    final chemistry =
+        TeamChemistry.factor(setup.familiarity, setup.predictability) - 1;
+    return (plan + chemistry * _chemistryPoints).round();
   }
+
+  /// Rating points a skipped match credits per unit of chemistry factor.
+  static const double _chemistryPoints = 30;
 
   /// The men the manager may field for his own nation in a match he skipped:
   /// his call-ups, minus anyone the absences rule out. Empty when he is not the

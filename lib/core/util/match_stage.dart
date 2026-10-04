@@ -15,6 +15,7 @@ abstract final class MatchStage {
     null || 'CQ' => l.resultsStageQualifier,
     'FRIENDLY' => l.resultsStageFriendly,
     'NL' || 'NGROUP' => l.resultsStageGroupStage,
+    'NR16' => l.resultsStageRoundOf16,
     'NQF' => l.resultsStageQuarterFinal,
     'NSF' => l.resultsStageSemiFinal,
     'NFINAL' => l.resultsStageFinal,

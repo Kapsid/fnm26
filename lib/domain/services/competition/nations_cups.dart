@@ -1,6 +1,8 @@
 import 'dart:math';
 
 import 'package:fnm/domain/entities/enums.dart';
+import 'package:fnm/domain/entities/group_standing.dart';
+import 'package:fnm/domain/services/competition/cross_group.dart';
 
 /// How a confederation's Nations Cup is organised.
 enum NationsCupFormat { ladder, zones }
@@ -143,17 +145,65 @@ abstract final class NationsCups {
     return groups;
   }
 
-  /// Quarter-final pairs (home, away) of the Finals Eight from each zone's two
-  /// qualifiers, best first: W1 v E2, E1 v S2, S1 v N2, N1 v W2.
-  static List<(int, int)> finalsEightPairs(
-    Map<AfricaZone, List<int>> bestTwoByZone,
+  /// How many runners-up join the 14 group winners in the Round of 16.
+  static const int runnersUpThrough = 2;
+
+  /// The African cup's knockout field from its zone groups (each group's
+  /// standings, best first): every group winner, and every runner-up, each
+  /// ranked best-first across groups. The [runnersUpThrough] best runners-up
+  /// complete the Round of 16.
+  ///
+  /// The North's groups of three make the groups uneven, so the comparison
+  /// drops results against each bigger group's bottom side ([CrossGroup]),
+  /// then breaks a dead heat on world ranking ([rankOf], lower is better).
+  static ({List<GroupStanding> winners, List<GroupStanding> runnersUp})
+  knockoutField(List<List<GroupStanding>> groups, int Function(int) rankOf) {
+    final adjusted = CrossGroup.comparable(groups);
+    int order(GroupStanding a, GroupStanding b) {
+      final byTable = CrossGroup.rank(a, b);
+      if (byTable != 0) return byTable;
+      return rankOf(a.nationId).compareTo(rankOf(b.nationId));
+    }
+
+    return (
+      winners: [
+        for (final g in adjusted)
+          if (g.isNotEmpty) g[0],
+      ]..sort(order),
+      runnersUp: [
+        for (final g in adjusted)
+          if (g.length > 1) g[1],
+      ]..sort(order),
+    );
+  }
+
+  /// Round of 16 pairs (home, away) from the qualifiers seeded best-first
+  /// (the ranked group winners, then the qualifying runners-up), in bracket
+  /// order: consecutive ties meet in the quarter-finals, so seeds 1 and 2 can
+  /// only meet in the final. A runner-up is never paired with the winner of
+  /// its own group ([groupOf] gives a nation's group) when a swap avoids it.
+  static List<(int, int)> roundOf16Pairs(
+    List<int> seeded,
+    String? Function(int) groupOf,
   ) {
-    int pick(AfricaZone z, int i) => bestTwoByZone[z]![i];
+    assert(seeded.length == 16);
+    final s = [...seeded];
+    // Seeds 15 and 16 are the runners-up; seed 1 meets 16, seed 2 meets 15.
+    if (groupOf(s[0]) == groupOf(s[15]) || groupOf(s[1]) == groupOf(s[14])) {
+      final t = s[15];
+      s[15] = s[14];
+      s[14] = t;
+    }
+    (int, int) tie(int a, int b) => (s[a - 1], s[b - 1]);
     return [
-      (pick(AfricaZone.west, 0), pick(AfricaZone.east, 1)),
-      (pick(AfricaZone.east, 0), pick(AfricaZone.centralSouthern, 1)),
-      (pick(AfricaZone.centralSouthern, 0), pick(AfricaZone.north, 1)),
-      (pick(AfricaZone.north, 0), pick(AfricaZone.west, 1)),
+      tie(1, 16),
+      tie(8, 9),
+      tie(4, 13),
+      tie(5, 12),
+      tie(2, 15),
+      tie(7, 10),
+      tie(3, 14),
+      tie(6, 11),
     ];
   }
 }

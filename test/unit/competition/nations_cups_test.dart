@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/domain/entities/enums.dart';
+import 'package:fnm/domain/entities/group_standing.dart';
 import 'package:fnm/domain/services/competition/nations_cups.dart';
 
 void main() {
@@ -82,26 +83,47 @@ void main() {
     expect(s[0].where({1, 2}.contains).length, 1);
   });
 
-  test('finalsEightPairs keeps zones apart', () {
-    final pairs = NationsCups.finalsEightPairs({
-      AfricaZone.west: [1, 2],
-      AfricaZone.east: [3, 4],
-      AfricaZone.centralSouthern: [5, 6],
-      AfricaZone.north: [7, 8],
-    });
-    expect(pairs, [(1, 4), (3, 6), (5, 8), (7, 2)]);
-    final zoneOf = {
-      1: 'W',
-      2: 'W',
-      3: 'E',
-      4: 'E',
-      5: 'S',
-      6: 'S',
-      7: 'N',
-      8: 'N',
-    };
-    for (final p in pairs) {
-      expect(zoneOf[p.$1], isNot(zoneOf[p.$2]));
-    }
+  GroupStanding row(int id, {int w = 0, int d = 0, int gf = 0, int ga = 0}) =>
+      GroupStanding(id)
+        ..played = w + d
+        ..won = w
+        ..drawn = d
+        ..goalsFor = gf
+        ..goalsAgainst = ga;
+
+  test('knockoutField ranks winners and runners-up across groups', () {
+    final f = NationsCups.knockoutField([
+      [row(1, w: 3, gf: 6), row(2, w: 2, gf: 4), row(3)],
+      [row(4, w: 4, gf: 9), row(5, w: 2, d: 1, gf: 5), row(6)],
+      [row(7, w: 3, gf: 5), row(8, w: 2, gf: 4), row(9)],
+    ], (id) => id);
+    expect([for (final s in f.winners) s.nationId], [4, 1, 7]);
+    // 2 and 8 are level on everything: world ranking (lower id) decides.
+    expect([for (final s in f.runnersUp) s.nationId], [5, 2, 8]);
+  });
+
+  test('roundOf16Pairs: bracket order, 1 and 2 only meet in the final', () {
+    final seeded = List.generate(16, (i) => i + 1);
+    final pairs = NationsCups.roundOf16Pairs(seeded, (id) => 'G$id');
+    expect(pairs, [
+      (1, 16),
+      (8, 9),
+      (4, 13),
+      (5, 12),
+      (2, 15),
+      (7, 10),
+      (3, 14),
+      (6, 11),
+    ]);
+    expect(pairs.expand((p) => [p.$1, p.$2]).toSet(), seeded.toSet());
+  });
+
+  test('roundOf16Pairs keeps a runner-up off its own group winner', () {
+    final seeded = List.generate(16, (i) => i + 1);
+    // Runner-up 16 came second in seed 1's group.
+    final group = {1: 'W1', 16: 'W1'};
+    final pairs = NationsCups.roundOf16Pairs(seeded, (id) => group[id] ?? '$id');
+    expect(pairs.first, (1, 15));
+    expect(pairs[4], (2, 16));
   });
 }

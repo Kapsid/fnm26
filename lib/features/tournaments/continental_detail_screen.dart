@@ -272,6 +272,7 @@ class ContinentalDetailScreen extends ConsumerWidget {
                           ),
                   ),
                 TournamentAwardsTab(
+                  highlightNations: data.myNationIds,
                   team: data.teamOfTournament,
                   goldenGlove: data.goldenGlove,
                   code: code,
@@ -283,6 +284,7 @@ class ContinentalDetailScreen extends ConsumerWidget {
                   allTime: data.allTimeScorers,
                   code: code,
                   emptyMessage: l.tourContNoGoalsYet,
+                  highlightNations: data.myNationIds,
                 ),
                 TournamentHistory(
                   honours: data.honours,

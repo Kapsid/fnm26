@@ -326,10 +326,11 @@ extension SeasonCycle on SeasonService {
     await _crownNationsCupIfDecided(careerId, cupName, finalFx);
   }
 
-  /// The African cup: once every zone group is played, the two best group
-  /// winners of each zone meet in a Finals Eight in November of the group
-  /// stage's year — quarter-finals (day 12, zone winners kept apart), then
-  /// semi-finals (day 15) and the final (day 18).
+  /// The African cup: once every zone group is played, all 14 group winners
+  /// and the two best runners-up meet in a Round of 16 in November of the
+  /// group stage's year (day 9), then quarter-finals (day 12), semi-finals
+  /// (day 15) and the final (day 18). A save whose cup was drawn as the old
+  /// Finals Eight (quarter-finals, no Round of 16) plays on from there.
   Future<void> _progressZonesCup(
     int careerId,
     Confederation conf,
@@ -338,6 +339,7 @@ extension SeasonCycle on SeasonService {
     const kind = CompetitionKind.nationsLeague;
     Future<List<Fixture>> round(String r) =>
         _comp.fixturesByRound(careerId, r, kind: kind, confederation: conf);
+    final r16Fx = await round('NR16');
     final qfFx = await round('NQF');
     final semiFx = await round('NSF');
     final finalFx = await round('NFINAL');
@@ -345,8 +347,8 @@ extension SeasonCycle on SeasonService {
     if (career == null) return;
     final finalsYear = SeasonService.finalsYear(career.cyclePointer) - 2;
 
-    // Stage 1 — groups done: the Finals Eight from each zone's best two.
-    if (qfFx.isEmpty && semiFx.isEmpty && finalFx.isEmpty) {
+    // Stage 1 — groups done: the Round of 16.
+    if (r16Fx.isEmpty && qfFx.isEmpty && semiFx.isEmpty && finalFx.isEmpty) {
       if (!await _roundComplete(
         careerId,
         'NGROUP',
@@ -369,48 +371,41 @@ extension SeasonCycle on SeasonService {
         return _maxDate(careerId, 'NGROUP', kind: kind, confederation: conf);
       }
 
-      final tables = await _comp.tournamentGroupTables(
-        careerId,
-        kind,
-        confederation: conf,
-      );
-      // Best by points, goal difference, goals scored, then world ranking.
+      final tables = [
+        for (final t in await _comp.tournamentGroupTables(
+          careerId,
+          kind,
+          confederation: conf,
+        ))
+          if (NationsCups.zoneOfGroupName(t.name) != null &&
+              t.standings.isNotEmpty)
+            t,
+      ];
       final rank = _liveRankById(await _nationsById());
-      int byRanking(GroupStanding a, GroupStanding b) {
-        final byTable = SeasonService._rankStandings(a, b);
-        if (byTable != 0) return byTable;
-        return (rank[a.nationId] ?? 1 << 20).compareTo(
-          rank[b.nationId] ?? 1 << 20,
-        );
-      }
-
-      final byZone = <AfricaZone, List<GroupStanding>>{};
-      for (final t in tables) {
-        final zone = NationsCups.zoneOfGroupName(t.name);
-        if (zone == null || t.standings.isEmpty) continue;
-        (byZone[zone] ??= []).add(t.standings.first);
-      }
-      for (final w in byZone.values) {
-        w.sort(byRanking);
-      }
-      final full = AfricaZone.values.every(
-        (z) => (byZone[z]?.length ?? 0) >= 2,
+      final field = NationsCups.knockoutField(
+        [for (final t in tables) t.standings],
+        (id) => rank[id] ?? 1 << 20,
       );
-      if (!full) {
-        // Not a field of eight (a malformed cup): settle it between the best
+      final seeded = [
+        for (final s in field.winners) s.nationId,
+        for (final s in field.runnersUp.take(NationsCups.runnersUpThrough))
+          s.nationId,
+      ];
+      if (seeded.length != 16) {
+        // Not a field of sixteen (a malformed cup): settle it between the best
         // two group winners, or crown a lone one, rather than stall forever.
-        final winners = [for (final w in byZone.values) ...w]..sort(byRanking);
+        final winners = [for (final s in field.winners) s.nationId];
         if (winners.isEmpty) return;
         if (winners.length < 2) {
           await _recordNationsLeagueHonour(
             careerId,
             cupName,
-            winners.first.nationId,
+            winners.first,
             null,
           );
           return;
         }
-        final pair = (winners[0].nationId, winners[1].nationId);
+        final pair = (winners[0], winners[1]);
         await _comp.addKnockoutFixtures(
           careerId: careerId,
           round: 'NFINAL',
@@ -424,25 +419,54 @@ extension SeasonCycle on SeasonService {
         );
         return;
       }
-      final pairs = NationsCups.finalsEightPairs({
-        for (final e in byZone.entries)
-          e.key: [for (final s in e.value.take(2)) s.nationId],
-      });
+      final groupOf = {
+        for (final t in tables)
+          for (final s in t.standings) s.nationId: t.name,
+      };
+      final pairs = NationsCups.roundOf16Pairs(seeded, (id) => groupOf[id]);
       await _comp.addKnockoutFixtures(
         careerId: careerId,
-        round: 'NQF',
+        round: 'NR16',
         kind: kind,
         confederation: conf,
         pairings: pairs,
         date: _notBeforeToday(
-          DateTime(finalsYear, 11, 12),
+          DateTime(finalsYear, 11, 9),
           await finalsBase(pairs),
         ),
       );
       return;
     }
 
-    // Stage 2 — quarter-finals played: QF1 v QF2, QF3 v QF4.
+    // Stage 2 — Round of 16 played: its ties pair off into quarter-finals in
+    // bracket order (R16 1 v 2, 3 v 4, ...).
+    if (r16Fx.isNotEmpty && qfFx.isEmpty && semiFx.isEmpty && finalFx.isEmpty) {
+      if (r16Fx.length < 8 || !r16Fx.every((f) => f.hasResult)) return;
+      final after = (await _maxDate(
+        careerId,
+        'NR16',
+        kind: kind,
+        confederation: conf,
+      )).add(const Duration(days: 3));
+      final scheduled = DateTime(finalsYear, 11, 12);
+      await _comp.addKnockoutFixtures(
+        careerId: careerId,
+        round: 'NQF',
+        kind: kind,
+        confederation: conf,
+        pairings: [
+          for (var i = 0; i < 8; i += 2)
+            (
+              SeasonService._winner(r16Fx[i]),
+              SeasonService._winner(r16Fx[i + 1]),
+            ),
+        ],
+        date: scheduled.isBefore(after) ? after : scheduled,
+      );
+      return;
+    }
+
+    // Stage 3 — quarter-finals played: QF1 v QF2, QF3 v QF4.
     if (qfFx.isNotEmpty && semiFx.isEmpty && finalFx.isEmpty) {
       if (qfFx.length < 4 || !qfFx.every((f) => f.hasResult)) return;
       final after = (await _maxDate(
@@ -466,7 +490,7 @@ extension SeasonCycle on SeasonService {
       return;
     }
 
-    // Stage 3 — semi-finals played: the final.
+    // Stage 4 — semi-finals played: the final.
     if (finalFx.isEmpty) {
       if (semiFx.length < 2 || !semiFx.every((f) => f.hasResult)) return;
       final after = (await _maxDate(

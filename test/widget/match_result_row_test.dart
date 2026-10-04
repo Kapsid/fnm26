@@ -116,4 +116,24 @@ void main() {
       reason: 'nobody won a drawn game',
     );
   });
+
+  testWidgets('a match still to be played reads -:-, not 0 - 0', (
+    tester,
+  ) async {
+    await pump(
+      tester,
+      Fixture(
+        id: 1,
+        careerId: 1,
+        competitionId: 1,
+        matchday: 1,
+        date: DateTime(2029, 3, 6),
+        homeNationId: 1,
+        awayNationId: 2,
+        round: 'NGROUP',
+      ),
+    );
+    expect(find.text('-:-'), findsOneWidget);
+    expect(find.text('0 - 0'), findsNothing);
+  });
 }

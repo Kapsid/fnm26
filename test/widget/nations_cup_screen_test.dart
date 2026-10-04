@@ -100,18 +100,21 @@ void main() {
   });
 
   // Another confederation's cup, opened from the tournaments screen: the
-  // African one is played in zones with a Finals Eight, and as it is not the
+  // African one is played in zones with a Round of 16, and as it is not the
   // manager's own there is no draw ceremony to wait for before its groups
   // show.
-  testWidgets('the African cup shows its zones and its Finals Eight', (
+  testWidgets('the African cup shows its zones and its knockouts', (
     tester,
   ) async {
     await pumpScreen(tester, confederation: Confederation.africa);
 
     expect(find.text('ZONES'), findsOneWidget);
-    expect(find.text('FINALS EIGHT'), findsOneWidget);
+    expect(find.text('KNOCKOUTS'), findsOneWidget);
     expect(find.text('LEAGUES'), findsNothing);
-    expect(find.textContaining('may reach the Finals Eight'), findsOneWidget);
+    expect(find.textContaining('the 2 best runners-up'), findsOneWidget);
+    // The race for the last two places is always on show.
+    expect(find.text('BEST RUNNERS-UP'), findsOneWidget);
+    expect(find.text('Top 2 advance to the Round of 16'), findsOneWidget);
     expect(find.text('NORTH ZONE'), findsOneWidget);
   });
 

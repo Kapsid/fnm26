@@ -23,19 +23,19 @@ void main() {
       expect(nationsCup(lowest: true).relegate, 0);
     });
 
-    test('an African zone group: the winner MAY reach the Finals Eight', () {
+    test('an African zone group: winner through, runner-up MAY follow', () {
       final adv = GroupAdvancement.forGroup(
         kind: CompetitionKind.nationsLeague,
         confederation: Confederation.africa,
         groupCount: 4,
         continentalSize: 24,
       );
-      expect(adv.direct, 0, reason: 'only the best two winners per zone go');
-      expect(adv.contention, 1);
+      expect(adv.direct, 1, reason: 'every group winner reaches the R16');
+      expect(adv.contention, 2, reason: 'the two best runners-up join them');
       expect(adv.relegate, 0, reason: 'the African cup relegates nobody');
       expect(
         GroupAdvancement.caption(kind: CompetitionKind.nationsLeague, adv: adv),
-        allOf(contains('Finals Eight'), isNot(contains('relegated'))),
+        allOf(contains('Round of 16'), isNot(contains('relegated'))),
       );
     });
 

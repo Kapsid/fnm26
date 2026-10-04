@@ -51,6 +51,7 @@ String nationsCupFinishLabel(
       NationsCupFinish.runnersUp => l.careerNationsCupZoneRunnerUp(z),
       NationsCupFinish.semiFinalist => l.careerNationsCupZoneSemi(z),
       NationsCupFinish.quarterFinalist => l.careerNationsCupZoneQuarter(z),
+      NationsCupFinish.roundOf16 => l.careerNationsCupZoneRoundOf16(z),
       null => l.careerNationsCupZonePlaced(z, position),
     };
   }
@@ -60,6 +61,7 @@ String nationsCupFinishLabel(
     NationsCupFinish.semiFinalist => l.careerNationsCupSemi(league),
     // A ladder cup has no quarter-final; its Finals Four opens at the semis.
     NationsCupFinish.quarterFinalist ||
+    NationsCupFinish.roundOf16 ||
     null => l.careerNationsCupPlaced(league, position),
   };
 }

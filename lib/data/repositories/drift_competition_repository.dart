@@ -2174,7 +2174,7 @@ class DriftCompetitionRepository implements CompetitionRepository {
       final league = myGroup.name.isEmpty ? 'A' : myGroup.name[0];
 
       // How far it went in the finals: a ladder cup's Finals Four (NSF,
-      // NFINAL) or the African Finals Eight, which opens with a quarter-final.
+      // NFINAL) or the African knockouts, which open with a Round of 16.
       final ko =
           await (_db.select(_db.fixtures)..where(
                 (t) =>
@@ -2198,8 +2198,10 @@ class DriftCompetitionRepository implements CompetitionRepository {
               : NationsCupFinish.runnersUp;
         } else if (ko.any((f) => f.round == 'NSF')) {
           finals = NationsCupFinish.semiFinalist;
-        } else {
+        } else if (ko.any((f) => f.round == 'NQF')) {
           finals = NationsCupFinish.quarterFinalist;
+        } else {
+          finals = NationsCupFinish.roundOf16;
         }
       }
 

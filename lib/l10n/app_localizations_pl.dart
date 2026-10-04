@@ -5092,6 +5092,9 @@ class AppLocalizationsPl extends AppLocalizations {
   String get tourCupCompSAmerica => 'Puchar Ameryki Południowej';
 
   @override
+  String get tourCupDestRoundOf16 => '1/8 finału';
+
+  @override
   String get tourCupDestKnockouts => 'fazy pucharowej';
 
   @override
@@ -7419,6 +7422,12 @@ class AppLocalizationsPl extends AppLocalizations {
   String get careerShareFailed => 'Nie udało się wyeksportować tej kariery.';
 
   @override
+  String get managerRename => 'Zmień nazwisko';
+
+  @override
+  String get managerRenameSave => 'Zapisz';
+
+  @override
   String get managerTitle => 'SELEKCJONER';
 
   @override
@@ -9113,6 +9122,11 @@ class AppLocalizationsPl extends AppLocalizations {
   }
 
   @override
+  String careerNationsCupZoneRoundOf16(String zone) {
+    return '$zone · 1/8 finału';
+  }
+
+  @override
   String careerNationsCupZoneQuarter(String zone) {
     return '$zone · Ćwierćfinaliści';
   }
@@ -9123,13 +9137,13 @@ class AppLocalizationsPl extends AppLocalizations {
   }
 
   @override
-  String get objectiveNcFinalsEight => 'Awansuj do Finału Ośmiu';
+  String get objectiveNcFinalsEight => 'Awansuj do ćwierćfinału';
 
   @override
   String get objectiveNcZoneWinGroup => 'Wygraj grupę';
 
   @override
-  String get finishNcFinalsEight => 'Finał Ośmiu';
+  String get finishNcFinalsEight => 'Ćwierćfinał';
 
   @override
   String get finishNcBottomHalf => 'Dolna połowa grupy';
@@ -9138,18 +9152,18 @@ class AppLocalizationsPl extends AppLocalizations {
   String get tourContTabZones => 'STREFY';
 
   @override
-  String get tourContTabFinalsEight => 'FINAŁ OŚMIU';
+  String get tourContTabFinalsEight => 'FAZA PUCHAROWA';
 
   @override
   String get tourContFinalsEightSoon =>
-      'W Finale Ośmiu zagrają dwaj najlepsi zwycięzcy grup z każdej strefy po zakończeniu fazy grupowej.';
+      'Faza pucharowa rusza w listopadzie od 1/8 finału: wszyscy 14 zwycięzców grup i 2 najlepsze drużyny z drugich miejsc.';
 
   @override
   String get tourContQuarterFinals => 'ĆWIERĆFINAŁY';
 
   @override
   String get tourContZoneAdvancement =>
-      'Zwycięzcy grup mogą awansować do Finału Ośmiu: awans wywalczy dwóch najlepszych z każdej strefy. Nikt nie spada.';
+      'Każdy zwycięzca grupy awansuje do 1/8 finału, a z nim 2 najlepsze drużyny z drugich miejsc. Nikt nie spada.';
 
   @override
   String tourContZoneHeadingYours(String zone) {
