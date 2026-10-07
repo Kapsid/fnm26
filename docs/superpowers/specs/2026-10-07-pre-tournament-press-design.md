@@ -158,3 +158,17 @@ semi-finals".
 
 The Nations Cup and Clash previews, a pre-match conference before every game,
 and a visible credibility meter.
+
+## Amendments (during the build, 2026-10-07)
+
+- **Finals brief floor.** At the finals the press hold him to at least
+  "reach the knockouts" (`PreviewCampaign.briefFor` clamps a finals brief to
+  3–7). Without it, a side whose board brief was "qualify" could promise to
+  match the brief at the finals and have it count as kept on the day it was
+  said. Qualifying briefs are clamped to 0–2 as specified.
+- **`promiseQualify` instant effect** is always (+2, +1). Only its judged
+  effect depends on the brief (aim higher at brief 1, match the brief at 2).
+- **Answer effect row wraps.** The squad/board line under each answer was a
+  fixed row that overflowed a 320px screen in French, Polish and German on
+  any zero-effect answer. That was an existing bug in every conference,
+  found by the new fit test.
