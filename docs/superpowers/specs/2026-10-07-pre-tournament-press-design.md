@@ -65,9 +65,9 @@ or null).
 1. **Aim** (`BeatKind.aim`). Always asked.
    - Finals: `aimHigher`, `matchBrief`, `playDown`.
    - Qualifying: `promiseQualify`, `playDown`, `deflect`.
-   - When the brief is already 7 (win it), `aimHigher` is not offered. When
-     the brief is already "qualify" (2) before qualifying, `promiseQualify`
-     IS the brief and is scored as `matchBrief`.
+   - When the brief is already 7 (win it), `aimHigher` is not offered.
+   - `promiseQualify` is scored as `aimHigher` when the brief is 1 (top half
+     of the qualifying group), and as `matchBrief` when the brief is 2 or more.
 2. **The draw** (`BeatKind.rival`). Asked only when `rivalNationId` is set.
    Answers `fearNobody`, `respectRival`, `deflect`. Instant effects only.
 3. **Key player** (`BeatKind.keyPlayer`). Asked only when `keyPlayerId` is set
@@ -112,8 +112,8 @@ existing statements.
 
 | Answer | Instant (morale, board) | Kept | Broken |
 |---|---|---|---|
-| `aimHigher` | (+3, +2) | board +10 | board −10 |
-| `matchBrief` / `promiseQualify` | (+2, +1) | board +4 | board −6 |
+| `aimHigher` (and `promiseQualify` at brief 1) | (+3, +2) | board +10 | board −10 |
+| `matchBrief` (and `promiseQualify` at brief ≥ 2) | (+2, +1) | board +4 | board −6 |
 | `playDown` | (0, −2) | board +2 only if the brief itself is beaten (`actual > brief`), else 0 | 0 |
 | `fearNobody` | (+3, 0) | | |
 | `respectRival` | (+1, +1) | | |
