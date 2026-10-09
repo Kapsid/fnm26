@@ -10,7 +10,7 @@ Match, Competitions, Inbox).
 
 A tablet UI that feels like a desktop football manager: a persistent sidebar,
 dense sortable tables, and several panes on screen at once. It ships as its own
-release, good enough for store screenshots and reviews. Where the extra space
+release, **v1.0.4 on both iOS and Android**, good enough for store screenshots and reviews. Where the extra space
 is worth it, tablet shows more than phone does (more columns, side-by-side
 detail).
 
