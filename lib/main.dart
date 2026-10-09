@@ -27,11 +27,20 @@ void main() {
         AppLog.error('build', details.exception, details.stack);
         return const AppCrashBox();
       };
-      // The form factor is read once, from the first window, before anything
-      // is built: the router's shape depends on it, and a tablet is held in
-      // landscape so it will not change under us.
-      final formFactor = FormFactor.fromLogicalSize(
-        await firstLogicalWindowSize(PlatformDispatcher.instance),
+      // The form factor is read once, before anything is built: the router's
+      // shape depends on it, and a tablet is held in landscape so it will not
+      // change under us. It comes from the physical DISPLAY, not the window:
+      // an iPad held in portrait at launch letterboxes the landscape-only app
+      // into a window under 600 logical px, which would wrongly read as a
+      // phone for the whole session. The window is only the fallback when the
+      // display size is unavailable.
+      final dispatcher = PlatformDispatcher.instance;
+      final display = logicalDisplaySizeOf(dispatcher);
+      final formFactor = formFactorAtStartup(
+        display: display,
+        window: display.isEmpty
+            ? await firstLogicalWindowSize(dispatcher)
+            : Size.zero,
       );
       if (formFactor == FormFactor.tablet) {
         await SystemChrome.setPreferredOrientations(const [

@@ -32,6 +32,23 @@ Size logicalSizeOf(Size physical, double devicePixelRatio) {
   return physical / devicePixelRatio;
 }
 
+/// The logical size of the physical display the app runs on.
+///
+/// Unlike the window, this does not shrink when iPadOS letterboxes a
+/// landscape-only app held in portrait. Returns [Size.zero] when no display
+/// is known or its metrics are unusable.
+Size logicalDisplaySizeOf(PlatformDispatcher dispatcher) {
+  final display =
+      dispatcher.implicitView?.display ?? dispatcher.displays.firstOrNull;
+  if (display == null) return Size.zero;
+  return logicalSizeOf(display.size, display.devicePixelRatio);
+}
+
+/// The startup form factor: the display decides when its size is known,
+/// otherwise the window does. Empty sizes on both give a phone.
+FormFactor formFactorAtStartup({required Size display, required Size window}) =>
+    FormFactor.fromLogicalSize(display.isEmpty ? window : display);
+
 /// The logical size of the first window, waiting briefly for real metrics.
 ///
 /// Deciding from empty metrics would classify every device as a phone, so if
