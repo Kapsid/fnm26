@@ -4,6 +4,7 @@ import 'package:fnm/core/layout/form_factor.dart';
 import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/features/career/career_providers.dart';
+import 'package:fnm/shared/widgets/app_error_state.dart';
 import 'package:go_router/go_router.dart';
 
 import '../helpers/seeded_save.dart';
@@ -83,6 +84,9 @@ void main() {
       {for (final r in shell.routes.whereType<GoRoute>()) r.path},
     );
 
+    /// Routes allowed to keep an ambient spinner (reason beside each).
+    final stillLoading = <String>{};
+
     final locations = [
       for (final e in extra.entries) '${e.key}?careerId=$id${e.value}',
       // Squad is the tactics screen on its fourth tab.
@@ -95,6 +99,25 @@ void main() {
       router.go(location);
       await settle(tester);
       expect(tester.takeException(), isNull, reason: location);
+      // It really rendered: no silent redirect, no endless spinner, no error.
+      final path = Uri.parse(location).path;
+      expect(
+        router.routeInformationProvider.value.uri.path,
+        path,
+        reason: 'redirected: $location',
+      );
+      if (!stillLoading.contains(path)) {
+        expect(
+          find.byType(CircularProgressIndicator),
+          findsNothing,
+          reason: 'stuck loading: $location',
+        );
+      }
+      expect(
+        find.byType(AppErrorState),
+        findsNothing,
+        reason: 'error state: $location',
+      );
     }
 
     // Unmount, so no screen's timers outlive the test.
