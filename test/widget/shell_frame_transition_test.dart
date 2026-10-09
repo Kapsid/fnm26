@@ -25,7 +25,7 @@ void main() {
 
     save.container
         .read(routerProvider)
-        .go('${Routes.results}?careerId=${save.careerId}');
+        .go('${Routes.manager}?careerId=${save.careerId}');
     for (var i = 0; i < 20; i++) {
       await tester.runAsync(
         () => Future<void>.delayed(const Duration(milliseconds: 10)),
@@ -54,7 +54,7 @@ void main() {
       await pumpRoute(
         tester,
         save,
-        '${Routes.results}?careerId=${save.careerId}',
+        '${Routes.manager}?careerId=${save.careerId}',
         size: kTabletSize,
       );
       final frame = tester.getSize(find.byType(PhoneWidthFrame));

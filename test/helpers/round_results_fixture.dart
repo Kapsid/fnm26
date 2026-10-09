@@ -1,6 +1,7 @@
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/entities/group_standing.dart';
+import 'package:fnm/domain/repositories/competition_repository.dart';
 import 'package:fnm/features/results/round_results_screen.dart';
 
 import 'fixtures.dart';
@@ -64,3 +65,48 @@ RoundResultsView fourGroupsView() {
     noRelegationGroups: const <String>{},
   );
 }
+
+/// A knockout round: two quarter-finals, the manager's nation 1 in the first.
+RoundResultsView knockoutView() {
+  Fixture qf(int id, int home, int away) => Fixture(
+    id: id,
+    careerId: 1,
+    competitionId: 2,
+    matchday: 1,
+    date: DateTime(2028, 6, 30),
+    homeNationId: home,
+    awayNationId: away,
+    homeScore: 2,
+    awayScore: 1,
+    round: 'CQF',
+    played: true,
+  );
+  return (
+    results: (
+      competition: 'European Championship',
+      kind: CompetitionKind.continentalFinals,
+      groupCount: 0,
+      matchday: 1,
+      groups: const <RoundResultGroup>[],
+      stage: 'QUARTER-FINALS',
+      knockoutFixtures: [qf(1, 1, 2), qf(2, 3, 4)],
+    ),
+    nations: {for (var i = 1; i <= 4; i++) i: nation(id: i)},
+    playerNationId: 1,
+    directCount: 2,
+    contentionPos: null,
+    relegateCount: 0,
+    noRelegationGroups: const <String>{},
+  );
+}
+
+/// A friendly window: no competition round at all.
+RoundResultsView emptyRoundView() => (
+  results: null,
+  nations: {for (var i = 1; i <= 4; i++) i: nation(id: i)},
+  playerNationId: 1,
+  directCount: 2,
+  contentionPos: null,
+  relegateCount: 0,
+  noRelegationGroups: const <String>{},
+);
