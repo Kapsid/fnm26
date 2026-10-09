@@ -23,6 +23,8 @@ void main() {
     expect(tester.takeException(), isNull);
     final before = tester.getSize(find.byKey(CallUpScreen.tabletLayoutKey));
 
+    // /manager is the phone-framed destination: it is not tablet-ready in
+    // stage 3, so this stays true until it converts (then pick another).
     save.container
         .read(routerProvider)
         .go('${Routes.manager}?careerId=${save.careerId}');
