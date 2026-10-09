@@ -489,16 +489,18 @@ class PlayerView extends ConsumerWidget {
             color: AppColors.onSurfaceVariant,
           ),
         ),
-        const SizedBox(width: AppSpacing.sm),
-        // Flexible so a narrow pane (the tablet squad's) ellipsises the value
-        // instead of overflowing; at full width it sits right, as before.
+        // Takes the rest of the row and keeps the value at its right edge,
+        // where the Spacer put it; a narrow pane (the tablet squad's)
+        // ellipsises the value instead of overflowing.
         Expanded(
-          child: Text(
-            value,
-            textAlign: TextAlign.end,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: AppTypography.bodyMedium,
+          child: Align(
+            alignment: AlignmentDirectional.centerEnd,
+            child: Text(
+              value,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: AppTypography.bodyMedium,
+            ),
           ),
         ),
       ],
