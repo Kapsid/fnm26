@@ -169,6 +169,49 @@ Each stage gets its own implementation plan.
 - On tablets, sheets are dialogs of a fixed width min(560, window width - 64)
   on the root navigator.
 
+## Stage 2 adjustments (2026-10-09)
+
+- Inbox filters are All, Board, Competitions, Squad: Press and Scouting are
+  not inbox categories.
+- Tactics tabs are Formation (instructions under it), Roles and set pieces,
+  Opposition. Roles and set pieces stay one tab, as on the phone.
+- The Opposition tab reuses the preview's briefing. Its danger men are the
+  opponent pool's best three (`opponentKeyMenProvider`), so Tactics never
+  keeps the pre-simulated match preview alive. It shows nothing of the
+  opponent until his draw has been watched.
+- The match centre is the manager's live shape on the tactics pitch (read
+  only; a tap opens the editor) above the momentum bar. There is no 2D ball
+  view and no shouts; the bottom bar is the existing control bar.
+- Substitutions "alongside the pitch" means the in-match editor's landscape
+  layout: pitch left, lists and instructions right.
+- The hub has no in-body Continue on tablet; the top bar's carries the tour
+  key. Its Next-match panel links to Call-ups and Tactics, not the preview.
+- Full-screen routes without a tablet layout yet are drawn centred at 600.
+- Full-screen routes choose their tablet layout with `useTabletLayout`
+  (tablet at startup AND a tablet-sized window).
+- Tablet layouts need a window at least 1000 logical px wide
+  (`kTabletLayoutMinWidth`); narrower tablet windows (iPadOS 26 resizable
+  windows, split view) get the phone app. Sheets stay dialogs on any
+  tablet-sized window.
+- In-shell pages are framed per page: routes not in `tabletReadyPaths` are
+  wrapped in a phone-width frame inside the tablet router; `TabletShell`
+  gives the full content area.
+- `PanelBox` is a Material, so ink is visible inside panels.
+- `DataGrid` scrolls sideways (header and body together) when its columns
+  do not fit.
+- Live match: player ratings are shown from full time only. They are
+  pre-simulated, so showing them live would spoil the result.
+- On tablet the top bar Continue owns the onboarding tour's hub target, and
+  the sidebar Squad item owns the Squad tour target.
+- Test harness: the seeded-save settle waits until no spinner is showing
+  (10 s cap); `countryCitiesProvider` is overridden from disk in tests,
+  because a cached `rootBundle` load never completes for the second test in
+  a file.
+- Phone guards are golden files on a seeded save at 390 x 844
+  (`test/golden/`).
+- German and Spanish need the 8 stage 2 keys when they merge (values in the
+  stage 2 plan, Task 2).
+
 ## Testing
 
 - **Phone guard**: before a screen gets a tablet layout, a widget or golden
