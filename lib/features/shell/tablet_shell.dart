@@ -12,7 +12,7 @@ import 'package:fnm/shared/tablet/tablet_shell_scope.dart';
 /// content area (in the shell) or the whole screen (full-screen routes).
 /// Everything else is drawn at phone width: [PhoneWidthFrame] in the shell,
 /// [FullScreenPhoneFrame] outside it. Each stage adds the screens it converts.
-const Set<String> tabletReadyPaths = <String>{Routes.hub};
+const Set<String> tabletReadyPaths = <String>{Routes.hub, Routes.callUps};
 
 /// The tablet frame around every in-save screen: sidebar on the left, top bar
 /// above, the routed screen in what is left.
