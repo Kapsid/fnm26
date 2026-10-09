@@ -22,6 +22,7 @@ const Set<String> tabletReadyPaths = <String>{
   Routes.tactics,
   Routes.ranking,
   Routes.results,
+  Routes.cup,
 };
 
 /// The tablet frame around every in-save screen: sidebar on the left, top bar

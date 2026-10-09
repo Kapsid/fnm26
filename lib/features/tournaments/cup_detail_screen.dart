@@ -27,8 +27,11 @@ import 'package:fnm/features/tournaments/tournament_stats.dart';
 import 'package:fnm/features/tournaments/tournament_summary.dart';
 import 'package:fnm/features/tournaments/wc_host_theme.dart';
 import 'package:fnm/l10n/app_localizations.dart';
+import 'package:fnm/shared/tablet/tablet.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
+
+part 'cup_detail_view.dart';
 
 /// World Championship detail: the qualifying group stage for every
 /// confederation (your region first), plus knockout/stats/history tabs that
@@ -37,6 +40,8 @@ class CupDetailScreen extends ConsumerWidget {
   const CupDetailScreen({required this.careerId, super.key});
 
   final int careerId;
+
+  static const Key tabletLayoutKey = Key('cupDetail.tabletLayout');
 
   /// The tab to land on: wherever the tournament actually is. Opening on
   /// qualifying while the final is being played makes the manager hunt for the
@@ -53,6 +58,9 @@ class CupDetailScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    if (TabletShellScope.isActive(context)) {
+      return _CupDetailTabletLayout(careerId: careerId);
+    }
     final l = AppLocalizations.of(context);
     final dataAsync = ref.watch(cupDetailProvider(careerId));
     final liveTab = _liveTab(dataAsync.valueOrNull);
@@ -90,17 +98,7 @@ class CupDetailScreen extends ConsumerWidget {
               labelColor: themed ? accent : AppColors.onSurface,
               unselectedLabelColor: AppColors.onSurfaceVariant,
               indicatorColor: accent,
-              tabs: [
-                Tab(text: l.tourCupTabSummary),
-                Tab(text: l.tourCupTabQualifying),
-                Tab(text: l.tourCupTabPlayoff),
-                Tab(text: l.tourCupTabFinals),
-                Tab(text: l.tourCupTabBracket),
-                Tab(text: l.tourCupTabAwards),
-                Tab(text: l.tourCupTabScorers),
-                Tab(text: l.tourCupTabHistory),
-                Tab(text: l.tourCupTabRecords),
-              ],
+              tabs: _cupTabs(l),
             ),
           ),
         ),
@@ -127,97 +125,7 @@ class CupDetailScreen extends ConsumerWidget {
                 ),
                 Expanded(
                   child: TabBarView(
-                    children: [
-                      // Host cities, stadiums, mascot and ball — first, as an
-                      // at-a-glance overview of the edition.
-                      TournamentSummaryTab(
-                        hostIds: data.hostIds,
-                        hostCities: data.hostCities,
-                        identity: data.identity,
-                        trophyAsset: Trophies.worldCup,
-                        code: code,
-                        name: name,
-                      ),
-                      if (!data.qualDrawWatched)
-                        _Soon(message: l.tourCupQualDrawSoon)
-                      else
-                        _Qualifying(
-                          groups: data.groups,
-                          playerConfederation: data.playerConfederation,
-                          playerNationId: data.playerNationId,
-                          code: code,
-                          name: name,
-                        ),
-                      // The intercontinental play-off — its own tab, shown as a
-                      // knockout bracket for the last two finals berths.
-                      _PlayoffTab(careerId: careerId),
-                      if (data.hasFinals && !data.finalsDrawWatched)
-                        _Soon(message: l.tourCupFinalsDrawSoon)
-                      else if (data.hasFinals)
-                        _FinalsGroups(
-                          groups: data.finalsGroups,
-                          groupFixtures: data.groupFixtures,
-                          playerNationId: data.playerNationId,
-                          code: code,
-                          name: name,
-                        )
-                      else
-                        _Soon(message: l.tourCupFinalsDrawnAfterQual),
-                      if (data.knockout.isNotEmpty)
-                        TournamentBracket(
-                          fixtures: data.knockout,
-                          rounds: _rounds,
-                          ladder: _ladder,
-                          champion: data.champion,
-                          championLabel: l.tourCupWorldChampions,
-                          playerNationId: data.playerNationId,
-                          runSummary: playerRunSummary(
-                            l,
-                            playerNationId: data.playerNationId,
-                            champion: data.champion,
-                            knockout: data.knockout,
-                            groups: data.finalsGroups,
-                            championTitle: l.tourCupWorldChampionsTitle,
-                          ),
-                          groupSeeds: groupSeedsOf(data.finalsGroups),
-                          code: code,
-                          name: name,
-                        )
-                      else
-                        _Soon(message: l.tourCupKnockoutSoon),
-                      // Every individual honour for the edition in one place.
-                      TournamentAwardsTab(
-                        highlightNations: data.myNationIds,
-                        team: data.teamOfTournament,
-                        goldenGlove: data.goldenGlove,
-                        code: code,
-                        name: name,
-                      ),
-                      _Scorers(
-                        qualifying: data.scorersQualifying,
-                        finals: data.scorersFinals,
-                        allTime: data.allTimeScorers,
-                        playerNames: data.playerNames,
-                        code: code,
-                        highlightNations: data.myNationIds,
-                      ),
-                      // Not the shared TournamentHistory: the World Cup screen's
-                      // history browses every competition, not just its own.
-                      _History(honours: data.honours, name: name, code: code),
-                      TournamentStatsTab(
-                        // data.honours spans every competition here — the
-                        // records are World-Cup-only.
-                        honours: data.honours
-                            .where((h) => h.competition == 'World Championship')
-                            .toList(),
-                        allTimeScorers: data.allTimeScorers,
-                        topGames: data.topGames,
-                        topCups: data.topCups,
-                        highlightNations: data.myNationIds,
-                        code: code,
-                        name: name,
-                      ),
-                    ],
+                    children: _cupTabViews(context, data, careerId: careerId),
                   ),
                 ),
               ],
@@ -227,6 +135,128 @@ class CupDetailScreen extends ConsumerWidget {
       ),
     );
   }
+}
+
+/// The World Championship's nine tabs, in the order [_cupTabViews] builds
+/// their bodies.
+List<Tab> _cupTabs(AppLocalizations l) => [
+  Tab(text: l.tourCupTabSummary),
+  Tab(text: l.tourCupTabQualifying),
+  Tab(text: l.tourCupTabPlayoff),
+  Tab(text: l.tourCupTabFinals),
+  Tab(text: l.tourCupTabBracket),
+  Tab(text: l.tourCupTabAwards),
+  Tab(text: l.tourCupTabScorers),
+  Tab(text: l.tourCupTabHistory),
+  Tab(text: l.tourCupTabRecords),
+];
+
+/// The nine tab bodies. Shared by the phone screen and [CupDetailView]:
+/// [grid] (a tablet) lays the group tables out in columns and opens the
+/// bracket full width.
+List<Widget> _cupTabViews(
+  BuildContext context,
+  CupData data, {
+  required int careerId,
+  bool grid = false,
+}) {
+  final l = AppLocalizations.of(context);
+  String code(int id) => data.nations[id]?.code ?? '??';
+  String name(int id) => data.nations[id]?.name ?? l.tourCupUnknown;
+  return [
+    // Host cities, stadiums, mascot and ball — first, as an
+    // at-a-glance overview of the edition.
+    TournamentSummaryTab(
+      hostIds: data.hostIds,
+      hostCities: data.hostCities,
+      identity: data.identity,
+      trophyAsset: Trophies.worldCup,
+      code: code,
+      name: name,
+    ),
+    if (!data.qualDrawWatched)
+      _Soon(message: l.tourCupQualDrawSoon)
+    else
+      _Qualifying(
+        grid: grid,
+        groups: data.groups,
+        playerConfederation: data.playerConfederation,
+        playerNationId: data.playerNationId,
+        code: code,
+        name: name,
+      ),
+    // The intercontinental play-off — its own tab, shown as a
+    // knockout bracket for the last two finals berths.
+    _PlayoffTab(careerId: careerId),
+    if (data.hasFinals && !data.finalsDrawWatched)
+      _Soon(message: l.tourCupFinalsDrawSoon)
+    else if (data.hasFinals)
+      _FinalsGroups(
+        grid: grid,
+        groups: data.finalsGroups,
+        groupFixtures: data.groupFixtures,
+        playerNationId: data.playerNationId,
+        code: code,
+        name: name,
+      )
+    else
+      _Soon(message: l.tourCupFinalsDrawnAfterQual),
+    if (data.knockout.isNotEmpty)
+      TournamentBracket(
+        wide: grid,
+        fixtures: data.knockout,
+        rounds: _rounds,
+        ladder: _ladder,
+        champion: data.champion,
+        championLabel: l.tourCupWorldChampions,
+        playerNationId: data.playerNationId,
+        runSummary: playerRunSummary(
+          l,
+          playerNationId: data.playerNationId,
+          champion: data.champion,
+          knockout: data.knockout,
+          groups: data.finalsGroups,
+          championTitle: l.tourCupWorldChampionsTitle,
+        ),
+        groupSeeds: groupSeedsOf(data.finalsGroups),
+        code: code,
+        name: name,
+      )
+    else
+      _Soon(message: l.tourCupKnockoutSoon),
+    // Every individual honour for the edition in one place.
+    TournamentAwardsTab(
+      highlightNations: data.myNationIds,
+      team: data.teamOfTournament,
+      goldenGlove: data.goldenGlove,
+      code: code,
+      name: name,
+    ),
+    _Scorers(
+      qualifying: data.scorersQualifying,
+      finals: data.scorersFinals,
+      allTime: data.allTimeScorers,
+      playerNames: data.playerNames,
+      code: code,
+      highlightNations: data.myNationIds,
+    ),
+    // Not the shared TournamentHistory: the World Cup screen's
+    // history browses every competition, not just its own.
+    _History(honours: data.honours, name: name, code: code),
+    TournamentStatsTab(
+      // data.honours spans every competition here — the
+      // records are World-Cup-only.
+      honours: data.honours
+          .where((h) => h.competition == 'World Championship')
+          .toList(),
+      allTimeScorers: data.allTimeScorers,
+      topGames: data.topGames,
+      topCups: data.topCups,
+      highlightNations: data.myNationIds,
+      code: code,
+      name: name,
+    ),
+  ];
 }
 
 /// The intercontinental play-off tab: the knockout for the last two finals
@@ -266,6 +296,7 @@ class _Qualifying extends StatefulWidget {
     required this.playerNationId,
     required this.code,
     required this.name,
+    this.grid = false,
   });
 
   final List<ConfederationGroupTable> groups;
@@ -273,6 +304,9 @@ class _Qualifying extends StatefulWidget {
   final int playerNationId;
   final String Function(int) code;
   final String Function(int) name;
+
+  /// A tablet: each confederation's groups in columns rather than stacked.
+  final bool grid;
 
   @override
   State<_Qualifying> createState() => _QualifyingState();
@@ -358,6 +392,38 @@ class _QualifyingState extends State<_Qualifying> {
     );
   }
 
+  /// [conf]'s group tables, the manager's own first: stacked with a gap under
+  /// each on a phone, in columns on a tablet.
+  List<Widget> _groupCards(
+    Confederation conf,
+    Map<Confederation, List<ConfederationGroupTable>> byConf,
+  ) {
+    final adv = GroupAdvancement.worldCupQualifying(conf, byConf[conf]!.length);
+    final cards = [
+      for (final g in _mineFirst(byConf[conf]!, widget.playerNationId))
+        _GroupCard(
+          group: g,
+          playerNationId: widget.playerNationId,
+          code: widget.code,
+          name: widget.name,
+          directCount: adv.direct,
+          contentionPos: adv.contention,
+        ),
+    ];
+    if (widget.grid) {
+      return [
+        ColumnFlow(children: cards),
+        const SizedBox(height: AppSpacing.sm),
+      ];
+    }
+    return [
+      for (final card in cards) ...[
+        card,
+        const SizedBox(height: AppSpacing.sm),
+      ],
+    ];
+  }
+
   Widget _list(
     List<Confederation> confs,
     Map<Confederation, List<ConfederationGroupTable>> byConf,
@@ -379,23 +445,7 @@ class _QualifyingState extends State<_Qualifying> {
               ),
             ),
           ),
-          for (final g in _mineFirst(byConf[conf]!, widget.playerNationId)) ...[
-            () {
-              final adv = GroupAdvancement.worldCupQualifying(
-                conf,
-                byConf[conf]!.length,
-              );
-              return _GroupCard(
-                group: g,
-                playerNationId: widget.playerNationId,
-                code: widget.code,
-                name: widget.name,
-                directCount: adv.direct,
-                contentionPos: adv.contention,
-              );
-            }(),
-            const SizedBox(height: AppSpacing.sm),
-          ],
+          ..._groupCards(conf, byConf),
           // The cross-group ladder for the CONTESTED position — usually the
           // second-placed teams ranked against each other, but the group
           // WINNERS in a confederation with fewer berths than groups (Oceania
@@ -654,6 +704,7 @@ class _FinalsGroups extends StatelessWidget {
     required this.playerNationId,
     required this.code,
     required this.name,
+    this.grid = false,
   });
 
   final List<FinalsGroupTable> groups;
@@ -661,6 +712,9 @@ class _FinalsGroups extends StatelessWidget {
   final int playerNationId;
   final String Function(int) code;
   final String Function(int) name;
+
+  /// A tablet: the group tables in columns rather than stacked.
+  final bool grid;
 
   bool _isMine(FinalsGroupTable g) =>
       g.standings.any((s) => s.nationId == playerNationId);
@@ -694,24 +748,30 @@ class _FinalsGroups extends StatelessWidget {
         ..sort((a, b) => a.date.compareTo(b.date));
     }
 
+    Widget card(FinalsGroupTable g) => _GroupCard(
+      group: (
+        confederation: Confederation.europe,
+        groupName: g.name,
+        standings: g.standings,
+      ),
+      playerNationId: playerNationId,
+      code: code,
+      name: name,
+      contentionPos: qualifyThirds > 0 ? 3 : null,
+      matches: matchesOf(g),
+    );
+
     return ListView(
       padding: const EdgeInsets.all(AppSpacing.marginMobile),
       children: [
-        for (final g in ordered) ...[
-          _GroupCard(
-            group: (
-              confederation: Confederation.europe,
-              groupName: g.name,
-              standings: g.standings,
-            ),
-            playerNationId: playerNationId,
-            code: code,
-            name: name,
-            contentionPos: qualifyThirds > 0 ? 3 : null,
-            matches: matchesOf(g),
-          ),
+        if (grid) ...[
+          ColumnFlow(children: [for (final g in ordered) card(g)]),
           const SizedBox(height: AppSpacing.md),
-        ],
+        ] else
+          for (final g in ordered) ...[
+            card(g),
+            const SizedBox(height: AppSpacing.md),
+          ],
         if (qualifyThirds > 0 && thirds.length > qualifyThirds) ...[
           BestThirdsCard(
             thirds: thirds,
