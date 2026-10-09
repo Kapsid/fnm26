@@ -4,7 +4,12 @@ import 'package:fnm/shared/tablet/adaptive_sheet.dart';
 
 import '../helpers/pump_app.dart';
 
-Future<void> _open(WidgetTester tester, Size size, {bool dismissible = true}) async {
+Future<void> _open(
+  WidgetTester tester,
+  Size size, {
+  bool dismissible = true,
+  Widget body = const Text('sheet body'),
+}) async {
   tester.view.physicalSize = size;
   tester.view.devicePixelRatio = 1;
   addTearDown(tester.view.reset);
@@ -15,7 +20,7 @@ Future<void> _open(WidgetTester tester, Size size, {bool dismissible = true}) as
           onPressed: () => showAdaptiveSheet<void>(
             context: context,
             isDismissible: dismissible,
-            builder: (_) => const Text('sheet body'),
+            builder: (_) => body,
           ),
           child: const Text('open'),
         ),
@@ -34,16 +39,30 @@ void main() {
     expect(find.text('sheet body'), findsOneWidget);
   });
 
-  testWidgets('on a tablet it is a centred dialog', (tester) async {
+  Rect card(WidgetTester tester) => tester.getRect(
+    find
+        .descendant(of: find.byType(Dialog), matching: find.byType(Material))
+        .first,
+  );
+
+  testWidgets('on a tablet it is a centred dialog 560 wide', (tester) async {
     await _open(tester, const Size(1194, 834));
     expect(find.byType(Dialog), findsOneWidget);
     expect(find.byType(BottomSheet), findsNothing);
-    // The Dialog widget itself fills the window; its Material is the card.
-    final rect = tester.getRect(
-      find.descendant(of: find.byType(Dialog), matching: find.byType(Material)).first,
-    );
-    expect(rect.width, lessThanOrEqualTo(560));
+    final rect = card(tester);
+    expect(rect.width, 560);
     expect(rect.center.dx, closeTo(597, 1));
+  });
+
+  testWidgets('a tall body is capped at 85% of the window height', (
+    tester,
+  ) async {
+    await _open(
+      tester,
+      const Size(1194, 834),
+      body: const SizedBox(height: 5000, child: Text('sheet body')),
+    );
+    expect(card(tester).height, closeTo(834 * 0.85, 1));
   });
 
   testWidgets('a sheet that must not be dismissed is not, on a tablet', (
