@@ -208,7 +208,8 @@ class _ResultsScreenState extends ConsumerState<ResultsScreen> {
   /// Whether cycle [c] is showing its matches. The one being played opens; the
   /// rest wait behind their summary line, which is the whole point of folding
   /// them.
-  bool _cycleOpen(int c, int cyclePointer) => _cycles[c] ?? (c == cyclePointer);
+  bool _cycleOpen(int c, int cyclePointer) =>
+      _cycles[c] ?? (c == cyclePointer);
 
   int get careerId => widget.careerId;
 
