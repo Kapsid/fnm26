@@ -323,7 +323,6 @@ class _CallUpScreenState extends ConsumerState<CallUpScreen> {
                       .watch(squadConditionProvider(widget.careerId))
                       .valueOrNull ??
                   const <int, PlayerCondition>{},
-              saveSeed: saveSeed,
             );
           },
         ),

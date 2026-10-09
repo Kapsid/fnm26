@@ -66,13 +66,14 @@ class PanelBox extends StatelessWidget {
   final Widget child;
 
   @override
-  Widget build(BuildContext context) => DecoratedBox(
-    decoration: BoxDecoration(
-      color: AppColors.surfaceContainerLow,
+  Widget build(BuildContext context) => Material(
+    color: AppColors.surfaceContainerLow,
+    shape: RoundedRectangleBorder(
       borderRadius: AppRadii.baseAll,
-      border: Border.all(color: AppColors.outlineVariant),
+      side: const BorderSide(color: AppColors.outlineVariant),
     ),
-    child: ClipRRect(borderRadius: AppRadii.baseAll, child: child),
+    clipBehavior: Clip.antiAlias,
+    child: child,
   );
 }
 

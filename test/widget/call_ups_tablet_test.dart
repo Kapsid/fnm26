@@ -89,4 +89,31 @@ void main() {
     );
     await tester.pumpWidget(const SizedBox());
   });
+
+  testWidgets('a 10.2in iPad (1080 x 810) fits all three columns', (
+    tester,
+  ) async {
+    final save = await seedSave(tester, formFactor: FormFactor.tablet);
+    await pumpRoute(
+      tester,
+      save,
+      location(save),
+      size: const Size(1080, 810),
+    );
+    expect(tester.takeException(), isNull);
+    expect(find.byKey(CallUpScreen.tabletLayoutKey), findsOneWidget);
+    expect(find.byType(DataGrid<Player>), findsOneWidget);
+    expect(find.byType(DetailPaneHost), findsOneWidget);
+
+    // Opening a player must land in the pane, never silently do nothing.
+    final names = find.descendant(
+      of: find.byType(DataGrid<Player>),
+      matching: find.byKey(const ValueKey('callUps.name')),
+    );
+    await tester.tap(names.at(1));
+    await settle(tester);
+    expect(find.byType(PlayerView), findsOneWidget);
+    expect(tester.takeException(), isNull);
+    await tester.pumpWidget(const SizedBox());
+  });
 }

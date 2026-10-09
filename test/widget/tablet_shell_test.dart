@@ -66,10 +66,31 @@ void main() {
     );
   });
 
-  testWidgets('a screen with no tablet layout yet is held at phone width', (
+  testWidgets('the shell gives its screen the whole content area', (
     tester,
   ) async {
     await pump(tester, const Size(1194, 834), '/results?careerId=1');
+    expect(find.byType(PhoneWidthFrame), findsNothing);
+    expect(
+      tester.getSize(find.byType(Scaffold).last).width,
+      greaterThan(PhoneWidthFrame.maxWidth),
+    );
+  });
+
+  testWidgets('ShellPhoneFrame holds a page at phone width inside the shell', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(1194, 834);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+    await tester.pumpApp(
+      TabletShell(
+        location: Uri.parse('/results?careerId=1'),
+        child: const ShellPhoneFrame(child: Scaffold(body: Text('the screen'))),
+      ),
+      overrides: overrides,
+    );
+    await tester.pump();
     final frame = tester.getSize(find.byType(PhoneWidthFrame));
     final inner = tester.getSize(find.byType(Scaffold).last);
     expect(frame.width, greaterThan(PhoneWidthFrame.maxWidth));
@@ -103,11 +124,13 @@ void main() {
     await tester.pumpApp(
       TabletShell(
         location: Uri.parse('/youth?careerId=1'),
-        child: Builder(
-          builder: (context) {
-            seen = MediaQuery.viewInsetsOf(context).bottom;
-            return const SizedBox.expand();
-          },
+        child: ShellPhoneFrame(
+          child: Builder(
+            builder: (context) {
+              seen = MediaQuery.viewInsetsOf(context).bottom;
+              return const SizedBox.expand();
+            },
+          ),
         ),
       ),
       overrides: overrides,

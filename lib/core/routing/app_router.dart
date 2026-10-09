@@ -833,7 +833,8 @@ List<RouteBase> _tabletRoutes(List<GoRoute> routes) => [
         TabletShell(location: state.uri, child: child),
     routes: [
       for (final r in routes)
-        if (!Routes.fullScreen.contains(r.path)) r,
+        if (!Routes.fullScreen.contains(r.path))
+          if (tabletReadyPaths.contains(r.path)) r else _shellFramed(r),
     ],
   ),
   for (final r in routes)
@@ -846,4 +847,11 @@ GoRoute _phoneFramed(GoRoute route) => GoRoute(
   path: route.path,
   builder: (context, state) =>
       FullScreenPhoneFrame(child: route.builder!(context, state)),
+);
+
+/// [route] with its screen drawn through [ShellPhoneFrame].
+GoRoute _shellFramed(GoRoute route) => GoRoute(
+  path: route.path,
+  builder: (context, state) =>
+      ShellPhoneFrame(child: route.builder!(context, state)),
 );

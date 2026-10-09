@@ -35,9 +35,6 @@ class TabletShell extends StatelessWidget {
     if (careerId == null || careerId <= 0 || !context.isTabletWindow) {
       return child;
     }
-    final content = tabletReadyPaths.contains(location.path)
-        ? child
-        : PhoneWidthFrame(child: child);
     return TabletShellScope(
       // A Material, not a ColoredBox: it supplies the DefaultTextStyle the
       // sidebar and top bar texts need (without it they get the yellow
@@ -62,7 +59,7 @@ class TabletShell extends StatelessWidget {
                       thickness: 1,
                       color: AppColors.outlineVariant,
                     ),
-                    Expanded(child: content),
+                    Expanded(child: child),
                   ],
                 ),
               ),
@@ -72,6 +69,23 @@ class TabletShell extends StatelessWidget {
       ),
     );
   }
+}
+
+/// An in-shell screen with no tablet layout yet, framed at phone width.
+///
+/// Applied to the PAGE (see `_tabletRoutes`), not to the shell's navigator:
+/// framing by the current location framed an outgoing tablet page at 600
+/// while it was still transitioning out, and stretched an outgoing phone
+/// page. Outside the shell (a split-view window) the child is left alone.
+class ShellPhoneFrame extends StatelessWidget {
+  const ShellPhoneFrame({required this.child, super.key});
+
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) => TabletShellScope.isActive(context)
+      ? PhoneWidthFrame(child: child)
+      : child;
 }
 
 /// Draws a phone screen in the middle of a wider area, at most [maxWidth]

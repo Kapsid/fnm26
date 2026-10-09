@@ -13,14 +13,13 @@ class _CallUpTabletLayout extends StatelessWidget {
     required this.coverage,
     required this.formation,
     required this.condition,
-    required this.saveSeed,
   });
 
-  static const double _squadWidth = 260;
-  static const double _paneWidth = 320;
-
-  /// Pool (at least 300) + squad + card + two gaps.
-  static const double _threeColumnWidth = 300 + _squadWidth + _paneWidth + 24;
+  // The pool takes what the two fixed columns leave. At the narrowest
+  // tablet content width (a 10.2in iPad: about 840, 808 inside the padding)
+  // that is still about 270.
+  static const double _squadWidth = 230;
+  static const double _paneWidth = 290;
 
   final _CallUpScreenState state;
   final SquadData data;
@@ -30,7 +29,6 @@ class _CallUpTabletLayout extends StatelessWidget {
   final int coverage;
   final Formation formation;
   final Map<int, PlayerCondition> condition;
-  final int saveSeed;
 
   int get careerId => state.widget.careerId;
 
@@ -54,60 +52,50 @@ class _CallUpTabletLayout extends StatelessWidget {
           final focused = rows.where((p) => p.id == focusedId).firstOrNull;
           return Padding(
             padding: const EdgeInsets.all(AppSpacing.md),
-            // A window too narrow for three columns (split view, or the page
-            // briefly framed at phone width while a route changes) drops the
-            // player card rather than overflow.
-            child: LayoutBuilder(
-              builder: (context, box) {
-                final showPane = box.maxWidth >= _threeColumnWidth;
-                return Row(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Expanded(
-                      child: Panel(
-                        title: l.squadStatPool,
-                        expand: true,
-                        padding: EdgeInsets.zero,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: [
-                            _lineChips(context, l),
-                            Expanded(
-                              child: DataGrid<Player>(
-                                rows: rows,
-                                columnSets: [_columns(context, l)],
-                                selected: focused,
-                                onSelect: (p) => openPlayer(
-                                  context,
-                                  careerId: careerId,
-                                  playerId: p.id,
-                                ),
-                              ),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Expanded(
+                  child: Panel(
+                    title: l.squadStatPool,
+                    expand: true,
+                    padding: EdgeInsets.zero,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        _lineChips(context, l),
+                        Expanded(
+                          child: DataGrid<Player>(
+                            rows: rows,
+                            columnSets: [_columns(context, l)],
+                            selected: focused,
+                            onSelect: (p) => openPlayer(
+                              context,
+                              careerId: careerId,
+                              playerId: p.id,
                             ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: AppSpacing.md - 4),
-                    SizedBox(
-                      width: _squadWidth,
-                      child: _squadPanel(context, l, status),
-                    ),
-                    if (showPane) ...[
-                      const SizedBox(width: AppSpacing.md - 4),
-                      SizedBox(
-                        width: _paneWidth,
-                        child: PanelBox(
-                          child: DetailPaneHost(
-                            careerId: careerId,
-                            target: state._pane.value,
                           ),
                         ),
-                      ),
-                    ],
-                  ],
-                );
-              },
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(width: AppSpacing.md - 4),
+                SizedBox(
+                  width: _squadWidth,
+                  child: _squadPanel(context, l, status),
+                ),
+                const SizedBox(width: AppSpacing.md - 4),
+                SizedBox(
+                  width: _paneWidth,
+                  child: PanelBox(
+                    child: DetailPaneHost(
+                      careerId: careerId,
+                      target: state._pane.value,
+                    ),
+                  ),
+                ),
+              ],
             ),
           );
         },
@@ -313,62 +301,57 @@ class _CallUpTabletLayout extends StatelessWidget {
             ),
           const Divider(height: 1),
           Expanded(
-            // The panel paints its own fill, so the tiles need a Material to
-            // paint their ink on.
-            child: Material(
-              type: MaterialType.transparency,
-              child: ListView(
-                children: [
-                  for (final c in _CallUpScreenState._order)
-                    if (named.any((p) => p.category == c)) ...[
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(12, 10, 12, 2),
-                        child: Text(
-                          state._shortHeading(l, c).toUpperCase(),
-                          style: TabletText.sectionLabel,
+            child: ListView(
+              children: [
+                for (final c in _CallUpScreenState._order)
+                  if (named.any((p) => p.category == c)) ...[
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(12, 10, 12, 2),
+                      child: Text(
+                        state._shortHeading(l, c).toUpperCase(),
+                        style: TabletText.sectionLabel,
+                      ),
+                    ),
+                    for (final p in named.where((p) => p.category == c))
+                      ListTile(
+                        dense: true,
+                        visualDensity: VisualDensity.compact,
+                        leading: TacticalChip(p.position.label),
+                        title: Text(
+                          p.name,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        trailing: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              '${p.overall}',
+                              style: TabletText.cellNumeric,
+                            ),
+                            if (!locked)
+                              IconButton(
+                                icon: const Icon(Icons.close, size: 16),
+                                visualDensity: VisualDensity.compact,
+                                onPressed: () => state._toggle(
+                                  context,
+                                  p,
+                                  false,
+                                  selected: selected,
+                                  absences: data.absences,
+                                  coverage: coverage,
+                                ),
+                              ),
+                          ],
+                        ),
+                        onTap: () => openPlayer(
+                          context,
+                          careerId: careerId,
+                          playerId: p.id,
                         ),
                       ),
-                      for (final p in named.where((p) => p.category == c))
-                        ListTile(
-                          dense: true,
-                          visualDensity: VisualDensity.compact,
-                          leading: TacticalChip(p.position.label),
-                          title: Text(
-                            p.name,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          trailing: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Text(
-                                '${p.overall}',
-                                style: TabletText.cellNumeric,
-                              ),
-                              if (!locked)
-                                IconButton(
-                                  icon: const Icon(Icons.close, size: 16),
-                                  visualDensity: VisualDensity.compact,
-                                  onPressed: () => state._toggle(
-                                    context,
-                                    p,
-                                    false,
-                                    selected: selected,
-                                    absences: data.absences,
-                                    coverage: coverage,
-                                  ),
-                                ),
-                            ],
-                          ),
-                          onTap: () => openPlayer(
-                            context,
-                            careerId: careerId,
-                            playerId: p.id,
-                          ),
-                        ),
-                    ],
-                ],
-              ),
+                  ],
+              ],
             ),
           ),
           Padding(
