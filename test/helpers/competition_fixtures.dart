@@ -8,6 +8,7 @@ import 'package:fnm/features/tournaments/continental_clash_providers.dart';
 import 'package:fnm/features/tournaments/continental_detail_providers.dart';
 import 'package:fnm/features/tournaments/cup_detail_providers.dart';
 import 'package:fnm/features/tournaments/finals_draw_providers.dart';
+import 'package:fnm/features/tournaments/intercontinental_playoff_providers.dart';
 import 'package:fnm/features/tournaments/nations_cup_draw_providers.dart';
 import 'package:fnm/features/tournaments/nations_cup_providers.dart';
 
@@ -236,5 +237,29 @@ ContinentalClashData fakeClash(int playerNationId) {
     nations: realNationsById,
     playerNationId: playerNationId,
     honours: const [],
+  );
+}
+
+/// The play-off: two seeded sides with a bye to a path final, four in the
+/// semis. The manager's nation is seeded and wins its final.
+PlayoffView fakePlayoff(int playerNationId) {
+  final f = [for (final n in fieldOf(playerNationId, 6)) n.id];
+  PlayoffTie tie(int home, int away, {bool isFinal = false}) => (
+    home: home,
+    away: away,
+    homeScore: 2,
+    awayScore: 1,
+    winner: home,
+    isFinal: isFinal,
+  );
+  return (
+    ties: [
+      tie(f[2], f[3]),
+      tie(f[4], f[5]),
+      tie(f[0], f[2], isFinal: true),
+      tie(f[1], f[4], isFinal: true),
+    ],
+    nations: realNationsById,
+    playerNationId: playerNationId,
   );
 }
