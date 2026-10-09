@@ -11,6 +11,12 @@ import 'package:fnm/core/theme/app_dimens.dart';
 /// [showModalBottomSheet], and on a phone forwards them unchanged. On a tablet
 /// [enableDrag] and [showDragHandle] are ignored, and the dialog goes on the
 /// root navigator.
+///
+/// On a tablet the sheet is a root dialog, not a route of the screen's own
+/// navigator. Inside [builder], pop with the sheet's own context
+/// (`Navigator.of(sheetContext).pop(x)`), never the screen's, which would pop
+/// the screen from the shell navigator. And pop BEFORE navigating (go/push)
+/// from inside sheet content, or the new page lands underneath the dialog.
 Future<T?> showAdaptiveSheet<T>({
   required BuildContext context,
   required WidgetBuilder builder,

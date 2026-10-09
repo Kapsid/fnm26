@@ -33,7 +33,10 @@ class TabletShell extends StatelessWidget {
         ? child
         : PhoneWidthFrame(child: child);
     return TabletShellScope(
-      child: ColoredBox(
+      // A Material, not a ColoredBox: it supplies the DefaultTextStyle the
+      // sidebar and top bar texts need (without it they get the yellow
+      // double underline).
+      child: Material(
         color: AppColors.surface,
         child: SafeArea(
           child: Row(

@@ -44,6 +44,28 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
+  testWidgets('sidebar and top bar text sit on a Material (no yellow '
+      'underline)', (tester) async {
+    await pump(tester, const Size(1194, 834), '/hub?careerId=1');
+    final sidebarText = find.descendant(
+      of: find.byType(TabletSidebar),
+      matching: find.byType(Text),
+    );
+    expect(sidebarText, findsWidgets);
+    expect(
+      find.ancestor(of: sidebarText.first, matching: find.byType(Material)),
+      findsWidgets,
+    );
+    final topText = find.descendant(
+      of: find.byType(TabletTopBar),
+      matching: find.byType(Text),
+    );
+    expect(
+      find.ancestor(of: topText.first, matching: find.byType(Material)),
+      findsWidgets,
+    );
+  });
+
   testWidgets('a screen with no tablet layout yet is held at phone width', (
     tester,
   ) async {

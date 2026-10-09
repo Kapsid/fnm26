@@ -32,6 +32,7 @@ import 'package:fnm/features/tactics/formation_picker.dart';
 import 'package:fnm/features/tactics/tactics_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/tablet/adaptive_sheet.dart';
+import 'package:fnm/shared/tablet/tablet_shell_scope.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
 
@@ -536,7 +537,7 @@ class TacticsScreen extends ConsumerWidget {
       // the sheet instead of overflowing the default half-screen cap and
       // pushing the header/handle off the top (which left it unclosable).
       isScrollControlled: true,
-      builder: (_) {
+      builder: (sheetContext) {
         final maxHeight = MediaQuery.of(context).size.height * 0.7;
         return ConstrainedBox(
           constraints: BoxConstraints(maxHeight: maxHeight),
@@ -576,7 +577,7 @@ class TacticsScreen extends ConsumerWidget {
                     // if the list is long.
                     IconButton(
                       icon: const Icon(Icons.close, size: 20),
-                      onPressed: () => Navigator.of(context).pop(),
+                      onPressed: () => Navigator.of(sheetContext).pop(),
                     ),
                   ],
                 ),
@@ -597,7 +598,7 @@ class TacticsScreen extends ConsumerWidget {
                               color: AppColors.onSurfaceVariant,
                             ),
                           ),
-                          onTap: () => Navigator.of(context).pop(r),
+                          onTap: () => Navigator.of(sheetContext).pop(r),
                         ),
                     ],
                   ),
@@ -644,7 +645,7 @@ class TacticsScreen extends ConsumerWidget {
     final picked = await showAdaptiveSheet<int>(
       context: context,
       backgroundColor: AppColors.surfaceContainer,
-      builder: (_) => ListView(
+      builder: (sheetContext) => ListView(
         padding: const EdgeInsets.all(AppSpacing.md),
         children: [
           Text(
@@ -712,15 +713,24 @@ class TacticsScreen extends ConsumerWidget {
                         size: 20,
                         color: AppColors.onSurfaceVariant,
                       ),
-                      onPressed: () => context.push(
-                        '${Routes.player}?careerId=$careerId&playerId=${p.id}',
-                      ),
+                      onPressed: () {
+                        final route =
+                            '${Routes.player}?careerId=$careerId&playerId=${p.id}';
+                        // On a tablet the sheet is a root dialog: a push from
+                        // here would land on the shell navigator UNDER it, so
+                        // close it first. On a phone the sheet stays open
+                        // beneath the player page, as before.
+                        if (TabletShellScope.isActive(context)) {
+                          Navigator.of(sheetContext).pop();
+                        }
+                        context.push(route);
+                      },
                     ),
                   ],
                 ),
                 selected: inXi,
                 selectedTileColor: AppColors.surfaceContainerHigh,
-                onTap: () => Navigator.of(context).pop(p.id),
+                onTap: () => Navigator.of(sheetContext).pop(p.id),
               );
             }(),
         ],
@@ -1286,7 +1296,7 @@ class _CaptainCard extends ConsumerWidget {
     final picked = await showAdaptiveSheet<int>(
       context: context,
       backgroundColor: AppColors.surfaceContainer,
-      builder: (_) => ListView(
+      builder: (sheetContext) => ListView(
         padding: const EdgeInsets.all(AppSpacing.md),
         children: [
           Text(
@@ -1313,7 +1323,7 @@ class _CaptainCard extends ConsumerWidget {
                   : Text('${p.overall}', style: AppTypography.labelMedium),
               // Tapping the current captain takes the armband back off him, so
               // "no captain" needs no row of its own.
-              onTap: () => Navigator.of(context).pop(p.id),
+              onTap: () => Navigator.of(sheetContext).pop(p.id),
             ),
         ],
       ),
