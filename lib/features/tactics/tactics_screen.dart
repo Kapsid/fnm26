@@ -22,7 +22,6 @@ import 'package:fnm/features/hub/hub_providers.dart';
 import 'package:fnm/features/match/match_preview_screen.dart'
     show OpponentBriefing, opponentKeyMenProvider;
 import 'package:fnm/features/onboarding/tour_keys.dart';
-import 'package:fnm/features/shell/tablet_shell.dart' show PhoneWidthFrame;
 import 'package:fnm/features/squad/captain_providers.dart';
 import 'package:fnm/features/tactics/absence_providers.dart';
 import 'package:fnm/features/tactics/familiarity_providers.dart';
@@ -30,6 +29,7 @@ import 'package:fnm/features/tactics/formation_picker.dart';
 import 'package:fnm/features/tactics/nation_squad_tab.dart';
 import 'package:fnm/features/tactics/player_roles_providers.dart';
 import 'package:fnm/features/tactics/set_piece_takers_providers.dart';
+import 'package:fnm/features/tactics/squad_tablet_layout.dart';
 import 'package:fnm/features/tactics/tactic_preset_providers.dart';
 import 'package:fnm/features/tactics/tactics_pitch.dart';
 import 'package:fnm/features/tactics/tactics_providers.dart';
@@ -121,13 +121,8 @@ class TacticsScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     if (TabletShellScope.isActive(context)) {
-      // Squad is its own sidebar destination on the same route. Drawn at
-      // phone width until it has a tablet layout of its own.
-      if (initialTab == 3) {
-        return Scaffold(
-          body: PhoneWidthFrame(child: NationSquadTab(careerId: careerId)),
-        );
-      }
+      // Squad is its own sidebar destination on the same route.
+      if (initialTab == 3) return SquadTabletLayout(careerId: careerId);
       return _TacticsTabletLayout(screen: this);
     }
     final l = AppLocalizations.of(context);

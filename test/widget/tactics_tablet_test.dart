@@ -10,6 +10,7 @@ import 'package:fnm/features/onboarding/tour_keys.dart';
 import 'package:fnm/features/shell/tablet_shell.dart';
 import 'package:fnm/features/shell/tablet_sidebar.dart';
 import 'package:fnm/features/tactics/formation_picker.dart';
+import 'package:fnm/features/tactics/squad_tablet_layout.dart';
 import 'package:fnm/features/tactics/tactics_pitch.dart';
 import 'package:fnm/features/tactics/tactics_providers.dart';
 import 'package:fnm/features/tactics/tactics_screen.dart';
@@ -50,7 +51,7 @@ void main() {
     await tester.pumpWidget(const SizedBox());
   });
 
-  testWidgets('squad tab is drawn at phone width until it has its own layout', (
+  testWidgets('the squad tab is the squad layout, not the tactics one', (
     tester,
   ) async {
     final save = await seedSave(tester, formFactor: FormFactor.tablet);
@@ -61,7 +62,7 @@ void main() {
       size: kTabletSize,
     );
     expect(tester.takeException(), isNull);
-    expect(find.byType(PhoneWidthFrame), findsOneWidget);
+    expect(find.byKey(SquadTabletLayout.layoutKey), findsOneWidget);
     expect(find.byKey(TacticsScreen.tabletLayoutKey), findsNothing);
     await tester.pumpWidget(const SizedBox());
   });
