@@ -100,4 +100,31 @@ void main() {
     );
     expect(tester.takeException(), isNull);
   });
+
+  testWidgets('minDetailWidth caps the master however far the divider goes', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(1000, 700);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+    await tester.pumpApp(
+      const Scaffold(
+        body: MasterDetail(
+          master: SizedBox.expand(key: Key('master')),
+          detail: SizedBox.expand(key: Key('detail')),
+          initialFraction: 0.9,
+          maxFraction: 0.9,
+          minDetailWidth: 300,
+        ),
+      ),
+    );
+    // Starts over the cap: clamped at once.
+    expect(tester.getSize(find.byKey(const Key('detail'))).width, 300);
+    await tester.drag(
+      find.byKey(MasterDetail.dividerKey),
+      const Offset(500, 0),
+    );
+    await tester.pump();
+    expect(tester.getSize(find.byKey(const Key('detail'))).width, 300);
+  });
 }

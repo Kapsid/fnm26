@@ -5,6 +5,11 @@ import 'package:fnm/core/layout/form_factor.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 
+/// Whether [showAdaptiveSheet] shows a dialog (rather than a bottom sheet) for
+/// [context]. Code that must "pop before navigating" asks this, not
+/// `TabletShellScope`, so the answer always matches the sheet that was shown.
+bool sheetIsDialog(BuildContext context) => context.isTabletWindow;
+
 /// A bottom sheet on a phone, a centred dialog on a tablet.
 ///
 /// Takes the same arguments the app's sheets already pass to
@@ -17,6 +22,10 @@ import 'package:fnm/core/theme/app_dimens.dart';
 /// (`Navigator.of(sheetContext).pop(x)`), never the screen's, which would pop
 /// the screen from the shell navigator. And pop BEFORE navigating (go/push)
 /// from inside sheet content, or the new page lands underneath the dialog.
+///
+/// Deliberate: a 600-999 wide tablet window shows the phone layouts but still
+/// gets dialog sheets (see [sheetIsDialog]), so those windows also need the
+/// pop-before-navigate rule.
 Future<T?> showAdaptiveSheet<T>({
   required BuildContext context,
   required WidgetBuilder builder,
@@ -26,7 +35,7 @@ Future<T?> showAdaptiveSheet<T>({
   bool enableDrag = true,
   bool? showDragHandle,
 }) {
-  if (!context.isTabletWindow) {
+  if (!sheetIsDialog(context)) {
     return showModalBottomSheet<T>(
       context: context,
       builder: builder,

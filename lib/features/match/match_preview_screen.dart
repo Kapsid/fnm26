@@ -65,6 +65,8 @@ class MatchPreviewScreen extends ConsumerWidget {
     // Push (don't replace) so returning lands back on the preview, then refresh
     // it to pick up the new lineup.
     await context.push('${Routes.tactics}?careerId=$careerId');
+    // The preview may have been left while tactics was open.
+    if (!context.mounted) return;
     ref.invalidate(matchPreviewProvider(careerId));
     // And the strength panel with it: a familiarity reading taken before the
     // manager changed his shape is the one failure this panel cannot have, as

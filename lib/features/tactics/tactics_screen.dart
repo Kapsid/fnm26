@@ -781,7 +781,7 @@ class TacticsScreen extends ConsumerWidget {
                         // here would land on the shell navigator UNDER it, so
                         // close it first. On a phone the sheet stays open
                         // beneath the player page, as before.
-                        if (TabletShellScope.isActive(context)) {
+                        if (sheetIsDialog(context)) {
                           Navigator.of(sheetContext).pop();
                         }
                         context.push(route);

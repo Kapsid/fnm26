@@ -133,6 +133,7 @@ class _SquadTabletLayoutState extends ConsumerState<SquadTabletLayout> {
                     initialFraction: 0.63,
                     minFraction: 0.45,
                     maxFraction: 0.72,
+                    minDetailWidth: 300,
                     master: PanelBox(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,

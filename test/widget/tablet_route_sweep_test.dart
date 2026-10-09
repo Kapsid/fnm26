@@ -14,7 +14,19 @@ import '../helpers/seeded_save.dart';
 /// at phone width (PhoneWidthFrame); this proves that holds for every one of
 /// them, and keeps holding as later tasks convert them.
 void main() {
-  testWidgets('every shell route lays out on a tablet', (tester) async {
+  // 1194 x 834 is the big iPad; 1024 x 768 the 9.7 inch ones, where
+  // everything has the least room.
+  for (final size in [kTabletSize, const Size(1024, 768)]) {
+    testWidgets('every shell route lays out on a tablet, $size', (
+      tester,
+    ) async {
+      await _sweep(tester, size);
+    });
+  }
+}
+
+Future<void> _sweep(WidgetTester tester, Size size) async {
+  {
     final save = await seedSave(tester, formFactor: FormFactor.tablet);
     final id = save.careerId;
     late int playerId;
@@ -93,7 +105,7 @@ void main() {
       '${Routes.tactics}?careerId=$id&tab=3',
     ];
 
-    await pumpRoute(tester, save, locations.first, size: kTabletSize);
+    await pumpRoute(tester, save, locations.first, size: size);
     final router = save.container.read(routerProvider);
     for (final location in locations) {
       router.go(location);
@@ -123,5 +135,5 @@ void main() {
     // Unmount, so no screen's timers outlive the test.
     await tester.pumpWidget(const SizedBox());
     await tester.pump();
-  });
+  }
 }

@@ -139,4 +139,34 @@ void main() {
       await tester.pumpWidget(const SizedBox());
     });
   }
+
+  // Real 9.7 inch iPads and the divider pushed to its limit: the player pane
+  // keeps room for its own header whatever the split.
+  for (final (size, drag) in <(Size, double)>[
+    (const Size(1000, 750), 0),
+    (const Size(1024, 768), 0),
+    (const Size(1080, 810), 900),
+    (const Size(1194, 834), 900),
+  ]) {
+    testWidgets('the player pane does not overflow at $size, drag $drag', (
+      tester,
+    ) async {
+      final save = await seedSave(tester, formFactor: FormFactor.tablet);
+      await pumpRoute(
+        tester,
+        save,
+        '${Routes.tactics}?careerId=${save.careerId}&tab=3',
+        size: size,
+      );
+      if (drag != 0) {
+        await tester.drag(
+          find.byKey(MasterDetail.dividerKey),
+          Offset(drag, 0),
+        );
+        await tester.pump();
+      }
+      expect(tester.takeException(), isNull);
+      await tester.pumpWidget(const SizedBox());
+    });
+  }
 }
