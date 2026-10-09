@@ -2371,5 +2371,14 @@
   "panelViewAll": "Tout voir",
   "gridViewOverview": "Vue d’ensemble",
   "gridColCondition": "Condition",
-  "gridColStatus": "Statut"
+  "gridColStatus": "Statut",
+  "gridColRank": "Rang",
+  "gridColMove": "Évolution",
+  "gridColNation": "Nation",
+  "gridColRegion": "Région",
+  "gridColPoints": "Points",
+  "panePickNation": "Choisissez une nation pour voir son palmarès ici",
+  "resultsCyclesTitle": "Cycles",
+  "tourDrawStart": "Lancer le tirage",
+  "tourDrawViewGroups": "Voir les groupes"
 }

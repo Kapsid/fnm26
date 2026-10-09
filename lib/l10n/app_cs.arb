@@ -2371,5 +2371,14 @@
   "panelViewAll": "Zobrazit vše",
   "gridViewOverview": "Přehled",
   "gridColCondition": "Kondice",
-  "gridColStatus": "Stav"
+  "gridColStatus": "Stav",
+  "gridColRank": "Pořadí",
+  "gridColMove": "Posun",
+  "gridColNation": "Reprezentace",
+  "gridColRegion": "Region",
+  "gridColPoints": "Body",
+  "panePickNation": "Vyberte reprezentaci a její historie se ukáže tady",
+  "resultsCyclesTitle": "Cykly",
+  "tourDrawStart": "Zahájit los",
+  "tourDrawViewGroups": "Zobrazit skupiny"
 }

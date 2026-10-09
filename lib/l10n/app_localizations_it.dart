@@ -9209,4 +9209,32 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get gridColStatus => 'Stato';
+
+  @override
+  String get gridColRank => 'Posizione';
+
+  @override
+  String get gridColMove => 'Variazione';
+
+  @override
+  String get gridColNation => 'Nazionale';
+
+  @override
+  String get gridColRegion => 'Regione';
+
+  @override
+  String get gridColPoints => 'Punti';
+
+  @override
+  String get panePickNation =>
+      'Scegli una nazionale per vedere qui il suo palmarès';
+
+  @override
+  String get resultsCyclesTitle => 'Cicli';
+
+  @override
+  String get tourDrawStart => 'Avvia il sorteggio';
+
+  @override
+  String get tourDrawViewGroups => 'Vedi i gironi';
 }

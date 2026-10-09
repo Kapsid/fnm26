@@ -13591,5 +13591,41 @@
   "gridColStatus": "Status",
   "@gridColStatus": {
     "description": "Tablet squad table column: injured or suspended, empty when available."
+  },
+  "gridColRank": "Rank",
+  "@gridColRank": {
+    "description": "Tablet ranking table column: the nation's world ranking position."
+  },
+  "gridColMove": "Move",
+  "@gridColMove": {
+    "description": "Tablet ranking table column: places climbed or dropped since the last ranking freeze."
+  },
+  "gridColNation": "Nation",
+  "@gridColNation": {
+    "description": "Tablet ranking table column: the national team."
+  },
+  "gridColRegion": "Region",
+  "@gridColRegion": {
+    "description": "Tablet ranking table column: the nation's confederation."
+  },
+  "gridColPoints": "Points",
+  "@gridColPoints": {
+    "description": "Tablet ranking table column: world ranking points."
+  },
+  "panePickNation": "Pick a nation to see its record here",
+  "@panePickNation": {
+    "description": "Tablet detail pane: shown while no nation is selected."
+  },
+  "resultsCyclesTitle": "Cycles",
+  "@resultsCyclesTitle": {
+    "description": "Tablet results screen: heading of the list of the manager's four-year cycles."
+  },
+  "tourDrawStart": "Start the draw",
+  "@tourDrawStart": {
+    "description": "World Championship finals draw: button that starts the ball-drawing ceremony."
+  },
+  "tourDrawViewGroups": "View groups",
+  "@tourDrawViewGroups": {
+    "description": "World Championship finals draw, already watched: button that opens the drawn groups."
   }
 }

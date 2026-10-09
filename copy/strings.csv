@@ -2371,3 +2371,12 @@ panelViewAll,Tablet dashboard panel header link to the panel's full screen.,,Vie
 gridViewOverview,Tablet squad table: the default set of columns.,,Overview,Přehled,Vue d’ensemble,Panoramica,Przegląd
 gridColCondition,Tablet squad table column: how fresh or tired a player is.,,Condition,Kondice,Condition,Condizione,Kondycja
 gridColStatus,"Tablet squad table column: injured or suspended, empty when available.",,Status,Stav,Statut,Stato,Status
+gridColRank,Tablet ranking table column: the nation's world ranking position.,,Rank,Pořadí,Rang,Posizione,Miejsce
+gridColMove,Tablet ranking table column: places climbed or dropped since the last ranking freeze.,,Move,Posun,Évolution,Variazione,Zmiana
+gridColNation,Tablet ranking table column: the national team.,,Nation,Reprezentace,Nation,Nazionale,Reprezentacja
+gridColRegion,Tablet ranking table column: the nation's confederation.,,Region,Region,Région,Regione,Region
+gridColPoints,Tablet ranking table column: world ranking points.,,Points,Body,Points,Punti,Punkty
+panePickNation,Tablet detail pane: shown while no nation is selected.,,Pick a nation to see its record here,Vyberte reprezentaci a její historie se ukáže tady,Choisissez une nation pour voir son palmarès ici,Scegli una nazionale per vedere qui il suo palmarès,"Wybierz reprezentację, aby zobaczyć tu jej historię"
+resultsCyclesTitle,Tablet results screen: heading of the list of the manager's four-year cycles.,,Cycles,Cykly,Cycles,Cicli,Cykle
+tourDrawStart,World Championship finals draw: button that starts the ball-drawing ceremony.,,Start the draw,Zahájit los,Lancer le tirage,Avvia il sorteggio,Rozpocznij losowanie
+tourDrawViewGroups,"World Championship finals draw, already watched: button that opens the drawn groups.",,View groups,Zobrazit skupiny,Voir les groupes,Vedi i gironi,Zobacz grupy

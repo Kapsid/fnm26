@@ -2371,5 +2371,14 @@
   "panelViewAll": "Vedi tutto",
   "gridViewOverview": "Panoramica",
   "gridColCondition": "Condizione",
-  "gridColStatus": "Stato"
+  "gridColStatus": "Stato",
+  "gridColRank": "Posizione",
+  "gridColMove": "Variazione",
+  "gridColNation": "Nazionale",
+  "gridColRegion": "Regione",
+  "gridColPoints": "Punti",
+  "panePickNation": "Scegli una nazionale per vedere qui il suo palmarès",
+  "resultsCyclesTitle": "Cicli",
+  "tourDrawStart": "Avvia il sorteggio",
+  "tourDrawViewGroups": "Vedi i gironi"
 }

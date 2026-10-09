@@ -9187,4 +9187,32 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get gridColStatus => 'Stav';
+
+  @override
+  String get gridColRank => 'Pořadí';
+
+  @override
+  String get gridColMove => 'Posun';
+
+  @override
+  String get gridColNation => 'Reprezentace';
+
+  @override
+  String get gridColRegion => 'Region';
+
+  @override
+  String get gridColPoints => 'Body';
+
+  @override
+  String get panePickNation =>
+      'Vyberte reprezentaci a její historie se ukáže tady';
+
+  @override
+  String get resultsCyclesTitle => 'Cykly';
+
+  @override
+  String get tourDrawStart => 'Zahájit los';
+
+  @override
+  String get tourDrawViewGroups => 'Zobrazit skupiny';
 }

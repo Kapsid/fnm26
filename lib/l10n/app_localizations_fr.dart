@@ -9223,4 +9223,32 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get gridColStatus => 'Statut';
+
+  @override
+  String get gridColRank => 'Rang';
+
+  @override
+  String get gridColMove => 'Évolution';
+
+  @override
+  String get gridColNation => 'Nation';
+
+  @override
+  String get gridColRegion => 'Région';
+
+  @override
+  String get gridColPoints => 'Points';
+
+  @override
+  String get panePickNation =>
+      'Choisissez une nation pour voir son palmarès ici';
+
+  @override
+  String get resultsCyclesTitle => 'Cycles';
+
+  @override
+  String get tourDrawStart => 'Lancer le tirage';
+
+  @override
+  String get tourDrawViewGroups => 'Voir les groupes';
 }

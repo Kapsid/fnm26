@@ -9157,4 +9157,31 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get gridColStatus => 'Status';
+
+  @override
+  String get gridColRank => 'Rank';
+
+  @override
+  String get gridColMove => 'Move';
+
+  @override
+  String get gridColNation => 'Nation';
+
+  @override
+  String get gridColRegion => 'Region';
+
+  @override
+  String get gridColPoints => 'Points';
+
+  @override
+  String get panePickNation => 'Pick a nation to see its record here';
+
+  @override
+  String get resultsCyclesTitle => 'Cycles';
+
+  @override
+  String get tourDrawStart => 'Start the draw';
+
+  @override
+  String get tourDrawViewGroups => 'View groups';
 }

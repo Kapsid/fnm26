@@ -14396,6 +14396,60 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Status'**
   String get gridColStatus;
+
+  /// Tablet ranking table column: the nation's world ranking position.
+  ///
+  /// In en, this message translates to:
+  /// **'Rank'**
+  String get gridColRank;
+
+  /// Tablet ranking table column: places climbed or dropped since the last ranking freeze.
+  ///
+  /// In en, this message translates to:
+  /// **'Move'**
+  String get gridColMove;
+
+  /// Tablet ranking table column: the national team.
+  ///
+  /// In en, this message translates to:
+  /// **'Nation'**
+  String get gridColNation;
+
+  /// Tablet ranking table column: the nation's confederation.
+  ///
+  /// In en, this message translates to:
+  /// **'Region'**
+  String get gridColRegion;
+
+  /// Tablet ranking table column: world ranking points.
+  ///
+  /// In en, this message translates to:
+  /// **'Points'**
+  String get gridColPoints;
+
+  /// Tablet detail pane: shown while no nation is selected.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick a nation to see its record here'**
+  String get panePickNation;
+
+  /// Tablet results screen: heading of the list of the manager's four-year cycles.
+  ///
+  /// In en, this message translates to:
+  /// **'Cycles'**
+  String get resultsCyclesTitle;
+
+  /// World Championship finals draw: button that starts the ball-drawing ceremony.
+  ///
+  /// In en, this message translates to:
+  /// **'Start the draw'**
+  String get tourDrawStart;
+
+  /// World Championship finals draw, already watched: button that opens the drawn groups.
+  ///
+  /// In en, this message translates to:
+  /// **'View groups'**
+  String get tourDrawViewGroups;
 }
 
 class _AppLocalizationsDelegate

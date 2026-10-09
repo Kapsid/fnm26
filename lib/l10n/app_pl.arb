@@ -2371,5 +2371,14 @@
   "panelViewAll": "Zobacz wszystko",
   "gridViewOverview": "Przegląd",
   "gridColCondition": "Kondycja",
-  "gridColStatus": "Status"
+  "gridColStatus": "Status",
+  "gridColRank": "Miejsce",
+  "gridColMove": "Zmiana",
+  "gridColNation": "Reprezentacja",
+  "gridColRegion": "Region",
+  "gridColPoints": "Punkty",
+  "panePickNation": "Wybierz reprezentację, aby zobaczyć tu jej historię",
+  "resultsCyclesTitle": "Cykle",
+  "tourDrawStart": "Rozpocznij losowanie",
+  "tourDrawViewGroups": "Zobacz grupy"
 }

@@ -9286,4 +9286,32 @@ class AppLocalizationsPl extends AppLocalizations {
 
   @override
   String get gridColStatus => 'Status';
+
+  @override
+  String get gridColRank => 'Miejsce';
+
+  @override
+  String get gridColMove => 'Zmiana';
+
+  @override
+  String get gridColNation => 'Reprezentacja';
+
+  @override
+  String get gridColRegion => 'Region';
+
+  @override
+  String get gridColPoints => 'Punkty';
+
+  @override
+  String get panePickNation =>
+      'Wybierz reprezentację, aby zobaczyć tu jej historię';
+
+  @override
+  String get resultsCyclesTitle => 'Cykle';
+
+  @override
+  String get tourDrawStart => 'Rozpocznij losowanie';
+
+  @override
+  String get tourDrawViewGroups => 'Zobacz grupy';
 }
