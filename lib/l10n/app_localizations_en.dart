@@ -9067,4 +9067,70 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get finishNcChampionsAfrica => 'Nations Cup winners';
+
+  @override
+  String get sideGroupHome => 'Home';
+
+  @override
+  String get sideGroupTeam => 'Team';
+
+  @override
+  String get sideGroupCompetitions => 'Competitions';
+
+  @override
+  String get sideGroupFederation => 'Federation';
+
+  @override
+  String get sideGroupHistory => 'History';
+
+  @override
+  String get sideInbox => 'Inbox';
+
+  @override
+  String get sideSquad => 'Squad';
+
+  @override
+  String get sideTactics => 'Tactics';
+
+  @override
+  String get sideCallUps => 'Call-ups';
+
+  @override
+  String get sideTournaments => 'Tournaments';
+
+  @override
+  String get sideRanking => 'Ranking';
+
+  @override
+  String get sideResults => 'Results';
+
+  @override
+  String get sideFinances => 'Finances';
+
+  @override
+  String get sideBoard => 'Board';
+
+  @override
+  String get sideManager => 'Manager & staff';
+
+  @override
+  String get sideRecords => 'Records';
+
+  @override
+  String get sideLegends => 'Legends';
+
+  @override
+  String get sideHeadToHead => 'Head to head';
+
+  @override
+  String get sideAchievements => 'Achievements';
+
+  @override
+  String get sideCareer => 'Career';
+
+  @override
+  String get topBarNext => 'Next';
+
+  @override
+  String get topBarDrawPending => 'Draw to come';
 }

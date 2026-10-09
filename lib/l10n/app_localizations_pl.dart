@@ -9196,4 +9196,70 @@ class AppLocalizationsPl extends AppLocalizations {
 
   @override
   String get finishNcChampionsAfrica => 'Zdobywcy Pucharu Narodów';
+
+  @override
+  String get sideGroupHome => 'Start';
+
+  @override
+  String get sideGroupTeam => 'Drużyna';
+
+  @override
+  String get sideGroupCompetitions => 'Rozgrywki';
+
+  @override
+  String get sideGroupFederation => 'Federacja';
+
+  @override
+  String get sideGroupHistory => 'Historia';
+
+  @override
+  String get sideInbox => 'Skrzynka';
+
+  @override
+  String get sideSquad => 'Kadra';
+
+  @override
+  String get sideTactics => 'Taktyka';
+
+  @override
+  String get sideCallUps => 'Powołania';
+
+  @override
+  String get sideTournaments => 'Turnieje';
+
+  @override
+  String get sideRanking => 'Ranking';
+
+  @override
+  String get sideResults => 'Wyniki';
+
+  @override
+  String get sideFinances => 'Finanse';
+
+  @override
+  String get sideBoard => 'Zarząd';
+
+  @override
+  String get sideManager => 'Trener i sztab';
+
+  @override
+  String get sideRecords => 'Rekordy';
+
+  @override
+  String get sideLegends => 'Legendy';
+
+  @override
+  String get sideHeadToHead => 'Bilans spotkań';
+
+  @override
+  String get sideAchievements => 'Osiągnięcia';
+
+  @override
+  String get sideCareer => 'Kariera';
+
+  @override
+  String get topBarNext => 'Następny';
+
+  @override
+  String get topBarDrawPending => 'Losowanie wkrótce';
 }

@@ -13471,5 +13471,93 @@
   "finishNcChampionsAfrica": "Nations Cup winners",
   "@finishNcChampionsAfrica": {
     "description": "African Nations Cup objective result: won the competition."
+  },
+  "sideGroupHome": "Home",
+  "@sideGroupHome": {
+    "description": "Tablet sidebar: section heading over Hub, Inbox and Y."
+  },
+  "sideGroupTeam": "Team",
+  "@sideGroupTeam": {
+    "description": "Tablet sidebar: section heading over squad, tactics, call-ups and youth."
+  },
+  "sideGroupCompetitions": "Competitions",
+  "@sideGroupCompetitions": {
+    "description": "Tablet sidebar: section heading over tournaments, Nations Cup, ranking and results."
+  },
+  "sideGroupFederation": "Federation",
+  "@sideGroupFederation": {
+    "description": "Tablet sidebar: section heading over finances, board and manager."
+  },
+  "sideGroupHistory": "History",
+  "@sideGroupHistory": {
+    "description": "Tablet sidebar: section heading over records, legends, head to head, achievements and career."
+  },
+  "sideInbox": "Inbox",
+  "@sideInbox": {
+    "description": "Tablet sidebar item: the messages screen."
+  },
+  "sideSquad": "Squad",
+  "@sideSquad": {
+    "description": "Tablet sidebar item: the squad list."
+  },
+  "sideTactics": "Tactics",
+  "@sideTactics": {
+    "description": "Tablet sidebar item: line-up and instructions."
+  },
+  "sideCallUps": "Call-ups",
+  "@sideCallUps": {
+    "description": "Tablet sidebar item: squad selection."
+  },
+  "sideTournaments": "Tournaments",
+  "@sideTournaments": {
+    "description": "Tablet sidebar item: tournaments and standings."
+  },
+  "sideRanking": "Ranking",
+  "@sideRanking": {
+    "description": "Tablet sidebar item: the world ranking."
+  },
+  "sideResults": "Results",
+  "@sideResults": {
+    "description": "Tablet sidebar item: results and fixtures."
+  },
+  "sideFinances": "Finances",
+  "@sideFinances": {
+    "description": "Tablet sidebar item: federation finances."
+  },
+  "sideBoard": "Board",
+  "@sideBoard": {
+    "description": "Tablet sidebar item: board objectives."
+  },
+  "sideManager": "Manager & staff",
+  "@sideManager": {
+    "description": "Tablet sidebar item: manager skills, staff and training."
+  },
+  "sideRecords": "Records",
+  "@sideRecords": {
+    "description": "Tablet sidebar item: the record book."
+  },
+  "sideLegends": "Legends",
+  "@sideLegends": {
+    "description": "Tablet sidebar item: all-time XI and hall of fame."
+  },
+  "sideHeadToHead": "Head to head",
+  "@sideHeadToHead": {
+    "description": "Tablet sidebar item: compare two nations."
+  },
+  "sideAchievements": "Achievements",
+  "@sideAchievements": {
+    "description": "Tablet sidebar item: achievements."
+  },
+  "sideCareer": "Career",
+  "@sideCareer": {
+    "description": "Tablet sidebar item: the manager's careers."
+  },
+  "topBarNext": "Next",
+  "@topBarNext": {
+    "description": "Tablet top bar: label before the next fixture."
+  },
+  "topBarDrawPending": "Draw to come",
+  "@topBarDrawPending": {
+    "description": "Tablet top bar: shown instead of the opponent until the draw has been watched."
   }
 }

@@ -2341,3 +2341,25 @@ objectiveNcReachFinalNorthAmerica,North America Nations Cup board objective: rea
 objectiveNcReachFinalAfrica,African Nations Cup board objective: reach the final.,,Reach the Nations Cup final,Postoupit do finále Poháru národů,Atteindre la finale de la Coupe des Nations,Arrivare in finale di Coppa delle Nazioni,Dojdź do finału Pucharu Narodów
 finishNcChampionsNorthAmerica,North America Nations Cup objective result: won the competition.,,North America Nations Cup winners,Vítězové Poháru národů Severní Ameriky,Vainqueurs de la Coupe des Nations d’Amérique du Nord,Vincitori della Coppa delle Nazioni del Nord America,Zdobywcy Pucharu Narodów Ameryki Północnej
 finishNcChampionsAfrica,African Nations Cup objective result: won the competition.,,Nations Cup winners,Vítězové Poháru národů,Vainqueurs de la Coupe des Nations,Vincitori della Coppa delle Nazioni,Zdobywcy Pucharu Narodów
+sideGroupHome,"Tablet sidebar: section heading over Hub, Inbox and Y.",,Home,Hlavní,Accueil,Home,Start
+sideGroupTeam,"Tablet sidebar: section heading over squad, tactics, call-ups and youth.",,Team,Tým,Équipe,Squadra,Drużyna
+sideGroupCompetitions,"Tablet sidebar: section heading over tournaments, Nations Cup, ranking and results.",,Competitions,Soutěže,Compétitions,Competizioni,Rozgrywki
+sideGroupFederation,"Tablet sidebar: section heading over finances, board and manager.",,Federation,Svaz,Fédération,Federazione,Federacja
+sideGroupHistory,"Tablet sidebar: section heading over records, legends, head to head, achievements and career.",,History,Historie,Histoire,Storia,Historia
+sideInbox,Tablet sidebar item: the messages screen.,,Inbox,Pošta,Boîte de réception,Posta,Skrzynka
+sideSquad,Tablet sidebar item: the squad list.,,Squad,Kádr,Effectif,Rosa,Kadra
+sideTactics,Tablet sidebar item: line-up and instructions.,,Tactics,Taktika,Tactique,Tattica,Taktyka
+sideCallUps,Tablet sidebar item: squad selection.,,Call-ups,Nominace,Convocations,Convocazioni,Powołania
+sideTournaments,Tablet sidebar item: tournaments and standings.,,Tournaments,Turnaje,Tournois,Tornei,Turnieje
+sideRanking,Tablet sidebar item: the world ranking.,,Ranking,Žebříček,Classement,Ranking,Ranking
+sideResults,Tablet sidebar item: results and fixtures.,,Results,Výsledky,Résultats,Risultati,Wyniki
+sideFinances,Tablet sidebar item: federation finances.,,Finances,Finance,Finances,Finanze,Finanse
+sideBoard,Tablet sidebar item: board objectives.,,Board,Vedení,Direction,Dirigenza,Zarząd
+sideManager,"Tablet sidebar item: manager skills, staff and training.",,Manager & staff,Trenér a štáb,Entraîneur et staff,Allenatore e staff,Trener i sztab
+sideRecords,Tablet sidebar item: the record book.,,Records,Rekordy,Records,Record,Rekordy
+sideLegends,Tablet sidebar item: all-time XI and hall of fame.,,Legends,Legendy,Légendes,Leggende,Legendy
+sideHeadToHead,Tablet sidebar item: compare two nations.,,Head to head,Vzájemné zápasy,Face-à-face,Scontri diretti,Bilans spotkań
+sideAchievements,Tablet sidebar item: achievements.,,Achievements,Úspěchy,Succès,Obiettivi,Osiągnięcia
+sideCareer,Tablet sidebar item: the manager's careers.,,Career,Kariéra,Carrière,Carriera,Kariera
+topBarNext,Tablet top bar: label before the next fixture.,,Next,Další,Prochain,Prossima,Następny
+topBarDrawPending,Tablet top bar: shown instead of the opponent until the draw has been watched.,,Draw to come,Čeká se na los,Tirage à venir,Sorteggio in arrivo,Losowanie wkrótce

@@ -9097,4 +9097,70 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get finishNcChampionsAfrica => 'Vítězové Poháru národů';
+
+  @override
+  String get sideGroupHome => 'Hlavní';
+
+  @override
+  String get sideGroupTeam => 'Tým';
+
+  @override
+  String get sideGroupCompetitions => 'Soutěže';
+
+  @override
+  String get sideGroupFederation => 'Svaz';
+
+  @override
+  String get sideGroupHistory => 'Historie';
+
+  @override
+  String get sideInbox => 'Pošta';
+
+  @override
+  String get sideSquad => 'Kádr';
+
+  @override
+  String get sideTactics => 'Taktika';
+
+  @override
+  String get sideCallUps => 'Nominace';
+
+  @override
+  String get sideTournaments => 'Turnaje';
+
+  @override
+  String get sideRanking => 'Žebříček';
+
+  @override
+  String get sideResults => 'Výsledky';
+
+  @override
+  String get sideFinances => 'Finance';
+
+  @override
+  String get sideBoard => 'Vedení';
+
+  @override
+  String get sideManager => 'Trenér a štáb';
+
+  @override
+  String get sideRecords => 'Rekordy';
+
+  @override
+  String get sideLegends => 'Legendy';
+
+  @override
+  String get sideHeadToHead => 'Vzájemné zápasy';
+
+  @override
+  String get sideAchievements => 'Úspěchy';
+
+  @override
+  String get sideCareer => 'Kariéra';
+
+  @override
+  String get topBarNext => 'Další';
+
+  @override
+  String get topBarDrawPending => 'Čeká se na los';
 }

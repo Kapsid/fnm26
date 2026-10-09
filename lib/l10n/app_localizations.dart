@@ -14216,6 +14216,138 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Nations Cup winners'**
   String get finishNcChampionsAfrica;
+
+  /// Tablet sidebar: section heading over Hub, Inbox and Y.
+  ///
+  /// In en, this message translates to:
+  /// **'Home'**
+  String get sideGroupHome;
+
+  /// Tablet sidebar: section heading over squad, tactics, call-ups and youth.
+  ///
+  /// In en, this message translates to:
+  /// **'Team'**
+  String get sideGroupTeam;
+
+  /// Tablet sidebar: section heading over tournaments, Nations Cup, ranking and results.
+  ///
+  /// In en, this message translates to:
+  /// **'Competitions'**
+  String get sideGroupCompetitions;
+
+  /// Tablet sidebar: section heading over finances, board and manager.
+  ///
+  /// In en, this message translates to:
+  /// **'Federation'**
+  String get sideGroupFederation;
+
+  /// Tablet sidebar: section heading over records, legends, head to head, achievements and career.
+  ///
+  /// In en, this message translates to:
+  /// **'History'**
+  String get sideGroupHistory;
+
+  /// Tablet sidebar item: the messages screen.
+  ///
+  /// In en, this message translates to:
+  /// **'Inbox'**
+  String get sideInbox;
+
+  /// Tablet sidebar item: the squad list.
+  ///
+  /// In en, this message translates to:
+  /// **'Squad'**
+  String get sideSquad;
+
+  /// Tablet sidebar item: line-up and instructions.
+  ///
+  /// In en, this message translates to:
+  /// **'Tactics'**
+  String get sideTactics;
+
+  /// Tablet sidebar item: squad selection.
+  ///
+  /// In en, this message translates to:
+  /// **'Call-ups'**
+  String get sideCallUps;
+
+  /// Tablet sidebar item: tournaments and standings.
+  ///
+  /// In en, this message translates to:
+  /// **'Tournaments'**
+  String get sideTournaments;
+
+  /// Tablet sidebar item: the world ranking.
+  ///
+  /// In en, this message translates to:
+  /// **'Ranking'**
+  String get sideRanking;
+
+  /// Tablet sidebar item: results and fixtures.
+  ///
+  /// In en, this message translates to:
+  /// **'Results'**
+  String get sideResults;
+
+  /// Tablet sidebar item: federation finances.
+  ///
+  /// In en, this message translates to:
+  /// **'Finances'**
+  String get sideFinances;
+
+  /// Tablet sidebar item: board objectives.
+  ///
+  /// In en, this message translates to:
+  /// **'Board'**
+  String get sideBoard;
+
+  /// Tablet sidebar item: manager skills, staff and training.
+  ///
+  /// In en, this message translates to:
+  /// **'Manager & staff'**
+  String get sideManager;
+
+  /// Tablet sidebar item: the record book.
+  ///
+  /// In en, this message translates to:
+  /// **'Records'**
+  String get sideRecords;
+
+  /// Tablet sidebar item: all-time XI and hall of fame.
+  ///
+  /// In en, this message translates to:
+  /// **'Legends'**
+  String get sideLegends;
+
+  /// Tablet sidebar item: compare two nations.
+  ///
+  /// In en, this message translates to:
+  /// **'Head to head'**
+  String get sideHeadToHead;
+
+  /// Tablet sidebar item: achievements.
+  ///
+  /// In en, this message translates to:
+  /// **'Achievements'**
+  String get sideAchievements;
+
+  /// Tablet sidebar item: the manager's careers.
+  ///
+  /// In en, this message translates to:
+  /// **'Career'**
+  String get sideCareer;
+
+  /// Tablet top bar: label before the next fixture.
+  ///
+  /// In en, this message translates to:
+  /// **'Next'**
+  String get topBarNext;
+
+  /// Tablet top bar: shown instead of the opponent until the draw has been watched.
+  ///
+  /// In en, this message translates to:
+  /// **'Draw to come'**
+  String get topBarDrawPending;
 }
 
 class _AppLocalizationsDelegate
