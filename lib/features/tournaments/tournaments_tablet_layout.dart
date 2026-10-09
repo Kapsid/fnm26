@@ -16,8 +16,24 @@ class _TournamentsTabletLayout extends ConsumerStatefulWidget {
 
 class _TournamentsTabletLayoutState
     extends ConsumerState<_TournamentsTabletLayout> {
+  /// Where the pick is kept in the route's page storage. The layout is torn
+  /// down when the window narrows under 1000 (iPad split view) and built
+  /// afresh when it widens again; the route, and its storage, stay.
+  static const _pickStorageId = 'tournaments.tablet.pick';
+
   /// What the manager picked, or null for the live competition.
-  _Pick? _picked;
+  late _Pick? _picked =
+      PageStorage.maybeOf(
+            context,
+          )?.readState(context, identifier: _pickStorageId)
+          as _Pick?;
+
+  void _pick(_Pick pick) {
+    setState(() => _picked = pick);
+    PageStorage.maybeOf(
+      context,
+    )?.writeState(context, pick, identifier: _pickStorageId);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,12 +64,12 @@ class _TournamentsTabletLayoutState
             ),
             spec: s,
             selected: s.pick == shown.pick,
-            onTap: () => setState(() => _picked = s.pick),
+            onTap: () => _pick(s.pick),
           );
           return Padding(
             padding: const EdgeInsets.all(AppSpacing.md),
             child: MasterDetail(
-              initialFraction: 0.28,
+              initialFraction: 0.32,
               minFraction: 0.22,
               maxFraction: 0.4,
               minDetailWidth: 480,
@@ -193,6 +209,9 @@ class _CompetitionListRow extends StatelessWidget {
     super.key,
   });
 
+  /// The strap under the name, found by tests within one row.
+  static const Key strapKey = Key('competition.strap');
+
   final _Spec spec;
   final bool selected;
   final VoidCallback onTap;
@@ -245,19 +264,22 @@ class _CompetitionListRow extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 4),
-                    // The status shares the strap's line, not the name's:
-                    // beside the name it left a narrow list "Worl…".
-                    Row(
+                    // The strap is read whole: on a Nations Cup row it is all
+                    // that tells "LEAGUE A" from "N. AMERICA". The status
+                    // follows it on its line while there is room, and drops
+                    // under it when there is not, rather than cutting it.
+                    Wrap(
+                      spacing: AppSpacing.sm,
+                      runSpacing: 4,
+                      crossAxisAlignment: WrapCrossAlignment.center,
                       children: [
-                        Expanded(
-                          child: Text(
-                            c.zone(l),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: TabletText.sectionLabel,
-                          ),
+                        Text(
+                          c.zone(l),
+                          key: _CompetitionListRow.strapKey,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: TabletText.sectionLabel,
                         ),
-                        const SizedBox(width: AppSpacing.sm),
                         _StatusChip(
                           label: spec.status?.label ?? l.tourSharedSoon,
                           accent: accent,

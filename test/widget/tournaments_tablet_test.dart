@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/core/layout/form_factor.dart';
@@ -24,16 +25,18 @@ import '../helpers/seeded_save.dart';
 
 /// Asia's championship and Africa's Nations Cup live, Africa's championship
 /// not yet: other confederations' rows that open real views, and one that
-/// does not.
-TournamentsOverview _overview() {
-  const live = TournamentStatus(
+/// does not. The labels are the provider's own longest, in [locale]'s copy,
+/// so the rows are measured with what they really carry.
+TournamentsOverview _overview([Locale locale = const Locale('en')]) {
+  final l = lookupAppLocalizations(locale);
+  final live = TournamentStatus(
     phase: TournamentPhase.live,
-    label: 'LIVE',
+    label: l.tourStatusFinals,
     championId: null,
   );
-  const soon = TournamentStatus(
+  final soon = TournamentStatus(
     phase: TournamentPhase.upcoming,
-    label: 'SOON',
+    label: l.tourSharedPastWinners,
     championId: null,
   );
   return TournamentsOverview(
@@ -42,7 +45,7 @@ TournamentsOverview _overview() {
     nextMatches: const {},
     playerGroup: null,
     worldCupHostId: null,
-    statuses: const {
+    statuses: {
       null: live,
       Confederation.europe: live,
       Confederation.asia: live,
@@ -53,7 +56,7 @@ TournamentsOverview _overview() {
     },
     nationsCup: live,
     nationsCupConfederation: Confederation.europe,
-    otherNationsCups: const {
+    otherNationsCups: {
       Confederation.africa: live,
       Confederation.northAmerica: soon,
     },
@@ -64,6 +67,7 @@ Future<SeededSave> _open(
   WidgetTester tester,
   Size size, {
   bool fake = false,
+  Locale? locale,
 }) async {
   final save = await seedSave(
     tester,
@@ -72,15 +76,34 @@ Future<SeededSave> _open(
       if (fake)
         tournamentsOverviewProvider(
           kSeededCareerId,
-        ).overrideWith((ref) async => _overview()),
+        ).overrideWith(
+          (ref) async => _overview(locale ?? const Locale('en')),
+        ),
     ],
   );
-  await pumpRoute(
-    tester,
-    save,
-    '${Routes.tournaments}?careerId=${save.careerId}',
-    size: size,
+  final location = '${Routes.tournaments}?careerId=${save.careerId}';
+  if (locale == null) {
+    await pumpRoute(tester, save, location, size: size);
+    return save;
+  }
+  // pumpRoute speaks English only; the same app, in [locale].
+  tester.view.physicalSize = size;
+  tester.view.devicePixelRatio = 1;
+  addTearDown(tester.view.reset);
+  final router = save.container.read(routerProvider)..go(location);
+  await tester.pumpWidget(
+    UncontrolledProviderScope(
+      container: save.container,
+      child: MaterialApp.router(
+        theme: AppTheme.theme,
+        locale: locale,
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        routerConfig: router,
+      ),
+    ),
   );
+  await settle(tester);
   return save;
 }
 
@@ -231,10 +254,11 @@ void main() {
     await tester.pumpWidget(const SizedBox());
   });
 
-  testWidgets('the ranking target follows a window through 1000', (
+  testWidgets('the ranking target and the pick follow a window through 1000', (
     tester,
   ) async {
-    await _open(tester, kTabletSize);
+    await _open(tester, kTabletSize, fake: true);
+    await _pick(tester, 'competition.continental.asia');
     tester.view.physicalSize = const Size(700, 810);
     await settle(tester);
     expect(tester.takeException(), isNull);
@@ -248,6 +272,52 @@ void main() {
       find.descendant(of: _layout, matching: find.byKey(TourKeys.worldRanking)),
       findsOneWidget,
     );
+    // Split view and back: still Asia's championship, not the live default.
+    expect(
+      tester
+          .widget<ContinentalDetailView>(find.byType(ContinentalDetailView))
+          .confederation,
+      Confederation.asia,
+    );
     await tester.pumpWidget(const SizedBox());
   });
+
+  for (final locale in const [Locale('en'), Locale('cs')]) {
+    testWidgets('every strap reads whole at 1024 x 768, $locale', (
+      tester,
+    ) async {
+      await _open(tester, const Size(1024, 768), fake: true, locale: locale);
+      // Yours, then the others': on the Nations Cup rows the strap is all
+      // that tells one "Nations Cup" from the next.
+      const rows = [
+        'competition.worldChampionship.world',
+        'competition.continental.europe',
+        'competition.nationsCup.europe',
+        'competition.continental.asia',
+        'competition.continental.southAmerica',
+        'competition.continental.africa',
+        'competition.continental.northAmerica',
+        'competition.continental.oceania',
+        'competition.nationsCup.africa',
+        'competition.nationsCup.northAmerica',
+      ];
+      for (final key in rows) {
+        final row = find.byKey(Key(key));
+        await tester.ensureVisible(row);
+        await tester.pump();
+        final strap = find.descendant(
+          of: row,
+          matching: find.byKey(const Key('competition.strap')),
+        );
+        final paragraph = tester.renderObject<RenderParagraph>(strap);
+        expect(
+          paragraph.didExceedMaxLines,
+          isFalse,
+          reason: '$key cuts its strap "${paragraph.text.toPlainText()}"',
+        );
+      }
+      expect(tester.takeException(), isNull);
+      await tester.pumpWidget(const SizedBox());
+    });
+  }
 }
