@@ -18,6 +18,7 @@ const Set<String> tabletReadyPaths = <String>{
   Routes.matchPreview,
   Routes.match,
   Routes.roundResults,
+  Routes.messages,
 };
 
 /// The tablet frame around every in-save screen: sidebar on the left, top bar

@@ -12,8 +12,11 @@ import 'package:fnm/domain/repositories/competition_repository.dart';
 import 'package:fnm/features/messages/message_providers.dart';
 import 'package:fnm/features/messages/message_sheet.dart';
 import 'package:fnm/l10n/app_localizations.dart';
+import 'package:fnm/shared/tablet/tablet.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
+
+part 'messages_tablet_layout.dart';
 
 /// The manager's inbox: draws made, qualifications, champions crowned and board
 /// news, newest first. Opening the screen marks everything read.
@@ -22,12 +25,20 @@ class MessagesScreen extends ConsumerStatefulWidget {
 
   final int careerId;
 
+  /// The tablet's list-and-reading-pane layout.
+  static const Key tabletLayoutKey = Key('messages.tabletLayout');
+
   @override
   ConsumerState<MessagesScreen> createState() => _MessagesScreenState();
 }
 
 class _MessagesScreenState extends ConsumerState<MessagesScreen> {
   bool _marked = false;
+
+  /// The tablet list's filter and the message open beside it. Null: the
+  /// newest in the current filter.
+  InboxFilter _filter = InboxFilter.all;
+  int? _openId;
 
   @override
   Widget build(BuildContext context) {
@@ -45,6 +56,20 @@ class _MessagesScreenState extends ConsumerState<MessagesScreen> {
           ..invalidate(messageInboxProvider(widget.careerId))
           ..invalidate(unreadMessagesProvider(widget.careerId));
       });
+    }
+
+    if (TabletShellScope.isActive(context)) {
+      return _MessagesTabletLayout(
+        inboxAsync: inboxAsync,
+        filter: _filter,
+        openId: _openId,
+        onFilter: (f) => setState(() {
+          _filter = f;
+          _openId = null;
+        }),
+        onOpen: (id) => setState(() => _openId = id),
+        onRetry: () => ref.invalidate(messageInboxProvider(widget.careerId)),
+      );
     }
 
     return Scaffold(
