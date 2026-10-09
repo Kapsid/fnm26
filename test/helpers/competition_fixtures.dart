@@ -1,11 +1,14 @@
+import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/entities/group_standing.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/services/competition/finals.dart';
+import 'package:fnm/domain/services/competition/nations_cups.dart';
 import 'package:fnm/features/tournaments/continental_detail_providers.dart';
 import 'package:fnm/features/tournaments/cup_detail_providers.dart';
 import 'package:fnm/features/tournaments/finals_draw_providers.dart';
 import 'package:fnm/features/tournaments/nations_cup_draw_providers.dart';
+import 'package:fnm/features/tournaments/nations_cup_providers.dart';
 
 import 'seeded_save.dart';
 
@@ -179,5 +182,36 @@ CupData fakeCupData(int playerNationId) {
     scorersFinals: const [],
     honours: const [],
     playerNames: const {},
+  );
+}
+
+/// Europe's Nations Cup mid-season: Leagues A and B, two groups of four each,
+/// the manager's nation heading B1. No finals drawn yet.
+NationsCupData fakeNationsCup(int playerNationId) {
+  final groups = groupsOf(fieldOf(playerNationId, 16), groupCount: 4, size: 4);
+  const names = ['B1', 'A1', 'A2', 'B2'];
+  return (
+    confederation: Confederation.europe,
+    cupName: NationsCups.europe,
+    format: NationsCupFormat.ladder,
+    isMine: true,
+    playerLeague: 'B',
+    playerGroup: 'B1',
+    groups: [
+      for (var i = 0; i < 4; i++)
+        (name: names[i], standings: standingsOf(groups[i].nationIds)),
+    ]..sort((a, b) => a.name.compareTo(b.name)),
+    roundOf16: const [],
+    quarters: const [],
+    semis: const [],
+    finalFx: const [],
+    honours: const [],
+    scorers: const [],
+    playerNames: const {},
+    drawWatched: true,
+    playerNationId: playerNationId,
+    myNationIds: {playerNationId},
+    nations: realNationsById,
+    maxTier: 1,
   );
 }
