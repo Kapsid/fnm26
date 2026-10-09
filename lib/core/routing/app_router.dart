@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fnm/core/layout/form_factor.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/features/achievements/achievements_screen.dart';
 import 'package:fnm/features/achievements/challenges_screen.dart';
@@ -10,6 +11,7 @@ import 'package:fnm/features/career/saves_screen.dart';
 import 'package:fnm/features/settings/diagnostics_screen.dart';
 import 'package:fnm/features/manager/manager_screen.dart';
 import 'package:fnm/features/settings/settings_screen.dart';
+import 'package:fnm/features/shell/tablet_shell.dart';
 import 'package:fnm/features/squad/training_camp_screen.dart';
 import 'package:fnm/features/squad/youth_screen.dart';
 import 'package:fnm/features/y/y_screen.dart';
@@ -213,582 +215,620 @@ abstract final class Routes {
   /// The Continental Clash (champions-of-champions) detail. Expects
   /// `?careerId=`.
   static const continentalClash = '/continental-clash';
+
+  /// Routes drawn full screen on a tablet, outside the sidebar and top bar:
+  /// the menus before a save is open, the screens with no save behind them,
+  /// and the big occasions (a match, a draw, a kickoff, a new cycle).
+  static const Set<String> fullScreen = {
+    home,
+    nations,
+    saves,
+    settings,
+    diagnostics,
+    startFromBottom,
+    newGame,
+    match,
+    hostDraw,
+    qualifyingDraw,
+    finalsDraw,
+    continentalDraw,
+    nationsCupDraw,
+    tournamentKickoff,
+    cycleRollover,
+    gallery,
+  };
 }
 
 /// Provides the app's [GoRouter]. Exposed as a provider so routing can later
 /// depend on app state (e.g. redirecting based on whether a save exists or the
 /// premium entitlement) without a global singleton.
 final routerProvider = Provider<GoRouter>((ref) {
+  final formFactor = ref.watch(formFactorProvider);
+  final routes = <GoRoute>[
+    GoRoute(
+      path: Routes.home,
+      builder: (context, state) => const HomeScreen(),
+    ),
+    GoRoute(
+      path: Routes.nations,
+      builder: (context, state) => const NationSelectScreen(),
+    ),
+    GoRoute(
+      path: Routes.saves,
+      builder: (context, state) => const SavesScreen(),
+    ),
+    GoRoute(
+      path: Routes.settings,
+      builder: (context, state) => const SettingsScreen(),
+    ),
+    GoRoute(
+      path: Routes.diagnostics,
+      builder: (context, state) => const DiagnosticsScreen(),
+    ),
+    GoRoute(
+      path: Routes.startFromBottom,
+      builder: (context, state) => const UnemployedStartScreen(),
+    ),
+    GoRoute(
+      path: Routes.newGame,
+      builder: (context, state) {
+        final id =
+            int.tryParse(
+              state.uri.queryParameters['nationId'] ?? '',
+            ) ??
+            0;
+        return NewGameScreen(nationId: id);
+      },
+    ),
+    GoRoute(
+      path: Routes.hub,
+      builder: (context, state) {
+        final id =
+            int.tryParse(
+              state.uri.queryParameters['careerId'] ?? '',
+            ) ??
+            0;
+        return HubScreen(careerId: id);
+      },
+    ),
+    GoRoute(
+      path: Routes.manager,
+      builder: (context, state) => ManagerScreen(
+        careerId:
+            int.tryParse(state.uri.queryParameters['careerId'] ?? '') ?? 0,
+      ),
+    ),
+    GoRoute(
+      path: Routes.tactics,
+      builder: (context, state) {
+        final id =
+            int.tryParse(
+              state.uri.queryParameters['careerId'] ?? '',
+            ) ??
+            0;
+        // `?tab=` opens straight onto one of the three tabs. The pre-match
+        // setup strip warns about the armband and the set-piece takers,
+        // which both live on the second one; landing on the lineup instead
+        // left the manager to find the thing they had just been told about.
+        final tab = int.tryParse(state.uri.queryParameters['tab'] ?? '') ?? 0;
+        return TacticsScreen(careerId: id, initialTab: tab);
+      },
+    ),
+    GoRoute(
+      path: Routes.callUps,
+      builder: (context, state) {
+        final id =
+            int.tryParse(
+              state.uri.queryParameters['careerId'] ?? '',
+            ) ??
+            0;
+        return CallUpScreen(
+          careerId: id,
+          // When launched as a timeline event, these mark the call-up done.
+          eventKind: state.uri.queryParameters['event'],
+          eventCycle: int.tryParse(
+            state.uri.queryParameters['cycle'] ?? '',
+          ),
+        );
+      },
+    ),
+    GoRoute(
+      path: Routes.matchPreview,
+      builder: (context, state) {
+        final id =
+            int.tryParse(
+              state.uri.queryParameters['careerId'] ?? '',
+            ) ??
+            0;
+        return MatchPreviewScreen(careerId: id);
+      },
+    ),
+    GoRoute(
+      path: Routes.match,
+      builder: (context, state) {
+        final id =
+            int.tryParse(
+              state.uri.queryParameters['careerId'] ?? '',
+            ) ??
+            0;
+        return MatchScreen(careerId: id);
+      },
+    ),
+    GoRoute(
+      path: Routes.roundResults,
+      builder: (context, state) {
+        final id =
+            int.tryParse(
+              state.uri.queryParameters['careerId'] ?? '',
+            ) ??
+            0;
+        return RoundResultsScreen(careerId: id);
+      },
+    ),
+    GoRoute(
+      path: Routes.player,
+      builder: (context, state) {
+        final id =
+            int.tryParse(
+              state.uri.queryParameters['careerId'] ?? '',
+            ) ??
+            0;
+        final playerId =
+            int.tryParse(
+              state.uri.queryParameters['playerId'] ?? '',
+            ) ??
+            0;
+        return PlayerDetailScreen(careerId: id, playerId: playerId);
+      },
+    ),
+    GoRoute(
+      path: Routes.teamStats,
+      builder: (context, state) {
+        final id =
+            int.tryParse(
+              state.uri.queryParameters['careerId'] ?? '',
+            ) ??
+            0;
+        return TeamStatsScreen(careerId: id);
+      },
+    ),
+    GoRoute(
+      path: Routes.nationVitrine,
+      builder: (context, state) {
+        final id =
+            int.tryParse(
+              state.uri.queryParameters['careerId'] ?? '',
+            ) ??
+            0;
+        final nationId =
+            int.tryParse(
+              state.uri.queryParameters['nationId'] ?? '',
+            ) ??
+            0;
+        return NationVitrineScreen(careerId: id, nationId: nationId);
+      },
+    ),
+    GoRoute(
+      path: Routes.careers,
+      builder: (context, state) {
+        final id =
+            int.tryParse(
+              state.uri.queryParameters['careerId'] ?? '',
+            ) ??
+            0;
+        return CareersScreen(careerId: id);
+      },
+    ),
+    GoRoute(
+      path: Routes.careerSummary,
+      builder: (context, state) {
+        final id =
+            int.tryParse(
+              state.uri.queryParameters['careerId'] ?? '',
+            ) ??
+            0;
+        return CareerSummaryScreen(careerId: id);
+      },
+    ),
+    GoRoute(
+      path: Routes.achievements,
+      builder: (context, state) {
+        final id =
+            int.tryParse(
+              state.uri.queryParameters['careerId'] ?? '',
+            ) ??
+            0;
+        return AchievementsScreen(careerId: id);
+      },
+    ),
+    GoRoute(
+      path: Routes.challenges,
+      builder: (context, state) {
+        final id =
+            int.tryParse(
+              state.uri.queryParameters['careerId'] ?? '',
+            ) ??
+            0;
+        return ChallengesScreen(careerId: id);
+      },
+    ),
+    GoRoute(
+      path: Routes.messages,
+      builder: (context, state) {
+        final id =
+            int.tryParse(
+              state.uri.queryParameters['careerId'] ?? '',
+            ) ??
+            0;
+        return MessagesScreen(careerId: id);
+      },
+    ),
+    GoRoute(
+      path: Routes.finances,
+      builder: (context, state) {
+        final id =
+            int.tryParse(
+              state.uri.queryParameters['careerId'] ?? '',
+            ) ??
+            0;
+        return FinancesScreen(careerId: id);
+      },
+    ),
+    GoRoute(
+      path: Routes.youth,
+      builder: (context, state) {
+        final id =
+            int.tryParse(
+              state.uri.queryParameters['careerId'] ?? '',
+            ) ??
+            0;
+        return YouthScreen(careerId: id);
+      },
+    ),
+    GoRoute(
+      path: Routes.y,
+      builder: (context, state) {
+        final id =
+            int.tryParse(
+              state.uri.queryParameters['careerId'] ?? '',
+            ) ??
+            0;
+        return YScreen(careerId: id);
+      },
+    ),
+    GoRoute(
+      path: Routes.boardObjectives,
+      builder: (context, state) {
+        final id =
+            int.tryParse(
+              state.uri.queryParameters['careerId'] ?? '',
+            ) ??
+            0;
+        return BoardObjectivesScreen(careerId: id);
+      },
+    ),
+    GoRoute(
+      path: Routes.budgetSetup,
+      builder: (context, state) {
+        final id =
+            int.tryParse(
+              state.uri.queryParameters['careerId'] ?? '',
+            ) ??
+            0;
+        return BudgetSetupScreen(careerId: id);
+      },
+    ),
+    GoRoute(
+      path: Routes.records,
+      builder: (context, state) {
+        final id =
+            int.tryParse(
+              state.uri.queryParameters['careerId'] ?? '',
+            ) ??
+            0;
+        return RecordBookScreen(careerId: id);
+      },
+    ),
+    GoRoute(
+      path: Routes.legends,
+      builder: (context, state) {
+        final id =
+            int.tryParse(
+              state.uri.queryParameters['careerId'] ?? '',
+            ) ??
+            0;
+        return LegendsScreen(careerId: id);
+      },
+    ),
+    GoRoute(
+      path: Routes.allTimeRecords,
+      builder: (context, state) {
+        final id =
+            int.tryParse(
+              state.uri.queryParameters['careerId'] ?? '',
+            ) ??
+            0;
+        return AllTimeRecordsScreen(careerId: id);
+      },
+    ),
+    GoRoute(
+      path: Routes.headToHead,
+      builder: (context, state) {
+        final id =
+            int.tryParse(
+              state.uri.queryParameters['careerId'] ?? '',
+            ) ??
+            0;
+        return HeadToHeadScreen(careerId: id);
+      },
+    ),
+    GoRoute(
+      path: Routes.h2hMeetings,
+      builder: (context, state) {
+        final q = state.uri.queryParameters;
+        return H2HMeetingsScreen(
+          careerId: int.tryParse(q['careerId'] ?? '') ?? 0,
+          nationA: int.tryParse(q['a'] ?? '') ?? 0,
+          nationB: int.tryParse(q['b'] ?? '') ?? 0,
+        );
+      },
+    ),
+    GoRoute(
+      path: Routes.nationsCup,
+      builder: (context, state) {
+        final q = state.uri.queryParameters;
+        final id = int.tryParse(q['careerId'] ?? '') ?? 0;
+        // `&conf=` picks another confederation's cup; without it the
+        // manager's own opens.
+        final conf = Confederation.values
+            .where((c) => c.name == q['conf'])
+            .firstOrNull;
+        return NationsCupScreen(careerId: id, confederation: conf);
+      },
+    ),
+    GoRoute(
+      path: Routes.nationsCupDraw,
+      builder: (context, state) {
+        final id =
+            int.tryParse(
+              state.uri.queryParameters['careerId'] ?? '',
+            ) ??
+            0;
+        return NationsCupDrawScreen(careerId: id);
+      },
+    ),
+    GoRoute(
+      path: Routes.naturalization,
+      builder: (context, state) {
+        final id =
+            int.tryParse(
+              state.uri.queryParameters['careerId'] ?? '',
+            ) ??
+            0;
+        return NaturalizationScreen(careerId: id);
+      },
+    ),
+    GoRoute(
+      path: Routes.managerHistory,
+      builder: (context, state) {
+        final id =
+            int.tryParse(
+              state.uri.queryParameters['careerId'] ?? '',
+            ) ??
+            0;
+        return ManagerHistoryScreen(careerId: id);
+      },
+    ),
+    GoRoute(
+      path: Routes.hostDraw,
+      builder: (context, state) {
+        final id =
+            int.tryParse(
+              state.uri.queryParameters['careerId'] ?? '',
+            ) ??
+            0;
+        final worldCup = state.uri.queryParameters['worldCup'] == 'true';
+        return HostDrawScreen(careerId: id, worldCup: worldCup);
+      },
+    ),
+    GoRoute(
+      path: Routes.friendlies,
+      builder: (context, state) {
+        final id =
+            int.tryParse(
+              state.uri.queryParameters['careerId'] ?? '',
+            ) ??
+            0;
+        return FriendliesScreen(careerId: id);
+      },
+    ),
+    GoRoute(
+      path: Routes.cycleRollover,
+      builder: (context, state) {
+        final id =
+            int.tryParse(
+              state.uri.queryParameters['careerId'] ?? '',
+            ) ??
+            0;
+        return CycleRolloverScreen(careerId: id);
+      },
+    ),
+    GoRoute(
+      path: Routes.results,
+      builder: (context, state) {
+        final id =
+            int.tryParse(
+              state.uri.queryParameters['careerId'] ?? '',
+            ) ??
+            0;
+        return ResultsScreen(careerId: id);
+      },
+    ),
+    GoRoute(
+      path: Routes.tournaments,
+      builder: (context, state) {
+        final id =
+            int.tryParse(
+              state.uri.queryParameters['careerId'] ?? '',
+            ) ??
+            0;
+        return TournamentsScreen(careerId: id);
+      },
+    ),
+    GoRoute(
+      path: Routes.cup,
+      builder: (context, state) {
+        final id =
+            int.tryParse(
+              state.uri.queryParameters['careerId'] ?? '',
+            ) ??
+            0;
+        return CupDetailScreen(careerId: id);
+      },
+    ),
+    GoRoute(
+      path: Routes.continental,
+      builder: (context, state) {
+        final id =
+            int.tryParse(
+              state.uri.queryParameters['careerId'] ?? '',
+            ) ??
+            0;
+        final confName = state.uri.queryParameters['conf'] ?? '';
+        final conf = Confederation.values
+            .where((c) => c.name == confName)
+            .firstOrNull;
+        if (conf == null) {
+          return CupDetailScreen(careerId: id);
+        }
+        return ContinentalDetailScreen(careerId: id, confederation: conf);
+      },
+    ),
+    GoRoute(
+      path: Routes.continentalClash,
+      builder: (context, state) {
+        final id =
+            int.tryParse(
+              state.uri.queryParameters['careerId'] ?? '',
+            ) ??
+            0;
+        return ContinentalClashScreen(careerId: id);
+      },
+    ),
+    GoRoute(
+      path: Routes.continentalDraw,
+      builder: (context, state) {
+        final id =
+            int.tryParse(
+              state.uri.queryParameters['careerId'] ?? '',
+            ) ??
+            0;
+        final confName = state.uri.queryParameters['conf'] ?? '';
+        final conf = Confederation.values
+            .where((c) => c.name == confName)
+            .firstOrNull;
+        if (conf == null) return HubScreen(careerId: id);
+        return ContinentalDrawScreen(
+          careerId: id,
+          confederation: conf,
+          qualifying: state.uri.queryParameters['stage'] == 'qualifying',
+        );
+      },
+    ),
+    GoRoute(
+      path: Routes.ranking,
+      builder: (context, state) {
+        final id =
+            int.tryParse(
+              state.uri.queryParameters['careerId'] ?? '',
+            ) ??
+            0;
+        return WorldRankingScreen(careerId: id);
+      },
+    ),
+    GoRoute(
+      path: Routes.finalsDraw,
+      builder: (context, state) {
+        final id =
+            int.tryParse(
+              state.uri.queryParameters['careerId'] ?? '',
+            ) ??
+            0;
+        return FinalsDrawScreen(careerId: id);
+      },
+    ),
+    GoRoute(
+      path: Routes.tournamentKickoff,
+      builder: (context, state) {
+        final id =
+            int.tryParse(
+              state.uri.queryParameters['careerId'] ?? '',
+            ) ??
+            0;
+        final confName = state.uri.queryParameters['conf'] ?? '';
+        final conf = Confederation.values
+            .where((c) => c.name == confName)
+            .firstOrNull;
+        return TournamentKickoffScreen(careerId: id, conf: conf);
+      },
+    ),
+    GoRoute(
+      path: Routes.trainingCamp,
+      builder: (context, state) {
+        final id =
+            int.tryParse(
+              state.uri.queryParameters['careerId'] ?? '',
+            ) ??
+            0;
+        return TrainingCampScreen(careerId: id);
+      },
+    ),
+    GoRoute(
+      path: Routes.intercontinentalPlayoff,
+      builder: (context, state) {
+        final id =
+            int.tryParse(
+              state.uri.queryParameters['careerId'] ?? '',
+            ) ??
+            0;
+        return IntercontinentalPlayoffScreen(careerId: id);
+      },
+    ),
+    GoRoute(
+      path: Routes.qualifyingDraw,
+      builder: (context, state) {
+        final id =
+            int.tryParse(
+              state.uri.queryParameters['careerId'] ?? '',
+            ) ??
+            0;
+        return QualifyingDrawScreen(
+          careerId: id,
+          worldCup: state.uri.queryParameters['worldCup'] == 'true',
+        );
+      },
+    ),
+    GoRoute(
+      path: Routes.gallery,
+      builder: (context, state) => const StyleGalleryScreen(),
+    ),
+  ];
   return GoRouter(
     initialLocation: Routes.home,
-    routes: [
-      GoRoute(
-        path: Routes.home,
-        builder: (context, state) => const HomeScreen(),
-      ),
-      GoRoute(
-        path: Routes.nations,
-        builder: (context, state) => const NationSelectScreen(),
-      ),
-      GoRoute(
-        path: Routes.saves,
-        builder: (context, state) => const SavesScreen(),
-      ),
-      GoRoute(
-        path: Routes.settings,
-        builder: (context, state) => const SettingsScreen(),
-      ),
-      GoRoute(
-        path: Routes.diagnostics,
-        builder: (context, state) => const DiagnosticsScreen(),
-      ),
-      GoRoute(
-        path: Routes.startFromBottom,
-        builder: (context, state) => const UnemployedStartScreen(),
-      ),
-      GoRoute(
-        path: Routes.newGame,
-        builder: (context, state) {
-          final id =
-              int.tryParse(
-                state.uri.queryParameters['nationId'] ?? '',
-              ) ??
-              0;
-          return NewGameScreen(nationId: id);
-        },
-      ),
-      GoRoute(
-        path: Routes.hub,
-        builder: (context, state) {
-          final id =
-              int.tryParse(
-                state.uri.queryParameters['careerId'] ?? '',
-              ) ??
-              0;
-          return HubScreen(careerId: id);
-        },
-      ),
-      GoRoute(
-        path: Routes.manager,
-        builder: (context, state) => ManagerScreen(
-          careerId:
-              int.tryParse(state.uri.queryParameters['careerId'] ?? '') ?? 0,
-        ),
-      ),
-      GoRoute(
-        path: Routes.tactics,
-        builder: (context, state) {
-          final id =
-              int.tryParse(
-                state.uri.queryParameters['careerId'] ?? '',
-              ) ??
-              0;
-          // `?tab=` opens straight onto one of the three tabs. The pre-match
-          // setup strip warns about the armband and the set-piece takers,
-          // which both live on the second one; landing on the lineup instead
-          // left the manager to find the thing they had just been told about.
-          final tab = int.tryParse(state.uri.queryParameters['tab'] ?? '') ?? 0;
-          return TacticsScreen(careerId: id, initialTab: tab);
-        },
-      ),
-      GoRoute(
-        path: Routes.callUps,
-        builder: (context, state) {
-          final id =
-              int.tryParse(
-                state.uri.queryParameters['careerId'] ?? '',
-              ) ??
-              0;
-          return CallUpScreen(
-            careerId: id,
-            // When launched as a timeline event, these mark the call-up done.
-            eventKind: state.uri.queryParameters['event'],
-            eventCycle: int.tryParse(
-              state.uri.queryParameters['cycle'] ?? '',
-            ),
-          );
-        },
-      ),
-      GoRoute(
-        path: Routes.matchPreview,
-        builder: (context, state) {
-          final id =
-              int.tryParse(
-                state.uri.queryParameters['careerId'] ?? '',
-              ) ??
-              0;
-          return MatchPreviewScreen(careerId: id);
-        },
-      ),
-      GoRoute(
-        path: Routes.match,
-        builder: (context, state) {
-          final id =
-              int.tryParse(
-                state.uri.queryParameters['careerId'] ?? '',
-              ) ??
-              0;
-          return MatchScreen(careerId: id);
-        },
-      ),
-      GoRoute(
-        path: Routes.roundResults,
-        builder: (context, state) {
-          final id =
-              int.tryParse(
-                state.uri.queryParameters['careerId'] ?? '',
-              ) ??
-              0;
-          return RoundResultsScreen(careerId: id);
-        },
-      ),
-      GoRoute(
-        path: Routes.player,
-        builder: (context, state) {
-          final id =
-              int.tryParse(
-                state.uri.queryParameters['careerId'] ?? '',
-              ) ??
-              0;
-          final playerId =
-              int.tryParse(
-                state.uri.queryParameters['playerId'] ?? '',
-              ) ??
-              0;
-          return PlayerDetailScreen(careerId: id, playerId: playerId);
-        },
-      ),
-      GoRoute(
-        path: Routes.teamStats,
-        builder: (context, state) {
-          final id =
-              int.tryParse(
-                state.uri.queryParameters['careerId'] ?? '',
-              ) ??
-              0;
-          return TeamStatsScreen(careerId: id);
-        },
-      ),
-      GoRoute(
-        path: Routes.nationVitrine,
-        builder: (context, state) {
-          final id =
-              int.tryParse(
-                state.uri.queryParameters['careerId'] ?? '',
-              ) ??
-              0;
-          final nationId =
-              int.tryParse(
-                state.uri.queryParameters['nationId'] ?? '',
-              ) ??
-              0;
-          return NationVitrineScreen(careerId: id, nationId: nationId);
-        },
-      ),
-      GoRoute(
-        path: Routes.careers,
-        builder: (context, state) {
-          final id =
-              int.tryParse(
-                state.uri.queryParameters['careerId'] ?? '',
-              ) ??
-              0;
-          return CareersScreen(careerId: id);
-        },
-      ),
-      GoRoute(
-        path: Routes.careerSummary,
-        builder: (context, state) {
-          final id =
-              int.tryParse(
-                state.uri.queryParameters['careerId'] ?? '',
-              ) ??
-              0;
-          return CareerSummaryScreen(careerId: id);
-        },
-      ),
-      GoRoute(
-        path: Routes.achievements,
-        builder: (context, state) {
-          final id =
-              int.tryParse(
-                state.uri.queryParameters['careerId'] ?? '',
-              ) ??
-              0;
-          return AchievementsScreen(careerId: id);
-        },
-      ),
-      GoRoute(
-        path: Routes.challenges,
-        builder: (context, state) {
-          final id =
-              int.tryParse(
-                state.uri.queryParameters['careerId'] ?? '',
-              ) ??
-              0;
-          return ChallengesScreen(careerId: id);
-        },
-      ),
-      GoRoute(
-        path: Routes.messages,
-        builder: (context, state) {
-          final id =
-              int.tryParse(
-                state.uri.queryParameters['careerId'] ?? '',
-              ) ??
-              0;
-          return MessagesScreen(careerId: id);
-        },
-      ),
-      GoRoute(
-        path: Routes.finances,
-        builder: (context, state) {
-          final id =
-              int.tryParse(
-                state.uri.queryParameters['careerId'] ?? '',
-              ) ??
-              0;
-          return FinancesScreen(careerId: id);
-        },
-      ),
-      GoRoute(
-        path: Routes.youth,
-        builder: (context, state) {
-          final id =
-              int.tryParse(
-                state.uri.queryParameters['careerId'] ?? '',
-              ) ??
-              0;
-          return YouthScreen(careerId: id);
-        },
-      ),
-      GoRoute(
-        path: Routes.y,
-        builder: (context, state) {
-          final id =
-              int.tryParse(
-                state.uri.queryParameters['careerId'] ?? '',
-              ) ??
-              0;
-          return YScreen(careerId: id);
-        },
-      ),
-      GoRoute(
-        path: Routes.boardObjectives,
-        builder: (context, state) {
-          final id =
-              int.tryParse(
-                state.uri.queryParameters['careerId'] ?? '',
-              ) ??
-              0;
-          return BoardObjectivesScreen(careerId: id);
-        },
-      ),
-      GoRoute(
-        path: Routes.budgetSetup,
-        builder: (context, state) {
-          final id =
-              int.tryParse(
-                state.uri.queryParameters['careerId'] ?? '',
-              ) ??
-              0;
-          return BudgetSetupScreen(careerId: id);
-        },
-      ),
-      GoRoute(
-        path: Routes.records,
-        builder: (context, state) {
-          final id =
-              int.tryParse(
-                state.uri.queryParameters['careerId'] ?? '',
-              ) ??
-              0;
-          return RecordBookScreen(careerId: id);
-        },
-      ),
-      GoRoute(
-        path: Routes.legends,
-        builder: (context, state) {
-          final id =
-              int.tryParse(
-                state.uri.queryParameters['careerId'] ?? '',
-              ) ??
-              0;
-          return LegendsScreen(careerId: id);
-        },
-      ),
-      GoRoute(
-        path: Routes.allTimeRecords,
-        builder: (context, state) {
-          final id =
-              int.tryParse(
-                state.uri.queryParameters['careerId'] ?? '',
-              ) ??
-              0;
-          return AllTimeRecordsScreen(careerId: id);
-        },
-      ),
-      GoRoute(
-        path: Routes.headToHead,
-        builder: (context, state) {
-          final id =
-              int.tryParse(
-                state.uri.queryParameters['careerId'] ?? '',
-              ) ??
-              0;
-          return HeadToHeadScreen(careerId: id);
-        },
-      ),
-      GoRoute(
-        path: Routes.h2hMeetings,
-        builder: (context, state) {
-          final q = state.uri.queryParameters;
-          return H2HMeetingsScreen(
-            careerId: int.tryParse(q['careerId'] ?? '') ?? 0,
-            nationA: int.tryParse(q['a'] ?? '') ?? 0,
-            nationB: int.tryParse(q['b'] ?? '') ?? 0,
-          );
-        },
-      ),
-      GoRoute(
-        path: Routes.nationsCup,
-        builder: (context, state) {
-          final q = state.uri.queryParameters;
-          final id = int.tryParse(q['careerId'] ?? '') ?? 0;
-          // `&conf=` picks another confederation's cup; without it the
-          // manager's own opens.
-          final conf = Confederation.values
-              .where((c) => c.name == q['conf'])
-              .firstOrNull;
-          return NationsCupScreen(careerId: id, confederation: conf);
-        },
-      ),
-      GoRoute(
-        path: Routes.nationsCupDraw,
-        builder: (context, state) {
-          final id =
-              int.tryParse(
-                state.uri.queryParameters['careerId'] ?? '',
-              ) ??
-              0;
-          return NationsCupDrawScreen(careerId: id);
-        },
-      ),
-      GoRoute(
-        path: Routes.naturalization,
-        builder: (context, state) {
-          final id =
-              int.tryParse(
-                state.uri.queryParameters['careerId'] ?? '',
-              ) ??
-              0;
-          return NaturalizationScreen(careerId: id);
-        },
-      ),
-      GoRoute(
-        path: Routes.managerHistory,
-        builder: (context, state) {
-          final id =
-              int.tryParse(
-                state.uri.queryParameters['careerId'] ?? '',
-              ) ??
-              0;
-          return ManagerHistoryScreen(careerId: id);
-        },
-      ),
-      GoRoute(
-        path: Routes.hostDraw,
-        builder: (context, state) {
-          final id =
-              int.tryParse(
-                state.uri.queryParameters['careerId'] ?? '',
-              ) ??
-              0;
-          final worldCup = state.uri.queryParameters['worldCup'] == 'true';
-          return HostDrawScreen(careerId: id, worldCup: worldCup);
-        },
-      ),
-      GoRoute(
-        path: Routes.friendlies,
-        builder: (context, state) {
-          final id =
-              int.tryParse(
-                state.uri.queryParameters['careerId'] ?? '',
-              ) ??
-              0;
-          return FriendliesScreen(careerId: id);
-        },
-      ),
-      GoRoute(
-        path: Routes.cycleRollover,
-        builder: (context, state) {
-          final id =
-              int.tryParse(
-                state.uri.queryParameters['careerId'] ?? '',
-              ) ??
-              0;
-          return CycleRolloverScreen(careerId: id);
-        },
-      ),
-      GoRoute(
-        path: Routes.results,
-        builder: (context, state) {
-          final id =
-              int.tryParse(
-                state.uri.queryParameters['careerId'] ?? '',
-              ) ??
-              0;
-          return ResultsScreen(careerId: id);
-        },
-      ),
-      GoRoute(
-        path: Routes.tournaments,
-        builder: (context, state) {
-          final id =
-              int.tryParse(
-                state.uri.queryParameters['careerId'] ?? '',
-              ) ??
-              0;
-          return TournamentsScreen(careerId: id);
-        },
-      ),
-      GoRoute(
-        path: Routes.cup,
-        builder: (context, state) {
-          final id =
-              int.tryParse(
-                state.uri.queryParameters['careerId'] ?? '',
-              ) ??
-              0;
-          return CupDetailScreen(careerId: id);
-        },
-      ),
-      GoRoute(
-        path: Routes.continental,
-        builder: (context, state) {
-          final id =
-              int.tryParse(
-                state.uri.queryParameters['careerId'] ?? '',
-              ) ??
-              0;
-          final confName = state.uri.queryParameters['conf'] ?? '';
-          final conf = Confederation.values
-              .where((c) => c.name == confName)
-              .firstOrNull;
-          if (conf == null) {
-            return CupDetailScreen(careerId: id);
-          }
-          return ContinentalDetailScreen(careerId: id, confederation: conf);
-        },
-      ),
-      GoRoute(
-        path: Routes.continentalClash,
-        builder: (context, state) {
-          final id =
-              int.tryParse(
-                state.uri.queryParameters['careerId'] ?? '',
-              ) ??
-              0;
-          return ContinentalClashScreen(careerId: id);
-        },
-      ),
-      GoRoute(
-        path: Routes.continentalDraw,
-        builder: (context, state) {
-          final id =
-              int.tryParse(
-                state.uri.queryParameters['careerId'] ?? '',
-              ) ??
-              0;
-          final confName = state.uri.queryParameters['conf'] ?? '';
-          final conf = Confederation.values
-              .where((c) => c.name == confName)
-              .firstOrNull;
-          if (conf == null) return HubScreen(careerId: id);
-          return ContinentalDrawScreen(
-            careerId: id,
-            confederation: conf,
-            qualifying: state.uri.queryParameters['stage'] == 'qualifying',
-          );
-        },
-      ),
-      GoRoute(
-        path: Routes.ranking,
-        builder: (context, state) {
-          final id =
-              int.tryParse(
-                state.uri.queryParameters['careerId'] ?? '',
-              ) ??
-              0;
-          return WorldRankingScreen(careerId: id);
-        },
-      ),
-      GoRoute(
-        path: Routes.finalsDraw,
-        builder: (context, state) {
-          final id =
-              int.tryParse(
-                state.uri.queryParameters['careerId'] ?? '',
-              ) ??
-              0;
-          return FinalsDrawScreen(careerId: id);
-        },
-      ),
-      GoRoute(
-        path: Routes.tournamentKickoff,
-        builder: (context, state) {
-          final id =
-              int.tryParse(
-                state.uri.queryParameters['careerId'] ?? '',
-              ) ??
-              0;
-          final confName = state.uri.queryParameters['conf'] ?? '';
-          final conf = Confederation.values
-              .where((c) => c.name == confName)
-              .firstOrNull;
-          return TournamentKickoffScreen(careerId: id, conf: conf);
-        },
-      ),
-      GoRoute(
-        path: Routes.trainingCamp,
-        builder: (context, state) {
-          final id =
-              int.tryParse(
-                state.uri.queryParameters['careerId'] ?? '',
-              ) ??
-              0;
-          return TrainingCampScreen(careerId: id);
-        },
-      ),
-      GoRoute(
-        path: Routes.intercontinentalPlayoff,
-        builder: (context, state) {
-          final id =
-              int.tryParse(
-                state.uri.queryParameters['careerId'] ?? '',
-              ) ??
-              0;
-          return IntercontinentalPlayoffScreen(careerId: id);
-        },
-      ),
-      GoRoute(
-        path: Routes.qualifyingDraw,
-        builder: (context, state) {
-          final id =
-              int.tryParse(
-                state.uri.queryParameters['careerId'] ?? '',
-              ) ??
-              0;
-          return QualifyingDrawScreen(
-            careerId: id,
-            worldCup: state.uri.queryParameters['worldCup'] == 'true',
-          );
-        },
-      ),
-      GoRoute(
-        path: Routes.gallery,
-        builder: (context, state) => const StyleGalleryScreen(),
-      ),
-    ],
+    routes: formFactor == FormFactor.tablet ? _tabletRoutes(routes) : routes,
   );
 });
+
+/// The same routes, with every in-save screen inside the tablet shell.
+List<RouteBase> _tabletRoutes(List<GoRoute> routes) => [
+  ShellRoute(
+    builder: (context, state, child) =>
+        TabletShell(location: state.uri, child: child),
+    routes: [
+      for (final r in routes)
+        if (!Routes.fullScreen.contains(r.path)) r,
+    ],
+  ),
+  for (final r in routes)
+    if (Routes.fullScreen.contains(r.path)) r,
+];
