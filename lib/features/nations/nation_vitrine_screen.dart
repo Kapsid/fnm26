@@ -30,9 +30,6 @@ class NationVitrineScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l = AppLocalizations.of(context);
-    final async = ref.watch(
-      nationVitrineProvider((careerId: careerId, nationId: nationId)),
-    );
 
     return Scaffold(
       appBar: AppBar(
@@ -48,39 +45,66 @@ class NationVitrineScreen extends ConsumerWidget {
         ),
         centerTitle: true,
       ),
-      body: async.when(
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) =>
-            Center(child: Text(l.nationsCouldNotLoad(e.toString()))),
-        data: (v) {
-          if (v == null) return Center(child: Text(l.nationsNoNation));
-          return ListView(
-            padding: const EdgeInsets.all(AppSpacing.marginMobile),
-            children: [
-              _Header(v),
+      body: NationView(careerId: careerId, nationId: nationId),
+    );
+  }
+}
+
+/// A nation's whole record: its honours, how its world standing has moved,
+/// its record scorers and its titles. The body of [NationVitrineScreen], on
+/// its own so a tablet detail pane can show the same record beside the
+/// ranking.
+///
+/// Scrolls itself; give it a bounded height.
+class NationView extends ConsumerWidget {
+  const NationView({
+    required this.careerId,
+    required this.nationId,
+    this.padding = const EdgeInsets.all(AppSpacing.marginMobile),
+    super.key,
+  });
+
+  final int careerId;
+  final int nationId;
+  final EdgeInsetsGeometry padding;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l = AppLocalizations.of(context);
+    final async = ref.watch(
+      nationVitrineProvider((careerId: careerId, nationId: nationId)),
+    );
+    return async.when(
+      loading: () => const Center(child: CircularProgressIndicator()),
+      error: (e, _) => Center(child: Text(l.nationsCouldNotLoad(e.toString()))),
+      data: (v) {
+        if (v == null) return Center(child: Text(l.nationsNoNation));
+        return ListView(
+          padding: padding,
+          children: [
+            _Header(v),
+            const SizedBox(height: AppSpacing.md),
+            _sectionLabel(l.nationsHonours),
+            const SizedBox(height: AppSpacing.sm),
+            _HonoursCard(v),
+            const SizedBox(height: AppSpacing.md),
+            _sectionLabel(l.nationsRankingHistory),
+            const SizedBox(height: AppSpacing.sm),
+            _RankingHistoryCard(v),
+            const SizedBox(height: AppSpacing.md),
+            _sectionLabel(l.nationsTopScorers),
+            const SizedBox(height: AppSpacing.sm),
+            _TopScorersCard(v),
+            if (v.titles.isNotEmpty) ...[
               const SizedBox(height: AppSpacing.md),
-              _sectionLabel(l.nationsHonours),
+              _sectionLabel(l.nationsTitles),
               const SizedBox(height: AppSpacing.sm),
-              _HonoursCard(v),
-              const SizedBox(height: AppSpacing.md),
-              _sectionLabel(l.nationsRankingHistory),
-              const SizedBox(height: AppSpacing.sm),
-              _RankingHistoryCard(v),
-              const SizedBox(height: AppSpacing.md),
-              _sectionLabel(l.nationsTopScorers),
-              const SizedBox(height: AppSpacing.sm),
-              _TopScorersCard(v),
-              if (v.titles.isNotEmpty) ...[
-                const SizedBox(height: AppSpacing.md),
-                _sectionLabel(l.nationsTitles),
-                const SizedBox(height: AppSpacing.sm),
-                _TitlesCard(v),
-              ],
-              const SizedBox(height: AppSpacing.lg),
+              _TitlesCard(v),
             ],
-          );
-        },
-      ),
+            const SizedBox(height: AppSpacing.lg),
+          ],
+        );
+      },
     );
   }
 

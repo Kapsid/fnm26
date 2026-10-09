@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
 
-/// What a tablet detail pane is showing. Stage 2 has players; nations, team
-/// stats and head to head join in later stages.
+/// What a tablet detail pane is showing: a player (stage 2) or a nation
+/// (stage 3); team stats and head to head join in later stages.
 sealed class DetailTarget {
   const DetailTarget();
 }
@@ -17,6 +17,19 @@ final class PlayerTarget extends DetailTarget {
 
   @override
   int get hashCode => playerId.hashCode;
+}
+
+final class NationTarget extends DetailTarget {
+  const NationTarget(this.nationId);
+
+  final int nationId;
+
+  @override
+  bool operator ==(Object other) =>
+      other is NationTarget && other.nationId == nationId;
+
+  @override
+  int get hashCode => Object.hash(NationTarget, nationId);
 }
 
 /// The selection of one detail pane.

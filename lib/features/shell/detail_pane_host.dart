@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/theme/app_colors.dart';
+import 'package:fnm/features/nations/nation_vitrine_screen.dart';
 import 'package:fnm/features/player/player_detail_screen.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/tablet/detail_pane.dart';
@@ -27,6 +28,7 @@ class DetailPaneHost extends StatelessWidget {
   final DetailTarget? target;
 
   /// What the empty pane says; [AppLocalizations.panePickPlayer] by default.
+  /// A screen whose pane holds nations passes [AppLocalizations.panePickNation].
   final String? placeholder;
 
   @override
@@ -45,6 +47,16 @@ class DetailPaneHost extends StatelessWidget {
           key: ValueKey(playerId),
           careerId: careerId,
           playerId: playerId,
+        ),
+      ),
+      NationTarget(:final nationId) => (
+        l.nationsVitrineTitle,
+        '${Routes.nationVitrine}?careerId=$careerId&nationId=$nationId',
+        NationView(
+          // A new nation is a new record: no scroll offset carried over.
+          key: ValueKey(('nation', nationId)),
+          careerId: careerId,
+          nationId: nationId,
         ),
       ),
     };
@@ -96,5 +108,27 @@ void openPlayer(
   }
   unawaited(
     context.push('${Routes.player}?careerId=$careerId&playerId=$playerId'),
+  );
+}
+
+/// Shows a nation's record: in the nearest detail pane when the screen has
+/// one, otherwise on its own vitrine page, as every phone screen does.
+///
+/// From inside a sheet or dialog there is never a pane (see
+/// [DetailPaneScope.maybeOf]); close the sheet BEFORE calling this.
+void openNation(
+  BuildContext context, {
+  required int careerId,
+  required int nationId,
+}) {
+  final pane = DetailPaneScope.maybeOf(context);
+  if (pane != null) {
+    pane.show(NationTarget(nationId));
+    return;
+  }
+  unawaited(
+    context.push(
+      '${Routes.nationVitrine}?careerId=$careerId&nationId=$nationId',
+    ),
   );
 }
