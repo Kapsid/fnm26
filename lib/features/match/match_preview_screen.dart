@@ -7,12 +7,14 @@ import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/core/util/app_date.dart';
 import 'package:fnm/core/util/match_stage.dart';
 import 'package:fnm/core/util/squad_label.dart';
+import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/formation.dart';
 import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/services/match/strength_factors.dart';
 import 'package:fnm/domain/services/rating/overall_rating.dart';
 import 'package:fnm/domain/services/tactics/position_fit.dart';
+import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/match/ground_card.dart';
 import 'package:fnm/features/match/match_providers.dart';
 import 'package:fnm/features/match/setup_warning.dart';
@@ -555,6 +557,34 @@ List<Player> _keyMen(List<Player> xi) {
   final sorted = [...xi]..sort((a, b) => b.overall.compareTo(a.overall));
   return sorted.take(3).toList();
 }
+
+/// The three best-rated players in [nationId]'s pool: the danger men for the
+/// tablet Tactics screen's scouting dossier.
+///
+/// The preview reads them off the opponent's named XI. Tactics cannot: the
+/// one provider holding that XI ([matchPreviewProvider]) also pre-simulates
+/// the match, and keeping it alive while the manager changes his line-up
+/// would hand the preview a result simulated with the old one. Barring an
+/// injury the pool's best three are the XI's best three.
+final AutoDisposeFutureProviderFamily<
+  List<Player>,
+  ({int careerId, int nationId})
+>
+opponentKeyMenProvider = FutureProvider.autoDispose
+    .family<List<Player>, ({int careerId, int nationId})>((ref, key) async {
+      final career = await ref
+          .watch(careerRepositoryProvider)
+          .byId(key.careerId);
+      if (career == null) return const <Player>[];
+      final pool = await ref
+          .watch(playerRepositoryProvider)
+          .byNation(
+            key.nationId,
+            agingYears: CareerService.agingYears(career),
+            saveSeed: career.rngSeed,
+          );
+      return _keyMen(pool);
+    });
 
 /// A pre-match scouting report on the opponent: their recent form (a W/D/L
 /// strip), a morale read, and their danger men — everything derived from data
