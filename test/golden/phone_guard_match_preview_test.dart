@@ -16,6 +16,8 @@ void main() {
     );
     expect(find.byType(MatchHeadline), findsOneWidget);
     await expectAppGolden('goldens/match_preview_phone.png');
+    // Unmount the app so the screen's timers and listeners are gone before the
+    // test ends (a live timer fails the test's pending-timer check).
     await tester.pumpWidget(const SizedBox());
   });
 

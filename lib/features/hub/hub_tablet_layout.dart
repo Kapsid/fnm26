@@ -2,8 +2,9 @@ part of 'hub_screen.dart';
 
 /// The hub on a tablet: the mockup's dashboard. Data comes from the same
 /// providers the phone hub watches; the only additions are the objectives
-/// and the Y feed (both already kept alive by the phone hub's satisfaction
-/// and Y badge) and the federation buildings (changed only on screens that
+/// and the Y feed (kept alive by the hub State's own watch of
+/// `satisfactionProvider` and `yUnreadCountProvider`, which resolves the feed
+/// it counts) and the federation buildings (changed only on screens that
 /// leave the hub).
 class _HubTabletLayout extends ConsumerWidget {
   const _HubTabletLayout({required this.careerId, required this.onOpenGroup});
@@ -574,7 +575,8 @@ class _YPanel extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l = AppLocalizations.of(context);
-    // Already kept alive by the hub's Y badge (yUnreadCountProvider).
+    // Kept alive by the hub State's watch of yUnreadCountProvider, which
+    // reads this feed to count.
     final posts = [
       for (final p
           in ref.watch(yFeedProvider(careerId)).valueOrNull?.posts ??

@@ -53,6 +53,9 @@ class _MessagesTabletLayout extends StatelessWidget {
     return Scaffold(
       key: MessagesScreen.tabletLayoutKey,
       body: inboxAsync.when(
+        // Opening the inbox marks it read and reloads it; keep the previous
+        // data on screen meanwhile instead of flashing a spinner.
+        skipLoadingOnReload: true,
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (e, _) => AppErrorState(
           message: l.messagesCouldNotLoad('').trim(),

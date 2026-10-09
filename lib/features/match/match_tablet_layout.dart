@@ -79,11 +79,8 @@ class _MatchTabletLayout extends StatelessWidget {
                             ),
                             if (momentum != null) ...[
                               const SizedBox(height: AppSpacing.sm),
-                              Panel(
-                                title: l.matchMomentum,
-                                padding: EdgeInsets.zero,
-                                child: momentum!,
-                              ),
+                              // No panel header: the bar names itself.
+                              PanelBox(child: momentum!),
                             ],
                           ],
                         ),

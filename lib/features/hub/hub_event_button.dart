@@ -48,8 +48,8 @@ class HubEventButton extends ConsumerStatefulWidget {
 
   final int careerId;
 
-  /// The top-bar variant: no subtitle under it, and not the tour's target
-  /// (the hub's own button is; one GlobalKey cannot sit on two widgets).
+  /// The top-bar variant: no subtitle under it. Whether it carries the tour's
+  /// key is [tourTarget]'s call, not this flag's (one GlobalKey, one widget).
   final bool compact;
 
   /// Whether this button carries [TourKeys.hubAction]. Defaults to the

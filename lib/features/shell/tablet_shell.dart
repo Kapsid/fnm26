@@ -134,8 +134,8 @@ class PhoneWidthFrame extends StatelessWidget {
 
 /// A full-screen route with no tablet layout yet, on a tablet: its phone
 /// layout centred at [PhoneWidthFrame.maxWidth] on the app's background,
-/// rather than stretched across a landscape screen. On a phone, or a tablet
-/// window narrower than a tablet, the child is returned as it is.
+/// rather than stretched across a landscape screen. On a phone, or a window
+/// narrower than [kTabletLayoutMinWidth], the child is returned as it is.
 class FullScreenPhoneFrame extends StatelessWidget {
   const FullScreenPhoneFrame({required this.child, super.key});
 
