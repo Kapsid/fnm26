@@ -1,9 +1,12 @@
 import 'dart:async';
+import 'dart:ui' show PlatformDispatcher;
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/app.dart';
 import 'package:fnm/core/diagnostics/app_log.dart';
+import 'package:fnm/core/layout/form_factor.dart';
 import 'package:fnm/shared/widgets/app_crash_box.dart';
 
 void main() {
@@ -24,7 +27,22 @@ void main() {
         AppLog.error('build', details.exception, details.stack);
         return const AppCrashBox();
       };
-      runApp(const FnmRoot());
+      // The form factor is read once, from the first window, before anything
+      // is built: the router's shape depends on it, and a tablet is held in
+      // landscape so it will not change under us.
+      final view = PlatformDispatcher.instance.implicitView;
+      final formFactor = view == null
+          ? FormFactor.phone
+          : FormFactor.fromLogicalSize(
+              view.physicalSize / view.devicePixelRatio,
+            );
+      if (formFactor == FormFactor.tablet) {
+        await SystemChrome.setPreferredOrientations(const [
+          DeviceOrientation.landscapeLeft,
+          DeviceOrientation.landscapeRight,
+        ]);
+      }
+      runApp(FnmRoot(formFactor: formFactor));
     },
     (e, st) => AppLog.error('zone', e, st),
   );
@@ -41,7 +59,10 @@ void main() {
 /// Flutter cannot relaunch itself on iOS, so this is the closest thing there
 /// is to a restart, and it is enough: nothing outside the scope holds state.
 class FnmRoot extends StatefulWidget {
-  const FnmRoot({super.key});
+  const FnmRoot({this.formFactor = FormFactor.phone, super.key});
+
+  /// Detected at startup; survives [restart], which rebuilds the scope.
+  final FormFactor formFactor;
 
   /// Bumped to rebuild everything. A [ValueNotifier] rather than a callback so
   /// the trigger does not need a BuildContext — a restore finishes on a screen
@@ -61,6 +82,7 @@ class _FnmRootState extends State<FnmRoot> {
     valueListenable: FnmRoot.generation,
     builder: (_, generation, _) => ProviderScope(
       key: ValueKey(generation),
+      overrides: [formFactorProvider.overrideWithValue(widget.formFactor)],
       child: const FnmApp(),
     ),
   );
