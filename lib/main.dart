@@ -30,12 +30,9 @@ void main() {
       // The form factor is read once, from the first window, before anything
       // is built: the router's shape depends on it, and a tablet is held in
       // landscape so it will not change under us.
-      final view = PlatformDispatcher.instance.implicitView;
-      final formFactor = view == null
-          ? FormFactor.phone
-          : FormFactor.fromLogicalSize(
-              view.physicalSize / view.devicePixelRatio,
-            );
+      final formFactor = FormFactor.fromLogicalSize(
+        await firstLogicalWindowSize(PlatformDispatcher.instance),
+      );
       if (formFactor == FormFactor.tablet) {
         await SystemChrome.setPreferredOrientations(const [
           DeviceOrientation.landscapeLeft,
