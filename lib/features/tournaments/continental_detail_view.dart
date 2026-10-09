@@ -34,17 +34,7 @@ class ContinentalDetailView extends ConsumerWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Material(
-            color: AppColors.surfaceContainer,
-            child: TabBar(
-              isScrollable: true,
-              tabAlignment: TabAlignment.start,
-              labelColor: AppColors.onSurface,
-              unselectedLabelColor: AppColors.onSurfaceVariant,
-              indicatorColor: AppColors.primary,
-              tabs: _continentalTabs(l, confederation),
-            ),
-          ),
+          TabletTabBar(tabs: _continentalTabs(l, confederation)),
           Expanded(
             child: dataAsync.when(
               loading: () => const Center(child: CircularProgressIndicator()),
@@ -107,30 +97,15 @@ class _ContinentalDetailTabletLayout extends ConsumerWidget {
           )),
         )
         .valueOrNull;
-    return Scaffold(
-      key: ContinentalDetailScreen.tabletLayoutKey,
-      body: Padding(
-        padding: const EdgeInsets.all(AppSpacing.md),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            TabletScreenHeader(
-              title: data == null
-                  ? l.tourContChampionship
-                  : competitionLabel(l, data.name).toUpperCase(),
-              onBack: () =>
-                  context.go('${Routes.tournaments}?careerId=$careerId'),
-            ),
-            Expanded(
-              child: PanelBox(
-                child: ContinentalDetailView(
-                  careerId: careerId,
-                  confederation: confederation,
-                ),
-              ),
-            ),
-          ],
-        ),
+    return TabletDetailPage(
+      scaffoldKey: ContinentalDetailScreen.tabletLayoutKey,
+      title: data == null
+          ? l.tourContChampionship
+          : competitionLabel(l, data.name).toUpperCase(),
+      onBack: () => context.go('${Routes.tournaments}?careerId=$careerId'),
+      child: ContinentalDetailView(
+        careerId: careerId,
+        confederation: confederation,
       ),
     );
   }

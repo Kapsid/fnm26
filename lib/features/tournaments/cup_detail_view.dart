@@ -27,16 +27,10 @@ class CupDetailView extends ConsumerWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Material(
-            color: AppColors.surfaceContainer,
-            child: TabBar(
-              isScrollable: true,
-              tabAlignment: TabAlignment.start,
-              labelColor: themed ? accent : AppColors.onSurface,
-              unselectedLabelColor: AppColors.onSurfaceVariant,
-              indicatorColor: accent,
-              tabs: _cupTabs(l),
-            ),
+          TabletTabBar(
+            selectedColor: themed ? accent : AppColors.onSurface,
+            indicatorColor: accent,
+            tabs: _cupTabs(l),
           ),
           Expanded(
             child: dataAsync.when(
@@ -90,25 +84,12 @@ class _CupDetailTabletLayout extends ConsumerWidget {
     final l = AppLocalizations.of(context);
     final host = ref.watch(wcHostThemeProvider(careerId)).valueOrNull;
     final accent = (host?.active ?? false) ? host!.accent : null;
-    return Scaffold(
-      key: CupDetailScreen.tabletLayoutKey,
-      body: Padding(
-        padding: const EdgeInsets.all(AppSpacing.md),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            TabletScreenHeader(
-              title: l.tourCupTitle,
-              accent: accent,
-              onBack: () =>
-                  context.go('${Routes.tournaments}?careerId=$careerId'),
-            ),
-            Expanded(
-              child: PanelBox(child: CupDetailView(careerId: careerId)),
-            ),
-          ],
-        ),
-      ),
+    return TabletDetailPage(
+      scaffoldKey: CupDetailScreen.tabletLayoutKey,
+      title: l.tourCupTitle,
+      accent: accent,
+      onBack: () => context.go('${Routes.tournaments}?careerId=$careerId'),
+      child: CupDetailView(careerId: careerId),
     );
   }
 }

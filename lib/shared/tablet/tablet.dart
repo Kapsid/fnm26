@@ -6,5 +6,6 @@ export 'detail_pane.dart';
 export 'master_detail.dart';
 export 'panel.dart';
 export 'screen_header.dart';
+export 'tablet_detail_page.dart';
 export 'tablet_shell_scope.dart';
 export 'tablet_text.dart';

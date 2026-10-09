@@ -38,17 +38,7 @@ class _NationsCupViewState extends ConsumerState<NationsCupView>
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Material(
-            color: AppColors.surfaceContainer,
-            child: TabBar(
-              isScrollable: true,
-              tabAlignment: TabAlignment.start,
-              labelColor: AppColors.onSurface,
-              unselectedLabelColor: AppColors.onSurfaceVariant,
-              indicatorColor: AppColors.primary,
-              tabs: _tabs(l, zones: zones),
-            ),
-          ),
+          TabletTabBar(tabs: _tabs(l, zones: zones)),
           Expanded(
             child: async.when(
               loading: () => const Center(child: CircularProgressIndicator()),
@@ -93,30 +83,13 @@ class _NationsCupTabletLayout extends ConsumerWidget {
     final title = view == null || view.cupName == NationsCups.europe
         ? l.tourContNationsCup
         : competitionLabel(l, view.cupName).toUpperCase();
-    return Scaffold(
-      key: NationsCupScreen.tabletLayoutKey,
-      body: Padding(
-        padding: const EdgeInsets.all(AppSpacing.md),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            TabletScreenHeader(
-              title: title,
-              onBack: () => context.canPop()
-                  ? context.pop()
-                  : context.go('${Routes.tournaments}?careerId=$careerId'),
-            ),
-            Expanded(
-              child: PanelBox(
-                child: NationsCupView(
-                  careerId: careerId,
-                  confederation: confederation,
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
+    return TabletDetailPage(
+      scaffoldKey: NationsCupScreen.tabletLayoutKey,
+      title: title,
+      onBack: () => context.canPop()
+          ? context.pop()
+          : context.go('${Routes.tournaments}?careerId=$careerId'),
+      child: NationsCupView(careerId: careerId, confederation: confederation),
     );
   }
 }

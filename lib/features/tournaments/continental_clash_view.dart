@@ -16,17 +16,7 @@ class ContinentalClashView extends ConsumerWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Material(
-            color: AppColors.surfaceContainer,
-            child: TabBar(
-              isScrollable: true,
-              tabAlignment: TabAlignment.start,
-              labelColor: AppColors.onSurface,
-              unselectedLabelColor: AppColors.onSurfaceVariant,
-              indicatorColor: AppColors.primary,
-              tabs: _clashTabs(l),
-            ),
-          ),
+          TabletTabBar(tabs: _clashTabs(l)),
           Expanded(
             child: dataAsync.when(
               loading: () => const Center(child: CircularProgressIndicator()),
@@ -58,26 +48,11 @@ class _ContinentalClashTabletLayout extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
-    return Scaffold(
-      key: ContinentalClashScreen.tabletLayoutKey,
-      body: Padding(
-        padding: const EdgeInsets.all(AppSpacing.md),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            TabletScreenHeader(
-              title: l.tourContContinentalClash,
-              onBack: () =>
-                  context.go('${Routes.tournaments}?careerId=$careerId'),
-            ),
-            Expanded(
-              child: PanelBox(
-                child: ContinentalClashView(careerId: careerId),
-              ),
-            ),
-          ],
-        ),
-      ),
+    return TabletDetailPage(
+      scaffoldKey: ContinentalClashScreen.tabletLayoutKey,
+      title: l.tourContContinentalClash,
+      onBack: () => context.go('${Routes.tournaments}?careerId=$careerId'),
+      child: ContinentalClashView(careerId: careerId),
     );
   }
 }
