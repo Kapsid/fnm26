@@ -43,6 +43,24 @@ class GridColumnSet<T> {
   final List<GridColumn<T>> columns;
 }
 
+/// Lets a screen find and scroll to a row in the grid's CURRENT order, which
+/// the grid sorts privately. Pass one to [DataGrid.rowsController].
+class DataGridController<T> {
+  _DataGridState<T>? _state;
+
+  /// Whether a grid is showing rows for this controller.
+  bool get isAttached => _state != null;
+
+  /// Where [row] sits in the order on screen, or -1 when it is not there.
+  int indexOf(T row) => _state?._indexOf(row) ?? -1;
+
+  /// Scrolls so [row] is centred in the visible rows; false when the grid is
+  /// not showing it. When the columns scroll sideways this is still the rows'
+  /// vertical scroll.
+  bool revealRow(T row, {bool animate = false}) =>
+      _state?._reveal(row, animate: animate) ?? false;
+}
+
 /// The tablet's table: sticky header, tap a header to sort (again to reverse),
 /// zebra rows, a highlighted selection, and several column views of the same
 /// rows. Rows are built lazily, so a 2000-row list costs a screenful.
@@ -56,6 +74,7 @@ class DataGrid<T> extends StatefulWidget {
     this.selected,
     this.onSelect,
     this.controller,
+    this.rowsController,
     super.key,
   }) : assert(columnSets.length > 0, 'at least one column set');
 
@@ -79,6 +98,9 @@ class DataGrid<T> extends StatefulWidget {
   /// ("centre on my nation"). The header never scrolls.
   final ScrollController? controller;
 
+  /// Finds and reveals rows by value in the grid's sorted order.
+  final DataGridController<T>? rowsController;
+
   @override
   State<DataGrid<T>> createState() => _DataGridState<T>();
 }
@@ -97,6 +119,49 @@ class _DataGridState<T> extends State<DataGrid<T>> {
   String? _sortedSortId;
   bool _sortedAscending = true;
 
+  ScrollController? _ownScroll;
+  ScrollController get _scroll =>
+      widget.controller ?? (_ownScroll ??= ScrollController());
+
+  int _indexOf(T row) => _rowsFor(_set).indexOf(row);
+
+  bool _reveal(T row, {bool animate = false}) {
+    final index = _indexOf(row);
+    final scroll = _scroll;
+    if (index < 0 || !scroll.hasClients) return false;
+    final position = scroll.position;
+    final target =
+        (index * DataGrid.rowHeight +
+                DataGrid.rowHeight / 2 -
+                position.viewportDimension / 2)
+            .clamp(0.0, position.maxScrollExtent);
+    if (animate) {
+      scroll.animateTo(
+        target,
+        duration: const Duration(milliseconds: 280),
+        curve: Curves.easeOutCubic,
+      );
+    } else {
+      scroll.jumpTo(target);
+    }
+    return true;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    widget.rowsController?._state = this;
+  }
+
+  @override
+  void dispose() {
+    if (widget.rowsController?._state == this) {
+      widget.rowsController!._state = null;
+    }
+    _ownScroll?.dispose();
+    super.dispose();
+  }
+
   GridColumnSet<T> get _set => widget.columnSets.firstWhere(
     (s) => s.id == _setId,
     orElse: () => widget.columnSets.first,
@@ -105,6 +170,10 @@ class _DataGridState<T> extends State<DataGrid<T>> {
   @override
   void didUpdateWidget(DataGrid<T> old) {
     super.didUpdateWidget(old);
+    if (old.rowsController != widget.rowsController) {
+      if (old.rowsController?._state == this) old.rowsController!._state = null;
+      widget.rowsController?._state = this;
+    }
     // A view or sort column the parent removed falls back to the first view
     // and no sort, so the header and the rows never disagree.
     final set = _set;
@@ -274,7 +343,7 @@ class _DataGridState<T> extends State<DataGrid<T>> {
         ),
         Expanded(
           child: ListView.builder(
-            controller: widget.controller,
+            controller: _scroll,
             itemCount: rows.length,
             itemExtent: DataGrid.rowHeight,
             itemBuilder: (context, i) {

@@ -16,16 +16,15 @@ class _WorldRankingTabletLayout extends ConsumerStatefulWidget {
 class _WorldRankingTabletLayoutState
     extends ConsumerState<_WorldRankingTabletLayout> {
   final DetailPaneController _pane = DetailPaneController();
-  final ScrollController _grid = ScrollController();
+  final DataGridController<Nation> _rowsController = DataGridController();
 
   /// The (region, row) the table was last centred on, so a filter change or a
   /// new release re-centres on the manager's nation, and nothing else does.
-  ({Confederation? region, int index})? _centredOn;
+  ({Confederation? region, int nationId})? _centredOn;
 
   @override
   void dispose() {
     _pane.dispose();
-    _grid.dispose();
     super.dispose();
   }
 
@@ -60,28 +59,19 @@ class _WorldRankingTabletLayoutState
     return _sets;
   }
 
-  void _centre(int index, {bool animate = false}) {
-    if (!mounted || !_grid.hasClients || index < 0) return;
-    final viewport = _grid.position.viewportDimension;
-    final target =
-        (index * DataGrid.rowHeight + DataGrid.rowHeight / 2 - viewport / 2)
-            .clamp(0.0, _grid.position.maxScrollExtent);
-    if (animate) {
-      _grid.animateTo(
-        target,
-        duration: const Duration(milliseconds: 280),
-        curve: Curves.easeOutCubic,
-      );
-    } else {
-      _grid.jumpTo(target);
-    }
+  // The grid sorts privately, so it finds the row in the order on screen.
+  void _centre(Nation? nation, {bool animate = false}) {
+    if (!mounted || nation == null) return;
+    _rowsController.revealRow(nation, animate: animate);
   }
 
-  void _focus(Confederation? region, int index) {
-    if (index < 0) return;
-    if (_centredOn?.region == region && _centredOn?.index == index) return;
-    _centredOn = (region: region, index: index);
-    WidgetsBinding.instance.addPostFrameCallback((_) => _centre(index));
+  void _focus(Confederation? region, Nation? nation) {
+    if (nation == null) return;
+    if (_centredOn?.region == region && _centredOn?.nationId == nation.id) {
+      return;
+    }
+    _centredOn = (region: region, nationId: nation.id);
+    WidgetsBinding.instance.addPostFrameCallback((_) => _centre(nation));
   }
 
   @override
@@ -102,10 +92,10 @@ class _WorldRankingTabletLayoutState
           if (data == null) return Center(child: Text(l.rankingNoRanking));
           final rows = _rowsFor(data, region);
           final sets = _setsFor(l, data);
-          final playerIndex = rows.indexWhere(
-            (n) => n.id == data.playerNationId,
-          );
-          _focus(region, playerIndex);
+          final player = rows
+              .where((n) => n.id == data.playerNationId)
+              .firstOrNull;
+          _focus(region, player);
           final now = data.position[data.playerNationId];
           return DetailPaneScope(
             controller: _pane,
@@ -141,8 +131,7 @@ class _WorldRankingTabletLayoutState
                                   Icons.my_location_rounded,
                                   color: AppColors.primary,
                                 ),
-                                onPressed: () =>
-                                    _centre(playerIndex, animate: true),
+                                onPressed: () => _centre(player, animate: true),
                               ),
                             ),
                           ),
@@ -169,7 +158,7 @@ class _WorldRankingTabletLayoutState
                               rows: rows,
                               columnSets: sets,
                               selected: selected,
-                              controller: _grid,
+                              rowsController: _rowsController,
                               onSelect: (n) => openNation(
                                 context,
                                 careerId: careerId,
@@ -215,7 +204,7 @@ List<GridColumnSet<Nation>> rankingColumnSets(
           width: 64,
           sortKey: (n) => data.position[n.id] ?? 1 << 20,
           cell: (n) => Text(
-            '${data.position[n.id] ?? ''}',
+            '${data.position[n.id] ?? data.nations.indexOf(n) + 1}',
             style: TabletText.cellNumeric,
           ),
         ),

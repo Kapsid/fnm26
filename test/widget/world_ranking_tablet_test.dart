@@ -83,4 +83,39 @@ void main() {
     expect(rows.every((n) => n.confederation == Confederation.asia), isTrue);
     await tester.pumpWidget(const SizedBox());
   });
+
+  for (final column in ['Nation', 'Region']) {
+    testWidgets('centre on my nation finds the row after sorting by $column', (
+      tester,
+    ) async {
+      final save = await _open(tester, kTabletSize);
+      final me = tester
+          .widget<DataGrid<Nation>>(_grid)
+          .rows
+          .firstWhere((n) => n.id == save.nationId);
+      await tester.tap(
+        find.descendant(
+          of: find.byKey(DataGrid.headerKey),
+          matching: find.textContaining(RegExp(column, caseSensitive: false)),
+        ),
+      );
+      await settle(tester);
+      final list = find.descendant(of: _grid, matching: find.byType(ListView));
+      // Away from the manager's row, then back by the button.
+      await tester.drag(list, const Offset(0, 6000));
+      await settle(tester);
+      await tester.drag(list, const Offset(0, -6000));
+      await settle(tester);
+      await tester.tap(find.byTooltip(enL.rankingCentreOnMe));
+      await settle(tester);
+      final row = find.descendant(of: _grid, matching: find.text(me.name));
+      expect(row, findsOneWidget);
+      final view = tester.getRect(list);
+      expect(
+        tester.getCenter(row).dy,
+        inInclusiveRange(view.top, view.bottom),
+      );
+      await tester.pumpWidget(const SizedBox());
+    });
+  }
 }
