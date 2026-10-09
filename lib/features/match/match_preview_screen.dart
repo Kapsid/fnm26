@@ -23,8 +23,11 @@ import 'package:fnm/features/records/head_to_head_providers.dart';
 import 'package:fnm/features/tactics/condition_providers.dart';
 import 'package:fnm/features/tournaments/wc_host_theme.dart';
 import 'package:fnm/l10n/app_localizations.dart';
+import 'package:fnm/shared/tablet/tablet.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
+
+part 'match_preview_tablet_layout.dart';
 
 /// The World Cup finals rounds — a match on one of these is host-themed once
 /// the tournament has kicked off.
@@ -49,6 +52,8 @@ class MatchPreviewScreen extends ConsumerWidget {
   const MatchPreviewScreen({required this.careerId, super.key});
 
   final int careerId;
+
+  static const Key tabletLayoutKey = Key('matchPreview.tabletLayout');
 
   /// Height of both buttons in the bottom bar, the outlined button's own
   /// minimum, so Kick-off and Tactics read as a matched pair.
@@ -84,6 +89,14 @@ class MatchPreviewScreen extends ConsumerWidget {
         : null;
     final themedRounds = activeWc ? _wcFinalsRounds : _continentalFinalsRounds;
     final accent = host?.accent ?? AppColors.primary;
+    if (TabletShellScope.isActive(context)) {
+      return _MatchPreviewTabletLayout(
+        screen: this,
+        host: host,
+        themedRounds: themedRounds,
+        accent: accent,
+      );
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -151,7 +164,7 @@ class MatchPreviewScreen extends ConsumerWidget {
               // Head-to-head and the scouting report share one card as two
               // tabs — they were stacked, which pushed the starting XI (the
               // thing the manager is actually here to check) below the fold.
-              _OpponentTabs(
+              OpponentBriefing(
                 careerId: careerId,
                 myNationId: myNationId,
                 oppNationId: oppNationId,
@@ -284,10 +297,11 @@ class MatchPreviewScreen extends ConsumerWidget {
   }
 }
 
-/// The opponent briefing: head-to-head and the scouting report as two tabs of
-/// one card, head-to-head open by default.
-class _OpponentTabs extends StatefulWidget {
-  const _OpponentTabs({
+/// The opponent briefing: head to head and the scouting report as two tabs of
+/// one card, head to head open by default. Shared by the preview and the
+/// tablet Tactics screen's Opposition tab.
+class OpponentBriefing extends StatefulWidget {
+  const OpponentBriefing({
     required this.careerId,
     required this.myNationId,
     required this.oppNationId,
@@ -295,6 +309,7 @@ class _OpponentTabs extends StatefulWidget {
     required this.oppCode,
     required this.keyMen,
     required this.saveSeed,
+    super.key,
   });
 
   final int careerId;
@@ -306,10 +321,10 @@ class _OpponentTabs extends StatefulWidget {
   final int saveSeed;
 
   @override
-  State<_OpponentTabs> createState() => _OpponentTabsState();
+  State<OpponentBriefing> createState() => _OpponentBriefingState();
 }
 
-class _OpponentTabsState extends State<_OpponentTabs> {
+class _OpponentBriefingState extends State<OpponentBriefing> {
   /// 0 = head-to-head (the default), 1 = the scouting report.
   int _tab = 0;
 
