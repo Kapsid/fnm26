@@ -1083,6 +1083,7 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
             ? null
             : KitColors.discFill(n.primaryColor, n.secondaryColor);
       }(),
+      tabletLayout: useTabletLayout(context, ref),
     );
     if (result != null && mounted) await _applyTactics(preview, result);
     if (wasPlaying && _minute < 90 && !_playing) _togglePlay();

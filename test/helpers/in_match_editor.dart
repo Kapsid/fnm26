@@ -68,6 +68,7 @@ Future<void> openEditor(
                     pool: players,
                     startingIds: {for (var i = 1; i <= 11; i++) i},
                     maxSubs: 5,
+                    tabletLayout: tabletLayout,
                   ),
                   child: const Text('open'),
                 ),
