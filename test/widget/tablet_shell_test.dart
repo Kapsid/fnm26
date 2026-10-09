@@ -161,4 +161,37 @@ void main() {
     );
     expect(tester.getSize(find.byKey(const Key('page'))).width, 390);
   });
+
+  testWidgets('a 700 x 810 window gets the plain phone screen, no sidebar', (
+    tester,
+  ) async {
+    await pump(tester, const Size(700, 810), '/hub?careerId=1');
+    expect(find.byType(TabletSidebar), findsNothing);
+    expect(find.byType(TabletTopBar), findsNothing);
+    expect(find.text('the screen'), findsOneWidget);
+  });
+
+  testWidgets('999 wide is still phone, 1000 and 1080 wide show the shell', (
+    tester,
+  ) async {
+    await pump(tester, const Size(999, 810), '/hub?careerId=1');
+    expect(find.byType(TabletSidebar), findsNothing);
+    await pump(tester, const Size(1000, 810), '/hub?careerId=1');
+    expect(find.byType(TabletSidebar), findsOneWidget);
+    await pump(tester, const Size(1080, 810), '/hub?careerId=1');
+    expect(find.byType(TabletSidebar), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('a full-screen page below 1000 wide is left alone', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(700, 810);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+    await tester.pumpApp(
+      const FullScreenPhoneFrame(child: SizedBox.expand(key: Key('page'))),
+    );
+    expect(tester.getSize(find.byKey(const Key('page'))).width, 700);
+  });
 }

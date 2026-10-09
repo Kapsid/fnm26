@@ -23,7 +23,8 @@ const Set<String> tabletReadyPaths = <String>{
 /// above, the routed screen in what is left.
 ///
 /// Steps aside entirely (returns [child]) when there is no save in the link,
-/// or when the window is not tablet sized, as in iPad split view.
+/// or when the window is under [kTabletLayoutMinWidth] wide (iPad split view,
+/// a narrowed iPadOS window).
 class TabletShell extends StatelessWidget {
   const TabletShell({required this.location, required this.child, super.key});
 
@@ -33,7 +34,7 @@ class TabletShell extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final careerId = int.tryParse(location.queryParameters['careerId'] ?? '');
-    if (careerId == null || careerId <= 0 || !context.isTabletWindow) {
+    if (careerId == null || careerId <= 0 || !context.isWideTabletWindow) {
       return child;
     }
     return TabletShellScope(
@@ -139,7 +140,7 @@ class FullScreenPhoneFrame extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (!context.isTabletWindow) return child;
+    if (!context.isWideTabletWindow) return child;
     return Material(
       color: AppColors.surface,
       child: SafeArea(child: PhoneWidthFrame(child: child)),

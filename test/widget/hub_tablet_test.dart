@@ -8,6 +8,7 @@ import 'package:fnm/features/hub/hub_providers.dart';
 import 'package:fnm/features/hub/hub_screen.dart';
 import 'package:fnm/features/onboarding/tour_keys.dart';
 import 'package:fnm/features/shell/tablet_shell.dart';
+import 'package:fnm/features/shell/tablet_sidebar.dart';
 import 'package:fnm/features/shell/tablet_top_bar.dart';
 import 'package:fnm/shared/tablet/tablet.dart';
 
@@ -112,6 +113,22 @@ void main() {
       find.descendant(of: panel, matching: find.text(oppName)),
       findsOneWidget,
     );
+    await tester.pumpWidget(const SizedBox());
+  });
+
+  testWidgets('a 700 x 810 window shows the phone hub, no overflow', (
+    tester,
+  ) async {
+    final save = await seedSave(tester, formFactor: FormFactor.tablet);
+    await pumpRoute(
+      tester,
+      save,
+      '${Routes.hub}?careerId=${save.careerId}',
+      size: const Size(700, 810),
+    );
+    expect(tester.takeException(), isNull);
+    expect(find.byType(TabletSidebar), findsNothing);
+    expect(find.byKey(HubScreen.tabletLayoutKey), findsNothing);
     await tester.pumpWidget(const SizedBox());
   });
 }

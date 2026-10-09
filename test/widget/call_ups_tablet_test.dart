@@ -6,6 +6,7 @@ import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/features/player/player_detail_screen.dart';
 import 'package:fnm/features/shell/detail_pane_host.dart';
 import 'package:fnm/features/shell/tablet_shell.dart';
+import 'package:fnm/features/shell/tablet_sidebar.dart';
 import 'package:fnm/features/tactics/call_up_screen.dart';
 import 'package:fnm/features/tactics/tactics_providers.dart' show kMaxSquadSize;
 import 'package:fnm/shared/tablet/tablet.dart';
@@ -114,6 +115,17 @@ void main() {
     await settle(tester);
     expect(find.byType(PlayerView), findsOneWidget);
     expect(tester.takeException(), isNull);
+    await tester.pumpWidget(const SizedBox());
+  });
+
+  testWidgets('a 700 x 810 window shows the phone call-ups, no overflow', (
+    tester,
+  ) async {
+    final save = await seedSave(tester, formFactor: FormFactor.tablet);
+    await pumpRoute(tester, save, location(save), size: const Size(700, 810));
+    expect(tester.takeException(), isNull);
+    expect(find.byType(TabletSidebar), findsNothing);
+    expect(find.byKey(CallUpScreen.tabletLayoutKey), findsNothing);
     await tester.pumpWidget(const SizedBox());
   });
 }

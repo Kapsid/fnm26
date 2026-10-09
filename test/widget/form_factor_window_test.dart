@@ -85,4 +85,24 @@ void main() {
       isFalse,
     );
   });
+
+  testWidgets('a 700 x 810 tablet window is not a wide tablet window', (
+    tester,
+  ) async {
+    expect(
+      await probeLayout(tester, const Size(700, 810), FormFactor.tablet),
+      isFalse,
+    );
+  });
+
+  testWidgets('1000 wide is the first wide tablet window', (tester) async {
+    expect(
+      await probeLayout(tester, const Size(999, 810), FormFactor.tablet),
+      isFalse,
+    );
+    expect(
+      await probeLayout(tester, const Size(1000, 810), FormFactor.tablet),
+      isTrue,
+    );
+  });
 }

@@ -95,6 +95,16 @@ final Provider<FormFactor> formFactorProvider = Provider<FormFactor>(
   (ref) => FormFactor.phone,
 );
 
+/// The width, in logical pixels, from which a tablet window gets the tablet
+/// layouts (shell sidebar, three-column call-ups, match preview, live match).
+///
+/// iPadOS 26 windows are freely resizable, so a window can be tablet sized
+/// ([FormFactor.tabletShortestSide]) yet only 700 wide. The 208 px sidebar plus
+/// the three-column layouts need about 1000 logical px; below that the app
+/// looks exactly like the phone app at that size. Real devices clear it:
+/// iPad mini landscape is 1133, a 10.2" iPad 1080.
+const double kTabletLayoutMinWidth = 1000;
+
 extension FormFactorContext on BuildContext {
   /// Whether the window this widget is drawn in is tablet sized RIGHT NOW.
   ///
@@ -102,6 +112,12 @@ extension FormFactorContext on BuildContext {
   /// split-screen window: the shell then steps aside for the phone layout.
   bool get isTabletWindow =>
       FormFactor.fromLogicalSize(MediaQuery.sizeOf(this)) == FormFactor.tablet;
+
+  /// A [isTabletWindow] that is also at least [kTabletLayoutMinWidth] wide:
+  /// wide enough for the tablet shell and its layouts. Everything that picks
+  /// a tablet layout or frame asks this, not [isTabletWindow].
+  bool get isWideTabletWindow =>
+      isTabletWindow && MediaQuery.sizeOf(this).width >= kTabletLayoutMinWidth;
 }
 
 /// Whether a FULL-SCREEN route should draw its tablet layout.
@@ -111,7 +127,8 @@ extension FormFactorContext on BuildContext {
 /// Flutter's default test window is 800 x 600 logical, which is tablet sized,
 /// and a phone build must never switch layouts because of it. So both must
 /// hold: the app started as a tablet, and the window is tablet sized right
-/// now (an iPad in split view gets the phone layout).
+/// now and at least [kTabletLayoutMinWidth] wide (an iPad in split view or a
+/// narrow resized window gets the phone layout).
 bool useTabletLayout(BuildContext context, WidgetRef ref) =>
     ref.watch(formFactorProvider) == FormFactor.tablet &&
-    context.isTabletWindow;
+    context.isWideTabletWindow;
