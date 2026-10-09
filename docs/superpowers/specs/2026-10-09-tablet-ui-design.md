@@ -152,6 +152,23 @@ inside the shell.
 
 Each stage gets its own implementation plan.
 
+## Stage 1 adjustments (2026-10-09)
+
+- Training camp and Naturalization are not in the sidebar: they are event
+  screens that Continue opens when due.
+- Settings, diagnostics and the dev gallery are full-screen routes outside the
+  shell (no `careerId`, so no save for the top bar).
+- `DetailPaneHost` and the `*View` extractions move to stage 2, where Squad
+  first hosts a detail pane; `MasterDetail` ships in stage 1.
+- Stage 1 checks route parity (every path registered on tablet, full-screen
+  paths outside the shell). Pumping every route on a seeded save moves to
+  stage 2.
+- iPad uses `UIRequiresFullScreen` (required for landscape-only iPad apps).
+- German and Spanish ARB files are not on this branch; the 22 new keys must be
+  added to them when that work merges (values in the stage 1 plan, Task 3).
+- On tablets, sheets are dialogs of a fixed width min(560, window width - 64)
+  on the root navigator.
+
 ## Testing
 
 - **Phone guard**: before a screen gets a tablet layout, a widget or golden
