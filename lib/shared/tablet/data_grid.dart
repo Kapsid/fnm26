@@ -67,22 +67,62 @@ class DataGrid<T> extends StatefulWidget {
 }
 
 class _DataGridState<T> extends State<DataGrid<T>> {
-  late GridColumnSet<T> _set = widget.columnSets.first;
+  /// The active view, kept by id so a parent's new [GridColumnSet] objects
+  /// take effect; resolved against [DataGrid.columnSets] on every read.
+  late String _setId = widget.columnSets.first.id;
   String? _sortId;
   bool _ascending = true;
 
-  List<GridColumn<T>> get _columns => _set.columns;
+  // Sorted rows are cached and rebuilt only when the rows or column sets
+  // change (see didUpdateWidget) or the view or sort does.
+  List<T>? _sortedRows;
+  String? _sortedSetId;
+  String? _sortedSortId;
+  bool _sortedAscending = true;
 
-  List<T> get _sorted {
-    final column = _columns.where((c) => c.id == _sortId).firstOrNull;
+  GridColumnSet<T> get _set => widget.columnSets.firstWhere(
+    (s) => s.id == _setId,
+    orElse: () => widget.columnSets.first,
+  );
+
+  @override
+  void didUpdateWidget(DataGrid<T> old) {
+    super.didUpdateWidget(old);
+    // A view or sort column the parent removed falls back to the first view
+    // and no sort, so the header and the rows never disagree.
+    final set = _set;
+    _setId = set.id;
+    if (!set.columns.any((c) => c.id == _sortId)) _sortId = null;
+    if (!identical(old.rows, widget.rows) ||
+        !identical(old.columnSets, widget.columnSets)) {
+      _sortedRows = null;
+    }
+  }
+
+  List<T> _rowsFor(GridColumnSet<T> set) {
+    final column = set.columns.where((c) => c.id == _sortId).firstOrNull;
     final key = column?.sortKey;
     if (key == null) return widget.rows;
-    final rows = [...widget.rows]
+    if (_sortedRows != null &&
+        _sortedSetId == set.id &&
+        _sortedSortId == _sortId &&
+        _sortedAscending == _ascending) {
+      return _sortedRows!;
+    }
+    final rows = widget.rows;
+    final keys = [for (final r in rows) key(r)];
+    // Ties fall back to the incoming index in both directions, so equal keys
+    // keep the order they arrived in (List.sort is not stable by itself).
+    final order = List<int>.generate(rows.length, (i) => i)
       ..sort((a, b) {
-        final c = key(a).compareTo(key(b));
-        return _ascending ? c : -c;
+        final c = keys[a].compareTo(keys[b]);
+        if (c != 0) return _ascending ? c : -c;
+        return a.compareTo(b);
       });
-    return rows;
+    _sortedSetId = set.id;
+    _sortedSortId = _sortId;
+    _sortedAscending = _ascending;
+    return _sortedRows = [for (final i in order) rows[i]];
   }
 
   void _tapHeader(GridColumn<T> c) {
@@ -98,13 +138,15 @@ class _DataGridState<T> extends State<DataGrid<T>> {
   }
 
   void _pickSet(GridColumnSet<T> s) => setState(() {
-    _set = s;
+    _setId = s.id;
     if (!s.columns.any((c) => c.id == _sortId)) _sortId = null;
   });
 
   @override
   Widget build(BuildContext context) {
-    final rows = _sorted;
+    final set = _set;
+    final columns = set.columns;
+    final rows = _rowsFor(set);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -117,7 +159,7 @@ class _DataGridState<T> extends State<DataGrid<T>> {
                 for (final s in widget.columnSets)
                   ChoiceChip(
                     label: Text(s.label),
-                    selected: s.id == _set.id,
+                    selected: s.id == set.id,
                     onSelected: (_) => _pickSet(s),
                   ),
               ],
@@ -129,7 +171,7 @@ class _DataGridState<T> extends State<DataGrid<T>> {
           padding: const EdgeInsets.symmetric(horizontal: 12),
           child: Row(
             children: [
-              for (final c in _columns)
+              for (final c in columns)
                 _cellBox(
                   c,
                   InkWell(
@@ -193,7 +235,7 @@ class _DataGridState<T> extends State<DataGrid<T>> {
                     ),
                     child: Row(
                       children: [
-                        for (final c in _columns)
+                        for (final c in columns)
                           _cellBox(
                             c,
                             Align(

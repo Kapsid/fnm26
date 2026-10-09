@@ -37,13 +37,19 @@ List<String> _order(WidgetTester tester) => tester
     .where((s) => ['Staněk', 'Kubišta', 'Rejthar'].contains(s))
     .toList();
 
-Future<void> _pump(WidgetTester tester, {List<P> rows = _rows, ValueChanged<P>? onSelect, P? selected}) async {
+Future<void> _pump(
+  WidgetTester tester, {
+  List<P> rows = _rows,
+  List<GridColumnSet<P>>? sets,
+  ValueChanged<P>? onSelect,
+  P? selected,
+}) async {
   tester.view.physicalSize = const Size(800, 700);
   tester.view.devicePixelRatio = 1;
   addTearDown(tester.view.reset);
   await tester.pumpApp(
     Scaffold(
-      body: DataGrid<P>(rows: rows, columnSets: _sets, onSelect: onSelect, selected: selected),
+      body: DataGrid<P>(rows: rows, columnSets: sets ?? _sets, onSelect: onSelect, selected: selected),
     ),
   );
 }
@@ -94,5 +100,67 @@ void main() {
     expect(find.text('P0'), findsOneWidget);
     expect(find.text('P1999'), findsNothing);
     expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('ties keep their incoming order, ascending and descending', (tester) async {
+    // 60 rows is past the sort's small-list path, where an unstable sort
+    // would scramble equal keys; the first screenful shows the order.
+    final tied = [for (var i = 0; i < 60; i++) (name: 'R${i.toString().padLeft(2, '0')}', ovr: 80, age: 20)];
+    List<String> visible() => tester
+        .widgetList<Text>(find.byType(Text))
+        .map((t) => t.data ?? '')
+        .where((s) => s.startsWith('R'))
+        .take(10)
+        .toList();
+    final expected = [for (var i = 0; i < 10; i++) 'R${i.toString().padLeft(2, '0')}'];
+    await _pump(tester, rows: tied);
+    await tester.tap(find.text('OVR'));
+    await tester.pump();
+    expect(visible(), expected);
+    await tester.tap(find.text('OVR'));
+    await tester.pump();
+    expect(visible(), expected);
+  });
+
+  testWidgets('a parent rebuild with new column builders re-renders the cells', (tester) async {
+    final v2 = <GridColumnSet<P>>[
+      GridColumnSet(
+        id: 'overview',
+        label: 'Overview',
+        columns: [
+          GridColumn(id: 'name', label: 'Name', flex: 3, cell: (p) => Text('${p.name}!'), sortKey: (p) => p.name),
+          GridColumn(id: 'ovr', label: 'OVR', width: 48, numeric: true, cell: (p) => Text('${p.ovr}'), sortKey: (p) => p.ovr),
+        ],
+      ),
+    ];
+    await _pump(tester);
+    expect(find.text('Staněk'), findsOneWidget);
+    await _pump(tester, sets: v2);
+    expect(find.text('Staněk!'), findsOneWidget);
+    expect(find.text('Staněk'), findsNothing);
+  });
+
+  testWidgets('a parent that removes the active view falls back to the first', (tester) async {
+    await _pump(tester);
+    await tester.tap(find.text('Career'));
+    await tester.pump();
+    expect(find.text('Age'), findsOneWidget);
+    await _pump(tester, sets: [_sets.first]);
+    expect(find.text('OVR'), findsOneWidget);
+    expect(find.text('Age'), findsNothing);
+  });
+
+  testWidgets('replacing the rows re-sorts them with the current sort', (tester) async {
+    const replaced = <P>[
+      (name: 'Staněk', ovr: 79, age: 29),
+      (name: 'Kubišta', ovr: 90, age: 23),
+      (name: 'Rejthar', ovr: 80, age: 30),
+    ];
+    await _pump(tester);
+    await tester.tap(find.text('OVR'));
+    await tester.pump();
+    expect(_order(tester), ['Rejthar', 'Staněk', 'Kubišta']);
+    await _pump(tester, rows: replaced);
+    expect(_order(tester), ['Kubišta', 'Rejthar', 'Staněk']);
   });
 }
