@@ -9,6 +9,7 @@ import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/nations/nation_select_providers.dart';
 import 'package:fnm/features/records/head_to_head_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
+import 'package:fnm/shared/tablet/adaptive_sheet.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
 
@@ -121,7 +122,7 @@ class _HeadToHeadScreenState extends ConsumerState<HeadToHeadScreen> {
   }
 
   Future<void> _pick(List<Nation> nations, ValueChanged<int> onPick) async {
-    final id = await showModalBottomSheet<int>(
+    final id = await showAdaptiveSheet<int>(
       context: context,
       isScrollControlled: true,
       backgroundColor: AppColors.surface,

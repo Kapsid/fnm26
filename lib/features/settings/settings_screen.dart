@@ -20,6 +20,7 @@ import 'package:fnm/features/onboarding/tour_providers.dart';
 import 'package:fnm/features/paywall/paywall_sheet.dart';
 import 'package:fnm/features/settings/settings_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
+import 'package:fnm/shared/tablet/adaptive_sheet.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
 
@@ -40,7 +41,7 @@ Future<void> _pickLanguage(
   String current,
 ) async {
   final l = AppLocalizations.of(context);
-  final chosen = await showModalBottomSheet<String>(
+  final chosen = await showAdaptiveSheet<String>(
     context: context,
     isScrollControlled: true,
     builder: (ctx) => SafeArea(

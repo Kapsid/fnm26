@@ -20,6 +20,7 @@ import 'package:fnm/features/press/press_sheet.dart';
 import 'package:fnm/features/squad/grievance_providers.dart';
 import 'package:fnm/features/squad/grievance_sheet.dart';
 import 'package:fnm/l10n/app_localizations.dart';
+import 'package:fnm/shared/tablet/adaptive_sheet.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
 
@@ -148,7 +149,7 @@ class _HubEventButtonState extends ConsumerState<HubEventButton> {
         final open = ref.read(grievanceProvider(careerId)).valueOrNull;
         if (open == null || open.isEmpty) return;
         unawaited(
-          showModalBottomSheet<void>(
+          showAdaptiveSheet<void>(
             context: context,
             backgroundColor: AppColors.surfaceContainer,
             isScrollControlled: true,
@@ -186,7 +187,7 @@ class _HubEventButtonState extends ConsumerState<HubEventButton> {
           };
           if (!context.mounted) return;
           unawaited(
-            showModalBottomSheet<void>(
+            showAdaptiveSheet<void>(
               context: context,
               backgroundColor: AppColors.surfaceContainer,
               isScrollControlled: true,

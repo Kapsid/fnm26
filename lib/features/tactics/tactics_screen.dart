@@ -31,6 +31,7 @@ import 'package:fnm/features/tactics/tactics_pitch.dart';
 import 'package:fnm/features/tactics/formation_picker.dart';
 import 'package:fnm/features/tactics/tactics_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
+import 'package:fnm/shared/tablet/adaptive_sheet.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
 
@@ -528,7 +529,7 @@ class TacticsScreen extends ConsumerWidget {
           r,
     ];
     final l = AppLocalizations.of(context);
-    final picked = await showModalBottomSheet<PlayerRole>(
+    final picked = await showAdaptiveSheet<PlayerRole>(
       context: context,
       backgroundColor: AppColors.surfaceContainerHigh,
       // Scroll-controlled + bounded height so a long role list scrolls INSIDE
@@ -640,7 +641,7 @@ class TacticsScreen extends ConsumerWidget {
     }
 
     final l = AppLocalizations.of(context);
-    final picked = await showModalBottomSheet<int>(
+    final picked = await showAdaptiveSheet<int>(
       context: context,
       backgroundColor: AppColors.surfaceContainer,
       builder: (_) => ListView(
@@ -746,7 +747,7 @@ class TacticsScreen extends ConsumerWidget {
     WidgetRef ref,
     Tactic tactic,
   ) {
-    return showModalBottomSheet<void>(
+    return showAdaptiveSheet<void>(
       context: context,
       backgroundColor: AppColors.surfaceContainer,
       isScrollControlled: true,
@@ -1282,7 +1283,7 @@ class _CaptainCard extends ConsumerWidget {
     // says who actually carries it.
     final candidates = [...pool]
       ..sort((a, b) => b.overall.compareTo(a.overall));
-    final picked = await showModalBottomSheet<int>(
+    final picked = await showAdaptiveSheet<int>(
       context: context,
       backgroundColor: AppColors.surfaceContainer,
       builder: (_) => ListView(

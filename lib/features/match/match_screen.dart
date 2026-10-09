@@ -34,6 +34,7 @@ import 'package:fnm/features/tactics/in_match_tactics.dart';
 import 'package:fnm/features/tactics/set_piece_takers_providers.dart';
 import 'package:fnm/features/tactics/tactics_pitch.dart' show energyColor;
 import 'package:fnm/l10n/app_localizations.dart';
+import 'package:fnm/shared/tablet/adaptive_sheet.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
 
@@ -371,7 +372,7 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
   /// the sheet keeps the automatic order — the shootout always goes ahead.
   Future<void> _askPenaltyOrder(MatchPreview preview) async {
     final r = _result;
-    final chosen = await showModalBottomSheet<List<Player>>(
+    final chosen = await showAdaptiveSheet<List<Player>>(
       context: context,
       backgroundColor: AppColors.surfaceContainer,
       isScrollControlled: true,

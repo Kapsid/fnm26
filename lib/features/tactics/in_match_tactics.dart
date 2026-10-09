@@ -15,6 +15,7 @@ import 'package:fnm/domain/services/tactics/substitution_rules.dart';
 import 'package:fnm/features/tactics/formation_picker.dart';
 import 'package:fnm/features/tactics/tactics_pitch.dart';
 import 'package:fnm/l10n/app_localizations.dart';
+import 'package:fnm/shared/tablet/adaptive_sheet.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 
 /// The tactical setup a manager confirms from the in-match editor: the shape,
@@ -1215,7 +1216,7 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
     // line saying why. A manager a man short has to be able to field SOMEBODY.
     final noFit = suitableHere.isEmpty && availableHere.isNotEmpty;
 
-    final picked = await showModalBottomSheet<int>(
+    final picked = await showAdaptiveSheet<int>(
       context: context,
       backgroundColor: AppColors.surfaceContainer,
       isScrollControlled: true,

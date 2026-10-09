@@ -10,6 +10,7 @@ import 'package:fnm/features/federation/staff_effect.dart';
 import 'package:fnm/features/federation/staff_providers.dart';
 import 'package:fnm/features/manager/manager_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
+import 'package:fnm/shared/tablet/adaptive_sheet.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 
 String roleName(AppLocalizations l, StaffRole role) => switch (role) {
@@ -63,7 +64,7 @@ class StaffCard extends ConsumerWidget {
     StaffRoom room,
   ) async {
     final l = AppLocalizations.of(context);
-    final picked = await showModalBottomSheet<int?>(
+    final picked = await showAdaptiveSheet<int?>(
       context: context,
       backgroundColor: AppColors.surfaceContainerLowest,
       builder: (sheetContext) => SafeArea(
