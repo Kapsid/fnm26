@@ -74,6 +74,9 @@ class _HubEventButtonState extends ConsumerState<HubEventButton> {
       label: event?.label ?? l.hubContinue,
       icon: event?.icon ?? Icons.play_arrow_rounded,
       isLoading: busy,
+      // The tablet top bar gives the button room to read as metal: 44 tall
+      // with breathing space above and below.
+      height: widget.compact ? 44 : AppSpacing.minHitArea + 8,
       onPressed: event == null ? null : () => _dispatch(context, ref, event),
     );
     if (widget.compact) return button;

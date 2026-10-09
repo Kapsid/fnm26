@@ -23,7 +23,7 @@ String unreadBadgeLabel(int unread) => unread > 99 ? '99+' : '$unread';
 class TabletTopBar extends ConsumerWidget {
   const TabletTopBar({required this.careerId, super.key});
 
-  static const double height = 56;
+  static const double height = 64;
 
   final int careerId;
 
@@ -86,7 +86,7 @@ class TabletTopBar extends ConsumerWidget {
           ),
           const SizedBox(width: AppSpacing.sm),
           SizedBox(
-            width: 220,
+            width: 260,
             child: HubEventButton(
               careerId: careerId,
               compact: true,

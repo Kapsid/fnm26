@@ -6,6 +6,7 @@ import 'package:fnm/features/hub/hub_event.dart';
 import 'package:fnm/features/hub/hub_providers.dart';
 import 'package:fnm/features/messages/message_providers.dart';
 import 'package:fnm/features/shell/tablet_top_bar.dart';
+import 'package:fnm/shared/widgets/primary_button.dart';
 
 import '../helpers/fixtures.dart';
 import '../helpers/pump_app.dart';
@@ -63,7 +64,9 @@ Future<void> _pump(WidgetTester tester, HubData hub, {int unread = 0}) async {
 }
 
 void main() {
-  testWidgets('shows the nation, the next fixture and Continue', (tester) async {
+  testWidgets('shows the nation, the next fixture and Continue', (
+    tester,
+  ) async {
     await _pump(tester, _hub(drawWatched: true), unread: 3);
     expect(find.text('Czechia'), findsWidgets);
     expect(find.textContaining('Norway'), findsOneWidget);
@@ -78,6 +81,18 @@ void main() {
     await _pump(tester, _hub(drawWatched: false));
     expect(find.textContaining('Norway'), findsNothing);
     expect(find.textContaining('Draw to come'), findsOneWidget);
+  });
+
+  testWidgets('the bar is 64 tall and Continue has room to show its metal', (
+    tester,
+  ) async {
+    await _pump(tester, _hub(drawWatched: true));
+    expect(tester.getSize(find.byType(TabletTopBar)).height, 64);
+    final button = tester.getSize(find.byType(PrimaryButton));
+    expect(button.height, 44);
+    expect(button.width, 260);
+    final text = tester.getSize(find.text('Continue'));
+    expect(text.height, greaterThan(14));
   });
 
   test('the unread badge caps at 99+', () {
