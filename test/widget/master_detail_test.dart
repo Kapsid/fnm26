@@ -61,4 +61,43 @@ void main() {
     await tester.pump();
     expect(tester.getSize(find.byKey(const Key('master'))).width, 250);
   });
+
+  testWidgets('the divider is wide enough for a finger', (tester) async {
+    await pump(tester);
+    expect(
+      tester.getSize(find.byKey(MasterDetail.dividerKey)).width,
+      greaterThanOrEqualTo(24),
+    );
+  });
+
+  testWidgets('the divider follows the finger back from past a limit', (
+    tester,
+  ) async {
+    await pump(tester);
+    final gesture = await tester.startGesture(
+      tester.getCenter(find.byKey(MasterDetail.dividerKey)),
+    );
+    // 400 -> past the 600 limit (finger at 700), then back to 600.
+    await gesture.moveBy(const Offset(300, 0));
+    await tester.pump();
+    await gesture.moveBy(const Offset(-100, 0));
+    await tester.pump();
+    await gesture.up();
+    await tester.pump();
+    expect(tester.getSize(find.byKey(const Key('master'))).width, 600);
+  });
+
+  testWidgets('a zero-width parent draws nothing and does not throw', (
+    tester,
+  ) async {
+    await tester.pumpApp(
+      const Scaffold(
+        body: SizedBox(
+          width: 0,
+          child: MasterDetail(master: SizedBox.expand()),
+        ),
+      ),
+    );
+    expect(tester.takeException(), isNull);
+  });
 }

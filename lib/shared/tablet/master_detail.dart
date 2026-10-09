@@ -18,6 +18,10 @@ class MasterDetail extends StatefulWidget {
 
   static const Key dividerKey = Key('masterDetail.divider');
 
+  /// The divider's touch target. Only a 1px line is drawn in it, but a finger
+  /// needs 24 to 32 points to find it.
+  static const double dividerWidth = 28;
+
   final Widget master;
   final Widget? detail;
   final Widget? placeholder;
@@ -30,14 +34,22 @@ class MasterDetail extends StatefulWidget {
 }
 
 class _MasterDetailState extends State<MasterDetail> {
-  static const double _dividerWidth = 12;
   late double _fraction = widget.initialFraction;
+
+  /// Where the finger is, as a fraction, for the length of one drag. Kept
+  /// unclamped so a finger that goes past a limit and comes back finds the
+  /// divider under it again, rather than ahead of it by the overshoot.
+  double? _dragFraction;
 
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
         final width = constraints.maxWidth;
+        // Nothing to split: a zero-width first frame, or a parent collapsing.
+        if (!width.isFinite || width <= MasterDetail.dividerWidth) {
+          return const SizedBox.shrink();
+        }
         final masterWidth = width * _fraction;
         return Row(
           children: [
@@ -48,14 +60,20 @@ class _MasterDetailState extends State<MasterDetail> {
                 key: MasterDetail.dividerKey,
                 behavior: HitTestBehavior.opaque,
                 dragStartBehavior: DragStartBehavior.down,
+                onHorizontalDragStart: (_) => _dragFraction = _fraction,
                 onHorizontalDragUpdate: (d) => setState(() {
-                  _fraction = ((masterWidth + d.delta.dx) / width).clamp(
+                  final raw =
+                      (_dragFraction ?? _fraction) + d.delta.dx / width;
+                  _dragFraction = raw;
+                  _fraction = raw.clamp(
                     widget.minFraction,
                     widget.maxFraction,
                   );
                 }),
+                onHorizontalDragEnd: (_) => _dragFraction = null,
+                onHorizontalDragCancel: () => _dragFraction = null,
                 child: SizedBox(
-                  width: _dividerWidth,
+                  width: MasterDetail.dividerWidth,
                   child: Center(
                     child: Container(
                       width: 1,

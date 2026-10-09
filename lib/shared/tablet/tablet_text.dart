@@ -41,6 +41,19 @@ abstract final class TabletText {
     letterSpacing: 0.9,
     color: AppColors.onSurfaceVariant,
   );
+  /// A tablet screen's own heading, top left of its content ("Squad").
+  static const screenTitle = TextStyle(
+    fontFamily: AppFonts.sans,
+    fontSize: 22,
+    fontWeight: FontWeight.w700,
+    color: AppColors.onSurface,
+  );
+  static const panelLink = TextStyle(
+    fontFamily: AppFonts.sans,
+    fontSize: 11,
+    fontWeight: FontWeight.w600,
+    color: AppColors.primary,
+  );
   static const header = TextStyle(
     fontFamily: AppFonts.sans,
     fontSize: 11,

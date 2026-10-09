@@ -820,6 +820,13 @@ final routerProvider = Provider<GoRouter>((ref) {
 });
 
 /// The same routes, with every in-save screen inside the tablet shell.
+///
+/// Full-screen routes stay top level. One whose screen has no tablet layout
+/// yet is drawn through [FullScreenPhoneFrame].
+///
+/// Never PUSH a shell route from a top-level route (a match, a draw): go_router
+/// would build a second shell, and its navigator key with it, on top of the
+/// first. Leave a full-screen route with `go`.
 List<RouteBase> _tabletRoutes(List<GoRoute> routes) => [
   ShellRoute(
     builder: (context, state, child) =>
@@ -830,5 +837,13 @@ List<RouteBase> _tabletRoutes(List<GoRoute> routes) => [
     ],
   ),
   for (final r in routes)
-    if (Routes.fullScreen.contains(r.path)) r,
+    if (Routes.fullScreen.contains(r.path))
+      if (tabletReadyPaths.contains(r.path)) r else _phoneFramed(r),
 ];
+
+/// [route] with its screen drawn through [FullScreenPhoneFrame].
+GoRoute _phoneFramed(GoRoute route) => GoRoute(
+  path: route.path,
+  builder: (context, state) =>
+      FullScreenPhoneFrame(child: route.builder!(context, state)),
+);

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/shared/tablet/data_grid.dart';
 
 import '../helpers/pump_app.dart';
@@ -162,5 +163,37 @@ void main() {
     expect(_order(tester), ['Rejthar', 'Staněk', 'Kubišta']);
     await _pump(tester, rows: replaced);
     expect(_order(tester), ['Kubišta', 'Rejthar', 'Staněk']);
+  });
+
+  testWidgets('the header is a full-height, labelled tap target', (
+    tester,
+  ) async {
+    final semantics = tester.ensureSemantics();
+    await _pump(tester);
+    expect(
+      tester.getSize(find.byKey(DataGrid.headerKey)).height,
+      DataGrid.headerHeight,
+    );
+    expect(
+      tester.getSemantics(find.text('OVR')),
+      containsSemantics(isButton: true, isSelected: false),
+    );
+    await tester.tap(find.text('OVR'));
+    await tester.pump();
+    expect(
+      tester.getSemantics(find.text('OVR')),
+      containsSemantics(isButton: true, isSelected: true),
+    );
+    semantics.dispose();
+  });
+
+  testWidgets('the selected row is highlighted', (tester) async {
+    await _pump(tester, selected: _rows[1]);
+    final material = tester.widget<Material>(
+      find
+          .ancestor(of: find.text('Kubišta'), matching: find.byType(Material))
+          .first,
+    );
+    expect(material.color, AppColors.surfaceContainerHighest);
   });
 }

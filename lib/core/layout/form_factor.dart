@@ -103,3 +103,15 @@ extension FormFactorContext on BuildContext {
   bool get isTabletWindow =>
       FormFactor.fromLogicalSize(MediaQuery.sizeOf(this)) == FormFactor.tablet;
 }
+
+/// Whether a FULL-SCREEN route should draw its tablet layout.
+///
+/// In-shell screens ask `TabletShellScope.isActive` instead. A full-screen
+/// route has no shell around it, and the window size alone is not enough:
+/// Flutter's default test window is 800 x 600 logical, which is tablet sized,
+/// and a phone build must never switch layouts because of it. So both must
+/// hold: the app started as a tablet, and the window is tablet sized right
+/// now (an iPad in split view gets the phone layout).
+bool useTabletLayout(BuildContext context, WidgetRef ref) =>
+    ref.watch(formFactorProvider) == FormFactor.tablet &&
+    context.isTabletWindow;

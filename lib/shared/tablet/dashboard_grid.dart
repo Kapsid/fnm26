@@ -11,6 +11,14 @@ class DashboardTile {
 
 /// Lays tiles out on a 12-column grid, left to right, starting a new row when
 /// the next tile would not fit. Tiles in a row share the row's height.
+///
+/// Each row is sized with [IntrinsicHeight], so every tile must be able to
+/// report its intrinsic height. That rules out, anywhere inside a tile, a
+/// [ListView] or other scrollable, a [LayoutBuilder], and widgets built on one
+/// (`WholeText`, and so `YPostTile`): they assert. A tile that needs a list
+/// gives it a fixed height (`SizedBox(height: ...)`), which IntrinsicHeight
+/// reads without asking the list. A screen whose content must scroll inside a
+/// panel uses `Panel(expand: true)` in a Row or Column, not this grid.
 class DashboardGrid extends StatelessWidget {
   const DashboardGrid({required this.tiles, this.gap = 12, super.key});
 

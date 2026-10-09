@@ -14,6 +14,10 @@ import 'package:fnm/shared/tablet/tablet_text.dart';
 import 'package:fnm/shared/widgets/flag_disc.dart';
 import 'package:go_router/go_router.dart';
 
+/// The inbox badge's text: the count, capped so a long-ignored inbox does not
+/// grow a pill wider than the icon it sits on.
+String unreadBadgeLabel(int unread) => unread > 99 ? '99+' : '$unread';
+
 /// The bar across the top of every in-save tablet screen: who you are, what
 /// day it is, what is next, and the button that moves the world on.
 class TabletTopBar extends ConsumerWidget {
@@ -39,7 +43,17 @@ class TabletTopBar extends ConsumerWidget {
           if (nation != null) ...[
             FlagDisc(nation.code, size: 28),
             const SizedBox(width: AppSpacing.sm),
-            Text(nation.name, style: TabletText.barTitle),
+            // Capped, and ellipsised: "Saint Vincent and the Grenadines" must
+            // not push the date and the next fixture off the bar.
+            ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 180),
+              child: Text(
+                nation.name,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TabletText.barTitle,
+              ),
+            ),
             const SizedBox(width: AppSpacing.lg),
           ],
           if (hub != null)
@@ -47,18 +61,26 @@ class TabletTopBar extends ConsumerWidget {
               AppDate.dayMonthYear(context, hub.career.inGameDate),
               style: TabletText.barMeta,
             ),
+          // The chip takes ALL the free space and sits at its left. Sharing
+          // it with a Spacer gave it half, and it ellipsised long before the
+          // bar was full.
           if (hub != null && next != null) ...[
             const SizedBox(width: AppSpacing.md),
-            Flexible(child: _NextChip(hub: hub, next: next)),
-          ],
-          const Spacer(),
+            Expanded(
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: _NextChip(hub: hub, next: next),
+              ),
+            ),
+          ] else
+            const Spacer(),
           IconButton(
             tooltip: l.hubMessages,
             onPressed: () =>
                 context.go('${Routes.messages}?careerId=$careerId'),
             icon: Badge(
               isLabelVisible: unread > 0,
-              label: Text('$unread'),
+              label: Text(unreadBadgeLabel(unread)),
               child: const Icon(Icons.mail_outline, color: AppColors.primary),
             ),
           ),
@@ -102,7 +124,7 @@ class _NextChip extends StatelessWidget {
             TextSpan(text: '${l.topBarNext}  ', style: TabletText.barMeta),
             TextSpan(text: teams, style: TabletText.barStrong),
             TextSpan(
-              text: '  ${MatchStage.label(l, next)}, '
+              text: '  ${MatchStage.labelCompact(l, next)}, '
                   '${AppDate.dayMonth(context, next.date)}',
               style: TabletText.barMeta,
             ),

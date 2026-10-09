@@ -46,6 +46,9 @@ class GridColumnSet<T> {
 /// The tablet's table: sticky header, tap a header to sort (again to reverse),
 /// zebra rows, a highlighted selection, and several column views of the same
 /// rows. Rows are built lazily, so a 2000-row list costs a screenful.
+///
+/// Pass a NEW list when the rows change. The sorted order is cached against
+/// the list's identity, so a list mutated in place keeps its old order.
 class DataGrid<T> extends StatefulWidget {
   const DataGrid({
     required this.rows,
@@ -56,6 +59,11 @@ class DataGrid<T> extends StatefulWidget {
   }) : assert(columnSets.length > 0, 'at least one column set');
 
   static const double rowHeight = 36;
+
+  /// The header row: as tall as a body row, so each column title is a whole
+  /// tap target rather than a strip of text.
+  static const double headerHeight = 36;
+  static const Key headerKey = Key('dataGrid.header');
 
   final List<T> rows;
   final List<GridColumnSet<T>> columnSets;
@@ -165,47 +173,59 @@ class _DataGridState<T> extends State<DataGrid<T>> {
               ],
             ),
           ),
-        Container(
-          height: 30,
+        // A Material, not a coloured Container: the header cells' InkWells
+        // paint on the nearest Material, and a Container's colour hid them.
+        Material(
+          key: DataGrid.headerKey,
           color: AppColors.surfaceContainer,
-          padding: const EdgeInsets.symmetric(horizontal: 12),
-          child: Row(
-            children: [
-              for (final c in columns)
-                _cellBox(
-                  c,
-                  InkWell(
-                    onTap: () => _tapHeader(c),
-                    child: Row(
-                      mainAxisAlignment: c.numeric
-                          ? MainAxisAlignment.end
-                          : MainAxisAlignment.start,
-                      children: [
-                        Flexible(
-                          child: Text(
-                            c.label,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: TabletText.header.copyWith(
-                              color: c.id == _sortId
-                                  ? AppColors.onSurface
-                                  : null,
-                            ),
+          child: SizedBox(
+            height: DataGrid.headerHeight,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              child: Row(
+                children: [
+                  for (final c in columns)
+                    _cellBox(
+                      c,
+                      Semantics(
+                        container: true,
+                        button: c.sortKey != null,
+                        selected: c.id == _sortId,
+                        child: InkWell(
+                          onTap: () => _tapHeader(c),
+                          child: Row(
+                            mainAxisAlignment: c.numeric
+                                ? MainAxisAlignment.end
+                                : MainAxisAlignment.start,
+                            children: [
+                              Flexible(
+                                child: Text(
+                                  c.label,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TabletText.header.copyWith(
+                                    color: c.id == _sortId
+                                        ? AppColors.onSurface
+                                        : null,
+                                  ),
+                                ),
+                              ),
+                              if (c.id == _sortId)
+                                Icon(
+                                  _ascending
+                                      ? Icons.arrow_drop_up
+                                      : Icons.arrow_drop_down,
+                                  size: 16,
+                                  color: AppColors.onSurface,
+                                ),
+                            ],
                           ),
                         ),
-                        if (c.id == _sortId)
-                          Icon(
-                            _ascending
-                                ? Icons.arrow_drop_up
-                                : Icons.arrow_drop_down,
-                            size: 16,
-                            color: AppColors.onSurface,
-                          ),
-                      ],
+                      ),
                     ),
-                  ),
-                ),
-            ],
+                ],
+              ),
+            ),
           ),
         ),
         Expanded(

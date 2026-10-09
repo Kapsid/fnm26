@@ -11,6 +11,7 @@ class Panel extends StatelessWidget {
     required this.child,
     this.action,
     this.padding = const EdgeInsets.all(12),
+    this.expand = false,
     super.key,
   });
 
@@ -19,42 +20,76 @@ class Panel extends StatelessWidget {
   final Widget child;
   final EdgeInsetsGeometry padding;
 
+  /// Whether the panel fills the height it is given, its body taking all of
+  /// it below the header. For a body that scrolls (a list, a grid). Never
+  /// inside a `DashboardGrid`, whose rows measure intrinsic heights.
+  final bool expand;
+
   @override
   Widget build(BuildContext context) {
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        color: AppColors.surfaceContainerLow,
-        borderRadius: AppRadii.baseAll,
-        border: Border.all(color: AppColors.outlineVariant),
-      ),
-      child: ClipRRect(
-        borderRadius: AppRadii.baseAll,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              height: 34,
-              color: AppColors.surfaceContainer,
-              padding: const EdgeInsets.symmetric(horizontal: 12),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      title.toUpperCase(),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: TabletText.panelTitle,
-                    ),
+    final body = Padding(padding: padding, child: child);
+    return PanelBox(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        mainAxisSize: expand ? MainAxisSize.max : MainAxisSize.min,
+        children: [
+          Container(
+            height: 34,
+            color: AppColors.surfaceContainer,
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    title.toUpperCase(),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TabletText.panelTitle,
                   ),
-                  ?action,
-                ],
-              ),
+                ),
+                ?action,
+              ],
             ),
-            Padding(padding: padding, child: child),
-          ],
-        ),
+          ),
+          if (expand) Expanded(child: body) else body,
+        ],
       ),
     );
   }
+}
+
+/// A panel's box without its header, for a pane whose content brings its own
+/// (a tab bar, a detail view).
+class PanelBox extends StatelessWidget {
+  const PanelBox({required this.child, super.key});
+
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) => DecoratedBox(
+    decoration: BoxDecoration(
+      color: AppColors.surfaceContainerLow,
+      borderRadius: AppRadii.baseAll,
+      border: Border.all(color: AppColors.outlineVariant),
+    ),
+    child: ClipRRect(borderRadius: AppRadii.baseAll, child: child),
+  );
+}
+
+/// The small link on the right of a [Panel]'s header ("View all").
+class PanelLink extends StatelessWidget {
+  const PanelLink({required this.label, required this.onTap, super.key});
+
+  final String label;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) => InkWell(
+    onTap: onTap,
+    borderRadius: AppRadii.smAll,
+    child: Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 8),
+      child: Text(label, style: TabletText.panelLink),
+    ),
+  );
 }
