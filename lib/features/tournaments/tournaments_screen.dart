@@ -1,4 +1,3 @@
-import 'package:fnm/features/onboarding/tour_keys.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/core/routing/app_router.dart';
@@ -9,10 +8,18 @@ import 'package:fnm/core/util/competition_label.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/services/competition/nations_cups.dart';
 import 'package:fnm/domain/services/competition/trophies.dart';
+import 'package:fnm/features/onboarding/tour_keys.dart';
+import 'package:fnm/features/tournaments/continental_clash_screen.dart';
+import 'package:fnm/features/tournaments/continental_detail_screen.dart';
+import 'package:fnm/features/tournaments/cup_detail_screen.dart';
+import 'package:fnm/features/tournaments/nations_cup_screen.dart';
 import 'package:fnm/features/tournaments/tournaments_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
+import 'package:fnm/shared/tablet/tablet.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
+
+part 'tournaments_tablet_layout.dart';
 
 /// A championship tile's static presentation (name/zone/icon).
 ///
@@ -98,6 +105,22 @@ String _zoneAsia(AppLocalizations l) => l.tourZoneAsia;
 String _zoneOceania(AppLocalizations l) => l.tourZoneOceania;
 String _zoneIntercontinental(AppLocalizations l) => l.tourZoneIntercontinental;
 
+/// What the overview can open.
+enum _PickKind { worldChampionship, continental, nationsCup, clash }
+
+/// One openable competition: its kind, and whose it is where that matters.
+typedef _Pick = ({_PickKind kind, Confederation? conf});
+
+/// One competition as both layouts list it: how its tile looks, where it
+/// stands, who won it, where its own page is, and what the tablet opens.
+typedef _Spec = ({
+  _Championship championship,
+  TournamentStatus? status,
+  String? championName,
+  String route,
+  _Pick pick,
+});
+
 /// Tournaments overview (the "Trophy" destination). Lists every championship
 /// with its live status; the World Championship and each continental cup open
 /// their own detail screen.
@@ -108,6 +131,9 @@ class TournamentsScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    if (TabletShellScope.isActive(context)) {
+      return _TournamentsTabletLayout(careerId: careerId);
+    }
     final l = AppLocalizations.of(context);
     final overviewAsync = ref.watch(tournamentsOverviewProvider(careerId));
 
@@ -136,19 +162,6 @@ class TournamentsScreen extends ConsumerWidget {
         error: (_, _) =>
             Center(child: Text(l.tourSharedCouldNotLoadTournaments)),
         data: (overview) {
-          final playerConf = overview?.playerConfederation;
-          // Your competitions (the World Cup + your own continental cup) sit in
-          // their own section; the other continents follow.
-          final mine = _championships
-              .where(
-                (c) => c.confederation == null || c.confederation == playerConf,
-              )
-              .toList();
-          final others = _ordered(overview)
-              .where(
-                (c) => c.confederation != null && c.confederation != playerConf,
-              )
-              .toList();
           return ListView(
             padding: const EdgeInsets.all(AppSpacing.marginMobile),
             children: [
@@ -194,21 +207,8 @@ class TournamentsScreen extends ConsumerWidget {
               ),
               const SizedBox(height: AppSpacing.sm),
               _tileGrid([
-                for (final c in mine) _tile(context, overview, c),
-                if (overview?.nationsCup != null)
-                  _nationsCupTile(
-                    context,
-                    overview!,
-                    overview.nationsCupConfederation ?? Confederation.europe,
-                    overview.nationsCup!,
-                    mine: true,
-                  ),
-                // The Continental Clash only sits among YOUR competitions when
-                // your nation is one of the two entrants; otherwise it drops to
-                // the other-competitions grid below.
-                if (overview?.continentalClash != null &&
-                    overview!.clashInvolvesPlayer)
-                  _clashTile(context, overview),
+                for (final s in _mineSpecs(careerId, overview))
+                  _specTile(context, s),
               ]),
               const SizedBox(height: AppSpacing.lg),
               Text(
@@ -219,14 +219,8 @@ class TournamentsScreen extends ConsumerWidget {
               ),
               const SizedBox(height: AppSpacing.sm),
               _tileGrid([
-                for (final c in others) _tile(context, overview, c),
-                // The other confederations' Nations Cups, to browse.
-                if (overview != null)
-                  for (final e in overview.otherNationsCups.entries)
-                    _nationsCupTile(context, overview, e.key, e.value),
-                if (overview?.continentalClash != null &&
-                    !overview!.clashInvolvesPlayer)
-                  _clashTile(context, overview),
+                for (final s in _otherSpecs(careerId, overview))
+                  _specTile(context, s),
               ]),
               const SizedBox(height: AppSpacing.lg),
             ],
@@ -236,27 +230,39 @@ class TournamentsScreen extends ConsumerWidget {
     );
   }
 
-  /// Builds a championship tile from the overview data.
-  Widget _tile(
-    BuildContext context,
+  static const Key tabletLayoutKey = Key('tournaments.tabletLayout');
+
+  /// A championship's spec from the overview data: the World Championship or
+  /// a continental cup.
+  static _Spec _championshipSpec(
+    int careerId,
     TournamentsOverview? overview,
     _Championship c,
   ) {
-    final championId = overview?.statuses[c.confederation]?.championId;
-    return _ChampionshipTile(
+    final conf = c.confederation;
+    final championId = overview?.statuses[conf]?.championId;
+    return (
       championship: c,
-      status: overview?.statuses[c.confederation],
+      status: overview?.statuses[conf],
       championName: championId == null
           ? null
           : overview?.nations[championId]?.name,
-      onView: () => _open(context, c),
+      route: conf == null
+          ? '${Routes.cup}?careerId=$careerId'
+          : '${Routes.continental}?careerId=$careerId&conf=${conf.name}',
+      pick: (
+        kind: conf == null
+            ? _PickKind.worldChampionship
+            : _PickKind.continental,
+        conf: conf,
+      ),
     );
   }
 
-  /// A Nations Cup tile: the manager's own (strapped with his league on a
-  /// ladder cup) or another confederation's, opening that cup's screen.
-  Widget _nationsCupTile(
-    BuildContext context,
+  /// A Nations Cup: the manager's own (strapped with his league on a ladder
+  /// cup) or another confederation's, opening that cup's screen.
+  static _Spec _nationsCupSpec(
+    int careerId,
     TournamentsOverview overview,
     Confederation conf,
     TournamentStatus status, {
@@ -264,7 +270,7 @@ class TournamentsScreen extends ConsumerWidget {
   }) {
     final cup = NationsCups.forConfederation(conf);
     final ladder = cup?.format == NationsCupFormat.ladder;
-    return _ChampionshipTile(
+    return (
       championship: _Championship(
         name: cup?.name ?? NationsCups.europe,
         zone: (l) => mine && ladder
@@ -274,9 +280,8 @@ class TournamentsScreen extends ConsumerWidget {
       ),
       status: status,
       championName: overview.nations[status.championId]?.name,
-      onView: () => context.go(
-        '${Routes.nationsCup}?careerId=$careerId&conf=${conf.name}',
-      ),
+      route: '${Routes.nationsCup}?careerId=$careerId&conf=${conf.name}',
+      pick: (kind: _PickKind.nationsCup, conf: conf),
     );
   }
 
@@ -290,21 +295,67 @@ class TournamentsScreen extends ConsumerWidget {
         Confederation.oceania => l.tourZoneOceania,
       };
 
-  /// The Continental Clash tile, placed either among your competitions or the
-  /// other-competitions grid depending on whether you're an entrant.
-  Widget _clashTile(BuildContext context, TournamentsOverview overview) {
-    return _ChampionshipTile(
-      championship: const _Championship(
-        name: 'Continental Clash',
-        zone: _zoneIntercontinental,
-        icon: Icons.flash_on,
-      ),
-      status: overview.continentalClash,
-      championName:
-          overview.nations[overview.continentalClash!.championId]?.name,
-      onView: () => context.go('${Routes.continentalClash}?careerId=$careerId'),
-    );
+  /// The Continental Clash, placed either among your competitions or the
+  /// other competitions depending on whether you're an entrant.
+  static _Spec _clashSpec(int careerId, TournamentsOverview overview) => (
+    championship: const _Championship(
+      name: 'Continental Clash',
+      zone: _zoneIntercontinental,
+      icon: Icons.flash_on,
+    ),
+    status: overview.continentalClash,
+    championName: overview.nations[overview.continentalClash!.championId]?.name,
+    route: '${Routes.continentalClash}?careerId=$careerId',
+    pick: (kind: _PickKind.clash, conf: null),
+  );
+
+  /// Your competitions: the World Championship and your own continental cup,
+  /// your Nations Cup, and the Continental Clash when your nation is one of
+  /// its two entrants.
+  static List<_Spec> _mineSpecs(int careerId, TournamentsOverview? overview) {
+    final playerConf = overview?.playerConfederation;
+    return [
+      for (final c in _championships)
+        if (c.confederation == null || c.confederation == playerConf)
+          _championshipSpec(careerId, overview, c),
+      if (overview?.nationsCup != null)
+        _nationsCupSpec(
+          careerId,
+          overview!,
+          overview.nationsCupConfederation ?? Confederation.europe,
+          overview.nationsCup!,
+          mine: true,
+        ),
+      // The Continental Clash only sits among YOUR competitions when your
+      // nation is one of the two entrants; otherwise it drops to the others.
+      if (overview?.continentalClash != null && overview!.clashInvolvesPlayer)
+        _clashSpec(careerId, overview),
+    ];
   }
+
+  /// The other continents' championships (most relevant first), their
+  /// Nations Cups, and the Clash when your nation is not in it.
+  static List<_Spec> _otherSpecs(int careerId, TournamentsOverview? overview) {
+    final playerConf = overview?.playerConfederation;
+    return [
+      for (final c in _ordered(overview))
+        if (c.confederation != null && c.confederation != playerConf)
+          _championshipSpec(careerId, overview, c),
+      if (overview != null)
+        for (final e in overview.otherNationsCups.entries)
+          _nationsCupSpec(careerId, overview, e.key, e.value),
+      if (overview?.continentalClash != null && !overview!.clashInvolvesPlayer)
+        _clashSpec(careerId, overview),
+    ];
+  }
+
+  /// A spec as the phone draws it: a tile opening the competition's page.
+  Widget _specTile(BuildContext context, _Spec s) => _ChampionshipTile(
+    championship: s.championship,
+    status: s.status,
+    championName: s.championName,
+    onView: () => context.go(s.route),
+  );
 
   /// Championships ordered by current relevance: competitions being contested
   /// now come first (the player's own region, then the World Championship, then
@@ -358,15 +409,6 @@ class TournamentsScreen extends ConsumerWidget {
       );
     }
     return Column(children: rows);
-  }
-
-  void _open(BuildContext context, _Championship c) {
-    if (c.confederation == null) {
-      context.go('${Routes.cup}?careerId=$careerId');
-    } else {
-      final conf = c.confederation!.name;
-      context.go('${Routes.continental}?careerId=$careerId&conf=$conf');
-    }
   }
 }
 
