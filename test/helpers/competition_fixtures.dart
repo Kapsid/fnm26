@@ -96,15 +96,14 @@ ContinentalDrawData fakeContinentalDraw(int playerNationId) =>
     );
 
 /// A Nations Cup league draw of four groups of four, not yet watched.
-NationsCupDrawData fakeNationsCupDraw(int playerNationId) =>
-    NationsCupDrawData(
-      leagueLetter: 'A',
-      groups: groupsOf(fieldOf(playerNationId, 16), groupCount: 4, size: 4),
-      nations: realNationsById,
-      playerNationId: playerNationId,
-      cycle: 0,
-      alreadyWatched: false,
-    );
+NationsCupDrawData fakeNationsCupDraw(int playerNationId) => NationsCupDrawData(
+  leagueLetter: 'A',
+  groups: groupsOf(fieldOf(playerNationId, 16), groupCount: 4, size: 4),
+  nations: realNationsById,
+  playerNationId: playerNationId,
+  cycle: 0,
+  alreadyWatched: false,
+);
 
 /// A World Championship deep into its finals: six qualifying groups of five
 /// for the manager's confederation, eight finals groups of four and a played
