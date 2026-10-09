@@ -8,8 +8,11 @@ import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/features/tournaments/continental_clash_providers.dart';
 import 'package:fnm/features/tournaments/tournament_history.dart';
 import 'package:fnm/l10n/app_localizations.dart';
+import 'package:fnm/shared/tablet/tablet.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
+
+part 'continental_clash_view.dart';
 
 /// Continental Clash (Finalissima) detail: the champions-of-champions one-off
 /// between the European and South American champions — this cycle's tie and
@@ -19,8 +22,13 @@ class ContinentalClashScreen extends ConsumerWidget {
 
   final int careerId;
 
+  static const Key tabletLayoutKey = Key('clash.tabletLayout');
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    if (TabletShellScope.isActive(context)) {
+      return _ContinentalClashTabletLayout(careerId: careerId);
+    }
     final l = AppLocalizations.of(context);
     final dataAsync = ref.watch(continentalClashProvider(careerId));
 
@@ -44,10 +52,7 @@ class ContinentalClashScreen extends ConsumerWidget {
               labelColor: AppColors.onSurface,
               unselectedLabelColor: AppColors.onSurfaceVariant,
               indicatorColor: AppColors.primary,
-              tabs: [
-                Tab(text: l.tourContTabThisCycle),
-                Tab(text: l.tourContTabHistory),
-              ],
+              tabs: _clashTabs(l),
             ),
           ),
         ),
@@ -59,35 +64,56 @@ class ContinentalClashScreen extends ConsumerWidget {
             if (data == null) {
               return Center(child: Text(l.tourContNoSaveFound));
             }
-            String code(int id) => data.nations[id]?.code ?? '??';
-            String name(int id) => data.nations[id]?.name ?? l.tourContUnknown;
-
-            return TabBarView(
-              children: [
-                if (data.tie == null)
-                  TournamentSoon(
-                    message: l.tourContClashSoon,
-                  )
-                else
-                  _ThisCycle(
-                    tie: data.tie!,
-                    playerNationId: data.playerNationId,
-                    code: code,
-                    name: name,
-                  ),
-                TournamentHistory(
-                  honours: data.honours,
-                  name: name,
-                  code: code,
-                  emptyMessage: l.tourContNoClashYet,
-                ),
-              ],
-            );
+            return TabBarView(children: _clashTabViews(context, data));
           },
         ),
       ),
     );
   }
+}
+
+/// The Clash's two tabs, in the order [_clashTabViews] builds them.
+List<Tab> _clashTabs(AppLocalizations l) => [
+  Tab(text: l.tourContTabThisCycle),
+  Tab(text: l.tourContTabHistory),
+];
+
+/// The two tab bodies. Shared by the phone screen and [ContinentalClashView];
+/// [wide] (a tablet) holds this cycle's tie to a readable width, centred.
+List<Widget> _clashTabViews(
+  BuildContext context,
+  ContinentalClashData data, {
+  bool wide = false,
+}) {
+  final l = AppLocalizations.of(context);
+  String code(int id) => data.nations[id]?.code ?? '??';
+  String name(int id) => data.nations[id]?.name ?? l.tourContUnknown;
+  final thisCycle = data.tie == null
+      ? TournamentSoon(message: l.tourContClashSoon)
+      : _ThisCycle(
+          tie: data.tie!,
+          playerNationId: data.playerNationId,
+          code: code,
+          name: name,
+        );
+  return [
+    if (wide)
+      Align(
+        alignment: Alignment.topCenter,
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 640),
+          child: thisCycle,
+        ),
+      )
+    else
+      thisCycle,
+    TournamentHistory(
+      honours: data.honours,
+      name: name,
+      code: code,
+      emptyMessage: l.tourContNoClashYet,
+    ),
+  ];
 }
 
 /// This cycle's tie: both champions face to face, with the result once played.
