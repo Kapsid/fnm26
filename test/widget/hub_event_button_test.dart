@@ -120,9 +120,13 @@ void main() {
       final season = await pumpBoth(tester);
       final buttons = find.byType(PrimaryButton);
 
+      // Captured BEFORE the first tap: once busy, the buttons disable
+      // themselves, so only a stale closure can reach `_guarded` again.
+      final staleTap = tester.widget<PrimaryButton>(buttons.last).onPressed!;
+
       await tester.tap(buttons.first);
       await tester.pump();
-      await tester.tap(buttons.last);
+      staleTap();
       await tester.pump();
 
       expect(season.calls, 1);
