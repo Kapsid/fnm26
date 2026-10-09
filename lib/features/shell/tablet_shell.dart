@@ -28,6 +28,9 @@ const Set<String> tabletReadyPaths = <String>{
   Routes.continentalClash,
   Routes.intercontinentalPlayoff,
   Routes.tournaments,
+  Routes.qualifyingDraw,
+  Routes.continentalDraw,
+  Routes.nationsCupDraw,
 };
 
 /// The tablet frame around every in-save screen: sidebar on the left, top bar
