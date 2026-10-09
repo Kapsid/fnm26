@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
+import 'package:fnm/features/onboarding/tour_keys.dart';
 import 'package:fnm/features/shell/shell_destinations.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/tablet/tablet_text.dart';
@@ -48,16 +49,27 @@ class TabletSidebar extends StatelessWidget {
                   for (final d in shellDestinations.where(
                     (d) => d.section == section,
                   ))
-                    _Item(
-                      key: ValueKey(
-                        d.id == active
-                            ? 'sidebar.${d.id.name}.active'
-                            : 'sidebar.${d.id.name}',
+                    // A stable slot around the item: its own key changes with
+                    // the active state, and the tour's GlobalKey must move
+                    // between the old and new item under one updating parent.
+                    KeyedSubtree(
+                      key: ValueKey('sidebar.slot.${d.id.name}'),
+                      child: _Item(
+                        key: ValueKey(
+                          d.id == active
+                              ? 'sidebar.${d.id.name}.active'
+                              : 'sidebar.${d.id.name}',
+                        ),
+                        icon: d.icon,
+                        label: shellDestinationLabel(l, d.id),
+                        active: d.id == active,
+                        // The tour's Squad step points here on a tablet, where
+                        // the phone's Squad tab does not exist.
+                        tourKey: d.id == ShellDestinationId.squad
+                            ? TourKeys.squadTab
+                            : null,
+                        onTap: () => context.go(d.location(careerId)),
                       ),
-                      icon: d.icon,
-                      label: shellDestinationLabel(l, d.id),
-                      active: d.id == active,
-                      onTap: () => context.go(d.location(careerId)),
                     ),
                 ],
               ],
@@ -86,9 +98,11 @@ class _Item extends StatelessWidget {
     required this.label,
     required this.active,
     required this.onTap,
+    this.tourKey,
     super.key,
   });
 
+  final GlobalKey? tourKey;
   final IconData icon;
   final String label;
   final bool active;
@@ -98,6 +112,7 @@ class _Item extends StatelessWidget {
   Widget build(BuildContext context) {
     final color = active ? AppColors.onSurface : AppColors.onSurfaceVariant;
     return Material(
+      key: tourKey,
       color: active ? AppColors.surfaceContainerHighest : Colors.transparent,
       borderRadius: AppRadii.baseAll,
       child: InkWell(

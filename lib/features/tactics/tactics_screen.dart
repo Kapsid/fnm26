@@ -1,6 +1,4 @@
-import 'package:fnm/features/onboarding/tour_keys.dart';
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/core/routing/app_router.dart';
@@ -11,31 +9,31 @@ import 'package:fnm/core/theme/kit_colors.dart';
 import 'package:fnm/core/util/squad_label.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/formation.dart';
+import 'package:fnm/domain/entities/player.dart';
+import 'package:fnm/domain/entities/player_role.dart';
 import 'package:fnm/domain/entities/tactic_preset.dart';
 import 'package:fnm/domain/entities/tactics.dart';
+import 'package:fnm/domain/services/squad/absence_outlook.dart';
+import 'package:fnm/domain/services/squad/captaincy.dart';
 import 'package:fnm/domain/services/tactics/position_fit.dart';
 import 'package:fnm/domain/services/tactics/set_piece_picks.dart';
 import 'package:fnm/features/career/career_providers.dart';
-import 'package:fnm/domain/entities/player.dart';
-import 'package:fnm/domain/entities/player_role.dart';
-import 'package:fnm/domain/services/squad/absence_outlook.dart';
-import 'package:fnm/domain/services/squad/captaincy.dart';
+import 'package:fnm/features/hub/hub_providers.dart';
+import 'package:fnm/features/match/match_preview_screen.dart'
+    show OpponentBriefing, opponentKeyMenProvider;
+import 'package:fnm/features/onboarding/tour_keys.dart';
+import 'package:fnm/features/shell/tablet_shell.dart' show PhoneWidthFrame;
 import 'package:fnm/features/squad/captain_providers.dart';
 import 'package:fnm/features/tactics/absence_providers.dart';
 import 'package:fnm/features/tactics/familiarity_providers.dart';
+import 'package:fnm/features/tactics/formation_picker.dart';
 import 'package:fnm/features/tactics/nation_squad_tab.dart';
 import 'package:fnm/features/tactics/player_roles_providers.dart';
 import 'package:fnm/features/tactics/set_piece_takers_providers.dart';
 import 'package:fnm/features/tactics/tactic_preset_providers.dart';
 import 'package:fnm/features/tactics/tactics_pitch.dart';
-import 'package:fnm/features/tactics/formation_picker.dart';
 import 'package:fnm/features/tactics/tactics_providers.dart';
-import 'package:fnm/features/hub/hub_providers.dart';
-import 'package:fnm/features/match/match_preview_screen.dart'
-    show OpponentBriefing, opponentKeyMenProvider;
-import 'package:fnm/features/shell/tablet_shell.dart' show PhoneWidthFrame;
 import 'package:fnm/l10n/app_localizations.dart';
-import 'package:fnm/shared/tablet/adaptive_sheet.dart';
 import 'package:fnm/shared/tablet/tablet.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';

@@ -147,6 +147,9 @@ class _TacticsTabletLayout extends ConsumerWidget {
                   child: PanelBox(
                     child: DefaultTabController(
                       length: 3,
+                      // The phone's tabs are line-up, instructions, roles and
+                      // set pieces: the first two are this Formation tab.
+                      initialIndex: screen.initialTab == 2 ? 1 : 0,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [

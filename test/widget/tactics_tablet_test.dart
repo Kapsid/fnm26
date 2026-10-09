@@ -8,6 +8,7 @@ import 'package:fnm/features/hub/hub_providers.dart';
 import 'package:fnm/features/match/match_preview_screen.dart';
 import 'package:fnm/features/onboarding/tour_keys.dart';
 import 'package:fnm/features/shell/tablet_shell.dart';
+import 'package:fnm/features/shell/tablet_sidebar.dart';
 import 'package:fnm/features/tactics/formation_picker.dart';
 import 'package:fnm/features/tactics/tactics_pitch.dart';
 import 'package:fnm/features/tactics/tactics_providers.dart';
@@ -144,9 +145,59 @@ void main() {
       await tester.tap(find.text(enL.captainNone));
       await settle(tester);
       expect(find.text(enL.squadCaptain.toUpperCase()), findsWidgets);
-      await tester.tapAt(const Offset(4, 4));
+      await tester.tap(find.byType(ListTile).at(1));
       await settle(tester);
       expect(find.byKey(TacticsScreen.tabletLayoutKey), findsOneWidget);
+      expect(
+        find.text(enL.captainNone),
+        findsNothing,
+        reason: 'the pick landed: somebody wears the armband',
+      );
+      await tester.pumpWidget(const SizedBox());
+    });
+  }
+
+  testWidgets('TourKeys.squadTab has one owner on a tablet: the sidebar', (
+    tester,
+  ) async {
+    final save = await seedSave(tester, formFactor: FormFactor.tablet);
+    await pumpRoute(
+      tester,
+      save,
+      '${Routes.tactics}?careerId=${save.careerId}',
+      size: kTabletSize,
+    );
+    expect(find.byKey(TourKeys.squadTab), findsOneWidget);
+    expect(
+      find.descendant(
+        of: find.byType(TabletSidebar),
+        matching: find.byKey(TourKeys.squadTab),
+      ),
+      findsOneWidget,
+    );
+    await tester.pumpWidget(const SizedBox());
+  });
+
+  for (final tab in [1, 2]) {
+    testWidgets('?tab=$tab on a tablet opens '
+        '${tab == 2 ? 'Roles and set pieces' : 'the Formation tab'}', (
+      tester,
+    ) async {
+      final save = await seedSave(tester, formFactor: FormFactor.tablet);
+      await pumpRoute(
+        tester,
+        save,
+        '${Routes.tactics}?careerId=${save.careerId}&tab=$tab',
+        size: kTabletSize,
+      );
+      expect(
+        find.text(enL.tacticsRolesSetPiecesBlurb),
+        tab == 2 ? findsOneWidget : findsNothing,
+      );
+      expect(
+        find.byKey(TourKeys.tacticsFormation),
+        tab == 2 ? findsNothing : findsOneWidget,
+      );
       await tester.pumpWidget(const SizedBox());
     });
   }

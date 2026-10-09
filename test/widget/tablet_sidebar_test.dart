@@ -17,18 +17,26 @@ void main() {
     final router = GoRouter(
       initialLocation: '/hub?careerId=3',
       routes: [
-        for (final p in ['/hub', '/messages', '/settings'])
-          GoRoute(
-            path: p,
-            builder: (context, state) => Scaffold(
-              body: Row(
-                children: [
-                  TabletSidebar(careerId: 3, location: state.uri),
-                  Expanded(child: Text('at ${state.uri}')),
-                ],
-              ),
+        // One shell, as in the app: the sidebar persists across routes (it
+        // owns a GlobalKey, the tour's Squad target, so two at once would
+        // clash).
+        ShellRoute(
+          builder: (context, state, child) => Scaffold(
+            body: Row(
+              children: [
+                TabletSidebar(careerId: 3, location: state.uri),
+                Expanded(child: child),
+              ],
             ),
           ),
+          routes: [
+            for (final p in ['/hub', '/messages', '/settings'])
+              GoRoute(
+                path: p,
+                builder: (context, state) => Text('at ${state.uri}'),
+              ),
+          ],
+        ),
       ],
     );
     addTearDown(router.dispose);
