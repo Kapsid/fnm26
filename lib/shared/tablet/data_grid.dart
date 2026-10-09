@@ -55,6 +55,7 @@ class DataGrid<T> extends StatefulWidget {
     required this.columnSets,
     this.selected,
     this.onSelect,
+    this.controller,
     super.key,
   }) : assert(columnSets.length > 0, 'at least one column set');
 
@@ -73,6 +74,10 @@ class DataGrid<T> extends StatefulWidget {
   final List<GridColumnSet<T>> columnSets;
   final T? selected;
   final ValueChanged<T>? onSelect;
+
+  /// The rows' vertical scroll, for a screen that scrolls the table itself
+  /// ("centre on my nation"). The header never scrolls.
+  final ScrollController? controller;
 
   @override
   State<DataGrid<T>> createState() => _DataGridState<T>();
@@ -269,6 +274,7 @@ class _DataGridState<T> extends State<DataGrid<T>> {
         ),
         Expanded(
           child: ListView.builder(
+            controller: widget.controller,
             itemCount: rows.length,
             itemExtent: DataGrid.rowHeight,
             itemBuilder: (context, i) {
