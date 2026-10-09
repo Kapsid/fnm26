@@ -59,6 +59,7 @@ import 'package:fnm/features/tournaments/playoff_paths.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/domain/services/club/clubs.dart';
 import 'package:fnm/domain/services/club/transfer_window.dart';
+import 'package:fnm/features/messages/message_providers.dart';
 import 'package:fnm/features/messages/transfer_report.dart';
 
 part 'season_cycle.dart';
@@ -1493,6 +1494,11 @@ class SeasonService {
     // the full ranking always shows the points the sim just moved.
     _ref
       ..invalidate(hubDataProvider)
+      // The inbox syncs news from the world when it reads; a tablet's top bar
+      // keeps it alive for the whole shell, so a step must refresh it by hand
+      // or its news never pops and its badge never moves.
+      ..invalidate(messageInboxProvider(careerId))
+      ..invalidate(unreadMessagesProvider(careerId))
       ..invalidate(worldRankingProvider)
       ..invalidate(rankHistoryProvider)
       // The board's brief and its mood are derived from fixtures the sim has
@@ -1541,6 +1547,11 @@ class SeasonService {
     // the full ranking always shows the points the sim just moved.
     _ref
       ..invalidate(hubDataProvider)
+      // The inbox syncs news from the world when it reads; a tablet's top bar
+      // keeps it alive for the whole shell, so a step must refresh it by hand
+      // or its news never pops and its badge never moves.
+      ..invalidate(messageInboxProvider(careerId))
+      ..invalidate(unreadMessagesProvider(careerId))
       ..invalidate(worldRankingProvider)
       ..invalidate(rankHistoryProvider)
       // The board's brief and its mood are derived from fixtures the sim has
@@ -1870,6 +1881,11 @@ class SeasonService {
     // the full ranking always shows the points the sim just moved.
     _ref
       ..invalidate(hubDataProvider)
+      // The inbox syncs news from the world when it reads; a tablet's top bar
+      // keeps it alive for the whole shell, so a step must refresh it by hand
+      // or its news never pops and its badge never moves.
+      ..invalidate(messageInboxProvider(careerId))
+      ..invalidate(unreadMessagesProvider(careerId))
       ..invalidate(worldRankingProvider)
       ..invalidate(rankHistoryProvider)
       // The board's brief and its mood are derived from fixtures the sim has
