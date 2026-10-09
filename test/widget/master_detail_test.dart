@@ -36,15 +36,18 @@ void main() {
 
   testWidgets('the divider drags, and stops at the limits', (tester) async {
     await pump(tester);
-    await tester.drag(
-      find.byKey(MasterDetail.dividerKey),
-      const Offset(100, 0),
+    // Touch slop first, then the rest, so the divider must follow the finger
+    // from the first pixel (DragStartBehavior.down).
+    final gesture = await tester.startGesture(
+      tester.getCenter(find.byKey(MasterDetail.dividerKey)),
     );
+    await gesture.moveBy(const Offset(36, 0));
     await tester.pump();
-    expect(
-      tester.getSize(find.byKey(const Key('master'))).width,
-      closeTo(500, 20),
-    );
+    await gesture.moveBy(const Offset(64, 0));
+    await tester.pump();
+    await gesture.up();
+    await tester.pump();
+    expect(tester.getSize(find.byKey(const Key('master'))).width, 500);
     await tester.drag(
       find.byKey(MasterDetail.dividerKey),
       const Offset(900, 0),

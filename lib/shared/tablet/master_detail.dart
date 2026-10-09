@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/shared/tablet/tablet_text.dart';
@@ -46,6 +47,7 @@ class _MasterDetailState extends State<MasterDetail> {
               child: GestureDetector(
                 key: MasterDetail.dividerKey,
                 behavior: HitTestBehavior.opaque,
+                dragStartBehavior: DragStartBehavior.down,
                 onHorizontalDragUpdate: (d) => setState(() {
                   _fraction = ((masterWidth + d.delta.dx) / width).clamp(
                     widget.minFraction,
