@@ -11,14 +11,20 @@ import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/features/ranking/world_ranking_providers.dart';
+import 'package:fnm/features/shell/detail_pane_host.dart';
 import 'package:fnm/l10n/app_localizations.dart';
+import 'package:fnm/shared/tablet/tablet.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
+
+part 'world_ranking_tablet_layout.dart';
 
 /// FIFA-style world ranking of every nation, filterable by confederation, with
 /// the player's team highlighted. Opens focused on the manager's own nation.
 class WorldRankingScreen extends ConsumerStatefulWidget {
   const WorldRankingScreen({required this.careerId, super.key});
+
+  static const Key tabletLayoutKey = Key('ranking.tabletLayout');
 
   final int careerId;
 
@@ -98,6 +104,9 @@ class _WorldRankingScreenState extends ConsumerState<WorldRankingScreen> {
 
   @override
   Widget build(BuildContext context) {
+    if (TabletShellScope.isActive(context)) {
+      return _WorldRankingTabletLayout(careerId: widget.careerId);
+    }
     final careerId = widget.careerId;
     final l = AppLocalizations.of(context);
     final dataAsync = ref.watch(worldRankingProvider(careerId));
