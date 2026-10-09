@@ -20,7 +20,7 @@ import 'package:go_router/go_router.dart';
 
 /// Everything the round-results screen needs: the grouped results plus the
 /// nation lookup and which nation is the player's.
-typedef _RoundView = ({
+typedef RoundResultsView = ({
   RoundResults? results,
   Map<int, Nation> nations,
   int playerNationId,
@@ -30,8 +30,9 @@ typedef _RoundView = ({
   Set<String> noRelegationGroups,
 });
 
-final AutoDisposeFutureProviderFamily<_RoundView?, int>
-_roundResultsProvider = FutureProvider.autoDispose.family<_RoundView?, int>((
+/// The last round the manager played, grouped, with the zones each table colours. Public so a test can hand the screen a round without playing one.
+final AutoDisposeFutureProviderFamily<RoundResultsView?, int>
+roundResultsViewProvider = FutureProvider.autoDispose.family<RoundResultsView?, int>((
   ref,
   careerId,
 ) async {
@@ -104,7 +105,7 @@ class RoundResultsScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l = AppLocalizations.of(context);
-    final viewAsync = ref.watch(_roundResultsProvider(careerId));
+    final viewAsync = ref.watch(roundResultsViewProvider(careerId));
     final friendlies =
         ref.watch(otherFriendliesProvider(careerId)).valueOrNull ?? const [];
     void toHub() => context.go('${Routes.hub}?careerId=$careerId');
