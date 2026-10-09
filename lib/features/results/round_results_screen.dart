@@ -15,8 +15,11 @@ import 'package:fnm/domain/services/competition/group_advancement.dart';
 import 'package:fnm/domain/services/competition/nations_cup.dart';
 import 'package:fnm/features/friendlies/other_friendlies_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
+import 'package:fnm/shared/tablet/tablet.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
+
+part 'round_results_tablet_layout.dart';
 
 /// Everything the round-results screen needs: the grouped results plus the
 /// nation lookup and which nation is the player's.
@@ -30,9 +33,11 @@ typedef RoundResultsView = ({
   Set<String> noRelegationGroups,
 });
 
-/// The last round the manager played, grouped, with the zones each table colours. Public so a test can hand the screen a round without playing one.
+/// The last round the manager played, grouped, with the zones each table
+/// colours. Public so a test can hand the screen a round without playing one.
 final AutoDisposeFutureProviderFamily<RoundResultsView?, int>
-roundResultsViewProvider = FutureProvider.autoDispose.family<RoundResultsView?, int>((
+roundResultsViewProvider = FutureProvider.autoDispose
+    .family<RoundResultsView?, int>((
   ref,
   careerId,
 ) async {
@@ -102,9 +107,14 @@ class RoundResultsScreen extends ConsumerWidget {
 
   final int careerId;
 
+  static const Key tabletLayoutKey = Key('roundResults.tabletLayout');
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l = AppLocalizations.of(context);
+    if (TabletShellScope.isActive(context)) {
+      return _RoundResultsTabletLayout(careerId: careerId);
+    }
     final viewAsync = ref.watch(roundResultsViewProvider(careerId));
     final friendlies =
         ref.watch(otherFriendliesProvider(careerId)).valueOrNull ?? const [];
