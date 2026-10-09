@@ -153,9 +153,9 @@ Future<SeededSave> seedSave(
 
 /// Lets the database work and the frames catch up.
 ///
-/// At least [rounds] rounds of (real delay, pump), then on until no
-/// [CircularProgressIndicator] is left, so a slow provider chain cannot leave
-/// a golden on its spinner. Stops after [maxWait] of real time. If a spinner
+/// At least [rounds] rounds of (real delay, pump), then on, advancing fake
+/// time 50 ms a round, until no [CircularProgressIndicator] is left, so a
+/// slow provider chain cannot leave a golden on its spinner. Stops after [maxWait] of real time. If a spinner
 /// is still showing then, the test FAILS: a screen stuck loading is a bug,
 /// not a state to take a golden of. Pass [allowSpinner] only for a screen
 /// whose spinner is its content, and say why at the call site. The final
@@ -172,7 +172,12 @@ Future<void> settle(
     await tester.runAsync(
       () => Future<void>.delayed(const Duration(milliseconds: 30)),
     );
-    await tester.pump();
+    // Fake time only moves once the minimum rounds are spent and a spinner
+    // is still up (some providers wait on a timer): a screen that is ready
+    // sooner is captured exactly as before, which the phone goldens rely on.
+    await tester.pump(
+      i >= rounds ? const Duration(milliseconds: 50) : Duration.zero,
+    );
     i++;
     final spinning = find
         .byType(CircularProgressIndicator)
