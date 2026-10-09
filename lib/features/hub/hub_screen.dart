@@ -32,6 +32,16 @@ import 'package:fnm/features/tactics/condition_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
+import 'package:fnm/core/util/federation_label.dart';
+import 'package:fnm/core/util/message_text.dart';
+import 'package:fnm/domain/services/federation/federation_finance.dart';
+import 'package:fnm/domain/services/press/y_feed.dart';
+import 'package:fnm/features/hub/objective_providers.dart';
+import 'package:fnm/features/messages/message_sheet.dart' show messageStyle;
+import 'package:fnm/features/y/y_screen.dart' show yPostBody;
+import 'package:fnm/shared/tablet/tablet.dart';
+
+part 'hub_tablet_layout.dart';
 
 /// In-game home ("National Hub"): continue/play, calendar, next match, squad
 /// status, and the group table, with the in-game bottom navigation.
@@ -39,6 +49,9 @@ class HubScreen extends ConsumerStatefulWidget {
   const HubScreen({required this.careerId, super.key});
 
   final int careerId;
+
+  static const Key tabletLayoutKey = Key('hub.tabletLayout');
+  static const Key nextMatchPanelKey = Key('hub.tablet.nextMatch');
 
   @override
   ConsumerState<HubScreen> createState() => _HubScreenState();
@@ -144,6 +157,27 @@ class _HubScreenState extends ConsumerState<HubScreen> {
 
   int get careerId => widget.careerId;
 
+  /// Opens the competition [hub]'s group belongs to: the Nations Cup, the
+  /// World Championship for its qualifiers and finals, else the manager's
+  /// continental cup.
+  void _openGroup(BuildContext context, HubData hub) {
+    final comp = hub.group!.competition;
+    final conf = hub.nations[hub.career.nationId]?.confederation;
+    // Any of the three cups (Europe's, North America's, Africa's): his own,
+    // which the screen opens on.
+    if (hub.group!.kind == CompetitionKind.nationsLeague ||
+        NationsCups.isNationsCup(comp)) {
+      context.go('${Routes.nationsCup}?careerId=$careerId');
+      return;
+    }
+    final isWc = comp == 'World Cup Qualifiers' || comp == 'World Championship';
+    context.go(
+      isWc || conf == null
+          ? '${Routes.cup}?careerId=$careerId'
+          : '${Routes.continental}?careerId=$careerId&conf=${conf.name}',
+    );
+  }
+
   /// Pops any unread news over the hub. Driven from here rather than from each
   /// action because everything returns to the hub — a match, a draw, a stepped
   /// tournament round — so this catches them all in one place.
@@ -194,6 +228,14 @@ class _HubScreenState extends ConsumerState<HubScreen> {
     if (!ref.watch(tourOfferedProvider) && !_offeringTour) {
       _offeringTour = true;
       WidgetsBinding.instance.addPostFrameCallback((_) => _offerTour());
+    }
+
+    // The popups above run for both layouts; only the drawing differs.
+    if (TabletShellScope.isActive(context)) {
+      return _HubTabletLayout(
+        careerId: careerId,
+        onOpenGroup: (hub) => _openGroup(context, hub),
+      );
     }
 
     return Scaffold(
@@ -352,32 +394,7 @@ class _HubScreenState extends ConsumerState<HubScreen> {
                     relegateCount: hub.groupRelegateCount,
                     code: code,
                     name: name,
-                    // Open the right competition detail: the Nations Cup, the
-                    // World Cup for its qualifiers/finals, else the player's
-                    // continental cup.
-                    onTap: () {
-                      final comp = hub.group!.competition;
-                      final conf =
-                          hub.nations[hub.career.nationId]?.confederation;
-                      // Any of the three cups (Europe's, North America's,
-                      // Africa's) — his own, which the screen opens on.
-                      if (hub.group!.kind == CompetitionKind.nationsLeague ||
-                          NationsCups.isNationsCup(comp)) {
-                        context.go(
-                          '${Routes.nationsCup}?careerId=$careerId',
-                        );
-                        return;
-                      }
-                      final isWc =
-                          comp == 'World Cup Qualifiers' ||
-                          comp == 'World Championship';
-                      context.go(
-                        isWc || conf == null
-                            ? '${Routes.cup}?careerId=$careerId'
-                            : '${Routes.continental}?careerId=$careerId'
-                                  '&conf=${conf.name}',
-                      );
-                    },
+                    onTap: () => _openGroup(context, hub),
                   )
                 else
                   _GroupPlaceholder(competition: hub.group!.competition),
@@ -913,6 +930,7 @@ class _GroupTable extends StatelessWidget {
     required this.name,
     this.relegateCount = 0,
     this.onTap,
+    this.framed = true,
   });
 
   final GroupTable group;
@@ -931,14 +949,17 @@ class _GroupTable extends StatelessWidget {
   final String Function(int) name;
   final VoidCallback? onTap;
 
+  /// False inside a tablet panel, which already supplies the box and names
+  /// the competition: the table is drawn bare and without that first line.
+  final bool framed;
+
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
-    return AppCard(
-      onTap: onTap,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
+    final content = Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (framed)
           Row(
             children: [
               Expanded(
@@ -957,22 +978,24 @@ class _GroupTable extends StatelessWidget {
                 ),
             ],
           ),
-          Text(l.hubGroupName(group.name), style: AppTypography.labelMedium),
-          const SizedBox(height: AppSpacing.sm),
-          _row(
-            '#',
-            l.hubTblTeam,
-            l.hubTblP,
-            l.hubTblGd,
-            l.hubTblPts,
-            header: true,
-          ),
-          const Divider(),
-          for (var i = 0; i < group.standings.length; i++)
-            _standingRow(i + 1, group.standings[i]),
-        ],
-      ),
+        Text(l.hubGroupName(group.name), style: AppTypography.labelMedium),
+        const SizedBox(height: AppSpacing.sm),
+        _row(
+          '#',
+          l.hubTblTeam,
+          l.hubTblP,
+          l.hubTblGd,
+          l.hubTblPts,
+          header: true,
+        ),
+        const Divider(),
+        for (var i = 0; i < group.standings.length; i++)
+          _standingRow(i + 1, group.standings[i]),
+      ],
     );
+    return framed
+        ? AppCard(onTap: onTap, child: content)
+        : InkWell(onTap: onTap, child: content);
   }
 
   Widget _standingRow(int pos, GroupStanding s) {

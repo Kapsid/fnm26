@@ -42,6 +42,7 @@ class HubEventButton extends ConsumerStatefulWidget {
   const HubEventButton({
     required this.careerId,
     this.compact = false,
+    this.tourTarget,
     super.key,
   });
 
@@ -50,6 +51,11 @@ class HubEventButton extends ConsumerStatefulWidget {
   /// The top-bar variant: no subtitle under it, and not the tour's target
   /// (the hub's own button is; one GlobalKey cannot sit on two widgets).
   final bool compact;
+
+  /// Whether this button carries [TourKeys.hubAction]. Defaults to the
+  /// full-size (in-body) button. The tablet top bar sets it, because the
+  /// tablet hub has no in-body button; one GlobalKey, one widget, always.
+  final bool? tourTarget;
 
   @override
   ConsumerState<HubEventButton> createState() => _HubEventButtonState();
@@ -64,7 +70,7 @@ class _HubEventButtonState extends ConsumerState<HubEventButton> {
     final event = ref.watch(nextEventProvider(careerId)).valueOrNull;
     final busy = ref.watch(hubActionBusyProvider(careerId));
     final button = PrimaryButton(
-      key: widget.compact ? null : TourKeys.hubAction,
+      key: (widget.tourTarget ?? !widget.compact) ? TourKeys.hubAction : null,
       label: event?.label ?? l.hubContinue,
       icon: event?.icon ?? Icons.play_arrow_rounded,
       isLoading: busy,

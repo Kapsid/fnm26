@@ -87,7 +87,11 @@ class TabletTopBar extends ConsumerWidget {
           const SizedBox(width: AppSpacing.sm),
           SizedBox(
             width: 220,
-            child: HubEventButton(careerId: careerId, compact: true),
+            child: HubEventButton(
+              careerId: careerId,
+              compact: true,
+              tourTarget: true,
+            ),
           ),
         ],
       ),
@@ -124,7 +128,8 @@ class _NextChip extends StatelessWidget {
             TextSpan(text: '${l.topBarNext}  ', style: TabletText.barMeta),
             TextSpan(text: teams, style: TabletText.barStrong),
             TextSpan(
-              text: '  ${MatchStage.labelCompact(l, next)}, '
+              text:
+                  '  ${MatchStage.labelCompact(l, next)}, '
                   '${AppDate.dayMonth(context, next.date)}',
               style: TabletText.barMeta,
             ),

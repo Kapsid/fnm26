@@ -2,6 +2,7 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:fnm/core/layout/form_factor.dart';
+import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/features/shell/tablet_sidebar.dart';
 import 'package:fnm/features/shell/tablet_top_bar.dart';
@@ -11,7 +12,7 @@ import 'package:fnm/shared/tablet/tablet_shell_scope.dart';
 /// content area (in the shell) or the whole screen (full-screen routes).
 /// Everything else is drawn at phone width: [PhoneWidthFrame] in the shell,
 /// [FullScreenPhoneFrame] outside it. Each stage adds the screens it converts.
-const Set<String> tabletReadyPaths = <String>{};
+const Set<String> tabletReadyPaths = <String>{Routes.hub};
 
 /// The tablet frame around every in-save screen: sidebar on the left, top bar
 /// above, the routed screen in what is left.

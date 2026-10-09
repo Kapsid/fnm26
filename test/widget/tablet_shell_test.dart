@@ -69,7 +69,7 @@ void main() {
   testWidgets('a screen with no tablet layout yet is held at phone width', (
     tester,
   ) async {
-    await pump(tester, const Size(1194, 834), '/hub?careerId=1');
+    await pump(tester, const Size(1194, 834), '/results?careerId=1');
     final frame = tester.getSize(find.byType(PhoneWidthFrame));
     final inner = tester.getSize(find.byType(Scaffold).last);
     expect(frame.width, greaterThan(PhoneWidthFrame.maxWidth));

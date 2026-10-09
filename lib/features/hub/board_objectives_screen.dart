@@ -122,6 +122,31 @@ class BoardObjectivesScreen extends ConsumerWidget {
   _ => (AppColors.error, l.hubBoardJobAtRisk),
 };
 
+/// The colour an objective's status is written in: grey while its tournament
+/// is live, gold when the brief was beaten outright, green met, red missed.
+/// Beating a brief by rounds is its own colour: a cycle carried three rounds
+/// past what was asked should not look like one that scraped it.
+Color objectiveStatusColor(CycleObjective o) {
+  final gap = o.actual - o.target;
+  return !o.decided
+      ? AppColors.onSurfaceVariant
+      : gap > 0
+      ? AppColors.primary
+      : (o.met ? AppColors.positive : AppColors.error);
+}
+
+/// An objective's status line: how far the run has got while it is live,
+/// and once graded, by how much it was met, beaten or missed.
+String objectiveStatusLabel(AppLocalizations l, CycleObjective o) => !o.decided
+    ? (o.actual >= 2
+          ? l.boardObjectiveSoFar(o.resultLabel)
+          : l.boardObjectivesPending)
+    : switch (o.actual - o.target) {
+        0 => l.hubObjectiveMet(o.resultLabel),
+        final gap when gap > 0 => l.boardObjectiveBeatenBy(o.resultLabel, gap),
+        final gap => l.boardObjectiveShortBy(o.resultLabel, -gap),
+      };
+
 class _ObjectiveCard extends StatelessWidget {
   const _ObjectiveCard({required this.objective});
 
@@ -130,16 +155,7 @@ class _ObjectiveCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
-    final decided = objective.decided;
-    final met = objective.met;
-    // Beating a brief outright is its own colour: a cycle carried three
-    // rounds past what was asked should not look like one that scraped it.
-    final gap = objective.actual - objective.target;
-    final color = !decided
-        ? AppColors.onSurfaceVariant
-        : gap > 0
-        ? AppColors.primary
-        : (met ? AppColors.positive : AppColors.error);
+    final color = objectiveStatusColor(objective);
     return AppCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -181,21 +197,7 @@ class _ObjectiveCard extends StatelessWidget {
               // Once graded, say by HOW MUCH. Met/missed alone read the same
               // whether a side scraped the brief or was carried three rounds
               // past it, and the two are not the same cycle.
-              !decided
-                  ? (objective.actual >= 2
-                        ? l.boardObjectiveSoFar(objective.resultLabel)
-                        : l.boardObjectivesPending)
-                  : switch (objective.actual - objective.target) {
-                      0 => l.hubObjectiveMet(objective.resultLabel),
-                      final gap when gap > 0 => l.boardObjectiveBeatenBy(
-                        objective.resultLabel,
-                        gap,
-                      ),
-                      final gap => l.boardObjectiveShortBy(
-                        objective.resultLabel,
-                        -gap,
-                      ),
-                    },
+              objectiveStatusLabel(l, objective),
               style: AppTypography.labelSmall.copyWith(
                 color: color,
                 fontWeight: FontWeight.w700,
