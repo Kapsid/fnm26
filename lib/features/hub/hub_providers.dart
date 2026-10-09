@@ -55,6 +55,14 @@ import 'package:fnm/features/tactics/absence_providers.dart';
 import 'package:fnm/features/tactics/nation_squad_providers.dart';
 import 'package:fnm/features/tactics/tactics_providers.dart';
 import 'package:fnm/features/settings/settings_providers.dart';
+import 'package:fnm/features/nations/nation_vitrine_providers.dart';
+import 'package:fnm/features/results/results_providers.dart';
+import 'package:fnm/features/tournaments/continental_clash_providers.dart';
+import 'package:fnm/features/tournaments/continental_detail_providers.dart';
+import 'package:fnm/features/tournaments/cup_detail_providers.dart';
+import 'package:fnm/features/tournaments/intercontinental_playoff_providers.dart';
+import 'package:fnm/features/tournaments/nations_cup_providers.dart';
+import 'package:fnm/features/tournaments/tournaments_providers.dart';
 import 'package:fnm/features/tournaments/playoff_paths.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/domain/services/club/clubs.dart';
@@ -575,6 +583,25 @@ class SeasonService {
     for (final e in placings.entries) {
       pts[e.key] = (pts[e.key] ?? Elo.base) + e.value;
     }
+  }
+
+  /// The competition screens' data, refreshed by hand after a step.
+  ///
+  /// On a phone none of these screens is on show while the sim runs: the
+  /// Continue that runs it lives on the hub. A tablet's top bar runs it from
+  /// any screen, and a screen on show keeps its auto-disposed provider alive,
+  /// reading the world as it was before the step. Nothing else tells them:
+  /// they read the database imperatively (see "derived providers go stale").
+  void _invalidateCompetitionViews() {
+    _ref
+      ..invalidate(tournamentsOverviewProvider)
+      ..invalidate(cupDetailProvider)
+      ..invalidate(continentalDetailProvider)
+      ..invalidate(nationsCupProvider)
+      ..invalidate(continentalClashProvider)
+      ..invalidate(intercontinentalPlayoffProvider)
+      ..invalidate(resultsProvider)
+      ..invalidate(nationVitrineProvider);
   }
 
   /// Persists the in-memory ranking points for [careerId], and republishes the
@@ -1512,6 +1539,7 @@ class SeasonService {
       ..invalidate(pendingConferenceProvider)
       ..invalidate(pressStatementsProvider)
       ..invalidate(squadConditionProvider);
+    _invalidateCompetitionViews();
   }
 
   /// Fast-forwards straight to the World Cup champion — the "skip to the final"
@@ -1561,6 +1589,7 @@ class SeasonService {
       ..invalidate(cycleObjectiveOutcomesProvider)
       ..invalidate(cycleObjectivesProvider)
       ..invalidate(satisfactionProvider);
+    _invalidateCompetitionViews();
   }
 
   /// Records the player's [result] for [fixture] (from the tactical engine),
@@ -1905,6 +1934,7 @@ class SeasonService {
       // across the commit would be handed the finished match — which is how a
       // just-played scoreline turns up under the next opponent's flags.
       ..invalidate(matchPreviewProvider);
+    _invalidateCompetitionViews();
   }
 
   /// Files an inbox message when [fixture] knocked the manager out of a cup —

@@ -18,8 +18,7 @@ import 'package:fnm/features/tournaments/all_time_scorers_legend.dart';
 import 'package:fnm/features/tournaments/best_thirds.dart';
 import 'package:fnm/features/tournaments/cup_detail_providers.dart';
 import 'package:fnm/features/tournaments/intercontinental_playoff_bracket.dart';
-import 'package:fnm/features/tournaments/intercontinental_playoff_screen.dart'
-    show intercontinentalPlayoffProvider;
+import 'package:fnm/features/tournaments/intercontinental_playoff_providers.dart';
 import 'package:fnm/features/tournaments/tournament_awards.dart';
 import 'package:fnm/features/tournaments/tournament_bracket.dart';
 import 'package:fnm/features/tournaments/tournament_history.dart';
