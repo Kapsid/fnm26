@@ -4,6 +4,7 @@ import 'package:fnm/domain/entities/group_standing.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/services/competition/finals.dart';
 import 'package:fnm/domain/services/competition/nations_cups.dart';
+import 'package:fnm/features/tournaments/continental_clash_providers.dart';
 import 'package:fnm/features/tournaments/continental_detail_providers.dart';
 import 'package:fnm/features/tournaments/cup_detail_providers.dart';
 import 'package:fnm/features/tournaments/finals_draw_providers.dart';
@@ -213,5 +214,28 @@ NationsCupData fakeNationsCup(int playerNationId) {
     myNationIds: {playerNationId},
     nations: realNationsById,
     maxTier: 1,
+  );
+}
+
+/// This cycle's Clash, played: the manager's nation beat the next best 2-1.
+ContinentalClashData fakeClash(int playerNationId) {
+  final f = fieldOf(playerNationId, 2);
+  return (
+    tie: Fixture(
+      id: 2000,
+      careerId: kSeededCareerId,
+      competitionId: 98,
+      matchday: 1,
+      date: DateTime(2029, 6, 1),
+      homeNationId: f[0].id,
+      awayNationId: f[1].id,
+      homeScore: 2,
+      awayScore: 1,
+      round: 'FFINAL',
+      played: true,
+    ),
+    nations: realNationsById,
+    playerNationId: playerNationId,
+    honours: const [],
   );
 }
