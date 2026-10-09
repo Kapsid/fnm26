@@ -24,15 +24,19 @@ void main() {
     tester,
   ) async {
     await openEditor(tester, size: kTabletSize, tabletLayout: true);
-    // A striker's disc: the names are painted, not Text, so tap by place.
-    final pitch = tester.getRect(find.byType(TacticsPitch));
-    await tester.tapAt(
-      pitch.topLeft + Offset(pitch.width * 0.35, pitch.height * 0.14),
+    await tester.tap(find.byKey(const ValueKey('pitchDisc10')));
+    await tester.pumpAndSettle();
+    expect(find.byType(Dialog), findsOneWidget, reason: 'picker is open');
+    await tester.tap(
+      find.descendant(
+        of: find.byType(Dialog),
+        matching: find.text('Bench12'),
+      ),
     );
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Bench12').last);
-    await tester.pumpAndSettle();
+    expect(find.byType(Dialog), findsNothing, reason: 'picker closed');
     expect(find.byKey(InMatchTacticsKeys.tabletLayout), findsOneWidget);
+    expect(find.text(enL.tacticsSubsUsed(1, 5)), findsOneWidget);
   });
 
   testWidgets('narrow window falls back to the phone editor', (tester) async {

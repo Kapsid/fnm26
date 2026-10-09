@@ -646,8 +646,6 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
     required List<Player> unavailable,
     required Player? comingOff,
   }) {
-    // Computed here rather than in build(): it depends on who has been chosen
-    // to come off, which this sheet owns.
     return ListView(
       children: [
         // The formation picker lives on the Tactics tab and nowhere else. It
