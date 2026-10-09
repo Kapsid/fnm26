@@ -17,6 +17,7 @@ import 'package:fnm/domain/services/entitlement/entitlement.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/match/match_providers.dart';
 import 'package:fnm/features/messages/message_providers.dart';
+import 'package:fnm/features/tournaments/city_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -45,6 +46,18 @@ final List<Player> _players =
             as List<dynamic>)
         .map((e) => Player.fromJson(e as Map<String, Object?>))
         .toList();
+
+/// The real cities, read straight from disk. The app reads them through
+/// `rootBundle`, whose cached load never completes for the second test of a
+/// file (the preview then sits on its spinner for ever), so the harness
+/// serves the same file itself.
+final Map<int, List<String>> _cities = {
+  for (final e
+      in (jsonDecode(File('assets/data/country_cities.json').readAsStringSync())
+              as Map<String, Object?>)
+          .entries)
+    int.parse(e.key): (e.value! as List).cast<String>(),
+};
 
 /// A brand-new career on the real world data, in its own in-memory database.
 class SeededSave {
@@ -80,6 +93,7 @@ Future<SeededSave> seedSave(
         InMemorySeedSource(nationList: _nations, playerList: _players),
       ),
       formFactorProvider.overrideWithValue(formFactor),
+      countryCitiesProvider.overrideWith((ref) async => _cities),
       ...overrides,
     ],
   );
@@ -92,14 +106,15 @@ Future<SeededSave> seedSave(
     final strongest = _nations
         .where((n) => n.confederation == Confederation.europe)
         .reduce((a, b) => a.ranking <= b.ranking ? a : b);
-    career = (await container
-            .read(careerServiceProvider)
-            .create(
-              nationId: strongest.id,
-              managerName: 'M',
-              rngSeed: 20260922,
-            ))
-        .valueOrNull!;
+    career =
+        (await container
+                .read(careerServiceProvider)
+                .create(
+                  nationId: strongest.id,
+                  managerName: 'M',
+                  rngSeed: 20260922,
+                ))
+            .valueOrNull!;
     await container.read(messageInboxProvider(career.id).future);
     await container
         .read(competitionRepositoryProvider)
@@ -113,16 +128,29 @@ Future<SeededSave> seedSave(
 
 /// Lets the database work and the frames catch up.
 ///
-/// A FIXED number of rounds, never "until the spinners stop": a golden must
-/// capture the same frame on every run, and a nested provider that resolved
-/// one round later would otherwise change the picture. The final pump runs
-/// out route transitions.
-Future<void> settle(WidgetTester tester, {int rounds = 30}) async {
-  for (var i = 0; i < rounds; i++) {
+/// At least [rounds] rounds of (real delay, pump), then on until no
+/// [CircularProgressIndicator] is left, so a slow provider chain cannot leave
+/// a golden on its spinner. Stops after [maxWait] of real time either way
+/// (a screen with a spinner of its own must not hang), leaving the assertion
+/// to the caller. The final pump runs out route transitions.
+Future<void> settle(
+  WidgetTester tester, {
+  int rounds = 30,
+  Duration maxWait = const Duration(seconds: 10),
+}) async {
+  final clock = Stopwatch()..start();
+  var i = 0;
+  while (true) {
     await tester.runAsync(
       () => Future<void>.delayed(const Duration(milliseconds: 30)),
     );
     await tester.pump();
+    i++;
+    if (i >= rounds &&
+        find.byType(CircularProgressIndicator).evaluate().isEmpty) {
+      break;
+    }
+    if (clock.elapsed >= maxWait) break;
   }
   await tester.pump(const Duration(milliseconds: 500));
 }
