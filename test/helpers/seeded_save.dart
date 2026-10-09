@@ -262,3 +262,13 @@ Future<void> watchContinentalQualifyingDraw(
     }
   });
 }
+
+/// Moves the [controller]th tab bar in the tree (0, the outermost, by
+/// default) to [tab], as a tap on that tab would, and lets the page land.
+/// For tabs a narrow scrolling tab bar has scrolled out of reach.
+Future<void> showTab(WidgetTester tester, int tab, {int controller = 0}) async {
+  final element = tester.element(find.byType(TabBarView).at(controller));
+  DefaultTabController.of(element).index = tab;
+  await tester.pump();
+  await tester.pump(const Duration(milliseconds: 600));
+}
