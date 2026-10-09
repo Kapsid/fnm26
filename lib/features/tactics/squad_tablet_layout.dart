@@ -262,7 +262,14 @@ List<GridColumnSet<NationSquadRow>> squadColumnSets(
             ),
           ),
         Flexible(child: Text(r.player.name)),
-        PlayerTraitGlyphs(player: r.player, saveSeed: saveSeed),
+        // Shrinks rather than overflows when the name column is squeezed.
+        Flexible(
+          child: FittedBox(
+            fit: BoxFit.scaleDown,
+            alignment: Alignment.centerLeft,
+            child: PlayerTraitGlyphs(player: r.player, saveSeed: saveSeed),
+          ),
+        ),
       ],
     ),
   );
@@ -287,7 +294,7 @@ List<GridColumnSet<NationSquadRow>> squadColumnSets(
     String id,
     String label,
     int Function(PlayerAttributes a) value,
-  ) => number(id, label, (r) => value(r.player.attributes), width: 92);
+  ) => number(id, label, (r) => value(r.player.attributes), width: 64);
   final overall = number(
     'ovr',
     l.teamOverall,

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/core/layout/form_factor.dart';
 import 'package:fnm/core/routing/app_router.dart';
+import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/features/onboarding/tour_keys.dart';
 import 'package:fnm/features/player/player_detail_screen.dart';
 import 'package:fnm/features/shell/detail_pane_host.dart';
@@ -93,10 +94,49 @@ void main() {
       size: const Size(1080, 810),
     );
     expect(tester.takeException(), isNull);
+    final data = save.container.read(nationSquadProvider(save.careerId)).value!;
+    final total = data.rows.length;
+    final keepers = data.rows
+        .where((r) => r.player.category == PositionCategory.goalkeeper)
+        .length;
+    expect(keepers, lessThan(total));
+    expect(find.text(enL.squadShowingOf(total, total)), findsOneWidget);
     await tester.tap(find.widgetWithText(ChoiceChip, enL.squadLineKeepers));
     await tester.pump();
     expect(tester.takeException(), isNull);
-    expect(find.byType(DataGrid<NationSquadRow>), findsOneWidget);
+    expect(find.text(enL.squadShowingOf(keepers, total)), findsOneWidget);
     await tester.pumpWidget(const SizedBox());
   });
+
+  for (final size in [const Size(1080, 810), kTabletSize]) {
+    testWidgets('every view fits with the divider dragged to its minimum at '
+        '$size', (tester) async {
+      final save = await seedSave(tester, formFactor: FormFactor.tablet);
+      await pumpRoute(
+        tester,
+        save,
+        '${Routes.tactics}?careerId=${save.careerId}&tab=3',
+        size: size,
+      );
+      await tester.drag(
+        find.byKey(MasterDetail.dividerKey),
+        const Offset(-900, 0),
+      );
+      await tester.pump();
+      final grid = find.byType(DataGrid<NationSquadRow>);
+      for (final v in [
+        enL.gridViewOverview,
+        enL.playerAttributes,
+        enL.playerStatForm,
+        enL.sideCareer,
+      ]) {
+        await tester.tap(
+          find.descendant(of: grid, matching: find.text(v)).first,
+        );
+        await tester.pump();
+        expect(tester.takeException(), isNull, reason: v);
+      }
+      await tester.pumpWidget(const SizedBox());
+    });
+  }
 }

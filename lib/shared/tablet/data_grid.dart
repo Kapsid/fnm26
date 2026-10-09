@@ -64,6 +64,10 @@ class DataGrid<T> extends StatefulWidget {
   /// tap target rather than a strip of text.
   static const double headerHeight = 36;
   static const Key headerKey = Key('dataGrid.header');
+  static const Key scrollKey = Key('dataGrid.scroll');
+
+  /// The least a flexible column is given before the table scrolls sideways.
+  static const double minFlexWidth = 120;
 
   final List<T> rows;
   final List<GridColumnSet<T>> columnSets;
@@ -173,6 +177,41 @@ class _DataGridState<T> extends State<DataGrid<T>> {
               ],
             ),
           ),
+        Expanded(
+          child: LayoutBuilder(
+            builder: (context, box) {
+              final minWidth = _minContentWidth(columns);
+              final table = _table(columns, rows);
+              if (!box.maxWidth.isFinite || minWidth <= box.maxWidth) {
+                return table;
+              }
+              // Too narrow for the columns: one horizontal scroll carries the
+              // header and the rows together, so they stay aligned.
+              return SingleChildScrollView(
+                key: DataGrid.scrollKey,
+                scrollDirection: Axis.horizontal,
+                child: SizedBox(width: minWidth, child: table),
+              );
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
+  /// Row padding plus every fixed width and a floor for each flexible column.
+  double _minContentWidth(List<GridColumn<T>> columns) {
+    var w = 24.0;
+    for (final c in columns) {
+      w += c.width ?? DataGrid.minFlexWidth;
+    }
+    return w;
+  }
+
+  Widget _table(List<GridColumn<T>> columns, List<T> rows) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
         // A Material, not a coloured Container: the header cells' InkWells
         // paint on the nearest Material, and a Container's colour hid them.
         Material(
