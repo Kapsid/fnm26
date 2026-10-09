@@ -18,8 +18,11 @@ import 'package:fnm/features/tournaments/best_thirds.dart';
 import 'package:fnm/features/tournaments/nations_cup_providers.dart';
 import 'package:fnm/features/tournaments/tournament_history.dart';
 import 'package:fnm/l10n/app_localizations.dart';
+import 'package:fnm/shared/tablet/tablet.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
+
+part 'nations_cup_view.dart';
 
 /// A Nations Cup: the manager's league group standings by default (their own
 /// group first), with a selector to browse the other leagues — or, for the
@@ -35,35 +38,33 @@ class NationsCupScreen extends ConsumerStatefulWidget {
   final int careerId;
   final Confederation? confederation;
 
+  /// The key of the tablet layout.
+  static const Key tabletLayoutKey = Key('nationsCup.tabletLayout');
+
   @override
   ConsumerState<NationsCupScreen> createState() => _NationsCupScreenState();
 }
 
-class _NationsCupScreenState extends ConsumerState<NationsCupScreen> {
-  /// The tab to land on: wherever the cup actually is.
-  static int _liveTab(NationsCupData? v) {
-    if (v == null) return 0;
-    // The finals are the business end — go there once they're drawn.
-    if (v.roundOf16.isNotEmpty ||
-        v.quarters.isNotEmpty ||
-        v.semis.isNotEmpty ||
-        v.finalFx.isNotEmpty) {
-      return 1;
-    }
-    // Out of season there are no tables to show, so the honours are the point.
-    if (v.groups.isEmpty) return 3;
-    return 0; // leagues / zones
-  }
+class _NationsCupScreenState extends ConsumerState<NationsCupScreen>
+    with _NationsCupBodies<NationsCupScreen> {
+  @override
+  bool get grid => false;
 
   NationsCupKey get _key =>
       (careerId: widget.careerId, confederation: widget.confederation);
 
   @override
   Widget build(BuildContext context) {
+    if (TabletShellScope.isActive(context)) {
+      return _NationsCupTabletLayout(
+        careerId: widget.careerId,
+        confederation: widget.confederation,
+      );
+    }
     final l = AppLocalizations.of(context);
     final async = ref.watch(nationsCupProvider(_key));
     final view = async.valueOrNull;
-    final liveTab = _liveTab(view);
+    final liveTab = _ncLiveTab(view);
     final zones = view?.format == NationsCupFormat.zones;
     // Europe's cup keeps the title it always had; the others are named.
     final title = view == null || view.cupName == NationsCups.europe
@@ -103,16 +104,7 @@ class _NationsCupScreenState extends ConsumerState<NationsCupScreen> {
               labelColor: AppColors.onSurface,
               unselectedLabelColor: AppColors.onSurfaceVariant,
               indicatorColor: AppColors.primary,
-              tabs: [
-                Tab(text: zones ? l.tourContTabZones : l.tourContTabLeagues),
-                Tab(
-                  text: zones
-                      ? l.tourContTabFinalsEight
-                      : l.tourContTabFinalsFour,
-                ),
-                Tab(text: l.tourContTabScorers),
-                Tab(text: l.tourContTabHistory),
-              ],
+              tabs: _tabs(l, zones: zones),
             ),
           ),
         ),
@@ -124,38 +116,69 @@ class _NationsCupScreenState extends ConsumerState<NationsCupScreen> {
             if (v == null) {
               return Center(child: Text(l.tourContNoSaveFound));
             }
-            String name(int id) => v.nations[id]?.name ?? l.tourContUnknown;
-            String code(int id) => v.nations[id]?.code ?? '??';
-
-            return TabBarView(
-              children: [
-                if (v.format == NationsCupFormat.zones)
-                  _zones(v, name, code)
-                else
-                  _leagues(v, name, code),
-                _finals(v, name, code),
-                TournamentScorers(
-                  scorers: v.scorers,
-                  playerNames: v.playerNames,
-                  code: code,
-                  emptyMessage: l.tourContNoNationsCupGoals,
-                  highlightNations: v.myNationIds,
-                ),
-                // Always reachable: the roll of honour used to be visible only
-                // out of season, so the cup's history vanished the moment it
-                // kicked off.
-                TournamentHistory(
-                  honours: v.honours,
-                  name: name,
-                  code: code,
-                  emptyMessage: l.tourContNoNationsCupChampions,
-                ),
-              ],
-            );
+            return TabBarView(children: _tabViews(v));
           },
         ),
       ),
     );
+  }
+}
+
+/// The tab to land on: wherever the cup actually is.
+int _ncLiveTab(NationsCupData? v) {
+  if (v == null) return 0;
+  // The finals are the business end — go there once they're drawn.
+  if (v.roundOf16.isNotEmpty ||
+      v.quarters.isNotEmpty ||
+      v.semis.isNotEmpty ||
+      v.finalFx.isNotEmpty) {
+    return 1;
+  }
+  // Out of season there are no tables to show, so the honours are the point.
+  if (v.groups.isEmpty) return 3;
+  return 0; // leagues / zones
+}
+
+/// The cup's tabs and their bodies, shared by the phone screen and
+/// [NationsCupView]. [grid] (a tablet) lays each league's or zone's group
+/// tables out in columns.
+mixin _NationsCupBodies<T extends StatefulWidget> on State<T> {
+  bool get grid;
+
+  List<Tab> _tabs(AppLocalizations l, {required bool zones}) => [
+    Tab(text: zones ? l.tourContTabZones : l.tourContTabLeagues),
+    Tab(text: zones ? l.tourContTabFinalsEight : l.tourContTabFinalsFour),
+    Tab(text: l.tourContTabScorers),
+    Tab(text: l.tourContTabHistory),
+  ];
+
+  List<Widget> _tabViews(NationsCupData v) {
+    final l = AppLocalizations.of(context);
+    String name(int id) => v.nations[id]?.name ?? l.tourContUnknown;
+    String code(int id) => v.nations[id]?.code ?? '??';
+    return [
+      if (v.format == NationsCupFormat.zones)
+        _zones(v, name, code)
+      else
+        _leagues(v, name, code),
+      _finals(v, name, code),
+      TournamentScorers(
+        scorers: v.scorers,
+        playerNames: v.playerNames,
+        code: code,
+        emptyMessage: l.tourContNoNationsCupGoals,
+        highlightNations: v.myNationIds,
+      ),
+      // Always reachable: the roll of honour used to be visible only
+      // out of season, so the cup's history vanished the moment it
+      // kicked off.
+      TournamentHistory(
+        honours: v.honours,
+        name: name,
+        code: code,
+        emptyMessage: l.tourContNoNationsCupChampions,
+      ),
+    ];
   }
 
   /// Why there are no tables to show yet, or null when there are.
@@ -211,6 +234,14 @@ class _NationsCupScreenState extends ConsumerState<NationsCupScreen> {
         if (shown.isEmpty) {
           return TournamentSoon(message: l.tourContLeagueNoGroups);
         }
+        Widget card(FinalsGroupTable g) => _GroupCard(
+          group: g,
+          confederation: v.confederation,
+          playerNationId: v.playerNationId,
+          name: name,
+          code: code,
+          isLowestLeague: NationsCup.tierOfGroupName(g.name) >= v.maxTier,
+        );
         return ListView(
           padding: const EdgeInsets.all(AppSpacing.marginMobile),
           children: [
@@ -225,17 +256,14 @@ class _NationsCupScreenState extends ConsumerState<NationsCupScreen> {
               ),
             ),
             const SizedBox(height: AppSpacing.md),
-            for (final g in shown) ...[
-              _GroupCard(
-                group: g,
-                confederation: v.confederation,
-                playerNationId: v.playerNationId,
-                name: name,
-                code: code,
-                isLowestLeague: NationsCup.tierOfGroupName(g.name) >= v.maxTier,
-              ),
+            if (grid) ...[
+              ColumnFlow(children: [for (final g in shown) card(g)]),
               const SizedBox(height: AppSpacing.md),
-            ],
+            ] else
+              for (final g in shown) ...[
+                card(g),
+                const SizedBox(height: AppSpacing.md),
+              ],
           ],
         );
       },
@@ -272,6 +300,23 @@ class _NationsCupScreenState extends ConsumerState<NationsCupScreen> {
       standings,
       (id) => v.nations[id]?.ranking ?? 1 << 20,
     ).runnersUp;
+    List<FinalsGroupTable> groupsOf(AfricaZone zone) =>
+        [
+          for (final g in v.groups)
+            if (NationsCups.zoneOfGroupName(g.name) == zone) g,
+        ]..sort((a, b) {
+          if (a.name == v.playerGroup) return -1;
+          if (b.name == v.playerGroup) return 1;
+          return a.name.compareTo(b.name);
+        });
+    Widget card(FinalsGroupTable g) => _GroupCard(
+      group: g,
+      confederation: v.confederation,
+      playerNationId: v.playerNationId,
+      name: name,
+      code: code,
+      isLowestLeague: true,
+    );
     return ListView(
       padding: const EdgeInsets.all(AppSpacing.marginMobile),
       children: [
@@ -296,25 +341,14 @@ class _NationsCupScreenState extends ConsumerState<NationsCupScreen> {
             ),
           ),
           const SizedBox(height: AppSpacing.sm),
-          for (final g
-              in [
-                for (final g in v.groups)
-                  if (NationsCups.zoneOfGroupName(g.name) == zone) g,
-              ]..sort((a, b) {
-                if (a.name == v.playerGroup) return -1;
-                if (b.name == v.playerGroup) return 1;
-                return a.name.compareTo(b.name);
-              })) ...[
-            _GroupCard(
-              group: g,
-              confederation: v.confederation,
-              playerNationId: v.playerNationId,
-              name: name,
-              code: code,
-              isLowestLeague: true,
-            ),
+          if (grid) ...[
+            ColumnFlow(children: [for (final g in groupsOf(zone)) card(g)]),
             const SizedBox(height: AppSpacing.md),
-          ],
+          ] else
+            for (final g in groupsOf(zone)) ...[
+              card(g),
+              const SizedBox(height: AppSpacing.md),
+            ],
           const SizedBox(height: AppSpacing.sm),
         ],
         // Below every table, as in the other cups' group tabs.
