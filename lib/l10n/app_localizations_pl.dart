@@ -9262,4 +9262,28 @@ class AppLocalizationsPl extends AppLocalizations {
 
   @override
   String get topBarDrawPending => 'Losowanie wkrótce';
+
+  @override
+  String get paneFullProfile => 'Pełny profil';
+
+  @override
+  String get panePickPlayer => 'Wybierz zawodnika, aby zobaczyć tu jego kartę';
+
+  @override
+  String get inboxPickMessage => 'Wybierz wiadomość, aby ją tu przeczytać';
+
+  @override
+  String get inboxFilterAll => 'Wszystkie';
+
+  @override
+  String get panelViewAll => 'Zobacz wszystko';
+
+  @override
+  String get gridViewOverview => 'Przegląd';
+
+  @override
+  String get gridColCondition => 'Kondycja';
+
+  @override
+  String get gridColStatus => 'Status';
 }

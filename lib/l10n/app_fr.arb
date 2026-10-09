@@ -2363,5 +2363,13 @@
   "sideAchievements": "Succès",
   "sideCareer": "Carrière",
   "topBarNext": "Prochain",
-  "topBarDrawPending": "Tirage à venir"
+  "topBarDrawPending": "Tirage à venir",
+  "paneFullProfile": "Profil complet",
+  "panePickPlayer": "Choisissez un joueur pour voir sa fiche ici",
+  "inboxPickMessage": "Choisissez un message pour le lire ici",
+  "inboxFilterAll": "Tous",
+  "panelViewAll": "Tout voir",
+  "gridViewOverview": "Vue d’ensemble",
+  "gridColCondition": "Condition",
+  "gridColStatus": "Statut"
 }

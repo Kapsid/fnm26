@@ -14348,6 +14348,54 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Draw to come'**
   String get topBarDrawPending;
+
+  /// Tablet detail pane: link that opens the player's full page.
+  ///
+  /// In en, this message translates to:
+  /// **'Full profile'**
+  String get paneFullProfile;
+
+  /// Tablet detail pane: shown while no player is selected.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick a player to see his card here'**
+  String get panePickPlayer;
+
+  /// Tablet inbox: shown in the reading pane while no message is open.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick a message to read it here'**
+  String get inboxPickMessage;
+
+  /// Tablet inbox filter chip: every message.
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get inboxFilterAll;
+
+  /// Tablet dashboard panel header link to the panel's full screen.
+  ///
+  /// In en, this message translates to:
+  /// **'View all'**
+  String get panelViewAll;
+
+  /// Tablet squad table: the default set of columns.
+  ///
+  /// In en, this message translates to:
+  /// **'Overview'**
+  String get gridViewOverview;
+
+  /// Tablet squad table column: how fresh or tired a player is.
+  ///
+  /// In en, this message translates to:
+  /// **'Condition'**
+  String get gridColCondition;
+
+  /// Tablet squad table column: injured or suspended, empty when available.
+  ///
+  /// In en, this message translates to:
+  /// **'Status'**
+  String get gridColStatus;
 }
 
 class _AppLocalizationsDelegate

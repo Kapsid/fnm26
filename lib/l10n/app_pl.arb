@@ -2363,5 +2363,13 @@
   "sideAchievements": "Osiągnięcia",
   "sideCareer": "Kariera",
   "topBarNext": "Następny",
-  "topBarDrawPending": "Losowanie wkrótce"
+  "topBarDrawPending": "Losowanie wkrótce",
+  "paneFullProfile": "Pełny profil",
+  "panePickPlayer": "Wybierz zawodnika, aby zobaczyć tu jego kartę",
+  "inboxPickMessage": "Wybierz wiadomość, aby ją tu przeczytać",
+  "inboxFilterAll": "Wszystkie",
+  "panelViewAll": "Zobacz wszystko",
+  "gridViewOverview": "Przegląd",
+  "gridColCondition": "Kondycja",
+  "gridColStatus": "Status"
 }

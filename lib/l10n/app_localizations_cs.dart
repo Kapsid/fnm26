@@ -9163,4 +9163,28 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get topBarDrawPending => 'Čeká se na los';
+
+  @override
+  String get paneFullProfile => 'Celý profil';
+
+  @override
+  String get panePickPlayer => 'Vyberte hráče a jeho karta se ukáže tady';
+
+  @override
+  String get inboxPickMessage => 'Vyberte zprávu a přečtěte si ji tady';
+
+  @override
+  String get inboxFilterAll => 'Vše';
+
+  @override
+  String get panelViewAll => 'Zobrazit vše';
+
+  @override
+  String get gridViewOverview => 'Přehled';
+
+  @override
+  String get gridColCondition => 'Kondice';
+
+  @override
+  String get gridColStatus => 'Stav';
 }

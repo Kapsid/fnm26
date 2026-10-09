@@ -9133,4 +9133,28 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get topBarDrawPending => 'Draw to come';
+
+  @override
+  String get paneFullProfile => 'Full profile';
+
+  @override
+  String get panePickPlayer => 'Pick a player to see his card here';
+
+  @override
+  String get inboxPickMessage => 'Pick a message to read it here';
+
+  @override
+  String get inboxFilterAll => 'All';
+
+  @override
+  String get panelViewAll => 'View all';
+
+  @override
+  String get gridViewOverview => 'Overview';
+
+  @override
+  String get gridColCondition => 'Condition';
+
+  @override
+  String get gridColStatus => 'Status';
 }

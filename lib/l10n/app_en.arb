@@ -13559,5 +13559,37 @@
   "topBarDrawPending": "Draw to come",
   "@topBarDrawPending": {
     "description": "Tablet top bar: shown instead of the opponent until the draw has been watched."
+  },
+  "paneFullProfile": "Full profile",
+  "@paneFullProfile": {
+    "description": "Tablet detail pane: link that opens the player's full page."
+  },
+  "panePickPlayer": "Pick a player to see his card here",
+  "@panePickPlayer": {
+    "description": "Tablet detail pane: shown while no player is selected."
+  },
+  "inboxPickMessage": "Pick a message to read it here",
+  "@inboxPickMessage": {
+    "description": "Tablet inbox: shown in the reading pane while no message is open."
+  },
+  "inboxFilterAll": "All",
+  "@inboxFilterAll": {
+    "description": "Tablet inbox filter chip: every message."
+  },
+  "panelViewAll": "View all",
+  "@panelViewAll": {
+    "description": "Tablet dashboard panel header link to the panel's full screen."
+  },
+  "gridViewOverview": "Overview",
+  "@gridViewOverview": {
+    "description": "Tablet squad table: the default set of columns."
+  },
+  "gridColCondition": "Condition",
+  "@gridColCondition": {
+    "description": "Tablet squad table column: how fresh or tired a player is."
+  },
+  "gridColStatus": "Status",
+  "@gridColStatus": {
+    "description": "Tablet squad table column: injured or suspended, empty when available."
   }
 }

@@ -2363,5 +2363,13 @@
   "sideAchievements": "Obiettivi",
   "sideCareer": "Carriera",
   "topBarNext": "Prossima",
-  "topBarDrawPending": "Sorteggio in arrivo"
+  "topBarDrawPending": "Sorteggio in arrivo",
+  "paneFullProfile": "Profilo completo",
+  "panePickPlayer": "Scegli un giocatore per vedere qui la sua scheda",
+  "inboxPickMessage": "Scegli un messaggio per leggerlo qui",
+  "inboxFilterAll": "Tutti",
+  "panelViewAll": "Vedi tutto",
+  "gridViewOverview": "Panoramica",
+  "gridColCondition": "Condizione",
+  "gridColStatus": "Stato"
 }

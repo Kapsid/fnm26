@@ -2363,5 +2363,13 @@
   "sideAchievements": "Úspěchy",
   "sideCareer": "Kariéra",
   "topBarNext": "Další",
-  "topBarDrawPending": "Čeká se na los"
+  "topBarDrawPending": "Čeká se na los",
+  "paneFullProfile": "Celý profil",
+  "panePickPlayer": "Vyberte hráče a jeho karta se ukáže tady",
+  "inboxPickMessage": "Vyberte zprávu a přečtěte si ji tady",
+  "inboxFilterAll": "Vše",
+  "panelViewAll": "Zobrazit vše",
+  "gridViewOverview": "Přehled",
+  "gridColCondition": "Kondice",
+  "gridColStatus": "Stav"
 }

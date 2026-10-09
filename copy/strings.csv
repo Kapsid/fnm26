@@ -2363,3 +2363,11 @@ sideAchievements,Tablet sidebar item: achievements.,,Achievements,Úspěchy,Succ
 sideCareer,Tablet sidebar item: the manager's careers.,,Career,Kariéra,Carrière,Carriera,Kariera
 topBarNext,Tablet top bar: label before the next fixture.,,Next,Další,Prochain,Prossima,Następny
 topBarDrawPending,Tablet top bar: shown instead of the opponent until the draw has been watched.,,Draw to come,Čeká se na los,Tirage à venir,Sorteggio in arrivo,Losowanie wkrótce
+paneFullProfile,Tablet detail pane: link that opens the player's full page.,,Full profile,Celý profil,Profil complet,Profilo completo,Pełny profil
+panePickPlayer,Tablet detail pane: shown while no player is selected.,,Pick a player to see his card here,Vyberte hráče a jeho karta se ukáže tady,Choisissez un joueur pour voir sa fiche ici,Scegli un giocatore per vedere qui la sua scheda,"Wybierz zawodnika, aby zobaczyć tu jego kartę"
+inboxPickMessage,Tablet inbox: shown in the reading pane while no message is open.,,Pick a message to read it here,Vyberte zprávu a přečtěte si ji tady,Choisissez un message pour le lire ici,Scegli un messaggio per leggerlo qui,"Wybierz wiadomość, aby ją tu przeczytać"
+inboxFilterAll,Tablet inbox filter chip: every message.,,All,Vše,Tous,Tutti,Wszystkie
+panelViewAll,Tablet dashboard panel header link to the panel's full screen.,,View all,Zobrazit vše,Tout voir,Vedi tutto,Zobacz wszystko
+gridViewOverview,Tablet squad table: the default set of columns.,,Overview,Přehled,Vue d’ensemble,Panoramica,Przegląd
+gridColCondition,Tablet squad table column: how fresh or tired a player is.,,Condition,Kondice,Condition,Condizione,Kondycja
+gridColStatus,"Tablet squad table column: injured or suspended, empty when available.",,Status,Stav,Statut,Stato,Status
