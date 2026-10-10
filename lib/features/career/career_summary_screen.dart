@@ -8,8 +8,11 @@ import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/features/career/career_summary_providers.dart';
 import 'package:fnm/features/stats/stats_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
+import 'package:fnm/shared/tablet/tablet.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
+
+part 'career_summary_tablet_layout.dart';
 
 const _gold = AppColors.medalGold;
 const _silver = AppColors.medalSilver;
@@ -20,13 +23,16 @@ const _bronze = AppColors.medalBronze;
 class CareerSummaryScreen extends ConsumerWidget {
   const CareerSummaryScreen({required this.careerId, super.key});
 
+  static const Key tabletLayoutKey = Key('careerSummary.tabletLayout');
+
   final int careerId;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    if (TabletShellScope.isActive(context)) {
+      return _CareerSummaryTabletLayout(careerId: careerId);
+    }
     final l = AppLocalizations.of(context);
-    final async = ref.watch(careerSummaryProvider(careerId));
-
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -39,49 +45,72 @@ class CareerSummaryScreen extends ConsumerWidget {
         ),
         centerTitle: true,
       ),
-      body: async.when(
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => Center(child: Text(l.careerCouldNotLoadCareer('$e'))),
-        data: (s) {
-          if (s == null) return Center(child: Text(l.careerNoCareer));
-          return ListView(
-            padding: const EdgeInsets.all(AppSpacing.marginMobile),
-            children: [
-              _Header(s),
-              const SizedBox(height: AppSpacing.sm),
-              _RecordCard(s),
-              _CareerStatsSection(careerId),
-              const SizedBox(height: AppSpacing.md),
-              Text(
-                l.careerTrophyCabinet,
-                style: AppTypography.labelMedium.copyWith(
-                  color: AppColors.primary,
-                ),
+      body: CareerSummaryView(careerId: careerId),
+    );
+  }
+}
+
+/// A career's summary in one column: the header, the record, the numbers,
+/// the trophy cabinet and the tournament history. The body of
+/// [CareerSummaryScreen], on its own so the tablet's Career page and saves
+/// list can show it in a pane.
+///
+/// Scrolls itself; give it a bounded height.
+class CareerSummaryView extends ConsumerWidget {
+  const CareerSummaryView({
+    required this.careerId,
+    this.padding = const EdgeInsets.all(AppSpacing.marginMobile),
+    super.key,
+  });
+
+  final int careerId;
+  final EdgeInsetsGeometry padding;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l = AppLocalizations.of(context);
+    final async = ref.watch(careerSummaryProvider(careerId));
+    return async.when(
+      loading: () => const Center(child: CircularProgressIndicator()),
+      error: (e, _) => Center(child: Text(l.careerCouldNotLoadCareer('$e'))),
+      data: (s) {
+        if (s == null) return Center(child: Text(l.careerNoCareer));
+        return ListView(
+          padding: padding,
+          children: [
+            _Header(s),
+            const SizedBox(height: AppSpacing.sm),
+            _RecordCard(s),
+            _CareerStatsSection(careerId),
+            const SizedBox(height: AppSpacing.md),
+            Text(
+              l.careerTrophyCabinet,
+              style: AppTypography.labelMedium.copyWith(
+                color: AppColors.primary,
               ),
+            ),
+            const SizedBox(height: AppSpacing.sm),
+            _TrophyCabinet(s),
+            if (s.titles.isNotEmpty) ...[
               const SizedBox(height: AppSpacing.sm),
-              _TrophyCabinet(s),
-              if (s.titles.isNotEmpty) ...[
-                const SizedBox(height: AppSpacing.sm),
-                _TitlesList(s.titles),
-              ],
-              const SizedBox(height: AppSpacing.md),
-              Text(
-                l.careerTournamentHistory,
-                style: AppTypography.labelMedium.copyWith(
-                  color: AppColors.primary,
-                ),
-              ),
-              const SizedBox(height: AppSpacing.sm),
-              if (s.runs.isEmpty)
-                AppCard(child: Text(l.careerNoTournamentsYet))
-              else
-                for (final r in s.runs)
-                  _RunRow(r, showNation: s.spansNations),
-              const SizedBox(height: AppSpacing.xl),
+              _TitlesList(s.titles),
             ],
-          );
-        },
-      ),
+            const SizedBox(height: AppSpacing.md),
+            Text(
+              l.careerTournamentHistory,
+              style: AppTypography.labelMedium.copyWith(
+                color: AppColors.primary,
+              ),
+            ),
+            const SizedBox(height: AppSpacing.sm),
+            if (s.runs.isEmpty)
+              AppCard(child: Text(l.careerNoTournamentsYet))
+            else
+              for (final r in s.runs) _RunRow(r, showNation: s.spansNations),
+            const SizedBox(height: AppSpacing.xl),
+          ],
+        );
+      },
     );
   }
 }
