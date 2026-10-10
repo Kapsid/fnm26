@@ -7,8 +7,11 @@ import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/domain/services/squad/training_camp.dart';
 import 'package:fnm/features/squad/training_camp_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
+import 'package:fnm/shared/tablet/tablet.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
+
+part 'training_camp_tablet_layout.dart';
 
 /// Choosing the squad's base camp for a tournament — where they will live for
 /// the month, in the host country.
@@ -23,10 +26,39 @@ class TrainingCampScreen extends ConsumerWidget {
 
   final int careerId;
 
+  static const Key tabletLayoutKey = Key('trainingCamp.tabletLayout');
+
   String _exit() => '${Routes.hub}?careerId=$careerId';
+
+  /// One camp's card, wired to choose it and go back to the hub. The
+  /// country is part of the choice when the tournament is shared, so then
+  /// every card wears its flag.
+  Widget _cardFor(
+    BuildContext context,
+    WidgetRef ref,
+    TrainingCampPlan plan,
+    CampOption option,
+  ) => _CampCard(
+    camp: option.camp,
+    countryCode: plan.hostNames.length > 1 ? option.hostCode : null,
+    countryName: plan.hostNames.length > 1 ? option.hostName : null,
+    selected: plan.isChosen(option),
+    onTap: () async {
+      // Read before the await: a resize across 1000 while the choice is
+      // saving swaps layouts and unmounts this card, and the manager must
+      // still leave for the hub with the camp stored.
+      final service = ref.read(trainingCampServiceProvider);
+      final router = GoRouter.of(context);
+      await service.choose(careerId, plan, option);
+      router.go(_exit());
+    },
+  );
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    if (TabletShellScope.isActive(context)) {
+      return _TrainingCampTabletLayout(screen: this);
+    }
     final l = AppLocalizations.of(context);
     final planAsync = ref.watch(trainingCampPlanProvider(careerId));
     return Scaffold(
@@ -56,60 +88,57 @@ class TrainingCampScreen extends ConsumerWidget {
           return ListView(
             padding: const EdgeInsets.all(AppSpacing.marginMobile),
             children: [
-              AppCard(
-                child: Row(
-                  children: [
-                    FlagDisc(plan.hostCode, size: 34),
-                    const SizedBox(width: AppSpacing.md),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            // Every host country, not just the primary one —
-                            // the squad may be based in any of them.
-                            l.campBasedIn(plan.hostNames.join(' · ')),
-                            style: AppTypography.titleMedium,
-                          ),
-                          Text(
-                            l.campBlurb,
-                            style: AppTypography.labelSmall.copyWith(
-                              color: AppColors.onSurfaceVariant,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+              _CampHeader(plan: plan),
               const SizedBox(height: AppSpacing.md),
               for (final option in plan.options)
                 Padding(
                   padding: const EdgeInsets.only(bottom: AppSpacing.sm),
-                  child: _CampCard(
-                    camp: option.camp,
-                    // The country is part of the choice when the tournament is
-                    // shared, so every card wears its flag.
-                    countryCode: plan.hostNames.length > 1
-                        ? option.hostCode
-                        : null,
-                    countryName: plan.hostNames.length > 1
-                        ? option.hostName
-                        : null,
-                    selected: plan.isChosen(option),
-                    onTap: () async {
-                      await ref
-                          .read(trainingCampServiceProvider)
-                          .choose(careerId, plan, option);
-                      if (context.mounted) context.go(_exit());
-                    },
-                  ),
+                  child: _cardFor(context, ref, plan, option),
                 ),
               const SizedBox(height: AppSpacing.xl),
             ],
           );
         },
+      ),
+    );
+  }
+}
+
+/// Where the squad will be based: the host's flag, every host country's
+/// name, and what a base camp is for.
+class _CampHeader extends StatelessWidget {
+  const _CampHeader({required this.plan});
+
+  final TrainingCampPlan plan;
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    return AppCard(
+      child: Row(
+        children: [
+          FlagDisc(plan.hostCode, size: 34),
+          const SizedBox(width: AppSpacing.md),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  // Every host country, not just the primary one —
+                  // the squad may be based in any of them.
+                  l.campBasedIn(plan.hostNames.join(' · ')),
+                  style: AppTypography.titleMedium,
+                ),
+                Text(
+                  l.campBlurb,
+                  style: AppTypography.labelSmall.copyWith(
+                    color: AppColors.onSurfaceVariant,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
