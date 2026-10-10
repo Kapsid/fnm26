@@ -7,6 +7,7 @@ import 'package:fnm/domain/entities/career.dart';
 import 'package:fnm/features/career/career_summary_screen.dart';
 import 'package:fnm/features/career/saves_screen.dart';
 import 'package:fnm/features/home/home_screen.dart';
+import 'package:fnm/features/nations/nation_select_screen.dart';
 import 'package:fnm/features/shell/tablet_shell.dart';
 import 'package:fnm/shared/tablet/tablet.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
@@ -124,13 +125,14 @@ void main() {
       expect(find.text(enL.homeLoadGame), findsOneWidget);
       expect(find.text(enL.homeAllSaves), findsNothing);
       expect(find.text(enL.homeContinue), findsNothing);
-      // New game still leads to the nation pick, which a tablet shows in
-      // the phone frame.
+      // New game still leads to the nation pick, which stage 6 drew as a
+      // landscape grid of tiles.
       await tester.tap(find.widgetWithText(PrimaryButton, enL.homeNewGame));
       await settle(tester);
       expect(tester.takeException(), isNull);
       expect(_uri(save).path, Routes.nations);
-      expect(find.byType(FullScreenPhoneFrame), findsOneWidget);
+      expect(find.byKey(NationSelectScreen.tabletLayoutKey), findsOneWidget);
+      expect(find.byType(FullScreenPhoneFrame), findsNothing);
       await tester.pumpWidget(const SizedBox());
     });
   }
