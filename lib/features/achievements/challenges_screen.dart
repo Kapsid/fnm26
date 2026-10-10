@@ -7,8 +7,11 @@ import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/domain/services/achievements/challenges.dart';
 import 'package:fnm/features/achievements/challenge_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
+import 'package:fnm/shared/tablet/tablet.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
+
+part 'challenges_tablet_layout.dart';
 
 /// The brutal, career-long challenges — win multiple World Cups, conquer every
 /// confederation, manage for centuries. Distinct from the match achievements.
@@ -17,8 +20,13 @@ class ChallengesScreen extends ConsumerWidget {
 
   final int careerId;
 
+  static const Key tabletLayoutKey = Key('challenges.tabletLayout');
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    if (TabletShellScope.isActive(context)) {
+      return _ChallengesTabletLayout(careerId: careerId);
+    }
     final l = AppLocalizations.of(context);
     final viewAsync = ref.watch(challengesViewProvider(careerId));
     return Scaffold(
@@ -175,77 +183,88 @@ class _ChallengeTile extends StatelessWidget {
   final ChallengeView view;
 
   @override
+  Widget build(BuildContext context) => Padding(
+    padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+    child: _ChallengeCard(view: view),
+  );
+}
+
+/// One challenge: done or not, how brutal, what it asks, and the progress
+/// bar towards it.
+class _ChallengeCard extends StatelessWidget {
+  const _ChallengeCard({required this.view});
+
+  final ChallengeView view;
+
+  @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
     final text = challengeText(l, view.def, view.target);
     final complete = view.complete;
     final brutal = view.def.brutal;
-    return Padding(
-      padding: const EdgeInsets.only(bottom: AppSpacing.sm),
-      child: AppCard(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Icon(
-                  complete
-                      ? Icons.check_circle_rounded
-                      : Icons.radio_button_unchecked,
+    return AppCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(
+                complete
+                    ? Icons.check_circle_rounded
+                    : Icons.radio_button_unchecked,
+                color: complete
+                    ? AppColors.positive
+                    : AppColors.onSurfaceVariant,
+                size: 20,
+              ),
+              const SizedBox(width: AppSpacing.sm),
+              Expanded(
+                child: Text(
+                  text.title,
+                  style: AppTypography.titleMedium.copyWith(
+                    color: complete ? AppColors.positive : null,
+                  ),
+                ),
+              ),
+              if (brutal)
+                TacticalChip(l.achievementsBrutalBadge, emphasized: true),
+            ],
+          ),
+          const SizedBox(height: AppSpacing.xs),
+          Text(
+            text.description,
+            style: AppTypography.bodySmall.copyWith(
+              color: AppColors.onSurfaceVariant,
+            ),
+          ),
+          const SizedBox(height: AppSpacing.sm),
+          Row(
+            children: [
+              Expanded(
+                child: ClipRRect(
+                  borderRadius: AppRadii.smAll,
+                  child: LinearProgressIndicator(
+                    value: view.target == 0 ? 1 : view.current / view.target,
+                    minHeight: 6,
+                    backgroundColor: AppColors.surfaceContainerHigh,
+                    valueColor: AlwaysStoppedAnimation(
+                      complete ? AppColors.positive : AppColors.primary,
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(width: AppSpacing.sm),
+              Text(
+                '${view.current}/${view.target}',
+                style: AppTypography.labelMedium.copyWith(
                   color: complete
                       ? AppColors.positive
                       : AppColors.onSurfaceVariant,
-                  size: 20,
                 ),
-                const SizedBox(width: AppSpacing.sm),
-                Expanded(
-                  child: Text(
-                    text.title,
-                    style: AppTypography.titleMedium.copyWith(
-                      color: complete ? AppColors.positive : null,
-                    ),
-                  ),
-                ),
-                if (brutal)
-                  TacticalChip(l.achievementsBrutalBadge, emphasized: true),
-              ],
-            ),
-            const SizedBox(height: AppSpacing.xs),
-            Text(
-              text.description,
-              style: AppTypography.bodySmall.copyWith(
-                color: AppColors.onSurfaceVariant,
               ),
-            ),
-            const SizedBox(height: AppSpacing.sm),
-            Row(
-              children: [
-                Expanded(
-                  child: ClipRRect(
-                    borderRadius: AppRadii.smAll,
-                    child: LinearProgressIndicator(
-                      value: view.target == 0 ? 1 : view.current / view.target,
-                      minHeight: 6,
-                      backgroundColor: AppColors.surfaceContainerHigh,
-                      valueColor: AlwaysStoppedAnimation(
-                        complete ? AppColors.positive : AppColors.primary,
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(width: AppSpacing.sm),
-                Text(
-                  '${view.current}/${view.target}',
-                  style: AppTypography.labelMedium.copyWith(
-                    color: complete
-                        ? AppColors.positive
-                        : AppColors.onSurfaceVariant,
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
+            ],
+          ),
+        ],
       ),
     );
   }

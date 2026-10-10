@@ -7,8 +7,11 @@ import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/domain/services/achievements/achievements.dart';
 import 'package:fnm/features/achievements/achievement_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
+import 'package:fnm/shared/tablet/tablet.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
+
+part 'achievements_tablet_layout.dart';
 
 /// The per-save achievements screen: an unlocked count and every achievement
 /// grouped by category, with progress for tally-based ones.
@@ -17,8 +20,13 @@ class AchievementsScreen extends ConsumerWidget {
 
   final int careerId;
 
+  static const Key tabletLayoutKey = Key('achievements.tabletLayout');
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    if (TabletShellScope.isActive(context)) {
+      return _AchievementsTabletLayout(careerId: careerId);
+    }
     final l = AppLocalizations.of(context);
     final viewAsync = ref.watch(achievementsViewProvider(careerId));
 
@@ -51,10 +59,7 @@ class AchievementsScreen extends ConsumerWidget {
             Center(child: Text(l.achievementsCouldNotLoad(e.toString()))),
         data: (views) {
           final earned = views.where((v) => v.earned).length;
-          final grouped = <AchievementCategory, List<AchievementView>>{};
-          for (final v in views) {
-            (grouped[v.def.category] ??= []).add(v);
-          }
+          final grouped = _byCategory(views);
           return ListView(
             padding: const EdgeInsets.all(AppSpacing.marginMobile),
             children: [
@@ -128,8 +133,33 @@ class AchievementsScreen extends ConsumerWidget {
   }
 }
 
+/// [views] by category, each in the catalogue's order.
+Map<AchievementCategory, List<AchievementView>> _byCategory(
+  List<AchievementView> views,
+) {
+  final grouped = <AchievementCategory, List<AchievementView>>{};
+  for (final v in views) {
+    (grouped[v.def.category] ??= []).add(v);
+  }
+  return grouped;
+}
+
 class _AchievementTile extends StatelessWidget {
   const _AchievementTile({required this.view});
+
+  final AchievementView view;
+
+  @override
+  Widget build(BuildContext context) => Padding(
+    padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+    child: _AchievementCard(view: view),
+  );
+}
+
+/// One achievement: unlocked or locked, its tier, what it asks, and how far
+/// along a tally one is.
+class _AchievementCard extends StatelessWidget {
+  const _AchievementCard({required this.view});
 
   final AchievementView view;
 
@@ -138,63 +168,60 @@ class _AchievementTile extends StatelessWidget {
     final text = achievementText(AppLocalizations.of(context), view.def);
     final earned = view.earned;
     final showProgress = !earned && view.current != null && view.target != null;
-    return Padding(
-      padding: const EdgeInsets.only(bottom: AppSpacing.sm),
-      child: AppCard(
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Icon(
-              earned ? Icons.emoji_events : Icons.lock_outline,
-              color: earned ? AppColors.primary : AppColors.onSurfaceVariant,
-              size: 24,
-            ),
-            const SizedBox(width: AppSpacing.md),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Flexible(
-                        child: Text(
-                          text.title,
-                          style: AppTypography.titleMedium.copyWith(
-                            color: earned
-                                ? AppColors.onSurface
-                                : AppColors.onSurfaceVariant,
-                          ),
+    return AppCard(
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Icon(
+            earned ? Icons.emoji_events : Icons.lock_outline,
+            color: earned ? AppColors.primary : AppColors.onSurfaceVariant,
+            size: 24,
+          ),
+          const SizedBox(width: AppSpacing.md),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Flexible(
+                      child: Text(
+                        text.title,
+                        style: AppTypography.titleMedium.copyWith(
+                          color: earned
+                              ? AppColors.onSurface
+                              : AppColors.onSurfaceVariant,
                         ),
                       ),
-                      const SizedBox(width: AppSpacing.sm),
-                      _TierBadge(view.def.tier, dimmed: !earned),
-                    ],
-                  ),
-                  const SizedBox(height: 2),
-                  Text(
-                    text.description,
-                    style: AppTypography.labelSmall.copyWith(
-                      color: AppColors.onSurfaceVariant,
                     ),
-                  ),
-                  if (showProgress) ...[
-                    const SizedBox(height: AppSpacing.sm),
-                    _ProgressBar(current: view.current!, target: view.target!),
+                    const SizedBox(width: AppSpacing.sm),
+                    _TierBadge(view.def.tier, dimmed: !earned),
                   ],
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  text.description,
+                  style: AppTypography.labelSmall.copyWith(
+                    color: AppColors.onSurfaceVariant,
+                  ),
+                ),
+                if (showProgress) ...[
+                  const SizedBox(height: AppSpacing.sm),
+                  _ProgressBar(current: view.current!, target: view.target!),
                 ],
+              ],
+            ),
+          ),
+          if (earned)
+            const Padding(
+              padding: EdgeInsets.only(left: AppSpacing.sm),
+              child: Icon(
+                Icons.check_circle,
+                color: AppColors.positive,
+                size: 20,
               ),
             ),
-            if (earned)
-              const Padding(
-                padding: EdgeInsets.only(left: AppSpacing.sm),
-                child: Icon(
-                  Icons.check_circle,
-                  color: AppColors.positive,
-                  size: 20,
-                ),
-              ),
-          ],
-        ),
+        ],
       ),
     );
   }

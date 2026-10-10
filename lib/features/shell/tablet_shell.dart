@@ -47,6 +47,8 @@ const Set<String> tabletReadyPaths = <String>{
   Routes.legends,
   Routes.headToHead,
   Routes.h2hMeetings,
+  Routes.achievements,
+  Routes.challenges,
 };
 
 /// The tablet frame around every in-save screen: sidebar on the left, top bar
