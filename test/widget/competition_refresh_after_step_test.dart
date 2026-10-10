@@ -3,15 +3,25 @@ import 'dart:io';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/domain/entities/enums.dart';
+import 'package:fnm/features/achievements/achievement_providers.dart';
+import 'package:fnm/features/achievements/challenge_providers.dart';
+import 'package:fnm/features/career/career_summary_providers.dart';
+import 'package:fnm/features/career/manager_history_providers.dart';
 import 'package:fnm/features/federation/federation_service.dart';
 import 'package:fnm/features/federation/naturalization_providers.dart';
 import 'package:fnm/features/hub/hub_providers.dart';
 import 'package:fnm/features/manager/manager_providers.dart';
 import 'package:fnm/features/match/match_providers.dart';
 import 'package:fnm/features/nations/nation_vitrine_providers.dart';
+import 'package:fnm/features/records/all_time_records_providers.dart';
+import 'package:fnm/features/records/head_to_head_providers.dart';
+import 'package:fnm/features/records/legends_providers.dart';
+import 'package:fnm/features/records/record_book_providers.dart';
+import 'package:fnm/features/records/rivalry_providers.dart';
 import 'package:fnm/features/results/results_providers.dart';
 import 'package:fnm/features/squad/training_camp_providers.dart';
 import 'package:fnm/features/squad/youth_providers.dart';
+import 'package:fnm/features/stats/stats_providers.dart';
 import 'package:fnm/features/tournaments/continental_clash_providers.dart';
 import 'package:fnm/features/tournaments/continental_detail_providers.dart';
 import 'package:fnm/features/tournaments/cup_detail_providers.dart';
@@ -21,6 +31,7 @@ import 'package:fnm/features/tournaments/tournaments_providers.dart';
 import 'package:fnm/features/tournaments/wc_host_theme.dart';
 import 'package:fnm/features/y/y_providers.dart';
 
+import '../helpers/competition_fixtures.dart';
 import '../helpers/seeded_save.dart';
 
 typedef _Views = Map<String, ProviderListenable<Future<Object?>>>;
@@ -63,6 +74,32 @@ _Views _federationViews(SeededSave save) {
     'y': yFeedProvider(id).future,
     'naturalization': pendingNaturalizationProvider(id).future,
     'camp': trainingCampPlanProvider(id).future,
+  };
+}
+
+/// The history and career screens' data (stage 5). The head-to-head pair is
+/// the manager's nation against the best-ranked other one.
+_Views _historyViews(SeededSave save) {
+  final id = save.careerId;
+  final pair = (
+    careerId: id,
+    nationA: save.nationId,
+    nationB: fieldOf(save.nationId, 2)[1].id,
+  );
+  return {
+    'recordBook': recordBookProvider(id).future,
+    'rivalry': rivalryProvider(id).future,
+    'legends': legendsProvider(id).future,
+    'allTime': allTimeRecordsProvider(id).future,
+    'myH2h': myHeadToHeadsProvider(id).future,
+    'h2h': headToHeadProvider(pair).future,
+    'meetings': h2hMeetingsProvider(pair).future,
+    'achievements': achievementsViewProvider(id).future,
+    'challenges': challengesViewProvider(id).future,
+    'summary': careerSummaryProvider(id).future,
+    'managerHistory': managerHistoryProvider(id).future,
+    'careerStats': careerStatsProvider(id).future,
+    'teamOverall': teamOverallHistoryProvider(id).future,
   };
 }
 
@@ -111,7 +148,7 @@ Future<void> _expectRefreshedBy(
   });
 }
 
-/// Review Focus 3 (stage 3) and 1 (stage 4). A tablet's top bar runs the sim
+/// Review Focus 3 (stage 3), 1 (stage 4) and 1 (stage 5). A tablet's top bar runs the sim
 /// while a screen is on show, and that screen's provider is kept alive by
 /// being watched. Every way a step is committed must hand every one of them
 /// a fresh read.
@@ -123,7 +160,11 @@ void main() {
     await _expectRefreshedBy(
       tester,
       save,
-      {..._competitionViews(save), ..._federationViews(save)},
+      {
+        ..._competitionViews(save),
+        ..._federationViews(save),
+        ..._historyViews(save),
+      },
       () => save.container.read(seasonServiceProvider).advance(save.careerId),
     );
   });
@@ -146,7 +187,11 @@ void main() {
     await _expectRefreshedBy(
       tester,
       save,
-      {..._competitionViews(save), ..._federationViews(save)},
+      {
+        ..._competitionViews(save),
+        ..._federationViews(save),
+        ..._historyViews(save),
+      },
       () => c
           .read(seasonServiceProvider)
           .playPlayerMatch(save.careerId, preview.fixture, preview.result),
@@ -166,9 +211,8 @@ void main() {
     final cascade = src.substring(
       src.indexOf('void _invalidateCompetitionViews()'),
     );
-    expect(
-      cascade.substring(0, cascade.indexOf('\n  }')),
-      contains('_invalidateFederationViews();'),
-    );
+    final cascadeBody = cascade.substring(0, cascade.indexOf('\n  }'));
+    expect(cascadeBody, contains('_invalidateFederationViews();'));
+    expect(cascadeBody, contains('_invalidateHistoryViews();'));
   });
 }

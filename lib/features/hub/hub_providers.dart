@@ -44,6 +44,12 @@ import 'package:fnm/features/federation/federation_service.dart';
 import 'package:fnm/features/federation/naturalization_providers.dart';
 import 'package:fnm/features/hub/draw_reveal.dart';
 import 'package:fnm/features/achievements/achievement_providers.dart';
+import 'package:fnm/features/achievements/challenge_providers.dart'
+    show challengesViewProvider;
+import 'package:fnm/features/career/career_summary_providers.dart'
+    show careerSummaryProvider;
+import 'package:fnm/features/career/manager_history_providers.dart'
+    show managerHistoryProvider;
 import 'package:fnm/features/hub/objective_providers.dart';
 import 'package:fnm/features/manager/manager_providers.dart';
 import 'package:fnm/features/match/match_providers.dart';
@@ -51,6 +57,16 @@ import 'package:fnm/features/press/press_desk.dart';
 import 'package:fnm/features/press/press_providers.dart';
 import 'package:fnm/features/tactics/condition_providers.dart';
 import 'package:fnm/features/ranking/world_ranking_providers.dart';
+import 'package:fnm/features/records/all_time_records_providers.dart'
+    show allTimeRecordsProvider;
+import 'package:fnm/features/records/head_to_head_providers.dart'
+    show h2hMeetingsProvider, headToHeadProvider, myHeadToHeadsProvider;
+import 'package:fnm/features/records/legends_providers.dart'
+    show legendsProvider;
+import 'package:fnm/features/records/record_book_providers.dart'
+    show recordBookProvider;
+import 'package:fnm/features/records/rivalry_providers.dart'
+    show rivalryProvider;
 import 'package:fnm/features/squad/training_camp_providers.dart';
 import 'package:fnm/features/squad/youth_providers.dart';
 import 'package:fnm/features/squad/youth_watch_providers.dart';
@@ -58,6 +74,8 @@ import 'package:fnm/features/tactics/absence_providers.dart';
 import 'package:fnm/features/tactics/nation_squad_providers.dart';
 import 'package:fnm/features/tactics/tactics_providers.dart';
 import 'package:fnm/features/settings/settings_providers.dart';
+import 'package:fnm/features/stats/stats_providers.dart'
+    show careerStatsProvider, teamOverallHistoryProvider;
 import 'package:fnm/features/nations/nation_vitrine_providers.dart';
 import 'package:fnm/features/results/results_providers.dart';
 import 'package:fnm/features/tournaments/continental_clash_providers.dart';
@@ -610,6 +628,7 @@ class SeasonService {
       ..invalidate(wcHostThemeProvider)
       ..invalidate(continentalHostThemeProvider);
     _invalidateFederationViews();
+    _invalidateHistoryViews();
   }
 
   /// The federation, manager and Y screens' data, refreshed by hand after a
@@ -632,6 +651,32 @@ class SeasonService {
       ..invalidate(yFeedProvider)
       ..invalidate(pendingNaturalizationProvider)
       ..invalidate(trainingCampPlanProvider);
+  }
+
+  /// The history and career screens' data, refreshed by hand after a step
+  /// for the same reason as [_invalidateCompetitionViews]: a tablet's top bar
+  /// runs the sim while one of them is on show, and every one of them reads
+  /// the fixtures, the appearances or the honours imperatively. The record
+  /// book and the rivalry, the legends, the world's all-time boards, head to
+  /// head, the achievements and challenges, the career summary and its
+  /// numbers, and the manager's career with its strength curve. Re-reading
+  /// the achievements records any the step earned, exactly as opening that
+  /// screen does on a phone.
+  void _invalidateHistoryViews() {
+    _ref
+      ..invalidate(recordBookProvider)
+      ..invalidate(rivalryProvider)
+      ..invalidate(legendsProvider)
+      ..invalidate(allTimeRecordsProvider)
+      ..invalidate(myHeadToHeadsProvider)
+      ..invalidate(headToHeadProvider)
+      ..invalidate(h2hMeetingsProvider)
+      ..invalidate(achievementsViewProvider)
+      ..invalidate(challengesViewProvider)
+      ..invalidate(careerSummaryProvider)
+      ..invalidate(managerHistoryProvider)
+      ..invalidate(careerStatsProvider)
+      ..invalidate(teamOverallHistoryProvider);
   }
 
   /// Persists the in-memory ranking points for [careerId], and republishes the
