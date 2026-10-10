@@ -18,9 +18,10 @@ class _WorldRankingTabletLayoutState
   final DetailPaneController _pane = DetailPaneController();
   final DataGridController<Nation> _rowsController = DataGridController();
 
-  /// The (region, row) the table was last centred on, so a filter change or a
-  /// new release re-centres on the manager's nation, and nothing else does.
-  ({Confederation? region, int nationId})? _centredOn;
+  /// The (region, row, place) the table was last centred on, so a filter
+  /// change or a release that moves the manager's place re-centres on his
+  /// nation, and nothing else does.
+  ({Confederation? region, int nationId, int? place})? _centredOn;
 
   @override
   void dispose() {
@@ -65,12 +66,11 @@ class _WorldRankingTabletLayoutState
     _rowsController.revealRow(nation, animate: animate);
   }
 
-  void _focus(Confederation? region, Nation? nation) {
+  void _focus(Confederation? region, Nation? nation, int? place) {
     if (nation == null) return;
-    if (_centredOn?.region == region && _centredOn?.nationId == nation.id) {
-      return;
-    }
-    _centredOn = (region: region, nationId: nation.id);
+    final key = (region: region, nationId: nation.id, place: place);
+    if (_centredOn == key) return;
+    _centredOn = key;
     WidgetsBinding.instance.addPostFrameCallback((_) => _centre(nation));
   }
 
@@ -95,8 +95,8 @@ class _WorldRankingTabletLayoutState
           final player = rows
               .where((n) => n.id == data.playerNationId)
               .firstOrNull;
-          _focus(region, player);
           final now = data.position[data.playerNationId];
+          _focus(region, player, now);
           return DetailPaneScope(
             controller: _pane,
             child: ListenableBuilder(

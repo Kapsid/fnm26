@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/core/layout/form_factor.dart';
 import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/util/competition_label.dart';
+import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/features/nations/nation_vitrine_screen.dart';
+import 'package:fnm/features/ranking/world_ranking_providers.dart';
 import 'package:fnm/features/ranking/world_ranking_screen.dart';
 import 'package:fnm/features/shell/tablet_shell.dart';
 import 'package:fnm/shared/tablet/tablet.dart';
@@ -81,6 +84,62 @@ void main() {
     final rows = tester.widget<DataGrid<Nation>>(_grid).rows;
     expect(rows, isNotEmpty);
     expect(rows.every((n) => n.confederation == Confederation.asia), isTrue);
+    await tester.pumpWidget(const SizedBox());
+  });
+
+  testWidgets("a release that moves the manager's place re-centres on him", (
+    tester,
+  ) async {
+    final lastPlace = StateProvider<bool>((ref) => false);
+    // The manager sits first, then drops to last: only his place changes.
+    final save = await seedSave(
+      tester,
+      formFactor: FormFactor.tablet,
+      overrides: [
+        worldRankingProvider.overrideWith((ref, careerId) async {
+          final career = await ref
+              .watch(careerRepositoryProvider)
+              .byId(careerId);
+          final all = await ref.watch(nationRepositoryProvider).all();
+          final me = all.firstWhere((n) => n.id == career!.nationId);
+          final others = all.where((n) => n.id != me.id).toList();
+          final nations = ref.watch(lastPlace)
+              ? [...others, me]
+              : [me, ...others];
+          return RankingData(
+            nations: nations,
+            points: {
+              for (var i = 0; i < nations.length; i++) nations[i].id: 2000 - i,
+            },
+            position: {
+              for (var i = 0; i < nations.length; i++) nations[i].id: i + 1,
+            },
+            movement: const {},
+            playerNationId: me.id,
+            baseline: RankBaseline.values.first,
+          );
+        }),
+      ],
+    );
+    await pumpRoute(
+      tester,
+      save,
+      '${Routes.ranking}?careerId=${save.careerId}',
+      size: kTabletSize,
+    );
+    final me = tester
+        .widget<DataGrid<Nation>>(_grid)
+        .rows
+        .firstWhere((n) => n.id == save.nationId);
+    final row = find.descendant(of: _grid, matching: find.text(me.name));
+    expect(row, findsOneWidget);
+    save.container.read(lastPlace.notifier).state = true;
+    await settle(tester);
+    expect(row, findsOneWidget, reason: 'the table followed him down');
+    final view = tester.getRect(
+      find.descendant(of: _grid, matching: find.byType(ListView)),
+    );
+    expect(tester.getCenter(row).dy, inInclusiveRange(view.top, view.bottom));
     await tester.pumpWidget(const SizedBox());
   });
 
