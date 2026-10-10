@@ -77,6 +77,8 @@ import 'package:fnm/features/settings/settings_providers.dart';
 import 'package:fnm/features/stats/stats_providers.dart'
     show careerStatsProvider, teamOverallHistoryProvider;
 import 'package:fnm/features/nations/nation_vitrine_providers.dart';
+import 'package:fnm/features/player/player_detail_screen.dart'
+    show invalidatePlayerDetails;
 import 'package:fnm/features/results/results_providers.dart';
 import 'package:fnm/features/tournaments/continental_clash_providers.dart';
 import 'package:fnm/features/tournaments/continental_detail_providers.dart';
@@ -677,6 +679,8 @@ class SeasonService {
       ..invalidate(managerHistoryProvider)
       ..invalidate(careerStatsProvider)
       ..invalidate(teamOverallHistoryProvider);
+    // The detail pane beside the history, squad and ranking grids.
+    invalidatePlayerDetails(_ref);
   }
 
   /// Persists the in-memory ranking points for [careerId], and republishes the

@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/features/achievements/achievement_providers.dart';
 import 'package:fnm/features/achievements/challenge_providers.dart';
@@ -13,6 +14,7 @@ import 'package:fnm/features/hub/hub_providers.dart';
 import 'package:fnm/features/manager/manager_providers.dart';
 import 'package:fnm/features/match/match_providers.dart';
 import 'package:fnm/features/nations/nation_vitrine_providers.dart';
+import 'package:fnm/features/player/player_detail_screen.dart';
 import 'package:fnm/features/records/all_time_records_providers.dart';
 import 'package:fnm/features/records/head_to_head_providers.dart';
 import 'package:fnm/features/records/legends_providers.dart';
@@ -78,8 +80,9 @@ _Views _federationViews(SeededSave save) {
 }
 
 /// The history and career screens' data (stage 5). The head-to-head pair is
-/// the manager's nation against the best-ranked other one.
-_Views _historyViews(SeededSave save) {
+/// the manager's nation against the best-ranked other one. [playerId] is one
+/// of the manager's players, for the detail pane beside the history grids.
+_Views _historyViews(SeededSave save, int playerId) {
   final id = save.careerId;
   final pair = (
     careerId: id,
@@ -100,7 +103,17 @@ _Views _historyViews(SeededSave save) {
     'managerHistory': managerHistoryProvider(id).future,
     'careerStats': careerStatsProvider(id).future,
     'teamOverall': teamOverallHistoryProvider(id).future,
+    'playerDetail': playerDetailFuture(id, playerId),
   };
+}
+
+/// One of the manager's players, for the detail pane.
+Future<int> _aPlayerId(WidgetTester tester, SeededSave save) async {
+  final squad = await tester.runAsync(
+    () => save.container.read(playerRepositoryProvider).byNation(save.nationId),
+  );
+  expect(squad, isNotEmpty, reason: 'the seeded nation has players');
+  return squad!.first.id;
 }
 
 /// Listens to every one of [views] as a screen on show would, runs [step],
@@ -157,13 +170,14 @@ void main() {
     tester,
   ) async {
     final save = await seedSave(tester);
+    final playerId = await _aPlayerId(tester, save);
     await _expectRefreshedBy(
       tester,
       save,
       {
         ..._competitionViews(save),
         ..._federationViews(save),
-        ..._historyViews(save),
+        ..._historyViews(save, playerId),
       },
       () => save.container.read(seasonServiceProvider).advance(save.careerId),
     );
@@ -171,6 +185,7 @@ void main() {
 
   testWidgets("so does committing the manager's own match", (tester) async {
     final save = await seedSave(tester);
+    final playerId = await _aPlayerId(tester, save);
     final c = save.container;
     late MatchPreview preview;
     await tester.runAsync(() async {
@@ -190,7 +205,7 @@ void main() {
       {
         ..._competitionViews(save),
         ..._federationViews(save),
-        ..._historyViews(save),
+        ..._historyViews(save, playerId),
       },
       () => c
           .read(seasonServiceProvider)
@@ -207,12 +222,27 @@ void main() {
     expect(start, isNonNegative);
     final end = src.indexOf('\n  Future<', start + 1);
     final body = src.substring(start, end < 0 ? src.length : end);
-    expect(body, contains('_invalidateCompetitionViews();'));
+    // Each call must stand at the start of a line, so a commented-out call
+    // (`// _invalidate...();`) no longer passes.
+    expect(body, _callLine('_invalidateCompetitionViews'));
     final cascade = src.substring(
       src.indexOf('void _invalidateCompetitionViews()'),
     );
     final cascadeBody = cascade.substring(0, cascade.indexOf('\n  }'));
-    expect(cascadeBody, contains('_invalidateFederationViews();'));
-    expect(cascadeBody, contains('_invalidateHistoryViews();'));
+    expect(cascadeBody, _callLine('_invalidateFederationViews'));
+    expect(cascadeBody, _callLine('_invalidateHistoryViews'));
+    final history = src.substring(
+      src.indexOf('void _invalidateHistoryViews()'),
+    );
+    final historyBody = history.substring(0, history.indexOf('\n  }'));
+    expect(historyBody, _callLine('invalidatePlayerDetails', '_ref'));
   });
 }
+
+/// Matches a call to [name] standing alone at the start of a line.
+Matcher _callLine(String name, [String args = '']) => matches(
+  RegExp(
+    '^\\s*${RegExp.escape(name)}\\(${RegExp.escape(args)}\\);',
+    multiLine: true,
+  ),
+);

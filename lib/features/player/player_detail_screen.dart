@@ -117,6 +117,22 @@ _playerDetailProvider = FutureProvider.autoDispose
       );
     });
 
+/// Drops every cached player detail, so a pane on show re-reads its player.
+/// The sim's cascade calls it after a step: on a tablet a [PlayerView] pane
+/// stays on show beside the history, squad and ranking grids while the top
+/// bar's Continue runs the sim, and the provider reads the appearances and
+/// goals imperatively, so nothing else would notice the step.
+void invalidatePlayerDetails(Ref ref) => ref.invalidate(_playerDetailProvider);
+
+/// One player's detail read, for tests that check the cascade hands it a
+/// fresh future. The value is the private view record, so it is exposed only
+/// as an [Object].
+@visibleForTesting
+ProviderListenable<Future<Object?>> playerDetailFuture(
+  int careerId,
+  int playerId,
+) => _playerDetailProvider((careerId: careerId, playerId: playerId)).future;
+
 /// A player's detail card: identity, club/value, and the ten attributes. Base
 /// data for now — reachable from anywhere a player is listed.
 class PlayerDetailScreen extends ConsumerWidget {
