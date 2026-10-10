@@ -14594,6 +14594,96 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Manager'**
   String get gridColManager;
+
+  /// Tablet nation pick: how many nation tiles are on show for the current confederation or search.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 nation} other{{count} nations}}'**
+  String nationsShownCount(int count);
+
+  /// Tablet nation pick: says the tiles are ordered by world ranking.
+  ///
+  /// In en, this message translates to:
+  /// **'Sorted by world rank'**
+  String get nationsSortedByRank;
+
+  /// Tablet nation preview: label of the nation's strength out of five (which fifth of the world its squad's overall puts it in).
+  ///
+  /// In en, this message translates to:
+  /// **'Strength'**
+  String get nationsStrength;
+
+  /// Tablet nation preview: the strength value, out of five.
+  ///
+  /// In en, this message translates to:
+  /// **'{tier} of 5'**
+  String nationsStrengthOf(int tier);
+
+  /// Tablet nation preview: label of the average overall of the nation's best eleven.
+  ///
+  /// In en, this message translates to:
+  /// **'Squad overall'**
+  String get nationsSquadOverall;
+
+  /// Tablet nation preview: the money a new save with this nation starts with.
+  ///
+  /// In en, this message translates to:
+  /// **'Opening budget'**
+  String get nationsOpeningBudget;
+
+  /// Tablet nation preview: heading over the nation's best player (position, age and rating; no name, because every save names its players).
+  ///
+  /// In en, this message translates to:
+  /// **'Star player'**
+  String get nationsStarPlayer;
+
+  /// Tablet nation tile: the best player's position code and rating, e.g. 'Star ST 93'.
+  ///
+  /// In en, this message translates to:
+  /// **'Star {position} {rating}'**
+  String nationsStarTile(String position, int rating);
+
+  /// Tablet nation preview: the best player's age.
+  ///
+  /// In en, this message translates to:
+  /// **'Age {age}'**
+  String nationsStarAge(int age);
+
+  /// Tablet nation preview: heading over what the board will demand in the first cycle.
+  ///
+  /// In en, this message translates to:
+  /// **'The board expects'**
+  String get nationsBoardExpects;
+
+  /// Tablet nation pick: the button that takes the previewed nation's job.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage {nation}'**
+  String nationsManage(String nation);
+
+  /// Tablet nation pick: the hint under the Manage button.
+  ///
+  /// In en, this message translates to:
+  /// **'You name your manager next'**
+  String get nationsManagerNext;
+
+  /// Tablet heading of a player's full page.
+  ///
+  /// In en, this message translates to:
+  /// **'Player'**
+  String get playerPageTitle;
+
+  /// Tablet heading of a nation's page (its honours, ranking history, scorers and titles).
+  ///
+  /// In en, this message translates to:
+  /// **'Nation'**
+  String get nationPageTitle;
+
+  /// Tablet friendlies: heading of the panel listing each open window and the opponent picked for it.
+  ///
+  /// In en, this message translates to:
+  /// **'Your friendlies'**
+  String get friendliesYourGames;
 }
 
 class _AppLocalizationsDelegate

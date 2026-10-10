@@ -2404,5 +2404,20 @@
   "gridColTournaments": "Turnieje",
   "gridColDate": "Data",
   "gridColLastPlayed": "Ostatnio grane",
-  "gridColManager": "Trener"
+  "gridColManager": "Trener",
+  "nationsShownCount": "{count, plural, one{1 reprezentacja} few{{count} reprezentacje} many{{count} reprezentacji} other{{count} reprezentacji}}",
+  "nationsSortedByRank": "Według rankingu światowego",
+  "nationsStrength": "Siła",
+  "nationsStrengthOf": "{tier} z 5",
+  "nationsSquadOverall": "Ocena kadry",
+  "nationsOpeningBudget": "Budżet na start",
+  "nationsStarPlayer": "Gwiazda drużyny",
+  "nationsStarTile": "Gwiazda {position} {rating}",
+  "nationsStarAge": "Wiek {age}",
+  "nationsBoardExpects": "Zarząd oczekuje",
+  "nationsManage": "Obejmij kadrę ({nation})",
+  "nationsManagerNext": "Imię trenera podasz w następnym kroku",
+  "playerPageTitle": "Zawodnik",
+  "nationPageTitle": "Reprezentacja",
+  "friendliesYourGames": "Twoje sparingi"
 }

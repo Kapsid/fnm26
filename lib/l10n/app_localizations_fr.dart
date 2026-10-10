@@ -9324,4 +9324,65 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get gridColManager => 'Sélectionneur';
+
+  @override
+  String nationsShownCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count sélections',
+      one: '$count sélection',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get nationsSortedByRank => 'Classées par rang mondial';
+
+  @override
+  String get nationsStrength => 'Force';
+
+  @override
+  String nationsStrengthOf(int tier) {
+    return '$tier sur 5';
+  }
+
+  @override
+  String get nationsSquadOverall => 'Note de l\'effectif';
+
+  @override
+  String get nationsOpeningBudget => 'Budget de départ';
+
+  @override
+  String get nationsStarPlayer => 'Joueur vedette';
+
+  @override
+  String nationsStarTile(String position, int rating) {
+    return 'Vedette $position $rating';
+  }
+
+  @override
+  String nationsStarAge(int age) {
+    return '$age ans';
+  }
+
+  @override
+  String get nationsBoardExpects => 'La direction attend';
+
+  @override
+  String nationsManage(String nation) {
+    return 'Prendre les rênes ($nation)';
+  }
+
+  @override
+  String get nationsManagerNext => 'Vous nommerez votre sélectionneur ensuite';
+
+  @override
+  String get playerPageTitle => 'Joueur';
+
+  @override
+  String get nationPageTitle => 'Sélection';
+
+  @override
+  String get friendliesYourGames => 'Vos matchs amicaux';
 }

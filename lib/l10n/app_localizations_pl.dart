@@ -9387,4 +9387,67 @@ class AppLocalizationsPl extends AppLocalizations {
 
   @override
   String get gridColManager => 'Trener';
+
+  @override
+  String nationsShownCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count reprezentacji',
+      many: '$count reprezentacji',
+      few: '$count reprezentacje',
+      one: '1 reprezentacja',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get nationsSortedByRank => 'Według rankingu światowego';
+
+  @override
+  String get nationsStrength => 'Siła';
+
+  @override
+  String nationsStrengthOf(int tier) {
+    return '$tier z 5';
+  }
+
+  @override
+  String get nationsSquadOverall => 'Ocena kadry';
+
+  @override
+  String get nationsOpeningBudget => 'Budżet na start';
+
+  @override
+  String get nationsStarPlayer => 'Gwiazda drużyny';
+
+  @override
+  String nationsStarTile(String position, int rating) {
+    return 'Gwiazda $position $rating';
+  }
+
+  @override
+  String nationsStarAge(int age) {
+    return 'Wiek $age';
+  }
+
+  @override
+  String get nationsBoardExpects => 'Zarząd oczekuje';
+
+  @override
+  String nationsManage(String nation) {
+    return 'Obejmij kadrę ($nation)';
+  }
+
+  @override
+  String get nationsManagerNext => 'Imię trenera podasz w następnym kroku';
+
+  @override
+  String get playerPageTitle => 'Zawodnik';
+
+  @override
+  String get nationPageTitle => 'Reprezentacja';
+
+  @override
+  String get friendliesYourGames => 'Twoje sparingi';
 }

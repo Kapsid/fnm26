@@ -13723,5 +13723,70 @@
   "gridColManager": "Manager",
   "@gridColManager": {
     "description": "Tablet saves table column: the manager's name in that save."
+  },
+  "nationsShownCount": "{count, plural, =1{1 nation} other{{count} nations}}",
+  "@nationsShownCount": {
+    "description": "Tablet nation pick: how many nation tiles are on show for the current confederation or search.",
+    "placeholders": {"count": { "type": "int" }}
+  },
+  "nationsSortedByRank": "Sorted by world rank",
+  "@nationsSortedByRank": {
+    "description": "Tablet nation pick: says the tiles are ordered by world ranking."
+  },
+  "nationsStrength": "Strength",
+  "@nationsStrength": {
+    "description": "Tablet nation preview: label of the nation's strength out of five (which fifth of the world its squad's overall puts it in)."
+  },
+  "nationsStrengthOf": "{tier} of 5",
+  "@nationsStrengthOf": {
+    "description": "Tablet nation preview: the strength value, out of five.",
+    "placeholders": {"tier": { "type": "int" }}
+  },
+  "nationsSquadOverall": "Squad overall",
+  "@nationsSquadOverall": {
+    "description": "Tablet nation preview: label of the average overall of the nation's best eleven."
+  },
+  "nationsOpeningBudget": "Opening budget",
+  "@nationsOpeningBudget": {
+    "description": "Tablet nation preview: the money a new save with this nation starts with."
+  },
+  "nationsStarPlayer": "Star player",
+  "@nationsStarPlayer": {
+    "description": "Tablet nation preview: heading over the nation's best player (position, age and rating; no name, because every save names its players)."
+  },
+  "nationsStarTile": "Star {position} {rating}",
+  "@nationsStarTile": {
+    "description": "Tablet nation tile: the best player's position code and rating, e.g. 'Star ST 93'.",
+    "placeholders": {"position": { "type": "String" }, "rating": { "type": "int" }}
+  },
+  "nationsStarAge": "Age {age}",
+  "@nationsStarAge": {
+    "description": "Tablet nation preview: the best player's age.",
+    "placeholders": {"age": { "type": "int" }}
+  },
+  "nationsBoardExpects": "The board expects",
+  "@nationsBoardExpects": {
+    "description": "Tablet nation preview: heading over what the board will demand in the first cycle."
+  },
+  "nationsManage": "Manage {nation}",
+  "@nationsManage": {
+    "description": "Tablet nation pick: the button that takes the previewed nation's job.",
+    "placeholders": {"nation": { "type": "String" }}
+  },
+  "nationsManagerNext": "You name your manager next",
+  "@nationsManagerNext": {
+    "description": "Tablet nation pick: the hint under the Manage button."
+  },
+  "playerPageTitle": "Player",
+  "@playerPageTitle": {
+    "description": "Tablet heading of a player's full page."
+  },
+  "nationPageTitle": "Nation",
+  "@nationPageTitle": {
+    "description": "Tablet heading of a nation's page (its honours, ranking history, scorers and titles)."
+  },
+  "friendliesYourGames": "Your friendlies",
+  "@friendliesYourGames": {
+    "description": "Tablet friendlies: heading of the panel listing each open window and the opponent picked for it."
   }
 }

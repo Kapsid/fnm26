@@ -2404,5 +2404,20 @@
   "gridColTournaments": "Tournois",
   "gridColDate": "Date",
   "gridColLastPlayed": "Dernière partie",
-  "gridColManager": "Sélectionneur"
+  "gridColManager": "Sélectionneur",
+  "nationsShownCount": "{count, plural, one{{count} sélection} other{{count} sélections}}",
+  "nationsSortedByRank": "Classées par rang mondial",
+  "nationsStrength": "Force",
+  "nationsStrengthOf": "{tier} sur 5",
+  "nationsSquadOverall": "Note de l'effectif",
+  "nationsOpeningBudget": "Budget de départ",
+  "nationsStarPlayer": "Joueur vedette",
+  "nationsStarTile": "Vedette {position} {rating}",
+  "nationsStarAge": "{age} ans",
+  "nationsBoardExpects": "La direction attend",
+  "nationsManage": "Prendre les rênes ({nation})",
+  "nationsManagerNext": "Vous nommerez votre sélectionneur ensuite",
+  "playerPageTitle": "Joueur",
+  "nationPageTitle": "Sélection",
+  "friendliesYourGames": "Vos matchs amicaux"
 }

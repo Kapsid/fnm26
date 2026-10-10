@@ -2404,3 +2404,18 @@ gridColTournaments,Tablet all-time records column: finals tournaments attended.,
 gridColDate,Tablet saves table column: the in-game date the save has reached.,,Date,Datum,Date,Data,Data
 gridColLastPlayed,Tablet saves table column: how long ago the save was last opened.,,Last played,Naposledy hráno,Dernière partie,Ultima partita,Ostatnio grane
 gridColManager,Tablet saves table column: the manager's name in that save.,,Manager,Trenér,Sélectionneur,Allenatore,Trener
+nationsShownCount,Tablet nation pick: how many nation tiles are on show for the current confederation or search.,"PLURAL — keep the {count, plural, …} skeleton exactly; translate only the words inside the branches","{count, plural, =1{1 nation} other{{count} nations}}","{count, plural, one{1 reprezentace} few{{count} reprezentace} other{{count} reprezentací}}","{count, plural, one{{count} sélection} other{{count} sélections}}","{count, plural, one{1 nazionale} other{{count} nazionali}}","{count, plural, one{1 reprezentacja} few{{count} reprezentacje} many{{count} reprezentacji} other{{count} reprezentacji}}"
+nationsSortedByRank,Tablet nation pick: says the tiles are ordered by world ranking.,,Sorted by world rank,Seřazeno podle světového žebříčku,Classées par rang mondial,Ordinate per ranking mondiale,Według rankingu światowego
+nationsStrength,Tablet nation preview: label of the nation's strength out of five (which fifth of the world its squad's overall puts it in).,,Strength,Síla,Force,Forza,Siła
+nationsStrengthOf,"Tablet nation preview: the strength value, out of five.",{tier},{tier} of 5,{tier} z 5,{tier} sur 5,{tier} su 5,{tier} z 5
+nationsSquadOverall,Tablet nation preview: label of the average overall of the nation's best eleven.,,Squad overall,Hodnocení kádru,Note de l'effectif,Valore della rosa,Ocena kadry
+nationsOpeningBudget,Tablet nation preview: the money a new save with this nation starts with.,,Opening budget,Počáteční rozpočet,Budget de départ,Budget iniziale,Budżet na start
+nationsStarPlayer,"Tablet nation preview: heading over the nation's best player (position, age and rating; no name, because every save names its players).",,Star player,Hvězda týmu,Joueur vedette,Stella della squadra,Gwiazda drużyny
+nationsStarTile,"Tablet nation tile: the best player's position code and rating, e.g. 'Star ST 93'.",{position} {rating},Star {position} {rating},Hvězda {position} {rating},Vedette {position} {rating},Stella {position} {rating},Gwiazda {position} {rating}
+nationsStarAge,Tablet nation preview: the best player's age.,{age},Age {age},Věk {age},{age} ans,{age} anni,Wiek {age}
+nationsBoardExpects,Tablet nation preview: heading over what the board will demand in the first cycle.,,The board expects,Vedení očekává,La direction attend,La dirigenza si aspetta,Zarząd oczekuje
+nationsManage,Tablet nation pick: the button that takes the previewed nation's job.,{nation},Manage {nation},Převzít tým ({nation}),Prendre les rênes ({nation}),Prendi le redini ({nation}),Obejmij kadrę ({nation})
+nationsManagerNext,Tablet nation pick: the hint under the Manage button.,,You name your manager next,Jméno trenéra zadáte v dalším kroku,Vous nommerez votre sélectionneur ensuite,Subito dopo scegli il nome dell'allenatore,Imię trenera podasz w następnym kroku
+playerPageTitle,Tablet heading of a player's full page.,,Player,Hráč,Joueur,Giocatore,Zawodnik
+nationPageTitle,"Tablet heading of a nation's page (its honours, ranking history, scorers and titles).",,Nation,Reprezentace,Sélection,Nazionale,Reprezentacja
+friendliesYourGames,Tablet friendlies: heading of the panel listing each open window and the opponent picked for it.,,Your friendlies,Vaše přátelská utkání,Vos matchs amicaux,Le tue amichevoli,Twoje sparingi

@@ -2404,5 +2404,20 @@
   "gridColTournaments": "Turnaje",
   "gridColDate": "Datum",
   "gridColLastPlayed": "Naposledy hráno",
-  "gridColManager": "Trenér"
+  "gridColManager": "Trenér",
+  "nationsShownCount": "{count, plural, one{1 reprezentace} few{{count} reprezentace} other{{count} reprezentací}}",
+  "nationsSortedByRank": "Seřazeno podle světového žebříčku",
+  "nationsStrength": "Síla",
+  "nationsStrengthOf": "{tier} z 5",
+  "nationsSquadOverall": "Hodnocení kádru",
+  "nationsOpeningBudget": "Počáteční rozpočet",
+  "nationsStarPlayer": "Hvězda týmu",
+  "nationsStarTile": "Hvězda {position} {rating}",
+  "nationsStarAge": "Věk {age}",
+  "nationsBoardExpects": "Vedení očekává",
+  "nationsManage": "Převzít tým ({nation})",
+  "nationsManagerNext": "Jméno trenéra zadáte v dalším kroku",
+  "playerPageTitle": "Hráč",
+  "nationPageTitle": "Reprezentace",
+  "friendliesYourGames": "Vaše přátelská utkání"
 }

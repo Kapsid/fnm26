@@ -9288,4 +9288,66 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get gridColManager => 'Trenér';
+
+  @override
+  String nationsShownCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count reprezentací',
+      few: '$count reprezentace',
+      one: '1 reprezentace',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get nationsSortedByRank => 'Seřazeno podle světového žebříčku';
+
+  @override
+  String get nationsStrength => 'Síla';
+
+  @override
+  String nationsStrengthOf(int tier) {
+    return '$tier z 5';
+  }
+
+  @override
+  String get nationsSquadOverall => 'Hodnocení kádru';
+
+  @override
+  String get nationsOpeningBudget => 'Počáteční rozpočet';
+
+  @override
+  String get nationsStarPlayer => 'Hvězda týmu';
+
+  @override
+  String nationsStarTile(String position, int rating) {
+    return 'Hvězda $position $rating';
+  }
+
+  @override
+  String nationsStarAge(int age) {
+    return 'Věk $age';
+  }
+
+  @override
+  String get nationsBoardExpects => 'Vedení očekává';
+
+  @override
+  String nationsManage(String nation) {
+    return 'Převzít tým ($nation)';
+  }
+
+  @override
+  String get nationsManagerNext => 'Jméno trenéra zadáte v dalším kroku';
+
+  @override
+  String get playerPageTitle => 'Hráč';
+
+  @override
+  String get nationPageTitle => 'Reprezentace';
+
+  @override
+  String get friendliesYourGames => 'Vaše přátelská utkání';
 }

@@ -9310,4 +9310,66 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get gridColManager => 'Allenatore';
+
+  @override
+  String nationsShownCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count nazionali',
+      one: '1 nazionale',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get nationsSortedByRank => 'Ordinate per ranking mondiale';
+
+  @override
+  String get nationsStrength => 'Forza';
+
+  @override
+  String nationsStrengthOf(int tier) {
+    return '$tier su 5';
+  }
+
+  @override
+  String get nationsSquadOverall => 'Valore della rosa';
+
+  @override
+  String get nationsOpeningBudget => 'Budget iniziale';
+
+  @override
+  String get nationsStarPlayer => 'Stella della squadra';
+
+  @override
+  String nationsStarTile(String position, int rating) {
+    return 'Stella $position $rating';
+  }
+
+  @override
+  String nationsStarAge(int age) {
+    return '$age anni';
+  }
+
+  @override
+  String get nationsBoardExpects => 'La dirigenza si aspetta';
+
+  @override
+  String nationsManage(String nation) {
+    return 'Prendi le redini ($nation)';
+  }
+
+  @override
+  String get nationsManagerNext =>
+      'Subito dopo scegli il nome dell\'allenatore';
+
+  @override
+  String get playerPageTitle => 'Giocatore';
+
+  @override
+  String get nationPageTitle => 'Nazionale';
+
+  @override
+  String get friendliesYourGames => 'Le tue amichevoli';
 }

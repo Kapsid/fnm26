@@ -2404,5 +2404,20 @@
   "gridColTournaments": "Tornei",
   "gridColDate": "Data",
   "gridColLastPlayed": "Ultima partita",
-  "gridColManager": "Allenatore"
+  "gridColManager": "Allenatore",
+  "nationsShownCount": "{count, plural, one{1 nazionale} other{{count} nazionali}}",
+  "nationsSortedByRank": "Ordinate per ranking mondiale",
+  "nationsStrength": "Forza",
+  "nationsStrengthOf": "{tier} su 5",
+  "nationsSquadOverall": "Valore della rosa",
+  "nationsOpeningBudget": "Budget iniziale",
+  "nationsStarPlayer": "Stella della squadra",
+  "nationsStarTile": "Stella {position} {rating}",
+  "nationsStarAge": "{age} anni",
+  "nationsBoardExpects": "La dirigenza si aspetta",
+  "nationsManage": "Prendi le redini ({nation})",
+  "nationsManagerNext": "Subito dopo scegli il nome dell'allenatore",
+  "playerPageTitle": "Giocatore",
+  "nationPageTitle": "Nazionale",
+  "friendliesYourGames": "Le tue amichevoli"
 }

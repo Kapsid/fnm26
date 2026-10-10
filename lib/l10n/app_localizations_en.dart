@@ -9256,4 +9256,65 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get gridColManager => 'Manager';
+
+  @override
+  String nationsShownCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count nations',
+      one: '1 nation',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get nationsSortedByRank => 'Sorted by world rank';
+
+  @override
+  String get nationsStrength => 'Strength';
+
+  @override
+  String nationsStrengthOf(int tier) {
+    return '$tier of 5';
+  }
+
+  @override
+  String get nationsSquadOverall => 'Squad overall';
+
+  @override
+  String get nationsOpeningBudget => 'Opening budget';
+
+  @override
+  String get nationsStarPlayer => 'Star player';
+
+  @override
+  String nationsStarTile(String position, int rating) {
+    return 'Star $position $rating';
+  }
+
+  @override
+  String nationsStarAge(int age) {
+    return 'Age $age';
+  }
+
+  @override
+  String get nationsBoardExpects => 'The board expects';
+
+  @override
+  String nationsManage(String nation) {
+    return 'Manage $nation';
+  }
+
+  @override
+  String get nationsManagerNext => 'You name your manager next';
+
+  @override
+  String get playerPageTitle => 'Player';
+
+  @override
+  String get nationPageTitle => 'Nation';
+
+  @override
+  String get friendliesYourGames => 'Your friendlies';
 }
