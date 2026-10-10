@@ -76,6 +76,10 @@ final Map<int, List<String>> _cities = {
 /// The real nations, for fake competition data drawn with real flags.
 List<Nation> get realNations => _nations;
 
+/// The real players, for fake records drawn with real names and ids (a
+/// player opened in a pane must exist in the save).
+List<Player> get realPlayers => _players;
+
 /// The nation [seedSave] starts the career with: the strongest in Europe.
 int get seededNationId => _nations
     .where((n) => n.confederation == Confederation.europe)
