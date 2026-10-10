@@ -1,19 +1,28 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fnm/core/layout/form_factor.dart';
 import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/core/util/app_date.dart';
+import 'package:fnm/domain/entities/career.dart';
+import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
 
+part 'home_tablet_layout.dart';
+
 /// The app's landing screen: jump straight back into the last save, start a new
 /// game, or open the full saves list.
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
+
+  static const Key tabletLayoutKey = Key('home.tabletLayout');
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -26,6 +35,15 @@ class HomeScreen extends ConsumerWidget {
     final lastNation = lastSave == null
         ? null
         : ref.watch(nationByIdProvider(lastSave.nationId)).valueOrNull;
+    if (useTabletLayout(context, ref)) {
+      return _HomeTabletLayout(
+        lastSave: lastSave,
+        lastNation: lastNation,
+        onResume: lastSave == null
+            ? null
+            : () => _resume(context, ref, lastSave),
+      );
+    }
 
     return Scaffold(
       body: SafeArea(
@@ -87,10 +105,7 @@ class HomeScreen extends ConsumerWidget {
                   nationCode: lastNation?.code,
                   inGameDate: lastSave.inGameDate,
                   cyclePointer: lastSave.cyclePointer,
-                  onResume: () {
-                    ref.read(careerServiceProvider).markPlayed(lastSave.id);
-                    context.go('${Routes.hub}?careerId=${lastSave.id}');
-                  },
+                  onResume: () => _resume(context, ref, lastSave),
                 ),
                 const SizedBox(height: AppSpacing.md),
               ],
@@ -111,6 +126,14 @@ class HomeScreen extends ConsumerWidget {
       ),
     );
   }
+}
+
+/// Opens [save] where the manager left it, stamping it so it heads the saves
+/// list next time. Nothing is awaited, so there is no later moment at which
+/// to go anywhere else.
+void _resume(BuildContext context, WidgetRef ref, Career save) {
+  unawaited(ref.read(careerServiceProvider).markPlayed(save.id));
+  context.go('${Routes.hub}?careerId=${save.id}');
 }
 
 /// The highlighted "continue your last save" card — a flag, the nation, and a
