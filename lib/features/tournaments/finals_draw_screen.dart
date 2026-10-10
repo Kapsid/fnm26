@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fnm/core/layout/form_factor.dart';
 import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
@@ -8,6 +9,7 @@ import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/features/tournaments/draw_ceremony.dart';
 import 'package:fnm/features/tournaments/finals_draw_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
+import 'package:fnm/shared/tablet/tablet.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
 
@@ -18,6 +20,9 @@ class FinalsDrawScreen extends ConsumerStatefulWidget {
   const FinalsDrawScreen({required this.careerId, super.key});
 
   final int careerId;
+
+  /// The tablet pots view: the four pots side by side.
+  static const Key potsLandscapeKey = Key('finalsDraw.potsLandscape');
 
   @override
   ConsumerState<FinalsDrawScreen> createState() => _FinalsDrawScreenState();
@@ -39,6 +44,7 @@ class _FinalsDrawScreenState extends ConsumerState<FinalsDrawScreen> {
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
     final dataAsync = ref.watch(finalsDrawProvider(widget.careerId));
+    final landscape = useTabletLayout(context, ref);
     void leave() => context.go('${Routes.cup}?careerId=${widget.careerId}');
 
     return Scaffold(
@@ -69,6 +75,7 @@ class _FinalsDrawScreenState extends ConsumerState<FinalsDrawScreen> {
               nations: data.nations,
               highlightNationId: data.playerNationId,
               potCount: 4,
+              landscape: landscape,
               onContinue: () => _finishWatched(data),
             );
           }
@@ -76,7 +83,10 @@ class _FinalsDrawScreenState extends ConsumerState<FinalsDrawScreen> {
           // straight to the drawn groups instead.
           return _PotsPreview(
             data: data,
-            buttonLabel: data.alreadyWatched ? 'View groups' : 'Start the draw',
+            landscape: landscape,
+            buttonLabel: data.alreadyWatched
+                ? l.tourDrawViewGroups
+                : l.tourDrawStart,
             buttonIcon: data.alreadyWatched
                 ? Icons.table_rows_rounded
                 : Icons.casino,
@@ -97,12 +107,16 @@ class _PotsPreview extends StatelessWidget {
     required this.onStart,
     required this.buttonLabel,
     required this.buttonIcon,
+    this.landscape = false,
   });
 
   final FinalsDrawData data;
   final VoidCallback onStart;
   final String buttonLabel;
   final IconData buttonIcon;
+
+  /// A tablet: the pots side by side, the button bottom right.
+  final bool landscape;
 
   @override
   Widget build(BuildContext context) {
@@ -123,6 +137,80 @@ class _PotsPreview extends StatelessWidget {
 
     String code(int id) => data.nations[id]?.code ?? '??';
     String name(int id) => data.nations[id]?.name ?? '—';
+
+    if (landscape) {
+      return Column(
+        key: FinalsDrawScreen.potsLandscapeKey,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(
+              AppSpacing.lg,
+              AppSpacing.md,
+              AppSpacing.lg,
+              0,
+            ),
+            child: Text(
+              l.tourFinalsDrawBlurb,
+              style: AppTypography.bodySmall.copyWith(
+                color: AppColors.onSurfaceVariant,
+              ),
+            ),
+          ),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.all(AppSpacing.lg),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  for (var pot = 1; pot <= potCount; pot++) ...[
+                    if (pot > 1) const SizedBox(width: AppSpacing.md),
+                    Expanded(
+                      child: Panel(
+                        title: l.tourPot(pot),
+                        expand: true,
+                        child: ListView(
+                          children: [
+                            for (final id in byPot[pot] ?? const <int>[])
+                              _potRow(
+                                code(id),
+                                name(id),
+                                isPlayer: id == data.playerNationId,
+                              ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ],
+              ),
+            ),
+          ),
+          SafeArea(
+            top: false,
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(
+                AppSpacing.lg,
+                0,
+                AppSpacing.lg,
+                AppSpacing.lg,
+              ),
+              child: Align(
+                alignment: Alignment.centerRight,
+                child: SizedBox(
+                  width: 320,
+                  child: PrimaryButton(
+                    label: buttonLabel,
+                    icon: buttonIcon,
+                    onPressed: onStart,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      );
+    }
 
     return Column(
       children: [
