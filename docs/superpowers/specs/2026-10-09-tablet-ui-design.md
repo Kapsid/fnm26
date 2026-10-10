@@ -318,6 +318,70 @@ Each stage gets its own implementation plan.
   element that was never rebuilt. Test-only; revisit at the Riverpod 3
   upgrade.
 
+## Stage 5 adjustments (2026-10-10)
+
+- The record book, the world's all-time records and the legends are
+  sortable `DataGrid`s (tabs for the record book's three boards, the
+  world's four and the legends' hall of fame and XI) beside the player
+  pane. Leaderboards on a tablet are never `LeaderRow`s in a dashboard
+  tile: the row is built on `WholeText`, which a tile cannot measure. The
+  record book's headline records and fiercest rival are panels above its
+  grids; the all-time search is the screen State's, so a resize keeps it.
+- Head to head: the two nation slots and the manager's ledger (a grid) on
+  the left; the picked pairing on the right, its record above every
+  meeting. The pair is the State's, so a resize keeps it; the slots open
+  the phone's picker, a root dialog that pops with its own context. The
+  meetings body is `H2hMeetingsView`, which the `/h2h-meetings` page also
+  renders. It is not a `DetailTarget` yet: the match preview's head-to-head
+  link still routes to its page.
+- Achievements and challenges: the categories (tiers) down the left
+  (`TabletListRow`, a new kit widget), the picked one's cards beside them
+  in a two-column `ColumnFlow`. An achievement has no more to show than its
+  card, so there is no detail pane.
+- The career summary and the manager's career are two columns of the
+  phone's cards. `CareerSummaryView` is the career summary's body; the
+  Career page and the saves list show it in a pane.
+- "Careers / saves" is two screens. The Career page (`/careers`) is the
+  phone's menu beside the manager's career summary; the saves list
+  (`/saves`) is a table of saves beside the picked save's career, with
+  Continue, Back up and Delete acting on that save. Deleting the picked
+  save falls back to the first. There is no save rename in the app.
+- Home is a landscape title screen: the logo and title left, Continue, New
+  game and the saves right. The new-game flow (nation select, new game,
+  start from the bottom), team stats and the cycle rollover keep their
+  phone layouts centred; they are left for stage 6.
+- Sidebar destinations go back with pop or to the hub; pages under one go
+  back to it (all-time records to records, meetings to head to head,
+  challenges to achievements, the career pages to Career). The Career page
+  has no back arrow, as on the phone.
+- The sim's cascade also refreshes the history screens
+  (`SeasonService._invalidateHistoryViews`): the record book and rivalry,
+  the legends, the world's boards, head to head, achievements and
+  challenges, the career summary and its numbers, and the manager's career
+  with its strength curve.
+- Every share sheet passes `sharePositionOrigin` (`shareOriginOf`): an iPad
+  refuses one without it, which made exporting a save fail on iPad. The
+  tablet's buttons pass their own rect; the phone's pass the screen's,
+  which an iPhone ignores.
+- Exporting or backing up a save on an iPad works: every share sheet is
+  anchored to the button that opened it, clipped to the screen
+  (`shareOriginOf`), because iPadOS refuses a share sheet whose anchor is
+  missing or off screen.
+- A sim step also refreshes the player card shown beside any grid
+  (`invalidatePlayerDetails`), so the card and the list it sits beside
+  never disagree.
+- The saves list shows the picked save's career; Continue, Back up and
+  Delete act on that save, and a deleted save never stays on show.
+- The saves delete dialog pops with its own context and takes its services
+  before it opens.
+- German and Spanish need the 15 stage 5 keys when they merge (values in
+  the stage 5 plan, Task 2).
+- Stage 6 is cut to converting the remaining screens only (nation select
+  as a tile grid, new game, start from the bottom, team stats, cycle
+  rollover). The column picker, the collapsible sidebar, store
+  screenshots, the iPad listing and the Android tablet check are dropped
+  from this release.
+
 ## Testing
 
 - **Phone guard**: before a screen gets a tablet layout, a widget or golden
