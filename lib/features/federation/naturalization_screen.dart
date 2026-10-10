@@ -10,6 +10,7 @@ import 'package:fnm/core/util/message_text.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/features/federation/naturalization_providers.dart';
 import 'package:fnm/features/hub/hub_providers.dart';
+import 'package:fnm/features/messages/message_providers.dart';
 import 'package:fnm/features/shell/detail_pane_host.dart';
 import 'package:fnm/features/tactics/tactics_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
@@ -78,6 +79,11 @@ class _NaturalizationScreenState extends ConsumerState<NaturalizationScreen> {
         ]),
         year: career?.inGameDate.year ?? 2026,
       );
+      // The tablet top bar's unread badge keeps the inbox alive across this
+      // screen; without this it would miss the message just filed.
+      container
+        ..invalidate(messageInboxProvider(careerId))
+        ..invalidate(unreadMessagesProvider(careerId));
     }
     // Once every write has landed: the hub's next event reads the offer
     // straight from the save. A tablet keeps the hub's data (and the top
@@ -87,10 +93,11 @@ class _NaturalizationScreenState extends ConsumerState<NaturalizationScreen> {
       ..invalidate(pendingNaturalizationProvider(careerId))
       ..invalidate(hubDataProvider(careerId));
     // Only if the manager is still on this decision: a layout swap mid-save
-    // leaves him here, but if he has gone elsewhere he is not pulled back.
-    if (mounted ||
-        router.routeInformationProvider.value.uri.path ==
-            Routes.naturalization) {
+    // keeps the location, but a manager who went elsewhere meanwhile is left
+    // where he went. `state` is the top-most route, a pushed one included:
+    // his full profile is pushed over this screen, which stays mounted under
+    // it, and a push does not move the router's reported location.
+    if (router.state.uri.path == Routes.naturalization) {
       router.go('${Routes.hub}?careerId=$careerId');
     }
   }

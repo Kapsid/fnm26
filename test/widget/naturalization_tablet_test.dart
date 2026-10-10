@@ -8,7 +8,9 @@ import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/data/repositories/drift_career_repository.dart';
 import 'package:fnm/features/federation/naturalization_screen.dart';
 import 'package:fnm/features/player/player_detail_screen.dart';
+import 'package:fnm/features/shell/detail_pane_host.dart';
 import 'package:fnm/features/shell/tablet_shell.dart';
+import 'package:fnm/features/shell/tablet_top_bar.dart';
 
 import '../helpers/federation_fixtures.dart';
 import '../helpers/seeded_save.dart';
@@ -38,6 +40,24 @@ class _GatedRepository extends DriftCareerRepository {
     return super.setNaturalizationStatus(careerId, playerId, status);
   }
 }
+
+/// The unread count on the top bar's inbox badge.
+int _unread(WidgetTester tester) {
+  final badge = tester.widget<Badge>(
+    find.descendant(
+      of: find.byType(TabletTopBar),
+      matching: find.byType(Badge),
+    ),
+  );
+  if (!badge.isLabelVisible) return 0;
+  final label = (badge.label! as Text).data!;
+  return int.parse(label.replaceAll('+', ''));
+}
+
+/// The top-most route, a pushed one included (a push does not move
+/// [_path]).
+String _top(SeededSave save) =>
+    save.container.read(routerProvider).state.uri.path;
 
 String _path(SeededSave save) =>
     save.container.read(routerProvider).routeInformationProvider.value.uri.path;
@@ -95,12 +115,16 @@ void main() {
     // the next event.
     await markBudgetSet(tester, save);
     await _pump(tester, save, kTabletSize);
+    expect(await _status(tester, save, offer.playerId), 'pending');
     expect(topBarContinue(tester).label, enL.hubEventNaturalization);
+    final unreadBefore = _unread(tester);
     await tester.tap(find.text(enL.federationNaturalise));
     await settle(tester);
     expect(_path(save), Routes.hub);
     expect(await _status(tester, save, offer.playerId), 'accepted');
     expect(topBarContinue(tester).label, isNot(enL.hubEventNaturalization));
+    // The "naturalised" message is filed, and the badge counts it.
+    expect(_unread(tester), unreadBefore + 1);
     await tester.pumpWidget(const SizedBox());
   });
 
@@ -109,6 +133,8 @@ void main() {
     final offer = await offerNaturalization(tester, save);
     await markBudgetSet(tester, save);
     await _pump(tester, save, kTabletSize);
+    expect(await _status(tester, save, offer.playerId), 'pending');
+    expect(topBarContinue(tester).label, enL.hubEventNaturalization);
     await tester.tap(find.text(enL.federationDecline));
     await settle(tester);
     expect(_path(save), Routes.hub);
@@ -193,4 +219,39 @@ void main() {
       await tester.pumpWidget(const SizedBox());
     });
   }
+
+  // The full profile is pushed over the decision while it is still saving:
+  // the screen stays mounted under it, and the manager is left on the
+  // profile, not pulled to the hub, with the decision stored.
+  testWidgets('a decision saved after he opened the profile leaves him there', (
+    tester,
+  ) async {
+    final gate = Completer<void>();
+    final save = await seedSave(
+      tester,
+      formFactor: FormFactor.tablet,
+      overrides: [
+        careerRepositoryProvider.overrideWith(
+          (ref) => _GatedRepository(ref.watch(appDatabaseProvider), gate),
+        ),
+      ],
+    );
+    final offer = await offerNaturalization(tester, save);
+    await _pump(tester, save, kTabletSize);
+    expect(await _status(tester, save, offer.playerId), 'pending');
+    await tester.tap(find.text(enL.federationNaturalise));
+    await tester.pump();
+    await tester.tap(find.byKey(DetailPaneHost.fullProfileKey));
+    await settle(tester);
+    final away = _top(save);
+    expect(away, isNot(Routes.naturalization));
+    expect(find.byKey(NaturalizationScreen.tabletLayoutKey), findsNothing);
+    gate.complete();
+    await settle(tester);
+    expect(tester.takeException(), isNull);
+    expect(_top(save), away);
+    expect(_path(save), Routes.naturalization);
+    expect(await _status(tester, save, offer.playerId), 'accepted');
+    await tester.pumpWidget(const SizedBox());
+  });
 }
