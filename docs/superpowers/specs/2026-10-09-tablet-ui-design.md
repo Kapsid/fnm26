@@ -212,6 +212,55 @@ Each stage gets its own implementation plan.
 - German and Spanish need the 8 stage 2 keys when they merge (values in the
   stage 2 plan, Task 2).
 
+## Stage 3 adjustments (2026-10-09)
+
+- The Tournaments pane shows the picked competition's OWN tabs (the World
+  Championship's nine, a continental cup's seven or eight, the Nations
+  Cup's four, the Clash's two), not a new Groups, Fixtures, Play-offs,
+  Stats set. A competition with nothing played yet says "Tournament coming
+  soon". The pane opens on the competition being played now.
+- Cup, continental and Nations Cup detail keep their tabs; group tables sit
+  in columns (as many 280 px columns as fit, up to three) and the bracket
+  opens as a bracket stretched across the width.
+- Results (not in the layouts table): the manager's cycles on the left, the
+  picked cycle's competitions on the right as panels of dense rows.
+- Ranking: a `DataGrid` with the nation's record (`NationView`, a new
+  detail pane target) beside it, the manager's own nation open first. The
+  phone's "ranking over time" chart is not repeated; the nation's record
+  carries its ranking history.
+- The Continental Clash and the intercontinental play-off (not in the
+  table) keep their phone content at a readable width; the play-off's
+  Continue sits in its heading.
+- Draw ceremonies choose their landscape stage inside the ceremony, so a
+  resize keeps the draw. The finals draw's seeding pots sit side by side;
+  the host selection puts the envelope beside the bids; the kickoff puts
+  the trophy beside the words.
+- A tablet's top-bar Continue runs the sim under any screen, so the sim's
+  cascade invalidates every competition screen's provider
+  (`SeasonService._invalidateCompetitionViews`).
+- The seeded-save `settle` fails when a screen is still loading at its
+  cap; the route sweep runs at 1194, 1080 and 1024 wide and covers the
+  full-screen routes.
+- German and Spanish need the 9 stage 3 keys when they merge (values in the
+  stage 3 plan, Task 3).
+- The top bar is 64 px high; the compact Continue is 44 px tall and 260
+  wide so the brushed-metal button reads.
+- `DataGrid` has a `DataGridController` (`indexOf`, `revealRow`) so
+  "centre on my nation" follows the current sort.
+- The competition detail screens share `TabletTabBar` and
+  `TabletDetailPage`.
+- The draw ceremonies, the finals draw, the host draw and the kickoff
+  choose landscape inside their own State, so resizing never restarts an
+  animation; those routes are tablet-ready.
+- On non-English phones, four previously hard-coded English strings in the
+  draw screens are now translated ("GROUP", "Start the draw", "View
+  groups", "HOST" and "CO-HOSTS"). English is unchanged.
+- Known pre-existing phone bug, not fixed on this branch: on the phone
+  Tournaments screen, 6 tiles with two-line names overflow by 16 px at 390
+  wide. The phone guard pins it.
+- Test harness: `settle` advances fake time only after its minimum rounds
+  while a spinner shows; the full-screen route sweep is its own file.
+
 ## Testing
 
 - **Phone guard**: before a screen gets a tablet layout, a widget or golden
