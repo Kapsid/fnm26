@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/entities/player.dart';
@@ -10,6 +11,7 @@ import 'package:fnm/domain/services/squad/legends.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/career/career_transfer_providers.dart';
 import 'package:fnm/features/career/play_time.dart';
+import 'package:fnm/features/messages/message_providers.dart';
 import 'package:fnm/features/records/all_time_records_providers.dart';
 import 'package:fnm/features/records/head_to_head_providers.dart';
 import 'package:fnm/features/records/legends_providers.dart';
@@ -47,7 +49,9 @@ List<RecordLeader> _leaders(Iterable<Player> players, List<int> values) {
 }
 
 /// The manager's record book after a few cycles: three boards of five, each
-/// drawn from a different slice of his squad, a 5-0 win over the rival.
+/// drawn from a different slice of his squad. The team records are the ones
+/// [fakeMeetingsByOpponent] add up to: the 2-0 over the rival is the biggest
+/// win, and the last four results (W W D D) the longest unbeaten run.
 RecordBook fakeRecordBook() {
   final squad = squadOf(seededNationId);
   return (
@@ -55,21 +59,23 @@ RecordBook fakeRecordBook() {
     mostCaps: _leaders(squad, const [61, 54, 48, 40, 33]),
     topScorers: _leaders(squad.skip(5), const [22, 17, 12, 9, 6]),
     topAssists: _leaders(squad.skip(10), const [14, 11, 8, 5, 3]),
-    biggestWin: (oppId: rivalNation.id, gf: 5, ga: 0),
-    longestUnbeaten: 9,
+    biggestWin: (oppId: rivalNation.id, gf: 2, ga: 0),
+    longestUnbeaten: 4,
     bestFinish: 'Quarter-finals',
     nations: realNationsById,
   );
 }
 
+/// The fiercest rival: the opponent met most often, with the same record as
+/// the ledger's first line and the rival's three meetings ([fakeMeetings]).
 Rivalry fakeRivalry() => (
   rival: rivalNation,
-  played: 6,
-  wins: 3,
+  played: 3,
+  wins: 1,
   draws: 1,
-  losses: 2,
-  goalsFor: 9,
-  goalsAgainst: 7,
+  losses: 1,
+  goalsFor: 3,
+  goalsAgainst: 2,
 );
 
 List<Override> fakeRecordsOverrides() => [
@@ -152,6 +158,8 @@ Override fakeAllTimeOverride() => allTimeRecordsProvider(
 ).overrideWith((ref) async => fakeAllTimeRecords());
 
 /// The manager's ledger: the rival (met three times) first, then two more.
+/// Each line is what that opponent's meetings in [fakeMeetingsByOpponent] add
+/// up to.
 List<MyH2HLine> fakeLedger() {
   final field = fieldOf(seededNationId, 4);
   MyH2HLine line(Nation n, int won, int drawn, int lost, int gf, int ga) => (
@@ -172,7 +180,8 @@ List<MyH2HLine> fakeLedger() {
   ];
 }
 
-/// Any pairing's record, from side A: the three meetings below.
+/// The manager's record against [rivalNation], from his side (A): what
+/// [fakeMeetings] add up to.
 HeadToHead fakeHeadToHead() => (
   played: 3,
   winsA: 1,
@@ -184,8 +193,9 @@ HeadToHead fakeHeadToHead() => (
   biggestWinMarginB: 1,
 );
 
-/// Three meetings, newest first: a World Championship draw settled on
-/// penalties, a continental win, a friendly defeat.
+/// The manager's three meetings with [rivalNation], from his side (A), newest
+/// first: a World Championship draw settled on penalties, a continental win,
+/// a friendly defeat.
 List<H2HMeeting> fakeMeetings() => [
   (
     date: DateTime(2029, 6, 21),
@@ -216,23 +226,138 @@ List<H2HMeeting> fakeMeetings() => [
   ),
 ];
 
+H2HMeeting _friendly(int year, int month, int day, int forA, int forB) => (
+  date: DateTime(year, month, day),
+  competition: 'Friendly',
+  forA: forA,
+  forB: forB,
+  afterExtraTime: false,
+  penA: null,
+  penB: null,
+);
+
+/// Every meeting the manager's nation has played, by opponent, from his side
+/// (A), newest first: the one source the ledger, the rivalry, the record
+/// book's team records and the keyed head-to-head fakes all agree with.
+Map<int, List<H2HMeeting>> fakeMeetingsByOpponent() {
+  final field = fieldOf(seededNationId, 4);
+  return {
+    field[1].id: fakeMeetings(),
+    field[2].id: [_friendly(2028, 10, 10, 1, 0), _friendly(2026, 11, 15, 1, 2)],
+    field[3].id: [_friendly(2029, 3, 25, 1, 1)],
+  };
+}
+
+/// [m] seen from side B.
+H2HMeeting _flip(H2HMeeting m) => (
+  date: m.date,
+  competition: m.competition,
+  forA: m.forB,
+  forB: m.forA,
+  afterExtraTime: m.afterExtraTime,
+  penA: m.penB,
+  penB: m.penA,
+);
+
+/// The meetings between [key]'s two nations, from side A, newest first. A
+/// pairing that never met (any not involving the manager's nation) has none.
+List<H2HMeeting> fakeMeetingsFor(H2HKey key) {
+  final byOpponent = fakeMeetingsByOpponent();
+  if (key.nationA == seededNationId) {
+    return byOpponent[key.nationB] ?? const [];
+  }
+  if (key.nationB == seededNationId) {
+    return [
+      for (final m in byOpponent[key.nationA] ?? const <H2HMeeting>[]) _flip(m),
+    ];
+  }
+  return const [];
+}
+
+/// The record [meetings] add up to, from side A, as the repository counts
+/// it: a shootout is a draw, and a side's biggest win margin is 0 without a
+/// win.
+HeadToHead headToHeadOf(List<H2HMeeting> meetings) {
+  var winsA = 0;
+  var draws = 0;
+  var winsB = 0;
+  var goalsA = 0;
+  var goalsB = 0;
+  var marginA = 0;
+  var marginB = 0;
+  for (final m in meetings) {
+    goalsA += m.forA;
+    goalsB += m.forB;
+    final margin = m.forA - m.forB;
+    if (margin > 0) {
+      winsA++;
+      if (margin > marginA) marginA = margin;
+    } else if (margin < 0) {
+      winsB++;
+      if (-margin > marginB) marginB = -margin;
+    } else {
+      draws++;
+    }
+  }
+  return (
+    played: meetings.length,
+    winsA: winsA,
+    draws: draws,
+    winsB: winsB,
+    goalsA: goalsA,
+    goalsB: goalsB,
+    biggestWinMarginA: marginA,
+    biggestWinMarginB: marginB,
+  );
+}
+
+/// The ledger, and any pairing's record and meetings, keyed as the real
+/// providers are: the manager against the rival is [fakeHeadToHead] and
+/// [fakeMeetings]; opened from the other side the wins and goals swap; a
+/// pairing that never met has played 0 and no meetings.
 List<Override> fakeH2hOverrides() => [
   myHeadToHeadsProvider(
     kSeededCareerId,
   ).overrideWith((ref) async => fakeLedger()),
-  headToHeadProvider.overrideWith((ref, key) async => fakeHeadToHead()),
-  h2hMeetingsProvider.overrideWith((ref, key) async => fakeMeetings()),
+  headToHeadProvider.overrideWith(
+    (ref, key) async => headToHeadOf(fakeMeetingsFor(key)),
+  ),
+  h2hMeetingsProvider.overrideWith(
+    (ref, key) async => fakeMeetingsFor(key),
+  ),
 ];
 
 /// A second career, on [rivalNation], beside [save]'s. Returns its id.
+///
+/// Its welcome news is read, as [seedSave] does for the first, so opening it
+/// does not pop news over the hub.
+///
+/// The ORDER of the two in `savesProvider` is not defined: neither has been
+/// played (`lastPlayedAt` null) and `createdAt` is the game's start date, the
+/// same for both, so they tie on every key the list sorts by. Find the
+/// second save by its nation ([rivalNation]) or its id, never by position.
 Future<int> addSecondSave(WidgetTester tester, SeededSave save) async {
   late int id;
   await tester.runAsync(() async {
     final created = await save.container
         .read(careerServiceProvider)
         .create(nationId: rivalNation.id, managerName: 'N', rngSeed: 20261010);
-    id = created.valueOrNull!.id;
+    final career = created.valueOrNull;
+    if (career == null) {
+      throw StateError(
+        'addSecondSave: creating the second career failed: '
+        '$created',
+      );
+    }
+    id = career.id;
+    await save.container.read(messageInboxProvider(id).future);
+    await save.container
+        .read(competitionRepositoryProvider)
+        .markMessagesRead(id);
   });
+  save.container
+    ..invalidate(messageInboxProvider(id))
+    ..invalidate(unreadMessagesProvider(id));
   return id;
 }
 

@@ -52,4 +52,36 @@ void main() {
     );
     expect(fill(tester), AppColors.surfaceContainerHighest);
   });
+
+  testWidgets('a screen reader hears a button, and which one is open', (
+    tester,
+  ) async {
+    final handle = tester.ensureSemantics();
+    await pump(tester, TabletListRow(label: 'Goals', onTap: () {}));
+    expect(
+      tester.getSemantics(find.byType(TabletListRow)),
+      isSemantics(
+        label: 'Goals',
+        isButton: true,
+        hasSelectedState: true,
+        isSelected: false,
+        hasTapAction: true,
+      ),
+    );
+    await pump(
+      tester,
+      TabletListRow(label: 'Goals', selected: true, onTap: () {}),
+    );
+    expect(
+      tester.getSemantics(find.byType(TabletListRow)),
+      isSemantics(
+        label: 'Goals',
+        isButton: true,
+        hasSelectedState: true,
+        isSelected: true,
+        hasTapAction: true,
+      ),
+    );
+    handle.dispose();
+  });
 }

@@ -6,6 +6,10 @@ import 'package:fnm/shared/tablet/tablet_text.dart';
 /// One line of a tablet master list (an achievement category, a challenge
 /// tier): an optional icon, the label, a count on the right, and a lit
 /// background and edge when it is the one open beside the list.
+///
+/// The fixed [height] of 44 px is deliberate tablet density: a master list
+/// holds many lines beside its detail, so the row is as tall as a comfortable
+/// touch target and no taller (the phone's list tiles are not reused here).
 class TabletListRow extends StatelessWidget {
   const TabletListRow({
     required this.label,
