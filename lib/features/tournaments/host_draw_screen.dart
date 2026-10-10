@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fnm/core/layout/form_factor.dart';
 import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
@@ -22,6 +23,8 @@ class HostDrawScreen extends ConsumerStatefulWidget {
     super.key,
   });
 
+  static const Key landscapeKey = Key('hostDraw.landscape');
+
   final int careerId;
   final bool worldCup;
 
@@ -41,12 +44,135 @@ class _HostDrawScreenState extends ConsumerState<HostDrawScreen> {
 
   void _toHub() => context.go('${Routes.hub}?careerId=${widget.careerId}');
 
+  /// The edition and what the envelope is about to say (or has said).
+  List<Widget> _heading(
+    AppLocalizations l,
+    HostDrawData data,
+    int hostCount,
+  ) => [
+    Text('${data.title} · ${data.year}', style: AppTypography.headlineMedium),
+    const SizedBox(height: AppSpacing.xs),
+    Text(
+      _revealed
+          ? (hostCount > 1 ? l.tourDrawHostsReveal : l.tourDrawHostReveal)
+          : l.tourDrawHostCandidates,
+      style: AppTypography.bodyMedium.copyWith(
+        color: AppColors.onSurfaceVariant,
+      ),
+    ),
+  ];
+
+  /// Every bid on the table, the winning one lit once revealed.
+  Widget _candidates(HostDrawData data) => Wrap(
+    spacing: AppSpacing.sm,
+    runSpacing: AppSpacing.sm,
+    children: [
+      for (final bid in data.bids)
+        () {
+          // A bid wins as a whole, so it's chosen only when
+          // it IS the winning bid — not merely overlapping.
+          final won =
+              _revealed &&
+              bid.length == data.hostIds.length &&
+              bid.every(data.hostIds.contains);
+          return _Candidate(
+            nations: [
+              for (final id in bid)
+                (
+                  code: data.nations[id]?.code ?? '??',
+                  name: data.nations[id]?.name ?? '—',
+                ),
+            ],
+            chosen: won,
+            dimmed: _revealed && !won,
+          );
+        }(),
+    ],
+  );
+
+  /// Open the envelope, then Continue.
+  Widget _action(AppLocalizations l, HostDrawData data) => _revealed
+      ? PrimaryButton(
+          label: l.tourSharedContinue,
+          icon: Icons.check_rounded,
+          onPressed: _toHub,
+        )
+      : PrimaryButton(
+          label: l.tourSharedOpenEnvelope,
+          icon: Icons.mail_outline_rounded,
+          onPressed: () => unawaited(_reveal(data)),
+        );
+
+  /// A tablet: the edition and the envelope on the left, the bids on the
+  /// right, the action bottom right.
+  Widget _landscape(
+    AppLocalizations l,
+    HostDrawData data,
+    List<({String code, String name})> hosts,
+  ) {
+    return Padding(
+      key: HostDrawScreen.landscapeKey,
+      padding: const EdgeInsets.all(AppSpacing.lg),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Expanded(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  flex: 5,
+                  child: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        ..._heading(l, data, hosts.length),
+                        const SizedBox(height: AppSpacing.lg),
+                        _Envelope(revealed: _revealed, hosts: hosts),
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(width: AppSpacing.xl),
+                Expanded(
+                  flex: 6,
+                  child: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          l.tourCandidates,
+                          style: AppTypography.labelSmall.copyWith(
+                            color: AppColors.primary,
+                          ),
+                        ),
+                        const SizedBox(height: AppSpacing.sm),
+                        _candidates(data),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: AppSpacing.md),
+          Align(
+            alignment: Alignment.centerRight,
+            child: SizedBox(width: 320, child: _action(l, data)),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
     final async = ref.watch(
       hostDrawProvider((careerId: widget.careerId, worldCup: widget.worldCup)),
     );
+
+    final landscape = useTabletLayout(context, ref);
 
     return Scaffold(
       appBar: AppBar(
@@ -77,6 +203,7 @@ class _HostDrawScreenState extends ConsumerState<HostDrawScreen> {
                 name: data.nations[id]?.name ?? '—',
               ),
           ];
+          if (landscape) return _landscape(l, data, hosts);
 
           return Column(
             children: [
@@ -84,21 +211,7 @@ class _HostDrawScreenState extends ConsumerState<HostDrawScreen> {
                 child: ListView(
                   padding: const EdgeInsets.all(AppSpacing.marginMobile),
                   children: [
-                    Text(
-                      '${data.title} · ${data.year}',
-                      style: AppTypography.headlineMedium,
-                    ),
-                    const SizedBox(height: AppSpacing.xs),
-                    Text(
-                      _revealed
-                          ? (hosts.length > 1
-                                ? l.tourDrawHostsReveal
-                                : l.tourDrawHostReveal)
-                          : l.tourDrawHostCandidates,
-                      style: AppTypography.bodyMedium.copyWith(
-                        color: AppColors.onSurfaceVariant,
-                      ),
-                    ),
+                    ..._heading(l, data, hosts.length),
                     const SizedBox(height: AppSpacing.lg),
                     _Envelope(revealed: _revealed, hosts: hosts),
                     const SizedBox(height: AppSpacing.lg),
@@ -109,32 +222,7 @@ class _HostDrawScreenState extends ConsumerState<HostDrawScreen> {
                       ),
                     ),
                     const SizedBox(height: AppSpacing.sm),
-                    Wrap(
-                      spacing: AppSpacing.sm,
-                      runSpacing: AppSpacing.sm,
-                      children: [
-                        for (final bid in data.bids)
-                          () {
-                            // A bid wins as a whole, so it's chosen only when
-                            // it IS the winning bid — not merely overlapping.
-                            final won =
-                                _revealed &&
-                                bid.length == data.hostIds.length &&
-                                bid.every(data.hostIds.contains);
-                            return _Candidate(
-                              nations: [
-                                for (final id in bid)
-                                  (
-                                    code: data.nations[id]?.code ?? '??',
-                                    name: data.nations[id]?.name ?? '—',
-                                  ),
-                              ],
-                              chosen: won,
-                              dimmed: _revealed && !won,
-                            );
-                          }(),
-                      ],
-                    ),
+                    _candidates(data),
                   ],
                 ),
               ),
@@ -142,17 +230,7 @@ class _HostDrawScreenState extends ConsumerState<HostDrawScreen> {
                 top: false,
                 child: Padding(
                   padding: const EdgeInsets.all(AppSpacing.marginMobile),
-                  child: _revealed
-                      ? PrimaryButton(
-                          label: l.tourSharedContinue,
-                          icon: Icons.check_rounded,
-                          onPressed: _toHub,
-                        )
-                      : PrimaryButton(
-                          label: l.tourSharedOpenEnvelope,
-                          icon: Icons.mail_outline_rounded,
-                          onPressed: () => unawaited(_reveal(data)),
-                        ),
+                  child: _action(l, data),
                 ),
               ),
             ],
@@ -292,7 +370,13 @@ class _EnvelopeState extends State<_Envelope>
                                   : AppTypography.headlineMedium,
                             ),
                             Text(
-                              multi ? 'CO-HOSTS' : 'HOST',
+                              multi
+                                  ? AppLocalizations.of(
+                                      context,
+                                    ).tourSharedCoHostsHeading
+                                  : AppLocalizations.of(
+                                      context,
+                                    ).tourSharedHostHeading,
                               style: AppTypography.labelSmall.copyWith(
                                 color: AppColors.primary,
                               ),
