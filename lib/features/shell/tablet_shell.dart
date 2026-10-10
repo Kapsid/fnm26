@@ -14,6 +14,7 @@ import 'package:fnm/shared/tablet/tablet_shell_scope.dart';
 /// [FullScreenPhoneFrame] outside it. Each stage adds the screens it converts.
 const Set<String> tabletReadyPaths = <String>{
   Routes.hub,
+  Routes.tournamentKickoff,
   Routes.callUps,
   Routes.matchPreview,
   Routes.match,
