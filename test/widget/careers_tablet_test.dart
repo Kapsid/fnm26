@@ -21,8 +21,10 @@ Future<SeededSave> _open(WidgetTester tester, Size size) async {
   return save;
 }
 
-String _path(SeededSave save) =>
-    save.container.read(routerProvider).routeInformationProvider.value.uri.path;
+Uri _uri(SeededSave save) =>
+    save.container.read(routerProvider).routeInformationProvider.value.uri;
+
+String _path(SeededSave save) => _uri(save).path;
 
 void main() {
   for (final size in kTabletSizes) {
@@ -74,6 +76,11 @@ void main() {
       );
       await settle(tester);
       expect(_path(save), e.value, reason: e.key);
+      expect(
+        _uri(save).queryParameters['careerId'],
+        '${save.careerId}',
+        reason: e.key,
+      );
     }
     await tester.pumpWidget(const SizedBox());
   });
@@ -83,6 +90,7 @@ void main() {
     await tester.tap(find.text(enL.panelViewAll));
     await settle(tester);
     expect(_path(save), Routes.careerSummary);
+    expect(_uri(save).queryParameters['careerId'], '${save.careerId}');
     await tester.pumpWidget(const SizedBox());
   });
 }

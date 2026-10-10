@@ -3,12 +3,14 @@ import 'dart:io';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/data/data_providers.dart';
+import 'package:fnm/domain/entities/career.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
 import 'package:fnm/domain/services/squad/legends.dart';
 import 'package:fnm/features/career/career_providers.dart';
+import 'package:fnm/features/career/career_summary_providers.dart';
 import 'package:fnm/features/career/career_transfer_providers.dart';
 import 'package:fnm/features/career/play_time.dart';
 import 'package:fnm/features/messages/message_providers.dart';
@@ -326,6 +328,113 @@ List<Override> fakeH2hOverrides() => [
     (ref, key) async => fakeMeetingsFor(key),
   ),
 ];
+
+/// The real nation with the longest name, to push the nation column of a
+/// career that spans nations as wide as it goes.
+Nation get _longestNamedNation =>
+    realNations.reduce((a, b) => b.name.length > a.name.length ? b : a);
+
+/// A long career for [career]: three titles won several times, eight
+/// tournaments (World Championships, continental cups and some long
+/// pass-through names) at two nations, and a full medal tally. Everything the
+/// summary, the Career page and the saves pane can be asked to fit.
+CareerSummary fakeCareerSummary(Career career) {
+  final home = realNationsById[career.nationId]!;
+  final away = _longestNamedNation;
+  TournamentRun run(
+    int year,
+    String competition,
+    String placement,
+    int medal, {
+    bool atHome = true,
+    bool qualified = true,
+    String? champion,
+  }) {
+    final managed = atHome ? home : away;
+    return TournamentRun(
+      year: year,
+      competition: competition,
+      placement: placement,
+      medal: medal,
+      qualified: qualified,
+      nationName: managed.name,
+      nationCode: managed.code,
+      championName: champion ?? (medal == 1 ? managed.name : rivalNation.name),
+    );
+  }
+
+  return CareerSummary(
+    career: career,
+    nation: home,
+    worldRank: 1,
+    worldPoints: 2154,
+    seasons: 7,
+    played: 184,
+    won: 121,
+    drawn: 37,
+    lost: 26,
+    goalsFor: 389,
+    goalsAgainst: 142,
+    golds: 8,
+    silvers: 3,
+    bronzes: 2,
+    runs: [
+      run(2054, 'World Championship', 'Champions', 1),
+      run(2052, 'European Championship', 'Champions', 1),
+      run(
+        2050,
+        'Intercontinental Champions Challenge Trophy',
+        'Runners-up',
+        2,
+        atHome: false,
+      ),
+      run(
+        2048,
+        'Confederations Grand Tournament of Nations',
+        'Third place',
+        3,
+        atHome: false,
+      ),
+      run(2046, 'World Championship', 'Quarter-finals', 0),
+      run(2044, 'European Championship', 'Round of 16', 0),
+      run(2042, 'World Championship', 'Did not qualify', 0, qualified: false),
+      run(2040, 'European Championship', 'Group stage', 0),
+    ],
+    titles: [
+      TrophyTitle(
+        competition: 'World Championship',
+        wins: [
+          (year: 2054, nationName: home.name),
+          (year: 2038, nationName: away.name),
+          (year: 2030, nationName: home.name),
+        ],
+      ),
+      TrophyTitle(
+        competition: 'European Championship',
+        wins: [
+          (year: 2052, nationName: home.name),
+          (year: 2036, nationName: home.name),
+          (year: 2032, nationName: away.name),
+        ],
+      ),
+      TrophyTitle(
+        competition: 'Intercontinental Champions Challenge Trophy',
+        wins: [
+          (year: 2049, nationName: away.name),
+          (year: 2041, nationName: home.name),
+        ],
+      ),
+    ],
+    spansNations: true,
+  );
+}
+
+/// [fakeCareerSummary] for every save, built on the save's stored career.
+Override fakeCareerSummaryOverride() =>
+    careerSummaryProvider.overrideWith((ref, careerId) async {
+      final career = await ref.watch(careerRepositoryProvider).byId(careerId);
+      return career == null ? null : fakeCareerSummary(career);
+    });
 
 /// A second career, on [rivalNation], beside [save]'s. Returns its id.
 ///

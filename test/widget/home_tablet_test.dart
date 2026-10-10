@@ -4,10 +4,14 @@ import 'package:fnm/core/layout/form_factor.dart';
 import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/career.dart';
+import 'package:fnm/features/career/career_summary_screen.dart';
+import 'package:fnm/features/career/saves_screen.dart';
 import 'package:fnm/features/home/home_screen.dart';
 import 'package:fnm/features/shell/tablet_shell.dart';
+import 'package:fnm/shared/tablet/tablet.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 
+import '../helpers/competition_fixtures.dart';
 import '../helpers/history_fixtures.dart';
 import '../helpers/seeded_save.dart';
 
@@ -102,6 +106,76 @@ void main() {
       await settle(tester);
       expect(_uri(save).path, e.value);
     }
+    await tester.pumpWidget(const SizedBox());
+  });
+
+  for (final size in kTabletSizes) {
+    testWidgets('no save to continue, $size', (tester) async {
+      final save = await seedSave(tester, formFactor: FormFactor.tablet);
+      final careers = save.container.read(careerRepositoryProvider);
+      await tester.runAsync(() async {
+        expect(await careers.all(), hasLength(1));
+        await careers.delete(save.careerId);
+        expect(await careers.all(), isEmpty);
+      });
+      await pumpRoute(tester, save, Routes.home, size: size);
+      expect(tester.takeException(), isNull);
+      expect(find.byKey(HomeScreen.tabletLayoutKey), findsOneWidget);
+      expect(find.text(enL.homeLoadGame), findsOneWidget);
+      expect(find.text(enL.homeAllSaves), findsNothing);
+      expect(find.text(enL.homeContinue), findsNothing);
+      // New game still leads to the nation pick, which a tablet shows in
+      // the phone frame.
+      await tester.tap(find.widgetWithText(PrimaryButton, enL.homeNewGame));
+      await settle(tester);
+      expect(tester.takeException(), isNull);
+      expect(_uri(save).path, Routes.nations);
+      expect(find.byType(FullScreenPhoneFrame), findsOneWidget);
+      await tester.pumpWidget(const SizedBox());
+    });
+  }
+
+  testWidgets('the Continue card follows a delete made on the saves screen', (
+    tester,
+  ) async {
+    final save = await seedSave(
+      tester,
+      formFactor: FormFactor.tablet,
+      overrides: [fakeTransferOverride()],
+    );
+    final second = await addSecondSave(tester, save);
+    await pumpRoute(tester, save, Routes.home, size: kTabletSize);
+    final mine = realNationsById[seededNationId]!.name;
+    // The card is on the save listed first: the second, played last.
+    expect(find.text(enL.homeContinue), findsOneWidget);
+    expect(find.text(rivalNation.name), findsOneWidget);
+    expect(find.text(mine), findsNothing);
+    await tester.tap(find.text(enL.homeAllSaves));
+    await settle(tester);
+    expect(_uri(save).path, Routes.saves);
+    // The pane opens on that same save; delete it from there.
+    expect(
+      tester.widget<CareerSummaryView>(find.byType(CareerSummaryView)).careerId,
+      second,
+    );
+    await tester.tap(find.byKey(SavesScreen.deleteKey));
+    await settle(tester);
+    await tester.tap(
+      find.descendant(
+        of: find.byType(AlertDialog),
+        matching: find.text(enL.careerDelete),
+      ),
+    );
+    await settle(tester);
+    expect((await _career(tester, save, second)), isNull);
+    expect((await _career(tester, save, save.careerId)), isNotNull);
+    await tester.tap(find.byKey(TabletScreenHeader.backKey));
+    await settle(tester);
+    expect(_uri(save).path, Routes.home);
+    // Home re-reads the saves: the card is on the one that is left.
+    expect(find.text(enL.homeContinue), findsOneWidget);
+    expect(find.text(mine), findsOneWidget);
+    expect(find.text(rivalNation.name), findsNothing);
     await tester.pumpWidget(const SizedBox());
   });
 }

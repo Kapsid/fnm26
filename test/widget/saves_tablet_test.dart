@@ -5,6 +5,7 @@ import 'package:fnm/core/layout/form_factor.dart';
 import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/career.dart';
+import 'package:fnm/domain/services/entitlement/entitlement.dart';
 import 'package:fnm/features/career/career_summary_screen.dart';
 import 'package:fnm/features/career/career_transfer_providers.dart';
 import 'package:fnm/features/career/saves_screen.dart';
@@ -127,6 +128,93 @@ void main() {
     await stopPlayClock(tester, save);
     await tester.pumpWidget(const SizedBox());
   });
+
+  testWidgets('re-picking the save listed first sends Continue to it (Review '
+      'Focus 2)', (tester) async {
+    final (save, second) = await _open(tester, kTabletSize, second: true);
+    // Away from the first row and back: the pick follows the LAST tap, not
+    // the first, nor the first-made save.
+    await _pickFirstMade(tester, save, second!);
+    await tester.tap(
+      find.descendant(of: _grid, matching: find.text(rivalNation.name)),
+    );
+    await settle(tester);
+    expect(_paneId(tester), second);
+    final secondBefore = (await _career(tester, save, second))!.lastPlayedAt;
+    final firstBefore = (await _career(
+      tester,
+      save,
+      save.careerId,
+    ))!.lastPlayedAt;
+    expect(secondBefore, isNotNull);
+    expect(firstBefore, isNotNull);
+    await tester.tap(find.byKey(SavesScreen.continueKey));
+    await settle(tester);
+    expect(_uri(save).path, Routes.hub);
+    expect(_uri(save).queryParameters['careerId'], '$second');
+    expect(
+      (await _career(tester, save, second))!.lastPlayedAt,
+      isNot(secondBefore),
+    );
+    expect(
+      (await _career(tester, save, save.careerId))!.lastPlayedAt,
+      firstBefore,
+    );
+    await stopPlayClock(tester, save);
+    await tester.pumpWidget(const SizedBox());
+  });
+
+  for (final size in kTabletSizes) {
+    testWidgets('a free tier with both slots taken, $size', (tester) async {
+      final save = await seedSave(
+        tester,
+        formFactor: FormFactor.tablet,
+        overrides: [fakeTransferOverride()],
+      );
+      await addSecondSave(tester, save);
+      // seedSave unlocks premium so a second save can be made; lock it again
+      // (it is a StateProvider, as the premium gate test sets it).
+      final premium = save.container.read(premiumUnlockedProvider.notifier);
+      expect(premium.state, isTrue);
+      premium.state = false;
+      await pumpRoute(tester, save, Routes.saves, size: size);
+      expect(tester.takeException(), isNull);
+      expect(find.byKey(SavesScreen.tabletLayoutKey), findsOneWidget);
+      expect(
+        find.text(enL.careerSlotsCount(2, kFreeSaveSlots)),
+        findsOneWidget,
+      );
+      expect(find.text(enL.careerSlotsUnlockMore), findsOneWidget);
+      expect(find.text(enL.careerSlotsKeepNote), findsOneWidget);
+      expect(find.text(enL.careerImport), findsNothing);
+      await tester.pumpWidget(const SizedBox());
+    });
+
+    testWidgets('no saves at all, $size', (tester) async {
+      final save = await seedSave(
+        tester,
+        formFactor: FormFactor.tablet,
+        overrides: [fakeTransferOverride()],
+      );
+      final careers = save.container.read(careerRepositoryProvider);
+      await tester.runAsync(() async {
+        expect(await careers.all(), hasLength(1));
+        await careers.delete(save.careerId);
+        expect(await careers.all(), isEmpty);
+      });
+      await pumpRoute(tester, save, Routes.saves, size: size);
+      expect(tester.takeException(), isNull);
+      expect(find.byKey(SavesScreen.tabletLayoutKey), findsOneWidget);
+      expect(find.byType(DataGrid<Career>), findsNothing);
+      // Once in the table's place, once in the pane's.
+      expect(find.text(enL.careerNoSavesYet), findsNWidgets(2));
+      expect(find.byType(CareerSummaryView), findsNothing);
+      expect(find.byKey(SavesScreen.continueKey), findsNothing);
+      expect(find.byKey(SavesScreen.exportKey), findsNothing);
+      expect(find.byKey(SavesScreen.deleteKey), findsNothing);
+      await tester.pumpWidget(const SizedBox());
+    });
+  }
 
   testWidgets('deleting the picked save leaves the other one open (Review '
       'Focus 2 and 5)', (tester) async {
