@@ -332,10 +332,14 @@ List<Override> fakeH2hOverrides() => [
 /// Its welcome news is read, as [seedSave] does for the first, so opening it
 /// does not pop news over the hub.
 ///
-/// The ORDER of the two in `savesProvider` is not defined: neither has been
-/// played (`lastPlayedAt` null) and `createdAt` is the game's start date, the
-/// same for both, so they tie on every key the list sorts by. Find the
-/// second save by its nation ([rivalNation]) or its id, never by position.
+/// The order of the two in `savesProvider` is pinned: the second lists FIRST.
+/// Creating a career stamps it "just played", and `lastPlayedAt` is stored to
+/// the second, so two saves made in the same second tie on it (and on
+/// `createdAt`, the game's start date) and came back in either order. So both
+/// are stamped here, a minute apart and both in the past: [save] two minutes
+/// ago, the second one minute ago. Being in the past also means a later
+/// `markPlayed` always changes the stamp it writes. Still find the second save
+/// by its nation ([rivalNation]) or its id rather than by position.
 Future<int> addSecondSave(WidgetTester tester, SeededSave save) async {
   late int id;
   await tester.runAsync(() async {
@@ -350,6 +354,13 @@ Future<int> addSecondSave(WidgetTester tester, SeededSave save) async {
       );
     }
     id = career.id;
+    final now = DateTime.now();
+    final careers = save.container.read(careerRepositoryProvider);
+    await careers.touch(
+      save.careerId,
+      now.subtract(const Duration(minutes: 2)),
+    );
+    await careers.touch(id, now.subtract(const Duration(minutes: 1)));
     await save.container.read(messageInboxProvider(id).future);
     await save.container
         .read(competitionRepositoryProvider)
@@ -357,7 +368,8 @@ Future<int> addSecondSave(WidgetTester tester, SeededSave save) async {
   });
   save.container
     ..invalidate(messageInboxProvider(id))
-    ..invalidate(unreadMessagesProvider(id));
+    ..invalidate(unreadMessagesProvider(id))
+    ..invalidate(savesProvider);
   return id;
 }
 

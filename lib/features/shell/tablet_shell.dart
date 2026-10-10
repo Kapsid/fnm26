@@ -52,6 +52,7 @@ const Set<String> tabletReadyPaths = <String>{
   Routes.careerSummary,
   Routes.managerHistory,
   Routes.careers,
+  Routes.saves,
 };
 
 /// The tablet frame around every in-save screen: sidebar on the left, top bar

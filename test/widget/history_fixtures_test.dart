@@ -170,6 +170,8 @@ void main() {
     await tester.runAsync(() async {
       final all = await save.container.read(careerRepositoryProvider).all();
       expect({for (final c in all) c.id}, {save.careerId, second});
+      // The second was stamped played more recently, so it lists first.
+      expect([for (final c in all) c.id], [second, save.careerId]);
       expect(all.firstWhere((c) => c.id == second).nationId, rivalNation.id);
       expect(
         await save.container.read(unreadMessagesProvider(save.careerId).future),

@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:fnm/core/layout/form_factor.dart';
 import 'package:fnm/core/util/app_date.dart';
 import 'package:fnm/core/util/share_origin.dart';
 import 'package:share_plus/share_plus.dart';
@@ -18,18 +19,27 @@ import 'package:fnm/domain/entities/career.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/services/entitlement/entitlement.dart';
 import 'package:fnm/features/career/career_providers.dart';
+import 'package:fnm/features/career/career_summary_screen.dart';
 import 'package:fnm/features/nations/nation_select_providers.dart';
 import 'package:fnm/features/paywall/paywall_sheet.dart';
 import 'package:fnm/features/settings/backup_restore_prompt.dart';
 import 'package:fnm/features/settings/save_backup_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
+import 'package:fnm/shared/tablet/tablet.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
+
+part 'saves_tablet_layout.dart';
 
 /// Lists save games: continue, delete, or start a new one (subject to the
 /// free/Unlimited slot limit).
 class SavesScreen extends ConsumerStatefulWidget {
   const SavesScreen({super.key});
+
+  static const Key tabletLayoutKey = Key('saves.tabletLayout');
+  static const Key continueKey = Key('saves.continue');
+  static const Key exportKey = Key('saves.export');
+  static const Key deleteKey = Key('saves.delete');
 
   @override
   ConsumerState<SavesScreen> createState() => _SavesScreenState();
@@ -47,6 +57,14 @@ class _SavesScreenState extends ConsumerState<SavesScreen> {
   /// control that ignored him.
   bool _busy = false;
 
+  /// The save open beside the table on a tablet. Kept here, in the State both
+  /// layouts share, so a window resized across 1000 px comes back to it. A
+  /// pick that no longer exists (deleted) falls back to the first save.
+  // Null is meaningful (nothing picked yet: the first save is shown), and it
+  // is read before any pick, so it cannot be `late`.
+  // ignore: use_late_for_private_fields_and_variables
+  int? _selectedId;
+
   /// Runs a file action with the screen marked busy for its whole duration.
   Future<void> _run(Future<void> Function() action) async {
     if (_busy) return;
@@ -58,6 +76,16 @@ class _SavesScreenState extends ConsumerState<SavesScreen> {
     }
   }
 
+  void _select(Career save) => setState(() => _selectedId = save.id);
+
+  /// Opens [save] where the manager left it. Stamps the open before
+  /// navigating so this save is top of the list next time; nothing is
+  /// awaited, so there is no later moment at which to go anywhere else.
+  void _continue(Career save) {
+    unawaited(ref.read(careerServiceProvider).markPlayed(save.id));
+    context.go('${Routes.hub}?careerId=${save.id}');
+  }
+
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
@@ -67,6 +95,16 @@ class _SavesScreenState extends ConsumerState<SavesScreen> {
     final limit = saveSlotLimit(premiumUnlocked: premium);
     final nations = ref.watch(nationsProvider).valueOrNull ?? const <Nation>[];
     final nationsById = {for (final n in nations) n.id: n};
+
+    if (useTabletLayout(context, ref)) {
+      return _SavesTabletLayout(
+        state: this,
+        savesAsync: savesAsync,
+        nationsById: nationsById,
+        premium: premium,
+        limit: limit,
+      );
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -121,14 +159,7 @@ class _SavesScreenState extends ConsumerState<SavesScreen> {
                           return SaveTile(
                             save: save,
                             nation: nationsById[save.nationId],
-                            onContinue: () {
-                              // Stamp the open before navigating so this save
-                              // is top of the list next time.
-                              ref
-                                  .read(careerServiceProvider)
-                                  .markPlayed(save.id);
-                              context.go('${Routes.hub}?careerId=${save.id}');
-                            },
+                            onContinue: () => _continue(save),
                             onDelete: () => _confirmDelete(
                               context,
                               ref,
@@ -154,97 +185,11 @@ class _SavesScreenState extends ConsumerState<SavesScreen> {
                 top: false,
                 child: Padding(
                   padding: const EdgeInsets.all(AppSpacing.marginMobile),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      PrimaryButton(
-                        label: full
-                            ? (premium
-                                  ? l.careerSlotsFull
-                                  : l.careerSlotsUnlockMore)
-                            : l.careerNewGame,
-                        icon: full && !premium ? Icons.lock_open : Icons.add,
-                        // A full free player is not sent to a dead button:
-                        // more saves are exactly what the purchase sells, so
-                        // the button becomes the door to it.
-                        onPressed: !full
-                            ? () => context.go(Routes.nations)
-                            : premium
-                            ? null
-                            : () => unawaited(showPaywall(context)),
-                      ),
-                      if (full && !premium)
-                        Padding(
-                          padding: const EdgeInsets.only(top: AppSpacing.sm),
-                          child: Text(
-                            l.careerSlotsKeepNote,
-                            textAlign: TextAlign.center,
-                            style: AppTypography.bodySmall.copyWith(
-                              color: AppColors.onSurfaceVariant,
-                            ),
-                          ),
-                        ),
-                      // The way to the shop, open whether or not the slots are
-                      // full.
-                      //
-                      // It used to appear only when they were, which made the
-                      // offer a consequence of running out rather than
-                      // something a manager could take up when he wanted it.
-                      // He asked for it on this screen with room to spare, and
-                      // he is right: what the purchase sells is endless
-                      // cycles, and the second save is the smaller half of it.
-                      // When the slots ARE full the primary button above is
-                      // already that door, so this one stands down rather than
-                      // print the same offer twice.
-                      if (!premium && !full)
-                        Padding(
-                          padding: const EdgeInsets.only(top: AppSpacing.sm),
-                          child: TextButton.icon(
-                            onPressed: () => unawaited(showPaywall(context)),
-                            icon: const Icon(
-                              Icons.lock_open_rounded,
-                              size: 18,
-                            ),
-                            label: Text(l.paywallGoPro),
-                          ),
-                        ),
-                      // An imported career takes a slot like any other, so it
-                      // is offered only while there is room for one.
-                      if (!full)
-                        TextButton.icon(
-                          onPressed: _busy
-                              ? null
-                              : () => _run(() => _importCareer(context, ref)),
-                          icon: _busy
-                              ? const _Spinner()
-                              : const Icon(
-                                  Icons.file_download_outlined,
-                                  size: 18,
-                                ),
-                          label: Text(l.careerImport),
-                        ),
-                      // Every save at once, which is the backup that actually
-                      // answers a lost phone. Exporting one career at a time
-                      // from the tiles covers the save you remembered; this
-                      // covers the ones you did not. The Builder hands the
-                      // share sheet this button's own rect (an iPad's popover
-                      // points at it).
-                      if (saves.isNotEmpty)
-                        Builder(
-                          builder: (button) => TextButton.icon(
-                            onPressed: () => _backupAll(
-                              context,
-                              ref,
-                              origin: shareOriginOf(button),
-                            ),
-                            icon: const Icon(
-                              Icons.backup_outlined,
-                              size: 18,
-                            ),
-                            label: Text(l.careerBackupAll),
-                          ),
-                        ),
-                    ],
+                  child: _actions(
+                    context,
+                    saves: saves,
+                    full: full,
+                    premium: premium,
                   ),
                 ),
               ),
@@ -255,6 +200,91 @@ class _SavesScreenState extends ConsumerState<SavesScreen> {
     );
   }
 
+  /// What the manager can do besides open a save: start one (or buy room for
+  /// one), take one in from a file, back them all up. Both layouts show it.
+  Widget _actions(
+    BuildContext context, {
+    required List<Career> saves,
+    required bool full,
+    required bool premium,
+  }) {
+    final l = AppLocalizations.of(context);
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        PrimaryButton(
+          label: full
+              ? (premium ? l.careerSlotsFull : l.careerSlotsUnlockMore)
+              : l.careerNewGame,
+          icon: full && !premium ? Icons.lock_open : Icons.add,
+          // A full free player is not sent to a dead button: more saves are
+          // exactly what the purchase sells, so the button becomes the door
+          // to it.
+          onPressed: !full
+              ? () => context.go(Routes.nations)
+              : premium
+              ? null
+              : () => unawaited(showPaywall(context)),
+        ),
+        if (full && !premium)
+          Padding(
+            padding: const EdgeInsets.only(top: AppSpacing.sm),
+            child: Text(
+              l.careerSlotsKeepNote,
+              textAlign: TextAlign.center,
+              style: AppTypography.bodySmall.copyWith(
+                color: AppColors.onSurfaceVariant,
+              ),
+            ),
+          ),
+        // The way to the shop, open whether or not the slots are full.
+        //
+        // It used to appear only when they were, which made the offer a
+        // consequence of running out rather than something a manager could
+        // take up when he wanted it. He asked for it on this screen with room
+        // to spare, and he is right: what the purchase sells is endless
+        // cycles, and the second save is the smaller half of it. When the
+        // slots ARE full the primary button above is already that door, so
+        // this one stands down rather than print the same offer twice.
+        if (!premium && !full)
+          Padding(
+            padding: const EdgeInsets.only(top: AppSpacing.sm),
+            child: TextButton.icon(
+              onPressed: () => unawaited(showPaywall(context)),
+              icon: const Icon(Icons.lock_open_rounded, size: 18),
+              label: Text(l.paywallGoPro),
+            ),
+          ),
+        // An imported career takes a slot like any other, so it is offered
+        // only while there is room for one.
+        if (!full)
+          TextButton.icon(
+            onPressed: _busy
+                ? null
+                : () => _run(() => _importCareer(context, ref)),
+            icon: _busy
+                ? const _Spinner()
+                : const Icon(Icons.file_download_outlined, size: 18),
+            label: Text(l.careerImport),
+          ),
+        // Every save at once, which is the backup that actually answers a
+        // lost phone. Exporting one career at a time from the tiles covers
+        // the save you remembered; this covers the ones you did not. The
+        // Builder hands the share sheet this button's own rect (an iPad's
+        // popover points at it).
+        if (saves.isNotEmpty)
+          Builder(
+            builder: (button) => TextButton.icon(
+              onPressed: () =>
+                  _backupAll(context, ref, origin: shareOriginOf(button)),
+              icon: const Icon(Icons.backup_outlined, size: 18),
+              label: Text(l.careerBackupAll),
+            ),
+          ),
+      ],
+    );
+  }
+
   Future<void> _confirmDelete(
     BuildContext context,
     WidgetRef ref,
@@ -262,30 +292,34 @@ class _SavesScreenState extends ConsumerState<SavesScreen> {
     int careerId,
   ) async {
     final l = AppLocalizations.of(context);
+    // Taken before the dialog: the window may resize, or the screen go,
+    // while it is up.
+    final careers = ref.read(careerServiceProvider);
+    final transfer = ref.read(careerTransferServiceProvider);
     final confirmed = await showDialog<bool>(
       context: context,
-      builder: (_) => AlertDialog(
+      // The dialog pops with its OWN context: on a tablet it is a root
+      // dialog, and the screen's navigator is not necessarily its.
+      builder: (dialogContext) => AlertDialog(
         backgroundColor: AppColors.surfaceContainer,
         title: Text(l.careerDeleteSaveTitle),
         content: Text(l.careerDeleteSaveBody(label)),
         actions: [
           TextButton(
-            onPressed: () => Navigator.of(context).pop(false),
+            onPressed: () => Navigator.of(dialogContext).pop(false),
             child: Text(l.careerCancel),
           ),
           TextButton(
-            onPressed: () => Navigator.of(context).pop(true),
+            onPressed: () => Navigator.of(dialogContext).pop(true),
             child: Text(l.careerDelete),
           ),
         ],
       ),
     );
     if (confirmed ?? false) {
-      await ref.read(careerServiceProvider).delete(careerId);
+      await careers.delete(careerId);
       // Its end-of-cycle copy goes with it: nothing else would ever clear it.
-      await ref
-          .read(careerTransferServiceProvider)
-          .removeAppFolderBackup(careerId);
+      await transfer.removeAppFolderBackup(careerId);
     }
   }
 
