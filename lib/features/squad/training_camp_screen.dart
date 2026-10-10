@@ -46,11 +46,15 @@ class TrainingCampScreen extends ConsumerWidget {
     onTap: () async {
       // Read before the await: a resize across 1000 while the choice is
       // saving swaps layouts and unmounts this card, and the manager must
-      // still leave for the hub with the camp stored.
+      // still leave for the hub with the camp stored. A resize keeps the
+      // location; a manager who went elsewhere meanwhile is left there.
       final service = ref.read(trainingCampServiceProvider);
       final router = GoRouter.of(context);
       await service.choose(careerId, plan, option);
-      router.go(_exit());
+      if (router.routeInformationProvider.value.uri.path ==
+          Routes.trainingCamp) {
+        router.go(_exit());
+      }
     },
   );
 

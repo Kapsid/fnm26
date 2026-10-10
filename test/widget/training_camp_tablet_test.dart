@@ -99,21 +99,27 @@ void main() {
     });
   }
 
-  testWidgets('three co-hosts: their six camps three to a row', (
-    tester,
-  ) async {
-    final plan = fakeCampPlan(campHosts(3));
-    await _open(tester, kTabletSize, plan: plan);
-    expect(tester.takeException(), isNull);
-    final rects = [
-      for (final o in plan.options) tester.getRect(find.text(o.camp.name)),
-    ];
-    expect(rects, hasLength(6));
-    expect(rects[1].top, rects[0].top);
-    expect(rects[2].top, rects[0].top);
-    expect(rects[3].top, greaterThan(rects[0].bottom));
-    await tester.pumpWidget(const SizedBox());
-  });
+  for (final size in kTabletSizes) {
+    // Three to a row where the content area holds three 300 px tiles (1194
+    // wide), two where it holds two.
+    final columns = size.width >= 1194 ? 3 : 2;
+    testWidgets('three co-hosts: their six camps $columns to a row, $size', (
+      tester,
+    ) async {
+      final plan = fakeCampPlan(campHosts(3));
+      await _open(tester, size, plan: plan);
+      expect(tester.takeException(), isNull);
+      final rects = [
+        for (final o in plan.options) tester.getRect(find.text(o.camp.name)),
+      ];
+      expect(rects, hasLength(6));
+      for (var i = 1; i < columns; i++) {
+        expect(rects[i].top, rects[0].top);
+      }
+      expect(rects[columns].top, greaterThan(rects[0].bottom));
+      await tester.pumpWidget(const SizedBox());
+    });
+  }
 
   testWidgets('a tapped camp is the camp stored, then the hub', (
     tester,
@@ -180,6 +186,34 @@ void main() {
     await settle(tester);
     expect(tester.takeException(), isNull);
     expect(_path(save), Routes.hub);
+    final stored = await _stored(tester, save, plan);
+    expect(stored?.hostId, option.hostId);
+    expect(stored?.campIndex, option.camp.index);
+    await tester.pumpWidget(const SizedBox());
+  });
+
+  // The manager leaves the page while the choice is still saving: the camp
+  // is stored, but they are not pulled back to the hub from where they went.
+  testWidgets('leaving while the choice is saving stays where they went', (
+    tester,
+  ) async {
+    final plan = fakeCampPlan(campHosts(1));
+    final gate = Completer<void>();
+    final save = await _open(tester, kTabletSize, plan: plan, gate: gate);
+    expect(await _stored(tester, save, plan), isNull);
+    final option = plan.options[2];
+    await tester.tap(find.text(option.camp.name));
+    await tester.pump();
+    save.container
+        .read(routerProvider)
+        .go('${Routes.finances}?careerId=${save.careerId}');
+    await settle(tester);
+    expect(_path(save), Routes.finances);
+    expect(await _stored(tester, save, plan), isNull);
+    gate.complete();
+    await settle(tester);
+    expect(tester.takeException(), isNull);
+    expect(_path(save), Routes.finances);
     final stored = await _stored(tester, save, plan);
     expect(stored?.hostId, option.hostId);
     expect(stored?.campIndex, option.camp.index);
