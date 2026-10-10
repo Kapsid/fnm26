@@ -9211,4 +9211,49 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get yConversation => 'Conversation';
+
+  @override
+  String get allTimeRecordsTitle => 'All-time world records';
+
+  @override
+  String get h2hMeetingsTitle => 'Every meeting';
+
+  @override
+  String get h2hPickOpponent => 'Pick an opponent to see every meeting here';
+
+  @override
+  String get savesTitle => 'Saves';
+
+  @override
+  String get gridColPlayer => 'Player';
+
+  @override
+  String get gridColPos => 'Pos';
+
+  @override
+  String get gridColActive => 'Active';
+
+  @override
+  String get gridColMotm => 'MOTM';
+
+  @override
+  String get gridColAvg => 'Avg';
+
+  @override
+  String get gridColOpponent => 'Opponent';
+
+  @override
+  String get gridColStarts => 'Starts';
+
+  @override
+  String get gridColTournaments => 'Tournaments';
+
+  @override
+  String get gridColDate => 'Date';
+
+  @override
+  String get gridColLastPlayed => 'Last played';
+
+  @override
+  String get gridColManager => 'Manager';
 }

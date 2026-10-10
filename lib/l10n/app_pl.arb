@@ -2389,5 +2389,20 @@
   "naturalisationTitle": "Naturalizacja",
   "yTrending": "Na czasie",
   "yVoices": "Głosy",
-  "yConversation": "Rozmowa"
+  "yConversation": "Rozmowa",
+  "allTimeRecordsTitle": "Rekordy świata wszech czasów",
+  "h2hMeetingsTitle": "Wszystkie spotkania",
+  "h2hPickOpponent": "Wybierz rywala, aby zobaczyć tu wszystkie spotkania",
+  "savesTitle": "Zapisy",
+  "gridColPlayer": "Zawodnik",
+  "gridColPos": "Poz.",
+  "gridColActive": "Aktywny",
+  "gridColMotm": "MVP",
+  "gridColAvg": "Śr.",
+  "gridColOpponent": "Rywal",
+  "gridColStarts": "W podstawie",
+  "gridColTournaments": "Turnieje",
+  "gridColDate": "Data",
+  "gridColLastPlayed": "Ostatnio grane",
+  "gridColManager": "Trener"
 }

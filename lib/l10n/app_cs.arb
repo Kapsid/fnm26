@@ -2389,5 +2389,20 @@
   "naturalisationTitle": "Naturalizace",
   "yTrending": "Právě se řeší",
   "yVoices": "Hlasy",
-  "yConversation": "Konverzace"
+  "yConversation": "Konverzace",
+  "allTimeRecordsTitle": "Světové rekordy všech dob",
+  "h2hMeetingsTitle": "Všechna vzájemná utkání",
+  "h2hPickOpponent": "Vyberte soupeře a uvidíte tu všechna vzájemná utkání",
+  "savesTitle": "Uložené hry",
+  "gridColPlayer": "Hráč",
+  "gridColPos": "Post",
+  "gridColActive": "Aktivní",
+  "gridColMotm": "MOTM",
+  "gridColAvg": "Prům.",
+  "gridColOpponent": "Soupeř",
+  "gridColStarts": "Starty",
+  "gridColTournaments": "Turnaje",
+  "gridColDate": "Datum",
+  "gridColLastPlayed": "Naposledy hráno",
+  "gridColManager": "Trenér"
 }

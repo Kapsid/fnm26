@@ -13663,5 +13663,65 @@
   "yConversation": "Conversation",
   "@yConversation": {
     "description": "Tablet Y feed side pane heading: one post and the replies to it."
+  },
+  "allTimeRecordsTitle": "All-time world records",
+  "@allTimeRecordsTitle": {
+    "description": "Tablet all-time records screen heading: the greatest players of every nation in the save."
+  },
+  "h2hMeetingsTitle": "Every meeting",
+  "@h2hMeetingsTitle": {
+    "description": "Tablet heading of the page listing every past match between two nations."
+  },
+  "h2hPickOpponent": "Pick an opponent to see every meeting here",
+  "@h2hPickOpponent": {
+    "description": "Tablet head to head: the empty right-hand pane before a second nation is picked."
+  },
+  "savesTitle": "Saves",
+  "@savesTitle": {
+    "description": "Tablet saves screen heading: the list of save games."
+  },
+  "gridColPlayer": "Player",
+  "@gridColPlayer": {
+    "description": "Tablet table column: the player's name."
+  },
+  "gridColPos": "Pos",
+  "@gridColPos": {
+    "description": "Tablet table column, short: the player's position (GK, CB, ST)."
+  },
+  "gridColActive": "Active",
+  "@gridColActive": {
+    "description": "Tablet records table column: whether the player is still playing."
+  },
+  "gridColMotm": "MOTM",
+  "@gridColMotm": {
+    "description": "Tablet legends table column, short: man of the match awards."
+  },
+  "gridColAvg": "Avg",
+  "@gridColAvg": {
+    "description": "Tablet legends table column, short: average match rating."
+  },
+  "gridColOpponent": "Opponent",
+  "@gridColOpponent": {
+    "description": "Tablet head-to-head ledger column: the nation played against."
+  },
+  "gridColStarts": "Starts",
+  "@gridColStarts": {
+    "description": "Tablet all-time records column: World Championship finals matches started."
+  },
+  "gridColTournaments": "Tournaments",
+  "@gridColTournaments": {
+    "description": "Tablet all-time records column: finals tournaments attended."
+  },
+  "gridColDate": "Date",
+  "@gridColDate": {
+    "description": "Tablet saves table column: the in-game date the save has reached."
+  },
+  "gridColLastPlayed": "Last played",
+  "@gridColLastPlayed": {
+    "description": "Tablet saves table column: how long ago the save was last opened."
+  },
+  "gridColManager": "Manager",
+  "@gridColManager": {
+    "description": "Tablet saves table column: the manager's name in that save."
   }
 }

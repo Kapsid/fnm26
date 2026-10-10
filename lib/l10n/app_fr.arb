@@ -2389,5 +2389,20 @@
   "naturalisationTitle": "Naturalisation",
   "yTrending": "Tendances",
   "yVoices": "Voix",
-  "yConversation": "Conversation"
+  "yConversation": "Conversation",
+  "allTimeRecordsTitle": "Records mondiaux de tous les temps",
+  "h2hMeetingsTitle": "Toutes les confrontations",
+  "h2hPickOpponent": "Choisissez un adversaire pour voir ici toutes les confrontations",
+  "savesTitle": "Sauvegardes",
+  "gridColPlayer": "Joueur",
+  "gridColPos": "Poste",
+  "gridColActive": "En activité",
+  "gridColMotm": "HdM",
+  "gridColAvg": "Moy.",
+  "gridColOpponent": "Adversaire",
+  "gridColStarts": "Titularisations",
+  "gridColTournaments": "Tournois",
+  "gridColDate": "Date",
+  "gridColLastPlayed": "Dernière partie",
+  "gridColManager": "Sélectionneur"
 }

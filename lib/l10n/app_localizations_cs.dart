@@ -9242,4 +9242,50 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get yConversation => 'Konverzace';
+
+  @override
+  String get allTimeRecordsTitle => 'Světové rekordy všech dob';
+
+  @override
+  String get h2hMeetingsTitle => 'Všechna vzájemná utkání';
+
+  @override
+  String get h2hPickOpponent =>
+      'Vyberte soupeře a uvidíte tu všechna vzájemná utkání';
+
+  @override
+  String get savesTitle => 'Uložené hry';
+
+  @override
+  String get gridColPlayer => 'Hráč';
+
+  @override
+  String get gridColPos => 'Post';
+
+  @override
+  String get gridColActive => 'Aktivní';
+
+  @override
+  String get gridColMotm => 'MOTM';
+
+  @override
+  String get gridColAvg => 'Prům.';
+
+  @override
+  String get gridColOpponent => 'Soupeř';
+
+  @override
+  String get gridColStarts => 'Starty';
+
+  @override
+  String get gridColTournaments => 'Turnaje';
+
+  @override
+  String get gridColDate => 'Datum';
+
+  @override
+  String get gridColLastPlayed => 'Naposledy hráno';
+
+  @override
+  String get gridColManager => 'Trenér';
 }

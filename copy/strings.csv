@@ -2389,3 +2389,18 @@ naturalisationTitle,Tablet naturalisation decision screen heading.,,Naturalisati
 yTrending,Tablet Y feed side panel: the conversations with the most posts.,,Trending,Právě se řeší,Tendances,Di tendenza,Na czasie
 yVoices,Tablet Y feed side panel: the accounts that post the most.,,Voices,Hlasy,Voix,Voci,Głosy
 yConversation,Tablet Y feed side pane heading: one post and the replies to it.,,Conversation,Konverzace,Conversation,Conversazione,Rozmowa
+allTimeRecordsTitle,Tablet all-time records screen heading: the greatest players of every nation in the save.,,All-time world records,Světové rekordy všech dob,Records mondiaux de tous les temps,Record mondiali di sempre,Rekordy świata wszech czasów
+h2hMeetingsTitle,Tablet heading of the page listing every past match between two nations.,,Every meeting,Všechna vzájemná utkání,Toutes les confrontations,Tutti i precedenti,Wszystkie spotkania
+h2hPickOpponent,Tablet head to head: the empty right-hand pane before a second nation is picked.,,Pick an opponent to see every meeting here,Vyberte soupeře a uvidíte tu všechna vzájemná utkání,Choisissez un adversaire pour voir ici toutes les confrontations,Scegli un avversario per vedere qui tutti i precedenti,"Wybierz rywala, aby zobaczyć tu wszystkie spotkania"
+savesTitle,Tablet saves screen heading: the list of save games.,,Saves,Uložené hry,Sauvegardes,Salvataggi,Zapisy
+gridColPlayer,Tablet table column: the player's name.,,Player,Hráč,Joueur,Giocatore,Zawodnik
+gridColPos,"Tablet table column, short: the player's position (GK, CB, ST).",,Pos,Post,Poste,Ruolo,Poz.
+gridColActive,Tablet records table column: whether the player is still playing.,,Active,Aktivní,En activité,In attività,Aktywny
+gridColMotm,"Tablet legends table column, short: man of the match awards.",,MOTM,MOTM,HdM,MVP,MVP
+gridColAvg,"Tablet legends table column, short: average match rating.",,Avg,Prům.,Moy.,Media,Śr.
+gridColOpponent,Tablet head-to-head ledger column: the nation played against.,,Opponent,Soupeř,Adversaire,Avversario,Rywal
+gridColStarts,Tablet all-time records column: World Championship finals matches started.,,Starts,Starty,Titularisations,Da titolare,W podstawie
+gridColTournaments,Tablet all-time records column: finals tournaments attended.,,Tournaments,Turnaje,Tournois,Tornei,Turnieje
+gridColDate,Tablet saves table column: the in-game date the save has reached.,,Date,Datum,Date,Data,Data
+gridColLastPlayed,Tablet saves table column: how long ago the save was last opened.,,Last played,Naposledy hráno,Dernière partie,Ultima partita,Ostatnio grane
+gridColManager,Tablet saves table column: the manager's name in that save.,,Manager,Trenér,Sélectionneur,Allenatore,Trener

@@ -14504,6 +14504,96 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Conversation'**
   String get yConversation;
+
+  /// Tablet all-time records screen heading: the greatest players of every nation in the save.
+  ///
+  /// In en, this message translates to:
+  /// **'All-time world records'**
+  String get allTimeRecordsTitle;
+
+  /// Tablet heading of the page listing every past match between two nations.
+  ///
+  /// In en, this message translates to:
+  /// **'Every meeting'**
+  String get h2hMeetingsTitle;
+
+  /// Tablet head to head: the empty right-hand pane before a second nation is picked.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick an opponent to see every meeting here'**
+  String get h2hPickOpponent;
+
+  /// Tablet saves screen heading: the list of save games.
+  ///
+  /// In en, this message translates to:
+  /// **'Saves'**
+  String get savesTitle;
+
+  /// Tablet table column: the player's name.
+  ///
+  /// In en, this message translates to:
+  /// **'Player'**
+  String get gridColPlayer;
+
+  /// Tablet table column, short: the player's position (GK, CB, ST).
+  ///
+  /// In en, this message translates to:
+  /// **'Pos'**
+  String get gridColPos;
+
+  /// Tablet records table column: whether the player is still playing.
+  ///
+  /// In en, this message translates to:
+  /// **'Active'**
+  String get gridColActive;
+
+  /// Tablet legends table column, short: man of the match awards.
+  ///
+  /// In en, this message translates to:
+  /// **'MOTM'**
+  String get gridColMotm;
+
+  /// Tablet legends table column, short: average match rating.
+  ///
+  /// In en, this message translates to:
+  /// **'Avg'**
+  String get gridColAvg;
+
+  /// Tablet head-to-head ledger column: the nation played against.
+  ///
+  /// In en, this message translates to:
+  /// **'Opponent'**
+  String get gridColOpponent;
+
+  /// Tablet all-time records column: World Championship finals matches started.
+  ///
+  /// In en, this message translates to:
+  /// **'Starts'**
+  String get gridColStarts;
+
+  /// Tablet all-time records column: finals tournaments attended.
+  ///
+  /// In en, this message translates to:
+  /// **'Tournaments'**
+  String get gridColTournaments;
+
+  /// Tablet saves table column: the in-game date the save has reached.
+  ///
+  /// In en, this message translates to:
+  /// **'Date'**
+  String get gridColDate;
+
+  /// Tablet saves table column: how long ago the save was last opened.
+  ///
+  /// In en, this message translates to:
+  /// **'Last played'**
+  String get gridColLastPlayed;
+
+  /// Tablet saves table column: the manager's name in that save.
+  ///
+  /// In en, this message translates to:
+  /// **'Manager'**
+  String get gridColManager;
 }
 
 class _AppLocalizationsDelegate

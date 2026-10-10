@@ -2389,5 +2389,20 @@
   "naturalisationTitle": "Naturalizzazione",
   "yTrending": "Di tendenza",
   "yVoices": "Voci",
-  "yConversation": "Conversazione"
+  "yConversation": "Conversazione",
+  "allTimeRecordsTitle": "Record mondiali di sempre",
+  "h2hMeetingsTitle": "Tutti i precedenti",
+  "h2hPickOpponent": "Scegli un avversario per vedere qui tutti i precedenti",
+  "savesTitle": "Salvataggi",
+  "gridColPlayer": "Giocatore",
+  "gridColPos": "Ruolo",
+  "gridColActive": "In attività",
+  "gridColMotm": "MVP",
+  "gridColAvg": "Media",
+  "gridColOpponent": "Avversario",
+  "gridColStarts": "Da titolare",
+  "gridColTournaments": "Tornei",
+  "gridColDate": "Data",
+  "gridColLastPlayed": "Ultima partita",
+  "gridColManager": "Allenatore"
 }

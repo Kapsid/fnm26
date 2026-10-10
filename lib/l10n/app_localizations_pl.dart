@@ -9341,4 +9341,50 @@ class AppLocalizationsPl extends AppLocalizations {
 
   @override
   String get yConversation => 'Rozmowa';
+
+  @override
+  String get allTimeRecordsTitle => 'Rekordy świata wszech czasów';
+
+  @override
+  String get h2hMeetingsTitle => 'Wszystkie spotkania';
+
+  @override
+  String get h2hPickOpponent =>
+      'Wybierz rywala, aby zobaczyć tu wszystkie spotkania';
+
+  @override
+  String get savesTitle => 'Zapisy';
+
+  @override
+  String get gridColPlayer => 'Zawodnik';
+
+  @override
+  String get gridColPos => 'Poz.';
+
+  @override
+  String get gridColActive => 'Aktywny';
+
+  @override
+  String get gridColMotm => 'MVP';
+
+  @override
+  String get gridColAvg => 'Śr.';
+
+  @override
+  String get gridColOpponent => 'Rywal';
+
+  @override
+  String get gridColStarts => 'W podstawie';
+
+  @override
+  String get gridColTournaments => 'Turnieje';
+
+  @override
+  String get gridColDate => 'Data';
+
+  @override
+  String get gridColLastPlayed => 'Ostatnio grane';
+
+  @override
+  String get gridColManager => 'Trener';
 }

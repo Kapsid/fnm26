@@ -9264,4 +9264,50 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get yConversation => 'Conversazione';
+
+  @override
+  String get allTimeRecordsTitle => 'Record mondiali di sempre';
+
+  @override
+  String get h2hMeetingsTitle => 'Tutti i precedenti';
+
+  @override
+  String get h2hPickOpponent =>
+      'Scegli un avversario per vedere qui tutti i precedenti';
+
+  @override
+  String get savesTitle => 'Salvataggi';
+
+  @override
+  String get gridColPlayer => 'Giocatore';
+
+  @override
+  String get gridColPos => 'Ruolo';
+
+  @override
+  String get gridColActive => 'In attività';
+
+  @override
+  String get gridColMotm => 'MVP';
+
+  @override
+  String get gridColAvg => 'Media';
+
+  @override
+  String get gridColOpponent => 'Avversario';
+
+  @override
+  String get gridColStarts => 'Da titolare';
+
+  @override
+  String get gridColTournaments => 'Tornei';
+
+  @override
+  String get gridColDate => 'Data';
+
+  @override
+  String get gridColLastPlayed => 'Ultima partita';
+
+  @override
+  String get gridColManager => 'Allenatore';
 }
