@@ -41,6 +41,7 @@ const Set<String> tabletReadyPaths = <String>{
   Routes.manager,
   Routes.budgetSetup,
   Routes.trainingCamp,
+  Routes.naturalization,
 };
 
 /// The tablet frame around every in-save screen: sidebar on the left, top bar
