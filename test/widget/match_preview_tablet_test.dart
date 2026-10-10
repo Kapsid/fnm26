@@ -1,3 +1,4 @@
+import 'package:drift/drift.dart' show driftRuntimeOptions;
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/core/layout/form_factor.dart';
@@ -78,7 +79,29 @@ Future<void> _openWith(
   );
 }
 
+const Color _accent = Color(0xFFC8102E);
+
+/// An active host theme for a finals hosted by [p]'s away side.
+WcHostTheme _host(MatchPreview p) => (
+  active: true,
+  accent: _accent,
+  onAccent: const Color(0xFFFFFFFF),
+  colors: const [_accent, Color(0xFFFFC400)],
+  hostIds: [p.fixture.awayNationId],
+  hostLabel: p.nations[p.fixture.awayNationId]!.name.toUpperCase(),
+  competitionLabel: 'WORLD CHAMPIONSHIP 2030',
+  year: 2030,
+);
+
 void main() {
+  // Each seeded save is its own in-memory database, and some tests here
+  // open two (a source save for the real preview, then the one on show):
+  // drift's warning about several databases is expected, not a leak.
+  setUpAll(() => driftRuntimeOptions.dontWarnAboutMultipleDatabases = true);
+  tearDownAll(
+    () => driftRuntimeOptions.dontWarnAboutMultipleDatabases = false,
+  );
+
   testWidgets('the preview is two columns: your side, then theirs', (
     tester,
   ) async {
@@ -129,38 +152,38 @@ void main() {
     await tester.pumpWidget(const SizedBox());
   });
 
+  // Under the same active host theme as the finals match below: a friendly
+  // is not part of the finals, so it gets no banner and its stage line is
+  // not in the host's colour. The page title follows the live finals on
+  // both layouts (the phone's app bar title too), whatever the match.
   testWidgets('a friendly says so, unskinned', (tester) async {
-    final friendly = _reshaped(await _realPreview(tester), round: 'FRIENDLY');
-    await _openWith(tester, friendly);
+    final real = await _realPreview(tester);
+    final friendly = _reshaped(real, round: 'FRIENDLY');
+    await _openWith(tester, friendly, host: _host(real));
     expect(tester.takeException(), isNull);
-    expect(find.text(MatchStage.label(enL, friendly.fixture)), findsWidgets);
+    final stage = find.descendant(
+      of: find.byKey(MatchPreviewScreen.tabletLayoutKey),
+      matching: find.text(MatchStage.label(enL, friendly.fixture)),
+    );
+    expect(stage, findsWidgets);
     expect(find.byType(WcHostBanner), findsNothing);
+    expect(tester.widget<Text>(stage.first).style?.color, isNot(_accent));
+    expect(
+      tester.widget<Text>(find.text(enL.matchPreviewTitle)).style?.color,
+      _accent,
+    );
     await tester.pumpWidget(const SizedBox());
   });
 
   testWidgets("a finals match in the host's colours", (tester) async {
     final real = await _realPreview(tester);
     final hosted = _reshaped(real, round: 'GROUP');
-    const accent = Color(0xFFC8102E);
-    await _openWith(
-      tester,
-      hosted,
-      host: (
-        active: true,
-        accent: accent,
-        onAccent: const Color(0xFFFFFFFF),
-        colors: const [accent, Color(0xFFFFC400)],
-        hostIds: [real.fixture.awayNationId],
-        hostLabel: real.nations[real.fixture.awayNationId]!.name.toUpperCase(),
-        competitionLabel: 'WORLD CHAMPIONSHIP 2030',
-        year: 2030,
-      ),
-    );
+    await _openWith(tester, hosted, host: _host(real));
     expect(tester.takeException(), isNull);
     expect(find.byType(WcHostBanner), findsOneWidget);
     expect(
       tester.widget<Text>(find.text(enL.matchPreviewTitle)).style?.color,
-      accent,
+      _accent,
     );
     await tester.pumpWidget(const SizedBox());
   });
