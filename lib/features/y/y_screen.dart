@@ -7,13 +7,18 @@ import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/util/app_date.dart';
+import 'package:fnm/domain/services/press/persona.dart';
 import 'package:fnm/domain/services/press/y_feed.dart';
 import 'package:fnm/features/y/y_post_detail.dart';
 import 'package:fnm/features/y/y_profile_sheet.dart';
 import 'package:fnm/features/y/y_providers.dart';
+import 'package:fnm/features/y/y_trends.dart';
 import 'package:fnm/l10n/app_localizations.dart';
+import 'package:fnm/shared/tablet/tablet.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
+
+part 'y_tablet_layout.dart';
 
 /// The words for a post.
 ///
@@ -361,14 +366,22 @@ class YScreen extends ConsumerStatefulWidget {
 
   final int careerId;
 
+  static const Key tabletLayoutKey = Key('y.tabletLayout');
+  static const Key trendingKey = Key('y.trending');
+  static const Key voicesKey = Key('y.voices');
+  static const Key sideThreadKey = Key('y.side.thread');
+  static const Key sideProfileKey = Key('y.side.profile');
+  static const Key sideCloseKey = Key('y.side.close');
+
   @override
   ConsumerState<YScreen> createState() => _YScreenState();
 }
 
 class _YScreenState extends ConsumerState<YScreen> {
-  /// Whether the feed has been stamped read on this visit — once per visit, so
-  /// a rebuild does not keep writing the same watermark.
-  bool _marked = false;
+  /// The feed last stamped read, so a rebuild does not keep writing the same
+  /// watermark. A NEW feed is stamped again: on a tablet the sim runs under
+  /// this screen, and posts that arrive while it is on show have been seen.
+  YTimeline? _markedFeed;
 
   @override
   Widget build(BuildContext context) {
@@ -377,9 +390,18 @@ class _YScreenState extends ConsumerState<YScreen> {
     final async = ref.watch(yFeedProvider(careerId));
     // Opening the feed IS reading it: the badge counts what has been said
     // since, not what has been tapped.
-    if (!_marked && async.hasValue) {
-      _marked = true;
+    final shown = async.valueOrNull;
+    if (shown != null && !identical(shown, _markedFeed)) {
+      _markedFeed = shown;
       unawaited(ref.read(yReadServiceProvider).markRead(careerId));
+    }
+    if (TabletShellScope.isActive(context)) {
+      return _YTabletLayout(
+        feedAsync: async,
+        onBack: () => context.canPop()
+            ? context.pop()
+            : context.go('${Routes.hub}?careerId=$careerId'),
+      );
     }
 
     return Scaffold(
@@ -423,9 +445,20 @@ class _YScreenState extends ConsumerState<YScreen> {
 /// Its own widget so the seam heading can be tested without a save behind it:
 /// what this draws is entirely decided by the [YTimeline] handed to it.
 class YFeedList extends StatelessWidget {
-  const YFeedList({required this.feed, super.key});
+  const YFeedList({
+    required this.feed,
+    this.onOpenPost,
+    this.onOpenAccount,
+    super.key,
+  });
 
   final YTimeline feed;
+
+  /// Opens a post; null pushes its page (the phone).
+  final void Function(YPost post)? onOpenPost;
+
+  /// Opens whoever wrote a post; null pushes the profile page (the phone).
+  final void Function(YPost post)? onOpenAccount;
 
   @override
   Widget build(BuildContext context) {
@@ -454,19 +487,23 @@ class YFeedList extends StatelessWidget {
           topRule: i > 0 && posts[i].replyTo == null && row != (seam ?? -1) + 1,
           // A post is the start of a conversation, not a dead line of text:
           // opening it shows everyone who said something about the same match.
-          onTap: () => Navigator.of(context).push(
-            MaterialPageRoute<void>(
-              builder: (_) => YPostDetail(post: posts[i], all: posts),
-            ),
-          ),
-          onAccountTap: () => Navigator.of(context).push(
-            MaterialPageRoute<void>(
-              builder: (_) => YProfileSheet(
-                persona: YFeed.personaOf(posts[i]),
-                all: posts,
-              ),
-            ),
-          ),
+          onTap: () => onOpenPost != null
+              ? onOpenPost!(posts[i])
+              : Navigator.of(context).push(
+                  MaterialPageRoute<void>(
+                    builder: (_) => YPostDetail(post: posts[i], all: posts),
+                  ),
+                ),
+          onAccountTap: () => onOpenAccount != null
+              ? onOpenAccount!(posts[i])
+              : Navigator.of(context).push(
+                  MaterialPageRoute<void>(
+                    builder: (_) => YProfileSheet(
+                      persona: YFeed.personaOf(posts[i]),
+                      all: posts,
+                    ),
+                  ),
+                ),
         );
       },
     );

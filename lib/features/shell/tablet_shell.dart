@@ -37,6 +37,7 @@ const Set<String> tabletReadyPaths = <String>{
   Routes.finances,
   Routes.boardObjectives,
   Routes.youth,
+  Routes.y,
 };
 
 /// The tablet frame around every in-save screen: sidebar on the left, top bar
