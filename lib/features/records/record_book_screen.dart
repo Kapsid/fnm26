@@ -6,9 +6,13 @@ import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/features/records/record_book_providers.dart';
 import 'package:fnm/features/records/rivalry_providers.dart';
+import 'package:fnm/features/shell/detail_pane_host.dart';
 import 'package:fnm/l10n/app_localizations.dart';
+import 'package:fnm/shared/tablet/tablet.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
+
+part 'record_book_tablet_layout.dart';
 
 /// The nation's all-time record book: leaderboards for caps, goals and assists,
 /// plus headline team records. Builds a sense of legacy across endless cycles.
@@ -17,8 +21,13 @@ class RecordBookScreen extends ConsumerWidget {
 
   final int careerId;
 
+  static const Key tabletLayoutKey = Key('records.tabletLayout');
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    if (TabletShellScope.isActive(context)) {
+      return _RecordBookTabletLayout(careerId: careerId);
+    }
     final l = AppLocalizations.of(context);
     final async = ref.watch(recordBookProvider(careerId));
     return Scaffold(
@@ -43,46 +52,16 @@ class RecordBookScreen extends ConsumerWidget {
           if (book == null) {
             return Center(child: Text(l.recordsSaveNotFound));
           }
-          final hasData =
-              book.mostCaps.isNotEmpty ||
-              book.topScorers.isNotEmpty ||
-              book.longestUnbeaten > 0;
-          if (!hasData) {
-            return Center(
-              child: Padding(
-                padding: const EdgeInsets.all(AppSpacing.xl),
-                child: Text(
-                  l.recordsPlayToWriteHistory(book.nationName),
-                  textAlign: TextAlign.center,
-                  style: AppTypography.bodyMedium.copyWith(
-                    color: AppColors.onSurfaceVariant,
-                  ),
-                ),
-              ),
-            );
+          if (!_hasRecords(book)) {
+            return _NoHistoryYet(nationName: book.nationName);
           }
-          String nation(int id) => book.nations[id]?.name ?? 'Unknown';
-          String code(int id) => book.nations[id]?.code ?? '??';
           return ListView(
             padding: const EdgeInsets.all(AppSpacing.marginMobile),
             children: [
               LegacyTiles(careerId: careerId),
               const SizedBox(height: AppSpacing.md),
               _RivalryCard(careerId: careerId),
-              _TeamRecords(
-                bestFinish: book.bestFinish,
-                longestUnbeaten: book.longestUnbeaten,
-                biggestWin: book.biggestWin == null
-                    ? null
-                    : l.recordsBiggestWinValue(
-                        book.biggestWin!.gf,
-                        book.biggestWin!.ga,
-                        nation(book.biggestWin!.oppId),
-                      ),
-                biggestWinCode: book.biggestWin == null
-                    ? null
-                    : code(book.biggestWin!.oppId),
-              ),
+              _TeamRecords(book: book),
               const SizedBox(height: AppSpacing.md),
               _Leaderboard(
                 title: l.recordsMostCaps,
@@ -108,6 +87,36 @@ class RecordBookScreen extends ConsumerWidget {
             ],
           );
         },
+      ),
+    );
+  }
+}
+
+/// Whether the book has anything in it yet: a fresh save has no caps, no
+/// goals and no results.
+bool _hasRecords(RecordBook book) =>
+    book.mostCaps.isNotEmpty ||
+    book.topScorers.isNotEmpty ||
+    book.longestUnbeaten > 0;
+
+/// What the record book says before anything has been played.
+class _NoHistoryYet extends StatelessWidget {
+  const _NoHistoryYet({required this.nationName});
+
+  final String nationName;
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(AppSpacing.xl),
+        child: Text(
+          AppLocalizations.of(context).recordsPlayToWriteHistory(nationName),
+          textAlign: TextAlign.center,
+          style: AppTypography.bodyMedium.copyWith(
+            color: AppColors.onSurfaceVariant,
+          ),
+        ),
       ),
     );
   }
@@ -323,12 +332,6 @@ class _RivalryCard extends ConsumerWidget {
     final l = AppLocalizations.of(context);
     final r = ref.watch(rivalryProvider(careerId)).valueOrNull;
     if (r == null) return const SizedBox.shrink();
-    final record = l.recordsWdl(r.wins, r.draws, r.losses);
-    final edge = r.wins > r.losses
-        ? l.recordsEdgeUpperHand
-        : r.wins < r.losses
-        ? l.recordsEdgeTheirNumber
-        : l.recordsEdgeEven;
     return Padding(
       padding: const EdgeInsets.only(bottom: AppSpacing.md),
       child: AppCard(
@@ -352,32 +355,7 @@ class _RivalryCard extends ConsumerWidget {
               ],
             ),
             const SizedBox(height: AppSpacing.sm),
-            Row(
-              children: [
-                FlagDisc(r.rival.code, size: 32),
-                const SizedBox(width: AppSpacing.md),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(r.rival.name, style: AppTypography.titleMedium),
-                      Text(
-                        l.recordsRivalLine(r.played, record, edge),
-                        style: AppTypography.labelSmall.copyWith(
-                          color: AppColors.onSurfaceVariant,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Text(
-                  '${r.goalsFor}–${r.goalsAgainst}',
-                  style: AppTypography.titleMedium.copyWith(
-                    color: AppColors.primary,
-                  ),
-                ),
-              ],
-            ),
+            _RivalryLine(rivalry: r),
           ],
         ),
       ),
@@ -385,35 +363,89 @@ class _RivalryCard extends ConsumerWidget {
   }
 }
 
-class _TeamRecords extends StatelessWidget {
-  const _TeamRecords({
-    required this.bestFinish,
-    required this.longestUnbeaten,
-    required this.biggestWin,
-    required this.biggestWinCode,
-  });
+/// The rival's flag and name, the record against them, and the goals.
+class _RivalryLine extends StatelessWidget {
+  const _RivalryLine({required this.rivalry});
 
-  final String bestFinish;
-  final int longestUnbeaten;
-  final String? biggestWin;
-  final String? biggestWinCode;
+  final Rivalry rivalry;
 
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
-    return AppCard(
-      child: Column(
-        children: [
-          _row(l.recordsBestFinish, bestFinish, null),
-          _row(
-            l.recordsLongestUnbeaten,
-            l.recordsMatchesCount(longestUnbeaten),
-            null,
+    final r = rivalry;
+    final record = l.recordsWdl(r.wins, r.draws, r.losses);
+    final edge = r.wins > r.losses
+        ? l.recordsEdgeUpperHand
+        : r.wins < r.losses
+        ? l.recordsEdgeTheirNumber
+        : l.recordsEdgeEven;
+    return Row(
+      children: [
+        FlagDisc(r.rival.code, size: 32),
+        const SizedBox(width: AppSpacing.md),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(r.rival.name, style: AppTypography.titleMedium),
+              Text(
+                l.recordsRivalLine(r.played, record, edge),
+                style: AppTypography.labelSmall.copyWith(
+                  color: AppColors.onSurfaceVariant,
+                ),
+              ),
+            ],
           ),
-          if (biggestWin != null)
-            _row(l.recordsBiggestWin, biggestWin!, biggestWinCode),
-        ],
-      ),
+        ),
+        Text(
+          '${r.goalsFor}–${r.goalsAgainst}',
+          style: AppTypography.titleMedium.copyWith(color: AppColors.primary),
+        ),
+      ],
+    );
+  }
+}
+
+class _TeamRecords extends StatelessWidget {
+  const _TeamRecords({required this.book});
+
+  final RecordBook book;
+
+  @override
+  Widget build(BuildContext context) =>
+      AppCard(child: _TeamRecordRows(book: book));
+}
+
+/// The team's headline records: the best finish, the longest unbeaten run
+/// and the biggest win.
+class _TeamRecordRows extends StatelessWidget {
+  const _TeamRecordRows({required this.book});
+
+  final RecordBook book;
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    final win = book.biggestWin;
+    return Column(
+      children: [
+        _row(l.recordsBestFinish, book.bestFinish, null),
+        _row(
+          l.recordsLongestUnbeaten,
+          l.recordsMatchesCount(book.longestUnbeaten),
+          null,
+        ),
+        if (win != null)
+          _row(
+            l.recordsBiggestWin,
+            l.recordsBiggestWinValue(
+              win.gf,
+              win.ga,
+              book.nations[win.oppId]?.name ?? 'Unknown',
+            ),
+            book.nations[win.oppId]?.code ?? '??',
+          ),
+      ],
     );
   }
 
