@@ -44,6 +44,7 @@ const Set<String> tabletReadyPaths = <String>{
   Routes.naturalization,
   Routes.records,
   Routes.allTimeRecords,
+  Routes.legends,
 };
 
 /// The tablet frame around every in-save screen: sidebar on the left, top bar
