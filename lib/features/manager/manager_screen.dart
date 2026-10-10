@@ -8,8 +8,11 @@ import 'package:fnm/domain/services/manager/manager_skills.dart';
 import 'package:fnm/features/federation/staff_card.dart';
 import 'package:fnm/features/manager/manager_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
+import 'package:fnm/shared/tablet/tablet.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
+
+part 'manager_tablet_layout.dart';
 
 /// The manager's own page: what he is good at, who he employs, and what the
 /// side works on when there is no match to play.
@@ -22,8 +25,16 @@ class ManagerScreen extends ConsumerWidget {
 
   final int careerId;
 
+  static const Key tabletLayoutKey = Key('manager.tabletLayout');
+
+  /// The skills card on the tablet page.
+  static const Key skillsKey = Key('manager.skills');
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    if (TabletShellScope.isActive(context)) {
+      return _ManagerTabletLayout(careerId: careerId);
+    }
     final l = AppLocalizations.of(context);
     final async = ref.watch(managerViewProvider(careerId));
     return Scaffold(
@@ -102,35 +113,62 @@ class _NameCard extends ConsumerWidget {
   }
 
   Future<void> _rename(BuildContext context, WidgetRef ref) async {
-    final l = AppLocalizations.of(context);
-    final controller = TextEditingController(text: name);
     final next = await showDialog<String>(
       context: context,
-      builder: (dialogContext) => AlertDialog(
-        title: Text(l.managerRename),
-        content: AppTextField(
-          label: l.careerManagerName,
-          hint: l.careerManagerNameHint,
-          controller: controller,
-          autofocus: true,
-          textInputAction: TextInputAction.done,
-          onSubmitted: (v) => Navigator.of(dialogContext).pop(v),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(dialogContext).pop(),
-            child: Text(l.careerCancel),
-          ),
-          TextButton(
-            onPressed: () => Navigator.of(dialogContext).pop(controller.text),
-            child: Text(l.managerRenameSave),
-          ),
-        ],
-      ),
+      builder: (_) => _RenameDialog(name: name),
     );
-    controller.dispose();
     if (next == null || next.trim() == name) return;
     await ref.read(managerServiceProvider).rename(careerId, next);
+  }
+}
+
+/// The rename dialog. It owns its controller so the field outlives the
+/// dialog's exit animation: disposing it as soon as `showDialog` returned
+/// left the closing dialog rebuilding a dead controller.
+class _RenameDialog extends StatefulWidget {
+  const _RenameDialog({required this.name});
+
+  final String name;
+
+  @override
+  State<_RenameDialog> createState() => _RenameDialogState();
+}
+
+class _RenameDialogState extends State<_RenameDialog> {
+  late final TextEditingController _controller = TextEditingController(
+    text: widget.name,
+  );
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    return AlertDialog(
+      title: Text(l.managerRename),
+      content: AppTextField(
+        label: l.careerManagerName,
+        hint: l.careerManagerNameHint,
+        controller: _controller,
+        autofocus: true,
+        textInputAction: TextInputAction.done,
+        onSubmitted: (v) => Navigator.of(context).pop(v),
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(),
+          child: Text(l.careerCancel),
+        ),
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(_controller.text),
+          child: Text(l.managerRenameSave),
+        ),
+      ],
+    );
   }
 }
 

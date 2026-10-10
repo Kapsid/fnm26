@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/services/manager/manager_skills.dart';
+import 'package:fnm/domain/services/manager/staff.dart';
 import 'package:fnm/domain/services/press/y_feed.dart';
 import 'package:fnm/domain/services/squad/training_camp.dart';
 import 'package:fnm/features/career/career_providers.dart';
@@ -137,7 +138,12 @@ Override managerWithPoints(int earned) =>
           earned: earned,
           levels: skills,
         ),
-        staffWages: 0,
+        // As the real provider derives it.
+        staffWages: Staff.totalCost({
+          StaffRole.assistant: career.staffAssistant,
+          StaffRole.scout: career.staffScout,
+          StaffRole.fitnessCoach: career.staffFitnessCoach,
+        }),
       );
     });
 

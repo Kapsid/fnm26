@@ -23,11 +23,12 @@ void main() {
     expect(tester.takeException(), isNull);
     final before = tester.getSize(find.byKey(CallUpScreen.tabletLayoutKey));
 
-    // /manager is the phone-framed destination: it is not tablet-ready in
-    // stage 3, so this stays true until it converts (then pick another).
+    // /achievements is the phone-framed destination: it is not tablet-ready
+    // in stage 4, so this stays true until it converts (then pick another;
+    // /manager was the destination until stage 4 converted it).
     save.container
         .read(routerProvider)
-        .go('${Routes.manager}?careerId=${save.careerId}');
+        .go('${Routes.achievements}?careerId=${save.careerId}');
     for (var i = 0; i < 20; i++) {
       await tester.runAsync(
         () => Future<void>.delayed(const Duration(milliseconds: 10)),
@@ -56,7 +57,7 @@ void main() {
       await pumpRoute(
         tester,
         save,
-        '${Routes.manager}?careerId=${save.careerId}',
+        '${Routes.achievements}?careerId=${save.careerId}',
         size: kTabletSize,
       );
       final frame = tester.getSize(find.byType(PhoneWidthFrame));
