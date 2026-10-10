@@ -387,11 +387,10 @@ class _BackupCard extends ConsumerStatefulWidget {
 class _BackupCardState extends ConsumerState<_BackupCard> {
   bool _busy = false;
 
-  Future<void> _export() async {
+  /// [origin] is the Export button's on-screen rect, taken at the tap while
+  /// it is laid out: an iPad's share sheet must point at something.
+  Future<void> _export(Rect? origin) async {
     final l = AppLocalizations.of(context);
-    // Taken now, while the card is laid out: an iPad's share sheet must
-    // point at something.
-    final origin = shareOriginOf(context);
     setState(() => _busy = true);
     try {
       final file = await ref.read(saveBackupServiceProvider).export();
@@ -459,10 +458,12 @@ class _BackupCardState extends ConsumerState<_BackupCard> {
             ),
           ),
           const SizedBox(height: AppSpacing.md),
-          PrimaryButton(
-            label: l.backupExport,
-            icon: Icons.ios_share_rounded,
-            onPressed: _busy ? null : _export,
+          Builder(
+            builder: (button) => PrimaryButton(
+              label: l.backupExport,
+              icon: Icons.ios_share_rounded,
+              onPressed: _busy ? null : () => _export(shareOriginOf(button)),
+            ),
           ),
           const SizedBox(height: AppSpacing.sm),
           // A full-width outlined button, not a text link: restoring is the

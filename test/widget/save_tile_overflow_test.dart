@@ -63,7 +63,7 @@ void main() {
             nation: nation,
             onContinue: () {},
             onDelete: () {},
-            onShare: busy ? null : () {},
+            onShare: busy ? null : (_) {},
           ),
         ),
       ),

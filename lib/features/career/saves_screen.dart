@@ -138,11 +138,12 @@ class _SavesScreenState extends ConsumerState<SavesScreen> {
                             ),
                             onShare: _busy
                                 ? null
-                                : () => _run(
+                                : (origin) => _run(
                                     () => _shareCareer(
                                       context,
                                       ref,
                                       save.id,
+                                      origin: origin,
                                     ),
                                   ),
                           );
@@ -225,15 +226,23 @@ class _SavesScreenState extends ConsumerState<SavesScreen> {
                       // Every save at once, which is the backup that actually
                       // answers a lost phone. Exporting one career at a time
                       // from the tiles covers the save you remembered; this
-                      // covers the ones you did not.
+                      // covers the ones you did not. The Builder hands the
+                      // share sheet this button's own rect (an iPad's popover
+                      // points at it).
                       if (saves.isNotEmpty)
-                        TextButton.icon(
-                          onPressed: () => _backupAll(context, ref),
-                          icon: const Icon(
-                            Icons.backup_outlined,
-                            size: 18,
+                        Builder(
+                          builder: (button) => TextButton.icon(
+                            onPressed: () => _backupAll(
+                              context,
+                              ref,
+                              origin: shareOriginOf(button),
+                            ),
+                            icon: const Icon(
+                              Icons.backup_outlined,
+                              size: 18,
+                            ),
+                            label: Text(l.careerBackupAll),
                           ),
-                          label: Text(l.careerBackupAll),
                         ),
                     ],
                   ),
@@ -479,10 +488,12 @@ class SaveTile extends StatelessWidget {
   final VoidCallback onContinue;
   final VoidCallback onDelete;
 
-  /// Writes this one career to a file and hands it to the share sheet.
-  /// Null while another file action is already running, which disables the
-  /// row's export button rather than queueing a second write behind the first.
-  final VoidCallback? onShare;
+  /// Writes this one career to a file and hands it to the share sheet, which
+  /// points at the export button's on-screen rect (an iPad's popover needs
+  /// one). Null while another file action is already running, which disables
+  /// the row's export button rather than queueing a second write behind the
+  /// first.
+  final void Function(Rect? origin)? onShare;
 
   @override
   Widget build(BuildContext context) {
@@ -576,29 +587,33 @@ class SaveTile extends StatelessWidget {
                 // is the control that gets a career off the phone.
                 Align(
                   alignment: Alignment.centerLeft,
-                  child: TextButton.icon(
-                    style: TextButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: AppSpacing.xs,
+                  child: Builder(
+                    builder: (button) => TextButton.icon(
+                      style: TextButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: AppSpacing.xs,
+                        ),
+                        visualDensity: VisualDensity.compact,
+                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                       ),
-                      visualDensity: VisualDensity.compact,
-                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                    ),
-                    onPressed: onShare,
-                    icon: onShare == null
-                        ? const SizedBox(
-                            width: 16,
-                            height: 16,
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2,
-                              color: AppColors.primary,
-                            ),
-                          )
-                        : const Icon(Icons.ios_share_rounded, size: 16),
-                    label: Text(
-                      l.careerExportSave,
-                      style: AppTypography.labelSmall.copyWith(
-                        color: AppColors.primary,
+                      onPressed: onShare == null
+                          ? null
+                          : () => onShare!(shareOriginOf(button)),
+                      icon: onShare == null
+                          ? const SizedBox(
+                              width: 16,
+                              height: 16,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                color: AppColors.primary,
+                              ),
+                            )
+                          : const Icon(Icons.ios_share_rounded, size: 16),
+                      label: Text(
+                        l.careerExportSave,
+                        style: AppTypography.labelSmall.copyWith(
+                          color: AppColors.primary,
+                        ),
                       ),
                     ),
                   ),
