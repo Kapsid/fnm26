@@ -9,8 +9,10 @@ import 'package:fnm/core/util/match_stage.dart';
 import 'package:fnm/core/util/squad_label.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/enums.dart';
+import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/entities/formation.dart';
 import 'package:fnm/domain/entities/player.dart';
+import 'package:fnm/domain/services/match/match_engine.dart' show MatchTeam;
 import 'package:fnm/domain/services/match/strength_factors.dart';
 import 'package:fnm/domain/services/rating/overall_rating.dart';
 import 'package:fnm/domain/services/tactics/position_fit.dart';
@@ -121,34 +123,25 @@ class MatchPreviewScreen extends ConsumerWidget {
           if (preview == null) {
             return Center(child: Text(l10n.matchNoUpcoming));
           }
-          final f = preview.fixture;
-          String code(int id) => preview.nations[id]?.code ?? '??';
-          String name(int id) =>
-              preview.nations[id]?.name ?? l10n.matchUnknownNation;
-          final team = preview.playerIsHome
-              ? preview.homeTeam
-              : preview.awayTeam;
-          final positions = team.formation.positions;
-          final myNationId = preview.playerIsHome
-              ? f.homeNationId
-              : f.awayNationId;
-          final oppNationId = preview.playerIsHome
-              ? f.awayNationId
-              : f.homeNationId;
-          final hosted = host != null && themedRounds.contains(f.round);
-
+          final p = _PreviewParts(
+            preview: preview,
+            careerId: careerId,
+            l10n: l10n,
+            host: host,
+            themedRounds: themedRounds,
+          );
           return ListView(
             padding: const EdgeInsets.all(AppSpacing.marginMobile),
             children: [
-              if (hosted) ...[
-                WcHostBanner(theme: host, code: code),
+              if (p.hosted) ...[
+                WcHostBanner(theme: host!, code: p.code),
                 const SizedBox(height: AppSpacing.md),
               ],
               Center(
                 child: Text(
-                  MatchStage.label(l10n, f),
+                  MatchStage.label(l10n, p.fixture),
                   style: AppTypography.labelSmall.copyWith(
-                    color: hosted ? accent : AppColors.primary,
+                    color: p.hosted ? accent : AppColors.primary,
                   ),
                 ),
               ),
@@ -157,89 +150,18 @@ class MatchPreviewScreen extends ConsumerWidget {
               // engine decide", which is fine to play with and terrible to
               // never be told about.
               SquadSetupWarning(careerId: careerId),
-              MatchHeadline(
-                homeCode: code(f.homeNationId),
-                homeOverall: squadOverall(preview.homeTeam.xi),
-                awayCode: code(f.awayNationId),
-                awayOverall: squadOverall(preview.awayTeam.xi),
-                date: f.date,
-              ),
+              p.headline(),
               const SizedBox(height: AppSpacing.lg),
-              // Head-to-head and the scouting report share one card as two
-              // tabs — they were stacked, which pushed the starting XI (the
-              // thing the manager is actually here to check) below the fold.
-              OpponentBriefing(
-                careerId: careerId,
-                myNationId: myNationId,
-                oppNationId: oppNationId,
-                oppName: name(oppNationId),
-                oppCode: code(oppNationId),
-                keyMen: _keyMen(
-                  preview.playerIsHome
-                      ? preview.awayTeam.xi
-                      : preview.homeTeam.xi,
-                ),
-                saveSeed: preview.saveSeed,
-              ),
+              p.briefing(),
               const SizedBox(height: AppSpacing.lg),
-              Text(
-                l10n.matchGroundTitle,
-                style: AppTypography.labelMedium.copyWith(
-                  color: AppColors.primary,
-                ),
-              ),
+              p.groundTitle(),
               const SizedBox(height: AppSpacing.sm),
-              GroundCard(
-                ground: preview.ground,
-                neutral: preview.neutralVenue,
-                groundNationCode: code(preview.ground.groundNationId),
-              ),
+              p.ground(),
               const SizedBox(height: AppSpacing.lg),
-              // What is helping and what is hurting, before he picks. Every
-              // line of it already moved the result and none of it was ever
-              // said out loud.
-              StrengthPanel(
-                careerId: careerId,
-                formation: team.formation,
-                sideRating: team.xi.isEmpty
-                    ? StrengthFactors.defaultSideRating
-                    : squadOverall(team.xi),
-              ),
-              Row(
-                children: [
-                  Text(
-                    l10n.matchYourXi,
-                    style: AppTypography.labelMedium.copyWith(
-                      color: AppColors.primary,
-                    ),
-                  ),
-                  const SizedBox(width: AppSpacing.sm),
-                  Text(
-                    team.formation.label,
-                    style: AppTypography.labelSmall.copyWith(
-                      color: AppColors.onSurfaceVariant,
-                    ),
-                  ),
-                ],
-              ),
+              p.strength(),
+              p.xiHeader(),
               const SizedBox(height: AppSpacing.sm),
-              AppCard(
-                padding: const EdgeInsets.symmetric(
-                  vertical: AppSpacing.sm,
-                  horizontal: AppSpacing.md,
-                ),
-                child: Column(
-                  children: [
-                    for (var i = 0; i < team.xi.length; i++)
-                      _XiRow(
-                        player: team.xi[i],
-                        slot: i < positions.length
-                            ? positions[i]
-                            : team.xi[i].position,
-                      ),
-                  ],
-                ),
-              ),
+              p.xiCard(),
               const SizedBox(height: AppSpacing.xl),
             ],
           );
@@ -296,6 +218,121 @@ class MatchPreviewScreen extends ConsumerWidget {
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+/// Everything both preview layouts read off one [MatchPreview], worked out
+/// once, and the pieces both draw. The phone stacks them in one list; the
+/// tablet splits them over two columns.
+class _PreviewParts {
+  _PreviewParts({
+    required this.preview,
+    required this.careerId,
+    required this.l10n,
+    required WcHostTheme? host,
+    required Set<String> themedRounds,
+  }) : hosted = host != null && themedRounds.contains(preview.fixture.round);
+
+  final MatchPreview preview;
+  final int careerId;
+  final AppLocalizations l10n;
+
+  /// Whether this match is played in the live finals, under its host's skin.
+  final bool hosted;
+
+  Fixture get fixture => preview.fixture;
+
+  MatchTeam get team =>
+      preview.playerIsHome ? preview.homeTeam : preview.awayTeam;
+
+  int get myNationId =>
+      preview.playerIsHome ? fixture.homeNationId : fixture.awayNationId;
+
+  int get oppNationId =>
+      preview.playerIsHome ? fixture.awayNationId : fixture.homeNationId;
+
+  String code(int id) => preview.nations[id]?.code ?? '??';
+
+  String name(int id) => preview.nations[id]?.name ?? l10n.matchUnknownNation;
+
+  Widget headline() => MatchHeadline(
+    homeCode: code(fixture.homeNationId),
+    homeOverall: squadOverall(preview.homeTeam.xi),
+    awayCode: code(fixture.awayNationId),
+    awayOverall: squadOverall(preview.awayTeam.xi),
+    date: fixture.date,
+  );
+
+  // Head-to-head and the scouting report share one card as two tabs: they
+  // were stacked, which pushed the starting XI (the thing the manager is
+  // actually here to check) below the fold.
+  Widget briefing() => OpponentBriefing(
+    careerId: careerId,
+    myNationId: myNationId,
+    oppNationId: oppNationId,
+    oppName: name(oppNationId),
+    oppCode: code(oppNationId),
+    keyMen: _keyMen(
+      preview.playerIsHome ? preview.awayTeam.xi : preview.homeTeam.xi,
+    ),
+    saveSeed: preview.saveSeed,
+  );
+
+  Widget groundTitle() => Text(
+    l10n.matchGroundTitle,
+    style: AppTypography.labelMedium.copyWith(color: AppColors.primary),
+  );
+
+  Widget ground() => GroundCard(
+    ground: preview.ground,
+    neutral: preview.neutralVenue,
+    groundNationCode: code(preview.ground.groundNationId),
+  );
+
+  // What is helping and what is hurting, before he picks. Every line of it
+  // already moved the result and none of it was ever said out loud.
+  Widget strength() => StrengthPanel(
+    careerId: careerId,
+    formation: team.formation,
+    sideRating: team.xi.isEmpty
+        ? StrengthFactors.defaultSideRating
+        : squadOverall(team.xi),
+  );
+
+  Widget xiHeader() => Row(
+    children: [
+      Text(
+        l10n.matchYourXi,
+        style: AppTypography.labelMedium.copyWith(color: AppColors.primary),
+      ),
+      const SizedBox(width: AppSpacing.sm),
+      Text(
+        team.formation.label,
+        style: AppTypography.labelSmall.copyWith(
+          color: AppColors.onSurfaceVariant,
+        ),
+      ),
+    ],
+  );
+
+  Widget xiCard() {
+    final xi = team.xi;
+    final positions = team.formation.positions;
+    return AppCard(
+      padding: const EdgeInsets.symmetric(
+        vertical: AppSpacing.sm,
+        horizontal: AppSpacing.md,
+      ),
+      child: Column(
+        children: [
+          for (var i = 0; i < xi.length; i++)
+            _XiRow(
+              player: xi[i],
+              slot: i < positions.length ? positions[i] : xi[i].position,
+            ),
+        ],
       ),
     );
   }

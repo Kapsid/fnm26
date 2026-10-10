@@ -30,21 +30,13 @@ class _MatchPreviewTabletLayout extends ConsumerWidget {
           if (preview == null) {
             return Center(child: Text(l10n.matchNoUpcoming));
           }
-          final f = preview.fixture;
-          String code(int id) => preview.nations[id]?.code ?? '??';
-          String name(int id) =>
-              preview.nations[id]?.name ?? l10n.matchUnknownNation;
-          final team = preview.playerIsHome
-              ? preview.homeTeam
-              : preview.awayTeam;
-          final positions = team.formation.positions;
-          final myNationId = preview.playerIsHome
-              ? f.homeNationId
-              : f.awayNationId;
-          final oppNationId = preview.playerIsHome
-              ? f.awayNationId
-              : f.homeNationId;
-          final hosted = host != null && themedRounds.contains(f.round);
+          final p = _PreviewParts(
+            preview: preview,
+            careerId: careerId,
+            l10n: l10n,
+            host: host,
+            themedRounds: themedRounds,
+          );
           return Padding(
             padding: const EdgeInsets.all(AppSpacing.md),
             child: Column(
@@ -59,19 +51,19 @@ class _MatchPreviewTabletLayout extends ConsumerWidget {
                     const SizedBox(width: AppSpacing.md),
                     Expanded(
                       child: Text(
-                        MatchStage.label(l10n, f),
+                        MatchStage.label(l10n, p.fixture),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: TabletText.barMeta.copyWith(
-                          color: hosted ? accent : AppColors.primary,
+                          color: p.hosted ? accent : AppColors.primary,
                         ),
                       ),
                     ),
                   ],
                 ),
-                if (hosted) ...[
+                if (p.hosted) ...[
                   const SizedBox(height: AppSpacing.sm),
-                  WcHostBanner(theme: host!, code: code),
+                  WcHostBanner(theme: host!, code: p.code),
                 ],
                 const SizedBox(height: AppSpacing.sm),
                 Expanded(
@@ -82,56 +74,12 @@ class _MatchPreviewTabletLayout extends ConsumerWidget {
                         child: ListView(
                           children: [
                             SquadSetupWarning(careerId: careerId),
-                            MatchHeadline(
-                              homeCode: code(f.homeNationId),
-                              homeOverall: squadOverall(preview.homeTeam.xi),
-                              awayCode: code(f.awayNationId),
-                              awayOverall: squadOverall(preview.awayTeam.xi),
-                              date: f.date,
-                            ),
+                            p.headline(),
                             const SizedBox(height: AppSpacing.lg),
-                            StrengthPanel(
-                              careerId: careerId,
-                              formation: team.formation,
-                              sideRating: team.xi.isEmpty
-                                  ? StrengthFactors.defaultSideRating
-                                  : squadOverall(team.xi),
-                            ),
-                            Row(
-                              children: [
-                                Text(
-                                  l10n.matchYourXi,
-                                  style: AppTypography.labelMedium.copyWith(
-                                    color: AppColors.primary,
-                                  ),
-                                ),
-                                const SizedBox(width: AppSpacing.sm),
-                                Text(
-                                  team.formation.label,
-                                  style: AppTypography.labelSmall.copyWith(
-                                    color: AppColors.onSurfaceVariant,
-                                  ),
-                                ),
-                              ],
-                            ),
+                            p.strength(),
+                            p.xiHeader(),
                             const SizedBox(height: AppSpacing.sm),
-                            AppCard(
-                              padding: const EdgeInsets.symmetric(
-                                vertical: AppSpacing.sm,
-                                horizontal: AppSpacing.md,
-                              ),
-                              child: Column(
-                                children: [
-                                  for (var i = 0; i < team.xi.length; i++)
-                                    _XiRow(
-                                      player: team.xi[i],
-                                      slot: i < positions.length
-                                          ? positions[i]
-                                          : team.xi[i].position,
-                                    ),
-                                ],
-                              ),
-                            ),
+                            p.xiCard(),
                           ],
                         ),
                       ),
@@ -139,34 +87,11 @@ class _MatchPreviewTabletLayout extends ConsumerWidget {
                       Expanded(
                         child: ListView(
                           children: [
-                            OpponentBriefing(
-                              careerId: careerId,
-                              myNationId: myNationId,
-                              oppNationId: oppNationId,
-                              oppName: name(oppNationId),
-                              oppCode: code(oppNationId),
-                              keyMen: _keyMen(
-                                preview.playerIsHome
-                                    ? preview.awayTeam.xi
-                                    : preview.homeTeam.xi,
-                              ),
-                              saveSeed: preview.saveSeed,
-                            ),
+                            p.briefing(),
                             const SizedBox(height: AppSpacing.lg),
-                            Text(
-                              l10n.matchGroundTitle,
-                              style: AppTypography.labelMedium.copyWith(
-                                color: AppColors.primary,
-                              ),
-                            ),
+                            p.groundTitle(),
                             const SizedBox(height: AppSpacing.sm),
-                            GroundCard(
-                              ground: preview.ground,
-                              neutral: preview.neutralVenue,
-                              groundNationCode: code(
-                                preview.ground.groundNationId,
-                              ),
-                            ),
+                            p.ground(),
                           ],
                         ),
                       ),
