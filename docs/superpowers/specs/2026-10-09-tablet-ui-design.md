@@ -262,6 +262,62 @@ Each stage gets its own implementation plan.
 - Test harness: `settle` advances fake time only after its minimum rounds
   while a spinner shows; the full-screen route sweep is its own file.
 
+## Stage 4 adjustments (2026-10-10)
+
+- Finances and board objectives are `DashboardGrid`s of panels. The
+  manager's page is not: the staff card sizes its names with a
+  `LayoutBuilder`, which a dashboard row cannot measure, so the page is two
+  scrolling columns of the phone's cards, skills left, name and staff
+  right. Hiring stays on the budget screen.
+- Budget setup: the sliders (with their blurbs) left; the staff, a "What
+  this budget buys" panel and the Confirm bar right. The sliders' own
+  effect lines are hidden on a tablet (`InvestmentEditor.showEffects`), so
+  each effect is stated once. Both layouts read one set of numbers
+  (`_budgetFor`) and one Confirm, and an allocation in progress survives a
+  resize across 1000 px.
+- Youth: the watchlist and the five levels are tabs over sortable grids,
+  with the picked boy's card in a detail pane and the U-21 call-ups in the
+  heading.
+- Y: the timeline in the centre; beside it "Trending" (the conversations
+  above the seam with the most posts) and "Voices" (the accounts that post
+  most). A post or an account opens in that side column instead of a page
+  of its own. The feed is marked read again whenever it refreshes while on
+  show.
+- Training camp: the host card over the camps as a grid of the phone's
+  cards (four camps two to a row, a co-hosted six three to a row where
+  they fit). Naturalisation: the offer and the two answers left, the
+  player's full card right. Both are event pages with no back arrow, as on
+  the phone.
+- The sim's cascade also refreshes the federation, manager and Y screens
+  (`SeasonService._invalidateFederationViews`): the prize money, the
+  balance, the manager's points, the youth pyramid and watchlist, the Y
+  feed, a pending naturalisation offer and the base camp.
+- A naturalisation decision refreshes the hub's data, so the tablet top
+  bar (which keeps it alive) stops offering the decision just taken.
+- The competition views' tab key (`ValueKey(liveTab)`) is kept: a refresh
+  that leaves the stage where it was keeps the manager's tab; a real stage
+  change re-lands on the live stage.
+- `TabletPage` (heading over content) frames the in-shell pages of this
+  stage.
+- The budget sliders here are the €500k ones on this branch. The
+  budget-levels work merges into `_budgetFor`, `budgetReady` and
+  `InvestmentEditor` only, which both layouts share.
+- German and Spanish need the 9 stage 4 keys when they merge (values in the
+  stage 4 plan, Task 2).
+- A decision page that saves and then moves on (budget, base camp,
+  naturalisation) takes what it needs before the save and goes to the hub
+  only if the manager is still on that page (`router.state`, which sees
+  pushed pages too), so a resize or a trip to Settings mid-save never loses
+  the choice or pulls him away.
+- Accepting a naturalisation also refreshes the inbox, so the tablet top
+  bar's unread count includes the new message.
+- The budget's back arrow says "Decide later" on a tablet too
+  (`TabletScreenHeader.backTooltip`).
+- Some widget tests override a provider the screen invalidates but nothing
+  watches: Riverpod 2.6.1 throws at container teardown for an invalidated
+  element that was never rebuilt. Test-only; revisit at the Riverpod 3
+  upgrade.
+
 ## Testing
 
 - **Phone guard**: before a screen gets a tablet layout, a widget or golden
