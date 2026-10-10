@@ -10,6 +10,7 @@ import 'package:fnm/features/tournaments/cup_detail_providers.dart';
 import 'package:fnm/features/tournaments/intercontinental_playoff_providers.dart';
 import 'package:fnm/features/tournaments/nations_cup_providers.dart';
 import 'package:fnm/features/tournaments/tournaments_providers.dart';
+import 'package:fnm/features/tournaments/wc_host_theme.dart';
 
 import '../helpers/seeded_save.dart';
 
@@ -36,6 +37,8 @@ void main() {
       'clash': continentalClashProvider(id).future,
       'playoff': intercontinentalPlayoffProvider(id).future,
       'results': resultsProvider(id).future,
+      'wcHost': wcHostThemeProvider(id).future,
+      'continentalHost': continentalHostThemeProvider(id).future,
       'vitrine': nationVitrineProvider((
         careerId: id,
         nationId: save.nationId,

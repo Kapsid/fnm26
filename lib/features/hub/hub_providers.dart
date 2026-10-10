@@ -64,6 +64,7 @@ import 'package:fnm/features/tournaments/intercontinental_playoff_providers.dart
 import 'package:fnm/features/tournaments/nations_cup_providers.dart';
 import 'package:fnm/features/tournaments/tournaments_providers.dart';
 import 'package:fnm/features/tournaments/playoff_paths.dart';
+import 'package:fnm/features/tournaments/wc_host_theme.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/domain/services/club/clubs.dart';
 import 'package:fnm/domain/services/club/transfer_window.dart';
@@ -601,7 +602,9 @@ class SeasonService {
       ..invalidate(continentalClashProvider)
       ..invalidate(intercontinentalPlayoffProvider)
       ..invalidate(resultsProvider)
-      ..invalidate(nationVitrineProvider);
+      ..invalidate(nationVitrineProvider)
+      ..invalidate(wcHostThemeProvider)
+      ..invalidate(continentalHostThemeProvider);
   }
 
   /// Persists the in-memory ranking points for [careerId], and republishes the

@@ -200,6 +200,8 @@ extension SeasonRollover on SeasonService {
     // The ranking screen's data is auto-disposed but can be kept alive by a
     // listener elsewhere (careers list, vitrine) — refresh it explicitly so
     // the full ranking always shows the points the sim just moved.
+    // Not _invalidateCompetitionViews: the rollover is a top-level route, so
+    // the shell and its competition screens are torn down while it runs.
     _ref
       ..invalidate(hubDataProvider)
       ..invalidate(worldRankingProvider)
