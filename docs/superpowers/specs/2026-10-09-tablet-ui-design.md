@@ -250,9 +250,10 @@ Each stage gets its own implementation plan.
 - The competition detail screens share `TabletTabBar` and
   `TabletDetailPage`.
 - The draw ceremonies, the finals draw, the host draw and the kickoff
-  choose landscape inside their own State, so resizing never restarts an
-  animation; those routes are tablet-ready.
-- On non-English phones, four previously hard-coded English strings in the
+  choose landscape inside their own State, so resizing keeps the draws'
+  state; the kickoff's entrance fade replays when the window crosses
+  1000px. Those routes are tablet-ready.
+- On non-English phones, five previously hard-coded English strings in the
   draw screens are now translated ("GROUP", "Start the draw", "View
   groups", "HOST" and "CO-HOSTS"). English is unchanged.
 - Known pre-existing phone bug, not fixed on this branch: on the phone
