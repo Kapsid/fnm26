@@ -71,4 +71,33 @@ void main() {
       await tester.pumpWidget(const SizedBox());
     });
   }
+
+  // Stage 3 carry-over (liveTab re-key). A top-bar step invalidates this
+  // provider under the open page; a refresh that leaves the stage where it
+  // was must leave the manager on the tab he picked.
+  testWidgets('a refresh keeps the tab the manager picked', (tester) async {
+    final save = await seedSave(
+      tester,
+      formFactor: FormFactor.tablet,
+      overrides: [
+        cupDetailProvider(
+          kSeededCareerId,
+        ).overrideWith((ref) async => fakeCupData(seededNationId)),
+      ],
+    );
+    await pumpRoute(
+      tester,
+      save,
+      '${Routes.cup}?careerId=${save.careerId}',
+      size: kTabletSize,
+    );
+    TabController controller() =>
+        DefaultTabController.of(tester.element(find.byType(TabBarView)));
+    expect(controller().index, 4, reason: 'opens on the bracket');
+    await showTab(tester, 7);
+    save.container.invalidate(cupDetailProvider(save.careerId));
+    await settle(tester);
+    expect(controller().index, 7);
+    await tester.pumpWidget(const SizedBox());
+  });
 }

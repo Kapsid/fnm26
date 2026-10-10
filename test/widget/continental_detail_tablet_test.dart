@@ -6,7 +6,9 @@ import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/features/shell/tablet_shell.dart';
 import 'package:fnm/features/tournaments/continental_detail_providers.dart';
 import 'package:fnm/features/tournaments/continental_detail_screen.dart';
+import 'package:fnm/features/tournaments/tournament_bracket.dart';
 
+import '../helpers/competition_fixtures.dart';
 import '../helpers/seeded_save.dart';
 
 void main() {
@@ -65,4 +67,71 @@ void main() {
       await tester.pumpWidget(const SizedBox());
     });
   }
+
+  Future<void> openCup(
+    WidgetTester tester,
+    Confederation conf,
+    Size size,
+  ) async {
+    final save = await seedSave(
+      tester,
+      formFactor: FormFactor.tablet,
+      overrides: [
+        continentalDetailProvider((
+          careerId: kSeededCareerId,
+          confederation: conf,
+        )).overrideWith(
+          (ref) async =>
+              fakeContinentalData(seededNationId, confederation: conf),
+        ),
+      ],
+    );
+    await pumpRoute(
+      tester,
+      save,
+      '${Routes.continental}?careerId=${save.careerId}&conf=${conf.name}',
+      size: size,
+    );
+  }
+
+  int tabIndex(WidgetTester tester) =>
+      DefaultTabController.of(tester.element(find.byType(TabBarView))).index;
+
+  for (final size in kTabletSizes) {
+    testWidgets('a played cup opens on its bracket, finals in columns, $size', (
+      tester,
+    ) async {
+      await openCup(tester, Confederation.europe, size);
+      expect(tester.takeException(), isNull);
+      // Summary, Qualifying, Finals, Bracket: the bracket is tab 3.
+      expect(tabIndex(tester), 3);
+      expect(
+        tester.widget<TournamentBracket>(find.byType(TournamentBracket)).wide,
+        isTrue,
+      );
+      await showTab(tester, 2);
+      expect(tester.takeException(), isNull);
+      final a = tester.getRect(
+        find.text(enL.tourContGroupHeading('A')).hitTestable(),
+      );
+      final b = tester.getRect(
+        find.text(enL.tourContGroupHeading('B')).hitTestable(),
+      );
+      expect(a.top, b.top);
+      expect(b.left, greaterThan(a.right));
+      await tester.pumpWidget(const SizedBox());
+    });
+  }
+
+  testWidgets('a cup with no qualifying has seven tabs', (tester) async {
+    await openCup(tester, Confederation.southAmerica, kTabletSize);
+    expect(tester.takeException(), isNull);
+    expect(tester.widget<TabBar>(find.byType(TabBar)).tabs, hasLength(7));
+    expect(find.text(enL.tourContTabQualifying), findsNothing);
+    // Not the manager's region, and played: it opens on its bracket, which
+    // is tab 2 once there is no qualifying tab.
+    expect(tabIndex(tester), 2);
+    expect(find.byType(TournamentBracket), findsOneWidget);
+    await tester.pumpWidget(const SizedBox());
+  });
 }

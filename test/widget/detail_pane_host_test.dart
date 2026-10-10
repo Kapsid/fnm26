@@ -4,6 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/core/theme/app_theme.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/features/career/career_providers.dart';
+import 'package:fnm/features/nations/nation_vitrine_screen.dart';
 import 'package:fnm/features/player/player_detail_screen.dart';
 import 'package:fnm/features/shell/detail_pane_host.dart';
 import 'package:fnm/l10n/app_localizations.dart';
@@ -87,7 +88,10 @@ void main() {
     Future<GoRouter> pump(WidgetTester tester, Widget page) async {
       final router = GoRouter(
         routes: [
-          GoRoute(path: '/', builder: (_, _) => Scaffold(body: page)),
+          GoRoute(
+            path: '/',
+            builder: (_, _) => Scaffold(body: page),
+          ),
           GoRoute(
             path: '/player',
             builder: (_, state) => Text('routed ${state.uri}'),
@@ -133,5 +137,62 @@ void main() {
       await tester.pumpAndSettle();
       expect(find.text('routed /player?careerId=1&playerId=7'), findsOneWidget);
     });
+  });
+
+  // Stage 3 carry-over. One pane, its target switched from a player to a
+  // nation (a ranking row after a squad row): the player's card goes, the
+  // nation's record comes, under the nation's heading.
+  testWidgets('a nation replaces a player in the same pane', (tester) async {
+    final save = await seedSave(tester);
+    late int playerId;
+    await tester.runAsync(() async {
+      final pool = await save.container
+          .read(playerRepositoryProvider)
+          .byNation(
+            save.nationId,
+            agingYears: CareerService.agingYears(save.career),
+            saveSeed: save.career.rngSeed,
+          );
+      playerId = pool.first.id;
+    });
+    final target = ValueNotifier<DetailTarget?>(PlayerTarget(playerId));
+    addTearDown(target.dispose);
+    tester.view.physicalSize = kTabletSize;
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+    await tester.pumpWidget(
+      UncontrolledProviderScope(
+        container: save.container,
+        child: MaterialApp(
+          theme: AppTheme.theme,
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: Scaffold(
+            body: SizedBox(
+              width: 360,
+              child: ValueListenableBuilder<DetailTarget?>(
+                valueListenable: target,
+                builder: (_, t, _) =>
+                    DetailPaneHost(careerId: save.careerId, target: t),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+    await settle(tester);
+    expect(find.byType(PlayerView), findsOneWidget);
+    target.value = NationTarget(save.nationId);
+    await settle(tester);
+    expect(find.byType(PlayerView), findsNothing);
+    expect(
+      tester.widget<NationView>(find.byType(NationView)).nationId,
+      save.nationId,
+    );
+    expect(find.text(enL.nationsVitrineTitle.toUpperCase()), findsOneWidget);
+    target.value = null;
+    await settle(tester);
+    expect(find.text(enL.panePickPlayer), findsOneWidget);
+    await tester.pumpWidget(const SizedBox());
   });
 }

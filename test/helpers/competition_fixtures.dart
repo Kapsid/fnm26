@@ -2,6 +2,8 @@ import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/entities/group_standing.dart';
 import 'package:fnm/domain/entities/nation.dart';
+import 'package:fnm/domain/repositories/competition_repository.dart';
+import 'package:fnm/domain/services/competition/continental_cups.dart';
 import 'package:fnm/domain/services/competition/finals.dart';
 import 'package:fnm/domain/services/competition/nations_cups.dart';
 import 'package:fnm/features/tournaments/continental_clash_providers.dart';
@@ -261,5 +263,112 @@ PlayoffView fakePlayoff(int playerNationId) {
     ],
     nations: realNationsById,
     playerNationId: playerNationId,
+  );
+}
+
+/// A continental championship played to its end: six groups of four, a
+/// round of 16 to the final, the manager's nation heading group A. Drawn with
+/// the same real nations for any [confederation] (only the flags matter); it
+/// is the manager's region only when it is his own confederation's cup.
+ContinentalData fakeContinentalData(
+  int playerNationId, {
+  Confederation confederation = Confederation.europe,
+}) {
+  final info = ContinentalCups.byConfederation[confederation]!;
+  final field = fieldOf(playerNationId, 24);
+  final finals = groupsOf(field, groupCount: 6, size: 4);
+  final qualifying = info.qualifying
+      ? groupsOf(fieldOf(playerNationId, 30), groupCount: 6, size: 5)
+      : const <({String name, List<int> nationIds})>[];
+  var nextId = 3000;
+  Fixture tie(String round, int home, int away) => Fixture(
+    id: nextId++,
+    careerId: kSeededCareerId,
+    competitionId: 97,
+    matchday: 1,
+    date: DateTime(2028, 7, 1),
+    homeNationId: home,
+    awayNationId: away,
+    homeScore: 2,
+    awayScore: 1,
+    round: round,
+    played: true,
+  );
+  final r16 = [
+    for (var i = 0; i < 8; i++) tie('CR16', field[i].id, field[15 - i].id),
+  ];
+  final qf = [
+    for (var i = 0; i < 4; i++)
+      tie('CQF', r16[2 * i].homeNationId, r16[2 * i + 1].homeNationId),
+  ];
+  final sf = [
+    for (var i = 0; i < 2; i++)
+      tie('CSF', qf[2 * i].homeNationId, qf[2 * i + 1].homeNationId),
+  ];
+  final last = tie('CFINAL', sf[0].homeNationId, sf[1].homeNationId);
+  return ContinentalData(
+    name: info.name,
+    confederation: confederation,
+    isPlayerRegion:
+        realNationsById[playerNationId]!.confederation == confederation,
+    hostCount: 1,
+    qualifyingGroups: [
+      for (final g in qualifying)
+        (name: g.name, standings: standingsOf(g.nationIds)),
+    ],
+    groups: [
+      for (final g in finals)
+        (name: g.name, standings: standingsOf(g.nationIds)),
+    ],
+    knockout: [...r16, ...qf, ...sf, last],
+    champion: last.homeNationId,
+    scorers: const [],
+    honours: const [],
+    nations: realNationsById,
+    playerNationId: playerNationId,
+    playerNames: const {},
+  );
+}
+
+/// The African Nations Cup mid-season, seen by a manager from elsewhere: in
+/// each of the four zones, two groups of the zone's best-ranked nations
+/// (N1 and N2, W1 and W2, and so on). No finals drawn yet.
+NationsCupData fakeAfricanNationsCup(int playerNationId) {
+  final groups = <FinalsGroupTable>[];
+  for (final zone in AfricaZone.values) {
+    final ranked = [
+      for (final n in realNations)
+        if (NationsCups.africaZoneByCode[n.code] == zone) n,
+    ]..sort((a, b) => a.ranking.compareTo(b.ranking));
+    final ids = [for (final n in ranked.take(6)) n.id];
+    final half = ids.length ~/ 2;
+    final prefix = NationsCups.zonePrefix(zone);
+    groups
+      ..add((name: '${prefix}1', standings: standingsOf(ids.sublist(0, half))))
+      ..add((
+        name: '${prefix}2',
+        standings: standingsOf(ids.sublist(half, 2 * half)),
+      ));
+  }
+  return (
+    confederation: Confederation.africa,
+    cupName: NationsCups.africa,
+    format: NationsCupFormat.zones,
+    isMine: false,
+    playerLeague: '',
+    playerGroup: null,
+    groups: groups,
+    roundOf16: const [],
+    quarters: const [],
+    semis: const [],
+    finalFx: const [],
+    honours: const [],
+    scorers: const [],
+    playerNames: const {},
+    drawWatched: true,
+    playerNationId: playerNationId,
+    myNationIds: {playerNationId},
+    nations: realNationsById,
+    maxTier: 0,
   );
 }
