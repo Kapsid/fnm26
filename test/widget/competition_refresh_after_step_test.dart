@@ -1,9 +1,17 @@
+import 'dart:io';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/domain/entities/enums.dart';
+import 'package:fnm/features/federation/federation_service.dart';
+import 'package:fnm/features/federation/naturalization_providers.dart';
 import 'package:fnm/features/hub/hub_providers.dart';
+import 'package:fnm/features/manager/manager_providers.dart';
+import 'package:fnm/features/match/match_providers.dart';
 import 'package:fnm/features/nations/nation_vitrine_providers.dart';
 import 'package:fnm/features/results/results_providers.dart';
+import 'package:fnm/features/squad/training_camp_providers.dart';
+import 'package:fnm/features/squad/youth_providers.dart';
 import 'package:fnm/features/tournaments/continental_clash_providers.dart';
 import 'package:fnm/features/tournaments/continental_detail_providers.dart';
 import 'package:fnm/features/tournaments/cup_detail_providers.dart';
@@ -11,72 +19,156 @@ import 'package:fnm/features/tournaments/intercontinental_playoff_providers.dart
 import 'package:fnm/features/tournaments/nations_cup_providers.dart';
 import 'package:fnm/features/tournaments/tournaments_providers.dart';
 import 'package:fnm/features/tournaments/wc_host_theme.dart';
+import 'package:fnm/features/y/y_providers.dart';
 
 import '../helpers/seeded_save.dart';
 
-/// Review Focus 3. A tablet's top bar runs the sim while a competition screen
-/// is on show, and that screen's provider is kept alive by being watched. One
-/// step must hand every one of them a fresh read.
+typedef _Views = Map<String, ProviderListenable<Future<Object?>>>;
+
+/// The competition screens' data (stage 3).
+_Views _competitionViews(SeededSave save) {
+  final id = save.careerId;
+  return {
+    'tournaments': tournamentsOverviewProvider(id).future,
+    'cup': cupDetailProvider(id).future,
+    'continental': continentalDetailProvider((
+      careerId: id,
+      confederation: Confederation.europe,
+    )).future,
+    'nationsCup': nationsCupProvider((
+      careerId: id,
+      confederation: null,
+    )).future,
+    'clash': continentalClashProvider(id).future,
+    'playoff': intercontinentalPlayoffProvider(id).future,
+    'results': resultsProvider(id).future,
+    'wcHost': wcHostThemeProvider(id).future,
+    'continentalHost': continentalHostThemeProvider(id).future,
+    'vitrine': nationVitrineProvider((
+      careerId: id,
+      nationId: save.nationId,
+    )).future,
+  };
+}
+
+/// The federation, manager and Y screens' data (stage 4).
+_Views _federationViews(SeededSave save) {
+  final id = save.careerId;
+  return {
+    'finances': financeViewProvider(id).future,
+    'funds': federationFundsProvider(id).future,
+    'manager': managerViewProvider(id).future,
+    'youth': youthPyramidProvider(id).future,
+    'shortlist': youthShortlistProvider(id).future,
+    'y': yFeedProvider(id).future,
+    'naturalization': pendingNaturalizationProvider(id).future,
+    'camp': trainingCampPlanProvider(id).future,
+  };
+}
+
+/// Listens to every one of [views] as a screen on show would, runs [step],
+/// and expects each to hand out a fresh read afterwards.
+Future<void> _expectRefreshedBy(
+  WidgetTester tester,
+  SeededSave save,
+  _Views views,
+  Future<void> Function() step,
+) async {
+  final c = save.container;
+  // The listeners are the screens on show. They are opened inside the real
+  // async zone, so the reads they start are not stranded on fake time.
+  final subs = <String, ProviderSubscription<Future<Object?>>>{};
+  addTearDown(() {
+    for (final s in subs.values) {
+      s.close();
+    }
+  });
+  final before = <String, Future<Object?>>{};
+  await tester.runAsync(() async {
+    for (final e in views.entries) {
+      subs[e.key] = c.listen<Future<Object?>>(e.value, (_, _) {});
+      before[e.key] = subs[e.key]!.read();
+      await before[e.key];
+      // Sanity: with no step in between, the same read comes back.
+      expect(
+        identical(subs[e.key]!.read(), before[e.key]),
+        isTrue,
+        reason: e.key,
+      );
+    }
+    await step();
+    for (final e in subs.entries) {
+      final after = e.value.read();
+      expect(
+        identical(after, before[e.key]),
+        isFalse,
+        reason: '${e.key} kept its pre-step data',
+      );
+      // Let the fresh read finish inside the real-async zone, so no
+      // database work is left pending when the test ends.
+      await after;
+    }
+  });
+}
+
+/// Review Focus 3 (stage 3) and 1 (stage 4). A tablet's top bar runs the sim
+/// while a screen is on show, and that screen's provider is kept alive by
+/// being watched. Every way a step is committed must hand every one of them
+/// a fresh read.
 void main() {
-  testWidgets('a step refreshes every competition screen a tablet keeps '
-      'on show', (tester) async {
+  testWidgets('a step refreshes every screen a tablet keeps on show', (
+    tester,
+  ) async {
     final save = await seedSave(tester);
-    final id = save.careerId;
+    await _expectRefreshedBy(
+      tester,
+      save,
+      {..._competitionViews(save), ..._federationViews(save)},
+      () => save.container.read(seasonServiceProvider).advance(save.careerId),
+    );
+  });
+
+  testWidgets("so does committing the manager's own match", (tester) async {
+    final save = await seedSave(tester);
     final c = save.container;
-    final providers = <String, ProviderListenable<Future<Object?>>>{
-      'tournaments': tournamentsOverviewProvider(id).future,
-      'cup': cupDetailProvider(id).future,
-      'continental': continentalDetailProvider((
-        careerId: id,
-        confederation: Confederation.europe,
-      )).future,
-      'nationsCup': nationsCupProvider((
-        careerId: id,
-        confederation: null,
-      )).future,
-      'clash': continentalClashProvider(id).future,
-      'playoff': intercontinentalPlayoffProvider(id).future,
-      'results': resultsProvider(id).future,
-      'wcHost': wcHostThemeProvider(id).future,
-      'continentalHost': continentalHostThemeProvider(id).future,
-      'vitrine': nationVitrineProvider((
-        careerId: id,
-        nationId: save.nationId,
-      )).future,
-    };
-    // The listeners are the screens on show. They are opened inside the real
-    // async zone, so the reads they start are not stranded on fake time.
-    final subs = <String, ProviderSubscription<Future<Object?>>>{};
-    addTearDown(() {
-      for (final s in subs.values) {
-        s.close();
-      }
-    });
-    final before = <String, Future<Object?>>{};
+    late MatchPreview preview;
     await tester.runAsync(() async {
-      for (final e in providers.entries) {
-        subs[e.key] = c.listen<Future<Object?>>(e.value, (_, _) {});
-        before[e.key] = subs[e.key]!.read();
-        await before[e.key];
-        // Sanity: with no step in between, the same read comes back.
-        expect(
-          identical(subs[e.key]!.read(), before[e.key]),
-          isTrue,
-          reason: e.key,
-        );
-      }
-      await c.read(seasonServiceProvider).advance(id);
-      for (final e in subs.entries) {
-        final after = e.value.read();
-        expect(
-          identical(after, before[e.key]),
-          isFalse,
-          reason: '${e.key} kept its pre-step data',
-        );
-        // Let the fresh read finish inside the real-async zone, so no
-        // database work is left pending when the test ends.
-        await after;
-      }
+      // Held, as the match screen holds it between whistle and commit.
+      final held = c.listen(
+        matchPreviewProvider(save.careerId).future,
+        (_, _) {},
+      );
+      addTearDown(held.close);
+      final p = await held.read();
+      expect(p, isNotNull, reason: 'the seeded save has a next match');
+      preview = p!;
     });
+    await _expectRefreshedBy(
+      tester,
+      save,
+      {..._competitionViews(save), ..._federationViews(save)},
+      () => c
+          .read(seasonServiceProvider)
+          .playPlayerMatch(save.careerId, preview.fixture, preview.result),
+    );
+  });
+
+  // Skipping to the champion simulates the rest of a cycle, far too long for
+  // the suite, so its cascade is checked in the source: it must end on the
+  // same refresh as the other two paths.
+  test('skipping to the champion runs the same refresh', () {
+    final src = File('lib/features/hub/hub_providers.dart').readAsStringSync();
+    final start = src.indexOf('Future<void> _skipToChampion(');
+    expect(start, isNonNegative);
+    final end = src.indexOf('\n  Future<', start + 1);
+    final body = src.substring(start, end < 0 ? src.length : end);
+    expect(body, contains('_invalidateCompetitionViews();'));
+    final cascade = src.substring(
+      src.indexOf('void _invalidateCompetitionViews()'),
+    );
+    expect(
+      cascade.substring(0, cascade.indexOf('\n  }')),
+      contains('_invalidateFederationViews();'),
+    );
   });
 }

@@ -41,15 +41,18 @@ import 'package:fnm/features/awards/award_providers.dart';
 import 'package:fnm/features/squad/grievance_providers.dart';
 import 'package:fnm/features/federation/federation_providers.dart';
 import 'package:fnm/features/federation/federation_service.dart';
+import 'package:fnm/features/federation/naturalization_providers.dart';
 import 'package:fnm/features/hub/draw_reveal.dart';
 import 'package:fnm/features/achievements/achievement_providers.dart';
 import 'package:fnm/features/hub/objective_providers.dart';
+import 'package:fnm/features/manager/manager_providers.dart';
 import 'package:fnm/features/match/match_providers.dart';
 import 'package:fnm/features/press/press_desk.dart';
 import 'package:fnm/features/press/press_providers.dart';
 import 'package:fnm/features/tactics/condition_providers.dart';
 import 'package:fnm/features/ranking/world_ranking_providers.dart';
 import 'package:fnm/features/squad/training_camp_providers.dart';
+import 'package:fnm/features/squad/youth_providers.dart';
 import 'package:fnm/features/squad/youth_watch_providers.dart';
 import 'package:fnm/features/tactics/absence_providers.dart';
 import 'package:fnm/features/tactics/nation_squad_providers.dart';
@@ -65,6 +68,7 @@ import 'package:fnm/features/tournaments/nations_cup_providers.dart';
 import 'package:fnm/features/tournaments/tournaments_providers.dart';
 import 'package:fnm/features/tournaments/playoff_paths.dart';
 import 'package:fnm/features/tournaments/wc_host_theme.dart';
+import 'package:fnm/features/y/y_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/domain/services/club/clubs.dart';
 import 'package:fnm/domain/services/club/transfer_window.dart';
@@ -605,6 +609,28 @@ class SeasonService {
       ..invalidate(nationVitrineProvider)
       ..invalidate(wcHostThemeProvider)
       ..invalidate(continentalHostThemeProvider);
+    _invalidateFederationViews();
+  }
+
+  /// The federation, manager and Y screens' data, refreshed by hand after a
+  /// step for the same reason as [_invalidateCompetitionViews]: a tablet's
+  /// top bar runs the sim while one of them is on show. The prize money so
+  /// far, the manager's points (a trophy is one), the youth pyramid (it ages
+  /// on 1 December), the Y feed (every match is talked about, and the tablet
+  /// hub's Y panel keeps it alive across the whole shell), a naturalisation
+  /// offer the step may have rolled, and the base camp (closed once its
+  /// tournament's first match is played). The staff room needs nothing: it
+  /// watches the squad, which the step refreshes.
+  void _invalidateFederationViews() {
+    _ref
+      ..invalidate(financeViewProvider)
+      ..invalidate(federationFundsProvider)
+      ..invalidate(managerViewProvider)
+      ..invalidate(youthPyramidProvider)
+      ..invalidate(youthShortlistProvider)
+      ..invalidate(yFeedProvider)
+      ..invalidate(pendingNaturalizationProvider)
+      ..invalidate(trainingCampPlanProvider);
   }
 
   /// Persists the in-memory ranking points for [careerId], and republishes the
