@@ -5,7 +5,6 @@ import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
-import 'package:fnm/features/hub/hub_event.dart';
 import 'package:fnm/features/shell/tablet_shell.dart';
 import 'package:fnm/features/shell/tablet_sidebar.dart';
 import 'package:fnm/features/tournaments/continental_detail_providers.dart';
