@@ -11,9 +11,10 @@ import '../helpers/seeded_save.dart';
 ///
 /// At 390 wide every hall-of-fame row already overflows its 44 px leading
 /// slot by a few pixels (an 18 px rank beside the position chip). That is the
-/// phone as it ships (all 16 rows of the fake), so the tall guard pins it as it is, as the tournaments
-/// guard does: it lets RenderFlex overflows through, counts them, and expects
-/// the same count, so a change that adds or removes one still fails here.
+/// phone as it ships (every row of the fake), so the tall guard pins it as it
+/// is, as the tournaments guard does: it lets RenderFlex overflows through,
+/// counts them, and expects one per row, so a change that adds or removes one
+/// still fails here.
 void main() {
   testWidgets('legends_phone', (tester) async {
     final save = await seedSave(tester);
@@ -48,7 +49,11 @@ void main() {
     } finally {
       FlutterError.onError = original;
     }
-    expect(seen, 16, reason: 'the hall of fame overflows differently');
+    expect(
+      seen,
+      fakeLegends().hallOfFame.length,
+      reason: 'the hall of fame overflows differently',
+    );
     expect(find.text(enL.recordsHallOfFame), findsOneWidget);
     await expectAppGolden('goldens/legends_phone_tall.png');
   });
