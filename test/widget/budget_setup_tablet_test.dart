@@ -9,12 +9,15 @@ import 'package:fnm/data/repositories/drift_career_repository.dart';
 import 'package:fnm/domain/entities/career.dart';
 import 'package:fnm/domain/repositories/career_repository.dart';
 import 'package:fnm/domain/services/federation/federation_finance.dart';
+import 'package:fnm/domain/services/manager/staff.dart';
 import 'package:fnm/features/federation/budget_setup_screen.dart';
 import 'package:fnm/features/federation/department_effect.dart';
 import 'package:fnm/features/federation/investment_editor.dart';
 import 'package:fnm/features/federation/staff_card.dart';
+import 'package:fnm/features/federation/staff_providers.dart';
 import 'package:fnm/features/onboarding/tour_keys.dart';
 import 'package:fnm/features/shell/tablet_shell.dart';
+import 'package:fnm/features/tactics/condition_providers.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 
 import '../helpers/federation_fixtures.dart';
@@ -24,6 +27,7 @@ Future<SeededSave> _open(
   WidgetTester tester,
   Size size, {
   _Gate? gate,
+  bool hires = false,
 }) async {
   final save = await seedSave(
     tester,
@@ -33,6 +37,16 @@ Future<SeededSave> _open(
         careerRepositoryProvider.overrideWith(
           (ref) => _GatedRepository(ref.watch(appDatabaseProvider), gate),
         ),
+      if (hires)
+        // A hire (ManagerService) invalidates morale, which nothing on this
+        // page watches, so nothing rebuilds it.
+        // Test-only, no app change: in riverpod 2.6.1
+        // (async_notifier/base.dart 461-466) an invalidated FutureProvider
+        // element that is never rebuilt before the container is disposed
+        // has its future completed a second time on that dispose ("Bad
+        // state: Future already completed"). A value with no awaits is never
+        // left in that state. Revisit at the Riverpod 3 upgrade.
+        moraleProvider(kSeededCareerId).overrideWith((ref) async => 50),
     ],
   );
   await pumpRoute(
@@ -194,6 +208,7 @@ void main() {
       () => save.container.read(careerRepositoryProvider).byId(save.careerId),
     ))!.budget;
     expect(budget, greaterThan(0));
+    expect(await _invested(tester, save), 0);
     for (var i = 0; i < 5; i++) {
       final slider = _slider(tester, i);
       await _set(tester, i, slider.max);
@@ -294,6 +309,34 @@ void main() {
     await settle(tester);
     expect(tester.takeException(), isNull);
     expect(save.container.read(routerProvider).state.uri.path, Routes.hub);
+    await tester.pumpWidget(const SizedBox());
+  });
+
+  // The picker is open when the window crosses 1000: the tablet layout gives
+  // way to the phone one, and the StaffCard moves with its GlobalKey, so the
+  // hire made after the swap still goes through.
+  testWidgets('a hire made across a resize is stored', (tester) async {
+    final save = await _open(tester, kTabletSize, hires: true);
+    expect((await _career(tester, save)).staffAssistantId, isNull);
+    late StaffCandidate first;
+    await tester.runAsync(() async {
+      final sub = save.container.listen(
+        staffRoomProvider(save.careerId).future,
+        (_, _) {},
+      );
+      first = (await sub.read())!.applicants[StaffRole.assistant]!.first;
+      sub.close();
+    });
+    await tester.tap(find.text(roleName(enL, StaffRole.assistant)));
+    await settle(tester);
+    expect(find.text(first.name), findsOneWidget);
+    tester.view.physicalSize = const Size(900, 810);
+    await settle(tester);
+    expect(find.byKey(BudgetSetupScreen.tabletLayoutKey), findsNothing);
+    await tester.tap(find.text(first.name));
+    await settle(tester);
+    expect(tester.takeException(), isNull);
+    expect((await _career(tester, save)).staffAssistantId, first.id);
     await tester.pumpWidget(const SizedBox());
   });
 }

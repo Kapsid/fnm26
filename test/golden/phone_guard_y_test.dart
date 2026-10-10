@@ -20,11 +20,13 @@ void main() {
       overrides: [
         yFeedProvider(kSeededCareerId).overrideWith((ref) async => feed),
         // Nothing on these pages shows the unread count, but the read mark
-        // invalidates it, and in debug mode riverpod 2.6.1 MOUNTS an unwatched
-        // autoDispose provider to check an invalidate. The real one then gets
-        // auto-disposed between its awaits, watches the feed after that, and
-        // the container's teardown disposes it a second time ("Future already
-        // completed"). A value with no awaits cannot outlive its disposal.
+        // invalidates it and nothing rebuilds it.
+        // Test-only, no app change: in riverpod 2.6.1 (async_notifier/base.dart
+        // 461-466) an invalidated FutureProvider element that is never rebuilt
+        // before the container is disposed has its future completed a second
+        // time on that dispose ("Bad state: Future already completed"). A value
+        // with no awaits is never left in that state. Revisit at the Riverpod 3
+        // upgrade.
         yUnreadCountProvider(kSeededCareerId).overrideWith((ref) async => 0),
       ],
     );

@@ -1,5 +1,9 @@
 part of 'y_screen.dart';
 
+/// An account's initial for its avatar: the first character of [name], or
+/// nothing for an empty name (which must not throw).
+String yInitial(String name) => name.characters.firstOrNull ?? '';
+
 /// What the side column is showing instead of trending and voices.
 sealed class _YSide {
   const _YSide();
@@ -281,7 +285,7 @@ class _VoiceList extends StatelessWidget {
                       color: AppColors.primary.withValues(alpha: 0.16),
                     ),
                     child: Text(
-                      v.persona.displayName.characters.first,
+                      yInitial(v.persona.displayName),
                       style: TabletText.barStrong.copyWith(
                         color: AppColors.primary,
                       ),

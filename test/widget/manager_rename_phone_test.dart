@@ -13,10 +13,13 @@ Future<SeededSave> _open(WidgetTester tester) async {
     tester,
     overrides: [
       // ManagerService invalidates morale, which nothing on this page
-      // watches. In debug, riverpod 2.6's invalidate mounts it; the real one
-      // is auto-disposed between its awaits, watches more providers after
-      // that, and the teardown disposes it twice ("Future already
-      // completed"). See phone_guard_y_test.dart.
+      // watches, so nothing rebuilds it.
+      // Test-only, no app change: in riverpod 2.6.1 (async_notifier/base.dart
+      // 461-466) an invalidated FutureProvider element that is never rebuilt
+      // before the container is disposed has its future completed a second
+      // time on that dispose ("Bad state: Future already completed"). A value
+      // with no awaits is never left in that state. Revisit at the Riverpod 3
+      // upgrade.
       moraleProvider(kSeededCareerId).overrideWith((ref) async => 50),
     ],
   );

@@ -6,8 +6,9 @@ import 'package:fnm/features/federation/investment_editor.dart';
 import '../helpers/seeded_save.dart';
 
 /// The phone budget setup, pinned before its banner and confirm bar are
-/// shared with the tablet: as it opens, and with money in two departments
-/// (effect lines lit, the over-budget and ready states of the bar).
+/// shared with the tablet: as it opens (nothing allocated, Confirm disabled),
+/// and with every department filled in order until the budget is spent
+/// (effect lines lit, the bar ready). There is no over-budget golden.
 void main() {
   for (final (name, size) in [
     ('budget_phone', kPhoneSize),

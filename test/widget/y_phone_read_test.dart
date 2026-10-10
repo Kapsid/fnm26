@@ -21,8 +21,14 @@ void main() {
       tester,
       overrides: [
         yFeedProvider(kSeededCareerId).overrideWith((ref) async => feed),
-        // Test-only, see phone_guard_y_test.dart: riverpod 2.6.1 debug
-        // teardown of an invalidated, never-rebuilt FutureProvider.
+        // The read mark invalidates the unread count, which nothing on this
+        // page rebuilds.
+        // Test-only, no app change: in riverpod 2.6.1 (async_notifier/base.dart
+        // 461-466) an invalidated FutureProvider element that is never rebuilt
+        // before the container is disposed has its future completed a second
+        // time on that dispose ("Bad state: Future already completed"). A value
+        // with no awaits is never left in that state. Revisit at the Riverpod 3
+        // upgrade.
         yUnreadCountProvider(kSeededCareerId).overrideWith((ref) async => 0),
       ],
     );

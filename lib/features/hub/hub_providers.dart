@@ -616,8 +616,9 @@ class SeasonService {
   /// step for the same reason as [_invalidateCompetitionViews]: a tablet's
   /// top bar runs the sim while one of them is on show. The prize money so
   /// far, the manager's points (a trophy is one), the youth pyramid (it ages
-  /// on 1 December), the Y feed (every match is talked about, and the tablet
-  /// hub's Y panel keeps it alive across the whole shell), a naturalisation
+  /// on 1 December), the Y feed (every match is talked about; the tablet
+  /// hub's Y panel and the Y screen watch it, and the hub is not mounted
+  /// under the other in-shell screens), a naturalisation
   /// offer the step may have rolled, and the base camp (closed once its
   /// tournament's first match is played). The staff room needs nothing: it
   /// watches the squad, which the step refreshes.

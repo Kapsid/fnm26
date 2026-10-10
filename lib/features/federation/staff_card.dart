@@ -147,6 +147,10 @@ class StaffCard extends ConsumerWidget {
       ),
     );
     if (picked == null) return;
+    // `ref` is used after the picker's await. On the budget page that holds
+    // across a resize across 1000 (which swaps the tablet and phone layouts)
+    // only because the card carries the `TourKeys.budgetStaff` GlobalKey, so
+    // its element is re-parented rather than unmounted.
     await ref
         .read(managerServiceProvider)
         .hire(careerId, role, picked == -1 ? null : picked);

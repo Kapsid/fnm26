@@ -87,6 +87,9 @@ class SeededSave {
   SeededSave(this.container, this.career);
 
   final ProviderContainer container;
+
+  /// The career as created; the opening budget is granted after, so `budget`
+  /// is 0 here. Read the repository for the balance.
   final Career career;
 
   int get careerId => career.id;
