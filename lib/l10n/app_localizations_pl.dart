@@ -9314,4 +9314,31 @@ class AppLocalizationsPl extends AppLocalizations {
 
   @override
   String get tourDrawViewGroups => 'Zobacz grupy';
+
+  @override
+  String get gridColCeiling => 'Potencjał';
+
+  @override
+  String get gridColYearGain => 'Postęp';
+
+  @override
+  String get gridColMarkedAt => 'Przy oznaczeniu';
+
+  @override
+  String get budgetSetupTitle => 'Ustal budżet';
+
+  @override
+  String get budgetEffectsTitle => 'Co daje ten budżet';
+
+  @override
+  String get naturalisationTitle => 'Naturalizacja';
+
+  @override
+  String get yTrending => 'Na czasie';
+
+  @override
+  String get yVoices => 'Głosy';
+
+  @override
+  String get yConversation => 'Rozmowa';
 }

@@ -9251,4 +9251,31 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get tourDrawViewGroups => 'Voir les groupes';
+
+  @override
+  String get gridColCeiling => 'Plafond';
+
+  @override
+  String get gridColYearGain => 'Progrès';
+
+  @override
+  String get gridColMarkedAt => 'Au repérage';
+
+  @override
+  String get budgetSetupTitle => 'Fixez votre budget';
+
+  @override
+  String get budgetEffectsTitle => 'Ce que ce budget apporte';
+
+  @override
+  String get naturalisationTitle => 'Naturalisation';
+
+  @override
+  String get yTrending => 'Tendances';
+
+  @override
+  String get yVoices => 'Voix';
+
+  @override
+  String get yConversation => 'Conversation';
 }

@@ -9184,4 +9184,31 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get tourDrawViewGroups => 'View groups';
+
+  @override
+  String get gridColCeiling => 'Ceiling';
+
+  @override
+  String get gridColYearGain => 'Gain';
+
+  @override
+  String get gridColMarkedAt => 'When marked';
+
+  @override
+  String get budgetSetupTitle => 'Set your budget';
+
+  @override
+  String get budgetEffectsTitle => 'What this budget buys';
+
+  @override
+  String get naturalisationTitle => 'Naturalisation';
+
+  @override
+  String get yTrending => 'Trending';
+
+  @override
+  String get yVoices => 'Voices';
+
+  @override
+  String get yConversation => 'Conversation';
 }

@@ -2380,5 +2380,14 @@
   "panePickNation": "Scegli una nazionale per vedere qui il suo palmarès",
   "resultsCyclesTitle": "Cicli",
   "tourDrawStart": "Avvia il sorteggio",
-  "tourDrawViewGroups": "Vedi i gironi"
+  "tourDrawViewGroups": "Vedi i gironi",
+  "gridColCeiling": "Potenziale",
+  "gridColYearGain": "Crescita",
+  "gridColMarkedAt": "Alla segnalazione",
+  "budgetSetupTitle": "Imposta il budget",
+  "budgetEffectsTitle": "Cosa compra questo budget",
+  "naturalisationTitle": "Naturalizzazione",
+  "yTrending": "Di tendenza",
+  "yVoices": "Voci",
+  "yConversation": "Conversazione"
 }

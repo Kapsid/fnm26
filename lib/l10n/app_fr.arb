@@ -2380,5 +2380,14 @@
   "panePickNation": "Choisissez une nation pour voir son palmarès ici",
   "resultsCyclesTitle": "Cycles",
   "tourDrawStart": "Lancer le tirage",
-  "tourDrawViewGroups": "Voir les groupes"
+  "tourDrawViewGroups": "Voir les groupes",
+  "gridColCeiling": "Plafond",
+  "gridColYearGain": "Progrès",
+  "gridColMarkedAt": "Au repérage",
+  "budgetSetupTitle": "Fixez votre budget",
+  "budgetEffectsTitle": "Ce que ce budget apporte",
+  "naturalisationTitle": "Naturalisation",
+  "yTrending": "Tendances",
+  "yVoices": "Voix",
+  "yConversation": "Conversation"
 }

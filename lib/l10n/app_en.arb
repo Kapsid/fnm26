@@ -13627,5 +13627,41 @@
   "tourDrawViewGroups": "View groups",
   "@tourDrawViewGroups": {
     "description": "World Championship finals draw, already watched: button that opens the drawn groups."
+  },
+  "gridColCeiling": "Ceiling",
+  "@gridColCeiling": {
+    "description": "Tablet youth table column: the scout's star read on how good a boy can become."
+  },
+  "gridColYearGain": "Gain",
+  "@gridColYearGain": {
+    "description": "Tablet youth table column: rating points a boy gained over the last year."
+  },
+  "gridColMarkedAt": "When marked",
+  "@gridColMarkedAt": {
+    "description": "Tablet youth watchlist column: the boy's rating when the manager put him on the list."
+  },
+  "budgetSetupTitle": "Set your budget",
+  "@budgetSetupTitle": {
+    "description": "Tablet budget setup screen heading."
+  },
+  "budgetEffectsTitle": "What this budget buys",
+  "@budgetEffectsTitle": {
+    "description": "Tablet budget setup: panel listing what each department's money buys this cycle."
+  },
+  "naturalisationTitle": "Naturalisation",
+  "@naturalisationTitle": {
+    "description": "Tablet naturalisation decision screen heading."
+  },
+  "yTrending": "Trending",
+  "@yTrending": {
+    "description": "Tablet Y feed side panel: the conversations with the most posts."
+  },
+  "yVoices": "Voices",
+  "@yVoices": {
+    "description": "Tablet Y feed side panel: the accounts that post the most."
+  },
+  "yConversation": "Conversation",
+  "@yConversation": {
+    "description": "Tablet Y feed side pane heading: one post and the replies to it."
   }
 }

@@ -2380,5 +2380,14 @@
   "panePickNation": "Vyberte reprezentaci a její historie se ukáže tady",
   "resultsCyclesTitle": "Cykly",
   "tourDrawStart": "Zahájit los",
-  "tourDrawViewGroups": "Zobrazit skupiny"
+  "tourDrawViewGroups": "Zobrazit skupiny",
+  "gridColCeiling": "Strop",
+  "gridColYearGain": "Zlepšení",
+  "gridColMarkedAt": "Při označení",
+  "budgetSetupTitle": "Rozdělte rozpočet",
+  "budgetEffectsTitle": "Co za tento rozpočet získáte",
+  "naturalisationTitle": "Naturalizace",
+  "yTrending": "Právě se řeší",
+  "yVoices": "Hlasy",
+  "yConversation": "Konverzace"
 }

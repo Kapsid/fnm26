@@ -2380,3 +2380,12 @@ panePickNation,Tablet detail pane: shown while no nation is selected.,,Pick a na
 resultsCyclesTitle,Tablet results screen: heading of the list of the manager's four-year cycles.,,Cycles,Cykly,Cycles,Cicli,Cykle
 tourDrawStart,World Championship finals draw: button that starts the ball-drawing ceremony.,,Start the draw,Zahájit los,Lancer le tirage,Avvia il sorteggio,Rozpocznij losowanie
 tourDrawViewGroups,"World Championship finals draw, already watched: button that opens the drawn groups.",,View groups,Zobrazit skupiny,Voir les groupes,Vedi i gironi,Zobacz grupy
+gridColCeiling,Tablet youth table column: the scout's star read on how good a boy can become.,,Ceiling,Strop,Plafond,Potenziale,Potencjał
+gridColYearGain,Tablet youth table column: rating points a boy gained over the last year.,,Gain,Zlepšení,Progrès,Crescita,Postęp
+gridColMarkedAt,Tablet youth watchlist column: the boy's rating when the manager put him on the list.,,When marked,Při označení,Au repérage,Alla segnalazione,Przy oznaczeniu
+budgetSetupTitle,Tablet budget setup screen heading.,,Set your budget,Rozdělte rozpočet,Fixez votre budget,Imposta il budget,Ustal budżet
+budgetEffectsTitle,Tablet budget setup: panel listing what each department's money buys this cycle.,,What this budget buys,Co za tento rozpočet získáte,Ce que ce budget apporte,Cosa compra questo budget,Co daje ten budżet
+naturalisationTitle,Tablet naturalisation decision screen heading.,,Naturalisation,Naturalizace,Naturalisation,Naturalizzazione,Naturalizacja
+yTrending,Tablet Y feed side panel: the conversations with the most posts.,,Trending,Právě se řeší,Tendances,Di tendenza,Na czasie
+yVoices,Tablet Y feed side panel: the accounts that post the most.,,Voices,Hlasy,Voix,Voci,Głosy
+yConversation,Tablet Y feed side pane heading: one post and the replies to it.,,Conversation,Konverzace,Conversation,Conversazione,Rozmowa

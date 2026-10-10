@@ -9215,4 +9215,31 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get tourDrawViewGroups => 'Zobrazit skupiny';
+
+  @override
+  String get gridColCeiling => 'Strop';
+
+  @override
+  String get gridColYearGain => 'Zlepšení';
+
+  @override
+  String get gridColMarkedAt => 'Při označení';
+
+  @override
+  String get budgetSetupTitle => 'Rozdělte rozpočet';
+
+  @override
+  String get budgetEffectsTitle => 'Co za tento rozpočet získáte';
+
+  @override
+  String get naturalisationTitle => 'Naturalizace';
+
+  @override
+  String get yTrending => 'Právě se řeší';
+
+  @override
+  String get yVoices => 'Hlasy';
+
+  @override
+  String get yConversation => 'Konverzace';
 }

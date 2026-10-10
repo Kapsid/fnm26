@@ -2380,5 +2380,14 @@
   "panePickNation": "Wybierz reprezentację, aby zobaczyć tu jej historię",
   "resultsCyclesTitle": "Cykle",
   "tourDrawStart": "Rozpocznij losowanie",
-  "tourDrawViewGroups": "Zobacz grupy"
+  "tourDrawViewGroups": "Zobacz grupy",
+  "gridColCeiling": "Potencjał",
+  "gridColYearGain": "Postęp",
+  "gridColMarkedAt": "Przy oznaczeniu",
+  "budgetSetupTitle": "Ustal budżet",
+  "budgetEffectsTitle": "Co daje ten budżet",
+  "naturalisationTitle": "Naturalizacja",
+  "yTrending": "Na czasie",
+  "yVoices": "Głosy",
+  "yConversation": "Rozmowa"
 }

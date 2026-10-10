@@ -9237,4 +9237,31 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get tourDrawViewGroups => 'Vedi i gironi';
+
+  @override
+  String get gridColCeiling => 'Potenziale';
+
+  @override
+  String get gridColYearGain => 'Crescita';
+
+  @override
+  String get gridColMarkedAt => 'Alla segnalazione';
+
+  @override
+  String get budgetSetupTitle => 'Imposta il budget';
+
+  @override
+  String get budgetEffectsTitle => 'Cosa compra questo budget';
+
+  @override
+  String get naturalisationTitle => 'Naturalizzazione';
+
+  @override
+  String get yTrending => 'Di tendenza';
+
+  @override
+  String get yVoices => 'Voci';
+
+  @override
+  String get yConversation => 'Conversazione';
 }

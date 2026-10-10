@@ -14450,6 +14450,60 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'View groups'**
   String get tourDrawViewGroups;
+
+  /// Tablet youth table column: the scout's star read on how good a boy can become.
+  ///
+  /// In en, this message translates to:
+  /// **'Ceiling'**
+  String get gridColCeiling;
+
+  /// Tablet youth table column: rating points a boy gained over the last year.
+  ///
+  /// In en, this message translates to:
+  /// **'Gain'**
+  String get gridColYearGain;
+
+  /// Tablet youth watchlist column: the boy's rating when the manager put him on the list.
+  ///
+  /// In en, this message translates to:
+  /// **'When marked'**
+  String get gridColMarkedAt;
+
+  /// Tablet budget setup screen heading.
+  ///
+  /// In en, this message translates to:
+  /// **'Set your budget'**
+  String get budgetSetupTitle;
+
+  /// Tablet budget setup: panel listing what each department's money buys this cycle.
+  ///
+  /// In en, this message translates to:
+  /// **'What this budget buys'**
+  String get budgetEffectsTitle;
+
+  /// Tablet naturalisation decision screen heading.
+  ///
+  /// In en, this message translates to:
+  /// **'Naturalisation'**
+  String get naturalisationTitle;
+
+  /// Tablet Y feed side panel: the conversations with the most posts.
+  ///
+  /// In en, this message translates to:
+  /// **'Trending'**
+  String get yTrending;
+
+  /// Tablet Y feed side panel: the accounts that post the most.
+  ///
+  /// In en, this message translates to:
+  /// **'Voices'**
+  String get yVoices;
+
+  /// Tablet Y feed side pane heading: one post and the replies to it.
+  ///
+  /// In en, this message translates to:
+  /// **'Conversation'**
+  String get yConversation;
 }
 
 class _AppLocalizationsDelegate
