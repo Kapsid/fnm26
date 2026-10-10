@@ -113,12 +113,16 @@ class _NameCard extends ConsumerWidget {
   }
 
   Future<void> _rename(BuildContext context, WidgetRef ref) async {
+    // Read before the dialog: it sits on the root navigator, and a tablet
+    // window resized across 1000 while it is open swaps the page's layout,
+    // disposing this card (and its ref) before the name comes back.
+    final service = ref.read(managerServiceProvider);
     final next = await showDialog<String>(
       context: context,
       builder: (_) => _RenameDialog(name: name),
     );
     if (next == null || next.trim() == name) return;
-    await ref.read(managerServiceProvider).rename(careerId, next);
+    await service.rename(careerId, next);
   }
 }
 

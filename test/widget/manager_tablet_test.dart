@@ -101,11 +101,35 @@ void main() {
 
   testWidgets('the pencil renames the manager', (tester) async {
     final save = await _open(tester, kTabletSize);
+    expect((await _career(tester, save)).managerName, isNot('Vera'));
+    expect(find.text('Vera'), findsNothing);
     await tester.tap(find.byTooltip(enL.managerRename));
     await settle(tester);
     await tester.enterText(find.byType(TextField), 'Vera');
     await tester.tap(find.text(enL.managerRenameSave));
     await settle(tester);
+    expect((await _career(tester, save)).managerName, 'Vera');
+    expect(find.byType(AlertDialog), findsNothing);
+    expect(find.text('Vera'), findsWidgets);
+    await tester.pumpWidget(const SizedBox());
+  });
+
+  // The dialog sits on the root navigator, so it outlives the card that
+  // opened it when the window crosses 1000 and the page swaps layouts: the
+  // name must still be saved.
+  testWidgets('a rename survives a resize across 1000 while the dialog is '
+      'open', (tester) async {
+    final save = await _open(tester, kTabletSize);
+    await tester.tap(find.byTooltip(enL.managerRename));
+    await settle(tester);
+    await tester.enterText(find.byType(TextField), 'Vera');
+    tester.view.physicalSize = const Size(900, 834);
+    await settle(tester);
+    expect(find.byKey(ManagerScreen.tabletLayoutKey), findsNothing);
+    expect((await _career(tester, save)).managerName, isNot('Vera'));
+    await tester.tap(find.text(enL.managerRenameSave));
+    await settle(tester);
+    expect(tester.takeException(), isNull);
     expect((await _career(tester, save)).managerName, 'Vera');
     expect(find.byType(AlertDialog), findsNothing);
     expect(find.text('Vera'), findsWidgets);
