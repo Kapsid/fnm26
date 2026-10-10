@@ -45,6 +45,8 @@ const Set<String> tabletReadyPaths = <String>{
   Routes.records,
   Routes.allTimeRecords,
   Routes.legends,
+  Routes.headToHead,
+  Routes.h2hMeetings,
 };
 
 /// The tablet frame around every in-save screen: sidebar on the left, top bar

@@ -7,16 +7,21 @@ import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/nations/nation_select_providers.dart';
+import 'package:fnm/features/records/h2h_meetings_screen.dart';
 import 'package:fnm/features/records/head_to_head_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
-import 'package:fnm/shared/tablet/adaptive_sheet.dart';
+import 'package:fnm/shared/tablet/tablet.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
+
+part 'head_to_head_tablet_layout.dart';
 
 /// Head-to-head explorer: pick any two nations and see their all-time record
 /// across every meeting in the save — friendlies, qualifiers and finals alike.
 class HeadToHeadScreen extends ConsumerStatefulWidget {
   const HeadToHeadScreen({required this.careerId, super.key});
+
+  static const Key tabletLayoutKey = Key('headToHead.tabletLayout');
 
   final int careerId;
 
@@ -42,6 +47,9 @@ class _HeadToHeadScreenState extends ConsumerState<HeadToHeadScreen> {
       }
     }
 
+    if (TabletShellScope.isActive(context)) {
+      return _HeadToHeadTabletLayout(state: this, nationsAsync: nationsAsync);
+    }
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -128,8 +136,19 @@ class _HeadToHeadScreenState extends ConsumerState<HeadToHeadScreen> {
       backgroundColor: AppColors.surface,
       builder: (_) => _NationPickerSheet(nations: nations),
     );
-    if (id != null) onPick(id);
+    if (id != null && mounted) onPick(id);
   }
+
+  /// The home slot's picker; the tablet's slots call these, so both layouts
+  /// set the pair the same way.
+  void _pickA(List<Nation> nations) =>
+      _pick(nations, (id) => setState(() => _a = id));
+
+  void _pickB(List<Nation> nations) =>
+      _pick(nations, (id) => setState(() => _b = id));
+
+  /// An opponent picked off the manager's ledger, as the away side.
+  void _chooseB(int id) => setState(() => _b = id);
 }
 
 class _NationSlot extends StatelessWidget {
@@ -332,11 +351,20 @@ class _WdlPill extends StatelessWidget {
 }
 
 class _Record extends ConsumerWidget {
-  const _Record({required this.careerId, required this.a, required this.b});
+  const _Record({
+    required this.careerId,
+    required this.a,
+    required this.b,
+    this.showAllMeetings = true,
+  });
 
   final int careerId;
   final Nation a;
   final Nation b;
+
+  /// Whether to offer the full list of meetings. Not where that list is
+  /// already on show under the record (the tablet's pane).
+  final bool showAllMeetings;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -394,18 +422,20 @@ class _Record extends ConsumerWidget {
                 ],
               ),
             ),
-            const SizedBox(height: AppSpacing.sm),
-            SizedBox(
-              width: double.infinity,
-              child: OutlinedButton.icon(
-                onPressed: () => context.push(
-                  '${Routes.h2hMeetings}?careerId=$careerId'
-                  '&a=${a.id}&b=${b.id}',
+            if (showAllMeetings) ...[
+              const SizedBox(height: AppSpacing.sm),
+              SizedBox(
+                width: double.infinity,
+                child: OutlinedButton.icon(
+                  onPressed: () => context.push(
+                    '${Routes.h2hMeetings}?careerId=$careerId'
+                    '&a=${a.id}&b=${b.id}',
+                  ),
+                  icon: const Icon(Icons.history, size: 18),
+                  label: Text(l.recordsSeeAllMeetings),
                 ),
-                icon: const Icon(Icons.history, size: 18),
-                label: Text(l.recordsSeeAllMeetings),
               ),
-            ),
+            ],
           ],
         );
       },
