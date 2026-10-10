@@ -42,6 +42,8 @@ import 'package:fnm/features/squad/grievance_providers.dart';
 import 'package:fnm/features/federation/federation_providers.dart';
 import 'package:fnm/features/federation/federation_service.dart';
 import 'package:fnm/features/federation/naturalization_providers.dart';
+import 'package:fnm/features/friendlies/friendlies_providers.dart'
+    show friendliesPlanProvider;
 import 'package:fnm/features/hub/draw_reveal.dart';
 import 'package:fnm/features/achievements/achievement_providers.dart';
 import 'package:fnm/features/achievements/challenge_providers.dart'
@@ -75,7 +77,7 @@ import 'package:fnm/features/tactics/nation_squad_providers.dart';
 import 'package:fnm/features/tactics/tactics_providers.dart';
 import 'package:fnm/features/settings/settings_providers.dart';
 import 'package:fnm/features/stats/stats_providers.dart'
-    show careerStatsProvider, teamOverallHistoryProvider;
+    show careerStatsProvider, teamOverallHistoryProvider, teamStatsProvider;
 import 'package:fnm/features/nations/nation_vitrine_providers.dart';
 import 'package:fnm/features/player/player_detail_screen.dart'
     show invalidatePlayerDetails;
@@ -631,6 +633,7 @@ class SeasonService {
       ..invalidate(continentalHostThemeProvider);
     _invalidateFederationViews();
     _invalidateHistoryViews();
+    _invalidateTeamViews();
   }
 
   /// The federation, manager and Y screens' data, refreshed by hand after a
@@ -681,6 +684,18 @@ class SeasonService {
       ..invalidate(teamOverallHistoryProvider);
     // The detail pane beside the history, squad and ranking grids.
     invalidatePlayerDetails(_ref);
+  }
+
+  /// The team records and the friendlies plan, refreshed by hand after a step
+  /// for the same reason as [_invalidateCompetitionViews]. The team records
+  /// read the goals, caps and ratings imperatively. The friendlies page keeps
+  /// its plan alive while it is on show, and the hub's next event reads that
+  /// same plan: left stale, a friendly gap the step has just opened would
+  /// never be offered and the sim would run straight past it.
+  void _invalidateTeamViews() {
+    _ref
+      ..invalidate(teamStatsProvider)
+      ..invalidate(friendliesPlanProvider);
   }
 
   /// Persists the in-memory ranking points for [careerId], and republishes the

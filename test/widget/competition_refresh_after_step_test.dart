@@ -6,14 +6,17 @@ import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/features/achievements/achievement_providers.dart';
 import 'package:fnm/features/achievements/challenge_providers.dart';
+import 'package:fnm/features/awards/award_providers.dart';
 import 'package:fnm/features/career/career_summary_providers.dart';
 import 'package:fnm/features/career/manager_history_providers.dart';
 import 'package:fnm/features/federation/federation_service.dart';
 import 'package:fnm/features/federation/naturalization_providers.dart';
+import 'package:fnm/features/friendlies/friendlies_providers.dart';
 import 'package:fnm/features/hub/hub_providers.dart';
 import 'package:fnm/features/manager/manager_providers.dart';
 import 'package:fnm/features/match/match_providers.dart';
 import 'package:fnm/features/nations/nation_vitrine_providers.dart';
+import 'package:fnm/features/player/club_history_providers.dart';
 import 'package:fnm/features/player/player_detail_screen.dart';
 import 'package:fnm/features/records/all_time_records_providers.dart';
 import 'package:fnm/features/records/head_to_head_providers.dart';
@@ -107,6 +110,20 @@ _Views _historyViews(SeededSave save, int playerId) {
   };
 }
 
+/// The remaining screens' data (stage 6): the team records, the friendlies
+/// plan (which the hub's next event also reads), and the player card's club
+/// history and cabinet, shown beside every grid and on the player page.
+_Views _teamViews(SeededSave save, int playerId) {
+  final id = save.careerId;
+  final player = (careerId: id, playerId: playerId);
+  return {
+    'teamStats': teamStatsProvider(id).future,
+    'friendlies': friendliesPlanProvider(id).future,
+    'clubHistory': clubHistoryProvider(player).future,
+    'playerAwards': playerAwardsProvider(player).future,
+  };
+}
+
 /// One of the manager's players, for the detail pane.
 Future<int> _aPlayerId(WidgetTester tester, SeededSave save) async {
   final squad = await tester.runAsync(
@@ -161,7 +178,7 @@ Future<void> _expectRefreshedBy(
   });
 }
 
-/// Review Focus 3 (stage 3), 1 (stage 4) and 1 (stage 5). A tablet's top bar runs the sim
+/// Review Focus 3 (stage 3), 1 (stage 4), 1 (stage 5) and 5 (stage 6). A tablet's top bar runs the sim
 /// while a screen is on show, and that screen's provider is kept alive by
 /// being watched. Every way a step is committed must hand every one of them
 /// a fresh read.
@@ -178,6 +195,7 @@ void main() {
         ..._competitionViews(save),
         ..._federationViews(save),
         ..._historyViews(save, playerId),
+        ..._teamViews(save, playerId),
       },
       () => save.container.read(seasonServiceProvider).advance(save.careerId),
     );
@@ -206,6 +224,7 @@ void main() {
         ..._competitionViews(save),
         ..._federationViews(save),
         ..._historyViews(save, playerId),
+        ..._teamViews(save, playerId),
       },
       () => c
           .read(seasonServiceProvider)
@@ -231,6 +250,7 @@ void main() {
     final cascadeBody = cascade.substring(0, cascade.indexOf('\n  }'));
     expect(cascadeBody, _callLine('_invalidateFederationViews'));
     expect(cascadeBody, _callLine('_invalidateHistoryViews'));
+    expect(cascadeBody, _callLine('_invalidateTeamViews'));
     final history = src.substring(
       src.indexOf('void _invalidateHistoryViews()'),
     );

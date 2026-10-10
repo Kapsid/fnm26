@@ -22,6 +22,7 @@ import 'package:fnm/features/awards/award_providers.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/federation/federation_providers.dart';
 import 'package:fnm/features/player/club_history_card.dart';
+import 'package:fnm/features/player/club_history_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/domain/services/player/player_traits.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
@@ -117,12 +118,19 @@ _playerDetailProvider = FutureProvider.autoDispose
       );
     });
 
-/// Drops every cached player detail, so a pane on show re-reads its player.
-/// The sim's cascade calls it after a step: on a tablet a [PlayerView] pane
-/// stays on show beside the history, squad and ranking grids while the top
-/// bar's Continue runs the sim, and the provider reads the appearances and
-/// goals imperatively, so nothing else would notice the step.
-void invalidatePlayerDetails(Ref ref) => ref.invalidate(_playerDetailProvider);
+/// Drops every cached player detail, so a card on show re-reads its player.
+/// The sim's cascade calls it after a step: on a tablet a [PlayerView] (a
+/// pane beside the history, squad and ranking grids, or the player page)
+/// stays on show while the top bar's Continue runs the sim. The detail reads
+/// the appearances and goals imperatively, the club history moves each 1
+/// December and the cabinet fills when a tournament ends, so nothing else
+/// would notice the step.
+void invalidatePlayerDetails(Ref ref) {
+  ref
+    ..invalidate(_playerDetailProvider)
+    ..invalidate(clubHistoryProvider)
+    ..invalidate(playerAwardsProvider);
+}
 
 /// One player's detail read, for tests that check the cascade hands it a
 /// fresh future. The value is the private view record, so it is exposed only
