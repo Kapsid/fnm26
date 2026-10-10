@@ -15,6 +15,7 @@ class TabletPage extends StatelessWidget {
     required this.title,
     required this.child,
     this.onBack,
+    this.backTooltip,
     this.trailing,
     super.key,
   });
@@ -27,6 +28,9 @@ class TabletPage extends StatelessWidget {
   /// Where the back arrow goes; no arrow when null (an event page, which is
   /// left by deciding).
   final VoidCallback? onBack;
+
+  /// The back arrow's tooltip; Material's "Back" when null.
+  final String? backTooltip;
   final Widget? trailing;
 
   @override
@@ -41,6 +45,7 @@ class TabletPage extends StatelessWidget {
             TabletScreenHeader(
               title: title,
               onBack: onBack,
+              backTooltip: backTooltip,
               trailing: trailing,
             ),
             Expanded(child: child),

@@ -9,6 +9,7 @@ class TabletScreenHeader extends StatelessWidget {
   const TabletScreenHeader({
     required this.title,
     this.onBack,
+    this.backTooltip,
     this.trailing,
     this.accent,
     super.key,
@@ -18,6 +19,9 @@ class TabletScreenHeader extends StatelessWidget {
 
   final String title;
   final VoidCallback? onBack;
+
+  /// What the back arrow says it does; Material's "Back" when null.
+  final String? backTooltip;
   final Widget? trailing;
 
   /// The title's colour; the screen title's own when null.
@@ -32,7 +36,9 @@ class TabletScreenHeader extends StatelessWidget {
           if (onBack != null) ...[
             IconButton(
               key: backKey,
-              tooltip: MaterialLocalizations.of(context).backButtonTooltip,
+              tooltip:
+                  backTooltip ??
+                  MaterialLocalizations.of(context).backButtonTooltip,
               icon: const Icon(Icons.arrow_back, color: AppColors.primary),
               onPressed: onBack,
             ),

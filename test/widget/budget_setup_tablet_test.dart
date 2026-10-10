@@ -281,4 +281,19 @@ void main() {
     expect(topBarContinue(tester).label, isNot(enL.hubEventSetBudget));
     await tester.pumpWidget(const SizedBox());
   });
+
+  // The back arrow says what it does, as the phone's does: the budget can
+  // wait, and the hub will ask again.
+  testWidgets('the back arrow is "later", and goes to the hub', (
+    tester,
+  ) async {
+    final save = await _open(tester, kTabletSize);
+    final back = find.byTooltip(enL.federationBudgetLater);
+    expect(back, findsOneWidget);
+    await tester.tap(back);
+    await settle(tester);
+    expect(tester.takeException(), isNull);
+    expect(save.container.read(routerProvider).state.uri.path, Routes.hub);
+    await tester.pumpWidget(const SizedBox());
+  });
 }

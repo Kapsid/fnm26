@@ -245,6 +245,7 @@ class _BudgetSetupScreenState extends ConsumerState<BudgetSetupScreen> {
         title: l.budgetSetupTitle,
         // A way out, as on the phone: forced is not the same as a trap.
         onBack: () => context.go('${Routes.hub}?careerId=${widget.careerId}'),
+        backTooltip: l.federationBudgetLater,
         child: careerAsync.when(
           loading: () => const Center(child: CircularProgressIndicator()),
           error: (e, _) => Center(

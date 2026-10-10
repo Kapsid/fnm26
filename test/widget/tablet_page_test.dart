@@ -49,4 +49,31 @@ void main() {
     expect(back, 1);
     expect(find.text('call-ups'), findsOneWidget);
   });
+
+  testWidgets('the back arrow keeps the default tooltip unless given one', (
+    tester,
+  ) async {
+    Widget page({String? tooltip}) => MaterialApp(
+      home: TabletPage(
+        scaffoldKey: const Key('page'),
+        title: 'Budget',
+        onBack: () {},
+        backTooltip: tooltip,
+        child: const SizedBox(),
+      ),
+    );
+    await tester.pumpWidget(page());
+    final fallback = MaterialLocalizations.of(
+      tester.element(find.byType(TabletScreenHeader)),
+    ).backButtonTooltip;
+    expect(
+      tester.widget<IconButton>(find.byKey(TabletScreenHeader.backKey)).tooltip,
+      fallback,
+    );
+    await tester.pumpWidget(page(tooltip: 'Later'));
+    expect(
+      tester.widget<IconButton>(find.byKey(TabletScreenHeader.backKey)).tooltip,
+      'Later',
+    );
+  });
 }
