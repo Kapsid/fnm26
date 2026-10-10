@@ -1,22 +1,31 @@
-import 'package:fnm/features/onboarding/tour_keys.dart';
 import 'package:flutter/material.dart';
 import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
+import 'package:fnm/features/career/career_summary_screen.dart';
+import 'package:fnm/features/onboarding/tour_keys.dart';
 import 'package:fnm/l10n/app_localizations.dart';
+import 'package:fnm/shared/tablet/tablet.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
+
+part 'careers_tablet_layout.dart';
 
 /// The "Careers" hub: a menu grouping the manager's career record, the national
 /// team's all-time records, and the played-match history.
 class CareersScreen extends StatelessWidget {
   const CareersScreen({required this.careerId, super.key});
 
+  static const Key tabletLayoutKey = Key('careers.tabletLayout');
+
   final int careerId;
 
   @override
   Widget build(BuildContext context) {
+    if (TabletShellScope.isActive(context)) {
+      return _CareersTabletLayout(careerId: careerId);
+    }
     final l = AppLocalizations.of(context);
     return Scaffold(
       appBar: AppBar(
@@ -33,59 +42,80 @@ class CareersScreen extends StatelessWidget {
       body: ListView(
         padding: const EdgeInsets.all(AppSpacing.marginMobile),
         children: [
-          _MenuTile(
-            key: TourKeys.careerHistory,
-            icon: Icons.timeline,
-            title: l.careerManagerCareer,
-            subtitle: l.careerManagerCareerSubtitle,
-            onTap: () =>
-                context.go('${Routes.managerHistory}?careerId=$careerId'),
-          ),
-          const SizedBox(height: AppSpacing.sm),
-          _MenuTile(
-            icon: Icons.workspace_premium,
-            title: l.careerSummaryTitle,
-            subtitle: l.careerSummarySubtitle,
-            onTap: () =>
-                context.go('${Routes.careerSummary}?careerId=$careerId'),
-          ),
-          const SizedBox(height: AppSpacing.sm),
-          _MenuTile(
-            icon: Icons.emoji_events,
-            title: l.careerAchievements,
-            subtitle: l.careerAchievementsSubtitle,
-            onTap: () =>
-                context.go('${Routes.achievements}?careerId=$careerId'),
-          ),
-          const SizedBox(height: AppSpacing.sm),
-          // Beside achievements, not buried inside them: the challenges used
-          // to be reachable only from a button in the achievements app bar,
-          // so a manager who never went looking never knew they were there.
-          _MenuTile(
-            icon: Icons.local_fire_department_rounded,
-            title: l.careerChallenges,
-            subtitle: l.careerChallengesSubtitle,
-            onTap: () => context.go('${Routes.challenges}?careerId=$careerId'),
-          ),
-          const SizedBox(height: AppSpacing.sm),
-          _MenuTile(
-            icon: Icons.leaderboard,
-            title: l.careerTeamRecords,
-            subtitle: l.careerTeamRecordsSubtitle,
-            onTap: () => context.go('${Routes.teamStats}?careerId=$careerId'),
-          ),
-          const SizedBox(height: AppSpacing.sm),
-          _MenuTile(
-            icon: Icons.sports_soccer,
-            title: l.careerMyMatches,
-            subtitle: l.careerMyMatchesSubtitle,
-            onTap: () => context.go('${Routes.results}?careerId=$careerId'),
-          ),
+          for (final (i, e) in _careerMenu(l, careerId).indexed) ...[
+            if (i > 0) const SizedBox(height: AppSpacing.sm),
+            _MenuTile(
+              key: e.key,
+              icon: e.icon,
+              title: e.title,
+              subtitle: e.subtitle,
+              onTap: () => context.go(e.location),
+            ),
+          ],
         ],
       ),
     );
   }
 }
+
+/// One destination of the Career menu.
+typedef _CareerEntry = ({
+  Key? key,
+  IconData icon,
+  String title,
+  String subtitle,
+  String location,
+});
+
+/// The Career menu, top to bottom: the same destinations on both layouts.
+List<_CareerEntry> _careerMenu(AppLocalizations l, int careerId) => [
+  (
+    // The onboarding tour's Career step points here, on both layouts.
+    key: TourKeys.careerHistory,
+    icon: Icons.timeline,
+    title: l.careerManagerCareer,
+    subtitle: l.careerManagerCareerSubtitle,
+    location: '${Routes.managerHistory}?careerId=$careerId',
+  ),
+  (
+    key: null,
+    icon: Icons.workspace_premium,
+    title: l.careerSummaryTitle,
+    subtitle: l.careerSummarySubtitle,
+    location: '${Routes.careerSummary}?careerId=$careerId',
+  ),
+  (
+    key: null,
+    icon: Icons.emoji_events,
+    title: l.careerAchievements,
+    subtitle: l.careerAchievementsSubtitle,
+    location: '${Routes.achievements}?careerId=$careerId',
+  ),
+  // Beside achievements, not buried inside them: the challenges used to be
+  // reachable only from a button in the achievements app bar, so a manager
+  // who never went looking never knew they were there.
+  (
+    key: null,
+    icon: Icons.local_fire_department_rounded,
+    title: l.careerChallenges,
+    subtitle: l.careerChallengesSubtitle,
+    location: '${Routes.challenges}?careerId=$careerId',
+  ),
+  (
+    key: null,
+    icon: Icons.leaderboard,
+    title: l.careerTeamRecords,
+    subtitle: l.careerTeamRecordsSubtitle,
+    location: '${Routes.teamStats}?careerId=$careerId',
+  ),
+  (
+    key: null,
+    icon: Icons.sports_soccer,
+    title: l.careerMyMatches,
+    subtitle: l.careerMyMatchesSubtitle,
+    location: '${Routes.results}?careerId=$careerId',
+  ),
+];
 
 class _MenuTile extends StatelessWidget {
   const _MenuTile({
