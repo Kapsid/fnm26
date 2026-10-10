@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:fnm/core/util/app_date.dart';
+import 'package:fnm/core/util/share_origin.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:fnm/features/career/career_transfer_providers.dart';
 import 'package:fnm/data/db/career_bundle.dart';
@@ -325,18 +326,27 @@ String agoShort(DateTime at, {DateTime? now}) {
   return '${diff.inDays ~/ 365}y';
 }
 
-/// Writes one career to a file and hands it to the share sheet.
 /// Writes EVERY save to one file and hands it to the share sheet.
 ///
 /// The same export the settings screen offers, on the screen where a manager
-/// is actually looking at what he would lose.
-Future<void> _backupAll(BuildContext context, WidgetRef ref) async {
+/// is actually looking at what he would lose. [origin] is where an iPad's
+/// share popover points; the calling context's own rect when absent.
+Future<void> _backupAll(
+  BuildContext context,
+  WidgetRef ref, {
+  Rect? origin,
+}) async {
   final l = AppLocalizations.of(context);
   final messenger = ScaffoldMessenger.of(context);
+  final from = origin ?? shareOriginOf(context);
   try {
     final file = await ref.read(saveBackupServiceProvider).export();
     await SharePlus.instance.share(
-      ShareParams(files: [XFile(file.path)], subject: l.backupExportSubject),
+      ShareParams(
+        files: [XFile(file.path)],
+        subject: l.backupExportSubject,
+        sharePositionOrigin: from,
+      ),
     );
   } on Object catch (e, stack) {
     AppLog.error('saves-backup-all', e, stack);
@@ -344,17 +354,26 @@ Future<void> _backupAll(BuildContext context, WidgetRef ref) async {
   }
 }
 
+/// Writes one career to a file and hands it to the share sheet. [origin] is
+/// where an iPad's share popover points; the calling context's own rect when
+/// absent.
 Future<void> _shareCareer(
   BuildContext context,
   WidgetRef ref,
-  int careerId,
-) async {
+  int careerId, {
+  Rect? origin,
+}) async {
   final l = AppLocalizations.of(context);
   final messenger = ScaffoldMessenger.of(context);
+  final from = origin ?? shareOriginOf(context);
   try {
     final file = await ref.read(careerTransferServiceProvider).export(careerId);
     await SharePlus.instance.share(
-      ShareParams(files: [XFile(file.path)], subject: l.careerShareSubject),
+      ShareParams(
+        files: [XFile(file.path)],
+        subject: l.careerShareSubject,
+        sharePositionOrigin: from,
+      ),
     );
   } on Object catch (e, stack) {
     AppLog.error('career-share', e, stack);

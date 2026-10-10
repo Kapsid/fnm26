@@ -13,6 +13,7 @@ import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
+import 'package:fnm/core/util/share_origin.dart';
 import 'package:fnm/domain/entities/career.dart';
 import 'package:fnm/domain/services/entitlement/entitlement.dart';
 import 'package:fnm/features/career/career_providers.dart';
@@ -388,6 +389,9 @@ class _BackupCardState extends ConsumerState<_BackupCard> {
 
   Future<void> _export() async {
     final l = AppLocalizations.of(context);
+    // Taken now, while the card is laid out: an iPad's share sheet must
+    // point at something.
+    final origin = shareOriginOf(context);
     setState(() => _busy = true);
     try {
       final file = await ref.read(saveBackupServiceProvider).export();
@@ -396,6 +400,7 @@ class _BackupCardState extends ConsumerState<_BackupCard> {
         ShareParams(
           files: [XFile(file.path)],
           subject: l.backupExportSubject,
+          sharePositionOrigin: origin,
         ),
       );
       if (mounted) _say(l.backupExported);
