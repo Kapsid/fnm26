@@ -1,8 +1,13 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/core/layout/form_factor.dart';
 import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/data/data_providers.dart';
+import 'package:fnm/data/repositories/drift_career_repository.dart';
+import 'package:fnm/domain/entities/career.dart';
+import 'package:fnm/domain/repositories/career_repository.dart';
 import 'package:fnm/domain/services/federation/federation_finance.dart';
 import 'package:fnm/features/federation/budget_setup_screen.dart';
 import 'package:fnm/features/federation/department_effect.dart';
@@ -15,8 +20,21 @@ import 'package:fnm/shared/widgets/widgets.dart';
 import '../helpers/federation_fixtures.dart';
 import '../helpers/seeded_save.dart';
 
-Future<SeededSave> _open(WidgetTester tester, Size size) async {
-  final save = await seedSave(tester, formFactor: FormFactor.tablet);
+Future<SeededSave> _open(
+  WidgetTester tester,
+  Size size, {
+  _Gate? gate,
+}) async {
+  final save = await seedSave(
+    tester,
+    formFactor: FormFactor.tablet,
+    overrides: [
+      if (gate != null)
+        careerRepositoryProvider.overrideWith(
+          (ref) => _GatedRepository(ref.watch(appDatabaseProvider), gate),
+        ),
+    ],
+  );
   await pumpRoute(
     tester,
     save,
@@ -24,6 +42,63 @@ Future<SeededSave> _open(WidgetTester tester, Size size) async {
     size: size,
   );
   return save;
+}
+
+/// Armed by a test once the save is seeded: until then nothing is held.
+class _Gate {
+  Completer<void>? completer;
+}
+
+/// The real repository, holding the investment write back while its gate is
+/// armed: the manager can then leave the page while the budget is still
+/// being written.
+class _GatedRepository extends DriftCareerRepository {
+  _GatedRepository(super._db, this.gate);
+
+  final _Gate gate;
+
+  @override
+  Future<void> setInvestment(
+    int careerId,
+    int cycle,
+    FederationInvestment i,
+  ) async {
+    await gate.completer?.future;
+    return super.setInvestment(careerId, cycle, i);
+  }
+}
+
+/// The stored career, not `save.career` (that is the career as created,
+/// before the opening budget was granted to it).
+Future<Career> _career(WidgetTester tester, SeededSave save) async =>
+    (await tester.runAsync(
+      () => save.container.read(careerRepositoryProvider).byId(save.careerId),
+    ))!;
+
+/// The total stored as this cycle's investment.
+Future<int> _invested(WidgetTester tester, SeededSave save) async {
+  final career = await _career(tester, save);
+  final stored = (await tester.runAsync(
+    () => save.container
+        .read(careerRepositoryProvider)
+        .investment(save.careerId, career.cyclePointer),
+  ))!;
+  return stored.youth +
+      stored.commercial +
+      stored.medical +
+      stored.naturalization +
+      stored.boardRelations;
+}
+
+/// Spends every department in full and taps the page's Confirm.
+Future<void> _spendAndConfirm(WidgetTester tester) async {
+  for (var i = 0; i < 5; i++) {
+    await _set(tester, i, _slider(tester, i).max);
+  }
+  final ready = _confirmButton(tester);
+  expect(ready.onPressed, isNotNull);
+  await tester.tap(find.byWidget(ready));
+  await tester.pump();
 }
 
 Slider _slider(WidgetTester tester, int i) =>
@@ -154,6 +229,55 @@ void main() {
       expect(career.budget, budget - spent);
     });
     // ...and not after.
+    expect(topBarContinue(tester).label, isNot(enL.hubEventSetBudget));
+    await tester.pumpWidget(const SizedBox());
+  });
+
+  // Settings pushed over the page while the budget is being written: the
+  // budget is stored, and he is left on Settings, not pulled to the hub.
+  testWidgets('a budget saved under a pushed page leaves him there', (
+    tester,
+  ) async {
+    final gate = _Gate();
+    final save = await _open(tester, kTabletSize, gate: gate);
+    expect(await _invested(tester, save), 0);
+    gate.completer = Completer<void>();
+    await _spendAndConfirm(tester);
+    final router = save.container.read(routerProvider);
+    unawaited(router.push(Routes.settings));
+    await settle(tester);
+    expect(router.state.uri.path, Routes.settings);
+    expect(await _invested(tester, save), 0);
+    gate.completer!.complete();
+    await settle(tester);
+    expect(tester.takeException(), isNull);
+    expect(router.state.uri.path, Routes.settings);
+    expect(await _invested(tester, save), greaterThan(0));
+    await tester.pumpWidget(const SizedBox());
+  });
+
+  // He goes elsewhere while the budget is being written, which unmounts the
+  // page: the hub's data is still refreshed, so the top bar stops offering
+  // the budget, and he is not pulled back to the hub.
+  testWidgets('leaving while the budget is saving still moves the bar on', (
+    tester,
+  ) async {
+    final gate = _Gate();
+    final save = await _open(tester, kTabletSize, gate: gate);
+    expect(await _invested(tester, save), 0);
+    expect(topBarContinue(tester).label, enL.hubEventSetBudget);
+    gate.completer = Completer<void>();
+    await _spendAndConfirm(tester);
+    final router = save.container.read(routerProvider)
+      ..go('${Routes.finances}?careerId=${save.careerId}');
+    await settle(tester);
+    expect(router.state.uri.path, Routes.finances);
+    expect(topBarContinue(tester).label, enL.hubEventSetBudget);
+    gate.completer!.complete();
+    await settle(tester);
+    expect(tester.takeException(), isNull);
+    expect(router.state.uri.path, Routes.finances);
+    expect(await _invested(tester, save), greaterThan(0));
     expect(topBarContinue(tester).label, isNot(enL.hubEventSetBudget));
     await tester.pumpWidget(const SizedBox());
   });

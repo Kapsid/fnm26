@@ -48,11 +48,12 @@ class TrainingCampScreen extends ConsumerWidget {
       // saving swaps layouts and unmounts this card, and the manager must
       // still leave for the hub with the camp stored. A resize keeps the
       // location; a manager who went elsewhere meanwhile is left there.
+      // `router.state` is the top-most route, a pushed one (Settings)
+      // included; the route information provider misses a push.
       final service = ref.read(trainingCampServiceProvider);
       final router = GoRouter.of(context);
       await service.choose(careerId, plan, option);
-      if (router.routeInformationProvider.value.uri.path ==
-          Routes.trainingCamp) {
+      if (router.state.uri.path == Routes.trainingCamp) {
         router.go(_exit());
       }
     },

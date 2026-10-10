@@ -220,6 +220,35 @@ void main() {
     await tester.pumpWidget(const SizedBox());
   });
 
+  // A page pushed over the camps (Settings) while the choice is saving: a
+  // push does not move the route information, so only the router's own
+  // state says he is no longer on the camps. He stays where he went.
+  testWidgets('a choice saved under a pushed page leaves him there', (
+    tester,
+  ) async {
+    final plan = fakeCampPlan(campHosts(1));
+    final gate = Completer<void>();
+    final save = await _open(tester, kTabletSize, plan: plan, gate: gate);
+    expect(await _stored(tester, save, plan), isNull);
+    final option = plan.options[0];
+    await tester.tap(find.text(option.camp.name));
+    await tester.pump();
+    final router = save.container.read(routerProvider);
+    unawaited(router.push(Routes.settings));
+    await settle(tester);
+    expect(router.state.uri.path, Routes.settings);
+    expect(_path(save), Routes.trainingCamp);
+    expect(await _stored(tester, save, plan), isNull);
+    gate.complete();
+    await settle(tester);
+    expect(tester.takeException(), isNull);
+    expect(router.state.uri.path, Routes.settings);
+    final stored = await _stored(tester, save, plan);
+    expect(stored?.hostId, option.hostId);
+    expect(stored?.campIndex, option.camp.index);
+    await tester.pumpWidget(const SizedBox());
+  });
+
   testWidgets('nothing to decide: Continue to the hub', (tester) async {
     final save = await _open(tester, kTabletSize);
     expect(find.byKey(TrainingCampScreen.tabletLayoutKey), findsOneWidget);

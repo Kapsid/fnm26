@@ -100,6 +100,12 @@ class _BudgetSetupScreenState extends ConsumerState<BudgetSetupScreen> {
   Future<void> _confirm(Career career, FederationInvestment alloc) async {
     if (_busy) return;
     setState(() => _busy = true);
+    // Read before the first await: the manager may leave (or a resize across
+    // 1000 swap layouts) while the budget is saving, and the hub must still
+    // be refreshed and only a manager still here taken on to it.
+    final container = ProviderScope.containerOf(context, listen: false);
+    final router = GoRouter.of(context);
+    final careerId = widget.careerId;
     final repo = ref.read(careerRepositoryProvider);
     final comp = ref.read(competitionRepositoryProvider);
     final spend =
@@ -125,17 +131,22 @@ class _BudgetSetupScreenState extends ConsumerState<BudgetSetupScreen> {
     // The naturalisation offer is no longer rolled here — it now arrives at a
     // random point in the cycle (see SeasonService._rollNaturalizationIfDue),
     // so an approach isn't always glued to setting the budget.
-    if (!mounted) return;
+    //
     // Refresh the hub so the now-satisfied budget event clears and the season
-    // moves on to its next step.
-    ref
-      ..invalidate(financeViewProvider(widget.careerId))
+    // moves on to its next step. Through the captured container, so it
+    // happens even when this page is gone (the tablet top bar reads it).
+    container
+      ..invalidate(financeViewProvider(careerId))
       // The balance has just changed, and the money indicator on the hub reads
       // it through here — a derived provider never notices a write it did not
       // make, so it is told.
-      ..invalidate(federationFundsProvider(widget.careerId))
-      ..invalidate(hubDataProvider(widget.careerId));
-    context.go('${Routes.hub}?careerId=${widget.careerId}');
+      ..invalidate(federationFundsProvider(careerId))
+      ..invalidate(hubDataProvider(careerId));
+    // `router.state` is the top-most route, a pushed one included: a manager
+    // who went elsewhere meanwhile is left there.
+    if (router.state.uri.path == Routes.budgetSetup) {
+      router.go('${Routes.hub}?careerId=$careerId');
+    }
   }
 
   /// The money there is, the split so far, and whether it may be confirmed.
