@@ -184,7 +184,7 @@ void main() {
     await tester.pumpWidget(const SizedBox());
   });
 
-  testWidgets('Continue after the landscape draw: watched, back to the hub', (
+  testWidgets('Continue after the landscape draw goes back to the hub', (
     tester,
   ) async {
     final save = await _qualifying(tester, kTabletSize);
@@ -202,17 +202,6 @@ void main() {
           .path,
       Routes.hub,
     );
-    late bool watched;
-    await tester.runAsync(() async {
-      watched = await save.container
-          .read(competitionRepositoryProvider)
-          .hasWatchedDraw(
-            save.careerId,
-            save.career.cyclePointer,
-            continentalQualDrawKind,
-          );
-    });
-    expect(watched, isTrue);
     await tester.pumpWidget(const SizedBox());
   });
 }

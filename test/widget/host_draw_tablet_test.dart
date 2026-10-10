@@ -42,6 +42,17 @@ void main() {
     tester,
   ) async {
     final save = await _open(tester, kTabletSize);
+    late bool before;
+    await tester.runAsync(() async {
+      before = await save.container
+          .read(competitionRepositoryProvider)
+          .hasWatchedDraw(
+            save.careerId,
+            save.career.cyclePointer,
+            continentalHostDrawKind,
+          );
+    });
+    expect(before, isFalse, reason: 'unseen until the envelope is opened');
     await tester.tap(find.text(enL.tourSharedOpenEnvelope));
     await tester.pump();
     await tester.pump(const Duration(seconds: 1));

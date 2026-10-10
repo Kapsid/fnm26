@@ -140,6 +140,13 @@ void main() {
     tester,
   ) async {
     final save = await _open(tester, kTabletSize);
+    late bool before;
+    await tester.runAsync(() async {
+      before = await save.container
+          .read(competitionRepositoryProvider)
+          .hasWatchedDraw(save.careerId, 0, worldCupDrawKind);
+    });
+    expect(before, isFalse, reason: 'unseen until the draw is finished');
     await tester.tap(find.text(enL.tourDrawStart));
     await tester.pump();
     await _skip(tester);
