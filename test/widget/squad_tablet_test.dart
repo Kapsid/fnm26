@@ -119,6 +119,89 @@ void main() {
     await tester.pumpWidget(const SizedBox());
   });
 
+  testWidgets('the headers sort: OVERALL starts high to low and reverses, '
+      'POS runs in pitch order, every column answers a tap', (tester) async {
+    final save = await seedSave(tester, formFactor: FormFactor.tablet);
+    await pumpRoute(
+      tester,
+      save,
+      '${Routes.tactics}?careerId=${save.careerId}&tab=3',
+      size: const Size(1080, 810),
+    );
+    final data = save.container.read(nationSquadProvider(save.careerId)).value!;
+    final grid = find.byType(DataGrid<NationSquadRow>);
+    final header = find.byKey(DataGrid.headerKey);
+    Finder title(String label) =>
+        find.descendant(of: header, matching: find.text(label.toUpperCase()));
+    Finder arrow(IconData icon) =>
+        find.descendant(of: header, matching: find.byIcon(icon));
+    // The names on screen, top to bottom.
+    List<String> names() {
+      final all = {for (final r in data.rows) r.player.name};
+      final shown =
+          [
+            for (final e
+                in find
+                    .descendant(of: grid, matching: find.byType(Text))
+                    .evaluate())
+              if (all.contains((e.widget as Text).data)) e,
+          ]..sort(
+            (a, b) => tester
+                .getTopLeft(find.byWidget(a.widget))
+                .dy
+                .compareTo(tester.getTopLeft(find.byWidget(b.widget)).dy),
+          );
+      return [for (final e in shown) (e.widget as Text).data!];
+    }
+
+    String nameOf(NationSquadRow r) => r.player.name;
+    final best = [...data.rows]
+      ..sort((a, b) => b.player.overall.compareTo(a.player.overall));
+    // As it arrives: best first, and the header says so.
+    expect(names().first, nameOf(best.first));
+    Finder arrowOn(String label) => find.descendant(
+      of: find.ancestor(of: title(label), matching: find.byType(InkWell)),
+      matching: find.byType(Icon),
+    );
+    expect(arrowOn(enL.teamOverall), findsOneWidget);
+    expect(arrow(Icons.arrow_drop_down), findsOneWidget);
+
+    // One tap on OVERALL turns it round.
+    await tester.tap(title(enL.teamOverall));
+    await tester.pump();
+    expect(arrow(Icons.arrow_drop_up), findsOneWidget);
+    final worst = best.last.player.overall;
+    expect(
+      data.rows
+          .firstWhere((r) => r.player.name == names().first)
+          .player
+          .overall,
+      worst,
+    );
+
+    // POS: keepers first, forwards last.
+    await tester.tap(title(enL.squadDevPosition));
+    await tester.pump();
+    final first = data.rows.firstWhere((r) => r.player.name == names().first);
+    expect(first.player.category, PositionCategory.goalkeeper);
+
+    // Every other header of the overview answers too.
+    for (final label in [
+      enL.squadSortName,
+      enL.playerAge,
+      enL.playerClub,
+      enL.squadSortCaps,
+      enL.squadSortGoals,
+      enL.gridColStatus,
+    ]) {
+      await tester.tap(title(label));
+      await tester.pump();
+      expect(arrowOn(label), findsOneWidget, reason: label);
+      expect(tester.takeException(), isNull, reason: label);
+    }
+    await tester.pumpWidget(const SizedBox());
+  });
+
   testWidgets('the line filter narrows the table at 1080x810', (tester) async {
     final save = await seedSave(tester, formFactor: FormFactor.tablet);
     await pumpRoute(

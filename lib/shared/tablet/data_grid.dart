@@ -80,6 +80,8 @@ class DataGrid<T> extends StatefulWidget {
     this.onSelect,
     this.controller,
     this.rowsController,
+    this.initialSortId,
+    this.initialAscending = false,
     super.key,
   }) : assert(columnSets.length > 0, 'at least one column set');
 
@@ -106,6 +108,17 @@ class DataGrid<T> extends StatefulWidget {
   /// Finds and reveals rows by value in the grid's sorted order.
   final DataGridController<T>? rowsController;
 
+  /// The column the rows arrive sorted by, if any: its header carries the
+  /// sort arrow from the start, so the first tap on it reverses the order
+  /// rather than "sorting" into the order already on screen. The grid sorts
+  /// by it too (stably, so rows already in that order keep it), and a view
+  /// that has the column returns to it. Null (the default) shows the rows as
+  /// given with no arrow.
+  final String? initialSortId;
+
+  /// The direction of [initialSortId]'s order: false is high to low.
+  final bool initialAscending;
+
   @override
   State<DataGrid<T>> createState() => _DataGridState<T>();
 }
@@ -114,8 +127,20 @@ class _DataGridState<T> extends State<DataGrid<T>> {
   /// The active view, kept by id so a parent's new [GridColumnSet] objects
   /// take effect; resolved against [DataGrid.columnSets] on every read.
   late String _setId = widget.columnSets.first.id;
-  String? _sortId;
-  bool _ascending = true;
+  late String? _sortId = _initialSortFor(widget.columnSets.first);
+  late bool _ascending = widget.initialAscending;
+
+  /// [DataGrid.initialSortId] when [set] has that column, else no sort.
+  String? _initialSortFor(GridColumnSet<T> set) {
+    final id = widget.initialSortId;
+    return id != null && set.columns.any((c) => c.id == id) ? id : null;
+  }
+
+  /// The sort a view falls back to when it lacks the current sort column.
+  void _resetSortFor(GridColumnSet<T> set) {
+    _sortId = _initialSortFor(set);
+    _ascending = widget.initialAscending;
+  }
 
   // Sorted rows are cached and rebuilt only when the rows or column sets
   // change (see didUpdateWidget) or the view or sort does.
@@ -180,10 +205,12 @@ class _DataGridState<T> extends State<DataGrid<T>> {
       widget.rowsController?._state = this;
     }
     // A view or sort column the parent removed falls back to the first view
-    // and no sort, so the header and the rows never disagree.
+    // and the initial sort (or none), so the header and the rows never disagree.
     final set = _set;
     _setId = set.id;
-    if (!set.columns.any((c) => c.id == _sortId)) _sortId = null;
+    if (_sortId != null && !set.columns.any((c) => c.id == _sortId)) {
+      _resetSortFor(set);
+    }
     if (!identical(old.rows, widget.rows) ||
         !identical(old.columnSets, widget.columnSets)) {
       _sortedRows = null;
@@ -230,7 +257,7 @@ class _DataGridState<T> extends State<DataGrid<T>> {
 
   void _pickSet(GridColumnSet<T> s) => setState(() {
     _setId = s.id;
-    if (!s.columns.any((c) => c.id == _sortId)) _sortId = null;
+    if (!s.columns.any((c) => c.id == _sortId)) _resetSortFor(s);
   });
 
   @override
@@ -304,7 +331,10 @@ class _DataGridState<T> extends State<DataGrid<T>> {
             height: DataGrid.headerHeight,
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 12),
+              // Stretched, so each title is tappable over the header's whole
+              // height and not only across its line of text.
               child: Row(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   for (final c in columns)
                     _cellBox(
@@ -409,7 +439,10 @@ class _DataGridState<T> extends State<DataGrid<T>> {
 
   Widget _cellBox(GridColumn<T> c, Widget child) {
     final padded = c.gapBefore > 0
-        ? Padding(padding: EdgeInsets.only(left: c.gapBefore), child: child)
+        ? Padding(
+            padding: EdgeInsets.only(left: c.gapBefore),
+            child: child,
+          )
         : child;
     return c.width != null
         ? SizedBox(width: c.width, child: padded)
