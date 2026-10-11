@@ -144,7 +144,7 @@ class RoundResultsScreen extends ConsumerWidget {
             // friendly internationals from this window, if any.
             if (view != null && friendlies.isNotEmpty) {
               String code(int id) => view.nations[id]?.code ?? '??';
-              String name(int id) => view.nations[id]?.name ?? '—';
+              String name(int id) => view.nations[id]?.name ?? l.hubUnknown;
               return ListView(
                 padding: const EdgeInsets.all(AppSpacing.marginMobile),
                 children: [
@@ -171,7 +171,7 @@ class RoundResultsScreen extends ConsumerWidget {
             return const SizedBox.shrink();
           }
           String code(int id) => view.nations[id]?.code ?? '??';
-          String name(int id) => view.nations[id]?.name ?? '—';
+          String name(int id) => view.nations[id]?.name ?? l.hubUnknown;
           final isKnockout = results.knockoutFixtures.isNotEmpty;
 
           return ListView(
