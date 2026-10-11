@@ -2410,6 +2410,7 @@ sideGroupHistory,"Tablet sidebar: section heading over records, legends, head to
 sideInbox,Tablet sidebar item: the messages screen.,,Inbox,Pošta,Boîte de réception,Posta,Skrzynka,Bandeja de entrada,Posteingang
 sideSquad,Tablet sidebar item: the squad list.,,Squad,Kádr,Effectif,Rosa,Kadra,Plantilla,Kader
 sideTactics,Tablet sidebar item: line-up and instructions.,,Tactics,Taktika,Tactique,Tattica,Taktyka,Táctica,Taktik
+sideMainMenu,"Tablet sidebar item at the bottom, beside Settings: leaves the career for the app's main menu (the title screen).",,Main menu,Hlavní nabídka,Menu principal,Menu principale,Menu główne,Menú principal,Hauptmenü
 sideCallUps,Tablet sidebar item: squad selection.,,Call-ups,Nominace,Convocations,Convocazioni,Powołania,Convocatorias,Nominierungen
 sideTournaments,Tablet sidebar item: tournaments and standings.,,Tournaments,Turnaje,Tournois,Tornei,Turnieje,Torneos,Turniere
 sideRanking,Tablet sidebar item: the world ranking.,,Ranking,Žebříček,Classement,Ranking,Ranking,Clasificación,Weltrangliste

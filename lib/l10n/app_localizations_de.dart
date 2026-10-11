@@ -9394,6 +9394,9 @@ class AppLocalizationsDe extends AppLocalizations {
   String get sideTactics => 'Taktik';
 
   @override
+  String get sideMainMenu => 'Hauptmenü';
+
+  @override
   String get sideCallUps => 'Nominierungen';
 
   @override

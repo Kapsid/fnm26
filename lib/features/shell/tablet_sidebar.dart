@@ -19,6 +19,9 @@ class TabletSidebar extends StatelessWidget {
 
   static const double width = 208;
 
+  /// The bottom item that leaves for the main menu.
+  static const mainMenuKey = ValueKey('sidebar.mainMenu');
+
   final int careerId;
   final Uri location;
 
@@ -78,12 +81,25 @@ class TabletSidebar extends StatelessWidget {
           const Divider(height: 1, color: AppColors.outlineVariant),
           Padding(
             padding: const EdgeInsets.all(AppSpacing.sm),
-            child: _Item(
-              icon: Icons.settings_outlined,
-              label: l.homeSettings,
-              active: false,
-              // Pushed, as from the hub, so its back arrow returns here.
-              onTap: () => context.push(Routes.settings),
+            child: Column(
+              children: [
+                _Item(
+                  icon: Icons.settings_outlined,
+                  label: l.homeSettings,
+                  active: false,
+                  // Pushed, as from the hub, so its back arrow returns here.
+                  onTap: () => context.push(Routes.settings),
+                ),
+                // The way out of the career, as the phone hub's back arrow:
+                // gone to, not pushed, so nothing of the shell stays behind.
+                _Item(
+                  key: mainMenuKey,
+                  icon: Icons.home_outlined,
+                  label: l.sideMainMenu,
+                  active: false,
+                  onTap: () => context.go(Routes.home),
+                ),
+              ],
             ),
           ),
         ],

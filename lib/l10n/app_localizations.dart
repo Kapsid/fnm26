@@ -14635,6 +14635,12 @@ abstract class AppLocalizations {
   /// **'Tactics'**
   String get sideTactics;
 
+  /// Tablet sidebar item at the bottom, beside Settings: leaves the career for the app's main menu (the title screen).
+  ///
+  /// In en, this message translates to:
+  /// **'Main menu'**
+  String get sideMainMenu;
+
   /// Tablet sidebar item: squad selection.
   ///
   /// In en, this message translates to:

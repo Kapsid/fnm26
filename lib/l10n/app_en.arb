@@ -13896,6 +13896,10 @@
   "@sideTactics": {
     "description": "Tablet sidebar item: line-up and instructions."
   },
+  "sideMainMenu": "Main menu",
+  "@sideMainMenu": {
+    "description": "Tablet sidebar item at the bottom, beside Settings: leaves the career for the app's main menu (the title screen)."
+  },
   "sideCallUps": "Call-ups",
   "@sideCallUps": {
     "description": "Tablet sidebar item: squad selection."
