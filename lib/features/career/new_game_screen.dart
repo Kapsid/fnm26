@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/core/layout/form_factor.dart';
+import 'package:fnm/core/result/result.dart';
 import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
+import 'package:fnm/domain/entities/career.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/nations/nation_preview.dart';
@@ -49,14 +51,18 @@ class _NewGameScreenState extends ConsumerState<NewGameScreen> {
     // pushed Settings, the back arrow) is left there rather than pulled into
     // the new save. `router.state` is the top-most route, pushed ones too.
     final router = GoRouter.of(context);
-    final result = await ref
-        .read(careerServiceProvider)
-        .create(
-          nationId: widget.nationId,
-          managerName: _controller.text,
-        );
+    final careers = ref.read(careerServiceProvider);
+    final Result<Career> result;
+    try {
+      result = await careers.create(
+        nationId: widget.nationId,
+        managerName: _controller.text,
+      );
+    } finally {
+      // A create that throws must give Start back, not leave it spinning.
+      if (mounted) setState(() => _creating = false);
+    }
     if (!mounted) return;
-    setState(() => _creating = false);
     final l = AppLocalizations.of(context);
 
     result.fold(

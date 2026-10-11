@@ -11,6 +11,7 @@ import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/career/new_game_screen.dart';
 import 'package:fnm/features/nations/nation_preview.dart';
 import 'package:fnm/features/shell/tablet_shell.dart';
+import 'package:fnm/shared/widgets/widgets.dart';
 
 import '../helpers/history_fixtures.dart';
 import '../helpers/seeded_save.dart';
@@ -26,6 +27,10 @@ class _GatedCareers extends CareerService {
 
   Completer<void>? gate;
 
+  /// When set, the next create throws (a disk full, a database gone) and
+  /// clears the flag, so a retry goes through.
+  bool throwOnce = false;
+
   @override
   Future<Result<Career>> create({
     required int nationId,
@@ -33,6 +38,10 @@ class _GatedCareers extends CareerService {
     int? rngSeed,
   }) async {
     await gate?.future;
+    if (throwOnce) {
+      throwOnce = false;
+      throw StateError('create failed');
+    }
     return super.create(
       nationId: nationId,
       managerName: managerName,
@@ -223,6 +232,57 @@ void main() {
       expect(_uri(save).path, Routes.hub);
       expect(_uri(save).queryParameters['careerId'], '${made.id}');
       // The hub opened: it started the play clock and rebuilt the list.
+      await stopPlayClock(tester, save);
+      await tester.pumpWidget(const SizedBox());
+    });
+  }
+
+  // A create that throws used to leave Start spinning for good: `_creating`
+  // was only reset on the way out of a create that returned.
+  for (final (label, formFactor, size) in [
+    ('tablet', FormFactor.tablet, kTabletSize),
+    ('phone', FormFactor.phone, kPhoneSize),
+  ]) {
+    testWidgets('a create that throws gives Start back, $label', (
+      tester,
+    ) async {
+      final save = await _open(
+        tester,
+        size,
+        gated: true,
+        formFactor: formFactor,
+      );
+      // Armed after the save is seeded: seedSave creates through it too.
+      final careers =
+          save.container.read(careerServiceProvider) as _GatedCareers
+            ..throwOnce = true;
+      expect(await _careers(tester, save), hasLength(1));
+      await tester.enterText(find.byType(TextField), 'Zola');
+      final start = find.widgetWithText(PrimaryButton, enL.careerStartCareer);
+      // The failure escapes `_start` as it would on a device (to the zone's
+      // handler, which logs it); caught here so it does not fail the test.
+      final errors = <Object>[];
+      await runZonedGuarded(
+        () => tester.tap(start),
+        (e, _) => errors.add(e),
+      );
+      await settle(tester);
+      expect(errors, [isA<StateError>()]);
+      expect(careers.throwOnce, isFalse, reason: 'the create did throw');
+      expect(await _careers(tester, save), hasLength(1));
+      expect(
+        tester.widget<PrimaryButton>(start).onPressed,
+        isNotNull,
+        reason: 'Start is live again',
+      );
+      await tester.tap(start);
+      await settle(tester);
+      final after = await _careers(tester, save);
+      expect(after, hasLength(2), reason: 'the retry made exactly one save');
+      final made = after.firstWhere((c) => c.id != save.careerId);
+      expect(made.managerName, 'Zola');
+      expect(_uri(save).path, Routes.hub);
+      expect(_uri(save).queryParameters['careerId'], '${made.id}');
       await stopPlayClock(tester, save);
       await tester.pumpWidget(const SizedBox());
     });
