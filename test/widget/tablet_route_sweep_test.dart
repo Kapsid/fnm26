@@ -93,6 +93,19 @@ Future<void> _sweepShell(WidgetTester tester, Size size) async {
   expect(extra.keys.toSet(), {
     for (final r in shell.routes.whereType<GoRoute>()) r.path,
   });
+  // Stage 6 converted the last in-shell screen, and
+  // shell_frame_transition_test (a tablet page leaving for a phone-framed
+  // one) was retired with it. ShellPhoneFrame stays as the fallback for a
+  // future route, but none may ship without a tablet layout: that is what
+  // keeps the retired test's bug unreachable.
+  expect(
+    [
+      for (final p in extra.keys)
+        if (!tabletReadyPaths.contains(p)) p,
+    ],
+    isEmpty,
+    reason: 'an in-shell route with no tablet layout',
+  );
 
   /// Routes allowed to keep an ambient spinner (reason beside each).
   final stillLoading = <String>{};

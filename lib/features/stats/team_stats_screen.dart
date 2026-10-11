@@ -7,17 +7,23 @@ import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/services/rating/overall_rating.dart';
 import 'package:fnm/features/records/record_book_screen.dart';
+import 'package:fnm/features/shell/detail_pane_host.dart';
 import 'package:fnm/features/stats/stats_providers.dart';
 import 'package:fnm/features/stats/team_overall_history.dart';
 import 'package:fnm/features/tactics/tactics_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
+import 'package:fnm/shared/tablet/tablet.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
+
+part 'team_stats_tablet_layout.dart';
 
 /// The player's national-team records: all-time and per-competition top
 /// scorers ("who scored the most for your team").
 class TeamStatsScreen extends ConsumerStatefulWidget {
   const TeamStatsScreen({required this.careerId, super.key});
+
+  static const Key tabletLayoutKey = Key('teamStats.tabletLayout');
 
   final int careerId;
 
@@ -45,6 +51,9 @@ class _TeamStatsScreenState extends ConsumerState<TeamStatsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    if (TabletShellScope.isActive(context)) {
+      return _TeamStatsTabletLayout(careerId: widget.careerId);
+    }
     final viewAsync = ref.watch(teamStatsProvider(widget.careerId));
     final l = AppLocalizations.of(context);
 

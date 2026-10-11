@@ -62,6 +62,7 @@ const Set<String> tabletReadyPaths = <String>{
   Routes.cycleRollover,
   Routes.settings,
   Routes.friendlies,
+  Routes.teamStats,
 };
 
 /// The tablet frame around every in-save screen: sidebar on the left, top bar
