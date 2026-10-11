@@ -1,3 +1,5 @@
+import 'package:fnm/domain/services/nation/nation_names_de.dart';
+import 'package:fnm/domain/services/nation/nation_names_es.dart';
 import 'package:fnm/domain/services/nation/nation_names_fr.dart';
 import 'package:fnm/domain/services/nation/nation_names_it.dart';
 import 'package:fnm/domain/services/nation/nation_names_pl.dart';
@@ -508,6 +510,8 @@ abstract final class NationNames {
       'fr' => nationNamesFr,
       'it' => nationNamesIt,
       'pl' => nationNamesPl,
+      'es' => nationNamesEs,
+      'de' => nationNamesDe,
       _ => null,
     };
     return table?[key] ?? enByCode[key] ?? seedName;

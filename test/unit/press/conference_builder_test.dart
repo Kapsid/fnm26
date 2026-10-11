@@ -18,11 +18,18 @@ ConferenceFacts facts(
   hasOpenJob: openJob,
   playersWithOpenStatement: open,
   throwback: throwback,
+  preview: null,
 );
+
+/// The reasons a result calls the room for; a preview has beats of its own.
+final _afterMatch = [
+  for (final r in ConferenceReason.values)
+    if (r != ConferenceReason.preview) r,
+];
 
 void main() {
   test('only a crisis or a job verdict asks about his future', () {
-    for (final r in ConferenceReason.values) {
+    for (final r in _afterMatch) {
       final f = facts(r);
       final beats = [
         ConferenceBuilder.opening(f),
@@ -80,7 +87,7 @@ void main() {
   );
 
   test('no free answer: every opening has something that costs', () {
-    for (final r in ConferenceReason.values) {
+    for (final r in _afterMatch) {
       final answers = ConferenceBuilder.opening(facts(r)).answers;
       expect(answers.length, inInclusiveRange(3, 4));
       expect(
@@ -162,6 +169,7 @@ void main() {
         status: status,
         judgedOn: DateTime.utc(2030, 2),
         thrownBack: false,
+        target: null,
       );
       final kept = ConferenceBuilder.throwback(
         facts(ConferenceReason.bigWin, throwback: s(StatementStatus.kept)),

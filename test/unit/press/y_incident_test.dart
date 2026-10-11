@@ -59,12 +59,12 @@ void main() {
   });
 
   test('a cynic and a loyalist do not write the same post', () {
-    final loyal = posts(seedWhereExProIs(YTrait.loyalist))
-        .firstWhere((p) => p.voice == YVoice.expro)
-        .variant;
-    final cynical = posts(seedWhereExProIs(YTrait.cynic))
-        .firstWhere((p) => p.voice == YVoice.expro)
-        .variant;
+    final loyal = posts(
+      seedWhereExProIs(YTrait.loyalist),
+    ).firstWhere((p) => p.voice == YVoice.expro).variant;
+    final cynical = posts(
+      seedWhereExProIs(YTrait.cynic),
+    ).firstWhere((p) => p.voice == YVoice.expro).variant;
     expect(
       loyal,
       isNot(cynical),

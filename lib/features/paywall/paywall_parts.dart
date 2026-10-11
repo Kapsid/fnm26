@@ -41,7 +41,7 @@ class PaywallBenefits extends StatelessWidget {
         _row(Icons.all_inclusive, l.paywallBenefitEndless),
         _row(Icons.save_rounded, l.paywallBenefitSaves),
         _row(Icons.bookmark_rounded, l.paywallBenefitCarryOn),
-        _row(Icons.wifi_off_rounded, l.paywallBenefitOffline),
+        _row(Icons.block_rounded, l.paywallBenefitNoAds),
       ],
     );
   }

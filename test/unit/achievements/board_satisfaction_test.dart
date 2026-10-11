@@ -306,4 +306,65 @@ void main() {
       expect(at(50) - at(0), lessThanOrEqualTo(5));
     });
   });
+
+  group('a finals brief counts once it is reached', () {
+    test('qualifying for the finals locks in a brief to qualify', () {
+      expect(
+        BoardSatisfaction.lockedIn((
+          tier: TournamentTier.world,
+          target: 2,
+          actual: 2,
+        )),
+        isTrue,
+      );
+      // Not yet there: still open.
+      expect(
+        BoardSatisfaction.lockedIn((
+          tier: TournamentTier.continental,
+          target: 4,
+          actual: 3,
+        )),
+        isFalse,
+      );
+    });
+
+    test('table positions wait for the verdict', () {
+      // A Nations Cup rung or the qualifying-group top half can still slip.
+      expect(
+        BoardSatisfaction.lockedIn((
+          tier: TournamentTier.nationsCup,
+          target: 3,
+          actual: 4,
+        )),
+        isFalse,
+      );
+      expect(
+        BoardSatisfaction.lockedIn((
+          tier: TournamentTier.world,
+          target: 1,
+          actual: 1,
+        )),
+        isFalse,
+      );
+    });
+
+    test('losing every finals game after qualifying costs only a little', () {
+      const met = (tier: TournamentTier.world, target: 2, actual: 2);
+      final qualified = BoardSatisfaction.compute(
+        recent: const [MatchOutcome.win, MatchOutcome.draw],
+        honours: const [],
+        worldRank: 40,
+        objectives: const [met],
+      );
+      final thenLostThree = BoardSatisfaction.compute(
+        recent: const [MatchOutcome.win, MatchOutcome.draw],
+        honours: const [],
+        worldRank: 40,
+        objectives: const [met],
+        lockedInLosses: 3,
+      );
+      expect(qualified - thenLostThree, 3);
+      expect(thenLostThree, greaterThan(BoardSatisfaction.neutral));
+    });
+  });
 }

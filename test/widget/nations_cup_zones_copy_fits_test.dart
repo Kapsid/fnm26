@@ -22,7 +22,7 @@ import '../helpers/pump_app.dart';
 /// Both are built here the way `nations_cup_screen.dart` builds them, with the
 /// words read out of [AppLocalizations], in all five languages.
 const _widths = [320.0, 360.0, 400.0];
-const _locales = ['en', 'cs', 'fr', 'it', 'pl'];
+const _locales = ['en', 'cs', 'fr', 'it', 'pl', 'es', 'de'];
 
 Future<void> _pump(
   WidgetTester tester,

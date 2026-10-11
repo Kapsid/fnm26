@@ -6,7 +6,9 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:intl/intl.dart' as intl;
 
 import 'app_localizations_cs.dart';
+import 'app_localizations_de.dart';
 import 'app_localizations_en.dart';
+import 'app_localizations_es.dart';
 import 'app_localizations_fr.dart';
 import 'app_localizations_it.dart';
 import 'app_localizations_pl.dart';
@@ -99,6 +101,8 @@ abstract class AppLocalizations {
   static const List<Locale> supportedLocales = <Locale>[
     Locale('en'),
     Locale('cs'),
+    Locale('de'),
+    Locale('es'),
     Locale('fr'),
     Locale('it'),
     Locale('pl'),
@@ -2705,7 +2709,7 @@ abstract class AppLocalizations {
   /// Note under the new-game blurb saying what is free and what the one-time purchase unlocks.
   ///
   /// In en, this message translates to:
-  /// **'The first full cycle is free on two saves: qualifying, your continental championship and the World Championship, every nation in the world. Endless cycles and unlimited saves unlock once.'**
+  /// **'Free for one full four-year cycle: qualifying, your continental championship and the World Championship, on two saves. After that, one payment unlocks endless cycles.'**
   String get careerFreeCycleNote;
 
   /// Button starting the career.
@@ -5072,11 +5076,11 @@ abstract class AppLocalizations {
   /// **'This save carries on exactly where it stopped, with every cap, record and rivalry intact.'**
   String get paywallBenefitCarryOn;
 
-  /// Paywall benefit line: one payment and nothing collected.
+  /// Paywall benefit line: no ads or microtransactions, one payment covers every update.
   ///
   /// In en, this message translates to:
-  /// **'No subscription, no ads, no account, no network. One payment, and it is yours forever.'**
-  String get paywallBenefitOffline;
+  /// **'No ads, no microtransactions, no subscription. One payment, and every future update is yours.'**
+  String get paywallBenefitNoAds;
 
   /// Paywall benefit line: the save-slot limit goes away.
   ///
@@ -6225,13 +6229,13 @@ abstract class AppLocalizations {
   /// Y post: eliminated, variant 0.
   ///
   /// In en, this message translates to:
-  /// **'Out at {opponent}. Same script, different year.'**
+  /// **'Out at {opponent}. That one will hurt for a while.'**
   String yEliminated0(String opponent);
 
   /// Y post: eliminated, variant 1.
   ///
   /// In en, this message translates to:
-  /// **'{opponent} is where it ends. Again.'**
+  /// **'{opponent} is where it ends for us.'**
   String yEliminated1(String opponent);
 
   /// Y post: eliminated, variant 2.
@@ -11298,7 +11302,7 @@ abstract class AppLocalizations {
   /// Y reply: despair, variant 7.
   ///
   /// In en, this message translates to:
-  /// **'Same feeling, different year.'**
+  /// **'That one is going to sting for a long time.'**
   String get yReactionDespair7;
 
   /// Y reply: despair, variant 8.
@@ -12207,6 +12211,24 @@ abstract class AppLocalizations {
   /// **'Endless cycles, unlimited saves and every future update. Thank you.'**
   String get settingsUnlockedBlurb;
 
+  /// Settings: heading of the developer's note on long-term support, shown to every player.
+  ///
+  /// In en, this message translates to:
+  /// **'From the developer'**
+  String get settingsFromDeveloperTitle;
+
+  /// Settings: the developer's note. No ads or microtransactions ever, please consider buying the full version.
+  ///
+  /// In en, this message translates to:
+  /// **'Football Nations Manager is made by one person and will be supported for the long term. There will never be ads or microtransactions. If you enjoy the game, please consider buying the full version. It is what keeps the updates coming.'**
+  String get settingsFromDeveloperBlurb;
+
+  /// Settings: the developer's note for a player who has bought the full version. No ads or microtransactions ever, thank you for buying.
+  ///
+  /// In en, this message translates to:
+  /// **'Football Nations Manager is made by one person and will be supported for the long term. There will never be ads or microtransactions. Thank you for buying the full version. It is what keeps the updates coming.'**
+  String get settingsFromDeveloperThanksBlurb;
+
   /// Friendlies: why these opponents are suggested first, when the group is a qualifying campaign rather than a finals draw.
   ///
   /// In en, this message translates to:
@@ -12312,7 +12334,7 @@ abstract class AppLocalizations {
   /// Y post: sameOldStory, variant 0.
   ///
   /// In en, this message translates to:
-  /// **'That is the {count}th time this has happened lately. At what point is it just what we are?'**
+  /// **'That is {count} times this has happened lately. At what point is it just what we are?'**
   String ySameOldStory0(String count);
 
   /// Y post: sameOldStory, variant 1.
@@ -12330,7 +12352,7 @@ abstract class AppLocalizations {
   /// Y post: sameOldStory, variant 3.
   ///
   /// In en, this message translates to:
-  /// **'The {count}th version of the same ninety minutes. Nobody is fixing it.'**
+  /// **'{count} versions of the same ninety minutes now. Nobody is fixing it.'**
   String ySameOldStory3(String count);
 
   /// Y post: sameOldStory, variant 4.
@@ -14216,6 +14238,354 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Nations Cup winners'**
   String get finishNcChampionsAfrica;
+
+  /// Press preview: the opening question before a qualifying campaign, warm tone. {competition} is the competition.
+  ///
+  /// In en, this message translates to:
+  /// **'{competition} qualifying starts now, and the country believes in this side. What are you aiming for?'**
+  String pressAimQualWarm1(String competition);
+
+  /// Press preview: the opening question before a qualifying campaign, warm tone. {competition} is the competition.
+  ///
+  /// In en, this message translates to:
+  /// **'A new {competition} qualifying campaign, and spirits are high. How far can this team go?'**
+  String pressAimQualWarm2(String competition);
+
+  /// Press preview: the opening question before a qualifying campaign, neutral tone. {competition} is the competition.
+  ///
+  /// In en, this message translates to:
+  /// **'{competition} qualifying begins. What is the target for this campaign?'**
+  String pressAimQualNeutral1(String competition);
+
+  /// Press preview: the opening question before a qualifying campaign, neutral tone. {competition} is the competition.
+  ///
+  /// In en, this message translates to:
+  /// **'The {competition} qualifiers are here. Where do you see this side finishing?'**
+  String pressAimQualNeutral2(String competition);
+
+  /// Press preview: the opening question before a qualifying campaign, hostile tone. {competition} is the competition.
+  ///
+  /// In en, this message translates to:
+  /// **'{competition} qualifying starts, and plenty of people doubt you will get there. What do you say to them?'**
+  String pressAimQualHostile1(String competition);
+
+  /// Press preview: the opening question before a qualifying campaign, hostile tone. {competition} is the competition.
+  ///
+  /// In en, this message translates to:
+  /// **'Another {competition} qualifying campaign. Why should anyone believe this one will be different?'**
+  String pressAimQualHostile2(String competition);
+
+  /// Press preview: the opening question before a finals tournament, warm tone. {competition} is the competition.
+  ///
+  /// In en, this message translates to:
+  /// **'The {competition} is here and the whole country is behind you. How far can you go?'**
+  String pressAimFinalsWarm1(String competition);
+
+  /// Press preview: the opening question before a finals tournament, warm tone. {competition} is the competition.
+  ///
+  /// In en, this message translates to:
+  /// **'You are at the {competition} and the fans are dreaming. What is the aim?'**
+  String pressAimFinalsWarm2(String competition);
+
+  /// Press preview: the opening question before a finals tournament, neutral tone. {competition} is the competition.
+  ///
+  /// In en, this message translates to:
+  /// **'The {competition} starts this week. What would count as a success?'**
+  String pressAimFinalsNeutral1(String competition);
+
+  /// Press preview: the opening question before a finals tournament, neutral tone. {competition} is the competition.
+  ///
+  /// In en, this message translates to:
+  /// **'Your first game at the {competition} is close. Set us a target.'**
+  String pressAimFinalsNeutral2(String competition);
+
+  /// Press preview: the opening question before a finals tournament, hostile tone. {competition} is the competition.
+  ///
+  /// In en, this message translates to:
+  /// **'The {competition} is here and nobody expects much. What are you really hoping for?'**
+  String pressAimFinalsHostile1(String competition);
+
+  /// Press preview: the opening question before a finals tournament, hostile tone. {competition} is the competition.
+  ///
+  /// In en, this message translates to:
+  /// **'You are at the {competition}, but the doubts have not gone away. What is your target?'**
+  String pressAimFinalsHostile2(String competition);
+
+  /// Press preview: question about the strongest other side in the group, warm tone. {rival} is that nation.
+  ///
+  /// In en, this message translates to:
+  /// **'{rival} are in your group. Do they worry you?'**
+  String pressBeatRivalWarm1(String rival);
+
+  /// Press preview: question about the strongest other side in the group, warm tone. {rival} is that nation.
+  ///
+  /// In en, this message translates to:
+  /// **'The draw put {rival} in your way. How do you see that game?'**
+  String pressBeatRivalWarm2(String rival);
+
+  /// Press preview: question about the strongest other side in the group, neutral tone. {rival} is that nation.
+  ///
+  /// In en, this message translates to:
+  /// **'{rival} look the strongest side in your group. Are they the favourites?'**
+  String pressBeatRivalNeutral1(String rival);
+
+  /// Press preview: question about the strongest other side in the group, neutral tone. {rival} is that nation.
+  ///
+  /// In en, this message translates to:
+  /// **'What do you make of {rival}?'**
+  String pressBeatRivalNeutral2(String rival);
+
+  /// Press preview: question about the strongest other side in the group, hostile tone. {rival} is that nation.
+  ///
+  /// In en, this message translates to:
+  /// **'{rival} are in your group. Be honest, can you live with them?'**
+  String pressBeatRivalHostile1(String rival);
+
+  /// Press preview: question about the strongest other side in the group, hostile tone. {rival} is that nation.
+  ///
+  /// In en, this message translates to:
+  /// **'Most people expect {rival} to beat you. Are they wrong?'**
+  String pressBeatRivalHostile2(String rival);
+
+  /// Press preview: question about the manager's best player, warm tone. {player} is the player.
+  ///
+  /// In en, this message translates to:
+  /// **'{player} is in fine form. Is this his moment?'**
+  String pressBeatKeyPlayerWarm1(String player);
+
+  /// Press preview: question about the manager's best player, warm tone. {player} is the player.
+  ///
+  /// In en, this message translates to:
+  /// **'{player} is in every headline. Can he carry this side?'**
+  String pressBeatKeyPlayerWarm2(String player);
+
+  /// Press preview: question about the manager's best player, neutral tone. {player} is the player.
+  ///
+  /// In en, this message translates to:
+  /// **'How much does this campaign depend on {player}?'**
+  String pressBeatKeyPlayerNeutral1(String player);
+
+  /// Press preview: question about the manager's best player, neutral tone. {player} is the player.
+  ///
+  /// In en, this message translates to:
+  /// **'Is {player} ready to lead this team?'**
+  String pressBeatKeyPlayerNeutral2(String player);
+
+  /// Press preview: question about the manager's best player, hostile tone. {player} is the player.
+  ///
+  /// In en, this message translates to:
+  /// **'If {player} is not at his best, does this side have anything?'**
+  String pressBeatKeyPlayerHostile1(String player);
+
+  /// Press preview: question about the manager's best player, hostile tone. {player} is the player.
+  ///
+  /// In en, this message translates to:
+  /// **'{player} has a lot on his shoulders. Too much?'**
+  String pressBeatKeyPlayerHostile2(String player);
+
+  /// Press preview: the manager's answer, aiming higher than the board asked.
+  ///
+  /// In en, this message translates to:
+  /// **'We are going further than anyone expects.'**
+  String get pressReplyAimHigher1;
+
+  /// Press preview: the manager's answer, aiming higher than the board asked.
+  ///
+  /// In en, this message translates to:
+  /// **'I want more than the federation asked for, and I will say it out loud.'**
+  String get pressReplyAimHigher2;
+
+  /// Press preview: the manager's answer, promising exactly what the board asked.
+  ///
+  /// In en, this message translates to:
+  /// **'We know the target and we will reach it.'**
+  String get pressReplyMatchBrief1;
+
+  /// Press preview: the manager's answer, promising exactly what the board asked.
+  ///
+  /// In en, this message translates to:
+  /// **'The federation set a target. We will deliver it.'**
+  String get pressReplyMatchBrief2;
+
+  /// Press preview: the manager's answer, playing expectations down.
+  ///
+  /// In en, this message translates to:
+  /// **'Let us take it one game at a time.'**
+  String get pressReplyPlayDown1;
+
+  /// Press preview: the manager's answer, playing expectations down.
+  ///
+  /// In en, this message translates to:
+  /// **'No big promises. We will see where we are.'**
+  String get pressReplyPlayDown2;
+
+  /// Press preview: the manager's answer, promising qualification.
+  ///
+  /// In en, this message translates to:
+  /// **'We will qualify. You can write that down.'**
+  String get pressReplyPromiseQualify1;
+
+  /// Press preview: the manager's answer, promising qualification.
+  ///
+  /// In en, this message translates to:
+  /// **'This side will be at the finals.'**
+  String get pressReplyPromiseQualify2;
+
+  /// Press preview: the manager's answer, saying the group rival holds no fear.
+  ///
+  /// In en, this message translates to:
+  /// **'We fear nobody.'**
+  String get pressReplyFearNobody1;
+
+  /// Press preview: the manager's answer, saying the group rival holds no fear.
+  ///
+  /// In en, this message translates to:
+  /// **'They have to play us too.'**
+  String get pressReplyFearNobody2;
+
+  /// Press preview: the manager's answer, respecting the group rival.
+  ///
+  /// In en, this message translates to:
+  /// **'They are the favourites, and we respect them.'**
+  String get pressReplyRespectRival1;
+
+  /// Press preview: the manager's answer, respecting the group rival.
+  ///
+  /// In en, this message translates to:
+  /// **'A very good side. We will need our best.'**
+  String get pressReplyRespectRival2;
+
+  /// Press preview: the manager's answer, putting the team before the key player.
+  ///
+  /// In en, this message translates to:
+  /// **'It is about the whole team, not one player.'**
+  String get pressReplyTeamFirst1;
+
+  /// Press preview: the manager's answer, putting the team before the key player.
+  ///
+  /// In en, this message translates to:
+  /// **'Nobody wins this alone.'**
+  String get pressReplyTeamFirst2;
+
+  /// Press preview: note that the stated target is on the record and will be judged. {aim} is the target, worded like a board objective.
+  ///
+  /// In en, this message translates to:
+  /// **'On the record: {aim}.'**
+  String pressOnRecordTarget(String aim);
+
+  /// Press preview: note under the play-it-down answer; it only counts if the brief is beaten.
+  ///
+  /// In en, this message translates to:
+  /// **'On the record: no promises.'**
+  String get pressOnRecordPlayDown;
+
+  /// Press: a later question throwing back a stated campaign target that was hit, warm tone.
+  ///
+  /// In en, this message translates to:
+  /// **'You set a target before the campaign and you hit it. Is that your proudest moment yet?'**
+  String get pressThrowbackTargetKeptWarm;
+
+  /// Press: a later question throwing back a stated campaign target that was hit, neutral tone.
+  ///
+  /// In en, this message translates to:
+  /// **'You said what you would achieve, and you did. Was it ever in doubt?'**
+  String get pressThrowbackTargetKeptNeutral;
+
+  /// Press: a later question throwing back a stated campaign target that was hit, hostile tone.
+  ///
+  /// In en, this message translates to:
+  /// **'You hit the target you set. Lucky, or was it really the plan?'**
+  String get pressThrowbackTargetKeptHostile;
+
+  /// Press: a later question throwing back a stated campaign target that was missed, warm tone.
+  ///
+  /// In en, this message translates to:
+  /// **'You set a target and fell short. What went wrong?'**
+  String get pressThrowbackTargetBrokenWarm;
+
+  /// Press: a later question throwing back a stated campaign target that was missed, neutral tone.
+  ///
+  /// In en, this message translates to:
+  /// **'You promised more than this side delivered. Do you regret saying it?'**
+  String get pressThrowbackTargetBrokenNeutral;
+
+  /// Press: a later question throwing back a stated campaign target that was missed, hostile tone.
+  ///
+  /// In en, this message translates to:
+  /// **'You talked big before the campaign and fell short. Why should we believe you now?'**
+  String get pressThrowbackTargetBrokenHostile;
+
+  /// Hub event subtitle: the press want to hear the manager's aims before a campaign. {competition} is the competition.
+  ///
+  /// In en, this message translates to:
+  /// **'The press want to hear your aims for the {competition}'**
+  String hubEventPressPreviewSub(String competition);
+
+  /// Budget setup: a department's investment level and what it costs. {level} is 0 to 10, {amount} the euros.
+  ///
+  /// In en, this message translates to:
+  /// **'Level {level} · {amount}'**
+  String deptLevelCost(int level, String amount);
+
+  /// Player form: label for the best form (flame icon).
+  ///
+  /// In en, this message translates to:
+  /// **'On fire'**
+  String get formOnFire;
+
+  /// Player form: label for good form (arrow up).
+  ///
+  /// In en, this message translates to:
+  /// **'In form'**
+  String get formGood;
+
+  /// Player form: label for ordinary form.
+  ///
+  /// In en, this message translates to:
+  /// **'Steady'**
+  String get formSteady;
+
+  /// Player form: label for poor form (arrow down).
+  ///
+  /// In en, this message translates to:
+  /// **'Out of form'**
+  String get formPoor;
+
+  /// Player form: label for the worst form (snowflake icon).
+  ///
+  /// In en, this message translates to:
+  /// **'Ice cold'**
+  String get formCold;
+
+  /// Player page: heading of the current form and fitness section.
+  ///
+  /// In en, this message translates to:
+  /// **'FORM AND FITNESS'**
+  String get playerFormTitle;
+
+  /// Player page: his average match rating over recent games. {rating} like 7.4.
+  ///
+  /// In en, this message translates to:
+  /// **'Averaging {rating} in his recent games'**
+  String playerFormAverage(String rating);
+
+  /// Player page: not enough recent games to judge form.
+  ///
+  /// In en, this message translates to:
+  /// **'Not enough recent games to judge'**
+  String get playerFormNoGames;
+
+  /// Player page: what form and fatigue do to his rating in the next match. {delta} is signed, like +2 or −1.
+  ///
+  /// In en, this message translates to:
+  /// **'{delta} to his rating next match'**
+  String playerFormNextMatch(String delta);
+
+  /// Player page: form and fatigue leave his rating unchanged next match.
+  ///
+  /// In en, this message translates to:
+  /// **'No change to his rating next match'**
+  String get playerFormNoEffect;
 }
 
 class _AppLocalizationsDelegate
@@ -14228,8 +14598,15 @@ class _AppLocalizationsDelegate
   }
 
   @override
-  bool isSupported(Locale locale) =>
-      <String>['cs', 'en', 'fr', 'it', 'pl'].contains(locale.languageCode);
+  bool isSupported(Locale locale) => <String>[
+    'cs',
+    'de',
+    'en',
+    'es',
+    'fr',
+    'it',
+    'pl',
+  ].contains(locale.languageCode);
 
   @override
   bool shouldReload(_AppLocalizationsDelegate old) => false;
@@ -14240,8 +14617,12 @@ AppLocalizations lookupAppLocalizations(Locale locale) {
   switch (locale.languageCode) {
     case 'cs':
       return AppLocalizationsCs();
+    case 'de':
+      return AppLocalizationsDe();
     case 'en':
       return AppLocalizationsEn();
+    case 'es':
+      return AppLocalizationsEs();
     case 'fr':
       return AppLocalizationsFr();
     case 'it':

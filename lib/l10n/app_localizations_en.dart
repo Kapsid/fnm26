@@ -1535,7 +1535,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get careerFreeCycleNote =>
-      'The first full cycle is free on two saves: qualifying, your continental championship and the World Championship, every nation in the world. Endless cycles and unlimited saves unlock once.';
+      'Free for one full four-year cycle: qualifying, your continental championship and the World Championship, on two saves. After that, one payment unlocks endless cycles.';
 
   @override
   String get careerStartCareer => 'Start Career';
@@ -2959,8 +2959,8 @@ class AppLocalizationsEn extends AppLocalizations {
       'This save carries on exactly where it stopped, with every cap, record and rivalry intact.';
 
   @override
-  String get paywallBenefitOffline =>
-      'No subscription, no ads, no account, no network. One payment, and it is yours forever.';
+  String get paywallBenefitNoAds =>
+      'No ads, no microtransactions, no subscription. One payment, and every future update is yours.';
 
   @override
   String get paywallBenefitSaves =>
@@ -3751,12 +3751,12 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String yEliminated0(String opponent) {
-    return 'Out at $opponent. Same script, different year.';
+    return 'Out at $opponent. That one will hurt for a while.';
   }
 
   @override
   String yEliminated1(String opponent) {
-    return '$opponent is where it ends. Again.';
+    return '$opponent is where it ends for us.';
   }
 
   @override
@@ -7121,7 +7121,7 @@ class AppLocalizationsEn extends AppLocalizations {
       'Not even angry any more. That is the worrying part.';
 
   @override
-  String get yReactionDespair7 => 'Same feeling, different year.';
+  String get yReactionDespair7 => 'That one is going to sting for a long time.';
 
   @override
   String get yReactionDespair8 =>
@@ -7674,6 +7674,17 @@ class AppLocalizationsEn extends AppLocalizations {
       'Endless cycles, unlimited saves and every future update. Thank you.';
 
   @override
+  String get settingsFromDeveloperTitle => 'From the developer';
+
+  @override
+  String get settingsFromDeveloperBlurb =>
+      'Football Nations Manager is made by one person and will be supported for the long term. There will never be ads or microtransactions. If you enjoy the game, please consider buying the full version. It is what keeps the updates coming.';
+
+  @override
+  String get settingsFromDeveloperThanksBlurb =>
+      'Football Nations Manager is made by one person and will be supported for the long term. There will never be ads or microtransactions. Thank you for buying the full version. It is what keeps the updates coming.';
+
+  @override
   String friendliesLikeYourCampaign(String rivals) {
     return 'Marked below: sides who play like $rivals, who you still have to face.';
   }
@@ -7753,7 +7764,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String ySameOldStory0(String count) {
-    return 'That is the ${count}th time this has happened lately. At what point is it just what we are?';
+    return 'That is $count times this has happened lately. At what point is it just what we are?';
   }
 
   @override
@@ -7768,7 +7779,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String ySameOldStory3(String count) {
-    return 'The ${count}th version of the same ninety minutes. Nobody is fixing it.';
+    return '$count versions of the same ninety minutes now. Nobody is fixing it.';
   }
 
   @override
@@ -9067,4 +9078,251 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get finishNcChampionsAfrica => 'Nations Cup winners';
+
+  @override
+  String pressAimQualWarm1(String competition) {
+    return '$competition qualifying starts now, and the country believes in this side. What are you aiming for?';
+  }
+
+  @override
+  String pressAimQualWarm2(String competition) {
+    return 'A new $competition qualifying campaign, and spirits are high. How far can this team go?';
+  }
+
+  @override
+  String pressAimQualNeutral1(String competition) {
+    return '$competition qualifying begins. What is the target for this campaign?';
+  }
+
+  @override
+  String pressAimQualNeutral2(String competition) {
+    return 'The $competition qualifiers are here. Where do you see this side finishing?';
+  }
+
+  @override
+  String pressAimQualHostile1(String competition) {
+    return '$competition qualifying starts, and plenty of people doubt you will get there. What do you say to them?';
+  }
+
+  @override
+  String pressAimQualHostile2(String competition) {
+    return 'Another $competition qualifying campaign. Why should anyone believe this one will be different?';
+  }
+
+  @override
+  String pressAimFinalsWarm1(String competition) {
+    return 'The $competition is here and the whole country is behind you. How far can you go?';
+  }
+
+  @override
+  String pressAimFinalsWarm2(String competition) {
+    return 'You are at the $competition and the fans are dreaming. What is the aim?';
+  }
+
+  @override
+  String pressAimFinalsNeutral1(String competition) {
+    return 'The $competition starts this week. What would count as a success?';
+  }
+
+  @override
+  String pressAimFinalsNeutral2(String competition) {
+    return 'Your first game at the $competition is close. Set us a target.';
+  }
+
+  @override
+  String pressAimFinalsHostile1(String competition) {
+    return 'The $competition is here and nobody expects much. What are you really hoping for?';
+  }
+
+  @override
+  String pressAimFinalsHostile2(String competition) {
+    return 'You are at the $competition, but the doubts have not gone away. What is your target?';
+  }
+
+  @override
+  String pressBeatRivalWarm1(String rival) {
+    return '$rival are in your group. Do they worry you?';
+  }
+
+  @override
+  String pressBeatRivalWarm2(String rival) {
+    return 'The draw put $rival in your way. How do you see that game?';
+  }
+
+  @override
+  String pressBeatRivalNeutral1(String rival) {
+    return '$rival look the strongest side in your group. Are they the favourites?';
+  }
+
+  @override
+  String pressBeatRivalNeutral2(String rival) {
+    return 'What do you make of $rival?';
+  }
+
+  @override
+  String pressBeatRivalHostile1(String rival) {
+    return '$rival are in your group. Be honest, can you live with them?';
+  }
+
+  @override
+  String pressBeatRivalHostile2(String rival) {
+    return 'Most people expect $rival to beat you. Are they wrong?';
+  }
+
+  @override
+  String pressBeatKeyPlayerWarm1(String player) {
+    return '$player is in fine form. Is this his moment?';
+  }
+
+  @override
+  String pressBeatKeyPlayerWarm2(String player) {
+    return '$player is in every headline. Can he carry this side?';
+  }
+
+  @override
+  String pressBeatKeyPlayerNeutral1(String player) {
+    return 'How much does this campaign depend on $player?';
+  }
+
+  @override
+  String pressBeatKeyPlayerNeutral2(String player) {
+    return 'Is $player ready to lead this team?';
+  }
+
+  @override
+  String pressBeatKeyPlayerHostile1(String player) {
+    return 'If $player is not at his best, does this side have anything?';
+  }
+
+  @override
+  String pressBeatKeyPlayerHostile2(String player) {
+    return '$player has a lot on his shoulders. Too much?';
+  }
+
+  @override
+  String get pressReplyAimHigher1 =>
+      'We are going further than anyone expects.';
+
+  @override
+  String get pressReplyAimHigher2 =>
+      'I want more than the federation asked for, and I will say it out loud.';
+
+  @override
+  String get pressReplyMatchBrief1 =>
+      'We know the target and we will reach it.';
+
+  @override
+  String get pressReplyMatchBrief2 =>
+      'The federation set a target. We will deliver it.';
+
+  @override
+  String get pressReplyPlayDown1 => 'Let us take it one game at a time.';
+
+  @override
+  String get pressReplyPlayDown2 =>
+      'No big promises. We will see where we are.';
+
+  @override
+  String get pressReplyPromiseQualify1 =>
+      'We will qualify. You can write that down.';
+
+  @override
+  String get pressReplyPromiseQualify2 => 'This side will be at the finals.';
+
+  @override
+  String get pressReplyFearNobody1 => 'We fear nobody.';
+
+  @override
+  String get pressReplyFearNobody2 => 'They have to play us too.';
+
+  @override
+  String get pressReplyRespectRival1 =>
+      'They are the favourites, and we respect them.';
+
+  @override
+  String get pressReplyRespectRival2 =>
+      'A very good side. We will need our best.';
+
+  @override
+  String get pressReplyTeamFirst1 =>
+      'It is about the whole team, not one player.';
+
+  @override
+  String get pressReplyTeamFirst2 => 'Nobody wins this alone.';
+
+  @override
+  String pressOnRecordTarget(String aim) {
+    return 'On the record: $aim.';
+  }
+
+  @override
+  String get pressOnRecordPlayDown => 'On the record: no promises.';
+
+  @override
+  String get pressThrowbackTargetKeptWarm =>
+      'You set a target before the campaign and you hit it. Is that your proudest moment yet?';
+
+  @override
+  String get pressThrowbackTargetKeptNeutral =>
+      'You said what you would achieve, and you did. Was it ever in doubt?';
+
+  @override
+  String get pressThrowbackTargetKeptHostile =>
+      'You hit the target you set. Lucky, or was it really the plan?';
+
+  @override
+  String get pressThrowbackTargetBrokenWarm =>
+      'You set a target and fell short. What went wrong?';
+
+  @override
+  String get pressThrowbackTargetBrokenNeutral =>
+      'You promised more than this side delivered. Do you regret saying it?';
+
+  @override
+  String get pressThrowbackTargetBrokenHostile =>
+      'You talked big before the campaign and fell short. Why should we believe you now?';
+
+  @override
+  String hubEventPressPreviewSub(String competition) {
+    return 'The press want to hear your aims for the $competition';
+  }
+
+  @override
+  String deptLevelCost(int level, String amount) {
+    return 'Level $level · $amount';
+  }
+
+  @override
+  String get formOnFire => 'On fire';
+
+  @override
+  String get formGood => 'In form';
+
+  @override
+  String get formSteady => 'Steady';
+
+  @override
+  String get formPoor => 'Out of form';
+
+  @override
+  String get formCold => 'Ice cold';
+
+  @override
+  String get playerFormTitle => 'FORM AND FITNESS';
+
+  @override
+  String playerFormAverage(String rating) {
+    return 'Averaging $rating in his recent games';
+  }
+
+  @override
+  String get playerFormNoGames => 'Not enough recent games to judge';
+
+  @override
+  String playerFormNextMatch(String delta) {
+    return '$delta to his rating next match';
+  }
+
+  @override
+  String get playerFormNoEffect => 'No change to his rating next match';
 }

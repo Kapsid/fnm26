@@ -176,6 +176,9 @@ abstract interface class CareerRepository {
     int? playerId,
     required DateTime madeOn,
     required int madeAfterFixtureId,
+
+    /// A [StatementKind.target]'s stated finish.
+    int? target,
   });
 
   /// Every statement this career, oldest first.

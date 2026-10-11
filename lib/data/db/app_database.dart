@@ -84,7 +84,7 @@ class AppDatabase extends _$AppDatabase {
   /// full set of upgrade paths from it — see `schema_migration_test.dart`.
   /// A hand-written list of paths is a step somebody forgets on the bump that
   /// matters.
-  static const int currentSchemaVersion = 49;
+  static const int currentSchemaVersion = 50;
 
   @override
   int get schemaVersion => currentSchemaVersion;
@@ -276,6 +276,12 @@ class AppDatabase extends _$AppDatabase {
         from48To49: (m, schema) async {
           await m.createTable(schema.pressStatements);
           await m.createTable(schema.pressConferences);
+        },
+        from49To50: (m, schema) async {
+          await m.addColumn(
+            schema.pressStatements,
+            schema.pressStatements.target,
+          );
         },
       )(m, from, to);
     },

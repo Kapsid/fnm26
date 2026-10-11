@@ -10,7 +10,15 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 /// social post gets them right without each one having to ask.
 
 /// The languages the app speaks. Anything else is drawn in English.
-const List<String> supportedLanguageCodes = ['en', 'cs', 'fr', 'it', 'pl'];
+const List<String> supportedLanguageCodes = [
+  'en',
+  'cs',
+  'fr',
+  'it',
+  'pl',
+  'es',
+  'de',
+];
 
 /// The UI language override, or null to follow the device locale. Read by the
 /// root `MaterialApp`; persisted so a chosen language survives relaunches.

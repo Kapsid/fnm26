@@ -5,6 +5,7 @@ import 'dart:ui' show AppExitResponse;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/core/routing/app_router.dart';
+import 'package:fnm/core/routing/back_navigation.dart';
 import 'package:fnm/core/theme/app_theme.dart';
 import 'package:fnm/domain/services/entitlement/entitlement_service.dart';
 import 'package:fnm/features/career/play_time.dart';
@@ -27,6 +28,9 @@ class _FnmAppState extends ConsumerState<FnmApp> {
 
   /// Removes the route listener again — see [_watchRoute].
   VoidCallback? _routeListener;
+
+  /// Android's back button, heard ahead of the router.
+  SystemBackHandler? _back;
 
   @override
   void initState() {
@@ -74,8 +78,14 @@ class _FnmAppState extends ConsumerState<FnmApp> {
     _routeListener = () => information.removeListener(onRoute);
   }
 
+  void _watchBack(GoRouter router) {
+    if (_back != null) return;
+    _back = SystemBackHandler(router)..attach();
+  }
+
   @override
   void dispose() {
+    _back?.dispose();
     _routeListener?.call();
     _lifecycle?.dispose();
     super.dispose();
@@ -85,6 +95,7 @@ class _FnmAppState extends ConsumerState<FnmApp> {
   Widget build(BuildContext context) {
     final router = ref.watch(routerProvider);
     _watchRoute(router);
+    _watchBack(router);
     // A null override follows the device language; a chosen language wins.
     final locale = ref.watch(localeProvider);
 

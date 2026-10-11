@@ -773,6 +773,13 @@ String _labelFor(
 /// [nationId]'s deepest finish this cycle as an ordinal (0 = did not qualify,
 /// 2 = group stage … 7 = champions). [prefix] selects the competition's rounds
 /// ('' = World Cup, 'C' = the continental championship).
+///
+/// A round counts the moment the nation is IN it, played or not: being drawn
+/// into the finals is qualifying, and a quarter-final on the calendar is a
+/// quarter-final reached. Counting only played games kept a side that had
+/// qualified a year earlier on "top half of the qualifying group" until its
+/// first finals match, so a brief to qualify was met in the inbox and still
+/// unmet on the board.
 int _finishOrdinal(
   List<Fixture> fixtures,
   int nationId, {
@@ -780,11 +787,15 @@ int _finishOrdinal(
 }) {
   var best = 0;
   for (final f in fixtures) {
-    if (!f.hasResult) continue;
     final round = f.round;
     if (round == null || !round.startsWith(prefix)) continue;
     final base = round.substring(prefix.length);
     if (base == 'FINAL') {
+      // Reaching the final is a runners-up finish at the least.
+      if (!f.hasResult) {
+        if (6 > best) best = 6;
+        continue;
+      }
       // Winning the final is the title; losing it is a runners-up finish. A
       // level score means it was settled on penalties.
       final mineIsHome = f.homeNationId == nationId;

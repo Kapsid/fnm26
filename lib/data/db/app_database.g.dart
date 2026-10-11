@@ -14579,6 +14579,15 @@ class $PressStatementsTable extends PressStatements
     ),
     defaultValue: const Constant(false),
   );
+  static const VerificationMeta _targetMeta = const VerificationMeta('target');
+  @override
+  late final GeneratedColumn<int> target = GeneratedColumn<int>(
+    'target',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -14592,6 +14601,7 @@ class $PressStatementsTable extends PressStatements
     status,
     judgedOn,
     thrownBack,
+    target,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -14683,6 +14693,12 @@ class $PressStatementsTable extends PressStatements
         thrownBack.isAcceptableOrUnknown(data['thrown_back']!, _thrownBackMeta),
       );
     }
+    if (data.containsKey('target')) {
+      context.handle(
+        _targetMeta,
+        target.isAcceptableOrUnknown(data['target']!, _targetMeta),
+      );
+    }
     return context;
   }
 
@@ -14736,6 +14752,10 @@ class $PressStatementsTable extends PressStatements
         DriftSqlType.bool,
         data['${effectivePrefix}thrown_back'],
       )!,
+      target: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}target'],
+      ),
     );
   }
 
@@ -14767,6 +14787,10 @@ class PressStatementData extends DataClass
   final String status;
   final DateTime? judgedOn;
   final bool thrownBack;
+
+  /// A `target` statement's stated finish (the board's 0–7 ordinal); null for
+  /// every other kind.
+  final int? target;
   const PressStatementData({
     required this.id,
     required this.careerId,
@@ -14779,6 +14803,7 @@ class PressStatementData extends DataClass
     required this.status,
     this.judgedOn,
     required this.thrownBack,
+    this.target,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -14798,6 +14823,9 @@ class PressStatementData extends DataClass
       map['judged_on'] = Variable<DateTime>(judgedOn);
     }
     map['thrown_back'] = Variable<bool>(thrownBack);
+    if (!nullToAbsent || target != null) {
+      map['target'] = Variable<int>(target);
+    }
     return map;
   }
 
@@ -14818,6 +14846,9 @@ class PressStatementData extends DataClass
           ? const Value.absent()
           : Value(judgedOn),
       thrownBack: Value(thrownBack),
+      target: target == null && nullToAbsent
+          ? const Value.absent()
+          : Value(target),
     );
   }
 
@@ -14838,6 +14869,7 @@ class PressStatementData extends DataClass
       status: serializer.fromJson<String>(json['status']),
       judgedOn: serializer.fromJson<DateTime?>(json['judgedOn']),
       thrownBack: serializer.fromJson<bool>(json['thrownBack']),
+      target: serializer.fromJson<int?>(json['target']),
     );
   }
   @override
@@ -14855,6 +14887,7 @@ class PressStatementData extends DataClass
       'status': serializer.toJson<String>(status),
       'judgedOn': serializer.toJson<DateTime?>(judgedOn),
       'thrownBack': serializer.toJson<bool>(thrownBack),
+      'target': serializer.toJson<int?>(target),
     };
   }
 
@@ -14870,6 +14903,7 @@ class PressStatementData extends DataClass
     String? status,
     Value<DateTime?> judgedOn = const Value.absent(),
     bool? thrownBack,
+    Value<int?> target = const Value.absent(),
   }) => PressStatementData(
     id: id ?? this.id,
     careerId: careerId ?? this.careerId,
@@ -14882,6 +14916,7 @@ class PressStatementData extends DataClass
     status: status ?? this.status,
     judgedOn: judgedOn.present ? judgedOn.value : this.judgedOn,
     thrownBack: thrownBack ?? this.thrownBack,
+    target: target.present ? target.value : this.target,
   );
   PressStatementData copyWithCompanion(PressStatementsCompanion data) {
     return PressStatementData(
@@ -14900,6 +14935,7 @@ class PressStatementData extends DataClass
       thrownBack: data.thrownBack.present
           ? data.thrownBack.value
           : this.thrownBack,
+      target: data.target.present ? data.target.value : this.target,
     );
   }
 
@@ -14916,7 +14952,8 @@ class PressStatementData extends DataClass
           ..write('madeAfterFixtureId: $madeAfterFixtureId, ')
           ..write('status: $status, ')
           ..write('judgedOn: $judgedOn, ')
-          ..write('thrownBack: $thrownBack')
+          ..write('thrownBack: $thrownBack, ')
+          ..write('target: $target')
           ..write(')'))
         .toString();
   }
@@ -14934,6 +14971,7 @@ class PressStatementData extends DataClass
     status,
     judgedOn,
     thrownBack,
+    target,
   );
   @override
   bool operator ==(Object other) =>
@@ -14949,7 +14987,8 @@ class PressStatementData extends DataClass
           other.madeAfterFixtureId == this.madeAfterFixtureId &&
           other.status == this.status &&
           other.judgedOn == this.judgedOn &&
-          other.thrownBack == this.thrownBack);
+          other.thrownBack == this.thrownBack &&
+          other.target == this.target);
 }
 
 class PressStatementsCompanion extends UpdateCompanion<PressStatementData> {
@@ -14964,6 +15003,7 @@ class PressStatementsCompanion extends UpdateCompanion<PressStatementData> {
   final Value<String> status;
   final Value<DateTime?> judgedOn;
   final Value<bool> thrownBack;
+  final Value<int?> target;
   const PressStatementsCompanion({
     this.id = const Value.absent(),
     this.careerId = const Value.absent(),
@@ -14976,6 +15016,7 @@ class PressStatementsCompanion extends UpdateCompanion<PressStatementData> {
     this.status = const Value.absent(),
     this.judgedOn = const Value.absent(),
     this.thrownBack = const Value.absent(),
+    this.target = const Value.absent(),
   });
   PressStatementsCompanion.insert({
     this.id = const Value.absent(),
@@ -14989,6 +15030,7 @@ class PressStatementsCompanion extends UpdateCompanion<PressStatementData> {
     this.status = const Value.absent(),
     this.judgedOn = const Value.absent(),
     this.thrownBack = const Value.absent(),
+    this.target = const Value.absent(),
   }) : careerId = Value(careerId),
        cycle = Value(cycle),
        nationId = Value(nationId),
@@ -15007,6 +15049,7 @@ class PressStatementsCompanion extends UpdateCompanion<PressStatementData> {
     Expression<String>? status,
     Expression<DateTime>? judgedOn,
     Expression<bool>? thrownBack,
+    Expression<int>? target,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -15021,6 +15064,7 @@ class PressStatementsCompanion extends UpdateCompanion<PressStatementData> {
       if (status != null) 'status': status,
       if (judgedOn != null) 'judged_on': judgedOn,
       if (thrownBack != null) 'thrown_back': thrownBack,
+      if (target != null) 'target': target,
     });
   }
 
@@ -15036,6 +15080,7 @@ class PressStatementsCompanion extends UpdateCompanion<PressStatementData> {
     Value<String>? status,
     Value<DateTime?>? judgedOn,
     Value<bool>? thrownBack,
+    Value<int?>? target,
   }) {
     return PressStatementsCompanion(
       id: id ?? this.id,
@@ -15049,6 +15094,7 @@ class PressStatementsCompanion extends UpdateCompanion<PressStatementData> {
       status: status ?? this.status,
       judgedOn: judgedOn ?? this.judgedOn,
       thrownBack: thrownBack ?? this.thrownBack,
+      target: target ?? this.target,
     );
   }
 
@@ -15088,6 +15134,9 @@ class PressStatementsCompanion extends UpdateCompanion<PressStatementData> {
     if (thrownBack.present) {
       map['thrown_back'] = Variable<bool>(thrownBack.value);
     }
+    if (target.present) {
+      map['target'] = Variable<int>(target.value);
+    }
     return map;
   }
 
@@ -15104,7 +15153,8 @@ class PressStatementsCompanion extends UpdateCompanion<PressStatementData> {
           ..write('madeAfterFixtureId: $madeAfterFixtureId, ')
           ..write('status: $status, ')
           ..write('judgedOn: $judgedOn, ')
-          ..write('thrownBack: $thrownBack')
+          ..write('thrownBack: $thrownBack, ')
+          ..write('target: $target')
           ..write(')'))
         .toString();
   }
@@ -32043,6 +32093,7 @@ typedef $$PressStatementsTableCreateCompanionBuilder =
       Value<String> status,
       Value<DateTime?> judgedOn,
       Value<bool> thrownBack,
+      Value<int?> target,
     });
 typedef $$PressStatementsTableUpdateCompanionBuilder =
     PressStatementsCompanion Function({
@@ -32057,6 +32108,7 @@ typedef $$PressStatementsTableUpdateCompanionBuilder =
       Value<String> status,
       Value<DateTime?> judgedOn,
       Value<bool> thrownBack,
+      Value<int?> target,
     });
 
 final class $$PressStatementsTableReferences
@@ -32149,6 +32201,11 @@ class $$PressStatementsTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
+  ColumnFilters<int> get target => $composableBuilder(
+    column: $table.target,
+    builder: (column) => ColumnFilters(column),
+  );
+
   $$CareersTableFilterComposer get careerId {
     final $$CareersTableFilterComposer composer = $composerBuilder(
       composer: this,
@@ -32232,6 +32289,11 @@ class $$PressStatementsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<int> get target => $composableBuilder(
+    column: $table.target,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   $$CareersTableOrderingComposer get careerId {
     final $$CareersTableOrderingComposer composer = $composerBuilder(
       composer: this,
@@ -32299,6 +32361,9 @@ class $$PressStatementsTableAnnotationComposer
     builder: (column) => column,
   );
 
+  GeneratedColumn<int> get target =>
+      $composableBuilder(column: $table.target, builder: (column) => column);
+
   $$CareersTableAnnotationComposer get careerId {
     final $$CareersTableAnnotationComposer composer = $composerBuilder(
       composer: this,
@@ -32364,6 +32429,7 @@ class $$PressStatementsTableTableManager
                 Value<String> status = const Value.absent(),
                 Value<DateTime?> judgedOn = const Value.absent(),
                 Value<bool> thrownBack = const Value.absent(),
+                Value<int?> target = const Value.absent(),
               }) => PressStatementsCompanion(
                 id: id,
                 careerId: careerId,
@@ -32376,6 +32442,7 @@ class $$PressStatementsTableTableManager
                 status: status,
                 judgedOn: judgedOn,
                 thrownBack: thrownBack,
+                target: target,
               ),
           createCompanionCallback:
               ({
@@ -32390,6 +32457,7 @@ class $$PressStatementsTableTableManager
                 Value<String> status = const Value.absent(),
                 Value<DateTime?> judgedOn = const Value.absent(),
                 Value<bool> thrownBack = const Value.absent(),
+                Value<int?> target = const Value.absent(),
               }) => PressStatementsCompanion.insert(
                 id: id,
                 careerId: careerId,
@@ -32402,6 +32470,7 @@ class $$PressStatementsTableTableManager
                 status: status,
                 judgedOn: judgedOn,
                 thrownBack: thrownBack,
+                target: target,
               ),
           withReferenceMapper: (p0) => p0
               .map(

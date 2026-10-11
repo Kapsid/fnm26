@@ -147,11 +147,30 @@ void main() {
     });
 
     test('a run of the same afternoon becomes a story about the run', () {
+      // Poor afternoons: draws a favourite should have won.
       final posts = run([
         for (var i = 0; i < 6; i++)
-          ctx(i, opponent: 'Nation $i', scored: 1, conceded: 1),
+          ctx(
+            i,
+            opponent: 'Nation $i',
+            ourRank: 20,
+            theirRank: 120,
+            scored: 1,
+            conceded: 1,
+          ),
       ]);
       expect(posts.map((p) => p.template), contains(YTemplate.sameOldStory));
+    });
+
+    test('a pattern is a complaint: never after good afternoons', () {
+      final posts = run([
+        for (var i = 0; i < 6; i++)
+          ctx(i, opponent: 'Nation $i', scored: 3, conceded: 0),
+      ]);
+      expect(
+        posts.map((p) => p.template),
+        isNot(contains(YTemplate.sameOldStory)),
+      );
     });
 
     test('somebody says they told you so, but only after the hype', () {

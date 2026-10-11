@@ -181,6 +181,9 @@ typedef YMemory = ({
 
   /// How many of the recent results read the same way as this one.
   int sameRecently,
+
+  /// How many of those earlier meetings with this opponent were won.
+  int beatenBefore,
 });
 
 /// A feed with nothing behind it — the first match of a save, and the shape
@@ -189,6 +192,7 @@ const YMemory blankMemory = (
   standings: <ResultStanding>[],
   metBefore: 0,
   sameRecently: 0,
+  beatenBefore: 0,
 );
 
 /// One post on the feed.
@@ -373,10 +377,13 @@ abstract final class YFeed {
   /// ruined a favourite's. It now asks [Expectation], like everything else.
   static YTemplate classify(YMatch m) {
     final standing = standingOf(m);
+    final margin = (m.scored - m.conceded).abs();
     if (m.scored > m.conceded) {
+      // "Earned the hard way" is a close win. A creditable 3–0 is the margin
+      // bonus talking, and was being reported as nervy and ugly.
       return switch (standing) {
         ResultStanding.heroic => YTemplate.winUpset,
-        ResultStanding.creditable => YTemplate.winTight,
+        ResultStanding.creditable when margin <= 2 => YTemplate.winTight,
         _ => YTemplate.winRoutine,
       };
     }
@@ -384,7 +391,10 @@ abstract final class YFeed {
     // Only a defeat that shames you is a bad defeat. Losing 4–0 to the best
     // side in the world is a scoreline; losing 1–0 at home to a minnow is a
     // story, and the old rule had those the wrong way round.
-    return standing == ResultStanding.humiliating
+    //
+    // And it takes a margin to be a hammering: the bad-defeat wordings talk
+    // about the scoreline, which a one-goal upset does not deserve.
+    return standing == ResultStanding.humiliating && margin >= 2
         ? YTemplate.lostBadly
         : YTemplate.lost;
   }
@@ -395,7 +405,11 @@ abstract final class YFeed {
   /// similar results produced a run of near-identical posts. A shape is a
   /// template and its arguments together: the same sentence about a different
   /// opponent is not a repeat.
-  static const int noRepeatWindow = 10;
+  ///
+  /// Forty rather than ten: at ten, the same reply came back two seasons on
+  /// under the next defeat, which reads as a feed on a loop. A reply that has
+  /// no unused wording left is dropped rather than repeated.
+  static const int noRepeatWindow = 40;
 
   /// A run of results, oldest first, as the world talked about it.
   ///
@@ -416,6 +430,7 @@ abstract final class YFeed {
     // How often each opponent has been faced, and how the last few afternoons
     // read — the two things a callback needs and the walk already knows.
     final met = <String, int>{};
+    final beaten = <String, int>{};
     for (final context in contexts) {
       final standing = standingOf(context.match);
       final recentStandings = history.length <= callbackWindow
@@ -429,6 +444,7 @@ abstract final class YFeed {
           standings: history,
           metBefore: met[context.match.opponent] ?? 0,
           sameRecently: recentStandings.where((s) => s == standing).length,
+          beatenBefore: beaten[context.match.opponent] ?? 0,
         ),
       )) {
         // A shape is the SENTENCE, not the subject: template, wording and
@@ -454,6 +470,13 @@ abstract final class YFeed {
         (v) => v + 1,
         ifAbsent: () => 1,
       );
+      if (context.match.scored > context.match.conceded) {
+        beaten.update(
+          context.match.opponent,
+          (v) => v + 1,
+          ifAbsent: () => 1,
+        );
+      }
     }
     return out;
   }
@@ -549,10 +572,9 @@ abstract final class YFeed {
       (YVoice.stats, template, result),
       if (loud >= 2) (YVoice.fan, template, result),
       if (loud >= 3) (YVoice.pundit, template, result),
-      // Somebody enjoys it only when there is something to enjoy. Any old
-      // defeat used to bring the rival account out, which made it noise.
-      if (lost && standing == ResultStanding.humiliating)
-        (YVoice.rival, template, result),
+      // The rival does not post the result: every result line is written as
+      // one of ours ("we did not lay a glove on them"), so he gloats in the
+      // replies instead, in words of his own.
     ];
 
     // And what else the world happens to know.
@@ -563,7 +585,7 @@ abstract final class YFeed {
     }
     if (context.isRivalry) {
       candidates.add((
-        lost ? YVoice.rival : YVoice.fan,
+        lost ? YVoice.expro : YVoice.fan,
         YTemplate.rivalry,
         result,
       ));
@@ -596,6 +618,7 @@ abstract final class YFeed {
     // could never say. A fourth defeat to the same neighbours is not a fourth
     // result, it is a pattern, and somebody says so.
     if (memory.metBefore >= callbackMeetings &&
+        memory.beatenBefore == 0 &&
         Expectation.weight(standing) < 0) {
       candidates.add((
         YVoice.fan,
@@ -603,7 +626,11 @@ abstract final class YFeed {
         [m.opponent, '${memory.metBefore + 1}'],
       ));
     }
-    if (memory.sameRecently >= callbackRepeats) {
+    // "A pattern, not a run of luck" is a complaint: only bad afternoons make
+    // one, and a losing streak already said so.
+    if (memory.sameRecently >= callbackRepeats &&
+        Expectation.weight(standing) < 0 &&
+        context.lossStreak < streakThreshold) {
       candidates.add((
         YVoice.pundit,
         YTemplate.sameOldStory,
@@ -623,11 +650,14 @@ abstract final class YFeed {
           // from a loyalist and terminal from a doomer, and a run of results
           // moves both of them.
           final persona = personaFor(voice, nation, seed, m.key);
-          final tone = YCast.toneFor(
-            persona,
-            standing,
-            YCast.stance(persona, memory.standings),
-          );
+          // The rival is here to enjoy it: never generous about our misery.
+          final tone = voice == YVoice.rival
+              ? YTone.sour
+              : YCast.toneFor(
+                  persona,
+                  standing,
+                  YCast.stance(persona, memory.standings),
+                );
           return _post(
             voice: voice,
             template: shape,
@@ -644,7 +674,7 @@ abstract final class YFeed {
     // thread — every post drawing one would bury the feed under its own
     // replies, and a match is one conversation, not five.
     if (posts.isEmpty) return posts;
-    return [
+    return distinctWording([
       ...posts,
       ...repliesTo(
         posts.first,
@@ -656,7 +686,7 @@ abstract final class YFeed {
         standing: standing,
         history: memory.standings,
       ),
-    ];
+    ]);
   }
 
   /// How long a run has to be before anybody remarks on it.
@@ -725,7 +755,7 @@ abstract final class YFeed {
           seed: seed,
         ),
     ];
-    return [
+    return distinctWording([
       ...posts,
       ...repliesTo(
         posts.first,
@@ -733,6 +763,47 @@ abstract final class YFeed {
         nation: nation,
         seed: seed,
       ),
+    ]);
+  }
+
+  /// [posts] about one event, with no two of them saying the same sentence.
+  ///
+  /// Each account picks its wording from its own seed and tone band, and a
+  /// once-a-cycle template has only four, so the wire, a fan and the ex-pro
+  /// were posting the identical line about one exit. A wording already taken
+  /// moves the later post on to the next free one.
+  static List<YPost> distinctWording(List<YPost> posts) {
+    final used = <String, Set<int>>{};
+    return [
+      for (final p in posts)
+        () {
+          final group = p.mood == null
+              ? 't:${p.template.name}'
+              : 'm:${p.mood!.name}';
+          final spread = p.mood == null
+              ? variantsFor(p.template)
+              : reactionVariantCount;
+          final taken = used.putIfAbsent(group, () => <int>{});
+          var variant = p.variant;
+          for (var i = 0; i < spread && taken.contains(variant); i++) {
+            variant = (variant + 1) % spread;
+          }
+          taken.add(variant);
+          return variant == p.variant
+              ? p
+              : (
+                  voice: p.voice,
+                  handle: p.handle,
+                  displayName: p.displayName,
+                  template: p.template,
+                  variant: variant,
+                  args: p.args,
+                  date: p.date,
+                  key: p.key,
+                  replyTo: p.replyTo,
+                  mood: p.mood,
+                );
+        }(),
     ];
   }
 
@@ -1310,7 +1381,9 @@ abstract final class YFeed {
       YMood.elation => const [YVoice.meme, YVoice.fan],
       YMood.relief => const [YVoice.fan, YVoice.expro],
       YMood.fury => const [YVoice.expro, YVoice.rival, YVoice.meme],
-      YMood.despair => const [YVoice.meme, YVoice.expro, YVoice.rival],
+      // The rival first: a crushing result is the one he always turns up for,
+      // and he no longer posts the result itself (see [forMatch]).
+      YMood.despair => const [YVoice.rival, YVoice.meme, YVoice.expro],
       YMood.smugness => const [YVoice.rival, YVoice.meme],
       YMood.shrug => const [YVoice.meme],
     };
@@ -1325,6 +1398,9 @@ abstract final class YFeed {
       for (final voice in voices.take(count))
         () {
           final persona = personaFor(voice, nation, seed, event);
+          // Our fury is the rival's fun: he answers it smug, never in the
+          // home fans' own words.
+          final rival = voice == YVoice.rival;
           return _post(
             voice: voice,
             template: YTemplate.reaction,
@@ -1334,12 +1410,14 @@ abstract final class YFeed {
             nation: nation,
             seed: seed,
             replyTo: parent.key,
-            mood: mood,
-            tone: YCast.toneFor(
-              persona,
-              standing,
-              YCast.stance(persona, history),
-            ),
+            mood: rival ? YMood.smugness : mood,
+            tone: rival
+                ? YTone.sour
+                : YCast.toneFor(
+                    persona,
+                    standing,
+                    YCast.stance(persona, history),
+                  ),
           );
         }(),
     ];

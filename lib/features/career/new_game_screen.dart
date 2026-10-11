@@ -144,20 +144,18 @@ class _NewGameScreenState extends ConsumerState<NewGameScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               const Padding(
-                                padding: EdgeInsets.only(top: 1),
+                                padding: EdgeInsets.only(top: 2),
                                 child: Icon(
                                   Icons.info_outline_rounded,
-                                  size: 13,
-                                  color: AppColors.onSurfaceVariant,
+                                  size: 18,
+                                  color: AppColors.primary,
                                 ),
                               ),
-                              const SizedBox(width: AppSpacing.xs),
+                              const SizedBox(width: AppSpacing.sm),
                               Expanded(
                                 child: Text(
                                   l.careerFreeCycleNote,
-                                  style: AppTypography.labelSmall.copyWith(
-                                    color: AppColors.onSurfaceVariant,
-                                  ),
+                                  style: AppTypography.bodyMedium,
                                 ),
                               ),
                             ],

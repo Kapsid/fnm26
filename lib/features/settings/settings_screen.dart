@@ -31,6 +31,8 @@ const Map<String, String> _languageEndonyms = {
   'fr': 'Français',
   'it': 'Italiano',
   'pl': 'Polski',
+  'es': 'Español',
+  'de': 'Deutsch',
 };
 
 /// Opens the language picker: "System" plus one radio row per language.
@@ -243,6 +245,43 @@ class SettingsScreen extends ConsumerWidget {
                         premium
                             ? l.settingsUnlockedBlurb
                             : l.settingsFreeScopeBlurb,
+                        style: AppTypography.labelSmall.copyWith(
+                          color: AppColors.onSurfaceVariant,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: AppSpacing.md),
+          // The developer's note, in his own voice, for everyone. A manager
+          // who has not bought gets the ask; one who has gets a thank-you
+          // instead, so nobody is asked twice.
+          AppCard(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Icon(
+                  Icons.favorite_border_rounded,
+                  size: 18,
+                  color: AppColors.primary,
+                ),
+                const SizedBox(width: AppSpacing.md),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        l.settingsFromDeveloperTitle,
+                        style: AppTypography.bodyMedium,
+                      ),
+                      const SizedBox(height: 2),
+                      Text(
+                        premium
+                            ? l.settingsFromDeveloperThanksBlurb
+                            : l.settingsFromDeveloperBlurb,
                         style: AppTypography.labelSmall.copyWith(
                           color: AppColors.onSurfaceVariant,
                         ),

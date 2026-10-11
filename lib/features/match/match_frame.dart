@@ -64,8 +64,6 @@ class MatchScoreboard extends StatelessWidget {
     required this.awayCode,
     required this.homeName,
     required this.awayName,
-    required this.homeOverall,
-    required this.awayOverall,
     required this.homeScore,
     required this.awayScore,
     required this.clock,
@@ -76,12 +74,6 @@ class MatchScoreboard extends StatelessWidget {
   final String awayCode;
   final String homeName;
   final String awayName;
-
-  /// Each side's team overall — the same number the pre-match screen shows
-  /// either side of the "VS", carried into the live game so the manager can
-  /// still see what he is up against once the whistle has gone.
-  final int homeOverall;
-  final int awayOverall;
   final int homeScore;
   final int awayScore;
   final String clock;
@@ -154,11 +146,7 @@ class MatchScoreboard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Expanded(
-                  child: _Side(
-                    code: homeCode,
-                    label: homeName,
-                    overall: homeOverall,
-                  ),
+                  child: _Side(code: homeCode, label: homeName),
                 ),
                 // The scoreline still shrinks rather than shove the two sides
                 // out of the card: a long name next to a 4:3 used to run the
@@ -197,11 +185,7 @@ class MatchScoreboard extends StatelessWidget {
                   ),
                 ),
                 Expanded(
-                  child: _Side(
-                    code: awayCode,
-                    label: awayName,
-                    overall: awayOverall,
-                  ),
+                  child: _Side(code: awayCode, label: awayName),
                 ),
               ],
             ),
@@ -465,21 +449,13 @@ class _ScoreFigure extends StatelessWidget {
 }
 
 class _Side extends StatelessWidget {
-  const _Side({
-    required this.code,
-    required this.label,
-    required this.overall,
-  });
+  // No team rating here: the pre-match screen shows it, and that is enough.
+  const _Side({required this.code, required this.label});
   final String code;
   final String label;
 
-  /// The side's team overall, shown under the name. Zero hides it — a side
-  /// whose XI isn't known yet has no honest number to print.
-  final int overall;
-
   @override
   Widget build(BuildContext context) {
-    final l = AppLocalizations.of(context);
     return Column(
       children: [
         FlagDisc(code, size: 56),
@@ -495,20 +471,6 @@ class _Side extends StatelessWidget {
           shrinkBeforeShortening: 1,
           style: AppTypography.titleMedium,
         ),
-        // Scaled down rather than cut: in a longer language the label could
-        // fill the side's third and clip the number, which is the point.
-        if (overall > 0)
-          FittedBox(
-            fit: BoxFit.scaleDown,
-            child: Text(
-              '${l.teamOverall} $overall',
-              maxLines: 1,
-              softWrap: false,
-              style: AppTypography.labelSmall.copyWith(
-                color: AppColors.onSurfaceVariant,
-              ),
-            ),
-          ),
       ],
     );
   }

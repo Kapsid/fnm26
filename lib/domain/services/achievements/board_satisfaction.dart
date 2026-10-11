@@ -188,6 +188,28 @@ abstract final class BoardSatisfaction {
   static int overachievementBonus(TournamentTier tier, int gap) =>
       gap <= 0 ? 0 : objectiveWeights(tier).step;
 
+  /// Whether a brief already counts as met before its tournament is over.
+  ///
+  /// A finals run only ever goes deeper, so once a World Championship or
+  /// continental brief is reached it cannot be lost again: the board credits
+  /// it there and then, rather than when the run ends. Waiting left a side
+  /// that had qualified as asked sitting on its finals form until the
+  /// verdict, and the gauge jumped the day the tournament was settled. The
+  /// Nations Cup and the qualifying-group rungs are table positions, which
+  /// can still slip, so they wait for the verdict.
+  static bool lockedIn(ObjectiveResult o) =>
+      (o.tier == TournamentTier.world ||
+          o.tier == TournamentTier.continental) &&
+      o.actual >= 2 &&
+      o.actual >= o.target;
+
+  /// What each defeat at a finals tournament costs once its brief is
+  /// [lockedIn]. Those games leave the form window, since the brief they
+  /// were played for is already answered, and only losing still costs a
+  /// little, so a side that qualified as asked and then loses every game is
+  /// marked down a few points, not dragged back under the sacking bar.
+  static const int lockedInLoss = -1;
+
   /// The board's mood.
   ///
   /// [objectives] are the cycle's SETTLED expectations (see `objectiveSwing`) —
@@ -211,6 +233,10 @@ abstract final class BoardSatisfaction {
     /// Where the gauge finished the PREVIOUS cycle, or null for a first cycle.
     /// See [carryOver] — a reputation buys a little rope, not a free pass.
     int? previousCycle,
+
+    /// Defeats at finals whose brief is already [lockedIn]; those games are
+    /// left out of [recent]. See [lockedInLoss].
+    int lockedInLosses = 0,
   }) {
     var best = 0;
     for (final h in honours) {
@@ -223,6 +249,7 @@ abstract final class BoardSatisfaction {
     }
     return (openingFrom(previousCycle) +
             formPoints(recent) +
+            lockedInLosses * lockedInLoss +
             best +
             fromObjectives +
             rankBonus(worldRank) +

@@ -31,8 +31,9 @@ void main() {
     // all question variants: expose `allQuestionVariants(l)` returning
     // (ConferenceReason?, BeatKind, String) triples for this test.
     final variants = allQuestionVariants(l);
-    // 24 moments, 30 reaction and player questions, 24 throwbacks.
-    expect(variants, hasLength(78));
+    // 24 moments, 30 reaction and player questions, 30 throwbacks, and the
+    // preview's 12 aim, 6 rival and 6 key-player questions.
+    expect(variants, hasLength(108));
     for (final (reason, kind, text) in variants) {
       final allowed =
           kind == BeatKind.moment &&

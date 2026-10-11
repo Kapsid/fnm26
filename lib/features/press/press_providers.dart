@@ -1,10 +1,18 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/data/data_providers.dart';
+import 'package:fnm/domain/entities/enums.dart';
+import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/repositories/career_repository.dart';
+import 'package:fnm/domain/entities/group_standing.dart';
+import 'package:fnm/domain/entities/player.dart';
+import 'package:fnm/domain/services/achievements/board_satisfaction.dart';
 import 'package:fnm/domain/services/press/conference.dart';
 import 'package:fnm/domain/services/press/press.dart';
 import 'package:fnm/domain/services/press/statement.dart';
+import 'package:fnm/features/career/career_providers.dart';
+import 'package:fnm/features/hub/objective_providers.dart';
 import 'package:fnm/features/press/press_desk.dart';
+import 'package:fnm/features/ranking/world_ranking_providers.dart';
 import 'package:fnm/features/tactics/condition_providers.dart';
 
 bool _counts(PressAnswerRow a) => !a.questionKey.startsWith('grv:');
@@ -60,6 +68,124 @@ final AutoDisposeFutureProviderFamily<PressEffect, int> pressEffectProvider =
       );
     });
 
+/// A preview conference that is due: the campaign, and the fixture that
+/// opens it.
+typedef PreviewDue = ({PreviewCampaign campaign, Fixture fixture});
+
+/// The preview conference due now, if any: the manager's next fixture opens a
+/// campaign he is in (see [PreviewCampaign]), he has played none of that
+/// campaign yet, and no preview has been opened for it.
+///
+/// Derived, never stored by the season: the row is written only when he
+/// opens it (see [ConferenceService.openPreview]), and once the fixture is
+/// played the preview is simply no longer due.
+final AutoDisposeFutureProviderFamily<PreviewDue?, int> previewDueProvider =
+    FutureProvider.autoDispose.family<PreviewDue?, int>((ref, careerId) async {
+      final repo = ref.watch(careerRepositoryProvider);
+      final comp = ref.watch(competitionRepositoryProvider);
+      final career = await repo.byId(careerId);
+      if (career == null) return null;
+      final fixtures = await comp.cycleFixturesForNation(
+        careerId,
+        career.nationId,
+      );
+      final unplayed =
+          [
+            for (final f in fixtures)
+              if (!f.hasResult) f,
+          ]..sort((a, b) {
+            final byDate = a.date.compareTo(b.date);
+            return byDate != 0 ? byDate : a.id.compareTo(b.id);
+          });
+      if (unplayed.isEmpty) return null;
+      final next = unplayed.first;
+      final campaign = PreviewCampaign.ofRound(next.round);
+      if (campaign == null) return null;
+      if (fixtures.any(
+        (f) => f.hasResult && PreviewCampaign.ofRound(f.round) == campaign,
+      )) {
+        return null;
+      }
+      final calls = await repo.conferences(careerId);
+      if (calls.any(
+        (c) => c.reason == ConferenceReason.preview && c.fixtureId == next.id,
+      )) {
+        return null;
+      }
+      return (campaign: campaign, fixture: next);
+    });
+
+/// The tier of the board objective a preview [campaign] is judged against.
+TournamentTier previewTier(PreviewCampaign campaign) =>
+    campaign.isWorld ? TournamentTier.world : TournamentTier.continental;
+
+/// What a preview conference about [campaign] is about: the board's brief, the
+/// best-ranked other side in his group and his best called-up player.
+Future<PreviewFacts> _previewFacts(
+  Ref ref,
+  int careerId,
+  PreviewCampaign campaign,
+) async {
+  final career = (await ref.read(careerRepositoryProvider).byId(careerId))!;
+  final comp = ref.read(competitionRepositoryProvider);
+  final outcomes = await ref.watch(
+    cycleObjectiveOutcomesProvider(careerId).future,
+  );
+  final tier = previewTier(campaign);
+  final objective = outcomes.where((o) => o.tier == tier).firstOrNull;
+  final brief = campaign.briefFor(objective?.target ?? 2);
+
+  final nations = await ref.read(nationRepositoryProvider).all();
+  final conf = nations
+      .where((n) => n.id == career.nationId)
+      .map((n) => n.confederation)
+      .firstOrNull;
+  final kind = switch (campaign) {
+    PreviewCampaign.worldQualifying => CompetitionKind.worldCupQualifying,
+    PreviewCampaign.continentalQualifying =>
+      CompetitionKind.continentalQualifying,
+    PreviewCampaign.worldFinals => CompetitionKind.worldCupFinals,
+    PreviewCampaign.continentalFinals => CompetitionKind.continentalFinals,
+  };
+  final tables = await comp.tournamentGroupTables(
+    careerId,
+    kind,
+    confederation: campaign == PreviewCampaign.worldFinals ? null : conf,
+  );
+  final group = tables
+      .where((t) => t.standings.any((s) => s.nationId == career.nationId))
+      .firstOrNull;
+  final ranking = await ref.watch(worldRankingProvider(careerId).future);
+  int rankOf(int id) => ranking?.position[id] ?? 999;
+  final others = [
+    for (final s in group?.standings ?? const <GroupStanding>[])
+      if (s.nationId != career.nationId) s.nationId,
+  ]..sort((a, b) => rankOf(a).compareTo(rankOf(b)));
+
+  final called = await ref.read(squadRepositoryProvider).callUps(careerId);
+  final squad = called.isEmpty
+      ? const <Player>[]
+      : await ref
+            .read(playerRepositoryProvider)
+            .byNation(
+              career.nationId,
+              agingYears: CareerService.agingYears(career),
+              saveSeed: career.rngSeed,
+              minAge: 15,
+            );
+  final picked = [
+    for (final p in squad)
+      if (called.contains(p.id)) p,
+  ]..sort((a, b) => b.overall.compareTo(a.overall));
+
+  return (
+    campaign: campaign,
+    brief: brief,
+    rivalNationId: others.firstOrNull,
+    keyPlayerId: picked.firstOrNull?.id,
+  );
+}
+
 typedef PendingConference = ({
   PressConferenceRow row,
   ConferenceFacts facts,
@@ -99,6 +225,44 @@ pendingConferenceProvider = FutureProvider.autoDispose
         career.nationId,
       )).where((f) => f.id == row.fixtureId).firstOrNull;
       if (fixture == null) return null;
+      final opponent = fixture.homeNationId == career.nationId
+          ? fixture.awayNationId
+          : fixture.homeNationId;
+      final statementsNow = await ref.watch(
+        pressStatementsProvider(careerId).future,
+      );
+      final openNow = [
+        for (final s in statementsNow)
+          if (s.status == StatementStatus.open) s,
+      ];
+      // A preview is about the campaign ahead: no result to react to, and
+      // nothing old to throw back.
+      if (row.reason == ConferenceReason.preview) {
+        final campaign = PreviewCampaign.ofRound(fixture.round);
+        if (campaign == null || fixture.hasResult) return null;
+        return (
+          row: row,
+          facts: (
+            reason: row.reason,
+            bestPlayerId: null,
+            worstPlayerId: null,
+            hasOpenWinNext: openNow.any(
+              (s) => s.kind == StatementKind.winNext,
+            ),
+            hasOpenJob: openNow.any(
+              (s) => s.kind == StatementKind.jobOnTheLine,
+            ),
+            playersWithOpenStatement: {
+              for (final s in openNow)
+                if (s.playerId != null) s.playerId!,
+            },
+            throwback: null,
+            preview: await _previewFacts(ref, careerId, campaign),
+          ),
+          credibility: await ref.watch(credibilityProvider(careerId).future),
+          opponentNationId: opponent,
+        );
+      }
       final lines = [
         for (final r in await comp.ratingsForFixture(careerId, fixture.id))
           if (r.nationId == career.nationId) r,
@@ -147,6 +311,7 @@ pendingConferenceProvider = FutureProvider.autoDispose
               if (s.playerId != null) s.playerId!,
           },
           throwback: due.isEmpty ? null : due.last,
+          preview: null,
         ),
         credibility: await ref.watch(credibilityProvider(careerId).future),
         opponentNationId: fixture.homeNationId == career.nationId
@@ -188,7 +353,13 @@ class ConferenceService {
       answeredAt: career.inGameDate,
     );
     final kind = ConferenceBuilder.statementOf(a);
-    if (kind != null) {
+    final preview = c.facts.preview;
+    final stated = preview == null
+        ? null
+        : ConferenceBuilder.statedTarget(a, preview);
+    // A target needs a campaign to be judged against; outside a preview there
+    // is none, so nothing goes on the record.
+    if (kind != null && (kind != StatementKind.target || stated != null)) {
       await repo.recordStatement(
         careerId: careerId,
         cycle: career.cyclePointer,
@@ -197,6 +368,7 @@ class ConferenceService {
         playerId: beat.playerId,
         madeOn: c.row.triggeredOn,
         madeAfterFixtureId: c.row.fixtureId,
+        target: stated,
       );
     }
     if (beat.kind == BeatKind.throwback && c.facts.throwback != null) {
@@ -207,6 +379,30 @@ class ConferenceService {
       ..invalidate(pressStatementsProvider(careerId))
       ..invalidate(squadConditionProvider(careerId));
     return effect;
+  }
+
+  /// Writes the row for a preview that is [due], the moment he opens it, so
+  /// the sheet runs against a conference like any other. Returns its id.
+  Future<int> openPreview(int careerId, PreviewDue due) async {
+    final repo = _ref.read(careerRepositoryProvider);
+    final career = (await repo.byId(careerId))!;
+    final existing = (await repo.conferences(careerId)).where(
+      (c) =>
+          c.reason == ConferenceReason.preview && c.fixtureId == due.fixture.id,
+    );
+    final id = existing.isNotEmpty
+        ? existing.first.id
+        : await repo.recordConference(
+            careerId: careerId,
+            cycle: career.cyclePointer,
+            reason: ConferenceReason.preview,
+            fixtureId: due.fixture.id,
+            triggeredOn: career.inGameDate,
+          );
+    _ref
+      ..invalidate(previewDueProvider(careerId))
+      ..invalidate(pendingConferenceProvider(careerId));
+    return id;
   }
 
   Future<void> finish(int careerId, int conferenceId) async {
@@ -229,6 +425,7 @@ class ConferenceService {
     await repo.setConferenceStatus(conferenceId, ConferenceStatus.held);
     _ref
       ..invalidate(pendingConferenceProvider(careerId))
+      ..invalidate(previewDueProvider(careerId))
       ..invalidate(pressStatementsProvider(careerId))
       ..invalidate(credibilityProvider(careerId))
       ..invalidate(pressEffectProvider(careerId))

@@ -10,6 +10,7 @@ import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/career.dart';
 import 'package:fnm/domain/repositories/career_repository.dart';
+import 'package:fnm/domain/services/federation/federation_finance.dart';
 import 'package:fnm/features/federation/federation_service.dart';
 import 'package:fnm/features/federation/investment_editor.dart';
 import 'package:fnm/features/federation/staff_card.dart';
@@ -52,8 +53,8 @@ final AutoDisposeFutureProviderFamily<bool, int> budgetSettledProvider =
           .hasWatchedDraw(careerId, career.cyclePointer, budgetSetupKind);
     });
 
-/// The smallest slice of the budget a department can be given.
-const int kBudgetStep = 500000;
+/// The smallest slice of the budget a department can be given: one level.
+const int kBudgetStep = FederationFinance.investLevelPrice;
 
 /// Whether an allocation of [allocated] out of [available] may be confirmed.
 ///
@@ -66,9 +67,17 @@ const int kBudgetStep = 500000;
 /// this same screen and their wages come off the top, so allocating everything
 /// and then hiring an elite assistant moves the ceiling down underneath an
 /// allocation that was legal when it was made.
-bool budgetReady({required int available, required int allocated}) {
+///
+/// Spent means "no further level fits": less than one level's price left, or
+/// every department already at its top level. What is left over stays in the
+/// bank rather than being forced into a department it cannot buy anything in.
+bool budgetReady({
+  required int available,
+  required int allocated,
+  bool levelsLeft = true,
+}) {
   final remaining = available - allocated;
-  return remaining >= 0 && remaining < kBudgetStep;
+  return remaining >= 0 && (remaining < kBudgetStep || !levelsLeft);
 }
 
 class _BudgetSetupScreenState extends ConsumerState<BudgetSetupScreen> {
@@ -181,9 +190,21 @@ class _BudgetSetupScreenState extends ConsumerState<BudgetSetupScreen> {
           // undo a decision the manager has already lived with.
           final settled = ref.watch(budgetSettledProvider(widget.careerId));
           final overCommitted = allocated > available;
+          final levelsLeft = Department.values.any(
+            (d) =>
+                investmentIn(alloc, d) <
+                FederationFinance.maxLevels(d) * kBudgetStep,
+          );
+          // Untouched is fine when there is nothing a level could be bought
+          // with: a federation with less than one level to spend confirms an
+          // empty allocation rather than being stuck on this screen.
           final ready =
-              _alloc != null &&
-              budgetReady(available: available, allocated: allocated);
+              (_alloc != null || available < kBudgetStep) &&
+              budgetReady(
+                available: available,
+                allocated: allocated,
+                levelsLeft: levelsLeft,
+              );
           return Column(
             children: [
               Expanded(

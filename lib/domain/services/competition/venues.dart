@@ -1,8 +1,10 @@
 import 'package:fnm/core/rng/seeded_rng.dart';
+import 'package:fnm/domain/services/competition/stadium_capacity.dart';
 
 /// A tournament venue: the `stadium`, its host `city`, and the stadium's
-/// `capacity` (seats). Capacity tracks the city's size, so the marquee grounds
-/// are in the biggest cities.
+/// `capacity` (seats). Capacity starts from the nation's real biggest ground
+/// and tapers down the city list, so the marquee grounds are in the biggest
+/// cities and a small country has small ones.
 typedef Venue = ({String city, String stadium, int capacity});
 
 /// Generates a host nation's tournament cities and stadiums. Deterministic in
@@ -71,6 +73,19 @@ abstract final class VenueGenerator {
     'Field',
   ];
 
+  /// The [rank]th ground of a nation in [nationalStadiumCapacity], scaled
+  /// down from its biggest: each step is about a tenth smaller, so a big
+  /// country's eighth city still has a decent stadium and a small one's is a
+  /// few thousand seats. Null for a nation not in the table.
+  static int? _scaled(int hostId, int rank, SeededRng rng) {
+    final biggest = nationalStadiumCapacity[hostId];
+    if (biggest == null) return null;
+    if (rank == 0) return biggest;
+    final factor = 1 - rank * 0.1 + (rng.nextInt(61) - 30) / 1000;
+    final seats = (biggest * factor.clamp(0.25, 1.0) / 100).round() * 100;
+    return seats.clamp(1000, biggest);
+  }
+
   /// The venues of a tournament shared between [hostIds] (primary first):
   /// [count] grounds in total, split as evenly as possible, with any remainder
   /// going to the earlier hosts.
@@ -123,10 +138,9 @@ abstract final class VenueGenerator {
                 : '${cities[i]} '
                       '${_stadiumSuffixes[rng.nextInt(_stadiumSuffixes.length)]}',
             // Capacity tapers from the biggest city down, with a little wobble.
-            capacity: (80000 - i * 6000 + rng.nextInt(3000)).clamp(
-              30000,
-              85000,
-            ),
+            capacity:
+                _scaled(hostId, i, rng) ??
+                (80000 - i * 6000 + rng.nextInt(3000)).clamp(30000, 85000),
           ),
       ];
     }
@@ -147,7 +161,9 @@ abstract final class VenueGenerator {
       final city = ranked[i].name;
       // Stadium capacity scales with the city's population (32k … ~85k), so the
       // biggest cities host the largest grounds.
-      final capacity = (28000 + ranked[i].pop * 6).clamp(32000, 85000);
+      final capacity =
+          _scaled(hostId, i, rng) ??
+          (28000 + ranked[i].pop * 6).clamp(32000, 85000);
       final stadium = rng.chance(0.5)
           ? '${_stadiumPrefixes[rng.nextInt(_stadiumPrefixes.length)]} $city'
           : '$city ${_stadiumSuffixes[rng.nextInt(_stadiumSuffixes.length)]}';

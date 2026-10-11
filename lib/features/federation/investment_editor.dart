@@ -18,8 +18,9 @@ String formatEuros(int euros) {
   return '€$euros';
 }
 
-/// A three-department allocation editor: sliders for Youth, Commercial and
-/// Medical that together cannot exceed the available balance. Reports the
+/// The department allocation editor: one slider per department, in whole
+/// levels (see [FederationFinance.investLevelPrice]), that together cannot
+/// exceed the available balance. Reports the
 /// current split on every change. Youth can be disabled (e.g. the opening
 /// cycle, which has no academy intake yet).
 class InvestmentEditor extends StatefulWidget {
@@ -48,8 +49,7 @@ class _InvestmentEditorState extends State<InvestmentEditor> {
   late int _naturalization = widget.initial.naturalization;
   late int _boardRelations = widget.initial.boardRelations;
 
-  /// Slider granularity — €500k steps.
-  static const _step = 500000;
+  static const _price = FederationFinance.investLevelPrice;
 
   int get _allocated =>
       _youth + _commercial + _medical + _naturalization + _boardRelations;
@@ -63,31 +63,31 @@ class _InvestmentEditorState extends State<InvestmentEditor> {
     boardRelations: _boardRelations,
   );
 
-  void _set(Department dept, double raw) {
-    // Round to the step, then cap so the departments never exceed the balance.
-    final others =
-        _allocated -
-        switch (dept) {
-          Department.youth => _youth,
-          Department.commercial => _commercial,
-          Department.medical => _medical,
-          Department.naturalization => _naturalization,
-          Department.boardRelations => _boardRelations,
-        };
-    final room = widget.available - others;
-    final capped = clampDepartment(raw: raw, room: room, step: _step);
+  int _valueOf(Department dept) => investmentIn(_current, dept);
+
+  void _set(Department dept, double rawLevel) {
+    // Whole levels only, and never more than the balance left once the other
+    // departments are paid for.
+    final room = widget.available - (_allocated - _valueOf(dept));
+    final level = affordableLevel(
+      wanted: rawLevel.round(),
+      room: room,
+      price: _price,
+      max: FederationFinance.maxLevels(dept),
+    );
+    final euros = level * _price;
     setState(() {
       switch (dept) {
         case Department.youth:
-          _youth = capped;
+          _youth = euros;
         case Department.commercial:
-          _commercial = capped;
+          _commercial = euros;
         case Department.medical:
-          _medical = capped;
+          _medical = euros;
         case Department.naturalization:
-          _naturalization = capped;
+          _naturalization = euros;
         case Department.boardRelations:
-          _boardRelations = capped;
+          _boardRelations = euros;
       }
     });
     widget.onChanged(_current);
@@ -125,13 +125,11 @@ class _InvestmentEditorState extends State<InvestmentEditor> {
 
   Widget _slider(Department dept, int value, {bool enabled = true}) {
     final l = AppLocalizations.of(context);
-    // A FIXED scale per slider (the department cap, or the whole balance if
-    // smaller) so moving one slider never shifts the others' thumbs — the
-    // total is instead enforced by clamping on change in [_set].
-    final cap = FederationFinance.maxInvestPerDepartment < widget.available
-        ? FederationFinance.maxInvestPerDepartment
-        : widget.available;
-    final max = (cap < _step ? _step : cap).toDouble();
+    // A FIXED scale per slider (the department's own levels) so moving one
+    // slider never shifts the others' thumbs: the total is enforced on change
+    // in [_set] instead.
+    final levels = FederationFinance.maxLevels(dept);
+    final level = (value ~/ _price).clamp(0, levels);
     return Opacity(
       opacity: enabled ? 1 : 0.5,
       child: Column(
@@ -146,7 +144,7 @@ class _InvestmentEditorState extends State<InvestmentEditor> {
                 ),
               ),
               Text(
-                formatEuros(value),
+                l.deptLevelCost(level, formatEuros(value)),
                 style: AppTypography.labelMedium.copyWith(
                   color: value > 0
                       ? AppColors.primary
@@ -156,8 +154,9 @@ class _InvestmentEditorState extends State<InvestmentEditor> {
             ],
           ),
           Slider(
-            value: value.toDouble().clamp(0, max),
-            max: max,
+            value: level.toDouble(),
+            max: levels.toDouble(),
+            divisions: levels,
             onChanged: enabled ? (v) => _set(dept, v) : null,
           ),
           Padding(
@@ -199,26 +198,25 @@ class _InvestmentEditorState extends State<InvestmentEditor> {
   }
 }
 
-/// What a department actually takes when the slider is dragged to [raw], given
-/// there is [room] left in the budget.
-///
-/// Rounds DOWN to [step] like the slider does, except at the very top, where
-/// it takes the exact remainder instead.
-///
-/// Without that exception a budget that is not a whole number of steps could
-/// never be finished: the balance is whatever the federation happens to hold,
-/// so a manager dragging every slider to its limit was still left staring at a
-/// few hundred thousand — or, with an odd balance and five roundings, rather
-/// more — that no slider would accept. Money you can see and cannot assign
-/// reads as a bug whatever the arithmetic behind it, and the screen refuses to
-/// confirm until the balance is spent, so it could also strand the manager on
-/// the one screen he is forced to finish.
-int clampDepartment({
-  required double raw,
+/// What [alloc] puts into [dept].
+int investmentIn(FederationInvestment alloc, Department dept) => switch (dept) {
+  Department.youth => alloc.youth,
+  Department.commercial => alloc.commercial,
+  Department.medical => alloc.medical,
+  Department.naturalization => alloc.naturalization,
+  Department.boardRelations => alloc.boardRelations,
+};
+
+/// The level a department actually gets when the slider asks for [wanted]:
+/// never above its [max], and never more levels than the [room] left in the
+/// budget pays for at [price] each.
+int affordableLevel({
+  required int wanted,
   required int room,
-  required int step,
+  required int price,
+  required int max,
 }) {
-  if (room <= 0) return 0;
-  final rounded = raw ~/ step * step;
-  return rounded >= room ? room : rounded.clamp(0, room);
+  if (room < price) return 0;
+  final affordable = room ~/ price;
+  return wanted.clamp(0, affordable < max ? affordable : max);
 }

@@ -13,6 +13,9 @@ import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/services/club/club_form.dart';
+import 'package:fnm/domain/services/squad/condition.dart';
+import 'package:fnm/features/tactics/condition_providers.dart';
+import 'package:fnm/features/tactics/player_form_look.dart';
 import 'package:fnm/features/tactics/call_up_screen.dart'
     show clubStandingLabel;
 import 'package:fnm/domain/services/manager/staff.dart';
@@ -286,6 +289,16 @@ class PlayerDetailScreen extends ConsumerWidget {
                   ],
                 ),
               ),
+              // His form and legs right now. The call-up row shows only an
+              // icon for it, so this is where a flame or a snowflake is
+              // explained, with what it does to him next match.
+              if (ref
+                      .watch(squadConditionProvider(careerId))
+                      .valueOrNull?[playerId]
+                  case final condition?) ...[
+                const SizedBox(height: AppSpacing.sm),
+                _FormCard(condition: condition),
+              ],
               // What this player is KNOWN for. A squad of twenty-three ratings
               // is forgettable; a hothead, an iron man and a big-game striker
               // are not — and each one changes how they should be used.
@@ -949,6 +962,89 @@ class _FormSparkline extends StatelessWidget {
 /// The effect is spelled out rather than hinted at — a trait the manager can't
 /// act on is just decoration, and the whole point is that these change how a
 /// player should be used.
+/// His current form and fitness, in words: what the call-up row's icons
+/// mean for this player, and the rating shift they put on him next match.
+class _FormCard extends StatelessWidget {
+  const _FormCard({required this.condition});
+
+  final PlayerCondition condition;
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    final look = formLook(condition.form);
+    final delta = condition.overallDelta;
+    final fatigue = switch (condition.fatigueState) {
+      FatigueState.exhausted => l.tacticsFatigueExhausted,
+      FatigueState.tired => l.tacticsFatigueTired,
+      FatigueState.ready => l.tacticsFatigueMatchLegs,
+      FatigueState.fresh => null,
+    };
+    final muted = AppTypography.labelSmall.copyWith(
+      color: AppColors.onSurfaceVariant,
+    );
+    return AppCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            l.playerFormTitle,
+            style: AppTypography.labelSmall.copyWith(color: AppColors.primary),
+          ),
+          const SizedBox(height: AppSpacing.sm),
+          Row(
+            children: [
+              Icon(look.icon, size: 18, color: look.color),
+              const SizedBox(width: AppSpacing.sm),
+              Expanded(
+                child: Text(
+                  formLabel(l, condition.form),
+                  style: AppTypography.labelMedium.copyWith(color: look.color),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 2),
+          Text(
+            condition.formRating > 0
+                ? l.playerFormAverage(condition.formRating.toStringAsFixed(1))
+                : l.playerFormNoGames,
+            style: muted,
+          ),
+          if (fatigue != null) ...[
+            const SizedBox(height: AppSpacing.xs),
+            Row(
+              children: [
+                const Icon(
+                  Icons.battery_alert_rounded,
+                  size: 14,
+                  color: AppColors.onSurfaceVariant,
+                ),
+                const SizedBox(width: AppSpacing.xs),
+                Expanded(child: Text(fatigue, style: muted)),
+              ],
+            ),
+          ],
+          const SizedBox(height: AppSpacing.xs),
+          Text(
+            delta == 0
+                ? l.playerFormNoEffect
+                : l.playerFormNextMatch(delta > 0 ? '+$delta' : '−${-delta}'),
+            style: AppTypography.labelSmall.copyWith(
+              color: delta > 0
+                  ? AppColors.positive
+                  : delta < 0
+                  ? AppColors.error
+                  : AppColors.onSurfaceVariant,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 class _TraitRow extends StatelessWidget {
   const _TraitRow({required this.trait});
 

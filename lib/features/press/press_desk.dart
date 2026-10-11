@@ -43,9 +43,44 @@ class PressDesk {
     int theirs(Fixture f) =>
         f.homeNationId == career.nationId ? f.awayScore! : f.homeScore!;
 
-    // 1. Judge.
+    // 1. Judge. A target is judged against the board's own grading of its
+    // campaign, which the match just changed and which no provider here would
+    // notice, so it is read fresh.
+    _ref
+      ..invalidate(cycleObjectiveOutcomesProvider(careerId))
+      ..invalidate(cycleObjectivesProvider(careerId));
+    final statements = await careers.statements(careerId);
+    final outcomes =
+        statements.any(
+          (s) =>
+              s.kind == StatementKind.target &&
+              s.status == StatementStatus.open,
+        )
+        ? await _ref.read(cycleObjectiveOutcomesProvider(careerId).future)
+        : const <ObjectiveOutcome>[];
+    TargetOutcome? targetOutcome(PressStatement s) {
+      if (s.kind != StatementKind.target) return null;
+      final opener = all.where((f) => f.id == s.madeAfterFixtureId).firstOrNull;
+      final campaign = PreviewCampaign.ofRound(opener?.round);
+      if (opener == null || campaign == null) return null;
+      final o = outcomes
+          .where((o) => o.tier == previewTier(campaign))
+          .firstOrNull;
+      if (o == null) return null;
+      // Qualifying is settled the moment the side is in the finals draw (or
+      // the verdict says it is not), and judged on getting there at all.
+      final brief = campaign.briefFor(o.target);
+      return campaign.isQualifying
+          ? (
+              brief: brief,
+              actual: o.actual.clamp(0, 2),
+              settled: o.actual >= 2 || o.decided,
+            )
+          : (brief: brief, actual: o.actual, settled: o.decided);
+    }
+
     var jobJustBroken = false;
-    for (final s in await careers.statements(careerId)) {
+    for (final s in statements) {
       if (s.status != StatementStatus.open) continue;
       final apps = s.playerId == null
           ? const <Appearance>[]
@@ -71,6 +106,7 @@ class PressDesk {
         appearances: apps,
         currentNationId: career.nationId,
         currentCycle: career.cyclePointer,
+        target: targetOutcome(s),
       );
       if (v == null) continue;
       await careers.judgeStatement(s.id, status: v.status, judgedOn: now);
@@ -91,15 +127,24 @@ class PressDesk {
       }
     }
 
-    // 2. Retire stale invitations.
-    final calls = await careers.conferences(careerId);
-    for (final c in calls) {
+    // 2. Retire stale invitations, and a preview left open once the match it
+    // was the preview of has been played.
+    final allCalls = await careers.conferences(careerId);
+    for (final c in allCalls) {
       if (c.status == ConferenceStatus.pending &&
           (c.cycle != career.cyclePointer ||
-              now.difference(c.triggeredOn).inDays > staleDays)) {
+              now.difference(c.triggeredOn).inDays > staleDays ||
+              (c.reason == ConferenceReason.preview &&
+                  own.any((f) => f.id == c.fixtureId)))) {
         await careers.setConferenceStatus(c.id, ConferenceStatus.skipped);
       }
     }
+    // Previews keep their own calendar: they neither count toward the cap and
+    // the quiet below, nor stand in for the match they came before.
+    final calls = [
+      for (final c in allCalls)
+        if (c.reason != ConferenceReason.preview) c,
+    ];
 
     // 3. Call the room, at most once per match. Only this cycle's matches of
     // the nation he leads now are news: the all-time list would offer last
@@ -171,7 +216,7 @@ class PressDesk {
       lastConference: calls.isEmpty ? null : calls.last.triggeredOn,
     );
     if (reason == null) return;
-    for (final c in calls) {
+    for (final c in allCalls) {
       if (c.status == ConferenceStatus.pending) {
         await careers.setConferenceStatus(c.id, ConferenceStatus.skipped);
       }

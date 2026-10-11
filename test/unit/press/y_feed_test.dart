@@ -53,7 +53,35 @@ void main() {
     test('a humiliation brings out the rivals', () {
       final p = posts(match(mine: 4, theirs: 70, scored: 0, conceded: 3));
       expect(p.map((x) => x.template), contains(YTemplate.lostBadly));
-      expect(p.map((x) => x.voice), contains(YVoice.rival));
+      // He gloats in the replies, in his own words: the result lines are
+      // written as one of ours.
+      final rival = p.where((x) => x.voice == YVoice.rival).toList();
+      expect(rival, isNotEmpty);
+      expect(rival.every((x) => x.replyTo != null), isTrue);
+      expect(rival.every((x) => x.mood == YMood.smugness), isTrue);
+    });
+
+    test('nobody posts the identical sentence about one match', () {
+      for (var i = 0; i < 200; i++) {
+        final p = posts(
+          match(key: 'fx:$i', mine: 4, theirs: 70, scored: 0, conceded: 3),
+        );
+        final shapes = [
+          for (final x in p) '${x.template}|${x.mood}|${x.variant}',
+        ];
+        expect(shapes.toSet(), hasLength(shapes.length), reason: 'fx:$i');
+      }
+    });
+
+    test('a 3-0 is not filed as nervy, nor a 0-1 as a hammering', () {
+      expect(
+        YFeed.classify(match(mine: 20, theirs: 60, scored: 3, conceded: 0)),
+        isNot(YTemplate.winTight),
+      );
+      expect(
+        YFeed.classify(match(mine: 4, theirs: 120, scored: 0, conceded: 1)),
+        YTemplate.lost,
+      );
     });
 
     test('a bad day says more than a routine one', () {

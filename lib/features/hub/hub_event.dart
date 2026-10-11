@@ -12,6 +12,7 @@ import 'package:fnm/domain/services/competition/finals_participation.dart';
 import 'package:fnm/domain/services/competition/hosts.dart';
 import 'package:fnm/domain/services/competition/kickoff_keys.dart';
 import 'package:fnm/domain/services/squad/nomination.dart';
+import 'package:fnm/features/press/press_copy.dart';
 import 'package:fnm/features/press/press_providers.dart';
 import 'package:fnm/features/squad/grievance_providers.dart';
 
@@ -842,6 +843,20 @@ nextEventProvider = FutureProvider.autoDispose.family<HubEvent, int>((
               : l.hubEventReshapeShortSub(11 - lineupIds.length),
         );
       }
+    }
+
+    // 5·9. The press before the first match of a campaign he is in: the last
+    //      thing before kick-off, once the squad is named and set.
+    final preview = await ref.watch(previewDueProvider(careerId).future);
+    if (preview != null && preview.fixture.id == next.id) {
+      return HubEvent(
+        kind: HubEventKind.press,
+        label: l.hubEventPressConference,
+        icon: Icons.mic_rounded,
+        subtitle: l.hubEventPressPreviewSub(
+          previewCompetitionName(l, preview.campaign, playerConf),
+        ),
+      );
     }
 
     // 6. Play the next match (opens its pre-match preview first).

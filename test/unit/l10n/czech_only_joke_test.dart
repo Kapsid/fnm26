@@ -102,4 +102,32 @@ void main() {
       );
     }
   });
+
+  // The second one. "Kapříci uplavali" (the little carp have swum off) turns
+  // up now and then when one of ours is sent off: two of the eight Czech
+  // red-card wordings, Czech only for the same reason as Csaplár's trap.
+  group('Kapříci uplavali', () {
+    const carp = ['ySentOff2', 'ySentOff4'];
+
+    test('the Czech red-card posts carry it', () {
+      final cs = copy('cs');
+      for (final key in carp) {
+        expect(cs[key], contains('Kapříci uplavali'), reason: key);
+      }
+    });
+
+    test('no other language carries it, and they still report the red', () {
+      for (final locale in const ['en', 'fr', 'it', 'pl', 'es', 'de']) {
+        final c = copy(locale);
+        expect(
+          c.entries.where((e) => e.value.contains('Kapří')).map((e) => e.key),
+          isEmpty,
+          reason: locale,
+        );
+        for (final key in carp) {
+          expect(c[key]?.trim(), isNotEmpty, reason: '$locale $key');
+        }
+      }
+    });
+  });
 }

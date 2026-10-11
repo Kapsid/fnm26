@@ -16,7 +16,7 @@ void main() {
   final en = arb('lib/l10n/app_en.arb');
   // Every non-English language whose ARB exists.
   final others = <String, Map<String, Object?>>{
-    for (final code in ['cs', 'fr', 'it', 'pl'])
+    for (final code in ['cs', 'fr', 'it', 'pl', 'es', 'de'])
       if (File('lib/l10n/app_$code.arb').existsSync())
         code: arb('lib/l10n/app_$code.arb'),
   };

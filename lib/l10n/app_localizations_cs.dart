@@ -1539,7 +1539,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get careerFreeCycleNote =>
-      'První cyklus je zdarma celý na dvou uložených hrách: kvalifikace, kontinentální šampionát i mistrovství světa, všechny země světa. Nekonečné cykly a neomezený počet uložených her odemknete jednorázově.';
+      'Zdarma na jeden celý čtyřletý cyklus: kvalifikace, váš kontinentální šampionát i mistrovství světa, na dvou uložených hrách. Potom jedna platba odemkne nekonečné cykly.';
 
   @override
   String get careerStartCareer => 'Začít kariéru';
@@ -2980,8 +2980,8 @@ class AppLocalizationsCs extends AppLocalizations {
       'Tahle hra pokračuje přesně tam, kde skončila, se všemi starty, rekordy i rivalitami.';
 
   @override
-  String get paywallBenefitOffline =>
-      'Žádné předplatné, žádné reklamy, žádný účet, žádná síť. Jedna platba a je vaše navždy.';
+  String get paywallBenefitNoAds =>
+      'Žádné reklamy, žádné mikrotransakce, žádné předplatné. Jedna platba a všechny budoucí aktualizace jsou vaše.';
 
   @override
   String get paywallBenefitSaves =>
@@ -3773,12 +3773,12 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String yEliminated0(String opponent) {
-    return 'Konec na $opponent. Stejný scénář, jiný rok.';
+    return 'Konec na $opponent. Tohle bude chvíli bolet.';
   }
 
   @override
   String yEliminated1(String opponent) {
-    return '$opponent je místo, kde to končí. Zase.';
+    return '$opponent je místo, kde to pro nás končí.';
   }
 
   @override
@@ -4175,7 +4175,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String ySentOff2(String name, String minute) {
-    return '$name, $minute. minuta, červená karta. Odtud v deseti.';
+    return '$name, $minute. minuta, červená karta. Kapříci uplavali.';
   }
 
   @override
@@ -4185,7 +4185,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String ySentOff4(String name, String minute) {
-    return 'Skvělé. $name jde v $minute. minutě ze hřiště a hrajeme v deseti. Zase.';
+    return 'Skvělé. $name jde v $minute. minutě ze hřiště a hrajeme v deseti. Kapříci uplavali.';
   }
 
   @override
@@ -7153,7 +7153,7 @@ class AppLocalizationsCs extends AppLocalizations {
   String get yReactionDespair6 => 'Už ani vztek. To je na tom to nejhorší.';
 
   @override
-  String get yReactionDespair7 => 'Stejný pocit, jiný rok.';
+  String get yReactionDespair7 => 'Tohle bude bolet ještě hodně dlouho.';
 
   @override
   String get yReactionDespair8 => 'Nevím, co to je, ale fotbalový tým to není.';
@@ -7700,6 +7700,17 @@ class AppLocalizationsCs extends AppLocalizations {
   @override
   String get settingsUnlockedBlurb =>
       'Nekonečné cykly, neomezená uložení a všechny budoucí aktualizace. Děkujeme.';
+
+  @override
+  String get settingsFromDeveloperTitle => 'Od vývojáře';
+
+  @override
+  String get settingsFromDeveloperBlurb =>
+      'Football Nations Manager vytváří jeden člověk a hra bude dlouhodobě podporována. Nikdy v ní nebudou reklamy ani mikrotransakce. Pokud vás hra baví, zvažte prosím koupi plné verze. Díky ní můžou přicházet další aktualizace.';
+
+  @override
+  String get settingsFromDeveloperThanksBlurb =>
+      'Football Nations Manager vytváří jeden člověk a hra bude dlouhodobě podporována. Nikdy v ní nebudou reklamy ani mikrotransakce. Děkuji, že jste si koupili plnou verzi. Díky ní můžou přicházet další aktualizace.';
 
   @override
   String friendliesLikeYourCampaign(String rivals) {
@@ -9097,4 +9108,245 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get finishNcChampionsAfrica => 'Vítězové Poháru národů';
+
+  @override
+  String pressAimQualWarm1(String competition) {
+    return 'Kvalifikace: $competition. Celá země tomuhle týmu věří. Kam míříte?';
+  }
+
+  @override
+  String pressAimQualWarm2(String competition) {
+    return 'Nová kvalifikace, $competition, a nálada je skvělá. Jak daleko může tenhle tým dojít?';
+  }
+
+  @override
+  String pressAimQualNeutral1(String competition) {
+    return 'Začíná kvalifikace, $competition. Jaký je cíl této kampaně?';
+  }
+
+  @override
+  String pressAimQualNeutral2(String competition) {
+    return 'Kvalifikace je tady, $competition. Kde tenhle tým vidíte na konci?';
+  }
+
+  @override
+  String pressAimQualHostile1(String competition) {
+    return 'Začíná kvalifikace, $competition, a spousta lidí pochybuje, že postoupíte. Co jim vzkážete?';
+  }
+
+  @override
+  String pressAimQualHostile2(String competition) {
+    return 'Další kvalifikace, $competition. Proč by měl někdo věřit, že tahle bude jiná?';
+  }
+
+  @override
+  String pressAimFinalsWarm1(String competition) {
+    return '$competition je tady a celá země stojí za vámi. Jak daleko můžete dojít?';
+  }
+
+  @override
+  String pressAimFinalsWarm2(String competition) {
+    return 'Jste tam: $competition. Fanoušci sní. Jaký je cíl?';
+  }
+
+  @override
+  String pressAimFinalsNeutral1(String competition) {
+    return 'Tento týden začíná $competition. Co by pro vás byl úspěch?';
+  }
+
+  @override
+  String pressAimFinalsNeutral2(String competition) {
+    return 'První zápas se blíží, $competition. Dejte nám cíl.';
+  }
+
+  @override
+  String pressAimFinalsHostile1(String competition) {
+    return '$competition je tady a nikdo moc nečeká. V co doopravdy doufáte?';
+  }
+
+  @override
+  String pressAimFinalsHostile2(String competition) {
+    return 'Jste tam: $competition, ale pochybnosti nezmizely. Jaký je váš cíl?';
+  }
+
+  @override
+  String pressBeatRivalWarm1(String rival) {
+    return 'Ve skupině máte soupeře $rival. Dělá vám to starosti?';
+  }
+
+  @override
+  String pressBeatRivalWarm2(String rival) {
+    return 'Los vám do cesty postavil soupeře $rival. Jak ten zápas vidíte?';
+  }
+
+  @override
+  String pressBeatRivalNeutral1(String rival) {
+    return 'Soupeř $rival vypadá jako nejsilnější tým vaší skupiny. Je to favorit?';
+  }
+
+  @override
+  String pressBeatRivalNeutral2(String rival) {
+    return 'Co říkáte na soupeře $rival?';
+  }
+
+  @override
+  String pressBeatRivalHostile1(String rival) {
+    return 'Ve skupině máte soupeře $rival. Upřímně, stačíte na ně?';
+  }
+
+  @override
+  String pressBeatRivalHostile2(String rival) {
+    return 'Většina lidí čeká, že vás soupeř $rival porazí. Mýlí se?';
+  }
+
+  @override
+  String pressBeatKeyPlayerWarm1(String player) {
+    return '$player je ve skvělé formě. Je tohle jeho chvíle?';
+  }
+
+  @override
+  String pressBeatKeyPlayerWarm2(String player) {
+    return '$player je ve všech titulcích. Unese tenhle tým?';
+  }
+
+  @override
+  String pressBeatKeyPlayerNeutral1(String player) {
+    return 'Jak moc tahle kampaň stojí na hráči $player?';
+  }
+
+  @override
+  String pressBeatKeyPlayerNeutral2(String player) {
+    return 'Je $player připravený vést tenhle tým?';
+  }
+
+  @override
+  String pressBeatKeyPlayerHostile1(String player) {
+    return 'Když $player nebude ve formě, má tenhle tým vůbec něco?';
+  }
+
+  @override
+  String pressBeatKeyPlayerHostile2(String player) {
+    return '$player má na bedrech hodně. Není to moc?';
+  }
+
+  @override
+  String get pressReplyAimHigher1 => 'Dojdeme dál, než kdokoli čeká.';
+
+  @override
+  String get pressReplyAimHigher2 =>
+      'Chci víc, než po nás chce svaz, a říkám to nahlas.';
+
+  @override
+  String get pressReplyMatchBrief1 => 'Známe cíl a splníme ho.';
+
+  @override
+  String get pressReplyMatchBrief2 => 'Svaz nám dal cíl. Splníme ho.';
+
+  @override
+  String get pressReplyPlayDown1 => 'Jdeme zápas od zápasu.';
+
+  @override
+  String get pressReplyPlayDown2 => 'Žádné velké sliby. Uvidíme, kde budeme.';
+
+  @override
+  String get pressReplyPromiseQualify1 => 'Postoupíme. To si můžete napsat.';
+
+  @override
+  String get pressReplyPromiseQualify2 =>
+      'Tenhle tým bude na závěrečném turnaji.';
+
+  @override
+  String get pressReplyFearNobody1 => 'Nebojíme se nikoho.';
+
+  @override
+  String get pressReplyFearNobody2 => 'Oni musí hrát proti nám taky.';
+
+  @override
+  String get pressReplyRespectRival1 => 'Jsou favorit a máme k nim respekt.';
+
+  @override
+  String get pressReplyRespectRival2 =>
+      'Velmi dobrý tým. Budeme potřebovat to nejlepší.';
+
+  @override
+  String get pressReplyTeamFirst1 => 'Jde o celý tým, ne o jednoho hráče.';
+
+  @override
+  String get pressReplyTeamFirst2 => 'Sám tohle nikdo nevyhraje.';
+
+  @override
+  String pressOnRecordTarget(String aim) {
+    return 'Řečeno do záznamu: $aim.';
+  }
+
+  @override
+  String get pressOnRecordPlayDown => 'Řečeno do záznamu: žádné sliby.';
+
+  @override
+  String get pressThrowbackTargetKeptWarm =>
+      'Před kampaní jste si dal cíl a splnil jste ho. Je to zatím vaše nejhrdější chvíle?';
+
+  @override
+  String get pressThrowbackTargetKeptNeutral =>
+      'Řekl jste, čeho dosáhnete, a dosáhl jste toho. Pochyboval jste někdy?';
+
+  @override
+  String get pressThrowbackTargetKeptHostile =>
+      'Cíl, který jste si dal, jste splnil. Štěstí, nebo to byl opravdu plán?';
+
+  @override
+  String get pressThrowbackTargetBrokenWarm =>
+      'Dal jste si cíl a nesplnil jste ho. Co se pokazilo?';
+
+  @override
+  String get pressThrowbackTargetBrokenNeutral =>
+      'Slíbil jste víc, než tým dokázal. Litujete toho?';
+
+  @override
+  String get pressThrowbackTargetBrokenHostile =>
+      'Před kampaní jste mluvil velká slova a nedotáhl jste to. Proč bychom vám teď měli věřit?';
+
+  @override
+  String hubEventPressPreviewSub(String competition) {
+    return 'Novináři chtějí slyšet vaše cíle: $competition';
+  }
+
+  @override
+  String deptLevelCost(int level, String amount) {
+    return 'Úroveň $level · $amount';
+  }
+
+  @override
+  String get formOnFire => 'V ohromné formě';
+
+  @override
+  String get formGood => 'Ve formě';
+
+  @override
+  String get formSteady => 'Stabilní';
+
+  @override
+  String get formPoor => 'Bez formy';
+
+  @override
+  String get formCold => 'Úplně bez formy';
+
+  @override
+  String get playerFormTitle => 'FORMA A KONDICE';
+
+  @override
+  String playerFormAverage(String rating) {
+    return 'Průměrná známka $rating v posledních zápasech';
+  }
+
+  @override
+  String get playerFormNoGames => 'Málo nedávných zápasů na posouzení';
+
+  @override
+  String playerFormNextMatch(String delta) {
+    return '$delta k hodnocení v příštím zápase';
+  }
+
+  @override
+  String get playerFormNoEffect => 'Hodnocení v příštím zápase beze změny';
 }

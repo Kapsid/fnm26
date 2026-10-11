@@ -11,7 +11,9 @@ import 'package:fnm/domain/services/competition/nations_cups.dart';
 import 'package:fnm/domain/services/federation/federation_finance.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/l10n/app_localizations_cs.dart';
+import 'package:fnm/l10n/app_localizations_de.dart';
 import 'package:fnm/l10n/app_localizations_en.dart';
+import 'package:fnm/l10n/app_localizations_es.dart';
 import 'package:fnm/l10n/app_localizations_fr.dart';
 import 'package:fnm/l10n/app_localizations_it.dart';
 import 'package:fnm/l10n/app_localizations_pl.dart';
@@ -138,39 +140,44 @@ void main() {
       expect(locales['cs']!.careerBestWin, 'Nejvyšší výhra');
     });
 
-    test('every Nations Cup is named in all five; Africa reads as the plain cup', () {
-      final all = <AppLocalizations>[
-        ...locales.values,
-        AppLocalizationsFr(),
-        AppLocalizationsIt(),
-        AppLocalizationsPl(),
-      ];
-      for (final l in all) {
-        final names = [
-          for (final stored in NationsCups.allNames)
-            competitionLabel(l, stored),
+    test(
+      'every Nations Cup is named in all seven; Africa reads as the plain cup',
+      () {
+        final all = <AppLocalizations>[
+          ...locales.values,
+          AppLocalizationsFr(),
+          AppLocalizationsIt(),
+          AppLocalizationsPl(),
+          AppLocalizationsEs(),
+          AppLocalizationsDe(),
         ];
-        // Europe and North America are named apart. Africa prints as the plain
-        // Nations Cup: "African Nations Cup" (and "Africký pohár národů",
-        // "Coupe d'Afrique des Nations"...) is how the real AFCON is known.
-        expect(
-          competitionLabel(l, NationsCups.africa),
-          competitionLabel(l, NationsCups.europe),
-        );
-        expect(
-          competitionLabel(l, NationsCups.northAmerica),
-          isNot(competitionLabel(l, NationsCups.europe)),
-        );
-        if (l is AppLocalizationsEn) continue;
-        for (final stored in NationsCups.allNames) {
+        for (final l in all) {
+          final names = [
+            for (final stored in NationsCups.allNames)
+              competitionLabel(l, stored),
+          ];
+          // Europe and North America are named apart. Africa prints as the plain
+          // Nations Cup: "African Nations Cup" (and "Africký pohár národů",
+          // "Coupe d'Afrique des Nations"...) is how the real AFCON is known.
           expect(
-            competitionLabel(l, stored),
-            isNot(stored),
-            reason: '$stored is printed back untranslated in ${l.localeName}',
+            competitionLabel(l, NationsCups.africa),
+            competitionLabel(l, NationsCups.europe),
           );
+          expect(
+            competitionLabel(l, NationsCups.northAmerica),
+            isNot(competitionLabel(l, NationsCups.europe)),
+          );
+          if (l is AppLocalizationsEn) continue;
+          for (final stored in NationsCups.allNames) {
+            expect(
+              competitionLabel(l, stored),
+              isNot(stored),
+              reason: '$stored is printed back untranslated in ${l.localeName}',
+            );
+          }
         }
-      }
-    });
+      },
+    );
 
     test('a name the table has never heard of survives unchanged', () {
       for (final l in locales.values) {

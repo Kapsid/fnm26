@@ -26,6 +26,7 @@ import 'package:fnm/features/hub/hub_event.dart';
 import 'package:fnm/features/hub/hub_providers.dart';
 import 'package:fnm/features/y/y_providers.dart';
 import 'package:fnm/features/hub/board_objectives_screen.dart';
+import 'package:fnm/features/press/press_copy.dart';
 import 'package:fnm/features/press/press_providers.dart';
 import 'package:fnm/features/ranking/world_ranking_providers.dart';
 import 'package:fnm/features/squad/grievance_providers.dart';
@@ -658,16 +659,30 @@ class _EventButtonState extends ConsumerState<_EventButton> {
       case HubEventKind.press:
         // The press conference has no screen of its own — it is the same sheet
         // the optional press card opens, just reached as a forced step.
-        final conference = ref
+        final pending = ref
             .read(pendingConferenceProvider(careerId))
             .valueOrNull;
+        final preview = ref.read(previewDueProvider(careerId)).valueOrNull;
         final hub = ref.read(hubDataProvider(careerId)).valueOrNull;
-        if (conference == null || hub == null) return;
+        if ((pending == null && preview == null) || hub == null) return;
         unawaited(() async {
+          // A preview has no row until he opens it: write it, then read the
+          // conference back like any other.
+          var conference = pending;
+          if (conference == null && preview != null) {
+            await ref
+                .read(conferenceServiceProvider)
+                .openPreview(careerId, preview);
+            conference = await ref.read(
+              pendingConferenceProvider(careerId).future,
+            );
+          }
+          if (conference == null) return;
           final ids = {
             conference.facts.bestPlayerId,
             conference.facts.worstPlayerId,
             conference.facts.throwback?.playerId,
+            conference.facts.preview?.keyPlayerId,
           }.whereType<int>().toSet();
           final pool = await ref
               .read(playerRepositoryProvider)
@@ -689,13 +704,26 @@ class _EventButtonState extends ConsumerState<_EventButton> {
               isScrollControlled: true,
               isDismissible: false,
               enableDrag: false,
-              builder: (_) => PressSheet(
-                careerId: careerId,
-                conference: conference,
-                playerNames: names,
-                opponentName:
-                    hub.nations[conference.opponentNationId]?.name ?? '',
-              ),
+              builder: (sheetContext) {
+                final facts = conference!.facts.preview;
+                return PressSheet(
+                  careerId: careerId,
+                  conference: conference,
+                  playerNames: names,
+                  opponentName:
+                      hub.nations[conference.opponentNationId]?.name ?? '',
+                  competitionName: facts == null
+                      ? ''
+                      : previewCompetitionName(
+                          AppLocalizations.of(sheetContext),
+                          facts.campaign,
+                          hub.nations[hub.career.nationId]?.confederation,
+                        ),
+                  rivalName: facts?.rivalNationId == null
+                      ? ''
+                      : hub.nations[facts!.rivalNationId]?.name ?? '',
+                );
+              },
             ),
           );
         }());

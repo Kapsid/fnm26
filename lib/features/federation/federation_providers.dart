@@ -69,8 +69,8 @@ youthBonusByCycleProvider = FutureProvider.autoDispose.family<Map<int, double>, 
 /// that feeds it, all of it read from stored history so it re-produces
 /// identically on replay or restore.
 final AutoDisposeFutureProviderFamily<Map<int, double>, int>
-intakeStandingByCycleProvider =
-    FutureProvider.autoDispose.family<Map<int, double>, int>((
+intakeStandingByCycleProvider = FutureProvider.autoDispose
+    .family<Map<int, double>, int>((
       ref,
       careerId,
     ) async {
@@ -117,8 +117,7 @@ intakeStandingByCycleProvider =
         // better side is not the same as having improved the one you had. The
         // trophies still count: you won those.
         final sameNation =
-            before != null &&
-            nationByCycle[cycle - 1] == nationByCycle[cycle];
+            before != null && nationByCycle[cycle - 1] == nationByCycle[cycle];
         final now = rankByCycle[cycle]!;
         final bonus = IntakeStanding.bonus(
           worldRank: now,

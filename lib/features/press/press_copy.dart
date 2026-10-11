@@ -1,3 +1,6 @@
+import 'package:fnm/core/util/competition_label.dart';
+import 'package:fnm/domain/entities/enums.dart';
+import 'package:fnm/domain/services/competition/continental_cups.dart';
 import 'package:fnm/domain/services/press/conference.dart';
 import 'package:fnm/domain/services/press/statement.dart';
 import 'package:fnm/features/press/press_providers.dart';
@@ -9,6 +12,20 @@ import 'package:fnm/l10n/app_localizations.dart';
 /// Every mapping is an exhaustive `switch`, so a new [BeatKind],
 /// [AnswerKind], [ConferenceReason] or [StatementKind] fails to compile here
 /// until it has copy, rather than reaching a player mute.
+
+/// The competition a preview [campaign] is about, as the manager reads it:
+/// the World Championship, or his own confederation's championship.
+String previewCompetitionName(
+  AppLocalizations l,
+  PreviewCampaign campaign,
+  Confederation? confederation,
+) {
+  if (campaign.isWorld) return l.objectiveWorldCup;
+  final cup = confederation == null
+      ? null
+      : ContinentalCups.byConfederation[confederation];
+  return cup == null ? l.objectiveWorldCup : competitionLabel(l, cup.name);
+}
 
 T _pick<T>(List<T> list, int seed) => list[seed.abs() % list.length];
 
@@ -34,11 +51,16 @@ String beatQuestion(
   required String? playerName,
   required String opponentName,
   required int seed,
+
+  /// A preview's competition and group rival, for its own questions.
+  String competitionName = '',
+  String rivalName = '',
 }) {
   final tone = _toneOf(Credibility.band(c.credibility));
   final names =
       beat.kind == BeatKind.standout ||
       beat.kind == BeatKind.struggler ||
+      beat.kind == BeatKind.keyPlayer ||
       (beat.kind == BeatKind.throwback &&
           _namesPlayer(c.facts.throwback!.kind));
   final player = names ? _named(playerName) : playerName ?? '';
@@ -59,6 +81,17 @@ String beatQuestion(
       tone,
       player,
     ),
+    BeatKind.aim => _pick(
+      _aim(
+        l,
+        qualifying: c.facts.preview?.campaign.isQualifying ?? false,
+        tone: tone,
+        competition: competitionName,
+      ),
+      seed,
+    ),
+    BeatKind.rival => _pick(_rival(l, tone, rivalName), seed),
+    BeatKind.keyPlayer => _pick(_keyPlayer(l, tone, player), seed),
   };
 }
 
@@ -139,21 +172,40 @@ String answerLabel(
       l.pressReplyAdmitMistake3,
       l.pressReplyAdmitMistake4,
     ],
+    AnswerKind.aimHigher => [l.pressReplyAimHigher1, l.pressReplyAimHigher2],
+    AnswerKind.matchBrief => [l.pressReplyMatchBrief1, l.pressReplyMatchBrief2],
+    AnswerKind.playDown => [l.pressReplyPlayDown1, l.pressReplyPlayDown2],
+    AnswerKind.promiseQualify => [
+      l.pressReplyPromiseQualify1,
+      l.pressReplyPromiseQualify2,
+    ],
+    AnswerKind.fearNobody => [l.pressReplyFearNobody1, l.pressReplyFearNobody2],
+    AnswerKind.respectRival => [
+      l.pressReplyRespectRival1,
+      l.pressReplyRespectRival2,
+    ],
+    AnswerKind.teamFirst => [l.pressReplyTeamFirst1, l.pressReplyTeamFirst2],
   };
   return _pick(variants, seed);
 }
 
 /// The note under an answer that goes on the record, or null for an answer
 /// nobody will hold against him.
+///
+/// [aim] is the target an aim answer states, worded as a board objective.
 String? onRecordLine(
   AppLocalizations l,
   AnswerKind a, {
   required String? playerName,
+  String aim = '',
 }) {
   final player = _namesPlayer(ConferenceBuilder.statementOf(a))
       ? _named(playerName)
       : playerName ?? '';
   return switch (ConferenceBuilder.statementOf(a)) {
+    StatementKind.target when a == AnswerKind.playDown =>
+      l.pressOnRecordPlayDown,
+    StatementKind.target => l.pressOnRecordTarget(aim),
     StatementKind.winNext => l.pressOnRecordWinNext,
     StatementKind.jobOnTheLine => l.pressOnRecordJob,
     StatementKind.backPlayer => l.pressOnRecordBack(player),
@@ -178,6 +230,20 @@ List<(ConferenceReason?, BeatKind, String)> allQuestionVariants(
       if (kind != BeatKind.moment && kind != BeatKind.throwback)
         for (final tone in _Tone.values)
           for (final text in _beat(l, kind, tone, player)) (null, kind, text),
+    for (final tone in _Tone.values) ...[
+      for (final qualifying in const [true, false])
+        for (final text in _aim(
+          l,
+          qualifying: qualifying,
+          tone: tone,
+          competition: 'World Championship',
+        ))
+          (ConferenceReason.preview, BeatKind.aim, text),
+      for (final text in _rival(l, tone, opponent))
+        (ConferenceReason.preview, BeatKind.rival, text),
+      for (final text in _keyPlayer(l, tone, player))
+        (ConferenceReason.preview, BeatKind.keyPlayer, text),
+    ],
     for (final kind in StatementKind.values)
       for (final kept in const [true, false])
         for (final tone in _Tone.values)
@@ -259,7 +325,74 @@ List<String> _moment(
     l.pressMomentJobVerdictHostile1(opponent),
     l.pressMomentJobVerdictHostile2(opponent),
   ],
+  // A preview opens on its own question (see [_aim]).
+  (ConferenceReason.preview, _) => const [],
 };
+
+/// A preview's opening: what is he aiming for in [competition]?
+List<String> _aim(
+  AppLocalizations l, {
+  required bool qualifying,
+  required _Tone tone,
+  required String competition,
+}) => switch ((qualifying, tone)) {
+  (true, _Tone.warm) => [
+    l.pressAimQualWarm1(competition),
+    l.pressAimQualWarm2(competition),
+  ],
+  (true, _Tone.neutral) => [
+    l.pressAimQualNeutral1(competition),
+    l.pressAimQualNeutral2(competition),
+  ],
+  (true, _Tone.hostile) => [
+    l.pressAimQualHostile1(competition),
+    l.pressAimQualHostile2(competition),
+  ],
+  (false, _Tone.warm) => [
+    l.pressAimFinalsWarm1(competition),
+    l.pressAimFinalsWarm2(competition),
+  ],
+  (false, _Tone.neutral) => [
+    l.pressAimFinalsNeutral1(competition),
+    l.pressAimFinalsNeutral2(competition),
+  ],
+  (false, _Tone.hostile) => [
+    l.pressAimFinalsHostile1(competition),
+    l.pressAimFinalsHostile2(competition),
+  ],
+};
+
+List<String> _rival(AppLocalizations l, _Tone tone, String rival) =>
+    switch (tone) {
+      _Tone.warm => [
+        l.pressBeatRivalWarm1(rival),
+        l.pressBeatRivalWarm2(rival),
+      ],
+      _Tone.neutral => [
+        l.pressBeatRivalNeutral1(rival),
+        l.pressBeatRivalNeutral2(rival),
+      ],
+      _Tone.hostile => [
+        l.pressBeatRivalHostile1(rival),
+        l.pressBeatRivalHostile2(rival),
+      ],
+    };
+
+List<String> _keyPlayer(AppLocalizations l, _Tone tone, String player) =>
+    switch (tone) {
+      _Tone.warm => [
+        l.pressBeatKeyPlayerWarm1(player),
+        l.pressBeatKeyPlayerWarm2(player),
+      ],
+      _Tone.neutral => [
+        l.pressBeatKeyPlayerNeutral1(player),
+        l.pressBeatKeyPlayerNeutral2(player),
+      ],
+      _Tone.hostile => [
+        l.pressBeatKeyPlayerHostile1(player),
+        l.pressBeatKeyPlayerHostile2(player),
+      ],
+    };
 
 /// The reaction and player questions. [BeatKind.moment] and
 /// [BeatKind.throwback] have copy of their own and land here empty.
@@ -329,7 +462,11 @@ List<String> _beat(
     l.pressBeatStrugglerHostile1(player),
     l.pressBeatStrugglerHostile2(player),
   ],
-  (BeatKind.moment, _) || (BeatKind.throwback, _) => const [],
+  (BeatKind.moment, _) ||
+  (BeatKind.throwback, _) ||
+  (BeatKind.aim, _) ||
+  (BeatKind.rival, _) ||
+  (BeatKind.keyPlayer, _) => const [],
 };
 
 /// The question that confronts him with a statement the results have judged.
@@ -389,4 +526,14 @@ String _throwback(
     l.pressThrowbackBlameBrokenNeutral(player),
   (StatementKind.blamePlayer, false, _Tone.hostile) =>
     l.pressThrowbackBlameBrokenHostile(player),
+  (StatementKind.target, true, _Tone.warm) => l.pressThrowbackTargetKeptWarm,
+  (StatementKind.target, true, _Tone.neutral) =>
+    l.pressThrowbackTargetKeptNeutral,
+  (StatementKind.target, true, _Tone.hostile) =>
+    l.pressThrowbackTargetKeptHostile,
+  (StatementKind.target, false, _Tone.warm) => l.pressThrowbackTargetBrokenWarm,
+  (StatementKind.target, false, _Tone.neutral) =>
+    l.pressThrowbackTargetBrokenNeutral,
+  (StatementKind.target, false, _Tone.hostile) =>
+    l.pressThrowbackTargetBrokenHostile,
 };

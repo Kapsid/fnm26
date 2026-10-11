@@ -21,6 +21,7 @@ import 'package:fnm/domain/services/squad/condition.dart';
 import 'package:fnm/domain/services/squad/absence_outlook.dart';
 import 'package:fnm/features/tactics/absence_providers.dart';
 import 'package:fnm/features/tactics/condition_providers.dart';
+import 'package:fnm/features/tactics/player_form_look.dart';
 import 'package:fnm/features/tactics/nomination_providers.dart';
 import 'package:fnm/features/tactics/tactics_providers.dart';
 import 'package:fnm/features/career/career_providers.dart';
@@ -996,18 +997,14 @@ class _FormDot extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final (color, icon) = switch (form) {
-      PlayerForm.onFire => (
-        const Color(0xFFE8622C),
-        Icons.local_fire_department,
-      ),
-      PlayerForm.good => (AppColors.positive, Icons.trending_up),
-      PlayerForm.steady => (AppColors.onSurfaceVariant, Icons.remove),
-      PlayerForm.poor => (const Color(0xFFEFC94C), Icons.trending_down),
-      PlayerForm.cold => (const Color(0xFFD64545), Icons.ac_unit),
-    };
     if (form == PlayerForm.steady) return const SizedBox.shrink();
-    return Icon(icon, size: 14, color: color);
+    final look = formLook(form);
+    // The word behind the icon is a long-press away, and spelled out with
+    // what it does on the player's own page.
+    return Tooltip(
+      message: formLabel(AppLocalizations.of(context), form),
+      child: Icon(look.icon, size: 14, color: look.color),
+    );
   }
 }
 
