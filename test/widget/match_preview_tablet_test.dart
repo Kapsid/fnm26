@@ -151,6 +151,43 @@ void main() {
     await tester.pumpWidget(const SizedBox());
   });
 
+  testWidgets('the briefing tabs are both in capitals on a tablet only', (
+    tester,
+  ) async {
+    final save = await seedSave(tester, formFactor: FormFactor.tablet);
+    await pumpRoute(
+      tester,
+      save,
+      '${Routes.matchPreview}?careerId=${save.careerId}',
+      size: kTabletSize,
+    );
+    final briefing = find.byType(OpponentBriefing);
+    for (final label in [enL.matchHeadToHead, enL.matchDossierTitle]) {
+      expect(
+        find.descendant(of: briefing, matching: find.text(label.toUpperCase())),
+        findsOneWidget,
+        reason: label,
+      );
+    }
+    await tester.pumpWidget(const SizedBox());
+
+    // The phone keeps the copy as written.
+    final phone = await seedSave(tester);
+    await pumpRoute(
+      tester,
+      phone,
+      '${Routes.matchPreview}?careerId=${phone.careerId}',
+    );
+    expect(
+      find.descendant(
+        of: find.byType(OpponentBriefing),
+        matching: find.text(enL.matchDossierTitle),
+      ),
+      findsOneWidget,
+    );
+    await tester.pumpWidget(const SizedBox());
+  });
+
   // Stage 3 carry-over: the branches the shared derivation took over.
   testWidgets("away: the manager's side is still his, on the right end", (
     tester,

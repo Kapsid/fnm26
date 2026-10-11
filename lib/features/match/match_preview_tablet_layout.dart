@@ -91,7 +91,7 @@ class _MatchPreviewTabletLayout extends ConsumerWidget {
                             Expanded(
                               child: ListView(
                                 children: [
-                                  p.briefing(),
+                                  p.briefing(capitals: true),
                                   const SizedBox(height: AppSpacing.lg),
                                   p.groundTitle(),
                                   const SizedBox(height: AppSpacing.sm),
