@@ -1354,6 +1354,7 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
                   ? '90+$_added'
                   : '$_minute',
               live: !ft,
+              wholeNames: tablet,
             );
             // The two nations' own colours, pushed apart from each other when
             // the kits are too alike to tell which end of the bar is whose.

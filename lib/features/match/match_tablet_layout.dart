@@ -1,9 +1,11 @@
 part of 'match_screen.dart';
 
-/// The live match on a tablet, landscape: commentary, your shape and the
-/// momentum, then stats and line-ups. The same widgets the phone shows in
-/// three tabs, all on screen at once. Overlays (goal, intervals) sit on top
-/// exactly as on the phone.
+/// The live match on a tablet, landscape, in three columns: the match stats
+/// on the left; the momentum, the score and the commentary down the centre;
+/// the line-ups (and the manager's own shape on the pitch) on the right. The
+/// same widgets the phone shows in three tabs, all on screen at once.
+/// Overlays (goal, intervals) sit on top exactly as on the phone, and the
+/// controls stay in the pinned bar below.
 class _MatchTabletLayout extends StatelessWidget {
   const _MatchTabletLayout({
     required this.ft,
@@ -18,8 +20,11 @@ class _MatchTabletLayout extends StatelessWidget {
     required this.overlays,
   });
 
-  static const double _commentaryWidth = 320;
-  static const double _sideWidth = 340;
+  /// The share of the width each side column takes, within these bounds.
+  static const double _sideShare = 0.26;
+  static const double _sideMin = 270;
+  static const double _sideMax = 360;
+  static const double _gap = AppSpacing.md - 4;
 
   final bool ft;
   final Widget topBar;
@@ -42,8 +47,6 @@ class _MatchTabletLayout extends StatelessWidget {
           Column(
             children: [
               topBar,
-              scoreboard,
-              ?shootout,
               Expanded(
                 child: Padding(
                   padding: const EdgeInsets.fromLTRB(
@@ -52,73 +55,31 @@ class _MatchTabletLayout extends StatelessWidget {
                     AppSpacing.md,
                     AppSpacing.sm,
                   ),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      SizedBox(
-                        width: _commentaryWidth,
-                        child: Panel(
-                          title: l.matchTabTimeline,
-                          expand: true,
-                          padding: EdgeInsets.zero,
-                          child: timeline,
-                        ),
-                      ),
-                      const SizedBox(width: AppSpacing.md - 4),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: [
-                            Expanded(
-                              child: Panel(
-                                title: l.matchYourXi,
-                                expand: true,
-                                padding: const EdgeInsets.all(AppSpacing.sm),
-                                child: pitch,
-                              ),
-                            ),
-                            if (momentum != null) ...[
-                              const SizedBox(height: AppSpacing.sm),
-                              // No panel header: the bar names itself.
-                              PanelBox(child: momentum!),
-                            ],
-                          ],
-                        ),
-                      ),
-                      const SizedBox(width: AppSpacing.md - 4),
-                      SizedBox(
-                        width: _sideWidth,
-                        child: PanelBox(
-                          child: DefaultTabController(
-                            length: 2,
-                            // Recreated at the whistle, like the phone's.
-                            key: ValueKey(ft),
-                            child: Column(
-                              children: [
-                                Material(
-                                  color: AppColors.surfaceContainer,
-                                  child: TabBar(
-                                    labelColor: AppColors.onSurface,
-                                    unselectedLabelColor:
-                                        AppColors.onSurfaceVariant,
-                                    indicatorColor: AppColors.primary,
-                                    tabs: [
-                                      Tab(text: l.matchTabStats),
-                                      Tab(text: l.matchTabLineups),
-                                    ],
-                                  ),
-                                ),
-                                Expanded(
-                                  child: TabBarView(
-                                    children: [stats, lineups],
-                                  ),
-                                ),
-                              ],
+                  child: LayoutBuilder(
+                    builder: (context, c) {
+                      final side = (c.maxWidth * _sideShare).clamp(
+                        _sideMin,
+                        _sideMax,
+                      );
+                      return Row(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          SizedBox(
+                            width: side,
+                            child: Panel(
+                              title: l.matchTabStats,
+                              expand: true,
+                              padding: EdgeInsets.zero,
+                              child: stats,
                             ),
                           ),
-                        ),
-                      ),
-                    ],
+                          const SizedBox(width: _gap),
+                          Expanded(child: _centre(l)),
+                          const SizedBox(width: _gap),
+                          SizedBox(width: side, child: _lineupsColumn(l)),
+                        ],
+                      );
+                    },
                   ),
                 ),
               ),
@@ -129,4 +90,65 @@ class _MatchTabletLayout extends StatelessWidget {
       ),
     );
   }
+
+  /// The momentum over the score, then the shootout if there is one, then
+  /// the commentary filling the rest.
+  Widget _centre(AppLocalizations l) => Column(
+    crossAxisAlignment: CrossAxisAlignment.stretch,
+    children: [
+      if (momentum != null) ...[
+        // No panel header: the bar names itself.
+        PanelBox(child: momentum!),
+        const SizedBox(height: AppSpacing.sm),
+      ],
+      scoreboard,
+      ?shootout,
+      const SizedBox(height: AppSpacing.sm),
+      Expanded(
+        child: Panel(
+          title: l.matchTabTimeline,
+          expand: true,
+          padding: EdgeInsets.zero,
+          child: timeline,
+        ),
+      ),
+    ],
+  );
+
+  /// Both line-ups, with the manager's own shape on the pitch a tab away
+  /// (a tap on it opens the tactics, as the bar's Tactics button does).
+  Widget _lineupsColumn(AppLocalizations l) => PanelBox(
+    child: DefaultTabController(
+      length: 2,
+      // Recreated at the whistle, like the phone's.
+      key: ValueKey(ft),
+      child: Column(
+        children: [
+          Material(
+            color: AppColors.surfaceContainer,
+            child: TabBar(
+              labelColor: AppColors.onSurface,
+              unselectedLabelColor: AppColors.onSurfaceVariant,
+              indicatorColor: AppColors.primary,
+              tabs: [
+                Tab(text: l.matchTabLineups),
+                Tab(text: l.matchYourXi),
+              ],
+            ),
+          ),
+          Expanded(
+            child: TabBarView(
+              children: [
+                lineups,
+                Padding(
+                  padding: const EdgeInsets.all(AppSpacing.sm),
+                  child: pitch,
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    ),
+  );
 }

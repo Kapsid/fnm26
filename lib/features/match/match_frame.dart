@@ -68,6 +68,7 @@ class MatchScoreboard extends StatelessWidget {
     required this.awayScore,
     required this.clock,
     required this.live,
+    this.wholeNames = false,
   });
 
   final String homeCode;
@@ -79,10 +80,20 @@ class MatchScoreboard extends StatelessWidget {
   final String clock;
   final bool live;
 
+  /// The tablet's scoreboard, set in the match's centre column: no margin of
+  /// its own (the column has one), the two sides given more of the row than
+  /// the scoreline, and each name written out WHOLE on up to three lines,
+  /// scaled down before it is ever cut or swapped for its code.
+  final bool wholeNames;
+
   @override
   Widget build(BuildContext context) {
+    final sideFlex = wholeNames ? 3 : 1;
+    final scoreFlex = wholeNames ? 2 : 1;
     return Padding(
-      padding: const EdgeInsets.all(AppSpacing.marginMobile),
+      padding: wholeNames
+          ? EdgeInsets.zero
+          : const EdgeInsets.all(AppSpacing.marginMobile),
       child: AppCard(
         child: Column(
           children: [
@@ -146,7 +157,12 @@ class MatchScoreboard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Expanded(
-                  child: _Side(code: homeCode, label: homeName),
+                  flex: sideFlex,
+                  child: _Side(
+                    code: homeCode,
+                    label: homeName,
+                    other: wholeNames ? awayName : null,
+                  ),
                 ),
                 // The scoreline still shrinks rather than shove the two sides
                 // out of the card: a long name next to a 4:3 used to run the
@@ -161,6 +177,7 @@ class MatchScoreboard extends StatelessWidget {
                 // Each number now fills a half of its own, pinned against the
                 // colon, and scales down inside that half if it must.
                 Expanded(
+                  flex: scoreFlex,
                   child: Padding(
                     padding: const EdgeInsets.symmetric(
                       horizontal: AppSpacing.sm,
@@ -185,7 +202,12 @@ class MatchScoreboard extends StatelessWidget {
                   ),
                 ),
                 Expanded(
-                  child: _Side(code: awayCode, label: awayName),
+                  flex: sideFlex,
+                  child: _Side(
+                    code: awayCode,
+                    label: awayName,
+                    other: wholeNames ? homeName : null,
+                  ),
                 ),
               ],
             ),
@@ -450,28 +472,94 @@ class _ScoreFigure extends StatelessWidget {
 
 class _Side extends StatelessWidget {
   // No team rating here: the pre-match screen shows it, and that is enough.
-  const _Side({required this.code, required this.label});
+  const _Side({required this.code, required this.label, this.other});
   final String code;
   final String label;
 
+  /// The name on the other side, when the names are written whole (see
+  /// [MatchScoreboard.wholeNames]): both are set at the size the longer of
+  /// the two needs, so they never read out of step.
+  final String? other;
+
   @override
   Widget build(BuildContext context) {
+    final other = this.other;
     return Column(
       children: [
         FlagDisc(code, size: 56),
         const SizedBox(height: AppSpacing.xs),
-        // A name too long for its third is written as its code, at the same
-        // size, rather than cut off with an ellipsis or shrunk out of step
-        // with the name on the other side.
-        WholeText(
-          label,
-          maxLines: 1,
-          textAlign: TextAlign.center,
-          shortText: code,
-          shrinkBeforeShortening: 1,
-          style: AppTypography.titleMedium,
-        ),
+        if (other != null)
+          _WholeName(label, other: other, style: AppTypography.titleMedium)
+        else
+          // A name too long for its third is written as its code, at the same
+          // size, rather than cut off with an ellipsis or shrunk out of step
+          // with the name on the other side.
+          WholeText(
+            label,
+            maxLines: 1,
+            textAlign: TextAlign.center,
+            shortText: code,
+            shrinkBeforeShortening: 1,
+            style: AppTypography.titleMedium,
+          ),
       ],
     );
   }
+}
+
+/// A nation's name, whole: wrapped at its spaces onto up to [maxLines] lines,
+/// and only if it still will not fit (or one word is wider than the box) set
+/// a step smaller. Never ellipsised, never broken inside a word, never
+/// swapped for its code. The size is the one that fits BOTH [text] and
+/// [other] in the same width, so the two sides match.
+class _WholeName extends StatelessWidget {
+  const _WholeName(this.text, {required this.other, required this.style});
+
+  final String text;
+  final String other;
+  final TextStyle style;
+
+  static const int maxLines = 3;
+  static const double _minScale = 0.6;
+
+  @override
+  Widget build(BuildContext context) => LayoutBuilder(
+    builder: (context, constraints) {
+      final width = constraints.maxWidth;
+      final dir = Directionality.of(context);
+      final scaler = MediaQuery.textScalerOf(context);
+      final base = style.fontSize ?? 16;
+      bool fits(String s, TextStyle sized) {
+        final wrapped = TextPainter(
+          text: TextSpan(text: s, style: sized),
+          textDirection: dir,
+          textScaler: scaler,
+          maxLines: maxLines,
+        )..layout(maxWidth: width);
+        if (wrapped.didExceedMaxLines) return false;
+        // A word wider than the box would be broken inside itself.
+        return s.split(' ').every((w) {
+          final one = TextPainter(
+            text: TextSpan(text: w, style: sized),
+            textDirection: dir,
+            textScaler: scaler,
+          )..layout();
+          return one.width <= width;
+        });
+      }
+
+      var scale = 1.0;
+      while (width.isFinite && scale > _minScale) {
+        final sized = style.copyWith(fontSize: base * scale);
+        if (fits(text, sized) && fits(other, sized)) break;
+        scale -= 0.05;
+      }
+      return Text(
+        text,
+        textAlign: TextAlign.center,
+        maxLines: maxLines,
+        style: style.copyWith(fontSize: base * scale),
+      );
+    },
+  );
 }
