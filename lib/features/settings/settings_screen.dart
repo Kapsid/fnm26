@@ -476,6 +476,8 @@ class _BackupCardState extends ConsumerState<_BackupCard> {
   Future<void> _restore() async {
     if (_busy || _asking) return;
     final l = AppLocalizations.of(context);
+    // Read before the first await: `ref` is not to be touched after one.
+    final backup = ref.read(saveBackupServiceProvider);
     _asking = true;
     final String? path;
     try {
@@ -486,12 +488,16 @@ class _BackupCardState extends ConsumerState<_BackupCard> {
     if (path == null || !mounted) return;
 
     setState(() => _busy = true);
-    final refusal = await ref.read(saveBackupServiceProvider).restore(path);
-    // On success the app has been torn down and rebuilt, so this State is
-    // gone; only a refusal has anyone left to tell.
-    if (refusal != null && mounted) {
-      setState(() => _busy = false);
-      _say(BackupRestorePrompt.reason(l, refusal));
+    try {
+      final refusal = await backup.restore(path);
+      // On success the app has been torn down and rebuilt, so this State is
+      // gone; only a refusal has anyone left to tell.
+      if (refusal != null && mounted) {
+        _say(BackupRestorePrompt.reason(l, refusal));
+      }
+    } finally {
+      // A refusal, or a restore that threw, gives the buttons back.
+      if (mounted) setState(() => _busy = false);
     }
   }
 

@@ -33,16 +33,28 @@ class _FakeBackup extends SaveBackupService {
   /// When set, an export is held until it completes.
   Future<void>? exportGate;
 
+  /// When set, the next export (or restore) throws and clears the flag.
+  bool exportThrows = false;
+  bool restoreThrows = false;
+
   @override
   Future<File> export({DateTime? at}) async {
     exports++;
     await exportGate;
+    if (exportThrows) {
+      exportThrows = false;
+      throw const FileSystemException('disk full');
+    }
     return File('fnm-test-backup.fnmbackup');
   }
 
   @override
   Future<BackupRejection?> restore(String path) async {
     restored.add(path);
+    if (restoreThrows) {
+      restoreThrows = false;
+      throw const FileSystemException('restore failed');
+    }
     return BackupRejection.notAFnmSave;
   }
 }
@@ -116,8 +128,12 @@ List<MethodCall> _mockShare(WidgetTester tester) {
 }
 
 /// Records every file-picker call, answering with one backup file once
-/// [gate] completes.
-List<MethodCall> _mockPicker(WidgetTester tester, Future<void> gate) {
+/// [gate] completes, or with nothing (the picker cancelled) when [cancel].
+List<MethodCall> _mockPicker(
+  WidgetTester tester,
+  Future<void> gate, {
+  bool cancel = false,
+}) {
   const channel = MethodChannel('miguelruivo.flutter.plugins.filepicker');
   final calls = <MethodCall>[];
   tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(channel, (
@@ -125,6 +141,7 @@ List<MethodCall> _mockPicker(WidgetTester tester, Future<void> gate) {
   ) async {
     calls.add(call);
     await gate;
+    if (cancel) return null;
     return [
       {'name': 'old.fnmbackup', 'path': '/picked/old.fnmbackup', 'size': 0},
     ];
@@ -136,6 +153,31 @@ List<MethodCall> _mockPicker(WidgetTester tester, Future<void> gate) {
     ),
   );
   return calls;
+}
+
+/// Whether the backup card's two buttons take taps.
+void _expectButtonsLive(WidgetTester tester) {
+  expect(
+    tester
+        .widget<PrimaryButton>(
+          find.widgetWithText(PrimaryButton, enL.backupExport),
+        )
+        .onPressed,
+    isNotNull,
+    reason: 'export is live',
+  );
+  expect(
+    tester
+        .widget<OutlinedButton>(
+          find.ancestor(
+            of: find.text(enL.backupRestore),
+            matching: find.byType(OutlinedButton),
+          ),
+        )
+        .onPressed,
+    isNotNull,
+    reason: 'restore is live',
+  );
 }
 
 void main() {
@@ -303,6 +345,91 @@ void main() {
       find.ancestor(of: restore, matching: find.byType(OutlinedButton)),
     );
     expect(button.onPressed, isNotNull);
+    await tester.pumpWidget(const SizedBox());
+  });
+
+  testWidgets('a cancelled picker restores nothing and leaves the buttons '
+      'live', (tester) async {
+    final save = await _open(tester, kTabletSize);
+    final picks = _mockPicker(tester, Future<void>.value(), cancel: true);
+    final backup =
+        save.container.read(saveBackupServiceProvider) as _FakeBackup;
+    expect(backup.restored, isEmpty);
+    expect(picks, isEmpty);
+    await tester.tap(find.text(enL.backupRestore));
+    await settle(tester);
+    expect(picks, hasLength(1));
+    expect(find.text(enL.backupRestoreWarnTitle), findsNothing);
+    expect(backup.restored, isEmpty);
+    _expectButtonsLive(tester);
+    // Not still "asking": a second restore opens the picker again.
+    await tester.tap(find.text(enL.backupRestore));
+    await settle(tester);
+    expect(picks, hasLength(2));
+    await tester.pumpWidget(const SizedBox());
+  });
+
+  testWidgets('a declined restore restores nothing', (tester) async {
+    final save = await _open(tester, kTabletSize);
+    _mockPicker(tester, Future<void>.value());
+    final backup =
+        save.container.read(saveBackupServiceProvider) as _FakeBackup;
+    expect(backup.restored, isEmpty);
+    await tester.tap(find.text(enL.backupRestore));
+    await settle(tester);
+    expect(find.text(enL.backupRestoreWarnTitle), findsOneWidget);
+    await tester.tap(find.text(enL.backupCancel));
+    await settle(tester);
+    expect(find.text(enL.backupRestoreWarnTitle), findsNothing);
+    expect(backup.restored, isEmpty);
+    _expectButtonsLive(tester);
+    await tester.pumpWidget(const SizedBox());
+  });
+
+  testWidgets('an export that throws says so, and a retry exports once', (
+    tester,
+  ) async {
+    final save = await _open(tester, kTabletSize);
+    final calls = _mockShare(tester);
+    // Armed after the save is seeded.
+    final backup = save.container.read(saveBackupServiceProvider) as _FakeBackup
+      ..exportThrows = true;
+    expect(backup.exports, 0);
+    final export = find.widgetWithText(PrimaryButton, enL.backupExport);
+    await tester.tap(export);
+    await settle(tester);
+    expect(backup.exports, 1);
+    expect(calls, isEmpty, reason: 'nothing to share');
+    expect(find.text(enL.backupFailed), findsOneWidget);
+    _expectButtonsLive(tester);
+    await tester.tap(export);
+    await settle(tester);
+    expect(backup.exports, 2, reason: 'the retry exported once');
+    expect(calls, hasLength(1));
+    await tester.pumpWidget(const SizedBox());
+  });
+
+  testWidgets('a restore that throws gives the buttons back', (tester) async {
+    final save = await _open(tester, kTabletSize);
+    _mockPicker(tester, Future<void>.value());
+    final backup = save.container.read(saveBackupServiceProvider) as _FakeBackup
+      ..restoreThrows = true;
+    expect(backup.restored, isEmpty);
+    // The failure escapes `_restore` as it would on a device (to the zone's
+    // handler, which logs it); caught here so it does not fail the test. The
+    // zone is the one `_restore` starts in: its later steps run there.
+    final errors = <Object>[];
+    await runZonedGuarded(
+      () => tester.tap(find.text(enL.backupRestore)),
+      (e, _) => errors.add(e),
+    );
+    await settle(tester);
+    expect(find.text(enL.backupRestoreWarnTitle), findsOneWidget);
+    await tester.tap(find.text(enL.backupRestoreConfirm));
+    await settle(tester);
+    expect(errors, [isA<FileSystemException>()]);
+    expect(backup.restored, ['/picked/old.fnmbackup']);
+    _expectButtonsLive(tester);
     await tester.pumpWidget(const SizedBox());
   });
 
