@@ -75,15 +75,19 @@ void main() {
         findsOneWidget,
       );
     }
-    // The manager's own shape is a tab away, beside the line-ups.
-    expect(find.byType(TacticsPitch), findsNothing);
-    await tester.tap(find.text(enL.matchYourXi));
-    await tester.pumpAndSettle();
+    // The manager's own shape is what the column opens on, with both
+    // line-ups a tab away.
     expect(find.byType(TacticsPitch), findsOneWidget);
     expect(
       tester.getCenter(find.byType(TacticsPitch)).dx,
       greaterThan(score.right),
     );
+    await tester.tap(find.text(enL.matchTabLineups));
+    await tester.pumpAndSettle();
+    expect(find.byType(TacticsPitch), findsNothing);
+    await tester.tap(find.text(enL.matchYourXi));
+    await tester.pumpAndSettle();
+    expect(find.byType(TacticsPitch), findsOneWidget);
     await tester.pumpWidget(const SizedBox());
   });
 
