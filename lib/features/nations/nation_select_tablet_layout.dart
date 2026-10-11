@@ -328,7 +328,11 @@ class _BarModeButton extends StatelessWidget {
         label,
         maxLines: 1,
         overflow: TextOverflow.ellipsis,
-        style: AppTypography.labelSmall,
+        // The mockup sets these in the sans, not the mono read-out face.
+        style: AppTypography.bodySmall.copyWith(
+          fontSize: 12,
+          fontWeight: FontWeight.w600,
+        ),
       ),
       style: OutlinedButton.styleFrom(
         foregroundColor: AppColors.primary,
@@ -427,7 +431,10 @@ class _ConfederationChip extends StatelessWidget {
             children: [
               Text(
                 label,
-                style: AppTypography.labelSmall.copyWith(
+                style: AppTypography.bodySmall.copyWith(
+                  fontSize: 11,
+                  fontWeight: FontWeight.w600,
+                  letterSpacing: 1.1,
                   color: active
                       ? AppColors.onSurface
                       : AppColors.onSurfaceVariant,
@@ -643,7 +650,10 @@ class _StarLine extends StatelessWidget {
           : TextSpan(text: full),
       maxLines: 1,
       overflow: TextOverflow.ellipsis,
-      style: AppTypography.labelSmall.copyWith(color: AppColors.outline),
+      style: AppTypography.bodySmall.copyWith(
+        fontSize: 11,
+        color: AppColors.outline,
+      ),
     );
   }
 }
