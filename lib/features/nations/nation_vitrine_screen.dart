@@ -8,8 +8,11 @@ import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/domain/services/nation/nation_identity.dart';
 import 'package:fnm/features/nations/nation_vitrine_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
+import 'package:fnm/shared/tablet/tablet.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
+
+part 'nation_vitrine_tablet_layout.dart';
 
 const _gold = AppColors.medalGold;
 const _silver = AppColors.medalSilver;
@@ -24,11 +27,16 @@ class NationVitrineScreen extends ConsumerWidget {
     super.key,
   });
 
+  static const Key tabletLayoutKey = Key('nationVitrine.tabletLayout');
+
   final int careerId;
   final int nationId;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    if (TabletShellScope.isActive(context)) {
+      return _NationVitrineTabletLayout(careerId: careerId, nationId: nationId);
+    }
     final l = AppLocalizations.of(context);
 
     return Scaffold(
@@ -107,12 +115,12 @@ class NationView extends ConsumerWidget {
       },
     );
   }
-
-  Widget _sectionLabel(String text) => Text(
-    text,
-    style: AppTypography.labelMedium.copyWith(color: AppColors.primary),
-  );
 }
+
+Widget _sectionLabel(String text) => Text(
+  text,
+  style: AppTypography.labelMedium.copyWith(color: AppColors.primary),
+);
 
 class _Header extends StatelessWidget {
   const _Header(this.v);
