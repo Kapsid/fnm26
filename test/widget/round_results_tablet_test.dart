@@ -108,4 +108,37 @@ void main() {
       expect(find.text(enL.resultsContinue), findsOneWidget);
     });
   }
+
+  // A nation the view cannot name reads as unknown, never as a dash.
+  testWidgets('a nation missing from the view is named Unknown', (
+    tester,
+  ) async {
+    tester.view.physicalSize = kTabletSize;
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+    final v = fourGroupsView();
+    final view = (
+      results: v.results,
+      nations: {...v.nations}..remove(4),
+      playerNationId: v.playerNationId,
+      directCount: v.directCount,
+      contentionPos: v.contentionPos,
+      relegateCount: v.relegateCount,
+      noRelegationGroups: v.noRelegationGroups,
+    );
+    await tester.pumpApp(
+      const TabletShellScope(child: RoundResultsScreen(careerId: 1)),
+      overrides: [
+        roundResultsViewProvider(1).overrideWith((ref) async => view),
+        otherFriendliesProvider(1).overrideWith((ref) async => const []),
+      ],
+    );
+    await tester.pumpAndSettle();
+    expect(tester.takeException(), isNull);
+    expect(find.byKey(RoundResultsScreen.tabletLayoutKey), findsOneWidget);
+    // Group A's table names its other three and calls the fourth unknown.
+    expect(find.text('Nation 3'), findsWidgets);
+    expect(find.text(enL.hubUnknown), findsOneWidget);
+    expect(find.text('—'), findsNothing);
+  });
 }

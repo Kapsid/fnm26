@@ -66,7 +66,7 @@ class _RoundResultsTabletLayout extends ConsumerWidget {
         results != null &&
         (results.groups.isNotEmpty || results.knockoutFixtures.isNotEmpty);
     String code(int id) => view.nations[id]?.code ?? '??';
-    String name(int id) => view.nations[id]?.name ?? '—';
+    String name(int id) => view.nations[id]?.name ?? l.hubUnknown;
     if (results == null || !hasContent) {
       // A friendly window: the other nations' friendlies, if any.
       if (friendlies.isEmpty) return const SizedBox.shrink();
