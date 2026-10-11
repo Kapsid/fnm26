@@ -40,6 +40,9 @@ class _NewGameScreenState extends ConsumerState<NewGameScreen> {
   }
 
   Future<void> _start() async {
+    // The button is disabled while a save is made, but the field's keyboard
+    // Done also calls this: without the guard it would make a second save.
+    if (_creating) return;
     setState(() => _creating = true);
     // Taken before the await: a resize across 1000 px rebuilds this page in
     // the other layout meanwhile, and a manager who has gone elsewhere (a

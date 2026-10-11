@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -519,4 +520,30 @@ Future<void> stopPlayClock(WidgetTester tester, SeededSave save) async {
     await save.container.read(playTimeTrackerProvider).stop();
     await save.container.read(savesProvider.future);
   });
+}
+
+/// Ends a test whose write invalidated `savesProvider` while the manager was
+/// somewhere that does not watch it (a page pushed over the screen, or the
+/// screen itself), so nothing rebuilt it. Use it instead of [stopPlayClock]
+/// when no hub was opened (no play clock runs) and the write ran in the
+/// test's fake zone: [stopPlayClock] awaits the list from `runAsync`, and a
+/// list being rebuilt in the fake zone completes only while frames are
+/// pumped, so it would wait for ever. This reads the list in the test's zone
+/// and pumps until it is built, so riverpod 2.6.1 does not complete its
+/// future a second time at teardown (Stage 4 adjustments).
+Future<void> rebuildSavesInFakeZone(
+  WidgetTester tester,
+  SeededSave save,
+) async {
+  var rebuilt = false;
+  unawaited(
+    save.container.read(savesProvider.future).then((_) => rebuilt = true),
+  );
+  for (var i = 0; i < 400 && !rebuilt; i++) {
+    await tester.runAsync(
+      () => Future<void>.delayed(const Duration(milliseconds: 30)),
+    );
+    await tester.pump();
+  }
+  expect(rebuilt, isTrue, reason: 'the saves list was rebuilt');
 }

@@ -45,10 +45,11 @@ Future<SeededSave> _open(
   WidgetTester tester,
   Size size, {
   bool gated = false,
+  FormFactor formFactor = FormFactor.tablet,
 }) async {
   final save = await seedSave(
     tester,
-    formFactor: FormFactor.tablet,
+    formFactor: formFactor,
     overrides: [
       if (gated) careerServiceProvider.overrideWith(_GatedCareers.new),
     ],
@@ -77,6 +78,21 @@ Finder get _nameField => find.descendant(
   of: find.byKey(NewGameScreen.tabletLayoutKey),
   matching: find.byType(TextField),
 );
+
+/// Lets a save held at the gate through and pumps until the button's spinner
+/// has gone, offstage ones too (under a pushed page `settle` does not see it).
+Future<void> _release(WidgetTester tester, _GatedCareers careers) async {
+  careers.gate!.complete();
+  final spinner = find.byType(CircularProgressIndicator, skipOffstage: false);
+  for (var i = 0; i < 400 && spinner.evaluate().isNotEmpty; i++) {
+    await tester.runAsync(
+      () => Future<void>.delayed(const Duration(milliseconds: 30)),
+    );
+    await tester.pump();
+  }
+  expect(spinner, findsNothing, reason: 'the save finished being made');
+  await settle(tester);
+}
 
 void main() {
   setUp(() => EditableText.debugDeterministicCursor = true);
@@ -161,41 +177,102 @@ void main() {
     // through `routeInformationProvider`.
     final router = save.container.read(routerProvider);
     expect(router.state.uri.path, Routes.settings);
-    careers.gate!.complete();
     // The save is made in the test's fake zone, so it only moves while frames
     // are pumped. Its spinner is under Settings, offstage, where `settle`
-    // does not look: pump on until that spinner has gone.
-    final spinner = find.byType(
-      CircularProgressIndicator,
-      skipOffstage: false,
-    );
-    for (var i = 0; i < 400 && spinner.evaluate().isNotEmpty; i++) {
-      await tester.runAsync(
-        () => Future<void>.delayed(const Duration(milliseconds: 30)),
-      );
-      await tester.pump();
-    }
-    expect(spinner, findsNothing, reason: 'the save finished being made');
-    await settle(tester);
+    // does not look: `_release` pumps on until that spinner has gone.
+    await _release(tester, careers);
     expect(router.state.uri.path, Routes.settings);
     expect(await _careers(tester, save), hasLength(2), reason: 'still made');
-    // create() invalidated the saves list. Riverpod 2.6.1 throws "Future
-    // already completed" at dispose for an invalidated FutureProvider never
-    // rebuilt, so it is rebuilt here, pumped in the test's zone. Not
-    // `stopPlayClock`: that awaits the list from `runAsync`, and a list
-    // rebuilt in the test's zone only completes while frames are pumped, so
-    // it would wait for ever. No hub was opened, so no play clock runs.
-    var rebuilt = false;
-    unawaited(
-      save.container.read(savesProvider.future).then((_) => rebuilt = true),
-    );
-    for (var i = 0; i < 400 && !rebuilt; i++) {
-      await tester.runAsync(
-        () => Future<void>.delayed(const Duration(milliseconds: 30)),
+    // create() invalidated the saves list while Settings was on show; no hub
+    // was opened, and the write ran in the test's zone.
+    await rebuildSavesInFakeZone(tester, save);
+    await tester.pumpWidget(const SizedBox());
+  });
+
+  // Keyboard Done while the save is being made must not make a second one:
+  // both the button and the field's Done call `_start`.
+  for (final (label, formFactor, size) in [
+    ('tablet', FormFactor.tablet, kTabletSize),
+    ('phone', FormFactor.phone, kPhoneSize),
+  ]) {
+    testWidgets('Done after Start makes one save, $label', (tester) async {
+      final save = await _open(
+        tester,
+        size,
+        gated: true,
+        formFactor: formFactor,
       );
+      final careers =
+          save.container.read(careerServiceProvider) as _GatedCareers
+            ..gate = Completer<void>();
+      expect(
+        [for (final c in await _careers(tester, save)) c.id],
+        [
+          save.careerId,
+        ],
+      );
+      await tester.enterText(find.byType(TextField), 'Zola');
+      await tester.tap(find.text(enL.careerStartCareer));
       await tester.pump();
-    }
-    expect(rebuilt, isTrue);
+      await tester.testTextInput.receiveAction(TextInputAction.done);
+      await tester.pump();
+      await _release(tester, careers);
+      final after = await _careers(tester, save);
+      expect(after, hasLength(2), reason: 'exactly one new save');
+      final made = after.firstWhere((c) => c.id != save.careerId);
+      expect(_uri(save).path, Routes.hub);
+      expect(_uri(save).queryParameters['careerId'], '${made.id}');
+      // The hub opened: it started the play clock and rebuilt the list.
+      await stopPlayClock(tester, save);
+      await tester.pumpWidget(const SizedBox());
+    });
+  }
+
+  testWidgets('a resize while the save is made still opens its hub', (
+    tester,
+  ) async {
+    final save = await _open(tester, kTabletSize, gated: true);
+    final careers = save.container.read(careerServiceProvider) as _GatedCareers
+      ..gate = Completer<void>();
+    expect(await _careers(tester, save), hasLength(1));
+    await tester.enterText(_nameField, 'Zola');
+    await tester.tap(find.byKey(NewGameScreen.startKey));
+    await tester.pump();
+    // Not `settle` while the gate is shut: the spinner is on purpose.
+    tester.view.physicalSize = const Size(900, 810);
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 300));
+    expect(find.byKey(NewGameScreen.tabletLayoutKey), findsNothing);
+    tester.view.physicalSize = kTabletSize;
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 300));
+    expect(find.byKey(NewGameScreen.tabletLayoutKey), findsOneWidget);
+    await _release(tester, careers);
+    final after = await _careers(tester, save);
+    expect(after, hasLength(2));
+    final made = after.firstWhere((c) => c.id != save.careerId);
+    expect(made.managerName, 'Zola');
+    expect(_uri(save).path, Routes.hub);
+    expect(_uri(save).queryParameters['careerId'], '${made.id}');
+    await stopPlayClock(tester, save);
+    await tester.pumpWidget(const SizedBox());
+  });
+
+  testWidgets('the keyboard up on the smallest tablet leaves Start reachable', (
+    tester,
+  ) async {
+    const size = Size(1024, 768);
+    await _open(tester, size);
+    tester.view.viewInsets = const FakeViewPadding(bottom: 300);
+    await settle(tester);
+    expect(tester.takeException(), isNull);
+    expect(find.byKey(NewGameScreen.tabletLayoutKey), findsOneWidget);
+    await tester.ensureVisible(find.byKey(NewGameScreen.startKey));
+    await tester.pump();
+    expect(tester.takeException(), isNull);
+    final start = tester.getRect(find.byKey(NewGameScreen.startKey));
+    expect(start.bottom, lessThanOrEqualTo(size.height - 300));
+    expect(find.byKey(NewGameScreen.startKey).hitTestable(), findsOneWidget);
     await tester.pumpWidget(const SizedBox());
   });
 }
