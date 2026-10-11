@@ -21,6 +21,7 @@ class LeaderRow extends StatelessWidget {
     this.flagCode,
     this.subtitle,
     this.trailing,
+    this.reserveTrailing = false,
     this.onTap,
     this.highlighted = false,
     super.key,
@@ -43,6 +44,12 @@ class LeaderRow extends StatelessWidget {
 
   /// An extra mark after the value, such as the still-active dot.
   final Widget? trailing;
+
+  /// Keeps a fixed slot for [trailing] even on a row that has none, so every
+  /// tally in a chart where only some rows carry a mark (the "active" badge)
+  /// ends on one line and the mark starts on another, clear of the number.
+  /// A chart passes `true` on every row once any row has a mark.
+  final bool reserveTrailing;
 
   final VoidCallback? onTap;
 
@@ -117,7 +124,21 @@ class LeaderRow extends StatelessWidget {
             softWrap: false,
             style: AppTypography.labelMedium.copyWith(color: AppColors.primary),
           ),
-          if (trailing case final mark?) ...[
+          if (reserveTrailing) ...[
+            const SizedBox(width: AppSpacing.md),
+            SizedBox(
+              width: leaderTrailingWidth,
+              child: trailing == null
+                  ? null
+                  // Shrinks rather than cuts where the word runs long
+                  // ("EN ACTIVITÉ").
+                  : FittedBox(
+                      fit: BoxFit.scaleDown,
+                      alignment: Alignment.centerLeft,
+                      child: trailing,
+                    ),
+            ),
+          ] else if (trailing case final mark?) ...[
             const SizedBox(width: AppSpacing.xs),
             mark,
           ],
@@ -136,3 +157,7 @@ class LeaderRow extends StatelessWidget {
     return onTap == null ? marked : InkWell(onTap: onTap, child: marked);
   }
 }
+
+/// The width a [LeaderRow] keeps for its mark when [LeaderRow.reserveTrailing]
+/// is set: room for the "active" badge in English, smaller in longer languages.
+const double leaderTrailingWidth = 48;

@@ -525,6 +525,7 @@ class _Leaderboard extends StatelessWidget {
                       : '${leaders[i].value} $unit',
                   // Still playing: the badge every all-time chart uses.
                   trailing: leaders[i].active ? const ActiveBadge() : null,
+                  reserveTrailing: leaders.any((r) => r.active),
                   onTap: () => context.push(
                     '${Routes.player}?careerId=$careerId'
                     '&playerId=${leaders[i].playerId}',
