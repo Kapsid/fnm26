@@ -69,27 +69,43 @@ class _TeamStatsTabletLayoutState
                         dense: true,
                       ),
                       const SizedBox(height: AppSpacing.md),
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Expanded(
-                            child: _TeamHeader(
-                              careerId: careerId,
-                              nation: view.nation,
-                            ),
-                          ),
+                      // Side by side only when each card gets 320; a master
+                      // narrower than that (the divider dragged left, a
+                      // smaller window) puts the curve under the header.
+                      LayoutBuilder(
+                        builder: (context, constraints) {
+                          final header = _TeamHeader(
+                            careerId: careerId,
+                            nation: view.nation,
+                          );
                           // One year is not a curve: the card draws nothing
                           // until there are two.
-                          if (history.length > 1) ...[
-                            const SizedBox(width: AppSpacing.md),
-                            Expanded(
-                              child: TeamOverallHistoryCard(
-                                key: const Key('team-overall-history'),
-                                history: history,
-                              ),
-                            ),
-                          ],
-                        ],
+                          final curve = history.length > 1
+                              ? TeamOverallHistoryCard(
+                                  key: const Key('team-overall-history'),
+                                  history: history,
+                                )
+                              : null;
+                          if (curve == null) return header;
+                          if (constraints.maxWidth >= 2 * 320 + AppSpacing.md) {
+                            return Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Expanded(child: header),
+                                const SizedBox(width: AppSpacing.md),
+                                Expanded(child: curve),
+                              ],
+                            );
+                          }
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              header,
+                              const SizedBox(height: AppSpacing.sm),
+                              curve,
+                            ],
+                          );
+                        },
                       ),
                       const SizedBox(height: AppSpacing.md),
                       Expanded(

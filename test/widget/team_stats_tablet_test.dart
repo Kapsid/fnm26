@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/core/layout/form_factor.dart';
 import 'package:fnm/core/routing/app_router.dart';
+import 'package:fnm/core/theme/app_dimens.dart';
+import 'package:fnm/domain/services/stats/career_stats.dart';
 import 'package:fnm/features/shell/detail_pane_host.dart';
 import 'package:fnm/features/shell/tablet_shell.dart';
 import 'package:fnm/features/stats/stats_providers.dart';
@@ -15,11 +18,15 @@ Future<SeededSave> _open(
   WidgetTester tester,
   Size size, {
   bool records = true,
+  bool played = false,
 }) async {
   final save = await seedSave(
     tester,
     formFactor: FormFactor.tablet,
-    overrides: [if (records) fakeTeamStatsOverride()],
+    overrides: [
+      if (records) fakeTeamStatsOverride(),
+      if (played) ..._playedOverrides,
+    ],
   );
   await pumpRoute(
     tester,
@@ -29,6 +36,30 @@ Future<SeededSave> _open(
   );
   return save;
 }
+
+/// A side a few years in: games played, so the header carries its record
+/// line, and three years of strength, so the curve is drawn beside it.
+/// Neither override awaits, so an invalidated, never-rebuilt element cannot
+/// trip riverpod 2.6.1 at teardown.
+final List<Override> _playedOverrides = [
+  careerStatsProvider(kSeededCareerId).overrideWith(
+    (ref) async => const CareerStatsSnapshot(
+      played: 24,
+      wins: 14,
+      draws: 6,
+      losses: 4,
+      goalsFor: 41,
+      goalsAgainst: 19,
+    ),
+  ),
+  teamOverallHistoryProvider(kSeededCareerId).overrideWith(
+    (ref) async => const <TeamOverallPoint>[
+      (year: 2026, overall: 78),
+      (year: 2027, overall: 80),
+      (year: 2028, overall: 82),
+    ],
+  ),
+];
 
 DetailTarget? _pane(WidgetTester tester) =>
     tester.widget<DetailPaneHost>(find.byType(DetailPaneHost)).target;
@@ -56,6 +87,61 @@ void main() {
       await tester.pumpWidget(const SizedBox());
     });
   }
+
+  for (final size in kTabletSizes) {
+    testWidgets('the record line and the curve both fit, $size', (
+      tester,
+    ) async {
+      await _open(tester, size, played: true);
+      expect(tester.takeException(), isNull);
+      expect(find.text(enL.statsPlayed.toUpperCase()), findsOneWidget);
+      final curve = find.byKey(const Key('team-overall-history'));
+      expect(curve, findsOneWidget);
+      // Side by side only when each card gets 320: otherwise stacked.
+      final md = tester.widget<MasterDetail>(find.byType(MasterDetail));
+      final master = tester.getSize(find.byWidget(md.master)).width;
+      final played = tester.getRect(find.text(enL.statsPlayed.toUpperCase()));
+      if (master >= 2 * 320 + AppSpacing.md) {
+        expect(tester.getRect(curve).left, greaterThan(played.right));
+      } else {
+        expect(tester.getRect(curve).top, greaterThanOrEqualTo(played.bottom));
+      }
+      await tester.pumpWidget(const SizedBox());
+    });
+  }
+
+  testWidgets('the master at its narrowest still fits both, 1024x768', (
+    tester,
+  ) async {
+    await _open(tester, const Size(1024, 768), played: true);
+    expect(tester.takeException(), isNull);
+    // Drag the divider far past the minimum: it stops at minFraction.
+    await tester.drag(
+      find.byKey(MasterDetail.dividerKey),
+      const Offset(-1000, 0),
+    );
+    await settle(tester);
+    final md = tester.widget<MasterDetail>(find.byType(MasterDetail));
+    final whole = tester.getSize(find.byType(MasterDetail)).width;
+    final master = tester.getSize(find.byWidget(md.master));
+    expect(
+      master.width,
+      closeTo(whole * md.minFraction, 1),
+      reason: 'the divider sits at its minimum',
+    );
+    expect(tester.takeException(), isNull);
+    expect(find.text(enL.statsPlayed.toUpperCase()), findsOneWidget);
+    expect(find.byKey(const Key('team-overall-history')), findsOneWidget);
+    // Too narrow for two cards side by side: the curve goes under the
+    // header's record line instead of squeezing beside it.
+    expect(
+      tester.getRect(find.byKey(const Key('team-overall-history'))).top,
+      greaterThanOrEqualTo(
+        tester.getRect(find.text(enL.statsPlayed.toUpperCase())).bottom,
+      ),
+    );
+    await tester.pumpWidget(const SizedBox());
+  });
 
   testWidgets('a fresh save says so, as on the phone', (tester) async {
     await _open(tester, kTabletSize, records: false);
