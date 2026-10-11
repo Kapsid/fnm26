@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/core/routing/app_router.dart';
+import 'package:fnm/core/routing/back_navigation.dart';
 import 'package:fnm/core/util/app_date.dart';
 import 'package:fnm/core/util/competition_label.dart';
 import 'package:fnm/core/theme/app_colors.dart';
@@ -169,6 +170,7 @@ class PlayerDetailScreen extends ConsumerWidget {
   static const Key tabletLayoutKey = Key('player.tabletLayout');
   static const Key profileKey = Key('player.profile');
   static const Key recordKey = Key('player.record');
+  static const Key clubKey = Key('player.club');
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -236,20 +238,46 @@ class PlayerView extends ConsumerWidget {
   }
 }
 
-/// The player card in two runs: `profile` (who he is: the headline card,
-/// abilities, traits, club facts, club history, cabinet) and `record` (what
-/// he has done: the career record, recent form, every match). One column
-/// shows them one after the other ([PlayerView]); the tablet's player page
-/// shows them side by side. The sections are the card's own, moved here
-/// unchanged.
-({List<Widget> profile, List<Widget> record}) _playerSections(
+/// The player card in runs: `profile` (who he is: the headline card,
+/// abilities, traits, facts, cabinet), `club` (where he plays: his club and
+/// standing there, and the club history) and `record` (what he has done:
+/// the career record, recent form, every match). One column shows them one
+/// after the other ([PlayerView]); the tablet's player page puts the profile
+/// on the left and the club over the record on the right.
+///
+/// With [splitClub] false (the one column) `club` is empty and the club rows
+/// and history stay inside `profile`, exactly as the phone card has them.
+({List<Widget> profile, List<Widget> club, List<Widget> record})
+_playerSections(
   BuildContext context,
   _PlayerView view,
   Player p,
-  int careerId,
-) {
+  int careerId, {
+  bool splitClub = false,
+}) {
   final l = AppLocalizations.of(context);
   final a = p.attributes;
+
+  final clubFact = _clubFact(p, l.playerClub);
+  // How much football he is actually getting THERE. It used to be a badge on
+  // the call-up row, where it appeared on some players and not others and
+  // read as a warning the game had raised about the man rather than a fact
+  // about his season. Here every player has one, and it sits next to the
+  // club it is about.
+  final clubStanding = _fact(
+    l.playerClubRole,
+    clubStandingLabel(
+      l,
+      ClubForm.standingFor(
+        playerId: p.id,
+        overall: p.overall,
+        age: p.age,
+        saveSeed: view.saveSeed,
+        windowIndex: ClubForm.windowIndexFor(view.asOf),
+      ),
+    ),
+  );
+  final clubHistory = ClubHistoryCard(careerId: careerId, playerId: p.id);
 
   // The four numbers that actually identify a footballer — how old he
   // is, where he plays, how often he's played and what he's produced —
@@ -387,26 +415,7 @@ class PlayerView extends ConsumerWidget {
       AppCard(
         child: Column(
           children: [
-            _clubFact(p, l.playerClub),
-            // How much football he is actually getting THERE. It used
-            // to be a badge on the call-up row, where it appeared on
-            // some players and not others and read as a warning the
-            // game had raised about the man rather than a fact about
-            // his season. Here every player has one, and it sits next
-            // to the club it is about.
-            _fact(
-              l.playerClubRole,
-              clubStandingLabel(
-                l,
-                ClubForm.standingFor(
-                  playerId: p.id,
-                  overall: p.overall,
-                  age: p.age,
-                  saveSeed: view.saveSeed,
-                  windowIndex: ClubForm.windowIndexFor(view.asOf),
-                ),
-              ),
-            ),
+            if (!splitClub) ...[clubFact, clubStanding],
             _fact(l.playerPosition, positionName(l, p.position)),
             _fact(l.playerAge, '${p.age}'),
             // The scouted ceiling for prospects: the same read the
@@ -426,8 +435,14 @@ class PlayerView extends ConsumerWidget {
           ],
         ),
       ),
-      ClubHistoryCard(careerId: careerId, playerId: p.id),
+      if (!splitClub) clubHistory,
       _TrophyCabinet(careerId: careerId, playerId: p.id),
+    ],
+    club: [
+      if (splitClub) ...[
+        AppCard(child: Column(children: [clubFact, clubStanding])),
+        clubHistory,
+      ],
     ],
     record: [
       const SizedBox(height: AppSpacing.md),
