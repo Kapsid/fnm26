@@ -65,7 +65,7 @@ class _QualifyingDrawScreenState extends ConsumerState<QualifyingDrawScreen> {
           onPressed: leave,
         ),
         title: Text(
-          worldCup ? 'WC QUALIFYING DRAW' : 'QUALIFYING DRAW',
+          worldCup ? l.tourContWorldQualifyingDraw : l.tourContQualifyingDraw,
           style: AppTypography.labelMedium.copyWith(color: AppColors.primary),
         ),
         centerTitle: true,

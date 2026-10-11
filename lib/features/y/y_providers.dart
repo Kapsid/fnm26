@@ -1,7 +1,12 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/nation.dart';
+import 'package:fnm/domain/repositories/competition_repository.dart';
 import 'package:fnm/domain/services/competition/rounds.dart';
+import 'package:fnm/domain/services/match/match_engine.dart';
+import 'package:fnm/domain/services/press/expectation.dart';
+import 'package:fnm/domain/services/press/half_time_swing.dart';
+import 'package:fnm/domain/services/press/press.dart';
 import 'package:fnm/domain/services/press/public_mood.dart';
 import 'package:fnm/domain/services/press/y_feed.dart';
 import 'package:fnm/domain/services/press/y_tournaments.dart';
@@ -9,6 +14,8 @@ import 'package:fnm/features/ranking/world_ranking_providers.dart';
 import 'package:fnm/domain/services/achievements/board_satisfaction.dart';
 import 'package:fnm/features/achievements/achievement_providers.dart';
 import 'package:fnm/features/career/career_providers.dart';
+import 'package:fnm/features/press/press_providers.dart';
+import 'package:fnm/features/press/story_providers.dart';
 import 'package:fnm/features/squad/grievance_providers.dart';
 
 /// The manager's played matches, newest first, with both sides' world
@@ -101,12 +108,32 @@ final AutoDisposeFutureProviderFamily<YTimeline, int> yFeedProvider =
       final playerRepo = ref.watch(playerRepositoryProvider);
       final aging = CareerService.agingYears(career);
 
+      // What happened on the pitch, match by match: the sendings-off the
+      // press room can also see. Each belongs to the date it happened on, not
+      // to today, so it is read inside the walk below rather than hung on the
+      // newest result the way an injury is.
+      final incidents = await comp.incidentsByFixture(
+        careerId,
+        career.nationId,
+      );
+
+      // And how each of those results GOT to its scoreline. The fixture row
+      // keeps only the end of the story, so without the goal minutes the feed
+      // cannot tell a comfortable win from a match that was two down at the
+      // break — which is the one afternoon the country talks about for years.
+      final timeline = await comp.goalTimeline(careerId);
+
       // Oldest first, so a streak counts the matches BEFORE it.
       final chronological = judged.reversed.toList();
       final meetings = <String, int>{};
       var wins = 0;
       var losses = 0;
       final contexts = <YContext>[];
+      final incidentPosts = <YPost>[];
+      final standingsSoFar = <ResultStanding>[];
+      // The same run with its dates, so a post dated before the newest result
+      // can be toned by what was known on its own day.
+      final datedStandings = <({DateTime date, ResultStanding standing})>[];
       for (final j in chronological) {
         final won = j.scored > j.conceded;
         final lost = j.scored < j.conceded;
@@ -138,17 +165,75 @@ final AutoDisposeFutureProviderFamily<YTimeline, int> yFeedProvider =
           }
         }
 
+        final match = (
+          opponent: j.opponent,
+          nationRank: j.nationRank,
+          opponentRank: j.opponentRank,
+          scored: j.scored,
+          conceded: j.conceded,
+          date: j.date,
+          key: j.key,
+          competitive: j.competitive,
+        );
+
+        // One of ours walked. The cast reads it through the stance it held on
+        // the day, exactly as it reads a result — see [YFeed.forIncident].
+        final standing = YFeed.standingOf(match);
+        for (final i in incidents[fixtureId] ?? const <MatchIncident>[]) {
+          if (i.type != MatchEventType.redCard) continue;
+          final p = await playerRepo.byId(
+            i.playerId,
+            agingYears: aging,
+            saveSeed: career.rngSeed,
+          );
+          if (p == null) continue;
+          incidentPosts.addAll(
+            YFeed.forIncident(
+              incident: PressSubjectIncident(
+                type: i.type,
+                minute: i.minute,
+                playerId: i.playerId,
+                name: p.name,
+              ),
+              date: j.date,
+              key: 'red:${j.key}:${i.playerId}',
+              nation: nation,
+              seed: career.rngSeed,
+              standing: standing,
+              history: [...standingsSoFar],
+            ),
+          );
+        }
+        // An afternoon the second half turned over, either way. Competitive
+        // only, like the press room's version: a warm-up that swings two goals
+        // is not evidence and the country does not treat it as any.
+        final swing = fixtureId == null || !j.competitive
+            ? null
+            : halfTimeSwingOf(
+                goals: timeline[fixtureId] ?? const [],
+                nationId: career.nationId,
+                scored: j.scored,
+                conceded: j.conceded,
+              );
+        if (swing != null) {
+          incidentPosts.addAll(
+            YFeed.forSwing(
+              swing: swing,
+              opponent: j.opponent,
+              date: j.date,
+              key: 'swing:${j.key}',
+              nation: nation,
+              seed: career.rngSeed,
+              standing: standing,
+              history: [...standingsSoFar],
+            ),
+          );
+        }
+        standingsSoFar.add(standing);
+        datedStandings.add((date: j.date, standing: standing));
+
         contexts.add((
-          match: (
-            opponent: j.opponent,
-            nationRank: j.nationRank,
-            opponentRank: j.opponentRank,
-            scored: j.scored,
-            conceded: j.conceded,
-            date: j.date,
-            key: j.key,
-            competitive: j.competitive,
-          ),
+          match: match,
           scorerName: scorerName,
           scorerGoals: scorerGoals,
           winStreak: wins,
@@ -197,7 +282,7 @@ final AutoDisposeFutureProviderFamily<YTimeline, int> yFeedProvider =
         contexts,
         nation: nation,
         seed: career.rngSeed,
-      );
+      )..addAll(incidentPosts);
       // The one post drawn from a match that has NOT been played. Every other
       // shape on the feed reacts to a result, so the biggest game of a cycle
       // used to arrive in silence and the reaction to it landed before any
@@ -258,6 +343,84 @@ final AutoDisposeFutureProviderFamily<YTimeline, int> yFeedProvider =
             key: g.key,
             nation: nation,
             seed: career.rngSeed,
+          ),
+        );
+      }
+
+      // WHO is in the squad, and who they are playing next. The same two
+      // readings the conference is built on — see [squadStoriesProvider] —
+      // so the room and the country are talking about one week rather than
+      // two. Dated today, like a grievance: a selection is a thing that is
+      // true now, not a thing that happened on an afternoon.
+      final mood = standingsSoFar.isEmpty
+          ? ResultStanding.par
+          : standingsSoFar.last;
+      for (final s in await ref.watch(squadStoriesProvider(careerId).future)) {
+        posts.addAll(
+          YFeed.forPlayer(
+            topic: s.topic,
+            subject: PressSubjectPlayer(
+              playerId: s.playerId,
+              name: s.name,
+              count: s.count,
+            ),
+            date: career.inGameDate,
+            // ':' and never '|': the detail view groups a conversation by the
+            // part before the FIRST pipe.
+            key: '${s.topic.name}:${s.playerId}:${s.count}',
+            nation: nation,
+            seed: career.rngSeed,
+            standing: mood,
+            history: standingsSoFar,
+          ),
+        );
+      }
+      for (final s in await ref.watch(
+        opponentStoriesProvider(careerId).future,
+      )) {
+        final them = nations
+            .where((n) => n.id == s.nationId)
+            .map((n) => n.name)
+            .firstOrNull;
+        if (them == null) continue;
+        posts.addAll(
+          YFeed.forOpponent(
+            topic: s.topic,
+            subject: PressSubjectOpponent(
+              s.nationId,
+              count: s.count,
+              favourable: s.favourable,
+            ),
+            opponent: them,
+            date: career.inGameDate,
+            key: '${s.topic.name}:${s.nationId}:${s.count}',
+            nation: nation,
+            seed: career.rngSeed,
+            standing: mood,
+            history: standingsSoFar,
+          ),
+        );
+      }
+
+      // And what he said on the record, once it has been judged. Dated the
+      // day it was settled, so it sits next to the match that decided it.
+      for (final s in await ref.watch(
+        pressStatementsProvider(careerId).future,
+      )) {
+        // A statement from a previous job is not posted under the new nation.
+        if (s.nationId != career.nationId) continue;
+        final judgedOn = s.judgedOn;
+        if (judgedOn == null) continue;
+        // Toned by the run as it stood the day it was judged, never by today's:
+        // an older post says now what it said then.
+        final then = YFeed.standingsAsOf(datedStandings, judgedOn);
+        posts.addAll(
+          YFeed.forStatement(
+            s: s,
+            nation: nation,
+            seed: career.rngSeed,
+            standing: then.isEmpty ? ResultStanding.par : then.last,
+            history: then,
           ),
         );
       }

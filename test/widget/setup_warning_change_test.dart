@@ -46,6 +46,11 @@ void main() {
         // The stored INTENT: who the manager gave the armband to. Whether he
         // can actually wear it this week is what the strip works out.
         storedCaptainIdProvider(1).overrideWith((ref) async => captainId),
+        // These tests are about a NAMED man who cannot play, so nobody has
+        // waved the takers away. Stated rather than left to the default: the
+        // acknowledgement silences the strip, and a test about the strip
+        // firing must say where it stands on that.
+        setPieceAutoAcceptedProvider(1).overrideWith((ref) async => false),
         setPieceTakersProvider(
           1,
         ).overrideWith((ref) async => (penalty: takerId, deadBall: takerId)),

@@ -6,7 +6,12 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:intl/intl.dart' as intl;
 
 import 'app_localizations_cs.dart';
+import 'app_localizations_de.dart';
 import 'app_localizations_en.dart';
+import 'app_localizations_es.dart';
+import 'app_localizations_fr.dart';
+import 'app_localizations_it.dart';
+import 'app_localizations_pl.dart';
 
 // ignore_for_file: type=lint
 
@@ -96,6 +101,11 @@ abstract class AppLocalizations {
   static const List<Locale> supportedLocales = <Locale>[
     Locale('en'),
     Locale('cs'),
+    Locale('de'),
+    Locale('es'),
+    Locale('fr'),
+    Locale('it'),
+    Locale('pl'),
   ];
 
   /// App-bar title on the pre-match preview screen.
@@ -236,6 +246,24 @@ abstract class AppLocalizations {
   /// **'Shots'**
   String get matchStatShots;
 
+  /// Match stat bar label: goals.
+  ///
+  /// In en, this message translates to:
+  /// **'Goals'**
+  String get matchStatGoals;
+
+  /// Match stat bar label: yellow cards.
+  ///
+  /// In en, this message translates to:
+  /// **'Yellows'**
+  String get matchStatYellowCards;
+
+  /// Match stat bar label: red cards.
+  ///
+  /// In en, this message translates to:
+  /// **'Reds'**
+  String get matchStatRedCards;
+
   /// Label on the live momentum bar.
   ///
   /// In en, this message translates to:
@@ -257,7 +285,7 @@ abstract class AppLocalizations {
   /// Opening-ceremony banner heading with the edition year.
   ///
   /// In en, this message translates to:
-  /// **'WORLD CUP {year}'**
+  /// **'WORLD CHAMPIONSHIP {year}'**
   String ceremonyWorldCupYear(int year);
 
   /// Opening-ceremony tagline.
@@ -284,11 +312,17 @@ abstract class AppLocalizations {
   /// **'HALF TIME'**
   String get matchHalfTime;
 
-  /// Button that resumes play from the interval.
+  /// Button that resumes play from the interval, and the full-time button that leaves the match.
   ///
   /// In en, this message translates to:
   /// **'Continue'**
   String get matchContinue;
+
+  /// The full-time Continue button while the result is being saved.
+  ///
+  /// In en, this message translates to:
+  /// **'Continuing…'**
+  String get matchContinuing;
 
   /// Tactics button on the interval overlay, with subs used.
   ///
@@ -464,6 +498,18 @@ abstract class AppLocalizations {
   /// **'Errors recorded on this device. Nothing is sent anywhere.'**
   String get settingsDiagnosticsBlurb;
 
+  /// Settings row that copies the support email address.
+  ///
+  /// In en, this message translates to:
+  /// **'Contact'**
+  String get settingsContactTitle;
+
+  /// Snackbar shown after the address is copied.
+  ///
+  /// In en, this message translates to:
+  /// **'Address copied.'**
+  String get settingsContactCopied;
+
   /// Placeholder when the error log is empty.
   ///
   /// In en, this message translates to:
@@ -548,17 +594,11 @@ abstract class AppLocalizations {
   /// **'System'**
   String get settingsLanguageSystem;
 
-  /// Language option: English.
+  /// Match preview: opens the list of every past meeting with this opponent. Sentence case on purpose, so it reads as something to tap rather than as a heading.
   ///
   /// In en, this message translates to:
-  /// **'English'**
-  String get settingsLanguageEnglish;
-
-  /// Language option: Czech (in Czech).
-  ///
-  /// In en, this message translates to:
-  /// **'Čeština'**
-  String get settingsLanguageCzech;
+  /// **'All meetings'**
+  String get matchPreviewAllMeetings;
 
   /// App-bar title on the head-to-head meetings list.
   ///
@@ -602,10 +642,10 @@ abstract class AppLocalizations {
   /// **'MOST CAPPED'**
   String get recordsMostCapped;
 
-  /// Leaderboard heading.
+  /// Leaderboard heading: most starts in the World Championship finals. The competition carries that name everywhere the manager can read it, and never the trademarked one.
   ///
   /// In en, this message translates to:
-  /// **'MOST WORLD CUP STARTS'**
+  /// **'MOST WORLD CHAMPIONSHIP STARTS'**
   String get recordsMostWcStarts;
 
   /// Leaderboard heading.
@@ -1304,11 +1344,107 @@ abstract class AppLocalizations {
   /// **'{age}y'**
   String squadAgeShort(int age);
 
-  /// Heading above the substitutes list, with the count.
+  /// Substitution tab: men who would be playing out of position here, with the rating they would play it at.
   ///
   /// In en, this message translates to:
-  /// **'SUBSTITUTES · {count}'**
-  String tacticsSubstitutesCount(int count);
+  /// **'OTHER PLACES'**
+  String get tacticsTabOtherPositions;
+
+  /// Row note under a man who does not naturally play this place.
+  ///
+  /// In en, this message translates to:
+  /// **'Out of position here'**
+  String get tacticsOutOfPositionNote;
+
+  /// Shown when there is nobody out of position left to offer.
+  ///
+  /// In en, this message translates to:
+  /// **'Nobody else to try here.'**
+  String get tacticsNobodyElse;
+
+  /// Shown in the other-places tab before anybody has been chosen to come off.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose who comes off and the rest of the bench appears here, with what they would play this place at.'**
+  String get tacticsPickSomebodyFirst;
+
+  /// Substitution tab label, count shown under it.
+  ///
+  /// In en, this message translates to:
+  /// **'SUITABLE'**
+  String get tacticsTabSuitable;
+
+  /// Substitution tab label, count shown under it.
+  ///
+  /// In en, this message translates to:
+  /// **'ON THE PITCH'**
+  String get tacticsTabOnPitch;
+
+  /// Substitution tab: bench players who naturally suit the place being filled.
+  ///
+  /// In en, this message translates to:
+  /// **'SUITABLE · {count}'**
+  String tacticsSectionSuitable(int count);
+
+  /// Shown when the suitable tab has nobody in it and falls back to the whole bench.
+  ///
+  /// In en, this message translates to:
+  /// **'Nobody on the bench naturally suits this place, so here is everybody.'**
+  String get tacticsNobodySuits;
+
+  /// Heading above the list of players currently in the XI, with how many of the eleven are actually out there.
+  ///
+  /// In en, this message translates to:
+  /// **'ON THE PITCH · {count}/{max}'**
+  String tacticsSectionOnPitch(int count, int max);
+
+  /// Heading above the substitutes who may still be brought on, with the count.
+  ///
+  /// In en, this message translates to:
+  /// **'AVAILABLE · {count}'**
+  String tacticsSectionAvailable(int count);
+
+  /// Marker under a player on the pitch who was in the starting eleven.
+  ///
+  /// In en, this message translates to:
+  /// **'Started'**
+  String get tacticsRowStarted;
+
+  /// Marker under a player on the pitch who came on as a substitute, with the minute.
+  ///
+  /// In en, this message translates to:
+  /// **'On at {minute}\''**
+  String tacticsRowCameOn(int minute);
+
+  /// Marker under a player on the pitch who came on as a substitute, when the minute he came on is not known.
+  ///
+  /// In en, this message translates to:
+  /// **'Came on'**
+  String get tacticsRowSubstitute;
+
+  /// Caption over a player's remaining-energy percentage, so the bare number is not unexplained.
+  ///
+  /// In en, this message translates to:
+  /// **'ENERGY'**
+  String get tacticsEnergyLabel;
+
+  /// Prompt shown once the manager has tapped a player on the pitch to take off.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap a replacement for {name}, or tap him again to cancel.'**
+  String tacticsPickReplacementFor(String name);
+
+  /// Refusal shown when the manager tries to put somebody into the hole a sending-off left.
+  ///
+  /// In en, this message translates to:
+  /// **'A red card cost you this place. It cannot be filled.'**
+  String get tacticsSlotLostToRedCard;
+
+  /// Badge on the empty spot a sent-off player left on the pitch.
+  ///
+  /// In en, this message translates to:
+  /// **'SENT OFF'**
+  String get tacticsSentOffShort;
 
   /// How many substitutions have been used out of the maximum.
   ///
@@ -1316,10 +1452,10 @@ abstract class AppLocalizations {
   /// **'SUBS · {used}/{max}'**
   String tacticsSubsUsed(int used, int max);
 
-  /// Hint above the bench in the in-match editor.
+  /// Hint above the bench in the in-match editor, naming both ways of making a change.
   ///
   /// In en, this message translates to:
-  /// **'Drag a sub onto a player to bring them on.'**
+  /// **'Tap a man on the pitch to take him off, or hold and drag a sub onto him.'**
   String get tacticsDragSubOn;
 
   /// Shown when the bench is empty.
@@ -1496,11 +1632,77 @@ abstract class AppLocalizations {
   /// **'Direct'**
   String get tacticsInstrDirect;
 
-  /// Heading of the player-picker sheet for a given slot's role.
+  /// Heading of the player-picker sheet for a goalkeeper slot. Czech needs its own accusative form, so each position has its own heading.
   ///
   /// In en, this message translates to:
-  /// **'PICK {role}'**
-  String tacticsPickRole(String role);
+  /// **'PICK GOALKEEPER'**
+  String get tacticsPickGoalkeeper;
+
+  /// Heading of the player-picker sheet for a left back slot. Czech needs its own accusative form, so each position has its own heading.
+  ///
+  /// In en, this message translates to:
+  /// **'PICK LEFT BACK'**
+  String get tacticsPickLeftBack;
+
+  /// Heading of the player-picker sheet for a centre back slot. Czech needs its own accusative form, so each position has its own heading.
+  ///
+  /// In en, this message translates to:
+  /// **'PICK CENTRE BACK'**
+  String get tacticsPickCentreBack;
+
+  /// Heading of the player-picker sheet for a right back slot. Czech needs its own accusative form, so each position has its own heading.
+  ///
+  /// In en, this message translates to:
+  /// **'PICK RIGHT BACK'**
+  String get tacticsPickRightBack;
+
+  /// Heading of the player-picker sheet for a defensive mid slot. Czech needs its own accusative form, so each position has its own heading.
+  ///
+  /// In en, this message translates to:
+  /// **'PICK DEFENSIVE MID'**
+  String get tacticsPickDefensiveMid;
+
+  /// Heading of the player-picker sheet for a central mid slot. Czech needs its own accusative form, so each position has its own heading.
+  ///
+  /// In en, this message translates to:
+  /// **'PICK CENTRAL MID'**
+  String get tacticsPickCentralMid;
+
+  /// Heading of the player-picker sheet for a attacking mid slot. Czech needs its own accusative form, so each position has its own heading.
+  ///
+  /// In en, this message translates to:
+  /// **'PICK ATTACKING MID'**
+  String get tacticsPickAttackingMid;
+
+  /// Heading of the player-picker sheet for a left mid slot. Czech needs its own accusative form, so each position has its own heading.
+  ///
+  /// In en, this message translates to:
+  /// **'PICK LEFT MID'**
+  String get tacticsPickLeftMid;
+
+  /// Heading of the player-picker sheet for a right mid slot. Czech needs its own accusative form, so each position has its own heading.
+  ///
+  /// In en, this message translates to:
+  /// **'PICK RIGHT MID'**
+  String get tacticsPickRightMid;
+
+  /// Heading of the player-picker sheet for a left wing slot. Czech needs its own accusative form, so each position has its own heading.
+  ///
+  /// In en, this message translates to:
+  /// **'PICK LEFT WING'**
+  String get tacticsPickLeftWing;
+
+  /// Heading of the player-picker sheet for a right wing slot. Czech needs its own accusative form, so each position has its own heading.
+  ///
+  /// In en, this message translates to:
+  /// **'PICK RIGHT WING'**
+  String get tacticsPickRightWing;
+
+  /// Heading of the player-picker sheet for a striker slot. Czech needs its own accusative form, so each position has its own heading.
+  ///
+  /// In en, this message translates to:
+  /// **'PICK STRIKER'**
+  String get tacticsPickStriker;
 
   /// Subtitle noting a player is playing out of position.
   ///
@@ -1807,12 +2009,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Hold a sub, then drag them onto a player to bring them on.'**
   String get tacticsHoldDragSub;
-
-  /// Heading of the unavailable-players list, with the count.
-  ///
-  /// In en, this message translates to:
-  /// **'UNAVAILABLE · {count}'**
-  String tacticsUnavailableCount(int count);
 
   /// Button to continue to the next screen.
   ///
@@ -2513,7 +2709,7 @@ abstract class AppLocalizations {
   /// Note under the new-game blurb saying what is free and what the one-time purchase unlocks.
   ///
   /// In en, this message translates to:
-  /// **'The first full cycle is free on two saves: qualifying, your continental championship and the World Championship, every nation in the world. Endless cycles and unlimited saves unlock once.'**
+  /// **'Free for one full four-year cycle: qualifying, your continental championship and the World Championship, on two saves. After that, one payment unlocks endless cycles.'**
   String get careerFreeCycleNote;
 
   /// Button starting the career.
@@ -4877,25 +5073,25 @@ abstract class AppLocalizations {
   /// Paywall benefit line: the existing career continues.
   ///
   /// In en, this message translates to:
-  /// **'Your save carries on exactly where it stopped'**
+  /// **'This save carries on exactly where it stopped, with every cap, record and rivalry intact.'**
   String get paywallBenefitCarryOn;
 
-  /// Paywall benefit line: one payment and nothing collected.
+  /// Paywall benefit line: no ads or microtransactions, one payment covers every update.
   ///
   /// In en, this message translates to:
-  /// **'No subscription, no ads, no account'**
-  String get paywallBenefitOffline;
+  /// **'No ads, no microtransactions, no subscription. One payment, and every future update is yours.'**
+  String get paywallBenefitNoAds;
 
   /// Paywall benefit line: the save-slot limit goes away.
   ///
   /// In en, this message translates to:
-  /// **'As many saves as you want, not two'**
+  /// **'As many saves as you want. Run a favourite and a minnow at once, and find out how differently the same game reads.'**
   String get paywallBenefitSaves;
 
   /// Paywall benefit line.
   ///
   /// In en, this message translates to:
-  /// **'Every cycle from here on, all the way to 2600'**
+  /// **'Every cycle from here on. Pick a seventeen-year-old today and learn in 2034 whether you saw it.'**
   String get paywallBenefitEndless;
 
   /// Shown on the paywall once premium is already unlocked.
@@ -4949,7 +5145,7 @@ abstract class AppLocalizations {
   /// Lead paragraph on the end-of-cycle wall.
   ///
   /// In en, this message translates to:
-  /// **'Four years, and nothing was held back. Carry this save on for one payment.'**
+  /// **'Four years is one cycle. It is not long enough to find out whether you were right.'**
   String get gateLead;
 
   /// Label above the store price on the end-of-cycle wall.
@@ -6033,13 +6229,13 @@ abstract class AppLocalizations {
   /// Y post: eliminated, variant 0.
   ///
   /// In en, this message translates to:
-  /// **'Out at {opponent}. Same script, different year.'**
+  /// **'Out at {opponent}. That one will hurt for a while.'**
   String yEliminated0(String opponent);
 
   /// Y post: eliminated, variant 1.
   ///
   /// In en, this message translates to:
-  /// **'{opponent} is where it ends. Again.'**
+  /// **'{opponent} is where it ends for us.'**
   String yEliminated1(String opponent);
 
   /// Y post: eliminated, variant 2.
@@ -6533,6 +6729,54 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Lost {name}, and there is nobody behind him. That is the real problem.'**
   String yInjuryBlow7(String name);
+
+  /// Y post about a sending-off, warm.
+  ///
+  /// In en, this message translates to:
+  /// **'Red for {name} on {minute} minutes and the whole country turns on him. He has given us more than most. Leave it.'**
+  String ySentOff0(String name, String minute);
+
+  /// Y post about a sending-off, warm.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} off after {minute} minutes. Harsh. Ten men and we still had a go, which tells you something.'**
+  String ySentOff1(String name, String minute);
+
+  /// Y post about a sending-off, flat.
+  ///
+  /// In en, this message translates to:
+  /// **'{name}, {minute} minutes, red card. Ten men from there.'**
+  String ySentOff2(String name, String minute);
+
+  /// Y post about a sending-off, flat.
+  ///
+  /// In en, this message translates to:
+  /// **'Sending off: {name} on {minute}. Not the first match to turn on one decision.'**
+  String ySentOff3(String name, String minute);
+
+  /// Y post about a sending-off, sour.
+  ///
+  /// In en, this message translates to:
+  /// **'Brilliant. {name} walks on {minute} minutes and we are down to ten. Again.'**
+  String ySentOff4(String name, String minute);
+
+  /// Y post about a sending-off, sour.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} sent off after {minute} minutes. Who exactly is coaching discipline around here?'**
+  String ySentOff5(String name, String minute);
+
+  /// Y post about a sending-off, sour.
+  ///
+  /// In en, this message translates to:
+  /// **'{minute} minutes. That is how long {name} could keep his head. Professional football.'**
+  String ySentOff6(String name, String minute);
+
+  /// Y post about a sending-off, sour.
+  ///
+  /// In en, this message translates to:
+  /// **'A red for {name} on {minute} minutes, and I am supposed to believe this is progress.'**
+  String ySentOff7(String name, String minute);
 
   /// Y post about the board losing patience. Variant 0.
   ///
@@ -7506,6 +7750,24 @@ abstract class AppLocalizations {
   /// **'QUALIFYING DRAW'**
   String get tourContQualifyingDraw;
 
+  /// Qualifying draw screen title for the World Championship, as against a continental cup's own qualifying.
+  ///
+  /// In en, this message translates to:
+  /// **'WORLD QUALIFYING DRAW'**
+  String get tourContWorldQualifyingDraw;
+
+  /// Finals draw screen title while the draw is being made.
+  ///
+  /// In en, this message translates to:
+  /// **'FINALS DRAW'**
+  String get tourContFinalsDraw;
+
+  /// Finals draw screen title before the draw, when the pots are on show.
+  ///
+  /// In en, this message translates to:
+  /// **'SEEDING POTS'**
+  String get tourContSeedingPots;
+
   /// Group draw screen title.
   ///
   /// In en, this message translates to:
@@ -7865,6 +8127,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'South America Cup'**
   String get tourCupCompSAmerica;
+
+  /// Destination in 'Top {count} advance to {destination}': the African Nations Cup Round of 16, for the best runners-up ladder.
+  ///
+  /// In en, this message translates to:
+  /// **'the Round of 16'**
+  String get tourCupDestRoundOf16;
+
+  /// Where a cross-group ladder's qualifiers advance to, inside "Top {count} advance to …". Czech needs the genitive here, as all four of these do.
+  ///
+  /// In en, this message translates to:
+  /// **'the knockouts'**
+  String get tourCupDestKnockouts;
 
   /// World Championship detail: tourCupDestFinals
   ///
@@ -8598,35 +8872,59 @@ abstract class AppLocalizations {
   /// **'Go to call-ups'**
   String get u21CallUps;
 
+  /// Youth screen tab holding the boys the manager has marked.
+  ///
+  /// In en, this message translates to:
+  /// **'Watching'**
+  String get youthWatching;
+
+  /// Shown on the youth watchlist tab when nothing is marked.
+  ///
+  /// In en, this message translates to:
+  /// **'Nobody marked yet. Mark a boy on any level and he turns up here, with what he has become since.'**
+  String get youthWatchEmpty;
+
+  /// Tooltip on the bookmark that adds a young player to the watchlist.
+  ///
+  /// In en, this message translates to:
+  /// **'Follow this boy'**
+  String get youthWatchMark;
+
+  /// Tooltip on the bookmark that removes a young player from the watchlist.
+  ///
+  /// In en, this message translates to:
+  /// **'Stop following him'**
+  String get youthWatchUnmark;
+
+  /// What a watched boy was when the manager marked him.
+  ///
+  /// In en, this message translates to:
+  /// **'Marked at {rating}, aged {age}'**
+  String youthWatchMarked(int rating, int age);
+
+  /// Status of a watched boy who has aged out of the pyramid.
+  ///
+  /// In en, this message translates to:
+  /// **'Through to the senior pool'**
+  String get youthWatchSenior;
+
+  /// Status of a watched boy the academy let go.
+  ///
+  /// In en, this message translates to:
+  /// **'Released by the academy'**
+  String get youthWatchReleased;
+
+  /// Status of a watched boy who can no longer be found at all.
+  ///
+  /// In en, this message translates to:
+  /// **'No longer in the pyramid'**
+  String get youthWatchGone;
+
   /// Tooltip on the squad screen's youth-watchlist action.
   ///
   /// In en, this message translates to:
   /// **'Under-21s'**
   String get tacticsYouth;
-
-  /// Title of the press-question sheet.
-  ///
-  /// In en, this message translates to:
-  /// **'Press conference'**
-  String get pressTitle;
-
-  /// Hub card inviting the manager to answer a press question.
-  ///
-  /// In en, this message translates to:
-  /// **'The press are waiting'**
-  String get pressCardTitle;
-
-  /// Hub card subtitle.
-  ///
-  /// In en, this message translates to:
-  /// **'One question. What you say moves the dressing room and the board.'**
-  String get pressCardSub;
-
-  /// Fallback when the opponent is unknown.
-  ///
-  /// In en, this message translates to:
-  /// **'the opposition'**
-  String get pressTheOpposition;
 
   /// Label on the dressing-room swing of a press answer.
   ///
@@ -8646,66 +8944,6 @@ abstract class AppLocalizations {
   /// **'Nobody reads much into it'**
   String get pressNoEffect;
 
-  /// Press question after a heavy defeat.
-  ///
-  /// In en, this message translates to:
-  /// **'That was a chastening night against {opponent}. What went wrong?'**
-  String pressAskHeavyDefeat(String opponent);
-
-  /// Press question after a knockout exit.
-  ///
-  /// In en, this message translates to:
-  /// **'Beaten by {opponent}, and the tournament is over. How do you explain it?'**
-  String pressAskElimination(String opponent);
-
-  /// Press question during a bad run.
-  ///
-  /// In en, this message translates to:
-  /// **'Three games without a win, and the board are watching. Are you still the right man?'**
-  String get pressAskUnderPressure;
-
-  /// Press question before a finals.
-  ///
-  /// In en, this message translates to:
-  /// **'The tournament starts here. How far does this squad go?'**
-  String get pressAskPreview;
-
-  /// Press question after winning a trophy.
-  ///
-  /// In en, this message translates to:
-  /// **'Champions. Where does this rank, and what comes next?'**
-  String get pressAskTriumph;
-
-  /// Press answer: back the squad.
-  ///
-  /// In en, this message translates to:
-  /// **'These players gave me everything. I would not swap a single one of them.'**
-  String get pressAnswerBackPlayers;
-
-  /// Press answer: take the blame.
-  ///
-  /// In en, this message translates to:
-  /// **'That one is on me. I picked the side and I set them up.'**
-  String get pressAnswerTakeBlame;
-
-  /// Press answer: demand more.
-  ///
-  /// In en, this message translates to:
-  /// **'Not good enough. Some of them have to look at themselves.'**
-  String get pressAnswerDemandMore;
-
-  /// Press answer: raise the target.
-  ///
-  /// In en, this message translates to:
-  /// **'We are here to win it. Anything less is a failure.'**
-  String get pressAnswerRaiseBar;
-
-  /// Press answer: say nothing.
-  ///
-  /// In en, this message translates to:
-  /// **'We take it one game at a time. Nothing more to add.'**
-  String get pressAnswerPlayDown;
-
   /// Tag on the ground card when a tie is played on neutral territory.
   ///
   /// In en, this message translates to:
@@ -8724,6 +8962,30 @@ abstract class AppLocalizations {
   /// **'EXTRA TIME · HALF TIME'**
   String get matchExtraTimeHalf;
 
+  /// The clock plate once the match is over.
+  ///
+  /// In en, this message translates to:
+  /// **'FULL TIME'**
+  String get matchClockFullTime;
+
+  /// The clock plate when a knockout was settled in extra time.
+  ///
+  /// In en, this message translates to:
+  /// **'AFTER EXTRA TIME'**
+  String get matchClockAfterExtraTime;
+
+  /// The clock plate while the shootout is being taken.
+  ///
+  /// In en, this message translates to:
+  /// **'PENALTIES'**
+  String get matchClockPenalties;
+
+  /// The clock plate when a tie was settled on penalties. Keep it short: the plate sits between the two crests and grows to fit.
+  ///
+  /// In en, this message translates to:
+  /// **'FULL TIME · PENALTIES'**
+  String get matchClockFullTimePenalties;
+
   /// Timeline action: the opening press conference of a tournament.
   ///
   /// In en, this message translates to:
@@ -8735,12 +8997,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'The world’s media want a word before your first match'**
   String get hubEventPressConferenceSub;
-
-  /// Press question at a tournament's opening conference.
-  ///
-  /// In en, this message translates to:
-  /// **'The tournament is open and you start against {opponent}. What are you telling the country?'**
-  String pressAskOpening(String opponent);
 
   /// Tag on a newly emerged player the scouts rate very highly.
   ///
@@ -9090,6 +9346,54 @@ abstract class AppLocalizations {
   /// **'Name'**
   String get squadSortName;
 
+  /// Title of the squad list legend sheet.
+  ///
+  /// In en, this message translates to:
+  /// **'What the marks mean'**
+  String get squadLegendTitle;
+
+  /// Legend: the star before a name.
+  ///
+  /// In en, this message translates to:
+  /// **'In your starting eleven'**
+  String get squadLegendStarting;
+
+  /// Legend: the tick before a name.
+  ///
+  /// In en, this message translates to:
+  /// **'Called up, on the bench'**
+  String get squadLegendCalledUp;
+
+  /// Legend: the green arrow.
+  ///
+  /// In en, this message translates to:
+  /// **'Rating rising this year'**
+  String get squadLegendRatingUp;
+
+  /// Legend: the red arrow.
+  ///
+  /// In en, this message translates to:
+  /// **'Rating falling this year'**
+  String get squadLegendRatingDown;
+
+  /// Legend: the injury icon.
+  ///
+  /// In en, this message translates to:
+  /// **'Injured, unavailable'**
+  String get squadLegendInjured;
+
+  /// Legend: the suspension icon.
+  ///
+  /// In en, this message translates to:
+  /// **'Suspended, unavailable'**
+  String get squadLegendSuspended;
+
+  /// Legend: heading above the player traits.
+  ///
+  /// In en, this message translates to:
+  /// **'KNOWN FOR'**
+  String get squadLegendTraits;
+
   /// Count of the filtered squad list.
   ///
   /// In en, this message translates to:
@@ -9156,246 +9460,6 @@ abstract class AppLocalizations {
   /// **'Gls'**
   String get squadGoalsShort;
 
-  /// Press conference line.
-  ///
-  /// In en, this message translates to:
-  /// **'Four goals conceded against {opponent}. Where does a night like that leave you?'**
-  String pressAskHeavyDefeat2(String opponent);
-
-  /// Press conference line.
-  ///
-  /// In en, this message translates to:
-  /// **'{opponent} took you apart. Is this squad good enough?'**
-  String pressAskHeavyDefeat3(String opponent);
-
-  /// Press conference line.
-  ///
-  /// In en, this message translates to:
-  /// **'{opponent} end it. Four years of work, gone in ninety minutes. Talk us through it.'**
-  String pressAskElimination2(String opponent);
-
-  /// Press conference line.
-  ///
-  /// In en, this message translates to:
-  /// **'Out to {opponent}. Was that as far as this team was ever going?'**
-  String pressAskElimination3(String opponent);
-
-  /// Press conference line.
-  ///
-  /// In en, this message translates to:
-  /// **'The results have dried up and your name is in every column. Worried?'**
-  String get pressAskUnderPressure2;
-
-  /// Press conference line.
-  ///
-  /// In en, this message translates to:
-  /// **'No wins, no goals, no answers. What do you say to the supporters?'**
-  String get pressAskUnderPressure3;
-
-  /// Press conference line.
-  ///
-  /// In en, this message translates to:
-  /// **'Everyone wants a prediction. Give us yours.'**
-  String get pressAskPreview2;
-
-  /// Press conference line.
-  ///
-  /// In en, this message translates to:
-  /// **'Realistically: group stage, quarters, or more than that?'**
-  String get pressAskPreview3;
-
-  /// Press conference line.
-  ///
-  /// In en, this message translates to:
-  /// **'The whole country is watching and {opponent} are first up. Your message?'**
-  String pressAskOpening2(String opponent);
-
-  /// Press conference line.
-  ///
-  /// In en, this message translates to:
-  /// **'It starts against {opponent}. How do you want this side to be remembered?'**
-  String pressAskOpening3(String opponent);
-
-  /// Press conference line.
-  ///
-  /// In en, this message translates to:
-  /// **'You\'ve won it. Does it feel like the end of something, or the start?'**
-  String get pressAskTriumph2;
-
-  /// Press conference line.
-  ///
-  /// In en, this message translates to:
-  /// **'Champions at last. Who does this one belong to?'**
-  String get pressAskTriumph3;
-
-  /// Press conference line.
-  ///
-  /// In en, this message translates to:
-  /// **'Three clear against {opponent}. Is this side finally clicking?'**
-  String pressAskBigWin(String opponent);
-
-  /// Press conference line.
-  ///
-  /// In en, this message translates to:
-  /// **'You took {opponent} apart. How good was that?'**
-  String pressAskBigWin2(String opponent);
-
-  /// Press conference line.
-  ///
-  /// In en, this message translates to:
-  /// **'A statement result against {opponent}. Should the rest of them be worried?'**
-  String pressAskBigWin3(String opponent);
-
-  /// Press conference line.
-  ///
-  /// In en, this message translates to:
-  /// **'You\'re through. What does qualifying mean to this group?'**
-  String get pressAskQualified;
-
-  /// Press conference line.
-  ///
-  /// In en, this message translates to:
-  /// **'The place is booked. Job done, or is the job just starting?'**
-  String get pressAskQualified2;
-
-  /// Press conference line.
-  ///
-  /// In en, this message translates to:
-  /// **'Qualification secured. Now what is this squad actually capable of?'**
-  String get pressAskQualified3;
-
-  /// Press conference line.
-  ///
-  /// In en, this message translates to:
-  /// **'No tournament this time. How did it come to this?'**
-  String get pressAskMissedOut;
-
-  /// Press conference line.
-  ///
-  /// In en, this message translates to:
-  /// **'Watching it on television. What do you say to a country that expected better?'**
-  String get pressAskMissedOut3;
-
-  /// Press conference line.
-  ///
-  /// In en, this message translates to:
-  /// **'The campaign is over and you\'re not in it. Who is accountable?'**
-  String get pressAskMissedOut2;
-
-  /// Press conference line.
-  ///
-  /// In en, this message translates to:
-  /// **'Unbeaten for months now. How long can this go on?'**
-  String get pressAskUnbeaten;
-
-  /// Press conference line.
-  ///
-  /// In en, this message translates to:
-  /// **'Nobody has laid a glove on you all season. What\'s behind the run?'**
-  String get pressAskUnbeaten2;
-
-  /// Press conference line.
-  ///
-  /// In en, this message translates to:
-  /// **'The run keeps going. Is this the best side you\'ve had?'**
-  String get pressAskUnbeaten3;
-
-  /// Press conference line.
-  ///
-  /// In en, this message translates to:
-  /// **'Day one. What are you promising this country?'**
-  String get pressAskNewJob;
-
-  /// Press conference line.
-  ///
-  /// In en, this message translates to:
-  /// **'New job, new squad. What changes first?'**
-  String get pressAskNewJob2;
-
-  /// Press conference line.
-  ///
-  /// In en, this message translates to:
-  /// **'You\'ve taken the job. Why this one, and why now?'**
-  String get pressAskNewJob3;
-
-  /// Press conference line.
-  ///
-  /// In en, this message translates to:
-  /// **'A record world ranking. Does the table flatter this team?'**
-  String get pressAskRankingPeak;
-
-  /// Press conference line.
-  ///
-  /// In en, this message translates to:
-  /// **'Never been ranked this high. Is this side genuinely among the best?'**
-  String get pressAskRankingPeak2;
-
-  /// Press conference line.
-  ///
-  /// In en, this message translates to:
-  /// **'Top of the pile on paper. Does that put a target on your back?'**
-  String get pressAskRankingPeak3;
-
-  /// Press conference line.
-  ///
-  /// In en, this message translates to:
-  /// **'Nobody works harder than this group. I\'ll defend them all day.'**
-  String get pressAnswerBackPlayers2;
-
-  /// Press conference line.
-  ///
-  /// In en, this message translates to:
-  /// **'You won\'t hear a word against my players from this seat.'**
-  String get pressAnswerBackPlayers3;
-
-  /// Press conference line.
-  ///
-  /// In en, this message translates to:
-  /// **'Judge me, not them. It\'s my team and my responsibility.'**
-  String get pressAnswerTakeBlame2;
-
-  /// Press conference line.
-  ///
-  /// In en, this message translates to:
-  /// **'If you want somebody to blame, I\'m sitting right here.'**
-  String get pressAnswerTakeBlame3;
-
-  /// Press conference line.
-  ///
-  /// In en, this message translates to:
-  /// **'Standards slipped. Some of them know exactly what I mean.'**
-  String get pressAnswerDemandMore2;
-
-  /// Press conference line.
-  ///
-  /// In en, this message translates to:
-  /// **'Effort isn\'t enough at this level. I want more, and I\'ve told them so.'**
-  String get pressAnswerDemandMore3;
-
-  /// Press conference line.
-  ///
-  /// In en, this message translates to:
-  /// **'No hiding from it. We expect to lift the trophy.'**
-  String get pressAnswerRaiseBar2;
-
-  /// Press conference line.
-  ///
-  /// In en, this message translates to:
-  /// **'Second place is not what this country sent us here for.'**
-  String get pressAnswerRaiseBar3;
-
-  /// Press conference line.
-  ///
-  /// In en, this message translates to:
-  /// **'I\'m not going to make headlines for you today.'**
-  String get pressAnswerPlayDown2;
-
-  /// Press conference line.
-  ///
-  /// In en, this message translates to:
-  /// **'Next game. That\'s all I\'m thinking about.'**
-  String get pressAnswerPlayDown3;
-
   /// Records/legacy label.
   ///
   /// In en, this message translates to:
@@ -9407,456 +9471,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'LEGACY'**
   String get statsLegacy;
-
-  /// Press conference line.
-  ///
-  /// In en, this message translates to:
-  /// **'That was hard to watch. Did {opponent} simply want it more?'**
-  String pressAskHeavyDefeat4(String opponent);
-
-  /// Press conference line.
-  ///
-  /// In en, this message translates to:
-  /// **'You were second to everything against {opponent}. Fitness or attitude?'**
-  String pressAskHeavyDefeat5(String opponent);
-
-  /// Press conference line.
-  ///
-  /// In en, this message translates to:
-  /// **'{opponent} scored at will. Who is responsible for that defence?'**
-  String pressAskHeavyDefeat6(String opponent);
-
-  /// Press conference line.
-  ///
-  /// In en, this message translates to:
-  /// **'A result like that against {opponent} follows a manager around. How do you come back from it?'**
-  String pressAskHeavyDefeat7(String opponent);
-
-  /// Press conference line.
-  ///
-  /// In en, this message translates to:
-  /// **'You were booed off after {opponent}. Do you blame them?'**
-  String pressAskHeavyDefeat8(String opponent);
-
-  /// Press conference line.
-  ///
-  /// In en, this message translates to:
-  /// **'{opponent} knocked you out. When did you know it had gone?'**
-  String pressAskElimination4(String opponent);
-
-  /// Press conference line.
-  ///
-  /// In en, this message translates to:
-  /// **'Another tournament, another early flight home, and {opponent} did it. Why?'**
-  String pressAskElimination5(String opponent);
-
-  /// Press conference line.
-  ///
-  /// In en, this message translates to:
-  /// **'Out to {opponent}. Is this squad short of quality or short of nerve?'**
-  String pressAskElimination6(String opponent);
-
-  /// Press conference line.
-  ///
-  /// In en, this message translates to:
-  /// **'{opponent} are through and you are not. What do you say in that dressing room?'**
-  String pressAskElimination7(String opponent);
-
-  /// Press conference line.
-  ///
-  /// In en, this message translates to:
-  /// **'Beaten by {opponent} when it mattered. Does that define your time here?'**
-  String pressAskElimination8(String opponent);
-
-  /// Press conference line.
-  ///
-  /// In en, this message translates to:
-  /// **'The bookmakers have you favourite to go. Does that reach you?'**
-  String get pressAskUnderPressure4;
-
-  /// Press conference line.
-  ///
-  /// In en, this message translates to:
-  /// **'Your predecessor was sacked on a run like this. What makes you different?'**
-  String get pressAskUnderPressure5;
-
-  /// Press conference line.
-  ///
-  /// In en, this message translates to:
-  /// **'The board have said nothing publicly. Is silence support?'**
-  String get pressAskUnderPressure6;
-
-  /// Press conference line.
-  ///
-  /// In en, this message translates to:
-  /// **'Every phone-in wants a new manager. Have you lost the country?'**
-  String get pressAskUnderPressure7;
-
-  /// Press conference line.
-  ///
-  /// In en, this message translates to:
-  /// **'How many more games do you think you have?'**
-  String get pressAskUnderPressure8;
-
-  /// Press conference line.
-  ///
-  /// In en, this message translates to:
-  /// **'Who is the team to beat, and are you in that conversation?'**
-  String get pressAskPreview4;
-
-  /// Press conference line.
-  ///
-  /// In en, this message translates to:
-  /// **'Nobody outside this room fancies you. Does that suit you?'**
-  String get pressAskPreview5;
-
-  /// Press conference line.
-  ///
-  /// In en, this message translates to:
-  /// **'What would make this a successful tournament, honestly?'**
-  String get pressAskPreview6;
-
-  /// Press conference line.
-  ///
-  /// In en, this message translates to:
-  /// **'Your group looks kind. Is anything less than qualification unacceptable?'**
-  String get pressAskPreview7;
-
-  /// Press conference line.
-  ///
-  /// In en, this message translates to:
-  /// **'This is the youngest squad you have taken to a finals. Gamble or plan?'**
-  String get pressAskPreview8;
-
-  /// Press conference line.
-  ///
-  /// In en, this message translates to:
-  /// **'First game, {opponent}, and everyone is nervous. How do you settle a side?'**
-  String pressAskOpening4(String opponent);
-
-  /// Press conference line.
-  ///
-  /// In en, this message translates to:
-  /// **'You have waited two years for this. Does the plan change now {opponent} are in front of you?'**
-  String pressAskOpening5(String opponent);
-
-  /// Press conference line.
-  ///
-  /// In en, this message translates to:
-  /// **'{opponent} to open. Win it and the whole tournament looks different. Do you tell them that?'**
-  String pressAskOpening6(String opponent);
-
-  /// Press conference line.
-  ///
-  /// In en, this message translates to:
-  /// **'The country has stopped for this. Is {opponent} a good draw or a bad one?'**
-  String pressAskOpening7(String opponent);
-
-  /// Press conference line.
-  ///
-  /// In en, this message translates to:
-  /// **'Opening night against {opponent}. What is the one thing you cannot allow?'**
-  String pressAskOpening8(String opponent);
-
-  /// Press conference line.
-  ///
-  /// In en, this message translates to:
-  /// **'You have made history. Has it landed yet?'**
-  String get pressAskTriumph4;
-
-  /// Press conference line.
-  ///
-  /// In en, this message translates to:
-  /// **'The trophy is in the room. Who did you think of first?'**
-  String get pressAskTriumph5;
-
-  /// Press conference line.
-  ///
-  /// In en, this message translates to:
-  /// **'A generation will remember this side. What should they remember about it?'**
-  String get pressAskTriumph6;
-
-  /// Press conference line.
-  ///
-  /// In en, this message translates to:
-  /// **'You were written off in this very room. Enjoying the moment?'**
-  String get pressAskTriumph7;
-
-  /// Press conference line.
-  ///
-  /// In en, this message translates to:
-  /// **'Is this the peak, or can this team win more?'**
-  String get pressAskTriumph8;
-
-  /// Press conference line.
-  ///
-  /// In en, this message translates to:
-  /// **'{opponent} had no answer to that. The plan or the players?'**
-  String pressAskBigWin4(String opponent);
-
-  /// Press conference line.
-  ///
-  /// In en, this message translates to:
-  /// **'The best performance of your reign, and against {opponent}?'**
-  String pressAskBigWin5(String opponent);
-
-  /// Press conference line.
-  ///
-  /// In en, this message translates to:
-  /// **'You could have had more against {opponent}. Do you ask for ruthlessness or take the win?'**
-  String pressAskBigWin6(String opponent);
-
-  /// Press conference line.
-  ///
-  /// In en, this message translates to:
-  /// **'A scoreline like that against {opponent} raises expectations. Comfortable with that?'**
-  String pressAskBigWin7(String opponent);
-
-  /// Press conference line.
-  ///
-  /// In en, this message translates to:
-  /// **'{opponent} never laid a glove on you. Is this side finally what you wanted?'**
-  String pressAskBigWin8(String opponent);
-
-  /// Press conference line.
-  ///
-  /// In en, this message translates to:
-  /// **'Job done. Was it ever in doubt?'**
-  String get pressAskQualified4;
-
-  /// Press conference line.
-  ///
-  /// In en, this message translates to:
-  /// **'You are through. Does the campaign tell you how far you can go?'**
-  String get pressAskQualified5;
-
-  /// Press conference line.
-  ///
-  /// In en, this message translates to:
-  /// **'A place at the finals: relief or satisfaction?'**
-  String get pressAskQualified6;
-
-  /// Press conference line.
-  ///
-  /// In en, this message translates to:
-  /// **'You qualified with games to spare. What are the rest of them for?'**
-  String get pressAskQualified7;
-
-  /// Press conference line.
-  ///
-  /// In en, this message translates to:
-  /// **'Now the hard part. Is this squad ready for a tournament?'**
-  String get pressAskQualified8;
-
-  /// Press conference line.
-  ///
-  /// In en, this message translates to:
-  /// **'No tournament this time. A squad problem or a coaching one?'**
-  String get pressAskMissedOut4;
-
-  /// Press conference line.
-  ///
-  /// In en, this message translates to:
-  /// **'Two years of work and nothing to show. Do you still believe in this group?'**
-  String get pressAskMissedOut5;
-
-  /// Press conference line.
-  ///
-  /// In en, this message translates to:
-  /// **'The country will not see its team at a finals. What do you owe them?'**
-  String get pressAskMissedOut6;
-
-  /// Press conference line.
-  ///
-  /// In en, this message translates to:
-  /// **'Was there one night that cost you?'**
-  String get pressAskMissedOut7;
-
-  /// Press conference line.
-  ///
-  /// In en, this message translates to:
-  /// **'Do you expect to still be in this job next season?'**
-  String get pressAskMissedOut8;
-
-  /// Press conference line.
-  ///
-  /// In en, this message translates to:
-  /// **'Nobody has beaten you in a year. Are you thinking about records?'**
-  String get pressAskUnbeaten4;
-
-  /// Press conference line.
-  ///
-  /// In en, this message translates to:
-  /// **'The run is the story now. Is it a burden yet?'**
-  String get pressAskUnbeaten5;
-
-  /// Press conference line.
-  ///
-  /// In en, this message translates to:
-  /// **'Sides set up not to lose to you. Does that make it harder?'**
-  String get pressAskUnbeaten6;
-
-  /// Press conference line.
-  ///
-  /// In en, this message translates to:
-  /// **'When it ends, and it will, how do you want it to end?'**
-  String get pressAskUnbeaten7;
-
-  /// Press conference line.
-  ///
-  /// In en, this message translates to:
-  /// **'Unbeaten, but how many of those were convincing?'**
-  String get pressAskUnbeaten8;
-
-  /// Press conference line.
-  ///
-  /// In en, this message translates to:
-  /// **'You inherit a squad in transition. Where do you start?'**
-  String get pressAskNewJob4;
-
-  /// Press conference line.
-  ///
-  /// In en, this message translates to:
-  /// **'What does this team look like in two years?'**
-  String get pressAskNewJob5;
-
-  /// Press conference line.
-  ///
-  /// In en, this message translates to:
-  /// **'You turned down other offers for this one. Why?'**
-  String get pressAskNewJob6;
-
-  /// Press conference line.
-  ///
-  /// In en, this message translates to:
-  /// **'Some of these players were not picked by you. Does anyone start with a clean slate?'**
-  String get pressAskNewJob7;
-
-  /// Press conference line.
-  ///
-  /// In en, this message translates to:
-  /// **'What has this country been getting wrong?'**
-  String get pressAskNewJob8;
-
-  /// Press conference line.
-  ///
-  /// In en, this message translates to:
-  /// **'Top of the pile on paper. Does a ranking mean anything to you?'**
-  String get pressAskRankingPeak4;
-
-  /// Press conference line.
-  ///
-  /// In en, this message translates to:
-  /// **'The highest this nation has ever been. Whose achievement is that?'**
-  String get pressAskRankingPeak5;
-
-  /// Press conference line.
-  ///
-  /// In en, this message translates to:
-  /// **'You are ranked above sides with far more history. Fair?'**
-  String get pressAskRankingPeak6;
-
-  /// Press conference line.
-  ///
-  /// In en, this message translates to:
-  /// **'The numbers say you are among the best. Do the trophies?'**
-  String get pressAskRankingPeak7;
-
-  /// Press conference line.
-  ///
-  /// In en, this message translates to:
-  /// **'A record ranking and no trophy yet. Does that sit uneasily?'**
-  String get pressAskRankingPeak8;
-
-  /// Press conference line.
-  ///
-  /// In en, this message translates to:
-  /// **'I\'ll take the questions. They\'ll take the credit. That\'s how it works here.'**
-  String get pressAnswerBackPlayers4;
-
-  /// Press conference line.
-  ///
-  /// In en, this message translates to:
-  /// **'This group has never let me down. Not once.'**
-  String get pressAnswerBackPlayers5;
-
-  /// Press conference line.
-  ///
-  /// In en, this message translates to:
-  /// **'They\'re hurting more than anyone. I\'m not adding to it.'**
-  String get pressAnswerBackPlayers6;
-
-  /// Press conference line.
-  ///
-  /// In en, this message translates to:
-  /// **'That\'s on the staff and it\'s on me. Nobody else.'**
-  String get pressAnswerTakeBlame4;
-
-  /// Press conference line.
-  ///
-  /// In en, this message translates to:
-  /// **'I picked it, I set it up, I got it wrong.'**
-  String get pressAnswerTakeBlame5;
-
-  /// Press conference line.
-  ///
-  /// In en, this message translates to:
-  /// **'Point it at me. That\'s what I\'m paid for.'**
-  String get pressAnswerTakeBlame6;
-
-  /// Press conference line.
-  ///
-  /// In en, this message translates to:
-  /// **'Some of them are a long way short of what this shirt asks.'**
-  String get pressAnswerDemandMore4;
-
-  /// Press conference line.
-  ///
-  /// In en, this message translates to:
-  /// **'I\'ve told them privately and I\'ll say it here: it isn\'t good enough.'**
-  String get pressAnswerDemandMore5;
-
-  /// Press conference line.
-  ///
-  /// In en, this message translates to:
-  /// **'Places are open. Everyone in that dressing room knows it.'**
-  String get pressAnswerDemandMore6;
-
-  /// Press conference line.
-  ///
-  /// In en, this message translates to:
-  /// **'We came here to win it. I\'m not going to pretend otherwise.'**
-  String get pressAnswerRaiseBar4;
-
-  /// Press conference line.
-  ///
-  /// In en, this message translates to:
-  /// **'Anything but the trophy and we\'ll have wasted this.'**
-  String get pressAnswerRaiseBar5;
-
-  /// Press conference line.
-  ///
-  /// In en, this message translates to:
-  /// **'I\'d rather be judged on winning than praised for trying.'**
-  String get pressAnswerRaiseBar6;
-
-  /// Press conference line.
-  ///
-  /// In en, this message translates to:
-  /// **'I\'ll keep my thoughts in the dressing room.'**
-  String get pressAnswerPlayDown4;
-
-  /// Press conference line.
-  ///
-  /// In en, this message translates to:
-  /// **'You\'ve seen the game. Your read is as good as mine.'**
-  String get pressAnswerPlayDown5;
-
-  /// Press conference line.
-  ///
-  /// In en, this message translates to:
-  /// **'Nothing I say tonight changes the result.'**
-  String get pressAnswerPlayDown6;
 
   /// Snackbar when the manager tries to re-use a substituted player.
   ///
@@ -10959,10 +10573,10 @@ abstract class AppLocalizations {
   /// **'LEAGUE {letter}'**
   String tourStatusLeague(String letter);
 
-  /// Draw-ceremony heading.
+  /// Draw-ceremony heading for World Championship qualifying. Says "world" rather than the full competition name because the full one does not fit the heading on a narrow phone, and the screen the manager is already on supplies the rest. Matches tourContWorldQualifyingDraw, the heading above it.
   ///
   /// In en, this message translates to:
-  /// **'WORLD CUP QUALIFYING DRAW'**
+  /// **'WORLD QUALIFYING DRAW'**
   String get tourDrawWcQualifying;
 
   /// Draw-ceremony heading.
@@ -10971,10 +10585,10 @@ abstract class AppLocalizations {
   /// **'{cup} QUALIFYING DRAW'**
   String tourDrawContQualifying(String cup);
 
-  /// Host-draw ceremony heading.
+  /// Host-draw ceremony heading. Printed with the year after it, and allowed to wrap onto a second line as the continental heading beside it already does.
   ///
   /// In en, this message translates to:
-  /// **'WORLD CUP HOST'**
+  /// **'WORLD CHAMPIONSHIP HOST'**
   String get tourDrawWcHost;
 
   /// Host-draw ceremony heading.
@@ -10982,6 +10596,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{cup} HOST'**
   String tourDrawContHost(String cup);
+
+  /// Host-draw ceremony line, more than one host.
+  ///
+  /// In en, this message translates to:
+  /// **'And the hosts will be…'**
+  String get tourDrawHostsReveal;
+
+  /// Host-draw ceremony line, a single host.
+  ///
+  /// In en, this message translates to:
+  /// **'And the host will be…'**
+  String get tourDrawHostReveal;
+
+  /// Host-draw ceremony line, before the reveal.
+  ///
+  /// In en, this message translates to:
+  /// **'The candidates in the running:'**
+  String get tourDrawHostCandidates;
 
   /// Fallback tournament name on the opening-ceremony screen.
   ///
@@ -11055,16 +10687,40 @@ abstract class AppLocalizations {
   /// **' {name} takes the young player\'s award.'**
   String newsPotyYoungSuffix(String name);
 
-  /// Live-match screen top bar.
+  /// Inbox: the year's report on the manager's youth watchlist.
   ///
   /// In en, this message translates to:
-  /// **'MATCH'**
-  String get matchTopBarTitle;
+  /// **'The boys you are watching, {year}'**
+  String newsWatchTitle(int year);
 
-  /// Live match: stats tab before full time.
+  /// Inbox line: a watched boy who improved well beyond his age curve.
   ///
   /// In en, this message translates to:
-  /// **'Stats available at full time.'**
+  /// **'{name} has kicked on to {rating}, {gain, plural, one{a point} other{{gain} points}} up on last year.'**
+  String newsWatchJump(String name, int rating, int gain);
+
+  /// Inbox line: a watched boy reaching the next youth age band.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} moves up to the {band}s.'**
+  String newsWatchBand(String name, String band);
+
+  /// Inbox: a watched boy has won his first senior cap.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} makes his debut'**
+  String newsWatchDebutTitle(String name);
+
+  /// Inbox body for a watched boy's first senior cap.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} has won his first cap at {age}, rated {rating}. One of the boys you are watching.'**
+  String newsWatchDebutBody(String name, int age, int rating);
+
+  /// Live match stats tab: which figures cannot be given until full time.
+  ///
+  /// In en, this message translates to:
+  /// **'Possession, player ratings and the man of the match are settled at the final whistle.'**
   String get matchStatsAtFullTime;
 
   /// Live match: player-ratings heading.
@@ -11199,6 +10855,60 @@ abstract class AppLocalizations {
   /// **'OTHER CONTINENTS'**
   String get tourOtherContinents;
 
+  /// Zone strap under a competition tile: the whole world. Keep these zone straps SHORT — a tile is half the screen wide.
+  ///
+  /// In en, this message translates to:
+  /// **'GLOBAL'**
+  String get tourZoneGlobal;
+
+  /// Zone strap under a competition tile.
+  ///
+  /// In en, this message translates to:
+  /// **'EUROPE'**
+  String get tourZoneEurope;
+
+  /// Zone strap under a competition tile, abbreviated to fit.
+  ///
+  /// In en, this message translates to:
+  /// **'S. AMERICA'**
+  String get tourZoneSouthAmerica;
+
+  /// Zone strap under a competition tile, abbreviated to fit.
+  ///
+  /// In en, this message translates to:
+  /// **'N. AMERICA'**
+  String get tourZoneNorthAmerica;
+
+  /// Zone strap under a competition tile.
+  ///
+  /// In en, this message translates to:
+  /// **'AFRICA'**
+  String get tourZoneAfrica;
+
+  /// Zone strap under a competition tile.
+  ///
+  /// In en, this message translates to:
+  /// **'ASIA'**
+  String get tourZoneAsia;
+
+  /// Zone strap under a competition tile.
+  ///
+  /// In en, this message translates to:
+  /// **'OCEANIA'**
+  String get tourZoneOceania;
+
+  /// Zone strap under the Continental Clash tile.
+  ///
+  /// In en, this message translates to:
+  /// **'INTERCONTINENTAL'**
+  String get tourZoneIntercontinental;
+
+  /// Zone strap under the Nations Cup tile: which league the nation is in.
+  ///
+  /// In en, this message translates to:
+  /// **'LEAGUE {league}'**
+  String tourZoneLeague(String league);
+
   /// Opening-ceremony screen: the host nations.
   ///
   /// In en, this message translates to:
@@ -11222,228 +10932,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{name} has retired from international football at {age}, with {caps} caps. He asked to be told where he stood and was not, and he is not waiting any longer.'**
   String newsWalkoutBody(String name, int age, int caps);
-
-  /// Press conference: a Accountability follow-up question.
-  ///
-  /// In en, this message translates to:
-  /// **'You\'ve backed them again. Is nobody in that dressing room accountable?'**
-  String get pressProbeAccountability1;
-
-  /// Press conference: a Accountability follow-up question.
-  ///
-  /// In en, this message translates to:
-  /// **'That\'s the players defended. Who actually answers for a night like that?'**
-  String get pressProbeAccountability2;
-
-  /// Press conference: a Accountability follow-up question.
-  ///
-  /// In en, this message translates to:
-  /// **'Loyalty is easy from up there. Does anyone pay a price?'**
-  String get pressProbeAccountability3;
-
-  /// Press conference: a Accountability follow-up question.
-  ///
-  /// In en, this message translates to:
-  /// **'If it\'s never the players, we\'re left with one name. Yours.'**
-  String get pressProbeAccountability4;
-
-  /// Press conference: a YourFuture follow-up question.
-  ///
-  /// In en, this message translates to:
-  /// **'You\'ve taken it on yourself. Should we be asking about your future?'**
-  String get pressProbeYourFuture1;
-
-  /// Press conference: a YourFuture follow-up question.
-  ///
-  /// In en, this message translates to:
-  /// **'Falling on your sword is noble. Is the job still yours?'**
-  String get pressProbeYourFuture2;
-
-  /// Press conference: a YourFuture follow-up question.
-  ///
-  /// In en, this message translates to:
-  /// **'You keep saying it\'s you. At what point is that a resignation?'**
-  String get pressProbeYourFuture3;
-
-  /// Press conference: a YourFuture follow-up question.
-  ///
-  /// In en, this message translates to:
-  /// **'The board are listening too. Are you sure you want that on record?'**
-  String get pressProbeYourFuture4;
-
-  /// Press conference: a DressingRoom follow-up question.
-  ///
-  /// In en, this message translates to:
-  /// **'Strong words in public. Have you lost that dressing room?'**
-  String get pressProbeDressingRoom1;
-
-  /// Press conference: a DressingRoom follow-up question.
-  ///
-  /// In en, this message translates to:
-  /// **'You\'ve just told the country they\'re not good enough. How does that help?'**
-  String get pressProbeDressingRoom2;
-
-  /// Press conference: a DressingRoom follow-up question.
-  ///
-  /// In en, this message translates to:
-  /// **'Demanding it here rather than in there. Is that leadership?'**
-  String get pressProbeDressingRoom3;
-
-  /// Press conference: a DressingRoom follow-up question.
-  ///
-  /// In en, this message translates to:
-  /// **'Players read this too. What do they hear tomorrow morning?'**
-  String get pressProbeDressingRoom4;
-
-  /// Press conference: a Expectation follow-up question.
-  ///
-  /// In en, this message translates to:
-  /// **'You\'ve raised the bar in public. Is that not a hostage to fortune?'**
-  String get pressProbeExpectation1;
-
-  /// Press conference: a Expectation follow-up question.
-  ///
-  /// In en, this message translates to:
-  /// **'Big promise. What happens the day you don\'t deliver it?'**
-  String get pressProbeExpectation2;
-
-  /// Press conference: a Expectation follow-up question.
-  ///
-  /// In en, this message translates to:
-  /// **'Every manager before you said the same and packed a bag. Why are you different?'**
-  String get pressProbeExpectation3;
-
-  /// Press conference: a Expectation follow-up question.
-  ///
-  /// In en, this message translates to:
-  /// **'You\'ve set the target. Will you resign if you miss it?'**
-  String get pressProbeExpectation4;
-
-  /// Press conference: a Substance follow-up question.
-  ///
-  /// In en, this message translates to:
-  /// **'With respect, that\'s not an answer. Give us something.'**
-  String get pressProbeSubstance1;
-
-  /// Press conference: a Substance follow-up question.
-  ///
-  /// In en, this message translates to:
-  /// **'The country wants to hear from you. Anything at all?'**
-  String get pressProbeSubstance2;
-
-  /// Press conference: a Substance follow-up question.
-  ///
-  /// In en, this message translates to:
-  /// **'You can keep saying nothing. We\'ll keep printing it.'**
-  String get pressProbeSubstance3;
-
-  /// Press conference: a Substance follow-up question.
-  ///
-  /// In en, this message translates to:
-  /// **'One straight sentence. What do you actually think?'**
-  String get pressProbeSubstance4;
-
-  /// Press conference: a Selection follow-up question.
-  ///
-  /// In en, this message translates to:
-  /// **'Same names, same shape, same result. Why does that team keep getting picked?'**
-  String get pressProbeSelection1;
-
-  /// Press conference: a Selection follow-up question.
-  ///
-  /// In en, this message translates to:
-  /// **'There are players in form watching this on television. Explain the selection.'**
-  String get pressProbeSelection2;
-
-  /// Press conference: a Selection follow-up question.
-  ///
-  /// In en, this message translates to:
-  /// **'Is the XI picked on merit, or on reputation?'**
-  String get pressProbeSelection3;
-
-  /// Press conference: a Selection follow-up question.
-  ///
-  /// In en, this message translates to:
-  /// **'Tactically, we all saw the problem. Did you?'**
-  String get pressProbeSelection4;
-
-  /// Press conference: a TheFans follow-up question.
-  ///
-  /// In en, this message translates to:
-  /// **'Thousands travelled for that. What do you say to them tonight?'**
-  String get pressProbeTheFans1;
-
-  /// Press conference: a TheFans follow-up question.
-  ///
-  /// In en, this message translates to:
-  /// **'The supporters have stuck with this team for years. What are you giving them?'**
-  String get pressProbeTheFans2;
-
-  /// Press conference: a TheFans follow-up question.
-  ///
-  /// In en, this message translates to:
-  /// **'They sing your name or they don\'t. Which is it going to be?'**
-  String get pressProbeTheFans3;
-
-  /// Press conference: a TheFans follow-up question.
-  ///
-  /// In en, this message translates to:
-  /// **'Message to the people back home. Go on.'**
-  String get pressProbeTheFans4;
-
-  /// Press conference: a BigPicture follow-up question.
-  ///
-  /// In en, this message translates to:
-  /// **'Step back for me. Where is this nation actually going?'**
-  String get pressProbeBigPicture1;
-
-  /// Press conference: a BigPicture follow-up question.
-  ///
-  /// In en, this message translates to:
-  /// **'From the outside, nothing has changed here in years. Has it?'**
-  String get pressProbeBigPicture2;
-
-  /// Press conference: a BigPicture follow-up question.
-  ///
-  /// In en, this message translates to:
-  /// **'In four years\' time, what does this side look like?'**
-  String get pressProbeBigPicture3;
-
-  /// Press conference: a BigPicture follow-up question.
-  ///
-  /// In en, this message translates to:
-  /// **'Is this a project, or is it just the next match?'**
-  String get pressProbeBigPicture4;
-
-  /// Press conference: a reporter's aside when the manager keeps taking the same stance.
-  ///
-  /// In en, this message translates to:
-  /// **'You always back them. We\'ve heard it.'**
-  String get pressNeedleBackPlayers;
-
-  /// Press conference: a reporter's aside when the manager keeps taking the same stance.
-  ///
-  /// In en, this message translates to:
-  /// **'It\'s always your fault, apparently.'**
-  String get pressNeedleTakeBlame;
-
-  /// Press conference: a reporter's aside when the manager keeps taking the same stance.
-  ///
-  /// In en, this message translates to:
-  /// **'More demands. Again.'**
-  String get pressNeedleDemandMore;
-
-  /// Press conference: a reporter's aside when the manager keeps taking the same stance.
-  ///
-  /// In en, this message translates to:
-  /// **'Another promise for the file.'**
-  String get pressNeedleRaiseBar;
-
-  /// Press conference: a reporter's aside when the manager keeps taking the same stance.
-  ///
-  /// In en, this message translates to:
-  /// **'You never give us anything.'**
-  String get pressNeedlePlayDown;
 
   /// Press conference: the morning's headline after a conference that went went.
   ///
@@ -11814,7 +11302,7 @@ abstract class AppLocalizations {
   /// Y reply: despair, variant 7.
   ///
   /// In en, this message translates to:
-  /// **'Same feeling, different year.'**
+  /// **'That one is going to sting for a long time.'**
   String get yReactionDespair7;
 
   /// Y reply: despair, variant 8.
@@ -11994,7 +11482,7 @@ abstract class AppLocalizations {
   /// Labelled action on a save tile: writes this one career to a file and hands it to the share sheet.
   ///
   /// In en, this message translates to:
-  /// **'Export this save'**
+  /// **'Back up this save'**
   String get careerExportSave;
 
   /// Button on the saves screen that exports every save at once, as one file.
@@ -12141,6 +11629,18 @@ abstract class AppLocalizations {
   /// **'Could not export that career.'**
   String get careerShareFailed;
 
+  /// Manager screen: button and dialog title to rename the manager.
+  ///
+  /// In en, this message translates to:
+  /// **'Change name'**
+  String get managerRename;
+
+  /// Manager screen rename dialog: confirm button.
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get managerRenameSave;
+
   /// Manager screen: app bar title.
   ///
   /// In en, this message translates to:
@@ -12252,7 +11752,7 @@ abstract class AppLocalizations {
   /// Staff role effect.
   ///
   /// In en, this message translates to:
-  /// **'Watches the world\'s teenagers. Nothing he reports reaches your squad yet.'**
+  /// **'Reads your prospects and your next opponent: truer star ratings, and an edge on matchday.'**
   String get managerRoleScoutBlurb;
 
   /// Staff role.
@@ -12290,6 +11790,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'and youngsters +{minPoints} to +{maxPoints} overall'**
   String staffHiringYouth(int minPoints, int maxPoints);
+
+  /// What the scout in the job is doing: the share of unproven prospects whose star rating he gets exactly right.
+  ///
+  /// In en, this message translates to:
+  /// **'Reads {percent}% of prospects exactly'**
+  String staffEffectScoutRead(int percent);
+
+  /// What the scout in the job is doing: how many caps before a prospect's potential is known for sure.
+  ///
+  /// In en, this message translates to:
+  /// **'{caps, plural, =1{Potential known after 1 cap} other{Potential known after {caps} caps}}'**
+  String staffEffectScoutCaps(int caps);
+
+  /// What the scout in the job is doing: the rating points his pre-match report on each opponent adds to the side.
+  ///
+  /// In en, this message translates to:
+  /// **'+{points} rating from opponent dossiers'**
+  String staffEffectScoutDossier(int points);
+
+  /// What filling the vacant scout job would be worth: share of prospect star ratings read exactly.
+  ///
+  /// In en, this message translates to:
+  /// **'Hiring one: {min}% to {max}% of reads exact'**
+  String staffHiringScoutRead(int min, int max);
+
+  /// Second line of what filling the vacant scout job would be worth.
+  ///
+  /// In en, this message translates to:
+  /// **'and potential known {minCaps} to {maxCaps} caps sooner'**
+  String staffHiringScoutCaps(int minCaps, int maxCaps);
+
+  /// Third line of what filling the vacant scout job would be worth: the opponent dossier.
+  ///
+  /// In en, this message translates to:
+  /// **'and +{minPoints} to +{maxPoints} rating every match'**
+  String staffHiringScoutDossier(int minPoints, int maxPoints);
 
   /// Shown against a staff role that is wired to nothing in the game.
   ///
@@ -12627,10 +12163,16 @@ abstract class AppLocalizations {
   /// **'{opponent} next, and everything else can wait. What a week to be alive.'**
   String yFinalLooms3(String opponent);
 
+  /// Dismisses the pre-match set-piece warning for good: the manager is content to let the engine pick the takers.
+  ///
+  /// In en, this message translates to:
+  /// **'Leave the takers to the coach'**
+  String get matchSetupLeaveToCoach;
+
   /// Friendlies: why these opponents are suggested first.
   ///
   /// In en, this message translates to:
-  /// **'Marked below: sides who play like {rivals}, who you have drawn.'**
+  /// **'Marked below: sides who play like {rivals}, the teams you meet in your groups this cycle.'**
   String friendliesLikeYourGroup(String rivals);
 
   /// Inbox: the window's transfers, as one report.
@@ -12668,6 +12210,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Endless cycles, unlimited saves and every future update. Thank you.'**
   String get settingsUnlockedBlurb;
+
+  /// Settings: heading of the developer's note on long-term support, shown to every player.
+  ///
+  /// In en, this message translates to:
+  /// **'From the developer'**
+  String get settingsFromDeveloperTitle;
+
+  /// Settings: the developer's note. No ads or microtransactions ever, please consider buying the full version.
+  ///
+  /// In en, this message translates to:
+  /// **'Football Nations Manager is made by one person and will be supported for the long term. There will never be ads or microtransactions. If you enjoy the game, please consider buying the full version. It is what keeps the updates coming.'**
+  String get settingsFromDeveloperBlurb;
+
+  /// Settings: the developer's note for a player who has bought the full version. No ads or microtransactions ever, thank you for buying.
+  ///
+  /// In en, this message translates to:
+  /// **'Football Nations Manager is made by one person and will be supported for the long term. There will never be ads or microtransactions. Thank you for buying the full version. It is what keeps the updates coming.'**
+  String get settingsFromDeveloperThanksBlurb;
 
   /// Friendlies: why these opponents are suggested first, when the group is a qualifying campaign rather than a finals draw.
   ///
@@ -12774,7 +12334,7 @@ abstract class AppLocalizations {
   /// Y post: sameOldStory, variant 0.
   ///
   /// In en, this message translates to:
-  /// **'That is the {count}th time this has happened lately. At what point is it just what we are?'**
+  /// **'That is {count} times this has happened lately. At what point is it just what we are?'**
   String ySameOldStory0(String count);
 
   /// Y post: sameOldStory, variant 1.
@@ -12792,7 +12352,7 @@ abstract class AppLocalizations {
   /// Y post: sameOldStory, variant 3.
   ///
   /// In en, this message translates to:
-  /// **'The {count}th version of the same ninety minutes. Nobody is fixing it.'**
+  /// **'{count} versions of the same ninety minutes now. Nobody is fixing it.'**
   String ySameOldStory3(String count);
 
   /// Y post: sameOldStory, variant 4.
@@ -12843,150 +12403,6 @@ abstract class AppLocalizations {
   /// **'Every time. We are told it is different, and every time it is not.'**
   String get yToldYouSo5;
 
-  /// Press conference line.
-  ///
-  /// In en, this message translates to:
-  /// **'Nobody expected this side to be where it is. Is it real, or is it a good few months?'**
-  String get pressAskAbove;
-
-  /// Press conference line.
-  ///
-  /// In en, this message translates to:
-  /// **'You are getting results against sides ranked well above you. How?'**
-  String get pressAskAbove2;
-
-  /// Press conference line.
-  ///
-  /// In en, this message translates to:
-  /// **'Every neutral has you overachieving. Does that description annoy you?'**
-  String get pressAskAbove3;
-
-  /// Press conference line.
-  ///
-  /// In en, this message translates to:
-  /// **'This squad is punching above its weight. What happens when it stops?'**
-  String get pressAskAbove4;
-
-  /// Press conference line.
-  ///
-  /// In en, this message translates to:
-  /// **'You keep beating teams you have no business beating. What have you found?'**
-  String get pressAskAbove5;
-
-  /// Press conference line.
-  ///
-  /// In en, this message translates to:
-  /// **'People are starting to take this seriously. Are you?'**
-  String get pressAskAbove6;
-
-  /// Press conference line.
-  ///
-  /// In en, this message translates to:
-  /// **'Is this side better than the ranking says, or are you catching people out?'**
-  String get pressAskAbove7;
-
-  /// Press conference line.
-  ///
-  /// In en, this message translates to:
-  /// **'How long can a group like this keep this up?'**
-  String get pressAskAbove8;
-
-  /// Press conference line.
-  ///
-  /// In en, this message translates to:
-  /// **'You are winning without convincing anybody. Does that worry you?'**
-  String get pressAskFlattered;
-
-  /// Press conference line.
-  ///
-  /// In en, this message translates to:
-  /// **'Another narrow one against a side you should be beating comfortably. Why is it so hard?'**
-  String get pressAskFlattered2;
-
-  /// Press conference line.
-  ///
-  /// In en, this message translates to:
-  /// **'Three points, and not much else. Is that enough for you?'**
-  String get pressAskFlattered3;
-
-  /// Press conference line.
-  ///
-  /// In en, this message translates to:
-  /// **'You got away with that. Would you agree?'**
-  String get pressAskFlattered4;
-
-  /// Press conference line.
-  ///
-  /// In en, this message translates to:
-  /// **'The results are there and the performances are not. Which one are you judging yourself on?'**
-  String get pressAskFlattered5;
-
-  /// Press conference line.
-  ///
-  /// In en, this message translates to:
-  /// **'Sides that ride their luck this often usually run out of it. Are you worried?'**
-  String get pressAskFlattered6;
-
-  /// Press conference line.
-  ///
-  /// In en, this message translates to:
-  /// **'That was hard work for what it was. What is missing?'**
-  String get pressAskFlattered7;
-
-  /// Press conference line.
-  ///
-  /// In en, this message translates to:
-  /// **'Do you care how you win, or only that you win?'**
-  String get pressAskFlattered8;
-
-  /// Press conference line.
-  ///
-  /// In en, this message translates to:
-  /// **'Bad results and a board that has stopped defending you. How bad is it?'**
-  String get pressAskCrisis;
-
-  /// Press conference line.
-  ///
-  /// In en, this message translates to:
-  /// **'Nobody upstairs will say your name. Do you still have their backing?'**
-  String get pressAskCrisis2;
-
-  /// Press conference line.
-  ///
-  /// In en, this message translates to:
-  /// **'The results are poor and the silence from above is loud. What now?'**
-  String get pressAskCrisis3;
-
-  /// Press conference line.
-  ///
-  /// In en, this message translates to:
-  /// **'This has gone past a bad run. Do you accept that?'**
-  String get pressAskCrisis4;
-
-  /// Press conference line.
-  ///
-  /// In en, this message translates to:
-  /// **'You are losing the room and the boardroom at the same time. Which worries you more?'**
-  String get pressAskCrisis5;
-
-  /// Press conference line.
-  ///
-  /// In en, this message translates to:
-  /// **'Is there a point at which you would walk?'**
-  String get pressAskCrisis6;
-
-  /// Press conference line.
-  ///
-  /// In en, this message translates to:
-  /// **'What do you say to people who think this has run its course?'**
-  String get pressAskCrisis7;
-
-  /// Press conference line.
-  ///
-  /// In en, this message translates to:
-  /// **'Give us one reason to believe this turns around.'**
-  String get pressAskCrisis8;
-
   /// Marker under a squad row for a player who has already been taken off this match.
   ///
   /// In en, this message translates to:
@@ -12998,6 +12414,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Injured'**
   String get tacticsSubInjured;
+
+  /// Marker under a squad row for a player sent off in this match.
+  ///
+  /// In en, this message translates to:
+  /// **'Sent off'**
+  String get tacticsSubSentOffMark;
 
   /// Marker under a squad row when the side has spent every change it has.
   ///
@@ -13052,6 +12474,2118 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Staff room'**
   String get strengthFactorStaff;
+
+  /// Pre-match strength line: what the scout's report on this opponent is worth.
+  ///
+  /// In en, this message translates to:
+  /// **'Scout\'s dossier'**
+  String get strengthFactorDossier;
+
+  /// Y feed post about a player winning his first cap.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} gets his first cap. Remember the name.'**
+  String yDebut0(String name);
+
+  /// Y feed post about a player winning his first cap.
+  ///
+  /// In en, this message translates to:
+  /// **'A debut for {name}. You can see it in him, can you not?'**
+  String yDebut1(String name);
+
+  /// Y feed post about a player winning his first cap.
+  ///
+  /// In en, this message translates to:
+  /// **'{name}, first cap. Let us see what he does with it.'**
+  String yDebut2(String name);
+
+  /// Y feed post about a player winning his first cap.
+  ///
+  /// In en, this message translates to:
+  /// **'Debut for {name}. The squad needed fresh legs somewhere.'**
+  String yDebut3(String name);
+
+  /// Y feed post about a player winning his first cap.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} handed a cap. We have handed out a lot of those lately.'**
+  String yDebut4(String name);
+
+  /// Y feed post about a player winning his first cap.
+  ///
+  /// In en, this message translates to:
+  /// **'A debut for {name}. Another one we will have forgotten by spring.'**
+  String yDebut5(String name);
+
+  /// Y feed post about a forward who has gone a long run without scoring.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} has gone {count} without scoring and is doing everything else on the pitch.'**
+  String yDrought0(String name, String count);
+
+  /// Y feed post about a forward who has gone a long run without scoring.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} games without a goal for {name}. They come in threes, always have.'**
+  String yDrought1(String name, String count);
+
+  /// Y feed post about a forward who has gone a long run without scoring.
+  ///
+  /// In en, this message translates to:
+  /// **'{name}: {count} games, no goals.'**
+  String yDrought2(String name, String count);
+
+  /// Y feed post about a forward who has gone a long run without scoring.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} without a goal for {name}. Worth keeping an eye on.'**
+  String yDrought3(String name, String count);
+
+  /// Y feed post about a forward who has gone a long run without scoring.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} games. No goals. {name} could not hit a barn door.'**
+  String yDrought4(String name, String count);
+
+  /// Y feed post about a forward who has gone a long run without scoring.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} has not scored in {count}. Play literally anybody else.'**
+  String yDrought5(String name, String count);
+
+  /// Y feed post before a match against the most-played opponent.
+  ///
+  /// In en, this message translates to:
+  /// **'{opponent} next. {count} meetings and it still means everything.'**
+  String yRivalryLooms0(String opponent, String count);
+
+  /// Y feed post before a match against the most-played opponent.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} times against {opponent} now. Bring it on.'**
+  String yRivalryLooms1(String opponent, String count);
+
+  /// Y feed post before a match against the most-played opponent.
+  ///
+  /// In en, this message translates to:
+  /// **'{opponent} next. Played {count}.'**
+  String yRivalryLooms2(String opponent, String count);
+
+  /// Y feed post before a match against the most-played opponent.
+  ///
+  /// In en, this message translates to:
+  /// **'Meeting number {count} with {opponent} this week.'**
+  String yRivalryLooms3(String opponent, String count);
+
+  /// Y feed post before a match against the most-played opponent.
+  ///
+  /// In en, this message translates to:
+  /// **'{opponent} again. {count} of these and we have learned nothing.'**
+  String yRivalryLooms4(String opponent, String count);
+
+  /// Y feed post before a match against the most-played opponent.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} games against {opponent} and they still beat us. Wonderful.'**
+  String yRivalryLooms5(String opponent, String count);
+
+  /// A playing position, written out in full.
+  ///
+  /// In en, this message translates to:
+  /// **'Goalkeeper'**
+  String get positionGoalkeeper;
+
+  /// No description provided for @positionLeftBack.
+  ///
+  /// In en, this message translates to:
+  /// **'Left Back'**
+  String get positionLeftBack;
+
+  /// No description provided for @positionCentreBack.
+  ///
+  /// In en, this message translates to:
+  /// **'Centre Back'**
+  String get positionCentreBack;
+
+  /// No description provided for @positionRightBack.
+  ///
+  /// In en, this message translates to:
+  /// **'Right Back'**
+  String get positionRightBack;
+
+  /// No description provided for @positionDefensiveMid.
+  ///
+  /// In en, this message translates to:
+  /// **'Defensive Mid'**
+  String get positionDefensiveMid;
+
+  /// No description provided for @positionCentralMid.
+  ///
+  /// In en, this message translates to:
+  /// **'Central Mid'**
+  String get positionCentralMid;
+
+  /// No description provided for @positionAttackingMid.
+  ///
+  /// In en, this message translates to:
+  /// **'Attacking Mid'**
+  String get positionAttackingMid;
+
+  /// No description provided for @positionLeftMid.
+  ///
+  /// In en, this message translates to:
+  /// **'Left Mid'**
+  String get positionLeftMid;
+
+  /// No description provided for @positionRightMid.
+  ///
+  /// In en, this message translates to:
+  /// **'Right Mid'**
+  String get positionRightMid;
+
+  /// No description provided for @positionLeftWing.
+  ///
+  /// In en, this message translates to:
+  /// **'Left Wing'**
+  String get positionLeftWing;
+
+  /// No description provided for @positionRightWing.
+  ///
+  /// In en, this message translates to:
+  /// **'Right Wing'**
+  String get positionRightWing;
+
+  /// No description provided for @positionStriker.
+  ///
+  /// In en, this message translates to:
+  /// **'Striker'**
+  String get positionStriker;
+
+  /// A tactical role a player can be given.
+  ///
+  /// In en, this message translates to:
+  /// **'No role'**
+  String get roleNone;
+
+  /// No description provided for @roleTargetMan.
+  ///
+  /// In en, this message translates to:
+  /// **'Target man'**
+  String get roleTargetMan;
+
+  /// No description provided for @rolePoacher.
+  ///
+  /// In en, this message translates to:
+  /// **'Poacher'**
+  String get rolePoacher;
+
+  /// No description provided for @rolePlaymaker.
+  ///
+  /// In en, this message translates to:
+  /// **'Playmaker'**
+  String get rolePlaymaker;
+
+  /// No description provided for @roleBallWinner.
+  ///
+  /// In en, this message translates to:
+  /// **'Ball winner'**
+  String get roleBallWinner;
+
+  /// No description provided for @roleInvertedWinger.
+  ///
+  /// In en, this message translates to:
+  /// **'Inverted winger'**
+  String get roleInvertedWinger;
+
+  /// No description provided for @roleBallPlayingDefender.
+  ///
+  /// In en, this message translates to:
+  /// **'Ball-playing defender'**
+  String get roleBallPlayingDefender;
+
+  /// What a tactical role does, one line, in the role picker.
+  ///
+  /// In en, this message translates to:
+  /// **'Plays their natural game.'**
+  String get roleNoneBlurb;
+
+  /// No description provided for @roleTargetManBlurb.
+  ///
+  /// In en, this message translates to:
+  /// **'Wins headers, lays it off. Assists and set pieces.'**
+  String get roleTargetManBlurb;
+
+  /// No description provided for @rolePoacherBlurb.
+  ///
+  /// In en, this message translates to:
+  /// **'Lurks in the box. Many more goals.'**
+  String get rolePoacherBlurb;
+
+  /// No description provided for @rolePlaymakerBlurb.
+  ///
+  /// In en, this message translates to:
+  /// **'Creates chances. Far more assists.'**
+  String get rolePlaymakerBlurb;
+
+  /// No description provided for @roleBallWinnerBlurb.
+  ///
+  /// In en, this message translates to:
+  /// **'Breaks up play rather than finishing it.'**
+  String get roleBallWinnerBlurb;
+
+  /// No description provided for @roleInvertedWingerBlurb.
+  ///
+  /// In en, this message translates to:
+  /// **'Cuts inside to shoot. More goals.'**
+  String get roleInvertedWingerBlurb;
+
+  /// No description provided for @roleBallPlayingDefenderBlurb.
+  ///
+  /// In en, this message translates to:
+  /// **'Starts moves from the back.'**
+  String get roleBallPlayingDefenderBlurb;
+
+  /// A federation department the manager invests in.
+  ///
+  /// In en, this message translates to:
+  /// **'Youth Academy'**
+  String get federationDeptYouth;
+
+  /// No description provided for @federationDeptCommercial.
+  ///
+  /// In en, this message translates to:
+  /// **'Commercial / PR'**
+  String get federationDeptCommercial;
+
+  /// No description provided for @federationDeptMedical.
+  ///
+  /// In en, this message translates to:
+  /// **'Medical & Sports Science'**
+  String get federationDeptMedical;
+
+  /// No description provided for @federationDeptNaturalisation.
+  ///
+  /// In en, this message translates to:
+  /// **'Naturalisation Office'**
+  String get federationDeptNaturalisation;
+
+  /// No description provided for @federationDeptBoardRelations.
+  ///
+  /// In en, this message translates to:
+  /// **'Board Relations'**
+  String get federationDeptBoardRelations;
+
+  /// What a federation department buys.
+  ///
+  /// In en, this message translates to:
+  /// **'Better academy prospects debut for your nation next cycle.'**
+  String get federationDeptYouthBlurb;
+
+  /// No description provided for @federationDeptCommercialBlurb.
+  ///
+  /// In en, this message translates to:
+  /// **'Sponsorship brings extra income at the end of the cycle.'**
+  String get federationDeptCommercialBlurb;
+
+  /// No description provided for @federationDeptMedicalBlurb.
+  ///
+  /// In en, this message translates to:
+  /// **'Fewer injuries. Your squad stays available all cycle.'**
+  String get federationDeptMedicalBlurb;
+
+  /// No description provided for @federationDeptNaturalisationBlurb.
+  ///
+  /// In en, this message translates to:
+  /// **'More foreign players offer to switch to your nation.'**
+  String get federationDeptNaturalisationBlurb;
+
+  /// No description provided for @federationDeptBoardRelationsBlurb.
+  ///
+  /// In en, this message translates to:
+  /// **'The board judges your results more patiently.'**
+  String get federationDeptBoardRelationsBlurb;
+
+  /// The building a federation department is housed in, in the development section.
+  ///
+  /// In en, this message translates to:
+  /// **'Academy'**
+  String get federationBuildingAcademy;
+
+  /// No description provided for @federationBuildingCommercial.
+  ///
+  /// In en, this message translates to:
+  /// **'Commercial HQ'**
+  String get federationBuildingCommercial;
+
+  /// No description provided for @federationBuildingMedical.
+  ///
+  /// In en, this message translates to:
+  /// **'Medical Centre'**
+  String get federationBuildingMedical;
+
+  /// No description provided for @federationBuildingScouting.
+  ///
+  /// In en, this message translates to:
+  /// **'Scouting Office'**
+  String get federationBuildingScouting;
+
+  /// No description provided for @federationBuildingBoardroom.
+  ///
+  /// In en, this message translates to:
+  /// **'Boardroom'**
+  String get federationBuildingBoardroom;
+
+  /// The squad’s morale, as a word, on the hub badge.
+  ///
+  /// In en, this message translates to:
+  /// **'Buoyant'**
+  String get moraleBuoyant;
+
+  /// No description provided for @moralePositive.
+  ///
+  /// In en, this message translates to:
+  /// **'Positive'**
+  String get moralePositive;
+
+  /// No description provided for @moraleSettled.
+  ///
+  /// In en, this message translates to:
+  /// **'Settled'**
+  String get moraleSettled;
+
+  /// No description provided for @moraleUneasy.
+  ///
+  /// In en, this message translates to:
+  /// **'Uneasy'**
+  String get moraleUneasy;
+
+  /// No description provided for @moraleRockBottom.
+  ///
+  /// In en, this message translates to:
+  /// **'Rock bottom'**
+  String get moraleRockBottom;
+
+  /// Live match: the tab strip above the match detail.
+  ///
+  /// In en, this message translates to:
+  /// **'TIMELINE'**
+  String get matchTabTimeline;
+
+  /// No description provided for @matchTabStats.
+  ///
+  /// In en, this message translates to:
+  /// **'STATS'**
+  String get matchTabStats;
+
+  /// No description provided for @matchTabLineups.
+  ///
+  /// In en, this message translates to:
+  /// **'LINEUPS'**
+  String get matchTabLineups;
+
+  /// Live match: the goal flash, when the goal was a penalty.
+  ///
+  /// In en, this message translates to:
+  /// **'PENALTY'**
+  String get matchPenalty;
+
+  /// Half-time interval: the scoreline read back, when it is level.
+  ///
+  /// In en, this message translates to:
+  /// **'It’s all square'**
+  String get matchStateLevel;
+
+  /// Half-time interval: the scoreline read back, when the manager is ahead.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{You lead by a goal} other{You lead by {count} goals}}'**
+  String matchStateLead(int count);
+
+  /// Half-time interval: the scoreline read back, when the manager is behind.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{You trail by a goal} other{You trail by {count} goals}}'**
+  String matchStateTrail(int count);
+
+  /// Half-time interval: the manager’s share of the ball, after the scoreline.
+  ///
+  /// In en, this message translates to:
+  /// **'{possession}% possession'**
+  String matchPossessionShare(int possession);
+
+  /// Board verdict headline: the manager has been dismissed.
+  ///
+  /// In en, this message translates to:
+  /// **'The board has dismissed you'**
+  String get boardVerdictSackedTitle;
+
+  /// Board verdict detail: dismissed.
+  ///
+  /// In en, this message translates to:
+  /// **'A dismal cycle (rating {rating}%). Your reign ends here. Only lesser nations will take a chance on you now.'**
+  String boardVerdictSackedBody(int rating);
+
+  /// Board verdict headline: an outstanding cycle.
+  ///
+  /// In en, this message translates to:
+  /// **'The board is delighted'**
+  String get boardVerdictDelightedTitle;
+
+  /// Board verdict detail: an outstanding cycle. {best} names the cycle's best run.
+  ///
+  /// In en, this message translates to:
+  /// **'An outstanding cycle (rating {rating}%) after {best}. Bigger nations are interested, or you can stay and build.'**
+  String boardVerdictDelightedBody(int rating, String best);
+
+  /// Board verdict headline: a solid cycle.
+  ///
+  /// In en, this message translates to:
+  /// **'A solid cycle'**
+  String get boardVerdictSolidTitle;
+
+  /// Board verdict detail: a solid cycle.
+  ///
+  /// In en, this message translates to:
+  /// **'The board is content (rating {rating}%). A few nations of similar standing would take you, but there is no pressure to move.'**
+  String boardVerdictSolidBody(int rating);
+
+  /// Board verdict headline: a disappointing cycle.
+  ///
+  /// In en, this message translates to:
+  /// **'The board expected more'**
+  String get boardVerdictExpectedMoreTitle;
+
+  /// Board verdict detail: a disappointing cycle.
+  ///
+  /// In en, this message translates to:
+  /// **'A disappointing cycle (rating {rating}%). You keep your job, but any offers are a step down.'**
+  String boardVerdictExpectedMoreBody(int rating);
+
+  /// Board verdict headline: a poor cycle, survived.
+  ///
+  /// In en, this message translates to:
+  /// **'You are under real pressure'**
+  String get boardVerdictPressureTitle;
+
+  /// Board verdict detail: a poor cycle, survived.
+  ///
+  /// In en, this message translates to:
+  /// **'A poor cycle (rating {rating}%). You survive, but only weaker nations are interested if you fancy a fresh start.'**
+  String boardVerdictPressureBody(int rating);
+
+  /// Board verdict headline: a national hero the board will not sack, whatever the cycle.
+  ///
+  /// In en, this message translates to:
+  /// **'The nation stands by you'**
+  String get boardVerdictHeroTitle;
+
+  /// Board verdict: the sentence added for a national hero. It follows the verdict detail, so it opens with a space.
+  ///
+  /// In en, this message translates to:
+  /// **' {nation} adore you, a national hero after {cycles, plural, one{1 cycle} other{{cycles} cycles}}; your job is safe for as long as you want it.'**
+  String boardVerdictHeroNote(String nation, int cycles);
+
+  /// Board verdict: stands in for the nation's name when it cannot be read.
+  ///
+  /// In en, this message translates to:
+  /// **'The nation'**
+  String get boardVerdictTheNation;
+
+  /// Board verdict: the cycle's best run, when there is nothing to name.
+  ///
+  /// In en, this message translates to:
+  /// **'a quiet cycle'**
+  String get boardVerdictBestQuiet;
+
+  /// Board verdict: the cycle's best run, when the World Championship is not part of it.
+  ///
+  /// In en, this message translates to:
+  /// **'the cycle'**
+  String get boardVerdictBestCycle;
+
+  /// Board verdict: the cycle's best run, named after how far the nation went at the World Championship.
+  ///
+  /// In en, this message translates to:
+  /// **'the World Championship: {placement}'**
+  String boardVerdictBestWorld(String placement);
+
+  /// A tournament finish: third.
+  ///
+  /// In en, this message translates to:
+  /// **'Third place'**
+  String get finishThirdPlace;
+
+  /// A tournament finish: fourth.
+  ///
+  /// In en, this message translates to:
+  /// **'Fourth place'**
+  String get finishFourthPlace;
+
+  /// A tournament finish: never reached the finals.
+  ///
+  /// In en, this message translates to:
+  /// **'Did not qualify'**
+  String get finishDidNotQualify;
+
+  /// A manager's career-long standing, top band.
+  ///
+  /// In en, this message translates to:
+  /// **'Iconic'**
+  String get careerRepIconic;
+
+  /// A manager's career-long standing, second band.
+  ///
+  /// In en, this message translates to:
+  /// **'Renowned'**
+  String get careerRepRenowned;
+
+  /// A manager's career-long standing, middle band.
+  ///
+  /// In en, this message translates to:
+  /// **'Established'**
+  String get careerRepEstablished;
+
+  /// A manager's career-long standing, fourth band.
+  ///
+  /// In en, this message translates to:
+  /// **'Up-and-coming'**
+  String get careerRepRising;
+
+  /// A manager's career-long standing, bottom band.
+  ///
+  /// In en, this message translates to:
+  /// **'Unproven'**
+  String get careerRepUnproven;
+
+  /// Job offer tier: a stronger nation than the one being left.
+  ///
+  /// In en, this message translates to:
+  /// **'Step up'**
+  String get hubOfferStepUp;
+
+  /// Job offer tier: a nation of about the same standing.
+  ///
+  /// In en, this message translates to:
+  /// **'Lateral move'**
+  String get hubOfferLateral;
+
+  /// Job offer tier: a weaker nation, taken on to build it up.
+  ///
+  /// In en, this message translates to:
+  /// **'A rebuild'**
+  String get hubOfferRebuild;
+
+  /// Career history: won the Nations Cup Finals Four from this league.
+  ///
+  /// In en, this message translates to:
+  /// **'League {league} · Champions'**
+  String careerNationsCupWon(String league);
+
+  /// Career history: lost the Nations Cup final from this league.
+  ///
+  /// In en, this message translates to:
+  /// **'League {league} · Runners-up'**
+  String careerNationsCupRunnerUp(String league);
+
+  /// Career history: reached the Nations Cup Finals Four from this league.
+  ///
+  /// In en, this message translates to:
+  /// **'League {league} · Semi-finalist'**
+  String careerNationsCupSemi(String league);
+
+  /// Career history: where the nation came in its Nations Cup league group.
+  ///
+  /// In en, this message translates to:
+  /// **'League {league} · #{position}'**
+  String careerNationsCupPlaced(String league, int position);
+
+  /// Above a bracket: the nation has a tie to come in this round.
+  ///
+  /// In en, this message translates to:
+  /// **'Into the {round}'**
+  String tourRunInto(String round);
+
+  /// Above a bracket: the nation plays the bronze match next.
+  ///
+  /// In en, this message translates to:
+  /// **'Into the third-place play-off'**
+  String get tourRunIntoThirdPlace;
+
+  /// Above a bracket: the nation won its tie in this round.
+  ///
+  /// In en, this message translates to:
+  /// **'Through from the {round}'**
+  String tourRunThrough(String round);
+
+  /// Above a bracket: the nation lost its tie in this round.
+  ///
+  /// In en, this message translates to:
+  /// **'Knocked out in the {round}'**
+  String tourRunOut(String round);
+
+  /// Above a bracket: the nation is still in the group stage.
+  ///
+  /// In en, this message translates to:
+  /// **'Contesting the group stage'**
+  String get tourRunInGroup;
+
+  /// Above a bracket: the nation went out in the group stage.
+  ///
+  /// In en, this message translates to:
+  /// **'Eliminated in the group stage'**
+  String get tourRunGroupOut;
+
+  /// Header of one folded cycle on the my-matches list: the cycle it closes and the nation led through it.
+  ///
+  /// In en, this message translates to:
+  /// **'{year} cycle · {nation}'**
+  String resultsCycleTitle(int year, String nation);
+
+  /// Header of one folded cycle: matches played, and the win/draw/loss balance.
+  ///
+  /// In en, this message translates to:
+  /// **'{played} played  ·  {won}W {drawn}D {lost}L'**
+  String resultsCycleRecord(int played, int won, int drawn, int lost);
+
+  /// Header of one folded cycle: what the cycle ended in, named after the World Championship that closes it.
+  ///
+  /// In en, this message translates to:
+  /// **'World Championship: {finish}'**
+  String resultsCycleFinish(String finish);
+
+  /// Header of the cycle the manager is living through, which has not ended in anything yet.
+  ///
+  /// In en, this message translates to:
+  /// **'Still being played'**
+  String get resultsCycleUnderway;
+
+  /// Y post: the side came from two goals down at half time, wording 0 (tone order: generous, neutral, sour). CZECH DIFFERS ON PURPOSE: it is built on "Csaplarova past", a Czech in-joke about a side two goals down at half time being exactly where it wants to be. The English says the same thing about the same match with no trace of the joke, because an English reader has never heard of it. The two Y templates and the two press questions on this afternoon are the only place in the app where the languages deliberately differ.
+  ///
+  /// In en, this message translates to:
+  /// **'Two down to {opponent} at the break and they got every bit of it back. That is a team.'**
+  String yTurnedItRound0(String opponent);
+
+  /// Y post: the side came from two goals down at half time, wording 1 (tone order: generous, neutral, sour). CZECH DIFFERS ON PURPOSE: it is built on "Csaplarova past", a Czech in-joke about a side two goals down at half time being exactly where it wants to be. The English says the same thing about the same match with no trace of the joke, because an English reader has never heard of it. The two Y templates and the two press questions on this afternoon are the only place in the app where the languages deliberately differ.
+  ///
+  /// In en, this message translates to:
+  /// **'Two behind against {opponent} and by the end it did not matter. Not many sides do that.'**
+  String yTurnedItRound1(String opponent);
+
+  /// Y post: the side came from two goals down at half time, wording 2 (tone order: generous, neutral, sour). CZECH DIFFERS ON PURPOSE: it is built on "Csaplarova past", a Czech in-joke about a side two goals down at half time being exactly where it wants to be. The English says the same thing about the same match with no trace of the joke, because an English reader has never heard of it. The two Y templates and the two press questions on this afternoon are the only place in the app where the languages deliberately differ.
+  ///
+  /// In en, this message translates to:
+  /// **'Half time: two goals down to {opponent}. Full time: not. The second half was a different match.'**
+  String yTurnedItRound2(String opponent);
+
+  /// Y post: the side came from two goals down at half time, wording 3 (tone order: generous, neutral, sour). CZECH DIFFERS ON PURPOSE: it is built on "Csaplarova past", a Czech in-joke about a side two goals down at half time being exactly where it wants to be. The English says the same thing about the same match with no trace of the joke, because an English reader has never heard of it. The two Y templates and the two press questions on this afternoon are the only place in the app where the languages deliberately differ.
+  ///
+  /// In en, this message translates to:
+  /// **'Came from two down against {opponent}. Whatever was said at the break, say it every week.'**
+  String yTurnedItRound3(String opponent);
+
+  /// Y post: the side came from two goals down at half time, wording 4 (tone order: generous, neutral, sour). CZECH DIFFERS ON PURPOSE: it is built on "Csaplarova past", a Czech in-joke about a side two goals down at half time being exactly where it wants to be. The English says the same thing about the same match with no trace of the joke, because an English reader has never heard of it. The two Y templates and the two press questions on this afternoon are the only place in the app where the languages deliberately differ.
+  ///
+  /// In en, this message translates to:
+  /// **'Fine, we got it back against {opponent}. Now somebody explain the first forty-five minutes.'**
+  String yTurnedItRound4(String opponent);
+
+  /// Y post: the side came from two goals down at half time, wording 5 (tone order: generous, neutral, sour). CZECH DIFFERS ON PURPOSE: it is built on "Csaplarova past", a Czech in-joke about a side two goals down at half time being exactly where it wants to be. The English says the same thing about the same match with no trace of the joke, because an English reader has never heard of it. The two Y templates and the two press questions on this afternoon are the only place in the app where the languages deliberately differ.
+  ///
+  /// In en, this message translates to:
+  /// **'Two down to {opponent} and we are supposed to be delighted. Fix the first half.'**
+  String yTurnedItRound5(String opponent);
+
+  /// Y post: the side threw away a two-goal half-time lead, wording 0 (tone order: generous, neutral, sour). CZECH DIFFERS ON PURPOSE: it is built on "Csaplarova past", a Czech in-joke about a side two goals down at half time being exactly where it wants to be. The English says the same thing about the same match with no trace of the joke, because an English reader has never heard of it. The two Y templates and the two press questions on this afternoon are the only place in the app where the languages deliberately differ.
+  ///
+  /// In en, this message translates to:
+  /// **'Two up on {opponent} at the break and it slipped away. It happens to better sides.'**
+  String yThrewItAway0(String opponent);
+
+  /// Y post: the side threw away a two-goal half-time lead, wording 1 (tone order: generous, neutral, sour). CZECH DIFFERS ON PURPOSE: it is built on "Csaplarova past", a Czech in-joke about a side two goals down at half time being exactly where it wants to be. The English says the same thing about the same match with no trace of the joke, because an English reader has never heard of it. The two Y templates and the two press questions on this afternoon are the only place in the app where the languages deliberately differ.
+  ///
+  /// In en, this message translates to:
+  /// **'Two goals in front of {opponent} and it got away. Long cycle ahead, plenty of time.'**
+  String yThrewItAway1(String opponent);
+
+  /// Y post: the side threw away a two-goal half-time lead, wording 2 (tone order: generous, neutral, sour). CZECH DIFFERS ON PURPOSE: it is built on "Csaplarova past", a Czech in-joke about a side two goals down at half time being exactly where it wants to be. The English says the same thing about the same match with no trace of the joke, because an English reader has never heard of it. The two Y templates and the two press questions on this afternoon are the only place in the app where the languages deliberately differ.
+  ///
+  /// In en, this message translates to:
+  /// **'Half time: two goals up on {opponent}. Full time: nothing like it.'**
+  String yThrewItAway2(String opponent);
+
+  /// Y post: the side threw away a two-goal half-time lead, wording 3 (tone order: generous, neutral, sour). CZECH DIFFERS ON PURPOSE: it is built on "Csaplarova past", a Czech in-joke about a side two goals down at half time being exactly where it wants to be. The English says the same thing about the same match with no trace of the joke, because an English reader has never heard of it. The two Y templates and the two press questions on this afternoon are the only place in the app where the languages deliberately differ.
+  ///
+  /// In en, this message translates to:
+  /// **'A two-goal lead against {opponent}, gone inside forty-five minutes.'**
+  String yThrewItAway3(String opponent);
+
+  /// Y post: the side threw away a two-goal half-time lead, wording 4 (tone order: generous, neutral, sour). CZECH DIFFERS ON PURPOSE: it is built on "Csaplarova past", a Czech in-joke about a side two goals down at half time being exactly where it wants to be. The English says the same thing about the same match with no trace of the joke, because an English reader has never heard of it. The two Y templates and the two press questions on this afternoon are the only place in the app where the languages deliberately differ.
+  ///
+  /// In en, this message translates to:
+  /// **'Two up and we lost it. To {opponent}. Somebody answers for that.'**
+  String yThrewItAway4(String opponent);
+
+  /// Y post: the side threw away a two-goal half-time lead, wording 5 (tone order: generous, neutral, sour). CZECH DIFFERS ON PURPOSE: it is built on "Csaplarova past", a Czech in-joke about a side two goals down at half time being exactly where it wants to be. The English says the same thing about the same match with no trace of the joke, because an English reader has never heard of it. The two Y templates and the two press questions on this afternoon are the only place in the app where the languages deliberately differ.
+  ///
+  /// In en, this message translates to:
+  /// **'Two goals in front against {opponent} and we managed this. Every single time.'**
+  String yThrewItAway5(String opponent);
+
+  /// Snackbar after the automatic end-of-cycle career backup.
+  ///
+  /// In en, this message translates to:
+  /// **'Career backed up to the FNM folder on this phone. Uninstalling the app removes it: to keep a copy elsewhere, use Back up this save on the saves screen.'**
+  String get cycleBackupDone;
+
+  /// Snackbar when the automatic end-of-cycle backup fails.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not back up the career this time.'**
+  String get cycleBackupFailed;
+
+  /// Press conference: opening question after a heroic win, warm reporter. {opponent} is the nation just played.
+  ///
+  /// In en, this message translates to:
+  /// **'A night to remember against {opponent}. How proud are you of this group?'**
+  String pressMomentBigWinWarm1(String opponent);
+
+  /// Press conference: opening question after a heroic win, warm reporter. {opponent} is the nation just played.
+  ///
+  /// In en, this message translates to:
+  /// **'{opponent} could not live with you. Is this the side you always believed you had?'**
+  String pressMomentBigWinWarm2(String opponent);
+
+  /// Press conference: opening question after a heroic win, neutral reporter. {opponent} is the nation just played.
+  ///
+  /// In en, this message translates to:
+  /// **'A big win over {opponent}. What made the difference tonight?'**
+  String pressMomentBigWinNeutral1(String opponent);
+
+  /// Press conference: opening question after a heroic win, neutral reporter. {opponent} is the nation just played.
+  ///
+  /// In en, this message translates to:
+  /// **'{opponent} beaten, and comfortably. Where did you win it?'**
+  String pressMomentBigWinNeutral2(String opponent);
+
+  /// Press conference: opening question after a heroic win, hostile reporter. {opponent} is the nation just played.
+  ///
+  /// In en, this message translates to:
+  /// **'A good win over {opponent}. One good night: why should anyone believe it will last?'**
+  String pressMomentBigWinHostile1(String opponent);
+
+  /// Press conference: opening question after a heroic win, hostile reporter. {opponent} is the nation just played.
+  ///
+  /// In en, this message translates to:
+  /// **'A fine result against {opponent}. Was that your plan, or did the players work it out themselves?'**
+  String pressMomentBigWinHostile2(String opponent);
+
+  /// Press conference: opening question after a humiliating loss, warm reporter. {opponent} is the nation just played.
+  ///
+  /// In en, this message translates to:
+  /// **'A hard night against {opponent}. What do you say to the players after one like that?'**
+  String pressMomentBigLossWarm1(String opponent);
+
+  /// Press conference: opening question after a humiliating loss, warm reporter. {opponent} is the nation just played.
+  ///
+  /// In en, this message translates to:
+  /// **'Nobody saw that coming against {opponent}. Was it just one of those nights?'**
+  String pressMomentBigLossWarm2(String opponent);
+
+  /// Press conference: opening question after a humiliating loss, neutral reporter. {opponent} is the nation just played.
+  ///
+  /// In en, this message translates to:
+  /// **'That was a chastening night against {opponent}. What went wrong?'**
+  String pressMomentBigLossNeutral1(String opponent);
+
+  /// Press conference: opening question after a humiliating loss, neutral reporter. {opponent} is the nation just played.
+  ///
+  /// In en, this message translates to:
+  /// **'{opponent} took you apart. Is this squad good enough?'**
+  String pressMomentBigLossNeutral2(String opponent);
+
+  /// Press conference: opening question after a humiliating loss, hostile reporter. {opponent} is the nation just played.
+  ///
+  /// In en, this message translates to:
+  /// **'You were second to everything against {opponent}. How did you let it get that bad?'**
+  String pressMomentBigLossHostile1(String opponent);
+
+  /// Press conference: opening question after a humiliating loss, hostile reporter. {opponent} is the nation just played.
+  ///
+  /// In en, this message translates to:
+  /// **'{opponent} scored at will. Where was the plan tonight?'**
+  String pressMomentBigLossHostile2(String opponent);
+
+  /// Press conference: opening question in a crisis (may mention his job), warm reporter. {opponent} is the nation just played.
+  ///
+  /// In en, this message translates to:
+  /// **'Another one gets away, this time against {opponent}. How do you turn this run around?'**
+  String pressMomentCrisisWarm1(String opponent);
+
+  /// Press conference: opening question in a crisis (may mention his job), warm reporter. {opponent} is the nation just played.
+  ///
+  /// In en, this message translates to:
+  /// **'The results have dried up, and {opponent} made it worse. Do you still believe in this group?'**
+  String pressMomentCrisisWarm2(String opponent);
+
+  /// Press conference: opening question in a crisis (may mention his job), neutral reporter. {opponent} is the nation just played.
+  ///
+  /// In en, this message translates to:
+  /// **'No win again, now against {opponent}, and the board are watching. Is your job safe?'**
+  String pressMomentCrisisNeutral1(String opponent);
+
+  /// Press conference: opening question in a crisis (may mention his job), neutral reporter. {opponent} is the nation just played.
+  ///
+  /// In en, this message translates to:
+  /// **'After {opponent}, the run is getting long. Are you worried about your future?'**
+  String pressMomentCrisisNeutral2(String opponent);
+
+  /// Press conference: opening question in a crisis (may mention his job), hostile reporter. {opponent} is the nation just played.
+  ///
+  /// In en, this message translates to:
+  /// **'{opponent} now as well. Your predecessor was sacked on a run like this. Why should you survive it?'**
+  String pressMomentCrisisHostile1(String opponent);
+
+  /// Press conference: opening question in a crisis (may mention his job), hostile reporter. {opponent} is the nation just played.
+  ///
+  /// In en, this message translates to:
+  /// **'After another night like {opponent}, every phone-in wants you out. Would you step down if the board asked?'**
+  String pressMomentCrisisHostile2(String opponent);
+
+  /// Press conference: opening question after his 'judge me on the next three' promise failed (may mention his job), warm reporter. {opponent} is the nation just played.
+  ///
+  /// In en, this message translates to:
+  /// **'You put your job on the line, and after {opponent} it has not gone your way. How are you holding up?'**
+  String pressMomentJobVerdictWarm1(String opponent);
+
+  /// Press conference: opening question after his 'judge me on the next three' promise failed (may mention his job), warm reporter. {opponent} is the nation just played.
+  ///
+  /// In en, this message translates to:
+  /// **'The three matches are done, the last against {opponent}. You set the test yourself. What do you make of the verdict?'**
+  String pressMomentJobVerdictWarm2(String opponent);
+
+  /// Press conference: opening question after his 'judge me on the next three' promise failed (may mention his job), neutral reporter. {opponent} is the nation just played.
+  ///
+  /// In en, this message translates to:
+  /// **'You told us to judge you on the next three. After {opponent}, we have. Is your job still yours?'**
+  String pressMomentJobVerdictNeutral1(String opponent);
+
+  /// Press conference: opening question after his 'judge me on the next three' promise failed (may mention his job), neutral reporter. {opponent} is the nation just played.
+  ///
+  /// In en, this message translates to:
+  /// **'Three matches, the last against {opponent}, and not what you promised. Have you spoken to the board about your future?'**
+  String pressMomentJobVerdictNeutral2(String opponent);
+
+  /// Press conference: opening question after his 'judge me on the next three' promise failed (may mention his job), hostile reporter. {opponent} is the nation just played.
+  ///
+  /// In en, this message translates to:
+  /// **'You set the test yourself and failed it against {opponent}. Are you going to resign?'**
+  String pressMomentJobVerdictHostile1(String opponent);
+
+  /// Press conference: opening question after his 'judge me on the next three' promise failed (may mention his job), hostile reporter. {opponent} is the nation just played.
+  ///
+  /// In en, this message translates to:
+  /// **'Your words, not ours: judge me on the next three. After {opponent}, why are you still sitting there?'**
+  String pressMomentJobVerdictHostile2(String opponent);
+
+  /// Press conference: after he demanded more, asking who he means, warm reporter.
+  ///
+  /// In en, this message translates to:
+  /// **'You want more from them. Anyone in particular?'**
+  String get pressBeatWhoToBlameWarm1;
+
+  /// Press conference: after he demanded more, asking who he means, warm reporter.
+  ///
+  /// In en, this message translates to:
+  /// **'You have set the bar high. Who has to step up first?'**
+  String get pressBeatWhoToBlameWarm2;
+
+  /// Press conference: after he demanded more, asking who he means, neutral reporter.
+  ///
+  /// In en, this message translates to:
+  /// **'You say some of them have to look at themselves. Who do you mean?'**
+  String get pressBeatWhoToBlameNeutral1;
+
+  /// Press conference: after he demanded more, asking who he means, neutral reporter.
+  ///
+  /// In en, this message translates to:
+  /// **'Not good enough, you say. Who are you talking about?'**
+  String get pressBeatWhoToBlameNeutral2;
+
+  /// Press conference: after he demanded more, asking who he means, hostile reporter.
+  ///
+  /// In en, this message translates to:
+  /// **'You keep it vague. Will you name names, or does it come back to you?'**
+  String get pressBeatWhoToBlameHostile1;
+
+  /// Press conference: after he demanded more, asking who he means, hostile reporter.
+  ///
+  /// In en, this message translates to:
+  /// **'Every week it is somebody else\'s fault. Whose is it this time?'**
+  String get pressBeatWhoToBlameHostile2;
+
+  /// Press conference: after he promised to win the next match, asking what happens if he does not (never mention his job), warm reporter.
+  ///
+  /// In en, this message translates to:
+  /// **'Brave words. And if the next one does not go your way?'**
+  String get pressBeatIfYouDontWarm1;
+
+  /// Press conference: after he promised to win the next match, asking what happens if he does not (never mention his job), warm reporter.
+  ///
+  /// In en, this message translates to:
+  /// **'The country will hold you to that. What if it does not come off?'**
+  String get pressBeatIfYouDontWarm2;
+
+  /// Press conference: after he promised to win the next match, asking what happens if he does not (never mention his job), neutral reporter.
+  ///
+  /// In en, this message translates to:
+  /// **'And if you don\'t win it? What then?'**
+  String get pressBeatIfYouDontNeutral1;
+
+  /// Press conference: after he promised to win the next match, asking what happens if he does not (never mention his job), neutral reporter.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'ve said it now. What happens if you\'re wrong?'**
+  String get pressBeatIfYouDontNeutral2;
+
+  /// Press conference: after he promised to win the next match, asking what happens if he does not (never mention his job), hostile reporter.
+  ///
+  /// In en, this message translates to:
+  /// **'We have heard promises in this room before. What do you owe the supporters if this one breaks too?'**
+  String get pressBeatIfYouDontHostile1;
+
+  /// Press conference: after he promised to win the next match, asking what happens if he does not (never mention his job), hostile reporter.
+  ///
+  /// In en, this message translates to:
+  /// **'And when it doesn\'t happen, what will the excuse be?'**
+  String get pressBeatIfYouDontHostile2;
+
+  /// Press conference: a follow-up question pressing for more, warm reporter.
+  ///
+  /// In en, this message translates to:
+  /// **'One more, if you have it in you. What does this group still need to work on?'**
+  String get pressBeatFollowUpWarm1;
+
+  /// Press conference: a follow-up question pressing for more, warm reporter.
+  ///
+  /// In en, this message translates to:
+  /// **'When the dust settles, what do you take from tonight into the next match?'**
+  String get pressBeatFollowUpWarm2;
+
+  /// Press conference: a follow-up question pressing for more, neutral reporter.
+  ///
+  /// In en, this message translates to:
+  /// **'Let\'s go a little deeper. What has to improve before the next match?'**
+  String get pressBeatFollowUpNeutral1;
+
+  /// Press conference: a follow-up question pressing for more, neutral reporter.
+  ///
+  /// In en, this message translates to:
+  /// **'Looking past the scoreline: is this squad where you want it?'**
+  String get pressBeatFollowUpNeutral2;
+
+  /// Press conference: a follow-up question pressing for more, hostile reporter.
+  ///
+  /// In en, this message translates to:
+  /// **'Plenty of words, not much said. What actually changes from here?'**
+  String get pressBeatFollowUpHostile1;
+
+  /// Press conference: a follow-up question pressing for more, hostile reporter.
+  ///
+  /// In en, this message translates to:
+  /// **'The supporters want a straight answer. Is this team good enough, yes or no?'**
+  String get pressBeatFollowUpHostile2;
+
+  /// Press conference: question about the standout player of a big win, warm reporter. {player} is the player.
+  ///
+  /// In en, this message translates to:
+  /// **'{player} was outstanding tonight. How far can he go?'**
+  String pressBeatStandoutWarm1(String player);
+
+  /// Press conference: question about the standout player of a big win, warm reporter. {player} is the player.
+  ///
+  /// In en, this message translates to:
+  /// **'{player} is in every headline tonight. Did you see that coming?'**
+  String pressBeatStandoutWarm2(String player);
+
+  /// Press conference: question about the standout player of a big win, neutral reporter. {player} is the player.
+  ///
+  /// In en, this message translates to:
+  /// **'{player} stood out. What did you ask of him tonight?'**
+  String pressBeatStandoutNeutral1(String player);
+
+  /// Press conference: question about the standout player of a big win, neutral reporter. {player} is the player.
+  ///
+  /// In en, this message translates to:
+  /// **'Was {player} the difference tonight?'**
+  String pressBeatStandoutNeutral2(String player);
+
+  /// Press conference: question about the standout player of a big win, hostile reporter. {player} is the player.
+  ///
+  /// In en, this message translates to:
+  /// **'Without {player} that is a different story. Is this a team, or one player?'**
+  String pressBeatStandoutHostile1(String player);
+
+  /// Press conference: question about the standout player of a big win, hostile reporter. {player} is the player.
+  ///
+  /// In en, this message translates to:
+  /// **'{player} was brilliant. Your doing, or his?'**
+  String pressBeatStandoutHostile2(String player);
+
+  /// Press conference: question about the player who struggled, warm reporter. {player} is the player.
+  ///
+  /// In en, this message translates to:
+  /// **'{player} had a hard night. Is he carrying a knock?'**
+  String pressBeatStrugglerWarm1(String player);
+
+  /// Press conference: question about the player who struggled, warm reporter. {player} is the player.
+  ///
+  /// In en, this message translates to:
+  /// **'{player} did not have his night. Will you put an arm round him?'**
+  String pressBeatStrugglerWarm2(String player);
+
+  /// Press conference: question about the player who struggled, neutral reporter. {player} is the player.
+  ///
+  /// In en, this message translates to:
+  /// **'{player} struggled tonight. Does he keep his place?'**
+  String pressBeatStrugglerNeutral1(String player);
+
+  /// Press conference: question about the player who struggled, neutral reporter. {player} is the player.
+  ///
+  /// In en, this message translates to:
+  /// **'{player} looked off the pace. What did you make of his game?'**
+  String pressBeatStrugglerNeutral2(String player);
+
+  /// Press conference: question about the player who struggled, hostile reporter. {player} is the player.
+  ///
+  /// In en, this message translates to:
+  /// **'{player} was a passenger again. Why do you keep picking him?'**
+  String pressBeatStrugglerHostile1(String player);
+
+  /// Press conference: question about the player who struggled, hostile reporter. {player} is the player.
+  ///
+  /// In en, this message translates to:
+  /// **'Everyone could see {player} was not at it. Everyone except the bench?'**
+  String pressBeatStrugglerHostile2(String player);
+
+  /// Press conference: throwback to his promise to win the next match, which came true; warm reporter.
+  ///
+  /// In en, this message translates to:
+  /// **'You said you would win the next one, and you did. Does it feel good to be right?'**
+  String get pressThrowbackWinNextKeptWarm;
+
+  /// Press conference: throwback to his promise to win the next match, which came true; neutral reporter.
+  ///
+  /// In en, this message translates to:
+  /// **'You promised a win in the next match and delivered it. Confidence, or bravado?'**
+  String get pressThrowbackWinNextKeptNeutral;
+
+  /// Press conference: throwback to his promise to win the next match, which came true; hostile reporter.
+  ///
+  /// In en, this message translates to:
+  /// **'You said you would win the next one, and you did. Luck, or are we meant to start listening?'**
+  String get pressThrowbackWinNextKeptHostile;
+
+  /// Press conference: throwback to his promise to win the next match, which failed; warm reporter.
+  ///
+  /// In en, this message translates to:
+  /// **'You told us you would win that one. It did not happen. What went wrong?'**
+  String get pressThrowbackWinNextBrokenWarm;
+
+  /// Press conference: throwback to his promise to win the next match, which failed; neutral reporter.
+  ///
+  /// In en, this message translates to:
+  /// **'You said you\'d win the next one. You didn\'t. Why should we believe the next promise?'**
+  String get pressThrowbackWinNextBrokenNeutral;
+
+  /// Press conference: throwback to his promise to win the next match, which failed; hostile reporter.
+  ///
+  /// In en, this message translates to:
+  /// **'You said you\'d win the next one. You didn\'t. Do your words still mean anything in this room?'**
+  String get pressThrowbackWinNextBrokenHostile;
+
+  /// Press conference: throwback to his 'judge me on the next three' promise, which came true; warm reporter.
+  ///
+  /// In en, this message translates to:
+  /// **'You asked to be judged on three matches, and you passed. Vindicated?'**
+  String get pressThrowbackJobKeptWarm;
+
+  /// Press conference: throwback to his 'judge me on the next three' promise, which came true; neutral reporter.
+  ///
+  /// In en, this message translates to:
+  /// **'Judge me on the next three, you said. We did, and the results came. What did that test teach you?'**
+  String get pressThrowbackJobKeptNeutral;
+
+  /// Press conference: throwback to his 'judge me on the next three' promise, which came true; hostile reporter.
+  ///
+  /// In en, this message translates to:
+  /// **'You gave yourself three matches and got through them. Was the test ever that hard?'**
+  String get pressThrowbackJobKeptHostile;
+
+  /// Press conference: throwback to his 'judge me on the next three' promise, which failed; warm reporter.
+  ///
+  /// In en, this message translates to:
+  /// **'You asked to be judged on three matches. They did not go your way. What have you learned?'**
+  String get pressThrowbackJobBrokenWarm;
+
+  /// Press conference: throwback to his 'judge me on the next three' promise, which failed; neutral reporter.
+  ///
+  /// In en, this message translates to:
+  /// **'You said judge me on the next three. The three are gone, and so is the benefit of the doubt. What now?'**
+  String get pressThrowbackJobBrokenNeutral;
+
+  /// Press conference: throwback to his 'judge me on the next three' promise, which failed; hostile reporter.
+  ///
+  /// In en, this message translates to:
+  /// **'You set the test and failed it. Why should anyone take your word now?'**
+  String get pressThrowbackJobBrokenHostile;
+
+  /// Press conference: throwback to his backing of {player}, which came true; warm reporter.
+  ///
+  /// In en, this message translates to:
+  /// **'You backed {player} when others would not. He delivered. Some of the credit yours?'**
+  String pressThrowbackBackKeptWarm(String player);
+
+  /// Press conference: throwback to his backing of {player}, which came true; neutral reporter.
+  ///
+  /// In en, this message translates to:
+  /// **'You backed {player}. He delivered. Faith, or knowledge?'**
+  String pressThrowbackBackKeptNeutral(String player);
+
+  /// Press conference: throwback to his backing of {player}, which came true; hostile reporter.
+  ///
+  /// In en, this message translates to:
+  /// **'You backed {player}, and for once it paid off. Will you be that sure next time?'**
+  String pressThrowbackBackKeptHostile(String player);
+
+  /// Press conference: throwback to his backing of {player}, which failed; warm reporter.
+  ///
+  /// In en, this message translates to:
+  /// **'You stood by {player}, and it has not worked out. Do you still believe in him?'**
+  String pressThrowbackBackBrokenWarm(String player);
+
+  /// Press conference: throwback to his backing of {player}, which failed; neutral reporter.
+  ///
+  /// In en, this message translates to:
+  /// **'You backed {player}. He has not repaid it. Was that a mistake?'**
+  String pressThrowbackBackBrokenNeutral(String player);
+
+  /// Press conference: throwback to his backing of {player}, which failed; hostile reporter.
+  ///
+  /// In en, this message translates to:
+  /// **'Your judgement or your loyalty: which one failed with {player}?'**
+  String pressThrowbackBackBrokenHostile(String player);
+
+  /// Press conference: throwback to his public criticism of {player}, which was proved right (the player stayed poor); warm reporter.
+  ///
+  /// In en, this message translates to:
+  /// **'You were hard on {player}, and the matches since have proved you right. Any satisfaction in that?'**
+  String pressThrowbackBlameKeptWarm(String player);
+
+  /// Press conference: throwback to his public criticism of {player}, which was proved right (the player stayed poor); neutral reporter.
+  ///
+  /// In en, this message translates to:
+  /// **'You called {player} out, and he has not answered. Is there a way back for him?'**
+  String pressThrowbackBlameKeptNeutral(String player);
+
+  /// Press conference: throwback to his public criticism of {player}, which was proved right (the player stayed poor); hostile reporter.
+  ///
+  /// In en, this message translates to:
+  /// **'You hung {player} out to dry and he has not recovered. Did you break him?'**
+  String pressThrowbackBlameKeptHostile(String player);
+
+  /// Press conference: throwback to his public criticism of {player}, which was proved wrong (the player responded); warm reporter.
+  ///
+  /// In en, this message translates to:
+  /// **'You called {player} out, and he answered you on the pitch. Was that the idea all along?'**
+  String pressThrowbackBlameBrokenWarm(String player);
+
+  /// Press conference: throwback to his public criticism of {player}, which was proved wrong (the player responded); neutral reporter.
+  ///
+  /// In en, this message translates to:
+  /// **'You blamed {player}, and since then he has been one of your best. Do you owe him an apology?'**
+  String pressThrowbackBlameBrokenNeutral(String player);
+
+  /// Press conference: throwback to his public criticism of {player}, which was proved wrong (the player responded); hostile reporter.
+  ///
+  /// In en, this message translates to:
+  /// **'You threw {player} under the bus, and he has been your best player since. Will you apologise?'**
+  String pressThrowbackBlameBrokenHostile(String player);
+
+  /// Press conference: the manager's answer (CreditPlayers), variant 1.
+  ///
+  /// In en, this message translates to:
+  /// **'These players gave me everything. I would not swap a single one of them.'**
+  String get pressReplyCreditPlayers1;
+
+  /// Press conference: the manager's answer (CreditPlayers), variant 2.
+  ///
+  /// In en, this message translates to:
+  /// **'Nobody works harder than this group. I\'ll defend them all day.'**
+  String get pressReplyCreditPlayers2;
+
+  /// Press conference: the manager's answer (CreditPlayers), variant 3.
+  ///
+  /// In en, this message translates to:
+  /// **'You won\'t hear a word against my players from this seat.'**
+  String get pressReplyCreditPlayers3;
+
+  /// Press conference: the manager's answer (CreditPlayers), variant 4.
+  ///
+  /// In en, this message translates to:
+  /// **'The players deserve the credit, not me. Write about them.'**
+  String get pressReplyCreditPlayers4;
+
+  /// Press conference: the manager's answer (TakeResponsibility), variant 1.
+  ///
+  /// In en, this message translates to:
+  /// **'That one is on me. I picked the side and I set them up.'**
+  String get pressReplyTakeResponsibility1;
+
+  /// Press conference: the manager's answer (TakeResponsibility), variant 2.
+  ///
+  /// In en, this message translates to:
+  /// **'Judge me, not them. It\'s my team and my responsibility.'**
+  String get pressReplyTakeResponsibility2;
+
+  /// Press conference: the manager's answer (TakeResponsibility), variant 3.
+  ///
+  /// In en, this message translates to:
+  /// **'If you want somebody to blame, I\'m sitting right here.'**
+  String get pressReplyTakeResponsibility3;
+
+  /// Press conference: the manager's answer (TakeResponsibility), variant 4.
+  ///
+  /// In en, this message translates to:
+  /// **'The responsibility is mine. Leave the players out of it.'**
+  String get pressReplyTakeResponsibility4;
+
+  /// Press conference: the manager's answer (DemandMore), variant 1.
+  ///
+  /// In en, this message translates to:
+  /// **'I want more. Some of them know exactly what I mean.'**
+  String get pressReplyDemandMore1;
+
+  /// Press conference: the manager's answer (DemandMore), variant 2.
+  ///
+  /// In en, this message translates to:
+  /// **'Effort isn\'t enough at this level. I want more, and I\'ve told them so.'**
+  String get pressReplyDemandMore2;
+
+  /// Press conference: the manager's answer (DemandMore), variant 3.
+  ///
+  /// In en, this message translates to:
+  /// **'I expect more from every one of them, starting tomorrow.'**
+  String get pressReplyDemandMore3;
+
+  /// Press conference: the manager's answer (DemandMore), variant 4.
+  ///
+  /// In en, this message translates to:
+  /// **'Some of them have to look at themselves. I\'m not satisfied.'**
+  String get pressReplyDemandMore4;
+
+  /// Press conference: the manager's answer (PromiseWinNext), variant 1.
+  ///
+  /// In en, this message translates to:
+  /// **'We will win the next one. You can write that down.'**
+  String get pressReplyPromiseWinNext1;
+
+  /// Press conference: the manager's answer (PromiseWinNext), variant 2.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark my words: we win the next match.'**
+  String get pressReplyPromiseWinNext2;
+
+  /// Press conference: the manager's answer (PromiseWinNext), variant 3.
+  ///
+  /// In en, this message translates to:
+  /// **'Next game, we win. I\'m saying it here so you can hold me to it.'**
+  String get pressReplyPromiseWinNext3;
+
+  /// Press conference: the manager's answer (PromiseWinNext), variant 4.
+  ///
+  /// In en, this message translates to:
+  /// **'I\'m sure of this team. We win the next match.'**
+  String get pressReplyPromiseWinNext4;
+
+  /// Press conference: the manager's answer (JobOnTheLine), variant 1.
+  ///
+  /// In en, this message translates to:
+  /// **'Judge me on the next three matches. That\'s fair.'**
+  String get pressReplyJobOnTheLine1;
+
+  /// Press conference: the manager's answer (JobOnTheLine), variant 2.
+  ///
+  /// In en, this message translates to:
+  /// **'Give me three games. If it isn\'t right by then, judge me on it.'**
+  String get pressReplyJobOnTheLine2;
+
+  /// Press conference: the manager's answer (JobOnTheLine), variant 3.
+  ///
+  /// In en, this message translates to:
+  /// **'The next three will show whether I\'m the right man. Hold me to that.'**
+  String get pressReplyJobOnTheLine3;
+
+  /// Press conference: the manager's answer (JobOnTheLine), variant 4.
+  ///
+  /// In en, this message translates to:
+  /// **'Three matches. Then write whatever you like about me.'**
+  String get pressReplyJobOnTheLine4;
+
+  /// Press conference: the manager's answer (Deflect), variant 1.
+  ///
+  /// In en, this message translates to:
+  /// **'We take it one game at a time. Nothing more to add.'**
+  String get pressReplyDeflect1;
+
+  /// Press conference: the manager's answer (Deflect), variant 2.
+  ///
+  /// In en, this message translates to:
+  /// **'I\'m not going to make headlines for you today.'**
+  String get pressReplyDeflect2;
+
+  /// Press conference: the manager's answer (Deflect), variant 3.
+  ///
+  /// In en, this message translates to:
+  /// **'Next game. That\'s all I\'m thinking about.'**
+  String get pressReplyDeflect3;
+
+  /// Press conference: the manager's answer (Deflect), variant 4.
+  ///
+  /// In en, this message translates to:
+  /// **'What I think stays in the dressing room.'**
+  String get pressReplyDeflect4;
+
+  /// Press conference: the manager's answer (TakeCredit), variant 1.
+  ///
+  /// In en, this message translates to:
+  /// **'I said it because I believed it, and I was right.'**
+  String get pressReplyTakeCredit1;
+
+  /// Press conference: the manager's answer (TakeCredit), variant 2.
+  ///
+  /// In en, this message translates to:
+  /// **'I read it correctly. That\'s what I\'m here for.'**
+  String get pressReplyTakeCredit2;
+
+  /// Press conference: the manager's answer (TakeCredit), variant 3.
+  ///
+  /// In en, this message translates to:
+  /// **'Call it judgement. I knew what I was saying.'**
+  String get pressReplyTakeCredit3;
+
+  /// Press conference: the manager's answer (TakeCredit), variant 4.
+  ///
+  /// In en, this message translates to:
+  /// **'I made the call and it came off. I\'ll take that.'**
+  String get pressReplyTakeCredit4;
+
+  /// Press conference: the manager's answer (StandByIt), variant 1.
+  ///
+  /// In en, this message translates to:
+  /// **'I said what I believed. I stand by it.'**
+  String get pressReplyStandByIt1;
+
+  /// Press conference: the manager's answer (StandByIt), variant 2.
+  ///
+  /// In en, this message translates to:
+  /// **'I don\'t take back a word of it.'**
+  String get pressReplyStandByIt2;
+
+  /// Press conference: the manager's answer (StandByIt), variant 3.
+  ///
+  /// In en, this message translates to:
+  /// **'Same answer as then. I meant it, and I still do.'**
+  String get pressReplyStandByIt3;
+
+  /// Press conference: the manager's answer (StandByIt), variant 4.
+  ///
+  /// In en, this message translates to:
+  /// **'I\'d say it again tomorrow.'**
+  String get pressReplyStandByIt4;
+
+  /// Press conference: the manager's answer (AdmitMistake), variant 1.
+  ///
+  /// In en, this message translates to:
+  /// **'I got that one wrong. I\'ll own it.'**
+  String get pressReplyAdmitMistake1;
+
+  /// Press conference: the manager's answer (AdmitMistake), variant 2.
+  ///
+  /// In en, this message translates to:
+  /// **'Fair enough, I misjudged it. I\'ll learn from it.'**
+  String get pressReplyAdmitMistake2;
+
+  /// Press conference: the manager's answer (AdmitMistake), variant 3.
+  ///
+  /// In en, this message translates to:
+  /// **'I was wrong, and I can say so.'**
+  String get pressReplyAdmitMistake3;
+
+  /// Press conference: the manager's answer (AdmitMistake), variant 4.
+  ///
+  /// In en, this message translates to:
+  /// **'That call didn\'t work, and it was mine.'**
+  String get pressReplyAdmitMistake4;
+
+  /// Press conference: the manager's answer (BackPlayer), variant 1. {player} is the player.
+  ///
+  /// In en, this message translates to:
+  /// **'{player} has my full backing. He\'ll come good.'**
+  String pressReplyBackPlayer1(String player);
+
+  /// Press conference: the manager's answer (BackPlayer), variant 2. {player} is the player.
+  ///
+  /// In en, this message translates to:
+  /// **'I believe in {player}, and he\'ll show you why.'**
+  String pressReplyBackPlayer2(String player);
+
+  /// Press conference: the manager's answer (BackPlayer), variant 3. {player} is the player.
+  ///
+  /// In en, this message translates to:
+  /// **'You won\'t hear a word against {player} from me. He\'ll deliver.'**
+  String pressReplyBackPlayer3(String player);
+
+  /// Press conference: the manager's answer (BackPlayer), variant 4. {player} is the player.
+  ///
+  /// In en, this message translates to:
+  /// **'{player} stays in my plans. Watch what he does next.'**
+  String pressReplyBackPlayer4(String player);
+
+  /// Press conference: the manager's answer (BlamePlayer), variant 1. {player} is the player.
+  ///
+  /// In en, this message translates to:
+  /// **'{player} let us down tonight, and he knows it.'**
+  String pressReplyBlamePlayer1(String player);
+
+  /// Press conference: the manager's answer (BlamePlayer), variant 2. {player} is the player.
+  ///
+  /// In en, this message translates to:
+  /// **'I expected far more from {player}. He has to answer that.'**
+  String pressReplyBlamePlayer2(String player);
+
+  /// Press conference: the manager's answer (BlamePlayer), variant 3. {player} is the player.
+  ///
+  /// In en, this message translates to:
+  /// **'{player} wasn\'t at the level. I\'ll say that publicly.'**
+  String pressReplyBlamePlayer3(String player);
+
+  /// Press conference: the manager's answer (BlamePlayer), variant 4. {player} is the player.
+  ///
+  /// In en, this message translates to:
+  /// **'That wasn\'t good enough from {player}, and he\'ll hear it from me.'**
+  String pressReplyBlamePlayer4(String player);
+
+  /// Press conference: note that the answer is on the record and will be judged.
+  ///
+  /// In en, this message translates to:
+  /// **'On the record: you will win the next match.'**
+  String get pressOnRecordWinNext;
+
+  /// Press conference: note that the answer is on the record and will be judged.
+  ///
+  /// In en, this message translates to:
+  /// **'On the record: judge you on the next three.'**
+  String get pressOnRecordJob;
+
+  /// Press conference: note that the answer is on the record and will be judged. {player} is the player.
+  ///
+  /// In en, this message translates to:
+  /// **'On the record: backing {player}.'**
+  String pressOnRecordBack(String player);
+
+  /// Press conference: note that the answer is on the record and will be judged. {player} is the player.
+  ///
+  /// In en, this message translates to:
+  /// **'On the record: {player} let you down.'**
+  String pressOnRecordBlame(String player);
+
+  /// Y feed post: something the manager said on the record at a press conference came true (a promised win, a job staked on the next games, a player backed or blamed in public), wording 0 (tone order: generous, neutral, sour). {nation} is the manager's country.
+  ///
+  /// In en, this message translates to:
+  /// **'He said it, and it happened. {nation} has a manager who means what he says.'**
+  String yStatementKept0(String nation);
+
+  /// Y feed post: something the manager said on the record at a press conference came true (a promised win, a job staked on the next games, a player backed or blamed in public), wording 1 (tone order: generous, neutral, sour). {nation} is the manager's country.
+  ///
+  /// In en, this message translates to:
+  /// **'Said it out loud, then went and did it. That is the man {nation} needed.'**
+  String yStatementKept1(String nation);
+
+  /// Y feed post: something the manager said on the record at a press conference came true (a promised win, a job staked on the next games, a player backed or blamed in public), wording 2 (tone order: generous, neutral, sour). {nation} is the manager's country.
+  ///
+  /// In en, this message translates to:
+  /// **'{nation}: he called it, and it came true. Fair enough.'**
+  String yStatementKept2(String nation);
+
+  /// Y feed post: something the manager said on the record at a press conference came true (a promised win, a job staked on the next games, a player backed or blamed in public), wording 3 (tone order: generous, neutral, sour). {nation} is the manager's country.
+  ///
+  /// In en, this message translates to:
+  /// **'He put it on the record and it held. One for him. {nation} moves on.'**
+  String yStatementKept3(String nation);
+
+  /// Y feed post: something the manager said on the record at a press conference came true (a promised win, a job staked on the next games, a player backed or blamed in public), wording 4 (tone order: generous, neutral, sour). {nation} is the manager's country.
+  ///
+  /// In en, this message translates to:
+  /// **'He got one right. {nation}, do not get used to it.'**
+  String yStatementKept4(String nation);
+
+  /// Y feed post: something the manager said on the record at a press conference came true (a promised win, a job staked on the next games, a player backed or blamed in public), wording 5 (tone order: generous, neutral, sour). {nation} is the manager's country.
+  ///
+  /// In en, this message translates to:
+  /// **'Even a stopped clock is right twice a day. {nation} got lucky this time.'**
+  String yStatementKept5(String nation);
+
+  /// Y feed post: something the manager said on the record at a press conference did not come true (a promised win, a job staked on the next games, a player backed or blamed in public), wording 0 (tone order: generous, neutral, sour). {nation} is the manager's country.
+  ///
+  /// In en, this message translates to:
+  /// **'He said it and it did not come off. Still with him. {nation} goes again.'**
+  String yStatementBroken0(String nation);
+
+  /// Y feed post: something the manager said on the record at a press conference did not come true (a promised win, a job staked on the next games, a player backed or blamed in public), wording 1 (tone order: generous, neutral, sour). {nation} is the manager's country.
+  ///
+  /// In en, this message translates to:
+  /// **'{nation}: he promised more than we got, but I would rather a manager who backs himself.'**
+  String yStatementBroken1(String nation);
+
+  /// Y feed post: something the manager said on the record at a press conference did not come true (a promised win, a job staked on the next games, a player backed or blamed in public), wording 2 (tone order: generous, neutral, sour). {nation} is the manager's country.
+  ///
+  /// In en, this message translates to:
+  /// **'{nation}: he said it on the record and it did not happen. People will remember.'**
+  String yStatementBroken2(String nation);
+
+  /// Y feed post: something the manager said on the record at a press conference did not come true (a promised win, a job staked on the next games, a player backed or blamed in public), wording 3 (tone order: generous, neutral, sour). {nation} is the manager's country.
+  ///
+  /// In en, this message translates to:
+  /// **'Big words, nothing behind them. {nation}: next time, say less.'**
+  String yStatementBroken3(String nation);
+
+  /// Y feed post: something the manager said on the record at a press conference did not come true (a promised win, a job staked on the next games, a player backed or blamed in public), wording 4 (tone order: generous, neutral, sour). {nation} is the manager's country.
+  ///
+  /// In en, this message translates to:
+  /// **'He stood there and told us. Then this. {nation} deserves better than talk.'**
+  String yStatementBroken4(String nation);
+
+  /// Y feed post: something the manager said on the record at a press conference did not come true (a promised win, a job staked on the next games, a player backed or blamed in public), wording 5 (tone order: generous, neutral, sour). {nation} is the manager's country.
+  ///
+  /// In en, this message translates to:
+  /// **'His word is worth nothing now. Write it down, {nation}.'**
+  String yStatementBroken5(String nation);
+
+  /// African Nations Cup: the zone of the North African nations.
+  ///
+  /// In en, this message translates to:
+  /// **'North Zone'**
+  String get ncZoneNorth;
+
+  /// African Nations Cup: the zone of the West African nations.
+  ///
+  /// In en, this message translates to:
+  /// **'West Zone'**
+  String get ncZoneWest;
+
+  /// African Nations Cup: the zone of the East African nations.
+  ///
+  /// In en, this message translates to:
+  /// **'East Zone'**
+  String get ncZoneEast;
+
+  /// African Nations Cup: the zone of the Central and Southern African nations.
+  ///
+  /// In en, this message translates to:
+  /// **'Central and Southern Zone'**
+  String get ncZoneCentralSouthern;
+
+  /// Career history: won the African Nations Cup, from this zone.
+  ///
+  /// In en, this message translates to:
+  /// **'{zone} · Champions'**
+  String careerNationsCupZoneWon(String zone);
+
+  /// Career history: lost the African Nations Cup final, from this zone.
+  ///
+  /// In en, this message translates to:
+  /// **'{zone} · Runners-up'**
+  String careerNationsCupZoneRunnerUp(String zone);
+
+  /// Career history: lost an African Nations Cup semi-final, from this zone.
+  ///
+  /// In en, this message translates to:
+  /// **'{zone} · Semi-finalist'**
+  String careerNationsCupZoneSemi(String zone);
+
+  /// Career history: lost in the African Nations Cup Round of 16, from this zone.
+  ///
+  /// In en, this message translates to:
+  /// **'{zone} · Round of 16'**
+  String careerNationsCupZoneRoundOf16(String zone);
+
+  /// Career history: lost an African Nations Cup quarter-final, from this zone.
+  ///
+  /// In en, this message translates to:
+  /// **'{zone} · Quarter-finalist'**
+  String careerNationsCupZoneQuarter(String zone);
+
+  /// Career history: where the nation came in its African Nations Cup zone group.
+  ///
+  /// In en, this message translates to:
+  /// **'{zone} · #{position}'**
+  String careerNationsCupZonePlaced(String zone, int position);
+
+  /// African Nations Cup board objective: reach the quarter-finals (the last eight of the knockouts).
+  ///
+  /// In en, this message translates to:
+  /// **'Reach the quarter-finals'**
+  String get objectiveNcFinalsEight;
+
+  /// African Nations Cup board objective: top your zone group (the African cup has no promotion).
+  ///
+  /// In en, this message translates to:
+  /// **'Win your group'**
+  String get objectiveNcZoneWinGroup;
+
+  /// African Nations Cup objective result: reached the quarter-finals.
+  ///
+  /// In en, this message translates to:
+  /// **'Quarter-finals'**
+  String get finishNcFinalsEight;
+
+  /// African Nations Cup objective result: finished in the bottom half of the zone group, but not last.
+  ///
+  /// In en, this message translates to:
+  /// **'Bottom half of the group'**
+  String get finishNcBottomHalf;
+
+  /// Tab on the African Nations Cup screen: the four zones and their groups.
+  ///
+  /// In en, this message translates to:
+  /// **'ZONES'**
+  String get tourContTabZones;
+
+  /// Tab on the African Nations Cup screen: the knockout rounds (Round of 16 to the final).
+  ///
+  /// In en, this message translates to:
+  /// **'KNOCKOUTS'**
+  String get tourContTabFinalsEight;
+
+  /// Explains when and how the African Nations Cup knockouts are contested.
+  ///
+  /// In en, this message translates to:
+  /// **'The knockouts start in November with a Round of 16: all 14 group winners and the 2 best runners-up.'**
+  String get tourContFinalsEightSoon;
+
+  /// Heading for the quarter-finals in the African Nations Cup knockout bracket.
+  ///
+  /// In en, this message translates to:
+  /// **'QUARTER-FINALS'**
+  String get tourContQuarterFinals;
+
+  /// Africa Nations Cup group advancement line shown above the zone tables.
+  ///
+  /// In en, this message translates to:
+  /// **'Every group winner goes through to the Round of 16, joined by the 2 best runners-up. Nobody is relegated.'**
+  String get tourContZoneAdvancement;
+
+  /// Heading of the manager's own zone on the African Nations Cup screen; the star marks it as the manager's, as on the league chips. Kept short: the longest zone name fills a 320px phone on its own.
+  ///
+  /// In en, this message translates to:
+  /// **'{zone} ★'**
+  String tourContZoneHeadingYours(String zone);
+
+  /// Nations Cup name: the CONCACAF confederation's own Nations Cup.
+  ///
+  /// In en, this message translates to:
+  /// **'North America Nations Cup'**
+  String get compNorthAmericaNationsCup;
+
+  /// Nations Cup name: the African confederation's own Nations Cup, played in four zones.
+  ///
+  /// In en, this message translates to:
+  /// **'Nations Cup'**
+  String get compAfricanNationsCup;
+
+  /// North America Nations Cup board objective: win the competition.
+  ///
+  /// In en, this message translates to:
+  /// **'Win the North America Nations Cup'**
+  String get objectiveNcWinItNorthAmerica;
+
+  /// African Nations Cup board objective: win the competition.
+  ///
+  /// In en, this message translates to:
+  /// **'Win the Nations Cup'**
+  String get objectiveNcWinItAfrica;
+
+  /// North America Nations Cup board objective: reach the final.
+  ///
+  /// In en, this message translates to:
+  /// **'Reach the North America Nations Cup final'**
+  String get objectiveNcReachFinalNorthAmerica;
+
+  /// African Nations Cup board objective: reach the final.
+  ///
+  /// In en, this message translates to:
+  /// **'Reach the Nations Cup final'**
+  String get objectiveNcReachFinalAfrica;
+
+  /// North America Nations Cup objective result: won the competition.
+  ///
+  /// In en, this message translates to:
+  /// **'North America Nations Cup winners'**
+  String get finishNcChampionsNorthAmerica;
+
+  /// African Nations Cup objective result: won the competition.
+  ///
+  /// In en, this message translates to:
+  /// **'Nations Cup winners'**
+  String get finishNcChampionsAfrica;
+
+  /// Press preview: the opening question before a qualifying campaign, warm tone. {competition} is the competition.
+  ///
+  /// In en, this message translates to:
+  /// **'{competition} qualifying starts now, and the country believes in this side. What are you aiming for?'**
+  String pressAimQualWarm1(String competition);
+
+  /// Press preview: the opening question before a qualifying campaign, warm tone. {competition} is the competition.
+  ///
+  /// In en, this message translates to:
+  /// **'A new {competition} qualifying campaign, and spirits are high. How far can this team go?'**
+  String pressAimQualWarm2(String competition);
+
+  /// Press preview: the opening question before a qualifying campaign, neutral tone. {competition} is the competition.
+  ///
+  /// In en, this message translates to:
+  /// **'{competition} qualifying begins. What is the target for this campaign?'**
+  String pressAimQualNeutral1(String competition);
+
+  /// Press preview: the opening question before a qualifying campaign, neutral tone. {competition} is the competition.
+  ///
+  /// In en, this message translates to:
+  /// **'The {competition} qualifiers are here. Where do you see this side finishing?'**
+  String pressAimQualNeutral2(String competition);
+
+  /// Press preview: the opening question before a qualifying campaign, hostile tone. {competition} is the competition.
+  ///
+  /// In en, this message translates to:
+  /// **'{competition} qualifying starts, and plenty of people doubt you will get there. What do you say to them?'**
+  String pressAimQualHostile1(String competition);
+
+  /// Press preview: the opening question before a qualifying campaign, hostile tone. {competition} is the competition.
+  ///
+  /// In en, this message translates to:
+  /// **'Another {competition} qualifying campaign. Why should anyone believe this one will be different?'**
+  String pressAimQualHostile2(String competition);
+
+  /// Press preview: the opening question before a finals tournament, warm tone. {competition} is the competition.
+  ///
+  /// In en, this message translates to:
+  /// **'The {competition} is here and the whole country is behind you. How far can you go?'**
+  String pressAimFinalsWarm1(String competition);
+
+  /// Press preview: the opening question before a finals tournament, warm tone. {competition} is the competition.
+  ///
+  /// In en, this message translates to:
+  /// **'You are at the {competition} and the fans are dreaming. What is the aim?'**
+  String pressAimFinalsWarm2(String competition);
+
+  /// Press preview: the opening question before a finals tournament, neutral tone. {competition} is the competition.
+  ///
+  /// In en, this message translates to:
+  /// **'The {competition} starts this week. What would count as a success?'**
+  String pressAimFinalsNeutral1(String competition);
+
+  /// Press preview: the opening question before a finals tournament, neutral tone. {competition} is the competition.
+  ///
+  /// In en, this message translates to:
+  /// **'Your first game at the {competition} is close. Set us a target.'**
+  String pressAimFinalsNeutral2(String competition);
+
+  /// Press preview: the opening question before a finals tournament, hostile tone. {competition} is the competition.
+  ///
+  /// In en, this message translates to:
+  /// **'The {competition} is here and nobody expects much. What are you really hoping for?'**
+  String pressAimFinalsHostile1(String competition);
+
+  /// Press preview: the opening question before a finals tournament, hostile tone. {competition} is the competition.
+  ///
+  /// In en, this message translates to:
+  /// **'You are at the {competition}, but the doubts have not gone away. What is your target?'**
+  String pressAimFinalsHostile2(String competition);
+
+  /// Press preview: question about the strongest other side in the group, warm tone. {rival} is that nation.
+  ///
+  /// In en, this message translates to:
+  /// **'{rival} are in your group. Do they worry you?'**
+  String pressBeatRivalWarm1(String rival);
+
+  /// Press preview: question about the strongest other side in the group, warm tone. {rival} is that nation.
+  ///
+  /// In en, this message translates to:
+  /// **'The draw put {rival} in your way. How do you see that game?'**
+  String pressBeatRivalWarm2(String rival);
+
+  /// Press preview: question about the strongest other side in the group, neutral tone. {rival} is that nation.
+  ///
+  /// In en, this message translates to:
+  /// **'{rival} look the strongest side in your group. Are they the favourites?'**
+  String pressBeatRivalNeutral1(String rival);
+
+  /// Press preview: question about the strongest other side in the group, neutral tone. {rival} is that nation.
+  ///
+  /// In en, this message translates to:
+  /// **'What do you make of {rival}?'**
+  String pressBeatRivalNeutral2(String rival);
+
+  /// Press preview: question about the strongest other side in the group, hostile tone. {rival} is that nation.
+  ///
+  /// In en, this message translates to:
+  /// **'{rival} are in your group. Be honest, can you live with them?'**
+  String pressBeatRivalHostile1(String rival);
+
+  /// Press preview: question about the strongest other side in the group, hostile tone. {rival} is that nation.
+  ///
+  /// In en, this message translates to:
+  /// **'Most people expect {rival} to beat you. Are they wrong?'**
+  String pressBeatRivalHostile2(String rival);
+
+  /// Press preview: question about the manager's best player, warm tone. {player} is the player.
+  ///
+  /// In en, this message translates to:
+  /// **'{player} is in fine form. Is this his moment?'**
+  String pressBeatKeyPlayerWarm1(String player);
+
+  /// Press preview: question about the manager's best player, warm tone. {player} is the player.
+  ///
+  /// In en, this message translates to:
+  /// **'{player} is in every headline. Can he carry this side?'**
+  String pressBeatKeyPlayerWarm2(String player);
+
+  /// Press preview: question about the manager's best player, neutral tone. {player} is the player.
+  ///
+  /// In en, this message translates to:
+  /// **'How much does this campaign depend on {player}?'**
+  String pressBeatKeyPlayerNeutral1(String player);
+
+  /// Press preview: question about the manager's best player, neutral tone. {player} is the player.
+  ///
+  /// In en, this message translates to:
+  /// **'Is {player} ready to lead this team?'**
+  String pressBeatKeyPlayerNeutral2(String player);
+
+  /// Press preview: question about the manager's best player, hostile tone. {player} is the player.
+  ///
+  /// In en, this message translates to:
+  /// **'If {player} is not at his best, does this side have anything?'**
+  String pressBeatKeyPlayerHostile1(String player);
+
+  /// Press preview: question about the manager's best player, hostile tone. {player} is the player.
+  ///
+  /// In en, this message translates to:
+  /// **'{player} has a lot on his shoulders. Too much?'**
+  String pressBeatKeyPlayerHostile2(String player);
+
+  /// Press preview: the manager's answer, aiming higher than the board asked.
+  ///
+  /// In en, this message translates to:
+  /// **'We are going further than anyone expects.'**
+  String get pressReplyAimHigher1;
+
+  /// Press preview: the manager's answer, aiming higher than the board asked.
+  ///
+  /// In en, this message translates to:
+  /// **'I want more than the federation asked for, and I will say it out loud.'**
+  String get pressReplyAimHigher2;
+
+  /// Press preview: the manager's answer, promising exactly what the board asked.
+  ///
+  /// In en, this message translates to:
+  /// **'We know the target and we will reach it.'**
+  String get pressReplyMatchBrief1;
+
+  /// Press preview: the manager's answer, promising exactly what the board asked.
+  ///
+  /// In en, this message translates to:
+  /// **'The federation set a target. We will deliver it.'**
+  String get pressReplyMatchBrief2;
+
+  /// Press preview: the manager's answer, playing expectations down.
+  ///
+  /// In en, this message translates to:
+  /// **'Let us take it one game at a time.'**
+  String get pressReplyPlayDown1;
+
+  /// Press preview: the manager's answer, playing expectations down.
+  ///
+  /// In en, this message translates to:
+  /// **'No big promises. We will see where we are.'**
+  String get pressReplyPlayDown2;
+
+  /// Press preview: the manager's answer, promising qualification.
+  ///
+  /// In en, this message translates to:
+  /// **'We will qualify. You can write that down.'**
+  String get pressReplyPromiseQualify1;
+
+  /// Press preview: the manager's answer, promising qualification.
+  ///
+  /// In en, this message translates to:
+  /// **'This side will be at the finals.'**
+  String get pressReplyPromiseQualify2;
+
+  /// Press preview: the manager's answer, saying the group rival holds no fear.
+  ///
+  /// In en, this message translates to:
+  /// **'We fear nobody.'**
+  String get pressReplyFearNobody1;
+
+  /// Press preview: the manager's answer, saying the group rival holds no fear.
+  ///
+  /// In en, this message translates to:
+  /// **'They have to play us too.'**
+  String get pressReplyFearNobody2;
+
+  /// Press preview: the manager's answer, respecting the group rival.
+  ///
+  /// In en, this message translates to:
+  /// **'They are the favourites, and we respect them.'**
+  String get pressReplyRespectRival1;
+
+  /// Press preview: the manager's answer, respecting the group rival.
+  ///
+  /// In en, this message translates to:
+  /// **'A very good side. We will need our best.'**
+  String get pressReplyRespectRival2;
+
+  /// Press preview: the manager's answer, putting the team before the key player.
+  ///
+  /// In en, this message translates to:
+  /// **'It is about the whole team, not one player.'**
+  String get pressReplyTeamFirst1;
+
+  /// Press preview: the manager's answer, putting the team before the key player.
+  ///
+  /// In en, this message translates to:
+  /// **'Nobody wins this alone.'**
+  String get pressReplyTeamFirst2;
+
+  /// Press preview: note that the stated target is on the record and will be judged. {aim} is the target, worded like a board objective.
+  ///
+  /// In en, this message translates to:
+  /// **'On the record: {aim}.'**
+  String pressOnRecordTarget(String aim);
+
+  /// Press preview: note under the play-it-down answer; it only counts if the brief is beaten.
+  ///
+  /// In en, this message translates to:
+  /// **'On the record: no promises.'**
+  String get pressOnRecordPlayDown;
+
+  /// Press: a later question throwing back a stated campaign target that was hit, warm tone.
+  ///
+  /// In en, this message translates to:
+  /// **'You set a target before the campaign and you hit it. Is that your proudest moment yet?'**
+  String get pressThrowbackTargetKeptWarm;
+
+  /// Press: a later question throwing back a stated campaign target that was hit, neutral tone.
+  ///
+  /// In en, this message translates to:
+  /// **'You said what you would achieve, and you did. Was it ever in doubt?'**
+  String get pressThrowbackTargetKeptNeutral;
+
+  /// Press: a later question throwing back a stated campaign target that was hit, hostile tone.
+  ///
+  /// In en, this message translates to:
+  /// **'You hit the target you set. Lucky, or was it really the plan?'**
+  String get pressThrowbackTargetKeptHostile;
+
+  /// Press: a later question throwing back a stated campaign target that was missed, warm tone.
+  ///
+  /// In en, this message translates to:
+  /// **'You set a target and fell short. What went wrong?'**
+  String get pressThrowbackTargetBrokenWarm;
+
+  /// Press: a later question throwing back a stated campaign target that was missed, neutral tone.
+  ///
+  /// In en, this message translates to:
+  /// **'You promised more than this side delivered. Do you regret saying it?'**
+  String get pressThrowbackTargetBrokenNeutral;
+
+  /// Press: a later question throwing back a stated campaign target that was missed, hostile tone.
+  ///
+  /// In en, this message translates to:
+  /// **'You talked big before the campaign and fell short. Why should we believe you now?'**
+  String get pressThrowbackTargetBrokenHostile;
+
+  /// Hub event subtitle: the press want to hear the manager's aims before a campaign. {competition} is the competition.
+  ///
+  /// In en, this message translates to:
+  /// **'The press want to hear your aims for the {competition}'**
+  String hubEventPressPreviewSub(String competition);
+
+  /// Budget setup: a department's investment level and what it costs. {level} is 0 to 10, {amount} the euros.
+  ///
+  /// In en, this message translates to:
+  /// **'Level {level} · {amount}'**
+  String deptLevelCost(int level, String amount);
+
+  /// Player form: label for the best form (flame icon).
+  ///
+  /// In en, this message translates to:
+  /// **'On fire'**
+  String get formOnFire;
+
+  /// Player form: label for good form (arrow up).
+  ///
+  /// In en, this message translates to:
+  /// **'In form'**
+  String get formGood;
+
+  /// Player form: label for ordinary form.
+  ///
+  /// In en, this message translates to:
+  /// **'Steady'**
+  String get formSteady;
+
+  /// Player form: label for poor form (arrow down).
+  ///
+  /// In en, this message translates to:
+  /// **'Out of form'**
+  String get formPoor;
+
+  /// Player form: label for the worst form (snowflake icon).
+  ///
+  /// In en, this message translates to:
+  /// **'Ice cold'**
+  String get formCold;
+
+  /// Player page: heading of the current form and fitness section.
+  ///
+  /// In en, this message translates to:
+  /// **'FORM AND FITNESS'**
+  String get playerFormTitle;
+
+  /// Player page: his average match rating over recent games. {rating} like 7.4.
+  ///
+  /// In en, this message translates to:
+  /// **'Averaging {rating} in his recent games'**
+  String playerFormAverage(String rating);
+
+  /// Player page: not enough recent games to judge form.
+  ///
+  /// In en, this message translates to:
+  /// **'Not enough recent games to judge'**
+  String get playerFormNoGames;
+
+  /// Player page: what form and fatigue do to his rating in the next match. {delta} is signed, like +2 or −1.
+  ///
+  /// In en, this message translates to:
+  /// **'{delta} to his rating next match'**
+  String playerFormNextMatch(String delta);
+
+  /// Player page: form and fatigue leave his rating unchanged next match.
+  ///
+  /// In en, this message translates to:
+  /// **'No change to his rating next match'**
+  String get playerFormNoEffect;
 }
 
 class _AppLocalizationsDelegate
@@ -13064,8 +14598,15 @@ class _AppLocalizationsDelegate
   }
 
   @override
-  bool isSupported(Locale locale) =>
-      <String>['cs', 'en'].contains(locale.languageCode);
+  bool isSupported(Locale locale) => <String>[
+    'cs',
+    'de',
+    'en',
+    'es',
+    'fr',
+    'it',
+    'pl',
+  ].contains(locale.languageCode);
 
   @override
   bool shouldReload(_AppLocalizationsDelegate old) => false;
@@ -13076,8 +14617,18 @@ AppLocalizations lookupAppLocalizations(Locale locale) {
   switch (locale.languageCode) {
     case 'cs':
       return AppLocalizationsCs();
+    case 'de':
+      return AppLocalizationsDe();
     case 'en':
       return AppLocalizationsEn();
+    case 'es':
+      return AppLocalizationsEs();
+    case 'fr':
+      return AppLocalizationsFr();
+    case 'it':
+      return AppLocalizationsIt();
+    case 'pl':
+      return AppLocalizationsPl();
   }
 
   throw FlutterError(

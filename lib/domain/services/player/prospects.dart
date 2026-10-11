@@ -1,5 +1,6 @@
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/player.dart';
+import 'package:fnm/domain/services/manager/staff.dart';
 import 'package:fnm/domain/services/player/player_lifecycle.dart';
 
 /// A young player as the manager sees them: what they are now, what they might
@@ -28,32 +29,56 @@ abstract final class Prospects {
   static const int maxAge = 20;
 
   /// Caps after which the scouting estimate settles into the truth — you have
-  /// seen enough of him to know.
+  /// seen enough of him to know. This is the figure with NOBODY in the scout's
+  /// job; [capsToKnowWith] is what a hired one brings it down to.
   static const int capsToKnow = 3;
+
+  /// Caps before the ceiling is known, with [scout] in the job: three with no
+  /// scout, two for a basic or good one, one for an elite one.
+  static int capsToKnowWith(StaffTier scout) =>
+      Staff.capsToKnow(scout, capsToKnow);
+
+  /// The one read every screen shows for a player's ceiling: the truth once
+  /// he has [caps] enough for [scout] to know it, the scout's estimate
+  /// before that.
+  static ({int stars, bool certain}) read(
+    int playerId, {
+    required int age,
+    required int caps,
+    StaffTier scout = StaffTier.none,
+  }) {
+    final certain = caps >= capsToKnowWith(scout);
+    return (
+      stars: certain
+          ? trueStars(playerId, age: age)
+          : scoutedStars(playerId, age: age, scout: scout),
+      certain: certain,
+    );
+  }
 
   /// The nation's under-21s, best prospect first.
   ///
   /// [previousPool] is the same nation a year ago, for the year's gain;
-  /// [capsByPlayer] their international appearances.
+  /// [capsByPlayer] their international appearances; [scout] the tier of the
+  /// man reading them, which tightens the estimate and settles it sooner.
   static List<Prospect> watchlist(
     List<Player> pool, {
     List<Player> previousPool = const [],
     Map<int, int> capsByPlayer = const {},
+    StaffTier scout = StaffTier.none,
   }) {
     final before = {for (final p in previousPool) p.id: p.overall};
     final out = <Prospect>[];
     for (final p in pool) {
       if (p.age > maxAge) continue;
       final caps = capsByPlayer[p.id] ?? 0;
-      final certain = caps >= capsToKnow;
+      final r = read(p.id, age: p.age, caps: caps, scout: scout);
       out.add((
         player: p,
         yearGain: p.overall - (before[p.id] ?? p.overall),
         caps: caps,
-        stars: certain
-            ? trueStars(p.id, age: p.age)
-            : scoutedStars(p.id, age: p.age),
-        certain: certain,
+        stars: r.stars,
+        certain: r.certain,
       ));
     }
     out.sort((a, b) => _rank(b).compareTo(_rank(a)));
@@ -86,16 +111,36 @@ abstract final class Prospects {
     return 1;
   }
 
-  /// The scout's read on an unproven player: the truth, off by up to a star
-  /// from seventeen up and up to TWO below that.
+  /// The scout's read on an unproven player.
   ///
-  /// A boy under seventeen has played nothing anyone can judge him on, so
-  /// the read on him is barely a read at all — which is what makes bringing
-  /// him through and finding out the interesting decision.
-  static int scoutedStars(int playerId, {int age = 20}) {
-    final spread = age >= YouthLevel.u19.minAge ? 1 : 2;
+  /// With nobody in the job it is the truth, off by up to a star from
+  /// seventeen up and up to TWO below that. A boy under seventeen has played
+  /// nothing anyone can judge him on, so the read on him is barely a read at
+  /// all — which is what makes bringing him through and finding out the
+  /// interesting decision.
+  ///
+  /// A hired [scout] does two things to it. He never misses by more than a
+  /// star, whatever the age. And he reads [Staff.exactReadShare] of players
+  /// dead right, the rest being the ordinary ±1 guess. Both are hashed from
+  /// the player's id, never rolled, so the read is the same on every screen
+  /// and every refresh; and with [StaffTier.none] the arithmetic is exactly
+  /// what it always was.
+  static int scoutedStars(
+    int playerId, {
+    int age = 20,
+    StaffTier scout = StaffTier.none,
+  }) {
+    final truth = trueStars(playerId, age: age);
+    if (scout != StaffTier.none &&
+        _mix(playerId ^ 0x5C0A7) % 100 <
+            (Staff.exactReadShare(scout) * 100).round()) {
+      return truth;
+    }
+    final spread = scout == StaffTier.none && age < YouthLevel.u19.minAge
+        ? 2
+        : 1;
     final wobble = (_mix(playerId ^ 0x5CADE) % (spread * 2 + 1)) - spread;
-    return (trueStars(playerId, age: age) + wobble).clamp(1, 5);
+    return (truth + wobble).clamp(1, 5);
   }
 
   /// Sort key: promise first, then what he already is, then who is closest to

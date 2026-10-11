@@ -1,5 +1,6 @@
 // Reads back the file `tool/export_copy.dart` wrote and puts the edited text
-// into the two ARB files.
+// into the ARB files (every language whose
+// `lib/l10n/app_<code>.arb` exists).
 //
 //   dart run tool/import_copy.dart                 → copy/strings.csv
 //   dart run tool/import_copy.dart other.csv
@@ -17,11 +18,13 @@
 // gets a row refused:
 //
 //   * a key that is not in the app (a typo, or a string deleted since export);
-//   * placeholders that do not match the original, in either language. A
+//   * placeholders that do not match the original, in any language. A
 //     `{player}` renamed to `{name}` compiles perfectly and throws in front of
 //     a player the first time that screen opens, which is exactly the class of
 //     mistake a hand-edited copy file invites;
-//   * a plural whose `{count, plural, …}` skeleton has been rewritten.
+//   * a plural whose `{count, plural, …}` skeleton has been rewritten: a
+//     translation must keep the plural and its variable and an `other{`
+//     branch, but may use other categories (Polish has `few` and `many`).
 //
 // Key order, every `@`-metadata block and every description are preserved
 // untouched: this writes VALUES and nothing else.
@@ -30,8 +33,7 @@ import 'dart:io';
 
 import 'copy_format.dart';
 
-const String _enPath = 'lib/l10n/app_en.arb';
-const String _csPath = 'lib/l10n/app_cs.arb';
+String _arbPath(String code) => 'lib/l10n/app_$code.arb';
 
 /// Where the exporter writes, and where a `.csv` that has been round-tripped
 /// through a spreadsheet is most likely to be.
@@ -53,8 +55,13 @@ void main(List<String> args) {
     _fail('no such file: ${source.path} — run tool/export_copy.dart first');
   }
 
-  final en = _readArb(_enPath);
-  final cs = _readArb(_csPath);
+  // Only languages whose ARB exists are imported; English always does.
+  final langs = [
+    for (final code in kLanguages)
+      if (File(_arbPath(code)).existsSync()) code,
+  ];
+  final arbs = {for (final code in langs) code: _readArb(_arbPath(code))};
+  final en = arbs['en']!;
 
   final lines = source.readAsLinesSync();
   if (lines.isEmpty) _fail('${source.path} is empty');
@@ -71,8 +78,7 @@ void main(List<String> args) {
   }
 
   final problems = <String>[];
-  final enChanges = <String, String>{};
-  final csChanges = <String, String>{};
+  final changes = {for (final code in langs) code: <String, String>{}};
 
   for (var i = 1; i < lines.length; i++) {
     final line = lines[i];
@@ -86,12 +92,11 @@ void main(List<String> args) {
       continue;
     }
     final key = f[0].trim();
-    final newEn = unescapeValue(f[3]);
-    final newCs = unescapeValue(f[4]);
+    final newEn = unescapeValue(f[columnOf('en')]);
 
     final oldEn = en[key];
     if (oldEn is! String) {
-      problems.add('$where: "$key" is not a string in $_enPath');
+      problems.add('$where: "$key" is not a string in ${_arbPath('en')}');
       continue;
     }
     if (newEn.trim().isEmpty) {
@@ -100,17 +105,19 @@ void main(List<String> args) {
     }
     final shapeEn = _shapeProblem(key, oldEn, newEn, 'English');
     if (shapeEn != null) problems.add('$where: $shapeEn');
+    if (newEn != oldEn) changes['en']![key] = newEn;
 
-    // The Czech is checked against the ENGLISH, which is the template: a
-    // translation carries the same placeholders as the string it translates,
-    // whatever the Czech file happened to hold before.
-    if (newCs.trim().isNotEmpty) {
-      final shapeCs = _shapeProblem(key, oldEn, newCs, 'Czech');
-      if (shapeCs != null) problems.add('$where: $shapeCs');
+    // Every other language is checked against the ENGLISH, which is the
+    // template: a translation carries the same placeholders as the string it
+    // translates, whatever its own file happened to hold before. A blank cell
+    // keeps what is there.
+    for (final code in langs.skip(1)) {
+      final value = unescapeValue(f[columnOf(code)]);
+      if (value.trim().isEmpty) continue;
+      final shape = _shapeProblem(key, oldEn, value, code);
+      if (shape != null) problems.add('$where: $shape');
+      if (value != arbs[code]![key]) changes[code]![key] = value;
     }
-
-    if (newEn != oldEn) enChanges[key] = newEn;
-    if (newCs.trim().isNotEmpty && newCs != cs[key]) csChanges[key] = newCs;
   }
 
   if (problems.isNotEmpty) {
@@ -125,22 +132,27 @@ void main(List<String> args) {
   }
 
   stdout.writeln(
-    '${enChanges.length} English and ${csChanges.length} Czech '
-    'string(s) changed.',
+    [
+          for (final code in langs) '${changes[code]!.length} $code',
+        ].join(', ') +
+        ' string(s) changed.',
   );
+  final touched = {for (final c in changes.values) ...c.keys};
   if (dryRun) {
-    for (final key in {...enChanges.keys, ...csChanges.keys}) {
+    for (final key in touched) {
       stdout.writeln('  $key');
     }
     stdout.writeln('\nDry run — nothing written.');
     return;
   }
-  if (enChanges.isEmpty && csChanges.isEmpty) return;
+  if (touched.isEmpty) return;
 
-  enChanges.forEach((k, v) => en[k] = v);
-  csChanges.forEach((k, v) => cs[k] = v);
-  _writeArb(_enPath, en);
-  _writeArb(_csPath, cs);
+  for (final code in langs) {
+    final c = changes[code]!;
+    if (c.isEmpty) continue;
+    c.forEach((k, v) => arbs[code]![k] = v);
+    _writeArb(_arbPath(code), arbs[code]!);
+  }
   stdout.writeln('Written. Now run:  flutter gen-l10n');
 }
 
@@ -158,8 +170,18 @@ String? _shapeProblem(
         'translate only the words inside its branches';
   }
   // Inside a plural the branch selectors ({count}, one, other) are machinery,
-  // so only the simple case can be compared name for name.
-  if (wasPlural) return null;
+  // and languages have different categories (Polish adds few and many), so
+  // only the variable and the mandatory `other{` branch are checked.
+  if (wasPlural) {
+    final variable = _pluralVariable(original);
+    if (_pluralVariable(replacement) != variable) {
+      return '"$key" ($language): the plural must count {$variable}';
+    }
+    if (!RegExp(r'\bother\s*\{').hasMatch(replacement)) {
+      return '"$key" ($language): the plural has no other{…} branch';
+    }
+    return null;
+  }
   final before = _placeholders(original);
   final after = _placeholders(replacement);
   if (before.difference(after).isNotEmpty) {
@@ -173,6 +195,10 @@ String? _shapeProblem(
   }
   return null;
 }
+
+/// The variable a `{count, plural, …}` counts (or selects on).
+String? _pluralVariable(String v) =>
+    RegExp(r'\{\s*(\w+)\s*,\s*(plural|select)').firstMatch(v)?.group(1);
 
 bool _isPlural(String v) =>
     RegExp(r'\{\s*\w+\s*,\s*(plural|select)').hasMatch(v);

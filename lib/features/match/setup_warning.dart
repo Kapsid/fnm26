@@ -65,6 +65,9 @@ typedef SquadSetup = ({
 final AutoDisposeFutureProviderFamily<SquadSetup, int> squadSetupProvider =
     FutureProvider.autoDispose.family<SquadSetup, int>((ref, careerId) async {
       final takers = await ref.watch(setPieceTakersProvider(careerId).future);
+      final acceptedAuto = await ref.watch(
+        setPieceAutoAcceptedProvider(careerId).future,
+      );
       final squad = await ref.watch(squadDataProvider(careerId).future);
       final storedId = await ref.watch(
         storedCaptainIdProvider(careerId).future,
@@ -109,7 +112,16 @@ final AutoDisposeFutureProviderFamily<SquadSetup, int> squadSetupProvider =
         captainName: skipper?.name,
         // Penalties are the half of this that decides matches, so a save with
         // a dead-ball taker and nobody on penalties still counts as unset.
-        setPieces: available(takers.penalty) && available(takers.deadBall),
+        //
+        // Unless the manager has said he is happy leaving it to the coach, and
+        // has named nobody since. The acknowledgement only holds while nothing
+        // is named: once he picks somebody, the question becomes whether THAT
+        // man can play, and an old "leave it" must not swallow the answer.
+        setPieces:
+            (takers.penalty == null &&
+                takers.deadBall == null &&
+                acceptedAuto) ||
+            (available(takers.penalty) && available(takers.deadBall)),
       );
     });
 
@@ -144,7 +156,7 @@ class SquadSetupWarning extends ConsumerWidget {
       null => l.matchSetupWarnSetPieces,
     };
 
-    return Padding(
+    final card = Padding(
       padding: const EdgeInsets.only(bottom: AppSpacing.md),
       child: AppCard(
         // Straight to the tab that holds both the armband and the takers,
@@ -174,6 +186,34 @@ class SquadSetupWarning extends ConsumerWidget {
             ),
           ],
         ),
+      ),
+    );
+
+    // An unnamed CAPTAIN is a gap worth nagging about and cannot be waved
+    // away. Takers can: letting the coach pick them is a way of playing, and
+    // this is the manager saying so once instead of being asked before every
+    // match for the rest of the save.
+    if (setup.captain != null) return card;
+    return Padding(
+      padding: const EdgeInsets.only(bottom: AppSpacing.md),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          card,
+          Align(
+            alignment: Alignment.centerRight,
+            child: TextButton(
+              onPressed: () =>
+                  ref.read(setPieceTakersStoreProvider).acceptAuto(careerId),
+              child: Text(
+                l.matchSetupLeaveToCoach,
+                style: AppTypography.labelSmall.copyWith(
+                  color: AppColors.onSurfaceVariant,
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

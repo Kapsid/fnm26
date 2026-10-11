@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/core/rng/seeded_rng.dart';
-import 'package:fnm/core/util/competition_label.dart';
+import 'package:fnm/core/util/message_text.dart';
 import 'package:fnm/core/util/text_variety.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/career.dart';
@@ -20,6 +20,7 @@ import 'package:fnm/domain/services/competition/finals_participation.dart';
 import 'package:fnm/domain/services/competition/group_advancement.dart';
 import 'package:fnm/domain/services/competition/hosts.dart';
 import 'package:fnm/domain/services/competition/nations_cup.dart';
+import 'package:fnm/domain/services/competition/nations_cups.dart';
 import 'package:fnm/domain/services/competition/qualification.dart';
 import 'package:fnm/domain/services/competition/rounds.dart';
 import 'package:fnm/domain/services/entitlement/entitlement.dart';
@@ -44,13 +45,16 @@ import 'package:fnm/features/hub/draw_reveal.dart';
 import 'package:fnm/features/achievements/achievement_providers.dart';
 import 'package:fnm/features/hub/objective_providers.dart';
 import 'package:fnm/features/match/match_providers.dart';
+import 'package:fnm/features/press/press_desk.dart';
+import 'package:fnm/features/press/press_providers.dart';
+import 'package:fnm/features/tactics/condition_providers.dart';
 import 'package:fnm/features/ranking/world_ranking_providers.dart';
 import 'package:fnm/features/squad/training_camp_providers.dart';
+import 'package:fnm/features/squad/youth_watch_providers.dart';
 import 'package:fnm/features/tactics/absence_providers.dart';
 import 'package:fnm/features/tactics/nation_squad_providers.dart';
 import 'package:fnm/features/tactics/tactics_providers.dart';
 import 'package:fnm/features/settings/settings_providers.dart';
-import 'package:fnm/features/hub/round_popup.dart' show stageLabelFor;
 import 'package:fnm/features/tournaments/playoff_paths.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/domain/services/club/clubs.dart';
@@ -257,6 +261,10 @@ typedef _ManagerSetup = ({
   Tactic? tactic,
   double familiarity,
   double predictability,
+
+  /// Who is reading the opposition for him: his dossier is worth
+  /// `Staff.dossierBonus` on the day, watched or skipped.
+  StaffTier scout,
 });
 
 /// Drives the whole-world simulation: quick-sims due matches, advances the
@@ -403,6 +411,7 @@ class SeasonService {
       tactic: tactic,
       familiarity: shape?.familiarity ?? 0,
       predictability: shape?.predictability ?? 0,
+      scout: career.staffScout,
     );
     _managerSetupCareer = careerId;
     return _managerSetup;
@@ -641,8 +650,30 @@ class SeasonService {
     )) {
       return true;
     }
-    if (await _comp.hasLiveNationsCupFinals(careerId)) return true;
+    // The manager's own confederation's Nations Cup, if it runs one. The
+    // other cups resolve in the background.
+    final mine = NationsCups.ofManager(await _managerConfederation(careerId));
+    if (mine != null &&
+        await _comp.hasLiveNationsCupFinals(careerId, confederation: mine)) {
+      return true;
+    }
     return false;
+  }
+
+  /// The date of [conf]'s Nations Cup's last group matchday while any group
+  /// match of that cup is still unplayed, else null (groups done, or no cup).
+  Future<DateTime?> _lastUnplayedNationsCupGroupDate(
+    int careerId,
+    Confederation conf,
+  ) async {
+    final groups = await _comp.fixturesByRound(
+      careerId,
+      'NGROUP',
+      kind: CompetitionKind.nationsLeague,
+      confederation: conf,
+    );
+    if (groups.every((f) => f.hasResult)) return null;
+    return groups.map((f) => f.date).reduce((a, b) => a.isAfter(b) ? a : b);
   }
 
   /// World positions (1 = top) from the live points held in memory, tie-broken
@@ -762,8 +793,14 @@ class SeasonService {
         hs,
         as,
         SeededRng.forFixture(rngSeed, f.id ^ 0x7F),
-        homeStrength: homeStrength.toDouble(),
-        awayStrength: awayStrength.toDouble(),
+        // `decideKnockout` splits extra time and the shootout by the SHARE of
+        // the pair it is handed. Raw ratings (89 against 81) made that share
+        // 0.52, so every level knockout was a coin toss; the simulator's own
+        // knockout weight turns the same gap into the edge it shows in ninety
+        // minutes. Only the background path converts — the live match screen
+        // passes its own pair (team talks, named takers) and is unchanged.
+        homeStrength: RatingMatchSimulator.knockoutWeight(homeStrength),
+        awayStrength: RatingMatchSimulator.knockoutWeight(awayStrength),
       );
       aet = true;
       // The extra-time goals are attributed with 91'–120' minutes so they show
@@ -899,6 +936,12 @@ class SeasonService {
       awayXg: detail.awayXg,
     );
 
+    await _comp.recordIncidents(
+      f.careerId,
+      f.id,
+      _incidentsOf(f, detail.events),
+    );
+
     // Both sides' cards and knocks, through the same rules the manager's own
     // squad lives under — so a rival really can lose its striker to a ban.
     for (final nationId in [f.homeNationId, f.awayNationId]) {
@@ -941,12 +984,14 @@ class SeasonService {
   /// Two conversions, neither of them invented here:
   ///  * the plan, via [MatchEngine.planRatingDelta] — the engine's own slider
   ///    coefficients, read as the one number this simulator works in;
-  ///  * the drilling, via [TeamChemistry.factor] — a MULTIPLIER on a side's
-  ///    attack and defence, both of which are built from its players' ratings,
-  ///    so it multiplies a rating here too (the same reading `StrengthFactors`
-  ///    shows the manager). Predictability goes in with it: the engine passes
+  ///  * the drilling, via [TeamChemistry.factor] — a multiplier on a side's
+  ///    attack and defence in the engine, credited here as the flat rating
+  ///    lift it is measured to be worth there. Predictability goes in with it: the engine passes
   ///    the stored figure, so a side the world has worked out gives the same
   ///    part of it back whether or not he watched.
+  ///
+  /// And one flat lift: the scout's opponent dossier, [Staff.dossierBonus],
+  /// already in rating points.
   ///
   /// The result is deliberately NOT re-clamped to the 40–92 ranking scale that
   /// [_squadStrength] ends on: that scale describes a nation, and this is what
@@ -958,15 +1003,26 @@ class SeasonService {
   ) async {
     final setup = await _ensureManagerSetup(careerId);
     if (setup == null || setup.nationId != nationId) return strength;
+    // The scout's dossier is a flat rating lift, the same points the live
+    // engine adds to each fielded man (`MatchTeam.ratingBonus`), so it goes in
+    // beside the plan, before the chemistry multiplies the side.
     final plan =
         strength +
         MatchEngine.planRatingDelta(
           setup.tactic?.instructions ?? const TacticalInstructions(),
-        );
-    return (plan *
-            TeamChemistry.factor(setup.familiarity, setup.predictability))
-        .round();
+        ) +
+        Staff.dossierBonus(setup.scout);
+    // Chemistry as a LIFT, not a multiplier on the whole rating: 80 x 1.04
+    // was +3.2 points here, about three times what the same chemistry wins a
+    // side when the match is played out, so skipping beat playing. 30 points
+    // per unit of factor is what the engine actually delivers (+1.2 at 1.04).
+    final chemistry =
+        TeamChemistry.factor(setup.familiarity, setup.predictability) - 1;
+    return (plan + chemistry * _chemistryPoints).round();
   }
+
+  /// Rating points a skipped match credits per unit of chemistry factor.
+  static const double _chemistryPoints = 30;
 
   /// The men the manager may field for his own nation in a match he skipped:
   /// his call-ups, minus anyone the absences rule out. Empty when he is not the
@@ -1298,9 +1354,7 @@ class SeasonService {
       //    `next` is the player's earliest unplayed fixture, so a finals
       //    fixture strictly before it is never one of theirs.
       final finalsRoundBeforeOwn =
-          finalsDate != null &&
-          nextIsFinals &&
-          finalsDate.isBefore(next.date);
+          finalsDate != null && nextIsFinals && finalsDate.isBefore(next.date);
       if (finalsDate != null &&
           (finalsRoundBeforeOwn ||
               (!nextIsFinals &&
@@ -1318,19 +1372,28 @@ class SeasonService {
         break;
       }
 
-      // 1b. The Nations Cup Finals Four is under way and the player isn't in it
-      //     — step it one matchday at a time, like the main finals, so the
-      //     semis and final are watched rather than silently fast-forwarded. A
-      //     participant is detected from ANY unplayed NSF/NFINAL fixture (not
-      //     just their immediate next one), so a host whose pre-finals window is
-      //     friendlies still plays their own semi/final instead of watching it.
-      final ncFinalsDate = await _comp.earliestUnplayedNationsCupFinalsDate(
-        careerId,
+      // 1b. The manager's Nations Cup finals are under way and the player
+      //     isn't in them — step them one matchday at a time, like the main
+      //     finals, so they are watched rather than silently fast-forwarded. A
+      //     participant is detected from ANY unplayed finals fixture (not just
+      //     their immediate next one), so a host whose pre-finals window is
+      //     friendlies still plays their own tie instead of watching it. Only
+      //     his own confederation's cup is stepped (none for a confederation
+      //     that runs no cup); the others resolve in the background like the
+      //     other continents' championships.
+      final ncConf = NationsCups.ofManager(
+        await _managerConfederation(careerId),
       );
+      final ncFinalsDate = ncConf == null
+          ? null
+          : await _comp.earliestUnplayedNationsCupFinalsDate(
+              careerId,
+              confederation: ncConf,
+            );
       final nextIsNcFinals =
-          next != null && (next.round == 'NSF' || next.round == 'NFINAL');
+          next != null && FinalsRounds.nationsCup.contains(next.round);
       final playerInNcFinals = playerFixtures.any(
-        (f) => !f.hasResult && (f.round == 'NSF' || f.round == 'NFINAL'),
+        (f) => !f.hasResult && FinalsRounds.nationsCup.contains(f.round),
       );
       if (ncFinalsDate != null &&
           !nextIsNcFinals &&
@@ -1344,6 +1407,36 @@ class SeasonService {
           excludeNationId: career.nationId,
         );
         break;
+      }
+
+      // 1c. The last matchday of the manager's own Nations Cup groups, when it
+      //     falls before his next fixture. A side with a bye on that matchday
+      //     (Africa's North zone plays groups of three) would otherwise jump
+      //     straight to its next fixture months away, the groups would finish
+      //     inside that one catch-up, and his cup's finals would be drawn from
+      //     a clock already in the spring. Stopping on the day the groups end
+      //     lets the progression draw the finals on their own dates (the
+      //     African Finals Eight in November) before the clock moves on.
+      if (ncConf != null && next != null) {
+        final groupEnd = await _lastUnplayedNationsCupGroupDate(
+          careerId,
+          ncConf,
+        );
+        if (groupEnd != null && groupEnd.isBefore(next.date)) {
+          // Never backwards: a stray unplayed group match already behind the
+          // clock is simply caught up today.
+          final stop = groupEnd.isBefore(career.inGameDate)
+              ? career.inGameDate
+              : groupEnd;
+          await _careers.updateInGameDate(careerId, stop);
+          await _catchUp(
+            careerId,
+            stop,
+            career.rngSeed,
+            excludeNationId: career.nationId,
+          );
+          break;
+        }
       }
 
       // 2. The player's next fixture (a finals match they contest, or their
@@ -1390,6 +1483,9 @@ class SeasonService {
     // The board's verdict on any objective this run has just settled, so it
     // lands with the result rather than at the end of the cycle.
     await _gradeObjectivesIfDecided(careerId);
+    // The press: judge what he said and decide whether the room is called,
+    // now that his result is in (both ways a match of his is committed).
+    await _ref.read(pressDeskProvider).afterMatches(careerId);
     await _flushRank(careerId);
     await _flushAbsences(careerId);
     // The ranking screen's data is auto-disposed but can be kept alive by a
@@ -1405,7 +1501,11 @@ class SeasonService {
       // verdict it computed before the tournament was played.
       ..invalidate(cycleObjectiveOutcomesProvider)
       ..invalidate(cycleObjectivesProvider)
-      ..invalidate(satisfactionProvider);
+      ..invalidate(satisfactionProvider)
+      ..invalidate(pressEffectProvider)
+      ..invalidate(pendingConferenceProvider)
+      ..invalidate(pressStatementsProvider)
+      ..invalidate(squadConditionProvider);
   }
 
   /// Fast-forwards straight to the World Cup champion — the "skip to the final"
@@ -1572,6 +1672,14 @@ class SeasonService {
           ),
     ]);
 
+    // …and everything else the engine reported that outlives the ninety
+    // minutes: the sendings-off and the knocks, with their minutes.
+    await _comp.recordIncidents(
+      careerId,
+      fixture.id,
+      _incidentsOf(fixture, result.events),
+    );
+
     // Update the squad's suspensions and injuries from this match's cards and
     // knocks (players who sat this one out have now served a game). Scoped to
     // the manager's own nation — the rest of the world now carries absences
@@ -1612,28 +1720,33 @@ class SeasonService {
       if (e.teamNationId != career.nationId) continue;
       if (e.type == MatchEventType.redCard && competitive) {
         final ban = after[e.playerId]?.banMatches ?? 1;
-        final l = _l;
-        final how = e.secondYellow
-            ? l.hubBanHowSecondYellow
-            : ban >= 3
-            ? l.hubBanHowViolent
-            : l.hubBanHowRed;
-        await _comp.addMessage(
+        // How he went is a phrase inside the sentence, so it is stored as one
+        // rather than as words: see `core/util/message_text.dart`.
+        final how = MsgText(
+          e.secondYellow
+              ? MsgKey.hubBanHowSecondYellow
+              : ban >= 3
+              ? MsgKey.hubBanHowViolent
+              : MsgKey.hubBanHowRed,
+        );
+        await _comp.addTextMessage(
+          l: _l,
           careerId: careerId,
           dedupKey: 'ban:${fixture.id}:${e.playerId}',
           category: 'discipline',
-          title: l.hubBanTitle(e.playerName),
-          body: l.hubBanBody(e.playerName, how, ban),
+          title: MsgText(MsgKey.hubBanTitle, [e.playerName]),
+          body: MsgText(MsgKey.hubBanBody, [e.playerName, how, ban]),
           year: discYear,
         );
       } else if (e.type == MatchEventType.injury) {
         final out = after[e.playerId]?.injuryMatches ?? 1;
-        await _comp.addMessage(
+        await _comp.addTextMessage(
+          l: _l,
           careerId: careerId,
           dedupKey: 'inj:${fixture.id}:${e.playerId}',
           category: 'injury',
-          title: _l.hubInjuryTitle(e.playerName),
-          body: _l.hubInjuryBody(e.playerName, out),
+          title: MsgText(MsgKey.hubInjuryTitle, [e.playerName]),
+          body: MsgText(MsgKey.hubInjuryBody, [e.playerName, out]),
           year: discYear,
         );
       }
@@ -1747,6 +1860,9 @@ class SeasonService {
     // The board's verdict on any objective this run has just settled, so it
     // lands with the result rather than at the end of the cycle.
     await _gradeObjectivesIfDecided(careerId);
+    // The press: judge what he said and decide whether the room is called,
+    // now that his result is in (both ways a match of his is committed).
+    await _ref.read(pressDeskProvider).afterMatches(careerId);
     await _flushRank(careerId);
     await _flushAbsences(careerId);
     // The ranking screen's data is auto-disposed but can be kept alive by a
@@ -1763,6 +1879,10 @@ class SeasonService {
       ..invalidate(cycleObjectiveOutcomesProvider)
       ..invalidate(cycleObjectivesProvider)
       ..invalidate(satisfactionProvider)
+      ..invalidate(pressEffectProvider)
+      ..invalidate(pendingConferenceProvider)
+      ..invalidate(pressStatementsProvider)
+      ..invalidate(squadConditionProvider)
       // "The player's NEXT fixture" is now a different fixture: the one this
       // provider is holding has just been played, and the result it carries is
       // the score the manager is still looking at. Anything that keeps it open
@@ -1791,12 +1911,15 @@ class SeasonService {
     final nations = await _nationsById();
     final l = _l;
     final conf = nations[me]?.confederation;
+    // The cup by its CANONICAL STORED name, which is what a message carries:
+    // the words are made when the manager reads it.
     final contName = conf == null
-        ? l.compContinentalChampionship
-        : continentalCupLabel(l, conf);
-    final ({String name, CompetitionKind kind})? cup = switch (round) {
+        ? 'Continental Championship'
+        : ContinentalCups.byConfederation[conf]?.name ??
+              'Continental Championship';
+    final cup = switch (round) {
       'GROUP' || 'R32' || 'R16' || 'QF' || 'SF' || '3RD' || 'FINAL' => (
-        name: l.compWorldCup,
+        name: 'World Championship',
         kind: CompetitionKind.worldCupFinals,
       ),
       'CGROUP' || 'CR16' || 'CQF' || 'CSF' || 'CFINAL' => (
@@ -1817,41 +1940,45 @@ class SeasonService {
       final core = round!.startsWith('C') ? round.substring(1) : round;
       if (core == 'FINAL') {
         final s = varietySeed('runnerup:${fixture.id}');
-        await _comp.addMessage(
+        final cupName = MsgComp(cup.name);
+        await _comp.addTextMessage(
+          l: l,
           careerId: careerId,
           dedupKey: 'runnerup:${fixture.id}',
           category: 'eliminated',
           title: pickVariant([
-            l.hubRunnerUpTitle1,
-            l.hubRunnerUpTitle2,
-            l.hubRunnerUpTitle3,
+            const MsgText(MsgKey.hubRunnerUpTitle1),
+            const MsgText(MsgKey.hubRunnerUpTitle2),
+            const MsgText(MsgKey.hubRunnerUpTitle3),
           ], s),
           body: pickVariant([
-            l.hubRunnerUpBody1(cup.name, oppName),
-            l.hubRunnerUpBody2(oppName, cup.name),
-            l.hubRunnerUpBody3(cup.name, oppName),
+            MsgText(MsgKey.hubRunnerUpBody1, [cupName, oppName]),
+            MsgText(MsgKey.hubRunnerUpBody2, [oppName, cupName]),
+            MsgText(MsgKey.hubRunnerUpBody3, [cupName, oppName]),
           ], s),
           year: year,
         );
       } else {
         final s = varietySeed('out:${fixture.id}');
-        await _comp.addMessage(
+        final cupName = MsgComp(cup.name);
+        // The stage as a key, lower-cased where the copy reads it into the
+        // middle of a sentence — the round is stored, the words are not.
+        final stage = MsgLower(MsgText(stageMsgKey(core)));
+        await _comp.addTextMessage(
+          l: l,
           careerId: careerId,
           dedupKey: 'out:${fixture.id}',
           category: 'eliminated',
           title: pickVariant([
-            l.hubKnockedOutTitle1,
-            l.hubKnockedOutTitle2,
-            l.hubKnockedOutTitle3,
+            const MsgText(MsgKey.hubKnockedOutTitle1),
+            const MsgText(MsgKey.hubKnockedOutTitle2),
+            const MsgText(MsgKey.hubKnockedOutTitle3),
           ], s),
-          body: () {
-            final stage = stageLabelFor(l, core).toLowerCase();
-            return pickVariant([
-              l.hubKnockedOutBody1(cup.name, oppName, stage),
-              l.hubKnockedOutBody2(oppName, cup.name, stage),
-              l.hubKnockedOutBody3(cup.name, stage, oppName),
-            ], s);
-          }(),
+          body: pickVariant([
+            MsgText(MsgKey.hubKnockedOutBody1, [cupName, oppName, stage]),
+            MsgText(MsgKey.hubKnockedOutBody2, [oppName, cupName, stage]),
+            MsgText(MsgKey.hubKnockedOutBody3, [cupName, stage, oppName]),
+          ], s),
           year: year,
         );
       }
@@ -1871,19 +1998,21 @@ class SeasonService {
       );
       if (!inKnockout) {
         final s = varietySeed('groupout:${cup.kind.name}:$year');
-        await _comp.addMessage(
+        final cupName = MsgComp(cup.name);
+        await _comp.addTextMessage(
+          l: l,
           careerId: careerId,
           dedupKey: 'groupout:${cup.kind.name}:$year',
           category: 'eliminated',
           title: pickVariant([
-            l.hubGroupExitTitle1,
-            l.hubGroupExitTitle2,
-            l.hubGroupExitTitle3,
+            const MsgText(MsgKey.hubGroupExitTitle1),
+            const MsgText(MsgKey.hubGroupExitTitle2),
+            const MsgText(MsgKey.hubGroupExitTitle3),
           ], s),
           body: pickVariant([
-            l.hubGroupExitBody1(cup.name),
-            l.hubGroupExitBody2(cup.name),
-            l.hubGroupExitBody3(cup.name),
+            MsgText(MsgKey.hubGroupExitBody1, [cupName]),
+            MsgText(MsgKey.hubGroupExitBody2, [cupName]),
+            MsgText(MsgKey.hubGroupExitBody3, [cupName]),
           ], s),
           year: year,
         );
@@ -1919,8 +2048,8 @@ class SeasonService {
   Future<void> startNextCycle(
     int careerId, {
     int? switchToNationId,
-    String? boardTitle,
-    String? boardBody,
+    MsgPart? boardTitle,
+    MsgPart? boardBody,
     FederationInvestment? nextInvestment,
   }) => _exclusive(
     () => _startNextCycle(
@@ -1966,3 +2095,25 @@ class SeasonService {
 final Provider<SeasonService> seasonServiceProvider = Provider(
   SeasonService.new,
 );
+
+/// The engine events worth keeping: who was sent off and who was hurt, with
+/// the minute.
+///
+/// A match reports five kinds of event and the save used to keep one of them
+/// (the goals). The cards and the knocks were read once — for the ban, for the
+/// injury list — and then discarded, so nothing a fortnight later knew that a
+/// side had played half an hour with ten men. The press and the feed ask about
+/// exactly that.
+List<IncidentRecord> _incidentsOf(Fixture f, List<MatchEvent> events) => [
+  for (final e in events)
+    if (e.type == MatchEventType.redCard || e.type == MatchEventType.injury)
+      (
+        careerId: f.careerId,
+        fixtureId: f.id,
+        nationId: e.teamNationId,
+        playerId: e.playerId,
+        minute: e.minute,
+        type: e.type,
+        secondYellow: e.secondYellow,
+      ),
+];

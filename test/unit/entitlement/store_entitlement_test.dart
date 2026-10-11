@@ -202,6 +202,16 @@ void main() {
       expect(await readAppleEntitlements(), isNull);
     });
 
+    test(
+      'the Google reader and the dispatcher answer null off device',
+      () async {
+        // The same guard for Play: a Mac is not a phone with Play on it, and
+        // "not asked" must never turn into "owns nothing".
+        expect(await readGoogleEntitlements(), isNull);
+        expect(await readStoreEntitlements(), isNull);
+      },
+    );
+
     test('a refunded transaction is not a current entitlement', () async {
       expect(
         isRevokedTransaction(

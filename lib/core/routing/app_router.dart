@@ -175,7 +175,8 @@ abstract final class Routes {
   /// The board's objectives for the cycle. Expects `?careerId=`.
   static const boardObjectives = '/board-objectives';
 
-  /// The under-21 watchlist. Expects `?careerId=`.
+  /// The youth pyramid, U-13 to U-21, and the manager's own shortlist of the
+  /// boys he is following. Expects `?careerId=`.
   static const youth = '/youth';
 
   /// The social feed.
@@ -203,7 +204,8 @@ abstract final class Routes {
   /// `?careerId=&a=&b=`.
   static const h2hMeetings = '/h2h-meetings';
 
-  /// The Nations Cup league standings. Expects `?careerId=`.
+  /// A Nations Cup's standings. Expects `?careerId=`; `&conf=` (a
+  /// [Confederation] name) picks the cup, the manager's own when absent.
   static const nationsCup = '/nations-cup';
   static const nationsCupDraw = '/nations-cup-draw';
   static const naturalization = '/naturalization';
@@ -551,12 +553,14 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: Routes.nationsCup,
         builder: (context, state) {
-          final id =
-              int.tryParse(
-                state.uri.queryParameters['careerId'] ?? '',
-              ) ??
-              0;
-          return NationsCupScreen(careerId: id);
+          final q = state.uri.queryParameters;
+          final id = int.tryParse(q['careerId'] ?? '') ?? 0;
+          // `&conf=` picks another confederation's cup; without it the
+          // manager's own opens.
+          final conf = Confederation.values
+              .where((c) => c.name == q['conf'])
+              .firstOrNull;
+          return NationsCupScreen(careerId: id, confederation: conf);
         },
       ),
       GoRoute(

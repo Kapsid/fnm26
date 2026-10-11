@@ -70,6 +70,9 @@ abstract final class CareerBundle {
       ('goal_events', 'fixture_id'),
       ('player_ratings', 'fixture_id'),
       ('match_team_stats', 'fixture_id'),
+      ('match_incidents', 'fixture_id'),
+      ('press_statements', 'made_after_fixture_id'),
+      ('press_conferences', 'fixture_id'),
     ],
   };
 

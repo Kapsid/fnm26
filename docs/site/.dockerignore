@@ -1,4 +1,0 @@
-# Kept out of the build context entirely. The Dockerfile and the Caddyfile
-# cannot be listed here: the build needs to read them.
-*.md
-.DS_Store

@@ -4,6 +4,8 @@
 /// (`achievement_providers.dart`); this file stays pure and unit-testable.
 library;
 
+import 'package:fnm/domain/services/competition/nations_cups.dart';
+
 /// The sections achievements are grouped under on the achievements screen.
 enum AchievementCategory {
   wins('Wins'),
@@ -13,8 +15,7 @@ enum AchievementCategory {
   qualifications('Qualifications'),
   titles('Titles'),
   misc('Misc'),
-  mega('Mega')
-  ;
+  mega('Mega');
 
   const AchievementCategory(this.label);
 
@@ -327,7 +328,8 @@ abstract final class AchievementCatalog {
       category: AchievementCategory.titles,
       title: 'Nations Cup Winners',
       description: 'Win the Nations Cup.',
-      isEarned: (s) => s.titlesWon.contains('Nations Cup'),
+      // Any confederation's Nations Cup.
+      isEarned: (s) => s.titlesWon.any(NationsCups.isNationsCup),
       tier: AchievementTier.gold,
     ),
     AchievementDef(

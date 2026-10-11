@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/core/routing/app_router.dart';
+import 'package:fnm/domain/services/competition/nations_cups.dart';
+import 'package:fnm/core/util/competition_label.dart';
+import 'package:fnm/core/util/nation_label.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
 import 'package:fnm/domain/entities/fixture.dart';
-import 'package:fnm/domain/services/competition/continental_cups.dart';
 import 'package:fnm/domain/services/competition/finals_participation.dart';
 import 'package:fnm/domain/services/competition/hosts.dart';
 import 'package:fnm/domain/services/competition/kickoff_keys.dart';
 import 'package:fnm/domain/services/squad/nomination.dart';
+import 'package:fnm/features/press/press_copy.dart';
 import 'package:fnm/features/press/press_providers.dart';
 import 'package:fnm/features/squad/grievance_providers.dart';
 
@@ -180,6 +183,9 @@ nextEventProvider = FutureProvider.autoDispose.family<HubEvent, int>((
   final comp = ref.watch(competitionRepositoryProvider);
   final cycle = hub.career.cyclePointer;
   String opp(int id) => hub.nations[id]?.name ?? l.hubUnknown;
+  // The opponent as it reads AFTER "proti", which in Czech is the dative and
+  // not the name the rest of the hub prints.
+  String oppAgainst(int id) => nationAgainst(l, hub.nations[id], l.hubUnknown);
 
   // Whether the manager is contesting each finals tournament themselves — they
   // have an unplayed fixture in one of its rounds. This decides whether an
@@ -422,6 +428,32 @@ nextEventProvider = FutureProvider.autoDispose.family<HubEvent, int>((
     );
   }
 
+  // The press come to HIS match before he goes and sits in the stands. The
+  // conference further down waits out a tournament he is only watching, and
+  // until now that was the only place it sat, so a result was taken to the
+  // room only after somebody else's cup had been played over the top of it.
+  // Once a round of that tournament HAS been played since his last match he
+  // is watching it, and the press wait below as before.
+  final lastOwnMatch = hub.fixtures
+      .where((f) => f.hasResult)
+      .map((f) => f.date)
+      .fold<DateTime?>(null, (a, b) => a == null || b.isAfter(a) ? b : a);
+  final watchedLine = await comp.latestPlayedWatchedFinalsDate(
+    careerId,
+    hub.career.nationId,
+    confederation: playerConf,
+  );
+  if (lastOwnMatch != null &&
+      (watchedLine == null || !lastOwnMatch.isBefore(watchedLine)) &&
+      await ref.watch(pendingConferenceProvider(careerId).future) != null) {
+    return HubEvent(
+      kind: HubEventKind.press,
+      label: l.hubEventPressConference,
+      icon: Icons.mic_rounded,
+      subtitle: l.hubEventPressConferenceSub,
+    );
+  }
+
   final next = hub.next;
 
   // 2c. A main finals tournament (World Cup or continental) is under way and
@@ -458,9 +490,7 @@ nextEventProvider = FutureProvider.autoDispose.family<HubEvent, int>((
   // fixture of its tournament — which is the only reason it never showed this.
   // Mirrors the same guard in [SeasonService._advance].
   final finalsRoundBeforeOwn =
-      finalsDate != null &&
-      nextIsFinalsMatch &&
-      finalsDate.isBefore(next.date);
+      finalsDate != null && nextIsFinalsMatch && finalsDate.isBefore(next.date);
   if (finalsDate != null &&
       (finalsRoundBeforeOwn ||
           (!nextIsFinalsMatch &&
@@ -477,8 +507,7 @@ nextEventProvider = FutureProvider.autoDispose.family<HubEvent, int>((
     final conf = hub.nations[hub.career.nationId]?.confederation;
     final cupName = conf == null
         ? l.hubEventContinentalFinalsFallback
-        : ContinentalCups.byConfederation[conf]?.name ??
-              l.hubEventContinentalFinalsFallback;
+        : continentalCupLabel(l, conf);
     return HubEvent(
       kind: HubEventKind.watchTournament,
       label: l.hubEventPlayCupMatch(cupName),
@@ -489,21 +518,31 @@ nextEventProvider = FutureProvider.autoDispose.family<HubEvent, int>((
     );
   }
 
-  // 2d. The Nations Cup Finals Four is under way and the player isn't in it —
-  //     surface it so its semis and final are watched, not skipped past. As with
+  // 2d. The manager's Nations Cup finals (a Finals Four, or Africa's Finals
+  //     Eight) are under way and the player isn't in them — surface them so
+  //     their rounds are watched, not skipped past. As with
   //     the World Cup guard above, a participant is detected from ANY unplayed
   //     Finals Four fixture, not just their immediate next one — otherwise a
   //     host (who fills the pre-finals window with friendlies) is wrongly routed
   //     to watch, and their own semi/final is auto-simmed and never played.
   final nextIsNcFinals =
-      next != null && (next.round == 'NSF' || next.round == 'NFINAL');
+      next != null && FinalsRounds.nationsCup.contains(next.round);
   final playerInNcFinals = hub.fixtures.any(
-    (f) => !f.hasResult && (f.round == 'NSF' || f.round == 'NFINAL'),
+    (f) => !f.hasResult && FinalsRounds.nationsCup.contains(f.round),
   );
-  final ncFinalsDate = await comp.earliestUnplayedNationsCupFinalsDate(
-    careerId,
+  // Only his own confederation's cup, as the stepping in `advance` does; a
+  // manager whose confederation runs none has no Nations Cup to watch.
+  final ncConf = NationsCups.ofManager(
+    hub.nations[hub.career.nationId]?.confederation,
   );
-  if (ncFinalsDate != null &&
+  final ncFinalsDate = ncConf == null
+      ? null
+      : await comp.earliestUnplayedNationsCupFinalsDate(
+          careerId,
+          confederation: ncConf,
+        );
+  if (ncConf != null &&
+      ncFinalsDate != null &&
       !nextIsNcFinals &&
       !playerInNcFinals &&
       (next == null || !ncFinalsDate.isAfter(next.date))) {
@@ -511,7 +550,7 @@ nextEventProvider = FutureProvider.autoDispose.family<HubEvent, int>((
       kind: HubEventKind.watchTournament,
       label: l.hubEventPlayNationsCupMatch,
       icon: Icons.fast_forward_rounded,
-      route: '${Routes.nationsCup}?careerId=$careerId',
+      route: '${Routes.nationsCup}?careerId=$careerId&conf=${ncConf.name}',
     );
   }
 
@@ -527,8 +566,10 @@ nextEventProvider = FutureProvider.autoDispose.family<HubEvent, int>((
   // somebody else's final, held by a manager who was not there. His own
   // fixtures are what the room turns up for, so the questions wait until the
   // tournament he is only watching has been played out.
-  final pressQuestion = await ref.watch(pressQuestionProvider(careerId).future);
-  if (pressQuestion != null) {
+  final pendingPress = await ref.watch(
+    pendingConferenceProvider(careerId).future,
+  );
+  if (pendingPress != null) {
     return HubEvent(
       kind: HubEventKind.press,
       label: l.hubEventPressConference,
@@ -804,13 +845,27 @@ nextEventProvider = FutureProvider.autoDispose.family<HubEvent, int>((
       }
     }
 
+    // 5·9. The press before the first match of a campaign he is in: the last
+    //      thing before kick-off, once the squad is named and set.
+    final preview = await ref.watch(previewDueProvider(careerId).future);
+    if (preview != null && preview.fixture.id == next.id) {
+      return HubEvent(
+        kind: HubEventKind.press,
+        label: l.hubEventPressConference,
+        icon: Icons.mic_rounded,
+        subtitle: l.hubEventPressPreviewSub(
+          previewCompetitionName(l, preview.campaign, playerConf),
+        ),
+      );
+    }
+
     // 6. Play the next match (opens its pre-match preview first).
     final oppId = next.homeNationId == hub.career.nationId
         ? next.awayNationId
         : next.homeNationId;
     return HubEvent(
       kind: HubEventKind.match,
-      label: l.hubEventPlayOpponent(opp(oppId)),
+      label: l.hubEventPlayOpponent(oppAgainst(oppId)),
       icon: Icons.play_arrow_rounded,
       route: '${Routes.matchPreview}?careerId=$careerId',
     );
@@ -843,8 +898,7 @@ nextEventProvider = FutureProvider.autoDispose.family<HubEvent, int>((
     final conf = myConf;
     final cupName = conf == null
         ? l.hubEventContinentalFinalsFallback
-        : ContinentalCups.byConfederation[conf]?.name ??
-              l.hubEventContinentalFinalsFallback;
+        : continentalCupLabel(l, conf);
     return HubEvent(
       kind: HubEventKind.watchTournament,
       label: l.hubEventPlayCupMatch(cupName),

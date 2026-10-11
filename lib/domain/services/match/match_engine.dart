@@ -23,6 +23,7 @@ class MatchTeam {
     this.deadBallTakerId,
     this.conditionByPlayer = const {},
     this.traitsByPlayer = const {},
+    this.ratingBonus = 0,
   });
 
   final int nationId;
@@ -39,6 +40,13 @@ class MatchTeam {
   /// ratings depending on where you looked. The displayed rating is always the
   /// player's real overall; condition is what the engine quietly does with it.
   final Map<int, int> conditionByPlayer;
+
+  /// A side-wide shift, in rating points, on every man the side fields
+  /// (substitutes included), applied on the same seam as [conditionByPlayer].
+  ///
+  /// This is the scout's opponent dossier (`Staff.dossierBonus`): the
+  /// manager's side only, zero for everybody else.
+  final int ratingBonus;
 
   /// Each player's traits (player id → traits), from [PlayerTraits]. Traits are
   /// what make a squad memorable: a hothead collects cards, an iron man barely
@@ -269,6 +277,8 @@ class MatchResult {
     this.stoppage = 0,
     this.homeXgByMinute = const [],
     this.awayXgByMinute = const [],
+    this.homeShotsByMinute = const [],
+    this.awayShotsByMinute = const [],
     this.momentumByMinute = const [],
   });
 
@@ -292,6 +302,14 @@ class MatchResult {
   /// the live "xG race" line. Empty when not recorded.
   final List<double> homeXgByMinute;
   final List<double> awayXgByMinute;
+
+  /// Cumulative shots per minute, shaped exactly like the xG series (index 0 =
+  /// kick-off = 0, index m = shots taken after minute m), length 91 with any
+  /// stoppage folded onto minute 90. Empty when not recorded. Lets the stats
+  /// tab report the shot count as of the minute on the clock instead of making
+  /// the manager wait for the whistle.
+  final List<int> homeShotsByMinute;
+  final List<int> awayShotsByMinute;
 
   /// Net in-match momentum per minute from the home side's view (positive = home
   /// pressing, negative = away), length 91 like the xG series. Empty when not
@@ -745,6 +763,9 @@ class MatchEngine {
     // Cumulative xG snapshots per minute (index 0 = kick-off), for the race line.
     final homeXgByMinute = <double>[0];
     final awayXgByMinute = <double>[0];
+    // The same snapshot for shots, so the box score can be read live.
+    final homeShotsByMinute = <int>[0];
+    final awayShotsByMinute = <int>[0];
     // Net momentum per minute from the home side's view (+ = home on top), for
     // the live momentum bar. Same length/shape as the xG series.
     final momentumByMinute = <double>[0];
@@ -752,6 +773,8 @@ class MatchEngine {
       playMinute(minute, 0);
       homeXgByMinute.add(homeXg);
       awayXgByMinute.add(awayXg);
+      homeShotsByMinute.add(homeShots);
+      awayShotsByMinute.add(awayShots);
       momentumByMinute.add(liveHome.momentumAttack - liveAway.momentumAttack);
     }
     // Second-half stoppage time ("90+X"): a deterministic few added minutes,
@@ -762,9 +785,11 @@ class MatchEngine {
     for (var s = 1; s <= stoppageMinutes; s++) {
       playMinute(90, s);
     }
-    // Fold stoppage-time xG onto the final (90') point of the series.
+    // Fold stoppage-time xG and shots onto the final (90') point of the series.
     homeXgByMinute[homeXgByMinute.length - 1] = homeXg;
     awayXgByMinute[awayXgByMinute.length - 1] = awayXg;
+    homeShotsByMinute[homeShotsByMinute.length - 1] = homeShots;
+    awayShotsByMinute[awayShotsByMinute.length - 1] = awayShots;
     momentumByMinute[momentumByMinute.length - 1] =
         liveHome.momentumAttack - liveAway.momentumAttack;
 
@@ -789,6 +814,8 @@ class MatchEngine {
       awayXg: awayXg,
       homeXgByMinute: homeXgByMinute,
       awayXgByMinute: awayXgByMinute,
+      homeShotsByMinute: homeShotsByMinute,
+      awayShotsByMinute: awayShotsByMinute,
       momentumByMinute: momentumByMinute,
       stoppage: stoppageMinutes,
       homePossession: homePossession,
@@ -1756,7 +1783,7 @@ class MatchEngine {
       // with; the player's displayed overall never moves. Traits shift it too:
       // a big-game player is worth more on the biggest night, and a leader
       // lifts everyone ELSE around them.
-      var shift = t.team.conditionByPlayer[p.id] ?? 0;
+      var shift = (t.team.conditionByPlayer[p.id] ?? 0) + t.team.ratingBonus;
       if (t.bigMatch && t.team.hasTrait(p.id, PlayerTrait.bigGame)) {
         shift += PlayerTraits.bigGameBonus;
       }

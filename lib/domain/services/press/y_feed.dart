@@ -1,6 +1,10 @@
 import 'package:fnm/core/util/text_variety.dart';
+import 'package:fnm/domain/services/match/match_engine.dart';
 import 'package:fnm/domain/services/press/expectation.dart';
+import 'package:fnm/domain/services/press/half_time_swing.dart';
+import 'package:fnm/domain/services/press/press.dart';
 import 'package:fnm/domain/services/press/persona.dart';
+import 'package:fnm/domain/services/press/statement.dart';
 import 'package:fnm/domain/services/competition/rounds.dart';
 
 /// Who is talking on Y.
@@ -95,6 +99,23 @@ enum YTemplate {
   /// Somebody important limping off.
   injuryBlow,
 
+  /// One of ours walking, and the minute he did it.
+  ///
+  /// The first template drawn from something that happened ON THE PITCH
+  /// rather than from a scoreline: the feed could see that a match was lost
+  /// and never that it was lost a man short.
+  sentOff,
+
+  /// Two goals down at half time, and it finished level or won.
+  ///
+  /// The pair below read the match the way [sentOff] does rather than the
+  /// scoreline, and they are the one pair whose Czech does not translate its
+  /// English: see the copy, which says why.
+  turnedItRound,
+
+  /// Two goals up at half time, and it finished level or lost.
+  threwItAway,
+
   /// The board's patience, in public.
   boardPressure,
 
@@ -117,6 +138,29 @@ enum YTemplate {
   /// Somebody who said it would go wrong, being right out loud.
   toldYouSo,
 
+  /// A first cap, and the country arguing about him already.
+  ///
+  /// The first template drawn from the SQUAD rather than from a match. The
+  /// feed could see a scoreline and a sending-off and never once see who the
+  /// manager had picked.
+  debut,
+
+  /// A forward who has stopped scoring, and how long it has been.
+  drought,
+
+  /// The neighbours, next week.
+  rivalryLooms,
+
+  /// Something the manager said on the record, and it came true.
+  ///
+  /// Generic over every [StatementKind] on purpose: the wording names the
+  /// nation and nothing else, so one set of lines serves a promised win, a job
+  /// staked on three games and a player backed or blamed in public.
+  statementKept,
+
+  /// Something the manager said on the record, and it did not.
+  statementBroken,
+
   /// A reply under somebody else's post. Its words come from a [YMood], not
   /// from what happened — see [YMood].
   reaction,
@@ -137,6 +181,9 @@ typedef YMemory = ({
 
   /// How many of the recent results read the same way as this one.
   int sameRecently,
+
+  /// How many of those earlier meetings with this opponent were won.
+  int beatenBefore,
 });
 
 /// A feed with nothing behind it — the first match of a save, and the shape
@@ -145,6 +192,7 @@ const YMemory blankMemory = (
   standings: <ResultStanding>[],
   metBefore: 0,
   sameRecently: 0,
+  beatenBefore: 0,
 );
 
 /// One post on the feed.
@@ -254,6 +302,15 @@ abstract final class YFeed {
   /// The ones that fire often but not always — a scorer, a streak, an injury.
   static const int midVariantCount = 8;
 
+  /// The templates drawn from the SQUAD rather than from a result.
+  ///
+  /// Six, not four, and the reason is the bands: [YCast.band] cuts a total
+  /// into thirds, so four gives one generous wording, one neutral and two
+  /// sour — too thin for the thing these are here for. A nostalgic and a
+  /// hypeman have to sound like different people about the same debutant, and
+  /// six gives each disposition a pair to choose between.
+  static const int subjectVariantCount = 6;
+
   /// How many phrasings [t] has.
   ///
   /// Four for everything was the whole repetition problem: a host being named
@@ -273,7 +330,20 @@ abstract final class YFeed {
     YTemplate.lossStreak ||
     YTemplate.rivalry ||
     YTemplate.injuryBlow ||
+    YTemplate.sentOff ||
     YTemplate.boardPressure => midVariantCount,
+    YTemplate.debut ||
+    YTemplate.drought ||
+    YTemplate.rivalryLooms ||
+    // Six rather than four for the same reason the squad templates take six:
+    // the bands cut a total into thirds, and a joke a loyalist tells and a
+    // joke a cynic tells need a pair apiece to choose between.
+    YTemplate.turnedItRound ||
+    YTemplate.threwItAway ||
+    // And for a statement judged: the loyalist who always believed him and
+    // the cynic who never did both need a pair of their own.
+    YTemplate.statementKept ||
+    YTemplate.statementBroken => subjectVariantCount,
     _ => variantCount,
   };
 
@@ -307,10 +377,13 @@ abstract final class YFeed {
   /// ruined a favourite's. It now asks [Expectation], like everything else.
   static YTemplate classify(YMatch m) {
     final standing = standingOf(m);
+    final margin = (m.scored - m.conceded).abs();
     if (m.scored > m.conceded) {
+      // "Earned the hard way" is a close win. A creditable 3–0 is the margin
+      // bonus talking, and was being reported as nervy and ugly.
       return switch (standing) {
         ResultStanding.heroic => YTemplate.winUpset,
-        ResultStanding.creditable => YTemplate.winTight,
+        ResultStanding.creditable when margin <= 2 => YTemplate.winTight,
         _ => YTemplate.winRoutine,
       };
     }
@@ -318,7 +391,10 @@ abstract final class YFeed {
     // Only a defeat that shames you is a bad defeat. Losing 4–0 to the best
     // side in the world is a scoreline; losing 1–0 at home to a minnow is a
     // story, and the old rule had those the wrong way round.
-    return standing == ResultStanding.humiliating
+    //
+    // And it takes a margin to be a hammering: the bad-defeat wordings talk
+    // about the scoreline, which a one-goal upset does not deserve.
+    return standing == ResultStanding.humiliating && margin >= 2
         ? YTemplate.lostBadly
         : YTemplate.lost;
   }
@@ -329,7 +405,11 @@ abstract final class YFeed {
   /// similar results produced a run of near-identical posts. A shape is a
   /// template and its arguments together: the same sentence about a different
   /// opponent is not a repeat.
-  static const int noRepeatWindow = 10;
+  ///
+  /// Forty rather than ten: at ten, the same reply came back two seasons on
+  /// under the next defeat, which reads as a feed on a loop. A reply that has
+  /// no unused wording left is dropped rather than repeated.
+  static const int noRepeatWindow = 40;
 
   /// A run of results, oldest first, as the world talked about it.
   ///
@@ -350,6 +430,7 @@ abstract final class YFeed {
     // How often each opponent has been faced, and how the last few afternoons
     // read — the two things a callback needs and the walk already knows.
     final met = <String, int>{};
+    final beaten = <String, int>{};
     for (final context in contexts) {
       final standing = standingOf(context.match);
       final recentStandings = history.length <= callbackWindow
@@ -363,6 +444,7 @@ abstract final class YFeed {
           standings: history,
           metBefore: met[context.match.opponent] ?? 0,
           sameRecently: recentStandings.where((s) => s == standing).length,
+          beatenBefore: beaten[context.match.opponent] ?? 0,
         ),
       )) {
         // A shape is the SENTENCE, not the subject: template, wording and
@@ -388,6 +470,13 @@ abstract final class YFeed {
         (v) => v + 1,
         ifAbsent: () => 1,
       );
+      if (context.match.scored > context.match.conceded) {
+        beaten.update(
+          context.match.opponent,
+          (v) => v + 1,
+          ifAbsent: () => 1,
+        );
+      }
     }
     return out;
   }
@@ -483,10 +572,9 @@ abstract final class YFeed {
       (YVoice.stats, template, result),
       if (loud >= 2) (YVoice.fan, template, result),
       if (loud >= 3) (YVoice.pundit, template, result),
-      // Somebody enjoys it only when there is something to enjoy. Any old
-      // defeat used to bring the rival account out, which made it noise.
-      if (lost && standing == ResultStanding.humiliating)
-        (YVoice.rival, template, result),
+      // The rival does not post the result: every result line is written as
+      // one of ours ("we did not lay a glove on them"), so he gloats in the
+      // replies instead, in words of his own.
     ];
 
     // And what else the world happens to know.
@@ -497,7 +585,7 @@ abstract final class YFeed {
     }
     if (context.isRivalry) {
       candidates.add((
-        lost ? YVoice.rival : YVoice.fan,
+        lost ? YVoice.expro : YVoice.fan,
         YTemplate.rivalry,
         result,
       ));
@@ -530,6 +618,7 @@ abstract final class YFeed {
     // could never say. A fourth defeat to the same neighbours is not a fourth
     // result, it is a pattern, and somebody says so.
     if (memory.metBefore >= callbackMeetings &&
+        memory.beatenBefore == 0 &&
         Expectation.weight(standing) < 0) {
       candidates.add((
         YVoice.fan,
@@ -537,7 +626,11 @@ abstract final class YFeed {
         [m.opponent, '${memory.metBefore + 1}'],
       ));
     }
-    if (memory.sameRecently >= callbackRepeats) {
+    // "A pattern, not a run of luck" is a complaint: only bad afternoons make
+    // one, and a losing streak already said so.
+    if (memory.sameRecently >= callbackRepeats &&
+        Expectation.weight(standing) < 0 &&
+        context.lossStreak < streakThreshold) {
       candidates.add((
         YVoice.pundit,
         YTemplate.sameOldStory,
@@ -557,11 +650,14 @@ abstract final class YFeed {
           // from a loyalist and terminal from a doomer, and a run of results
           // moves both of them.
           final persona = personaFor(voice, nation, seed, m.key);
-          final tone = YCast.toneFor(
-            persona,
-            standing,
-            YCast.stance(persona, memory.standings),
-          );
+          // The rival is here to enjoy it: never generous about our misery.
+          final tone = voice == YVoice.rival
+              ? YTone.sour
+              : YCast.toneFor(
+                  persona,
+                  standing,
+                  YCast.stance(persona, memory.standings),
+                );
           return _post(
             voice: voice,
             template: shape,
@@ -578,7 +674,7 @@ abstract final class YFeed {
     // thread — every post drawing one would bury the feed under its own
     // replies, and a match is one conversation, not five.
     if (posts.isEmpty) return posts;
-    return [
+    return distinctWording([
       ...posts,
       ...repliesTo(
         posts.first,
@@ -590,7 +686,7 @@ abstract final class YFeed {
         standing: standing,
         history: memory.standings,
       ),
-    ];
+    ]);
   }
 
   /// How long a run has to be before anybody remarks on it.
@@ -659,7 +755,7 @@ abstract final class YFeed {
           seed: seed,
         ),
     ];
-    return [
+    return distinctWording([
       ...posts,
       ...repliesTo(
         posts.first,
@@ -667,6 +763,47 @@ abstract final class YFeed {
         nation: nation,
         seed: seed,
       ),
+    ]);
+  }
+
+  /// [posts] about one event, with no two of them saying the same sentence.
+  ///
+  /// Each account picks its wording from its own seed and tone band, and a
+  /// once-a-cycle template has only four, so the wire, a fan and the ex-pro
+  /// were posting the identical line about one exit. A wording already taken
+  /// moves the later post on to the next free one.
+  static List<YPost> distinctWording(List<YPost> posts) {
+    final used = <String, Set<int>>{};
+    return [
+      for (final p in posts)
+        () {
+          final group = p.mood == null
+              ? 't:${p.template.name}'
+              : 'm:${p.mood!.name}';
+          final spread = p.mood == null
+              ? variantsFor(p.template)
+              : reactionVariantCount;
+          final taken = used.putIfAbsent(group, () => <int>{});
+          var variant = p.variant;
+          for (var i = 0; i < spread && taken.contains(variant); i++) {
+            variant = (variant + 1) % spread;
+          }
+          taken.add(variant);
+          return variant == p.variant
+              ? p
+              : (
+                  voice: p.voice,
+                  handle: p.handle,
+                  displayName: p.displayName,
+                  template: p.template,
+                  variant: variant,
+                  args: p.args,
+                  date: p.date,
+                  key: p.key,
+                  replyTo: p.replyTo,
+                  mood: p.mood,
+                );
+        }(),
     ];
   }
 
@@ -765,6 +902,312 @@ abstract final class YFeed {
     return [
       post,
       ...repliesTo(post, mood: YMood.fury, nation: nation, seed: seed),
+    ];
+  }
+
+  /// The results as they stood on [when]: every standing dated on or before
+  /// it, oldest first, ignoring anything that came after.
+  ///
+  /// A post derived from the save is rebuilt on every open, so whatever it is
+  /// toned by has to be what was known on ITS day. Hand it today's run and a
+  /// statement judged months ago re-words itself after every later result.
+  static List<ResultStanding> standingsAsOf(
+    List<({DateTime date, ResultStanding standing})> dated,
+    DateTime when,
+  ) => [
+    for (final d in dated)
+      if (!d.date.isAfter(when)) d.standing,
+  ];
+
+  /// What the country says once something the manager put on the record has
+  /// been judged: it came true, or it did not.
+  ///
+  /// Nothing for a statement still [StatementStatus.open] (there is nothing
+  /// to say yet) or [StatementStatus.lapsed] (the window closed on a job he no
+  /// longer holds, and the country has moved on with him). Keyed by the
+  /// statement's id and dated the day it was judged, so it lands in the feed
+  /// next to the match that decided it and reads the same on every rebuild.
+  static List<YPost> forStatement({
+    required PressStatement s,
+    required String nation,
+    required int seed,
+    ResultStanding standing = ResultStanding.par,
+    List<ResultStanding> history = const [],
+  }) {
+    final judgedOn = s.judgedOn;
+    final template = switch (s.status) {
+      StatementStatus.kept => YTemplate.statementKept,
+      StatementStatus.broken => YTemplate.statementBroken,
+      StatementStatus.open || StatementStatus.lapsed => null,
+    };
+    if (template == null || judgedOn == null) return const [];
+    final key = 'stmt:${s.id}';
+    final persona = personaFor(YVoice.fan, nation, seed, key);
+    final post = _post(
+      voice: YVoice.fan,
+      template: template,
+      args: [nation],
+      date: judgedOn,
+      key: key,
+      nation: nation,
+      seed: seed,
+      tone: YCast.toneFor(persona, standing, YCast.stance(persona, history)),
+    );
+    return [
+      post,
+      ...repliesTo(
+        post,
+        mood: moodOf(template),
+        nation: nation,
+        seed: seed,
+        standing: standing,
+        history: history,
+      ),
+    ];
+  }
+
+  /// What the country says about one thing that happened on the pitch.
+  ///
+  /// It takes the SAME [PressSubjectIncident] the press room does, so the
+  /// question a reporter puts to the manager and the post a supporter writes
+  /// are two readings of one event rather than two systems that happen to
+  /// agree. Only a sending-off of one of ours is worth a post today: a knock
+  /// already has [YTemplate.injuryBlow] behind it, and a goal has the match
+  /// report.
+  ///
+  /// [standing] and [history] are what make the cast read differently about
+  /// the same red card — a loyalist reaches for the generous third of the
+  /// wordings and a cynic for the sour one, exactly as they do about a
+  /// result. Nothing here is a second persona system; see [YCast].
+  static List<YPost> forIncident({
+    required PressSubjectIncident incident,
+    required DateTime date,
+    required String key,
+    required String nation,
+    required int seed,
+    ResultStanding standing = ResultStanding.par,
+    List<ResultStanding> history = const [],
+  }) {
+    if (incident.type != MatchEventType.redCard || !incident.ours) {
+      return const [];
+    }
+    final name = incident.name;
+    // A post that cannot name him would be the generality the feed already
+    // had too much of.
+    if (name == null) return const [];
+    final args = [name, '${incident.minute}'];
+    final posts = [
+      for (final voice in const [YVoice.fan, YVoice.expro])
+        () {
+          final persona = personaFor(voice, nation, seed, key);
+          return _post(
+            voice: voice,
+            template: YTemplate.sentOff,
+            args: args,
+            date: date,
+            key: key,
+            nation: nation,
+            seed: seed,
+            tone: YCast.toneFor(
+              persona,
+              standing,
+              YCast.stance(persona, history),
+            ),
+          );
+        }(),
+    ];
+    return [
+      ...posts,
+      ...repliesTo(
+        posts.first,
+        mood: YMood.fury,
+        nation: nation,
+        seed: seed,
+        standing: standing,
+        history: history,
+      ),
+    ];
+  }
+
+  /// What the country says about one of the manager's MEN.
+  ///
+  /// The same [PressSubjectPlayer] the conference is built on, so the question
+  /// a reporter puts and the post a supporter writes are two readings of one
+  /// selection rather than two systems that happen to agree — exactly as
+  /// [forIncident] does for a red card.
+  ///
+  /// Not every player topic is worth a post: a dropped star and a captain out
+  /// of form are arguments for a press room, where somebody has to answer
+  /// them. The two the country talks about on its own are the boy who has just
+  /// been handed a shirt and the forward who has stopped scoring.
+  static List<YPost> forPlayer({
+    required PressTopic topic,
+    required PressSubjectPlayer subject,
+    required DateTime date,
+    required String key,
+    required String nation,
+    required int seed,
+    ResultStanding standing = ResultStanding.par,
+    List<ResultStanding> history = const [],
+  }) {
+    final (template, args) = switch (topic) {
+      PressTopic.debutant => (YTemplate.debut, [subject.name]),
+      PressTopic.strikerDrought => (
+        YTemplate.drought,
+        [subject.name, '${subject.count}'],
+      ),
+      _ => (null, const <String>[]),
+    };
+    if (template == null) return const [];
+    return _castPosts(
+      voices: const [YVoice.fan, YVoice.expro],
+      template: template,
+      args: args,
+      date: date,
+      key: key,
+      nation: nation,
+      seed: seed,
+      standing: standing,
+      history: history,
+    );
+  }
+
+  /// …and about the side it is about to play.
+  ///
+  /// Only a rivalry: a head-to-head run and a grudge from a tournament exit
+  /// are what a reporter opens a conference with, and a feed that posted every
+  /// fixture's record would be the stats desk talking to itself.
+  static List<YPost> forOpponent({
+    required PressTopic topic,
+    required PressSubjectOpponent subject,
+    required String opponent,
+    required DateTime date,
+    required String key,
+    required String nation,
+    required int seed,
+    ResultStanding standing = ResultStanding.par,
+    List<ResultStanding> history = const [],
+  }) {
+    if (topic != PressTopic.rivalryNext) return const [];
+    return _castPosts(
+      voices: const [YVoice.fan, YVoice.rival],
+      template: YTemplate.rivalryLooms,
+      args: [opponent, '${subject.count}'],
+      date: date,
+      key: key,
+      nation: nation,
+      seed: seed,
+      standing: standing,
+      history: history,
+    );
+  }
+
+  /// One subject, said by each of [voices] in its own persona's tone, with the
+  /// thread the loudest of them draws.
+  ///
+  /// The shared body of [forPlayer] and [forOpponent] — and the shape
+  /// [forIncident] already had, written out once instead of three times.
+  static List<YPost> _castPosts({
+    required List<YVoice> voices,
+    required YTemplate template,
+    required List<String> args,
+    required DateTime date,
+    required String key,
+    required String nation,
+    required int seed,
+    required ResultStanding standing,
+    required List<ResultStanding> history,
+  }) {
+    final posts = [
+      for (final voice in voices)
+        () {
+          final persona = personaFor(voice, nation, seed, key);
+          return _post(
+            voice: voice,
+            template: template,
+            args: args,
+            date: date,
+            key: key,
+            nation: nation,
+            seed: seed,
+            tone: YCast.toneFor(
+              persona,
+              standing,
+              YCast.stance(persona, history),
+            ),
+          );
+        }(),
+    ];
+    return [
+      ...posts,
+      ...repliesTo(
+        posts.first,
+        mood: moodOf(template),
+        nation: nation,
+        seed: seed,
+        standing: standing,
+        history: history,
+      ),
+    ];
+  }
+
+  /// What the country says about an afternoon the second half turned over.
+  ///
+  /// It reads the same [halfTimeSwingOf] the press room does, so the question a
+  /// reporter puts to the manager and the posts under it are two readings of
+  /// one match rather than two systems that happen to agree.
+  ///
+  /// The wordings are where this one is unusual: in Czech they are built on a
+  /// local in-joke and in English they are not, deliberately. The DOMAIN knows
+  /// nothing about that — it decides that there is a post and which band of
+  /// wordings the author reaches for, exactly as it does for a red card.
+  static List<YPost> forSwing({
+    required HalfTimeSwing swing,
+    required String opponent,
+    required DateTime date,
+    required String key,
+    required String nation,
+    required int seed,
+    ResultStanding standing = ResultStanding.par,
+    List<ResultStanding> history = const [],
+  }) {
+    final template = swing == HalfTimeSwing.comeback
+        ? YTemplate.turnedItRound
+        : YTemplate.threwItAway;
+    final posts = [
+      // The same two accounts a red card draws: one of our own, and the former
+      // international with a column. The supporters' pool holds no loyalist and
+      // the ex-pros' holds both a loyalist and a cynic, which is what lets one
+      // afternoon read two ways.
+      for (final voice in const [YVoice.fan, YVoice.expro])
+        () {
+          final persona = personaFor(voice, nation, seed, key);
+          return _post(
+            voice: voice,
+            template: template,
+            args: [opponent],
+            date: date,
+            key: key,
+            nation: nation,
+            seed: seed,
+            tone: YCast.toneFor(
+              persona,
+              standing,
+              YCast.stance(persona, history),
+            ),
+          );
+        }(),
+    ];
+    return [
+      ...posts,
+      ...repliesTo(
+        posts.first,
+        mood: moodOf(template),
+        nation: nation,
+        seed: seed,
+        standing: standing,
+        history: history,
+      ),
     ];
   }
 
@@ -938,7 +1381,9 @@ abstract final class YFeed {
       YMood.elation => const [YVoice.meme, YVoice.fan],
       YMood.relief => const [YVoice.fan, YVoice.expro],
       YMood.fury => const [YVoice.expro, YVoice.rival, YVoice.meme],
-      YMood.despair => const [YVoice.meme, YVoice.expro, YVoice.rival],
+      // The rival first: a crushing result is the one he always turns up for,
+      // and he no longer posts the result itself (see [forMatch]).
+      YMood.despair => const [YVoice.rival, YVoice.meme, YVoice.expro],
       YMood.smugness => const [YVoice.rival, YVoice.meme],
       YMood.shrug => const [YVoice.meme],
     };
@@ -953,6 +1398,9 @@ abstract final class YFeed {
       for (final voice in voices.take(count))
         () {
           final persona = personaFor(voice, nation, seed, event);
+          // Our fury is the rival's fun: he answers it smug, never in the
+          // home fans' own words.
+          final rival = voice == YVoice.rival;
           return _post(
             voice: voice,
             template: YTemplate.reaction,
@@ -962,12 +1410,14 @@ abstract final class YFeed {
             nation: nation,
             seed: seed,
             replyTo: parent.key,
-            mood: mood,
-            tone: YCast.toneFor(
-              persona,
-              standing,
-              YCast.stance(persona, history),
-            ),
+            mood: rival ? YMood.smugness : mood,
+            tone: rival
+                ? YTone.sour
+                : YCast.toneFor(
+                    persona,
+                    standing,
+                    YCast.stance(persona, history),
+                  ),
           );
         }(),
     ];
@@ -991,7 +1441,25 @@ abstract final class YFeed {
     YTemplate.eliminated ||
     YTemplate.injuryBlow ||
     YTemplate.boardPressure => YMood.despair,
+    // A knock is bad luck and a red card is somebody's fault, which is the
+    // difference between the room despairing and the room turning on him.
+    YTemplate.sentOff => YMood.fury,
+    // Coming from two down is the best afternoon there is short of a trophy;
+    // losing from two up is the one the room does not forgive.
+    YTemplate.turnedItRound => YMood.elation,
+    YTemplate.threwItAway => YMood.fury,
     YTemplate.winStreak || YTemplate.toldYouSo => YMood.smugness,
+    // A boy handed a shirt is the one bit of good news that is not a result,
+    // and a forward who cannot score is the one bit of bad news that is not
+    // one either. A rivalry coming up is nerves, which is what relief reads as
+    // before the fact.
+    YTemplate.debut => YMood.elation,
+    YTemplate.drought => YMood.fury,
+    YTemplate.rivalryLooms => YMood.relief,
+    // He said it on the record. Delivering it is a good day; failing to is
+    // the room turning on him, like a grievance aired in public.
+    YTemplate.statementKept => YMood.elation,
+    YTemplate.statementBroken => YMood.fury,
     // A repeat is read by what it repeats: being done over by the same side
     // again is fury, and a familiar bad afternoon is weariness.
     YTemplate.againstThemAgain => YMood.fury,

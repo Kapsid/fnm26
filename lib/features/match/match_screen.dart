@@ -10,6 +10,7 @@ import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/core/theme/kit_colors.dart';
+import 'package:fnm/core/util/match_stage.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/entities/formation.dart';
@@ -20,7 +21,6 @@ import 'package:fnm/domain/services/competition/rounds.dart';
 import 'package:fnm/domain/services/match/attendance.dart';
 import 'package:fnm/domain/services/match/match_engine.dart';
 import 'package:fnm/domain/services/match/penalty_takers.dart';
-import 'package:fnm/domain/services/rating/overall_rating.dart';
 import 'package:fnm/features/achievements/achievement_popup.dart';
 import 'package:fnm/features/achievements/achievement_providers.dart';
 import 'package:fnm/features/hub/hub_providers.dart';
@@ -103,6 +103,14 @@ class MatchScreen extends ConsumerStatefulWidget {
 class _MatchScreenState extends ConsumerState<MatchScreen> {
   static const _speeds = [1, 2, 3];
   static const _engine = MatchEngine();
+
+  /// This attempt's salt on the fixture seed (see [matchAttemptSaltProvider]).
+  /// Held by the screen, not the preview, so a rebuilt preview can never swap
+  /// the dice under a match already in play.
+  late final int _attemptSalt = ref.read(matchAttemptSaltProvider)();
+
+  /// The seed this attempt plays from: the match itself and its extra time.
+  int _seed(MatchPreview preview) => preview.saveSeed ^ _attemptSalt;
 
   int _minute = 0;
   bool _playing = true;
@@ -718,7 +726,7 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
     return WorldCupFinals.decideKnockout(
       r.homeScore,
       r.awayScore,
-      SeededRng.forFixture(preview.saveSeed, preview.fixture.id ^ 0x7F),
+      SeededRng.forFixture(_seed(preview), preview.fixture.id ^ 0x7F),
       homeStrength: homeStrength,
       awayStrength: awayStrength,
       homeTakerSkill: preview.playerIsHome ? mySkill : oppSkill,
@@ -996,6 +1004,41 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
     return n;
   }
 
+  /// When each man came on and when each went off, read back off the changes
+  /// the manager has already made in this match.
+  ///
+  /// The tactics sheet sees one moment of the game, so on its own it could say
+  /// no more about a substitute than "he is not a starter" — which is the half
+  /// of the answer the manager already had. Walking the changes in order gives
+  /// it the other half: the minute.
+  ({Map<int, int> on, Map<int, int> off}) _subMinutes(MatchPreview preview) {
+    final on = <int, int>{};
+    final off = <int, int>{};
+    var current = _playerTeam(preview).xi.map((p) => p.id).toSet();
+    for (final c in _changes) {
+      if (c.teamNationId != preview.playerNationId) continue;
+      final next = c.xi.map((p) => p.id).toSet();
+      for (final id in next.difference(current)) {
+        on[id] = c.minute;
+      }
+      for (final id in current.difference(next)) {
+        off[id] = c.minute;
+      }
+      current = next;
+    }
+    // A man sent off did not go off at the minute the manager next opened this
+    // sheet; he went off when the referee sent him. Read from the events, the
+    // same place [_sentOffIds] reads, so the two always agree.
+    for (final e in _result?.events ?? const <MatchEvent>[]) {
+      if (e.type == MatchEventType.redCard &&
+          e.teamNationId == _playerNationId &&
+          e.minute <= _minute) {
+        off[e.playerId] = e.minute;
+      }
+    }
+    return (on: on, off: off);
+  }
+
   /// Opens the full in-match tactics editor and, if the manager confirms,
   /// records the change and re-simulates the rest of the match with it applied.
   Future<void> _openTactics(MatchPreview preview) async {
@@ -1004,6 +1047,7 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
     final team = _playerTeam(preview);
     // So the manager can see who's tiring when choosing a substitution.
     final energyNow = _liveEnergy(_result ?? preview.result);
+    final minutes = _subMinutes(preview);
     final result = await showInMatchTactics(
       context,
       minute: _minute.clamp(1, 90),
@@ -1020,6 +1064,10 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
       injuredIds: _injuredIds,
       sentOffIds: _sentOffIds(),
       energyByPlayer: energyNow,
+      // So the squad list can say who started and who came on when, rather
+      // than leaving the manager to work it out from the discs on the pitch.
+      cameOnAt: minutes.on,
+      wentOffAt: minutes.off,
       // Your kit on your players' discs — the same identity the pre-match
       // tactics pitch shows, rather than a neutral grey mid-game.
       teamColors: () {
@@ -1046,7 +1094,7 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
   MatchResult _resim(MatchPreview preview) => _engine.play(
     home: preview.homeTeam,
     away: preview.awayTeam,
-    rng: SeededRng.forFixture(preview.saveSeed, preview.fixture.id),
+    rng: SeededRng.forFixture(_seed(preview), preview.fixture.id),
     subs: preview.opponentSubs,
     changes: _changes,
     talks: _talks,
@@ -1168,7 +1216,9 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
             if (preview == null) {
               return Center(child: Text(l.matchNoUpcoming));
             }
-            _result ??= preview.result;
+            // Played from this attempt's own seed. The preview's result is
+            // the bare fixture seed's match, so it only stands at salt 0.
+            _result ??= _attemptSalt == 0 ? preview.result : _resim(preview);
             _livePreview = preview;
             _ensureLiveSetup(preview);
             final r = _result!;
@@ -1246,35 +1296,24 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
                   children: [
                     Column(
                       children: [
-                        const _TopBar(),
-                        _Header(
+                        _TopBar(
+                          occasion: MatchStage.label(l, preview.fixture),
+                        ),
+                        MatchScoreboard(
                           homeCode: code(homeId),
                           awayCode: code(awayId),
                           homeName: name(homeId),
                           awayName: name(awayId),
-                          // The manager's own side is rated off the XI actually
-                          // on the pitch, so the number moves with his changes;
-                          // the opponent's off the team they named.
-                          homeOverall: squadOverall(
-                            preview.playerIsHome
-                                ? _currentXi(preview)
-                                : preview.homeTeam.xi,
-                          ),
-                          awayOverall: squadOverall(
-                            preview.playerIsHome
-                                ? preview.awayTeam.xi
-                                : _currentXi(preview),
-                          ),
                           homeScore: homeScore,
                           awayScore: awayScore,
                           clock: ft
                               ? (decidedByShootout
-                                    ? 'FULL TIME · PENALTIES'
+                                    ? l.matchClockFullTimePenalties
                                     : knockout != null
-                                    ? 'AFTER EXTRA TIME'
-                                    : 'FULL TIME')
+                                    ? l.matchClockAfterExtraTime
+                                    : l.matchClockFullTime)
                               : showingShootout
-                              ? 'PENALTIES'
+                              ? l.matchClockPenalties
                               : inExtraTime
                               // No trailing apostrophe: it adds right-side
                               // width that pushes the digits left of the
@@ -1324,16 +1363,7 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
                                 ? const []
                                 : _takerNames(preview),
                           ),
-                        const TabBar(
-                          labelColor: AppColors.onSurface,
-                          unselectedLabelColor: AppColors.onSurfaceVariant,
-                          indicatorColor: AppColors.primary,
-                          tabs: [
-                            Tab(text: 'TIMELINE'),
-                            Tab(text: 'STATS'),
-                            Tab(text: 'LINEUPS'),
-                          ],
-                        ),
+                        const MatchDetailTabs(),
                         Expanded(
                           child: TabBarView(
                             children: [
@@ -1342,20 +1372,24 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
                                 live: !ft,
                                 homeId: homeId,
                               ),
-                              if (ft)
-                                _Stats(
-                                  result: r,
-                                  homeCode: code(homeId),
-                                  awayCode: code(awayId),
-                                  homeNationId: homeId,
-                                  ground: preview.ground,
-                                  neutral: preview.neutralVenue,
-                                  groundCode: code(
-                                    preview.ground.groundNationId,
-                                  ),
-                                )
-                              else
-                                const _StatsLocked(),
+                              MatchStatsPanel(
+                                result: r,
+                                homeCode: code(homeId),
+                                awayCode: code(awayId),
+                                homeNationId: homeId,
+                                ground: preview.ground,
+                                neutral: preview.neutralVenue,
+                                groundCode: code(
+                                  preview.ground.groundNationId,
+                                ),
+                                // Read as of the clock, exactly like the
+                                // timeline beside it, so the box score moves
+                                // through the match instead of arriving whole
+                                // at the whistle.
+                                minute: _minute,
+                                fullTime: ft,
+                                events: timelineEvents,
+                              ),
                               _Lineups(
                                 home: preview.playerIsHome
                                     ? _currentXi(preview)
@@ -1408,7 +1442,7 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
                     // Half-time interval — play only resumes on Continue (the
                     // manager may reshape the side first).
                     if (_atHalfTime)
-                      _HalfTimePrompt(
+                      HalfTimePrompt(
                         heading: l.matchHalfTime,
                         homeCode: code(homeId),
                         awayCode: code(awayId),
@@ -1431,7 +1465,7 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
                     // The two extra-time intervals of a level knockout: the
                     // huddle before the first period, and the turnaround at 105'.
                     if (_atExtraTimeStart || _atExtraTimeHalf)
-                      _HalfTimePrompt(
+                      HalfTimePrompt(
                         heading: _atExtraTimeStart
                             ? l.matchExtraTimeAhead
                             : l.matchExtraTimeHalf,
@@ -1480,7 +1514,9 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
                 ? Padding(
                     padding: const EdgeInsets.all(AppSpacing.marginMobile),
                     child: PrimaryButton(
-                      label: _committing ? 'Continuing…' : 'Continue',
+                      label: _committing
+                          ? AppLocalizations.of(context).matchContinuing
+                          : AppLocalizations.of(context).matchContinue,
                       icon: Icons.check_rounded,
                       onPressed: _committing
                           ? null

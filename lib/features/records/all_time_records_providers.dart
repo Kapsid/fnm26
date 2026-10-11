@@ -27,6 +27,10 @@ typedef AllTimeRecords = ({
   List<AllTimeLeader> mostCaps,
   List<AllTimeLeader> mostWcStarts,
   List<AllTimeLeader> mostCupsAttended,
+
+  /// The nations the manager has led, current and past: their players are
+  /// highlighted on the boards.
+  Set<int> myNationIds,
 });
 
 final AutoDisposeFutureProviderFamily<AllTimeRecords?, int>
@@ -133,5 +137,9 @@ allTimeRecordsProvider = FutureProvider.autoDispose.family<AllTimeRecords?, int>
     mostCaps: mostCaps,
     mostWcStarts: mostWcStarts,
     mostCupsAttended: mostCupsAttended,
+    myNationIds: {
+      career.nationId,
+      ...(await ref.watch(careerRepositoryProvider).stints(careerId)).values,
+    },
   );
 });

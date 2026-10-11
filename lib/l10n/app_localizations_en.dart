@@ -86,6 +86,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get matchStatShots => 'Shots';
 
   @override
+  String get matchStatGoals => 'Goals';
+
+  @override
+  String get matchStatYellowCards => 'Yellows';
+
+  @override
+  String get matchStatRedCards => 'Reds';
+
+  @override
   String get matchMomentum => 'MOMENTUM';
 
   @override
@@ -96,7 +105,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String ceremonyWorldCupYear(int year) {
-    return 'WORLD CUP $year';
+    return 'WORLD CHAMPIONSHIP $year';
   }
 
   @override
@@ -115,6 +124,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get matchContinue => 'Continue';
+
+  @override
+  String get matchContinuing => 'Continuing…';
 
   @override
   String matchTacticsWithSubs(int used, int max) {
@@ -214,6 +226,12 @@ class AppLocalizationsEn extends AppLocalizations {
       'Errors recorded on this device. Nothing is sent anywhere.';
 
   @override
+  String get settingsContactTitle => 'Contact';
+
+  @override
+  String get settingsContactCopied => 'Address copied.';
+
+  @override
   String get diagnosticsEmpty => 'No errors recorded. That\'s the idea.';
 
   @override
@@ -258,10 +276,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settingsLanguageSystem => 'System';
 
   @override
-  String get settingsLanguageEnglish => 'English';
-
-  @override
-  String get settingsLanguageCzech => 'Čeština';
+  String get matchPreviewAllMeetings => 'All meetings';
 
   @override
   String get recordsMeetings => 'MEETINGS';
@@ -285,7 +300,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get recordsMostCapped => 'MOST CAPPED';
 
   @override
-  String get recordsMostWcStarts => 'MOST WORLD CUP STARTS';
+  String get recordsMostWcStarts => 'MOST WORLD CHAMPIONSHIP STARTS';
 
   @override
   String get recordsMostTournaments => 'MOST TOURNAMENTS ATTENDED';
@@ -714,9 +729,68 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String tacticsSubstitutesCount(int count) {
-    return 'SUBSTITUTES · $count';
+  String get tacticsTabOtherPositions => 'OTHER PLACES';
+
+  @override
+  String get tacticsOutOfPositionNote => 'Out of position here';
+
+  @override
+  String get tacticsNobodyElse => 'Nobody else to try here.';
+
+  @override
+  String get tacticsPickSomebodyFirst =>
+      'Choose who comes off and the rest of the bench appears here, with what they would play this place at.';
+
+  @override
+  String get tacticsTabSuitable => 'SUITABLE';
+
+  @override
+  String get tacticsTabOnPitch => 'ON THE PITCH';
+
+  @override
+  String tacticsSectionSuitable(int count) {
+    return 'SUITABLE · $count';
   }
+
+  @override
+  String get tacticsNobodySuits =>
+      'Nobody on the bench naturally suits this place, so here is everybody.';
+
+  @override
+  String tacticsSectionOnPitch(int count, int max) {
+    return 'ON THE PITCH · $count/$max';
+  }
+
+  @override
+  String tacticsSectionAvailable(int count) {
+    return 'AVAILABLE · $count';
+  }
+
+  @override
+  String get tacticsRowStarted => 'Started';
+
+  @override
+  String tacticsRowCameOn(int minute) {
+    return 'On at $minute\'';
+  }
+
+  @override
+  String get tacticsRowSubstitute => 'Came on';
+
+  @override
+  String get tacticsEnergyLabel => 'ENERGY';
+
+  @override
+  String tacticsPickReplacementFor(String name) {
+    return 'Tap a replacement for $name, or tap him again to cancel.';
+  }
+
+  @override
+  String get tacticsSlotLostToRedCard =>
+      'A red card cost you this place. It cannot be filled.';
+
+  @override
+  String get tacticsSentOffShort => 'SENT OFF';
 
   @override
   String tacticsSubsUsed(int used, int max) {
@@ -724,7 +798,8 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get tacticsDragSubOn => 'Drag a sub onto a player to bring them on.';
+  String get tacticsDragSubOn =>
+      'Tap a man on the pitch to take him off, or hold and drag a sub onto him.';
 
   @override
   String get tacticsNoSubs => 'No substitutes available.';
@@ -815,9 +890,40 @@ class AppLocalizationsEn extends AppLocalizations {
   String get tacticsInstrDirect => 'Direct';
 
   @override
-  String tacticsPickRole(String role) {
-    return 'PICK $role';
-  }
+  String get tacticsPickGoalkeeper => 'PICK GOALKEEPER';
+
+  @override
+  String get tacticsPickLeftBack => 'PICK LEFT BACK';
+
+  @override
+  String get tacticsPickCentreBack => 'PICK CENTRE BACK';
+
+  @override
+  String get tacticsPickRightBack => 'PICK RIGHT BACK';
+
+  @override
+  String get tacticsPickDefensiveMid => 'PICK DEFENSIVE MID';
+
+  @override
+  String get tacticsPickCentralMid => 'PICK CENTRAL MID';
+
+  @override
+  String get tacticsPickAttackingMid => 'PICK ATTACKING MID';
+
+  @override
+  String get tacticsPickLeftMid => 'PICK LEFT MID';
+
+  @override
+  String get tacticsPickRightMid => 'PICK RIGHT MID';
+
+  @override
+  String get tacticsPickLeftWing => 'PICK LEFT WING';
+
+  @override
+  String get tacticsPickRightWing => 'PICK RIGHT WING';
+
+  @override
+  String get tacticsPickStriker => 'PICK STRIKER';
 
   @override
   String tacticsRoleOutOfPosition(String role) {
@@ -1004,11 +1110,6 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get tacticsHoldDragSub =>
       'Hold a sub, then drag them onto a player to bring them on.';
-
-  @override
-  String tacticsUnavailableCount(int count) {
-    return 'UNAVAILABLE · $count';
-  }
 
   @override
   String get hubContinue => 'Continue';
@@ -1434,7 +1535,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get careerFreeCycleNote =>
-      'The first full cycle is free on two saves: qualifying, your continental championship and the World Championship, every nation in the world. Endless cycles and unlimited saves unlock once.';
+      'Free for one full four-year cycle: qualifying, your continental championship and the World Championship, on two saves. After that, one payment unlocks endless cycles.';
 
   @override
   String get careerStartCareer => 'Start Career';
@@ -2855,17 +2956,19 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get paywallBenefitCarryOn =>
-      'Your save carries on exactly where it stopped';
+      'This save carries on exactly where it stopped, with every cap, record and rivalry intact.';
 
   @override
-  String get paywallBenefitOffline => 'No subscription, no ads, no account';
+  String get paywallBenefitNoAds =>
+      'No ads, no microtransactions, no subscription. One payment, and every future update is yours.';
 
   @override
-  String get paywallBenefitSaves => 'As many saves as you want, not two';
+  String get paywallBenefitSaves =>
+      'As many saves as you want. Run a favourite and a minnow at once, and find out how differently the same game reads.';
 
   @override
   String get paywallBenefitEndless =>
-      'Every cycle from here on, all the way to 2600';
+      'Every cycle from here on. Pick a seventeen-year-old today and learn in 2034 whether you saw it.';
 
   @override
   String get paywallUnlocked => 'Unlimited is unlocked. Enjoy!';
@@ -2896,7 +2999,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get gateLead =>
-      'Four years, and nothing was held back. Carry this save on for one payment.';
+      'Four years is one cycle. It is not long enough to find out whether you were right.';
 
   @override
   String get gatePriceLead => 'One payment, forever';
@@ -3648,12 +3751,12 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String yEliminated0(String opponent) {
-    return 'Out at $opponent. Same script, different year.';
+    return 'Out at $opponent. That one will hurt for a while.';
   }
 
   @override
   String yEliminated1(String opponent) {
-    return '$opponent is where it ends. Again.';
+    return '$opponent is where it ends for us.';
   }
 
   @override
@@ -4038,6 +4141,46 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String yInjuryBlow7(String name) {
     return 'Lost $name, and there is nobody behind him. That is the real problem.';
+  }
+
+  @override
+  String ySentOff0(String name, String minute) {
+    return 'Red for $name on $minute minutes and the whole country turns on him. He has given us more than most. Leave it.';
+  }
+
+  @override
+  String ySentOff1(String name, String minute) {
+    return '$name off after $minute minutes. Harsh. Ten men and we still had a go, which tells you something.';
+  }
+
+  @override
+  String ySentOff2(String name, String minute) {
+    return '$name, $minute minutes, red card. Ten men from there.';
+  }
+
+  @override
+  String ySentOff3(String name, String minute) {
+    return 'Sending off: $name on $minute. Not the first match to turn on one decision.';
+  }
+
+  @override
+  String ySentOff4(String name, String minute) {
+    return 'Brilliant. $name walks on $minute minutes and we are down to ten. Again.';
+  }
+
+  @override
+  String ySentOff5(String name, String minute) {
+    return '$name sent off after $minute minutes. Who exactly is coaching discipline around here?';
+  }
+
+  @override
+  String ySentOff6(String name, String minute) {
+    return '$minute minutes. That is how long $name could keep his head. Professional football.';
+  }
+
+  @override
+  String ySentOff7(String name, String minute) {
+    return 'A red for $name on $minute minutes, and I am supposed to believe this is progress.';
   }
 
   @override
@@ -4653,6 +4796,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get tourContQualifyingDraw => 'QUALIFYING DRAW';
 
   @override
+  String get tourContWorldQualifyingDraw => 'WORLD QUALIFYING DRAW';
+
+  @override
+  String get tourContFinalsDraw => 'FINALS DRAW';
+
+  @override
+  String get tourContSeedingPots => 'SEEDING POTS';
+
+  @override
   String get tourContGroupDraw => 'GROUP DRAW';
 
   @override
@@ -4858,6 +5010,12 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get tourCupCompSAmerica => 'South America Cup';
+
+  @override
+  String get tourCupDestRoundOf16 => 'the Round of 16';
+
+  @override
+  String get tourCupDestKnockouts => 'the knockouts';
 
   @override
   String get tourCupDestFinals => 'the finals';
@@ -5318,20 +5476,34 @@ class AppLocalizationsEn extends AppLocalizations {
   String get u21CallUps => 'Go to call-ups';
 
   @override
+  String get youthWatching => 'Watching';
+
+  @override
+  String get youthWatchEmpty =>
+      'Nobody marked yet. Mark a boy on any level and he turns up here, with what he has become since.';
+
+  @override
+  String get youthWatchMark => 'Follow this boy';
+
+  @override
+  String get youthWatchUnmark => 'Stop following him';
+
+  @override
+  String youthWatchMarked(int rating, int age) {
+    return 'Marked at $rating, aged $age';
+  }
+
+  @override
+  String get youthWatchSenior => 'Through to the senior pool';
+
+  @override
+  String get youthWatchReleased => 'Released by the academy';
+
+  @override
+  String get youthWatchGone => 'No longer in the pyramid';
+
+  @override
   String get tacticsYouth => 'Under-21s';
-
-  @override
-  String get pressTitle => 'Press conference';
-
-  @override
-  String get pressCardTitle => 'The press are waiting';
-
-  @override
-  String get pressCardSub =>
-      'One question. What you say moves the dressing room and the board.';
-
-  @override
-  String get pressTheOpposition => 'the opposition';
 
   @override
   String get pressSquad => 'Squad';
@@ -5343,48 +5515,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get pressNoEffect => 'Nobody reads much into it';
 
   @override
-  String pressAskHeavyDefeat(String opponent) {
-    return 'That was a chastening night against $opponent. What went wrong?';
-  }
-
-  @override
-  String pressAskElimination(String opponent) {
-    return 'Beaten by $opponent, and the tournament is over. How do you explain it?';
-  }
-
-  @override
-  String get pressAskUnderPressure =>
-      'Three games without a win, and the board are watching. Are you still the right man?';
-
-  @override
-  String get pressAskPreview =>
-      'The tournament starts here. How far does this squad go?';
-
-  @override
-  String get pressAskTriumph =>
-      'Champions. Where does this rank, and what comes next?';
-
-  @override
-  String get pressAnswerBackPlayers =>
-      'These players gave me everything. I would not swap a single one of them.';
-
-  @override
-  String get pressAnswerTakeBlame =>
-      'That one is on me. I picked the side and I set them up.';
-
-  @override
-  String get pressAnswerDemandMore =>
-      'Not good enough. Some of them have to look at themselves.';
-
-  @override
-  String get pressAnswerRaiseBar =>
-      'We are here to win it. Anything less is a failure.';
-
-  @override
-  String get pressAnswerPlayDown =>
-      'We take it one game at a time. Nothing more to add.';
-
-  @override
   String get matchNeutralGround => 'NEUTRAL';
 
   @override
@@ -5394,16 +5524,23 @@ class AppLocalizationsEn extends AppLocalizations {
   String get matchExtraTimeHalf => 'EXTRA TIME · HALF TIME';
 
   @override
+  String get matchClockFullTime => 'FULL TIME';
+
+  @override
+  String get matchClockAfterExtraTime => 'AFTER EXTRA TIME';
+
+  @override
+  String get matchClockPenalties => 'PENALTIES';
+
+  @override
+  String get matchClockFullTimePenalties => 'FULL TIME · PENALTIES';
+
+  @override
   String get hubEventPressConference => 'Face the press';
 
   @override
   String get hubEventPressConferenceSub =>
       'The world’s media want a word before your first match';
-
-  @override
-  String pressAskOpening(String opponent) {
-    return 'The tournament is open and you start against $opponent. What are you telling the country?';
-  }
 
   @override
   String get squadDevWonderkid => 'WONDERKID';
@@ -5602,6 +5739,30 @@ class AppLocalizationsEn extends AppLocalizations {
   String get squadSortName => 'Name';
 
   @override
+  String get squadLegendTitle => 'What the marks mean';
+
+  @override
+  String get squadLegendStarting => 'In your starting eleven';
+
+  @override
+  String get squadLegendCalledUp => 'Called up, on the bench';
+
+  @override
+  String get squadLegendRatingUp => 'Rating rising this year';
+
+  @override
+  String get squadLegendRatingDown => 'Rating falling this year';
+
+  @override
+  String get squadLegendInjured => 'Injured, unavailable';
+
+  @override
+  String get squadLegendSuspended => 'Suspended, unavailable';
+
+  @override
+  String get squadLegendTraits => 'KNOWN FOR';
+
+  @override
   String squadShowingOf(int shown, int total) {
     return 'Showing $shown of $total players';
   }
@@ -5643,491 +5804,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String get squadGoalsShort => 'Gls';
 
   @override
-  String pressAskHeavyDefeat2(String opponent) {
-    return 'Four goals conceded against $opponent. Where does a night like that leave you?';
-  }
-
-  @override
-  String pressAskHeavyDefeat3(String opponent) {
-    return '$opponent took you apart. Is this squad good enough?';
-  }
-
-  @override
-  String pressAskElimination2(String opponent) {
-    return '$opponent end it. Four years of work, gone in ninety minutes. Talk us through it.';
-  }
-
-  @override
-  String pressAskElimination3(String opponent) {
-    return 'Out to $opponent. Was that as far as this team was ever going?';
-  }
-
-  @override
-  String get pressAskUnderPressure2 =>
-      'The results have dried up and your name is in every column. Worried?';
-
-  @override
-  String get pressAskUnderPressure3 =>
-      'No wins, no goals, no answers. What do you say to the supporters?';
-
-  @override
-  String get pressAskPreview2 => 'Everyone wants a prediction. Give us yours.';
-
-  @override
-  String get pressAskPreview3 =>
-      'Realistically: group stage, quarters, or more than that?';
-
-  @override
-  String pressAskOpening2(String opponent) {
-    return 'The whole country is watching and $opponent are first up. Your message?';
-  }
-
-  @override
-  String pressAskOpening3(String opponent) {
-    return 'It starts against $opponent. How do you want this side to be remembered?';
-  }
-
-  @override
-  String get pressAskTriumph2 =>
-      'You\'ve won it. Does it feel like the end of something, or the start?';
-
-  @override
-  String get pressAskTriumph3 =>
-      'Champions at last. Who does this one belong to?';
-
-  @override
-  String pressAskBigWin(String opponent) {
-    return 'Three clear against $opponent. Is this side finally clicking?';
-  }
-
-  @override
-  String pressAskBigWin2(String opponent) {
-    return 'You took $opponent apart. How good was that?';
-  }
-
-  @override
-  String pressAskBigWin3(String opponent) {
-    return 'A statement result against $opponent. Should the rest of them be worried?';
-  }
-
-  @override
-  String get pressAskQualified =>
-      'You\'re through. What does qualifying mean to this group?';
-
-  @override
-  String get pressAskQualified2 =>
-      'The place is booked. Job done, or is the job just starting?';
-
-  @override
-  String get pressAskQualified3 =>
-      'Qualification secured. Now what is this squad actually capable of?';
-
-  @override
-  String get pressAskMissedOut =>
-      'No tournament this time. How did it come to this?';
-
-  @override
-  String get pressAskMissedOut3 =>
-      'Watching it on television. What do you say to a country that expected better?';
-
-  @override
-  String get pressAskMissedOut2 =>
-      'The campaign is over and you\'re not in it. Who is accountable?';
-
-  @override
-  String get pressAskUnbeaten =>
-      'Unbeaten for months now. How long can this go on?';
-
-  @override
-  String get pressAskUnbeaten2 =>
-      'Nobody has laid a glove on you all season. What\'s behind the run?';
-
-  @override
-  String get pressAskUnbeaten3 =>
-      'The run keeps going. Is this the best side you\'ve had?';
-
-  @override
-  String get pressAskNewJob => 'Day one. What are you promising this country?';
-
-  @override
-  String get pressAskNewJob2 => 'New job, new squad. What changes first?';
-
-  @override
-  String get pressAskNewJob3 =>
-      'You\'ve taken the job. Why this one, and why now?';
-
-  @override
-  String get pressAskRankingPeak =>
-      'A record world ranking. Does the table flatter this team?';
-
-  @override
-  String get pressAskRankingPeak2 =>
-      'Never been ranked this high. Is this side genuinely among the best?';
-
-  @override
-  String get pressAskRankingPeak3 =>
-      'Top of the pile on paper. Does that put a target on your back?';
-
-  @override
-  String get pressAnswerBackPlayers2 =>
-      'Nobody works harder than this group. I\'ll defend them all day.';
-
-  @override
-  String get pressAnswerBackPlayers3 =>
-      'You won\'t hear a word against my players from this seat.';
-
-  @override
-  String get pressAnswerTakeBlame2 =>
-      'Judge me, not them. It\'s my team and my responsibility.';
-
-  @override
-  String get pressAnswerTakeBlame3 =>
-      'If you want somebody to blame, I\'m sitting right here.';
-
-  @override
-  String get pressAnswerDemandMore2 =>
-      'Standards slipped. Some of them know exactly what I mean.';
-
-  @override
-  String get pressAnswerDemandMore3 =>
-      'Effort isn\'t enough at this level. I want more, and I\'ve told them so.';
-
-  @override
-  String get pressAnswerRaiseBar2 =>
-      'No hiding from it. We expect to lift the trophy.';
-
-  @override
-  String get pressAnswerRaiseBar3 =>
-      'Second place is not what this country sent us here for.';
-
-  @override
-  String get pressAnswerPlayDown2 =>
-      'I\'m not going to make headlines for you today.';
-
-  @override
-  String get pressAnswerPlayDown3 =>
-      'Next game. That\'s all I\'m thinking about.';
-
-  @override
   String get recordsRecordBookSubtitle =>
       'Caps, goals and the team\'s headline records';
 
   @override
   String get statsLegacy => 'LEGACY';
-
-  @override
-  String pressAskHeavyDefeat4(String opponent) {
-    return 'That was hard to watch. Did $opponent simply want it more?';
-  }
-
-  @override
-  String pressAskHeavyDefeat5(String opponent) {
-    return 'You were second to everything against $opponent. Fitness or attitude?';
-  }
-
-  @override
-  String pressAskHeavyDefeat6(String opponent) {
-    return '$opponent scored at will. Who is responsible for that defence?';
-  }
-
-  @override
-  String pressAskHeavyDefeat7(String opponent) {
-    return 'A result like that against $opponent follows a manager around. How do you come back from it?';
-  }
-
-  @override
-  String pressAskHeavyDefeat8(String opponent) {
-    return 'You were booed off after $opponent. Do you blame them?';
-  }
-
-  @override
-  String pressAskElimination4(String opponent) {
-    return '$opponent knocked you out. When did you know it had gone?';
-  }
-
-  @override
-  String pressAskElimination5(String opponent) {
-    return 'Another tournament, another early flight home, and $opponent did it. Why?';
-  }
-
-  @override
-  String pressAskElimination6(String opponent) {
-    return 'Out to $opponent. Is this squad short of quality or short of nerve?';
-  }
-
-  @override
-  String pressAskElimination7(String opponent) {
-    return '$opponent are through and you are not. What do you say in that dressing room?';
-  }
-
-  @override
-  String pressAskElimination8(String opponent) {
-    return 'Beaten by $opponent when it mattered. Does that define your time here?';
-  }
-
-  @override
-  String get pressAskUnderPressure4 =>
-      'The bookmakers have you favourite to go. Does that reach you?';
-
-  @override
-  String get pressAskUnderPressure5 =>
-      'Your predecessor was sacked on a run like this. What makes you different?';
-
-  @override
-  String get pressAskUnderPressure6 =>
-      'The board have said nothing publicly. Is silence support?';
-
-  @override
-  String get pressAskUnderPressure7 =>
-      'Every phone-in wants a new manager. Have you lost the country?';
-
-  @override
-  String get pressAskUnderPressure8 =>
-      'How many more games do you think you have?';
-
-  @override
-  String get pressAskPreview4 =>
-      'Who is the team to beat, and are you in that conversation?';
-
-  @override
-  String get pressAskPreview5 =>
-      'Nobody outside this room fancies you. Does that suit you?';
-
-  @override
-  String get pressAskPreview6 =>
-      'What would make this a successful tournament, honestly?';
-
-  @override
-  String get pressAskPreview7 =>
-      'Your group looks kind. Is anything less than qualification unacceptable?';
-
-  @override
-  String get pressAskPreview8 =>
-      'This is the youngest squad you have taken to a finals. Gamble or plan?';
-
-  @override
-  String pressAskOpening4(String opponent) {
-    return 'First game, $opponent, and everyone is nervous. How do you settle a side?';
-  }
-
-  @override
-  String pressAskOpening5(String opponent) {
-    return 'You have waited two years for this. Does the plan change now $opponent are in front of you?';
-  }
-
-  @override
-  String pressAskOpening6(String opponent) {
-    return '$opponent to open. Win it and the whole tournament looks different. Do you tell them that?';
-  }
-
-  @override
-  String pressAskOpening7(String opponent) {
-    return 'The country has stopped for this. Is $opponent a good draw or a bad one?';
-  }
-
-  @override
-  String pressAskOpening8(String opponent) {
-    return 'Opening night against $opponent. What is the one thing you cannot allow?';
-  }
-
-  @override
-  String get pressAskTriumph4 => 'You have made history. Has it landed yet?';
-
-  @override
-  String get pressAskTriumph5 =>
-      'The trophy is in the room. Who did you think of first?';
-
-  @override
-  String get pressAskTriumph6 =>
-      'A generation will remember this side. What should they remember about it?';
-
-  @override
-  String get pressAskTriumph7 =>
-      'You were written off in this very room. Enjoying the moment?';
-
-  @override
-  String get pressAskTriumph8 => 'Is this the peak, or can this team win more?';
-
-  @override
-  String pressAskBigWin4(String opponent) {
-    return '$opponent had no answer to that. The plan or the players?';
-  }
-
-  @override
-  String pressAskBigWin5(String opponent) {
-    return 'The best performance of your reign, and against $opponent?';
-  }
-
-  @override
-  String pressAskBigWin6(String opponent) {
-    return 'You could have had more against $opponent. Do you ask for ruthlessness or take the win?';
-  }
-
-  @override
-  String pressAskBigWin7(String opponent) {
-    return 'A scoreline like that against $opponent raises expectations. Comfortable with that?';
-  }
-
-  @override
-  String pressAskBigWin8(String opponent) {
-    return '$opponent never laid a glove on you. Is this side finally what you wanted?';
-  }
-
-  @override
-  String get pressAskQualified4 => 'Job done. Was it ever in doubt?';
-
-  @override
-  String get pressAskQualified5 =>
-      'You are through. Does the campaign tell you how far you can go?';
-
-  @override
-  String get pressAskQualified6 =>
-      'A place at the finals: relief or satisfaction?';
-
-  @override
-  String get pressAskQualified7 =>
-      'You qualified with games to spare. What are the rest of them for?';
-
-  @override
-  String get pressAskQualified8 =>
-      'Now the hard part. Is this squad ready for a tournament?';
-
-  @override
-  String get pressAskMissedOut4 =>
-      'No tournament this time. A squad problem or a coaching one?';
-
-  @override
-  String get pressAskMissedOut5 =>
-      'Two years of work and nothing to show. Do you still believe in this group?';
-
-  @override
-  String get pressAskMissedOut6 =>
-      'The country will not see its team at a finals. What do you owe them?';
-
-  @override
-  String get pressAskMissedOut7 => 'Was there one night that cost you?';
-
-  @override
-  String get pressAskMissedOut8 =>
-      'Do you expect to still be in this job next season?';
-
-  @override
-  String get pressAskUnbeaten4 =>
-      'Nobody has beaten you in a year. Are you thinking about records?';
-
-  @override
-  String get pressAskUnbeaten5 =>
-      'The run is the story now. Is it a burden yet?';
-
-  @override
-  String get pressAskUnbeaten6 =>
-      'Sides set up not to lose to you. Does that make it harder?';
-
-  @override
-  String get pressAskUnbeaten7 =>
-      'When it ends, and it will, how do you want it to end?';
-
-  @override
-  String get pressAskUnbeaten8 =>
-      'Unbeaten, but how many of those were convincing?';
-
-  @override
-  String get pressAskNewJob4 =>
-      'You inherit a squad in transition. Where do you start?';
-
-  @override
-  String get pressAskNewJob5 => 'What does this team look like in two years?';
-
-  @override
-  String get pressAskNewJob6 =>
-      'You turned down other offers for this one. Why?';
-
-  @override
-  String get pressAskNewJob7 =>
-      'Some of these players were not picked by you. Does anyone start with a clean slate?';
-
-  @override
-  String get pressAskNewJob8 => 'What has this country been getting wrong?';
-
-  @override
-  String get pressAskRankingPeak4 =>
-      'Top of the pile on paper. Does a ranking mean anything to you?';
-
-  @override
-  String get pressAskRankingPeak5 =>
-      'The highest this nation has ever been. Whose achievement is that?';
-
-  @override
-  String get pressAskRankingPeak6 =>
-      'You are ranked above sides with far more history. Fair?';
-
-  @override
-  String get pressAskRankingPeak7 =>
-      'The numbers say you are among the best. Do the trophies?';
-
-  @override
-  String get pressAskRankingPeak8 =>
-      'A record ranking and no trophy yet. Does that sit uneasily?';
-
-  @override
-  String get pressAnswerBackPlayers4 =>
-      'I\'ll take the questions. They\'ll take the credit. That\'s how it works here.';
-
-  @override
-  String get pressAnswerBackPlayers5 =>
-      'This group has never let me down. Not once.';
-
-  @override
-  String get pressAnswerBackPlayers6 =>
-      'They\'re hurting more than anyone. I\'m not adding to it.';
-
-  @override
-  String get pressAnswerTakeBlame4 =>
-      'That\'s on the staff and it\'s on me. Nobody else.';
-
-  @override
-  String get pressAnswerTakeBlame5 =>
-      'I picked it, I set it up, I got it wrong.';
-
-  @override
-  String get pressAnswerTakeBlame6 =>
-      'Point it at me. That\'s what I\'m paid for.';
-
-  @override
-  String get pressAnswerDemandMore4 =>
-      'Some of them are a long way short of what this shirt asks.';
-
-  @override
-  String get pressAnswerDemandMore5 =>
-      'I\'ve told them privately and I\'ll say it here: it isn\'t good enough.';
-
-  @override
-  String get pressAnswerDemandMore6 =>
-      'Places are open. Everyone in that dressing room knows it.';
-
-  @override
-  String get pressAnswerRaiseBar4 =>
-      'We came here to win it. I\'m not going to pretend otherwise.';
-
-  @override
-  String get pressAnswerRaiseBar5 =>
-      'Anything but the trophy and we\'ll have wasted this.';
-
-  @override
-  String get pressAnswerRaiseBar6 =>
-      'I\'d rather be judged on winning than praised for trying.';
-
-  @override
-  String get pressAnswerPlayDown4 =>
-      'I\'ll keep my thoughts in the dressing room.';
-
-  @override
-  String get pressAnswerPlayDown5 =>
-      'You\'ve seen the game. Your read is as good as mine.';
-
-  @override
-  String get pressAnswerPlayDown6 =>
-      'Nothing I say tonight changes the result.';
 
   @override
   String tacticsSubAlreadyOff(String name) {
@@ -6991,7 +6672,7 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get tourDrawWcQualifying => 'WORLD CUP QUALIFYING DRAW';
+  String get tourDrawWcQualifying => 'WORLD QUALIFYING DRAW';
 
   @override
   String tourDrawContQualifying(String cup) {
@@ -6999,12 +6680,21 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get tourDrawWcHost => 'WORLD CUP HOST';
+  String get tourDrawWcHost => 'WORLD CHAMPIONSHIP HOST';
 
   @override
   String tourDrawContHost(String cup) {
     return '$cup HOST';
   }
+
+  @override
+  String get tourDrawHostsReveal => 'And the hosts will be…';
+
+  @override
+  String get tourDrawHostReveal => 'And the host will be…';
+
+  @override
+  String get tourDrawHostCandidates => 'The candidates in the running:';
 
   @override
   String get tourKickoffContinentalCup => 'CONTINENTAL CUP';
@@ -7067,10 +6757,39 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get matchTopBarTitle => 'MATCH';
+  String newsWatchTitle(int year) {
+    return 'The boys you are watching, $year';
+  }
 
   @override
-  String get matchStatsAtFullTime => 'Stats available at full time.';
+  String newsWatchJump(String name, int rating, int gain) {
+    String _temp0 = intl.Intl.pluralLogic(
+      gain,
+      locale: localeName,
+      other: '$gain points',
+      one: 'a point',
+    );
+    return '$name has kicked on to $rating, $_temp0 up on last year.';
+  }
+
+  @override
+  String newsWatchBand(String name, String band) {
+    return '$name moves up to the ${band}s.';
+  }
+
+  @override
+  String newsWatchDebutTitle(String name) {
+    return '$name makes his debut';
+  }
+
+  @override
+  String newsWatchDebutBody(String name, int age, int rating) {
+    return '$name has won his first cap at $age, rated $rating. One of the boys you are watching.';
+  }
+
+  @override
+  String get matchStatsAtFullTime =>
+      'Possession, player ratings and the man of the match are settled at the final whistle.';
 
   @override
   String get matchPlayerRatings => 'PLAYER RATINGS';
@@ -7150,6 +6869,35 @@ class AppLocalizationsEn extends AppLocalizations {
   String get tourOtherContinents => 'OTHER CONTINENTS';
 
   @override
+  String get tourZoneGlobal => 'GLOBAL';
+
+  @override
+  String get tourZoneEurope => 'EUROPE';
+
+  @override
+  String get tourZoneSouthAmerica => 'S. AMERICA';
+
+  @override
+  String get tourZoneNorthAmerica => 'N. AMERICA';
+
+  @override
+  String get tourZoneAfrica => 'AFRICA';
+
+  @override
+  String get tourZoneAsia => 'ASIA';
+
+  @override
+  String get tourZoneOceania => 'OCEANIA';
+
+  @override
+  String get tourZoneIntercontinental => 'INTERCONTINENTAL';
+
+  @override
+  String tourZoneLeague(String league) {
+    return 'LEAGUE $league';
+  }
+
+  @override
   String tourHostedBy(String hosts) {
     return 'HOSTED BY  $hosts';
   }
@@ -7168,148 +6916,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String newsWalkoutBody(String name, int age, int caps) {
     return '$name has retired from international football at $age, with $caps caps. He asked to be told where he stood and was not, and he is not waiting any longer.';
   }
-
-  @override
-  String get pressProbeAccountability1 =>
-      'You\'ve backed them again. Is nobody in that dressing room accountable?';
-
-  @override
-  String get pressProbeAccountability2 =>
-      'That\'s the players defended. Who actually answers for a night like that?';
-
-  @override
-  String get pressProbeAccountability3 =>
-      'Loyalty is easy from up there. Does anyone pay a price?';
-
-  @override
-  String get pressProbeAccountability4 =>
-      'If it\'s never the players, we\'re left with one name. Yours.';
-
-  @override
-  String get pressProbeYourFuture1 =>
-      'You\'ve taken it on yourself. Should we be asking about your future?';
-
-  @override
-  String get pressProbeYourFuture2 =>
-      'Falling on your sword is noble. Is the job still yours?';
-
-  @override
-  String get pressProbeYourFuture3 =>
-      'You keep saying it\'s you. At what point is that a resignation?';
-
-  @override
-  String get pressProbeYourFuture4 =>
-      'The board are listening too. Are you sure you want that on record?';
-
-  @override
-  String get pressProbeDressingRoom1 =>
-      'Strong words in public. Have you lost that dressing room?';
-
-  @override
-  String get pressProbeDressingRoom2 =>
-      'You\'ve just told the country they\'re not good enough. How does that help?';
-
-  @override
-  String get pressProbeDressingRoom3 =>
-      'Demanding it here rather than in there. Is that leadership?';
-
-  @override
-  String get pressProbeDressingRoom4 =>
-      'Players read this too. What do they hear tomorrow morning?';
-
-  @override
-  String get pressProbeExpectation1 =>
-      'You\'ve raised the bar in public. Is that not a hostage to fortune?';
-
-  @override
-  String get pressProbeExpectation2 =>
-      'Big promise. What happens the day you don\'t deliver it?';
-
-  @override
-  String get pressProbeExpectation3 =>
-      'Every manager before you said the same and packed a bag. Why are you different?';
-
-  @override
-  String get pressProbeExpectation4 =>
-      'You\'ve set the target. Will you resign if you miss it?';
-
-  @override
-  String get pressProbeSubstance1 =>
-      'With respect, that\'s not an answer. Give us something.';
-
-  @override
-  String get pressProbeSubstance2 =>
-      'The country wants to hear from you. Anything at all?';
-
-  @override
-  String get pressProbeSubstance3 =>
-      'You can keep saying nothing. We\'ll keep printing it.';
-
-  @override
-  String get pressProbeSubstance4 =>
-      'One straight sentence. What do you actually think?';
-
-  @override
-  String get pressProbeSelection1 =>
-      'Same names, same shape, same result. Why does that team keep getting picked?';
-
-  @override
-  String get pressProbeSelection2 =>
-      'There are players in form watching this on television. Explain the selection.';
-
-  @override
-  String get pressProbeSelection3 =>
-      'Is the XI picked on merit, or on reputation?';
-
-  @override
-  String get pressProbeSelection4 =>
-      'Tactically, we all saw the problem. Did you?';
-
-  @override
-  String get pressProbeTheFans1 =>
-      'Thousands travelled for that. What do you say to them tonight?';
-
-  @override
-  String get pressProbeTheFans2 =>
-      'The supporters have stuck with this team for years. What are you giving them?';
-
-  @override
-  String get pressProbeTheFans3 =>
-      'They sing your name or they don\'t. Which is it going to be?';
-
-  @override
-  String get pressProbeTheFans4 => 'Message to the people back home. Go on.';
-
-  @override
-  String get pressProbeBigPicture1 =>
-      'Step back for me. Where is this nation actually going?';
-
-  @override
-  String get pressProbeBigPicture2 =>
-      'From the outside, nothing has changed here in years. Has it?';
-
-  @override
-  String get pressProbeBigPicture3 =>
-      'In four years\' time, what does this side look like?';
-
-  @override
-  String get pressProbeBigPicture4 =>
-      'Is this a project, or is it just the next match?';
-
-  @override
-  String get pressNeedleBackPlayers => 'You always back them. We\'ve heard it.';
-
-  @override
-  String get pressNeedleTakeBlame => 'It\'s always your fault, apparently.';
-
-  @override
-  String get pressNeedleDemandMore => 'More demands. Again.';
-
-  @override
-  String get pressNeedleRaiseBar => 'Another promise for the file.';
-
-  @override
-  String get pressNeedlePlayDown => 'You never give us anything.';
 
   @override
   String get pressHeadlineWent1 => 'A manager in charge of the room';
@@ -7515,7 +7121,7 @@ class AppLocalizationsEn extends AppLocalizations {
       'Not even angry any more. That is the worrying part.';
 
   @override
-  String get yReactionDespair7 => 'Same feeling, different year.';
+  String get yReactionDespair7 => 'That one is going to sting for a long time.';
 
   @override
   String get yReactionDespair8 =>
@@ -7619,7 +7225,7 @@ class AppLocalizationsEn extends AppLocalizations {
       'Groups are uneven, so results against each big group\'s bottom side are dropped and every team is judged over the same games.';
 
   @override
-  String get careerExportSave => 'Export this save';
+  String get careerExportSave => 'Back up this save';
 
   @override
   String get careerBackupAll => 'BACK UP ALL SAVES';
@@ -7699,6 +7305,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get careerShareFailed => 'Could not export that career.';
 
   @override
+  String get managerRename => 'Change name';
+
+  @override
+  String get managerRenameSave => 'Save';
+
+  @override
   String get managerTitle => 'MANAGER';
 
   @override
@@ -7772,7 +7384,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get managerRoleScoutBlurb =>
-      'Watches the world\'s teenagers. Nothing he reports reaches your squad yet.';
+      'Reads your prospects and your next opponent: truer star ratings, and an edge on matchday.';
 
   @override
   String get managerRoleFitness => 'Fitness Coach';
@@ -7798,6 +7410,42 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String staffHiringYouth(int minPoints, int maxPoints) {
     return 'and youngsters +$minPoints to +$maxPoints overall';
+  }
+
+  @override
+  String staffEffectScoutRead(int percent) {
+    return 'Reads $percent% of prospects exactly';
+  }
+
+  @override
+  String staffEffectScoutCaps(int caps) {
+    String _temp0 = intl.Intl.pluralLogic(
+      caps,
+      locale: localeName,
+      other: 'Potential known after $caps caps',
+      one: 'Potential known after 1 cap',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String staffEffectScoutDossier(int points) {
+    return '+$points rating from opponent dossiers';
+  }
+
+  @override
+  String staffHiringScoutRead(int min, int max) {
+    return 'Hiring one: $min% to $max% of reads exact';
+  }
+
+  @override
+  String staffHiringScoutCaps(int minCaps, int maxCaps) {
+    return 'and potential known $minCaps to $maxCaps caps sooner';
+  }
+
+  @override
+  String staffHiringScoutDossier(int minPoints, int maxPoints) {
+    return 'and +$minPoints to +$maxPoints rating every match';
   }
 
   @override
@@ -7994,8 +7642,11 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get matchSetupLeaveToCoach => 'Leave the takers to the coach';
+
+  @override
   String friendliesLikeYourGroup(String rivals) {
-    return 'Marked below: sides who play like $rivals, who you have drawn.';
+    return 'Marked below: sides who play like $rivals, the teams you meet in your groups this cycle.';
   }
 
   @override
@@ -8021,6 +7672,17 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get settingsUnlockedBlurb =>
       'Endless cycles, unlimited saves and every future update. Thank you.';
+
+  @override
+  String get settingsFromDeveloperTitle => 'From the developer';
+
+  @override
+  String get settingsFromDeveloperBlurb =>
+      'Football Nations Manager is made by one person and will be supported for the long term. There will never be ads or microtransactions. If you enjoy the game, please consider buying the full version. It is what keeps the updates coming.';
+
+  @override
+  String get settingsFromDeveloperThanksBlurb =>
+      'Football Nations Manager is made by one person and will be supported for the long term. There will never be ads or microtransactions. Thank you for buying the full version. It is what keeps the updates coming.';
 
   @override
   String friendliesLikeYourCampaign(String rivals) {
@@ -8102,7 +7764,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String ySameOldStory0(String count) {
-    return 'That is the ${count}th time this has happened lately. At what point is it just what we are?';
+    return 'That is $count times this has happened lately. At what point is it just what we are?';
   }
 
   @override
@@ -8117,7 +7779,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String ySameOldStory3(String count) {
-    return 'The ${count}th version of the same ninety minutes. Nobody is fixing it.';
+    return '$count versions of the same ninety minutes now. Nobody is fixing it.';
   }
 
   @override
@@ -8155,103 +7817,13 @@ class AppLocalizationsEn extends AppLocalizations {
       'Every time. We are told it is different, and every time it is not.';
 
   @override
-  String get pressAskAbove =>
-      'Nobody expected this side to be where it is. Is it real, or is it a good few months?';
-
-  @override
-  String get pressAskAbove2 =>
-      'You are getting results against sides ranked well above you. How?';
-
-  @override
-  String get pressAskAbove3 =>
-      'Every neutral has you overachieving. Does that description annoy you?';
-
-  @override
-  String get pressAskAbove4 =>
-      'This squad is punching above its weight. What happens when it stops?';
-
-  @override
-  String get pressAskAbove5 =>
-      'You keep beating teams you have no business beating. What have you found?';
-
-  @override
-  String get pressAskAbove6 =>
-      'People are starting to take this seriously. Are you?';
-
-  @override
-  String get pressAskAbove7 =>
-      'Is this side better than the ranking says, or are you catching people out?';
-
-  @override
-  String get pressAskAbove8 => 'How long can a group like this keep this up?';
-
-  @override
-  String get pressAskFlattered =>
-      'You are winning without convincing anybody. Does that worry you?';
-
-  @override
-  String get pressAskFlattered2 =>
-      'Another narrow one against a side you should be beating comfortably. Why is it so hard?';
-
-  @override
-  String get pressAskFlattered3 =>
-      'Three points, and not much else. Is that enough for you?';
-
-  @override
-  String get pressAskFlattered4 => 'You got away with that. Would you agree?';
-
-  @override
-  String get pressAskFlattered5 =>
-      'The results are there and the performances are not. Which one are you judging yourself on?';
-
-  @override
-  String get pressAskFlattered6 =>
-      'Sides that ride their luck this often usually run out of it. Are you worried?';
-
-  @override
-  String get pressAskFlattered7 =>
-      'That was hard work for what it was. What is missing?';
-
-  @override
-  String get pressAskFlattered8 =>
-      'Do you care how you win, or only that you win?';
-
-  @override
-  String get pressAskCrisis =>
-      'Bad results and a board that has stopped defending you. How bad is it?';
-
-  @override
-  String get pressAskCrisis2 =>
-      'Nobody upstairs will say your name. Do you still have their backing?';
-
-  @override
-  String get pressAskCrisis3 =>
-      'The results are poor and the silence from above is loud. What now?';
-
-  @override
-  String get pressAskCrisis4 =>
-      'This has gone past a bad run. Do you accept that?';
-
-  @override
-  String get pressAskCrisis5 =>
-      'You are losing the room and the boardroom at the same time. Which worries you more?';
-
-  @override
-  String get pressAskCrisis6 => 'Is there a point at which you would walk?';
-
-  @override
-  String get pressAskCrisis7 =>
-      'What do you say to people who think this has run its course?';
-
-  @override
-  String get pressAskCrisis8 =>
-      'Give us one reason to believe this turns around.';
-
-  @override
   String get tacticsSubOffAlready => 'Already off';
 
   @override
   String get tacticsSubInjured => 'Injured';
+
+  @override
+  String get tacticsSubSentOffMark => 'Sent off';
 
   @override
   String get tacticsSubNoneLeft => 'No changes left';
@@ -8279,4 +7851,1478 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get strengthFactorStaff => 'Staff room';
+
+  @override
+  String get strengthFactorDossier => 'Scout\'s dossier';
+
+  @override
+  String yDebut0(String name) {
+    return '$name gets his first cap. Remember the name.';
+  }
+
+  @override
+  String yDebut1(String name) {
+    return 'A debut for $name. You can see it in him, can you not?';
+  }
+
+  @override
+  String yDebut2(String name) {
+    return '$name, first cap. Let us see what he does with it.';
+  }
+
+  @override
+  String yDebut3(String name) {
+    return 'Debut for $name. The squad needed fresh legs somewhere.';
+  }
+
+  @override
+  String yDebut4(String name) {
+    return '$name handed a cap. We have handed out a lot of those lately.';
+  }
+
+  @override
+  String yDebut5(String name) {
+    return 'A debut for $name. Another one we will have forgotten by spring.';
+  }
+
+  @override
+  String yDrought0(String name, String count) {
+    return '$name has gone $count without scoring and is doing everything else on the pitch.';
+  }
+
+  @override
+  String yDrought1(String name, String count) {
+    return '$count games without a goal for $name. They come in threes, always have.';
+  }
+
+  @override
+  String yDrought2(String name, String count) {
+    return '$name: $count games, no goals.';
+  }
+
+  @override
+  String yDrought3(String name, String count) {
+    return '$count without a goal for $name. Worth keeping an eye on.';
+  }
+
+  @override
+  String yDrought4(String name, String count) {
+    return '$count games. No goals. $name could not hit a barn door.';
+  }
+
+  @override
+  String yDrought5(String name, String count) {
+    return '$name has not scored in $count. Play literally anybody else.';
+  }
+
+  @override
+  String yRivalryLooms0(String opponent, String count) {
+    return '$opponent next. $count meetings and it still means everything.';
+  }
+
+  @override
+  String yRivalryLooms1(String opponent, String count) {
+    return '$count times against $opponent now. Bring it on.';
+  }
+
+  @override
+  String yRivalryLooms2(String opponent, String count) {
+    return '$opponent next. Played $count.';
+  }
+
+  @override
+  String yRivalryLooms3(String opponent, String count) {
+    return 'Meeting number $count with $opponent this week.';
+  }
+
+  @override
+  String yRivalryLooms4(String opponent, String count) {
+    return '$opponent again. $count of these and we have learned nothing.';
+  }
+
+  @override
+  String yRivalryLooms5(String opponent, String count) {
+    return '$count games against $opponent and they still beat us. Wonderful.';
+  }
+
+  @override
+  String get positionGoalkeeper => 'Goalkeeper';
+
+  @override
+  String get positionLeftBack => 'Left Back';
+
+  @override
+  String get positionCentreBack => 'Centre Back';
+
+  @override
+  String get positionRightBack => 'Right Back';
+
+  @override
+  String get positionDefensiveMid => 'Defensive Mid';
+
+  @override
+  String get positionCentralMid => 'Central Mid';
+
+  @override
+  String get positionAttackingMid => 'Attacking Mid';
+
+  @override
+  String get positionLeftMid => 'Left Mid';
+
+  @override
+  String get positionRightMid => 'Right Mid';
+
+  @override
+  String get positionLeftWing => 'Left Wing';
+
+  @override
+  String get positionRightWing => 'Right Wing';
+
+  @override
+  String get positionStriker => 'Striker';
+
+  @override
+  String get roleNone => 'No role';
+
+  @override
+  String get roleTargetMan => 'Target man';
+
+  @override
+  String get rolePoacher => 'Poacher';
+
+  @override
+  String get rolePlaymaker => 'Playmaker';
+
+  @override
+  String get roleBallWinner => 'Ball winner';
+
+  @override
+  String get roleInvertedWinger => 'Inverted winger';
+
+  @override
+  String get roleBallPlayingDefender => 'Ball-playing defender';
+
+  @override
+  String get roleNoneBlurb => 'Plays their natural game.';
+
+  @override
+  String get roleTargetManBlurb =>
+      'Wins headers, lays it off. Assists and set pieces.';
+
+  @override
+  String get rolePoacherBlurb => 'Lurks in the box. Many more goals.';
+
+  @override
+  String get rolePlaymakerBlurb => 'Creates chances. Far more assists.';
+
+  @override
+  String get roleBallWinnerBlurb => 'Breaks up play rather than finishing it.';
+
+  @override
+  String get roleInvertedWingerBlurb => 'Cuts inside to shoot. More goals.';
+
+  @override
+  String get roleBallPlayingDefenderBlurb => 'Starts moves from the back.';
+
+  @override
+  String get federationDeptYouth => 'Youth Academy';
+
+  @override
+  String get federationDeptCommercial => 'Commercial / PR';
+
+  @override
+  String get federationDeptMedical => 'Medical & Sports Science';
+
+  @override
+  String get federationDeptNaturalisation => 'Naturalisation Office';
+
+  @override
+  String get federationDeptBoardRelations => 'Board Relations';
+
+  @override
+  String get federationDeptYouthBlurb =>
+      'Better academy prospects debut for your nation next cycle.';
+
+  @override
+  String get federationDeptCommercialBlurb =>
+      'Sponsorship brings extra income at the end of the cycle.';
+
+  @override
+  String get federationDeptMedicalBlurb =>
+      'Fewer injuries. Your squad stays available all cycle.';
+
+  @override
+  String get federationDeptNaturalisationBlurb =>
+      'More foreign players offer to switch to your nation.';
+
+  @override
+  String get federationDeptBoardRelationsBlurb =>
+      'The board judges your results more patiently.';
+
+  @override
+  String get federationBuildingAcademy => 'Academy';
+
+  @override
+  String get federationBuildingCommercial => 'Commercial HQ';
+
+  @override
+  String get federationBuildingMedical => 'Medical Centre';
+
+  @override
+  String get federationBuildingScouting => 'Scouting Office';
+
+  @override
+  String get federationBuildingBoardroom => 'Boardroom';
+
+  @override
+  String get moraleBuoyant => 'Buoyant';
+
+  @override
+  String get moralePositive => 'Positive';
+
+  @override
+  String get moraleSettled => 'Settled';
+
+  @override
+  String get moraleUneasy => 'Uneasy';
+
+  @override
+  String get moraleRockBottom => 'Rock bottom';
+
+  @override
+  String get matchTabTimeline => 'TIMELINE';
+
+  @override
+  String get matchTabStats => 'STATS';
+
+  @override
+  String get matchTabLineups => 'LINEUPS';
+
+  @override
+  String get matchPenalty => 'PENALTY';
+
+  @override
+  String get matchStateLevel => 'It’s all square';
+
+  @override
+  String matchStateLead(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'You lead by $count goals',
+      one: 'You lead by a goal',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String matchStateTrail(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'You trail by $count goals',
+      one: 'You trail by a goal',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String matchPossessionShare(int possession) {
+    return '$possession% possession';
+  }
+
+  @override
+  String get boardVerdictSackedTitle => 'The board has dismissed you';
+
+  @override
+  String boardVerdictSackedBody(int rating) {
+    return 'A dismal cycle (rating $rating%). Your reign ends here. Only lesser nations will take a chance on you now.';
+  }
+
+  @override
+  String get boardVerdictDelightedTitle => 'The board is delighted';
+
+  @override
+  String boardVerdictDelightedBody(int rating, String best) {
+    return 'An outstanding cycle (rating $rating%) after $best. Bigger nations are interested, or you can stay and build.';
+  }
+
+  @override
+  String get boardVerdictSolidTitle => 'A solid cycle';
+
+  @override
+  String boardVerdictSolidBody(int rating) {
+    return 'The board is content (rating $rating%). A few nations of similar standing would take you, but there is no pressure to move.';
+  }
+
+  @override
+  String get boardVerdictExpectedMoreTitle => 'The board expected more';
+
+  @override
+  String boardVerdictExpectedMoreBody(int rating) {
+    return 'A disappointing cycle (rating $rating%). You keep your job, but any offers are a step down.';
+  }
+
+  @override
+  String get boardVerdictPressureTitle => 'You are under real pressure';
+
+  @override
+  String boardVerdictPressureBody(int rating) {
+    return 'A poor cycle (rating $rating%). You survive, but only weaker nations are interested if you fancy a fresh start.';
+  }
+
+  @override
+  String get boardVerdictHeroTitle => 'The nation stands by you';
+
+  @override
+  String boardVerdictHeroNote(String nation, int cycles) {
+    String _temp0 = intl.Intl.pluralLogic(
+      cycles,
+      locale: localeName,
+      other: '$cycles cycles',
+      one: '1 cycle',
+    );
+    return ' $nation adore you, a national hero after $_temp0; your job is safe for as long as you want it.';
+  }
+
+  @override
+  String get boardVerdictTheNation => 'The nation';
+
+  @override
+  String get boardVerdictBestQuiet => 'a quiet cycle';
+
+  @override
+  String get boardVerdictBestCycle => 'the cycle';
+
+  @override
+  String boardVerdictBestWorld(String placement) {
+    return 'the World Championship: $placement';
+  }
+
+  @override
+  String get finishThirdPlace => 'Third place';
+
+  @override
+  String get finishFourthPlace => 'Fourth place';
+
+  @override
+  String get finishDidNotQualify => 'Did not qualify';
+
+  @override
+  String get careerRepIconic => 'Iconic';
+
+  @override
+  String get careerRepRenowned => 'Renowned';
+
+  @override
+  String get careerRepEstablished => 'Established';
+
+  @override
+  String get careerRepRising => 'Up-and-coming';
+
+  @override
+  String get careerRepUnproven => 'Unproven';
+
+  @override
+  String get hubOfferStepUp => 'Step up';
+
+  @override
+  String get hubOfferLateral => 'Lateral move';
+
+  @override
+  String get hubOfferRebuild => 'A rebuild';
+
+  @override
+  String careerNationsCupWon(String league) {
+    return 'League $league · Champions';
+  }
+
+  @override
+  String careerNationsCupRunnerUp(String league) {
+    return 'League $league · Runners-up';
+  }
+
+  @override
+  String careerNationsCupSemi(String league) {
+    return 'League $league · Semi-finalist';
+  }
+
+  @override
+  String careerNationsCupPlaced(String league, int position) {
+    return 'League $league · #$position';
+  }
+
+  @override
+  String tourRunInto(String round) {
+    return 'Into the $round';
+  }
+
+  @override
+  String get tourRunIntoThirdPlace => 'Into the third-place play-off';
+
+  @override
+  String tourRunThrough(String round) {
+    return 'Through from the $round';
+  }
+
+  @override
+  String tourRunOut(String round) {
+    return 'Knocked out in the $round';
+  }
+
+  @override
+  String get tourRunInGroup => 'Contesting the group stage';
+
+  @override
+  String get tourRunGroupOut => 'Eliminated in the group stage';
+
+  @override
+  String resultsCycleTitle(int year, String nation) {
+    return '$year cycle · $nation';
+  }
+
+  @override
+  String resultsCycleRecord(int played, int won, int drawn, int lost) {
+    return '$played played  ·  ${won}W ${drawn}D ${lost}L';
+  }
+
+  @override
+  String resultsCycleFinish(String finish) {
+    return 'World Championship: $finish';
+  }
+
+  @override
+  String get resultsCycleUnderway => 'Still being played';
+
+  @override
+  String yTurnedItRound0(String opponent) {
+    return 'Two down to $opponent at the break and they got every bit of it back. That is a team.';
+  }
+
+  @override
+  String yTurnedItRound1(String opponent) {
+    return 'Two behind against $opponent and by the end it did not matter. Not many sides do that.';
+  }
+
+  @override
+  String yTurnedItRound2(String opponent) {
+    return 'Half time: two goals down to $opponent. Full time: not. The second half was a different match.';
+  }
+
+  @override
+  String yTurnedItRound3(String opponent) {
+    return 'Came from two down against $opponent. Whatever was said at the break, say it every week.';
+  }
+
+  @override
+  String yTurnedItRound4(String opponent) {
+    return 'Fine, we got it back against $opponent. Now somebody explain the first forty-five minutes.';
+  }
+
+  @override
+  String yTurnedItRound5(String opponent) {
+    return 'Two down to $opponent and we are supposed to be delighted. Fix the first half.';
+  }
+
+  @override
+  String yThrewItAway0(String opponent) {
+    return 'Two up on $opponent at the break and it slipped away. It happens to better sides.';
+  }
+
+  @override
+  String yThrewItAway1(String opponent) {
+    return 'Two goals in front of $opponent and it got away. Long cycle ahead, plenty of time.';
+  }
+
+  @override
+  String yThrewItAway2(String opponent) {
+    return 'Half time: two goals up on $opponent. Full time: nothing like it.';
+  }
+
+  @override
+  String yThrewItAway3(String opponent) {
+    return 'A two-goal lead against $opponent, gone inside forty-five minutes.';
+  }
+
+  @override
+  String yThrewItAway4(String opponent) {
+    return 'Two up and we lost it. To $opponent. Somebody answers for that.';
+  }
+
+  @override
+  String yThrewItAway5(String opponent) {
+    return 'Two goals in front against $opponent and we managed this. Every single time.';
+  }
+
+  @override
+  String get cycleBackupDone =>
+      'Career backed up to the FNM folder on this phone. Uninstalling the app removes it: to keep a copy elsewhere, use Back up this save on the saves screen.';
+
+  @override
+  String get cycleBackupFailed => 'Could not back up the career this time.';
+
+  @override
+  String pressMomentBigWinWarm1(String opponent) {
+    return 'A night to remember against $opponent. How proud are you of this group?';
+  }
+
+  @override
+  String pressMomentBigWinWarm2(String opponent) {
+    return '$opponent could not live with you. Is this the side you always believed you had?';
+  }
+
+  @override
+  String pressMomentBigWinNeutral1(String opponent) {
+    return 'A big win over $opponent. What made the difference tonight?';
+  }
+
+  @override
+  String pressMomentBigWinNeutral2(String opponent) {
+    return '$opponent beaten, and comfortably. Where did you win it?';
+  }
+
+  @override
+  String pressMomentBigWinHostile1(String opponent) {
+    return 'A good win over $opponent. One good night: why should anyone believe it will last?';
+  }
+
+  @override
+  String pressMomentBigWinHostile2(String opponent) {
+    return 'A fine result against $opponent. Was that your plan, or did the players work it out themselves?';
+  }
+
+  @override
+  String pressMomentBigLossWarm1(String opponent) {
+    return 'A hard night against $opponent. What do you say to the players after one like that?';
+  }
+
+  @override
+  String pressMomentBigLossWarm2(String opponent) {
+    return 'Nobody saw that coming against $opponent. Was it just one of those nights?';
+  }
+
+  @override
+  String pressMomentBigLossNeutral1(String opponent) {
+    return 'That was a chastening night against $opponent. What went wrong?';
+  }
+
+  @override
+  String pressMomentBigLossNeutral2(String opponent) {
+    return '$opponent took you apart. Is this squad good enough?';
+  }
+
+  @override
+  String pressMomentBigLossHostile1(String opponent) {
+    return 'You were second to everything against $opponent. How did you let it get that bad?';
+  }
+
+  @override
+  String pressMomentBigLossHostile2(String opponent) {
+    return '$opponent scored at will. Where was the plan tonight?';
+  }
+
+  @override
+  String pressMomentCrisisWarm1(String opponent) {
+    return 'Another one gets away, this time against $opponent. How do you turn this run around?';
+  }
+
+  @override
+  String pressMomentCrisisWarm2(String opponent) {
+    return 'The results have dried up, and $opponent made it worse. Do you still believe in this group?';
+  }
+
+  @override
+  String pressMomentCrisisNeutral1(String opponent) {
+    return 'No win again, now against $opponent, and the board are watching. Is your job safe?';
+  }
+
+  @override
+  String pressMomentCrisisNeutral2(String opponent) {
+    return 'After $opponent, the run is getting long. Are you worried about your future?';
+  }
+
+  @override
+  String pressMomentCrisisHostile1(String opponent) {
+    return '$opponent now as well. Your predecessor was sacked on a run like this. Why should you survive it?';
+  }
+
+  @override
+  String pressMomentCrisisHostile2(String opponent) {
+    return 'After another night like $opponent, every phone-in wants you out. Would you step down if the board asked?';
+  }
+
+  @override
+  String pressMomentJobVerdictWarm1(String opponent) {
+    return 'You put your job on the line, and after $opponent it has not gone your way. How are you holding up?';
+  }
+
+  @override
+  String pressMomentJobVerdictWarm2(String opponent) {
+    return 'The three matches are done, the last against $opponent. You set the test yourself. What do you make of the verdict?';
+  }
+
+  @override
+  String pressMomentJobVerdictNeutral1(String opponent) {
+    return 'You told us to judge you on the next three. After $opponent, we have. Is your job still yours?';
+  }
+
+  @override
+  String pressMomentJobVerdictNeutral2(String opponent) {
+    return 'Three matches, the last against $opponent, and not what you promised. Have you spoken to the board about your future?';
+  }
+
+  @override
+  String pressMomentJobVerdictHostile1(String opponent) {
+    return 'You set the test yourself and failed it against $opponent. Are you going to resign?';
+  }
+
+  @override
+  String pressMomentJobVerdictHostile2(String opponent) {
+    return 'Your words, not ours: judge me on the next three. After $opponent, why are you still sitting there?';
+  }
+
+  @override
+  String get pressBeatWhoToBlameWarm1 =>
+      'You want more from them. Anyone in particular?';
+
+  @override
+  String get pressBeatWhoToBlameWarm2 =>
+      'You have set the bar high. Who has to step up first?';
+
+  @override
+  String get pressBeatWhoToBlameNeutral1 =>
+      'You say some of them have to look at themselves. Who do you mean?';
+
+  @override
+  String get pressBeatWhoToBlameNeutral2 =>
+      'Not good enough, you say. Who are you talking about?';
+
+  @override
+  String get pressBeatWhoToBlameHostile1 =>
+      'You keep it vague. Will you name names, or does it come back to you?';
+
+  @override
+  String get pressBeatWhoToBlameHostile2 =>
+      'Every week it is somebody else\'s fault. Whose is it this time?';
+
+  @override
+  String get pressBeatIfYouDontWarm1 =>
+      'Brave words. And if the next one does not go your way?';
+
+  @override
+  String get pressBeatIfYouDontWarm2 =>
+      'The country will hold you to that. What if it does not come off?';
+
+  @override
+  String get pressBeatIfYouDontNeutral1 =>
+      'And if you don\'t win it? What then?';
+
+  @override
+  String get pressBeatIfYouDontNeutral2 =>
+      'You\'ve said it now. What happens if you\'re wrong?';
+
+  @override
+  String get pressBeatIfYouDontHostile1 =>
+      'We have heard promises in this room before. What do you owe the supporters if this one breaks too?';
+
+  @override
+  String get pressBeatIfYouDontHostile2 =>
+      'And when it doesn\'t happen, what will the excuse be?';
+
+  @override
+  String get pressBeatFollowUpWarm1 =>
+      'One more, if you have it in you. What does this group still need to work on?';
+
+  @override
+  String get pressBeatFollowUpWarm2 =>
+      'When the dust settles, what do you take from tonight into the next match?';
+
+  @override
+  String get pressBeatFollowUpNeutral1 =>
+      'Let\'s go a little deeper. What has to improve before the next match?';
+
+  @override
+  String get pressBeatFollowUpNeutral2 =>
+      'Looking past the scoreline: is this squad where you want it?';
+
+  @override
+  String get pressBeatFollowUpHostile1 =>
+      'Plenty of words, not much said. What actually changes from here?';
+
+  @override
+  String get pressBeatFollowUpHostile2 =>
+      'The supporters want a straight answer. Is this team good enough, yes or no?';
+
+  @override
+  String pressBeatStandoutWarm1(String player) {
+    return '$player was outstanding tonight. How far can he go?';
+  }
+
+  @override
+  String pressBeatStandoutWarm2(String player) {
+    return '$player is in every headline tonight. Did you see that coming?';
+  }
+
+  @override
+  String pressBeatStandoutNeutral1(String player) {
+    return '$player stood out. What did you ask of him tonight?';
+  }
+
+  @override
+  String pressBeatStandoutNeutral2(String player) {
+    return 'Was $player the difference tonight?';
+  }
+
+  @override
+  String pressBeatStandoutHostile1(String player) {
+    return 'Without $player that is a different story. Is this a team, or one player?';
+  }
+
+  @override
+  String pressBeatStandoutHostile2(String player) {
+    return '$player was brilliant. Your doing, or his?';
+  }
+
+  @override
+  String pressBeatStrugglerWarm1(String player) {
+    return '$player had a hard night. Is he carrying a knock?';
+  }
+
+  @override
+  String pressBeatStrugglerWarm2(String player) {
+    return '$player did not have his night. Will you put an arm round him?';
+  }
+
+  @override
+  String pressBeatStrugglerNeutral1(String player) {
+    return '$player struggled tonight. Does he keep his place?';
+  }
+
+  @override
+  String pressBeatStrugglerNeutral2(String player) {
+    return '$player looked off the pace. What did you make of his game?';
+  }
+
+  @override
+  String pressBeatStrugglerHostile1(String player) {
+    return '$player was a passenger again. Why do you keep picking him?';
+  }
+
+  @override
+  String pressBeatStrugglerHostile2(String player) {
+    return 'Everyone could see $player was not at it. Everyone except the bench?';
+  }
+
+  @override
+  String get pressThrowbackWinNextKeptWarm =>
+      'You said you would win the next one, and you did. Does it feel good to be right?';
+
+  @override
+  String get pressThrowbackWinNextKeptNeutral =>
+      'You promised a win in the next match and delivered it. Confidence, or bravado?';
+
+  @override
+  String get pressThrowbackWinNextKeptHostile =>
+      'You said you would win the next one, and you did. Luck, or are we meant to start listening?';
+
+  @override
+  String get pressThrowbackWinNextBrokenWarm =>
+      'You told us you would win that one. It did not happen. What went wrong?';
+
+  @override
+  String get pressThrowbackWinNextBrokenNeutral =>
+      'You said you\'d win the next one. You didn\'t. Why should we believe the next promise?';
+
+  @override
+  String get pressThrowbackWinNextBrokenHostile =>
+      'You said you\'d win the next one. You didn\'t. Do your words still mean anything in this room?';
+
+  @override
+  String get pressThrowbackJobKeptWarm =>
+      'You asked to be judged on three matches, and you passed. Vindicated?';
+
+  @override
+  String get pressThrowbackJobKeptNeutral =>
+      'Judge me on the next three, you said. We did, and the results came. What did that test teach you?';
+
+  @override
+  String get pressThrowbackJobKeptHostile =>
+      'You gave yourself three matches and got through them. Was the test ever that hard?';
+
+  @override
+  String get pressThrowbackJobBrokenWarm =>
+      'You asked to be judged on three matches. They did not go your way. What have you learned?';
+
+  @override
+  String get pressThrowbackJobBrokenNeutral =>
+      'You said judge me on the next three. The three are gone, and so is the benefit of the doubt. What now?';
+
+  @override
+  String get pressThrowbackJobBrokenHostile =>
+      'You set the test and failed it. Why should anyone take your word now?';
+
+  @override
+  String pressThrowbackBackKeptWarm(String player) {
+    return 'You backed $player when others would not. He delivered. Some of the credit yours?';
+  }
+
+  @override
+  String pressThrowbackBackKeptNeutral(String player) {
+    return 'You backed $player. He delivered. Faith, or knowledge?';
+  }
+
+  @override
+  String pressThrowbackBackKeptHostile(String player) {
+    return 'You backed $player, and for once it paid off. Will you be that sure next time?';
+  }
+
+  @override
+  String pressThrowbackBackBrokenWarm(String player) {
+    return 'You stood by $player, and it has not worked out. Do you still believe in him?';
+  }
+
+  @override
+  String pressThrowbackBackBrokenNeutral(String player) {
+    return 'You backed $player. He has not repaid it. Was that a mistake?';
+  }
+
+  @override
+  String pressThrowbackBackBrokenHostile(String player) {
+    return 'Your judgement or your loyalty: which one failed with $player?';
+  }
+
+  @override
+  String pressThrowbackBlameKeptWarm(String player) {
+    return 'You were hard on $player, and the matches since have proved you right. Any satisfaction in that?';
+  }
+
+  @override
+  String pressThrowbackBlameKeptNeutral(String player) {
+    return 'You called $player out, and he has not answered. Is there a way back for him?';
+  }
+
+  @override
+  String pressThrowbackBlameKeptHostile(String player) {
+    return 'You hung $player out to dry and he has not recovered. Did you break him?';
+  }
+
+  @override
+  String pressThrowbackBlameBrokenWarm(String player) {
+    return 'You called $player out, and he answered you on the pitch. Was that the idea all along?';
+  }
+
+  @override
+  String pressThrowbackBlameBrokenNeutral(String player) {
+    return 'You blamed $player, and since then he has been one of your best. Do you owe him an apology?';
+  }
+
+  @override
+  String pressThrowbackBlameBrokenHostile(String player) {
+    return 'You threw $player under the bus, and he has been your best player since. Will you apologise?';
+  }
+
+  @override
+  String get pressReplyCreditPlayers1 =>
+      'These players gave me everything. I would not swap a single one of them.';
+
+  @override
+  String get pressReplyCreditPlayers2 =>
+      'Nobody works harder than this group. I\'ll defend them all day.';
+
+  @override
+  String get pressReplyCreditPlayers3 =>
+      'You won\'t hear a word against my players from this seat.';
+
+  @override
+  String get pressReplyCreditPlayers4 =>
+      'The players deserve the credit, not me. Write about them.';
+
+  @override
+  String get pressReplyTakeResponsibility1 =>
+      'That one is on me. I picked the side and I set them up.';
+
+  @override
+  String get pressReplyTakeResponsibility2 =>
+      'Judge me, not them. It\'s my team and my responsibility.';
+
+  @override
+  String get pressReplyTakeResponsibility3 =>
+      'If you want somebody to blame, I\'m sitting right here.';
+
+  @override
+  String get pressReplyTakeResponsibility4 =>
+      'The responsibility is mine. Leave the players out of it.';
+
+  @override
+  String get pressReplyDemandMore1 =>
+      'I want more. Some of them know exactly what I mean.';
+
+  @override
+  String get pressReplyDemandMore2 =>
+      'Effort isn\'t enough at this level. I want more, and I\'ve told them so.';
+
+  @override
+  String get pressReplyDemandMore3 =>
+      'I expect more from every one of them, starting tomorrow.';
+
+  @override
+  String get pressReplyDemandMore4 =>
+      'Some of them have to look at themselves. I\'m not satisfied.';
+
+  @override
+  String get pressReplyPromiseWinNext1 =>
+      'We will win the next one. You can write that down.';
+
+  @override
+  String get pressReplyPromiseWinNext2 =>
+      'Mark my words: we win the next match.';
+
+  @override
+  String get pressReplyPromiseWinNext3 =>
+      'Next game, we win. I\'m saying it here so you can hold me to it.';
+
+  @override
+  String get pressReplyPromiseWinNext4 =>
+      'I\'m sure of this team. We win the next match.';
+
+  @override
+  String get pressReplyJobOnTheLine1 =>
+      'Judge me on the next three matches. That\'s fair.';
+
+  @override
+  String get pressReplyJobOnTheLine2 =>
+      'Give me three games. If it isn\'t right by then, judge me on it.';
+
+  @override
+  String get pressReplyJobOnTheLine3 =>
+      'The next three will show whether I\'m the right man. Hold me to that.';
+
+  @override
+  String get pressReplyJobOnTheLine4 =>
+      'Three matches. Then write whatever you like about me.';
+
+  @override
+  String get pressReplyDeflect1 =>
+      'We take it one game at a time. Nothing more to add.';
+
+  @override
+  String get pressReplyDeflect2 =>
+      'I\'m not going to make headlines for you today.';
+
+  @override
+  String get pressReplyDeflect3 =>
+      'Next game. That\'s all I\'m thinking about.';
+
+  @override
+  String get pressReplyDeflect4 => 'What I think stays in the dressing room.';
+
+  @override
+  String get pressReplyTakeCredit1 =>
+      'I said it because I believed it, and I was right.';
+
+  @override
+  String get pressReplyTakeCredit2 =>
+      'I read it correctly. That\'s what I\'m here for.';
+
+  @override
+  String get pressReplyTakeCredit3 =>
+      'Call it judgement. I knew what I was saying.';
+
+  @override
+  String get pressReplyTakeCredit4 =>
+      'I made the call and it came off. I\'ll take that.';
+
+  @override
+  String get pressReplyStandByIt1 => 'I said what I believed. I stand by it.';
+
+  @override
+  String get pressReplyStandByIt2 => 'I don\'t take back a word of it.';
+
+  @override
+  String get pressReplyStandByIt3 =>
+      'Same answer as then. I meant it, and I still do.';
+
+  @override
+  String get pressReplyStandByIt4 => 'I\'d say it again tomorrow.';
+
+  @override
+  String get pressReplyAdmitMistake1 => 'I got that one wrong. I\'ll own it.';
+
+  @override
+  String get pressReplyAdmitMistake2 =>
+      'Fair enough, I misjudged it. I\'ll learn from it.';
+
+  @override
+  String get pressReplyAdmitMistake3 => 'I was wrong, and I can say so.';
+
+  @override
+  String get pressReplyAdmitMistake4 =>
+      'That call didn\'t work, and it was mine.';
+
+  @override
+  String pressReplyBackPlayer1(String player) {
+    return '$player has my full backing. He\'ll come good.';
+  }
+
+  @override
+  String pressReplyBackPlayer2(String player) {
+    return 'I believe in $player, and he\'ll show you why.';
+  }
+
+  @override
+  String pressReplyBackPlayer3(String player) {
+    return 'You won\'t hear a word against $player from me. He\'ll deliver.';
+  }
+
+  @override
+  String pressReplyBackPlayer4(String player) {
+    return '$player stays in my plans. Watch what he does next.';
+  }
+
+  @override
+  String pressReplyBlamePlayer1(String player) {
+    return '$player let us down tonight, and he knows it.';
+  }
+
+  @override
+  String pressReplyBlamePlayer2(String player) {
+    return 'I expected far more from $player. He has to answer that.';
+  }
+
+  @override
+  String pressReplyBlamePlayer3(String player) {
+    return '$player wasn\'t at the level. I\'ll say that publicly.';
+  }
+
+  @override
+  String pressReplyBlamePlayer4(String player) {
+    return 'That wasn\'t good enough from $player, and he\'ll hear it from me.';
+  }
+
+  @override
+  String get pressOnRecordWinNext =>
+      'On the record: you will win the next match.';
+
+  @override
+  String get pressOnRecordJob => 'On the record: judge you on the next three.';
+
+  @override
+  String pressOnRecordBack(String player) {
+    return 'On the record: backing $player.';
+  }
+
+  @override
+  String pressOnRecordBlame(String player) {
+    return 'On the record: $player let you down.';
+  }
+
+  @override
+  String yStatementKept0(String nation) {
+    return 'He said it, and it happened. $nation has a manager who means what he says.';
+  }
+
+  @override
+  String yStatementKept1(String nation) {
+    return 'Said it out loud, then went and did it. That is the man $nation needed.';
+  }
+
+  @override
+  String yStatementKept2(String nation) {
+    return '$nation: he called it, and it came true. Fair enough.';
+  }
+
+  @override
+  String yStatementKept3(String nation) {
+    return 'He put it on the record and it held. One for him. $nation moves on.';
+  }
+
+  @override
+  String yStatementKept4(String nation) {
+    return 'He got one right. $nation, do not get used to it.';
+  }
+
+  @override
+  String yStatementKept5(String nation) {
+    return 'Even a stopped clock is right twice a day. $nation got lucky this time.';
+  }
+
+  @override
+  String yStatementBroken0(String nation) {
+    return 'He said it and it did not come off. Still with him. $nation goes again.';
+  }
+
+  @override
+  String yStatementBroken1(String nation) {
+    return '$nation: he promised more than we got, but I would rather a manager who backs himself.';
+  }
+
+  @override
+  String yStatementBroken2(String nation) {
+    return '$nation: he said it on the record and it did not happen. People will remember.';
+  }
+
+  @override
+  String yStatementBroken3(String nation) {
+    return 'Big words, nothing behind them. $nation: next time, say less.';
+  }
+
+  @override
+  String yStatementBroken4(String nation) {
+    return 'He stood there and told us. Then this. $nation deserves better than talk.';
+  }
+
+  @override
+  String yStatementBroken5(String nation) {
+    return 'His word is worth nothing now. Write it down, $nation.';
+  }
+
+  @override
+  String get ncZoneNorth => 'North Zone';
+
+  @override
+  String get ncZoneWest => 'West Zone';
+
+  @override
+  String get ncZoneEast => 'East Zone';
+
+  @override
+  String get ncZoneCentralSouthern => 'Central and Southern Zone';
+
+  @override
+  String careerNationsCupZoneWon(String zone) {
+    return '$zone · Champions';
+  }
+
+  @override
+  String careerNationsCupZoneRunnerUp(String zone) {
+    return '$zone · Runners-up';
+  }
+
+  @override
+  String careerNationsCupZoneSemi(String zone) {
+    return '$zone · Semi-finalist';
+  }
+
+  @override
+  String careerNationsCupZoneRoundOf16(String zone) {
+    return '$zone · Round of 16';
+  }
+
+  @override
+  String careerNationsCupZoneQuarter(String zone) {
+    return '$zone · Quarter-finalist';
+  }
+
+  @override
+  String careerNationsCupZonePlaced(String zone, int position) {
+    return '$zone · #$position';
+  }
+
+  @override
+  String get objectiveNcFinalsEight => 'Reach the quarter-finals';
+
+  @override
+  String get objectiveNcZoneWinGroup => 'Win your group';
+
+  @override
+  String get finishNcFinalsEight => 'Quarter-finals';
+
+  @override
+  String get finishNcBottomHalf => 'Bottom half of the group';
+
+  @override
+  String get tourContTabZones => 'ZONES';
+
+  @override
+  String get tourContTabFinalsEight => 'KNOCKOUTS';
+
+  @override
+  String get tourContFinalsEightSoon =>
+      'The knockouts start in November with a Round of 16: all 14 group winners and the 2 best runners-up.';
+
+  @override
+  String get tourContQuarterFinals => 'QUARTER-FINALS';
+
+  @override
+  String get tourContZoneAdvancement =>
+      'Every group winner goes through to the Round of 16, joined by the 2 best runners-up. Nobody is relegated.';
+
+  @override
+  String tourContZoneHeadingYours(String zone) {
+    return '$zone ★';
+  }
+
+  @override
+  String get compNorthAmericaNationsCup => 'North America Nations Cup';
+
+  @override
+  String get compAfricanNationsCup => 'Nations Cup';
+
+  @override
+  String get objectiveNcWinItNorthAmerica =>
+      'Win the North America Nations Cup';
+
+  @override
+  String get objectiveNcWinItAfrica => 'Win the Nations Cup';
+
+  @override
+  String get objectiveNcReachFinalNorthAmerica =>
+      'Reach the North America Nations Cup final';
+
+  @override
+  String get objectiveNcReachFinalAfrica => 'Reach the Nations Cup final';
+
+  @override
+  String get finishNcChampionsNorthAmerica =>
+      'North America Nations Cup winners';
+
+  @override
+  String get finishNcChampionsAfrica => 'Nations Cup winners';
+
+  @override
+  String pressAimQualWarm1(String competition) {
+    return '$competition qualifying starts now, and the country believes in this side. What are you aiming for?';
+  }
+
+  @override
+  String pressAimQualWarm2(String competition) {
+    return 'A new $competition qualifying campaign, and spirits are high. How far can this team go?';
+  }
+
+  @override
+  String pressAimQualNeutral1(String competition) {
+    return '$competition qualifying begins. What is the target for this campaign?';
+  }
+
+  @override
+  String pressAimQualNeutral2(String competition) {
+    return 'The $competition qualifiers are here. Where do you see this side finishing?';
+  }
+
+  @override
+  String pressAimQualHostile1(String competition) {
+    return '$competition qualifying starts, and plenty of people doubt you will get there. What do you say to them?';
+  }
+
+  @override
+  String pressAimQualHostile2(String competition) {
+    return 'Another $competition qualifying campaign. Why should anyone believe this one will be different?';
+  }
+
+  @override
+  String pressAimFinalsWarm1(String competition) {
+    return 'The $competition is here and the whole country is behind you. How far can you go?';
+  }
+
+  @override
+  String pressAimFinalsWarm2(String competition) {
+    return 'You are at the $competition and the fans are dreaming. What is the aim?';
+  }
+
+  @override
+  String pressAimFinalsNeutral1(String competition) {
+    return 'The $competition starts this week. What would count as a success?';
+  }
+
+  @override
+  String pressAimFinalsNeutral2(String competition) {
+    return 'Your first game at the $competition is close. Set us a target.';
+  }
+
+  @override
+  String pressAimFinalsHostile1(String competition) {
+    return 'The $competition is here and nobody expects much. What are you really hoping for?';
+  }
+
+  @override
+  String pressAimFinalsHostile2(String competition) {
+    return 'You are at the $competition, but the doubts have not gone away. What is your target?';
+  }
+
+  @override
+  String pressBeatRivalWarm1(String rival) {
+    return '$rival are in your group. Do they worry you?';
+  }
+
+  @override
+  String pressBeatRivalWarm2(String rival) {
+    return 'The draw put $rival in your way. How do you see that game?';
+  }
+
+  @override
+  String pressBeatRivalNeutral1(String rival) {
+    return '$rival look the strongest side in your group. Are they the favourites?';
+  }
+
+  @override
+  String pressBeatRivalNeutral2(String rival) {
+    return 'What do you make of $rival?';
+  }
+
+  @override
+  String pressBeatRivalHostile1(String rival) {
+    return '$rival are in your group. Be honest, can you live with them?';
+  }
+
+  @override
+  String pressBeatRivalHostile2(String rival) {
+    return 'Most people expect $rival to beat you. Are they wrong?';
+  }
+
+  @override
+  String pressBeatKeyPlayerWarm1(String player) {
+    return '$player is in fine form. Is this his moment?';
+  }
+
+  @override
+  String pressBeatKeyPlayerWarm2(String player) {
+    return '$player is in every headline. Can he carry this side?';
+  }
+
+  @override
+  String pressBeatKeyPlayerNeutral1(String player) {
+    return 'How much does this campaign depend on $player?';
+  }
+
+  @override
+  String pressBeatKeyPlayerNeutral2(String player) {
+    return 'Is $player ready to lead this team?';
+  }
+
+  @override
+  String pressBeatKeyPlayerHostile1(String player) {
+    return 'If $player is not at his best, does this side have anything?';
+  }
+
+  @override
+  String pressBeatKeyPlayerHostile2(String player) {
+    return '$player has a lot on his shoulders. Too much?';
+  }
+
+  @override
+  String get pressReplyAimHigher1 =>
+      'We are going further than anyone expects.';
+
+  @override
+  String get pressReplyAimHigher2 =>
+      'I want more than the federation asked for, and I will say it out loud.';
+
+  @override
+  String get pressReplyMatchBrief1 =>
+      'We know the target and we will reach it.';
+
+  @override
+  String get pressReplyMatchBrief2 =>
+      'The federation set a target. We will deliver it.';
+
+  @override
+  String get pressReplyPlayDown1 => 'Let us take it one game at a time.';
+
+  @override
+  String get pressReplyPlayDown2 =>
+      'No big promises. We will see where we are.';
+
+  @override
+  String get pressReplyPromiseQualify1 =>
+      'We will qualify. You can write that down.';
+
+  @override
+  String get pressReplyPromiseQualify2 => 'This side will be at the finals.';
+
+  @override
+  String get pressReplyFearNobody1 => 'We fear nobody.';
+
+  @override
+  String get pressReplyFearNobody2 => 'They have to play us too.';
+
+  @override
+  String get pressReplyRespectRival1 =>
+      'They are the favourites, and we respect them.';
+
+  @override
+  String get pressReplyRespectRival2 =>
+      'A very good side. We will need our best.';
+
+  @override
+  String get pressReplyTeamFirst1 =>
+      'It is about the whole team, not one player.';
+
+  @override
+  String get pressReplyTeamFirst2 => 'Nobody wins this alone.';
+
+  @override
+  String pressOnRecordTarget(String aim) {
+    return 'On the record: $aim.';
+  }
+
+  @override
+  String get pressOnRecordPlayDown => 'On the record: no promises.';
+
+  @override
+  String get pressThrowbackTargetKeptWarm =>
+      'You set a target before the campaign and you hit it. Is that your proudest moment yet?';
+
+  @override
+  String get pressThrowbackTargetKeptNeutral =>
+      'You said what you would achieve, and you did. Was it ever in doubt?';
+
+  @override
+  String get pressThrowbackTargetKeptHostile =>
+      'You hit the target you set. Lucky, or was it really the plan?';
+
+  @override
+  String get pressThrowbackTargetBrokenWarm =>
+      'You set a target and fell short. What went wrong?';
+
+  @override
+  String get pressThrowbackTargetBrokenNeutral =>
+      'You promised more than this side delivered. Do you regret saying it?';
+
+  @override
+  String get pressThrowbackTargetBrokenHostile =>
+      'You talked big before the campaign and fell short. Why should we believe you now?';
+
+  @override
+  String hubEventPressPreviewSub(String competition) {
+    return 'The press want to hear your aims for the $competition';
+  }
+
+  @override
+  String deptLevelCost(int level, String amount) {
+    return 'Level $level · $amount';
+  }
+
+  @override
+  String get formOnFire => 'On fire';
+
+  @override
+  String get formGood => 'In form';
+
+  @override
+  String get formSteady => 'Steady';
+
+  @override
+  String get formPoor => 'Out of form';
+
+  @override
+  String get formCold => 'Ice cold';
+
+  @override
+  String get playerFormTitle => 'FORM AND FITNESS';
+
+  @override
+  String playerFormAverage(String rating) {
+    return 'Averaging $rating in his recent games';
+  }
+
+  @override
+  String get playerFormNoGames => 'Not enough recent games to judge';
+
+  @override
+  String playerFormNextMatch(String delta) {
+    return '$delta to his rating next match';
+  }
+
+  @override
+  String get playerFormNoEffect => 'No change to his rating next match';
 }

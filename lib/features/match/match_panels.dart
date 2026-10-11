@@ -181,24 +181,17 @@ String _abbrevName(String full) {
   return '${parts.first[0]}. ${parts.last}';
 }
 
-class _StatsLocked extends StatelessWidget {
-  const _StatsLocked();
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Text(
-        AppLocalizations.of(context).matchStatsAtFullTime,
-        style: AppTypography.bodyMedium.copyWith(
-          color: AppColors.onSurfaceVariant,
-        ),
-      ),
-    );
-  }
-}
-
-class _Stats extends StatelessWidget {
-  const _Stats({
+/// The box score, readable from the first whistle.
+///
+/// It used to say "Stats available at full time." for ninety minutes and then
+/// fill in all at once, which made a tab that was on screen the whole match
+/// useless for all of it. Everything the engine records minute by minute
+/// (shots, xG) or as timed events (goals, cards) is now reported as of
+/// [minute]; only the figures that genuinely are not settled until the whistle
+/// wait for it, and a line says which ones rather than leaving a gap.
+class MatchStatsPanel extends StatelessWidget {
+  const MatchStatsPanel({
+    super.key,
     required this.result,
     required this.homeCode,
     required this.awayCode,
@@ -206,6 +199,9 @@ class _Stats extends StatelessWidget {
     required this.ground,
     required this.neutral,
     required this.groundCode,
+    required this.minute,
+    required this.fullTime,
+    required this.events,
   });
   final bool neutral;
   final String groundCode;
@@ -215,10 +211,40 @@ class _Stats extends StatelessWidget {
   final int homeNationId;
   final MatchGround ground;
 
+  /// The minute on the clock. Extra time reads past the end of the per-minute
+  /// series, so it is clamped to the last recorded point.
+  final int minute;
+
+  /// The final whistle has gone: the whole-match figures can be stated.
+  final bool fullTime;
+
+  /// The events the clock has REACHED, already gated for added time by the
+  /// screen, so counting them here needs no minute arithmetic of its own.
+  final List<MatchEvent> events;
+
+  /// A per-minute series read as of the clock: the full-match total once the
+  /// whistle has gone (the series' last point is that total), and 0 for a
+  /// result that never recorded the series.
+  T _asOf<T extends num>(List<T> series, T total, T zero) {
+    if (fullTime) return total;
+    if (series.isEmpty) return zero;
+    return series[minute.clamp(0, series.length - 1)];
+  }
+
+  int _count(MatchEventType type, {required bool home}) => events
+      .where((e) => e.type == type && (e.teamNationId == homeNationId) == home)
+      .length;
+
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
-    final motm = result.manOfTheMatch;
+    // The man of the match is a verdict on ninety minutes, not a running
+    // total, so it stays behind the whistle however good someone looks at 20'.
+    final motm = fullTime ? result.manOfTheMatch : null;
+    final homeYellow = _count(MatchEventType.yellowCard, home: true);
+    final awayYellow = _count(MatchEventType.yellowCard, home: false);
+    final homeRed = _count(MatchEventType.redCard, home: true);
+    final awayRed = _count(MatchEventType.redCard, home: false);
     return ListView(
       padding: const EdgeInsets.all(AppSpacing.marginMobile),
       children: [
@@ -245,21 +271,53 @@ class _Stats extends StatelessWidget {
         ),
         const SizedBox(height: AppSpacing.md),
         _StatBar(
-          label: l.tacticsInstrPossession,
-          home: result.homePossession,
-          away: result.awayPossession,
-          suffix: '%',
+          label: l.matchStatGoals,
+          home: _count(MatchEventType.goal, home: true),
+          away: _count(MatchEventType.goal, home: false),
         ),
         _StatBar(
           label: l.matchStatShots,
-          home: result.homeShots,
-          away: result.awayShots,
+          home: _asOf(result.homeShotsByMinute, result.homeShots, 0),
+          away: _asOf(result.awayShotsByMinute, result.awayShots, 0),
         ),
-        _XgBar(home: result.homeXg, away: result.awayXg),
-        if (result.ratings.isNotEmpty) ...[
+        _XgBar(
+          home: _asOf(result.homeXgByMinute, result.homeXg, 0.0),
+          away: _asOf(result.awayXgByMinute, result.awayXg, 0.0),
+        ),
+        // Possession is a share of the whole match, not a per-minute series:
+        // printing the final figure at 20' would state something that is not
+        // true yet, so it waits with the rest of the full-time block.
+        if (fullTime)
+          _StatBar(
+            label: l.tacticsInstrPossession,
+            home: result.homePossession,
+            away: result.awayPossession,
+            suffix: '%',
+          ),
+        // Cards appear once there are any: a 0 v 0 red-card row in the eight
+        // matches out of ten that have none is noise, not information.
+        if (homeYellow + awayYellow > 0)
+          _StatBar(
+            label: l.matchStatYellowCards,
+            home: homeYellow,
+            away: awayYellow,
+          ),
+        if (homeRed + awayRed > 0)
+          _StatBar(label: l.matchStatRedCards, home: homeRed, away: awayRed),
+        if (!fullTime) ...[
           const SizedBox(height: AppSpacing.lg),
           Text(
-            AppLocalizations.of(context).matchPlayerRatings,
+            l.matchStatsAtFullTime,
+            textAlign: TextAlign.center,
+            style: AppTypography.bodySmall.copyWith(
+              color: AppColors.onSurfaceVariant,
+            ),
+          ),
+        ],
+        if (fullTime && result.ratings.isNotEmpty) ...[
+          const SizedBox(height: AppSpacing.lg),
+          Text(
+            l.matchPlayerRatings,
             style: AppTypography.labelMedium.copyWith(color: AppColors.primary),
           ),
           const SizedBox(height: AppSpacing.sm),
@@ -357,25 +415,75 @@ class _XgBar extends StatelessWidget {
             ],
           ),
           const SizedBox(height: AppSpacing.xs),
+          // The split SLIDES. These bars move while the match is being
+          // played, and a bar that jumps from one share to another reads as a
+          // redraw rather than as something happening on the pitch. Same
+          // duration and curve as the possession bar further down this file,
+          // so two bars on one screen do not move at different speeds.
           ClipRRect(
             borderRadius: AppRadii.smAll,
-            child: Row(
-              children: [
-                Expanded(
-                  flex: (home / total * 1000).round().clamp(1, 1000),
-                  child: Container(height: 6, color: AppColors.primary),
-                ),
-                Expanded(
-                  flex: (away / total * 1000).round().clamp(1, 1000),
-                  child: Container(height: 6, color: AppColors.outlineVariant),
-                ),
-              ],
+            child: TweenAnimationBuilder<double>(
+              tween: Tween(end: home / total),
+              duration: _barDuration,
+              curve: _barCurve,
+              builder: (context, share, _) => Row(
+                children: [
+                  Expanded(
+                    flex: (share * 1000).round().clamp(1, 1000),
+                    child: Container(height: 6, color: AppColors.primary),
+                  ),
+                  Expanded(
+                    flex: ((1 - share) * 1000).round().clamp(1, 1000),
+                    child: Container(
+                      height: 6,
+                      color: AppColors.outlineVariant,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ],
       ),
     );
   }
+}
+
+/// How a live stat bar moves. Matched to the possession bar's own constants
+/// further down, so nothing on the screen animates at two different speeds.
+const Duration _barDuration = Duration(milliseconds: 450);
+const Curve _barCurve = Curves.easeOutCubic;
+
+/// One side's number, which FLIPS when it changes rather than counting.
+///
+/// Counting would print values that never happened: a shot count easing from
+/// four to five passes through four-point-something, and there is no such
+/// thing. So the old number leaves and the new one arrives, which says a
+/// thing has changed without inventing a number in between.
+class _Tally extends StatelessWidget {
+  const _Tally({required this.value, required this.suffix});
+
+  final int value;
+  final String suffix;
+
+  @override
+  Widget build(BuildContext context) => AnimatedSwitcher(
+    duration: const Duration(milliseconds: 220),
+    transitionBuilder: (child, animation) => FadeTransition(
+      opacity: animation,
+      child: SizeTransition(
+        sizeFactor: animation,
+        axis: Axis.vertical,
+        axisAlignment: -1,
+        child: child,
+      ),
+    ),
+    child: Text(
+      '$value$suffix',
+      key: ValueKey(value),
+      style: AppTypography.labelMedium,
+    ),
+  );
 }
 
 class _StatBar extends StatelessWidget {
@@ -399,16 +507,28 @@ class _StatBar extends StatelessWidget {
       child: Column(
         children: [
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('$home$suffix', style: AppTypography.labelMedium),
-              Text(
-                label.toUpperCase(),
-                style: AppTypography.labelSmall.copyWith(
-                  color: AppColors.onSurfaceVariant,
+              _Tally(value: home, suffix: suffix),
+              // The label takes the room the two numbers leave, rather than
+              // whatever width it wants: a long one (ZLUTE KARTY) used to push
+              // a spaceBetween row past the screen and overflow it.
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: AppSpacing.sm,
+                  ),
+                  child: Text(
+                    label.toUpperCase(),
+                    textAlign: TextAlign.center,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: AppTypography.labelSmall.copyWith(
+                      color: AppColors.onSurfaceVariant,
+                    ),
+                  ),
                 ),
               ),
-              Text('$away$suffix', style: AppTypography.labelMedium),
+              _Tally(value: away, suffix: suffix),
             ],
           ),
           const SizedBox(height: AppSpacing.xs),
@@ -932,7 +1052,8 @@ class _GoalFlash extends StatelessWidget {
                   Text(event.playerName, style: AppTypography.titleMedium),
                   Text(
                     event.penalty
-                        ? 'PENALTY · ${_eventClock(event)}'
+                        ? '${AppLocalizations.of(context).matchPenalty} · '
+                              '${_eventClock(event)}'
                         : _eventClock(event),
                     style: AppTypography.labelSmall.copyWith(
                       color: AppColors.onSurfaceVariant,
@@ -1058,11 +1179,50 @@ class _ShootoutStrip extends StatelessWidget {
   );
 }
 
+/// The tab strip above the live match detail.
+///
+/// Its own widget, and PUBLIC, so a width test can pump the real strip rather
+/// than a reconstruction of it: the three labels are fixed copy sharing a
+/// phone's width between them, and Czech's are half again as long as English's
+/// ("STATISTIKY" against "STATS").
+///
+/// [WholeText] rather than `Tab(text:)`, for the reason the substitution strip
+/// uses it too: a tab that is cut, or broken into STATIS / TIKY, is not a tab.
+/// A label too long for its third of a 320-wide phone scales down instead, and
+/// [expectLegible] is the guard built for that.
+class MatchDetailTabs extends StatelessWidget {
+  const MatchDetailTabs({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    return TabBar(
+      labelColor: AppColors.onSurface,
+      unselectedLabelColor: AppColors.onSurfaceVariant,
+      indicatorColor: AppColors.primary,
+      tabs: [
+        for (final label in [
+          l.matchTabTimeline,
+          l.matchTabStats,
+          l.matchTabLineups,
+        ])
+          Tab(
+            child: WholeText(label, maxLines: 1, textAlign: TextAlign.center),
+          ),
+      ],
+    );
+  }
+}
+
 /// The half-time interval overlay: the score, a read of the first half, and the
 /// team talk — each tone shown with what it does and a recommendation for the
 /// current game state. The manager can reshape the side (Tactics) too.
-class _HalfTimePrompt extends StatelessWidget {
-  const _HalfTimePrompt({
+///
+/// PUBLIC for the same reason as [MatchDetailTabs]: the scoreline read back
+/// ("You lead by 3 goals · 60% possession") is copy a width test measures.
+class HalfTimePrompt extends StatelessWidget {
+  const HalfTimePrompt({
+    super.key,
     required this.heading,
     required this.homeCode,
     required this.awayCode,
@@ -1103,110 +1263,156 @@ class _HalfTimePrompt extends StatelessWidget {
     final l10n = AppLocalizations.of(context);
     final diff = playerIsHome ? homeScore - awayScore : awayScore - homeScore;
     final state = diff > 0
-        ? 'You lead by ${diff == 1 ? 'a goal' : '$diff goals'}'
+        ? l10n.matchStateLead(diff)
         : diff < 0
-        ? 'You trail by ${-diff == 1 ? 'a goal' : '${-diff} goals'}'
-        : 'It\'s all square';
+        ? l10n.matchStateTrail(-diff)
+        : l10n.matchStateLevel;
     final stateColor = diff > 0
         ? AppColors.positive
         : diff < 0
         ? AppColors.error
         : AppColors.onSurface;
+    // The card is laid out so Continue is ALWAYS on screen.
+    //
+    // It used to be one scroll view around the whole card, with Continue at
+    // the bottom of it. On a phone with the system font turned up, three talk
+    // options whose blurbs wrap to two or three lines each ran the card past
+    // the bottom of the screen, and the one action every interval ends with
+    // was below the fold: the manager had to go looking for the way back to
+    // his match. Now the header and the two buttons are fixed, only the talk
+    // options scroll, and they take whatever height is left between them.
+    // The type and the padding are a step smaller too, so on most phones
+    // nothing scrolls at all.
     return Positioned.fill(
       child: ColoredBox(
         color: Colors.black54,
         child: Center(
-          child: SingleChildScrollView(
-            child: Container(
-              margin: const EdgeInsets.all(AppSpacing.lg),
-              padding: const EdgeInsets.all(AppSpacing.lg),
-              constraints: const BoxConstraints(maxWidth: 420),
-              decoration: BoxDecoration(
-                color: AppColors.surfaceContainerHigh,
-                borderRadius: AppRadii.lgAll,
-                border: Border.all(color: AppColors.primary, width: 2),
-              ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    heading,
-                    style: AppTypography.labelMedium.copyWith(
-                      color: AppColors.primary,
-                    ),
+          child: Container(
+            margin: const EdgeInsets.all(AppSpacing.md),
+            padding: const EdgeInsets.all(AppSpacing.md),
+            constraints: const BoxConstraints(maxWidth: 420),
+            decoration: BoxDecoration(
+              color: AppColors.surfaceContainerHigh,
+              borderRadius: AppRadii.lgAll,
+              border: Border.all(color: AppColors.primary, width: 2),
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  heading,
+                  textAlign: TextAlign.center,
+                  style: AppTypography.labelMedium.copyWith(
+                    color: AppColors.primary,
+                    // No tracking: its trailing gap pushes a centred caps
+                    // heading ("PRODLOUŽENÍ · POLOČAS") off the middle.
+                    letterSpacing: 0,
                   ),
-                  const SizedBox(height: AppSpacing.sm),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      FlagDisc(homeCode, size: 28),
-                      const SizedBox(width: AppSpacing.sm),
-                      Text(
-                        '$homeScore – $awayScore',
-                        style: AppTypography.headlineMedium,
-                      ),
-                      const SizedBox(width: AppSpacing.sm),
-                      FlagDisc(awayCode, size: 28),
-                    ],
-                  ),
-                  const SizedBox(height: AppSpacing.xs),
-                  Text(
-                    '$state · $possession% possession',
-                    style: AppTypography.bodySmall.copyWith(color: stateColor),
-                  ),
-                  const SizedBox(height: AppSpacing.md),
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      l10n.teamTalkHeading,
-                      style: AppTypography.labelSmall.copyWith(
-                        color: AppColors.onSurfaceVariant,
+                ),
+                const SizedBox(height: AppSpacing.xs),
+                // Centred on the dash, not as a block: each side takes an
+                // equal half, so the dash sits on the card's centre line
+                // whatever the two numbers are.
+                Row(
+                  children: [
+                    Expanded(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          FlagDisc(homeCode, size: 24),
+                          const SizedBox(width: AppSpacing.sm),
+                          Text('$homeScore', style: _scoreStyle),
+                        ],
                       ),
                     ),
-                  ),
-                  const SizedBox(height: AppSpacing.xs),
-                  for (final tone in options)
-                    _TalkOption(
-                      label: teamTalkLabel(l10n, tone),
-                      blurb: teamTalkBlurb(l10n, tone),
-                      effect: tone.effect,
-                      selected: selectedTalk == tone,
-                      onTap: () => onTalk(tone),
+                    Text(' – ', style: _scoreStyle),
+                    Expanded(
+                      child: Row(
+                        children: [
+                          Text('$awayScore', style: _scoreStyle),
+                          const SizedBox(width: AppSpacing.sm),
+                          FlagDisc(awayCode, size: 24),
+                        ],
+                      ),
                     ),
-                  const SizedBox(height: AppSpacing.md),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: OutlinedButton.icon(
-                          onPressed: onTactics,
-                          icon: const Icon(Icons.tune, size: 18),
-                          label: Text(
-                            l10n.matchTacticsWithSubs(subsUsed, kMaxSubs),
+                  ],
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  '$state · ${l10n.matchPossessionShare(possession)}',
+                  textAlign: TextAlign.center,
+                  style: AppTypography.bodySmall.copyWith(color: stateColor),
+                ),
+                const SizedBox(height: AppSpacing.sm),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    l10n.teamTalkHeading,
+                    style: AppTypography.labelSmall.copyWith(
+                      color: AppColors.onSurfaceVariant,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: AppSpacing.xs),
+                // The only part that scrolls, and only when it must.
+                Flexible(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        for (final tone in options)
+                          _TalkOption(
+                            label: teamTalkLabel(l10n, tone),
+                            blurb: teamTalkBlurb(l10n, tone),
+                            effect: tone.effect,
+                            selected: selectedTalk == tone,
+                            onTap: () => onTalk(tone),
                           ),
-                          style: OutlinedButton.styleFrom(
-                            foregroundColor: AppColors.primary,
-                            side: const BorderSide(
-                              color: AppColors.outlineVariant,
-                            ),
-                          ),
-                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(height: AppSpacing.sm),
+                SizedBox(
+                  width: double.infinity,
+                  child: OutlinedButton.icon(
+                    onPressed: onTactics,
+                    icon: const Icon(Icons.tune, size: 18),
+                    label: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Text(
+                        l10n.matchTacticsWithSubs(subsUsed, kMaxSubs),
+                        maxLines: 1,
+                        softWrap: false,
                       ),
-                    ],
+                    ),
+                    style: OutlinedButton.styleFrom(
+                      foregroundColor: AppColors.primary,
+                      side: const BorderSide(color: AppColors.outlineVariant),
+                    ),
                   ),
-                  const SizedBox(height: AppSpacing.sm),
-                  PrimaryButton(
-                    label: l10n.matchContinue,
-                    icon: Icons.play_arrow_rounded,
-                    onPressed: onContinue,
-                  ),
-                ],
-              ),
+                ),
+                const SizedBox(height: AppSpacing.sm),
+                PrimaryButton(
+                  label: l10n.matchContinue,
+                  icon: Icons.play_arrow_rounded,
+                  height: 48,
+                  onPressed: onContinue,
+                ),
+              ],
             ),
           ),
         ),
       ),
     );
   }
+
+  /// The interval scoreline: a step down from the headline size it was, which
+  /// is room the talk options need more than the score does.
+  static final TextStyle _scoreStyle = AppTypography.titleMedium.copyWith(
+    fontWeight: FontWeight.w700,
+    fontFeatures: const [FontFeature.tabularFigures()],
+  );
 }
 
 /// One team-talk option in the half-time card: its label, what it asks for, and
@@ -1232,7 +1438,7 @@ class _TalkOption extends StatelessWidget {
     final l = AppLocalizations.of(context);
     final (atk, def) = effect;
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 3),
+      padding: const EdgeInsets.symmetric(vertical: 2),
       child: Material(
         color: selected
             ? AppColors.primary.withValues(alpha: 0.16)
@@ -1242,9 +1448,12 @@ class _TalkOption extends StatelessWidget {
           onTap: onTap,
           borderRadius: AppRadii.baseAll,
           child: Container(
+            // Tighter than a list row: three of these sit between the score
+            // and Continue, and every point of padding here is a point of
+            // talk the manager has to scroll past on a small phone.
             padding: const EdgeInsets.symmetric(
-              horizontal: AppSpacing.md,
-              vertical: AppSpacing.sm,
+              horizontal: AppSpacing.sm + AppSpacing.xs,
+              vertical: 6,
             ),
             decoration: BoxDecoration(
               borderRadius: AppRadii.baseAll,
@@ -1268,7 +1477,16 @@ class _TalkOption extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(label, style: AppTypography.bodyMedium),
+                      // The body-small face rather than body-medium: the
+                      // option's name is a word or two and reads fine a size
+                      // down, set bold so it still leads its blurb.
+                      Text(
+                        label,
+                        style: AppTypography.bodySmall.copyWith(
+                          color: AppColors.onSurface,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
                       Text(
                         blurb,
                         style: AppTypography.labelSmall.copyWith(

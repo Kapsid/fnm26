@@ -35,6 +35,8 @@ class MatchResultRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final home = fixture.homeNationId;
     final away = fixture.awayNationId;
+    // A match still to be played reads "-:-", never a 0-0 it hasn't had.
+    final played = fixture.hasResult;
     final hs = fixture.homeScore ?? 0;
     final as = fixture.awayScore ?? 0;
 
@@ -49,7 +51,7 @@ class MatchResultRow extends StatelessWidget {
 
     bool bold(int nationId) {
       if (emphasiseNationId != null) return nationId == emphasiseNationId;
-      if (!emphasiseWinner || drawn) return false;
+      if (!played || !emphasiseWinner || drawn) return false;
       return nationId == home ? hs >= as : as > hs;
     }
 
@@ -70,7 +72,12 @@ class MatchResultRow extends StatelessWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text('$hs - $as', style: AppTypography.labelMedium),
+                Text(
+                  played ? '$hs - $as' : '-:-',
+                  style: AppTypography.labelMedium.copyWith(
+                    color: played ? null : AppColors.onSurfaceVariant,
+                  ),
+                ),
                 if (marker != null)
                   Text(
                     marker,

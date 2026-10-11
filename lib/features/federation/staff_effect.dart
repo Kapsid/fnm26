@@ -1,12 +1,13 @@
 import 'package:fnm/domain/services/manager/staff.dart';
+import 'package:fnm/domain/services/player/prospects.dart';
 import 'package:fnm/features/federation/department_effect.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 
 /// What the people in the staff room actually do, in words.
 ///
 /// The manager's complaint was that hiring somebody changed nothing he could
-/// see. Reading the seams each role is wired into says why: the staff room is
-/// nearly cosmetic, and only two of its three jobs reach anything at all.
+/// see. So every line here is read off the seam the role is wired into, and
+/// every role now reaches one:
 ///
 ///  * The FITNESS COACH multiplies the side's per-minute injury rate by
 ///    [Staff.injuryFactor] — `match_providers.dart` folds it into
@@ -14,21 +15,20 @@ import 'package:fnm/l10n/app_localizations.dart';
 ///  * The ASSISTANT does the same through [Staff.assistantInjuryFactor], and
 ///    adds [Staff.youthTalentBonus] to the nation's newgen intake in
 ///    `federation_providers.dart`.
-///  * The SCOUT reaches nothing. [Staff.capsToKnow] — the number of caps
-///    before a prospect's ceiling is known rather than estimated — is defined
-///    and never called; `Prospects.capsToKnow` is a flat three whoever is in
-///    the job. So is [Staff.familiarityGain], the assistant's drilling work.
-///
-/// This states that rather than dressing it up. A manager who can read that
-/// the scout buys nothing can stop paying him, which is worth more than a
-/// sentence implying otherwise. Making the staff room matter is its own piece
-/// of work, and it starts from here.
+///  * The SCOUT does two things. His TALENT READ: `Prospects.scoutedStars`
+///    reads [Staff.exactReadShare] of unproven prospects exactly and never
+///    misses by more than a star, and `Prospects.capsToKnowWith` settles the
+///    read into the truth after [Staff.capsToKnow] caps instead of three. His
+///    OPPONENT DOSSIER: [Staff.dossierBonus] rating points on the manager's
+///    side in every match, through `MatchTeam.ratingBonus` when he plays it
+///    and `SeasonService._withManagerTactics` when he skips it.
 ///
 /// One definition, shared by the read-only staff room on the manager's screen
 /// and the hiring card on the budget screen, so the two can never quote
 /// different numbers for the same hire. The pre-match strength panel prices
-/// the same two injury factors in rating points through `StrengthFactors`;
-/// these are the same multipliers in the unit they are applied in.
+/// the same two injury factors in rating points through `StrengthFactors`,
+/// and shows the dossier as its own line; these are the same figures in the
+/// unit they are applied in.
 abstract final class StaffEffect {
   /// The best anybody in the job can be. [StaffMarket] always offers a slot at
   /// this tier, so it is the top of what a vacancy could be filled with.
@@ -47,6 +47,25 @@ abstract final class StaffEffect {
         StaffRole.scout => 0,
       };
 
+  /// The share of unproven prospects [scout] reads exactly, as a percentage.
+  ///
+  /// [Staff.exactReadShare] are read dead right by the scout's own judgement;
+  /// the rest get a guess within a star either way, which lands on the truth a
+  /// third of the time. Together: half, seven in ten and nine in ten. (A guess
+  /// clamped at one or five stars lands a little more often, so this is the
+  /// floor of what the manager sees, never an overstatement.)
+  static int readSpotOnPct(StaffTier scout) {
+    final share = Staff.exactReadShare(scout);
+    return ((share + (1 - share) / 3) * 100).round();
+  }
+
+  /// Caps before a prospect's ceiling is known, with [scout] in the job.
+  static int capsToKnow(StaffTier scout) => Prospects.capsToKnowWith(scout);
+
+  /// How many caps sooner than with nobody in the job.
+  static int capsSooner(StaffTier scout) =>
+      Prospects.capsToKnow - capsToKnow(scout);
+
   static int _pct(double factor) => ((1 - factor) * 100).round();
 
   /// What the assistant's hours with the youngest players are worth on the
@@ -56,9 +75,12 @@ abstract final class StaffEffect {
         Staff.youthTalentBonus(assistant),
       );
 
-  /// Whether [role] does anything at all at any tier. False for the scout, and
-  /// the screen says so plainly rather than inventing a benefit.
-  static bool hasEffect(StaffRole role) => role != StaffRole.scout;
+  /// Whether [role] does anything at all at any tier. True for all three now
+  /// that the scout reads prospects and opponents; kept so a role wired to
+  /// nothing in future is told so plainly rather than handed a benefit.
+  static bool hasEffect(StaffRole role) => switch (role) {
+    StaffRole.fitnessCoach || StaffRole.assistant || StaffRole.scout => true,
+  };
 
   /// What the person currently in the job is doing, one short line per effect.
   ///
@@ -76,7 +98,13 @@ abstract final class StaffEffect {
       l.staffEffectInjury(injuryReductionPct(role, tier)),
       l.staffEffectYouth(youthOverall(tier)),
     ],
-    StaffRole.scout => const [],
+    // Nobody in the job describes nothing: the card shows the hiring range.
+    StaffRole.scout when tier == StaffTier.none => const [],
+    StaffRole.scout => [
+      l.staffEffectScoutRead(readSpotOnPct(tier)),
+      l.staffEffectScoutCaps(capsToKnow(tier)),
+      l.staffEffectScoutDossier(Staff.dossierBonus(tier)),
+    ],
   };
 
   /// What filling the vacancy would be worth, across the range the market
@@ -96,6 +124,16 @@ abstract final class StaffEffect {
           ),
           l.staffHiringYouth(youthOverall(cheapest), youthOverall(best)),
         ],
-        StaffRole.scout => const [],
+        StaffRole.scout => [
+          l.staffHiringScoutRead(
+            readSpotOnPct(cheapest),
+            readSpotOnPct(best),
+          ),
+          l.staffHiringScoutCaps(capsSooner(cheapest), capsSooner(best)),
+          l.staffHiringScoutDossier(
+            Staff.dossierBonus(cheapest),
+            Staff.dossierBonus(best),
+          ),
+        ],
       };
 }

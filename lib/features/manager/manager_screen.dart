@@ -50,6 +50,8 @@ class ManagerScreen extends ConsumerWidget {
             : ListView(
                 padding: const EdgeInsets.all(AppSpacing.marginMobile),
                 children: [
+                  _NameCard(careerId: careerId, name: view.career.managerName),
+                  const SizedBox(height: AppSpacing.md),
                   _SkillsCard(careerId: careerId, view: view),
                   const SizedBox(height: AppSpacing.md),
                   // Who is in each job, read-only. HIRING happens on the
@@ -63,6 +65,72 @@ class ManagerScreen extends ConsumerWidget {
               ),
       ),
     );
+  }
+}
+
+/// The manager's name, with a pencil to change it.
+class _NameCard extends ConsumerWidget {
+  const _NameCard({required this.careerId, required this.name});
+
+  final int careerId;
+  final String name;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l = AppLocalizations.of(context);
+    return AppCard(
+      child: Row(
+        children: [
+          const Icon(Icons.person, color: AppColors.primary),
+          const SizedBox(width: AppSpacing.md),
+          Expanded(
+            child: Text(
+              name,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: AppTypography.titleMedium,
+            ),
+          ),
+          IconButton(
+            tooltip: l.managerRename,
+            icon: const Icon(Icons.edit, color: AppColors.primary),
+            onPressed: () => _rename(context, ref),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _rename(BuildContext context, WidgetRef ref) async {
+    final l = AppLocalizations.of(context);
+    final controller = TextEditingController(text: name);
+    final next = await showDialog<String>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: Text(l.managerRename),
+        content: AppTextField(
+          label: l.careerManagerName,
+          hint: l.careerManagerNameHint,
+          controller: controller,
+          autofocus: true,
+          textInputAction: TextInputAction.done,
+          onSubmitted: (v) => Navigator.of(dialogContext).pop(v),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(),
+            child: Text(l.careerCancel),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(controller.text),
+            child: Text(l.managerRenameSave),
+          ),
+        ],
+      ),
+    );
+    controller.dispose();
+    if (next == null || next.trim() == name) return;
+    await ref.read(managerServiceProvider).rename(careerId, next);
   }
 }
 

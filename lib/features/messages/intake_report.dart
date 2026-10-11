@@ -1,9 +1,10 @@
+import 'package:fnm/core/util/message_text.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/player.dart';
+import 'package:fnm/domain/services/manager/staff.dart';
 import 'package:fnm/domain/services/player/player_lifecycle.dart';
 import 'package:fnm/domain/services/player/prospects.dart';
 import 'package:fnm/features/messages/squad_dev_report.dart';
-import 'package:fnm/l10n/app_localizations.dart';
 
 /// The year's academy intake, as report rows.
 ///
@@ -15,7 +16,11 @@ import 'package:fnm/l10n/app_localizations.dart';
 /// deliberately vague sub-17 one: two stars wide either way, and never settled
 /// until he has actually played. What the manager is being told is what the
 /// coaches think — which is the only thing anybody could honestly tell him.
-List<SquadDevRow> intakeRows(List<Player> pyramid) => [
+/// A hired [scout] narrows that read (see [Prospects.scoutedStars]).
+List<SquadDevRow> intakeRows(
+  List<Player> pyramid, {
+  StaffTier scout = StaffTier.none,
+}) => [
   for (final p in pyramid)
     if (p.age == PlayerLifecycle.intakeAge)
       SquadDevRow(
@@ -24,7 +29,7 @@ List<SquadDevRow> intakeRows(List<Player> pyramid) => [
         position: p.position.label,
         rating: p.overall,
         status: SquadDevStatus.arrived,
-        stars: Prospects.scoutedStars(p.id, age: p.age),
+        stars: Prospects.scoutedStars(p.id, age: p.age, scout: scout),
         // From his real ceiling, not from the stars beside it: the stars are
         // what the coaches think, and at eleven what they think is two stars
         // wide. The badge is the game telling the truth, which it can only
@@ -33,7 +38,7 @@ List<SquadDevRow> intakeRows(List<Player> pyramid) => [
       ),
 ];
 
-/// The line above the table, or null when there is nothing to say.
+/// Which line goes above the table, or null when there is nothing to say.
 ///
 /// Only a POSITIVE shift is reported, and the note names WHICH of the two
 /// causes did it. A nation sliding down the rankings draws a negative talent
@@ -45,15 +50,17 @@ List<SquadDevRow> intakeRows(List<Player> pyramid) => [
 /// ranking and winning things. Half of what this batch is about is mechanics
 /// the manager could not see working, so when the standing is what brought a
 /// better crop through, the note says so.
-String? intakeNote(
-  AppLocalizations l, {
+///
+/// A KEY rather than the words: the note is stored with the message and
+/// written when the manager reads it, in the language he is reading in.
+MsgKey? intakeNoteKey({
   required double academyBonus,
   required double standingBonus,
 }) {
   final academy = academyBonus > 0;
   final standing = standingBonus > 0;
-  if (academy && standing) return l.msgIntakeNoteBoth;
-  if (standing) return l.msgIntakeNoteStanding;
-  if (academy) return l.msgIntakeNoteAcademy;
+  if (academy && standing) return MsgKey.msgIntakeNoteBoth;
+  if (standing) return MsgKey.msgIntakeNoteStanding;
+  if (academy) return MsgKey.msgIntakeNoteAcademy;
   return null;
 }

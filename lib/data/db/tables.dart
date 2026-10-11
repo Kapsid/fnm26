@@ -4,6 +4,7 @@ import 'package:fnm/domain/entities/formation.dart';
 import 'package:fnm/domain/entities/tactics.dart';
 import 'package:fnm/domain/services/manager/manager_skills.dart';
 import 'package:fnm/domain/services/manager/staff.dart';
+import 'package:fnm/domain/services/match/match_engine.dart';
 
 /// Drift table definitions for the local SQLite database.
 ///
@@ -138,8 +139,6 @@ class Careers extends Table {
   /// as one who had nearly been sacked. This one number is what a reputation
   /// is made of; see `BoardSatisfaction.carryOver`.
   IntColumn get lastCycleBoard => integer().nullable()();
-
-
 }
 
 /// A nation's Nations Cup league (0 = League A, 1 = League B, …) within its
@@ -570,6 +569,13 @@ class Messages extends Table {
   TextColumn get title => text()();
   TextColumn get body => text()();
 
+  /// What the message MEANS, as JSON: which string names its title and body,
+  /// and the arguments they take (see `MsgText`). Null on every message filed
+  /// before this column existed — those keep the words they were written in,
+  /// which is all a save from before this has. Everything since is rendered in
+  /// the language the manager is reading in, whatever language it happened in.
+  TextColumn get spec => text().nullable()();
+
   /// The in-game year the message belongs to, for ordering.
   IntColumn get year => integer()();
   BoolColumn get read => boolean().withDefault(const Constant(false))();
@@ -635,6 +641,41 @@ class GoalEvents extends Table {
   IntColumn get nationId => integer()();
   IntColumn get playerId => integer()();
   IntColumn get minute => integer()();
+}
+
+/// A thing that happened in a match which was not a goal: a man sent off, a
+/// man hurt. Written for both sides of every match the save simulates.
+///
+/// Goals have had a table since the first build because a top-scorer chart
+/// needs them. Everything else the engine reported was read once — for the
+/// ban, for the knock — and then thrown away, so a fortnight later nothing in
+/// the save knew that a side had finished a match with ten men, and neither
+/// the press nor the feed could ask about it. The minute is the whole point:
+/// "sent off" is a fact, "sent off in the thirty-fourth" is a story.
+///
+/// [type] is a [MatchEventType] by name. Only [MatchEventType.redCard] and
+/// [MatchEventType.injury] are written today; the column is the full enum so
+/// that keeping a booking or a substitution later is a decision rather than a
+/// migration.
+@DataClassName('MatchIncidentRow')
+class MatchIncidents extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  IntColumn get careerId =>
+      integer().references(Careers, #id, onDelete: KeyAction.cascade)();
+  IntColumn get fixtureId => integer().references(Fixtures, #id)();
+
+  /// The side the player was representing, so a nation's own incidents can be
+  /// read without joining the fixture.
+  IntColumn get nationId => integer()();
+  IntColumn get playerId => integer()();
+  IntColumn get minute => integer()();
+  TextColumn get type => textEnum<MatchEventType>()();
+
+  /// For a sending-off, whether it was a second booking rather than a straight
+  /// red. Recorded but not yet asked about: the difference between a rush of
+  /// blood and a disgrace is a sharper question than either, and keeping the
+  /// flag now means writing that copy later rather than migrating for it.
+  BoolColumn get secondYellow => boolean().withDefault(const Constant(false))();
 }
 
 /// A completed tournament's roll of honour (World Cup winners history).
@@ -727,6 +768,58 @@ class PressAnswers extends Table {
   IntColumn get moraleDelta => integer()();
   IntColumn get boardDelta => integer()();
   DateTimeColumn get answeredAt => dateTime()();
+}
+
+/// What the manager put on the record at a press conference, to be judged by
+/// what happens next. See `StatementJudge`.
+///
+/// The row class is renamed so it does not collide with the domain
+/// `PressStatement` the repository hands out.
+@DataClassName('PressStatementData')
+class PressStatements extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  IntColumn get careerId =>
+      integer().references(Careers, #id, onDelete: KeyAction.cascade)();
+  IntColumn get cycle => integer()();
+
+  /// The nation he managed when he said it: a statement about a squad he has
+  /// since left lapses rather than being judged against another team.
+  IntColumn get nationId => integer()();
+
+  /// A `StatementKind` name.
+  TextColumn get kind => text()();
+  IntColumn get playerId => integer().nullable()();
+
+  /// The date of the match the conference was about; its window opens after.
+  DateTimeColumn get madeOn => dateTime()();
+  IntColumn get madeAfterFixtureId => integer()();
+
+  /// A `StatementStatus` name.
+  TextColumn get status => text().withDefault(const Constant('open'))();
+  DateTimeColumn get judgedOn => dateTime().nullable()();
+  BoolColumn get thrownBack => boolean().withDefault(const Constant(false))();
+
+  /// A `target` statement's stated finish (the board's 0–7 ordinal); null for
+  /// every other kind.
+  IntColumn get target => integer().nullable()();
+}
+
+/// A press conference the season has called. Stored when it is triggered, so
+/// the quiet period and the per-cycle ceiling count conferences whether or
+/// not the manager opened them.
+class PressConferences extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  IntColumn get careerId =>
+      integer().references(Careers, #id, onDelete: KeyAction.cascade)();
+  IntColumn get cycle => integer()();
+
+  /// A `ConferenceReason` name.
+  TextColumn get reason => text()();
+  IntColumn get fixtureId => integer()();
+  DateTimeColumn get triggeredOn => dateTime()();
+
+  /// A `ConferenceStatus` name.
+  TextColumn get status => text().withDefault(const Constant('pending'))();
 }
 
 /// The individual trophies a player has won.

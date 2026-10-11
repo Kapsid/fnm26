@@ -193,10 +193,17 @@ void main() {
               date: start.add(Duration(days: i * 3)),
             ),
         ], name: f.name);
+        // The Nations Cup is the exception, and deliberately: its fixtures are
+        // written for the whole cycle at once and played off in the
+        // background, so the anticipation was months early, repeated, and
+        // parked at the bottom of the feed. The manager asked for it gone.
+        final soon = f.group.startsWith('N')
+            ? isNot(contains(YTemplate.tournamentSoon))
+            : contains(YTemplate.tournamentSoon);
         expect(
           posts.map((m) => m.template),
-          contains(YTemplate.tournamentSoon),
-          reason: '${f.name} is coming and nobody mentioned it',
+          soon,
+          reason: '${f.name}: the wrong thing was said about it starting',
         );
       });
 

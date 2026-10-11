@@ -6,6 +6,8 @@ import 'package:fnm/data/repositories/mappers.dart';
 import 'package:fnm/domain/entities/career.dart';
 // FederationInvestment typedef.
 import 'package:fnm/domain/repositories/career_repository.dart';
+import 'package:fnm/domain/services/press/conference.dart';
+import 'package:fnm/domain/services/press/statement.dart';
 
 /// Drift-backed [CareerRepository].
 class DriftCareerRepository implements CareerRepository {
@@ -73,6 +75,13 @@ class DriftCareerRepository implements CareerRepository {
   Future<void> updateInGameDate(int id, DateTime date) async {
     await (_db.update(_db.careers)..where((t) => t.id.equals(id))).write(
       CareersCompanion(inGameDate: Value(date)),
+    );
+  }
+
+  @override
+  Future<void> renameManager(int id, String name) async {
+    await (_db.update(_db.careers)..where((t) => t.id.equals(id))).write(
+      CareersCompanion(managerName: Value(name)),
     );
   }
 
@@ -178,7 +187,9 @@ class DriftCareerRepository implements CareerRepository {
     // The tier is derived from the id rather than passed in, so the person and
     // his ability can never disagree.
     final tier = Value(
-      candidateId == null ? StaffTier.none.index : StaffMarket.tierOf(candidateId).index,
+      candidateId == null
+          ? StaffTier.none.index
+          : StaffMarket.tierOf(candidateId).index,
     );
     final person = Value(candidateId);
     await (_db.update(_db.careers)..where((t) => t.id.equals(id))).write(
@@ -395,6 +406,119 @@ class DriftCareerRepository implements CareerRepository {
           ),
         );
   }
+
+  @override
+  Future<int> recordStatement({
+    required int careerId,
+    required int cycle,
+    required int nationId,
+    required StatementKind kind,
+    int? playerId,
+    required DateTime madeOn,
+    required int madeAfterFixtureId,
+    int? target,
+  }) => _db
+      .into(_db.pressStatements)
+      .insert(
+        PressStatementsCompanion.insert(
+          careerId: careerId,
+          cycle: cycle,
+          nationId: nationId,
+          kind: kind.name,
+          playerId: Value(playerId),
+          madeOn: madeOn,
+          madeAfterFixtureId: madeAfterFixtureId,
+          target: Value(target),
+        ),
+      );
+
+  @override
+  Future<List<PressStatement>> statements(int careerId) async {
+    final rows =
+        await (_db.select(_db.pressStatements)
+              ..where((t) => t.careerId.equals(careerId))
+              ..orderBy([(t) => OrderingTerm.asc(t.id)]))
+            .get();
+    return [
+      for (final r in rows)
+        (
+          id: r.id,
+          cycle: r.cycle,
+          nationId: r.nationId,
+          kind: StatementKind.values.byName(r.kind),
+          playerId: r.playerId,
+          madeOn: r.madeOn,
+          madeAfterFixtureId: r.madeAfterFixtureId,
+          status: StatementStatus.values.byName(r.status),
+          judgedOn: r.judgedOn,
+          thrownBack: r.thrownBack,
+          target: r.target,
+        ),
+    ];
+  }
+
+  @override
+  Future<void> judgeStatement(
+    int id, {
+    required StatementStatus status,
+    required DateTime judgedOn,
+  }) => (_db.update(_db.pressStatements)..where((t) => t.id.equals(id))).write(
+    PressStatementsCompanion(
+      status: Value(status.name),
+      judgedOn: Value(judgedOn),
+    ),
+  );
+
+  @override
+  Future<void> markThrownBack(int id) =>
+      (_db.update(_db.pressStatements)..where((t) => t.id.equals(id))).write(
+        const PressStatementsCompanion(thrownBack: Value(true)),
+      );
+
+  @override
+  Future<int> recordConference({
+    required int careerId,
+    required int cycle,
+    required ConferenceReason reason,
+    required int fixtureId,
+    required DateTime triggeredOn,
+  }) => _db
+      .into(_db.pressConferences)
+      .insert(
+        PressConferencesCompanion.insert(
+          careerId: careerId,
+          cycle: cycle,
+          reason: reason.name,
+          fixtureId: fixtureId,
+          triggeredOn: triggeredOn,
+        ),
+      );
+
+  @override
+  Future<List<PressConferenceRow>> conferences(int careerId) async {
+    final rows =
+        await (_db.select(_db.pressConferences)
+              ..where((t) => t.careerId.equals(careerId))
+              ..orderBy([(t) => OrderingTerm.asc(t.id)]))
+            .get();
+    return [
+      for (final r in rows)
+        (
+          id: r.id,
+          cycle: r.cycle,
+          reason: ConferenceReason.values.byName(r.reason),
+          fixtureId: r.fixtureId,
+          triggeredOn: r.triggeredOn,
+          status: ConferenceStatus.values.byName(r.status),
+        ),
+    ];
+  }
+
+  @override
+  Future<void> setConferenceStatus(int id, ConferenceStatus status) =>
+      (_db.update(_db.pressConferences)..where((t) => t.id.equals(id))).write(
+        PressConferencesCompanion(status: Value(status.name)),
+      );
 
   @override
   Future<List<PressAnswerRow>> pressAnswers(int careerId, {int? cycle}) async {

@@ -4,6 +4,7 @@ import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
+import 'package:fnm/core/util/competition_label.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/entities/group_standing.dart';
@@ -15,8 +16,8 @@ import 'package:fnm/domain/services/competition/group_advancement.dart';
 import 'package:fnm/domain/services/competition/trophies.dart';
 import 'package:fnm/features/tournaments/best_thirds.dart';
 import 'package:fnm/features/tournaments/continental_detail_providers.dart';
-import 'package:fnm/features/tournaments/tournament_bracket.dart';
 import 'package:fnm/features/tournaments/tournament_awards.dart';
+import 'package:fnm/features/tournaments/tournament_bracket.dart';
 import 'package:fnm/features/tournaments/tournament_history.dart';
 import 'package:fnm/features/tournaments/tournament_holders_row.dart';
 import 'package:fnm/features/tournaments/tournament_stats.dart';
@@ -107,7 +108,9 @@ class ContinentalDetailScreen extends ConsumerWidget {
           ),
           title: Text(
             dataAsync.maybeWhen(
-              data: (d) => d?.name.toUpperCase() ?? l.tourContChampionship,
+              data: (d) => d == null
+                  ? l.tourContChampionship
+                  : competitionLabel(l, d.name).toUpperCase(),
               orElse: () => l.tourContChampionship,
             ),
             style: AppTypography.labelMedium.copyWith(color: AppColors.primary),
@@ -151,7 +154,9 @@ class ContinentalDetailScreen extends ConsumerWidget {
                 return TournamentSoon(
                   message: data.isPlayerRegion
                       ? l.tourContQualSeeded
-                      : l.tourContBackgroundRegion(data.name),
+                      : l.tourContBackgroundRegion(
+                          competitionLabel(l, data.name),
+                        ),
                 );
               }
               if (!data.qualDrawWatched) {
@@ -174,7 +179,7 @@ class ContinentalDetailScreen extends ConsumerWidget {
                 contentionQualify: adv.contentionQualify,
                 // The contested places lead to the finals here, not to a
                 // knockout round.
-                contentionDestination: 'the finals',
+                contentionDestination: l.tourCupDestFinals,
                 code: code,
                 name: name,
               );
@@ -226,7 +231,9 @@ class ContinentalDetailScreen extends ConsumerWidget {
                   TournamentSoon(
                     message: data.isPlayerRegion
                         ? l.tourContFinalsDrawAfterQual
-                        : l.tourContBackgroundRegion(data.name),
+                        : l.tourContBackgroundRegion(
+                            competitionLabel(l, data.name),
+                          ),
                   ),
                 if (data.knockout.isNotEmpty)
                   TournamentBracket(
@@ -235,7 +242,7 @@ class ContinentalDetailScreen extends ConsumerWidget {
                     ladder: _ladder,
                     champion: data.champion,
                     championLabel: l.tourContChampionsHeading(
-                      data.name.toUpperCase(),
+                      competitionLabel(l, data.name).toUpperCase(),
                     ),
                     playerNationId: data.playerNationId,
                     // Only the manager's own confederation is played out, so a
@@ -243,11 +250,14 @@ class ContinentalDetailScreen extends ConsumerWidget {
                     runSummary: !data.isPlayerRegion
                         ? null
                         : playerRunSummary(
+                            l,
                             playerNationId: data.playerNationId,
                             champion: data.champion,
                             knockout: data.knockout,
                             groups: data.groups,
-                            championTitle: l.tourContWinnersTitle(data.name),
+                            championTitle: l.tourContWinnersTitle(
+                              competitionLabel(l, data.name),
+                            ),
                           ),
                     groupSeeds: groupSeedsOf(data.groups),
                     code: code,
@@ -257,9 +267,12 @@ class ContinentalDetailScreen extends ConsumerWidget {
                   TournamentSoon(
                     message: data.isPlayerRegion
                         ? l.tourContContestedBeforeWc
-                        : l.tourContBackgroundRegion(data.name),
+                        : l.tourContBackgroundRegion(
+                            competitionLabel(l, data.name),
+                          ),
                   ),
                 TournamentAwardsTab(
+                  highlightNations: data.myNationIds,
                   team: data.teamOfTournament,
                   goldenGlove: data.goldenGlove,
                   code: code,
@@ -271,6 +284,7 @@ class ContinentalDetailScreen extends ConsumerWidget {
                   allTime: data.allTimeScorers,
                   code: code,
                   emptyMessage: l.tourContNoGoalsYet,
+                  highlightNations: data.myNationIds,
                 ),
                 TournamentHistory(
                   honours: data.honours,
@@ -317,7 +331,7 @@ class _Groups extends StatelessWidget {
     required this.code,
     required this.name,
     this.contentionQualify = 0,
-    this.contentionDestination = 'the knockouts',
+    this.contentionDestination,
   });
 
   final List<FinalsGroupTable> groups;
@@ -335,8 +349,10 @@ class _Groups extends StatelessWidget {
   /// advance" list rather than left to be guessed at.
   final int contentionQualify;
 
-  /// Where the contested places lead ('the finals' in qualifying).
-  final String contentionDestination;
+  /// Where the contested places lead, written for the manager and in the case
+  /// the ladder's sentence wants. Null takes the knockouts, which is where a
+  /// finals group stage leads.
+  final String? contentionDestination;
 
   final String Function(int) code;
   final String Function(int) name;

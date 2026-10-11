@@ -39,4 +39,4 @@ const bool kShowSkipMatch = false;
 /// Setting this to `false` removes the line; the note above it and the "Try
 /// again" button stay, which is the whole of what a real player is meant to
 /// see.
-const bool kShowStoreDiagnostics = true;
+const bool kShowStoreDiagnostics = false;

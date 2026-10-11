@@ -12,7 +12,8 @@ enum StaffRole {
   /// shape beds in, and the hours put into the youngest players.
   assistant,
 
-  /// Reads what a young player will BECOME rather than what he is.
+  /// Reads what a young player will BECOME rather than what he is, and what
+  /// the next opponent is weak at.
   scout,
 
   /// Keeps them on the pitch.
@@ -71,6 +72,42 @@ abstract final class Staff {
     StaffTier.basic => (baseCaps * 0.75).round(),
     StaffTier.good => (baseCaps * 0.5).round(),
     StaffTier.elite => (baseCaps * 0.25).round(),
+  };
+
+  /// The share of unproven prospects the scout reads EXACTLY by his own
+  /// judgement, before the ordinary guesswork applies to the rest.
+  ///
+  /// Nobody in the job is zero: the read is the plain estimate every save
+  /// has always had, and a save that never hires a scout plays exactly as it
+  /// did. `Prospects.scoutedStars` snaps this share of players to the truth
+  /// by a hash of the player's id, so the read never flickers between
+  /// screens, and the players a good scout gets right are a subset of the
+  /// ones an elite one does.
+  ///
+  /// Chosen so the whole read, snapped share plus the third of the rest a
+  /// ±1 guess lands on by chance, comes out at a round half, seven in ten
+  /// and nine in ten (see `StaffEffect.readSpotOnPct`).
+  static double exactReadShare(StaffTier scout) => switch (scout) {
+    StaffTier.none => 0.0,
+    StaffTier.basic => 0.25,
+    StaffTier.good => 0.55,
+    StaffTier.elite => 0.85,
+  };
+
+  /// The OPPONENT DOSSIER: before every match the scout has been to see the
+  /// other side and found where it is weak. Worth this many rating points to
+  /// the manager's side, in the units every other strength factor uses: the
+  /// live engine adds it to each fielded man's effective rating
+  /// (`MatchTeam.ratingBonus`), and a skipped match adds it to the side's
+  /// strength in the rating simulator (`SeasonService._withManagerTactics`).
+  ///
+  /// Only the manager's own nation has a scout; the rest of the world plays
+  /// without one, so nothing here touches a match he is not in.
+  static int dossierBonus(StaffTier scout) => switch (scout) {
+    StaffTier.none => 0,
+    StaffTier.basic => 1,
+    StaffTier.good => 2,
+    StaffTier.elite => 3,
   };
 
   /// A multiplier on the side's injury rate. Compounds with the federation's

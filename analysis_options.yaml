@@ -16,6 +16,8 @@ analyzer:
     # language-level strict-raw-types warnings they also trip.
     - "test/generated_migrations/**"
     - "lib/data/db/schema_versions.dart"
+    - android/**
+    - ios/**
   language:
     strict-casts: true
     strict-inference: true

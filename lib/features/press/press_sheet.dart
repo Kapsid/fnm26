@@ -1,393 +1,132 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fnm/core/diagnostics/app_log.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/core/util/text_variety.dart';
+import 'package:fnm/domain/services/press/conference.dart';
 import 'package:fnm/domain/services/press/press.dart';
+import 'package:fnm/features/press/press_copy.dart';
+import 'package:fnm/features/hub/objective_providers.dart';
 import 'package:fnm/features/press/press_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 
-/// The press conference: a room of named reporters, three questions, and a
-/// back page written from what was said.
+/// The press conference: a room of named reporters, two or three questions,
+/// and a back page written from what was said.
 ///
-/// It used to be ONE anonymous question with a stance to pick, which read as a
-/// form rather than a room: nobody ever came back at an answer, so a manager
-/// could back his players in every conference of a twenty-year career and
-/// never once be asked what that was supposed to mean. Now the opening
-/// question is about the story, the second is a reporter reacting to the
-/// stance just taken, and the third is whoever is asking riding their own
-/// hobby-horse — and the morning's headline is the sum of all three.
+/// The opening question is about the story the season called the room for;
+/// the second reacts to the answer just given (and may name a player); the
+/// third, when there is one, throws an old statement back at him.
 class PressSheet extends ConsumerStatefulWidget {
   const PressSheet({
     required this.careerId,
-    required this.question,
+    required this.conference,
+    required this.playerNames,
     required this.opponentName,
+    this.competitionName = '',
+    this.rivalName = '',
     super.key,
   });
 
   final int careerId;
-  final PressQuestion question;
+  final PendingConference conference;
 
-  /// The other nation, when the question is about a specific match.
-  final String? opponentName;
+  /// Player id to name, for the ids the conference can mention.
+  final Map<int, String> playerNames;
+  final String opponentName;
+
+  /// A preview's competition and group rival, named in its questions.
+  final String competitionName;
+  final String rivalName;
 
   @override
   ConsumerState<PressSheet> createState() => _PressSheetState();
 }
 
 class _PressSheetState extends ConsumerState<PressSheet> {
-  /// The seed every wording on this sheet is drawn from: the question's own
-  /// key, so a given conference always reads the same but two conferences on
-  /// the same topic are put differently.
-  late final int _seed = varietySeed('pressq:${widget.question.key}');
+  PendingConference get _c => widget.conference;
 
-  /// Who is in the room, in the order they get the microphone. Drawn from the
-  /// question's key rather than at random so reopening the sheet is the same
-  /// conference, not a new one.
-  late final int _length = Press.lengthFor(widget.question.topic);
+  late final int _seed = varietySeed('conf:${_c.row.id}');
+  late final List<PressReporter> _room = Press.roomFor(_seed);
+  late final Beat? _throwback = ConferenceBuilder.throwback(_c.facts);
 
-  late final List<PressReporter> _room = Press.roomFor(
-    _seed,
-  ).take(_length).toList();
+  bool get _isPreview => _c.facts.preview != null;
 
-  /// The exchanges asked so far, and what was said to each. The list grows as
-  /// the manager answers: a follow-up cannot exist until there is a stance for
-  /// it to react to.
-  late final List<PressExchange> _asked = [
-    Press.openingExchange(widget.question, _room.first),
-  ];
-  final List<PressTone> _said = [];
+  /// Fixed up front: two questions, or three when an old statement is due. A
+  /// preview's beats are all known before the first is asked.
+  late final int _length = _isPreview
+      ? _beats.length
+      : (_throwback == null ? 2 : 3);
 
-  /// Everything this conference has cost so far.
+  late final List<Beat> _beats = _isPreview
+      ? ConferenceBuilder.previewBeats(_c.facts)
+      : [ConferenceBuilder.opening(_c.facts)];
+  final List<AnswerKind> _said = [];
   PressEffect _total = (morale: 0, board: 0);
+  bool _busy = false;
+  bool _leaving = false;
+  bool _finished = false;
 
   bool get _over => _said.length >= _length;
-  PressExchange get _current => _asked.last;
+  Beat get _beat => _beats[_said.length.clamp(0, _beats.length - 1)];
 
-  Future<void> _answer(PressTone tone) async {
-    final effect = await ref
-        .read(pressServiceProvider)
-        .answerExchange(widget.careerId, _current, tone);
-    if (!mounted) return;
-    setState(() {
-      _said.add(tone);
-      if (effect != null) {
+  String? _nameOf(Beat beat) =>
+      beat.playerId == null ? null : widget.playerNames[beat.playerId];
+
+  Future<void> _answer(AnswerKind a) async {
+    if (_busy) return;
+    _busy = true;
+    try {
+      final effect = await ref
+          .read(conferenceServiceProvider)
+          .answer(widget.careerId, _c, _said.length, _beat, a);
+      if (!mounted) return;
+      setState(() {
+        _said.add(a);
         _total = (
           morale: _total.morale + effect.morale,
           board: _total.board + effect.board,
         );
-      }
-      if (!_over) {
-        _asked.add(
-          Press.followUp(
-            widget.question,
-            _room[_said.length],
-            tone,
-            index: _said.length,
-          ),
-        );
-      }
-    });
-  }
-
-  void _leave() {
-    ref.read(pressServiceProvider).refresh();
-    Navigator.of(context).pop();
-  }
-
-  /// The question in front of the manager right now.
-  String _prompt(AppLocalizations l) {
-    final exchange = _current;
-    // A follow-up is keyed by what it presses on; only the OPENING question is
-    // about the situation, and it keeps the wordings it always had.
-    if (exchange.probe case final probe?) {
-      return pickVariant(
-        _probeWordings(l, probe),
-        _seed + probe.index * 13 + _said.length,
-      );
+        if (_isPreview) {
+          // Every beat is already in place.
+        } else if (_said.length == 1) {
+          _beats.add(ConferenceBuilder.reaction(_c.facts, a));
+        } else if (_said.length == 2 && _throwback != null) {
+          _beats.add(_throwback);
+        }
+      });
+    } finally {
+      _busy = false;
     }
-    return _openingPrompt(l);
   }
 
-  String _openingPrompt(AppLocalizations l) {
-    final who = widget.opponentName ?? l.pressTheOpposition;
-    final options = switch (widget.question.topic) {
-      PressTopic.overachieving => [
-        l.pressAskAbove,
-        l.pressAskAbove2,
-        l.pressAskAbove3,
-        l.pressAskAbove4,
-        l.pressAskAbove5,
-        l.pressAskAbove6,
-        l.pressAskAbove7,
-        l.pressAskAbove8,
-      ],
-      PressTopic.luckyWin => [
-        l.pressAskFlattered,
-        l.pressAskFlattered2,
-        l.pressAskFlattered3,
-        l.pressAskFlattered4,
-        l.pressAskFlattered5,
-        l.pressAskFlattered6,
-        l.pressAskFlattered7,
-        l.pressAskFlattered8,
-      ],
-      PressTopic.crisis => [
-        l.pressAskCrisis,
-        l.pressAskCrisis2,
-        l.pressAskCrisis3,
-        l.pressAskCrisis4,
-        l.pressAskCrisis5,
-        l.pressAskCrisis6,
-        l.pressAskCrisis7,
-        l.pressAskCrisis8,
-      ],
-      PressTopic.heavyDefeat => [
-        l.pressAskHeavyDefeat(who),
-        l.pressAskHeavyDefeat2(who),
-        l.pressAskHeavyDefeat3(who),
-        l.pressAskHeavyDefeat4(who),
-        l.pressAskHeavyDefeat5(who),
-        l.pressAskHeavyDefeat6(who),
-        l.pressAskHeavyDefeat7(who),
-        l.pressAskHeavyDefeat8(who),
-      ],
-      PressTopic.elimination => [
-        l.pressAskElimination(who),
-        l.pressAskElimination2(who),
-        l.pressAskElimination3(who),
-        l.pressAskElimination4(who),
-        l.pressAskElimination5(who),
-        l.pressAskElimination6(who),
-        l.pressAskElimination7(who),
-        l.pressAskElimination8(who),
-      ],
-      PressTopic.underPressure => [
-        l.pressAskUnderPressure,
-        l.pressAskUnderPressure2,
-        l.pressAskUnderPressure3,
-        l.pressAskUnderPressure4,
-        l.pressAskUnderPressure5,
-        l.pressAskUnderPressure6,
-        l.pressAskUnderPressure7,
-        l.pressAskUnderPressure8,
-      ],
-      PressTopic.tournamentPreview => [
-        l.pressAskPreview,
-        l.pressAskPreview2,
-        l.pressAskPreview3,
-        l.pressAskPreview4,
-        l.pressAskPreview5,
-        l.pressAskPreview6,
-        l.pressAskPreview7,
-        l.pressAskPreview8,
-      ],
-      PressTopic.tournamentOpening => [
-        l.pressAskOpening(who),
-        l.pressAskOpening2(who),
-        l.pressAskOpening3(who),
-        l.pressAskOpening4(who),
-        l.pressAskOpening5(who),
-        l.pressAskOpening6(who),
-        l.pressAskOpening7(who),
-        l.pressAskOpening8(who),
-      ],
-      PressTopic.triumph => [
-        l.pressAskTriumph,
-        l.pressAskTriumph2,
-        l.pressAskTriumph3,
-        l.pressAskTriumph4,
-        l.pressAskTriumph5,
-        l.pressAskTriumph6,
-        l.pressAskTriumph7,
-        l.pressAskTriumph8,
-      ],
-      PressTopic.bigWin => [
-        l.pressAskBigWin(who),
-        l.pressAskBigWin2(who),
-        l.pressAskBigWin3(who),
-        l.pressAskBigWin4(who),
-        l.pressAskBigWin5(who),
-        l.pressAskBigWin6(who),
-        l.pressAskBigWin7(who),
-        l.pressAskBigWin8(who),
-      ],
-      PressTopic.qualified => [
-        l.pressAskQualified,
-        l.pressAskQualified2,
-        l.pressAskQualified3,
-        l.pressAskQualified4,
-        l.pressAskQualified5,
-        l.pressAskQualified6,
-        l.pressAskQualified7,
-        l.pressAskQualified8,
-      ],
-      PressTopic.missedOut => [
-        l.pressAskMissedOut,
-        l.pressAskMissedOut2,
-        l.pressAskMissedOut3,
-        l.pressAskMissedOut4,
-        l.pressAskMissedOut5,
-        l.pressAskMissedOut6,
-        l.pressAskMissedOut7,
-        l.pressAskMissedOut8,
-      ],
-      PressTopic.unbeatenRun => [
-        l.pressAskUnbeaten,
-        l.pressAskUnbeaten2,
-        l.pressAskUnbeaten3,
-        l.pressAskUnbeaten4,
-        l.pressAskUnbeaten5,
-        l.pressAskUnbeaten6,
-        l.pressAskUnbeaten7,
-        l.pressAskUnbeaten8,
-      ],
-      PressTopic.newJob => [
-        l.pressAskNewJob,
-        l.pressAskNewJob2,
-        l.pressAskNewJob3,
-        l.pressAskNewJob4,
-        l.pressAskNewJob5,
-        l.pressAskNewJob6,
-        l.pressAskNewJob7,
-        l.pressAskNewJob8,
-      ],
-      PressTopic.rankingPeak => [
-        l.pressAskRankingPeak,
-        l.pressAskRankingPeak2,
-        l.pressAskRankingPeak3,
-        l.pressAskRankingPeak4,
-        l.pressAskRankingPeak5,
-        l.pressAskRankingPeak6,
-        l.pressAskRankingPeak7,
-        l.pressAskRankingPeak8,
-      ],
-    };
-    return pickVariant(options, _seed);
+  Future<void> _leave() async {
+    if (_leaving) return;
+    _leaving = true;
+    final navigator = Navigator.of(context);
+    try {
+      await ref
+          .read(conferenceServiceProvider)
+          .finish(widget.careerId, _c.row.id);
+    } on Object catch (e, st) {
+      // Never trap him here: the conference stays pending and comes back, and
+      // its answers are idempotent.
+      AppLog.error('press-finish', e, st);
+    }
+    _leaving = false;
+    if (!mounted) return;
+    setState(() => _finished = true);
+    navigator.pop();
   }
 
-  static List<String> _probeWordings(AppLocalizations l, PressProbe probe) =>
-      switch (probe) {
-        PressProbe.accountability => [
-          l.pressProbeAccountability1,
-          l.pressProbeAccountability2,
-          l.pressProbeAccountability3,
-          l.pressProbeAccountability4,
-        ],
-        PressProbe.yourFuture => [
-          l.pressProbeYourFuture1,
-          l.pressProbeYourFuture2,
-          l.pressProbeYourFuture3,
-          l.pressProbeYourFuture4,
-        ],
-        PressProbe.dressingRoom => [
-          l.pressProbeDressingRoom1,
-          l.pressProbeDressingRoom2,
-          l.pressProbeDressingRoom3,
-          l.pressProbeDressingRoom4,
-        ],
-        PressProbe.expectation => [
-          l.pressProbeExpectation1,
-          l.pressProbeExpectation2,
-          l.pressProbeExpectation3,
-          l.pressProbeExpectation4,
-        ],
-        PressProbe.substance => [
-          l.pressProbeSubstance1,
-          l.pressProbeSubstance2,
-          l.pressProbeSubstance3,
-          l.pressProbeSubstance4,
-        ],
-        PressProbe.selection => [
-          l.pressProbeSelection1,
-          l.pressProbeSelection2,
-          l.pressProbeSelection3,
-          l.pressProbeSelection4,
-        ],
-        PressProbe.theFans => [
-          l.pressProbeTheFans1,
-          l.pressProbeTheFans2,
-          l.pressProbeTheFans3,
-          l.pressProbeTheFans4,
-        ],
-        PressProbe.bigPicture => [
-          l.pressProbeBigPicture1,
-          l.pressProbeBigPicture2,
-          l.pressProbeBigPicture3,
-          l.pressProbeBigPicture4,
-        ],
-      };
-
-  /// The stances are phrased six ways — the same answer, said differently — so
-  /// a manager who always backs the players isn't reading one stock line for a
-  /// whole career.
-  String _answerText(AppLocalizations l, PressTone tone) {
-    final options = switch (tone) {
-      PressTone.backThePlayers => [
-        l.pressAnswerBackPlayers,
-        l.pressAnswerBackPlayers2,
-        l.pressAnswerBackPlayers3,
-        l.pressAnswerBackPlayers4,
-        l.pressAnswerBackPlayers5,
-        l.pressAnswerBackPlayers6,
-      ],
-      PressTone.takeTheBlame => [
-        l.pressAnswerTakeBlame,
-        l.pressAnswerTakeBlame2,
-        l.pressAnswerTakeBlame3,
-        l.pressAnswerTakeBlame4,
-        l.pressAnswerTakeBlame5,
-        l.pressAnswerTakeBlame6,
-      ],
-      PressTone.demandMore => [
-        l.pressAnswerDemandMore,
-        l.pressAnswerDemandMore2,
-        l.pressAnswerDemandMore3,
-        l.pressAnswerDemandMore4,
-        l.pressAnswerDemandMore5,
-        l.pressAnswerDemandMore6,
-      ],
-      PressTone.raiseTheBar => [
-        l.pressAnswerRaiseBar,
-        l.pressAnswerRaiseBar2,
-        l.pressAnswerRaiseBar3,
-        l.pressAnswerRaiseBar4,
-        l.pressAnswerRaiseBar5,
-        l.pressAnswerRaiseBar6,
-      ],
-      PressTone.playItDown => [
-        l.pressAnswerPlayDown,
-        l.pressAnswerPlayDown2,
-        l.pressAnswerPlayDown3,
-        l.pressAnswerPlayDown4,
-        l.pressAnswerPlayDown5,
-        l.pressAnswerPlayDown6,
-      ],
-    };
-    // Offset per tone and per question so one sheet doesn't read as three
-    // variants of the same sentence structure.
-    return pickVariant(
-      options,
-      _seed + tone.index * 7 + _asked.length * 3,
-    );
-  }
-
-  /// The line a reporter throws in when the manager keeps saying the same
-  /// thing. Null when they have nothing to needle him about yet.
-  String? _needle(AppLocalizations l, Map<PressTone, int> habits) {
-    if (_current.probe == null)
-      return null; // the opening question is asked straight
-    final tone = _said.isEmpty ? null : _said.last;
-    if (tone == null) return null;
-    if ((habits[tone] ?? 0) < pressNeedleThreshold) return null;
-    return switch (tone) {
-      PressTone.backThePlayers => l.pressNeedleBackPlayers,
-      PressTone.takeTheBlame => l.pressNeedleTakeBlame,
-      PressTone.demandMore => l.pressNeedleDemandMore,
-      PressTone.raiseTheBar => l.pressNeedleRaiseBar,
-      PressTone.playItDown => l.pressNeedlePlayDown,
-    };
+  /// The target an aim answer puts on the record, worded as the board's own
+  /// objective ("Reach the semi-finals").
+  String _aimText(AppLocalizations l, AnswerKind a) {
+    final p = _c.facts.preview;
+    final stated = p == null ? null : ConferenceBuilder.statedTarget(a, p);
+    if (p == null || stated == null) return '';
+    return objectiveDemandText(l, previewTier(p.campaign), stated);
   }
 
   String _headline(AppLocalizations l) {
@@ -419,89 +158,98 @@ class _PressSheetState extends ConsumerState<PressSheet> {
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
-    // What the room already knows: the last result as the country read it,
-    // and how the dressing room and the board are sitting.
-    final mood = ref.watch(pressMoodProvider(widget.careerId)).valueOrNull;
-    final habits =
-        ref.watch(pressToneHistoryProvider(widget.careerId)).valueOrNull ??
-        const <PressTone, int>{};
-    return SafeArea(
-      child: ConstrainedBox(
-        constraints: BoxConstraints(
-          maxHeight: MediaQuery.of(context).size.height * 0.85,
-        ),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: AppSpacing.marginMobile,
+    final index = _said.length;
+    final beat = _beat;
+    final playerName = _nameOf(beat);
+    return PopScope(
+      canPop: _finished,
+      child: SafeArea(
+        child: ConstrainedBox(
+          constraints: BoxConstraints(
+            maxHeight: MediaQuery.of(context).size.height * 0.85,
           ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(height: AppSpacing.md),
-              Row(
-                children: [
-                  const Icon(Icons.mic_rounded, color: AppColors.primary),
-                  const SizedBox(width: AppSpacing.sm),
-                  Expanded(
-                    child: Text(
-                      l.pressConferenceTitle,
-                      style: AppTypography.headlineMedium,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppSpacing.marginMobile,
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: AppSpacing.md),
+                Row(
+                  children: [
+                    const Icon(Icons.mic_rounded, color: AppColors.primary),
+                    const SizedBox(width: AppSpacing.sm),
+                    Expanded(
+                      child: Text(
+                        l.pressConferenceTitle,
+                        style: AppTypography.headlineMedium,
+                      ),
                     ),
-                  ),
-                  Text(
-                    l.pressQuestionOf(
-                      (_said.length + 1).clamp(1, _length),
-                      _length,
+                    Text(
+                      l.pressQuestionOf((index + 1).clamp(1, _length), _length),
+                      style: AppTypography.labelSmall.copyWith(
+                        color: AppColors.onSurfaceVariant,
+                      ),
                     ),
-                    style: AppTypography.labelSmall.copyWith(
-                      color: AppColors.onSurfaceVariant,
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: AppSpacing.md),
-              Flexible(
-                child: SingleChildScrollView(
-                  child: _over
-                      ? _Verdict(
-                          headline: _headline(l),
-                          total: _total,
-                          onLeave: _leave,
-                        )
-                      : Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            _Byline(
-                              reporter: _current.reporter,
-                              aside: _needle(l, habits),
-                            ),
-                            const SizedBox(height: AppSpacing.sm),
-                            Text(_prompt(l), style: AppTypography.bodyMedium),
-                            const SizedBox(height: AppSpacing.lg),
-                            for (final tone in _current.options)
-                              AnswerTile(
-                                label: _answerText(l, tone),
-                                // The SAME reading the service will apply when
-                                // the answer is recorded. Shown from the flat
-                                // table and applied from the contextual one,
-                                // the arrows on the sheet would be a promise
-                                // the save does not keep.
-                                effect: Press.effectOfExchange(
-                                  _current,
-                                  tone,
-                                  standing: mood?.standing,
-                                  squadMorale: mood?.squadMorale ?? 50,
-                                  boardMood: mood?.boardMood ?? 50,
-                                ),
-                                onTap: () => _answer(tone),
-                              ),
-                          ],
-                        ),
+                  ],
                 ),
-              ),
-              const SizedBox(height: AppSpacing.md),
-            ],
+                const SizedBox(height: AppSpacing.md),
+                Flexible(
+                  child: SingleChildScrollView(
+                    child: _over
+                        ? _Verdict(
+                            headline: _headline(l),
+                            total: _total,
+                            onLeave: _leave,
+                          )
+                        : Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              _Byline(reporter: _room[index % _room.length]),
+                              const SizedBox(height: AppSpacing.sm),
+                              Text(
+                                beatQuestion(
+                                  l,
+                                  beat,
+                                  _c,
+                                  playerName: playerName,
+                                  opponentName: widget.opponentName,
+                                  seed: _seed + index,
+                                  competitionName: widget.competitionName,
+                                  rivalName: widget.rivalName,
+                                ),
+                                style: AppTypography.bodyMedium,
+                              ),
+                              const SizedBox(height: AppSpacing.lg),
+                              for (final a in beat.answers)
+                                AnswerTile(
+                                  label: answerLabel(
+                                    l,
+                                    a,
+                                    playerName: playerName,
+                                    seed: _seed + a.index * 7 + index * 3,
+                                  ),
+                                  effect: ConferenceBuilder.effectOf(
+                                    a,
+                                    _c.credibility,
+                                  ),
+                                  note: onRecordLine(
+                                    l,
+                                    a,
+                                    playerName: playerName,
+                                    aim: _aimText(l, a),
+                                  ),
+                                  onTap: () => _answer(a),
+                                ),
+                            ],
+                          ),
+                  ),
+                ),
+                const SizedBox(height: AppSpacing.md),
+              ],
+            ),
           ),
         ),
       ),
@@ -512,13 +260,9 @@ class _PressSheetState extends ConsumerState<PressSheet> {
 /// Who is asking: a name, an outlet, and a colour for the kind of question
 /// they are about to put. The manager learns to brace for some of them.
 class _Byline extends StatelessWidget {
-  const _Byline({required this.reporter, this.aside});
+  const _Byline({required this.reporter});
 
   final PressReporter reporter;
-
-  /// The reporter's needle, when the manager has been saying the same thing
-  /// for years and somebody in the room has finally said so.
-  final String? aside;
 
   @override
   Widget build(BuildContext context) {
@@ -555,16 +299,6 @@ class _Byline extends StatelessWidget {
             ),
           ],
         ),
-        if (aside case final line?) ...[
-          const SizedBox(height: AppSpacing.xs),
-          Text(
-            line,
-            style: AppTypography.labelSmall.copyWith(
-              color: AppColors.onSurfaceVariant,
-              fontStyle: FontStyle.italic,
-            ),
-          ),
-        ],
       ],
     );
   }
@@ -578,11 +312,15 @@ class AnswerTile extends StatelessWidget {
     required this.label,
     required this.effect,
     required this.onTap,
+    this.note,
     super.key,
   });
 
   final String label;
   final PressEffect effect;
+
+  /// What putting this on the record means ("On the record: ..."), if it does.
+  final String? note;
   final VoidCallback onTap;
 
   @override
@@ -603,11 +341,18 @@ class AnswerTile extends StatelessWidget {
               children: [
                 Text('“$label”', style: AppTypography.bodyMedium),
                 const SizedBox(height: AppSpacing.sm),
-                Row(
+                // Wraps rather than runs off the tile: with "no effect"
+                // beside both swings, French, Polish and German were wider
+                // than a 320 phone.
+                Wrap(
+                  spacing: AppSpacing.md,
+                  runSpacing: AppSpacing.xs,
+                  crossAxisAlignment: WrapCrossAlignment.center,
                   children: [
-                    _Swing(label: l.pressSquad, value: effect.morale),
-                    const SizedBox(width: AppSpacing.md),
-                    _Swing(label: l.pressBoard, value: effect.board),
+                    if (Press.arrowsFor(effect.morale) != 0)
+                      _Swing(label: l.pressSquad, value: effect.morale),
+                    if (Press.arrowsFor(effect.board) != 0)
+                      _Swing(label: l.pressBoard, value: effect.board),
                     if (effect.morale == 0 && effect.board == 0)
                       Text(
                         l.pressNoEffect,
@@ -617,6 +362,15 @@ class AnswerTile extends StatelessWidget {
                       ),
                   ],
                 ),
+                if (note case final line?) ...[
+                  const SizedBox(height: AppSpacing.xs),
+                  Text(
+                    line,
+                    style: AppTypography.labelSmall.copyWith(
+                      color: AppColors.primary,
+                    ),
+                  ),
+                ],
               ],
             ),
           ),

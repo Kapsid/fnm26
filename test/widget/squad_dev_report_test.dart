@@ -337,4 +337,41 @@ void main() {
       expectNothingCut(tester);
     });
   }
+
+  testWidgets('an intake reads its values under their headings', (
+    tester,
+  ) async {
+    final l = await pumpTable(
+      tester,
+      width: 360,
+      locale: const Locale('en'),
+      rows: const [
+        SquadDevRow(
+          name: 'Nováček',
+          age: 11,
+          position: 'ST',
+          rating: 23,
+          status: SquadDevStatus.arrived,
+          stars: 4,
+        ),
+      ],
+    );
+    double centreX(Finder f) => tester.getCenter(f).dx;
+    // Age and position sit centred under their labels, not shoved a column
+    // to the right by the stars' unlabelled cell.
+    expect(
+      centreX(find.text('11')),
+      moreOrLessEquals(centreX(find.text(l.squadDevAge)), epsilon: 1),
+    );
+    expect(
+      centreX(find.text('ST')),
+      moreOrLessEquals(centreX(find.text(l.squadDevPosition)), epsilon: 1),
+    );
+    expect(
+      centreX(find.text('23')),
+      moreOrLessEquals(centreX(find.text(l.squadDevChange)), epsilon: 1),
+    );
+    // The stars column is headed: one star above, one on the line.
+    expect(find.byIcon(Icons.star_rounded), findsNWidgets(2));
+  });
 }

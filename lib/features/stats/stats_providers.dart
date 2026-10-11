@@ -10,7 +10,7 @@ import 'package:fnm/features/federation/federation_providers.dart';
 const _finalsRounds = {
   'GROUP', 'R32', 'R16', 'QF', 'SF', '3RD', 'FINAL', //
   'CGROUP', 'CR16', 'CQF', 'CSF', 'C3RD', 'CFINAL', //
-  'NGROUP', 'NSF', 'NFINAL',
+  'NGROUP', 'NR16', 'NQF', 'NSF', 'NFINAL',
 };
 
 /// The manager's whole-career [CareerStatsSnapshot], built from every match any
@@ -98,7 +98,7 @@ careerStatsProvider = FutureProvider.autoDispose.family<CareerStatsSnapshot, int
 /// and safe for anything whose timeline was never captured: a comeback is
 /// claimed only when the evidence for it exists.
 bool _everTrailed(
-  List<({int nationId, int minute})>? timeline, {
+  List<({int nationId, int playerId, int minute})>? timeline, {
   required int mineId,
 }) {
   if (timeline == null || timeline.isEmpty) return false;

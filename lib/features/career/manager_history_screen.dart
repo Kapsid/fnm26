@@ -5,7 +5,9 @@ import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/core/util/app_date.dart';
+import 'package:fnm/core/util/career_label.dart';
 import 'package:fnm/core/util/competition_label.dart';
+import 'package:fnm/domain/services/competition/cycle_finish.dart';
 import 'package:fnm/domain/services/competition/trophies.dart';
 import 'package:fnm/features/career/manager_history_providers.dart';
 import 'package:fnm/features/stats/stats_providers.dart';
@@ -254,21 +256,33 @@ class _TrophyCabinet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Wrap(
-      spacing: AppSpacing.md,
-      runSpacing: AppSpacing.md,
-      children: [
-        for (final t in Trophies.cabinet)
-          _TrophySlot(
-            asset: t.asset,
-            // The cabinet holds the competitions' canonical stored names, so
-            // they go through the same translator every other competition
-            // name does. Printed raw, this was the one shelf in the game
-            // still labelled in English.
-            label: competitionLabel(AppLocalizations.of(context), t.label),
-            count: counts[t.key] ?? 0,
-          ),
-      ],
+    // Centred in the card, so the leftover width is split between both sides.
+    //
+    // A tester reported the gap to the right of the trophies as much bigger
+    // than the one to the left, and it was: sixteen points against eighty on
+    // a 430-wide phone. The Wrap SHRINKS TO ITS CHILDREN, so it had no spare
+    // width of its own to distribute and sat against the card's left padding
+    // with the whole remainder behind it. WrapAlignment does nothing here for
+    // the same reason, which is worth saying out loud because it is the
+    // obvious fix and it is the wrong one.
+    return Center(
+      child: Wrap(
+        alignment: WrapAlignment.center,
+        spacing: AppSpacing.md,
+        runSpacing: AppSpacing.md,
+        children: [
+          for (final t in Trophies.cabinet)
+            _TrophySlot(
+              asset: t.asset,
+              // The cabinet holds the competitions' canonical stored names, so
+              // they go through the same translator every other competition
+              // name does. Printed raw, this was the one shelf in the game
+              // still labelled in English.
+              label: competitionLabel(AppLocalizations.of(context), t.label),
+              count: counts[t.key] ?? 0,
+            ),
+        ],
+      ),
     );
   }
 }
@@ -423,22 +437,31 @@ class _CycleCard extends StatelessWidget {
                 Expanded(
                   child: _Finish(
                     label: l.careerWorldCupLabel,
-                    placement: c.worldCup,
+                    placement: cycleFinishLabel(l, c.worldCup),
+                    gold: c.worldCup == CycleFinish.champions,
                   ),
                 ),
                 Expanded(
                   child: _Finish(
                     label: l.careerContinentalLabel,
-                    placement: c.continental,
+                    placement: cycleFinishLabel(l, c.continental),
+                    gold: c.continental == CycleFinish.champions,
                   ),
                 ),
               ],
             ),
-            if (c.nationsCup.isNotEmpty) ...[
+            if (c.nationsCup case final nc?) ...[
               const SizedBox(height: AppSpacing.xs),
               _Finish(
-                label: l.careerNationsCupLabel,
-                placement: c.nationsCup,
+                label: competitionLabel(l, nc.cup),
+                placement: nationsCupFinishLabel(
+                  l,
+                  league: nc.league,
+                  position: nc.position,
+                  finals: nc.finals,
+                  zone: nc.zone,
+                ),
+                gold: nc.finals == NationsCupFinish.champions,
               ),
             ],
           ],
@@ -449,14 +472,22 @@ class _CycleCard extends StatelessWidget {
 }
 
 class _Finish extends StatelessWidget {
-  const _Finish({required this.label, required this.placement});
+  const _Finish({
+    required this.label,
+    required this.placement,
+    required this.gold,
+  });
 
   final String label;
   final String placement;
 
+  /// Whether this finish was the trophy. Passed in rather than read back off
+  /// [placement]: the words are translated now, and `== 'Champions'` was only
+  /// ever true in English.
+  final bool gold;
+
   @override
   Widget build(BuildContext context) {
-    final gold = placement == 'Champions';
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/features/tournaments/tournament_bracket.dart';
+import 'package:fnm/l10n/app_localizations.dart';
 
 import '../helpers/expect_whole.dart';
 import '../helpers/pump_app.dart';
@@ -234,10 +235,14 @@ void main() {
   });
 
   group('playerRunSummary', () {
-    test('is prefix-agnostic, so continental rounds work', () {
+    // Its words are localised now (they were four English phrases built in
+    // `lib/features`), so the summary is asked for in a language.
+    test('is prefix-agnostic, so continental rounds work', () async {
+      final l = await AppLocalizations.delegate.load(const Locale('en'));
       // 'CFINAL' must read as a final, not an unknown round.
       expect(
         playerRunSummary(
+          l,
           playerNationId: 1,
           champion: null,
           knockout: [tie('CFINAL', 1, 2, hs: 0, as: 1)],
@@ -248,6 +253,7 @@ void main() {
       );
       expect(
         playerRunSummary(
+          l,
           playerNationId: 1,
           champion: 1,
           knockout: [tie('CFINAL', 1, 2, hs: 2, as: 1)],
@@ -258,9 +264,11 @@ void main() {
       );
     });
 
-    test('reports the deepest round reached', () {
+    test('reports the deepest round reached', () async {
+      final l = await AppLocalizations.delegate.load(const Locale('en'));
       expect(
         playerRunSummary(
+          l,
           playerNationId: 1,
           champion: 9,
           knockout: [
@@ -270,13 +278,15 @@ void main() {
           groups: const [],
           championTitle: 'Winners!',
         ),
-        'Knocked out in the Quarter-finals',
+        'Knocked out in the quarter-final',
       );
     });
 
-    test('a nation that never reached the finals has no run', () {
+    test('a nation that never reached the finals has no run', () async {
+      final l = await AppLocalizations.delegate.load(const Locale('en'));
       expect(
         playerRunSummary(
+          l,
           playerNationId: 99,
           champion: 1,
           knockout: [tie('QF', 1, 2, hs: 1, as: 0)],

@@ -9,6 +9,7 @@ import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/services/competition/continental_cups.dart';
+import 'package:fnm/domain/services/competition/nations_cups.dart';
 import 'package:fnm/features/hub/hub_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
@@ -40,8 +41,10 @@ const _knockoutRounds = <String, ({int order, String label})>{
   'CSF': (order: 2, label: 'Semi-finals'),
   'C3RD': (order: 3, label: 'Third-place play-off'),
   'CFINAL': (order: 4, label: 'Final'),
-  'NSF': (order: 0, label: 'Semi-finals'),
-  'NFINAL': (order: 1, label: 'Final'),
+  'NR16': (order: 0, label: 'Round of 16'),
+  'NQF': (order: 1, label: 'Quarter-finals'),
+  'NSF': (order: 2, label: 'Semi-finals'),
+  'NFINAL': (order: 3, label: 'Final'),
 };
 
 /// The localised name for a knockout [round] code (empty/unknown = group stage),
@@ -50,8 +53,8 @@ const _knockoutRounds = <String, ({int order, String label})>{
 /// the code to the viewer's language only when the popup is shown.
 String stageLabelFor(AppLocalizations l, String round) => switch (round) {
   'R32' => l.hubStageRoundOf32,
-  'R16' || 'CR16' => l.finishRoundOf16,
-  'QF' || 'CQF' => l.finishQuarterFinals,
+  'R16' || 'CR16' || 'NR16' => l.finishRoundOf16,
+  'QF' || 'CQF' || 'NQF' => l.finishQuarterFinals,
   'SF' || 'CSF' || 'NSF' => l.finishSemiFinals,
   '3RD' || 'C3RD' => l.hubStageThirdPlace,
   'FINAL' || 'CFINAL' || 'NFINAL' => l.hubFinal,
@@ -84,6 +87,8 @@ latestRoundPopupProvider = FutureProvider.autoDispose.family<RoundPopup?, int>((
       : ContinentalCups.byConfederation[conf]?.name ??
             'Continental Championship';
 
+  final ncConf = NationsCups.ofManager(conf);
+
   // Every confederation's championship is a competition of the same kind, so
   // the continental source names the player's own: without it the popup could
   // report a round from a cup on the other side of the world under the name of
@@ -109,12 +114,20 @@ latestRoundPopupProvider = FutureProvider.autoDispose.family<RoundPopup?, int>((
           rounds: const ['CGROUP', 'CR16', 'CQF', 'CSF', 'C3RD', 'CFINAL'],
           confederation: conf,
         ),
-        (
-          kind: CompetitionKind.nationsLeague,
-          name: 'Nations Cup',
-          rounds: const ['NSF', 'NFINAL'],
-          confederation: null,
-        ),
+        // The manager's own confederation's Nations Cup, under its own name
+        // and with its own finals rounds (Africa's knockouts open with a
+        // Round of 16); none for a confederation that runs no cup.
+        if (ncConf != null)
+          (
+            kind: CompetitionKind.nationsLeague,
+            name: NationsCups.forConfederation(ncConf)!.name,
+            rounds:
+                NationsCups.forConfederation(ncConf)!.format ==
+                    NationsCupFormat.zones
+                ? const ['NR16', 'NQF', 'NSF', 'NFINAL']
+                : const ['NSF', 'NFINAL'],
+            confederation: ncConf,
+          ),
       ];
 
   ({String name, Fixture fixture})? newest;

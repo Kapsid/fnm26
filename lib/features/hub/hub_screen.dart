@@ -4,18 +4,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/core/diagnostics/app_log.dart';
 import 'package:fnm/core/util/app_date.dart';
+import 'package:fnm/core/util/competition_label.dart';
+import 'package:fnm/core/util/squad_label.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/core/util/match_stage.dart';
+import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/entities/group_standing.dart';
-import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
-import 'package:fnm/domain/services/squad/condition.dart';
+import 'package:fnm/domain/services/competition/nations_cups.dart';
 import 'package:fnm/features/achievements/achievement_providers.dart';
+import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/tournaments/wc_host_theme.dart';
 import 'package:fnm/features/federation/federation_service.dart';
 import 'package:fnm/features/federation/investment_editor.dart';
@@ -23,6 +26,7 @@ import 'package:fnm/features/hub/hub_event.dart';
 import 'package:fnm/features/hub/hub_providers.dart';
 import 'package:fnm/features/y/y_providers.dart';
 import 'package:fnm/features/hub/board_objectives_screen.dart';
+import 'package:fnm/features/press/press_copy.dart';
 import 'package:fnm/features/press/press_providers.dart';
 import 'package:fnm/features/ranking/world_ranking_providers.dart';
 import 'package:fnm/features/squad/grievance_providers.dart';
@@ -54,18 +58,59 @@ class _HubScreenState extends ConsumerState<HubScreen> {
   /// often, and each rebuild would otherwise stack another popup.
   bool _popping = false;
 
-  /// Guards the offer against firing twice while its popup is opening.
+  /// True from the moment the offer is scheduled until it has been answered
+  /// (or deferred because something else was on screen).
+  ///
+  /// Cleared in [_offerTour]'s `finally`, so a deferred offer is retried on
+  /// the next rebuild instead of being lost for the rest of the session.
   bool _offeringTour = false;
+
+  /// Whether unread news must wait because of the walk through.
+  ///
+  /// News and the tour used to race on a new save's first hub frame: both are
+  /// post-frame callbacks, and the news one spends a few awaits syncing before
+  /// it shows anything, so the offer won the guard check and the news popup
+  /// then landed on top of it (or under it, whichever lost). Accept the tour
+  /// with news still up and it got worse: the tour's overlay sits above the
+  /// Navigator, so the news dialog stayed UNDER the scrim, covering the
+  /// control being lit and untappable behind the AbsorbPointer, and the
+  /// tour's first `go` to another screen tore it down (a dialog is a pageless
+  /// route on the hub page), after which the batch was marked read unseen.
+  ///
+  /// So news waits while the offer is pending or open, and for as long as the
+  /// tour runs. It stays unread meanwhile, and pops once the offer is declined
+  /// (see [_offerTour]) or the tour ends (the hub watches [tourStepProvider],
+  /// and finishing or skipping lands back on the hub anyway).
+  bool get _tourHoldsNews =>
+      _offeringTour ||
+      !ref.read(tourOfferedProvider) ||
+      ref.read(tourStepProvider) != null;
 
   /// Asks, once ever, whether the manager wants showing around.
   ///
   /// Recorded whatever the answer is: "no thanks" is an answer, and asking it
   /// again would make an offer into a nag. Settings is the way back in.
   Future<void> _offerTour() async {
-    if (!mounted || appPopupBusy) return;
+    var started = false;
+    try {
+      // Something else is up (an action's own popup, or news that got in
+      // before the stored flag had loaded). Not recorded as offered, so the
+      // next rebuild, which that popup's own invalidations bring, asks again.
+      if (!mounted || appPopupBusy) return;
+      started = await _askTour();
+    } finally {
+      _offeringTour = false;
+      // Declined (or never asked): the news that waited for the answer goes
+      // now. Accepted: it keeps waiting for the tour to end.
+      if (mounted && !started) unawaited(_popMessages());
+    }
+  }
+
+  /// Puts the question; true when the tour was started.
+  Future<bool> _askTour() async {
     final l = AppLocalizations.of(context);
     await markTourOffered(ref);
-    if (!mounted) return;
+    if (!mounted) return false;
     final wants = await showAppPopup<bool>(
       context: context,
       builder: (popupContext) => Padding(
@@ -101,8 +146,9 @@ class _HubScreenState extends ConsumerState<HubScreen> {
         ),
       ),
     );
-    if (!mounted) return;
-    if (wants ?? false) startTour(ref, careerId);
+    if (!mounted || !(wants ?? false)) return false;
+    startTour(ref, careerId);
+    return true;
   }
 
   int get careerId => widget.careerId;
@@ -114,12 +160,17 @@ class _HubScreenState extends ConsumerState<HubScreen> {
     // Wait if an action is already showing its own popup: stepping a final
     // fires the champion news and the final's result together, and racing them
     // buries one behind the other. That path pops the news itself when done.
-    if (_popping || appPopupBusy) return;
+    // And while the walk through is being offered or is running: see
+    // [_tourHoldsNews].
+    if (_popping || appPopupBusy || !mounted || _tourHoldsNews) return;
     _popping = true;
     try {
       if (mounted) await showUnreadMessagePopups(context, ref, careerId);
     } finally {
       _popping = false;
+      // An offer that arrived while this was on screen deferred itself; give
+      // it the rebuild it retries on, now the screen is clear.
+      if (mounted && !ref.read(tourOfferedProvider)) setState(() {});
     }
   }
 
@@ -136,6 +187,10 @@ class _HubScreenState extends ConsumerState<HubScreen> {
     final unread = ref.watch(unreadMessagesProvider(careerId)).valueOrNull ?? 0;
     // What the world has said since the manager last looked.
     final yUnread = ref.watch(yUnreadCountProvider(careerId)).valueOrNull ?? 0;
+
+    // Watched so the hub rebuilds when the tour ends, which is what lets the
+    // news it held back through [_tourHoldsNews] pop.
+    ref.watch(tourStepProvider);
 
     // Surface news the moment it lands, rather than leaving it to be found.
     if (unread > 0 && !_popping) {
@@ -156,9 +211,20 @@ class _HubScreenState extends ConsumerState<HubScreen> {
           icon: const Icon(Icons.arrow_back, color: AppColors.primary),
           onPressed: () => context.go(Routes.home),
         ),
-        title: Text(
-          l.hubNationalHub,
-          style: AppTypography.labelMedium.copyWith(color: AppColors.primary),
+        // One line, shrunk to fit rather than wrapped. The title shares the bar
+        // with a back button and four actions, which leaves it roughly 160dp
+        // on a 412dp phone; "NÁRODNÍ CENTRÁLA" in the tracked mono face needs
+        // more than that once the system font is enlarged, and a wrapped title
+        // spills out of the toolbar's height. A title is a label, not reading
+        // matter, so a few percent smaller beats two lines.
+        title: FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Text(
+            l.hubNationalHub,
+            maxLines: 1,
+            softWrap: false,
+            style: AppTypography.labelMedium.copyWith(color: AppColors.primary),
+          ),
         ),
         centerTitle: true,
         actions: [
@@ -302,7 +368,10 @@ class _HubScreenState extends ConsumerState<HubScreen> {
                       final comp = hub.group!.competition;
                       final conf =
                           hub.nations[hub.career.nationId]?.confederation;
-                      if (comp.startsWith('Nations Cup')) {
+                      // Any of the three cups (Europe's, North America's,
+                      // Africa's) — his own, which the screen opens on.
+                      if (hub.group!.kind == CompetitionKind.nationsLeague ||
+                          NationsCups.isNationsCup(comp)) {
                         context.go(
                           '${Routes.nationsCup}?careerId=$careerId',
                         );
@@ -590,26 +659,74 @@ class _EventButtonState extends ConsumerState<_EventButton> {
       case HubEventKind.press:
         // The press conference has no screen of its own — it is the same sheet
         // the optional press card opens, just reached as a forced step.
-        final question = ref.read(pressQuestionProvider(careerId)).valueOrNull;
-        if (question == null) return;
-        final nations =
-            ref.read(hubDataProvider(careerId)).valueOrNull?.nations ??
-            const <int, Nation>{};
-        unawaited(
-          showModalBottomSheet<void>(
-            context: context,
-            backgroundColor: AppColors.surfaceContainer,
-            isScrollControlled: true,
-            builder: (_) => PressSheet(
-              careerId: careerId,
-              question: question,
-              opponentName: switch (question.subjectNationId) {
-                final id? => nations[id]?.name,
-                _ => null,
+        final pending = ref
+            .read(pendingConferenceProvider(careerId))
+            .valueOrNull;
+        final preview = ref.read(previewDueProvider(careerId)).valueOrNull;
+        final hub = ref.read(hubDataProvider(careerId)).valueOrNull;
+        if ((pending == null && preview == null) || hub == null) return;
+        unawaited(() async {
+          // A preview has no row until he opens it: write it, then read the
+          // conference back like any other.
+          var conference = pending;
+          if (conference == null && preview != null) {
+            await ref
+                .read(conferenceServiceProvider)
+                .openPreview(careerId, preview);
+            conference = await ref.read(
+              pendingConferenceProvider(careerId).future,
+            );
+          }
+          if (conference == null) return;
+          final ids = {
+            conference.facts.bestPlayerId,
+            conference.facts.worstPlayerId,
+            conference.facts.throwback?.playerId,
+            conference.facts.preview?.keyPlayerId,
+          }.whereType<int>().toSet();
+          final pool = await ref
+              .read(playerRepositoryProvider)
+              .byNation(
+                hub.career.nationId,
+                agingYears: CareerService.agingYears(hub.career),
+                saveSeed: hub.career.rngSeed,
+                minAge: 15,
+              );
+          final names = {
+            for (final p in pool)
+              if (ids.contains(p.id)) p.id: p.name,
+          };
+          if (!context.mounted) return;
+          unawaited(
+            showModalBottomSheet<void>(
+              context: context,
+              backgroundColor: AppColors.surfaceContainer,
+              isScrollControlled: true,
+              isDismissible: false,
+              enableDrag: false,
+              builder: (sheetContext) {
+                final facts = conference!.facts.preview;
+                return PressSheet(
+                  careerId: careerId,
+                  conference: conference,
+                  playerNames: names,
+                  opponentName:
+                      hub.nations[conference.opponentNationId]?.name ?? '',
+                  competitionName: facts == null
+                      ? ''
+                      : previewCompetitionName(
+                          AppLocalizations.of(sheetContext),
+                          facts.campaign,
+                          hub.nations[hub.career.nationId]?.confederation,
+                        ),
+                  rivalName: facts?.rivalNationId == null
+                      ? ''
+                      : hub.nations[facts!.rivalNationId]?.name ?? '',
+                );
               },
             ),
-          ),
-        );
+          );
+        }());
       case HubEventKind.managerSkills:
         // Marked seen as it is TAKEN, not when the points are spent: a manager
         // who looks at his skills and decides to bank them has answered the
@@ -668,29 +785,26 @@ class _NextMatch extends StatelessWidget {
     return AppCard(
       child: Column(
         children: [
-          Row(
-            children: [
-              Text(l.hubNextMatch, style: AppTypography.labelMedium),
-              const Spacer(),
-              Flexible(
-                // "World Cup qualifying · Matchday 6" is longer than the room
-                // left beside the heading, and a stage that ends in "…" tells
-                // the manager nothing about which match this is. The compact
-                // form writes the qualifying campaigns with a Q, which is the
-                // difference between a banner you can read here and one that
-                // has been scaled down to a grey smear.
-                child: WholeText(
-                  MatchStage.labelCompact(l, f),
-                  maxLines: 1,
-                  textAlign: TextAlign.end,
-                  style: AppTypography.labelSmall.copyWith(
-                    color: f.round == null
-                        ? AppColors.onSurfaceVariant
-                        : AppColors.primary,
-                  ),
-                ),
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Text(l.hubNextMatch, style: AppTypography.labelMedium),
+          ),
+          const SizedBox(height: AppSpacing.xs),
+          // On its own full-width line, at the heading's size. Squeezed into
+          // the room beside the heading it was shrunk to fit, and players read
+          // which match this is from it: a qualifier or a semi-final.
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Text(
+              MatchStage.label(l, f),
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              style: AppTypography.labelMedium.copyWith(
+                color: f.round == null
+                    ? AppColors.onSurfaceVariant
+                    : AppColors.primary,
               ),
-            ],
+            ),
           ),
           const SizedBox(height: AppSpacing.sm),
           Row(
@@ -943,7 +1057,7 @@ class _SquadStatus extends StatelessWidget {
               ),
               const Spacer(),
               Text(
-                Condition.moraleLabel(morale),
+                moraleLabel(l, morale),
                 style: AppTypography.labelMedium.copyWith(color: _moraleColor),
               ),
             ],
@@ -962,10 +1076,22 @@ class _SquadStatus extends StatelessWidget {
             ),
           ),
           const SizedBox(height: AppSpacing.sm),
-          PrimaryButton(
-            label: l.hubManageTeam,
-            icon: Icons.groups,
+          // Outlined, like Tactics on the match preview: the event button is
+          // the one call to action on the hub, and a second silver slab here
+          // competed with it.
+          OutlinedButton.icon(
             onPressed: onManage,
+            icon: const Icon(Icons.groups, size: 18),
+            label: FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Text(l.hubManageTeam, maxLines: 1, softWrap: false),
+            ),
+            style: OutlinedButton.styleFrom(
+              minimumSize: const Size.fromHeight(AppSpacing.minHitArea),
+              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
+              foregroundColor: AppColors.primary,
+              side: const BorderSide(color: AppColors.outlineVariant),
+            ),
           ),
         ],
       ),
@@ -993,7 +1119,7 @@ class _GroupPlaceholder extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  competition.toUpperCase(),
+                  competitionLabel(l, competition).toUpperCase(),
                   style: AppTypography.labelSmall.copyWith(
                     color: AppColors.primary,
                   ),
@@ -1054,7 +1180,7 @@ class _GroupTable extends StatelessWidget {
             children: [
               Expanded(
                 child: Text(
-                  group.competition.toUpperCase(),
+                  competitionLabel(l, group.competition).toUpperCase(),
                   style: AppTypography.labelSmall.copyWith(
                     color: AppColors.primary,
                   ),

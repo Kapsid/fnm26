@@ -1,6 +1,8 @@
 import 'package:fnm/domain/services/manager/staff.dart';
 import 'package:fnm/domain/services/manager/manager_skills.dart';
 import 'package:fnm/domain/entities/career.dart';
+import 'package:fnm/domain/services/press/conference.dart';
+import 'package:fnm/domain/services/press/statement.dart';
 
 /// A cycle's federation investment split (euros committed to each department).
 typedef FederationInvestment = ({
@@ -56,6 +58,9 @@ abstract interface class CareerRepository {
   /// Advances (or sets) the in-game date of a save.
   Future<void> updateInGameDate(int id, DateTime date);
 
+  /// Renames the save's manager.
+  Future<void> renameManager(int id, String name);
+
   /// Advances the save to a new cycle, setting [cyclePointer] and [date].
   /// Moves the save into [cyclePointer], dated [date].
   ///
@@ -87,14 +92,12 @@ abstract interface class CareerRepository {
   /// a point is available — see `ManagerSkills.canRaise`.
   Future<void> raiseSkill(int id, ManagerSkill skill);
 
-
   /// Puts [candidateId] in [role], or clears the post when it is null.
   ///
   /// The TIER is written alongside, because it is what every staff effect
   /// reads; the id is who is actually in the chair. A cleared post is
   /// [StaffTier.none] and nobody.
   Future<void> setStaff(int id, StaffRole role, int? candidateId);
-
 
   /// Marks the Y feed read up to [date] — the in-game date of its newest post.
   Future<void> setYReadAt(int id, DateTime date);
@@ -163,6 +166,49 @@ abstract interface class CareerRepository {
   /// Everything said this career, newest first. [cycle] limits it to one
   /// cycle's answers — press effects expire with the cycle they were given in.
   Future<List<PressAnswerRow>> pressAnswers(int careerId, {int? cycle});
+
+  /// Puts a statement on the record, open until its window judges it.
+  Future<int> recordStatement({
+    required int careerId,
+    required int cycle,
+    required int nationId,
+    required StatementKind kind,
+    int? playerId,
+    required DateTime madeOn,
+    required int madeAfterFixtureId,
+
+    /// A [StatementKind.target]'s stated finish.
+    int? target,
+  });
+
+  /// Every statement this career, oldest first.
+  Future<List<PressStatement>> statements(int careerId);
+
+  /// Settles statement [id] as [status] on [judgedOn].
+  Future<void> judgeStatement(
+    int id, {
+    required StatementStatus status,
+    required DateTime judgedOn,
+  });
+
+  /// Marks statement [id] as quoted back at the manager, so it is only thrown
+  /// back once.
+  Future<void> markThrownBack(int id);
+
+  /// Stores a conference the season has called, pending until it is opened.
+  Future<int> recordConference({
+    required int careerId,
+    required int cycle,
+    required ConferenceReason reason,
+    required int fixtureId,
+    required DateTime triggeredOn,
+  });
+
+  /// Every conference called this career, oldest first.
+  Future<List<PressConferenceRow>> conferences(int careerId);
+
+  /// Records whether conference [id] was held or skipped.
+  Future<void> setConferenceStatus(int id, ConferenceStatus status);
 
   /// The base camp chosen for [tournament] (`GROUP` / `CGROUP`) in [cycle], or
   /// null when the manager has not picked one.

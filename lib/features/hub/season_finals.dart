@@ -276,12 +276,13 @@ extension SeasonFinals on SeasonService {
     // The field is set — if the manager's nation isn't in it, their qualifying
     // campaign came up short.
     if (!qualifiers.contains(career.nationId)) {
-      await _comp.addMessage(
+      await _comp.addTextMessage(
+        l: _l,
         careerId: careerId,
         dedupKey: 'wcmiss:$year',
         category: 'eliminated',
-        title: _l.newsWcMissTitle,
-        body: _l.newsWcMissBody(year),
+        title: const MsgText(MsgKey.newsWcMissTitle),
+        body: MsgText(MsgKey.newsWcMissBody, [year]),
         year: year - 1,
       );
     }

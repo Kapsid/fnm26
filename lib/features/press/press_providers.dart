@@ -1,671 +1,437 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:fnm/core/util/text_variety.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/fixture.dart';
-import 'package:fnm/domain/services/competition/finals_participation.dart';
-import 'package:fnm/domain/services/competition/kickoff_keys.dart';
-import 'package:fnm/domain/services/competition/rounds.dart';
-import 'package:fnm/domain/services/press/expectation.dart';
+import 'package:fnm/domain/repositories/career_repository.dart';
+import 'package:fnm/domain/entities/group_standing.dart';
+import 'package:fnm/domain/entities/player.dart';
+import 'package:fnm/domain/services/achievements/board_satisfaction.dart';
+import 'package:fnm/domain/services/press/conference.dart';
 import 'package:fnm/domain/services/press/press.dart';
-import 'package:fnm/features/achievements/achievement_providers.dart';
+import 'package:fnm/domain/services/press/statement.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/hub/objective_providers.dart';
+import 'package:fnm/features/press/press_desk.dart';
 import 'package:fnm/features/ranking/world_ranking_providers.dart';
 import 'package:fnm/features/tactics/condition_providers.dart';
 
-/// The press question waiting right now, or null when they have nothing to ask
-/// — which is most of the time, and deliberately so.
-///
-/// The rules that keep it from being a chore:
-///  * one question at a time, and each key is asked ONCE ever;
-///  * only after something actually happened (a hammering, a trophy, a
-///    tournament exit, a run of results with the board watching, the eve of a
-///    finals) — never after an ordinary win;
-///  * it goes stale after [Press.askWindowDays], so an unanswered question is
-///    dropped rather than queued up behind the next one;
-///  * nothing at all for [Press.quietDays] after the last answer.
-final AutoDisposeFutureProviderFamily<PressQuestion?, int>
-pressQuestionProvider = FutureProvider.autoDispose.family<PressQuestion?, int>((
-  ref,
-  careerId,
-) async {
-  final careerRepo = ref.watch(careerRepositoryProvider);
-  final career = await careerRepo.byId(careerId);
-  if (career == null) return null;
-  final answers = await careerRepo.pressAnswers(careerId);
-  final asked = {for (final a in answers) a.questionKey};
-  final now = career.inGameDate;
+bool _counts(PressAnswerRow a) => !a.questionKey.startsWith('grv:');
 
-  // Who this manager IS, so the answers offered are things he could
-  // plausibly say. A side told only to qualify, ranked outside the top forty,
-  // used to be offered "we are here to win this" — which is what made the room
-  // read as generic.
-  final ranking = await ref.watch(worldRankingProvider(careerId).future);
-  final worldRank = ranking?.position[career.nationId];
-  // Opponent ranks, for the questions that weigh a result against the form
-  // book rather than reading its scoreline.
-  final allNations = {
-    for (final n in await ref.watch(nationRepositoryProvider).all()) n.id: n,
-  };
-  int rankOf(int id) =>
-      ranking?.position[id] ?? allNations[id]?.ranking ?? allNations.length;
-  final boardMood = await ref.watch(satisfactionProvider(careerId).future);
-  final objectives = await ref.watch(
-    cycleObjectivesProvider(careerId).future,
-  );
-  final highestDemand = objectives.isEmpty
-      ? Press.qualifyTarget
-      : objectives.map((o) => o.target).reduce((a, b) => a > b ? a : b);
-
-  final comp = ref.watch(competitionRepositoryProvider);
-  final fixtures = await comp.fixturesForNation(careerId, career.nationId);
-
-  // WHICH football this manager may be asked about. A press room asks about
-  // the tournaments his side turned up to; the roll of honour carries every
-  // trophy in the world and the fixture list carries four years of repeating
-  // round codes, so without a gate a manager was congratulated on a cup his
-  // nation never entered and questioned about a tournament he watched on
-  // television.
-  //
-  // Participation is read from the WHOLE fixture list rather than from the
-  // next match, via [contestsFinals] — the same check the timeline uses to
-  // decide whether a manager plays a finals or watches it. A naive "is the
-  // next fixture a finals match" once told a host it was not in its own
-  // tournament, because a host fills the weeks before it with friendlies.
-  final competitionNames = await comp.competitionNames(careerId);
-  final entered = {
-    for (final f in fixtures) ?competitionNames[f.competitionId],
-  };
-
-  /// Whether the nation played in the competition an honour names.
-  ///
-  /// The roll of honour stores a tournament's public name ('World
-  /// Championship'); the fixture list stores the competition row that ran it
-  /// ('World Championship Finals'). Matching both spellings — and nothing
-  /// looser — keeps a qualifying campaign ('European Championship
-  /// Qualifiers') from passing as the cup itself.
-  bool enteredCompetition(String name) =>
-      entered.contains(name) || entered.contains('$name Finals');
-
-  /// Whether the nation contests the tournament [round] belongs to. A round
-  /// that is not a finals round at all — qualifying, a friendly — is the
-  /// nation's own by definition.
-  bool contestsTournamentOf(String? round) {
-    final family = FinalsRounds.familyOf(round);
-    return family == null || contestsFinals(fixtures, family);
-  }
-
-  // 0. The opening press conference, held the moment a tournament the nation is
-  //    contesting has been opened and before a ball is kicked. It jumps the
-  //    quiet period on purpose: the press used to be heard from only in the
-  //    wreckage AFTER a tournament (an exit, a hammering), so a manager never
-  //    got to set the tone going into one.
-  //
-  //    Read from THIS cycle's fixtures: round codes repeat every four years,
-  //    so an all-time list would show the last World Cup's group games as
-  //    played and the conference would never be held again.
-  final opening = _openingQuestion(
-    career.nationId,
-    await comp.cycleFixturesForNation(careerId, career.nationId),
-    asked,
-    target: highestDemand,
-    worldRank: worldRank,
-  );
-  if (opening != null &&
-      await comp.hasWatchedDraw(
-        careerId,
-        career.cyclePointer,
-        _kickoffKindFor(opening.round),
-      )) {
-    return opening.question;
-  }
-
-  // The press let a manager breathe after they have just spoken.
-  for (final a in answers) {
-    if (now.difference(a.answeredAt).inDays < Press.quietDays) return null;
-  }
-
-  final played = [
-    for (final f in fixtures)
-      if (f.hasResult) f,
-  ]..sort((a, b) => b.date.compareTo(a.date)); // newest first
-
-  // Nothing that has happened TO the nation is a question for a manager who
-  // has not taken charge of a match yet. On day one the trophy in the cabinet
-  // was won by somebody else, a "booked place" is a host's automatic berth,
-  // and the world ranking is where the nation started rather than anywhere it
-  // has climbed to — all three were being put to him as if he had done them.
-  // [PressTopic.newJob] is the day-one question, and it asks for itself below.
-  final hasManaged = played.isNotEmpty;
-
-  PressQuestion? q(
-    String key,
-    PressTopic topic, {
-    int? subjectNationId,
-  }) => asked.contains(key)
-      ? null
-      : (
-          key: key,
-          topic: topic,
-          subjectNationId: subjectNationId,
-          options: Press.optionsFor(
-            topic,
-            target: highestDemand,
-            worldRank: worldRank,
-          ),
-        );
-
-  // Only the recent past is news.
-  final recent = [
-    for (final f in played)
-      if (now.difference(f.date).inDays <= Press.askWindowDays) f,
-  ];
-  final competitive = [
-    for (final f in recent)
-      if (f.round != Rounds.friendly) f,
-  ];
-
-  /// How many COMPETITIVE matches have been played since [f].
-  int playedSince(Fixture f) => played
-      .where((p) => p.date.isAfter(f.date) && p.round != Rounds.friendly)
-      .length;
-
-  // The results a reporter would still lead with: inside the calendar window
-  // AND not yet buried by the football played since. A manager who has played
-  // twice since being beaten is not still being asked about that defeat,
-  // whatever the date says — see [Press.askWindowMatches].
-  //
-  // This narrower list is for the questions about ONE result (a hammering, an
-  // exit, a rout). The run-of-form questions below keep reading [competitive],
-  // because a run of four or six matches is about the matches themselves and
-  // is current by construction.
-  final news = [
-    for (final f in recent)
-      if (playedSince(f) < Press.askWindowMatches) f,
-  ];
-
-  // Every story the press could lead with right now, biggest first. One of the
-  // top few is then drawn (see [Press.storyPool]) — asking strictly in order
-  // meant a manager always got the same question for the same situation.
-  final candidates = <PressQuestion>[];
-  void add(PressQuestion? question) {
-    if (question != null) candidates.add(question);
-  }
-
-  // A hammering — the biggest story there is.
-  for (final f in news) {
-    final mine = _mine(f, career.nationId);
-    if (mine.against - mine.forGoals >= 3) {
-      add(
-        q(
-          'defeat:${f.id}',
-          PressTopic.heavyDefeat,
-          subjectNationId: _opponent(f, career.nationId),
-        ),
-      );
-      break;
-    }
-  }
-
-  // Out of a tournament: a knockout defeat ends the run there and then, and
-  // only in a tournament the nation was actually contesting.
-  for (final f in news) {
-    if (!Rounds.isKnockout(f.round)) continue;
-    if (!contestsTournamentOf(f.round)) continue;
-    final mine = _mine(f, career.nationId);
-    if (mine.forGoals < mine.against) {
-      add(
-        q(
-          'exit:${f.id}',
-          PressTopic.elimination,
-          subjectNationId: _opponent(f, career.nationId),
-        ),
-      );
-      break;
-    }
-  }
-
-  // A trophy — the one question a manager enjoys, and only if it is his. The
-  // roll of honour is seeded with the real world's, so without the year floor
-  // a brand-new manager of Portugal was congratulated on a cup his nation won
-  // before he was appointed.
-  if (hasManaged) {
-    for (final h in await comp.honours(careerId)) {
-      if (h.championId != career.nationId) continue;
-      if (!CareerService.isOwnHonourYear(h.year)) continue;
-      if (h.year < now.year - 1) continue;
-      // …and only if the side was there. A trophy in a competition this
-      // nation has no fixture in is somebody else's record, however the roll
-      // of honour credits it.
-      if (!enteredCompetition(h.competition)) continue;
-      add(q('triumph:${h.competition}:${h.year}', PressTopic.triumph));
-      break;
-    }
-  }
-
-  // The other side of a hammering: a night when everything came off.
-  for (final f in news) {
-    final mine = _mine(f, career.nationId);
-    if (mine.forGoals - mine.against >= 3) {
-      add(
-        q(
-          'rout:${f.id}',
-          PressTopic.bigWin,
-          subjectNationId: _opponent(f, career.nationId),
-        ),
-      );
-      break;
-    }
-  }
-
-  // A bad run with the board watching: three straight competitive games
-  // without a win.
-  if (competitive.length >= 3) {
-    final winless = competitive.take(3).every((f) {
-      final mine = _mine(f, career.nationId);
-      return mine.forGoals <= mine.against;
-    });
-    if (winless) {
-      add(q('pressure:${competitive.first.id}', PressTopic.underPressure));
-    }
-  }
-
-  // …and its opposite: a long run nobody has ended yet.
-  if (competitive.length >= _unbeatenRunLength) {
-    final unbeaten = competitive.take(_unbeatenRunLength).every((f) {
-      final mine = _mine(f, career.nationId);
-      return mine.forGoals >= mine.against;
-    });
-    if (unbeaten) {
-      add(q('unbeaten:${competitive.first.id}', PressTopic.unbeatenRun));
-    }
-  }
-
-  // The three questions that need to know how good this side is SUPPOSED to
-  // be. Everything above reads a scoreline; these read it against the form
-  // book — see [Expectation] — which is what lets the press tell a minnow's
-  // fine month from a favourite's ordinary one.
-  final standings = [
-    for (final f in competitive.take(_standingWindow))
-      () {
-        final mine = _mine(f, career.nationId);
-        return Expectation.standing(
-          nationRank: worldRank ?? 100,
-          opponentRank: rankOf(_opponent(f, career.nationId)),
-          scored: mine.forGoals,
-          conceded: mine.against,
-        );
-      }(),
-  ];
-
-  if (standings.length >= _standingWindow) {
-    // Punching above your weight: most of a recent run was better than this
-    // side had any business producing.
-    final above = standings.where((s) => Expectation.weight(s) > 0).length;
-    if (above >= _standingWindow - 1) {
-      add(q('above:${competitive.first.id}', PressTopic.overachieving));
-    }
-    // Bad results AND an unhappy board. Either alone is already a question;
-    // both at once is a different one.
-    final below = standings.where((s) => Expectation.weight(s) < 0).length;
-    if (below >= _standingWindow - 1 && boardMood < _crisisBoard) {
-      add(q('crisis:${competitive.first.id}', PressTopic.crisis));
-    }
-  }
-
-  // Winning without convincing: the last one was a win the side should have
-  // had comfortably, and did not.
-  if (competitive.isNotEmpty && standings.isNotEmpty) {
-    final f = competitive.first;
-    final mine = _mine(f, career.nationId);
-    final won = mine.forGoals > mine.against;
-    if (won &&
-        mine.forGoals - mine.against <= 1 &&
-        standings.first == ResultStanding.par) {
-      add(q('flattered:${f.id}', PressTopic.luckyWin));
-    }
-  }
-
-  // The first days in a job, before a ball has been kicked for this nation.
-  if (played.isEmpty) {
-    add(
-      q(
-        'newjob:${career.nationId}:${career.cyclePointer}',
-        PressTopic.newJob,
-      ),
+final AutoDisposeFutureProviderFamily<List<PressStatement>, int>
+pressStatementsProvider = FutureProvider.autoDispose
+    .family<List<PressStatement>, int>(
+      (ref, careerId) =>
+          ref.watch(careerRepositoryProvider).statements(careerId),
     );
-  }
 
-  // A place booked, or a campaign that came up short. Both are read off THIS
-  // cycle's finals fixtures: the nation's own, and the tournament's.
-  final cycleFixtures = await comp.cycleFixturesForNation(
-    careerId,
-    career.nationId,
-  );
-  // The continental entry names the manager's confederation: every continent's
-  // cup is a competition of the same kind, and reading them all would let
-  // another continent's group stage kicking off decide that this nation had
-  // missed out on its own.
-  final myConf = (await ref.watch(nationRepositoryProvider).all())
-      .where((n) => n.id == career.nationId)
-      .firstOrNull
-      ?.confederation;
-  for (final (round, kind, conf)
-      in !hasManaged
-          ? const <(String, CompetitionKind, Confederation?)>[]
-          : [
-              ('GROUP', CompetitionKind.worldCupFinals, null),
-              ('CGROUP', CompetitionKind.continentalFinals, myConf),
-            ]) {
-    final field = await comp.fixturesByRound(
-      careerId,
-      round,
-      kind: kind,
-      confederation: conf,
-    );
-    if (field.isEmpty) continue;
-    final year = field.first.date.year;
-    final mine = [
-      for (final f in cycleFixtures)
-        if (f.round == round) f,
-    ];
-    if (mine.isEmpty) {
-      // Not in the draw — the campaign fell short, and there is no hiding it
-      // once the tournament is under way.
-      if (field.any((f) => f.hasResult)) {
-        add(q('missed:$round:$year', PressTopic.missedOut));
-      }
-      continue;
-    }
-    // In the draw and not yet under way: the place is the story until the
-    // build-up proper takes over (see the eve-of-finals question below).
-    if (!mine.any((f) => f.hasResult) &&
-        mine.first.date.difference(now).inDays > 21) {
-      add(q('qualified:$round:$year', PressTopic.qualified));
-    }
-  }
-
-  // A world ranking the nation has never held before — measured against the
-  // releases already on record, not against the live position. Including the
-  // live one made a nation its own peak the moment a save opened, so a manager
-  // was asked about a climb on the day he walked in.
-  final releases = await ref
-      .watch(rankingReleaseRepositoryProvider)
-      .all(careerId);
-  final priorRanks = [
-    for (final r in releases)
-      if (r.nationId == career.nationId) r.playerRank,
-  ];
-  final rank = worldRank;
-  if (hasManaged && rank != null && rank <= _peakRankCeiling) {
-    final priorBest = priorRanks.isEmpty
-        ? null
-        : priorRanks.reduce((a, b) => a < b ? a : b);
-    // Strictly better: standing still at a rank held before is not a peak.
-    if (priorBest != null && rank < priorBest) {
-      add(q('peak:$rank', PressTopic.rankingPeak));
-    }
-  }
-
-  // The eve of a finals: asked once per tournament, before a ball is kicked,
-  // so the manager sets the expectation themselves.
-  final next = [
-    for (final f in fixtures)
-      if (!f.hasResult) f,
-  ]..sort((a, b) => a.date.compareTo(b.date));
-  final opener = next.firstOrNull;
-  if (opener != null &&
-      (opener.round == 'GROUP' || opener.round == 'CGROUP') &&
-      contestsTournamentOf(opener.round) &&
-      opener.matchday == 1 &&
-      opener.date.difference(now).inDays <= 21) {
-    add(
-      q(
-        'preview:${opener.round}:${opener.date.year}',
-        PressTopic.tournamentPreview,
-        subjectNationId: _opponent(opener, career.nationId),
-      ),
-    );
-  }
-
-  // What the press have just been asking about, newest first. A topic they
-  // have only recently covered goes to the back of the queue: the conference
-  // read as a loop because nothing stopped the same story leading twice.
-  final recentAnswers = [...answers]
-    ..sort((a, b) => b.answeredAt.compareTo(a.answeredAt));
-  final recentTopics = <PressTopic>{
-    for (final a in recentAnswers.take(_recentTopicMemory))
-      if (Press.topicOfKey(a.questionKey) case final topic?) topic,
-  };
-
-  return Press.pick(
-    candidates,
-    recentTopics: recentTopics,
-    seed: varietySeed(
-      'press:${career.rngSeed}:${now.year}:${now.month}:${now.day}',
-    ),
-  );
-});
-
-/// How many recent ANSWERS the press remember having heard. A conference is
-/// [Press.maxConferenceLength] questions on one story, so this is three
-/// conferences' worth: they should avoid repeating themselves, not work
-/// through every topic before coming back to a story that matters.
-const int _recentTopicMemory = Press.maxConferenceLength * 3;
-
-/// How many competitive games without defeat make a run worth asking about.
-const int _unbeatenRunLength = 6;
-
-/// How many recent competitive results the form-book questions read.
-const int _standingWindow = 4;
-
-/// The board mood below which bad results become a crisis rather than a run.
-const int _crisisBoard = 40;
-
-/// A new world-ranking high is only news near the top of the table.
-const int _peakRankCeiling = 20;
-
-/// Everything the manager has said THIS cycle, as a single nudge to the
-/// dressing room and to the board. Older cycles are forgotten.
-final AutoDisposeFutureProviderFamily<PressEffect, int> pressEffectProvider =
-    FutureProvider.autoDispose.family<PressEffect, int>((ref, careerId) async {
-      final careerRepo = ref.watch(careerRepositoryProvider);
-      final career = await careerRepo.byId(careerId);
-      if (career == null) return (morale: 0, board: 0);
-      final answers = await careerRepo.pressAnswers(
-        careerId,
-        cycle: career.cyclePointer,
+final AutoDisposeFutureProviderFamily<int, int> credibilityProvider =
+    FutureProvider.autoDispose.family<int, int>((ref, careerId) async {
+      final statements = await ref.watch(
+        pressStatementsProvider(careerId).future,
       );
-      return Press.totalOf([
-        for (final a in answers) (morale: a.moraleDelta, board: a.boardDelta),
-      ]);
-    });
-
-/// The manager's HABITS: how often each stance has been taken, across the
-/// whole career. A reporter who has heard the same line five times says so —
-/// which is the difference between a room of people and a form to fill in.
-final AutoDisposeFutureProviderFamily<Map<PressTone, int>, int>
-pressToneHistoryProvider = FutureProvider.autoDispose
-    .family<Map<PressTone, int>, int>((
-      ref,
-      careerId,
-    ) async {
       final answers = await ref
           .watch(careerRepositoryProvider)
           .pressAnswers(careerId);
-      final byName = {for (final t in PressTone.values) t.name: t};
-      final counts = <PressTone, int>{};
-      for (final a in answers) {
-        if (byName[a.tone] case final tone?) {
-          counts[tone] = (counts[tone] ?? 0) + 1;
-        }
-      }
-      return counts;
+      final deflects = answers
+          .where(
+            (a) =>
+                a.questionKey.startsWith('conf:') &&
+                a.tone == AnswerKind.deflect.name,
+          )
+          .length;
+      return Credibility.of(statements, deflects: deflects);
     });
 
-/// How many times a stance must have been taken before the room starts saying
-/// so out loud.
-const int pressNeedleThreshold = 4;
+/// What the manager has said this cycle, plus half of last cycle's, as a
+/// single nudge to the dressing room and to the board. Grievance rows
+/// (`grv:`) are the squad's doing, not his words, and do not count.
+final AutoDisposeFutureProviderFamily<PressEffect, int> pressEffectProvider =
+    FutureProvider.autoDispose.family<PressEffect, int>((ref, careerId) async {
+      final repo = ref.watch(careerRepositoryProvider);
+      final career = await repo.byId(careerId);
+      if (career == null) return (morale: 0, board: 0);
+      PressEffect of(PressAnswerRow a) =>
+          (morale: a.moraleDelta, board: a.boardDelta);
+      final now = await repo.pressAnswers(careerId, cycle: career.cyclePointer);
+      final before = career.cyclePointer == 0
+          ? const <PressAnswerRow>[]
+          : await repo.pressAnswers(careerId, cycle: career.cyclePointer - 1);
+      return Press.carryOver(
+        [
+          for (final a in now)
+            if (_counts(a)) of(a),
+        ],
+        [
+          for (final a in before)
+            if (_counts(a)) of(a),
+        ],
+      );
+    });
 
-/// Records an answer and refreshes everything it touches.
-class PressService {
-  PressService(this._ref);
+/// A preview conference that is due: the campaign, and the fixture that
+/// opens it.
+typedef PreviewDue = ({PreviewCampaign campaign, Fixture fixture});
 
+/// The preview conference due now, if any: the manager's next fixture opens a
+/// campaign he is in (see [PreviewCampaign]), he has played none of that
+/// campaign yet, and no preview has been opened for it.
+///
+/// Derived, never stored by the season: the row is written only when he
+/// opens it (see [ConferenceService.openPreview]), and once the fixture is
+/// played the preview is simply no longer due.
+final AutoDisposeFutureProviderFamily<PreviewDue?, int> previewDueProvider =
+    FutureProvider.autoDispose.family<PreviewDue?, int>((ref, careerId) async {
+      final repo = ref.watch(careerRepositoryProvider);
+      final comp = ref.watch(competitionRepositoryProvider);
+      final career = await repo.byId(careerId);
+      if (career == null) return null;
+      final fixtures = await comp.cycleFixturesForNation(
+        careerId,
+        career.nationId,
+      );
+      final unplayed =
+          [
+            for (final f in fixtures)
+              if (!f.hasResult) f,
+          ]..sort((a, b) {
+            final byDate = a.date.compareTo(b.date);
+            return byDate != 0 ? byDate : a.id.compareTo(b.id);
+          });
+      if (unplayed.isEmpty) return null;
+      final next = unplayed.first;
+      final campaign = PreviewCampaign.ofRound(next.round);
+      if (campaign == null) return null;
+      if (fixtures.any(
+        (f) => f.hasResult && PreviewCampaign.ofRound(f.round) == campaign,
+      )) {
+        return null;
+      }
+      final calls = await repo.conferences(careerId);
+      if (calls.any(
+        (c) => c.reason == ConferenceReason.preview && c.fixtureId == next.id,
+      )) {
+        return null;
+      }
+      return (campaign: campaign, fixture: next);
+    });
+
+/// The tier of the board objective a preview [campaign] is judged against.
+TournamentTier previewTier(PreviewCampaign campaign) =>
+    campaign.isWorld ? TournamentTier.world : TournamentTier.continental;
+
+/// What a preview conference about [campaign] is about: the board's brief, the
+/// best-ranked other side in his group and his best called-up player.
+Future<PreviewFacts> _previewFacts(
+  Ref ref,
+  int careerId,
+  PreviewCampaign campaign,
+) async {
+  final career = (await ref.read(careerRepositoryProvider).byId(careerId))!;
+  final comp = ref.read(competitionRepositoryProvider);
+  final outcomes = await ref.watch(
+    cycleObjectiveOutcomesProvider(careerId).future,
+  );
+  final tier = previewTier(campaign);
+  final objective = outcomes.where((o) => o.tier == tier).firstOrNull;
+  final brief = campaign.briefFor(objective?.target ?? 2);
+
+  final nations = await ref.read(nationRepositoryProvider).all();
+  final conf = nations
+      .where((n) => n.id == career.nationId)
+      .map((n) => n.confederation)
+      .firstOrNull;
+  final kind = switch (campaign) {
+    PreviewCampaign.worldQualifying => CompetitionKind.worldCupQualifying,
+    PreviewCampaign.continentalQualifying =>
+      CompetitionKind.continentalQualifying,
+    PreviewCampaign.worldFinals => CompetitionKind.worldCupFinals,
+    PreviewCampaign.continentalFinals => CompetitionKind.continentalFinals,
+  };
+  final tables = await comp.tournamentGroupTables(
+    careerId,
+    kind,
+    confederation: campaign == PreviewCampaign.worldFinals ? null : conf,
+  );
+  final group = tables
+      .where((t) => t.standings.any((s) => s.nationId == career.nationId))
+      .firstOrNull;
+  final ranking = await ref.watch(worldRankingProvider(careerId).future);
+  int rankOf(int id) => ranking?.position[id] ?? 999;
+  final others = [
+    for (final s in group?.standings ?? const <GroupStanding>[])
+      if (s.nationId != career.nationId) s.nationId,
+  ]..sort((a, b) => rankOf(a).compareTo(rankOf(b)));
+
+  final called = await ref.read(squadRepositoryProvider).callUps(careerId);
+  final squad = called.isEmpty
+      ? const <Player>[]
+      : await ref
+            .read(playerRepositoryProvider)
+            .byNation(
+              career.nationId,
+              agingYears: CareerService.agingYears(career),
+              saveSeed: career.rngSeed,
+              minAge: 15,
+            );
+  final picked = [
+    for (final p in squad)
+      if (called.contains(p.id)) p,
+  ]..sort((a, b) => b.overall.compareTo(a.overall));
+
+  return (
+    campaign: campaign,
+    brief: brief,
+    rivalNationId: others.firstOrNull,
+    keyPlayerId: picked.firstOrNull?.id,
+  );
+}
+
+typedef PendingConference = ({
+  PressConferenceRow row,
+  ConferenceFacts facts,
+  int credibility,
+  int opponentNationId,
+});
+
+final AutoDisposeFutureProviderFamily<PendingConference?, int>
+pendingConferenceProvider = FutureProvider.autoDispose
+    .family<PendingConference?, int>((ref, careerId) async {
+      final repo = ref.watch(careerRepositoryProvider);
+      final comp = ref.watch(competitionRepositoryProvider);
+      final career = await repo.byId(careerId);
+      if (career == null) return null;
+      final calls = await repo.conferences(careerId);
+      // Offered on the desk's own terms: a row it would retire as stale (an
+      // earlier cycle, or news gone cold) is never put to the manager, even
+      // before the next advance gets round to retiring it.
+      final pending = calls.where(
+        (c) =>
+            c.status == ConferenceStatus.pending &&
+            c.cycle == career.cyclePointer &&
+            career.inGameDate.difference(c.triggeredOn).inDays <=
+                PressDesk.staleDays,
+      );
+      if (pending.isEmpty) return null;
+      final row = pending.last;
+      // The last conference he actually faced before this one; only what was
+      // judged since then is fresh enough to throw back.
+      final previous = calls
+          .where(
+            (c) => c.id < row.id && c.status == ConferenceStatus.held,
+          )
+          .lastOrNull;
+      final fixture = (await comp.fixturesForNation(
+        careerId,
+        career.nationId,
+      )).where((f) => f.id == row.fixtureId).firstOrNull;
+      if (fixture == null) return null;
+      final opponent = fixture.homeNationId == career.nationId
+          ? fixture.awayNationId
+          : fixture.homeNationId;
+      final statementsNow = await ref.watch(
+        pressStatementsProvider(careerId).future,
+      );
+      final openNow = [
+        for (final s in statementsNow)
+          if (s.status == StatementStatus.open) s,
+      ];
+      // A preview is about the campaign ahead: no result to react to, and
+      // nothing old to throw back.
+      if (row.reason == ConferenceReason.preview) {
+        final campaign = PreviewCampaign.ofRound(fixture.round);
+        if (campaign == null || fixture.hasResult) return null;
+        return (
+          row: row,
+          facts: (
+            reason: row.reason,
+            bestPlayerId: null,
+            worstPlayerId: null,
+            hasOpenWinNext: openNow.any(
+              (s) => s.kind == StatementKind.winNext,
+            ),
+            hasOpenJob: openNow.any(
+              (s) => s.kind == StatementKind.jobOnTheLine,
+            ),
+            playersWithOpenStatement: {
+              for (final s in openNow)
+                if (s.playerId != null) s.playerId!,
+            },
+            throwback: null,
+            preview: await _previewFacts(ref, careerId, campaign),
+          ),
+          credibility: await ref.watch(credibilityProvider(careerId).future),
+          opponentNationId: opponent,
+        );
+      }
+      final lines = [
+        for (final r in await comp.ratingsForFixture(careerId, fixture.id))
+          if (r.nationId == career.nationId) r,
+      ]..sort((a, b) => b.rating.compareTo(a.rating));
+      final statements = await ref.watch(
+        pressStatementsProvider(careerId).future,
+      );
+      final open = [
+        for (final s in statements)
+          if (s.status == StatementStatus.open) s,
+      ];
+      // His newest judged statement for the nation he leads now, since the
+      // last conference he faced (or this cycle, if none). Anything older, or
+      // said for another job, is simply never thrown back.
+      final due =
+          [
+            for (final s in statements)
+              if ((s.status == StatementStatus.kept ||
+                      s.status == StatementStatus.broken) &&
+                  !s.thrownBack &&
+                  s.nationId == career.nationId &&
+                  s.judgedOn != null &&
+                  (previous == null
+                      ? s.cycle == career.cyclePointer
+                      : s.judgedOn!.isAfter(previous.triggeredOn)) &&
+                  // The opening of a job-verdict conference IS that broken
+                  // promise; asking it again as a throwback would be the same
+                  // question twice.
+                  !(row.reason == ConferenceReason.jobVerdict &&
+                      s.kind == StatementKind.jobOnTheLine))
+                s,
+          ]..sort((a, b) {
+            final byDate = a.judgedOn!.compareTo(b.judgedOn!);
+            return byDate != 0 ? byDate : a.id.compareTo(b.id);
+          });
+      return (
+        row: row,
+        facts: (
+          reason: row.reason,
+          bestPlayerId: lines.isEmpty ? null : lines.first.playerId,
+          worstPlayerId: lines.length < 2 ? null : lines.last.playerId,
+          hasOpenWinNext: open.any((s) => s.kind == StatementKind.winNext),
+          hasOpenJob: open.any((s) => s.kind == StatementKind.jobOnTheLine),
+          playersWithOpenStatement: {
+            for (final s in open)
+              if (s.playerId != null) s.playerId!,
+          },
+          throwback: due.isEmpty ? null : due.last,
+          preview: null,
+        ),
+        credibility: await ref.watch(credibilityProvider(careerId).future),
+        opponentNationId: fixture.homeNationId == career.nationId
+            ? fixture.awayNationId
+            : fixture.homeNationId,
+      );
+    });
+
+/// Records a conference's answers and statements and closes it.
+class ConferenceService {
+  ConferenceService(this._ref);
   final Ref _ref;
 
-  /// Records one exchange of a conference. The follow-ups carry the opening
-  /// question's key with a suffix, so they store alongside it in the same
-  /// table — no new column, and an old save still reads back.
-  Future<PressEffect?> answerExchange(
+  Future<PressEffect> answer(
     int careerId,
-    PressExchange exchange,
-    PressTone tone,
+    PendingConference c,
+    int beatIndex,
+    Beat beat,
+    AnswerKind a,
   ) async {
     final repo = _ref.read(careerRepositoryProvider);
-    final career = await repo.byId(careerId);
-    if (career == null) return null;
-    // The same answer is not worth the same thing after a humiliation as
-    // after a good week, and the sheet shows the manager exactly this figure
-    // before he picks — so both have to read the mood the same way.
-    final mood = await _ref.read(pressMoodProvider(careerId).future);
-    final effect = Press.effectOfExchange(
-      exchange,
-      tone,
-      standing: mood.standing,
-      squadMorale: mood.squadMorale,
-      boardMood: mood.boardMood,
-    );
+    final career = (await repo.byId(careerId))!;
+    // Idempotent: a beat already answered (the sheet was reopened) records
+    // nothing a second time.
+    final key = 'conf:${c.row.id}:$beatIndex';
+    for (final row in await repo.pressAnswers(careerId)) {
+      if (row.questionKey == key) {
+        return (morale: row.moraleDelta, board: row.boardDelta);
+      }
+    }
+    final effect = ConferenceBuilder.effectOf(a, c.credibility);
     await repo.recordPressAnswer(
       careerId: careerId,
       cycle: career.cyclePointer,
-      questionKey: exchange.key,
-      tone: tone.name,
+      questionKey: key,
+      tone: a.name,
       moraleDelta: effect.morale,
       boardDelta: effect.board,
       answeredAt: career.inGameDate,
     );
+    final kind = ConferenceBuilder.statementOf(a);
+    final preview = c.facts.preview;
+    final stated = preview == null
+        ? null
+        : ConferenceBuilder.statedTarget(a, preview);
+    // A target needs a campaign to be judged against; outside a preview there
+    // is none, so nothing goes on the record.
+    if (kind != null && (kind != StatementKind.target || stated != null)) {
+      await repo.recordStatement(
+        careerId: careerId,
+        cycle: career.cyclePointer,
+        nationId: career.nationId,
+        kind: kind,
+        playerId: beat.playerId,
+        madeOn: c.row.triggeredOn,
+        madeAfterFixtureId: c.row.fixtureId,
+        target: stated,
+      );
+    }
+    if (beat.kind == BeatKind.throwback && c.facts.throwback != null) {
+      await repo.markThrownBack(c.facts.throwback!.id);
+    }
+    // A statement on the record shifts a named player's condition.
+    _ref
+      ..invalidate(pressStatementsProvider(careerId))
+      ..invalidate(squadConditionProvider(careerId));
     return effect;
   }
 
-  /// Everything a conference touched, once the manager has left the room.
-  void refresh() => _ref
-    ..invalidate(pressQuestionProvider)
-    ..invalidate(pressEffectProvider)
-    ..invalidate(pressToneHistoryProvider);
-}
-
-/// What the room already knows when the manager answers: the last result as
-/// the country read it, how the dressing room is, and how the board is.
-///
-/// Gathered in one place so the sheet and the service both weigh an answer the
-/// same way — see [Press.effectInContext].
-typedef PressMood = ({
-  ResultStanding? standing,
-  int squadMorale,
-  int boardMood,
-});
-
-final AutoDisposeFutureProviderFamily<PressMood, int> pressMoodProvider =
-    FutureProvider.autoDispose.family<PressMood, int>((ref, careerId) async {
-      final career = await ref.watch(careerRepositoryProvider).byId(careerId);
-      final morale = await ref.watch(moraleProvider(careerId).future);
-      final board = await ref.watch(satisfactionProvider(careerId).future);
-      ResultStanding? standing;
-      if (career != null) {
-        final ranking = await ref.watch(worldRankingProvider(careerId).future);
-        final nations = {
-          for (final n in await ref.watch(nationRepositoryProvider).all())
-            n.id: n,
-        };
-        int rankOf(int id) =>
-            ranking?.position[id] ?? nations[id]?.ranking ?? nations.length;
-        final fixtures = await ref
-            .watch(competitionRepositoryProvider)
-            .fixturesForNation(careerId, career.nationId);
-        final played = [
-          for (final f in fixtures)
-            if (f.hasResult) f,
-        ]..sort((a, b) => b.date.compareTo(a.date));
-        if (played.isNotEmpty) {
-          final f = played.first;
-          final home = f.homeNationId == career.nationId;
-          standing = Expectation.standing(
-            nationRank: rankOf(career.nationId),
-            opponentRank: rankOf(home ? f.awayNationId : f.homeNationId),
-            scored: home ? f.homeScore! : f.awayScore!,
-            conceded: home ? f.awayScore! : f.homeScore!,
-            competitive: f.round != Rounds.friendly,
+  /// Writes the row for a preview that is [due], the moment he opens it, so
+  /// the sheet runs against a conference like any other. Returns its id.
+  Future<int> openPreview(int careerId, PreviewDue due) async {
+    final repo = _ref.read(careerRepositoryProvider);
+    final career = (await repo.byId(careerId))!;
+    final existing = (await repo.conferences(careerId)).where(
+      (c) =>
+          c.reason == ConferenceReason.preview && c.fixtureId == due.fixture.id,
+    );
+    final id = existing.isNotEmpty
+        ? existing.first.id
+        : await repo.recordConference(
+            careerId: careerId,
+            cycle: career.cyclePointer,
+            reason: ConferenceReason.preview,
+            fixtureId: due.fixture.id,
+            triggeredOn: career.inGameDate,
           );
+    _ref
+      ..invalidate(previewDueProvider(careerId))
+      ..invalidate(pendingConferenceProvider(careerId));
+    return id;
+  }
+
+  Future<void> finish(int careerId, int conferenceId) async {
+    final repo = _ref.read(careerRepositoryProvider);
+    final held = (await repo.conferences(
+      careerId,
+    )).where((c) => c.id == conferenceId).firstOrNull;
+    // A job-verdict conference opens on the broken job promise itself, so it
+    // is spent: no later conference may throw it back a second time.
+    if (held?.reason == ConferenceReason.jobVerdict) {
+      for (final s in await repo.statements(careerId)) {
+        if (s.kind == StatementKind.jobOnTheLine &&
+            (s.status == StatementStatus.broken ||
+                s.status == StatementStatus.kept) &&
+            !s.thrownBack) {
+          await repo.markThrownBack(s.id);
         }
       }
-      return (standing: standing, squadMorale: morale, boardMood: board);
-    });
-
-final Provider<PressService> pressServiceProvider = Provider(PressService.new);
-
-
-/// Which opening-ceremony key gates the conference for a tournament whose group
-/// round is [round].
-String _kickoffKindFor(String round) =>
-    round == 'GROUP' ? worldCupKickoffKind : continentalKickoffKind;
-
-/// The opening press conference the nation is due, or null.
-///
-/// Due when the side is contesting a finals tournament that has not started —
-/// it has finals fixtures and none of them has been played — and the question
-/// has not already been answered. The [round] it comes back with says which
-/// tournament, so the caller can check that its ceremony has been held.
-({PressQuestion question, String round})? _openingQuestion(
-  int nationId,
-  List<Fixture> fixtures,
-  Set<String> asked, {
-  required int target,
-  required int? worldRank,
-}) {
-  for (final rounds in [
-    FinalsRounds.worldChampionship,
-    FinalsRounds.continental,
-  ]) {
-    final mine = [
-      for (final f in fixtures)
-        if (f.round != null && rounds.contains(f.round)) f,
-    ]..sort((a, b) => a.date.compareTo(b.date));
-    if (mine.isEmpty) continue;
-    if (mine.any((f) => f.hasResult)) continue; // already under way
-    final group = rounds == FinalsRounds.worldChampionship
-        ? 'GROUP'
-        : 'CGROUP';
-    final opener = mine.first;
-    final key = 'opening:$group:${opener.date.year}';
-    if (asked.contains(key)) continue;
-    return (
-      question: (
-        key: key,
-        topic: PressTopic.tournamentOpening,
-        subjectNationId: opener.homeNationId == nationId
-            ? opener.awayNationId
-            : opener.homeNationId,
-        options: Press.optionsFor(
-          PressTopic.tournamentOpening,
-          target: target,
-          worldRank: worldRank,
-        ),
-      ),
-      round: group,
-    );
+    }
+    await repo.setConferenceStatus(conferenceId, ConferenceStatus.held);
+    _ref
+      ..invalidate(pendingConferenceProvider(careerId))
+      ..invalidate(previewDueProvider(careerId))
+      ..invalidate(pressStatementsProvider(careerId))
+      ..invalidate(credibilityProvider(careerId))
+      ..invalidate(pressEffectProvider(careerId))
+      ..invalidate(squadConditionProvider(careerId));
   }
-  return null;
 }
 
-/// This nation's goals for and against in [f].
-({int forGoals, int against}) _mine(Fixture f, int nationId) {
-  final isHome = f.homeNationId == nationId;
-  return (
-    forGoals: (isHome ? f.homeScore : f.awayScore) ?? 0,
-    against: (isHome ? f.awayScore : f.homeScore) ?? 0,
-  );
-}
-
-int _opponent(Fixture f, int nationId) =>
-    f.homeNationId == nationId ? f.awayNationId : f.homeNationId;
+final Provider<ConferenceService> conferenceServiceProvider =
+    Provider<ConferenceService>(ConferenceService.new);

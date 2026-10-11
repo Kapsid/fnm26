@@ -34,18 +34,24 @@ import 'package:intl/intl.dart';
 /// via flutter_localizations, not from our strings; all an .arb entry would
 /// carry is the field order and a full stop, in a syntax where one stray
 /// letter silently reformats every date in the game and no translator would
-/// see it coming. The two languages sit side by side here instead, where the
+/// see it coming. The patterns sit side by side here instead, where the
 /// width consequences of changing one are visible next to the other.
 abstract final class AppDate {
   /// The language the widget tree is being drawn in, as `intl` names it.
   ///
-  /// Anything that is not Czech is English: those are the two languages the
-  /// app speaks, and `supportedLocales` has already resolved the phone's
-  /// Portuguese down to one of them by the time this is asked.
-  static String _locale(BuildContext context) =>
-      Localizations.maybeLocaleOf(context)?.languageCode == 'cs' ? 'cs' : 'en';
+  /// Anything the app does not speak is English: `supportedLocales` has
+  /// already resolved the phone's Portuguese down to one of the seven by the
+  /// time this is asked.
+  static String _locale(BuildContext context) {
+    final code = Localizations.maybeLocaleOf(context)?.languageCode;
+    return const ['en', 'cs', 'fr', 'it', 'pl', 'es', 'de'].contains(code)
+        ? code!
+        : 'en';
+  }
 
-  /// Formats [date] with whichever of the two patterns the language wants.
+  /// Formats [date] with the pattern the language wants: Czech's, or the English one
+  /// for every other language (`intl` supplies the localized month and day
+  /// names, and all of them write the day before the month).
   ///
   /// Czech writes the day of the month as an ordinal, so it takes a full stop:
   /// `1. zář 2030`, never `1 zář 2030`. That full stop is the whole difference
@@ -58,7 +64,10 @@ abstract final class AppDate {
     required String cs,
   }) {
     final locale = _locale(context);
-    return DateFormat(locale == 'cs' ? cs : en, locale).format(date);
+    // German writes its day as an ordinal too (`1. Sep. 2030`), so it takes
+    // the Czech pattern.
+    final dotted = locale == 'cs' || locale == 'de';
+    return DateFormat(dotted ? cs : en, locale).format(date);
   }
 
   /// `Sep 2030` / `zář 2030` — a month, for a save tile or a career summary.

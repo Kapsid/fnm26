@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/core/rng/seeded_rng.dart';
 import 'package:fnm/core/util/text_variety.dart';
@@ -37,6 +39,17 @@ import 'package:shared_preferences/shared_preferences.dart';
 /// The session provider is the FAST path — the live screen reads it every
 /// frame — and [MatchSpeedStore] is what makes the choice outlive the session.
 final matchSpeedProvider = StateProvider<int>((ref) => 0);
+
+/// A fresh salt for each time the manager walks out for a match, mixed into
+/// the fixture's seed by the live screen. Without it a fixture replayed from
+/// the same save (app closed before Continue) was the same match to the
+/// minute, whatever the tactics: every minute rolled the same dice, and a new
+/// plan only nudged the odds those dice were read against. Tests override it
+/// with a constant; 0 reproduces the bare fixture seed.
+final matchAttemptSaltProvider = Provider<int Function()>(
+  (ref) =>
+      () => math.Random().nextInt(0x7fffffff),
+);
 
 /// Prefs key: outside the save database (so no schema bump), one per career,
 /// because a manager who watches one save at full speed may well want to sit
@@ -259,6 +272,8 @@ matchPreviewProvider = FutureProvider.autoDispose.family<MatchPreview?, int>((
     formation: playerFormation,
     roles: roles,
     conditionByPlayer: conditionDeltas,
+    // The scout's dossier on this opponent: his side only, the AI's never.
+    ratingBonus: Staff.dossierBonus(career.staffScout),
     traitsByPlayer: traitsOf(fullPool),
     penaltyTakerId: takers.penalty,
     deadBallTakerId: takers.deadBall,
@@ -518,6 +533,8 @@ bool _isKnockout(String? round) {
     'CSF',
     'C3RD',
     'CFINAL',
+    'NR16',
+    'NQF',
     'NSF',
     'NFINAL',
   };

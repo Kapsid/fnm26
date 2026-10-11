@@ -4,11 +4,12 @@
 //   dart run tool/export_copy.dart          → copy/strings.csv
 //   dart run tool/export_copy.dart out.csv  → somewhere else
 //
-// CSV, five columns: key, where, placeholders, en, cs. It opens by
+// CSV, ten columns: key, where, placeholders, en, cs, fr, it, pl, es, de. It opens by
 // double-click in Numbers and Excel, and quoting is handled properly, so a
 // comma inside a sentence is just a comma.
 //
-// WHAT YOU MAY CHANGE: the `en` and `cs` columns, and nothing else. The key is
+// WHAT YOU MAY CHANGE: the language columns (`en`, `cs`, `fr`, `it`, `pl`,
+// `es`, `de`), and nothing else. The key is
 // what the code asks for, `where` and `placeholders` are notes for you, and
 // the importer checks the placeholders you leave behind against the ones the
 // string started with — a `{player}` renamed or dropped compiles fine and
@@ -21,7 +22,10 @@ import 'copy_format.dart';
 void main(List<String> args) {
   final out = File(args.isEmpty ? 'copy/strings.csv' : args.first);
   final en = _readArb('lib/l10n/app_en.arb');
-  final cs = _readArb('lib/l10n/app_cs.arb');
+  final others = {
+    for (final code in kLanguages.skip(1))
+      code: _readArbIfExists('lib/l10n/app_$code.arb'),
+  };
 
   final lines = <String>[encodeRow(kColumns)];
   var written = 0;
@@ -37,7 +41,8 @@ void main(List<String> args) {
         meta is Map ? (meta['description'] as String? ?? '') : '',
         _placeholderNote(value),
         value,
-        cs[key] is String ? cs[key]! as String : '',
+        for (final code in kLanguages.skip(1))
+          others[code]![key] is String ? others[code]![key]! as String : '',
       ]),
     );
     written++;
@@ -48,12 +53,16 @@ void main(List<String> args) {
   // diacritic. Numbers, a text editor and the importer all ignore it.
   out.writeAsStringSync('﻿${lines.join('\n')}\n');
   stdout.writeln('Wrote $written strings to ${out.path}.');
-  stdout.writeln('Edit the `en` and `cs` columns, then:');
+  stdout.writeln('Edit the language columns, then:');
   stdout.writeln('  dart run tool/import_copy.dart ${out.path}');
 }
 
 Map<String, Object?> _readArb(String path) =>
     jsonDecode(File(path).readAsStringSync()) as Map<String, Object?>;
+
+/// A language whose file does not exist yet exports as blank cells.
+Map<String, Object?> _readArbIfExists(String path) =>
+    File(path).existsSync() ? _readArb(path) : <String, Object?>{};
 
 /// The placeholders a string uses, as a note for whoever is editing it.
 ///

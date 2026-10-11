@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/core/theme/app_theme.dart';
 import 'package:fnm/domain/services/manager/staff.dart';
+import 'package:fnm/domain/services/player/prospects.dart';
 import 'package:fnm/features/federation/staff_card.dart';
 import 'package:fnm/features/federation/staff_effect.dart';
 import 'package:fnm/features/federation/staff_providers.dart';
@@ -14,18 +15,12 @@ import '../helpers/expect_whole.dart';
 /// What the staff room says each hire is doing.
 ///
 /// The manager's report was that he could see no effect from the people he
-/// pays. Reading the seams says why: only two of the three jobs reach anything
-/// at all, and what they reach is the injury rate and the newgen intake. So
-/// these tests hold two things down.
+/// pays. So these tests hold down that every figure on the card is PRICED OFF
+/// the constant the game applies — the injury rate, the newgen intake, the
+/// scout's read on prospects and his opponent dossier — not typed into the
+/// copy, where it would drift the first time somebody tunes `Staff`.
 ///
-/// One, that every figure on the card is PRICED OFF the constant the engine
-/// applies — not typed into the copy, where it would drift the first time
-/// somebody tunes `Staff`.
-///
-/// Two, that the screen does not claim an effect the scout does not have. The
-/// scout's tier is stored, displayed, charged for, and read by nothing:
-/// `Staff.capsToKnow` is defined and never called. A screen that says so is
-/// worth more than one that pads the line.
+/// The "no effect" line stays for a role wired to nothing; none is today.
 void main() {
   /// Text as it READS: [WholeText] threads zero-width spaces through a string
   /// so a long one can break anywhere, so plain `find.text` never finds it.
@@ -164,14 +159,45 @@ void main() {
       },
     );
 
-    test('the scout reaches nothing, and the card is told so', () {
-      // `Staff.capsToKnow` is defined and never called; `Prospects.capsToKnow`
-      // is a flat three whoever is in the job. Until that is wired, the honest
-      // answer is nothing.
-      expect(StaffEffect.hasEffect(StaffRole.scout), isFalse);
+    test('every role now reaches something', () {
+      expect(StaffEffect.hasEffect(StaffRole.scout), isTrue);
       expect(StaffEffect.hasEffect(StaffRole.assistant), isTrue);
       expect(StaffEffect.hasEffect(StaffRole.fitnessCoach), isTrue);
     });
+
+    test(
+      'the scout is priced off the read and the dossier he is applied by',
+      () {
+        expect(StaffEffect.readSpotOnPct(StaffTier.basic), 50);
+        expect(StaffEffect.readSpotOnPct(StaffTier.good), 70);
+        expect(StaffEffect.readSpotOnPct(StaffTier.elite), 90);
+        expect(StaffEffect.capsToKnow(StaffTier.basic), 2);
+        expect(StaffEffect.capsToKnow(StaffTier.elite), 1);
+        expect(StaffEffect.capsSooner(StaffTier.basic), 1);
+        expect(StaffEffect.capsSooner(StaffTier.elite), 2);
+
+        // The quoted share is a floor on what the manager will actually see:
+        // measured across a few thousand nineteen-year-olds, never below it.
+        for (final tier in [StaffTier.basic, StaffTier.good, StaffTier.elite]) {
+          var exact = 0;
+          const n = 4000;
+          for (var id = 0; id < n; id++) {
+            if (Prospects.scoutedStars(id, age: 19, scout: tier) ==
+                Prospects.trueStars(id, age: 19)) {
+              exact++;
+            }
+          }
+          expect(
+            exact / n * 100,
+            inInclusiveRange(
+              StaffEffect.readSpotOnPct(tier) - 2,
+              StaffEffect.readSpotOnPct(tier) + 12,
+            ),
+            reason: '$tier',
+          );
+        }
+      },
+    );
   });
 
   group('what the card says', () {
@@ -213,16 +239,37 @@ void main() {
       );
     });
 
-    testWidgets('the scout is not handed an effect he does not have', (
+    testWidgets('a hired scout states his read, his caps and his dossier', (
       tester,
     ) async {
       await pump(tester, {StaffRole.scout: StaffTier.elite});
 
-      // Not "improves your squad", not a blank line: the truth.
-      expect(reading('No effect on your squad yet'), findsOneWidget);
-      // And an elite scout is worth no more than none of one.
+      expect(reading('Reads 90% of prospects exactly'), findsOneWidget);
+      expect(reading('Potential known after 1 cap'), findsOneWidget);
+      expect(reading('+3 rating from opponent dossiers'), findsOneWidget);
+      expect(reading('No effect on your squad yet'), findsNothing);
+    });
+
+    testWidgets('a basic scout states his own tier, not the best', (
+      tester,
+    ) async {
+      await pump(tester, {StaffRole.scout: StaffTier.basic});
+      expect(reading('Reads 50% of prospects exactly'), findsOneWidget);
+      expect(reading('Potential known after 2 caps'), findsOneWidget);
+      expect(reading('+1 rating from opponent dossiers'), findsOneWidget);
+    });
+
+    testWidgets('a vacant scout job says what filling it would be worth', (
+      tester,
+    ) async {
       await pump(tester, const {});
-      expect(reading('No effect on your squad yet'), findsOneWidget);
+      expect(reading('Hiring one: 50% to 90% of reads exact'), findsOneWidget);
+      expect(
+        reading('and potential known 1 to 2 caps sooner'),
+        findsOneWidget,
+      );
+      expect(reading('and +1 to +3 rating every match'), findsOneWidget);
+      expect(reading('No effect on your squad yet'), findsNothing);
     });
   });
 
@@ -234,6 +281,7 @@ void main() {
         await pump(tester, {
           StaffRole.fitnessCoach: StaffTier.elite,
           StaffRole.assistant: StaffTier.elite,
+          StaffRole.scout: StaffTier.elite,
         }, width: width);
 
         expectWhole(reading('Fitness Coach'), 'the fitness coach\'s job');
@@ -249,8 +297,16 @@ void main() {
           "the assistant's youth figure",
         );
         expectWhole(
-          reading('No effect on your squad yet'),
-          'the scout\'s line',
+          reading('Reads 90% of prospects exactly'),
+          "the scout's read",
+        );
+        expectWhole(
+          reading('Potential known after 1 cap'),
+          "the scout's caps",
+        );
+        expectWhole(
+          reading('+3 rating from opponent dossiers'),
+          "the scout's dossier",
         );
         expectNothingCut(tester);
       });
@@ -263,6 +319,7 @@ void main() {
           {
             StaffRole.fitnessCoach: StaffTier.elite,
             StaffRole.assistant: StaffTier.elite,
+            StaffRole.scout: StaffTier.elite,
           },
           locale: const Locale('cs'),
           width: width,
@@ -285,8 +342,16 @@ void main() {
           "the assistant's youth figure",
         );
         expectWhole(
-          reading('Na tým zatím nemá žádný vliv'),
-          'the scout\'s line',
+          reading('Přesně odhadne 90 % talentů'),
+          "the scout's read",
+        );
+        expectWhole(
+          reading('Potenciál jasný po 1 startu'),
+          "the scout's caps",
+        );
+        expectWhole(
+          reading('+3 k síle díky rozboru soupeře'),
+          "the scout's dossier",
         );
         expectNothingCut(tester);
       });
@@ -313,6 +378,18 @@ void main() {
         expectWhole(
           reading('a mladíci +2 až +3 na celkovém'),
           'the vacant assistant youth line',
+        );
+        expectWhole(
+          reading('Po najmutí: přesně odhadne 50 až 90 % talentů'),
+          'the vacant scout line',
+        );
+        expectWhole(
+          reading('a potenciál jasný o 1 až 2 starty dřív'),
+          'the vacant scout caps line',
+        );
+        expectWhole(
+          reading('a +1 až +3 k síle v každém zápase'),
+          'the vacant scout dossier line',
         );
         expectNothingCut(tester);
       });

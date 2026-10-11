@@ -66,7 +66,10 @@ void main() {
     await db.close();
   });
 
-  Future<void> pumpScreen(WidgetTester tester) async {
+  Future<void> pumpScreen(
+    WidgetTester tester, {
+    Confederation? confederation,
+  }) async {
     tester.view.devicePixelRatio = 1;
     tester.view.physicalSize = const Size(500, 900);
     addTearDown(tester.view.reset);
@@ -77,7 +80,10 @@ void main() {
           theme: AppTheme.theme,
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
-          home: NationsCupScreen(careerId: careerId),
+          home: NationsCupScreen(
+            careerId: careerId,
+            confederation: confederation,
+          ),
         ),
       ),
     );
@@ -91,6 +97,42 @@ void main() {
     expect(find.text('FINALS FOUR'), findsOneWidget);
     expect(find.text('SCORERS'), findsOneWidget);
     expect(find.text('HISTORY'), findsOneWidget);
+  });
+
+  // Another confederation's cup, opened from the tournaments screen: the
+  // African one is played in zones with a Round of 16, and as it is not the
+  // manager's own there is no draw ceremony to wait for before its groups
+  // show.
+  testWidgets('the African cup shows its zones and its knockouts', (
+    tester,
+  ) async {
+    await pumpScreen(tester, confederation: Confederation.africa);
+
+    expect(find.text('ZONES'), findsOneWidget);
+    expect(find.text('KNOCKOUTS'), findsOneWidget);
+    expect(find.text('LEAGUES'), findsNothing);
+    expect(find.textContaining('the 2 best runners-up'), findsOneWidget);
+    expect(find.text('NORTH ZONE'), findsOneWidget);
+    // The race for the last two places is always on show, under the tables.
+    expect(find.text('BEST RUNNERS-UP'), findsNothing);
+    // Pinned once: the zone text it is found by scrolls out of the tree.
+    final zonesList = find.byWidget(
+      tester.widget<Scrollable>(
+        find
+            .ancestor(
+              of: find.text('NORTH ZONE'),
+              matching: find.byType(Scrollable),
+            )
+            .first,
+      ),
+    );
+    await tester.scrollUntilVisible(
+      find.text('BEST RUNNERS-UP'),
+      400,
+      scrollable: zonesList,
+    );
+    expect(find.text('BEST RUNNERS-UP'), findsOneWidget);
+    expect(find.text('Top 2 advance to the Round of 16'), findsOneWidget);
   });
 
   testWidgets('history is reachable while the cup is running', (tester) async {

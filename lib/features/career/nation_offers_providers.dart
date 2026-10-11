@@ -1,10 +1,13 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/core/rng/seeded_rng.dart';
+import 'package:fnm/core/util/message_text.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/career.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
+import 'package:fnm/domain/services/competition/nations_cups.dart';
 import 'package:fnm/domain/services/federation/federation_finance.dart';
+import 'package:fnm/domain/services/manager/job_market.dart';
 import 'package:fnm/features/achievements/achievement_providers.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/career/career_summary_providers.dart';
@@ -24,8 +27,9 @@ class NationOffer {
   /// The nation's world position (1 = strongest).
   final int position;
 
-  /// 'Step up' / 'Lateral move' / 'A rebuild' — relative to the current job.
-  final String tier;
+  /// What taking it would mean, relative to the current job. The words are the
+  /// copy's (see `offerTierLabel`); this is the judgement.
+  final OfferTier tier;
 }
 
 /// The board's end-of-cycle verdict and the job market it opens up.
@@ -44,8 +48,14 @@ class RolloverVerdict {
 
   /// A 0–100 rating of the cycle just gone.
   final int performance;
-  final String headline;
-  final String detail;
+
+  /// The board's verdict, as MEANING rather than as words: it is shown on this
+  /// screen AND filed as a message the manager may open a language later. See
+  /// `core/util/message_text.dart`.
+  final MsgPart headline;
+
+  /// The verdict in full, same shape as [headline].
+  final MsgPart detail;
 
   /// Whether the manager has been dismissed (they must take a new, lesser job).
   final bool sacked;
@@ -64,15 +74,6 @@ class RolloverVerdict {
 
   /// Consecutive cycles served at the current nation.
   final int cyclesAtNation;
-
-  /// A short label for the reputation tier, for the UI.
-  String get reputationLabel => switch (reputation) {
-    >= 85 => 'Iconic',
-    >= 70 => 'Renowned',
-    >= 50 => 'Established',
-    >= 30 => 'Up-and-coming',
-    _ => 'Unproven',
-  };
 }
 
 /// Evaluates the manager's just-finished cycle and produces the board verdict
@@ -184,27 +185,31 @@ rolloverVerdictProvider = FutureProvider.autoDispose.family<RolloverVerdict?, in
     }
     if (pick == null) continue;
     used.add(pick.id);
-    final tier = pos < currentPos * 0.85
-        ? 'Step up'
-        : pos > currentPos * 1.2
-        ? 'A rebuild'
-        : 'Lateral move';
-    offers.add(NationOffer(nation: pick, position: pos, tier: tier));
+    offers.add(
+      NationOffer(
+        nation: pick,
+        position: pos,
+        tier: offerTierFor(offered: pos, current: currentPos),
+      ),
+    );
   }
   offers.sort((a, b) => a.position.compareTo(b.position));
 
   final best = _bestResult(summary, career.cyclePointer);
   final (headline, detail) = _verdict(perf, sacked, best);
   final heroNote = nationalHero && !sacked
-      ? ' ${currentNation?.name ?? 'The nation'} adore you, a national hero '
-            'after $cyclesAtNation cycles; your job is safe for as long as you '
-            'want it.'
-      : '';
+      ? MsgText(MsgKey.boardVerdictHeroNote, [
+          currentNation?.name ?? const MsgText(MsgKey.boardVerdictTheNation),
+          cyclesAtNation,
+        ])
+      : null;
 
   return RolloverVerdict(
     performance: perf,
-    headline: nationalHero && perf < 30 ? 'The nation stands by you' : headline,
-    detail: '$detail$heroNote',
+    headline: nationalHero && perf < 30
+        ? const MsgText(MsgKey.boardVerdictHeroTitle)
+        : headline,
+    detail: heroNote == null ? detail : MsgJoin([detail, heroNote]),
     sacked: sacked,
     currentNation: currentNation,
     offers: offers,
@@ -237,7 +242,8 @@ int _reputation(Career career, Map<int, int> stints, List<Honour> honours) {
     switch (h.competition) {
       case 'World Championship':
         wc++;
-      case 'Nations Cup':
+      case final name when NationsCups.isNationsCup(name):
+        other++;
       case 'Continental Clash':
         other++;
       default:
@@ -280,52 +286,60 @@ int _titlesAtNation(
 }
 
 /// The best tournament placement the manager achieved this cycle, for flavour.
-String _bestResult(CareerSummary? summary, int cycle) {
-  if (summary == null) return 'a quiet cycle';
+///
+/// The placement is CANONICAL ENGLISH, the way the career summary records it
+/// and competition names are stored, so it is carried as a key and written for
+/// the manager when the verdict is read. A placement this ladder has not been
+/// taught goes through as it came rather than being blanked.
+MsgPart _bestResult(CareerSummary? summary, int cycle) {
+  if (summary == null) return const MsgText(MsgKey.boardVerdictBestQuiet);
   final year = CareerService.worldCupYear(cycle);
   for (final r in summary.runs) {
     // The STORED name, which is what `summary.runs` carries. It used to be
     // rewritten to a second English spelling on the way out of the summary
     // provider, and this comparison was quietly keyed to that spelling.
     if (r.competition == 'World Championship' && r.year == year) {
-      return 'the World Championship: ${r.placement}';
+      final placement = placementMsgKey(r.placement);
+      return MsgText(MsgKey.boardVerdictBestWorld, [
+        if (placement == null) r.placement else MsgText(placement),
+      ]);
     }
   }
-  return 'the cycle';
+  return const MsgText(MsgKey.boardVerdictBestCycle);
 }
 
-(String, String) _verdict(int perf, bool sacked, String best) {
+/// The board's verdict on the cycle: a headline and the detail under it.
+///
+/// Both are stored rather than written out, because this verdict is also the
+/// message filed in the inbox — and an inbox is read in whatever language the
+/// manager has chosen today, not the one the cycle ended in.
+(MsgPart, MsgPart) _verdict(int perf, bool sacked, MsgPart best) {
   if (sacked) {
     return (
-      'The board has dismissed you',
-      'A dismal cycle (rating $perf%). Your reign ends here. Only lesser '
-          'nations will take a chance on you now.',
+      const MsgText(MsgKey.boardVerdictSackedTitle),
+      MsgText(MsgKey.boardVerdictSackedBody, [perf]),
     );
   }
   if (perf >= 80) {
     return (
-      'The board is delighted',
-      'An outstanding cycle (rating $perf%) after $best. Bigger nations are '
-          'interested, or you can stay and build.',
+      const MsgText(MsgKey.boardVerdictDelightedTitle),
+      MsgText(MsgKey.boardVerdictDelightedBody, [perf, best]),
     );
   }
   if (perf >= 55) {
     return (
-      'A solid cycle',
-      'The board is content (rating $perf%). A few nations of similar '
-          'standing would take you, but there is no pressure to move.',
+      const MsgText(MsgKey.boardVerdictSolidTitle),
+      MsgText(MsgKey.boardVerdictSolidBody, [perf]),
     );
   }
   if (perf >= 30) {
     return (
-      'The board expected more',
-      'A disappointing cycle (rating $perf%). You keep your job, but any '
-          'offers are a step down.',
+      const MsgText(MsgKey.boardVerdictExpectedMoreTitle),
+      MsgText(MsgKey.boardVerdictExpectedMoreBody, [perf]),
     );
   }
   return (
-    'You are under real pressure',
-    'A poor cycle (rating $perf%). You survive, but only weaker nations are '
-        'interested if you fancy a fresh start.',
+    const MsgText(MsgKey.boardVerdictPressureTitle),
+    MsgText(MsgKey.boardVerdictPressureBody, [perf]),
   );
 }

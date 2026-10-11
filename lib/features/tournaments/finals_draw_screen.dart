@@ -48,7 +48,7 @@ class _FinalsDrawScreenState extends ConsumerState<FinalsDrawScreen> {
           onPressed: leave,
         ),
         title: Text(
-          _drawing ? 'FINALS DRAW' : 'SEEDING POTS',
+          _drawing ? l.tourContFinalsDraw : l.tourContSeedingPots,
           style: AppTypography.labelMedium.copyWith(color: AppColors.primary),
         ),
         centerTitle: true,

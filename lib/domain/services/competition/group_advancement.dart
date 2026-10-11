@@ -1,5 +1,6 @@
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/services/competition/finals.dart';
+import 'package:fnm/domain/services/competition/nations_cups.dart';
 import 'package:fnm/domain/services/competition/qualification_format.dart';
 
 /// How a group's places resolve — which positions advance outright (direct,
@@ -106,6 +107,13 @@ abstract final class GroupAdvancement {
         final adv = finalsGroup(groupCount, continentalSize);
         return (direct: adv.direct, contention: adv.contention, relegate: 0);
       case CompetitionKind.nationsLeague:
+        // The African cup's zone groups: every winner goes through to the
+        // Round of 16, a runner-up MAY (the two best across all groups do),
+        // and nobody is relegated.
+        if (NationsCups.forConfederation(confederation)?.format ==
+            NationsCupFormat.zones) {
+          return (direct: 1, contention: 2, relegate: 0);
+        }
         // Only the group winner advances (to the Finals Four / promotion), and
         // each group's bottom side drops a league — see
         // NationsCup.promoteRelegate. So a single green top spot, not two, and
@@ -159,6 +167,9 @@ abstract final class GroupAdvancement {
     };
     switch (kind) {
       case CompetitionKind.nationsLeague:
+        if (adv.contention == 2) {
+          return 'Winner reaches the Round of 16; the best runners-up join them';
+        }
         return adv.relegate > 0
             ? 'Winner goes up (League A: to the Finals Four); '
                   'bottom side is relegated'

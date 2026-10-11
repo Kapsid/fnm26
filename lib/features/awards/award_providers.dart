@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fnm/core/util/message_text.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/career.dart';
 import 'package:fnm/domain/entities/enums.dart';
@@ -112,31 +113,37 @@ class AwardService {
       );
     }
     if (best != null) {
-      await comp.addMessage(
+      // The card, when the winners resolve; otherwise the sentence, stored as
+      // meaning like every other message.
+      final card = await _card(
+        careerId: careerId,
+        career: career,
+        best: best,
+        young: young,
+        lines: {for (final r in resolved) r.playerId: r},
+      );
+      final youngToo = young != null && young.playerId != best.playerId;
+      await comp.addTextMessage(
+        l: l,
         careerId: careerId,
         dedupKey: 'poty:$year',
         category: 'award',
-        title: l.newsPotyTitle(year),
-        body: await _body(
-          careerId: careerId,
-          career: career,
-          best: best,
-          young: young,
-          lines: {for (final r in resolved) r.playerId: r},
-          fallback:
-              l.newsPotyBody(best.name) +
-              (young == null || young.playerId == best.playerId
-                  ? ''
-                  : l.newsPotyYoungSuffix(young.name)),
-        ),
+        title: MsgText(MsgKey.newsPotyTitle, [year]),
+        rawBody: card,
+        body: card != null
+            ? null
+            : MsgJoin([
+                MsgText(MsgKey.newsPotyBody, [best.name]),
+                if (youngToo) MsgText(MsgKey.newsPotyYoungSuffix, [young.name]),
+              ]),
         year: year,
       );
     }
     _ref.invalidate(playerAwardsProvider);
   }
 
-  /// The award's message body: a card per winner, or the old sentence if the
-  /// winners cannot be resolved.
+  /// The award's message body: a card per winner, or null if the winners
+  /// cannot be resolved (the caller then files the old sentence).
   ///
   /// The announcement used to be that sentence and nothing else — a name, and
   /// not one word about the season that earned it or the man who played it.
@@ -147,13 +154,12 @@ class AwardService {
   /// reading the pool the shortlist was built from: a rating is only right
   /// with all four of the repository's inputs, and the pool above is read with
   /// two of them. A name is the same either way; a number is not.
-  Future<String> _body({
+  Future<String?> _card({
     required int careerId,
     required Career career,
     required AwardWinner best,
     required AwardWinner? young,
     required Map<int, AwardLine> lines,
-    required String fallback,
   }) async {
     final repo = _ref.read(playerRepositoryProvider);
     final nations = {
@@ -195,7 +201,7 @@ class AwardService {
     }
     // Nothing resolved: say it the way it was always said rather than file an
     // empty card. A body that renders as a blank popup is worse than a name.
-    if (rows.isEmpty) return fallback;
+    if (rows.isEmpty) return null;
     return encodePotyReport(rows);
   }
 }

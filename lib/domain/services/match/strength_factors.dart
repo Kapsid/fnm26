@@ -18,7 +18,19 @@ typedef StrengthFactor = ({
 
 /// The things that move a side's strength on the day, each of which the engine
 /// already applies and none of which the manager was ever shown.
-enum StrengthFactorKind { familiarity, fatigue, clubForm, morale, captain, staff }
+enum StrengthFactorKind {
+  familiarity,
+  fatigue,
+  clubForm,
+  morale,
+  captain,
+  staff,
+
+  /// The scout's opponent dossier. Its own line rather than folded into
+  /// [staff]: it is a different thing (knowledge of THIS opponent, not
+  /// bodies kept on the pitch) and it is worth several times as much.
+  dossier,
+}
 
 /// What is making the side stronger or weaker today, read as rating points.
 ///
@@ -97,6 +109,11 @@ abstract final class StrengthFactors {
       ),
       (kind: StrengthFactorKind.captain, delta: captain, subject: null),
       (kind: StrengthFactorKind.staff, delta: _staff(staff), subject: null),
+      (
+        kind: StrengthFactorKind.dossier,
+        delta: Staff.dossierBonus(staff[StaffRole.scout] ?? StaffTier.none),
+        subject: null,
+      ),
     ];
     return [
       for (final f in factors)
@@ -207,9 +224,12 @@ abstract final class StrengthFactors {
   /// The fitness coach and the assistant's conditioning work are the only staff
   /// effects the match itself feels: the match preview multiplies the side's
   /// injury rate by exactly these two (`Staff.injuryFactor` x
-  /// `Staff.assistantInjuryFactor`). The scout buys knowledge of a young
-  /// player's ceiling and the assistant's drilling work buys familiarity over
-  /// time — neither moves today's eleven, so neither is counted here.
+  /// `Staff.assistantInjuryFactor`). The assistant's drilling work buys
+  /// familiarity over time, which the familiarity line already reads. The
+  /// scout DOES move today's eleven, through his opponent dossier, but that
+  /// is a flat rating lift the engine applies directly (`Staff.dossierBonus`
+  /// via `MatchTeam.ratingBonus`), so it is its own line,
+  /// [StrengthFactorKind.dossier], and not counted here.
   ///
   /// Injury rate is not points, so: the engine rolls one knock per team per
   /// minute at `MatchEngine.injuryPerMinute`, which over ninety minutes is the

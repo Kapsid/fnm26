@@ -5,6 +5,7 @@ import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/services/player/prospects.dart';
 import 'package:fnm/features/squad/youth_providers.dart';
 import 'package:fnm/features/squad/youth_screen.dart';
+import 'package:fnm/features/squad/youth_watch_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 
 import '../helpers/fixtures.dart';
@@ -28,6 +29,10 @@ void main() {
   Widget app(YouthPyramid pyramid) => ProviderScope(
     overrides: [
       youthPyramidProvider(1).overrideWith((ref) async => pyramid),
+      // The watchlist tab is first and reads the marks; an empty list keeps
+      // these cases about the pyramid.
+      youthMarksProvider(1).overrideWith((ref) async => const <YouthMark>[]),
+      youthShortlistProvider(1).overrideWith((ref) async => const []),
     ],
     child: const MaterialApp(
       localizationsDelegates: AppLocalizations.localizationsDelegates,
@@ -43,6 +48,7 @@ void main() {
           for (final level in YouthLevel.values) level: [prospectAt(level)],
         },
         releasedByLevel: const <YouthLevel, List<String>>{},
+        years: 3,
       )),
     );
     await tester.pumpAndSettle();
@@ -54,7 +60,11 @@ void main() {
         reason: 'no tab for ${level.label}',
       );
     }
-    // The first tab's own player is on screen; the others are off-stage.
+    // The shortlist tab is the one that opens, so the U-13s are off-stage
+    // until it is asked for.
+    expect(find.text('Boy U-13'), findsNothing);
+    await tester.tap(find.text(YouthLevel.u13.label));
+    await tester.pumpAndSettle();
     expect(find.text('Boy U-13'), findsOneWidget);
   });
 
@@ -63,8 +73,11 @@ void main() {
       app((
         byLevel: const <YouthLevel, List<Prospect>>{},
         releasedByLevel: const <YouthLevel, List<String>>{},
+        years: 0,
       )),
     );
+    await tester.pumpAndSettle();
+    await tester.tap(find.text(YouthLevel.u13.label));
     await tester.pumpAndSettle();
 
     final l = AppLocalizations.of(
@@ -84,8 +97,11 @@ void main() {
         releasedByLevel: const {
           YouthLevel.u13: ['Gone Boy'],
         },
+        years: 2,
       )),
     );
+    await tester.pumpAndSettle();
+    await tester.tap(find.text(YouthLevel.u13.label));
     await tester.pumpAndSettle();
 
     expect(find.text('Gone Boy'), findsOneWidget);

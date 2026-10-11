@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Auto Backup (Android 6 to 11). Everything the app keeps is backed up to the
+  player's Google account by default; these only leave out what would waste the
+  25 MB quota. Going over it skips the WHOLE backup without a word, so the save
+  database must not be counted twice.
+
+  - fnm.sqlite.previous: the copy kept while a backup file is being restored.
+  - fnm.sqlite-shm: SQLite's shared-memory index, rebuilt on open. The -wal
+    file IS kept: it can hold committed moves not yet folded into the database.
+  - diagnostics.log: this phone's crash log, no use on another.
+  Keep in step with data_extraction_rules.xml.
+-->
+<full-backup-content>
+    <exclude domain="root" path="app_flutter/fnm.sqlite.previous" />
+    <exclude domain="root" path="app_flutter/fnm.sqlite-shm" />
+    <exclude domain="file" path="diagnostics.log" />
+</full-backup-content>

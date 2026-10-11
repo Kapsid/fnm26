@@ -173,6 +173,7 @@ class CupDetailScreen extends ConsumerWidget {
                           championLabel: l.tourCupWorldChampions,
                           playerNationId: data.playerNationId,
                           runSummary: playerRunSummary(
+                            l,
                             playerNationId: data.playerNationId,
                             champion: data.champion,
                             knockout: data.knockout,
@@ -187,6 +188,7 @@ class CupDetailScreen extends ConsumerWidget {
                         _Soon(message: l.tourCupKnockoutSoon),
                       // Every individual honour for the edition in one place.
                       TournamentAwardsTab(
+                        highlightNations: data.myNationIds,
                         team: data.teamOfTournament,
                         goldenGlove: data.goldenGlove,
                         code: code,
@@ -198,6 +200,7 @@ class CupDetailScreen extends ConsumerWidget {
                         allTime: data.allTimeScorers,
                         playerNames: data.playerNames,
                         code: code,
+                        highlightNations: data.myNationIds,
                       ),
                       // Not the shared TournamentHistory: the World Cup screen's
                       // history browses every competition, not just its own.
@@ -340,8 +343,8 @@ class _QualifyingState extends State<_Qualifying> {
                         value: c,
                         child: Text(
                           c == widget.playerConfederation
-                              ? l.tourCupRegionYours(c.label)
-                              : c.label,
+                              ? l.tourCupRegionYours(confederationLabel(l, c))
+                              : confederationLabel(l, c),
                         ),
                       ),
                   ],
@@ -754,6 +757,7 @@ class _Scorers extends StatefulWidget {
     required this.allTime,
     required this.playerNames,
     required this.code,
+    required this.highlightNations,
   });
 
   final List<ScorerTally> qualifying;
@@ -764,6 +768,9 @@ class _Scorers extends StatefulWidget {
   final List<AllTimeScorer> allTime;
   final Map<int, String> playerNames;
   final String Function(int) code;
+
+  /// The manager's nations, current and past: their scorers are highlighted.
+  final Set<int> highlightNations;
 
   @override
   State<_Scorers> createState() => _ScorersState();
@@ -836,9 +843,11 @@ class _ScorersState extends State<_Scorers> {
               itemCount: rows.length,
               itemBuilder: (context, i) {
                 final s = rows[i];
+                final mine = widget.highlightNations.contains(s.nationId);
                 return Padding(
                   padding: const EdgeInsets.only(bottom: AppSpacing.sm),
                   child: AppCard(
+                    border: mine ? Border.all(color: AppColors.primary) : null,
                     padding: const EdgeInsets.symmetric(
                       vertical: AppSpacing.sm,
                       horizontal: AppSpacing.md,
@@ -854,7 +863,11 @@ class _ScorersState extends State<_Scorers> {
                             ),
                           ),
                         ),
-                        FlagDisc(widget.code(s.nationId), size: 24),
+                        FlagDisc(
+                          widget.code(s.nationId),
+                          size: 24,
+                          highlighted: mine,
+                        ),
                         const SizedBox(width: AppSpacing.md),
                         Expanded(
                           child: Row(
@@ -865,8 +878,12 @@ class _ScorersState extends State<_Scorers> {
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
                                   style: AppTypography.bodyMedium.copyWith(
-                                    color: s.active ? AppColors.positive : null,
-                                    fontWeight: s.active
+                                    color: mine
+                                        ? AppColors.primary
+                                        : s.active
+                                        ? AppColors.positive
+                                        : null,
+                                    fontWeight: (mine || s.active)
                                         ? FontWeight.w700
                                         : FontWeight.w400,
                                   ),

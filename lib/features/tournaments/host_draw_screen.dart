@@ -92,9 +92,9 @@ class _HostDrawScreenState extends ConsumerState<HostDrawScreen> {
                     Text(
                       _revealed
                           ? (hosts.length > 1
-                                ? 'And the hosts will be…'
-                                : 'And the host will be…')
-                          : 'The candidates in the running:',
+                                ? l.tourDrawHostsReveal
+                                : l.tourDrawHostReveal)
+                          : l.tourDrawHostCandidates,
                       style: AppTypography.bodyMedium.copyWith(
                         color: AppColors.onSurfaceVariant,
                       ),

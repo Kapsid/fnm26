@@ -6,38 +6,64 @@ part of 'match_screen.dart';
 /// A part rather than its own library so these stay private to the match
 /// screen — they are its furniture, not widgets anything else should build.
 class _TopBar extends StatelessWidget {
-  const _TopBar();
+  const _TopBar({required this.occasion});
+
+  /// What the match is for ("WORLD CUP FINALS · SEMI-FINAL", from
+  /// [MatchStage.label], as the hub's next-match card writes it).
+  final String occasion;
 
   @override
   Widget build(BuildContext context) {
+    // What is at stake, on a full-width plate of the clock's own silver, where
+    // the bar used to just say "MATCH": a quick game still says whether it is
+    // a qualifier or a semi-final, without taking room from the scoreboard.
+    //
+    // No way out of here: once the whistle has gone the only exit is Continue
+    // at full time, so the result is always committed rather than a
+    // half-played match being abandoned back to the hub.
     return Padding(
-      padding: const EdgeInsets.symmetric(
-        horizontal: AppSpacing.md,
-        vertical: AppSpacing.sm,
+      padding: const EdgeInsets.fromLTRB(
+        AppSpacing.marginMobile,
+        AppSpacing.sm,
+        AppSpacing.marginMobile,
+        0,
       ),
-      child: Row(
-        children: [
-          // No way out of here: once the whistle has gone the only exit is
-          // Continue at full time, so the result is always committed rather
-          // than a half-played match being abandoned back to the hub.
-          Text(
-            AppLocalizations.of(context).matchTopBarTitle,
-            style: AppTypography.labelMedium.copyWith(color: AppColors.primary),
-          ),
-        ],
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppSpacing.md,
+          vertical: 6,
+        ),
+        decoration: const BoxDecoration(
+          color: AppColors.surfaceContainerHighest,
+          borderRadius: AppRadii.baseAll,
+        ),
+        child: Text(
+          occasion,
+          textAlign: TextAlign.center,
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
+          style: AppTypography.labelMedium.copyWith(color: AppColors.primary),
+        ),
       ),
     );
   }
 }
 
-class _Header extends StatelessWidget {
-  const _Header({
+/// The scoreboard at the top of the live match: the clock plate, and the two
+/// sides either side of the scoreline.
+///
+/// Public only so a widget test can pump it and measure that the score and the
+/// clock sit on the screen's centre line whatever the two names are; nothing
+/// outside the match screen builds it.
+@visibleForTesting
+class MatchScoreboard extends StatelessWidget {
+  const MatchScoreboard({
+    super.key,
     required this.homeCode,
     required this.awayCode,
     required this.homeName,
     required this.awayName,
-    required this.homeOverall,
-    required this.awayOverall,
     required this.homeScore,
     required this.awayScore,
     required this.clock,
@@ -48,12 +74,6 @@ class _Header extends StatelessWidget {
   final String awayCode;
   final String homeName;
   final String awayName;
-
-  /// Each side's team overall — the same number the pre-match screen shows
-  /// either side of the "VS", carried into the live game so the manager can
-  /// still see what he is up against once the whistle has gone.
-  final int homeOverall;
-  final int awayOverall;
   final int homeScore;
   final int awayScore;
   final String clock;
@@ -81,17 +101,31 @@ class _Header extends StatelessWidget {
                 // Monospace tabular figures give the even, broadcast look with
                 // no letter-spacing — the latter adds a trailing gap after the
                 // last digit that pushes the time off-centre in the plate.
-                child: Text(
-                  clock,
-                  textAlign: TextAlign.center,
-                  style: AppTypography.labelMedium.copyWith(
-                    fontFamily: AppFonts.mono,
-                    fontSize: 15,
-                    fontWeight: FontWeight.w700,
-                    fontFeatures: const [FontFeature.tabularFigures()],
-                    color: live
-                        ? AppColors.onSurface
-                        : AppColors.onSurfaceVariant,
+                //
+                // Which is why the spacing is zeroed HERE: labelMedium carries
+                // 0.7 of its own, and copyWith keeps whatever it is not told to
+                // replace, so the plate the comment above describes was still
+                // tracked, and every label in it ("PO PRODLOUŽENÍ" as much as
+                // "45") sat a hair left of the centre line. One line, capped
+                // and scaled down, so a long label can never wrap the plate
+                // into two lines of a different width either.
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text(
+                    clock,
+                    textAlign: TextAlign.center,
+                    maxLines: 1,
+                    softWrap: false,
+                    style: AppTypography.labelMedium.copyWith(
+                      fontFamily: AppFonts.mono,
+                      letterSpacing: 0,
+                      fontSize: 15,
+                      fontWeight: FontWeight.w700,
+                      fontFeatures: const [FontFeature.tabularFigures()],
+                      color: live
+                          ? AppColors.onSurface
+                          : AppColors.onSurfaceVariant,
+                    ),
                   ),
                 ),
               ),
@@ -99,37 +133,59 @@ class _Header extends StatelessWidget {
             const SizedBox(height: AppSpacing.sm),
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
+              // Centred, and the scoreline takes a third like the two sides.
+              //
+              // It was Flexible, which is LOOSE: it took less than its third
+              // and the leftover collected at the END of the row, so the whole
+              // block sat left and the right of the card carried a bigger gap
+              // than the left. Measured off a screenshot at 393pt: 100 points
+              // of gap on the left against 145 on the right, with the score
+              // about 20 left of the card's centre. Expanded is tight, so the
+              // row is exactly filled and each third is centred in itself;
+              // the centre alignment is belt and braces for any rounding.
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Expanded(
-                  child: _Side(
-                    code: homeCode,
-                    label: homeName,
-                    overall: homeOverall,
-                  ),
+                  child: _Side(code: homeCode, label: homeName),
                 ),
-                // The scoreline is allowed to shrink rather than shove the two
-                // sides out of the card: a long name next to a 4:3 used to run
-                // the row off the edge of a narrow screen.
-                Flexible(
+                // The scoreline still shrinks rather than shove the two sides
+                // out of the card: a long name next to a 4:3 used to run the
+                // row off the edge of a narrow screen.
+                //
+                // And it is three pieces, not one string, so the COLON is what
+                // sits on the centre line. "1 : 0" set as one run was centred
+                // as a block, and the sans digits are not one width: a narrow
+                // 1 against a round 0 put the colon a few points off the middle
+                // of the card, a different few for every score, which is what
+                // still read as off-centre after the thirds were made equal.
+                // Each number now fills a half of its own, pinned against the
+                // colon, and scales down inside that half if it must.
+                Expanded(
                   child: Padding(
                     padding: const EdgeInsets.symmetric(
                       horizontal: AppSpacing.sm,
                     ),
-                    child: FittedBox(
-                      child: Text(
-                        '$homeScore : $awayScore',
-                        maxLines: 1,
-                        style: AppTypography.displayLarge,
-                      ),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: _ScoreFigure(
+                            '$homeScore',
+                            alignment: Alignment.centerRight,
+                          ),
+                        ),
+                        const _ScoreFigure(' : '),
+                        Expanded(
+                          child: _ScoreFigure(
+                            '$awayScore',
+                            alignment: Alignment.centerLeft,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
                 Expanded(
-                  child: _Side(
-                    code: awayCode,
-                    label: awayName,
-                    overall: awayOverall,
-                  ),
+                  child: _Side(code: awayCode, label: awayName),
                 ),
               ],
             ),
@@ -362,40 +418,59 @@ class _PillButton extends StatelessWidget {
   }
 }
 
-class _Side extends StatelessWidget {
-  const _Side({
-    required this.code,
-    required this.label,
-    required this.overall,
-  });
-  final String code;
-  final String label;
+/// One piece of the live scoreline: a number, or the colon between them.
+///
+/// Set in the display face with tabular figures and no tracking, so a digit's
+/// width does not depend on which digit it is, and scaled down (never wrapped)
+/// inside whatever width it is given. [alignment] pins a number against the
+/// colon, which is what keeps the colon on the card's centre line.
+class _ScoreFigure extends StatelessWidget {
+  const _ScoreFigure(this.text, {this.alignment = Alignment.center});
 
-  /// The side's team overall, shown under the name. Zero hides it — a side
-  /// whose XI isn't known yet has no honest number to print.
-  final int overall;
+  final String text;
+  final AlignmentGeometry alignment;
 
   @override
   Widget build(BuildContext context) {
-    final l = AppLocalizations.of(context);
+    return FittedBox(
+      fit: BoxFit.scaleDown,
+      alignment: alignment,
+      child: Text(
+        text,
+        maxLines: 1,
+        softWrap: false,
+        style: AppTypography.displayLarge.copyWith(
+          letterSpacing: 0,
+          fontFeatures: const [FontFeature.tabularFigures()],
+        ),
+      ),
+    );
+  }
+}
+
+class _Side extends StatelessWidget {
+  // No team rating here: the pre-match screen shows it, and that is enough.
+  const _Side({required this.code, required this.label});
+  final String code;
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
     return Column(
       children: [
         FlagDisc(code, size: 56),
         const SizedBox(height: AppSpacing.xs),
-        Text(
+        // A name too long for its third is written as its code, at the same
+        // size, rather than cut off with an ellipsis or shrunk out of step
+        // with the name on the other side.
+        WholeText(
           label,
           maxLines: 1,
-          overflow: TextOverflow.ellipsis,
+          textAlign: TextAlign.center,
+          shortText: code,
+          shrinkBeforeShortening: 1,
           style: AppTypography.titleMedium,
         ),
-        if (overall > 0)
-          Text(
-            '${l.teamOverall} $overall',
-            maxLines: 1,
-            style: AppTypography.labelSmall.copyWith(
-              color: AppColors.onSurfaceVariant,
-            ),
-          ),
       ],
     );
   }

@@ -1,5 +1,6 @@
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/services/competition/continental_cups.dart';
+import 'package:fnm/domain/services/competition/nations_cups.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 
 /// Writing continents and competitions in the manager's own language.
@@ -70,9 +71,20 @@ Map<String, String> _byEnglishName(AppLocalizations l) => {
   'World Championship Qualifiers': l.compWorldCupQualifying,
   'Friendlies': l.compFriendlies,
   'Nations Cup': l.compNationsCup,
+  NationsCups.northAmerica: l.compNorthAmericaNationsCup,
+  NationsCups.africa: l.compAfricanNationsCup,
   'Continental Clash': l.compContinentalClash,
   'Intercontinental Play-off': l.compIntercontinentalPlayoff,
   'Continental Championship': l.compContinentalChampionship,
   for (final e in ContinentalCups.byConfederation.entries)
     e.value.name: continentalCupLabel(l, e.key),
+  // "European Championship Qualifiers" — the continental cup's own qualifying
+  // campaign, named after the cup rather than after the continent, so the
+  // ' Qualifiers' branch above (which expects a CONTINENT before it) read it
+  // back untranslated. This was the "European Championship Qualifiers" a Czech
+  // manager saw on his hub.
+  for (final e in ContinentalCups.byConfederation.entries)
+    '${e.value.name}$_qualifiersSuffix': l.compQualifiers(
+      continentalCupLabel(l, e.key),
+    ),
 };

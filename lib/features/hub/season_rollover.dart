@@ -10,8 +10,8 @@ extension SeasonRollover on SeasonService {
   Future<void> _startNextCycle(
     int careerId, {
     int? switchToNationId,
-    String? boardTitle,
-    String? boardBody,
+    MsgPart? boardTitle,
+    MsgPart? boardBody,
     FederationInvestment? nextInvestment,
   }) async {
     final career = await _careers.byId(careerId);
@@ -82,26 +82,51 @@ extension SeasonRollover on SeasonService {
     }
     await _careers.setBudget(careerId, budget);
 
-    // Move the Nations Cup ladder on this cycle's cup — every league's group
-    // winners climb, bottom sides drop. Read the tables BEFORE advancing the
-    // cycle (they are scoped to the current, finishing cycle).
+    // Move each ladder-format Nations Cup — every league's group winners
+    // climb, bottom sides drop. Each confederation ladders on its own: its
+    // tables alone feed [NationsCup.promoteRelegate], so one confederation's
+    // result never moves another's nations (the African zones don't ladder).
+    // Read the tables BEFORE advancing the cycle (they are scoped to the
+    // current, finishing cycle). A save from before a confederation had a cup
+    // has no tables for it and is skipped.
     var ncTiers = await _careers.nationsCupTiers(careerId);
-    final ncTables = await _comp.tournamentGroupTables(
-      careerId,
-      CompetitionKind.nationsLeague,
-    );
-    if (ncTables.isNotEmpty && ncTiers.isNotEmpty) {
-      final groups = [
-        for (final t in ncTables)
-          if (t.standings.length >= 2)
-            (
-              tier: NationsCup.tierOfGroupName(t.name),
-              winner: t.standings.first,
-              bottom: t.standings.last,
-            ),
-      ];
-      ncTiers = NationsCup.promoteRelegate(tiers: ncTiers, groups: groups);
-      await _careers.setNationsCupTiers(careerId, ncTiers);
+    if (ncTiers.isNotEmpty) {
+      var moved = false;
+      for (final conf in NationsCups.confederations) {
+        if (NationsCups.forConfederation(conf)?.format !=
+            NationsCupFormat.ladder) {
+          continue;
+        }
+        final ncTables = await _comp.tournamentGroupTables(
+          careerId,
+          CompetitionKind.nationsLeague,
+          confederation: conf,
+        );
+        if (ncTables.isEmpty) continue;
+        final groups = [
+          for (final t in ncTables)
+            if (t.standings.length >= 2)
+              (
+                tier: NationsCup.tierOfGroupName(t.name),
+                winner: t.standings.first,
+                bottom: t.standings.last,
+              ),
+        ];
+        ncTiers = NationsCup.promoteRelegate(tiers: ncTiers, groups: groups);
+        moved = true;
+      }
+      // Fold any league too small to play into the one above it, the way the
+      // calendar already plays it. Run every rollover, moved or not: a save
+      // seeded before the fold still stores CONCACAF's last three as a League
+      // C that has no groups, and this is where it is repaired.
+      final confOf = {
+        for (final n in await _ref.read(nationRepositoryProvider).all())
+          n.id: n.confederation,
+      };
+      final folded = NationsCup.mergeRemainders(ncTiers, (id) => confOf[id]);
+      if (folded.entries.any((e) => ncTiers[e.key] != e.value)) moved = true;
+      ncTiers = folded;
+      if (moved) await _careers.setNationsCupTiers(careerId, ncTiers);
     }
 
     if (switchToNationId != null && switchToNationId != career.nationId) {
@@ -111,12 +136,13 @@ extension SeasonRollover on SeasonService {
       await _ref.read(tacticFamiliarityRepositoryProvider).reset(careerId);
     }
     if (boardTitle != null) {
-      await _comp.addMessage(
+      await _comp.addTextMessage(
+        l: _l,
         careerId: careerId,
         dedupKey: 'board:${career.cyclePointer}',
         category: 'board',
         title: boardTitle,
-        body: boardBody ?? '',
+        body: boardBody,
         year: SeasonService.finalsYear(career.cyclePointer),
       );
     }
@@ -260,12 +286,13 @@ extension SeasonRollover on SeasonService {
             );
           }(),
       ];
-      await _comp.addMessage(
+      await _comp.addTextMessage(
+        l: _l,
         careerId: careerId,
         dedupKey: 'transfers:$year',
         category: 'transfer',
-        title: _l.newsTransferWindowTitle(year),
-        body: encodeTransferReport(rows),
+        title: MsgText(MsgKey.newsTransferWindowTitle, [year]),
+        rawBody: encodeTransferReport(rows),
         year: year,
       );
     }
@@ -283,30 +310,39 @@ extension SeasonRollover on SeasonService {
             agingYears: CareerService.agingYears(career),
             saveSeed: career.rngSeed,
           );
-      return p?.name ?? _l.newsARecordBreaker;
+      return p?.name ??
+          renderMsgKey(_l, const MsgText(MsgKey.newsARecordBreaker));
     }
 
     final scorers = await _comp.allTimeTopScorers(careerId, limit: 1);
     if (scorers.isNotEmpty && scorers.first.goals >= 30) {
       final s = scorers.first;
-      await _comp.addMessage(
+      await _comp.addTextMessage(
+        l: _l,
         careerId: careerId,
         dedupKey: 'record:scorer:${s.playerId}',
         category: 'record',
-        title: _l.newsRecordScorerTitle,
-        body: _l.newsRecordScorerBody(await nameOf(s.playerId), s.goals),
+        title: const MsgText(MsgKey.newsRecordScorerTitle),
+        body: MsgText(MsgKey.newsRecordScorerBody, [
+          await nameOf(s.playerId),
+          s.goals,
+        ]),
         year: year,
       );
     }
     final caps = await _comp.allTimeTopAppearances(careerId, limit: 1);
     if (caps.isNotEmpty && caps.first.games >= 70) {
       final c = caps.first;
-      await _comp.addMessage(
+      await _comp.addTextMessage(
+        l: _l,
         careerId: careerId,
         dedupKey: 'record:caps:${c.playerId}',
         category: 'record',
-        title: _l.newsRecordCapsTitle,
-        body: _l.newsRecordCapsBody(await nameOf(c.playerId), c.games),
+        title: const MsgText(MsgKey.newsRecordCapsTitle),
+        body: MsgText(MsgKey.newsRecordCapsBody, [
+          await nameOf(c.playerId),
+          c.games,
+        ]),
         year: year,
       );
     }
@@ -366,6 +402,13 @@ extension SeasonRollover on SeasonService {
     // No explicit selection: the whole new pool is available (as for a fresh
     // save) until the manager curates it.
     await _ref.read(squadRepositoryProvider).clearCallUps(careerId);
+
+    // Nor does the youth watchlist travel. The boys he bookmarked are the old
+    // academy's, player ids are partitioned per nation, and not one of them is
+    // in the new nation's pyramid: left in place, every name on his shortlist
+    // would read as released or gone.
+    await clearYouthMarks(careerId);
+    _ref.invalidate(youthMarksProvider(careerId));
 
     // Rebuild the XI from the new nation's players; saveTactic replaces the
     // stored lineup slots, which still named the old squad.
@@ -507,9 +550,12 @@ extension SeasonRollover on SeasonService {
       if (candidates.isEmpty) continue;
       final pick = candidates[rng.nextInt(candidates.length)];
       taken.add(pick.id);
-      final l = _l;
-      final from = nations[pick.nationId]?.name ?? l.newsTheirNation;
-      final to = nations[nationId]?.name ?? l.newsYourNation;
+      // A nation with no name falls back to a PHRASE, which is a piece of the
+      // message like any other rather than words fixed at writing time.
+      final from =
+          nations[pick.nationId]?.name ?? const MsgText(MsgKey.newsTheirNation);
+      final to =
+          nations[nationId]?.name ?? const MsgText(MsgKey.newsYourNation);
 
       await _careers.addNaturalizationOffer(
         careerId: careerId,
@@ -517,30 +563,24 @@ extension SeasonRollover on SeasonService {
         sourceNationId: pick.nationId,
         cycle: nextCycle,
       );
-      await _comp.addMessage(
+      final star = pick.overall >= 85;
+      await _comp.addTextMessage(
+        l: _l,
         careerId: careerId,
         dedupKey: 'natz:$nextCycle:${pick.id}',
         category: 'naturalize',
-        title: pick.overall >= 85
-            ? l.newsNatzStarTitle(pick.name, to)
-            : l.newsNatzTitle(pick.name, to),
-        body: pick.overall >= 85
-            ? l.newsNatzBodyStar(
-                pick.name,
-                pick.position.label,
-                from,
-                to,
-                pick.age,
-                pick.overall,
-              )
-            : l.newsNatzBody(
-                pick.name,
-                pick.position.label,
-                from,
-                to,
-                pick.age,
-                pick.overall,
-              ),
+        title: MsgText(
+          star ? MsgKey.newsNatzStarTitle : MsgKey.newsNatzTitle,
+          [pick.name, to],
+        ),
+        body: MsgText(star ? MsgKey.newsNatzBodyStar : MsgKey.newsNatzBody, [
+          pick.name,
+          pick.position.label,
+          from,
+          to,
+          pick.age,
+          pick.overall,
+        ]),
         year: SeasonService.finalsYear(nextCycle),
       );
     }

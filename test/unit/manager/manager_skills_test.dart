@@ -25,8 +25,9 @@ void main() {
       expect(Staff.totalCost(const {}), 0);
       expect(Staff.injuryFactor(StaffTier.none), 1.0);
       expect(Staff.capsToKnow(StaffTier.none, 20), 20);
+      expect(Staff.exactReadShare(StaffTier.none), 0.0);
+      expect(Staff.dossierBonus(StaffTier.none), 0);
     });
-
   });
 
   group('earning and spending points', () {
@@ -146,6 +147,20 @@ void main() {
       for (var i = 1; i < caps.length; i++) {
         expect(caps[i], lessThan(caps[i - 1]));
       }
+    });
+
+    test('a better scout reads more, and brings a bigger dossier', () {
+      expect(
+        [for (final t in StaffTier.values) Staff.dossierBonus(t)],
+        [0, 1, 2, 3],
+      );
+      final shares = [
+        for (final t in StaffTier.values) Staff.exactReadShare(t),
+      ];
+      for (var i = 1; i < shares.length; i++) {
+        expect(shares[i], greaterThan(shares[i - 1]));
+      }
+      expect(shares.last, lessThan(1), reason: 'even elite is not a lookup');
     });
 
     test('a fitness coach lowers the injury rate without abolishing it', () {

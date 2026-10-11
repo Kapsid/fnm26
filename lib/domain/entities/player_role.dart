@@ -30,27 +30,9 @@ enum PlayerRole {
 }
 
 extension PlayerRoleX on PlayerRole {
-  /// Short label for the UI.
-  String get label => switch (this) {
-    PlayerRole.none => 'No role',
-    PlayerRole.targetMan => 'Target man',
-    PlayerRole.poacher => 'Poacher',
-    PlayerRole.playmaker => 'Playmaker',
-    PlayerRole.ballWinner => 'Ball winner',
-    PlayerRole.invertedWinger => 'Inverted winger',
-    PlayerRole.ballPlayingDefender => 'Ball-playing defender',
-  };
-
-  /// One-line description of what the role does.
-  String get blurb => switch (this) {
-    PlayerRole.none => 'Plays their natural game.',
-    PlayerRole.targetMan => 'Wins headers, lays it off. Assists and set pieces.',
-    PlayerRole.poacher => 'Lurks in the box. Many more goals.',
-    PlayerRole.playmaker => 'Creates chances. Far more assists.',
-    PlayerRole.ballWinner => 'Breaks up play rather than finishing it.',
-    PlayerRole.invertedWinger => 'Cuts inside to shoot. More goals.',
-    PlayerRole.ballPlayingDefender => 'Starts moves from the back.',
-  };
+  // A role's name and its one-line blurb are DISPLAY strings and live with the
+  // copy: `playerRoleLabel(l, r)` and `playerRoleBlurb(l, r)` in
+  // core/util/squad_label.dart.
 
   /// Multiplier on the player's weight to be the OPEN-PLAY scorer.
   double get scorerWeight => switch (this) {

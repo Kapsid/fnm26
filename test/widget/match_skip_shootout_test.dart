@@ -94,6 +94,7 @@ Future<ProviderContainer> pumpMatch(
         1,
       ).overrideWith((ref) async => levelKnockout(saveSeed: saveSeed)),
       soundHapticsEnabledProvider.overrideWith((ref) => false),
+      matchAttemptSaltProvider.overrideWithValue(() => 0),
     ],
   );
   addTearDown(c.dispose);

@@ -3,6 +3,7 @@ import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/domain/entities/fixture.dart';
+import 'package:fnm/core/util/match_stage.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
@@ -517,21 +518,14 @@ String baseRound(String round) =>
     round.length > 1 && round.startsWith('C') ? round.substring(1) : round;
 
 const _runOrder = {'R32': 0, 'R16': 1, 'QF': 2, 'SF': 3, '3RD': 4, 'FINAL': 5};
-const _runLabel = {
-  'R32': 'Round of 32',
-  'R16': 'Round of 16',
-  'QF': 'Quarter-finals',
-  'SF': 'Semi-finals',
-  '3RD': 'third-place play-off',
-  'FINAL': 'Final',
-};
 
 /// A short summary of how [playerNationId] fared, to highlight their run above
 /// the bracket ("Knocked out in the Quarter-finals", "Champions!").
 ///
 /// [championTitle] names the prize ('World Champions! 🏆'). Returns null when
 /// the nation never reached the finals.
-String? playerRunSummary({
+String? playerRunSummary(
+  AppLocalizations l, {
   required int playerNationId,
   required int? champion,
   required List<Fixture> knockout,
@@ -552,9 +546,7 @@ String? playerRunSummary({
       (g) => g.standings.any((s) => s.nationId == playerNationId),
     );
     if (!reached) return null;
-    return knockout.isEmpty
-        ? 'Contesting the group stage'
-        : 'Eliminated in the group stage';
+    return knockout.isEmpty ? l.tourRunInGroup : l.tourRunGroupOut;
   }
 
   own.sort((a, b) {
@@ -564,15 +556,24 @@ String? playerRunSummary({
   });
   final deepest = own.last;
   final round = baseRound(deepest.round ?? '');
-  final label = _runLabel[round] ?? round;
-  if (!deepest.hasResult) return 'Into the $label';
+  // The round's name, mid-sentence: the banner reads "Into the quarter-final",
+  // so it is wanted in lower case. Every wording below puts it behind a
+  // preposition that does not change shape in Czech ("do", "přes", "po"),
+  // which is what lets ONE sentence serve all five rounds in a language with
+  // seven cases.
+  final label = MatchStage.stage(l, round).toLowerCase();
+  if (!deepest.hasResult) {
+    // The bronze match is the one round whose name is not a noun ("third
+    // place"), so it cannot be dropped into the same sentence.
+    return round == '3RD' ? l.tourRunIntoThirdPlace : l.tourRunInto(label);
+  }
 
   final won = deepest.homeNationId == playerNationId
       ? deepest.homeScore! >= deepest.awayScore!
       : deepest.awayScore! >= deepest.homeScore!;
-  if (round == 'FINAL') return won ? championTitle : 'Runners-up';
-  if (round == '3RD') return won ? 'Third place' : 'Fourth place';
-  return won ? 'Through from the $label' : 'Knocked out in the $label';
+  if (round == 'FINAL') return won ? championTitle : l.finishRunnersUp;
+  if (round == '3RD') return won ? l.finishThirdPlace : l.finishFourthPlace;
+  return won ? l.tourRunThrough(label) : l.tourRunOut(label);
 }
 
 /// Group-stage seed for every finalist: nation id → e.g. "A2" (runner-up of

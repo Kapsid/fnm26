@@ -1,6 +1,10 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/services/competition/hosts.dart';
+import 'package:fnm/domain/services/competition/stadium_capacity.dart';
 import 'package:fnm/domain/services/competition/venues.dart';
 
 import '../../helpers/fixtures.dart';
@@ -300,13 +304,44 @@ void main() {
             lessThanOrEqualTo(venues[i - 1].capacity),
           );
         }
+        // The marquee ground is the nation's real biggest; the rest taper.
+        expect(venues.first.capacity, nationalStadiumCapacity[7]);
         expect(
-          venues.every((v) => v.capacity >= 32000 && v.capacity <= 85000),
+          venues.every(
+            (v) => v.capacity >= 1000 && v.capacity <= venues.first.capacity,
+          ),
           isTrue,
         );
         expect(venues.map((v) => v.city).toSet(), hasLength(venues.length));
       },
     );
+
+    test('a small nation plays in a small ground, a big one in a big one', () {
+      // Malta and Germany, the player's complaint: both used to get ~80k.
+      final malta = VenueGenerator.forHost(
+        hostId: 33,
+        cities: const ['Valletta'],
+      );
+      final germany = VenueGenerator.forHost(
+        hostId: 20,
+        cities: const ['Berlin', 'Munich'],
+      );
+      expect(malta.first.capacity, lessThan(20000));
+      expect(germany.first.capacity, greaterThan(75000));
+    });
+
+    test('every nation in the seed has a stadium capacity', () {
+      final ids = [
+        for (final n
+            in jsonDecode(File('assets/data/nations.json').readAsStringSync())
+                as List)
+          (n as Map)['id'] as int,
+      ];
+      expect(
+        ids.where((id) => !nationalStadiumCapacity.containsKey(id)),
+        isEmpty,
+      );
+    });
   });
 
   group('WorldCupHosts.continentalQualifiers', () {

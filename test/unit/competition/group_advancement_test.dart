@@ -23,6 +23,22 @@ void main() {
       expect(nationsCup(lowest: true).relegate, 0);
     });
 
+    test('an African zone group: winner through, runner-up MAY follow', () {
+      final adv = GroupAdvancement.forGroup(
+        kind: CompetitionKind.nationsLeague,
+        confederation: Confederation.africa,
+        groupCount: 4,
+        continentalSize: 24,
+      );
+      expect(adv.direct, 1, reason: 'every group winner reaches the R16');
+      expect(adv.contention, 2, reason: 'the two best runners-up join them');
+      expect(adv.relegate, 0, reason: 'the African cup relegates nobody');
+      expect(
+        GroupAdvancement.caption(kind: CompetitionKind.nationsLeague, adv: adv),
+        allOf(contains('Round of 16'), isNot(contains('relegated'))),
+      );
+    });
+
     test('nothing is relegated outside the Nations Cup', () {
       for (final kind in [
         CompetitionKind.worldCupQualifying,

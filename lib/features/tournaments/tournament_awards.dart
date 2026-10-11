@@ -19,6 +19,7 @@ class TournamentAwardsTab extends StatelessWidget {
     required this.goldenGlove,
     required this.code,
     required this.name,
+    this.highlightNations = const {},
     super.key,
   });
 
@@ -26,6 +27,9 @@ class TournamentAwardsTab extends StatelessWidget {
   final ({int nationId, String name})? goldenGlove;
   final String Function(int) code;
   final String Function(int) name;
+
+  /// The manager's nations, current and past: their players are highlighted.
+  final Set<int> highlightNations;
 
   @override
   Widget build(BuildContext context) {
@@ -42,8 +46,8 @@ class TournamentAwardsTab extends StatelessWidget {
       children: [
         if (goldenBall != null)
           _AwardHero(
-            award: 'GOLDEN BALL',
-            sub: 'Player of the Tournament',
+            award: l.tourSharedGoldenBall,
+            sub: l.tourSharedPlayerOfTournament,
             icon: Icons.emoji_events_rounded,
             playerName: goldenBall.name,
             nationName: name(goldenBall.nationId),
@@ -51,10 +55,8 @@ class TournamentAwardsTab extends StatelessWidget {
           ),
         if (goldenBoot != null)
           _AwardHero(
-            award: 'GOLDEN BOOT',
-            sub:
-                '${goldenBoot.goals} '
-                '${goldenBoot.goals == 1 ? 'goal' : 'goals'}',
+            award: l.tourSharedGoldenBoot,
+            sub: l.tourSharedGoalsCount(goldenBoot.goals),
             icon: Icons.sports_soccer_rounded,
             playerName: goldenBoot.name,
             nationName: name(goldenBoot.nationId),
@@ -68,7 +70,12 @@ class TournamentAwardsTab extends StatelessWidget {
           ),
         if (team.isNotEmpty) ...[
           const SizedBox(height: AppSpacing.md),
-          TeamOfTournamentCard(stars: team, code: code, name: name),
+          TeamOfTournamentCard(
+            stars: team,
+            code: code,
+            name: name,
+            highlightNations: highlightNations,
+          ),
         ],
         const SizedBox(height: AppSpacing.xl),
       ],
@@ -190,12 +197,16 @@ class TeamOfTournamentCard extends StatelessWidget {
     required this.stars,
     required this.code,
     required this.name,
+    this.highlightNations = const {},
     super.key,
   });
 
   final List<StarPlayer> stars;
   final String Function(int) code;
   final String Function(int) name;
+
+  /// The manager's nations, current and past: their players are highlighted.
+  final Set<int> highlightNations;
 
   @override
   Widget build(BuildContext context) {
@@ -243,20 +254,30 @@ class TeamOfTournamentCard extends StatelessWidget {
   }
 
   Widget _row(StarPlayer s) {
-    return Padding(
+    final mine = highlightNations.contains(s.nationId);
+    return Container(
       padding: const EdgeInsets.symmetric(vertical: 3),
+      decoration: mine
+          ? BoxDecoration(
+              color: AppColors.primary.withValues(alpha: 0.10),
+              borderRadius: AppRadii.smAll,
+            )
+          : null,
       child: Row(
         children: [
           SizedBox(width: 34, child: TacticalChip(s.position.label)),
           const SizedBox(width: AppSpacing.sm),
-          FlagDisc(code(s.nationId), size: 20),
+          FlagDisc(code(s.nationId), size: 20, highlighted: mine),
           const SizedBox(width: AppSpacing.sm),
           Expanded(
             child: Text(
               s.name,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
-              style: AppTypography.bodySmall,
+              style: AppTypography.bodySmall.copyWith(
+                color: mine ? AppColors.primary : null,
+                fontWeight: mine ? FontWeight.w700 : null,
+              ),
             ),
           ),
           if (s.goals > 0) ...[

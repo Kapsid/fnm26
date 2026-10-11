@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:fnm/domain/services/competition/nations_cups.dart';
 import 'package:fnm/domain/services/ranking/elo.dart';
 
 /// A cycle's earnings, split by source (all euros).
@@ -8,29 +9,9 @@ typedef IncomeBreakdown = ({int grant, int prize, int commercial});
 /// The federation departments the manager invests in each cycle.
 enum Department { youth, commercial, medical, naturalization, boardRelations }
 
-extension DepartmentX on Department {
-  String get label => switch (this) {
-    Department.youth => 'Youth Academy',
-    Department.commercial => 'Commercial / PR',
-    Department.medical => 'Medical & Sports Science',
-    Department.naturalization => 'Naturalisation Office',
-    Department.boardRelations => 'Board Relations',
-  };
-
-  /// A one-line description of what the department buys, for the invest UI.
-  String get blurb => switch (this) {
-    Department.youth =>
-      'Better academy prospects debut for your nation next cycle.',
-    Department.commercial =>
-      'Sponsorship brings extra income at the end of the cycle.',
-    Department.medical =>
-      'Fewer injuries. Your squad stays available all cycle.',
-    Department.naturalization =>
-      'More foreign players offer to switch to your nation.',
-    Department.boardRelations =>
-      'The board judges your results more patiently.',
-  };
-}
+// A department's name, its blurb and its building's name are DISPLAY strings
+// and live with the copy: `departmentLabel(l, d)`, `departmentBlurb(l, d)` and
+// `departmentBuildingName(l, d)` in core/util/federation_label.dart.
 
 /// The federation economy model: how much a save starts with, what it earns
 /// each cycle, and what each department investment buys. Pure and centralised
@@ -204,7 +185,9 @@ abstract final class FederationFinance {
   /// A one-off bonus for actually lifting a trophy, by competition name.
   static const Map<String, int> _titleBonus = {
     'World Championship': 20000000,
-    'Nations Cup': 4000000,
+    NationsCups.europe: 4000000,
+    NationsCups.northAmerica: 4000000,
+    NationsCups.africa: 4000000,
     'Continental Clash': 3000000,
   };
 
@@ -248,6 +231,19 @@ abstract final class FederationFinance {
   /// The most a department can usefully absorb in one cycle — effects are
   /// capped here, and the invest UI uses it as the slider ceiling.
   static const int maxInvestPerDepartment = 40000000;
+
+  /// What one level of a department costs. Money is invested in whole levels,
+  /// so every euro spent buys an effect the manager can see: a free slider let
+  /// a few hundred thousand buy a figure that rounded to nothing, and rounding
+  /// it up instead would have paid out for spreading crumbs everywhere.
+  static const int investLevelPrice = 4000000;
+
+  /// How many levels [dept] has. Ten for most, so the top level is
+  /// [maxInvestPerDepartment]; Medical stops at six, where its injury
+  /// reduction reaches its floor, so no level of it buys nothing.
+  static int maxLevels(Department dept) => dept == Department.medical
+      ? 6
+      : maxInvestPerDepartment ~/ investLevelPrice;
 
   /// The talent scale bonus applied to a nation's newgen intake for a cycle,
   /// from the euros invested in the Youth Academy. Diminishing, capped so an
@@ -333,13 +329,4 @@ abstract final class FederationBuildings {
     if (levelFor(cumulativeEuros) >= maxLevel) return 1;
     return (cumulativeEuros % eurosPerLevel) / eurosPerLevel;
   }
-
-  /// A short display name for a department's building.
-  static String nameFor(Department d) => switch (d) {
-    Department.youth => 'Academy',
-    Department.commercial => 'Commercial HQ',
-    Department.medical => 'Medical Centre',
-    Department.naturalization => 'Scouting Office',
-    Department.boardRelations => 'Boardroom',
-  };
 }

@@ -1,8 +1,10 @@
+import 'dart:math';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/nation.dart';
-import 'package:fnm/domain/services/competition/nations_cup.dart';
+import 'package:fnm/domain/services/competition/nations_cups.dart';
 
 /// Watched-draw key for the Nations Cup group draw (one per cycle).
 const nationsCupDrawKind = 'nationsCupDraw';
@@ -12,8 +14,11 @@ const nationsCupDrawKind = 'nationsCupDraw';
 typedef NcDrawGroup = ({String name, List<int> nationIds});
 
 /// The Nations Cup group draw recomputed for the ceremony. It reads the already
-/// persisted groups of the manager's own league and orders each by world
-/// ranking into pots, so the shared draw ceremony can reveal them pot by pot.
+/// persisted groups of the manager's own league (or, in the African cup, his
+/// own zone) and orders each by world ranking into pots, so the shared draw
+/// ceremony can reveal them pot by pot. Only the cup of the manager's own
+/// confederation is drawn for him: a manager whose confederation has none has
+/// no ceremony at all.
 class NationsCupDrawData {
   const NationsCupDrawData({
     required this.leagueLetter,
@@ -24,8 +29,12 @@ class NationsCupDrawData {
     required this.alreadyWatched,
   });
 
+  /// The league letter (a ladder cup) or zone prefix (Africa) of the groups.
   final String leagueLetter;
   final List<NcDrawGroup> groups;
+
+  /// How many pots the ceremony draws from: the largest group's size.
+  int get potCount => groups.fold(0, (m, g) => max(m, g.nationIds.length));
   final Map<int, Nation> nations;
   final int playerNationId;
   final int cycle;
@@ -41,25 +50,33 @@ nationsCupDrawProvider = FutureProvider.autoDispose
       final career = await ref.watch(careerRepositoryProvider).byId(careerId);
       if (career == null) return null;
       final comp = ref.watch(competitionRepositoryProvider);
-      final tables = await comp.tournamentGroupTables(
-        careerId,
-        CompetitionKind.nationsLeague,
-      );
-      if (tables.isEmpty) return null;
-
-      final tiers = await ref
-          .watch(careerRepositoryProvider)
-          .nationsCupTiers(careerId);
-      final playerTier = tiers[career.nationId] ?? 0;
-      final letter = NationsCup.leagueLetter(playerTier);
-
       final nations = {
         for (final n in await ref.watch(nationRepositoryProvider).all())
           n.id: n,
       };
+      final conf = NationsCups.ofManager(
+        nations[career.nationId]?.confederation,
+      );
+      if (conf == null) return null;
+      final tables = await comp.tournamentGroupTables(
+        careerId,
+        CompetitionKind.nationsLeague,
+        confederation: conf,
+      );
+      if (tables.isEmpty) return null;
+
+      // The league (or zone) his own group sits in: 'B3' -> 'B', 'W2' -> 'W'.
+      // Read off the drawn group, never the stored ladder: a save seeded
+      // before CONCACAF's remainder was folded into League B stores its last
+      // three as a League C that has no groups at all.
+      final own = tables
+          .where((t) => t.standings.any((s) => s.nationId == career.nationId))
+          .firstOrNull;
+      if (own == null || own.name.isEmpty) return null;
+      final letter = own.name[0];
       int rank(int id) => nations[id]?.ranking ?? 9999;
 
-      // Only the manager's own league, its groups in order.
+      // Only the manager's own league (or zone), its groups in order.
       final leagueTables = [
         for (final t in tables)
           if (t.name.isNotEmpty && t.name[0] == letter) t,

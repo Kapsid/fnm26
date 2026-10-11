@@ -20,8 +20,7 @@ typedef _Step = ({int groupIndex, int nationId, int pot});
 enum _DrawGrain {
   ball('Ball'),
   pot('Pot'),
-  all('All')
-  ;
+  all('All');
 
   const _DrawGrain(this.label);
   final String label;
@@ -255,7 +254,14 @@ class _DrawCeremonyState extends State<DrawCeremony> {
                 for (var gi = 0; gi < widget.groups.length; gi++)
                   _GroupCard(
                     title: l.tourSharedGroupName(widget.groups[gi].name),
-                    slots: _pots,
+                    // This group's OWN size, not the pot count. The pot count
+                    // is the biggest group, and handing it to every card gave
+                    // a group of three a fourth, permanently empty ball that
+                    // stayed there after the draw had finished. Slots say how
+                    // many nations this group will hold; pots say how the
+                    // reveal is paced. They are only the same number when
+                    // every group is the same size.
+                    slots: widget.groups[gi].nationIds.length,
                     revealed: revealedByGroup[gi] ?? const [],
                     justAdded: !done && last != null && last.groupIndex == gi
                         ? last.nationId
@@ -457,16 +463,26 @@ class _Pot extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text(
-            AppLocalizations.of(context).tourPot(index + 1),
-            style:
-                (active ? AppTypography.labelMedium : AppTypography.labelSmall)
-                    .copyWith(
-                      color: active
-                          ? AppColors.primary
-                          : AppColors.onSurfaceVariant,
-                      fontWeight: active ? FontWeight.w800 : FontWeight.w600,
-                    ),
+          // The same size whether it is the pot being drawn or not, and always
+          // one line. The active pot used to step up to labelMedium, and in a
+          // column a quarter (or a sixth) of the phone wide, with the system
+          // font enlarged, "KOŠ 1" no longer fit and broke into "KOŠ" over
+          // "1" the moment its pot came up, so the row jumped as the draw
+          // moved along. The active pot already says so with its border, its
+          // fill, its colour and its bigger flags; the weight is enough here.
+          // scaleDown only ever shrinks, and only when the column is too
+          // narrow.
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text(
+              AppLocalizations.of(context).tourPot(index + 1),
+              maxLines: 1,
+              softWrap: false,
+              style: AppTypography.labelSmall.copyWith(
+                color: active ? AppColors.primary : AppColors.onSurfaceVariant,
+                fontWeight: active ? FontWeight.w800 : FontWeight.w600,
+              ),
+            ),
           ),
           const SizedBox(height: 4),
           // The flags of the nations still waiting in this pot. The manager's
@@ -565,7 +581,9 @@ class _Stage extends StatelessWidget {
             ? Center(
                 key: const ValueKey('done'),
                 child: Text(
-                  done ? 'DRAW COMPLETE' : 'DRAWING…',
+                  done
+                      ? AppLocalizations.of(context).tourSharedDrawComplete
+                      : AppLocalizations.of(context).tourSharedDrawing,
                   style: AppTypography.labelMedium.copyWith(
                     color: AppColors.primary,
                   ),

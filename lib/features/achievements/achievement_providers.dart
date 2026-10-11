@@ -5,8 +5,10 @@ import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/services/achievements/achievements.dart';
 import 'package:fnm/domain/services/achievements/board_satisfaction.dart';
+import 'package:fnm/domain/services/competition/nations_cups.dart';
 import 'package:fnm/features/y/y_providers.dart';
 import 'package:fnm/domain/services/competition/continental_cups.dart';
+import 'package:fnm/domain/services/competition/finals_participation.dart';
 import 'package:fnm/domain/services/competition/tournament_stars.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/hub/objective_providers.dart';
@@ -141,21 +143,6 @@ satisfactionProvider = FutureProvider.autoDispose.family<int, int>((
   final comp = ref.watch(competitionRepositoryProvider);
   final fixtures = await comp.fixturesForNation(careerId, career.nationId);
 
-  // Recent form, newest first.
-  final played = fixtures.where((f) => f.hasResult).toList()
-    ..sort((a, b) => b.date.compareTo(a.date));
-  final recent = [
-    for (final f in played.take(BoardSatisfaction.formWindow))
-      () {
-        final isHome = f.homeNationId == career.nationId;
-        final mine = isHome ? f.homeScore! : f.awayScore!;
-        final theirs = isHome ? f.awayScore! : f.homeScore!;
-        if (mine > theirs) return MatchOutcome.win;
-        if (mine == theirs) return MatchOutcome.draw;
-        return MatchOutcome.loss;
-      }(),
-  ];
-
   final ranking = await ref.watch(worldRankingProvider(careerId).future);
 
   // Tournaments the nation placed in recently. The board's memory is short —
@@ -182,7 +169,8 @@ satisfactionProvider = FutureProvider.autoDispose.family<int, int>((
     if (placing == null) continue;
     final tier = switch (h.competition) {
       'World Championship' => TournamentTier.world,
-      'Nations Cup' => TournamentTier.nationsCup,
+      final name when NationsCups.isNationsCup(name) =>
+        TournamentTier.nationsCup,
       'Continental Clash' => TournamentTier.clash,
       final name when name == continentalName => TournamentTier.continental,
       // Another confederation's cup can't be won by this nation, so anything
@@ -198,9 +186,63 @@ satisfactionProvider = FutureProvider.autoDispose.family<int, int>((
   // the code: a manager could hit the brief and still be "concerned", or miss
   // it and be "pleased", purely on friendly form.
   final objectives = await ref.watch(cycleObjectivesProvider(careerId).future);
-  final settled = [
+  // A finals brief counts the moment it is reached, not when the run ends —
+  // see [BoardSatisfaction.lockedIn].
+  final graded = [
     for (final o in objectives)
-      if (o.decided) (tier: o.tier, target: o.target, actual: o.actual),
+      (
+        result: (tier: o.tier, target: o.target, actual: o.actual),
+        decided: o.decided,
+        met: o.met,
+      ),
+  ];
+  final settled = [
+    for (final o in graded)
+      if (o.decided || BoardSatisfaction.lockedIn(o.result)) o.result,
+  ];
+
+  // This cycle's games at finals whose brief is already locked in: they come
+  // out of the form window and only their defeats count, lightly.
+  final lockedRounds = <String>{
+    for (final o in graded)
+      if (BoardSatisfaction.lockedIn(o.result))
+        ...switch (o.result.tier) {
+          TournamentTier.world => FinalsRounds.worldChampionship,
+          TournamentTier.continental => FinalsRounds.continental,
+          _ => const <String>{},
+        },
+  };
+  final lockedIds = {
+    for (final f in await comp.cycleFixturesForNation(
+      careerId,
+      career.nationId,
+    ))
+      if (lockedRounds.contains(f.round)) f.id,
+  };
+
+  // Recent form, newest first.
+  final played =
+      fixtures.where((f) => f.hasResult && !lockedIds.contains(f.id)).toList()
+        ..sort((a, b) => b.date.compareTo(a.date));
+  final lockedInLosses = fixtures
+      .where((f) => f.hasResult && lockedIds.contains(f.id))
+      .where((f) {
+        final isHome = f.homeNationId == career.nationId;
+        final mine = isHome ? f.homeScore! : f.awayScore!;
+        final theirs = isHome ? f.awayScore! : f.homeScore!;
+        return mine < theirs;
+      })
+      .length;
+  final recent = [
+    for (final f in played.take(BoardSatisfaction.formWindow))
+      () {
+        final isHome = f.homeNationId == career.nationId;
+        final mine = isHome ? f.homeScore! : f.awayScore!;
+        final theirs = isHome ? f.awayScore! : f.homeScore!;
+        if (mine > theirs) return MatchOutcome.win;
+        if (mine == theirs) return MatchOutcome.draw;
+        return MatchOutcome.loss;
+      }(),
   ];
 
   // What the manager has said in public this cycle. Small next to results, but
@@ -221,6 +263,7 @@ satisfactionProvider = FutureProvider.autoDispose.family<int, int>((
                 ),
                 // A reputation is worth a little rope, and only a little.
                 previousCycle: career.lastCycleBoard,
+                lockedInLosses: lockedInLosses,
               ) +
               press.board)
           .clamp(0, 100);
@@ -230,7 +273,9 @@ satisfactionProvider = FutureProvider.autoDispose.family<int, int>((
   // never sink below the neutral (job-safe) mark for the rest of the cycle.
   final allMet =
       settled.isNotEmpty &&
-      objectives.where((o) => o.decided).every((o) => o.met);
+      graded
+          .where((o) => o.decided || BoardSatisfaction.lockedIn(o.result))
+          .every((o) => o.met || BoardSatisfaction.lockedIn(o.result));
   if (allMet && base < BoardSatisfaction.neutral) {
     return BoardSatisfaction.neutral;
   }

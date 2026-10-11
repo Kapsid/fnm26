@@ -346,7 +346,12 @@ class _SquadDevTableState extends State<SquadDevTable> {
           padding: const EdgeInsets.only(bottom: AppSpacing.xs),
           child: Row(
             children: [
-              Expanded(child: _head(l.squadDevPlayer)),
+              Expanded(
+                child: Align(
+                  alignment: AlignmentDirectional.centerStart,
+                  child: _head(l.squadDevPlayer),
+                ),
+              ),
               SizedBox(
                 width: _SquadDevLine.ageWidth,
                 child: _head(l.squadDevAge),
@@ -355,6 +360,19 @@ class _SquadDevTableState extends State<SquadDevTable> {
                 width: _SquadDevLine.positionWidth,
                 child: _head(l.squadDevPosition),
               ),
+              // The newcomers' stars had a column of their own and no heading,
+              // so on an intake every value sat one column to the right of its
+              // label. A star says what the column is without a word to
+              // translate.
+              if (rows.any((r) => r.stars != null))
+                const SizedBox(
+                  width: _SquadDevLine.starsWidth,
+                  child: Icon(
+                    Icons.star_rounded,
+                    size: 12,
+                    color: AppColors.onSurfaceVariant,
+                  ),
+                ),
               SizedBox(
                 width: _SquadDevLine.ratingWidth,
                 child: _head(l.squadDevChange),
@@ -402,10 +420,13 @@ class _SquadDevTableState extends State<SquadDevTable> {
     );
   }
 
+  /// Every column but the player's is centred, heading and values alike, so a
+  /// value always sits under its label whatever its width.
   Widget _head(String text) => Text(
     text,
     maxLines: 1,
     overflow: TextOverflow.ellipsis,
+    textAlign: TextAlign.center,
     style: AppTypography.labelSmall.copyWith(
       color: AppColors.onSurfaceVariant,
       fontWeight: FontWeight.w700,
@@ -511,6 +532,9 @@ class _SquadDevLine extends StatelessWidget {
   static const double ageWidth = 40;
   static const double positionWidth = 52;
 
+  /// The scouts' stars, on a newcomer's line only.
+  static const double starsWidth = 46;
+
   /// Wide enough for a rating, an arrow and a rating: the line's whole point
   /// is where a player came FROM, so 84 on its own will not do.
   static const double ratingWidth = 78;
@@ -574,9 +598,9 @@ class _SquadDevLine extends StatelessWidget {
           // estimate, which is exactly why it belongs next to the name.
           if (row.stars != null)
             SizedBox(
-              width: 46,
+              width: starsWidth,
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Icon(
                     Icons.star_rounded,
@@ -603,7 +627,7 @@ class _SquadDevLine extends StatelessWidget {
           SizedBox(
             width: ratingWidth,
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 if (change != null && change != 0) ...[
                   Text(
@@ -640,6 +664,7 @@ class _SquadDevLine extends StatelessWidget {
   Widget _cell(String text) => Text(
     text,
     maxLines: 1,
+    textAlign: TextAlign.center,
     style: AppTypography.bodySmall.copyWith(
       color: AppColors.onSurfaceVariant,
     ),

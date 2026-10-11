@@ -52,6 +52,7 @@ class TournamentScorers extends StatefulWidget {
     required this.code,
     this.allTime = const [],
     this.emptyMessage = 'No goals scored yet.',
+    this.highlightNations = const {},
     super.key,
   });
 
@@ -63,6 +64,10 @@ class TournamentScorers extends StatefulWidget {
   /// active flag). When non-empty a "This edition / All-time" toggle appears.
   final List<AllTimeScorer> allTime;
   final String emptyMessage;
+
+  /// The nations the manager has led (current and past): their players are
+  /// highlighted, so his own scorers stand out of the chart.
+  final Set<int> highlightNations;
 
   @override
   State<TournamentScorers> createState() => _TournamentScorersState();
@@ -142,9 +147,11 @@ class _TournamentScorersState extends State<TournamentScorers> {
     required int goals,
     required bool active,
   }) {
+    final mine = widget.highlightNations.contains(nationId);
     return Padding(
       padding: const EdgeInsets.only(bottom: AppSpacing.sm),
       child: AppCard(
+        border: mine ? Border.all(color: AppColors.primary) : null,
         padding: const EdgeInsets.symmetric(
           vertical: AppSpacing.sm,
           horizontal: AppSpacing.md,
@@ -160,7 +167,7 @@ class _TournamentScorersState extends State<TournamentScorers> {
                 ),
               ),
             ),
-            FlagDisc(widget.code(nationId), size: 24),
+            FlagDisc(widget.code(nationId), size: 24, highlighted: mine),
             const SizedBox(width: AppSpacing.md),
             Expanded(
               // The scorer's name, and an ellipsis is not an option: the row
@@ -172,7 +179,10 @@ class _TournamentScorersState extends State<TournamentScorers> {
                 name,
                 maxLines: 1,
                 shortText: initialledName(name),
-                style: AppTypography.bodyMedium,
+                style: AppTypography.bodyMedium.copyWith(
+                  color: mine ? AppColors.primary : null,
+                  fontWeight: mine ? FontWeight.w700 : null,
+                ),
               ),
             ),
             // The one mark every all-time chart uses for a man still playing

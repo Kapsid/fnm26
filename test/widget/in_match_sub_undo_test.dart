@@ -5,6 +5,7 @@ import 'package:fnm/core/theme/app_theme.dart';
 import 'package:fnm/domain/entities/formation.dart';
 import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/entities/tactics.dart';
+import 'package:fnm/domain/services/tactics/substitution_rules.dart';
 import 'package:fnm/features/tactics/in_match_tactics.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 
@@ -65,10 +66,13 @@ void main() {
     double width = 400,
     Locale locale = const Locale('en'),
   }) async {
-    tester.view
-      ..physicalSize = Size(width, 1600)
-      ..devicePixelRatio = 1.0;
-    addTearDown(tester.view.reset);
+    // setSurfaceSize, not tester.view.physicalSize. The editor is a PUSHED
+    // ROUTE, and a probe showed its layout coming out identical at 320 and at
+    // 430 with physicalSize set: these width cases were not constraining the
+    // sheet at all, which is how a tab strip that painted its counter over
+    // its second tab passed them. The surface size does reach it.
+    await tester.binding.setSurfaceSize(Size(width, 1600));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
     await tester.pumpWidget(
       ProviderScope(
         child: MaterialApp(
@@ -118,6 +122,24 @@ void main() {
     String benchName,
   ) async {
     await openPicker(tester, starterName);
+    // The picker opens on the SHORTLIST, so the man wanted may be under one
+    // of the other tabs. Look on each in turn rather than assuming the first.
+    //
+    // The strings come from the TREE, not from a hard-coded English load: the
+    // sheet renders in whichever language the case is running, and an English
+    // finder simply finds nothing in the Czech one.
+    final l = AppLocalizations.of(
+      tester.element(find.byType(Scaffold).last),
+    );
+    if (find.text(benchName).evaluate().isEmpty) {
+      for (final tab in [l.tacticsTabOnPitch, l.tacticsTabOtherPositions]) {
+        final chip = find.text(tab);
+        if (chip.evaluate().isEmpty) continue;
+        await tester.tap(chip.last);
+        await tester.pumpAndSettle();
+        if (find.text(benchName).evaluate().isNotEmpty) break;
+      }
+    }
     // The squad list behind the modal sheet carries the same name; the sheet
     // was pushed later, so it is the last match in the tree.
     final target = find.text(benchName).last;
@@ -128,7 +150,7 @@ void main() {
     await tester.pumpAndSettle();
   }
 
-  testWidgets('a man already taken off is marked, and cannot be dragged on', (
+  testWidgets('a man already taken off is not offered at all', (
     tester,
   ) async {
     // Bench12 came on for Starter3 before this sheet opened.
@@ -136,18 +158,30 @@ void main() {
       tester,
       lineup: [1, 2, 12, 4, 5, 6, 7, 8, 9, 10, 11],
     );
-    final l = await AppLocalizations.delegate.load(const Locale('en'));
 
-    // Starter3 now sits in the squad list, and the list says why he is out.
-    expect(find.text(l.tacticsSubOffAlready), findsOneWidget);
-    final row = find.ancestor(
-      of: find.text('Starter3'),
-      matching: find.byType(IgnorePointer),
-    );
+    // He used to sit in a greyed pile with "already off" beside his name.
+    // The manager decided that pile was not worth a third list, so a
+    // withdrawn man simply leaves the sheet: not greyed, not listed.
     expect(
-      row,
-      findsWidgets,
-      reason: 'a man who cannot come on must not answer a drag',
+      find.text('Starter3'),
+      findsNothing,
+      reason: 'a man already taken off is no longer shown at all',
+    );
+
+    // The RULE has not moved with the row. It lives in refusalToBringOn and
+    // still refuses him, which is what stops a drag rather than the absence
+    // of a row: see the unit tests on substitution_rules.
+    expect(
+      canBringOn(
+        startingIds: {for (var i = 1; i <= 11; i++) i},
+        onPitch: {1, 2, 12, 4, 5, 6, 7, 8, 9, 10, 11},
+        sentOffIds: const {},
+        withdrawnIds: const {3},
+        maxSubs: 5,
+        playerId: 3,
+      ),
+      isFalse,
+      reason: 'he still cannot come back on',
     );
     expect(tester.takeException(), isNull);
     expectNothingCut(tester);
@@ -215,8 +249,10 @@ void main() {
     expect(find.text(l.tacticsSubsUsed(1, 5)), findsOneWidget);
     expect(onPitchName('BENCH12'), findsOneWidget);
     expect(onPitchName('STARTER3'), findsNothing);
-    // Football has no re-entry: he is still marked out of the game.
-    expect(find.text(l.tacticsSubOffAlready), findsOneWidget);
+    // Football has no re-entry, and undoing a LATER change does not give him
+    // back. He is not marked out of the game any more, he is simply not in
+    // the sheet: the greyed pile that used to carry that marker is gone.
+    expect(find.text('Starter3'), findsNothing);
     expect(tester.takeException(), isNull);
     expectNothingCut(tester);
   });
@@ -251,6 +287,10 @@ void main() {
 
     // And the man handed back is a man the manager can still move.
     await openPicker(tester, 'Bench12');
+    // He is ON THE PITCH now, and the picker opens on the shortlist, so his
+    // row is under the tab that holds the eleven.
+    await tester.tap(find.text(l.tacticsTabOnPitch).last);
+    await tester.pumpAndSettle();
     final tile = find.widgetWithText(ListTile, 'Bench12');
     expect(tile, findsOneWidget);
     expect(
@@ -310,8 +350,15 @@ void main() {
 
           // The sheet really is in this language. It is a pushed route, so an
           // override around the launcher would never have reached it.
+          // Proved off the candidates tab, which is always on screen. It
+          // used to be proved off "already off", which lived in the spent
+          // pile; that pile is gone, and a language check anchored to a
+          // deleted section fails for the wrong reason.
+          // Proved off a tab word, which is always on screen. It used to be
+          // proved off the available heading, and that heading became a tab
+          // label with its count on a line of its own.
           expect(
-            find.text(l.tacticsSubOffAlready),
+            find.text(l.tacticsTabSuitable),
             findsOneWidget,
             reason: 'the sheet did not render in ${locale.languageCode}',
           );
@@ -321,11 +368,14 @@ void main() {
             'the count of changes left',
           );
           expectWhole(find.text(l.tacticsSubInjured), 'the injury marker');
-          expectWhole(
-            find.text(l.tacticsSubOffAlready),
-            'the already-off marker',
-          );
-          expectWhole(find.text('Starter3'), 'a squad row name');
+          // The already-off marker is gone with the pile it lived in. An
+          // injured man is still OFFERED, with a warning, so his marker stays;
+          // a withdrawn man is not offered at all any more, so there is no row
+          // left to carry one.
+          // A real candidate. Starter3 used to serve here, but in this
+          // lineup he is a starter who is no longer on the pitch, which is
+          // exactly the state that no longer appears in a list at all.
+          expectWhole(find.text('Bench14'), 'a squad row name');
 
           // Any change made HERE brings the undo row out. A swap of two men
           // already on the pitch does it without spending a substitution, and
@@ -343,4 +393,50 @@ void main() {
       );
     }
   }
+
+  // The GRAPHICAL route to a substitution, which is the one most managers
+  // take: tap a man on the pitch and pick his replacement. The bench list
+  // below the pitch was given sections; this sheet was not, so it went on
+  // offering a man already taken off exactly as it offered a fit substitute
+  // and a manager reported that it still looked old. It did.
+  testWidgets('the slot picker is sectioned, not one flat list', (
+    tester,
+  ) async {
+    await openSheet(tester);
+
+    // Take somebody off first, so there is a man who cannot come back on and
+    // the unavailable section has something in it to prove.
+    await substitute(tester, 'Starter11', 'Bench12');
+    await openPicker(tester, 'Starter10');
+
+    // TWICE each: once in the bench list underneath, once in the picker over
+    // it. That is the assertion. Before this the picker had none of its own
+    // and every heading was found exactly once, which is what the old flat
+    // list looked like from here.
+    // The picker carries the same three TABS the squad list does. It used to
+    // open every group at once in one modal, which is what a manager saw
+    // during a live match and reported as having no tabs: this is the route
+    // he takes, and it was the one route the tabs had never reached.
+    final l = await AppLocalizations.delegate.load(const Locale('en'));
+    for (final tab in [
+      l.tacticsTabSuitable,
+      l.tacticsTabOnPitch,
+      l.tacticsTabOtherPositions,
+    ]) {
+      expect(
+        find.text(tab),
+        findsAtLeastNWidgets(2),
+        reason: '"$tab" is missing from the slot picker',
+      );
+    }
+
+    // Only one group is shown at a time. That is the difference between tabs
+    // and the stack of sections this replaced.
+    final suitable = find.text(l.tacticsTabSuitable);
+    await tester.tap(suitable.last);
+    await tester.pumpAndSettle();
+    expect(tester.takeException(), isNull);
+    expect(tester.takeException(), isNull);
+    expectNothingCut(tester);
+  });
 }

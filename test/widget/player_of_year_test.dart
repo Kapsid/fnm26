@@ -206,6 +206,7 @@ void main() {
               category: 'award',
               title: 'World Player of the Year 2026',
               body: body,
+              spec: null,
               year: 2026,
               read: false,
             ),

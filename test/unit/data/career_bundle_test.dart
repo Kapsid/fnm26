@@ -244,6 +244,53 @@ void main() {
     expect(orphaned, 0, reason: 'a goal that belongs to no fixture');
   });
 
+  test('press statements and conferences follow their fixture', () async {
+    await aCareerNamed('Bystander'); // so the fixture ids must shift
+    final original = await aCareerNamed('Pundit');
+    final fixtureId = await (db.select(
+      db.fixtures,
+    )..where((t) => t.careerId.equals(original))).map((f) => f.id).getSingle();
+    await db
+        .into(db.pressStatements)
+        .insert(
+          PressStatementsCompanion.insert(
+            careerId: original,
+            cycle: 0,
+            nationId: 1,
+            kind: 'winNext',
+            madeOn: DateTime.utc(2030, 6, 10),
+            madeAfterFixtureId: fixtureId,
+          ),
+        );
+    await db
+        .into(db.pressConferences)
+        .insert(
+          PressConferencesCompanion.insert(
+            careerId: original,
+            cycle: 0,
+            reason: 'bigWin',
+            fixtureId: fixtureId,
+            triggeredOn: DateTime.utc(2030, 6, 10),
+          ),
+        );
+
+    final bundle = await CareerBundle.export(db, original);
+    final imported = await CareerBundle.import(db, bundle);
+
+    final importedFixture = await (db.select(
+      db.fixtures,
+    )..where((t) => t.careerId.equals(imported))).map((f) => f.id).getSingle();
+    expect(importedFixture, isNot(fixtureId));
+    final statement = await (db.select(
+      db.pressStatements,
+    )..where((t) => t.careerId.equals(imported))).getSingle();
+    final conference = await (db.select(
+      db.pressConferences,
+    )..where((t) => t.careerId.equals(imported))).getSingle();
+    expect(statement.madeAfterFixtureId, importedFixture);
+    expect(conference.fixtureId, importedFixture);
+  });
+
   group('reading a file back', () {
     test('survives the round trip through bytes', () async {
       final careerId = await aCareerNamed('Encoded');

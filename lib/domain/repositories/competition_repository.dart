@@ -2,8 +2,11 @@ import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/services/awards/awards.dart';
 import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/entities/group_standing.dart';
+import 'package:fnm/domain/services/competition/cycle_finish.dart';
 import 'package:fnm/domain/services/competition/finals.dart';
+import 'package:fnm/domain/services/competition/nations_cups.dart';
 import 'package:fnm/domain/services/competition/schedule_generator.dart';
+import 'package:fnm/domain/services/match/match_engine.dart';
 
 /// A qualifying group's table for display.
 typedef GroupTable = ({
@@ -94,6 +97,29 @@ typedef GoalRecord = ({
 /// A top-scorer tally.
 typedef ScorerTally = ({int playerId, int nationId, int goals});
 
+/// One thing that happened in a match which was not a goal, ready to persist.
+///
+/// Only a sending-off and a knock are written today — see the `MatchIncidents`
+/// table for why the [type] is nonetheless the engine's full event type.
+typedef IncidentRecord = ({
+  int careerId,
+  int fixtureId,
+  int nationId,
+  int playerId,
+  int minute,
+  MatchEventType type,
+  bool secondYellow,
+});
+
+/// The same thing, read back: who, when, and what.
+typedef MatchIncident = ({
+  int playerId,
+  int nationId,
+  int minute,
+  MatchEventType type,
+  bool secondYellow,
+});
+
 /// The head-to-head record between two nations across a save: from nation A's
 /// point of view (its wins, the draws, its losses, and both sides' goals).
 typedef HeadToHead = ({
@@ -152,11 +178,18 @@ typedef PlayerCareerStats = ({
 });
 
 /// One inbox message.
+///
+/// [title] and [body] are the words the message was written in. [spec] is what
+/// it MEANS — the strings that name it and their arguments, as JSON — and is
+/// what the display layer renders when it is there; see
+/// `core/util/message_text.dart`. Null on every message filed before the inbox
+/// stored meaning, which therefore reads in the language it happened in.
 typedef MessageItem = ({
   int id,
   String category,
   String title,
   String body,
+  String? spec,
   int year,
   bool read,
 });
@@ -328,10 +361,14 @@ abstract interface class CompetitionRepository {
     Confederation? confederation,
   });
 
-  /// Whether the Nations Cup Finals Four (its knockout stage — semis or final)
-  /// is under way this cycle with an unplayed fixture. Lets the hub surface the
-  /// Finals Four as a watchable step even when the player's nation isn't in it.
-  Future<bool> hasLiveNationsCupFinals(int careerId);
+  /// Whether a Nations Cup's finals (its knockout stage) are under way this
+  /// cycle with an unplayed fixture. Lets the hub surface them as a watchable
+  /// step even when the player's nation isn't in them. Scoped to
+  /// [confederation]'s cup when given; null looks at every cup of the cycle.
+  Future<bool> hasLiveNationsCupFinals(
+    int careerId, {
+    Confederation? confederation,
+  });
 
   /// Whether the manager has already watched a given draw ([kind] is
   /// 'worldCupFinals' or a confederation name) for [cycle] — draws play once.
@@ -355,10 +392,31 @@ abstract interface class CompetitionRepository {
     Confederation? playerConfederation,
   });
 
-  /// The earliest unplayed Nations Cup Finals Four (NSF/NFINAL) fixture date, or
-  /// null when none is pending — so the hub can step the Finals Four day by day
-  /// even when the player's nation isn't in it.
-  Future<DateTime?> earliestUnplayedNationsCupFinalsDate(int careerId);
+  /// The latest PLAYED finals fixture [nationId] took no part in, among the
+  /// tournaments a manager steps through from the stands: the World
+  /// Championship, his own region's continental finals ([confederation]) and
+  /// the finals of his own confederation's Nations Cup
+  /// (`NationsCups.ofManager` of [confederation]: none when it runs no cup;
+  /// every cup when null). Null
+  /// when none has been played.
+  ///
+  /// The press read it as a line in time: a match of his that falls before it
+  /// has had somebody else's tournament played over the top of it, and is no
+  /// longer anything the room would ask about.
+  Future<DateTime?> latestPlayedWatchedFinalsDate(
+    int careerId,
+    int nationId, {
+    Confederation? confederation,
+  });
+
+  /// The earliest unplayed Nations Cup finals (NQF/NSF/NFINAL) fixture date,
+  /// or null when none is pending — so the hub can step the finals day by day
+  /// even when the player's nation isn't in them. Scoped to [confederation]'s
+  /// cup when given; null looks at every cup of the cycle.
+  Future<DateTime?> earliestUnplayedNationsCupFinalsDate(
+    int careerId, {
+    Confederation? confederation,
+  });
 
   /// The earliest unplayed fixture date of the current cycle's tournament of
   /// [kind] (optionally the one for [confederation]), or null when none pends —
@@ -468,8 +526,30 @@ abstract interface class CompetitionRepository {
   /// This is what makes a scoreline a story rather than a number: it is the
   /// only way to know a side came from behind, since a fixture row records how
   /// a match ENDED and nothing about how it got there.
-  Future<Map<int, List<({int nationId, int minute})>>> goalTimeline(
+  /// Pass [fixtureId] to read ONE match's goals rather than the save's — a
+  /// caller asking how a single afternoon unfolded should not be handed every
+  /// goal a twenty-year career ever scored.
+  Future<Map<int, List<({int nationId, int playerId, int minute})>>>
+  goalTimeline(int careerId, {int? fixtureId});
+
+  /// Persists a match's sendings-off and knocks (both sides). Called once per
+  /// played match; re-recording the same fixture replaces its incidents.
+  Future<void> recordIncidents(
     int careerId,
+    int fixtureId,
+    List<IncidentRecord> incidents,
+  );
+
+  /// What happened to one nation's players, match by match: fixture id → the
+  /// incidents in it, earliest minute first.
+  ///
+  /// The counterpart to [scorersByFixture]. A scoreline says a side lost; this
+  /// is what says it lost a man in the thirty-fourth minute, which is the
+  /// difference between a question about the result and a question about the
+  /// match.
+  Future<Map<int, List<MatchIncident>>> incidentsByFixture(
+    int careerId,
+    int nationId,
   );
 
   /// Who scored, match by match, for one nation: fixture id → that fixture's
@@ -612,17 +692,20 @@ abstract interface class CompetitionRepository {
   });
 
   /// The manager nation's Nations Cup finish in every edition it played: the
-  /// league it was in (A/B/…), its final group position (1 = top), the group
-  /// size, and its Finals Four result if it reached the last four. One entry per
-  /// cycle, for the career-history "which league, and how it ended".
+  /// league it was in (A/B/…, a ladder cup) or its [zone] (the African cup),
+  /// its final group position (1 = top), the group size, and how far it went
+  /// in the cup's finals (Finals Four or Finals Eight) if it reached them. One
+  /// entry per cycle, read from its own confederation's cup only, for the
+  /// career-history "which league, and how it ended".
   Future<
     List<
       ({
         int cycle,
         String league,
+        AfricaZone? zone,
         int position,
         int groupSize,
-        String? finals,
+        NationsCupFinish? finals,
       })
     >
   >
@@ -661,6 +744,19 @@ abstract interface class CompetitionRepository {
 
   /// A player's aggregated career record, or null if they've never featured.
   Future<PlayerCareerStats?> playerCareerStats(int careerId, int playerId);
+
+  /// Who played in ONE match, and how each of them was marked.
+  ///
+  /// The per-fixture read of the rating table. Every other read of it is keyed
+  /// by player, by nation or by competition, so nothing could answer the one
+  /// question a press room asks after a game — who was out there on Saturday,
+  /// and which of them had the afternoon of his life. That is what a first cap
+  /// and a breakthrough are both read from, and neither could be seen without
+  /// it.
+  ///
+  /// The rows have been written for every match in the world since the world
+  /// gained a box score; this adds no column and no table, only the query.
+  Future<List<PlayerMatchLine>> ratingsForFixture(int careerId, int fixtureId);
 
   /// Recent match ratings (with their dates) for every player of [nationId],
   /// newest first and capped per player — the raw input for form and fatigue.
@@ -751,6 +847,10 @@ abstract interface class CompetitionRepository {
   Future<Set<String>> messageKeys(int careerId);
 
   /// Appends a message to the inbox (ignored if [dedupKey] already exists).
+  ///
+  /// [title] and [body] are the words as they read when the message is filed;
+  /// [spec] is what it means, and is what the manager actually reads when he
+  /// opens it. Callers go through `addTextMessage`, which writes both.
   Future<void> addMessage({
     required int careerId,
     required String dedupKey,
@@ -758,6 +858,7 @@ abstract interface class CompetitionRepository {
     required String title,
     required String body,
     required int year,
+    String? spec,
   });
 
   /// The inbox, newest first.

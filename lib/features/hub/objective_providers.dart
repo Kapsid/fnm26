@@ -1,4 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fnm/core/util/competition_label.dart';
+import 'package:fnm/core/util/message_text.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/fixture.dart';
@@ -7,7 +9,9 @@ import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/services/achievements/board_satisfaction.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
 import 'package:fnm/domain/services/competition/continental_cups.dart';
+import 'package:fnm/domain/services/competition/finals_participation.dart';
 import 'package:fnm/domain/services/competition/nations_cup.dart';
+import 'package:fnm/domain/services/competition/nations_cups.dart';
 import 'package:fnm/domain/services/competition/rounds.dart';
 import 'package:fnm/features/ranking/world_ranking_providers.dart';
 import 'package:fnm/features/settings/settings_providers.dart';
@@ -78,15 +82,132 @@ typedef ObjectiveOutcome = ({
 String objectiveDemandText(
   AppLocalizations l,
   TournamentTier tier,
-  int target,
-) => _labelFor(l, tier, target);
+  int target, {
+  String? competition,
+}) => _labelFor(l, tier, target, competition: competition);
+
+/// The same demand WITHOUT the words: which string it is, so the board's
+/// verdict can be stored as meaning and read in the manager's language
+/// whenever he opens it.
+///
+/// [competition] is the objective's stored competition name: the African
+/// Nations Cup is played in zones with a Round of 16 and no promotion, so its
+/// rungs are worded for that.
+MsgKey objectiveDemandKey(
+  TournamentTier tier,
+  int target, {
+  String? competition,
+}) {
+  if (tier == TournamentTier.nationsCup && _isZonesCup(competition)) {
+    return switch (target) {
+      7 => _ncWinIt(competition),
+      6 => _ncReachFinal(competition),
+      5 => MsgKey.objectiveNcFinalsEight,
+      4 => MsgKey.objectiveNcZoneWinGroup,
+      _ => MsgKey.objectiveNcTopHalf,
+    };
+  }
+  if (tier == TournamentTier.nationsCup) {
+    return switch (target) {
+      7 => _ncWinIt(competition),
+      6 => _ncReachFinal(competition),
+      5 => MsgKey.objectiveNcFinalsFour,
+      4 => MsgKey.objectiveNcWinGroup,
+      3 => MsgKey.objectiveNcTopHalf,
+      _ => MsgKey.objectiveNcSurvive,
+    };
+  }
+  return switch (target) {
+    7 => MsgKey.objectiveWinTournament,
+    6 => MsgKey.objectiveReachFinal,
+    5 => MsgKey.objectiveReachSemis,
+    4 => MsgKey.objectiveReachQuarters,
+    3 => MsgKey.objectiveReachKnockouts,
+    2 => MsgKey.objectiveQualifyGeneric,
+    _ => MsgKey.objectiveQualifyingTopHalf,
+  };
+}
+
+/// A finish ordinal as a key, for the same reason as [objectiveDemandKey].
+MsgKey objectiveFinishKey(
+  TournamentTier tier,
+  int ordinal, {
+  String? competition,
+}) {
+  if (tier == TournamentTier.nationsCup && _isZonesCup(competition)) {
+    return switch (ordinal) {
+      7 => _ncChampions(competition),
+      6 => MsgKey.finishRunnersUp,
+      5 => MsgKey.finishNcFinalsEight,
+      4 => MsgKey.finishNcGroupWinners,
+      3 => MsgKey.finishNcTopHalf,
+      2 => MsgKey.finishNcBottomHalf,
+      _ => MsgKey.finishNcBottom,
+    };
+  }
+  if (tier == TournamentTier.nationsCup) {
+    return switch (ordinal) {
+      7 => _ncChampions(competition),
+      6 => MsgKey.finishRunnersUp,
+      5 => MsgKey.finishNcFinalsFour,
+      4 => MsgKey.finishNcGroupWinners,
+      3 => MsgKey.finishNcTopHalf,
+      2 => MsgKey.finishNcStayedUp,
+      _ => MsgKey.finishNcBottom,
+    };
+  }
+  return switch (ordinal) {
+    7 => MsgKey.finishChampions,
+    6 => MsgKey.finishRunnersUp,
+    5 => MsgKey.finishSemiFinals,
+    4 => MsgKey.finishQuarterFinals,
+    3 => MsgKey.finishRoundOf16,
+    2 => MsgKey.finishGroupStage,
+    // Both bottom rungs describe the QUALIFYING campaign, because that is what
+    // a side that never reached the tournament actually played. A flat "did not
+    // qualify" here read as a contradiction next to a met verdict, and told a
+    // manager whose brief was the campaign itself nothing about how it went.
+    1 => MsgKey.finishQualifyingTopHalf,
+    _ => MsgKey.finishQualifyingBottomHalf,
+  };
+}
 
 /// A finish ordinal, worded for the manager.
 String objectiveFinishText(
   AppLocalizations l,
   TournamentTier tier,
-  int ordinal,
-) => _resultLabel(l, tier, ordinal);
+  int ordinal, {
+  String? competition,
+}) => _resultLabel(l, tier, ordinal, competition: competition);
+
+/// The rungs that name the cup say which one: a CONCACAF manager is told to
+/// win the North America Nations Cup, not Europe's.
+MsgKey _ncWinIt(String? competition) => switch (competition?.trim()) {
+  NationsCups.northAmerica => MsgKey.objectiveNcWinItNorthAmerica,
+  NationsCups.africa => MsgKey.objectiveNcWinItAfrica,
+  _ => MsgKey.objectiveNcWinIt,
+};
+
+MsgKey _ncReachFinal(String? competition) => switch (competition?.trim()) {
+  NationsCups.northAmerica => MsgKey.objectiveNcReachFinalNorthAmerica,
+  NationsCups.africa => MsgKey.objectiveNcReachFinalAfrica,
+  _ => MsgKey.objectiveNcReachFinal,
+};
+
+MsgKey _ncChampions(String? competition) => switch (competition?.trim()) {
+  NationsCups.northAmerica => MsgKey.finishNcChampionsNorthAmerica,
+  NationsCups.africa => MsgKey.finishNcChampionsAfrica,
+  _ => MsgKey.finishNcChampions,
+};
+
+/// Whether [competition] is a zones-format Nations Cup (Africa's).
+bool _isZonesCup(String? competition) =>
+    competition != null &&
+    NationsCups.confederations.any(
+      (c) =>
+          NationsCups.forConfederation(c)!.name == competition &&
+          NationsCups.forConfederation(c)!.format == NationsCupFormat.zones,
+    );
 
 /// Every board objective for [careerId]'s current cycle, graded but unworded —
 /// the CONTINENTAL championship first, then the Nations Cup (for the nations
@@ -188,45 +309,73 @@ cycleObjectiveOutcomesProvider = FutureProvider.autoDispose.family<List<Objectiv
   }
 
   // --- The Nations Cup -------------------------------------------------------
-  // Only the confederations that actually run one have a group to stand in, so
-  // this simply asks whether the nation is in this cycle's cup. It used to have
-  // no objective at all: the manager played a whole league campaign, went up or
-  // came down, and the board never once said what it had wanted from it.
-  final ncTables = await comp.tournamentGroupTables(
-    careerId,
-    CompetitionKind.nationsLeague,
-  );
+  // Only the confederations that actually run one have a group to stand in, and
+  // the board judges the cup of the manager's OWN confederation: all three cups
+  // live in the cycle as competitions of the same kind, so the lookup names it.
+  // It used to have no objective at all: the manager played a whole league
+  // campaign, went up or came down, and the board never once said what it had
+  // wanted from it.
+  final ncConf = NationsCups.ofManager(conf);
+  final ncCup = ncConf == null ? null : NationsCups.forConfederation(ncConf);
+  final ncTables = ncConf == null
+      ? const <FinalsGroupTable>[]
+      : await comp.tournamentGroupTables(
+          careerId,
+          CompetitionKind.nationsLeague,
+          confederation: ncConf,
+        );
   final myNcGroup = ncTables
       .where((t) => t.standings.any((s) => s.nationId == career.nationId))
       .firstOrNull;
-  if (conf != null && myNcGroup != null) {
-    final tiers = await ref
-        .watch(careerRepositoryProvider)
-        .nationsCupTiers(careerId);
-    final target = _nationsCupTarget(
-      tiers: tiers,
-      baseline: baseline,
-      nations: nations,
-      confederation: conf,
-      nationId: career.nationId,
-      groupName: myNcGroup.name,
-    );
+  if (ncConf != null && ncCup != null && myNcGroup != null) {
+    final zones = ncCup.format == NationsCupFormat.zones;
+    final int target;
+    if (zones) {
+      target = _zonesCupTarget(
+        baseline: baseline,
+        nations: nations,
+        nationId: career.nationId,
+      );
+    } else {
+      final tiers = await ref
+          .watch(careerRepositoryProvider)
+          .nationsCupTiers(careerId);
+      target = _nationsCupTarget(
+        tiers: tiers,
+        baseline: baseline,
+        nations: nations,
+        confederation: ncConf,
+        nationId: career.nationId,
+        groupName: myNcGroup.name,
+      );
+    }
     final actual = _nationsCupOrdinal(
       standings: myNcGroup.standings,
       fixtures: fixtures,
       nationId: career.nationId,
     );
     // Settled once the league campaign is played out — and, for a side that
-    // reached the Finals Four, once that has been played too.
+    // reached the finals, once those have been played too.
     final ncFixtures = [
       for (final f in fixtures)
-        if (f.round == 'NGROUP' || f.round == 'NSF' || f.round == 'NFINAL') f,
+        if (f.round == 'NGROUP' || FinalsRounds.nationsCup.contains(f.round)) f,
     ];
-    final decided =
-        ncFixtures.isNotEmpty && ncFixtures.every((f) => f.hasResult);
+    var decided = ncFixtures.isNotEmpty && ncFixtures.every((f) => f.hasResult);
+    // A zone group winner only learns whether he is one of his zone's best two
+    // once EVERY group of the cup is played — a side with a bye on the last
+    // matchday has finished before the others have.
+    if (decided && zones) {
+      final cupGroups = await comp.fixturesByRound(
+        careerId,
+        'NGROUP',
+        kind: CompetitionKind.nationsLeague,
+        confederation: ncConf,
+      );
+      decided = cupGroups.every((f) => f.hasResult);
+    }
     out.add((
       tier: TournamentTier.nationsCup,
-      competition: _nationsCupName,
+      competition: ncCup.name,
       target: target,
       decided: decided,
       met: decided && actual >= target,
@@ -273,8 +422,9 @@ cycleObjectiveOutcomesProvider = FutureProvider.autoDispose.family<List<Objectiv
 /// localisations to read. The UI substitutes `l.objectiveWorldCup` for it.
 const _worldCupName = 'World Cup';
 
-/// The Nations Cup's own name, as above.
-const _nationsCupName = 'Nations Cup';
+/// Europe's Nations Cup's own name, as above (the other cups are named by
+/// [competitionLabel]).
+const _nationsCupName = NationsCups.europe;
 
 /// Every board objective for the current cycle, worded for the screen.
 final AutoDisposeFutureProviderFamily<List<CycleObjective>, int>
@@ -294,14 +444,19 @@ cycleObjectivesProvider = FutureProvider.autoDispose
             competition: switch (o.competition) {
               _worldCupName => l.objectiveWorldCup,
               _nationsCupName => l.careerNationsCupLabel,
-              final name => name,
+              final name => competitionLabel(l, name),
             },
-            label: _labelFor(l, o.tier, o.target),
+            label: _labelFor(l, o.tier, o.target, competition: o.competition),
             target: o.target,
             decided: o.decided,
             met: o.met,
             actual: o.actual,
-            resultLabel: _resultLabel(l, o.tier, o.actual),
+            resultLabel: _resultLabel(
+              l,
+              o.tier,
+              o.actual,
+              competition: o.competition,
+            ),
           ),
       ];
     });
@@ -503,9 +658,40 @@ int _nationsCupTarget({
   return tier >= lowest ? 3 : 2; // stay up
 }
 
+/// What the board demands of an African Nations Cup campaign, by strength:
+/// the continent's leading sides are told to win it or reach the final, the
+/// best two of a zone to reach the quarter-finals, a zone's group seeds to win their group, and everybody else
+/// to finish in the top half. There is no promotion to earn and no relegation
+/// to avoid.
+int _zonesCupTarget({
+  required Map<int, int> baseline,
+  required List<Nation> nations,
+  required int nationId,
+}) {
+  final me = nations.where((n) => n.id == nationId).firstOrNull;
+  final zone = me == null ? null : NationsCups.africaZoneByCode[me.code];
+  if (me == null || zone == null) return 3;
+  final continentRank = _rankWithin(baseline, nations, me.confederation, me.id);
+  if (continentRank <= 2) return 7; // win it
+  if (continentRank <= 4) return 6; // reach the final
+  int rankOf(Nation n) => baseline[n.id] ?? n.ranking;
+  final peers = [
+    for (final n in nations)
+      if (NationsCups.africaZoneByCode[n.code] == zone) n,
+  ]..sort((a, b) => rankOf(a).compareTo(rankOf(b)));
+  final idx = peers.indexWhere((n) => n.id == nationId);
+  if (idx < 0) return 3;
+  if (idx < 2) return 5; // one of the zone's best two: the quarter-finals
+  // The zone's group seeds: one per group (two groups in the North).
+  final groupsInZone = peers.length <= 6 ? 2 : 4;
+  if (idx < groupsInZone) return 4; // win your group
+  return 3; // top half
+}
+
 /// How the Nations Cup campaign actually went, on the ladder's own scale:
-/// 7 champions, 6 runners-up, 5 the Finals Four, 4 group winners, 3 top half,
-/// 2 clear of the bottom, 1 bottom of the group.
+/// 7 champions, 6 runners-up, 5 the finals (Finals Four, or Africa's
+/// quarter-finals), 4 group winners (or Africa's Round of 16), 3 top half, 2 clear of the bottom, 1 bottom of the
+/// group.
 int _nationsCupOrdinal({
   required List<GroupStanding> standings,
   required List<Fixture> fixtures,
@@ -520,7 +706,11 @@ int _nationsCupOrdinal({
     final theirPens = isHome ? (f.awayPenalties ?? 0) : (f.homePenalties ?? 0);
     return mine > theirs || (mine == theirs && myPens > theirPens) ? 7 : 6;
   }
-  if (fixtures.any((f) => f.round == 'NSF')) return 5;
+  // Reached the finals: a ladder cup's Finals Four, or Africa's last eight.
+  if (fixtures.any((f) => f.round == 'NSF' || f.round == 'NQF')) return 5;
+  // Africa's Round of 16: as good as winning the group, which a runner-up
+  // through on the best-runners-up ladder did not quite do.
+  if (fixtures.any((f) => f.round == 'NR16')) return 4;
 
   final pos = standings.indexWhere((s) => s.nationId == nationId) + 1;
   if (pos <= 0) return 3;
@@ -570,31 +760,26 @@ Future<int> _qualifyingOrdinal({
 /// The board's demand, worded generically — the competition it applies to is
 /// named alongside it, since a cycle now carries a continental objective as
 /// well as a World Cup one.
-String _labelFor(AppLocalizations l, TournamentTier tier, int target) {
-  if (tier == TournamentTier.nationsCup) {
-    return switch (target) {
-      7 => l.objectiveNcWinIt,
-      6 => l.objectiveNcReachFinal,
-      5 => l.objectiveNcFinalsFour,
-      4 => l.objectiveNcWinGroup,
-      3 => l.objectiveNcTopHalf,
-      _ => l.objectiveNcSurvive,
-    };
-  }
-  return switch (target) {
-    7 => l.objectiveWinTournament,
-    6 => l.objectiveReachFinal,
-    5 => l.objectiveReachSemis,
-    4 => l.objectiveReachQuarters,
-    3 => l.objectiveReachKnockouts,
-    2 => l.objectiveQualifyGeneric,
-    _ => l.objectiveQualifyingTopHalf,
-  };
-}
+String _labelFor(
+  AppLocalizations l,
+  TournamentTier tier,
+  int target, {
+  String? competition,
+}) => renderMsgKey(
+  l,
+  MsgText(objectiveDemandKey(tier, target, competition: competition)),
+);
 
 /// [nationId]'s deepest finish this cycle as an ordinal (0 = did not qualify,
 /// 2 = group stage … 7 = champions). [prefix] selects the competition's rounds
 /// ('' = World Cup, 'C' = the continental championship).
+///
+/// A round counts the moment the nation is IN it, played or not: being drawn
+/// into the finals is qualifying, and a quarter-final on the calendar is a
+/// quarter-final reached. Counting only played games kept a side that had
+/// qualified a year earlier on "top half of the qualifying group" until its
+/// first finals match, so a brief to qualify was met in the inbox and still
+/// unmet on the board.
 int _finishOrdinal(
   List<Fixture> fixtures,
   int nationId, {
@@ -602,11 +787,15 @@ int _finishOrdinal(
 }) {
   var best = 0;
   for (final f in fixtures) {
-    if (!f.hasResult) continue;
     final round = f.round;
     if (round == null || !round.startsWith(prefix)) continue;
     final base = round.substring(prefix.length);
     if (base == 'FINAL') {
+      // Reaching the final is a runners-up finish at the least.
+      if (!f.hasResult) {
+        if (6 > best) best = 6;
+        continue;
+      }
       // Winning the final is the title; losing it is a runners-up finish. A
       // level score means it was settled on penalties.
       final mineIsHome = f.homeNationId == nationId;
@@ -635,30 +824,12 @@ int _finishOrdinal(
   return best;
 }
 
-String _resultLabel(AppLocalizations l, TournamentTier tier, int ordinal) {
-  if (tier == TournamentTier.nationsCup) {
-    return switch (ordinal) {
-      7 => l.finishNcChampions,
-      6 => l.finishRunnersUp,
-      5 => l.finishNcFinalsFour,
-      4 => l.finishNcGroupWinners,
-      3 => l.finishNcTopHalf,
-      2 => l.finishNcStayedUp,
-      _ => l.finishNcBottom,
-    };
-  }
-  return switch (ordinal) {
-    7 => l.finishChampions,
-    6 => l.finishRunnersUp,
-    5 => l.finishSemiFinals,
-    4 => l.finishQuarterFinals,
-    3 => l.finishRoundOf16,
-    2 => l.finishGroupStage,
-    // Both bottom rungs describe the QUALIFYING campaign, because that is what
-    // a side that never reached the tournament actually played. A flat "did not
-    // qualify" here read as a contradiction next to a met verdict, and told a
-    // manager whose brief was the campaign itself nothing about how it went.
-    1 => l.finishQualifyingTopHalf,
-    _ => l.finishQualifyingBottomHalf,
-  };
-}
+String _resultLabel(
+  AppLocalizations l,
+  TournamentTier tier,
+  int ordinal, {
+  String? competition,
+}) => renderMsgKey(
+  l,
+  MsgText(objectiveFinishKey(tier, ordinal, competition: competition)),
+);

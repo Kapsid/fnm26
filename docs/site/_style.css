@@ -1,4 +1,4 @@
-/* FNM — metal on charcoal. The app's own typeface, self-hosted, so the site
+/* FNM, metal on charcoal. The app's own typeface, self-hosted, so the site
    fetches nothing from anywhere. SIL OFL; see fonts-license.txt. */
 
 @font-face {
@@ -54,7 +54,7 @@ body::before {
 .wrap {
   position: relative;
   z-index: 1;
-  max-width: 1040px;
+  max-width: 1560px;
   margin: 0 auto;
   padding: 0 var(--pad);
 }
@@ -74,37 +74,45 @@ body::before {
 }
 
 h1, h2, h3 { letter-spacing: -0.02em; line-height: 1.08; margin: 0; }
-h2 { font-size: clamp(27px, 5vw, 38px); font-weight: 800; margin-bottom: 10px; }
+h2 { font-size: clamp(27px, 5vw, 38px); font-weight: 800; margin-bottom: 8px; }
 h3 { font-size: 18px; font-weight: 700; letter-spacing: -0.01em; }
 
 p { margin: 0 0 14px; }
-.lede { color: var(--muted); font-size: clamp(17px, 2.3vw, 19px); max-width: 60ch; }
+.lede { color: var(--muted); font-size: clamp(17px, 2.3vw, 19px); max-width: 72ch; }
 a { color: var(--steel); text-decoration-color: var(--line-bright); }
 a:hover { text-decoration-color: currentColor; }
 
-section { padding: clamp(56px, 9vw, 96px) 0; border-top: 1px solid var(--line); }
+section { padding: clamp(38px, 5.5vw, 64px) 0; border-top: 1px solid var(--line); }
 section:first-of-type { border-top: 0; }
 
 /* ---------- hero ---------- */
 
-.hero { text-align: center; padding: clamp(26px, 5vw, 44px) 0 clamp(32px, 5vw, 52px); }
-.hero img { width: min(210px, 46vw); height: auto; filter: drop-shadow(0 18px 40px rgba(0,0,0,.6)); }
+.hero { text-align: center; padding: clamp(18px, 3vw, 30px) 0 clamp(22px, 3.4vw, 36px); }
+/* The LOGO, and only it. As `.hero img` this also matched both store badges,
+   and it outranks .b-apple/.b-google on specificity, so it sized them too:
+   both were forced to 210px wide and their heights fell out of their own
+   aspect ratios, 70px against 64px. That is why the badges never matched
+   however their heights were set. */
+.hero > img { width: min(210px, 46vw); height: auto; filter: drop-shadow(0 18px 40px rgba(0,0,0,.6)); }
 /* One line, always. The wordmark is 24 characters, so the size is driven off
    the viewport and the whole thing is allowed to get small on a narrow phone
    rather than wrap into three decks and push everything below the fold. */
 .hero h1 {
   font-size: clamp(18px, 5.4vw, 52px);
   font-weight: 900;
-  margin: 14px 0 4px;
+  margin: 10px 0 2px;
   text-transform: uppercase;
   white-space: nowrap;
   letter-spacing: -0.015em;
 }
 .hero .claim {
-  font-size: clamp(18px, 3.4vw, 26px);
+  /* One line, like the wordmark above it. No min in the clamp on purpose:
+     the Czech line is nine characters longer than the English one, and a
+     floor would make it the one that wraps. */
+  font-size: min(3.4vw, 30px);
   font-weight: 600;
-  max-width: 22ch;
-  margin: 0 auto 24px;
+  white-space: nowrap;
+  margin: 0 auto 18px;
   color: var(--text);
 }
 
@@ -133,13 +141,24 @@ section:first-of-type { border-top: 0; }
 
 .features { display: grid; gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; }
 @media (min-width: 620px) { .features { grid-template-columns: 1fr 1fr; } }
+@media (min-width: 1100px) { .features { grid-template-columns: repeat(4, 1fr); } }
 .feature { background: var(--panel); padding: clamp(22px, 3.6vw, 32px); }
 .feature h3 { margin-bottom: 7px; }
 .feature p { color: var(--muted); font-size: 15.5px; margin: 0; }
 
+/* Sits directly under the grid, which puts it right below the payment cell.
+   Centred and quiet: it is reassurance, not another claim. */
+.tryline {
+  margin: 18px auto 0;
+  max-width: 62ch;
+  text-align: center;
+  font-size: 15.5px;
+  color: var(--muted);
+}
+
 /* ---------- carousel ---------- */
 
-.carousel { position: relative; margin-top: 26px; }
+.carousel { position: relative; margin-top: 18px; }
 .track {
   display: flex; gap: 16px;
   overflow-x: auto;
@@ -152,22 +171,32 @@ section:first-of-type { border-top: 0; }
 .slide {
   flex: 0 0 auto;
   margin: 0;
-  width: clamp(180px, 44vw, 236px);
+  /* Big enough to READ. At 236px these were unreadable thumbnails, which is
+     worse than showing fewer: the point of the carousel is that somebody can
+     see what the game looks like without opening anything. */
+  width: clamp(250px, 66vw, 400px);
   scroll-snap-align: center;
 }
 .slide img {
   width: 100%;
   display: block;
-  /* Phone-shaped whatever arrives, so a slide holds its place before the
-     image decodes and the row does not jump as the shots load in. */
-  aspect-ratio: 9 / 19.5;
+  /* The shots' own ratio, so nothing is cropped and a slide holds its place
+     before the image decodes: the row does not jump as the shots load in.
+     Change this only with the shots; see shots/README.md. */
+  aspect-ratio: 500 / 1010;
+  /* Required, and not decoration: the width/height ATTRIBUTES on the img are
+     presentational hints, so height="1010" lands as a real used height and
+     aspect-ratio is then ignored. That made the box 320x1010 instead of
+     320x646 and object-fit cut the difference off the SIDES, which is where
+     this app puts its numbers. The attributes stay, because they are what
+     lets the browser reserve the space before the file arrives. */
+  height: auto;
   object-fit: cover;
-  border-radius: 18px;
-  border: 1px solid var(--line-bright);
+  border-radius: 22px;
   background: var(--panel);
 }
 .slide figcaption {
-  font-size: 13px;
+  font-size: 14px;
   color: var(--muted);
   text-align: center;
   margin-top: 10px;
@@ -179,15 +208,19 @@ section:first-of-type { border-top: 0; }
 .slide.empty::before {
   content: '';
   display: block;
-  aspect-ratio: 9 / 19.5;
-  border-radius: 18px;
+  aspect-ratio: 500 / 1010;
+  border-radius: 30px;
   border: 1px dashed var(--line-bright);
   background:
     repeating-linear-gradient(135deg,
       rgba(255,255,255,.015) 0 10px, transparent 10px 20px),
     var(--panel);
 }
-.arrows { display: flex; gap: 10px; justify-content: flex-end; margin-top: 4px; }
+/* Right-aligned on a desktop, where they sit under the last slide; centred
+   on a phone, where a single slide fills the width and an arrow hanging off
+   one edge reads as misplaced. */
+.arrows { display: flex; gap: 10px; justify-content: flex-end; margin-top: 10px; }
+@media (max-width: 700px) { .arrows { justify-content: center; } }
 .arrows button {
   width: 42px; height: 42px; border-radius: 50%;
   border: 1px solid var(--line-bright);
@@ -198,8 +231,13 @@ section:first-of-type { border-top: 0; }
 
 /* ---------- about + contact ---------- */
 
-.split { display: grid; gap: clamp(26px, 4vw, 48px); }
-@media (min-width: 780px) { .split { grid-template-columns: 1fr 1fr; } }
+/* The portrait column is sized to the portrait, not to half the page. As
+   1fr 1fr the photo capped at 340px left the rest of its half empty, so the
+   text started a long way from it with nothing in between. */
+.split { display: grid; gap: clamp(24px, 3vw, 40px); }
+@media (min-width: 780px) {
+  .split { grid-template-columns: minmax(0, 340px) 1fr; align-items: start; }
+}
 
 .panel {
   background: var(--panel);
@@ -228,33 +266,235 @@ footer nav { display: flex; gap: 18px; flex-wrap: wrap; }
 .doc ul { padding-left: 20px; color: var(--text); }
 .doc .updated { color: var(--muted); font-size: 14px; }
 
-/* ---------- store badges ---------- */
+/* ---------- coming soon ---------- */
+
+.soon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+/* Stamped metal: a bevel from the light above, a dark seat below, and a
+   hairline of light along the top edge where a pressed plate always catches
+   it. */
+.plate {
+  display: inline-block;
+  padding: 13px 26px;
+  border-radius: 12px;
+  border: 1px solid rgba(228, 230, 233, .22);
+  background:
+    repeating-linear-gradient(90deg,
+      rgba(255,255,255,.02) 0 1px, transparent 1px 3px),
+    linear-gradient(176deg, #3a4048 0%, #22262c 46%, #191d22 54%, #2b3037 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, .22),
+    inset 0 -1px 0 rgba(0, 0, 0, .55),
+    0 12px 26px rgba(0, 0, 0, .5);
+  font-size: clamp(15px, 1.7vw, 20px);
+  font-weight: 800;
+  letter-spacing: .10em;
+  text-transform: uppercase;
+  /* Engraved rather than chrome: the .chrome ramp needs background-clip:text,
+     which would clip the plate's own metal away with it. A dark shadow under
+     light glyphs reads as stamped and leaves the plate intact. */
+  color: var(--text);
+  text-shadow: 0 1px 0 rgba(0, 0, 0, .65);
+}
+.soon-sub {
+  font-size: 13px;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* ---------- store badges (unused until the app ships; see README) ---------- */
 
 .stores {
   display: flex; gap: 14px; justify-content: center; align-items: center;
-  flex-wrap: wrap; margin-top: 22px;
+  flex-wrap: wrap; margin-top: 16px;
 }
 .stores a { display: inline-flex; transition: opacity .18s, transform .18s; }
 .stores a:hover { transform: translateY(-1px); }
 .stores a[aria-disabled='true'] { opacity: .55; pointer-events: none; }
 /* Both are official artwork and neither may be redrawn, so they are only
-   scaled. Apple's badge is tight to its edges; Google's carries its own clear
-   space, which is why the two heights differ to look the same size. */
-.b-apple  { height: 54px; width: auto; display: block; }
-.b-google { height: 72px; width: auto; display: block; }
+   scaled, and both now to the SAME height, which is what each vendor's
+   guidelines ask for. That works because Google's asset has had its built-in
+   clear space trimmed off the file; with it still in, an equal height drew a
+   visibly smaller button. The widths still differ a little, because "GET IT
+   ON Google Play" is simply a longer phrase than "Download on the App
+   Store". */
+.b-apple  { height: 56px; width: auto; display: block; }
+.b-google { height: 56px; width: auto; display: block; }
 
 /* ---------- portrait ---------- */
 
-.portrait { margin: 0; }
-.portrait img {
+/* The same bezel the shots wear, so the two framed things on the page are
+   framed the same way. */
+.portrait {
+  margin: 0;
   width: 100%;
   max-width: 340px;
-  aspect-ratio: 4 / 5;
-  object-fit: cover;
-  border-radius: 16px;
+  padding: 9px;
   border: 1px solid var(--line-bright);
+  border-radius: 26px;
+  background: linear-gradient(168deg, #30353c, #15181c 60%);
+  box-shadow: 0 20px 44px rgba(0, 0, 0, .55);
+}
+.portrait img {
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  height: auto;
+  object-fit: cover;
+  border-radius: 18px;
   display: block;
 }
 @media (max-width: 779px) {
   .portrait img { max-width: 240px; }
+}
+
+/* ---------- language switcher ---------- */
+
+/* Two segments milled from one piece: the same steel gradient and hairline
+   as the buttons, joined by a shared border so it reads as one control
+   rather than two links that happen to sit together. It is the first thing
+   on every page and the smallest, which is the right order of importance. */
+.lang {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 16px;
+  margin-bottom: 4px;
+}
+.lang a,
+.lang span {
+  padding: 5px 12px;
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: .07em;
+  line-height: 1.5;
+  border: 1px solid var(--line-bright);
+  background: linear-gradient(180deg, #2a2f36, #1a1e23);
+  color: var(--muted);
+  text-decoration: none;
+  transition: border-color .18s, color .18s;
+}
+.lang > :first-child { border-radius: 8px 0 0 8px; }
+.lang > :last-child { border-radius: 0 8px 8px 0; }
+.lang > * + * { margin-left: -1px; }
+.lang a:hover { color: var(--text); border-color: rgba(228,230,233,.42); }
+/* The page you are on is not a link, and is lit rather than merely bold, so
+   the pair still reads at a glance on a phone. */
+.lang [aria-current] {
+  color: var(--text);
+  background: linear-gradient(180deg, #3a4048, #24292f);
+  border-color: rgba(228,230,233,.30);
+  position: relative;
+  z-index: 1;
+}
+
+/* The inner pages already carry their own top padding, so the switcher sits
+   inside that rather than adding to it. */
+.doc > .lang { padding-top: 0; margin-bottom: 22px; }
+
+
+/* ---------- lightbox ---------- */
+
+/* A slide is a button, so it is reachable by keyboard and announces itself.
+   It is dressed as a HANDSET: the bezel is what tells a visitor at a glance
+   that they are looking at a phone screen rather than a cropped picture, and
+   it is what makes a shot this size read as deliberate. */
+.shot {
+  position: relative;
+  display: block;
+  width: 100%;
+  padding: 9px;
+  border: 1px solid var(--line-bright);
+  border-radius: 32px;
+  background: linear-gradient(168deg, #30353c, #15181c 60%);
+  box-shadow: 0 20px 44px rgba(0, 0, 0, .55);
+  cursor: zoom-in;
+  transition: transform .18s, border-color .18s;
+}
+.shot:hover { transform: translateY(-3px); border-color: rgba(228, 230, 233, .42); }
+.shot:focus-visible { outline: 2px solid var(--steel); outline-offset: 4px; }
+
+/* The affordance. Without it the shots read as pictures and nobody learns
+   they open, so the badge is always there rather than on hover only, which
+   a touch screen never delivers. */
+.shot::after {
+  content: '\2922';
+  position: absolute;
+  right: 18px;
+  bottom: 18px;
+  width: 30px;
+  height: 30px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: rgba(14, 16, 18, .78);
+  border: 1px solid var(--line-bright);
+  color: var(--text);
+  font-size: 14px;
+  line-height: 1;
+  -webkit-backdrop-filter: blur(3px);
+  backdrop-filter: blur(3px);
+}
+
+#lb[hidden] { display: none; }
+
+#lb {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* The bottom band is the caption's, so the picture stops short of it
+     instead of being written over. */
+  padding: max(16px, env(safe-area-inset-top, 0px)) 16px
+           calc(44px + env(safe-area-inset-bottom, 0px));
+  background: rgba(8, 9, 11, .92);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+}
+#lb img {
+  max-width: min(100%, 460px);
+  max-height: 100%;
+  width: auto;
+  border-radius: 14px;
+  border: 1px solid var(--line-bright);
+  box-shadow: 0 30px 80px rgba(0, 0, 0, .7);
+}
+/* The controls sit on the backdrop, not on the picture, so they never cover
+   the thing you opened the lightbox to see. */
+#lb button {
+  position: absolute;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  border: 1px solid var(--line-bright);
+  background: linear-gradient(180deg, #2a2f36, #1a1e23);
+  color: var(--text);
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+}
+#lb button:hover { border-color: rgba(228, 230, 233, .42); }
+#lb .x { top: max(14px, env(safe-area-inset-top, 0px)); right: 14px; }
+#lb .p { left: 14px; top: 50%; transform: translateY(-50%); }
+#lb .n { right: 14px; top: 50%; transform: translateY(-50%); }
+#lb .cap {
+  position: absolute;
+  bottom: max(14px, env(safe-area-inset-bottom, 0px));
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-size: 13px;
+  color: var(--muted);
+}
+/* Narrow phones have no room for side arrows beside the picture, and swiping
+   the carousel is the gesture people reach for there anyway. */
+@media (max-width: 560px) {
+  #lb .p, #lb .n { display: none; }
 }

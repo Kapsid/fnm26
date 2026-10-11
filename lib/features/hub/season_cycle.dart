@@ -64,22 +64,35 @@ extension SeasonCycle on SeasonService {
     final objectives = await _ref.read(
       cycleObjectiveOutcomesProvider(careerId).future,
     );
-    final l = _l;
     for (final o in objectives) {
       if (!o.decided) continue;
-      final demand = objectiveDemandText(l, o.tier, o.target);
-      final finish = objectiveFinishText(l, o.tier, o.actual);
-      final comp = competitionLabel(l, o.competition);
-      await _comp.addMessage(
+      // The brief, the finish and the competition are all stored as MEANING:
+      // the board's verdict is a message the manager may not open for months,
+      // and by then he may be reading in another language.
+      final demand = MsgText(
+        objectiveDemandKey(o.tier, o.target, competition: o.competition),
+      );
+      final finish = MsgText(
+        objectiveFinishKey(o.tier, o.actual, competition: o.competition),
+      );
+      final comp = MsgComp(o.competition);
+      await _comp.addTextMessage(
+        l: _l,
         careerId: careerId,
         dedupKey: 'objective:${career.cyclePointer}:${o.tier.name}',
         category: 'board',
-        title: o.met
-            ? l.boardObjectiveMetTitle(comp)
-            : l.boardObjectiveMissedTitle(comp),
-        body: o.met
-            ? l.boardObjectiveMetBody(comp, demand, finish)
-            : l.boardObjectiveMissedBody(comp, demand, finish),
+        title: MsgText(
+          o.met
+              ? MsgKey.boardObjectiveMetTitle
+              : MsgKey.boardObjectiveMissedTitle,
+          [comp],
+        ),
+        body: MsgText(
+          o.met
+              ? MsgKey.boardObjectiveMetBody
+              : MsgKey.boardObjectiveMissedBody,
+          [comp, demand, finish],
+        ),
         year: career.inGameDate.year,
       );
     }
@@ -155,21 +168,86 @@ extension SeasonCycle on SeasonService {
     );
   }
 
-  /// Progresses the Nations Cup: once the groups are done, the four group
-  /// winners contest a Finals Four (two semi-finals then a final); the final's
-  /// winner takes the title. Leagues with fewer than four groups fall back to a
-  /// single decider (or crown a lone winner outright).
+  /// Progresses EVERY confederation's Nations Cup, the manager's first (as
+  /// [_progressContinental] does), so nothing about his season depends on the
+  /// order the others resolve in.
+  ///
+  /// All three cups live in the cycle as competitions of the same kind, so
+  /// every lookup names its confederation: an unscoped one returns an
+  /// arbitrary cup, which advanced one and left the others without a champion.
   Future<void> _progressNationsLeague(int careerId) async {
-    const kind = CompetitionKind.nationsLeague;
-    if (!await _comp.hasTournament(careerId, kind)) return;
+    final mine = await _managerConfederation(careerId);
+    if (mine != null && NationsCups.forConfederation(mine) != null) {
+      await _progressNationsCupFor(careerId, mine);
+    }
+    for (final conf in NationsCups.confederations) {
+      if (conf == mine) continue;
+      await _progressNationsCupFor(careerId, conf);
+    }
+  }
 
-    final finalFx = await _comp.fixturesByRound(careerId, 'NFINAL', kind: kind);
-    final semiFx = await _comp.fixturesByRound(careerId, 'NSF', kind: kind);
+  /// Progresses one confederation's Nations Cup from its groups to its final,
+  /// recording the honour under the cup's own name once it is decided.
+  Future<void> _progressNationsCupFor(int careerId, Confederation conf) async {
+    const kind = CompetitionKind.nationsLeague;
+    final cup = NationsCups.forConfederation(conf);
+    if (cup == null) return;
+    final career = await _careers.byId(careerId);
+    if (career == null) return;
+    // Already decided this cycle: the cheapest way to say there is nothing
+    // left to do, on a path `_progress` walks many times per catch-up.
+    final year = SeasonService.finalsYear(career.cyclePointer) - 2;
+    if (await _comp.hasHonour(careerId, cup.name, year)) return;
+    // A save whose cycle was built before this cup existed simply has none.
+    if (!await _comp.hasTournament(careerId, kind, confederation: conf)) {
+      return;
+    }
+    switch (cup.format) {
+      case NationsCupFormat.ladder:
+        await _progressLadderCup(careerId, conf, cup.name);
+      case NationsCupFormat.zones:
+        await _progressZonesCup(careerId, conf, cup.name);
+    }
+  }
+
+  /// A ladder cup (Europe, CONCACAF): once the groups are done, League A's
+  /// four group winners contest a Finals Four (two semi-finals then a final);
+  /// the final's winner takes the title. Fewer than four League A groups fall
+  /// back to a single decider (or crown a lone winner outright).
+  Future<void> _progressLadderCup(
+    int careerId,
+    Confederation conf,
+    String cupName,
+  ) async {
+    const kind = CompetitionKind.nationsLeague;
+    final finalFx = await _comp.fixturesByRound(
+      careerId,
+      'NFINAL',
+      kind: kind,
+      confederation: conf,
+    );
+    final semiFx = await _comp.fixturesByRound(
+      careerId,
+      'NSF',
+      kind: kind,
+      confederation: conf,
+    );
 
     // Stage 1 — groups done: seed the Finals Four from the group winners.
     if (finalFx.isEmpty && semiFx.isEmpty) {
-      if (!await _roundComplete(careerId, 'NGROUP', kind: kind)) return;
-      final tables = await _comp.tournamentGroupTables(careerId, kind);
+      if (!await _roundComplete(
+        careerId,
+        'NGROUP',
+        kind: kind,
+        confederation: conf,
+      )) {
+        return;
+      }
+      final tables = await _comp.tournamentGroupTables(
+        careerId,
+        kind,
+        confederation: conf,
+      );
       // The title is contested by League A (tier 0) — its group winners meet in
       // the Finals Four.
       final winners = [
@@ -181,6 +259,7 @@ extension SeasonCycle on SeasonService {
       if (winners.length < 2) {
         await _recordNationsLeagueHonour(
           careerId,
+          cupName,
           winners.first.nationId,
           null,
         );
@@ -192,20 +271,17 @@ extension SeasonCycle on SeasonService {
       // Days 18/21 sit clear of that window's qualifying matchdays.
       final career = await _careers.byId(careerId);
       if (career == null) return;
-      final scheduled = DateTime(
-        SeasonService.finalsYear(career.cyclePointer) - 1,
-        6,
-        18,
+      final date = _notBeforeToday(
+        DateTime(SeasonService.finalsYear(career.cyclePointer) - 1, 6, 18),
+        career.inGameDate,
       );
-      final date = scheduled.isAfter(career.inGameDate)
-          ? scheduled
-          : career.inGameDate.add(const Duration(days: 14));
       if (winners.length < 4) {
         // Too few group winners for a Finals Four — a single decider.
         await _comp.addKnockoutFixtures(
           careerId: careerId,
           round: 'NFINAL',
           kind: kind,
+          confederation: conf,
           pairings: [(winners[0].nationId, winners[1].nationId)],
           date: date,
         );
@@ -216,6 +292,7 @@ extension SeasonCycle on SeasonService {
         careerId: careerId,
         round: 'NSF',
         kind: kind,
+        confederation: conf,
         pairings: [
           (winners[0].nationId, winners[3].nationId),
           (winners[1].nationId, winners[2].nationId),
@@ -232,6 +309,7 @@ extension SeasonCycle on SeasonService {
         careerId: careerId,
         round: 'NFINAL',
         kind: kind,
+        confederation: conf,
         pairings: [
           (SeasonService._winner(semiFx[0]), SeasonService._winner(semiFx[1])),
         ],
@@ -239,15 +317,222 @@ extension SeasonCycle on SeasonService {
           careerId,
           'NSF',
           kind: kind,
+          confederation: conf,
         )).add(const Duration(days: 3)),
       );
       return;
     }
 
+    await _crownNationsCupIfDecided(careerId, cupName, finalFx);
+  }
+
+  /// The African cup: once every zone group is played, all 14 group winners
+  /// and the two best runners-up meet in a Round of 16 in November of the
+  /// group stage's year (day 9), then quarter-finals (day 12), semi-finals
+  /// (day 15) and the final (day 18). A save whose cup was drawn as the old
+  /// Finals Eight (quarter-finals, no Round of 16) plays on from there.
+  Future<void> _progressZonesCup(
+    int careerId,
+    Confederation conf,
+    String cupName,
+  ) async {
+    const kind = CompetitionKind.nationsLeague;
+    Future<List<Fixture>> round(String r) =>
+        _comp.fixturesByRound(careerId, r, kind: kind, confederation: conf);
+    final r16Fx = await round('NR16');
+    final qfFx = await round('NQF');
+    final semiFx = await round('NSF');
+    final finalFx = await round('NFINAL');
+    final career = await _careers.byId(careerId);
+    if (career == null) return;
+    final finalsYear = SeasonService.finalsYear(career.cyclePointer) - 2;
+
+    // Stage 1 — groups done: the Round of 16.
+    if (r16Fx.isEmpty && qfFx.isEmpty && semiFx.isEmpty && finalFx.isEmpty) {
+      if (!await _roundComplete(
+        careerId,
+        'NGROUP',
+        kind: kind,
+        confederation: conf,
+      )) {
+        return;
+      }
+      // What "already past" is measured from. The clock can have run well
+      // beyond the group stage by the time its last game is caught up: a side
+      // with a bye on the final matchday jumps straight to its next fixture,
+      // months away. A tie the manager plays must still lie ahead of him, but
+      // everybody else's keeps its November date — it is simmed in the same
+      // catch-up, so the cup is settled when it should be, not in the spring.
+      Future<DateTime> finalsBase(List<(int, int)> pairs) async {
+        final mineIn = pairs.any(
+          (p) => p.$1 == career.nationId || p.$2 == career.nationId,
+        );
+        if (mineIn) return career.inGameDate;
+        return _maxDate(careerId, 'NGROUP', kind: kind, confederation: conf);
+      }
+
+      final tables = [
+        for (final t in await _comp.tournamentGroupTables(
+          careerId,
+          kind,
+          confederation: conf,
+        ))
+          if (NationsCups.zoneOfGroupName(t.name) != null &&
+              t.standings.isNotEmpty)
+            t,
+      ];
+      final rank = _liveRankById(await _nationsById());
+      final field = NationsCups.knockoutField(
+        [for (final t in tables) t.standings],
+        (id) => rank[id] ?? 1 << 20,
+      );
+      final seeded = [
+        for (final s in field.winners) s.nationId,
+        for (final s in field.runnersUp.take(NationsCups.runnersUpThrough))
+          s.nationId,
+      ];
+      if (seeded.length != 16) {
+        // Not a field of sixteen (a malformed cup): settle it between the best
+        // two group winners, or crown a lone one, rather than stall forever.
+        final winners = [for (final s in field.winners) s.nationId];
+        if (winners.isEmpty) return;
+        if (winners.length < 2) {
+          await _recordNationsLeagueHonour(
+            careerId,
+            cupName,
+            winners.first,
+            null,
+          );
+          return;
+        }
+        final pair = (winners[0], winners[1]);
+        await _comp.addKnockoutFixtures(
+          careerId: careerId,
+          round: 'NFINAL',
+          kind: kind,
+          confederation: conf,
+          pairings: [pair],
+          date: _notBeforeToday(
+            DateTime(finalsYear, 11, 18),
+            await finalsBase([pair]),
+          ),
+        );
+        return;
+      }
+      final groupOf = {
+        for (final t in tables)
+          for (final s in t.standings) s.nationId: t.name,
+      };
+      final pairs = NationsCups.roundOf16Pairs(seeded, (id) => groupOf[id]);
+      await _comp.addKnockoutFixtures(
+        careerId: careerId,
+        round: 'NR16',
+        kind: kind,
+        confederation: conf,
+        pairings: pairs,
+        date: _notBeforeToday(
+          DateTime(finalsYear, 11, 9),
+          await finalsBase(pairs),
+        ),
+      );
+      return;
+    }
+
+    // Stage 2 — Round of 16 played: its ties pair off into quarter-finals in
+    // bracket order (R16 1 v 2, 3 v 4, ...).
+    if (r16Fx.isNotEmpty && qfFx.isEmpty && semiFx.isEmpty && finalFx.isEmpty) {
+      if (r16Fx.length < 8 || !r16Fx.every((f) => f.hasResult)) return;
+      final after = (await _maxDate(
+        careerId,
+        'NR16',
+        kind: kind,
+        confederation: conf,
+      )).add(const Duration(days: 3));
+      final scheduled = DateTime(finalsYear, 11, 12);
+      await _comp.addKnockoutFixtures(
+        careerId: careerId,
+        round: 'NQF',
+        kind: kind,
+        confederation: conf,
+        pairings: [
+          for (var i = 0; i < 8; i += 2)
+            (
+              SeasonService._winner(r16Fx[i]),
+              SeasonService._winner(r16Fx[i + 1]),
+            ),
+        ],
+        date: scheduled.isBefore(after) ? after : scheduled,
+      );
+      return;
+    }
+
+    // Stage 3 — quarter-finals played: QF1 v QF2, QF3 v QF4.
+    if (qfFx.isNotEmpty && semiFx.isEmpty && finalFx.isEmpty) {
+      if (qfFx.length < 4 || !qfFx.every((f) => f.hasResult)) return;
+      final after = (await _maxDate(
+        careerId,
+        'NQF',
+        kind: kind,
+        confederation: conf,
+      )).add(const Duration(days: 3));
+      final scheduled = DateTime(finalsYear, 11, 15);
+      await _comp.addKnockoutFixtures(
+        careerId: careerId,
+        round: 'NSF',
+        kind: kind,
+        confederation: conf,
+        pairings: [
+          (SeasonService._winner(qfFx[0]), SeasonService._winner(qfFx[1])),
+          (SeasonService._winner(qfFx[2]), SeasonService._winner(qfFx[3])),
+        ],
+        date: scheduled.isBefore(after) ? after : scheduled,
+      );
+      return;
+    }
+
+    // Stage 4 — semi-finals played: the final.
+    if (finalFx.isEmpty) {
+      if (semiFx.length < 2 || !semiFx.every((f) => f.hasResult)) return;
+      final after = (await _maxDate(
+        careerId,
+        'NSF',
+        kind: kind,
+        confederation: conf,
+      )).add(const Duration(days: 3));
+      final scheduled = DateTime(finalsYear, 11, 18);
+      await _comp.addKnockoutFixtures(
+        careerId: careerId,
+        round: 'NFINAL',
+        kind: kind,
+        confederation: conf,
+        pairings: [
+          (SeasonService._winner(semiFx[0]), SeasonService._winner(semiFx[1])),
+        ],
+        date: scheduled.isBefore(after) ? after : scheduled,
+      );
+      return;
+    }
+
+    await _crownNationsCupIfDecided(careerId, cupName, finalFx);
+  }
+
+  /// [scheduled], or a fortnight from [today] when the calendar has already
+  /// gone past it (a late catch-up), so a new round is never in the past.
+  static DateTime _notBeforeToday(DateTime scheduled, DateTime today) =>
+      scheduled.isAfter(today)
+      ? scheduled
+      : today.add(const Duration(days: 14));
+
+  Future<void> _crownNationsCupIfDecided(
+    int careerId,
+    String cupName,
+    List<Fixture> finalFx,
+  ) async {
     final f = finalFx.first;
     if (!f.hasResult) return;
     await _recordNationsLeagueHonour(
       careerId,
+      cupName,
       SeasonService._winner(f),
       SeasonService._loser(f),
       finalFixture: f,
@@ -256,6 +541,7 @@ extension SeasonCycle on SeasonService {
 
   Future<void> _recordNationsLeagueHonour(
     int careerId,
+    String cupName,
     int champion,
     int? runnerUp, {
     Fixture? finalFixture,
@@ -263,7 +549,7 @@ extension SeasonCycle on SeasonService {
     final career = await _careers.byId(careerId);
     if (career == null) return;
     final year = SeasonService.finalsYear(career.cyclePointer) - 2;
-    if (await _comp.hasHonour(careerId, 'Nations Cup', year)) return;
+    if (await _comp.hasHonour(careerId, cupName, year)) return;
     // Store the final's scoreline champion-first, so the past-winners card
     // shows the result rather than a bare "beat".
     final f = finalFixture;
@@ -272,7 +558,7 @@ extension SeasonCycle on SeasonService {
     await _comp.recordHonour(
       careerId: careerId,
       year: year,
-      competition: 'Nations Cup',
+      competition: cupName,
       championId: champion,
       runnerUpId: runnerUp ?? champion,
       finalHomeScore: !scored
@@ -729,12 +1015,14 @@ extension SeasonCycle on SeasonService {
     // not need telling they missed out on a cup they were never in.
     if (isManagers && !field.contains(career.nationId)) {
       final year = wcYear - 2;
-      await _comp.addMessage(
+      final cupName = MsgComp(cont.name);
+      await _comp.addTextMessage(
+        l: _l,
         careerId: careerId,
         dedupKey: 'contmiss:$year',
         category: 'eliminated',
-        title: _l.newsContMissTitle(continentalCupLabel(_l, conf)),
-        body: _l.newsContMissBody(continentalCupLabel(_l, conf)),
+        title: MsgText(MsgKey.newsContMissTitle, [cupName]),
+        body: MsgText(MsgKey.newsContMissBody, [cupName]),
         year: year - 1,
       );
     }

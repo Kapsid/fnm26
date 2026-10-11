@@ -1,92 +1,110 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/core/rng/seeded_rng.dart';
+import 'package:fnm/domain/services/competition/finals.dart';
 import 'package:fnm/domain/services/match/match_simulator.dart';
 
 /// How often the world throws up a surprise winner.
 ///
-/// A MEASUREMENT first. The report was that passive simulation produces
-/// improbable champions who then dominate, but the balance either side of that
-/// is good and has very little slack — so this prints the number before
-/// anything is tuned, and guards it afterwards. The dial itself lives in
-/// [RatingMatchSimulator] (`exp(k * diff)`) and is calibrated together with
-/// MatchEngine; see the match_balance_test that pins the other half.
+/// The background simulator ([RatingMatchSimulator]) plays every match the
+/// manager does not, so it decides who wins the World Championship. Measured
+/// on 100 whole careers (real 48-team finals, qualifying included) at the old
+/// tuning, a top-eight seed won only 41% of them and a seed ranked 30th or
+/// worse 12%. Retuned (gap response, gap ceiling, the elite band in
+/// [RatingMatchSimulator.strengthOf] and the knockout weight), the same
+/// harness gave 76% top-eight winners over 416 careers, 2% from 21st or
+/// worse, and one 30th-or-worse winner (a 40th seed): possible, but rare.
+///
+/// This is the cheap, deterministic stand-in for that harness: the real
+/// start-of-save strengths of the top 32 seeds, one knockout bracket, level
+/// ties settled the way the background path settles them.
 void main() {
   const sim = RatingMatchSimulator();
 
-  /// A field of 32, seeded like a real tournament: a handful of contenders, a
-  /// middle, and some makeweights, on the same ~40–92 strength scale the
-  /// background simulator uses.
-  List<int> field() => [
-    for (var i = 0; i < 32; i++) (88 - i * 1.4).round().clamp(45, 92),
+  /// The top 32 seeds' background strength at the start of a save (best XI
+  /// blended with the ranking anchor, as `SeasonService._squadStrength` does),
+  /// in seed order. A compressed field: ten points cover all 32, which is
+  /// exactly why the dial has to be loud enough to tell 88 from 85.
+  const field = [
+    89, 89, 90, 88, 89, 88, 88, 87, 87, 88, 85, 87, 85, 85, 84, 84, //
+    84, 84, 83, 83, 83, 83, 83, 83, 82, 82, 82, 81, 80, 82, 80, 81,
   ];
 
-  /// Plays one knockout bracket and returns the winner's seed index.
-  int playBracket(List<int> strengths, SeededRng rng) {
-    var alive = [for (var i = 0; i < strengths.length; i++) i];
+  /// Plays one bracket (strongest seed against weakest) and returns the
+  /// winner's seed index.
+  int playBracket(SeededRng rng) {
+    var alive = [for (var i = 0; i < field.length; i++) i];
     while (alive.length > 1) {
       final next = <int>[];
-      for (var i = 0; i < alive.length; i += 2) {
+      final n = alive.length;
+      for (var i = 0; i < n ~/ 2; i++) {
         final a = alive[i];
-        final b = alive[i + 1];
-        final result = sim.simulate(
-          homeStrength: strengths[a],
-          awayStrength: strengths[b],
+        final b = alive[n - 1 - i];
+        final r = sim.simulate(
+          homeStrength: field[a],
+          awayStrength: field[b],
           rng: rng,
           homeAdvantage: false,
         );
-        // A knockout has to produce somebody. A draw goes to a shootout, which
-        // is close enough to a coin toss that treating it as one is honest.
-        next.add(
-          switch (result.homeScore.compareTo(result.awayScore)) {
-            > 0 => a,
-            < 0 => b,
-            _ => rng.nextInt(2) == 0 ? a : b,
-          },
+        if (r.homeScore != r.awayScore) {
+          next.add(r.homeScore > r.awayScore ? a : b);
+          continue;
+        }
+        // Level after ninety: extra time and penalties, weighted exactly as
+        // the background path weights them.
+        final ko = WorldCupFinals.decideKnockout(
+          r.homeScore,
+          r.awayScore,
+          rng,
+          homeStrength: RatingMatchSimulator.knockoutWeight(field[a]),
+          awayStrength: RatingMatchSimulator.knockoutWeight(field[b]),
         );
+        next.add(ko.homeWon ? a : b);
       }
-      alive = next;
+      alive = next..sort();
     }
     return alive.first;
   }
 
   test('a top-eight seed wins the great majority of tournaments', () {
-    const editions = 400;
+    const editions = 2000;
     var fromTopEight = 0;
     var fromTopSixteen = 0;
-    final strengths = field();
+    var fromTwentyFirstDown = 0;
     for (var edition = 0; edition < editions; edition++) {
-      final winner = playBracket(strengths, SeededRng(9000 + edition));
+      final winner = playBracket(SeededRng(9000 + edition));
       if (winner < 8) fromTopEight++;
       if (winner < 16) fromTopSixteen++;
+      if (winner >= 20) fromTwentyFirstDown++;
     }
-    final topEightShare = fromTopEight / editions * 100;
-    final topSixteenShare = fromTopSixteen / editions * 100;
+    double pct(int n) => n / editions * 100;
 
     // Printed so the number is on the record, not just asserted.
     // ignore: avoid_print
     print(
-      'winners from the top 8 seeds: ${topEightShare.toStringAsFixed(1)}%, '
-      'from the top 16: ${topSixteenShare.toStringAsFixed(1)}%',
+      'winners from the top 8 seeds: ${pct(fromTopEight).toStringAsFixed(1)}%, '
+      'top 16: ${pct(fromTopSixteen).toStringAsFixed(1)}%, '
+      '21st or worse: ${pct(fromTwentyFirstDown).toStringAsFixed(1)}%',
     );
 
-    // Deliberately WIDE. Real tournaments are won by outsiders often enough
-    // that a narrow band here would be pinning noise, and the balance this
-    // guards is good — the job is to catch a collapse into randomness, not to
-    // hold a number.
     expect(
-      topEightShare,
-      greaterThan(45),
+      pct(fromTopEight),
+      greaterThanOrEqualTo(65),
       reason: 'the best sides should win most of the time',
     );
     expect(
-      topSixteenShare,
-      greaterThan(70),
+      pct(fromTopEight),
+      lessThan(92),
+      reason: 'and an upset must still be possible',
+    );
+    expect(
+      pct(fromTopSixteen),
+      greaterThan(88),
       reason: 'a bottom-half seed winning should be a story, not a habit',
     );
     expect(
-      topEightShare,
-      lessThan(95),
-      reason: 'and an upset must still be possible',
+      pct(fromTwentyFirstDown),
+      inInclusiveRange(0.05, 8),
+      reason: 'an outsider can still rise all the way, but rarely',
     );
   });
 }

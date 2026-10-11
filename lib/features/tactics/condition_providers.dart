@@ -2,11 +2,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/services/club/club_form.dart';
 import 'package:fnm/domain/services/manager/manager_skills.dart';
-import 'package:fnm/features/career/career_providers.dart';
-import 'package:fnm/features/squad/grievance_providers.dart';
+import 'package:fnm/domain/services/press/statement.dart';
 import 'package:fnm/domain/services/squad/condition.dart';
+import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/press/press_providers.dart';
 import 'package:fnm/features/squad/captain_providers.dart';
+import 'package:fnm/features/squad/grievance_providers.dart';
 import 'package:fnm/features/squad/training_camp_providers.dart';
 
 /// Returns [p] with every attribute shifted by [delta] (their condition), so
@@ -114,6 +115,12 @@ squadConditionProvider = FutureProvider.autoDispose
           );
       final byId = {for (final p in pool) p.id: p};
       final window = ClubForm.windowIndexFor(asOf);
+      // What he has said about a player on the record: an open public blame
+      // weighs on the man, a backing that came good lifts him.
+      final said = StatementJudge.conditionDeltas(
+        await ref.watch(careerRepositoryProvider).statements(careerId),
+        asOf,
+      );
       return {
         for (final entry in recent.entries)
           entry.key: () {
@@ -137,6 +144,7 @@ squadConditionProvider = FutureProvider.autoDispose
               clubDelta: standing == null
                   ? 0
                   : ClubForm.sharpnessDelta(standing),
+              statementDelta: said[entry.key] ?? 0,
               clubStanding: standing,
             );
           }(),

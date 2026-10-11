@@ -219,7 +219,7 @@ class _RegionFilter extends StatelessWidget {
               padding: const EdgeInsets.only(left: AppSpacing.sm),
               child: _chip(
                 context,
-                c.label.toUpperCase(),
+                confederationLabel(l, c).toUpperCase(),
                 selected == c,
                 () => onSelect(c),
               ),

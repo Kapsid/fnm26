@@ -2,6 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/core/rng/seeded_rng.dart';
 import 'package:fnm/domain/entities/formation.dart';
 import 'package:fnm/domain/entities/tactics.dart';
+import 'package:fnm/domain/services/competition/finals.dart';
 import 'package:fnm/domain/services/match/match_engine.dart';
 import 'package:fnm/domain/services/match/match_simulator.dart';
 
@@ -118,15 +119,22 @@ void main() {
   });
 
   group('RatingMatchSimulator balance', () {
-    ({double home, double away, double homeWinPct}) sim(
-      int homeStrength,
-      int awayStrength,
-    ) {
+    ({
+      double home,
+      double away,
+      double homeWinPct,
+      double drawPct,
+      double awayWinPct,
+      double homeLosesByFourPct,
+    })
+    sim(int homeStrength, int awayStrength, {int n = 4000}) {
       const s = RatingMatchSimulator();
       var hg = 0;
       var ag = 0;
       var hw = 0;
-      const n = 1000;
+      var dr = 0;
+      var aw = 0;
+      var routed = 0;
       for (var i = 0; i < n; i++) {
         final o = s.simulate(
           homeStrength: homeStrength,
@@ -136,28 +144,80 @@ void main() {
         );
         hg += o.homeScore;
         ag += o.awayScore;
-        if (o.homeScore > o.awayScore) hw++;
+        if (o.homeScore > o.awayScore) {
+          hw++;
+        } else if (o.homeScore == o.awayScore) {
+          dr++;
+        } else {
+          aw++;
+        }
+        if (o.awayScore - o.homeScore >= 4) routed++;
       }
-      return (home: hg / n, away: ag / n, homeWinPct: 100 * hw / n);
+      return (
+        home: hg / n,
+        away: ag / n,
+        homeWinPct: 100 * hw / n,
+        drawPct: 100 * dr / n,
+        awayWinPct: 100 * aw / n,
+        homeLosesByFourPct: 100 * routed / n,
+      );
     }
 
-    test('background results track the engine, not a steeper curve', () {
-      final even = sim(85, 85);
-      expect(even.home + even.away, inInclusiveRange(2.0, 3.0));
+    // Bands measured on whole careers (see world_variance_test). The
+    // background simulator was retuned on its own; MatchEngine, above, was
+    // deliberately left as it was.
 
-      // Ten points apart: a clear favourite, but the underdog still scores.
-      final gap = sim(89, 79);
-      expect(gap.homeWinPct, inInclusiveRange(50, 70));
-      expect(gap.away, greaterThan(0.6));
+    test('equals stay equal, at a realistic scoring rate', () {
+      for (final level in [85, 64]) {
+        final even = sim(level, level);
+        expect(even.home + even.away, inInclusiveRange(2.0, 2.8));
+        // A neutral ground favours nobody — the nominal home slot used to
+        // carry a second, hidden home advantage in its base xG.
+        expect((even.homeWinPct - even.awayWinPct).abs(), lessThan(4));
+      }
+    });
 
-      // A gulf still produces a hatful — a little smaller than it used to be,
-      // because a side three clear now eases off (see [_blowoutDamping]). That
-      // trim is the point: it is what keeps a 7-0 a story rather than a
-      // Tuesday, and it costs the very top of the distribution about a tenth
-      // of a goal.
+    test('a top-six side beats a 34th-ranked one about two times in three', () {
+      // Spain (88) against Turkey (79) at the start of a save. At the old
+      // tuning this was 55/26/20: a favourite that lost one game in five.
+      final gap = sim(88, 79);
+      expect(gap.homeWinPct, inInclusiveRange(63, 74));
+      expect(gap.drawPct, inInclusiveRange(17, 26));
+      expect(gap.away, greaterThan(0.5), reason: 'the underdog still scores');
+      expect(gap.home + gap.away, inInclusiveRange(2.2, 2.9));
+      // A favourite thrashed by four is a once-a-decade story, not a habit.
+      expect(gap.homeLosesByFourPct, lessThanOrEqualTo(0.1));
+    });
+
+    test('a genuine gulf is still a rout, not a cricket score', () {
       final gulf = sim(89, 48);
+      expect(gulf.homeWinPct, greaterThan(95));
       expect(gulf.home, greaterThan(3.3));
-      expect(gulf.homeWinPct, greaterThan(90));
+      expect(gulf.away, lessThan(0.5));
+    });
+
+    test('a level background knockout leans to the better side', () {
+      // Extra time and penalties used to be split by the raw share 88/168 =
+      // 0.52, a coin toss. The background path now hands `decideKnockout` the
+      // simulator's knockout weights instead.
+      var better = 0;
+      const n = 4000;
+      for (var i = 0; i < n; i++) {
+        final ko = WorldCupFinals.decideKnockout(
+          1,
+          1,
+          SeededRng.forFixture(0x0C0A, i),
+          homeStrength: RatingMatchSimulator.knockoutWeight(88),
+          awayStrength: RatingMatchSimulator.knockoutWeight(80),
+        );
+        if (ko.homeWon) better++;
+      }
+      // Printed so the number is on the record, not just asserted.
+      // ignore: avoid_print
+      print(
+        'level knockout, 88 v 80: ${(100 * better / n).toStringAsFixed(1)}%',
+      );
+      expect(100 * better / n, inInclusiveRange(58, 75));
     });
   });
 }

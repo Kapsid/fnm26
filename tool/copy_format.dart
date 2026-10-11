@@ -10,7 +10,24 @@
 // refusing the file over a delimiter would be a refusal about nothing.
 
 /// The columns, in order.
-const List<String> kColumns = ['key', 'where', 'placeholders', 'en', 'cs'];
+const List<String> kColumns = [
+  'key',
+  'where',
+  'placeholders',
+  'en',
+  'cs',
+  'fr',
+  'it',
+  'pl',
+  'es',
+  'de',
+];
+
+/// The language columns, in order — each is `lib/l10n/app_<code>.arb`.
+const List<String> kLanguages = ['en', 'cs', 'fr', 'it', 'pl', 'es', 'de'];
+
+/// The column index of language [code] in a row.
+int columnOf(String code) => kColumns.indexOf(code);
 
 /// A real line break inside a value is written as these two characters. The
 /// format is line-based — a field holding an actual newline would be read as

@@ -104,6 +104,60 @@ void main() {
       expect(tiers[33], 2); // 33rd → League C
     });
 
+    test('a remainder of three seeds into the league above, not its own', () {
+      // CONCACAF's shape: 35 nations would leave a three-nation League C that
+      // the calendar plays inside League B.
+      final nations = [for (var i = 1; i <= 35; i++) _n(i, i)];
+      final tiers = NationsCup.seedTiers(nations, (n) => n.ranking);
+      expect(tiers[16], 0);
+      expect(tiers[17], 1);
+      expect(tiers[33], 1);
+      expect(tiers[35], 1);
+      expect(
+        NationsCup.lowestTier(
+          tiers: tiers,
+          confederation: Confederation.europe,
+          confederationOf: (_) => Confederation.europe,
+        ),
+        1,
+      );
+    });
+
+    group('mergeRemainders', () {
+      Confederation? confOf(int id) =>
+          id < 100 ? Confederation.europe : Confederation.northAmerica;
+
+      test(
+        'folds a league under four into the one above, per confederation',
+        () {
+          final tiers = {
+            for (var i = 1; i <= 16; i++) i: 0,
+            for (var i = 17; i <= 32; i++) i: 1,
+            for (var i = 33; i <= 35; i++) i: 2, // three: folds into B
+            for (var i = 101; i <= 104; i++) i: 0,
+            for (var i = 105; i <= 107; i++) i: 1, // three: folds into A
+          };
+          final merged = NationsCup.mergeRemainders(tiers, confOf);
+          expect([for (var i = 33; i <= 35; i++) merged[i]], [1, 1, 1]);
+          expect([for (var i = 105; i <= 107; i++) merged[i]], [0, 0, 0]);
+          expect(merged[17], 1);
+          expect(merged[1], 0);
+        },
+      );
+
+      test('repeats until stable and leaves full leagues alone', () {
+        final tiers = {
+          for (var i = 1; i <= 8; i++) i: 0,
+          10: 1, 11: 1, // two
+          12: 2, // one: B+C = three, still too small, so both fold into A
+        };
+        final merged = NationsCup.mergeRemainders(tiers, confOf);
+        expect(merged.values.toSet(), {0});
+        final full = {for (var i = 1; i <= 8; i++) i: i <= 4 ? 0 : 1};
+        expect(NationsCup.mergeRemainders(full, confOf), full);
+      });
+    });
+
     test('promotes group winners and relegates group bottoms', () {
       // Two leagues: nations 1 (A) and 2 (B). Winner of B climbs, bottom of A
       // drops; the lowest league never relegates, the top never promotes.

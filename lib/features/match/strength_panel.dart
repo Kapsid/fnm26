@@ -262,6 +262,7 @@ class _FactorRow extends StatelessWidget {
         StrengthFactorKind.morale => l10n.strengthFactorMorale,
         StrengthFactorKind.captain => l10n.strengthFactorCaptain,
         StrengthFactorKind.staff => l10n.strengthFactorStaff,
+        StrengthFactorKind.dossier => l10n.strengthFactorDossier,
       };
 }
 

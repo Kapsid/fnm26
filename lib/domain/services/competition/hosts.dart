@@ -433,7 +433,14 @@ abstract final class WorldCupHosts {
 
   /// When an edition is co-hosted, the chance the partner is a geographic
   /// neighbour (same subregion) rather than a nation from further afield.
-  static const double _neighbourChance = 0.95;
+  ///
+  /// Raised from 0.95 after a tester was shown England and Portugal bidding
+  /// together and asked why. The pairing was not a fault: they sit in
+  /// different subregions (britishIsles and iberia), so it was the distant
+  /// roll working as written, and the subregion table covers all 209 nations
+  /// with no gap that could invent a false neighbour. It simply came up too
+  /// often to read as the exception it is meant to be.
+  static const double _neighbourChance = 0.97;
 
   /// How many of a confederation's strongest members make the host shortlist —
   /// both the weighted draw pool and the candidates shown in the ceremony.

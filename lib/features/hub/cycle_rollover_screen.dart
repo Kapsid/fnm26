@@ -6,11 +6,14 @@ import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
+import 'package:fnm/core/util/career_label.dart';
+import 'package:fnm/core/util/message_text.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
 import 'package:fnm/domain/services/entitlement/entitlement.dart';
 import 'package:fnm/domain/services/federation/federation_finance.dart';
+import 'package:fnm/features/career/cycle_backup.dart';
 import 'package:fnm/features/career/nation_offers_providers.dart';
 import 'package:fnm/features/federation/federation_service.dart';
 import 'package:fnm/features/federation/investment_editor.dart';
@@ -115,6 +118,16 @@ class _CycleRolloverScreenState extends ConsumerState<CycleRolloverScreen> {
       ref
         ..invalidate(messageInboxProvider(widget.careerId))
         ..invalidate(unreadMessagesProvider(widget.careerId));
+      // Once a cycle, with the new one in the save: the moment a career is
+      // most worth keeping a copy of. The notice outlives this screen (the
+      // messenger is the app's), so it is read on the hub.
+      await CycleBackup.run(
+        ScaffoldMessenger.of(context),
+        AppLocalizations.of(context),
+        ref,
+        widget.careerId,
+      );
+      if (!mounted) return;
       context.go('${Routes.hub}?careerId=${widget.careerId}');
     } on Object catch (e) {
       if (!mounted) return;
@@ -304,7 +317,10 @@ class _CycleRolloverScreenState extends ConsumerState<CycleRolloverScreen> {
                     for (final o in v.offers)
                       _OfferTile(
                         nation: o.nation,
-                        subtitle: l.hubOfferSubtitle(o.tier, o.position),
+                        subtitle: l.hubOfferSubtitle(
+                          offerTierLabel(l, o.tier),
+                          o.position,
+                        ),
                         selected: _selected == o.nation.id,
                         onTap: () => setState(() => _selected = o.nation.id),
                       ),
@@ -599,13 +615,16 @@ class _VerdictCard extends StatelessWidget {
               ),
               const SizedBox(width: AppSpacing.sm),
               Expanded(
-                child: Text(verdict.headline, style: AppTypography.titleMedium),
+                child: Text(
+                  renderMsgPart(l, verdict.headline),
+                  style: AppTypography.titleMedium,
+                ),
               ),
             ],
           ),
           const SizedBox(height: AppSpacing.sm),
           Text(
-            verdict.detail,
+            renderMsgPart(l, verdict.detail),
             style: AppTypography.bodySmall.copyWith(
               color: AppColors.onSurfaceVariant,
             ),
@@ -630,7 +649,10 @@ class _VerdictCard extends StatelessWidget {
               ),
               const SizedBox(width: AppSpacing.xs),
               Text(
-                l.hubReputation(verdict.reputationLabel, verdict.reputation),
+                l.hubReputation(
+                  reputationLabel(l, verdict.reputation),
+                  verdict.reputation,
+                ),
                 style: AppTypography.labelSmall.copyWith(
                   color: AppColors.onSurfaceVariant,
                 ),
