@@ -9,8 +9,11 @@ import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/features/friendlies/friendlies_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
+import 'package:fnm/shared/tablet/tablet.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
+
+part 'friendlies_tablet_layout.dart';
 
 /// Arrange up to three friendlies in the gap before the next competitive block.
 /// Pick an opponent for each window (or leave it free); confirming schedules
@@ -19,6 +22,9 @@ class FriendliesScreen extends ConsumerStatefulWidget {
   const FriendliesScreen({required this.careerId, super.key});
 
   final int careerId;
+
+  static const Key tabletLayoutKey = Key('friendlies.tabletLayout');
+  static const Key confirmKey = Key('friendlies.confirm');
 
   @override
   ConsumerState<FriendliesScreen> createState() => _FriendliesScreenState();
@@ -29,89 +35,56 @@ class _FriendliesScreenState extends ConsumerState<FriendliesScreen> {
   final Map<DateTime, int> _picks = {};
   bool _saving = false;
 
-  String _monthAbbr(AppLocalizations l, int m) {
-    switch (m) {
-      case 1:
-        return l.friendliesMonthJan;
-      case 2:
-        return l.friendliesMonthFeb;
-      case 3:
-        return l.friendliesMonthMar;
-      case 4:
-        return l.friendliesMonthApr;
-      case 5:
-        return l.friendliesMonthMay;
-      case 6:
-        return l.friendliesMonthJun;
-      case 7:
-        return l.friendliesMonthJul;
-      case 8:
-        return l.friendliesMonthAug;
-      case 9:
-        return l.friendliesMonthSep;
-      case 10:
-        return l.friendliesMonthOct;
-      case 11:
-        return l.friendliesMonthNov;
-      default:
-        return l.friendliesMonthDec;
+  /// Picks [nationId] for [window], or clears it when he is already the
+  /// pick: a second tap on the same side leaves the window free.
+  void _pick(DateTime window, int nationId) => setState(() {
+    if (_picks[window] == nationId) {
+      _picks.remove(window);
+    } else {
+      _picks[window] = nationId;
     }
-  }
-
-  String _label(AppLocalizations l, DateTime d) =>
-      '${_monthAbbr(l, d.month)} ${d.year}';
-
-  /// A distinct block of suggested opponents for window [index], so each window
-  /// offers a different set rather than the same list.
-  ///
-  /// DEALT round-robin, not sliced. The pool is ordered by how closely a side
-  /// resembles who the manager is preparing for, and handing window 0 the first
-  /// block gave it every good suggestion and left the later windows the tail —
-  /// so the shortlist only meant anything for the first game. Dealing one card
-  /// at a time round the table gives every window a share off the top.
-  List<Nation> _opponentsFor(List<Nation> pool, int index, int windowCount) {
-    if (pool.isEmpty) return pool;
-    final per = (pool.length ~/ windowCount).clamp(6, 12);
-    return [
-      for (var k = 0; k < per; k++)
-        pool[(k * windowCount + index) % pool.length],
-    ];
-  }
-
-  /// How many of a window's opponents carry the recommended mark. The list is
-  /// dealt best-first, so these are the closest matches for that window.
-  static const int _markedPerWindow = 3;
-
-  /// What the mark on those chips MEANS. A shortlist reordered silently is just
-  /// a different shortlist, and "suggested first" was the whole of the hint —
-  /// which told the manager nothing he could see, because the chips were all
-  /// drawn identically and he had no way of knowing where "first" ended. The
-  /// line now names what is marked, and the marks are on the chips.
-  String _reasonFor(AppLocalizations l, FriendliesPlan plan) {
-    final names = plan.rivals.map((n) => n.name).join(', ');
-    return switch (plan.reason) {
-      FriendlyReason.finalsGroup => l.friendliesLikeYourGroup(names),
-      FriendlyReason.qualifyingGroup => l.friendliesLikeYourCampaign(names),
-      FriendlyReason.ranking => l.friendliesCloseToYou,
-    };
-  }
+  });
 
   Future<void> _confirm(FriendliesPlan plan) async {
+    // A second tap landing before the button has redrawn disabled would
+    // book every pick twice.
+    if (_saving) return;
     setState(() => _saving = true);
+    // Taken before the await: on a tablet the sidebar is always there, and
+    // a resize swaps the layout under this State; the games are saved
+    // whatever happens, and only a manager still on this page is taken on
+    // to the hub. `router.state` is the top-most route, pushed ones too.
+    final router = GoRouter.of(context);
+    final careerId = widget.careerId;
     await ref
         .read(friendliesServiceProvider)
         .arrange(
-          widget.careerId,
+          careerId,
           nationId: plan.playerNationId,
           cycle: plan.cycle,
           picks: _picks,
           allWindows: plan.windows,
         );
-    if (mounted) context.go('${Routes.hub}?careerId=${widget.careerId}');
+    if (router.state.uri.path == Routes.friendlies) {
+      router.go('${Routes.hub}?careerId=$careerId');
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    // On a tablet the top bar's Continue runs the sim while this page is on
+    // show, and the step refreshes the plan: a window the calendar has moved
+    // past drops out of it. Its pick goes with it, before Confirm can book a
+    // game on a date already gone. No rebuild is asked for: both layouts
+    // watch the plan, so the change that called this redraws them.
+    ref.listen(friendliesPlanProvider(widget.careerId), (_, next) {
+      if (next.isLoading || next.hasError) return;
+      final windows = next.requireValue?.windows ?? const <DateTime>[];
+      _picks.removeWhere((window, _) => !windows.contains(window));
+    });
+    if (TabletShellScope.isActive(context)) {
+      return _FriendliesTabletLayout(state: this);
+    }
     final async = ref.watch(friendliesPlanProvider(widget.careerId));
     final l = AppLocalizations.of(context);
 
@@ -214,14 +187,7 @@ class _FriendliesScreenState extends ConsumerState<FriendliesScreen> {
                         selected: _picks[plan.windows[i]],
                         code: (id) => plan.nations[id]?.code ?? '??',
                         name: (id) => plan.nations[id]?.name ?? '—',
-                        onPick: (id) => setState(() {
-                          final w = plan.windows[i];
-                          if (_picks[w] == id) {
-                            _picks.remove(w);
-                          } else {
-                            _picks[w] = id;
-                          }
-                        }),
+                        onPick: (id) => _pick(plan.windows[i], id),
                       ),
                     const SizedBox(height: AppSpacing.xl),
                   ],
@@ -246,6 +212,72 @@ class _FriendliesScreenState extends ConsumerState<FriendliesScreen> {
       ),
     );
   }
+}
+
+String _monthAbbr(AppLocalizations l, int m) {
+  switch (m) {
+    case 1:
+      return l.friendliesMonthJan;
+    case 2:
+      return l.friendliesMonthFeb;
+    case 3:
+      return l.friendliesMonthMar;
+    case 4:
+      return l.friendliesMonthApr;
+    case 5:
+      return l.friendliesMonthMay;
+    case 6:
+      return l.friendliesMonthJun;
+    case 7:
+      return l.friendliesMonthJul;
+    case 8:
+      return l.friendliesMonthAug;
+    case 9:
+      return l.friendliesMonthSep;
+    case 10:
+      return l.friendliesMonthOct;
+    case 11:
+      return l.friendliesMonthNov;
+    default:
+      return l.friendliesMonthDec;
+  }
+}
+
+String _label(AppLocalizations l, DateTime d) =>
+    '${_monthAbbr(l, d.month)} ${d.year}';
+
+/// A distinct block of suggested opponents for window [index], so each window
+/// offers a different set rather than the same list.
+///
+/// DEALT round-robin, not sliced. The pool is ordered by how closely a side
+/// resembles who the manager is preparing for, and handing window 0 the first
+/// block gave it every good suggestion and left the later windows the tail —
+/// so the shortlist only meant anything for the first game. Dealing one card
+/// at a time round the table gives every window a share off the top.
+List<Nation> _opponentsFor(List<Nation> pool, int index, int windowCount) {
+  if (pool.isEmpty) return pool;
+  final per = (pool.length ~/ windowCount).clamp(6, 12);
+  return [
+    for (var k = 0; k < per; k++) pool[(k * windowCount + index) % pool.length],
+  ];
+}
+
+/// How many of a window's opponents carry the recommended mark. The list is
+/// dealt best-first, so these are the closest matches for that window.
+const int _markedPerWindow = 3;
+
+/// What the mark on those chips MEANS. A shortlist reordered silently is just
+/// a different shortlist, and "suggested first" was the whole of the hint —
+/// which told the manager nothing he could see, because the chips were all
+/// drawn identically and he had no way of knowing where "first" ended. The
+/// line now names what is marked, and the marks are on the chips.
+String _reasonFor(AppLocalizations l, FriendliesPlan plan) {
+  final names = plan.rivals.map((n) => n.name).join(', ');
+  return switch (plan.reason) {
+    FriendlyReason.finalsGroup => l.friendliesLikeYourGroup(names),
+    FriendlyReason.qualifyingGroup => l.friendliesLikeYourCampaign(names),
+    FriendlyReason.ranking => l.friendliesCloseToYou,
+  };
 }
 
 class _WindowCard extends StatelessWidget {
