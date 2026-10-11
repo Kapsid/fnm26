@@ -182,4 +182,9 @@ void main() {
       );
     }
   });
+
+  test('a single academy million never reads as 0 overall', () {
+    expect(DepartmentEffect.youthOverall(0), 0);
+    expect(DepartmentEffect.youthOverall(price), 1);
+  });
 }
