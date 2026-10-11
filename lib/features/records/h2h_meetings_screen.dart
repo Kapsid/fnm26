@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:fnm/core/util/app_date.dart';
-import 'package:fnm/core/util/competition_label.dart';
+import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
+import 'package:fnm/core/util/app_date.dart';
+import 'package:fnm/core/util/competition_label.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/features/nations/nation_select_providers.dart';
 import 'package:fnm/features/records/head_to_head_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
+import 'package:fnm/shared/tablet/tablet.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
 
@@ -23,9 +25,83 @@ class H2HMeetingsScreen extends ConsumerWidget {
     super.key,
   });
 
+  static const Key tabletLayoutKey = Key('h2hMeetings.tabletLayout');
+
   final int careerId;
   final int nationA;
   final int nationB;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l = AppLocalizations.of(context);
+    if (TabletShellScope.isActive(context)) {
+      // On a tablet: the same list under the shell's heading, at a reading
+      // width rather than stretched across the content area.
+      return TabletPage(
+        scaffoldKey: tabletLayoutKey,
+        title: l.h2hMeetingsTitle,
+        onBack: () => context.canPop()
+            ? context.pop()
+            : context.go('${Routes.headToHead}?careerId=$careerId'),
+        child: Align(
+          alignment: Alignment.topLeft,
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 720),
+            child: PanelBox(
+              child: H2hMeetingsView(
+                careerId: careerId,
+                nationA: nationA,
+                nationB: nationB,
+              ),
+            ),
+          ),
+        ),
+      );
+    }
+    return Scaffold(
+      appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: AppColors.primary),
+          onPressed: () => context.canPop() ? context.pop() : context.go('/'),
+        ),
+        title: Text(
+          l.recordsMeetings,
+          style: AppTypography.labelMedium.copyWith(color: AppColors.primary),
+        ),
+        centerTitle: true,
+      ),
+      body: H2hMeetingsView(
+        careerId: careerId,
+        nationA: nationA,
+        nationB: nationB,
+      ),
+    );
+  }
+}
+
+/// Every meeting between [nationA] and [nationB], newest first, under the
+/// pairing's name and its won-drawn-lost line. The body of
+/// [H2HMeetingsScreen], on its own so the tablet head to head can show it
+/// beside the picker, with the pairing's record as its [header].
+///
+/// Scrolls itself; give it a bounded height.
+class H2hMeetingsView extends ConsumerWidget {
+  const H2hMeetingsView({
+    required this.careerId,
+    required this.nationA,
+    required this.nationB,
+    this.header,
+    this.padding = const EdgeInsets.all(AppSpacing.marginMobile),
+    super.key,
+  });
+
+  final int careerId;
+  final int nationA;
+  final int nationB;
+
+  /// Shown above the meetings when there are any.
+  final Widget? header;
+  final EdgeInsetsGeometry padding;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -42,60 +118,50 @@ class H2HMeetingsScreen extends ConsumerWidget {
     final aName = byId[nationA]?.name ?? '';
     final bName = byId[nationB]?.name ?? '';
 
-    return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: AppColors.primary),
-          onPressed: () => context.canPop() ? context.pop() : context.go('/'),
-        ),
-        title: Text(
-          l.recordsMeetings,
-          style: AppTypography.labelMedium.copyWith(color: AppColors.primary),
-        ),
-        centerTitle: true,
-      ),
-      body: meetingsAsync.when(
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) =>
-            Center(child: Text(l.recordsCouldNotLoad(e.toString()))),
-        data: (meetings) {
-          if (meetings.isEmpty) {
-            return Center(
-              child: Padding(
-                padding: const EdgeInsets.all(AppSpacing.xl),
-                child: Text(
-                  l.recordsNeverMet(aName, bName),
-                  textAlign: TextAlign.center,
-                  style: AppTypography.bodyMedium.copyWith(
-                    color: AppColors.onSurfaceVariant,
-                  ),
-                ),
-              ),
-            );
-          }
-          final wins = meetings.where((m) => m.forA > m.forB).length;
-          final draws = meetings.where((m) => m.forA == m.forB).length;
-          final losses = meetings.where((m) => m.forA < m.forB).length;
-          return ListView(
-            padding: const EdgeInsets.all(AppSpacing.marginMobile),
-            children: [
-              Text(
-                l.recordsVersus(aName, bName),
-                style: AppTypography.titleMedium,
-              ),
-              Text(
-                l.recordsMeetingsWdl(meetings.length, wins, draws, losses),
-                style: AppTypography.labelSmall.copyWith(
+    return meetingsAsync.when(
+      loading: () => const Center(child: CircularProgressIndicator()),
+      error: (e, _) => Center(child: Text(l.recordsCouldNotLoad(e.toString()))),
+      data: (meetings) {
+        if (meetings.isEmpty) {
+          return Center(
+            child: Padding(
+              padding: const EdgeInsets.all(AppSpacing.xl),
+              child: Text(
+                l.recordsNeverMet(aName, bName),
+                textAlign: TextAlign.center,
+                style: AppTypography.bodyMedium.copyWith(
                   color: AppColors.onSurfaceVariant,
                 ),
               ),
-              const SizedBox(height: AppSpacing.md),
-              for (final m in meetings) _MeetingRow(meeting: m),
-              const SizedBox(height: AppSpacing.xl),
-            ],
+            ),
           );
-        },
-      ),
+        }
+        final wins = meetings.where((m) => m.forA > m.forB).length;
+        final draws = meetings.where((m) => m.forA == m.forB).length;
+        final losses = meetings.where((m) => m.forA < m.forB).length;
+        return ListView(
+          padding: padding,
+          children: [
+            if (header case final top?) ...[
+              top,
+              const SizedBox(height: AppSpacing.md),
+            ],
+            Text(
+              l.recordsVersus(aName, bName),
+              style: AppTypography.titleMedium,
+            ),
+            Text(
+              l.recordsMeetingsWdl(meetings.length, wins, draws, losses),
+              style: AppTypography.labelSmall.copyWith(
+                color: AppColors.onSurfaceVariant,
+              ),
+            ),
+            const SizedBox(height: AppSpacing.md),
+            for (final m in meetings) _MeetingRow(meeting: m),
+            const SizedBox(height: AppSpacing.xl),
+          ],
+        );
+      },
     );
   }
 }

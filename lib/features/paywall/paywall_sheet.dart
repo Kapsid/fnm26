@@ -6,11 +6,12 @@ import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/domain/services/entitlement/entitlement.dart';
 import 'package:fnm/features/paywall/paywall_parts.dart';
 import 'package:fnm/l10n/app_localizations.dart';
+import 'package:fnm/shared/tablet/adaptive_sheet.dart';
 
 /// Opens the premium paywall as a bottom sheet. Resolves once the sheet is
 /// dismissed; check [premiumUnlockedProvider] afterwards for the outcome.
 Future<void> showPaywall(BuildContext context) {
-  return showModalBottomSheet<void>(
+  return showAdaptiveSheet<void>(
     context: context,
     backgroundColor: AppColors.surfaceContainer,
     isScrollControlled: true,

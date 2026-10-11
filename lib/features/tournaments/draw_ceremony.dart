@@ -38,6 +38,7 @@ class DrawCeremony extends StatefulWidget {
     this.highlightNationId,
     this.potCount,
     this.crossAxisCount = 2,
+    this.landscape = false,
     super.key,
   });
 
@@ -58,13 +59,40 @@ class DrawCeremony extends StatefulWidget {
   /// Columns in the groups grid.
   final int crossAxisCount;
 
+  static const Key landscapeKey = Key('drawCeremony.landscape');
+
+  /// The landscape stage's left column: the ball, the pots, the controls.
+  static const double landscapeSideWidth = 340;
+
+  /// A tablet: the pots and controls in a column on the left, the groups
+  /// filling the rest. Chosen INSIDE the ceremony's own State, so a window
+  /// that crosses the tablet width mid-draw keeps the draw where it was.
+  final bool landscape;
+
   @override
-  State<DrawCeremony> createState() => _DrawCeremonyState();
+  State<DrawCeremony> createState() => DrawCeremonyState();
 }
 
-class _DrawCeremonyState extends State<DrawCeremony> {
+/// Where the draw stands after the balls revealed so far: what each group
+/// holds, what each pot still holds, and the ball just drawn.
+typedef _DrawFrame = ({
+  Map<int, List<int>> revealedByGroup,
+  Map<int, List<int>> waitingByPot,
+  bool done,
+  _Step? current,
+  _Step? last,
+});
+
+/// The ceremony's running state: the reveal order and how many balls are
+/// out. Public only so a test can check that the same State survives a
+/// window resize (the draw must not restart when the layout flips).
+class DrawCeremonyState extends State<DrawCeremony> {
   int _revealed = 0;
   Timer? _timer;
+
+  /// How many balls are out. For tests.
+  @visibleForTesting
+  int get revealed => _revealed;
 
   /// Whether the draw is auto-playing. The manager can pause and pull the balls
   /// one at a time, or let it run.
@@ -187,12 +215,9 @@ class _DrawCeremonyState extends State<DrawCeremony> {
   String _code(int id) => widget.nations[id]?.code ?? '??';
   String _name(int id) => widget.nations[id]?.name ?? '—';
 
-  @override
-  Widget build(BuildContext context) {
-    final l = AppLocalizations.of(context);
-    final shown = _steps.take(_revealed).toList();
+  _DrawFrame _frame() {
     final revealedByGroup = <int, List<int>>{};
-    for (final s in shown) {
+    for (final s in _steps.take(_revealed)) {
       (revealedByGroup[s.groupIndex] ??= []).add(s.nationId);
     }
     // Nations still waiting in each pot, so the pots can show their flags.
@@ -211,36 +236,171 @@ class _DrawCeremonyState extends State<DrawCeremony> {
       pot.sort();
     }
     final done = _revealed >= _steps.length;
-    final current = (!done && _revealed >= 0 && _revealed < _steps.length)
-        ? _steps[_revealed]
-        : null;
-    final last = (_revealed > 0) ? _steps[_revealed - 1] : null;
+    return (
+      revealedByGroup: revealedByGroup,
+      waitingByPot: waitingByPot,
+      done: done,
+      current: (!done && _revealed >= 0 && _revealed < _steps.length)
+          ? _steps[_revealed]
+          : null,
+      last: _revealed > 0 ? _steps[_revealed - 1] : null,
+    );
+  }
 
+  Widget _stage(_DrawFrame frame) {
+    final last = frame.last;
+    return _Stage(
+      done: frame.done,
+      step: last,
+      groupName: last == null ? '' : widget.groups[last.groupIndex].name,
+      // The teams already in the group the last team joined, for context.
+      groupMembers: last == null
+          ? const []
+          : (frame.revealedByGroup[last.groupIndex] ?? const []),
+      code: _code,
+      name: _name,
+    );
+  }
+
+  Widget _groupCard(AppLocalizations l, int gi, _DrawFrame frame) {
+    final last = frame.last;
+    return _GroupCard(
+      title: l.tourSharedGroupName(widget.groups[gi].name),
+      // This group's OWN size, not the pot count. The pot count is the
+      // biggest group, and handing it to every card gave a group of three a
+      // fourth, permanently empty ball that stayed there after the draw had
+      // finished. Slots say how many nations this group will hold; pots say
+      // how the reveal is paced. They are only the same number when every
+      // group is the same size.
+      slots: widget.groups[gi].nationIds.length,
+      revealed: frame.revealedByGroup[gi] ?? const [],
+      justAdded: !frame.done && last != null && last.groupIndex == gi
+          ? last.nationId
+          : null,
+      highlightNationId: widget.highlightNationId,
+      code: _code,
+      name: _name,
+    );
+  }
+
+  /// The draw-mode selector and its hint while the draw runs, then the
+  /// buttons: pause or play and skip, or Continue once it is done.
+  List<Widget> _controls(AppLocalizations l, bool done) => [
+    if (!done) ...[
+      // Draw mode: reveal one ball, a whole pot, or the entire draw.
+      Padding(
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppSpacing.marginMobile,
+        ),
+        child: SegmentedButton<_DrawGrain>(
+          showSelectedIcon: false,
+          style: SegmentedButton.styleFrom(
+            visualDensity: VisualDensity.compact,
+          ),
+          segments: [
+            ButtonSegment(
+              value: _DrawGrain.ball,
+              label: Text(l.tourSharedBall),
+            ),
+            ButtonSegment(
+              value: _DrawGrain.pot,
+              label: Text(l.tourSharedPot),
+            ),
+            ButtonSegment(
+              value: _DrawGrain.all,
+              label: Text(l.tourSharedAll),
+            ),
+          ],
+          selected: {_grain},
+          onSelectionChanged: (s) => setState(() => _grain = s.first),
+        ),
+      ),
+      const SizedBox(height: AppSpacing.xs),
+      Padding(
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppSpacing.marginMobile,
+        ),
+        child: Text(
+          switch (_grain) {
+            _DrawGrain.ball => l.tourSharedTapDrawTeam,
+            _DrawGrain.pot => l.tourSharedTapDrawPot,
+            _DrawGrain.all => l.tourSharedTapDrawAll,
+          },
+          textAlign: TextAlign.center,
+          style: AppTypography.labelSmall.copyWith(
+            color: AppColors.onSurfaceVariant,
+          ),
+        ),
+      ),
+    ],
+    SafeArea(
+      top: false,
+      child: Padding(
+        padding: const EdgeInsets.all(AppSpacing.marginMobile),
+        child: done
+            ? PrimaryButton(
+                label: l.tourSharedContinue,
+                icon: Icons.check_rounded,
+                onPressed: widget.onContinue,
+              )
+            : Row(
+                children: [
+                  // Pause the run, or set it going again.
+                  Expanded(
+                    child: OutlinedButton.icon(
+                      onPressed: _toggleAuto,
+                      style: OutlinedButton.styleFrom(
+                        minimumSize: const Size.fromHeight(48),
+                      ),
+                      icon: Icon(
+                        _auto ? Icons.pause_rounded : Icons.play_arrow_rounded,
+                        size: 20,
+                      ),
+                      label: Text(
+                        _auto ? l.tourSharedPause : l.tourSharedPlay,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: AppSpacing.sm),
+                  Expanded(
+                    child: FilledButton.tonalIcon(
+                      onPressed: _skip,
+                      style: FilledButton.styleFrom(
+                        minimumSize: const Size.fromHeight(48),
+                      ),
+                      icon: const Icon(
+                        Icons.fast_forward_rounded,
+                        size: 20,
+                      ),
+                      label: Text(l.tourSharedSkip),
+                    ),
+                  ),
+                ],
+              ),
+      ),
+    ),
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    final frame = _frame();
+    if (widget.landscape) return _landscape(l, frame);
     return Column(
       children: [
         _Pots(
           potCount: _pots,
           groupCount: widget.groups.length,
-          waitingByPot: waitingByPot,
-          activePot: current?.pot,
+          waitingByPot: frame.waitingByPot,
+          activePot: frame.current?.pot,
           highlightNationId: widget.highlightNationId,
           code: _code,
         ),
-        _Stage(
-          done: done,
-          step: last,
-          groupName: last == null ? '' : widget.groups[last.groupIndex].name,
-          // The teams already in the group the last team joined, for context.
-          groupMembers: last == null
-              ? const []
-              : (revealedByGroup[last.groupIndex] ?? const []),
-          code: _code,
-          name: _name,
-        ),
+        _stage(frame),
         Expanded(
           // Tap anywhere over the groups to pull the next ball.
           child: GestureDetector(
-            onTap: done ? null : _drawNext,
+            onTap: frame.done ? null : _drawNext,
             behavior: HitTestBehavior.opaque,
             child: GridView.count(
               crossAxisCount: widget.crossAxisCount,
@@ -252,123 +412,104 @@ class _DrawCeremonyState extends State<DrawCeremony> {
               crossAxisSpacing: AppSpacing.sm,
               children: [
                 for (var gi = 0; gi < widget.groups.length; gi++)
-                  _GroupCard(
-                    title: l.tourSharedGroupName(widget.groups[gi].name),
-                    // This group's OWN size, not the pot count. The pot count
-                    // is the biggest group, and handing it to every card gave
-                    // a group of three a fourth, permanently empty ball that
-                    // stayed there after the draw had finished. Slots say how
-                    // many nations this group will hold; pots say how the
-                    // reveal is paced. They are only the same number when
-                    // every group is the same size.
-                    slots: widget.groups[gi].nationIds.length,
-                    revealed: revealedByGroup[gi] ?? const [],
-                    justAdded: !done && last != null && last.groupIndex == gi
-                        ? last.nationId
-                        : null,
-                    highlightNationId: widget.highlightNationId,
-                    code: _code,
-                    name: _name,
-                  ),
+                  _groupCard(l, gi, frame),
               ],
             ),
           ),
         ),
-        if (!done) ...[
-          // Draw mode: reveal one ball, a whole pot, or the entire draw.
-          Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: AppSpacing.marginMobile,
-            ),
-            child: SegmentedButton<_DrawGrain>(
-              showSelectedIcon: false,
-              style: SegmentedButton.styleFrom(
-                visualDensity: VisualDensity.compact,
-              ),
-              segments: [
-                ButtonSegment(
-                  value: _DrawGrain.ball,
-                  label: Text(l.tourSharedBall),
-                ),
-                ButtonSegment(
-                  value: _DrawGrain.pot,
-                  label: Text(l.tourSharedPot),
-                ),
-                ButtonSegment(
-                  value: _DrawGrain.all,
-                  label: Text(l.tourSharedAll),
-                ),
-              ],
-              selected: {_grain},
-              onSelectionChanged: (s) => setState(() => _grain = s.first),
-            ),
-          ),
-          const SizedBox(height: AppSpacing.xs),
-          Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: AppSpacing.marginMobile,
-            ),
-            child: Text(
-              switch (_grain) {
-                _DrawGrain.ball => l.tourSharedTapDrawTeam,
-                _DrawGrain.pot => l.tourSharedTapDrawPot,
-                _DrawGrain.all => l.tourSharedTapDrawAll,
-              },
-              textAlign: TextAlign.center,
-              style: AppTypography.labelSmall.copyWith(
-                color: AppColors.onSurfaceVariant,
-              ),
-            ),
-          ),
-        ],
-        SafeArea(
-          top: false,
-          child: Padding(
-            padding: const EdgeInsets.all(AppSpacing.marginMobile),
-            child: done
-                ? PrimaryButton(
-                    label: l.tourSharedContinue,
-                    icon: Icons.check_rounded,
-                    onPressed: widget.onContinue,
-                  )
-                : Row(
+        ..._controls(l, frame.done),
+      ],
+    );
+  }
+
+  /// The landscape stage: the ball being drawn, the pots and the controls in
+  /// a column on the left, the groups filling the rest.
+  Widget _landscape(AppLocalizations l, _DrawFrame frame) {
+    return Row(
+      key: DrawCeremony.landscapeKey,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        SizedBox(
+          width: DrawCeremony.landscapeSideWidth,
+          child: Column(
+            children: [
+              _stage(frame),
+              Expanded(
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: AppSpacing.md,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      // Pause the run, or set it going again.
-                      Expanded(
-                        child: OutlinedButton.icon(
-                          onPressed: _toggleAuto,
-                          style: OutlinedButton.styleFrom(
-                            minimumSize: const Size.fromHeight(48),
+                      for (var pot = 0; pot < _pots; pot++)
+                        Padding(
+                          padding: const EdgeInsets.only(
+                            bottom: AppSpacing.sm,
                           ),
-                          icon: Icon(
-                            _auto
-                                ? Icons.pause_rounded
-                                : Icons.play_arrow_rounded,
-                            size: 20,
-                          ),
-                          label: Text(
-                            _auto ? l.tourSharedPause : l.tourSharedPlay,
+                          child: _Pot(
+                            index: pot,
+                            total: widget.groups.length,
+                            waiting: frame.waitingByPot[pot] ?? const [],
+                            active: pot == frame.current?.pot,
+                            highlightNationId: widget.highlightNationId,
+                            code: _code,
                           ),
                         ),
-                      ),
-                      const SizedBox(width: AppSpacing.sm),
-                      Expanded(
-                        child: FilledButton.tonalIcon(
-                          onPressed: _skip,
-                          style: FilledButton.styleFrom(
-                            minimumSize: const Size.fromHeight(48),
-                          ),
-                          icon: const Icon(
-                            Icons.fast_forward_rounded,
-                            size: 20,
-                          ),
-                          label: Text(l.tourSharedSkip),
-                        ),
-                      ),
                     ],
                   ),
+                ),
+              ),
+              ..._controls(l, frame.done),
+            ],
           ),
         ),
+        const VerticalDivider(
+          width: 1,
+          thickness: 1,
+          color: AppColors.outlineVariant,
+        ),
+        Expanded(
+          // Tap anywhere over the groups to pull the next ball.
+          child: GestureDetector(
+            onTap: frame.done ? null : _drawNext,
+            behavior: HitTestBehavior.opaque,
+            child: LayoutBuilder(
+              builder: (context, box) => _landscapeGroups(l, frame, box),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  /// The groups as a grid filling [box]: as many columns as fit at about 200
+  /// wide (two at least), each card tall enough for a line per slot, and
+  /// taller, up to half as much again, when every row fits without scrolling.
+  Widget _landscapeGroups(
+    AppLocalizations l,
+    _DrawFrame frame,
+    BoxConstraints box,
+  ) {
+    const pad = AppSpacing.md;
+    const gap = AppSpacing.sm;
+    final count = widget.groups.length;
+    final width = box.maxWidth - 2 * pad;
+    final height = box.maxHeight - 2 * pad;
+    final columns = min(max(2, (width / 200).floor()), max(1, count));
+    final rows = (count / columns).ceil();
+    final minHeight = 34.0 + _largestGroup() * 24.0;
+    final fitHeight = (height - (rows - 1) * gap) / rows;
+    final tileHeight = max(minHeight, min(fitHeight, minHeight * 1.5));
+    final tileWidth = (width - (columns - 1) * gap) / columns;
+    return GridView.count(
+      crossAxisCount: columns,
+      padding: const EdgeInsets.all(pad),
+      childAspectRatio: tileWidth / tileHeight,
+      mainAxisSpacing: gap,
+      crossAxisSpacing: gap,
+      children: [
+        for (var gi = 0; gi < count; gi++) _groupCard(l, gi, frame),
       ],
     );
   }
@@ -569,6 +710,7 @@ class _Stage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
     return SizedBox(
       height: 96,
       child: AnimatedSwitcher(
@@ -618,7 +760,7 @@ class _Stage extends StatelessWidget {
                         style: AppTypography.titleMedium,
                       ),
                       Text(
-                        '→ GROUP $groupName',
+                        '→ ${l.tourSharedGroupName(groupName)}',
                         style: AppTypography.labelMedium.copyWith(
                           color: AppColors.primary,
                         ),

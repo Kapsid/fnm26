@@ -4,51 +4,15 @@ import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
-import 'package:fnm/data/data_providers.dart';
-import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/fixture.dart';
-import 'package:fnm/domain/entities/nation.dart';
-import 'package:fnm/domain/repositories/competition_repository.dart';
+import 'package:fnm/features/tournaments/continental_clash_providers.dart';
 import 'package:fnm/features/tournaments/tournament_history.dart';
 import 'package:fnm/l10n/app_localizations.dart';
+import 'package:fnm/shared/tablet/tablet.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
 
-/// Everything the Continental Clash screen shows: this cycle's one-off match
-/// (once both continental champions are known) and the full roll of honour.
-typedef _ClashData = ({
-  Fixture? tie,
-  Map<int, Nation> nations,
-  int playerNationId,
-  List<Honour> honours,
-});
-
-final AutoDisposeFutureProviderFamily<_ClashData?, int> _clashProvider =
-    FutureProvider.autoDispose.family<_ClashData?, int>((ref, careerId) async {
-      await ref.watch(seedLoaderProvider).ensureSeeded();
-      final career = await ref.watch(careerRepositoryProvider).byId(careerId);
-      if (career == null) return null;
-      final comp = ref.watch(competitionRepositoryProvider);
-
-      final ties = await comp.fixturesByRound(
-        careerId,
-        'FFINAL',
-        kind: CompetitionKind.finalissima,
-      );
-      final honours = (await comp.honours(
-        careerId,
-      )).where((h) => h.competition == 'Continental Clash').toList();
-      final nations = {
-        for (final n in await ref.watch(nationRepositoryProvider).all())
-          n.id: n,
-      };
-      return (
-        tie: ties.firstOrNull,
-        nations: nations,
-        playerNationId: career.nationId,
-        honours: honours,
-      );
-    });
+part 'continental_clash_view.dart';
 
 /// Continental Clash (Finalissima) detail: the champions-of-champions one-off
 /// between the European and South American champions — this cycle's tie and
@@ -58,10 +22,15 @@ class ContinentalClashScreen extends ConsumerWidget {
 
   final int careerId;
 
+  static const Key tabletLayoutKey = Key('clash.tabletLayout');
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    if (TabletShellScope.isActive(context)) {
+      return _ContinentalClashTabletLayout(careerId: careerId);
+    }
     final l = AppLocalizations.of(context);
-    final dataAsync = ref.watch(_clashProvider(careerId));
+    final dataAsync = ref.watch(continentalClashProvider(careerId));
 
     return DefaultTabController(
       length: 2,
@@ -83,10 +52,7 @@ class ContinentalClashScreen extends ConsumerWidget {
               labelColor: AppColors.onSurface,
               unselectedLabelColor: AppColors.onSurfaceVariant,
               indicatorColor: AppColors.primary,
-              tabs: [
-                Tab(text: l.tourContTabThisCycle),
-                Tab(text: l.tourContTabHistory),
-              ],
+              tabs: _clashTabs(l),
             ),
           ),
         ),
@@ -98,35 +64,56 @@ class ContinentalClashScreen extends ConsumerWidget {
             if (data == null) {
               return Center(child: Text(l.tourContNoSaveFound));
             }
-            String code(int id) => data.nations[id]?.code ?? '??';
-            String name(int id) => data.nations[id]?.name ?? l.tourContUnknown;
-
-            return TabBarView(
-              children: [
-                if (data.tie == null)
-                  TournamentSoon(
-                    message: l.tourContClashSoon,
-                  )
-                else
-                  _ThisCycle(
-                    tie: data.tie!,
-                    playerNationId: data.playerNationId,
-                    code: code,
-                    name: name,
-                  ),
-                TournamentHistory(
-                  honours: data.honours,
-                  name: name,
-                  code: code,
-                  emptyMessage: l.tourContNoClashYet,
-                ),
-              ],
-            );
+            return TabBarView(children: _clashTabViews(context, data));
           },
         ),
       ),
     );
   }
+}
+
+/// The Clash's two tabs, in the order [_clashTabViews] builds them.
+List<Tab> _clashTabs(AppLocalizations l) => [
+  Tab(text: l.tourContTabThisCycle),
+  Tab(text: l.tourContTabHistory),
+];
+
+/// The two tab bodies. Shared by the phone screen and [ContinentalClashView];
+/// [wide] (a tablet) holds this cycle's tie to a readable width, centred.
+List<Widget> _clashTabViews(
+  BuildContext context,
+  ContinentalClashData data, {
+  bool wide = false,
+}) {
+  final l = AppLocalizations.of(context);
+  String code(int id) => data.nations[id]?.code ?? '??';
+  String name(int id) => data.nations[id]?.name ?? l.tourContUnknown;
+  final thisCycle = data.tie == null
+      ? TournamentSoon(message: l.tourContClashSoon)
+      : _ThisCycle(
+          tie: data.tie!,
+          playerNationId: data.playerNationId,
+          code: code,
+          name: name,
+        );
+  return [
+    if (wide)
+      Align(
+        alignment: Alignment.topCenter,
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 640),
+          child: thisCycle,
+        ),
+      )
+    else
+      thisCycle,
+    TournamentHistory(
+      honours: data.honours,
+      name: name,
+      code: code,
+      emptyMessage: l.tourContNoClashYet,
+    ),
+  ];
 }
 
 /// This cycle's tie: both champions face to face, with the result once played.

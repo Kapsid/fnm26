@@ -1,4 +1,7 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
+import 'package:fnm/core/layout/form_factor.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
@@ -15,6 +18,7 @@ import 'package:fnm/domain/services/tactics/substitution_rules.dart';
 import 'package:fnm/features/tactics/formation_picker.dart';
 import 'package:fnm/features/tactics/tactics_pitch.dart';
 import 'package:fnm/l10n/app_localizations.dart';
+import 'package:fnm/shared/tablet/adaptive_sheet.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 
 /// The tactical setup a manager confirms from the in-match editor: the shape,
@@ -37,6 +41,10 @@ class InMatchTacticsResult {
   final ({int? penalty, int? deadBall}) takers;
 }
 
+abstract final class InMatchTacticsKeys {
+  static const Key tabletLayout = Key('inMatchTactics.tabletLayout');
+}
+
 /// Opens the full in-match tactics editor (shape, XI, subs and instructions) as
 /// a page and returns the confirmed setup, or null if the manager backed out.
 Future<InMatchTacticsResult?> showInMatchTactics(
@@ -55,6 +63,7 @@ Future<InMatchTacticsResult?> showInMatchTactics(
   Map<int, int> cameOnAt = const {},
   Map<int, int> wentOffAt = const {},
   List<Color>? teamColors,
+  bool tabletLayout = false,
 }) {
   return Navigator.of(context).push<InMatchTacticsResult>(
     MaterialPageRoute(
@@ -74,6 +83,7 @@ Future<InMatchTacticsResult?> showInMatchTactics(
         cameOnAt: cameOnAt,
         wentOffAt: wentOffAt,
         teamColors: teamColors,
+        tabletLayout: tabletLayout,
       ),
     ),
   );
@@ -95,6 +105,7 @@ class _InMatchTacticsEditor extends StatefulWidget {
     this.cameOnAt = const {},
     this.wentOffAt = const {},
     this.teamColors,
+    this.tabletLayout = false,
   });
 
   final int minute;
@@ -134,6 +145,11 @@ class _InMatchTacticsEditor extends StatefulWidget {
 
   /// The manager's kit colours, filling the player discs on the pitch.
   final List<Color>? teamColors;
+
+  /// Lay out for a landscape tablet: pitch left, lists right. Set by the
+  /// match screen from useTabletLayout; false everywhere else, so phones and
+  /// tests keep the tabbed page.
+  final bool tabletLayout;
 
   @override
   State<_InMatchTacticsEditor> createState() => _InMatchTacticsEditorState();
@@ -571,35 +587,42 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
           ),
         ],
       ),
-      body: DefaultTabController(
-        length: 2,
-        child: Column(
-          children: [
-            TabBar(
-              labelColor: AppColors.onSurface,
-              unselectedLabelColor: AppColors.onSurfaceVariant,
-              indicatorColor: AppColors.primary,
-              tabs: [
-                Tab(text: l.tacticsTabLineupSubs),
-                Tab(text: l.tacticsTabTactics),
-              ],
-            ),
-            Expanded(
-              child: TabBarView(
+      body: widget.tabletLayout && context.isWideTabletWindow
+          ? _tabletBody(
+              onPitch: _onPitchPlayers,
+              available: available,
+              unavailable: unavailable,
+              comingOff: coming,
+            )
+          : DefaultTabController(
+              length: 2,
+              child: Column(
                 children: [
-                  _lineupTab(
-                    onPitch: _onPitchPlayers,
-                    available: available,
-                    unavailable: unavailable,
-                    comingOff: coming,
+                  TabBar(
+                    labelColor: AppColors.onSurface,
+                    unselectedLabelColor: AppColors.onSurfaceVariant,
+                    indicatorColor: AppColors.primary,
+                    tabs: [
+                      Tab(text: l.tacticsTabLineupSubs),
+                      Tab(text: l.tacticsTabTactics),
+                    ],
                   ),
-                  _tacticsTab(),
+                  Expanded(
+                    child: TabBarView(
+                      children: [
+                        _lineupTab(
+                          onPitch: _onPitchPlayers,
+                          available: available,
+                          unavailable: unavailable,
+                          comingOff: coming,
+                        ),
+                        _tacticsTab(),
+                      ],
+                    ),
+                  ),
                 ],
               ),
             ),
-          ],
-        ),
-      ),
     );
   }
 
@@ -623,247 +646,331 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
     required List<Player> unavailable,
     required Player? comingOff,
   }) {
-    // Computed here rather than in build(): it depends on who has been chosen
-    // to come off, which this sheet owns.
-    final suitable = _suitable(available);
-    final other = _otherPlaces(available);
-    final l = AppLocalizations.of(context);
     return ListView(
       children: [
         // The formation picker lives on the Tactics tab and nowhere else. It
         // used to be repeated here, above the pitch, so the same row of shape
         // chips appeared twice in one sheet — two controls for one setting,
         // which reads as a bug whichever one you touch.
-        AspectRatio(
-          aspectRatio: 3 / 4,
-          child: TacticsPitch(
-            formation: _formation,
-            instructions: _instructions,
-            lineup: _lineup,
-            byId: _byId,
-            teamColors: widget.teamColors,
-            energyByPlayer: widget.energyByPlayer,
-            // Mark the hurt players absent AND injured so their node renders the
-            // orange "INJURED — REPLACE" flag, exactly like a pre-match injury.
-            absentIds: widget.injuredIds,
-            injuredIds: widget.injuredIds,
-            // The holes a red card left, drawn as holes rather than as spaces
-            // waiting to be filled.
-            deadSlots: _dead,
-            onTapSlot: _pickPlayer,
-            onSwap: (a, b) {
-              switch (resolveDrag(_formation, a, b)) {
-                case SwapSlots():
-                  _swap(a, b);
-                case ReshapeTo(:final formation):
-                  _reshapeKeeping(formation, a, b);
-              }
-            },
-            onBenchIn: _setSlot,
-            onMoveToSpace: (slot, dropY) {
-              final outcome = resolveSpaceDrag(
-                _formation,
-                _instructions,
-                slot,
-                dropY,
-              );
-              // Through _setFormation, which refits the players already on the
-              // pitch — assigning _formation directly would scramble the side
-              // mid-match.
-              if (outcome case ReshapeTo(:final formation)) {
-                _setFormation(formation);
-              }
-            },
-          ),
+        AspectRatio(aspectRatio: 3 / 4, child: _pitchView()),
+        _lineupLists(
+          onPitch: onPitch,
+          available: available,
+          unavailable: unavailable,
+          comingOff: comingOff,
         ),
-        Padding(
-          padding: const EdgeInsets.all(AppSpacing.marginMobile),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Both gestures are named, tap first. The drag was the only one
-              // there was, and it is the least discoverable thing on a phone.
-              Text(
-                comingOff == null
-                    ? l.tacticsDragSubOn
-                    : l.tacticsPickReplacementFor(comingOff.name),
-                style: AppTypography.labelSmall.copyWith(
-                  color: comingOff == null
-                      ? AppColors.onSurfaceVariant
-                      : AppColors.primary,
+      ],
+    );
+  }
+
+  /// The pitch, with every gesture the lineup tab has always had.
+  Widget _pitchView() => TacticsPitch(
+    formation: _formation,
+    instructions: _instructions,
+    lineup: _lineup,
+    byId: _byId,
+    teamColors: widget.teamColors,
+    energyByPlayer: widget.energyByPlayer,
+    // Mark the hurt players absent AND injured so their node renders the
+    // orange "INJURED — REPLACE" flag, exactly like a pre-match injury.
+    absentIds: widget.injuredIds,
+    injuredIds: widget.injuredIds,
+    // The holes a red card left, drawn as holes rather than as spaces
+    // waiting to be filled.
+    deadSlots: _dead,
+    onTapSlot: _pickPlayer,
+    onSwap: (a, b) {
+      switch (resolveDrag(_formation, a, b)) {
+        case SwapSlots():
+          _swap(a, b);
+        case ReshapeTo(:final formation):
+          _reshapeKeeping(formation, a, b);
+      }
+    },
+    onBenchIn: _setSlot,
+    onMoveToSpace: (slot, dropY) {
+      final outcome = resolveSpaceDrag(
+        _formation,
+        _instructions,
+        slot,
+        dropY,
+      );
+      // Through _setFormation, which refits the players already on the
+      // pitch — assigning _formation directly would scramble the side
+      // mid-match.
+      if (outcome case ReshapeTo(:final formation)) {
+        _setFormation(formation);
+      }
+    },
+  );
+
+  /// The three lists, the hint and the undo row under the pitch.
+  Widget _lineupLists({
+    required List<Player> onPitch,
+    required List<Player> available,
+    required List<Player> unavailable,
+    required Player? comingOff,
+  }) {
+    // Computed here rather than in build(): it depends on who has been chosen
+    // to come off, which this sheet owns.
+    final suitable = _suitable(available);
+    final other = _otherPlaces(available);
+    final l = AppLocalizations.of(context);
+    return Padding(
+      padding: const EdgeInsets.all(AppSpacing.marginMobile),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Both gestures are named, tap first. The drag was the only one
+          // there was, and it is the least discoverable thing on a phone.
+          Text(
+            comingOff == null
+                ? l.tacticsDragSubOn
+                : l.tacticsPickReplacementFor(comingOff.name),
+            style: AppTypography.labelSmall.copyWith(
+              color: comingOff == null
+                  ? AppColors.onSurfaceVariant
+                  : AppColors.primary,
+            ),
+          ),
+          // Only while there is something to take back, and only ever what
+          // THIS sheet changed. A misclicked substitution used to be final
+          // the moment it landed: the one way out was to leave the editor,
+          // which threw away every other change made with it.
+          if (_undo.isNotEmpty)
+            InkWell(
+              onTap: _undoLast,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  vertical: AppSpacing.xs,
                 ),
-              ),
-              // Only while there is something to take back, and only ever what
-              // THIS sheet changed. A misclicked substitution used to be final
-              // the moment it landed: the one way out was to leave the editor,
-              // which threw away every other change made with it.
-              if (_undo.isNotEmpty)
-                InkWell(
-                  onTap: _undoLast,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                      vertical: AppSpacing.xs,
-                    ),
-                    child: Row(
-                      children: [
-                        const Icon(
-                          Icons.undo_rounded,
-                          size: 16,
-                          color: AppColors.primary,
-                        ),
-                        const SizedBox(width: AppSpacing.xs),
-                        Expanded(
-                          child: Text(
-                            l.tacticsUndoLastChange,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: AppTypography.labelMedium.copyWith(
-                              color: AppColors.primary,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              // Say plainly that the side is short. The pitch says it too now,
-              // on the barred spot itself, but this is the line that names the
-              // man it happened to.
-              if (widget.sentOffIds.isNotEmpty) ...[
-                const SizedBox(height: AppSpacing.sm),
-                Row(
+                child: Row(
                   children: [
                     const Icon(
-                      Icons.block_rounded,
-                      size: 14,
-                      color: AppColors.error,
+                      Icons.undo_rounded,
+                      size: 16,
+                      color: AppColors.primary,
                     ),
                     const SizedBox(width: AppSpacing.xs),
                     Expanded(
                       child: Text(
-                        l.tacticsSentOffNote(
-                          widget.sentOffIds
-                              .map((id) => _byId[id]?.name)
-                              .whereType<String>()
-                              .join(', '),
-                        ),
-                        style: AppTypography.labelSmall.copyWith(
-                          color: AppColors.error,
+                        l.tacticsUndoLastChange,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: AppTypography.labelMedium.copyWith(
+                          color: AppColors.primary,
                         ),
                       ),
                     ),
                   ],
                 ),
-              ],
-              // TWO TABS, not three stacked sections.
-              //
-              // Stacked, the pitch and three lists made one long scroll and a
-              // manager reported losing part of it off the bottom. Two tabs
-              // are three short lists, and the sheet stops being a column
-              // you have to remember your place in.
-              //
-              // SUITABLE leads because it is the answer to the question the
-              // manager is actually asking. Once he has named the man coming
-              // off it shows only the bench players who naturally fill that
-              // place, which is fitRank: the same position, or at least the
-              // same line. Before he has named anybody it cannot know what
-              // "suits" means, so it is everybody who may come on.
-              _SquadTabs(
-                tab: _tab,
-                suitableLabel: l.tacticsTabSuitable,
-                onPitchLabel: l.tacticsTabOnPitch,
-                otherLabel: l.tacticsTabOtherPositions,
-                suitableCount: '${suitable.length}',
-                onPitchCount: '${onPitch.length}/${_lineup.length}',
-                otherCount: '${other.length}',
-                trailing: Text(
-                  l.tacticsSubsUsed(_subsUsed, widget.maxSubs),
-                  maxLines: 1,
-                  style: AppTypography.labelMedium.copyWith(
-                    color: _overLimit ? AppColors.error : AppColors.primary,
-                  ),
-                ),
-                onSelected: (t) => setState(() => _tab = t),
               ),
-              const SizedBox(height: AppSpacing.sm),
-              // Nobody on the bench belongs in this place. Rather than an
-              // empty tab and a dead end, the whole bench is offered with a
-              // line saying why it is not a shortlist: a manager a man short
-              // has to be able to put SOMEBODY there.
-              if (_tab == _SquadTab.suitable && _noNaturalFit)
-                Padding(
-                  padding: const EdgeInsets.only(bottom: AppSpacing.xs),
+            ),
+          // Say plainly that the side is short. The pitch says it too now,
+          // on the barred spot itself, but this is the line that names the
+          // man it happened to.
+          if (widget.sentOffIds.isNotEmpty) ...[
+            const SizedBox(height: AppSpacing.sm),
+            Row(
+              children: [
+                const Icon(
+                  Icons.block_rounded,
+                  size: 14,
+                  color: AppColors.error,
+                ),
+                const SizedBox(width: AppSpacing.xs),
+                Expanded(
                   child: Text(
-                    l.tacticsNobodySuits,
+                    l.tacticsSentOffNote(
+                      widget.sentOffIds
+                          .map((id) => _byId[id]?.name)
+                          .whereType<String>()
+                          .join(', '),
+                    ),
                     style: AppTypography.labelSmall.copyWith(
-                      color: AppColors.onSurfaceVariant,
+                      color: AppColors.error,
                     ),
                   ),
                 ),
-              AppCard(
-                padding: EdgeInsets.zero,
-                child: Column(
-                  children: [
-                    if (_tab == _SquadTab.onPitch)
-                      for (final p in onPitch)
-                        _OnPitchRow(
-                          player: p,
-                          detail: _pitchDetail(l, p.id),
-                          energy: widget.energyByPlayer[p.id],
-                          selected: comingOff?.id == p.id,
-                          // Picking a man to come off moves the sheet to the
-                          // men who could replace him. Otherwise choosing him
-                          // and then hunting for the other tab is two thirds
-                          // of the work of a substitution.
-                          onTap: () => setState(() {
-                            final same = _comingOff == p.id;
-                            _comingOff = same ? null : p.id;
-                            if (!same) _tab = _SquadTab.suitable;
-                          }),
-                        )
-                    else if (_tab == _SquadTab.other)
-                      // Out of position here, and the number that says what
-                      // that costs. Before anybody is chosen to come off
-                      // there is no place to be out of, so the tab explains
-                      // itself rather than sitting empty.
-                      if (comingOff == null)
-                        _emptyNote(l.tacticsPickSomebodyFirst)
-                      else if (other.isEmpty)
-                        _emptyNote(l.tacticsNobodyElse)
-                      else
-                        for (final p in other)
-                          SubDragRow(
-                            player: p,
-                            trailing: _fitTrailing(p),
-                            note: l.tacticsOutOfPositionNote,
-                            noteColor: AppColors.warning,
-                            onTap: () => _replace(comingOff.id, p.id),
-                          )
-                    else if (suitable.isEmpty)
-                      _emptyNote(l.tacticsNoSubs)
-                    else
-                      for (final p in suitable)
-                        () {
-                          final standing = _standing(p);
-                          return SubDragRow(
-                            player: p,
-                            trailing: _energyTrailing(p.id),
-                            note: standing.note,
-                            noteColor: standing.color,
-                            // Tapping completes a change the manager began by
-                            // tapping the man he wants off. With nobody chosen
-                            // there is nothing for a tap to mean, so the row
-                            // does not pretend to answer one.
-                            onTap: comingOff == null
-                                ? null
-                                : () => _replace(comingOff.id, p.id),
-                          );
-                        }(),
-                  ],
+              ],
+            ),
+          ],
+          // TWO TABS, not three stacked sections.
+          //
+          // Stacked, the pitch and three lists made one long scroll and a
+          // manager reported losing part of it off the bottom. Two tabs
+          // are three short lists, and the sheet stops being a column
+          // you have to remember your place in.
+          //
+          // SUITABLE leads because it is the answer to the question the
+          // manager is actually asking. Once he has named the man coming
+          // off it shows only the bench players who naturally fill that
+          // place, which is fitRank: the same position, or at least the
+          // same line. Before he has named anybody it cannot know what
+          // "suits" means, so it is everybody who may come on.
+          _SquadTabs(
+            tab: _tab,
+            suitableLabel: l.tacticsTabSuitable,
+            onPitchLabel: l.tacticsTabOnPitch,
+            otherLabel: l.tacticsTabOtherPositions,
+            suitableCount: '${suitable.length}',
+            onPitchCount: '${onPitch.length}/${_lineup.length}',
+            otherCount: '${other.length}',
+            trailing: Text(
+              l.tacticsSubsUsed(_subsUsed, widget.maxSubs),
+              maxLines: 1,
+              style: AppTypography.labelMedium.copyWith(
+                color: _overLimit ? AppColors.error : AppColors.primary,
+              ),
+            ),
+            onSelected: (t) => setState(() => _tab = t),
+          ),
+          const SizedBox(height: AppSpacing.sm),
+          // Nobody on the bench belongs in this place. Rather than an
+          // empty tab and a dead end, the whole bench is offered with a
+          // line saying why it is not a shortlist: a manager a man short
+          // has to be able to put SOMEBODY there.
+          if (_tab == _SquadTab.suitable && _noNaturalFit)
+            Padding(
+              padding: const EdgeInsets.only(bottom: AppSpacing.xs),
+              child: Text(
+                l.tacticsNobodySuits,
+                style: AppTypography.labelSmall.copyWith(
+                  color: AppColors.onSurfaceVariant,
                 ),
               ),
-              const SizedBox(height: AppSpacing.xl),
-            ],
+            ),
+          AppCard(
+            padding: EdgeInsets.zero,
+            child: Column(
+              children: [
+                if (_tab == _SquadTab.onPitch)
+                  for (final p in onPitch)
+                    _OnPitchRow(
+                      player: p,
+                      detail: _pitchDetail(l, p.id),
+                      energy: widget.energyByPlayer[p.id],
+                      selected: comingOff?.id == p.id,
+                      // Picking a man to come off moves the sheet to the
+                      // men who could replace him. Otherwise choosing him
+                      // and then hunting for the other tab is two thirds
+                      // of the work of a substitution.
+                      onTap: () => setState(() {
+                        final same = _comingOff == p.id;
+                        _comingOff = same ? null : p.id;
+                        if (!same) _tab = _SquadTab.suitable;
+                      }),
+                    )
+                else if (_tab == _SquadTab.other)
+                  // Out of position here, and the number that says what
+                  // that costs. Before anybody is chosen to come off
+                  // there is no place to be out of, so the tab explains
+                  // itself rather than sitting empty.
+                  if (comingOff == null)
+                    _emptyNote(l.tacticsPickSomebodyFirst)
+                  else if (other.isEmpty)
+                    _emptyNote(l.tacticsNobodyElse)
+                  else
+                    for (final p in other)
+                      SubDragRow(
+                        player: p,
+                        trailing: _fitTrailing(p),
+                        note: l.tacticsOutOfPositionNote,
+                        noteColor: AppColors.warning,
+                        onTap: () => _replace(comingOff.id, p.id),
+                      )
+                else if (suitable.isEmpty)
+                  _emptyNote(l.tacticsNoSubs)
+                else
+                  for (final p in suitable)
+                    () {
+                      final standing = _standing(p);
+                      return SubDragRow(
+                        player: p,
+                        trailing: _energyTrailing(p.id),
+                        note: standing.note,
+                        noteColor: standing.color,
+                        // Tapping completes a change the manager began by
+                        // tapping the man he wants off. With nobody chosen
+                        // there is nothing for a tap to mean, so the row
+                        // does not pretend to answer one.
+                        onTap: comingOff == null
+                            ? null
+                            : () => _replace(comingOff.id, p.id),
+                      );
+                    }(),
+              ],
+            ),
+          ),
+          const SizedBox(height: AppSpacing.xl),
+        ],
+      ),
+    );
+  }
+
+  /// The editor on a tablet: the pitch at full height on the left, the lists
+  /// and the instructions as two tabs on the right.
+  Widget _tabletBody({
+    required List<Player> onPitch,
+    required List<Player> available,
+    required List<Player> unavailable,
+    required Player? comingOff,
+  }) {
+    final l = AppLocalizations.of(context);
+    final size = MediaQuery.sizeOf(context);
+    final height =
+        size.height -
+        kToolbarHeight -
+        MediaQuery.paddingOf(context).vertical -
+        2 * AppSpacing.md;
+    final pitchWidth = math.min(height * 3 / 4, size.width * 0.45);
+    return Row(
+      key: InMatchTacticsKeys.tabletLayout,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        SizedBox(
+          width: pitchWidth + 2 * AppSpacing.md,
+          child: Padding(
+            padding: const EdgeInsets.all(AppSpacing.md),
+            child: Center(
+              child: AspectRatio(aspectRatio: 3 / 4, child: _pitchView()),
+            ),
+          ),
+        ),
+        const VerticalDivider(width: 1, color: AppColors.outlineVariant),
+        Expanded(
+          child: DefaultTabController(
+            length: 2,
+            child: Column(
+              children: [
+                TabBar(
+                  labelColor: AppColors.onSurface,
+                  unselectedLabelColor: AppColors.onSurfaceVariant,
+                  indicatorColor: AppColors.primary,
+                  tabs: [
+                    Tab(text: l.tacticsTabLineupSubs),
+                    Tab(text: l.tacticsTabTactics),
+                  ],
+                ),
+                Expanded(
+                  child: TabBarView(
+                    children: [
+                      ListView(
+                        children: [
+                          _lineupLists(
+                            onPitch: onPitch,
+                            available: available,
+                            unavailable: unavailable,
+                            comingOff: comingOff,
+                          ),
+                        ],
+                      ),
+                      _tacticsTab(),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ],
@@ -1215,7 +1322,7 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
     // line saying why. A manager a man short has to be able to field SOMEBODY.
     final noFit = suitableHere.isEmpty && availableHere.isNotEmpty;
 
-    final picked = await showModalBottomSheet<int>(
+    final picked = await showAdaptiveSheet<int>(
       context: context,
       backgroundColor: AppColors.surfaceContainer,
       isScrollControlled: true,
@@ -1226,7 +1333,8 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
         other: otherHere,
         onPitchCount: '${onPitch.length}/${_lineup.length}',
         noFitNote: noFit ? l.tacticsNobodySuits : null,
-        row: (p) => _pickerRow(p, position, onPitch, l),
+        row: (sheetContext, p) =>
+            _pickerRow(sheetContext, p, position, onPitch, l),
       ),
     );
     if (picked != null && mounted) _setSlot(slot, picked);
@@ -1234,6 +1342,7 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
 
   /// One candidate's row in the slot picker.
   Widget _pickerRow(
+    BuildContext sheetContext,
     Player p,
     PlayerPosition position,
     Set<int> onPitch,
@@ -1304,7 +1413,9 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
             ),
         ],
       ),
-      onTap: standing.blocked ? null : () => Navigator.of(context).pop(p.id),
+      onTap: standing.blocked
+          ? null
+          : () => Navigator.of(sheetContext).pop(p.id),
     );
   }();
 }
@@ -1342,7 +1453,7 @@ class _SlotPickerSheet extends StatefulWidget {
   /// Set when nothing naturally fits and [suitable] is the whole bench.
   final String? noFitNote;
 
-  final Widget Function(Player) row;
+  final Widget Function(BuildContext, Player) row;
 
   @override
   State<_SlotPickerSheet> createState() => _SlotPickerSheetState();
@@ -1412,7 +1523,7 @@ class _SlotPickerSheetState extends State<_SlotPickerSheet> {
                     )
                   : ListView(
                       shrinkWrap: true,
-                      children: [for (final p in shown) widget.row(p)],
+                      children: [for (final p in shown) widget.row(context, p)],
                     ),
             ),
           ],

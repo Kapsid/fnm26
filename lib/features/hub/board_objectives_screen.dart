@@ -7,8 +7,11 @@ import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/features/achievements/achievement_providers.dart';
 import 'package:fnm/features/hub/objective_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
+import 'package:fnm/shared/tablet/tablet.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
+
+part 'board_objectives_tablet_layout.dart';
 
 /// The board's expectations for the cycle, in full.
 ///
@@ -22,8 +25,13 @@ class BoardObjectivesScreen extends ConsumerWidget {
 
   final int careerId;
 
+  static const Key tabletLayoutKey = Key('boardObjectives.tabletLayout');
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    if (TabletShellScope.isActive(context)) {
+      return _BoardObjectivesTabletLayout(careerId: careerId);
+    }
     final l = AppLocalizations.of(context);
     final value = ref.watch(satisfactionProvider(careerId)).valueOrNull;
     // Held as the AsyncValue rather than `.valueOrNull ?? []`: an objective
@@ -32,7 +40,6 @@ class BoardObjectivesScreen extends ConsumerWidget {
     // nothing to say.
     final objectivesAsync = ref.watch(cycleObjectivesProvider(careerId));
     final objectives = objectivesAsync.valueOrNull ?? const <CycleObjective>[];
-    final (color, verdict) = boardVerdict(l, value);
 
     return Scaffold(
       appBar: AppBar(
@@ -47,58 +54,11 @@ class BoardObjectivesScreen extends ConsumerWidget {
       body: ListView(
         padding: const EdgeInsets.all(AppSpacing.marginMobile),
         children: [
-          AppCard(
-            child: Row(
-              children: [
-                Icon(Icons.gavel, color: color, size: 26),
-                const SizedBox(width: AppSpacing.md),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        l.boardObjectivesConfidence,
-                        style: AppTypography.labelSmall.copyWith(
-                          color: AppColors.onSurfaceVariant,
-                        ),
-                      ),
-                      Text(
-                        verdict,
-                        style: AppTypography.titleMedium.copyWith(color: color),
-                      ),
-                    ],
-                  ),
-                ),
-                Text(
-                  value == null ? '—' : '$value%',
-                  style: AppTypography.headlineMedium.copyWith(color: color),
-                ),
-              ],
-            ),
-          ),
+          AppCard(child: _ConfidenceRow(value: value)),
           const SizedBox(height: AppSpacing.md),
           if (objectives.isEmpty)
             AppCard(
-              child: switch (objectivesAsync) {
-                AsyncLoading() => const Center(
-                  child: Padding(
-                    padding: EdgeInsets.all(AppSpacing.md),
-                    child: CircularProgressIndicator(),
-                  ),
-                ),
-                AsyncError(:final error) => Text(
-                  '$error',
-                  style: AppTypography.bodySmall.copyWith(
-                    color: AppColors.error,
-                  ),
-                ),
-                _ => Text(
-                  l.boardObjectivesEmpty,
-                  style: AppTypography.bodyMedium.copyWith(
-                    color: AppColors.onSurfaceVariant,
-                  ),
-                ),
-              },
+              child: _ObjectivesState(async: objectivesAsync),
             )
           else
             for (final objective in objectives) ...[
@@ -122,28 +82,131 @@ class BoardObjectivesScreen extends ConsumerWidget {
   _ => (AppColors.error, l.hubBoardJobAtRisk),
 };
 
+/// The colour an objective's status is written in: grey while its tournament
+/// is live, gold when the brief was beaten outright, green met, red missed.
+/// Beating a brief by rounds is its own colour: a cycle carried three rounds
+/// past what was asked should not look like one that scraped it.
+Color objectiveStatusColor(CycleObjective o) {
+  final gap = o.actual - o.target;
+  return !o.decided
+      ? AppColors.onSurfaceVariant
+      : gap > 0
+      ? AppColors.primary
+      : (o.met ? AppColors.positive : AppColors.error);
+}
+
+/// An objective's status line: how far the run has got while it is live,
+/// and once graded, by how much it was met, beaten or missed.
+String objectiveStatusLabel(AppLocalizations l, CycleObjective o) => !o.decided
+    ? (o.actual >= 2
+          ? l.boardObjectiveSoFar(o.resultLabel)
+          : l.boardObjectivesPending)
+    : switch (o.actual - o.target) {
+        0 => l.hubObjectiveMet(o.resultLabel),
+        final gap when gap > 0 => l.boardObjectiveBeatenBy(o.resultLabel, gap),
+        final gap => l.boardObjectiveShortBy(o.resultLabel, -gap),
+      };
+
 class _ObjectiveCard extends StatelessWidget {
   const _ObjectiveCard({required this.objective});
 
   final CycleObjective objective;
 
   @override
+  Widget build(BuildContext context) =>
+      AppCard(child: _ObjectiveBody(objective: objective));
+}
+
+/// The board's confidence: the gavel, the verdict and the figure, in the
+/// verdict's colour.
+class _ConfidenceRow extends StatelessWidget {
+  const _ConfidenceRow({required this.value});
+
+  final int? value;
+
+  @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
-    final decided = objective.decided;
-    final met = objective.met;
-    // Beating a brief outright is its own colour: a cycle carried three
-    // rounds past what was asked should not look like one that scraped it.
-    final gap = objective.actual - objective.target;
-    final color = !decided
-        ? AppColors.onSurfaceVariant
-        : gap > 0
-        ? AppColors.primary
-        : (met ? AppColors.positive : AppColors.error);
-    return AppCard(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
+    final (color, verdict) = boardVerdict(l, value);
+    return Row(
+      children: [
+        Icon(Icons.gavel, color: color, size: 26),
+        const SizedBox(width: AppSpacing.md),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                l.boardObjectivesConfidence,
+                style: AppTypography.labelSmall.copyWith(
+                  color: AppColors.onSurfaceVariant,
+                ),
+              ),
+              Text(
+                verdict,
+                style: AppTypography.titleMedium.copyWith(color: color),
+              ),
+            ],
+          ),
+        ),
+        Text(
+          value == null ? '—' : '$value%',
+          style: AppTypography.headlineMedium.copyWith(color: color),
+        ),
+      ],
+    );
+  }
+}
+
+/// What stands in for the objectives when there are none to list: still
+/// loading, failed (said, not hidden), or a board with nothing to ask.
+class _ObjectivesState extends StatelessWidget {
+  const _ObjectivesState({required this.async});
+
+  final AsyncValue<List<CycleObjective>> async;
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    return switch (async) {
+      AsyncLoading() => const Center(
+        child: Padding(
+          padding: EdgeInsets.all(AppSpacing.md),
+          child: CircularProgressIndicator(),
+        ),
+      ),
+      AsyncError(:final error) => Text(
+        '$error',
+        style: AppTypography.bodySmall.copyWith(color: AppColors.error),
+      ),
+      _ => Text(
+        l.boardObjectivesEmpty,
+        style: AppTypography.bodyMedium.copyWith(
+          color: AppColors.onSurfaceVariant,
+        ),
+      ),
+    };
+  }
+}
+
+/// One objective: its competition (unless a panel header already names it),
+/// what the board asks, and how the run is going or how it was graded.
+class _ObjectiveBody extends StatelessWidget {
+  const _ObjectiveBody({required this.objective, this.showCompetition = true});
+
+  final CycleObjective objective;
+
+  /// False inside a tablet panel, whose header is the competition.
+  final bool showCompetition;
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    final color = objectiveStatusColor(objective);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (showCompetition) ...[
           Row(
             children: [
               Icon(Icons.flag_outlined, size: 18, color: color),
@@ -159,51 +222,37 @@ class _ObjectiveCard extends StatelessWidget {
             ],
           ),
           const SizedBox(height: AppSpacing.xs),
-          Text(objective.label, style: AppTypography.titleMedium),
-          const SizedBox(height: AppSpacing.sm),
-          Container(
-            padding: const EdgeInsets.symmetric(
-              horizontal: AppSpacing.sm,
-              vertical: 3,
-            ),
-            decoration: BoxDecoration(
-              color: color.withValues(alpha: 0.15),
-              borderRadius: AppRadii.smAll,
-            ),
-            child: Text(
-              // An objective can only be GRADED when its tournament is over,
-              // but a brief that says nothing at all until then reads as one
-              // that is never judged. While it's live, say how far the run has
-              // got — the manager can see themselves closing on it.
-              // Ordinals below 2 are not progress — they are "out of it" and
-              // "bottom of the group", which read as an achievement if shown
-              // as how far the run has got.
-              // Once graded, say by HOW MUCH. Met/missed alone read the same
-              // whether a side scraped the brief or was carried three rounds
-              // past it, and the two are not the same cycle.
-              !decided
-                  ? (objective.actual >= 2
-                        ? l.boardObjectiveSoFar(objective.resultLabel)
-                        : l.boardObjectivesPending)
-                  : switch (objective.actual - objective.target) {
-                      0 => l.hubObjectiveMet(objective.resultLabel),
-                      final gap when gap > 0 => l.boardObjectiveBeatenBy(
-                        objective.resultLabel,
-                        gap,
-                      ),
-                      final gap => l.boardObjectiveShortBy(
-                        objective.resultLabel,
-                        -gap,
-                      ),
-                    },
-              style: AppTypography.labelSmall.copyWith(
-                color: color,
-                fontWeight: FontWeight.w700,
-              ),
+        ],
+        Text(objective.label, style: AppTypography.titleMedium),
+        const SizedBox(height: AppSpacing.sm),
+        Container(
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppSpacing.sm,
+            vertical: 3,
+          ),
+          decoration: BoxDecoration(
+            color: color.withValues(alpha: 0.15),
+            borderRadius: AppRadii.smAll,
+          ),
+          child: Text(
+            // An objective can only be GRADED when its tournament is over,
+            // but a brief that says nothing at all until then reads as one
+            // that is never judged. While it's live, say how far the run has
+            // got — the manager can see themselves closing on it.
+            // Ordinals below 2 are not progress — they are "out of it" and
+            // "bottom of the group", which read as an achievement if shown
+            // as how far the run has got.
+            // Once graded, say by HOW MUCH. Met/missed alone read the same
+            // whether a side scraped the brief or was carried three rounds
+            // past it, and the two are not the same cycle.
+            objectiveStatusLabel(l, objective),
+            style: AppTypography.labelSmall.copyWith(
+              color: color,
+              fontWeight: FontWeight.w700,
             ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

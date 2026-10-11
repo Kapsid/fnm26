@@ -13,8 +13,11 @@ import 'package:fnm/domain/services/competition/cycle_finish.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/results/results_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
+import 'package:fnm/shared/tablet/tablet.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
+
+part 'results_tablet_layout.dart';
 
 /// One competition's matches, split into what the manager is living through
 /// and the campaigns that are already history.
@@ -61,6 +64,8 @@ typedef ResultsCycle = ({
 /// The player's own matches (qualifiers + finals), the present at the top.
 class ResultsScreen extends ConsumerStatefulWidget {
   const ResultsScreen({required this.careerId, super.key});
+
+  static const Key tabletLayoutKey = Key('results.tabletLayout');
 
   final int careerId;
 
@@ -197,6 +202,9 @@ class _ResultsScreenState extends ConsumerState<ResultsScreen> {
   /// default (see [_cycleOpen]). Empty until he touches one.
   final Map<int, bool> _cycles = {};
 
+  /// The cycle the tablet layout shows; the one being played until he picks.
+  int? _picked;
+
   /// Whether cycle [c] is showing its matches. The one being played opens; the
   /// rest wait behind their summary line, which is the whole point of folding
   /// them.
@@ -207,6 +215,17 @@ class _ResultsScreenState extends ConsumerState<ResultsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    if (TabletShellScope.isActive(context)) {
+      return _ResultsTabletLayout(
+        careerId: careerId,
+        picked: _picked,
+        onPick: (c) => setState(() => _picked = c),
+        opened: _opened,
+        onToggleEarlier: (key) => setState(() {
+          if (!_opened.remove(key)) _opened.add(key);
+        }),
+      );
+    }
     final l = AppLocalizations.of(context);
     final dataAsync = ref.watch(resultsProvider(careerId));
 

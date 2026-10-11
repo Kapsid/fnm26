@@ -81,8 +81,11 @@ class DriftPlayerRepository implements PlayerRepository {
       youthBonusByCycle: youthBonusByCycle,
       careerStartsByPlayer: careerStartsByPlayer,
       minAge: minAge,
-      // Only the manager's own pool feels club minutes; the world simulation
-      // passes no seed and is byte-identical to before.
+      // The save seed weights development by club minutes, but only for a
+      // player with career starts (withCareerDev leaves one with none as he
+      // is), so a save's day one carries the seed-free ratings. Save-bound
+      // callers pass it, the world simulation included; zero means no club
+      // effect.
       clubSeed: saveSeed,
     )..sort((a, b) => b.overall.compareTo(a.overall));
     final name = await _namerFor(nationId, seeded, saveSeed);
@@ -115,8 +118,11 @@ class DriftPlayerRepository implements PlayerRepository {
       agingYears,
       youthBonusByCycle: youthBonusByCycle,
       careerStartsByPlayer: careerStartsByPlayer,
-      // Only the manager's own pool feels club minutes; the world simulation
-      // passes no seed and is byte-identical to before.
+      // The save seed weights development by club minutes, but only for a
+      // player with career starts (withCareerDev leaves one with none as he
+      // is), so a save's day one carries the seed-free ratings. Save-bound
+      // callers pass it, the world simulation included; zero means no club
+      // effect.
       clubSeed: saveSeed,
     )..sort((a, b) => b.overall.compareTo(a.overall));
     final name = await _namerFor(nationId, seeded, saveSeed);

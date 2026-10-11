@@ -1,0 +1,140 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:fnm/core/layout/form_factor.dart';
+import 'package:fnm/core/routing/app_router.dart';
+import 'package:fnm/data/data_providers.dart';
+import 'package:fnm/domain/entities/career.dart';
+import 'package:fnm/features/federation/staff_card.dart';
+import 'package:fnm/features/manager/manager_screen.dart';
+import 'package:fnm/features/shell/tablet_shell.dart';
+import 'package:fnm/features/tactics/condition_providers.dart';
+
+import '../helpers/federation_fixtures.dart';
+import '../helpers/seeded_save.dart';
+
+Future<SeededSave> _open(
+  WidgetTester tester,
+  Size size, {
+  int points = 0,
+}) async {
+  final save = await seedSave(
+    tester,
+    formFactor: FormFactor.tablet,
+    overrides: [
+      if (points > 0) managerWithPoints(points),
+      // ManagerService invalidates morale, which nothing on this page
+      // watches, so nothing rebuilds it.
+      // Test-only, no app change: in riverpod 2.6.1 (async_notifier/base.dart
+      // 461-466) an invalidated FutureProvider element that is never rebuilt
+      // before the container is disposed has its future completed a second
+      // time on that dispose ("Bad state: Future already completed"). A value
+      // with no awaits is never left in that state. Revisit at the Riverpod 3
+      // upgrade.
+      moraleProvider(kSeededCareerId).overrideWith((ref) async => 50),
+    ],
+  );
+  await pumpRoute(
+    tester,
+    save,
+    '${Routes.manager}?careerId=${save.careerId}',
+    size: size,
+  );
+  return save;
+}
+
+Future<Career> _career(WidgetTester tester, SeededSave save) async {
+  late Career career;
+  await tester.runAsync(() async {
+    career = (await save.container
+        .read(careerRepositoryProvider)
+        .byId(save.careerId))!;
+  });
+  return career;
+}
+
+/// The + of each skill row, in the phone's order: man-management, tactical,
+/// youth development, negotiation.
+Finder _raise(int skill) => find
+    .descendant(
+      of: find.byKey(ManagerScreen.skillsKey),
+      matching: find.widgetWithIcon(IconButton, Icons.add_circle),
+    )
+    .at(skill);
+
+void main() {
+  for (final size in kTabletSizes) {
+    testWidgets('skills on the left, name and staff on the right, $size', (
+      tester,
+    ) async {
+      await _open(tester, size);
+      expect(tester.takeException(), isNull);
+      expect(find.byKey(ManagerScreen.tabletLayoutKey), findsOneWidget);
+      expect(find.byType(PhoneWidthFrame), findsNothing);
+      expect(find.byType(AppBar), findsNothing);
+      final skills = tester.getRect(find.byKey(ManagerScreen.skillsKey));
+      final staff = tester.getRect(find.byType(StaffCard));
+      expect(staff.left, greaterThan(skills.right));
+      expect(find.text(enL.managerSkills), findsOneWidget);
+      await tester.pumpWidget(const SizedBox());
+    });
+  }
+
+  testWidgets('two points raise two skills by one each, then no more', (
+    tester,
+  ) async {
+    final save = await _open(tester, kTabletSize, points: 2);
+    final before = await _career(tester, save);
+    expect(find.text(enL.managerPointsAvailable(2)), findsOneWidget);
+    await tester.tap(_raise(1));
+    await settle(tester);
+    await tester.tap(_raise(2));
+    await settle(tester);
+    final after = await _career(tester, save);
+    expect(after.skillTactical, before.skillTactical + 1);
+    expect(after.skillYouthDevelopment, before.skillYouthDevelopment + 1);
+    expect(after.skillManManagement, before.skillManManagement);
+    expect(after.skillNegotiation, before.skillNegotiation);
+    expect(find.text(enL.managerPointsAvailable(0)), findsOneWidget);
+    for (var i = 0; i < 4; i++) {
+      expect(tester.widget<IconButton>(_raise(i)).onPressed, isNull);
+    }
+    await tester.pumpWidget(const SizedBox());
+  });
+
+  testWidgets('the pencil renames the manager', (tester) async {
+    final save = await _open(tester, kTabletSize);
+    expect((await _career(tester, save)).managerName, isNot('Vera'));
+    expect(find.text('Vera'), findsNothing);
+    await tester.tap(find.byTooltip(enL.managerRename));
+    await settle(tester);
+    await tester.enterText(find.byType(TextField), 'Vera');
+    await tester.tap(find.text(enL.managerRenameSave));
+    await settle(tester);
+    expect((await _career(tester, save)).managerName, 'Vera');
+    expect(find.byType(AlertDialog), findsNothing);
+    expect(find.text('Vera'), findsWidgets);
+    await tester.pumpWidget(const SizedBox());
+  });
+
+  // The dialog sits on the root navigator, so it outlives the card that
+  // opened it when the window crosses 1000 and the page swaps layouts: the
+  // name must still be saved.
+  testWidgets('a rename survives a resize across 1000 while the dialog is '
+      'open', (tester) async {
+    final save = await _open(tester, kTabletSize);
+    await tester.tap(find.byTooltip(enL.managerRename));
+    await settle(tester);
+    await tester.enterText(find.byType(TextField), 'Vera');
+    tester.view.physicalSize = const Size(900, 834);
+    await settle(tester);
+    expect(find.byKey(ManagerScreen.tabletLayoutKey), findsNothing);
+    expect((await _career(tester, save)).managerName, isNot('Vera'));
+    await tester.tap(find.text(enL.managerRenameSave));
+    await settle(tester);
+    expect(tester.takeException(), isNull);
+    expect((await _career(tester, save)).managerName, 'Vera');
+    expect(find.byType(AlertDialog), findsNothing);
+    expect(find.text('Vera'), findsWidgets);
+    await tester.pumpWidget(const SizedBox());
+  });
+}

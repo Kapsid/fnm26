@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fnm/core/layout/form_factor.dart';
 import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_typography.dart';
@@ -90,6 +91,7 @@ class _QualifyingDrawScreenState extends ConsumerState<QualifyingDrawScreen> {
             highlightNationId: data.playerNationId,
             potCount: potCount,
             onContinue: leave,
+            landscape: useTabletLayout(context, ref),
           );
         },
       ),

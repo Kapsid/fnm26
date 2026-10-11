@@ -41,24 +41,60 @@ import 'package:fnm/features/awards/award_providers.dart';
 import 'package:fnm/features/squad/grievance_providers.dart';
 import 'package:fnm/features/federation/federation_providers.dart';
 import 'package:fnm/features/federation/federation_service.dart';
+import 'package:fnm/features/federation/naturalization_providers.dart';
+import 'package:fnm/features/friendlies/friendlies_providers.dart'
+    show friendliesPlanProvider;
 import 'package:fnm/features/hub/draw_reveal.dart';
 import 'package:fnm/features/achievements/achievement_providers.dart';
+import 'package:fnm/features/achievements/challenge_providers.dart'
+    show challengesViewProvider;
+import 'package:fnm/features/career/career_summary_providers.dart'
+    show careerSummaryProvider;
+import 'package:fnm/features/career/manager_history_providers.dart'
+    show managerHistoryProvider;
 import 'package:fnm/features/hub/objective_providers.dart';
+import 'package:fnm/features/manager/manager_providers.dart';
 import 'package:fnm/features/match/match_providers.dart';
 import 'package:fnm/features/press/press_desk.dart';
 import 'package:fnm/features/press/press_providers.dart';
 import 'package:fnm/features/tactics/condition_providers.dart';
 import 'package:fnm/features/ranking/world_ranking_providers.dart';
+import 'package:fnm/features/records/all_time_records_providers.dart'
+    show allTimeRecordsProvider;
+import 'package:fnm/features/records/head_to_head_providers.dart'
+    show h2hMeetingsProvider, headToHeadProvider, myHeadToHeadsProvider;
+import 'package:fnm/features/records/legends_providers.dart'
+    show legendsProvider;
+import 'package:fnm/features/records/record_book_providers.dart'
+    show recordBookProvider;
+import 'package:fnm/features/records/rivalry_providers.dart'
+    show rivalryProvider;
 import 'package:fnm/features/squad/training_camp_providers.dart';
+import 'package:fnm/features/squad/youth_providers.dart';
 import 'package:fnm/features/squad/youth_watch_providers.dart';
 import 'package:fnm/features/tactics/absence_providers.dart';
 import 'package:fnm/features/tactics/nation_squad_providers.dart';
 import 'package:fnm/features/tactics/tactics_providers.dart';
 import 'package:fnm/features/settings/settings_providers.dart';
+import 'package:fnm/features/stats/stats_providers.dart'
+    show careerStatsProvider, teamOverallHistoryProvider, teamStatsProvider;
+import 'package:fnm/features/nations/nation_vitrine_providers.dart';
+import 'package:fnm/features/player/player_detail_screen.dart'
+    show invalidatePlayerDetails;
+import 'package:fnm/features/results/results_providers.dart';
+import 'package:fnm/features/tournaments/continental_clash_providers.dart';
+import 'package:fnm/features/tournaments/continental_detail_providers.dart';
+import 'package:fnm/features/tournaments/cup_detail_providers.dart';
+import 'package:fnm/features/tournaments/intercontinental_playoff_providers.dart';
+import 'package:fnm/features/tournaments/nations_cup_providers.dart';
+import 'package:fnm/features/tournaments/tournaments_providers.dart';
 import 'package:fnm/features/tournaments/playoff_paths.dart';
+import 'package:fnm/features/tournaments/wc_host_theme.dart';
+import 'package:fnm/features/y/y_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/domain/services/club/clubs.dart';
 import 'package:fnm/domain/services/club/transfer_window.dart';
+import 'package:fnm/features/messages/message_providers.dart';
 import 'package:fnm/features/messages/transfer_report.dart';
 
 part 'season_cycle.dart';
@@ -574,6 +610,93 @@ class SeasonService {
     for (final e in placings.entries) {
       pts[e.key] = (pts[e.key] ?? Elo.base) + e.value;
     }
+  }
+
+  /// The competition screens' data, refreshed by hand after a step.
+  ///
+  /// On a phone none of these screens is on show while the sim runs: the
+  /// Continue that runs it lives on the hub. A tablet's top bar runs it from
+  /// any screen, and a screen on show keeps its auto-disposed provider alive,
+  /// reading the world as it was before the step. Nothing else tells them:
+  /// they read the database imperatively (see "derived providers go stale").
+  void _invalidateCompetitionViews() {
+    _ref
+      ..invalidate(tournamentsOverviewProvider)
+      ..invalidate(cupDetailProvider)
+      ..invalidate(continentalDetailProvider)
+      ..invalidate(nationsCupProvider)
+      ..invalidate(continentalClashProvider)
+      ..invalidate(intercontinentalPlayoffProvider)
+      ..invalidate(resultsProvider)
+      ..invalidate(nationVitrineProvider)
+      ..invalidate(wcHostThemeProvider)
+      ..invalidate(continentalHostThemeProvider);
+    _invalidateFederationViews();
+    _invalidateHistoryViews();
+    _invalidateTeamViews();
+  }
+
+  /// The federation, manager and Y screens' data, refreshed by hand after a
+  /// step for the same reason as [_invalidateCompetitionViews]: a tablet's
+  /// top bar runs the sim while one of them is on show. The prize money so
+  /// far, the manager's points (a trophy is one), the youth pyramid (it ages
+  /// on 1 December), the Y feed (every match is talked about; the tablet
+  /// hub's Y panel and the Y screen watch it, and the hub is not mounted
+  /// under the other in-shell screens), a naturalisation
+  /// offer the step may have rolled, and the base camp (closed once its
+  /// tournament's first match is played). The staff room needs nothing: it
+  /// watches the squad, which the step refreshes.
+  void _invalidateFederationViews() {
+    _ref
+      ..invalidate(financeViewProvider)
+      ..invalidate(federationFundsProvider)
+      ..invalidate(managerViewProvider)
+      ..invalidate(youthPyramidProvider)
+      ..invalidate(youthShortlistProvider)
+      ..invalidate(yFeedProvider)
+      ..invalidate(pendingNaturalizationProvider)
+      ..invalidate(trainingCampPlanProvider);
+  }
+
+  /// The history and career screens' data, refreshed by hand after a step
+  /// for the same reason as [_invalidateCompetitionViews]: a tablet's top bar
+  /// runs the sim while one of them is on show, and every one of them reads
+  /// the fixtures, the appearances or the honours imperatively. The record
+  /// book and the rivalry, the legends, the world's all-time boards, head to
+  /// head, the achievements and challenges, the career summary and its
+  /// numbers, and the manager's career with its strength curve. Re-reading
+  /// the achievements records any the step earned, exactly as opening that
+  /// screen does on a phone.
+  void _invalidateHistoryViews() {
+    _ref
+      ..invalidate(recordBookProvider)
+      ..invalidate(rivalryProvider)
+      ..invalidate(legendsProvider)
+      ..invalidate(allTimeRecordsProvider)
+      ..invalidate(myHeadToHeadsProvider)
+      ..invalidate(headToHeadProvider)
+      ..invalidate(h2hMeetingsProvider)
+      ..invalidate(achievementsViewProvider)
+      ..invalidate(challengesViewProvider)
+      ..invalidate(careerSummaryProvider)
+      ..invalidate(managerHistoryProvider)
+      ..invalidate(careerStatsProvider)
+      ..invalidate(teamOverallHistoryProvider);
+    // The detail pane beside the history, squad and ranking grids.
+    invalidatePlayerDetails(_ref);
+  }
+
+  /// The team records and the friendlies plan, refreshed by hand after a step
+  /// for the same reason as [_invalidateCompetitionViews]. The team records
+  /// read the goals, caps and ratings imperatively. `nextEventProvider`
+  /// watches the friendlies plan on every form factor (the friendlies page
+  /// keeps it alive too while it is on show): left stale, a friendly gap the
+  /// step has just opened would never be offered and the sim would run
+  /// straight past it.
+  void _invalidateTeamViews() {
+    _ref
+      ..invalidate(teamStatsProvider)
+      ..invalidate(friendliesPlanProvider);
   }
 
   /// Persists the in-memory ranking points for [careerId], and republishes the
@@ -1493,6 +1616,11 @@ class SeasonService {
     // the full ranking always shows the points the sim just moved.
     _ref
       ..invalidate(hubDataProvider)
+      // The inbox syncs news from the world when it reads; a tablet's top bar
+      // keeps it alive for the whole shell, so a step must refresh it by hand
+      // or its news never pops and its badge never moves.
+      ..invalidate(messageInboxProvider(careerId))
+      ..invalidate(unreadMessagesProvider(careerId))
       ..invalidate(worldRankingProvider)
       ..invalidate(rankHistoryProvider)
       // The board's brief and its mood are derived from fixtures the sim has
@@ -1506,6 +1634,7 @@ class SeasonService {
       ..invalidate(pendingConferenceProvider)
       ..invalidate(pressStatementsProvider)
       ..invalidate(squadConditionProvider);
+    _invalidateCompetitionViews();
   }
 
   /// Fast-forwards straight to the World Cup champion — the "skip to the final"
@@ -1541,6 +1670,11 @@ class SeasonService {
     // the full ranking always shows the points the sim just moved.
     _ref
       ..invalidate(hubDataProvider)
+      // The inbox syncs news from the world when it reads; a tablet's top bar
+      // keeps it alive for the whole shell, so a step must refresh it by hand
+      // or its news never pops and its badge never moves.
+      ..invalidate(messageInboxProvider(careerId))
+      ..invalidate(unreadMessagesProvider(careerId))
       ..invalidate(worldRankingProvider)
       ..invalidate(rankHistoryProvider)
       // The board's brief and its mood are derived from fixtures the sim has
@@ -1550,6 +1684,7 @@ class SeasonService {
       ..invalidate(cycleObjectiveOutcomesProvider)
       ..invalidate(cycleObjectivesProvider)
       ..invalidate(satisfactionProvider);
+    _invalidateCompetitionViews();
   }
 
   /// Records the player's [result] for [fixture] (from the tactical engine),
@@ -1870,6 +2005,11 @@ class SeasonService {
     // the full ranking always shows the points the sim just moved.
     _ref
       ..invalidate(hubDataProvider)
+      // The inbox syncs news from the world when it reads; a tablet's top bar
+      // keeps it alive for the whole shell, so a step must refresh it by hand
+      // or its news never pops and its badge never moves.
+      ..invalidate(messageInboxProvider(careerId))
+      ..invalidate(unreadMessagesProvider(careerId))
       ..invalidate(worldRankingProvider)
       ..invalidate(rankHistoryProvider)
       // The board's brief and its mood are derived from fixtures the sim has
@@ -1889,6 +2029,7 @@ class SeasonService {
       // across the commit would be handed the finished match — which is how a
       // just-played scoreline turns up under the next opponent's flags.
       ..invalidate(matchPreviewProvider);
+    _invalidateCompetitionViews();
   }
 
   /// Files an inbox message when [fixture] knocked the manager out of a cup —

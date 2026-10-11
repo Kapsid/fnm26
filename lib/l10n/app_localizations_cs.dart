@@ -9349,4 +9349,257 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get playerFormNoEffect => 'Hodnocení v příštím zápase beze změny';
+
+  @override
+  String get sideGroupHome => 'Hlavní';
+
+  @override
+  String get sideGroupTeam => 'Tým';
+
+  @override
+  String get sideGroupCompetitions => 'Soutěže';
+
+  @override
+  String get sideGroupFederation => 'Svaz';
+
+  @override
+  String get sideGroupHistory => 'Historie';
+
+  @override
+  String get sideInbox => 'Pošta';
+
+  @override
+  String get sideSquad => 'Kádr';
+
+  @override
+  String get sideTactics => 'Taktika';
+
+  @override
+  String get sideCallUps => 'Nominace';
+
+  @override
+  String get sideTournaments => 'Turnaje';
+
+  @override
+  String get sideRanking => 'Žebříček';
+
+  @override
+  String get sideResults => 'Výsledky';
+
+  @override
+  String get sideFinances => 'Finance';
+
+  @override
+  String get sideBoard => 'Vedení';
+
+  @override
+  String get sideManager => 'Trenér a štáb';
+
+  @override
+  String get sideRecords => 'Rekordy';
+
+  @override
+  String get sideLegends => 'Legendy';
+
+  @override
+  String get sideHeadToHead => 'Vzájemné zápasy';
+
+  @override
+  String get sideAchievements => 'Úspěchy';
+
+  @override
+  String get sideCareer => 'Kariéra';
+
+  @override
+  String get topBarNext => 'Další';
+
+  @override
+  String get topBarDrawPending => 'Čeká se na los';
+
+  @override
+  String get paneFullProfile => 'Celý profil';
+
+  @override
+  String get panePickPlayer => 'Vyberte hráče a jeho karta se ukáže tady';
+
+  @override
+  String get inboxPickMessage => 'Vyberte zprávu a přečtěte si ji tady';
+
+  @override
+  String get inboxFilterAll => 'Vše';
+
+  @override
+  String get panelViewAll => 'Zobrazit vše';
+
+  @override
+  String get gridViewOverview => 'Přehled';
+
+  @override
+  String get gridColCondition => 'Kondice';
+
+  @override
+  String get gridColStatus => 'Stav';
+
+  @override
+  String get gridColRank => 'Pořadí';
+
+  @override
+  String get gridColMove => 'Posun';
+
+  @override
+  String get gridColNation => 'Reprezentace';
+
+  @override
+  String get gridColRegion => 'Region';
+
+  @override
+  String get gridColPoints => 'Body';
+
+  @override
+  String get panePickNation =>
+      'Vyberte reprezentaci a její historie se ukáže tady';
+
+  @override
+  String get resultsCyclesTitle => 'Cykly';
+
+  @override
+  String get tourDrawStart => 'Zahájit los';
+
+  @override
+  String get tourDrawViewGroups => 'Zobrazit skupiny';
+
+  @override
+  String get gridColCeiling => 'Strop';
+
+  @override
+  String get gridColYearGain => 'Zlepšení';
+
+  @override
+  String get gridColMarkedAt => 'Při označení';
+
+  @override
+  String get budgetSetupTitle => 'Rozdělte rozpočet';
+
+  @override
+  String get budgetEffectsTitle => 'Co za tento rozpočet získáte';
+
+  @override
+  String get naturalisationTitle => 'Naturalizace';
+
+  @override
+  String get yTrending => 'Právě se řeší';
+
+  @override
+  String get yVoices => 'Hlasy';
+
+  @override
+  String get yConversation => 'Konverzace';
+
+  @override
+  String get allTimeRecordsTitle => 'Světové rekordy všech dob';
+
+  @override
+  String get h2hMeetingsTitle => 'Všechna vzájemná utkání';
+
+  @override
+  String get h2hPickOpponent =>
+      'Vyberte soupeře a uvidíte tu všechna vzájemná utkání';
+
+  @override
+  String get savesTitle => 'Uložené hry';
+
+  @override
+  String get gridColPlayer => 'Hráč';
+
+  @override
+  String get gridColPos => 'Post';
+
+  @override
+  String get gridColActive => 'Aktivní';
+
+  @override
+  String get gridColMotm => 'MOTM';
+
+  @override
+  String get gridColAvg => 'Prům.';
+
+  @override
+  String get gridColOpponent => 'Soupeř';
+
+  @override
+  String get gridColStarts => 'Starty';
+
+  @override
+  String get gridColTournaments => 'Turnaje';
+
+  @override
+  String get gridColDate => 'Datum';
+
+  @override
+  String get gridColLastPlayed => 'Naposledy hráno';
+
+  @override
+  String get gridColManager => 'Trenér';
+
+  @override
+  String nationsShownCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count reprezentací',
+      few: '$count reprezentace',
+      one: '1 reprezentace',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get nationsSortedByRank => 'Seřazeno podle světového žebříčku';
+
+  @override
+  String get nationsStrength => 'Síla';
+
+  @override
+  String nationsStrengthOf(int tier) {
+    return '$tier z 5';
+  }
+
+  @override
+  String get nationsSquadOverall => 'Hodnocení kádru';
+
+  @override
+  String get nationsOpeningBudget => 'Počáteční rozpočet';
+
+  @override
+  String get nationsStarPlayer => 'Hvězda týmu';
+
+  @override
+  String nationsStarTile(String position, int rating) {
+    return 'Hvězda $position $rating';
+  }
+
+  @override
+  String nationsStarAge(int age) {
+    return 'Věk $age';
+  }
+
+  @override
+  String get nationsBoardExpects => 'Vedení očekává';
+
+  @override
+  String nationsManage(String nation) {
+    return 'Převzít tým ($nation)';
+  }
+
+  @override
+  String get nationsManagerNext => 'Jméno trenéra zadáte v dalším kroku';
+
+  @override
+  String get playerPageTitle => 'Hráč';
+
+  @override
+  String get nationPageTitle => 'Reprezentace';
+
+  @override
+  String get friendliesYourGames => 'Vaše přátelská utkání';
 }

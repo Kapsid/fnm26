@@ -2,6 +2,7 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/util/app_date.dart';
 import 'package:fnm/core/util/competition_label.dart';
 import 'package:fnm/core/theme/app_colors.dart';
@@ -25,10 +26,14 @@ import 'package:fnm/features/awards/award_providers.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/federation/federation_providers.dart';
 import 'package:fnm/features/player/club_history_card.dart';
+import 'package:fnm/features/player/club_history_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/domain/services/player/player_traits.dart';
+import 'package:fnm/shared/tablet/tablet.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
+
+part 'player_tablet_layout.dart';
 
 typedef _PlayerView = ({
   Player? player,
@@ -120,6 +125,29 @@ _playerDetailProvider = FutureProvider.autoDispose
       );
     });
 
+/// Drops every cached player detail, so a card on show re-reads its player.
+/// The sim's cascade calls it after a step: on a tablet a [PlayerView] (a
+/// pane beside the history, squad and ranking grids, or the player page)
+/// stays on show while the top bar's Continue runs the sim. The detail reads
+/// the appearances and goals imperatively, the club history moves each 1
+/// December and the cabinet fills when a tournament ends, so nothing else
+/// would notice the step.
+void invalidatePlayerDetails(Ref ref) {
+  ref
+    ..invalidate(_playerDetailProvider)
+    ..invalidate(clubHistoryProvider)
+    ..invalidate(playerAwardsProvider);
+}
+
+/// One player's detail read, for tests that check the cascade hands it a
+/// fresh future. The value is the private view record, so it is exposed only
+/// as an [Object].
+@visibleForTesting
+ProviderListenable<Future<Object?>> playerDetailFuture(
+  int careerId,
+  int playerId,
+) => _playerDetailProvider((careerId: careerId, playerId: playerId)).future;
+
 /// A player's detail card: identity, club/value, and the ten attributes. Base
 /// data for now — reachable from anywhere a player is listed.
 class PlayerDetailScreen extends ConsumerWidget {
@@ -138,12 +166,16 @@ class PlayerDetailScreen extends ConsumerWidget {
     return '€$euros';
   }
 
+  static const Key tabletLayoutKey = Key('player.tabletLayout');
+  static const Key profileKey = Key('player.profile');
+  static const Key recordKey = Key('player.record');
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    if (TabletShellScope.isActive(context)) {
+      return _PlayerTabletLayout(careerId: careerId, playerId: playerId);
+    }
     final l = AppLocalizations.of(context);
-    final viewAsync = ref.watch(
-      _playerDetailProvider((careerId: careerId, playerId: playerId)),
-    );
 
     return Scaffold(
       appBar: AppBar(
@@ -159,330 +191,361 @@ class PlayerDetailScreen extends ConsumerWidget {
         ),
         centerTitle: true,
       ),
-      body: viewAsync.when(
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => Center(child: Text(l.playerLoadError('$e'))),
-        data: (view) {
-          final p = view.player;
-          if (p == null) return Center(child: Text(l.playerNotFound));
-          final a = p.attributes;
+      body: PlayerView(careerId: careerId, playerId: playerId),
+    );
+  }
+}
 
-          // The four numbers that actually identify a footballer — how old he
-          // is, where he plays, how often he's played and what he's produced —
-          // read as headlines rather than as rows in a list of facts.
-          final caps = view.stats?.caps ?? view.history.length;
-          final goals = view.goals > (view.stats?.goals ?? 0)
-              ? view.goals
-              : (view.stats?.goals ?? 0);
+/// A player's whole card: identity, abilities, traits, club, cabinet, career
+/// record, form and match history. The body of [PlayerDetailScreen], on its
+/// own so a tablet detail pane can show the same card beside a list.
+///
+/// Scrolls itself; give it a bounded height.
+class PlayerView extends ConsumerWidget {
+  const PlayerView({
+    required this.careerId,
+    required this.playerId,
+    this.padding = const EdgeInsets.all(AppSpacing.marginMobile),
+    super.key,
+  });
 
-          return ListView(
-            padding: const EdgeInsets.all(AppSpacing.marginMobile),
-            children: [
-              AppCard(
-                child: Column(
-                  children: [
-                    Row(
-                      children: [
-                        Container(
-                          width: 64,
-                          height: 64,
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: AppColors.primary.withValues(alpha: 0.10),
-                            border: Border.all(
-                              color: AppColors.primary,
-                              width: 2,
-                            ),
-                          ),
-                          child: Text(
-                            '${p.overall}',
-                            style: AppTypography.headlineLargeMobile.copyWith(
-                              color: AppColors.primary,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: AppSpacing.md),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                p.name,
-                                style: AppTypography.headlineMedium,
-                              ),
-                              const SizedBox(height: 4),
-                              Row(
-                                children: [
-                                  if (view.nation != null)
-                                    FlagDisc(view.nation!.code, size: 18),
-                                  const SizedBox(width: AppSpacing.xs),
-                                  Flexible(
-                                    child: Text(
-                                      view.nation?.name ?? '',
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: AppTypography.labelSmall.copyWith(
-                                        color: AppColors.onSurfaceVariant,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
+  final int careerId;
+  final int playerId;
+  final EdgeInsetsGeometry padding;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l = AppLocalizations.of(context);
+    final viewAsync = ref.watch(
+      _playerDetailProvider((careerId: careerId, playerId: playerId)),
+    );
+
+    return viewAsync.when(
+      loading: () => const Center(child: CircularProgressIndicator()),
+      error: (e, _) => Center(child: Text(l.playerLoadError('$e'))),
+      data: (view) {
+        final p = view.player;
+        if (p == null) return Center(child: Text(l.playerNotFound));
+        final sections = _playerSections(context, view, p, careerId);
+        return ListView(
+          padding: padding,
+          children: [...sections.profile, ...sections.record],
+        );
+      },
+    );
+  }
+}
+
+/// The player card in two runs: `profile` (who he is: the headline card,
+/// abilities, traits, club facts, club history, cabinet) and `record` (what
+/// he has done: the career record, recent form, every match). One column
+/// shows them one after the other ([PlayerView]); the tablet's player page
+/// shows them side by side. The sections are the card's own, moved here
+/// unchanged.
+({List<Widget> profile, List<Widget> record}) _playerSections(
+  BuildContext context,
+  _PlayerView view,
+  Player p,
+  int careerId,
+) {
+  final l = AppLocalizations.of(context);
+  final a = p.attributes;
+
+  // The four numbers that actually identify a footballer — how old he
+  // is, where he plays, how often he's played and what he's produced —
+  // read as headlines rather than as rows in a list of facts.
+  final caps = view.stats?.caps ?? view.history.length;
+  final goals = view.goals > (view.stats?.goals ?? 0)
+      ? view.goals
+      : (view.stats?.goals ?? 0);
+
+  return (
+    profile: [
+      AppCard(
+        child: Column(
+          children: [
+            Row(
+              children: [
+                Container(
+                  width: 64,
+                  height: 64,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: AppColors.primary.withValues(alpha: 0.10),
+                    border: Border.all(color: AppColors.primary, width: 2),
+                  ),
+                  child: Text(
+                    '${p.overall}',
+                    style: AppTypography.headlineLargeMobile.copyWith(
+                      color: AppColors.primary,
                     ),
-                    const SizedBox(height: AppSpacing.md),
-                    Row(
-                      children: [
-                        _HeadlineStat(
-                          value: '${p.age}',
-                          label: l.playerAge,
-                        ),
-                        _HeadlineStat(
-                          value: p.position.label,
-                          label: l.playerPosition,
-                          accent: true,
-                        ),
-                        _HeadlineStat(
-                          value: '$caps',
-                          label: l.playerStatCaps,
-                        ),
-                        _HeadlineStat(
-                          value: '$goals',
-                          label: l.playerStatGoals,
-                        ),
-                      ],
-                    ),
-                  ],
+                  ),
                 ),
-              ),
-              const SizedBox(height: AppSpacing.sm),
-              // Abilities as filled rings — three numbers on a bar chart all
-              // look alike, three dials do not: a lopsided player reads as
-              // lopsided at a glance.
-              AppCard(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      l.playerAttributes.toUpperCase(),
-                      style: AppTypography.labelSmall.copyWith(
-                        color: AppColors.primary,
-                      ),
-                    ),
-                    const SizedBox(height: AppSpacing.md),
-                    Row(
-                      children: [
-                        for (final s in <(String, int)>[
-                          (l.playerAttrPhysical, a.physical),
-                          (l.playerAttrTechnical, a.technical),
-                          (l.playerAttrStamina, a.stamina),
-                        ])
-                          Expanded(
-                            child: _AbilityRing(label: s.$1, value: s.$2),
-                          ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              // His form and legs right now. The call-up row shows only an
-              // icon for it, so this is where a flame or a snowflake is
-              // explained, with what it does to him next match.
-              if (ref
-                      .watch(squadConditionProvider(careerId))
-                      .valueOrNull?[playerId]
-                  case final condition?) ...[
-                const SizedBox(height: AppSpacing.sm),
-                _FormCard(condition: condition),
-              ],
-              // What this player is KNOWN for. A squad of twenty-three ratings
-              // is forgettable; a hothead, an iron man and a big-game striker
-              // are not — and each one changes how they should be used.
-              if (PlayerTraits.of(p, saveSeed: view.saveSeed) case final traits
-                  when traits.isNotEmpty) ...[
-                const SizedBox(height: AppSpacing.sm),
-                AppCard(
+                const SizedBox(width: AppSpacing.md),
+                Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        l.playerTraitsTitle,
-                        style: AppTypography.labelSmall.copyWith(
-                          color: AppColors.primary,
-                        ),
+                      Text(p.name, style: AppTypography.headlineMedium),
+                      const SizedBox(height: 4),
+                      Row(
+                        children: [
+                          if (view.nation != null)
+                            FlagDisc(view.nation!.code, size: 18),
+                          const SizedBox(width: AppSpacing.xs),
+                          Flexible(
+                            child: Text(
+                              view.nation?.name ?? '',
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: AppTypography.labelSmall.copyWith(
+                                color: AppColors.onSurfaceVariant,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
-                      const SizedBox(height: AppSpacing.sm),
-                      for (final t in traits) _TraitRow(trait: t),
                     ],
                   ),
                 ),
               ],
-              const SizedBox(height: AppSpacing.sm),
-              AppCard(
-                child: Column(
-                  children: [
-                    _clubFact(p, l.playerClub),
-                    // How much football he is actually getting THERE. It used
-                    // to be a badge on the call-up row, where it appeared on
-                    // some players and not others and read as a warning the
-                    // game had raised about the man rather than a fact about
-                    // his season. Here every player has one, and it sits next
-                    // to the club it is about.
-                    _fact(
-                      l.playerClubRole,
-                      clubStandingLabel(
-                        l,
-                        ClubForm.standingFor(
-                          playerId: p.id,
-                          overall: p.overall,
-                          age: p.age,
-                          saveSeed: view.saveSeed,
-                          windowIndex: ClubForm.windowIndexFor(view.asOf),
-                        ),
-                      ),
-                    ),
-                    _fact(l.playerPosition, positionName(l, p.position)),
-                    _fact(l.playerAge, '${p.age}'),
-                    // The scouted ceiling for prospects: the same read the
-                    // youth screens give (the estimate until he has played
-                    // enough to be known), so developing youth stays a gamble
-                    // and a better scout narrows it.
-                    if (p.age <= 21)
-                      _fact(
-                        l.playerPotential,
-                        _potentialStars(
-                          p,
-                          caps: view.stats?.caps ?? 0,
-                          scout: view.scout,
-                        ),
-                      ),
-                    _fact(l.playerValue, money(p.value)),
-                  ],
+            ),
+            const SizedBox(height: AppSpacing.md),
+            Row(
+              children: [
+                _HeadlineStat(value: '${p.age}', label: l.playerAge),
+                _HeadlineStat(
+                  value: p.position.label,
+                  label: l.playerPosition,
+                  accent: true,
                 ),
+                _HeadlineStat(value: '$caps', label: l.playerStatCaps),
+                _HeadlineStat(value: '$goals', label: l.playerStatGoals),
+              ],
+            ),
+          ],
+        ),
+      ),
+      const SizedBox(height: AppSpacing.sm),
+      // Abilities as filled rings — three numbers on a bar chart all
+      // look alike, three dials do not: a lopsided player reads as
+      // lopsided at a glance.
+      AppCard(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              l.playerAttributes.toUpperCase(),
+              style: AppTypography.labelSmall.copyWith(
+                color: AppColors.primary,
               ),
-              ClubHistoryCard(careerId: careerId, playerId: p.id),
-              _TrophyCabinet(careerId: careerId, playerId: p.id),
-              const SizedBox(height: AppSpacing.md),
+            ),
+            const SizedBox(height: AppSpacing.md),
+            Row(
+              children: [
+                for (final s in <(String, int)>[
+                  (l.playerAttrPhysical, a.physical),
+                  (l.playerAttrTechnical, a.technical),
+                  (l.playerAttrStamina, a.stamina),
+                ])
+                  Expanded(
+                    child: _AbilityRing(label: s.$1, value: s.$2),
+                  ),
+              ],
+            ),
+          ],
+        ),
+      ),
+      // His form and legs right now. The call-up row shows only an icon for
+      // it, so this is where a flame or a snowflake is explained, with what
+      // it does to him next match.
+      _FormSection(careerId: careerId, playerId: p.id),
+      // What this player is KNOWN for. A squad of twenty-three ratings
+      // is forgettable; a hothead, an iron man and a big-game striker
+      // are not — and each one changes how they should be used.
+      if (PlayerTraits.of(p, saveSeed: view.saveSeed) case final traits
+          when traits.isNotEmpty) ...[
+        const SizedBox(height: AppSpacing.sm),
+        AppCard(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
               Text(
-                l.playerCareerRecord,
-                style: AppTypography.labelMedium.copyWith(
+                l.playerTraitsTitle,
+                style: AppTypography.labelSmall.copyWith(
                   color: AppColors.primary,
                 ),
               ),
               const SizedBox(height: AppSpacing.sm),
-              if (view.stats case final s?)
-                _CareerStatsCard(stats: s, goals: view.goals)
-              else
-                AppCard(
-                  child: _fact(l.playerInternationalGoals, '${view.goals}'),
-                ),
-              if (view.history.length >= 3) ...[
-                const SizedBox(height: AppSpacing.md),
-                Text(
-                  l.playerRecentForm,
-                  style: AppTypography.labelMedium.copyWith(
-                    color: AppColors.primary,
-                  ),
-                ),
-                const SizedBox(height: AppSpacing.sm),
-                AppCard(
-                  child: _FormSparkline(
-                    // Oldest → newest, capped to the last dozen games.
-                    ratings: [
-                      for (final m in view.history.take(12).toList().reversed)
-                        m.rating,
-                    ],
-                  ),
-                ),
-              ],
-              if (view.history.isNotEmpty) ...[
-                const SizedBox(height: AppSpacing.md),
-                Text(
-                  l.playerMatchHistory,
-                  style: AppTypography.labelMedium.copyWith(
-                    color: AppColors.primary,
-                  ),
-                ),
-                const SizedBox(height: AppSpacing.sm),
-                AppCard(
-                  padding: EdgeInsets.zero,
-                  child: Column(
-                    children: [
-                      for (final m in view.history)
-                        _HistoryRow(
-                          stat: m,
-                          playerNationId: p.nationId,
-                          nationsById: view.nationsById,
-                        ),
-                    ],
-                  ),
-                ),
-              ],
-              const SizedBox(height: AppSpacing.xl),
+              for (final t in traits) _TraitRow(trait: t),
             ],
-          );
-        },
-      ),
-    );
-  }
-
-  /// The club row, with the club's country flag beside its name, hard-aligned
-  /// to the right (the trailing group takes the remaining width and ends right).
-  Widget _clubFact(Player p, String clubLabel) => Padding(
-    padding: const EdgeInsets.symmetric(vertical: 3),
-    child: Row(
-      children: [
-        Text(
-          clubLabel,
-          style: AppTypography.labelSmall.copyWith(
-            color: AppColors.onSurfaceVariant,
           ),
         ),
-        const SizedBox(width: AppSpacing.sm),
-        Expanded(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              if (p.clubCountry.isNotEmpty) ...[
-                FlagDisc(p.clubCountry, size: 18),
-                const SizedBox(width: AppSpacing.sm),
-              ],
-              Flexible(
-                child: Text(
-                  p.club,
-                  textAlign: TextAlign.end,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: AppTypography.bodyMedium,
+      ],
+      const SizedBox(height: AppSpacing.sm),
+      AppCard(
+        child: Column(
+          children: [
+            _clubFact(p, l.playerClub),
+            // How much football he is actually getting THERE. It used
+            // to be a badge on the call-up row, where it appeared on
+            // some players and not others and read as a warning the
+            // game had raised about the man rather than a fact about
+            // his season. Here every player has one, and it sits next
+            // to the club it is about.
+            _fact(
+              l.playerClubRole,
+              clubStandingLabel(
+                l,
+                ClubForm.standingFor(
+                  playerId: p.id,
+                  overall: p.overall,
+                  age: p.age,
+                  saveSeed: view.saveSeed,
+                  windowIndex: ClubForm.windowIndexFor(view.asOf),
                 ),
               ),
+            ),
+            _fact(l.playerPosition, positionName(l, p.position)),
+            _fact(l.playerAge, '${p.age}'),
+            // The scouted ceiling for prospects: the same read the
+            // youth screens give (the estimate until he has played
+            // enough to be known), so developing youth stays a gamble
+            // and a better scout narrows it.
+            if (p.age <= 21)
+              _fact(
+                l.playerPotential,
+                _potentialStars(
+                  p,
+                  caps: view.stats?.caps ?? 0,
+                  scout: view.scout,
+                ),
+              ),
+            _fact(l.playerValue, PlayerDetailScreen.money(p.value)),
+          ],
+        ),
+      ),
+      ClubHistoryCard(careerId: careerId, playerId: p.id),
+      _TrophyCabinet(careerId: careerId, playerId: p.id),
+    ],
+    record: [
+      const SizedBox(height: AppSpacing.md),
+      Text(
+        l.playerCareerRecord,
+        style: AppTypography.labelMedium.copyWith(color: AppColors.primary),
+      ),
+      const SizedBox(height: AppSpacing.sm),
+      if (view.stats case final s?)
+        _CareerStatsCard(stats: s, goals: view.goals)
+      else
+        AppCard(child: _fact(l.playerInternationalGoals, '${view.goals}')),
+      if (view.history.length >= 3) ...[
+        const SizedBox(height: AppSpacing.md),
+        Text(
+          l.playerRecentForm,
+          style: AppTypography.labelMedium.copyWith(color: AppColors.primary),
+        ),
+        const SizedBox(height: AppSpacing.sm),
+        AppCard(
+          child: _FormSparkline(
+            // Oldest → newest, capped to the last dozen games.
+            ratings: [
+              for (final m in view.history.take(12).toList().reversed) m.rating,
             ],
           ),
         ),
       ],
-    ),
-  );
-
-  Widget _fact(String label, String value) => Padding(
-    padding: const EdgeInsets.symmetric(vertical: 3),
-    child: Row(
-      children: [
+      if (view.history.isNotEmpty) ...[
+        const SizedBox(height: AppSpacing.md),
         Text(
-          label.toUpperCase(),
-          style: AppTypography.labelSmall.copyWith(
-            color: AppColors.onSurfaceVariant,
+          l.playerMatchHistory,
+          style: AppTypography.labelMedium.copyWith(color: AppColors.primary),
+        ),
+        const SizedBox(height: AppSpacing.sm),
+        AppCard(
+          padding: EdgeInsets.zero,
+          child: Column(
+            children: [
+              for (final m in view.history)
+                _HistoryRow(
+                  stat: m,
+                  playerNationId: p.nationId,
+                  nationsById: view.nationsById,
+                ),
+            ],
           ),
         ),
-        const Spacer(),
-        Text(value, style: AppTypography.bodyMedium),
       ],
-    ),
+      const SizedBox(height: AppSpacing.xl),
+    ],
   );
 }
+
+/// The club row, with the club's country flag beside its name, hard-aligned
+/// to the right (the trailing group takes the remaining width and ends right).
+Widget _clubFact(Player p, String clubLabel) => Padding(
+  padding: const EdgeInsets.symmetric(vertical: 3),
+  child: Row(
+    children: [
+      Text(
+        clubLabel,
+        style: AppTypography.labelSmall.copyWith(
+          color: AppColors.onSurfaceVariant,
+        ),
+      ),
+      const SizedBox(width: AppSpacing.sm),
+      Expanded(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            if (p.clubCountry.isNotEmpty) ...[
+              FlagDisc(p.clubCountry, size: 18),
+              const SizedBox(width: AppSpacing.sm),
+            ],
+            Flexible(
+              child: Text(
+                p.club,
+                textAlign: TextAlign.end,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: AppTypography.bodyMedium,
+              ),
+            ),
+          ],
+        ),
+      ),
+    ],
+  ),
+);
+
+Widget _fact(String label, String value) => Padding(
+  padding: const EdgeInsets.symmetric(vertical: 3),
+  child: Row(
+    children: [
+      Text(
+        label.toUpperCase(),
+        style: AppTypography.labelSmall.copyWith(
+          color: AppColors.onSurfaceVariant,
+        ),
+      ),
+      // Takes the rest of the row and keeps the value at its right edge,
+      // where the Spacer put it; a narrow pane (the tablet squad's)
+      // ellipsises the value instead of overflowing.
+      Expanded(
+        child: Align(
+          alignment: AlignmentDirectional.centerEnd,
+          child: Text(
+            value,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: AppTypography.bodyMedium,
+          ),
+        ),
+      ),
+    ],
+  ),
+);
 
 /// One of the four headline facts across the top of the player card — the
 /// number large, its name small underneath.
@@ -957,11 +1020,27 @@ class _FormSparkline extends StatelessWidget {
   }
 }
 
-/// One trait on the player card: its glyph, name and what it actually does.
-///
-/// The effect is spelled out rather than hinted at — a trait the manager can't
-/// act on is just decoration, and the whole point is that these change how a
-/// player should be used.
+/// The form card under the abilities, once the squad's condition is known
+/// and only for a player it covers.
+class _FormSection extends ConsumerWidget {
+  const _FormSection({required this.careerId, required this.playerId});
+
+  final int careerId;
+  final int playerId;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final condition = ref
+        .watch(squadConditionProvider(careerId))
+        .valueOrNull?[playerId];
+    if (condition == null) return const SizedBox.shrink();
+    return Padding(
+      padding: const EdgeInsets.only(top: AppSpacing.sm),
+      child: _FormCard(condition: condition),
+    );
+  }
+}
+
 /// His current form and fitness, in words: what the call-up row's icons
 /// mean for this player, and the rating shift they put on him next match.
 class _FormCard extends StatelessWidget {
@@ -1045,6 +1124,11 @@ class _FormCard extends StatelessWidget {
   }
 }
 
+/// One trait on the player card: its glyph, name and what it actually does.
+///
+/// The effect is spelled out rather than hinted at — a trait the manager can't
+/// act on is just decoration, and the whole point is that these change how a
+/// player should be used.
 class _TraitRow extends StatelessWidget {
   const _TraitRow({required this.trait});
 

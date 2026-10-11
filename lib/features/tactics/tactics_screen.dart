@@ -1,6 +1,4 @@
-import 'package:fnm/features/onboarding/tour_keys.dart';
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/core/routing/app_router.dart';
@@ -11,28 +9,36 @@ import 'package:fnm/core/theme/kit_colors.dart';
 import 'package:fnm/core/util/squad_label.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/formation.dart';
+import 'package:fnm/domain/entities/player.dart';
+import 'package:fnm/domain/entities/player_role.dart';
 import 'package:fnm/domain/entities/tactic_preset.dart';
 import 'package:fnm/domain/entities/tactics.dart';
+import 'package:fnm/domain/services/squad/absence_outlook.dart';
+import 'package:fnm/domain/services/squad/captaincy.dart';
 import 'package:fnm/domain/services/tactics/position_fit.dart';
 import 'package:fnm/domain/services/tactics/set_piece_picks.dart';
 import 'package:fnm/features/career/career_providers.dart';
-import 'package:fnm/domain/entities/player.dart';
-import 'package:fnm/domain/entities/player_role.dart';
-import 'package:fnm/domain/services/squad/absence_outlook.dart';
-import 'package:fnm/domain/services/squad/captaincy.dart';
+import 'package:fnm/features/hub/hub_providers.dart';
+import 'package:fnm/features/match/match_preview_screen.dart'
+    show OpponentBriefing, opponentKeyMenProvider;
+import 'package:fnm/features/onboarding/tour_keys.dart';
 import 'package:fnm/features/squad/captain_providers.dart';
 import 'package:fnm/features/tactics/absence_providers.dart';
 import 'package:fnm/features/tactics/familiarity_providers.dart';
+import 'package:fnm/features/tactics/formation_picker.dart';
 import 'package:fnm/features/tactics/nation_squad_tab.dart';
 import 'package:fnm/features/tactics/player_roles_providers.dart';
 import 'package:fnm/features/tactics/set_piece_takers_providers.dart';
+import 'package:fnm/features/tactics/squad_tablet_layout.dart';
 import 'package:fnm/features/tactics/tactic_preset_providers.dart';
 import 'package:fnm/features/tactics/tactics_pitch.dart';
-import 'package:fnm/features/tactics/formation_picker.dart';
 import 'package:fnm/features/tactics/tactics_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
+import 'package:fnm/shared/tablet/tablet.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
+
+part 'tactics_tablet_layout.dart';
 
 /// Drops a designated set-piece taker who is no longer in the eleven, once
 /// this frame is done — a build must not write to a provider.
@@ -49,6 +55,51 @@ void _clearTakerAfterFrame(
   });
 }
 
+/// The eleven as named, and who takes the set pieces: the manager's man where
+/// he has named one who is still in the side, otherwise the engine's own pick.
+typedef _Takers = ({
+  List<Player> xi,
+  int? namedPenalty,
+  int? namedDeadBall,
+  int? penaltyId,
+  int? deadBallId,
+});
+
+/// Resolves [_Takers] for [data], clearing (after this frame) a designated
+/// taker who is no longer in the eleven: null already means "let the engine
+/// pick", so a stale id is cleared rather than kept as a second kind of empty.
+_Takers _resolveTakers(
+  WidgetRef ref,
+  int careerId,
+  TacticData data,
+  SetPieceTakers? takers,
+) {
+  final xi = [
+    for (final id in data.tactic.lineup.whereType<int>()) ?data.byId[id],
+  ];
+  final xiIds = {for (final p in xi) p.id};
+  final namedPenalty = xiIds.contains(takers?.penalty) ? takers?.penalty : null;
+  final namedDeadBall = xiIds.contains(takers?.deadBall)
+      ? takers?.deadBall
+      : null;
+  if (takers != null && xi.isNotEmpty) {
+    final store = ref.read(setPieceTakersStoreProvider);
+    if (takers.penalty != null && namedPenalty == null) {
+      _clearTakerAfterFrame(store, careerId, penalty: true);
+    }
+    if (takers.deadBall != null && namedDeadBall == null) {
+      _clearTakerAfterFrame(store, careerId, penalty: false);
+    }
+  }
+  return (
+    xi: xi,
+    namedPenalty: namedPenalty,
+    namedDeadBall: namedDeadBall,
+    penaltyId: namedPenalty ?? SetPiecePicks.penalty(xi),
+    deadBallId: namedDeadBall ?? SetPiecePicks.deadBall(xi),
+  );
+}
+
 /// Squad: a tactical pitch view of the starting XI with the substitutes list
 /// and formation selector. Players can be tapped to pick, or dragged to swap
 /// positions / bring a substitute on. Instructions live behind the tune action.
@@ -56,6 +107,9 @@ class TacticsScreen extends ConsumerWidget {
   const TacticsScreen({required this.careerId, this.initialTab = 0, super.key});
 
   final int careerId;
+
+  /// The tablet layout's root, for tests.
+  static const Key tabletLayoutKey = Key('tactics.tabletLayout');
 
   /// Which tab to open on (0 lineup, 1 instructions, 2 roles & set pieces,
   /// 3 squad).
@@ -66,6 +120,11 @@ class TacticsScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    if (TabletShellScope.isActive(context)) {
+      // Squad is its own sidebar destination on the same route.
+      if (initialTab == 3) return SquadTabletLayout(careerId: careerId);
+      return _TacticsTabletLayout(screen: this);
+    }
     final l = AppLocalizations.of(context);
     final dataAsync = ref.watch(tacticDataProvider(careerId));
     final service = ref.read(tacticServiceProvider);
@@ -193,34 +252,7 @@ class TacticsScreen extends ConsumerWidget {
                 if ((data.absences[p.id]?.injuryMatches ?? 0) > 0) p.id,
             };
             final outStarters = data.unavailableStarters;
-            // The eleven as named, for the set pieces. A designated taker who
-            // is no longer in the side goes back to automatic: null already
-            // means "let the engine pick", so the stale id is cleared rather
-            // than kept as a second kind of empty.
-            final xi = [
-              for (final id in tactic.lineup.whereType<int>()) ?data.byId[id],
-            ];
-            final xiIds = {for (final p in xi) p.id};
-            final namedPenalty = xiIds.contains(takers?.penalty)
-                ? takers?.penalty
-                : null;
-            final namedDeadBall = xiIds.contains(takers?.deadBall)
-                ? takers?.deadBall
-                : null;
-            if (takers != null && xi.isNotEmpty) {
-              final store = ref.read(setPieceTakersStoreProvider);
-              if (takers.penalty != null && namedPenalty == null) {
-                _clearTakerAfterFrame(store, careerId, penalty: true);
-              }
-              if (takers.deadBall != null && namedDeadBall == null) {
-                _clearTakerAfterFrame(store, careerId, penalty: false);
-              }
-            }
-            // Who actually steps up: the manager's man where he has named one,
-            // and otherwise the engine's own choice, shown rather than left
-            // blank for him to guess at.
-            final penaltyId = namedPenalty ?? SetPiecePicks.penalty(xi);
-            final deadBallId = namedDeadBall ?? SetPiecePicks.deadBall(xi);
+            final t = _resolveTakers(ref, careerId, data, takers);
 
             return TabBarView(
               children: [
@@ -239,86 +271,18 @@ class TacticsScreen extends ConsumerWidget {
                           AppSpacing.marginMobile,
                           0,
                         ),
-                        child: AppCard(
-                          child: Row(
-                            children: [
-                              const Icon(
-                                Icons.personal_injury_outlined,
-                                color: AppColors.error,
-                              ),
-                              const SizedBox(width: AppSpacing.md),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      l.tacticsReplaceStarters(
-                                        outStarters.length,
-                                      ),
-                                      style: AppTypography.labelSmall.copyWith(
-                                        color: AppColors.error,
-                                      ),
-                                    ),
-                                    const SizedBox(height: 2),
-                                    for (final p in outStarters)
-                                      Text(
-                                        l.tacticsPlayerOut(
-                                          p.name,
-                                          switch (outlooks[p.id]) {
-                                            final o? => absenceLabel(l, o),
-                                            _ =>
-                                              absenceShortLabel(
-                                                    l,
-                                                    data.absences[p.id],
-                                                  ) ??
-                                                  l.tacticsOut,
-                                          },
-                                        ),
-                                        style: AppTypography.bodySmall,
-                                      ),
-                                    const SizedBox(height: 2),
-                                    Text(
-                                      l.tacticsTapSpotReplace,
-                                      style: AppTypography.labelSmall.copyWith(
-                                        color: AppColors.onSurfaceVariant,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
+                        child: _outStartersCard(l, data, outlooks),
                       ),
                     AspectRatio(
                       aspectRatio: 3 / 4,
-                      child: TacticsPitch(
-                        injuredIds: injuredIds,
-                        formation: tactic.formation,
-                        instructions: tactic.instructions,
-                        lineup: tactic.lineup,
-                        byId: data.byId,
+                      child: _pitch(
+                        context,
+                        ref,
+                        data,
+                        service: service,
                         teamColors: teamColors,
                         absentIds: absentIds,
-                        onTapSlot: (slot) =>
-                            _pickPlayer(context, ref, data, slot),
-                        onSwap: (a, b) =>
-                            _dragBetweenSlots(service, tactic, a, b),
-                        onBenchIn: (slot, playerId) =>
-                            service.setSlot(careerId, slot, playerId),
-                        onMoveToSpace: (slot, dropY) {
-                          final outcome = resolveSpaceDrag(
-                            tactic.formation,
-                            tactic.instructions,
-                            slot,
-                            dropY,
-                          );
-                          if (outcome case ReshapeTo(:final formation)) {
-                            unawaited(
-                              service.reshapeFormation(careerId, formation),
-                            );
-                          }
-                        },
+                        injuredIds: injuredIds,
                       ),
                     ),
                     Padding(
@@ -431,70 +395,7 @@ class TacticsScreen extends ConsumerWidget {
                 //    multiple choice and buried the one name that mattered.
                 ListView(
                   padding: const EdgeInsets.all(AppSpacing.marginMobile),
-                  children: [
-                    // The armband can go to a player nursing a knock — he is
-                    // still the captain, he just isn't playing — so the squad
-                    // offered here is the called-up group, not only the fit.
-                    _CaptainCard(
-                      careerId: careerId,
-                      pool: [...data.pool, ...data.unavailable],
-                    ),
-                    const SizedBox(height: AppSpacing.md),
-                    Text(
-                      l.tacticsRolesSetPiecesBlurb,
-                      style: AppTypography.labelSmall.copyWith(
-                        color: AppColors.onSurfaceVariant,
-                      ),
-                    ),
-                    const SizedBox(height: AppSpacing.sm),
-                    AppCard(
-                      child: SetPieceTakerSummary(
-                        penaltyName: data.byId[penaltyId]?.name,
-                        penaltyIsAuto: namedPenalty == null,
-                        deadBallName: data.byId[deadBallId]?.name,
-                        deadBallIsAuto: namedDeadBall == null,
-                        // One tap makes the two men already named above the
-                        // manager's own choice. The names do not change; what
-                        // changes is that they are now his, which is also what
-                        // settles the "set-piece takers are not set" strip
-                        // before kick-off.
-                        onQuickPick: () => ref
-                            .read(setPieceTakersStoreProvider)
-                            .setBoth(
-                              careerId,
-                              penalty: penaltyId,
-                              deadBall: deadBallId,
-                            ),
-                      ),
-                    ),
-                    const SizedBox(height: AppSpacing.sm),
-                    for (final p in xi)
-                      _PlayerTacticRow(
-                        player: p,
-                        role: roles[p.id] ?? PlayerRole.none,
-                        isPenaltyTaker: namedPenalty == p.id,
-                        isDeadBallTaker: namedDeadBall == p.id,
-                        isAutoPenalty:
-                            namedPenalty == null && penaltyId == p.id,
-                        isAutoDeadBall:
-                            namedDeadBall == null && deadBallId == p.id,
-                        onRole: () => _pickRole(context, ref, p),
-                        onTogglePenalty: () => ref
-                            .read(setPieceTakersStoreProvider)
-                            .set(
-                              careerId,
-                              penalty: true,
-                              playerId: namedPenalty == p.id ? null : p.id,
-                            ),
-                        onToggleDeadBall: () => ref
-                            .read(setPieceTakersStoreProvider)
-                            .set(
-                              careerId,
-                              penalty: false,
-                              playerId: namedDeadBall == p.id ? null : p.id,
-                            ),
-                      ),
-                  ],
+                  children: _rolesChildren(context, ref, l, data, t, roles),
                 ),
                 // 4. SQUAD — the nation's whole pool: every eligible player,
                 //    their club, age, form and international record, filterable
@@ -507,6 +408,168 @@ class TacticsScreen extends ConsumerWidget {
         ),
       ),
     );
+  }
+
+  /// The starting XI on the pitch, with every gesture the line-up has: tap a
+  /// slot to pick, drag to swap or reshape, drop a substitute on.
+  Widget _pitch(
+    BuildContext context,
+    WidgetRef ref,
+    TacticData data, {
+    required TacticService service,
+    required List<Color>? teamColors,
+    required Set<int> absentIds,
+    required Set<int> injuredIds,
+  }) {
+    final tactic = data.tactic;
+    return TacticsPitch(
+      injuredIds: injuredIds,
+      formation: tactic.formation,
+      instructions: tactic.instructions,
+      lineup: tactic.lineup,
+      byId: data.byId,
+      teamColors: teamColors,
+      absentIds: absentIds,
+      onTapSlot: (slot) => _pickPlayer(context, ref, data, slot),
+      onSwap: (a, b) => _dragBetweenSlots(service, tactic, a, b),
+      onBenchIn: (slot, playerId) => service.setSlot(careerId, slot, playerId),
+      onMoveToSpace: (slot, dropY) {
+        final outcome = resolveSpaceDrag(
+          tactic.formation,
+          tactic.instructions,
+          slot,
+          dropY,
+        );
+        if (outcome case ReshapeTo(:final formation)) {
+          unawaited(service.reshapeFormation(careerId, formation));
+        }
+      },
+    );
+  }
+
+  /// Names the starters who cannot play the next match, and why.
+  Widget _outStartersCard(
+    AppLocalizations l,
+    TacticData data,
+    Map<int, AbsenceOutlook> outlooks,
+  ) {
+    final outStarters = data.unavailableStarters;
+    return AppCard(
+      child: Row(
+        children: [
+          const Icon(Icons.personal_injury_outlined, color: AppColors.error),
+          const SizedBox(width: AppSpacing.md),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  l.tacticsReplaceStarters(outStarters.length),
+                  style: AppTypography.labelSmall.copyWith(
+                    color: AppColors.error,
+                  ),
+                ),
+                const SizedBox(height: 2),
+                for (final p in outStarters)
+                  Text(
+                    l.tacticsPlayerOut(
+                      p.name,
+                      switch (outlooks[p.id]) {
+                        final o? => absenceLabel(l, o),
+                        _ =>
+                          absenceShortLabel(l, data.absences[p.id]) ??
+                              l.tacticsOut,
+                      },
+                    ),
+                    style: AppTypography.bodySmall,
+                  ),
+                const SizedBox(height: 2),
+                Text(
+                  l.tacticsTapSpotReplace,
+                  style: AppTypography.labelSmall.copyWith(
+                    color: AppColors.onSurfaceVariant,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// The armband, the set-piece summary and one row per starter: the roles
+  /// and set pieces tab, on both layouts.
+  List<Widget> _rolesChildren(
+    BuildContext context,
+    WidgetRef ref,
+    AppLocalizations l,
+    TacticData data,
+    _Takers t,
+    Map<int, PlayerRole> roles,
+  ) {
+    final xi = t.xi;
+    final namedPenalty = t.namedPenalty;
+    final namedDeadBall = t.namedDeadBall;
+    final penaltyId = t.penaltyId;
+    final deadBallId = t.deadBallId;
+    return [
+      // The armband can go to a player nursing a knock — he is still the
+      // captain, he just isn't playing — so the squad offered here is the
+      // called-up group, not only the fit.
+      _CaptainCard(
+        careerId: careerId,
+        pool: [...data.pool, ...data.unavailable],
+      ),
+      const SizedBox(height: AppSpacing.md),
+      Text(
+        l.tacticsRolesSetPiecesBlurb,
+        style: AppTypography.labelSmall.copyWith(
+          color: AppColors.onSurfaceVariant,
+        ),
+      ),
+      const SizedBox(height: AppSpacing.sm),
+      AppCard(
+        child: SetPieceTakerSummary(
+          penaltyName: data.byId[penaltyId]?.name,
+          penaltyIsAuto: namedPenalty == null,
+          deadBallName: data.byId[deadBallId]?.name,
+          deadBallIsAuto: namedDeadBall == null,
+          // One tap makes the two men already named above the manager's own
+          // choice. The names do not change; what changes is that they are
+          // now his, which is also what settles the "set-piece takers are not
+          // set" strip before kick-off.
+          onQuickPick: () => ref
+              .read(setPieceTakersStoreProvider)
+              .setBoth(careerId, penalty: penaltyId, deadBall: deadBallId),
+        ),
+      ),
+      const SizedBox(height: AppSpacing.sm),
+      for (final p in xi)
+        _PlayerTacticRow(
+          player: p,
+          role: roles[p.id] ?? PlayerRole.none,
+          isPenaltyTaker: namedPenalty == p.id,
+          isDeadBallTaker: namedDeadBall == p.id,
+          isAutoPenalty: namedPenalty == null && penaltyId == p.id,
+          isAutoDeadBall: namedDeadBall == null && deadBallId == p.id,
+          onRole: () => _pickRole(context, ref, p),
+          onTogglePenalty: () => ref
+              .read(setPieceTakersStoreProvider)
+              .set(
+                careerId,
+                penalty: true,
+                playerId: namedPenalty == p.id ? null : p.id,
+              ),
+          onToggleDeadBall: () => ref
+              .read(setPieceTakersStoreProvider)
+              .set(
+                careerId,
+                penalty: false,
+                playerId: namedDeadBall == p.id ? null : p.id,
+              ),
+        ),
+    ];
   }
 
   /// Opens the role picker for [player] — only the roles that suit their
@@ -528,14 +591,14 @@ class TacticsScreen extends ConsumerWidget {
           r,
     ];
     final l = AppLocalizations.of(context);
-    final picked = await showModalBottomSheet<PlayerRole>(
+    final picked = await showAdaptiveSheet<PlayerRole>(
       context: context,
       backgroundColor: AppColors.surfaceContainerHigh,
       // Scroll-controlled + bounded height so a long role list scrolls INSIDE
       // the sheet instead of overflowing the default half-screen cap and
       // pushing the header/handle off the top (which left it unclosable).
       isScrollControlled: true,
-      builder: (_) {
+      builder: (sheetContext) {
         final maxHeight = MediaQuery.of(context).size.height * 0.7;
         return ConstrainedBox(
           constraints: BoxConstraints(maxHeight: maxHeight),
@@ -575,7 +638,7 @@ class TacticsScreen extends ConsumerWidget {
                     // if the list is long.
                     IconButton(
                       icon: const Icon(Icons.close, size: 20),
-                      onPressed: () => Navigator.of(context).pop(),
+                      onPressed: () => Navigator.of(sheetContext).pop(),
                     ),
                   ],
                 ),
@@ -596,7 +659,7 @@ class TacticsScreen extends ConsumerWidget {
                               color: AppColors.onSurfaceVariant,
                             ),
                           ),
-                          onTap: () => Navigator.of(context).pop(r),
+                          onTap: () => Navigator.of(sheetContext).pop(r),
                         ),
                     ],
                   ),
@@ -640,10 +703,10 @@ class TacticsScreen extends ConsumerWidget {
     }
 
     final l = AppLocalizations.of(context);
-    final picked = await showModalBottomSheet<int>(
+    final picked = await showAdaptiveSheet<int>(
       context: context,
       backgroundColor: AppColors.surfaceContainer,
-      builder: (_) => ListView(
+      builder: (sheetContext) => ListView(
         padding: const EdgeInsets.all(AppSpacing.md),
         children: [
           Text(
@@ -711,15 +774,24 @@ class TacticsScreen extends ConsumerWidget {
                         size: 20,
                         color: AppColors.onSurfaceVariant,
                       ),
-                      onPressed: () => context.push(
-                        '${Routes.player}?careerId=$careerId&playerId=${p.id}',
-                      ),
+                      onPressed: () {
+                        final route =
+                            '${Routes.player}?careerId=$careerId&playerId=${p.id}';
+                        // On a tablet the sheet is a root dialog: a push from
+                        // here would land on the shell navigator UNDER it, so
+                        // close it first. On a phone the sheet stays open
+                        // beneath the player page, as before.
+                        if (sheetIsDialog(context)) {
+                          Navigator.of(sheetContext).pop();
+                        }
+                        context.push(route);
+                      },
                     ),
                   ],
                 ),
                 selected: inXi,
                 selectedTileColor: AppColors.surfaceContainerHigh,
-                onTap: () => Navigator.of(context).pop(p.id),
+                onTap: () => Navigator.of(sheetContext).pop(p.id),
               );
             }(),
         ],
@@ -746,7 +818,7 @@ class TacticsScreen extends ConsumerWidget {
     WidgetRef ref,
     Tactic tactic,
   ) {
-    return showModalBottomSheet<void>(
+    return showAdaptiveSheet<void>(
       context: context,
       backgroundColor: AppColors.surfaceContainer,
       isScrollControlled: true,
@@ -1282,10 +1354,10 @@ class _CaptainCard extends ConsumerWidget {
     // says who actually carries it.
     final candidates = [...pool]
       ..sort((a, b) => b.overall.compareTo(a.overall));
-    final picked = await showModalBottomSheet<int>(
+    final picked = await showAdaptiveSheet<int>(
       context: context,
       backgroundColor: AppColors.surfaceContainer,
-      builder: (_) => ListView(
+      builder: (sheetContext) => ListView(
         padding: const EdgeInsets.all(AppSpacing.md),
         children: [
           Text(
@@ -1312,7 +1384,7 @@ class _CaptainCard extends ConsumerWidget {
                   : Text('${p.overall}', style: AppTypography.labelMedium),
               // Tapping the current captain takes the armband back off him, so
               // "no captain" needs no row of its own.
-              onTap: () => Navigator.of(context).pop(p.id),
+              onTap: () => Navigator.of(sheetContext).pop(p.id),
             ),
         ],
       ),

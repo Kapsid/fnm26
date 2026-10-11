@@ -10,8 +10,11 @@ import 'package:fnm/domain/services/federation/federation_finance.dart';
 import 'package:fnm/features/federation/federation_service.dart';
 import 'package:fnm/features/federation/investment_editor.dart';
 import 'package:fnm/l10n/app_localizations.dart';
+import 'package:fnm/shared/tablet/tablet.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
+
+part 'finances_tablet_layout.dart';
 
 /// The federation finances screen: the cash balance, this cycle's department
 /// investments and the income projected at the season's close. The opening
@@ -22,6 +25,8 @@ class FinancesScreen extends ConsumerStatefulWidget {
 
   final int careerId;
 
+  static const Key tabletLayoutKey = Key('finances.tabletLayout');
+
   @override
   ConsumerState<FinancesScreen> createState() => _FinancesScreenState();
 }
@@ -29,6 +34,9 @@ class FinancesScreen extends ConsumerStatefulWidget {
 class _FinancesScreenState extends ConsumerState<FinancesScreen> {
   @override
   Widget build(BuildContext context) {
+    if (TabletShellScope.isActive(context)) {
+      return _FinancesTabletLayout(careerId: widget.careerId);
+    }
     final viewAsync = ref.watch(financeViewProvider(widget.careerId));
     final l = AppLocalizations.of(context);
     return Scaffold(
@@ -54,13 +62,7 @@ class _FinancesScreenState extends ConsumerState<FinancesScreen> {
             return Center(child: Text(l.federationSaveNotFound));
           }
           final income = view.projectedIncome;
-          final hasCurrent =
-              view.current.youth +
-                  view.current.commercial +
-                  view.current.medical +
-                  view.current.naturalization +
-                  view.current.boardRelations >
-              0;
+          final hasCurrent = _anyInvested(view.current);
 
           return ListView(
             padding: const EdgeInsets.all(AppSpacing.marginMobile),
@@ -92,16 +94,7 @@ class _FinancesScreenState extends ConsumerState<FinancesScreen> {
                 ),
               ),
               const SizedBox(height: AppSpacing.sm),
-              AppCard(
-                child: Column(
-                  children: [
-                    _row(l.federationCentralFunding, income.grant),
-                    _row(l.federationPrizeMoneySoFar, income.prize),
-                    if (income.commercial > 0)
-                      _row(l.federationCommercialReturn, income.commercial),
-                  ],
-                ),
-              ),
+              AppCard(child: _IncomeRows(income: income)),
               if (hasCurrent) ...[
                 const SizedBox(height: AppSpacing.md),
                 Text(
@@ -136,24 +129,6 @@ class _FinancesScreenState extends ConsumerState<FinancesScreen> {
       ),
     );
   }
-
-  Widget _row(String label, int euros) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 3),
-      child: Row(
-        children: [
-          Text(
-            label.toUpperCase(),
-            style: AppTypography.labelSmall.copyWith(
-              color: AppColors.onSurfaceVariant,
-            ),
-          ),
-          const Spacer(),
-          Text(formatEuros(euros), style: AppTypography.bodyMedium),
-        ],
-      ),
-    );
-  }
 }
 
 class _BalanceCard extends StatelessWidget {
@@ -163,68 +138,8 @@ class _BalanceCard extends StatelessWidget {
   final FederationFunds funds;
 
   @override
-  Widget build(BuildContext context) {
-    final l = AppLocalizations.of(context);
-    final budget = funds.balance;
-    final wages = funds.wages;
-    final free = funds.free;
-    return AppCard(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Row(
-            children: [
-              const Icon(
-                Icons.account_balance,
-                color: AppColors.primary,
-                size: 32,
-              ),
-              const SizedBox(width: AppSpacing.md),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    l.federationBalance,
-                    style: AppTypography.labelSmall.copyWith(
-                      color: AppColors.onSurfaceVariant,
-                    ),
-                  ),
-                  Text(
-                    formatEuros(budget),
-                    style: AppTypography.headlineMedium,
-                  ),
-                ],
-              ),
-            ],
-          ),
-          // Only worth breaking down when somebody is actually employed: with
-          // no staff the balance IS the free money, and a second line saying
-          // so twice is noise.
-          if (wages > 0) ...[
-            const Divider(height: AppSpacing.lg),
-            _Split(
-              label: l.federationCommittedToStaff,
-              amount: wages,
-              color: AppColors.warning,
-            ),
-            const SizedBox(height: AppSpacing.xs),
-            _Split(
-              label: l.federationFreeToSpend,
-              amount: free,
-              color: free > 0 ? AppColors.positive : AppColors.onSurfaceVariant,
-            ),
-            const SizedBox(height: AppSpacing.sm),
-            Text(
-              l.federationWagesNote,
-              style: AppTypography.labelSmall.copyWith(
-                color: AppColors.onSurfaceVariant,
-              ),
-            ),
-          ],
-        ],
-      ),
-    );
-  }
+  Widget build(BuildContext context) =>
+      AppCard(child: _BalanceBody(funds: funds));
 }
 
 /// One line of the balance breakdown: what it is, and how much of it.
@@ -272,48 +187,8 @@ class _LockedInvestment extends StatelessWidget {
   final FederationInvestment investment;
 
   @override
-  Widget build(BuildContext context) {
-    final l = AppLocalizations.of(context);
-    return AppCard(
-      child: Column(
-        children: [
-          for (final d in Department.values)
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 3),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      departmentLabel(l, d),
-                      style: AppTypography.bodyMedium,
-                    ),
-                  ),
-                  Text(
-                    formatEuros(switch (d) {
-                      Department.youth => investment.youth,
-                      Department.commercial => investment.commercial,
-                      Department.medical => investment.medical,
-                      Department.naturalization => investment.naturalization,
-                      Department.boardRelations => investment.boardRelations,
-                    }),
-                    style: AppTypography.labelMedium.copyWith(
-                      color: AppColors.primary,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          const SizedBox(height: AppSpacing.xs),
-          Text(
-            l.federationInvestAtCeremony,
-            style: AppTypography.labelSmall.copyWith(
-              color: AppColors.onSurfaceVariant,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+  Widget build(BuildContext context) =>
+      AppCard(child: _InvestmentRows(investment: investment));
 }
 
 /// The federation's four buildings, each with a level that grows from the total
@@ -326,63 +201,13 @@ class _BuildingsCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final l = AppLocalizations.of(context);
     final async = ref.watch(federationBuildingsProvider(careerId));
     return async.when(
       loading: () => const AppCard(
         child: Center(child: CircularProgressIndicator()),
       ),
       error: (_, _) => const SizedBox.shrink(),
-      data: (buildings) => AppCard(
-        child: Column(
-          children: [
-            for (final b in buildings)
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 5),
-                child: Row(
-                  children: [
-                    SizedBox(
-                      width: 34,
-                      child: _LevelBadge(level: b.level),
-                    ),
-                    const SizedBox(width: AppSpacing.md),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            '${departmentBuildingName(l, b.department)}'
-                            '  ·  ${departmentLabel(l, b.department)}',
-                            style: AppTypography.bodyMedium,
-                          ),
-                          const SizedBox(height: 4),
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(3),
-                            child: LinearProgressIndicator(
-                              value: b.progress,
-                              minHeight: 5,
-                              backgroundColor: AppColors.surfaceContainerHigh,
-                              valueColor: const AlwaysStoppedAnimation(
-                                AppColors.primary,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(width: AppSpacing.sm),
-                    Text(
-                      formatEuros(b.cumulativeEuros),
-                      style: AppTypography.labelSmall.copyWith(
-                        color: AppColors.onSurfaceVariant,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-          ],
-        ),
-      ),
+      data: (buildings) => AppCard(child: _BuildingRows(buildings: buildings)),
     );
   }
 }
@@ -414,6 +239,230 @@ class _LevelBadge extends StatelessWidget {
           fontWeight: FontWeight.w700,
         ),
       ),
+    );
+  }
+}
+
+/// Whether any money went into a department this cycle.
+bool _anyInvested(FederationInvestment i) =>
+    i.youth + i.commercial + i.medical + i.naturalization + i.boardRelations >
+    0;
+
+/// What the cycle is projected to bring in: the grant, the prize money so
+/// far, and the commercial return when there is one.
+class _IncomeRows extends StatelessWidget {
+  const _IncomeRows({required this.income});
+
+  final IncomeBreakdown income;
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    return Column(
+      children: [
+        _moneyRow(l.federationCentralFunding, income.grant),
+        _moneyRow(l.federationPrizeMoneySoFar, income.prize),
+        if (income.commercial > 0)
+          _moneyRow(l.federationCommercialReturn, income.commercial),
+      ],
+    );
+  }
+
+  static Widget _moneyRow(String label, int euros) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 3),
+      child: Row(
+        children: [
+          Text(
+            label.toUpperCase(),
+            style: AppTypography.labelSmall.copyWith(
+              color: AppColors.onSurfaceVariant,
+            ),
+          ),
+          const Spacer(),
+          Text(formatEuros(euros), style: AppTypography.bodyMedium),
+        ],
+      ),
+    );
+  }
+}
+
+/// The balance, and when staff are employed, what is promised to them and
+/// what is left to spend.
+class _BalanceBody extends StatelessWidget {
+  const _BalanceBody({required this.funds});
+
+  final FederationFunds funds;
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    final budget = funds.balance;
+    final wages = funds.wages;
+    final free = funds.free;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Row(
+          children: [
+            const Icon(
+              Icons.account_balance,
+              color: AppColors.primary,
+              size: 32,
+            ),
+            const SizedBox(width: AppSpacing.md),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  l.federationBalance,
+                  style: AppTypography.labelSmall.copyWith(
+                    color: AppColors.onSurfaceVariant,
+                  ),
+                ),
+                Text(
+                  formatEuros(budget),
+                  style: AppTypography.headlineMedium,
+                ),
+              ],
+            ),
+          ],
+        ),
+        // Only worth breaking down when somebody is actually employed: with
+        // no staff the balance IS the free money, and a second line saying
+        // so twice is noise.
+        if (wages > 0) ...[
+          const Divider(height: AppSpacing.lg),
+          _Split(
+            label: l.federationCommittedToStaff,
+            amount: wages,
+            color: AppColors.warning,
+          ),
+          const SizedBox(height: AppSpacing.xs),
+          _Split(
+            label: l.federationFreeToSpend,
+            amount: free,
+            color: free > 0 ? AppColors.positive : AppColors.onSurfaceVariant,
+          ),
+          const SizedBox(height: AppSpacing.sm),
+          Text(
+            l.federationWagesNote,
+            style: AppTypography.labelSmall.copyWith(
+              color: AppColors.onSurfaceVariant,
+            ),
+          ),
+        ],
+      ],
+    );
+  }
+}
+
+/// This cycle's money, department by department, and where it was decided.
+class _InvestmentRows extends StatelessWidget {
+  const _InvestmentRows({required this.investment});
+
+  final FederationInvestment investment;
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    return Column(
+      children: [
+        for (final d in Department.values)
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 3),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    departmentLabel(l, d),
+                    style: AppTypography.bodyMedium,
+                  ),
+                ),
+                Text(
+                  formatEuros(switch (d) {
+                    Department.youth => investment.youth,
+                    Department.commercial => investment.commercial,
+                    Department.medical => investment.medical,
+                    Department.naturalization => investment.naturalization,
+                    Department.boardRelations => investment.boardRelations,
+                  }),
+                  style: AppTypography.labelMedium.copyWith(
+                    color: AppColors.primary,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        const SizedBox(height: AppSpacing.xs),
+        Text(
+          l.federationInvestAtCeremony,
+          style: AppTypography.labelSmall.copyWith(
+            color: AppColors.onSurfaceVariant,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+/// Each department's building: its level, how far it is to the next, and the
+/// money keeping it there.
+class _BuildingRows extends StatelessWidget {
+  const _BuildingRows({required this.buildings});
+
+  final List<DepartmentBuilding> buildings;
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    return Column(
+      children: [
+        for (final b in buildings)
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 5),
+            child: Row(
+              children: [
+                SizedBox(
+                  width: 34,
+                  child: _LevelBadge(level: b.level),
+                ),
+                const SizedBox(width: AppSpacing.md),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        '${departmentBuildingName(l, b.department)}'
+                        '  ·  ${departmentLabel(l, b.department)}',
+                        style: AppTypography.bodyMedium,
+                      ),
+                      const SizedBox(height: 4),
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(3),
+                        child: LinearProgressIndicator(
+                          value: b.progress,
+                          minHeight: 5,
+                          backgroundColor: AppColors.surfaceContainerHigh,
+                          valueColor: const AlwaysStoppedAnimation(
+                            AppColors.primary,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(width: AppSpacing.sm),
+                Text(
+                  formatEuros(b.cumulativeEuros),
+                  style: AppTypography.labelSmall.copyWith(
+                    color: AppColors.onSurfaceVariant,
+                  ),
+                ),
+              ],
+            ),
+          ),
+      ],
     );
   }
 }

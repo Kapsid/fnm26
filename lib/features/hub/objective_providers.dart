@@ -614,6 +614,32 @@ int continentalObjectiveTarget(int confederationRank) {
   return 1; // come through qualifying in the top half of the group
 }
 
+/// The board's World Championship and continental demands of [nation] for a
+/// save's FIRST cycle, known before the save exists.
+///
+/// The first cycle's baseline is the static seed ranking (cycle 0 is never
+/// snapshotted; see `seedRankByIdProvider`), so these are exactly the targets
+/// [cycleObjectiveOutcomesProvider] sets once the career starts. The tablet's
+/// nation preview states them. `continental` is null for a confederation with
+/// no continental championship.
+({int world, int? continental}) openingObjectiveTargets(
+  Nation nation,
+  List<Nation> nations,
+) {
+  final baseline = {for (final n in nations) n.id: n.ranking};
+  final hasCup = ContinentalCups.byConfederation.containsKey(
+    nation.confederation,
+  );
+  return (
+    world: worldObjectiveTarget(baseline[nation.id] ?? 50),
+    continental: hasCup
+        ? continentalObjectiveTarget(
+            _rankWithin(baseline, nations, nation.confederation, nation.id),
+          )
+        : null,
+  );
+}
+
 /// What the board demands of the nation's Nations Cup campaign, from where it
 /// stands INSIDE its own league — the ladder is the competition, so a League C
 /// side is judged against League C, not against the continent.

@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
@@ -35,6 +37,7 @@ class TournamentBracket extends StatefulWidget {
     this.runSummary,
     this.groupSeeds = const {},
     this.extraHeader,
+    this.wide = false,
     super.key,
   });
 
@@ -60,12 +63,17 @@ class TournamentBracket extends StatefulWidget {
   /// Cup shows its team of the tournament here.
   final Widget? extraHeader;
 
+  /// A tablet pane: open on the bracket rather than the list, and stretch the
+  /// round columns across the width when they fit (they scroll sideways, as
+  /// on a phone, when they do not).
+  final bool wide;
+
   @override
   State<TournamentBracket> createState() => _TournamentBracketState();
 }
 
 class _TournamentBracketState extends State<TournamentBracket> {
-  bool _visual = false;
+  late bool _visual = widget.wide;
 
   /// Which round the list view is showing, as an index into [_playedRounds].
   /// Null until the first build works out where the tournament is.
@@ -260,50 +268,73 @@ class _TournamentBracketState extends State<TournamentBracket> {
     return (most * _tieSlot).clamp(240.0, 4000.0);
   }
 
+  /// A round column's width in the scrolling bracket.
+  static const double _columnWidth = 150;
+
   /// A horizontal, aligned bracket: one column per round, ties spaced evenly so
   /// each next-round tie sits between its two feeders.
   Widget _bracketView() {
-    final columns = <Widget>[];
+    final bodies = <Widget>[];
     for (final (round, label) in widget.ladder) {
       final inRound = _inRound(round);
       if (inRound.isEmpty) continue;
-      columns.add(
-        SizedBox(
-          width: 150,
-          child: Column(
-            children: [
-              Text(
-                label,
-                style: AppTypography.labelSmall.copyWith(
-                  color: AppColors.primary,
-                ),
+      bodies.add(
+        Column(
+          children: [
+            Text(
+              label,
+              style: AppTypography.labelSmall.copyWith(
+                color: AppColors.primary,
               ),
-              const SizedBox(height: AppSpacing.xs),
-              Expanded(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [for (final f in inRound) _miniTie(f)],
-                ),
+            ),
+            const SizedBox(height: AppSpacing.xs),
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [for (final f in inRound) _miniTie(f)],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       );
     }
-    return SizedBox(
+    Widget scrolling() => SizedBox(
       height: _bracketHeight(),
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            for (var i = 0; i < columns.length; i++) ...[
+            for (var i = 0; i < bodies.length; i++) ...[
               if (i > 0) const SizedBox(width: AppSpacing.sm),
-              columns[i],
+              SizedBox(width: _columnWidth, child: bodies[i]),
             ],
           ],
         ),
       ),
+    );
+    if (!widget.wide) return scrolling();
+    return LayoutBuilder(
+      builder: (context, box) {
+        final natural =
+            bodies.length * _columnWidth +
+            math.max(0, bodies.length - 1) * AppSpacing.sm;
+        if (!box.maxWidth.isFinite || box.maxWidth < natural) {
+          return scrolling();
+        }
+        return SizedBox(
+          height: _bracketHeight(),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              for (var i = 0; i < bodies.length; i++) ...[
+                if (i > 0) const SizedBox(width: AppSpacing.sm),
+                Expanded(child: bodies[i]),
+              ],
+            ],
+          ),
+        );
+      },
     );
   }
 

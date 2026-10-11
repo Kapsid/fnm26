@@ -1,118 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/core/routing/app_router.dart';
-import 'package:fnm/core/rng/seeded_rng.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/data/data_providers.dart';
-import 'package:fnm/domain/entities/enums.dart';
-import 'package:fnm/domain/entities/group_standing.dart';
-import 'package:fnm/domain/entities/nation.dart';
-import 'package:fnm/domain/services/competition/finals.dart';
 import 'package:fnm/features/hub/hub_event.dart';
-import 'package:fnm/features/ranking/world_ranking_providers.dart';
 import 'package:fnm/features/tournaments/intercontinental_playoff_bracket.dart';
-import 'package:fnm/features/tournaments/playoff_paths.dart';
+import 'package:fnm/features/tournaments/intercontinental_playoff_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
+import 'package:fnm/shared/tablet/tablet.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
 
-/// The intercontinental play-off, replayed deterministically for display: the
-/// ties that decided the last two World Cup places.
-typedef PlayoffView = ({
-  List<PlayoffTie> ties,
-  Map<int, Nation> nations,
-  int playerNationId,
-});
-
-final AutoDisposeFutureProviderFamily<PlayoffView?, int>
-intercontinentalPlayoffProvider = FutureProvider.autoDispose
-    .family<PlayoffView?, int>((ref, careerId) async {
-      await ref.watch(seedLoaderProvider).ensureSeeded();
-      final career = await ref.watch(careerRepositoryProvider).byId(careerId);
-      if (career == null) return null;
-      final comp = ref.watch(competitionRepositoryProvider);
-      if (!await comp.allQualifyingPlayed(careerId)) return null;
-
-      final byConfederation = await comp.allGroupTablesByConfederation(
-        careerId,
-      );
-      final grouped = <Confederation, List<List<GroupStanding>>>{};
-      for (final t in byConfederation) {
-        (grouped[t.confederation] ??= []).add(t.standings);
-      }
-      final nations = {
-        for (final n in await ref.watch(nationRepositoryProvider).all())
-          n.id: n,
-      };
-      // The play-off's own frozen seeding when there is one (there is whenever
-      // the manager was an entrant), else the finals-draw snapshot — the
-      // ranking the instant resolution was seeded on.
-      final playoffRank = await ref.watch(
-        seedRankByIdProvider((
-          careerId: careerId,
-          cycle: drawSeedCycle(career.cyclePointer, drawSlotWorldCupPlayoff),
-        )).future,
-      );
-      final rankingById = playoffRank.isNotEmpty
-          ? playoffRank
-          : await ref.watch(
-              seedRankByIdProvider((
-                careerId: careerId,
-                cycle: drawSeedCycle(
-                  career.cyclePointer,
-                  drawSlotWorldCupFinals,
-                ),
-              )).future,
-            );
-      final pool = WorldCupFinals.playoffPoolFor(
-        byConfederation: grouped,
-        rankingById: rankingById,
-      );
-      // The manager's own ties were played, not modelled. Read them back so the
-      // bracket shows what happened on the pitch — a bracket that contradicted
-      // the result he just played would also contradict the finals draw.
-      final path = playoffPathOf(
-        pool: pool,
-        rankingById: rankingById,
-        nationId: career.nationId,
-      );
-      var results = const <String, int>{};
-      var scores = const <String, (int, int)>{};
-      if (path != null) {
-        const kind = CompetitionKind.worldCupPlayoff;
-        final played = playoffPlayed(
-          path: path,
-          semis: await comp.fixturesByRound(
-            careerId,
-            playoffSemiFixtureRound,
-            kind: kind,
-          ),
-          finals: await comp.fixturesByRound(
-            careerId,
-            playoffFinalFixtureRound,
-            kind: kind,
-          ),
-        );
-        results = played.results;
-        scores = played.scores;
-      }
-      // Same seed the finalist selection uses, so the shown ties are exactly how
-      // the last two places were decided.
-      final ties = WorldCupFinals.playoffBracket(
-        byConfederation: grouped,
-        rankingById: rankingById,
-        rng: SeededRng(
-          career.rngSeed ^ (career.cyclePointer * 0x50FF) ^ 0xB1A0,
-        ),
-        pool: pool,
-        playedResults: results,
-        playedScores: scores,
-      );
-      if (ties.isEmpty) return null;
-      return (ties: ties, nations: nations, playerNationId: career.nationId);
-    });
+part 'intercontinental_playoff_tablet_layout.dart';
 
 /// A one-shot event surfaced before the World Cup finals draw: the
 /// intercontinental play-off that decided the final two berths, shown as its own
@@ -136,8 +37,13 @@ class IntercontinentalPlayoffScreen extends ConsumerWidget {
     if (context.mounted) context.go('${Routes.hub}?careerId=$careerId');
   }
 
+  static const Key tabletLayoutKey = Key('playoff.tabletLayout');
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    if (TabletShellScope.isActive(context)) {
+      return _PlayoffTabletLayout(screen: this);
+    }
     final l = AppLocalizations.of(context);
     final async = ref.watch(intercontinentalPlayoffProvider(careerId));
     return Scaffold(
@@ -157,68 +63,12 @@ class IntercontinentalPlayoffScreen extends ConsumerWidget {
           if (data == null) {
             return Center(child: Text(l.tourContNoPlayoffThisCycle));
           }
-          String code(int id) => data.nations[id]?.code ?? '??';
-          String name(int id) => data.nations[id]?.name ?? '—';
-          final winners = {
-            for (final t in data.ties)
-              if (t.isFinal) t.winner,
-          };
-          final playerThrough = winners.contains(data.playerNationId);
-          final playerInvolved = data.ties.any(
-            (t) =>
-                t.home == data.playerNationId || t.away == data.playerNationId,
-          );
           return Column(
             children: [
               Expanded(
                 child: ListView(
                   padding: const EdgeInsets.all(AppSpacing.marginMobile),
-                  children: [
-                    Text(
-                      l.tourContPlayoffIntro,
-                      style: AppTypography.bodySmall.copyWith(
-                        color: AppColors.onSurfaceVariant,
-                      ),
-                    ),
-                    if (playerInvolved) ...[
-                      const SizedBox(height: AppSpacing.sm),
-                      Container(
-                        width: double.infinity,
-                        padding: const EdgeInsets.all(AppSpacing.md),
-                        decoration: BoxDecoration(
-                          color:
-                              (playerThrough
-                                      ? AppColors.positive
-                                      : AppColors.error)
-                                  .withValues(alpha: 0.12),
-                          borderRadius: AppRadii.baseAll,
-                          border: Border.all(
-                            color: playerThrough
-                                ? AppColors.positive
-                                : AppColors.error,
-                          ),
-                        ),
-                        child: Text(
-                          playerThrough
-                              ? l.tourContPlayoffThrough
-                              : l.tourContPlayoffOut,
-                          style: AppTypography.bodyMedium.copyWith(
-                            color: playerThrough
-                                ? AppColors.positive
-                                : AppColors.error,
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-                      ),
-                    ],
-                    const SizedBox(height: AppSpacing.md),
-                    IntercontinentalPlayoffBracket(
-                      ties: data.ties,
-                      code: code,
-                      name: name,
-                      playerNationId: data.playerNationId,
-                    ),
-                  ],
+                  children: _playoffBody(l, data),
                 ),
               ),
               SafeArea(
@@ -238,4 +88,57 @@ class IntercontinentalPlayoffScreen extends ConsumerWidget {
       ),
     );
   }
+}
+
+/// The play-off's body: what it is, how the manager's nation fared (when it
+/// was in it), and the bracket. The phone's list and the tablet's both show
+/// exactly this.
+List<Widget> _playoffBody(AppLocalizations l, PlayoffView data) {
+  String code(int id) => data.nations[id]?.code ?? '??';
+  String name(int id) => data.nations[id]?.name ?? '—';
+  final winners = {
+    for (final t in data.ties)
+      if (t.isFinal) t.winner,
+  };
+  final playerThrough = winners.contains(data.playerNationId);
+  final playerInvolved = data.ties.any(
+    (t) => t.home == data.playerNationId || t.away == data.playerNationId,
+  );
+  return [
+    Text(
+      l.tourContPlayoffIntro,
+      style: AppTypography.bodySmall.copyWith(
+        color: AppColors.onSurfaceVariant,
+      ),
+    ),
+    if (playerInvolved) ...[
+      const SizedBox(height: AppSpacing.sm),
+      Container(
+        width: double.infinity,
+        padding: const EdgeInsets.all(AppSpacing.md),
+        decoration: BoxDecoration(
+          color: (playerThrough ? AppColors.positive : AppColors.error)
+              .withValues(alpha: 0.12),
+          borderRadius: AppRadii.baseAll,
+          border: Border.all(
+            color: playerThrough ? AppColors.positive : AppColors.error,
+          ),
+        ),
+        child: Text(
+          playerThrough ? l.tourContPlayoffThrough : l.tourContPlayoffOut,
+          style: AppTypography.bodyMedium.copyWith(
+            color: playerThrough ? AppColors.positive : AppColors.error,
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+      ),
+    ],
+    const SizedBox(height: AppSpacing.md),
+    IntercontinentalPlayoffBracket(
+      ties: data.ties,
+      code: code,
+      name: name,
+      playerNationId: data.playerNationId,
+    ),
+  ];
 }

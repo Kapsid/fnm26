@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fnm/core/layout/form_factor.dart';
 import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
@@ -24,6 +25,8 @@ import 'package:fnm/features/paywall/premium_gate_screen.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
+
+part 'cycle_rollover_tablet_layout.dart';
 
 typedef _RolloverView = ({
   Honour? worldCup,
@@ -66,6 +69,9 @@ class CycleRolloverScreen extends ConsumerStatefulWidget {
 
   final int careerId;
 
+  static const Key tabletLayoutKey = Key('cycleRollover.tabletLayout');
+  static const Key beginKey = Key('cycleRollover.begin');
+
   @override
   ConsumerState<CycleRolloverScreen> createState() =>
       _CycleRolloverScreenState();
@@ -76,14 +82,43 @@ class _CycleRolloverScreenState extends ConsumerState<CycleRolloverScreen> {
   int? _selected; // chosen offer nation id (null = stay)
   bool _busy = false;
 
+  /// Set the moment [_begin] is entered, before its first await. [_busy] is
+  /// only set once the paywall check is past, so a second tap landing in that
+  /// gap used to pass the `_busy` check as well and roll the world twice.
+  /// Never drawn: the button's look still follows [_busy] alone.
+  bool _beginning = false;
+
+  /// Moves to [step]; the tablet's buttons call it (the phone's set the
+  /// field inline).
+  void _goTo(int step) => setState(() => _step = step);
+
+  /// Picks the job (null: stay); the tablet's tiles call it.
+  void _pick(int? nationId) => setState(() => _selected = nationId);
+
   Future<void> _begin(RolloverVerdict? v) async {
-    if (_busy) return;
+    if (_busy || _beginning) return;
+    _beginning = true;
+    try {
+      await _roll(v);
+    } finally {
+      _beginning = false;
+    }
+  }
+
+  Future<void> _roll(RolloverVerdict? v) async {
     // The end of the FIRST cycle is where the free game stops: the manager has
     // had a complete four years with nothing held back, and carrying the save
     // on is what is being sold. This is the only gate — every later rollover
     // runs straight through. See the monetisation spec.
     final season = ref.read(seasonServiceProvider);
-    if (await season.trialBlocksNextCycle(widget.careerId)) {
+    // Taken before the first await: a resize across 1000 px rebuilds this
+    // screen in the other layout meanwhile, and a manager may go back to his
+    // saves while the world rolls. The inbox is refreshed whatever he does;
+    // the hub is opened only for a manager still here.
+    final container = ProviderScope.containerOf(context, listen: false);
+    final router = GoRouter.of(context);
+    final careerId = widget.careerId;
+    if (await season.trialBlocksNextCycle(careerId)) {
       if (!mounted) return;
       // A full page, not a sheet. A sheet is something you flick away; this
       // is the decision the career turns on.
@@ -109,15 +144,15 @@ class _CycleRolloverScreenState extends ConsumerState<CycleRolloverScreen> {
     // with nothing behind it.
     try {
       await season.startNextCycle(
-        widget.careerId,
+        careerId,
         switchToNationId: _selected,
         boardTitle: v?.headline,
         boardBody: v?.detail,
       );
+      container
+        ..invalidate(messageInboxProvider(careerId))
+        ..invalidate(unreadMessagesProvider(careerId));
       if (!mounted) return;
-      ref
-        ..invalidate(messageInboxProvider(widget.careerId))
-        ..invalidate(unreadMessagesProvider(widget.careerId));
       // Once a cycle, with the new one in the save: the moment a career is
       // most worth keeping a copy of. The notice outlives this screen (the
       // messenger is the app's), so it is read on the hub.
@@ -125,10 +160,13 @@ class _CycleRolloverScreenState extends ConsumerState<CycleRolloverScreen> {
         ScaffoldMessenger.of(context),
         AppLocalizations.of(context),
         ref,
-        widget.careerId,
+        careerId,
       );
       if (!mounted) return;
-      context.go('${Routes.hub}?careerId=${widget.careerId}');
+      // `router.state` is the top-most route, a pushed one included.
+      if (router.state.uri.path == Routes.cycleRollover) {
+        router.go('${Routes.hub}?careerId=$careerId');
+      }
     } on Object catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
@@ -189,6 +227,9 @@ class _CycleRolloverScreenState extends ConsumerState<CycleRolloverScreen> {
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
     final viewAsync = ref.watch(_rolloverProvider(widget.careerId));
+    if (useTabletLayout(context, ref)) {
+      return _RolloverTabletLayout(state: this, viewAsync: viewAsync);
+    }
     return Scaffold(
       body: viewAsync.when(
         loading: _waiting,

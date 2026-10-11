@@ -273,11 +273,13 @@ void main() {
     // is exactly how this feedback arrived in the first place.
     const lists = [
       'lib/features/records/all_time_records_screen.dart',
+      'lib/features/records/all_time_records_tablet_layout.dart',
       'lib/features/tournaments/cup_detail_screen.dart',
       'lib/features/tournaments/tournament_history.dart',
       'lib/features/tournaments/tournament_stats.dart',
       'lib/features/nations/nation_vitrine_screen.dart',
       'lib/features/records/record_book_screen.dart',
+      'lib/features/records/record_book_tablet_layout.dart',
       'lib/features/stats/team_stats_screen.dart',
     ];
     for (final path in lists) {

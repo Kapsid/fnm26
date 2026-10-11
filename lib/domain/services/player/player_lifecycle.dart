@@ -162,10 +162,11 @@ abstract final class PlayerLifecycle {
     Map<int, double> youthBonusByCycle = const {},
     Map<int, int> careerStartsByPlayer = const {},
 
-    /// The save seed, for the club-minutes factor on development. ZERO means
-    /// no club effect at all — which is what the world simulation and every
-    /// other existing caller want, and what keeps their pools identical to
-    /// before this feature existed.
+    /// The save seed, for the club-minutes factor on development. It only
+    /// weighs a player's career starts ([withCareerDev] leaves a player with
+    /// none untouched), so a save's day one is the seed-free pool. The world
+    /// simulation passes the save's seed like every other save-bound caller.
+    /// ZERO means no club effect at all (no save yet: the nation pick).
     int clubSeed = 0,
   }) {
     // Retirement comes in a post-tournament WAVE — see [retireAgingAt] — which
@@ -244,8 +245,8 @@ abstract final class PlayerLifecycle {
   /// player is the case that proves it — he is the only squad member always
   /// resolved by identity, sitting next to team-mates built from the pool.
   ///
-  /// [clubSeed] ZERO means no club effect at all, which is what the world
-  /// simulation wants.
+  /// [clubSeed] ZERO means no club effect at all, for a caller with no save
+  /// (the nation pick). The world simulation passes the save's seed.
   static double minutesFactorFor(Player aged, int agingYears, int clubSeed) =>
       clubSeed == 0
       ? 1

@@ -4,6 +4,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/core/config/testing_flags.dart';
+import 'package:fnm/core/layout/form_factor.dart';
 import 'package:fnm/core/rng/seeded_rng.dart';
 import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/theme/app_colors.dart';
@@ -31,13 +32,16 @@ import 'package:fnm/features/match/match_providers.dart';
 import 'package:fnm/features/settings/settings_providers.dart';
 import 'package:fnm/features/tactics/in_match_tactics.dart';
 import 'package:fnm/features/tactics/set_piece_takers_providers.dart';
-import 'package:fnm/features/tactics/tactics_pitch.dart' show energyColor;
+import 'package:fnm/features/tactics/tactics_pitch.dart'
+    show energyColor, TacticsPitch;
 import 'package:fnm/l10n/app_localizations.dart';
+import 'package:fnm/shared/tablet/tablet.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
 
 part 'match_frame.dart';
 part 'match_panels.dart';
+part 'match_tablet_layout.dart';
 
 /// The maximum substitutions a manager may make in a match.
 const int kMaxSubs = 5;
@@ -95,6 +99,8 @@ class MatchScreen extends ConsumerStatefulWidget {
   const MatchScreen({required this.careerId, super.key});
 
   final int careerId;
+
+  static const Key tabletLayoutKey = Key('match.tabletLayout');
 
   @override
   ConsumerState<MatchScreen> createState() => _MatchScreenState();
@@ -370,7 +376,7 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
   /// the sheet keeps the automatic order — the shootout always goes ahead.
   Future<void> _askPenaltyOrder(MatchPreview preview) async {
     final r = _result;
-    final chosen = await showModalBottomSheet<List<Player>>(
+    final chosen = await showAdaptiveSheet<List<Player>>(
       context: context,
       backgroundColor: AppColors.surfaceContainer,
       isScrollControlled: true,
@@ -1076,6 +1082,7 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
             ? null
             : KitColors.discFill(n.primaryColor, n.secondaryColor);
       }(),
+      tabletLayout: useTabletLayout(context, ref),
     );
     if (result != null && mounted) await _applyTactics(preview, result);
     if (wasPlaying && _minute < 90 && !_playing) _togglePlay();
@@ -1187,9 +1194,44 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
     });
   }
 
+  /// The manager's side as it stands on the pitch right now, with each man's
+  /// energy: the centre of the tablet match. Read only; a tap anywhere on it
+  /// opens the tactics editor, where changes are made.
+  Widget _livePitch(MatchPreview preview, MatchResult r) {
+    final byId = {for (final p in _playerPool(preview)) p.id: p};
+    final n = preview.nations[preview.playerNationId];
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: _fullTime ? null : () => _openTactics(preview),
+      child: IgnorePointer(
+        child: Center(
+          child: AspectRatio(
+            aspectRatio: 3 / 4,
+            child: TacticsPitch(
+              formation: _liveFormation,
+              instructions: _liveInstructions,
+              lineup: _liveLineup,
+              byId: byId,
+              teamColors: n == null
+                  ? null
+                  : KitColors.discFill(n.primaryColor, n.secondaryColor),
+              energyByPlayer: _liveEnergy(r),
+              absentIds: {..._injuredIds, ..._sentOffIds()},
+              injuredIds: _injuredIds,
+              onTapSlot: (_) {},
+              onSwap: (_, _) {},
+              onBenchIn: (_, _) {},
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
+    final tablet = useTabletLayout(context, ref);
     // A match is played from the teamsheet it kicked off with. Once the preview
     // has landed it is PINNED — the screen stops watching the provider — so the
     // world moving underneath can never repaint this match with another
@@ -1285,6 +1327,198 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
             final showingShootout = _isShootout && _minute >= _fullTimeMinute;
             final decidedByShootout = ft && (knockout?.wentToShootout ?? false);
 
+            final topBar = _TopBar(
+              occasion: MatchStage.label(l, preview.fixture),
+            );
+            final scoreboard = MatchScoreboard(
+              homeCode: code(homeId),
+              awayCode: code(awayId),
+              homeName: name(homeId),
+              awayName: name(awayId),
+              homeScore: homeScore,
+              awayScore: awayScore,
+              clock: ft
+                  ? (decidedByShootout
+                        ? l.matchClockFullTimePenalties
+                        : knockout != null
+                        ? l.matchClockAfterExtraTime
+                        : l.matchClockFullTime)
+                  : showingShootout
+                  ? l.matchClockPenalties
+                  : inExtraTime
+                  // No trailing apostrophe: it adds right-side width that
+                  // pushes the digits left of the plate's centre. The bare
+                  // number reads as the minute and sits dead-centre.
+                  ? 'ET $_minute'
+                  : inStoppage
+                  ? '90+$_added'
+                  : '$_minute',
+              live: !ft,
+            );
+            // The two nations' own colours, pushed apart from each other when
+            // the kits are too alike to tell which end of the bar is whose.
+            final Widget? momentum = !ft && !showingShootout
+                ? () {
+                    final (homeC, awayC) = KitColors.opposed(
+                      (
+                        preview.nations[homeId]?.primaryColor ?? '',
+                        preview.nations[homeId]?.secondaryColor ?? '',
+                      ),
+                      (
+                        preview.nations[awayId]?.primaryColor ?? '',
+                        preview.nations[awayId]?.secondaryColor ?? '',
+                      ),
+                    );
+                    return _MomentumBar(
+                      homePercent: _homeMomentum(preview, homeId),
+                      homeCode: code(homeId),
+                      awayCode: code(awayId),
+                      homeColor: homeC,
+                      awayColor: awayC,
+                    );
+                  }()
+                : null;
+            final Widget? shootout = showingShootout || decidedByShootout
+                ? _ShootoutStrip(
+                    outcome: knockout!,
+                    homeCode: code(homeId),
+                    awayCode: code(awayId),
+                    revealed: showingShootout ? _penRevealed : _penTotal,
+                    homeTakers: preview.playerIsHome
+                        ? _takerNames(preview)
+                        : const [],
+                    awayTakers: preview.playerIsHome
+                        ? const []
+                        : _takerNames(preview),
+                  )
+                : null;
+            final timeline = _Timeline(
+              events: timelineEvents,
+              live: !ft,
+              homeId: homeId,
+            );
+            final stats = MatchStatsPanel(
+              result: r,
+              homeCode: code(homeId),
+              awayCode: code(awayId),
+              homeNationId: homeId,
+              ground: preview.ground,
+              neutral: preview.neutralVenue,
+              groundCode: code(preview.ground.groundNationId),
+              // Read as of the clock, exactly like the timeline beside it, so
+              // the box score moves through the match instead of arriving
+              // whole at the whistle.
+              minute: _minute,
+              fullTime: ft,
+              events: timelineEvents,
+            );
+            List<MatchEvent> subsOf(int nationId) => shown
+                .where(
+                  (e) =>
+                      e.type == MatchEventType.substitution &&
+                      e.teamNationId == nationId,
+                )
+                .toList();
+            final lineups = _Lineups(
+              home: preview.playerIsHome
+                  ? _currentXi(preview)
+                  : preview.homeTeam.xi,
+              away: preview.playerIsHome
+                  ? preview.awayTeam.xi
+                  : _currentXi(preview),
+              homeCode: code(homeId),
+              awayCode: code(awayId),
+              homeSubs: subsOf(homeId),
+              awaySubs: subsOf(awayId),
+              homeBench: preview.playerIsHome
+                  ? preview.bench
+                  : preview.opponentBench,
+              awayBench: preview.playerIsHome
+                  ? preview.opponentBench
+                  : preview.bench,
+              ratings: ft
+                  ? {for (final x in r.ratings) x.playerId: x.rating}
+                  : const {},
+              energy: _liveEnergy(r),
+            );
+            final overlays = <Widget>[
+              if (_goalFlash != null)
+                _GoalFlash(
+                  event: _goalFlash!,
+                  flagCode: code(_goalFlash!.teamNationId),
+                ),
+              // Half-time interval: play only resumes on Continue (the
+              // manager may reshape the side first).
+              if (_atHalfTime)
+                HalfTimePrompt(
+                  heading: l.matchHalfTime,
+                  homeCode: code(homeId),
+                  awayCode: code(awayId),
+                  homeScore: homeScore,
+                  awayScore: awayScore,
+                  playerIsHome: preview.playerIsHome,
+                  possession: preview.playerIsHome
+                      ? r.homePossession
+                      : 100 - r.homePossession,
+                  subsUsed: _subsUsed(preview),
+                  selectedTalk: _halfTimeTalk,
+                  options: offeredTalkTones(
+                    preview.saveSeed,
+                    preview.fixture.id,
+                  ),
+                  onTalk: (tone) => _applyTeamTalk(preview, tone),
+                  onTactics: () => _openTactics(preview),
+                  onContinue: _resumeFromHalfTime,
+                ),
+              // The two extra-time intervals of a level knockout: the huddle
+              // before the first period, and the turnaround at 105'.
+              if (_atExtraTimeStart || _atExtraTimeHalf)
+                HalfTimePrompt(
+                  heading: _atExtraTimeStart
+                      ? l.matchExtraTimeAhead
+                      : l.matchExtraTimeHalf,
+                  homeCode: code(homeId),
+                  awayCode: code(awayId),
+                  homeScore: homeScore,
+                  awayScore: awayScore,
+                  playerIsHome: preview.playerIsHome,
+                  possession: preview.playerIsHome
+                      ? r.homePossession
+                      : 100 - r.homePossession,
+                  subsUsed: _subsUsed(preview),
+                  selectedTalk: _atExtraTimeStart
+                      ? _extraTimeTalk
+                      : _extraTimeHalfTalk,
+                  // A different salt per interval, so the huddle and the
+                  // turnaround don't offer the identical three lines.
+                  options: offeredTalkTones(
+                    preview.saveSeed,
+                    preview.fixture.id ^ (_atExtraTimeStart ? 0x0E71 : 0x0E72),
+                  ),
+                  onTalk: (tone) => _applyExtraTimeTalk(
+                    preview,
+                    tone,
+                    atStart: _atExtraTimeStart,
+                  ),
+                  onTactics: () => _openTactics(preview),
+                  onContinue: _resumeFromExtraTimeBreak,
+                ),
+            ];
+
+            if (tablet) {
+              return _MatchTabletLayout(
+                ft: ft,
+                topBar: topBar,
+                scoreboard: scoreboard,
+                momentum: momentum,
+                shootout: shootout,
+                timeline: timeline,
+                stats: stats,
+                lineups: lineups,
+                pitch: _livePitch(preview, r),
+                overlays: overlays,
+              );
+            }
             return DefaultTabController(
               length: 3,
               // Jump to the Stats tab (player ratings, MOTM) at full time; the
@@ -1296,206 +1530,19 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
                   children: [
                     Column(
                       children: [
-                        _TopBar(
-                          occasion: MatchStage.label(l, preview.fixture),
-                        ),
-                        MatchScoreboard(
-                          homeCode: code(homeId),
-                          awayCode: code(awayId),
-                          homeName: name(homeId),
-                          awayName: name(awayId),
-                          homeScore: homeScore,
-                          awayScore: awayScore,
-                          clock: ft
-                              ? (decidedByShootout
-                                    ? l.matchClockFullTimePenalties
-                                    : knockout != null
-                                    ? l.matchClockAfterExtraTime
-                                    : l.matchClockFullTime)
-                              : showingShootout
-                              ? l.matchClockPenalties
-                              : inExtraTime
-                              // No trailing apostrophe: it adds right-side
-                              // width that pushes the digits left of the
-                              // plate's centre. The bare number reads as the
-                              // minute and sits dead-centre.
-                              ? 'ET $_minute'
-                              : inStoppage
-                              ? '90+$_added'
-                              : '$_minute',
-                          live: !ft,
-                        ),
-                        if (!ft && !showingShootout)
-                          () {
-                            // The two nations' own colours, pushed apart from
-                            // each other when the kits are too alike to tell
-                            // which end of the bar is whose.
-                            final (homeC, awayC) = KitColors.opposed(
-                              (
-                                preview.nations[homeId]?.primaryColor ?? '',
-                                preview.nations[homeId]?.secondaryColor ?? '',
-                              ),
-                              (
-                                preview.nations[awayId]?.primaryColor ?? '',
-                                preview.nations[awayId]?.secondaryColor ?? '',
-                              ),
-                            );
-                            return _MomentumBar(
-                              homePercent: _homeMomentum(preview, homeId),
-                              homeCode: code(homeId),
-                              awayCode: code(awayId),
-                              homeColor: homeC,
-                              awayColor: awayC,
-                            );
-                          }(),
-                        if (showingShootout || decidedByShootout)
-                          _ShootoutStrip(
-                            outcome: knockout!,
-                            homeCode: code(homeId),
-                            awayCode: code(awayId),
-                            revealed: showingShootout
-                                ? _penRevealed
-                                : _penTotal,
-                            homeTakers: preview.playerIsHome
-                                ? _takerNames(preview)
-                                : const [],
-                            awayTakers: preview.playerIsHome
-                                ? const []
-                                : _takerNames(preview),
-                          ),
+                        topBar,
+                        scoreboard,
+                        ?momentum,
+                        ?shootout,
                         const MatchDetailTabs(),
                         Expanded(
                           child: TabBarView(
-                            children: [
-                              _Timeline(
-                                events: timelineEvents,
-                                live: !ft,
-                                homeId: homeId,
-                              ),
-                              MatchStatsPanel(
-                                result: r,
-                                homeCode: code(homeId),
-                                awayCode: code(awayId),
-                                homeNationId: homeId,
-                                ground: preview.ground,
-                                neutral: preview.neutralVenue,
-                                groundCode: code(
-                                  preview.ground.groundNationId,
-                                ),
-                                // Read as of the clock, exactly like the
-                                // timeline beside it, so the box score moves
-                                // through the match instead of arriving whole
-                                // at the whistle.
-                                minute: _minute,
-                                fullTime: ft,
-                                events: timelineEvents,
-                              ),
-                              _Lineups(
-                                home: preview.playerIsHome
-                                    ? _currentXi(preview)
-                                    : preview.homeTeam.xi,
-                                away: preview.playerIsHome
-                                    ? preview.awayTeam.xi
-                                    : _currentXi(preview),
-                                homeCode: code(homeId),
-                                awayCode: code(awayId),
-                                homeSubs: shown
-                                    .where(
-                                      (e) =>
-                                          e.type ==
-                                              MatchEventType.substitution &&
-                                          e.teamNationId == homeId,
-                                    )
-                                    .toList(),
-                                awaySubs: shown
-                                    .where(
-                                      (e) =>
-                                          e.type ==
-                                              MatchEventType.substitution &&
-                                          e.teamNationId == awayId,
-                                    )
-                                    .toList(),
-                                homeBench: preview.playerIsHome
-                                    ? preview.bench
-                                    : preview.opponentBench,
-                                awayBench: preview.playerIsHome
-                                    ? preview.opponentBench
-                                    : preview.bench,
-                                ratings: ft
-                                    ? {
-                                        for (final x in r.ratings)
-                                          x.playerId: x.rating,
-                                      }
-                                    : const {},
-                                energy: _liveEnergy(r),
-                              ),
-                            ],
+                            children: [timeline, stats, lineups],
                           ),
                         ),
                       ],
                     ),
-                    if (_goalFlash != null)
-                      _GoalFlash(
-                        event: _goalFlash!,
-                        flagCode: code(_goalFlash!.teamNationId),
-                      ),
-                    // Half-time interval — play only resumes on Continue (the
-                    // manager may reshape the side first).
-                    if (_atHalfTime)
-                      HalfTimePrompt(
-                        heading: l.matchHalfTime,
-                        homeCode: code(homeId),
-                        awayCode: code(awayId),
-                        homeScore: homeScore,
-                        awayScore: awayScore,
-                        playerIsHome: preview.playerIsHome,
-                        possession: preview.playerIsHome
-                            ? r.homePossession
-                            : 100 - r.homePossession,
-                        subsUsed: _subsUsed(preview),
-                        selectedTalk: _halfTimeTalk,
-                        options: offeredTalkTones(
-                          preview.saveSeed,
-                          preview.fixture.id,
-                        ),
-                        onTalk: (tone) => _applyTeamTalk(preview, tone),
-                        onTactics: () => _openTactics(preview),
-                        onContinue: _resumeFromHalfTime,
-                      ),
-                    // The two extra-time intervals of a level knockout: the
-                    // huddle before the first period, and the turnaround at 105'.
-                    if (_atExtraTimeStart || _atExtraTimeHalf)
-                      HalfTimePrompt(
-                        heading: _atExtraTimeStart
-                            ? l.matchExtraTimeAhead
-                            : l.matchExtraTimeHalf,
-                        homeCode: code(homeId),
-                        awayCode: code(awayId),
-                        homeScore: homeScore,
-                        awayScore: awayScore,
-                        playerIsHome: preview.playerIsHome,
-                        possession: preview.playerIsHome
-                            ? r.homePossession
-                            : 100 - r.homePossession,
-                        subsUsed: _subsUsed(preview),
-                        selectedTalk: _atExtraTimeStart
-                            ? _extraTimeTalk
-                            : _extraTimeHalfTalk,
-                        // A different salt per interval, so the huddle and the
-                        // turnaround don't offer the identical three lines.
-                        options: offeredTalkTones(
-                          preview.saveSeed,
-                          preview.fixture.id ^
-                              (_atExtraTimeStart ? 0x0E71 : 0x0E72),
-                        ),
-                        onTalk: (tone) => _applyExtraTimeTalk(
-                          preview,
-                          tone,
-                          atStart: _atExtraTimeStart,
-                        ),
-                        onTactics: () => _openTactics(preview),
-                        onContinue: _resumeFromExtraTimeBreak,
-                      ),
+                    ...overlays,
                   ],
                 ),
               ),
@@ -1542,7 +1589,18 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
                   top: BorderSide(color: AppColors.outlineVariant),
                 ),
               ),
-              child: SafeArea(top: false, child: bar),
+              child: SafeArea(
+                top: false,
+                child: tablet
+                    ? Center(
+                        heightFactor: 1,
+                        child: ConstrainedBox(
+                          constraints: const BoxConstraints(maxWidth: 760),
+                          child: bar,
+                        ),
+                      )
+                    : bar,
+              ),
             );
           },
         ),

@@ -14,6 +14,7 @@ import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 
 import '../helpers/expect_whole.dart';
+import '../helpers/seeded_save.dart' show kTabletSizes;
 
 /// The wall at the end of the free cycle. It is a full page rather than a
 /// sheet on purpose, so everything on it has to fit on a phone in the longer
@@ -87,6 +88,7 @@ void main() {
     WidgetTester tester, {
     Locale locale = const Locale('en'),
     double width = 400,
+    Size? size,
     List<ProductDetails> products = const [],
     bool premium = false,
     bool? storeAvailable,
@@ -95,7 +97,7 @@ void main() {
       ..available = storeAvailable ?? products.isNotEmpty
       ..products = products;
     tester.view
-      ..physicalSize = Size(width, 780)
+      ..physicalSize = size ?? Size(width, 780)
       ..devicePixelRatio = 1.0;
     addTearDown(tester.view.reset);
     addTearDown(store._purchases.close);
@@ -277,6 +279,41 @@ void main() {
     await tester.pumpAndSettle();
     expect(carriedOn, isFalse);
   });
+
+  // On an iPad the wall is the purchase moment too. Stretched across a
+  // landscape window it was a phone page 1160 wide; the body is held to 560
+  // in the middle, and the buttons are the phone's own.
+  for (final size in kTabletSizes) {
+    testWidgets('a tablet holds the wall to 560 in the middle, $size', (
+      tester,
+    ) async {
+      final store = await pumpGate(
+        tester,
+        size: size,
+        products: [_product('249,00 Kč')],
+      );
+      expect(tester.takeException(), isNull);
+      final buy = find.widgetWithText(PrimaryButton, 'BUY AND CONTINUE');
+      expect(buy, findsOneWidget);
+      final rect = tester.getRect(buy);
+      expect(rect.width, lessThanOrEqualTo(560));
+      expect(rect.center.dx, closeTo(size.width / 2, 1));
+
+      expect(store.restores, 0);
+      await tester.tap(find.text('Restore purchases'));
+      await tester.pump();
+      expect(store.restores, 1);
+      // The restore gives up after its timeout, as on the phone.
+      await tester.pump(const Duration(seconds: 9));
+      await tester.pumpAndSettle();
+
+      expect(store.buys, 0);
+      await tester.tap(buy);
+      await tester.pump();
+      await tester.pump();
+      expect(store.buys, 1);
+    });
+  }
 
   for (final locale in [const Locale('en'), const Locale('cs')]) {
     for (final width in [360.0, 400.0]) {

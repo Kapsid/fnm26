@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/features/settings/settings_providers.dart';
 import 'package:fnm/core/util/competition_label.dart';
+import 'package:fnm/core/layout/form_factor.dart';
 import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
@@ -93,6 +94,8 @@ tournamentKickoffProvider = FutureProvider.autoDispose
 class TournamentKickoffScreen extends ConsumerWidget {
   const TournamentKickoffScreen({required this.careerId, this.conf, super.key});
 
+  static const Key landscapeKey = Key('kickoff.landscape');
+
   final int careerId;
 
   /// The confederation whose cup is kicking off, or null for the World Cup.
@@ -115,12 +118,40 @@ class TournamentKickoffScreen extends ConsumerWidget {
     context.go('${Routes.hub}?careerId=$careerId');
   }
 
+  /// The entrance: everything rises and fades in, overshooting a little.
+  Widget _rise(Widget child) => TweenAnimationBuilder<double>(
+    tween: Tween(begin: 0, end: 1),
+    duration: const Duration(milliseconds: 1100),
+    curve: Curves.easeOutBack,
+    builder: (context, t, child) {
+      final c = t.clamp(0.0, 1.0);
+      return Opacity(
+        opacity: c,
+        child: Transform.scale(scale: 0.55 + 0.45 * c, child: child),
+      );
+    },
+    child: child,
+  );
+
+  Widget _trophy(
+    KickoffData? data, {
+    required double height,
+    required double iconSize,
+  }) => Image.asset(
+    data?.trophyAsset ?? Trophies.worldCup,
+    height: height,
+    fit: BoxFit.contain,
+    errorBuilder: (_, _, _) =>
+        Icon(Icons.emoji_events, size: iconSize, color: AppColors.primary),
+  );
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l = AppLocalizations.of(context);
     final async = ref.watch(
       tournamentKickoffProvider((careerId: careerId, conf: conf)),
     );
+    final landscape = useTabletLayout(context, ref);
     return Scaffold(
       body: SafeArea(
         child: async.when(
@@ -131,25 +162,76 @@ class TournamentKickoffScreen extends ConsumerWidget {
                 ? l.tourSharedHostTbc
                 : data.hostNames.join('  ·  ').toUpperCase();
             final title = data == null ? '' : '${data.title} ${data.year}';
+            if (landscape) {
+              return Row(
+                key: landscapeKey,
+                children: [
+                  Expanded(
+                    child: Center(
+                      child: _rise(_trophy(data, height: 320, iconSize: 200)),
+                    ),
+                  ),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.all(AppSpacing.xl),
+                      child: _rise(
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              title,
+                              style: AppTypography.labelMedium.copyWith(
+                                color: AppColors.primary,
+                                letterSpacing: 3,
+                              ),
+                            ),
+                            const SizedBox(height: AppSpacing.md),
+                            Text(
+                              l.tourSharedFinalsAreHere,
+                              style: AppTypography.headlineMedium.copyWith(
+                                color: AppColors.onSurface,
+                              ),
+                            ),
+                            const SizedBox(height: AppSpacing.md),
+                            if (data != null && data.hostCodes.isNotEmpty)
+                              Wrap(
+                                spacing: AppSpacing.sm,
+                                children: [
+                                  for (final c in data.hostCodes)
+                                    FlagDisc(c, size: 36),
+                                ],
+                              ),
+                            const SizedBox(height: AppSpacing.sm),
+                            Text(
+                              l.tourHostedBy(hostLabel),
+                              style: AppTypography.labelSmall.copyWith(
+                                color: AppColors.onSurfaceVariant,
+                              ),
+                            ),
+                            const SizedBox(height: AppSpacing.xl),
+                            SizedBox(
+                              width: 320,
+                              child: PrimaryButton(
+                                label: l.tourSharedLetFinalsBegin,
+                                icon: Icons.sports_soccer,
+                                onPressed: () => _begin(context, ref),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              );
+            }
             return Column(
               children: [
                 Expanded(
                   child: Center(
-                    child: TweenAnimationBuilder<double>(
-                      tween: Tween(begin: 0, end: 1),
-                      duration: const Duration(milliseconds: 1100),
-                      curve: Curves.easeOutBack,
-                      builder: (context, t, child) {
-                        final c = t.clamp(0.0, 1.0);
-                        return Opacity(
-                          opacity: c,
-                          child: Transform.scale(
-                            scale: 0.55 + 0.45 * c,
-                            child: child,
-                          ),
-                        );
-                      },
-                      child: Padding(
+                    child: _rise(
+                      Padding(
                         padding: const EdgeInsets.all(AppSpacing.xl),
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
@@ -163,16 +245,7 @@ class TournamentKickoffScreen extends ConsumerWidget {
                               ),
                             ),
                             const SizedBox(height: AppSpacing.lg),
-                            Image.asset(
-                              data?.trophyAsset ?? Trophies.worldCup,
-                              height: 220,
-                              fit: BoxFit.contain,
-                              errorBuilder: (_, _, _) => const Icon(
-                                Icons.emoji_events,
-                                size: 140,
-                                color: AppColors.primary,
-                              ),
-                            ),
+                            _trophy(data, height: 220, iconSize: 140),
                             const SizedBox(height: AppSpacing.lg),
                             Text(
                               l.tourSharedFinalsAreHere,

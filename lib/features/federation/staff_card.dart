@@ -10,6 +10,7 @@ import 'package:fnm/features/federation/staff_effect.dart';
 import 'package:fnm/features/federation/staff_providers.dart';
 import 'package:fnm/features/manager/manager_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
+import 'package:fnm/shared/tablet/adaptive_sheet.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 
 String roleName(AppLocalizations l, StaffRole role) => switch (role) {
@@ -63,7 +64,7 @@ class StaffCard extends ConsumerWidget {
     StaffRoom room,
   ) async {
     final l = AppLocalizations.of(context);
-    final picked = await showModalBottomSheet<int?>(
+    final picked = await showAdaptiveSheet<int?>(
       context: context,
       backgroundColor: AppColors.surfaceContainerLowest,
       builder: (sheetContext) => SafeArea(
@@ -146,6 +147,10 @@ class StaffCard extends ConsumerWidget {
       ),
     );
     if (picked == null) return;
+    // `ref` is used after the picker's await. On the budget page that holds
+    // across a resize across 1000 (which swaps the tablet and phone layouts)
+    // only because the card carries the `TourKeys.budgetStaff` GlobalKey, so
+    // its element is re-parented rather than unmounted.
     await ref
         .read(managerServiceProvider)
         .hire(careerId, role, picked == -1 ? null : picked);

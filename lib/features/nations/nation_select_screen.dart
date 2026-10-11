@@ -2,18 +2,23 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:fnm/core/util/competition_label.dart';
+import 'package:fnm/core/layout/form_factor.dart';
 import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
+import 'package:fnm/core/util/competition_label.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/entities/player.dart';
+import 'package:fnm/features/nations/nation_preview.dart';
 import 'package:fnm/features/nations/nation_select_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
+import 'package:fnm/shared/tablet/tablet.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
+
+part 'nation_select_tablet_layout.dart';
 
 /// Country selection — pick the national team to manage.
 ///
@@ -27,11 +32,42 @@ import 'package:go_router/go_router.dart';
 /// means anything before a nation is chosen. The real [AppBottomNav] needs a
 /// careerId, and there is no career yet. A bar that cannot go anywhere is
 /// worse than no bar, so until the save exists there is none.
-class NationSelectScreen extends ConsumerWidget {
+class NationSelectScreen extends ConsumerStatefulWidget {
   const NationSelectScreen({super.key});
 
+  static const Key tabletLayoutKey = Key('nationSelect.tabletLayout');
+  static const Key topBarKey = Key('nationSelect.topBar');
+  static const Key backKey = Key('nationSelect.back');
+  static const Key gridKey = Key('nationSelect.grid');
+  static const Key previewKey = Key('nationSelect.preview');
+  static const Key manageKey = Key('nationSelect.manage');
+
+  /// The tablet tile of the nation with [nationId].
+  static Key tileKey(int nationId) => ValueKey(('nationTile', nationId));
+
+  /// The tablet chip of [confederation].
+  static Key chipKey(Confederation confederation) =>
+      ValueKey(('confChip', confederation));
+
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<NationSelectScreen> createState() => _NationSelectScreenState();
+}
+
+class _NationSelectScreenState extends ConsumerState<NationSelectScreen> {
+  /// The nation previewed beside the tiles on a tablet. Held here, not in
+  /// the tablet layout, so a window crossing 1000 px keeps it.
+  int? _previewId;
+
+  void _preview(int nationId) => setState(() => _previewId = nationId);
+
+  @override
+  Widget build(BuildContext context) {
+    if (useTabletLayout(context, ref)) {
+      return _NationSelectTabletLayout(
+        previewId: _previewId,
+        onPreview: _preview,
+      );
+    }
     final nationsAsync = ref.watch(nationsProvider);
     final stars = ref.watch(starPlayersProvider).valueOrNull ?? const {};
     final selectedConf = ref.watch(selectedConfederationProvider);
@@ -79,16 +115,7 @@ class NationSelectScreen extends ConsumerWidget {
                 ),
               ),
               data: (nations) {
-                // With a search query, look across every confederation (so a
-                // nation is findable from any tab); otherwise show the selected
-                // confederation.
-                final filtered = nations
-                    .where(
-                      (n) => query.isEmpty
-                          ? n.confederation == selectedConf
-                          : n.name.toLowerCase().contains(query),
-                    )
-                    .toList();
+                final filtered = _filterNations(nations, selectedConf, query);
 
                 if (filtered.isEmpty) {
                   return Center(child: Text(l.nationsNoMatch));
@@ -122,15 +149,30 @@ class NationSelectScreen extends ConsumerWidget {
       ),
     );
   }
+}
 
-  /// Picks a nation at random from everything this player may manage and goes
-  /// straight to naming the manager.
-  void _startRandom(BuildContext context, List<Nation>? nations) {
-    final pool = nations ?? const <Nation>[];
-    if (pool.isEmpty) return;
-    final pick = pool[Random().nextInt(pool.length)];
-    context.go('${Routes.newGame}?nationId=${pick.id}');
-  }
+/// The nations on show: with a search [query], every confederation's matches
+/// (so a nation is findable from any tab); otherwise the [selected]
+/// confederation's. Both layouts filter through here.
+List<Nation> _filterNations(
+  List<Nation> nations,
+  Confederation selected,
+  String query,
+) => nations
+    .where(
+      (n) => query.isEmpty
+          ? n.confederation == selected
+          : n.name.toLowerCase().contains(query),
+    )
+    .toList();
+
+/// Picks a nation at random from everything this player may manage and goes
+/// straight to naming the manager.
+void _startRandom(BuildContext context, List<Nation>? nations) {
+  final pool = nations ?? const <Nation>[];
+  if (pool.isEmpty) return;
+  final pick = pool[Random().nextInt(pool.length)];
+  context.go('${Routes.newGame}?nationId=${pick.id}');
 }
 
 class _Header extends StatelessWidget {

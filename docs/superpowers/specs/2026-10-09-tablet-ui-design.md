@@ -152,6 +152,319 @@ inside the shell.
 
 Each stage gets its own implementation plan.
 
+## Stage 1 adjustments (2026-10-09)
+
+- Training camp and Naturalization are not in the sidebar: they are event
+  screens that Continue opens when due.
+- Settings, diagnostics and the dev gallery are full-screen routes outside the
+  shell (no `careerId`, so no save for the top bar).
+- `DetailPaneHost` and the `*View` extractions move to stage 2, where Squad
+  first hosts a detail pane; `MasterDetail` ships in stage 1.
+- Stage 1 checks route parity (every path registered on tablet, full-screen
+  paths outside the shell). Pumping every route on a seeded save moves to
+  stage 2.
+- iPad uses `UIRequiresFullScreen` (required for landscape-only iPad apps).
+- German and Spanish ARB files are not on this branch; the 22 new keys must be
+  added to them when that work merges (values in the stage 1 plan, Task 3).
+- On tablets, sheets are dialogs of a fixed width min(560, window width - 64)
+  on the root navigator.
+
+## Stage 2 adjustments (2026-10-09)
+
+- Inbox filters are All, Board, Competitions, Squad: Press and Scouting are
+  not inbox categories.
+- Tactics tabs are Formation (instructions under it), Roles and set pieces,
+  Opposition. Roles and set pieces stay one tab, as on the phone.
+- The Opposition tab reuses the preview's briefing. Its danger men are the
+  opponent pool's best three (`opponentKeyMenProvider`), so Tactics never
+  keeps the pre-simulated match preview alive. It shows nothing of the
+  opponent until his draw has been watched.
+- The match centre is the manager's live shape on the tactics pitch (read
+  only; a tap opens the editor) above the momentum bar. There is no 2D ball
+  view and no shouts; the bottom bar is the existing control bar.
+- Substitutions "alongside the pitch" means the in-match editor's landscape
+  layout: pitch left, lists and instructions right.
+- The hub has no in-body Continue on tablet; the top bar's carries the tour
+  key. Its Next-match panel links to Call-ups and Tactics, not the preview.
+- Full-screen routes without a tablet layout yet are drawn centred at 600.
+- Full-screen routes choose their tablet layout with `useTabletLayout`
+  (tablet at startup AND a tablet-sized window).
+- Tablet layouts need a window at least 1000 logical px wide
+  (`kTabletLayoutMinWidth`); narrower tablet windows (iPadOS 26 resizable
+  windows, split view) get the phone app. Sheets stay dialogs on any
+  tablet-sized window.
+- In-shell pages are framed per page: routes not in `tabletReadyPaths` are
+  wrapped in a phone-width frame inside the tablet router; `TabletShell`
+  gives the full content area.
+- `PanelBox` is a Material, so ink is visible inside panels.
+- `DataGrid` scrolls sideways (header and body together) when its columns
+  do not fit.
+- Live match: player ratings are shown from full time only. They are
+  pre-simulated, so showing them live would spoil the result.
+- On tablet the top bar Continue owns the onboarding tour's hub target, and
+  the sidebar Squad item owns the Squad tour target.
+- Test harness: the seeded-save settle waits until no spinner is showing
+  (10 s cap); `countryCitiesProvider` is overridden from disk in tests,
+  because a cached `rootBundle` load never completes for the second test in
+  a file.
+- Phone guards are golden files on a seeded save at 390 x 844
+  (`test/golden/`).
+- German and Spanish need the 8 stage 2 keys when they merge (values in the
+  stage 2 plan, Task 2).
+
+## Stage 3 adjustments (2026-10-09)
+
+- The Tournaments pane shows the picked competition's OWN tabs (the World
+  Championship's nine, a continental cup's seven or eight, the Nations
+  Cup's four, the Clash's two), not a new Groups, Fixtures, Play-offs,
+  Stats set. A competition with nothing played yet says "Tournament coming
+  soon". The pane opens on the competition being played now.
+- Cup, continental and Nations Cup detail keep their tabs; group tables sit
+  in columns (as many 280 px columns as fit, up to three) and the bracket
+  opens as a bracket stretched across the width.
+- Results (not in the layouts table): the manager's cycles on the left, the
+  picked cycle's competitions on the right as panels of dense rows.
+- Ranking: a `DataGrid` with the nation's record (`NationView`, a new
+  detail pane target) beside it, the manager's own nation open first. The
+  phone's "ranking over time" chart is not repeated; the nation's record
+  carries its ranking history.
+- The Continental Clash and the intercontinental play-off (not in the
+  table) keep their phone content at a readable width; the play-off's
+  Continue sits in its heading.
+- Draw ceremonies choose their landscape stage inside the ceremony, so a
+  resize keeps the draw. The finals draw's seeding pots sit side by side;
+  the host selection puts the envelope beside the bids; the kickoff puts
+  the trophy beside the words.
+- A tablet's top-bar Continue runs the sim under any screen, so the sim's
+  cascade invalidates every competition screen's provider
+  (`SeasonService._invalidateCompetitionViews`).
+- The seeded-save `settle` fails when a screen is still loading at its
+  cap; the route sweep runs at 1194, 1080 and 1024 wide and covers the
+  full-screen routes.
+- German and Spanish need the 9 stage 3 keys when they merge (values in the
+  stage 3 plan, Task 3).
+- The top bar is 64 px high; the compact Continue is 44 px tall and 260
+  wide so the brushed-metal button reads.
+- `DataGrid` has a `DataGridController` (`indexOf`, `revealRow`) so
+  "centre on my nation" follows the current sort.
+- The competition detail screens share `TabletTabBar` and
+  `TabletDetailPage`.
+- The draw ceremonies, the finals draw, the host draw and the kickoff
+  choose landscape inside their own State, so resizing keeps the draws'
+  state; the kickoff's entrance fade replays when the window crosses
+  1000px. Those routes are tablet-ready.
+- On non-English phones, five previously hard-coded English strings in the
+  draw screens are now translated ("GROUP", "Start the draw", "View
+  groups", "HOST" and "CO-HOSTS"). English is unchanged.
+- Known pre-existing phone bug, not fixed on this branch: on the phone
+  Tournaments screen, 6 tiles with two-line names overflow by 16 px at 390
+  wide. The phone guard pins it.
+- Test harness: `settle` advances fake time only after its minimum rounds
+  while a spinner shows; the full-screen route sweep is its own file.
+
+## Stage 4 adjustments (2026-10-10)
+
+- Finances and board objectives are `DashboardGrid`s of panels. The
+  manager's page is not: the staff card sizes its names with a
+  `LayoutBuilder`, which a dashboard row cannot measure, so the page is two
+  scrolling columns of the phone's cards, skills left, name and staff
+  right. Hiring stays on the budget screen.
+- Budget setup: the sliders (with their blurbs) left; the staff, a "What
+  this budget buys" panel and the Confirm bar right. The sliders' own
+  effect lines are hidden on a tablet (`InvestmentEditor.showEffects`), so
+  each effect is stated once. Both layouts read one set of numbers
+  (`_budgetFor`) and one Confirm, and an allocation in progress survives a
+  resize across 1000 px.
+- Youth: the watchlist and the five levels are tabs over sortable grids,
+  with the picked boy's card in a detail pane and the U-21 call-ups in the
+  heading.
+- Y: the timeline in the centre; beside it "Trending" (the conversations
+  above the seam with the most posts) and "Voices" (the accounts that post
+  most). A post or an account opens in that side column instead of a page
+  of its own. The feed is marked read again whenever it refreshes while on
+  show.
+- Training camp: the host card over the camps as a grid of the phone's
+  cards (four camps two to a row, a co-hosted six three to a row where
+  they fit). Naturalisation: the offer and the two answers left, the
+  player's full card right. Both are event pages with no back arrow, as on
+  the phone.
+- The sim's cascade also refreshes the federation, manager and Y screens
+  (`SeasonService._invalidateFederationViews`): the prize money, the
+  balance, the manager's points, the youth pyramid and watchlist, the Y
+  feed, a pending naturalisation offer and the base camp.
+- A naturalisation decision refreshes the hub's data, so the tablet top
+  bar (which keeps it alive) stops offering the decision just taken.
+- The competition views' tab key (`ValueKey(liveTab)`) is kept: a refresh
+  that leaves the stage where it was keeps the manager's tab; a real stage
+  change re-lands on the live stage.
+- `TabletPage` (heading over content) frames the in-shell pages of this
+  stage.
+- The budget sliders here are the €500k ones on this branch. The
+  budget-levels work merges into `_budgetFor`, `budgetReady` and
+  `InvestmentEditor` only, which both layouts share.
+- German and Spanish need the 9 stage 4 keys when they merge (values in the
+  stage 4 plan, Task 2).
+- A decision page that saves and then moves on (budget, base camp,
+  naturalisation) takes what it needs before the save and goes to the hub
+  only if the manager is still on that page (`router.state`, which sees
+  pushed pages too), so a resize or a trip to Settings mid-save never loses
+  the choice or pulls him away.
+- Accepting a naturalisation also refreshes the inbox, so the tablet top
+  bar's unread count includes the new message.
+- The budget's back arrow says "Decide later" on a tablet too
+  (`TabletScreenHeader.backTooltip`).
+- Some widget tests override a provider the screen invalidates but nothing
+  watches: Riverpod 2.6.1 throws at container teardown for an invalidated
+  element that was never rebuilt. Test-only; revisit at the Riverpod 3
+  upgrade.
+
+## Stage 5 adjustments (2026-10-10)
+
+- The record book, the world's all-time records and the legends are
+  sortable `DataGrid`s (tabs for the record book's three boards, the
+  world's four and the legends' hall of fame and XI) beside the player
+  pane. Leaderboards on a tablet are never `LeaderRow`s in a dashboard
+  tile: the row is built on `WholeText`, which a tile cannot measure. The
+  record book's headline records and fiercest rival are panels above its
+  grids; the all-time search is the screen State's, so a resize keeps it.
+- Head to head: the two nation slots and the manager's ledger (a grid) on
+  the left; the picked pairing on the right, its record above every
+  meeting. The pair is the State's, so a resize keeps it; the slots open
+  the phone's picker, a root dialog that pops with its own context. The
+  meetings body is `H2hMeetingsView`, which the `/h2h-meetings` page also
+  renders. It is not a `DetailTarget` yet: the match preview's head-to-head
+  link still routes to its page.
+- Achievements and challenges: the categories (tiers) down the left
+  (`TabletListRow`, a new kit widget), the picked one's cards beside them
+  in a two-column `ColumnFlow`. An achievement has no more to show than its
+  card, so there is no detail pane.
+- The career summary and the manager's career are two columns of the
+  phone's cards. `CareerSummaryView` is the career summary's body; the
+  Career page and the saves list show it in a pane.
+- "Careers / saves" is two screens. The Career page (`/careers`) is the
+  phone's menu beside the manager's career summary; the saves list
+  (`/saves`) is a table of saves beside the picked save's career, with
+  Continue, Back up and Delete acting on that save. Deleting the picked
+  save falls back to the first. There is no save rename in the app.
+- Home is a landscape title screen: the logo and title left, Continue, New
+  game and the saves right. The new-game flow (nation select, new game,
+  start from the bottom), team stats and the cycle rollover keep their
+  phone layouts centred; they are left for stage 6.
+- Sidebar destinations go back with pop or to the hub; pages under one go
+  back to it (all-time records to records, meetings to head to head,
+  challenges to achievements, the career pages to Career). The Career page
+  has no back arrow, as on the phone.
+- The sim's cascade also refreshes the history screens
+  (`SeasonService._invalidateHistoryViews`): the record book and rivalry,
+  the legends, the world's boards, head to head, achievements and
+  challenges, the career summary and its numbers, and the manager's career
+  with its strength curve.
+- Every share sheet passes `sharePositionOrigin` (`shareOriginOf`): an iPad
+  refuses one without it, which made exporting a save fail on iPad. The
+  tablet's buttons pass their own rect; the phone's pass the screen's,
+  which an iPhone ignores.
+- Exporting or backing up a save on an iPad works: every share sheet is
+  anchored to the button that opened it, clipped to the screen
+  (`shareOriginOf`), because iPadOS refuses a share sheet whose anchor is
+  missing or off screen.
+- A sim step also refreshes the player card shown beside any grid
+  (`invalidatePlayerDetails`), so the card and the list it sits beside
+  never disagree.
+- The saves list shows the picked save's career; Continue, Back up and
+  Delete act on that save, and a deleted save never stays on show.
+- The saves delete dialog pops with its own context and takes its services
+  before it opens.
+- German and Spanish need the 15 stage 5 keys when they merge (values in
+  the stage 5 plan, Task 2).
+- Stage 6 is cut to converting the remaining screens only (nation select
+  as a tile grid, new game, start from the bottom, team stats, cycle
+  rollover). The column picker, the collapsible sidebar, store
+  screenshots, the iPad listing and the Android tablet check are dropped
+  from this release.
+
+## Stage 6 adjustments (2026-10-11)
+
+- Stage 6 converted every route that was not tablet-ready except the
+  dev-only style gallery: the nation pick, new game, start from the
+  bottom, team records, cycle rollover, settings, friendlies, the player
+  page, the nation page and diagnostics. After it, nothing in the shell is
+  drawn at phone width; the gallery is the one route still in
+  `FullScreenPhoneFrame`. The column picker, the collapsible sidebar,
+  store screenshots, the iPad listing and the Android tablet check were
+  dropped from this release, and with the column picker the persisted
+  per-table view the "Out of scope" section mentions.
+- The nation pick is the approved tile grid: a bar with back, the title,
+  the search, Random team and From the bottom; confederation chips with
+  counts; tiles with the world rank, a five-bar strength meter, the flag,
+  the name and the best player's position and rating. A tap previews the
+  nation in a pane (`NationPreview`); only "Manage <nation>" starts the
+  new game. The preview is the screen State's, so a resize keeps it; the
+  search and the confederation are the phone's providers.
+- `NationPreview` shows only what exists before a career, as the save
+  will see it: the world rank (the seed ranking), the strength (which
+  fifth of the world the squad overall falls in), the squad overall (the
+  same ratings the world simulation uses; the save's seed only renames
+  and re-clubs players), the opening budget
+  (`FederationFinance.initialBudget`, what a new save stores), the best
+  player's position, age and rating, and the first cycle's World
+  Championship and continental briefs (`openingObjectiveTargets`, the
+  targets the board then sets). No player name: every save names its
+  players afresh. The Nations Cup brief is left to the board screen.
+- New game puts the name form beside that preview; out of work puts the
+  three offers side by side, each a preview over its Take it. The offers
+  are the screen State's draw, so a resize keeps them;
+  `unemployedOfferSeedProvider` (a `Provider<int?>`, null in the app,
+  overridden in tests) pins the draw in tests only.
+- The cycle rollover keeps its three steps, each in two columns, with the
+  phone's "Back to your saves" on every step. It needs no cascade (a
+  full-screen route: the shell is torn down while it runs, and the roll
+  invalidates the hub's data itself); it refreshes the inbox through a
+  captured container and goes to the hub only for a manager still on it.
+- Settings are two columns of the phone's cards (now one widget each);
+  the backup export keeps its share anchor. Diagnostics put the log
+  across the screen with Copy and Clear in the heading.
+- Friendlies: the picks and Confirm beside every window's card; the picks
+  are the State's. The team records are the record book's shape (tabs
+  over sortable grids beside the player pane). The player and nation pages
+  are two columns; their detail panes keep one.
+- There is no `TeamStatsView`: nothing opens the team records beside a
+  list.
+- The sim's cascade also refreshes the team records (`teamStatsProvider`,
+  moved to `stats_providers.dart`), the friendlies plan (the hub's next
+  event reads the same plan), and the player card's club history and
+  cabinet (`invalidatePlayerDetails`).
+- New game, the rollover and friendlies take the router before their
+  write and navigate after it only if the manager is still on that page.
+- `shell_frame_transition_test` was retired when team stats converted:
+  no phone-framed in-shell page is left to leave for. The shell sweep
+  fails on any in-shell route without a tablet layout instead.
+- German and Spanish need the 15 stage 6 keys when they merge (values in
+  the stage 6 plan, Task 1).
+- Every write a manager can tap twice ignores the second tap while the
+  first is running: starting a career, starting the next cycle, the
+  backup card's export and restore, Back up all on the saves list,
+  booking friendlies, answering a grievance and clearing the diagnostics
+  log. A failed friendlies, new game or restore write leaves its button
+  usable again. These are the only phone-path behaviour changes of stage
+  6, and each is pinned by a test.
+- The premium gate is centred at 560 px on a tablet so the purchase
+  moment is not a stretched phone page.
+- Team stats puts the strength curve beside the team header only when the
+  master column is at least 744 px, so the record values are never cut
+  off; on every iPad width it sits under the header.
+- Nation select follows the approved tile mockup
+  (https://claude.ai/artifact/8MU7ytHt5oKZaXnMPuahaw). Its preview shows
+  only facts the created save really gets: world rank, opening budget,
+  the World Championship and continental briefs, the squad overall, the
+  strength tier and the best player's position, age and rating (no name,
+  since each save renames its players).
+- The shell sweep fails on any in-shell route without a tablet layout,
+  and the full-screen sweep fails on any full-screen route other than the
+  developer gallery that is still phone-framed.
+- Not done in this release, by the user's decision: the column picker,
+  the collapsible sidebar, store screenshots, the iPad listing and the
+  Android tablet check.
+
 ## Testing
 
 - **Phone guard**: before a screen gets a tablet layout, a widget or golden

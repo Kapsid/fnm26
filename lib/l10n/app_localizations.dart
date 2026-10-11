@@ -14586,6 +14586,474 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No change to his rating next match'**
   String get playerFormNoEffect;
+
+  /// Tablet sidebar: section heading over Hub, Inbox and Y.
+  ///
+  /// In en, this message translates to:
+  /// **'Home'**
+  String get sideGroupHome;
+
+  /// Tablet sidebar: section heading over squad, tactics, call-ups and youth.
+  ///
+  /// In en, this message translates to:
+  /// **'Team'**
+  String get sideGroupTeam;
+
+  /// Tablet sidebar: section heading over tournaments, Nations Cup, ranking and results.
+  ///
+  /// In en, this message translates to:
+  /// **'Competitions'**
+  String get sideGroupCompetitions;
+
+  /// Tablet sidebar: section heading over finances, board and manager.
+  ///
+  /// In en, this message translates to:
+  /// **'Federation'**
+  String get sideGroupFederation;
+
+  /// Tablet sidebar: section heading over records, legends, head to head, achievements and career.
+  ///
+  /// In en, this message translates to:
+  /// **'History'**
+  String get sideGroupHistory;
+
+  /// Tablet sidebar item: the messages screen.
+  ///
+  /// In en, this message translates to:
+  /// **'Inbox'**
+  String get sideInbox;
+
+  /// Tablet sidebar item: the squad list.
+  ///
+  /// In en, this message translates to:
+  /// **'Squad'**
+  String get sideSquad;
+
+  /// Tablet sidebar item: line-up and instructions.
+  ///
+  /// In en, this message translates to:
+  /// **'Tactics'**
+  String get sideTactics;
+
+  /// Tablet sidebar item: squad selection.
+  ///
+  /// In en, this message translates to:
+  /// **'Call-ups'**
+  String get sideCallUps;
+
+  /// Tablet sidebar item: tournaments and standings.
+  ///
+  /// In en, this message translates to:
+  /// **'Tournaments'**
+  String get sideTournaments;
+
+  /// Tablet sidebar item: the world ranking.
+  ///
+  /// In en, this message translates to:
+  /// **'Ranking'**
+  String get sideRanking;
+
+  /// Tablet sidebar item: results and fixtures.
+  ///
+  /// In en, this message translates to:
+  /// **'Results'**
+  String get sideResults;
+
+  /// Tablet sidebar item: federation finances.
+  ///
+  /// In en, this message translates to:
+  /// **'Finances'**
+  String get sideFinances;
+
+  /// Tablet sidebar item: board objectives.
+  ///
+  /// In en, this message translates to:
+  /// **'Board'**
+  String get sideBoard;
+
+  /// Tablet sidebar item: manager skills, staff and training.
+  ///
+  /// In en, this message translates to:
+  /// **'Manager & staff'**
+  String get sideManager;
+
+  /// Tablet sidebar item: the record book.
+  ///
+  /// In en, this message translates to:
+  /// **'Records'**
+  String get sideRecords;
+
+  /// Tablet sidebar item: all-time XI and hall of fame.
+  ///
+  /// In en, this message translates to:
+  /// **'Legends'**
+  String get sideLegends;
+
+  /// Tablet sidebar item: compare two nations.
+  ///
+  /// In en, this message translates to:
+  /// **'Head to head'**
+  String get sideHeadToHead;
+
+  /// Tablet sidebar item: achievements.
+  ///
+  /// In en, this message translates to:
+  /// **'Achievements'**
+  String get sideAchievements;
+
+  /// Tablet sidebar item: the manager's careers.
+  ///
+  /// In en, this message translates to:
+  /// **'Career'**
+  String get sideCareer;
+
+  /// Tablet top bar: label before the next fixture.
+  ///
+  /// In en, this message translates to:
+  /// **'Next'**
+  String get topBarNext;
+
+  /// Tablet top bar: shown instead of the opponent until the draw has been watched.
+  ///
+  /// In en, this message translates to:
+  /// **'Draw to come'**
+  String get topBarDrawPending;
+
+  /// Tablet detail pane: link that opens the player's full page.
+  ///
+  /// In en, this message translates to:
+  /// **'Full profile'**
+  String get paneFullProfile;
+
+  /// Tablet detail pane: shown while no player is selected.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick a player to see his card here'**
+  String get panePickPlayer;
+
+  /// Tablet inbox: shown in the reading pane while no message is open.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick a message to read it here'**
+  String get inboxPickMessage;
+
+  /// Tablet inbox filter chip: every message.
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get inboxFilterAll;
+
+  /// Tablet dashboard panel header link to the panel's full screen.
+  ///
+  /// In en, this message translates to:
+  /// **'View all'**
+  String get panelViewAll;
+
+  /// Tablet squad table: the default set of columns.
+  ///
+  /// In en, this message translates to:
+  /// **'Overview'**
+  String get gridViewOverview;
+
+  /// Tablet squad table column: how fresh or tired a player is.
+  ///
+  /// In en, this message translates to:
+  /// **'Condition'**
+  String get gridColCondition;
+
+  /// Tablet squad table column: injured or suspended, empty when available.
+  ///
+  /// In en, this message translates to:
+  /// **'Status'**
+  String get gridColStatus;
+
+  /// Tablet ranking table column: the nation's world ranking position.
+  ///
+  /// In en, this message translates to:
+  /// **'Rank'**
+  String get gridColRank;
+
+  /// Tablet ranking table column: places climbed or dropped since the last ranking freeze.
+  ///
+  /// In en, this message translates to:
+  /// **'Move'**
+  String get gridColMove;
+
+  /// Tablet ranking table column: the national team.
+  ///
+  /// In en, this message translates to:
+  /// **'Nation'**
+  String get gridColNation;
+
+  /// Tablet ranking table column: the nation's confederation.
+  ///
+  /// In en, this message translates to:
+  /// **'Region'**
+  String get gridColRegion;
+
+  /// Tablet ranking table column: world ranking points.
+  ///
+  /// In en, this message translates to:
+  /// **'Points'**
+  String get gridColPoints;
+
+  /// Tablet detail pane: shown while no nation is selected.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick a nation to see its record here'**
+  String get panePickNation;
+
+  /// Tablet results screen: heading of the list of the manager's four-year cycles.
+  ///
+  /// In en, this message translates to:
+  /// **'Cycles'**
+  String get resultsCyclesTitle;
+
+  /// World Championship finals draw: button that starts the ball-drawing ceremony.
+  ///
+  /// In en, this message translates to:
+  /// **'Start the draw'**
+  String get tourDrawStart;
+
+  /// World Championship finals draw, already watched: button that opens the drawn groups.
+  ///
+  /// In en, this message translates to:
+  /// **'View groups'**
+  String get tourDrawViewGroups;
+
+  /// Tablet youth table column: the scout's star read on how good a boy can become.
+  ///
+  /// In en, this message translates to:
+  /// **'Ceiling'**
+  String get gridColCeiling;
+
+  /// Tablet youth table column: rating points a boy gained over the last year.
+  ///
+  /// In en, this message translates to:
+  /// **'Gain'**
+  String get gridColYearGain;
+
+  /// Tablet youth watchlist column: the boy's rating when the manager put him on the list.
+  ///
+  /// In en, this message translates to:
+  /// **'When marked'**
+  String get gridColMarkedAt;
+
+  /// Tablet budget setup screen heading.
+  ///
+  /// In en, this message translates to:
+  /// **'Set your budget'**
+  String get budgetSetupTitle;
+
+  /// Tablet budget setup: panel listing what each department's money buys this cycle.
+  ///
+  /// In en, this message translates to:
+  /// **'What this budget buys'**
+  String get budgetEffectsTitle;
+
+  /// Tablet naturalisation decision screen heading.
+  ///
+  /// In en, this message translates to:
+  /// **'Naturalisation'**
+  String get naturalisationTitle;
+
+  /// Tablet Y feed side panel: the conversations with the most posts.
+  ///
+  /// In en, this message translates to:
+  /// **'Trending'**
+  String get yTrending;
+
+  /// Tablet Y feed side panel: the accounts that post the most.
+  ///
+  /// In en, this message translates to:
+  /// **'Voices'**
+  String get yVoices;
+
+  /// Tablet Y feed side pane heading: one post and the replies to it.
+  ///
+  /// In en, this message translates to:
+  /// **'Conversation'**
+  String get yConversation;
+
+  /// Tablet all-time records screen heading: the greatest players of every nation in the save.
+  ///
+  /// In en, this message translates to:
+  /// **'All-time world records'**
+  String get allTimeRecordsTitle;
+
+  /// Tablet heading of the page listing every past match between two nations.
+  ///
+  /// In en, this message translates to:
+  /// **'Every meeting'**
+  String get h2hMeetingsTitle;
+
+  /// Tablet head to head: the empty right-hand pane before a second nation is picked.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick an opponent to see every meeting here'**
+  String get h2hPickOpponent;
+
+  /// Tablet saves screen heading: the list of save games.
+  ///
+  /// In en, this message translates to:
+  /// **'Saves'**
+  String get savesTitle;
+
+  /// Tablet table column: the player's name.
+  ///
+  /// In en, this message translates to:
+  /// **'Player'**
+  String get gridColPlayer;
+
+  /// Tablet table column, short: the player's position (GK, CB, ST).
+  ///
+  /// In en, this message translates to:
+  /// **'Pos'**
+  String get gridColPos;
+
+  /// Tablet records table column: whether the player is still playing.
+  ///
+  /// In en, this message translates to:
+  /// **'Active'**
+  String get gridColActive;
+
+  /// Tablet legends table column, short: man of the match awards.
+  ///
+  /// In en, this message translates to:
+  /// **'MOTM'**
+  String get gridColMotm;
+
+  /// Tablet legends table column, short: average match rating.
+  ///
+  /// In en, this message translates to:
+  /// **'Avg'**
+  String get gridColAvg;
+
+  /// Tablet head-to-head ledger column: the nation played against.
+  ///
+  /// In en, this message translates to:
+  /// **'Opponent'**
+  String get gridColOpponent;
+
+  /// Tablet all-time records column: World Championship finals matches started.
+  ///
+  /// In en, this message translates to:
+  /// **'Starts'**
+  String get gridColStarts;
+
+  /// Tablet all-time records column: finals tournaments attended.
+  ///
+  /// In en, this message translates to:
+  /// **'Tournaments'**
+  String get gridColTournaments;
+
+  /// Tablet saves table column: the in-game date the save has reached.
+  ///
+  /// In en, this message translates to:
+  /// **'Date'**
+  String get gridColDate;
+
+  /// Tablet saves table column: how long ago the save was last opened.
+  ///
+  /// In en, this message translates to:
+  /// **'Last played'**
+  String get gridColLastPlayed;
+
+  /// Tablet saves table column: the manager's name in that save.
+  ///
+  /// In en, this message translates to:
+  /// **'Manager'**
+  String get gridColManager;
+
+  /// Tablet nation pick: how many nation tiles are on show for the current confederation or search.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 nation} other{{count} nations}}'**
+  String nationsShownCount(int count);
+
+  /// Tablet nation pick: says the tiles are ordered by world ranking.
+  ///
+  /// In en, this message translates to:
+  /// **'Sorted by world rank'**
+  String get nationsSortedByRank;
+
+  /// Tablet nation preview: label of the nation's strength out of five (which fifth of the world its squad's overall puts it in).
+  ///
+  /// In en, this message translates to:
+  /// **'Strength'**
+  String get nationsStrength;
+
+  /// Tablet nation preview: the strength value, out of five.
+  ///
+  /// In en, this message translates to:
+  /// **'{tier} of 5'**
+  String nationsStrengthOf(int tier);
+
+  /// Tablet nation preview: label of the average overall of the nation's best eleven.
+  ///
+  /// In en, this message translates to:
+  /// **'Squad overall'**
+  String get nationsSquadOverall;
+
+  /// Tablet nation preview: the money a new save with this nation starts with.
+  ///
+  /// In en, this message translates to:
+  /// **'Opening budget'**
+  String get nationsOpeningBudget;
+
+  /// Tablet nation preview: heading over the nation's best player (position, age and rating; no name, because every save names its players).
+  ///
+  /// In en, this message translates to:
+  /// **'Star player'**
+  String get nationsStarPlayer;
+
+  /// Tablet nation tile: the best player's position code and rating, e.g. 'Star ST 93'.
+  ///
+  /// In en, this message translates to:
+  /// **'Star {position} {rating}'**
+  String nationsStarTile(String position, int rating);
+
+  /// Tablet nation preview: the best player's age.
+  ///
+  /// In en, this message translates to:
+  /// **'Age {age}'**
+  String nationsStarAge(int age);
+
+  /// Tablet nation preview: heading over what the board will demand in the first cycle.
+  ///
+  /// In en, this message translates to:
+  /// **'The board expects'**
+  String get nationsBoardExpects;
+
+  /// Tablet nation pick: the button that takes the previewed nation's job.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage {nation}'**
+  String nationsManage(String nation);
+
+  /// Tablet nation pick: the hint under the Manage button.
+  ///
+  /// In en, this message translates to:
+  /// **'You name your manager next'**
+  String get nationsManagerNext;
+
+  /// Tablet heading of a player's full page.
+  ///
+  /// In en, this message translates to:
+  /// **'Player'**
+  String get playerPageTitle;
+
+  /// Tablet heading of a nation's page (its honours, ranking history, scorers and titles).
+  ///
+  /// In en, this message translates to:
+  /// **'Nation'**
+  String get nationPageTitle;
+
+  /// Tablet friendlies: heading of the panel listing each open window and the opponent picked for it.
+  ///
+  /// In en, this message translates to:
+  /// **'Your friendlies'**
+  String get friendliesYourGames;
 }
 
 class _AppLocalizationsDelegate

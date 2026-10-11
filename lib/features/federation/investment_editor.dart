@@ -29,6 +29,7 @@ class InvestmentEditor extends StatefulWidget {
     required this.initial,
     required this.onChanged,
     this.youthEnabled = true,
+    this.showEffects = true,
     super.key,
   });
 
@@ -37,6 +38,10 @@ class InvestmentEditor extends StatefulWidget {
   final FederationInvestment initial;
   final ValueChanged<FederationInvestment> onChanged;
   final bool youthEnabled;
+
+  /// Whether each slider states, under its blurb, what its money buys. The
+  /// tablet says that once, beside the sliders, and turns this off.
+  final bool showEffects;
 
   @override
   State<InvestmentEditor> createState() => _InvestmentEditorState();
@@ -170,25 +175,27 @@ class _InvestmentEditorState extends State<InvestmentEditor> {
                     color: AppColors.onSurfaceVariant,
                   ),
                 ),
-                const SizedBox(height: 2),
-                // What this money actually buys, live as the slider moves.
-                // The effect used to be legible only on the finances screen's
-                // impact table — a screen away from the decision.
-                Text(
-                  value <= 0
-                      ? AppLocalizations.of(context).deptEffectNone
-                      : DepartmentEffect.describe(
-                          AppLocalizations.of(context),
-                          dept,
-                          value,
-                        ),
-                  style: AppTypography.labelSmall.copyWith(
-                    color: value > 0
-                        ? AppColors.positive
-                        : AppColors.onSurfaceVariant,
-                    fontWeight: value > 0 ? FontWeight.w700 : null,
+                if (widget.showEffects) ...[
+                  const SizedBox(height: 2),
+                  // What this money actually buys, live as the slider moves.
+                  // The effect used to be legible only on the finances
+                  // screen's impact table — a screen away from the decision.
+                  Text(
+                    value <= 0
+                        ? AppLocalizations.of(context).deptEffectNone
+                        : DepartmentEffect.describe(
+                            AppLocalizations.of(context),
+                            dept,
+                            value,
+                          ),
+                    style: AppTypography.labelSmall.copyWith(
+                      color: value > 0
+                          ? AppColors.positive
+                          : AppColors.onSurfaceVariant,
+                      fontWeight: value > 0 ? FontWeight.w700 : null,
+                    ),
                   ),
-                ),
+                ],
               ],
             ),
           ),

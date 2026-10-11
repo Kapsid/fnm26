@@ -7,11 +7,15 @@ import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/services/player/prospects.dart';
+import 'package:fnm/features/shell/detail_pane_host.dart';
 import 'package:fnm/features/squad/youth_providers.dart';
 import 'package:fnm/features/squad/youth_watch_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
+import 'package:fnm/shared/tablet/tablet.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
+
+part 'youth_tablet_layout.dart';
 
 /// The nation's youth pyramid: five levels, from the eleven-year-olds who have
 /// just come in to the twenty-year-olds about to be seniors, with the manager's
@@ -30,10 +34,15 @@ import 'package:go_router/go_router.dart';
 class YouthScreen extends ConsumerWidget {
   const YouthScreen({required this.careerId, super.key});
 
+  static const Key tabletLayoutKey = Key('youth.tabletLayout');
+
   final int careerId;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    if (TabletShellScope.isActive(context)) {
+      return _YouthTabletLayout(careerId: careerId);
+    }
     final l = AppLocalizations.of(context);
     final async = ref.watch(youthPyramidProvider(careerId));
     final marked = {
@@ -333,39 +342,12 @@ class YouthWatchTab extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final l = AppLocalizations.of(context);
     final async = ref.watch(youthShortlistProvider(careerId));
     return async.when(
       loading: () => const Center(child: CircularProgressIndicator()),
       error: (e, _) => Center(child: Text('$e')),
       data: (boys) {
-        if (boys.isEmpty) {
-          return Center(
-            child: Padding(
-              padding: const EdgeInsets.all(AppSpacing.xl),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  // The control itself, above the words: the copy says to mark
-                  // a boy without naming a shape, so this is what says which
-                  // shape to look for beside his name.
-                  const Icon(
-                    Icons.bookmark_border_rounded,
-                    color: AppColors.onSurfaceVariant,
-                  ),
-                  const SizedBox(height: AppSpacing.sm),
-                  Text(
-                    l.youthWatchEmpty,
-                    textAlign: TextAlign.center,
-                    style: AppTypography.bodyMedium.copyWith(
-                      color: AppColors.onSurfaceVariant,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          );
-        }
+        if (boys.isEmpty) return const _WatchEmpty();
         return ListView(
           padding: const EdgeInsets.all(AppSpacing.marginMobile),
           children: [
@@ -471,17 +453,7 @@ class _WatchRow extends StatelessWidget {
           // hundred points wide, and "Through to the senior pool" was cut in
           // half in it.
           Text(
-            switch (boy.status) {
-              WatchedStatus.following =>
-                player == null
-                    ? l.youthWatchGone
-                    : boy.caps > 0
-                    ? l.u21AgeCaps(player.age, boy.caps)
-                    : l.u21AgeUncapped(player.age),
-              WatchedStatus.senior => l.youthWatchSenior,
-              WatchedStatus.released => l.youthWatchReleased,
-              WatchedStatus.gone => l.youthWatchGone,
-            },
+            _watchStatus(l, boy),
             maxLines: 2,
             style: AppTypography.labelSmall.copyWith(
               color: AppColors.onSurfaceVariant,
@@ -552,4 +524,57 @@ class _Tag extends StatelessWidget {
       ),
     ),
   );
+}
+
+/// Where a watched boy is now: his age and caps while he is coming through,
+/// otherwise what became of him.
+String _watchStatus(AppLocalizations l, WatchedBoy boy) {
+  final player = boy.player;
+  return switch (boy.status) {
+    WatchedStatus.following =>
+      player == null
+          ? l.youthWatchGone
+          : boy.caps > 0
+          ? l.u21AgeCaps(player.age, boy.caps)
+          : l.u21AgeUncapped(player.age),
+    WatchedStatus.senior => l.youthWatchSenior,
+    WatchedStatus.released => l.youthWatchReleased,
+    WatchedStatus.gone => l.youthWatchGone,
+  };
+}
+
+/// The empty watchlist: the bookmark itself above the words, so the manager
+/// knows which shape to look for beside a boy's name.
+class _WatchEmpty extends StatelessWidget {
+  const _WatchEmpty();
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(AppSpacing.xl),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // The control itself, above the words: the copy says to mark
+            // a boy without naming a shape, so this is what says which
+            // shape to look for beside his name.
+            const Icon(
+              Icons.bookmark_border_rounded,
+              color: AppColors.onSurfaceVariant,
+            ),
+            const SizedBox(height: AppSpacing.sm),
+            Text(
+              l.youthWatchEmpty,
+              textAlign: TextAlign.center,
+              style: AppTypography.bodyMedium.copyWith(
+                color: AppColors.onSurfaceVariant,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 }

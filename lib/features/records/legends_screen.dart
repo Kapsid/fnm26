@@ -7,9 +7,13 @@ import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/services/squad/legends.dart';
 import 'package:fnm/features/records/legends_providers.dart';
+import 'package:fnm/features/shell/detail_pane_host.dart';
 import 'package:fnm/l10n/app_localizations.dart';
+import 'package:fnm/shared/tablet/tablet.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
+
+part 'legends_tablet_layout.dart';
 
 /// The nation's Legends: an all-time XI and a hall of fame ranked across every
 /// cycle of the save — the dynasty layer that makes a long career feel earned.
@@ -18,8 +22,13 @@ class LegendsScreen extends ConsumerWidget {
 
   final int careerId;
 
+  static const Key tabletLayoutKey = Key('legends.tabletLayout');
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    if (TabletShellScope.isActive(context)) {
+      return _LegendsTabletLayout(careerId: careerId);
+    }
     final l = AppLocalizations.of(context);
     final async = ref.watch(legendsProvider(careerId));
     return Scaffold(

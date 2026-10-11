@@ -4,106 +4,26 @@ import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
-import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/nation.dart';
-import 'package:fnm/domain/services/player/player_lifecycle.dart';
 import 'package:fnm/domain/services/rating/overall_rating.dart';
-import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/records/record_book_screen.dart';
-import 'package:fnm/features/federation/federation_providers.dart';
+import 'package:fnm/features/shell/detail_pane_host.dart';
 import 'package:fnm/features/stats/stats_providers.dart';
 import 'package:fnm/features/stats/team_overall_history.dart';
 import 'package:fnm/features/tactics/tactics_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
+import 'package:fnm/shared/tablet/tablet.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
 
-typedef _StatEntry = ({int playerId, int value});
-
-typedef _RatingEntry = ({
-  int playerId,
-  int apps,
-  double meanRating,
-  int motms,
-});
-
-typedef _StatsView = ({
-  Nation? nation,
-  List<_StatEntry> scorers,
-  List<_StatEntry> appearances,
-  List<_RatingEntry> ratings,
-  Map<int, String> names,
-  Set<int> active,
-});
-
-final AutoDisposeFutureProviderFamily<_StatsView?, int>
-_teamStatsProvider = FutureProvider.autoDispose.family<_StatsView?, int>((
-  ref,
-  careerId,
-) async {
-  final career = await ref.watch(careerRepositoryProvider).byId(careerId);
-  if (career == null) return null;
-  final comp = ref.watch(competitionRepositoryProvider);
-  final nationId = career.nationId;
-
-  final scorers = [
-    for (final s in await comp.nationTopScorers(careerId, nationId, limit: 25))
-      (playerId: s.playerId, value: s.goals),
-  ];
-  final appearances = [
-    for (final a in await comp.nationTopAppearances(
-      careerId,
-      nationId,
-      limit: 25,
-    ))
-      (playerId: a.playerId, value: a.games),
-  ];
-  // Best average match rating. Every match in the world is rated now, so this
-  // is a full record rather than only the games the manager was in charge for.
-  final ratings = await comp.nationTopRatings(careerId, nationId, limit: 25);
-
-  final playerRepo = ref.watch(playerRepositoryProvider);
-  final aging = CareerService.agingYears(career);
-  final youth = await ref.watch(youthBonusByCycleProvider(careerId).future);
-  final careerDev = await ref.watch(careerDevBonusProvider(careerId).future);
-  final ids = {
-    for (final s in [...scorers, ...appearances]) s.playerId,
-    for (final r in ratings) r.playerId,
-  };
-  final names = <int, String>{};
-  // Who on these all-time boards is still playing — the same rule the pool
-  // retires on, so a chart-topper you could still pick stands apart from the
-  // legends above and below him.
-  final active = <int>{};
-  for (final id in ids) {
-    final p = await playerRepo.byId(
-      id,
-      agingYears: aging,
-      saveSeed: career.rngSeed,
-      youthBonusByCycle: youth,
-      careerStartsByPlayer: careerDev,
-    );
-    names[id] = p?.name ?? 'Unknown';
-    if (p != null && !PlayerLifecycle.hasRetiredAt(p.id, p.age, aging)) {
-      active.add(id);
-    }
-  }
-
-  final nations = await ref.watch(nationRepositoryProvider).all();
-  return (
-    nation: nations.where((n) => n.id == nationId).firstOrNull,
-    scorers: scorers,
-    appearances: appearances,
-    ratings: ratings,
-    names: names,
-    active: active,
-  );
-});
+part 'team_stats_tablet_layout.dart';
 
 /// The player's national-team records: all-time and per-competition top
 /// scorers ("who scored the most for your team").
 class TeamStatsScreen extends ConsumerStatefulWidget {
   const TeamStatsScreen({required this.careerId, super.key});
+
+  static const Key tabletLayoutKey = Key('teamStats.tabletLayout');
 
   final int careerId;
 
@@ -131,7 +51,10 @@ class _TeamStatsScreenState extends ConsumerState<TeamStatsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final viewAsync = ref.watch(_teamStatsProvider(widget.careerId));
+    if (TabletShellScope.isActive(context)) {
+      return _TeamStatsTabletLayout(careerId: widget.careerId);
+    }
+    final viewAsync = ref.watch(teamStatsProvider(widget.careerId));
     final l = AppLocalizations.of(context);
 
     return Scaffold(
@@ -415,7 +338,7 @@ class _RatingRow extends StatelessWidget {
   final int rank;
   final String name;
   final String? flagCode;
-  final _RatingEntry entry;
+  final TeamRatingEntry entry;
   final VoidCallback onInfo;
 
   @override

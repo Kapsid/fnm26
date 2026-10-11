@@ -6,6 +6,7 @@ import 'package:fnm/domain/entities/formation.dart';
 import 'package:fnm/domain/services/tactics/familiarity_band.dart';
 import 'package:fnm/features/tactics/tactics_pitch.dart' show layoutOf;
 import 'package:fnm/l10n/app_localizations.dart';
+import 'package:fnm/shared/tablet/adaptive_sheet.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 
 /// The formation control on the tactics screen: the shape you are playing,
@@ -36,7 +37,7 @@ class FormationField extends StatelessWidget {
   final Map<Formation, double>? drilling;
 
   Future<void> _open(BuildContext context) async {
-    final picked = await showModalBottomSheet<Formation>(
+    final picked = await showAdaptiveSheet<Formation>(
       context: context,
       backgroundColor: AppColors.surfaceContainerLowest,
       isScrollControlled: true,

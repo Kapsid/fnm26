@@ -13,18 +13,26 @@ import 'package:fnm/features/career/manager_history_providers.dart';
 import 'package:fnm/features/stats/stats_providers.dart';
 import 'package:fnm/features/stats/team_overall_history.dart';
 import 'package:fnm/l10n/app_localizations.dart';
+import 'package:fnm/shared/tablet/tablet.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
+
+part 'manager_history_tablet_layout.dart';
 
 /// The manager's whole journey: every cycle they've managed (nation, balance,
 /// tournament finishes) plus the career totals across all of them.
 class ManagerHistoryScreen extends ConsumerWidget {
   const ManagerHistoryScreen({required this.careerId, super.key});
 
+  static const Key tabletLayoutKey = Key('managerHistory.tabletLayout');
+
   final int careerId;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    if (TabletShellScope.isActive(context)) {
+      return _ManagerHistoryTabletLayout(careerId: careerId);
+    }
     final l = AppLocalizations.of(context);
     final async = ref.watch(managerHistoryProvider(careerId));
     return Scaffold(

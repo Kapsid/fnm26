@@ -4,6 +4,7 @@ import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/l10n/app_localizations.dart';
+import 'package:fnm/shared/tablet/tablet_shell_scope.dart';
 import 'package:go_router/go_router.dart';
 
 /// The primary destinations reachable from the persistent bottom navigation.
@@ -27,6 +28,8 @@ class AppBottomNav extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // On a tablet the shell's sidebar is the navigation.
+    if (TabletShellScope.isActive(context)) return const SizedBox.shrink();
     final l = AppLocalizations.of(context);
     return Container(
       decoration: const BoxDecoration(

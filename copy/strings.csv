@@ -2402,3 +2402,81 @@ playerFormAverage,Player page: his average match rating over recent games. {rati
 playerFormNoGames,Player page: not enough recent games to judge form.,,Not enough recent games to judge,Málo nedávných zápasů na posouzení,Pas assez de matchs récents pour juger,Troppe poche partite recenti per giudicare,"Za mało ostatnich meczów, by ocenić",No hay suficientes partidos recientes para juzgar,"Zu wenige Spiele, um es zu beurteilen"
 playerFormNextMatch,"Player page: what form and fatigue do to his rating in the next match. {delta} is signed, like +2 or −1.",{delta},{delta} to his rating next match,{delta} k hodnocení v příštím zápase,{delta} sur sa note au prochain match,{delta} alla sua valutazione nella prossima partita,{delta} do oceny w następnym meczu,{delta} a su valoración en el próximo partido,{delta} auf seine Wertung im nächsten Spiel
 playerFormNoEffect,Player page: form and fatigue leave his rating unchanged next match.,,No change to his rating next match,Hodnocení v příštím zápase beze změny,Aucun changement de note au prochain match,Nessuna variazione nella prossima partita,Bez zmiany oceny w następnym meczu,Sin cambios en su valoración en el próximo partido,Keine Änderung seiner Wertung im nächsten Spiel
+sideGroupHome,"Tablet sidebar: section heading over Hub, Inbox and Y.",,Home,Hlavní,Accueil,Home,Start,Inicio,Übersicht
+sideGroupTeam,"Tablet sidebar: section heading over squad, tactics, call-ups and youth.",,Team,Tým,Équipe,Squadra,Drużyna,Equipo,Team
+sideGroupCompetitions,"Tablet sidebar: section heading over tournaments, Nations Cup, ranking and results.",,Competitions,Soutěže,Compétitions,Competizioni,Rozgrywki,Competiciones,Wettbewerbe
+sideGroupFederation,"Tablet sidebar: section heading over finances, board and manager.",,Federation,Svaz,Fédération,Federazione,Federacja,Federación,Verband
+sideGroupHistory,"Tablet sidebar: section heading over records, legends, head to head, achievements and career.",,History,Historie,Histoire,Storia,Historia,Historia,Geschichte
+sideInbox,Tablet sidebar item: the messages screen.,,Inbox,Pošta,Boîte de réception,Posta,Skrzynka,Bandeja de entrada,Posteingang
+sideSquad,Tablet sidebar item: the squad list.,,Squad,Kádr,Effectif,Rosa,Kadra,Plantilla,Kader
+sideTactics,Tablet sidebar item: line-up and instructions.,,Tactics,Taktika,Tactique,Tattica,Taktyka,Táctica,Taktik
+sideCallUps,Tablet sidebar item: squad selection.,,Call-ups,Nominace,Convocations,Convocazioni,Powołania,Convocatorias,Nominierungen
+sideTournaments,Tablet sidebar item: tournaments and standings.,,Tournaments,Turnaje,Tournois,Tornei,Turnieje,Torneos,Turniere
+sideRanking,Tablet sidebar item: the world ranking.,,Ranking,Žebříček,Classement,Ranking,Ranking,Clasificación,Weltrangliste
+sideResults,Tablet sidebar item: results and fixtures.,,Results,Výsledky,Résultats,Risultati,Wyniki,Resultados,Ergebnisse
+sideFinances,Tablet sidebar item: federation finances.,,Finances,Finance,Finances,Finanze,Finanse,Finanzas,Finanzen
+sideBoard,Tablet sidebar item: board objectives.,,Board,Vedení,Direction,Dirigenza,Zarząd,Directiva,Vorstand
+sideManager,"Tablet sidebar item: manager skills, staff and training.",,Manager & staff,Trenér a štáb,Entraîneur et staff,Allenatore e staff,Trener i sztab,Entrenador y cuerpo técnico,Trainer & Stab
+sideRecords,Tablet sidebar item: the record book.,,Records,Rekordy,Records,Record,Rekordy,Récords,Rekorde
+sideLegends,Tablet sidebar item: all-time XI and hall of fame.,,Legends,Legendy,Légendes,Leggende,Legendy,Leyendas,Legenden
+sideHeadToHead,Tablet sidebar item: compare two nations.,,Head to head,Vzájemné zápasy,Face-à-face,Scontri diretti,Bilans spotkań,Cara a cara,Direktvergleich
+sideAchievements,Tablet sidebar item: achievements.,,Achievements,Úspěchy,Succès,Obiettivi,Osiągnięcia,Logros,Erfolge
+sideCareer,Tablet sidebar item: the manager's careers.,,Career,Kariéra,Carrière,Carriera,Kariera,Carrera,Karriere
+topBarNext,Tablet top bar: label before the next fixture.,,Next,Další,Prochain,Prossima,Następny,Próximo,Nächstes
+topBarDrawPending,Tablet top bar: shown instead of the opponent until the draw has been watched.,,Draw to come,Čeká se na los,Tirage à venir,Sorteggio in arrivo,Losowanie wkrótce,Sorteo pendiente,Auslosung folgt
+paneFullProfile,Tablet detail pane: link that opens the player's full page.,,Full profile,Celý profil,Profil complet,Profilo completo,Pełny profil,Perfil completo,Vollständiges Profil
+panePickPlayer,Tablet detail pane: shown while no player is selected.,,Pick a player to see his card here,Vyberte hráče a jeho karta se ukáže tady,Choisissez un joueur pour voir sa fiche ici,Scegli un giocatore per vedere qui la sua scheda,"Wybierz zawodnika, aby zobaczyć tu jego kartę",Elige un jugador para ver aquí su ficha,"Wählen Sie einen Spieler, um seine Karte hier zu sehen"
+inboxPickMessage,Tablet inbox: shown in the reading pane while no message is open.,,Pick a message to read it here,Vyberte zprávu a přečtěte si ji tady,Choisissez un message pour le lire ici,Scegli un messaggio per leggerlo qui,"Wybierz wiadomość, aby ją tu przeczytać",Elige un mensaje para leerlo aquí,"Wählen Sie eine Nachricht, um sie hier zu lesen"
+inboxFilterAll,Tablet inbox filter chip: every message.,,All,Vše,Tous,Tutti,Wszystkie,Todos,Alle
+panelViewAll,Tablet dashboard panel header link to the panel's full screen.,,View all,Zobrazit vše,Tout voir,Vedi tutto,Zobacz wszystko,Ver todo,Alle anzeigen
+gridViewOverview,Tablet squad table: the default set of columns.,,Overview,Přehled,Vue d’ensemble,Panoramica,Przegląd,Resumen,Übersicht
+gridColCondition,Tablet squad table column: how fresh or tired a player is.,,Condition,Kondice,Condition,Condizione,Kondycja,Condición,Verfassung
+gridColStatus,"Tablet squad table column: injured or suspended, empty when available.",,Status,Stav,Statut,Stato,Status,Estado,Status
+gridColRank,Tablet ranking table column: the nation's world ranking position.,,Rank,Pořadí,Rang,Posizione,Miejsce,Puesto,Rang
+gridColMove,Tablet ranking table column: places climbed or dropped since the last ranking freeze.,,Move,Posun,Évolution,Variazione,Zmiana,Cambio,Veränderung
+gridColNation,Tablet ranking table column: the national team.,,Nation,Reprezentace,Nation,Nazionale,Reprezentacja,Selección,Nation
+gridColRegion,Tablet ranking table column: the nation's confederation.,,Region,Region,Région,Regione,Region,Región,Region
+gridColPoints,Tablet ranking table column: world ranking points.,,Points,Body,Points,Punti,Punkty,Puntos,Punkte
+panePickNation,Tablet detail pane: shown while no nation is selected.,,Pick a nation to see its record here,Vyberte reprezentaci a její historie se ukáže tady,Choisissez une nation pour voir son palmarès ici,Scegli una nazionale per vedere qui il suo palmarès,"Wybierz reprezentację, aby zobaczyć tu jej historię",Elige una selección para ver aquí su historial,"Wählen Sie eine Nation, um ihre Bilanz hier zu sehen"
+resultsCyclesTitle,Tablet results screen: heading of the list of the manager's four-year cycles.,,Cycles,Cykly,Cycles,Cicli,Cykle,Ciclos,Zyklen
+tourDrawStart,World Championship finals draw: button that starts the ball-drawing ceremony.,,Start the draw,Zahájit los,Lancer le tirage,Avvia il sorteggio,Rozpocznij losowanie,Empezar el sorteo,Auslosung starten
+tourDrawViewGroups,"World Championship finals draw, already watched: button that opens the drawn groups.",,View groups,Zobrazit skupiny,Voir les groupes,Vedi i gironi,Zobacz grupy,Ver los grupos,Gruppen ansehen
+gridColCeiling,Tablet youth table column: the scout's star read on how good a boy can become.,,Ceiling,Strop,Plafond,Potenziale,Potencjał,Techo,Potenzial
+gridColYearGain,Tablet youth table column: rating points a boy gained over the last year.,,Gain,Zlepšení,Progrès,Crescita,Postęp,Mejora,Zuwachs
+gridColMarkedAt,Tablet youth watchlist column: the boy's rating when the manager put him on the list.,,When marked,Při označení,Au repérage,Alla segnalazione,Przy oznaczeniu,Al marcarlo,Beim Markieren
+budgetSetupTitle,Tablet budget setup screen heading.,,Set your budget,Rozdělte rozpočet,Fixez votre budget,Imposta il budget,Ustal budżet,Fija tu presupuesto,Budget festlegen
+budgetEffectsTitle,Tablet budget setup: panel listing what each department's money buys this cycle.,,What this budget buys,Co za tento rozpočet získáte,Ce que ce budget apporte,Cosa compra questo budget,Co daje ten budżet,Lo que compra este presupuesto,Was dieses Budget bringt
+naturalisationTitle,Tablet naturalisation decision screen heading.,,Naturalisation,Naturalizace,Naturalisation,Naturalizzazione,Naturalizacja,Nacionalización,Einbürgerung
+yTrending,Tablet Y feed side panel: the conversations with the most posts.,,Trending,Právě se řeší,Tendances,Di tendenza,Na czasie,Tendencias,Im Trend
+yVoices,Tablet Y feed side panel: the accounts that post the most.,,Voices,Hlasy,Voix,Voci,Głosy,Voces,Stimmen
+yConversation,Tablet Y feed side pane heading: one post and the replies to it.,,Conversation,Konverzace,Conversation,Conversazione,Rozmowa,Conversación,Unterhaltung
+allTimeRecordsTitle,Tablet all-time records screen heading: the greatest players of every nation in the save.,,All-time world records,Světové rekordy všech dob,Records mondiaux de tous les temps,Record mondiali di sempre,Rekordy świata wszech czasów,Récords mundiales de todos los tiempos,Ewige Weltrekorde
+h2hMeetingsTitle,Tablet heading of the page listing every past match between two nations.,,Every meeting,Všechna vzájemná utkání,Toutes les confrontations,Tutti i precedenti,Wszystkie spotkania,Todos los enfrentamientos,Alle Duelle
+h2hPickOpponent,Tablet head to head: the empty right-hand pane before a second nation is picked.,,Pick an opponent to see every meeting here,Vyberte soupeře a uvidíte tu všechna vzájemná utkání,Choisissez un adversaire pour voir ici toutes les confrontations,Scegli un avversario per vedere qui tutti i precedenti,"Wybierz rywala, aby zobaczyć tu wszystkie spotkania",Elige un rival para ver aquí todos los enfrentamientos,"Wählen Sie einen Gegner, um hier alle Duelle zu sehen"
+savesTitle,Tablet saves screen heading: the list of save games.,,Saves,Uložené hry,Sauvegardes,Salvataggi,Zapisy,Partidas guardadas,Spielstände
+gridColPlayer,Tablet table column: the player's name.,,Player,Hráč,Joueur,Giocatore,Zawodnik,Jugador,Spieler
+gridColPos,"Tablet table column, short: the player's position (GK, CB, ST).",,Pos,Post,Poste,Ruolo,Poz.,Pos.,Pos.
+gridColActive,Tablet records table column: whether the player is still playing.,,Active,Aktivní,En activité,In attività,Aktywny,En activo,Aktiv
+gridColMotm,"Tablet legends table column, short: man of the match awards.",,MOTM,MOTM,HdM,MVP,MVP,MVP,MVP
+gridColAvg,"Tablet legends table column, short: average match rating.",,Avg,Prům.,Moy.,Media,Śr.,Media,Ø
+gridColOpponent,Tablet head-to-head ledger column: the nation played against.,,Opponent,Soupeř,Adversaire,Avversario,Rywal,Rival,Gegner
+gridColStarts,Tablet all-time records column: World Championship finals matches started.,,Starts,Starty,Titularisations,Da titolare,W podstawie,Titularidades,Startelf
+gridColTournaments,Tablet all-time records column: finals tournaments attended.,,Tournaments,Turnaje,Tournois,Tornei,Turnieje,Torneos,Turniere
+gridColDate,Tablet saves table column: the in-game date the save has reached.,,Date,Datum,Date,Data,Data,Fecha,Datum
+gridColLastPlayed,Tablet saves table column: how long ago the save was last opened.,,Last played,Naposledy hráno,Dernière partie,Ultima partita,Ostatnio grane,Última partida,Zuletzt gespielt
+gridColManager,Tablet saves table column: the manager's name in that save.,,Manager,Trenér,Sélectionneur,Allenatore,Trener,Seleccionador,Trainer
+nationsShownCount,Tablet nation pick: how many nation tiles are on show for the current confederation or search.,"PLURAL — keep the {count, plural, …} skeleton exactly; translate only the words inside the branches","{count, plural, =1{1 nation} other{{count} nations}}","{count, plural, one{1 reprezentace} few{{count} reprezentace} other{{count} reprezentací}}","{count, plural, one{{count} sélection} other{{count} sélections}}","{count, plural, one{1 nazionale} other{{count} nazionali}}","{count, plural, one{1 reprezentacja} few{{count} reprezentacje} many{{count} reprezentacji} other{{count} reprezentacji}}","{count, plural, =1{1 selección} other{{count} selecciones}}","{count, plural, =1{1 Nationalteam} other{{count} Nationalteams}}"
+nationsSortedByRank,Tablet nation pick: says the tiles are ordered by world ranking.,,Sorted by world rank,Seřazeno podle světového žebříčku,Classées par rang mondial,Ordinate per ranking mondiale,Według rankingu światowego,Ordenadas por ranking mundial,Nach Weltrangliste sortiert
+nationsStrength,Tablet nation preview: label of the nation's strength out of five (which fifth of the world its squad's overall puts it in).,,Strength,Síla,Force,Forza,Siła,Fuerza,Stärke
+nationsStrengthOf,"Tablet nation preview: the strength value, out of five.",{tier},{tier} of 5,{tier} z 5,{tier} sur 5,{tier} su 5,{tier} z 5,{tier} de 5,{tier} von 5
+nationsSquadOverall,Tablet nation preview: label of the average overall of the nation's best eleven.,,Squad overall,Hodnocení kádru,Note de l'effectif,Valore della rosa,Ocena kadry,Media de la plantilla,Kaderwertung
+nationsOpeningBudget,Tablet nation preview: the money a new save with this nation starts with.,,Opening budget,Počáteční rozpočet,Budget de départ,Budget iniziale,Budżet na start,Presupuesto inicial,Startbudget
+nationsStarPlayer,"Tablet nation preview: heading over the nation's best player (position, age and rating; no name, because every save names its players).",,Star player,Hvězda týmu,Joueur vedette,Stella della squadra,Gwiazda drużyny,Estrella del equipo,Star des Teams
+nationsStarTile,"Tablet nation tile: the best player's position code and rating, e.g. 'Star ST 93'.",{position} {rating},Star {position} {rating},Hvězda {position} {rating},Vedette {position} {rating},Stella {position} {rating},Gwiazda {position} {rating},Estrella {position} {rating},Star {position} {rating}
+nationsStarAge,Tablet nation preview: the best player's age.,{age},Age {age},Věk {age},{age} ans,{age} anni,Wiek {age},{age} años,{age} Jahre
+nationsBoardExpects,Tablet nation preview: heading over what the board will demand in the first cycle.,,The board expects,Vedení očekává,La direction attend,La dirigenza si aspetta,Zarząd oczekuje,La directiva espera,Der Vorstand erwartet
+nationsManage,Tablet nation pick: the button that takes the previewed nation's job.,{nation},Manage {nation},Převzít tým ({nation}),Prendre les rênes ({nation}),Prendi le redini ({nation}),Obejmij kadrę ({nation}),Dirigir a {nation},{nation} übernehmen
+nationsManagerNext,Tablet nation pick: the hint under the Manage button.,,You name your manager next,Jméno trenéra zadáte v dalším kroku,Vous nommerez votre sélectionneur ensuite,Subito dopo scegli il nome dell'allenatore,Imię trenera podasz w następnym kroku,A continuación eliges el nombre de tu seleccionador,Als Nächstes geben Sie Ihrem Trainer einen Namen
+playerPageTitle,Tablet heading of a player's full page.,,Player,Hráč,Joueur,Giocatore,Zawodnik,Jugador,Spieler
+nationPageTitle,"Tablet heading of a nation's page (its honours, ranking history, scorers and titles).",,Nation,Reprezentace,Sélection,Nazionale,Reprezentacja,Selección,Nationalteam
+friendliesYourGames,Tablet friendlies: heading of the panel listing each open window and the opponent picked for it.,,Your friendlies,Vaše přátelská utkání,Vos matchs amicaux,Le tue amichevoli,Twoje sparingi,Tus amistosos,Ihre Testspiele

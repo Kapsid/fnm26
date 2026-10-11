@@ -9377,4 +9377,258 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get playerFormNoEffect => 'Nessuna variazione nella prossima partita';
+
+  @override
+  String get sideGroupHome => 'Home';
+
+  @override
+  String get sideGroupTeam => 'Squadra';
+
+  @override
+  String get sideGroupCompetitions => 'Competizioni';
+
+  @override
+  String get sideGroupFederation => 'Federazione';
+
+  @override
+  String get sideGroupHistory => 'Storia';
+
+  @override
+  String get sideInbox => 'Posta';
+
+  @override
+  String get sideSquad => 'Rosa';
+
+  @override
+  String get sideTactics => 'Tattica';
+
+  @override
+  String get sideCallUps => 'Convocazioni';
+
+  @override
+  String get sideTournaments => 'Tornei';
+
+  @override
+  String get sideRanking => 'Ranking';
+
+  @override
+  String get sideResults => 'Risultati';
+
+  @override
+  String get sideFinances => 'Finanze';
+
+  @override
+  String get sideBoard => 'Dirigenza';
+
+  @override
+  String get sideManager => 'Allenatore e staff';
+
+  @override
+  String get sideRecords => 'Record';
+
+  @override
+  String get sideLegends => 'Leggende';
+
+  @override
+  String get sideHeadToHead => 'Scontri diretti';
+
+  @override
+  String get sideAchievements => 'Obiettivi';
+
+  @override
+  String get sideCareer => 'Carriera';
+
+  @override
+  String get topBarNext => 'Prossima';
+
+  @override
+  String get topBarDrawPending => 'Sorteggio in arrivo';
+
+  @override
+  String get paneFullProfile => 'Profilo completo';
+
+  @override
+  String get panePickPlayer =>
+      'Scegli un giocatore per vedere qui la sua scheda';
+
+  @override
+  String get inboxPickMessage => 'Scegli un messaggio per leggerlo qui';
+
+  @override
+  String get inboxFilterAll => 'Tutti';
+
+  @override
+  String get panelViewAll => 'Vedi tutto';
+
+  @override
+  String get gridViewOverview => 'Panoramica';
+
+  @override
+  String get gridColCondition => 'Condizione';
+
+  @override
+  String get gridColStatus => 'Stato';
+
+  @override
+  String get gridColRank => 'Posizione';
+
+  @override
+  String get gridColMove => 'Variazione';
+
+  @override
+  String get gridColNation => 'Nazionale';
+
+  @override
+  String get gridColRegion => 'Regione';
+
+  @override
+  String get gridColPoints => 'Punti';
+
+  @override
+  String get panePickNation =>
+      'Scegli una nazionale per vedere qui il suo palmarès';
+
+  @override
+  String get resultsCyclesTitle => 'Cicli';
+
+  @override
+  String get tourDrawStart => 'Avvia il sorteggio';
+
+  @override
+  String get tourDrawViewGroups => 'Vedi i gironi';
+
+  @override
+  String get gridColCeiling => 'Potenziale';
+
+  @override
+  String get gridColYearGain => 'Crescita';
+
+  @override
+  String get gridColMarkedAt => 'Alla segnalazione';
+
+  @override
+  String get budgetSetupTitle => 'Imposta il budget';
+
+  @override
+  String get budgetEffectsTitle => 'Cosa compra questo budget';
+
+  @override
+  String get naturalisationTitle => 'Naturalizzazione';
+
+  @override
+  String get yTrending => 'Di tendenza';
+
+  @override
+  String get yVoices => 'Voci';
+
+  @override
+  String get yConversation => 'Conversazione';
+
+  @override
+  String get allTimeRecordsTitle => 'Record mondiali di sempre';
+
+  @override
+  String get h2hMeetingsTitle => 'Tutti i precedenti';
+
+  @override
+  String get h2hPickOpponent =>
+      'Scegli un avversario per vedere qui tutti i precedenti';
+
+  @override
+  String get savesTitle => 'Salvataggi';
+
+  @override
+  String get gridColPlayer => 'Giocatore';
+
+  @override
+  String get gridColPos => 'Ruolo';
+
+  @override
+  String get gridColActive => 'In attività';
+
+  @override
+  String get gridColMotm => 'MVP';
+
+  @override
+  String get gridColAvg => 'Media';
+
+  @override
+  String get gridColOpponent => 'Avversario';
+
+  @override
+  String get gridColStarts => 'Da titolare';
+
+  @override
+  String get gridColTournaments => 'Tornei';
+
+  @override
+  String get gridColDate => 'Data';
+
+  @override
+  String get gridColLastPlayed => 'Ultima partita';
+
+  @override
+  String get gridColManager => 'Allenatore';
+
+  @override
+  String nationsShownCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count nazionali',
+      one: '1 nazionale',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get nationsSortedByRank => 'Ordinate per ranking mondiale';
+
+  @override
+  String get nationsStrength => 'Forza';
+
+  @override
+  String nationsStrengthOf(int tier) {
+    return '$tier su 5';
+  }
+
+  @override
+  String get nationsSquadOverall => 'Valore della rosa';
+
+  @override
+  String get nationsOpeningBudget => 'Budget iniziale';
+
+  @override
+  String get nationsStarPlayer => 'Stella della squadra';
+
+  @override
+  String nationsStarTile(String position, int rating) {
+    return 'Stella $position $rating';
+  }
+
+  @override
+  String nationsStarAge(int age) {
+    return '$age anni';
+  }
+
+  @override
+  String get nationsBoardExpects => 'La dirigenza si aspetta';
+
+  @override
+  String nationsManage(String nation) {
+    return 'Prendi le redini ($nation)';
+  }
+
+  @override
+  String get nationsManagerNext =>
+      'Subito dopo scegli il nome dell\'allenatore';
+
+  @override
+  String get playerPageTitle => 'Giocatore';
+
+  @override
+  String get nationPageTitle => 'Nazionale';
+
+  @override
+  String get friendliesYourGames => 'Le tue amichevoli';
 }

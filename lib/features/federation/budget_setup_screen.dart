@@ -1,4 +1,3 @@
-import 'package:fnm/features/onboarding/tour_keys.dart';
 import 'dart:async';
 
 import 'package:flutter/material.dart';
@@ -7,17 +6,23 @@ import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
+import 'package:fnm/core/util/federation_label.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/career.dart';
 import 'package:fnm/domain/repositories/career_repository.dart';
 import 'package:fnm/domain/services/federation/federation_finance.dart';
+import 'package:fnm/features/federation/department_effect.dart';
 import 'package:fnm/features/federation/federation_service.dart';
 import 'package:fnm/features/federation/investment_editor.dart';
 import 'package:fnm/features/federation/staff_card.dart';
 import 'package:fnm/features/hub/hub_providers.dart';
+import 'package:fnm/features/onboarding/tour_keys.dart';
 import 'package:fnm/l10n/app_localizations.dart';
+import 'package:fnm/shared/tablet/tablet.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
+
+part 'budget_setup_tablet_layout.dart';
 
 /// The watched-draw key marking that the federation budget has been set for a
 /// cycle. Until it is set, the budget-setup event is forced first on the hub.
@@ -38,6 +43,11 @@ class BudgetSetupScreen extends ConsumerStatefulWidget {
   const BudgetSetupScreen({required this.careerId, super.key});
 
   final int careerId;
+
+  static const Key tabletLayoutKey = Key('budgetSetup.tabletLayout');
+
+  /// The tablet's "What this budget buys" panel.
+  static const Key effectsKey = Key('budgetSetup.effects');
 
   @override
   ConsumerState<BudgetSetupScreen> createState() => _BudgetSetupScreenState();
@@ -80,6 +90,17 @@ bool budgetReady({
   return remaining >= 0 && (remaining < kBudgetStep || !levelsLeft);
 }
 
+/// Everything both layouts read off the allocation in progress, worked out
+/// once (see [_BudgetSetupScreenState._budgetFor]).
+typedef _Budget = ({
+  int available,
+  FederationInvestment alloc,
+  int allocated,
+  bool overCommitted,
+  bool ready,
+  bool settled,
+});
+
 class _BudgetSetupScreenState extends ConsumerState<BudgetSetupScreen> {
   FederationInvestment? _alloc;
   bool _busy = false;
@@ -87,6 +108,12 @@ class _BudgetSetupScreenState extends ConsumerState<BudgetSetupScreen> {
   Future<void> _confirm(Career career, FederationInvestment alloc) async {
     if (_busy) return;
     setState(() => _busy = true);
+    // Read before the first await: the manager may leave (or a resize across
+    // 1000 swap layouts) while the budget is saving, and the hub must still
+    // be refreshed and only a manager still here taken on to it.
+    final container = ProviderScope.containerOf(context, listen: false);
+    final router = GoRouter.of(context);
+    final careerId = widget.careerId;
     final repo = ref.read(careerRepositoryProvider);
     final comp = ref.read(competitionRepositoryProvider);
     final spend =
@@ -112,23 +139,147 @@ class _BudgetSetupScreenState extends ConsumerState<BudgetSetupScreen> {
     // The naturalisation offer is no longer rolled here — it now arrives at a
     // random point in the cycle (see SeasonService._rollNaturalizationIfDue),
     // so an approach isn't always glued to setting the budget.
-    if (!mounted) return;
+    //
     // Refresh the hub so the now-satisfied budget event clears and the season
-    // moves on to its next step.
-    ref
-      ..invalidate(financeViewProvider(widget.careerId))
+    // moves on to its next step. Through the captured container, so it
+    // happens even when this page is gone (the tablet top bar reads it).
+    container
+      ..invalidate(financeViewProvider(careerId))
       // The balance has just changed, and the money indicator on the hub reads
       // it through here — a derived provider never notices a write it did not
       // make, so it is told.
-      ..invalidate(federationFundsProvider(widget.careerId))
-      ..invalidate(hubDataProvider(widget.careerId));
-    context.go('${Routes.hub}?careerId=${widget.careerId}');
+      ..invalidate(federationFundsProvider(careerId))
+      ..invalidate(hubDataProvider(careerId));
+    // `router.state` is the top-most route, a pushed one included: a manager
+    // who went elsewhere meanwhile is left there.
+    if (router.state.uri.path == Routes.budgetSetup) {
+      router.go('${Routes.hub}?careerId=$careerId');
+    }
+  }
+
+  /// The money there is, the split so far, and whether it may be confirmed.
+  /// Both layouts read these and nothing else, so the rules live here once.
+  _Budget _budgetFor(Career career) {
+    // The wage bill comes off the top. Staff are a standing cost the
+    // federation pays at the rollover, so money already promised to
+    // people is not money there is to hand to a department — showing it
+    // any other way is how a budget ends up overspent by exactly the
+    // amount of an elite scout.
+    final available =
+        ref.watch(federationFundsProvider(widget.careerId)).valueOrNull?.free ??
+        career.budget;
+    final alloc =
+        _alloc ??
+        const (
+          youth: 0,
+          commercial: 0,
+          medical: 0,
+          naturalization: 0,
+          boardRelations: 0,
+        );
+    final allocated =
+        alloc.youth +
+        alloc.commercial +
+        alloc.medical +
+        alloc.naturalization +
+        alloc.boardRelations;
+    // Already distributed this cycle? Then this screen is a record, not
+    // an editor. The hub only offers the event while it is unset, but
+    // the guided tour visits this route directly and a re-cut here would
+    // undo a decision the manager has already lived with.
+    final settled =
+        ref.watch(budgetSettledProvider(widget.careerId)).valueOrNull ?? false;
+    return (
+      available: available,
+      alloc: alloc,
+      allocated: allocated,
+      overCommitted: allocated > available,
+      // Untouched is fine when there is nothing a level could be bought
+      // with: a federation with less than one level to spend confirms an
+      // empty allocation rather than being stuck on this screen.
+      ready:
+          (_alloc != null || available < kBudgetStep) &&
+          budgetReady(
+            available: available,
+            allocated: allocated,
+            levelsLeft: Department.values.any(
+              (d) =>
+                  investmentIn(alloc, d) <
+                  FederationFinance.maxLevels(d) * kBudgetStep,
+            ),
+          ),
+      settled: settled,
+    );
+  }
+
+  void _onAllocated(FederationInvestment a) => setState(() => _alloc = a);
+
+  /// What is still to do (or what is over), and the button that commits it.
+  Widget _confirmBar(AppLocalizations l, Career career, _Budget b) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        if (!b.ready)
+          Padding(
+            padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+            child: Text(
+              // Over-committed says something different from
+              // "not finished yet": the manager has promised
+              // money that is not there, usually by hiring staff
+              // after allocating, and needs to take some back.
+              b.overCommitted
+                  ? l.federationOverBudget(
+                      formatEuros(b.allocated - b.available),
+                    )
+                  : l.federationAllocateFullBudget,
+              style: AppTypography.labelSmall.copyWith(
+                color: b.overCommitted
+                    ? AppColors.error
+                    : AppColors.onSurfaceVariant,
+              ),
+            ),
+          ),
+        PrimaryButton(
+          label: b.settled
+              ? l.federationBudgetAlreadySet
+              : _busy
+              ? l.federationConfirming
+              : l.federationConfirmBudget,
+          icon: Icons.savings_rounded,
+          onPressed: (!b.ready || _busy || b.settled)
+              ? null
+              : () => unawaited(_confirm(career, b.alloc)),
+        ),
+      ],
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     final careerAsync = ref.watch(_budgetCareerProvider(widget.careerId));
     final l = AppLocalizations.of(context);
+    if (TabletShellScope.isActive(context)) {
+      return TabletPage(
+        scaffoldKey: BudgetSetupScreen.tabletLayoutKey,
+        title: l.budgetSetupTitle,
+        // A way out, as on the phone: forced is not the same as a trap.
+        onBack: () => context.go('${Routes.hub}?careerId=${widget.careerId}'),
+        backTooltip: l.federationBudgetLater,
+        child: careerAsync.when(
+          loading: () => const Center(child: CircularProgressIndicator()),
+          error: (e, _) => Center(
+            child: Text(l.federationCouldNotLoadFinances(e.toString())),
+          ),
+          data: (career) => career == null
+              ? Center(child: Text(l.federationSaveNotFound))
+              : _BudgetSetupTabletLayout(
+                  state: this,
+                  career: career,
+                  budget: _budgetFor(career),
+                ),
+        ),
+      );
+    }
     return Scaffold(
       appBar: AppBar(
         // A way out. The budget is a FORCED event and stays one — the hub
@@ -158,53 +309,7 @@ class _BudgetSetupScreenState extends ConsumerState<BudgetSetupScreen> {
           if (career == null) {
             return Center(child: Text(l.federationSaveNotFound));
           }
-          // The wage bill comes off the top. Staff are a standing cost the
-          // federation pays at the rollover, so money already promised to
-          // people is not money there is to hand to a department — showing it
-          // any other way is how a budget ends up overspent by exactly the
-          // amount of an elite scout.
-          final available =
-              ref
-                  .watch(federationFundsProvider(widget.careerId))
-                  .valueOrNull
-                  ?.free ??
-              career.budget;
-          final alloc =
-              _alloc ??
-              const (
-                youth: 0,
-                commercial: 0,
-                medical: 0,
-                naturalization: 0,
-                boardRelations: 0,
-              );
-          final allocated =
-              alloc.youth +
-              alloc.commercial +
-              alloc.medical +
-              alloc.naturalization +
-              alloc.boardRelations;
-          // Already distributed this cycle? Then this screen is a record, not
-          // an editor. The hub only offers the event while it is unset, but
-          // the guided tour visits this route directly and a re-cut here would
-          // undo a decision the manager has already lived with.
-          final settled = ref.watch(budgetSettledProvider(widget.careerId));
-          final overCommitted = allocated > available;
-          final levelsLeft = Department.values.any(
-            (d) =>
-                investmentIn(alloc, d) <
-                FederationFinance.maxLevels(d) * kBudgetStep,
-          );
-          // Untouched is fine when there is nothing a level could be bought
-          // with: a federation with less than one level to spend confirms an
-          // empty allocation rather than being stuck on this screen.
-          final ready =
-              (_alloc != null || available < kBudgetStep) &&
-              budgetReady(
-                available: available,
-                allocated: allocated,
-                levelsLeft: levelsLeft,
-              );
+          final b = _budgetFor(career);
           return Column(
             children: [
               Expanded(
@@ -213,47 +318,7 @@ class _BudgetSetupScreenState extends ConsumerState<BudgetSetupScreen> {
                   children: [
                     // A bright banner so the season-defining decision can't be
                     // breezed past.
-                    Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.all(AppSpacing.md),
-                      decoration: BoxDecoration(
-                        color: AppColors.secondaryContainer,
-                        borderRadius: AppRadii.baseAll,
-                        border: Border.all(
-                          color: AppColors.primary,
-                          width: 1.5,
-                        ),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              const Icon(
-                                Icons.account_balance_rounded,
-                                color: AppColors.primary,
-                              ),
-                              const SizedBox(width: AppSpacing.sm),
-                              Text(
-                                l.federationBudgetHeading,
-                                style: AppTypography.labelMedium.copyWith(
-                                  color: AppColors.primary,
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: AppSpacing.xs),
-                          Text(
-                            l.federationDistributeBudget(
-                              formatEuros(available),
-                            ),
-                            style: AppTypography.bodySmall.copyWith(
-                              color: AppColors.onSurfaceVariant,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
+                    _BudgetBanner(available: b.available),
                     const SizedBox(height: AppSpacing.md),
                     StaffCard(
                       key: TourKeys.budgetStaff,
@@ -263,9 +328,9 @@ class _BudgetSetupScreenState extends ConsumerState<BudgetSetupScreen> {
                     AppCard(
                       key: TourKeys.budgetDepartments,
                       child: InvestmentEditor(
-                        available: available,
-                        initial: alloc,
-                        onChanged: (a) => setState(() => _alloc = a),
+                        available: b.available,
+                        initial: b.alloc,
+                        onChanged: _onAllocated,
                       ),
                     ),
                     const SizedBox(height: AppSpacing.xl),
@@ -276,48 +341,61 @@ class _BudgetSetupScreenState extends ConsumerState<BudgetSetupScreen> {
                 top: false,
                 child: Padding(
                   padding: const EdgeInsets.all(AppSpacing.marginMobile),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      if (!ready)
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: AppSpacing.sm),
-                          child: Text(
-                            // Over-committed says something different from
-                            // "not finished yet": the manager has promised
-                            // money that is not there, usually by hiring staff
-                            // after allocating, and needs to take some back.
-                            overCommitted
-                                ? l.federationOverBudget(
-                                    formatEuros(allocated - available),
-                                  )
-                                : l.federationAllocateFullBudget,
-                            style: AppTypography.labelSmall.copyWith(
-                              color: overCommitted
-                                  ? AppColors.error
-                                  : AppColors.onSurfaceVariant,
-                            ),
-                          ),
-                        ),
-                      PrimaryButton(
-                        label: settled.valueOrNull ?? false
-                            ? l.federationBudgetAlreadySet
-                            : _busy
-                            ? l.federationConfirming
-                            : l.federationConfirmBudget,
-                        icon: Icons.savings_rounded,
-                        onPressed:
-                            (!ready || _busy || (settled.valueOrNull ?? false))
-                            ? null
-                            : () => unawaited(_confirm(career, alloc)),
-                      ),
-                    ],
-                  ),
+                  child: _confirmBar(l, career, b),
                 ),
               ),
             ],
           );
         },
+      ),
+    );
+  }
+}
+
+/// The bright banner over the budget, so the season-defining decision can't
+/// be breezed past.
+class _BudgetBanner extends StatelessWidget {
+  const _BudgetBanner({required this.available});
+
+  final int available;
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(AppSpacing.md),
+      decoration: BoxDecoration(
+        color: AppColors.secondaryContainer,
+        borderRadius: AppRadii.baseAll,
+        border: Border.all(color: AppColors.primary, width: 1.5),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              const Icon(
+                Icons.account_balance_rounded,
+                color: AppColors.primary,
+              ),
+              const SizedBox(width: AppSpacing.sm),
+              Text(
+                l.federationBudgetHeading,
+                style: AppTypography.labelMedium.copyWith(
+                  color: AppColors.primary,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: AppSpacing.xs),
+          Text(
+            l.federationDistributeBudget(formatEuros(available)),
+            style: AppTypography.bodySmall.copyWith(
+              color: AppColors.onSurfaceVariant,
+            ),
+          ),
+        ],
       ),
     );
   }

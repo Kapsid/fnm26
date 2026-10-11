@@ -1,0 +1,377 @@
+part of 'call_up_screen.dart';
+
+/// Call-ups on a tablet: the pool as a table, the squad being named with its
+/// summary and the confirm button, and the focused player's card. All state
+/// is the screen's own (selection, draft, line filter, focused player).
+class _CallUpTabletLayout extends StatelessWidget {
+  const _CallUpTabletLayout({
+    required this.state,
+    required this.data,
+    required this.selected,
+    required this.window,
+    required this.locked,
+    required this.coverage,
+    required this.formation,
+    required this.condition,
+  });
+
+  // The pool takes what the two fixed columns leave. At the narrowest
+  // tablet content width (a 10.2in iPad: about 840, 808 inside the padding)
+  // that is still about 270.
+  static const double _squadWidth = 230;
+  static const double _paneWidth = 290;
+
+  final _CallUpScreenState state;
+  final SquadData data;
+  final Set<int> selected;
+  final NominationWindow? window;
+  final bool locked;
+  final int coverage;
+  final Formation formation;
+  final Map<int, PlayerCondition> condition;
+
+  int get careerId => state.widget.careerId;
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    final rows = [
+      for (final p in data.pool)
+        if (state._tabletLine == null || p.category == state._tabletLine) p,
+    ]..sort((a, b) => b.overall.compareTo(a.overall));
+    final status = state._squadStatus(selected, data, coverage);
+    return DetailPaneScope(
+      controller: state._pane,
+      child: ListenableBuilder(
+        listenable: state._pane,
+        builder: (context, _) {
+          final focusedId = switch (state._pane.value) {
+            PlayerTarget(:final playerId) => playerId,
+            _ => null,
+          };
+          final focused = rows.where((p) => p.id == focusedId).firstOrNull;
+          return Padding(
+            padding: const EdgeInsets.all(AppSpacing.md),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Expanded(
+                  child: Panel(
+                    title: l.squadStatPool,
+                    expand: true,
+                    padding: EdgeInsets.zero,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        _lineChips(context, l),
+                        Expanded(
+                          child: DataGrid<Player>(
+                            rows: rows,
+                            columnSets: [_columns(context, l)],
+                            selected: focused,
+                            onSelect: (p) => openPlayer(
+                              context,
+                              careerId: careerId,
+                              playerId: p.id,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(width: AppSpacing.md - 4),
+                SizedBox(
+                  width: _squadWidth,
+                  child: _squadPanel(context, l, status),
+                ),
+                const SizedBox(width: AppSpacing.md - 4),
+                SizedBox(
+                  width: _paneWidth,
+                  child: PanelBox(
+                    child: DetailPaneHost(
+                      careerId: careerId,
+                      target: state._pane.value,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  int _named(PositionCategory c) =>
+      data.pool.where((p) => p.category == c && selected.contains(p.id)).length;
+
+  Widget _lineChips(BuildContext context, AppLocalizations l) {
+    Widget chip(String label, PositionCategory? line) => Padding(
+      padding: const EdgeInsets.only(right: AppSpacing.xs),
+      child: ChoiceChip(
+        label: Text(label),
+        visualDensity: VisualDensity.compact,
+        selected: state._tabletLine == line,
+        onSelected: (_) => state._setTabletLine(line),
+      ),
+    );
+    return Padding(
+      padding: const EdgeInsets.all(AppSpacing.sm),
+      child: Wrap(
+        children: [
+          chip(l.squadLineAll, null),
+          for (final c in _CallUpScreenState._order)
+            chip(
+              '${state._shortHeading(l, c)} '
+              '${_named(c)}',
+              c,
+            ),
+        ],
+      ),
+    );
+  }
+
+  GridColumnSet<Player> _columns(BuildContext context, AppLocalizations l) =>
+      GridColumnSet<Player>(
+        id: 'pool',
+        label: l.squadStatPool,
+        columns: [
+          GridColumn<Player>(
+            id: 'pick',
+            label: '',
+            width: 40,
+            cell: (p) => Checkbox(
+              value: selected.contains(p.id),
+              visualDensity: VisualDensity.compact,
+              onChanged: locked
+                  ? null
+                  : (on) => state._toggle(
+                      context,
+                      p,
+                      on ?? false,
+                      selected: selected,
+                      absences: data.absences,
+                      coverage: coverage,
+                    ),
+            ),
+          ),
+          GridColumn<Player>(
+            id: 'pos',
+            label: l.squadDevPosition,
+            width: 48,
+            sortKey: (p) => p.position.index,
+            cell: (p) => TacticalChip(p.position.label),
+          ),
+          GridColumn<Player>(
+            id: 'name',
+            label: l.squadSortName,
+            flex: 3,
+            sortKey: (p) => p.name,
+            cell: (p) => Row(
+              key: const ValueKey('callUps.name'),
+              children: [
+                if (!(data.absences[p.id]?.isAvailable ?? true))
+                  Padding(
+                    padding: const EdgeInsets.only(right: 4),
+                    child: Icon(
+                      (data.absences[p.id]?.injuryMatches ?? 0) > 0
+                          ? Icons.personal_injury
+                          : Icons.gavel_rounded,
+                      size: 13,
+                      color: (data.absences[p.id]?.injuryMatches ?? 0) > 0
+                          ? AppColors.warning
+                          : AppColors.error,
+                    ),
+                  ),
+                Flexible(child: Text(p.name)),
+              ],
+            ),
+          ),
+          GridColumn<Player>(
+            id: 'age',
+            label: l.playerAge,
+            width: 44,
+            numeric: true,
+            sortKey: (p) => p.age,
+            cell: (p) => Text('${p.age}'),
+          ),
+          GridColumn<Player>(
+            id: 'ovr',
+            label: l.teamOverall,
+            width: 64,
+            numeric: true,
+            sortKey: (p) => p.overall,
+            cell: (p) => Text(
+              '${p.overall}',
+              style: const TextStyle(fontWeight: FontWeight.w700),
+            ),
+          ),
+          GridColumn<Player>(
+            id: 'form',
+            label: l.playerStatForm,
+            width: 48,
+            numeric: true,
+            sortKey: (p) => condition[p.id]?.formRating ?? 0,
+            cell: (p) => _FormDot(
+              form: condition[p.id]?.form ?? PlayerForm.steady,
+            ),
+          ),
+        ],
+      );
+
+  Widget _squadPanel(
+    BuildContext context,
+    AppLocalizations l,
+    ({int count, int fit, bool ok}) status,
+  ) {
+    final named = [
+      for (final p in data.pool)
+        if (selected.contains(p.id)) p,
+    ]..sort((a, b) => b.overall.compareTo(a.overall));
+    return Panel(
+      title: l.tacticsSquad,
+      expand: true,
+      padding: EdgeInsets.zero,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          KeyedSubtree(
+            key: TourKeys.callUpCount,
+            child: Padding(
+              padding: const EdgeInsets.all(12),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    l.tacticsSquadCount(status.count, kMaxSquadSize),
+                    style: AppTypography.labelMedium.copyWith(
+                      color: status.ok ? AppColors.onSurface : AppColors.error,
+                    ),
+                  ),
+                  Text(
+                    status.count >= kMinSquadSize &&
+                            status.count <= kMaxSquadSize &&
+                            status.fit < kMinFitPlayers
+                        ? l.tacticsNeedFitPlayers(kMinFitPlayers, status.fit)
+                        : l.tacticsMinMax(kMinSquadSize, kMaxSquadSize),
+                    style: AppTypography.labelSmall.copyWith(
+                      color: status.ok
+                          ? AppColors.onSurfaceVariant
+                          : AppColors.error,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          if (window != null && window!.matches.isNotEmpty)
+            _CoverageBanner(window: window!, locked: locked),
+          if (!locked)
+            Padding(
+              padding: const EdgeInsets.all(AppSpacing.sm),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: OutlinedButton(
+                      onPressed: () =>
+                          state._pickBest(data, coverage, formation),
+                      child: Text(
+                        l.tacticsBestQuality,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: AppSpacing.xs),
+                  Expanded(
+                    child: OutlinedButton(
+                      onPressed: !data.hasPreviousSquad
+                          ? null
+                          : () => state._pickPrevious(data, coverage),
+                      child: Text(
+                        l.tacticsPreviousSquad,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          const Divider(height: 1),
+          Expanded(
+            child: ListView(
+              children: [
+                for (final c in _CallUpScreenState._order)
+                  if (named.any((p) => p.category == c)) ...[
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(12, 10, 12, 2),
+                      child: Text(
+                        state._shortHeading(l, c).toUpperCase(),
+                        style: TabletText.sectionLabel,
+                      ),
+                    ),
+                    for (final p in named.where((p) => p.category == c))
+                      ListTile(
+                        dense: true,
+                        visualDensity: VisualDensity.compact,
+                        leading: TacticalChip(p.position.label),
+                        title: Text(
+                          p.name,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        trailing: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              '${p.overall}',
+                              style: TabletText.cellNumeric,
+                            ),
+                            if (!locked)
+                              IconButton(
+                                icon: const Icon(Icons.close, size: 16),
+                                visualDensity: VisualDensity.compact,
+                                onPressed: () => state._toggle(
+                                  context,
+                                  p,
+                                  false,
+                                  selected: selected,
+                                  absences: data.absences,
+                                  coverage: coverage,
+                                ),
+                              ),
+                          ],
+                        ),
+                        onTap: () => openPlayer(
+                          context,
+                          careerId: careerId,
+                          playerId: p.id,
+                        ),
+                      ),
+                  ],
+              ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(12),
+            child: locked
+                ? OutlinedButton.icon(
+                    onPressed: () => context.go(state._exitRoute),
+                    icon: const Icon(Icons.lock_outline, size: 18),
+                    label: Text(l.tacticsSquadLockedBack),
+                  )
+                : PrimaryButton(
+                    label: l.tacticsConfirmSquad,
+                    icon: Icons.check_rounded,
+                    onPressed: status.ok
+                        ? () => state._confirm(selected)
+                        : null,
+                  ),
+          ),
+        ],
+      ),
+    );
+  }
+}

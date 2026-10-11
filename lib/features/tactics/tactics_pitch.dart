@@ -1544,3 +1544,49 @@ class SubDragRow extends StatelessWidget {
     );
   }
 }
+
+/// A substitute as a small chip: the tablet's bench strip under the pitch.
+/// Hold and drag it onto a player on the pitch to bring it on, exactly like a
+/// [SubDragRow]; a tap does [onTap].
+class BenchChip extends StatelessWidget {
+  const BenchChip({required this.player, this.onTap, super.key});
+
+  final Player player;
+  final VoidCallback? onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    Widget chip() => Material(
+      color: AppColors.surfaceContainerHigh,
+      borderRadius: AppRadii.lgAll,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: AppRadii.lgAll,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                player.position.label,
+                style: AppTypography.labelSmall.copyWith(
+                  color: AppColors.onSurfaceVariant,
+                  fontSize: 10,
+                ),
+              ),
+              const SizedBox(width: 5),
+              Text(surnameOf(player.name), style: AppTypography.labelSmall),
+            ],
+          ),
+        ),
+      ),
+    );
+    return LongPressDraggable<Object>(
+      data: _BenchDrag(player.id),
+      delay: kDragHoldDelay,
+      feedback: chip(),
+      childWhenDragging: Opacity(opacity: 0.4, child: chip()),
+      child: chip(),
+    );
+  }
+}

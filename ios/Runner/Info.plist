@@ -73,11 +73,11 @@
 	</array>
 	<key>UISupportedInterfaceOrientations~ipad</key>
 	<array>
-		<string>UIInterfaceOrientationPortrait</string>
-		<string>UIInterfaceOrientationPortraitUpsideDown</string>
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>UIRequiresFullScreen</key>
+	<true/>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>FNM only opens your files when you choose a save backup to restore. It never reads your photos.</string>
 	<key>NSCameraUsageDescription</key>

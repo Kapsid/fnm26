@@ -27,9 +27,13 @@ import 'package:fnm/features/tactics/tactics_providers.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/player/player_detail_screen.dart'
     show PlayerTraitGlyphs;
+import 'package:fnm/features/shell/detail_pane_host.dart';
 import 'package:fnm/l10n/app_localizations.dart';
+import 'package:fnm/shared/tablet/tablet.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
+
+part 'call_up_tablet_layout.dart';
 
 /// Call-ups: choose which of the nation's eligible players are in the squad
 /// for this save. Only called-up players can be picked in the XI or brought on
@@ -49,6 +53,8 @@ class CallUpScreen extends ConsumerStatefulWidget {
   final String? eventKind;
   final int? eventCycle;
 
+  static const Key tabletLayoutKey = Key('callUps.tabletLayout');
+
   @override
   ConsumerState<CallUpScreen> createState() => _CallUpScreenState();
 }
@@ -63,6 +69,112 @@ class _CallUpScreenState extends ConsumerState<CallUpScreen> {
   /// Whether the saved draft has been read back into [_selected] yet, so a
   /// rebuild never re-applies it over later edits.
   bool _draftLoaded = false;
+
+  /// The tablet pool's line filter (null: everyone).
+  PositionCategory? _tabletLine;
+
+  /// The tablet's right-hand pane.
+  final DetailPaneController _pane = DetailPaneController();
+
+  void _setTabletLine(PositionCategory? line) =>
+      setState(() => _tabletLine = line);
+
+  @override
+  void dispose() {
+    _pane.dispose();
+    super.dispose();
+  }
+
+  /// How many are named, how many of them can play in the period, and
+  /// whether that is a squad that may be confirmed.
+  ///
+  /// "Fit" is asked of the PERIOD, not of the next kick-off: a man serving one
+  /// game of a three-match camp plays the other two.
+  ({int count, int fit, bool ok}) _squadStatus(
+    Set<int> selected,
+    SquadData data,
+    int coverage,
+  ) {
+    final count = selected.length;
+    final fit = selected
+        .where(
+          (id) => SquadSelection.usableInPeriod(data.absences[id], coverage),
+        )
+        .length;
+    return (
+      count: count,
+      fit: fit,
+      ok:
+          count >= kMinSquadSize &&
+          count <= kMaxSquadSize &&
+          fit >= kMinFitPlayers,
+    );
+  }
+
+  /// Names or drops [p], refusing (with a snackbar) a man who misses every
+  /// match of the period, or one more than the squad can hold.
+  void _toggle(
+    BuildContext context,
+    Player p,
+    bool on, {
+    required Set<int> selected,
+    required Map<int, PlayerAbsence> absences,
+    required int coverage,
+  }) {
+    final l = AppLocalizations.of(context);
+    if (on && !SquadSelection.usableInPeriod(absences[p.id], coverage)) {
+      ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(SnackBar(content: Text(l.tacticsOutForWholeCamp)));
+      return;
+    }
+    if (on && selected.length >= kMaxSquadSize) {
+      ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(
+          SnackBar(content: Text(l.tacticsSquadFullMax(kMaxSquadSize))),
+        );
+      return;
+    }
+    _edit((s) {
+      if (on) {
+        s.add(p.id);
+      } else {
+        s.remove(p.id);
+      }
+    });
+  }
+
+  /// The best available squad for the shape being played.
+  void _pickBest(SquadData data, int coverage, Formation formation) =>
+      _edit((s) {
+        s
+          ..clear()
+          ..addAll(
+            SquadSelection.bestQuality(
+              pool: data.pool,
+              absences: data.absences,
+              coverage: coverage,
+              formation: formation,
+              max: kMaxSquadSize,
+            ),
+          );
+      });
+
+  /// The last squad again, minus whoever cannot play in this period.
+  void _pickPrevious(SquadData data, int coverage) => _edit((s) {
+    s
+      ..clear()
+      ..addAll(
+        SquadSelection.previousSquad(
+          pool: data.pool,
+          previous: data.callUps,
+          absences: data.absences,
+          coverage: coverage,
+          max: kMaxSquadSize,
+        ),
+      );
+  });
 
   static const List<PositionCategory> _order = [
     PositionCategory.goalkeeper,
@@ -190,6 +302,34 @@ class _CallUpScreenState extends ConsumerState<CallUpScreen> {
       if (saved.isNotEmpty) _selected = {...saved};
     }
 
+    if (TabletShellScope.isActive(context)) {
+      return Scaffold(
+        key: CallUpScreen.tabletLayoutKey,
+        body: dataAsync.when(
+          loading: () => const Center(child: CircularProgressIndicator()),
+          error: (e, _) =>
+              Center(child: Text(l.tacticsCouldNotLoadSquad(e.toString()))),
+          data: (data) {
+            if (data == null) return Center(child: Text(l.tacticsNoSquad));
+            return _CallUpTabletLayout(
+              state: this,
+              data: data,
+              selected: _selected ??= _initialSquad(data.pool, data.callUps),
+              window: window,
+              locked: locked,
+              coverage: coverage,
+              formation: formation,
+              condition:
+                  ref
+                      .watch(squadConditionProvider(widget.careerId))
+                      .valueOrNull ??
+                  const <int, PlayerCondition>{},
+            );
+          },
+        ),
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -225,25 +365,10 @@ class _CallUpScreenState extends ConsumerState<CallUpScreen> {
               ref.watch(absenceOutlookProvider(widget.careerId)).valueOrNull ??
               const <int, AbsenceOutlook>{};
           final selected = _selected ??= _initialSquad(data.pool, data.callUps);
-          final count = selected.length;
-          // Banned/injured players may be named, but a squad still has to be
-          // able to put eleven players on the pitch.
-          //
-          // "Fit" is asked of the PERIOD, not of the next kick-off: a man
-          // serving one game of a three-match camp plays the other two, so he
-          // counts toward the squad being fieldable. Asking `isAvailable`
-          // instead asked "can he play the very next game", which is the
-          // question the XI picker asks, not the one a call-up list answers.
-          final fit = selected
-              .where(
-                (id) =>
-                    SquadSelection.usableInPeriod(data.absences[id], coverage),
-              )
-              .length;
-          final ok =
-              count >= kMinSquadSize &&
-              count <= kMaxSquadSize &&
-              fit >= kMinFitPlayers;
+          final status = _squadStatus(selected, data, coverage);
+          final count = status.count;
+          final fit = status.fit;
+          final ok = status.ok;
 
           // The chrome that sits above the pool: what this squad has to
           // cover, how many are in it, and the two auto-picks.
@@ -311,19 +436,7 @@ class _CallUpScreenState extends ConsumerState<CallUpScreen> {
                     children: [
                       Expanded(
                         child: OutlinedButton.icon(
-                          onPressed: () => _edit((s) {
-                            s
-                              ..clear()
-                              ..addAll(
-                                SquadSelection.bestQuality(
-                                  pool: data.pool,
-                                  absences: data.absences,
-                                  coverage: coverage,
-                                  formation: formation,
-                                  max: kMaxSquadSize,
-                                ),
-                              );
-                          }),
+                          onPressed: () => _pickBest(data, coverage, formation),
                           icon: const Icon(Icons.auto_awesome, size: 16),
                           label: Text(l.tacticsBestQuality),
                         ),
@@ -334,19 +447,7 @@ class _CallUpScreenState extends ConsumerState<CallUpScreen> {
                           // Nothing to restore before a squad has been named.
                           onPressed: !data.hasPreviousSquad
                               ? null
-                              : () => _edit((s) {
-                                  s
-                                    ..clear()
-                                    ..addAll(
-                                      SquadSelection.previousSquad(
-                                        pool: data.pool,
-                                        previous: data.callUps,
-                                        absences: data.absences,
-                                        coverage: coverage,
-                                        max: kMaxSquadSize,
-                                      ),
-                                    );
-                                }),
+                              : () => _pickPrevious(data, coverage),
                           icon: const Icon(Icons.history, size: 16),
                           label: Text(l.tacticsPreviousSquad),
                         ),
@@ -538,41 +639,14 @@ class _CallUpScreenState extends ConsumerState<CallUpScreen> {
                 // he will not kick a ball before the squad is picked again.
                 onChanged: locked
                     ? null
-                    : (on) {
-                        if (on &&
-                            !SquadSelection.usableInPeriod(
-                              absences[p.id],
-                              coverage,
-                            )) {
-                          ScaffoldMessenger.of(context)
-                            ..hideCurrentSnackBar()
-                            ..showSnackBar(
-                              SnackBar(
-                                content: Text(l.tacticsOutForWholeCamp),
-                              ),
-                            );
-                          return;
-                        }
-                        if (on && selected.length >= kMaxSquadSize) {
-                          ScaffoldMessenger.of(context)
-                            ..hideCurrentSnackBar()
-                            ..showSnackBar(
-                              SnackBar(
-                                content: Text(
-                                  l.tacticsSquadFullMax(kMaxSquadSize),
-                                ),
-                              ),
-                            );
-                          return;
-                        }
-                        _edit((s) {
-                          if (on) {
-                            s.add(p.id);
-                          } else {
-                            s.remove(p.id);
-                          }
-                        });
-                      },
+                    : (on) => _toggle(
+                        context,
+                        p,
+                        on,
+                        selected: selected,
+                        absences: absences,
+                        coverage: coverage,
+                      ),
                 onInfo: () => context.push(
                   '${Routes.player}?careerId=${widget.careerId}'
                   '&playerId=${p.id}',

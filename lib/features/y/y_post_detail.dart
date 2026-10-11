@@ -36,12 +36,6 @@ class YPostDetail extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
-    final event = eventOf(post);
-    final replies = [
-      for (final p in all)
-        if (p.key != post.key && eventOf(p) == event) p,
-    ];
-
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -51,40 +45,68 @@ class YPostDetail extends StatelessWidget {
         title: Text(l.yTitle, style: AppTypography.titleMedium),
         centerTitle: true,
       ),
-      // Edge to edge, like the feed it was opened from: the rows carry their
-      // own margins now, so a page padding here would inset the conversation
-      // by twice as much as the timeline behind it.
-      body: ListView(
-        padding: EdgeInsets.zero,
-        children: [
-          YPostTile(
-            post: post,
-            onAccountTap: () => _openAccount(context, post),
-          ),
-          if (replies.isNotEmpty) ...[
-            Padding(
-              padding: const EdgeInsets.fromLTRB(
-                AppSpacing.marginMobile,
-                AppSpacing.sm,
-                AppSpacing.marginMobile,
-                AppSpacing.xs,
-              ),
-              child: Text(
-                l.yReplies,
-                style: AppTypography.labelMedium.copyWith(
-                  color: AppColors.onSurfaceVariant,
-                ),
+      body: YPostThread(
+        post: post,
+        all: all,
+        onAccountTap: (p) => _openAccount(context, p),
+      ),
+    );
+  }
+}
+
+/// One post and everything else said about the same event, as a list: the
+/// body of [YPostDetail], and of the tablet's side column.
+class YPostThread extends StatelessWidget {
+  const YPostThread({
+    required this.post,
+    required this.all,
+    required this.onAccountTap,
+    super.key,
+  });
+
+  final YPost post;
+
+  /// The whole feed, which the replies are drawn from.
+  final List<YPost> all;
+
+  /// Opens whoever wrote the post handed to it.
+  final void Function(YPost post) onAccountTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    final event = YPostDetail.eventOf(post);
+    final replies = [
+      for (final p in all)
+        if (p.key != post.key && YPostDetail.eventOf(p) == event) p,
+    ];
+    // Edge to edge, like the feed it was opened from: the rows carry their
+    // own margins now, so a page padding here would inset the conversation
+    // by twice as much as the timeline behind it.
+    return ListView(
+      padding: EdgeInsets.zero,
+      children: [
+        YPostTile(post: post, onAccountTap: () => onAccountTap(post)),
+        if (replies.isNotEmpty) ...[
+          Padding(
+            padding: const EdgeInsets.fromLTRB(
+              AppSpacing.marginMobile,
+              AppSpacing.sm,
+              AppSpacing.marginMobile,
+              AppSpacing.xs,
+            ),
+            child: Text(
+              l.yReplies,
+              style: AppTypography.labelMedium.copyWith(
+                color: AppColors.onSurfaceVariant,
               ),
             ),
-            for (final r in replies)
-              YPostTile(
-                post: r,
-                onAccountTap: () => _openAccount(context, r),
-              ),
-          ],
-          const SizedBox(height: AppSpacing.xl),
+          ),
+          for (final r in replies)
+            YPostTile(post: r, onAccountTap: () => onAccountTap(r)),
         ],
-      ),
+        const SizedBox(height: AppSpacing.xl),
+      ],
     );
   }
 }

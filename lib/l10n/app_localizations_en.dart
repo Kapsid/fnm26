@@ -9325,4 +9325,254 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get playerFormNoEffect => 'No change to his rating next match';
+
+  @override
+  String get sideGroupHome => 'Home';
+
+  @override
+  String get sideGroupTeam => 'Team';
+
+  @override
+  String get sideGroupCompetitions => 'Competitions';
+
+  @override
+  String get sideGroupFederation => 'Federation';
+
+  @override
+  String get sideGroupHistory => 'History';
+
+  @override
+  String get sideInbox => 'Inbox';
+
+  @override
+  String get sideSquad => 'Squad';
+
+  @override
+  String get sideTactics => 'Tactics';
+
+  @override
+  String get sideCallUps => 'Call-ups';
+
+  @override
+  String get sideTournaments => 'Tournaments';
+
+  @override
+  String get sideRanking => 'Ranking';
+
+  @override
+  String get sideResults => 'Results';
+
+  @override
+  String get sideFinances => 'Finances';
+
+  @override
+  String get sideBoard => 'Board';
+
+  @override
+  String get sideManager => 'Manager & staff';
+
+  @override
+  String get sideRecords => 'Records';
+
+  @override
+  String get sideLegends => 'Legends';
+
+  @override
+  String get sideHeadToHead => 'Head to head';
+
+  @override
+  String get sideAchievements => 'Achievements';
+
+  @override
+  String get sideCareer => 'Career';
+
+  @override
+  String get topBarNext => 'Next';
+
+  @override
+  String get topBarDrawPending => 'Draw to come';
+
+  @override
+  String get paneFullProfile => 'Full profile';
+
+  @override
+  String get panePickPlayer => 'Pick a player to see his card here';
+
+  @override
+  String get inboxPickMessage => 'Pick a message to read it here';
+
+  @override
+  String get inboxFilterAll => 'All';
+
+  @override
+  String get panelViewAll => 'View all';
+
+  @override
+  String get gridViewOverview => 'Overview';
+
+  @override
+  String get gridColCondition => 'Condition';
+
+  @override
+  String get gridColStatus => 'Status';
+
+  @override
+  String get gridColRank => 'Rank';
+
+  @override
+  String get gridColMove => 'Move';
+
+  @override
+  String get gridColNation => 'Nation';
+
+  @override
+  String get gridColRegion => 'Region';
+
+  @override
+  String get gridColPoints => 'Points';
+
+  @override
+  String get panePickNation => 'Pick a nation to see its record here';
+
+  @override
+  String get resultsCyclesTitle => 'Cycles';
+
+  @override
+  String get tourDrawStart => 'Start the draw';
+
+  @override
+  String get tourDrawViewGroups => 'View groups';
+
+  @override
+  String get gridColCeiling => 'Ceiling';
+
+  @override
+  String get gridColYearGain => 'Gain';
+
+  @override
+  String get gridColMarkedAt => 'When marked';
+
+  @override
+  String get budgetSetupTitle => 'Set your budget';
+
+  @override
+  String get budgetEffectsTitle => 'What this budget buys';
+
+  @override
+  String get naturalisationTitle => 'Naturalisation';
+
+  @override
+  String get yTrending => 'Trending';
+
+  @override
+  String get yVoices => 'Voices';
+
+  @override
+  String get yConversation => 'Conversation';
+
+  @override
+  String get allTimeRecordsTitle => 'All-time world records';
+
+  @override
+  String get h2hMeetingsTitle => 'Every meeting';
+
+  @override
+  String get h2hPickOpponent => 'Pick an opponent to see every meeting here';
+
+  @override
+  String get savesTitle => 'Saves';
+
+  @override
+  String get gridColPlayer => 'Player';
+
+  @override
+  String get gridColPos => 'Pos';
+
+  @override
+  String get gridColActive => 'Active';
+
+  @override
+  String get gridColMotm => 'MOTM';
+
+  @override
+  String get gridColAvg => 'Avg';
+
+  @override
+  String get gridColOpponent => 'Opponent';
+
+  @override
+  String get gridColStarts => 'Starts';
+
+  @override
+  String get gridColTournaments => 'Tournaments';
+
+  @override
+  String get gridColDate => 'Date';
+
+  @override
+  String get gridColLastPlayed => 'Last played';
+
+  @override
+  String get gridColManager => 'Manager';
+
+  @override
+  String nationsShownCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count nations',
+      one: '1 nation',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get nationsSortedByRank => 'Sorted by world rank';
+
+  @override
+  String get nationsStrength => 'Strength';
+
+  @override
+  String nationsStrengthOf(int tier) {
+    return '$tier of 5';
+  }
+
+  @override
+  String get nationsSquadOverall => 'Squad overall';
+
+  @override
+  String get nationsOpeningBudget => 'Opening budget';
+
+  @override
+  String get nationsStarPlayer => 'Star player';
+
+  @override
+  String nationsStarTile(String position, int rating) {
+    return 'Star $position $rating';
+  }
+
+  @override
+  String nationsStarAge(int age) {
+    return 'Age $age';
+  }
+
+  @override
+  String get nationsBoardExpects => 'The board expects';
+
+  @override
+  String nationsManage(String nation) {
+    return 'Manage $nation';
+  }
+
+  @override
+  String get nationsManagerNext => 'You name your manager next';
+
+  @override
+  String get playerPageTitle => 'Player';
+
+  @override
+  String get nationPageTitle => 'Nation';
+
+  @override
+  String get friendliesYourGames => 'Your friendlies';
 }

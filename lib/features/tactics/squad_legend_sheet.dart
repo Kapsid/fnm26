@@ -6,6 +6,7 @@ import 'package:fnm/domain/services/player/player_traits.dart';
 import 'package:fnm/features/player/player_detail_screen.dart'
     show describeTrait;
 import 'package:fnm/l10n/app_localizations.dart';
+import 'package:fnm/shared/tablet/adaptive_sheet.dart';
 
 /// What every mark on a squad row means.
 ///
@@ -19,7 +20,7 @@ import 'package:fnm/l10n/app_localizations.dart';
 /// same mapping the player screen prints, so the legend cannot drift into
 /// describing an icon the list no longer uses.
 Future<void> showSquadLegend(BuildContext context) =>
-    showModalBottomSheet<void>(
+    showAdaptiveSheet<void>(
       context: context,
       backgroundColor: AppColors.surfaceContainer,
       showDragHandle: true,

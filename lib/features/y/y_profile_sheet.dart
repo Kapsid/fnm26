@@ -47,11 +47,6 @@ class YProfileSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
-    final mine = [
-      for (final p in all)
-        if (p.handle == persona.handle) p,
-    ]..sort((a, b) => b.date.compareTo(a.date));
-
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -61,57 +56,92 @@ class YProfileSheet extends StatelessWidget {
         title: Text(l.yTitle, style: AppTypography.titleMedium),
         centerTitle: true,
       ),
-      body: ListView(
-        // Edge to edge, like the feed: every row below carries its own
-        // margins.
-        padding: EdgeInsets.zero,
-        children: [
-          _Header(persona: persona),
+      body: YProfileView(
+        persona: persona,
+        all: all,
+        // The post still opens its conversation, on a page of its own.
+        onPostTap: (p) => Navigator.of(context).push(
+          MaterialPageRoute<void>(
+            builder: (_) => YPostDetail(post: p, all: all),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Who is behind a handle and everything they have said this save, as a
+/// list: the body of [YProfileSheet], and of the tablet's side column.
+class YProfileView extends StatelessWidget {
+  const YProfileView({
+    required this.persona,
+    required this.all,
+    required this.onPostTap,
+    super.key,
+  });
+
+  final YPersona persona;
+
+  /// The whole feed. The account's own posts are filtered out of it, so the
+  /// profile can never disagree with the timeline it was opened from.
+  final List<YPost> all;
+
+  /// Opens the conversation a post of theirs belongs to.
+  final void Function(YPost post) onPostTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    final mine = [
+      for (final p in all)
+        if (p.handle == persona.handle) p,
+    ]..sort((a, b) => b.date.compareTo(a.date));
+    return ListView(
+      // Edge to edge, like the feed: every row below carries its own
+      // margins.
+      padding: EdgeInsets.zero,
+      children: [
+        _Header(persona: persona),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(
+            AppSpacing.marginMobile,
+            AppSpacing.md,
+            AppSpacing.marginMobile,
+            AppSpacing.xs,
+          ),
+          child: Text(
+            l.yProfilePosts,
+            maxLines: 1,
+            style: AppTypography.labelMedium.copyWith(
+              color: AppColors.onSurfaceVariant,
+            ),
+          ),
+        ),
+        if (mine.isEmpty)
           Padding(
-            padding: const EdgeInsets.fromLTRB(
-              AppSpacing.marginMobile,
-              AppSpacing.md,
-              AppSpacing.marginMobile,
-              AppSpacing.xs,
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppSpacing.marginMobile,
+              vertical: AppSpacing.sm,
             ),
             child: Text(
-              l.yProfilePosts,
-              maxLines: 1,
-              style: AppTypography.labelMedium.copyWith(
+              l.yProfileEmpty,
+              style: AppTypography.bodyMedium.copyWith(
                 color: AppColors.onSurfaceVariant,
               ),
             ),
           ),
-          if (mine.isEmpty)
-            Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: AppSpacing.marginMobile,
-                vertical: AppSpacing.sm,
-              ),
-              child: Text(
-                l.yProfileEmpty,
-                style: AppTypography.bodyMedium.copyWith(
-                  color: AppColors.onSurfaceVariant,
-                ),
-              ),
-            ),
-          for (var i = 0; i < mine.length; i++)
-            YPostTile(
-              post: mine[i],
-              topRule: i > 0,
-              // The post still opens its conversation. What it must NOT do
-              // here is offer the account again: tapping the name of the
-              // account whose profile you are already reading would push the
-              // same page onto itself.
-              onTap: () => Navigator.of(context).push(
-                MaterialPageRoute<void>(
-                  builder: (_) => YPostDetail(post: mine[i], all: all),
-                ),
-              ),
-            ),
-          const SizedBox(height: AppSpacing.xl),
-        ],
-      ),
+        for (var i = 0; i < mine.length; i++)
+          YPostTile(
+            post: mine[i],
+            topRule: i > 0,
+            // The post still opens its conversation. What it must NOT do
+            // here is offer the account again: tapping the name of the
+            // account whose profile you are already reading would open the
+            // same profile onto itself.
+            onTap: () => onPostTap(mine[i]),
+          ),
+        const SizedBox(height: AppSpacing.xl),
+      ],
     );
   }
 }
