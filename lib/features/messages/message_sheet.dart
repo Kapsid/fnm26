@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fnm/core/layout/form_factor.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
@@ -74,24 +75,54 @@ class MessageSheet extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              children: [
-                Icon(style.icon, color: style.color, size: 22),
-                const SizedBox(width: AppSpacing.sm),
-                Expanded(
-                  child: Text(
-                    words.title,
-                    style: AppTypography.headlineMedium,
+            if (context.isWideTabletWindow)
+              Row(
+                children: [
+                  Icon(style.icon, color: style.color, size: 22),
+                  const SizedBox(width: AppSpacing.sm),
+                  Expanded(
+                    child: Text(
+                      words.title,
+                      style: AppTypography.headlineMedium,
+                    ),
                   ),
-                ),
-                Text(
-                  '${message.year}',
-                  style: AppTypography.labelMedium.copyWith(
-                    color: AppColors.onSurfaceVariant,
+                  Text(
+                    '${message.year}',
+                    style: AppTypography.labelMedium.copyWith(
+                      color: AppColors.onSurfaceVariant,
+                    ),
                   ),
-                ),
-              ],
-            ),
+                ],
+              )
+            else
+              // On a phone a headline such as "World ranking · #17" wraps,
+              // and a year beside it read as part of it. The year goes
+              // under the headline instead, a quiet line of its own.
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(top: AppSpacing.xs),
+                    child: Icon(style.icon, color: style.color, size: 22),
+                  ),
+                  const SizedBox(width: AppSpacing.sm),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(words.title, style: AppTypography.headlineMedium),
+                        const SizedBox(height: AppSpacing.xs),
+                        Text(
+                          '${message.year}',
+                          style: AppTypography.labelMedium.copyWith(
+                            color: AppColors.onSurfaceVariant,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             const SizedBox(height: AppSpacing.md),
             // The yearly squad report is a table, not a paragraph — a run of
             // "A 78→82, B 74→76, …" was unreadable once more than a couple of
