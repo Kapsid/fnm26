@@ -18,10 +18,11 @@ String formatEuros(int euros) {
   return '€$euros';
 }
 
-/// How many levels one notch of the phone's budget sliders moves: €4M a
-/// notch, ten notches (Medical six), as the phone always had. A phone slider
-/// is too short for forty notches under a thumb.
-const int kPhoneBudgetStepLevels = 4;
+/// How many levels one notch of the phone's budget sliders moves: €1M a
+/// notch, like the tablet. It used to be four (€4M, ten notches), which left
+/// a manager unable to spend the odd million; the value bubble names the sum
+/// under the thumb instead.
+const int kPhoneBudgetStepLevels = 1;
 
 /// How many levels one notch of the tablet's budget sliders moves: €1M a
 /// notch, every level its own stop.
@@ -188,9 +189,7 @@ class _InvestmentEditorState extends State<InvestmentEditor> {
             divisions: levels,
             // Forty stops are too close to read under a finger: the bubble
             // names the sum the thumb is on while it is dragged.
-            label: widget.stepLevels == kTabletBudgetStepLevels
-                ? formatEuros(level * _price)
-                : null,
+            label: widget.stepLevels == 1 ? formatEuros(level * _price) : null,
             onChanged: enabled ? (v) => _set(dept, v) : null,
           ),
           Padding(

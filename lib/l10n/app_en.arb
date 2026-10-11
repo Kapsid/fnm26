@@ -13804,7 +13804,7 @@
   },
   "deptLevelCost": "Level {level} · {amount}",
   "@deptLevelCost": {
-    "description": "Budget setup: a department's investment level and what it costs. {level} is the slider notch: 0 to 10 on a phone (€4M a notch), 0 to 40 on a tablet (€1M a notch); {amount} the euros.",
+    "description": "Budget setup: a department's investment level and what it costs. {level} is the slider notch: 0 to 40 (€1M a notch), Medical 0 to 24; {amount} the euros.",
     "placeholders": {
       "level": {
         "type": "int"

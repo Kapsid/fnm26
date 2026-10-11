@@ -245,8 +245,8 @@ abstract final class FederationFinance {
   /// A level used to cost €4M (ten of them, Medical six). The ceilings in
   /// euros did not move, so the euro-keyed effect curves below read exactly
   /// as before, and a stored allocation (euros, never levels) stays valid:
-  /// every €4M multiple is a €1M one. The phone's sliders still move four
-  /// levels at a time (see `kPhoneBudgetStepLevels`); the tablet's move one.
+  /// every €4M multiple is a €1M one. Phone and tablet sliders both move one
+  /// level a notch (see `kPhoneBudgetStepLevels`).
   static const int investLevelPrice = 1000000;
 
   /// How many levels [dept] has: forty for most, so the top level is

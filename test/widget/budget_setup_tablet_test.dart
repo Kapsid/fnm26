@@ -228,8 +228,8 @@ void main() {
     tester.view.physicalSize = const Size(900, 810);
     await settle(tester);
     expect(find.byKey(BudgetSetupScreen.tabletLayoutKey), findsNothing);
-    // The phone reads the same €8M on its €4M notches: the second.
-    expect(_slider(tester, 0).value, 2);
+    // The phone reads the same €8M on its own €1M notches: the eighth.
+    expect(_slider(tester, 0).value, 8);
     tester.view.physicalSize = kTabletSize;
     await settle(tester);
     expect(find.byKey(BudgetSetupScreen.tabletLayoutKey), findsOneWidget);

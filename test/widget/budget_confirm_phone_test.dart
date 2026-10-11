@@ -78,42 +78,42 @@ void main() {
     await tester.pumpWidget(const SizedBox());
   });
 
-  // The €1M level is the tablet's: a phone slider still moves €4M a notch,
-  // ten notches, and anything under €4M left over is banked.
-  testWidgets('a phone slider still moves €4M a notch', (tester) async {
+  // A phone slider moves €1M a notch, like the tablet's: forty notches, a
+  // bubble naming the sum, and anything under €1M left over is banked.
+  testWidgets('a phone slider moves €1M a notch', (tester) async {
     final save = await seedSave(tester);
     await pumpRoute(
       tester,
       save,
       '${Routes.budgetSetup}?careerId=${save.careerId}',
     );
-    // A budget that leaves €3M over once three notches are spent.
+    // A budget that leaves €0.5M over once twelve notches are spent.
     await tester.runAsync(
       () => save.container
           .read(careerRepositoryProvider)
-          .setBudget(save.careerId, 15000000),
+          .setBudget(save.careerId, 12500000),
     );
     save.container.invalidate(federationFundsProvider(save.careerId));
     await settle(tester);
     final youth = find.byType(Slider).first;
-    expect(tester.widget<Slider>(youth).max, 10);
-    expect(tester.widget<Slider>(youth).divisions, 10);
-    expect(tester.widget<Slider>(youth).label, isNull);
+    expect(tester.widget<Slider>(youth).max, 40);
+    expect(tester.widget<Slider>(youth).divisions, 40);
+    expect(tester.widget<Slider>(youth).label, isNotNull);
     final confirm = find.widgetWithText(
       PrimaryButton,
       enL.federationConfirmBudget,
     );
 
-    tester.widget<Slider>(youth).onChanged!(2);
+    tester.widget<Slider>(youth).onChanged!(11);
     await tester.pump();
-    expect(find.text(enL.deptLevelCost(2, '€8M')), findsOneWidget);
-    // €7M left: a whole notch still fits.
+    expect(find.text(enL.deptLevelCost(11, '€11M')), findsOneWidget);
+    // €1.5M left: a whole notch still fits.
     expect(tester.widget<PrimaryButton>(confirm).onPressed, isNull);
 
-    tester.widget<Slider>(youth).onChanged!(3);
+    tester.widget<Slider>(youth).onChanged!(12);
     await tester.pump();
-    expect(find.text(enL.deptLevelCost(3, '€12M')), findsOneWidget);
-    // €3M left: under a notch, banked.
+    expect(find.text(enL.deptLevelCost(12, '€12M')), findsOneWidget);
+    // €0.5M left: under a notch, banked.
     expect(tester.widget<PrimaryButton>(confirm).onPressed, isNotNull);
     await tester.pumpWidget(const SizedBox());
   });

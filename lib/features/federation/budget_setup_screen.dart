@@ -76,7 +76,7 @@ final AutoDisposeFutureProviderFamily<bool, int> budgetSettledProvider =
 /// allocation that was legal when it was made.
 ///
 /// Spent means "no further notch fits": less than one slider notch
-/// ([stepLevels] levels, so €4M on a phone and €1M on a tablet) left, or
+/// ([stepLevels] levels, €1M on both a phone and a tablet) left, or
 /// every department already at its top level. What is left over stays in the
 /// bank rather than being forced into a department it cannot buy anything in.
 bool budgetReady({
