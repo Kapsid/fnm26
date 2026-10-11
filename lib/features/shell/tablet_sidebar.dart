@@ -20,7 +20,7 @@ class TabletSidebar extends StatelessWidget {
   static const double width = 208;
 
   /// The bottom item that leaves for the main menu.
-  static const mainMenuKey = ValueKey('sidebar.mainMenu');
+  static const Key mainMenuKey = ValueKey('sidebar.mainMenu');
 
   final int careerId;
   final Uri location;
