@@ -14,6 +14,8 @@ class GridColumn<T> {
     this.flex = 1,
     this.numeric = false,
     this.gapBefore = 0,
+    this.firstAscending,
+    this.tooltip,
   });
 
   final String id;
@@ -33,6 +35,15 @@ class GridColumn<T> {
   /// Empty room at the column's left edge, header and cells alike, so a
   /// left-aligned column never runs into a right-aligned number before it.
   final double gapBefore;
+
+  /// The direction of the first tap's sort; null takes it from [numeric]
+  /// (numbers high to low, text A to Z). A place (1st, 2nd) is a number read
+  /// low to high.
+  final bool? firstAscending;
+
+  /// What the header says on a long press or hover, for a title too short
+  /// to explain itself. Null adds nothing.
+  final String? tooltip;
 }
 
 /// A named set of columns: one "view" of the same rows (Overview, Attributes).
@@ -205,7 +216,8 @@ class _DataGridState<T> extends State<DataGrid<T>> {
       widget.rowsController?._state = this;
     }
     // A view or sort column the parent removed falls back to the first view
-    // and the initial sort (or none), so the header and the rows never disagree.
+    // and the initial sort (or none), so the header and the rows never
+    // disagree.
     final set = _set;
     _setId = set.id;
     if (_sortId != null && !set.columns.any((c) => c.id == _sortId)) {
@@ -250,7 +262,7 @@ class _DataGridState<T> extends State<DataGrid<T>> {
         _ascending = !_ascending;
       } else {
         _sortId = c.id;
-        _ascending = !c.numeric;
+        _ascending = c.firstAscending ?? !c.numeric;
       }
     });
   }
@@ -339,38 +351,41 @@ class _DataGridState<T> extends State<DataGrid<T>> {
                   for (final c in columns)
                     _cellBox(
                       c,
-                      Semantics(
-                        container: true,
-                        button: c.sortKey != null,
-                        selected: c.id == _sortId,
-                        child: InkWell(
-                          onTap: () => _tapHeader(c),
-                          child: Row(
-                            mainAxisAlignment: c.numeric
-                                ? MainAxisAlignment.end
-                                : MainAxisAlignment.start,
-                            children: [
-                              Flexible(
-                                child: Text(
-                                  c.label,
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TabletText.header.copyWith(
-                                    color: c.id == _sortId
-                                        ? AppColors.onSurface
-                                        : null,
+                      _withTooltip(
+                        c,
+                        Semantics(
+                          container: true,
+                          button: c.sortKey != null,
+                          selected: c.id == _sortId,
+                          child: InkWell(
+                            onTap: () => _tapHeader(c),
+                            child: Row(
+                              mainAxisAlignment: c.numeric
+                                  ? MainAxisAlignment.end
+                                  : MainAxisAlignment.start,
+                              children: [
+                                Flexible(
+                                  child: Text(
+                                    c.label,
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TabletText.header.copyWith(
+                                      color: c.id == _sortId
+                                          ? AppColors.onSurface
+                                          : null,
+                                    ),
                                   ),
                                 ),
-                              ),
-                              if (c.id == _sortId)
-                                Icon(
-                                  _ascending
-                                      ? Icons.arrow_drop_up
-                                      : Icons.arrow_drop_down,
-                                  size: 16,
-                                  color: AppColors.onSurface,
-                                ),
-                            ],
+                                if (c.id == _sortId)
+                                  Icon(
+                                    _ascending
+                                        ? Icons.arrow_drop_up
+                                        : Icons.arrow_drop_down,
+                                    size: 16,
+                                    color: AppColors.onSurface,
+                                  ),
+                              ],
+                            ),
                           ),
                         ),
                       ),
@@ -436,6 +451,9 @@ class _DataGridState<T> extends State<DataGrid<T>> {
       ],
     );
   }
+
+  Widget _withTooltip(GridColumn<T> c, Widget child) =>
+      c.tooltip == null ? child : Tooltip(message: c.tooltip, child: child);
 
   Widget _cellBox(GridColumn<T> c, Widget child) {
     final padded = c.gapBefore > 0

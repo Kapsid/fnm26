@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/core/layout/form_factor.dart';
 import 'package:fnm/core/routing/app_router.dart';
+import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/util/competition_label.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/enums.dart';
@@ -13,6 +14,7 @@ import 'package:fnm/features/ranking/world_ranking_screen.dart';
 import 'package:fnm/features/shell/tablet_shell.dart';
 import 'package:fnm/shared/tablet/tablet.dart';
 import 'package:fnm/shared/widgets/app_bottom_nav.dart';
+import 'package:fnm/shared/widgets/widgets.dart';
 
 import '../helpers/seeded_save.dart';
 
@@ -51,6 +53,86 @@ void main() {
       await tester.pumpWidget(const SizedBox());
     });
   }
+
+  for (final size in const [Size(1080, 810), Size(1366, 1024)]) {
+    testWidgets('a narrow right-aligned rank, the move in its own column clear '
+        'of the nation, and its baseline a tooltip at $size', (tester) async {
+      final save = await _open(tester, size);
+      // No sentence over the table: the Move header carries it.
+      expect(find.byType(RankMovementHeader), findsNothing);
+      expect(find.text(enL.rankingSinceCycleStart), findsNothing);
+      expect(find.byTooltip(enL.rankingSinceCycleStart), findsOneWidget);
+
+      final grid = tester.widget<DataGrid<Nation>>(_grid);
+      final first = grid.rows.first;
+      final header = find.byKey(DataGrid.headerKey);
+      // The place sits flush right under its title.
+      final rowFinder = find.ancestor(
+        of: find.descendant(of: _grid, matching: find.text(first.name)),
+        matching: find.byType(InkWell),
+      );
+      final place = tester.getRect(
+        find.descendant(of: rowFinder.first, matching: find.text('1')),
+      );
+      final rankCell = tester.getRect(
+        find
+            .ancestor(
+              of: find.descendant(
+                of: header,
+                matching: find.text(enL.gridColRank),
+              ),
+              matching: find.byType(InkWell),
+            )
+            .first,
+      );
+      expect(rankCell.width, lessThanOrEqualTo(48));
+      expect((place.right - rankCell.right).abs(), lessThan(2));
+      // The movement stands clear of the nation's flag.
+      final move = tester.getRect(
+        find.descendant(
+          of: rowFinder.first,
+          matching: find.byType(RankMovementInline),
+        ),
+      );
+      final flag = tester.getRect(
+        find.descendant(of: rowFinder.first, matching: find.byType(FlagDisc)),
+      );
+      expect(flag.left - move.right, greaterThanOrEqualTo(16));
+      expect(save.nationId, isNonZero);
+      await tester.pumpWidget(const SizedBox());
+    });
+  }
+
+  testWidgets('the movement reads on one line, coloured by direction', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      const Directionality(
+        textDirection: TextDirection.ltr,
+        child: Column(
+          children: [
+            RankMovementInline(3),
+            RankMovementInline(-12),
+            RankMovementInline(0),
+          ],
+        ),
+      ),
+    );
+    final up = tester.widget<Text>(find.text('3'));
+    final down = tester.widget<Text>(find.text('12'));
+    expect(up.style?.color, AppColors.up);
+    expect(down.style?.color, AppColors.down);
+    expect(find.byIcon(Icons.arrow_drop_up), findsOneWidget);
+    expect(find.byIcon(Icons.arrow_drop_down), findsOneWidget);
+    expect(find.byIcon(Icons.remove), findsOneWidget);
+    // Arrow and figure side by side, not stacked.
+    expect(
+      (tester.getCenter(find.byIcon(Icons.arrow_drop_up)).dy -
+              tester.getCenter(find.text('3')).dy)
+          .abs(),
+      lessThan(2),
+    );
+  });
 
   testWidgets('picking a row puts that nation in the pane', (tester) async {
     final save = await _open(tester, kTabletSize);

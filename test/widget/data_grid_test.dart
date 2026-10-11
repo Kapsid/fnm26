@@ -264,6 +264,39 @@ void main() {
     expect(_order(tester), ['Rejthar', 'Staněk', 'Kubišta']);
   });
 
+  testWidgets('a column can sort low to high first, and explain itself in a '
+      'tooltip', (tester) async {
+    final sets = <GridColumnSet<P>>[
+      GridColumnSet(
+        id: 'overview',
+        label: 'Overview',
+        columns: [
+          GridColumn(
+            id: 'name',
+            label: 'Name',
+            flex: 3,
+            cell: (p) => Text(p.name),
+          ),
+          GridColumn(
+            id: 'ovr',
+            label: 'OVR',
+            width: 48,
+            numeric: true,
+            firstAscending: true,
+            tooltip: 'Overall rating',
+            cell: (p) => Text('${p.ovr}'),
+            sortKey: (p) => p.ovr,
+          ),
+        ],
+      ),
+    ];
+    await _pump(tester, sets: sets);
+    expect(find.byTooltip('Overall rating'), findsOneWidget);
+    await tester.tap(find.text('OVR'));
+    await tester.pump();
+    expect(_order(tester), ['Kubišta', 'Staněk', 'Rejthar']);
+  });
+
   group('an initial sort', () {
     const presorted = <P>[
       (name: 'Rejthar', ovr: 80, age: 30),
