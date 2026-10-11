@@ -1,15 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:fnm/core/routing/app_router.dart';
+import 'package:fnm/core/layout/form_factor.dart';
 import 'package:fnm/core/rng/seeded_rng.dart';
+import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/domain/entities/nation.dart';
+import 'package:fnm/features/nations/nation_preview.dart';
 import 'package:fnm/features/nations/nation_select_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
+import 'package:fnm/shared/tablet/tablet.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
+
+part 'unemployed_start_tablet_layout.dart';
 
 /// The share of the world ranking a "from the bottom" career starts in: the
 /// bottom half, drawn from at random.
@@ -36,6 +41,11 @@ final unemployedOfferSeedProvider = Provider<int?>((ref) => null);
 /// everybody picks somebody good. Here the job picks you.
 class UnemployedStartScreen extends ConsumerStatefulWidget {
   const UnemployedStartScreen({super.key});
+
+  static const Key tabletLayoutKey = Key('unemployedStart.tabletLayout');
+
+  /// The tablet's Take it for the offer from [nationId].
+  static Key takeKey(int nationId) => ValueKey(('takeOffer', nationId));
 
   @override
   ConsumerState<UnemployedStartScreen> createState() =>
@@ -75,6 +85,12 @@ class _UnemployedStartScreenState extends ConsumerState<UnemployedStartScreen> {
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
     final nationsAsync = ref.watch(nationsProvider);
+    if (useTabletLayout(context, ref)) {
+      return _UnemployedStartTabletLayout(
+        nationsAsync: nationsAsync,
+        offersOf: _offers,
+      );
+    }
 
     return Scaffold(
       appBar: AppBar(

@@ -56,6 +56,7 @@ const Set<String> tabletReadyPaths = <String>{
   Routes.home,
   Routes.nations,
   Routes.newGame,
+  Routes.startFromBottom,
 };
 
 /// The tablet frame around every in-save screen: sidebar on the left, top bar
