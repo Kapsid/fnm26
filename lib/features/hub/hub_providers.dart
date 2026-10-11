@@ -688,10 +688,11 @@ class SeasonService {
 
   /// The team records and the friendlies plan, refreshed by hand after a step
   /// for the same reason as [_invalidateCompetitionViews]. The team records
-  /// read the goals, caps and ratings imperatively. The friendlies page keeps
-  /// its plan alive while it is on show, and the hub's next event reads that
-  /// same plan: left stale, a friendly gap the step has just opened would
-  /// never be offered and the sim would run straight past it.
+  /// read the goals, caps and ratings imperatively. `nextEventProvider`
+  /// watches the friendlies plan on every form factor (the friendlies page
+  /// keeps it alive too while it is on show): left stale, a friendly gap the
+  /// step has just opened would never be offered and the sim would run
+  /// straight past it.
   void _invalidateTeamViews() {
     _ref
       ..invalidate(teamStatsProvider)

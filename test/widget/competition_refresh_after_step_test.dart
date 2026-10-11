@@ -178,10 +178,10 @@ Future<void> _expectRefreshedBy(
   });
 }
 
-/// Review Focus 3 (stage 3), 1 (stage 4), 1 (stage 5) and 5 (stage 6). A tablet's top bar runs the sim
-/// while a screen is on show, and that screen's provider is kept alive by
-/// being watched. Every way a step is committed must hand every one of them
-/// a fresh read.
+/// Review Focus 3 (stage 3), 1 (stage 4), 1 (stage 5) and 5 (stage 6). A
+/// tablet's top bar runs the sim while a screen is on show, and that screen's
+/// provider is kept alive by being watched. Every way a step is committed
+/// must hand every one of them a fresh read.
 void main() {
   testWidgets('a step refreshes every screen a tablet keeps on show', (
     tester,
