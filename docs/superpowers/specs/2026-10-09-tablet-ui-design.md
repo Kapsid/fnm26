@@ -382,6 +382,89 @@ Each stage gets its own implementation plan.
   screenshots, the iPad listing and the Android tablet check are dropped
   from this release.
 
+## Stage 6 adjustments (2026-10-11)
+
+- Stage 6 converted every route that was not tablet-ready except the
+  dev-only style gallery: the nation pick, new game, start from the
+  bottom, team records, cycle rollover, settings, friendlies, the player
+  page, the nation page and diagnostics. After it, nothing in the shell is
+  drawn at phone width; the gallery is the one route still in
+  `FullScreenPhoneFrame`. The column picker, the collapsible sidebar,
+  store screenshots, the iPad listing and the Android tablet check were
+  dropped from this release, and with the column picker the persisted
+  per-table view the "Out of scope" section mentions.
+- The nation pick is the approved tile grid: a bar with back, the title,
+  the search, Random team and From the bottom; confederation chips with
+  counts; tiles with the world rank, a five-bar strength meter, the flag,
+  the name and the best player's position and rating. A tap previews the
+  nation in a pane (`NationPreview`); only "Manage <nation>" starts the
+  new game. The preview is the screen State's, so a resize keeps it; the
+  search and the confederation are the phone's providers.
+- `NationPreview` shows only what exists before a career, as the save
+  will see it: the world rank (the seed ranking), the strength (which
+  fifth of the world the squad overall falls in), the squad overall (the
+  same ratings the world simulation uses; the save's seed only renames
+  and re-clubs players), the opening budget
+  (`FederationFinance.initialBudget`, what a new save stores), the best
+  player's position, age and rating, and the first cycle's World
+  Championship and continental briefs (`openingObjectiveTargets`, the
+  targets the board then sets). No player name: every save names its
+  players afresh. The Nations Cup brief is left to the board screen.
+- New game puts the name form beside that preview; out of work puts the
+  three offers side by side, each a preview over its Take it. The offers
+  are the screen State's draw, so a resize keeps them;
+  `unemployedOfferSeedProvider` (a `Provider<int?>`, null in the app,
+  overridden in tests) pins the draw in tests only.
+- The cycle rollover keeps its three steps, each in two columns, with the
+  phone's "Back to your saves" on every step. It needs no cascade (a
+  full-screen route: the shell is torn down while it runs, and the roll
+  invalidates the hub's data itself); it refreshes the inbox through a
+  captured container and goes to the hub only for a manager still on it.
+- Settings are two columns of the phone's cards (now one widget each);
+  the backup export keeps its share anchor. Diagnostics put the log
+  across the screen with Copy and Clear in the heading.
+- Friendlies: the picks and Confirm beside every window's card; the picks
+  are the State's. The team records are the record book's shape (tabs
+  over sortable grids beside the player pane). The player and nation pages
+  are two columns; their detail panes keep one.
+- There is no `TeamStatsView`: nothing opens the team records beside a
+  list.
+- The sim's cascade also refreshes the team records (`teamStatsProvider`,
+  moved to `stats_providers.dart`), the friendlies plan (the hub's next
+  event reads the same plan), and the player card's club history and
+  cabinet (`invalidatePlayerDetails`).
+- New game, the rollover and friendlies take the router before their
+  write and navigate after it only if the manager is still on that page.
+- `shell_frame_transition_test` was retired when team stats converted:
+  no phone-framed in-shell page is left to leave for. The shell sweep
+  fails on any in-shell route without a tablet layout instead.
+- German and Spanish need the 15 stage 6 keys when they merge (values in
+  the stage 6 plan, Task 1).
+- Every write a manager can tap twice ignores the second tap while the
+  first is running: starting a career, starting the next cycle, the
+  backup card's export and restore, Back up all on the saves list,
+  booking friendlies, answering a grievance and clearing the diagnostics
+  log. A failed friendlies, new game or restore write leaves its button
+  usable again. These are the only phone-path behaviour changes of stage
+  6, and each is pinned by a test.
+- The premium gate is centred at 560 px on a tablet so the purchase
+  moment is not a stretched phone page.
+- Team stats puts the strength curve beside the team header only when the
+  master column is at least 744 px, so the record values are never cut
+  off; on every iPad width it sits under the header.
+- Nation select follows the approved tile mockup
+  (https://claude.ai/artifact/8MU7ytHt5oKZaXnMPuahaw). Its preview shows
+  only facts the created save really gets: world rank, opening budget,
+  the World Championship and continental briefs, the squad overall, the
+  strength tier and the best player's position, age and rating (no name,
+  since each save renames its players).
+- The shell sweep fails on any in-shell route without a tablet layout,
+  and the full-screen sweep fails on any full-screen route other than the
+  developer gallery that is still phone-framed.
+- Not done in this release, by the user's decision: the column picker,
+  the collapsible sidebar, store screenshots, the iPad listing and the
+  Android tablet check.
+
 ## Testing
 
 - **Phone guard**: before a screen gets a tablet layout, a widget or golden
