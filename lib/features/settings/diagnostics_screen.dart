@@ -1,32 +1,72 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/core/diagnostics/app_log.dart';
+import 'package:fnm/core/layout/form_factor.dart';
 import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/l10n/app_localizations.dart';
+import 'package:fnm/shared/tablet/tablet.dart';
 import 'package:go_router/go_router.dart';
+
+part 'diagnostics_tablet_layout.dart';
 
 /// Shows the on-device error log written by [AppLog], with a copy action.
 ///
 /// This is the whole of the game's crash reporting: nothing leaves the phone
 /// on its own, so when something goes wrong the only way the log reaches
 /// anyone who can act on it is the player copying it out deliberately.
-class DiagnosticsScreen extends StatefulWidget {
+class DiagnosticsScreen extends ConsumerStatefulWidget {
   const DiagnosticsScreen({super.key});
 
+  static const Key tabletLayoutKey = Key('diagnostics.tabletLayout');
+
   @override
-  State<DiagnosticsScreen> createState() => _DiagnosticsScreenState();
+  ConsumerState<DiagnosticsScreen> createState() => _DiagnosticsScreenState();
 }
 
-class _DiagnosticsScreenState extends State<DiagnosticsScreen> {
+class _DiagnosticsScreenState extends ConsumerState<DiagnosticsScreen> {
   late Future<String> _log = AppLog.read();
 
-  void _reload() => setState(() => _log = AppLog.read());
+  void _reload() {
+    setState(() {
+      _log = AppLog.read();
+    });
+  }
+
+  /// Copies [text] to the clipboard and says so.
+  Future<void> _copy(BuildContext context, String text) async {
+    final l = AppLocalizations.of(context);
+    await Clipboard.setData(ClipboardData(text: text));
+    if (!context.mounted) return;
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(l.diagnosticsCopied)));
+  }
+
+  bool _clearing = false;
+
+  /// Empties the log and reads it again. A second tap while the first is
+  /// still clearing does nothing.
+  Future<void> _clear() async {
+    if (_clearing) return;
+    _clearing = true;
+    try {
+      await AppLog.clear();
+    } finally {
+      _clearing = false;
+    }
+    if (!mounted) return;
+    _reload();
+  }
 
   @override
   Widget build(BuildContext context) {
+    if (useTabletLayout(context, ref)) {
+      return _DiagnosticsTabletLayout(state: this);
+    }
     final l = AppLocalizations.of(context);
     return Scaffold(
       appBar: AppBar(
@@ -91,13 +131,7 @@ class _DiagnosticsScreenState extends State<DiagnosticsScreen> {
                     children: [
                       Expanded(
                         child: OutlinedButton.icon(
-                          onPressed: () async {
-                            await Clipboard.setData(ClipboardData(text: text));
-                            if (!context.mounted) return;
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text(l.diagnosticsCopied)),
-                            );
-                          },
+                          onPressed: () => _copy(context, text),
                           icon: const Icon(Icons.copy_rounded, size: 18),
                           label: Text(l.diagnosticsCopy),
                         ),
@@ -105,10 +139,7 @@ class _DiagnosticsScreenState extends State<DiagnosticsScreen> {
                       const SizedBox(width: AppSpacing.sm),
                       Expanded(
                         child: OutlinedButton.icon(
-                          onPressed: () async {
-                            await AppLog.clear();
-                            _reload();
-                          },
+                          onPressed: _clear,
                           icon: const Icon(
                             Icons.delete_outline_rounded,
                             size: 18,

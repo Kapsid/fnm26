@@ -61,6 +61,7 @@ const Set<String> tabletReadyPaths = <String>{
   Routes.startFromBottom,
   Routes.cycleRollover,
   Routes.settings,
+  Routes.diagnostics,
   Routes.friendlies,
   Routes.teamStats,
 };
